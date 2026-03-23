@@ -1,0 +1,326 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================
+// CARD DATA
+// ============================================================
+
+model CardSet {
+  id          Int       @id @default(autoincrement())
+  code        String    @unique
+  name        String
+  nameEn      String?
+  type        SetType
+  releaseDate DateTime?
+  cardCount   Int       @default(0)
+  cards       Card[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([code])
+}
+
+enum SetType {
+  BOOSTER
+  EXTRA_BOOSTER
+  STARTER
+  PROMO
+  OTHER
+}
+
+model Card {
+  id              Int              @id @default(autoincrement())
+  cardCode        String           @unique
+  yuyuteiId       String?
+  yuyuteiUrl      String?
+  setId           Int
+  set             CardSet          @relation(fields: [setId], references: [id])
+  nameJp          String
+  nameEn          String?
+  rarity          String
+  cardType        CardType
+  color           String
+  colorEn         String?
+  cost            Int?
+  power           Int?
+  counter         Int?
+  life            Int?
+  attribute       String?
+  trait           String?
+  effectJp        String?
+  effectEn        String?
+  triggerJp       String?
+  imageUrl        String?
+  isParallel      Boolean          @default(false)
+  viewCount       Int              @default(0)
+  priceChange24h  Float?
+  priceChange7d   Float?
+  latestPriceJpy  Int?
+  latestPriceThb  Float?
+  prices          CardPrice[]
+  portfolioItems  PortfolioItem[]
+  watchlistItems  WatchlistItem[]
+  priceAlerts     PriceAlert[]
+  listings        Listing[]
+  communityPrices CommunityPrice[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([setId])
+  @@index([rarity])
+  @@index([cardType])
+  @@index([color])
+  @@index([nameJp])
+  @@index([viewCount(sort: Desc)])
+  @@index([priceChange24h(sort: Desc)])
+  @@index([priceChange7d(sort: Desc)])
+}
+
+enum CardType {
+  CHARACTER
+  EVENT
+  STAGE
+  LEADER
+  DON
+}
+
+model CardPrice {
+  id        Int      @id @default(autoincrement())
+  cardId    Int
+  card      Card     @relation(fields: [cardId], references: [id])
+  priceJpy  Int
+  priceThb  Float?
+  inStock   Boolean  @default(true)
+  scrapedAt DateTime @default(now())
+
+  @@index([cardId, scrapedAt(sort: Desc)])
+  @@index([scrapedAt])
+}
+
+model ExchangeRate {
+  id        Int      @id @default(autoincrement())
+  fromCur   String   @default("JPY")
+  toCur     String   @default("THB")
+  rate      Float
+  fetchedAt DateTime @default(now())
+
+  @@index([fetchedAt(sort: Desc)])
+}
+
+// ============================================================
+// USER & AUTH
+// ============================================================
+
+model User {
+  id                String           @id @default(cuid())
+  supabaseId        String           @unique
+  email             String           @unique
+  displayName       String?
+  avatarUrl         String?
+  tier              UserTier         @default(FREE)
+  tierExpiresAt     DateTime?
+  portfolios        Portfolio[]
+  watchlistItems    WatchlistItem[]
+  priceAlerts       PriceAlert[]
+  listings          Listing[]
+  sentMessages      Message[]        @relation("SentMessages")
+  receivedMessages  Message[]        @relation("ReceivedMessages")
+  reviewsGiven      Review[]         @relation("ReviewsGiven")
+  reviewsReceived   Review[]         @relation("ReviewsReceived")
+  communityPrices   CommunityPrice[]
+  sellerRating      Float?
+  sellerReviewCount Int              @default(0)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  @@index([supabaseId])
+  @@index([tier])
+}
+
+enum UserTier {
+  FREE
+  PRO
+  PRO_PLUS
+  LIFETIME_PRO
+  LIFETIME_PRO_PLUS
+}
+
+// ============================================================
+// PORTFOLIO
+// ============================================================
+
+model Portfolio {
+  id        Int             @id @default(autoincrement())
+  userId    String
+  user      User            @relation(fields: [userId], references: [id])
+  name      String          @default("Default")
+  items     PortfolioItem[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([userId])
+}
+
+model PortfolioItem {
+  id            Int           @id @default(autoincrement())
+  portfolioId   Int
+  portfolio     Portfolio     @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  cardId        Int
+  card          Card          @relation(fields: [cardId], references: [id])
+  quantity      Int           @default(1)
+  purchasePrice Int?
+  condition     CardCondition @default(NM)
+  notes         String?
+  addedAt       DateTime      @default(now())
+
+  @@unique([portfolioId, cardId, condition])
+  @@index([portfolioId])
+  @@index([cardId])
+}
+
+enum CardCondition {
+  NM
+  LP
+  MP
+  HP
+  DMG
+}
+
+// ============================================================
+// WATCHLIST & ALERTS
+// ============================================================
+
+model WatchlistItem {
+  id      Int      @id @default(autoincrement())
+  userId  String
+  user    User     @relation(fields: [userId], references: [id])
+  cardId  Int
+  card    Card     @relation(fields: [cardId], references: [id])
+  addedAt DateTime @default(now())
+
+  @@unique([userId, cardId])
+  @@index([userId])
+}
+
+model PriceAlert {
+  id          Int            @id @default(autoincrement())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id])
+  cardId      Int
+  card        Card           @relation(fields: [cardId], references: [id])
+  targetPrice Int
+  direction   AlertDirection
+  channel     AlertChannel   @default(EMAIL)
+  isActive    Boolean        @default(true)
+  triggeredAt DateTime?
+  createdAt   DateTime       @default(now())
+
+  @@index([userId, isActive])
+  @@index([cardId, isActive])
+}
+
+enum AlertDirection {
+  ABOVE
+  BELOW
+}
+
+enum AlertChannel {
+  EMAIL
+  LINE
+  PUSH
+}
+
+// ============================================================
+// MARKETPLACE
+// ============================================================
+
+model Listing {
+  id           Int           @id @default(autoincrement())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  cardId       Int
+  card         Card          @relation(fields: [cardId], references: [id])
+  priceJpy     Int
+  priceThb     Float?
+  condition    CardCondition @default(NM)
+  quantity     Int           @default(1)
+  description  String?
+  photos       String[]
+  shipping     String[]
+  location     String?
+  status       ListingStatus @default(ACTIVE)
+  isFeatured   Boolean       @default(false)
+  isBoosted    Boolean       @default(false)
+  boostedUntil DateTime?
+  messages     Message[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([cardId, status])
+  @@index([userId, status])
+  @@index([status, createdAt(sort: Desc)])
+  @@index([isFeatured, status])
+}
+
+enum ListingStatus {
+  ACTIVE
+  SOLD
+  RESERVED
+  EXPIRED
+  CANCELLED
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  listingId  Int
+  listing    Listing  @relation(fields: [listingId], references: [id])
+  senderId   String
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  content    String
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([listingId, createdAt])
+  @@index([receiverId, isRead])
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  reviewerId String
+  reviewer   User     @relation("ReviewsGiven", fields: [reviewerId], references: [id])
+  revieweeId String
+  reviewee   User     @relation("ReviewsReceived", fields: [revieweeId], references: [id])
+  listingId  Int?
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  @@unique([reviewerId, revieweeId, listingId])
+  @@index([revieweeId])
+}
+
+// ============================================================
+// COMMUNITY PRICE
+// ============================================================
+
+model CommunityPrice {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  cardId    Int
+  card      Card     @relation(fields: [cardId], references: [id])
+  priceThb  Int
+  upvotes   Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([cardId, createdAt(sort: Desc)])
+  @@index([userId, createdAt])
+}
