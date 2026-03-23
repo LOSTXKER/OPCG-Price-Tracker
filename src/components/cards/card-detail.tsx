@@ -43,9 +43,8 @@ export interface CardDetailProps {
   } | null
   priceChange24h?: number | null
   priceChange7d?: number | null
-  /** When provided, replaces the default price history placeholder. */
+  communityPrice?: { avgThb: number | null; reportCount: number } | null
   priceHistorySlot?: React.ReactNode
-  /** When provided, replaces the default marketplace placeholder. */
   marketplaceSlot?: React.ReactNode
 }
 
@@ -63,6 +62,7 @@ export function CardDetail({
   latestPrice,
   priceChange24h,
   priceChange7d,
+  communityPrice,
   priceHistorySlot,
   marketplaceSlot,
 }: CardDetailProps) {
@@ -249,6 +249,26 @@ export function CardDetail({
               )}
             </CardContent>
           </Card>
+
+          {communityPrice && communityPrice.reportCount > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">ราคาตลาดไทย (Community)</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-mono text-2xl font-semibold">
+                      {communityPrice.avgThb != null ? `${communityPrice.avgThb} ฿` : "—"}
+                    </p>
+                    <p className="text-muted-foreground text-xs">
+                      เฉลี่ยจาก {communityPrice.reportCount} รายงาน (30 วัน)
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           <Card>
             <CardHeader>

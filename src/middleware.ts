@@ -10,6 +10,8 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/portfolio") ||
     pathname.startsWith("/watchlist") ||
     pathname.startsWith("/marketplace/create") ||
+    pathname.startsWith("/messages") ||
+    pathname.startsWith("/deck-calculator") ||
     pathname === "/profile";
 
   if (needsAuth) {

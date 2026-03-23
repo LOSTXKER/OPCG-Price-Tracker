@@ -20,6 +20,21 @@ const getCardForDetail = cache(async (rawCode: string) => {
   });
 });
 
+const getCommunityPrice = cache(async (cardId: number) => {
+  const result = await prisma.communityPrice.aggregate({
+    where: {
+      cardId,
+      createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
+    },
+    _avg: { priceThb: true },
+    _count: true,
+  });
+  return {
+    avgThb: result._avg.priceThb ? Math.round(result._avg.priceThb) : null,
+    reportCount: result._count,
+  };
+});
+
 const getListingsForCard = cache(async (cardId: number) => {
   return prisma.listing.findMany({
     where: { cardId, status: "ACTIVE" },
@@ -70,7 +85,10 @@ export default async function CardDetailPage(props: {
     data: { viewCount: { increment: 1 } },
   });
 
-  const listings = await getListingsForCard(card.id);
+  const [listings, communityPrice] = await Promise.all([
+    getListingsForCard(card.id),
+    getCommunityPrice(card.id),
+  ]);
 
   const latestRow = card.prices[0];
   const latestPrice =
@@ -164,6 +182,7 @@ export default async function CardDetailPage(props: {
       latestPrice={latestPrice}
       priceChange24h={card.priceChange24h}
       priceChange7d={card.priceChange7d}
+      communityPrice={communityPrice}
       priceHistorySlot={<CardDetailPriceChart data={chartData} />}
       marketplaceSlot={marketplaceSlot}
     />

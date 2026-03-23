@@ -54,8 +54,11 @@ async function ensurePortfolioId(): Promise<number> {
   return created.portfolio.id;
 }
 
+type HistoryPoint = { label: string; value: number };
+
 export default function PortfolioPage() {
   const [portfolios, setPortfolios] = useState<PortfolioRow[]>([]);
+  const [history, setHistory] = useState<HistoryPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -65,14 +68,32 @@ export default function PortfolioPage() {
 
   const load = useCallback(async () => {
     setError(null);
-    const res = await fetch("/api/portfolio");
-    if (!res.ok) {
+    const [portfolioRes, historyRes] = await Promise.all([
+      fetch("/api/portfolio"),
+      fetch("/api/portfolio/history").catch(() => null),
+    ]);
+    if (!portfolioRes.ok) {
       setError("โหลดข้อมูลไม่สำเร็จ");
       setLoading(false);
       return;
     }
-    const data = (await res.json()) as { portfolios: PortfolioRow[] };
+    const data = (await portfolioRes.json()) as { portfolios: PortfolioRow[] };
     setPortfolios(data.portfolios ?? []);
+
+    if (historyRes?.ok) {
+      const hData = (await historyRes.json()) as {
+        snapshots: { totalJpy: number; snapshotAt: string }[];
+      };
+      setHistory(
+        (hData.snapshots ?? []).map((s) => ({
+          label: new Date(s.snapshotAt).toLocaleDateString("th-TH", {
+            month: "short",
+            day: "numeric",
+          }),
+          value: s.totalJpy,
+        }))
+      );
+    }
     setLoading(false);
   }, []);
 
@@ -187,7 +208,7 @@ export default function PortfolioPage() {
         </div>
       ) : (
         <>
-          <PortfolioSummary {...summary} />
+          <PortfolioSummary {...summary} history={history} />
           <div className="space-y-3">
             {flatItems.map((it) => (
               <PortfolioItem

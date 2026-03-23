@@ -8,6 +8,23 @@ datasource db {
 }
 
 // ============================================================
+// GAME (Multi-TCG)
+// ============================================================
+
+model Game {
+  id        Int       @id @default(autoincrement())
+  slug      String    @unique
+  name      String
+  nameEn    String?
+  logoUrl   String?
+  isActive  Boolean   @default(true)
+  sets      CardSet[]
+  createdAt DateTime  @default(now())
+
+  @@index([slug])
+}
+
+// ============================================================
 // CARD DATA
 // ============================================================
 
@@ -17,6 +34,8 @@ model CardSet {
   name        String
   nameEn      String?
   type        SetType
+  gameId      Int?
+  game        Game?     @relation(fields: [gameId], references: [id])
   releaseDate DateTime?
   cardCount   Int       @default(0)
   cards       Card[]
@@ -24,6 +43,7 @@ model CardSet {
   updatedAt   DateTime  @updatedAt
 
   @@index([code])
+  @@index([gameId])
 }
 
 enum SetType {
@@ -69,6 +89,8 @@ model Card {
   priceAlerts     PriceAlert[]
   listings        Listing[]
   communityPrices CommunityPrice[]
+  deckLeaders     Deck[]           @relation("DeckLeader")
+  deckCards       DeckCard[]
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 
@@ -134,6 +156,7 @@ model User {
   reviewsGiven      Review[]         @relation("ReviewsGiven")
   reviewsReceived   Review[]         @relation("ReviewsReceived")
   communityPrices   CommunityPrice[]
+  decks             Deck[]
   sellerRating      Float?
   sellerReviewCount Int              @default(0)
   createdAt         DateTime         @default(now())
@@ -156,15 +179,30 @@ enum UserTier {
 // ============================================================
 
 model Portfolio {
-  id        Int             @id @default(autoincrement())
+  id        Int                 @id @default(autoincrement())
   userId    String
-  user      User            @relation(fields: [userId], references: [id])
-  name      String          @default("Default")
+  user      User                @relation(fields: [userId], references: [id])
+  name      String              @default("Default")
   items     PortfolioItem[]
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  snapshots PortfolioSnapshot[]
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
 
   @@index([userId])
+}
+
+model PortfolioSnapshot {
+  id          Int      @id @default(autoincrement())
+  portfolioId Int
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  totalJpy    Int
+  totalThb    Float?
+  totalCost   Int
+  pnl         Int
+  cardCount   Int
+  snapshotAt  DateTime @default(now())
+
+  @@index([portfolioId, snapshotAt(sort: Desc)])
 }
 
 model PortfolioItem {
@@ -312,15 +350,58 @@ model Review {
 // ============================================================
 
 model CommunityPrice {
-  id        Int      @id @default(autoincrement())
+  id        Int                  @id @default(autoincrement())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User                 @relation(fields: [userId], references: [id])
   cardId    Int
-  card      Card     @relation(fields: [cardId], references: [id])
+  card      Card                 @relation(fields: [cardId], references: [id])
   priceThb  Int
-  upvotes   Int      @default(0)
-  createdAt DateTime @default(now())
+  upvotes   Int                  @default(0)
+  votes     CommunityPriceVote[]
+  createdAt DateTime             @default(now())
 
   @@index([cardId, createdAt(sort: Desc)])
   @@index([userId, createdAt])
+}
+
+model CommunityPriceVote {
+  id               Int            @id @default(autoincrement())
+  communityPriceId Int
+  communityPrice   CommunityPrice @relation(fields: [communityPriceId], references: [id], onDelete: Cascade)
+  userId           String
+  createdAt        DateTime       @default(now())
+
+  @@unique([communityPriceId, userId])
+  @@index([userId])
+}
+
+// ============================================================
+// DECK CALCULATOR
+// ============================================================
+
+model Deck {
+  id        Int        @id @default(autoincrement())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+  name      String
+  leaderId  Int?
+  leader    Card?      @relation("DeckLeader", fields: [leaderId], references: [id])
+  cards     DeckCard[]
+  isPublic  Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([userId])
+}
+
+model DeckCard {
+  id       Int  @id @default(autoincrement())
+  deckId   Int
+  deck     Deck @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  cardId   Int
+  card     Card @relation(fields: [cardId], references: [id])
+  quantity Int  @default(1)
+
+  @@unique([deckId, cardId])
+  @@index([deckId])
 }

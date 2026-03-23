@@ -28,17 +28,8 @@ export interface PortfolioSummaryProps {
   unrealizedPnl: number
   unrealizedPnlPercent: number
   cardCount: number
+  history?: { label: string; value: number }[]
 }
-
-const PLACEHOLDER_TREND = [
-  { label: "Mon", value: 0.92 },
-  { label: "Tue", value: 0.95 },
-  { label: "Wed", value: 0.93 },
-  { label: "Thu", value: 0.97 },
-  { label: "Fri", value: 1.0 },
-  { label: "Sat", value: 0.99 },
-  { label: "Sun", value: 1.0 },
-]
 
 export function PortfolioSummary({
   totalValueJpy,
@@ -47,13 +38,12 @@ export function PortfolioSummary({
   unrealizedPnl,
   unrealizedPnlPercent,
   cardCount,
+  history,
 }: PortfolioSummaryProps) {
   const chartFillId = `portfolioValueFill-${useId().replace(/:/g, "")}`
   const pnlPositive = unrealizedPnl >= 0
-  const chartData = PLACEHOLDER_TREND.map((row, i) => ({
-    ...row,
-    value: Math.round(totalValueJpy * row.value * (0.85 + i * 0.02)),
-  }))
+  const hasHistory = history && history.length > 1
+  const chartData = hasHistory ? history : undefined
 
   return (
     <Card>
@@ -109,51 +99,53 @@ export function PortfolioSummary({
           </div>
         </div>
 
-        <div>
-          <p className="text-muted-foreground mb-2 text-xs font-medium tracking-wide uppercase">
-            Value over time (sample)
-          </p>
-          <div className="text-muted-foreground h-40 w-full text-xs">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id={chartFillId} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.35} />
-                    <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                <XAxis
-                  dataKey="label"
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{ fill: "var(--muted-foreground)", fontSize: 10 }}
-                />
-                <Tooltip
-                  contentStyle={{
-                    borderRadius: 8,
-                    border: "1px solid var(--border)",
-                    background: "var(--popover)",
-                    fontSize: 12,
-                  }}
-                  formatter={(value) => {
-                    const n = typeof value === "number" ? value : Number(value)
-                    if (value == null || Number.isNaN(n)) return ["—", "Value"]
-                    return [`¥${n.toLocaleString()}`, "Value"]
-                  }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="value"
-                  stroke="var(--primary)"
-                  strokeWidth={2}
-                  fill={`url(#${chartFillId})`}
-                  isAnimationActive={false}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+        {chartData && (
+          <div>
+            <p className="text-muted-foreground mb-2 text-xs font-medium tracking-wide uppercase">
+              Value over time
+            </p>
+            <div className="text-muted-foreground h-40 w-full text-xs">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id={chartFillId} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.35} />
+                      <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                  <XAxis
+                    dataKey="label"
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 10 }}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: 8,
+                      border: "1px solid var(--border)",
+                      background: "var(--popover)",
+                      fontSize: 12,
+                    }}
+                    formatter={(value) => {
+                      const n = typeof value === "number" ? value : Number(value)
+                      if (value == null || Number.isNaN(n)) return ["—", "Value"]
+                      return [`¥${n.toLocaleString()}`, "Value"]
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="value"
+                    stroke="var(--primary)"
+                    strokeWidth={2}
+                    fill={`url(#${chartFillId})`}
+                    isAnimationActive={false}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-        </div>
+        )}
       </CardContent>
     </Card>
   )
