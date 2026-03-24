@@ -5,11 +5,13 @@ import { useCallback, useEffect, useState } from "react";
 
 import { CardItem } from "@/components/cards/card-item";
 import { CardGrid } from "@/components/cards/card-grid";
+import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { Button } from "@/components/ui/button";
 
 type WatchCard = {
   id: number;
   cardCode: string;
+  baseCode: string | null;
   nameJp: string;
   nameEn: string | null;
   rarity: string;
@@ -63,27 +65,26 @@ export default function WatchlistPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto max-w-5xl px-4 py-8">
-        <p className="text-muted-foreground text-sm">กำลังโหลด…</p>
+      <div className="space-y-6">
+        <div className="panel animate-pulse p-8">
+          <div className="h-4 w-32 rounded bg-muted" />
+          <div className="mt-3 h-6 w-48 rounded bg-muted" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto max-w-5xl space-y-6 px-4 py-8">
+    <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Watchlist</h1>
-        <p className="text-muted-foreground text-sm">การ์ดที่คุณติดตาม</p>
+        <h1 className="font-sans text-2xl font-bold tracking-tight">Watchlist</h1>
+        <p className="mt-0.5 text-sm text-muted-foreground">การ์ดที่คุณติดตาม</p>
       </div>
 
       {error ? <p className="text-destructive text-sm">{error}</p> : null}
 
       {items.length === 0 ? (
-        <div className="bg-muted/40 rounded-xl border border-dashed py-16 text-center">
-          <p className="text-muted-foreground text-sm">
-            เพิ่มการ์ดเข้า Watchlist โดยกดดาว ⭐
-          </p>
-        </div>
+        <KumaEmptyState preset="empty-watchlist" />
       ) : (
         <CardGrid>
           {items.map((entry) => (
@@ -103,7 +104,7 @@ export default function WatchlistPage() {
                 type="button"
                 size="icon-sm"
                 variant="secondary"
-                className="absolute top-2 right-2 z-10 shadow-md"
+                className="absolute top-2 right-2 z-10 rounded-full bg-background/80 backdrop-blur-sm shadow-sm"
                 aria-label="ลบออกจาก Watchlist"
                 disabled={removing === entry.cardId}
                 onClick={() => void remove(entry.cardId)}

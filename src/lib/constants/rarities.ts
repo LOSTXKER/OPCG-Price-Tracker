@@ -21,6 +21,7 @@ export const RARITIES: RarityInfo[] = [
   { code: "P", name: "Promo", order: 2, color: "#06B6D4" },
   { code: "P-P", name: "Parallel Promo", order: 2, color: "#06B6D4" },
   { code: "P-L", name: "Parallel Leader", order: 8, color: "#F97316" },
+  { code: "DON", name: "DON!!", order: 1, color: "#EA580C" },
 ];
 
 export const RARITY_MAP = new Map(RARITIES.map((r) => [r.code, r]));

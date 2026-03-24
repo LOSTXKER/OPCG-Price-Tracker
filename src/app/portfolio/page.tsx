@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { Plus } from "lucide-react";
 
+import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { PortfolioItem } from "@/components/portfolio/portfolio-item";
 import { PortfolioSummary } from "@/components/portfolio/portfolio-summary";
 import { Button } from "@/components/ui/button";
@@ -13,12 +15,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useCardSearch, type CardSearchResult } from "@/hooks/use-card-search";
 import { jpyToThb } from "@/lib/utils/currency";
 
-type CardRow = {
+type PortfolioCardRow = {
   id: number;
   cardCode: string;
+  baseCode: string | null;
   nameJp: string;
+  nameEn: string | null;
   imageUrl: string | null;
   latestPriceJpy: number | null;
 };
@@ -28,7 +33,7 @@ type ItemRow = {
   quantity: number;
   purchasePrice: number | null;
   condition: string;
-  card: CardRow;
+  card: PortfolioCardRow;
 };
 
 type PortfolioRow = {
@@ -62,8 +67,7 @@ export default function PortfolioPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const [searchResults, setSearchResults] = useState<CardRow[]>([]);
+  const cardSearch = useCardSearch();
   const [adding, setAdding] = useState(false);
 
   const load = useCallback(async () => {
@@ -101,21 +105,6 @@ export default function PortfolioPage() {
     void load();
   }, [load]);
 
-  useEffect(() => {
-    const q = search.trim();
-    if (q.length < 2) {
-      setSearchResults([]);
-      return;
-    }
-    const t = window.setTimeout(() => {
-      void fetch(`/api/cards?search=${encodeURIComponent(q)}&limit=20`)
-        .then((r) => r.json())
-        .then((j: { cards: CardRow[] }) => setSearchResults(j.cards ?? []))
-        .catch(() => setSearchResults([]));
-    }, 300);
-    return () => window.clearTimeout(t);
-  }, [search]);
-
   const flatItems = useMemo(() => portfolios.flatMap((p) => p.items), [portfolios]);
 
   const summary = useMemo(() => {
@@ -144,7 +133,7 @@ export default function PortfolioPage() {
     if (res.ok) void load();
   };
 
-  const addCard = async (card: CardRow) => {
+  const addCard = async (card: CardSearchResult) => {
     setAdding(true);
     setError(null);
     try {
@@ -165,8 +154,7 @@ export default function PortfolioPage() {
         return;
       }
       setDialogOpen(false);
-      setSearch("");
-      setSearchResults([]);
+      cardSearch.reset();
       void load();
     } catch {
       setError("เพิ่มการ์ดไม่สำเร็จ");
@@ -177,20 +165,28 @@ export default function PortfolioPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto max-w-2xl px-4 py-8">
-        <p className="text-muted-foreground text-sm">กำลังโหลด…</p>
+      <div className="space-y-6">
+        <div className="panel animate-pulse p-8">
+          <div className="h-4 w-32 rounded bg-muted" />
+          <div className="mt-3 h-10 w-48 rounded bg-muted" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto max-w-2xl space-y-6 px-4 py-8">
+    <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Portfolio</h1>
-          <p className="text-muted-foreground text-sm">มูลค่าคอลเลกชันของคุณ</p>
+          <h1 className="font-sans text-2xl font-bold tracking-tight">
+            Collection
+          </h1>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            ติดตามมูลค่าคอลเลกชันของคุณ
+          </p>
         </div>
-        <Button type="button" onClick={() => setDialogOpen(true)}>
+        <Button type="button" onClick={() => setDialogOpen(true)} className="gap-1.5">
+          <Plus className="size-4" />
           เพิ่มการ์ด
         </Button>
       </div>
@@ -198,23 +194,60 @@ export default function PortfolioPage() {
       {error ? <p className="text-destructive text-sm">{error}</p> : null}
 
       {flatItems.length === 0 ? (
-        <div className="bg-muted/40 flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed py-16 px-6 text-center">
-          <p className="text-muted-foreground max-w-sm text-sm">
-            เพิ่มการ์ดใบแรกเข้า Portfolio
-          </p>
-          <Button type="button" onClick={() => setDialogOpen(true)}>
-            เพิ่มการ์ด
-          </Button>
-        </div>
+        <KumaEmptyState
+          preset="empty-portfolio"
+          action={
+            <Button type="button" onClick={() => setDialogOpen(true)} className="gap-1.5">
+              <Plus className="size-4" />
+              เพิ่มการ์ด
+            </Button>
+          }
+        />
       ) : (
         <>
+          {/* Hero value */}
+          <div className="panel p-6">
+            <p className="text-xs text-muted-foreground uppercase tracking-wider">
+              Total Value
+            </p>
+            <p className="mt-1 font-mono text-4xl font-bold tracking-tight tabular-nums">
+              ¥{summary.totalValueJpy.toLocaleString()}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-4 text-sm">
+              <span className="text-muted-foreground font-mono tabular-nums">
+                ~{Math.round(summary.totalValueThb).toLocaleString()} ฿
+              </span>
+              <span
+                className={
+                  summary.unrealizedPnl >= 0
+                    ? "font-mono font-semibold text-price-up tabular-nums"
+                    : "font-mono font-semibold text-price-down tabular-nums"
+                }
+              >
+                {summary.unrealizedPnl >= 0 ? "+" : ""}
+                ¥{summary.unrealizedPnl.toLocaleString()} (
+                {summary.unrealizedPnlPercent >= 0 ? "+" : ""}
+                {summary.unrealizedPnlPercent.toFixed(1)}%)
+              </span>
+              <span className="text-muted-foreground">
+                {summary.cardCount} ใบ
+              </span>
+            </div>
+          </div>
+
           <PortfolioSummary {...summary} history={history} />
+
           <div className="space-y-3">
+            <h2 className="font-sans text-base font-semibold">
+              Holdings
+            </h2>
             {flatItems.map((it) => (
               <PortfolioItem
                 key={it.id}
                 cardCode={it.card.cardCode}
+                baseCode={it.card.baseCode}
                 nameJp={it.card.nameJp}
+                nameEn={it.card.nameEn}
                 imageUrl={it.card.imageUrl}
                 quantity={it.quantity}
                 purchasePrice={it.purchasePrice}
@@ -231,30 +264,37 @@ export default function PortfolioPage() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>ค้นหาการ์ด</DialogTitle>
-            <DialogDescription>พิมพ์ชื่อหรือรหัสการ์ดแล้วเลือกจากรายการ</DialogDescription>
+            <DialogDescription>
+              พิมพ์ชื่อหรือรหัสการ์ดแล้วเลือกจากรายการ
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <Input
               placeholder="ค้นหา…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={cardSearch.query}
+              onChange={(e) => cardSearch.setQuery(e.target.value)}
               autoComplete="off"
+              className=""
             />
-            <div className="max-h-60 space-y-1 overflow-auto rounded-md border p-1">
-              {search.trim().length < 2 ? (
-                <p className="text-muted-foreground px-2 py-3 text-sm">พิมพ์อย่างน้อย 2 ตัวอักษร</p>
-              ) : searchResults.length === 0 ? (
-                <p className="text-muted-foreground px-2 py-3 text-sm">ไม่พบผลลัพธ์</p>
+            <div className="max-h-60 space-y-1 overflow-auto rounded-lg border border-border/50 p-1">
+              {cardSearch.query.trim().length < 2 ? (
+                <p className="text-muted-foreground px-2 py-3 text-sm">
+                  พิมพ์อย่างน้อย 2 ตัวอักษร
+                </p>
+              ) : cardSearch.results.length === 0 ? (
+                <p className="text-muted-foreground px-2 py-3 text-sm">
+                  ไม่พบผลลัพธ์
+                </p>
               ) : (
-                searchResults.map((c) => (
+                cardSearch.results.map((c) => (
                   <button
                     key={c.id}
                     type="button"
                     disabled={adding}
-                    className="hover:bg-muted block w-full rounded-md px-3 py-2 text-left text-sm"
+                    className="block w-full rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-accent"
                     onClick={() => void addCard(c)}
                   >
-                    <span className="font-medium">{c.nameJp}</span>
+                    <span className="font-medium">{c.nameEn ?? c.nameJp}</span>
                     <span className="text-muted-foreground block font-mono text-xs">
                       {c.cardCode}
                     </span>

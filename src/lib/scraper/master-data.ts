@@ -56,7 +56,14 @@ export async function scrapeMasterData(setCodes?: string[]) {
           cardName = cardName.replace(rarityMatch[0], "").trim();
         }
 
-        const isParallel = cardName.includes("パラレル") || rarity.startsWith("P-");
+        if (!rarity && cardName.includes("ドン!!")) {
+          rarity = "DON";
+        }
+
+        const isParallel = cardName.includes("パラレル") || rarity.startsWith("P-") || rarity === "SP";
+        if (isParallel && rarity && !rarity.startsWith("P-") && rarity !== "SP" && rarity !== "DON") {
+          rarity = `P-${rarity}`;
+        }
         if (isParallel) {
           cardName = cardName.replace(/[（(]パラレル[）)]/, "").trim();
         }

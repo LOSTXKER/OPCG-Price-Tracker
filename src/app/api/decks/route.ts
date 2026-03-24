@@ -16,10 +16,10 @@ export async function GET() {
       where: { userId: dbUser.id },
       orderBy: { updatedAt: "desc" },
       include: {
-        leader: { select: { id: true, cardCode: true, nameJp: true, imageUrl: true, latestPriceJpy: true } },
+        leader: { select: { id: true, cardCode: true, nameJp: true, nameEn: true, imageUrl: true, latestPriceJpy: true } },
         cards: {
           include: {
-            card: { select: { id: true, cardCode: true, nameJp: true, rarity: true, imageUrl: true, latestPriceJpy: true, cardType: true } },
+            card: { select: { id: true, cardCode: true, nameJp: true, nameEn: true, rarity: true, imageUrl: true, latestPriceJpy: true, cardType: true } },
           },
         },
         _count: { select: { cards: true } },
@@ -63,10 +63,10 @@ export async function POST(request: NextRequest) {
           : undefined,
       },
       include: {
-        leader: { select: { id: true, cardCode: true, nameJp: true, imageUrl: true, latestPriceJpy: true } },
+        leader: { select: { id: true, cardCode: true, nameJp: true, nameEn: true, imageUrl: true, latestPriceJpy: true } },
         cards: {
           include: {
-            card: { select: { id: true, cardCode: true, nameJp: true, rarity: true, imageUrl: true, latestPriceJpy: true, cardType: true } },
+            card: { select: { id: true, cardCode: true, nameJp: true, nameEn: true, rarity: true, imageUrl: true, latestPriceJpy: true, cardType: true } },
           },
         },
       },

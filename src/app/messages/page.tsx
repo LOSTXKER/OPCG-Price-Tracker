@@ -13,7 +13,7 @@ type Conversation = {
     id: number;
     priceJpy: number;
     status: string;
-    card: { cardCode: string; nameJp: string; imageUrl: string | null };
+    card: { cardCode: string; nameJp: string; nameEn?: string | null; imageUrl: string | null };
   };
   otherUser: { id: string; displayName: string | null; avatarUrl: string | null };
   lastMessage: string;
@@ -85,16 +85,15 @@ export default function MessagesPage() {
               {conv.listing.card.imageUrl && (
                 <Image
                   src={conv.listing.card.imageUrl}
-                  alt={conv.listing.card.nameJp}
+                  alt={conv.listing.card.nameEn ?? conv.listing.card.nameJp}
                   width={40}
                   height={56}
                   className="rounded"
-                  unoptimized
                 />
               )}
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">
-                  {conv.listing.card.nameJp}
+                  {conv.listing.card.nameEn ?? conv.listing.card.nameJp}
                 </p>
                 <p className="text-muted-foreground truncate text-xs">
                   {conv.otherUser.displayName ?? "ผู้ใช้"}: {conv.lastMessage}

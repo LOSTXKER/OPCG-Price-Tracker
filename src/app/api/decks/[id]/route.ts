@@ -17,10 +17,10 @@ export async function GET(
     const deck = await prisma.deck.findUnique({
       where: { id: deckId },
       include: {
-        leader: { select: { id: true, cardCode: true, nameJp: true, imageUrl: true, latestPriceJpy: true, rarity: true } },
+        leader: { select: { id: true, cardCode: true, nameJp: true, nameEn: true, imageUrl: true, latestPriceJpy: true, rarity: true } },
         cards: {
           include: {
-            card: { select: { id: true, cardCode: true, nameJp: true, rarity: true, imageUrl: true, latestPriceJpy: true, cardType: true } },
+            card: { select: { id: true, cardCode: true, nameJp: true, nameEn: true, rarity: true, imageUrl: true, latestPriceJpy: true, cardType: true } },
           },
         },
         user: { select: { displayName: true, avatarUrl: true } },
@@ -105,10 +105,10 @@ export async function PATCH(
         ...(body.isPublic !== undefined ? { isPublic: body.isPublic } : {}),
       },
       include: {
-        leader: { select: { id: true, cardCode: true, nameJp: true, imageUrl: true, latestPriceJpy: true } },
+        leader: { select: { id: true, cardCode: true, nameJp: true, nameEn: true, imageUrl: true, latestPriceJpy: true } },
         cards: {
           include: {
-            card: { select: { id: true, cardCode: true, nameJp: true, rarity: true, imageUrl: true, latestPriceJpy: true, cardType: true } },
+            card: { select: { id: true, cardCode: true, nameJp: true, nameEn: true, rarity: true, imageUrl: true, latestPriceJpy: true, cardType: true } },
           },
         },
       },

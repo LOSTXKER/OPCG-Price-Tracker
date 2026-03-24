@@ -9,7 +9,9 @@ import { cn } from "@/lib/utils"
 
 export interface PortfolioItemProps {
   cardCode: string
+  baseCode?: string | null
   nameJp: string
+  nameEn?: string | null
   imageUrl?: string | null
   quantity: number
   purchasePrice?: number | null
@@ -29,7 +31,9 @@ function conditionBadgeVariant(condition: string) {
 
 export function PortfolioItem({
   cardCode,
+  baseCode,
   nameJp,
+  nameEn,
   imageUrl,
   quantity,
   purchasePrice,
@@ -46,23 +50,22 @@ export function PortfolioItem({
       ? ((currentPrice - purchasePrice) / purchasePrice) * 100
       : null
   const pnlPositive = lineCost != null ? lineCost >= 0 : null
-  const detailHref = `/cards/${encodeURIComponent(cardCode)}`
+  const detailHref = `/cards/${encodeURIComponent(baseCode ?? cardCode)}`
 
   return (
     <div className="bg-card flex gap-3 rounded-xl border p-3 ring-1 ring-foreground/10">
       <Link
         href={detailHref}
         className="bg-muted relative h-[4.5rem] w-12 shrink-0 overflow-hidden rounded-md"
-        aria-label={`View ${nameJp}`}
+        aria-label={`View ${nameEn ?? nameJp}`}
       >
         {imageUrl ? (
           <Image
             src={imageUrl}
-            alt={`${nameJp} (${cardCode})`}
+            alt={`${nameEn ?? nameJp} (${cardCode})`}
             fill
             sizes="48px"
             className="object-cover"
-            unoptimized
           />
         ) : (
           <span className="text-muted-foreground flex size-full items-center justify-center text-[10px]">
@@ -78,7 +81,7 @@ export function PortfolioItem({
               href={detailHref}
               className="hover:text-primary line-clamp-2 font-medium leading-snug underline-offset-4 hover:underline"
             >
-              {nameJp}
+              {nameEn ?? nameJp}
             </Link>
             <p className="text-muted-foreground font-mono text-xs">{cardCode}</p>
           </div>

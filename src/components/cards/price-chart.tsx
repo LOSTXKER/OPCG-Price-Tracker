@@ -13,7 +13,8 @@ import {
 import { Lock } from "lucide-react"
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { jpyToThb } from "@/lib/utils/currency"
+import { formatJpy, formatThb, formatUsd, jpyToThb, jpyToUsd } from "@/lib/utils/currency"
+import { useUIStore } from "@/stores/ui-store"
 
 const LINE_COLOR = "#3B82F6"
 
@@ -26,7 +27,7 @@ const PERIODS: { value: string; label: string; locked: boolean }[] = [
 ]
 
 export interface PriceChartProps {
-  data: { scrapedAt: string; priceJpy: number; priceThb?: number | null }[]
+  data: { scrapedAt: string; priceJpy: number | null; priceThb?: number | null; source?: string }[]
   period: string
   onPeriodChange: (period: string) => void
 }
@@ -53,40 +54,42 @@ type ChartTooltipRow = {
   priceThb?: number | null
 }
 
+function formatPriceByCurrency(jpy: number, currency: string): string {
+  switch (currency) {
+    case "THB": return `~${formatThb(Math.round(jpyToThb(jpy)))}`
+    case "USD": return formatUsd(jpyToUsd(jpy))
+    default: return formatJpy(jpy)
+  }
+}
+
 function ChartTooltip(props: {
   active?: boolean
   payload?: ReadonlyArray<{ payload?: ChartTooltipRow }>
+  currency?: string
 }) {
-  const { active, payload } = props
+  const { active, payload, currency = "JPY" } = props
   if (!active || !payload?.length) return null
   const row = payload[0].payload as ChartTooltipRow | undefined
   if (!row) return null
-  const thb =
-    row.priceThb != null ? row.priceThb : jpyToThb(row.priceJpy)
   return (
     <div className="bg-popover text-popover-foreground rounded-lg border px-3 py-2 text-xs shadow-md">
       <p className="text-muted-foreground mb-1.5 font-medium">
         {formatTooltipDate(row.scrapedAt)}
       </p>
       <p className="font-mono font-semibold">
-        {new Intl.NumberFormat("ja-JP", {
-          style: "currency",
-          currency: "JPY",
-          maximumFractionDigits: 0,
-        }).format(row.priceJpy)}
+        {formatPriceByCurrency(row.priceJpy, currency)}
       </p>
-      <p className="text-muted-foreground font-mono">
-        {new Intl.NumberFormat("th-TH", {
-          style: "currency",
-          currency: "THB",
-          maximumFractionDigits: 0,
-        }).format(thb)}
-      </p>
+      {currency !== "JPY" && (
+        <p className="text-muted-foreground font-mono">
+          {formatJpy(row.priceJpy)}
+        </p>
+      )}
     </div>
   )
 }
 
 export function PriceChart({ data, period, onPeriodChange }: PriceChartProps) {
+  const currency = useUIStore((s) => s.currency)
   const chartId = useId().replace(/:/g, "")
   const gradientId = `priceArea-${chartId}`
 
@@ -154,10 +157,10 @@ export function PriceChart({ data, period, onPeriodChange }: PriceChartProps) {
               tickLine={false}
               axisLine={false}
               className="text-muted-foreground font-mono"
-              tickFormatter={(v) => `¥${Number(v).toLocaleString()}`}
+              tickFormatter={(v) => formatPriceByCurrency(Number(v), currency)}
               width={56}
             />
-            <Tooltip content={ChartTooltip} />
+            <Tooltip content={<ChartTooltip currency={currency} />} />
             <Area
               type="monotone"
               dataKey="priceJpy"

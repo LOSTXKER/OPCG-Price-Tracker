@@ -1,128 +1,100 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { Bell, Search } from "lucide-react";
-import { motion } from "motion/react";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button, buttonVariants } from "@/components/ui/button";
 import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
+  BookOpen,
+  LayoutGrid,
+  Package,
+  Search,
+  ShoppingBag,
+  TrendingUp,
+  User,
+} from "lucide-react";
+
+import { Logo } from "@/components/brand/logo";
 import { CurrencyToggle } from "@/components/shared/currency-toggle";
+import { LanguageToggle } from "@/components/shared/language-toggle";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { cn } from "@/lib/utils";
 
-export type HeaderUser = {
-  name: string;
-  imageUrl?: string | null;
-};
+const navLinks = [
+  { href: "/", label: "ตลาด", icon: TrendingUp },
+  { href: "/boxes", label: "ชุดการ์ด", icon: Package },
+  { href: "/cards", label: "การ์ดเดี่ยว", icon: LayoutGrid },
+  { href: "/marketplace", label: "ซื้อขาย", icon: ShoppingBag },
+  { href: "/guide", label: "คู่มือ", icon: BookOpen },
+] as const;
 
-export function Header({
-  user = null,
-  className,
-}: {
-  user?: HeaderUser | null;
-  className?: string;
-}) {
+function isActive(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+export function Header() {
   const router = useRouter();
+  const pathname = usePathname() ?? "/";
   const [query, setQuery] = useState("");
-
-  const initials = user?.name
-    ? user.name
-        .split(/\s+/)
-        .map((w) => w[0])
-        .join("")
-        .slice(0, 2)
-        .toUpperCase()
-    : "";
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const q = query.trim();
     if (!q) return;
     router.push(`/cards?search=${encodeURIComponent(q)}`);
+    setQuery("");
   };
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-40 hidden border-b border-border bg-background md:block",
-        className
-      )}
-    >
-      <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4 lg:px-6">
-        <motion.div
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        >
-          <Link
-            href="/"
-            className="shrink-0 text-sm font-semibold tracking-tight text-foreground transition-colors hover:text-primary lg:text-base"
-          >
-            TCG Price Tracker
-          </Link>
-        </motion.div>
+    <header className="sticky top-0 z-50 hidden border-b border-border/60 bg-background/80 backdrop-blur-xl md:block">
+      <div className="mx-auto flex h-11 max-w-6xl items-center gap-6 px-4 md:px-6">
+        <Link href="/" className="shrink-0">
+          <Logo size="sm" />
+        </Link>
 
-        <form onSubmit={handleSearch} className="mx-auto min-w-0 max-w-xl flex-1">
-          <InputGroup className="border-border bg-card/80 shadow-sm">
-            <InputGroupAddon align="inline-start" className="pl-2.5">
-              <Search className="size-4 text-muted-foreground" aria-hidden />
-            </InputGroupAddon>
-            <InputGroupInput
-              type="search"
-              placeholder="ค้นหาการ์ด..."
-              className="h-9 text-sm"
-              aria-label="ค้นหาการ์ด"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </InputGroup>
+        <nav className="flex items-center gap-1">
+          {navLinks.map((link) => {
+            const active = isActive(pathname, link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "px-3 py-1.5 text-[13px] font-medium transition-colors rounded-md",
+                  active
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <form onSubmit={handleSearch} className="relative ml-auto max-w-xs flex-1">
+          <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="search"
+            placeholder="ค้นหาการ์ด..."
+            className="h-8 w-full rounded-lg border-0 bg-muted/60 pl-8 pr-3 text-[13px] outline-none transition-colors placeholder:text-muted-foreground/60 focus:bg-muted focus:ring-1 focus:ring-border"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search"
+          />
         </form>
 
-        <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+        <div className="flex items-center">
+          <LanguageToggle />
           <CurrencyToggle />
           <ThemeToggle />
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="text-foreground"
-            aria-label="การแจ้งเตือน"
+          <Link
+            href="/login"
+            className="flex h-8 items-center gap-1.5 rounded-lg px-3 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
-            <Bell className="size-4" />
-          </Button>
-          {user ? (
-            <Link
-              href="/profile"
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "icon" }),
-                "rounded-full text-foreground"
-              )}
-              aria-label={user.name}
-            >
-              <Avatar size="sm">
-                {user.imageUrl ? (
-                  <AvatarImage src={user.imageUrl} alt="" />
-                ) : null}
-                <AvatarFallback className="bg-surface-elevated text-xs text-foreground">
-                  {initials || "?"}
-                </AvatarFallback>
-              </Avatar>
-            </Link>
-          ) : (
-            <Link
-              href="/login"
-              className={cn(buttonVariants({ variant: "default", size: "sm" }))}
-            >
-              เข้าสู่ระบบ
-            </Link>
-          )}
+            <User className="size-3.5" />
+            <span className="hidden lg:inline">เข้าสู่ระบบ</span>
+          </Link>
         </div>
       </div>
     </header>

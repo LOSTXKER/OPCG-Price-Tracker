@@ -14,27 +14,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { PriceDisplay } from "@/components/shared/price-display";
-
-type CardData = {
-  id: number;
-  cardCode: string;
-  nameJp: string;
-  rarity: string;
-  imageUrl: string | null;
-  latestPriceJpy: number | null;
-  cardType: string;
-};
-
-type DeckCardEntry = {
-  card: CardData;
-  quantity: number;
-};
+import { useCardSearch, type CardSearchResult } from "@/hooks/use-card-search";
 
 type DeckRow = {
   id: number;
   name: string;
-  leader: CardData | null;
-  cards: { card: CardData; quantity: number }[];
+  leader: CardSearchResult | null;
+  cards: { card: CardSearchResult; quantity: number }[];
 };
 
 export default function DeckCalculatorPage() {
@@ -44,8 +30,9 @@ export default function DeckCalculatorPage() {
   const [error, setError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchType, setSearchType] = useState<"leader" | "card">("card");
-  const [search, setSearch] = useState("");
-  const [searchResults, setSearchResults] = useState<CardData[]>([]);
+  const cardSearch = useCardSearch({
+    typeFilter: searchType === "leader" ? "LEADER" : undefined,
+  });
   const [newDeckName, setNewDeckName] = useState("");
 
   const loadDecks = useCallback(async () => {
@@ -75,19 +62,6 @@ export default function DeckCalculatorPage() {
     void loadDecks();
   }, [loadDecks]);
 
-  useEffect(() => {
-    const q = search.trim();
-    if (q.length < 2) { setSearchResults([]); return; }
-    const typeFilter = searchType === "leader" ? "&type=LEADER" : "";
-    const t = window.setTimeout(() => {
-      void fetch(`/api/cards?search=${encodeURIComponent(q)}&limit=20${typeFilter}`)
-        .then((r) => r.json())
-        .then((j: { cards: CardData[] }) => setSearchResults(j.cards ?? []))
-        .catch(() => setSearchResults([]));
-    }, 300);
-    return () => window.clearTimeout(t);
-  }, [search, searchType]);
-
   const createDeck = async () => {
     const name = newDeckName.trim();
     if (!name) return;
@@ -108,7 +82,7 @@ export default function DeckCalculatorPage() {
     }
   };
 
-  const addCard = async (card: CardData) => {
+  const addCard = async (card: CardSearchResult) => {
     if (!activeDeck) return;
     try {
       const res = await fetch(`/api/decks/${activeDeck.id}`, {
@@ -129,7 +103,7 @@ export default function DeckCalculatorPage() {
       setError("เพิ่มการ์ดไม่สำเร็จ");
     }
     setDialogOpen(false);
-    setSearch("");
+    cardSearch.reset();
   };
 
   const removeCard = async (cardId: number) => {
@@ -176,16 +150,16 @@ export default function DeckCalculatorPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto max-w-4xl px-4 py-8">
+      <div className="space-y-6">
         <p className="text-muted-foreground text-sm">กำลังโหลด…</p>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto max-w-4xl space-y-6 px-4 py-8">
+    <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Deck Calculator</h1>
+        <h1 className="font-sans text-2xl font-semibold tracking-tight">Deck Calculator</h1>
         <p className="text-muted-foreground text-sm">สร้าง Deck และคำนวณราคารวม</p>
       </div>
 
@@ -266,15 +240,14 @@ export default function DeckCalculatorPage() {
                 {activeDeck.leader.imageUrl && (
                   <Image
                     src={activeDeck.leader.imageUrl}
-                    alt={activeDeck.leader.nameJp}
+                    alt={activeDeck.leader.nameEn ?? activeDeck.leader.nameJp}
                     width={40}
                     height={56}
                     className="rounded"
-                    unoptimized
                   />
                 )}
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{activeDeck.leader.nameJp}</p>
+                  <p className="truncate text-sm font-medium">{activeDeck.leader.nameEn ?? activeDeck.leader.nameJp}</p>
                   <p className="text-muted-foreground font-mono text-xs">{activeDeck.leader.cardCode}</p>
                 </div>
                 <PriceDisplay priceJpy={activeDeck.leader.latestPriceJpy} showChange={false} size="sm" />
@@ -311,15 +284,14 @@ export default function DeckCalculatorPage() {
                     {entry.card.imageUrl && (
                       <Image
                         src={entry.card.imageUrl}
-                        alt={entry.card.nameJp}
+                        alt={entry.card.nameEn ?? entry.card.nameJp}
                         width={32}
                         height={45}
                         className="rounded"
-                        unoptimized
                       />
                     )}
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">{entry.card.nameJp}</p>
+                      <p className="truncate text-sm font-medium">{entry.card.nameEn ?? entry.card.nameJp}</p>
                       <p className="text-muted-foreground font-mono text-xs">
                         {entry.card.cardCode} x{entry.quantity}
                       </p>
@@ -358,24 +330,24 @@ export default function DeckCalculatorPage() {
           </DialogHeader>
           <Input
             placeholder="ค้นหา…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={cardSearch.query}
+            onChange={(e) => cardSearch.setQuery(e.target.value)}
             autoComplete="off"
           />
           <div className="max-h-60 space-y-1 overflow-auto rounded-md border p-1">
-            {search.trim().length < 2 ? (
+            {cardSearch.query.trim().length < 2 ? (
               <p className="text-muted-foreground px-2 py-3 text-sm">พิมพ์อย่างน้อย 2 ตัวอักษร</p>
-            ) : searchResults.length === 0 ? (
+            ) : cardSearch.results.length === 0 ? (
               <p className="text-muted-foreground px-2 py-3 text-sm">ไม่พบผลลัพธ์</p>
             ) : (
-              searchResults.map((c) => (
+              cardSearch.results.map((c) => (
                 <button
                   key={c.id}
                   type="button"
                   className="hover:bg-muted block w-full rounded-md px-3 py-2 text-left text-sm"
                   onClick={() => void addCard(c)}
                 >
-                  <span className="font-medium">{c.nameJp}</span>
+                  <span className="font-medium">{c.nameEn ?? c.nameJp}</span>
                   <span className="text-muted-foreground block font-mono text-xs">{c.cardCode}</span>
                 </button>
               ))

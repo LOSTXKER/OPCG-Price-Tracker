@@ -96,6 +96,7 @@ export default async function PublicProfilePage({ params }: PageProps) {
                   card={{
                     cardCode: l.card.cardCode,
                     nameJp: l.card.nameJp,
+                    nameEn: l.card.nameEn,
                     rarity: l.card.rarity,
                     imageUrl: l.card.imageUrl,
                     latestPriceJpy: l.card.latestPriceJpy,

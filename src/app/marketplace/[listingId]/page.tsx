@@ -10,7 +10,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { ListingStatus } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { cn } from "@/lib/utils";
-import { formatJpy } from "@/lib/utils/currency";
+import { Price } from "@/components/shared/price-inline";
 
 export const dynamic = "force-dynamic";
 
@@ -84,7 +84,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
           ← กลับ
         </Link>
         <Link
-          href={`/cards/${encodeURIComponent(listing.card.cardCode)}`}
+          href={`/cards/${encodeURIComponent(listing.card.baseCode ?? listing.card.cardCode)}`}
           className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
         >
           หน้าการ์ด
@@ -97,11 +97,10 @@ export default async function ListingDetailPage({ params }: PageProps) {
             {listing.card.imageUrl ? (
               <Image
                 src={listing.card.imageUrl}
-                alt={listing.card.nameJp}
+                alt={listing.card.nameEn ?? listing.card.nameJp}
                 fill
                 className="object-cover"
                 sizes="280px"
-                unoptimized
               />
             ) : (
               <div className="text-muted-foreground flex size-full items-center justify-center text-sm">
@@ -116,7 +115,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
                   key={url}
                   className="border-border relative h-20 w-16 overflow-hidden rounded-md border"
                 >
-                  <Image src={url} alt="" fill className="object-cover" sizes="64px" unoptimized />
+                  <Image src={url} alt="" fill className="object-cover" sizes="64px" />
                 </div>
               ))}
             </div>
@@ -125,7 +124,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
 
         <div className="min-w-0 space-y-4">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight">{listing.card.nameJp}</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">{listing.card.nameEn ?? listing.card.nameJp}</h1>
             <p className="text-muted-foreground font-mono text-sm">{listing.card.cardCode}</p>
             <div className="mt-2 flex flex-wrap gap-2">
               <Badge variant="outline">{listing.condition}</Badge>
@@ -145,7 +144,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
             </div>
             {market != null && diffPct != null ? (
               <p className="text-muted-foreground mt-2 text-sm">
-                ราคาตลาดโดยประมาณ {formatJpy(market)}
+                ราคาตลาดโดยประมาณ <Price jpy={market} />
                 <span
                   className={cn(
                     "ml-2 font-mono font-medium",
@@ -221,6 +220,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
                 card={{
                   cardCode: l.card.cardCode,
                   nameJp: l.card.nameJp,
+                  nameEn: l.card.nameEn,
                   rarity: l.card.rarity,
                   imageUrl: l.card.imageUrl,
                   latestPriceJpy: l.card.latestPriceJpy,

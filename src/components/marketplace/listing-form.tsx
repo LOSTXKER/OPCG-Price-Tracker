@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
-import { formatJpy } from "@/lib/utils/currency"
+import { Price } from "@/components/shared/price-inline"
 
 const CONDITIONS = ["NM", "LP", "MP", "HP", "DMG"] as const
 
@@ -32,6 +32,7 @@ export interface ListingFormProps {
   card?: {
     cardCode: string
     nameJp: string
+    nameEn?: string | null
     latestPriceJpy?: number | null
   } | null
   onSubmit: (data: ListingFormData) => void
@@ -41,6 +42,7 @@ export interface ListingFormProps {
 type SearchCard = {
   cardCode: string
   nameJp: string
+  nameEn?: string | null
   latestPriceJpy: number | null
 }
 
@@ -137,7 +139,7 @@ export function ListingForm({ card, onSubmit, isLoading }: ListingFormProps) {
           <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
             Listing card
           </p>
-          <p className="font-medium">{card.nameJp}</p>
+          <p className="font-medium">{card.nameEn ?? card.nameJp}</p>
           <p className="text-muted-foreground font-mono text-sm">{card.cardCode}</p>
           {card.latestPriceJpy != null ? (
             <p className="text-sm">
@@ -184,11 +186,11 @@ export function ListingForm({ card, onSubmit, isLoading }: ListingFormProps) {
                       if (c.latestPriceJpy != null) {
                         setValue("priceJpy", c.latestPriceJpy)
                       }
-                      setSearchQuery(`${c.nameJp} (${c.cardCode})`)
+                      setSearchQuery(`${c.nameEn ?? c.nameJp} (${c.cardCode})`)
                       setSearchOpen(false)
                     }}
                   >
-                    <span className="line-clamp-1 font-medium">{c.nameJp}</span>
+                    <span className="line-clamp-1 font-medium">{c.nameEn ?? c.nameJp}</span>
                     <span className="text-muted-foreground font-mono text-xs">{c.cardCode}</span>
                   </button>
                 ))
@@ -220,8 +222,8 @@ export function ListingForm({ card, onSubmit, isLoading }: ListingFormProps) {
         ) : null}
         {suggestedLow != null && suggestedHigh != null && marketHint != null ? (
           <p className="text-muted-foreground text-xs">
-            Suggested range around market {formatJpy(marketHint)}: {formatJpy(suggestedLow)} –{" "}
-            {formatJpy(suggestedHigh)}
+            Suggested range around market <Price jpy={marketHint} />: <Price jpy={suggestedLow} /> –{" "}
+            <Price jpy={suggestedHigh} />
           </p>
         ) : null}
       </div>

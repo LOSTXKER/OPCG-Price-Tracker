@@ -84,10 +84,19 @@ function parseCards($: cheerio.CheerioAPI): ScrapedListing[] {
     const altMatch = altText.match(
       /^[\w-]+\s+(P-SEC|P-SR|P-R|P-UC|P-C|P-L|P-P|SEC|SR|SP|R|UC|C|L|P)?\s*(.*)/
     );
-    const rarity = altMatch?.[1] || undefined;
+    let rarity: string | undefined = altMatch?.[1] || undefined;
     const name =
       altMatch?.[2]?.trim() ||
       $el.find("h4.text-primary").first().text().trim();
+
+    if (!rarity && name.includes("ドン!!")) {
+      rarity = "DON";
+    }
+
+    const isParallel = name.includes("パラレル") || (rarity?.startsWith("P-") ?? false) || rarity === "SP";
+    if (isParallel && rarity && !rarity.startsWith("P-") && rarity !== "SP" && rarity !== "DON") {
+      rarity = `P-${rarity}`;
+    }
 
     const href = $el.find("a[href*='/sell/opc/card/']").first().attr("href");
     const yuyuteiId =
@@ -144,26 +153,25 @@ async function computePriceChanges() {
     if (!currentPrice) continue;
 
     const price24h = await prisma.cardPrice.findFirst({
-      where: { cardId: card.id, scrapedAt: { lte: oneDayAgo } },
+      where: { cardId: card.id, source: "YUYUTEI", scrapedAt: { lte: oneDayAgo } },
       orderBy: { scrapedAt: "desc" },
       select: { priceJpy: true },
     });
 
     const price7d = await prisma.cardPrice.findFirst({
-      where: { cardId: card.id, scrapedAt: { lte: sevenDaysAgo } },
+      where: { cardId: card.id, source: "YUYUTEI", scrapedAt: { lte: sevenDaysAgo } },
       orderBy: { scrapedAt: "desc" },
       select: { priceJpy: true },
     });
 
-    const change24h = price24h
-      ? Math.round(
-          ((currentPrice - price24h.priceJpy) / price24h.priceJpy) * 10000
-        ) / 100
+    const p24h = price24h?.priceJpy;
+    const p7d = price7d?.priceJpy;
+
+    const change24h = p24h
+      ? Math.round(((currentPrice - p24h) / p24h) * 10000) / 100
       : null;
-    const change7d = price7d
-      ? Math.round(
-          ((currentPrice - price7d.priceJpy) / price7d.priceJpy) * 10000
-        ) / 100
+    const change7d = p7d
+      ? Math.round(((currentPrice - p7d) / p7d) * 10000) / 100
       : null;
 
     if (change24h !== null || change7d !== null) {
@@ -209,18 +217,24 @@ async function main() {
         continue;
       }
 
+      const dbSet = await prisma.cardSet.findUnique({
+        where: { code: setCode },
+      });
+
       let matched = 0;
       for (const listing of listings) {
         const compositeCode = `${listing.cardCode}${listing.yuyuteiId ? `-${listing.yuyuteiId}` : ""}`;
-        let card = listing.yuyuteiId
-          ? await prisma.card.findFirst({
-              where: { yuyuteiId: listing.yuyuteiId },
-            })
-          : null;
 
-        if (!card) {
-          card = await prisma.card.findUnique({
-            where: { cardCode: compositeCode },
+        let card = await prisma.card.findUnique({
+          where: { cardCode: compositeCode },
+        });
+
+        if (!card && listing.yuyuteiId && dbSet) {
+          card = await prisma.card.findFirst({
+            where: {
+              yuyuteiId: listing.yuyuteiId,
+              setId: dbSet.id,
+            },
           });
         }
 
@@ -231,6 +245,8 @@ async function main() {
         await prisma.cardPrice.create({
           data: {
             cardId: card.id,
+            source: "YUYUTEI",
+            type: "SELL",
             priceJpy: listing.priceJpy,
             priceThb,
             inStock: listing.inStock,

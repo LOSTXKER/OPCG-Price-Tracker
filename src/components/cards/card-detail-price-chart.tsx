@@ -7,8 +7,9 @@ import { PriceChart } from "@/components/cards/price-chart"
 export type CardDetailPriceChartProps = {
   data: {
     scrapedAt: string
-    priceJpy: number
+    priceJpy: number | null
     priceThb?: number | null
+    source?: string
   }[]
 }
 

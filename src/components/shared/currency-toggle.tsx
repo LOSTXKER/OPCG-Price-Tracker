@@ -1,26 +1,22 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/stores/ui-store";
+
+const CURRENCY_LABEL = { THB: "฿", JPY: "¥", USD: "$" } as const;
 
 export function CurrencyToggle() {
   const currency = useUIStore((s) => s.currency);
-  const toggleCurrency = useUIStore((s) => s.toggleCurrency);
+  const cycle = useUIStore((s) => s.cycleCurrency);
 
   return (
-    <Button
+    <button
       type="button"
-      variant="outline"
-      size="sm"
-      className="min-w-14 border-border bg-card font-mono text-foreground tabular-nums hover:bg-surface-elevated"
-      onClick={() => toggleCurrency()}
-      aria-label={
-        currency === "JPY"
-          ? "Switch currency to Thai Baht"
-          : "Switch currency to Japanese Yen"
-      }
+      onClick={cycle}
+      className="flex h-8 items-center gap-1 rounded-lg px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+      title={`Currency: ${currency}`}
     >
-      {currency === "JPY" ? "¥" : "฿"}
-    </Button>
+      <span className="font-price">{CURRENCY_LABEL[currency]}</span>
+      <span>{currency}</span>
+    </button>
   );
 }

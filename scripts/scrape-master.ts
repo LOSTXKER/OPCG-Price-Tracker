@@ -12,6 +12,7 @@ const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
 const BASE_URL = "https://yuyu-tei.jp";
+const BANDAI_EN_IMG = "https://asia-en.onepiece-cardgame.com/images/cardlist/card";
 const USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
 const DELAY_MS = 1500;
@@ -30,8 +31,12 @@ const SETS = [
   { code: "op11", name: "激闘の支配者", type: "BOOSTER" as const },
   { code: "op12", name: "烈風の支配者", type: "BOOSTER" as const },
   { code: "op13", name: "紡がれし絆", type: "BOOSTER" as const },
+  { code: "op14", name: "蒼海の七星", type: "BOOSTER" as const },
+  { code: "op15", name: "誓いの絆", type: "BOOSTER" as const },
   { code: "eb01", name: "Memorial Collection", type: "EXTRA_BOOSTER" as const },
   { code: "eb02", name: "Extra Booster 02", type: "EXTRA_BOOSTER" as const },
+  { code: "eb03", name: "ONE PIECE HEROINES Edition", type: "EXTRA_BOOSTER" as const },
+  { code: "eb04", name: "Extra Booster 04", type: "EXTRA_BOOSTER" as const },
   { code: "st01", name: "麦わらの一味", type: "STARTER" as const },
   { code: "st02", name: "最悪の世代", type: "STARTER" as const },
   { code: "st03", name: "王下七武海", type: "STARTER" as const },
@@ -52,6 +57,7 @@ const SETS = [
   { code: "st18", name: "PURPLE Monkey.D.Luffy", type: "STARTER" as const },
   { code: "st19", name: "BLACK Smoker", type: "STARTER" as const },
   { code: "st20", name: "YELLOW Charlotte Katakuri", type: "STARTER" as const },
+  { code: "st21", name: "Starter Deck 21", type: "STARTER" as const },
   { code: "prb01", name: "Premium Booster 01", type: "PROMO" as const },
 ];
 
@@ -73,7 +79,7 @@ interface ScrapedCard {
   rarity: string;
   priceJpy: number;
   inStock: boolean;
-  imageUrl?: string;
+  yuyuteiImgUrl?: string;
   yuyuteiId?: string;
   cardUrl?: string;
 }
@@ -91,15 +97,24 @@ function parseCards($: cheerio.CheerioAPI): ScrapedCard[] {
 
     const imgEl = $el.find(".product-img img.card").first();
     const altText = imgEl.attr("alt") || "";
-    const imageUrl = imgEl.attr("src") || undefined;
+    const yuyuteiImgUrl = imgEl.attr("src") || undefined;
 
     const altMatch = altText.match(
       /^[\w-]+\s+(P-SEC|P-SR|P-R|P-UC|P-C|P-L|P-P|SEC|SR|SP|R|UC|C|L|P)?\s*(.*)/
     );
-    const rarity = altMatch?.[1] || "Unknown";
+    let rarity = altMatch?.[1] || "Unknown";
     const name =
       altMatch?.[2]?.trim() ||
       $el.find("h4.text-primary").first().text().trim();
+
+    if (rarity === "Unknown" && name.includes("ドン!!")) {
+      rarity = "DON";
+    }
+
+    const isParallel = name.includes("パラレル") || rarity.startsWith("P-") || rarity === "SP";
+    if (isParallel && !rarity.startsWith("P-") && rarity !== "SP" && rarity !== "Unknown" && rarity !== "DON") {
+      rarity = `P-${rarity}`;
+    }
 
     const href = $el.find("a[href*='/sell/opc/card/']").first().attr("href");
     const yuyuteiId =
@@ -107,18 +122,78 @@ function parseCards($: cheerio.CheerioAPI): ScrapedCard[] {
     const inStock = !$el.hasClass("sold-out");
 
     cards.push({
-      cardCode,
-      name,
-      rarity,
-      priceJpy,
-      inStock,
-      imageUrl,
-      yuyuteiId,
-      cardUrl: href || undefined,
+      cardCode, name, rarity, priceJpy, inStock, yuyuteiImgUrl,
+      yuyuteiId, cardUrl: href || undefined,
     });
   });
   return cards;
 }
+
+// ============================================================
+// Bandai Image Mapping
+// Determines the correct _pN suffix from Yuyu-tei card name/rarity
+// ============================================================
+
+type ParallelType = "REGULAR" | "SUPER" | "RED_SUPER" | "SP";
+
+function classifyParallel(name: string, rarity: string): ParallelType {
+  if (rarity === "SP") return "SP";
+  if (name.includes("レッドスーパーパラレル")) return "RED_SUPER";
+  if (name.includes("スーパーパラレル")) return "SUPER";
+  if (name.includes("特別パラレル")) return "SUPER";
+  return "REGULAR";
+}
+
+const PARALLEL_TYPE_ORDER: Record<ParallelType, number> = {
+  REGULAR: 1,    // _p1
+  SUPER: 2,      // _p2
+  RED_SUPER: 3,  // _p3
+  SP: 4,         // _p4
+};
+
+function assignBandaiIndex(
+  parallels: { card: ScrapedCard; type: ParallelType }[]
+): { card: ScrapedCard; bandaiIndex: number }[] {
+  // Group by type
+  const byType = new Map<ParallelType, ScrapedCard[]>();
+  for (const p of parallels) {
+    if (!byType.has(p.type)) byType.set(p.type, []);
+    byType.get(p.type)!.push(p.card);
+  }
+
+  const result: { card: ScrapedCard; bandaiIndex: number }[] = [];
+
+  // Check if ALL parallels are REGULAR (e.g., R cards with 2 parallels both called パラレル)
+  const allRegular = parallels.every((p) => p.type === "REGULAR");
+
+  if (allRegular && parallels.length > 1) {
+    // Multiple REGULAR parallels: sort by price, assign _p1, _p2, etc.
+    const sorted = [...parallels].sort((a, b) => a.card.priceJpy - b.card.priceJpy);
+    sorted.forEach((p, i) => result.push({ card: p.card, bandaiIndex: i + 1 }));
+  } else {
+    // Mixed types: use type-based ordering
+    for (const p of parallels) {
+      result.push({ card: p.card, bandaiIndex: PARALLEL_TYPE_ORDER[p.type] });
+    }
+  }
+
+  return result;
+}
+
+function getBandaiImageUrl(baseCode: string, bandaiIndex: number | null): string {
+  if (bandaiIndex === null) {
+    return `${BANDAI_EN_IMG}/${baseCode}.png`;
+  }
+  return `${BANDAI_EN_IMG}/${baseCode}_p${bandaiIndex}.png`;
+}
+
+function isParallelCard(card: ScrapedCard): boolean {
+  return card.name.includes("パラレル") || card.rarity.startsWith("P-") || card.rarity === "SP";
+}
+
+// ============================================================
+// Main
+// ============================================================
 
 async function main() {
   console.log(`Starting master data scrape for ${SETS.length} sets...`);
@@ -148,37 +223,73 @@ async function main() {
         create: { code: setInfo.code, name: setInfo.name, type: setInfo.type },
       });
 
-      let upserted = 0;
+      // Group listings by base OPCG code
+      const baseGroups = new Map<string, ScrapedCard[]>();
       for (const card of listings) {
-        const isParallel =
-          card.name.includes("パラレル") || card.rarity.startsWith("P-");
+        const baseCode = card.cardCode.toUpperCase();
+        if (!baseGroups.has(baseCode)) baseGroups.set(baseCode, []);
+        baseGroups.get(baseCode)!.push(card);
+      }
 
-        await prisma.card.upsert({
-          where: { cardCode: `${card.cardCode}${card.yuyuteiId ? `-${card.yuyuteiId}` : ""}` },
-          update: {
-            yuyuteiId: card.yuyuteiId,
-            yuyuteiUrl: card.cardUrl,
-            nameJp: card.name,
-            rarity: card.rarity,
-            imageUrl: card.imageUrl,
-            isParallel,
-            latestPriceJpy: card.priceJpy,
-          },
-          create: {
-            cardCode: `${card.cardCode}${card.yuyuteiId ? `-${card.yuyuteiId}` : ""}`,
-            yuyuteiId: card.yuyuteiId,
-            yuyuteiUrl: card.cardUrl,
-            setId: cardSet.id,
-            nameJp: card.name,
-            rarity: card.rarity,
-            cardType: "CHARACTER",
-            color: "Unknown",
-            imageUrl: card.imageUrl,
-            isParallel,
-            latestPriceJpy: card.priceJpy,
-          },
-        });
-        upserted++;
+      let upserted = 0;
+      for (const [baseCode, group] of baseGroups) {
+        const baseCards = group.filter((c) => !isParallelCard(c));
+        const parallelCards = group.filter((c) => isParallelCard(c));
+
+        // Classify each parallel and assign Bandai _pN index
+        const classified = parallelCards.map((card) => ({
+          card,
+          type: classifyParallel(card.name, card.rarity),
+        }));
+        const withIndex = assignBandaiIndex(classified);
+
+        // Upsert base cards
+        for (const card of baseCards) {
+          const compositeCode = `${card.cardCode}${card.yuyuteiId ? `-${card.yuyuteiId}` : ""}`;
+          const imageUrl = getBandaiImageUrl(baseCode, null);
+
+          await prisma.card.upsert({
+            where: { cardCode: compositeCode },
+            update: {
+              yuyuteiId: card.yuyuteiId, yuyuteiUrl: card.cardUrl,
+              nameJp: card.name, rarity: card.rarity, imageUrl,
+              isParallel: false, baseCode, parallelIndex: null,
+              latestPriceJpy: card.priceJpy,
+            },
+            create: {
+              cardCode: compositeCode, yuyuteiId: card.yuyuteiId,
+              yuyuteiUrl: card.cardUrl, setId: cardSet.id,
+              nameJp: card.name, rarity: card.rarity, cardType: "CHARACTER",
+              color: "Unknown", imageUrl, isParallel: false,
+              baseCode, parallelIndex: null, latestPriceJpy: card.priceJpy,
+            },
+          });
+          upserted++;
+        }
+
+        // Upsert parallel cards with correct Bandai index
+        for (const { card, bandaiIndex } of withIndex) {
+          const compositeCode = `${card.cardCode}${card.yuyuteiId ? `-${card.yuyuteiId}` : ""}`;
+          const imageUrl = getBandaiImageUrl(baseCode, bandaiIndex);
+
+          await prisma.card.upsert({
+            where: { cardCode: compositeCode },
+            update: {
+              yuyuteiId: card.yuyuteiId, yuyuteiUrl: card.cardUrl,
+              nameJp: card.name, rarity: card.rarity, imageUrl,
+              isParallel: true, baseCode, parallelIndex: bandaiIndex,
+              latestPriceJpy: card.priceJpy,
+            },
+            create: {
+              cardCode: compositeCode, yuyuteiId: card.yuyuteiId,
+              yuyuteiUrl: card.cardUrl, setId: cardSet.id,
+              nameJp: card.name, rarity: card.rarity, cardType: "CHARACTER",
+              color: "Unknown", imageUrl, isParallel: true,
+              baseCode, parallelIndex: bandaiIndex, latestPriceJpy: card.priceJpy,
+            },
+          });
+          upserted++;
+        }
       }
 
       await prisma.cardSet.update({

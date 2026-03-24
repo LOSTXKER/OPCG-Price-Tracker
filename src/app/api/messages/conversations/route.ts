@@ -27,7 +27,7 @@ export async function GET() {
             priceJpy: true,
             status: true,
             card: {
-              select: { cardCode: true, nameJp: true, imageUrl: true },
+              select: { cardCode: true, nameJp: true, nameEn: true, imageUrl: true },
             },
           },
         },

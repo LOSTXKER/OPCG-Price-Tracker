@@ -169,15 +169,18 @@ export function MarketplaceBrowse({
         <p className="text-muted-foreground text-sm">กำลังโหลด…</p>
       ) : null}
 
-      <div className="space-y-4">
+      <div>
         {listings.length === 0 ? (
-          <p className="text-muted-foreground py-12 text-center text-sm">
-            ยังไม่มีรายการในตลาด หรือลองเปลี่ยนตัวกรอง
-          </p>
+          <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed py-16 text-center">
+            <p className="text-muted-foreground text-sm">
+              ยังไม่มีรายการในตลาด หรือลองเปลี่ยนตัวกรอง
+            </p>
+          </div>
         ) : (
-          listings.map((l) => (
-            <div key={l.id} className="space-y-2">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {listings.map((l) => (
               <ListingCard
+                key={l.id}
                 id={l.id}
                 card={{
                   cardCode: l.card.cardCode,
@@ -199,19 +202,8 @@ export function MarketplaceBrowse({
                 location={l.location}
                 isFeatured={l.isFeatured}
               />
-              <div className="flex justify-end">
-                <Link
-                  href={`/marketplace/${l.id}`}
-                  className={cn(
-                    buttonVariants({ variant: "link" }),
-                    "h-auto p-0 text-sm"
-                  )}
-                >
-                  ดูรายละเอียด
-                </Link>
-              </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
 

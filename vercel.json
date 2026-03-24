@@ -2,19 +2,19 @@
   "crons": [
     {
       "path": "/api/cron/scrape-prices",
-      "schedule": "0 3 * * *"
+      "schedule": "0 17 * * *"
     },
     {
       "path": "/api/cron/scrape-exchange",
-      "schedule": "0 */6 * * *"
+      "schedule": "0 0 * * *"
     },
     {
       "path": "/api/cron/snapshot-portfolios",
-      "schedule": "30 3 * * *"
+      "schedule": "0 20 * * *"
     },
     {
       "path": "/api/cron/check-alerts",
-      "schedule": "0 4 * * *"
+      "schedule": "0 21 * * *"
     }
   ]
 }

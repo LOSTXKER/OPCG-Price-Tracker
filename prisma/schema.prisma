@@ -29,18 +29,24 @@ model Game {
 // ============================================================
 
 model CardSet {
-  id          Int       @id @default(autoincrement())
-  code        String    @unique
-  name        String
-  nameEn      String?
-  type        SetType
-  gameId      Int?
-  game        Game?     @relation(fields: [gameId], references: [id])
-  releaseDate DateTime?
-  cardCount   Int       @default(0)
-  cards       Card[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id           Int           @id @default(autoincrement())
+  code         String        @unique
+  name         String
+  nameEn       String?
+  nameTh       String?
+  type         SetType
+  gameId       Int?
+  game         Game?         @relation(fields: [gameId], references: [id])
+  releaseDate  DateTime?
+  cardCount    Int           @default(0)
+  packsPerBox  Int?
+  cardsPerPack Int?
+  boxImageUrl  String?
+  msrpJpy      Int?
+  cards        Card[]
+  dropRates    SetDropRate[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   @@index([code])
   @@index([gameId])
@@ -57,12 +63,15 @@ enum SetType {
 model Card {
   id              Int              @id @default(autoincrement())
   cardCode        String           @unique
+  baseCode        String?
+  parallelIndex   Int?
   yuyuteiId       String?
   yuyuteiUrl      String?
   setId           Int
   set             CardSet          @relation(fields: [setId], references: [id])
   nameJp          String
   nameEn          String?
+  nameTh          String?
   rarity          String
   cardType        CardType
   color           String
@@ -73,9 +82,12 @@ model Card {
   life            Int?
   attribute       String?
   trait           String?
+  artist          String?
   effectJp        String?
   effectEn        String?
+  effectTh        String?
   triggerJp       String?
+  triggerEn       String?
   imageUrl        String?
   isParallel      Boolean          @default(false)
   viewCount       Int              @default(0)
@@ -84,6 +96,7 @@ model Card {
   latestPriceJpy  Int?
   latestPriceThb  Float?
   prices          CardPrice[]
+  sourceMappings  SourceMapping[]
   portfolioItems  PortfolioItem[]
   watchlistItems  WatchlistItem[]
   priceAlerts     PriceAlert[]
@@ -95,6 +108,7 @@ model Card {
   updatedAt       DateTime         @updatedAt
 
   @@index([setId])
+  @@index([baseCode])
   @@index([rarity])
   @@index([cardType])
   @@index([color])
@@ -112,17 +126,67 @@ enum CardType {
   DON
 }
 
-model CardPrice {
-  id        Int      @id @default(autoincrement())
-  cardId    Int
-  card      Card     @relation(fields: [cardId], references: [id])
-  priceJpy  Int
-  priceThb  Float?
-  inStock   Boolean  @default(true)
-  scrapedAt DateTime @default(now())
+// ============================================================
+// PRICE DATA (Multi-source)
+// ============================================================
 
-  @@index([cardId, scrapedAt(sort: Desc)])
+model CardPrice {
+  id        Int         @id @default(autoincrement())
+  cardId    Int
+  card      Card        @relation(fields: [cardId], references: [id])
+  source    PriceSource @default(YUYUTEI)
+  type      PriceType   @default(SELL)
+  priceJpy  Int?
+  priceThb  Float?
+  priceUsd  Float?
+  priceEur  Float?
+  inStock   Boolean     @default(true)
+  scrapedAt DateTime    @default(now())
+
+  @@index([cardId, source, scrapedAt(sort: Desc)])
   @@index([scrapedAt])
+}
+
+enum PriceSource {
+  YUYUTEI
+  EBAY_JP
+  MERCARI_JP
+  PORTFOLIO
+  MARKETPLACE
+  CARDMARKET
+  TCGPLAYER
+}
+
+enum PriceType {
+  SELL
+  BUY
+  SOLD
+  LISTING
+}
+
+model SourceMapping {
+  id               Int         @id @default(autoincrement())
+  cardId           Int
+  card             Card        @relation(fields: [cardId], references: [id])
+  source           PriceSource
+  sourceIdentifier String
+  isVerified       Boolean     @default(false)
+  createdAt        DateTime    @default(now())
+
+  @@unique([source, sourceIdentifier])
+  @@index([cardId])
+}
+
+model SetDropRate {
+  id          Int     @id @default(autoincrement())
+  setId       Int
+  set         CardSet @relation(fields: [setId], references: [id])
+  rarity      String
+  avgPerBox   Float?
+  ratePerPack Float?
+
+  @@unique([setId, rarity])
+  @@index([setId])
 }
 
 model ExchangeRate {
@@ -147,6 +211,10 @@ model User {
   avatarUrl         String?
   tier              UserTier         @default(FREE)
   tierExpiresAt     DateTime?
+  honeyPoints       Int              @default(0)
+  isAdmin           Boolean          @default(false)
+  sellerRating      Float?
+  sellerReviewCount Int              @default(0)
   portfolios        Portfolio[]
   watchlistItems    WatchlistItem[]
   priceAlerts       PriceAlert[]
@@ -157,8 +225,6 @@ model User {
   reviewsReceived   Review[]         @relation("ReviewsReceived")
   communityPrices   CommunityPrice[]
   decks             Deck[]
-  sellerRating      Float?
-  sellerReviewCount Int              @default(0)
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
 

@@ -44,34 +44,37 @@ export async function scrapeDailyPrices(): Promise<ScrapeResult> {
         continue;
       }
 
+      const dbSet = await prisma.cardSet.findUnique({
+        where: { code: setCode },
+      });
+
       // 3. For each card, upsert price
       for (const listing of listings) {
         try {
-          // Try to find the card in DB by yuyuteiId or cardCode
-          let card = listing.yuyuteiId
-            ? await prisma.card.findFirst({
-                where: { yuyuteiId: listing.yuyuteiId },
-              })
-            : null;
+          const compositeCode = `${listing.cardCode}${listing.yuyuteiId ? `-${listing.yuyuteiId}` : ""}`;
 
-          if (!card && listing.cardCode) {
-            card = await prisma.card.findUnique({
-              where: { cardCode: listing.cardCode },
+          let card = await prisma.card.findUnique({
+            where: { cardCode: compositeCode },
+          });
+
+          if (!card && listing.yuyuteiId && dbSet) {
+            card = await prisma.card.findFirst({
+              where: {
+                yuyuteiId: listing.yuyuteiId,
+                setId: dbSet.id,
+              },
             });
           }
 
-          if (!card) {
-            // Card not in DB yet — skip for daily price scrape
-            // Master data scrape should populate cards first
-            continue;
-          }
+          if (!card) continue;
 
           const priceThb = jpyToThb(listing.priceJpy, rate);
 
-          // Insert new price record
           await prisma.cardPrice.create({
             data: {
               cardId: card.id,
+              source: "YUYUTEI",
+              type: "SELL",
               priceJpy: listing.priceJpy,
               priceThb,
               inStock: listing.inStock,
@@ -140,27 +143,31 @@ async function computePriceChanges() {
     const price24h = await prisma.cardPrice.findFirst({
       where: {
         cardId: card.id,
+        source: "YUYUTEI",
         scrapedAt: { lte: oneDayAgo },
       },
       orderBy: { scrapedAt: "desc" },
       select: { priceJpy: true },
     });
 
-    // Get price from ~7d ago
     const price7d = await prisma.cardPrice.findFirst({
       where: {
         cardId: card.id,
+        source: "YUYUTEI",
         scrapedAt: { lte: sevenDaysAgo },
       },
       orderBy: { scrapedAt: "desc" },
       select: { priceJpy: true },
     });
 
-    const change24h = price24h
-      ? ((currentPrice - price24h.priceJpy) / price24h.priceJpy) * 100
+    const p24h = price24h?.priceJpy;
+    const p7d = price7d?.priceJpy;
+
+    const change24h = p24h
+      ? ((currentPrice - p24h) / p24h) * 100
       : null;
-    const change7d = price7d
-      ? ((currentPrice - price7d.priceJpy) / price7d.priceJpy) * 100
+    const change7d = p7d
+      ? ((currentPrice - p7d) / p7d) * 100
       : null;
 
     await prisma.card.update({

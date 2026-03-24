@@ -1,11 +1,16 @@
-const DEFAULT_RATE = 0.296;
+const DEFAULT_JPY_THB = 0.296;
+const DEFAULT_JPY_USD = 0.0067;
 
 export function jpyToThb(jpy: number, rate?: number): number {
-  return Math.round(jpy * (rate ?? DEFAULT_RATE) * 100) / 100;
+  return Math.round(jpy * (rate ?? DEFAULT_JPY_THB) * 100) / 100;
+}
+
+export function jpyToUsd(jpy: number, rate?: number): number {
+  return Math.round(jpy * (rate ?? DEFAULT_JPY_USD) * 100) / 100;
 }
 
 export function thbToJpy(thb: number, rate?: number): number {
-  const r = rate ?? DEFAULT_RATE;
+  const r = rate ?? DEFAULT_JPY_THB;
   if (r === 0) return 0;
   return Math.round(thb / r);
 }
@@ -16,6 +21,10 @@ export function formatJpy(amount: number): string {
 
 export function formatThb(amount: number): string {
   return `${amount.toLocaleString()} ฿`;
+}
+
+export function formatUsd(amount: number): string {
+  return `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 export function formatPrice(jpy: number, rate?: number): { jpy: string; thb: string } {

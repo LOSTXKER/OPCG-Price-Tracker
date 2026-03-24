@@ -7,6 +7,7 @@ export async function GET(
 ) {
   const { code } = await params;
   const period = request.nextUrl.searchParams.get("period") || "7d";
+  const source = request.nextUrl.searchParams.get("source") || undefined;
 
   const card = await prisma.card.findUnique({
     where: { cardCode: code.toUpperCase() },
@@ -37,24 +38,48 @@ export async function GET(
   }
 
   try {
+    const whereClause: Record<string, unknown> = {
+      cardId: card.id,
+      scrapedAt: { gte: since },
+    };
+
+    if (source) {
+      whereClause.source = source;
+    }
+
     const prices = await prisma.cardPrice.findMany({
-      where: {
-        cardId: card.id,
-        scrapedAt: { gte: since },
-      },
+      where: whereClause,
       orderBy: { scrapedAt: "asc" },
+      select: {
+        id: true,
+        source: true,
+        type: true,
+        priceJpy: true,
+        priceThb: true,
+        priceUsd: true,
+        priceEur: true,
+        inStock: true,
+        scrapedAt: true,
+      },
     });
 
-    const priceValues = prices.map((p) => p.priceJpy);
-    const high = priceValues.length ? Math.max(...priceValues) : 0;
-    const low = priceValues.length ? Math.min(...priceValues) : 0;
-    const avg = priceValues.length
-      ? Math.round(priceValues.reduce((a, b) => a + b, 0) / priceValues.length)
+    const jpyPrices = prices
+      .filter((p) => p.priceJpy !== null)
+      .map((p) => p.priceJpy!);
+    const high = jpyPrices.length ? Math.max(...jpyPrices) : 0;
+    const low = jpyPrices.length ? Math.min(...jpyPrices) : 0;
+    const avg = jpyPrices.length
+      ? Math.round(jpyPrices.reduce((a, b) => a + b, 0) / jpyPrices.length)
       : 0;
 
-    return NextResponse.json({ prices, high, low, avg });
+    const sources = [...new Set(prices.map((p) => p.source))];
+
+    return NextResponse.json({ prices, high, low, avg, sources });
   } catch (error) {
     console.error("Error fetching price history:", error);
-    return NextResponse.json({ error: "Failed to fetch prices" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch prices" },
+      { status: 500 }
+    );
   }
 }

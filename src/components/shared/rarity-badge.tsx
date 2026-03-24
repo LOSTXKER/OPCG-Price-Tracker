@@ -1,17 +1,17 @@
-import { Badge } from "@/components/ui/badge";
-import { RARITY_MAP } from "@/lib/constants/rarities";
 import { cn } from "@/lib/utils";
 
-const DEFAULT_COLOR = "#6B7280";
-
-function resolveRarityColor(code: string): string {
-  const direct = RARITY_MAP.get(code);
-  if (direct) return direct.color;
-  const upper = code.toUpperCase();
-  const fromUpper = RARITY_MAP.get(upper);
-  if (fromUpper) return fromUpper.color;
-  return DEFAULT_COLOR;
-}
+const ACCENT_RARITIES: Record<string, string> = {
+  SEC: "text-amber-600 dark:text-amber-400",
+  "P-SEC": "text-amber-600 dark:text-amber-400",
+  SP: "text-amber-600 dark:text-amber-400",
+  SR: "text-purple-600 dark:text-purple-400",
+  "P-SR": "text-purple-600 dark:text-purple-400",
+  R: "text-sky-600 dark:text-sky-400",
+  "P-R": "text-sky-600 dark:text-sky-400",
+  L: "text-red-600 dark:text-red-400",
+  "P-L": "text-red-600 dark:text-red-400",
+  DON: "text-orange-600 dark:text-orange-400",
+};
 
 export type RarityBadgeProps = {
   rarity: string;
@@ -19,28 +19,20 @@ export type RarityBadgeProps = {
   className?: string;
 };
 
-export function RarityBadge({
-  rarity,
-  size = "md",
-  className,
-}: RarityBadgeProps) {
-  const bg = resolveRarityColor(rarity);
+export function RarityBadge({ rarity, size = "md", className }: RarityBadgeProps) {
+  const accent = ACCENT_RARITIES[rarity];
 
   return (
-    <Badge
-      variant="outline"
+    <span
       className={cn(
-        "border-0 font-semibold text-white shadow-none",
-        size === "sm" && "h-5 px-1.5 text-[10px]",
-        size === "md" && "h-5 px-2 text-xs",
+        "inline-flex items-center rounded bg-muted font-medium",
+        accent ?? "text-foreground",
+        size === "sm" && "px-1.5 py-0.5 text-[10px]",
+        size === "md" && "px-2 py-0.5 text-[11px]",
         className
       )}
-      style={{
-        backgroundColor: bg,
-        color: "#FFFFFF",
-      }}
     >
       {rarity}
-    </Badge>
+    </span>
   );
 }

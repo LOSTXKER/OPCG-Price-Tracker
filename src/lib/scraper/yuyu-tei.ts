@@ -54,8 +54,17 @@ export function parseSetListingPage($: cheerio.CheerioAPI): ScrapedCardListing[]
     const altMatch = altText.match(
       /^([\w-]+)\s+(P-SEC|P-SR|P-R|P-UC|P-C|P-L|P-P|SEC|SR|SP|R|UC|C|L|P)?\s*(.*)/
     );
-    const rarity = altMatch?.[2] || undefined;
+    let rarity: string | undefined = altMatch?.[2] || undefined;
     const name = altMatch?.[3]?.trim() || $el.find("h4.text-primary").first().text().trim();
+
+    if (!rarity && name.includes("ドン!!")) {
+      rarity = "DON";
+    }
+
+    const isParallel = name.includes("パラレル") || (rarity?.startsWith("P-") ?? false) || rarity === "SP";
+    if (isParallel && rarity && !rarity.startsWith("P-") && rarity !== "SP" && rarity !== "DON") {
+      rarity = `P-${rarity}`;
+    }
 
     const linkEl = $el.find("a[href*='/sell/opc/card/']").first();
     const href = linkEl.attr("href");

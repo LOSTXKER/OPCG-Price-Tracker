@@ -2,23 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  BarChart3,
-  House,
-  Search,
-  Store,
-  User,
-} from "lucide-react";
-import { motion } from "motion/react";
+import { Briefcase, Home, Search, ShoppingBag, User } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 const tabs = [
-  { href: "/", label: "Home", icon: House },
-  { href: "/cards", label: "Search", icon: Search },
-  { href: "/marketplace", label: "Market", icon: Store },
-  { href: "/portfolio", label: "Portfolio", icon: BarChart3 },
-  { href: "/profile", label: "Profile", icon: User },
+  { href: "/", label: "หน้าแรก", icon: Home },
+  { href: "/cards", label: "ค้นหา", icon: Search },
+  { href: "/portfolio", label: "พอร์ต", icon: Briefcase },
+  { href: "/marketplace", label: "ซื้อขาย", icon: ShoppingBag },
+  { href: "/profile", label: "บัญชี", icon: User },
 ] as const;
 
 function isTabActive(pathname: string, href: string) {
@@ -32,12 +25,12 @@ export function BottomNav({ className }: { className?: string }) {
   return (
     <nav
       className={cn(
-        "fixed right-0 bottom-0 left-0 z-50 border-t border-border bg-card pb-[env(safe-area-inset-bottom)] md:hidden",
+        "fixed right-0 bottom-0 left-0 z-50 border-t border-border/40 bg-background/80 backdrop-blur-xl pb-[env(safe-area-inset-bottom)] md:hidden",
         className
       )}
-      aria-label="หลัก"
+      aria-label="Navigation"
     >
-      <ul className="mx-auto flex max-w-lg items-stretch justify-between gap-0 px-1 pt-1">
+      <ul className="mx-auto flex max-w-lg items-stretch justify-around">
         {tabs.map(({ href, label, icon: Icon }) => {
           const active = isTabActive(pathname, href);
           return (
@@ -45,24 +38,12 @@ export function BottomNav({ className }: { className?: string }) {
               <Link
                 href={href}
                 className={cn(
-                  "relative flex flex-col items-center gap-0.5 rounded-lg py-2 text-[0.65rem] font-medium transition-colors",
-                  active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  "flex flex-col items-center gap-0.5 py-2 text-[10px] font-medium transition-colors",
+                  active ? "text-foreground" : "text-muted-foreground"
                 )}
               >
-                {active && (
-                  <motion.span
-                    layoutId="bottom-nav-pill"
-                    className="absolute inset-x-1 top-0 bottom-0 -z-10 rounded-lg bg-primary/10"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
-                <motion.span
-                  animate={{ scale: active ? 1.06 : 1 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 28 }}
-                >
-                  <Icon className="size-5" aria-hidden />
-                </motion.span>
-                <span className="truncate">{label}</span>
+                <Icon className={cn("size-5", active && "stroke-[2.5]")} aria-hidden />
+                <span>{label}</span>
               </Link>
             </li>
           );

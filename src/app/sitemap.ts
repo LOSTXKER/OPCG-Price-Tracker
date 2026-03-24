@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://tcg-price-tracker.vercel.app";
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://kumatracker.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let cards: { cardCode: string; updatedAt: Date }[] = [];
@@ -21,7 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }),
     ]);
   } catch {
-    // DB not available at build time - return static entries only
+    // DB not available at build time
   }
 
   const cardEntries = cards.map((card) => ({
@@ -32,37 +32,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const setEntries = sets.map((set) => ({
-    url: `${BASE_URL}/sets/${set.code}`,
+    url: `${BASE_URL}/boxes/${set.code}`,
     lastModified: set.updatedAt,
     changeFrequency: "daily" as const,
     priority: 0.6,
   }));
 
   return [
-    {
-      url: BASE_URL,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 1,
-    },
-    {
-      url: `${BASE_URL}/cards`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/sets`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/marketplace`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.7,
-    },
+    { url: BASE_URL, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
+    { url: `${BASE_URL}/cards`, lastModified: new Date(), changeFrequency: "daily", priority: 0.9 },
+    { url: `${BASE_URL}/boxes`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/marketplace`, lastModified: new Date(), changeFrequency: "daily", priority: 0.7 },
+    { url: `${BASE_URL}/guide`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
+    { url: `${BASE_URL}/guide/getting-started`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.4 },
+    { url: `${BASE_URL}/guide/sets`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.4 },
+    { url: `${BASE_URL}/guide/rarities`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.4 },
+    { url: `${BASE_URL}/guide/buying`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.4 },
     ...setEntries,
     ...cardEntries,
   ];

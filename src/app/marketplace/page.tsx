@@ -1,3 +1,4 @@
+import { Store } from "lucide-react";
 import { ListingStatus } from "@/generated/prisma/client";
 import { MarketplaceBrowse } from "@/components/marketplace/marketplace-browse";
 import { prisma } from "@/lib/db";
@@ -48,6 +49,7 @@ export default async function MarketplacePage() {
       card: {
         cardCode: l.card.cardCode,
         nameJp: l.card.nameJp,
+        nameEn: l.card.nameEn,
         rarity: l.card.rarity,
         imageUrl: l.card.imageUrl,
         latestPriceJpy: l.card.latestPriceJpy,
@@ -60,14 +62,15 @@ export default async function MarketplacePage() {
   }
 
   return (
-    <div className="container mx-auto max-w-3xl space-y-6 px-4 py-8">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Marketplace</h1>
-        <p className="text-muted-foreground text-sm">ซื้อขายการ์ดกับชุมชน</p>
+        <h1 className="font-sans text-4xl font-bold tracking-tight">Market</h1>
+        <p className="text-muted-foreground mt-2 text-base">ซื้อขายการ์ดกับชุมชน — ดูดีลดี เทียบราคาตลาด</p>
       </div>
       {dbError ? (
-        <div className="rounded-xl border border-dashed border-destructive/50 py-12 text-center">
-          <p className="text-destructive text-sm">ไม่สามารถเชื่อมต่อฐานข้อมูลได้ กรุณาลองใหม่</p>
+        <div className="flex flex-col items-center gap-4 rounded-2xl bg-muted/30 py-12 text-center">
+          <Store className="size-10 text-muted-foreground/40" />
+          <p className="text-sm text-destructive">ไม่สามารถเชื่อมต่อฐานข้อมูลได้ กรุณาลองใหม่</p>
         </div>
       ) : (
         <MarketplaceBrowse

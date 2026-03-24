@@ -1,20 +1,23 @@
 import Image from "next/image"
 import Link from "next/link"
-import { MessageCircle, Star, Store } from "lucide-react"
+import { MessageCircle, Star } from "lucide-react"
 
 import { PriceDisplay } from "@/components/shared/price-display"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
+import { CARD_BG } from "@/lib/constants/ui"
 import { cn } from "@/lib/utils"
-import { formatJpy } from "@/lib/utils/currency"
+import { Price } from "@/components/shared/price-inline"
 
 export interface ListingCardProps {
   id: number
   card: {
     cardCode: string
+    baseCode?: string | null
     nameJp: string
+    nameEn?: string | null
     rarity: string
     imageUrl?: string | null
     latestPriceJpy?: number | null
@@ -51,12 +54,12 @@ function conditionStyles(condition: string) {
 function StarRow({ rating }: { rating: number }) {
   const full = Math.round(rating)
   return (
-    <span className="inline-flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
+    <span className="inline-flex items-center gap-0.5" aria-label={`${rating}/5`}>
       {Array.from({ length: 5 }, (_, i) => (
         <Star
           key={i}
           className={cn(
-            "size-3.5",
+            "size-3",
             i < full ? "fill-amber-400 text-amber-400" : "text-muted-foreground/40"
           )}
         />
@@ -72,147 +75,120 @@ export function ListingCard({
   priceThb,
   condition,
   seller,
-  shipping,
-  location,
   isFeatured,
 }: ListingCardProps) {
   const market = card.latestPriceJpy
   const diffPct =
     market != null && market > 0 ? ((priceJpy - market) / market) * 100 : null
-  const isDeal = diffPct != null && diffPct <= -5
-  const cardHref = `/cards/${encodeURIComponent(card.cardCode)}`
+  const isDeal = diffPct != null && diffPct <= -10
+  const cardHref = `/cards/${encodeURIComponent(card.baseCode ?? card.cardCode)}`
 
   return (
     <article
       data-listing-id={id}
       className={cn(
-        "bg-card flex gap-3 rounded-xl border p-3 shadow-sm ring-1 ring-foreground/10 transition-shadow",
-        isFeatured && "ring-2 ring-amber-400/50 shadow-amber-500/10"
+        "panel flex flex-col overflow-hidden transition-shadow hover:shadow-md",
+        isFeatured && "ring-1 ring-gold/30"
       )}
     >
       <Link
         href={cardHref}
-        className="bg-muted relative h-28 w-20 shrink-0 overflow-hidden rounded-lg"
-        aria-label={`View ${card.nameJp}`}
+        className={cn("relative h-44 w-full overflow-hidden", CARD_BG)}
       >
         {card.imageUrl ? (
           <Image
             src={card.imageUrl}
-            alt={card.nameJp}
+            alt={card.nameEn ?? card.nameJp}
             fill
-            sizes="80px"
-            className="object-cover"
-            unoptimized
+            sizes="(max-width: 640px) 100vw, 33vw"
+            className="object-contain transition-transform duration-300 hover:scale-105"
           />
         ) : (
-          <span className="text-muted-foreground flex size-full items-center justify-center text-xs">
+          <span className="flex size-full items-center justify-center text-xs text-muted-foreground">
             No image
           </span>
         )}
+        <div className="absolute top-2 left-2 flex flex-col gap-1">
+          {isDeal && (
+            <Badge className="bg-price-up/90 text-white border-0 text-[10px] shadow-sm">
+              Best Deal
+            </Badge>
+          )}
+          {isFeatured && (
+            <Badge className="bg-muted/90 text-black border-0 text-[10px] shadow-sm">
+              Featured
+            </Badge>
+          )}
+        </div>
+        <div className="absolute top-2 right-2">
+          <span
+            className={cn(
+              "inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold shadow-sm",
+              conditionStyles(condition)
+            )}
+          >
+            {condition}
+          </span>
+        </div>
       </Link>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-2">
-        <div className="flex flex-wrap items-start justify-between gap-2">
-          <div className="min-w-0 space-y-1">
-            <Link
-              href={cardHref}
-              className="hover:text-primary line-clamp-2 font-medium leading-snug underline-offset-4 hover:underline"
-            >
-              {card.nameJp}
-            </Link>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-muted-foreground font-mono text-xs">{card.cardCode}</span>
-              <RarityBadge rarity={card.rarity} />
-              <span
-                className={cn(
-                  "inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium",
-                  conditionStyles(condition)
-                )}
-              >
-                {condition}
-              </span>
-            </div>
-          </div>
-          <div className="flex flex-col items-end gap-1 text-right">
-            {isDeal ? (
-              <Badge className="bg-amber-500/15 text-amber-800 border-amber-500/40 dark:text-amber-200">
-                BEST DEAL
-              </Badge>
-            ) : null}
-            {isFeatured ? (
-              <Badge variant="outline" className="border-amber-400/60 text-amber-700 dark:text-amber-300">
-                Featured
-              </Badge>
-            ) : null}
-          </div>
+      <div className="flex flex-1 flex-col gap-2 p-3">
+        <Link href={cardHref} className="hover:text-primary transition-colors">
+          <p className="line-clamp-1 text-sm font-medium">{card.nameEn ?? card.nameJp}</p>
+        </Link>
+        <div className="flex items-center gap-1.5">
+          <span className="font-mono text-[11px] text-muted-foreground">
+            {card.cardCode}
+          </span>
+          <RarityBadge rarity={card.rarity} size="sm" />
         </div>
 
-        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <div className="space-y-1">
           <PriceDisplay
             priceJpy={priceJpy}
             priceThb={priceThb ?? undefined}
             showChange={false}
-            size="md"
+            size="sm"
           />
-          {market != null && diffPct != null ? (
-            <p className="text-muted-foreground flex flex-wrap items-center gap-1 text-sm">
-              <span>vs {formatJpy(market)}</span>
-              <span aria-hidden>🏷️</span>
+          {market != null && diffPct != null && (
+            <p className="text-muted-foreground text-xs">
+              vs <Price jpy={market} />{" "}
               <span
                 className={cn(
-                  "font-mono font-medium",
-                  diffPct < 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
+                  "font-mono font-semibold tabular-nums",
+                  diffPct < 0
+                    ? "text-price-up"
+                    : "text-price-down"
                 )}
               >
                 {diffPct > 0 ? "+" : ""}
                 {diffPct.toFixed(0)}%
               </span>
             </p>
-          ) : null}
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3 text-sm">
-          <div className="flex items-center gap-2">
-            <Avatar size="sm">
-              {seller.avatarUrl ? (
-                <AvatarImage src={seller.avatarUrl} alt="" />
-              ) : null}
-              <AvatarFallback>
-                {(seller.displayName ?? "?").slice(0, 1).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0">
-              <p className="truncate font-medium">{seller.displayName ?? "Seller"}</p>
-              <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-xs">
-                {seller.sellerRating != null ? (
-                  <StarRow rating={seller.sellerRating} />
-                ) : null}
-                <span>({seller.sellerReviewCount} reviews)</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="text-muted-foreground space-y-1 text-xs">
-          {location ? <p>Location: {location}</p> : null}
-          {shipping.length > 0 ? (
-            <p>Shipping: {shipping.join(" · ")}</p>
-          ) : (
-            <p>Shipping: contact seller</p>
           )}
         </div>
 
-        <div className="mt-auto flex flex-wrap gap-2 pt-1">
-          <Button type="button" variant="outline" size="sm" className="gap-1.5">
-            <MessageCircle className="size-4" />
-            Chat
-          </Button>
-          <Link
-            href="/marketplace"
-            className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "inline-flex gap-1.5")}
-          >
-            <Store className="size-4" />
-            View Shop
+        <div className="mt-auto flex items-center gap-2 border-t border-white/[0.04] pt-2">
+          <Avatar size="sm">
+            {seller.avatarUrl ? (
+              <AvatarImage src={seller.avatarUrl} alt="" />
+            ) : null}
+            <AvatarFallback className="text-[10px]">
+              {(seller.displayName ?? "?").slice(0, 1).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-medium">
+              {seller.displayName ?? "Seller"}
+            </p>
+            {seller.sellerRating != null && (
+              <StarRow rating={seller.sellerRating} />
+            )}
+          </div>
+          <Link href={`/messages/${id}`}>
+            <Button type="button" variant="ghost" size="icon" className="size-8 text-muted-foreground hover:text-primary">
+              <MessageCircle className="size-4" />
+            </Button>
           </Link>
         </div>
       </div>

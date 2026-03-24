@@ -26,7 +26,7 @@ type ListingBrief = {
   id: number;
   priceJpy: number;
   priceThb: number | null;
-  card: { cardCode: string; nameJp: string };
+  card: { cardCode: string; nameJp: string; nameEn?: string | null };
 };
 
 export default function ProfilePage() {
@@ -114,7 +114,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto max-w-2xl space-y-8 px-4 py-8">
+    <div className="mx-auto max-w-2xl space-y-10">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <Avatar className="size-20">
           {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
@@ -123,7 +123,7 @@ export default function ProfilePage() {
           </AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex-1">
-          <h1 className="text-2xl font-semibold tracking-tight">
+          <h1 className="font-sans text-3xl font-bold tracking-tight">
             {user.displayName ?? "ผู้ใช้"}
           </h1>
           <p className="text-muted-foreground truncate text-sm">{user.email}</p>
@@ -136,8 +136,8 @@ export default function ProfilePage() {
         </Button>
       </div>
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold">ตั้งค่า</h2>
+      <section className="space-y-4">
+        <h2 className="font-sans text-lg font-semibold">ตั้งค่า</h2>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
           <div className="min-w-0 flex-1 space-y-1">
             <label htmlFor="display-name" className="text-sm font-medium">
@@ -157,8 +157,8 @@ export default function ProfilePage() {
         {error ? <p className="text-destructive text-sm">{error}</p> : null}
       </section>
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold">รายการขายของฉัน</h2>
+      <section className="space-y-4">
+        <h2 className="font-sans text-lg font-semibold">รายการขายของฉัน</h2>
         {listings.length === 0 ? (
           <p className="text-muted-foreground text-sm">ยังไม่มีรายการที่ลงขาย</p>
         ) : (
@@ -167,9 +167,9 @@ export default function ProfilePage() {
               <li key={l.id}>
                 <Link
                   href={`/marketplace/${l.id}`}
-                  className="bg-card hover:bg-muted/50 flex flex-wrap items-center justify-between gap-2 rounded-lg border p-3 text-sm ring-1 ring-foreground/10"
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-muted/30 p-4 text-sm transition-colors hover:bg-muted/50"
                 >
-                  <span className="font-medium">{l.card.nameJp}</span>
+                  <span className="font-medium">{l.card.nameEn ?? l.card.nameJp}</span>
                   <PriceDisplay
                     priceJpy={l.priceJpy}
                     priceThb={l.priceThb ?? undefined}
