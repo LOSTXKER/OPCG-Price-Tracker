@@ -17,7 +17,7 @@ const getSet = cache(async (setCode: string) => {
     where: { code },
     include: {
       cards: {
-        orderBy: { cardCode: "asc" },
+        orderBy: [{ latestPriceJpy: "desc" }],
         include: { set: { select: { code: true } } },
       },
     },
@@ -51,11 +51,16 @@ export default async function SetDetailPage(props: {
     ? cardsWithPrice.reduce((a, b) => (a.latestPriceJpy ?? 0) > (b.latestPriceJpy ?? 0) ? a : b)
     : null;
 
+  const RARITY_ORDER = ["SP", "P-SEC", "SEC", "P-SR", "SR", "P-R", "R", "L", "P-L", "P-UC", "UC", "P-C", "C", "DON", "P", "P-P"];
   const rarityDist = new Map<string, number>();
   for (const c of cards) {
     rarityDist.set(c.rarity, (rarityDist.get(c.rarity) ?? 0) + 1);
   }
-  const rarityEntries = [...rarityDist.entries()].sort((a, b) => b[1] - a[1]);
+  const rarityEntries = [...rarityDist.entries()].sort((a, b) => {
+    const aIdx = RARITY_ORDER.indexOf(a[0]);
+    const bIdx = RARITY_ORDER.indexOf(b[0]);
+    return (aIdx === -1 ? 100 : aIdx) - (bIdx === -1 ? 100 : bIdx);
+  });
   const totalForBar = cards.length || 1;
 
   return (
@@ -129,29 +134,42 @@ export default async function SetDetailPage(props: {
         </div>
       )}
 
-      {/* Cards */}
+      {/* Cards grouped by rarity */}
       {cards.length === 0 ? (
         <div className="panel py-16 text-center">
           <p className="text-sm text-muted-foreground">ยังไม่มีการ์ดในชุดนี้</p>
         </div>
       ) : (
-        <CardGrid>
-          {cards.map((c) => (
-            <CardItem
-              key={c.id}
-              cardCode={c.cardCode}
-              nameJp={c.nameJp}
-              nameEn={c.nameEn}
-              rarity={c.rarity}
-              isParallel={c.isParallel}
-              imageUrl={c.imageUrl}
-              priceJpy={c.latestPriceJpy ?? undefined}
-              priceThb={c.latestPriceThb ?? undefined}
-              priceChange7d={c.priceChange7d}
-              setCode={c.set.code}
-            />
-          ))}
-        </CardGrid>
+        <div className="space-y-8">
+          {rarityEntries.map(([rarity, count]) => {
+            const group = cards.filter((c) => c.rarity === rarity);
+            return (
+              <section key={rarity}>
+                <h2 className="mb-3 text-sm font-semibold">
+                  <span className="font-mono">{rarity}</span>
+                  <span className="ml-2 text-muted-foreground font-normal">{count} cards</span>
+                </h2>
+                <CardGrid>
+                  {group.map((c) => (
+                    <CardItem
+                      key={c.id}
+                      cardCode={c.cardCode}
+                      nameJp={c.nameJp}
+                      nameEn={c.nameEn}
+                      rarity={c.rarity}
+                      isParallel={c.isParallel}
+                      imageUrl={c.imageUrl}
+                      priceJpy={c.latestPriceJpy ?? undefined}
+                      priceThb={c.latestPriceThb ?? undefined}
+                      priceChange7d={c.priceChange7d}
+                      setCode={c.set.code}
+                    />
+                  ))}
+                </CardGrid>
+              </section>
+            );
+          })}
+        </div>
       )}
     </div>
   );

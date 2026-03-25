@@ -13,32 +13,34 @@ import { Price } from "@/components/shared/price-inline";
 
 export const dynamic = "force-dynamic";
 
-const TIER_ORDER = ["SEC", "P-SEC", "SP", "P-SR", "SR", "R", "P-R", "L", "P-L", "UC", "P-UC", "C", "P-C", "P", "P-P"];
+const TIER_ORDER = ["SP", "P-SEC", "SEC", "P-SR", "SR", "P-R", "R", "L", "P-L", "P-UC", "UC", "P-C", "C", "DON", "P", "P-P"];
 
 const TIER_ACCENT: Record<string, string> = {
-  SEC: "border-l-amber-500",
-  "P-SEC": "border-l-amber-500",
   SP: "border-l-pink-500",
-  SR: "border-l-purple-500",
+  "P-SEC": "border-l-amber-500",
+  SEC: "border-l-amber-500",
   "P-SR": "border-l-purple-500",
-  R: "border-l-blue-500",
+  SR: "border-l-purple-500",
   "P-R": "border-l-blue-500",
+  R: "border-l-blue-500",
   L: "border-l-orange-500",
   "P-L": "border-l-orange-500",
-  UC: "border-l-emerald-500",
   "P-UC": "border-l-emerald-500",
-  C: "border-l-neutral-400",
+  UC: "border-l-emerald-500",
   "P-C": "border-l-neutral-400",
+  C: "border-l-neutral-400",
+  DON: "border-l-red-500",
 };
 
 const TIER_BG: Record<string, string> = {
-  SEC: "bg-amber-500/5",
-  "P-SEC": "bg-amber-500/5",
   SP: "bg-pink-500/5",
-  SR: "bg-purple-500/5",
+  "P-SEC": "bg-amber-500/5",
+  SEC: "bg-amber-500/5",
   "P-SR": "bg-purple-500/5",
-  R: "bg-blue-500/5",
+  SR: "bg-purple-500/5",
   "P-R": "bg-blue-500/5",
+  R: "bg-blue-500/5",
+  DON: "bg-red-500/5",
 };
 
 const COLLAPSED_BY_DEFAULT = new Set(["C", "P-C", "UC", "P-UC"]);
