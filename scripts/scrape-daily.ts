@@ -25,7 +25,7 @@ const SET_CODES = [
   "st01", "st02", "st03", "st04", "st05", "st06", "st07", "st08",
   "st09", "st10", "st11", "st12", "st13", "st14", "st15", "st16",
   "st17", "st18", "st19", "st20", "st21",
-  "prb01",
+  "prb01", "prb02", "don",
 ];
 
 function sleep(ms: number) {
@@ -223,7 +223,10 @@ async function main() {
 
       let matched = 0;
       for (const listing of listings) {
-        const compositeCode = `${listing.cardCode}${listing.yuyuteiId ? `-${listing.yuyuteiId}` : ""}`;
+        const isDon = listing.rarity === "DON" || listing.name.includes("ドン!!");
+        const compositeCode = isDon && listing.yuyuteiId
+          ? `${setCode}-DON-${listing.yuyuteiId}`
+          : `${listing.cardCode}${listing.yuyuteiId ? `-${listing.yuyuteiId}` : ""}`;
 
         let card = await prisma.card.findUnique({
           where: { cardCode: compositeCode },

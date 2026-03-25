@@ -333,7 +333,12 @@ async function scrapeAllSets() {
 
         for (const card of baseCards) {
           const compositeCode = `${card.cardCode}${card.yuyuteiId ? `-${card.yuyuteiId}` : ""}`;
-          const imageUrl = getBandaiImageUrl(baseCode, null);
+          const isDon = baseCode === "-" || card.rarity === "DON";
+          const imageUrl = isDon && card.yuyuteiImgUrl
+            ? card.yuyuteiImgUrl
+            : isDon && card.yuyuteiId
+              ? `https://card.yuyu-tei.jp/opc/front/${setInfo.code}/${card.yuyuteiId}.jpg`
+              : getBandaiImageUrl(baseCode, null);
 
           await prisma.card.upsert({
             where: { cardCode: compositeCode },
@@ -383,7 +388,12 @@ async function scrapeAllSets() {
 
         for (const { card, bandaiIndex } of withIndex) {
           const compositeCode = `${card.cardCode}${card.yuyuteiId ? `-${card.yuyuteiId}` : ""}`;
-          const imageUrl = getBandaiImageUrl(baseCode, bandaiIndex);
+          const isDon = baseCode === "-" || card.rarity === "DON";
+          const imageUrl = isDon && card.yuyuteiImgUrl
+            ? card.yuyuteiImgUrl
+            : isDon && card.yuyuteiId
+              ? `https://card.yuyu-tei.jp/opc/front/${setInfo.code}/${card.yuyuteiId}.jpg`
+              : getBandaiImageUrl(baseCode, bandaiIndex);
 
           await prisma.card.upsert({
             where: { cardCode: compositeCode },

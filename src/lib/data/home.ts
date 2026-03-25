@@ -17,16 +17,8 @@ export type ViewedCard = TrendingCard & { viewCount: number }
 
 export async function getHomeData() {
   try {
-    const [
-      topGainers,
-      topLosers,
-      mostViewed,
-      newestSet,
-      totalCards,
-      totalSets,
-      highestPriced,
-      totalValueAgg,
-    ] = await Promise.all([
+    // Batch 1: card lists
+    const [topGainers, topLosers, mostViewed, highestPriced] = await Promise.all([
       prisma.card.findMany({
         where: { priceChange24h: { not: null, gt: 0 } },
         orderBy: { priceChange24h: "desc" },
@@ -45,17 +37,21 @@ export async function getHomeData() {
         take: 10,
         include: { set: { select: { code: true, name: true } } },
       }),
-      prisma.cardSet.findFirst({
-        orderBy: [{ releaseDate: "desc" }, { createdAt: "desc" }],
-      }),
-      prisma.card.count(),
-      prisma.cardSet.count(),
       prisma.card.findMany({
         where: { latestPriceJpy: { not: null, gt: 0 } },
         orderBy: { latestPriceJpy: "desc" },
         take: 10,
         include: { set: { select: { code: true, name: true } } },
       }),
+    ])
+
+    // Batch 2: aggregates + set info
+    const [newestSet, totalCards, totalSets, totalValueAgg] = await Promise.all([
+      prisma.cardSet.findFirst({
+        orderBy: [{ releaseDate: "desc" }, { createdAt: "desc" }],
+      }),
+      prisma.card.count(),
+      prisma.cardSet.count(),
       prisma.card.aggregate({
         _sum: { latestPriceJpy: true },
         where: { latestPriceJpy: { gt: 0 } },
@@ -76,17 +72,7 @@ export async function getHomeData() {
     return { topGainers, topLosers, mostViewed, newestSet, latestSetCards, totalCards, totalSets, highestPriced, totalValue }
   } catch (error) {
     console.error("Failed to fetch home data:", error)
-    return {
-      topGainers: [],
-      topLosers: [],
-      mostViewed: [],
-      newestSet: null,
-      latestSetCards: [],
-      totalCards: 0,
-      totalSets: 0,
-      highestPriced: [],
-      totalValue: 0,
-    }
+    throw error
   }
 }
 

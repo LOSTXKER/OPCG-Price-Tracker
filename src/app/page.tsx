@@ -8,7 +8,7 @@ import { HomeMarketTable, HomeFeaturedCard, HomeMostViewed } from "@/components/
 import { getHomeData, mapCardToTrending, type ViewedCard } from "@/lib/data/home";
 import { Price } from "@/components/shared/price-inline";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 function getMarketCondition(upCount: number, downCount: number) {
   if (upCount === 0 && downCount === 0) return { condition: "neutral" as const, change: 0 };

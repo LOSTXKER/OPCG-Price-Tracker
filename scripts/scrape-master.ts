@@ -59,6 +59,8 @@ const SETS = [
   { code: "st20", name: "YELLOW Charlotte Katakuri", type: "STARTER" as const },
   { code: "st21", name: "Starter Deck 21", type: "STARTER" as const },
   { code: "prb01", name: "Premium Booster 01", type: "PROMO" as const },
+  { code: "prb02", name: "Premium Booster 02", type: "PROMO" as const },
+  { code: "don", name: "DON!! Card Collection", type: "PROMO" as const },
 ];
 
 function sleep(ms: number) {
@@ -245,8 +247,15 @@ async function main() {
 
         // Upsert base cards
         for (const card of baseCards) {
-          const compositeCode = `${card.cardCode}${card.yuyuteiId ? `-${card.yuyuteiId}` : ""}`;
-          const imageUrl = getBandaiImageUrl(baseCode, null);
+          const isDon = card.rarity === "DON" || card.name.includes("ドン!!");
+          const compositeCode = isDon && card.yuyuteiId
+            ? `${setInfo.code}-DON-${card.yuyuteiId}`
+            : `${card.cardCode}${card.yuyuteiId ? `-${card.yuyuteiId}` : ""}`;
+          const imageUrl = isDon && card.yuyuteiImgUrl
+            ? card.yuyuteiImgUrl
+            : isDon && card.yuyuteiId
+              ? `https://card.yuyu-tei.jp/opc/front/${setInfo.code}/${card.yuyuteiId}.jpg`
+              : getBandaiImageUrl(baseCode, null);
 
           await prisma.card.upsert({
             where: { cardCode: compositeCode },
@@ -269,8 +278,15 @@ async function main() {
 
         // Upsert parallel cards with correct Bandai index
         for (const { card, bandaiIndex } of withIndex) {
-          const compositeCode = `${card.cardCode}${card.yuyuteiId ? `-${card.yuyuteiId}` : ""}`;
-          const imageUrl = getBandaiImageUrl(baseCode, bandaiIndex);
+          const isDon = card.rarity === "DON" || card.name.includes("ドン!!");
+          const compositeCode = isDon && card.yuyuteiId
+            ? `${setInfo.code}-DON-${card.yuyuteiId}`
+            : `${card.cardCode}${card.yuyuteiId ? `-${card.yuyuteiId}` : ""}`;
+          const imageUrl = isDon && card.yuyuteiImgUrl
+            ? card.yuyuteiImgUrl
+            : isDon && card.yuyuteiId
+              ? `https://card.yuyu-tei.jp/opc/front/${setInfo.code}/${card.yuyuteiId}.jpg`
+              : getBandaiImageUrl(baseCode, bandaiIndex);
 
           await prisma.card.upsert({
             where: { cardCode: compositeCode },
