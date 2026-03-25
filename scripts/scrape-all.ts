@@ -190,9 +190,10 @@ async function scrapeAllSets() {
           ? `${setInfo.code}-DON-${card.yuyuteiId}`
           : `${baseCode}${card.yuyuteiId ? `-${card.yuyuteiId}` : ""}`;
 
-        // Temporary: use Yuyu-tei image; Step 3 will try to upgrade to Bandai
-        const imageUrl = card.yuyuteiImgUrl
-          || (card.yuyuteiId ? `https://card.yuyu-tei.jp/opc/front/${setInfo.code}/${card.yuyuteiId}.jpg` : "");
+        // Use full-size Yuyu-tei image; Step 3 will try to upgrade to Bandai for non-DON
+        const imageUrl = card.yuyuteiId
+          ? `https://card.yuyu-tei.jp/opc/front/${setInfo.code}/${card.yuyuteiId}.jpg`
+          : card.yuyuteiImgUrl || "";
 
         const cardRecord = await prisma.card.upsert({
           where: { cardCode: compositeCode },
