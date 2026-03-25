@@ -104,6 +104,7 @@ model Card {
   communityPrices CommunityPrice[]
   deckLeaders     Deck[]           @relation("DeckLeader")
   deckCards       DeckCard[]
+  productCards    ProductCard[]
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 
@@ -187,6 +188,36 @@ model SetDropRate {
 
   @@unique([setId, rarity])
   @@index([setId])
+}
+
+// ============================================================
+// PRODUCT (physical boxes/packs that contain cards)
+// ============================================================
+
+model Product {
+  id          Int           @id @default(autoincrement())
+  code        String        @unique
+  name        String
+  nameEn      String?
+  nameTh      String?
+  type        SetType
+  releaseDate DateTime?
+  cards       ProductCard[]
+  createdAt   DateTime      @default(now())
+
+  @@index([code])
+}
+
+model ProductCard {
+  id        Int     @id @default(autoincrement())
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  cardId    Int
+  card      Card    @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, cardId])
+  @@index([productId])
+  @@index([cardId])
 }
 
 model ExchangeRate {

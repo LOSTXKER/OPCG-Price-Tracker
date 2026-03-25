@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: "/", label: "ตลาด", icon: TrendingUp },
-  { href: "/boxes", label: "ชุดการ์ด", icon: Package },
+  { href: "/sets", label: "ชุดการ์ด", icon: Package },
   { href: "/cards", label: "การ์ดเดี่ยว", icon: LayoutGrid },
   { href: "/marketplace", label: "ซื้อขาย", icon: ShoppingBag },
   { href: "/guide", label: "คู่มือ", icon: BookOpen },

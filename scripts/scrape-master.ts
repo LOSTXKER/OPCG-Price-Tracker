@@ -156,13 +156,23 @@ function isParallelCard(card: ScrapedCard): boolean {
 // ============================================================
 
 async function main() {
-  console.log(`Starting master data scrape for ${SETS.length} sets...`);
+  const setFilter = process.argv.find((_, i, a) => a[i - 1] === "--set") ?? null;
+  const setsToScrape = setFilter
+    ? SETS.filter((s) => s.code === setFilter)
+    : SETS;
+
+  if (setFilter && setsToScrape.length === 0) {
+    console.error(`Set "${setFilter}" not found`);
+    process.exit(1);
+  }
+
+  console.log(`Starting master data scrape for ${setsToScrape.length} sets...`);
   let totalCards = 0;
   let totalSets = 0;
   const errors: string[] = [];
   const startTime = Date.now();
 
-  for (const setInfo of SETS) {
+  for (const setInfo of setsToScrape) {
     const url = `${BASE_URL}/sell/opc/s/${setInfo.code}`;
     console.log(`\n[${setInfo.code}] ${setInfo.name} — ${url}`);
 
@@ -209,7 +219,7 @@ async function main() {
           const compositeCode = isDon && card.yuyuteiId
             ? `${setInfo.code}-DON-${card.yuyuteiId}`
             : `${card.cardCode}${card.yuyuteiId ? `-${card.yuyuteiId}` : ""}`;
-          const imageUrl = isDon && card.yuyuteiImgUrl
+          const fallbackImage = isDon && card.yuyuteiImgUrl
             ? card.yuyuteiImgUrl
             : isDon && card.yuyuteiId
               ? `https://card.yuyu-tei.jp/opc/front/${setInfo.code}/${card.yuyuteiId}.jpg`
@@ -219,28 +229,28 @@ async function main() {
             where: { cardCode: compositeCode },
             update: {
               yuyuteiId: card.yuyuteiId, yuyuteiUrl: card.cardUrl,
-              nameJp: card.name, rarity: card.rarity, imageUrl,
-              isParallel: false, baseCode, parallelIndex: null,
+              nameJp: card.name, rarity: card.rarity,
+              isParallel: false, baseCode,
               latestPriceJpy: card.priceJpy,
             },
             create: {
               cardCode: compositeCode, yuyuteiId: card.yuyuteiId,
               yuyuteiUrl: card.cardUrl, setId: cardSet.id,
               nameJp: card.name, rarity: card.rarity, cardType: "CHARACTER",
-              color: "Unknown", imageUrl, isParallel: false,
+              color: "Unknown", imageUrl: fallbackImage, isParallel: false,
               baseCode, parallelIndex: null, latestPriceJpy: card.priceJpy,
             },
           });
           upserted++;
         }
 
-        // Upsert parallel cards — prefer Yuyu-tei image (unique per variant)
+        // Upsert parallel cards — don't overwrite imageUrl/parallelIndex on update (Gemini-matched)
         for (const { card, bandaiIndex } of withIndex) {
           const isDon = card.rarity === "DON" || card.name.includes("ドン!!");
           const compositeCode = isDon && card.yuyuteiId
             ? `${setInfo.code}-DON-${card.yuyuteiId}`
             : `${card.cardCode}${card.yuyuteiId ? `-${card.yuyuteiId}` : ""}`;
-          const imageUrl = card.yuyuteiImgUrl
+          const fallbackImage = card.yuyuteiImgUrl
             ? card.yuyuteiImgUrl
             : card.yuyuteiId
               ? `https://card.yuyu-tei.jp/opc/front/${setInfo.code}/${card.yuyuteiId}.jpg`
@@ -250,15 +260,15 @@ async function main() {
             where: { cardCode: compositeCode },
             update: {
               yuyuteiId: card.yuyuteiId, yuyuteiUrl: card.cardUrl,
-              nameJp: card.name, rarity: card.rarity, imageUrl,
-              isParallel: true, baseCode, parallelIndex: bandaiIndex,
+              nameJp: card.name, rarity: card.rarity,
+              isParallel: true, baseCode,
               latestPriceJpy: card.priceJpy,
             },
             create: {
               cardCode: compositeCode, yuyuteiId: card.yuyuteiId,
               yuyuteiUrl: card.cardUrl, setId: cardSet.id,
               nameJp: card.name, rarity: card.rarity, cardType: "CHARACTER",
-              color: "Unknown", imageUrl, isParallel: true,
+              color: "Unknown", imageUrl: fallbackImage, isParallel: true,
               baseCode, parallelIndex: bandaiIndex, latestPriceJpy: card.priceJpy,
             },
           });

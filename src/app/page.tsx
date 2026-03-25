@@ -133,7 +133,7 @@ export default async function HomePage() {
               <p className="text-xs text-muted-foreground">{newestSet.nameEn ?? newestSet.name}</p>
             </div>
             <Link
-              href={`/boxes/${newestSet.code}`}
+              href={`/sets/${newestSet.code}`}
               className="text-xs text-muted-foreground hover:text-foreground"
             >
               ดูเพิ่มเติม <ArrowRight className="size-3" />

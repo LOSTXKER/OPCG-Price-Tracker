@@ -7,6 +7,7 @@ import {
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { MainChrome, PageContent } from "@/components/layout/main-chrome";
 
 import { ThemeProvider } from "@/providers/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -64,12 +65,14 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TooltipProvider>
-            <Header />
-            <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 pb-24 md:px-6 md:pb-8">
-              {children}
-            </main>
-            <Footer />
-            <BottomNav />
+            <MainChrome>
+              <Header />
+            </MainChrome>
+            <PageContent>{children}</PageContent>
+            <MainChrome>
+              <Footer />
+              <BottomNav />
+            </MainChrome>
             <Toaster position="bottom-center" />
           </TooltipProvider>
         </ThemeProvider>

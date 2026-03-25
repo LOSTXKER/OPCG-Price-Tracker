@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { getCardName } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
+import { formatPct } from "@/lib/utils/pull-rate"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { useUIStore } from "@/stores/ui-store"
 
@@ -24,6 +25,8 @@ export interface CardItemProps {
   priceChange7d?: number | null
   setCode?: string
   inStock?: boolean
+  /** Pull probability per box (0-1 range) shown as overlay badge */
+  pullChancePerBox?: number
 }
 
 export function CardItem({
@@ -39,6 +42,7 @@ export function CardItem({
   priceChange7d,
   setCode,
   inStock = true,
+  pullChancePerBox,
 }: CardItemProps) {
   const lang = useUIStore((s) => s.language)
   const displayName = getCardName(lang, { nameEn, nameJp, nameTh })
@@ -62,6 +66,15 @@ export function CardItem({
             />
           ) : (
             <Skeleton className="absolute inset-0 size-full" />
+          )}
+
+          {/* Top-left pull chance badge */}
+          {pullChancePerBox != null && pullChancePerBox > 0 && (
+            <div className="absolute left-1 top-1">
+              <span className="rounded bg-black/70 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-white backdrop-blur-sm">
+                {formatPct(pullChancePerBox)}
+              </span>
+            </div>
           )}
 
           {/* Top-right badges */}

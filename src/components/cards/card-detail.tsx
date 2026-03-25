@@ -75,7 +75,7 @@ export function CardDetail({ card, siblings, communityPrice }: CardDetailProps) 
         items={[
           { label: t(lang, "market"), href: "/" },
           { label: t(lang, "cards"), href: "/cards" },
-          { label: set.code.toUpperCase(), href: `/boxes/${set.code}` },
+          { label: set.code.toUpperCase(), href: `/sets/${set.code}` },
           { label: card.baseCode ?? card.cardCode },
         ]}
       />
@@ -118,7 +118,7 @@ export function CardDetail({ card, siblings, communityPrice }: CardDetailProps) 
               {displayName}
             </h1>
             <p className="mt-1 text-xs text-muted-foreground">
-              <Link href={`/boxes/${set.code}`} className="hover:text-foreground hover:underline underline-offset-4">
+              <Link href={`/sets/${set.code}`} className="hover:text-foreground hover:underline underline-offset-4">
                 {set.code.toUpperCase()} &middot; {setName}
               </Link>
             </p>
