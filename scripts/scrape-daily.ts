@@ -18,15 +18,7 @@ const DELAY_MS = 1500;
 const DEFAULT_RATE = 0.296;
 const EXCHANGE_API_URL = "https://v6.exchangerate-api.com/v6";
 
-const SET_CODES = [
-  "op01", "op02", "op03", "op04", "op05", "op06", "op07", "op08",
-  "op09", "op10", "op11", "op12", "op13", "op14", "op15",
-  "eb01", "eb02", "eb03", "eb04",
-  "st01", "st02", "st03", "st04", "st05", "st06", "st07", "st08",
-  "st09", "st10", "st11", "st12", "st13", "st14", "st15", "st16",
-  "st17", "st18", "st19", "st20", "st21",
-  "prb01", "prb02", "don",
-];
+import { SET_CODES } from "./sets";
 
 function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
