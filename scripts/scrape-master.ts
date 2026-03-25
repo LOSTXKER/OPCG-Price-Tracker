@@ -276,15 +276,15 @@ async function main() {
           upserted++;
         }
 
-        // Upsert parallel cards with correct Bandai index
+        // Upsert parallel cards — prefer Yuyu-tei image (unique per variant)
         for (const { card, bandaiIndex } of withIndex) {
           const isDon = card.rarity === "DON" || card.name.includes("ドン!!");
           const compositeCode = isDon && card.yuyuteiId
             ? `${setInfo.code}-DON-${card.yuyuteiId}`
             : `${card.cardCode}${card.yuyuteiId ? `-${card.yuyuteiId}` : ""}`;
-          const imageUrl = isDon && card.yuyuteiImgUrl
+          const imageUrl = card.yuyuteiImgUrl
             ? card.yuyuteiImgUrl
-            : isDon && card.yuyuteiId
+            : card.yuyuteiId
               ? `https://card.yuyu-tei.jp/opc/front/${setInfo.code}/${card.yuyuteiId}.jpg`
               : getBandaiImageUrl(baseCode, bandaiIndex);
 
