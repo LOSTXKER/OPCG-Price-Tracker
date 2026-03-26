@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { z } from "zod"
-import { Eye, EyeOff, Loader2, Mail } from "lucide-react"
+import { Eye, EyeOff, Loader2, Mail, Play } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -29,6 +29,24 @@ export function LoginClient() {
     authError === "auth_failed" ? "การเข้าสู่ระบบล้มเหลว ลองใหม่อีกครั้ง" : null
   )
   const [loading, setLoading] = useState(false)
+  const [demoLoading, setDemoLoading] = useState(false)
+
+  const signInDemo = async () => {
+    setError(null)
+    setDemoLoading(true)
+    const supabase = createClient()
+    const { error: signError } = await supabase.auth.signInWithPassword({
+      email: "demo@meecard.com",
+      password: "demo1234",
+    })
+    setDemoLoading(false)
+    if (signError) {
+      setError("Demo account ไม่พร้อมใช้งานขณะนี้")
+      return
+    }
+    router.push(redirect)
+    router.refresh()
+  }
 
   const oauthRedirect = () => {
     const origin = window.location.origin
@@ -224,6 +242,30 @@ export function LoginClient() {
                 สมัครสมาชิก
               </Link>
             </p>
+
+            {/* Demo login */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-3 text-muted-foreground">หรือ</span>
+              </div>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={loading || demoLoading}
+              onClick={() => void signInDemo()}
+              className="h-11 w-full gap-2 border-dashed"
+            >
+              {demoLoading ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <Play className="size-3.5" />
+              )}
+              {demoLoading ? "กำลังเข้าสู่ระบบ..." : "ทดลองใช้งาน Demo"}
+            </Button>
           </div>
         </div>
       </div>
