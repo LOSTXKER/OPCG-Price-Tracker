@@ -13,7 +13,7 @@ import {
 import { Lock } from "lucide-react"
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { formatByCurrency, formatJpy, jpyToThb, jpyToUsd } from "@/lib/utils/currency"
+import { formatByCurrency, jpyToThb, jpyToUsd } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
 const LINE_COLOR = "#3B82F6"
@@ -103,11 +103,6 @@ function ChartTooltip(props: {
       <p className="font-mono font-semibold">
         {formatPriceByCurrency(row.priceJpy, currency)}
       </p>
-      {currency !== "JPY" && (
-        <p className="text-muted-foreground font-mono">
-          {formatJpy(row.priceJpy)}
-        </p>
-      )}
     </div>
   )
 }
