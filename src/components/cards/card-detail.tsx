@@ -84,8 +84,8 @@ export function CardDetail({ card, siblings, communityPrice }: CardDetailProps) 
 
       <div className="grid gap-6 lg:grid-cols-12">
         {/* Image column */}
-        <div className="lg:col-span-5">
-          <div className="sticky top-24">
+        <div className="lg:col-span-5 space-y-4">
+          <div>
             <div className="relative mx-auto aspect-[63/88] w-full max-w-[340px] overflow-hidden rounded bg-card border border-border lg:max-w-none">
               {card.imageUrl ? (
                 <Image
@@ -106,6 +106,40 @@ export function CardDetail({ card, siblings, communityPrice }: CardDetailProps) 
               {card.viewCount.toLocaleString()} {t(lang, "views")}
             </p>
           </div>
+
+          {/* Other versions — below main image */}
+          {siblings.length > 0 && (
+            <div>
+              <p className="mb-3 text-xs text-muted-foreground">
+                {t(lang, "otherVersions")} ({siblings.length})
+              </p>
+              <div className="grid grid-cols-4 gap-2 sm:grid-cols-5 lg:grid-cols-4">
+                {siblings.map((s) => (
+                  <Link
+                    key={s.id}
+                    href={`/cards/${s.cardCode}`}
+                    className="group flex flex-col gap-1.5 text-center"
+                  >
+                    <div className="relative aspect-[63/88] w-full overflow-hidden rounded border border-border bg-muted transition-colors group-hover:border-primary/30">
+                      {s.imageUrl ? (
+                        <Image src={s.imageUrl} alt={getCardName(lang, s)} fill className="object-contain" sizes="100px" />
+                      ) : (
+                        <Skeleton className="absolute inset-0 size-full" />
+                      )}
+                    </div>
+                    <div>
+                      <RarityBadge rarity={s.rarity} size="sm" />
+                      {s.latestPriceJpy != null && (
+                        <p className="mt-0.5 font-price text-xs font-semibold">
+                          <Price jpy={s.latestPriceJpy} />
+                        </p>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Data column */}
@@ -241,39 +275,6 @@ export function CardDetail({ card, siblings, communityPrice }: CardDetailProps) 
         </div>
       </div>
 
-      {/* Other versions */}
-      {siblings.length > 0 && (
-        <section>
-          <p className="mb-4 text-xs text-muted-foreground">
-            {t(lang, "otherVersions")} ({siblings.length})
-          </p>
-          <div className="flex gap-4 overflow-x-auto">
-            {siblings.map((s) => (
-              <Link
-                key={s.id}
-                href={`/cards/${s.cardCode}`}
-                className="group flex w-20 shrink-0 flex-col gap-1.5 text-center"
-              >
-                <div className="relative aspect-[63/88] w-full overflow-hidden rounded border border-border bg-muted transition-colors group-hover:border-primary/30">
-                  {s.imageUrl ? (
-                    <Image src={s.imageUrl} alt={getCardName(lang, s)} fill className="object-contain" sizes="80px" />
-                  ) : (
-                    <Skeleton className="absolute inset-0 size-full" />
-                  )}
-                </div>
-                <div>
-                  <RarityBadge rarity={s.rarity} size="sm" />
-                  {s.latestPriceJpy != null && (
-                    <p className="mt-0.5 font-price text-xs font-semibold">
-                      <Price jpy={s.latestPriceJpy} />
-                    </p>
-                  )}
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
     </div>
   )
 }
