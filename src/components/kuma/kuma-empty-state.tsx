@@ -17,7 +17,7 @@ const PRESETS: Record<KumaEmptyPreset, { mood: KumaMood; emoji: string; title: s
     mood: "sad",
     emoji: "🐻",
     title: "ยังไม่มีการ์ดในพอร์ต",
-    description: "เพิ่มการ์ดใบแรกให้ Kuma ถือหน่อย!",
+    description: "เพิ่มการ์ดใบแรกเลย!",
   },
   "empty-watchlist": {
     mood: "calm",

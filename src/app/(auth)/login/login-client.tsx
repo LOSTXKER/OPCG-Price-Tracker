@@ -90,7 +90,7 @@ export function LoginClient() {
             </p>
           </div>
           <p className="text-xs text-background/30">
-            OPCG Price Tracker
+            Meecard
           </p>
         </div>
       </div>

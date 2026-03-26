@@ -29,7 +29,7 @@ export async function generateMetadata(props: {
 
   return {
     title: `${card.cardCode} ${displayName}`,
-    description: `${priceText} · ${displayName} (${card.rarity}) — One Piece Card Game | Kuma Tracker`,
+    description: `${priceText} · ${displayName} (${card.rarity}) — One Piece Card Game | Meecard`,
   };
 }
 

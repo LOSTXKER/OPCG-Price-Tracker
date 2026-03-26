@@ -115,7 +115,7 @@ export function RegisterClient() {
             </div>
           </div>
           <p className="text-xs text-background/30">
-            OPCG Price Tracker
+            Meecard
           </p>
         </div>
       </div>

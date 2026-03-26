@@ -32,13 +32,13 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Kuma Tracker — ราคาการ์ด OPCG อัปเดตทุกวัน",
-    template: "%s | Kuma Tracker",
+    default: "Meecard — ราคาการ์ด OPCG อัปเดตทุกวัน",
+    template: "%s | Meecard",
   },
   description:
-    "ราคากลางการ์ด One Piece Card Game อัปเดตทุกวัน ดูราคา Yuyu-tei แปลงเป็นบาท กราฟราคาย้อนหลัง Portfolio ติดตามมูลค่า",
+    "Meecard — ราคากลางการ์ด One Piece Card Game อัปเดตทุกวัน ดูราคา Yuyu-tei แปลงเป็นบาท กราฟราคาย้อนหลัง Portfolio ติดตามมูลค่า",
   keywords: [
-    "Kuma Tracker",
+    "Meecard",
     "OPCG",
     "One Piece Card Game",
     "ราคาการ์ด",
