@@ -35,15 +35,15 @@ export interface PriceChartProps {
 function formatAxisDate(iso: string) {
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return iso
-  return d.toLocaleDateString("ja-JP", { month: "short", day: "numeric" })
+  return d.toLocaleDateString("th-TH", { month: "short", day: "numeric" })
 }
 
 function formatTooltipDate(iso: string) {
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return iso
-  return d.toLocaleString("ja-JP", {
+  return d.toLocaleDateString("th-TH", {
     year: "numeric",
-    month: "short",
+    month: "long",
     day: "numeric",
   })
 }
