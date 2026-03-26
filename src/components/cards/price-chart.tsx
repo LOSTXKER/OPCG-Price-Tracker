@@ -13,7 +13,7 @@ import {
 import { Lock } from "lucide-react"
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { formatByCurrency, formatJpy } from "@/lib/utils/currency"
+import { formatByCurrency, formatJpy, jpyToThb, jpyToUsd } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
 const LINE_COLOR = "#3B82F6"
@@ -56,6 +56,34 @@ type ChartTooltipRow = {
 
 function formatPriceByCurrency(jpy: number, currency: string): string {
   return formatByCurrency(jpy, currency as "JPY" | "THB" | "USD").primary
+}
+
+function compactPrice(jpy: number, currency: string): string {
+  const c = currency as "JPY" | "THB" | "USD"
+  let value: number
+  let prefix: string
+  let suffix: string
+
+  switch (c) {
+    case "THB":
+      value = jpyToThb(jpy)
+      prefix = "~"
+      suffix = " ฿"
+      break
+    case "USD":
+      value = jpyToUsd(jpy)
+      prefix = "$"
+      suffix = ""
+      break
+    default:
+      value = jpy
+      prefix = "¥"
+      suffix = ""
+  }
+
+  if (value >= 1_000_000) return `${prefix}${(value / 1_000_000).toFixed(1)}M${suffix}`
+  if (value >= 1_000) return `${prefix}${Math.round(value / 1_000)}K${suffix}`
+  return `${prefix}${Math.round(value)}${suffix}`
 }
 
 function ChartTooltip(props: {
@@ -149,12 +177,12 @@ export function PriceChart({ data, period, onPeriodChange }: PriceChartProps) {
               minTickGap={24}
             />
             <YAxis
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 11 }}
               tickLine={false}
               axisLine={false}
               className="text-muted-foreground font-mono"
-              tickFormatter={(v) => formatPriceByCurrency(Number(v), currency)}
-              width={56}
+              tickFormatter={(v) => compactPrice(Number(v), currency)}
+              width={64}
             />
             <Tooltip content={<ChartTooltip currency={currency} />} />
             <Area
