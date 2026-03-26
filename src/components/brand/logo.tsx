@@ -10,20 +10,23 @@ export function Logo({
   size?: "sm" | "md" | "lg";
   mono?: boolean;
 }) {
-  const imgSize = { sm: 28, md: 34, lg: 42 };
-  const textSize = { sm: "text-sm", md: "text-lg", lg: "text-xl" };
-  const leading = { sm: "leading-[28px]", md: "leading-[34px]", lg: "leading-[42px]" };
+  const cfg = {
+    sm: { img: 24, text: "text-base", gap: "gap-1.5" },
+    md: { img: 30, text: "text-lg", gap: "gap-2" },
+    lg: { img: 38, text: "text-2xl", gap: "gap-2.5" },
+  }[size];
 
   return (
-    <span className={cn("inline-flex items-center gap-1.5 font-bold tracking-tight", textSize[size], className)}>
+    <span className={cn("inline-flex items-center font-bold", cfg.gap, cfg.text, className)}>
       <Image
         src="/meecard.png"
         alt="Meecard"
-        width={imgSize[size]}
-        height={imgSize[size]}
-        className="shrink-0"
+        width={cfg.img}
+        height={cfg.img}
+        className="shrink-0 select-none"
+        priority
       />
-      <span className={cn(mono ? undefined : "text-foreground", leading[size])}>Meecard</span>
+      <span className={mono ? undefined : "text-foreground"}>Meecard</span>
     </span>
   );
 }
