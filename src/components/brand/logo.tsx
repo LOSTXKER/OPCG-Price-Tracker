@@ -10,17 +10,17 @@ export function Logo({
   size?: "sm" | "md" | "lg";
   mono?: boolean;
 }) {
-  const imgSize = { sm: 22, md: 28, lg: 36 };
-  const textSize = { sm: "text-sm", md: "text-base", lg: "text-lg" };
+  const imgSize = { sm: 26, md: 32, lg: 40 };
+  const textSize = { sm: "text-sm", md: "text-lg", lg: "text-xl" };
 
   return (
-    <span className={cn("inline-flex items-center gap-1.5 font-semibold tracking-tight", textSize[size], className)}>
+    <span className={cn("inline-flex items-center gap-2 font-bold tracking-tight", textSize[size], className)}>
       <Image
         src="/meecard.png"
         alt="Meecard"
         width={imgSize[size]}
         height={imgSize[size]}
-        className="shrink-0 rounded-full"
+        className="shrink-0"
       />
       <span className={mono ? undefined : "text-foreground"}>Meecard</span>
     </span>
