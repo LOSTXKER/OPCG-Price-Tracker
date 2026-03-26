@@ -48,7 +48,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 hidden border-b border-border/60 bg-background/80 backdrop-blur-xl md:block">
-      <div className="mx-auto flex h-11 max-w-6xl items-center gap-6 px-4 md:px-6">
+      <div className="mx-auto flex h-12 max-w-6xl items-center gap-6 px-4 md:px-6">
         <Link href="/" className="shrink-0">
           <Logo size="sm" />
         </Link>
