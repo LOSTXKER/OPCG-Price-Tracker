@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/marketplace/create") ||
     pathname.startsWith("/messages") ||
     pathname.startsWith("/deck-calculator") ||
-    pathname.startsWith("/admin") ||
+    (pathname.startsWith("/admin") && !pathname.startsWith("/admin-login")) ||
     pathname === "/profile";
 
   if (needsAuth) {

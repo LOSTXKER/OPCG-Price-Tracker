@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 function useIsChromeless() {
   const pathname = usePathname();
-  return pathname.startsWith("/admin") || pathname === "/login" || pathname === "/register";
+  return pathname.startsWith("/admin") || pathname === "/admin-login" || pathname === "/login" || pathname === "/register";
 }
 
 export function MainChrome({ children }: { children: React.ReactNode }) {
