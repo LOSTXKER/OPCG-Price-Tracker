@@ -28,11 +28,11 @@ export function CardsPagination({
   return (
     <nav className="flex flex-wrap items-center justify-center gap-1.5 pt-2" aria-label="Pagination">
       {hasPrev ? (
-        <Link href={pageHref(page - 1)} className="inline-flex h-8 items-center rounded-md border border-border/40 px-3 text-[13px] font-medium transition-colors hover:bg-muted">
+        <Link href={pageHref(page - 1)} className="inline-flex h-8 items-center rounded-md border border-border/40 px-3 text-sm font-medium transition-colors hover:bg-muted">
           ก่อนหน้า
         </Link>
       ) : (
-        <span className="inline-flex h-8 cursor-not-allowed items-center rounded-md border border-border/20 px-3 text-[13px] font-medium opacity-30">
+        <span className="inline-flex h-8 cursor-not-allowed items-center rounded-md border border-border/20 px-3 text-sm font-medium opacity-30">
           ก่อนหน้า
         </span>
       )}
@@ -44,7 +44,7 @@ export function CardsPagination({
           <Link
             key={p}
             href={pageHref(p)}
-            className={`inline-flex size-8 items-center justify-center rounded-md text-[13px] font-medium transition-colors ${
+            className={`inline-flex size-8 items-center justify-center rounded-md text-sm font-medium transition-colors ${
               p === page
                 ? "bg-primary text-primary-foreground"
                 : "border border-border/40 hover:bg-muted"
@@ -56,11 +56,11 @@ export function CardsPagination({
       )}
 
       {hasNext ? (
-        <Link href={pageHref(page + 1)} className="inline-flex h-8 items-center rounded-md border border-border/40 px-3 text-[13px] font-medium transition-colors hover:bg-muted">
+        <Link href={pageHref(page + 1)} className="inline-flex h-8 items-center rounded-md border border-border/40 px-3 text-sm font-medium transition-colors hover:bg-muted">
           ถัดไป
         </Link>
       ) : (
-        <span className="inline-flex h-8 cursor-not-allowed items-center rounded-md border border-border/20 px-3 text-[13px] font-medium opacity-30">
+        <span className="inline-flex h-8 cursor-not-allowed items-center rounded-md border border-border/20 px-3 text-sm font-medium opacity-30">
           ถัดไป
         </span>
       )}

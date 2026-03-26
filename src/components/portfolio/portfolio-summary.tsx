@@ -118,14 +118,14 @@ export function PortfolioSummary({
                     dataKey="label"
                     tickLine={false}
                     axisLine={false}
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 10 }}
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
                   />
                   <Tooltip
                     contentStyle={{
                       borderRadius: 8,
                       border: "1px solid var(--border)",
                       background: "var(--popover)",
-                      fontSize: 12,
+                      fontSize: 13,
                     }}
                     formatter={(value) => {
                       const n = typeof value === "number" ? value : Number(value)

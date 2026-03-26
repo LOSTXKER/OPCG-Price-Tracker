@@ -1,23 +1,14 @@
-import { syncAppUser } from "@/lib/auth/sync-app-user";
+import { getAuthUser } from "@/lib/api/auth";
+import { cardInclude } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
-import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
-
-const cardInclude = {
-  set: { select: { code: true, name: true, nameEn: true } },
-} as const;
 
 export async function GET() {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    const dbUser = await getAuthUser();
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    const dbUser = await syncAppUser(user);
 
     const items = await prisma.watchlistItem.findMany({
       where: { userId: dbUser.id },
@@ -34,15 +25,10 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    const dbUser = await getAuthUser();
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    const dbUser = await syncAppUser(user);
 
     let body: Record<string, unknown>;
     try {
@@ -82,15 +68,10 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    const dbUser = await getAuthUser();
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    const dbUser = await syncAppUser(user);
 
     const cardIdParam = request.nextUrl.searchParams.get("cardId");
     const cardId = cardIdParam ? Number(cardIdParam) : NaN;

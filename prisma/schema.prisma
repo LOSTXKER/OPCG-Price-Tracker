@@ -97,8 +97,9 @@ model Card {
   latestPriceThb  Float?
   prices          CardPrice[]
   sourceMappings  SourceMapping[]
-  portfolioItems  PortfolioItem[]
-  watchlistItems  WatchlistItem[]
+  portfolioItems       PortfolioItem[]
+  portfolioTransactions PortfolioTransaction[]
+  watchlistItems       WatchlistItem[]
   priceAlerts     PriceAlert[]
   listings        Listing[]
   communityPrices CommunityPrice[]
@@ -110,6 +111,7 @@ model Card {
 
   @@index([setId])
   @@index([baseCode])
+  @@index([yuyuteiId])
   @@index([rarity])
   @@index([cardType])
   @@index([color])
@@ -276,14 +278,15 @@ enum UserTier {
 // ============================================================
 
 model Portfolio {
-  id        Int                 @id @default(autoincrement())
-  userId    String
-  user      User                @relation(fields: [userId], references: [id])
-  name      String              @default("Default")
-  items     PortfolioItem[]
-  snapshots PortfolioSnapshot[]
-  createdAt DateTime            @default(now())
-  updatedAt DateTime            @updatedAt
+  id           Int                    @id @default(autoincrement())
+  userId       String
+  user         User                   @relation(fields: [userId], references: [id])
+  name         String                 @default("Default")
+  items        PortfolioItem[]
+  snapshots    PortfolioSnapshot[]
+  transactions PortfolioTransaction[]
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
 
   @@index([userId])
 }
@@ -316,6 +319,22 @@ model PortfolioItem {
 
   @@unique([portfolioId, cardId, condition])
   @@index([portfolioId])
+  @@index([cardId])
+}
+
+model PortfolioTransaction {
+  id           Int       @id @default(autoincrement())
+  portfolioId  Int
+  portfolio    Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  cardId       Int
+  card         Card     @relation(fields: [cardId], references: [id])
+  type         String
+  quantity     Int
+  pricePerUnit Int?
+  note         String?
+  createdAt    DateTime @default(now())
+
+  @@index([portfolioId, createdAt(sort: Desc)])
   @@index([cardId])
 }
 

@@ -1,6 +1,5 @@
-import { syncAppUser } from "@/lib/auth/sync-app-user";
+import { getAuthUser } from "@/lib/api/auth";
 import { prisma } from "@/lib/db";
-import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -32,12 +31,10 @@ export async function GET(
     }
 
     if (!deck.isPublic) {
-      const supabase = await createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
+      const dbUser = await getAuthUser();
+      if (!dbUser) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
-      const dbUser = await syncAppUser(user);
       if (deck.userId !== dbUser.id) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
@@ -61,12 +58,10 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid deck ID" }, { status: 400 });
     }
 
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const dbUser = await getAuthUser();
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const dbUser = await syncAppUser(user);
 
     const existing = await prisma.deck.findUnique({ where: { id: deckId } });
     if (!existing || existing.userId !== dbUser.id) {
@@ -132,12 +127,10 @@ export async function DELETE(
       return NextResponse.json({ error: "Invalid deck ID" }, { status: 400 });
     }
 
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const dbUser = await getAuthUser();
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const dbUser = await syncAppUser(user);
 
     const existing = await prisma.deck.findUnique({ where: { id: deckId } });
     if (!existing || existing.userId !== dbUser.id) {

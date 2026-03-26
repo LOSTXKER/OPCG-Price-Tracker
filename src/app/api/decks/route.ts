@@ -1,16 +1,13 @@
-import { syncAppUser } from "@/lib/auth/sync-app-user";
+import { getAuthUser } from "@/lib/api/auth";
 import { prisma } from "@/lib/db";
-import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const dbUser = await getAuthUser();
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const dbUser = await syncAppUser(user);
 
     const decks = await prisma.deck.findMany({
       where: { userId: dbUser.id },
@@ -35,12 +32,10 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const dbUser = await getAuthUser();
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const dbUser = await syncAppUser(user);
 
     const body = await request.json() as { name?: string; leaderId?: number; cardIds?: { cardId: number; quantity: number }[] };
     const name = body.name?.trim();

@@ -1,18 +1,13 @@
-import { syncAppUser } from "@/lib/auth/sync-app-user";
+import { getAuthUser } from "@/lib/api/auth";
 import { prisma } from "@/lib/db";
-import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    const dbUser = await getAuthUser();
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const dbUser = await syncAppUser(user);
 
     const listingId = request.nextUrl.searchParams.get("listingId");
     if (!listingId) {
@@ -57,14 +52,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    const dbUser = await getAuthUser();
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const dbUser = await syncAppUser(user);
 
     const body = (await request.json()) as {
       listingId: number;

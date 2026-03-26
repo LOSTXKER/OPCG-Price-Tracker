@@ -4,41 +4,16 @@ import {
   type CardCondition as CardConditionType,
   type Prisma,
 } from "@/generated/prisma/client";
-import { syncAppUser } from "@/lib/auth/sync-app-user";
+import { getAuthUser } from "@/lib/api/auth";
+import { cardInclude, userPublicSelect, asStringArray } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
-import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 const CONDITIONS = new Set<string>(Object.values(CardCondition));
 
-const cardInclude = {
-  set: { select: { code: true, name: true, nameEn: true } },
-} as const;
-
-const userPublicSelect = {
-  id: true,
-  displayName: true,
-  avatarUrl: true,
-  sellerRating: true,
-  sellerReviewCount: true,
-} as const;
-
 function parseCondition(value: unknown): CardConditionType | null {
   if (typeof value !== "string" || !CONDITIONS.has(value)) return null;
   return value as CardConditionType;
-}
-
-function asStringArray(value: unknown, field: string): string[] | NextResponse {
-  if (value === undefined) return [];
-  if (!Array.isArray(value)) {
-    return NextResponse.json({ error: `${field} must be an array of strings` }, { status: 400 });
-  }
-  for (const v of value) {
-    if (typeof v !== "string") {
-      return NextResponse.json({ error: `${field} must contain only strings` }, { status: 400 });
-    }
-  }
-  return value as string[];
 }
 
 export async function GET(request: NextRequest) {
@@ -134,15 +109,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    const dbUser = await getAuthUser();
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    const dbUser = await syncAppUser(user);
 
     let body: Record<string, unknown>;
     try {

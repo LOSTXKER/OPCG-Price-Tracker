@@ -68,7 +68,7 @@ export function PortfolioItem({
             className="object-cover"
           />
         ) : (
-          <span className="text-muted-foreground flex size-full items-center justify-center text-[10px]">
+          <span className="text-muted-foreground flex size-full items-center justify-center text-[11px]">
             —
           </span>
         )}

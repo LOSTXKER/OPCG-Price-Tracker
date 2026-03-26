@@ -1,15 +1,5 @@
-import "dotenv/config";
-import { PrismaClient } from "../src/generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { prisma } from "./_db";
 import * as cheerio from "cheerio";
-
-const connectionString = process.env.DIRECT_URL || process.env.DATABASE_URL;
-if (!connectionString) {
-  throw new Error("DATABASE_URL or DIRECT_URL is not set");
-}
-
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
 
 const BASE_URL = "https://yuyu-tei.jp";
 const BANDAI_EN_IMG = "https://asia-en.onepiece-cardgame.com/images/cardlist/card";

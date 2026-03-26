@@ -121,7 +121,7 @@ export default async function SetsIndexPage() {
                   {mostValuable.map((s, i) => (
                     <tr key={s.id} className="border-b border-border/50 transition-colors last:border-0 hover:bg-muted/30">
                       <td className="px-4 py-2.5 align-middle">
-                        <span className={`flex size-5 items-center justify-center rounded font-mono text-[10px] font-bold ${i < 3 ? "text-primary" : "text-muted-foreground"}`}>
+                        <span className={`flex size-5 items-center justify-center rounded font-mono text-[11px] font-bold ${i < 3 ? "text-primary" : "text-muted-foreground"}`}>
                           {i + 1}
                         </span>
                       </td>
@@ -154,7 +154,7 @@ export default async function SetsIndexPage() {
                 <section key={type} className="space-y-4">
                   <div className="flex items-baseline gap-2">
                     <h2 className="font-sans text-lg font-semibold tracking-tight">{TYPE_LABEL[type]}</h2>
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">{list.length}</span>
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">{list.length}</span>
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {list.map((s) => (

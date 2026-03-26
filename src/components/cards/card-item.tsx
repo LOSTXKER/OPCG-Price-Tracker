@@ -71,7 +71,7 @@ export function CardItem({
           {/* Top-left pull chance badge */}
           {pullChancePerBox != null && pullChancePerBox > 0 && (
             <div className="absolute left-1 top-1">
-              <span className="rounded bg-black/70 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-white backdrop-blur-sm">
+              <span className="rounded bg-black/70 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-white backdrop-blur-sm">
                 {formatPct(pullChancePerBox)}
               </span>
             </div>
@@ -80,7 +80,7 @@ export function CardItem({
           {/* Top-right badges */}
           <div className="absolute right-1.5 top-1.5 flex flex-col items-end gap-1">
             {!inStock && (
-              <span className="rounded bg-destructive/90 px-1.5 py-0.5 text-[9px] font-medium text-white">
+              <span className="rounded bg-destructive/90 px-1.5 py-0.5 text-[10px] font-medium text-white">
                 หมด
               </span>
             )}
@@ -92,12 +92,12 @@ export function CardItem({
           <div className="mb-1 flex items-center gap-1.5">
             <RarityBadge rarity={rarity} size="sm" />
             {setCode && (
-              <span className="font-mono text-[9px] text-muted-foreground">
+              <span className="font-mono text-[10px] text-muted-foreground">
                 {setCode.toUpperCase()}
               </span>
             )}
           </div>
-          <p className="truncate text-[12px] font-medium leading-snug" title={displayName}>
+          <p className="truncate text-[13px] font-medium leading-snug" title={displayName}>
             {displayName}
           </p>
           <div className="mt-auto pt-1.5">

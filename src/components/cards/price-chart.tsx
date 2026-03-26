@@ -13,7 +13,7 @@ import {
 import { Lock } from "lucide-react"
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { formatJpy, formatThb, formatUsd, jpyToThb, jpyToUsd } from "@/lib/utils/currency"
+import { formatByCurrency, formatJpy } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
 const LINE_COLOR = "#3B82F6"
@@ -55,11 +55,7 @@ type ChartTooltipRow = {
 }
 
 function formatPriceByCurrency(jpy: number, currency: string): string {
-  switch (currency) {
-    case "THB": return `~${formatThb(Math.round(jpyToThb(jpy)))}`
-    case "USD": return formatUsd(jpyToUsd(jpy))
-    default: return formatJpy(jpy)
-  }
+  return formatByCurrency(jpy, currency as "JPY" | "THB" | "USD").primary
 }
 
 function ChartTooltip(props: {
@@ -146,14 +142,14 @@ export function PriceChart({ data, period, onPeriodChange }: PriceChartProps) {
             <XAxis
               dataKey="scrapedAt"
               tickFormatter={formatAxisDate}
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 12 }}
               tickLine={false}
               axisLine={false}
               className="text-muted-foreground"
               minTickGap={24}
             />
             <YAxis
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 12 }}
               tickLine={false}
               axisLine={false}
               className="text-muted-foreground font-mono"

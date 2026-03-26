@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import {
-  IBM_Plex_Sans_Thai,
-  Inter,
+  DM_Sans,
+  Kanit,
   JetBrains_Mono,
 } from "next/font/google";
 import { BottomNav } from "@/components/layout/bottom-nav";
@@ -14,14 +14,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-const inter = Inter({
+const dmSans = DM_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
 });
 
-const ibmPlexThai = IBM_Plex_Sans_Thai({
+const kanit = Kanit({
   variable: "--font-thai",
-  subsets: ["thai"],
+  subsets: ["thai", "latin"],
   weight: ["300", "400", "500", "600", "700"],
 });
 
@@ -56,7 +56,7 @@ export default function RootLayout({
   return (
     <html lang="th" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${ibmPlexThai.variable} ${jetbrainsMono.variable} flex min-h-dvh flex-col font-sans antialiased`}
+        className={`${dmSans.variable} ${kanit.variable} ${jetbrainsMono.variable} flex min-h-dvh flex-col font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"

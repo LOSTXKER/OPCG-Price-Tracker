@@ -1,42 +1,23 @@
 "use client";
 
-import { formatJpy, formatThb, formatUsd, jpyToThb, jpyToUsd } from "@/lib/utils/currency";
+import { formatByCurrency } from "@/lib/utils/currency";
 import { cn } from "@/lib/utils";
-import { useUIStore, type Currency } from "@/stores/ui-store";
+import { useUIStore } from "@/stores/ui-store";
 
 const sizeClasses = {
   sm: {
     primary: "text-sm font-medium",
-    secondary: "text-xs text-muted-foreground",
     change: "text-xs",
   },
   md: {
     primary: "text-xl font-semibold",
-    secondary: "text-sm text-muted-foreground",
     change: "text-sm",
   },
   lg: {
     primary: "text-3xl font-semibold",
-    secondary: "text-base text-muted-foreground",
     change: "text-base",
   },
 } as const;
-
-function formatByCurrency(jpy: number, currency: Currency, thbExplicit?: number | null): { primary: string; secondary: string } {
-  const thb = thbExplicit != null ? Number(thbExplicit) : jpyToThb(jpy);
-  const usd = jpyToUsd(jpy);
-  const approx = thbExplicit == null;
-
-  switch (currency) {
-    case "THB":
-      return { primary: approx ? `~${formatThb(Math.round(thb))}` : formatThb(Math.round(thb)), secondary: formatJpy(jpy) };
-    case "USD":
-      return { primary: formatUsd(usd), secondary: formatJpy(jpy) };
-    case "JPY":
-    default:
-      return { primary: formatJpy(jpy), secondary: approx ? `~${formatThb(Math.round(thb))}` : formatThb(Math.round(thb)) };
-  }
-}
 
 export type PriceDisplayProps = {
   priceJpy?: number | null;
@@ -64,7 +45,7 @@ export function PriceDisplay({
     );
   }
 
-  const { primary, secondary } = formatByCurrency(priceJpy, currency, priceThb);
+  const { primary } = formatByCurrency(priceJpy, currency, priceThb);
 
   const changeNum = change ?? undefined;
   const hasChange = changeNum !== undefined && !Number.isNaN(changeNum) && showChange;

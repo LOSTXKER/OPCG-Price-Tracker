@@ -8,6 +8,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -81,29 +82,31 @@ export function FilterChips({
               <ChevronDownIcon className="size-3.5 opacity-60" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="min-w-48">
-              <DropdownMenuLabel>{filter.label}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {filter.options.map((opt) => {
-                const checked = values.includes(opt.value);
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={opt.value}
-                    checked={checked}
-                    onCheckedChange={(next) => {
-                      if (next) {
-                        onChange(filter.key, [...values, opt.value]);
-                      } else {
-                        onChange(
-                          filter.key,
-                          values.filter((v) => v !== opt.value)
-                        );
-                      }
-                    }}
-                  >
-                    {opt.label}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>{filter.label}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {filter.options.map((opt) => {
+                  const checked = values.includes(opt.value);
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={opt.value}
+                      checked={checked}
+                      onCheckedChange={(next) => {
+                        if (next) {
+                          onChange(filter.key, [...values, opt.value]);
+                        } else {
+                          onChange(
+                            filter.key,
+                            values.filter((v) => v !== opt.value)
+                          );
+                        }
+                      }}
+                    >
+                      {opt.label}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         );

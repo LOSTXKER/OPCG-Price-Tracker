@@ -4,11 +4,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
-  BookOpen,
-  LayoutGrid,
+  Briefcase,
+  Calculator,
   Package,
   Search,
   ShoppingBag,
+  Star,
   TrendingUp,
   User,
 } from "lucide-react";
@@ -22,9 +23,9 @@ import { cn } from "@/lib/utils";
 const navLinks = [
   { href: "/", label: "ตลาด", icon: TrendingUp },
   { href: "/sets", label: "ชุดการ์ด", icon: Package },
-  { href: "/cards", label: "การ์ดเดี่ยว", icon: LayoutGrid },
+  { href: "/portfolio", label: "พอร์ตโฟลิโอ", icon: Briefcase },
+  { href: "/pull-calculator", label: "คำนวณดรอป", icon: Calculator },
   { href: "/marketplace", label: "ซื้อขาย", icon: ShoppingBag },
-  { href: "/guide", label: "คู่มือ", icon: BookOpen },
 ] as const;
 
 function isActive(pathname: string, href: string) {
@@ -41,7 +42,7 @@ export function Header() {
     e.preventDefault();
     const q = query.trim();
     if (!q) return;
-    router.push(`/cards?search=${encodeURIComponent(q)}`);
+    router.push(`/?search=${encodeURIComponent(q)}`);
     setQuery("");
   };
 
@@ -60,7 +61,7 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "px-3 py-1.5 text-[13px] font-medium transition-colors rounded-md",
+                  "px-3 py-1.5 text-sm font-medium transition-colors rounded-md",
                   active
                     ? "text-foreground"
                     : "text-muted-foreground hover:text-foreground"
@@ -77,7 +78,7 @@ export function Header() {
           <input
             type="search"
             placeholder="ค้นหาการ์ด..."
-            className="h-8 w-full rounded-lg border-0 bg-muted/60 pl-8 pr-3 text-[13px] outline-none transition-colors placeholder:text-muted-foreground/60 focus:bg-muted focus:ring-1 focus:ring-border"
+            className="h-8 w-full rounded-lg border-0 bg-muted/60 pl-8 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:bg-muted focus:ring-1 focus:ring-border"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             aria-label="Search"
@@ -89,8 +90,18 @@ export function Header() {
           <CurrencyToggle />
           <ThemeToggle />
           <Link
+            href="/watchlist"
+            className={cn(
+              "flex h-8 items-center justify-center rounded-lg px-2 text-muted-foreground transition-colors hover:text-amber-400",
+              isActive(pathname, "/watchlist") && "text-amber-400"
+            )}
+            aria-label="Watchlist"
+          >
+            <Star className={cn("size-4", isActive(pathname, "/watchlist") && "fill-current")} />
+          </Link>
+          <Link
             href="/login"
-            className="flex h-8 items-center gap-1.5 rounded-lg px-3 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+            className="flex h-8 items-center gap-1.5 rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <User className="size-3.5" />
             <span className="hidden lg:inline">เข้าสู่ระบบ</span>

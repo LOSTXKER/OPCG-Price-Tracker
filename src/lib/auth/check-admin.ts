@@ -1,20 +1,9 @@
-import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/db";
+import { getAdminUser } from "./get-admin-user";
 
 /**
- * For use in API routes — returns true/false instead of redirecting.
+ * For use in API routes -- returns true/false instead of redirecting.
  */
 export async function checkIsAdmin(): Promise<boolean> {
-  const supabase = await createClient();
-  const {
-    data: { user: authUser },
-  } = await supabase.auth.getUser();
-  if (!authUser) return false;
-
-  const appUser = await prisma.user.findUnique({
-    where: { supabaseId: authUser.id },
-    select: { isAdmin: true },
-  });
-
-  return appUser?.isAdmin === true;
+  const admin = await getAdminUser();
+  return admin !== null;
 }

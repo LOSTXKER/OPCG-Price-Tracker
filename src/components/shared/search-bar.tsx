@@ -190,7 +190,7 @@ export function SearchBar({
               <XIcon className="size-3.5" />
             </button>
           ) : (
-            <kbd className="mr-3 hidden rounded-md border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:inline">
+            <kbd className="mr-3 hidden rounded-md border border-border bg-background px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground sm:inline">
               /
             </kbd>
           )}

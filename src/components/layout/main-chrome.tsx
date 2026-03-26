@@ -2,19 +2,21 @@
 
 import { usePathname } from "next/navigation";
 
-export function MainChrome({ children }: { children: React.ReactNode }) {
+function useIsChromeless() {
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admin");
+  return pathname.startsWith("/admin") || pathname === "/login" || pathname === "/register";
+}
 
-  if (isAdmin) return null;
+export function MainChrome({ children }: { children: React.ReactNode }) {
+  const chromeless = useIsChromeless();
+  if (chromeless) return null;
   return <>{children}</>;
 }
 
 export function PageContent({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admin");
+  const chromeless = useIsChromeless();
 
-  if (isAdmin) {
+  if (chromeless) {
     return <>{children}</>;
   }
 

@@ -1,21 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { checkIsAdmin } from "@/lib/auth/check-admin";
 import { prisma } from "@/lib/db";
 
 const BANDAI_BASE = "https://www.onepiece-cardgame.com/images/cardlist/card";
-
-async function checkIsAdmin() {
-  const supabase = await createClient();
-  const {
-    data: { user: authUser },
-  } = await supabase.auth.getUser();
-  if (!authUser) return false;
-  const appUser = await prisma.user.findUnique({
-    where: { supabaseId: authUser.id },
-    select: { isAdmin: true },
-  });
-  return appUser?.isAdmin === true;
-}
 
 export async function GET(request: NextRequest) {
   if (!(await checkIsAdmin())) {

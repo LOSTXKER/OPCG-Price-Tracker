@@ -1,4 +1,4 @@
-const DEFAULT_JPY_THB = 0.296;
+const DEFAULT_JPY_THB = 0.21;
 const DEFAULT_JPY_USD = 0.0067;
 
 export function jpyToThb(jpy: number, rate?: number): number {
@@ -32,4 +32,37 @@ export function formatPrice(jpy: number, rate?: number): { jpy: string; thb: str
     jpy: formatJpy(jpy),
     thb: formatThb(jpyToThb(jpy, rate)),
   };
+}
+
+export type Currency = "JPY" | "THB" | "USD";
+
+/**
+ * Formats a JPY price into { primary, secondary } strings
+ * based on the active currency. When `thbExplicit` is provided
+ * it is used instead of the conversion estimate.
+ */
+export function formatByCurrency(
+  jpy: number,
+  currency: Currency,
+  thbExplicit?: number | null
+): { primary: string; secondary: string } {
+  const thb = thbExplicit != null ? Number(thbExplicit) : jpyToThb(jpy);
+  const usd = jpyToUsd(jpy);
+  const approx = thbExplicit == null;
+
+  switch (currency) {
+    case "THB":
+      return {
+        primary: approx ? `~${formatThb(Math.round(thb))}` : formatThb(Math.round(thb)),
+        secondary: formatJpy(jpy),
+      };
+    case "USD":
+      return { primary: formatUsd(usd), secondary: formatJpy(jpy) };
+    case "JPY":
+    default:
+      return {
+        primary: formatJpy(jpy),
+        secondary: approx ? `~${formatThb(Math.round(thb))}` : formatThb(Math.round(thb)),
+      };
+  }
 }

@@ -107,7 +107,7 @@ export default function ChatPage() {
                   </p>
                 )}
                 <p>{m.content}</p>
-                <p className={cn("mt-1 text-right text-[10px] opacity-60")}>
+                <p className={cn("mt-1 text-right text-[11px] opacity-60")}>
                   {new Date(m.createdAt).toLocaleTimeString("th-TH", {
                     hour: "2-digit",
                     minute: "2-digit",

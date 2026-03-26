@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Briefcase, Home, Search, ShoppingBag, User } from "lucide-react";
+import { Calculator, Home, Package, ShoppingBag, User } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 const tabs = [
   { href: "/", label: "หน้าแรก", icon: Home },
-  { href: "/cards", label: "ค้นหา", icon: Search },
-  { href: "/portfolio", label: "พอร์ต", icon: Briefcase },
+  { href: "/sets", label: "ชุดการ์ด", icon: Package },
+  { href: "/pull-calculator", label: "คำนวณ", icon: Calculator },
   { href: "/marketplace", label: "ซื้อขาย", icon: ShoppingBag },
   { href: "/profile", label: "บัญชี", icon: User },
 ] as const;
@@ -38,7 +38,7 @@ export function BottomNav({ className }: { className?: string }) {
               <Link
                 href={href}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 py-2 text-[10px] font-medium transition-colors",
+                  "flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition-colors",
                   active ? "text-foreground" : "text-muted-foreground"
                 )}
               >

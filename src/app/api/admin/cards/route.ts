@@ -50,6 +50,10 @@ export async function GET(request: NextRequest) {
     where.nameTh = null;
   } else if (missingFilter === "image") {
     where.OR = [{ imageUrl: null }, { imageUrl: "" }];
+  } else if (missingFilter === "price") {
+    where.latestPriceJpy = null;
+  } else if (missingFilter === "yuyutei") {
+    where.yuyuteiId = null;
   }
 
   const [cards, total] = await Promise.all([

@@ -7,12 +7,13 @@ import { Breadcrumb } from "@/components/shared/breadcrumb"
 import { PriceDisplay } from "@/components/shared/price-display"
 import { Price } from "@/components/shared/price-inline"
 import { RarityBadge } from "@/components/shared/rarity-badge"
+import { WatchlistStar } from "@/components/shared/watchlist-star"
+import { CardAddToPortfolio } from "@/components/cards/card-add-to-portfolio"
 import { Skeleton } from "@/components/ui/skeleton"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { t, getCardName, getCardEffect, getSetName } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 
-import { CardDetailActions } from "./card-detail-actions"
 import { CardDetailPriceChart } from "./card-detail-price-chart"
 
 export interface SiblingCard {
@@ -28,6 +29,7 @@ export interface SiblingCard {
 
 export interface CardDetailProps {
   card: {
+    id: number
     cardCode: string
     baseCode: string | null
     nameJp: string
@@ -100,7 +102,7 @@ export function CardDetail({ card, siblings, communityPrice }: CardDetailProps) 
                 <Skeleton className="absolute inset-0 size-full" />
               )}
             </div>
-            <p className="mt-2 text-center text-[11px] text-muted-foreground">
+            <p className="mt-2 text-center text-xs text-muted-foreground">
               {card.viewCount.toLocaleString()} {t(lang, "views")}
             </p>
           </div>
@@ -114,14 +116,20 @@ export function CardDetail({ card, siblings, communityPrice }: CardDetailProps) 
               <span className="font-price text-xs text-muted-foreground">{card.baseCode ?? card.cardCode}</span>
               <RarityBadge rarity={card.rarity} size="md" />
             </div>
-            <h1 className="text-2xl font-semibold tracking-tight">
-              {displayName}
-            </h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                {displayName}
+              </h1>
+              <WatchlistStar cardId={card.id} size="md" />
+            </div>
             <p className="mt-1 text-xs text-muted-foreground">
               <Link href={`/sets/${set.code}`} className="hover:text-foreground hover:underline underline-offset-4">
                 {set.code.toUpperCase()} &middot; {setName}
               </Link>
             </p>
+            <div className="mt-3">
+              <CardAddToPortfolio cardId={card.id} cardName={displayName} />
+            </div>
           </div>
 
           {/* Market Price */}
@@ -256,7 +264,7 @@ export function CardDetail({ card, siblings, communityPrice }: CardDetailProps) 
                 <div>
                   <RarityBadge rarity={s.rarity} size="sm" />
                   {s.latestPriceJpy != null && (
-                    <p className="mt-0.5 font-price text-[11px] font-semibold">
+                    <p className="mt-0.5 font-price text-xs font-semibold">
                       <Price jpy={s.latestPriceJpy} />
                     </p>
                   )}

@@ -22,7 +22,7 @@ export async function fetchExchangeRate(): Promise<number> {
     orderBy: { fetchedAt: "desc" },
   });
 
-  return latest?.rate ?? 0.296;
+  return latest?.rate ?? 0.21;
 }
 
 export async function saveExchangeRate(rate: number) {
@@ -39,5 +39,5 @@ export async function getLatestExchangeRate(): Promise<number> {
   const latest = await prisma.exchangeRate.findFirst({
     orderBy: { fetchedAt: "desc" },
   });
-  return latest?.rate ?? 0.296;
+  return latest?.rate ?? 0.21;
 }

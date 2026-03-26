@@ -2,9 +2,9 @@ import {
   CardCondition,
   type CardCondition as CardConditionType,
 } from "@/generated/prisma/client";
-import { syncAppUser } from "@/lib/auth/sync-app-user";
+import { getAuthUser } from "@/lib/api/auth";
+import { cardInclude } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
-import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 const CONDITIONS = new Set<string>(Object.values(CardCondition));
@@ -16,15 +16,10 @@ function parseCondition(value: unknown): CardConditionType | null {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    const dbUser = await getAuthUser();
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    const dbUser = await syncAppUser(user);
 
     let body: Record<string, unknown>;
     try {
@@ -96,9 +91,7 @@ export async function POST(request: NextRequest) {
             ...(typeof body.notes === "string" ? { notes: body.notes.slice(0, 2000) } : {}),
           },
           include: {
-            card: {
-              include: { set: { select: { code: true, name: true, nameEn: true } } },
-            },
+            card: { include: cardInclude },
           },
         })
       : await prisma.portfolioItem.create({
@@ -111,11 +104,20 @@ export async function POST(request: NextRequest) {
             notes,
           },
           include: {
-            card: {
-              include: { set: { select: { code: true, name: true, nameEn: true } } },
-            },
+            card: { include: cardInclude },
           },
         });
+
+    await prisma.portfolioTransaction.create({
+      data: {
+        portfolioId,
+        cardId,
+        type: "BUY",
+        quantity: quantityRaw,
+        pricePerUnit: purchasePrice !== null ? Math.round(purchasePrice) : null,
+        note: notes,
+      },
+    });
 
     return NextResponse.json({ item }, { status: existing ? 200 : 201 });
   } catch (error) {

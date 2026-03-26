@@ -5,7 +5,7 @@ import { cache } from "react";
 
 import { CardGrid } from "@/components/cards/card-grid";
 import { CardItem } from "@/components/cards/card-item";
-import { PullRatesTable, type PullRateRow } from "@/components/boxes/pull-rates-table";
+import { PullRatesTable, type PullRateRow } from "@/components/sets/pull-rates-table";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import { RARITIES } from "@/lib/constants/rarities";
@@ -143,19 +143,19 @@ export default async function SetDetailPage(props: {
       {/* Stat widgets */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="panel p-4">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">การ์ดทั้งหมด</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">การ์ดทั้งหมด</p>
           <p className="mt-1 font-sans text-2xl font-bold tabular-nums">{cards.length}</p>
         </div>
         <div className="panel p-4">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">มูลค่ารวม</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">มูลค่ารวม</p>
           <p className="mt-1 font-sans text-2xl font-bold tabular-nums font-mono"><Price jpy={totalValue} /></p>
         </div>
         <div className="panel p-4">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">ราคาเฉลี่ย</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">ราคาเฉลี่ย</p>
           <p className="mt-1 font-sans text-2xl font-bold tabular-nums font-mono"><Price jpy={avgPrice} /></p>
         </div>
         <div className="panel p-4">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">แพงที่สุด</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">แพงที่สุด</p>
           <p className="mt-1 font-sans text-2xl font-bold tabular-nums font-mono">{mostExpensive ? <Price jpy={mostExpensive.latestPriceJpy ?? 0} /> : "—"}</p>
           {mostExpensive && <p className="mt-0.5 truncate text-xs text-muted-foreground">{mostExpensive.nameEn ?? mostExpensive.nameJp}</p>}
         </div>

@@ -13,63 +13,82 @@ export type TrendingCard = {
   set?: { code: string; name?: string }
 }
 
-export type ViewedCard = TrendingCard & { viewCount: number }
+const TABLE_PAGE_SIZE = 20
+
+const cardSetSelect = { code: true, name: true, nameEn: true } as const
 
 export async function getHomeData() {
   try {
-    // Batch 1: card lists
-    const [topGainers, topLosers, mostViewed, highestPriced] = await Promise.all([
+    const [topGainers, topLosers, highestPriced] = await Promise.all([
       prisma.card.findMany({
         where: { priceChange24h: { not: null, gt: 0 } },
         orderBy: { priceChange24h: "desc" },
-        take: 10,
+        take: 5,
         include: { set: { select: { code: true, name: true } } },
       }),
       prisma.card.findMany({
         where: { priceChange24h: { not: null, lt: 0 } },
         orderBy: { priceChange24h: "asc" },
-        take: 10,
-        include: { set: { select: { code: true, name: true } } },
-      }),
-      prisma.card.findMany({
-        where: { viewCount: { gt: 0 } },
-        orderBy: { viewCount: "desc" },
-        take: 10,
+        take: 5,
         include: { set: { select: { code: true, name: true } } },
       }),
       prisma.card.findMany({
         where: { latestPriceJpy: { not: null, gt: 0 } },
         orderBy: { latestPriceJpy: "desc" },
-        take: 10,
+        take: 1,
         include: { set: { select: { code: true, name: true } } },
       }),
     ])
 
-    // Batch 2: aggregates + set info
-    const [newestSet, totalCards, totalSets, totalValueAgg] = await Promise.all([
+    const [
+      newestSet,
+      totalCards,
+      totalValueAgg,
+      initialTableCards,
+      initialTableTotal,
+      sets,
+      rarityRows,
+    ] = await Promise.all([
       prisma.cardSet.findFirst({
         orderBy: [{ releaseDate: "desc" }, { createdAt: "desc" }],
       }),
       prisma.card.count(),
-      prisma.cardSet.count(),
       prisma.card.aggregate({
         _sum: { latestPriceJpy: true },
         where: { latestPriceJpy: { gt: 0 } },
       }),
+      prisma.card.findMany({
+        orderBy: { latestPriceJpy: { sort: "desc", nulls: "last" } },
+        take: TABLE_PAGE_SIZE,
+        include: { set: { select: cardSetSelect } },
+      }),
+      prisma.card.count(),
+      prisma.cardSet.findMany({
+        select: { code: true, name: true, nameEn: true },
+        orderBy: { code: "asc" },
+      }),
+      prisma.card.findMany({
+        distinct: ["rarity"],
+        select: { rarity: true },
+        orderBy: { rarity: "asc" },
+      }),
     ])
-
-    const latestSetCards = newestSet
-      ? await prisma.card.findMany({
-          where: { setId: newestSet.id },
-          orderBy: { latestPriceJpy: "desc" },
-          take: 20,
-          include: { set: { select: { code: true } } },
-        })
-      : []
 
     const totalValue = totalValueAgg._sum.latestPriceJpy ?? 0
 
-    return { topGainers, topLosers, mostViewed, newestSet, latestSetCards, totalCards, totalSets, highestPriced, totalValue }
+    return {
+      topGainers,
+      topLosers,
+      highestPriced,
+      newestSet,
+      totalCards,
+      totalValue,
+      initialTableCards,
+      initialTableTotal,
+      initialTableTotalPages: Math.ceil(initialTableTotal / TABLE_PAGE_SIZE),
+      sets,
+      rarityRows,
+    }
   } catch (error) {
     console.error("Failed to fetch home data:", error)
     throw error

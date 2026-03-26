@@ -110,12 +110,12 @@ export function ListingCard({
         )}
         <div className="absolute top-2 left-2 flex flex-col gap-1">
           {isDeal && (
-            <Badge className="bg-price-up/90 text-white border-0 text-[10px] shadow-sm">
+            <Badge className="bg-price-up/90 text-white border-0 text-[11px] shadow-sm">
               Best Deal
             </Badge>
           )}
           {isFeatured && (
-            <Badge className="bg-muted/90 text-black border-0 text-[10px] shadow-sm">
+            <Badge className="bg-muted/90 text-black border-0 text-[11px] shadow-sm">
               Featured
             </Badge>
           )}
@@ -123,7 +123,7 @@ export function ListingCard({
         <div className="absolute top-2 right-2">
           <span
             className={cn(
-              "inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold shadow-sm",
+              "inline-flex rounded-full border px-2 py-0.5 text-[11px] font-semibold shadow-sm",
               conditionStyles(condition)
             )}
           >
@@ -137,7 +137,7 @@ export function ListingCard({
           <p className="line-clamp-1 text-sm font-medium">{card.nameEn ?? card.nameJp}</p>
         </Link>
         <div className="flex items-center gap-1.5">
-          <span className="font-mono text-[11px] text-muted-foreground">
+          <span className="font-mono text-xs text-muted-foreground">
             {card.cardCode}
           </span>
           <RarityBadge rarity={card.rarity} size="sm" />
@@ -173,7 +173,7 @@ export function ListingCard({
             {seller.avatarUrl ? (
               <AvatarImage src={seller.avatarUrl} alt="" />
             ) : null}
-            <AvatarFallback className="text-[10px]">
+            <AvatarFallback className="text-[11px]">
               {(seller.displayName ?? "?").slice(0, 1).toUpperCase()}
             </AvatarFallback>
           </Avatar>

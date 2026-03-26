@@ -4,25 +4,13 @@ import {
   type CardCondition as CardConditionType,
   type Prisma,
 } from "@/generated/prisma/client";
-import { syncAppUser } from "@/lib/auth/sync-app-user";
+import { getAuthUser } from "@/lib/api/auth";
+import { cardInclude, userPublicSelect, asStringArray } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
-import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 const CONDITIONS = new Set<string>(Object.values(CardCondition));
 const STATUSES = new Set<string>(Object.values(ListingStatus));
-
-const cardInclude = {
-  set: { select: { code: true, name: true, nameEn: true } },
-} as const;
-
-const userPublicSelect = {
-  id: true,
-  displayName: true,
-  avatarUrl: true,
-  sellerRating: true,
-  sellerReviewCount: true,
-} as const;
 
 function parseCondition(value: unknown): CardConditionType | null {
   if (typeof value !== "string" || !CONDITIONS.has(value)) return null;
@@ -32,19 +20,6 @@ function parseCondition(value: unknown): CardConditionType | null {
 function parseStatus(value: unknown): (typeof ListingStatus)[keyof typeof ListingStatus] | null {
   if (typeof value !== "string" || !STATUSES.has(value)) return null;
   return value as (typeof ListingStatus)[keyof typeof ListingStatus];
-}
-
-function asStringArray(value: unknown, field: string): string[] | NextResponse {
-  if (value === undefined) return [];
-  if (!Array.isArray(value)) {
-    return NextResponse.json({ error: `${field} must be an array of strings` }, { status: 400 });
-  }
-  for (const v of value) {
-    if (typeof v !== "string") {
-      return NextResponse.json({ error: `${field} must contain only strings` }, { status: 400 });
-    }
-  }
-  return value as string[];
 }
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -57,15 +32,10 @@ async function getOwnedListing(listingId: number, userId: string) {
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    const dbUser = await getAuthUser();
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    const dbUser = await syncAppUser(user);
 
     const { id: idParam } = await context.params;
     const listingId = Number(idParam);
@@ -185,15 +155,10 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
 export async function DELETE(_request: NextRequest, context: RouteContext) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    const dbUser = await getAuthUser();
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    const dbUser = await syncAppUser(user);
 
     const { id: idParam } = await context.params;
     const listingId = Number(idParam);

@@ -4,13 +4,10 @@ import {
   type AlertChannel as AlertChannelType,
   type AlertDirection as AlertDirectionType,
 } from "@/generated/prisma/client";
+import { getAuthUser } from "@/lib/api/auth";
+import { cardInclude } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
-import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
-
-const cardInclude = {
-  set: { select: { code: true, name: true, nameEn: true } },
-} as const;
 
 const DIRECTIONS = new Set<string>(Object.values(AlertDirection));
 const CHANNELS = new Set<string>(Object.values(AlertChannel));
@@ -27,17 +24,9 @@ function parseChannel(value: unknown): AlertChannelType | null {
 
 export async function GET() {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } });
+    const dbUser = await getAuthUser();
     if (!dbUser) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const alerts = await prisma.priceAlert.findMany({
@@ -55,17 +44,9 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } });
+    const dbUser = await getAuthUser();
     if (!dbUser) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     let body: Record<string, unknown>;
@@ -119,17 +100,9 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const dbUser = await prisma.user.findUnique({ where: { supabaseId: user.id } });
+    const dbUser = await getAuthUser();
     if (!dbUser) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const idParam = request.nextUrl.searchParams.get("id");

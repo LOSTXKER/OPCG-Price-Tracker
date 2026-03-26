@@ -246,6 +246,8 @@ export function CardsBrowser({
           className="h-8 rounded-md border border-border bg-background px-2 text-sm"
         >
           <option value="">No Filter</option>
+          <option value="price">Missing Price</option>
+          <option value="yuyutei">Missing Yuyu-tei ID</option>
           <option value="en">Missing EN Name</option>
           <option value="th">Missing TH Name</option>
           <option value="image">Missing Image</option>

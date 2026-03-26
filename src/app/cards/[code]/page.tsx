@@ -57,6 +57,7 @@ export default async function CardDetailPage(props: {
   return (
     <CardDetail
       card={{
+        id: card.id,
         cardCode: card.cardCode,
         baseCode: card.baseCode,
         nameJp: card.nameJp,

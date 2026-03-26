@@ -1,13 +1,6 @@
+import { authorizeCron } from "@/lib/api/cron-auth";
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-
-function authorizeCron(request: NextRequest): boolean {
-  const secret = process.env.CRON_SECRET;
-  if (!secret || secret === "your-cron-secret-here") return false;
-  const header = request.headers.get("authorization");
-  if (!header?.startsWith("Bearer ")) return false;
-  return header.slice(7).trim() === secret;
-}
 
 export async function GET(request: NextRequest) {
   if (!authorizeCron(request)) {

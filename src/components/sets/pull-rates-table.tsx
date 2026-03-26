@@ -70,7 +70,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
       {/* Header */}
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <h2 className="text-sm font-semibold">Pull Rates</h2>
-        <span className="flex items-center gap-1 rounded-full bg-warning/10 px-2 py-0.5 text-[10px] font-medium text-warning">
+        <span className="flex items-center gap-1 rounded-full bg-warning/10 px-2 py-0.5 text-[11px] font-medium text-warning">
           <AlertTriangle className="size-3" />
           Community estimates
         </span>
@@ -123,13 +123,13 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="text-[11px] text-muted-foreground">โอกาส/ใบ </span>
+                  <span className="text-xs text-muted-foreground">โอกาส/ใบ </span>
                   <span className="font-mono text-sm font-bold tabular-nums">{formatPct(chance)}</span>
                 </div>
               </div>
 
               {/* Context */}
-              <p className="mt-1 text-[11px] text-muted-foreground">
+              <p className="mt-1 text-xs text-muted-foreground">
                 rarity นี้มี {row.cardCount} ใบ
               </p>
             </div>
@@ -138,7 +138,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
       </div>
 
       {/* Footer */}
-      <div className="mt-3 border-t border-border pt-3 text-[11px] text-muted-foreground">
+      <div className="mt-3 border-t border-border pt-3 text-xs text-muted-foreground">
         {packsPerBox && cardsPerPack && (
           <p>{packsPerBox} ซอง/กล่อง · {cardsPerPack} ใบ/ซอง · {BOXES_PER_CARTON} กล่อง/คาตั้น</p>
         )}

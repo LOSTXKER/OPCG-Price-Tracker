@@ -34,7 +34,7 @@ export function CardTable({ cards }: { cards: CardTableRow[] }) {
     <div className="overflow-x-auto p-4">
       <table className="w-full text-left text-sm">
         <thead>
-          <tr className="border-b border-border text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+          <tr className="border-b border-border text-xs font-medium uppercase tracking-wider text-muted-foreground">
             <th className="whitespace-nowrap pb-2.5 pr-3 pl-1 font-medium">การ์ด</th>
             <th className="hidden whitespace-nowrap pb-2.5 pr-3 font-medium md:table-cell">ชุด</th>
             <th className="hidden whitespace-nowrap pb-2.5 pr-3 font-medium sm:table-cell">ความหายาก</th>
@@ -71,17 +71,17 @@ export function CardTable({ cards }: { cards: CardTableRow[] }) {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <p className="truncate text-[13px] font-medium leading-tight hover:text-primary">
+                      <p className="truncate text-sm font-medium leading-tight hover:text-primary">
                         {getCardName(lang, card)}
                       </p>
-                      <p className="mt-0.5 font-mono text-[10px] text-muted-foreground">
+                      <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
                         {card.baseCode ?? card.cardCode}
                         {card.isParallel && <span className="ml-1 text-primary">P</span>}
                       </p>
                     </div>
                   </Link>
                 </td>
-                <td className="hidden py-2 pr-3 align-middle font-mono text-[11px] text-muted-foreground md:table-cell">
+                <td className="hidden py-2 pr-3 align-middle font-mono text-xs text-muted-foreground md:table-cell">
                   {card.setCode.toUpperCase()}
                 </td>
                 <td className="hidden py-2 pr-3 align-middle sm:table-cell">
@@ -93,7 +93,7 @@ export function CardTable({ cards }: { cards: CardTableRow[] }) {
                 <td className="hidden py-2 pr-3 align-middle text-xs text-muted-foreground lg:table-cell">
                   {card.colorEn ?? "—"}
                 </td>
-                <td className="py-2 pr-3 text-right align-middle font-mono text-[13px] font-semibold tabular-nums">
+                <td className="py-2 pr-3 text-right align-middle font-mono text-sm font-semibold tabular-nums">
                   {card.latestPriceJpy != null ? <Price jpy={card.latestPriceJpy} /> : "—"}
                 </td>
                 <td className="py-2 pr-3 text-right align-middle">

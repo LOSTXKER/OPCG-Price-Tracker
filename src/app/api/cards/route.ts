@@ -34,28 +34,47 @@ export async function GET(request: NextRequest) {
     where.cardType = type;
   }
   if (color) {
-    where.colorEn = color;
+    if (color === "multi") {
+      where.colorEn = { contains: "/" };
+    } else {
+      where.colorEn = color;
+    }
   }
+  const variant = searchParams.get("variant") || "";
   if (minPrice > 0) {
     where.latestPriceJpy = { ...((where.latestPriceJpy as object) || {}), gte: minPrice };
   }
   if (maxPrice > 0) {
     where.latestPriceJpy = { ...((where.latestPriceJpy as object) || {}), lte: maxPrice };
   }
+  if (variant === "parallel") {
+    where.isParallel = true;
+  } else if (variant === "regular") {
+    where.isParallel = false;
+  }
 
-  const orderBy: Record<string, string> = {};
+  let orderBy: Record<string, unknown> = {};
   switch (sort) {
     case "price_asc":
-      orderBy.latestPriceJpy = "asc";
+      orderBy.latestPriceJpy = { sort: "asc", nulls: "last" };
       break;
     case "price_desc":
-      orderBy.latestPriceJpy = "desc";
+      orderBy.latestPriceJpy = { sort: "desc", nulls: "last" };
       break;
     case "change_desc":
-      orderBy.priceChange24h = "desc";
+      orderBy.priceChange24h = { sort: "desc", nulls: "last" };
+      break;
+    case "change_asc":
+      orderBy.priceChange24h = { sort: "asc", nulls: "last" };
       break;
     case "change_7d_desc":
-      orderBy.priceChange7d = "desc";
+      orderBy.priceChange7d = { sort: "desc", nulls: "last" };
+      break;
+    case "change_7d_asc":
+      orderBy.priceChange7d = { sort: "asc", nulls: "last" };
+      break;
+    case "views_desc":
+      orderBy.viewCount = { sort: "desc", nulls: "last" };
       break;
     case "name":
       orderBy.nameJp = "asc";

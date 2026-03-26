@@ -25,12 +25,10 @@ export async function scrapeDailyPrices(): Promise<ScrapeResult> {
   let totalCards = 0;
   let totalSets = 0;
 
-  // 1. Fetch and save exchange rate
   const rate = await fetchExchangeRate();
   await saveExchangeRate(rate);
   console.log(`Exchange rate: 1 JPY = ${rate} THB`);
 
-  // 2. Scrape each set
   for (const setCode of SET_CODES) {
     try {
       const url = getSetListingUrl(setCode);
@@ -40,32 +38,18 @@ export async function scrapeDailyPrices(): Promise<ScrapeResult> {
       const listings = parseSetListingPage($);
 
       if (listings.length === 0) {
-        errors.push(`${setCode}: No cards found (possible HTML structure change)`);
+        errors.push(`${setCode}: No cards found`);
         continue;
       }
 
-      const dbSet = await prisma.cardSet.findUnique({
-        where: { code: setCode },
+      const dbSet = await prisma.cardSet.findFirst({
+        where: { code: { equals: setCode, mode: "insensitive" } },
       });
 
-      // 3. For each card, upsert price
+      let setMatched = 0;
       for (const listing of listings) {
         try {
-          const compositeCode = `${listing.cardCode}${listing.yuyuteiId ? `-${listing.yuyuteiId}` : ""}`;
-
-          let card = await prisma.card.findUnique({
-            where: { cardCode: compositeCode },
-          });
-
-          if (!card && listing.yuyuteiId && dbSet) {
-            card = await prisma.card.findFirst({
-              where: {
-                yuyuteiId: listing.yuyuteiId,
-                setId: dbSet.id,
-              },
-            });
-          }
-
+          const card = await resolveCard(listing, dbSet?.id ?? null);
           if (!card) continue;
 
           const priceThb = jpyToThb(listing.priceJpy, rate);
@@ -81,7 +65,6 @@ export async function scrapeDailyPrices(): Promise<ScrapeResult> {
             },
           });
 
-          // Update latest price on card
           await prisma.card.update({
             where: { id: card.id },
             data: {
@@ -90,25 +73,29 @@ export async function scrapeDailyPrices(): Promise<ScrapeResult> {
             },
           });
 
-          totalCards++;
+          setMatched++;
         } catch (cardError) {
-          const msg = cardError instanceof Error ? cardError.message : String(cardError);
+          const msg =
+            cardError instanceof Error ? cardError.message : String(cardError);
           errors.push(`${setCode}/${listing.name}: ${msg}`);
         }
       }
 
+      totalCards += setMatched;
       totalSets++;
-      console.log(`  ${setCode}: ${listings.length} cards scraped`);
+      console.log(
+        `  ${setCode}: ${setMatched}/${listings.length} cards matched`
+      );
 
       await sleep(DELAY_BETWEEN_SETS_MS);
     } catch (setError) {
-      const msg = setError instanceof Error ? setError.message : String(setError);
+      const msg =
+        setError instanceof Error ? setError.message : String(setError);
       errors.push(`${setCode}: ${msg}`);
       console.error(`  ${setCode}: ERROR - ${msg}`);
     }
   }
 
-  // 4. Compute price changes (24h, 7d) for all cards
   await computePriceChanges();
 
   const finishedAt = new Date();
@@ -124,12 +111,71 @@ export async function scrapeDailyPrices(): Promise<ScrapeResult> {
   return { totalCards, totalSets, errors, startedAt, finishedAt };
 }
 
+/**
+ * Resolve a Yuyu-tei listing to a DB card.
+ *
+ * Priority:
+ * 1. yuyuteiId (exact, pre-seeded)
+ * 2. baseCode + rarity + set
+ * 3. baseCode + isParallel + set
+ * 4. baseCode + isParallel (any set)
+ */
+async function resolveCard(
+  listing: {
+    cardCode?: string;
+    yuyuteiId?: string;
+    rarity?: string;
+    name: string;
+  },
+  setId: number | null
+): Promise<{ id: number } | null> {
+  // 1. Fastest path: match by pre-seeded yuyuteiId
+  if (listing.yuyuteiId) {
+    const byId = await prisma.card.findFirst({
+      where: { yuyuteiId: listing.yuyuteiId },
+      select: { id: true },
+    });
+    if (byId) return byId;
+  }
+
+  if (!listing.cardCode) return null;
+  const baseCode = listing.cardCode.toUpperCase();
+  const isParallel =
+    listing.name.includes("パラレル") ||
+    (listing.rarity?.startsWith("P-") ?? false) ||
+    listing.rarity === "SP";
+
+  // 2. baseCode + rarity + set
+  if (setId && listing.rarity) {
+    const exact = await prisma.card.findFirst({
+      where: { baseCode, rarity: listing.rarity, setId },
+      select: { id: true },
+    });
+    if (exact) return exact;
+  }
+
+  // 3. baseCode + isParallel + set
+  if (setId) {
+    const relaxed = await prisma.card.findFirst({
+      where: { baseCode, isParallel, setId },
+      select: { id: true },
+    });
+    if (relaxed) return relaxed;
+  }
+
+  // 4. baseCode + isParallel (cross-set)
+  const broad = await prisma.card.findFirst({
+    where: { baseCode, isParallel },
+    select: { id: true },
+  });
+  return broad;
+}
+
 async function computePriceChanges() {
   const now = new Date();
   const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
   const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-  // Get all cards that have prices
   const cards = await prisma.card.findMany({
     where: { latestPriceJpy: { not: null } },
     select: { id: true, latestPriceJpy: true },
@@ -139,7 +185,6 @@ async function computePriceChanges() {
     const currentPrice = card.latestPriceJpy;
     if (!currentPrice) continue;
 
-    // Get price from ~24h ago
     const price24h = await prisma.cardPrice.findFirst({
       where: {
         cardId: card.id,
@@ -163,17 +208,15 @@ async function computePriceChanges() {
     const p24h = price24h?.priceJpy;
     const p7d = price7d?.priceJpy;
 
-    const change24h = p24h
-      ? ((currentPrice - p24h) / p24h) * 100
-      : null;
-    const change7d = p7d
-      ? ((currentPrice - p7d) / p7d) * 100
-      : null;
+    const change24h = p24h ? ((currentPrice - p24h) / p24h) * 100 : null;
+    const change7d = p7d ? ((currentPrice - p7d) / p7d) * 100 : null;
 
     await prisma.card.update({
       where: { id: card.id },
       data: {
-        priceChange24h: change24h ? Math.round(change24h * 100) / 100 : null,
+        priceChange24h: change24h
+          ? Math.round(change24h * 100) / 100
+          : null,
         priceChange7d: change7d ? Math.round(change7d * 100) / 100 : null,
       },
     });

@@ -27,8 +27,8 @@ export function RarityBadge({ rarity, size = "md", className }: RarityBadgeProps
       className={cn(
         "inline-flex items-center rounded bg-muted font-medium",
         accent ?? "text-foreground",
-        size === "sm" && "px-1.5 py-0.5 text-[10px]",
-        size === "md" && "px-2 py-0.5 text-[11px]",
+        size === "sm" && "px-1.5 py-0.5 text-[11px]",
+        size === "md" && "px-2 py-0.5 text-xs",
         className
       )}
     >

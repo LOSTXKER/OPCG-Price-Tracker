@@ -1,23 +1,15 @@
-import "dotenv/config";
-import { PrismaClient } from "../src/generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { prisma } from "./_db";
 
-const connectionString = process.env.DIRECT_URL || process.env.DATABASE_URL;
-if (!connectionString) throw new Error("DATABASE_URL or DIRECT_URL is not set");
-
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
-
-// Community-estimated pull rates for standard OPCG booster boxes (24 packs, 12 cards/pack)
-// Source: cardcosmos.de, reddit r/OnePieceTCG, onepiece.gg
+// Community-estimated pull rates for standard OPCG JP booster boxes (24 packs, 6 cards/pack)
+// Source: cardcosmos.de, reddit r/OnePieceTCG, onepiece.gg, onepiece-card-zanmai.jp
 const BOOSTER_RATES: Record<string, { avgPerBox: number; ratePerPack: number }> = {
   L:   { avgPerBox: 0,    ratePerPack: 0      },
-  C:   { avgPerBox: 120,  ratePerPack: 5.0    },
-  UC:  { avgPerBox: 72,   ratePerPack: 3.0    },
-  R:   { avgPerBox: 48,   ratePerPack: 2.0    },
-  SR:  { avgPerBox: 4.5,  ratePerPack: 0.1875 },
-  SEC: { avgPerBox: 0.5,  ratePerPack: 0.0208 },
-  SP:  { avgPerBox: 0.2,  ratePerPack: 0.0083 },
+  C:   { avgPerBox: 72,   ratePerPack: 3.0    },
+  UC:  { avgPerBox: 24,   ratePerPack: 1.0    },
+  R:   { avgPerBox: 24,   ratePerPack: 1.0    },
+  SR:  { avgPerBox: 3,    ratePerPack: 0.125  },
+  SEC: { avgPerBox: 0.33, ratePerPack: 0.014  },
+  SP:  { avgPerBox: 0.17, ratePerPack: 0.007  },
 };
 
 const EXTRA_BOOSTER_RATES: Record<string, { avgPerBox: number; ratePerPack: number }> = {
@@ -53,12 +45,12 @@ async function main() {
       case "BOOSTER":
         rates = BOOSTER_RATES;
         packsPerBox = 24;
-        cardsPerPack = 12;
+        cardsPerPack = 6;
         break;
       case "EXTRA_BOOSTER":
         rates = EXTRA_BOOSTER_RATES;
         packsPerBox = 24;
-        cardsPerPack = 12;
+        cardsPerPack = 6;
         break;
       case "STARTER":
         rates = STARTER_RATES;
@@ -68,7 +60,7 @@ async function main() {
       default:
         rates = BOOSTER_RATES;
         packsPerBox = 24;
-        cardsPerPack = 12;
+        cardsPerPack = 6;
         break;
     }
 

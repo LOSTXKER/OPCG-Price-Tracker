@@ -154,7 +154,7 @@ export default function BuyingGuidePage() {
           ← Sets
         </Link>
         <Link
-          href="/cards"
+          href="/"
           className="group inline-flex items-center gap-2 font-sans text-sm font-semibold text-primary hover:underline"
         >
           เริ่มค้นหาการ์ดเลย!

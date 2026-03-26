@@ -1,13 +1,5 @@
-import "dotenv/config";
-import { PrismaClient } from "../src/generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { prisma } from "./_db";
 import translate from "google-translate-api-x";
-
-const connectionString = process.env.DIRECT_URL || process.env.DATABASE_URL;
-if (!connectionString) throw new Error("DATABASE_URL or DIRECT_URL is not set");
-
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
 
 const BATCH_SIZE = 10;
 const DELAY_BETWEEN_BATCHES_MS = 2000;

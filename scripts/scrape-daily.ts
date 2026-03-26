@@ -1,21 +1,11 @@
-import "dotenv/config";
-import { PrismaClient } from "../src/generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { prisma } from "./_db";
 import * as cheerio from "cheerio";
-
-const connectionString = process.env.DIRECT_URL || process.env.DATABASE_URL;
-if (!connectionString) {
-  throw new Error("DATABASE_URL or DIRECT_URL is not set");
-}
-
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
 
 const BASE_URL = "https://yuyu-tei.jp";
 const USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
 const DELAY_MS = 1500;
-const DEFAULT_RATE = 0.296;
+const DEFAULT_RATE = 0.21;
 const EXCHANGE_API_URL = "https://v6.exchangerate-api.com/v6";
 
 import { SET_CODES } from "./sets";
@@ -177,6 +167,51 @@ async function computePriceChanges() {
   console.log(`  ${updated}/${cards.length} cards updated with price changes`);
 }
 
+async function resolveCard(
+  listing: ScrapedListing,
+  setId: number | null
+): Promise<{ id: number } | null> {
+  // 1. Match by yuyuteiId (pre-seeded)
+  if (listing.yuyuteiId) {
+    const byId = await prisma.card.findFirst({
+      where: { yuyuteiId: listing.yuyuteiId },
+      select: { id: true },
+    });
+    if (byId) return byId;
+  }
+
+  if (!listing.cardCode) return null;
+  const baseCode = listing.cardCode.toUpperCase();
+  const isParallel =
+    listing.name.includes("パラレル") ||
+    (listing.rarity?.startsWith("P-") ?? false) ||
+    listing.rarity === "SP";
+
+  // 2. baseCode + rarity + set
+  if (setId && listing.rarity) {
+    const exact = await prisma.card.findFirst({
+      where: { baseCode, rarity: listing.rarity, setId },
+      select: { id: true },
+    });
+    if (exact) return exact;
+  }
+
+  // 3. baseCode + isParallel + set
+  if (setId) {
+    const relaxed = await prisma.card.findFirst({
+      where: { baseCode, isParallel, setId },
+      select: { id: true },
+    });
+    if (relaxed) return relaxed;
+  }
+
+  // 4. baseCode + isParallel (cross-set)
+  return prisma.card.findFirst({
+    where: { baseCode, isParallel },
+    select: { id: true },
+  });
+}
+
 async function main() {
   console.log(`Starting daily price scrape for ${SET_CODES.length} sets...`);
   const startTime = Date.now();
@@ -209,30 +244,13 @@ async function main() {
         continue;
       }
 
-      const dbSet = await prisma.cardSet.findUnique({
-        where: { code: setCode },
+      const dbSet = await prisma.cardSet.findFirst({
+        where: { code: { equals: setCode, mode: "insensitive" } },
       });
 
       let matched = 0;
       for (const listing of listings) {
-        const isDon = listing.rarity === "DON" || listing.name.includes("ドン!!");
-        const compositeCode = isDon && listing.yuyuteiId
-          ? `${setCode}-DON-${listing.yuyuteiId}`
-          : `${listing.cardCode}${listing.yuyuteiId ? `-${listing.yuyuteiId}` : ""}`;
-
-        let card = await prisma.card.findUnique({
-          where: { cardCode: compositeCode },
-        });
-
-        if (!card && listing.yuyuteiId && dbSet) {
-          card = await prisma.card.findFirst({
-            where: {
-              yuyuteiId: listing.yuyuteiId,
-              setId: dbSet.id,
-            },
-          });
-        }
-
+        const card = await resolveCard(listing, dbSet?.id ?? null);
         if (!card) continue;
 
         const priceThb = jpyToThb(listing.priceJpy, rate);

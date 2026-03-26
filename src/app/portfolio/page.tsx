@@ -1,310 +1,415 @@
-"use client";
+"use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Plus } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { Plus } from "lucide-react"
 
-import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
-import { PortfolioItem } from "@/components/portfolio/portfolio-item";
-import { PortfolioSummary } from "@/components/portfolio/portfolio-summary";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { useCardSearch, type CardSearchResult } from "@/hooks/use-card-search";
-import { jpyToThb } from "@/lib/utils/currency";
+import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
+import { PortfolioSelector, type PortfolioMeta } from "@/components/portfolio/portfolio-selector"
+import { PortfolioStatsStrip, type PortfolioStats } from "@/components/portfolio/portfolio-stats-strip"
+import { PortfolioHistoryChart } from "@/components/portfolio/portfolio-history-chart"
+import { PortfolioAllocationChart, type AllocationSlice } from "@/components/portfolio/portfolio-allocation-chart"
+import { PortfolioAssetsTable, type AssetRow } from "@/components/portfolio/portfolio-assets-table"
+import { PortfolioTransactions, type TransactionRow } from "@/components/portfolio/portfolio-transactions"
+import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
+import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
+import type { CardSearchResult } from "@/hooks/use-card-search"
+import { getCardName } from "@/lib/i18n"
+import { useUIStore } from "@/stores/ui-store"
+import { cn } from "@/lib/utils"
 
-type PortfolioCardRow = {
-  id: number;
-  cardCode: string;
-  baseCode: string | null;
-  nameJp: string;
-  nameEn: string | null;
-  imageUrl: string | null;
-  latestPriceJpy: number | null;
-};
+type TabId = "overview" | "transactions"
 
-type ItemRow = {
-  id: number;
-  quantity: number;
-  purchasePrice: number | null;
-  condition: string;
-  card: PortfolioCardRow;
-};
-
-type PortfolioRow = {
-  id: number;
-  name: string;
-  items: ItemRow[];
-};
-
-async function ensurePortfolioId(): Promise<number> {
-  const res = await fetch("/api/portfolio");
-  if (!res.ok) throw new Error("โหลดพอร์ตไม่สำเร็จ");
-  const data = (await res.json()) as { portfolios: PortfolioRow[] };
-  if (data.portfolios?.length) {
-    return data.portfolios[0]!.id;
-  }
-  const create = await fetch("/api/portfolio", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: "Default" }),
-  });
-  if (!create.ok) throw new Error("สร้างพอร์ตไม่สำเร็จ");
-  const created = (await create.json()) as { portfolio: { id: number } };
-  return created.portfolio.id;
+type CardData = {
+  id: number
+  cardCode: string
+  baseCode: string | null
+  nameJp: string
+  nameEn: string | null
+  imageUrl: string | null
+  rarity: string
+  latestPriceJpy: number | null
+  priceChange24h: number | null
+  priceChange7d: number | null
 }
 
-type HistoryPoint = { label: string; value: number };
+type ItemRow = {
+  id: number
+  quantity: number
+  purchasePrice: number | null
+  condition: string
+  card: CardData
+}
+
+type PortfolioRow = {
+  id: number
+  name: string
+  items: ItemRow[]
+}
+
+type HistoryPoint = { label: string; value: number }
 
 export default function PortfolioPage() {
-  const [portfolios, setPortfolios] = useState<PortfolioRow[]>([]);
-  const [history, setHistory] = useState<HistoryPoint[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const cardSearch = useCardSearch();
-  const [adding, setAdding] = useState(false);
+  const lang = useUIStore((s) => s.language)
+  const [portfolios, setPortfolios] = useState<PortfolioRow[]>([])
+  const [history, setHistory] = useState<HistoryPoint[]>([])
+  const [transactions, setTransactions] = useState<TransactionRow[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [activeId, setActiveId] = useState<number | null>(null)
+  const [tab, setTab] = useState<TabId>("overview")
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   const load = useCallback(async () => {
-    setError(null);
-    const [portfolioRes, historyRes] = await Promise.all([
-      fetch("/api/portfolio"),
-      fetch("/api/portfolio/history").catch(() => null),
-    ]);
-    if (!portfolioRes.ok) {
-      setError("โหลดข้อมูลไม่สำเร็จ");
-      setLoading(false);
-      return;
-    }
-    const data = (await portfolioRes.json()) as { portfolios: PortfolioRow[] };
-    setPortfolios(data.portfolios ?? []);
+    setError(null)
+    try {
+      const [portfolioRes, historyRes] = await Promise.all([
+        fetch("/api/portfolio"),
+        fetch("/api/portfolio/history").catch(() => null),
+      ])
+      if (!portfolioRes.ok) {
+        setError("โหลดข้อมูลไม่สำเร็จ")
+        setLoading(false)
+        return
+      }
+      const data = (await portfolioRes.json()) as { portfolios: PortfolioRow[] }
+      setPortfolios(data.portfolios ?? [])
 
-    if (historyRes?.ok) {
-      const hData = (await historyRes.json()) as {
-        snapshots: { totalJpy: number; snapshotAt: string }[];
-      };
-      setHistory(
-        (hData.snapshots ?? []).map((s) => ({
-          label: new Date(s.snapshotAt).toLocaleDateString("th-TH", {
-            month: "short",
-            day: "numeric",
-          }),
-          value: s.totalJpy,
-        }))
-      );
+      if (!activeId && data.portfolios?.length) {
+        setActiveId(data.portfolios[0].id)
+      }
+
+      if (historyRes?.ok) {
+        const hData = (await historyRes.json()) as {
+          snapshots: { totalJpy: number; snapshotAt: string }[]
+        }
+        setHistory(
+          (hData.snapshots ?? []).map((s) => ({
+            label: new Date(s.snapshotAt).toLocaleDateString("th-TH", {
+              month: "short",
+              day: "numeric",
+            }),
+            value: s.totalJpy,
+          }))
+        )
+      }
+    } catch {
+      setError("โหลดข้อมูลไม่สำเร็จ")
     }
-    setLoading(false);
-  }, []);
+    setLoading(false)
+  }, [activeId])
+
+  const loadTransactions = useCallback(async () => {
+    if (!activeId) return
+    try {
+      const res = await fetch(`/api/portfolio/transactions?portfolioId=${activeId}`)
+      if (res.ok) {
+        const data = (await res.json()) as { transactions: TransactionRow[] }
+        setTransactions(data.transactions ?? [])
+      }
+    } catch { /* ignore */ }
+  }, [activeId])
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    void load()
+  }, [load])
 
-  const flatItems = useMemo(() => portfolios.flatMap((p) => p.items), [portfolios]);
+  useEffect(() => {
+    if (tab === "transactions") void loadTransactions()
+  }, [tab, loadTransactions])
 
-  const summary = useMemo(() => {
-    let totalValueJpy = 0;
-    let totalCostJpy = 0;
-    for (const it of flatItems) {
-      const px = it.card.latestPriceJpy ?? 0;
-      totalValueJpy += px * it.quantity;
-      totalCostJpy += (it.purchasePrice ?? 0) * it.quantity;
+  const activePortfolio = useMemo(
+    () => portfolios.find((p) => p.id === activeId) ?? null,
+    [portfolios, activeId]
+  )
+
+  const items = activePortfolio?.items ?? []
+
+  const stats = useMemo((): PortfolioStats => {
+    let totalValueJpy = 0
+    let totalCostJpy = 0
+    let best: { name: string; pnl: number; pnlPercent: number } | null = null
+    let worst: { name: string; pnl: number; pnlPercent: number } | null = null
+
+    for (const it of items) {
+      const px = it.card.latestPriceJpy ?? 0
+      const cost = (it.purchasePrice ?? 0) * it.quantity
+      const value = px * it.quantity
+      totalValueJpy += value
+      totalCostJpy += cost
+
+      if (it.purchasePrice != null && it.purchasePrice > 0) {
+        const linePnl = value - cost
+        const linePct = ((px - it.purchasePrice) / it.purchasePrice) * 100
+        const name = getCardName(lang, it.card)
+        if (!best || linePnl > best.pnl) best = { name, pnl: linePnl, pnlPercent: linePct }
+        if (!worst || linePnl < worst.pnl) worst = { name, pnl: linePnl, pnlPercent: linePct }
+      }
     }
-    const unrealizedPnl = totalValueJpy - totalCostJpy;
-    const unrealizedPnlPercent =
-      totalCostJpy > 0 ? (unrealizedPnl / totalCostJpy) * 100 : 0;
+
+    const unrealizedPnl = totalValueJpy - totalCostJpy
+    const unrealizedPnlPercent = totalCostJpy > 0 ? (unrealizedPnl / totalCostJpy) * 100 : 0
+
     return {
       totalValueJpy,
-      totalValueThb: jpyToThb(totalValueJpy),
       totalCostJpy,
       unrealizedPnl,
       unrealizedPnlPercent,
-      cardCount: flatItems.length,
-    };
-  }, [flatItems]);
+      bestPerformer: best,
+      worstPerformer: worst,
+    }
+  }, [items, lang])
 
-  const removeItem = async (itemId: number) => {
-    const res = await fetch(`/api/portfolio/items/${itemId}`, { method: "DELETE" });
-    if (res.ok) void load();
-  };
+  const allocation = useMemo((): AllocationSlice[] => {
+    if (stats.totalValueJpy === 0) return []
+    const sorted = [...items]
+      .map((it) => ({
+        name: getCardName(lang, it.card),
+        value: (it.card.latestPriceJpy ?? 0) * it.quantity,
+      }))
+      .filter((d) => d.value > 0)
+      .sort((a, b) => b.value - a.value)
 
-  const addCard = async (card: CardSearchResult) => {
-    setAdding(true);
-    setError(null);
-    try {
-      const portfolioId = await ensurePortfolioId();
-      const res = await fetch("/api/portfolio/items", {
+    const top7 = sorted.slice(0, 7)
+    const otherValue = sorted.slice(7).reduce((s, d) => s + d.value, 0)
+    const result = top7.map((d) => ({
+      ...d,
+      percent: (d.value / stats.totalValueJpy) * 100,
+    }))
+    if (otherValue > 0) {
+      result.push({ name: "อื่นๆ", value: otherValue, percent: (otherValue / stats.totalValueJpy) * 100 })
+    }
+    return result
+  }, [items, stats.totalValueJpy, lang])
+
+  const assets = useMemo((): AssetRow[] =>
+    items.map((it) => ({
+      itemId: it.id,
+      cardId: it.card.id,
+      cardCode: it.card.cardCode,
+      baseCode: it.card.baseCode,
+      nameJp: it.card.nameJp,
+      nameEn: it.card.nameEn,
+      rarity: it.card.rarity,
+      imageUrl: it.card.imageUrl,
+      quantity: it.quantity,
+      purchasePrice: it.purchasePrice,
+      currentPrice: it.card.latestPriceJpy,
+      priceChange24h: it.card.priceChange24h,
+      priceChange7d: it.card.priceChange7d,
+      condition: it.condition,
+    })),
+    [items]
+  )
+
+  const portfolioMetas = useMemo((): PortfolioMeta[] =>
+    portfolios.map((p) => ({
+      id: p.id,
+      name: p.name,
+      totalValue: p.items.reduce((s, it) => s + (it.card.latestPriceJpy ?? 0) * it.quantity, 0),
+      itemCount: p.items.length,
+    })),
+    [portfolios]
+  )
+
+  const createPortfolio = async (name: string) => {
+    const res = await fetch("/api/portfolio", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    })
+    if (res.ok) void load()
+  }
+
+  const renamePortfolio = async (id: number, name: string) => {
+    const res = await fetch(`/api/portfolio/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    })
+    if (res.ok) void load()
+  }
+
+  const deletePortfolio = async (id: number) => {
+    const res = await fetch(`/api/portfolio/${id}`, { method: "DELETE" })
+    if (res.ok) {
+      if (activeId === id) setActiveId(null)
+      void load()
+    }
+  }
+
+  const addCard = async (card: CardSearchResult, quantity: number, purchasePrice: number | null) => {
+    if (!activeId) {
+      const createRes = await fetch("/api/portfolio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: "Default" }),
+      })
+      if (!createRes.ok) return
+      const created = (await createRes.json()) as { portfolio: { id: number } }
+      setActiveId(created.portfolio.id)
+      await fetch("/api/portfolio/items", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          portfolioId,
+          portfolioId: created.portfolio.id,
           cardId: card.id,
-          quantity: 1,
+          quantity,
+          purchasePrice,
           condition: "NM",
         }),
-      });
-      if (!res.ok) {
-        const j = (await res.json()) as { error?: string };
-        setError(j.error ?? "เพิ่มการ์ดไม่สำเร็จ");
-        return;
-      }
-      setDialogOpen(false);
-      cardSearch.reset();
-      void load();
-    } catch {
-      setError("เพิ่มการ์ดไม่สำเร็จ");
-    } finally {
-      setAdding(false);
+      })
+    } else {
+      await fetch("/api/portfolio/items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          portfolioId: activeId,
+          cardId: card.id,
+          quantity,
+          purchasePrice,
+          condition: "NM",
+        }),
+      })
     }
-  };
+    void load()
+  }
+
+  const updateItem = async (itemId: number, data: { quantity?: number; purchasePrice?: number | null }) => {
+    await fetch(`/api/portfolio/items/${itemId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    })
+    void load()
+  }
+
+  const removeItem = async (itemId: number) => {
+    await fetch(`/api/portfolio/items/${itemId}`, { method: "DELETE" })
+    void load()
+  }
 
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="panel animate-pulse p-8">
-          <div className="h-4 w-32 rounded bg-muted" />
-          <div className="mt-3 h-10 w-48 rounded bg-muted" />
+        <Skeleton className="h-10 w-48" />
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} className="h-24 rounded-xl" />
+          ))}
         </div>
+        <Skeleton className="h-48 rounded-xl" />
       </div>
-    );
+    )
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="font-sans text-2xl font-bold tracking-tight">
-            Collection
-          </h1>
-          <p className="mt-0.5 text-sm text-muted-foreground">
-            ติดตามมูลค่าคอลเลกชันของคุณ
-          </p>
+      {/* Header */}
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="min-w-[200px] max-w-xs flex-1">
+          <PortfolioSelector
+            portfolios={portfolioMetas}
+            activeId={activeId}
+            onSelect={setActiveId}
+            onCreate={createPortfolio}
+            onRename={renamePortfolio}
+            onDelete={deletePortfolio}
+          />
         </div>
-        <Button type="button" onClick={() => setDialogOpen(true)} className="gap-1.5">
-          <Plus className="size-4" />
-          เพิ่มการ์ด
-        </Button>
+
+        <div className="flex items-center gap-2">
+          {/* Tabs */}
+          <div className="flex items-center gap-0.5 rounded-lg bg-muted/60 p-0.5">
+            {(["overview", "transactions"] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className={cn(
+                  "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+                  tab === t
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {t === "overview" ? "Overview" : "Transaction"}
+              </button>
+            ))}
+          </div>
+          <Button onClick={() => setDialogOpen(true)} className="gap-1.5">
+            <Plus className="size-4" />
+            เพิ่มการ์ด
+          </Button>
+        </div>
       </div>
 
-      {error ? <p className="text-destructive text-sm">{error}</p> : null}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
-      {flatItems.length === 0 ? (
+      {items.length === 0 && tab === "overview" ? (
         <KumaEmptyState
           preset="empty-portfolio"
           action={
-            <Button type="button" onClick={() => setDialogOpen(true)} className="gap-1.5">
+            <Button onClick={() => setDialogOpen(true)} className="gap-1.5">
               <Plus className="size-4" />
               เพิ่มการ์ด
             </Button>
           }
         />
-      ) : (
+      ) : tab === "overview" ? (
         <>
+          {/* Stats strip */}
+          <PortfolioStatsStrip stats={stats} />
+
           {/* Hero value */}
-          <div className="panel p-6">
-            <p className="text-xs text-muted-foreground uppercase tracking-wider">
-              Total Value
+          <div className="panel p-5">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Total Value</p>
+            <p className="mt-1 font-price text-4xl font-bold tabular-nums tracking-tight">
+              ¥{stats.totalValueJpy.toLocaleString()}
             </p>
-            <p className="mt-1 font-mono text-4xl font-bold tracking-tight tabular-nums">
-              ¥{summary.totalValueJpy.toLocaleString()}
-            </p>
-            <div className="mt-3 flex flex-wrap gap-4 text-sm">
-              <span className="text-muted-foreground font-mono tabular-nums">
-                ~{Math.round(summary.totalValueThb).toLocaleString()} ฿
-              </span>
-              <span
-                className={
-                  summary.unrealizedPnl >= 0
-                    ? "font-mono font-semibold text-price-up tabular-nums"
-                    : "font-mono font-semibold text-price-down tabular-nums"
-                }
-              >
-                {summary.unrealizedPnl >= 0 ? "+" : ""}
-                ¥{summary.unrealizedPnl.toLocaleString()} (
-                {summary.unrealizedPnlPercent >= 0 ? "+" : ""}
-                {summary.unrealizedPnlPercent.toFixed(1)}%)
-              </span>
-              <span className="text-muted-foreground">
-                {summary.cardCount} ใบ
-              </span>
+          </div>
+
+          {/* Charts row */}
+          <div className="grid gap-4 lg:grid-cols-12">
+            <div className="panel p-5 lg:col-span-8">
+              <p className="mb-3 text-xs uppercase tracking-wider text-muted-foreground">History</p>
+              <PortfolioHistoryChart data={history} />
+            </div>
+            <div className="panel p-5 lg:col-span-4">
+              <p className="mb-3 text-xs uppercase tracking-wider text-muted-foreground">Allocation</p>
+              <PortfolioAllocationChart data={allocation} />
             </div>
           </div>
 
-          <PortfolioSummary {...summary} history={history} />
-
-          <div className="space-y-3">
-            <h2 className="font-sans text-base font-semibold">
-              Holdings
-            </h2>
-            {flatItems.map((it) => (
-              <PortfolioItem
-                key={it.id}
-                cardCode={it.card.cardCode}
-                baseCode={it.card.baseCode}
-                nameJp={it.card.nameJp}
-                nameEn={it.card.nameEn}
-                imageUrl={it.card.imageUrl}
-                quantity={it.quantity}
-                purchasePrice={it.purchasePrice}
-                currentPrice={it.card.latestPriceJpy}
-                condition={it.condition}
-                onRemove={() => void removeItem(it.id)}
-              />
-            ))}
+          {/* Assets table */}
+          <div className="panel overflow-hidden">
+            <div className="border-b border-border px-4 py-3">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Assets · {assets.length} การ์ด
+              </p>
+            </div>
+            <PortfolioAssetsTable
+              assets={assets}
+              onUpdate={updateItem}
+              onRemove={removeItem}
+            />
           </div>
         </>
+      ) : (
+        <div className="panel overflow-hidden">
+          <div className="border-b border-border px-4 py-3">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              Transactions
+            </p>
+          </div>
+          <PortfolioTransactions transactions={transactions} />
+        </div>
       )}
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>ค้นหาการ์ด</DialogTitle>
-            <DialogDescription>
-              พิมพ์ชื่อหรือรหัสการ์ดแล้วเลือกจากรายการ
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3">
-            <Input
-              placeholder="ค้นหา…"
-              value={cardSearch.query}
-              onChange={(e) => cardSearch.setQuery(e.target.value)}
-              autoComplete="off"
-              className=""
-            />
-            <div className="max-h-60 space-y-1 overflow-auto rounded-lg border border-border/50 p-1">
-              {cardSearch.query.trim().length < 2 ? (
-                <p className="text-muted-foreground px-2 py-3 text-sm">
-                  พิมพ์อย่างน้อย 2 ตัวอักษร
-                </p>
-              ) : cardSearch.results.length === 0 ? (
-                <p className="text-muted-foreground px-2 py-3 text-sm">
-                  ไม่พบผลลัพธ์
-                </p>
-              ) : (
-                cardSearch.results.map((c) => (
-                  <button
-                    key={c.id}
-                    type="button"
-                    disabled={adding}
-                    className="block w-full rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-accent"
-                    onClick={() => void addCard(c)}
-                  >
-                    <span className="font-medium">{c.nameEn ?? c.nameJp}</span>
-                    <span className="text-muted-foreground block font-mono text-xs">
-                      {c.cardCode}
-                    </span>
-                  </button>
-                ))
-              )}
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <AddCardDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onAdd={addCard}
+      />
     </div>
-  );
+  )
 }
