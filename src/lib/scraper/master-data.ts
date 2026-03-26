@@ -68,7 +68,7 @@ export async function scrapeMasterData(setCodes?: string[]) {
           cardName = cardName.replace(/[（(]パラレル[）)]/, "").trim();
         }
 
-        await prisma.card.upsert({
+        const card = await prisma.card.upsert({
           where: { cardCode: listing.cardCode },
           update: {
             yuyuteiId: listing.yuyuteiId,
@@ -92,7 +92,20 @@ export async function scrapeMasterData(setCodes?: string[]) {
             isParallel,
             latestPriceJpy: listing.priceJpy,
           },
+          select: { id: true },
         });
+
+        if (listing.priceJpy != null) {
+          await prisma.cardPrice.create({
+            data: {
+              cardId: card.id,
+              source: "YUYUTEI",
+              type: "SELL",
+              priceJpy: listing.priceJpy,
+              inStock: true,
+            },
+          });
+        }
         upsertCount++;
       }
 

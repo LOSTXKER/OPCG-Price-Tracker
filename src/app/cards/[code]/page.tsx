@@ -51,8 +51,18 @@ export default async function CardDetailPage(props: {
   ]);
 
   const price = deriveLatestPrice(card);
-  const chartData = buildChartData(card.prices);
+  let chartData = buildChartData(card.prices);
   const sources = getAvailableSources(card.prices);
+
+  // Fallback: if no price history but card has a current price, show it as a single data point
+  if (chartData.length === 0 && card.latestPriceJpy != null) {
+    chartData = [{
+      scrapedAt: new Date().toISOString(),
+      priceJpy: card.latestPriceJpy,
+      priceThb: card.latestPriceThb,
+      source: "YUYUTEI",
+    }];
+  }
 
   return (
     <CardDetail
