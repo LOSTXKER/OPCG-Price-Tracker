@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/db";
 import { SetsManager } from "./sets-manager";
 
+export const dynamic = "force-dynamic";
+
 async function getSets() {
   const sets = await prisma.cardSet.findMany({
     orderBy: { code: "asc" },
