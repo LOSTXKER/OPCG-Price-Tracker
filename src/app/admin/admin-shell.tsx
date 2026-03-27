@@ -1,29 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Library,
   CreditCard,
-  Image as ImageIcon,
+  BarChart3,
+  LogOut,
   Shield,
 } from "lucide-react";
+
+import { createClient } from "@/lib/supabase/client";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/sets", label: "Sets", icon: Library },
   { href: "/admin/cards", label: "Cards", icon: CreditCard },
-  { href: "/admin/image-matching", label: "Images", icon: ImageIcon },
+  { href: "/admin/drop-rates", label: "Drop Rates", icon: BarChart3 },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
 
   function isActive(href: string, exact?: boolean) {
     if (exact) return pathname === href;
     return pathname.startsWith(href);
   }
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/admin-login");
+    router.refresh();
+  };
 
   return (
     <div className="flex min-h-dvh bg-background">
@@ -54,6 +65,15 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               );
             })}
           </nav>
+
+          <button
+            type="button"
+            onClick={() => void handleLogout()}
+            className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+          >
+            <LogOut className="h-4 w-4" />
+            ออกจากระบบ
+          </button>
         </div>
       </aside>
 
@@ -79,6 +99,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             </Link>
           );
         })}
+        <button
+          type="button"
+          onClick={() => void handleLogout()}
+          className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] text-muted-foreground transition-colors hover:text-destructive"
+        >
+          <LogOut className="h-4 w-4" />
+          ออกจากระบบ
+        </button>
       </div>
     </div>
   );

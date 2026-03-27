@@ -50,7 +50,7 @@ export function PortfolioItem({
       ? ((currentPrice - purchasePrice) / purchasePrice) * 100
       : null
   const pnlPositive = lineCost != null ? lineCost >= 0 : null
-  const detailHref = `/cards/${encodeURIComponent(baseCode ?? cardCode)}`
+  const detailHref = `/cards/${encodeURIComponent(cardCode)}`
 
   return (
     <div className="bg-card flex gap-3 rounded-xl border p-3 ring-1 ring-foreground/10">

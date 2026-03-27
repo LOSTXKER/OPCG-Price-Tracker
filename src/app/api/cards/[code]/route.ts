@@ -8,16 +8,23 @@ export async function GET(
   const { code } = await params;
 
   try {
-    const card = await prisma.card.findUnique({
-      where: { cardCode: code.toUpperCase() },
-      include: {
-        set: true,
-        prices: {
-          orderBy: { scrapedAt: "desc" },
-          take: 1,
-        },
+    const includeClause = {
+      set: true,
+      prices: {
+        orderBy: { scrapedAt: "desc" as const },
+        take: 1,
       },
-    });
+    };
+
+    const card =
+      (await prisma.card.findUnique({
+        where: { cardCode: code.toUpperCase() },
+        include: includeClause,
+      })) ??
+      (await prisma.card.findFirst({
+        where: { baseCode: code.toUpperCase(), isParallel: false },
+        include: includeClause,
+      }));
 
     if (!card) {
       return NextResponse.json({ error: "Card not found" }, { status: 404 });

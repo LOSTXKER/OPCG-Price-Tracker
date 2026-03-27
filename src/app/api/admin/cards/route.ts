@@ -14,27 +14,22 @@ export async function GET(request: NextRequest) {
   const skip = (page - 1) * limit;
   const search = sp.get("q") || "";
   const setFilter = sp.get("set") || "";
-  const productFilter = sp.get("product") || "";
   const rarityFilter = sp.get("rarity") || "";
-  const typeFilter = sp.get("type") || "";
-  const colorFilter = sp.get("color") || "";
   const missingFilter = sp.get("missing") || "";
+  const parallelFilter = sp.get("parallel") || "";
 
   const where: Prisma.CardWhereInput = {};
 
-  if (productFilter) {
-    where.productCards = { some: { product: { code: productFilter } } };
-  } else if (setFilter) {
+  if (setFilter) {
     where.set = { code: setFilter };
   }
   if (rarityFilter) {
     where.rarity = rarityFilter;
   }
-  if (typeFilter) {
-    where.cardType = typeFilter as Prisma.EnumCardTypeFilter["equals"];
-  }
-  if (colorFilter) {
-    where.colorEn = { contains: colorFilter, mode: "insensitive" };
+  if (parallelFilter === "true") {
+    where.isParallel = true;
+  } else if (parallelFilter === "false") {
+    where.isParallel = false;
   }
   if (search) {
     where.OR = [
@@ -52,8 +47,6 @@ export async function GET(request: NextRequest) {
     where.OR = [{ imageUrl: null }, { imageUrl: "" }];
   } else if (missingFilter === "price") {
     where.latestPriceJpy = null;
-  } else if (missingFilter === "yuyutei") {
-    where.yuyuteiId = null;
   }
 
   const [cards, total] = await Promise.all([
@@ -77,6 +70,8 @@ export async function GET(request: NextRequest) {
         isParallel: true,
         parallelIndex: true,
         latestPriceJpy: true,
+        yuyuteiId: true,
+        yuyuteiUrl: true,
         set: { select: { code: true, name: true } },
       },
     }),

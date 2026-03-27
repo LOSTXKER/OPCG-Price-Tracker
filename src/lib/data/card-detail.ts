@@ -6,29 +6,36 @@ const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000
 export const getCardByCode = cache(async (rawCode: string) => {
   const code = decodeURIComponent(rawCode)
 
-  const card = await prisma.card.findUnique({
-    where: { cardCode: code },
-    include: {
-      set: true,
-      prices: {
-        orderBy: { scrapedAt: "desc" },
-        take: 60,
-        select: {
-          id: true,
-          source: true,
-          type: true,
-          priceJpy: true,
-          priceThb: true,
-          priceUsd: true,
-          priceEur: true,
-          inStock: true,
-          scrapedAt: true,
-        },
+  const includeClause = {
+    set: true,
+    prices: {
+      orderBy: { scrapedAt: "desc" as const },
+      take: 60,
+      select: {
+        id: true,
+        source: true,
+        type: true,
+        priceJpy: true,
+        priceThb: true,
+        priceUsd: true,
+        priceEur: true,
+        inStock: true,
+        scrapedAt: true,
       },
     },
+  }
+
+  const card = await prisma.card.findUnique({
+    where: { cardCode: code },
+    include: includeClause,
   })
 
-  return card
+  if (card) return card
+
+  return prisma.card.findFirst({
+    where: { baseCode: code.toUpperCase(), isParallel: false },
+    include: includeClause,
+  })
 })
 
 export const getSiblingVariants = cache(async (baseCode: string | null, excludeId: number) => {

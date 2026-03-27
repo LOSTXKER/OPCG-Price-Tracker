@@ -1,19 +1,19 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { Plus } from "lucide-react"
+import { Eye, EyeOff, Plus } from "lucide-react"
 
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
-import { PortfolioSelector, type PortfolioMeta } from "@/components/portfolio/portfolio-selector"
+import { PortfolioSidebar, type PortfolioMeta } from "@/components/portfolio/portfolio-selector"
 import { PortfolioStatsStrip, type PortfolioStats } from "@/components/portfolio/portfolio-stats-strip"
 import { PortfolioHistoryChart } from "@/components/portfolio/portfolio-history-chart"
 import { PortfolioAllocationChart, type AllocationSlice } from "@/components/portfolio/portfolio-allocation-chart"
 import { PortfolioAssetsTable, type AssetRow } from "@/components/portfolio/portfolio-assets-table"
 import { PortfolioTransactions, type TransactionRow } from "@/components/portfolio/portfolio-transactions"
-import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
+import { AddCardDialog, type CartItem } from "@/components/portfolio/add-card-dialog"
+import { Price } from "@/components/shared/price-inline"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import type { CardSearchResult } from "@/hooks/use-card-search"
 import { getCardName } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
@@ -59,6 +59,7 @@ export default function PortfolioPage() {
   const [activeId, setActiveId] = useState<number | null>(null)
   const [tab, setTab] = useState<TabId>("overview")
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [hideBalance, setHideBalance] = useState(false)
 
   const load = useCallback(async () => {
     setError(null)
@@ -212,6 +213,11 @@ export default function PortfolioPage() {
     [portfolios]
   )
 
+  const totalAllPortfolios = useMemo(
+    () => portfolioMetas.reduce((s, p) => s + p.totalValue, 0),
+    [portfolioMetas]
+  )
+
   const createPortfolio = async (name: string) => {
     const res = await fetch("/api/portfolio", {
       method: "POST",
@@ -238,8 +244,11 @@ export default function PortfolioPage() {
     }
   }
 
-  const addCard = async (card: CardSearchResult, quantity: number, purchasePrice: number | null) => {
-    if (!activeId) {
+  const addCardsBatch = async (items: CartItem[]) => {
+    if (items.length === 0) return
+
+    let targetId = activeId
+    if (!targetId) {
       const createRes = await fetch("/api/portfolio", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -247,31 +256,25 @@ export default function PortfolioPage() {
       })
       if (!createRes.ok) return
       const created = (await createRes.json()) as { portfolio: { id: number } }
-      setActiveId(created.portfolio.id)
-      await fetch("/api/portfolio/items", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          portfolioId: created.portfolio.id,
-          cardId: card.id,
-          quantity,
-          purchasePrice,
-          condition: "NM",
-        }),
-      })
-    } else {
-      await fetch("/api/portfolio/items", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          portfolioId: activeId,
-          cardId: card.id,
-          quantity,
-          purchasePrice,
-          condition: "NM",
-        }),
-      })
+      targetId = created.portfolio.id
+      setActiveId(targetId)
     }
+
+    await Promise.all(
+      items.map((item) =>
+        fetch("/api/portfolio/items", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            portfolioId: targetId,
+            cardId: item.card.id,
+            quantity: item.quantity,
+            purchasePrice: item.purchasePrice,
+            condition: "NM",
+          }),
+        })
+      )
+    )
     void load()
   }
 
@@ -291,124 +294,178 @@ export default function PortfolioPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-10 w-48" />
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {[...Array(4)].map((_, i) => (
-            <Skeleton key={i} className="h-24 rounded-xl" />
-          ))}
+      <div className="flex gap-6">
+        <div className="hidden w-60 shrink-0 space-y-3 md:block">
+          <Skeleton className="h-16 rounded-xl" />
+          <Skeleton className="h-10 rounded-lg" />
+          <Skeleton className="h-10 rounded-lg" />
         </div>
-        <Skeleton className="h-48 rounded-xl" />
+        <div className="min-w-0 flex-1 space-y-6">
+          <Skeleton className="h-28 rounded-xl" />
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-24 rounded-xl" />
+            ))}
+          </div>
+          <Skeleton className="h-48 rounded-xl" />
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="min-w-[200px] max-w-xs flex-1">
-          <PortfolioSelector
-            portfolios={portfolioMetas}
-            activeId={activeId}
-            onSelect={setActiveId}
-            onCreate={createPortfolio}
-            onRename={renamePortfolio}
-            onDelete={deletePortfolio}
-          />
-        </div>
-
-        <div className="flex items-center gap-2">
-          {/* Tabs */}
-          <div className="flex items-center gap-0.5 rounded-lg bg-muted/60 p-0.5">
-            {(["overview", "transactions"] as const).map((t) => (
+    <div className="flex flex-col gap-6 md:flex-row">
+      {/* ──── Sidebar ──── */}
+      <aside className="w-full shrink-0 md:w-60">
+        <div className="md:sticky md:top-20 md:space-y-4">
+          {/* Total across all portfolios */}
+          <div className="rounded-xl border border-border bg-card p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-medium text-muted-foreground">ภาพรวม</p>
               <button
-                key={t}
-                onClick={() => setTab(t)}
-                className={cn(
-                  "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
-                  tab === t
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
+                onClick={() => setHideBalance(!hideBalance)}
+                className="text-muted-foreground transition-colors hover:text-foreground"
               >
-                {t === "overview" ? "Overview" : "Transaction"}
+                {hideBalance ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
               </button>
-            ))}
-          </div>
-          <Button onClick={() => setDialogOpen(true)} className="gap-1.5">
-            <Plus className="size-4" />
-            เพิ่มการ์ด
-          </Button>
-        </div>
-      </div>
-
-      {error && <p className="text-sm text-destructive">{error}</p>}
-
-      {items.length === 0 && tab === "overview" ? (
-        <KumaEmptyState
-          preset="empty-portfolio"
-          action={
-            <Button onClick={() => setDialogOpen(true)} className="gap-1.5">
-              <Plus className="size-4" />
-              เพิ่มการ์ด
-            </Button>
-          }
-        />
-      ) : tab === "overview" ? (
-        <>
-          {/* Stats strip */}
-          <PortfolioStatsStrip stats={stats} />
-
-          {/* Hero value */}
-          <div className="panel p-5">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">Total Value</p>
-            <p className="mt-1 font-price text-4xl font-bold tabular-nums tracking-tight">
-              ¥{stats.totalValueJpy.toLocaleString()}
+            </div>
+            <p className="mt-1 font-price text-2xl font-bold tabular-nums tracking-tight">
+              {hideBalance ? "••••••" : <Price jpy={totalAllPortfolios} />}
             </p>
           </div>
 
-          {/* Charts row */}
-          <div className="grid gap-4 lg:grid-cols-12">
-            <div className="panel p-5 lg:col-span-8">
-              <p className="mb-3 text-xs uppercase tracking-wider text-muted-foreground">History</p>
-              <PortfolioHistoryChart data={history} />
+          {/* Portfolio list */}
+          <div className="rounded-xl border border-border bg-card">
+            <div className="flex items-center justify-between border-b border-border/60 px-4 py-2.5">
+              <p className="text-xs font-semibold text-muted-foreground">พอร์ตโฟลิโอ ({portfolioMetas.length})</p>
             </div>
-            <div className="panel p-5 lg:col-span-4">
-              <p className="mb-3 text-xs uppercase tracking-wider text-muted-foreground">Allocation</p>
-              <PortfolioAllocationChart data={allocation} />
-            </div>
-          </div>
-
-          {/* Assets table */}
-          <div className="panel overflow-hidden">
-            <div className="border-b border-border px-4 py-3">
-              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Assets · {assets.length} การ์ด
-              </p>
-            </div>
-            <PortfolioAssetsTable
-              assets={assets}
-              onUpdate={updateItem}
-              onRemove={removeItem}
+            <PortfolioSidebar
+              portfolios={portfolioMetas}
+              activeId={activeId}
+              onSelect={setActiveId}
+              onCreate={createPortfolio}
+              onRename={renamePortfolio}
+              onDelete={deletePortfolio}
+              hideBalance={hideBalance}
             />
           </div>
-        </>
-      ) : (
-        <div className="panel overflow-hidden">
-          <div className="border-b border-border px-4 py-3">
-            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Transactions
-            </p>
-          </div>
-          <PortfolioTransactions transactions={transactions} />
         </div>
-      )}
+      </aside>
+
+      {/* ──── Main content ──── */}
+      <main className="min-w-0 flex-1 space-y-6">
+        {/* Top bar: portfolio name + tabs + add button */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <h1 className="text-xl font-bold tracking-tight">{activePortfolio?.name ?? "Portfolio"}</h1>
+            <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+              {items.length} การ์ด
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-0.5 rounded-lg bg-muted/60 p-0.5">
+              {(["overview", "transactions"] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={cn(
+                    "rounded-md px-3.5 py-1.5 text-sm font-medium transition-colors",
+                    tab === t
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {t === "overview" ? "ภาพรวม" : "ธุรกรรม"}
+                </button>
+              ))}
+            </div>
+            <Button onClick={() => setDialogOpen(true)} className="gap-1.5">
+              <Plus className="size-4" />
+              <span className="hidden sm:inline">เพิ่มการ์ด</span>
+            </Button>
+          </div>
+        </div>
+
+        {error && <p className="text-sm text-destructive">{error}</p>}
+
+        {items.length === 0 && tab === "overview" ? (
+          <KumaEmptyState
+            preset="empty-portfolio"
+            action={
+              <Button onClick={() => setDialogOpen(true)} className="gap-1.5">
+                <Plus className="size-4" />
+                เพิ่มการ์ด
+              </Button>
+            }
+          />
+        ) : tab === "overview" ? (
+          <>
+            {/* Hero value card */}
+            <div className="rounded-xl border border-border bg-card p-5">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                มูลค่าพอร์ต
+              </p>
+              <div className="mt-1 flex flex-wrap items-baseline gap-3">
+                <span className="font-price text-4xl font-bold tabular-nums tracking-tight">
+                  {hideBalance ? "••••••" : <Price jpy={stats.totalValueJpy} />}
+                </span>
+                {stats.totalCostJpy > 0 && (
+                  <span className={cn(
+                    "rounded-full px-2.5 py-0.5 text-sm font-semibold tabular-nums",
+                    stats.unrealizedPnl >= 0
+                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                      : "bg-red-500/10 text-red-600 dark:text-red-400"
+                  )}>
+                    {stats.unrealizedPnl >= 0 ? "+" : ""}{stats.unrealizedPnlPercent.toFixed(2)}%
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Stats strip */}
+            <PortfolioStatsStrip stats={stats} hideBalance={hideBalance} />
+
+            {/* Charts row */}
+            <div className="grid gap-4 lg:grid-cols-12">
+              <div className="rounded-xl border border-border bg-card p-5 lg:col-span-8">
+                <p className="mb-4 text-sm font-semibold">ประวัติย้อนหลัง</p>
+                <PortfolioHistoryChart data={history} />
+              </div>
+              <div className="rounded-xl border border-border bg-card p-5 lg:col-span-4">
+                <p className="mb-4 text-sm font-semibold">สัดส่วนการถือ</p>
+                <PortfolioAllocationChart data={allocation} />
+              </div>
+            </div>
+
+            {/* Assets table */}
+            <div className="overflow-hidden rounded-xl border border-border bg-card">
+              <div className="flex items-center justify-between border-b border-border/60 px-5 py-3.5">
+                <p className="text-sm font-semibold">สินทรัพย์</p>
+                <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+                  {assets.length} การ์ด
+                </span>
+              </div>
+              <PortfolioAssetsTable
+                assets={assets}
+                onUpdate={updateItem}
+                onRemove={removeItem}
+              />
+            </div>
+          </>
+        ) : (
+          <div className="overflow-hidden rounded-xl border border-border bg-card">
+            <div className="border-b border-border/60 px-5 py-3.5">
+              <p className="text-sm font-semibold">ธุรกรรม</p>
+            </div>
+            <PortfolioTransactions transactions={transactions} />
+          </div>
+        )}
+      </main>
 
       <AddCardDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        onAdd={addCard}
+        onAddBatch={addCardsBatch}
       />
     </div>
   )

@@ -3,24 +3,28 @@ import Link from "next/link";
 import {
   Library,
   CreditCard,
-  Image as ImageIcon,
   Languages,
   AlertTriangle,
   CheckCircle,
+  BarChart3,
+  Database,
+  DollarSign,
 } from "lucide-react";
 
 async function getStats() {
   const [
     totalCards,
+    baseCards,
     totalSets,
     missingEn,
     missingTh,
     missingImage,
     totalWithPrice,
     parallelCards,
-    parallelNoImage,
+    rarityCounts,
   ] = await Promise.all([
     prisma.card.count(),
+    prisma.card.count({ where: { isParallel: false } }),
     prisma.cardSet.count(),
     prisma.card.count({ where: { nameEn: null } }),
     prisma.card.count({ where: { nameTh: null } }),
@@ -29,27 +33,29 @@ async function getStats() {
     }),
     prisma.card.count({ where: { latestPriceJpy: { not: null } } }),
     prisma.card.count({ where: { isParallel: true } }),
-    prisma.card.count({
-      where: {
-        isParallel: true,
-        OR: [
-          { imageUrl: null },
-          { imageUrl: "" },
-          { imageUrl: { contains: "yuyu-tei" } },
-        ],
-      },
+    prisma.card.groupBy({
+      by: ["rarity"],
+      where: { isParallel: false },
+      _count: true,
+      orderBy: { rarity: "asc" },
     }),
   ]);
 
+  const withYuyuteiId = await prisma.card.count({
+    where: { yuyuteiId: { not: null } },
+  });
+
   return {
     totalCards,
+    baseCards,
     totalSets,
     missingEn,
     missingTh,
     missingImage,
     totalWithPrice,
     parallelCards,
-    parallelNoImage,
+    withYuyuteiId,
+    rarityCounts: rarityCounts.map((r) => ({ rarity: r.rarity, count: r._count })),
   };
 }
 
@@ -58,6 +64,12 @@ function pct(numerator: number, denominator: number) {
   return ((numerator / denominator) * 100).toFixed(1);
 }
 
+const RARITY_COLORS: Record<string, string> = {
+  TR: "bg-red-500", SP: "bg-pink-500", SEC: "bg-amber-500", SR: "bg-purple-500",
+  R: "bg-blue-500", UC: "bg-emerald-500", C: "bg-neutral-400",
+  L: "bg-orange-500", DON: "bg-red-500", P: "bg-cyan-500",
+};
+
 export default async function AdminDashboard() {
   const s = await getStats();
 
@@ -65,7 +77,8 @@ export default async function AdminDashboard() {
     {
       label: "Total Cards",
       value: s.totalCards.toLocaleString(),
-      icon: CreditCard,
+      sub: `${s.baseCards.toLocaleString()} base + ${s.parallelCards.toLocaleString()} parallels`,
+      icon: Database,
       color: "text-blue-500",
       bg: "bg-blue-500/10",
     },
@@ -77,20 +90,20 @@ export default async function AdminDashboard() {
       bg: "bg-purple-500/10",
     },
     {
-      label: "With Price",
+      label: "Price Coverage",
       value: `${pct(s.totalWithPrice, s.totalCards)}%`,
-      sub: `${s.totalWithPrice.toLocaleString()} cards`,
-      icon: CheckCircle,
+      sub: `${s.totalWithPrice.toLocaleString()} with price`,
+      icon: DollarSign,
       color: "text-green-500",
       bg: "bg-green-500/10",
     },
     {
-      label: "Parallels",
-      value: s.parallelCards.toLocaleString(),
-      sub: `${s.parallelNoImage} unmatched`,
-      icon: ImageIcon,
-      color: "text-orange-500",
-      bg: "bg-orange-500/10",
+      label: "Yuyutei Linked",
+      value: `${pct(s.withYuyuteiId, s.totalCards)}%`,
+      sub: `${s.withYuyuteiId.toLocaleString()} cards`,
+      icon: CheckCircle,
+      color: s.withYuyuteiId === s.totalCards ? "text-green-500" : "text-amber-500",
+      bg: s.withYuyuteiId === s.totalCards ? "bg-green-500/10" : "bg-amber-500/10",
     },
   ];
 
@@ -118,6 +131,14 @@ export default async function AdminDashboard() {
     },
   ];
 
+  const rarityOrder = ["L", "C", "UC", "R", "SR", "SEC", "SP", "TR", "DON", "P"];
+
+  const sortedRarities = [...s.rarityCounts].sort((a, b) => {
+    const ai = rarityOrder.indexOf(a.rarity);
+    const bi = rarityOrder.indexOf(b.rarity);
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+  });
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Dashboard</h1>
@@ -142,6 +163,27 @@ export default async function AdminDashboard() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Rarity Breakdown */}
+      <div className="rounded-xl border border-border/50 bg-card p-4">
+        <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+          <BarChart3 className="h-5 w-5" />
+          Rarity Breakdown (Base Cards)
+        </h2>
+        <div className="flex flex-wrap gap-3">
+          {sortedRarities.map((r) => (
+            <Link
+              key={r.rarity}
+              href={`/admin/cards?rarity=${r.rarity}&parallel=false`}
+              className="flex items-center gap-2 rounded-lg border border-border/50 px-3 py-2 transition-colors hover:border-primary/30"
+            >
+              <div className={`h-3 w-3 rounded-full ${RARITY_COLORS[r.rarity] ?? "bg-muted"}`} />
+              <span className="font-mono text-sm font-bold">{r.rarity}</span>
+              <span className="text-sm text-muted-foreground">{r.count}</span>
+            </Link>
+          ))}
+        </div>
       </div>
 
       <div className="rounded-xl border border-border/50 bg-card p-4">
@@ -192,7 +234,7 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Link
           href="/admin/sets"
           className="group rounded-xl border border-border/50 bg-card p-4 transition-colors hover:border-primary/30"
@@ -200,7 +242,7 @@ export default async function AdminDashboard() {
           <Library className="mb-2 h-6 w-6 text-muted-foreground group-hover:text-primary" />
           <h3 className="font-semibold">Manage Sets</h3>
           <p className="text-sm text-muted-foreground">
-            Edit set metadata, import data, scrape prices
+            View sets, scrape prices
           </p>
         </Link>
         <Link
@@ -210,17 +252,17 @@ export default async function AdminDashboard() {
           <CreditCard className="mb-2 h-6 w-6 text-muted-foreground group-hover:text-primary" />
           <h3 className="font-semibold">Browse Cards</h3>
           <p className="text-sm text-muted-foreground">
-            Search, filter, and edit card data
+            Search, filter, verify card data
           </p>
         </Link>
         <Link
-          href="/admin/image-matching"
+          href="/admin/drop-rates"
           className="group rounded-xl border border-border/50 bg-card p-4 transition-colors hover:border-primary/30"
         >
-          <ImageIcon className="mb-2 h-6 w-6 text-muted-foreground group-hover:text-primary" />
-          <h3 className="font-semibold">Image Matching</h3>
+          <BarChart3 className="mb-2 h-6 w-6 text-muted-foreground group-hover:text-primary" />
+          <h3 className="font-semibold">Drop Rates</h3>
           <p className="text-sm text-muted-foreground">
-            Match parallel card images with AI
+            View and edit pull rates per set
           </p>
         </Link>
       </div>

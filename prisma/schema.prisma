@@ -96,7 +96,6 @@ model Card {
   latestPriceJpy  Int?
   latestPriceThb  Float?
   prices          CardPrice[]
-  sourceMappings  SourceMapping[]
   portfolioItems       PortfolioItem[]
   portfolioTransactions PortfolioTransaction[]
   watchlistItems       WatchlistItem[]
@@ -104,10 +103,11 @@ model Card {
   listings        Listing[]
   communityPrices CommunityPrice[]
   deckLeaders     Deck[]           @relation("DeckLeader")
-  deckCards       DeckCard[]
-  productCards    ProductCard[]
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  deckCards           DeckCard[]
+  productCards        ProductCard[]
+  yuyuteiMappings     YuyuteiMapping[]
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
 
   @@index([setId])
   @@index([baseCode])
@@ -165,19 +165,6 @@ enum PriceType {
   BUY
   SOLD
   LISTING
-}
-
-model SourceMapping {
-  id               Int         @id @default(autoincrement())
-  cardId           Int
-  card             Card        @relation(fields: [cardId], references: [id])
-  source           PriceSource
-  sourceIdentifier String
-  isVerified       Boolean     @default(false)
-  createdAt        DateTime    @default(now())
-
-  @@unique([source, sourceIdentifier])
-  @@index([cardId])
 }
 
 model SetDropRate {
@@ -520,4 +507,31 @@ model DeckCard {
 
   @@unique([deckId, cardId])
   @@index([deckId])
+}
+
+// ============================================================
+// YUYUTEI MAPPING (AI-assisted card-to-price matching)
+// ============================================================
+
+model YuyuteiMapping {
+  id            Int      @id @default(autoincrement())
+  setCode       String
+  yuyuteiId     String
+  scrapedCode   String
+  scrapedRarity String?
+  scrapedName   String
+  scrapedImage  String?
+  priceJpy      Int
+  matchedCardId Int?
+  matchedCard   Card?    @relation(fields: [matchedCardId], references: [id])
+  matchMethod   String?
+  geminiScore   Float?
+  status        String   @default("pending")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([setCode, yuyuteiId])
+  @@index([status])
+  @@index([setCode])
+  @@index([matchedCardId])
 }

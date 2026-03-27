@@ -36,7 +36,6 @@ interface CardRow {
 
 interface FilterOptions {
   sets: { code: string; label: string }[];
-  products: { code: string; label: string }[];
   rarities: string[];
 }
 
@@ -63,14 +62,14 @@ export function CardsBrowser({
 
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const [setFilter, setSetFilter] = useState(searchParams.get("set") || "");
-  const [productFilter, setProductFilter] = useState(
-    searchParams.get("product") || ""
-  );
   const [rarityFilter, setRarityFilter] = useState(
     searchParams.get("rarity") || ""
   );
   const [missingFilter, setMissingFilter] = useState(
     searchParams.get("missing") || ""
+  );
+  const [parallelFilter, setParallelFilter] = useState(
+    searchParams.get("parallel") || ""
   );
   const [page, setPage] = useState(
     parseInt(searchParams.get("page") || "1")
@@ -86,13 +85,10 @@ export function CardsBrowser({
     params.set("page", String(page));
     params.set("limit", "50");
     if (search) params.set("q", search);
-    if (productFilter) {
-      params.set("product", productFilter);
-    } else if (setFilter) {
-      params.set("set", setFilter);
-    }
+    if (setFilter) params.set("set", setFilter);
     if (rarityFilter) params.set("rarity", rarityFilter);
     if (missingFilter) params.set("missing", missingFilter);
+    if (parallelFilter) params.set("parallel", parallelFilter);
 
     try {
       const res = await fetch(`/api/admin/cards?${params}`);
@@ -103,7 +99,7 @@ export function CardsBrowser({
     } finally {
       setLoading(false);
     }
-  }, [page, search, setFilter, productFilter, rarityFilter, missingFilter]);
+  }, [page, search, setFilter, rarityFilter, missingFilter, parallelFilter]);
 
   useEffect(() => {
     fetchCards();
@@ -113,12 +109,12 @@ export function CardsBrowser({
     const params = new URLSearchParams();
     if (search) params.set("q", search);
     if (setFilter) params.set("set", setFilter);
-    if (productFilter) params.set("product", productFilter);
     if (rarityFilter) params.set("rarity", rarityFilter);
     if (missingFilter) params.set("missing", missingFilter);
+    if (parallelFilter) params.set("parallel", parallelFilter);
     if (page > 1) params.set("page", String(page));
     router.replace(`/admin/cards?${params}`, { scroll: false });
-  }, [search, setFilter, productFilter, rarityFilter, missingFilter, page, router]);
+  }, [search, setFilter, rarityFilter, missingFilter, parallelFilter, page, router]);
 
   function startEdit(card: CardRow) {
     setEditingId(card.id);
@@ -191,7 +187,6 @@ export function CardsBrowser({
           value={setFilter}
           onChange={(e) => {
             setSetFilter(e.target.value);
-            if (e.target.value) setProductFilter("");
             setPage(1);
           }}
           className="h-8 rounded-md border border-border bg-background px-2 text-sm"
@@ -200,23 +195,6 @@ export function CardsBrowser({
           {filterOptions.sets.map((s) => (
             <option key={s.code} value={s.code}>
               {s.code.toUpperCase()}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={productFilter}
-          onChange={(e) => {
-            setProductFilter(e.target.value);
-            if (e.target.value) setSetFilter("");
-            setPage(1);
-          }}
-          className="h-8 rounded-md border border-border bg-background px-2 text-sm"
-        >
-          <option value="">All Products</option>
-          {filterOptions.products.map((p) => (
-            <option key={p.code} value={p.code}>
-              {p.code.toUpperCase()}
             </option>
           ))}
         </select>
@@ -247,10 +225,22 @@ export function CardsBrowser({
         >
           <option value="">No Filter</option>
           <option value="price">Missing Price</option>
-          <option value="yuyutei">Missing Yuyu-tei ID</option>
           <option value="en">Missing EN Name</option>
           <option value="th">Missing TH Name</option>
           <option value="image">Missing Image</option>
+        </select>
+
+        <select
+          value={parallelFilter}
+          onChange={(e) => {
+            setParallelFilter(e.target.value);
+            setPage(1);
+          }}
+          className="h-8 rounded-md border border-border bg-background px-2 text-sm"
+        >
+          <option value="">All Variants</option>
+          <option value="false">Regular Only</option>
+          <option value="true">Parallel Only</option>
         </select>
       </div>
 
@@ -259,7 +249,7 @@ export function CardsBrowser({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border/50 bg-muted/50">
-              <th className="w-12 px-2 py-2"></th>
+              <th className="w-12 px-2 py-2 text-center text-[10px] font-medium text-muted-foreground">Image</th>
               <th className="px-3 py-2 text-left font-medium">Code</th>
               <th className="px-3 py-2 text-left font-medium">Name (JP)</th>
               <th className="hidden px-3 py-2 text-left font-medium md:table-cell">
@@ -365,15 +355,10 @@ function CardTableRow({
     return (
       <tr className="border-b border-border/30 bg-primary/5">
         <td className="px-2 py-2">
-          {card.imageUrl && (
-            <Image
-              src={card.imageUrl}
-              alt=""
-              width={32}
-              height={44}
-              className="rounded"
-              unoptimized
-            />
+          {card.imageUrl ? (
+            <Image src={card.imageUrl} alt="" width={32} height={44} className="rounded" unoptimized />
+          ) : (
+            <div className="flex h-11 w-8 items-center justify-center rounded bg-muted text-[9px] text-muted-foreground">?</div>
           )}
         </td>
         <td className="px-3 py-2 font-mono text-xs">{card.baseCode}</td>
@@ -432,18 +417,9 @@ function CardTableRow({
     <tr className="border-b border-border/30 hover:bg-muted/20">
       <td className="px-2 py-1">
         {card.imageUrl ? (
-          <Image
-            src={card.imageUrl}
-            alt=""
-            width={32}
-            height={44}
-            className="rounded"
-            unoptimized
-          />
+          <Image src={card.imageUrl} alt="" width={32} height={44} className="rounded" unoptimized />
         ) : (
-          <div className="flex h-11 w-8 items-center justify-center rounded bg-muted text-xs text-muted-foreground">
-            ?
-          </div>
+          <div className="flex h-11 w-8 items-center justify-center rounded bg-muted text-[9px] text-muted-foreground">?</div>
         )}
       </td>
       <td className="px-3 py-1">
@@ -454,10 +430,17 @@ function CardTableRow({
           {card.baseCode}
         </Link>
         {card.isParallel && (
-          <span className="ml-1 text-[10px] text-orange-500">P</span>
+          <span className="ml-1 rounded bg-amber-500/20 px-1 text-[10px] font-medium text-amber-600 dark:text-amber-400">
+            {card.rarity.startsWith("P-") ? card.rarity : "PA"}
+          </span>
         )}
-        <div className="text-[10px] text-muted-foreground">
-          {card.set.code.toUpperCase()}
+        <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+          <span>{card.set.code.toUpperCase()}</span>
+          {card.imageUrl?.includes("onepiece-cardgame.com") ? (
+            <span className="rounded bg-green-500/10 px-1 text-green-500">Official</span>
+          ) : (
+            <span className="rounded bg-neutral-500/10 px-1 text-neutral-400">Legacy</span>
+          )}
         </div>
       </td>
       <td className="max-w-[140px] truncate px-3 py-1 text-xs">

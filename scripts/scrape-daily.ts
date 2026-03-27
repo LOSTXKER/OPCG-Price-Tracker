@@ -1,95 +1,31 @@
+/**
+ * CLI: Daily price scrape with exchange rate conversion and price change computation.
+ *
+ * This is meant to be run by cron or Vercel scheduler. It:
+ *   1. Fetches the JPY→THB exchange rate
+ *   2. Scrapes all sets from Yuyu-tei (using shared parser)
+ *   3. Updates card prices (using shared matcher)
+ *   4. Computes 24h / 7d price change percentages
+ *
+ * Usage:
+ *   npx tsx scripts/scrape-daily.ts
+ */
 import { prisma } from "./_db";
-import * as cheerio from "cheerio";
+import { SET_CODES } from "./sets";
+import {
+  fetchWithRetry,
+  getSetListingUrl,
+  parseSetListingPage,
+  sleep,
+} from "../src/lib/scraper/yuyu-tei";
+import {
+  matchAndUpdatePrices,
+  computePriceChanges,
+} from "../src/lib/scraper/price-matcher";
 
-const BASE_URL = "https://yuyu-tei.jp";
-const USER_AGENT =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
 const DELAY_MS = 1500;
 const DEFAULT_RATE = 0.21;
 const EXCHANGE_API_URL = "https://v6.exchangerate-api.com/v6";
-
-import { SET_CODES } from "./sets";
-
-function sleep(ms: number) {
-  return new Promise((r) => setTimeout(r, ms));
-}
-
-async function fetchPage(url: string) {
-  const res = await fetch(url, {
-    headers: { "User-Agent": USER_AGENT },
-  });
-  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-  return cheerio.load(await res.text());
-}
-
-async function fetchWithRetry(url: string, maxRetries = 3, baseDelay = 2000) {
-  let lastError: Error | undefined;
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      return await fetchPage(url);
-    } catch (error) {
-      lastError = error instanceof Error ? error : new Error(String(error));
-      console.warn(
-        `  Attempt ${attempt + 1}/${maxRetries} failed: ${lastError.message}`
-      );
-      if (attempt < maxRetries - 1) {
-        await sleep(baseDelay * Math.pow(2, attempt));
-      }
-    }
-  }
-  throw lastError;
-}
-
-interface ScrapedListing {
-  cardCode: string;
-  name: string;
-  rarity: string | undefined;
-  priceJpy: number;
-  inStock: boolean;
-  yuyuteiId: string | undefined;
-}
-
-function parseCards($: cheerio.CheerioAPI): ScrapedListing[] {
-  const cards: ScrapedListing[] = [];
-  $(".card-product").each((_, el) => {
-    const $el = $(el);
-    const cardCode = $el.find("span.border-dark").first().text().trim();
-    if (!cardCode) return;
-
-    const priceText = $el.find("strong.text-end").first().text().trim();
-    const priceJpy = parseInt(priceText.replace(/[^0-9]/g, ""), 10);
-    if (isNaN(priceJpy) || priceJpy === 0) return;
-
-    const imgEl = $el.find(".product-img img.card").first();
-    const altText = imgEl.attr("alt") || "";
-
-    const altMatch = altText.match(
-      /^[\w-]+\s+(P-SEC|P-SR|P-R|P-UC|P-C|P-L|P-P|SEC|SR|SP|R|UC|C|L|P)?\s*(.*)/
-    );
-    let rarity: string | undefined = altMatch?.[1] || undefined;
-    const name =
-      altMatch?.[2]?.trim() ||
-      $el.find("h4.text-primary").first().text().trim();
-
-    if (!rarity && name.includes("ドン!!")) {
-      rarity = "DON";
-    }
-
-    const isParallel = name.includes("パラレル") || (rarity?.startsWith("P-") ?? false) || rarity === "SP";
-    if (isParallel && rarity && !rarity.startsWith("P-") && rarity !== "SP" && rarity !== "DON") {
-      rarity = `P-${rarity}`;
-    }
-
-    const href = $el.find("a[href*='/sell/opc/card/']").first().attr("href");
-    const yuyuteiId =
-      $el.find("input.cart_cid").val()?.toString() || href?.split("/").pop();
-
-    const inStock = !$el.hasClass("sold-out");
-
-    cards.push({ cardCode, name, rarity, priceJpy, inStock, yuyuteiId });
-  });
-  return cards;
-}
 
 async function fetchExchangeRate(): Promise<number> {
   const apiKey = process.env.EXCHANGE_RATE_API_KEY;
@@ -114,109 +50,11 @@ async function fetchExchangeRate(): Promise<number> {
   return rate;
 }
 
-function jpyToThb(jpy: number, rate: number): number {
-  return Math.round(jpy * rate * 100) / 100;
-}
-
-async function computePriceChanges() {
-  console.log("\nComputing price changes...");
-  const now = new Date();
-  const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-
-  const cards = await prisma.card.findMany({
-    where: { latestPriceJpy: { not: null } },
-    select: { id: true, latestPriceJpy: true },
-  });
-
-  let updated = 0;
-  for (const card of cards) {
-    const currentPrice = card.latestPriceJpy;
-    if (!currentPrice) continue;
-
-    const price24h = await prisma.cardPrice.findFirst({
-      where: { cardId: card.id, source: "YUYUTEI", scrapedAt: { lte: oneDayAgo } },
-      orderBy: { scrapedAt: "desc" },
-      select: { priceJpy: true },
-    });
-
-    const price7d = await prisma.cardPrice.findFirst({
-      where: { cardId: card.id, source: "YUYUTEI", scrapedAt: { lte: sevenDaysAgo } },
-      orderBy: { scrapedAt: "desc" },
-      select: { priceJpy: true },
-    });
-
-    const p24h = price24h?.priceJpy;
-    const p7d = price7d?.priceJpy;
-
-    const change24h = p24h
-      ? Math.round(((currentPrice - p24h) / p24h) * 10000) / 100
-      : null;
-    const change7d = p7d
-      ? Math.round(((currentPrice - p7d) / p7d) * 10000) / 100
-      : null;
-
-    if (change24h !== null || change7d !== null) {
-      await prisma.card.update({
-        where: { id: card.id },
-        data: { priceChange24h: change24h, priceChange7d: change7d },
-      });
-      updated++;
-    }
-  }
-  console.log(`  ${updated}/${cards.length} cards updated with price changes`);
-}
-
-async function resolveCard(
-  listing: ScrapedListing,
-  setId: number | null
-): Promise<{ id: number } | null> {
-  // 1. Match by yuyuteiId (pre-seeded)
-  if (listing.yuyuteiId) {
-    const byId = await prisma.card.findFirst({
-      where: { yuyuteiId: listing.yuyuteiId },
-      select: { id: true },
-    });
-    if (byId) return byId;
-  }
-
-  if (!listing.cardCode) return null;
-  const baseCode = listing.cardCode.toUpperCase();
-  const isParallel =
-    listing.name.includes("パラレル") ||
-    (listing.rarity?.startsWith("P-") ?? false) ||
-    listing.rarity === "SP";
-
-  // 2. baseCode + rarity + set
-  if (setId && listing.rarity) {
-    const exact = await prisma.card.findFirst({
-      where: { baseCode, rarity: listing.rarity, setId },
-      select: { id: true },
-    });
-    if (exact) return exact;
-  }
-
-  // 3. baseCode + isParallel + set
-  if (setId) {
-    const relaxed = await prisma.card.findFirst({
-      where: { baseCode, isParallel, setId },
-      select: { id: true },
-    });
-    if (relaxed) return relaxed;
-  }
-
-  // 4. baseCode + isParallel (cross-set)
-  return prisma.card.findFirst({
-    where: { baseCode, isParallel },
-    select: { id: true },
-  });
-}
-
 async function main() {
   console.log(`Starting daily price scrape for ${SET_CODES.length} sets...`);
   const startTime = Date.now();
-  let totalCards = 0;
-  let totalSets = 0;
+  let totalMatched = 0;
+  let totalUnmatched = 0;
   const errors: string[] = [];
 
   const rate = await fetchExchangeRate();
@@ -226,75 +64,46 @@ async function main() {
       data: { fromCur: "JPY", toCur: "THB", rate },
     });
   } catch {
-    console.warn("Could not save exchange rate to DB (may already exist)");
+    console.warn("Could not save exchange rate to DB");
   }
 
   for (const setCode of SET_CODES) {
-    const url = `${BASE_URL}/sell/opc/s/${setCode}`;
+    const url = getSetListingUrl(setCode);
     console.log(`\n[${setCode}] ${url}`);
 
     try {
       const $ = await fetchWithRetry(url);
-      const listings = parseCards($);
+      const listings = parseSetListingPage($);
 
       if (listings.length === 0) {
-        console.log("  ⚠ No cards found");
         errors.push(`${setCode}: 0 cards`);
-        await sleep(DELAY_MS);
         continue;
       }
 
-      const dbSet = await prisma.cardSet.findFirst({
-        where: { code: { equals: setCode, mode: "insensitive" } },
+      const result = await matchAndUpdatePrices(prisma, setCode, listings, {
+        thbRate: rate,
       });
 
-      let matched = 0;
-      for (const listing of listings) {
-        const card = await resolveCard(listing, dbSet?.id ?? null);
-        if (!card) continue;
-
-        const priceThb = jpyToThb(listing.priceJpy, rate);
-
-        await prisma.cardPrice.create({
-          data: {
-            cardId: card.id,
-            source: "YUYUTEI",
-            type: "SELL",
-            priceJpy: listing.priceJpy,
-            priceThb,
-            inStock: listing.inStock,
-          },
-        });
-
-        await prisma.card.update({
-          where: { id: card.id },
-          data: {
-            latestPriceJpy: listing.priceJpy,
-            latestPriceThb: priceThb,
-          },
-        });
-        matched++;
-      }
-
-      console.log(`  ✓ ${matched}/${listings.length} cards price-updated`);
-      totalCards += matched;
-      totalSets++;
+      console.log(
+        `  ${result.matched}/${result.listings} matched (${result.unmatched} unmatched)`
+      );
+      totalMatched += result.matched;
+      totalUnmatched += result.unmatched;
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      console.error(`  ✗ ERROR: ${msg}`);
+      console.error(`  ERROR: ${msg}`);
       errors.push(`${setCode}: ${msg}`);
     }
 
     await sleep(DELAY_MS);
   }
 
-  await computePriceChanges();
+  console.log("\nComputing price changes...");
+  await computePriceChanges(prisma);
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   console.log(`\n========================================`);
-  console.log(
-    `Done! ${totalCards} card prices across ${totalSets} sets in ${elapsed}s`
-  );
+  console.log(`Done! ${totalMatched} matched, ${totalUnmatched} unmatched in ${elapsed}s`);
   if (errors.length) {
     console.log(`Errors (${errors.length}):`);
     errors.forEach((e) => console.log(`  - ${e}`));

@@ -144,7 +144,7 @@ export function SearchBar({
 
   const allItems = useMemo(() => {
     const items: { type: "result" | "recent"; key: string }[] = [];
-    for (const r of results) items.push({ type: "result", key: r.baseCode ?? r.cardCode });
+    for (const r of results) items.push({ type: "result", key: r.cardCode });
     if (results.length === 0) for (const r of filteredRecent) items.push({ type: "recent", key: r });
     return items;
   }, [results, filteredRecent]);

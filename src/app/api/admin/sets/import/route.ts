@@ -267,12 +267,11 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  // Link all cards from punk-records pack to this product
   let productLinked = 0;
   const allPunkCardIds = [...enLookup.keys()];
   for (const cardId of allPunkCardIds) {
-    const dbCard = await prisma.card.findUnique({
-      where: { cardCode: cardId },
+    const dbCard = await prisma.card.findFirst({
+      where: { baseCode: cardId.toUpperCase(), isParallel: false },
       select: { id: true },
     });
     if (!dbCard) continue;

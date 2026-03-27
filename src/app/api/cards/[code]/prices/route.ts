@@ -9,10 +9,15 @@ export async function GET(
   const period = request.nextUrl.searchParams.get("period") || "7d";
   const source = request.nextUrl.searchParams.get("source") || undefined;
 
-  const card = await prisma.card.findUnique({
-    where: { cardCode: code.toUpperCase() },
-    select: { id: true },
-  });
+  const card =
+    (await prisma.card.findUnique({
+      where: { cardCode: code.toUpperCase() },
+      select: { id: true },
+    })) ??
+    (await prisma.card.findFirst({
+      where: { baseCode: code.toUpperCase(), isParallel: false },
+      select: { id: true },
+    }));
 
   if (!card) {
     return NextResponse.json({ error: "Card not found" }, { status: 404 });

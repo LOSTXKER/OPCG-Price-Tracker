@@ -81,7 +81,7 @@ export function ListingCard({
   const diffPct =
     market != null && market > 0 ? ((priceJpy - market) / market) * 100 : null
   const isDeal = diffPct != null && diffPct <= -10
-  const cardHref = `/cards/${encodeURIComponent(card.baseCode ?? card.cardCode)}`
+  const cardHref = `/cards/${encodeURIComponent(card.cardCode)}`
 
   return (
     <article

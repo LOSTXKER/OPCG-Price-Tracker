@@ -1,0 +1,43 @@
+[
+  {
+    "code": "PRB01-001",
+    "cardCode": "PRB01-001",
+    "rarity": "L",
+    "cardType": "LEADER",
+    "nameEn": "Sanji",
+    "nameJp": "サンジ",
+    "nameTh": "Sanji",
+    "color": "Red",
+    "power": 5000,
+    "life": 3,
+    "attribute": "Strike",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[Activate: Main] [Once Per Turn] Up to 1 of your Characters without an [On Play] effect and with a cost of 8 or less gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
+    "effectJp": "【起動メイン】【ターン1回】自分のコスト8以下の【登場時】効果を持たないキャラ1枚までは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคอสต์ 8 หรือต่ำกว่า ที่ไม่มีความสามารถ [เมื่อลงสนาม] จำนวนไม่เกิน 1 ใบ, จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/PRB01-001.png",
+    "isParallel": false,
+    "sets": []
+  },
+  {
+    "code": "PRB01-001",
+    "cardCode": "PRB01-001_p1",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Sanji",
+    "nameJp": "サンジ",
+    "nameTh": "Sanji",
+    "color": "Red",
+    "power": 5000,
+    "life": 3,
+    "attribute": "Strike",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[Activate: Main] [Once Per Turn] Up to 1 of your Characters without an [On Play] effect and with a cost of 8 or less gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
+    "effectJp": "【起動メイン】【ターン1回】自分のコスト8以下の【登場時】効果を持たないキャラ1枚までは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคอสต์ 8 หรือต่ำกว่า ที่ไม่มีความสามารถ [เมื่อลงสนาม] จำนวนไม่เกิน 1 ใบ, จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/PRB01-001_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": []
+  }
+]

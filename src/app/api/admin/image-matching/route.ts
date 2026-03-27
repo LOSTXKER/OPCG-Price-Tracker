@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkIsAdmin } from "@/lib/auth/check-admin";
 import { prisma } from "@/lib/db";
 
-const BANDAI_BASE = "https://www.onepiece-cardgame.com/images/cardlist/card";
+const BANDAI_BASE = "https://asia-en.onepiece-cardgame.com/images/cardlist/card";
 
 export async function GET(request: NextRequest) {
   if (!(await checkIsAdmin())) {

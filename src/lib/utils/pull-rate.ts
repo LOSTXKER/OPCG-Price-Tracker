@@ -111,10 +111,16 @@ export function cardChancePerBox(
 
   const r = rarity.toUpperCase();
 
-  if (isParallel || r.startsWith("P-") || r === "SP" || r === "SP CARD") {
+  if (isParallel || r.startsWith("P-")) {
     const pool = totalParallelPool > 0 ? totalParallelPool : poolSize;
     if (pool <= 0 || EXPECTED_PARALLEL_SLOTS_PER_BOX <= 0) return 0;
     return 1 - Math.pow(1 - 1 / pool, EXPECTED_PARALLEL_SLOTS_PER_BOX);
+  }
+
+  if (r === "SP") {
+    const avg = avgPerBox > 0 ? avgPerBox : 0.17;
+    if (avg > 0) return pullChance(avg, poolSize);
+    return 0;
   }
 
   if (r === "SR") {

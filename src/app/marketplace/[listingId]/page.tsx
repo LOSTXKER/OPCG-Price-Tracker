@@ -84,7 +84,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
           ← กลับ
         </Link>
         <Link
-          href={`/cards/${encodeURIComponent(listing.card.baseCode ?? listing.card.cardCode)}`}
+          href={`/cards/${encodeURIComponent(listing.card.cardCode)}`}
           className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
         >
           หน้าการ์ด

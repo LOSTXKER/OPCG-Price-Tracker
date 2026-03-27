@@ -3,10 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Briefcase,
   Calculator,
+  LogOut,
   Package,
   Search,
   ShoppingBag,
@@ -17,6 +18,17 @@ import {
 import { CurrencyToggle } from "@/components/shared/currency-toggle";
 import { LanguageToggle } from "@/components/shared/language-toggle";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -32,10 +44,42 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+type AuthUser = {
+  email?: string;
+  user_metadata?: { avatar_url?: string; full_name?: string };
+};
+
 export function Header() {
   const router = useRouter();
   const pathname = usePathname() ?? "/";
   const [query, setQuery] = useState("");
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+  const [authLoaded, setAuthLoaded] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    supabase.auth.getUser().then(({ data }) => {
+      setAuthUser(data.user ?? null);
+      setAuthLoaded(true);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setAuthUser(session?.user ?? null);
+      setAuthLoaded(true);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/login");
+    router.refresh();
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,13 +169,54 @@ export function Header() {
               <Star className={cn("size-4", isActive(pathname, "/watchlist") && "fill-current")} />
             </Link>
 
-            <Link
-              href="/login"
-              className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
-              aria-label="Login"
-            >
-              <User className="size-4" />
-            </Link>
+            {authLoaded && authUser ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex size-8 items-center justify-center rounded-md transition-colors hover:bg-muted/60 focus:outline-none">
+                  <Avatar size="sm">
+                    {authUser.user_metadata?.avatar_url ? (
+                      <AvatarImage src={authUser.user_metadata.avatar_url} alt="" />
+                    ) : null}
+                    <AvatarFallback className="text-[10px]">
+                      {(authUser.user_metadata?.full_name ?? authUser.email ?? "U")
+                        .slice(0, 1)
+                        .toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" sideOffset={8}>
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel className="font-normal">
+                      <p className="truncate text-xs text-muted-foreground">
+                        {authUser.email}
+                      </p>
+                    </DropdownMenuLabel>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => router.push("/profile")}
+                  >
+                    <User className="size-4" />
+                    โปรไฟล์
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onClick={() => void handleLogout()}
+                  >
+                    <LogOut className="size-4" />
+                    ออกจากระบบ
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link
+                href="/login"
+                className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+                aria-label="Login"
+              >
+                <User className="size-4" />
+              </Link>
+            )}
           </div>
         </div>
       </div>

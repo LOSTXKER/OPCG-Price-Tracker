@@ -43,8 +43,7 @@ export function parseSetListingPage($: cheerio.CheerioAPI): ScrapedCardListing[]
     if (!cardCodeText) return;
 
     const priceText = $el.find("strong.text-end").first().text().trim();
-    const priceJpy = parseInt(priceText.replace(/[^0-9]/g, ""), 10);
-    if (isNaN(priceJpy) || priceJpy === 0) return;
+    const priceJpy = parseInt(priceText.replace(/[^0-9]/g, ""), 10) || 0;
 
     const imgEl = $el.find(".product-img img.card").first();
     const altText = imgEl.attr("alt") || "";

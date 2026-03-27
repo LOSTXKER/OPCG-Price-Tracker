@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import {
-  Download,
   RefreshCw,
   ChevronDown,
   ChevronUp,
@@ -68,38 +67,6 @@ export function SetsManager({ initialSets }: { initialSets: SetRow[] }) {
       }
     } finally {
       setLoading((p) => ({ ...p, [`edit-${id}`]: false }));
-    }
-  }
-
-  async function importPunkRecords(setCode: string, setId: number) {
-    const key = `import-${setId}`;
-    setLoading((p) => ({ ...p, [key]: true }));
-    setMessages((p) => ({ ...p, [setId]: "Importing from punk-records..." }));
-    try {
-      const res = await fetch("/api/admin/sets/import", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ setCode }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setMessages((p) => ({
-          ...p,
-          [setId]: `Imported: ${data.updated} updated, ${data.noMatch} no match`,
-        }));
-      } else {
-        setMessages((p) => ({
-          ...p,
-          [setId]: `Error: ${data.error}`,
-        }));
-      }
-    } catch (e) {
-      setMessages((p) => ({
-        ...p,
-        [setId]: `Error: ${e instanceof Error ? e.message : "Unknown"}`,
-      }));
-    } finally {
-      setLoading((p) => ({ ...p, [key]: false }));
     }
   }
 
@@ -176,7 +143,6 @@ export function SetsManager({ initialSets }: { initialSets: SetRow[] }) {
                   onEditChange={(field, value) =>
                     setEditData((p) => ({ ...p, [field]: value }))
                   }
-                  onImport={() => importPunkRecords(set.code, set.id)}
                   onScrape={() => scrapePrices(set.code, set.id)}
                 />
               );
@@ -200,7 +166,6 @@ function SetTableRow({
   onCancelEdit,
   onSaveEdit,
   onEditChange,
-  onImport,
   onScrape,
 }: {
   set: SetRow;
@@ -214,10 +179,8 @@ function SetTableRow({
   onCancelEdit: () => void;
   onSaveEdit: () => void;
   onEditChange: (field: string, value: unknown) => void;
-  onImport: () => void;
   onScrape: () => void;
 }) {
-  const importLoading = loading[`import-${set.id}`];
   const scrapeLoading = loading[`scrape-${set.id}`];
   const editLoading = loading[`edit-${set.id}`];
 
@@ -254,19 +217,6 @@ function SetTableRow({
         </td>
         <td className="px-3 py-2">
           <div className="flex items-center justify-center gap-1">
-            <button
-              onClick={onImport}
-              disabled={importLoading}
-              className="inline-flex items-center gap-1 rounded-md bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-500 hover:bg-blue-500/20 disabled:opacity-50"
-              title="Import from punk-records"
-            >
-              {importLoading ? (
-                <Loader2 className="h-3 w-3 animate-spin" />
-              ) : (
-                <Download className="h-3 w-3" />
-              )}
-              Import
-            </button>
             <button
               onClick={onScrape}
               disabled={scrapeLoading}

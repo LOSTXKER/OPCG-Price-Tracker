@@ -54,20 +54,20 @@ interface CardData {
   candidates: { pIndex: number; url: string }[];
 }
 
-const TEXT_FIELDS: { key: string; label: string; type?: string }[] = [
-  { key: "nameJp", label: "Name (JP)" },
-  { key: "nameEn", label: "Name (EN)" },
+const TEXT_FIELDS: { key: string; label: string; type?: string; official?: boolean }[] = [
+  { key: "nameJp", label: "Name (JP)", official: true },
+  { key: "nameEn", label: "Name (EN)", official: true },
   { key: "nameTh", label: "Name (TH)" },
-  { key: "rarity", label: "Rarity" },
-  { key: "cardType", label: "Card Type" },
-  { key: "color", label: "Color (JP)" },
-  { key: "colorEn", label: "Color (EN)" },
-  { key: "cost", label: "Cost", type: "number" },
-  { key: "power", label: "Power", type: "number" },
-  { key: "counter", label: "Counter", type: "number" },
-  { key: "life", label: "Life", type: "number" },
-  { key: "attribute", label: "Attribute" },
-  { key: "trait", label: "Trait" },
+  { key: "rarity", label: "Rarity", official: true },
+  { key: "cardType", label: "Card Type", official: true },
+  { key: "color", label: "Color (JP)", official: true },
+  { key: "colorEn", label: "Color (EN)", official: true },
+  { key: "cost", label: "Cost", type: "number", official: true },
+  { key: "power", label: "Power", type: "number", official: true },
+  { key: "counter", label: "Counter", type: "number", official: true },
+  { key: "life", label: "Life", type: "number", official: true },
+  { key: "attribute", label: "Attribute", official: true },
+  { key: "trait", label: "Trait", official: true },
   { key: "artist", label: "Artist" },
   { key: "imageUrl", label: "Image URL" },
 ];
@@ -270,8 +270,13 @@ export function CardEditor({ card }: { card: CardData }) {
             <div className="grid gap-3 sm:grid-cols-2">
               {TEXT_FIELDS.map((f) => (
                 <label key={f.key} className="space-y-1">
-                  <span className="text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     {f.label}
+                    {f.official && (
+                      <span className="rounded bg-green-500/10 px-1 py-px text-[9px] font-medium text-green-600 dark:text-green-400">
+                        Official
+                      </span>
+                    )}
                   </span>
                   <input
                     type={f.type === "number" ? "number" : "text"}
@@ -279,7 +284,7 @@ export function CardEditor({ card }: { card: CardData }) {
                     onChange={(e) =>
                       handleChange(f.key, e.target.value, f.type)
                     }
-                    className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+                    className={`w-full rounded-md border bg-background px-2 py-1.5 text-sm ${f.official ? "border-green-500/20" : "border-border"}`}
                   />
                 </label>
               ))}

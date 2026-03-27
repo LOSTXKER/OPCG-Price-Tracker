@@ -1,15 +1,24 @@
 import { prisma } from "./_db";
 
-// Community-estimated pull rates for standard OPCG JP booster boxes (24 packs, 6 cards/pack)
-// Source: cardcosmos.de, reddit r/OnePieceTCG, onepiece.gg, onepiece-card-zanmai.jp
+/**
+ * Community-estimated pull rates for standard OPCG JP booster boxes.
+ * 24 packs, 6 cards/pack = 144 cards per box.
+ *
+ * Box patterns (JP booster):
+ *   SEC box   (~33%): 1 SEC + 3 SR + rest
+ *   PA 1 box  (~42%): 1 Parallel + 3 SR + rest
+ *   PA 2 box  (~25%): 2 Parallel + 3 SR + rest
+ *
+ * SP cards are separate from parallels. ~1 SP per 4-6 boxes.
+ */
 const BOOSTER_RATES: Record<string, { avgPerBox: number; ratePerPack: number }> = {
-  L:   { avgPerBox: 0,    ratePerPack: 0      },
-  C:   { avgPerBox: 72,   ratePerPack: 3.0    },
-  UC:  { avgPerBox: 24,   ratePerPack: 1.0    },
-  R:   { avgPerBox: 24,   ratePerPack: 1.0    },
-  SR:  { avgPerBox: 3,    ratePerPack: 0.125  },
-  SEC: { avgPerBox: 0.33, ratePerPack: 0.014  },
-  SP:  { avgPerBox: 0.17, ratePerPack: 0.007  },
+  L:   { avgPerBox: 0,    ratePerPack: 0 },
+  C:   { avgPerBox: 72,   ratePerPack: 3.0 },
+  UC:  { avgPerBox: 24,   ratePerPack: 1.0 },
+  R:   { avgPerBox: 24,   ratePerPack: 1.0 },
+  SR:  { avgPerBox: 3,    ratePerPack: 0.125 },
+  SEC: { avgPerBox: 0.33, ratePerPack: 0.014 },
+  SP:  { avgPerBox: 0.2,  ratePerPack: 0.008 },
 };
 
 const EXTRA_BOOSTER_RATES: Record<string, { avgPerBox: number; ratePerPack: number }> = {
@@ -24,17 +33,22 @@ const STARTER_RATES: Record<string, { avgPerBox: number; ratePerPack: number }> 
   SR: { avgPerBox: 2, ratePerPack: 2 },
 };
 
+/**
+ * Expected parallel art slots per box from the 3 box patterns:
+ * SEC box (33%): 0 parallel slots
+ * PA 1 box (42%): 1 parallel slot
+ * PA 2 box (25%): 2 parallel slots
+ * = 0.33*0 + 0.42*1 + 0.25*2 = 0.92 parallel slots per box on average
+ */
+const EXPECTED_PARALLEL_SLOTS_PER_BOX = 0.92;
+
 async function main() {
   console.log("=== Seed Drop Rates ===\n");
 
-  const sets = await prisma.cardSet.findMany({
-    orderBy: { code: "asc" },
-  });
-
+  const sets = await prisma.cardSet.findMany({ orderBy: { code: "asc" } });
   console.log(`Found ${sets.length} sets.\n`);
 
-  let created = 0;
-  let updated = 0;
+  let totalEntries = 0;
 
   for (const set of sets) {
     let rates: Record<string, { avgPerBox: number; ratePerPack: number }>;
@@ -70,62 +84,57 @@ async function main() {
     });
 
     const rarityCounts = await prisma.card.groupBy({
-      by: ["rarity"],
-      where: { setId: set.id, isParallel: false },
+      by: ["rarity", "isParallel"],
+      where: { setId: set.id },
       _count: true,
     });
 
-    const existingRarities = new Set(rarityCounts.map((r) => r.rarity));
+    const baseRarities = rarityCounts
+      .filter((r) => !r.isParallel)
+      .map((r) => r.rarity);
 
+    const parallelCount = rarityCounts
+      .filter((r) => r.isParallel)
+      .reduce((sum, r) => sum + r._count, 0);
+
+    let setEntries = 0;
+
+    // Base rarity rates
     for (const [rarity, rate] of Object.entries(rates)) {
-      if (!existingRarities.has(rarity)) continue;
-
-      const result = await prisma.setDropRate.upsert({
-        where: { setId_rarity: { setId: set.id, rarity } },
-        update: { avgPerBox: rate.avgPerBox, ratePerPack: rate.ratePerPack },
-        create: {
-          setId: set.id,
-          rarity,
-          avgPerBox: rate.avgPerBox,
-          ratePerPack: rate.ratePerPack,
-        },
-      });
-
-      if (result.id) created++;
-    }
-
-    // Handle P- prefixed rarities (parallel rarities)
-    for (const rc of rarityCounts) {
-      if (!rc.rarity.startsWith("P-")) continue;
-      const baseRarity = rc.rarity.replace("P-", "");
-      const baseRate = rates[baseRarity];
-      if (!baseRate) continue;
-
-      const parallelRate = {
-        avgPerBox: Math.min(baseRate.avgPerBox * 0.1, 2),
-        ratePerPack: Math.min(baseRate.ratePerPack * 0.1, 0.08),
-      };
+      if (!baseRarities.includes(rarity)) continue;
 
       await prisma.setDropRate.upsert({
-        where: { setId_rarity: { setId: set.id, rarity: rc.rarity } },
-        update: { avgPerBox: parallelRate.avgPerBox, ratePerPack: parallelRate.ratePerPack },
-        create: {
-          setId: set.id,
-          rarity: rc.rarity,
-          avgPerBox: parallelRate.avgPerBox,
-          ratePerPack: parallelRate.ratePerPack,
-        },
+        where: { setId_rarity: { setId: set.id, rarity } },
+        update: { avgPerBox: rate.avgPerBox, ratePerPack: rate.ratePerPack },
+        create: { setId: set.id, rarity, avgPerBox: rate.avgPerBox, ratePerPack: rate.ratePerPack },
       });
-      created++;
+      setEntries++;
     }
 
-    console.log(`  [${set.code}] ${set.name}: seeded ${existingRarities.size} rarity rates`);
-    updated++;
+    // Parallel rarity rates (P-C, P-UC, P-R, P-SR, P-SEC, P-L)
+    // Each parallel card shares the ~0.92 parallel slots/box with ALL other parallels
+    if (parallelCount > 0 && set.type !== "STARTER") {
+      for (const rc of rarityCounts) {
+        if (!rc.isParallel || !rc.rarity.startsWith("P-")) continue;
+
+        const parallelAvg = EXPECTED_PARALLEL_SLOTS_PER_BOX;
+        const parallelRatePerPack = parallelAvg / packsPerBox;
+
+        await prisma.setDropRate.upsert({
+          where: { setId_rarity: { setId: set.id, rarity: rc.rarity } },
+          update: { avgPerBox: parallelAvg, ratePerPack: parallelRatePerPack },
+          create: { setId: set.id, rarity: rc.rarity, avgPerBox: parallelAvg, ratePerPack: parallelRatePerPack },
+        });
+        setEntries++;
+      }
+    }
+
+    console.log(`  [${set.code}] ${set.name}: ${setEntries} rate entries (${parallelCount} parallel cards in pool)`);
+    totalEntries += setEntries;
   }
 
   console.log(`\n========================================`);
-  console.log(`Done! Updated ${updated} sets, created/updated ${created} drop rate entries.`);
-
+  console.log(`Done! ${totalEntries} total drop rate entries.`);
   await prisma.$disconnect();
 }
 

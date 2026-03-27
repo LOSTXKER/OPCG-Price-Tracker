@@ -3,25 +3,36 @@ export type RarityInfo = {
   name: string;
   order: number;
   color: string;
+  isParallel?: boolean;
 };
 
-export const RARITIES: RarityInfo[] = [
-  { code: "L", name: "Leader", order: 8, color: "#F97316" },
-  { code: "SEC", name: "Secret Rare", order: 7, color: "#F59E0B" },
-  { code: "P-SEC", name: "Parallel Secret Rare", order: 7, color: "#F59E0B" },
-  { code: "SP", name: "Special", order: 9, color: "#EC4899" },
-  { code: "SR", name: "Super Rare", order: 6, color: "#8B5CF6" },
-  { code: "P-SR", name: "Parallel Super Rare", order: 6, color: "#8B5CF6" },
-  { code: "R", name: "Rare", order: 5, color: "#3B82F6" },
-  { code: "P-R", name: "Parallel Rare", order: 5, color: "#3B82F6" },
-  { code: "UC", name: "Uncommon", order: 4, color: "#22C55E" },
-  { code: "P-UC", name: "Parallel Uncommon", order: 4, color: "#22C55E" },
-  { code: "C", name: "Common", order: 3, color: "#6B7280" },
-  { code: "P-C", name: "Parallel Common", order: 3, color: "#6B7280" },
+/** Official base rarities sourced from Bandai */
+export const BASE_RARITIES: RarityInfo[] = [
+  { code: "TR", name: "Treasure Rare", order: 11, color: "#EF4444" },
+  { code: "SP", name: "Special (Manga Art)", order: 10, color: "#EC4899" },
+  { code: "SEC", name: "Secret Rare", order: 9, color: "#F59E0B" },
+  { code: "SR", name: "Super Rare", order: 8, color: "#8B5CF6" },
+  { code: "R", name: "Rare", order: 7, color: "#3B82F6" },
+  { code: "UC", name: "Uncommon", order: 6, color: "#22C55E" },
+  { code: "C", name: "Common", order: 5, color: "#6B7280" },
+  { code: "L", name: "Leader", order: 4, color: "#F97316" },
+  { code: "DON", name: "DON!!", order: 3, color: "#EA580C" },
   { code: "P", name: "Promo", order: 2, color: "#06B6D4" },
-  { code: "P-P", name: "Parallel Promo", order: 2, color: "#06B6D4" },
-  { code: "P-L", name: "Parallel Leader", order: 8, color: "#F97316" },
-  { code: "DON", name: "DON!!", order: 1, color: "#EA580C" },
 ];
 
+/** Parallel variants created by Yuyu-tei price scraping */
+export const PARALLEL_RARITIES: RarityInfo[] = [
+  { code: "P-SEC", name: "Parallel Secret Rare", order: 9, color: "#F59E0B", isParallel: true },
+  { code: "P-SR", name: "Parallel Super Rare", order: 8, color: "#8B5CF6", isParallel: true },
+  { code: "P-R", name: "Parallel Rare", order: 7, color: "#3B82F6", isParallel: true },
+  { code: "P-UC", name: "Parallel Uncommon", order: 6, color: "#22C55E", isParallel: true },
+  { code: "P-C", name: "Parallel Common", order: 5, color: "#6B7280", isParallel: true },
+  { code: "P-L", name: "Parallel Leader", order: 4, color: "#F97316", isParallel: true },
+  { code: "P-P", name: "Parallel Promo", order: 2, color: "#06B6D4", isParallel: true },
+];
+
+export const RARITIES: RarityInfo[] = [...BASE_RARITIES, ...PARALLEL_RARITIES];
+
 export const RARITY_MAP = new Map(RARITIES.map((r) => [r.code, r]));
+
+export const BASE_RARITY_CODES = new Set(BASE_RARITIES.map((r) => r.code));

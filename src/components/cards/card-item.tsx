@@ -79,6 +79,11 @@ export function CardItem({
 
           {/* Top-right badges */}
           <div className="absolute right-1.5 top-1.5 flex flex-col items-end gap-1">
+            {isParallel && (
+              <span className="rounded bg-amber-500/90 px-1.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
+                {rarity.startsWith("P-") ? rarity : "P"}
+              </span>
+            )}
             {!inStock && (
               <span className="rounded bg-destructive/90 px-1.5 py-0.5 text-[10px] font-medium text-white">
                 หมด

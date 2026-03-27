@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 
 const ACCENT_RARITIES: Record<string, string> = {
+  TR: "text-red-600 dark:text-red-400",
   SEC: "text-amber-600 dark:text-amber-400",
   "P-SEC": "text-amber-600 dark:text-amber-400",
   SP: "text-amber-600 dark:text-amber-400",
