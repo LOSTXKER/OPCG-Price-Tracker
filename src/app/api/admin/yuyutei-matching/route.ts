@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
   const setFilter = sp.get("set") || "";
   const statusFilter = sp.get("status") || "";
   const page = Math.max(1, parseInt(sp.get("page") || "1"));
-  const limit = 50;
+  const limit = 20;
   const skip = (page - 1) * limit;
 
   const where: Record<string, unknown> = {};
@@ -128,6 +128,32 @@ export async function GET(request: NextRequest) {
     statusCounts.map((s) => [s.status, s._count])
   );
 
+  // Recent activity log (last 30 approved/rejected)
+  let recentLog: unknown[] = [];
+  if (sp.get("withLog") === "true") {
+    const logWhere: Record<string, unknown> = {
+      status: { in: ["matched", "rejected"] },
+    };
+    if (setFilter) logWhere.setCode = setFilter;
+
+    recentLog = await prisma.yuyuteiMapping.findMany({
+      where: logWhere,
+      orderBy: { updatedAt: "desc" },
+      take: 30,
+      select: {
+        id: true,
+        scrapedCode: true,
+        scrapedName: true,
+        priceJpy: true,
+        matchMethod: true,
+        matchedCard: { select: { cardCode: true, rarity: true } },
+        status: true,
+        setCode: true,
+        updatedAt: true,
+      },
+    });
+  }
+
   return NextResponse.json({
     mappings: enriched,
     total,
@@ -140,6 +166,7 @@ export async function GET(request: NextRequest) {
       suggested: counts.suggested ?? 0,
       rejected: counts.rejected ?? 0,
     },
+    recentLog,
   });
 }
 
