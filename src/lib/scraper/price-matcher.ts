@@ -61,8 +61,8 @@ export async function matchAndUpdatePrices(
         })
       : null;
 
-    // 2. Exact cardCode match (scoped to set)
-    if (!card) {
+    // 2. Exact cardCode match — non-parallel only
+    if (!card && !parallel) {
       card = await db.card.findFirst({
         where: { cardCode: code, ...setFilter },
         select: { id: true },

@@ -71,12 +71,16 @@ async function matchCard(
     if (already) return { cardId: already.id, method: "yuyutei-id" };
   }
 
-  // Step 1: Exact cardCode match (scoped to current set)
-  const exact = await prisma.card.findFirst({
-    where: { cardCode: code, ...setFilter },
-    select: { id: true },
-  });
-  if (exact) return { cardId: exact.id, method: "exact" };
+  // Step 1: Exact cardCode match — non-parallel only
+  // Parallel listings share the same cardCode as the base card (e.g. "OP09-118")
+  // so they must skip this step and fall through to baseCode matching (Step 2)
+  if (!parallel) {
+    const exact = await prisma.card.findFirst({
+      where: { cardCode: code, ...setFilter },
+      select: { id: true },
+    });
+    if (exact) return { cardId: exact.id, method: "exact" };
+  }
 
   // Step 2: baseCode match — handles PRB/ST where Yuyutei uses original codes
   // (e.g. Yuyutei lists "OP01-120" on PRB01 page, DB has "OP01-120_r1" with baseCode "OP01-120")
