@@ -1,14 +1,10 @@
 /**
- * Pipeline: Scrape Yuyutei → Match prices to existing cards in DB.
+ * Scrape Yuyutei → save ALL listings to YuyuteiMapping table.
  *
- * Cards MUST already exist in the DB (from Punk Records via seed-cards.ts).
- * This script only matches Yuyutei listings to those cards and updates prices.
+ * Auto-suggests a match for each listing but does NOT write prices to cards.
+ * Admin reviews and approves matches in the admin UI, which then writes prices.
  *
- * 3-Step Matching:
- *   1. Non-parallel: exact cardCode match
- *   2. Parallel: baseCode + rarity + isParallel match
- *   3. YuyuteiMapping table fallback (manual matches)
- *   4. Unmatched → YuyuteiMapping with status "pending"
+ * For already-approved mappings (status="matched"), updates priceJpy only.
  *
  * Usage:
  *   npx tsx scripts/pipeline-yuyutei.ts                  # all sets
@@ -46,34 +42,19 @@ function isParallelListing(listing: ScrapedCardListing): boolean {
 }
 
 /**
- * Normalize Yuyutei rarity to match our DB format (from Punk Records mapRarity).
- * Yuyutei parser already outputs P-SEC, P-SR, SP, etc. but we ensure consistency.
+ * Suggest a card match for a listing. Returns cardId + method if found.
+ * Does NOT write anything to Card table — only used as a suggestion.
  */
-function normalizeRarity(listing: ScrapedCardListing): string | null {
-  return listing.rarity || null;
-}
-
-async function matchCard(
+async function suggestMatch(
   listing: ScrapedCardListing,
   setCode: string
 ): Promise<{ cardId: number; method: string } | null> {
   const code = listing.cardCode!.toUpperCase();
   const parallel = isParallelListing(listing);
-  const rarity = normalizeRarity(listing);
+  const rarity = listing.rarity || null;
   const setFilter = { set: { code: setCode } };
 
-  // Step 0: Re-run fast path — card already linked to this yuyuteiId (scoped to set)
-  if (listing.yuyuteiId) {
-    const already = await prisma.card.findFirst({
-      where: { yuyuteiId: listing.yuyuteiId, ...setFilter },
-      select: { id: true },
-    });
-    if (already) return { cardId: already.id, method: "yuyutei-id" };
-  }
-
-  // Step 1: Exact cardCode match — non-parallel only
-  // Parallel listings share the same cardCode as the base card (e.g. "OP09-118")
-  // so they must skip this step and fall through to baseCode matching (Step 2)
+  // Non-parallel: exact cardCode
   if (!parallel) {
     const exact = await prisma.card.findFirst({
       where: { cardCode: code, ...setFilter },
@@ -82,65 +63,35 @@ async function matchCard(
     if (exact) return { cardId: exact.id, method: "exact" };
   }
 
-  // Step 2: baseCode match — handles PRB/ST where Yuyutei uses original codes
-  // (e.g. Yuyutei lists "OP01-120" on PRB01 page, DB has "OP01-120_r1" with baseCode "OP01-120")
+  // Parallel: baseCode + isParallel + rarity
   if (parallel && rarity) {
-    // 2a: Parallel — baseCode + isParallel + rarity, prefer unlinked
-    const unlinked = await prisma.card.findFirst({
-      where: { baseCode: code, isParallel: true, rarity, yuyuteiId: null, ...setFilter },
+    const match = await prisma.card.findFirst({
+      where: { baseCode: code, isParallel: true, rarity, ...setFilter },
       select: { id: true },
       orderBy: { parallelIndex: "asc" },
     });
-    if (unlinked) return { cardId: unlinked.id, method: "basecode-parallel" };
+    if (match) return { cardId: match.id, method: "auto-parallel" };
 
-    // 2b: Any unlinked parallel with same baseCode
     const anyPar = await prisma.card.findFirst({
-      where: { baseCode: code, isParallel: true, yuyuteiId: null, ...setFilter },
+      where: { baseCode: code, isParallel: true, ...setFilter },
       select: { id: true },
       orderBy: { parallelIndex: "asc" },
     });
-    if (anyPar) return { cardId: anyPar.id, method: "basecode-parallel-any" };
+    if (anyPar) return { cardId: anyPar.id, method: "auto-parallel-any" };
   }
 
+  // Non-parallel baseCode fallback (PRB/ST reprints)
   if (!parallel) {
-    // 2c: Non-parallel — baseCode + !isParallel + rarity, prefer unlinked
     const byBase = await prisma.card.findFirst({
       where: {
         baseCode: code,
         isParallel: false,
         ...(rarity ? { rarity } : {}),
-        yuyuteiId: null,
         ...setFilter,
       },
       select: { id: true },
     });
-    if (byBase) return { cardId: byBase.id, method: "basecode" };
-
-    // 2d: Re-run — same but without yuyuteiId:null constraint
-    const byBaseRerun = await prisma.card.findFirst({
-      where: {
-        baseCode: code,
-        isParallel: false,
-        ...(rarity ? { rarity } : {}),
-        ...setFilter,
-      },
-      select: { id: true },
-    });
-    if (byBaseRerun) return { cardId: byBaseRerun.id, method: "basecode-rerun" };
-  }
-
-  // Step 3: YuyuteiMapping table fallback (already set-scoped)
-  if (listing.yuyuteiId) {
-    const mapping = await prisma.yuyuteiMapping.findFirst({
-      where: {
-        setCode,
-        yuyuteiId: listing.yuyuteiId,
-        status: "matched",
-        matchedCardId: { not: null },
-      },
-      select: { matchedCardId: true },
-    });
-    if (mapping?.matchedCardId) return { cardId: mapping.matchedCardId, method: "mapping" };
+    if (byBase) return { cardId: byBase.id, method: "auto-basecode" };
   }
 
   return null;
@@ -154,9 +105,9 @@ async function main() {
     ? new Set(setsArg.replace("--sets=", "").split(",").map((s) => s.trim().toLowerCase()))
     : null;
 
-  console.log("╔══════════════════════════════════════════════════╗");
-  console.log("║   Yuyutei Price Matcher (cards must exist in DB)  ║");
-  console.log("╚══════════════════════════════════════════════════╝");
+  console.log("╔══════════════════════════════════════════════════════╗");
+  console.log("║   Yuyutei Scraper → YuyuteiMapping (admin approves)  ║");
+  console.log("╚══════════════════════════════════════════════════════════╝");
   console.log(`  verbose: ${verbose}, sets: ${setsFilter ? [...setsFilter].join(",") : "all"}\n`);
 
   const setsToProcess = SETS.filter((s) => {
@@ -165,9 +116,8 @@ async function main() {
     return true;
   });
 
-  let totalMatched = 0;
-  let totalUnmatched = 0;
-  let totalPriceRows = 0;
+  let totalNew = 0;
+  let totalUpdated = 0;
   let totalDonSkipped = 0;
 
   for (const setDef of setsToProcess) {
@@ -191,96 +141,67 @@ async function main() {
 
     const donCount = listings.filter(isDonCard).length;
     const nonDon = listings.filter((l) => !isDonCard(l));
-
-    if (verbose) {
-      console.log(`  Raw listings: ${listings.length} (DON: ${donCount}, non-DON: ${nonDon.length})`);
-    }
-
-    let matched = 0;
-    let unmatched = 0;
-    let priceRows = 0;
+    let newCount = 0;
+    let updatedCount = 0;
 
     for (const listing of nonDon) {
-      if (!listing.cardCode) {
-        unmatched++;
-        continue;
-      }
+      if (!listing.cardCode || !listing.yuyuteiId) continue;
 
-      const result = await matchCard(listing, setDef.code);
+      const existing = await prisma.yuyuteiMapping.findUnique({
+        where: {
+          setCode_yuyuteiId: { setCode: setDef.code, yuyuteiId: listing.yuyuteiId },
+        },
+      });
 
-      if (result) {
-        // Update card with Yuyutei data
-        await prisma.card.update({
-          where: { id: result.cardId },
+      if (existing) {
+        // Already exists — just update price (keep admin's match decision)
+        await prisma.yuyuteiMapping.update({
+          where: { id: existing.id },
           data: {
-            yuyuteiId: listing.yuyuteiId || undefined,
-            yuyuteiUrl: listing.cardUrl || undefined,
-            latestPriceJpy: listing.priceJpy,
-          },
-        });
-
-        // Create price history row
-        await prisma.cardPrice.create({
-          data: {
-            cardId: result.cardId,
-            source: "YUYUTEI",
-            type: "SELL",
+            scrapedName: listing.name,
+            scrapedImage: listing.imageUrl || null,
             priceJpy: listing.priceJpy,
-            inStock: listing.inStock,
           },
         });
-
-        matched++;
-        priceRows++;
+        updatedCount++;
 
         if (verbose) {
-          const parallel = isParallelListing(listing) ? " [P]" : "";
-          console.log(`    OK  ${listing.cardCode}${parallel} ${listing.rarity || "-"} ¥${listing.priceJpy} (${result.method})`);
+          const p = isParallelListing(listing) ? " [P]" : "";
+          console.log(`    UPD ${listing.cardCode}${p} ¥${listing.priceJpy} (${existing.status})`);
         }
       } else {
-        // Step 4: Save unmatched to YuyuteiMapping for admin review
-        if (listing.yuyuteiId) {
-          await prisma.yuyuteiMapping.upsert({
-            where: {
-              setCode_yuyuteiId: {
-                setCode: setDef.code,
-                yuyuteiId: listing.yuyuteiId,
-              },
-            },
-            update: {
-              scrapedCode: listing.cardCode,
-              scrapedRarity: listing.rarity || null,
-              scrapedName: listing.name,
-              scrapedImage: listing.imageUrl || null,
-              priceJpy: listing.priceJpy,
-            },
-            create: {
-              setCode: setDef.code,
-              yuyuteiId: listing.yuyuteiId,
-              scrapedCode: listing.cardCode,
-              scrapedRarity: listing.rarity || null,
-              scrapedName: listing.name,
-              scrapedImage: listing.imageUrl || null,
-              priceJpy: listing.priceJpy,
-              status: "pending",
-            },
-          });
-        }
+        // New listing — auto-suggest a match
+        const suggestion = await suggestMatch(listing, setDef.code);
 
-        unmatched++;
+        await prisma.yuyuteiMapping.create({
+          data: {
+            setCode: setDef.code,
+            yuyuteiId: listing.yuyuteiId,
+            scrapedCode: listing.cardCode,
+            scrapedRarity: listing.rarity || null,
+            scrapedName: listing.name,
+            scrapedImage: listing.imageUrl || null,
+            priceJpy: listing.priceJpy,
+            matchedCardId: suggestion?.cardId ?? null,
+            matchMethod: suggestion?.method ?? null,
+            status: suggestion ? "suggested" : "pending",
+          },
+        });
+        newCount++;
+
         if (verbose) {
-          const parallel = isParallelListing(listing) ? " [P]" : "";
-          console.log(`    MISS ${listing.cardCode}${parallel} ${listing.rarity || "-"} ¥${listing.priceJpy} "${listing.name}"`);
+          const p = isParallelListing(listing) ? " [P]" : "";
+          const s = suggestion ? `→ card#${suggestion.cardId} (${suggestion.method})` : "NO MATCH";
+          console.log(`    NEW ${listing.cardCode}${p} ¥${listing.priceJpy} ${s}`);
         }
       }
     }
 
     console.log(
-      `  Matched: ${matched}, Unmatched: ${unmatched}, Prices: ${priceRows}, DON skipped: ${donCount}`
+      `  New: ${newCount}, Updated: ${updatedCount}, DON skipped: ${donCount}`
     );
-    totalMatched += matched;
-    totalUnmatched += unmatched;
-    totalPriceRows += priceRows;
+    totalNew += newCount;
+    totalUpdated += updatedCount;
     totalDonSkipped += donCount;
 
     await sleep(DELAY_MS);
@@ -288,10 +209,9 @@ async function main() {
 
   console.log(`\n${"=".repeat(60)}`);
   console.log(`Done!`);
-  console.log(`  Matched:   ${totalMatched}`);
-  console.log(`  Unmatched: ${totalUnmatched}`);
-  console.log(`  Prices:    ${totalPriceRows}`);
-  console.log(`  DON skip:  ${totalDonSkipped}`);
+  console.log(`  New mappings:     ${totalNew}`);
+  console.log(`  Updated prices:   ${totalUpdated}`);
+  console.log(`  DON skipped:      ${totalDonSkipped}`);
   console.log("=".repeat(60));
 
   await prisma.$disconnect();

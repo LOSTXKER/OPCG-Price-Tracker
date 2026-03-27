@@ -4,9 +4,7 @@ import { prisma } from "@/lib/db";
 
 /**
  * GET /api/admin/yuyutei-matching?set=&status=&page=
- * GET /api/admin/yuyutei-matching?summary=true  (lightweight per-set counts)
- *
- * List YuyuteiMapping records for admin review.
+ * GET /api/admin/yuyutei-matching?summary=true
  */
 export async function GET(request: NextRequest) {
   if (!(await checkIsAdmin())) {
@@ -16,35 +14,26 @@ export async function GET(request: NextRequest) {
   const sp = request.nextUrl.searchParams;
 
   if (sp.get("summary") === "true") {
-    const [allSets, totalBySet, pendingBySet] = await Promise.all([
+    const [allSets, statusBySet] = await Promise.all([
       prisma.cardSet.findMany({
         select: { code: true, name: true, nameEn: true },
         orderBy: { code: "asc" },
       }),
       prisma.yuyuteiMapping.groupBy({
-        by: ["setCode"],
+        by: ["setCode", "status"],
         _count: { _all: true },
-      }),
-      prisma.yuyuteiMapping.groupBy({
-        by: ["setCode"],
-        _count: { _all: true },
-        where: { status: "pending" },
       }),
     ]);
 
-    const totalMap = Object.fromEntries(
-      totalBySet.map((r) => [r.setCode, r._count._all])
-    );
-    const pendingMap = Object.fromEntries(
-      pendingBySet.map((r) => [r.setCode, r._count._all])
-    );
-
-    const setCompletion: Record<string, { total: number; pending: number }> = {};
-    for (const code of Object.keys(totalMap)) {
-      setCompletion[code] = {
-        total: totalMap[code] ?? 0,
-        pending: pendingMap[code] ?? 0,
-      };
+    const setCompletion: Record<string, { total: number; pending: number; suggested: number; matched: number }> = {};
+    for (const row of statusBySet) {
+      if (!setCompletion[row.setCode]) {
+        setCompletion[row.setCode] = { total: 0, pending: 0, suggested: 0, matched: 0 };
+      }
+      setCompletion[row.setCode].total += row._count._all;
+      if (row.status === "pending") setCompletion[row.setCode].pending = row._count._all;
+      if (row.status === "suggested") setCompletion[row.setCode].suggested = row._count._all;
+      if (row.status === "matched") setCompletion[row.setCode].matched = row._count._all;
     }
 
     return NextResponse.json({ sets: allSets, setCompletion });
@@ -52,24 +41,18 @@ export async function GET(request: NextRequest) {
 
   const setFilter = sp.get("set") || "";
   const statusFilter = sp.get("status") || "";
-  const sortBy = sp.get("sort") || "default";
   const page = Math.max(1, parseInt(sp.get("page") || "1"));
-  const limit = 30;
+  const limit = 50;
   const skip = (page - 1) * limit;
 
   const where: Record<string, unknown> = {};
   if (setFilter) where.setCode = setFilter;
   if (statusFilter) where.status = statusFilter;
 
-  const orderBy =
-    sortBy === "recent"
-      ? [{ updatedAt: "desc" as const }]
-      : [{ status: "asc" as const }, { scrapedCode: "asc" as const }];
-
   const [mappings, total, sets, statusCounts] = await Promise.all([
     prisma.yuyuteiMapping.findMany({
       where,
-      orderBy,
+      orderBy: [{ status: "asc" }, { scrapedCode: "asc" }],
       skip,
       take: limit,
       include: {
@@ -88,11 +71,10 @@ export async function GET(request: NextRequest) {
       },
     }),
     prisma.yuyuteiMapping.count({ where }),
-    prisma.cardSet
-      .findMany({
-        select: { code: true, name: true, nameEn: true },
-        orderBy: { code: "asc" },
-      }),
+    prisma.cardSet.findMany({
+      select: { code: true, name: true, nameEn: true },
+      orderBy: { code: "asc" },
+    }),
     prisma.yuyuteiMapping.groupBy({
       by: ["status"],
       _count: true,
@@ -100,6 +82,7 @@ export async function GET(request: NextRequest) {
     }),
   ]);
 
+  // For pending/suggested mappings, load candidate cards
   const enriched = await Promise.all(
     mappings.map(async (m) => {
       let candidates: {
@@ -108,48 +91,31 @@ export async function GET(request: NextRequest) {
         imageUrl: string | null;
         parallelIndex: number | null;
         rarity: string;
+        nameJp: string;
+        nameEn: string | null;
+        isParallel: boolean;
       }[] = [];
 
-      if (m.status === "pending" && m.scrapedCode) {
+      if ((m.status === "pending" || m.status === "suggested") && m.scrapedCode) {
         const code = m.scrapedCode.toUpperCase();
         const cardSet = await prisma.cardSet.findFirst({
           where: { code: { equals: m.setCode, mode: "insensitive" } },
         });
 
-        // Search in the same set first
         if (cardSet) {
           candidates = await prisma.card.findMany({
-            where: {
-              baseCode: code,
-              isParallel: true,
-              setId: cardSet.id,
-            },
+            where: { OR: [{ cardCode: code }, { baseCode: code }], setId: cardSet.id },
             select: {
               id: true,
               cardCode: true,
               imageUrl: true,
               parallelIndex: true,
               rarity: true,
-            },
-            orderBy: { parallelIndex: "asc" },
-          });
-        }
-
-        // Fall back to global search across all sets
-        if (candidates.length === 0) {
-          candidates = await prisma.card.findMany({
-            where: {
-              baseCode: code,
+              nameJp: true,
+              nameEn: true,
               isParallel: true,
             },
-            select: {
-              id: true,
-              cardCode: true,
-              imageUrl: true,
-              parallelIndex: true,
-              rarity: true,
-            },
-            orderBy: { parallelIndex: "asc" },
+            orderBy: [{ isParallel: "asc" }, { parallelIndex: "asc" }],
           });
         }
       }
@@ -171,6 +137,7 @@ export async function GET(request: NextRequest) {
     counts: {
       matched: counts.matched ?? 0,
       pending: counts.pending ?? 0,
+      suggested: counts.suggested ?? 0,
       rejected: counts.rejected ?? 0,
     },
   });
@@ -179,9 +146,10 @@ export async function GET(request: NextRequest) {
 /**
  * PATCH /api/admin/yuyutei-matching
  *
- * Admin approves/links a mapping, or unmatches it back to pending.
- * Body: { id: number, matchedCardId: number } — approve
- * Body: { id: number, action: "unmatch" }      — reset to pending
+ * Actions:
+ *   { id, matchedCardId }         — approve single mapping
+ *   { id, action: "unmatch" }     — reset to pending
+ *   { action: "bulk-approve", set?, status? } — approve all suggested/pending that have a matchedCardId
  */
 export async function PATCH(request: NextRequest) {
   if (!(await checkIsAdmin())) {
@@ -189,6 +157,51 @@ export async function PATCH(request: NextRequest) {
   }
 
   const body = await request.json();
+
+  // Bulk approve
+  if (body.action === "bulk-approve") {
+    const where: Record<string, unknown> = {
+      status: { in: ["suggested", "pending"] },
+      matchedCardId: { not: null },
+    };
+    if (body.set) where.setCode = body.set;
+
+    const toApprove = await prisma.yuyuteiMapping.findMany({
+      where,
+      select: { id: true, matchedCardId: true, priceJpy: true, yuyuteiId: true },
+    });
+
+    let approved = 0;
+    for (const m of toApprove) {
+      await prisma.yuyuteiMapping.update({
+        where: { id: m.id },
+        data: { status: "matched", matchMethod: "admin-bulk" },
+      });
+
+      await prisma.card.update({
+        where: { id: m.matchedCardId! },
+        data: {
+          yuyuteiId: m.yuyuteiId,
+          latestPriceJpy: m.priceJpy,
+        },
+      });
+
+      await prisma.cardPrice.create({
+        data: {
+          cardId: m.matchedCardId!,
+          source: "YUYUTEI",
+          type: "SELL",
+          priceJpy: m.priceJpy,
+          inStock: true,
+        },
+      });
+
+      approved++;
+    }
+
+    return NextResponse.json({ success: true, approved });
+  }
+
   const { id, matchedCardId, action } = body as {
     id: number;
     matchedCardId?: number;
@@ -201,17 +214,15 @@ export async function PATCH(request: NextRequest) {
 
   const mapping = await prisma.yuyuteiMapping.findUnique({ where: { id } });
   if (!mapping) {
-    return NextResponse.json(
-      { error: "Mapping not found" },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Mapping not found" }, { status: 404 });
   }
 
+  // Unmatch
   if (action === "unmatch") {
     if (mapping.matchedCardId) {
       await prisma.card.update({
         where: { id: mapping.matchedCardId },
-        data: { yuyuteiId: null, yuyuteiUrl: null },
+        data: { yuyuteiId: null, latestPriceJpy: null },
       });
     }
 
@@ -228,11 +239,9 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ success: true });
   }
 
+  // Single approve
   if (!matchedCardId) {
-    return NextResponse.json(
-      { error: "matchedCardId is required" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "matchedCardId is required" }, { status: 400 });
   }
 
   const card = await prisma.card.findUnique({
@@ -240,10 +249,7 @@ export async function PATCH(request: NextRequest) {
     select: { id: true },
   });
   if (!card) {
-    return NextResponse.json(
-      { error: "Card not found" },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Card not found" }, { status: 404 });
   }
 
   await prisma.yuyuteiMapping.update({
@@ -259,7 +265,17 @@ export async function PATCH(request: NextRequest) {
     where: { id: matchedCardId },
     data: {
       yuyuteiId: mapping.yuyuteiId,
-      yuyuteiUrl: undefined,
+      latestPriceJpy: mapping.priceJpy,
+    },
+  });
+
+  await prisma.cardPrice.create({
+    data: {
+      cardId: matchedCardId,
+      source: "YUYUTEI",
+      type: "SELL",
+      priceJpy: mapping.priceJpy,
+      inStock: true,
     },
   });
 
@@ -267,10 +283,7 @@ export async function PATCH(request: NextRequest) {
 }
 
 /**
- * DELETE /api/admin/yuyutei-matching
- *
- * Admin rejects a mapping.
- * Body: { id: number }
+ * DELETE /api/admin/yuyutei-matching  { id }
  */
 export async function DELETE(request: NextRequest) {
   if (!(await checkIsAdmin())) {
@@ -281,10 +294,7 @@ export async function DELETE(request: NextRequest) {
   const { id } = body as { id: number };
 
   if (!id) {
-    return NextResponse.json(
-      { error: "id is required" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "id is required" }, { status: 400 });
   }
 
   await prisma.yuyuteiMapping.update({

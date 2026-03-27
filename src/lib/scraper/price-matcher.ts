@@ -1,11 +1,9 @@
 /**
- * Price-matching module for the Punk Records + Yuyutei pipeline.
+ * Daily price update module.
  *
- * Cards are created from Punk Records (master data). Yuyutei provides prices.
- * Matching: yuyuteiId (fast) -> exact cardCode -> parallel rarity match.
- *
- * All functions accept a `db` (PrismaClient) parameter so the same logic
- * works from both Next.js routes (src/lib/db) and CLI scripts (scripts/_db).
+ * Uses approved YuyuteiMapping entries to update card prices.
+ * Scrapes Yuyutei → finds matching mapping by yuyuteiId → updates card price.
+ * New/unknown listings are saved to YuyuteiMapping as "pending" for admin review.
  */
 import type { ScrapedCardListing } from "./yuyu-tei";
 
@@ -19,17 +17,8 @@ export interface MatchResult {
   listings: number;
 }
 
-function isParallelListing(listing: ScrapedCardListing): boolean {
-  return (
-    listing.name.includes("パラレル") ||
-    (listing.rarity?.startsWith("P-") ?? false) ||
-    listing.rarity === "SP"
-  );
-}
-
 /**
- * Match a batch of Yuyu-tei listings to DB cards and update prices.
- * Creates CardPrice history rows and updates Card.latestPriceJpy / latestPriceThb.
+ * Update prices for a set using approved YuyuteiMapping entries.
  */
 export async function matchAndUpdatePrices(
   db: DB,
@@ -40,105 +29,81 @@ export async function matchAndUpdatePrices(
   let matched = 0;
   let unmatched = 0;
 
-  const setFilter = { set: { code: setCode } };
-
   for (const listing of listings) {
-    if (!listing.cardCode) {
+    if (!listing.cardCode || !listing.yuyuteiId) {
       unmatched++;
       continue;
     }
 
-    const code = listing.cardCode.toUpperCase();
+    // Find approved mapping for this yuyuteiId in this set
+    const mapping = await db.yuyuteiMapping.findUnique({
+      where: {
+        setCode_yuyuteiId: { setCode, yuyuteiId: listing.yuyuteiId },
+      },
+      select: { id: true, matchedCardId: true, status: true },
+    });
 
-    const parallel = isParallelListing(listing);
-    const rarity = listing.rarity || null;
+    if (mapping && mapping.status === "matched" && mapping.matchedCardId) {
+      const priceThb =
+        options?.thbRate != null
+          ? Math.round(listing.priceJpy * options.thbRate * 100) / 100
+          : undefined;
 
-    // 1. Match by yuyuteiId (fast path, scoped to set)
-    let card = listing.yuyuteiId
-      ? await db.card.findFirst({
-          where: { yuyuteiId: listing.yuyuteiId, ...setFilter },
-          select: { id: true },
-        })
-      : null;
-
-    // 2. Exact cardCode match — non-parallel only
-    if (!card && !parallel) {
-      card = await db.card.findFirst({
-        where: { cardCode: code, ...setFilter },
-        select: { id: true },
-      });
-    }
-
-    // 3. baseCode match — handles PRB/ST where Yuyutei uses original codes
-    if (!card && parallel && rarity) {
-      card = await db.card.findFirst({
-        where: { baseCode: code, isParallel: true, rarity, yuyuteiId: null, ...setFilter },
-        select: { id: true },
-        orderBy: { parallelIndex: "asc" },
-      });
-      if (!card) {
-        card = await db.card.findFirst({
-          where: { baseCode: code, isParallel: true, yuyuteiId: null, ...setFilter },
-          select: { id: true },
-          orderBy: { parallelIndex: "asc" },
-        });
-      }
-    }
-
-    if (!card && !parallel) {
-      card = await db.card.findFirst({
-        where: {
-          baseCode: code,
-          isParallel: false,
-          ...(rarity ? { rarity } : {}),
-          yuyuteiId: null,
-          ...setFilter,
+      // Update card price
+      await db.card.update({
+        where: { id: mapping.matchedCardId },
+        data: {
+          latestPriceJpy: listing.priceJpy,
+          ...(priceThb != null && { latestPriceThb: priceThb }),
         },
-        select: { id: true },
       });
-      if (!card) {
-        card = await db.card.findFirst({
-          where: {
-            baseCode: code,
-            isParallel: false,
-            ...(rarity ? { rarity } : {}),
-            ...setFilter,
-          },
-          select: { id: true },
-        });
-      }
-    }
 
-    if (!card) {
+      // Create price history
+      await db.cardPrice.create({
+        data: {
+          cardId: mapping.matchedCardId,
+          source: "YUYUTEI",
+          type: "SELL",
+          priceJpy: listing.priceJpy,
+          ...(priceThb != null && { priceThb }),
+          inStock: listing.inStock,
+        },
+      });
+
+      // Update mapping price
+      await db.yuyuteiMapping.update({
+        where: { id: mapping.id },
+        data: { priceJpy: listing.priceJpy },
+      });
+
+      matched++;
+    } else if (mapping) {
+      // Mapping exists but not approved — just update price in mapping
+      await db.yuyuteiMapping.update({
+        where: { id: mapping.id },
+        data: {
+          priceJpy: listing.priceJpy,
+          scrapedName: listing.name,
+          scrapedImage: listing.imageUrl || null,
+        },
+      });
       unmatched++;
-      continue;
+    } else {
+      // New listing — save for admin review
+      await db.yuyuteiMapping.create({
+        data: {
+          setCode,
+          yuyuteiId: listing.yuyuteiId,
+          scrapedCode: listing.cardCode,
+          scrapedRarity: listing.rarity || null,
+          scrapedName: listing.name,
+          scrapedImage: listing.imageUrl || null,
+          priceJpy: listing.priceJpy,
+          status: "pending",
+        },
+      });
+      unmatched++;
     }
-
-    const priceThb =
-      options?.thbRate != null
-        ? Math.round(listing.priceJpy * options.thbRate * 100) / 100
-        : undefined;
-
-    await db.card.update({
-      where: { id: card.id },
-      data: {
-        latestPriceJpy: listing.priceJpy,
-        ...(priceThb != null && { latestPriceThb: priceThb }),
-      },
-    });
-
-    await db.cardPrice.create({
-      data: {
-        cardId: card.id,
-        source: "YUYUTEI",
-        type: "SELL",
-        priceJpy: listing.priceJpy,
-        ...(priceThb != null && { priceThb }),
-        inStock: listing.inStock,
-      },
-    });
-
-    matched++;
   }
 
   return { setCode, matched, unmatched, listings: listings.length };
