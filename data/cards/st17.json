@@ -1,5 +1,231 @@
 [
   {
+    "code": "OP01-060",
+    "cardCode": "OP01-060_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Donquixote Doflamingo",
+    "nameJp": "ドンキホーテ・ドフラミンゴ",
+    "nameTh": "Donquixote Doflamingo",
+    "color": "Blue",
+    "power": 5000,
+    "life": 5,
+    "attribute": "Special",
+    "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
+    "effectEn": "[DON!! x2] [When Attacking] ➀ (You may rest the specified number of DON!! cards in your cost area.): Reveal 1 card from the top of your deck. If that card is a {The Seven Warlords of the Sea} type Character card with a cost of 4 or less, you may play that card rested.",
+    "effectJp": "【ドン‼×2】【アタック時】①(コストエリアのドン‼を指定の数レストにできる)：自分のデッキの一番上を公開し、そのカードがコスト4以下の特徴《王下七武海》を持つキャラカードの場合、レストで登場させてもよい。",
+    "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำการ์ดใบบนสุดของเด็คของเรามาแสดงให้ดู, ถ้าการ์ดใบนั้นเป็นคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ที่มีคุณสมบัติ < เจ็ดเทพโจรสลัด >, จะเลือกนำลงสนามในสภาพเรสต์ได้ด้วย.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-060_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
+  },
+  {
+    "code": "OP01-073_R1",
+    "cardCode": "OP01-073_r1",
+    "rarity": "R",
+    "cardType": "CHARACTER",
+    "nameEn": "Donquixote Doflamingo",
+    "nameJp": "ドンキホーテ・ドフラミンゴ",
+    "nameTh": "Donquixote Doflamingo",
+    "color": "Blue",
+    "cost": 3,
+    "power": 4000,
+    "counter": 1000,
+    "attribute": "Special",
+    "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Look at 5 cards from the top of your deck and place them at the top or bottom of the deck in any order.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のデッキの上から5枚を見て、好きな順番に並び変え、デッキの上か下に置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือข้างใต้เด็ค.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-073_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
+  },
+  {
+    "code": "OP01-086_R1",
+    "cardCode": "OP01-086_r1",
+    "rarity": "R",
+    "cardType": "EVENT",
+    "nameEn": "Overheat",
+    "nameJp": "超過鞭糸",
+    "nameTh": "Overheat",
+    "color": "Blue",
+    "cost": 2,
+    "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
+    "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, return up to 1 active Character with a cost of 3 or less to the owner's hand.",
+    "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、アクティブのコスト3以下のキャラ1枚までを、持ち主の手札に戻す。",
+    "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ + 4000. จากนั้น, นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า ซึ่งกำลังแอ็คทีฟอยู่ จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-086_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
+  },
+  {
+    "code": "OP02-054_R1",
+    "cardCode": "OP02-054_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Gecko Moria",
+    "nameJp": "ゲッコー・モリア",
+    "nameTh": "Gecko Moria",
+    "color": "Blue",
+    "cost": 4,
+    "power": 6000,
+    "counter": 1000,
+    "attribute": "Special",
+    "trait": "The Seven Warlords of the Sea/Thriller Bark Pirates",
+    "effectEn": "-",
+    "effectJp": "-",
+    "effectTh": "-",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP02-054_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
+  },
+  {
+    "code": "OP02-057_R1",
+    "cardCode": "OP02-057_r1",
+    "rarity": "UC",
+    "cardType": "CHARACTER",
+    "nameEn": "Bartholomew Kuma",
+    "nameJp": "バーソロミュー・くま",
+    "nameTh": "Bartholomew Kuma",
+    "color": "Blue",
+    "cost": 3,
+    "power": 3000,
+    "counter": 1000,
+    "attribute": "Strike",
+    "trait": "The Seven Warlords of the Sea/Revolutionary Army",
+    "effectEn": "[On Play] Look at 2 cards from the top of your deck; reveal up to 1 {The Seven Warlords of the Sea} type card and add it to your hand. Then, place the rest at the top or bottom of the deck in any order.",
+    "effectJp": "【登場時】自分のデッキの上から2枚を見て、特徴《王下七武海》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番に並び替え、デッキの上か下に置く。",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 2 ใบ, และนำการ์ดที่มีคุณสมบัติ < เจ็ดเทพโจรสลัด > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือ ข้างใต้เด็ค.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP02-057_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
+  },
+  {
+    "code": "P-030_R1",
+    "cardCode": "P-030_r1",
+    "rarity": "P",
+    "cardType": "CHARACTER",
+    "nameEn": "Jinbe",
+    "nameJp": "ジンベエ",
+    "nameTh": "Jinbe",
+    "color": "Blue",
+    "cost": 4,
+    "power": 5000,
+    "counter": 1000,
+    "attribute": "Strike",
+    "trait": "Fish-Man/The Seven Warlords of the Sea/The Sun Pirates",
+    "effectEn": "[On K.O.] Place up to 1 Character with a cost of 3 or less at the bottom of the owner's deck.",
+    "effectJp": "【KO時】コスト3以下のキャラ1枚までを、持ち主のデッキの下に置く。",
+    "effectTh": "[เมื่อถูก KO] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/P-030_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
+  },
+  {
+    "code": "ST03-002_R1",
+    "cardCode": "ST03-002_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Edward Weevil",
+    "nameJp": "エドワード・ウィーブル",
+    "nameTh": "Edward Weevil",
+    "color": "Blue",
+    "cost": 3,
+    "power": 5000,
+    "counter": 1000,
+    "attribute": "Slash",
+    "trait": "The Seven Warlords of the Sea",
+    "effectEn": "-",
+    "effectJp": "-",
+    "effectTh": "-",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-002_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
+  },
+  {
+    "code": "ST03-004_R1",
+    "cardCode": "ST03-004_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Gecko Moria",
+    "nameJp": "ゲッコー・モリア",
+    "nameTh": "Gecko Moria",
+    "color": "Blue",
+    "cost": 4,
+    "power": 5000,
+    "counter": 1000,
+    "attribute": "Special",
+    "trait": "The Seven Warlords of the Sea/Thriller Bark Pirates",
+    "effectEn": "[On Play] Add up to 1 {The Seven Warlords of the Sea} or {Thriller Bark Pirates} type Character with a cost of 4 or less other than [Gecko Moria] from your trash to your hand.",
+    "effectJp": "【登場時】自分のトラッシュの「ゲッコー・モリア」以外のコスト4以下の特徴《王下七武海》か《スリラーバーク海賊団》を持つキャラカード1枚までを、手札に加える。",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ที่มีคุณสมบัติ < เจ็ดเทพโจรสลัด > หรือ < กลุ่มโจรสลัดธริลเลอร์บาร์ค > ที่อยู่ในแทรชของเรา, นอกเหนือจาก [Gecko Moria], จำนวน 1 ใบ, ขึ้นสู่บนมือ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-004_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
+  },
+  {
+    "code": "ST03-005_R2",
+    "cardCode": "ST03-005_r2",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Dracule Mihawk",
+    "nameJp": "ジュラキュール・ミホーク",
+    "nameTh": "Dracule Mihawk",
+    "color": "Blue",
+    "cost": 4,
+    "power": 5000,
+    "counter": 2000,
+    "attribute": "Slash",
+    "trait": "The Seven Warlords of the Sea",
+    "effectEn": "[DON!! x1] [When Attacking] Draw 2 cards and trash 2 cards from your hand.",
+    "effectJp": "【ドン‼×1】【アタック時】カード2枚を引き、自分の手札2枚を捨てる。",
+    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] จั่วการ์ด 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-005_r2.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
+  },
+  {
+    "code": "ST03-008_R2",
+    "cardCode": "ST03-008_r2",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Trafalgar Law",
+    "nameJp": "トラファルガー・ロー",
+    "nameTh": "Trafalgar Law",
+    "color": "Blue",
+    "cost": 1,
+    "power": 1000,
+    "attribute": "Slash",
+    "trait": "The Seven Warlords of the Sea/Heart Pirates",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-008_r2.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
+  },
+  {
     "code": "ST17-001",
     "cardCode": "ST17-001",
     "rarity": "C",
@@ -15,10 +241,12 @@
     "trait": "The Seven Warlords of the Sea/Baroque Works",
     "effectEn": "[On Play] Reveal 1 card from the top of your deck. If that card is a {The Seven Warlords of the Sea} type card, draw 2 cards and place 1 card from your hand at the top of your deck.",
     "effectJp": "【登場時】自分のデッキの上から1枚を公開し、そのカードが特徴《王下七武海》を持つ場合、カード2枚を引き、自分の手札1枚をデッキの上に置く。",
-    "effectTh": "[เมื่อลงสนาม] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, ถ้าการ์ดใบนั้น มีคุณสมบัติ &lt; เจ็ดเทพโจรสลัด &gt; ละก็, จะต้องจั่วการ์ด จำนวน 2 ใบ (จะจั่วการ์ดที่นำมาแสดงให้ดูใบนั้นด้วย), และนำการ์ดบนมือของเรา จำนวน 1 ใบ ไปวางที่ข้างบนสุด ของเด็ค.",
+    "effectTh": "[เมื่อลงสนาม] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, ถ้าการ์ดใบนั้น มีคุณสมบัติ < เจ็ดเทพโจรสลัด > ละก็, จะต้องจั่วการ์ด จำนวน 2 ใบ (จะจั่วการ์ดที่นำมาแสดงให้ดูใบนั้นด้วย), และนำการ์ดบนมือของเรา จำนวน 1 ใบ ไปวางที่ข้างบนสุด ของเด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST17-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
   },
   {
     "code": "ST17-002",
@@ -36,10 +264,12 @@
     "trait": "The Seven Warlords of the Sea/Heart Pirates",
     "effectEn": "[On Play] You may return 1 of your Characters to the owner's hand: If your Leader has the {The Seven Warlords of the Sea} type, return up to 1 Character with a cost of 4 or less to the owner's hand.",
     "effectJp": "【登場時】自分のキャラ1枚を持ち主の手札に戻すことができる：自分のリーダーが特徴《王下七武海》を持つ場合、コスト4以下のキャラ1枚までを、持ち主の手札に戻す。",
-    "effectTh": "[เมื่อลงสนาม] สามารถนำคาแรกเตอร์ของเรา จำนวน 1 ใบ กลับขึ้นมือของเจ้าของ : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; เจ็ดเทพโจรสลัด &gt; ละก็, จะได้นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำคาแรกเตอร์ของเรา จำนวน 1 ใบ กลับขึ้นมือของเจ้าของ : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < เจ็ดเทพโจรสลัด > ละก็, จะได้นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST17-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
   },
   {
     "code": "ST17-003",
@@ -60,7 +290,9 @@
     "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบนสุดของเด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST17-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
   },
   {
     "code": "ST17-004",
@@ -75,12 +307,14 @@
     "power": 6000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Kuja Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Look at 3 cards from the top of your deck and place them at the top or bottom of your deck in any order. Then, give up to 1 rested DON!! card to 1 of your {The Seven Warlords of the Sea} type Leader or Character cards.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のデッキの上から3枚を見て、好きな順番に並び替え、デッキの上か下に置く。その後、自分の特徴《王下七武海》を持つ、リーダーかキャラ1枚にレストのドン‼1枚までを、付与する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือ ข้างใต้เด็ค. จากนั้น, จะได้นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ &lt; เจ็ดเทพโจรสลัด &gt; จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Look at 3 cards from the top of your deck and place them at the top or bottom of your deck in any order. Then, give up to 1 rested DON!! card to 1 of your {The Seven Warlords of the Sea} type Leader or Character cards.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のデッキの上から3枚を見て、好きな順番に並び替え、デッキの上か下に置く。その後、自分の特徴《王下七武海》を持つ、リーダーかキャラ1枚にレストのドン‼1枚までを、付与する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือ ข้างใต้เด็ค. จากนั้น, จะได้นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ < เจ็ดเทพโจรสลัด > จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST17-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
   },
   {
     "code": "ST17-005",
@@ -101,6 +335,8 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำการ์ดบนมือของเรา จำนวน 1 ใบ ไปวางที่ ข้างบนสุด ของเด็ค : นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST17-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Blue Donquixote Doflamingo- [ST-17]"
+    ]
   }
 ]

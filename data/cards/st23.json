@@ -1,5 +1,233 @@
 [
   {
+    "code": "OP09-001",
+    "cardCode": "OP09-001_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Shanks",
+    "nameJp": "シャンクス",
+    "nameTh": "Shanks",
+    "color": "Red",
+    "power": 5000,
+    "life": 5,
+    "attribute": "Slash",
+    "trait": "The Four Emperors/Red-Haired Pirates",
+    "effectEn": "[Once Per Turn] This effect can be activated when your opponent attacks. Give up to 1 of your opponent's Leader or Character cards −1000 power during this turn.",
+    "effectJp": "【ターン1回】相手がアタックした時、発動できる。相手のリーダーかキャラ1枚までを、このターン中、パワー-1000。",
+    "effectTh": "[เทิร์นละ 1 ครั้ง] เมื่อคู่แข่งโจมตี, จะสามารถใช้งาน. ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -1000.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-001_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
+  },
+  {
+    "code": "OP09-006_R1",
+    "cardCode": "OP09-006_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Howling Gab",
+    "nameJp": "\"ハウリング\"ガブ",
+    "nameTh": "Howling Gab",
+    "color": "Red",
+    "cost": 5,
+    "power": 7000,
+    "counter": 1000,
+    "attribute": "Special",
+    "trait": "Red-Haired Pirates",
+    "effectEn": "-",
+    "effectJp": "-",
+    "effectTh": "-",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-006_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
+  },
+  {
+    "code": "OP09-010_R1",
+    "cardCode": "OP09-010_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Bonk Punch",
+    "nameJp": "ボンク・パンチ",
+    "nameTh": "Bonk Punch",
+    "color": "Red",
+    "cost": 4,
+    "power": 5000,
+    "counter": 1000,
+    "attribute": "Strike",
+    "trait": "Red-Haired Pirates",
+    "effectEn": "[On Play] Play up to 1 [Monster] from your hand.[DON!! x1] [When Attacking] This Character gains +2000 power during this turn.",
+    "effectJp": "【登場時】自分の手札から「モンスター」1枚までを、登場させる。【ドン‼×1】【アタック時】このキャラは、このターン中、パワー+2000。",
+    "effectTh": "[เมื่อลงสนาม] นำ [Monster] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.[ด้ง!! x 1] [เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-010_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
+  },
+  {
+    "code": "OP09-011_R1",
+    "cardCode": "OP09-011_r1",
+    "rarity": "UC",
+    "cardType": "CHARACTER",
+    "nameEn": "Hongo",
+    "nameJp": "ホンゴウ",
+    "nameTh": "Hongo",
+    "color": "Red",
+    "cost": 3,
+    "power": 3000,
+    "counter": 2000,
+    "attribute": "Strike",
+    "trait": "Red-Haired Pirates",
+    "effectEn": "[Activate: Main] You may rest this Character: If your Leader has the {Red-Haired Pirates} type, give up to 1 of your opponent's Characters −2000 power during this turn.",
+    "effectJp": "【起動メイン】このキャラをレストにできる：自分のリーダーが特徴《赤髪海賊団》を持つ場合、相手のキャラ1枚までを、このターン中、パワー-2000。",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดผมแดง > ละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-011_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
+  },
+  {
+    "code": "OP09-012_R1",
+    "cardCode": "OP09-012_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Monster",
+    "nameJp": "モンスター",
+    "nameTh": "Monster",
+    "color": "Red",
+    "cost": 3,
+    "power": 4000,
+    "counter": 1000,
+    "attribute": "Strike",
+    "trait": "Animal/Red-Haired Pirates",
+    "effectEn": "If your Character [Bonk Punch] would be K.O.'d by an effect, you may trash this Character instead.",
+    "effectJp": "自分のキャラの「ボンク・パンチ」が効果でKOされる場合、代わりにこのキャラをトラッシュに置いてもよい。",
+    "effectTh": "ถ้าคาแรกเตอร์ [Bonk Punch] ของฝ่ายเรา กำลังจะถูก KO จากความสามารถของใครก็ตาม, จะสามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช แทนก็ได้.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-012_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
+  },
+  {
+    "code": "OP09-013_R1",
+    "cardCode": "OP09-013_r1",
+    "rarity": "R",
+    "cardType": "CHARACTER",
+    "nameEn": "Yasopp",
+    "nameJp": "ヤソップ",
+    "nameTh": "Yasopp",
+    "color": "Red",
+    "cost": 5,
+    "power": 6000,
+    "counter": 1000,
+    "attribute": "Ranged",
+    "trait": "Red-Haired Pirates",
+    "effectEn": "[On Play] Up to 1 of your Leader gains +1000 power until the end of your opponent's next turn.[DON!! x1] [When Attacking] Give up to 1 of your opponent's Characters −1000 power during this turn.",
+    "effectJp": "【登場時】自分のリーダー1枚までを、次の相手のターン終了時まで、パワー+1000。【ドン‼×1】【アタック時】相手のキャラ1枚までを、このターン中、パワー-1000。",
+    "effectTh": "[เมื่อลงสนาม] ลีดเดอร์ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.[ด้ง!! x 1] [เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -1000.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-013_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
+  },
+  {
+    "code": "OP09-014_R1",
+    "cardCode": "OP09-014_r1",
+    "rarity": "UC",
+    "cardType": "CHARACTER",
+    "nameEn": "Limejuice",
+    "nameJp": "ライムジュース",
+    "nameTh": "Limejuice",
+    "color": "Red",
+    "cost": 3,
+    "power": 3000,
+    "counter": 2000,
+    "attribute": "Special",
+    "trait": "Red-Haired Pirates",
+    "effectEn": "[On Play] Your opponent cannot activate up to 1 [Blocker] Character that has 4000 power or less during this turn.",
+    "effectJp": "【登場時】相手のパワー4000以下のキャラ1枚までは、このターン中、【ブロッカー】を発動できない。",
+    "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 4000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, จะไม่สามารถใช้งาน [บล็อกเกอร์].",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-014_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
+  },
+  {
+    "code": "OP09-015_R1",
+    "cardCode": "OP09-015_r1",
+    "rarity": "R",
+    "cardType": "CHARACTER",
+    "nameEn": "Lucky.Roux",
+    "nameJp": "ラッキー・ルウ",
+    "nameTh": "Lucky.Roux",
+    "color": "Red",
+    "cost": 4,
+    "power": 5000,
+    "counter": 1000,
+    "attribute": "Ranged",
+    "trait": "Red-Haired Pirates",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On K.O.] If your Leader has the {Red-Haired Pirates} type, K.O. up to 1 of your opponent's Characters with a base power of 6000 or less.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【KO時】自分のリーダーが特徴《赤髪海賊団》を持つ場合、相手の元々のパワー6000以下のキャラ1枚までを、KOする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดผมแดง > ละก็, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ตั้งต้น 6000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-015_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
+  },
+  {
+    "code": "OP09-016_R1",
+    "cardCode": "OP09-016_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Rockstar",
+    "nameJp": "ロックスター",
+    "nameTh": "Rockstar",
+    "color": "Red",
+    "cost": 4,
+    "power": 6000,
+    "counter": 1000,
+    "attribute": "Slash",
+    "trait": "Red-Haired Pirates",
+    "effectEn": "-",
+    "effectJp": "-",
+    "effectTh": "-",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-016_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
+  },
+  {
+    "code": "OP09-020",
+    "cardCode": "OP09-020_p1",
+    "rarity": "P-R",
+    "cardType": "EVENT",
+    "nameEn": "Come On!! We'll Fight You!!",
+    "nameJp": "来い…!!!おれ達が相手をしてやる!!!",
+    "nameTh": "Come On!! We'll Fight You!!",
+    "color": "Red",
+    "cost": 1,
+    "trait": "The Four Emperors/Red-Haired Pirates",
+    "effectEn": "[Main] Look at 5 cards from the top of your deck; reveal up to 1 {Red-Haired Pirates} type card other than [Come On!! We'll Fight You!!] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "【メイン】自分のデッキの上から5枚を見て、「来い…!!!おれ達が相手をしてやる!!!」以外の特徴《赤髪海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "ความสามารถ :[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < กลุ่มโจรสลัดผมแดง > นอกเหนือจาก [Come On!! We’ll Fight You!!] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-020_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
+  },
+  {
     "code": "ST23-001",
     "cardCode": "ST23-001",
     "rarity": "SR",
@@ -13,12 +241,14 @@
     "counter": 2000,
     "attribute": "Special",
     "trait": "FILM",
-    "effectEn": "If you have a Character with 10000 power or more, give this card in your hand −4 cost.<br>[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
-    "effectJp": "手札のこのカードは、自分のパワー10000以上のキャラがいる場合、コスト-4。<br>【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
-    "effectTh": "ถ้าเรามี คาแรกเตอร์ ที่มีพาวเวอร์ 10000 หรือสูงกว่า อยู่ละก็, การ์ดใบนี้ ที่อยู่บนมือ จะมีคอสต์ -4.<br>[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectEn": "If you have a Character with 10000 power or more, give this card in your hand −4 cost.[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
+    "effectJp": "手札のこのカードは、自分のパワー10000以上のキャラがいる場合、コスト-4。【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
+    "effectTh": "ถ้าเรามี คาแรกเตอร์ ที่มีพาวเวอร์ 10000 หรือสูงกว่า อยู่ละก็, การ์ดใบนี้ ที่อยู่บนมือ จะมีคอสต์ -4.[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST23-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
   },
   {
     "code": "ST23-002",
@@ -33,12 +263,14 @@
     "power": 10000,
     "attribute": "Slash",
     "trait": "The Four Emperors/Red-Haired Pirates",
-    "effectEn": "If your opponent has a Character with 8000 base power or more, give this card in your hand −3 cost.<br>[On Play] If your Leader has the {Red-Haired Pirates} type or is [Uta], your Leader gains +2000 power until the end of your opponent's next End Phase.",
-    "effectJp": "手札のこのカードは、相手の元々のパワー8000以上のキャラがいる場合、コスト-3。<br>【登場時】自分のリーダーが特徴《赤髪海賊団》を持つか「ウタ」の場合、自分のリーダーを、次の相手のエンドフェイズ終了時まで、パワー+2000。",
-    "effectTh": "ถ้าคู่แข่งมี คาแรกเตอร์ ที่มีพาวเวอร์ตั้งต้น 8000 หรือสูงกว่า อยู่ละก็, การ์ดใบนี้ที่อยู่ในมือ จะมีคอสต์ -3.<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา คือ  [Uta] , หรือว่า มีคุณสมบัติ &lt; กลุ่มโจรสลัดผมแดง &gt; ละก็, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป, ลีดเดอร์ของเรา จะมีพาวเวอร์ +2000.",
+    "effectEn": "If your opponent has a Character with 8000 base power or more, give this card in your hand −3 cost.[On Play] If your Leader has the {Red-Haired Pirates} type or is [Uta], your Leader gains +2000 power until the end of your opponent's next End Phase.",
+    "effectJp": "手札のこのカードは、相手の元々のパワー8000以上のキャラがいる場合、コスト-3。【登場時】自分のリーダーが特徴《赤髪海賊団》を持つか「ウタ」の場合、自分のリーダーを、次の相手のエンドフェイズ終了時まで、パワー+2000。",
+    "effectTh": "ถ้าคู่แข่งมี คาแรกเตอร์ ที่มีพาวเวอร์ตั้งต้น 8000 หรือสูงกว่า อยู่ละก็, การ์ดใบนี้ที่อยู่ในมือ จะมีคอสต์ -3.[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา คือ  [Uta] , หรือว่า มีคุณสมบัติ < กลุ่มโจรสลัดผมแดง > ละก็, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป, ลีดเดอร์ของเรา จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST23-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
   },
   {
     "code": "ST23-003",
@@ -56,10 +288,12 @@
     "trait": "Red-Haired Pirates",
     "effectEn": "[On Play] You may trash 1 card from your hand: If your Leader has the {Red-Haired Pirates} type, K.O. up to 1 of your opponent's Characters with 4000 base power or less.",
     "effectJp": "【登場時】自分の手札1枚を捨てることができる：自分のリーダーが特徴《赤髪海賊団》を持つ場合、相手の元々のパワー4000以下のキャラ1枚までを、KOする。",
-    "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดผมแดง &gt; ละก็, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ตั้งต้น 4000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < กลุ่มโจรสลัดผมแดง > ละก็, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ตั้งต้น 4000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST23-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
   },
   {
     "code": "ST23-004",
@@ -80,7 +314,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ กับ ด้ง!! ของเรา จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST23-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
   },
   {
     "code": "ST23-005",
@@ -101,6 +337,8 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST23-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Red Shanks- [ST-23]"
+    ]
   }
 ]

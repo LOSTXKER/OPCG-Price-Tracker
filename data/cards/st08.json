@@ -9,7 +9,7 @@
     "nameTh": "Monkey.D.Luffy",
     "color": "Black",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
     "effectEn": "[Your Turn] When a Character is K.O.'d, give up to 1 rested DON!! card to this Leader.",
@@ -17,7 +17,9 @@
     "effectTh": "[เทิร์นตัวเอง] เมื่อมีคาแรกเตอร์ของใครก็ตาม ถูก KO ด้วยกรณีใดๆ, นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ มาใส่ให้กับ ลีดเดอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   },
   {
     "code": "ST08-002",
@@ -32,12 +34,14 @@
     "power": 3000,
     "attribute": "Special",
     "trait": "FILM",
-    "effectEn": "This Character cannot be K.O.'d in battle by Leaders.<br>[Activate: Main] You may rest this Character: Give up to 1 of your opponent's Characters −2 cost during this turn.",
-    "effectJp": "このキャラはリーダーとのバトルでKOされない。<br>【起動メイン】このキャラをレストにできる：相手のキャラ1枚までを、このターン中、コスト-2。",
-    "effectTh": "คาแรกเตอร์นี้จะไม่ถูก KO จากการแบทเทิลกับ ลีดเดอร์.<br>[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
+    "effectEn": "This Character cannot be K.O.'d in battle by Leaders.[Activate: Main] You may rest this Character: Give up to 1 of your opponent's Characters −2 cost during this turn.",
+    "effectJp": "このキャラはリーダーとのバトルでKOされない。【起動メイン】このキャラをレストにできる：相手のキャラ1枚までを、このターン中、コスト-2。",
+    "effectTh": "คาแรกเตอร์นี้จะไม่ถูก KO จากการแบทเทิลกับ ลีดเดอร์.[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   },
   {
     "code": "ST08-003",
@@ -58,7 +62,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   },
   {
     "code": "ST08-004",
@@ -79,7 +85,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   },
   {
     "code": "ST08-005",
@@ -99,7 +107,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ ที่มีคอสต์ 1 หรือต่ำกว่า ทั้งหมด ไม่ว่าจะอยู่ในสนามของใครก็ตาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   },
   {
     "code": "ST08-006",
@@ -114,12 +124,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Merfolk",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Give up to 1 of your opponent's Characters −4 cost during this turn.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】相手のキャラ1枚までを、このターン中、コスト-4。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -4.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Give up to 1 of your opponent's Characters −4 cost during this turn.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】相手のキャラ1枚までを、このターン中、コスト-4。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -4.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   },
   {
     "code": "ST08-007",
@@ -138,11 +150,11 @@
     "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
     "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   },
   {
     "code": "ST08-008",
@@ -163,7 +175,9 @@
     "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   },
   {
     "code": "ST08-009",
@@ -183,7 +197,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้ามีคาแรกเตอร์ ที่มีคอสต์ 0 อยู่ในสนามของใครก็ตาม, จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   },
   {
     "code": "ST08-010",
@@ -204,7 +220,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   },
   {
     "code": "ST08-011",
@@ -225,7 +243,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   },
   {
     "code": "ST08-012",
@@ -246,7 +266,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   },
   {
     "code": "ST08-013",
@@ -266,7 +288,9 @@
     "effectTh": "[ด้ง!! x 1] ในตอนจบการแบทเทิลที่คาแรกเตอร์นี้ แบทเทิลกับคาแรกเตอร์ของคู่แข่ง, จะสามารถทำการ KO คาแรกเตอร์ของคู่แข่ง ที่แบทเทิลด้วยก็ได้. ถ้าทำเช่นนั้น, จะทำการ KO คาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   },
   {
     "code": "ST08-014",
@@ -282,11 +306,11 @@
     "effectEn": "[Main] You may add 1 card from the top of your Life cards to your hand: Give up to 1 of your opponent's Characters −7 cost during this turn.",
     "effectJp": "【メイン】自分のライフの上から1枚を手札に加えることができる：相手のキャラ1枚までを、このターン中、コスト-7。",
     "effectTh": "[เมน] สามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นบนสู่มือ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -7.",
-    "triggerEn": "[Trigger] Add up to 1 black Character card with a cost of 2 or less from your trash to your hand.",
-    "triggerJp": "【トリガー】自分のトラッシュのコスト2以下の黒のキャラカード1枚までを、手札に加える。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   },
   {
     "code": "ST08-015",
@@ -302,10 +326,10 @@
     "effectEn": "[Main] K.O. up to 1 of your opponent's Characters with a cost of 2 or less.",
     "effectJp": "【メイン】相手のコスト2以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Draw 1 card.",
-    "triggerJp": "【トリガー】カード1枚を引く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST08-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Side Monkey.D.Luffy- [ST-08]"
+    ]
   }
 ]

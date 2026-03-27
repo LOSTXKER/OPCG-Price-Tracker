@@ -1,5 +1,74 @@
 [
   {
+    "code": "EB01-001",
+    "cardCode": "EB01-001_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Kouzuki Oden",
+    "nameJp": "光月おでん",
+    "nameTh": "Kouzuki Oden",
+    "color": "Red/Green",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Slash",
+    "trait": "Land of Wano/Kouzuki Clan",
+    "effectEn": "All of your {Land of Wano} type Character cards without a Counter have a +1000 Counter, according to the rules.[DON!! x1] [When Attacking] If you have a {Land of Wano} type Character with a cost of 5 or more, this Leader gains +1000 power until the start of your next turn.",
+    "effectJp": "ルール上、自分の特徴《ワノ国》を持ちカウンターを持たないキャラカードすべてはカウンター+1000を持つ。【ドン‼×1】【アタック時】自分のコスト5以上の特徴《ワノ国》を持つキャラがいる場合、このリーダーは、次の自分のターン開始時まで、パワー+1000。",
+    "effectTh": "เพิ่มกฎให้คาแรกเตอร์การ์ดของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ < วาโนะคุนิ > แต่ไม่มีเคาน์เตอร์, จะมีเคาน์เตอร์ +1000.[ด้ง!! x 1] [เมื่อโจมตี] ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 5 หรือสูงกว่า และมีคุณสมบัติ < วาโนะคุนิ > อยู่ละก็, ลีดเดอร์นี้ จะมีพาวเวอร์ +1000, จนถึงช่วงเริ่มต้นเทิร์นถัดไปของเรา.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-001_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "EB01-021",
+    "cardCode": "EB01-021_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Hannyabal",
+    "nameJp": "ハンニャバル",
+    "nameTh": "Hannyabal",
+    "color": "Blue/Purple",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Slash",
+    "trait": "Impel Down",
+    "effectEn": "[End of Your Turn] You may return 1 of your {Impel Down} type Characters with a cost of 2 or more to the owner's hand: Add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【自分のターン終了時】自分のコスト2以上の特徴《インペルダウン》を持つキャラ1枚を持ち主の手札に戻すことができる：ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
+    "effectTh": "[เมื่อจบเทิร์นของเรา] สามารถนำ คาแรกเตอร์ของเรา ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ < อิมเพลดาวน์ > จำนวน 1 ใบ กลับขึ้นมือของเจ้าของ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-021_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "EB01-040",
+    "cardCode": "EB01-040_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Kyros",
+    "nameJp": "キュロス",
+    "nameTh": "Kyros",
+    "color": "Black/Yellow",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Slash",
+    "trait": "Dressrosa",
+    "effectEn": "[Activate: Main] [Once Per Turn] You may turn 1 card from the top of your Life cards face-up: K.O. up to 1 of your opponent's Characters with a cost of 0.",
+    "effectJp": "【起動メイン】【ターン1回】自分のライフの上から1枚を表向きにできる：相手のコスト0のキャラ1枚までを、KOする。",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถหงาย ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 0, จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-040_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
     "code": "EB02-001",
     "cardCode": "EB02-001",
     "rarity": "C",
@@ -18,7 +87,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-002",
@@ -36,10 +107,12 @@
     "trait": "Dressrosa/Revolutionary Army",
     "effectEn": "[Activate: Main] You may rest this Character: Up to 1 of your {Revolutionary Army} type Characters other than [Sabo] gains +2000 power during this turn.",
     "effectJp": "【起動メイン】このキャラをレストにできる：自分の「サボ」以外の特徴《革命軍》を持つキャラ1枚までを、このターン中、パワー+2000。",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; นอกเหนือจาก [Sabo] จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < กองทัพปฏิวัติ > นอกเหนือจาก [Sabo] จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-003",
@@ -55,12 +128,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Animal/Drum Kingdom/Straw Hat Crew",
-    "effectEn": "[DON!! x2] [Opponent's Turn] This Character gains +2000 power.<br>[On Play] If your Leader has the {Straw Hat Crew} type, give up to 1 rested DON!! card to your Leader or 1 of your Characters.",
-    "effectJp": "【ドン‼×2】【相手のターン中】このキャラのパワー+2000。<br>【登場時】自分のリーダーが特徴《麦わらの一味》を持つ場合、自分のリーダーかキャラ1枚にレストのドン!!1枚までを、付与する。",
-    "effectTh": "[ด้ง!! x 2] [ในเทิร์นของคู่แข่ง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000. <br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; ละก็, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
+    "effectEn": "[DON!! x2] [Opponent's Turn] This Character gains +2000 power.[On Play] If your Leader has the {Straw Hat Crew} type, give up to 1 rested DON!! card to your Leader or 1 of your Characters.",
+    "effectJp": "【ドン‼×2】【相手のターン中】このキャラのパワー+2000。【登場時】自分のリーダーが特徴《麦わらの一味》を持つ場合、自分のリーダーかキャラ1枚にレストのドン!!1枚までを、付与する。",
+    "effectTh": "[ด้ง!! x 2] [ในเทิร์นของคู่แข่ง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000. [เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มหมวกฟาง > ละก็, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-003",
@@ -76,13 +151,15 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Animal/Drum Kingdom/Straw Hat Crew",
-    "effectEn": "[DON!! x2] [Opponent's Turn] This Character gains +2000 power.<br>[On Play] If your Leader has the {Straw Hat Crew} type, give up to 1 rested DON!! card to your Leader or 1 of your Characters.",
-    "effectJp": "【ドン‼×2】【相手のターン中】このキャラのパワー+2000。<br>【登場時】自分のリーダーが特徴《麦わらの一味》を持つ場合、自分のリーダーかキャラ1枚にレストのドン!!1枚までを、付与する。",
-    "effectTh": "[ด้ง!! x 2] [ในเทิร์นของคู่แข่ง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000. <br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; ละก็, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
+    "effectEn": "[DON!! x2] [Opponent's Turn] This Character gains +2000 power.[On Play] If your Leader has the {Straw Hat Crew} type, give up to 1 rested DON!! card to your Leader or 1 of your Characters.",
+    "effectJp": "【ドン‼×2】【相手のターン中】このキャラのパワー+2000。【登場時】自分のリーダーが特徴《麦わらの一味》を持つ場合、自分のリーダーかキャラ1枚にレストのドン!!1枚までを、付与する。",
+    "effectTh": "[ด้ง!! x 2] [ในเทิร์นของคู่แข่ง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000. [เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มหมวกฟาง > ละก็, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-003_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-004",
@@ -103,7 +180,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-005",
@@ -118,12 +197,14 @@
     "power": 3000,
     "attribute": "Ranged",
     "trait": "Fake Straw Hat Crew",
-    "effectEn": "[Your Turn] This Character gains +2000 power.<br>[Opponent's Turn] Give this Character −2000 power.",
-    "effectJp": "【自分のターン中】このキャラのパワー+2000。<br>【相手のターン中】このキャラのパワー-2000。",
-    "effectTh": "[เทิร์นตัวเอง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.<br>[ในเทิร์นของคู่แข่ง] คาแรกเตอร์นี้ จะมีพาวเวอร์ -2000.",
+    "effectEn": "[Your Turn] This Character gains +2000 power.[Opponent's Turn] Give this Character −2000 power.",
+    "effectJp": "【自分のターン中】このキャラのパワー+2000。【相手のターン中】このキャラのパワー-2000。",
+    "effectTh": "[เทิร์นตัวเอง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.[ในเทิร์นของคู่แข่ง] คาแรกเตอร์นี้ จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-006",
@@ -140,10 +221,12 @@
     "trait": "Land of Wano",
     "effectEn": "[Activate: Main] [Once Per Turn] If your Leader has the {Land of Wano} type or is [Portgas.D.Ace], give up to 1 rested DON!! card to 1 of your Leader. Then, this Character gains [Rush] during this turn.",
     "effectJp": "【起動メイン】【ターン1回】自分のリーダーが特徴《ワノ国》を持つか「ポートガス・D・エース」の場合、自分のリーダー1枚にレストのドン‼1枚までを、付与する。その後、このキャラは、このターン中、【速攻】を得る。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; วาโนะคุนิ &gt;, หรือว่า คือ [Portgas.D.Ace] ละก็, นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ ไปใส่ให้กับ ลีดเดอร์ของเรา, จำนวน 1 ใบ. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < วาโนะคุนิ >, หรือว่า คือ [Portgas.D.Ace] ละก็, นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ ไปใส่ให้กับ ลีดเดอร์ของเรา, จำนวน 1 ใบ. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-006",
@@ -160,11 +243,13 @@
     "trait": "Land of Wano",
     "effectEn": "[Activate: Main] [Once Per Turn] If your Leader has the {Land of Wano} type or is [Portgas.D.Ace], give up to 1 rested DON!! card to 1 of your Leader. Then, this Character gains [Rush] during this turn.",
     "effectJp": "【起動メイン】【ターン1回】自分のリーダーが特徴《ワノ国》を持つか「ポートガス・D・エース」の場合、自分のリーダー1枚にレストのドン‼1枚までを、付与する。その後、このキャラは、このターン中、【速攻】を得る。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; วาโนะคุนิ &gt;, หรือว่า คือ [Portgas.D.Ace] ละก็, นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ ไปใส่ให้กับ ลีดเดอร์ของเรา, จำนวน 1 ใบ. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < วาโนะคุนิ >, หรือว่า คือ [Portgas.D.Ace] ละก็, นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ ไปใส่ให้กับ ลีดเดอร์ของเรา, จำนวน 1 ใบ. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-006_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-007",
@@ -180,11 +265,11 @@
     "effectEn": "[Main] Up to a total of 3 of your Leader and Character cards gain +1000 power during this turn. Then, K.O. up to 1 of your opponent's Characters with 3000 power or less.",
     "effectJp": "【メイン】自分のリーダーとキャラ合計3枚までを、このターン中、パワー+1000。その後、相手のパワー3000以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] ในเทิร์นนี้, ลีดเดอร์ กับ คาแรกเตอร์ ของเรา รวมกันจำนวนไม่เกิน 3 ใบ, จะมีพาวเวอร์ +1000. จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with 4000 power or less.",
-    "triggerJp": "【トリガー】相手のパワー4000以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-008",
@@ -200,11 +285,11 @@
     "effectEn": "[Main] Look at 4 cards from the top of your deck; reveal up to 1 card with a cost of 4 or more and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】自分のデッキの上から4枚を見て、コスト4以上のカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
     "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่มีคอสต์ 4 หรือสูงกว่า จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-009",
@@ -219,10 +304,12 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[Activate: Main] You may rest this Stage: Give up to 1 of your currently given DON!! cards to 1 of your {Straw Hat Crew} type Characters.",
     "effectJp": "【起動メイン】このステージをレストにできる：自分の付与されているドン‼1枚までを、自分の特徴《麦わらの一味》を持つキャラ1枚に付与する。",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ สเตจนี้ : นำ ด้ง!! ของเรา ที่ใส่ให้กับการ์ดใบอื่นอยู่ จำนวนไม่เกิน 1 ใบ, มาใส่ให้กับ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; จำนวน 1 ใบ.",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ สเตจนี้ : นำ ด้ง!! ของเรา ที่ใส่ให้กับการ์ดใบอื่นอยู่ จำนวนไม่เกิน 1 ใบ, มาใส่ให้กับ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-010",
@@ -234,15 +321,17 @@
     "nameTh": "Monkey.D.Luffy",
     "color": "Green/Purple",
     "power": 5000,
-    "life": 3,
+    "life": 4,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
     "effectEn": "[Activate: Main] [Once Per Turn] DON!! −2: If the only Characters on your field are {Straw Hat Crew} type Characters, set up to 2 of your DON!! cards as active. Then, this Leader gains +1000 power until the end of your opponent's next turn.",
     "effectJp": "【起動メイン】【ターン1回】ドン‼-2：自分の場のキャラが特徴《麦わらの一味》を持つキャラのみの場合、自分のドン‼2枚までをアクティブにする。その後、このリーダーは、次の相手のターン終了時まで、パワー+1000。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าคาแรกเตอร์ที่อยู่บนสนามของเรา มีแต่คุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; เท่านั้นละก็, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, เปลี่ยนเป็น แอ็คทีฟ. จากนั้น, ลีดเดอร์นี้ จะมีพาวเวอร์ +1000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าคาแรกเตอร์ที่อยู่บนสนามของเรา มีแต่คุณสมบัติ < กลุ่มหมวกฟาง > เท่านั้นละก็, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, เปลี่ยนเป็น แอ็คทีฟ. จากนั้น, ลีดเดอร์นี้ จะมีพาวเวอร์ +1000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-010",
@@ -254,16 +343,18 @@
     "nameTh": "Monkey.D.Luffy",
     "color": "Green/Purple",
     "power": 5000,
-    "life": 3,
+    "life": 4,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
     "effectEn": "[Activate: Main] [Once Per Turn] DON!! −2: If the only Characters on your field are {Straw Hat Crew} type Characters, set up to 2 of your DON!! cards as active. Then, this Leader gains +1000 power until the end of your opponent's next turn.",
     "effectJp": "【起動メイン】【ターン1回】ドン‼-2：自分の場のキャラが特徴《麦わらの一味》を持つキャラのみの場合、自分のドン‼2枚までをアクティブにする。その後、このリーダーは、次の相手のターン終了時まで、パワー+1000。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าคาแรกเตอร์ที่อยู่บนสนามของเรา มีแต่คุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; เท่านั้นละก็, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, เปลี่ยนเป็น แอ็คทีฟ. จากนั้น, ลีดเดอร์นี้ จะมีพาวเวอร์ +1000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าคาแรกเตอร์ที่อยู่บนสนามของเรา มีแต่คุณสมบัติ < กลุ่มหมวกฟาง > เท่านั้นละก็, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, เปลี่ยนเป็น แอ็คทีฟ. จากนั้น, ลีดเดอร์นี้ จะมีพาวเวอร์ +1000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-010_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-011",
@@ -281,10 +372,12 @@
     "trait": "Fish-Man/East Blue/Arlong Pirates",
     "effectEn": "[On Play] If your Leader has the {Fish-Man} or {East Blue} type, give up to 1 rested DON!! card to 1 of your Leader. Then, up to 1 of your opponent's Characters with a cost of 5 or less cannot be rested until the end of your opponent's next turn.",
     "effectJp": "【登場時】自分のリーダーが特徴《魚人族》か《東の海》を持つ場合、自分のリーダー1枚にレストのドン‼1枚までを、付与する。その後、相手のコスト5以下のキャラ1枚までは、次の相手のターン終了時まで、レストにできない。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; เผ่ามนุษย์เงือก &gt; หรือ &lt; อีสต์บลู &gt; ละก็, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ ไปใส่ให้กับ ลีดเดอร์ของเรา, จำนวน 1 ใบ. จากนั้น, คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, จะไม่สามารถ เรสต์, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < เผ่ามนุษย์เงือก > หรือ < อีสต์บลู > ละก็, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ ไปใส่ให้กับ ลีดเดอร์ของเรา, จำนวน 1 ใบ. จากนั้น, คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, จะไม่สามารถ เรสต์, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-011",
@@ -302,11 +395,13 @@
     "trait": "Fish-Man/East Blue/Arlong Pirates",
     "effectEn": "[On Play] If your Leader has the {Fish-Man} or {East Blue} type, give up to 1 rested DON!! card to 1 of your Leader. Then, up to 1 of your opponent's Characters with a cost of 5 or less cannot be rested until the end of your opponent's next turn.",
     "effectJp": "【登場時】自分のリーダーが特徴《魚人族》か《東の海》を持つ場合、自分のリーダー1枚にレストのドン‼1枚までを、付与する。その後、相手のコスト5以下のキャラ1枚までは、次の相手のターン終了時まで、レストにできない。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; เผ่ามนุษย์เงือก &gt; หรือ &lt; อีสต์บลู &gt; ละก็, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ ไปใส่ให้กับ ลีดเดอร์ของเรา, จำนวน 1 ใบ. จากนั้น, คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, จะไม่สามารถ เรสต์, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < เผ่ามนุษย์เงือก > หรือ < อีสต์บลู > ละก็, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ ไปใส่ให้กับ ลีดเดอร์ของเรา, จำนวน 1 ใบ. จากนั้น, คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, จะไม่สามารถ เรสต์, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-011_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-012",
@@ -324,10 +419,12 @@
     "trait": "East Blue",
     "effectEn": "If you have a [Sarfunkel], this Character gains [Blocker].",
     "effectJp": "自分の「サーファンクル」がいる場合、このキャラは【ブロッカー】を得る。",
-    "effectTh": "ถ้าเรามี [Sarfunkel] อยู่ด้วยละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. <br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectTh": "ถ้าเรามี [Sarfunkel] อยู่ด้วยละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-013",
@@ -347,7 +444,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 3 ใบ หรือมากกว่าละก็, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 7 ใบ, และนำ [Zou] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, แล้วนำ [Zou] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-014",
@@ -367,7 +466,9 @@
     "effectTh": "[เมื่อลงสนาม] นำ [Gaimon] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-015",
@@ -388,7 +489,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำให้ คาแรกเตอร์ของคู่แข่ง ที่กำลังเรสต์อยู่ จำนวนไม่เกิน 1 ใบ, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของคู่แข่งในครั้งถัดไป. จากนั้น, เมื่อจบเทิร์นนี้, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-015",
@@ -410,7 +513,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-015_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-016",
@@ -426,12 +531,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Animal/Straw Hat Crew",
-    "effectEn": "Also treat this card's name as [Tony Tony.Chopper] according to the rules.<br>[On Play] Play up to 1 {Animal} type Character card with a cost of 3 or less from your hand.",
-    "effectJp": "ルール上、このカードはカード名を「トニートニー・チョッパー」としても扱う。<br>【登場時】自分の手札からコスト3以下の特徴《動物》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Tony Tony.Chopper] ด้วยตามกฎ.<br>[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ &lt; สัตว์ &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "Also treat this card's name as [Tony Tony.Chopper] according to the rules.[On Play] Play up to 1 {Animal} type Character card with a cost of 3 or less from your hand.",
+    "effectJp": "ルール上、このカードはカード名を「トニートニー・チョッパー」としても扱う。【登場時】自分の手札からコスト3以下の特徴《動物》を持つキャラカード1枚までを、登場させる。",
+    "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Tony Tony.Chopper] ด้วยตามกฎ.[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ < สัตว์ > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-017",
@@ -449,10 +556,12 @@
     "trait": "East Blue/Straw Hat Crew",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Straw Hat Crew} type card other than [Nami] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「ナミ」以外の特徴《麦わらの一味》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; นอกเหนือจาก [Nami] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > นอกเหนือจาก [Nami] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-017",
@@ -470,11 +579,13 @@
     "trait": "East Blue/Straw Hat Crew",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Straw Hat Crew} type card other than [Nami] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「ナミ」以外の特徴《麦わらの一味》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; นอกเหนือจาก [Nami] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > นอกเหนือจาก [Nami] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-017_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-018",
@@ -491,12 +602,12 @@
     "trait": "East Blue/Buggy Pirates",
     "effectEn": "[On Play] If you have no other [Buggy] Characters, up to 1 of your Leader gains [Double Attack] during this turn.",
     "effectJp": "【登場時】自分のキャラの他の「バギー」がいない場合、自分のリーダー1枚までは、このターン中、【ダブルアタック】を得る。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าเราไม่มีคาแรกเตอร์ [Buggy] ใบอื่น อยู่ละก็, ในเทิร์นนี้, ลีดเดอร์ของเรา จำนวนไม่เกิน 1 ใบ, จะได้รับ [ดับเบิ้ลแอทแทค]. <br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
-    "triggerEn": "[Trigger] Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
-    "triggerJp": "【トリガー】相手のコスト4以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าเราไม่มีคาแรกเตอร์ [Buggy] ใบอื่น อยู่ละก็, ในเทิร์นนี้, ลีดเดอร์ของเรา จำนวนไม่เกิน 1 ใบ, จะได้รับ [ดับเบิ้ลแอทแทค]. (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-018.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-019",
@@ -512,12 +623,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "East Blue/Straw Hat Crew",
-    "effectEn": "If your opponent has 2 or more Characters, this Character can attack Characters on the turn in which it is played.<br>[On Play] If your Leader has the {Straw Hat Crew} type, rest up to 1 of your opponent's Characters with a cost of 4 or less.",
-    "effectJp": "相手のキャラが2枚以上いる場合、このキャラは登場したターンにキャラへアタックできる。<br>【登場時】自分のリーダーが特徴《麦わらの一味》を持つ場合、相手のコスト4以下のキャラ1枚までを、レストにする。",
-    "effectTh": "ถ้าคู่แข่งมีคาแรกเตอร์อยู่ จำนวน 2 ใบ หรือมากกว่า ละก็, คาแรกเตอร์นี้จะสามารถโจมตีใส่ คาแรกเตอร์ ในเทิร์นที่เพิ่งลงสนามได้.<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; ละก็, จะทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "If your opponent has 2 or more Characters, this Character can attack Characters on the turn in which it is played.[On Play] If your Leader has the {Straw Hat Crew} type, rest up to 1 of your opponent's Characters with a cost of 4 or less.",
+    "effectJp": "相手のキャラが2枚以上いる場合、このキャラは登場したターンにキャラへアタックできる。【登場時】自分のリーダーが特徴《麦わらの一味》を持つ場合、相手のコスト4以下のキャラ1枚までを、レストにする。",
+    "effectTh": "ถ้าคู่แข่งมีคาแรกเตอร์อยู่ จำนวน 2 ใบ หรือมากกว่า ละก็, คาแรกเตอร์นี้จะสามารถโจมตีใส่ คาแรกเตอร์ ในเทิร์นที่เพิ่งลงสนามได้.[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มหมวกฟาง > ละก็, จะทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-019.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-020",
@@ -533,11 +646,11 @@
     "effectEn": "[Main] Look at 4 cards from the top of your deck; reveal up to 1 card with a cost of 4 or more and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】自分のデッキの上から4枚を見て、コスト4以上のカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
     "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่มีคอสต์ 4 หรือสูงกว่า จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-020.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-021",
@@ -552,12 +665,12 @@
     "trait": "Water Seven/Straw Hat Crew",
     "effectEn": "[Main] Up to 1 of your {Straw Hat Crew} type Characters gains +6000 power during this turn. Then, the selected Character will not become active in your next Refresh Phase.",
     "effectJp": "【メイン】自分の特徴《麦わらの一味》を持つキャラ1枚までを、このターン中、パワー+6000。その後、選んだキャラは、次の自分のリフレッシュフェイズでアクティブにならない。",
-    "effectTh": "[เมน] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +6000. จากนั้น, คาแรกเตอร์ที่เลือก, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของเราในครั้งถัดไป.",
-    "triggerEn": "[Trigger] Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
-    "triggerJp": "【トリガー】相手のコスト4以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[เมน] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +6000. จากนั้น, คาแรกเตอร์ที่เลือก, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของเราในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-021.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-022",
@@ -578,7 +691,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าเรามีคาแรกเตอร์ ที่มีพาวเวอร์ 5000 หรือสูงกว่า อยู่ จำนวน 2 ใบ หรือน้อยกว่าละก็, จะสามารถนำคาแรกเตอร์การ์ด ที่มีพาวเวอร์ 6000 หรือต่ำกว่า ซึ่งแต่เดิมไม่มีความสามารถ จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-022.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-022",
@@ -600,7 +715,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-022_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-023",
@@ -621,7 +738,9 @@
     "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] ถ้ามีคาแรกเตอร์ของคู่แข่ง ถูกนำกลับขึ้นมือของเจ้าของ จากความสามารถของฝ่ายเรา, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือ ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-023.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-024",
@@ -637,12 +756,14 @@
     "counter": 1000,
     "attribute": "Ranged",
     "trait": "Sniper Island",
-    "effectEn": "Also treat this card's name as [Usopp] according to the rules.<br>[On Play] Draw 2 cards and place 2 cards from your hand at the bottom of your deck in any order. Then, return up to 1 Character with a cost of 1 or less to the owner's hand.",
-    "effectJp": "ルール上、このカードはカード名を「ウソップ」としても扱う。<br>【登場時】カード2枚を引き、自分の手札2枚を好きな順番でデッキの下に置く。その後、コスト1以下のキャラ1枚までを、持ち主の手札に戻す。",
-    "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Usopp] ด้วยตามกฎ.<br>[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, แล้วนำการ์ดบนมือของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค. จากนั้น, จะนำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 1 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
+    "effectEn": "Also treat this card's name as [Usopp] according to the rules.[On Play] Draw 2 cards and place 2 cards from your hand at the bottom of your deck in any order. Then, return up to 1 Character with a cost of 1 or less to the owner's hand.",
+    "effectJp": "ルール上、このカードはカード名を「ウソップ」としても扱う。【登場時】カード2枚を引き、自分の手札2枚を好きな順番でデッキの下に置く。その後、コスト1以下のキャラ1枚までを、持ち主の手札に戻す。",
+    "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Usopp] ด้วยตามกฎ.[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, แล้วนำการ์ดบนมือของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค. จากนั้น, จะนำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 1 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-024.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-025",
@@ -663,7 +784,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ กับ คาแรกเตอร์นี้ : ถ้าลีดเดอร์ของเราคือ [Donquixote Rosinante] ละก็, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, แล้วหาคาแรกเตอร์การ์ด ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, นำลงสนามแบบ เรสต์. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-025.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-026",
@@ -684,7 +807,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีหลายธีมสี, และเรามีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือน้อยกว่าละก็, จั่วการ์ด จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-026.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-026",
@@ -706,7 +831,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-026_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-027",
@@ -727,7 +854,9 @@
     "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 1000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-027.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-028",
@@ -748,7 +877,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำคาแรกเตอร์ การ์ด ที่มีคอสต์ 2 จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, แล้วนำคาแรกเตอร์การ์ด ที่มีคอสต์ 2 จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-028.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-029",
@@ -769,7 +900,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-029.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-030",
@@ -785,11 +918,11 @@
     "effectEn": "[Counter] If any of your Characters would be K.O.'d in battle during this turn, you may trash 1 card from your hand instead.",
     "effectJp": "【カウンター】自分のキャラすべては、このターン中、バトルでKOされる場合、代わりに自分の手札1枚を捨てることができる。",
     "effectTh": "[เคาน์เตอร์] ในเทิร์นนี้, ถ้าคาแรกเตอร์ของฝ่ายเรา กำลังจะถูก KO จากการแบทเทิล, จะสามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ แทนได้.",
-    "triggerEn": "[Trigger] Draw 1 card.",
-    "triggerJp": "【トリガー】カード1枚を引く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-030.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-031",
@@ -805,11 +938,11 @@
     "effectEn": "[Main] Look at 4 cards from the top of your deck; reveal up to 1 card with a cost of 4 or more and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】自分のデッキの上から4枚を見て、コスト4以上のカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
     "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่มีคอสต์ 4 หรือสูงกว่า จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-031.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-032",
@@ -829,7 +962,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 3 ใบ หรือมากกว่าละก็, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 7 ใบ, และนำ [Galley-La Company] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, แล้วนำ [Galley-La Company] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-032.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-033",
@@ -846,10 +981,12 @@
     "trait": "Sprite",
     "effectEn": "If you have [Merry Go] on your field, this Character gains [Blocker].",
     "effectJp": "自分の場に「ゴーイング・メリー号」がある場合、このキャラは【ブロッカー】を得る。",
-    "effectTh": "ถ้าในสนามของเรามี [Going Merry] อยู่ด้วยละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์].<br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectTh": "ถ้าในสนามของเรามี [Going Merry] อยู่ด้วยละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์].(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-033.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-034",
@@ -870,48 +1007,54 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-034.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-035",
     "cardCode": "EB02-035",
     "rarity": "SR",
     "cardType": "CHARACTER",
-    "nameEn": "Sanji &amp; Pudding",
-    "nameJp": "サンジ&amp;プリン",
-    "nameTh": "Sanji &amp; Pudding",
+    "nameEn": "Sanji & Pudding",
+    "nameJp": "サンジ&プリン",
+    "nameTh": "Sanji & Pudding",
     "color": "Purple",
     "cost": 5,
     "power": 7000,
-    "attribute": "Strike",
+    "attribute": "Strike/Wisdom",
     "trait": "Big Mom Pirates/Straw Hat Crew",
-    "effectEn": "[Your Turn] [Once Per Turn] When 2 or more DON!! cards on your field are returned to your DON!! deck, add up to 1 DON!! card from your DON!! deck and set it as active.<br>[On Play] If the number of DON!! cards on your field is equal to or less than the number on your opponent's field, draw 1 card.",
-    "effectJp": "【自分のターン中】【ターン1回】自分の場のドン‼が2枚以上ドン‼デッキに戻された時、ドン‼デッキからドン‼1枚までを、アクティブで追加する。<br>【登場時】自分の場のドン‼が相手の場のドン‼の枚数以下の場合、カード1枚を引く。",
-    "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา จำนวน 2 ใบ หรือมากกว่า ถูกนำกลับด้ง!! เด็ค, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.<br>[เมื่อลงสนาม] ถ้า ด้ง!! ที่อยู่บนสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่บนสนามของคู่แข่งละก็, จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "[Your Turn] [Once Per Turn] When 2 or more DON!! cards on your field are returned to your DON!! deck, add up to 1 DON!! card from your DON!! deck and set it as active.[On Play] If the number of DON!! cards on your field is equal to or less than the number on your opponent's field, draw 1 card.",
+    "effectJp": "【自分のターン中】【ターン1回】自分の場のドン‼が2枚以上ドン‼デッキに戻された時、ドン‼デッキからドン‼1枚までを、アクティブで追加する。【登場時】自分の場のドン‼が相手の場のドン‼の枚数以下の場合、カード1枚を引く。",
+    "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา จำนวน 2 ใบ หรือมากกว่า ถูกนำกลับด้ง!! เด็ค, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.[เมื่อลงสนาม] ถ้า ด้ง!! ที่อยู่บนสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่บนสนามของคู่แข่งละก็, จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-035.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-035",
     "cardCode": "EB02-035_p1",
     "rarity": "P-SR",
     "cardType": "CHARACTER",
-    "nameEn": "Sanji &amp; Pudding",
-    "nameJp": "サンジ&amp;プリン",
-    "nameTh": "Sanji &amp; Pudding",
+    "nameEn": "Sanji & Pudding",
+    "nameJp": "サンジ&プリン",
+    "nameTh": "Sanji & Pudding",
     "color": "Purple",
     "cost": 5,
     "power": 7000,
-    "attribute": "Strike",
+    "attribute": "Strike/Wisdom",
     "trait": "Big Mom Pirates/Straw Hat Crew",
-    "effectEn": "[Your Turn] [Once Per Turn] When 2 or more DON!! cards on your field are returned to your DON!! deck, add up to 1 DON!! card from your DON!! deck and set it as active.<br>[On Play] If the number of DON!! cards on your field is equal to or less than the number on your opponent's field, draw 1 card.",
-    "effectJp": "【自分のターン中】【ターン1回】自分の場のドン‼が2枚以上ドン‼デッキに戻された時、ドン‼デッキからドン‼1枚までを、アクティブで追加する。<br>【登場時】自分の場のドン‼が相手の場のドン‼の枚数以下の場合、カード1枚を引く。",
-    "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา จำนวน 2 ใบ หรือมากกว่า ถูกนำกลับด้ง!! เด็ค, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.<br>[เมื่อลงสนาม] ถ้า ด้ง!! ที่อยู่บนสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่บนสนามของคู่แข่งละก็, จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "[Your Turn] [Once Per Turn] When 2 or more DON!! cards on your field are returned to your DON!! deck, add up to 1 DON!! card from your DON!! deck and set it as active.[On Play] If the number of DON!! cards on your field is equal to or less than the number on your opponent's field, draw 1 card.",
+    "effectJp": "【自分のターン中】【ターン1回】自分の場のドン‼が2枚以上ドン‼デッキに戻された時、ドン‼デッキからドン‼1枚までを、アクティブで追加する。【登場時】自分の場のドン‼が相手の場のドン‼の枚数以下の場合、カード1枚を引く。",
+    "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา จำนวน 2 ใบ หรือมากกว่า ถูกนำกลับด้ง!! เด็ค, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.[เมื่อลงสนาม] ถ้า ด้ง!! ที่อยู่บนสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่บนสนามของคู่แข่งละก็, จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-035_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-036",
@@ -927,12 +1070,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
-    "effectEn": "[Blocker]<br>[On K.O.] DON!! −1: Look at 3 cards from the top of your deck; reveal up to 1 {Straw Hat Crew} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
-    "effectJp": "【ブロッカー】<br>【KO時】ドン‼-1：自分のデッキの上から3枚を見て、特徴《麦わらの一味》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectEn": "[Blocker][On K.O.] DON!! −1: Look at 3 cards from the top of your deck; reveal up to 1 {Straw Hat Crew} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "【ブロッカー】【KO時】ドン‼-1：自分のデッキの上から3枚を見て、特徴《麦わらの一味》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-036.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-036",
@@ -948,13 +1093,15 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
-    "effectEn": "[Blocker]<br>[On K.O.] DON!! −1: Look at 3 cards from the top of your deck; reveal up to 1 {Straw Hat Crew} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
-    "effectJp": "【ブロッカー】<br>【KO時】ドン‼-1：自分のデッキの上から3枚を見て、特徴《麦わらの一味》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectEn": "[Blocker][On K.O.] DON!! −1: Look at 3 cards from the top of your deck; reveal up to 1 {Straw Hat Crew} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "【ブロッカー】【KO時】ドン‼-1：自分のデッキの上から3枚を見て、特徴《麦わらの一味》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-036_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-037",
@@ -972,10 +1119,12 @@
     "trait": "Water Seven/Straw Hat Crew",
     "effectEn": "[On Play]/[When Attacking] If your Leader has the {Straw Hat Crew} type and the number of DON!! cards on your field is equal to or less than the number on your opponent's field, add up to 1 DON!! card from your DON!! deck and rest it.",
     "effectJp": "【登場時】/【アタック時】自分のリーダーが特徴《麦わらの一味》を持ち、自分の場のドン‼が相手の場のドン‼の枚数以下の場合、ドン‼デッキからドン‼1枚までを、レストで追加する。",
-    "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt;, และ ด้ง!! ที่อยู่บนสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่บนสนามของคู่แข่งละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
+    "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มหมวกฟาง >, และ ด้ง!! ที่อยู่บนสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่บนสนามของคู่แข่งละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-037.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-038",
@@ -993,10 +1142,12 @@
     "trait": "Impel Down",
     "effectEn": "[On Play] Play up to 1 {Impel Down} type Character card with a cost of 2 or less from your hand.",
     "effectJp": "【登場時】自分の手札からコスト2以下の特徴《インペルダウン》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 2 หรือต่ำกว่า และมีคุณสมบัติ &lt; อิมเพลดาวน์  &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 2 หรือต่ำกว่า และมีคุณสมบัติ < อิมเพลดาวน์  > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-038.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-039",
@@ -1011,10 +1162,12 @@
     "trait": "The Vinsmoke Family/GERMA 66",
     "effectEn": "[Main] You may trash 1 {GERMA 66} type Character card with 4000 power or less from your hand: If the number of DON!! cards on your field is equal to or less than the number on your opponent's field, play up to 1 Character card with 5000 to 7000 power and the same card name as the trashed card from your trash.",
     "effectJp": "【メイン】自分の手札からパワー4000以下の特徴《ジェルマ66》を持つキャラカード1枚を捨てることができる：自分の場のドン‼が相手の場のドン‼の枚数以下の場合、自分のトラッシュのパワー5000から7000の捨てたカードと同じカード名を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[เมน] สามารถทิ้ง คาแรกเตอร์การ์ด ที่มีพาวเวอร์ 4000 หรือต่ำกว่า และมีคุณสมบัติ &lt; เจอร์ม่า 66 &gt; จากบนมือของเรา จำนวน 1 ใบ : ถ้า ด้ง!! ที่อยู่บนสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่บนสนามของคู่แข่งละก็, นำคาแรกเตอร์การ์ด ที่มีพาวเวอร์ตั้งแต่ 5000 ไปจนถึง 7000 ซึ่งมีชื่อการ์ดเหมือนกับ การ์ดที่ถูกทิ้งไป จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[เมน] สามารถทิ้ง คาแรกเตอร์การ์ด ที่มีพาวเวอร์ 4000 หรือต่ำกว่า และมีคุณสมบัติ < เจอร์ม่า 66 > จากบนมือของเรา จำนวน 1 ใบ : ถ้า ด้ง!! ที่อยู่บนสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่บนสนามของคู่แข่งละก็, นำคาแรกเตอร์การ์ด ที่มีพาวเวอร์ตั้งแต่ 5000 ไปจนถึง 7000 ซึ่งมีชื่อการ์ดเหมือนกับ การ์ดที่ถูกทิ้งไป จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-039.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-040",
@@ -1030,11 +1183,11 @@
     "effectEn": "[Main] Look at 4 cards from the top of your deck; reveal up to 1 card with a cost of 4 or more and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】自分のデッキの上から4枚を見て、コスト4以上のカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
     "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่มีคอสต์ 4 หรือสูงกว่า จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-040.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-041",
@@ -1047,12 +1200,14 @@
     "color": "Purple",
     "cost": 1,
     "trait": "Straw Hat Crew",
-    "effectEn": "[On Play] If your Leader has the {Straw Hat Crew} type, draw 1 card.<br>[Activate: Main] You may rest this Stage: If the number of DON!! cards on your field is equal to or less than the number on your opponent's field, up to 1 of your {Straw Hat Crew} type Characters gains +2 cost until the end of your opponent's next turn.",
-    "effectJp": "【登場時】自分のリーダーが特徴《麦わらの一味》を持つ場合、カード1枚を引く。<br>【起動メイン】このステージをレストにできる：自分の場のドン‼が相手の場のドン‼の枚数以下の場合、自分の特徴《麦わらの一味》を持つキャラ1枚までを、次の相手のターン終了時まで、コスト+2。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; ละก็, จั่วการ์ด จำนวน 1 ใบ.<br>[ใช้งาน : เมน] สามารถ เรสต์ สเตจนี้ : ถ้า ด้ง!! ที่อยู่บนสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่บนสนามของคู่แข่งละก็, คาแรกเตอร์ของเรา ที่มีคุณสมบyติ &lt; กลุ่มหมวกฟาง &gt; จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ +2, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
+    "effectEn": "[On Play] If your Leader has the {Straw Hat Crew} type, draw 1 card.[Activate: Main] You may rest this Stage: If the number of DON!! cards on your field is equal to or less than the number on your opponent's field, up to 1 of your {Straw Hat Crew} type Characters gains +2 cost until the end of your opponent's next turn.",
+    "effectJp": "【登場時】自分のリーダーが特徴《麦わらの一味》を持つ場合、カード1枚を引く。【起動メイン】このステージをレストにできる：自分の場のドン‼が相手の場のドン‼の枚数以下の場合、自分の特徴《麦わらの一味》を持つキャラ1枚までを、次の相手のターン終了時まで、コスト+2。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มหมวกฟาง > ละก็, จั่วการ์ด จำนวน 1 ใบ.[ใช้งาน : เมน] สามารถ เรสต์ สเตจนี้ : ถ้า ด้ง!! ที่อยู่บนสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่บนสนามของคู่แข่งละก็, คาแรกเตอร์ของเรา ที่มีคุณสมบyติ < กลุ่มหมวกฟาง > จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ +2, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-041.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-042",
@@ -1073,7 +1228,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-042.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-043",
@@ -1094,7 +1251,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-043.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-044",
@@ -1110,12 +1269,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Navy",
-    "effectEn": "[Blocker]<br>[On Play] Play up to 1 black {Navy} type Character card with a cost of 4 or less from your trash rested.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のトラッシュからコスト4以下の黒の特徴《海軍》を持つキャラカード1枚までを、レストで登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ธีมสีดำ ที่มีคอสต์ 4 หรือต่ำกว่า และมีคุณสมบัติ &lt; กองทัพเรือ &gt; จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามแบบ เรสต์.",
+    "effectEn": "[Blocker][On Play] Play up to 1 black {Navy} type Character card with a cost of 4 or less from your trash rested.",
+    "effectJp": "【ブロッカー】【登場時】自分のトラッシュからコスト4以下の黒の特徴《海軍》を持つキャラカード1枚までを、レストで登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ธีมสีดำ ที่มีคอสต์ 4 หรือต่ำกว่า และมีคุณสมบัติ < กองทัพเรือ > จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-044.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-044",
@@ -1131,13 +1292,15 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Navy",
-    "effectEn": "[Blocker]<br>[On Play] Play up to 1 black {Navy} type Character card with a cost of 4 or less from your trash rested.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のトラッシュからコスト4以下の黒の特徴《海軍》を持つキャラカード1枚までを、レストで登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ธีมสีดำ ที่มีคอสต์ 4 หรือต่ำกว่า และมีคุณสมบัติ &lt; กองทัพเรือ &gt; จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามแบบ เรสต์.",
+    "effectEn": "[Blocker][On Play] Play up to 1 black {Navy} type Character card with a cost of 4 or less from your trash rested.",
+    "effectJp": "【ブロッカー】【登場時】自分のトラッシュからコスト4以下の黒の特徴《海軍》を持つキャラカード1枚までを、レストで登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ธีมสีดำ ที่มีคอสต์ 4 หรือต่ำกว่า และมีคุณสมบัติ < กองทัพเรือ > จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-044_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-045",
@@ -1153,12 +1316,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Dressrosa/Supernovas/Heart Pirates",
-    "effectEn": "[Blocker]<br>[On Play] You may place 2 cards from your trash at the bottom of your deck in any order: Choose one:<br>• Draw 1 card.<br>• If your opponent has 5 or more cards in their hand, your opponent trashes 1 card from their hand.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のトラッシュからカード2枚を好きな順番でデッキの下に置くことができる：以下から1つを選ぶ。<br>・カード1枚を引く。<br>・相手の手札が5枚以上ある場合、相手は自身の手札1枚を捨てる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] สามารถนำการ์ด จากในแทรชของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็คของเรา : เลือก 1 อย่าง จากดังต่อไปนี้.<br>• จั่วการ์ด จำนวน 1 ใบ.<br>• ถ้าคู่แข่งมีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องทิ้งการ์ดในมือของตัวเอง จำนวน 1 ใบ.",
+    "effectEn": "[Blocker][On Play] You may place 2 cards from your trash at the bottom of your deck in any order: Choose one:• Draw 1 card.• If your opponent has 5 or more cards in their hand, your opponent trashes 1 card from their hand.",
+    "effectJp": "【ブロッカー】【登場時】自分のトラッシュからカード2枚を好きな順番でデッキの下に置くことができる：以下から1つを選ぶ。・カード1枚を引く。・相手の手札が5枚以上ある場合、相手は自身の手札1枚を捨てる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] สามารถนำการ์ด จากในแทรชของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็คของเรา : เลือก 1 อย่าง จากดังต่อไปนี้.• จั่วการ์ด จำนวน 1 ใบ.• ถ้าคู่แข่งมีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องทิ้งการ์ดในมือของตัวเอง จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-045.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-045",
@@ -1174,13 +1339,15 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Dressrosa/Supernovas/Heart Pirates",
-    "effectEn": "[Blocker]<br>[On Play] You may place 2 cards from your trash at the bottom of your deck in any order: Choose one:<br>• Draw 1 card.<br>• If your opponent has 5 or more cards in their hand, your opponent trashes 1 card from their hand.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のトラッシュからカード2枚を好きな順番でデッキの下に置くことができる：以下から1つを選ぶ。<br>・カード1枚を引く。<br>・相手の手札が5枚以上ある場合、相手は自身の手札1枚を捨てる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] สามารถนำการ์ด จากในแทรชของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็คของเรา : เลือก 1 อย่าง จากดังต่อไปนี้.<br>• จั่วการ์ด จำนวน 1 ใบ.<br>• ถ้าคู่แข่งมีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องทิ้งการ์ดในมือของตัวเอง จำนวน 1 ใบ.",
+    "effectEn": "[Blocker][On Play] You may place 2 cards from your trash at the bottom of your deck in any order: Choose one:• Draw 1 card.• If your opponent has 5 or more cards in their hand, your opponent trashes 1 card from their hand.",
+    "effectJp": "【ブロッカー】【登場時】自分のトラッシュからカード2枚を好きな順番でデッキの下に置くことができる：以下から1つを選ぶ。・カード1枚を引く。・相手の手札が5枚以上ある場合、相手は自身の手札1枚を捨てる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] สามารถนำการ์ด จากในแทรชของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็คของเรา : เลือก 1 อย่าง จากดังต่อไปนี้.• จั่วการ์ด จำนวน 1 ใบ.• ถ้าคู่แข่งมีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องทิ้งการ์ดในมือของตัวเอง จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-045_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-046",
@@ -1201,7 +1368,9 @@
     "effectTh": "[เมื่อลงสนาม] นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -1.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-046.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-047",
@@ -1222,7 +1391,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ, และนำคาแรกเตอร์นี้ ไปวางที่แทรช : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ นอกเหนือจาก [Blueno] จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-047.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-048",
@@ -1238,12 +1409,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Straw Hat Crew",
-    "effectEn": "[On Play] Add up to 1 [Laboon] from your trash to your hand.<br>[On K.O.] Play up to 1 [Laboon] with a cost of 4 or less from your hand.",
-    "effectJp": "【登場時】自分のトラッシュから「ラブーン」1枚までを、手札に加える。<br>【KO時】自分の手札からコスト4以下の「ラブーン」1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] นำ [Laboon] จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ.<br>[เมื่อถูก KO] นำ [Laboon] ที่มีคอสต์ 4 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[On Play] Add up to 1 [Laboon] from your trash to your hand.[On K.O.] Play up to 1 [Laboon] with a cost of 4 or less from your hand.",
+    "effectJp": "【登場時】自分のトラッシュから「ラブーン」1枚までを、手札に加える。【KO時】自分の手札からコスト4以下の「ラブーン」1枚までを、登場させる。",
+    "effectTh": "[เมื่อลงสนาม] นำ [Laboon] จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ.[เมื่อถูก KO] นำ [Laboon] ที่มีคอสต์ 4 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-048.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-048",
@@ -1259,13 +1432,15 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Straw Hat Crew",
-    "effectEn": "[On Play] Add up to 1 [Laboon] from your trash to your hand.<br>[On K.O.] Play up to 1 [Laboon] with a cost of 4 or less from your hand.",
-    "effectJp": "【登場時】自分のトラッシュから「ラブーン」1枚までを、手札に加える。<br>【KO時】自分の手札からコスト4以下の「ラブーン」1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] นำ [Laboon] จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ.<br>[เมื่อถูก KO] นำ [Laboon] ที่มีคอสต์ 4 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[On Play] Add up to 1 [Laboon] from your trash to your hand.[On K.O.] Play up to 1 [Laboon] with a cost of 4 or less from your hand.",
+    "effectJp": "【登場時】自分のトラッシュから「ラブーン」1枚までを、手札に加える。【KO時】自分の手札からコスト4以下の「ラブーン」1枚までを、登場させる。",
+    "effectTh": "[เมื่อลงสนาม] นำ [Laboon] จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ.[เมื่อถูก KO] นำ [Laboon] ที่มีคอสต์ 4 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-048_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-049",
@@ -1280,12 +1455,14 @@
     "power": 6000,
     "attribute": "Strike",
     "trait": "Navy",
-    "effectEn": "[On Play] Give up to 2 rested DON!! cards to 1 of your Leader.<br>[Activate: Main] You may rest this Character: If your Leader is [Monkey.D.Garp], K.O. up to 1 of your opponent's Characters with a cost of 1 or less.",
-    "effectJp": "【登場時】自分のリーダー1枚にレストのドン‼2枚までを、付与する。<br>【起動メイン】このキャラをレストにできる：自分のリーダーが「モンキー・D・ガープ」の場合、相手のコスト1以下のキャラ1枚までを、KOする。",
-    "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ มาใส่ให้กับ ลีดเดอร์ของเรา, จำนวน 1 ใบ.<br>[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ถ้าลีดเดอร์ของเรา คือ [Monkey.D.Garp] ละก็, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[On Play] Give up to 2 rested DON!! cards to 1 of your Leader.[Activate: Main] You may rest this Character: If your Leader is [Monkey.D.Garp], K.O. up to 1 of your opponent's Characters with a cost of 1 or less.",
+    "effectJp": "【登場時】自分のリーダー1枚にレストのドン‼2枚までを、付与する。【起動メイン】このキャラをレストにできる：自分のリーダーが「モンキー・D・ガープ」の場合、相手のコスト1以下のキャラ1枚までを、KOする。",
+    "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ มาใส่ให้กับ ลีดเดอร์ของเรา, จำนวน 1 ใบ.[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ถ้าลีดเดอร์ของเรา คือ [Monkey.D.Garp] ละก็, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-049.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-050",
@@ -1301,11 +1478,11 @@
     "effectEn": "[Main] Look at 4 cards from the top of your deck; reveal up to 1 card with a cost of 4 or more and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】自分のデッキの上から4枚を見て、コスト4以上のカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
     "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่มีคอสต์ 4 หรือสูงกว่า จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-050.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-051",
@@ -1318,12 +1495,14 @@
     "color": "Black",
     "cost": 3,
     "trait": "Former Rumbar Pirates",
-    "effectEn": "[Main] Choose one:<br>• K.O. up to 1 of your opponent's Characters with a cost of 2 or less.<br>• Give up to 1 of your opponent's Characters −4 cost during this turn.",
-    "effectJp": "【メイン】以下から1つを選ぶ。<br>・相手のコスト2以下のキャラ1枚までを、KOする。<br>・相手のキャラ1枚までを、このターン中、コスト-4。",
-    "effectTh": "[เมน] เลือก 1 อย่าง จากดังต่อไปนี้.<br>• ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.<br>• ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -4.",
+    "effectEn": "[Main] Choose one:• K.O. up to 1 of your opponent's Characters with a cost of 2 or less.• Give up to 1 of your opponent's Characters −4 cost during this turn.",
+    "effectJp": "【メイン】以下から1つを選ぶ。・相手のコスト2以下のキャラ1枚までを、KOする。・相手のキャラ1枚までを、このターン中、コスト-4。",
+    "effectTh": "[เมน] เลือก 1 อย่าง จากดังต่อไปนี้.• ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.• ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -4.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-051.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-052",
@@ -1338,12 +1517,14 @@
     "power": 11000,
     "attribute": "Special",
     "trait": "Sky Island",
-    "effectEn": "If your Leader has the {Sky Island} type, this Character gains [Rush].<br>[When Attacking] You may trash 1 card from your hand: If you have 1 or less Life cards, add up to 1 card from the top of your deck to the top of your Life cards. Then, this Character gains +1000 power during this turn.",
-    "effectJp": "自分のリーダーが特徴《空島》を持つ場合、このキャラは【速攻】を得る。<br>【アタック時】自分の手札1枚を捨てることができる：自分のライフが1枚以下の場合、自分のデッキの上から1枚までを、ライフの上に加える。その後、このキャラは、このターン中、パワー+1000。",
-    "effectTh": "ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; เกาะแห่งท้องฟ้า &gt; ละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ถ้าเรามีไลฟ์อยู่ จำนวน 1 ใบ หรือน้อยกว่าละก็, นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000.",
+    "effectEn": "If your Leader has the {Sky Island} type, this Character gains [Rush].[When Attacking] You may trash 1 card from your hand: If you have 1 or less Life cards, add up to 1 card from the top of your deck to the top of your Life cards. Then, this Character gains +1000 power during this turn.",
+    "effectJp": "自分のリーダーが特徴《空島》を持つ場合、このキャラは【速攻】を得る。【アタック時】自分の手札1枚を捨てることができる：自分のライフが1枚以下の場合、自分のデッキの上から1枚までを、ライフの上に加える。その後、このキャラは、このターン中、パワー+1000。",
+    "effectTh": "ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < เกาะแห่งท้องฟ้า > ละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ถ้าเรามีไลฟ์อยู่ จำนวน 1 ใบ หรือน้อยกว่าละก็, นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-052.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-052",
@@ -1358,13 +1539,15 @@
     "power": 11000,
     "attribute": "Special",
     "trait": "Sky Island",
-    "effectEn": "If your Leader has the {Sky Island} type, this Character gains [Rush].<br>[When Attacking] You may trash 1 card from your hand: If you have 1 or less Life cards, add up to 1 card from the top of your deck to the top of your Life cards. Then, this Character gains +1000 power during this turn.",
-    "effectJp": "自分のリーダーが特徴《空島》を持つ場合、このキャラは【速攻】を得る。<br>【アタック時】自分の手札1枚を捨てることができる：自分のライフが1枚以下の場合、自分のデッキの上から1枚までを、ライフの上に加える。その後、このキャラは、このターン中、パワー+1000。",
-    "effectTh": "ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; เกาะแห่งท้องฟ้า &gt; ละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ถ้าเรามีไลฟ์อยู่ จำนวน 1 ใบ หรือน้อยกว่าละก็, นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000.",
+    "effectEn": "If your Leader has the {Sky Island} type, this Character gains [Rush].[When Attacking] You may trash 1 card from your hand: If you have 1 or less Life cards, add up to 1 card from the top of your deck to the top of your Life cards. Then, this Character gains +1000 power during this turn.",
+    "effectJp": "自分のリーダーが特徴《空島》を持つ場合、このキャラは【速攻】を得る。【アタック時】自分の手札1枚を捨てることができる：自分のライフが1枚以下の場合、自分のデッキの上から1枚までを、ライフの上に加える。その後、このキャラは、このターン中、パワー+1000。",
+    "effectTh": "ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < เกาะแห่งท้องฟ้า > ละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ถ้าเรามีไลฟ์อยู่ จำนวน 1 ใบ หรือน้อยกว่าละก็, นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-052_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-053",
@@ -1385,7 +1568,9 @@
     "effectTh": "[เมื่อลงสนาม] / [เมื่อถูก KO] ดูการ์ดใบบนสุดจาก ไลฟ์ของเรา หรือว่า ไลฟ์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, และนำไปวางที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์ของเจ้าของเดิม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-053.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-054",
@@ -1401,12 +1586,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "East Blue/Straw Hat Crew",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] If you have 2 or less Life cards, draw 2 cards and trash 1 card from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のライフが2枚以下の場合、カード2枚を引き、自分の手札1枚を捨てる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ถ้าเรามีไลฟ์อยู่ จำนวน 2 ใบ หรือน้อยกว่าละก็, จะต้องจั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] If you have 2 or less Life cards, draw 2 cards and trash 1 card from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のライフが2枚以下の場合、カード2枚を引き、自分の手札1枚を捨てる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ถ้าเรามีไลฟ์อยู่ จำนวน 2 ใบ หรือน้อยกว่าละก็, จะต้องจั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-054.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-054",
@@ -1422,13 +1609,15 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "East Blue/Straw Hat Crew",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] If you have 2 or less Life cards, draw 2 cards and trash 1 card from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のライフが2枚以下の場合、カード2枚を引き、自分の手札1枚を捨てる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ถ้าเรามีไลฟ์อยู่ จำนวน 2 ใบ หรือน้อยกว่าละก็, จะต้องจั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] If you have 2 or less Life cards, draw 2 cards and trash 1 card from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のライフが2枚以下の場合、カード2枚を引き、自分の手札1枚を捨てる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ถ้าเรามีไลฟ์อยู่ จำนวน 2 ใบ หรือน้อยกว่าละก็, จะต้องจั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-054_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-055",
@@ -1447,11 +1636,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] If your Leader has the {Fish-Man} or {Merfolk} type and you have 2 or less Life cards, play this card.",
-    "triggerJp": "【トリガー】自分のリーダーが特徴《魚人族》か《人魚族》を持ち、自分のライフが2枚以下の場合、このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-055.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-056",
@@ -1466,14 +1655,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Scientist/Egghead",
-    "effectEn": "[Blocker]<br>[On Play] Look at 5 cards from the top of your deck; play up to 1 {Scientist} type Character card with a cost of 5 or less other than [Vegapunk]. Then, place the rest at the bottom of your deck in any order and if your opponent has 2 or less Characters, trash 1 card from your hand.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のデッキの上から5枚を見て、「ベガパンク」以外のコスト5以下の特徴《科学者》を持つキャラカード1枚までを、登場させる。その後、残りを好きな順番でデッキの下に置き、相手のキャラが2枚以下の場合、自分の手札1枚を捨てる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, แล้วหาคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ &lt; นักวิทยาศาสตร์ &gt; นอกเหนือจาก [Vegapunk] จำนวนไม่เกิน 1 ใบ, นำลงสนาม. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, และถ้าคู่แข่งมีคาแรกเตอร์อยู่ จำนวน 2 ใบ หรือน้อยกว่าละก็, จะต้องทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
-    "triggerEn": "[Trigger] Draw 1 card.",
-    "triggerJp": "【トリガー】カード1枚を引く。",
+    "effectEn": "[Blocker][On Play] Look at 5 cards from the top of your deck; play up to 1 {Scientist} type Character card with a cost of 5 or less other than [Vegapunk]. Then, place the rest at the bottom of your deck in any order and if your opponent has 2 or less Characters, trash 1 card from your hand.",
+    "effectJp": "【ブロッカー】【登場時】自分のデッキの上から5枚を見て、「ベガパンク」以外のコスト5以下の特徴《科学者》を持つキャラカード1枚までを、登場させる。その後、残りを好きな順番でデッキの下に置き、相手のキャラが2枚以下の場合、自分の手札1枚を捨てる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, แล้วหาคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ < นักวิทยาศาสตร์ > นอกเหนือจาก [Vegapunk] จำนวนไม่เกิน 1 ใบ, นำลงสนาม. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, และถ้าคู่แข่งมีคาแรกเตอร์อยู่ จำนวน 2 ใบ หรือน้อยกว่าละก็, จะต้องทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-056.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-056",
@@ -1488,15 +1677,15 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Scientist/Egghead",
-    "effectEn": "[Blocker]<br>[On Play] Look at 5 cards from the top of your deck; play up to 1 {Scientist} type Character card with a cost of 5 or less other than [Vegapunk]. Then, place the rest at the bottom of your deck in any order and if your opponent has 2 or less Characters, trash 1 card from your hand.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のデッキの上から5枚を見て、「ベガパンク」以外のコスト5以下の特徴《科学者》を持つキャラカード1枚までを、登場させる。その後、残りを好きな順番でデッキの下に置き、相手のキャラが2枚以下の場合、自分の手札1枚を捨てる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, แล้วหาคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ &lt; นักวิทยาศาสตร์ &gt; นอกเหนือจาก [Vegapunk] จำนวนไม่เกิน 1 ใบ, นำลงสนาม. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, และถ้าคู่แข่งมีคาแรกเตอร์อยู่ จำนวน 2 ใบ หรือน้อยกว่าละก็, จะต้องทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
-    "triggerEn": "[Trigger] Draw 1 card.",
-    "triggerJp": "【トリガー】カード1枚を引く。",
+    "effectEn": "[Blocker][On Play] Look at 5 cards from the top of your deck; play up to 1 {Scientist} type Character card with a cost of 5 or less other than [Vegapunk]. Then, place the rest at the bottom of your deck in any order and if your opponent has 2 or less Characters, trash 1 card from your hand.",
+    "effectJp": "【ブロッカー】【登場時】自分のデッキの上から5枚を見て、「ベガパンク」以外のコスト5以下の特徴《科学者》を持つキャラカード1枚までを、登場させる。その後、残りを好きな順番でデッキの下に置き、相手のキャラが2枚以下の場合、自分の手札1枚を捨てる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, แล้วหาคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ < นักวิทยาศาสตร์ > นอกเหนือจาก [Vegapunk] จำนวนไม่เกิน 1 ใบ, นำลงสนาม. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, และถ้าคู่แข่งมีคาแรกเตอร์อยู่ จำนวน 2 ใบ หรือน้อยกว่าละก็, จะต้องทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-056_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-057",
@@ -1517,7 +1706,9 @@
     "effectTh": "[เมื่อโจมตี] สามารถนำ ไลฟ์ ใบบนสุด หรือ ใบล่างสุด ของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์ของคู่แข่ง แบบหงายหน้า.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-057.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-058",
@@ -1533,11 +1724,11 @@
     "effectEn": "[Main] Look at 4 cards from the top of your deck; reveal up to 1 card with a cost of 4 or more and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】自分のデッキの上から4枚を見て、コスト4以上のカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
     "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่มีคอสต์ 4 หรือสูงกว่า จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-058.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-059",
@@ -1552,10 +1743,12 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +1000 power during this battle. Then, if you have 1 or less Life cards, play up to 1 of your yellow {Straw Hat Crew} type Character cards or [Sanji] with a cost of 5 or less from your hand.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+1000。その後、自分のライフが1枚以下の場合、自分の手札からコスト5以下の黄の、特徴《麦わらの一味》を持つキャラカードか「サンジ」1枚までを、登場させる。",
-    "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ, จะมีพาวเวอร์ +1000. จากนั้น, ถ้าเรามีไลฟ์อยู่ จำนวน 1 ใบ หรือน้อยกว่าละก็, นำคาแรกเตอร์การ์ด ธีมสีเหลือง ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; หรือ [Sanji] ที่มีคอสต์ 5 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ, จะมีพาวเวอร์ +1000. จากนั้น, ถ้าเรามีไลฟ์อยู่ จำนวน 1 ใบ หรือน้อยกว่าละก็, นำคาแรกเตอร์การ์ด ธีมสีเหลือง ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ < กลุ่มหมวกฟาง > หรือ [Sanji] ที่มีคอสต์ 5 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-059.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-060",
@@ -1570,10 +1763,12 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[Activate: Main] You may rest this Stage and turn 1 card from the top of your Life cards face-up: Up to 1 of your {Straw Hat Crew} type Characters gains +1000 power until the end of your opponent's next turn.",
     "effectJp": "【起動メイン】このステージをレストにし、自分のライフの上から1枚を表向きにできる：自分の特徴《麦わらの一味》を持つキャラ1枚までを、次の相手のターン終了時まで、パワー+1000。",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ สเตจนี้, และหงาย ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ : คาแรกเตอร์ของเรา ที่มีคุณสมับติ &lt; กลุ่มหมวกฟาง &gt; จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ สเตจนี้, และหงาย ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ : คาแรกเตอร์ของเรา ที่มีคุณสมับติ < กลุ่มหมวกฟาง > จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-060.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-061",
@@ -1588,12 +1783,14 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "Water Seven/Straw Hat Crew",
-    "effectEn": "If your Leader is multicolored and your opponent has 5 or more DON!! cards on their field, this Character gains [Rush].<br>[When Attacking] [Once Per Turn] You may return 2 of your active DON!! cards to your DON!! deck: Set this Character as active. Then, add 1 card from the top of your Life cards to your hand.",
-    "effectJp": "自分のリーダーが多色で、相手の場のドン‼が5枚以上ある場合、このキャラは【速攻】を得る。<br>【アタック時】【ターン1回】自分のアクティブのドン‼2枚をドン‼デッキに戻すことができる：このキャラをアクティブにする。その後、自分のライフの上から1枚を手札に加える。",
-    "effectTh": "ถ้าลีดเดอร์ของเรา มีหลายธีมสี, และในสนามของคู่แข่งมี ด้ง!! อยู่จำนวน 5 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] สามารถนำ ด้ง!! ของเรา ที่กำลังแอ็คทีฟอยู่ จำนวน 2 ใบ กลับด้ง!! เด็ค : ทำการ แอ็คทีฟ คาแรกเตอร์นี้. จากนั้น, นำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ.",
+    "effectEn": "If your Leader is multicolored and your opponent has 5 or more DON!! cards on their field, this Character gains [Rush].[When Attacking] [Once Per Turn] You may return 2 of your active DON!! cards to your DON!! deck: Set this Character as active. Then, add 1 card from the top of your Life cards to your hand.",
+    "effectJp": "自分のリーダーが多色で、相手の場のドン‼が5枚以上ある場合、このキャラは【速攻】を得る。【アタック時】【ターン1回】自分のアクティブのドン‼2枚をドン‼デッキに戻すことができる：このキャラをアクティブにする。その後、自分のライフの上から1枚を手札に加える。",
+    "effectTh": "ถ้าลีดเดอร์ของเรา มีหลายธีมสี, และในสนามของคู่แข่งมี ด้ง!! อยู่จำนวน 5 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] สามารถนำ ด้ง!! ของเรา ที่กำลังแอ็คทีฟอยู่ จำนวน 2 ใบ กลับด้ง!! เด็ค : ทำการ แอ็คทีฟ คาแรกเตอร์นี้. จากนั้น, นำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-061.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-061",
@@ -1608,13 +1805,15 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "Water Seven/Straw Hat Crew",
-    "effectEn": "If your Leader is multicolored and your opponent has 5 or more DON!! cards on their field, this Character gains [Rush].<br>[When Attacking] [Once Per Turn] You may return 2 of your active DON!! cards to your DON!! deck: Set this Character as active. Then, add 1 card from the top of your Life cards to your hand.",
-    "effectJp": "自分のリーダーが多色で、相手の場のドン‼が5枚以上ある場合、このキャラは【速攻】を得る。<br>【アタック時】【ターン1回】自分のアクティブのドン‼2枚をドン‼デッキに戻すことができる：このキャラをアクティブにする。その後、自分のライフの上から1枚を手札に加える。",
-    "effectTh": "ถ้าลีดเดอร์ของเรา มีหลายธีมสี, และในสนามของคู่แข่งมี ด้ง!! อยู่จำนวน 5 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] สามารถนำ ด้ง!! ของเรา ที่กำลังแอ็คทีฟอยู่ จำนวน 2 ใบ กลับด้ง!! เด็ค : ทำการ แอ็คทีฟ คาแรกเตอร์นี้. จากนั้น, นำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ.",
+    "effectEn": "If your Leader is multicolored and your opponent has 5 or more DON!! cards on their field, this Character gains [Rush].[When Attacking] [Once Per Turn] You may return 2 of your active DON!! cards to your DON!! deck: Set this Character as active. Then, add 1 card from the top of your Life cards to your hand.",
+    "effectJp": "自分のリーダーが多色で、相手の場のドン‼が5枚以上ある場合、このキャラは【速攻】を得る。【アタック時】【ターン1回】自分のアクティブのドン‼2枚をドン‼デッキに戻すことができる：このキャラをアクティブにする。その後、自分のライフの上から1枚を手札に加える。",
+    "effectTh": "ถ้าลีดเดอร์ของเรา มีหลายธีมสี, และในสนามของคู่แข่งมี ด้ง!! อยู่จำนวน 5 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] สามารถนำ ด้ง!! ของเรา ที่กำลังแอ็คทีฟอยู่ จำนวน 2 ใบ กลับด้ง!! เด็ค : ทำการ แอ็คทีฟ คาแรกเตอร์นี้. จากนั้น, นำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-061_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   },
   {
     "code": "EB02-061",
@@ -1629,12 +1828,543 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "Water Seven/Straw Hat Crew",
-    "effectEn": "If your Leader is multicolored and your opponent has 5 or more DON!! cards on their field, this Character gains [Rush].<br>[When Attacking] [Once Per Turn] You may return 2 of your active DON!! cards to your DON!! deck: Set this Character as active. Then, add 1 card from the top of your Life cards to your hand.",
-    "effectJp": "自分のリーダーが多色で、相手の場のドン‼が5枚以上ある場合、このキャラは【速攻】を得る。<br>【アタック時】【ターン1回】自分のアクティブのドン‼2枚をドン‼デッキに戻すことができる：このキャラをアクティブにする。その後、自分のライフの上から1枚を手札に加える。",
-    "effectTh": "ถ้าลีดเดอร์ของเรา มีหลายธีมสี, และในสนามของคู่แข่งมี ด้ง!! อยู่จำนวน 5 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] สามารถนำ ด้ง!! ของเรา ที่กำลังแอ็คทีฟอยู่ จำนวน 2 ใบ กลับด้ง!! เด็ค : ทำการ แอ็คทีฟ คาแรกเตอร์นี้. จากนั้น, นำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ.",
+    "effectEn": "If your Leader is multicolored and your opponent has 5 or more DON!! cards on their field, this Character gains [Rush].[When Attacking] [Once Per Turn] You may return 2 of your active DON!! cards to your DON!! deck: Set this Character as active. Then, add 1 card from the top of your Life cards to your hand.",
+    "effectJp": "自分のリーダーが多色で、相手の場のドン‼が5枚以上ある場合、このキャラは【速攻】を得る。【アタック時】【ターン1回】自分のアクティブのドン‼2枚をドン‼デッキに戻すことができる：このキャラをアクティブにする。その後、自分のライフの上から1枚を手札に加える。",
+    "effectTh": "ถ้าลีดเดอร์ของเรา มีหลายธีมสี, และในสนามของคู่แข่งมี ด้ง!! อยู่จำนวน 5 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] สามารถนำ ด้ง!! ของเรา ที่กำลังแอ็คทีฟอยู่ จำนวน 2 ใบ กลับด้ง!! เด็ค : ทำการ แอ็คทีฟ คาแรกเตอร์นี้. จากนั้น, นำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-061_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP05-001",
+    "cardCode": "OP05-001_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Sabo",
+    "nameJp": "サボ",
+    "nameTh": "Sabo",
+    "color": "Red/Black",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Special",
+    "trait": "Revolutionary Army",
+    "effectEn": "[DON!! x1] [Opponent's Turn] [Once Per Turn] If your Character with 5000 power or more would be K.O.'d, you may give that Character −1000 power during this turn instead of that Character being K.O.'d.",
+    "effectJp": "【ドン‼×1】【相手のターン中】【ターン1回】自分のパワー5000以上のキャラがKOされる場合、そのキャラはKOされる代わりに、このターン中、パワー-1000できる。",
+    "effectTh": "[ด้ง!! x 1] [ในเทิร์นของคู่แข่ง] [เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์ของเรา ที่มีพาวเวอร์ 5000 หรือมากกว่า กำลังจะถูก KO, จะสามารถทำให้จากที่คาแรกเตอร์ดังกล่าวจะถูก KO จะเปลี่ยนเป็น, ในเทิร์นนี้, จะมีพาวเวอร์ -1000 แทนได้.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-001_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP05-002",
+    "cardCode": "OP05-002_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Belo Betty",
+    "nameJp": "ベロ・ベティ",
+    "nameTh": "Belo Betty",
+    "color": "Red/Yellow",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Special",
+    "trait": "Revolutionary Army",
+    "effectEn": "[Activate: Main] [Once Per Turn] You may trash 1 {Revolutionary Army} type card from your hand: Up to 3 of your {Revolutionary Army} type Characters or Characters with a [Trigger] gain +3000 power during this turn.",
+    "effectJp": "【起動メイン】【ターン1回】自分の手札から特徴《革命軍》を持つカード1枚を捨てることができる：自分の特徴《革命軍》か【トリガー】を持つキャラ3枚までを、このターン中、パワー+3000。",
+    "effectTh": "[ใช้งานเมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ด ที่มีคุณสมบัติ < กองทัพปฏิวัติ > จากบนมือของเรา จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < กองทัพปฏิวัติ > หรือ คาแรกเตอร์ของเรา ที่มี [ทริกเกอร์] จำนวนไม่เกิน 3 ใบ, จะมีพาวเวอร์ +3000.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-002_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP05-022",
+    "cardCode": "OP05-022_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Donquixote Rosinante",
+    "nameJp": "ドンキホーテ・ロシナンテ",
+    "nameTh": "Donquixote Rosinante",
+    "color": "Green/Blue",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Special",
+    "trait": "Navy/Donquixote Pirates",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[End of Your Turn] If you have 6 or less cards in your hand, set this Leader as active.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【自分のターン終了時】自分の手札が6枚以下の場合、このリーダーをアクティブにする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อจบเทิร์นของเรา] ถ้าเรามีการ์ดบนมือ จำนวน 6 ใบ หรือน้อยกว่า, จะทำการ แอ็คทีฟ ลีดเดอร์นี้.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-022_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP05-060",
+    "cardCode": "OP05-060_p4",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Monkey.D.Luffy",
+    "nameJp": "モンキー・D・ルフィ",
+    "nameTh": "Monkey.D.Luffy",
+    "color": "Purple",
+    "power": 5000,
+    "life": 5,
+    "attribute": "Strike",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[Activate: Main] [Once Per Turn] You may add 1 card from the top of your Life cards to your hand: If you have 0 or 3 or more DON!! cards on your field, add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【起動メイン】【ターン1回】自分のライフの上から1枚を手札に加えることができる：自分の場のドン‼が0枚か、3枚以上ある場合、ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 0 ใบ, หรือว่า มีอยู่จำนวน 3 ใบ หรือมากกว่า, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-060_p4.png",
+    "isParallel": true,
+    "parallelIndex": 4,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP05-098",
+    "cardCode": "OP05-098_p3",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Enel",
+    "nameJp": "エネル",
+    "nameTh": "Enel",
+    "color": "Yellow",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Special",
+    "trait": "Sky Island",
+    "effectEn": "[Opponent's Turn] [Once Per Turn] When your number of Life cards becomes 0, add 1 card from the top of your deck to the top of your Life cards. Then, trash 1 card from your hand.",
+    "effectJp": "【相手のターン中】【ターン1回】自分のライフが0枚になった時、自分のデッキの上から1枚を、ライフの上に加える。その後、自分の手札1枚を捨てる。",
+    "effectTh": "[ในเทิร์นของคู่แข่ง] [เทิร์นละ 1 ครั้ง] เมื่อไลฟ์ของเรา กลายเป็น จำนวน 0 ใบ, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, จะต้องทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-098_p3.png",
+    "isParallel": true,
+    "parallelIndex": 3,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP06-001",
+    "cardCode": "OP06-001_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Uta",
+    "nameJp": "ウタ",
+    "nameTh": "Uta",
+    "color": "Red/Purple",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Special",
+    "trait": "FILM",
+    "effectEn": "[When Attacking] You may trash 1 {FILM} type card from your hand: Give up to 1 of your opponent's Characters −2000 power during this turn. Then, add up to 1 DON!! card from your DON!! deck and rest it.",
+    "effectJp": "【アタック時】自分の手札の特徴《FILM》を持つカード1枚を捨てることができる：相手のキャラ1枚までを、このターン中、パワー-2000。その後、ドン‼デッキからドン‼1枚までを、レストで追加する。",
+    "effectTh": "[เมื่อโจมตี] สามารถทิ้งการ์ด ที่มีคุณสมบัติ < FILM > จากบนมือของเรา จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000. จากนั้น, นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP06-001_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP06-020",
+    "cardCode": "OP06-020_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Hody Jones",
+    "nameJp": "ホーディ・ジョーンズ",
+    "nameTh": "Hody Jones",
+    "color": "Green",
+    "power": 5000,
+    "life": 5,
+    "attribute": "Strike",
+    "trait": "Fish-Man/New Fish-Man Pirates",
+    "effectEn": "[Activate: Main] You may rest this Leader: Rest up to 1 of your opponent's DON!! cards or Characters with a cost of 3 or less. Then, you cannot add Life cards to your hand using your own effects during this turn.",
+    "effectJp": "【起動メイン】このリーダーをレストにできる：相手の、コスト3以下のキャラかドン‼1枚までを、レストにする。その後、自分は、このターン中、自分の効果でライフを手札に加えられない。",
+    "effectTh": "[ใช้งานเมน] สามารถ เรสต์ ลีดเดอร์นี้ : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า หรือว่า ด้ง!! ของคู่แข่ง, จำนวนไม่เกิน 1 ใบ. จากนั้น, ในเทิร์นนี้, เราจะนำ ไลฟ์ ขึ้นสู่บนมือด้วยความสามารถของฝ่ายตัวเองไม่ได้อีก.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP06-020_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP06-021",
+    "cardCode": "OP06-021_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Perona",
+    "nameJp": "ペローナ",
+    "nameTh": "Perona",
+    "color": "Green/Black",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Special",
+    "trait": "Thriller Bark Pirates",
+    "effectEn": "[Activate: Main] [Once Per Turn] Choose one:• Rest up to 1 of your opponent's Characters with a cost of 4 or less.• Give up to 1 of your opponent's Characters −1 cost during this turn.",
+    "effectJp": "【起動メイン】【ターン1回】以下から1つを選ぶ。・相手のコスト4以下のキャラ1枚までを、レストにする。・相手のキャラ1枚までを、このターン中、コスト-1。",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] เลือก 1 อย่าง จากดังต่อไปนี้.• ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.• ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -1.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP06-021_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP06-022",
+    "cardCode": "OP06-022_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Yamato",
+    "nameJp": "ヤマト",
+    "nameTh": "Yamato",
+    "color": "Green/Yellow",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Strike",
+    "trait": "Land of Wano",
+    "effectEn": "[Double Attack] (This card deals 2 damage.)[Activate: Main] [Once Per Turn] If your opponent has 3 or less Life cards, give up to 2 rested DON!! cards to 1 of your Characters.",
+    "effectJp": "【ダブルアタック】(このカードが与えるダメージは2になる)【起動メイン】【ターン1回】相手のライフが3枚以下の場合、自分のキャラ1枚にレストのドン!!2枚までを、付与する。",
+    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)[ใช้งานเมน] [เทิร์นละ 1 ครั้ง] ถ้าคู่แข่งมี ไลฟ์ จำนวน 3 ใบ หรือต่ำกว่า, นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ ไปใส่ให้กับ คาแรกเตอร์ของเรา จำนวน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP06-022_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP06-042",
+    "cardCode": "OP06-042_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Vinsmoke Reiju",
+    "nameJp": "ヴィンスモーク・レイジュ",
+    "nameTh": "Vinsmoke Reiju",
+    "color": "Blue/Purple",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Special",
+    "trait": "The Vinsmoke Family/GERMA 66",
+    "effectEn": "[Your Turn] [Once Per Turn] When a DON!! card on your field is returned to your DON!! deck, draw 1 card.",
+    "effectJp": "【自分のターン中】【ターン1回】自分の場のドン‼がドン‼デッキに戻された時、カード1枚を引く。",
+    "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา ถูกนำกลับ ด้ง!! เด็ค, จะจั่วการ์ด จำนวน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP06-042_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP06-080",
+    "cardCode": "OP06-080_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Gecko Moria",
+    "nameJp": "ゲッコー・モリア",
+    "nameTh": "Gecko Moria",
+    "color": "Black",
+    "power": 5000,
+    "life": 5,
+    "attribute": "Special",
+    "trait": "The Seven Warlords of the Sea/Thriller Bark Pirates",
+    "effectEn": "[DON!! x1] [When Attacking] ➁ (You may rest the specified number of DON!! cards in your cost area.) You may trash 1 card from your hand: Trash 2 cards from the top of your deck and play up to 1 {Thriller Bark Pirates} type Character card with a cost of 4 or less from your trash.",
+    "effectJp": "【ドン‼×1】【アタック時】➁(コストエリアのドン‼を指定の数レストにできる),自分の手札1枚を捨てることができる：自分のデッキの上から2枚をトラッシュに置き、自分のトラッシュのコスト4以下の特徴《スリラーバーク海賊団》を持つキャラカード1枚までを、登場させる。",
+    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช, และนำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ที่มีคุณสมบัติ < กลุ่มโจรสลัดธริลเลอร์บาร์ค > ที่อยู่ในแทรชของเรา จำนวนไม่เกิน 1 ใบ ลงสนาม.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP06-080_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP07-001",
+    "cardCode": "OP07-001_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Monkey.D.Dragon",
+    "nameJp": "モンキー・D・ドラゴン",
+    "nameTh": "Monkey.D.Dragon",
+    "color": "Red",
+    "power": 5000,
+    "life": 5,
+    "attribute": "Special",
+    "trait": "Revolutionary Army",
+    "effectEn": "[Activate: Main] [Once Per Turn] Give up to 2 total of your currently given DON!! cards to 1 of your Characters.",
+    "effectJp": "【起動メイン】【ターン1回】自分の付与されているドン‼合計2枚までを、自分のキャラ1枚に付与する。",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ของเรา ที่ถูกนำไปใส่ให้กับ (คาแรกเตอร์ หรือ ลีดเดอร์) อยู่ รวมกัน จำนวนไม่เกิน 2 ใบ, มาใส่ให้กับ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP07-001_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP07-019",
+    "cardCode": "OP07-019_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Jewelry Bonney",
+    "nameJp": "ジュエリー・ボニー",
+    "nameTh": "Jewelry Bonney",
+    "color": "Green",
+    "power": 5000,
+    "life": 5,
+    "attribute": "Special",
+    "trait": "Supernovas/Bonney Pirates",
+    "effectEn": "[On Your Opponent's Attack] [Once Per Turn] ➀ (You may rest the specified number of DON!! cards in your cost area.): Rest up to 1 of your opponent's Leader or Character cards.",
+    "effectJp": "【相手のアタック時】【ターン1回】➀(コストエリアのドン‼を指定の数レストにできる)：相手の、リーダーかキャラ1枚までを、レストにする。",
+    "effectTh": "[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ เรสต์ ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง, จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP07-019_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP07-038",
+    "cardCode": "OP07-038_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Boa Hancock",
+    "nameJp": "ボア・ハンコック",
+    "nameTh": "Boa Hancock",
+    "color": "Blue",
+    "power": 5000,
+    "life": 5,
+    "attribute": "Special",
+    "trait": "The Seven Warlords of the Sea/Kuja Pirates",
+    "effectEn": "[Your Turn] [Once Per Turn] This effect can be activated when a Character is removed from the field by your effect. If you have 5 or less cards in your hand, draw 1 card.",
+    "effectJp": "【自分のターン中】【ターン1回】キャラが自分の効果で場を離れた時、発動できる。自分の手札が5枚以下の場合、カード1枚を引く。",
+    "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมีคาแรกเตอร์ของใครก็ตาม ถูกนำออกจากสนามโดยความสามารถของฝ่ายเรา, จึงจะสามารถใช้งาน. ถ้าเรามีการ์ดบนมือ จำนวน 5 ใบ หรือน้อยกว่า, จะจั่วการ์ด จำนวน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP07-038_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP07-059",
+    "cardCode": "OP07-059_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Foxy",
+    "nameJp": "フォクシー",
+    "nameTh": "Foxy",
+    "color": "Purple",
+    "power": 5000,
+    "life": 5,
+    "attribute": "Special",
+    "trait": "Foxy Pirates",
+    "effectEn": "[When Attacking] DON!! −3 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If you have 3 or more {Foxy Pirates} type Characters, select your opponent's rested Leader and up to 1 Character card. The selected cards will not become active in your opponent's next Refresh Phase.",
+    "effectJp": "【アタック時】ドン‼-3(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：自分の特徴《フォクシー海賊団》を持つキャラが3枚以上いる場合、相手のレストの、リーダーとキャラ1枚までを選ぶ。選んだカードは次の相手のリフレッシュフェイズでアクティブにならない。",
+    "effectTh": "[เมื่อโจมตี] ด้ง!! - 3 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าเรามี คาแรกเตอร์ ที่มีคุณสมบัติ < กลุ่มโจรสลัดฟ็อกซี่ > อยู่ จำนวน 3 ใบ หรือมากกว่า, จะได้เลือก ลีดเดอร์ของคู่แข่ง ที่กำลังเรสต์อยู่ กับ คาแรกเตอร์ของคู่แข่ง ที่กำลังเรสต์อยู่ อีกจำนวนไม่เกิน 1 ใบ. การ์ดที่ถูกเลือก จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของคู่แข่งในครั้งถัดไป.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP07-059_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP07-079",
+    "cardCode": "OP07-079_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Rob Lucci",
+    "nameJp": "ロブ・ルッチ",
+    "nameTh": "Rob Lucci",
+    "color": "Black",
+    "power": 5000,
+    "life": 5,
+    "attribute": "Strike",
+    "trait": "CP0",
+    "effectEn": "[When Attacking] You may trash 2 cards from the top of your deck: Give up to 1 of your opponent's Characters −1 cost during this turn.",
+    "effectJp": "【アタック時】自分のデッキの上から2枚をトラッシュに置くことができる：相手のキャラ1枚までを、このターン中、コスト-1。",
+    "effectTh": "[เมื่อโจมตี] สามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -1.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP07-079_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP07-097",
+    "cardCode": "OP07-097_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Vegapunk",
+    "nameJp": "ベガパンク",
+    "nameTh": "Vegapunk",
+    "color": "Yellow",
+    "power": 5000,
+    "life": 2,
+    "attribute": "Wisdom",
+    "trait": "Scientist/Egghead",
+    "effectEn": "This Leader cannot attack.[Activate: Main] [Once Per Turn] ① (You may rest the specified number of DON!! cards in your cost area.): Select up to 1 {Egghead} type card with a cost of 5 or less from your hand and play it or add it to the top of your Life cards face-up.",
+    "effectJp": "このリーダーはアタックできない。【起動メイン】【ターン1回】①(コストエリアのドン‼を指定の数レストにできる)：自分の手札からコスト5以下の特徴《エッグヘッド》を持つカード1枚までを、ライフの上に表向きで加えるか登場させる。",
+    "effectTh": "ลีดเดอร์นี้ไม่สามารถทำการโจมตี.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำการ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ < เอ็กเฮด > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่ ข้างบนสุด ของไลฟ์ แบบหงายหน้า หรือว่า นำลงสนาม.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP07-097_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP08-001",
+    "cardCode": "OP08-001_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Tony Tony.Chopper",
+    "nameJp": "トニートニー・チョッパー",
+    "nameTh": "Tony Tony.Chopper",
+    "color": "Red/Green",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Strike",
+    "trait": "Animal/Drum Kingdom/Straw Hat Crew",
+    "effectEn": "[Activate: Main] [Once Per Turn] Give up to 3 of your {Animal} or {Drum Kingdom} type Characters up to 1 rested DON!! card each.",
+    "effectJp": "【起動メイン】【ターン1回】自分の特徴《動物》か《ドラム王国》を持つキャラ3枚までにレストのドン‼1枚ずつまでを、付与する。",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ ไปใส่ให้กับ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < สัตว์ > หรือ < ราชอาณาจักรดรัม > จำนวนไม่เกิน 3 ใบ, เป็นจำนวนสูงสุดตัวละไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-001_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP08-002",
+    "cardCode": "OP08-002_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Marco",
+    "nameJp": "マルコ",
+    "nameTh": "Marco",
+    "color": "Red/Blue",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Special",
+    "trait": "Whitebeard Pirates",
+    "effectEn": "[DON!! x1] [Activate: Main] [Once Per Turn] Draw 1 card and place 1 card from your hand at the top or bottom of your deck. Then, give up to 1 of your opponent's Characters −2000 power during this turn.",
+    "effectJp": "【ドン‼×1】【起動メイン】【ターン1回】カード1枚を引き、自分の手札1枚をデッキの上か下に置く。その後、相手のキャラ1枚までを、このターン中、パワー-2000。",
+    "effectTh": "[ด้ง!! x 1] [ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] จั่วการ์ด จำนวน 1 ใบ, แล้วนำการ์ดบนมือของเรา จำนวน 1 ใบ ไปวางที่ ข้างบนสุด หรือ ข้างใต้สุด ของเด็ค. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-002_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP08-021",
+    "cardCode": "OP08-021_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Carrot",
+    "nameJp": "キャロット",
+    "nameTh": "Carrot",
+    "color": "Green",
+    "power": 5000,
+    "life": 5,
+    "attribute": "Special",
+    "trait": "Minks",
+    "effectEn": "[Activate: Main] [Once Per Turn] If you have a {Minks} type Character, rest up to 1 of your opponent's Characters with a cost of 5 or less.",
+    "effectJp": "【起動メイン】【ターン1回】自分の特徴《ミンク族》を持つキャラがいる場合、相手のコスト5以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าเรามี คาแรกเตอร์ ที่มีคุณสมบัติ < เผ่ามิงค์ > อยู่ด้วยละก็, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-021_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP08-057",
+    "cardCode": "OP08-057_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "King",
+    "nameJp": "キング",
+    "nameTh": "King",
+    "color": "Purple/Black",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Special",
+    "trait": "Animal Kingdom Pirates",
+    "effectEn": "[Activate: Main] [Once Per Turn] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Choose one:• If you have 5 or less cards in your hand, draw 1 card.• Give up to 1 of your opponent's Characters −2 cost during this turn.",
+    "effectJp": "【起動メイン】【ターン1回】ドン‼-2(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：以下から1つを選ぶ。・自分の手札が5枚以下の場合、カード1枚を引く。・相手のキャラ1枚までを、このターン中、コスト-2。",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : เลือก 1 อย่าง จากดังต่อไปนี้.• ถ้าเรามีการ์ดบนมือ จำนวน 5 ใบ หรือน้อยกว่า, จั่วการ์ด จำนวน 1 ใบ.• ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-057_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP08-058",
+    "cardCode": "OP08-058_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Charlotte Pudding",
+    "nameJp": "シャーロット・プリン",
+    "nameTh": "Charlotte Pudding",
+    "color": "Purple/Yellow",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Wisdom",
+    "trait": "Big Mom Pirates",
+    "effectEn": "[When Attacking] You may turn 2 cards from the top of your Life cards face-up: Add up to 1 DON!! card from your DON!! deck and rest it.",
+    "effectJp": "【アタック時】自分のライフの上から2枚を表向きにできる：ドン‼デッキからドン‼1枚までを、レストで追加する。",
+    "effectTh": "[เมื่อโจมตี] สามารถหงาย ไลฟ์ ใบบนสุดของเรา จำนวน 2 ใบ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-058_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
+  },
+  {
+    "code": "OP08-098",
+    "cardCode": "OP08-098_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Kalgara",
+    "nameJp": "カルガラ",
+    "nameTh": "Kalgara",
+    "color": "Yellow",
+    "power": 5000,
+    "life": 5,
+    "attribute": "Slash",
+    "trait": "Jaya/Sky Island/Shandian Warrior",
+    "effectEn": "[DON!! x1] [When Attacking] Play up to 1 {Shandian Warrior} type Character card from your hand with a cost equal to or less than the number of DON!! cards on your field. If you do, add 1 card from the top of your Life cards to your hand.",
+    "effectJp": "【ドン‼×1】【アタック時】自分の手札から自分の場のドン‼の枚数以下のコストを持ち、特徴《シャンドラの戦士》を持つキャラカード1枚までを、登場させる。登場させた場合、自分のライフの上から1枚を手札に加える。",
+    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] นำ คาแรกเตอร์การ์ด ที่มีคุณสมบัติ < นักรบแห่งแชนโดรา > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม, ซึ่งจะต้องมีค่าคอสต์ไม่สูงไปกว่า จำนวน ด้ง!! ที่อยู่บนสนามของเรา. ถ้านำลงสนามละก็, จะต้องนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-098_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Anime 25th collection- [EB-02]"
+    ]
   }
 ]

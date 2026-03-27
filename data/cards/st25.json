@@ -1,5 +1,231 @@
 [
   {
+    "code": "OP09-042",
+    "cardCode": "OP09-042_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Buggy",
+    "nameJp": "バギー",
+    "nameTh": "Buggy",
+    "color": "Blue",
+    "power": 5000,
+    "life": 5,
+    "attribute": "Slash",
+    "trait": "The Four Emperors/Cross Guild",
+    "effectEn": "[Activate: Main] You may rest 5 of your DON!! cards and trash 1 card from your hand: Play up to 1 {Cross Guild} type Character card from your hand.",
+    "effectJp": "【起動メイン】自分のドン‼5枚をレストにし、自分の手札1枚を捨てることができる：自分の手札から特徴《クロスギルド》を持つキャラカード1枚までを、登場させる。",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 5 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < ครอสกิลด์ > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-042_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
+  },
+  {
+    "code": "OP09-043_R1",
+    "cardCode": "OP09-043_r1",
+    "rarity": "UC",
+    "cardType": "CHARACTER",
+    "nameEn": "Alvida",
+    "nameJp": "アルビダ",
+    "nameTh": "Alvida",
+    "color": "Blue",
+    "cost": 5,
+    "power": 6000,
+    "counter": 1000,
+    "attribute": "Strike",
+    "trait": "Cross Guild",
+    "effectEn": "[On K.O.] If your Leader has the {Cross Guild} type, play up to 1 Character card with a cost of 5 or less other than [Alvida] from your hand.",
+    "effectJp": "【KO時】自分のリーダーが特徴《クロスギルド》を持つ場合、自分の手札から「アルビダ」以外のコスト5以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "[เมื่อถูก KO] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < ครอสกิลด์ > ละก็, จะนำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า นอกเหนือจาก [Alvida] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-043_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
+  },
+  {
+    "code": "OP09-045_R1",
+    "cardCode": "OP09-045_r1",
+    "rarity": "UC",
+    "cardType": "CHARACTER",
+    "nameEn": "Cabaji",
+    "nameJp": "カバジ",
+    "nameTh": "Cabaji",
+    "color": "Blue",
+    "cost": 5,
+    "power": 5000,
+    "counter": 2000,
+    "attribute": "Slash",
+    "trait": "Cross Guild",
+    "effectEn": "If you have a [Buggy] or [Mohji] Character, this Character cannot be K.O.'d in battle.",
+    "effectJp": "自分のキャラの、「バギー」か「モージ」がいる場合、このキャラはバトルでKOされない。",
+    "effectTh": "ถ้าคาแรกเตอร์ของฝ่ายเรามี [Buggy] หรือ [Mohji] อยู่ด้วยละก็, คาแรกเตอร์นี้จะไม่ถูก KO จากการแบทเทิล.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-045_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
+  },
+  {
+    "code": "OP09-051_R1",
+    "cardCode": "OP09-051_r1",
+    "rarity": "R",
+    "cardType": "CHARACTER",
+    "nameEn": "Buggy",
+    "nameJp": "バギー",
+    "nameTh": "Buggy",
+    "color": "Blue",
+    "cost": 10,
+    "power": 12000,
+    "attribute": "Slash",
+    "trait": "The Four Emperors/Cross Guild",
+    "effectEn": "[On Play] Place up to 1 of your opponent's Characters at the bottom of the owner's deck. Then, if you do not have 5 Characters with a cost of 5 or more, place this Character at the bottom of the owner's deck.",
+    "effectJp": "【登場時】相手のキャラ1枚までを、持ち主のデッキの下に置く。その後、自分のコスト5以上のキャラが5枚いない場合、このキャラを持ち主のデッキの下に置く。",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ. จากนั้น, ถ้าเราไม่มีคาแรกเตอร์ ที่มีคอสต์ 5 หรือสูงกว่า จำนวน 5 ใบ อยู่ด้วยละก็, คาแรกเตอร์นี้ จะถูกนำไปวางที่ข้างใต้เด็คของเจ้าของ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-051_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
+  },
+  {
+    "code": "OP09-053_R1",
+    "cardCode": "OP09-053_r1",
+    "rarity": "UC",
+    "cardType": "CHARACTER",
+    "nameEn": "Mohji",
+    "nameJp": "モージ",
+    "nameTh": "Mohji",
+    "color": "Blue",
+    "cost": 5,
+    "power": 5000,
+    "counter": 2000,
+    "attribute": "Wisdom",
+    "trait": "Cross Guild",
+    "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 [Richie] and add it to your hand. Then, place the rest at the bottom of your deck in any order and play up to 1 [Richie] from your hand.",
+    "effectJp": "【登場時】自分のデッキの上から5枚を見て、「リッチー」1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置き、自分の手札から「リッチー」1枚までを、登場させる。",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำ [Richie] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, แล้วนำ [Richie] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-053_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
+  },
+  {
+    "code": "OP09-054_R1",
+    "cardCode": "OP09-054_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Richie",
+    "nameJp": "リッチー",
+    "nameTh": "Richie",
+    "color": "Blue",
+    "cost": 2,
+    "power": 2000,
+    "counter": 1000,
+    "attribute": "Strike",
+    "trait": "Animal/Cross Guild",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-054_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
+  },
+  {
+    "code": "OP09-055_R1",
+    "cardCode": "OP09-055_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Mr.1(Daz.Bonez)",
+    "nameJp": "Mr.1(ダズ・ボーネス)",
+    "nameTh": "Mr.1(Daz.Bonez)",
+    "color": "Blue",
+    "cost": 5,
+    "power": 7000,
+    "counter": 1000,
+    "attribute": "Slash",
+    "trait": "Cross Guild/Former Baroque Works",
+    "effectEn": "-",
+    "effectJp": "-",
+    "effectTh": "-",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-055_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
+  },
+  {
+    "code": "OP09-056_R1",
+    "cardCode": "OP09-056_r1",
+    "rarity": "R",
+    "cardType": "CHARACTER",
+    "nameEn": "Mr.3(Galdino)",
+    "nameJp": "Mr.3(ギャルディーノ)",
+    "nameTh": "Mr.3(Galdino)",
+    "color": "Blue",
+    "cost": 1,
+    "power": 2000,
+    "counter": 1000,
+    "attribute": "Special",
+    "trait": "Cross Guild/Former Baroque Works",
+    "effectEn": "[On Play] Look at 4 cards from the top of your deck; reveal up to 1 {Cross Guild} type card or card with a type including \"Baroque Works\" other than [Mr.3(Galdino)] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "【登場時】自分のデッキの上から4枚を見て、「Mr.3(ギャルディーノ)」以外の、特徴《クロスギルド》か『B・W』を含む特徴を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่มีคุณสมบัติ < ครอสกิลด์ > หรือว่า ที่ระบุคำว่า [B•W] รวมอยู่ในคุณสมบัติ จำนวนไม่เกิน 1 ใบ นอกเหนือจาก [Mr.3(Galdino)] มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-056_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
+  },
+  {
+    "code": "OP09-057",
+    "cardCode": "OP09-057_p1",
+    "rarity": "P-R",
+    "cardType": "EVENT",
+    "nameEn": "Cross Guild",
+    "nameJp": "クロスギルド",
+    "nameTh": "Cross Guild",
+    "color": "Blue",
+    "cost": 1,
+    "trait": "Cross Guild",
+    "effectEn": "[Main] Look at 4 cards from the top of your deck; reveal up to 1 {Cross Guild} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "【メイン】自分のデッキの上から4枚を見て、特徴《クロスギルド》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่มีคุณสมบัติ < ครอสกิลด์ > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-057_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
+  },
+  {
+    "code": "P-084_R1",
+    "cardCode": "P-084_r1",
+    "rarity": "P",
+    "cardType": "CHARACTER",
+    "nameEn": "Buggy",
+    "nameJp": "バギー",
+    "nameTh": "Buggy",
+    "color": "Blue",
+    "cost": 7,
+    "power": 8000,
+    "attribute": "Slash",
+    "trait": "The Four Emperors/Cross Guild",
+    "effectEn": "This Character cannot attack.If your Leader is [Buggy], all Characters with a cost of 3 or 4 cannot attack.[On Play] Play up to 1 {Cross Guild} type Character card with a cost of 6 or less from your hand.",
+    "effectJp": "このキャラはアタックできない。自分のリーダーが「バギー」の場合、コスト3と4のキャラすべては、アタックできない。【登場時】自分の手札からコスト6以下の特徴《クロスギルド》を持つキャラカード1枚までを、登場させる。",
+    "effectTh": "คาแรกเตอร์นี้ จะไม่สามารถโจมตี.ถ้าลีดเดอร์ของเราคือ [Buggy] ละก็, คาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 กับ คอสต์ 4 ทั้งหมด จะไม่สามารถโจมตี.[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 6 หรือต่ำกว่า และมีคุณสมบัติ < ครอสกิลด์ > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/P-084_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
+  },
+  {
     "code": "ST25-001",
     "cardCode": "ST25-001",
     "rarity": "C",
@@ -13,12 +239,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Cross Guild",
-    "effectEn": "If you have 2 or more Characters with a base cost of 5 or more, this Character gains +1 cost.<br>[On Play] If your Leader is [Buggy], draw 3 cards and trash 2 cards from your hand.",
-    "effectJp": "自分の元々のコスト5以上のキャラが2枚以上いる場合、このキャラのコスト+1。<br>【登場時】自分のリーダーが「バギー」の場合、カード3枚を引き、自分の手札2枚を捨てる。",
-    "effectTh": "ถ้าเรามี คาแรกเตอร์ ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า อยู่จำนวน 2 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะมีคอสต์ +1.<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Buggy] ละก็, จะจั่วการ์ด จำนวน 3 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
+    "effectEn": "If you have 2 or more Characters with a base cost of 5 or more, this Character gains +1 cost.[On Play] If your Leader is [Buggy], draw 3 cards and trash 2 cards from your hand.",
+    "effectJp": "自分の元々のコスト5以上のキャラが2枚以上いる場合、このキャラのコスト+1。【登場時】自分のリーダーが「バギー」の場合、カード3枚を引き、自分の手札2枚を捨てる。",
+    "effectTh": "ถ้าเรามี คาแรกเตอร์ ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า อยู่จำนวน 2 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะมีคอสต์ +1.[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Buggy] ละก็, จะจั่วการ์ด จำนวน 3 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST25-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
   },
   {
     "code": "ST25-002",
@@ -34,32 +262,36 @@
     "counter": 2000,
     "attribute": "Slash",
     "trait": "Cross Guild",
-    "effectEn": "If you have 2 or more Characters with a base cost of 5 or more, this Character gains [Blocker] and +1 cost.<br>(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[Opponent's Turn] This Character gains +5000 power.",
-    "effectJp": "自分の元々のコスト5以上のキャラが2枚以上いる場合、このキャラは【ブロッカー】を得て、コスト+1。<br>(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【相手のターン中】このキャラのパワー+5000。",
-    "effectTh": "ถ้าเรามี คาแรกเตอร์ ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า อยู่จำนวน 2 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์], และจะมีคอสต์ +1. <br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ในเทิร์นของคู่แข่ง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +5000.",
+    "effectEn": "If you have 2 or more Characters with a base cost of 5 or more, this Character gains [Blocker] and +1 cost.(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[Opponent's Turn] This Character gains +5000 power.",
+    "effectJp": "自分の元々のコスト5以上のキャラが2枚以上いる場合、このキャラは【ブロッカー】を得て、コスト+1。(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【相手のターン中】このキャラのパワー+5000。",
+    "effectTh": "ถ้าเรามี คาแรกเตอร์ ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า อยู่จำนวน 2 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์], และจะมีคอสต์ +1. (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ในเทิร์นของคู่แข่ง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +5000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST25-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
   },
   {
     "code": "ST25-003",
     "cardCode": "ST25-003",
     "rarity": "SR",
     "cardType": "CHARACTER",
-    "nameEn": "Crocodile &amp; Mihawk",
+    "nameEn": "Crocodile & Mihawk",
     "nameJp": "クロコダイル＆ミホーク",
-    "nameTh": "Crocodile &amp; Mihawk",
+    "nameTh": "Crocodile & Mihawk",
     "color": "Blue",
     "cost": 8,
     "power": 7000,
-    "attribute": "Slash",
+    "attribute": "Slash/Special",
     "trait": "Cross Guild/Former Baroque Works",
-    "effectEn": "[On Play] Draw 2 cards and trash 1 card from your hand. Then, play up to 1 {Cross Guild} type Character card with a cost of 4 or less from your hand.<br>[Once Per Turn] If your {Cross Guild} type Character would be removed from the field by your opponent's effect, you may trash 1 card from your hand instead.",
-    "effectJp": "【登場時】カード2枚を引き、自分の手札1枚を捨てる。その後、自分の手札からコスト4以下の特徴《クロスギルド》を持つキャラカード1枚までを、登場させる。<br>【ターン1回】自分の特徴《クロスギルド》を持つキャラが相手の効果で場を離れる場合、代わりに自分の手札1枚を捨てることができる。",
-    "effectTh": "[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ. จากนั้น, จะได้นำ คาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า และมีคุณสมบัติ &lt; ครอสกิลด์ &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.<br>[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์ของฝ่ายเรา ที่มีคุณสมบัติ &lt; ครอสกิลด์ &gt; กำลังจะถูกนำออกจากสนาม โดยความสามารถของฝ่ายคู่แข่ง, จะสามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ แทนได้.",
+    "effectEn": "[On Play] Draw 2 cards and trash 1 card from your hand. Then, play up to 1 {Cross Guild} type Character card with a cost of 4 or less from your hand.[Once Per Turn] If your {Cross Guild} type Character would be removed from the field by your opponent's effect, you may trash 1 card from your hand instead.",
+    "effectJp": "【登場時】カード2枚を引き、自分の手札1枚を捨てる。その後、自分の手札からコスト4以下の特徴《クロスギルド》を持つキャラカード1枚までを、登場させる。【ターン1回】自分の特徴《クロスギルド》を持つキャラが相手の効果で場を離れる場合、代わりに自分の手札1枚を捨てることができる。",
+    "effectTh": "[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ. จากนั้น, จะได้นำ คาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า และมีคุณสมบัติ < ครอสกิลด์ > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์ของฝ่ายเรา ที่มีคุณสมบัติ < ครอสกิลด์ > กำลังจะถูกนำออกจากสนาม โดยความสามารถของฝ่ายคู่แข่ง, จะสามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ แทนได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST25-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
   },
   {
     "code": "ST25-004",
@@ -77,10 +309,12 @@
     "trait": "The Four Emperors/Cross Guild",
     "effectEn": "[Activate: Main] You may trash 1 card from your hand and trash this Character: If your Leader is [Buggy], play up to 1 {Cross Guild} type Character card with a cost of 6 or less from your hand.",
     "effectJp": "【起動メイン】自分の手札1枚を捨て、このキャラをトラッシュに置くことができる：自分のリーダーが「バギー」の場合、自分の手札からコスト6以下の特徴《クロスギルド》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[ใช้งาน : เมน] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ, และนำคาแรกเตอร์นี้ ไปวางที่แทรช : ถ้าลีดเดอร์ของเรา คือ [Buggy] ละก็, นำ คาแรกเตอร์การ์ด ที่มีคอสต์ 6 หรือต่ำกว่า และมีคุณสมบัติ &lt; ครอสกิลด์ &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[ใช้งาน : เมน] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ, และนำคาแรกเตอร์นี้ ไปวางที่แทรช : ถ้าลีดเดอร์ของเรา คือ [Buggy] ละก็, นำ คาแรกเตอร์การ์ด ที่มีคอสต์ 6 หรือต่ำกว่า และมีคุณสมบัติ < ครอสกิลด์ > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST25-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
   },
   {
     "code": "ST25-005",
@@ -96,11 +330,13 @@
     "counter": 2000,
     "attribute": "Wisdom",
     "trait": "Cross Guild",
-    "effectEn": "If you have 2 or more Characters with a base cost of 5 or more, this Character gains [Blocker] and +1 cost.<br>(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] If your Leader is [Buggy] and you have 3 or less cards in your hand, draw 1 card.",
-    "effectJp": "自分の元々のコスト5以上のキャラが2枚以上いる場合、このキャラは【ブロッカー】を得て、コスト+1。<br>(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【KO時】自分のリーダーが「バギー」で、自分の手札が3枚以下の場合、カード1枚を引く。",
-    "effectTh": "ถ้าเรามี คาแรกเตอร์ ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า อยู่จำนวน 2 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์], และจะมีคอสต์ +1. <br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] ถ้าลีดเดอร์ของเราคือ [Buggy], และเรามีการ์ดบนมืออยู่ จำนวน 3 ใบ หรือน้อยกว่าละก็, จะได้จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "If you have 2 or more Characters with a base cost of 5 or more, this Character gains [Blocker] and +1 cost.(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On K.O.] If your Leader is [Buggy] and you have 3 or less cards in your hand, draw 1 card.",
+    "effectJp": "自分の元々のコスト5以上のキャラが2枚以上いる場合、このキャラは【ブロッカー】を得て、コスト+1。(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【KO時】自分のリーダーが「バギー」で、自分の手札が3枚以下の場合、カード1枚を引く。",
+    "effectTh": "ถ้าเรามี คาแรกเตอร์ ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า อยู่จำนวน 2 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์], และจะมีคอสต์ +1. (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] ถ้าลีดเดอร์ของเราคือ [Buggy], และเรามีการ์ดบนมืออยู่ จำนวน 3 ใบ หรือน้อยกว่าละก็, จะได้จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST25-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Blue Buggy- [ST-25]"
+    ]
   }
 ]

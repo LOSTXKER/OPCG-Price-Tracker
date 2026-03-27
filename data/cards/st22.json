@@ -4,12 +4,12 @@
     "cardCode": "ST22-001",
     "rarity": "L",
     "cardType": "LEADER",
-    "nameEn": "Ace &amp; Newgate",
+    "nameEn": "Ace & Newgate",
     "nameJp": "エース＆ニューゲート",
-    "nameTh": "Ace &amp; Newgate",
+    "nameTh": "Ace & Newgate",
     "color": "Blue",
     "power": 5000,
-    "life": 3,
+    "life": 5,
     "attribute": "Special",
     "trait": "The Four Emperors/Whitebeard Pirates",
     "effectEn": "[Activate: Main] [Once Per Turn] You may reveal 1 card with a type including \"Whitebeard Pirates\" from your hand: Draw 1 card and place the revealed card at the top of your deck.",
@@ -17,19 +17,21 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำการ์ด ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ จากบนมือของเรา จำนวน 1 ใบ มาแสดงให้ดู : จั่วการ์ด จำนวน 1 ใบ, และนำการ์ดที่แสดงให้ดู ไปวางเพิ่มที่บนสุดของเด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-001",
     "cardCode": "ST22-001_p1",
     "rarity": "P-L",
     "cardType": "LEADER",
-    "nameEn": "Ace &amp; Newgate",
+    "nameEn": "Ace & Newgate",
     "nameJp": "エース＆ニューゲート",
-    "nameTh": "Ace &amp; Newgate",
+    "nameTh": "Ace & Newgate",
     "color": "Blue",
     "power": 5000,
-    "life": 3,
+    "life": 5,
     "attribute": "Special",
     "trait": "The Four Emperors/Whitebeard Pirates",
     "effectEn": "[Activate: Main] [Once Per Turn] You may reveal 1 card with a type including \"Whitebeard Pirates\" from your hand: Draw 1 card and place the revealed card at the top of your deck.",
@@ -38,7 +40,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-001_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-002",
@@ -53,12 +57,14 @@
     "counter": 1000,
     "attribute": "Ranged",
     "trait": "Land of Wano/Whitebeard Pirates",
-    "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 card with a type including \"Whitebeard Pirates\" other than [Izo] and add it to your hand. Then, place the rest at the bottom of your deck in any order.<br>[On Your Opponent's Attack] You may trash this Character: Draw 1 card and place 1 card from your hand at the bottom of your deck.",
-    "effectJp": "【登場時】自分のデッキの上から5枚を見て、「イゾウ」以外の『白ひげ海賊団』を含む特徴を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。<br>【相手のアタック時】このキャラをトラッシュに置くことができる：カード1枚を引き、自分の手札1枚をデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ นอกเหนือจาก [Izo] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.<br>[เมื่อคู่แข่งโจมตี] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ, แล้วนำการ์ดบนมือของเรา จำนวน 1 ใบ ไปวางที่ข้างใต้เด็ค.",
+    "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 card with a type including \"Whitebeard Pirates\" other than [Izo] and add it to your hand. Then, place the rest at the bottom of your deck in any order.[On Your Opponent's Attack] You may trash this Character: Draw 1 card and place 1 card from your hand at the bottom of your deck.",
+    "effectJp": "【登場時】自分のデッキの上から5枚を見て、「イゾウ」以外の『白ひげ海賊団』を含む特徴を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。【相手のアタック時】このキャラをトラッシュに置くことができる：カード1枚を引き、自分の手札1枚をデッキの下に置く。",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ นอกเหนือจาก [Izo] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.[เมื่อคู่แข่งโจมตี] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ, แล้วนำการ์ดบนมือของเรา จำนวน 1 ใบ ไปวางที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-002",
@@ -73,13 +79,15 @@
     "counter": 1000,
     "attribute": "Ranged",
     "trait": "Land of Wano/Whitebeard Pirates",
-    "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 card with a type including \"Whitebeard Pirates\" other than [Izo] and add it to your hand. Then, place the rest at the bottom of your deck in any order.<br>[On Your Opponent's Attack] You may trash this Character: Draw 1 card and place 1 card from your hand at the bottom of your deck.",
-    "effectJp": "【登場時】自分のデッキの上から5枚を見て、「イゾウ」以外の『白ひげ海賊団』を含む特徴を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。<br>【相手のアタック時】このキャラをトラッシュに置くことができる：カード1枚を引き、自分の手札1枚をデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ นอกเหนือจาก [Izo] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.<br>[เมื่อคู่แข่งโจมตี] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ, แล้วนำการ์ดบนมือของเรา จำนวน 1 ใบ ไปวางที่ข้างใต้เด็ค.",
+    "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 card with a type including \"Whitebeard Pirates\" other than [Izo] and add it to your hand. Then, place the rest at the bottom of your deck in any order.[On Your Opponent's Attack] You may trash this Character: Draw 1 card and place 1 card from your hand at the bottom of your deck.",
+    "effectJp": "【登場時】自分のデッキの上から5枚を見て、「イゾウ」以外の『白ひげ海賊団』を含む特徴を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。【相手のアタック時】このキャラをトラッシュに置くことができる：カード1枚を引き、自分の手札1枚をデッキの下に置く。",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ นอกเหนือจาก [Izo] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.[เมื่อคู่แข่งโจมตี] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ, แล้วนำการ์ดบนมือของเรา จำนวน 1 ใบ ไปวางที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-002_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-003",
@@ -94,12 +102,14 @@
     "power": 10000,
     "attribute": "Special",
     "trait": "The Four Emperors/Whitebeard Pirates",
-    "effectEn": "[Double Attack] (This card deals 2 damage.)<br>[On Play] Reveal 1 card from the top of your deck. If that card's type includes \"Whitebeard Pirates\", draw 2 cards.",
-    "effectJp": "【ダブルアタック】(このカードが与えるダメージは2になる)<br>【登場時】自分のデッキの上から1枚を公開し、そのカードが『白ひげ海賊団』を含む特徴を持つ場合、カード2枚を引く。",
-    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)<br>[เมื่อลงสนาม] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, ถ้าการ์ดใบนั้น ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, จะได้จั่วการ์ด จำนวน 2 ใบ.",
+    "effectEn": "[Double Attack] (This card deals 2 damage.)[On Play] Reveal 1 card from the top of your deck. If that card's type includes \"Whitebeard Pirates\", draw 2 cards.",
+    "effectJp": "【ダブルアタック】(このカードが与えるダメージは2になる)【登場時】自分のデッキの上から1枚を公開し、そのカードが『白ひげ海賊団』を含む特徴を持つ場合、カード2枚を引く。",
+    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)[เมื่อลงสนาม] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, ถ้าการ์ดใบนั้น ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, จะได้จั่วการ์ด จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-003",
@@ -114,13 +124,15 @@
     "power": 10000,
     "attribute": "Special",
     "trait": "The Four Emperors/Whitebeard Pirates",
-    "effectEn": "[Double Attack] (This card deals 2 damage.)<br>[On Play] Reveal 1 card from the top of your deck. If that card's type includes \"Whitebeard Pirates\", draw 2 cards.",
-    "effectJp": "【ダブルアタック】(このカードが与えるダメージは2になる)<br>【登場時】自分のデッキの上から1枚を公開し、そのカードが『白ひげ海賊団』を含む特徴を持つ場合、カード2枚を引く。",
-    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)<br>[เมื่อลงสนาม] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, ถ้าการ์ดใบนั้น ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, จะได้จั่วการ์ด จำนวน 2 ใบ.",
+    "effectEn": "[Double Attack] (This card deals 2 damage.)[On Play] Reveal 1 card from the top of your deck. If that card's type includes \"Whitebeard Pirates\", draw 2 cards.",
+    "effectJp": "【ダブルアタック】(このカードが与えるダメージは2になる)【登場時】自分のデッキの上から1枚を公開し、そのカードが『白ひげ海賊団』を含む特徴を持つ場合、カード2枚を引く。",
+    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)[เมื่อลงสนาม] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, ถ้าการ์ดใบนั้น ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, จะได้จั่วการ์ด จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-003_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-004",
@@ -141,7 +153,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-004",
@@ -163,7 +177,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-004_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-005",
@@ -178,12 +194,14 @@
     "power": 8000,
     "attribute": "Slash",
     "trait": "Land of Wano/Kouzuki Clan/Whitebeard Pirates",
-    "effectEn": "If this Character would be removed from the field by your opponent's effect, you may trash 2 cards from your hand instead.<br>[Activate: Main] [Once Per Turn] You may rest 3 of your DON!! cards and return 1 of your Characters other than this Character to the owner's hand: Set this Character as active.",
-    "effectJp": "このキャラが相手の効果で場を離れる場合、代わりに自分の手札2枚を捨てることができる。<br>【起動メイン】【ターン1回】自分のドン‼3枚をレストにし、このキャラ以外の自分のキャラ1枚を持ち主の手札に戻すことができる：このキャラをアクティブにする。",
-    "effectTh": "ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม จากความสามารถของคู่แข่ง, จะสามารถทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ แทนได้.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 3 ใบ, และ นำคาแรกเตอร์ของเรา จำนวน 1 ใบ นอกเหนือจากคาแรกเตอร์นี้ กลับขึ้นมือเจ้าของ : ทำการ แอ็คทีฟ คาแรกเตอร์นี้.",
+    "effectEn": "If this Character would be removed from the field by your opponent's effect, you may trash 2 cards from your hand instead.[Activate: Main] [Once Per Turn] You may rest 3 of your DON!! cards and return 1 of your Characters other than this Character to the owner's hand: Set this Character as active.",
+    "effectJp": "このキャラが相手の効果で場を離れる場合、代わりに自分の手札2枚を捨てることができる。【起動メイン】【ターン1回】自分のドン‼3枚をレストにし、このキャラ以外の自分のキャラ1枚を持ち主の手札に戻すことができる：このキャラをアクティブにする。",
+    "effectTh": "ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม จากความสามารถของคู่แข่ง, จะสามารถทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ แทนได้.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 3 ใบ, และ นำคาแรกเตอร์ของเรา จำนวน 1 ใบ นอกเหนือจากคาแรกเตอร์นี้ กลับขึ้นมือเจ้าของ : ทำการ แอ็คทีฟ คาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-005",
@@ -198,13 +216,15 @@
     "power": 8000,
     "attribute": "Slash",
     "trait": "Land of Wano/Kouzuki Clan/Whitebeard Pirates",
-    "effectEn": "If this Character would be removed from the field by your opponent's effect, you may trash 2 cards from your hand instead.<br>[Activate: Main] [Once Per Turn] You may rest 3 of your DON!! cards and return 1 of your Characters other than this Character to the owner's hand: Set this Character as active.",
-    "effectJp": "このキャラが相手の効果で場を離れる場合、代わりに自分の手札2枚を捨てることができる。<br>【起動メイン】【ターン1回】自分のドン‼3枚をレストにし、このキャラ以外の自分のキャラ1枚を持ち主の手札に戻すことができる：このキャラをアクティブにする。",
-    "effectTh": "ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม จากความสามารถของคู่แข่ง, จะสามารถทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ แทนได้.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 3 ใบ, และ นำคาแรกเตอร์ของเรา จำนวน 1 ใบ นอกเหนือจากคาแรกเตอร์นี้ กลับขึ้นมือเจ้าของ : ทำการ แอ็คทีฟ คาแรกเตอร์นี้.",
+    "effectEn": "If this Character would be removed from the field by your opponent's effect, you may trash 2 cards from your hand instead.[Activate: Main] [Once Per Turn] You may rest 3 of your DON!! cards and return 1 of your Characters other than this Character to the owner's hand: Set this Character as active.",
+    "effectJp": "このキャラが相手の効果で場を離れる場合、代わりに自分の手札2枚を捨てることができる。【起動メイン】【ターン1回】自分のドン‼3枚をレストにし、このキャラ以外の自分のキャラ1枚を持ち主の手札に戻すことができる：このキャラをアクティブにする。",
+    "effectTh": "ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม จากความสามารถของคู่แข่ง, จะสามารถทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ แทนได้.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 3 ใบ, และ นำคาแรกเตอร์ของเรา จำนวน 1 ใบ นอกเหนือจากคาแรกเตอร์นี้ กลับขึ้นมือเจ้าของ : ทำการ แอ็คทีฟ คาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-005_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-006",
@@ -225,7 +245,9 @@
     "effectTh": "[เมื่อลงสนาม] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, ถ้าการ์ดใบนั้น ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, จะได้จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-006",
@@ -247,7 +269,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-006_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-007",
@@ -268,7 +292,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, ถ้าการ์ดใบนั้น ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-007",
@@ -290,7 +316,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-007_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-008",
@@ -311,7 +339,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-008",
@@ -333,7 +363,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-008_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-009",
@@ -353,7 +385,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-009",
@@ -374,7 +408,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-009_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-010",
@@ -395,7 +431,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-010",
@@ -417,7 +455,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-010_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-011",
@@ -438,7 +478,9 @@
     "effectTh": "[เทิร์นตัวเอง] [เมื่อลงสนาม] สามารถนำการ์ด ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ จากบนมือของเรา จำนวน 2 ใบ มาแสดงให้ดู : ในเทิร์นนี้, ลีดเดอร์ของเรา ที่มีระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-011",
@@ -460,7 +502,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-011_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-012",
@@ -476,12 +520,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
-    "effectEn": "[Once Per Turn] If this Character would be K.O.'d by your opponent's effect, you may trash 1 card from your hand instead.<br>[When Attacking] Reveal 1 card from the top of your deck. If that card's type includes \"Whitebeard Pirates\", this Character gains +1000 power until the end of your opponent's next turn.",
-    "effectJp": "【ターン1回】このキャラが相手の効果でKOされる場合、代わりに自分の手札1枚を捨てることができる。<br>【アタック時】自分のデッキの上から1枚を公開し、そのカードが『白ひげ海賊団』を含む特徴を持つ場合、このキャラは、次の相手のターン終了時まで、パワー+1000。",
-    "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ ถูก KO จากความสามารถของคู่แข่ง, จะสามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ แทนได้.<br>[เมื่อโจมตี] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, ถ้าการ์ดใบนั้น ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
+    "effectEn": "[Once Per Turn] If this Character would be K.O.'d by your opponent's effect, you may trash 1 card from your hand instead.[When Attacking] Reveal 1 card from the top of your deck. If that card's type includes \"Whitebeard Pirates\", this Character gains +1000 power until the end of your opponent's next turn.",
+    "effectJp": "【ターン1回】このキャラが相手の効果でKOされる場合、代わりに自分の手札1枚を捨てることができる。【アタック時】自分のデッキの上から1枚を公開し、そのカードが『白ひげ海賊団』を含む特徴を持つ場合、このキャラは、次の相手のターン終了時まで、パワー+1000。",
+    "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ ถูก KO จากความสามารถของคู่แข่ง, จะสามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ แทนได้.[เมื่อโจมตี] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, ถ้าการ์ดใบนั้น ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-012",
@@ -497,13 +543,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
-    "effectEn": "[Once Per Turn] If this Character would be K.O.'d by your opponent's effect, you may trash 1 card from your hand instead.<br>[When Attacking] Reveal 1 card from the top of your deck. If that card's type includes \"Whitebeard Pirates\", this Character gains +1000 power until the end of your opponent's next turn.",
-    "effectJp": "【ターン1回】このキャラが相手の効果でKOされる場合、代わりに自分の手札1枚を捨てることができる。<br>【アタック時】自分のデッキの上から1枚を公開し、そのカードが『白ひげ海賊団』を含む特徴を持つ場合、このキャラは、次の相手のターン終了時まで、パワー+1000。",
-    "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ ถูก KO จากความสามารถของคู่แข่ง, จะสามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ แทนได้.<br>[เมื่อโจมตี] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, ถ้าการ์ดใบนั้น ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
+    "effectEn": "[Once Per Turn] If this Character would be K.O.'d by your opponent's effect, you may trash 1 card from your hand instead.[When Attacking] Reveal 1 card from the top of your deck. If that card's type includes \"Whitebeard Pirates\", this Character gains +1000 power until the end of your opponent's next turn.",
+    "effectJp": "【ターン1回】このキャラが相手の効果でKOされる場合、代わりに自分の手札1枚を捨てることができる。【アタック時】自分のデッキの上から1枚を公開し、そのカードが『白ひげ海賊団』を含む特徴を持つ場合、このキャラは、次の相手のターン終了時まで、パワー+1000。",
+    "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ ถูก KO จากความสามารถของคู่แข่ง, จะสามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ แทนได้.[เมื่อโจมตี] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, ถ้าการ์ดใบนั้น ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-012_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-013",
@@ -524,7 +572,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-013",
@@ -546,7 +596,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-013_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-014",
@@ -567,7 +619,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-014",
@@ -589,7 +643,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-014_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-015",
@@ -607,7 +663,9 @@
     "effectTh": "[เมน] ถ้าลีดเดอร์ของเรา ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, นำ [Edward.Newgate] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, จะสามารถนำ ไลฟ์ ใบบนสุด หรือ ใบล่างสุด ของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือก็ได้. ถ้าทำเช่นนั้น, ลีดเดอร์ของเรา จำนวนไม่เกิน 1 ใบ จะมีพาวเวอร์ +2000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-016",
@@ -623,11 +681,11 @@
     "effectEn": "[Counter] Reveal 1 card from the top of your deck. If that card's type includes \"Whitebeard Pirates\", up to 1 of your Leader or Character cards gains +4000 power during this battle.",
     "effectJp": "【カウンター】自分のデッキの上から1枚を公開し、そのカードが『白ひげ海賊団』を含む特徴を持つ場合、自分のリーダーかキャラ1枚までを、このバトル中、パワー＋4000。",
     "effectTh": "[เคาน์เตอร์] นำการ์ดจากข้างบนเด็คของ จำนวน 1 ใบ มาแสดงให้ดู, ถ้าการ์ดใบนั้น ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000.",
-    "triggerEn": "[Trigger] Draw 1 card.",
-    "triggerJp": "【トリガー】カード1枚を引く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   },
   {
     "code": "ST22-017",
@@ -643,10 +701,10 @@
     "effectEn": "[Main] You may reveal 2 cards with a type including \"Whitebeard Pirates\" from your hand: Draw 1 card. Then, place up to 1 Character with a cost of 5 or less at the bottom of the owner's deck.",
     "effectJp": "【メイン】自分の手札から『白ひげ海賊団』を含む特徴を持つカード2枚を公開することができる：カード1枚を引く。その後、コスト5以下のキャラ1枚までを、持ち主のデッキの下に置く。",
     "effectTh": "[เมน] สามารถนำการ์ด ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ จากบนมือของเรา จำนวน 2 ใบ มาแสดงให้ดู : จั่วการ์ด จำนวน 1 ใบ. จากนั้น, นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
-    "triggerEn": "[Trigger] Return up to 1 Character with a cost of 3 or less to the owner's hand.",
-    "triggerJp": "【トリガー】コスト3以下のキャラ1枚までを、持ち主の手札に戻す。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST22-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Ace & Newgate- [ST-22]"
+    ]
   }
 ]

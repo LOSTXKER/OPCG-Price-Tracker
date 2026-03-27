@@ -1,5 +1,230 @@
 [
   {
+    "code": "OP06-022",
+    "cardCode": "OP06-022_p3",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Yamato",
+    "nameJp": "ヤマト",
+    "nameTh": "Yamato",
+    "color": "Green/Yellow",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Strike",
+    "trait": "Land of Wano",
+    "effectEn": "[Double Attack] (This card deals 2 damage.)[Activate: Main] [Once Per Turn] If your opponent has 3 or less Life cards, give up to 2 rested DON!! cards to 1 of your Characters.",
+    "effectJp": "【ダブルアタック】(このカードが与えるダメージは2になる)【起動メイン】【ターン1回】相手のライフが3枚以下の場合、自分のキャラ1枚にレストのドン!!2枚までを、付与する。",
+    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)[ใช้งานเมน] [เทิร์นละ 1 ครั้ง] ถ้าคู่แข่งมี ไลฟ์ จำนวน 3 ใบ หรือต่ำกว่า, นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ ไปใส่ให้กับ คาแรกเตอร์ของเรา จำนวน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP06-022_p3.png",
+    "isParallel": true,
+    "parallelIndex": 3,
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
+  },
+  {
+    "code": "OP06-100_R2",
+    "cardCode": "OP06-100_r2",
+    "rarity": "UC",
+    "cardType": "CHARACTER",
+    "nameEn": "Inuarashi",
+    "nameJp": "イヌアラシ",
+    "nameTh": "Inuarashi",
+    "color": "Yellow",
+    "cost": 4,
+    "power": 5000,
+    "counter": 1000,
+    "attribute": "Slash",
+    "trait": "Minks/Land of Wano/The Akazaya Nine",
+    "effectEn": "[DON!! x2] [When Attacking] You may trash 1 card from your hand: K.O. up to 1 of your opponent's Characters with a cost equal to or less than the number of your opponent's Life cards.",
+    "effectJp": "【ドン‼×2】【アタック時】自分の手札1枚を捨てることができる：相手のライフの枚数以下のコストを持つ相手のキャラ1枚までを、KOする。",
+    "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ไม่สูงไปกว่า จำนวนไลฟ์ของคู่แข่ง, จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP06-100_r2.png",
+    "isParallel": false,
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
+  },
+  {
+    "code": "OP06-103_R1",
+    "cardCode": "OP06-103_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Kawamatsu",
+    "nameJp": "河松",
+    "nameTh": "Kawamatsu",
+    "color": "Yellow",
+    "cost": 3,
+    "power": 5000,
+    "attribute": "Slash",
+    "trait": "Fish-Man/Land of Wano/The Akazaya Nine",
+    "effectEn": "[When Attacking] You may trash 2 cards from your hand: Add up to 1 of your Characters with 0 power to the top or bottom of the owner's Life cards face-up.",
+    "effectJp": "【アタック時】自分の手札2枚を捨てることができる：自分のパワー0のキャラ1枚までを、持ち主のライフの上か下に表向きで置く。",
+    "effectTh": "[เมื่อโจมตี] สามารถทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ : นำคาแรกเตอร์ของเรา ที่มีพาวเวอร์ 0 จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์เจ้าของเดิม แบบหงายหน้า.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP06-103_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
+  },
+  {
+    "code": "OP06-104_R1",
+    "cardCode": "OP06-104_r1",
+    "rarity": "R",
+    "cardType": "CHARACTER",
+    "nameEn": "Kikunojo",
+    "nameJp": "菊之丞",
+    "nameTh": "Kikunojo",
+    "color": "Yellow",
+    "cost": 4,
+    "power": 6000,
+    "attribute": "Slash",
+    "trait": "Land of Wano/The Akazaya Nine",
+    "effectEn": "[On K.O.] If your opponent has 3 or less Life cards, add up to 1 card from the top of your deck to the top of your Life cards.",
+    "effectJp": "【KO時】相手のライフが3枚以下の場合、自分のデッキの上から1枚までを、ライフの上に加える。",
+    "effectTh": "[เมื่อถูก KO] ถ้าคู่แข่งมี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่า, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP06-104_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
+  },
+  {
+    "code": "OP06-109_R1",
+    "cardCode": "OP06-109_r1",
+    "rarity": "UC",
+    "cardType": "CHARACTER",
+    "nameEn": "Denjiro",
+    "nameJp": "傳ジロー",
+    "nameTh": "Denjiro",
+    "color": "Yellow",
+    "cost": 5,
+    "power": 6000,
+    "attribute": "Slash",
+    "trait": "Land of Wano/The Akazaya Nine",
+    "effectEn": "[DON!! x2] If your opponent has 3 or less Life cards, this Character cannot be K.O.'d by effects.",
+    "effectJp": "【ドン‼×2】相手のライフが3枚以下の場合、このキャラは効果でKOされない。",
+    "effectTh": "[ด้ง!! x 2] ถ้าคู่แข่งมี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่า, คาแรกเตอร์นี้จะไม่ถูก KO จากความสามารถใดๆ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP06-109_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
+  },
+  {
+    "code": "OP06-110_R2",
+    "cardCode": "OP06-110_r2",
+    "rarity": "UC",
+    "cardType": "CHARACTER",
+    "nameEn": "Nekomamushi",
+    "nameJp": "ネコマムシ",
+    "nameTh": "Nekomamushi",
+    "color": "Yellow",
+    "cost": 4,
+    "power": 5000,
+    "counter": 1000,
+    "attribute": "Slash",
+    "trait": "Minks/Land of Wano/The Akazaya Nine",
+    "effectEn": "[DON!! x2] This Character can also attack your opponent's active Characters.",
+    "effectJp": "【ドン‼×2】このキャラは、相手のアクティブのキャラにもアタックできる。",
+    "effectTh": "[ด้ง!! x 2] คาแรกเตอร์นี้ จะสามารถโจมตีใส่คาแรกเตอร์ของคู่แข่งที่กำลังแอ็คทีฟอยู่ได้ด้วย.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP06-110_r2.png",
+    "isParallel": false,
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
+  },
+  {
+    "code": "OP06-112_R1",
+    "cardCode": "OP06-112_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Raizo",
+    "nameJp": "雷ぞう",
+    "nameTh": "Raizo",
+    "color": "Yellow",
+    "cost": 3,
+    "power": 4000,
+    "counter": 1000,
+    "attribute": "Slash",
+    "trait": "Land of Wano/The Akazaya Nine",
+    "effectEn": "[When Attacking] You may trash 1 card from your hand: Rest up to 1 of your opponent's DON!! cards.",
+    "effectJp": "【アタック時】自分の手札1枚を捨てることができる：相手のドン‼1枚までを、レストにする。",
+    "effectTh": "[เมื่อโจมตี] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ทำให้ ด้ง!! ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น เรสต์.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP06-112_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
+  },
+  {
+    "code": "OP07-116",
+    "cardCode": "OP07-116_p1",
+    "rarity": "P-R",
+    "cardType": "EVENT",
+    "nameEn": "Blaze Slice",
+    "nameJp": "焔裂き",
+    "nameTh": "Blaze Slice",
+    "color": "Yellow",
+    "cost": 1,
+    "trait": "Land of Wano/The Akazaya Nine",
+    "effectEn": "[Main]/[Counter] Up to 1 of your Leader or Character cards gains +1000 power during this turn. Then, if your opponent has 2 or less Life cards, rest up to 1 of your opponent's Characters with a cost of 4 or less.",
+    "effectJp": "【メイン】/【カウンター】自分のリーダーかキャラ1枚までを、このターン中、パワー+1000。その後、相手のライフが2枚以下の場合、相手のコスト4以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[เมน] / [เคาน์เตอร์] ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000. จากนั้น, ถ้าคู่แข่งมี ไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, จะทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP07-116_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
+  },
+  {
+    "code": "OP09-035_R1",
+    "cardCode": "OP09-035_r1",
+    "rarity": "UC",
+    "cardType": "CHARACTER",
+    "nameEn": "Portgas.D.Ace",
+    "nameJp": "ポートガス・D・エース",
+    "nameTh": "Portgas.D.Ace",
+    "color": "Green",
+    "cost": 5,
+    "power": 5000,
+    "counter": 2000,
+    "attribute": "Special",
+    "trait": "ODYSSEY/Whitebeard Pirates",
+    "effectEn": "[On Play] If you have 2 or more rested Characters, rest up to 1 of your opponent's Characters with a cost of 5 or less.",
+    "effectJp": "【登場時】自分のレストのキャラが2枚以上いる場合、相手のコスト5以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าเรามีคาแรกเตอร์ ที่กำลังเรสต์อยู่ จำนวน 2 ใบ หรือมากกว่าละก็, จะทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-035_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
+  },
+  {
+    "code": "ST13-016_R1",
+    "cardCode": "ST13-016_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Yamato",
+    "nameJp": "ヤマト",
+    "nameTh": "Yamato",
+    "color": "Yellow",
+    "cost": 5,
+    "power": 4000,
+    "counter": 2000,
+    "attribute": "Strike",
+    "trait": "Land of Wano",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[On Play] Look at all your Life cards; place 1 at the top of your deck and place the rest back in your Life area in any order.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【登場時】自分のライフすべてを見て、1枚を自分のデッキの上に置き、ライフを好きな順番で置く。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อลงสนาม] ดูไลฟ์ของเราทั้งหมด, แล้วจะต้องนำการ์ด จำนวน 1 ใบ ไปวางที่ข้างบนสุด ของเด็คของเรา, และนำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ตำแหน่งไลฟ์.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST13-016_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
+  },
+  {
     "code": "ST28-001",
     "cardCode": "ST28-001",
     "rarity": "C",
@@ -15,10 +240,12 @@
     "trait": "Land of Wano/The Akazaya Nine",
     "effectEn": "[On Play] If your Leader has the {Land of Wano} type and your opponent has 3 or more Life cards, K.O. up to 1 of your opponent's Characters with a base cost of 5 or less.",
     "effectJp": "【登場時】自分のリーダーが特徴《ワノ国》を持ち、相手のライフが3枚以上の場合、相手の元々のコスト5以下のキャラ1枚までを、KOする。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; วาโนะคุนิ &gt;, และคู่แข่งมี ไลฟ์ จำนวน 3 ใบ หรือมากกว่าละก็, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < วาโนะคุนิ >, และคู่แข่งมี ไลฟ์ จำนวน 3 ใบ หรือมากกว่าละก็, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST28-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
   },
   {
     "code": "ST28-002",
@@ -34,12 +261,14 @@
     "counter": 1000,
     "attribute": "Ranged",
     "trait": "Land of Wano/Former Whitebeard Pirates",
-    "effectEn": "[DON!! x2] This Character gains [Blocker].<br>[On Play] Your {Land of Wano} type Leader gains [Banish] during this turn.",
-    "effectJp": "【ドン‼×2】このキャラは【ブロッカー】を得る。<br>【登場時】自分の特徴《ワノ国》を持つリーダーは、このターン中、【バニッシュ】を得る。",
-    "effectTh": "[ด้ง!! x 2] คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. <br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ในเทิร์นนี้, ลีดเดอร์ของฝ่ายเรา ที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt; จะได้รับ [แบนนิช].<br>(ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
+    "effectEn": "[DON!! x2] This Character gains [Blocker].[On Play] Your {Land of Wano} type Leader gains [Banish] during this turn.",
+    "effectJp": "【ドン‼×2】このキャラは【ブロッカー】を得る。【登場時】自分の特徴《ワノ国》を持つリーダーは、このターン中、【バニッシュ】を得る。",
+    "effectTh": "[ด้ง!! x 2] คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ในเทิร์นนี้, ลีดเดอร์ของฝ่ายเรา ที่มีคุณสมบัติ < วาโนะคุนิ > จะได้รับ [แบนนิช].(ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST28-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
   },
   {
     "code": "ST28-003",
@@ -58,11 +287,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] If your Leader has the {Land of Wano} type and your opponent has 3 or less Life cards, play this card.",
-    "triggerJp": "【トリガー】自分のリーダーが特徴《ワノ国》を持ち、相手のライフが3枚以下の場合、このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST28-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
   },
   {
     "code": "ST28-004",
@@ -77,12 +306,14 @@
     "power": 7000,
     "attribute": "Slash",
     "trait": "Land of Wano/Kouzuki Clan",
-    "effectEn": "[Your Turn] If you have 2 or less Life cards, your Leader gains +1000 power.<br>[Activate: Main] [Once Per Turn] You may return 2 total of your currently given DON!! cards to your cost area rested: This Character gains [Rush] and +1000 power during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【自分のターン中】自分のライフが2枚以下の場合、自分のリーダーのパワー+1000。<br>【起動メイン】【ターン1回】自分の付与されているドン‼合計2枚をコストエリアにレストで戻すことができる：このキャラは、このターン中、【速攻】を得て、パワー+1000。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เทิร์นตัวเอง] ถ้าเรามี ไลฟ์ จำนวน 2 ใบ หรือน้อยกว่าละก็, ลีดเดอร์ของเรา จะมีพาวเวอร์ +1000.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ ด้ง!! ที่ถูกนำไปใส่อยู่ของฝ่ายเรา รวมกัน จำนวน 2 ใบ กลับมาวางแบบ เรสต์ ที่คอสต์แอเรีย : ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน], และจะมีพาวเวอร์ +1000.<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[Your Turn] If you have 2 or less Life cards, your Leader gains +1000 power.[Activate: Main] [Once Per Turn] You may return 2 total of your currently given DON!! cards to your cost area rested: This Character gains [Rush] and +1000 power during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【自分のターン中】自分のライフが2枚以下の場合、自分のリーダーのパワー+1000。【起動メイン】【ターン1回】自分の付与されているドン‼合計2枚をコストエリアにレストで戻すことができる：このキャラは、このターン中、【速攻】を得て、パワー+1000。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เทิร์นตัวเอง] ถ้าเรามี ไลฟ์ จำนวน 2 ใบ หรือน้อยกว่าละก็, ลีดเดอร์ของเรา จะมีพาวเวอร์ +1000.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ ด้ง!! ที่ถูกนำไปใส่อยู่ของฝ่ายเรา รวมกัน จำนวน 2 ใบ กลับมาวางแบบ เรสต์ ที่คอสต์แอเรีย : ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน], และจะมีพาวเวอร์ +1000.(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST28-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
   },
   {
     "code": "ST28-005",
@@ -97,11 +328,13 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Land of Wano",
-    "effectEn": "[DON!! x2] [Your Turn] This Character gains +3000 power.<br>[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Land of Wano} type card with a cost of 2 or more and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
-    "effectJp": "【ドン‼×2】【自分のターン中】このキャラのパワー+3000。<br>【登場時】自分のデッキの上から5枚を見て、コスト2以上の特徴《ワノ国》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[ด้ง!! x 2] [เทิร์นตัวเอง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +3000.<br>[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ &lt; วาโนะคุนิ &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectEn": "[DON!! x2] [Your Turn] This Character gains +3000 power.[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Land of Wano} type card with a cost of 2 or more and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "【ドン‼×2】【自分のターン中】このキャラのパワー+3000。【登場時】自分のデッキの上から5枚を見て、コスト2以上の特徴《ワノ国》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "[ด้ง!! x 2] [เทิร์นตัวเอง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +3000.[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ < วาโนะคุนิ > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST28-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Green/Yellow Yamato- [ST-28]"
+    ]
   }
 ]

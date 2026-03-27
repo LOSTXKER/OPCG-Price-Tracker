@@ -31,6 +31,10 @@ interface OfficialCard {
   sets: string[];
 }
 
+function extractBaseCode(code: string): string {
+  return code.replace(/_[PpRr]\d+/g, "");
+}
+
 const CARD_TYPE_MAP: Record<string, string> = {
   LEADER: "LEADER",
   CHARACTER: "CHARACTER",
@@ -128,7 +132,7 @@ async function main() {
         triggerEn: card.triggerEn || null,
         imageUrl: card.imageUrl || null,
         isParallel: card.isParallel ?? false,
-        baseCode: card.code,
+        baseCode: extractBaseCode(card.code),
         parallelIndex: card.parallelIndex ?? null,
       };
 

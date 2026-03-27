@@ -9,15 +9,17 @@
     "nameTh": "Shanks",
     "color": "Purple",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Slash",
     "trait": "FILM/The Four Emperors/Red-Haired Pirates",
     "effectEn": "[Activate: Main] [Once Per Turn] DON!! −3 (You may return the specified number of DON!! cards from your field to your DON!! deck.): All of your {FILM} type Characters gain +2000 power during this turn.",
     "effectJp": "【起動メイン】【ターン1回】ドン‼-3(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：自分の特徴《FILM》を持つキャラすべてを、このターン中、パワー+2000。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 3 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, คาแรกเตอร์ของเราทั้งหมด ที่มีคุณสมบัติ &lt; FILM &gt;, จะมีพาวเวอร์ +2000.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 3 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, คาแรกเตอร์ของเราทั้งหมด ที่มีคุณสมบัติ < FILM >, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-002",
@@ -37,7 +39,9 @@
     "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-003",
@@ -57,7 +61,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-004",
@@ -73,12 +79,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "FILM",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Block] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Rest up to 1 of your opponent's Characters with a cost of 5 or less.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ブロック時】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：相手のコスト5以下のキャラ1枚までを、レストにする。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อบล็อก] ด้ง!! -1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.<br>",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Block] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Rest up to 1 of your opponent's Characters with a cost of 5 or less.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ブロック時】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：相手のコスト5以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อบล็อก] ด้ง!! -1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-005",
@@ -96,10 +104,12 @@
     "trait": "FILM/Grantesoro",
     "effectEn": "[Activate: Main] [Once Per Turn] You may rest this Character and trash 1 {FILM} type card from your hand: If your opponent has more DON!! cards on their field than you, add 2 DON!! cards from your DON!! deck and rest them.",
     "effectJp": "【起動メイン】【ターン1回】このキャラをレストにする，自分の手札の特徴《FILM》を持つカード1枚をトラッシュに置くことができる：相手の場のドン‼の枚数が自分の場のドン‼の枚数より多い場合、ドン‼デッキからドン‼2枚をレストで追加する。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ คาแรกเตอร์นี้, และนำการ์ดจากบนมือของเรา ที่มีคุณสมบัติ &lt; FLIM &gt; จำนวน 1 ใบ ไปวางที่แทรช : ถ้าจำนวน ด้ง!! ในสนามของคู่แข่ง มีมากกว่าจำนวน ด้ง!! ในสนามของเรา, นำ ด้ง!! จากด้ง!! เด็ค จำนวน 2 ใบ มาวางเพิ่มแบบ เรสต์.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ คาแรกเตอร์นี้, และนำการ์ดจากบนมือของเรา ที่มีคุณสมบัติ < FLIM > จำนวน 1 ใบ ไปวางที่แทรช : ถ้าจำนวน ด้ง!! ในสนามของคู่แข่ง มีมากกว่าจำนวน ด้ง!! ในสนามของเรา, นำ ด้ง!! จากด้ง!! เด็ค จำนวน 2 ใบ มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-006",
@@ -119,7 +129,9 @@
     "effectTh": "[เมื่อโจมตี] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : จั่วการ์ด 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-007",
@@ -140,7 +152,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-008",
@@ -161,7 +175,9 @@
     "effectTh": "ถ้าในสนามของเรามี ด้ง!! อยู่ 8 ใบ หรือมากกว่า, คาแรกเตอร์นี้จะไม่ถูก KO จากการแบทเทิล.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-009",
@@ -180,11 +196,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-010",
@@ -199,12 +215,14 @@
     "power": 8000,
     "attribute": "Strike",
     "trait": "FILM/Neo Navy",
-    "effectEn": "When this Character battles &lt;Strike&gt; attribute Characters, this Character gains +3000 power during this turn.<br>[Activate: Main] [Once Per Turn] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains +2000 power during this turn.",
-    "effectJp": "このキャラが属性(打)を持つキャラとバトルする時、このキャラは、このターン中、パワー+3000。<br>【起動メイン】【ターン1回】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：このキャラは、このターン中、パワー+2000。",
-    "effectTh": "ถ้าคาแรกเตอร์นี้ แบทเทิลกับ คาแรกเตอร์ ที่มีคุณลักษณะ (ตี), ในเทิร์นนี้, คาแรกเตอร์นี้จะมีพาวเวอร์ +3000. <br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, คาแรกเตอร์นี้จะมีพาวเวอร์ +2000.",
+    "effectEn": "When this Character battles <Strike> attribute Characters, this Character gains +3000 power during this turn.[Activate: Main] [Once Per Turn] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains +2000 power during this turn.",
+    "effectJp": "このキャラが属性(打)を持つキャラとバトルする時、このキャラは、このターン中、パワー+3000。【起動メイン】【ターン1回】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：このキャラは、このターン中、パワー+2000。",
+    "effectTh": "ถ้าคาแรกเตอร์นี้ แบทเทิลกับ คาแรกเตอร์ ที่มีคุณลักษณะ (ตี), ในเทิร์นนี้, คาแรกเตอร์นี้จะมีพาวเวอร์ +3000. [ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, คาแรกเตอร์นี้จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-011",
@@ -219,12 +237,14 @@
     "power": 10000,
     "attribute": "Special",
     "trait": "FILM/The Pirates Fest",
-    "effectEn": "[Activate: Main] [Once Per Turn] DON!! −4 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Rest up to 2 of your opponent's Characters with a cost of 6 or less. Then, this Character gains [Double Attack] during this turn.<br>(This card deals 2 damage.)",
-    "effectJp": "【起動メイン】【ターン1回】ドン‼-4(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：相手のコスト6以下のキャラ2枚までを、レストにする。その後、このキャラは、このターン中、【ダブルアタック】を得る。<br>(このカードが与えるダメージは2になる)",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 4 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า จำนวนไม่เกิน 2 ใบ. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์นี้จะได้รับ [ดับเบิ้ลแอทแทค]. <br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)<br>",
+    "effectEn": "[Activate: Main] [Once Per Turn] DON!! −4 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Rest up to 2 of your opponent's Characters with a cost of 6 or less. Then, this Character gains [Double Attack] during this turn.(This card deals 2 damage.)",
+    "effectJp": "【起動メイン】【ターン1回】ドン‼-4(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：相手のコスト6以下のキャラ2枚までを、レストにする。その後、このキャラは、このターン中、【ダブルアタック】を得る。(このカードが与えるダメージは2になる)",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 4 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า จำนวนไม่เกิน 2 ใบ. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์นี้จะได้รับ [ดับเบิ้ลแอทแทค]. (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-012",
@@ -245,7 +265,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-013",
@@ -266,7 +288,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-014",
@@ -283,10 +307,12 @@
     "trait": "FILM/The Pirates Fest",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {FILM} type card other than [Buena Festa] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「ブエナ・フェスタ」以外の特徴《FILM》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; FILM &gt; นอกเหนือจาก [Buena Festa] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < FILM > นอกเหนือจาก [Buena Festa] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-015",
@@ -307,7 +333,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-016",
@@ -322,12 +350,12 @@
     "trait": "FILM/Golden Lion Pirates",
     "effectEn": "[Main] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): K.O. up to 1 of your opponent's Characters with a cost of 5 or less.",
     "effectJp": "【メイン】ドン‼-2(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：相手のコスト5以下のキャラ1枚までを、KOする。",
-    "effectTh": "[เมน] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ KO ใส่คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.<br>",
-    "triggerEn": "[Trigger] Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン‼デッキからドン‼1枚までをアクティブで追加する。",
+    "effectTh": "[เมน] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ KO ใส่คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   },
   {
     "code": "ST05-017",
@@ -342,11 +370,11 @@
     "trait": "FILM/The Pirates Fest",
     "effectEn": "[Counter] Up to 1 of your {FILM} type Leader or Character cards gains +4000 power during this battle. If that card is a Character, that Character cannot be K.O.'d during this turn.",
     "effectJp": "【カウンター】自分の特徴《FILM》を持つ、リーダーかキャラ1枚までを、このバトル中、パワー+4000。そのカードがキャラの場合、そのキャラは、このターン中、KOされない。",
-    "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ &lt; FILM &gt; จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. ถ้าการ์ดใบนั้นเป็น คาแรกเตอร์, ในเทิร์นนี้, คาแรกเตอร์นั้นจะไม่ถูก KO ไม่ว่าจากกรณีใดก็ตาม.<br>",
-    "triggerEn": "[Trigger] Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン‼デッキからドン‼1枚までをアクティブで追加する。",
+    "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ < FILM > จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. ถ้าการ์ดใบนั้นเป็น คาแรกเตอร์, ในเทิร์นนี้, คาแรกเตอร์นั้นจะไม่ถูก KO ไม่ว่าจากกรณีใดก็ตาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST05-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE FILM edition- [ST-05]"
+    ]
   }
 ]

@@ -1,5 +1,214 @@
 [
   {
+    "code": "EB02-028",
+    "cardCode": "EB02-028_p1",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Portgas.D.Ace",
+    "nameJp": "ポートガス・D・エース",
+    "nameTh": "Portgas.D.Ace",
+    "color": "Blue",
+    "cost": 5,
+    "power": 5000,
+    "counter": 1000,
+    "attribute": "Special",
+    "trait": "Alabasta/Whitebeard Pirates",
+    "effectEn": "[On Play] If your Leader's type includes \"Whitebeard Pirates\", look at 5 cards from the top of your deck; reveal up to 1 Character card with a cost of 2 and add it to your hand. Then, place the rest at the bottom of your deck in any order and play up to 1 Character card with a cost of 2 from your hand rested.",
+    "effectJp": "【登場時】自分のリーダーが『白ひげ海賊団』を含む特徴を持つ場合、自分のデッキの上から5枚を見て、コスト2のキャラカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置き、自分の手札からコスト2のキャラカード1枚までを、レストで登場させる。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำคาแรกเตอร์ การ์ด ที่มีคอสต์ 2 จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, แล้วนำคาแรกเตอร์การ์ด ที่มีคอสต์ 2 จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามแบบ เรสต์.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB02-028_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
+  },
+  {
+    "code": "OP07-111",
+    "cardCode": "OP07-111_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Lilith",
+    "nameJp": "リリス",
+    "nameTh": "Lilith",
+    "color": "Yellow",
+    "cost": 3,
+    "power": 5000,
+    "attribute": "Wisdom",
+    "trait": "Scientist/Egghead",
+    "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Egghead} type card other than [Lilith] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "【登場時】自分のデッキの上から5枚を見て、「リリス」以外の特徴《エッグヘッド》を持つカード1枚までを手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < เอ็กเฮด > นอกเหนือจาก [Lilith] จำนวนไม่เกิน 1 ใบ เพิ่มขึ้นสู่บนมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP07-111_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
+  },
+  {
+    "code": "OP07-118",
+    "cardCode": "OP07-118_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Sabo",
+    "nameJp": "サボ",
+    "nameTh": "Sabo",
+    "color": "Black",
+    "cost": 8,
+    "power": 9000,
+    "attribute": "Special",
+    "trait": "Revolutionary Army",
+    "effectEn": "[On Play] You may trash 1 card from your hand: K.O. up to 1 of your opponent's Characters with a cost of 5 or less and up to 1 of your opponent's Characters with a cost of 3 or less.",
+    "effectJp": "【登場時】自分の手札1枚を捨てることができる：相手の、コスト5以下のキャラ1枚までとコスト3以下のキャラ1枚までを、KOする。",
+    "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กับคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า อีกจำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP07-118_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
+  },
+  {
+    "code": "OP09-004",
+    "cardCode": "OP09-004_p5",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Shanks",
+    "nameJp": "シャンクス",
+    "nameTh": "Shanks",
+    "color": "Red",
+    "cost": 10,
+    "power": 12000,
+    "attribute": "Slash",
+    "trait": "The Four Emperors/Red-Haired Pirates",
+    "effectEn": "Give all of your opponent's Characters −1000 power.[Rush] (This card can attack on the turn in which it is played.)",
+    "effectJp": "相手のキャラすべてを、パワー-1000。【速攻】(このカードは登場したターンにアタックできる)",
+    "effectTh": "คาแรกเตอร์ของฝ่ายคู่แข่ง ทั้งหมด, จะมีพาวเวอร์ -1000.[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-004_p5.png",
+    "isParallel": true,
+    "parallelIndex": 5,
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
+  },
+  {
+    "code": "OP09-004",
+    "cardCode": "OP09-004_p6",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Shanks",
+    "nameJp": "シャンクス",
+    "nameTh": "Shanks",
+    "color": "Red",
+    "cost": 10,
+    "power": 12000,
+    "attribute": "Slash",
+    "trait": "The Four Emperors/Red-Haired Pirates",
+    "effectEn": "Give all of your opponent's Characters −1000 power.[Rush] (This card can attack on the turn in which it is played.)",
+    "effectJp": "相手のキャラすべてを、パワー-1000。【速攻】(このカードは登場したターンにアタックできる)",
+    "effectTh": "คาแรกเตอร์ของฝ่ายคู่แข่ง ทั้งหมด, จะมีพาวเวอร์ -1000.[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-004_p6.png",
+    "isParallel": true,
+    "parallelIndex": 6,
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
+  },
+  {
+    "code": "OP09-009",
+    "cardCode": "OP09-009_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Benn.Beckman",
+    "nameJp": "ベン・ベックマン",
+    "nameTh": "Benn.Beckman",
+    "color": "Red",
+    "cost": 7,
+    "power": 7000,
+    "counter": 1000,
+    "attribute": "Ranged",
+    "trait": "Red-Haired Pirates",
+    "effectEn": "[On Play] Trash up to 1 of your opponent's Characters with 6000 power or less.",
+    "effectJp": "【登場時】相手のパワー6000以下のキャラ1枚までを、トラッシュに置く。",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 6000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-009_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
+  },
+  {
+    "code": "OP09-118",
+    "cardCode": "OP09-118_p3",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Gol.D.Roger",
+    "nameJp": "ゴール・D・ロジャー",
+    "nameTh": "Gol.D.Roger",
+    "color": "Red",
+    "cost": 10,
+    "power": 13000,
+    "attribute": "Slash",
+    "trait": "King of the Pirates/Roger Pirates",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)When your opponent activates [Blocker], if either you or your opponent has 0 Life cards, you win the game.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる) 相手が【ブロッカー】を発動した時、自分か相手のライフが0枚の場合、自分はゲームに勝利する。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)ตอนที่คู่แข่งใช้งาน [บล็อกเกอร์], ถ้าเราหรือคู่แข่งมี ไลฟ์ จำนวน 0 ใบละก็, เราจะเป็นฝ่ายชนะเกม.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-118_p3.png",
+    "isParallel": true,
+    "parallelIndex": 3,
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
+  },
+  {
+    "code": "OP09-119",
+    "cardCode": "OP09-119_p3",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Monkey.D.Luffy",
+    "nameJp": "モンキー・Ｄ・ルフィ",
+    "nameTh": "Monkey.D.Luffy",
+    "color": "Purple",
+    "cost": 9,
+    "power": 10000,
+    "attribute": "Strike",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[On Play] You may return 1 or more DON!! cards from your field to your DON!! deck: Draw 1 card and this Character gains [Rush] during this turn.",
+    "effectJp": "【登場時】自分の場のドン‼を1枚以上ドン‼デッキに戻すことができる：カード1枚を引き、このキャラは、このターン中、【速攻】を得る。",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำ ด้ง!! ในสนามของเรา จำนวน 1 ใบ หรือมากกว่า กลับด้ง!! เด็ค : จั่วการ์ด จำนวน 1 ใบ, และในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-119_p3.png",
+    "isParallel": true,
+    "parallelIndex": 3,
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
+  },
+  {
+    "code": "OP10-030",
+    "cardCode": "OP10-030_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Smoker",
+    "nameJp": "スモーカー",
+    "nameTh": "Smoker",
+    "color": "Green",
+    "cost": 5,
+    "power": 7000,
+    "attribute": "Slash",
+    "trait": "Punk Hazard/Navy",
+    "effectEn": "[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)[Activate: Main] Set up to 1 of your DON!! cards as active. Then, you cannot set DON!! cards as active using Character effects during this turn.",
+    "effectJp": "【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる) 【起動メイン】自分のドン‼1枚までを、アクティブにする。その後、自分はこのターン中、キャラの効果でドン‼をアクティブにできない。",
+    "effectTh": "[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)[ใช้งาน : เมน] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถ แอ็คทีฟ ด้ง!! ด้วยความสามารถของคาแรกเตอร์อีก.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-030_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
+  },
+  {
     "code": "OP13-001",
     "cardCode": "OP13-001",
     "rarity": "L",
@@ -14,10 +223,12 @@
     "trait": "Supernovas/Straw Hat Crew",
     "effectEn": "[DON!! x1] [On Your Opponent's Attack] If you have 5 or less active DON!! cards, you may rest any number of your DON!! cards. For every DON!! card rested this way, this Leader or up to 1 of your {Straw Hat Crew} type Characters gains +2000 power during this battle.",
     "effectJp": "【ドン‼×1】【相手のアタック時】自分のアクティブのドン‼が5枚以下の場合、自分のドン‼を任意の枚数レストにできる。レストにしたドン‼1枚につき、このリーダーか自分の特徴《麦わらの一味》を持つキャラ1枚までを、このバトル中、パワー+2000。",
-    "effectTh": "[ด้ง!! x 1] [เมื่อคู่แข่งโจมตี] ถ้าในสนามของเรามี ด้ง!! ที่กำลังแอ็คทีฟอยู่ จำนวน 5 ใบ หรือน้อยกว่าละก็, จะสามารถ เรสต์ ด้ง!! ของเรา จำนวนกี่ใบก็ได้. ในแบทเทิลนี้, ลีดเดอร์นี้ หรือว่า คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000, ต่อจำนวน ด้ง!! ที่ทำให้เรสต์ จำนวน 1 ใบ.",
+    "effectTh": "[ด้ง!! x 1] [เมื่อคู่แข่งโจมตี] ถ้าในสนามของเรามี ด้ง!! ที่กำลังแอ็คทีฟอยู่ จำนวน 5 ใบ หรือน้อยกว่าละก็, จะสามารถ เรสต์ ด้ง!! ของเรา จำนวนกี่ใบก็ได้. ในแบทเทิลนี้, ลีดเดอร์นี้ หรือว่า คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000, ต่อจำนวน ด้ง!! ที่ทำให้เรสต์ จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-001",
@@ -34,11 +245,13 @@
     "trait": "Supernovas/Straw Hat Crew",
     "effectEn": "[DON!! x1] [On Your Opponent's Attack] If you have 5 or less active DON!! cards, you may rest any number of your DON!! cards. For every DON!! card rested this way, this Leader or up to 1 of your {Straw Hat Crew} type Characters gains +2000 power during this battle.",
     "effectJp": "【ドン‼×1】【相手のアタック時】自分のアクティブのドン‼が5枚以下の場合、自分のドン‼を任意の枚数レストにできる。レストにしたドン‼1枚につき、このリーダーか自分の特徴《麦わらの一味》を持つキャラ1枚までを、このバトル中、パワー+2000。",
-    "effectTh": "[ด้ง!! x 1] [เมื่อคู่แข่งโจมตี] ถ้าในสนามของเรามี ด้ง!! ที่กำลังแอ็คทีฟอยู่ จำนวน 5 ใบ หรือน้อยกว่าละก็, จะสามารถ เรสต์ ด้ง!! ของเรา จำนวนกี่ใบก็ได้. ในแบทเทิลนี้, ลีดเดอร์นี้ หรือว่า คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000, ต่อจำนวน ด้ง!! ที่ทำให้เรสต์ จำนวน 1 ใบ.",
+    "effectTh": "[ด้ง!! x 1] [เมื่อคู่แข่งโจมตี] ถ้าในสนามของเรามี ด้ง!! ที่กำลังแอ็คทีฟอยู่ จำนวน 5 ใบ หรือน้อยกว่าละก็, จะสามารถ เรสต์ ด้ง!! ของเรา จำนวนกี่ใบก็ได้. ในแบทเทิลนี้, ลีดเดอร์นี้ หรือว่า คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000, ต่อจำนวน ด้ง!! ที่ทำให้เรสต์ จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-001_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-002",
@@ -50,15 +263,17 @@
     "nameTh": "Portgas.D.Ace",
     "color": "Red/Blue",
     "power": 6000,
-    "life": 4,
+    "life": 3,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
-    "effectEn": "[On Your Opponent's Attack] [Once Per Turn] You may trash 1 card from your hand: Give up to 1 of your opponent's Leader or Character cards −2000 power during this battle.<br>[DON!! x1] [Once Per Turn] When you take damage or your Character with 6000 base power or more is K.O.'d, draw 1 card.",
-    "effectJp": "【相手のアタック時】【ターン1回】自分の手札1枚を捨てることができる：相手のリーダーかキャラ1枚までを、このバトル中、パワー-2000。<br>【ドン‼×1】【ターン1回】自分がダメージを受けた時か自分の元々のパワー6000以上のキャラがKOされた時、カード1枚を引く。",
-    "effectTh": "[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.<br>[ด้ง!! x 1] [เทิร์นละ 1 ครั้ง] เมื่อเราได้รับดาเมจ หรือว่า เมื่อคาแรกเตอร์ ที่มีพาวเวอร์ตั้งต้น 6000 หรือสูงกว่า ของฝ่ายเรา ถูก KO, จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "[On Your Opponent's Attack] [Once Per Turn] You may trash 1 card from your hand: Give up to 1 of your opponent's Leader or Character cards −2000 power during this battle.[DON!! x1] [Once Per Turn] When you take damage or your Character with 6000 base power or more is K.O.'d, draw 1 card.",
+    "effectJp": "【相手のアタック時】【ターン1回】自分の手札1枚を捨てることができる：相手のリーダーかキャラ1枚までを、このバトル中、パワー-2000。【ドン‼×1】【ターン1回】自分がダメージを受けた時か自分の元々のパワー6000以上のキャラがKOされた時、カード1枚を引く。",
+    "effectTh": "[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.[ด้ง!! x 1] [เทิร์นละ 1 ครั้ง] เมื่อเราได้รับดาเมจ หรือว่า เมื่อคาแรกเตอร์ ที่มีพาวเวอร์ตั้งต้น 6000 หรือสูงกว่า ของฝ่ายเรา ถูก KO, จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-002",
@@ -70,16 +285,18 @@
     "nameTh": "Portgas.D.Ace",
     "color": "Red/Blue",
     "power": 6000,
-    "life": 4,
+    "life": 3,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
-    "effectEn": "[On Your Opponent's Attack] [Once Per Turn] You may trash 1 card from your hand: Give up to 1 of your opponent's Leader or Character cards −2000 power during this battle.<br>[DON!! x1] [Once Per Turn] When you take damage or your Character with 6000 base power or more is K.O.'d, draw 1 card.",
-    "effectJp": "【相手のアタック時】【ターン1回】自分の手札1枚を捨てることができる：相手のリーダーかキャラ1枚までを、このバトル中、パワー-2000。<br>【ドン‼×1】【ターン1回】自分がダメージを受けた時か自分の元々のパワー6000以上のキャラがKOされた時、カード1枚を引く。",
-    "effectTh": "[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.<br>[ด้ง!! x 1] [เทิร์นละ 1 ครั้ง] เมื่อเราได้รับดาเมจ หรือว่า เมื่อคาแรกเตอร์ ที่มีพาวเวอร์ตั้งต้น 6000 หรือสูงกว่า ของฝ่ายเรา ถูก KO, จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "[On Your Opponent's Attack] [Once Per Turn] You may trash 1 card from your hand: Give up to 1 of your opponent's Leader or Character cards −2000 power during this battle.[DON!! x1] [Once Per Turn] When you take damage or your Character with 6000 base power or more is K.O.'d, draw 1 card.",
+    "effectJp": "【相手のアタック時】【ターン1回】自分の手札1枚を捨てることができる：相手のリーダーかキャラ1枚までを、このバトル中、パワー-2000。【ドン‼×1】【ターン1回】自分がダメージを受けた時か自分の元々のパワー6000以上のキャラがKOされた時、カード1枚を引く。",
+    "effectTh": "[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.[ด้ง!! x 1] [เทิร์นละ 1 ครั้ง] เมื่อเราได้รับดาเมจ หรือว่า เมื่อคาแรกเตอร์ ที่มีพาวเวอร์ตั้งต้น 6000 หรือสูงกว่า ของฝ่ายเรา ถูก KO, จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-002_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-003",
@@ -91,15 +308,17 @@
     "nameTh": "Gol.D.Roger",
     "color": "Red/Purple",
     "power": 7000,
-    "life": 4,
+    "life": 5,
     "attribute": "Slash",
     "trait": "King of the Pirates/Roger Pirates",
-    "effectEn": "If you have any DON!! cards on your field, 1 DON!! card placed during your DON!! Phase is given to your Leader.<br>If you have 9 or less DON!! cards on your field, give this Leader −2000 power.",
-    "effectJp": "自分の場のドン‼がある場合、自分のドン‼フェイズに置かれるドン‼1枚は、自分のリーダーに付与される。<br>自分の場のドン‼が9枚以下の場合、このリーダーのパワー-2000。",
-    "effectTh": "ถ้าในสนามของเรามี ด้ง!! อยู่ด้วยละก็, ด้ง!! จำนวน 1 ใบ ที่กำลังจะถูกนำมาวางใน ด้ง!! เฟส ของเรา, จะถูกนำมาใส่ให้ ลีดเดอร์ของเรา.<br>ถ้าในสนามของเรามี ด้ง!! จำนวน 9 ใบ หรือน้อยกว่าละก็, ลีดเดอร์นี้ จะมีพาวเวอร์ -2000.",
+    "effectEn": "If you have any DON!! cards on your field, 1 DON!! card placed during your DON!! Phase is given to your Leader.If you have 9 or less DON!! cards on your field, give this Leader −2000 power.",
+    "effectJp": "自分の場のドン‼がある場合、自分のドン‼フェイズに置かれるドン‼1枚は、自分のリーダーに付与される。自分の場のドン‼が9枚以下の場合、このリーダーのパワー-2000。",
+    "effectTh": "ถ้าในสนามของเรามี ด้ง!! อยู่ด้วยละก็, ด้ง!! จำนวน 1 ใบ ที่กำลังจะถูกนำมาวางใน ด้ง!! เฟส ของเรา, จะถูกนำมาใส่ให้ ลีดเดอร์ของเรา.ถ้าในสนามของเรามี ด้ง!! จำนวน 9 ใบ หรือน้อยกว่าละก็, ลีดเดอร์นี้ จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-003",
@@ -111,16 +330,18 @@
     "nameTh": "Gol.D.Roger",
     "color": "Red/Purple",
     "power": 7000,
-    "life": 4,
+    "life": 5,
     "attribute": "Slash",
     "trait": "King of the Pirates/Roger Pirates",
-    "effectEn": "If you have any DON!! cards on your field, 1 DON!! card placed during your DON!! Phase is given to your Leader.<br>If you have 9 or less DON!! cards on your field, give this Leader −2000 power.",
-    "effectJp": "自分の場のドン‼がある場合、自分のドン‼フェイズに置かれるドン‼1枚は、自分のリーダーに付与される。<br>自分の場のドン‼が9枚以下の場合、このリーダーのパワー-2000。",
-    "effectTh": "ถ้าในสนามของเรามี ด้ง!! อยู่ด้วยละก็, ด้ง!! จำนวน 1 ใบ ที่กำลังจะถูกนำมาวางใน ด้ง!! เฟส ของเรา, จะถูกนำมาใส่ให้ ลีดเดอร์ของเรา.<br>ถ้าในสนามของเรามี ด้ง!! จำนวน 9 ใบ หรือน้อยกว่าละก็, ลีดเดอร์นี้ จะมีพาวเวอร์ -2000.",
+    "effectEn": "If you have any DON!! cards on your field, 1 DON!! card placed during your DON!! Phase is given to your Leader.If you have 9 or less DON!! cards on your field, give this Leader −2000 power.",
+    "effectJp": "自分の場のドン‼がある場合、自分のドン‼フェイズに置かれるドン‼1枚は、自分のリーダーに付与される。自分の場のドン‼が9枚以下の場合、このリーダーのパワー-2000。",
+    "effectTh": "ถ้าในสนามของเรามี ด้ง!! อยู่ด้วยละก็, ด้ง!! จำนวน 1 ใบ ที่กำลังจะถูกนำมาวางใน ด้ง!! เฟส ของเรา, จะถูกนำมาใส่ให้ ลีดเดอร์ของเรา.ถ้าในสนามของเรามี ด้ง!! จำนวน 9 ใบ หรือน้อยกว่าละก็, ลีดเดอร์นี้ จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-003_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-004",
@@ -132,15 +353,17 @@
     "nameTh": "Sabo",
     "color": "Red/Black",
     "power": 5000,
-    "life": 4,
+    "life": 5,
     "attribute": "Special",
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "If you have 4 or more Life cards, give this Leader −1000 power.<br>[DON!! x1] If you have a Character with a cost of 8 or more, your Leader and all of your Characters gain +1000 power.",
-    "effectJp": "自分のライフが4枚以上の場合、このリーダーのパワー-1000。<br>【ドン‼×1】自分のコスト8以上のキャラがいる場合、自分のリーダーとキャラすべてを、パワー+1000。",
-    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 4 ใบ หรือมากกว่าละก็, ลีดเดอร์นี้ จะมีพาวเวอร์ -1000.<br>[ด้ง!! x 1] ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 8 หรือมากกว่า อยู่ด้วยละก็, ลีดเดอร์ กับ คาแรกเตอร์ ทั้งหมด ของฝ่ายเรา, จะมีพาวเวอร์ +1000.",
+    "effectEn": "If you have 4 or more Life cards, give this Leader −1000 power.[DON!! x1] If you have a Character with a cost of 8 or more, your Leader and all of your Characters gain +1000 power.",
+    "effectJp": "自分のライフが4枚以上の場合、このリーダーのパワー-1000。【ドン‼×1】自分のコスト8以上のキャラがいる場合、自分のリーダーとキャラすべてを、パワー+1000。",
+    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 4 ใบ หรือมากกว่าละก็, ลีดเดอร์นี้ จะมีพาวเวอร์ -1000.[ด้ง!! x 1] ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 8 หรือมากกว่า อยู่ด้วยละก็, ลีดเดอร์ กับ คาแรกเตอร์ ทั้งหมด ของฝ่ายเรา, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-004",
@@ -152,16 +375,18 @@
     "nameTh": "Sabo",
     "color": "Red/Black",
     "power": 5000,
-    "life": 4,
+    "life": 5,
     "attribute": "Special",
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "If you have 4 or more Life cards, give this Leader −1000 power.<br>[DON!! x1] If you have a Character with a cost of 8 or more, your Leader and all of your Characters gain +1000 power.",
-    "effectJp": "自分のライフが4枚以上の場合、このリーダーのパワー-1000。<br>【ドン‼×1】自分のコスト8以上のキャラがいる場合、自分のリーダーとキャラすべてを、パワー+1000。",
-    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 4 ใบ หรือมากกว่าละก็, ลีดเดอร์นี้ จะมีพาวเวอร์ -1000.<br>[ด้ง!! x 1] ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 8 หรือมากกว่า อยู่ด้วยละก็, ลีดเดอร์ กับ คาแรกเตอร์ ทั้งหมด ของฝ่ายเรา, จะมีพาวเวอร์ +1000.",
+    "effectEn": "If you have 4 or more Life cards, give this Leader −1000 power.[DON!! x1] If you have a Character with a cost of 8 or more, your Leader and all of your Characters gain +1000 power.",
+    "effectJp": "自分のライフが4枚以上の場合、このリーダーのパワー-1000。【ドン‼×1】自分のコスト8以上のキャラがいる場合、自分のリーダーとキャラすべてを、パワー+1000。",
+    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 4 ใบ หรือมากกว่าละก็, ลีดเดอร์นี้ จะมีพาวเวอร์ -1000.[ด้ง!! x 1] ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 8 หรือมากกว่า อยู่ด้วยละก็, ลีดเดอร์ กับ คาแรกเตอร์ ทั้งหมด ของฝ่ายเรา, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-004_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-005",
@@ -182,7 +407,9 @@
     "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-006",
@@ -202,16 +429,18 @@
     "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ, ใส่ให้ [Monkey.D.Luffy] ของฝ่ายเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-007",
     "cardCode": "OP13-007",
     "rarity": "SR",
     "cardType": "CHARACTER",
-    "nameEn": "Ace &amp; Sabo &amp; Luffy",
+    "nameEn": "Ace & Sabo & Luffy",
     "nameJp": "エース＆サボ＆ルフィ",
-    "nameTh": "Ace &amp; Sabo &amp; Luffy",
+    "nameTh": "Ace & Sabo & Luffy",
     "color": "Red",
     "cost": 1,
     "power": 1000,
@@ -223,16 +452,18 @@
     "effectTh": "[สั่งใช้ : เมน] สามารถนำ ด้ง!! ที่แอ็คทีฟอยู่ของเรา จำนวน 1 ใบ ใส่ให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ, และนำคาแรกเตอร์นี้ ไปวางที่แทรช : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-007",
     "cardCode": "OP13-007_p1",
     "rarity": "P-SR",
     "cardType": "CHARACTER",
-    "nameEn": "Ace &amp; Sabo &amp; Luffy",
+    "nameEn": "Ace & Sabo & Luffy",
     "nameJp": "エース＆サボ＆ルフィ",
-    "nameTh": "Ace &amp; Sabo &amp; Luffy",
+    "nameTh": "Ace & Sabo & Luffy",
     "color": "Red",
     "cost": 1,
     "power": 1000,
@@ -245,7 +476,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-007_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-008",
@@ -263,10 +496,12 @@
     "trait": "Revolutionary Army",
     "effectEn": "If your {Revolutionary Army} type Character would be K.O.'d by your opponent's effect, you may trash this Character instead.",
     "effectJp": "自分の特徴《革命軍》を持つキャラが相手の効果でKOされる場合、代わりにこのキャラをトラッシュに置くことができる。",
-    "effectTh": "ถ้าคาแรกเตอร์ของฝ่ายเรา ที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; กำลังจะถูก KO จากความสามารถของฝ่ายคู่แข่ง, จะสามารถนำ คาแรกเตอร์นี้ ไปวางที่แทรช แทนได้.",
+    "effectTh": "ถ้าคาแรกเตอร์ของฝ่ายเรา ที่มีคุณสมบัติ < กองทัพปฏิวัติ > กำลังจะถูก KO จากความสามารถของฝ่ายคู่แข่ง, จะสามารถนำ คาแรกเตอร์นี้ ไปวางที่แทรช แทนได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-009",
@@ -284,10 +519,12 @@
     "trait": "Mountain Bandits",
     "effectEn": "If you have a {Mountain Bandits} type Character other than this card, this Character gains [Double Attack].",
     "effectJp": "このカード以外の特徴《山賊》を持つキャラがいる場合、このキャラは【ダブルアタック】を得る。",
-    "effectTh": "ถ้าเรามีคาแรกเตอร์ ที่มีคุณสมบัติ &lt; โจรภูเขา &gt; นอกเหนือจากการ์ดใบนี้ อยู่ด้วยละก็, คาแรกเตอร์นี้ จะได้รับ [ดับเบิ้ลแอทแทค]. <br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
+    "effectTh": "ถ้าเรามีคาแรกเตอร์ ที่มีคุณสมบัติ < โจรภูเขา > นอกเหนือจากการ์ดใบนี้ อยู่ด้วยละก็, คาแรกเตอร์นี้ จะได้รับ [ดับเบิ้ลแอทแทค]. (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-010",
@@ -308,7 +545,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-011",
@@ -329,7 +568,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-012",
@@ -347,10 +588,12 @@
     "trait": "Alabasta",
     "effectEn": "[On Play] Look at 4 cards from the top of your deck; reveal up to 1 {Alabasta} or {Straw Hat Crew} type card with a cost of 2 or more and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から4枚を見て、コスト2以上の、特徴《アラバスタ王国》か《麦わらの一味》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่มีคอสต์ 2 หรือมากกว่า, ซึ่งมีคุณสมบัติ &lt; ราชอาณาจักรอลาบาสต้า &gt; หรือ &lt; กลุ่มหมวกฟาง &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่มีคอสต์ 2 หรือมากกว่า, ซึ่งมีคุณสมบัติ < ราชอาณาจักรอลาบาสต้า > หรือ < กลุ่มหมวกฟาง > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-013",
@@ -370,7 +613,9 @@
     "effectTh": "[เมื่อลงสนาม] จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 0 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-014",
@@ -388,11 +633,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] Up to 1 of your [Portgas.D.Ace] cards gains +3000 power during this turn.",
-    "triggerJp": "【トリガー】自分の「ポートガス・Ｄ・エース」1枚までを、このターン中、パワー+3000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-015",
@@ -412,7 +657,9 @@
     "effectTh": "[สั่งใช้ : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, [Monkey.D.Luffy] ของฝ่ายเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-016",
@@ -433,7 +680,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Sabo] หรือว่า [Portgas.D.Ace] หรือว่า [Monkey.D.Luffy] ละก็, จะดูการ์ดจากบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่มีคอสต์ 3 หรือสูงกว่า จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-016",
@@ -455,7 +704,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-016_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-017",
@@ -473,10 +724,12 @@
     "trait": "Revolutionary Army",
     "effectEn": "[Once Per Turn] If your {Revolutionary Army} type Character would be removed from the field by your opponent's effect, you may give this Character −2000 power during this turn instead.",
     "effectJp": "【ターン1回】自分の特徴《革命軍》を持つキャラが相手の効果で場を離れる場合、代わりにこのキャラを、このターン中、パワー-2000できる。",
-    "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์ของฝ่ายเรา ที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; กำลังจะถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, จะสามารถทำให้คาแรกเตอร์นี้, ในเทิร์นนี้ มีพาวเวอร์ -2000 แทนได้.",
+    "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์ของฝ่ายเรา ที่มีคุณสมบัติ < กองทัพปฏิวัติ > กำลังจะถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, จะสามารถทำให้คาแรกเตอร์นี้, ในเทิร์นนี้ มีพาวเวอร์ -2000 แทนได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-018",
@@ -497,7 +750,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-018.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-019",
@@ -510,12 +765,14 @@
     "color": "Red",
     "cost": 1,
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "[Main] You may rest 4 of your DON!! cards: Give up to 1 of your opponent's Characters −3000 power during this turn. Then, K.O. up to 1 of your opponent's Characters with 3000 power or less.<br>[Counter] Your Leader gains +3000 power during this battle.",
-    "effectJp": "【メイン】自分のドン‼4枚をレストにできる：相手のキャラ1枚までを、このターン中、パワー-3000。その後、相手のパワー3000以下のキャラ1枚までを、KOする。<br>【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 4 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000. จากนั้น, จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.<br>[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา, จะมีพาวเวอร์ +3000.",
+    "effectEn": "[Main] You may rest 4 of your DON!! cards: Give up to 1 of your opponent's Characters −3000 power during this turn. Then, K.O. up to 1 of your opponent's Characters with 3000 power or less.[Counter] Your Leader gains +3000 power during this battle.",
+    "effectJp": "【メイン】自分のドン‼4枚をレストにできる：相手のキャラ1枚までを、このターン中、パワー-3000。その後、相手のパワー3000以下のキャラ1枚までを、KOする。【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 4 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000. จากนั้น, จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา, จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-019.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-020",
@@ -531,11 +788,11 @@
     "effectEn": "[Main] Give up to 1 of your opponent's Characters −5000 power during this turn.",
     "effectJp": "【メイン】相手のキャラ1枚までを、このターン中、パワー-5000。",
     "effectTh": "[เมน] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -5000.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-020.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-021",
@@ -551,11 +808,11 @@
     "effectEn": "[Main] Give up to 1 rested DON!! card to 1 of your [Monkey.D.Luffy] cards. Then, give up to 1 of your opponent's Characters −2000 power during this turn.",
     "effectJp": "【メイン】自分の「モンキー・Ｄ・ルフィ」1枚にレストのドン‼1枚までを、付与する。その後、相手のキャラ1枚までを、このターン中、パワー-2000。",
     "effectTh": "[เมน] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ [Monkey.D.Luffy] ของเรา จำนวน 1 ใบ. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
-    "triggerEn": "[Trigger] Give up to 1 of your opponent's Characters −2000 power during this turn.",
-    "triggerJp": "【トリガー】相手のキャラ1枚までを、このターン中、パワー-2000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-021.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-022",
@@ -573,7 +830,9 @@
     "effectTh": "[สั่งใช้ : เมน] สามารถ เรสต์ สเตจนี้ : ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีพาวเตอร์ตั้งต้น 2000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-022.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-023",
@@ -589,12 +848,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "FILM",
-    "effectEn": "[On Play] Set up to 2 of your DON!! cards as active. Then, you cannot play Character cards with a base cost of 5 or more during this turn.<br>[On K.O.] Play up to 1 Character card with a cost of 5 or less from your hand rested.",
-    "effectJp": "【登場時】自分のドン‼2枚までを、アクティブにする。その後、自分は、このターン中、元々のコスト5以上のキャラカードを登場できない。<br>【KO時】自分の手札からコスト5以下のキャラカード1枚までを、レストで登場させる。",
-    "effectTh": "[เมื่อลงสนาม] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, แอ็คทีฟ. จากนั้น, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า, ลงสนามอีก ในเทิร์นนี้.<br>[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์.",
+    "effectEn": "[On Play] Set up to 2 of your DON!! cards as active. Then, you cannot play Character cards with a base cost of 5 or more during this turn.[On K.O.] Play up to 1 Character card with a cost of 5 or less from your hand rested.",
+    "effectJp": "【登場時】自分のドン‼2枚までを、アクティブにする。その後、自分は、このターン中、元々のコスト5以上のキャラカードを登場できない。【KO時】自分の手札からコスト5以下のキャラカード1枚までを、レストで登場させる。",
+    "effectTh": "[เมื่อลงสนาม] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, แอ็คทีฟ. จากนั้น, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า, ลงสนามอีก ในเทิร์นนี้.[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-023.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-023",
@@ -610,13 +871,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "FILM",
-    "effectEn": "[On Play] Set up to 2 of your DON!! cards as active. Then, you cannot play Character cards with a base cost of 5 or more during this turn.<br>[On K.O.] Play up to 1 Character card with a cost of 5 or less from your hand rested.",
-    "effectJp": "【登場時】自分のドン‼2枚までを、アクティブにする。その後、自分は、このターン中、元々のコスト5以上のキャラカードを登場できない。<br>【KO時】自分の手札からコスト5以下のキャラカード1枚までを、レストで登場させる。",
-    "effectTh": "[เมื่อลงสนาม] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, แอ็คทีฟ. จากนั้น, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า, ลงสนามอีก ในเทิร์นนี้.<br>[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์.",
+    "effectEn": "[On Play] Set up to 2 of your DON!! cards as active. Then, you cannot play Character cards with a base cost of 5 or more during this turn.[On K.O.] Play up to 1 Character card with a cost of 5 or less from your hand rested.",
+    "effectJp": "【登場時】自分のドン‼2枚までを、アクティブにする。その後、自分は、このターン中、元々のコスト5以上のキャラカードを登場できない。【KO時】自分の手札からコスト5以下のキャラカード1枚までを、レストで登場させる。",
+    "effectTh": "[เมื่อลงสนาม] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, แอ็คทีฟ. จากนั้น, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า, ลงสนามอีก ในเทิร์นนี้.[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-023_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-024",
@@ -633,10 +896,12 @@
     "trait": "FILM",
     "effectEn": "[On Play] You may reveal 1 {Music} or {FILM} type card from your hand: Set up to 2 of your DON!! cards as active at the end of this turn.",
     "effectJp": "【登場時】自分の手札から特徴《音楽》か《FILM》を持つカード1枚を公開することができる：このターン終了時、自分のドン‼2枚までを、アクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ด ที่มีคุณสมบัติ &lt; ดนตรี &gt; หรือ &lt; FILM &gt; จากในมือของเรา จำนวน 1 ใบ มาแสดงให้ดู : เมื่อจบเทิร์นนี้, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, แอ็คทีฟ.",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ด ที่มีคุณสมบัติ < ดนตรี > หรือ < FILM > จากในมือของเรา จำนวน 1 ใบ มาแสดงให้ดู : เมื่อจบเทิร์นนี้, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-024.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-025",
@@ -652,12 +917,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "FILM/Navy",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] If your Leader has the {FILM} type or the &lt;Strike&gt; attribute, set up to 1 of your DON!! cards as active.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のリーダーが特徴《FILM》か属性 (打)を持つ場合、自分のドン‼1枚までを、アクティブにする。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; FILM &gt; หรือว่า มีคุณลักษณะ (ตี) ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] If your Leader has the {FILM} type or the <Strike> attribute, set up to 1 of your DON!! cards as active.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のリーダーが特徴《FILM》か属性 (打)を持つ場合、自分のドン‼1枚までを、アクティブにする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < FILM > หรือว่า มีคุณลักษณะ (ตี) ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-025.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-026",
@@ -678,7 +945,9 @@
     "effectTh": "[สั่งใช้ : เมน]  [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-026.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-027",
@@ -693,12 +962,14 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "FILM/Straw Hat Crew",
-    "effectEn": "[On Play] Set up to 2 of your DON!! cards as active.<br>[End of Your Turn] If your Leader has the {FILM} or {Straw Hat Crew} type, set up to 1 of your DON!! cards as active.",
-    "effectJp": "【登場時】自分のドン‼2枚までを、アクティブにする。<br>【自分のターン終了時】自分のリーダーが特徴《FILM》か《麦わらの一味》を持つ場合、自分のドン‼1枚までを、アクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, แอ็คทีฟ.<br>[เมื่อจบเทิร์นของเรา] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; FILM &gt; หรือ &lt; กลุ่มหมวกฟาง &gt; ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ.",
+    "effectEn": "[On Play] Set up to 2 of your DON!! cards as active.[End of Your Turn] If your Leader has the {FILM} or {Straw Hat Crew} type, set up to 1 of your DON!! cards as active.",
+    "effectJp": "【登場時】自分のドン‼2枚までを、アクティブにする。【自分のターン終了時】自分のリーダーが特徴《FILM》か《麦わらの一味》を持つ場合、自分のドン‼1枚までを、アクティブにする。",
+    "effectTh": "[เมื่อลงสนาม] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, แอ็คทีฟ.[เมื่อจบเทิร์นของเรา] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < FILM > หรือ < กลุ่มหมวกฟาง > ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-027.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-027",
@@ -713,13 +984,15 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "FILM/Straw Hat Crew",
-    "effectEn": "[On Play] Set up to 2 of your DON!! cards as active.<br>[End of Your Turn] If your Leader has the {FILM} or {Straw Hat Crew} type, set up to 1 of your DON!! cards as active.",
-    "effectJp": "【登場時】自分のドン‼2枚までを、アクティブにする。<br>【自分のターン終了時】自分のリーダーが特徴《FILM》か《麦わらの一味》を持つ場合、自分のドン‼1枚までを、アクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, แอ็คทีฟ.<br>[เมื่อจบเทิร์นของเรา] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; FILM &gt; หรือ &lt; กลุ่มหมวกฟาง &gt; ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ.",
+    "effectEn": "[On Play] Set up to 2 of your DON!! cards as active.[End of Your Turn] If your Leader has the {FILM} or {Straw Hat Crew} type, set up to 1 of your DON!! cards as active.",
+    "effectJp": "【登場時】自分のドン‼2枚までを、アクティブにする。【自分のターン終了時】自分のリーダーが特徴《FILM》か《麦わらの一味》を持つ場合、自分のドン‼1枚までを、アクティブにする。",
+    "effectTh": "[เมื่อลงสนาม] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, แอ็คทีฟ.[เมื่อจบเทิร์นของเรา] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < FILM > หรือ < กลุ่มหมวกฟาง > ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-027_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-028",
@@ -739,7 +1012,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำให้ ด้ง!! ของเรา ทั้งหมด, แอ็คทีฟ. จากนั้น, เราจะไม่สามารถเล่นการ์ดจากในมืออีก ในเทิร์นนี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-028.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-028",
@@ -760,7 +1035,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-028_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-029",
@@ -781,7 +1058,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-029.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-030",
@@ -802,7 +1081,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-030.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-031",
@@ -817,12 +1098,14 @@
     "power": 6000,
     "attribute": "Slash",
     "trait": "FILM/Supernovas/Heart Pirates",
-    "effectEn": "If you have 1 or less Life cards, this Character gains [Blocker].<br>[On Play] You may return 1 of your Characters to the owner's hand: Play up to 1 Character card with a cost of 5 or less from your hand rested.",
-    "effectJp": "自分のライフが1枚以下の場合、このキャラは【ブロッカー】を得る。<br>【登場時】自分のキャラ1枚を持ち主の手札に戻すことができる：自分の手札からコスト5以下のキャラカード1枚までを、レストで登場させる。",
-    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 1 ใบ หรือน้อยกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์].<br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] สามารถนำคาแรกเตอร์ของเรา จำนวน 1 ใบ กลับขึ้นมือของเจ้าของ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์.",
+    "effectEn": "If you have 1 or less Life cards, this Character gains [Blocker].[On Play] You may return 1 of your Characters to the owner's hand: Play up to 1 Character card with a cost of 5 or less from your hand rested.",
+    "effectJp": "自分のライフが1枚以下の場合、このキャラは【ブロッカー】を得る。【登場時】自分のキャラ1枚を持ち主の手札に戻すことができる：自分の手札からコスト5以下のキャラカード1枚までを、レストで登場させる。",
+    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 1 ใบ หรือน้อยกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์].(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] สามารถนำคาแรกเตอร์ของเรา จำนวน 1 ใบ กลับขึ้นมือของเจ้าของ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-031.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-032",
@@ -843,7 +1126,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำให้คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 8 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, จะไม่สามารถถูก เรสต์, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-032.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-033",
@@ -863,7 +1148,9 @@
     "effectTh": "[เมื่อถูก KO] จะเรสต์ การ์ดของคู่แข่ง, จำนวนไม่เกิน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-033.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-034",
@@ -881,10 +1168,12 @@
     "trait": "FILM/Straw Hat Crew",
     "effectEn": "[On Play] If your Leader has the {FILM} or {Straw Hat Crew} type, set up to 1 of your DON!! cards as active.",
     "effectJp": "【登場時】自分のリーダーが特徴《FILM》か《麦わらの一味》を持つ場合、自分のドン‼1枚までを、アクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; FILM &gt; หรือ &lt; กลุ่มหมวกฟาง &gt; ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < FILM > หรือ < กลุ่มหมวกฟาง > ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-034.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-035",
@@ -904,7 +1193,9 @@
     "effectTh": "[เมื่อจบเทิร์นของเรา] ทำให้ คาแรกเตอร์นี้ หรือว่า ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ,  แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-035.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-036",
@@ -925,7 +1216,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-036.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-037",
@@ -941,12 +1234,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "FILM/Supernovas/Straw Hat Crew",
-    "effectEn": "[On Play] If your Leader has the {FILM} or {Straw Hat Crew} type, set up to 2 of your DON!! cards as active.<br>[End of Your Turn] Set this Character as active.",
-    "effectJp": "【登場時】自分のリーダーが特徴《FILM》か《麦わらの一味》を持つ場合、自分のドン‼2枚までを、アクティブにする。<br>【自分のターン終了時】このキャラをアクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; FILM &gt; หรือ &lt; กลุ่มหมวกฟาง &gt; ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, แอ็คทีฟ.<br>[เมื่อจบเทิร์นของเรา] จะแอ็คทีฟ คาแรกเตอร์นี้.",
+    "effectEn": "[On Play] If your Leader has the {FILM} or {Straw Hat Crew} type, set up to 2 of your DON!! cards as active.[End of Your Turn] Set this Character as active.",
+    "effectJp": "【登場時】自分のリーダーが特徴《FILM》か《麦わらの一味》を持つ場合、自分のドン‼2枚までを、アクティブにする。【自分のターン終了時】このキャラをアクティブにする。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < FILM > หรือ < กลุ่มหมวกฟาง > ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, แอ็คทีฟ.[เมื่อจบเทิร์นของเรา] จะแอ็คทีฟ คาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-037.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-038",
@@ -962,11 +1257,11 @@
     "effectEn": "[Main] Rest up to 1 of your opponent's Characters with a cost of 5 or less. Then, set up to 2 of your DON!! cards as active at the end of this turn.",
     "effectJp": "【メイン】相手のコスト5以下のキャラ1枚までを、レストにする。その後、このターン終了時、自分のドン‼2枚までを、アクティブにする。",
     "effectTh": "[เมน] จะเรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, เมื่อจบเทิร์นนี้, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, แอ็คทีฟ.",
-    "triggerEn": "[Trigger] Rest up to 1 of your opponent's Characters with a cost of 5 or less.",
-    "triggerJp": "【トリガー】相手のコスト5以下のキャラ1枚までを、レストにする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-038.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-039",
@@ -982,11 +1277,11 @@
     "effectEn": "[Counter] K.O. up to 1 of your opponent's rested Characters with a cost of 4 or less.",
     "effectJp": "【カウンター】相手のレストのコスト4以下のキャラ1枚までを、KOする。",
     "effectTh": "[เคาน์เตอร์] จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Activate this card's [Counter] effect.",
-    "triggerJp": "【トリガー】このカードの【カウンター】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-039.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-040",
@@ -999,12 +1294,14 @@
     "color": "Green",
     "cost": 1,
     "trait": "Supernovas/Straw Hat Crew",
-    "effectEn": "[Main] You may rest 2 of your DON!! cards: Up to 2 of your opponent's rested Characters with a cost of 7 or less will not become active in your opponent's next Refresh Phase.<br>[Counter] Your Leader gains +3000 power during this battle.",
-    "effectJp": "【メイン】自分のドン‼2枚をレストにできる：相手のレストのコスト7以下のキャラ2枚までは、次の相手のリフレッシュフェイズでアクティブにならない。<br>【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 2 ใบ : ทำให้ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 7 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่ จำนวนไม่เกิน 2 ใบ, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของคู่แข่งในครั้งถัดไป.<br>[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะมีพาวเวอร์ +3000.",
+    "effectEn": "[Main] You may rest 2 of your DON!! cards: Up to 2 of your opponent's rested Characters with a cost of 7 or less will not become active in your opponent's next Refresh Phase.[Counter] Your Leader gains +3000 power during this battle.",
+    "effectJp": "【メイン】自分のドン‼2枚をレストにできる：相手のレストのコスト7以下のキャラ2枚までは、次の相手のリフレッシュフェイズでアクティブにならない。【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 2 ใบ : ทำให้ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 7 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่ จำนวนไม่เกิน 2 ใบ, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของคู่แข่งในครั้งถัดไป.[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-040.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-041",
@@ -1025,7 +1322,9 @@
     "effectTh": "[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-041.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-042",
@@ -1040,12 +1339,14 @@
     "power": 12000,
     "attribute": "Special",
     "trait": "The Four Emperors/Whitebeard Pirates",
-    "effectEn": "[Blocker]<br>[On Play] Draw 2 cards and trash 1 card from your hand. Then, give your Leader and 1 Character up to 2 rested DON!! cards each.",
-    "effectJp": "【ブロッカー】<br>【登場時】カード2枚を引き、自分の手札1枚を捨てる。その後、自分のリーダーとキャラ1枚にレストのドン‼2枚ずつまでを、付与する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, จากนั้น, ทิ้งการ์ดในมือของเรา จำนวน 1 ใบ. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่, ใส่ให้ ลีดเดอร์ของฝ่ายเรา และ คาแรกเตอร์ ของฝ่ายเรา จำนวน 1 ใบ, อย่างละ จำนวนไม่เกิน 2 ใบ.",
+    "effectEn": "[Blocker][On Play] Draw 2 cards and trash 1 card from your hand. Then, give your Leader and 1 Character up to 2 rested DON!! cards each.",
+    "effectJp": "【ブロッカー】【登場時】カード2枚を引き、自分の手札1枚を捨てる。その後、自分のリーダーとキャラ1枚にレストのドン‼2枚ずつまでを、付与する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, จากนั้น, ทิ้งการ์ดในมือของเรา จำนวน 1 ใบ. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่, ใส่ให้ ลีดเดอร์ของฝ่ายเรา และ คาแรกเตอร์ ของฝ่ายเรา จำนวน 1 ใบ, อย่างละ จำนวนไม่เกิน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-042.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-042",
@@ -1060,13 +1361,15 @@
     "power": 12000,
     "attribute": "Special",
     "trait": "The Four Emperors/Whitebeard Pirates",
-    "effectEn": "[Blocker]<br>[On Play] Draw 2 cards and trash 1 card from your hand. Then, give your Leader and 1 Character up to 2 rested DON!! cards each.",
-    "effectJp": "【ブロッカー】<br>【登場時】カード2枚を引き、自分の手札1枚を捨てる。その後、自分のリーダーとキャラ1枚にレストのドン‼2枚ずつまでを、付与する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, จากนั้น, ทิ้งการ์ดในมือของเรา จำนวน 1 ใบ. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่, ใส่ให้ ลีดเดอร์ของฝ่ายเรา และ คาแรกเตอร์ ของฝ่ายเรา จำนวน 1 ใบ, อย่างละ จำนวนไม่เกิน 2 ใบ.",
+    "effectEn": "[Blocker][On Play] Draw 2 cards and trash 1 card from your hand. Then, give your Leader and 1 Character up to 2 rested DON!! cards each.",
+    "effectJp": "【ブロッカー】【登場時】カード2枚を引き、自分の手札1枚を捨てる。その後、自分のリーダーとキャラ1枚にレストのドン‼2枚ずつまでを、付与する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, จากนั้น, ทิ้งการ์ดในมือของเรา จำนวน 1 ใบ. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่, ใส่ให้ ลีดเดอร์ของฝ่ายเรา และ คาแรกเตอร์ ของฝ่ายเรา จำนวน 1 ใบ, อย่างละ จำนวนไม่เกิน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-042_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-043",
@@ -1086,7 +1389,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่าละก็, จะจั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-043.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-044",
@@ -1101,12 +1406,14 @@
     "power": 4000,
     "attribute": "Ranged",
     "trait": "Whitebeard Pirates",
-    "effectEn": "[When Attacking] Give up to 1 rested DON!! card to your Leader with a type including \"Whitebeard Pirates\" or 1 Character with a type including \"Whitebeard Pirates\".<br>[On K.O.] Draw 1 card.",
-    "effectJp": "【アタック時】自分の『白ひげ海賊団』を含む特徴を持つ、リーダーかキャラ1枚にレストのドン‼1枚までを、付与する。<br>【KO時】カード1枚を引く。",
-    "effectTh": "[เมื่อโจมตี] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของฝ่ายเรา จำนวน 1 ใบ, ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ.<br>[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "[When Attacking] Give up to 1 rested DON!! card to your Leader with a type including \"Whitebeard Pirates\" or 1 Character with a type including \"Whitebeard Pirates\".[On K.O.] Draw 1 card.",
+    "effectJp": "【アタック時】自分の『白ひげ海賊団』を含む特徴を持つ、リーダーかキャラ1枚にレストのドン‼1枚までを、付与する。【KO時】カード1枚を引く。",
+    "effectTh": "[เมื่อโจมตี] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของฝ่ายเรา จำนวน 1 ใบ, ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ.[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-044.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-045",
@@ -1127,7 +1434,9 @@
     "effectTh": "[เมื่อโจมตี] ถ้าเรามีการ์ดในมือ จำนวน 4 ใบ หรือน้อยกว่าละก็, จะจั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-045.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-046",
@@ -1142,12 +1451,14 @@
     "power": 8000,
     "attribute": "Slash",
     "trait": "Whitebeard Pirates",
-    "effectEn": "[Double Attack]<br>[Once Per Turn] If this Character would be K.O.'d or would be removed from the field by your opponent's effect, you may trash 1 card with a type including \"Whitebeard Pirates\" from your hand instead.",
-    "effectJp": "【ダブルアタック】<br>【ターン1回】このキャラがKOされるか相手の効果で場を離れる場合、代わりに自分の手札から『白ひげ海賊団』を含む特徴を持つカード1枚を捨てることができる。",
-    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)<br>[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูก KO หรือว่า กำลังจะถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, จะสามารถทิ้งการ์ด ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ จากในมือของเรา จำนวน 1 ใบ, แทนได้.",
+    "effectEn": "[Double Attack][Once Per Turn] If this Character would be K.O.'d or would be removed from the field by your opponent's effect, you may trash 1 card with a type including \"Whitebeard Pirates\" from your hand instead.",
+    "effectJp": "【ダブルアタック】【ターン1回】このキャラがKOされるか相手の効果で場を離れる場合、代わりに自分の手札から『白ひげ海賊団』を含む特徴を持つカード1枚を捨てることができる。",
+    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูก KO หรือว่า กำลังจะถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, จะสามารถทิ้งการ์ด ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ จากในมือของเรา จำนวน 1 ใบ, แทนได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-046.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-047",
@@ -1168,7 +1479,9 @@
     "effectTh": "ถ้าคาแรกเตอร์ของฝ่ายเรา ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ กำลังจะถูก KO จากความสามารถของฝ่ายคู่แข่ง, จะสามารถนำ คาแรกเตอร์นี้ ไปวางที่แทรช แทนได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-047.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-048",
@@ -1189,7 +1502,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-048.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-049",
@@ -1210,7 +1525,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-049.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-050",
@@ -1231,7 +1548,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Boa Hancock] ละก็, จะนำ [Boa Hancock] ที่มีคอสต์ 3 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-050.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-051",
@@ -1251,7 +1570,9 @@
     "effectTh": "[เมื่อถูก KO] ถ้าลีดเดอร์ของเราคือ [Boa Hancock] หรือว่า มีหลายสี ละก็, จะจั่วการ์ด จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-051.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-051",
@@ -1272,7 +1593,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-051_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-052",
@@ -1288,12 +1611,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Kuja Pirates",
-    "effectEn": "[Blocker]<br>[On Play] If your Leader is [Boa Hancock], play up to 1 [Boa Hancock] with a cost of 6 or less from your hand.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のリーダーが「ボア・ハンコック」の場合、自分の手札からコスト6以下の「ボア・ハンコック」1枚までを、登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Boa Hancock] ละก็, จะนำ [Boa Hancock] ที่มีคอสต์ 6 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Blocker][On Play] If your Leader is [Boa Hancock], play up to 1 [Boa Hancock] with a cost of 6 or less from your hand.",
+    "effectJp": "【ブロッカー】【登場時】自分のリーダーが「ボア・ハンコック」の場合、自分の手札からコスト6以下の「ボア・ハンコック」1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Boa Hancock] ละก็, จะนำ [Boa Hancock] ที่มีคอสต์ 6 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-052.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-053",
@@ -1311,10 +1636,12 @@
     "trait": "Whitebeard Pirates",
     "effectEn": "[When Attacking] You may trash 1 of your Characters with a type including \"Whitebeard Pirates\": Draw 1 card and this Character gains [Banish] during this turn.",
     "effectJp": "【アタック時】自分の『白ひげ海賊団』を含む特徴を持つキャラ1枚をトラッシュに置くことができる：カード1枚を引き、このキャラは、このターン中、【バニッシュ】を得る。",
-    "effectTh": "[เมื่อโจมตี] สามารถนำคาแรกเตอร์ของเรา ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ จำนวน 1 ใบ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [แบนนิช]. <br>(ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
+    "effectTh": "[เมื่อโจมตี] สามารถนำคาแรกเตอร์ของเรา ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ จำนวน 1 ใบ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [แบนนิช]. (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-053.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-054",
@@ -1335,7 +1662,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่าละก็, จะจั่วการ์ด จำนวน 2 ใบ. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-054.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-054",
@@ -1357,7 +1686,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-054_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-055",
@@ -1378,7 +1709,9 @@
     "effectTh": "[เมื่อโจมตี] ถ้าเรามีการ์ดในมือ จำนวน 4 ใบ หรือน้อยกว่าละก็, ในเทิร์นนี้, คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-055.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-056",
@@ -1399,7 +1732,9 @@
     "effectTh": "[เมื่อโจมตี] ถ้าลีดเดอร์ของฝ่ายเรา ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, จะจั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-056.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-057",
@@ -1412,12 +1747,14 @@
     "color": "Blue",
     "cost": 1,
     "trait": "Whitebeard Pirates",
-    "effectEn": "[Main] You may rest 1 of your DON!! cards: If you have 1 or less Life cards, your opponent cannot activate [Blocker] whenever your Leader attacks during this turn.<br>[Counter] Your Leader gains +3000 power during this battle.",
-    "effectJp": "【メイン】自分のドン‼1枚をレストにできる：自分のライフが1枚以下の場合、相手は、このターン中、自分のリーダーがアタックする際【ブロッカー】を発動できない。<br>【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : ถ้าเรามี ไลฟ์ จำนวน 1 ใบ หรือน้อยกว่าละก็, ในเทิร์นนี้, ขณะที่ลีดเดอร์ของเรากำลังโจมตี, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์].<br>[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะมีพาวเวอร์ +3000.",
+    "effectEn": "[Main] You may rest 1 of your DON!! cards: If you have 1 or less Life cards, your opponent cannot activate [Blocker] whenever your Leader attacks during this turn.[Counter] Your Leader gains +3000 power during this battle.",
+    "effectJp": "【メイン】自分のドン‼1枚をレストにできる：自分のライフが1枚以下の場合、相手は、このターン中、自分のリーダーがアタックする際【ブロッカー】を発動できない。【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : ถ้าเรามี ไลฟ์ จำนวน 1 ใบ หรือน้อยกว่าละก็, ในเทิร์นนี้, ขณะที่ลีดเดอร์ของเรากำลังโจมตี, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์].[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-057.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-058",
@@ -1430,12 +1767,14 @@
     "color": "Blue",
     "cost": 1,
     "trait": "Former Whitebeard Pirates",
-    "effectEn": "[Main] You may rest 1 of your DON!! cards: Place up to 1 of your opponent's Characters with 3000 power or less at the bottom of the owner's deck.<br>[Counter] Your Leader gains +3000 power during this battle.",
-    "effectJp": "【メイン】自分のドン‼1枚をレストにできる：相手のパワー3000以下のキャラ1枚までを、持ち主のデッキの下に置く。<br>【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : นำคาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ใต้เด็คของเจ้าของ.<br>[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะมีพาวเวอร์ +3000.",
+    "effectEn": "[Main] You may rest 1 of your DON!! cards: Place up to 1 of your opponent's Characters with 3000 power or less at the bottom of the owner's deck.[Counter] Your Leader gains +3000 power during this battle.",
+    "effectJp": "【メイン】自分のドン‼1枚をレストにできる：相手のパワー3000以下のキャラ1枚までを、持ち主のデッキの下に置く。【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : นำคาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ใต้เด็คของเจ้าของ.[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-058.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-059",
@@ -1451,11 +1790,11 @@
     "effectEn": "[Main] You may return 1 of your Characters to the owner's hand: Return up to 1 Character with a cost of 6 or less to the owner's hand.",
     "effectJp": "【メイン】自分のキャラ1枚を持ち主の手札に戻すことができる：コスト6以下のキャラ1枚までを、持ち主の手札に戻す。",
     "effectTh": "[เมน] สามารถนำคาแรกเตอร์ของเรา จำนวน 1 ใบ กลับขึ้นมือของเจ้าของ : นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 6 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
-    "triggerEn": "[Trigger] Draw 1 card.",
-    "triggerJp": "【トリガー】カード1枚を引く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-059.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-060",
@@ -1476,7 +1815,9 @@
     "effectTh": "ถ้าคาแรกเตอร์ของฝ่ายเรา ที่ระบุคำว่า [กลุ่มโจรสลัดโรเจอร์] รวมอยู่ในคุณสมบัติ กำลังจะถูก KO จากความสามารถของฝ่ายคู่แข่ง, จะสามารถนำ คาแรกเตอร์นี้ ไปวางที่แทรช แทนได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-060.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-061",
@@ -1497,7 +1838,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์. จากนั้น, จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-061.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-062",
@@ -1513,12 +1856,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Roger Pirates",
-    "effectEn": "[On Play] If you have any DON!! cards given, add up to 1 DON!! card from your DON!! deck and set it as active.<br>[When Attacking] Return up to 1 of your opponent's Characters with a base power of 3000 or less to the owner's hand.",
-    "effectJp": "【登場時】自分の付与されているドン‼がある場合、ドン‼デッキからドン‼1枚までを、アクティブで追加する。<br>【アタック時】相手の元々のパワー3000以下のキャラ1枚までを、持ち主の手札に戻す。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.<br>[เมื่อโจมตี] นำคาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ตั้งต้น 3000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
+    "effectEn": "[On Play] If you have any DON!! cards given, add up to 1 DON!! card from your DON!! deck and set it as active.[When Attacking] Return up to 1 of your opponent's Characters with a base power of 3000 or less to the owner's hand.",
+    "effectJp": "【登場時】自分の付与されているドン‼がある場合、ドン‼デッキからドン‼1枚までを、アクティブで追加する。【アタック時】相手の元々のパワー3000以下のキャラ1枚までを、持ち主の手札に戻す。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.[เมื่อโจมตี] นำคาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ตั้งต้น 3000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-062.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-063",
@@ -1534,12 +1879,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Land of Wano/Kouzuki Clan/Roger Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] If you have any DON!! cards given, add up to 1 DON!! card from your DON!! deck and rest it.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分の付与されているドン‼がある場合、ドン‼デッキからドン‼1枚までを、レストで追加する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] If you have any DON!! cards given, add up to 1 DON!! card from your DON!! deck and rest it.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分の付与されているドン‼がある場合、ドン‼デッキからドン‼1枚までを、レストで追加する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-063.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-064",
@@ -1554,12 +1901,14 @@
     "power": 13000,
     "attribute": "Slash",
     "trait": "King of the Pirates/Roger Pirates",
-    "effectEn": "Your Leader and all of your Characters that do not have a type including \"Roger Pirates\" have their effects negated.<br>[On Play] DON!! −3: Your Leader gains +2000 power until the end of your opponent's next End Phase. Then, give all of your opponent's Characters −2000 power until the end of your opponent's next End Phase.",
-    "effectJp": "自分の、リーダーと『ロジャー海賊団』を含む特徴を持たないキャラすべては、効果が無効になる。<br>【登場時】ドン‼-3：自分のリーダーを、次の相手のエンドフェイズ終了時まで、パワー+2000。その後、相手のキャラすべてを、次の相手のエンドフェイズ終了時まで、パワー-2000。",
-    "effectTh": "ลีดเดอร์, กับ คาแรกเตอร์ ที่ไม่ได้ระบุคำว่า [กลุ่มโจรสลัดโรเจอร์] รวมอยู่ในคุณสมบัติ ของฝ่ายเรา ทั้งหมด, จะถูกทำให้ความสามารถไร้ผล.<br>[เมื่อลงสนาม] ด้ง!! - 3 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ลีดเดอร์ของเรา จะมีพาวเวอร์ +2000, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป. จากนั้น, คาแรกเตอร์ของคู่แข่ง ทั้งหมด จะมีพาวเวอร์ -2000, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป.",
+    "effectEn": "Your Leader and all of your Characters that do not have a type including \"Roger Pirates\" have their effects negated.[On Play] DON!! −3: Your Leader gains +2000 power until the end of your opponent's next End Phase. Then, give all of your opponent's Characters −2000 power until the end of your opponent's next End Phase.",
+    "effectJp": "自分の、リーダーと『ロジャー海賊団』を含む特徴を持たないキャラすべては、効果が無効になる。【登場時】ドン‼-3：自分のリーダーを、次の相手のエンドフェイズ終了時まで、パワー+2000。その後、相手のキャラすべてを、次の相手のエンドフェイズ終了時まで、パワー-2000。",
+    "effectTh": "ลีดเดอร์, กับ คาแรกเตอร์ ที่ไม่ได้ระบุคำว่า [กลุ่มโจรสลัดโรเจอร์] รวมอยู่ในคุณสมบัติ ของฝ่ายเรา ทั้งหมด, จะถูกทำให้ความสามารถไร้ผล.[เมื่อลงสนาม] ด้ง!! - 3 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ลีดเดอร์ของเรา จะมีพาวเวอร์ +2000, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป. จากนั้น, คาแรกเตอร์ของคู่แข่ง ทั้งหมด จะมีพาวเวอร์ -2000, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-064.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-064",
@@ -1574,13 +1923,15 @@
     "power": 13000,
     "attribute": "Slash",
     "trait": "King of the Pirates/Roger Pirates",
-    "effectEn": "Your Leader and all of your Characters that do not have a type including \"Roger Pirates\" have their effects negated.<br>[On Play] DON!! −3: Your Leader gains +2000 power until the end of your opponent's next End Phase. Then, give all of your opponent's Characters −2000 power until the end of your opponent's next End Phase.",
-    "effectJp": "自分の、リーダーと『ロジャー海賊団』を含む特徴を持たないキャラすべては、効果が無効になる。<br>【登場時】ドン‼-3：自分のリーダーを、次の相手のエンドフェイズ終了時まで、パワー+2000。その後、相手のキャラすべてを、次の相手のエンドフェイズ終了時まで、パワー-2000。",
-    "effectTh": "ลีดเดอร์, กับ คาแรกเตอร์ ที่ไม่ได้ระบุคำว่า [กลุ่มโจรสลัดโรเจอร์] รวมอยู่ในคุณสมบัติ ของฝ่ายเรา ทั้งหมด, จะถูกทำให้ความสามารถไร้ผล.<br>[เมื่อลงสนาม] ด้ง!! - 3 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ลีดเดอร์ของเรา จะมีพาวเวอร์ +2000, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป. จากนั้น, คาแรกเตอร์ของคู่แข่ง ทั้งหมด จะมีพาวเวอร์ -2000, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป.",
+    "effectEn": "Your Leader and all of your Characters that do not have a type including \"Roger Pirates\" have their effects negated.[On Play] DON!! −3: Your Leader gains +2000 power until the end of your opponent's next End Phase. Then, give all of your opponent's Characters −2000 power until the end of your opponent's next End Phase.",
+    "effectJp": "自分の、リーダーと『ロジャー海賊団』を含む特徴を持たないキャラすべては、効果が無効になる。【登場時】ドン‼-3：自分のリーダーを、次の相手のエンドフェイズ終了時まで、パワー+2000。その後、相手のキャラすべてを、次の相手のエンドフェイズ終了時まで、パワー-2000。",
+    "effectTh": "ลีดเดอร์, กับ คาแรกเตอร์ ที่ไม่ได้ระบุคำว่า [กลุ่มโจรสลัดโรเจอร์] รวมอยู่ในคุณสมบัติ ของฝ่ายเรา ทั้งหมด, จะถูกทำให้ความสามารถไร้ผล.[เมื่อลงสนาม] ด้ง!! - 3 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ลีดเดอร์ของเรา จะมีพาวเวอร์ +2000, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป. จากนั้น, คาแรกเตอร์ของคู่แข่ง ทั้งหมด จะมีพาวเวอร์ -2000, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-064_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-065",
@@ -1601,7 +1952,9 @@
     "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่ระบุคำว่า [กลุ่มโจรสลัดโรเจอร์] รวมอยู่ในคุณสมบัติ นอกเหนือจาก [Shanks] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-065.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-065",
@@ -1623,7 +1976,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-065_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-066",
@@ -1638,12 +1993,14 @@
     "power": 9000,
     "attribute": "Slash",
     "trait": "Roger Pirates",
-    "effectEn": "[Rush]<br>[On Play] If you have any DON!! cards given, rest up to 1 of your opponent's Characters with a cost of 5 or less. Then, add up to 1 DON!! card from your DON!! deck and set it as active at the end of this turn.",
-    "effectJp": "【速攻】<br>【登場時】自分の付与されているドン‼がある場合、相手のコスト5以下のキャラ1枚までを、レストにする。その後、このターン終了時、ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).<br>[เมื่อลงสนาม] ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, จะเรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, เมื่อจบเทิร์นนี้, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[Rush][On Play] If you have any DON!! cards given, rest up to 1 of your opponent's Characters with a cost of 5 or less. Then, add up to 1 DON!! card from your DON!! deck and set it as active at the end of this turn.",
+    "effectJp": "【速攻】【登場時】自分の付与されているドン‼がある場合、相手のコスト5以下のキャラ1枚までを、レストにする。その後、このターン終了時、ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).[เมื่อลงสนาม] ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, จะเรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, เมื่อจบเทิร์นนี้, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-066.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-066",
@@ -1658,13 +2015,15 @@
     "power": 9000,
     "attribute": "Slash",
     "trait": "Roger Pirates",
-    "effectEn": "[Rush]<br>[On Play] If you have any DON!! cards given, rest up to 1 of your opponent's Characters with a cost of 5 or less. Then, add up to 1 DON!! card from your DON!! deck and set it as active at the end of this turn.",
-    "effectJp": "【速攻】<br>【登場時】自分の付与されているドン‼がある場合、相手のコスト5以下のキャラ1枚までを、レストにする。その後、このターン終了時、ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).<br>[เมื่อลงสนาม] ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, จะเรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, เมื่อจบเทิร์นนี้, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[Rush][On Play] If you have any DON!! cards given, rest up to 1 of your opponent's Characters with a cost of 5 or less. Then, add up to 1 DON!! card from your DON!! deck and set it as active at the end of this turn.",
+    "effectJp": "【速攻】【登場時】自分の付与されているドン‼がある場合、相手のコスト5以下のキャラ1枚までを、レストにする。その後、このターン終了時、ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).[เมื่อลงสนาม] ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, จะเรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, เมื่อจบเทิร์นนี้, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-066_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-067",
@@ -1685,7 +2044,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา ระบุคำว่า [กลุ่มโจรสลัดโรเจอร์] รวมอยู่ในคุณสมบัติละก็, จะจั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ. จากนั้น, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-067.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-068",
@@ -1701,12 +2062,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "FILM/Former Roger Pirates",
-    "effectEn": "If you have 8 or more DON!! cards on your field, this Character gains +2000 power.<br>[On Play] If your Leader's type includes \"Roger Pirates\", add up to 1 DON!! card from your DON!! deck and rest it.",
-    "effectJp": "自分の場のドン‼が8枚以上ある場合、このキャラのパワー+2000。<br>【登場時】自分のリーダーが『ロジャー海賊団』を含む特徴を持つ場合、ドン‼デッキからドン‼1枚までを、レストで追加する。",
-    "effectTh": "ถ้าในสนามของเรามี ด้ง!! จำนวน 8 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา ระบุคำว่า [กลุ่มโจรสลัดโรเจอร์] รวมอยู่ในคุณสมบัติละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
+    "effectEn": "If you have 8 or more DON!! cards on your field, this Character gains +2000 power.[On Play] If your Leader's type includes \"Roger Pirates\", add up to 1 DON!! card from your DON!! deck and rest it.",
+    "effectJp": "自分の場のドン‼が8枚以上ある場合、このキャラのパワー+2000。【登場時】自分のリーダーが『ロジャー海賊団』を含む特徴を持つ場合、ドン‼デッキからドン‼1枚までを、レストで追加する。",
+    "effectTh": "ถ้าในสนามของเรามี ด้ง!! จำนวน 8 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา ระบุคำว่า [กลุ่มโจรสลัดโรเจอร์] รวมอยู่ในคุณสมบัติละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-068.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-069",
@@ -1727,7 +2090,9 @@
     "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำ สเตจการ์ด ที่มีคอสต์ 3 หรือต่ำกว่า จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ขึ้นมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-069.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-070",
@@ -1748,7 +2113,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-070.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-071",
@@ -1769,7 +2136,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! จำนวน 8 ใบ หรือมากกว่าละก็, จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ตั้งต้น 3000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-071.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-072",
@@ -1790,7 +2159,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา ระบุคำว่า [กลุ่มโจรสลัดโรเจอร์] รวมอยู่ในคุณสมบัติ, และเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-072.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-073",
@@ -1811,7 +2182,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-073.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-074",
@@ -1829,10 +2202,12 @@
     "trait": "Homies/Big Mom Pirates",
     "effectEn": "[On Play] Play up to 1 {Homies} type Character card with 3000 power or less from your hand.",
     "effectJp": "【登場時】自分の手札からパワー3000以下の特徴《ホーミーズ》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] สามารถนำ คาแรกเตอร์การ์ด ที่มีพาวเวอร์ 3000 หรือต่ำกว่า และมีคุณสมบัติ &lt; โฮมี่ส์ &gt; จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำ คาแรกเตอร์การ์ด ที่มีพาวเวอร์ 3000 หรือต่ำกว่า และมีคุณสมบัติ < โฮมี่ส์ > จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-074.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-075",
@@ -1845,12 +2220,14 @@
     "color": "Purple",
     "cost": 1,
     "trait": "King of the Pirates/Roger Pirates",
-    "effectEn": "[Main] You may rest 1 of your DON!! cards: If your Leader is [Gol.D.Roger] and you have any DON!! cards given, add up to 1 DON!! card from your DON!! deck and rest it.<br>[Counter] Your Leader gains +3000 power during this battle.",
-    "effectJp": "【メイン】自分のドン‼1枚をレストにできる：自分のリーダーが「ゴール・Ｄ・ロジャー」で、自分の付与されているドン‼がある場合、ドン‼デッキからドン‼1枚までを、レストで追加する。<br>【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของเราคือ [Gol.D.Roger] และเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.<br>[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะมีพาวเวอร์ +3000.",
+    "effectEn": "[Main] You may rest 1 of your DON!! cards: If your Leader is [Gol.D.Roger] and you have any DON!! cards given, add up to 1 DON!! card from your DON!! deck and rest it.[Counter] Your Leader gains +3000 power during this battle.",
+    "effectJp": "【メイン】自分のドン‼1枚をレストにできる：自分のリーダーが「ゴール・Ｄ・ロジャー」で、自分の付与されているドン‼がある場合、ドン‼デッキからドン‼1枚までを、レストで追加する。【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของเราคือ [Gol.D.Roger] และเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-075.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-076",
@@ -1862,12 +2239,14 @@
     "nameTh": "Divine Departure",
     "color": "Purple",
     "trait": "King of the Pirates/Roger Pirates",
-    "effectEn": "[Main] You may rest 5 of your DON!! cards: If you have any DON!! cards given, give up to 1 of your opponent's Characters −8000 power during this turn.<br>[Counter] You may trash 1 card from your hand: Up to 1 of your Leader or Character cards gains +3000 power during this battle.",
-    "effectJp": "【メイン】自分のドン‼5枚をレストにできる：自分の付与されているドン‼がある場合、相手のキャラ1枚までを、このターン中、パワー-8000。<br>【カウンター】自分の手札1枚を捨てることができる：自分のリーダーかキャラ1枚までを、このバトル中、パワー+3000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 5 ใบ : ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -8000.<br>[เคาน์เตอร์] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
+    "effectEn": "[Main] You may rest 5 of your DON!! cards: If you have any DON!! cards given, give up to 1 of your opponent's Characters −8000 power during this turn.[Counter] You may trash 1 card from your hand: Up to 1 of your Leader or Character cards gains +3000 power during this battle.",
+    "effectJp": "【メイン】自分のドン‼5枚をレストにできる：自分の付与されているドン‼がある場合、相手のキャラ1枚までを、このターン中、パワー-8000。【カウンター】自分の手札1枚を捨てることができる：自分のリーダーかキャラ1枚までを、このバトル中、パワー+3000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 5 ใบ : ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -8000.[เคาน์เตอร์] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-076.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-076",
@@ -1879,13 +2258,15 @@
     "nameTh": "Divine Departure",
     "color": "Purple",
     "trait": "King of the Pirates/Roger Pirates",
-    "effectEn": "[Main] You may rest 5 of your DON!! cards: If you have any DON!! cards given, give up to 1 of your opponent's Characters −8000 power during this turn.<br>[Counter] You may trash 1 card from your hand: Up to 1 of your Leader or Character cards gains +3000 power during this battle.",
-    "effectJp": "【メイン】自分のドン‼5枚をレストにできる：自分の付与されているドン‼がある場合、相手のキャラ1枚までを、このターン中、パワー-8000。<br>【カウンター】自分の手札1枚を捨てることができる：自分のリーダーかキャラ1枚までを、このバトル中、パワー+3000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 5 ใบ : ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -8000.<br>[เคาน์เตอร์] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
+    "effectEn": "[Main] You may rest 5 of your DON!! cards: If you have any DON!! cards given, give up to 1 of your opponent's Characters −8000 power during this turn.[Counter] You may trash 1 card from your hand: Up to 1 of your Leader or Character cards gains +3000 power during this battle.",
+    "effectJp": "【メイン】自分のドン‼5枚をレストにできる：自分の付与されているドン‼がある場合、相手のキャラ1枚までを、このターン中、パワー-8000。【カウンター】自分の手札1枚を捨てることができる：自分のリーダーかキャラ1枚までを、このバトル中、パワー+3000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 5 ใบ : ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -8000.[เคาน์เตอร์] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-076_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-077",
@@ -1898,12 +2279,14 @@
     "color": "Purple",
     "cost": 1,
     "trait": "Former Roger Pirates",
-    "effectEn": "[Main] You may rest 3 of your DON!! cards: If you have any DON!! cards given, K.O. up to 1 of your opponent's Characters with 4000 base power or less and up to 1 of your opponent's Characters with 3000 base power or less.<br>[Counter] Your Leader gains +3000 power during this turn.",
-    "effectJp": "【メイン】自分のドン‼3枚をレストにできる：自分の付与されているドン‼がある場合、相手の元々の、パワー4000以下のキャラ1枚までとパワー3000以下のキャラ1枚までを、KOする。<br>【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 3 ใบ : ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, จะ KO คาแรกเตอร์ของฝ่ายคู่แข่ง, ที่มีพาวเวอร์ตั้งต้น 4000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กับที่มีพาวเวอร์ตั้งต้น 3000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.<br>[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะมีพาวเวอร์ +3000.",
+    "effectEn": "[Main] You may rest 3 of your DON!! cards: If you have any DON!! cards given, K.O. up to 1 of your opponent's Characters with 4000 base power or less and up to 1 of your opponent's Characters with 3000 base power or less.[Counter] Your Leader gains +3000 power during this turn.",
+    "effectJp": "【メイン】自分のドン‼3枚をレストにできる：自分の付与されているドン‼がある場合、相手の元々の、パワー4000以下のキャラ1枚までとパワー3000以下のキャラ1枚までを、KOする。【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 3 ใบ : ถ้าเรามี ด้ง!! ที่ถูกนำไปใส่อยู่ละก็, จะ KO คาแรกเตอร์ของฝ่ายคู่แข่ง, ที่มีพาวเวอร์ตั้งต้น 4000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กับที่มีพาวเวอร์ตั้งต้น 3000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-077.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "Apology for the errata and revision in card effect text"
+    ]
   },
   {
     "code": "OP13-078",
@@ -1921,7 +2304,9 @@
     "effectTh": "[เทิร์นละ 1 ครั้ง] เมื่อมี คาแรกเตอร์ของฝ่ายเรา ที่ระบุคำว่า [กลุ่มโจรสลัดโรเจอร์] รวมอยู่ในคุณสมบัติ กำลังจะถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-078.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-079",
@@ -1934,14 +2319,16 @@
     "color": "Black",
     "power": 5000,
     "life": 4,
-    "attribute": "Unknown",
+    "attribute": "?",
     "trait": "?",
-    "effectEn": "Under the rules of this game, you cannot include Events with a cost of 2 or more in your deck and at the start of the game, play up to 1 {Mary Geoise} type Stage card from your deck.<br>[Activate: Main] [Once Per Turn] You may trash 1 of your {Celestial Dragons} type Characters or 1 card from your hand: Draw 1 card.",
-    "effectJp": "ルール上、自分はコスト2以上のイベントをデッキに入れることができず、ゲーム開始時、自分のデッキから特徴《聖地マリージョア》を持つステージカード1枚までを、登場させる。<br>【起動メイン】【ターン1回】自分の、特徴《天竜人》を持つキャラか、手札1枚をトラッシュに置くことができる：カード1枚を引く。",
-    "effectTh": "เพิ่มกฎ, ทำให้เราไม่สามารถใส่ อีเวนต์ ที่มีคอสต์ 2 หรือสูงกว่า อยู่ในเด็ค, และเมื่อเริ่มเกม, จะนำ สเตจการ์ด ที่มีคุณสมบัติ &lt; ดินแดนศักดิ์สิทธิ์แมรี่จัวร์ &gt; จากในเด็คของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.<br>[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำคาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; เผ่ามังกรฟ้า &gt; หรือว่า การ์ดในมือของเรา จำนวน 1 ใบ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "Under the rules of this game, you cannot include Events with a cost of 2 or more in your deck and at the start of the game, play up to 1 {Mary Geoise} type Stage card from your deck.[Activate: Main] [Once Per Turn] You may trash 1 of your {Celestial Dragons} type Characters or 1 card from your hand: Draw 1 card.",
+    "effectJp": "ルール上、自分はコスト2以上のイベントをデッキに入れることができず、ゲーム開始時、自分のデッキから特徴《聖地マリージョア》を持つステージカード1枚までを、登場させる。【起動メイン】【ターン1回】自分の、特徴《天竜人》を持つキャラか、手札1枚をトラッシュに置くことができる：カード1枚を引く。",
+    "effectTh": "เพิ่มกฎ, ทำให้เราไม่สามารถใส่ อีเวนต์ ที่มีคอสต์ 2 หรือสูงกว่า อยู่ในเด็ค, และเมื่อเริ่มเกม, จะนำ สเตจการ์ด ที่มีคุณสมบัติ < ดินแดนศักดิ์สิทธิ์แมรี่จัวร์ > จากในเด็คของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำคาแรกเตอร์ของเรา ที่มีคุณสมบัติ < เผ่ามังกรฟ้า > หรือว่า การ์ดในมือของเรา จำนวน 1 ใบ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-079.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-079",
@@ -1954,15 +2341,17 @@
     "color": "Black",
     "power": 5000,
     "life": 4,
-    "attribute": "Unknown",
+    "attribute": "?",
     "trait": "?",
-    "effectEn": "Under the rules of this game, you cannot include Events with a cost of 2 or more in your deck and at the start of the game, play up to 1 {Mary Geoise} type Stage card from your deck.<br>[Activate: Main] [Once Per Turn] You may trash 1 of your {Celestial Dragons} type Characters or 1 card from your hand: Draw 1 card.",
-    "effectJp": "ルール上、自分はコスト2以上のイベントをデッキに入れることができず、ゲーム開始時、自分のデッキから特徴《聖地マリージョア》を持つステージカード1枚までを、登場させる。<br>【起動メイン】【ターン1回】自分の、特徴《天竜人》を持つキャラか、手札1枚をトラッシュに置くことができる：カード1枚を引く。",
-    "effectTh": "เพิ่มกฎ, ทำให้เราไม่สามารถใส่ อีเวนต์ ที่มีคอสต์ 2 หรือสูงกว่า อยู่ในเด็ค, และเมื่อเริ่มเกม, จะนำ สเตจการ์ด ที่มีคุณสมบัติ &lt; ดินแดนศักดิ์สิทธิ์แมรี่จัวร์ &gt; จากในเด็คของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.<br>[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำคาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; เผ่ามังกรฟ้า &gt; หรือว่า การ์ดในมือของเรา จำนวน 1 ใบ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "Under the rules of this game, you cannot include Events with a cost of 2 or more in your deck and at the start of the game, play up to 1 {Mary Geoise} type Stage card from your deck.[Activate: Main] [Once Per Turn] You may trash 1 of your {Celestial Dragons} type Characters or 1 card from your hand: Draw 1 card.",
+    "effectJp": "ルール上、自分はコスト2以上のイベントをデッキに入れることができず、ゲーム開始時、自分のデッキから特徴《聖地マリージョア》を持つステージカード1枚までを、登場させる。【起動メイン】【ターン1回】自分の、特徴《天竜人》を持つキャラか、手札1枚をトラッシュに置くことができる：カード1枚を引く。",
+    "effectTh": "เพิ่มกฎ, ทำให้เราไม่สามารถใส่ อีเวนต์ ที่มีคอสต์ 2 หรือสูงกว่า อยู่ในเด็ค, และเมื่อเริ่มเกม, จะนำ สเตจการ์ด ที่มีคุณสมบัติ < ดินแดนศักดิ์สิทธิ์แมรี่จัวร์ > จากในเด็คของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำคาแรกเตอร์ของเรา ที่มีคุณสมบัติ < เผ่ามังกรฟ้า > หรือว่า การ์ดในมือของเรา จำนวน 1 ใบ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-079_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-080",
@@ -1978,12 +2367,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Rush].<br>[When Attacking] If you have 10 or more cards in your trash, give up to 1 of your opponent's Characters −2000 power during this turn.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【速攻】を得る。<br>【アタック時】自分のトラッシュが10枚以上ある場合、相手のキャラ1枚までを、このターン中、パワー-2000。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 10 ใบ หรือมากกว่าละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Rush].[When Attacking] If you have 10 or more cards in your trash, give up to 1 of your opponent's Characters −2000 power during this turn.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【速攻】を得る。【アタック時】自分のトラッシュが10枚以上ある場合、相手のキャラ1枚までを、このターン中、パワー-2000。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 10 ใบ หรือมากกว่าละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-080.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-080",
@@ -1999,13 +2390,15 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Rush].<br>[When Attacking] If you have 10 or more cards in your trash, give up to 1 of your opponent's Characters −2000 power during this turn.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【速攻】を得る。<br>【アタック時】自分のトラッシュが10枚以上ある場合、相手のキャラ1枚までを、このターン中、パワー-2000。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 10 ใบ หรือมากกว่าละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Rush].[When Attacking] If you have 10 or more cards in your trash, give up to 1 of your opponent's Characters −2000 power during this turn.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【速攻】を得る。【アタック時】自分のトラッシュが10枚以上ある場合、相手のキャラ1枚までを、このターン中、パワー-2000。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 10 ใบ หรือมากกว่าละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-080_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-080",
@@ -2021,13 +2414,15 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Rush].<br>[When Attacking] If you have 10 or more cards in your trash, give up to 1 of your opponent's Characters −2000 power during this turn.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【速攻】を得る。<br>【アタック時】自分のトラッシュが10枚以上ある場合、相手のキャラ1枚までを、このターン中、パワー-2000。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 10 ใบ หรือมากกว่าละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Rush].[When Attacking] If you have 10 or more cards in your trash, give up to 1 of your opponent's Characters −2000 power during this turn.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【速攻】を得る。【アタック時】自分のトラッシュが10枚以上ある場合、相手のキャラ1枚までを、このターン中、パワー-2000。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 10 ใบ หรือมากกว่าละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-080_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-081",
@@ -2043,12 +2438,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "If your Leader has the {Revolutionary Army} type, this Character gains +3 cost.<br>[Activate: Main] [Once Per Turn] You may place 1 card from your trash at the bottom of your deck: Give up to 1 rested DON!! card to your Leader or 1 of your Characters.",
-    "effectJp": "自分のリーダーが特徴《革命軍》を持つ場合、このキャラのコスト+3。<br>【起動メイン】【ターン1回】自分のトラッシュからカード1枚をデッキの下に置くことができる：自分のリーダーかキャラ1枚にレストのドン‼1枚までを、付与する。",
-    "effectTh": "ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; ละก็, คาแรกเตอร์นี้ จะมีคอสต์ +3.<br>[สั่งใช้ : เมน]  [เทิร์นละ 1 ครั้ง] สามารถนำการ์ด จากในแทรชของเรา จำนวน 1 ใบ ไปวางที่ใต้เด็ค : นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
+    "effectEn": "If your Leader has the {Revolutionary Army} type, this Character gains +3 cost.[Activate: Main] [Once Per Turn] You may place 1 card from your trash at the bottom of your deck: Give up to 1 rested DON!! card to your Leader or 1 of your Characters.",
+    "effectJp": "自分のリーダーが特徴《革命軍》を持つ場合、このキャラのコスト+3。【起動メイン】【ターン1回】自分のトラッシュからカード1枚をデッキの下に置くことができる：自分のリーダーかキャラ1枚にレストのドン‼1枚までを、付与する。",
+    "effectTh": "ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < กองทัพปฏิวัติ > ละก็, คาแรกเตอร์นี้ จะมีคอสต์ +3.[สั่งใช้ : เมน]  [เทิร์นละ 1 ครั้ง] สามารถนำการ์ด จากในแทรชของเรา จำนวน 1 ใบ ไปวางที่ใต้เด็ค : นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-081.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-082",
@@ -2061,14 +2458,16 @@
     "color": "Black",
     "cost": 10,
     "power": 12000,
-    "attribute": "Slash",
+    "attribute": "Slash/Special",
     "trait": "Celestial Dragons/Five Elders",
     "effectEn": "[Activate: Main] If your Leader is [Imu], you may rest 1 of your DON!! cards and trash 1 card from your hand: Trash all of your Characters and play up to 5 {Five Elders} type Character cards with 5000 power and different card names from your trash.",
     "effectJp": "【起動メイン】自分のリーダーが「イム」の場合、自分のドン‼1枚をレストにし、自分の手札1枚を捨てることができる：自分のキャラすべてをトラッシュに置き、自分のトラッシュからパワー5000のカード名の異なる特徴《五老星》を持つキャラカード5枚までを、登場させる。",
-    "effectTh": "[สั่งใช้ : เมน]  ถ้าลีดเดอร์ของเราคือ [Imu] ละก็, จะสามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : นำคาแรกเตอร์ของเรา ทั้งหมด ไปวางที่แทรช, และนำคาแรกเตอร์การ์ด ที่มีพาวเวอร์ 5000 และมีคุณสมบัติ &lt; ห้าผู้เฒ่า &gt; ซึ่งมีชื่อการ์ดแตกต่างกัน, จากในแทรชของเรา จำนวนไม่เกิน 5 ใบ, ลงสนาม.",
+    "effectTh": "[สั่งใช้ : เมน]  ถ้าลีดเดอร์ของเราคือ [Imu] ละก็, จะสามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : นำคาแรกเตอร์ของเรา ทั้งหมด ไปวางที่แทรช, และนำคาแรกเตอร์การ์ด ที่มีพาวเวอร์ 5000 และมีคุณสมบัติ < ห้าผู้เฒ่า > ซึ่งมีชื่อการ์ดแตกต่างกัน, จากในแทรชของเรา จำนวนไม่เกิน 5 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-082.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-082",
@@ -2081,15 +2480,17 @@
     "color": "Black",
     "cost": 10,
     "power": 12000,
-    "attribute": "Slash",
+    "attribute": "Slash/Special",
     "trait": "Celestial Dragons/Five Elders",
     "effectEn": "[Activate: Main] If your Leader is [Imu], you may rest 1 of your DON!! cards and trash 1 card from your hand: Trash all of your Characters and play up to 5 {Five Elders} type Character cards with 5000 power and different card names from your trash.",
     "effectJp": "【起動メイン】自分のリーダーが「イム」の場合、自分のドン‼1枚をレストにし、自分の手札1枚を捨てることができる：自分のキャラすべてをトラッシュに置き、自分のトラッシュからパワー5000のカード名の異なる特徴《五老星》を持つキャラカード5枚までを、登場させる。",
-    "effectTh": "[สั่งใช้ : เมน]  ถ้าลีดเดอร์ของเราคือ [Imu] ละก็, จะสามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : นำคาแรกเตอร์ของเรา ทั้งหมด ไปวางที่แทรช, และนำคาแรกเตอร์การ์ด ที่มีพาวเวอร์ 5000 และมีคุณสมบัติ &lt; ห้าผู้เฒ่า &gt; ซึ่งมีชื่อการ์ดแตกต่างกัน, จากในแทรชของเรา จำนวนไม่เกิน 5 ใบ, ลงสนาม.",
+    "effectTh": "[สั่งใช้ : เมน]  ถ้าลีดเดอร์ของเราคือ [Imu] ละก็, จะสามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : นำคาแรกเตอร์ของเรา ทั้งหมด ไปวางที่แทรช, และนำคาแรกเตอร์การ์ด ที่มีพาวเวอร์ 5000 และมีคุณสมบัติ < ห้าผู้เฒ่า > ซึ่งมีชื่อการ์ดแตกต่างกัน, จากในแทรชของเรา จำนวนไม่เกิน 5 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-082_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-083",
@@ -2105,12 +2506,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects.<br>[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Five Elders} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れない。<br>【登場時】自分のデッキの上から5枚を見て、特徴《五老星》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง.<br>[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; ห้าผู้เฒ่า &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects.[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Five Elders} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れない。【登場時】自分のデッキの上から5枚を見て、特徴《五老星》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง.[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < ห้าผู้เฒ่า > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-083.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-083",
@@ -2126,13 +2529,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects.<br>[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Five Elders} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れない。<br>【登場時】自分のデッキの上から5枚を見て、特徴《五老星》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง.<br>[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; ห้าผู้เฒ่า &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects.[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Five Elders} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れない。【登場時】自分のデッキの上から5枚を見て、特徴《五老星》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง.[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < ห้าผู้เฒ่า > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-083_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-083",
@@ -2148,13 +2553,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects.<br>[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Five Elders} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れない。<br>【登場時】自分のデッキの上から5枚を見て、特徴《五老星》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง.<br>[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; ห้าผู้เฒ่า &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects.[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Five Elders} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れない。【登場時】自分のデッキの上から5枚を見て、特徴《五老星》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง.[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < ห้าผู้เฒ่า > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-083_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-084",
@@ -2170,12 +2577,14 @@
     "counter": 2000,
     "attribute": "Special",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects.<br>[Your Turn] If you have 10 or more cards in your trash, set the base power of all of your {Five Elders} type Characters to 7000.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れない。<br>【自分のターン中】自分のトラッシュが10枚以上ある場合、自分の特徴《五老星》を持つキャラすべての元々のパワーを7000にする。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง.<br>[ในเทิร์นของเรา] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 10 ใบ หรือมากกว่าละก็, คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ &lt; ห้าผู้เฒ่า &gt; จะมีพาวเวอร์ตั้งต้น กลายเป็น 7000.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects.[Your Turn] If you have 10 or more cards in your trash, set the base power of all of your {Five Elders} type Characters to 7000.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れない。【自分のターン中】自分のトラッシュが10枚以上ある場合、自分の特徴《五老星》を持つキャラすべての元々のパワーを7000にする。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง.[ในเทิร์นของเรา] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 10 ใบ หรือมากกว่าละก็, คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ < ห้าผู้เฒ่า > จะมีพาวเวอร์ตั้งต้น กลายเป็น 7000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-084.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-084",
@@ -2191,13 +2600,15 @@
     "counter": 2000,
     "attribute": "Special",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects.<br>[Your Turn] If you have 10 or more cards in your trash, set the base power of all of your {Five Elders} type Characters to 7000.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れない。<br>【自分のターン中】自分のトラッシュが10枚以上ある場合、自分の特徴《五老星》を持つキャラすべての元々のパワーを7000にする。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง.<br>[ในเทิร์นของเรา] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 10 ใบ หรือมากกว่าละก็, คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ &lt; ห้าผู้เฒ่า &gt; จะมีพาวเวอร์ตั้งต้น กลายเป็น 7000.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects.[Your Turn] If you have 10 or more cards in your trash, set the base power of all of your {Five Elders} type Characters to 7000.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れない。【自分のターン中】自分のトラッシュが10枚以上ある場合、自分の特徴《五老星》を持つキャラすべての元々のパワーを7000にする。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง.[ในเทิร์นของเรา] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 10 ใบ หรือมากกว่าละก็, คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ < ห้าผู้เฒ่า > จะมีพาวเวอร์ตั้งต้น กลายเป็น 7000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-084_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-084",
@@ -2213,13 +2624,15 @@
     "counter": 2000,
     "attribute": "Special",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects.<br>[Your Turn] If you have 10 or more cards in your trash, set the base power of all of your {Five Elders} type Characters to 7000.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れない。<br>【自分のターン中】自分のトラッシュが10枚以上ある場合、自分の特徴《五老星》を持つキャラすべての元々のパワーを7000にする。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง.<br>[ในเทิร์นของเรา] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 10 ใบ หรือมากกว่าละก็, คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ &lt; ห้าผู้เฒ่า &gt; จะมีพาวเวอร์ตั้งต้น กลายเป็น 7000.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects.[Your Turn] If you have 10 or more cards in your trash, set the base power of all of your {Five Elders} type Characters to 7000.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れない。【自分のターン中】自分のトラッシュが10枚以上ある場合、自分の特徴《五老星》を持つキャラすべての元々のパワーを7000にする。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง.[ในเทิร์นของเรา] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 10 ใบ หรือมากกว่าละก็, คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ < ห้าผู้เฒ่า > จะมีพาวเวอร์ตั้งต้น กลายเป็น 7000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-084_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-085",
@@ -2240,7 +2653,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-085.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-086",
@@ -2257,10 +2672,12 @@
     "trait": "Celestial Dragons",
     "effectEn": "[On Play] Look at 3 cards from the top of your deck; reveal up to 1 {Celestial Dragons} type card other than [Saint Shalria] and add it to your hand. Then, trash the rest and trash 1 card from your hand.",
     "effectJp": "【登場時】自分のデッキの上から3枚を見て、「シャルリア宮」以外の特徴《天竜人》を持つカード1枚までを公開し、手札に加える。その後、残りをトラッシュに置き、自分の手札1枚を捨てる。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; เผ่ามังกรฟ้า &gt; นอกเหนือจาก [Saint Shalria] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, จะนำการ์ดที่เหลือไปวางที่แทรช, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ < เผ่ามังกรฟ้า > นอกเหนือจาก [Saint Shalria] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, จะนำการ์ดที่เหลือไปวางที่แทรช, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-086.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-087",
@@ -2275,12 +2692,14 @@
     "counter": 1000,
     "attribute": "Ranged",
     "trait": "Celestial Dragons",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Trash 1 card from the top of your deck.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のデッキの上から1枚をトラッシュに置く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] นำการ์ดจากที่อยู่บนสุดของ เด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Trash 1 card from the top of your deck.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のデッキの上から1枚をトラッシュに置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] นำการ์ดจากที่อยู่บนสุดของ เด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-087.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-088",
@@ -2301,7 +2720,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-088.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-089",
@@ -2317,12 +2738,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Blocker].<br>[On K.O.] Draw 1 card.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【ブロッカー】を得る。<br>【KO時】カード1枚を引く。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].<br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Blocker].[On K.O.] Draw 1 card.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【ブロッカー】を得る。【KO時】カード1枚を引く。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-089.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-089",
@@ -2338,13 +2761,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Blocker].<br>[On K.O.] Draw 1 card.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【ブロッカー】を得る。<br>【KO時】カード1枚を引く。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].<br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Blocker].[On K.O.] Draw 1 card.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【ブロッカー】を得る。【KO時】カード1枚を引く。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-089_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-089",
@@ -2360,13 +2785,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Blocker].<br>[On K.O.] Draw 1 card.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【ブロッカー】を得る。<br>【KO時】カード1枚を引く。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].<br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Blocker].[On K.O.] Draw 1 card.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【ブロッカー】を得る。【KO時】カード1枚を引く。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-089_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-090",
@@ -2387,7 +2814,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-090.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-091",
@@ -2403,12 +2832,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Blocker].<br>[On Play] You may trash 1 card from your hand: K.O. up to 1 of your opponent's Characters with a base cost of 5 or less.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【ブロッカー】を得る。<br>【登場時】自分の手札1枚を捨てることができる：相手の元々のコスト5以下のキャラ1枚までを、KOする。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].<br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Blocker].[On Play] You may trash 1 card from your hand: K.O. up to 1 of your opponent's Characters with a base cost of 5 or less.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【ブロッカー】を得る。【登場時】自分の手札1枚を捨てることができる：相手の元々のコスト5以下のキャラ1枚までを、KOする。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-091.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-091",
@@ -2424,13 +2855,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Blocker].<br>[On Play] You may trash 1 card from your hand: K.O. up to 1 of your opponent's Characters with a base cost of 5 or less.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【ブロッカー】を得る。<br>【登場時】自分の手札1枚を捨てることができる：相手の元々のコスト5以下のキャラ1枚までを、KOする。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].<br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Blocker].[On Play] You may trash 1 card from your hand: K.O. up to 1 of your opponent's Characters with a base cost of 5 or less.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【ブロッカー】を得る。【登場時】自分の手札1枚を捨てることができる：相手の元々のコスト5以下のキャラ1枚までを、KOする。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-091_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-091",
@@ -2446,13 +2879,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Blocker].<br>[On Play] You may trash 1 card from your hand: K.O. up to 1 of your opponent's Characters with a base cost of 5 or less.",
-    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【ブロッカー】を得る。<br>【登場時】自分の手札1枚を捨てることができる：相手の元々のコスト5以下のキャラ1枚までを、KOする。",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].<br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "If you have 7 or more cards in your trash, this Character cannot be removed from the field by your opponent's effects and gains [Blocker].[On Play] You may trash 1 card from your hand: K.O. up to 1 of your opponent's Characters with a base cost of 5 or less.",
+    "effectJp": "自分のトラッシュが7枚以上ある場合、このキャラは相手の効果で場を離れず、【ブロッカー】を得る。【登場時】自分の手札1枚を捨てることができる：相手の元々のコスト5以下のキャラ1枚までを、KOする。",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 7 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-091_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-092",
@@ -2469,10 +2904,12 @@
     "trait": "Celestial Dragons",
     "effectEn": "[On Play] If you have 3 or less Life cards, play up to 1 {Mary Geoise} type Stage card with a cost of 1 from your trash.",
     "effectJp": "【登場時】自分のライフが3枚以下の場合、自分のトラッシュからコスト1の特徴《聖地マリージョア》を持つステージカード1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่าละก็, จะนำ สเตจการ์ด ที่มีคอสต์ 1 และมีคุณสมบัติ &lt; ดินแดนศักดิ์สิทธิ์แมรี่จัวร์ &gt; จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่าละก็, จะนำ สเตจการ์ด ที่มีคอสต์ 1 และมีคุณสมบัติ < ดินแดนศักดิ์สิทธิ์แมรี่จัวร์ > จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-092.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-093",
@@ -2488,12 +2925,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Journalist",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Draw 2 cards and trash 2 cards from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】カード2枚を引き、自分の手札2枚を捨てる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 2 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Draw 2 cards and trash 2 cards from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】カード2枚を引き、自分の手札2枚を捨てる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-093.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-094",
@@ -2511,10 +2950,12 @@
     "trait": "Egghead/Scientist",
     "effectEn": "[On Play] Up to 1 of your {Celestial Dragons} type Characters gains +2000 power during this turn.",
     "effectJp": "【登場時】自分の特徴《天竜人》を持つキャラ1枚までを、このターン中、パワー+2000。",
-    "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; เผ่ามังกรฟ้า &gt; จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
+    "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < เผ่ามังกรฟ้า > จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-094.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-095",
@@ -2531,10 +2972,12 @@
     "trait": "Celestial Dragons",
     "effectEn": "[On Play] You may trash 1 card from your hand: If you only have {Celestial Dragons} type Characters, K.O. up to 2 of your opponent's Characters with a base cost of 3 or less.",
     "effectJp": "【登場時】自分の手札1枚を捨てることができる：自分のキャラが、特徴《天竜人》を持つキャラのみの場合、相手の元々のコスト3以下のキャラ2枚までを、KOする。",
-    "effectTh": "[เมื่อลงสนาม] ทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : ถ้าคาแรกเตอร์ของฝ่ายเรา ล้วนแล้วแต่มีคุณสมบัติ &lt; เผ่ามังกรฟ้า &gt; เท่านั้นละก็, จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 3 หรือต่ำกว่า, จำนวนไม่เกิน 2 ใบ.",
+    "effectTh": "[เมื่อลงสนาม] ทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : ถ้าคาแรกเตอร์ของฝ่ายเรา ล้วนแล้วแต่มีคุณสมบัติ < เผ่ามังกรฟ้า > เท่านั้นละก็, จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 3 หรือต่ำกว่า, จำนวนไม่เกิน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-095.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-096",
@@ -2549,12 +2992,12 @@
     "trait": "Celestial Dragons/Five Elders",
     "effectEn": "[Main] Look at 3 cards from the top of your deck; reveal up to 1 {Celestial Dragons} type card other than [The Five Elders Are at Your Service!!!] and add it to your hand. Then, trash the rest.",
     "effectJp": "【メイン】自分のデッキの上から3枚を見て、「”五老星“ここに!!!」以外の特徴《天竜人》を持つカード1枚までを公開し、手札に加える。その後、残りをトラッシュに置く。",
-    "effectTh": "[เมน] ดูการ์ดจากบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; เผ่ามังกรฟ้า &gt; นอกเหนือจาก [The Five Elders Are at Your Service!!!] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, จะนำการ์ดที่เหลือไปวางที่แทรช.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
+    "effectTh": "[เมน] ดูการ์ดจากบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ < เผ่ามังกรฟ้า > นอกเหนือจาก [The Five Elders Are at Your Service!!!] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, จะนำการ์ดที่เหลือไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-096.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-097",
@@ -2567,12 +3010,14 @@
     "color": "Black",
     "cost": 1,
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "[Main] You may rest 5 of your DON!! cards: If the only Characters on your field are {Celestial Dragons} type Characters, K.O. up to 1 of your opponent's Characters with a base cost of 6 or less.<br>[Counter] Your Leader gains +3000 power during this battle.",
-    "effectJp": "【メイン】自分のドン‼5枚をレストにできる：自分の場のキャラが、特徴《天竜人》を持つキャラのみの場合、相手の元々のコスト6以下のキャラ1枚までを、KOする。<br>【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 5 ใบ : ถ้าคาแรกเตอร์ที่อยู่ในสนามของเรา, ล้วนแล้วแต่เป็นคาแรกเตอร์ที่มีคุณสมบัติ &lt; เผ่ามังกรฟ้า &gt; เท่านั้นละก็, จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.<br>[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะมีพาวเวอร์ +3000.",
+    "effectEn": "[Main] You may rest 5 of your DON!! cards: If the only Characters on your field are {Celestial Dragons} type Characters, K.O. up to 1 of your opponent's Characters with a base cost of 6 or less.[Counter] Your Leader gains +3000 power during this battle.",
+    "effectJp": "【メイン】自分のドン‼5枚をレストにできる：自分の場のキャラが、特徴《天竜人》を持つキャラのみの場合、相手の元々のコスト6以下のキャラ1枚までを、KOする。【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 5 ใบ : ถ้าคาแรกเตอร์ที่อยู่ในสนามของเรา, ล้วนแล้วแต่เป็นคาแรกเตอร์ที่มีคุณสมบัติ < เผ่ามังกรฟ้า > เท่านั้นละก็, จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-097.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-098",
@@ -2585,12 +3030,14 @@
     "color": "Black",
     "cost": 1,
     "trait": "Celestial Dragons/Five Elders",
-    "effectEn": "[Main] You may rest 1 of your DON!! cards: If your Leader is [Imu], K.O. up to 1 of your opponent's Stages with a cost of 7.<br>[Counter] If your Leader is [Imu], up to 1 of your Leader or Character cards gains +4000 power during this battle.",
-    "effectJp": "【メイン】自分のドン‼1枚をレストにできる：自分のリーダーが「イム」の場合、相手のコスト7のステージ1枚までを、KOする。<br>【カウンター】自分のリーダーが「イム」の場合、自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของเราคือ [Imu] ละก็, จะ KO สเตจของคู่แข่ง ที่มีคอสต์ 7, จำนวนไม่เกิน 1 ใบ.<br>[เคาน์เตอร์] ถ้าลีดเดอร์ของเราคือ [Imu] ละก็, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000.",
+    "effectEn": "[Main] You may rest 1 of your DON!! cards: If your Leader is [Imu], K.O. up to 1 of your opponent's Stages with a cost of 7.[Counter] If your Leader is [Imu], up to 1 of your Leader or Character cards gains +4000 power during this battle.",
+    "effectJp": "【メイン】自分のドン‼1枚をレストにできる：自分のリーダーが「イム」の場合、相手のコスト7のステージ1枚までを、KOする。【カウンター】自分のリーダーが「イム」の場合、自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของเราคือ [Imu] ละก็, จะ KO สเตจของคู่แข่ง ที่มีคอสต์ 7, จำนวนไม่เกิน 1 ใบ.[เคาน์เตอร์] ถ้าลีดเดอร์ของเราคือ [Imu] ละก็, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-098.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-099",
@@ -2603,12 +3050,14 @@
     "color": "Black",
     "cost": 7,
     "trait": "Mary Geoise",
-    "effectEn": "[Your Turn] If you have 19 or more cards in your trash, your Leader gains +1000 power.<br>[Activate: Main] You may rest this card and 3 of your DON!! cards: Play up to 1 black {Five Elders} type Character card with a cost equal to or less than the number of DON!! cards on your field from your hand.",
-    "effectJp": "【自分のターン中】自分のトラッシュが19枚以上ある場合、自分のリーダーを、パワー+1000。<br>【起動メイン】このカードと自分のドン‼3枚をレストにできる：自分の手札から自分の場のドン‼の枚数以下のコストを持つ黒の特徴《五老星》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[ในเทิร์นของเรา] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 19 ใบ หรือมากกว่าละก็, ลีดเดอร์ของเรา จะมีพาวเวอร์ +1000.<br>[สั่งใช้ : เมน] สามารถเรสต์ การ์ดใบนี้ กับ ด้ง!! ของเรา จำนวน 3 ใบ : นำคาแรกเตอร์การ์ด สีดำ ที่มีคอสต์ไม่สูงไปกว่า จำนวน ด้ง!! ในสนามของเรา และมีคุณสมบัติ &lt; ห้าผู้เฒ่า &gt; จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Your Turn] If you have 19 or more cards in your trash, your Leader gains +1000 power.[Activate: Main] You may rest this card and 3 of your DON!! cards: Play up to 1 black {Five Elders} type Character card with a cost equal to or less than the number of DON!! cards on your field from your hand.",
+    "effectJp": "【自分のターン中】自分のトラッシュが19枚以上ある場合、自分のリーダーを、パワー+1000。【起動メイン】このカードと自分のドン‼3枚をレストにできる：自分の手札から自分の場のドン‼の枚数以下のコストを持つ黒の特徴《五老星》を持つキャラカード1枚までを、登場させる。",
+    "effectTh": "[ในเทิร์นของเรา] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 19 ใบ หรือมากกว่าละก็, ลีดเดอร์ของเรา จะมีพาวเวอร์ +1000.[สั่งใช้ : เมน] สามารถเรสต์ การ์ดใบนี้ กับ ด้ง!! ของเรา จำนวน 3 ใบ : นำคาแรกเตอร์การ์ด สีดำ ที่มีคอสต์ไม่สูงไปกว่า จำนวน ด้ง!! ในสนามของเรา และมีคุณสมบัติ < ห้าผู้เฒ่า > จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-099.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-100",
@@ -2620,7 +3069,7 @@
     "nameTh": "Jewelry Bonney",
     "color": "Yellow",
     "power": 5000,
-    "life": 4,
+    "life": 5,
     "attribute": "Special",
     "trait": "Egghead/Bonney Pirates",
     "effectEn": "[Your Turn] [Once Per Turn] This effect can be activated when you play a Character with a [Trigger]. Give up to 2 rested DON!! cards to 1 of your Leader or Character cards.",
@@ -2628,7 +3077,9 @@
     "effectTh": "[ในเทิร์นของเรา] [เทิร์นละ 1 ครั้ง] เมื่อคาแรกเตอร์ ที่มี [ทริกเกอร์]  ของฝ่ายเรา ถูกนำลงสนาม, จะสามารถใช้งาน. นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ, ใส่ให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-100.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-100",
@@ -2640,7 +3091,7 @@
     "nameTh": "Jewelry Bonney",
     "color": "Yellow",
     "power": 5000,
-    "life": 4,
+    "life": 5,
     "attribute": "Special",
     "trait": "Egghead/Bonney Pirates",
     "effectEn": "[Your Turn] [Once Per Turn] This effect can be activated when you play a Character with a [Trigger]. Give up to 2 rested DON!! cards to 1 of your Leader or Character cards.",
@@ -2649,7 +3100,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-100_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-101",
@@ -2670,7 +3123,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-101.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-102",
@@ -2689,11 +3144,11 @@
     "effectEn": "[Activate: Main] You may trash this Character: If the number of your Life cards is equal to or less than the number of your opponent's Life cards, draw 1 card. Then, rest up to 1 of your opponent's Characters with a cost of 3 or less.",
     "effectJp": "【起動メイン】このキャラをトラッシュに置くことができる：自分のライフの枚数が相手のライフの枚数以下の場合、カード1枚を引く。その後、相手のコスト3以下のキャラ1枚までを、レストにする。",
     "effectTh": "[สั่งใช้ : เมน] สามารถนำ คาแรกเตอร์นี้ ไปวางที่แทรช : ถ้าไลฟ์ของเรา มีจำนวนไม่มากไปกว่า ไลฟ์ของคู่แข่งละก็, จะจั่วการ์ด จำนวน 1 ใบ. จากนั้น, จะเรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ",
-    "triggerEn": "[Trigger] Draw 1 card and rest up to 1 of your opponent's Characters with a cost of 3 or less.",
-    "triggerJp": "【トリガー】カード1枚を引き、相手のコスト3以下のキャラ1枚までを、レストにする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-102.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-103",
@@ -2714,7 +3169,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-103.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-104",
@@ -2729,12 +3186,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Land of Wano/Kouzuki Clan",
-    "effectEn": "[Blocker]<br>[On K.O.] You may trash 1 card from your hand: If your Leader is multicolored, add up to 1 card from the top of your deck to the top of your Life cards.",
-    "effectJp": "【ブロッカー】<br>【KO時】自分の手札1枚を捨てることができる：自分のリーダーが多色の場合、自分のデッキの上から1枚までを、ライフの上に加える。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของฝ่ายเรา มีหลายสี ละก็, จะนำการ์ดจากที่อยู่บนสุดของ เด็คของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์.",
+    "effectEn": "[Blocker][On K.O.] You may trash 1 card from your hand: If your Leader is multicolored, add up to 1 card from the top of your deck to the top of your Life cards.",
+    "effectJp": "【ブロッカー】【KO時】自分の手札1枚を捨てることができる：自分のリーダーが多色の場合、自分のデッキの上から1枚までを、ライフの上に加える。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของฝ่ายเรา มีหลายสี ละก็, จะนำการ์ดจากที่อยู่บนสุดของ เด็คของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-104.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-105",
@@ -2754,7 +3213,9 @@
     "effectTh": "[เมื่อลงสนาม] ดูไลฟ์ของเรา ทั้งหมด, และวางในลำดับใดก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-105.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-106",
@@ -2772,12 +3233,12 @@
     "trait": "Bonney Pirates",
     "effectEn": "[Opponent's Turn] When a [Trigger] activates, this Character gains [Blocker] during this turn.",
     "effectJp": "【相手のターン中】【トリガー】が発動した時、このキャラは、このターン中、【ブロッカー】を得る。",
-    "effectTh": "[ในเทิร์นของคู่แข่ง] เมื่อ [ทริกเกอร์] ถูกใช้งาน, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. <br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
+    "effectTh": "[ในเทิร์นของคู่แข่ง] เมื่อ [ทริกเกอร์] ถูกใช้งาน, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-106.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-107",
@@ -2798,7 +3259,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-107.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-108",
@@ -2815,12 +3278,12 @@
     "trait": "Egghead/Bonney Pirates",
     "effectEn": "[On Play] If your Leader has the {Egghead} type, this Character gains [Rush] during this turn. Then, your opponent adds 1 card from the top of their Life cards to their hand.",
     "effectJp": "【登場時】自分のリーダーが特徴《エッグヘッド》を持つ場合、このキャラは、このターン中、【速攻】を得る。その後、相手は自身のライフの上から1枚を、手札に加える。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; เอ็กเฮด &gt; ละก็, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. จากนั้น, คู่แข่งจะต้องนำการ์ดจากที่อยู่บนสุดของ ไลฟ์ของตัวเอง จำนวน 1 ใบ, ขึ้นมือ.<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).",
-    "triggerEn": "[Trigger] If you have 1 or less Life cards, rest up to 1 of your opponent's Characters with a cost of 7 or less.",
-    "triggerJp": "【トリガー】自分のライフが1枚以下の場合、相手のコスト7以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < เอ็กเฮด > ละก็, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. จากนั้น, คู่แข่งจะต้องนำการ์ดจากที่อยู่บนสุดของ ไลฟ์ของตัวเอง จำนวน 1 ใบ, ขึ้นมือ.(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-108.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-108",
@@ -2837,13 +3300,13 @@
     "trait": "Egghead/Bonney Pirates",
     "effectEn": "[On Play] If your Leader has the {Egghead} type, this Character gains [Rush] during this turn. Then, your opponent adds 1 card from the top of their Life cards to their hand.",
     "effectJp": "【登場時】自分のリーダーが特徴《エッグヘッド》を持つ場合、このキャラは、このターン中、【速攻】を得る。その後、相手は自身のライフの上から1枚を、手札に加える。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; เอ็กเฮด &gt; ละก็, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. จากนั้น, คู่แข่งจะต้องนำการ์ดจากที่อยู่บนสุดของ ไลฟ์ของตัวเอง จำนวน 1 ใบ, ขึ้นมือ.<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).",
-    "triggerEn": "[Trigger] If you have 1 or less Life cards, rest up to 1 of your opponent's Characters with a cost of 7 or less.",
-    "triggerJp": "【トリガー】自分のライフが1枚以下の場合、相手のコスト7以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < เอ็กเฮด > ละก็, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. จากนั้น, คู่แข่งจะต้องนำการ์ดจากที่อยู่บนสุดของ ไลฟ์ของตัวเอง จำนวน 1 ใบ, ขึ้นมือ.(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-108_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-109",
@@ -2862,11 +3325,11 @@
     "effectEn": "If this Character would be removed from the field by your opponent's effect, you may turn 1 card from the top of your Life cards face-up instead.",
     "effectJp": "このキャラが相手の効果で場を離れる場合、代わりに自分のライフの上から1枚を表向きにできる。",
     "effectTh": "ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม จากความสามารถของฝ่ายคู่แข่ง, จะสามารถหงายการ์ด จากที่อยู่บนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ แทนได้.",
-    "triggerEn": "[Trigger] Draw 2 cards and trash 1 card from your hand.",
-    "triggerJp": "【トリガー】カード2枚を引き、自分の手札1枚を捨てる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-109.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-110",
@@ -2881,12 +3344,14 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Egghead/CP0",
-    "effectEn": "[Blocker]<br>[On Play] If your Leader has the {Egghead} type, play up to 1 Character card with a cost of 5 or less and a [Trigger] from your hand.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のリーダーが特徴《エッグヘッド》を持つ場合、自分の手札からコスト5以下の【トリガー】を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; เอ็กเฮด &gt; ละก็, จะนำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีความสามารถ [ทริกเกอร์] จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Blocker][On Play] If your Leader has the {Egghead} type, play up to 1 Character card with a cost of 5 or less and a [Trigger] from your hand.",
+    "effectJp": "【ブロッカー】【登場時】自分のリーダーが特徴《エッグヘッド》を持つ場合、自分の手札からコスト5以下の【トリガー】を持つキャラカード1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < เอ็กเฮด > ละก็, จะนำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีความสามารถ [ทริกเกอร์] จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-110.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-110",
@@ -2901,13 +3366,15 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Egghead/CP0",
-    "effectEn": "[Blocker]<br>[On Play] If your Leader has the {Egghead} type, play up to 1 Character card with a cost of 5 or less and a [Trigger] from your hand.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のリーダーが特徴《エッグヘッド》を持つ場合、自分の手札からコスト5以下の【トリガー】を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; เอ็กเฮด &gt; ละก็, จะนำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีความสามารถ [ทริกเกอร์] จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Blocker][On Play] If your Leader has the {Egghead} type, play up to 1 Character card with a cost of 5 or less and a [Trigger] from your hand.",
+    "effectJp": "【ブロッカー】【登場時】自分のリーダーが特徴《エッグヘッド》を持つ場合、自分の手札からコスト5以下の【トリガー】を持つキャラカード1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < เอ็กเฮด > ละก็, จะนำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีความสามารถ [ทริกเกอร์] จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-110_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-111",
@@ -2928,7 +3395,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-111.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-112",
@@ -2944,12 +3413,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Egghead/Scientist",
-    "effectEn": "If you have a total of 2 or more given DON!! cards, this Character gains [Blocker].<br>(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
-    "effectJp": "自分の付与されているドン‼が合計2枚以上ある場合、このキャラは【ブロッカー】を得る。<br>(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
-    "effectTh": "ถ้า ด้ง!! ที่ถูกนำไปใส่อยู่ของฝ่ายเรา มีรวมกัน จำนวน 2 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. <br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectEn": "If you have a total of 2 or more given DON!! cards, this Character gains [Blocker].(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
+    "effectJp": "自分の付与されているドン‼が合計2枚以上ある場合、このキャラは【ブロッカー】を得る。(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
+    "effectTh": "ถ้า ด้ง!! ที่ถูกนำไปใส่อยู่ของฝ่ายเรา มีรวมกัน จำนวน 2 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-112.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-113",
@@ -2968,11 +3439,11 @@
     "effectEn": "[On Play] Look at 4 cards from the top of your deck; reveal up to 1 card with a [Trigger] other than [Lilith] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から4枚を見て、「リリス」以外の【トリガー】を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
     "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่มี [ทริกเกอร์] นอกเหนือจาก [Lilith] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.",
-    "triggerEn": "[Trigger] Activate this card's [On Play] effect.",
-    "triggerJp": "【トリガー】このカードの【登場時】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-113.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-113",
@@ -2991,12 +3462,12 @@
     "effectEn": "[On Play] Look at 4 cards from the top of your deck; reveal up to 1 card with a [Trigger] other than [Lilith] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から4枚を見て、「リリス」以外の【トリガー】を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
     "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่มี [ทริกเกอร์] นอกเหนือจาก [Lilith] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.",
-    "triggerEn": "[Trigger] Activate this card's [On Play] effect.",
-    "triggerJp": "【トリガー】このカードの【登場時】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-113_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-114",
@@ -3015,11 +3486,11 @@
     "effectEn": "[On Play]/[When Attacking] You may turn 1 card from the top of your Life cards face-up: Give up to 1 of your opponent's Characters −2000 power during this turn.",
     "effectJp": "【登場時】/【アタック時】自分のライフの上から1枚を表向きにできる：相手のキャラ1枚までを、このターン中、パワー-2000。",
     "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] สามารถหงายการ์ด จากที่อยู่บนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-114.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-114",
@@ -3038,12 +3509,12 @@
     "effectEn": "[On Play]/[When Attacking] You may turn 1 card from the top of your Life cards face-up: Give up to 1 of your opponent's Characters −2000 power during this turn.",
     "effectJp": "【登場時】/【アタック時】自分のライフの上から1枚を表向きにできる：相手のキャラ1枚までを、このターン中、パワー-2000。",
     "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] สามารถหงายการ์ด จากที่อยู่บนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-114_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-115",
@@ -3059,11 +3530,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +3000 power during this battle. Then, if your opponent has 2 or less Life cards, up to 1 of your Leader or Character cards gains +1000 power during this turn.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+3000。その後、相手のライフが2枚以下の場合、自分のリーダーかキャラ1枚までを、このターン中、パワー+1000。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000. จากนั้น, ถ้าคู่แข่งมีไลฟ์ จำนวน 2 ใบ หรือน้อยกว่าละก็, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000.",
-    "triggerEn": "[Trigger] Draw 1 card.",
-    "triggerJp": "【トリガー】カード1枚を引く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-115.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-116",
@@ -3078,12 +3549,12 @@
     "trait": "Supernovas/Straw Hat Crew",
     "effectEn": "[Main] Look at 5 cards from the top of your deck; reveal up to 1 {Supernovas} type Character card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】自分のデッキの上から5枚を見て、特徴《超新星》を持つキャラカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมน] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.<br>",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
+    "effectTh": "[เมน] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < ซูเปอร์โนวา > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-116.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-117",
@@ -3099,11 +3570,11 @@
     "effectEn": "[Main] You may turn 1 card from the top of your Life cards face-up: K.O. up to 1 of your opponent's Characters with a base cost of 6 or less.",
     "effectJp": "【メイン】自分のライフの上から1枚を表向きにできる：相手の元々のコスト6以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] สามารถหงายการ์ด จากที่อยู่บนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ : จะ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 6 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Draw 1 card.",
-    "triggerJp": "【トリガー】カード1枚を引く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-117.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-118",
@@ -3118,12 +3589,14 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "Fish-Man Island/Supernovas/Straw Hat Crew",
-    "effectEn": "[Double Attack]<br>[On Play] If your Leader is multicolored, set up to 4 of your DON!! cards as active. Then, you cannot play Character cards with a base cost of 5 or more during this turn.",
-    "effectJp": "【ダブルアタック】<br>【登場時】自分のリーダーが多色の場合、自分のドン‼4枚までを、アクティブにする。その後、自分は、このターン中、元々のコスト5以上のキャラカードを登場できない。",
-    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีหลายสี ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 4 ใบ, แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า, ลงสนามอีก ในเทิร์นนี้.",
+    "effectEn": "[Double Attack][On Play] If your Leader is multicolored, set up to 4 of your DON!! cards as active. Then, you cannot play Character cards with a base cost of 5 or more during this turn.",
+    "effectJp": "【ダブルアタック】【登場時】自分のリーダーが多色の場合、自分のドン‼4枚までを、アクティブにする。その後、自分は、このターン中、元々のコスト5以上のキャラカードを登場できない。",
+    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีหลายสี ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 4 ใบ, แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า, ลงสนามอีก ในเทิร์นนี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-118.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-118",
@@ -3138,13 +3611,15 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "Fish-Man Island/Supernovas/Straw Hat Crew",
-    "effectEn": "[Double Attack]<br>[On Play] If your Leader is multicolored, set up to 4 of your DON!! cards as active. Then, you cannot play Character cards with a base cost of 5 or more during this turn.",
-    "effectJp": "【ダブルアタック】<br>【登場時】自分のリーダーが多色の場合、自分のドン‼4枚までを、アクティブにする。その後、自分は、このターン中、元々のコスト5以上のキャラカードを登場できない。",
-    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีหลายสี ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 4 ใบ, แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า, ลงสนามอีก ในเทิร์นนี้.",
+    "effectEn": "[Double Attack][On Play] If your Leader is multicolored, set up to 4 of your DON!! cards as active. Then, you cannot play Character cards with a base cost of 5 or more during this turn.",
+    "effectJp": "【ダブルアタック】【登場時】自分のリーダーが多色の場合、自分のドン‼4枚までを、アクティブにする。その後、自分は、このターン中、元々のコスト5以上のキャラカードを登場できない。",
+    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีหลายสี ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 4 ใบ, แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า, ลงสนามอีก ในเทิร์นนี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-118_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-118",
@@ -3159,13 +3634,15 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "Fish-Man Island/Supernovas/Straw Hat Crew",
-    "effectEn": "[Double Attack]<br>[On Play] If your Leader is multicolored, set up to 4 of your DON!! cards as active. Then, you cannot play Character cards with a base cost of 5 or more during this turn.",
-    "effectJp": "【ダブルアタック】<br>【登場時】自分のリーダーが多色の場合、自分のドン‼4枚までを、アクティブにする。その後、自分は、このターン中、元々のコスト5以上のキャラカードを登場できない。",
-    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีหลายสี ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 4 ใบ, แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า, ลงสนามอีก ในเทิร์นนี้.",
+    "effectEn": "[Double Attack][On Play] If your Leader is multicolored, set up to 4 of your DON!! cards as active. Then, you cannot play Character cards with a base cost of 5 or more during this turn.",
+    "effectJp": "【ダブルアタック】【登場時】自分のリーダーが多色の場合、自分のドン‼4枚までを、アクティブにする。その後、自分は、このターン中、元々のコスト5以上のキャラカードを登場できない。",
+    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีหลายสี ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 4 ใบ, แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า, ลงสนามอีก ในเทิร์นนี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-118_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-118",
@@ -3180,13 +3657,15 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "Fish-Man Island/Supernovas/Straw Hat Crew",
-    "effectEn": "[Double Attack]<br>[On Play] If your Leader is multicolored, set up to 4 of your DON!! cards as active. Then, you cannot play Character cards with a base cost of 5 or more during this turn.",
-    "effectJp": "【ダブルアタック】<br>【登場時】自分のリーダーが多色の場合、自分のドン‼4枚までを、アクティブにする。その後、自分は、このターン中、元々のコスト5以上のキャラカードを登場できない。",
-    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีหลายสี ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 4 ใบ, แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า, ลงสนามอีก ในเทิร์นนี้.",
+    "effectEn": "[Double Attack][On Play] If your Leader is multicolored, set up to 4 of your DON!! cards as active. Then, you cannot play Character cards with a base cost of 5 or more during this turn.",
+    "effectJp": "【ダブルアタック】【登場時】自分のリーダーが多色の場合、自分のドン‼4枚までを、アクティブにする。その後、自分は、このターン中、元々のコスト5以上のキャラカードを登場できない。",
+    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีหลายสี ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 4 ใบ, แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า, ลงสนามอีก ในเทิร์นนี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-118_p3.png",
     "isParallel": true,
     "parallelIndex": 3,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-118",
@@ -3201,13 +3680,15 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "Fish-Man Island/Supernovas/Straw Hat Crew",
-    "effectEn": "[Double Attack]<br>[On Play] If your Leader is multicolored, set up to 4 of your DON!! cards as active. Then, you cannot play Character cards with a base cost of 5 or more during this turn.",
-    "effectJp": "【ダブルアタック】<br>【登場時】自分のリーダーが多色の場合、自分のドン‼4枚までを、アクティブにする。その後、自分は、このターン中、元々のコスト5以上のキャラカードを登場できない。",
-    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีหลายสี ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 4 ใบ, แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า, ลงสนามอีก ในเทิร์นนี้.",
+    "effectEn": "[Double Attack][On Play] If your Leader is multicolored, set up to 4 of your DON!! cards as active. Then, you cannot play Character cards with a base cost of 5 or more during this turn.",
+    "effectJp": "【ダブルアタック】【登場時】自分のリーダーが多色の場合、自分のドン‼4枚までを、アクティブにする。その後、自分は、このターン中、元々のコスト5以上のキャラカードを登場できない。",
+    "effectTh": "[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีหลายสี ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 4 ใบ, แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ที่มีคอสต์ตั้งต้น 5 หรือสูงกว่า, ลงสนามอีก ในเทิร์นนี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-118_p4.png",
     "isParallel": true,
     "parallelIndex": 4,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-119",
@@ -3222,12 +3703,14 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
-    "effectEn": "If you have 3 or less Life cards, this Character gains [Rush].<br>[On Play] Give up to 1 rested DON!! card to your Leader. Then, you may return up to 1 of your opponent's Characters with a cost of 5 or less to the owner's hand. If you do, your opponent plays up to 1 Character card with a cost of 4 or less from their hand.",
-    "effectJp": "自分のライフが3枚以下の場合、このキャラは【速攻】を得る。<br>【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のコスト5以下のキャラ1枚までを、持ち主の手札に戻してもよい。そうした場合、相手は自身の手札からコスト4以下のキャラカード1枚までを、登場させる。",
-    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา. จากนั้น, จะนำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของก็ได้. ถ้าทำเช่นนั้นละก็, คู่แข่งจะต้องนำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า จากในมือของตัวเอง จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "If you have 3 or less Life cards, this Character gains [Rush].[On Play] Give up to 1 rested DON!! card to your Leader. Then, you may return up to 1 of your opponent's Characters with a cost of 5 or less to the owner's hand. If you do, your opponent plays up to 1 Character card with a cost of 4 or less from their hand.",
+    "effectJp": "自分のライフが3枚以下の場合、このキャラは【速攻】を得る。【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のコスト5以下のキャラ1枚までを、持ち主の手札に戻してもよい。そうした場合、相手は自身の手札からコスト4以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา. จากนั้น, จะนำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของก็ได้. ถ้าทำเช่นนั้นละก็, คู่แข่งจะต้องนำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า จากในมือของตัวเอง จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-119.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-119",
@@ -3242,13 +3725,15 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
-    "effectEn": "If you have 3 or less Life cards, this Character gains [Rush].<br>[On Play] Give up to 1 rested DON!! card to your Leader. Then, you may return up to 1 of your opponent's Characters with a cost of 5 or less to the owner's hand. If you do, your opponent plays up to 1 Character card with a cost of 4 or less from their hand.",
-    "effectJp": "自分のライフが3枚以下の場合、このキャラは【速攻】を得る。<br>【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のコスト5以下のキャラ1枚までを、持ち主の手札に戻してもよい。そうした場合、相手は自身の手札からコスト4以下のキャラカード1枚までを、登場させる。",
-    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา. จากนั้น, จะนำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของก็ได้. ถ้าทำเช่นนั้นละก็, คู่แข่งจะต้องนำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า จากในมือของตัวเอง จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "If you have 3 or less Life cards, this Character gains [Rush].[On Play] Give up to 1 rested DON!! card to your Leader. Then, you may return up to 1 of your opponent's Characters with a cost of 5 or less to the owner's hand. If you do, your opponent plays up to 1 Character card with a cost of 4 or less from their hand.",
+    "effectJp": "自分のライフが3枚以下の場合、このキャラは【速攻】を得る。【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のコスト5以下のキャラ1枚までを、持ち主の手札に戻してもよい。そうした場合、相手は自身の手札からコスト4以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา. จากนั้น, จะนำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของก็ได้. ถ้าทำเช่นนั้นละก็, คู่แข่งจะต้องนำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า จากในมือของตัวเอง จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-119_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-119",
@@ -3263,13 +3748,15 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
-    "effectEn": "If you have 3 or less Life cards, this Character gains [Rush].<br>[On Play] Give up to 1 rested DON!! card to your Leader. Then, you may return up to 1 of your opponent's Characters with a cost of 5 or less to the owner's hand. If you do, your opponent plays up to 1 Character card with a cost of 4 or less from their hand.",
-    "effectJp": "自分のライフが3枚以下の場合、このキャラは【速攻】を得る。<br>【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のコスト5以下のキャラ1枚までを、持ち主の手札に戻してもよい。そうした場合、相手は自身の手札からコスト4以下のキャラカード1枚までを、登場させる。",
-    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา. จากนั้น, จะนำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของก็ได้. ถ้าทำเช่นนั้นละก็, คู่แข่งจะต้องนำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า จากในมือของตัวเอง จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "If you have 3 or less Life cards, this Character gains [Rush].[On Play] Give up to 1 rested DON!! card to your Leader. Then, you may return up to 1 of your opponent's Characters with a cost of 5 or less to the owner's hand. If you do, your opponent plays up to 1 Character card with a cost of 4 or less from their hand.",
+    "effectJp": "自分のライフが3枚以下の場合、このキャラは【速攻】を得る。【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のコスト5以下のキャラ1枚までを、持ち主の手札に戻してもよい。そうした場合、相手は自身の手札からコスト4以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา. จากนั้น, จะนำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของก็ได้. ถ้าทำเช่นนั้นละก็, คู่แข่งจะต้องนำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า จากในมือของตัวเอง จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-119_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-119",
@@ -3284,13 +3771,15 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
-    "effectEn": "If you have 3 or less Life cards, this Character gains [Rush].<br>[On Play] Give up to 1 rested DON!! card to your Leader. Then, you may return up to 1 of your opponent's Characters with a cost of 5 or less to the owner's hand. If you do, your opponent plays up to 1 Character card with a cost of 4 or less from their hand.",
-    "effectJp": "自分のライフが3枚以下の場合、このキャラは【速攻】を得る。<br>【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のコスト5以下のキャラ1枚までを、持ち主の手札に戻してもよい。そうした場合、相手は自身の手札からコスト4以下のキャラカード1枚までを、登場させる。",
-    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา. จากนั้น, จะนำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของก็ได้. ถ้าทำเช่นนั้นละก็, คู่แข่งจะต้องนำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า จากในมือของตัวเอง จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "If you have 3 or less Life cards, this Character gains [Rush].[On Play] Give up to 1 rested DON!! card to your Leader. Then, you may return up to 1 of your opponent's Characters with a cost of 5 or less to the owner's hand. If you do, your opponent plays up to 1 Character card with a cost of 4 or less from their hand.",
+    "effectJp": "自分のライフが3枚以下の場合、このキャラは【速攻】を得る。【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のコスト5以下のキャラ1枚までを、持ち主の手札に戻してもよい。そうした場合、相手は自身の手札からコスト4以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา. จากนั้น, จะนำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของก็ได้. ถ้าทำเช่นนั้นละก็, คู่แข่งจะต้องนำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า จากในมือของตัวเอง จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-119_p3.png",
     "isParallel": true,
     "parallelIndex": 3,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-119",
@@ -3305,13 +3794,15 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
-    "effectEn": "If you have 3 or less Life cards, this Character gains [Rush].<br>[On Play] Give up to 1 rested DON!! card to your Leader. Then, you may return up to 1 of your opponent's Characters with a cost of 5 or less to the owner's hand. If you do, your opponent plays up to 1 Character card with a cost of 4 or less from their hand.",
-    "effectJp": "自分のライフが3枚以下の場合、このキャラは【速攻】を得る。<br>【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のコスト5以下のキャラ1枚までを、持ち主の手札に戻してもよい。そうした場合、相手は自身の手札からコスト4以下のキャラカード1枚までを、登場させる。",
-    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา. จากนั้น, จะนำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของก็ได้. ถ้าทำเช่นนั้นละก็, คู่แข่งจะต้องนำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า จากในมือของตัวเอง จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "If you have 3 or less Life cards, this Character gains [Rush].[On Play] Give up to 1 rested DON!! card to your Leader. Then, you may return up to 1 of your opponent's Characters with a cost of 5 or less to the owner's hand. If you do, your opponent plays up to 1 Character card with a cost of 4 or less from their hand.",
+    "effectJp": "自分のライフが3枚以下の場合、このキャラは【速攻】を得る。【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のコスト5以下のキャラ1枚までを、持ち主の手札に戻してもよい。そうした場合、相手は自身の手札からコスト4以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่าละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา. จากนั้น, จะนำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของก็ได้. ถ้าทำเช่นนั้นละก็, คู่แข่งจะต้องนำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า จากในมือของตัวเอง จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-119_p4.png",
     "isParallel": true,
     "parallelIndex": 4,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-120",
@@ -3326,12 +3817,14 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "[Blocker]<br>[Activate: Main] [Once Per Turn] Up to 1 of your Characters gains +2 cost until the end of your opponent's next turn. Then, give up to 1 rested DON!! card to your Leader.",
-    "effectJp": "【ブロッカー】<br>【起動メイン】【ターン1回】自分のキャラ1枚までを、次の相手のターン終了時まで、コスト+2。その後、自分のリーダーにレストのドン‼1枚までを、付与する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ จะมีคอสต์ +2, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา.",
+    "effectEn": "[Blocker][Activate: Main] [Once Per Turn] Up to 1 of your Characters gains +2 cost until the end of your opponent's next turn. Then, give up to 1 rested DON!! card to your Leader.",
+    "effectJp": "【ブロッカー】【起動メイン】【ターン1回】自分のキャラ1枚までを、次の相手のターン終了時まで、コスト+2。その後、自分のリーダーにレストのドン‼1枚までを、付与する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ จะมีคอสต์ +2, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-120.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-120",
@@ -3346,13 +3839,15 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "[Blocker]<br>[Activate: Main] [Once Per Turn] Up to 1 of your Characters gains +2 cost until the end of your opponent's next turn. Then, give up to 1 rested DON!! card to your Leader.",
-    "effectJp": "【ブロッカー】<br>【起動メイン】【ターン1回】自分のキャラ1枚までを、次の相手のターン終了時まで、コスト+2。その後、自分のリーダーにレストのドン‼1枚までを、付与する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ จะมีคอสต์ +2, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา.",
+    "effectEn": "[Blocker][Activate: Main] [Once Per Turn] Up to 1 of your Characters gains +2 cost until the end of your opponent's next turn. Then, give up to 1 rested DON!! card to your Leader.",
+    "effectJp": "【ブロッカー】【起動メイン】【ターン1回】自分のキャラ1枚までを、次の相手のターン終了時まで、コスト+2。その後、自分のリーダーにレストのドン‼1枚までを、付与する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ จะมีคอสต์ +2, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-120_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-120",
@@ -3367,13 +3862,15 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "[Blocker]<br>[Activate: Main] [Once Per Turn] Up to 1 of your Characters gains +2 cost until the end of your opponent's next turn. Then, give up to 1 rested DON!! card to your Leader.",
-    "effectJp": "【ブロッカー】<br>【起動メイン】【ターン1回】自分のキャラ1枚までを、次の相手のターン終了時まで、コスト+2。その後、自分のリーダーにレストのドン‼1枚までを、付与する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ จะมีคอสต์ +2, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา.",
+    "effectEn": "[Blocker][Activate: Main] [Once Per Turn] Up to 1 of your Characters gains +2 cost until the end of your opponent's next turn. Then, give up to 1 rested DON!! card to your Leader.",
+    "effectJp": "【ブロッカー】【起動メイン】【ターン1回】自分のキャラ1枚までを、次の相手のターン終了時まで、コスト+2。その後、自分のリーダーにレストのドン‼1枚までを、付与する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ จะมีคอสต์ +2, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-120_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-120",
@@ -3388,13 +3885,15 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "[Blocker]<br>[Activate: Main] [Once Per Turn] Up to 1 of your Characters gains +2 cost until the end of your opponent's next turn. Then, give up to 1 rested DON!! card to your Leader.",
-    "effectJp": "【ブロッカー】<br>【起動メイン】【ターン1回】自分のキャラ1枚までを、次の相手のターン終了時まで、コスト+2。その後、自分のリーダーにレストのドン‼1枚までを、付与する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ จะมีคอสต์ +2, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา.",
+    "effectEn": "[Blocker][Activate: Main] [Once Per Turn] Up to 1 of your Characters gains +2 cost until the end of your opponent's next turn. Then, give up to 1 rested DON!! card to your Leader.",
+    "effectJp": "【ブロッカー】【起動メイン】【ターン1回】自分のキャラ1枚までを、次の相手のターン終了時まで、コスト+2。その後、自分のリーダーにレストのドン‼1枚までを、付与する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ จะมีคอสต์ +2, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-120_p3.png",
     "isParallel": true,
     "parallelIndex": 3,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   },
   {
     "code": "OP13-120",
@@ -3409,12 +3908,14 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "[Blocker]<br>[Activate: Main] [Once Per Turn] Up to 1 of your Characters gains +2 cost until the end of your opponent's next turn. Then, give up to 1 rested DON!! card to your Leader.",
-    "effectJp": "【ブロッカー】<br>【起動メイン】【ターン1回】自分のキャラ1枚までを、次の相手のターン終了時まで、コスト+2。その後、自分のリーダーにレストのドン‼1枚までを、付与する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ จะมีคอสต์ +2, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา.",
+    "effectEn": "[Blocker][Activate: Main] [Once Per Turn] Up to 1 of your Characters gains +2 cost until the end of your opponent's next turn. Then, give up to 1 rested DON!! card to your Leader.",
+    "effectJp": "【ブロッカー】【起動メイン】【ターン1回】自分のキャラ1枚までを、次の相手のターン終了時まで、コスト+2。その後、自分のリーダーにレストのドン‼1枚までを、付与する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ จะมีคอสต์ +2, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป. จากนั้น, จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของเรา.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP13-120_p4.png",
     "isParallel": true,
     "parallelIndex": 4,
-    "sets": []
+    "sets": [
+      "-Carrying on His Will- [OP-13]"
+    ]
   }
 ]

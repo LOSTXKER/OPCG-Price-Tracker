@@ -60,29 +60,27 @@ async function matchCard(
   const code = listing.cardCode!.toUpperCase();
   const parallel = isParallelListing(listing);
   const rarity = normalizeRarity(listing);
+  const setFilter = { set: { code: setCode } };
 
-  // Step 1: Non-parallel exact cardCode match
+  // Step 1: Non-parallel exact cardCode match (scoped to current set)
   if (!parallel) {
-    const card = await prisma.card.findUnique({
-      where: { cardCode: code },
+    const card = await prisma.card.findFirst({
+      where: { cardCode: code, ...setFilter },
       select: { id: true },
     });
     if (card) return { cardId: card.id, method: "exact" };
   }
 
-  // Step 2a: Re-run fast path — card already linked to this yuyuteiId
+  // Step 2a: Re-run fast path — card already linked to this yuyuteiId (scoped to set)
   if (parallel && listing.yuyuteiId) {
     const already = await prisma.card.findFirst({
-      where: { yuyuteiId: listing.yuyuteiId },
+      where: { yuyuteiId: listing.yuyuteiId, ...setFilter },
       select: { id: true },
     });
     if (already) return { cardId: already.id, method: "yuyutei-id" };
   }
 
-  // Step 2b: Parallel match by baseCode + rarity + isParallel
-  //   Prefer cards not yet linked (yuyuteiId is null) so that when
-  //   multiple listings share the same base+rarity (e.g. two P-SEC),
-  //   each listing maps to a different DB card.
+  // Step 2b: Parallel match by baseCode + rarity + isParallel (scoped to set)
   if (parallel && rarity) {
     const unlinked = await prisma.card.findFirst({
       where: {
@@ -90,22 +88,22 @@ async function matchCard(
         isParallel: true,
         rarity,
         yuyuteiId: null,
+        ...setFilter,
       },
       select: { id: true },
       orderBy: { parallelIndex: "asc" },
     });
     if (unlinked) return { cardId: unlinked.id, method: "rarity" };
 
-    // Try any unlinked parallel regardless of rarity
     const anyUnlinked = await prisma.card.findFirst({
-      where: { baseCode: code, isParallel: true, yuyuteiId: null },
+      where: { baseCode: code, isParallel: true, yuyuteiId: null, ...setFilter },
       select: { id: true },
       orderBy: { parallelIndex: "asc" },
     });
     if (anyUnlinked) return { cardId: anyUnlinked.id, method: "parallel-unlinked" };
   }
 
-  // Step 3: YuyuteiMapping table fallback (previously saved manual match)
+  // Step 3: YuyuteiMapping table fallback (already set-scoped)
   if (listing.yuyuteiId) {
     const mapping = await prisma.yuyuteiMapping.findFirst({
       where: {

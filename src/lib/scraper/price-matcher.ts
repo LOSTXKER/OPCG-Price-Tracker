@@ -40,45 +40,48 @@ export async function matchAndUpdatePrices(
   let matched = 0;
   let unmatched = 0;
 
+  const setFilter = { set: { code: setCode } };
+
   for (const listing of listings) {
     if (!listing.cardCode) {
       unmatched++;
       continue;
     }
 
-    // 1. Match by yuyuteiId (fast path for cards already linked)
+    const code = listing.cardCode.toUpperCase();
+
+    // 1. Match by yuyuteiId (fast path, scoped to set)
     let card = listing.yuyuteiId
       ? await db.card.findFirst({
-          where: { yuyuteiId: listing.yuyuteiId },
+          where: { yuyuteiId: listing.yuyuteiId, ...setFilter },
           select: { id: true },
         })
       : null;
 
-    // 2. Exact cardCode match (works for non-parallels)
+    // 2. Exact cardCode match (scoped to set)
     if (!card) {
-      const code = listing.cardCode.toUpperCase();
-      card = await db.card.findUnique({
-        where: { cardCode: code },
+      card = await db.card.findFirst({
+        where: { cardCode: code, ...setFilter },
         select: { id: true },
       });
     }
 
-    // 3. Parallel match: baseCode + rarity + isParallel (prefer unlinked)
+    // 3. Parallel match: baseCode + rarity + isParallel (scoped to set, prefer unlinked)
     if (!card && isParallelListing(listing) && listing.rarity) {
-      const code = listing.cardCode.toUpperCase();
       card = await db.card.findFirst({
         where: {
           baseCode: code,
           isParallel: true,
           rarity: listing.rarity,
           yuyuteiId: null,
+          ...setFilter,
         },
         select: { id: true },
         orderBy: { parallelIndex: "asc" },
       });
       if (!card) {
         card = await db.card.findFirst({
-          where: { baseCode: code, isParallel: true, rarity: listing.rarity },
+          where: { baseCode: code, isParallel: true, rarity: listing.rarity, ...setFilter },
           select: { id: true },
           orderBy: { parallelIndex: "asc" },
         });

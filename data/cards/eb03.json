@@ -12,12 +12,14 @@
     "life": 4,
     "attribute": "Slash",
     "trait": "Alabasta",
-    "effectEn": "[Once Per Turn] If your Character with a base cost of 4 or more would be K.O.'d, you may trash 1 card from your hand instead.<br>[Activate: Main] You may rest this Leader: Give up to 1 of your opponent's Characters −2000 power during this turn. Then, up to 1 of your Characters without a [When Attacking] effect gains [Rush] during this turn.",
-    "effectJp": "【ターン1回】自分の元々のコスト4以上のキャラがKOされる場合、代わりに自分の手札1枚を捨てることができる。<br>【起動メイン】このリーダーをレストにできる：相手のキャラ1枚までを、このターン中、パワー-2000。その後、自分の【アタック時】効果を持たないキャラ1枚までは、このターン中、【速攻】を得る。",
-    "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์ของฝ่ายเรา ที่คอสต์ตั้งต้น 4 หรือสูงกว่า กำลังจะถูก KO, จะสามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ แทนได้.<br>[สั่งใช้ : เมน] สามารถ เรสต์ ลีดเดอร์นี้ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ -2000. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่ไม่มีความสามารถ [เมื่อโจมตี] จำนวนไม่เกิน 1 ใบ, จะได้รับ  [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[Once Per Turn] If your Character with a base cost of 4 or more would be K.O.'d, you may trash 1 card from your hand instead.[Activate: Main] You may rest this Leader: Give up to 1 of your opponent's Characters −2000 power during this turn. Then, up to 1 of your Characters without a [When Attacking] effect gains [Rush] during this turn.",
+    "effectJp": "【ターン1回】自分の元々のコスト4以上のキャラがKOされる場合、代わりに自分の手札1枚を捨てることができる。【起動メイン】このリーダーをレストにできる：相手のキャラ1枚までを、このターン中、パワー-2000。その後、自分の【アタック時】効果を持たないキャラ1枚までは、このターン中、【速攻】を得る。",
+    "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์ของฝ่ายเรา ที่คอสต์ตั้งต้น 4 หรือสูงกว่า กำลังจะถูก KO, จะสามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ แทนได้.[สั่งใช้ : เมน] สามารถ เรสต์ ลีดเดอร์นี้ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ -2000. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่ไม่มีความสามารถ [เมื่อโจมตี] จำนวนไม่เกิน 1 ใบ, จะได้รับ  [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-001",
@@ -32,13 +34,15 @@
     "life": 4,
     "attribute": "Slash",
     "trait": "Alabasta",
-    "effectEn": "[Once Per Turn] If your Character with a base cost of 4 or more would be K.O.'d, you may trash 1 card from your hand instead.<br>[Activate: Main] You may rest this Leader: Give up to 1 of your opponent's Characters −2000 power during this turn. Then, up to 1 of your Characters without a [When Attacking] effect gains [Rush] during this turn.",
-    "effectJp": "【ターン1回】自分の元々のコスト4以上のキャラがKOされる場合、代わりに自分の手札1枚を捨てることができる。<br>【起動メイン】このリーダーをレストにできる：相手のキャラ1枚までを、このターン中、パワー-2000。その後、自分の【アタック時】効果を持たないキャラ1枚までは、このターン中、【速攻】を得る。",
-    "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์ของฝ่ายเรา ที่คอสต์ตั้งต้น 4 หรือสูงกว่า กำลังจะถูก KO, จะสามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ แทนได้.<br>[สั่งใช้ : เมน] สามารถ เรสต์ ลีดเดอร์นี้ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ -2000. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่ไม่มีความสามารถ [เมื่อโจมตี] จำนวนไม่เกิน 1 ใบ, จะได้รับ  [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[Once Per Turn] If your Character with a base cost of 4 or more would be K.O.'d, you may trash 1 card from your hand instead.[Activate: Main] You may rest this Leader: Give up to 1 of your opponent's Characters −2000 power during this turn. Then, up to 1 of your Characters without a [When Attacking] effect gains [Rush] during this turn.",
+    "effectJp": "【ターン1回】自分の元々のコスト4以上のキャラがKOされる場合、代わりに自分の手札1枚を捨てることができる。【起動メイン】このリーダーをレストにできる：相手のキャラ1枚までを、このターン中、パワー-2000。その後、自分の【アタック時】効果を持たないキャラ1枚までは、このターン中、【速攻】を得る。",
+    "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์ของฝ่ายเรา ที่คอสต์ตั้งต้น 4 หรือสูงกว่า กำลังจะถูก KO, จะสามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ แทนได้.[สั่งใช้ : เมน] สามารถ เรสต์ ลีดเดอร์นี้ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ -2000. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่ไม่มีความสามารถ [เมื่อโจมตี] จำนวนไม่เกิน 1 ใบ, จะได้รับ  [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-001_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-002",
@@ -59,7 +63,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-003",
@@ -79,7 +85,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา คือ [Uta] ละก็, จะจั่วการ์ด จำนวน 2 ใบ. จากนั้น, จะนำคาแรกเตอร์การ์ด ที่พาวเวอร์ 6000 หรือต่ำกว่า และไม่มีความสามารถดั้งเดิม จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-003",
@@ -100,7 +108,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-003_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-003",
@@ -121,7 +131,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-003_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-004",
@@ -137,12 +149,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "FILM/Grantesoro",
-    "effectEn": "[Blocker]<br>[Opponent's Turn] If your Leader is multicolored and you have no Characters with 6000 base power or more, this Character gains +4000 power.",
-    "effectJp": "【ブロッカー】<br>【相手のターン中】自分のリーダーが多色で、自分の元々のパワー6000以上のキャラがいない場合、このキャラのパワー+4000。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เทิร์นของคู่แข่ง] ถ้าลีดเดอร์ของฝ่ายเรา มีหลายสี, และไม่มี คาแรกเตอร์ของฝ่ายเรา ที่พาวเวอร์ตั้งต้น 6000 หรือสูงกว่า อยู่เลยละก็, คาแรกเตอร์นี้ จะพาวเวอร์ +4000.",
+    "effectEn": "[Blocker][Opponent's Turn] If your Leader is multicolored and you have no Characters with 6000 base power or more, this Character gains +4000 power.",
+    "effectJp": "【ブロッカー】【相手のターン中】自分のリーダーが多色で、自分の元々のパワー6000以上のキャラがいない場合、このキャラのパワー+4000。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เทิร์นของคู่แข่ง] ถ้าลีดเดอร์ของฝ่ายเรา มีหลายสี, และไม่มี คาแรกเตอร์ของฝ่ายเรา ที่พาวเวอร์ตั้งต้น 6000 หรือสูงกว่า อยู่เลยละก็, คาแรกเตอร์นี้ จะพาวเวอร์ +4000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-005",
@@ -159,10 +173,12 @@
     "trait": "Donquixote Pirates",
     "effectEn": "[On Play] If your Leader is [Sugar], play up to 1 {Donquixote Pirates} type Character card with 6000 power or less from your hand rested.",
     "effectJp": "【登場時】自分のリーダーが「シュガー」の場合、自分の手札からパワー6000以下の特徴《ドンキホーテ海賊団》を持つキャラカード1枚までを、レストで登場させる。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา คือ [Sugar] ละก็, จะนำคาแรกเตอร์การ์ด ที่พาวเวอร์ 6000 หรือต่ำกว่า และมีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt; จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม ในสภาพเรสต์.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา คือ [Sugar] ละก็, จะนำคาแรกเตอร์การ์ด ที่พาวเวอร์ 6000 หรือต่ำกว่า และมีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ > จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม ในสภาพเรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-006",
@@ -177,12 +193,14 @@
     "power": 7000,
     "attribute": "Wisdom",
     "trait": "Alabasta/Straw Hat Crew",
-    "effectEn": "[On Play] You may give your active Leader −5000 power during this turn: Draw 1 card.<br>[Activate: Main] [Once Per Turn] If your Leader has the {Alabasta} type, give up to 1 of your opponent's Characters −1000 power during this turn.",
-    "effectJp": "【登場時】自分のアクティブのリーダーを、このターン中、パワー-5000することができる：カード1枚を引く。<br>【起動メイン】【ターン1回】自分のリーダーが特徴《アラバスタ王国》を持つ場合、相手のキャラ1枚までを、このターン中、パワー-1000。",
-    "effectTh": "[เมื่อลงสนาม] สามารถทำให้ ลีดเดอร์ของเรา ที่กำลังแอ็คทีฟอยู่, ในเทิร์นนี้ จะพาวเวอร์ -5000 : จั่วการ์ด จำนวน 1 ใบ.<br>[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; ราชอาณาจักรอลาบาสต้า &gt; ละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ -1000.",
+    "effectEn": "[On Play] You may give your active Leader −5000 power during this turn: Draw 1 card.[Activate: Main] [Once Per Turn] If your Leader has the {Alabasta} type, give up to 1 of your opponent's Characters −1000 power during this turn.",
+    "effectJp": "【登場時】自分のアクティブのリーダーを、このターン中、パワー-5000することができる：カード1枚を引く。【起動メイン】【ターン1回】自分のリーダーが特徴《アラバスタ王国》を持つ場合、相手のキャラ1枚までを、このターン中、パワー-1000。",
+    "effectTh": "[เมื่อลงสนาม] สามารถทำให้ ลีดเดอร์ของเรา ที่กำลังแอ็คทีฟอยู่, ในเทิร์นนี้ จะพาวเวอร์ -5000 : จั่วการ์ด จำนวน 1 ใบ.[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < ราชอาณาจักรอลาบาสต้า > ละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ -1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-007",
@@ -198,12 +216,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "FILM/Grantesoro",
-    "effectEn": "[Blocker]<br>[On K.O.] Play up to 1 Character card with 6000 power or less and no base effect from your hand.",
-    "effectJp": "【ブロッカー】<br>【KO時】自分の手札からパワー6000以下の元々の効果のないキャラカード1枚までを、登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] จะนำคาแรกเตอร์การ์ด ที่พาวเวอร์ 6000 หรือต่ำกว่า และไม่มีความสามารถดั้งเดิม จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Blocker][On K.O.] Play up to 1 Character card with 6000 power or less and no base effect from your hand.",
+    "effectJp": "【ブロッカー】【KO時】自分の手札からパワー6000以下の元々の効果のないキャラカード1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] จะนำคาแรกเตอร์การ์ด ที่พาวเวอร์ 6000 หรือต่ำกว่า และไม่มีความสามารถดั้งเดิม จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-008",
@@ -218,12 +238,14 @@
     "power": 5000,
     "attribute": "Ranged",
     "trait": "Navy/SWORD",
-    "effectEn": "[On Play]/[When Attacking] Up to 1 of your {SWORD} type Leader or Character cards can also attack active Characters during this turn.<br>[Activate: Main] [Once Per Turn] Give up to 1 of your opponent's Characters −1000 power during this turn.",
-    "effectJp": "【登場時】/【アタック時】自分の特徴《SWORD》を持つ、リーダーかキャラ1枚までは、このターン中、アクティブのキャラにもアタックできる。<br>【起動メイン】【ターン1回】相手のキャラ1枚までを、このターン中、パワー-1000。",
-    "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ในเทิร์นนี้, ทำให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, ที่มีคุณสมบัติ &lt; SWORD &gt;, จะสามารถโจมตีใส่คาแรกเตอร์ของคู่แข่งที่กำลังแอ็คทีฟอยู่ได้ด้วย.<br>[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ -1000.",
+    "effectEn": "[On Play]/[When Attacking] Up to 1 of your {SWORD} type Leader or Character cards can also attack active Characters during this turn.[Activate: Main] [Once Per Turn] Give up to 1 of your opponent's Characters −1000 power during this turn.",
+    "effectJp": "【登場時】/【アタック時】自分の特徴《SWORD》を持つ、リーダーかキャラ1枚までは、このターン中、アクティブのキャラにもアタックできる。【起動メイン】【ターン1回】相手のキャラ1枚までを、このターン中、パワー-1000。",
+    "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ในเทิร์นนี้, ทำให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, ที่มีคุณสมบัติ < SWORD >, จะสามารถโจมตีใส่คาแรกเตอร์ของคู่แข่งที่กำลังแอ็คทีฟอยู่ได้ด้วย.[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ -1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-008",
@@ -238,13 +260,15 @@
     "power": 5000,
     "attribute": "Ranged",
     "trait": "Navy/SWORD",
-    "effectEn": "[On Play]/[When Attacking] Up to 1 of your {SWORD} type Leader or Character cards can also attack active Characters during this turn.<br>[Activate: Main] [Once Per Turn] Give up to 1 of your opponent's Characters −1000 power during this turn.",
-    "effectJp": "【登場時】/【アタック時】自分の特徴《SWORD》を持つ、リーダーかキャラ1枚までは、このターン中、アクティブのキャラにもアタックできる。<br>【起動メイン】【ターン1回】相手のキャラ1枚までを、このターン中、パワー-1000。",
-    "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ในเทิร์นนี้, ทำให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, ที่มีคุณสมบัติ &lt; SWORD &gt;, จะสามารถโจมตีใส่คาแรกเตอร์ของคู่แข่งที่กำลังแอ็คทีฟอยู่ได้ด้วย.<br>[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ -1000.",
+    "effectEn": "[On Play]/[When Attacking] Up to 1 of your {SWORD} type Leader or Character cards can also attack active Characters during this turn.[Activate: Main] [Once Per Turn] Give up to 1 of your opponent's Characters −1000 power during this turn.",
+    "effectJp": "【登場時】/【アタック時】自分の特徴《SWORD》を持つ、リーダーかキャラ1枚までは、このターン中、アクティブのキャラにもアタックできる。【起動メイン】【ターン1回】相手のキャラ1枚までを、このターン中、パワー-1000。",
+    "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ในเทิร์นนี้, ทำให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, ที่มีคุณสมบัติ < SWORD >, จะสามารถโจมตีใส่คาแรกเตอร์ของคู่แข่งที่กำลังแอ็คทีฟอยู่ได้ด้วย.[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ -1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-008_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-009",
@@ -264,7 +288,9 @@
     "effectTh": "[สั่งใช้ : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่แต่เดิมไม่มีความสามารถ จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-010",
@@ -280,12 +306,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Punk Hazard/Donquixote Pirates",
-    "effectEn": "[Blocker]<br>[On Play] Look at 5 cards from the top of your deck; reveal up to 1 Character card with 1000 power or less or up to 1 Event card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のデッキの上から5枚を見て、パワー1000以下のキャラカードかイベント1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำคาแรกเตอร์การ์ด ที่พาวเวอร์ 1000 หรือต่ำกว่า หรือว่า อีเวนต์ จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.<br>",
+    "effectEn": "[Blocker][On Play] Look at 5 cards from the top of your deck; reveal up to 1 Character card with 1000 power or less or up to 1 Event card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "【ブロッカー】【登場時】自分のデッキの上から5枚を見て、パワー1000以下のキャラカードかイベント1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำคาแรกเตอร์การ์ด ที่พาวเวอร์ 1000 หรือต่ำกว่า หรือว่า อีเวนต์ จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-011",
@@ -301,11 +329,11 @@
     "effectEn": "[Counter] If your Leader is [Nefeltari Vivi], up to 1 of your Leader or Character cards gains +4000 power during this battle.",
     "effectJp": "【カウンター】自分のリーダーが「ネフェルタリ・ビビ」の場合、自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。",
     "effectTh": "[เคาน์เตอร์] ถ้าลีดเดอร์ของฝ่ายเรา คือ [Nefeltari Vivi] ละก็, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ +4000.",
-    "triggerEn": "[Trigger] Give up to 1 of your opponent's Characters −2000 power during this turn.",
-    "triggerJp": "【トリガー】相手のキャラ1枚までを、このターン中、パワー-2000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-012",
@@ -322,10 +350,12 @@
     "trait": "Land of Wano",
     "effectEn": "[Activate: Main] You may rest this Character: Rest up to 1 of your opponent's DON!! cards or {Animal} or {SMILE} type Characters with a cost of 3 or less.",
     "effectJp": "【起動メイン】このキャラをレストにできる：相手の、コスト3以下の、特徴《動物》か《SMILE》を持つキャラかドン‼1枚までを、レストにする。",
-    "effectTh": "[สั่งใช้ : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : จะเรสต์ ด้ง!! หรือว่า คาแรกเตอร์ ของฝ่ายคู่แข่ง, ที่คอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ &lt; สัตว์ &gt; หรือ &lt; SMILE &gt; จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[สั่งใช้ : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : จะเรสต์ ด้ง!! หรือว่า คาแรกเตอร์ ของฝ่ายคู่แข่ง, ที่คอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ < สัตว์ > หรือ < SMILE > จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-013",
@@ -346,7 +376,9 @@
     "effectTh": "[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ ถูกนำลงสนามในเทิร์นนี้ละก็, จะ KO คาแรกเตอร์ของคู่แข่ง ที่คอสต์ 5 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่ จำนวนไม่เกิน 1 ใบ. จากนั้น, จะนำ [Zou] จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-013",
@@ -368,7 +400,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-013_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-014",
@@ -383,12 +417,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "East Blue/Frost Moon Village",
-    "effectEn": "[Activate: Main] You may rest this Character: Give up to 2 rested DON!! cards to your &lt;Slash&gt; attribute Leader.",
+    "effectEn": "[Activate: Main] You may rest this Character: Give up to 2 rested DON!! cards to your <Slash> attribute Leader.",
     "effectJp": "【起動メイン】このキャラをレストにできる：自分の属性(斬)を持つリーダーにレストのドン‼2枚までを、付与する。",
     "effectTh": "[สั่งใช้ : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ, ใส่ให้ ลีดเดอร์ของเรา ที่มีคุณลักษณะ (ฟัน).",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-015",
@@ -405,10 +441,12 @@
     "trait": "Merfolk/Fish-Man Island",
     "effectEn": "[Activate: Main] You may rest this Character: Give up to 1 rested DON!! card to 1 of your {Fish-Man} or {Merfolk} type Leader or Character cards. Then, rest up to 1 of your opponent's Characters with a cost of 2 or less.",
     "effectJp": "【起動メイン】このキャラをレストにできる：自分の特徴《魚人族》か《人魚族》を持つ、リーダーかキャラ1枚にレストのドン‼1枚までを、付与する。その後、相手のコスト2以下のキャラ1枚までを、レストにする。",
-    "effectTh": "[สั่งใช้ : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ &lt; เผ่ามนุษย์เงือก &gt; หรือ &lt; เผ่าเงือก &gt; จำนวน 1 ใบ. จากนั้น, จะเรสต์ คาแรกเตอร์ของคู่แข่ง ที่คอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[สั่งใช้ : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ < เผ่ามนุษย์เงือก > หรือ < เผ่าเงือก > จำนวน 1 ใบ. จากนั้น, จะเรสต์ คาแรกเตอร์ของคู่แข่ง ที่คอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-016",
@@ -422,12 +460,14 @@
     "cost": 1,
     "attribute": "Wisdom",
     "trait": "Land of Wano/Kouzuki Clan",
-    "effectEn": "[On Play] If your Leader is [Kouzuki Oden], draw 1 card.<br>[Activate: Main] You may trash this Character: Give up to 1 rested DON!! card to your {Land of Wano} type Leader.",
-    "effectJp": "【登場時】自分のリーダーが「光月おでん」の場合、カード1枚を引く。<br>【起動メイン】このキャラをトラッシュに置くことができる：自分の特徴《ワノ国》を持つリーダーにレストのドン‼1枚までを、付与する。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา คือ [Kouzuki Oden] ละก็, จะจั่วการ์ด จำนวน 1 ใบ.<br>[สั่งใช้ : เมน] สามารถนำ คาแรกเตอร์นี้ ไปวางที่แทรช : นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของฝ่ายเรา ที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt;.<br>",
+    "effectEn": "[On Play] If your Leader is [Kouzuki Oden], draw 1 card.[Activate: Main] You may trash this Character: Give up to 1 rested DON!! card to your {Land of Wano} type Leader.",
+    "effectJp": "【登場時】自分のリーダーが「光月おでん」の場合、カード1枚を引く。【起動メイン】このキャラをトラッシュに置くことができる：自分の特徴《ワノ国》を持つリーダーにレストのドン‼1枚までを、付与する。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา คือ [Kouzuki Oden] ละก็, จะจั่วการ์ด จำนวน 1 ใบ.[สั่งใช้ : เมน] สามารถนำ คาแรกเตอร์นี้ ไปวางที่แทรช : นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของฝ่ายเรา ที่มีคุณสมบัติ < วาโนะคุนิ >.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-017",
@@ -443,12 +483,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Supernovas/Bonney Pirates",
-    "effectEn": "[On Play] If your Leader has the {Supernovas} type, set up to 1 of your DON!! cards as active. Then, up to 1 of your opponent's Characters with a cost of 8 or less cannot be rested until the end of your opponent's next End Phase.<br>",
+    "effectEn": "[On Play] If your Leader has the {Supernovas} type, set up to 1 of your DON!! cards as active. Then, up to 1 of your opponent's Characters with a cost of 8 or less cannot be rested until the end of your opponent's next End Phase.",
     "effectJp": "【登場時】自分のリーダーが特徴《超新星》を持つ場合、自分のドン‼1枚までを、アクティブにする。その後、相手のコスト8以下のキャラ1枚までは、次の相手のエンドフェイズ終了時まで、レストにできない。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ. จากนั้น, ทำให้คาแรกเตอร์ของคู่แข่ง ที่คอสต์ 8 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, จะไม่สามารถถูก เรสต์, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < ซูเปอร์โนวา > ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ. จากนั้น, ทำให้คาแรกเตอร์ของคู่แข่ง ที่คอสต์ 8 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, จะไม่สามารถถูก เรสต์, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-018",
@@ -463,12 +505,14 @@
     "power": 6000,
     "attribute": "Slash",
     "trait": "Navy",
-    "effectEn": "[Opponent's Turn] This Character cannot be K.O.'d by your opponent's effects and gains [Blocker].<br>[End of Your Turn] You may rest 1 of your DON!! cards and trash 1 card from your hand: Set this Character as active.",
-    "effectJp": "【相手のターン中】このキャラは相手の効果でKOされず、【ブロッカー】を得る。<br>【自分のターン終了時】自分のドン‼1枚をレストにし、自分の手札1枚を捨てることができる：このキャラをアクティブにする。",
-    "effectTh": "[เทิร์นของคู่แข่ง] คาแรกเตอร์นี้จะไม่ถูก KO จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].<br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้).<br>[เมื่อจบเทิร์นของเรา] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : จะแอ็คทีฟ คาแรกเตอร์นี้.<br>",
+    "effectEn": "[Opponent's Turn] This Character cannot be K.O.'d by your opponent's effects and gains [Blocker].[End of Your Turn] You may rest 1 of your DON!! cards and trash 1 card from your hand: Set this Character as active.",
+    "effectJp": "【相手のターン中】このキャラは相手の効果でKOされず、【ブロッカー】を得る。【自分のターン終了時】自分のドン‼1枚をレストにし、自分の手札1枚を捨てることができる：このキャラをアクティブにする。",
+    "effectTh": "[เทิร์นของคู่แข่ง] คาแรกเตอร์นี้จะไม่ถูก KO จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้).[เมื่อจบเทิร์นของเรา] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : จะแอ็คทีฟ คาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-018.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-018",
@@ -483,13 +527,15 @@
     "power": 6000,
     "attribute": "Slash",
     "trait": "Navy",
-    "effectEn": "[Opponent's Turn] This Character cannot be K.O.'d by your opponent's effects and gains [Blocker].<br>[End of Your Turn] You may rest 1 of your DON!! cards and trash 1 card from your hand: Set this Character as active.",
-    "effectJp": "【相手のターン中】このキャラは相手の効果でKOされず、【ブロッカー】を得る。<br>【自分のターン終了時】自分のドン‼1枚をレストにし、自分の手札1枚を捨てることができる：このキャラをアクティブにする。",
-    "effectTh": "[เทิร์นของคู่แข่ง] คาแรกเตอร์นี้จะไม่ถูก KO จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].<br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้).<br>[เมื่อจบเทิร์นของเรา] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : จะแอ็คทีฟ คาแรกเตอร์นี้.<br>",
+    "effectEn": "[Opponent's Turn] This Character cannot be K.O.'d by your opponent's effects and gains [Blocker].[End of Your Turn] You may rest 1 of your DON!! cards and trash 1 card from your hand: Set this Character as active.",
+    "effectJp": "【相手のターン中】このキャラは相手の効果でKOされず、【ブロッカー】を得る。【自分のターン終了時】自分のドン‼1枚をレストにし、自分の手札1枚を捨てることができる：このキャラをアクティブにする。",
+    "effectTh": "[เทิร์นของคู่แข่ง] คาแรกเตอร์นี้จะไม่ถูก KO จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้).[เมื่อจบเทิร์นของเรา] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : จะแอ็คทีฟ คาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-018_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-018",
@@ -504,13 +550,15 @@
     "power": 6000,
     "attribute": "Slash",
     "trait": "Navy",
-    "effectEn": "[Opponent's Turn] This Character cannot be K.O.'d by your opponent's effects and gains [Blocker].<br>[End of Your Turn] You may rest 1 of your DON!! cards and trash 1 card from your hand: Set this Character as active.",
-    "effectJp": "【相手のターン中】このキャラは相手の効果でKOされず、【ブロッカー】を得る。<br>【自分のターン終了時】自分のドン‼1枚をレストにし、自分の手札1枚を捨てることができる：このキャラをアクティブにする。",
-    "effectTh": "[เทิร์นของคู่แข่ง] คาแรกเตอร์นี้จะไม่ถูก KO จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].<br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้).<br>[เมื่อจบเทิร์นของเรา] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : จะแอ็คทีฟ คาแรกเตอร์นี้.<br>",
+    "effectEn": "[Opponent's Turn] This Character cannot be K.O.'d by your opponent's effects and gains [Blocker].[End of Your Turn] You may rest 1 of your DON!! cards and trash 1 card from your hand: Set this Character as active.",
+    "effectJp": "【相手のターン中】このキャラは相手の効果でKOされず、【ブロッカー】を得る。【自分のターン終了時】自分のドン‼1枚をレストにし、自分の手札1枚を捨てることができる：このキャラをアクティブにする。",
+    "effectTh": "[เทิร์นของคู่แข่ง] คาแรกเตอร์นี้จะไม่ถูก KO จากความสามารถของฝ่ายคู่แข่ง, และจะได้รับ [บล็อกเกอร์].(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้).[เมื่อจบเทิร์นของเรา] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : จะแอ็คทีฟ คาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-018_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-019",
@@ -531,7 +579,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-019.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-020",
@@ -546,12 +596,12 @@
     "trait": "FILM",
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +2000 power during this battle. Then, if you have 2 or more {FILM} type Characters, that card gains an additional +2000 power during this battle.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+2000。その後、自分の特徴《FILM》を持つキャラが2枚以上いる場合、そのカードを、このバトル中、パワー+2000。",
-    "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ +2000. จากนั้น, การ์ดดังกล่าว จะพาวเวอร์เพิ่มขึ้นอีก +2000, ถ้าเรามีคาแรกเตอร์ ที่มีคุณสมบัติ &lt; FILM &gt; จำนวน 2 ใบ หรือมากกว่า อยู่ด้วย.",
-    "triggerEn": "[Trigger] Set up to 1 of your Characters as active.",
-    "triggerJp": "【トリガー】自分のキャラ1枚までを、アクティブにする。",
+    "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ +2000. จากนั้น, การ์ดดังกล่าว จะพาวเวอร์เพิ่มขึ้นอีก +2000, ถ้าเรามีคาแรกเตอร์ ที่มีคุณสมบัติ < FILM > จำนวน 2 ใบ หรือมากกว่า อยู่ด้วย.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-020.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-021",
@@ -572,7 +622,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : จะนำคาแรกเตอร์ของฝ่ายคู่แข่ง, ที่พาวเวอร์ตั้งต้น 4000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ กับ ที่คอสต์ตั้งต้น 3 หรือต่ำกว่า อีกจำนวนไม่เกิน 1 ใบ, ไปวางที่ใต้เด็คของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-021.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-022",
@@ -588,12 +640,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Navy",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Place up to 1 Character with a cost of 4 or less at the bottom of the owner's deck.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】コスト4以下のキャラ1枚までを、持ち主のデッキの下に置く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] จะนำคาแรกเตอร์ของใครก็ตาม ที่คอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ใต้เด็คของเจ้าของ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Place up to 1 Character with a cost of 4 or less at the bottom of the owner's deck.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】コスト4以下のキャラ1枚までを、持ち主のデッキの下に置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] จะนำคาแรกเตอร์ของใครก็ตาม ที่คอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ใต้เด็คของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-022.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-023",
@@ -613,7 +667,9 @@
     "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วค่อยนำไปวางที่บนเด็ค หรือ ใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-023.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-024",
@@ -629,12 +685,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Alabasta",
-    "effectEn": "[Blocker]<br>[On Play] Play up to 1 {Alabasta} or {Straw Hat Crew} type Character card with a cost of 5 or less from your hand. Then, you cannot play any Character cards on your field during this turn.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分の手札からコスト5以下の、特徴《アラバスタ王国》か《麦わらの一味》を持つキャラカード1枚までを、登場させる。その後、自分は、このターン中、自分の場にキャラカードを登場できない。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] จะนำคาแรกเตอร์การ์ด ที่คอสต์ 5 หรือต่ำกว่า, และมีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; หรือ &lt; ราชอาณาจักรอลาบาสต้า &gt; จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ลงสนามอีก ในเทิร์นนี้.",
+    "effectEn": "[Blocker][On Play] Play up to 1 {Alabasta} or {Straw Hat Crew} type Character card with a cost of 5 or less from your hand. Then, you cannot play any Character cards on your field during this turn.",
+    "effectJp": "【ブロッカー】【登場時】自分の手札からコスト5以下の、特徴《アラバスタ王国》か《麦わらの一味》を持つキャラカード1枚までを、登場させる。その後、自分は、このターン中、自分の場にキャラカードを登場できない。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] จะนำคาแรกเตอร์การ์ด ที่คอสต์ 5 หรือต่ำกว่า, และมีคุณสมบัติ < กลุ่มหมวกฟาง > หรือ < ราชอาณาจักรอลาบาสต้า > จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ลงสนามอีก ในเทิร์นนี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-024.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-024",
@@ -650,13 +708,15 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Alabasta",
-    "effectEn": "[Blocker]<br>[On Play] Play up to 1 {Alabasta} or {Straw Hat Crew} type Character card with a cost of 5 or less from your hand. Then, you cannot play any Character cards on your field during this turn.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分の手札からコスト5以下の、特徴《アラバスタ王国》か《麦わらの一味》を持つキャラカード1枚までを、登場させる。その後、自分は、このターン中、自分の場にキャラカードを登場できない。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] จะนำคาแรกเตอร์การ์ด ที่คอสต์ 5 หรือต่ำกว่า, และมีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; หรือ &lt; ราชอาณาจักรอลาบาสต้า &gt; จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ลงสนามอีก ในเทิร์นนี้.",
+    "effectEn": "[Blocker][On Play] Play up to 1 {Alabasta} or {Straw Hat Crew} type Character card with a cost of 5 or less from your hand. Then, you cannot play any Character cards on your field during this turn.",
+    "effectJp": "【ブロッカー】【登場時】自分の手札からコスト5以下の、特徴《アラバスタ王国》か《麦わらの一味》を持つキャラカード1枚までを、登場させる。その後、自分は、このターン中、自分の場にキャラカードを登場できない。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] จะนำคาแรกเตอร์การ์ด ที่คอสต์ 5 หรือต่ำกว่า, และมีคุณสมบัติ < กลุ่มหมวกฟาง > หรือ < ราชอาณาจักรอลาบาสต้า > จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ลงสนามอีก ในเทิร์นนี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-024_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-024",
@@ -672,13 +732,15 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Alabasta",
-    "effectEn": "[Blocker]<br>[On Play] Play up to 1 {Alabasta} or {Straw Hat Crew} type Character card with a cost of 5 or less from your hand. Then, you cannot play any Character cards on your field during this turn.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分の手札からコスト5以下の、特徴《アラバスタ王国》か《麦わらの一味》を持つキャラカード1枚までを、登場させる。その後、自分は、このターン中、自分の場にキャラカードを登場できない。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] จะนำคาแรกเตอร์การ์ด ที่คอสต์ 5 หรือต่ำกว่า, และมีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; หรือ &lt; ราชอาณาจักรอลาบาสต้า &gt; จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ลงสนามอีก ในเทิร์นนี้.",
+    "effectEn": "[Blocker][On Play] Play up to 1 {Alabasta} or {Straw Hat Crew} type Character card with a cost of 5 or less from your hand. Then, you cannot play any Character cards on your field during this turn.",
+    "effectJp": "【ブロッカー】【登場時】自分の手札からコスト5以下の、特徴《アラバスタ王国》か《麦わらの一味》を持つキャラカード1枚までを、登場させる。その後、自分は、このターン中、自分の場にキャラカードを登場できない。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] จะนำคาแรกเตอร์การ์ด ที่คอสต์ 5 หรือต่ำกว่า, และมีคุณสมบัติ < กลุ่มหมวกฟาง > หรือ < ราชอาณาจักรอลาบาสต้า > จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, เราจะไม่สามารถนำ คาแรกเตอร์การ์ด ลงสนามอีก ในเทิร์นนี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-024_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-025",
@@ -699,7 +761,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ : จะนำคาแรกเตอร์ของใครก็ตาม ที่พาวเวอร์ตั้งต้น 6000 จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-025.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-025",
@@ -721,7 +785,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-025_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-026",
@@ -736,12 +802,14 @@
     "power": 8000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Kuja Pirates",
-    "effectEn": "[On Play] If your opponent has 5 or more cards in their hand, your opponent places 1 card from their hand at the bottom of their deck.<br>[Activate: Main] [Once Per Turn] You may place 1 of your Characters at the bottom of the owner's deck: Give your Leader and 1 Character up to 1 rested DON!! card each.",
-    "effectJp": "【登場時】相手の手札が5枚以上ある場合、相手は自身の手札1枚をデッキの下に置く。<br>【起動メイン】【ターン1回】自分のキャラ1枚を持ち主のデッキの下に置くことができる：自分のリーダーとキャラ1枚にレストのドン‼1枚ずつまでを、付与する。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าคู่แข่งมีการ์ดในมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องนำการ์ดในมือของตัวเอง จำนวน 1 ใบ ไปวางที่ใต้เด็ค.<br>[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ คาแรกเตอร์ของเรา จำนวน 1 ใบ ไปวางที่ใต้เด็คของเจ้าของ : นำ ด้ง!! ที่เรสต์อยู่ ใส่ให้ ลีดเดอร์ของฝ่ายเรา กับ คาแรกเตอร์ของเรา อีกจำนวน 1 ใบ, อย่างละ จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[On Play] If your opponent has 5 or more cards in their hand, your opponent places 1 card from their hand at the bottom of their deck.[Activate: Main] [Once Per Turn] You may place 1 of your Characters at the bottom of the owner's deck: Give your Leader and 1 Character up to 1 rested DON!! card each.",
+    "effectJp": "【登場時】相手の手札が5枚以上ある場合、相手は自身の手札1枚をデッキの下に置く。【起動メイン】【ターン1回】自分のキャラ1枚を持ち主のデッキの下に置くことができる：自分のリーダーとキャラ1枚にレストのドン‼1枚ずつまでを、付与する。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าคู่แข่งมีการ์ดในมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องนำการ์ดในมือของตัวเอง จำนวน 1 ใบ ไปวางที่ใต้เด็ค.[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ คาแรกเตอร์ของเรา จำนวน 1 ใบ ไปวางที่ใต้เด็คของเจ้าของ : นำ ด้ง!! ที่เรสต์อยู่ ใส่ให้ ลีดเดอร์ของฝ่ายเรา กับ คาแรกเตอร์ของเรา อีกจำนวน 1 ใบ, อย่างละ จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-026.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-026",
@@ -756,13 +824,15 @@
     "power": 8000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Kuja Pirates",
-    "effectEn": "[On Play] If your opponent has 5 or more cards in their hand, your opponent places 1 card from their hand at the bottom of their deck.<br>[Activate: Main] [Once Per Turn] You may place 1 of your Characters at the bottom of the owner's deck: Give your Leader and 1 Character up to 1 rested DON!! card each.",
-    "effectJp": "【登場時】相手の手札が5枚以上ある場合、相手は自身の手札1枚をデッキの下に置く。<br>【起動メイン】【ターン1回】自分のキャラ1枚を持ち主のデッキの下に置くことができる：自分のリーダーとキャラ1枚にレストのドン‼1枚ずつまでを、付与する。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าคู่แข่งมีการ์ดในมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องนำการ์ดในมือของตัวเอง จำนวน 1 ใบ ไปวางที่ใต้เด็ค.<br>[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ คาแรกเตอร์ของเรา จำนวน 1 ใบ ไปวางที่ใต้เด็คของเจ้าของ : นำ ด้ง!! ที่เรสต์อยู่ ใส่ให้ ลีดเดอร์ของฝ่ายเรา กับ คาแรกเตอร์ของเรา อีกจำนวน 1 ใบ, อย่างละ จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[On Play] If your opponent has 5 or more cards in their hand, your opponent places 1 card from their hand at the bottom of their deck.[Activate: Main] [Once Per Turn] You may place 1 of your Characters at the bottom of the owner's deck: Give your Leader and 1 Character up to 1 rested DON!! card each.",
+    "effectJp": "【登場時】相手の手札が5枚以上ある場合、相手は自身の手札1枚をデッキの下に置く。【起動メイン】【ターン1回】自分のキャラ1枚を持ち主のデッキの下に置くことができる：自分のリーダーとキャラ1枚にレストのドン‼1枚ずつまでを、付与する。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าคู่แข่งมีการ์ดในมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องนำการ์ดในมือของตัวเอง จำนวน 1 ใบ ไปวางที่ใต้เด็ค.[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ คาแรกเตอร์ของเรา จำนวน 1 ใบ ไปวางที่ใต้เด็คของเจ้าของ : นำ ด้ง!! ที่เรสต์อยู่ ใส่ให้ ลีดเดอร์ของฝ่ายเรา กับ คาแรกเตอร์ของเรา อีกจำนวน 1 ใบ, อย่างละ จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-026_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-026",
@@ -777,13 +847,15 @@
     "power": 8000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Kuja Pirates",
-    "effectEn": "[On Play] If your opponent has 5 or more cards in their hand, your opponent places 1 card from their hand at the bottom of their deck.<br>[Activate: Main] [Once Per Turn] You may place 1 of your Characters at the bottom of the owner's deck: Give your Leader and 1 Character up to 1 rested DON!! card each.",
-    "effectJp": "【登場時】相手の手札が5枚以上ある場合、相手は自身の手札1枚をデッキの下に置く。<br>【起動メイン】【ターン1回】自分のキャラ1枚を持ち主のデッキの下に置くことができる：自分のリーダーとキャラ1枚にレストのドン‼1枚ずつまでを、付与する。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าคู่แข่งมีการ์ดในมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องนำการ์ดในมือของตัวเอง จำนวน 1 ใบ ไปวางที่ใต้เด็ค.<br>[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ คาแรกเตอร์ของเรา จำนวน 1 ใบ ไปวางที่ใต้เด็คของเจ้าของ : นำ ด้ง!! ที่เรสต์อยู่ ใส่ให้ ลีดเดอร์ของฝ่ายเรา กับ คาแรกเตอร์ของเรา อีกจำนวน 1 ใบ, อย่างละ จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[On Play] If your opponent has 5 or more cards in their hand, your opponent places 1 card from their hand at the bottom of their deck.[Activate: Main] [Once Per Turn] You may place 1 of your Characters at the bottom of the owner's deck: Give your Leader and 1 Character up to 1 rested DON!! card each.",
+    "effectJp": "【登場時】相手の手札が5枚以上ある場合、相手は自身の手札1枚をデッキの下に置く。【起動メイン】【ターン1回】自分のキャラ1枚を持ち主のデッキの下に置くことができる：自分のリーダーとキャラ1枚にレストのドン‼1枚ずつまでを、付与する。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าคู่แข่งมีการ์ดในมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องนำการ์ดในมือของตัวเอง จำนวน 1 ใบ ไปวางที่ใต้เด็ค.[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ คาแรกเตอร์ของเรา จำนวน 1 ใบ ไปวางที่ใต้เด็คของเจ้าของ : นำ ด้ง!! ที่เรสต์อยู่ ใส่ให้ ลีดเดอร์ของฝ่ายเรา กับ คาแรกเตอร์ของเรา อีกจำนวน 1 ใบ, อย่างละ จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-026_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-027",
@@ -804,7 +876,9 @@
     "effectTh": "[เมื่อลงสนาม] จะนำคาแรกเตอร์ของใครก็ตาม ที่พาวเวอร์ตั้งต้น 7000 จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-027.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-028",
@@ -819,12 +893,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "East Blue",
-    "effectEn": "[On Play] Trash 1 card from your hand.<br>[Activate: Main] You may trash this Character: If you have 4 or less cards in your hand, draw 2 cards.",
-    "effectJp": "【登場時】自分の手札1枚を捨てる。<br>【起動メイン】このキャラをトラッシュに置くことができる：自分の手札が4枚以下の場合、カード2枚を引く。",
-    "effectTh": "[เมื่อลงสนาม] จะทิ้งการ์ดในมือของเรา จำนวน 1 ใบ.<br>[สั่งใช้ : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ถ้าเรามีการ์ดในมืออยู่ จำนวน 4 ใบ หรือน้อยกว่าละก็, จั่วการ์ด จำนวน 2 ใบ.",
+    "effectEn": "[On Play] Trash 1 card from your hand.[Activate: Main] You may trash this Character: If you have 4 or less cards in your hand, draw 2 cards.",
+    "effectJp": "【登場時】自分の手札1枚を捨てる。【起動メイン】このキャラをトラッシュに置くことができる：自分の手札が4枚以下の場合、カード2枚を引く。",
+    "effectTh": "[เมื่อลงสนาม] จะทิ้งการ์ดในมือของเรา จำนวน 1 ใบ.[สั่งใช้ : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ถ้าเรามีการ์ดในมืออยู่ จำนวน 4 ใบ หรือน้อยกว่าละก็, จั่วการ์ด จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-028.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-029",
@@ -837,12 +913,14 @@
     "color": "Blue",
     "cost": 1,
     "trait": "The Seven Warlords of the Sea/Kuja Pirates",
-    "effectEn": "[Main] You may rest 4 of your DON!! cards: If your Leader is [Boa Hancock], play up to 1 {Amazon Lily} or {Kuja Pirates} type Character card with a cost of 6 or less from your hand.<br>[Counter] Up to 1 of your [Boa Hancock] cards gains +3000 power during this battle.",
-    "effectJp": "【メイン】自分のドン‼4枚をレストにできる：自分のリーダーが「ボア・ハンコック」の場合、自分の手札からコスト6以下の、特徴《アマゾン・リリー》か《九蛇海賊団》を持つキャラカード1枚までを、登場させる。<br>【カウンター】自分の「ボア・ハンコック」1枚までを、このバトル中、パワー+3000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 4 ใบ : ถ้าลีดเดอร์ของฝ่ายเรา คือ [Boa Hancock ละก็, จะนำคาแรกเตอร์การ์ด ที่คอสต์ 6 หรือต่ำกว่า, และมีคุณสมบัติ &lt; อมาซอน • ลิลี่ &gt; หรือ &lt; กลุ่มโจรสลัดคุจา &gt; จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.<br>[เคาน์เตอร์] ในแบทเทิลนี้, [Boa Hancock] ของฝ่ายเรา จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ +3000.",
+    "effectEn": "[Main] You may rest 4 of your DON!! cards: If your Leader is [Boa Hancock], play up to 1 {Amazon Lily} or {Kuja Pirates} type Character card with a cost of 6 or less from your hand.[Counter] Up to 1 of your [Boa Hancock] cards gains +3000 power during this battle.",
+    "effectJp": "【メイン】自分のドン‼4枚をレストにできる：自分のリーダーが「ボア・ハンコック」の場合、自分の手札からコスト6以下の、特徴《アマゾン・リリー》か《九蛇海賊団》を持つキャラカード1枚までを、登場させる。【カウンター】自分の「ボア・ハンコック」1枚までを、このバトル中、パワー+3000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 4 ใบ : ถ้าลีดเดอร์ของฝ่ายเรา คือ [Boa Hancock ละก็, จะนำคาแรกเตอร์การ์ด ที่คอสต์ 6 หรือต่ำกว่า, และมีคุณสมบัติ < อมาซอน • ลิลี่ > หรือ < กลุ่มโจรสลัดคุจา > จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.[เคาน์เตอร์] ในแบทเทิลนี้, [Boa Hancock] ของฝ่ายเรา จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-029.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-030",
@@ -863,7 +941,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-030.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-031",
@@ -884,7 +964,9 @@
     "effectTh": "[เทิร์นของเรา] [เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของฝ่ายเรา คือ [Sanji] ละก็, จะใช้งานความสามารถ [เมน] ของอีเวนต์ ที่คอสต์ 7 หรือต่ำกว่า, ซึ่งอยู่ในแทรชของเรา จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-031.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-031",
@@ -906,7 +988,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-031_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-031",
@@ -928,7 +1012,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-031_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-032",
@@ -949,7 +1035,9 @@
     "effectTh": "[เทิร์นของเรา] [เมื่อลงสนาม] ในเทิร์นนี้, [Charlotte Katakuri] ของฝ่ายเรา จำนวนไม่เกิน 1 ใบ, จะพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-032.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-033",
@@ -967,10 +1055,12 @@
     "trait": "Big Mom Pirates",
     "effectEn": "[Opponent's Turn] [Once Per Turn] When a DON!! card on your field is returned to your DON!! deck by your effect, if your Leader has the {Big Mom Pirates} type, add up to 1 DON!! card from your DON!! deck and rest it.",
     "effectJp": "【相手のターン中】【ターン1回】自分の場のドン‼が自分の効果によってドン‼デッキに戻された時、自分のリーダーが特徴《ビッグ・マム海賊団》を持つ場合、ドン‼デッキからドン‼1枚までを、レストで追加する。",
-    "effectTh": "[เทิร์นของคู่แข่ง] [เทิร์นละ 1 ครั้ง] เมื่อ ด้ง!! ในสนามของเรา ถูกนำกลับด้ง!! เด็ค จากความสามารถของฝ่ายเรา, ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดบิ๊กมัม &gt; ละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
+    "effectTh": "[เทิร์นของคู่แข่ง] [เทิร์นละ 1 ครั้ง] เมื่อ ด้ง!! ในสนามของเรา ถูกนำกลับด้ง!! เด็ค จากความสามารถของฝ่ายเรา, ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < กลุ่มโจรสลัดบิ๊กมัม > ละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-033.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-034",
@@ -986,12 +1076,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Rocks Pirates",
-    "effectEn": "[On Play] Draw 1 card and place 1 card from your hand at the top of your deck. Then, add up to 1 DON!! card from your DON!! deck and set it as active.<br>[On K.O.] DON!! −1: Add up to 1 card from the top of your deck to the top of your Life cards.",
-    "effectJp": "【登場時】カード1枚を引き、自分の手札1枚をデッキの上に置く。その後、ドン‼デッキからドン‼1枚までを、アクティブで追加する。<br>【KO時】ドン‼-1：自分のデッキの上から1枚までを、ライフの上に加える。",
-    "effectTh": "[เมื่อลงสนาม] จั่วการ์ด จำนวน 1 ใบ, แล้วนำการ์ดในมือของเรา จำนวน 1 ใบ ไปวางที่บนเด็ค. จากนั้น, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.<br>[เมื่อถูก KO] ด้ง!! - 1 [สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ] : จะนำการ์ดจากบนสุดของ เด็คของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์.",
+    "effectEn": "[On Play] Draw 1 card and place 1 card from your hand at the top of your deck. Then, add up to 1 DON!! card from your DON!! deck and set it as active.[On K.O.] DON!! −1: Add up to 1 card from the top of your deck to the top of your Life cards.",
+    "effectJp": "【登場時】カード1枚を引き、自分の手札1枚をデッキの上に置く。その後、ドン‼デッキからドン‼1枚までを、アクティブで追加する。【KO時】ドン‼-1：自分のデッキの上から1枚までを、ライフの上に加える。",
+    "effectTh": "[เมื่อลงสนาม] จั่วการ์ด จำนวน 1 ใบ, แล้วนำการ์ดในมือของเรา จำนวน 1 ใบ ไปวางที่บนเด็ค. จากนั้น, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.[เมื่อถูก KO] ด้ง!! - 1 [สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ] : จะนำการ์ดจากบนสุดของ เด็คของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-034.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-034",
@@ -1007,13 +1099,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Rocks Pirates",
-    "effectEn": "[On Play] Draw 1 card and place 1 card from your hand at the top of your deck. Then, add up to 1 DON!! card from your DON!! deck and set it as active.<br>[On K.O.] DON!! −1: Add up to 1 card from the top of your deck to the top of your Life cards.",
-    "effectJp": "【登場時】カード1枚を引き、自分の手札1枚をデッキの上に置く。その後、ドン‼デッキからドン‼1枚までを、アクティブで追加する。<br>【KO時】ドン‼-1：自分のデッキの上から1枚までを、ライフの上に加える。",
-    "effectTh": "[เมื่อลงสนาม] จั่วการ์ด จำนวน 1 ใบ, แล้วนำการ์ดในมือของเรา จำนวน 1 ใบ ไปวางที่บนเด็ค. จากนั้น, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.<br>[เมื่อถูก KO] ด้ง!! - 1 [สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ] : จะนำการ์ดจากบนสุดของ เด็คของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์.",
+    "effectEn": "[On Play] Draw 1 card and place 1 card from your hand at the top of your deck. Then, add up to 1 DON!! card from your DON!! deck and set it as active.[On K.O.] DON!! −1: Add up to 1 card from the top of your deck to the top of your Life cards.",
+    "effectJp": "【登場時】カード1枚を引き、自分の手札1枚をデッキの上に置く。その後、ドン‼デッキからドン‼1枚までを、アクティブで追加する。【KO時】ドン‼-1：自分のデッキの上から1枚までを、ライフの上に加える。",
+    "effectTh": "[เมื่อลงสนาม] จั่วการ์ด จำนวน 1 ใบ, แล้วนำการ์ดในมือของเรา จำนวน 1 ใบ ไปวางที่บนเด็ค. จากนั้น, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.[เมื่อถูก KO] ด้ง!! - 1 [สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ] : จะนำการ์ดจากบนสุดของ เด็คของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-034_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-035",
@@ -1029,12 +1123,14 @@
     "counter": 2000,
     "attribute": "Wisdom",
     "trait": "Big Mom Pirates",
-    "effectEn": "[Blocker]<br>[On Play] If the number of DON!! cards on your field is equal to or less than the number on your opponent's field, add up to 1 DON!! card from your DON!! deck and rest it.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分の場のドン‼が相手の場のドン‼の枚数以下の場合、ドン‼デッキからドン‼1枚までを、レストで追加する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ถ้า ด้ง!! ที่อยู่ในสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่ในสนามของคู่แข่งละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
+    "effectEn": "[Blocker][On Play] If the number of DON!! cards on your field is equal to or less than the number on your opponent's field, add up to 1 DON!! card from your DON!! deck and rest it.",
+    "effectJp": "【ブロッカー】【登場時】自分の場のドン‼が相手の場のドン‼の枚数以下の場合、ドン‼デッキからドン‼1枚までを、レストで追加する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ถ้า ด้ง!! ที่อยู่ในสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่ในสนามของคู่แข่งละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-035.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-036",
@@ -1055,7 +1151,9 @@
     "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : จะ KO คาแรกเตอร์ของคู่แข่ง ที่คอสต์ตั้งต้น 3 หรือต่ำกว่า, จำนวนไม่เกิน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-036.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-037",
@@ -1073,10 +1171,12 @@
     "trait": "ODYSSEY",
     "effectEn": "[On Play] If you have 7 or more DON!! cards on your field, all of your {ODYSSEY} type Leader and Character cards gain +1000 power until the end of your opponent's next End Phase.",
     "effectJp": "【登場時】自分の場のドン‼が7枚以上ある場合、自分の特徴《ODYSSEY》を持つ、リーダーとキャラすべてを、次の相手のエンドフェイズ終了時まで、パワー+1000。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! จำนวน 7 ใบ หรือมากกว่าละก็, ลีดเดอร์ กับ คาแรกเตอร์ ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ &lt; ODYSSEY &gt;, จะพาวเวอร์ +1000 จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! จำนวน 7 ใบ หรือมากกว่าละก็, ลีดเดอร์ กับ คาแรกเตอร์ ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ < ODYSSEY >, จะพาวเวอร์ +1000 จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-037.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-038",
@@ -1089,12 +1189,14 @@
     "color": "Purple",
     "cost": 1,
     "trait": "The Vinsmoke Family/GERMA 66",
-    "effectEn": "[Main] You may rest 1 of your DON!! cards: If the number of DON!! cards on your field is equal to or less than the number on your opponent's field and you only have Characters with a type including \"GERMA\", add up to 2 DON!! cards from your DON!! deck and rest them.<br>[Counter] Your Leader gains +3000 power during this battle.",
-    "effectJp": "【メイン】自分のドン‼1枚をレストにできる：自分の場のドン‼が相手の場のドン‼の枚数以下で、自分のキャラが『ジェルマ』を含む特徴を持つキャラのみの場合、ドン‼デッキからドン‼2枚までを、レストで追加する。<br>【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : ถ้า ด้ง!! ที่อยู่ในสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่ในสนามของคู่แข่ง, และคาแรกเตอร์ของฝ่ายเรา มีแต่ที่ระบุคำว่า [เจอร์ม่า] อยู่ในคุณสมบัติ เท่านั้น ละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 2 ใบ, มาวางเพิ่มแบบ เรสต์.<br>[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะพาวเวอร์ +3000.",
+    "effectEn": "[Main] You may rest 1 of your DON!! cards: If the number of DON!! cards on your field is equal to or less than the number on your opponent's field and you only have Characters with a type including \"GERMA\", add up to 2 DON!! cards from your DON!! deck and rest them.[Counter] Your Leader gains +3000 power during this battle.",
+    "effectJp": "【メイン】自分のドン‼1枚をレストにできる：自分の場のドン‼が相手の場のドン‼の枚数以下で、自分のキャラが『ジェルマ』を含む特徴を持つキャラのみの場合、ドン‼デッキからドン‼2枚までを、レストで追加する。【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : ถ้า ด้ง!! ที่อยู่ในสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่ในสนามของคู่แข่ง, และคาแรกเตอร์ของฝ่ายเรา มีแต่ที่ระบุคำว่า [เจอร์ม่า] อยู่ในคุณสมบัติ เท่านั้น ละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 2 ใบ, มาวางเพิ่มแบบ เรสต์.[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-038.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-039",
@@ -1112,10 +1214,12 @@
     "trait": "Animal Kingdom Pirates",
     "effectEn": "[On Play] If your Leader has the {Animal Kingdom Pirates} type, draw 1 card and trash 1 card from your hand. Then, play up to 1 Character card with 6000 power or less and no base effect from your trash.",
     "effectJp": "【登場時】自分のリーダーが特徴《百獣海賊団》を持つ場合、カード1枚を引き、自分の手札1枚を捨てる。その後、自分のトラッシュからパワー6000以下の元々の効果のないキャラカード1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดร้อยอสูร &gt; ละก็, จะจั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ. จากนั้น, จะนำคาแรกเตอร์การ์ด ที่พาวเวอร์ 6000 หรือต่ำกว่า และไม่มีความสามารถดั้งเดิม จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < กลุ่มโจรสลัดร้อยอสูร > ละก็, จะจั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดในมือของเรา จำนวน 1 ใบ. จากนั้น, จะนำคาแรกเตอร์การ์ด ที่พาวเวอร์ 6000 หรือต่ำกว่า และไม่มีความสามารถดั้งเดิม จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-039.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-040",
@@ -1136,7 +1240,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-040.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-041",
@@ -1151,12 +1257,14 @@
     "power": 6000,
     "attribute": "Special",
     "trait": "Navy/SWORD",
-    "effectEn": "[Opponent's Turn] All of your {SWORD} type Characters with a cost of 6 or less gain +2000 power.<br>[On Play] You may trash 1 {Navy} type card from your hand: Draw 2 cards.",
-    "effectJp": "【相手のターン中】自分のコスト6以下の特徴《SWORD》を持つキャラすべてを、パワー+2000。<br>【登場時】自分の手札から特徴《海軍》を持つカード1枚を捨てることができる：カード2枚を引く。",
-    "effectTh": "[เทิร์นของคู่แข่ง] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่คอสต์ 6 หรือต่ำกว่า และมีคุณสมบัติ &lt; SWORD &gt;, จะพาวเวอร์ +2000.<br>[เมื่อลงสนาม] สามารถทิ้งการ์ด ที่มีคุณสมบัติ &lt; กองทัพเรือ &gt; จากในมือของเรา จำนวน 1 ใบ : จั่วการ์ด จำนวน 2 ใบ.",
+    "effectEn": "[Opponent's Turn] All of your {SWORD} type Characters with a cost of 6 or less gain +2000 power.[On Play] You may trash 1 {Navy} type card from your hand: Draw 2 cards.",
+    "effectJp": "【相手のターン中】自分のコスト6以下の特徴《SWORD》を持つキャラすべてを、パワー+2000。【登場時】自分の手札から特徴《海軍》を持つカード1枚を捨てることができる：カード2枚を引く。",
+    "effectTh": "[เทิร์นของคู่แข่ง] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่คอสต์ 6 หรือต่ำกว่า และมีคุณสมบัติ < SWORD >, จะพาวเวอร์ +2000.[เมื่อลงสนาม] สามารถทิ้งการ์ด ที่มีคุณสมบัติ < กองทัพเรือ > จากในมือของเรา จำนวน 1 ใบ : จั่วการ์ด จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-041.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-041",
@@ -1171,13 +1279,15 @@
     "power": 6000,
     "attribute": "Special",
     "trait": "Navy/SWORD",
-    "effectEn": "[Opponent's Turn] All of your {SWORD} type Characters with a cost of 6 or less gain +2000 power.<br>[On Play] You may trash 1 {Navy} type card from your hand: Draw 2 cards.",
-    "effectJp": "【相手のターン中】自分のコスト6以下の特徴《SWORD》を持つキャラすべてを、パワー+2000。<br>【登場時】自分の手札から特徴《海軍》を持つカード1枚を捨てることができる：カード2枚を引く。",
-    "effectTh": "[เทิร์นของคู่แข่ง] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่คอสต์ 6 หรือต่ำกว่า และมีคุณสมบัติ &lt; SWORD &gt;, จะพาวเวอร์ +2000.<br>[เมื่อลงสนาม] สามารถทิ้งการ์ด ที่มีคุณสมบัติ &lt; กองทัพเรือ &gt; จากในมือของเรา จำนวน 1 ใบ : จั่วการ์ด จำนวน 2 ใบ.",
+    "effectEn": "[Opponent's Turn] All of your {SWORD} type Characters with a cost of 6 or less gain +2000 power.[On Play] You may trash 1 {Navy} type card from your hand: Draw 2 cards.",
+    "effectJp": "【相手のターン中】自分のコスト6以下の特徴《SWORD》を持つキャラすべてを、パワー+2000。【登場時】自分の手札から特徴《海軍》を持つカード1枚を捨てることができる：カード2枚を引く。",
+    "effectTh": "[เทิร์นของคู่แข่ง] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่คอสต์ 6 หรือต่ำกว่า และมีคุณสมบัติ < SWORD >, จะพาวเวอร์ +2000.[เมื่อลงสนาม] สามารถทิ้งการ์ด ที่มีคุณสมบัติ < กองทัพเรือ > จากในมือของเรา จำนวน 1 ใบ : จั่วการ์ด จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-041_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-042",
@@ -1193,12 +1303,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "If your Leader has the {Revolutionary Army} type, this Character gains +4 cost.<br>[Opponent's Turn] [On K.O.] Play up to 1 {Revolutionary Army} type Character card with a cost of 6 or less other than [Koala] or up to 1 [Nico Robin] with a cost of 6 or less from your hand or trash.",
-    "effectJp": "自分のリーダーが特徴《革命軍》を持つ場合、このキャラのコスト+4。<br>【相手のターン中】【KO時】自分の手札かトラッシュから「コアラ」以外のコスト6以下の、特徴《革命軍》を持つキャラカードか「ニコ・ロビン」1枚までを、登場させる。",
-    "effectTh": "ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; ละก็, คาแรกเตอร์นี้ จะคอสต์ +4.<br>[เทิร์นของคู่แข่ง] [เมื่อถูก KO] จะนำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; นอกเหนือจาก [Koala], หรือว่า [Nico Robin], ที่คอสต์ 6 หรือต่ำกว่า จากในมือ หรือ แทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "If your Leader has the {Revolutionary Army} type, this Character gains +4 cost.[Opponent's Turn] [On K.O.] Play up to 1 {Revolutionary Army} type Character card with a cost of 6 or less other than [Koala] or up to 1 [Nico Robin] with a cost of 6 or less from your hand or trash.",
+    "effectJp": "自分のリーダーが特徴《革命軍》を持つ場合、このキャラのコスト+4。【相手のターン中】【KO時】自分の手札かトラッシュから「コアラ」以外のコスト6以下の、特徴《革命軍》を持つキャラカードか「ニコ・ロビン」1枚までを、登場させる。",
+    "effectTh": "ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < กองทัพปฏิวัติ > ละก็, คาแรกเตอร์นี้ จะคอสต์ +4.[เทิร์นของคู่แข่ง] [เมื่อถูก KO] จะนำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < กองทัพปฏิวัติ > นอกเหนือจาก [Koala], หรือว่า [Nico Robin], ที่คอสต์ 6 หรือต่ำกว่า จากในมือ หรือ แทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-042.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-042",
@@ -1214,13 +1326,15 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "If your Leader has the {Revolutionary Army} type, this Character gains +4 cost.<br>[Opponent's Turn] [On K.O.] Play up to 1 {Revolutionary Army} type Character card with a cost of 6 or less other than [Koala] or up to 1 [Nico Robin] with a cost of 6 or less from your hand or trash.",
-    "effectJp": "自分のリーダーが特徴《革命軍》を持つ場合、このキャラのコスト+4。<br>【相手のターン中】【KO時】自分の手札かトラッシュから「コアラ」以外のコスト6以下の、特徴《革命軍》を持つキャラカードか「ニコ・ロビン」1枚までを、登場させる。",
-    "effectTh": "ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; ละก็, คาแรกเตอร์นี้ จะคอสต์ +4.<br>[เทิร์นของคู่แข่ง] [เมื่อถูก KO] จะนำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; นอกเหนือจาก [Koala], หรือว่า [Nico Robin], ที่คอสต์ 6 หรือต่ำกว่า จากในมือ หรือ แทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "If your Leader has the {Revolutionary Army} type, this Character gains +4 cost.[Opponent's Turn] [On K.O.] Play up to 1 {Revolutionary Army} type Character card with a cost of 6 or less other than [Koala] or up to 1 [Nico Robin] with a cost of 6 or less from your hand or trash.",
+    "effectJp": "自分のリーダーが特徴《革命軍》を持つ場合、このキャラのコスト+4。【相手のターン中】【KO時】自分の手札かトラッシュから「コアラ」以外のコスト6以下の、特徴《革命軍》を持つキャラカードか「ニコ・ロビン」1枚までを、登場させる。",
+    "effectTh": "ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < กองทัพปฏิวัติ > ละก็, คาแรกเตอร์นี้ จะคอสต์ +4.[เทิร์นของคู่แข่ง] [เมื่อถูก KO] จะนำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < กองทัพปฏิวัติ > นอกเหนือจาก [Koala], หรือว่า [Nico Robin], ที่คอสต์ 6 หรือต่ำกว่า จากในมือ หรือ แทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-042_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-042",
@@ -1236,13 +1350,15 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "If your Leader has the {Revolutionary Army} type, this Character gains +4 cost.<br>[Opponent's Turn] [On K.O.] Play up to 1 {Revolutionary Army} type Character card with a cost of 6 or less other than [Koala] or up to 1 [Nico Robin] with a cost of 6 or less from your hand or trash.",
-    "effectJp": "自分のリーダーが特徴《革命軍》を持つ場合、このキャラのコスト+4。<br>【相手のターン中】【KO時】自分の手札かトラッシュから「コアラ」以外のコスト6以下の、特徴《革命軍》を持つキャラカードか「ニコ・ロビン」1枚までを、登場させる。",
-    "effectTh": "ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; ละก็, คาแรกเตอร์นี้ จะคอสต์ +4.<br>[เทิร์นของคู่แข่ง] [เมื่อถูก KO] จะนำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; นอกเหนือจาก [Koala], หรือว่า [Nico Robin], ที่คอสต์ 6 หรือต่ำกว่า จากในมือ หรือ แทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "If your Leader has the {Revolutionary Army} type, this Character gains +4 cost.[Opponent's Turn] [On K.O.] Play up to 1 {Revolutionary Army} type Character card with a cost of 6 or less other than [Koala] or up to 1 [Nico Robin] with a cost of 6 or less from your hand or trash.",
+    "effectJp": "自分のリーダーが特徴《革命軍》を持つ場合、このキャラのコスト+4。【相手のターン中】【KO時】自分の手札かトラッシュから「コアラ」以外のコスト6以下の、特徴《革命軍》を持つキャラカードか「ニコ・ロビン」1枚までを、登場させる。",
+    "effectTh": "ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < กองทัพปฏิวัติ > ละก็, คาแรกเตอร์นี้ จะคอสต์ +4.[เทิร์นของคู่แข่ง] [เมื่อถูก KO] จะนำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < กองทัพปฏิวัติ > นอกเหนือจาก [Koala], หรือว่า [Nico Robin], ที่คอสต์ 6 หรือต่ำกว่า จากในมือ หรือ แทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-042_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-043",
@@ -1257,12 +1373,14 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "CP0",
-    "effectEn": "[Blocker]<br>[On Play] You may place 2 cards with a type including \"CP\" from your trash at the bottom of your deck in any order: K.O. up to 1 of your opponent's Characters with a cost of 4 or less.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のトラッシュから『CP』を含む特徴を持つカード2枚を好きな順番でデッキの下に置くことができる：相手のコスト4以下のキャラ1枚までを、KOする。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] สามารถนำการ์ด ที่ระบุคำว่า [CP] อยู่ในคุณสมบัติ จากในแทรชของเรา จำนวน 2 ใบ ไปวางที่ใต้เด็ค ในลำดับใดก็ได้ : จะ KO คาแรกเตอร์ของคู่แข่ง ที่คอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[Blocker][On Play] You may place 2 cards with a type including \"CP\" from your trash at the bottom of your deck in any order: K.O. up to 1 of your opponent's Characters with a cost of 4 or less.",
+    "effectJp": "【ブロッカー】【登場時】自分のトラッシュから『CP』を含む特徴を持つカード2枚を好きな順番でデッキの下に置くことができる：相手のコスト4以下のキャラ1枚までを、KOする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] สามารถนำการ์ด ที่ระบุคำว่า [CP] อยู่ในคุณสมบัติ จากในแทรชของเรา จำนวน 2 ใบ ไปวางที่ใต้เด็ค ในลำดับใดก็ได้ : จะ KO คาแรกเตอร์ของคู่แข่ง ที่คอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-043.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-044",
@@ -1278,12 +1396,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Animal Kingdom Pirates",
-    "effectEn": "If your Leader is multicolored, this Character gains [Blocker].<br>[On Play] Look at 5 cards from the top of your deck; reveal up to 1 [Onigashima Island] and add it to your hand. Then, place the rest at the bottom of your deck in any order and play up to 1 [Onigashima Island] from your hand.",
-    "effectJp": "自分のリーダーが多色の場合、このキャラは【ブロッカー】を得る。<br>【登場時】自分のデッキの上から5枚を見て、「鬼ヶ島」1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置き、自分の手札から「鬼ヶ島」1枚までを、登場させる。",
-    "effectTh": "ถ้าลีดเดอร์ของฝ่ายเรา มีหลายสี ละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์].<br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำ [Onigashima Island] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้, และนำ [Onigashima Island] จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "If your Leader is multicolored, this Character gains [Blocker].[On Play] Look at 5 cards from the top of your deck; reveal up to 1 [Onigashima Island] and add it to your hand. Then, place the rest at the bottom of your deck in any order and play up to 1 [Onigashima Island] from your hand.",
+    "effectJp": "自分のリーダーが多色の場合、このキャラは【ブロッカー】を得る。【登場時】自分のデッキの上から5枚を見て、「鬼ヶ島」1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置き、自分の手札から「鬼ヶ島」1枚までを、登場させる。",
+    "effectTh": "ถ้าลีดเดอร์ของฝ่ายเรา มีหลายสี ละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์].(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำ [Onigashima Island] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้, และนำ [Onigashima Island] จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-044.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-045",
@@ -1298,12 +1418,14 @@
     "power": 6000,
     "attribute": "Special",
     "trait": "Muggy Kingdom/Thriller Bark Pirates",
-    "effectEn": "[Blocker]<br>[On Play] Give up to 1 rested DON!! card to your Leader or 1 of your Characters. Then, if you have 10 or more cards in your trash, play up to 1 {Thriller Bark Pirates} type Character card with a cost of 2 or less from your trash rested.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のリーダーかキャラ1枚にレストのドン‼1枚までを、付与する。その後、自分のトラッシュが10枚以上ある場合、自分のトラッシュからコスト2以下の特徴《スリラーバーク海賊団》を持つキャラカード1枚までを、レストで登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ. จากนั้น, ถ้าในแทรชของเรามีการ์ดอยู่ จำนวน 10 ใบ หรือมากกว่าละก็, จะนำคาแรกเตอร์การ์ด ที่คอสต์ 2 หรือต่ำกว่า และมีคุณสมบัติ &lt; กลุ่มโจรสลัดธริลเลอร์บาร์ค &gt; จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม ในสภาพเรสต์.",
+    "effectEn": "[Blocker][On Play] Give up to 1 rested DON!! card to your Leader or 1 of your Characters. Then, if you have 10 or more cards in your trash, play up to 1 {Thriller Bark Pirates} type Character card with a cost of 2 or less from your trash rested.",
+    "effectJp": "【ブロッカー】【登場時】自分のリーダーかキャラ1枚にレストのドン‼1枚までを、付与する。その後、自分のトラッシュが10枚以上ある場合、自分のトラッシュからコスト2以下の特徴《スリラーバーク海賊団》を持つキャラカード1枚までを、レストで登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ. จากนั้น, ถ้าในแทรชของเรามีการ์ดอยู่ จำนวน 10 ใบ หรือมากกว่าละก็, จะนำคาแรกเตอร์การ์ด ที่คอสต์ 2 หรือต่ำกว่า และมีคุณสมบัติ < กลุ่มโจรสลัดธริลเลอร์บาร์ค > จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม ในสภาพเรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-045.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-045",
@@ -1318,13 +1440,15 @@
     "power": 6000,
     "attribute": "Special",
     "trait": "Muggy Kingdom/Thriller Bark Pirates",
-    "effectEn": "[Blocker]<br>[On Play] Give up to 1 rested DON!! card to your Leader or 1 of your Characters. Then, if you have 10 or more cards in your trash, play up to 1 {Thriller Bark Pirates} type Character card with a cost of 2 or less from your trash rested.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のリーダーかキャラ1枚にレストのドン‼1枚までを、付与する。その後、自分のトラッシュが10枚以上ある場合、自分のトラッシュからコスト2以下の特徴《スリラーバーク海賊団》を持つキャラカード1枚までを、レストで登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ. จากนั้น, ถ้าในแทรชของเรามีการ์ดอยู่ จำนวน 10 ใบ หรือมากกว่าละก็, จะนำคาแรกเตอร์การ์ด ที่คอสต์ 2 หรือต่ำกว่า และมีคุณสมบัติ &lt; กลุ่มโจรสลัดธริลเลอร์บาร์ค &gt; จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม ในสภาพเรสต์.",
+    "effectEn": "[Blocker][On Play] Give up to 1 rested DON!! card to your Leader or 1 of your Characters. Then, if you have 10 or more cards in your trash, play up to 1 {Thriller Bark Pirates} type Character card with a cost of 2 or less from your trash rested.",
+    "effectJp": "【ブロッカー】【登場時】自分のリーダーかキャラ1枚にレストのドン‼1枚までを、付与する。その後、自分のトラッシュが10枚以上ある場合、自分のトラッシュからコスト2以下の特徴《スリラーバーク海賊団》を持つキャラカード1枚までを、レストで登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ. จากนั้น, ถ้าในแทรชของเรามีการ์ดอยู่ จำนวน 10 ใบ หรือมากกว่าละก็, จะนำคาแรกเตอร์การ์ด ที่คอสต์ 2 หรือต่ำกว่า และมีคุณสมบัติ < กลุ่มโจรสลัดธริลเลอร์บาร์ค > จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม ในสภาพเรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-045_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-045",
@@ -1339,13 +1463,15 @@
     "power": 6000,
     "attribute": "Special",
     "trait": "Muggy Kingdom/Thriller Bark Pirates",
-    "effectEn": "[Blocker]<br>[On Play] Give up to 1 rested DON!! card to your Leader or 1 of your Characters. Then, if you have 10 or more cards in your trash, play up to 1 {Thriller Bark Pirates} type Character card with a cost of 2 or less from your trash rested.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のリーダーかキャラ1枚にレストのドン‼1枚までを、付与する。その後、自分のトラッシュが10枚以上ある場合、自分のトラッシュからコスト2以下の特徴《スリラーバーク海賊団》を持つキャラカード1枚までを、レストで登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ. จากนั้น, ถ้าในแทรชของเรามีการ์ดอยู่ จำนวน 10 ใบ หรือมากกว่าละก็, จะนำคาแรกเตอร์การ์ด ที่คอสต์ 2 หรือต่ำกว่า และมีคุณสมบัติ &lt; กลุ่มโจรสลัดธริลเลอร์บาร์ค &gt; จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม ในสภาพเรสต์.",
+    "effectEn": "[Blocker][On Play] Give up to 1 rested DON!! card to your Leader or 1 of your Characters. Then, if you have 10 or more cards in your trash, play up to 1 {Thriller Bark Pirates} type Character card with a cost of 2 or less from your trash rested.",
+    "effectJp": "【ブロッカー】【登場時】自分のリーダーかキャラ1枚にレストのドン‼1枚までを、付与する。その後、自分のトラッシュが10枚以上ある場合、自分のトラッシュからコスト2以下の特徴《スリラーバーク海賊団》を持つキャラカード1枚までを、レストで登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ. จากนั้น, ถ้าในแทรชของเรามีการ์ดอยู่ จำนวน 10 ใบ หรือมากกว่าละก็, จะนำคาแรกเตอร์การ์ด ที่คอสต์ 2 หรือต่ำกว่า และมีคุณสมบัติ < กลุ่มโจรสลัดธริลเลอร์บาร์ค > จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม ในสภาพเรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-045_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-046",
@@ -1361,12 +1487,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Baroque Works",
-    "effectEn": "[On Play] If there is a Character with a cost of 0 or with a cost of 8 or more, draw 1 card.<br>[On K.O.] Trash 2 cards from the top of your deck.",
-    "effectJp": "【登場時】コスト0か8以上のキャラがいる場合、カード1枚を引く。<br>【KO時】自分のデッキの上から2枚をトラッシュに置く。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าเรามีคาแรกเตอร์ ที่คอสต์ 0 หรือว่า ที่คอสต์ 8 หรือสูงกว่า อยู่ด้วยละก็, จะจั่วการ์ด จำนวน 1 ใบ.<br>[เมื่อถูก KO] นำการ์ดจากบนเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
+    "effectEn": "[On Play] If there is a Character with a cost of 0 or with a cost of 8 or more, draw 1 card.[On K.O.] Trash 2 cards from the top of your deck.",
+    "effectJp": "【登場時】コスト0か8以上のキャラがいる場合、カード1枚を引く。【KO時】自分のデッキの上から2枚をトラッシュに置く。",
+    "effectTh": "[เมื่อลงสนาม] ถ้ามีคาแรกเตอร์ของใครก็ตาม ที่คอสต์ 0 หรือว่า ที่คอสต์ 8 หรือสูงกว่า อยู่ด้วยละก็, จะจั่วการ์ด จำนวน 1 ใบ.[เมื่อถูก KO] นำการ์ดจากบนเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-046.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-047",
@@ -1382,12 +1510,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Baroque Works",
-    "effectEn": "[On Play] Trash 3 cards from the top of your deck.<br>[On K.O.] Draw 1 card.",
-    "effectJp": "【登場時】自分のデッキの上から3枚をトラッシュに置く。<br>【KO時】カード1枚を引く。",
-    "effectTh": "[เมื่อลงสนาม] นำการ์ดจากบนเด็คของเรา จำนวน 3 ใบ ไปวางที่แทรช.<br>[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "[On Play] Trash 3 cards from the top of your deck.[On K.O.] Draw 1 card.",
+    "effectJp": "【登場時】自分のデッキの上から3枚をトラッシュに置く。【KO時】カード1枚を引く。",
+    "effectTh": "[เมื่อลงสนาม] นำการ์ดจากบนเด็คของเรา จำนวน 3 ใบ ไปวางที่แทรช.[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-047.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-048",
@@ -1402,12 +1532,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Dressrosa",
-    "effectEn": "[Blocker]<br>[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Dressrosa} type Stage card and add it to your hand. Then, place the rest at the bottom of your deck in any order and play up to 1 {Dressrosa} type Stage card with a cost of 1 from your hand.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のデッキの上から5枚を見て、特徴《ドレスローザ》を持つステージカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置き、自分の手札からコスト1の特徴《ドレスローザ》を持つステージカード1枚までを、登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำสเตจการ์ด ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้, และนำสเตจการ์ด ที่คอสต์ 1 และมีคุณสมบัติ &lt; เดรสโรซ่า &gt; จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Blocker][On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Dressrosa} type Stage card and add it to your hand. Then, place the rest at the bottom of your deck in any order and play up to 1 {Dressrosa} type Stage card with a cost of 1 from your hand.",
+    "effectJp": "【ブロッカー】【登場時】自分のデッキの上から5枚を見て、特徴《ドレスローザ》を持つステージカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置き、自分の手札からコスト1の特徴《ドレスローザ》を持つステージカード1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ดูการ์ดจากบนเด็คของเรา จำนวน 5 ใบ, และนำสเตจการ์ด ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้, และนำสเตจการ์ด ที่คอสต์ 1 และมีคุณสมบัติ < เดรสโรซ่า > จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-048.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-049",
@@ -1420,12 +1552,14 @@
     "color": "Black",
     "cost": 1,
     "trait": "Thriller Bark Pirates",
-    "effectEn": "[Main] You may rest 7 of your DON!! cards: If your Leader is [Perona], play up to 1 {Thriller Bark Pirates} type Character card with a cost of 6 or less and up to 1 {Thriller Bark Pirates} type Character card with a cost of 4 or less from your hand or trash.<br>[Counter] Your Leader gains +3000 power during this battle.",
-    "effectJp": "【メイン】自分のドン‼7枚をレストにできる：自分のリーダーが「ペローナ」の場合、自分の手札かトラッシュから特徴《スリラーバーク海賊団》を持つ、コスト6以下とコスト4以下のキャラカード1枚ずつまでを、登場させる。<br>【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 7 ใบ : ถ้าลีดเดอร์ของฝ่ายเรา คือ [Perona] ละก็, จะนำคาแรกเตอร์การ์ด ที่คอสต์ 6 หรือต่ำกว่า กับ ที่คอสต์ 4 หรือต่ำกว่า, และมีคุณสมบัติ &lt; กลุ่มโจรสลัดธริลเลอร์บาร์ค &gt; จำนวนอย่างละไม่เกิน 1 ใบ จากในมือ หรือ แทรชของเรา, ลงสนาม.<br>[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะพาวเวอร์ +3000.",
+    "effectEn": "[Main] You may rest 7 of your DON!! cards: If your Leader is [Perona], play up to 1 {Thriller Bark Pirates} type Character card with a cost of 6 or less and up to 1 {Thriller Bark Pirates} type Character card with a cost of 4 or less from your hand or trash.[Counter] Your Leader gains +3000 power during this battle.",
+    "effectJp": "【メイン】自分のドン‼7枚をレストにできる：自分のリーダーが「ペローナ」の場合、自分の手札かトラッシュから特徴《スリラーバーク海賊団》を持つ、コスト6以下とコスト4以下のキャラカード1枚ずつまでを、登場させる。【カウンター】自分のリーダーを、このバトル中、パワー+3000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 7 ใบ : ถ้าลีดเดอร์ของฝ่ายเรา คือ [Perona] ละก็, จะนำคาแรกเตอร์การ์ด ที่คอสต์ 6 หรือต่ำกว่า กับ ที่คอสต์ 4 หรือต่ำกว่า, และมีคุณสมบัติ < กลุ่มโจรสลัดธริลเลอร์บาร์ค > จำนวนอย่างละไม่เกิน 1 ใบ จากในมือ หรือ แทรชของเรา, ลงสนาม.[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จะพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-049.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-050",
@@ -1440,12 +1574,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Sky Island",
-    "effectEn": "[On Play] Up to 1 of your {Sky Island} type Characters gains [Double Attack] during this turn.<br>(This card deals 2 damage.)<br>",
-    "effectJp": "【登場時】自分の特徴《空島》を持つキャラ1枚までは、このターン中、【ダブルアタック】を得る。<br>(このカードが与えるダメージは2になる)",
-    "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; เกาะแห่งท้องฟ้า &gt; จำนวนไม่เกิน 1 ใบ, จะได้รับ [ดับเบิ้ลแอทแทค]. <br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
+    "effectEn": "[On Play] Up to 1 of your {Sky Island} type Characters gains [Double Attack] during this turn.(This card deals 2 damage.)",
+    "effectJp": "【登場時】自分の特徴《空島》を持つキャラ1枚までは、このターン中、【ダブルアタック】を得る。(このカードが与えるダメージは2になる)",
+    "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < เกาะแห่งท้องฟ้า > จำนวนไม่เกิน 1 ใบ, จะได้รับ [ดับเบิ้ลแอทแทค]. (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-050.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-051",
@@ -1463,10 +1599,12 @@
     "trait": "Big Mom Pirates",
     "effectEn": "[On Play] If you have a face-up Life card, K.O. up to 1 of your opponent's Characters with a cost of 2 or less. Then, turn all of your Life cards face-down.",
     "effectJp": "【登場時】自分の表向きのライフがある場合、相手のコスト2以下のキャラ1枚までを、KOする。その後、自分のライフすべてを裏向きにする。",
-    "effectTh": "<br>[เมื่อลงสนาม] ถ้าไลฟ์ของเรา มีการ์ดที่หงายอยู่ละก็, จะ KO คาแรกเตอร์ของคู่แข่ง ที่คอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, ทำให้ ไลฟ์ของเรา ทั้งหมด เปลี่ยนเป็นคว่ำ",
+    "effectTh": "[เมื่อลงสนาม] ถ้าไลฟ์ของเรา มีการ์ดที่หงายอยู่ละก็, จะ KO คาแรกเตอร์ของคู่แข่ง ที่คอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, ทำให้ ไลฟ์ของเรา ทั้งหมด เปลี่ยนเป็นคว่ำ",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-051.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-052",
@@ -1483,10 +1621,12 @@
     "trait": "Merfolk/Fish-Man Island",
     "effectEn": "[Activate: Main] You may trash this Character: If your Leader is [Shirahoshi], add 1 card from the top of your deck to the top of your Life cards. Then, all of your {Neptunian} type Characters gain +1000 power during this turn.",
     "effectJp": "【起動メイン】このキャラをトラッシュに置くことができる：自分のリーダーが「しらほし」の場合、自分のデッキの上から1枚を、ライフの上に加える。その後、自分の特徴《海王類》を持つキャラすべてを、このターン中、パワー+1000。",
-    "effectTh": "[สั่งใช้ : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ถ้าลีดเดอร์ของฝ่ายเรา คือ [Shirahoshi] ละก็, จะนำการ์ดจากบนสุดของ เด็คของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ &lt; เจ้าทะเล &gt;, จะพาวเวอร์ +1000.",
+    "effectTh": "[สั่งใช้ : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ถ้าลีดเดอร์ของฝ่ายเรา คือ [Shirahoshi] ละก็, จะนำการ์ดจากบนสุดของ เด็คของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ < เจ้าทะเล >, จะพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-052.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-053",
@@ -1502,12 +1642,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Straw Hat Crew",
-    "effectEn": "[On Play] Give up to 1 rested DON!! card to your Leader. Then, if your opponent has 3 or more Life cards, add up to 1 card from the top of your opponent's Life cards to the owner's hand.<br>[On K.O.] You may turn 1 card from the top of your Life cards face-up: Play up to 1 Character card with 6000 power or less from your hand.",
-    "effectJp": "【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のライフが3枚以上の場合、相手のライフの上から1枚までを、持ち主の手札に加える。<br>【KO時】自分のライフの上から1枚を表向きにできる：自分の手札からパワー6000以下のキャラカード1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของฝ่ายเรา. จากนั้น, ถ้าไลฟ์ของคู่แข่งมี จำนวน 3 ใบ หรือมากกว่าละก็, จะนำการ์ดจากบนสุดของ ไลฟ์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ขึ้นมือของเจ้าของ.<br>[เมื่อถูก KO] สามารถหงายการ์ดจากบนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ : นำคาแรกเตอร์การ์ด ที่พาวเวอร์ 6000 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[On Play] Give up to 1 rested DON!! card to your Leader. Then, if your opponent has 3 or more Life cards, add up to 1 card from the top of your opponent's Life cards to the owner's hand.[On K.O.] You may turn 1 card from the top of your Life cards face-up: Play up to 1 Character card with 6000 power or less from your hand.",
+    "effectJp": "【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のライフが3枚以上の場合、相手のライフの上から1枚までを、持ち主の手札に加える。【KO時】自分のライフの上から1枚を表向きにできる：自分の手札からパワー6000以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของฝ่ายเรา. จากนั้น, ถ้าไลฟ์ของคู่แข่งมี จำนวน 3 ใบ หรือมากกว่าละก็, จะนำการ์ดจากบนสุดของ ไลฟ์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ขึ้นมือของเจ้าของ.[เมื่อถูก KO] สามารถหงายการ์ดจากบนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ : นำคาแรกเตอร์การ์ด ที่พาวเวอร์ 6000 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-053.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-053",
@@ -1523,13 +1665,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Straw Hat Crew",
-    "effectEn": "[On Play] Give up to 1 rested DON!! card to your Leader. Then, if your opponent has 3 or more Life cards, add up to 1 card from the top of your opponent's Life cards to the owner's hand.<br>[On K.O.] You may turn 1 card from the top of your Life cards face-up: Play up to 1 Character card with 6000 power or less from your hand.",
-    "effectJp": "【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のライフが3枚以上の場合、相手のライフの上から1枚までを、持ち主の手札に加える。<br>【KO時】自分のライフの上から1枚を表向きにできる：自分の手札からパワー6000以下のキャラカード1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของฝ่ายเรา. จากนั้น, ถ้าไลฟ์ของคู่แข่งมี จำนวน 3 ใบ หรือมากกว่าละก็, จะนำการ์ดจากบนสุดของ ไลฟ์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ขึ้นมือของเจ้าของ.<br>[เมื่อถูก KO] สามารถหงายการ์ดจากบนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ : นำคาแรกเตอร์การ์ด ที่พาวเวอร์ 6000 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[On Play] Give up to 1 rested DON!! card to your Leader. Then, if your opponent has 3 or more Life cards, add up to 1 card from the top of your opponent's Life cards to the owner's hand.[On K.O.] You may turn 1 card from the top of your Life cards face-up: Play up to 1 Character card with 6000 power or less from your hand.",
+    "effectJp": "【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のライフが3枚以上の場合、相手のライフの上から1枚までを、持ち主の手札に加える。【KO時】自分のライフの上から1枚を表向きにできる：自分の手札からパワー6000以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของฝ่ายเรา. จากนั้น, ถ้าไลฟ์ของคู่แข่งมี จำนวน 3 ใบ หรือมากกว่าละก็, จะนำการ์ดจากบนสุดของ ไลฟ์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ขึ้นมือของเจ้าของ.[เมื่อถูก KO] สามารถหงายการ์ดจากบนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ : นำคาแรกเตอร์การ์ด ที่พาวเวอร์ 6000 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-053_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-053",
@@ -1545,13 +1689,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Straw Hat Crew",
-    "effectEn": "[On Play] Give up to 1 rested DON!! card to your Leader. Then, if your opponent has 3 or more Life cards, add up to 1 card from the top of your opponent's Life cards to the owner's hand.<br>[On K.O.] You may turn 1 card from the top of your Life cards face-up: Play up to 1 Character card with 6000 power or less from your hand.",
-    "effectJp": "【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のライフが3枚以上の場合、相手のライフの上から1枚までを、持ち主の手札に加える。<br>【KO時】自分のライフの上から1枚を表向きにできる：自分の手札からパワー6000以下のキャラカード1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของฝ่ายเรา. จากนั้น, ถ้าไลฟ์ของคู่แข่งมี จำนวน 3 ใบ หรือมากกว่าละก็, จะนำการ์ดจากบนสุดของ ไลฟ์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ขึ้นมือของเจ้าของ.<br>[เมื่อถูก KO] สามารถหงายการ์ดจากบนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ : นำคาแรกเตอร์การ์ด ที่พาวเวอร์ 6000 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[On Play] Give up to 1 rested DON!! card to your Leader. Then, if your opponent has 3 or more Life cards, add up to 1 card from the top of your opponent's Life cards to the owner's hand.[On K.O.] You may turn 1 card from the top of your Life cards face-up: Play up to 1 Character card with 6000 power or less from your hand.",
+    "effectJp": "【登場時】自分のリーダーにレストのドン‼1枚までを、付与する。その後、相手のライフが3枚以上の場合、相手のライフの上から1枚までを、持ち主の手札に加える。【KO時】自分のライフの上から1枚を表向きにできる：自分の手札からパワー6000以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ใส่ให้ ลีดเดอร์ของฝ่ายเรา. จากนั้น, ถ้าไลฟ์ของคู่แข่งมี จำนวน 3 ใบ หรือมากกว่าละก็, จะนำการ์ดจากบนสุดของ ไลฟ์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ขึ้นมือของเจ้าของ.[เมื่อถูก KO] สามารถหงายการ์ดจากบนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ : นำคาแรกเตอร์การ์ด ที่พาวเวอร์ 6000 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-053_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-054",
@@ -1569,11 +1715,11 @@
     "effectEn": "[On Play] You may trash 1 card from the top of your Life cards: Add up to 1 card from the top of your deck to the top of your Life cards.",
     "effectJp": "【登場時】自分のライフの上から1枚をトラッシュに置くことができる：自分のデッキの上から1枚までを、ライフの上に加える。",
     "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ดจากบนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ ไปวางที่แทรช : นำการ์ดจากบนสุดของ เด็คของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์.",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-054.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-055",
@@ -1588,12 +1734,14 @@
     "power": 8000,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
-    "effectEn": "[On Play] You may trash 1 card from the top of your Life cards: If your Leader has the {Straw Hat Crew} type, add up to 2 cards from the top of your deck to the top of your Life cards.<br>[Opponent's Turn] [On K.O.] You may deal 1 damage to your opponent.",
-    "effectJp": "【登場時】自分のライフの上から1枚をトラッシュに置くことができる：自分のリーダーが特徴《麦わらの一味》を持つ場合、自分のデッキの上から2枚までを、ライフの上に加える。<br>【相手のターン中】【KO時】相手に1ダメージを与えてもよい。",
-    "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ดจากบนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ ไปวางที่แทรช : ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; ละก็, จะนำการ์ดจากบนสุดของ เด็คของเรา จำนวนไม่เกิน 2 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์.<br>[เทิร์นของคู่แข่ง] [เมื่อถูก KO] จะสามารถทำ ดาเมจ 1 หน่วย ใส่คู่แข่งก็ได้.",
+    "effectEn": "[On Play] You may trash 1 card from the top of your Life cards: If your Leader has the {Straw Hat Crew} type, add up to 2 cards from the top of your deck to the top of your Life cards.[Opponent's Turn] [On K.O.] You may deal 1 damage to your opponent.",
+    "effectJp": "【登場時】自分のライフの上から1枚をトラッシュに置くことができる：自分のリーダーが特徴《麦わらの一味》を持つ場合、自分のデッキの上から2枚までを、ライフの上に加える。【相手のターン中】【KO時】相手に1ダメージを与えてもよい。",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ดจากบนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ ไปวางที่แทรช : ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < กลุ่มหมวกฟาง > ละก็, จะนำการ์ดจากบนสุดของ เด็คของเรา จำนวนไม่เกิน 2 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์.[เทิร์นของคู่แข่ง] [เมื่อถูก KO] จะสามารถทำ ดาเมจ 1 หน่วย ใส่คู่แข่งก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-055.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-055",
@@ -1608,13 +1756,15 @@
     "power": 8000,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
-    "effectEn": "[On Play] You may trash 1 card from the top of your Life cards: If your Leader has the {Straw Hat Crew} type, add up to 2 cards from the top of your deck to the top of your Life cards.<br>[Opponent's Turn] [On K.O.] You may deal 1 damage to your opponent.",
-    "effectJp": "【登場時】自分のライフの上から1枚をトラッシュに置くことができる：自分のリーダーが特徴《麦わらの一味》を持つ場合、自分のデッキの上から2枚までを、ライフの上に加える。<br>【相手のターン中】【KO時】相手に1ダメージを与えてもよい。",
-    "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ดจากบนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ ไปวางที่แทรช : ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; ละก็, จะนำการ์ดจากบนสุดของ เด็คของเรา จำนวนไม่เกิน 2 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์.<br>[เทิร์นของคู่แข่ง] [เมื่อถูก KO] จะสามารถทำ ดาเมจ 1 หน่วย ใส่คู่แข่งก็ได้.",
+    "effectEn": "[On Play] You may trash 1 card from the top of your Life cards: If your Leader has the {Straw Hat Crew} type, add up to 2 cards from the top of your deck to the top of your Life cards.[Opponent's Turn] [On K.O.] You may deal 1 damage to your opponent.",
+    "effectJp": "【登場時】自分のライフの上から1枚をトラッシュに置くことができる：自分のリーダーが特徴《麦わらの一味》を持つ場合、自分のデッキの上から2枚までを、ライフの上に加える。【相手のターン中】【KO時】相手に1ダメージを与えてもよい。",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ดจากบนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ ไปวางที่แทรช : ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < กลุ่มหมวกฟาง > ละก็, จะนำการ์ดจากบนสุดของ เด็คของเรา จำนวนไม่เกิน 2 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์.[เทิร์นของคู่แข่ง] [เมื่อถูก KO] จะสามารถทำ ดาเมจ 1 หน่วย ใส่คู่แข่งก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-055_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-055",
@@ -1629,13 +1779,15 @@
     "power": 8000,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
-    "effectEn": "[On Play] You may trash 1 card from the top of your Life cards: If your Leader has the {Straw Hat Crew} type, add up to 2 cards from the top of your deck to the top of your Life cards.<br>[Opponent's Turn] [On K.O.] You may deal 1 damage to your opponent.",
-    "effectJp": "【登場時】自分のライフの上から1枚をトラッシュに置くことができる：自分のリーダーが特徴《麦わらの一味》を持つ場合、自分のデッキの上から2枚までを、ライフの上に加える。<br>【相手のターン中】【KO時】相手に1ダメージを与えてもよい。",
-    "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ดจากบนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ ไปวางที่แทรช : ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; ละก็, จะนำการ์ดจากบนสุดของ เด็คของเรา จำนวนไม่เกิน 2 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์.<br>[เทิร์นของคู่แข่ง] [เมื่อถูก KO] จะสามารถทำ ดาเมจ 1 หน่วย ใส่คู่แข่งก็ได้.",
+    "effectEn": "[On Play] You may trash 1 card from the top of your Life cards: If your Leader has the {Straw Hat Crew} type, add up to 2 cards from the top of your deck to the top of your Life cards.[Opponent's Turn] [On K.O.] You may deal 1 damage to your opponent.",
+    "effectJp": "【登場時】自分のライフの上から1枚をトラッシュに置くことができる：自分のリーダーが特徴《麦わらの一味》を持つ場合、自分のデッキの上から2枚までを、ライフの上に加える。【相手のターン中】【KO時】相手に1ダメージを与えてもよい。",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ดจากบนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ ไปวางที่แทรช : ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < กลุ่มหมวกฟาง > ละก็, จะนำการ์ดจากบนสุดของ เด็คของเรา จำนวนไม่เกิน 2 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์.[เทิร์นของคู่แข่ง] [เมื่อถูก KO] จะสามารถทำ ดาเมจ 1 หน่วย ใส่คู่แข่งก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-055_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-056",
@@ -1656,7 +1808,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถหงายการ์ดจากบนสุดของ ไลฟ์ของเรา จำนวน 1 ใบ : จะ KO คาแรกเตอร์ของคู่แข่ง ที่คอสต์ตั้งต้น 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-056.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-057",
@@ -1672,12 +1826,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Land of Wano",
-    "effectEn": "[On Play] Give up to 3 rested DON!! cards to your {Land of Wano} type Leader.<br>[On K.O.] Trash up to 1 card from the top of your opponent's Life cards.",
-    "effectJp": "【登場時】自分の特徴《ワノ国》を持つリーダーにレストのドン‼3枚までを、付与する。<br>【KO時】相手のライフの上から1枚までを、トラッシュに置く。",
-    "effectTh": "[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 3 ใบ, ใส่ให้ ลีดเดอร์ของฝ่ายเรา ที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt;.<br>[เมื่อถูก KO] จะนำการ์ดจากบนสุดของ ไลฟ์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.",
+    "effectEn": "[On Play] Give up to 3 rested DON!! cards to your {Land of Wano} type Leader.[On K.O.] Trash up to 1 card from the top of your opponent's Life cards.",
+    "effectJp": "【登場時】自分の特徴《ワノ国》を持つリーダーにレストのドン‼3枚までを、付与する。【KO時】相手のライフの上から1枚までを、トラッシュに置く。",
+    "effectTh": "[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 3 ใบ, ใส่ให้ ลีดเดอร์ของฝ่ายเรา ที่มีคุณสมบัติ < วาโนะคุนิ >.[เมื่อถูก KO] จะนำการ์ดจากบนสุดของ ไลฟ์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-057.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-057",
@@ -1693,13 +1849,15 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Land of Wano",
-    "effectEn": "[On Play] Give up to 3 rested DON!! cards to your {Land of Wano} type Leader.<br>[On K.O.] Trash up to 1 card from the top of your opponent's Life cards.",
-    "effectJp": "【登場時】自分の特徴《ワノ国》を持つリーダーにレストのドン‼3枚までを、付与する。<br>【KO時】相手のライフの上から1枚までを、トラッシュに置く。",
-    "effectTh": "[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 3 ใบ, ใส่ให้ ลีดเดอร์ของฝ่ายเรา ที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt;.<br>[เมื่อถูก KO] จะนำการ์ดจากบนสุดของ ไลฟ์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.",
+    "effectEn": "[On Play] Give up to 3 rested DON!! cards to your {Land of Wano} type Leader.[On K.O.] Trash up to 1 card from the top of your opponent's Life cards.",
+    "effectJp": "【登場時】自分の特徴《ワノ国》を持つリーダーにレストのドン‼3枚までを、付与する。【KO時】相手のライフの上から1枚までを、トラッシュに置く。",
+    "effectTh": "[เมื่อลงสนาม] จะนำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 3 ใบ, ใส่ให้ ลีดเดอร์ของฝ่ายเรา ที่มีคุณสมบัติ < วาโนะคุนิ >.[เมื่อถูก KO] จะนำการ์ดจากบนสุดของ ไลฟ์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-057_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-058",
@@ -1718,11 +1876,11 @@
     "effectEn": "[Your Turn] [On Play] If you have 2 or less Life cards, draw 1 card.",
     "effectJp": "【自分のターン中】【登場時】自分のライフが2枚以下の場合、カード1枚を引く。",
     "effectTh": "[เทิร์นของเรา] [เมื่อลงสนาม] ถ้าไลฟ์ของเรามี จำนวน 2 ใบ หรือน้อยกว่าละก็, จะจั่วการ์ด จำนวน 1 ใบ.",
-    "triggerEn": "[Trigger] If your Leader is [Vegapunk], play this card.",
-    "triggerJp": "【トリガー】自分のリーダーが「ベガパンク」の場合、このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-058.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-059",
@@ -1740,12 +1898,12 @@
     "trait": "Seraphim/Egghead",
     "effectEn": "[On Play] If your Leader has the {Egghead} type and you have 2 or more Life cards, add up to 1 Character card with a [Trigger] from your hand to the top of your Life cards face-up.",
     "effectJp": "【登場時】自分のリーダーが特徴《エッグヘッド》を持ち、自分のライフが2枚以上の場合、自分の手札から【トリガー】を持つキャラカード1枚までを、ライフの上に表向きで加える。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ &lt; เอ็กเฮด &gt;, และไลฟ์ของเรามี จำนวน 2 ใบ หรือมากกว่าละก็, จะนำคาแรกเตอร์การ์ด ที่มี [ทริกเกอร์] จากในมือของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์ ในสภาพหงาย.",
-    "triggerEn": "[Trigger] Up to 1 of your opponent's Characters with a cost of 6 or less other than [Monkey.D.Luffy] cannot attack during this turn.",
-    "triggerJp": "【トリガー】相手の「モンキー・Ｄ・ルフィ」以外のコスト6以下のキャラ1枚までは、このターン中、アタックできない。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของฝ่ายเรา มีคุณสมบัติ < เอ็กเฮด >, และไลฟ์ของเรามี จำนวน 2 ใบ หรือมากกว่าละก็, จะนำคาแรกเตอร์การ์ด ที่มี [ทริกเกอร์] จากในมือของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์ ในสภาพหงาย.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-059.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-060",
@@ -1760,12 +1918,12 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[Main] If your Leader is [Nami], look at 4 cards from the top of your deck; reveal up to 1 card with a cost of 2 to 8 and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】自分のリーダーが「ナミ」の場合、自分のデッキの上から4枚を見て、コスト2から8のカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมน] ถ้าลีดเดอร์ของฝ่ายเรา คือ [Nami] ละก็, ดูการ์ดจากบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่คอสต์ตั้งแต่ 2 จนถึง 8 จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.<br>[เคาน์เตอร์] ใช้งานความสามารถ [เมน] ของการ์ดใบนี้.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
+    "effectTh": "[เมน] ถ้าลีดเดอร์ของฝ่ายเรา คือ [Nami] ละก็, ดูการ์ดจากบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ด ที่คอสต์ตั้งแต่ 2 จนถึง 8 จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่ใต้เด็ค ในลำดับใดก็ได้.[เคาน์เตอร์] ใช้งานความสามารถ [เมน] ของการ์ดใบนี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-060.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-061",
@@ -1780,12 +1938,14 @@
     "power": 8000,
     "attribute": "Special",
     "trait": "FILM",
-    "effectEn": "[Activate: Main] [Once Per Turn] Set up to 1 of your DON!! cards as active. Then, rest up to 1 of your opponent's DON!! cards or Characters with a cost of 4 or less.<br>[End of Your Turn] You may rest 1 of your DON!! cards: Set up to 1 of your {FILM} type Characters as active.",
-    "effectJp": "【起動メイン】【ターン1回】自分のドン‼1枚までを、アクティブにする。その後、相手の、コスト4以下のキャラかドン‼1枚までを、レストにする。<br>【自分のターン終了時】自分のドン‼1枚をレストにできる：自分の特徴《FILM》を持つキャラ1枚までを、アクティブにする。",
-    "effectTh": "[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ. จากนั้น, จะเรสต์ ด้ง!! หรือว่า คาแรกเตอร์ ที่คอสต์ 4 หรือต่ำกว่า ของฝ่ายคู่แข่ง, จำนวนไม่เกิน 1 ใบ.<br>[เมื่อจบเทิร์นของเรา] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : ทำให้ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; FILM &gt; จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ.",
+    "effectEn": "[Activate: Main] [Once Per Turn] Set up to 1 of your DON!! cards as active. Then, rest up to 1 of your opponent's DON!! cards or Characters with a cost of 4 or less.[End of Your Turn] You may rest 1 of your DON!! cards: Set up to 1 of your {FILM} type Characters as active.",
+    "effectJp": "【起動メイン】【ターン1回】自分のドン‼1枚までを、アクティブにする。その後、相手の、コスト4以下のキャラかドン‼1枚までを、レストにする。【自分のターン終了時】自分のドン‼1枚をレストにできる：自分の特徴《FILM》を持つキャラ1枚までを、アクティブにする。",
+    "effectTh": "[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ. จากนั้น, จะเรสต์ ด้ง!! หรือว่า คาแรกเตอร์ ที่คอสต์ 4 หรือต่ำกว่า ของฝ่ายคู่แข่ง, จำนวนไม่เกิน 1 ใบ.[เมื่อจบเทิร์นของเรา] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : ทำให้ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < FILM > จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-061.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-061",
@@ -1800,13 +1960,15 @@
     "power": 8000,
     "attribute": "Special",
     "trait": "FILM",
-    "effectEn": "[Activate: Main] [Once Per Turn] Set up to 1 of your DON!! cards as active. Then, rest up to 1 of your opponent's DON!! cards or Characters with a cost of 4 or less.<br>[End of Your Turn] You may rest 1 of your DON!! cards: Set up to 1 of your {FILM} type Characters as active.",
-    "effectJp": "【起動メイン】【ターン1回】自分のドン‼1枚までを、アクティブにする。その後、相手の、コスト4以下のキャラかドン‼1枚までを、レストにする。<br>【自分のターン終了時】自分のドン‼1枚をレストにできる：自分の特徴《FILM》を持つキャラ1枚までを、アクティブにする。",
-    "effectTh": "[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ. จากนั้น, จะเรสต์ ด้ง!! หรือว่า คาแรกเตอร์ ที่คอสต์ 4 หรือต่ำกว่า ของฝ่ายคู่แข่ง, จำนวนไม่เกิน 1 ใบ.<br>[เมื่อจบเทิร์นของเรา] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : ทำให้ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; FILM &gt; จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ.",
+    "effectEn": "[Activate: Main] [Once Per Turn] Set up to 1 of your DON!! cards as active. Then, rest up to 1 of your opponent's DON!! cards or Characters with a cost of 4 or less.[End of Your Turn] You may rest 1 of your DON!! cards: Set up to 1 of your {FILM} type Characters as active.",
+    "effectJp": "【起動メイン】【ターン1回】自分のドン‼1枚までを、アクティブにする。その後、相手の、コスト4以下のキャラかドン‼1枚までを、レストにする。【自分のターン終了時】自分のドン‼1枚をレストにできる：自分の特徴《FILM》を持つキャラ1枚までを、アクティブにする。",
+    "effectTh": "[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ. จากนั้น, จะเรสต์ ด้ง!! หรือว่า คาแรกเตอร์ ที่คอสต์ 4 หรือต่ำกว่า ของฝ่ายคู่แข่ง, จำนวนไม่เกิน 1 ใบ.[เมื่อจบเทิร์นของเรา] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : ทำให้ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < FILM > จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-061_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-061",
@@ -1821,13 +1983,15 @@
     "power": 8000,
     "attribute": "Special",
     "trait": "FILM",
-    "effectEn": "[Activate: Main] [Once Per Turn] Set up to 1 of your DON!! cards as active. Then, rest up to 1 of your opponent's DON!! cards or Characters with a cost of 4 or less.<br>[End of Your Turn] You may rest 1 of your DON!! cards: Set up to 1 of your {FILM} type Characters as active.",
-    "effectJp": "【起動メイン】【ターン1回】自分のドン‼1枚までを、アクティブにする。その後、相手の、コスト4以下のキャラかドン‼1枚までを、レストにする。<br>【自分のターン終了時】自分のドン‼1枚をレストにできる：自分の特徴《FILM》を持つキャラ1枚までを、アクティブにする。",
-    "effectTh": "[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ. จากนั้น, จะเรสต์ ด้ง!! หรือว่า คาแรกเตอร์ ที่คอสต์ 4 หรือต่ำกว่า ของฝ่ายคู่แข่ง, จำนวนไม่เกิน 1 ใบ.<br>[เมื่อจบเทิร์นของเรา] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : ทำให้ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; FILM &gt; จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ.",
+    "effectEn": "[Activate: Main] [Once Per Turn] Set up to 1 of your DON!! cards as active. Then, rest up to 1 of your opponent's DON!! cards or Characters with a cost of 4 or less.[End of Your Turn] You may rest 1 of your DON!! cards: Set up to 1 of your {FILM} type Characters as active.",
+    "effectJp": "【起動メイン】【ターン1回】自分のドン‼1枚までを、アクティブにする。その後、相手の、コスト4以下のキャラかドン‼1枚までを、レストにする。【自分のターン終了時】自分のドン‼1枚をレストにできる：自分の特徴《FILM》を持つキャラ1枚までを、アクティブにする。",
+    "effectTh": "[สั่งใช้ : เมน] [เทิร์นละ 1 ครั้ง] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ. จากนั้น, จะเรสต์ ด้ง!! หรือว่า คาแรกเตอร์ ที่คอสต์ 4 หรือต่ำกว่า ของฝ่ายคู่แข่ง, จำนวนไม่เกิน 1 ใบ.[เมื่อจบเทิร์นของเรา] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : ทำให้ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < FILM > จำนวนไม่เกิน 1 ใบ, แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-061_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-062",
@@ -1843,12 +2007,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Heart Pirates",
-    "effectEn": "[Rush]<br>[Activate: Main] You may trash 1 card from your hand and trash this Character: Add up to 1 card from the top of your deck to the top of your Life cards. Then, play up to 1 [Trafalgar Law] with a cost of 7 or less from your hand.",
-    "effectJp": "【速攻】<br>【起動メイン】自分の手札1枚を捨て、このキャラをトラッシュに置くことができる：自分のデッキの上から1枚までを、ライフの上に加える。その後、自分の手札からコスト7以下の「トラファルガー・ロー」1枚までを、登場させる。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).<br>[สั่งใช้ : เมน] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ, และนำคาแรกเตอร์นี้ ไปวางที่แทรช : นำการ์ดจากที่อยู่บนสุดของ เด็คของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, จะนำ [Trafalgar Law] ที่คอสต์ 7 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Rush][Activate: Main] You may trash 1 card from your hand and trash this Character: Add up to 1 card from the top of your deck to the top of your Life cards. Then, play up to 1 [Trafalgar Law] with a cost of 7 or less from your hand.",
+    "effectJp": "【速攻】【起動メイン】自分の手札1枚を捨て、このキャラをトラッシュに置くことができる：自分のデッキの上から1枚までを、ライフの上に加える。その後、自分の手札からコスト7以下の「トラファルガー・ロー」1枚までを、登場させる。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).[สั่งใช้ : เมน] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ, และนำคาแรกเตอร์นี้ ไปวางที่แทรช : นำการ์ดจากที่อยู่บนสุดของ เด็คของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, จะนำ [Trafalgar Law] ที่คอสต์ 7 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-062.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   },
   {
     "code": "EB03-062",
@@ -1864,12 +2030,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Heart Pirates",
-    "effectEn": "[Rush]<br>[Activate: Main] You may trash 1 card from your hand and trash this Character: Add up to 1 card from the top of your deck to the top of your Life cards. Then, play up to 1 [Trafalgar Law] with a cost of 7 or less from your hand.",
-    "effectJp": "【速攻】<br>【起動メイン】自分の手札1枚を捨て、このキャラをトラッシュに置くことができる：自分のデッキの上から1枚までを、ライフの上に加える。その後、自分の手札からコスト7以下の「トラファルガー・ロー」1枚までを、登場させる。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).<br>[สั่งใช้ : เมน] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ, และนำคาแรกเตอร์นี้ ไปวางที่แทรช : นำการ์ดจากที่อยู่บนสุดของ เด็คของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, จะนำ [Trafalgar Law] ที่คอสต์ 7 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Rush][Activate: Main] You may trash 1 card from your hand and trash this Character: Add up to 1 card from the top of your deck to the top of your Life cards. Then, play up to 1 [Trafalgar Law] with a cost of 7 or less from your hand.",
+    "effectJp": "【速攻】【起動メイン】自分の手札1枚を捨て、このキャラをトラッシュに置くことができる：自分のデッキの上から1枚までを、ライフの上に加える。その後、自分の手札からコスト7以下の「トラファルガー・ロー」1枚までを、登場させる。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).[สั่งใช้ : เมน] สามารถทิ้งการ์ดในมือของเรา จำนวน 1 ใบ, และนำคาแรกเตอร์นี้ ไปวางที่แทรช : นำการ์ดจากที่อยู่บนสุดของ เด็คของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, จะนำ [Trafalgar Law] ที่คอสต์ 7 หรือต่ำกว่า จากในมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB03-062_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ONE PIECE Heroines Edition- [EB-03]"
+    ]
   }
 ]

@@ -1,5 +1,232 @@
 [
   {
+    "code": "OP05-060",
+    "cardCode": "OP05-060_p3",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Monkey.D.Luffy",
+    "nameJp": "モンキー・D・ルフィ",
+    "nameTh": "Monkey.D.Luffy",
+    "color": "Purple",
+    "power": 5000,
+    "life": 5,
+    "attribute": "Strike",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[Activate: Main] [Once Per Turn] You may add 1 card from the top of your Life cards to your hand: If you have 0 or 3 or more DON!! cards on your field, add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【起動メイン】【ターン1回】自分のライフの上から1枚を手札に加えることができる：自分の場のドン‼が0枚か、3枚以上ある場合、ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 0 ใบ, หรือว่า มีอยู่จำนวน 3 ใบ หรือมากกว่า, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-060_p3.png",
+    "isParallel": true,
+    "parallelIndex": 3,
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
+  },
+  {
+    "code": "OP05-061_R1",
+    "cardCode": "OP05-061_r1",
+    "rarity": "UC",
+    "cardType": "CHARACTER",
+    "nameEn": "Uso-Hachi",
+    "nameJp": "ウソ八",
+    "nameTh": "Uso-Hachi",
+    "color": "Purple",
+    "cost": 3,
+    "power": 4000,
+    "counter": 2000,
+    "attribute": "Ranged",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[DON!! x1] [When Attacking] If you have 8 or more DON!! cards on your field, rest up to 1 of your opponent's Characters with a cost of 4 or less.",
+    "effectJp": "【ドン‼×1】【アタック時】自分の場にドン‼が8枚以上ある場合、相手のコスト4以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 8 ใบ หรือมากกว่า, จะทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-061_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
+  },
+  {
+    "code": "OP05-063_R1",
+    "cardCode": "OP05-063_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "O-Robi",
+    "nameJp": "おロビ",
+    "nameTh": "O-Robi",
+    "color": "Purple",
+    "cost": 4,
+    "power": 5000,
+    "counter": 1000,
+    "attribute": "Strike",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[On Play] If you have 8 or more DON!! cards on your field, K.O. up to 1 of your opponent's Characters with a cost of 3 or less.",
+    "effectJp": "【登場時】自分の場にドン‼が8枚以上ある場合、相手のコスト3以下のキャラ1枚までを、KOする。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 8 ใบ หรือมากกว่า, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-063_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
+  },
+  {
+    "code": "OP05-066_R1",
+    "cardCode": "OP05-066_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Jinbe",
+    "nameJp": "ジンベエ",
+    "nameTh": "Jinbe",
+    "color": "Purple",
+    "cost": 5,
+    "power": 6000,
+    "counter": 1000,
+    "attribute": "Strike",
+    "trait": "Fish-Man/Straw Hat Crew",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[Opponent's Turn] If you have 10 DON!! cards on your field, this Character gains +1000 power.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【相手のターン中】自分の場にドン‼が10枚ある場合、このキャラはパワー+1000。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ในเทิร์นของคู่แข่ง] ถ้าในสนามของเรามี ด้ง!! อยู่ 10 ใบพอดี, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-066_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
+  },
+  {
+    "code": "OP05-067_R1",
+    "cardCode": "OP05-067_r1",
+    "rarity": "R",
+    "cardType": "CHARACTER",
+    "nameEn": "Zoro-Juurou",
+    "nameJp": "ゾロ十郎",
+    "nameTh": "Zoro-Juurou",
+    "color": "Purple",
+    "cost": 3,
+    "power": 4000,
+    "counter": 1000,
+    "attribute": "Slash",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[When Attacking] If you have 3 or less Life cards, add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【アタック時】自分のライフが3枚以下の場合、ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
+    "effectTh": "[เมื่อโจมตี] ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่า, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-067_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
+  },
+  {
+    "code": "OP05-068_R1",
+    "cardCode": "OP05-068_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Chopa-Emon",
+    "nameJp": "チョパえもん",
+    "nameTh": "Chopa-Emon",
+    "color": "Purple",
+    "cost": 2,
+    "power": 3000,
+    "counter": 1000,
+    "attribute": "Wisdom",
+    "trait": "Animal/Straw Hat Crew",
+    "effectEn": "[On Play] If you have 8 or more DON!! cards on your field, set up to 1 of your purple {Straw Hat Crew} type Characters with 6000 power or less as active.",
+    "effectJp": "【登場時】自分の場にドン‼が8枚以上ある場合、自分のパワー6000以下の紫の特徴《麦わらの一味》を持つキャラ1枚までを、アクティブにする。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่ จำนวน 8 ใบ หรือมากกว่า, จะทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > และเป็นธีมสีม่วง ซึ่งมีพาวเวอร์ 6000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-068_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
+  },
+  {
+    "code": "OP05-070_R1",
+    "cardCode": "OP05-070_r1",
+    "rarity": "UC",
+    "cardType": "CHARACTER",
+    "nameEn": "Fra-Nosuke",
+    "nameJp": "フラの介",
+    "nameTh": "Fra-Nosuke",
+    "color": "Purple",
+    "cost": 5,
+    "power": 4000,
+    "counter": 2000,
+    "attribute": "Strike",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[DON!! x1] If you have 8 or more DON!! cards on your field, this Character gains [Rush].(This card can attack on the turn in which it is played.)",
+    "effectJp": "【ドン‼×1】自分の場にドン‼が8枚以上ある場合、このキャラは【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[ด้ง!! x 1] ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 8 ใบ หรือมากกว่า, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-070_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
+  },
+  {
+    "code": "OP05-072_R1",
+    "cardCode": "OP05-072_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Hone-Kichi",
+    "nameJp": "ホネ吉",
+    "nameTh": "Hone-Kichi",
+    "color": "Purple",
+    "cost": 4,
+    "power": 6000,
+    "attribute": "Slash",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[On Play] If you have 8 or more DON!! cards on your field, give up to 2 of your opponent's Characters −2000 power during this turn.",
+    "effectJp": "【登場時】自分の場にドン‼が8枚以上ある場合、相手のキャラ2枚までを、このターン中、パワー-2000。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 8 ใบ หรือมากกว่า, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 2 ใบ, จะมีพาวเวอร์ –2000.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-072_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
+  },
+  {
+    "code": "OP05-076",
+    "cardCode": "OP05-076_p1",
+    "rarity": "P-R",
+    "cardType": "EVENT",
+    "nameEn": "When You're at Sea You Fight against Pirates!!",
+    "nameJp": "海は海賊が相手だ!!!",
+    "nameTh": "When You're at Sea You Fight against Pirates!!",
+    "color": "Purple",
+    "cost": 1,
+    "trait": "Land of Wano",
+    "effectEn": "[Main] Look at 3 cards from the top of your deck; reveal up to 1 {Straw Hat Crew}, {Kid Pirates}, or {Heart Pirates} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "【メイン】自分のデッキの上から3枚を見て、特徴《麦わらの一味》か《キッド海賊団》か《ハートの海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > หรือ < กลุ่มโจรสลัดคิด > หรือ < กลุ่มโจรสลัดฮาร์ท > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-076_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
+  },
+  {
+    "code": "P-041_R1",
+    "cardCode": "P-041_r1",
+    "rarity": "P",
+    "cardType": "CHARACTER",
+    "nameEn": "Monkey.D.Luffy",
+    "nameJp": "モンキー・D・ルフィ",
+    "nameTh": "Monkey.D.Luffy",
+    "color": "Purple",
+    "cost": 10,
+    "power": 12000,
+    "counter": 1000,
+    "attribute": "Strike",
+    "trait": "The Four Emperors/Straw Hat Crew",
+    "effectEn": "-",
+    "effectJp": "-",
+    "effectTh": "-",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/P-041_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
+  },
+  {
     "code": "ST18-001",
     "cardCode": "ST18-001",
     "rarity": "C",
@@ -18,7 +245,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่ จำนวน 8 ใบ หรือมากกว่าละก็, จะทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST18-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
   },
   {
     "code": "ST18-002",
@@ -34,12 +263,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Straw Hat Crew",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] If you have 8 or more DON!! cards on your field, trash 1 card from your hand and draw 2 cards.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分の場のドン!!が8枚以上ある場合、自分の手札1枚を捨て、カード2枚を引く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่ จำนวน 8 ใบ หรือมากกว่าละก็, จะต้องทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ, และจั่วการ์ด จำนวน 2 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] If you have 8 or more DON!! cards on your field, trash 1 card from your hand and draw 2 cards.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分の場のドン!!が8枚以上ある場合、自分の手札1枚を捨て、カード2枚を引く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่ จำนวน 8 ใบ หรือมากกว่าละก็, จะต้องทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ, และจั่วการ์ด จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST18-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
   },
   {
     "code": "ST18-003",
@@ -60,7 +291,9 @@
     "effectTh": "[เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] ถ้าในสนามของเรามี ด้ง!! อยู่ จำนวน 8 ใบ หรือมากกว่าละก็, จะต้องจั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST18-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
   },
   {
     "code": "ST18-004",
@@ -77,10 +310,12 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 purple {Straw Hat Crew} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、紫の特徴《麦わらの一味》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ธีมสีม่วง ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ธีมสีม่วง ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST18-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
   },
   {
     "code": "ST18-005",
@@ -97,9 +332,11 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Play up to 1 purple {Straw Hat Crew} type Character card with a cost of 5 or less from your hand.",
     "effectJp": "【登場時】ドン!!-1(自分の場のドン !!を指定の数ドン !!デッキに戻すことができる)：自分の手札からコスト5以下の紫の特徴《麦わらの一味》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์การ์ด ธีมสีม่วง ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์การ์ด ธีมสีม่วง ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ < กลุ่มหมวกฟาง > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST18-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Purple Monkey.D.Luffy- [ST-18]"
+    ]
   }
 ]

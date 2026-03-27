@@ -9,7 +9,7 @@
     "nameTh": "Charlotte Linlin",
     "color": "Yellow",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Special",
     "trait": "The Four Emperors/Big Mom Pirates",
     "effectEn": "[DON!! x2] [When Attacking] You may add 1 card from the top or bottom of your Life cards to your hand: If you have 2 or less Life cards, add up to 1 card from your hand to the top of your Life cards.",
@@ -17,7 +17,9 @@
     "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] สามารถนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : ถ้าเรามี ไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, สามารถนำ การ์ดบนมือของเรา จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-002",
@@ -38,7 +40,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-003",
@@ -53,12 +57,14 @@
     "power": 6000,
     "attribute": "Strike",
     "trait": "Big Mom Pirates",
-    "effectEn": "[On Play] Look at up to 1 card from the top of your or your opponent's Life cards, and place it at the top or bottom of the Life cards. Then, if you have less Life cards than your opponent, this Character gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【登場時】自分か相手のライフの上から1枚までを見て、ライフの上か下に置く。その後、自分のライフの枚数が相手より少ない場合、このキャラは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เมื่อลงสนาม] ดู ไลฟ์ ใบบนสุด ของเรา หรือ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, และนำ ไปวางที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์เจ้าของเดิม. จากนั้น, ถ้าเรามีไลฟ์ น้อยกว่าคู่แข่ง, ในเทิร์นนี้, คาแรกเตอร์นี้จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[On Play] Look at up to 1 card from the top of your or your opponent's Life cards, and place it at the top or bottom of the Life cards. Then, if you have less Life cards than your opponent, this Character gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】自分か相手のライフの上から1枚までを見て、ライフの上か下に置く。その後、自分のライフの枚数が相手より少ない場合、このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] ดู ไลฟ์ ใบบนสุด ของเรา หรือ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, และนำ ไปวางที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์เจ้าของเดิม. จากนั้น, ถ้าเรามีไลฟ์ น้อยกว่าคู่แข่ง, ในเทิร์นนี้, คาแรกเตอร์นี้จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-004",
@@ -73,12 +79,14 @@
     "power": 6000,
     "attribute": "Slash",
     "trait": "Big Mom Pirates",
-    "effectEn": "[DON!! x1] [When Attacking] You may add 1 card from the top or bottom of your Life cards to your hand: This Character gains [Banish] and +1000 power during this battle.<br>(When this card deals damage, the target card is trashed without activating its Trigger.)",
-    "effectJp": "【ドン!!×1】【アタック時】自分のライフの上か下から1枚を手札に加えることができる：このキャラは、このバトル中、【バニッシュ】を得て、パワー+1000。<br>(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)",
-    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] สามารถนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นบนสู่มือ : ในแบทเทิลนี้, คาแรกเตอร์นี้ จะได้รับ [แบนนิช], และจะมีพาวเวอร์ +1000. <br>(ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
+    "effectEn": "[DON!! x1] [When Attacking] You may add 1 card from the top or bottom of your Life cards to your hand: This Character gains [Banish] and +1000 power during this battle.(When this card deals damage, the target card is trashed without activating its Trigger.)",
+    "effectJp": "【ドン!!×1】【アタック時】自分のライフの上か下から1枚を手札に加えることができる：このキャラは、このバトル中、【バニッシュ】を得て、パワー+1000。(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)",
+    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] สามารถนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นบนสู่มือ : ในแบทเทิลนี้, คาแรกเตอร์นี้ จะได้รับ [แบนนิช], และจะมีพาวเวอร์ +1000. (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-005",
@@ -99,7 +107,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] สามารถนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นบนสู่มือ : นำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-006",
@@ -120,7 +130,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-007",
@@ -139,11 +151,11 @@
     "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
     "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-008",
@@ -164,7 +176,9 @@
     "effectTh": "[เมื่อลงสนาม] ดู ไลฟ์ ใบบนสุด ของเรา หรือ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, และนำ ไปวางที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์เจ้าของเดิม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-009",
@@ -183,11 +197,11 @@
     "effectEn": "[Activate: Main] You may rest this Character and add 1 card from the top or bottom of your Life cards to your hand: K.O. up to 1 of your opponent's Characters with a cost of 3 or less.",
     "effectJp": "【起動メイン】このキャラをレストにし、自分のライフの上か下から1枚を手札に加えることができる：相手のコスト3以下のキャラ1枚までを、KOする。",
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้, และนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-010",
@@ -202,12 +216,14 @@
     "power": 8000,
     "attribute": "Special",
     "trait": "The Four Emperors/Big Mom Pirates",
-    "effectEn": "[On Play] Your opponent chooses one:<br>- Trash 1 card from the top of your opponent's Life cards.<br>- Add 1 card from the top of your deck to the top of your Life cards.",
-    "effectJp": "【登場時】相手は以下から1つを選ぶ。<br>・相手のライフの上から1枚をトラッシュに置く。<br>・自分のデッキの上から1枚をライフの上に加える。",
-    "effectTh": "[เมื่อลงสนาม] คู่แข่งจะต้องเลือก 1 อย่าง จากดังต่อไปนี้. <br>• นำ ไลฟ์ ใบบนสุดของคู่แข่ง (คู่แข่งของเรา) จำนวน 1 ใบ ไปวางที่แทรช. <br>• นำการ์ด ใบบนสุดของเด็คของเรา จำนวน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์ตัวเอง.",
+    "effectEn": "[On Play] Your opponent chooses one:- Trash 1 card from the top of your opponent's Life cards.- Add 1 card from the top of your deck to the top of your Life cards.",
+    "effectJp": "【登場時】相手は以下から1つを選ぶ。・相手のライフの上から1枚をトラッシュに置く。・自分のデッキの上から1枚をライフの上に加える。",
+    "effectTh": "[เมื่อลงสนาม] คู่แข่งจะต้องเลือก 1 อย่าง จากดังต่อไปนี้. • นำ ไลฟ์ ใบบนสุดของคู่แข่ง (คู่แข่งของเรา) จำนวน 1 ใบ ไปวางที่แทรช. • นำการ์ด ใบบนสุดของเด็คของเรา จำนวน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์ตัวเอง.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-011",
@@ -223,14 +239,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Big Mom Pirates/Homies",
-    "effectEn": "[Activate: Main] You may rest this Character: Up to 1 of your [Charlotte Linlin] cards gains [Banish] during this turn.<br>(When this card deals damage, the target card is trashed without activating its Trigger.)",
-    "effectJp": "【起動メイン】このキャラをレストにできる：自分の「シャーロット・リンリン」1枚までは、このターン中、【バニッシュ】を得る。<br>(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, [Charlotte Linlin] ของฝ่ายเรา จำนวนไม่เกิน 1 ใบ, จะได้รับ [แบนนิช]. <br>(ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
+    "effectEn": "[Activate: Main] You may rest this Character: Up to 1 of your [Charlotte Linlin] cards gains [Banish] during this turn.(When this card deals damage, the target card is trashed without activating its Trigger.)",
+    "effectJp": "【起動メイン】このキャラをレストにできる：自分の「シャーロット・リンリン」1枚までは、このターン中、【バニッシュ】を得る。(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, [Charlotte Linlin] ของฝ่ายเรา จำนวนไม่เกิน 1 ใบ, จะได้รับ [แบนนิช]. (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-012",
@@ -251,7 +267,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-013",
@@ -267,14 +285,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Big Mom Pirates/Homies",
-    "effectEn": "[Activate: Main] You may rest this Character: Up to 1 of your [Charlotte Linlin] cards gains [Double Attack] during this turn.<br>(This card deals 2 damage.)",
-    "effectJp": "【起動メイン】このキャラをレストにできる：自分の「シャーロット・リンリン」1枚までは、このターン中、【ダブルアタック】を得る。<br>(このカードが与えるダメージは2になる)",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, [Charlotte Linlin] ของฝ่ายเรา จำนวนไม่เกิน 1 ใบ, จะได้รับ [ดับเบิ้ลแอทแทค]. <br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
+    "effectEn": "[Activate: Main] You may rest this Character: Up to 1 of your [Charlotte Linlin] cards gains [Double Attack] during this turn.(This card deals 2 damage.)",
+    "effectJp": "【起動メイン】このキャラをレストにできる：自分の「シャーロット・リンリン」1枚までは、このターン中、【ダブルアタック】を得る。(このカードが与えるダメージは2になる)",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, [Charlotte Linlin] ของฝ่ายเรา จำนวนไม่เกิน 1 ใบ, จะได้รับ [ดับเบิ้ลแอทแทค]. (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-014",
@@ -295,7 +313,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "Apology for the errata and revision in card number"
+    ]
   },
   {
     "code": "ST07-015",
@@ -308,14 +328,14 @@
     "color": "Yellow",
     "cost": 5,
     "trait": "The Four Emperors/Big Mom Pirates",
-    "effectEn": "[Main] Your opponent chooses one:<br>- Trash 1 card from the top of your opponent's Life cards.<br>- Add 1 card from the top of your deck to the top of your Life cards.",
-    "effectJp": "【メイン】相手は以下から1つを選ぶ。<br>・相手のライフの上から1枚をトラッシュに置く。<br>・自分のデッキの上から1枚をライフの上に加える。",
-    "effectTh": "[เมน] คู่แข่งจะต้องเลือก 1 อย่าง จากดังต่อไปนี้. <br>• นำ ไลฟ์ ใบบนสุดของคู่แข่ง (คู่แข่งของเรา) จำนวน 1 ใบ ไปวางที่แทรช. <br>• นำการ์ด ใบบนสุดของเด็คของเรา จำนวน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์ตัวเอง.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
+    "effectEn": "[Main] Your opponent chooses one:- Trash 1 card from the top of your opponent's Life cards.- Add 1 card from the top of your deck to the top of your Life cards.",
+    "effectJp": "【メイン】相手は以下から1つを選ぶ。・相手のライフの上から1枚をトラッシュに置く。・自分のデッキの上から1枚をライフの上に加える。",
+    "effectTh": "[เมน] คู่แข่งจะต้องเลือก 1 อย่าง จากดังต่อไปนี้. • นำ ไลฟ์ ใบบนสุดของคู่แข่ง (คู่แข่งของเรา) จำนวน 1 ใบ ไปวางที่แทรช. • นำการ์ด ใบบนสุดของเด็คของเรา จำนวน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์ตัวเอง.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-016",
@@ -331,11 +351,11 @@
     "effectEn": "[Counter] Look at up to 1 card from the top of your or your opponent's Life cards, and place it at the top or bottom of the Life cards. Then, up to 1 of your Leader or Character cards gains +2000 power during this battle.",
     "effectJp": "【カウンター】自分か相手のライフの上から1枚までを見て、ライフの上か下に置く。その後、自分のリーダーかキャラ1枚までを、このバトル中、パワー+2000。",
     "effectTh": "[เคาน์เตอร์] ดู ไลฟ์ ใบบนสุด ของเรา หรือ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, และนำ ไปวางที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์เจ้าของเดิม. จากนั้น, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
-    "triggerEn": "[Trigger] Draw 1 card, look at up to 1 card from the top of your or your opponent's Life cards, and place it at the top or bottom of the Life cards.",
-    "triggerJp": "【トリガー】カード1枚を引き、自分か相手のライフの上から1枚までを見て、ライフの上か下に置く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   },
   {
     "code": "ST07-017",
@@ -351,10 +371,10 @@
     "effectEn": "[Activate: Main] You may rest this Stage and add 1 card from the top or bottom of your Life cards to your hand: Add up to 1 of your Characters with a cost of 3 to the top of the owner's Life cards face-up.",
     "effectJp": "【起動メイン】このステージをレストにし、自分のライフの上か下から1枚を手札に加えることができる：自分のコスト3のキャラ1枚までを、持ち主のライフの上に表向きで加える。",
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ สเตจนี้, และนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นบนสู่มือ : นำคาแรกเตอร์ของเรา ที่มีคอสต์ 3 จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของ ไลฟ์ของเจ้าของเดิม แบบหงายหน้า.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST07-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Big Mom Pirates- [ST-07]"
+    ]
   }
 ]

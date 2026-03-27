@@ -9,7 +9,7 @@
     "nameTh": "Monkey.D.Luffy",
     "color": "Red",
     "power": 5000,
-    "life": 3,
+    "life": 5,
     "attribute": "Strike",
     "trait": "The Four Emperors/Straw Hat Crew",
     "effectEn": "[DON!! x1] [Activate: Main] [Once Per Turn] Give up to 2 rested DON!! cards to 1 of your Characters.",
@@ -17,7 +17,9 @@
     "effectTh": "[ด้ง!! x 1] [ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ, มาใส่ให้กับ คาแรกเตอร์ของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-001",
@@ -29,7 +31,7 @@
     "nameTh": "Monkey.D.Luffy",
     "color": "Red",
     "power": 5000,
-    "life": 3,
+    "life": 5,
     "attribute": "Strike",
     "trait": "The Four Emperors/Straw Hat Crew",
     "effectEn": "[DON!! x1] [Activate: Main] [Once Per Turn] Give up to 2 rested DON!! cards to 1 of your Characters.",
@@ -38,7 +40,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-001_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-002",
@@ -59,7 +63,9 @@
     "effectTh": "[ด้ง!! x 2] [ในเทิร์นของคู่แข่ง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-002",
@@ -81,7 +87,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-002_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-003",
@@ -99,10 +107,12 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[On Play] Select up to 1 of your {Straw Hat Crew} type Characters with 6000 power or more. If the selected Character attacks during this turn, your opponent cannot activate [Blocker].",
     "effectJp": "【登場時】自分のパワー6000以上の特徴《麦わらの一味》を持つキャラ1枚までを選ぶ。相手は、このターン中、選んだキャラがアタックする場合【ブロッカー】を発動できない。",
-    "effectTh": "[เมื่อลงสนาม] เลือกคาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; และมีพาวเวอร์ 6000 หรือสูงกว่า จำนวนไม่เกิน 1 ใบ. ในเทิร์นนี้, ถ้าคาแรกเตอร์ที่ถูกเลือกทำการโจมตี, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์].",
+    "effectTh": "[เมื่อลงสนาม] เลือกคาแรกเตอร์ของเรา ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > และมีพาวเวอร์ 6000 หรือสูงกว่า จำนวนไม่เกิน 1 ใบ. ในเทิร์นนี้, ถ้าคาแรกเตอร์ที่ถูกเลือกทำการโจมตี, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์].",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-003",
@@ -120,11 +130,13 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[On Play] Select up to 1 of your {Straw Hat Crew} type Characters with 6000 power or more. If the selected Character attacks during this turn, your opponent cannot activate [Blocker].",
     "effectJp": "【登場時】自分のパワー6000以上の特徴《麦わらの一味》を持つキャラ1枚までを選ぶ。相手は、このターン中、選んだキャラがアタックする場合【ブロッカー】を発動できない。",
-    "effectTh": "[เมื่อลงสนาม] เลือกคาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; และมีพาวเวอร์ 6000 หรือสูงกว่า จำนวนไม่เกิน 1 ใบ. ในเทิร์นนี้, ถ้าคาแรกเตอร์ที่ถูกเลือกทำการโจมตี, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์].",
+    "effectTh": "[เมื่อลงสนาม] เลือกคาแรกเตอร์ของเรา ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > และมีพาวเวอร์ 6000 หรือสูงกว่า จำนวนไม่เกิน 1 ใบ. ในเทิร์นนี้, ถ้าคาแรกเตอร์ที่ถูกเลือกทำการโจมตี, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์].",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-003_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-004",
@@ -144,7 +156,9 @@
     "effectTh": "[ด้ง!! x 2] [เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-004",
@@ -165,7 +179,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-004_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-005",
@@ -186,7 +202,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-005",
@@ -208,7 +226,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-005_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-006",
@@ -229,7 +249,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-006",
@@ -251,7 +273,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-006_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-007",
@@ -272,7 +296,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-007",
@@ -294,7 +320,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-007_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-008",
@@ -315,7 +343,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-008",
@@ -337,7 +367,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-008_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-009",
@@ -355,10 +387,12 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[Activate: Main] [Once Per Turn] Give up to 2 rested DON!! cards to 1 of your {Straw Hat Crew} type Leader or Character cards.",
     "effectJp": "【起動メイン】【ターン1回】自分の特徴《麦わらの一味》を持つ、リーダーかキャラ1枚にレストのドン!!2枚までを、付与する。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; จำนวน 1 ใบ.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-009",
@@ -376,11 +410,13 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[Activate: Main] [Once Per Turn] Give up to 2 rested DON!! cards to 1 of your {Straw Hat Crew} type Leader or Character cards.",
     "effectJp": "【起動メイン】【ターン1回】自分の特徴《麦わらの一味》を持つ、リーダーかキャラ1枚にレストのドン!!2枚までを、付与する。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; จำนวน 1 ใบ.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-009_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-010",
@@ -401,7 +437,9 @@
     "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 4000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-010",
@@ -423,7 +461,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-010_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-011",
@@ -441,10 +481,12 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[DON!! x2] [Opponent's Turn] All of your {Straw Hat Crew} type Characters with 4000 base power or less gain +1000 power.",
     "effectJp": "【ドン‼×2】【相手のターン中】自分の元々のパワー4000以下の特徴《麦わらの一味》を持つキャラすべてを、パワー+1000。",
-    "effectTh": "[ด้ง!! x 2] [ในเทิร์นของคู่แข่ง] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; และมีพาวเวอร์ตั้งต้น 4000 หรือต่ำกว่า, จะมีพาวเวอร์ +1000.",
+    "effectTh": "[ด้ง!! x 2] [ในเทิร์นของคู่แข่ง] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > และมีพาวเวอร์ตั้งต้น 4000 หรือต่ำกว่า, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-011",
@@ -462,11 +504,13 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[DON!! x2] [Opponent's Turn] All of your {Straw Hat Crew} type Characters with 4000 base power or less gain +1000 power.",
     "effectJp": "【ドン‼×2】【相手のターン中】自分の元々のパワー4000以下の特徴《麦わらの一味》を持つキャラすべてを、パワー+1000。",
-    "effectTh": "[ด้ง!! x 2] [ในเทิร์นของคู่แข่ง] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; และมีพาวเวอร์ตั้งต้น 4000 หรือต่ำกว่า, จะมีพาวเวอร์ +1000.",
+    "effectTh": "[ด้ง!! x 2] [ในเทิร์นของคู่แข่ง] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > และมีพาวเวอร์ตั้งต้น 4000 หรือต่ำกว่า, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-011_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-012",
@@ -487,7 +531,9 @@
     "effectTh": "[เมื่อโจมตี] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-012",
@@ -509,7 +555,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-012_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-013",
@@ -530,7 +578,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-013",
@@ -552,7 +602,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-013_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-014",
@@ -567,12 +619,14 @@
     "power": 6000,
     "attribute": "Strike",
     "trait": "The Four Emperors/Straw Hat Crew",
-    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)<br>[When Attacking] Give up to 1 rested DON!! card to your Leader or 1 of your Characters.",
-    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)<br>【アタック時】自分のリーダーかキャラ1枚にレストのドン!!1枚までを、付与する。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[When Attacking] Give up to 1 rested DON!! card to your Leader or 1 of your Characters.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【アタック時】自分のリーダーかキャラ1枚にレストのドン!!1枚までを、付与する。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-014",
@@ -587,13 +641,15 @@
     "power": 6000,
     "attribute": "Strike",
     "trait": "The Four Emperors/Straw Hat Crew",
-    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)<br>[When Attacking] Give up to 1 rested DON!! card to your Leader or 1 of your Characters.",
-    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)<br>【アタック時】自分のリーダーかキャラ1枚にレストのドン!!1枚までを、付与する。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[When Attacking] Give up to 1 rested DON!! card to your Leader or 1 of your Characters.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【アタック時】自分のリーダーかキャラ1枚にレストのドン!!1枚までを、付与する。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-014_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-015",
@@ -609,12 +665,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Straw Hat Crew",
-    "effectEn": "[DON!! x2] This Character gains [Rush].<br>[On K.O.] Play up to 1 red Character card with 6000 power or less other than [Roronoa Zoro] from your hand.",
-    "effectJp": "【ドン‼×2】このキャラは【速攻】を得る。<br>【KO時】自分の手札から「ロロノア・ゾロ」以外のパワー6000以下の赤のキャラカード1枚までを、登場させる。",
-    "effectTh": "[ด้ง!! x 2] คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ธีมสีแดง ที่มีพาวเวอร์ 6000 หรือต่ำกว่า  นอกเหนือจาก [Roronoa Zoro] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[DON!! x2] This Character gains [Rush].[On K.O.] Play up to 1 red Character card with 6000 power or less other than [Roronoa Zoro] from your hand.",
+    "effectJp": "【ドン‼×2】このキャラは【速攻】を得る。【KO時】自分の手札から「ロロノア・ゾロ」以外のパワー6000以下の赤のキャラカード1枚までを、登場させる。",
+    "effectTh": "[ด้ง!! x 2] คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ธีมสีแดง ที่มีพาวเวอร์ 6000 หรือต่ำกว่า  นอกเหนือจาก [Roronoa Zoro] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-015",
@@ -630,13 +688,15 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Straw Hat Crew",
-    "effectEn": "[DON!! x2] This Character gains [Rush].<br>[On K.O.] Play up to 1 red Character card with 6000 power or less other than [Roronoa Zoro] from your hand.",
-    "effectJp": "【ドン‼×2】このキャラは【速攻】を得る。<br>【KO時】自分の手札から「ロロノア・ゾロ」以外のパワー6000以下の赤のキャラカード1枚までを、登場させる。",
-    "effectTh": "[ด้ง!! x 2] คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ธีมสีแดง ที่มีพาวเวอร์ 6000 หรือต่ำกว่า  นอกเหนือจาก [Roronoa Zoro] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[DON!! x2] This Character gains [Rush].[On K.O.] Play up to 1 red Character card with 6000 power or less other than [Roronoa Zoro] from your hand.",
+    "effectJp": "【ドン‼×2】このキャラは【速攻】を得る。【KO時】自分の手札から「ロロノア・ゾロ」以外のパワー6000以下の赤のキャラカード1枚までを、登場させる。",
+    "effectTh": "[ด้ง!! x 2] คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ธีมสีแดง ที่มีพาวเวอร์ 6000 หรือต่ำกว่า  นอกเหนือจาก [Roronoa Zoro] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-015_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-016",
@@ -652,11 +712,11 @@
     "effectEn": "[Main] Up to 1 of your Leader or Character cards gains +1000 power during this turn. Then, up to 1 of your opponent's Characters with 4000 power or less cannot activate [Blocker] during this turn.",
     "effectJp": "【メイン】自分のリーダーかキャラ1枚までを、このターン中、パワー+1000。その後、相手のパワー4000以下のキャラ1枚までは、このターン中、【ブロッカー】を発動できない。",
     "effectTh": "[เมน] ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 4000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, จะไม่สามารถใช้งาน [บล็อกเกอร์].",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with 4000 power or less.",
-    "triggerJp": "【トリガー】相手のパワー4000以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   },
   {
     "code": "ST21-017",
@@ -672,10 +732,10 @@
     "effectEn": "[Main] Give up to 1 of your opponent's Characters −5000 power during this turn. Then, if you have a Character with 6000 power or more, K.O. up to 1 of your opponent's Characters with 2000 power or less.",
     "effectJp": "【メイン】相手のキャラ1枚までを、このターン中、パワー-5000。その後、自分のパワー6000以上のキャラがいる場合、相手のパワー2000以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -5000. จากนั้น, ถ้าเรามีคาแรกเตอร์ ที่มีพาวเวอร์ 6000 หรือสูงกว่า อยู่ด้วยละก็, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 2000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST21-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-GEAR5- [ST-21]"
+    ]
   }
 ]

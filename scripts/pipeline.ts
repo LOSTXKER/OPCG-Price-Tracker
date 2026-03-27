@@ -13,7 +13,8 @@
  *   2. Seed cards → DB (from JSON files)
  *   3. Upload images → Supabase Storage
  *   4. Yuyutei → match prices to existing cards
- *   5. Seed drop rates
+ *   5. Fill reprint prices (copy from original cards)
+ *   6. Seed drop rates
  */
 import { execSync } from "child_process";
 
@@ -84,7 +85,11 @@ async function main() {
   }
 
   if (shouldRun(5)) {
-    run("Step 5: Seed drop rates", `npx tsx scripts/seed-drop-rates.ts`);
+    run("Step 5: Fill reprint prices", `npx tsx scripts/fill-reprint-prices.ts`);
+  }
+
+  if (shouldRun(6)) {
+    run("Step 6: Seed drop rates", `npx tsx scripts/seed-drop-rates.ts`);
   }
 
   const elapsed = ((Date.now() - startTime) / 1000 / 60).toFixed(1);

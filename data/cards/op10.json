@@ -1,5 +1,53 @@
 [
   {
+    "code": "EB01-056",
+    "cardCode": "EB01-056_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Charlotte Flampe",
+    "nameJp": "シャーロット・フランペ",
+    "nameTh": "Charlotte Flampe",
+    "color": "Yellow",
+    "cost": 1,
+    "power": 1000,
+    "counter": 2000,
+    "attribute": "Special",
+    "trait": "Big Mom Pirates",
+    "effectEn": "[On Play] You may add 1 card from the top or bottom of your Life cards to your hand: Draw 1 card.",
+    "effectJp": "【登場時】自分のライフの上か下から1枚を手札に加えることができる：カード1枚を引く。",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : จั่วการ์ด จำนวน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-056_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
+  },
+  {
+    "code": "OP07-021",
+    "cardCode": "OP07-021_p1",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Urouge",
+    "nameJp": "ウルージ",
+    "nameTh": "Urouge",
+    "color": "Green",
+    "cost": 4,
+    "power": 5000,
+    "counter": 1000,
+    "attribute": "Strike",
+    "trait": "Supernovas/Fallen Monk Pirates",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[End of Your Turn] Set up to 1 of your DON!! cards as active.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【自分のターン終了時】自分のドン!!1枚までを、アクティブにする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อจบเทิร์นของเรา] นำ ด้ง!! จากด้ง!! เด็ค ของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP07-021_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
+  },
+  {
     "code": "OP10-001",
     "cardCode": "OP10-001",
     "rarity": "L",
@@ -9,15 +57,17 @@
     "nameTh": "Smoker",
     "color": "Red/Green",
     "power": 5000,
-    "life": 3,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Punk Hazard/Navy",
-    "effectEn": "[Opponent's Turn] All of your {Navy} or {Punk Hazard} type Characters gain +1000 power.<br>[Activate: Main] [Once Per Turn] If you have a Character with 7000 power or more, set up to 2 of your DON!! cards as active.",
-    "effectJp": "【相手のターン中】自分の特徴《海軍》か《パンクハザード》を持つキャラすべてを、パワー+1000。<br>【起動メイン】【ターン1回】自分のパワー7000以上のキャラがいる場合、自分のドン‼2枚までを、アクティブにする。",
-    "effectTh": "[ในเทิร์นของคู่แข่ง] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ &lt; กองทัพเรือ &gt; หรือ &lt; พังค์ฮาซาร์ด &gt;, จะมีพาวเวอร์ +1000.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าเรามีคาแรกเตอร์ ที่มีพาวเวอร์ 7000 หรือสูงกว่าอยู่ละก็, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectEn": "[Opponent's Turn] All of your {Navy} or {Punk Hazard} type Characters gain +1000 power.[Activate: Main] [Once Per Turn] If you have a Character with 7000 power or more, set up to 2 of your DON!! cards as active.",
+    "effectJp": "【相手のターン中】自分の特徴《海軍》か《パンクハザード》を持つキャラすべてを、パワー+1000。【起動メイン】【ターン1回】自分のパワー7000以上のキャラがいる場合、自分のドン‼2枚までを、アクティブにする。",
+    "effectTh": "[ในเทิร์นของคู่แข่ง] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ < กองทัพเรือ > หรือ < พังค์ฮาซาร์ด >, จะมีพาวเวอร์ +1000.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าเรามีคาแรกเตอร์ ที่มีพาวเวอร์ 7000 หรือสูงกว่าอยู่ละก็, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-001",
@@ -29,16 +79,18 @@
     "nameTh": "Smoker",
     "color": "Red/Green",
     "power": 5000,
-    "life": 3,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Punk Hazard/Navy",
-    "effectEn": "[Opponent's Turn] All of your {Navy} or {Punk Hazard} type Characters gain +1000 power.<br>[Activate: Main] [Once Per Turn] If you have a Character with 7000 power or more, set up to 2 of your DON!! cards as active.",
-    "effectJp": "【相手のターン中】自分の特徴《海軍》か《パンクハザード》を持つキャラすべてを、パワー+1000。<br>【起動メイン】【ターン1回】自分のパワー7000以上のキャラがいる場合、自分のドン‼2枚までを、アクティブにする。",
-    "effectTh": "[ในเทิร์นของคู่แข่ง] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ &lt; กองทัพเรือ &gt; หรือ &lt; พังค์ฮาซาร์ด  &gt;, จะมีพาวเวอร์ +1000.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าเรามีคาแรกเตอร์ ที่มีพาวเวอร์ 7000 หรือสูงกว่าอยู่ละก็, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectEn": "[Opponent's Turn] All of your {Navy} or {Punk Hazard} type Characters gain +1000 power.[Activate: Main] [Once Per Turn] If you have a Character with 7000 power or more, set up to 2 of your DON!! cards as active.",
+    "effectJp": "【相手のターン中】自分の特徴《海軍》か《パンクハザード》を持つキャラすべてを、パワー+1000。【起動メイン】【ターン1回】自分のパワー7000以上のキャラがいる場合、自分のドン‼2枚までを、アクティブにする。",
+    "effectTh": "[ในเทิร์นของคู่แข่ง] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ < กองทัพเรือ > หรือ < พังค์ฮาซาร์ด  >, จะมีพาวเวอร์ +1000.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าเรามีคาแรกเตอร์ ที่มีพาวเวอร์ 7000 หรือสูงกว่าอยู่ละก็, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-001_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-002",
@@ -50,15 +102,17 @@
     "nameTh": "Caesar Clown",
     "color": "Red/Blue",
     "power": 5000,
-    "life": 3,
+    "life": 4,
     "attribute": "Special",
     "trait": "Scientist/Punk Hazard",
     "effectEn": "[DON!! x2] [When Attacking] You may return 1 of your {Punk Hazard} type Characters with a cost of 2 or more to the owner's hand: K.O. up to 1 of your opponent's Characters with 4000 power or less.",
     "effectJp": "【ドン‼×2】【アタック時】自分のコスト2以上の特徴《パンクハザード》を持つキャラ1枚を、持ち主の手札に戻すことができる：相手のパワー4000以下のキャラ1枚までを、KOする。",
-    "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] สามารถนำ คาแรกเตอร์ของเรา ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ &lt; พังค์ฮาซาร์ด &gt; จำนวน 1 ใบ, กลับขึ้นมือเจ้าของ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 4000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] สามารถนำ คาแรกเตอร์ของเรา ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ < พังค์ฮาซาร์ด > จำนวน 1 ใบ, กลับขึ้นมือเจ้าของ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 4000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-002",
@@ -70,16 +124,18 @@
     "nameTh": "Caesar Clown",
     "color": "Red/Blue",
     "power": 5000,
-    "life": 3,
+    "life": 4,
     "attribute": "Special",
     "trait": "Scientist/Punk Hazard",
     "effectEn": "[DON!! x2] [When Attacking] You may return 1 of your {Punk Hazard} type Characters with a cost of 2 or more to the owner's hand: K.O. up to 1 of your opponent's Characters with 4000 power or less.",
     "effectJp": "【ドン‼×2】【アタック時】自分のコスト2以上の特徴《パンクハザード》を持つキャラ1枚を、持ち主の手札に戻すことができる：相手のパワー4000以下のキャラ1枚までを、KOする。",
-    "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] สามารถนำ คาแรกเตอร์ของเรา ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ &lt; พังค์ฮาซาร์ด &gt; จำนวน 1 ใบ, กลับขึ้นมือเจ้าของ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 4000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] สามารถนำ คาแรกเตอร์ของเรา ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ < พังค์ฮาซาร์ด > จำนวน 1 ใบ, กลับขึ้นมือเจ้าของ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 4000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-002_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-003",
@@ -91,15 +147,17 @@
     "nameTh": "Sugar",
     "color": "Red/Purple",
     "power": 5000,
-    "life": 3,
+    "life": 4,
     "attribute": "Special",
     "trait": "Donquixote Pirates",
-    "effectEn": "[End of Your Turn] If you have a {Donquixote Pirates} type Character with 6000 power or more, set up to 1 of your DON!! cards as active.<br>[Opponent's Turn] [Once Per Turn] When you activate an Event, add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "effectJp": "【自分のターン終了時】自分のパワー6000以上の特徴《ドンキホーテ海賊団》を持つキャラがいる場合、自分のドン‼1枚までを、アクティブにする。<br>【相手のターン中】【ターン1回】自分がイベントを発動した時、ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
-    "effectTh": "[เมื่อจบเทิร์นของเรา] ถ้าเรามีคาแรกเตอร์ ที่มีพาวเวอร์ 6000 หรือสูงกว่า และมีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt; อยู่ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.<br>[ในเทิร์นของคู่แข่ง] [เทิร์นละ 1 ครั้ง] เมื่อเราสั่งใช้งาน อีเวนต์, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[End of Your Turn] If you have a {Donquixote Pirates} type Character with 6000 power or more, set up to 1 of your DON!! cards as active.[Opponent's Turn] [Once Per Turn] When you activate an Event, add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【自分のターン終了時】自分のパワー6000以上の特徴《ドンキホーテ海賊団》を持つキャラがいる場合、自分のドン‼1枚までを、アクティブにする。【相手のターン中】【ターン1回】自分がイベントを発動した時、ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
+    "effectTh": "[เมื่อจบเทิร์นของเรา] ถ้าเรามีคาแรกเตอร์ ที่มีพาวเวอร์ 6000 หรือสูงกว่า และมีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ > อยู่ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.[ในเทิร์นของคู่แข่ง] [เทิร์นละ 1 ครั้ง] เมื่อเราสั่งใช้งาน อีเวนต์, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-003",
@@ -111,16 +169,18 @@
     "nameTh": "Sugar",
     "color": "Red/Purple",
     "power": 5000,
-    "life": 3,
+    "life": 4,
     "attribute": "Special",
     "trait": "Donquixote Pirates",
-    "effectEn": "[End of Your Turn] If you have a {Donquixote Pirates} type Character with 6000 power or more, set up to 1 of your DON!! cards as active.<br>[Opponent's Turn] [Once Per Turn] When you activate an Event, add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "effectJp": "【自分のターン終了時】自分のパワー6000以上の特徴《ドンキホーテ海賊団》を持つキャラがいる場合、自分のドン‼1枚までを、アクティブにする。<br>【相手のターン中】【ターン1回】自分がイベントを発動した時、ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
-    "effectTh": "[เมื่อจบเทิร์นของเรา] ถ้าเรามีคาแรกเตอร์ ที่มีพาวเวอร์ 6000 หรือสูงกว่า และมีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt; อยู่ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.<br>[ในเทิร์นของคู่แข่ง] [เทิร์นละ 1 ครั้ง] เมื่อเราสั่งใช้งาน อีเวนต์, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[End of Your Turn] If you have a {Donquixote Pirates} type Character with 6000 power or more, set up to 1 of your DON!! cards as active.[Opponent's Turn] [Once Per Turn] When you activate an Event, add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【自分のターン終了時】自分のパワー6000以上の特徴《ドンキホーテ海賊団》を持つキャラがいる場合、自分のドン‼1枚までを、アクティブにする。【相手のターン中】【ターン1回】自分がイベントを発動した時、ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
+    "effectTh": "[เมื่อจบเทิร์นของเรา] ถ้าเรามีคาแรกเตอร์ ที่มีพาวเวอร์ 6000 หรือสูงกว่า และมีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ > อยู่ละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.[ในเทิร์นของคู่แข่ง] [เทิร์นละ 1 ครั้ง] เมื่อเราสั่งใช้งาน อีเวนต์, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-003_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-004",
@@ -138,10 +198,12 @@
     "trait": "Punk Hazard/Navy/Donquixote Pirates",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Punk Hazard} type card other than [Vergo] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「ヴェルゴ」以外の特徴《パンクハザード》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; พังค์ฮาซาร์ด &gt; นอกเหนือจาก [Vergo] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < พังค์ฮาซาร์ด > นอกเหนือจาก [Vergo] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-005",
@@ -157,12 +219,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Punk Hazard/Straw Hat Crew",
-    "effectEn": "[Your Turn] This Character gains +3000 power.<br>[On K.O.] Draw 1 card.",
-    "effectJp": "【自分のターン中】このキャラのパワー+3000。<br>【KO時】カード1枚を引く。",
-    "effectTh": "[เทิร์นตัวเอง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +3000.<br>[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "[Your Turn] This Character gains +3000 power.[On K.O.] Draw 1 card.",
+    "effectJp": "【自分のターン中】このキャラのパワー+3000。【KO時】カード1枚を引く。",
+    "effectTh": "[เทิร์นตัวเอง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +3000.[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-005",
@@ -178,13 +242,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Punk Hazard/Straw Hat Crew",
-    "effectEn": "[Your Turn] This Character gains +3000 power.<br>[On K.O.] Draw 1 card.",
-    "effectJp": "【自分のターン中】このキャラのパワー+3000。<br>【KO時】カード1枚を引く。",
-    "effectTh": "[เทิร์นตัวเอง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +3000.<br>[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "[Your Turn] This Character gains +3000 power.[On K.O.] Draw 1 card.",
+    "effectJp": "【自分のターン中】このキャラのパワー+3000。【KO時】カード1枚を引く。",
+    "effectTh": "[เทิร์นตัวเอง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +3000.[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-005_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-006",
@@ -204,7 +270,9 @@
     "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำ [Smiley] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, และนำ [Smiley] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-007",
@@ -222,10 +290,12 @@
     "trait": "Punk Hazard",
     "effectEn": "[On Play] Play up to 1 {Punk Hazard} type Character card with a cost of 2 or less from your hand.",
     "effectJp": "【登場時】自分の手札からコスト2以下の特徴《パンクハザード》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 2 หรือต่ำกว่า และมีคุณสมบัติ &lt; พังค์ฮาซาร์ด &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 2 หรือต่ำกว่า และมีคุณสมบัติ < พังค์ฮาซาร์ด > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-008",
@@ -241,12 +311,14 @@
     "counter": 1000,
     "attribute": "Ranged",
     "trait": "Punk Hazard",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] If you don't have [Rock], play up to 1 [Rock] from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分の「ロック」がいない場合、自分の手札から「ロック」1枚までを、登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ถ้าเราไม่มี [Rock] อยู่ด้วยละก็, ให้นำ [Rock] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] If you don't have [Rock], play up to 1 [Rock] from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分の「ロック」がいない場合、自分の手札から「ロック」1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ถ้าเราไม่มี [Rock] อยู่ด้วยละก็, ให้นำ [Rock] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-009",
@@ -264,10 +336,12 @@
     "trait": "Biological Weapon/Punk Hazard",
     "effectEn": "[On Play] If your Leader has the {Punk Hazard} type, give up to 1 of your opponent's Characters −3000 power during this turn.",
     "effectJp": "【登場時】自分のリーダーが特徴《パンクハザード》を持つ場合、相手のキャラ1枚までを、このターン中、パワー-3000。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; พังค์ฮาซาร์ด &gt; ละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < พังค์ฮาซาร์ด > ละก็, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-010",
@@ -287,7 +361,9 @@
     "effectTh": "[เมื่อโจมตี] ถ้าเรามีคาแรกเตอร์ ที่มีพาวเวอร์ 6000 หรือมากกว่า จำนวน 1 ใบ หรือน้อยกว่าอยู่ละก็, ในเทิร์นนี้, คาแรกเตอร์นี้, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-011",
@@ -303,12 +379,14 @@
     "counter": 2000,
     "attribute": "Strike",
     "trait": "Punk Hazard/Straw Hat Crew",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[Opponent's Turn] This Character gains +2000 power.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【相手のターン中】このキャラのパワー+2000。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ในเทิร์นของคู่แข่ง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[Opponent's Turn] This Character gains +2000 power.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【相手のターン中】このキャラのパワー+2000。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ในเทิร์นของคู่แข่ง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-012",
@@ -329,7 +407,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-013",
@@ -350,7 +430,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-014",
@@ -371,7 +453,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-015",
@@ -392,7 +476,9 @@
     "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-016",
@@ -413,7 +499,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ, มาใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-016",
@@ -435,7 +523,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-016_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-017",
@@ -456,7 +546,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าเราไม่มี [Scotch] อยู่ด้วยละก็, ให้นำ [Scotch] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-018",
@@ -472,11 +564,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +3000 power during this battle. Then, give up to 1 of your opponent's Leader or Character cards −2000 power during this turn.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+3000。その後、相手のリーダーかキャラ1枚までを、このターン中、パワー-2000。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000. จากนั้น, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
-    "triggerEn": "[Trigger] Up to 1 of your Leader or Character cards gains +1000 power during this turn.",
-    "triggerJp": "【トリガー】自分のリーダーかキャラ1枚までを、このターン中、パワー+1000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-018.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-019",
@@ -489,12 +581,14 @@
     "color": "Red",
     "cost": 1,
     "trait": "The Four Emperors/Red-Haired Pirates",
-    "effectEn": "[Main] You may rest 5 of your DON!! cards: K.O. up to 1 of your opponent's Characters with 8000 power or less.<br>[Counter] Up to 1 of your Leader gains +3000 power during this battle.",
-    "effectJp": "【メイン】自分のドン‼5枚をレストにできる：相手のパワー8000以下のキャラ1枚までを、KOする。<br>【カウンター】自分のリーダー1枚までを、このバトル中、パワー+3000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 5 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 8000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.<br>[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
+    "effectEn": "[Main] You may rest 5 of your DON!! cards: K.O. up to 1 of your opponent's Characters with 8000 power or less.[Counter] Up to 1 of your Leader gains +3000 power during this battle.",
+    "effectJp": "【メイン】自分のドン‼5枚をレストにできる：相手のパワー8000以下のキャラ1枚までを、KOする。【カウンター】自分のリーダー1枚までを、このバトル中、パワー+3000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 5 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 8000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-019.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-019",
@@ -507,13 +601,15 @@
     "color": "Red",
     "cost": 1,
     "trait": "The Four Emperors/Red-Haired Pirates",
-    "effectEn": "[Main] You may rest 5 of your DON!! cards: K.O. up to 1 of your opponent's Characters with 8000 power or less.<br>[Counter] Up to 1 of your Leader gains +3000 power during this battle.",
-    "effectJp": "【メイン】自分のドン‼5枚をレストにできる：相手のパワー8000以下のキャラ1枚までを、KOする。<br>【カウンター】自分のリーダー1枚までを、このバトル中、パワー+3000。",
-    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 5 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 8000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.<br>[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
+    "effectEn": "[Main] You may rest 5 of your DON!! cards: K.O. up to 1 of your opponent's Characters with 8000 power or less.[Counter] Up to 1 of your Leader gains +3000 power during this battle.",
+    "effectJp": "【メイン】自分のドン‼5枚をレストにできる：相手のパワー8000以下のキャラ1枚までを、KOする。【カウンター】自分のリーダー1枚までを、このバトル中、パワー+3000。",
+    "effectTh": "[เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 5 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 8000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-019_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-020",
@@ -529,11 +625,11 @@
     "effectEn": "[Main] Give up to 1 of your opponent's Characters −4000 power during this turn. Then, if you have 2 or less Life cards, up to 1 of your Leader or Character cards gains +1000 power during this turn.",
     "effectJp": "【メイン】相手のキャラ1枚までを、このターン中、パワー-4000。その後、自分のライフが2枚以下の場合、自分のリーダーかキャラ1枚までを、このターン中、パワー+1000。",
     "effectTh": "[เมน] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -4000. จากนั้น, ถ้าเรามีไลฟ์อยู่ จำนวน 2 ใบ หรือน้อยกว่าละก็, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with 3000 power or less.",
-    "triggerJp": "【トリガー】相手のパワー3000以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-020.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-021",
@@ -551,7 +647,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ สเตจนี้ : ถ้าลีดเดอร์ของเราคือ [Caesar Clown] ละก็, นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา, จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-021.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-022",
@@ -563,15 +661,17 @@
     "nameTh": "Trafalgar Law",
     "color": "Green/Yellow",
     "power": 5000,
-    "life": 3,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Dressrosa/Supernovas/Heart Pirates",
     "effectEn": "[DON!! x1] [Activate: Main] [Once Per Turn] If the total cost of your Characters is 5 or more, you may return 1 of your Characters to the owner's hand: Reveal 1 card from the top of your Life cards. If that card is a {Supernovas} type Character card with a cost of 5 or less, you may play that card.",
     "effectJp": "【ドン‼×1】【起動メイン】【ターン1回】自分のキャラのコストの合計が5以上の場合、自分のキャラ1枚を、持ち主の手札に戻すことができる：自分のライフの上から1枚を公開し、そのカードがコスト5以下の特徴《超新星》を持つキャラカードの場合、登場させてもよい。",
-    "effectTh": "[ด้ง!! x 1] [ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าค่าคอสต์ของ คาแรกเตอร์ของฝ่ายเรา ทั้งหมด มีผลรวมเท่ากับ 5 หรือสูงกว่าละก็, จะสามารถนำคาแรกเตอร์ของเรา จำนวน 1 ใบ, กลับขึ้นมือเจ้าของ : นำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ มาแสดงให้ดู, แล้วถ้าการ์ดใบนั้นเป็นคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; ละก็, จะนำลงสนามก็ได้.",
+    "effectTh": "[ด้ง!! x 1] [ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าค่าคอสต์ของ คาแรกเตอร์ของฝ่ายเรา ทั้งหมด มีผลรวมเท่ากับ 5 หรือสูงกว่าละก็, จะสามารถนำคาแรกเตอร์ของเรา จำนวน 1 ใบ, กลับขึ้นมือเจ้าของ : นำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ มาแสดงให้ดู, แล้วถ้าการ์ดใบนั้นเป็นคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ < ซูเปอร์โนวา > ละก็, จะนำลงสนามก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-022.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-022",
@@ -583,16 +683,18 @@
     "nameTh": "Trafalgar Law",
     "color": "Green/Yellow",
     "power": 5000,
-    "life": 3,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Dressrosa/Supernovas/Heart Pirates",
     "effectEn": "[DON!! x1] [Activate: Main] [Once Per Turn] If the total cost of your Characters is 5 or more, you may return 1 of your Characters to the owner's hand: Reveal 1 card from the top of your Life cards. If that card is a {Supernovas} type Character card with a cost of 5 or less, you may play that card.",
     "effectJp": "【ドン‼×1】【起動メイン】【ターン1回】自分のキャラのコストの合計が5以上の場合、自分のキャラ1枚を、持ち主の手札に戻すことができる：自分のライフの上から1枚を公開し、そのカードがコスト5以下の特徴《超新星》を持つキャラカードの場合、登場させてもよい。",
-    "effectTh": "[ด้ง!! x 1] [ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าค่าคอสต์ของ คาแรกเตอร์ของฝ่ายเรา ทั้งหมด มีผลรวมเท่ากับ 5 หรือสูงกว่าละก็, จะสามารถนำคาแรกเตอร์ของเรา จำนวน 1 ใบ, กลับขึ้นมือเจ้าของ : นำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ มาแสดงให้ดู, แล้วถ้าการ์ดใบนั้นเป็นคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; ละก็, จะนำลงสนามก็ได้.",
+    "effectTh": "[ด้ง!! x 1] [ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าค่าคอสต์ของ คาแรกเตอร์ของฝ่ายเรา ทั้งหมด มีผลรวมเท่ากับ 5 หรือสูงกว่าละก็, จะสามารถนำคาแรกเตอร์ของเรา จำนวน 1 ใบ, กลับขึ้นมือเจ้าของ : นำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ มาแสดงให้ดู, แล้วถ้าการ์ดใบนั้นเป็นคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ < ซูเปอร์โนวา > ละก็, จะนำลงสนามก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-022_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-023",
@@ -610,10 +712,12 @@
     "trait": "Dressrosa/Navy",
     "effectEn": "[On Play] If your Leader has the {Navy} type, rest up to 2 of your opponent's Characters with a cost of 5 or less.",
     "effectJp": "【登場時】自分のリーダーが特徴《海軍》を持つ場合、相手のコスト5以下のキャラ2枚までを、レストにする。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กองทัพเรือ &gt; ละก็, จะทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 2 ใบ.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กองทัพเรือ > ละก็, จะทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-023.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-024",
@@ -634,7 +738,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าเรามีคาแรกเตอร์ ที่กำลังเรสต์อยู่ จำนวน 2 ใบ หรือมากกว่าละก็, จะทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-024.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-025",
@@ -655,7 +761,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าเรามีคาแรกเตอร์ ที่กำลังเรสต์อยู่ จำนวน 2 ใบ หรือมากกว่าละก็, จะต้องจั่วการ์ด จำนวน 3 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-025.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-026",
@@ -676,7 +784,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถนำ คาแรกเตอร์นี้ กับ [Kin’emon] ที่มีพาวเวอร์ 0 จากในแทรชของเรา จำนวน 1 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : นำ [Kin’emon] ที่มีคอสต์ 6 จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-026.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-027",
@@ -696,7 +806,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถนำ คาแรกเตอร์นี้ กับ [Kin’emon] ที่มีพาวเวอร์ 1000 จากในแทรชของเรา จำนวน 1 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : นำ [Kin’emon] ที่มีคอสต์ 6 จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-027.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-028",
@@ -714,10 +826,12 @@
     "trait": "Punk Hazard/Land of Wano/Kouzuki Clan",
     "effectEn": "[Activate: Main] You may rest 2 of your DON!! cards and trash this Character: Look at 5 cards from the top of your deck; reveal up to 2 {The Akazaya Nine} type cards and add them to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【起動メイン】自分のドン‼2枚をレストにし、このキャラをトラッシュに置くことができる：自分のデッキの上から5枚を見て、特徴《赤鞘九人男》を持つカード2枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 2 ใบ, และนำคาแรกเตอร์นี้ ไปวางที่แทรช : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; เก้าปลอกดาบแดง &gt; จำนวนไม่เกิน 2 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 2 ใบ, และนำคาแรกเตอร์นี้ ไปวางที่แทรช : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < เก้าปลอกดาบแดง > จำนวนไม่เกิน 2 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-028.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-029",
@@ -735,10 +849,12 @@
     "trait": "ODYSSEY/The Seven Warlords of the Sea",
     "effectEn": "[On Play] If you have 2 or more rested Characters, set up to 1 of your rested {ODYSSEY} type Characters with a cost of 5 or less as active.",
     "effectJp": "【登場時】自分のレストのキャラが2枚以上いる場合、自分のレストのコスト5以下の特徴《ODYSSEY》を持つキャラ1枚までを、アクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าเรามีคาแรกเตอร์ ที่กำลังเรสต์อยู่ จำนวน 2 ใบ หรือมากกว่าละก็, จะทำให้ คาแรกเตอร์ของเรา ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ &lt; ODYSSEY &gt; ซึ่งกำลังเรสต์อยู่ จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าเรามีคาแรกเตอร์ ที่กำลังเรสต์อยู่ จำนวน 2 ใบ หรือมากกว่าละก็, จะทำให้ คาแรกเตอร์ของเรา ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ < ODYSSEY > ซึ่งกำลังเรสต์อยู่ จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-029.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-030",
@@ -753,12 +869,14 @@
     "power": 7000,
     "attribute": "Slash",
     "trait": "Punk Hazard/Navy",
-    "effectEn": "[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)<br>[Activate: Main] Set up to 1 of your DON!! cards as active. Then, you cannot set DON!! cards as active using Character effects during this turn.",
-    "effectJp": "【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)<br>【起動メイン】自分のドン‼1枚までを、アクティブにする。その後、自分はこのターン中、キャラの効果でドン‼をアクティブにできない。",
-    "effectTh": "[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)<br>[ใช้งาน : เมน] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถ แอ็คทีฟ ด้ง!! ด้วยความสามารถของคาแรกเตอร์อีก.",
+    "effectEn": "[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)[Activate: Main] Set up to 1 of your DON!! cards as active. Then, you cannot set DON!! cards as active using Character effects during this turn.",
+    "effectJp": "【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)【起動メイン】自分のドン‼1枚までを、アクティブにする。その後、自分はこのターン中、キャラの効果でドン‼をアクティブにできない。",
+    "effectTh": "[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)[ใช้งาน : เมน] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถ แอ็คทีฟ ด้ง!! ด้วยความสามารถของคาแรกเตอร์อีก.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-030.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-030",
@@ -773,13 +891,15 @@
     "power": 7000,
     "attribute": "Slash",
     "trait": "Punk Hazard/Navy",
-    "effectEn": "[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)<br>[Activate: Main] Set up to 1 of your DON!! cards as active. Then, you cannot set DON!! cards as active using Character effects during this turn.",
-    "effectJp": "【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)<br>【起動メイン】自分のドン‼1枚までを、アクティブにする。その後、自分はこのターン中、キャラの効果でドン‼をアクティブにできない。",
-    "effectTh": "[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)<br>[ใช้งาน : เมน] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถ แอ็คทีฟ ด้ง!! ด้วยความสามารถของคาแรกเตอร์อีก.",
+    "effectEn": "[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)[Activate: Main] Set up to 1 of your DON!! cards as active. Then, you cannot set DON!! cards as active using Character effects during this turn.",
+    "effectJp": "【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)【起動メイン】自分のドン‼1枚までを、アクティブにする。その後、自分はこのターン中、キャラの効果でドン‼をアクティブにできない。",
+    "effectTh": "[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)[ใช้งาน : เมน] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ. จากนั้น, ในเทิร์นนี้, เราจะไม่สามารถ แอ็คทีฟ ด้ง!! ด้วยความสามารถของคาแรกเตอร์อีก.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-030_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-031",
@@ -800,7 +920,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-031.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-032",
@@ -821,7 +943,9 @@
     "effectTh": "ถ้าคาแรกเตอร์ ธีมสีเขียว ของเรา นอกเหนือจาก [Tashigi] กำลังจะถูกนำออกจากสนาม โดยความสามารถของฝ่ายคู่แข่ง, จะสามารถ เรสต์ คาแรกเตอร์นี้ แทนได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-032.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-032",
@@ -843,7 +967,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-032_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-033",
@@ -861,10 +987,12 @@
     "trait": "ODYSSEY/Straw Hat Crew",
     "effectEn": "[On Play] If you have 2 or more rested {ODYSSEY} type Characters, up to 1 of your opponent's rested DON!! cards will not become active in your opponent's next Refresh Phase.",
     "effectJp": "【登場時】自分のレストの特徴《ODYSSEY》を持つキャラが2枚以上いる場合、相手のレストのドン‼1枚までは、次の相手のリフレッシュフェイズでアクティブにならない。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าเรามีคาแรกเตอร์ ที่มีคุณสมบัติ &lt; ODYSSEY &gt; ซึ่งกำลังเรสต์อยู่ จำนวน 2 ใบ หรือมากว่าละก็, จะทำให้ ด้ง!! ของคู่แข่ง ที่กำลังเรสต์อยู่ จำนวนไม่เกิน 1 ใบ, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของคู่แข่งในครั้งถัดไป.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าเรามีคาแรกเตอร์ ที่มีคุณสมบัติ < ODYSSEY > ซึ่งกำลังเรสต์อยู่ จำนวน 2 ใบ หรือมากว่าละก็, จะทำให้ ด้ง!! ของคู่แข่ง ที่กำลังเรสต์อยู่ จำนวนไม่เกิน 1 ใบ, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-033.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-034",
@@ -885,7 +1013,9 @@
     "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูก KO จากการแบทเทิล, จะสามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ แทนก็ได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-034.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-035",
@@ -905,7 +1035,9 @@
     "effectTh": "[เมื่อถูก KO] ทำการ เรสต์ ลีดเดอร์ หรือ คาแรกเตอร์ ของคูแข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-035.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-036",
@@ -926,7 +1058,9 @@
     "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมีคาแรกเตอร์ของใครก็ตาม ถูกทำให้ เรสต์ โดยความสามารถของฝ่ายเรา, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-036.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-037",
@@ -941,12 +1075,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "ODYSSEY",
-    "effectEn": "[Once Per Turn] If this Character would be removed from the field by your opponent's effect, you may rest 1 of your {ODYSSEY} type Characters instead.<br>[End of Your Turn] Set up to 1 of your {ODYSSEY} type Characters as active.",
-    "effectJp": "【ターン1回】このキャラが相手の効果で場を離れる場合、代わりに自分の特徴《ODYSSEY》を持つキャラ1枚をレストにできる。<br>【自分のターン終了時】自分の特徴《ODYSSEY》を持つキャラ1枚までを、アクティブにする。",
-    "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม โดยความสามารถของฝ่ายคู่แข่ง, จะสามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; ODYSSEY &gt; จำนวน 1 ใบ แทนได้.<br>[เมื่อจบเทิร์นของเรา] จะทำให้ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; ODYSSEY &gt; จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectEn": "[Once Per Turn] If this Character would be removed from the field by your opponent's effect, you may rest 1 of your {ODYSSEY} type Characters instead.[End of Your Turn] Set up to 1 of your {ODYSSEY} type Characters as active.",
+    "effectJp": "【ターン1回】このキャラが相手の効果で場を離れる場合、代わりに自分の特徴《ODYSSEY》を持つキャラ1枚をレストにできる。【自分のターン終了時】自分の特徴《ODYSSEY》を持つキャラ1枚までを、アクティブにする。",
+    "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม โดยความสามารถของฝ่ายคู่แข่ง, จะสามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < ODYSSEY > จำนวน 1 ใบ แทนได้.[เมื่อจบเทิร์นของเรา] จะทำให้ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < ODYSSEY > จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-037.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-037",
@@ -961,13 +1097,15 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "ODYSSEY",
-    "effectEn": "[Once Per Turn] If this Character would be removed from the field by your opponent's effect, you may rest 1 of your {ODYSSEY} type Characters instead.<br>[End of Your Turn] Set up to 1 of your {ODYSSEY} type Characters as active.",
-    "effectJp": "【ターン1回】このキャラが相手の効果で場を離れる場合、代わりに自分の特徴《ODYSSEY》を持つキャラ1枚をレストにできる。<br>【自分のターン終了時】自分の特徴《ODYSSEY》を持つキャラ1枚までを、アクティブにする。",
-    "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม โดยความสามารถของฝ่ายคู่แข่ง, จะสามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; ODYSSEY &gt; จำนวน 1 ใบ แทนได้.<br>[เมื่อจบเทิร์นของเรา] จะทำให้ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; ODYSSEY &gt; จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectEn": "[Once Per Turn] If this Character would be removed from the field by your opponent's effect, you may rest 1 of your {ODYSSEY} type Characters instead.[End of Your Turn] Set up to 1 of your {ODYSSEY} type Characters as active.",
+    "effectJp": "【ターン1回】このキャラが相手の効果で場を離れる場合、代わりに自分の特徴《ODYSSEY》を持つキャラ1枚をレストにできる。【自分のターン終了時】自分の特徴《ODYSSEY》を持つキャラ1枚までを、アクティブにする。",
+    "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม โดยความสามารถของฝ่ายคู่แข่ง, จะสามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < ODYSSEY > จำนวน 1 ใบ แทนได้.[เมื่อจบเทิร์นของเรา] จะทำให้ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < ODYSSEY > จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-037_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-038",
@@ -988,7 +1126,9 @@
     "effectTh": "[ในเทิร์นของคู่แข่ง] ถ้าเรามีคาแรกเตอร์ ที่กำลังเรสต์อยู่ จำนวน 2 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-038.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-039",
@@ -1003,12 +1143,12 @@
     "trait": "ODYSSEY/Supernovas/Straw Hat Crew",
     "effectEn": "[Main] If your Leader has the {ODYSSEY} type, look at 5 cards from the top of your deck; reveal up to 2 {ODYSSEY} type Character cards and add them to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】自分のリーダーが特徴《ODYSSEY》を持つ場合、自分のデッキの上から5枚を見て、特徴《ODYSSEY》を持つキャラカード2枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมน] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; ODYSSEY &gt; ละก็, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; ODYSSEY &gt; จำนวนไม่เกิน 2 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Rest up to 1 of your opponent's Characters with a cost of 5 or less.",
-    "triggerJp": "【トリガー】相手のコスト5以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[เมน] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < ODYSSEY > ละก็, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < ODYSSEY > จำนวนไม่เกิน 2 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-039.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-040",
@@ -1026,7 +1166,9 @@
     "effectTh": "[เมน] / [เคาน์เตอร์] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 7 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-040.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-041",
@@ -1042,11 +1184,11 @@
     "effectEn": "[Main] Rest up to 1 of your opponent's Characters with a cost of 6 or less. Then, K.O. up to 1 of your opponent's rested Characters with a cost of 5 or less.",
     "effectJp": "【メイン】相手のコスト6以下のキャラ1枚までを、レストにする。その後、相手のレストのコスト5以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
-    "triggerJp": "【トリガー】相手のコスト4以下のキャラ1枚までを、レストにする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-041.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-042",
@@ -1058,15 +1200,17 @@
     "nameTh": "Usopp",
     "color": "Blue/Black",
     "power": 5000,
-    "life": 3,
+    "life": 4,
     "attribute": "Ranged",
     "trait": "Dressrosa/Straw Hat Crew",
-    "effectEn": "All of your {Dressrosa} type Characters with a cost of 2 or more gain +1 cost.<br>[Opponent's Turn] [Once Per Turn] This effect can be activated when your {Dressrosa} type Character is removed from the field by your opponent's effect or K.O.'d. If you have 5 or less cards in your hand, draw 1 card.",
-    "effectJp": "自分のコスト2以上の特徴《ドレスローザ》を持つキャラすべてを、コスト+1。<br>【相手のターン中】【ターン1回】自分の特徴《ドレスローザ》を持つキャラがKOされた時か、相手の効果で場を離れた時、発動できる。自分の手札が5枚以下の場合、カード1枚を引く。",
-    "effectTh": "คาแรกเตอร์ของฝ่ายเรา ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ &lt; เดรสโรซ่า &gt; ทั้งหมด, จะมีคอสต์ +1.<br>[ในเทิร์นของคู่แข่ง] [เทิร์นละ 1 ครั้ง] เมื่อคาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; ถูกนำออกจากสนามโดยความสามารถของคู่แข่ง หรือว่าถูก KO, จะสามารถสั่งใช้งาน. ถ้าเรามีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือน้อยกว่าละก็, จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "All of your {Dressrosa} type Characters with a cost of 2 or more gain +1 cost.[Opponent's Turn] [Once Per Turn] This effect can be activated when your {Dressrosa} type Character is removed from the field by your opponent's effect or K.O.'d. If you have 5 or less cards in your hand, draw 1 card.",
+    "effectJp": "自分のコスト2以上の特徴《ドレスローザ》を持つキャラすべてを、コスト+1。【相手のターン中】【ターン1回】自分の特徴《ドレスローザ》を持つキャラがKOされた時か、相手の効果で場を離れた時、発動できる。自分の手札が5枚以下の場合、カード1枚を引く。",
+    "effectTh": "คาแรกเตอร์ของฝ่ายเรา ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ < เดรสโรซ่า > ทั้งหมด, จะมีคอสต์ +1.[ในเทิร์นของคู่แข่ง] [เทิร์นละ 1 ครั้ง] เมื่อคาแรกเตอร์ของเรา ที่มีคุณสมบัติ < เดรสโรซ่า > ถูกนำออกจากสนามโดยความสามารถของคู่แข่ง หรือว่าถูก KO, จะสามารถสั่งใช้งาน. ถ้าเรามีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือน้อยกว่าละก็, จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-042.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-042",
@@ -1078,16 +1222,18 @@
     "nameTh": "Usopp",
     "color": "Blue/Black",
     "power": 5000,
-    "life": 3,
+    "life": 4,
     "attribute": "Ranged",
     "trait": "Dressrosa/Straw Hat Crew",
-    "effectEn": "All of your {Dressrosa} type Characters with a cost of 2 or more gain +1 cost.<br>[Opponent's Turn] [Once Per Turn] This effect can be activated when your {Dressrosa} type Character is removed from the field by your opponent's effect or K.O.'d. If you have 5 or less cards in your hand, draw 1 card.",
-    "effectJp": "自分のコスト2以上の特徴《ドレスローザ》を持つキャラすべてを、コスト+1。<br>【相手のターン中】【ターン1回】自分の特徴《ドレスローザ》を持つキャラがKOされた時か、相手の効果で場を離れた時、発動できる。自分の手札が5枚以下の場合、カード1枚を引く。",
-    "effectTh": "คาแรกเตอร์ของฝ่ายเรา ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ &lt; เดรสโรซ่า &gt; ทั้งหมด, จะมีคอสต์ +1.<br>[ในเทิร์นของคู่แข่ง] [เทิร์นละ 1 ครั้ง] เมื่อคาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; ถูกนำออกจากสนามโดยความสามารถของคู่แข่ง หรือว่าถูก KO, จะสามารถสั่งใช้งาน. ถ้าเรามีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือน้อยกว่าละก็, จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "All of your {Dressrosa} type Characters with a cost of 2 or more gain +1 cost.[Opponent's Turn] [Once Per Turn] This effect can be activated when your {Dressrosa} type Character is removed from the field by your opponent's effect or K.O.'d. If you have 5 or less cards in your hand, draw 1 card.",
+    "effectJp": "自分のコスト2以上の特徴《ドレスローザ》を持つキャラすべてを、コスト+1。【相手のターン中】【ターン1回】自分の特徴《ドレスローザ》を持つキャラがKOされた時か、相手の効果で場を離れた時、発動できる。自分の手札が5枚以下の場合、カード1枚を引く。",
+    "effectTh": "คาแรกเตอร์ของฝ่ายเรา ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ < เดรสโรซ่า > ทั้งหมด, จะมีคอสต์ +1.[ในเทิร์นของคู่แข่ง] [เทิร์นละ 1 ครั้ง] เมื่อคาแรกเตอร์ของเรา ที่มีคุณสมบัติ < เดรสโรซ่า > ถูกนำออกจากสนามโดยความสามารถของคู่แข่ง หรือว่าถูก KO, จะสามารถสั่งใช้งาน. ถ้าเรามีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือน้อยกว่าละก็, จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-042_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-043",
@@ -1105,10 +1251,12 @@
     "trait": "Animal/Dressrosa",
     "effectEn": "[On Play] You may rest 1 of your {Dressrosa} type Leader or Stage cards: Up to 1 of your [Monkey.D.Luffy] Characters gains [Banish] during this turn.",
     "effectJp": "【登場時】自分の特徴《ドレスローザ》を持つ、リーダーかステージ1枚を、レストにできる：自分のキャラの「モンキー・D・ルフィ」1枚までは、このターン中、【バニッシュ】を得る。",
-    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ หรือ สเตจ ของเรา, ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ [Monkey.D.Luffy] ของเรา จำนวนไม่เกิน 1 ใบ, จะได้รับ [แบนนิช].<br>(ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
+    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ หรือ สเตจ ของเรา, ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ [Monkey.D.Luffy] ของเรา จำนวนไม่เกิน 1 ใบ, จะได้รับ [แบนนิช].(ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-043.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-044",
@@ -1126,10 +1274,12 @@
     "trait": "The Tontattas/Dressrosa",
     "effectEn": "[On Play] You may rest 1 of your {Dressrosa} type Leader or Stage cards: Return up to 1 of your opponent's Characters with a cost of 1 or less to the owner's hand.",
     "effectJp": "【登場時】自分の特徴《ドレスローザ》を持つ、リーダーかステージ1枚を、レストにできる：相手のコスト1以下のキャラ1枚までを、持ち主の手札に戻す。",
-    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ หรือ สเตจ ของเรา, ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวน 1 ใบ : นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
+    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ หรือ สเตจ ของเรา, ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวน 1 ใบ : นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-044.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-045",
@@ -1149,7 +1299,9 @@
     "effectTh": "[เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-045.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-045",
@@ -1170,7 +1322,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-045_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-046",
@@ -1190,7 +1344,9 @@
     "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-046.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-046",
@@ -1211,7 +1367,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-046_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-047",
@@ -1229,10 +1387,12 @@
     "trait": "Dressrosa/Revolutionary Army",
     "effectEn": "[When Attacking] You may return 1 of your {Revolutionary Army} type Characters with a cost of 3 or more to the owner's hand: This Character gains +3000 power during this turn.",
     "effectJp": "【アタック時】自分のコスト3以上の特徴《革命軍》を持つキャラ1枚を持ち主の手札に戻すことができる：このキャラは、このターン中、パワー+3000。",
-    "effectTh": "[เมื่อโจมตี] สามารถนำ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือสูงกว่า และมีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; กลับขึ้นมือของเจ้าของ : ในเทิร์นนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +3000.",
+    "effectTh": "[เมื่อโจมตี] สามารถนำ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือสูงกว่า และมีคุณสมบัติ < กองทัพปฏิวัติ > กลับขึ้นมือของเจ้าของ : ในเทิร์นนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-047.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-048",
@@ -1249,10 +1409,12 @@
     "trait": "Dressrosa/Happosui Army",
     "effectEn": "[On Play] You may rest 1 of your {Dressrosa} type Leader or Stage cards: Return up to 1 of your opponent's Characters with a cost of 1 or less to the owner's hand.",
     "effectJp": "【登場時】自分の特徴《ドレスローザ》を持つ、リーダーかステージ1枚を、レストにできる：相手のコスト1以下のキャラ1枚までを、持ち主の手札に戻す。",
-    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ หรือ สเตจ ของเรา, ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวน 1 ใบ : นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
+    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ หรือ สเตจ ของเรา, ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวน 1 ใบ : นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-048.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-049",
@@ -1273,7 +1435,9 @@
     "effectTh": "ถ้าคาแรกเตอร์ของเรา ที่มีคอสต์ตั้งต้น 7 หรือต่ำกว่า นอกเหนือจาก [Sabo] กำลังจะถูกนำออกจากสนาม โดยความสามารถของฝ่ายคู่แข่ง, จะสามารถนำ คาแรกเตอร์นี้ กลับขึ้นมือของเจ้าของ แทนได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-049.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-050",
@@ -1294,7 +1458,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-050.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-051",
@@ -1312,10 +1478,12 @@
     "trait": "Fish-Man/Dressrosa/Revolutionary Army",
     "effectEn": "[DON!! x1] [When Attacking] Look at 3 cards from the top of your deck; reveal up to 1 {Revolutionary Army} type Character card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【ドン‼×1】【アタック時】自分のデッキの上から3枚を見て、特徴《革命軍》を持つキャラカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < กองทัพปฏิวัติ > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-051.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-052",
@@ -1330,12 +1498,14 @@
     "power": 6000,
     "attribute": "Special",
     "trait": "Dressrosa/Barto Club",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Place up to 1 Character with a cost of 1 or less at the bottom of the owner's deck.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】コスト1以下のキャラ1枚までを、持ち主のデッキの下に置く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 1 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Place up to 1 Character with a cost of 1 or less at the bottom of the owner's deck.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】コスト1以下のキャラ1枚までを、持ち主のデッキの下に置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 1 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-052.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-053",
@@ -1353,10 +1523,12 @@
     "trait": "The Tontattas/Dressrosa",
     "effectEn": "If you have a {The Tontattas} type Character other than [Bian], this Character gains [Blocker].",
     "effectJp": "「ビアン」以外の自分の特徴《トンタッタ族》を持つキャラがいる場合、このキャラは【ブロッカー】を得る。",
-    "effectTh": "ถ้าเรามีคาแรกเตอร์ ที่มีคุณสมบัติ &lt; เผ่าทอนทัตตะ &gt; นอกเหนือจาก [Bian] อยู่ด้วยละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. <br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectTh": "ถ้าเรามีคาแรกเตอร์ ที่มีคุณสมบัติ < เผ่าทอนทัตตะ > นอกเหนือจาก [Bian] อยู่ด้วยละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-053.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-054",
@@ -1377,7 +1549,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-054.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-055",
@@ -1392,12 +1566,14 @@
     "power": 5000,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] Return up to 1 of your opponent's Characters with a cost of 4 or less to the owner's hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【KO時】相手のコスト4以下のキャラ1枚までを、持ち主の手札に戻す。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On K.O.] Return up to 1 of your opponent's Characters with a cost of 4 or less to the owner's hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【KO時】相手のコスト4以下のキャラ1枚までを、持ち主の手札に戻す。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-055.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-056",
@@ -1414,10 +1590,12 @@
     "trait": "The Tontattas/Dressrosa",
     "effectEn": "[On Play] You may rest 1 of your {Dressrosa} type Leader or Stage cards, and return 1 of your {Dressrosa} type Characters with a cost of 4 or more to the owner's hand: Return up to 1 of your opponent's Characters with a cost of 4 or less to the owner's hand.",
     "effectJp": "【登場時】自分の特徴《ドレスローザ》を持つ、リーダーかステージ1枚を、レストにし、自分のコスト4以上の特徴《ドレスローザ》を持つキャラ1枚を持ち主の手札に戻すことができる：相手のコスト4以下のキャラ1枚までを、持ち主の手札に戻す。",
-    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ หรือ สเตจ ของเรา, ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวน 1 ใบ, และนำคาแรกเตอร์ของเรา ที่มีคอสต์ 4 หรือสูงกว่า และมีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวน 1 ใบ, กลับขึ้นมือของเจ้าของ : นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
+    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ หรือ สเตจ ของเรา, ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวน 1 ใบ, และนำคาแรกเตอร์ของเรา ที่มีคอสต์ 4 หรือสูงกว่า และมีคุณสมบัติ < เดรสโรซ่า > จำนวน 1 ใบ, กลับขึ้นมือของเจ้าของ : นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-056.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-057",
@@ -1435,10 +1613,12 @@
     "trait": "The Tontattas/Dressrosa",
     "effectEn": "[On Play] You may rest your Leader or 1 of your Stage cards: If your Leader is [Usopp], look at 5 cards from the top of your deck; reveal up to 2 {Dressrosa} type cards other than [Leo] and add them to your hand. Then, place the rest at the bottom of your deck in any order, and trash 1 card from your hand.",
     "effectJp": "【登場時】自分の、リーダーかステージ1枚を、レストにできる：自分のリーダーが「ウソップ」の場合、自分のデッキの上から5枚を見て、「レオ」以外の特徴《ドレスローザ》を持つカード2枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置き、自分の手札1枚を捨てる。",
-    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ หรือ สเตจ ของเรา, จำนวน 1 ใบ : ถ้าลีดเดอร์ของเราคือ [Usopp] ละก็, จะได้ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; นอกเหนือจาก [Leo] จำนวนไม่เกิน 2 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, และจะต้องทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
+    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ หรือ สเตจ ของเรา, จำนวน 1 ใบ : ถ้าลีดเดอร์ของเราคือ [Usopp] ละก็, จะได้ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < เดรสโรซ่า > นอกเหนือจาก [Leo] จำนวนไม่เกิน 2 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, และจะต้องทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-057.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-058",
@@ -1456,10 +1636,12 @@
     "trait": "Dressrosa",
     "effectEn": "[On Play] If there is a Character with a cost of 8 or more, draw 1 card. Then, reveal up to 2 {Dressrosa} type Character cards with a cost of 7 or less other than [Rebecca] from your hand. Play 1 of the revealed cards and play the other card rested if it has a cost of 4 or less.",
     "effectJp": "【登場時】コスト8以上のキャラがいる場合、カード1枚を引く。その後、自分の手札から、「レベッカ」以外の特徴《ドレスローザ》を持つコスト7以下のキャラカード2枚までを、公開する。公開したカードのうち1枚を登場させ、残りがコスト4以下ならレストで登場させる。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 8 หรือสูงกว่า อยู่ละก็, จั่วการ์ด จำนวน 1 ใบ. จากนั้น, นำคาแรกเตอร์การ์ด ที่มีคอสต์ 7 หรือต่ำว่า และมีคุณสมบัติ &lt; เดรสโรซ่า &gt; นอกเหนือจาก [Rebecca], จากบนมือของเรา จำนวนไม่เกิน 2 ใบ มาแสดงให้ดู. นำการ์ดจากที่แสดงให้ดู จำนวน 1 ใบ ลงสนาม, และถ้าที่เหลืออยู่ (อีก 1 ใบ) มีคอสต์ 4 หรือต่ำกว่า จะถูกนำลงสนามในสภาพ เรสต์.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 8 หรือสูงกว่า อยู่ละก็, จั่วการ์ด จำนวน 1 ใบ. จากนั้น, นำคาแรกเตอร์การ์ด ที่มีคอสต์ 7 หรือต่ำว่า และมีคุณสมบัติ < เดรสโรซ่า > นอกเหนือจาก [Rebecca], จากบนมือของเรา จำนวนไม่เกิน 2 ใบ มาแสดงให้ดู. นำการ์ดจากที่แสดงให้ดู จำนวน 1 ใบ ลงสนาม, และถ้าที่เหลืออยู่ (อีก 1 ใบ) มีคอสต์ 4 หรือต่ำกว่า จะถูกนำลงสนามในสภาพ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-058.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-058",
@@ -1477,11 +1659,13 @@
     "trait": "Dressrosa",
     "effectEn": "[On Play] If there is a Character with a cost of 8 or more, draw 1 card. Then, reveal up to 2 {Dressrosa} type Character cards with a cost of 7 or less other than [Rebecca] from your hand. Play 1 of the revealed cards and play the other card rested if it has a cost of 4 or less.",
     "effectJp": "【登場時】コスト8以上のキャラがいる場合、カード1枚を引く。その後、自分の手札から、「レベッカ」以外の特徴《ドレスローザ》を持つコスト7以下のキャラカード2枚までを、公開する。公開したカードのうち1枚を登場させ、残りがコスト4以下ならレストで登場させる。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 8 หรือสูงกว่า อยู่ละก็, จั่วการ์ด จำนวน 1 ใบ. จากนั้น, นำคาแรกเตอร์การ์ด ที่มีคอสต์ 7 หรือต่ำว่า และมีคุณสมบัติ &lt; เดรสโรซ่า &gt; นอกเหนือจาก [Rebecca], จากบนมือของเรา จำนวนไม่เกิน 2 ใบ มาแสดงให้ดู. นำการ์ดจากที่แสดงให้ดู จำนวน 1 ใบ ลงสนาม, และถ้าที่เหลืออยู่ (อีก 1 ใบ) มีคอสต์ 4 หรือต่ำกว่า จะถูกนำลงสนามในสภาพ เรสต์.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 8 หรือสูงกว่า อยู่ละก็, จั่วการ์ด จำนวน 1 ใบ. จากนั้น, นำคาแรกเตอร์การ์ด ที่มีคอสต์ 7 หรือต่ำว่า และมีคุณสมบัติ < เดรสโรซ่า > นอกเหนือจาก [Rebecca], จากบนมือของเรา จำนวนไม่เกิน 2 ใบ มาแสดงให้ดู. นำการ์ดจากที่แสดงให้ดู จำนวน 1 ใบ ลงสนาม, และถ้าที่เหลืออยู่ (อีก 1 ใบ) มีคอสต์ 4 หรือต่ำกว่า จะถูกนำลงสนามในสภาพ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-058_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-059",
@@ -1496,12 +1680,12 @@
     "trait": "Dressrosa/Straw Hat Crew",
     "effectEn": "[Main] Look at 5 cards from the top of your deck; reveal up to 1 {Dressrosa} type Character card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】自分のデッキの上から5枚を見て、特徴《ドレスローザ》を持つキャラカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
+    "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-059.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-060",
@@ -1517,11 +1701,11 @@
     "effectEn": "[Main] Place up to 1 of your opponent's Characters with 6000 power or less at the bottom of the owner's deck.",
     "effectJp": "【メイン】相手のパワー6000以下のキャラ1枚までを、持ち主のデッキの下に置く。",
     "effectTh": "[เมน] นำคาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 6000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-060.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-061",
@@ -1537,11 +1721,11 @@
     "effectEn": "[Main] Draw 1 card. Then, return up to 1 of your opponent's Characters with a cost of 2 or less to the owner's hand.",
     "effectJp": "【メイン】カード1枚を引く。その後、相手のコスト2以下のキャラ1枚までを、持ち主の手札に戻す。",
     "effectTh": "[เมน] จั่วการ์ด จำนวน 1 ใบ. จากนั้น, นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
-    "triggerEn": "[Trigger] Return up to 1 Character with a cost of 2 or less to the owner's hand.",
-    "triggerJp": "【トリガー】コスト2以下のキャラ1枚までを、持ち主の手札に戻す。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-061.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-062",
@@ -1557,12 +1741,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Donquixote Pirates",
-    "effectEn": "[Blocker]<br>[On K.O.] DON!! −1: If your Leader has the {Donquixote Pirates} type, add up to 1 purple Event from your trash to your hand.",
-    "effectJp": "【ブロッカー】<br>【KO時】ドン‼-1：自分のリーダーが特徴《ドンキホーテ海賊団》を持つ場合、自分のトラッシュから紫のイベント1枚までを、手札に加える。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt; ละก็, จะได้นำ อีเวนต์ ธีมสีม่วง จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ.",
+    "effectEn": "[Blocker][On K.O.] DON!! −1: If your Leader has the {Donquixote Pirates} type, add up to 1 purple Event from your trash to your hand.",
+    "effectJp": "【ブロッカー】【KO時】ドン‼-1：自分のリーダーが特徴《ドンキホーテ海賊団》を持つ場合、自分のトラッシュから紫のイベント1枚までを、手札に加える。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ > ละก็, จะได้นำ อีเวนต์ ธีมสีม่วง จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-062.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-063",
@@ -1583,7 +1769,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา ระบุคำว่า [เจอร์ม่า] รวมอยู่ในคุณสมบัติละก็, จะได้ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่ระบุคำว่า [เจอร์ม่า] รวมอยู่ในคุณสมบัติ จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-063.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-064",
@@ -1604,7 +1792,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-064.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-065",
@@ -1622,10 +1812,12 @@
     "trait": "Donquixote Pirates",
     "effectEn": "[Activate: Main] You may rest 1 of your DON!! cards and this Character: Look at 5 cards from the top of your deck; reveal up to 1 {Donquixote Pirates} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【起動メイン】自分のドン‼1枚をレストにし、このキャラをレストにできる：自分のデッキの上から5枚を見て、特徴《ドンキホーテ海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ, และ เรสต์ คาแรกเตอร์นี้ : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt; ไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ, และ เรสต์ คาแรกเตอร์นี้ : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ > ไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-065.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-066",
@@ -1646,7 +1838,9 @@
     "effectTh": "[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 2 ใบ : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-066.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-067",
@@ -1666,7 +1860,9 @@
     "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำ อีเวนต์ ธีมสีม่วง ที่มีคอสต์ 5 หรือต่ำกว่า จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ. จากนั้น, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-067.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-067",
@@ -1687,7 +1883,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-067_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-068",
@@ -1708,7 +1906,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-068.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-069",
@@ -1728,7 +1928,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-069.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-070",
@@ -1744,12 +1946,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Donquixote Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] All of your Characters with 1000 base power or less cannot be K.O.'d by your opponent's effects until the end of your opponent's next turn.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】次の相手のターン終了時まで、自分の元々のパワー1000以下のキャラすべては、相手の効果でKOされない。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีพาวเวอร์ตั้งต้น 1000 หรือต่ำกว่า, จะไม่ถูก KO โดยความสามารถของฝ่ายคู่แข่ง, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] All of your Characters with 1000 base power or less cannot be K.O.'d by your opponent's effects until the end of your opponent's next turn.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】次の相手のターン終了時まで、自分の元々のパワー1000以下のキャラすべては、相手の効果でKOされない。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่มีพาวเวอร์ตั้งต้น 1000 หรือต่ำกว่า, จะไม่ถูก KO โดยความสามารถของฝ่ายคู่แข่ง, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-070.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-071",
@@ -1764,12 +1968,14 @@
     "power": 9000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
-    "effectEn": "[On Play] DON!! −1: Play up to 1 {Donquixote Pirates} type Character card with a cost of 5 or less from your hand.<br>[On Your Opponent's Attack] [Once Per Turn] You may rest 1 of your DON!! cards: Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "effectJp": "【登場時】ドン‼-1：自分の手札からコスト5以下の特徴《ドンキホーテ海賊団》を持つキャラカード1枚までを、登場させる。<br>【相手のアタック時】【ターン1回】自分のドン‼1枚をレストにできる：ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.<br>[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[On Play] DON!! −1: Play up to 1 {Donquixote Pirates} type Character card with a cost of 5 or less from your hand.[On Your Opponent's Attack] [Once Per Turn] You may rest 1 of your DON!! cards: Add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【登場時】ドン‼-1：自分の手札からコスト5以下の特徴《ドンキホーテ海賊団》を持つキャラカード1枚までを、登場させる。【相手のアタック時】【ターン1回】自分のドン‼1枚をレストにできる：ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-071.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-071",
@@ -1784,13 +1990,15 @@
     "power": 9000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
-    "effectEn": "[On Play] DON!! −1: Play up to 1 {Donquixote Pirates} type Character card with a cost of 5 or less from your hand.<br>[On Your Opponent's Attack] [Once Per Turn] You may rest 1 of your DON!! cards: Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "effectJp": "【登場時】ドン‼-1：自分の手札からコスト5以下の特徴《ドンキホーテ海賊団》を持つキャラカード1枚までを、登場させる。<br>【相手のアタック時】【ターン1回】自分のドン‼1枚をレストにできる：ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.<br>[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[On Play] DON!! −1: Play up to 1 {Donquixote Pirates} type Character card with a cost of 5 or less from your hand.[On Your Opponent's Attack] [Once Per Turn] You may rest 1 of your DON!! cards: Add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【登場時】ドン‼-1：自分の手札からコスト5以下の特徴《ドンキホーテ海賊団》を持つキャラカード1枚までを、登場させる。【相手のアタック時】【ターン1回】自分のドン‼1枚をレストにできる：ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-071_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-072",
@@ -1806,12 +2014,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Navy/Donquixote Pirates",
-    "effectEn": "[On Play] You may trash 1 Event from your hand: Draw 2 cards.<br>[End of Your Turn] If you have 7 or more DON!! cards on your field, set up to 2 of your DON!! cards as active.",
-    "effectJp": "【登場時】自分の手札からイベント1枚を捨てることができる：カード2枚を引く。<br>【自分のターン終了時】自分の場のドン‼が7枚以上ある場合、自分のドン‼2枚までを、アクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] สามารถทิ้ง อีเวนต์ จากบนมือของเรา จำนวน 1 ใบ : จั่วการ์ด จำนวน 2 ใบ.<br>[เมื่อจบเทิร์นของเรา] ถ้าในสนามของเรามี ด้ง!! อยู่ จำนวน 7 ใบ หรือมากกว่าละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectEn": "[On Play] You may trash 1 Event from your hand: Draw 2 cards.[End of Your Turn] If you have 7 or more DON!! cards on your field, set up to 2 of your DON!! cards as active.",
+    "effectJp": "【登場時】自分の手札からイベント1枚を捨てることができる：カード2枚を引く。【自分のターン終了時】自分の場のドン‼が7枚以上ある場合、自分のドン‼2枚までを、アクティブにする。",
+    "effectTh": "[เมื่อลงสนาม] สามารถทิ้ง อีเวนต์ จากบนมือของเรา จำนวน 1 ใบ : จั่วการ์ด จำนวน 2 ใบ.[เมื่อจบเทิร์นของเรา] ถ้าในสนามของเรามี ด้ง!! อยู่ จำนวน 7 ใบ หรือมากกว่าละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-072.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-072",
@@ -1827,13 +2037,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Navy/Donquixote Pirates",
-    "effectEn": "[On Play] You may trash 1 Event from your hand: Draw 2 cards.<br>[End of Your Turn] If you have 7 or more DON!! cards on your field, set up to 2 of your DON!! cards as active.",
-    "effectJp": "【登場時】自分の手札からイベント1枚を捨てることができる：カード2枚を引く。<br>【自分のターン終了時】自分の場のドン‼が7枚以上ある場合、自分のドン‼2枚までを、アクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] สามารถทิ้ง อีเวนต์ จากบนมือของเรา จำนวน 1 ใบ : จั่วการ์ด จำนวน 2 ใบ.<br>[เมื่อจบเทิร์นของเรา] ถ้าในสนามของเรามี ด้ง!! อยู่ จำนวน 7 ใบ หรือมากกว่าละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectEn": "[On Play] You may trash 1 Event from your hand: Draw 2 cards.[End of Your Turn] If you have 7 or more DON!! cards on your field, set up to 2 of your DON!! cards as active.",
+    "effectJp": "【登場時】自分の手札からイベント1枚を捨てることができる：カード2枚を引く。【自分のターン終了時】自分の場のドン‼が7枚以上ある場合、自分のドン‼2枚までを、アクティブにする。",
+    "effectTh": "[เมื่อลงสนาม] สามารถทิ้ง อีเวนต์ จากบนมือของเรา จำนวน 1 ใบ : จั่วการ์ด จำนวน 2 ใบ.[เมื่อจบเทิร์นของเรา] ถ้าในสนามของเรามี ด้ง!! อยู่ จำนวน 7 ใบ หรือมากกว่าละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-072_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-073",
@@ -1854,7 +2066,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-073.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-074",
@@ -1875,7 +2089,9 @@
     "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูก KO โดยความสามารถของฝ่ายคู่แข่ง, จะสามารถ เรสต์ ด้ง!! ของเรา ที่กำลังแอ็คทีฟอยู่ จำนวน 2 ใบ แทนได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-074.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-075",
@@ -1896,7 +2112,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถนำ คาแรกเตอร์นี้ ไปวางที่แทรช : ถ้า ด้ง!! ที่อยู่บนสนามของเรา มีจำนวนไม่มากไปกว่า ด้ง!! ที่อยู่บนสนามของคู่แข่งละก็, จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-075.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-076",
@@ -1914,10 +2132,12 @@
     "trait": "Donquixote Pirates",
     "effectEn": "[On Play] You may trash 1 card from your hand: If your Leader has the {Donquixote Pirates} type, add up to 1 DON!! card from your DON!! deck and set it as active.",
     "effectJp": "【登場時】自分の手札1枚を捨てることができる：自分のリーダーが特徴《ドンキホーテ海賊団》を持つ場合、ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
-    "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt; ละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ > ละก็, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-076.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-077",
@@ -1933,12 +2153,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Donquixote Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Block] You may rest 2 of your DON!! cards: Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ブロック時】自分のドン‼2枚をレストにできる：ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อบล็อก] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 2 ใบ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Block] You may rest 2 of your DON!! cards: Add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ブロック時】自分のドン‼2枚をレストにできる：ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อบล็อก] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 2 ใบ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-077.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-078",
@@ -1953,10 +2175,12 @@
     "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
     "effectEn": "[Main]/[Counter] Look at 3 cards from the top of your deck; reveal up to 1 {Donquixote Pirates} type card other than [I Do Not Forgive Those Who Laugh at My Family!!!] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】/【カウンター】自分のデッキの上から3枚を見て、「家族を笑う者はおれが許さん…!!!」以外の特徴《ドンキホーテ海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมน] / [เคาน์เตอร์] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt; นอกเหนือจาก [I Do Not Forgive Those Who Laugh at My Family!!!] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมน] / [เคาน์เตอร์] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ > นอกเหนือจาก [I Do Not Forgive Those Who Laugh at My Family!!!] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-078.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-079",
@@ -1972,11 +2196,11 @@
     "effectEn": "[Main] K.O. up to 1 of your opponent's Characters with a cost 5 or less. Then, add up to 1 DON!! card from your DON!! deck and set it as active.",
     "effectJp": "【メイン】相手のコスト5以下のキャラ1枚までを、KOする。その後、ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
     "effectTh": "[เมน] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
-    "triggerEn": "[Trigger] Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-079.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-080",
@@ -1992,11 +2216,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, if you have 7 or more DON!! cards on your field and 5 or less cards in your hand, draw 1 card.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、自分の場のドン!!が7枚以上でかつ、自分の手札が5枚以下の場合、カード1枚を引く。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. จากนั้น, ถ้าในสนามของเรามี ด้ง!! อยู่ จำนวน 7 ใบ หรือมากกว่า, และเรามีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือน้อยกว่าละก็, จั่วการ์ด จำนวน 1 ใบ.",
-    "triggerEn": "[Trigger] Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-080.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-081",
@@ -2014,10 +2238,12 @@
     "trait": "Dressrosa/Straw Hat Crew",
     "effectEn": "[On Play] You may rest 1 of your {Dressrosa} type Leader or Stage cards: K.O. up to 1 of your opponent's Characters with a cost of 2 or less. Then, trash 2 cards from the top of your deck.",
     "effectJp": "【登場時】自分の特徴《ドレスローザ》を持つ、リーダーかステージ1枚を、レストにできる：相手のコスト2以下のキャラ1枚までを、KOする。その後、自分のデッキの上から2枚をトラッシュに置く。",
-    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ หรือ สเตจ ของเรา, ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
+    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ หรือ สเตจ ของเรา, ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-081.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-082",
@@ -2032,12 +2258,14 @@
     "power": 5000,
     "attribute": "Special",
     "trait": "Former Navy/Blackbeard Pirates",
-    "effectEn": "This Character cannot be removed from the field by your opponent's effects.<br>[Activate: Main] You may trash this Character: Draw 1 card. Then, play up to 1 {Blackbeard Pirates} type Character card with a cost of 5 or less other than [Kuzan] from your trash.",
-    "effectJp": "このキャラは相手の効果で場を離れない。<br>【起動メイン】このキャラをトラッシュに置くことができる：カード1枚を引く。その後、自分のトラッシュから「クザン」以外のコスト5以下の特徴《黒ひげ海賊団》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม โดยความสามารถของฝ่ายคู่แข่ง.<br>[ใช้งาน : เมน] สามารถนำ คาแรกเตอร์นี้ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ. จากนั้น, นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ &lt; กลุ่มโจรสลัดหนวดดำ &gt; นอกเหนือจาก [Kuzan] จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "This Character cannot be removed from the field by your opponent's effects.[Activate: Main] You may trash this Character: Draw 1 card. Then, play up to 1 {Blackbeard Pirates} type Character card with a cost of 5 or less other than [Kuzan] from your trash.",
+    "effectJp": "このキャラは相手の効果で場を離れない。【起動メイン】このキャラをトラッシュに置くことができる：カード1枚を引く。その後、自分のトラッシュから「クザン」以外のコスト5以下の特徴《黒ひげ海賊団》を持つキャラカード1枚までを、登場させる。",
+    "effectTh": "คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม โดยความสามารถของฝ่ายคู่แข่ง.[ใช้งาน : เมน] สามารถนำ คาแรกเตอร์นี้ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ. จากนั้น, นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ < กลุ่มโจรสลัดหนวดดำ > นอกเหนือจาก [Kuzan] จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-082.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-082",
@@ -2052,13 +2280,15 @@
     "power": 5000,
     "attribute": "Special",
     "trait": "Former Navy/Blackbeard Pirates",
-    "effectEn": "This Character cannot be removed from the field by your opponent's effects.<br>[Activate: Main] You may trash this Character: Draw 1 card. Then, play up to 1 {Blackbeard Pirates} type Character card with a cost of 5 or less other than [Kuzan] from your trash.",
-    "effectJp": "このキャラは相手の効果で場を離れない。<br>【起動メイン】このキャラをトラッシュに置くことができる：カード1枚を引く。その後、自分のトラッシュから「クザン」以外のコスト5以下の特徴《黒ひげ海賊団》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม โดยความสามารถของฝ่ายคู่แข่ง.<br>[ใช้งาน : เมน] สามารถนำ คาแรกเตอร์นี้ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ. จากนั้น, นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ &lt; กลุ่มโจรสลัดหนวดดำ &gt; นอกเหนือจาก [Kuzan] จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "This Character cannot be removed from the field by your opponent's effects.[Activate: Main] You may trash this Character: Draw 1 card. Then, play up to 1 {Blackbeard Pirates} type Character card with a cost of 5 or less other than [Kuzan] from your trash.",
+    "effectJp": "このキャラは相手の効果で場を離れない。【起動メイン】このキャラをトラッシュに置くことができる：カード1枚を引く。その後、自分のトラッシュから「クザン」以外のコスト5以下の特徴《黒ひげ海賊団》を持つキャラカード1枚までを、登場させる。",
+    "effectTh": "คาแรกเตอร์นี้ จะไม่ถูกนำออกจากสนาม โดยความสามารถของฝ่ายคู่แข่ง.[ใช้งาน : เมน] สามารถนำ คาแรกเตอร์นี้ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ. จากนั้น, นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ < กลุ่มโจรสลัดหนวดดำ > นอกเหนือจาก [Kuzan] จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-082_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-083",
@@ -2075,10 +2305,12 @@
     "trait": "Dressrosa/Land of Wano/Kouzuki Clan",
     "effectEn": "[Activate: Main] You may rest this Character and 1 of your {Dressrosa} type Leader or Stage cards: Give up to 1 of your opponent's Characters -2 cost during this turn.",
     "effectJp": "【起動メイン】このキャラと自分の特徴《ドレスローザ》を持つ、リーダーかステージ1枚を、レストにできる：相手のキャラ1枚までを、このターン中、コスト-2。",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้, กับ ลีดเดอร์ หรือ สเตจ ของเรา ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้, กับ ลีดเดอร์ หรือ สเตจ ของเรา ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-083.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-084",
@@ -2099,7 +2331,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-084.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-085",
@@ -2116,10 +2350,12 @@
     "trait": "Dressrosa/Blackbeard Pirates",
     "effectEn": "[DON!! x1] If you have 8 or more cards in your trash, this Character gains [Rush].",
     "effectJp": "【ドン‼×1】自分のトラッシュが8枚以上ある場合、このキャラは【速攻】を得る。",
-    "effectTh": "[ด้ง!! x 1] ถ้าในแทรชของเรามีการ์ดอยู่ จำนวน 8 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectTh": "[ด้ง!! x 1] ถ้าในแทรชของเรามีการ์ดอยู่ จำนวน 8 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-085.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-086",
@@ -2135,12 +2371,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Blackbeard Pirates",
-    "effectEn": "[Opponent's Turn] This Character gains +2000 power.<br>[Activate: Main] [Once Per Turn] If your Leader has the {Blackbeard Pirates} type, and this Character was played on this turn, K.O. up to 1 of your opponent's Characters with a base cost of 3 or less.",
-    "effectJp": "【相手のターン中】このキャラのパワー+2000。<br>【起動メイン】【ターン1回】自分のリーダーが特徴《黒ひげ海賊団》を持ち、このキャラが登場したターンの場合、相手の元々のコスト3以下のキャラ1枚までを、KOする。",
-    "effectTh": "[ในเทิร์นของคู่แข่ง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดหนวดดำ &gt; และคาแรกเตอร์นี้ เพิ่งถูกนำลงสนามมาในเทิร์นนี้ละก็, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[Opponent's Turn] This Character gains +2000 power.[Activate: Main] [Once Per Turn] If your Leader has the {Blackbeard Pirates} type, and this Character was played on this turn, K.O. up to 1 of your opponent's Characters with a base cost of 3 or less.",
+    "effectJp": "【相手のターン中】このキャラのパワー+2000。【起動メイン】【ターン1回】自分のリーダーが特徴《黒ひげ海賊団》を持ち、このキャラが登場したターンの場合、相手の元々のコスト3以下のキャラ1枚までを、KOする。",
+    "effectTh": "[ในเทิร์นของคู่แข่ง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดหนวดดำ > และคาแรกเตอร์นี้ เพิ่งถูกนำลงสนามมาในเทิร์นนี้ละก็, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-086.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-087",
@@ -2157,10 +2395,12 @@
     "trait": "Animal/Dressrosa/Straw Hat Crew",
     "effectEn": "[Activate: Main] You may rest this Character and 1 of your {Dressrosa} type Leader or Stage cards: If your opponent has 5 or more cards in their hand, your opponent trashes 1 card from their hand. Then, trash 2 cards from the top of your deck.",
     "effectJp": "【起動メイン】このキャラと自分の特徴《ドレスローザ》を持つ、リーダーかステージ1枚を、レストにできる：相手の手札が5枚以上ある場合、相手は自身の手札1枚を捨てる。その後、自分のデッキの上から2枚をトラッシュに置く。",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้, กับ ลีดเดอร์ หรือ สเตจ ของเรา ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวน 1 ใบ : ถ้าคู่แข่งมีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องทิ้งการ์ดในมือของตัวเอง จำนวน 1 ใบ. จากนั้น, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้, กับ ลีดเดอร์ หรือ สเตจ ของเรา ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวน 1 ใบ : ถ้าคู่แข่งมีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องทิ้งการ์ดในมือของตัวเอง จำนวน 1 ใบ. จากนั้น, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-087.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-088",
@@ -2177,10 +2417,12 @@
     "trait": "Dressrosa/Straw Hat Crew",
     "effectEn": "[Activate: Main] You may rest this Character and 1 of your {Dressrosa} type Leader or Stage cards: Draw 1 card. Then, trash 2 cards from the top of your deck.",
     "effectJp": "【起動メイン】このキャラと自分の特徴《ドレスローザ》を持つ、リーダーかステージ1枚を、レストにできる：カード1枚を引く。その後、自分のデッキの上から2枚をトラッシュに置く。",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้, กับ ลีดเดอร์ หรือ สเตจ ของเรา ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวน 1 ใบ : จั่วการ์ด จำนวน 1 ใบ. จากนั้น, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้, กับ ลีดเดอร์ หรือ สเตจ ของเรา ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวน 1 ใบ : จั่วการ์ด จำนวน 1 ใบ. จากนั้น, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-088.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-089",
@@ -2201,7 +2443,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-089.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-090",
@@ -2217,12 +2461,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Dressrosa/Straw Hat Crew",
-    "effectEn": "[Blocker]<br>[On K.O.] Play up to 1 {Dressrosa} type Character card with a cost of 3 or less from your trash rested.",
-    "effectJp": "【ブロッカー】<br>【KO時】自分のトラッシュからコスト3以下の特徴《ドレスローザ》を持つキャラカード1枚までを、レストで登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวนไม่เกิน 1 ใบ จากในแทรชของเรา, ลงสนามในสภาพ เรสต์.",
+    "effectEn": "[Blocker][On K.O.] Play up to 1 {Dressrosa} type Character card with a cost of 3 or less from your trash rested.",
+    "effectJp": "【ブロッカー】【KO時】自分のトラッシュからコスト3以下の特徴《ドレスローザ》を持つキャラカード1枚までを、レストで登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ < เดรสโรซ่า > จำนวนไม่เกิน 1 ใบ จากในแทรชของเรา, ลงสนามในสภาพ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-090.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-090",
@@ -2238,13 +2484,15 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Dressrosa/Straw Hat Crew",
-    "effectEn": "[Blocker]<br>[On K.O.] Play up to 1 {Dressrosa} type Character card with a cost of 3 or less from your trash rested.",
-    "effectJp": "【ブロッカー】<br>【KO時】自分のトラッシュからコスト3以下の特徴《ドレスローザ》を持つキャラカード1枚までを、レストで登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวนไม่เกิน 1 ใบ จากในแทรชของเรา, ลงสนามในสภาพ เรสต์.",
+    "effectEn": "[Blocker][On K.O.] Play up to 1 {Dressrosa} type Character card with a cost of 3 or less from your trash rested.",
+    "effectJp": "【ブロッカー】【KO時】自分のトラッシュからコスト3以下の特徴《ドレスローザ》を持つキャラカード1枚までを、レストで登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ < เดรสโรซ่า > จำนวนไม่เกิน 1 ใบ จากในแทรชของเรา, ลงสนามในสภาพ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-090_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-091",
@@ -2261,10 +2509,12 @@
     "trait": "Dressrosa/Straw Hat Crew",
     "effectEn": "[Activate: Main] You may rest this Character and 1 of your {Dressrosa} type Leader or Stage cards: K.O. up to 1 of your opponent's Characters with a cost of 1 or less. Then, trash 2 cards from the top of your deck.",
     "effectJp": "【起動メイン】このキャラと自分の特徴《ドレスローザ》を持つ、リーダーかステージ1枚を、レストにできる：相手のコスト1以下のキャラ1枚までを、KOする。その後、自分のデッキの上から2枚をトラッシュに置く。",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้, กับ ลีดเดอร์ หรือ สเตจ ของเรา ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้, กับ ลีดเดอร์ หรือ สเตจ ของเรา ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-091.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-092",
@@ -2282,10 +2532,12 @@
     "trait": "Thriller Bark Pirates",
     "effectEn": "[Activate: Main] [Once Per Turn] You may place 2 {Thriller Bark Pirates} type cards from your trash at the bottom of your deck in any order: Up to 1 of your Characters other than [Perona] gains +2000 power during this turn.",
     "effectJp": "【起動メイン】【ターン1回】自分のトラッシュから特徴《スリラーバーク海賊団》を持つカード2枚を好きな順番でデッキの下に置くことができる：自分の「ペローナ」以外のキャラ1枚までを、このターン中、パワー+2000。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำการ์ด ที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดธริลเลอร์บาร์ค &gt; จากในแทรชของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : ในเทิร์นนี้, คาแรกเตอร์ของเรา นอกเหนือจาก [Perona] จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำการ์ด ที่มีคุณสมบัติ < กลุ่มโจรสลัดธริลเลอร์บาร์ค > จากในแทรชของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : ในเทิร์นนี้, คาแรกเตอร์ของเรา นอกเหนือจาก [Perona] จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-092.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-093",
@@ -2305,7 +2557,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถนำ คาแรกเตอร์นี้ ไปวางที่แทรช : คาแรกเตอร์ ธีมสีดำ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ +3, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-093.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-094",
@@ -2322,10 +2576,12 @@
     "trait": "Land of Wano/Thriller Bark Pirates",
     "effectEn": "[DON!! x1] This Character gains [Double Attack].",
     "effectJp": "【ドン‼×1】このキャラは【ダブルアタック】を得る。",
-    "effectTh": "[ด้ง!! x 1] คาแรกเตอร์นี้ จะได้รับ [ดับเบิ้ลแอทแทค]. <br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
+    "effectTh": "[ด้ง!! x 1] คาแรกเตอร์นี้ จะได้รับ [ดับเบิ้ลแอทแทค]. (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-094.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-095",
@@ -2342,10 +2598,12 @@
     "trait": "Dressrosa/Supernovas/Straw Hat Crew",
     "effectEn": "[On Play] You may rest 1 of your {Dressrosa} type Leader or Stage cards: K.O. up to 1 of your opponent's Characters with a cost of 4 or less. Then, trash 2 cards from the top of your deck.",
     "effectJp": "【登場時】自分の特徴《ドレスローザ》を持つ、リーダーかステージ1枚を、レストにできる：相手のコスト4以下のキャラ1枚までを、KOする。その後、自分のデッキの上から2枚をトラッシュに置く。",
-    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ หรือ สเตจ ของเรา, ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ. จากนั้น, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
+    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ หรือ สเตจ ของเรา, ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ. จากนั้น, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-095.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-096",
@@ -2360,12 +2618,12 @@
     "trait": "Navy",
     "effectEn": "[Main] K.O. up to 1 of your opponent's {The Seven Warlords of the Sea} type Characters with a cost of 8 or less.",
     "effectJp": "【メイン】相手のコスト8以下の特徴《王下七武海》を持つキャラ1枚までを、KOする。",
-    "effectTh": "[เมน] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 8 หรือต่ำกว่า และมีคุณสมบัติ &lt; เจ็ดเทพโจรสลัด &gt;, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's {The Seven Warlords of the Sea} type Characters with a cost of 4 or less.",
-    "triggerJp": "【トリガー】相手のコスト4以下の特徴《王下七武海》を持つキャラ1枚までを、KOする。",
+    "effectTh": "[เมน] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 8 หรือต่ำกว่า และมีคุณสมบัติ < เจ็ดเทพโจรสลัด >, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-096.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-097",
@@ -2380,12 +2638,12 @@
     "trait": "Dressrosa/Supernovas/Straw Hat Crew",
     "effectEn": "[Main] Up to 1 of your {Dressrosa} type Characters gains +2000 power during this turn. Then, if you have 10 or more cards in your trash, that card gains [Banish] during this turn.",
     "effectJp": "【メイン】自分の特徴《ドレスローザ》を持つキャラ1枚までを、このターン中、パワー+2000。その後、自分のトラッシュが10枚以上ある場合、そのカードは、このターン中、【バニッシュ】を得る。",
-    "effectTh": "[เมน] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000. จากนั้น, ถ้าเรามีการ์ดอยู่ในแทรช จำนวน 10 ใบ หรือมากกว่าละก็, ในเทิร์นนี้, การ์ดใบนั้น จะได้รับ [แบนนิช].<br>(ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
-    "triggerEn": "[Trigger] Draw 2 cards and trash 1 card from your hand.",
-    "triggerJp": "【トリガー】カード2枚を引き、自分の手札1枚を捨てる。",
+    "effectTh": "[เมน] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000. จากนั้น, ถ้าเรามีการ์ดอยู่ในแทรช จำนวน 10 ใบ หรือมากกว่าละก็, ในเทิร์นนี้, การ์ดใบนั้น จะได้รับ [แบนนิช].(ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-097.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-098",
@@ -2401,11 +2659,11 @@
     "effectEn": "[Main] If the number of your Characters is at least 2 less than the number of your opponent's Characters, K.O. up to 1 of your opponent's Characters with a base cost of 6 or less and up to 1 of your opponent's Characters with a base cost of 4 or less.",
     "effectJp": "【メイン】自分のキャラが相手のキャラより2枚以上少ない場合、相手の元々の、コスト6以下のキャラ1枚までとコスト4以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] ถ้าคาแรกเตอร์ของฝ่ายเรา มีจำนวนน้อยกว่า คาแรกเตอร์ของคู่แข่ง ตั้งแต่ 2 ใบ ขึ้นไปละก็, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 6 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กับคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ตั้งต้น 4 หรือต่ำกว่า อีกจำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Negate the effect of up to 1 of each of your opponent's Leader and Character cards during this turn.",
-    "triggerJp": "【トリガー】相手のリーダーとキャラ1枚ずつまでを、このターン中、効果を無効にする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-098.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-099",
@@ -2417,15 +2675,17 @@
     "nameTh": "Eustass\"Captain\"Kid",
     "color": "Yellow",
     "power": 5000,
-    "life": 3,
+    "life": 5,
     "attribute": "Special",
     "trait": "Supernovas/Kid Pirates",
-    "effectEn": "[End of Your Turn] You may turn 1 card from the top of your Life cards face-up: Set up to 1 of your {Supernovas} type Characters with a cost of 3 to 8 as active. That Character gains [Blocker] until the end of your opponent's next turn.<br>",
+    "effectEn": "[End of Your Turn] You may turn 1 card from the top of your Life cards face-up: Set up to 1 of your {Supernovas} type Characters with a cost of 3 to 8 as active. That Character gains [Blocker] until the end of your opponent's next turn.",
     "effectJp": "【自分のターン終了時】自分のライフの上から1枚を表向きにできる：自分のコスト3から8の特徴《超新星》を持つキャラ1枚までを、アクティブにし、そのキャラは、次の相手のターン終了時まで、【ブロッカー】を得る。",
-    "effectTh": "[เมื่อจบเทิร์นของเรา] สามารถหงาย ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ : ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา, ที่มีค่าคอสต์ตั้งแต่ 3 ไปจนถึง 8 และมีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; จำนวนไม่เกิน 1 ใบ, และคาแรกเตอร์ดังกล่าว, จะได้รับ [บล็อกเกอร์] จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป. <br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectTh": "[เมื่อจบเทิร์นของเรา] สามารถหงาย ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ : ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา, ที่มีค่าคอสต์ตั้งแต่ 3 ไปจนถึง 8 และมีคุณสมบัติ < ซูเปอร์โนวา > จำนวนไม่เกิน 1 ใบ, และคาแรกเตอร์ดังกล่าว, จะได้รับ [บล็อกเกอร์] จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป. (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-099.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-099",
@@ -2437,16 +2697,18 @@
     "nameTh": "Eustass\"Captain\"Kid",
     "color": "Yellow",
     "power": 5000,
-    "life": 3,
+    "life": 5,
     "attribute": "Special",
     "trait": "Supernovas/Kid Pirates",
     "effectEn": "[End of Your Turn] You may turn 1 card from the top of your Life cards face-up: Set up to 1 of your {Supernovas} type Characters with a cost of 3 to 8 as active. That Character gains [Blocker] until the end of your opponent's next turn.",
     "effectJp": "【自分のターン終了時】自分のライフの上から1枚を表向きにできる：自分のコスト3から8の特徴《超新星》を持つキャラ1枚までを、アクティブにし、そのキャラは、次の相手のターン終了時まで、【ブロッカー】を得る。",
-    "effectTh": "[เมื่อจบเทิร์นของเรา] สามารถหงาย ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ : ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา, ที่มีค่าคอสต์ตั้งแต่ 3 ไปจนถึง 8 และมีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; จำนวนไม่เกิน 1 ใบ, และคาแรกเตอร์ดังกล่าว, จะได้รับ [บล็อกเกอร์] จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป. <br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectTh": "[เมื่อจบเทิร์นของเรา] สามารถหงาย ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ : ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา, ที่มีค่าคอสต์ตั้งแต่ 3 ไปจนถึง 8 และมีคุณสมบัติ < ซูเปอร์โนวา > จำนวนไม่เกิน 1 ใบ, และคาแรกเตอร์ดังกล่าว, จะได้รับ [บล็อกเกอร์] จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป. (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-099_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-100",
@@ -2465,11 +2727,11 @@
     "effectEn": "[DON!! x1] [When Attacking] Rest up to 1 of your opponent's Characters with a cost equal to or less than the total of your and your opponent's Life cards.",
     "effectJp": "【ドン‼×1】【アタック時】お互いのライフの合計枚数以下のコストを持つ相手のキャラ1枚までを、レストにする。",
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ที่มีค่าคอสต์ไม่สูงไปกว่า ผลรวมของจำนวน ไลฟ์ ของทั้งสองฝ่าย.",
-    "triggerEn": "[Trigger] If your Leader has the {Revolutionary Army} type and you and your opponent have a total of 5 or less Life cards, play this card.",
-    "triggerJp": "【トリガー】自分のリーダーが特徴《革命軍》を持ち、お互いのライフの合計枚数が5枚以下の場合、このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-100.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-101",
@@ -2490,7 +2752,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-101.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-102",
@@ -2508,10 +2772,12 @@
     "trait": "Revolutionary Army",
     "effectEn": "[Activate: Main] [Once Per Turn] Up to 3 of your {Revolutionary Army} type Characters gain +1000 power during this turn. Then, add 1 card from the top of your Life cards to your hand.",
     "effectJp": "【起動メイン】【ターン1回】自分の特徴《革命軍》を持つキャラ3枚までを、このターン中、パワー+1000。その後、自分のライフの上から1枚を手札に加える。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; จำนวนไม่เกิน 3 ใบ, จะมีพาวเวอร์ +1000. จากนั้น, จะต้องนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < กองทัพปฏิวัติ > จำนวนไม่เกิน 3 ใบ, จะมีพาวเวอร์ +1000. จากนั้น, จะต้องนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-102.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-103",
@@ -2528,10 +2794,12 @@
     "trait": "Supernovas/Firetank Pirates",
     "effectEn": "[On Play] You may add 1 card from the top or bottom of your Life cards to your hand: Add up to 1 {Supernovas} type Character card from your hand to the top of your Life cards face-up.",
     "effectJp": "【登場時】自分のライフの上か下から1枚を手札に加えることができる：自分の手札から特徴《超新星》を持つキャラカード1枚までを、ライフの上に表向きで加える。",
-    "effectTh": "[เมื่อลงสนาม] สามารถนำ ไลฟ์ ใบบนสุด หรือ ใบล่างสุด ของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์ แบบหงายหน้า.",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำ ไลฟ์ ใบบนสุด หรือ ใบล่างสุด ของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < ซูเปอร์โนวา > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์ แบบหงายหน้า.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-103.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-104",
@@ -2549,10 +2817,12 @@
     "trait": "Supernovas/Caribou Pirates",
     "effectEn": "[DON!! x1] If your Leader has the {Supernovas} type and your opponent has 3 or more Life cards, this Character cannot be K.O.'d in battle.",
     "effectJp": "【ドン!!×1】自分のリーダーが特徴《超新星》を持ち、相手のライフが3枚以上の場合、このキャラはバトルでKOされない。",
-    "effectTh": "[ด้ง!! x 1] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt;, และคู่แข่งมีไลฟ์ อยู่ จำนวน 3 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูก KO จากการแบทเทิล.",
+    "effectTh": "[ด้ง!! x 1] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < ซูเปอร์โนวา >, และคู่แข่งมีไลฟ์ อยู่ จำนวน 3 ใบ หรือมากกว่าละก็, คาแรกเตอร์นี้ จะไม่ถูก KO จากการแบทเทิล.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-104.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-105",
@@ -2573,7 +2843,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-105.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-106",
@@ -2590,10 +2862,12 @@
     "trait": "Supernovas/Kid Pirates",
     "effectEn": "[On K.O.] If your Leader has the {Supernovas} type, look at 3 cards from the top of your deck; reveal up to 1 {Supernovas} or {Kid Pirates} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【KO時】自分のリーダーが特徴《超新星》を持つ場合、自分のデッキの上から3枚を見て、特徴《超新星》か《キッド海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อถูก KO] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; ละก็, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; หรือ &lt; กลุ่มโจรสลัดคิด &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อถูก KO] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < ซูเปอร์โนวา > ละก็, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ < ซูเปอร์โนวา > หรือ < กลุ่มโจรสลัดคิด > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-106.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-107",
@@ -2609,12 +2883,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Supernovas/Bonney Pirates",
-    "effectEn": "[Blocker]<br>[On Play] You may add 1 card from the top or bottom of your Life cards to your hand: Add up to 1 {Supernovas} type Character card with a cost of 5 from your hand to the top of your Life cards face-up.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のライフの上か下から1枚を手札に加えることができる：自分の手札からコスト5の特徴《超新星》を持つキャラカード1枚までを、ライフの上に表向きで加える。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] สามารถนำ ไลฟ์ ใบบนสุด หรือ ใบล่างสุด ของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 และมีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์ แบบหงายหน้า.",
+    "effectEn": "[Blocker][On Play] You may add 1 card from the top or bottom of your Life cards to your hand: Add up to 1 {Supernovas} type Character card with a cost of 5 from your hand to the top of your Life cards face-up.",
+    "effectJp": "【ブロッカー】【登場時】自分のライフの上か下から1枚を手札に加えることができる：自分の手札からコスト5の特徴《超新星》を持つキャラカード1枚までを、ライフの上に表向きで加える。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] สามารถนำ ไลฟ์ ใบบนสุด หรือ ใบล่างสุด ของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 และมีคุณสมบัติ < ซูเปอร์โนวา > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์ แบบหงายหน้า.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-107.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-108",
@@ -2632,10 +2908,12 @@
     "trait": "Supernovas/On-Air Pirates",
     "effectEn": "If you have a yellow {Supernovas} type Character other than [Scratchmen Apoo], this Character gains [Blocker].",
     "effectJp": "「スクラッチメン・アプー」以外の自分の黄の特徴《超新星》を持つキャラがいる場合、このキャラは【ブロッカー】を得る。",
-    "effectTh": "ถ้าเรามีคาแรกเตอร์ ธีมสีเหลือง ที่มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; นอกเหนือจาก [Scratchmen Apoo] อยู่ด้วยละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. <br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectTh": "ถ้าเรามีคาแรกเตอร์ ธีมสีเหลือง ที่มีคุณสมบัติ < ซูเปอร์โนวา > นอกเหนือจาก [Scratchmen Apoo] อยู่ด้วยละก็, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-108.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-109",
@@ -2654,34 +2932,34 @@
     "effectEn": "[On K.O.] Trash up to 1 card from the top of your opponent's Life cards.",
     "effectJp": "【KO時】相手のライフの上から1枚までを、トラッシュに置く。",
     "effectTh": "[เมื่อถูก KO] นำ ไลฟ์ ใบบนสุดของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.",
-    "triggerEn": "[Trigger] Draw 2 cards and trash 1 card from your hand.",
-    "triggerJp": "【トリガー】カード2枚を引き、自分の手札1枚を捨てる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-109.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-110",
     "cardCode": "OP10-110",
     "rarity": "C",
     "cardType": "CHARACTER",
-    "nameEn": "Heat &amp; Wire",
+    "nameEn": "Heat & Wire",
     "nameJp": "ヒート＆ワイヤー",
-    "nameTh": "Heat &amp; Wire",
+    "nameTh": "Heat & Wire",
     "color": "Yellow",
     "cost": 3,
     "power": 4000,
     "counter": 1000,
-    "attribute": "Slash",
+    "attribute": "Slash/Special",
     "trait": "Kid Pirates",
     "effectEn": "[On Play] Rest up to 1 of your opponent's Characters with a cost equal to or less than the number of your opponent's Life cards.",
     "effectJp": "【登場時】相手のライフの枚数以下のコストを持つ相手のキャラ1枚までを、レストにする。",
     "effectTh": "[เมื่อลงสนาม] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ที่มีค่าคอสต์ไม่สูงไปกว่า จำนวนไลฟ์ของคู่แข่ง.",
-    "triggerEn": "[Trigger] If you have 2 or less Life cards, play this card.",
-    "triggerJp": "【トリガー】自分のライフが2枚以下の場合、このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-110.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-111",
@@ -2699,10 +2977,12 @@
     "trait": "Supernovas/Straw Hat Crew",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Supernovas} type card other than [Monkey.D.Luffy] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「モンキー・D・ルフィ」以外の特徴《超新星》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; นอกเหนือจาก [Monkey.D.Luffy] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < ซูเปอร์โนวา > นอกเหนือจาก [Monkey.D.Luffy] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-111.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-111",
@@ -2720,11 +3000,13 @@
     "trait": "Supernovas/Straw Hat Crew",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Supernovas} type card other than [Monkey.D.Luffy] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「モンキー・D・ルフィ」以外の特徴《超新星》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; นอกเหนือจาก [Monkey.D.Luffy] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < ซูเปอร์โนวา > นอกเหนือจาก [Monkey.D.Luffy] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-111_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-112",
@@ -2739,12 +3021,14 @@
     "power": 9000,
     "attribute": "Special",
     "trait": "Supernovas/Kid Pirates",
-    "effectEn": "[On Play] You may rest this Character: Trash up to 1 card from the top of your opponent's Life cards.<br>[End of Your Turn] If your opponent has 2 or less Life cards, draw 1 card and trash 1 card from your hand.",
-    "effectJp": "【登場時】このキャラをレストにできる：相手のライフの上から1枚までを、トラッシュに置く。<br>【自分のターン終了時】相手のライフが2枚以下の場合、カード1枚を引き、自分の手札1枚を捨てる。",
-    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ คาแรกเตอร์นี้ : นำ ไลฟ์ ใบบนสุดของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.<br>[เมื่อจบเทิร์นของเรา] ถ้าคู่แข่งมีไลฟ์อยู่ จำนวน 2 ใบ หรือน้อยกว่าละก็, จั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
+    "effectEn": "[On Play] You may rest this Character: Trash up to 1 card from the top of your opponent's Life cards.[End of Your Turn] If your opponent has 2 or less Life cards, draw 1 card and trash 1 card from your hand.",
+    "effectJp": "【登場時】このキャラをレストにできる：相手のライフの上から1枚までを、トラッシュに置く。【自分のターン終了時】相手のライフが2枚以下の場合、カード1枚を引き、自分の手札1枚を捨てる。",
+    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ คาแรกเตอร์นี้ : นำ ไลฟ์ ใบบนสุดของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.[เมื่อจบเทิร์นของเรา] ถ้าคู่แข่งมีไลฟ์อยู่ จำนวน 2 ใบ หรือน้อยกว่าละก็, จั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-112.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-112",
@@ -2759,13 +3043,15 @@
     "power": 9000,
     "attribute": "Special",
     "trait": "Supernovas/Kid Pirates",
-    "effectEn": "[On Play] You may rest this Character: Trash up to 1 card from the top of your opponent's Life cards.<br>[End of Your Turn] If your opponent has 2 or less Life cards, draw 1 card and trash 1 card from your hand.",
-    "effectJp": "【登場時】このキャラをレストにできる：相手のライフの上から1枚までを、トラッシュに置く。<br>【自分のターン終了時】相手のライフが2枚以下の場合、カード1枚を引き、自分の手札1枚を捨てる。",
-    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ คาแรกเตอร์นี้ : นำ ไลฟ์ ใบบนสุดของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.<br>[เมื่อจบเทิร์นของเรา] ถ้าคู่แข่งมีไลฟ์อยู่ จำนวน 2 ใบ หรือน้อยกว่าละก็, จั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
+    "effectEn": "[On Play] You may rest this Character: Trash up to 1 card from the top of your opponent's Life cards.[End of Your Turn] If your opponent has 2 or less Life cards, draw 1 card and trash 1 card from your hand.",
+    "effectJp": "【登場時】このキャラをレストにできる：相手のライフの上から1枚までを、トラッシュに置く。【自分のターン終了時】相手のライフが2枚以下の場合、カード1枚を引き、自分の手札1枚を捨てる。",
+    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ คาแรกเตอร์นี้ : นำ ไลฟ์ ใบบนสุดของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.[เมื่อจบเทิร์นของเรา] ถ้าคู่แข่งมีไลฟ์อยู่ จำนวน 2 ใบ หรือน้อยกว่าละก็, จั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-112_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-113",
@@ -2782,12 +3068,12 @@
     "trait": "Supernovas/Straw Hat Crew",
     "effectEn": "If you have less Life cards than your opponent, this Character gains [Rush].",
     "effectJp": "自分のライフの枚数が相手より少ない場合、このキャラは【速攻】を得る。",
-    "effectTh": "ถ้าเรามี ไลฟ์ น้อยกว่าคู่แข่งละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: If your Leader has the {Supernovas} type, play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：自分のリーダーが特徴《超新星》を持つ場合、このカードを登場させる。",
+    "effectTh": "ถ้าเรามี ไลฟ์ น้อยกว่าคู่แข่งละก็, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-113.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-114",
@@ -2808,7 +3094,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ถ้าไลฟ์ของเรา มีจำนวนไม่สูงไปกว่า จำนวน ไลฟ์ของคู่แข่งละก็, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-114.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-115",
@@ -2824,11 +3112,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, if you have 0 Life cards, draw 1 card.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、自分のライフが0枚の場合、カード1枚を引く。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. จากนั้น, ถ้าเรามีไลฟ์อยู่ จำนวน 0 ใบ ละก็, จั่วการ์ด จำนวน 1 ใบ.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with a cost equal to or less than the number of your opponent's Life cards.",
-    "triggerJp": "【トリガー】相手のライフの枚数以下のコストを持つ相手のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-115.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-116",
@@ -2844,11 +3132,11 @@
     "effectEn": "[Main] Look at up to 1 card from the top of your or your opponent's Life cards and place it at the top or bottom of the Life cards. Then, K.O. up to 1 of your opponent's Characters with a cost of 5 or less.",
     "effectJp": "【メイン】自分か相手のライフの上から1枚までを見て、ライフの上か下に置く。その後、相手のコスト5以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] ดูการ์ด จำนวนไม่เกิน 1 ใบ จากบนสุดของ ไลฟ์ ของฝ่ายเรา หรือว่า ของคู่แข่ง, และนำไปวางที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์ (ของเจ้าของเดิม). จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Draw 2 cards and trash 1 card from your hand.",
-    "triggerJp": "【トリガー】カード2枚を引き、自分の手札1枚を捨てる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-116.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-117",
@@ -2864,11 +3152,11 @@
     "effectEn": "[Counter] If you have 1 or less Life cards, up to 1 of your Leader or Character cards gains +3000 power during this battle. Then, set up to 1 of your Characters with a cost of 5 or less as active.",
     "effectJp": "【カウンター】自分のライフが1枚以下の場合、自分のリーダーかキャラ1枚までを、このバトル中、パワー+3000。その後、自分のコスト5以下のキャラ1枚までを、アクティブにする。",
     "effectTh": "[เคาน์เตอร์] ถ้าเรามีไลฟ์อยู่ จำนวน 1 ใบ หรือน้อยกว่าละก็, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000. จากนั้น, จะทำให้ คาแรกเตอร์ของเรา ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
-    "triggerEn": "[Trigger] Draw 1 card.",
-    "triggerJp": "【トリガー】カード1枚を引く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-117.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-118",
@@ -2884,12 +3172,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Dressrosa/Supernovas/Straw Hat Crew",
-    "effectEn": "Once per turn, this Character cannot be K.O.'d by your opponent's effects.<br>[When Attacking] You may place 3 cards from your trash at the bottom of your deck in any order: If your opponent has 5 or more cards in their hand, your opponent trashes 1 card from their hand.",
-    "effectJp": "このキャラはターンに1回、相手の効果でKOされない。<br>【アタック時】自分のトラッシュからカード3枚を好きな順番でデッキの下に置くことができる：相手の手札が5枚以上ある場合、相手は自身の手札1枚を捨てる。",
-    "effectTh": "คาแรกเตอร์นี้, จะไม่ถูก KO จากความสามารถของคู่แข่ง เทิร์นละ 1 ครั้ง.<br>[เมื่อโจมตี] สามารถนำการ์ด จากในแทรชของเรา จำนวน 3 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : ถ้าคู่แข่งมีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องทิ้งการ์ดในมือของตัวเอง จำนวน 1 ใบ.",
+    "effectEn": "Once per turn, this Character cannot be K.O.'d by your opponent's effects.[When Attacking] You may place 3 cards from your trash at the bottom of your deck in any order: If your opponent has 5 or more cards in their hand, your opponent trashes 1 card from their hand.",
+    "effectJp": "このキャラはターンに1回、相手の効果でKOされない。【アタック時】自分のトラッシュからカード3枚を好きな順番でデッキの下に置くことができる：相手の手札が5枚以上ある場合、相手は自身の手札1枚を捨てる。",
+    "effectTh": "คาแรกเตอร์นี้, จะไม่ถูก KO จากความสามารถของคู่แข่ง เทิร์นละ 1 ครั้ง.[เมื่อโจมตี] สามารถนำการ์ด จากในแทรชของเรา จำนวน 3 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : ถ้าคู่แข่งมีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องทิ้งการ์ดในมือของตัวเอง จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-118.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-118",
@@ -2905,13 +3195,15 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Dressrosa/Supernovas/Straw Hat Crew",
-    "effectEn": "Once per turn, this Character cannot be K.O.'d by your opponent's effects.<br>[When Attacking] You may place 3 cards from your trash at the bottom of your deck in any order: If your opponent has 5 or more cards in their hand, your opponent trashes 1 card from their hand.",
-    "effectJp": "このキャラはターンに1回、相手の効果でKOされない。<br>【アタック時】自分のトラッシュからカード3枚を好きな順番でデッキの下に置くことができる：相手の手札が5枚以上ある場合、相手は自身の手札1枚を捨てる。",
-    "effectTh": "คาแรกเตอร์นี้, จะไม่ถูก KO จากความสามารถของคู่แข่ง เทิร์นละ 1 ครั้ง.<br>[เมื่อโจมตี] สามารถนำการ์ด จากในแทรชของเรา จำนวน 3 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : ถ้าคู่แข่งมีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องทิ้งการ์ดในมือของตัวเอง จำนวน 1 ใบ.",
+    "effectEn": "Once per turn, this Character cannot be K.O.'d by your opponent's effects.[When Attacking] You may place 3 cards from your trash at the bottom of your deck in any order: If your opponent has 5 or more cards in their hand, your opponent trashes 1 card from their hand.",
+    "effectJp": "このキャラはターンに1回、相手の効果でKOされない。【アタック時】自分のトラッシュからカード3枚を好きな順番でデッキの下に置くことができる：相手の手札が5枚以上ある場合、相手は自身の手札1枚を捨てる。",
+    "effectTh": "คาแรกเตอร์นี้, จะไม่ถูก KO จากความสามารถของคู่แข่ง เทิร์นละ 1 ครั้ง.[เมื่อโจมตี] สามารถนำการ์ด จากในแทรชของเรา จำนวน 3 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : ถ้าคู่แข่งมีการ์ดบนมืออยู่ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องทิ้งการ์ดในมือของตัวเอง จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-118_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-119",
@@ -2928,10 +3220,12 @@
     "trait": "Dressrosa/Supernovas/Heart Pirates",
     "effectEn": "[On Play] Reveal up to 1 {Supernovas} type Character card from your hand and add it to the top of your Life cards face-down. Then, give up to 1 rested DON!! card to 1 of your {Supernovas} type Leader.",
     "effectJp": "【登場時】自分の手札から特徴《超新星》を持つキャラカード1枚までを公開し、ライフの上に裏向きで加える。その後、自分の特徴《超新星》を持つリーダー1枚にレストのドン‼1枚までを、付与する。",
-    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำไปวางเพิ่มที่บนสุดของไลฟ์ แบบคว่ำ. จากนั้น, จะได้นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ของเรา ที่มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; จำนวน 1 ใบ.",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < ซูเปอร์โนวา > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำไปวางเพิ่มที่บนสุดของไลฟ์ แบบคว่ำ. จากนั้น, จะได้นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ของเรา ที่มีคุณสมบัติ < ซูเปอร์โนวา > จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-119.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-119",
@@ -2948,11 +3242,13 @@
     "trait": "Dressrosa/Supernovas/Heart Pirates",
     "effectEn": "[On Play] Reveal up to 1 {Supernovas} type Character card from your hand and add it to the top of your Life cards face-down. Then, give up to 1 rested DON!! card to 1 of your {Supernovas} type Leader.",
     "effectJp": "【登場時】自分の手札から特徴《超新星》を持つキャラカード1枚までを公開し、ライフの上に裏向きで加える。その後、自分の特徴《超新星》を持つリーダー1枚にレストのドン‼1枚までを、付与する。",
-    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำไปวางเพิ่มที่บนสุดของไลฟ์ แบบคว่ำ. จากนั้น, จะได้นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ของเรา ที่มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; จำนวน 1 ใบ.",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < ซูเปอร์โนวา > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำไปวางเพิ่มที่บนสุดของไลฟ์ แบบคว่ำ. จากนั้น, จะได้นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ของเรา ที่มีคุณสมบัติ < ซูเปอร์โนวา > จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-119_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   },
   {
     "code": "OP10-119",
@@ -2969,10 +3265,106 @@
     "trait": "Dressrosa/Supernovas/Heart Pirates",
     "effectEn": "[On Play] Reveal up to 1 {Supernovas} type Character card from your hand and add it to the top of your Life cards face-down. Then, give up to 1 rested DON!! card to 1 of your {Supernovas} type Leader.",
     "effectJp": "【登場時】自分の手札から特徴《超新星》を持つキャラカード1枚までを公開し、ライフの上に裏向きで加える。その後、自分の特徴《超新星》を持つリーダー1枚にレストのドン‼1枚までを、付与する。",
-    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำไปวางเพิ่มที่บนสุดของไลฟ์ แบบคว่ำ. จากนั้น, จะได้นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ของเรา ที่มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; จำนวน 1 ใบ.",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < ซูเปอร์โนวา > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำไปวางเพิ่มที่บนสุดของไลฟ์ แบบคว่ำ. จากนั้น, จะได้นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ของเรา ที่มีคุณสมบัติ < ซูเปอร์โนวา > จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP10-119_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
+  },
+  {
+    "code": "ST12-012",
+    "cardCode": "ST12-012_p1",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Charlotte Pudding",
+    "nameJp": "シャーロット・プリン",
+    "nameTh": "Charlotte Pudding",
+    "color": "Blue",
+    "cost": 2,
+    "power": 2000,
+    "counter": 2000,
+    "attribute": "Wisdom",
+    "trait": "Big Mom Pirates",
+    "effectEn": "[Activate: Main] Return this Character to the owner's hand.",
+    "effectJp": "【起動メイン】このキャラを持ち主の手札に戻す。",
+    "effectTh": "[ใช้งาน : เมน] คาแรกเตอร์นี้จะถูกนำกลับขึ้นมือของเจ้าของ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST12-012_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
+  },
+  {
+    "code": "ST14-003",
+    "cardCode": "ST14-003_p1",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Sanji",
+    "nameJp": "サンジ",
+    "nameTh": "Sanji",
+    "color": "Black",
+    "cost": 5,
+    "power": 6000,
+    "attribute": "Strike",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[On Play] If you have a Character with a cost of 6 or more, K.O. up to 1 of your opponent's Characters with a cost of 5 or less.",
+    "effectJp": "【登場時】自分のコスト6以上のキャラがいる場合、相手のコスト5以下のキャラ1枚までを、KOする。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 6 หรือสูงกว่า อยู่ละก็, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST14-003_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
+  },
+  {
+    "code": "ST15-002",
+    "cardCode": "ST15-002_p1",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Edward.Newgate",
+    "nameJp": "エドワード・ニューゲート",
+    "nameTh": "Edward.Newgate",
+    "color": "Red",
+    "cost": 7,
+    "power": 8000,
+    "attribute": "Special",
+    "trait": "The Four Emperors/Whitebeard Pirates",
+    "effectEn": "[On Play] Give up to 1 rested DON!! card to your Leader or 1 of your Characters.[Activate: Main] You may rest this Character: K.O. up to 1 of your opponent's Characters with 5000 power or less.",
+    "effectJp": "【登場時】自分のリーダーかキャラ1枚にレストのドン!!1枚までを、付与する。【起動メイン】このキャラをレストにできる：相手のパワー5000以下のキャラ1枚までを、KOする。",
+    "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา, จำนวน 1 ใบ.[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 5000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST15-002_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
+  },
+  {
+    "code": "ST18-001",
+    "cardCode": "ST18-001_p1",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Uso-Hachi",
+    "nameJp": "ウソ八",
+    "nameTh": "Uso-Hachi",
+    "color": "Purple",
+    "cost": 3,
+    "power": 3000,
+    "counter": 2000,
+    "attribute": "Ranged",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[On Play] If you have 8 or more DON!! cards on your field, rest up to 1 of your opponent's Characters with a cost of 5 or less.",
+    "effectJp": "【登場時】自分の場のドン!!が8枚以上ある場合、相手のコスト5以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่ จำนวน 8 ใบ หรือมากกว่าละก็, จะทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST18-001_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": [
+      "-Royal Blood- [OP-10]"
+    ]
   }
 ]

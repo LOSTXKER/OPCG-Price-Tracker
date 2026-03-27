@@ -1,5 +1,121 @@
 [
   {
+    "code": "OP01-047",
+    "cardCode": "OP01-047_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Trafalgar Law (Parallel)",
+    "nameJp": "トラファルガー・ロー",
+    "nameTh": "Trafalgar Law (Parallel)",
+    "color": "Green",
+    "cost": 5,
+    "power": 6000,
+    "attribute": "Slash",
+    "trait": "Supernovas/Heart Pirates",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] You may return 1 of your Characters to the owner's hand: Play up to 1 Character card with a cost of 3 or less from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のキャラ1枚を持ち主の手札に戻すことができる：自分の手札からコスト3以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] สามารถนำคาแรกเตอร์ของเรา จำนวน 1 ใบ กลับขึ้นมือเจ้าของ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-047_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
+  },
+  {
+    "code": "OP01-078",
+    "cardCode": "OP01-078_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Boa Hancock (Parallel)",
+    "nameJp": "ボア・ハンコック",
+    "nameTh": "Boa Hancock (Parallel)",
+    "color": "Blue",
+    "cost": 4,
+    "power": 5000,
+    "counter": 1000,
+    "attribute": "Special",
+    "trait": "The Seven Warlords of the Sea/Kuja Pirates",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[DON!! x1] [When Attacking]/[On Block] Draw 1 card if you have 5 or less cards in your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ドン!!×1】【アタック時】/【ブロック時】自分の手札が5枚以下の場合、カード1枚を引く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ด้ง!! x 1] [เมื่อโจมตี] / [เมื่อบล็อก] ถ้าเรามีการ์ดบนมืออยู่ 5 ใบ หรือน้อยกว่า, จั่วการ์ด 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-078_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
+  },
+  {
+    "code": "OP02-004",
+    "cardCode": "OP02-004_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Edward.Newgate (Parallel)",
+    "nameJp": "エドワード・ニューゲート",
+    "nameTh": "Edward.Newgate (Parallel)",
+    "color": "Red",
+    "cost": 9,
+    "power": 10000,
+    "attribute": "Special",
+    "trait": "The Four Emperors/Whitebeard Pirates",
+    "effectEn": "[On Play] Up to 1 of your Leader gains +2000 power until the start of your next turn. Then, you cannot add Life cards to your hand using your own effects during this turn.[DON!! x2] [When Attacking] K.O. up to 1 of your opponent's Characters with 3000 power or less.",
+    "effectJp": "【登場時】自分のリーダー1枚までを、次の自分のターン開始時まで、パワー+2000。その後、自分は、このターン中、自分の効果でライフを手札に加えられない。【ドン‼×2】【アタック時】相手のパワー3000以下のキャラ1枚までを、KOする。",
+    "effectTh": "[เมื่อลงสนาม] จนถึงช่วงเริ่มต้นเทิร์นถัดไปของเรา, ลีดเดอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000. จากนั้น, ในเทิร์นนี้, เราจะไม่ได้นำ การ์ดจากไลฟ์ ขึ้นสู่บนมือ โดยความสามารถของฝ่ายเรา.[ด้ง!! x 2] [เมื่อโจมตี] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP02-004_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
+  },
+  {
+    "code": "OP02-085",
+    "cardCode": "OP02-085_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Magellan (Parallel)",
+    "nameJp": "マゼラン",
+    "nameTh": "Magellan (Parallel)",
+    "color": "Purple",
+    "cost": 5,
+    "power": 6000,
+    "attribute": "Special",
+    "trait": "Impel Down",
+    "effectEn": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Your opponent returns 1 DON!! card from their field to their DON!! deck.[Opponent's Turn] When this Character is K.O.'d, your opponent returns 2 DON!! cards from their field to their DON!! deck.",
+    "effectJp": "【登場時】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：相手は自身の場のドン‼1枚をドン‼デッキに戻す。【相手のターン中】このキャラがKOされた時、相手は自身の場のドン‼2枚をドン‼デッキに戻す。",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : คู่แข่งจะต้องนำ ด้ง!! ในสนามของตัวเอง จำนวน 1 ใบ กลับเข้า ด้ง!! เด็ค.[ในเทิร์นของคู่แข่ง] เมื่อคาแรกเตอร์นี้ถูก KO, คู่แข่งจะต้องนำ ด้ง!! ในสนามของตัวเอง จำนวน 2 ใบ กลับเข้า ด้ง!! เด็ค.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP02-085_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
+  },
+  {
+    "code": "OP02-099",
+    "cardCode": "OP02-099_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Sakazuki (Parallel)",
+    "nameJp": "サカズキ",
+    "nameTh": "Sakazuki (Parallel)",
+    "color": "Black",
+    "cost": 6,
+    "power": 7000,
+    "attribute": "Special",
+    "trait": "Navy",
+    "effectEn": "[On Play] You may trash 1 card from your hand: K.O. up to 1 of your opponent's Characters with a cost of 5 or less.",
+    "effectJp": "【登場時】自分の手札1枚を捨てることができる：相手のコスト5以下のキャラ1枚までを、KOする。",
+    "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP02-099_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
+  },
+  {
     "code": "OP04-001",
     "cardCode": "OP04-001",
     "rarity": "L",
@@ -9,15 +125,17 @@
     "nameTh": "Nefeltari Vivi",
     "color": "Red/Blue",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Slash",
     "trait": "Alabasta",
-    "effectEn": "This Leader cannot attack.<br>[Activate: Main] [Once Per Turn] ➁ (You may rest the specified number of DON!! cards in your cost area.): Draw 1 card and up to 1 of your Characters gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "このリーダーはアタックできない。<br>【起動メイン】【ターン1回】➁(コストエリアのドン!!を指定の数レストにできる)：カード1枚を引き、自分のキャラ1枚までは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "ลีดเดอร์นี้ไม่สามารถทำการโจมตี.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : จั่วการ์ด จำนวน 1 ใบ, และในเทิร์นนี้, คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "This Leader cannot attack.[Activate: Main] [Once Per Turn] ➁ (You may rest the specified number of DON!! cards in your cost area.): Draw 1 card and up to 1 of your Characters gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "このリーダーはアタックできない。【起動メイン】【ターン1回】➁(コストエリアのドン!!を指定の数レストにできる)：カード1枚を引き、自分のキャラ1枚までは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "ลีดเดอร์นี้ไม่สามารถทำการโจมตี.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : จั่วการ์ด จำนวน 1 ใบ, และในเทิร์นนี้, คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-001",
@@ -29,16 +147,18 @@
     "nameTh": "Nefeltari Vivi (Parallel)",
     "color": "Red/Blue",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Slash",
     "trait": "Alabasta",
-    "effectEn": "This Leader cannot attack.<br>[Activate: Main] [Once Per Turn] ➁ (You may rest the specified number of DON!! cards in your cost area.): Draw 1 card and up to 1 of your Characters gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "このリーダーはアタックできない。<br>【起動メイン】【ターン1回】➁(コストエリアのドン!!を指定の数レストにできる)：カード1枚を引き、自分のキャラ1枚までは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "ลีดเดอร์นี้ไม่สามารถทำการโจมตี.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : จั่วการ์ด จำนวน 1 ใบ, และในเทิร์นนี้, คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "This Leader cannot attack.[Activate: Main] [Once Per Turn] ➁ (You may rest the specified number of DON!! cards in your cost area.): Draw 1 card and up to 1 of your Characters gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "このリーダーはアタックできない。【起動メイン】【ターン1回】➁(コストエリアのドン!!を指定の数レストにできる)：カード1枚を引き、自分のキャラ1枚までは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "ลีดเดอร์นี้ไม่สามารถทำการโจมตี.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : จั่วการ์ด จำนวน 1 ใบ, และในเทิร์นนี้, คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-001_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-002",
@@ -56,10 +176,12 @@
     "trait": "Alabasta",
     "effectEn": "[Activate: Main] You may rest this Character and give your 1 active Leader −5000 power during this turn: Look at 5 cards from the top of your deck; reveal up to 1 {Alabasta} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【起動メイン】このキャラをレストにし、自分のアクティブのリーダー1枚を、このターン中、パワー-5000することができる：自分のデッキの上から5枚を見て、特徴《アラバスタ王国》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้, และในเทิร์นนี้, จะทำให้ ลีดเดอร์ ของเรา จำนวน 1 ใบ ที่กำลังแอ็คทีฟอยู่, มีพาวเวอร์ -5000 : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; ราชอาณาจักรอลาบาสต้า &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้, และในเทิร์นนี้, จะทำให้ ลีดเดอร์ ของเรา จำนวน 1 ใบ ที่กำลังแอ็คทีฟอยู่, มีพาวเวอร์ -5000 : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < ราชอาณาจักรอลาบาสต้า > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-003",
@@ -80,7 +202,9 @@
     "effectTh": "[เมื่อถูก KO] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ ตั้งต้น 5000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-004",
@@ -98,10 +222,12 @@
     "trait": "Animal/Alabasta",
     "effectEn": "[Activate: Main] You may rest this Character: Give up to 1 rested DON!! card to each of your {Alabasta} type Characters.",
     "effectJp": "【起動メイン】このキャラをレストにできる：自分の特徴《アラバスタ王国》を持つキャラすべてにレストのドン!!1枚ずつまでを、付与する。",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : นำ ด้ง!! ที่เรสต์อยู่ ไปใส่ให้กับ คาแรกเตอร์ของเรา ทั้งหมด ที่มีคุณสมบัติ &lt; ราชอาณาจักรอลาบาสต้า &gt;, เป็นจำนวนสูงสุดตัวละไม่เกิน 1 ใบ.",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : นำ ด้ง!! ที่เรสต์อยู่ ไปใส่ให้กับ คาแรกเตอร์ของเรา ทั้งหมด ที่มีคุณสมบัติ < ราชอาณาจักรอลาบาสต้า >, เป็นจำนวนสูงสุดตัวละไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-005",
@@ -117,12 +243,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Animal/Alabasta",
-    "effectEn": "If you have a [Kung Fu Jugon] other than this Character, this Character gains [Blocker].<br>(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
-    "effectJp": "このキャラ以外の自分の「クンフージュゴン」がいる場合、このキャラは【ブロッカー】を得る。<br>(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
-    "effectTh": "ถ้าเรามี [Kung Fu Jugon] ใบอื่น นอกเหนือจากคาแรกเตอร์นี้อยู่, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. <br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectEn": "If you have a [Kung Fu Jugon] other than this Character, this Character gains [Blocker].(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
+    "effectJp": "このキャラ以外の自分の「クンフージュゴン」がいる場合、このキャラは【ブロッカー】を得る。(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
+    "effectTh": "ถ้าเรามี [Kung Fu Jugon] ใบอื่น นอกเหนือจากคาแรกเตอร์นี้อยู่, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-006",
@@ -143,7 +271,9 @@
     "effectTh": "[เมื่อโจมตี] สามารถทำให้ ลีดเดอร์ของเรา จำนวน 1 ใบ ที่กำลังแอ็คทีฟอยู่, ในเทิร์นนี้, มีพาวเวอร์ -5000 : จนกระทั่งถึงช่วงเริ่มต้นเทิร์นของเราในครั้งถัดไป, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-007",
@@ -164,7 +294,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-008",
@@ -184,7 +316,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ถ้าลีดเดอร์ของเราคือ [Nefeltari Vivi], ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000. จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 0 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-009",
@@ -205,7 +339,9 @@
     "effectTh": "[เมื่อโจมตี] สามารถทำให้ ลีดเดอร์ของเรา จำนวน 1 ใบ ที่กำลังแอ็คทีฟอยู่, ในเทิร์นนี้, มีพาวเวอร์ -5000 : เมื่อจบเทิร์นนี้, คาแรกเตอร์นี้ จะถูกนำกลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-010",
@@ -223,10 +359,12 @@
     "trait": "Animal/Alabasta/Straw Hat Crew",
     "effectEn": "[On Play] Play up to 1 {Animal} type Character card with 3000 power or less from your hand.",
     "effectJp": "【登場時】自分の手札からパワー3000以下の特徴《動物》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; สัตว์ &gt; และมีพาวเวอร์ 3000 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < สัตว์ > และมีพาวเวอร์ 3000 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-011",
@@ -247,7 +385,9 @@
     "effectTh": "[เมื่อโจมตี] นำการ์ดจากข้างบนเด็คของเรามาแสดงให้ดู จำนวน 1 ใบ, และถ้าการ์ดที่นำมาแสดงให้ดู เป็นคาแรกเตอร์การ์ด ที่มีพาวเวอร์ 6000 หรือมากกว่า, ในเทิร์นนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +3000. จากนั้น, นำการ์ดที่ถูกนำมาแสดงให้ดูไปวางที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-012",
@@ -264,10 +404,12 @@
     "trait": "Alabasta",
     "effectEn": "[Your Turn] All of your {Alabasta} type Characters other than this Character gain +1000 power.",
     "effectJp": "【自分のターン中】このキャラ以外の自分の特徴《アラバスタ王国》を持つキャラすべてを、パワー+1000。",
-    "effectTh": "[เทิร์นตัวเอง] คาแรกเตอร์ของเรา ทั้งหมด ที่มีคุณสมบัติ &lt; ราชอาณาจักรอลาบาสต้า &gt; นอกเหนือจากคาแรกเตอร์นี้, จะมีพาวเวอร์ +1000.",
+    "effectTh": "[เทิร์นตัวเอง] คาแรกเตอร์ของเรา ทั้งหมด ที่มีคุณสมบัติ < ราชอาณาจักรอลาบาสต้า > นอกเหนือจากคาแรกเตอร์นี้, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-013",
@@ -287,7 +429,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 4000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-013",
@@ -308,7 +452,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-013_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-014",
@@ -328,7 +474,9 @@
     "effectTh": "[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-015",
@@ -349,7 +497,9 @@
     "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-016",
@@ -364,11 +514,11 @@
     "effectEn": "[Counter] You may trash 1 card from your hand: Up to 1 of your Leader or Character cards gains +3000 power during this battle.",
     "effectJp": "【カウンター】自分の手札1枚を捨てることができる：自分のリーダーかキャラ1枚までを、このバトル中、パワー+3000。",
     "effectTh": "[เคาน์เตอร์] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
-    "triggerEn": "[Trigger] Give up to 1 of your opponent's Leader or Character cards −3000 power during this turn.",
-    "triggerJp": "【トリガー】相手のリーダーかキャラ1枚までを、このターン中、パワー-3000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-017",
@@ -386,7 +536,9 @@
     "effectTh": "[เคาน์เตอร์] ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000. จากนั้น, ถ้าลีดเดอร์ของเรา กำลังแอ็คทีฟอยู่, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-018",
@@ -400,13 +552,13 @@
     "cost": 3,
     "trait": "Alabasta",
     "effectEn": "[Main] If your Leader has the {Alabasta} type, give up to 2 of your opponent's Characters −2000 power during this turn.",
-    "effectJp": "【メイン】自分のリーダーが特徴《アラバスタ王国》を持つ場合、相手のキャラ2枚までを、このターン中、パワー-2000。<br>",
-    "effectTh": "[เมน] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; ราชอาณาจักรอลาบาสต้า &gt;, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 2 ใบ, จะมีพาวเวอร์ -2000.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
+    "effectJp": "【メイン】自分のリーダーが特徴《アラバスタ王国》を持つ場合、相手のキャラ2枚までを、このターン中、パワー-2000。",
+    "effectTh": "[เมน] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < ราชอาณาจักรอลาบาสต้า >, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 2 ใบ, จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-018.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-019",
@@ -418,7 +570,7 @@
     "nameTh": "Donquixote Doflamingo",
     "color": "Green/Purple",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
     "effectEn": "[End of Your Turn] Set up to 2 of your DON!! cards as active.",
@@ -426,7 +578,9 @@
     "effectTh": "[เมื่อจบเทิร์นของเรา] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-019.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-019",
@@ -438,7 +592,7 @@
     "nameTh": "Donquixote Doflamingo (Parallel)",
     "color": "Green/Purple",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
     "effectEn": "[End of Your Turn] Set up to 2 of your DON!! cards as active.",
@@ -447,7 +601,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-019_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-020",
@@ -459,15 +615,17 @@
     "nameTh": "Issho",
     "color": "Green/Black",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Special",
     "trait": "Navy",
-    "effectEn": "[DON!! x1] [Your Turn] Give all of your opponent's Characters −1 cost.<br>[End of Your Turn] ➀ (You may rest the specified number of DON!! cards in your cost area.): Set up to 1 of your Characters with a cost of 5 or less as active.",
-    "effectJp": "【ドン!!×1】【自分のターン中】相手のキャラすべてを、コスト-1。<br>【自分のターン終了時】➀(コストエリアのドン!!を指定の数レストにできる)：自分のコスト5以下のキャラ1枚までを、アクティブにする。",
-    "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] คาแรกเตอร์ของคู่แข่ง ทั้งหมด จะมีคอสต์ -1.<br>[เมื่อจบเทิร์นของเรา] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[DON!! x1] [Your Turn] Give all of your opponent's Characters −1 cost.[End of Your Turn] ➀ (You may rest the specified number of DON!! cards in your cost area.): Set up to 1 of your Characters with a cost of 5 or less as active.",
+    "effectJp": "【ドン!!×1】【自分のターン中】相手のキャラすべてを、コスト-1。【自分のターン終了時】➀(コストエリアのドン!!を指定の数レストにできる)：自分のコスト5以下のキャラ1枚までを、アクティブにする。",
+    "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] คาแรกเตอร์ของคู่แข่ง ทั้งหมด จะมีคอสต์ -1.[เมื่อจบเทิร์นของเรา] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-020.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-020",
@@ -479,16 +637,18 @@
     "nameTh": "Issho (Parallel)",
     "color": "Green/Black",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Special",
     "trait": "Navy",
-    "effectEn": "[DON!! x1] [Your Turn] Give all of your opponent's Characters −1 cost.<br>[End of Your Turn] ➀ (You may rest the specified number of DON!! cards in your cost area.): Set up to 1 of your Characters with a cost of 5 or less as active.",
-    "effectJp": "【ドン!!×1】【自分のターン中】相手のキャラすべてを、コスト-1。<br>【自分のターン終了時】➀(コストエリアのドン!!を指定の数レストにできる)：自分のコスト5以下のキャラ1枚までを、アクティブにする。",
-    "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] คาแรกเตอร์ของคู่แข่ง ทั้งหมด จะมีคอสต์ -1.<br>[เมื่อจบเทิร์นของเรา] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[DON!! x1] [Your Turn] Give all of your opponent's Characters −1 cost.[End of Your Turn] ➀ (You may rest the specified number of DON!! cards in your cost area.): Set up to 1 of your Characters with a cost of 5 or less as active.",
+    "effectJp": "【ドン!!×1】【自分のターン中】相手のキャラすべてを、コスト-1。【自分のターン終了時】➀(コストエリアのドン!!を指定の数レストにできる)：自分のコスト5以下のキャラ1枚までを、アクティブにする。",
+    "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] คาแรกเตอร์ของคู่แข่ง ทั้งหมด จะมีคอสต์ -1.[เมื่อจบเทิร์นของเรา] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-020_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-021",
@@ -509,7 +669,9 @@
     "effectTh": "[เมื่อคู่แข่งโจมตี] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ เรสต์ ด้ง!! ของคู่แข่ง, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-021.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-022",
@@ -530,7 +692,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-022.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-023",
@@ -551,7 +715,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-023.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-024",
@@ -566,12 +732,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Donquixote Pirates",
-    "effectEn": "[Opponent's Turn] [Once Per Turn] When your opponent plays a Character, if your Leader has the {Donquixote Pirates} type, rest up to 1 of your opponent's Characters. Then, rest this Character.<br>[On Play] Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
-    "effectJp": "【相手のターン中】【ターン1回】相手がキャラを登場させた時、自分のリーダーが特徴《ドンキホーテ海賊団》を持つ場合、相手のキャラ1枚までを、レストにする。その後、このキャラをレストにする。<br>【登場時】相手のコスト4以下のキャラ1枚までを、レストにする。",
-    "effectTh": "[เทิร์นคู่แข่ง] [เทิร์นละ 1 ครั้ง] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt;, เมื่อคู่แข่งนำคาแรกเตอร์ลงสนาม, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ. จากนั้น, ทำการ เรสต์ คาแรกเตอร์นี้.<br>[เมื่อลงสนาม] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[Opponent's Turn] [Once Per Turn] When your opponent plays a Character, if your Leader has the {Donquixote Pirates} type, rest up to 1 of your opponent's Characters. Then, rest this Character.[On Play] Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
+    "effectJp": "【相手のターン中】【ターン1回】相手がキャラを登場させた時、自分のリーダーが特徴《ドンキホーテ海賊団》を持つ場合、相手のキャラ1枚までを、レストにする。その後、このキャラをレストにする。【登場時】相手のコスト4以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[เทิร์นคู่แข่ง] [เทิร์นละ 1 ครั้ง] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ >, เมื่อคู่แข่งนำคาแรกเตอร์ลงสนาม, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ. จากนั้น, ทำการ เรสต์ คาแรกเตอร์นี้.[เมื่อลงสนาม] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-024.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-024",
@@ -586,13 +754,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Donquixote Pirates",
-    "effectEn": "[Opponent's Turn] [Once Per Turn] When your opponent plays a Character, if your Leader has the {Donquixote Pirates} type, rest up to 1 of your opponent's Characters. Then, rest this Character.<br>[On Play] Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
-    "effectJp": "【相手のターン中】【ターン1回】相手がキャラを登場させた時、自分のリーダーが特徴《ドンキホーテ海賊団》を持つ場合、相手のキャラ1枚までを、レストにする。その後、このキャラをレストにする。<br>【登場時】相手のコスト4以下のキャラ1枚までを、レストにする。",
-    "effectTh": "[เทิร์นคู่แข่ง] [เทิร์นละ 1 ครั้ง] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt;, เมื่อคู่แข่งนำคาแรกเตอร์ลงสนาม, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ. จากนั้น, ทำการ เรสต์ คาแรกเตอร์นี้.<br>[เมื่อลงสนาม] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[Opponent's Turn] [Once Per Turn] When your opponent plays a Character, if your Leader has the {Donquixote Pirates} type, rest up to 1 of your opponent's Characters. Then, rest this Character.[On Play] Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
+    "effectJp": "【相手のターン中】【ターン1回】相手がキャラを登場させた時、自分のリーダーが特徴《ドンキホーテ海賊団》を持つ場合、相手のキャラ1枚までを、レストにする。その後、このキャラをレストにする。【登場時】相手のコスト4以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[เทิร์นคู่แข่ง] [เทิร์นละ 1 ครั้ง] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ >, เมื่อคู่แข่งนำคาแรกเตอร์ลงสนาม, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ. จากนั้น, ทำการ เรสต์ คาแรกเตอร์นี้.[เมื่อลงสนาม] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-024_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-025",
@@ -613,7 +783,9 @@
     "effectTh": "[เมื่อคู่แข่งโจมตี] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-025.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-026",
@@ -630,10 +802,12 @@
     "trait": "Donquixote Pirates",
     "effectEn": "[When Attacking] ➀ (You may rest the specified number of DON!! cards in your cost area.): If your Leader has the {Donquixote Pirates} type, rest up to 1 of your opponent's Characters with a cost of 4 or less. Then, set up to 1 of your DON!! cards as active at the end of this turn.",
     "effectJp": "【アタック時】➀(コストエリアのドン!!を指定の数レストにできる)：自分のリーダーが特徴《ドンキホーテ海賊団》を持つ場合、相手のコスト4以下のキャラ1枚までを、レストにする。その後、このターン終了時、自分のドン!!1枚までを、アクティブにする。",
-    "effectTh": "[เมื่อโจมตี] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt;, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, เมื่อจบเทิร์นนี้, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectTh": "[เมื่อโจมตี] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ >, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, เมื่อจบเทิร์นนี้, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-026.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-027",
@@ -653,7 +827,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อจบเทิร์นของเรา] ทำการ แอ็คทีฟ คาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-027.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-028",
@@ -669,12 +845,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Donquixote Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x1] [End of Your Turn] If you have 2 or more active DON!! cards, set this Character as active.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ドン!!×1】【自分のターン終了時】自分のアクティブのドン!!が2枚以上ある場合、このキャラをアクティブにする。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ด้ง!! x 1] [เมื่อจบเทิร์นของเรา] ถ้าเรามี ด้ง!! ที่กำลังแอ็คทีฟอยู่ จำนวน 2 ใบ หรือมากกว่า, จะทำการ แอ็คทีฟ คาแรกเตอร์นี้.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[DON!! x1] [End of Your Turn] If you have 2 or more active DON!! cards, set this Character as active.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ドン!!×1】【自分のターン終了時】自分のアクティブのドン!!が2枚以上ある場合、このキャラをアクティブにする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ด้ง!! x 1] [เมื่อจบเทิร์นของเรา] ถ้าเรามี ด้ง!! ที่กำลังแอ็คทีฟอยู่ จำนวน 2 ใบ หรือมากกว่า, จะทำการ แอ็คทีฟ คาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-028.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-028",
@@ -690,13 +868,15 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Donquixote Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x1] [End of Your Turn] If you have 2 or more active DON!! cards, set this Character as active.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ドン!!×1】【自分のターン終了時】自分のアクティブのドン!!が2枚以上ある場合、このキャラをアクティブにする。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ด้ง!! x 1] [เมื่อจบเทิร์นของเรา] ถ้าเรามี ด้ง!! ที่กำลังแอ็คทีฟอยู่ จำนวน 2 ใบ หรือมากกว่า, จะทำการ แอ็คทีฟ คาแรกเตอร์นี้.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[DON!! x1] [End of Your Turn] If you have 2 or more active DON!! cards, set this Character as active.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ドン!!×1】【自分のターン終了時】自分のアクティブのドン!!が2枚以上ある場合、このキャラをアクティブにする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ด้ง!! x 1] [เมื่อจบเทิร์นของเรา] ถ้าเรามี ด้ง!! ที่กำลังแอ็คทีฟอยู่ จำนวน 2 ใบ หรือมากกว่า, จะทำการ แอ็คทีฟ คาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-028_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-029",
@@ -717,7 +897,9 @@
     "effectTh": "[เมื่อจบเทิร์นของเรา] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-029.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-030",
@@ -732,12 +914,14 @@
     "power": 6000,
     "attribute": "Special",
     "trait": "Donquixote Pirates",
-    "effectEn": "[On Play] K.O. up to 1 of your opponent's rested Characters with a cost of 5 or less.<br>[On Your Opponent's Attack] ➁ (You may rest the specified number of DON!! cards in your cost area.): Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
-    "effectJp": "【登場時】相手のレストのコスト5以下のキャラ1枚までを、KOする。<br>【相手のアタック時】➁(コストエリアのドン!!を指定の数レストにできる)：相手のコスト4以下のキャラ1枚までを、レストにする。",
-    "effectTh": "[เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.<br>[เมื่อคู่แข่งโจมตี] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[On Play] K.O. up to 1 of your opponent's rested Characters with a cost of 5 or less.[On Your Opponent's Attack] ➁ (You may rest the specified number of DON!! cards in your cost area.): Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
+    "effectJp": "【登場時】相手のレストのコスト5以下のキャラ1枚までを、KOする。【相手のアタック時】➁(コストエリアのドン!!を指定の数レストにできる)：相手のコスト4以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.[เมื่อคู่แข่งโจมตี] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-030.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-030",
@@ -752,13 +936,15 @@
     "power": 6000,
     "attribute": "Special",
     "trait": "Donquixote Pirates",
-    "effectEn": "[On Play] K.O. up to 1 of your opponent's rested Characters with a cost of 5 or less.<br>[On Your Opponent's Attack] ➁ (You may rest the specified number of DON!! cards in your cost area.): Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
-    "effectJp": "【登場時】相手のレストのコスト5以下のキャラ1枚までを、KOする。<br>【相手のアタック時】➁(コストエリアのドン!!を指定の数レストにできる)：相手のコスト4以下のキャラ1枚までを、レストにする。",
-    "effectTh": "[เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.<br>[เมื่อคู่แข่งโจมตี] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[On Play] K.O. up to 1 of your opponent's rested Characters with a cost of 5 or less.[On Your Opponent's Attack] ➁ (You may rest the specified number of DON!! cards in your cost area.): Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
+    "effectJp": "【登場時】相手のレストのコスト5以下のキャラ1枚までを、KOする。【相手のアタック時】➁(コストエリアのドン!!を指定の数レストにできる)：相手のコスト4以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.[เมื่อคู่แข่งโจมตี] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-030_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-031",
@@ -778,7 +964,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำให้ ลีดเดอร์ กับ คาแรกเตอร์ ของคู่แข่ง ที่กำลังเรสต์อยู่, รวมกันจำนวนไม่เกิน 3 ใบ, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-031.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-031",
@@ -799,7 +987,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-031_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-032",
@@ -820,7 +1010,9 @@
     "effectTh": "[เมื่อจบเทิร์นของเรา] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-032.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-033",
@@ -838,10 +1030,12 @@
     "trait": "Donquixote Pirates",
     "effectEn": "[On Play] If your Leader has the {Donquixote Pirates} type, rest up to 1 of your opponent's Characters with a cost of 5 or less. Then, set up to 1 of your DON!! cards as active at the end of this turn.",
     "effectJp": "【登場時】自分のリーダーが特徴《ドンキホーテ海賊団》を持つ場合、相手のコスト5以下のキャラ1枚までを、レストにする。その後、このターン終了時、自分のドン!!1枚までを、アクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt;, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, เมื่อจบเทิร์นนี้, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ >, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, เมื่อจบเทิร์นนี้, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-033.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-034",
@@ -862,7 +1056,9 @@
     "effectTh": "[เมื่อจบเทิร์นของเรา] ถ้าเรามี ด้ง!! ที่กำลังแอ็คทีฟอยู่ จำนวน 3 ใบ หรือมากกว่า, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-034.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-035",
@@ -878,11 +1074,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, set up to 1 of your Characters as active.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、自分のキャラ1枚までを、アクティブにする。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. จากนั้น, ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Up to 1 of your Leader gains +2000 power during this turn.",
-    "triggerJp": "【トリガー】自分のリーダー1枚までを、このターン中、パワー+2000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-035.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-036",
@@ -897,12 +1093,12 @@
     "trait": "Donquixote Pirates",
     "effectEn": "[Counter] Look at 5 cards from the top of your deck; reveal up to 1 {Donquixote Pirates} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【カウンター】自分のデッキの上から5枚を見て、特徴《ドンキホーテ海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เคาน์เตอร์] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Activate this card's [Counter] effect.",
-    "triggerJp": "【トリガー】このカードの【カウンター】効果を発動する。",
+    "effectTh": "[เคาน์เตอร์] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-036.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-037",
@@ -917,12 +1113,12 @@
     "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
     "effectEn": "[Counter] If your Leader has the {Donquixote Pirates} type, up to 1 of your Leader or Character cards gains +2000 power during this turn.",
     "effectJp": "【カウンター】自分のリーダーが特徴《ドンキホーテ海賊団》を持つ場合、自分のリーダーかキャラ1枚までを、このターン中、パワー+2000。",
-    "effectTh": "[เคาน์เตอร์] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt;, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's rested Characters with a cost of 4 or less.",
-    "triggerJp": "【トリガー】相手のレストのコスト4以下のキャラ1枚までを、KOする。",
+    "effectTh": "[เคาน์เตอร์] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ >, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-037.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-038",
@@ -938,11 +1134,11 @@
     "effectEn": "[Main]/[Counter] Rest up to 1 of your opponent's Leader or Character cards. Then, K.O. up to 1 of your opponent's rested Characters with a cost of 6 or less.",
     "effectJp": "【メイン】/【カウンター】相手のリーダーかキャラ1枚までを、レストにする。その後、相手のレストのコスト6以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] / [เคาน์เตอร์] ทำการ เรสต์ ลีดเดอร์ หรือ คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ. จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Set up to 5 of your DON!! cards as active.",
-    "triggerJp": "【トリガー】自分のドン!!5枚までを、アクティブにする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-038.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-039",
@@ -954,15 +1150,17 @@
     "nameTh": "Rebecca",
     "color": "Blue/Black",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Slash",
     "trait": "Dressrosa",
-    "effectEn": "This Leader cannot attack.<br>[Activate: Main] [Once Per Turn] ➀ (You may rest the specified number of DON!! cards in your cost area.): If you have 6 or less cards in your hand, look at 2 cards from the top of your deck; reveal up to 1 {Dressrosa} type card and add it to your hand. Then, trash the rest.",
-    "effectJp": "このリーダーはアタックできない。<br>【起動メイン】【ターン1回】➀(コストエリアのドン!!を指定の数レストにできる)：自分の手札が6枚以下の場合、自分のデッキの上から2枚を見て、特徴《ドレスローザ》を持つカード1枚までを公開し、手札に加える。その後、残りをトラッシュに置く。",
-    "effectTh": "ลีดเดอร์นี้ไม่สามารถทำการโจมตี.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ถ้าเรามีการ์ดบนมือ จำนวน 6 ใบ หรือน้อยกว่า, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 2 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่แทรช.",
+    "effectEn": "This Leader cannot attack.[Activate: Main] [Once Per Turn] ➀ (You may rest the specified number of DON!! cards in your cost area.): If you have 6 or less cards in your hand, look at 2 cards from the top of your deck; reveal up to 1 {Dressrosa} type card and add it to your hand. Then, trash the rest.",
+    "effectJp": "このリーダーはアタックできない。【起動メイン】【ターン1回】➀(コストエリアのドン!!を指定の数レストにできる)：自分の手札が6枚以下の場合、自分のデッキの上から2枚を見て、特徴《ドレスローザ》を持つカード1枚までを公開し、手札に加える。その後、残りをトラッシュに置く。",
+    "effectTh": "ลีดเดอร์นี้ไม่สามารถทำการโจมตี.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ถ้าเรามีการ์ดบนมือ จำนวน 6 ใบ หรือน้อยกว่า, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 2 ใบ, และนำการ์ดที่มีคุณสมบัติ < เดรสโรซ่า > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-039.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-039",
@@ -974,16 +1172,18 @@
     "nameTh": "Rebecca (Parallel)",
     "color": "Blue/Black",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Slash",
     "trait": "Dressrosa",
-    "effectEn": "This Leader cannot attack.<br>[Activate: Main] [Once Per Turn] ➀ (You may rest the specified number of DON!! cards in your cost area.): If you have 6 or less cards in your hand, look at 2 cards from the top of your deck; reveal up to 1 {Dressrosa} type card and add it to your hand. Then, trash the rest.",
-    "effectJp": "このリーダーはアタックできない。<br>【起動メイン】【ターン1回】➀(コストエリアのドン!!を指定の数レストにできる)：自分の手札が6枚以下の場合、自分のデッキの上から2枚を見て、特徴《ドレスローザ》を持つカード1枚までを公開し、手札に加える。その後、残りをトラッシュに置く。",
-    "effectTh": "ลีดเดอร์นี้ไม่สามารถทำการโจมตี.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ถ้าเรามีการ์ดบนมือ จำนวน 6 ใบ หรือน้อยกว่า, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 2 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่แทรช.",
+    "effectEn": "This Leader cannot attack.[Activate: Main] [Once Per Turn] ➀ (You may rest the specified number of DON!! cards in your cost area.): If you have 6 or less cards in your hand, look at 2 cards from the top of your deck; reveal up to 1 {Dressrosa} type card and add it to your hand. Then, trash the rest.",
+    "effectJp": "このリーダーはアタックできない。【起動メイン】【ターン1回】➀(コストエリアのドン!!を指定の数レストにできる)：自分の手札が6枚以下の場合、自分のデッキの上から2枚を見て、特徴《ドレスローザ》を持つカード1枚までを公開し、手札に加える。その後、残りをトラッシュに置く。",
+    "effectTh": "ลีดเดอร์นี้ไม่สามารถทำการโจมตี.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ถ้าเรามีการ์ดบนมือ จำนวน 6 ใบ หรือน้อยกว่า, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 2 ใบ, และนำการ์ดที่มีคุณสมบัติ < เดรสโรซ่า > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-039_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-040",
@@ -995,7 +1195,7 @@
     "nameTh": "Queen",
     "color": "Blue/Yellow",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Ranged",
     "trait": "Animal Kingdom Pirates",
     "effectEn": "[DON!! x1] [When Attacking] If you have a total of 4 or less cards in your Life area and hand, draw 1 card. If you have a Character with a cost of 8 or more, you may add up to 1 card from the top of your deck to the top of your Life cards instead of drawing 1 card.",
@@ -1003,7 +1203,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ถ้าจำนวน ไลฟ์ของเรา กับการ์ดที่อยู่บนมือของเรา มีอยู่รวมกันเท่ากับ จำนวน 4 ใบ หรือน้อยกว่า, จะจั่วการ์ด จำนวน 1 ใบ. ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 8 หรือมากกว่า, จะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์ แทนการจั่วการ์ด 1 ใบได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-040.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-040",
@@ -1015,7 +1217,7 @@
     "nameTh": "Queen (Parallel)",
     "color": "Blue/Yellow",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Ranged",
     "trait": "Animal Kingdom Pirates",
     "effectEn": "[DON!! x1] [When Attacking] If you have a total of 4 or less cards in your Life area and hand, draw 1 card. If you have a Character with a cost of 8 or more, you may add up to 1 card from the top of your deck to the top of your Life cards instead of drawing 1 card.",
@@ -1024,7 +1226,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-040_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-041",
@@ -1041,10 +1245,12 @@
     "trait": "East Blue",
     "effectEn": "[On Play] You may trash 2 cards from your hand: Look at 5 cards from the top of your deck; reveal up to 1 {East Blue} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分の手札2枚を捨てることができる：自分のデッキの上から5枚を見て、特徴《東の海》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; อีสต์บลู &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < อีสต์บลู > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-041.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-042",
@@ -1060,12 +1266,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "East Blue",
-    "effectEn": "[On Play] Up to 1 of your &lt;Slash&gt; attribute Characters gains +3000 power during this turn. Then, trash 1 card from the top of your deck.",
+    "effectEn": "[On Play] Up to 1 of your <Slash> attribute Characters gains +3000 power during this turn. Then, trash 1 card from the top of your deck.",
     "effectJp": "【登場時】自分の属性(斬)を持つキャラ1枚までを、このターン中、パワー+3000。その後、自分のデッキの上から1枚をトラッシュに置く。",
     "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณลักษณะ (ฟัน) จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000. จากนั้น, นำการ์ดจากใบบนสุดของเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-042.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-043",
@@ -1086,7 +1294,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ หรือว่า นำกลับไปวางที่ข้างใต้เด็คของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-043.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-044",
@@ -1106,7 +1316,9 @@
     "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 8 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กับคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-044.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-044",
@@ -1127,7 +1339,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-044_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-045",
@@ -1148,7 +1362,9 @@
     "effectTh": "[เมื่อลงสนาม] จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-045.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-046",
@@ -1166,10 +1382,12 @@
     "trait": "Animal Kingdom Pirates",
     "effectEn": "[On Play] If your Leader has the {Animal Kingdom Pirates} type, look at 7 cards from the top of your deck; reveal a total of up to 2 [Plague Rounds] or [Ice Oni] cards and add them to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のリーダーが特徴《百獣海賊団》を持つ場合、自分のデッキの上から7枚を見て、「疫災弾」か「氷鬼」合計2枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดร้อยอสูร &gt;, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 7 ใบ, และนำ [Plague Rounds] หรือ [Ice Oni] รวมกันจำนวนไม่เกิน 2 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดร้อยอสูร >, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 7 ใบ, และนำ [Plague Rounds] หรือ [Ice Oni] รวมกันจำนวนไม่เกิน 2 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-046.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-047",
@@ -1189,7 +1407,9 @@
     "effectTh": "[เทิร์นตัวเอง] เมื่อจบการแบทเทิลที่คาแรกเตอร์นี้ แบทเทิลกับคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, คาแรกเตอร์ของคู่แข่งที่แบทเทิลด้วย จะถูกนำไปวางที่ข้างใต้เด็คของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-047.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-048",
@@ -1210,7 +1430,9 @@
     "effectTh": "[เมื่อลงสนาม] นำการ์ดบนมือของเรา ทั้งหมด กลับเข้าเด็ค, แล้วชัฟเฟิลเด็ค. จากนั้น, จั่วการ์ด เป็นจำนวนเท่ากับที่ถูกนำกลับเข้าเด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-048.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-049",
@@ -1231,7 +1453,9 @@
     "effectTh": "[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-049.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-050",
@@ -1251,7 +1475,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ, และ เรสต์ คาแรกเตอร์นี้ : จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-050.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-051",
@@ -1269,10 +1495,12 @@
     "trait": "Animal Kingdom Pirates",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Animal Kingdom Pirates} type card other than [Who's.Who] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「フーズ・フー」以外の特徴《百獣海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดร้อยอสูร &gt; นอกเหนือจาก [Who’s.Who] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดร้อยอสูร > นอกเหนือจาก [Who’s.Who] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-051.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-051",
@@ -1290,11 +1518,13 @@
     "trait": "Animal Kingdom Pirates",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Animal Kingdom Pirates} type card other than [Who's.Who] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「フーズ・フー」以外の特徴《百獣海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดร้อยอสูร &gt; นอกเหนือจาก [Who’s.Who] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดร้อยอสูร > นอกเหนือจาก [Who’s.Who] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-051_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-052",
@@ -1313,11 +1543,11 @@
     "effectEn": "[Activate: Main] ➁ (You may rest the specified number of DON!! cards in your cost area.) You may rest this Character: Draw 1 card.",
     "effectJp": "【起動メイン】➁(コストエリアのドン!!を指定の数レストにできる)，このキャラをレストにできる：カード1枚を引く。",
     "effectTh": "[ใช้งาน : เมน] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) สามารถ เรสต์ คาแรกเตอร์นี้ : จั่วการ์ด จำนวน 1 ใบ.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-052.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-053",
@@ -1337,7 +1567,9 @@
     "effectTh": "[ด้ง!! x 1] [เทิร์นละ 1 ครั้ง] เมื่อเราใช้งาน อีเวนต์, จะจั่วการ์ด จำนวน 1 ใบ. จากนั้น, นำการ์ดบนมือของเรา จำนวน 1 ใบ ไปวางที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-053.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-054",
@@ -1358,7 +1590,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-054.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-055",
@@ -1374,11 +1608,11 @@
     "effectEn": "[Main] You may trash 1 [Ice Oni] from your hand and place 1 Character with a cost of 4 or less at the bottom of the owner's deck: Play 1 [Ice Oni] from your trash.",
     "effectJp": "【メイン】自分の手札から「氷鬼」1枚を捨て、コスト4以下のキャラ1枚を、持ち主のデッキの下に置くことができる：自分のトラッシュから「氷鬼」1枚を登場させる。",
     "effectTh": "[เมน] สามารถทิ้ง [Ice Oni] จากบนมือของเรา จำนวน 1 ใบ, และนำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 4 หรือต่ำกว่า จำนวน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ : นำ [Ice Oni] จากแทรชของเรา จำนวน 1 ใบ ลงสนาม.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-055.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-056",
@@ -1394,11 +1628,11 @@
     "effectEn": "[Main] Place up to 1 Character at the bottom of the owner's deck.",
     "effectJp": "【メイン】キャラ1枚までを、持ち主のデッキの下に置く。",
     "effectTh": "[เมน] นำคาแรกเตอร์ของใครก็ตาม จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
-    "triggerEn": "[Trigger] Place up to 1 Character with a cost of 4 or less at the bottom of the owner's deck.",
-    "triggerJp": "【トリガー】コスト4以下のキャラ1枚までを、持ち主のデッキの下に置く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-056.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-057",
@@ -1414,11 +1648,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, place up to 1 Character with a cost of 1 or less at the bottom of the owner's deck.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、コスト1以下のキャラ1枚までを、持ち主のデッキの下に置く。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. จากนั้น, นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 1 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
-    "triggerEn": "[Trigger] Return up to 1 Character with a cost of 6 or less to the owner's hand.",
-    "triggerJp": "【トリガー】コスト6以下のキャラ1枚までを、持ち主の手札に戻す。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-057.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-058",
@@ -1430,7 +1664,7 @@
     "nameTh": "Crocodile",
     "color": "Purple/Yellow",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Baroque Works",
     "effectEn": "[Opponent's Turn] [Once Per Turn] When a DON!! card on your field is returned to your DON!! deck by your effect, add up to 1 DON!! card from your DON!! deck and set it as active.",
@@ -1438,7 +1672,9 @@
     "effectTh": "[เทิร์นคู่แข่ง] [เทิร์นละ 1 ครั้ง] เมื่อ ด้ง!! ในสนามของเราถูกนำกลับเข้า ด้ง!! เด็ค โดยความสามารถของฝ่ายเรา, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-058.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-058",
@@ -1450,7 +1686,7 @@
     "nameTh": "Crocodile (Parallel)",
     "color": "Purple/Yellow",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Baroque Works",
     "effectEn": "[Opponent's Turn] [Once Per Turn] When a DON!! card on your field is returned to your DON!! deck by your effect, add up to 1 DON!! card from your DON!! deck and set it as active.",
@@ -1459,7 +1695,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-058_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-059",
@@ -1474,12 +1712,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Water Seven/Galley-La Company",
-    "effectEn": "[On Your Opponent's Attack] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader has the {Water Seven} type, this Character gains [Blocker] during this turn.<br>(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
-    "effectJp": "【相手のアタック時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが特徴《W7》を持つ場合、このキャラは、このターン中、【ブロッカー】を得る。<br>(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
-    "effectTh": "[เมื่อคู่แข่งโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; W7 &gt;, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. <br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectEn": "[On Your Opponent's Attack] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader has the {Water Seven} type, this Character gains [Blocker] during this turn.(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
+    "effectJp": "【相手のアタック時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが特徴《W7》を持つ場合、このキャラは、このターン中、【ブロッカー】を得る。(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
+    "effectTh": "[เมื่อคู่แข่งโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < W7 >, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-059.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-060",
@@ -1494,12 +1734,14 @@
     "power": 9000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Baroque Works",
-    "effectEn": "[On Play] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader's type includes \"Baroque Works\", add up to 1 card from the top of your deck to the top of your Life cards.<br>[On Your Opponent's Attack] [Once Per Turn] DON!! −1: Draw 1 card and trash 1 card from your hand.",
-    "effectJp": "【登場時】ドン!!-2(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが『B・W』を含む特徴を持つ場合、自分のデッキの上から1枚までを、ライフの上に加える。<br>【相手のアタック時】【ターン1回】ドン!!-1：カード1枚を引き、自分の手札1枚を捨てる。",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา ระบุคำว่า [B•W] รวมอยู่ในคุณสมบัติ, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์.<br>[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : จั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
+    "effectEn": "[On Play] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader's type includes \"Baroque Works\", add up to 1 card from the top of your deck to the top of your Life cards.[On Your Opponent's Attack] [Once Per Turn] DON!! −1: Draw 1 card and trash 1 card from your hand.",
+    "effectJp": "【登場時】ドン!!-2(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが『B・W』を含む特徴を持つ場合、自分のデッキの上から1枚までを、ライフの上に加える。【相手のアタック時】【ターン1回】ドン!!-1：カード1枚を引き、自分の手札1枚を捨てる。",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา ระบุคำว่า [B•W] รวมอยู่ในคุณสมบัติ, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์.[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : จั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-060.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-060",
@@ -1514,13 +1756,15 @@
     "power": 9000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Baroque Works",
-    "effectEn": "[On Play] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader's type includes \"Baroque Works\", add up to 1 card from the top of your deck to the top of your Life cards.<br>[On Your Opponent's Attack] [Once Per Turn] DON!! −1: Draw 1 card and trash 1 card from your hand.",
-    "effectJp": "【登場時】ドン!!-2(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが『B・W』を含む特徴を持つ場合、自分のデッキの上から1枚までを、ライフの上に加える。<br>【相手のアタック時】【ターン1回】ドン!!-1：カード1枚を引き、自分の手札1枚を捨てる。",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา ระบุคำว่า [B•W] รวมอยู่ในคุณสมบัติ, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์.<br>[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : จั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
+    "effectEn": "[On Play] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader's type includes \"Baroque Works\", add up to 1 card from the top of your deck to the top of your Life cards.[On Your Opponent's Attack] [Once Per Turn] DON!! −1: Draw 1 card and trash 1 card from your hand.",
+    "effectJp": "【登場時】ドン!!-2(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが『B・W』を含む特徴を持つ場合、自分のデッキの上から1枚までを、ライフの上に加える。【相手のアタック時】【ターン1回】ドン!!-1：カード1枚を引き、自分の手札1枚を捨てる。",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา ระบุคำว่า [B•W] รวมอยู่ในคุณสมบัติ, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์.[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : จั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-060_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-061",
@@ -1538,10 +1782,12 @@
     "trait": "Fish-Man/Water Seven",
     "effectEn": "[Activate: Main] You may trash this Character: If your Leader has the {Water Seven} type, add up to 1 DON!! card from your DON!! deck and rest it.",
     "effectJp": "【起動メイン】このキャラをトラッシュに置くことができる：自分のリーダーが特徴《W7》を持つ場合、ドン!!デッキからドン!!1枚までを、レストで追加する。",
-    "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; W7 &gt;, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
+    "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < W7 >, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-061.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-062",
@@ -1562,7 +1808,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-062.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-063",
@@ -1580,10 +1828,12 @@
     "trait": "Water Seven/The Franky Family",
     "effectEn": "[On Your Opponent's Attack] [Once Per Turn] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader has the {Water Seven} type, up to 1 of your Leader or Character cards gains +1000 power during this battle.",
     "effectJp": "【相手のアタック時】【ターン1回】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが特徴《W7》を持つ場合、自分のリーダーかキャラ1枚までを、このバトル中、パワー+1000。",
-    "effectTh": "[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; W7 &gt;, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000.",
+    "effectTh": "[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < W7 >, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-063.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-064",
@@ -1601,11 +1851,11 @@
     "effectEn": "[On Play] Add up to 1 DON!! card from your DON!! deck and rest it. Then, if you have 6 or more DON!! cards on your field, draw 1 card.",
     "effectJp": "【登場時】ドン!!デッキからドン!!1枚までを、レストで追加する。その後、自分の場にドン!!が6枚以上ある場合、カード1枚を引く。",
     "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ มาวางเพิ่มแบบ เรสต์, และถ้ามี ด้ง!! อยู่ในสนามของเรา จำนวน 6 ใบ หรือมากกว่า, จะจั่วการ์ด จำนวน 1 ใบ.",
-    "triggerEn": "[Trigger] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Play this card.",
-    "triggerJp": "【トリガー】ドン!!-2(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-064.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-064",
@@ -1623,12 +1873,12 @@
     "effectEn": "[On Play] Add up to 1 DON!! card from your DON!! deck and rest it. Then, if you have 6 or more DON!! cards on your field, draw 1 card.",
     "effectJp": "【登場時】ドン!!デッキからドン!!1枚までを、レストで追加する。その後、自分の場にドン!!が6枚以上ある場合、カード1枚を引く。",
     "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ มาวางเพิ่มแบบ เรสต์, และถ้ามี ด้ง!! อยู่ในสนามของเรา จำนวน 6 ใบ หรือมากกว่า, จะจั่วการ์ด จำนวน 1 ใบ.",
-    "triggerEn": "[Trigger] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Play this card.",
-    "triggerJp": "【トリガー】ドン!!-2(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-064_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-065",
@@ -1647,11 +1897,11 @@
     "effectEn": "[On Play] If your Leader's type includes \"Baroque Works\", up to 1 of your opponent's Characters with a cost of 5 or less cannot attack until the start of your next turn.",
     "effectJp": "【登場時】自分のリーダーが『B・W』を含む特徴を持つ場合、相手のコスト5以下のキャラ1枚までは、次の自分のターン開始時までアタックできない。",
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา ระบุคำว่า [B•W] รวมอยู่ในคุณสมบัติ, คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, จะไม่สามารถโจมตีได้จนกระทั่งถึงช่วงเริ่มต้นเทิร์นของเราในครั้งถัดไป.",
-    "triggerEn": "[Trigger] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Play this card.",
-    "triggerJp": "【トリガー】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-065.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-066",
@@ -1670,11 +1920,11 @@
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 card with a type including \"Baroque Works\" and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、『B・W』を含む特徴を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
     "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่ระบุคำว่า [B•W] รวมอยู่ในคุณสมบัติ จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Play this card.",
-    "triggerJp": "【トリガー】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-066.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-067",
@@ -1692,11 +1942,11 @@
     "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
     "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
-    "triggerEn": "[Trigger] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Play this card.",
-    "triggerJp": "【トリガー】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-067.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-068",
@@ -1712,12 +1962,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Animal/Water Seven",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Your Opponent's Attack] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Return up to 1 of your opponent's Characters with a cost of 2 or less to the owner's hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【相手のアタック時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：相手のコスト2以下のキャラ1枚までを、持ち主の手札に戻す。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อคู่แข่งโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Your Opponent's Attack] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Return up to 1 of your opponent's Characters with a cost of 2 or less to the owner's hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【相手のアタック時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：相手のコスト2以下のキャラ1枚までを、持ち主の手札に戻す。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อคู่แข่งโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-068.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-069",
@@ -1736,11 +1988,11 @@
     "effectEn": "[On Your Opponent's Attack] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character's base power becomes the same as the power of your opponent's attacking Leader or Character during this turn.",
     "effectJp": "【相手のアタック時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：このキャラの元々のパワーは、このターン中、相手のアタックしているリーダーかキャラと同じパワーになる。",
     "effectTh": "[เมื่อคู่แข่งโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, ค่าพาวเวอร์ ตั้งต้น ของคาแรกเตอร์นี้, จะกลายเป็นเท่ากับ ค่าพาวเวอร์ของ ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง ที่กำลังโจมตีอยู่.",
-    "triggerEn": "[Trigger] DON!! −1: Play this card.",
-    "triggerJp": "【トリガー】ドン!!-1：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-069.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-070",
@@ -1761,7 +2013,9 @@
     "effectTh": "[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-070.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-071",
@@ -1777,12 +2031,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Baroque Works",
-    "effectEn": "[On Your Opponent's Attack] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains [Blocker] and +1000 power during this battle.<br>(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
-    "effectJp": "【相手のアタック時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：このキャラは、このバトル中、【ブロッカー】を得て、パワー+1000。<br>(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
-    "effectTh": "[เมื่อคู่แข่งโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในแบทเทิลนี้, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์], และจะมีพาวเวอร์ +1000.<br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectEn": "[On Your Opponent's Attack] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains [Blocker] and +1000 power during this battle.(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
+    "effectJp": "【相手のアタック時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：このキャラは、このバトル中、【ブロッカー】を得て、パワー+1000。(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
+    "effectTh": "[เมื่อคู่แข่งโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในแบทเทิลนี้, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์], และจะมีพาวเวอร์ +1000.(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-071.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-072",
@@ -1802,7 +2058,9 @@
     "effectTh": "[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ), สามารถ เรสต์ คาแรกเตอร์นี้ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-072.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-072",
@@ -1823,16 +2081,18 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-072_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-073",
     "cardCode": "OP04-073",
     "rarity": "C",
     "cardType": "CHARACTER",
-    "nameEn": "Mr.13 &amp; Ms.Friday",
-    "nameJp": "Mr.13&amp;ミス・フライデー",
-    "nameTh": "Mr.13 &amp; Ms.Friday",
+    "nameEn": "Mr.13 & Ms.Friday",
+    "nameJp": "Mr.13&ミス・フライデー",
+    "nameTh": "Mr.13 & Ms.Friday",
     "color": "Purple",
     "cost": 3,
     "power": 1000,
@@ -1842,11 +2102,11 @@
     "effectEn": "[Activate: Main] You may trash this Character and 1 of your Characters with a type including \"Baroque Works\": Add up to 1 DON!! card from your DON!! deck and set it as active.",
     "effectJp": "【起動メイン】このキャラと自分の『B・W』を含む特徴を持つキャラ1枚をトラッシュに置くことができる：ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
     "effectTh": "[ใช้งาน : เมน] สามารถนำ คาแรกเตอร์นี้ กับ คาแรกเตอร์ของเรา ที่ระบุคำว่า [B•W] รวมอยู่ในคุณสมบัติ จำนวน 1 ใบ ไปวางที่แทรช : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-073.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-074",
@@ -1862,11 +2122,11 @@
     "effectEn": "[Counter] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Up to 1 of your Leader or Character cards gains +1000 power during this battle. Then, rest up to 1 of your opponent's Characters with a cost of 4 or less.",
     "effectJp": "【カウンター】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーかキャラ1枚までを、このバトル中、パワー+1000。その後、相手のコスト4以下のキャラ1枚までを、レストにする。",
     "effectTh": "[เคาน์เตอร์] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000. จากนั้น, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-074.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-075",
@@ -1882,11 +2142,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +6000 power during this battle. Then, if you have 2 or less Life cards, add up to 1 DON!! card from your DON!! deck and rest it.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+6000。その後、自分のライフが2枚以下の場合、ドン!!デッキからドン!!1枚までを、レストで追加する。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +6000. จากนั้น, ถ้าเรามี ไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
-    "triggerEn": "[Trigger] Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-075.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-076",
@@ -1902,11 +2162,11 @@
     "effectEn": "[Counter] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Up to 1 of your Leader or Character cards gains +1000 power during this turn.",
     "effectJp": "【カウンター】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーかキャラ1枚までを、このターン中、パワー+1000。",
     "effectTh": "[เคาน์เตอร์] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000.",
-    "triggerEn": "[Trigger] Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-076.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-077",
@@ -1927,16 +2187,18 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-077.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-078",
     "cardCode": "OP04-078",
     "rarity": "C",
     "cardType": "CHARACTER",
-    "nameEn": "Oimo &amp; Kashii",
-    "nameJp": "オイモ&amp;カーシー",
-    "nameTh": "Oimo &amp; Kashii",
+    "nameEn": "Oimo & Kashii",
+    "nameJp": "オイモ&カーシー",
+    "nameTh": "Oimo & Kashii",
     "color": "Black",
     "cost": 6,
     "power": 8000,
@@ -1948,7 +2210,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-078.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-079",
@@ -1966,10 +2230,12 @@
     "trait": "Dressrosa/Yonta Maria Fleet",
     "effectEn": "[Activate: Main] [Once Per Turn] Give up to 1 of your opponent's Characters −4 cost during this turn and trash 2 cards from the top of your deck. Then, K.O. 1 of your {Dressrosa} type Characters.",
     "effectJp": "【起動メイン】【ターン1回】相手のキャラ1枚までを、このターン中、コスト-4し、自分のデッキの上から2枚をトラッシュに置く。その後、自分の特徴《ドレスローザ》を持つキャラ1枚を、KOする。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -4, และจะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช. จากนั้น, ทำการ KO คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวน 1 ใบ.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -4, และจะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช. จากนั้น, ทำการ KO คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-079.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-080",
@@ -1987,10 +2253,12 @@
     "trait": "Dressrosa",
     "effectEn": "[On Play] Up to 1 of your {Dressrosa} type Characters can also attack active Characters during this turn.",
     "effectJp": "【登場時】自分の特徴《ドレスローザ》を持つキャラ1枚までは、このターン中、アクティブのキャラにもアタックできる。",
-    "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวนไม่เกิน 1 ใบ จะสามารถโจมตีใส่คาแรกเตอร์ของคู่แข่ง ที่กำลังแอ็คทีฟอยู่ ได้ด้วย.",
+    "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวนไม่เกิน 1 ใบ จะสามารถโจมตีใส่คาแรกเตอร์ของคู่แข่ง ที่กำลังแอ็คทีฟอยู่ ได้ด้วย.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-080.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-081",
@@ -2005,12 +2273,14 @@
     "power": 6000,
     "attribute": "Slash",
     "trait": "Dressrosa/Beautiful Pirates",
-    "effectEn": "[DON!! x1] This Character can also attack active Characters.<br>[When Attacking] You may rest your Leader: K.O. up to 1 of your opponent's Characters with a cost of 1 or less. Then, trash 2 cards from the top of your deck.",
-    "effectJp": "【ドン!!×1】このキャラはアクティブのキャラにもアタックできる。<br>【アタック時】自分のリーダーをレストにできる：相手のコスト1以下のキャラ1枚までを、KOする。その後、自分のデッキの上から2枚をトラッシュに置く。",
-    "effectTh": "[ด้ง!! x 1] คาแรกเตอร์นี้ จะสามารถโจมตีใส่คาแรกเตอร์ ที่กำลังแอ็คทีฟอยู่ ได้ด้วย.<br>[เมื่อโจมตี] สามารถ เรสต์ ลีดเดอร์ของเรา : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
+    "effectEn": "[DON!! x1] This Character can also attack active Characters.[When Attacking] You may rest your Leader: K.O. up to 1 of your opponent's Characters with a cost of 1 or less. Then, trash 2 cards from the top of your deck.",
+    "effectJp": "【ドン!!×1】このキャラはアクティブのキャラにもアタックできる。【アタック時】自分のリーダーをレストにできる：相手のコスト1以下のキャラ1枚までを、KOする。その後、自分のデッキの上から2枚をトラッシュに置く。",
+    "effectTh": "[ด้ง!! x 1] คาแรกเตอร์นี้ จะสามารถโจมตีใส่คาแรกเตอร์ ที่กำลังแอ็คทีฟอยู่ ได้ด้วย.[เมื่อโจมตี] สามารถ เรสต์ ลีดเดอร์ของเรา : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-081.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-082",
@@ -2025,12 +2295,14 @@
     "power": 5000,
     "attribute": "Slash",
     "trait": "Dressrosa",
-    "effectEn": "If this Character would be K.O.'d, you may rest your Leader or 1 [Corrida Coliseum] instead.<br>[On Play] If your Leader is [Rebecca], K.O. up to 1 of your opponent's Characters with a cost of 1 or less. Then, trash 1 card from the top of your deck.",
-    "effectJp": "このキャラがKOされる場合、代わりに自分のリーダーか「コリーダコロシアム」1枚を、レストにできる。<br>【登場時】自分のリーダーが「レベッカ」の場合、相手のコスト1以下のキャラ1枚までを、KOする。その後、自分のデッキの上から1枚をトラッシュに置く。",
-    "effectTh": "ถ้าคาแรกเตอร์นี้กำลังจะถูก KO, จะสามารถทำการ เรสต์ ลีดเดอร์ของเรา หรือ [Corrida Coliseum] จำนวน 1 ใบ แทนได้.<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Rebecca], จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
+    "effectEn": "If this Character would be K.O.'d, you may rest your Leader or 1 [Corrida Coliseum] instead.[On Play] If your Leader is [Rebecca], K.O. up to 1 of your opponent's Characters with a cost of 1 or less. Then, trash 1 card from the top of your deck.",
+    "effectJp": "このキャラがKOされる場合、代わりに自分のリーダーか「コリーダコロシアム」1枚を、レストにできる。【登場時】自分のリーダーが「レベッカ」の場合、相手のコスト1以下のキャラ1枚までを、KOする。その後、自分のデッキの上から1枚をトラッシュに置く。",
+    "effectTh": "ถ้าคาแรกเตอร์นี้กำลังจะถูก KO, จะสามารถทำการ เรสต์ ลีดเดอร์ของเรา หรือ [Corrida Coliseum] จำนวน 1 ใบ แทนได้.[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Rebecca], จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-082.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-082",
@@ -2045,13 +2317,15 @@
     "power": 5000,
     "attribute": "Slash",
     "trait": "Dressrosa",
-    "effectEn": "If this Character would be K.O.'d, you may rest your Leader or 1 [Corrida Coliseum] instead.<br>[On Play] If your Leader is [Rebecca], K.O. up to 1 of your opponent's Characters with a cost of 1 or less. Then, trash 1 card from the top of your deck.",
-    "effectJp": "このキャラがKOされる場合、代わりに自分のリーダーか「コリーダコロシアム」1枚を、レストにできる。<br>【登場時】自分のリーダーが「レベッカ」の場合、相手のコスト1以下のキャラ1枚までを、KOする。その後、自分のデッキの上から1枚をトラッシュに置く。",
-    "effectTh": "ถ้าคาแรกเตอร์นี้กำลังจะถูก KO, จะสามารถทำการ เรสต์ ลีดเดอร์ของเรา หรือ [Corrida Coliseum] จำนวน 1 ใบ แทนได้.<br>[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Rebecca], จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
+    "effectEn": "If this Character would be K.O.'d, you may rest your Leader or 1 [Corrida Coliseum] instead.[On Play] If your Leader is [Rebecca], K.O. up to 1 of your opponent's Characters with a cost of 1 or less. Then, trash 1 card from the top of your deck.",
+    "effectJp": "このキャラがKOされる場合、代わりに自分のリーダーか「コリーダコロシアム」1枚を、レストにできる。【登場時】自分のリーダーが「レベッカ」の場合、相手のコスト1以下のキャラ1枚までを、KOする。その後、自分のデッキの上から1枚をトラッシュに置く。",
+    "effectTh": "ถ้าคาแรกเตอร์นี้กำลังจะถูก KO, จะสามารถทำการ เรสต์ ลีดเดอร์ของเรา หรือ [Corrida Coliseum] จำนวน 1 ใบ แทนได้.[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Rebecca], จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-082_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-083",
@@ -2067,12 +2341,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] None of your Characters can be K.O.'d by effects until the start of your next turn. Then, draw 2 cards and trash 2 cards from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のキャラすべては、次の自分のターン開始時まで、効果でKOされない。その後、カード2枚を引き、自分の手札2枚を捨てる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] จนกระทั่งถึงช่วงเริ่มต้นเทิร์นของเราในครั้งถัดไป, คาแรกเตอร์ ของฝ่ายเราทั้งหมด, จะไม่ถูก KO จากความสามารถใดๆ. จากนั้น, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] None of your Characters can be K.O.'d by effects until the start of your next turn. Then, draw 2 cards and trash 2 cards from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のキャラすべては、次の自分のターン開始時まで、効果でKOされない。その後、カード2枚を引き、自分の手札2枚を捨てる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] จนกระทั่งถึงช่วงเริ่มต้นเทิร์นของเราในครั้งถัดไป, คาแรกเตอร์ ของฝ่ายเราทั้งหมด, จะไม่ถูก KO จากความสามารถใดๆ. จากนั้น, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-083.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-083",
@@ -2088,13 +2364,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] None of your Characters can be K.O.'d by effects until the start of your next turn. Then, draw 2 cards and trash 2 cards from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のキャラすべては、次の自分のターン開始時まで、効果でKOされない。その後、カード2枚を引き、自分の手札2枚を捨てる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] จนกระทั่งถึงช่วงเริ่มต้นเทิร์นของเราในครั้งถัดไป, คาแรกเตอร์ ของฝ่ายเราทั้งหมด, จะไม่ถูก KO จากความสามารถใดๆ. จากนั้น, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] None of your Characters can be K.O.'d by effects until the start of your next turn. Then, draw 2 cards and trash 2 cards from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のキャラすべては、次の自分のターン開始時まで、効果でKOされない。その後、カード2枚を引き、自分の手札2枚を捨てる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] จนกระทั่งถึงช่วงเริ่มต้นเทิร์นของเราในครั้งถัดไป, คาแรกเตอร์ ของฝ่ายเราทั้งหมด, จะไม่ถูก KO จากความสามารถใดๆ. จากนั้น, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-083_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-083",
@@ -2110,13 +2388,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Dressrosa/Revolutionary Army",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] None of your Characters can be K.O.'d by effects until the start of your next turn. Then, draw 2 cards and trash 2 cards from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のキャラすべては、次の自分のターン開始時まで、効果でKOされない。その後、カード2枚を引き、自分の手札2枚を捨てる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] จนกระทั่งถึงช่วงเริ่มต้นเทิร์นของเราในครั้งถัดไป, คาแรกเตอร์ ของฝ่ายเราทั้งหมด, จะไม่ถูก KO จากความสามารถใดๆ. จากนั้น, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] None of your Characters can be K.O.'d by effects until the start of your next turn. Then, draw 2 cards and trash 2 cards from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のキャラすべては、次の自分のターン開始時まで、効果でKOされない。その後、カード2枚を引き、自分の手札2枚を捨てる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] จนกระทั่งถึงช่วงเริ่มต้นเทิร์นของเราในครั้งถัดไป, คาแรกเตอร์ ของฝ่ายเราทั้งหมด, จะไม่ถูก KO จากความสามารถใดๆ. จากนั้น, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-083_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-084",
@@ -2136,7 +2416,9 @@
     "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำคาแรกเตอร์การ์ด ที่มีคอสต์ 2 หรือต่ำกว่า และระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ นอกเหนือจาก [Stussy] จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, นำการ์ดที่เหลือไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-084.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-085",
@@ -2154,10 +2436,12 @@
     "trait": "Dressrosa",
     "effectEn": "[On Play]/[When Attacking] If your Leader has the {Dressrosa} type, give up to 1 of your opponent's Characters −2 cost during this turn. Then, trash 1 card from the top of your deck.",
     "effectJp": "【登場時】/【アタック時】自分のリーダーが特徴《ドレスローザ》を持つ場合、相手のキャラ1枚までを、このターン中、コスト-2。その後、自分のデッキの上から1枚をトラッシュに置く。",
-    "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; เดรสโรซ่า &gt;, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2. จากนั้น, นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
+    "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < เดรสโรซ่า >, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2. จากนั้น, นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-085.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-086",
@@ -2178,7 +2462,9 @@
     "effectTh": "[ด้ง!! x 1] เมื่อคาแรกเตอร์ของคู่แข่ง ถูก KO จากการแบทเทิลกับ คาแรกเตอร์นี้, จะจั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-086.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-087",
@@ -2199,7 +2485,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-087.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-088",
@@ -2220,7 +2508,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ ลีดเดอร์ของเรา จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -4.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-088.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-089",
@@ -2241,7 +2531,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-089.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-090",
@@ -2256,12 +2548,14 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "Dressrosa/Straw Hat Crew",
-    "effectEn": "This Character can also attack active Characters.<br>[Activate: Main] [Once Per Turn] You may return 7 cards from your trash to the bottom of your deck in any order: Set this Character as active. Then, this Character will not become active in your next Refresh Phase.",
-    "effectJp": "このキャラはアクティブのキャラにもアタックできる。<br>【起動メイン】【ターン1回】自分のトラッシュのカード7枚を好きな順番でデッキの下に戻すことができる：このキャラをアクティブにする。その後、このキャラは、次の自分のリフレッシュフェイズでアクティブにならない。",
-    "effectTh": "คาแรกเตอร์นี้ จะสามารถโจมตีใส่คาแรกเตอร์ ที่กำลังแอ็คทีฟอยู่ ได้ด้วย.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำการ์ดที่อยู่ในแทรชของเรา จำนวน 7 ใบ กลับไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : ทำการ แอ็คทีฟ คาแรกเตอร์นี้. จากนั้น, คาแรกเตอร์นี้, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของเราในครั้งถัดไป.",
+    "effectEn": "This Character can also attack active Characters.[Activate: Main] [Once Per Turn] You may return 7 cards from your trash to the bottom of your deck in any order: Set this Character as active. Then, this Character will not become active in your next Refresh Phase.",
+    "effectJp": "このキャラはアクティブのキャラにもアタックできる。【起動メイン】【ターン1回】自分のトラッシュのカード7枚を好きな順番でデッキの下に戻すことができる：このキャラをアクティブにする。その後、このキャラは、次の自分のリフレッシュフェイズでアクティブにならない。",
+    "effectTh": "คาแรกเตอร์นี้ จะสามารถโจมตีใส่คาแรกเตอร์ ที่กำลังแอ็คทีฟอยู่ ได้ด้วย.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำการ์ดที่อยู่ในแทรชของเรา จำนวน 7 ใบ กลับไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : ทำการ แอ็คทีฟ คาแรกเตอร์นี้. จากนั้น, คาแรกเตอร์นี้, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของเราในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-090.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-090",
@@ -2276,13 +2570,15 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "Dressrosa/Straw Hat Crew",
-    "effectEn": "This Character can also attack active Characters.<br>[Activate: Main] [Once Per Turn] You may return 7 cards from your trash to the bottom of your deck in any order: Set this Character as active. Then, this Character will not become active in your next Refresh Phase.",
-    "effectJp": "このキャラはアクティブのキャラにもアタックできる。<br>【起動メイン】【ターン1回】自分のトラッシュのカード7枚を好きな順番でデッキの下に戻すことができる：このキャラをアクティブにする。その後、このキャラは、次の自分のリフレッシュフェイズでアクティブにならない。",
-    "effectTh": "คาแรกเตอร์นี้ จะสามารถโจมตีใส่คาแรกเตอร์ ที่กำลังแอ็คทีฟอยู่ ได้ด้วย.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำการ์ดที่อยู่ในแทรชของเรา จำนวน 7 ใบ กลับไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : ทำการ แอ็คทีฟ คาแรกเตอร์นี้. จากนั้น, คาแรกเตอร์นี้, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของเราในครั้งถัดไป.",
+    "effectEn": "This Character can also attack active Characters.[Activate: Main] [Once Per Turn] You may return 7 cards from your trash to the bottom of your deck in any order: Set this Character as active. Then, this Character will not become active in your next Refresh Phase.",
+    "effectJp": "このキャラはアクティブのキャラにもアタックできる。【起動メイン】【ターン1回】自分のトラッシュのカード7枚を好きな順番でデッキの下に戻すことができる：このキャラをアクティブにする。その後、このキャラは、次の自分のリフレッシュフェイズでアクティブにならない。",
+    "effectTh": "คาแรกเตอร์นี้ จะสามารถโจมตีใส่คาแรกเตอร์ ที่กำลังแอ็คทีฟอยู่ ได้ด้วย.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำการ์ดที่อยู่ในแทรชของเรา จำนวน 7 ใบ กลับไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : ทำการ แอ็คทีฟ คาแรกเตอร์นี้. จากนั้น, คาแรกเตอร์นี้, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของเราในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-090_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-091",
@@ -2300,10 +2596,12 @@
     "trait": "The Tontattas/Dressrosa",
     "effectEn": "[On Play] You may rest your 1 Leader: If your Leader has the {Dressrosa} type, K.O. up to 1 of your opponent's Characters with a cost of 1 or less. Then, trash 2 cards from the top of your deck.",
     "effectJp": "【登場時】自分のリーダー1枚をレストにできる：自分のリーダーが特徴《ドレスローザ》を持つ場合、相手のコスト1以下のキャラ1枚までを、KOする。その後、自分のデッキの上から2枚をトラッシュに置く。",
-    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; เดรสโรซ่า &gt;, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
+    "effectTh": "[เมื่อลงสนาม] สามารถ เรสต์ ลีดเดอร์ของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < เดรสโรซ่า >, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, นำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-091.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-092",
@@ -2324,7 +2622,9 @@
     "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ดที่มีคุณสมบัติ [เดรสโรซ่า] นอกเหนือจาก [Rebecca] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-092.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-093",
@@ -2337,14 +2637,14 @@
     "color": "Black",
     "cost": 3,
     "trait": "Dressrosa/Straw Hat Crew",
-    "effectEn": "[Main] Up to 1 of your {Dressrosa} type Characters gains +6000 power during this turn. Then, if you have 15 or more cards in your trash, that card gains [Double Attack] during this turn.<br>(This card deals 2 damage.)",
-    "effectJp": "【メイン】自分の特徴《ドレスローザ》を持つキャラ1枚までを、このターン中、パワー+6000。その後、自分のトラッシュが15枚以上ある場合、そのカードは、このターン中、【ダブルアタック】を得る。<br>(このカードが与えるダメージは2になる)",
-    "effectTh": "[เมน] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +6000. จากนั้น, ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 15 ใบ หรือมากกว่า, ในเทิร์นนี้, การ์ดใบนั้น, จะได้รับ [ดับเบิ้ลแอทแทค].<br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
-    "triggerEn": "[Trigger] Draw 3 cards and trash 2 cards from your hand.",
-    "triggerJp": "【トリガー】カード3枚を引き、自分の手札2枚を捨てる。",
+    "effectEn": "[Main] Up to 1 of your {Dressrosa} type Characters gains +6000 power during this turn. Then, if you have 15 or more cards in your trash, that card gains [Double Attack] during this turn.(This card deals 2 damage.)",
+    "effectJp": "【メイン】自分の特徴《ドレスローザ》を持つキャラ1枚までを、このターン中、パワー+6000。その後、自分のトラッシュが15枚以上ある場合、そのカードは、このターン中、【ダブルアタック】を得る。(このカードが与えるダメージは2になる)",
+    "effectTh": "[เมน] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +6000. จากนั้น, ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 15 ใบ หรือมากกว่า, ในเทิร์นนี้, การ์ดใบนั้น, จะได้รับ [ดับเบิ้ลแอทแทค].(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-093.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-094",
@@ -2360,11 +2660,11 @@
     "effectEn": "[Main] Choose up to 1 of your opponent's Characters with a cost of 4 or less and K.O. it. If you have 15 or more cards in your trash, choose up to 1 of your opponent's Characters with a cost of 6 or less instead of a Character with a cost of 4 or less.",
     "effectJp": "【メイン】相手のコスト4以下のキャラ1枚までを選び、KOする。自分のトラッシュが15枚以上ある場合、相手のコスト4以下のキャラの代わりに相手のコスト6以下のキャラを選ぶ。",
     "effectTh": "[เมน] เลือกคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, และทำการ KO. ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 15 ใบ หรือมากกว่า, จากที่จะได้เลือกคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จะเปลี่ยนเป็น เลือกคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า แทน.",
-    "triggerEn": "[Trigger] You may rest your Leader: K.O. up to 1 of your opponent's Characters with a cost of 5 or less.",
-    "triggerJp": "【トリガー】自分のリーダーをレストにできる：相手のコスト5以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-094.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-095",
@@ -2380,11 +2680,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +2000 power during this battle. Then, if you have 15 or more cards in your trash, that card gains an additional +2000 power during this battle.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+2000。その後、自分のトラッシュが15枚以上ある場合、そのカードを、このバトル中、パワー+2000。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000. จากนั้น, ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 15 ใบ หรือมากกว่า, ในแบทเทิลนี้, การ์ดที่ใบนั้น, จะมีพาวเวอร์ +2000.",
-    "triggerEn": "[Trigger] Draw 2 cards and trash 1 card from your hand.",
-    "triggerJp": "【トリガー】カード2枚を引き、自分の手札1枚を捨てる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-095.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-096",
@@ -2399,10 +2699,12 @@
     "trait": "Dressrosa",
     "effectEn": "If your Leader has the {Dressrosa} type, your {Dressrosa} type Characters can attack Characters on the turn in which they are played.",
     "effectJp": "自分のリーダーが特徴《ドレスローザ》を持つ場合、自分の特徴《ドレスローザ》を持つキャラは、登場したターンにキャラへアタックできる。",
-    "effectTh": "ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; เดรสโรซ่า &gt;, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt;, จะสามารถโจมตีใส่ คาแรกเตอร์ ในเทิร์นที่เพิ่งลงสนามได้.",
+    "effectTh": "ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < เดรสโรซ่า >, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < เดรสโรซ่า >, จะสามารถโจมตีใส่ คาแรกเตอร์ ในเทิร์นที่เพิ่งลงสนามได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-096.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-097",
@@ -2419,10 +2721,12 @@
     "trait": "Land of Wano",
     "effectEn": "[On Play] Add up to 1 of your opponent's {Animal} or {SMILE} type Characters with a cost of 3 or less to the top of your opponent's Life cards face-up.",
     "effectJp": "【登場時】相手のコスト3以下の、特徴《動物》か《SMILE》を持つキャラ1枚までを、相手のライフの上に表向きで加える。",
-    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของคู่แข่ง, ที่มีคอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ &lt; สัตว์ &gt; หรือ &lt; SMILE &gt; จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่ ข้างบนสุด ของไลฟ์ของคู่แข่ง แบบหงายหน้า.",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของคู่แข่ง, ที่มีคอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ < สัตว์ > หรือ < SMILE > จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่ ข้างบนสุด ของไลฟ์ของคู่แข่ง แบบหงายหน้า.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-097.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-098",
@@ -2439,10 +2743,12 @@
     "trait": "Land of Wano",
     "effectEn": "[On Play] You may trash 2 {Land of Wano} type cards from your hand: If you have 1 or less Life cards, add 1 card from the top of your deck to the top of your Life cards.",
     "effectJp": "【登場時】自分の手札から特徴《ワノ国》を持つカード2枚を捨てることができる：自分のライフが1枚以下の場合、自分のデッキの上から1枚をライフの上に加える。",
-    "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt; จากบนมือของเรา จำนวน 2 ใบ : ถ้าเรามี ไลฟ์ จำนวน 1 ใบ หรือน้อยกว่า, จะนำการ์ดใบบนสุดจากเด็ค จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์.",
+    "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดที่มีคุณสมบัติ < วาโนะคุนิ > จากบนมือของเรา จำนวน 2 ใบ : ถ้าเรามี ไลฟ์ จำนวน 1 ใบ หรือน้อยกว่า, จะนำการ์ดใบบนสุดจากเด็ค จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-098.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-099",
@@ -2460,11 +2766,11 @@
     "effectEn": "Also treat this card's name as [Charlotte Linlin] according to the rules.",
     "effectJp": "ルール上、このカードはカード名を「シャーロット・リンリン」としても扱う。",
     "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Charlotte Linlin] ด้วยตามกฎ.",
-    "triggerEn": "[Trigger] If you have 1 or less Life cards, play this card.",
-    "triggerJp": "【トリガー】自分のライフが1枚以下の場合、このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-099.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-100",
@@ -2483,11 +2789,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] Up to 1 of your opponent's Leader or Character cards cannot attack during this turn.",
-    "triggerJp": "【トリガー】相手のリーダーかキャラ1枚までは、このターン中、アタックできない。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-100.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-100",
@@ -2506,12 +2812,12 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] Up to 1 of your opponent's Leader or Character cards cannot attack during this turn.",
-    "triggerJp": "【トリガー】相手のリーダーかキャラ1枚までは、このターン中、アタックできない。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-100_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-101",
@@ -2530,11 +2836,11 @@
     "effectEn": "[Your Turn] [On Play] Draw 1 card.",
     "effectJp": "【自分のターン中】【登場時】カード1枚を引く。",
     "effectTh": "[เทิร์นตัวเอง] [เมื่อลงสนาม] จั่วการ์ด จำนวน 1 ใบ.",
-    "triggerEn": "[Trigger] Play this card. Then, K.O. up to 1 of your opponent's Characters with a cost of 2 or less.",
-    "triggerJp": "【トリガー】このカードを登場させる。その後、相手のコスト2以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-101.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-102",
@@ -2554,7 +2860,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : ทำการ แอ็คทีฟ คาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-102.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-103",
@@ -2571,12 +2879,12 @@
     "trait": "Land of Wano/Kouzuki Clan",
     "effectEn": "[On Play] Up to 1 of your {Land of Wano} type Leader or Character cards gains +1000 power during this turn.",
     "effectJp": "【登場時】自分の特徴《ワノ国》を持つ、リーダーかキャラ1枚までを、このターン中、パワー+1000。",
-    "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt; จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
+    "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ < วาโนะคุนิ > จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-103.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-104",
@@ -2595,11 +2903,11 @@
     "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
     "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-104.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-104",
@@ -2618,12 +2926,12 @@
     "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
     "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-104_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-105",
@@ -2644,7 +2952,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ดที่มี [ทริกเกอร์] จากบนมือของเรา จำนวน 1 ใบ : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-105.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-106",
@@ -2663,11 +2973,11 @@
     "effectEn": "[DON!! x1] If you have less Life cards than your opponent, this Character gains +1000 power.",
     "effectJp": "【ドン!!×1】自分のライフの枚数が相手より少ない場合、このキャラはパワー+1000。",
     "effectTh": "[ด้ง!! x 1] ถ้าเรามี ไลฟ์ น้อยกว่าของฝ่ายคู่แข่ง, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000.",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-106.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-107",
@@ -2688,7 +2998,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-107.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-108",
@@ -2704,14 +3016,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Big Mom Pirates",
-    "effectEn": "[DON!! x1] This Character gains [Banish].<br>(When this card deals damage, the target card is trashed without activating its Trigger.)",
-    "effectJp": "【ドン!!×1】このキャラは【バニッシュ】を得る。<br>(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)",
-    "effectTh": "[ด้ง!! x 1] คาแรกเตอร์นี้จะได้รับ [แบนนิช].<br>(ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。",
+    "effectEn": "[DON!! x1] This Character gains [Banish].(When this card deals damage, the target card is trashed without activating its Trigger.)",
+    "effectJp": "【ドン!!×1】このキャラは【バニッシュ】を得る。(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)",
+    "effectTh": "[ด้ง!! x 1] คาแรกเตอร์นี้จะได้รับ [แบนนิช].(ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-108.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-109",
@@ -2729,10 +3041,12 @@
     "trait": "Land of Wano",
     "effectEn": "[Activate: Main] You may trash this Character: Up to 1 of your {Land of Wano} type Leader or Character cards gains +3000 power during this turn.",
     "effectJp": "【起動メイン】このキャラをトラッシュに置くことができる：自分の特徴《ワノ国》を持つ、リーダーかキャラ1枚までを、このターン中、パワー+3000。",
-    "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt; จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
+    "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ < วาโนะคุนิ > จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-109.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-110",
@@ -2748,12 +3062,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Whole Cake Island",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] Add up to 1 of your opponent's Characters with a cost of 3 or less to the top or bottom of your opponent's Life cards face-up.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【KO時】相手のコスト3以下のキャラ1枚までを、相手のライフの上か下に表向きで加える。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์คู่แข่ง แบบหงายหน้า.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On K.O.] Add up to 1 of your opponent's Characters with a cost of 3 or less to the top or bottom of your opponent's Life cards face-up.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【KO時】相手のコスト3以下のキャラ1枚までを、相手のライフの上か下に表向きで加える。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์คู่แข่ง แบบหงายหน้า.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-110.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-111",
@@ -2771,12 +3087,12 @@
     "trait": "Big Mom Pirates/Homies",
     "effectEn": "[Activate: Main] You may trash 1 of your {Homies} type Characters other than this Character and rest this Character: Set up to 1 of your [Charlotte Linlin] Characters as active.",
     "effectJp": "【起動メイン】このキャラ以外の自分の特徴《ホーミーズ》を持つキャラ1枚をトラッシュに置き、このキャラをレストにできる：自分のキャラの「シャーロット・リンリン」1枚までを、アクティブにする。",
-    "effectTh": "[ใช้งาน : เมน] สามารถนำ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ &lt; โฮมี่ส์ &gt; นอกเหนือจากคาแรกเตอร์นี้ จำนวน 1 ใบ ไปวางที่แทรช, และทำการ เรสต์ คาแรกเตอร์นี้ : ทำการ แอ็คทีฟ คาแรกเตอร์ [Charlotte Linlin] ของฝ่ายเรา, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
+    "effectTh": "[ใช้งาน : เมน] สามารถนำ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ < โฮมี่ส์ > นอกเหนือจากคาแรกเตอร์นี้ จำนวน 1 ใบ ไปวางที่แทรช, และทำการ เรสต์ คาแรกเตอร์นี้ : ทำการ แอ็คทีฟ คาแรกเตอร์ [Charlotte Linlin] ของฝ่ายเรา, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-111.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-112",
@@ -2796,7 +3112,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ที่มีคอสต์ เท่ากับ หรือต่ำกว่า จำนวน ไลฟ์ ของทั้งสองฝ่ายรวมกัน. จากนั้น, ถ้าเรามี ไลฟ์ จำนวน 1 ใบ หรือน้อยกว่า, จะนำการ์ดใบบนสุด จากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-112.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-112",
@@ -2817,7 +3135,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-112_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-113",
@@ -2836,11 +3156,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-113.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-114",
@@ -2861,7 +3181,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-114.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-115",
@@ -2874,14 +3196,14 @@
     "color": "Yellow",
     "cost": 1,
     "trait": "Land of Wano/Kouzuki Clan",
-    "effectEn": "[Main] You may add 1 card from the top or bottom of your Life cards to your hand: Up to 1 of your {Land of Wano} type Characters gains [Double Attack] during this turn.<br>(This card deals 2 damage.)",
-    "effectJp": "【メイン】自分のライフの上か下から1枚を手札に加えることができる：自分の特徴《ワノ国》を持つキャラ1枚までは、このターン中、【ダブルアタック】を得る。<br>(このカードが与えるダメージは2になる)",
-    "effectTh": "[เมน] สามารถนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt; จำนวนไม่เกิน 1 ใบ, จะได้รับ [ดับเบิ้ลแอทแทค].<br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
-    "triggerEn": "[Trigger] Up to 1 of your Leader or Character cards gains +1000 power during this turn.",
-    "triggerJp": "【トリガー】自分のリーダーかキャラ1枚までを、このターン中、パワー+1000。",
+    "effectEn": "[Main] You may add 1 card from the top or bottom of your Life cards to your hand: Up to 1 of your {Land of Wano} type Characters gains [Double Attack] during this turn.(This card deals 2 damage.)",
+    "effectJp": "【メイン】自分のライフの上か下から1枚を手札に加えることができる：自分の特徴《ワノ国》を持つキャラ1枚までは、このターン中、【ダブルアタック】を得る。(このカードが与えるダメージは2になる)",
+    "effectTh": "[เมน] สามารถนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < วาโนะคุนิ > จำนวนไม่เกิน 1 ใบ, จะได้รับ [ดับเบิ้ลแอทแทค].(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-115.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-116",
@@ -2897,11 +3219,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +6000 power during this battle. Then, if you and your opponent have a total of 4 or less Life cards, K.O. up to 1 of your opponent's Characters with a cost of 2 or less.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+6000。その後、お互いのライフの合計枚数が4枚以下の場合、相手のコスト2以下のキャラ1枚までを、KOする。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +6000. จากนั้น, ถ้า ไลฟ์ ของทั้งสองฝ่าย มีจำนวนรวมกัน เท่ากับ จำนวน 4 ใบ หรือน้อยกว่า, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Draw 1 card.",
-    "triggerJp": "【トリガー】カード1枚を引く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-116.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-117",
@@ -2917,11 +3239,11 @@
     "effectEn": "[Main] Add up to 1 of your opponent's Characters with a cost of 3 or less to the top or bottom of your opponent's Life cards face-up.",
     "effectJp": "【メイン】相手のコスト3以下のキャラ1枚までを、相手のライフの上か下に表向きで加える。",
     "effectTh": "[เมน] นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์ของคู่แข่ง แบบหงายหน้า.",
-    "triggerEn": "[Trigger] You may add 1 card from the top or bottom of your Life cards to your hand: Add up to 1 card from your hand to the top of your Life cards.",
-    "triggerJp": "【トリガー】自分のライフの上か下から1枚を手札に加えることができる：自分の手札1枚までを、ライフの上に加える。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-117.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-118",
@@ -2937,12 +3259,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Alabasta",
-    "effectEn": "All of your red Characters with a cost of 3 or more other than this Character gain [Rush].<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "このキャラ以外の自分のコスト3以上の赤のキャラすべては、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่เป็นธีมสีแดง และมีคอสต์ 3 หรือสูงกว่า นอกเหนือจากคาแรกเตอร์นี้, จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "All of your red Characters with a cost of 3 or more other than this Character gain [Rush].(This card can attack on the turn in which it is played.)",
+    "effectJp": "このキャラ以外の自分のコスト3以上の赤のキャラすべては、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่เป็นธีมสีแดง และมีคอสต์ 3 หรือสูงกว่า นอกเหนือจากคาแรกเตอร์นี้, จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-118.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-118",
@@ -2958,13 +3282,15 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Alabasta",
-    "effectEn": "All of your red Characters with a cost of 3 or more other than this Character gain [Rush].<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "このキャラ以外の自分のコスト3以上の赤のキャラすべては、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่เป็นธีมสีแดง และมีคอสต์ 3 หรือสูงกว่า นอกเหนือจากคาแรกเตอร์นี้, จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "All of your red Characters with a cost of 3 or more other than this Character gain [Rush].(This card can attack on the turn in which it is played.)",
+    "effectJp": "このキャラ以外の自分のコスト3以上の赤のキャラすべては、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "คาแรกเตอร์ของฝ่ายเรา ทั้งหมด ที่เป็นธีมสีแดง และมีคอสต์ 3 หรือสูงกว่า นอกเหนือจากคาแรกเตอร์นี้, จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-118_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-119",
@@ -2979,12 +3305,14 @@
     "power": 8000,
     "attribute": "Special",
     "trait": "Navy/Donquixote Pirates",
-    "effectEn": "[Opponent's Turn] If this Character is rested, your active Characters with a base cost of 5 cannot be K.O.'d by effects.<br>[On Play] You may rest this Character: Play up to 1 green Character card with a cost of 5 from your hand.",
-    "effectJp": "【相手のターン中】このキャラがレストの場合、自分のアクティブの元々のコストが5のキャラは、効果でKOされない。<br>【登場時】このキャラをレストにできる：自分の手札からコスト5の緑のキャラカード1枚までを、登場させる。",
-    "effectTh": "[ในเทิร์นของคู่แข่ง] ถ้าคาแรกเตอร์นี้ กำลังเรสต์อยู่, คาแรกเตอร์ของเรา ที่มีคอสต์ ตั้งต้น 5 ซึ่งกำลังแอ็คทีฟอยู่, จะไม่ถูก KO จากความสามารถใดๆ.<br>[เมื่อลงสนาม] สามารถ เรสต์ คาแรกเตอร์นี้ : นำคาแรกเตอร์การ์ด ธีมสีเขียว ที่มีคอสต์ 5 จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Opponent's Turn] If this Character is rested, your active Characters with a base cost of 5 cannot be K.O.'d by effects.[On Play] You may rest this Character: Play up to 1 green Character card with a cost of 5 from your hand.",
+    "effectJp": "【相手のターン中】このキャラがレストの場合、自分のアクティブの元々のコストが5のキャラは、効果でKOされない。【登場時】このキャラをレストにできる：自分の手札からコスト5の緑のキャラカード1枚までを、登場させる。",
+    "effectTh": "[ในเทิร์นของคู่แข่ง] ถ้าคาแรกเตอร์นี้ กำลังเรสต์อยู่, คาแรกเตอร์ของเรา ที่มีคอสต์ ตั้งต้น 5 ซึ่งกำลังแอ็คทีฟอยู่, จะไม่ถูก KO จากความสามารถใดๆ.[เมื่อลงสนาม] สามารถ เรสต์ คาแรกเตอร์นี้ : นำคาแรกเตอร์การ์ด ธีมสีเขียว ที่มีคอสต์ 5 จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-119.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   },
   {
     "code": "OP04-119",
@@ -2999,12 +3327,14 @@
     "power": 8000,
     "attribute": "Special",
     "trait": "Navy/Donquixote Pirates",
-    "effectEn": "[Opponent's Turn] If this Character is rested, your active Characters with a base cost of 5 cannot be K.O.'d by effects.<br>[On Play] You may rest this Character: Play up to 1 green Character card with a cost of 5 from your hand.",
-    "effectJp": "【相手のターン中】このキャラがレストの場合、自分のアクティブの元々のコストが5のキャラは、効果でKOされない。<br>【登場時】このキャラをレストにできる：自分の手札からコスト5の緑のキャラカード1枚までを、登場させる。",
-    "effectTh": "[ในเทิร์นของคู่แข่ง] ถ้าคาแรกเตอร์นี้ กำลังเรสต์อยู่, คาแรกเตอร์ของเรา ที่มีคอสต์ ตั้งต้น 5 ซึ่งกำลังแอ็คทีฟอยู่, จะไม่ถูก KO จากความสามารถใดๆ.<br>[เมื่อลงสนาม] สามารถ เรสต์ คาแรกเตอร์นี้ : นำคาแรกเตอร์การ์ด ธีมสีเขียว ที่มีคอสต์ 5 จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Opponent's Turn] If this Character is rested, your active Characters with a base cost of 5 cannot be K.O.'d by effects.[On Play] You may rest this Character: Play up to 1 green Character card with a cost of 5 from your hand.",
+    "effectJp": "【相手のターン中】このキャラがレストの場合、自分のアクティブの元々のコストが5のキャラは、効果でKOされない。【登場時】このキャラをレストにできる：自分の手札からコスト5の緑のキャラカード1枚までを、登場させる。",
+    "effectTh": "[ในเทิร์นของคู่แข่ง] ถ้าคาแรกเตอร์นี้ กำลังเรสต์อยู่, คาแรกเตอร์ของเรา ที่มีคอสต์ ตั้งต้น 5 ซึ่งกำลังแอ็คทีฟอยู่, จะไม่ถูก KO จากความสามารถใดๆ.[เมื่อลงสนาม] สามารถ เรสต์ คาแรกเตอร์นี้ : นำคาแรกเตอร์การ์ด ธีมสีเขียว ที่มีคอสต์ 5 จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-119_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Kingdoms of Intrigue- [OP-04]"
+    ]
   }
 ]

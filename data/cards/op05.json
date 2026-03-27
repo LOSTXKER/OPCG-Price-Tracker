@@ -1,5 +1,122 @@
 [
   {
+    "code": "OP01-016",
+    "cardCode": "OP01-016_p4",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Nami (Parallel)",
+    "nameJp": "ナミ",
+    "nameTh": "Nami (Parallel)",
+    "color": "Red",
+    "cost": 1,
+    "power": 2000,
+    "counter": 1000,
+    "attribute": "Special",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Straw Hat Crew} type card other than [Nami] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "【登場時】自分のデッキの上から5枚を見て、「ナミ」以外の特徴《麦わらの一味》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดหมวกฟาง > นอกเหนือจาก [Nami] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-016_p4.png",
+    "isParallel": true,
+    "parallelIndex": 4,
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
+  },
+  {
+    "code": "OP01-121",
+    "cardCode": "OP01-121_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Yamato (Parallel)",
+    "nameJp": "ヤマト",
+    "nameTh": "Yamato (Parallel)",
+    "color": "Green",
+    "cost": 5,
+    "power": 5000,
+    "counter": 1000,
+    "attribute": "Strike",
+    "trait": "Land of Wano",
+    "effectEn": "Also treat this card's name as [Kouzuki Oden] according to the rules.[Double Attack] (This card deals 2 damage.)[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)",
+    "effectJp": "ルール上、このカードはカード名を「光月おでん」としても扱う。【ダブルアタック】(このカードが与えるダメージは2になる)【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)",
+    "effectTh": "การ์ดใบนี้จะนับว่ามีชื่อการ์ดเป็น [Kouzuki Oden] ด้วย.[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-121_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
+  },
+  {
+    "code": "OP02-120",
+    "cardCode": "OP02-120_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Uta (Parallel)",
+    "nameJp": "ウタ",
+    "nameTh": "Uta (Parallel)",
+    "color": "Purple",
+    "cost": 8,
+    "power": 8000,
+    "attribute": "Special",
+    "trait": "FILM",
+    "effectEn": "[On Play] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Your Leader and all of your Characters gain +1000 power until the start of your next turn.",
+    "effectJp": "【登場時】ドン!!-2(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーとキャラすべてを、次の自分のターン開始時まで、パワー+1000。",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : จนถึงช่วงเริ่มต้นเทิร์นถัดไปของเรา, ลีดเดอร์ กับ คาแรกเตอร์ ของฝ่ายเราทั้งหมด, จะมีพาวเวอร์ +1000.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP02-120_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
+  },
+  {
+    "code": "OP03-092",
+    "cardCode": "OP03-092_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Rob Lucci (Parallel)",
+    "nameJp": "ロブ・ルッチ",
+    "nameTh": "Rob Lucci (Parallel)",
+    "color": "Black",
+    "cost": 6,
+    "power": 7000,
+    "attribute": "Strike",
+    "trait": "CP9",
+    "effectEn": "[On Play] You may place 2 cards with a type including \"CP\" from your trash at the bottom of your deck in any order: This Character gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】自分のトラッシュの『CP』を含む特徴を持つカード2枚を好きな順番でデッキの下に置くことができる：このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ด ที่ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ ที่อยู่ในแทรชของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็คของเรา : ในเทิร์นนี้, คาแรกเตอร์นี้, จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-092_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
+  },
+  {
+    "code": "OP04-044",
+    "cardCode": "OP04-044_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Kaido (Parallel)",
+    "nameJp": "カイドウ",
+    "nameTh": "Kaido (Parallel)",
+    "color": "Blue",
+    "cost": 10,
+    "power": 12000,
+    "attribute": "Strike",
+    "trait": "The Four Emperors/Animal Kingdom Pirates",
+    "effectEn": "[On Play] Return up to 1 Character with a cost of 8 or less and up to 1 Character with a cost of 3 or less to the owner's hand.",
+    "effectJp": "【登場時】コスト8以下のキャラ1枚までと、コスト3以下のキャラ1枚までを、持ち主の手札に戻す。",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 8 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กับคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP04-044_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
+  },
+  {
     "code": "OP05-001",
     "cardCode": "OP05-001",
     "rarity": "L",
@@ -9,7 +126,7 @@
     "nameTh": "Sabo",
     "color": "Red/Black",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Special",
     "trait": "Revolutionary Army",
     "effectEn": "[DON!! x1] [Opponent's Turn] [Once Per Turn] If your Character with 5000 power or more would be K.O.'d, you may give that Character −1000 power during this turn instead of that Character being K.O.'d.",
@@ -17,7 +134,9 @@
     "effectTh": "[ด้ง!! x 1] [ในเทิร์นของคู่แข่ง] [เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์ของเรา ที่มีพาวเวอร์ 5000 หรือมากกว่า กำลังจะถูก KO, จะสามารถทำให้จากที่คาแรกเตอร์ดังกล่าวจะถูก KO จะเปลี่ยนเป็น, ในเทิร์นนี้, จะมีพาวเวอร์ -1000 แทนได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-001",
@@ -29,7 +148,7 @@
     "nameTh": "Sabo (Parallel)",
     "color": "Red/Black",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Special",
     "trait": "Revolutionary Army",
     "effectEn": "[DON!! x1] [Opponent's Turn] [Once Per Turn] If your Character with 5000 power or more would be K.O.'d, you may give that Character −1000 power during this turn instead of that Character being K.O.'d.",
@@ -38,7 +157,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-001_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-002",
@@ -50,15 +171,17 @@
     "nameTh": "Belo Betty",
     "color": "Red/Yellow",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Special",
     "trait": "Revolutionary Army",
     "effectEn": "[Activate: Main] [Once Per Turn] You may trash 1 {Revolutionary Army} type card from your hand: Up to 3 of your {Revolutionary Army} type Characters or Characters with a [Trigger] gain +3000 power during this turn.",
     "effectJp": "【起動メイン】【ターン1回】自分の手札から特徴《革命軍》を持つカード1枚を捨てることができる：自分の特徴《革命軍》か【トリガー】を持つキャラ3枚までを、このターン中、パワー+3000。",
-    "effectTh": "[ใช้งานเมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ด ที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; จากบนมือของเรา จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; หรือ คาแรกเตอร์ของเรา ที่มี [ทริกเกอร์] จำนวนไม่เกิน 3 ใบ, จะมีพาวเวอร์ +3000.",
+    "effectTh": "[ใช้งานเมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ด ที่มีคุณสมบัติ < กองทัพปฏิวัติ > จากบนมือของเรา จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < กองทัพปฏิวัติ > หรือ คาแรกเตอร์ของเรา ที่มี [ทริกเกอร์] จำนวนไม่เกิน 3 ใบ, จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-002",
@@ -70,16 +193,18 @@
     "nameTh": "Belo Betty (Parallel)",
     "color": "Red/Yellow",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Special",
     "trait": "Revolutionary Army",
     "effectEn": "[Activate: Main] [Once Per Turn] You may trash 1 {Revolutionary Army} type card from your hand: Up to 3 of your {Revolutionary Army} type Characters or Characters with a [Trigger] gain +3000 power during this turn.",
     "effectJp": "【起動メイン】【ターン1回】自分の手札から特徴《革命軍》を持つカード1枚を捨てることができる：自分の特徴《革命軍》か【トリガー】を持つキャラ3枚までを、このターン中、パワー+3000。",
-    "effectTh": "[ใช้งานเมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ด ที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; จากบนมือของเรา จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; หรือ คาแรกเตอร์ของเรา ที่มี [ทริกเกอร์] จำนวนไม่เกิน 3 ใบ, จะมีพาวเวอร์ +3000.",
+    "effectTh": "[ใช้งานเมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ด ที่มีคุณสมบัติ < กองทัพปฏิวัติ > จากบนมือของเรา จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < กองทัพปฏิวัติ > หรือ คาแรกเตอร์ของเรา ที่มี [ทริกเกอร์] จำนวนไม่เกิน 3 ใบ, จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-002_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-003",
@@ -95,12 +220,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Revolutionary Army",
-    "effectEn": "If you have a Character with 7000 power or more other than this Character, this Character gains [Rush].<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "このキャラ以外の自分のパワー7000以上のキャラがいる場合、このキャラは【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "ถ้าเรามีคาแรกเตอร์ใบอื่น ที่มีพาวเวอร์ 7000 หรือมากกว่า นอกเหนือจากคาแรกเตอร์นี้อยู่ด้วย, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "If you have a Character with 7000 power or more other than this Character, this Character gains [Rush].(This card can attack on the turn in which it is played.)",
+    "effectJp": "このキャラ以外の自分のパワー7000以上のキャラがいる場合、このキャラは【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "ถ้าเรามีคาแรกเตอร์ใบอื่น ที่มีพาวเวอร์ 7000 หรือมากกว่า นอกเหนือจากคาแรกเตอร์นี้อยู่ด้วย, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-004",
@@ -118,10 +245,12 @@
     "trait": "Revolutionary Army",
     "effectEn": "[Activate: Main] [Once Per Turn] If this Character has 7000 power or more, play up to 1 {Revolutionary Army} type Character card with 5000 power or less other than [Emporio.Ivankov] from your hand.",
     "effectJp": "【起動メイン】【ターン1回】このキャラのパワーが7000以上の場合、自分の手札から「エンポリオ・イワンコフ」以外のパワー5000以下の特徴《革命軍》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ มีพาวเวอร์ 7000 หรือมากกว่า, นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; และมีพาวเวอร์ 5000 หรือต่ำกว่า นอกเหนือจาก [Emporio.Ivankov] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ มีพาวเวอร์ 7000 หรือมากกว่า, นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < กองทัพปฏิวัติ > และมีพาวเวอร์ 5000 หรือต่ำกว่า นอกเหนือจาก [Emporio.Ivankov] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-005",
@@ -137,12 +266,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Revolutionary Army",
-    "effectEn": "[On Play] If your Leader has the {Revolutionary Army} type, give up to 1 of your opponent's Leader or Character cards −1000 power during this turn.<br>[When Attacking] If this Character has 7000 power or more, give up to 1 of your opponent's Leader or Character cards −1000 power during this turn.",
-    "effectJp": "【登場時】自分のリーダーが特徴《革命軍》を持つ場合、相手のリーダーかキャラ1枚までを、このターン中、パワー-1000。<br>【アタック時】このキャラのパワーが7000以上の場合、相手のリーダーかキャラ1枚までを、このターン中、パワー-1000。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt;, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -1000.<br>[เมื่อโจมตี] ถ้าคาแรกเตอร์นี้ มีพาวเวอร์ 7000 หรือมากกว่า, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -1000.",
+    "effectEn": "[On Play] If your Leader has the {Revolutionary Army} type, give up to 1 of your opponent's Leader or Character cards −1000 power during this turn.[When Attacking] If this Character has 7000 power or more, give up to 1 of your opponent's Leader or Character cards −1000 power during this turn.",
+    "effectJp": "【登場時】自分のリーダーが特徴《革命軍》を持つ場合、相手のリーダーかキャラ1枚までを、このターン中、パワー-1000。【アタック時】このキャラのパワーが7000以上の場合、相手のリーダーかキャラ1枚までを、このターン中、パワー-1000。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กองทัพปฏิวัติ >, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -1000.[เมื่อโจมตี] ถ้าคาแรกเตอร์นี้ มีพาวเวอร์ 7000 หรือมากกว่า, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-006",
@@ -160,10 +291,12 @@
     "trait": "Revolutionary Army",
     "effectEn": "[On Play] If your Leader has the {Revolutionary Army} type, give up to 1 of your opponent's Characters −3000 power during this turn.",
     "effectJp": "【登場時】自分のリーダーが特徴《革命軍》を持つ場合、相手のキャラ1枚までを、このターン中、パワー-3000。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt;, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กองทัพปฏิวัติ >, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-006",
@@ -181,11 +314,13 @@
     "trait": "Revolutionary Army",
     "effectEn": "[On Play] If your Leader has the {Revolutionary Army} type, give up to 1 of your opponent's Characters −3000 power during this turn.",
     "effectJp": "【登場時】自分のリーダーが特徴《革命軍》を持つ場合、相手のキャラ1枚までを、このターン中、パワー-3000。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt;, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กองทัพปฏิวัติ >, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-006_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-007",
@@ -205,7 +340,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 2 ใบ, โดยจะต้องมีผลรวมของพาวเวอร์ รวมกันเท่ากับ 4000 หรือต่ำกว่า.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-007",
@@ -226,7 +363,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-007_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-008",
@@ -247,7 +386,9 @@
     "effectTh": "[ด้ง!! x 1] [ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ, มาใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-009",
@@ -267,7 +408,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีพาวเวอร์ 0 หรือต่ำกว่า, จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-010",
@@ -288,7 +431,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 1000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-011",
@@ -307,11 +452,11 @@
     "effectEn": "[On Play] K.O. up to 1 of your opponent's Characters with 2000 power or less.",
     "effectJp": "【登場時】相手のパワー2000以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 2000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] If your Leader is multicolored, play this card.",
-    "triggerJp": "【トリガー】自分のリーダーが多色の場合、このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-012",
@@ -332,7 +477,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-013",
@@ -353,7 +500,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-014",
@@ -374,7 +523,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-015",
@@ -392,10 +543,12 @@
     "trait": "Revolutionary Army",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Revolutionary Army} type card other than [Belo Betty] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「ベロ・ベティ」以外の特徴《革命軍》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; นอกเหนือจาก [Belo Betty] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < กองทัพปฏิวัติ > นอกเหนือจาก [Belo Betty] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-015",
@@ -413,11 +566,13 @@
     "trait": "Revolutionary Army",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Revolutionary Army} type card other than [Belo Betty] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「ベロ・ベティ」以外の特徴《革命軍》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; นอกเหนือจาก [Belo Betty] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < กองทัพปฏิวัติ > นอกเหนือจาก [Belo Betty] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-015_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-016",
@@ -435,11 +590,11 @@
     "effectEn": "[When Attacking] If this Character has 7000 power or more, your opponent cannot activate [Blocker] during this battle.",
     "effectJp": "【アタック時】このキャラのパワーが7000以上の場合、相手は、このバトル中、【ブロッカー】を発動できない。",
     "effectTh": "[เมื่อโจมตี] ถ้าคาแรกเตอร์นี้ มีพาวเวอร์ 7000 หรือมากกว่า, ในแบทเทิลนี้, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์].",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: If your Leader is multicolored, play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：自分のリーダーが多色の場合、このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-017",
@@ -458,11 +613,11 @@
     "effectEn": "[When Attacking] If this Character has 7000 power or more, K.O. up to 1 of your opponent's Characters with 3000 power or less.",
     "effectJp": "【アタック時】このキャラのパワーが7000以上の場合、相手のパワー3000以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมื่อโจมตี] ถ้าคาแรกเตอร์นี้ มีพาวเวอร์ 7000 หรือมากกว่า, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: If your Leader is multicolored, play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：自分のリーダーが多色の場合、このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-018",
@@ -477,12 +632,12 @@
     "trait": "Revolutionary Army",
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +3000 power during this battle. Then, play up to 1 {Revolutionary Army} type Character card with 5000 power or less from your hand.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+3000。その後、自分の手札からパワー5000以下の特徴《革命軍》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000. จากนั้น, นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; และมีพาวเวอร์ 5000 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
-    "triggerEn": "[Trigger] Play up to 1 {Revolutionary Army} type Character card with 5000 power or less from your hand.",
-    "triggerJp": "【トリガー】自分の手札からパワー5000以下の特徴《革命軍》を持つキャラカード1枚までを、登場させる。",
+    "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000. จากนั้น, นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < กองทัพปฏิวัติ > และมีพาวเวอร์ 5000 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-018.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-019",
@@ -498,11 +653,11 @@
     "effectEn": "[Main] Give up to 1 of your opponent's Characters −4000 power during this turn. Then, if you have 2 or less Life cards, K.O. up to 1 of your opponent's Characters with 0 power or less.",
     "effectJp": "【メイン】相手のキャラ1枚までを、このターン中、パワー-4000。その後、自分のライフが2枚以下の場合、相手のパワー0以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -4000. จากนั้น, ถ้าเรามีไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 0 หรือ ต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-019.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-020",
@@ -518,11 +673,11 @@
     "effectEn": "[Main] Up to 1 of your Leader or Character cards gains +2000 power during this turn. Then, K.O. up to 1 of your opponent's Characters with 2000 power or less.",
     "effectJp": "【メイン】自分のリーダーかキャラ1枚までを、このターン中、パワー+2000。その後、相手のパワー2000以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000. จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 2000 หรือ ต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Up to 1 of your Leader or Character cards gains +1000 power during this turn.",
-    "triggerJp": "【トリガー】自分のリーダーかキャラ1枚までを、このターン中、パワー+1000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-020.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-021",
@@ -537,10 +692,12 @@
     "trait": "Revolutionary Army",
     "effectEn": "[Activate: Main] You may trash 1 card from your hand and rest this Stage: Look at 3 cards from the top of your deck; reveal up to 1 {Revolutionary Army} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【起動メイン】自分の手札1枚を捨て、このステージをレストにできる：自分のデッキの上から3枚を見て、特徴《革命軍》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[ใช้งาน : เมน] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ, และ เรสต์ สเตจนี้ : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กองทัพปฏิวัติ &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[ใช้งาน : เมน] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ, และ เรสต์ สเตจนี้ : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ดที่มีคุณสมบัติ < กองทัพปฏิวัติ > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-021.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-022",
@@ -552,15 +709,17 @@
     "nameTh": "Donquixote Rosinante",
     "color": "Green/Blue",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Special",
     "trait": "Navy/Donquixote Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[End of Your Turn] If you have 6 or less cards in your hand, set this Leader as active.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【自分のターン終了時】自分の手札が6枚以下の場合、このリーダーをアクティブにする。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อจบเทิร์นของเรา] ถ้าเรามีการ์ดบนมือ จำนวน 6 ใบ หรือน้อยกว่า, จะทำการ แอ็คทีฟ ลีดเดอร์นี้.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[End of Your Turn] If you have 6 or less cards in your hand, set this Leader as active.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【自分のターン終了時】自分の手札が6枚以下の場合、このリーダーをアクティブにする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อจบเทิร์นของเรา] ถ้าเรามีการ์ดบนมือ จำนวน 6 ใบ หรือน้อยกว่า, จะทำการ แอ็คทีฟ ลีดเดอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-022.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-022",
@@ -572,16 +731,18 @@
     "nameTh": "Donquixote Rosinante (Parallel)",
     "color": "Green/Blue",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Special",
     "trait": "Navy/Donquixote Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[End of Your Turn] If you have 6 or less cards in your hand, set this Leader as active.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【自分のターン終了時】自分の手札が6枚以下の場合、このリーダーをアクティブにする。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อจบเทิร์นของเรา] ถ้าเรามีการ์ดบนมือ จำนวน 6 ใบ หรือน้อยกว่า, จะทำการ แอ็คทีฟ ลีดเดอร์นี้.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[End of Your Turn] If you have 6 or less cards in your hand, set this Leader as active.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【自分のターン終了時】自分の手札が6枚以下の場合、このリーダーをアクティブにする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อจบเทิร์นของเรา] ถ้าเรามีการ์ดบนมือ จำนวน 6 ใบ หรือน้อยกว่า, จะทำการ แอ็คทีฟ ลีดเดอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-022_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-023",
@@ -602,7 +763,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-023.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-024",
@@ -623,7 +786,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-024.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-025",
@@ -644,7 +809,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-025.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-026",
@@ -665,7 +832,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือสูงกว่า จำนวนไม่เกิน 1 ใบ : ทำการ แอ็คทีฟ คาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-026.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-027",
@@ -686,7 +855,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-027.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-028",
@@ -707,7 +878,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-028.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-029",
@@ -727,7 +900,9 @@
     "effectTh": "[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-029.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-030",
@@ -743,12 +918,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Navy/Donquixote Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[Opponent's Turn] If your rested Character would be K.O.'d, you may trash this Character instead.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【相手のターン中】自分のレストのキャラがKOされる場合、代わりにこのキャラをトラッシュに置くことができる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ในเทิร์นของคู่แข่ง] ถ้าคาแรกเตอร์ของเรา ที่กำลังเรสต์อยู่ กำลังจะถูก KO, จะสามารถเปลี่ยนเป็น นำคาแรกเตอร์นี้ ไปวางที่แทรชแทนได้.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[Opponent's Turn] If your rested Character would be K.O.'d, you may trash this Character instead.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【相手のターン中】自分のレストのキャラがKOされる場合、代わりにこのキャラをトラッシュに置くことができる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ในเทิร์นของคู่แข่ง] ถ้าคาแรกเตอร์ของเรา ที่กำลังเรสต์อยู่ กำลังจะถูก KO, จะสามารถเปลี่ยนเป็น นำคาแรกเตอร์นี้ ไปวางที่แทรชแทนได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-030.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-031",
@@ -769,7 +946,9 @@
     "effectTh": "[เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] ถ้าเรามีคาแรกเตอร์ ที่กำลังเรสต์อยู่ จำนวน 2 ใบ หรือมากกว่า, จะทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 1, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-031.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-032",
@@ -784,12 +963,14 @@
     "power": 6000,
     "attribute": "Strike",
     "trait": "Donquixote Pirates",
-    "effectEn": "[End of Your Turn] ①: Set this Character as active.<br>[Once Per Turn] If this Character would be K.O.'d, you may rest 1 of your Characters with a cost of 3 or more other than [Pica] instead.",
-    "effectJp": "【自分のターン終了時】①：このキャラをアクティブにする。<br>【ターン1回】このキャラがKOされる場合、代わりに「ピーカ」以外の自分のコスト3以上のキャラ1枚までを、レストにできる。",
-    "effectTh": "[เมื่อจบเทิร์นของเรา] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ แอ็คทีฟ คาแรกเตอร์นี้.<br>[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูก KO, จะสามารถเปลี่ยนเป็น เรสต์ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือสูงกว่า นอกเหนือจาก [Pica] จำนวน 1 ใบ แทนได้.",
+    "effectEn": "[End of Your Turn] ①: Set this Character as active.[Once Per Turn] If this Character would be K.O.'d, you may rest 1 of your Characters with a cost of 3 or more other than [Pica] instead.",
+    "effectJp": "【自分のターン終了時】①：このキャラをアクティブにする。【ターン1回】このキャラがKOされる場合、代わりに「ピーカ」以外の自分のコスト3以上のキャラ1枚までを、レストにできる。",
+    "effectTh": "[เมื่อจบเทิร์นของเรา] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ แอ็คทีฟ คาแรกเตอร์นี้.[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูก KO, จะสามารถเปลี่ยนเป็น เรสต์ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือสูงกว่า นอกเหนือจาก [Pica] จำนวน 1 ใบ แทนได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-032.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "Rule Revisions and Card Errata"
+    ]
   },
   {
     "code": "OP05-032",
@@ -804,13 +985,15 @@
     "power": 6000,
     "attribute": "Strike",
     "trait": "Donquixote Pirates",
-    "effectEn": "[End of Your Turn] ①: Set this Character as active.<br>[Once Per Turn] If this Character would be K.O.'d, you may rest 1 of your Characters with a cost of 3 or more other than [Pica] instead.",
-    "effectJp": "【自分のターン終了時】①：このキャラをアクティブにする。<br>【ターン1回】このキャラがKOされる場合、代わりに「ピーカ」以外の自分のコスト3以上のキャラ1枚までを、レストにできる。",
-    "effectTh": "[เมื่อจบเทิร์นของเรา] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ แอ็คทีฟ คาแรกเตอร์นี้.<br>[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูก KO, จะสามารถเปลี่ยนเป็น เรสต์ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือสูงกว่า นอกเหนือจาก [Pica] จำนวน 1 ใบ แทนได้.",
+    "effectEn": "[End of Your Turn] ①: Set this Character as active.[Once Per Turn] If this Character would be K.O.'d, you may rest 1 of your Characters with a cost of 3 or more other than [Pica] instead.",
+    "effectJp": "【自分のターン終了時】①：このキャラをアクティブにする。【ターン1回】このキャラがKOされる場合、代わりに「ピーカ」以外の自分のコスト3以上のキャラ1枚までを、レストにできる。",
+    "effectTh": "[เมื่อจบเทิร์นของเรา] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ แอ็คทีฟ คาแรกเตอร์นี้.[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูก KO, จะสามารถเปลี่ยนเป็น เรสต์ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือสูงกว่า นอกเหนือจาก [Pica] จำนวน 1 ใบ แทนได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-032_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "Rule Revisions and Card Errata"
+    ]
   },
   {
     "code": "OP05-033",
@@ -828,10 +1011,12 @@
     "trait": "Donquixote Pirates",
     "effectEn": "[Activate: Main] ➀ (You may rest the specified number of DON!! cards in your cost area.) You may rest this Character: Play up to 1 {Donquixote Pirates} type Character card with a cost of 2 or less from your hand.",
     "effectJp": "【起動メイン】➀(コストエリアのドン!!を指定の数レストにできる)，このキャラをレストにできる：自分の手札からコスト2以下の特徴《ドンキホーテ海賊団》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[ใช้งาน : เมน] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถ เรสต์ คาแรกเตอร์นี้ : นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt; ที่มีคอสต์ 2 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[ใช้งาน : เมน] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถ เรสต์ คาแรกเตอร์นี้ : นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ > ที่มีคอสต์ 2 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-033.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-034",
@@ -849,10 +1034,12 @@
     "trait": "Donquixote Pirates",
     "effectEn": "[Activate: Main] ➀ (You may rest the specified number of DON!! cards in your cost area.) You may rest this Character: Look at 5 cards from the top of your deck; reveal up to 1 {Donquixote Pirates} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【起動メイン】➀(コストエリアのドン!!を指定の数レストにできる)，このキャラをレストにできる：自分のデッキの上から5枚を見て、特徴《ドンキホーテ海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[ใช้งาน : เมน] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถ เรสต์ คาแรกเตอร์นี้ : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[ใช้งาน : เมน] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถ เรสต์ คาแรกเตอร์นี้ : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-034.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-034",
@@ -870,11 +1057,13 @@
     "trait": "Donquixote Pirates",
     "effectEn": "[Activate: Main] ➀ (You may rest the specified number of DON!! cards in your cost area.) You may rest this Character: Look at 5 cards from the top of your deck; reveal up to 1 {Donquixote Pirates} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【起動メイン】➀(コストエリアのドン!!を指定の数レストにできる)，このキャラをレストにできる：自分のデッキの上から5枚を見て、特徴《ドンキホーテ海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[ใช้งาน : เมน] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถ เรสต์ คาแรกเตอร์นี้ : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[ใช้งาน : เมน] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถ เรสต์ คาแรกเตอร์นี้ : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-034_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-035",
@@ -895,7 +1084,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-035.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-036",
@@ -911,12 +1102,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Donquixote Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Block] Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ブロック時】相手のコスト4以下のキャラ1枚までを、レストにする。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อบล็อก] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Block] Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ブロック時】相手のコスト4以下のキャラ1枚までを、レストにする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อบล็อก] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-036.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-037",
@@ -931,11 +1124,11 @@
     "effectEn": "[Counter] You may trash 1 card from your hand: Up to 1 of your Leader or Character cards gains +3000 power during this battle.",
     "effectJp": "【カウンター】自分の手札1枚を捨てることができる：自分のリーダーかキャラ1枚までを、このバトル中、パワー+3000。",
     "effectTh": "[เคาน์เตอร์] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
-    "triggerEn": "[Trigger] Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
-    "triggerJp": "【トリガー】相手のコスト4以下のキャラ1枚までを、レストにする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-037.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-038",
@@ -951,11 +1144,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, you may trash 1 card from your hand. If you do, set up to 3 of your DON!! cards as active.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、自分の手札1枚を捨ててもよい。そうした場合、自分のドン!!3枚までを、アクティブにする。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. จากนั้น, จะสามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบก็ได้. ถ้าหากว่าทำละก็, จะทำการ แอ็คทีฟ ด้ง!! ของเรา จำนวนไม่เกิน 3 ใบ.",
-    "triggerEn": "[Trigger] Rest up to 1 of your opponent's Leader or Character cards with a cost of 3 or less.",
-    "triggerJp": "【トリガー】相手のリーダーかコスト3以下のキャラ1枚までを、レストにする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-038.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-039",
@@ -971,11 +1164,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, K.O. up to 1 of your opponent's rested Characters with a cost of 3 or less.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、相手のレストのコスト3以下のキャラ1枚までを、KOする。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's rested Characters with a cost of 5 or less.",
-    "triggerJp": "【トリガー】相手のレストのコスト5以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-039.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-040",
@@ -988,12 +1181,14 @@
     "color": "Green",
     "cost": 5,
     "trait": "Donquixote Pirates",
-    "effectEn": "If your Leader is [Donquixote Doflamingo], all Characters with a cost of 5 or less do not become active in your and your opponent's Refresh Phases.<br>[End of Your Turn] If you have 10 DON!! cards on your field, K.O. all rested Characters with a cost of 5 or less. Then, trash this Stage.",
-    "effectJp": "自分のリーダーが「ドンキホーテ・ドフラミンゴ」の場合、コスト5以下のキャラすべては、お互いのリフレッシュフェイズでアクティブにならない。<br>【自分のターン終了時】自分の場のドン!!が10枚ある場合、レストのコスト5以下のキャラすべてを、KOする。その後、このステージをトラッシュに置く。",
-    "effectTh": "ถ้าลีดเดอร์ของเราคือ [Donquixote Doflamingo], คาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 5 หรือต่ำกว่า, จะไม่ถูก แอ็คทีฟ ในช่วงรีเฟรชเฟสของทั้งสองฝ่าย.<br>[เมื่อจบเทิร์นของเรา] ถ้าในสนามของเรามี ด้ง!! อยู่ 10 ใบพอดี, คาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 5 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จะถูก KO ทั้งหมด. จากนั้น, สเตจนี้ จะถูกนำไปวางที่แทรช.",
+    "effectEn": "If your Leader is [Donquixote Doflamingo], all Characters with a cost of 5 or less do not become active in your and your opponent's Refresh Phases.[End of Your Turn] If you have 10 DON!! cards on your field, K.O. all rested Characters with a cost of 5 or less. Then, trash this Stage.",
+    "effectJp": "自分のリーダーが「ドンキホーテ・ドフラミンゴ」の場合、コスト5以下のキャラすべては、お互いのリフレッシュフェイズでアクティブにならない。【自分のターン終了時】自分の場のドン!!が10枚ある場合、レストのコスト5以下のキャラすべてを、KOする。その後、このステージをトラッシュに置く。",
+    "effectTh": "ถ้าลีดเดอร์ของเราคือ [Donquixote Doflamingo], คาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 5 หรือต่ำกว่า, จะไม่ถูก แอ็คทีฟ ในช่วงรีเฟรชเฟสของทั้งสองฝ่าย.[เมื่อจบเทิร์นของเรา] ถ้าในสนามของเรามี ด้ง!! อยู่ 10 ใบพอดี, คาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 5 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จะถูก KO ทั้งหมด. จากนั้น, สเตจนี้ จะถูกนำไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-040.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-041",
@@ -1005,15 +1200,17 @@
     "nameTh": "Sakazuki",
     "color": "Blue/Black",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Special",
     "trait": "Navy",
-    "effectEn": "[Activate: Main] [Once Per Turn] You may trash 1 card from your hand: Draw 1 card.<br>[When Attacking] Give up to 1 of your opponent's Characters −1 cost during this turn.",
-    "effectJp": "【起動メイン】【ターン1回】自分の手札1枚を捨てることができる：カード1枚を引く。<br>【アタック時】相手のキャラ1枚までを、このターン中、コスト-1。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : จั่วการ์ด จำนวน 1 ใบ.<br>[เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -1.",
+    "effectEn": "[Activate: Main] [Once Per Turn] You may trash 1 card from your hand: Draw 1 card.[When Attacking] Give up to 1 of your opponent's Characters −1 cost during this turn.",
+    "effectJp": "【起動メイン】【ターン1回】自分の手札1枚を捨てることができる：カード1枚を引く。【アタック時】相手のキャラ1枚までを、このターン中、コスト-1。",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : จั่วการ์ด จำนวน 1 ใบ.[เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -1.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-041.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-041",
@@ -1025,16 +1222,18 @@
     "nameTh": "Sakazuki (Parallel)",
     "color": "Blue/Black",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Special",
     "trait": "Navy",
-    "effectEn": "[Activate: Main] [Once Per Turn] You may trash 1 card from your hand: Draw 1 card.<br>[When Attacking] Give up to 1 of your opponent's Characters −1 cost during this turn.",
-    "effectJp": "【起動メイン】【ターン1回】自分の手札1枚を捨てることができる：カード1枚を引く。<br>【アタック時】相手のキャラ1枚までを、このターン中、コスト-1。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : จั่วการ์ด จำนวน 1 ใบ.<br>[เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -1.",
+    "effectEn": "[Activate: Main] [Once Per Turn] You may trash 1 card from your hand: Draw 1 card.[When Attacking] Give up to 1 of your opponent's Characters −1 cost during this turn.",
+    "effectJp": "【起動メイン】【ターン1回】自分の手札1枚を捨てることができる：カード1枚を引く。【アタック時】相手のキャラ1枚までを、このターン中、コスト-1。",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : จั่วการ์ด จำนวน 1 ใบ.[เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -1.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-041_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-042",
@@ -1055,7 +1254,9 @@
     "effectTh": "[เมื่อลงสนาม] คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 7 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, จะไม่สามารถโจมตี, จนกระทั่งถึงช่วงเริ่มต้นเทิร์นของเราในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-042.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-043",
@@ -1076,7 +1277,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีหลายธีมสี, จะได้ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด จำนวนไม่เกิน 1 ใบ ขึ้นมือ. จากนั้น, นำการ์ดที่เหลือมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือ ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-043.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-043",
@@ -1098,7 +1301,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-043_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-044",
@@ -1119,7 +1324,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-044.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-045",
@@ -1140,7 +1347,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ, และ เรสต์ คาแรกเตอร์นี้ : นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-045.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-046",
@@ -1161,7 +1370,9 @@
     "effectTh": "[เมื่อถูก KO] จั่วการ์ด จำนวน 1 ใบ, และนำการ์ดบนมือของเรา จำนวน 1 ใบ ไปวางที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-046.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-047",
@@ -1177,12 +1388,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Animal Kingdom Pirates/Hawkins Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Block] Draw 1 card if you have 3 or less cards in your hand. Then, this Character gains +1000 power during this battle.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ブロック時】自分の手札が3枚以下の場合、カード1枚を引く。その後、このキャラは、このバトル中、パワー+1000。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อบล็อก] ถ้าเรามีการ์ดบนมือ จำนวน 3 ใบ หรือน้อยกว่า, จะได้จั่วการ์ด จำนวน 1 ใบ. จากนั้น, ในแบทเทิลนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Block] Draw 1 card if you have 3 or less cards in your hand. Then, this Character gains +1000 power during this battle.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ブロック時】自分の手札が3枚以下の場合、カード1枚を引く。その後、このキャラは、このバトル中、パワー+1000。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อบล็อก] ถ้าเรามีการ์ดบนมือ จำนวน 3 ใบ หรือน้อยกว่า, จะได้จั่วการ์ด จำนวน 1 ใบ. จากนั้น, ในแบทเทิลนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-047.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-048",
@@ -1203,7 +1416,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-048.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-049",
@@ -1223,7 +1438,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-049.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-050",
@@ -1244,7 +1461,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าเรามีการ์ดบนมือ จำนวน 5 ใบ หรือน้อยกว่า, จะได้จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-050.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-051",
@@ -1264,7 +1483,9 @@
     "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-051.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-051",
@@ -1285,7 +1506,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-051_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-052",
@@ -1306,7 +1529,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-052.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-053",
@@ -1327,7 +1552,9 @@
     "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อเราจั่วการ์ด นอกเหนือจากในช่วงดรอว์เฟส, ในเทิร์นนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-053.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-054",
@@ -1348,7 +1575,9 @@
     "effectTh": "[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, และนำการ์ดบนมือของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-054.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-055",
@@ -1364,12 +1593,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Navy/Drake Pirates/Animal Kingdom Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Look at 5 cards from the top of your deck and place them at the top or bottom of the deck in any order.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のデッキの上から5枚を見て、好きな順番に並び替え、デッキの上か下に置く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือ ข้างใต้เด็ค.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Look at 5 cards from the top of your deck and place them at the top or bottom of the deck in any order.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のデッキの上から5枚を見て、好きな順番に並び替え、デッキの上か下に置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือ ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-055.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-055",
@@ -1385,13 +1616,15 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Navy/Drake Pirates/Animal Kingdom Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Look at 5 cards from the top of your deck and place them at the top or bottom of the deck in any order.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のデッキの上から5枚を見て、好きな順番に並び替え、デッキの上か下に置く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือ ข้างใต้เด็ค.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Look at 5 cards from the top of your deck and place them at the top or bottom of the deck in any order.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のデッキの上から5枚を見て、好きな順番に並び替え、デッキの上か下に置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือ ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-055_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-056",
@@ -1412,7 +1645,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถนำ คาแรกเตอร์ของเรา นอกเหนือจากคาแรกเตอร์นี้ จำนวน 1 ใบ, ไปวางที่ข้างใต้เด็คของเรา : จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-056.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-057",
@@ -1428,11 +1663,11 @@
     "effectEn": "[Main] Up to 1 of your Leader or Character cards gains +3000 power during this turn. Then, place up to 1 Character with a cost of 2 or less at the bottom of the owner's deck.",
     "effectJp": "【メイン】自分のリーダーかキャラ1枚までを、このターン中、パワー+3000。その後、コスト2以下のキャラ1枚までを、持ち主のデッキの下に置く。",
     "effectTh": "[เมน] ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000. จากนั้น, นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
-    "triggerEn": "[Trigger] Return up to 1 Character with a cost of 3 or less to the owner's hand.",
-    "triggerJp": "【トリガー】コスト3以下のキャラ1枚までを、持ち主の手札に戻す。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-057.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-058",
@@ -1448,11 +1683,11 @@
     "effectEn": "[Main] Place all Characters with a cost of 3 or less at the bottom of the owner's deck. Then, you and your opponent trash cards from your hands until you each have 5 cards in your hands.",
     "effectJp": "【メイン】コスト3以下のキャラすべてを、持ち主のデッキの下に置く。その後、お互いは手札が5枚になるように、自身の手札を捨てる。",
     "effectTh": "[เมน] นำคาแรกเตอร์ทั้งหมด (ของทั้งสองฝ่าย) ที่มีคอสต์ 3 หรือต่ำกว่า, ไปวางที่ข้างใต้เด็คของเจ้าของ. จากนั้น, ทั้งสองฝ่าย จะต้องทิ้งการ์ดบนมือของตัวเอง, และทำให้การ์ดบนมือของตัวเอง มีจำนวนเหลืออยู่เท่ากับ 5 ใบ.",
-    "triggerEn": "[Trigger] Place all Characters with a cost of 2 or less at the bottom of the owner's deck.",
-    "triggerJp": "【トリガー】コスト2以下のキャラすべてを、持ち主のデッキの下に置く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-058.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-059",
@@ -1468,11 +1703,11 @@
     "effectEn": "[Main] If your Leader is multicolored, draw 1 card. Then, return up to 1 Character with a cost of 5 or less to the owner's hand.",
     "effectJp": "【メイン】自分のリーダーが多色の場合、カード1枚を引く。その後、コスト5以下のキャラ1枚までを、持ち主の手札に戻す。",
     "effectTh": "[เมน] ถ้าลีดเดอร์ของเรา มีหลายธีมสี, จั่วการ์ด จำนวน 1 ใบ. จากนั้น, นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
-    "triggerEn": "[Trigger] If your Leader is multicolored, draw 2 cards.",
-    "triggerJp": "【トリガー】自分のリーダーが多色の場合、カード2枚を引く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-059.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-060",
@@ -1484,7 +1719,7 @@
     "nameTh": "Monkey.D.Luffy",
     "color": "Purple",
     "power": 5000,
-    "life": 2,
+    "life": 5,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
     "effectEn": "[Activate: Main] [Once Per Turn] You may add 1 card from the top of your Life cards to your hand: If you have 0 or 3 or more DON!! cards on your field, add up to 1 DON!! card from your DON!! deck and set it as active.",
@@ -1492,7 +1727,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 0 ใบ, หรือว่า มีอยู่จำนวน 3 ใบ หรือมากกว่า, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-060.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-060",
@@ -1504,7 +1741,7 @@
     "nameTh": "Monkey.D.Luffy (Parallel)",
     "color": "Purple",
     "power": 5000,
-    "life": 2,
+    "life": 5,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
     "effectEn": "[Activate: Main] [Once Per Turn] You may add 1 card from the top of your Life cards to your hand: If you have 0 or 3 or more DON!! cards on your field, add up to 1 DON!! card from your DON!! deck and set it as active.",
@@ -1513,7 +1750,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-060_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-061",
@@ -1534,7 +1773,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 8 ใบ หรือมากกว่า, จะทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-061.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-062",
@@ -1550,12 +1791,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Straw Hat Crew",
-    "effectEn": "If you have 10 DON!! cards on your field, this Character gains [Blocker].<br>(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
-    "effectJp": "自分の場にドン!!が10枚ある場合、このキャラは【ブロッカー】を得る。<br>(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
-    "effectTh": "ถ้าในสนามของเรามี ด้ง!! อยู่ 10 ใบพอดี, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. <br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectEn": "If you have 10 DON!! cards on your field, this Character gains [Blocker].(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
+    "effectJp": "自分の場にドン!!が10枚ある場合、このキャラは【ブロッカー】を得る。(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
+    "effectTh": "ถ้าในสนามของเรามี ด้ง!! อยู่ 10 ใบพอดี, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-062.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-063",
@@ -1576,7 +1819,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 8 ใบ หรือมากกว่า, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-063.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-064",
@@ -1594,10 +1839,12 @@
     "trait": "Kid Pirates",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Kid Pirates} type card other than [Killer] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「キラー」以外の特徴《キッド海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดคิด &gt; นอกเหนือจาก [Killer] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดคิด > นอกเหนือจาก [Killer] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-064.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-065",
@@ -1618,7 +1865,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-065.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-066",
@@ -1634,12 +1883,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Fish-Man/Straw Hat Crew",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[Opponent's Turn] If you have 10 DON!! cards on your field, this Character gains +1000 power.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【相手のターン中】自分の場にドン!!が10枚ある場合、このキャラはパワー+1000。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ในเทิร์นของคู่แข่ง] ถ้าในสนามของเรามี ด้ง!! อยู่ 10 ใบพอดี, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[Opponent's Turn] If you have 10 DON!! cards on your field, this Character gains +1000 power.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【相手のターン中】自分の場にドン!!が10枚ある場合、このキャラはパワー+1000。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ในเทิร์นของคู่แข่ง] ถ้าในสนามของเรามี ด้ง!! อยู่ 10 ใบพอดี, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-066.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-067",
@@ -1660,7 +1911,9 @@
     "effectTh": "[เมื่อโจมตี] ถ้าเรามี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่า, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-067.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-067",
@@ -1682,7 +1935,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-067_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-068",
@@ -1700,10 +1955,12 @@
     "trait": "Animal/Straw Hat Crew",
     "effectEn": "[On Play] If you have 8 or more DON!! cards on your field, set up to 1 of your purple {Straw Hat Crew} type Characters with 6000 power or less as active.",
     "effectJp": "【登場時】自分の場にドン!!が8枚以上ある場合、自分のパワー6000以下の紫の特徴《麦わらの一味》を持つキャラ1枚までを、アクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่ จำนวน 8 ใบ หรือมากกว่า, จะทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; และเป็นธีมสีม่วง ซึ่งมีพาวเวอร์ 6000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่ จำนวน 8 ใบ หรือมากกว่า, จะทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > และเป็นธีมสีม่วง ซึ่งมีพาวเวอร์ 6000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-068.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-069",
@@ -1720,10 +1977,12 @@
     "trait": "Heart Pirates",
     "effectEn": "[When Attacking] If your opponent has more DON!! cards on their field than you, look at 5 cards from the top of your deck; reveal up to 1 {Heart Pirates} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【アタック時】相手の場のドン!!の枚数が自分の場のドン!!の枚数より多い場合、自分のデッキの上から5枚を見て、特徴《ハートの海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อโจมตี] ถ้าจำนวน ด้ง!! ที่อยู่บนสนามของคู่แข่ง มีมากกว่าจำนวน ด้ง!! ที่อยู่บนสนามของเรา, จะได้ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดฮาร์ท &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อโจมตี] ถ้าจำนวน ด้ง!! ที่อยู่บนสนามของคู่แข่ง มีมากกว่าจำนวน ด้ง!! ที่อยู่บนสนามของเรา, จะได้ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดฮาร์ท > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-069.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-069",
@@ -1740,11 +1999,13 @@
     "trait": "Heart Pirates",
     "effectEn": "[When Attacking] If your opponent has more DON!! cards on their field than you, look at 5 cards from the top of your deck; reveal up to 1 {Heart Pirates} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【アタック時】相手の場のドン!!の枚数が自分の場のドン!!の枚数より多い場合、自分のデッキの上から5枚を見て、特徴《ハートの海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อโจมตี] ถ้าจำนวน ด้ง!! ที่อยู่บนสนามของคู่แข่ง มีมากกว่าจำนวน ด้ง!! ที่อยู่บนสนามของเรา, จะได้ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดฮาร์ท &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อโจมตี] ถ้าจำนวน ด้ง!! ที่อยู่บนสนามของคู่แข่ง มีมากกว่าจำนวน ด้ง!! ที่อยู่บนสนามของเรา, จะได้ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดฮาร์ท > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-069_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-069",
@@ -1761,11 +2022,13 @@
     "trait": "Heart Pirates",
     "effectEn": "[When Attacking] If your opponent has more DON!! cards on their field than you, look at 5 cards from the top of your deck; reveal up to 1 {Heart Pirates} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【アタック時】相手の場のドン!!の枚数が自分の場のドン!!の枚数より多い場合、自分のデッキの上から5枚を見て、特徴《ハートの海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อโจมตี] ถ้าจำนวน ด้ง!! ที่อยู่บนสนามของคู่แข่ง มีมากกว่าจำนวน ด้ง!! ที่อยู่บนสนามของเรา, จะได้ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดฮาร์ท &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อโจมตี] ถ้าจำนวน ด้ง!! ที่อยู่บนสนามของคู่แข่ง มีมากกว่าจำนวน ด้ง!! ที่อยู่บนสนามของเรา, จะได้ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดฮาร์ท > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-069_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-070",
@@ -1781,12 +2044,14 @@
     "counter": 2000,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
-    "effectEn": "[DON!! x1] If you have 8 or more DON!! cards on your field, this Character gains [Rush].<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【ドン!!×1】自分の場にドン!!が8枚以上ある場合、このキャラは【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[ด้ง!! x 1] ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 8 ใบ หรือมากกว่า, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[DON!! x1] If you have 8 or more DON!! cards on your field, this Character gains [Rush].(This card can attack on the turn in which it is played.)",
+    "effectJp": "【ドン!!×1】自分の場にドン!!が8枚以上ある場合、このキャラは【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[ด้ง!! x 1] ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 8 ใบ หรือมากกว่า, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-070.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-071",
@@ -1806,7 +2071,9 @@
     "effectTh": "[เมื่อโจมตี] ถ้าจำนวน ด้ง!! ที่อยู่บนสนามของคู่แข่ง มีมากกว่าจำนวน ด้ง!! ที่อยู่บนสนามของเรา, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ –2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-071.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-072",
@@ -1826,7 +2093,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 8 ใบ หรือมากกว่า, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 2 ใบ, จะมีพาวเวอร์ –2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-072.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-073",
@@ -1845,11 +2114,11 @@
     "effectEn": "[On Play] You may trash 1 card from your hand: Add up to 1 DON!! card from your DON!! deck and rest it.",
     "effectJp": "【登場時】自分の手札1枚を捨てることができる：ドン!!デッキからドン!!1枚までを、レストで追加する。",
     "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
-    "triggerEn": "[Trigger] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Play this card.",
-    "triggerJp": "【トリガー】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-073.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-074",
@@ -1865,12 +2134,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Kid Pirates",
-    "effectEn": "[Blocker]<br>[Your Turn] [Once Per Turn] When a DON!! card on your field is returned to your DON!! deck, add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "effectJp": "【ブロッカー】<br>【自分のターン中】【ターン1回】自分の場のドン!!がドン!!デッキに戻された時、ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา ถูกนำกลับ ด้ง!! เด็ค, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[Blocker][Your Turn] [Once Per Turn] When a DON!! card on your field is returned to your DON!! deck, add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【ブロッカー】【自分のターン中】【ターン1回】自分の場のドン!!がドン!!デッキに戻された時、ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา ถูกนำกลับ ด้ง!! เด็ค, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-074.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-074",
@@ -1886,13 +2157,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Kid Pirates",
-    "effectEn": "[Blocker]<br>[Your Turn] [Once Per Turn] When a DON!! card on your field is returned to your DON!! deck, add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "effectJp": "【ブロッカー】<br>【自分のターン中】【ターン1回】自分の場のドン!!がドン!!デッキに戻された時、ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา ถูกนำกลับ ด้ง!! เด็ค, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[Blocker][Your Turn] [Once Per Turn] When a DON!! card on your field is returned to your DON!! deck, add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【ブロッカー】【自分のターン中】【ターン1回】自分の場のドン!!がドン!!デッキに戻された時、ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา ถูกนำกลับ ด้ง!! เด็ค, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-074_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-074",
@@ -1908,13 +2181,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Kid Pirates",
-    "effectEn": "[Blocker]<br>[Your Turn] [Once Per Turn] When a DON!! card on your field is returned to your DON!! deck, add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "effectJp": "【ブロッカー】<br>【自分のターン中】【ターン1回】自分の場のドン!!がドン!!デッキに戻された時、ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา ถูกนำกลับ ด้ง!! เด็ค, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[Blocker][Your Turn] [Once Per Turn] When a DON!! card on your field is returned to your DON!! deck, add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【ブロッカー】【自分のターン中】【ターン1回】自分の場のドン!!がドン!!デッキに戻された時、ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา ถูกนำกลับ ด้ง!! เด็ค, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-074_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-075",
@@ -1932,10 +2207,12 @@
     "trait": "Baroque Works",
     "effectEn": "[On Your Opponent's Attack] [Once Per Turn] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Play up to 1 {Baroque Works} type Character card with a cost of 3 or less from your hand.",
     "effectJp": "【相手のアタック時】【ターン1回】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分の手札からコスト3以下の特徴《B・W》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; B•W &gt; และมีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < B•W > และมีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-075.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-076",
@@ -1950,12 +2227,12 @@
     "trait": "Land of Wano",
     "effectEn": "[Main] Look at 3 cards from the top of your deck; reveal up to 1 {Straw Hat Crew}, {Kid Pirates}, or {Heart Pirates} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】自分のデッキの上から3枚を見て、特徴《麦わらの一味》か《キッド海賊団》か《ハートの海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; หรือ &lt; กลุ่มโจรสลัดคิด &gt; หรือ &lt; กลุ่มโจรสลัดฮาร์ท &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
+    "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > หรือ < กลุ่มโจรสลัดคิด > หรือ < กลุ่มโจรสลัดฮาร์ท > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-076.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-077",
@@ -1971,11 +2248,11 @@
     "effectEn": "[Main] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Give up to 1 of your opponent's Characters −5000 power during this turn.",
     "effectJp": "【メイン】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：相手のキャラ1枚までを、このターン中、パワー-5000。",
     "effectTh": "[เมน] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -5000.",
-    "triggerEn": "[Trigger] Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-077.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-078",
@@ -1990,12 +2267,12 @@
     "trait": "Kid Pirates",
     "effectEn": "[Main] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Up to 1 of your {Kid Pirates} type Leader or Character cards gains +5000 power during this turn.",
     "effectJp": "【メイン】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分の特徴《キッド海賊団》を持つ、リーダーかキャラ1枚までを、このターン中、パワー+5000。",
-    "effectTh": "[เมน] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดคิด &gt; จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +5000.",
-    "triggerEn": "[Trigger] Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
+    "effectTh": "[เมน] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา ที่มีคุณสมบัติ < กลุ่มโจรสลัดคิด > จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +5000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-078.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-079",
@@ -2016,7 +2293,9 @@
     "effectTh": "[เมื่อลงสนาม] คู่แข่งจะต้องนำการ์ดที่อยู่ในแทรชของตัวเอง จำนวน 3 ใบ, ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-079.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-080",
@@ -2032,12 +2311,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Kingdom of Prodence/Dressrosa",
-    "effectEn": "[When Attacking] [Once Per Turn] You may return 20 cards from your trash to your deck and shuffle it: This Character gains [Double Attack] and +10000 power during this battle.<br>(This card deals 2 damage.)",
-    "effectJp": "【アタック時】【ターン1回】自分のトラッシュのカード20枚をデッキに戻しシャッフルできる：このキャラは、このバトル中、【ダブルアタック】を得て、パワー+10000。<br>(このカードが与えるダメージは2になる)",
-    "effectTh": "[เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] สามารถนำการ์ดที่อยู่ในแทรชของเรา จำนวน 20 ใบ กลับเข้าเด็ค แล้วชัฟเฟิล : ในแบทเทิลนี้, คาแรกเตอร์นี้ จะได้รับ [ดับเบิ้ลแอทแทค], และจะมีพาวเวอร์ +10000.<br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
+    "effectEn": "[When Attacking] [Once Per Turn] You may return 20 cards from your trash to your deck and shuffle it: This Character gains [Double Attack] and +10000 power during this battle.(This card deals 2 damage.)",
+    "effectJp": "【アタック時】【ターン1回】自分のトラッシュのカード20枚をデッキに戻しシャッフルできる：このキャラは、このバトル中、【ダブルアタック】を得て、パワー+10000。(このカードが与えるダメージは2になる)",
+    "effectTh": "[เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] สามารถนำการ์ดที่อยู่ในแทรชของเรา จำนวน 20 ใบ กลับเข้าเด็ค แล้วชัฟเฟิล : ในแบทเทิลนี้, คาแรกเตอร์นี้ จะได้รับ [ดับเบิ้ลแอทแทค], และจะมีพาวเวอร์ +10000.(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-080.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-081",
@@ -2057,7 +2338,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -3.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-081.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-082",
@@ -2077,7 +2360,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้, และนำการ์ดที่อยู่ในแทรชของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : ถ้าคู่แข่งมีการ์ดบนมือ จำนวน 6 ใบ หรือมากกว่า, คู่แข่งจะต้องทิ้งการ์ดบนมือของตัวเอง จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-082.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-083",
@@ -2098,7 +2383,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-083.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-084",
@@ -2115,10 +2402,12 @@
     "trait": "Celestial Dragons",
     "effectEn": "[Your Turn] If the only Characters on your field are {Celestial Dragons} type Characters, give all of your opponent's Characters −4 cost.",
     "effectJp": "【自分のターン中】自分の場のキャラが、特徴《天竜人》を持つキャラのみの場合、相手のキャラすべてをコスト-4。",
-    "effectTh": "[เทิร์นตัวเอง] ถ้าคาแรกเตอร์ที่อยู่บนสนามของเรา, ล้วนแต่เป็นคาแรกเตอร์ที่มีคุณสมบัติ &lt; เผ่ามังกรฟ้า &gt; ทั้งหมด, คาแรกเตอร์ของคู่แข่งทั้งหมด จะมีคอสต์ -4.",
+    "effectTh": "[เทิร์นตัวเอง] ถ้าคาแรกเตอร์ที่อยู่บนสนามของเรา, ล้วนแต่เป็นคาแรกเตอร์ที่มีคุณสมบัติ < เผ่ามังกรฟ้า > ทั้งหมด, คาแรกเตอร์ของคู่แข่งทั้งหมด จะมีคอสต์ -4.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-084.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-085",
@@ -2134,12 +2423,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Alabasta",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Trash 1 card from the top of your deck.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のデッキの上から1枚をトラッシュに置く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] นำการ์ดจากใบบนสุดของเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Trash 1 card from the top of your deck.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のデッキの上から1枚をトラッシュに置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] นำการ์ดจากใบบนสุดของเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-085.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-086",
@@ -2155,12 +2446,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Alabasta",
-    "effectEn": "If you have 10 or more cards in your trash, this Character gains [Blocker].<br>(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
-    "effectJp": "自分のトラッシュが10枚以上ある場合、このキャラは【ブロッカー】を得る。<br>(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
-    "effectTh": "ถ้าเรามีการ์ดอยู่ในแทรช จำนวน 10 ใบ หรือมากกว่า, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. <br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectEn": "If you have 10 or more cards in your trash, this Character gains [Blocker].(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
+    "effectJp": "自分のトラッシュが10枚以上ある場合、このキャラは【ブロッカー】を得る。(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
+    "effectTh": "ถ้าเรามีการ์ดอยู่ในแทรช จำนวน 10 ใบ หรือมากกว่า, คาแรกเตอร์นี้ จะได้รับ [บล็อกเกอร์]. (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-086.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-087",
@@ -2181,7 +2474,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] สามารถ KO คาแรกเตอร์ของฝ่ายเรา นอกเหนือจากคาแรกเตอร์นี้ จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -5.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-087.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-088",
@@ -2201,7 +2496,9 @@
     "effectTh": "[ใช้งาน : เมน] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถ เรสต์ คาแรกเตอร์นี้, และนำการ์ดที่อยู่ในแทรชของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : นำคาแรกเตอร์การ์ด ที่เป็นธีมสีดำ และมีคอสต์ตั้งแต่ 3 ไปจนถึง 5 ซึ่งอยู่ในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-088.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-088",
@@ -2222,7 +2519,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-088_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-089",
@@ -2243,7 +2542,9 @@
     "effectTh": "[ใช้งาน : เมน] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถ เรสต์ คาแรกเตอร์นี้ กับคาแรกเตอร์ของฝ่ายเราอีก 1 ใบ : นำคาแรกเตอร์การ์ด ที่เป็นธีมสีดำ และมีคอสต์ 1 ซึ่งอยู่ในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-089.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-090",
@@ -2259,12 +2560,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Dressrosa",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play]/[On K.O.] Up to 1 of your {Dressrosa} type Characters gains +2000 power during this turn.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】/【KO時】自分の特徴《ドレスローザ》を持つキャラ1枚までを、このターン中、パワー+2000。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] / [เมื่อถูก KO] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; เดรสโรซ่า &gt; จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play]/[On K.O.] Up to 1 of your {Dressrosa} type Characters gains +2000 power during this turn.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】/【KO時】自分の特徴《ドレスローザ》を持つキャラ1枚までを、このターン中、パワー+2000。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] / [เมื่อถูก KO] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < เดรสโรซ่า > จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-090.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-091",
@@ -2279,12 +2582,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Dressrosa",
-    "effectEn": "[Blocker]<br>[On Play] Add up to 1 black Character card with a cost of 3 to 7 other than [Rebecca] from your trash to your hand. Then, play up to 1 black Character card with a cost of 3 or less from your hand rested.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のトラッシュの「レベッカ」以外のコスト3から7の黒のキャラカード1枚までを、手札に加える。その後、自分の手札からコスト3以下の黒のキャラカード1枚までを、レストで登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] นำคาแรคเตอร์การ์ด ที่เป็นธีมสีดำ และมีค่าคอสต์ตั้งแต่ 3 ไปจนถึง 7 นอกเหนือจาก [Rebecca] ซึ่งอยู่ในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ. จากนั้น, นำคาแรกเตอร์การ์ด ที่เป็นธีมสีดำ และมีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์.",
+    "effectEn": "[Blocker][On Play] Add up to 1 black Character card with a cost of 3 to 7 other than [Rebecca] from your trash to your hand. Then, play up to 1 black Character card with a cost of 3 or less from your hand rested.",
+    "effectJp": "【ブロッカー】【登場時】自分のトラッシュの「レベッカ」以外のコスト3から7の黒のキャラカード1枚までを、手札に加える。その後、自分の手札からコスト3以下の黒のキャラカード1枚までを、レストで登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] นำคาแรคเตอร์การ์ด ที่เป็นธีมสีดำ และมีค่าคอสต์ตั้งแต่ 3 ไปจนถึง 7 นอกเหนือจาก [Rebecca] ซึ่งอยู่ในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ. จากนั้น, นำคาแรกเตอร์การ์ด ที่เป็นธีมสีดำ และมีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-091.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-091",
@@ -2299,13 +2604,15 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Dressrosa",
-    "effectEn": "[Blocker]<br>[On Play] Add up to 1 black Character card with a cost of 3 to 7 other than [Rebecca] from your trash to your hand. Then, play up to 1 black Character card with a cost of 3 or less from your hand rested.",
-    "effectJp": "【ブロッカー】<br>【登場時】自分のトラッシュの「レベッカ」以外のコスト3から7の黒のキャラカード1枚までを、手札に加える。その後、自分の手札からコスト3以下の黒のキャラカード1枚までを、レストで登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] นำคาแรคเตอร์การ์ด ที่เป็นธีมสีดำ และมีค่าคอสต์ตั้งแต่ 3 ไปจนถึง 7 นอกเหนือจาก [Rebecca] ซึ่งอยู่ในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ. จากนั้น, นำคาแรกเตอร์การ์ด ที่เป็นธีมสีดำ และมีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์.",
+    "effectEn": "[Blocker][On Play] Add up to 1 black Character card with a cost of 3 to 7 other than [Rebecca] from your trash to your hand. Then, play up to 1 black Character card with a cost of 3 or less from your hand rested.",
+    "effectJp": "【ブロッカー】【登場時】自分のトラッシュの「レベッカ」以外のコスト3から7の黒のキャラカード1枚までを、手札に加える。その後、自分の手札からコスト3以下の黒のキャラカード1枚までを、レストで登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] นำคาแรคเตอร์การ์ด ที่เป็นธีมสีดำ และมีค่าคอสต์ตั้งแต่ 3 ไปจนถึง 7 นอกเหนือจาก [Rebecca] ซึ่งอยู่ในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ. จากนั้น, นำคาแรกเตอร์การ์ด ที่เป็นธีมสีดำ และมีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-091_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-092",
@@ -2322,10 +2629,12 @@
     "trait": "Celestial Dragons",
     "effectEn": "[Your Turn] If the only Characters on your field are {Celestial Dragons} type Characters, give all of your opponent's Characters −6 cost.",
     "effectJp": "【自分のターン中】自分の場のキャラが、特徴《天竜人》を持つキャラのみの場合、相手のキャラすべてをコスト-6。",
-    "effectTh": "[เทิร์นตัวเอง] ถ้าคาแรกเตอร์ที่อยู่บนสนามของเรา, ล้วนแต่เป็นคาแรกเตอร์ที่มีคุณสมบัติ &lt; เผ่ามังกรฟ้า &gt; ทั้งหมด, คาแรกเตอร์ของคู่แข่งทั้งหมด จะมีคอสต์ -6.",
+    "effectTh": "[เทิร์นตัวเอง] ถ้าคาแรกเตอร์ที่อยู่บนสนามของเรา, ล้วนแต่เป็นคาแรกเตอร์ที่มีคุณสมบัติ < เผ่ามังกรฟ้า > ทั้งหมด, คาแรกเตอร์ของคู่แข่งทั้งหมด จะมีคอสต์ -6.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-092.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-093",
@@ -2345,7 +2654,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ดที่อยู่ในแทรชของเรา จำนวน 3 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กับคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า อีกจำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-093.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-093",
@@ -2366,7 +2677,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-093_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-094",
@@ -2382,11 +2695,11 @@
     "effectEn": "[Main] Give up to 1 of your opponent's Characters −3 cost during this turn. Then, up to 1 of your opponent's Characters with a cost of 0 will not become active in the next Refresh Phase.",
     "effectJp": "【メイン】相手のキャラ1枚までを、このターン中、コスト-3。その後、相手のコスト0のキャラ1枚までは、次のリフレッシュフェイズでアクティブにならない。",
     "effectTh": "[เมน] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -3. จากนั้น, ทำให้คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 0 จำนวนไม่เกิน 1 ใบ, จะไม่ถูก แอ็คทีฟ ในช่วงรีเฟรชเฟสครั้งถัดไป.",
-    "triggerEn": "[Trigger] Draw 2 cards and trash 1 card from your hand.",
-    "triggerJp": "【トリガー】カード2枚を引き、自分の手札1枚を捨てる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-094.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-095",
@@ -2404,7 +2717,9 @@
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. จากนั้น, ถ้าเรามีการ์ดอยู่ในแทรช จำนวน 15 ใบ หรือมากกว่า, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-095.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-096",
@@ -2417,14 +2732,14 @@
     "color": "Black",
     "cost": 3,
     "trait": "Celestial Dragons",
-    "effectEn": "[Main] Choose one:<br>• K.O. up to 1 of your opponent's Characters with a cost of 1 or less.<br>• Return up to 1 of your opponent's Characters with a cost of 1 or less to the owner's hand.<br>• Place up to 1 of your opponent's Characters with a cost of 1 or less at the top or bottom of their Life cards face-up.<br>Then, if you have a {Celestial Dragons} type Character, draw 1 card.",
+    "effectEn": "[Main] Choose one:• K.O. up to 1 of your opponent's Characters with a cost of 1 or less.• Return up to 1 of your opponent's Characters with a cost of 1 or less to the owner's hand.• Place up to 1 of your opponent's Characters with a cost of 1 or less at the top or bottom of their Life cards face-up.Then, if you have a {Celestial Dragons} type Character, draw 1 card.",
     "effectJp": "【メイン】相手のコスト1以下のキャラ1枚までを、KOするか、持ち主の手札に戻すか、ライフの上か下に表向きで置く。その後、自分の特徴《天竜人》を持つキャラがいる場合、カード1枚を引く。",
-    "effectTh": "[เมน] เลือกคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, แล้วทำการ KO, หรือว่า นำกลับขึ้นมือของเจ้าของ, หรือว่า นำไปวางเพิ่มที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์ ในสภาพหงายหน้า. จากนั้น, ถ้าเรามีคาแรกเตอร์ ที่มีคุณสมบัติ &lt; เผ่ามังกรฟ้า &gt; อยู่ละก็, จะได้จั่วการ์ด จำนวน 1 ใบ.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with a cost of 6 or less, or return it to the owner's hand.",
-    "triggerJp": "【トリガー】相手のコスト6以下のキャラ1枚までを、KOするか、持ち主の手札に戻す。",
+    "effectTh": "[เมน] เลือกคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, แล้วทำการ KO, หรือว่า นำกลับขึ้นมือของเจ้าของ, หรือว่า นำไปวางเพิ่มที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์ ในสภาพหงายหน้า. จากนั้น, ถ้าเรามีคาแรกเตอร์ ที่มีคุณสมบัติ < เผ่ามังกรฟ้า > อยู่ละก็, จะได้จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-096.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-097",
@@ -2439,10 +2754,12 @@
     "trait": "Mary Geoise",
     "effectEn": "[Your Turn] The cost of playing {Celestial Dragons} type Character cards with a cost of 2 or more from your hand will be reduced by 1.",
     "effectJp": "【自分のターン中】自分が手札から登場させるコスト2以上の特徴《天竜人》を持つキャラカードの支払うコストは1少なくなる。",
-    "effectTh": "[ในเทิร์นของเรา] ค่าคอสต์ที่เราต้องจ่ายในการนำลงสนามจากบนมือของ คาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; เผ่ามังกรฟ้า &gt; ซึ่งมีคอสต์ 2 หรือสูงกว่า จะถูกลดลง 1.",
+    "effectTh": "[ในเทิร์นของเรา] ค่าคอสต์ที่เราต้องจ่ายในการนำลงสนามจากบนมือของ คาแรกเตอร์การ์ด ที่มีคุณสมบัติ < เผ่ามังกรฟ้า > ซึ่งมีคอสต์ 2 หรือสูงกว่า จะถูกลดลง 1.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-097.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-098",
@@ -2454,7 +2771,7 @@
     "nameTh": "Enel",
     "color": "Yellow",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Special",
     "trait": "Sky Island",
     "effectEn": "[Opponent's Turn] [Once Per Turn] When your number of Life cards becomes 0, add 1 card from the top of your deck to the top of your Life cards. Then, trash 1 card from your hand.",
@@ -2462,7 +2779,9 @@
     "effectTh": "[ในเทิร์นของคู่แข่ง] [เทิร์นละ 1 ครั้ง] เมื่อไลฟ์ของเรา กลายเป็น จำนวน 0 ใบ, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, จะต้องทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-098.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-098",
@@ -2474,7 +2793,7 @@
     "nameTh": "Enel (Parallel)",
     "color": "Yellow",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Special",
     "trait": "Sky Island",
     "effectEn": "[Opponent's Turn] [Once Per Turn] When your number of Life cards becomes 0, add 1 card from the top of your deck to the top of your Life cards. Then, trash 1 card from your hand.",
@@ -2483,7 +2802,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-098_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-099",
@@ -2503,7 +2824,9 @@
     "effectTh": "[เมื่อคู่แข่งโจมตี] สามารถ เรสต์ คาแรกเตอร์นี้ : คู่แข่งจะนำ ไลฟ์ ใบบนสุดของตัวเอง จำนวน 1 ใบ ไปวางที่แทรชก็ได้. ถ้าหากว่าไม่ทำละก็, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-099.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-100",
@@ -2518,12 +2841,14 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Sky Island",
-    "effectEn": "[Rush]<br>[Once Per Turn] If this Character would leave the field, you may trash 1 card from the top of your Life cards instead. If there is a [Monkey.D.Luffy] Character, this effect is negated.",
-    "effectJp": "【速攻】<br>【ターン1回】このキャラが場を離れる場合、代わりに自分のライフの上から1枚をトラッシュに置いてもよい。キャラの「モンキー・D・ルフィ」がいる場合、この効果は無効になる。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม, จะสามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ ไปวางที่แทรชแทนก็ได้. แต่ถ้ามีคาแรกเตอร์ [Monkey.D.Luffy] ของใครก็ตามอยู่ละก็, ความสามารถนี้จะกลายเป็นไร้ผล.",
+    "effectEn": "[Rush][Once Per Turn] If this Character would leave the field, you may trash 1 card from the top of your Life cards instead. If there is a [Monkey.D.Luffy] Character, this effect is negated.",
+    "effectJp": "【速攻】【ターン1回】このキャラが場を離れる場合、代わりに自分のライフの上から1枚をトラッシュに置いてもよい。キャラの「モンキー・D・ルフィ」がいる場合、この効果は無効になる。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม, จะสามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ ไปวางที่แทรชแทนก็ได้. แต่ถ้ามีคาแรกเตอร์ [Monkey.D.Luffy] ของใครก็ตามอยู่ละก็, ความสามารถนี้จะกลายเป็นไร้ผล.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-100.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-100",
@@ -2538,13 +2863,15 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Sky Island",
-    "effectEn": "[Rush]<br>[Once Per Turn] If this Character would leave the field, you may trash 1 card from the top of your Life cards instead. If there is a [Monkey.D.Luffy] Character, this effect is negated.",
-    "effectJp": "【速攻】<br>【ターン1回】このキャラが場を離れる場合、代わりに自分のライフの上から1枚をトラッシュに置いてもよい。キャラの「モンキー・D・ルフィ」がいる場合、この効果は無効になる。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม, จะสามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ ไปวางที่แทรชแทนก็ได้. แต่ถ้ามีคาแรกเตอร์ [Monkey.D.Luffy] ของใครก็ตามอยู่ละก็, ความสามารถนี้จะกลายเป็นไร้ผล.",
+    "effectEn": "[Rush][Once Per Turn] If this Character would leave the field, you may trash 1 card from the top of your Life cards instead. If there is a [Monkey.D.Luffy] Character, this effect is negated.",
+    "effectJp": "【速攻】【ターン1回】このキャラが場を離れる場合、代わりに自分のライフの上から1枚をトラッシュに置いてもよい。キャラの「モンキー・D・ルフィ」がいる場合、この効果は無効になる。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม, จะสามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ ไปวางที่แทรชแทนก็ได้. แต่ถ้ามีคาแรกเตอร์ [Monkey.D.Luffy] ของใครก็ตามอยู่ละก็, ความสามารถนี้จะกลายเป็นไร้ผล.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-100_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-100",
@@ -2559,13 +2886,15 @@
     "power": 7000,
     "attribute": "Special",
     "trait": "Sky Island",
-    "effectEn": "[Rush]<br>[Once Per Turn] If this Character would leave the field, you may trash 1 card from the top of your Life cards instead. If there is a [Monkey.D.Luffy] Character, this effect is negated.",
-    "effectJp": "【速攻】<br>【ターン1回】このキャラが場を離れる場合、代わりに自分のライフの上から1枚をトラッシュに置いてもよい。キャラの「モンキー・D・ルフィ」がいる場合、この効果は無効になる。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม, จะสามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ ไปวางที่แทรชแทนก็ได้. แต่ถ้ามีคาแรกเตอร์ [Monkey.D.Luffy] ของใครก็ตามอยู่ละก็, ความสามารถนี้จะกลายเป็นไร้ผล.",
+    "effectEn": "[Rush][Once Per Turn] If this Character would leave the field, you may trash 1 card from the top of your Life cards instead. If there is a [Monkey.D.Luffy] Character, this effect is negated.",
+    "effectJp": "【速攻】【ターン1回】このキャラが場を離れる場合、代わりに自分のライフの上から1枚をトラッシュに置いてもよい。キャラの「モンキー・D・ルフィ」がいる場合、この効果は無効になる。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูกนำออกจากสนาม, จะสามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ ไปวางที่แทรชแทนก็ได้. แต่ถ้ามีคาแรกเตอร์ [Monkey.D.Luffy] ของใครก็ตามอยู่ละก็, ความสามารถนี้จะกลายเป็นไร้ผล.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-100_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-101",
@@ -2581,12 +2910,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Sky Island/Vassals",
-    "effectEn": "If you have 2 or less Life cards, this Character gains +1000 power.<br>[On Play] Look at 5 cards from the top of your deck; reveal up to 1 [Holly] and add it to your hand. Then, place the rest at the bottom of your deck in any order and play up to 1 [Holly] from your hand.",
-    "effectJp": "自分のライフが2枚以下の場合、このキャラはパワー+1000。<br>【登場時】自分のデッキの上から5枚を見て、「ホーリー」1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置き、自分の手札から「ホーリー」1枚までを、登場させる。",
-    "effectTh": "ถ้าเรามีไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000.<br>[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำ [Holly] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, แล้วนำ [Holly] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "If you have 2 or less Life cards, this Character gains +1000 power.[On Play] Look at 5 cards from the top of your deck; reveal up to 1 [Holly] and add it to your hand. Then, place the rest at the bottom of your deck in any order and play up to 1 [Holly] from your hand.",
+    "effectJp": "自分のライフが2枚以下の場合、このキャラはパワー+1000。【登場時】自分のデッキの上から5枚を見て、「ホーリー」1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置き、自分の手札から「ホーリー」1枚までを、登場させる。",
+    "effectTh": "ถ้าเรามีไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000.[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำ [Holly] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, แล้วนำ [Holly] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-101.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-102",
@@ -2607,7 +2938,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีค่าคอสต์ไม่สูงไปกว่า จำนวนไลฟ์ของคู่แข่ง, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-102.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-102",
@@ -2629,7 +2962,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-102_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-103",
@@ -2650,7 +2985,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าเรามี [Hotori] อยู่ด้วยละก็, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีค่าคอสต์ไม่สูงไปกว่า จำนวนไลฟ์ของคู่แข่ง, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-103.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-104",
@@ -2670,7 +3007,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถนำ สเตจของเรา จำนวน 1 ใบ ไปวางที่ข้างใต้เด็ค : จั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-104.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-105",
@@ -2689,11 +3028,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-105.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-106",
@@ -2711,12 +3050,12 @@
     "trait": "Sky Island/Vassals",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Sky Island} type card other than [Shura] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「シュラ」以外の特徴《空島》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; เกาะแห่งท้องฟ้า &gt; นอกเหนือจาก [Shura] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < เกาะแห่งท้องฟ้า > นอกเหนือจาก [Shura] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-106.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-107",
@@ -2737,7 +3076,9 @@
     "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมีการ์ดที่ไลฟ์ของเรา ถูกนำขึ้นสู่บนมือ, ในเทิร์นนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-107.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-108",
@@ -2758,7 +3099,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-108.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-109",
@@ -2779,7 +3122,9 @@
     "effectTh": "[เทิร์นละ 1 ครั้ง] เมื่อมี [ทริกเกอร์] ถูกสั่งใช้งาน, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-109.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-110",
@@ -2800,7 +3145,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-110.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-111",
@@ -2821,7 +3168,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถนำ [Kotori] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม : นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์ของคู่แข่ง ในสภาพหงายหน้า.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-111.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-112",
@@ -2837,12 +3186,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Sky Island",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] Play up to 1 {Sky Island} type Character card with a cost of 1 from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【KO時】自分の手札からコスト1の特徴《空島》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; เกาะแห่งท้องฟ้า &gt; และมีคอสต์เท่ากับ 1 จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On K.O.] Play up to 1 {Sky Island} type Character card with a cost of 1 from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【KO時】自分の手札からコスト1の特徴《空島》を持つキャラカード1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ที่มีคุณสมบัติ < เกาะแห่งท้องฟ้า > และมีคอสต์เท่ากับ 1 จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-112.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-113",
@@ -2863,7 +3214,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-113.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-114",
@@ -2879,11 +3232,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +2000 power during this battle. Then, if your opponent has 2 or less Life cards, that card gains an additional +2000 power during this battle.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+2000。その後、相手のライフが2枚以下の場合、そのカードを、このバトル中、パワー+2000。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000. จากนั้น, ถ้าคู่แข่งมี ไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเราใบนั้น, จะมีพาวเวอร์เพิ่มอีก +2000.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with a cost equal to or less than the number of your opponent's Life cards.",
-    "triggerJp": "【トリガー】相手のライフの枚数以下のコストを持つ相手のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-114.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-115",
@@ -2899,11 +3252,11 @@
     "effectEn": "[Main] Up to 1 of your Leader or Character cards gains +3000 power during this turn. Then, if you have 1 or less Life cards, rest up to 1 of your opponent's Characters with a cost of 4 or less.",
     "effectJp": "【メイン】自分のリーダーかキャラ1枚までを、このターン中、パワー+3000。その後、自分のライフが1枚以下の場合、相手のコスト4以下のキャラ1枚までを、レストにする。",
     "effectTh": "[เมน] ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000. จากนั้น, ถ้าเรามี ไลฟ์ จำนวน 1 ใบ หรือน้อยกว่า, จะทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] You may trash 2 cards from your hand: Add up to 1 card from the top of your deck to the top of your Life cards.",
-    "triggerJp": "【トリガー】自分の手札2枚を捨てることができる：自分のデッキの上から1枚までを、ライフの上に加える。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-115.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-116",
@@ -2919,11 +3272,11 @@
     "effectEn": "[Main] K.O. up to 1 of your opponent's Characters with a cost equal to or less than the number of your opponent's Life cards.",
     "effectJp": "【メイン】相手のライフの枚数以下のコストを持つ相手のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีค่าคอสต์ไม่สูงไปกว่า จำนวนไลฟ์ของคู่แข่ง, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-116.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-117",
@@ -2938,10 +3291,12 @@
     "trait": "Sky Island",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Sky Island} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、特徴《空島》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; เกาะแห่งท้องฟ้า &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < เกาะแห่งท้องฟ้า > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-117.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-118",
@@ -2961,7 +3316,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าคู่แข่งมี ไลฟ์ จำนวน 3 ใบ หรือน้อยกว่า, จะได้จั่วการ์ด จำนวน 4 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-118.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-118",
@@ -2982,7 +3339,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-118_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-119",
@@ -2997,12 +3356,14 @@
     "power": 12000,
     "attribute": "Strike",
     "trait": "The Four Emperors/Straw Hat Crew",
-    "effectEn": "[On Play] DON!! −10: Place all of your Characters except this Character at the bottom of your deck in any order. Then, take an extra turn after this one.<br>[Activate: Main] [Once Per Turn] ➀: Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "effectJp": "【登場時】ドン!!-10：このキャラ以外の自分のキャラすべてを好きな順番でデッキの下に置く。その後、このターンの後に自分のターンを追加で得る。<br>【起動メイン】【ターン1回】➀：ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 10 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์ของฝ่ายเราทั้งหมด นอกเหนือจากคาแรกเตอร์นี้ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค. จากนั้น, หลังจากเล่นเทิร์นนี้แล้ว เราจะได้รับเทิร์นให้เล่นต่อเพิ่มอีก 1 เทิร์น.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[On Play] DON!! −10: Place all of your Characters except this Character at the bottom of your deck in any order. Then, take an extra turn after this one.[Activate: Main] [Once Per Turn] ➀: Add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【登場時】ドン!!-10：このキャラ以外の自分のキャラすべてを好きな順番でデッキの下に置く。その後、このターンの後に自分のターンを追加で得る。【起動メイン】【ターン1回】➀：ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 10 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์ของฝ่ายเราทั้งหมด นอกเหนือจากคาแรกเตอร์นี้ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค. จากนั้น, หลังจากเล่นเทิร์นนี้แล้ว เราจะได้รับเทิร์นให้เล่นต่อเพิ่มอีก 1 เทิร์น.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-119.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-119",
@@ -3017,13 +3378,15 @@
     "power": 12000,
     "attribute": "Strike",
     "trait": "The Four Emperors/Straw Hat Crew",
-    "effectEn": "[On Play] DON!! −10: Place all of your Characters except this Character at the bottom of your deck in any order. Then, take an extra turn after this one.<br>[Activate: Main] [Once Per Turn] ➀: Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "effectJp": "【登場時】ドン!!-10：このキャラ以外の自分のキャラすべてを好きな順番でデッキの下に置く。その後、このターンの後に自分のターンを追加で得る。<br>【起動メイン】【ターン1回】➀：ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 10 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์ของฝ่ายเราทั้งหมด นอกเหนือจากคาแรกเตอร์นี้ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค. จากนั้น, หลังจากเล่นเทิร์นนี้แล้ว เราจะได้รับเทิร์นให้เล่นต่อเพิ่มอีก 1 เทิร์น.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[On Play] DON!! −10: Place all of your Characters except this Character at the bottom of your deck in any order. Then, take an extra turn after this one.[Activate: Main] [Once Per Turn] ➀: Add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【登場時】ドン!!-10：このキャラ以外の自分のキャラすべてを好きな順番でデッキの下に置く。その後、このターンの後に自分のターンを追加で得る。【起動メイン】【ターン1回】➀：ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 10 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์ของฝ่ายเราทั้งหมด นอกเหนือจากคาแรกเตอร์นี้ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค. จากนั้น, หลังจากเล่นเทิร์นนี้แล้ว เราจะได้รับเทิร์นให้เล่นต่อเพิ่มอีก 1 เทิร์น.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-119_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   },
   {
     "code": "OP05-119",
@@ -3038,12 +3401,60 @@
     "power": 12000,
     "attribute": "Strike",
     "trait": "The Four Emperors/Straw Hat Crew",
-    "effectEn": "[On Play] DON!! −10: Place all of your Characters except this Character at the bottom of your deck in any order. Then, take an extra turn after this one.<br>[Activate: Main] [Once Per Turn] ➀: Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "effectJp": "【登場時】ドン!!-10：このキャラ以外の自分のキャラすべてを好きな順番でデッキの下に置く。その後、このターンの後に自分のターンを追加で得る。<br>【起動メイン】【ターン1回】➀：ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 10 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์ของฝ่ายเราทั้งหมด นอกเหนือจากคาแรกเตอร์นี้ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค. จากนั้น, หลังจากเล่นเทิร์นนี้แล้ว เราจะได้รับเทิร์นให้เล่นต่อเพิ่มอีก 1 เทิร์น.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[On Play] DON!! −10: Place all of your Characters except this Character at the bottom of your deck in any order. Then, take an extra turn after this one.[Activate: Main] [Once Per Turn] ➀: Add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【登場時】ドン!!-10：このキャラ以外の自分のキャラすべてを好きな順番でデッキの下に置く。その後、このターンの後に自分のターンを追加で得る。【起動メイン】【ターン1回】➀：ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 10 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์ของฝ่ายเราทั้งหมด นอกเหนือจากคาแรกเตอร์นี้ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค. จากนั้น, หลังจากเล่นเทิร์นนี้แล้ว เราจะได้รับเทิร์นให้เล่นต่อเพิ่มอีก 1 เทิร์น.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-119_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
+  },
+  {
+    "code": "ST01-012",
+    "cardCode": "ST01-012_p3",
+    "rarity": "P-SR",
+    "cardType": "CHARACTER",
+    "nameEn": "Monkey.D.Luffy (Parallel)",
+    "nameJp": "モンキー・D・ルフィ",
+    "nameTh": "Monkey.D.Luffy (Parallel)",
+    "color": "Red",
+    "cost": 5,
+    "power": 6000,
+    "attribute": "Strike",
+    "trait": "Supernovas/Straw Hat Crew",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[DON!! x2] [When Attacking] Your opponent cannot activate [Blocker] during this battle.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【ドン!!×2】【アタック時】相手は、このバトル中、【ブロッカー】を発動できない。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[ด้ง!! x 2] [เมื่อโจมตี] ในแบทเทิลนี้, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์].",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST01-012_p3.png",
+    "isParallel": true,
+    "parallelIndex": 3,
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
+  },
+  {
+    "code": "ST01-012",
+    "cardCode": "ST01-012_p4",
+    "rarity": "P-SR",
+    "cardType": "CHARACTER",
+    "nameEn": "Monkey.D.Luffy (Parallel)",
+    "nameJp": "モンキー・D・ルフィ",
+    "nameTh": "Monkey.D.Luffy (Parallel)",
+    "color": "Red",
+    "cost": 5,
+    "power": 6000,
+    "attribute": "Strike",
+    "trait": "Supernovas/Straw Hat Crew",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[DON!! x2] [When Attacking] Your opponent cannot activate [Blocker] during this battle.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【ドン!!×2】【アタック時】相手は、このバトル中、【ブロッカー】を発動できない。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[ด้ง!! x 2] [เมื่อโจมตี] ในแบทเทิลนี้, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์].",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST01-012_p4.png",
+    "isParallel": true,
+    "parallelIndex": 4,
+    "sets": [
+      "-Awakening of the New Era- [OP-05]"
+    ]
   }
 ]

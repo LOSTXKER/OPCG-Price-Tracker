@@ -9,15 +9,17 @@
     "nameTh": "Kouzuki Oden",
     "color": "Red/Green",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Land of Wano/Kouzuki Clan",
-    "effectEn": "All of your {Land of Wano} type Character cards without a Counter have a +1000 Counter, according to the rules.<br>[DON!! x1] [When Attacking] If you have a {Land of Wano} type Character with a cost of 5 or more, this Leader gains +1000 power until the start of your next turn.",
-    "effectJp": "ルール上、自分の特徴《ワノ国》を持ちカウンターを持たないキャラカードすべてはカウンター+1000を持つ。<br>【ドン!!×1】【アタック時】自分のコスト5以上の特徴《ワノ国》を持つキャラがいる場合、このリーダーは、次の自分のターン開始時まで、パワー+1000。",
-    "effectTh": "เพิ่มกฎให้คาแรกเตอร์การ์ดของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt; แต่ไม่มีเคาน์เตอร์, จะมีเคาน์เตอร์ +1000.<br>[ด้ง!! x 1] [เมื่อโจมตี] ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 5 หรือสูงกว่า และมีคุณสมบัติ &lt; วาโนะคุนิ &gt; อยู่ละก็, ลีดเดอร์นี้ จะมีพาวเวอร์ +1000, จนถึงช่วงเริ่มต้นเทิร์นถัดไปของเรา.",
+    "effectEn": "All of your {Land of Wano} type Character cards without a Counter have a +1000 Counter, according to the rules.[DON!! x1] [When Attacking] If you have a {Land of Wano} type Character with a cost of 5 or more, this Leader gains +1000 power until the start of your next turn.",
+    "effectJp": "ルール上、自分の特徴《ワノ国》を持ちカウンターを持たないキャラカードすべてはカウンター+1000を持つ。【ドン!!×1】【アタック時】自分のコスト5以上の特徴《ワノ国》を持つキャラがいる場合、このリーダーは、次の自分のターン開始時まで、パワー+1000。",
+    "effectTh": "เพิ่มกฎให้คาแรกเตอร์การ์ดของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ < วาโนะคุนิ > แต่ไม่มีเคาน์เตอร์, จะมีเคาน์เตอร์ +1000.[ด้ง!! x 1] [เมื่อโจมตี] ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 5 หรือสูงกว่า และมีคุณสมบัติ < วาโนะคุนิ > อยู่ละก็, ลีดเดอร์นี้ จะมีพาวเวอร์ +1000, จนถึงช่วงเริ่มต้นเทิร์นถัดไปของเรา.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-001",
@@ -29,16 +31,18 @@
     "nameTh": "Kouzuki Oden (Parallel)",
     "color": "Red/Green",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Land of Wano/Kouzuki Clan",
-    "effectEn": "All of your {Land of Wano} type Character cards without a Counter have a +1000 Counter, according to the rules.<br>[DON!! x1] [When Attacking] If you have a {Land of Wano} type Character with a cost of 5 or more, this Leader gains +1000 power until the start of your next turn.",
-    "effectJp": "ルール上、自分の特徴《ワノ国》を持ちカウンターを持たないキャラカードすべてはカウンター+1000を持つ。<br>【ドン!!×1】【アタック時】自分のコスト5以上の特徴《ワノ国》を持つキャラがいる場合、このリーダーは、次の自分のターン開始時まで、パワー+1000。",
-    "effectTh": "เพิ่มกฎให้คาแรกเตอร์การ์ดของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt; แต่ไม่มีเคาน์เตอร์, จะมีเคาน์เตอร์ +1000.<br>[ด้ง!! x 1] [เมื่อโจมตี] ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 5 หรือสูงกว่า และมีคุณสมบัติ &lt; วาโนะคุนิ &gt; อยู่ละก็, ลีดเดอร์นี้ จะมีพาวเวอร์ +1000, จนถึงช่วงเริ่มต้นเทิร์นถัดไปของเรา.",
+    "effectEn": "All of your {Land of Wano} type Character cards without a Counter have a +1000 Counter, according to the rules.[DON!! x1] [When Attacking] If you have a {Land of Wano} type Character with a cost of 5 or more, this Leader gains +1000 power until the start of your next turn.",
+    "effectJp": "ルール上、自分の特徴《ワノ国》を持ちカウンターを持たないキャラカードすべてはカウンター+1000を持つ。【ドン!!×1】【アタック時】自分のコスト5以上の特徴《ワノ国》を持つキャラがいる場合、このリーダーは、次の自分のターン開始時まで、パワー+1000。",
+    "effectTh": "เพิ่มกฎให้คาแรกเตอร์การ์ดของฝ่ายเรา ทั้งหมด ที่มีคุณสมบัติ < วาโนะคุนิ > แต่ไม่มีเคาน์เตอร์, จะมีเคาน์เตอร์ +1000.[ด้ง!! x 1] [เมื่อโจมตี] ถ้าเรามีคาแรกเตอร์ ที่มีคอสต์ 5 หรือสูงกว่า และมีคุณสมบัติ < วาโนะคุนิ > อยู่ละก็, ลีดเดอร์นี้ จะมีพาวเวอร์ +1000, จนถึงช่วงเริ่มต้นเทิร์นถัดไปของเรา.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-001_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-002",
@@ -53,53 +57,59 @@
     "power": 7000,
     "attribute": "Ranged",
     "trait": "Land of Wano/Whitebeard Pirates",
-    "effectEn": "[On Play] Give up to 1 rested DON!! card to your Leader or 1 of your Characters.<br>[On Your Opponent's Attack] [Once Per Turn] You may trash 1 card from your hand: If your Leader has the {Land of Wano} or {Whitebeard Pirates} type, give up to 1 of your opponent's Leader or Character cards −2000 power during this turn.",
-    "effectJp": "【登場時】自分のリーダーかキャラ1枚にレストのドン!!1枚までを、付与する。<br>【相手のアタック時】【ターン1回】自分の手札1枚を捨てることができる：自分のリーダーが特徴《ワノ国》か《白ひげ海賊団》を持つ場合、相手のリーダーかキャラ1枚までを、このターン中、パワー-2000。",
-    "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา, จำนวน 1 ใบ.<br>[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; วาโนะคุนิ &gt; หรือ &lt; กลุ่มโจรสลัดหนวดขาว &gt;, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
+    "effectEn": "[On Play] Give up to 1 rested DON!! card to your Leader or 1 of your Characters.[On Your Opponent's Attack] [Once Per Turn] You may trash 1 card from your hand: If your Leader has the {Land of Wano} or {Whitebeard Pirates} type, give up to 1 of your opponent's Leader or Character cards −2000 power during this turn.",
+    "effectJp": "【登場時】自分のリーダーかキャラ1枚にレストのドン!!1枚までを、付与する。【相手のアタック時】【ターン1回】自分の手札1枚を捨てることができる：自分のリーダーが特徴《ワノ国》か《白ひげ海賊団》を持つ場合、相手のリーダーかキャラ1枚までを、このターン中、パワー-2000。",
+    "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา, จำนวน 1 ใบ.[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < วาโนะคุนิ > หรือ < กลุ่มโจรสลัดหนวดขาว >, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-003",
     "cardCode": "EB01-003",
     "rarity": "R",
     "cardType": "CHARACTER",
-    "nameEn": "Kid &amp; Killer",
-    "nameJp": "キッド&amp;キラー",
-    "nameTh": "Kid &amp; Killer",
+    "nameEn": "Kid & Killer",
+    "nameJp": "キッド&キラー",
+    "nameTh": "Kid & Killer",
     "color": "Red",
     "cost": 4,
     "power": 5000,
-    "attribute": "Slash",
+    "attribute": "Slash/Special",
     "trait": "Supernovas/Kid Pirates",
-    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)<br>[When Attacking] If your opponent has 2 or less Life cards, this Character gains +2000 power during this turn.",
-    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)<br>【アタック時】相手のライフが2枚以下の場合、このキャラは、このターン中、パワー+2000。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] ถ้าคู่แข่งมีไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, ในเทิร์นนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[When Attacking] If your opponent has 2 or less Life cards, this Character gains +2000 power during this turn.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【アタック時】相手のライフが2枚以下の場合、このキャラは、このターン中、パワー+2000。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] ถ้าคู่แข่งมีไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, ในเทิร์นนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-003",
     "cardCode": "EB01-003_p1",
     "rarity": "P-R",
     "cardType": "CHARACTER",
-    "nameEn": "Kid &amp; Killer (Parallel)",
-    "nameJp": "キッド&amp;キラー",
-    "nameTh": "Kid &amp; Killer (Parallel)",
+    "nameEn": "Kid & Killer (Parallel)",
+    "nameJp": "キッド&キラー",
+    "nameTh": "Kid & Killer (Parallel)",
     "color": "Red",
     "cost": 4,
     "power": 5000,
-    "attribute": "Slash",
+    "attribute": "Slash/Special",
     "trait": "Supernovas/Kid Pirates",
-    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)<br>[When Attacking] If your opponent has 2 or less Life cards, this Character gains +2000 power during this turn.",
-    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)<br>【アタック時】相手のライフが2枚以下の場合、このキャラは、このターン中、パワー+2000。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] ถ้าคู่แข่งมีไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, ในเทิร์นนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[When Attacking] If your opponent has 2 or less Life cards, this Character gains +2000 power during this turn.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【アタック時】相手のライフが2枚以下の場合、このキャラは、このターン中、パワー+2000。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] ถ้าคู่แข่งมีไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, ในเทิร์นนี้, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-003_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-004",
@@ -120,7 +130,9 @@
     "effectTh": "[เมื่อโจมตี] สามารถทำให้ ลีดเดอร์ของเรา ที่กำลังแอ็คทีฟอยู่ จำนวน 1 ใบ, ในเทิร์นนี้, จะมีพาวเวอร์ -5000 : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-005",
@@ -141,7 +153,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-006",
@@ -157,12 +171,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Animal/Straw Hat Crew",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x2] [When Attacking] Give up to 1 of your opponent's Characters −3000 power during this turn.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ドン!!×2】【アタック時】相手のキャラ1枚までを、このターン中、パワー-3000。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ด้ง!! x 2] [เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[DON!! x2] [When Attacking] Give up to 1 of your opponent's Characters −3000 power during this turn.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ドン!!×2】【アタック時】相手のキャラ1枚までを、このターン中、パワー-3000。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ด้ง!! x 2] [เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-006",
@@ -178,13 +194,15 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Animal/Straw Hat Crew",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x2] [When Attacking] Give up to 1 of your opponent's Characters −3000 power during this turn.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ドン!!×2】【アタック時】相手のキャラ1枚までを、このターン中、パワー-3000。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ด้ง!! x 2] [เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[DON!! x2] [When Attacking] Give up to 1 of your opponent's Characters −3000 power during this turn.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ドン!!×2】【アタック時】相手のキャラ1枚までを、このターン中、パワー-3000。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ด้ง!! x 2] [เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-006_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-006",
@@ -200,13 +218,15 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Animal/Straw Hat Crew",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x2] [When Attacking] Give up to 1 of your opponent's Characters −3000 power during this turn.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ドン!!×2】【アタック時】相手のキャラ1枚までを、このターン中、パワー-3000。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ด้ง!! x 2] [เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[DON!! x2] [When Attacking] Give up to 1 of your opponent's Characters −3000 power during this turn.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ドン!!×2】【アタック時】相手のキャラ1枚までを、このターン中、パワー-3000。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ด้ง!! x 2] [เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-006_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-007",
@@ -227,7 +247,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา, จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-008",
@@ -248,7 +270,9 @@
     "effectTh": "[เทิร์นละ 1 ครั้ง] ถ้าคาแรกเตอร์นี้ กำลังจะถูก KO โดยความสามารถ, จะสามารถทิ้ง อีเวนต์ หรือ สเตจการ์ด ที่อยู่บนมือของเรา จำนวน 1 ใบ แทนได้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-009",
@@ -263,10 +287,12 @@
     "trait": "Drum Kingdom/Straw Hat Crew",
     "effectEn": "[Counter] Look at 5 cards from the top of your deck and play up to 1 {Animal} type Character card with a cost of 3 or less. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【カウンター】自分のデッキの上から5枚を見て、コスト3以下の特徴《動物》を持つキャラカード1枚までを、登場させる。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เคาน์เตอร์] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, แล้วหาคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ &lt; สัตว์ &gt; จำนวนไม่เกิน 1 ใบ, นำลงสนาม. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เคาน์เตอร์] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, แล้วหาคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ < สัตว์ > จำนวนไม่เกิน 1 ใบ, นำลงสนาม. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-010",
@@ -282,11 +308,11 @@
     "effectEn": "[Counter] K.O. up to 1 of your opponent's Characters with 6000 base power or less.",
     "effectJp": "【カウンター】相手の元々のパワー6000以下のキャラ1枚までを、KOする。",
     "effectTh": "[เคาน์เตอร์] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ตั้งต้น 6000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with 5000 base power or less.",
-    "triggerJp": "【トリガー】相手の元々のパワー5000以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-011",
@@ -304,7 +330,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ การ์ดใบนี้, และนำคาแรกเตอร์ของเรา ที่มีพาวเวอร์ตั้งต้น 1000 จำนวน 1 ใบ ไปวางที่ข้างใต้เด็ค : จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-012",
@@ -322,10 +350,12 @@
     "trait": "Supernovas/Beautiful Pirates",
     "effectEn": "[On Play]/[When Attacking] If your Leader has the {Supernovas} type and you have no other [Cavendish] Characters, set up to 2 of your DON!! cards as active.",
     "effectJp": "【登場時】/【アタック時】自分のリーダーが特徴《超新星》を持ち、自分のキャラの他の「キャベンディッシュ」がいない場合、自分のドン!!2枚までをアクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ถ้า ลีดเดอร์ ของเรา มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt;, และเราไม่มีคาแรกเตอร์ [Cavendish] ใบอื่น อยู่ด้วยละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ถ้า ลีดเดอร์ ของเรา มีคุณสมบัติ < ซูเปอร์โนวา >, และเราไม่มีคาแรกเตอร์ [Cavendish] ใบอื่น อยู่ด้วยละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-012",
@@ -343,11 +373,13 @@
     "trait": "Supernovas/Beautiful Pirates",
     "effectEn": "[On Play]/[When Attacking] If your Leader has the {Supernovas} type and you have no other [Cavendish] Characters, set up to 2 of your DON!! cards as active.",
     "effectJp": "【登場時】/【アタック時】自分のリーダーが特徴《超新星》を持ち、自分のキャラの他の「キャベンディッシュ」がいない場合、自分のドン!!2枚までをアクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ถ้า ลีดเดอร์ ของเรา มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt;, และเราไม่มีคาแรกเตอร์ [Cavendish] ใบอื่น อยู่ด้วยละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ถ้า ลีดเดอร์ ของเรา มีคุณสมบัติ < ซูเปอร์โนวา >, และเราไม่มีคาแรกเตอร์ [Cavendish] ใบอื่น อยู่ด้วยละก็, จะทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-012_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-013",
@@ -364,10 +396,12 @@
     "trait": "Land of Wano/Kouzuki Clan",
     "effectEn": "[Activate: Main] You may trash this Character: Play up to 1 {Land of Wano} type Character card with a cost of 5 or less other than [Kouzuki Hiyori] from your hand. Then, draw 1 card.",
     "effectJp": "【起動メイン】このキャラをトラッシュに置くことができる：自分の手札から「光月日和」以外のコスト5以下の特徴《ワノ国》を持つキャラカード1枚までを、登場させる。その後、カード1枚を引く。",
-    "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : นำ คาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ &lt; วาโนะคุนิ &gt; นอกเหนือจาก [Kouzuki Hiyori] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, จั่วการ์ด จำนวน 1 ใบ.",
+    "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : นำ คาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ < วาโนะคุนิ > นอกเหนือจาก [Kouzuki Hiyori] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-013",
@@ -384,11 +418,13 @@
     "trait": "Land of Wano/Kouzuki Clan",
     "effectEn": "[Activate: Main] You may trash this Character: Play up to 1 {Land of Wano} type Character card with a cost of 5 or less other than [Kouzuki Hiyori] from your hand. Then, draw 1 card.",
     "effectJp": "【起動メイン】このキャラをトラッシュに置くことができる：自分の手札から「光月日和」以外のコスト5以下の特徴《ワノ国》を持つキャラカード1枚までを、登場させる。その後、カード1枚を引く。",
-    "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : นำ คาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ &lt; วาโนะคุนิ &gt; นอกเหนือจาก [Kouzuki Hiyori] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, จั่วการ์ด จำนวน 1 ใบ.",
+    "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : นำ คาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า และมีคุณสมบัติ < วาโนะคุนิ > นอกเหนือจาก [Kouzuki Hiyori] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-013_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-014",
@@ -409,7 +445,9 @@
     "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000, ต่อจำนวน ด้ง!! ของเรา ที่กำลังเรสต์อยู่ จำนวน 3 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-015",
@@ -430,7 +468,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-016",
@@ -450,7 +490,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-017",
@@ -471,7 +513,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-018",
@@ -492,7 +536,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-018.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-019",
@@ -507,10 +553,12 @@
     "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, look at 3 cards from the top of your deck; reveal up to 1 {Donquixote Pirates} type Character card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、自分のデッキの上から3枚を見て、特徴《ドンキホーテ海賊団》を持つキャラカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. จากนั้น, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำคาแรกเตอร์การ์ดที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดดองกีโฮเต้ &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. จากนั้น, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำคาแรกเตอร์การ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดดองกีโฮเต้ > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-019.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-020",
@@ -525,12 +573,12 @@
     "trait": "Supernovas/Heart Pirates",
     "effectEn": "[Main] If your Leader has the {Supernovas} type, return 1 of your Characters to the owner's hand, and play up to 1 Character card with a cost of 2 or less from your hand that is a different color than the returned Character.",
     "effectJp": "【メイン】自分のリーダーが特徴《超新星》を持つ場合、自分のキャラ1枚を、持ち主の手札に戻し、自分の手札から、戻したキャラと異なる色のコスト2以下のキャラカード1枚までを、登場させる。",
-    "effectTh": "[เมน] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt;, นำคาแรกเตอร์ของเรา จำนวน 1 ใบ กลับขึ้นมือของเจ้าของ, และนำคาแรกเตอร์การ์ด ที่มีคอสต์ 2 หรือต่ำกว่า และมีธีมสี แตกต่างจากคาแรกเตอร์ที่เพิ่งถูกนำกลับไป, จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
+    "effectTh": "[เมน] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < ซูเปอร์โนวา >, นำคาแรกเตอร์ของเรา จำนวน 1 ใบ กลับขึ้นมือของเจ้าของ, และนำคาแรกเตอร์การ์ด ที่มีคอสต์ 2 หรือต่ำกว่า และมีธีมสี แตกต่างจากคาแรกเตอร์ที่เพิ่งถูกนำกลับไป, จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-020.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-021",
@@ -542,15 +590,17 @@
     "nameTh": "Hannyabal",
     "color": "Blue/Purple",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Impel Down",
     "effectEn": "[End of Your Turn] You may return 1 of your {Impel Down} type Characters with a cost of 2 or more to the owner's hand: Add up to 1 DON!! card from your DON!! deck and set it as active.",
     "effectJp": "【自分のターン終了時】自分のコスト2以上の特徴《インペルダウン》を持つキャラ1枚を持ち主の手札に戻すことができる：ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
-    "effectTh": "[เมื่อจบเทิร์นของเรา] สามารถนำ คาแรกเตอร์ของเรา ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ &lt; อิมเพลดาวน์ &gt; จำนวน 1 ใบ กลับขึ้นมือของเจ้าของ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectTh": "[เมื่อจบเทิร์นของเรา] สามารถนำ คาแรกเตอร์ของเรา ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ < อิมเพลดาวน์ > จำนวน 1 ใบ กลับขึ้นมือของเจ้าของ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-021.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-021",
@@ -562,16 +612,18 @@
     "nameTh": "Hannyabal (Parallel)",
     "color": "Blue/Purple",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Impel Down",
     "effectEn": "[End of Your Turn] You may return 1 of your {Impel Down} type Characters with a cost of 2 or more to the owner's hand: Add up to 1 DON!! card from your DON!! deck and set it as active.",
     "effectJp": "【自分のターン終了時】自分のコスト2以上の特徴《インペルダウン》を持つキャラ1枚を持ち主の手札に戻すことができる：ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
-    "effectTh": "[เมื่อจบเทิร์นของเรา] สามารถนำ คาแรกเตอร์ของเรา ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ &lt; อิมเพลดาวน์ &gt; จำนวน 1 ใบ กลับขึ้นมือของเจ้าของ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectTh": "[เมื่อจบเทิร์นของเรา] สามารถนำ คาแรกเตอร์ของเรา ที่มีคอสต์ 2 หรือสูงกว่า และมีคุณสมบัติ < อิมเพลดาวน์ > จำนวน 1 ใบ กลับขึ้นมือของเจ้าของ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-021_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-022",
@@ -592,7 +644,9 @@
     "effectTh": "[เมื่อจบเทิร์นของเรา] ถ้าเรามีการ์ดบนมือ จำนวน 2 ใบ หรือน้อยกว่า, จะต้องจั่วการ์ด จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-022.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-022",
@@ -614,7 +668,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-022_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-023",
@@ -634,7 +690,9 @@
     "effectTh": "[เมื่อลงสนาม] จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-023.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-024",
@@ -652,10 +710,12 @@
     "trait": "Animal Kingdom Pirates/SMILE",
     "effectEn": "If you have 4 or less cards in your hand, all of your {SMILE} type Characters gain +1000 power.",
     "effectJp": "自分の手札が4枚以下の場合、自分の特徴《SMILE》を持つキャラすべては、パワー+1000。",
-    "effectTh": "ถ้าเรามีการ์ดบนมือ จำนวน 4 ใบ หรือน้อยกว่า, คาแรกเตอร์ที่มีคุณสมบัติ &lt; SMILE &gt; ของฝ่ายเรา ทั้งหมด, จะมีพาวเวอร์ +1000.",
+    "effectTh": "ถ้าเรามีการ์ดบนมือ จำนวน 4 ใบ หรือน้อยกว่า, คาแรกเตอร์ที่มีคุณสมบัติ < SMILE > ของฝ่ายเรา ทั้งหมด, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-024.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-025",
@@ -676,7 +736,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-025.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-026",
@@ -697,7 +759,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ถ้าเรามีการ์ดบนมือ จำนวน 1 ใบ หรือน้อยกว่า, นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-026.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-027",
@@ -713,12 +777,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Baroque Works",
-    "effectEn": "If your Leader's type includes \"Baroque Works\", this Character gains +1000 power for every 2 Events in your trash.<br>[On Play] Draw 2 cards and trash 1 card from your hand.",
-    "effectJp": "自分のリーダーが『B・W』を含む特徴を持つ場合、このキャラは、自分のトラッシュにあるイベント2枚につき、パワー+1000。<br>【登場時】カード2枚を引き、自分の手札1枚を捨てる。",
-    "effectTh": "ถ้าลีดเดอร์ของเรา ระบุคำว่า [ B•W ] รวมอยู่ในคุณสมบัติ, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000, ต่อจำนวน อีเวนต์ ที่อยู่ใน แทรชของเรา จำนวน 2 ใบ.<br>[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
+    "effectEn": "If your Leader's type includes \"Baroque Works\", this Character gains +1000 power for every 2 Events in your trash.[On Play] Draw 2 cards and trash 1 card from your hand.",
+    "effectJp": "自分のリーダーが『B・W』を含む特徴を持つ場合、このキャラは、自分のトラッシュにあるイベント2枚につき、パワー+1000。【登場時】カード2枚を引き、自分の手札1枚を捨てる。",
+    "effectTh": "ถ้าลีดเดอร์ของเรา ระบุคำว่า [ B•W ] รวมอยู่ในคุณสมบัติ, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000, ต่อจำนวน อีเวนต์ ที่อยู่ใน แทรชของเรา จำนวน 2 ใบ.[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-027.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-027",
@@ -734,13 +800,15 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Baroque Works",
-    "effectEn": "If your Leader's type includes \"Baroque Works\", this Character gains +1000 power for every 2 Events in your trash.<br>[On Play] Draw 2 cards and trash 1 card from your hand.",
-    "effectJp": "自分のリーダーが『B・W』を含む特徴を持つ場合、このキャラは、自分のトラッシュにあるイベント2枚につき、パワー+1000。<br>【登場時】カード2枚を引き、自分の手札1枚を捨てる。",
-    "effectTh": "ถ้าลีดเดอร์ของเรา ระบุคำว่า [ B•W ] รวมอยู่ในคุณสมบัติ, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000, ต่อจำนวน อีเวนต์ ที่อยู่ใน แทรชของเรา จำนวน 2 ใบ.<br>[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
+    "effectEn": "If your Leader's type includes \"Baroque Works\", this Character gains +1000 power for every 2 Events in your trash.[On Play] Draw 2 cards and trash 1 card from your hand.",
+    "effectJp": "自分のリーダーが『B・W』を含む特徴を持つ場合、このキャラは、自分のトラッシュにあるイベント2枚につき、パワー+1000。【登場時】カード2枚を引き、自分の手札1枚を捨てる。",
+    "effectTh": "ถ้าลีดเดอร์ของเรา ระบุคำว่า [ B•W ] รวมอยู่ในคุณสมบัติ, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000, ต่อจำนวน อีเวนต์ ที่อยู่ใน แทรชของเรา จำนวน 2 ใบ.[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-027_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-028",
@@ -755,12 +823,12 @@
     "trait": "Impel Down/Straw Hat Crew",
     "effectEn": "[Counter] If your Leader has the {Impel Down} type, up to 1 of your Leader or Character cards gains +2000 power during this battle. Then, your opponent returns 1 of their active Characters to the owner's hand.",
     "effectJp": "【カウンター】自分のリーダーが特徴《インペルダウン》を持つ場合、自分のリーダーかキャラ1枚までを、このバトル中、パワー+2000。その後、相手は自身のアクティブのキャラ1枚を、持ち主の手札に戻す。",
-    "effectTh": "[เคาน์เตอร์] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; อิมเพลดาวน์ &gt;, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000. จากนั้น, คู่แข่งจะต้องนำคาแรกเตอร์ของตัวเอง ที่กำลังแอ็คทีฟอยู่ จำนวน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
-    "triggerEn": "[Trigger] Return up to 1 Character with a cost of 3 or less to the bottom of the owner's deck.",
-    "triggerJp": "【トリガー】コスト3以下のキャラ1枚までを、持ち主のデッキの下に戻す。",
+    "effectTh": "[เคาน์เตอร์] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < อิมเพลดาวน์ >, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000. จากนั้น, คู่แข่งจะต้องนำคาแรกเตอร์ของตัวเอง ที่กำลังแอ็คทีฟอยู่ จำนวน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-028.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-029",
@@ -775,12 +843,12 @@
     "trait": "East Blue/Straw Hat Crew",
     "effectEn": "[Counter] Reveal 1 card from the top of your deck. If the revealed card has a cost of 4 or more, return up to 1 of your Characters to the owner's hand. Then, place the revealed card at the bottom of your deck.",
     "effectJp": "【カウンター】自分のデッキの上から1枚を公開し、公開したカードがコスト4以上だった場合、自分のキャラ1枚までを、持ち主の手札に戻す。その後、公開したカードをデッキの下に置く。",
-    "effectTh": "[เคาน์เตอร์] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, และถ้าการ์ดที่ถูกนำมาแสดงให้ดู มีคอสต์ 4 หรือสูงกว่าละก็, จะได้นำคาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ. จากนั้น, นำการ์ดที่ถูกนำมาแสดงให้ดูไปวาง ที่ข้างใต้เด็ค.<br>",
-    "triggerEn": "[Trigger] Return up to 1 Character with a cost of 8 or less to the owner's hand.",
-    "triggerJp": "【トリガー】コスト8以下のキャラ1枚までを、持ち主の手札に戻す。",
+    "effectTh": "[เคาน์เตอร์] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, และถ้าการ์ดที่ถูกนำมาแสดงให้ดู มีคอสต์ 4 หรือสูงกว่าละก็, จะได้นำคาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ. จากนั้น, นำการ์ดที่ถูกนำมาแสดงให้ดูไปวาง ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-029.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-030",
@@ -796,11 +864,11 @@
     "effectEn": "[Activate: Main] You may place this card and 1 card from your hand at the bottom of your deck in any order: Draw 2 cards.",
     "effectJp": "【起動メイン】このカードと自分の手札1枚を好きな順番でデッキの下に置くことができる：カード2枚を引く。",
     "effectTh": "[ใช้งาน : เมน] สามารถนำการ์ดใบนี้ กับ การ์ดบนมือของเรา จำนวน 1 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : จั่วการ์ด จำนวน 2 ใบ.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-030.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-031",
@@ -818,10 +886,12 @@
     "trait": "Water Seven/Galley-La Company",
     "effectEn": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader has the {Water Seven} type, add up to 2 Character cards with a cost of 4 or less from your trash to your hand.",
     "effectJp": "【登場時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが特徴《W7》を持つ場合、自分のトラッシュのコスト4以下のキャラカード2枚までを、手札に加える。",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; W7 &gt;, นำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ซึ่งอยู่ในแทรชของเรา จำนวนไม่เกิน 2 ใบ, เพิ่มขึ้นสู่บนมือ.",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < W7 >, นำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ซึ่งอยู่ในแทรชของเรา จำนวนไม่เกิน 2 ใบ, เพิ่มขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-031.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-031",
@@ -839,11 +909,13 @@
     "trait": "Water Seven/Galley-La Company",
     "effectEn": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader has the {Water Seven} type, add up to 2 Character cards with a cost of 4 or less from your trash to your hand.",
     "effectJp": "【登場時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが特徴《W7》を持つ場合、自分のトラッシュのコスト4以下のキャラカード2枚までを、手札に加える。",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; W7 &gt;, นำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ซึ่งอยู่ในแทรชของเรา จำนวนไม่เกิน 2 ใบ, เพิ่มขึ้นสู่บนมือ.",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < W7 >, นำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ซึ่งอยู่ในแทรชของเรา จำนวนไม่เกิน 2 ใบ, เพิ่มขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-031_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-032",
@@ -864,7 +936,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-032.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-033",
@@ -882,10 +956,12 @@
     "trait": "Water Seven",
     "effectEn": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader has the {Water Seven} type, play up to 1 {Water Seven} type Character card with a cost of 5 other than [Blueno] from your hand or trash.",
     "effectJp": "【登場時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが特徴《W7》を持つ場合、自分の手札かトラッシュから「ブルーノ」以外のコスト5の特徴《W7》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; W7 &gt;, นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 และมีคุณสมบัติ &lt; W7 &gt; นอกเหนือจาก [Blueno] จากบนมือของเรา หรือ จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < W7 >, นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 และมีคุณสมบัติ < W7 > นอกเหนือจาก [Blueno] จากบนมือของเรา หรือ จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-033.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-034",
@@ -901,12 +977,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Baroque Works",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Your Opponent's Attack] [Once Per Turn] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader's type includes \"Baroque Works\", add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【相手のアタック時】【ターン1回】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが『B・W』を含む特徴を持つ場合、ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา ระบุคำว่า [B•W] รวมอยู่ในคุณสมบัติ, นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Your Opponent's Attack] [Once Per Turn] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader's type includes \"Baroque Works\", add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【相手のアタック時】【ターン1回】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが『B・W』を含む特徴を持つ場合、ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา ระบุคำว่า [B•W] รวมอยู่ในคุณสมบัติ, นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-034.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-034",
@@ -922,13 +1000,15 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Baroque Works",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Your Opponent's Attack] [Once Per Turn] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader's type includes \"Baroque Works\", add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【相手のアタック時】【ターン1回】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが『B・W』を含む特徴を持つ場合、ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา ระบุคำว่า [B•W] รวมอยู่ในคุณสมบัติ, นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Your Opponent's Attack] [Once Per Turn] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader's type includes \"Baroque Works\", add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【相手のアタック時】【ターン1回】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが『B・W』を含む特徴を持つ場合、ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา ระบุคำว่า [B•W] รวมอยู่ในคุณสมบัติ, นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-034_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-035",
@@ -946,11 +1026,11 @@
     "effectEn": "[On Play] If your Leader's type includes \"Baroque Works\", up to 1 of your Leader or Character cards gains +1000 power during this turn.",
     "effectJp": "【登場時】自分のリーダーが『B・W』を含む特徴を持つ場合、自分のリーダーかキャラ1枚までを、このターン中、パワー+1000。",
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา ระบุคำว่า [B•W] รวมอยู่ในคุณสมบัติ, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000.",
-    "triggerEn": "[Trigger] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Play this card.",
-    "triggerJp": "【トリガー】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-035.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-036",
@@ -965,12 +1045,14 @@
     "power": 5000,
     "attribute": "Strike",
     "trait": "Impel Down/Jailer Beast",
-    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)<br>[On K.O.] If your Leader has the {Impel Down} type, add up to 1 DON!! card from your DON!! deck and rest it.",
-    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)<br>【KO時】自分のリーダーが特徴《インペルダウン》を持つ場合、ドン!!デッキからドン!!1枚までを、レストで追加する。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อถูก KO] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; อิมเพลดาวน์ &gt;, นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[On K.O.] If your Leader has the {Impel Down} type, add up to 1 DON!! card from your DON!! deck and rest it.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【KO時】自分のリーダーが特徴《インペルダウン》を持つ場合、ドン!!デッキからドン!!1枚までを、レストで追加する。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อถูก KO] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < อิมเพลดาวน์ >, นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-036.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-037",
@@ -991,7 +1073,9 @@
     "effectTh": "[เมื่อคู่แข่งโจมตี] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-037.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-038",
@@ -1007,11 +1091,11 @@
     "effectEn": "[Counter] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader's type includes \"Baroque Works\", select 1 of your Characters. Change the attack target to the selected Character.",
     "effectJp": "【カウンター】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが『B・W』を含む特徴を持つ場合、自分のキャラ1枚を選ぶ。選んだキャラにアタックの対象を変更する。",
     "effectTh": "[เคาน์เตอร์] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา ระบุคำว่า [B•W] รวมอยู่ในคุณสมบัติ, เลือกคาแรกเตอร์ของเรา จำนวน 1 ใบ. เปลี่ยนเป้าหมายการโจมตีมาที่คาแรกเตอร์ที่ถูกเลือก.",
-    "triggerEn": "[Trigger] DON!! −1: Draw 2 cards.",
-    "triggerJp": "【トリガー】ドン‼-1：カード2枚を引く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-038.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-039",
@@ -1026,12 +1110,12 @@
     "trait": "The Four Emperors/Animal Kingdom Pirates",
     "effectEn": "[Main] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): K.O. up to 1 of your opponent's Characters with a cost of 8 or less.",
     "effectJp": "【メイン】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：相手のコスト8以下のキャラ1枚までを、KOする。",
-    "effectTh": "[เมน] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 8 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.<br>",
-    "triggerEn": "[Trigger] Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
+    "effectTh": "[เมน] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 8 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-039.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-040",
@@ -1043,7 +1127,7 @@
     "nameTh": "Kyros",
     "color": "Black/Yellow",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Dressrosa",
     "effectEn": "[Activate: Main] [Once Per Turn] You may turn 1 card from the top of your Life cards face-up: K.O. up to 1 of your opponent's Characters with a cost of 0.",
@@ -1051,7 +1135,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถหงาย ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 0, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-040.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-040",
@@ -1063,7 +1149,7 @@
     "nameTh": "Kyros (Parallel)",
     "color": "Black/Yellow",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Dressrosa",
     "effectEn": "[Activate: Main] [Once Per Turn] You may turn 1 card from the top of your Life cards face-up: K.O. up to 1 of your opponent's Characters with a cost of 0.",
@@ -1072,7 +1158,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-040_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-041",
@@ -1093,7 +1181,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-041.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-042",
@@ -1110,10 +1200,12 @@
     "trait": "Dressrosa",
     "effectEn": "[Activate: Main] You may trash this Character: Play up to 1 {Dressrosa} type Character card with a cost of 3 or less other than [Scarlet] from your hand rested. Then, give up to 1 of your opponent's Characters −2 cost during this turn.",
     "effectJp": "【起動メイン】このキャラをトラッシュに置くことができる：自分の手札から「スカーレット」以外のコスト3以下の特徴《ドレスローザ》を持つキャラカード1枚までを、レストで登場させる。その後、相手のキャラ1枚までを、このターン中、コスト-2。",
-    "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ &lt; เดรสโรซ่า &gt; นอกเหนือจาก [Scarlet] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
+    "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ < เดรสโรซ่า > นอกเหนือจาก [Scarlet] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-042.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-043",
@@ -1134,7 +1226,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ด ที่ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ ซึ่งอยู่ในแทรชของเรา จำนวน 3 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : นำคาแรกเตอร์การ์ด ที่ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ และมีคอสต์ 4 หรือต่ำกว่า นอกเหนือจาก [Spandine] จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-043.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-044",
@@ -1155,7 +1249,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, [Spandam] ของฝ่ายเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-044.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-045",
@@ -1171,12 +1267,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Rumbar Pirates",
-    "effectEn": "[On Play] If your opponent has a Character with a cost of 0, this Character gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【登場時】相手のコスト0のキャラがいる場合、このキャラは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เมื่อลงสนาม] ถ้าคู่แข่งมีคาแรกเตอร์ ที่มีคอสต์ 0 อยู่ด้วยละก็, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[On Play] If your opponent has a Character with a cost of 0, this Character gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】相手のコスト0のキャラがいる場合、このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] ถ้าคู่แข่งมีคาแรกเตอร์ ที่มีคอสต์ 0 อยู่ด้วยละก็, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-045.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-046",
@@ -1197,7 +1295,9 @@
     "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -1. จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 0, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-046.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-046",
@@ -1219,7 +1319,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-046_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-047",
@@ -1239,7 +1341,9 @@
     "effectTh": "[เทิร์นละ 1 ครั้ง] เมื่อมีคาแรกเตอร์ของใครก็ตาม ถูก KO, จะต้องจั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือของเรา 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-047.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-048",
@@ -1260,7 +1364,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -4.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-048.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-048",
@@ -1282,7 +1388,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-048_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-049",
@@ -1303,7 +1411,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-049.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-049",
@@ -1325,7 +1435,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-049_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-050",
@@ -1343,7 +1455,9 @@
     "effectTh": "[เคาน์เตอร์] ถ้าเรามีการ์ดอยู่ใน แทรช จำนวน 30 ใบ หรือมากกว่า, นำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-050.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-051",
@@ -1359,11 +1473,11 @@
     "effectEn": "[Main] You may trash 2 cards from the top of your deck: K.O. up to 1 of your opponent's Characters with a cost of 5 or less.",
     "effectJp": "【メイン】自分のデッキの上から2枚をトラッシュに置くことができる：相手のコスト5以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] สามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-051.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-052",
@@ -1378,12 +1492,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Dressrosa",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Choose one:<br>• Look at all of your opponent's Life cards and place them back in their Life area in any order.<br>• Turn all of your Life cards face-down.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】以下から1つを選ぶ。<br>・相手のライフすべてを見て、好きな順番で置く。<br>・自分のライフすべてを裏向きにする。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] เลือก 1 อย่าง จากดังต่อไปนี้.<br>• ดูไลฟ์ของคู่แข่งทั้งหมด, แล้วนำไปวางในลำดับใดก็ได้ ที่ตำแหน่งไลฟ์ของคู่แข่ง.<br>• ทำให้ ไลฟ์ของเรา ทั้งหมด เปลี่ยนเป็นคว่ำ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Choose one:• Look at all of your opponent's Life cards and place them back in their Life area in any order.• Turn all of your Life cards face-down.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】以下から1つを選ぶ。・相手のライフすべてを見て、好きな順番で置く。・自分のライフすべてを裏向きにする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] เลือก 1 อย่าง จากดังต่อไปนี้.• ดูไลฟ์ของคู่แข่งทั้งหมด, แล้วนำไปวางในลำดับใดก็ได้ ที่ตำแหน่งไลฟ์ของคู่แข่ง.• ทำให้ ไลฟ์ของเรา ทั้งหมด เปลี่ยนเป็นคว่ำ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-052.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-052",
@@ -1398,13 +1514,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Dressrosa",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Choose one:<br>• Look at all of your opponent's Life cards and place them back in their Life area in any order.<br>• Turn all of your Life cards face-down.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】以下から1つを選ぶ。<br>・相手のライフすべてを見て、好きな順番で置く。<br>・自分のライフすべてを裏向きにする。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] เลือก 1 อย่าง จากดังต่อไปนี้.<br>• ดูไลฟ์ของคู่แข่งทั้งหมด, แล้วนำไปวางในลำดับใดก็ได้ ที่ตำแหน่งไลฟ์ของคู่แข่ง.<br>• ทำให้ ไลฟ์ของเรา ทั้งหมด เปลี่ยนเป็นคว่ำ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Choose one:• Look at all of your opponent's Life cards and place them back in their Life area in any order.• Turn all of your Life cards face-down.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】以下から1つを選ぶ。・相手のライフすべてを見て、好きな順番で置く。・自分のライフすべてを裏向きにする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] เลือก 1 อย่าง จากดังต่อไปนี้.• ดูไลฟ์ของคู่แข่งทั้งหมด, แล้วนำไปวางในลำดับใดก็ได้ ที่ตำแหน่งไลฟ์ของคู่แข่ง.• ทำให้ ไลฟ์ของเรา ทั้งหมด เปลี่ยนเป็นคว่ำ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-052_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-053",
@@ -1422,11 +1540,11 @@
     "effectEn": "[On Play] Place up to 1 of your opponent's Characters with a cost of 3 or less at the top or bottom of your opponent's Life cards face-up.",
     "effectJp": "【登場時】相手のコスト3以下のキャラ1枚までを、相手のライフの上か下に表向きで置く。",
     "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์ของคู่แข่ง แบบหงายหน้า.",
-    "triggerEn": "[Trigger] Give up to a total of 2 of your opponent's Leader or Character cards −3000 power during this turn.",
-    "triggerJp": "【トリガー】相手のリーダーかキャラ合計2枚までを、このターン中、パワー-3000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-053.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-054",
@@ -1442,12 +1560,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Sky Island",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] If your opponent has 1 or less Life cards, K.O. up to 1 of your opponent's Characters with a cost of 3 or less.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】相手のライフが1枚以下の場合、相手のコスト3以下のキャラ1枚までを、KOする。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ถ้าคู่แข่งมี ไลฟ์ จำนวน 1 ใบ หรือน้อยกว่า, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] If your opponent has 1 or less Life cards, K.O. up to 1 of your opponent's Characters with a cost of 3 or less.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】相手のライフが1枚以下の場合、相手のコスト3以下のキャラ1枚までを、KOする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ถ้าคู่แข่งมี ไลฟ์ จำนวน 1 ใบ หรือน้อยกว่า, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-054.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-055",
@@ -1468,7 +1588,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-055.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-056",
@@ -1489,7 +1611,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-056.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-056",
@@ -1511,7 +1635,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-056_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-057",
@@ -1526,12 +1652,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Merfolk",
-    "effectEn": "When this Character is K.O.'d by your opponent's effect, add up to 1 card from the top of your deck to the top of your Life cards.<br>[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
-    "effectJp": "このキャラが相手の効果でKOされた時、自分のデッキの上から1枚までを、ライフの上に加える。<br>【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
-    "effectTh": "เมื่อคาแรกเตอร์นี้ถูก KO โดยความสามารถของคู่แข่ง, จะต้องนำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์.<br>[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectEn": "When this Character is K.O.'d by your opponent's effect, add up to 1 card from the top of your deck to the top of your Life cards.[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
+    "effectJp": "このキャラが相手の効果でKOされた時、自分のデッキの上から1枚までを、ライフの上に加える。【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
+    "effectTh": "เมื่อคาแรกเตอร์นี้ถูก KO โดยความสามารถของคู่แข่ง, จะต้องนำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์.[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-057.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-057",
@@ -1546,13 +1674,15 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Merfolk",
-    "effectEn": "When this Character is K.O.'d by your opponent's effect, add up to 1 card from the top of your deck to the top of your Life cards.<br>[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
-    "effectJp": "このキャラが相手の効果でKOされた時、自分のデッキの上から1枚までを、ライフの上に加える。<br>【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
-    "effectTh": "เมื่อคาแรกเตอร์นี้ถูก KO โดยความสามารถของคู่แข่ง, จะต้องนำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์.<br>[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectEn": "When this Character is K.O.'d by your opponent's effect, add up to 1 card from the top of your deck to the top of your Life cards.[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
+    "effectJp": "このキャラが相手の効果でKOされた時、自分のデッキの上から1枚までを、ライフの上に加える。【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
+    "effectTh": "เมื่อคาแรกเตอร์นี้ถูก KO โดยความสามารถของคู่แข่ง, จะต้องนำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์.[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-057_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-058",
@@ -1573,7 +1703,9 @@
     "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] ถ้าเรามี ไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-058.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-059",
@@ -1589,11 +1721,11 @@
     "effectEn": "[Main] K.O. up to 1 of your opponent's Characters. Then, trash cards from the top of your Life cards until you have 1 Life card.",
     "effectJp": "【メイン】相手のキャラ1枚までを、KOする。その後、自分のライフが1枚になるようにライフの上からトラッシュに置く。",
     "effectTh": "[เมน] ทำการ KO คาแรกเตอร์ของคู่แข่ง, จำนวนไม่เกิน 1 ใบ. จากนั้น, จะต้องนำการ์ดใบบนสุดจาก ไลฟ์ของเรา ไปวางที่แทรช, จนกระทั่งฝ่ายเรามีไลฟ์ เท่ากับ 1 ใบ.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with a cost equal to or less than the total of your and your opponent's Life cards.",
-    "triggerJp": "【トリガー】お互いのライフの合計枚数以下のコストを持つ相手のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-059.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-060",
@@ -1609,11 +1741,11 @@
     "effectEn": "[Main] Play up to 1 [Enel] with a cost of 7 or less from your hand or trash. Then, trash cards from the top of your Life cards until you have 1 Life card.",
     "effectJp": "【メイン】自分の、手札かトラッシュからコスト7以下の「エネル」1枚までを、登場させる。その後、自分のライフが1枚になるようにライフの上からトラッシュに置く。",
     "effectTh": "[เมน] นำ [Enel] ที่มีคอสต์ 7 หรือต่ำกว่า จากบนมือของเรา หรือ จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, จะต้องนำการ์ดใบบนสุดจาก ไลฟ์ของเรา ไปวางที่แทรช, จนกระทั่งฝ่ายเรามีไลฟ์ เท่ากับ 1 ใบ.",
-    "triggerEn": "[Trigger] Draw 2 cards and trash 1 card from your hand.",
-    "triggerJp": "【トリガー】カード2枚を引き、自分の手札1枚を捨てる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-060.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-061",
@@ -1629,12 +1761,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Former Baroque Works",
-    "effectEn": "[On Play] Add up to 1 DON!! card from your DON!! deck and set it as active.<br>[When Attacking] Select up to 1 of your opponent's Characters. This Character's base power becomes the same as the selected Character's power during this turn.",
-    "effectJp": "【登場時】ドン!!デッキからドン!!1枚までを、アクティブで追加する。<br>【アタック時】相手のキャラ1枚までを選ぶ。このキャラの元々のパワーは、このターン中、選んだキャラと同じパワーになる。",
-    "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.<br>[เมื่อโจมตี] เลือกคาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ. ในเทิร์นนี้, ค่าพาวเวอร์ตั้งต้น ของคาแรกเตอร์นี้, จะกลายเป็นเท่ากับ ค่าพาวเวอร์ของ คาแรกเตอร์ที่เลือก.",
+    "effectEn": "[On Play] Add up to 1 DON!! card from your DON!! deck and set it as active.[When Attacking] Select up to 1 of your opponent's Characters. This Character's base power becomes the same as the selected Character's power during this turn.",
+    "effectJp": "【登場時】ドン!!デッキからドン!!1枚までを、アクティブで追加する。【アタック時】相手のキャラ1枚までを選ぶ。このキャラの元々のパワーは、このターン中、選んだキャラと同じパワーになる。",
+    "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.[เมื่อโจมตี] เลือกคาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ. ในเทิร์นนี้, ค่าพาวเวอร์ตั้งต้น ของคาแรกเตอร์นี้, จะกลายเป็นเท่ากับ ค่าพาวเวอร์ของ คาแรกเตอร์ที่เลือก.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-061.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   },
   {
     "code": "EB01-061",
@@ -1650,12 +1784,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Former Baroque Works",
-    "effectEn": "[On Play] Add up to 1 DON!! card from your DON!! deck and set it as active.<br>[When Attacking] Select up to 1 of your opponent's Characters. This Character's base power becomes the same as the selected Character's power during this turn.",
-    "effectJp": "【登場時】ドン!!デッキからドン!!1枚までを、アクティブで追加する。<br>【アタック時】相手のキャラ1枚までを選ぶ。このキャラの元々のパワーは、このターン中、選んだキャラと同じパワーになる。",
-    "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.<br>[เมื่อโจมตี] เลือกคาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ. ในเทิร์นนี้, ค่าพาวเวอร์ตั้งต้น ของคาแรกเตอร์นี้, จะกลายเป็นเท่ากับ ค่าพาวเวอร์ของ คาแรกเตอร์ที่เลือก.",
+    "effectEn": "[On Play] Add up to 1 DON!! card from your DON!! deck and set it as active.[When Attacking] Select up to 1 of your opponent's Characters. This Character's base power becomes the same as the selected Character's power during this turn.",
+    "effectJp": "【登場時】ドン!!デッキからドン!!1枚までを、アクティブで追加する。【アタック時】相手のキャラ1枚までを選ぶ。このキャラの元々のパワーは、このターン中、選んだキャラと同じパワーになる。",
+    "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.[เมื่อโจมตี] เลือกคาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ. ในเทิร์นนี้, ค่าพาวเวอร์ตั้งต้น ของคาแรกเตอร์นี้, จะกลายเป็นเท่ากับ ค่าพาวเวอร์ของ คาแรกเตอร์ที่เลือก.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/EB01-061_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Memorial Collection- [EB-01]"
+    ]
   }
 ]

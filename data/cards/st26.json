@@ -1,5 +1,229 @@
 [
   {
+    "code": "OP05-065_R1",
+    "cardCode": "OP05-065_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "San-Gorou",
+    "nameJp": "サン五郎",
+    "nameTh": "San-Gorou",
+    "color": "Purple",
+    "cost": 6,
+    "power": 8000,
+    "counter": 1000,
+    "attribute": "Strike",
+    "trait": "Straw Hat Crew",
+    "effectEn": "-",
+    "effectJp": "-",
+    "effectTh": "-",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-065_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
+  },
+  {
+    "code": "OP05-066_R2",
+    "cardCode": "OP05-066_r2",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Jinbe",
+    "nameJp": "ジンベエ",
+    "nameTh": "Jinbe",
+    "color": "Purple",
+    "cost": 5,
+    "power": 6000,
+    "counter": 1000,
+    "attribute": "Strike",
+    "trait": "Fish-Man/Straw Hat Crew",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[Opponent's Turn] If you have 10 DON!! cards on your field, this Character gains +1000 power.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【相手のターン中】自分の場にドン‼が10枚ある場合、このキャラはパワー+1000。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ในเทิร์นของคู่แข่ง] ถ้าในสนามของเรามี ด้ง!! อยู่ 10 ใบพอดี, คาแรกเตอร์นี้ จะมีพาวเวอร์ +1000.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-066_r2.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
+  },
+  {
+    "code": "OP05-070_R2",
+    "cardCode": "OP05-070_r2",
+    "rarity": "UC",
+    "cardType": "CHARACTER",
+    "nameEn": "Fra-Nosuke",
+    "nameJp": "フラの介",
+    "nameTh": "Fra-Nosuke",
+    "color": "Purple",
+    "cost": 5,
+    "power": 4000,
+    "counter": 2000,
+    "attribute": "Strike",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[DON!! x1] If you have 8 or more DON!! cards on your field, this Character gains [Rush].(This card can attack on the turn in which it is played.)",
+    "effectJp": "【ドン‼×1】自分の場にドン‼が8枚以上ある場合、このキャラは【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[ด้ง!! x 1] ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 8 ใบ หรือมากกว่า, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP05-070_r2.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
+  },
+  {
+    "code": "OP09-061",
+    "cardCode": "OP09-061_p2",
+    "rarity": "P-L",
+    "cardType": "LEADER",
+    "nameEn": "Monkey.D.Luffy",
+    "nameJp": "モンキー・Ｄ・ルフィ",
+    "nameTh": "Monkey.D.Luffy",
+    "color": "Purple/Black",
+    "power": 5000,
+    "life": 4,
+    "attribute": "Strike",
+    "trait": "The Four Emperors/Straw Hat Crew",
+    "effectEn": "[DON!! x1] All of your Characters gain +1 cost.[Your Turn] [Once Per Turn] When 2 or more DON!! cards on your field are returned to your DON!! deck, add up to 1 DON!! card from your DON!! deck and set it as active, and add up to 1 additional DON!! card and rest it.",
+    "effectJp": "【ドン‼×1】自分のキャラすべてを、コスト+1。【自分のターン中】【ターン1回】自分の場のドン!!が2枚以上ドン!!デッキに戻された時、ドン!!デッキから、ドン!!1枚までをアクティブで追加し、さらに1枚までをレストで追加する。",
+    "effectTh": "[ด้ง!! x 1] คาแรกเตอร์ของฝ่ายเรา ทั้งหมด, จะมีคอสต์ +1.[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา จำนวน 2 ใบ หรือมากกว่า ถูกนำกลับด้ง!! เด็ค, จะนำ ด้ง!! จากด้ง!! เด็ค, มาวางเพิ่มแบบ แอ็คทีฟ จำนวนไม่เกิน 1 ใบ, ต่อจากนั้นจะได้วางเพิ่มแบบ เรสต์ จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-061_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
+  },
+  {
+    "code": "OP09-063_R1",
+    "cardCode": "OP09-063_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Usopp",
+    "nameJp": "ウソップ",
+    "nameTh": "Usopp",
+    "color": "Purple",
+    "cost": 4,
+    "power": 6000,
+    "counter": 1000,
+    "attribute": "Ranged",
+    "trait": "Straw Hat Crew",
+    "effectEn": "-",
+    "effectJp": "-",
+    "effectTh": "-",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-063_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
+  },
+  {
+    "code": "OP09-070_R1",
+    "cardCode": "OP09-070_r1",
+    "rarity": "UC",
+    "cardType": "CHARACTER",
+    "nameEn": "Nami",
+    "nameJp": "ナミ",
+    "nameTh": "Nami",
+    "color": "Purple",
+    "cost": 3,
+    "power": 2000,
+    "counter": 2000,
+    "attribute": "Special",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[On Play] You may return 1 or more DON!! cards from your field to your DON!! deck: Give up to 2 rested DON!! cards to your Leader or 1 of your Characters.",
+    "effectJp": "【登場時】自分の場のドン‼を1枚以上ドン‼デッキに戻すことができる：自分のリーダーかキャラ1枚にレストのドン!!2枚までを、付与する。",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำ ด้ง!! ในสนามของเรา จำนวน 1 ใบ หรือมากกว่า กลับด้ง!! เด็ค : นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ, ใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-070_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
+  },
+  {
+    "code": "OP09-076_R1",
+    "cardCode": "OP09-076_r1",
+    "rarity": "R",
+    "cardType": "CHARACTER",
+    "nameEn": "Roronoa Zoro",
+    "nameJp": "ロロノア・ゾロ",
+    "nameTh": "Roronoa Zoro",
+    "color": "Purple",
+    "cost": 3,
+    "power": 5000,
+    "attribute": "Slash",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[On Play] You may return 1 or more DON!! cards from your field to your DON!! deck: Add up to 1 DON!! card from your DON!! deck and set it as active.",
+    "effectJp": "【登場時】自分の場のドン‼を1枚以上ドン‼デッキに戻すことができる：ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำ ด้ง!! ในสนามของเรา จำนวน 1 ใบ หรือมากกว่า กลับด้ง!! เด็ค : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-076_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
+  },
+  {
+    "code": "OP09-077_R1",
+    "cardCode": "OP09-077_r1",
+    "rarity": "UC",
+    "cardType": "EVENT",
+    "nameEn": "Gum-Gum Lightning",
+    "nameJp": "ゴムゴムの雷",
+    "nameTh": "Gum-Gum Lightning",
+    "color": "Purple",
+    "cost": 2,
+    "trait": "The Four Emperors/Straw Hat Crew",
+    "effectEn": "[Main] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): K.O. up to 1 of your opponent's Characters with 6000 power or less.",
+    "effectJp": "【メイン】ドン!!-2(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：相手のパワー6000以下のキャラ1枚までを、KOする。",
+    "effectTh": "[เมน] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 6000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-077_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
+  },
+  {
+    "code": "OP09-078",
+    "cardCode": "OP09-078_p1",
+    "rarity": "P-R",
+    "cardType": "EVENT",
+    "nameEn": "Gum-Gum Giant",
+    "nameJp": "ゴムゴムの巨人",
+    "nameTh": "Gum-Gum Giant",
+    "color": "Purple",
+    "cost": 1,
+    "trait": "The Four Emperors/Straw Hat Crew",
+    "effectEn": "[Counter] DON!! −2, You may trash 1 card from your hand: If your Leader has the {Straw Hat Crew} type, up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, draw 2 cards.",
+    "effectJp": "【カウンター】ドン!!-2,自分の手札1枚を捨てることができる：自分のリーダーが特徴《麦わらの一味》を持つ場合、自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、カード2枚を引く。",
+    "effectTh": "[เคาน์เตอร์] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ), สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ <กลุ่มหมวกฟาง>, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. จากนั้น, จะจั่วการ์ด จำนวน 2 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP09-078_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
+  },
+  {
+    "code": "ST14-010_R1",
+    "cardCode": "ST14-010_r1",
+    "rarity": "C",
+    "cardType": "CHARACTER",
+    "nameEn": "Brook",
+    "nameJp": "ブルック",
+    "nameTh": "Brook",
+    "color": "Black",
+    "cost": 5,
+    "power": 7000,
+    "counter": 1000,
+    "attribute": "Slash",
+    "trait": "Straw Hat Crew",
+    "effectEn": "-",
+    "effectJp": "-",
+    "effectTh": "-",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST14-010_r1.png",
+    "isParallel": false,
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
+  },
+  {
     "code": "ST26-001",
     "cardCode": "ST26-001",
     "rarity": "C",
@@ -12,12 +236,14 @@
     "power": 9000,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
-    "effectEn": "If you have a [San-Gorou] or [Sanji] Character with 7000 base power or more, give this card in your hand −5 cost.<br>[On Play] Return all of your [San-Gorou] and [Sanji] Characters to the owner's hand.",
-    "effectJp": "手札のこのカードは、自分の元々のパワー7000以上のキャラの、「サン五郎」か「サンジ」がいる場合、コスト-5。<br>【登場時】自分の、「サン五郎」と「サンジ」すべてを、持ち主の手札に戻す。",
+    "effectEn": "If you have a [San-Gorou] or [Sanji] Character with 7000 base power or more, give this card in your hand −5 cost.[On Play] Return all of your [San-Gorou] and [Sanji] Characters to the owner's hand.",
+    "effectJp": "手札のこのカードは、自分の元々のパワー7000以上のキャラの、「サン五郎」か「サンジ」がいる場合、コスト-5。【登場時】自分の、「サン五郎」と「サンジ」すべてを、持ち主の手札に戻す。",
     "effectTh": "ถ้าเรามีคาแรกเตอร์ [San-Gorou] หรือว่า [Sanji] ที่มีพาวเวอร์ตั้งต้น 7000 หรือสูงกว่า อยู่ละก็, การ์ดใบนี้ ที่อยู่บนมือ จะมีคอสต์ -5.\n[เมื่อลงสนาม] นำ [San-Gorou] กับ [Sanji] ของฝ่ายเรา ทั้งหมด, กลับขึ้นมือเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST26-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
   },
   {
     "code": "ST26-002",
@@ -33,12 +259,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Animal/Straw Hat Crew",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Rest up to 1 of your opponent's DON!! cards or Characters with a cost of 1 or less.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】ドン‼-2(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：相手の、コスト1以下のキャラかドン‼1枚までを、レストにする。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ เรสต์, ด้ง!! หรือว่า คาแรกเตอร์ ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ ของฝ่ายคู่แข่ง.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Rest up to 1 of your opponent's DON!! cards or Characters with a cost of 1 or less.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】ドン‼-2(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：相手の、コスト1以下のキャラかドン‼1枚までを、レストにする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ เรสต์, ด้ง!! หรือว่า คาแรกเตอร์ ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ ของฝ่ายคู่แข่ง.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST26-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
   },
   {
     "code": "ST26-003",
@@ -59,7 +287,9 @@
     "effectTh": "[เมื่อลงสนาม] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST26-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
   },
   {
     "code": "ST26-004",
@@ -79,7 +309,9 @@
     "effectTh": "[เมื่อลงสนาม] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 2 ใบ, จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST26-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
   },
   {
     "code": "ST26-005",
@@ -96,9 +328,11 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[On Play]/[When Attacking] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader is multicolored and your opponent has 5 or more DON!! cards on their field, your {Straw Hat Crew} type Leader's base power becomes 7000 until the end of your opponent's next End Phase.",
     "effectJp": "【登場時】/【アタック時】ドン‼-2(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：自分のリーダーが多色で、相手の場のドン‼が5枚以上ある場合、自分の特徴《麦わらの一味》を持つリーダーを、次の相手のエンドフェイズ終了時まで、元々のパワー7000にする。",
-    "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของฝ่ายเรา มีหลายธีมสี, และจำนวน ด้ง!! ที่อยู่บนสนามของคู่แข่ง มีจำนวน 5 ใบ หรือมากกว่าละก็, ลีดเดอร์ของฝ่ายเรา ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; จะมีพาวเวอร์ตั้งต้น กลายเป็น 7000, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป.",
+    "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของฝ่ายเรา มีหลายธีมสี, และจำนวน ด้ง!! ที่อยู่บนสนามของคู่แข่ง มีจำนวน 5 ใบ หรือมากกว่าละก็, ลีดเดอร์ของฝ่ายเรา ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > จะมีพาวเวอร์ตั้งต้น กลายเป็น 7000, จนกระทั่งถึงตอนจบเอนด์เฟสของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST26-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Purple/Black Monkey.D.Luffy- [ST-26]"
+    ]
   }
 ]

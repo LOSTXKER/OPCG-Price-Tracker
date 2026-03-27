@@ -1,5 +1,52 @@
 [
   {
+    "code": "OP01-016",
+    "cardCode": "OP01-016_p3",
+    "rarity": "P-R",
+    "cardType": "CHARACTER",
+    "nameEn": "Nami (Parallel)",
+    "nameJp": "ナミ",
+    "nameTh": "Nami (Parallel)",
+    "color": "Red",
+    "cost": 1,
+    "power": 2000,
+    "counter": 1000,
+    "attribute": "Special",
+    "trait": "Straw Hat Crew",
+    "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Straw Hat Crew} type card other than [Nami] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "【登場時】自分のデッキの上から5枚を見て、「ナミ」以外の特徴《麦わらの一味》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดหมวกฟาง > นอกเหนือจาก [Nami] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-016_p3.png",
+    "isParallel": true,
+    "parallelIndex": 3,
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
+  },
+  {
+    "code": "OP01-025",
+    "cardCode": "OP01-025_p2",
+    "rarity": "P-SR",
+    "cardType": "CHARACTER",
+    "nameEn": "Roronoa Zoro (Parallel)",
+    "nameJp": "ロロノア・ゾロ",
+    "nameTh": "Roronoa Zoro (Parallel)",
+    "color": "Red",
+    "cost": 3,
+    "power": 5000,
+    "attribute": "Slash",
+    "trait": "Supernovas/Straw Hat Crew",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-025_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
+  },
+  {
     "code": "ST10-001",
     "cardCode": "ST10-001",
     "rarity": "L",
@@ -9,7 +56,7 @@
     "nameTh": "Trafalgar Law",
     "color": "Red/Purple",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Heart Pirates",
     "effectEn": "[Activate: Main] [Once Per Turn] DON!! −3 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Place up to 1 of your opponent's Characters with 3000 power or less at the bottom of the owner's deck, and play up to 1 Character card with a cost of 4 or less from your hand.",
@@ -17,7 +64,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 3 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ ไปวางที่ข้างใต้เด็คของเจ้าของ, และนำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-002",
@@ -29,7 +78,7 @@
     "nameTh": "Monkey.D.Luffy",
     "color": "Red/Purple",
     "power": 6000,
-    "life": 2,
+    "life": 3,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
     "effectEn": "[Activate: Main] [Once Per Turn] If you have 0 DON!! cards on your field or 8 or more DON!! cards on your field, add up to 1 DON!! card from your DON!! deck and set it as active.",
@@ -37,7 +86,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าในสนามของเรามี ด้ง!! อยู่ 0 ใบ, หรือว่า ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 8 ใบ หรือมากกว่า, จะนำ ด้ง!! จากด้ง!! เด็ค ของเรา จำนวนไม่เกิน 1 ใบ มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-003",
@@ -49,15 +100,17 @@
     "nameTh": "Eustass\"Captain\"Kid",
     "color": "Red/Purple",
     "power": 5000,
-    "life": 2,
+    "life": 5,
     "attribute": "Special",
     "trait": "Kid Pirates",
-    "effectEn": "[Your Turn] If you have 4 or more Life cards, give this Leader −1000 power.<br>[When Attacking] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Leader gains +2000 power during this turn.",
-    "effectJp": "【自分のターン中】自分のライフが4枚以上の場合、このリーダーはパワー-1000。<br>【アタック時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：このリーダーは、このターン中、パワー+2000。",
-    "effectTh": "[เทิร์นตัวเอง] ถ้าเรามี ไลฟ์ จำนวน 4 ใบ หรือมากกว่า, ลีดเดอร์นี้ จะมีพาวเวอร์ -1000.<br>[เมื่อโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, ลีดเดอร์นี้, จะมีพาวเวอร์ +2000.",
+    "effectEn": "[Your Turn] If you have 4 or more Life cards, give this Leader −1000 power.[When Attacking] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Leader gains +2000 power during this turn.",
+    "effectJp": "【自分のターン中】自分のライフが4枚以上の場合、このリーダーはパワー-1000。【アタック時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：このリーダーは、このターン中、パワー+2000。",
+    "effectTh": "[เทิร์นตัวเอง] ถ้าเรามี ไลฟ์ จำนวน 4 ใบ หรือมากกว่า, ลีดเดอร์นี้ จะมีพาวเวอร์ -1000.[เมื่อโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, ลีดเดอร์นี้, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-004",
@@ -73,12 +126,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
-    "effectEn": "[On Play] If your opponent has a Character with 5000 or more power, this Character gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【登場時】相手のパワー5000以上のキャラがいる場合、このキャラは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เมื่อลงสนาม] ถ้าคู่แข่งมีคาแรคเตอร์ ที่มีพาวเวอร์ 5000 หรือมากกว่า อยู่ด้วย, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[On Play] If your opponent has a Character with 5000 or more power, this Character gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】相手のパワー5000以上のキャラがいる場合、このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] ถ้าคู่แข่งมีคาแรคเตอร์ ที่มีพาวเวอร์ 5000 หรือมากกว่า อยู่ด้วย, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-005",
@@ -99,7 +154,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ในเทิร์นนี้ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ –2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-006",
@@ -114,12 +171,14 @@
     "power": 11000,
     "attribute": "Strike",
     "trait": "Straw Hat Crew",
-    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)<br>[Once Per Turn] When your opponent activates a [Blocker], K.O. up to 1 of your opponent's Characters with 8000 power or less.",
-    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)<br>【ターン1回】相手が【ブロッカー】を発動した時、相手のパワー8000以下のキャラ1枚までを、KOする。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เทิร์นละ 1 ครั้ง] ตอนที่คู่แข่งใช้งาน [บล็อกเกอร์], จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 8000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[Once Per Turn] When your opponent activates a [Blocker], K.O. up to 1 of your opponent's Characters with 8000 power or less.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【ターン1回】相手が【ブロッカー】を発動した時、相手のパワー8000以下のキャラ1枚までを、KOする。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เทิร์นละ 1 ครั้ง] ตอนที่คู่แข่งใช้งาน [บล็อกเกอร์], จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 8000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-007",
@@ -140,16 +199,18 @@
     "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา ถูกนำกลับ ด้ง!! เด็ค, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า ที่กำลังเรสต์อยู่ จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-008",
     "cardCode": "ST10-008",
     "rarity": "C",
     "cardType": "CHARACTER",
-    "nameEn": "Shachi &amp; Penguin",
+    "nameEn": "Shachi & Penguin",
     "nameJp": "シャチ＆ペンギン",
-    "nameTh": "Shachi &amp; Penguin",
+    "nameTh": "Shachi & Penguin",
     "color": "Purple",
     "cost": 4,
     "power": 5000,
@@ -161,7 +222,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 3 ใบ หรือน้อยกว่า, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 2 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-009",
@@ -182,7 +245,9 @@
     "effectTh": "[เมื่อลงสนาม] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-010",
@@ -198,12 +263,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Heart Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your opponent has 7 or more cards in their hand, trash 2 cards from your opponent's hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：相手の手札が7枚以上ある場合、相手の手札2枚を捨てる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าคู่แข่งมีการ์ดบนมืออยู่ จำนวน 7 ใบ หรือมากกว่า, จะทิ้งการ์ดบนมือของคู่แข่ง จำนวน 2 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your opponent has 7 or more cards in their hand, trash 2 cards from your opponent's hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：相手の手札が7枚以上ある場合、相手の手札2枚を捨てる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าคู่แข่งมีการ์ดบนมืออยู่ จำนวน 7 ใบ หรือมากกว่า, จะทิ้งการ์ดบนมือของคู่แข่ง จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-011",
@@ -224,7 +291,9 @@
     "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา ถูกนำกลับ ด้ง!! เด็ค, จนกระทั่งถึงช่วงเริ่มต้นเทิร์นของเราในครั้งถัดไป, คาแรกเตอร์นี้, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-012",
@@ -245,7 +314,9 @@
     "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ถ้าจำนวน ด้ง!! ที่อยู่บนสนามของคู่แข่ง มีมากกว่าจำนวน ด้ง!! ที่อยู่บนสนามของเรา, จะนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-013",
@@ -265,7 +336,9 @@
     "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : จนกระทั่งถึงช่วงเริ่มต้นเทิร์นของเราในครั้งถัดไป, ลีดเดอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-014",
@@ -281,12 +354,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Kid Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[Once Per Turn] When a DON!! card on your field is returned to your DON!! deck, draw 1 card and trash 1 card from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ターン1回】自分の場のドン!!がドン!!デッキに戻された時、カード1枚を引き、手札1枚を捨てる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา ถูกนำกลับ ด้ง!! เด็ค, จะจั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือ จำนวน 1 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[Once Per Turn] When a DON!! card on your field is returned to your DON!! deck, draw 1 card and trash 1 card from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ターン1回】自分の場のドン!!がドン!!デッキに戻された時、カード1枚を引き、手札1枚を捨てる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา ถูกนำกลับ ด้ง!! เด็ค, จะจั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือ จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-015",
@@ -304,7 +379,9 @@
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000, และทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 2000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-016",
@@ -320,11 +397,11 @@
     "effectEn": "[Main] K.O. up to 1 of your opponent's Characters with 7000 power or less.",
     "effectJp": "【メイン】相手のパワー7000以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 7000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Up to 1 of your Leader gains +1000 power until the end of your next turn.",
-    "triggerJp": "【トリガー】自分のリーダー1枚までを、次の自分のターン終了時まで、パワー+1000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   },
   {
     "code": "ST10-017",
@@ -340,10 +417,10 @@
     "effectEn": "[Main] Rest up to 1 of your opponent's Characters with a cost of 2 or less, and add up to 1 DON!! card from your DON!! deck and rest it.",
     "effectJp": "【メイン】相手のコスト2以下のキャラ1枚までを、レストにし、ドン!!デッキからドン!!1枚までを、レストで追加する。",
     "effectTh": "[เมน] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, และนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
-    "triggerEn": "[Trigger] Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST10-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Three Captains- [ST-10]"
+    ]
   }
 ]

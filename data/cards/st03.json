@@ -9,7 +9,7 @@
     "nameTh": "Crocodile",
     "color": "Blue",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Baroque Works",
     "effectEn": "[Activate: Main] [Once Per Turn] DON!! −4 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Return up to 1 Character with a cost of 5 or less to the owner's hand.",
@@ -17,7 +17,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 4 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรคเตอร์ของใครก็ตาม ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-002",
@@ -38,7 +40,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-003",
@@ -53,12 +57,14 @@
     "power": 6000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Baroque Works",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x1] [On Block] Place up to 1 Character with a cost of 2 or less at the bottom of the owner's deck.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ドン!!×1】【ブロック時】コスト2以下のキャラ1枚までを、持ち主のデッキの下に置く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ด้ง!! x 1] [เมื่อบล็อก] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.<br>",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[DON!! x1] [On Block] Place up to 1 Character with a cost of 2 or less at the bottom of the owner's deck.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ドン!!×1】【ブロック時】コスト2以下のキャラ1枚までを、持ち主のデッキの下に置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ด้ง!! x 1] [เมื่อบล็อก] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-004",
@@ -76,10 +82,12 @@
     "trait": "The Seven Warlords of the Sea/Thriller Bark Pirates",
     "effectEn": "[On Play] Add up to 1 {The Seven Warlords of the Sea} or {Thriller Bark Pirates} type Character with a cost of 4 or less other than [Gecko Moria] from your trash to your hand.",
     "effectJp": "【登場時】自分のトラッシュの「ゲッコー・モリア」以外のコスト4以下の特徴《王下七武海》か《スリラーバーク海賊団》を持つキャラカード1枚までを、手札に加える。",
-    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; เจ็ดเทพโจรสลัด &gt; หรือ &lt; กลุ่มโจรสลัดธริลเลอร์บาร์ค &gt; ที่อยู่ในแทรชของเรา, นอกเหนือจาก [Gecko Moria], จำนวน 1 ใบ, ขึ้นสู่บนมือ.",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ที่มีคุณสมบัติ < เจ็ดเทพโจรสลัด > หรือ < กลุ่มโจรสลัดธริลเลอร์บาร์ค > ที่อยู่ในแทรชของเรา, นอกเหนือจาก [Gecko Moria], จำนวน 1 ใบ, ขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-005",
@@ -100,7 +108,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] จั่วการ์ด 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-006",
@@ -121,7 +131,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-007",
@@ -142,7 +154,9 @@
     "effectTh": "[ด้ง!! x 1] [ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำ [Pacifista] ที่มีคอสต์ 4 หรือต่ำกว่า จากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, ทำการชัฟเฟิลเด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-008",
@@ -162,7 +176,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-009",
@@ -182,7 +198,9 @@
     "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 7 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-010",
@@ -199,12 +217,12 @@
     "trait": "The Seven Warlords of the Sea/Revolutionary Army",
     "effectEn": "[On Play] Look at 3 cards from the top of your deck and return them to the top or bottom of the deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から3枚を見て、好きな順番に並び変え、デッキの上か下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือข้างใต้เด็ค.<br>",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-011",
@@ -225,7 +243,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-012",
@@ -246,7 +266,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-013",
@@ -265,11 +287,11 @@
     "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
     "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-014",
@@ -290,7 +312,9 @@
     "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-015",
@@ -306,11 +330,11 @@
     "effectEn": "[Main] Return up to 1 Character with a cost of 7 or less to the owner's hand.",
     "effectJp": "【メイン】コスト7以下のキャラ1枚までを、持ち主の手札に戻す。",
     "effectTh": "[เมน] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 7 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือเจ้าของ.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-016",
@@ -326,11 +350,11 @@
     "effectEn": "[Counter] Return up to 1 Character with a cost of 3 or less to the owner's hand.",
     "effectJp": "【カウンター】コスト3以下のキャラ1枚までを、持ち主の手札に戻す。",
     "effectTh": "[เคาน์เตอร์] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือเจ้าของ.",
-    "triggerEn": "[Trigger] Activate this card's [Counter] effect.",
-    "triggerJp": "【トリガー】このカードの【カウンター】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   },
   {
     "code": "ST03-017",
@@ -348,6 +372,8 @@
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมี พาวเวอร์ + 4000. จากนั้น, ถ้าเรามีการ์ดบนมือ จำนวน 3 ใบ หรือน้อยกว่า, จั่วการ์ด 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-The Seven Warlords of the Sea- [ST-03]"
+    ]
   }
 ]

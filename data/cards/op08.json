@@ -1,5 +1,52 @@
 [
   {
+    "code": "OP02-013",
+    "cardCode": "OP02-013_p3",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Portgas.D.Ace (Parallel)",
+    "nameJp": "ポートガス・D・エース",
+    "nameTh": "Portgas.D.Ace (Parallel)",
+    "color": "Red",
+    "cost": 7,
+    "power": 7000,
+    "attribute": "Special",
+    "trait": "Whitebeard Pirates",
+    "effectEn": "[On Play] Give up to 2 of your opponent's Characters −3000 power during this turn. Then, if your Leader's type includes \"Whitebeard Pirates\", this Character gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】相手のキャラ2枚までを、このターン中、パワー-3000。その後、自分のリーダーが『白ひげ海賊団』を含む特徴を持つ場合、このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 2 ใบ, จะมีพาวเวอร์ -3000. จากนั้น, ถ้าลีดเดอร์ของเรา ระบุคำว่า < กลุ่มโจรสลัดหนวดขาว > รวมอยู่ในคุณสมบัติด้วย, ในเทิร์นนี้, คาแรกเตอร์นี้จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP02-013_p3.png",
+    "isParallel": true,
+    "parallelIndex": 3,
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
+  },
+  {
+    "code": "OP03-112",
+    "cardCode": "OP03-112_p4",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Charlotte Pudding (Parallel)",
+    "nameJp": "シャーロット・プリン",
+    "nameTh": "Charlotte Pudding (Parallel)",
+    "color": "Yellow",
+    "cost": 1,
+    "power": 2000,
+    "counter": 1000,
+    "attribute": "Wisdom",
+    "trait": "Big Mom Pirates",
+    "effectEn": "[On Play] Look at 4 cards from the top of your deck; reveal up to 1 [Sanji] or {Big Mom Pirates} type card other than [Charlotte Pudding] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "【登場時】自分のデッキの上から4枚を見て、「シャーロット・プリン」以外の特徴《ビッグ・マム海賊団》を持つカードか「サンジ」1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำ [Sanji] หรือ การ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดบิ๊กมัม > นอกเหนือจาก [Charlotte Pudding] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-112_p4.png",
+    "isParallel": true,
+    "parallelIndex": 4,
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
+  },
+  {
     "code": "OP08-001",
     "cardCode": "OP08-001",
     "rarity": "L",
@@ -9,15 +56,17 @@
     "nameTh": "Tony Tony.Chopper",
     "color": "Red/Green",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Strike",
     "trait": "Animal/Drum Kingdom/Straw Hat Crew",
     "effectEn": "[Activate: Main] [Once Per Turn] Give up to 3 of your {Animal} or {Drum Kingdom} type Characters up to 1 rested DON!! card each.",
     "effectJp": "【起動メイン】【ターン1回】自分の特徴《動物》か《ドラム王国》を持つキャラ3枚までにレストのドン‼1枚ずつまでを、付与する。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ ไปใส่ให้กับ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; สัตว์ &gt; หรือ &lt; ราชอาณาจักรดรัม &gt; จำนวนไม่เกิน 3 ใบ, เป็นจำนวนสูงสุดตัวละไม่เกิน 1 ใบ.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ ไปใส่ให้กับ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < สัตว์ > หรือ < ราชอาณาจักรดรัม > จำนวนไม่เกิน 3 ใบ, เป็นจำนวนสูงสุดตัวละไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-001",
@@ -29,16 +78,18 @@
     "nameTh": "Tony Tony.Chopper (Parallel)",
     "color": "Red/Green",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Strike",
     "trait": "Animal/Drum Kingdom/Straw Hat Crew",
     "effectEn": "[Activate: Main] [Once Per Turn] Give up to 3 of your {Animal} or {Drum Kingdom} type Characters up to 1 rested DON!! card each.",
     "effectJp": "【起動メイン】【ターン1回】自分の特徴《動物》か《ドラム王国》を持つキャラ3枚までにレストのドン‼1枚ずつまでを、付与する。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ ไปใส่ให้กับ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; สัตว์ &gt; หรือ &lt; ราชอาณาจักรดรัม &gt; จำนวนไม่เกิน 3 ใบ, เป็นจำนวนสูงสุดตัวละไม่เกิน 1 ใบ.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ ไปใส่ให้กับ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < สัตว์ > หรือ < ราชอาณาจักรดรัม > จำนวนไม่เกิน 3 ใบ, เป็นจำนวนสูงสุดตัวละไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-001_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-002",
@@ -50,7 +101,7 @@
     "nameTh": "Marco",
     "color": "Red/Blue",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
     "effectEn": "[DON!! x1] [Activate: Main] [Once Per Turn] Draw 1 card and place 1 card from your hand at the top or bottom of your deck. Then, give up to 1 of your opponent's Characters −2000 power during this turn.",
@@ -58,7 +109,9 @@
     "effectTh": "[ด้ง!! x 1] [ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] จั่วการ์ด จำนวน 1 ใบ, แล้วนำการ์ดบนมือของเรา จำนวน 1 ใบ ไปวางที่ ข้างบนสุด หรือ ข้างใต้สุด ของเด็ค. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-002",
@@ -70,7 +123,7 @@
     "nameTh": "Marco (Parallel)",
     "color": "Red/Blue",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
     "effectEn": "[DON!! x1] [Activate: Main] [Once Per Turn] Draw 1 card and place 1 card from your hand at the top or bottom of your deck. Then, give up to 1 of your opponent's Characters −2000 power during this turn.",
@@ -79,7 +132,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-002_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-003",
@@ -100,7 +155,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-004",
@@ -121,7 +178,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าเรามี [Chess] อยู่ด้วยละก็, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-005",
@@ -142,7 +201,9 @@
     "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000. จากนั้น, ถ้าเราไม่มี [Kuromarimo] อยู่ด้วยละก็, ให้นำ [Kuromarimo] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-006",
@@ -156,14 +217,16 @@
     "cost": 5,
     "power": 6000,
     "counter": 1000,
-    "attribute": "Strike",
+    "attribute": "Strike/Ranged",
     "trait": "Drum Kingdom",
     "effectEn": "[Your Turn] If you have [Kuromarimo] and [Chess] in your trash, this Character gains +2000 power.",
     "effectJp": "【自分のターン中】自分のトラッシュに「クロマーリモ」と「チェス」がある場合、このキャラはパワー+2000。",
     "effectTh": "[เทิร์นตัวเอง] ถ้าเรามี [Kuromarimo] กับ [Chess] อยู่ในแทรชละก็, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-007",
@@ -180,10 +243,12 @@
     "trait": "Animal/Drum Kingdom/Straw Hat Crew",
     "effectEn": "[Your Turn] [On Play]/[When Attacking] Look at 5 cards from the top of your deck and play up to 1 {Animal} type Character card with 4000 power or less rested. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【自分のターン中】【登場時】/【アタック時】自分のデッキの上から5枚を見て、パワー4000以下の特徴《動物》を持つキャラカード1枚までを、レストで登場させる。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เทิร์นตัวเอง] [เมื่อลงสนาม] / [เมื่อโจมตี] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, แล้วนำคาแรกเตอร์การ์ด ที่มีพาวเวอร์ 4000 หรือต่ำกว่า และมีคุณสมบัติ &lt; สัตว์ &gt; จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เทิร์นตัวเอง] [เมื่อลงสนาม] / [เมื่อโจมตี] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, แล้วนำคาแรกเตอร์การ์ด ที่มีพาวเวอร์ 4000 หรือต่ำกว่า และมีคุณสมบัติ < สัตว์ > จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-007",
@@ -200,11 +265,13 @@
     "trait": "Animal/Drum Kingdom/Straw Hat Crew",
     "effectEn": "[Your Turn] [On Play]/[When Attacking] Look at 5 cards from the top of your deck and play up to 1 {Animal} type Character card with 4000 power or less rested. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【自分のターン中】【登場時】/【アタック時】自分のデッキの上から5枚を見て、パワー4000以下の特徴《動物》を持つキャラカード1枚までを、レストで登場させる。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เทิร์นตัวเอง] [เมื่อลงสนาม] / [เมื่อโจมตี] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, แล้วนำคาแรกเตอร์การ์ด ที่มีพาวเวอร์ 4000 หรือต่ำกว่า และมีคุณสมบัติ &lt; สัตว์ &gt; จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เทิร์นตัวเอง] [เมื่อลงสนาม] / [เมื่อโจมตี] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, แล้วนำคาแรกเตอร์การ์ด ที่มีพาวเวอร์ 4000 หรือต่ำกว่า และมีคุณสมบัติ < สัตว์ > จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพ เรสต์. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-007_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-008",
@@ -220,12 +287,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Drum Kingdom",
-    "effectEn": "[On Play] Give up to 1 of your opponent's Characters −1000 power during this turn.<br>[DON!! x1] [Activate: Main] [Once Per Turn] You may add 1 card from the top of your Life cards to your hand: This Character gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【登場時】相手のキャラ1枚までを、このターン中、パワー-1000。<br>【ドン‼×1】【起動メイン】【ターン1回】自分のライフの上から1枚を手札に加えることができる：このキャラは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -1000.<br>[ด้ง!! x 1] [ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[On Play] Give up to 1 of your opponent's Characters −1000 power during this turn.[DON!! x1] [Activate: Main] [Once Per Turn] You may add 1 card from the top of your Life cards to your hand: This Character gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】相手のキャラ1枚までを、このターン中、パワー-1000。【ドン‼×1】【起動メイン】【ターン1回】自分のライフの上から1枚を手札に加えることができる：このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -1000.[ด้ง!! x 1] [ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-009",
@@ -246,7 +315,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-010",
@@ -264,10 +335,12 @@
     "trait": "Animal/Drum Kingdom",
     "effectEn": "[DON!! x1] [Activate: Main] [Once Per Turn] Up to 1 of your {Animal} type Characters other than this Character gains +1000 power during this turn.",
     "effectJp": "【ドン‼×1】【起動メイン】【ターン1回】このキャラ以外の自分の特徴《動物》を持つキャラ1枚までを、このターン中、パワー+1000。",
-    "effectTh": "[ด้ง!! x 1] [ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; สัตว์ &gt; นอกเหนือจาก คาแรกเตอร์นี้ จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000",
+    "effectTh": "[ด้ง!! x 1] [ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < สัตว์ > นอกเหนือจาก คาแรกเตอร์นี้ จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-011",
@@ -288,7 +361,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-012",
@@ -306,10 +381,12 @@
     "trait": "Animal/Drum Kingdom",
     "effectEn": "[DON!! x2] [When Attacking] If your Leader has the {Drum Kingdom} type, K.O. up to 1 of your opponent's Characters with 4000 power or less.",
     "effectJp": "【ドン‼×2】【アタック時】自分のリーダーが特徴《ドラム王国》を持つ場合、相手のパワー4000以下のキャラ1枚までを、KOする。",
-    "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; ราชอาณาจักรดรัม &gt;, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 4000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < ราชอาณาจักรดรัม >, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 4000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-013",
@@ -325,12 +402,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Animal/Drum Kingdom",
-    "effectEn": "[DON!! x2] This Character gains [Rush].<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【ドン‼×2】このキャラは【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[ด้ง!! x 2] ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[DON!! x2] This Character gains [Rush].(This card can attack on the turn in which it is played.)",
+    "effectJp": "【ドン‼×2】このキャラは【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[ด้ง!! x 2] ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-014",
@@ -351,7 +430,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000. จากนั้น, คาแรกเตอร์นี้, จะมีพาวเวอร์ +2000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-015",
@@ -369,10 +450,12 @@
     "trait": "Drum Kingdom",
     "effectEn": "[On Play] Look at 4 cards from the top of your deck; reveal up to 1 [Tony Tony.Chopper] or {Drum Kingdom} type card other than [Dr.Kureha] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から4枚を見て、「Dr.くれは」以外の、特徴《ドラム王国》を持つカードか「トニートニー・チョッパー」1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; ราชอาณาจักรดรัม &gt; นอกเหนือจาก [Dr.Kureha] จำนวนไม่เกิน 1 ใบ, หรือว่า [Tony Tony.Chopper] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ดที่มีคุณสมบัติ < ราชอาณาจักรดรัม > นอกเหนือจาก [Dr.Kureha] จำนวนไม่เกิน 1 ใบ, หรือว่า [Tony Tony.Chopper] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-015",
@@ -390,11 +473,13 @@
     "trait": "Drum Kingdom",
     "effectEn": "[On Play] Look at 4 cards from the top of your deck; reveal up to 1 [Tony Tony.Chopper] or {Drum Kingdom} type card other than [Dr.Kureha] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から4枚を見て、「Dr.くれは」以外の、特徴《ドラム王国》を持つカードか「トニートニー・チョッパー」1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; ราชอาณาจักรดรัม &gt; นอกเหนือจาก [Dr.Kureha] จำนวนไม่เกิน 1 ใบ, หรือว่า [Tony Tony.Chopper] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำการ์ดที่มีคุณสมบัติ < ราชอาณาจักรดรัม > นอกเหนือจาก [Dr.Kureha] จำนวนไม่เกิน 1 ใบ, หรือว่า [Tony Tony.Chopper] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-015_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-016",
@@ -414,7 +499,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ถ้าลีดเดอร์ของเรา คือ [Tony Tony.Chopper], ในเทิร์นนี้, คาแรกเตอร์ [Tony Tony.Chopper] ของฝ่ายเรา ทั้งหมด, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-017",
@@ -430,11 +517,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, give up to 1 of your opponent's Leader or Character cards −1000 power during this turn.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、相手のリーダーかキャラ1枚までを、このターン中、パワー-1000。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. จากนั้น, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -1000.",
-    "triggerEn": "[Trigger] Up to 1 of your Leader or Character cards gains +1000 power during this turn.",
-    "triggerJp": "【トリガー】自分のリーダーかキャラ1枚までを、このターン中、パワー+1000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-018",
@@ -450,11 +537,11 @@
     "effectEn": "[Main] Up to 3 of your Characters gain +1000 power during this turn. Then, give up to 1 of your opponent's Characters −2000 power during this turn.",
     "effectJp": "【メイン】自分のキャラ3枚までを、このターン中、パワー+1000。その後、相手のキャラ1枚までを、このターン中、パワー-2000。",
     "effectTh": "[เมน] ในเทิร์นนี้, คาแรกเตอร์ของเรา จำนวนไม่เกิน 3 ใบ, จะมีพาวเวอร์ +1000. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
-    "triggerEn": "[Trigger] Give up to 1 of your opponent's Leader or Character cards −3000 power during this turn.",
-    "triggerJp": "【トリガー】相手のリーダーかキャラ1枚までを、このターン中、パワー-3000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-018.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-019",
@@ -470,11 +557,11 @@
     "effectEn": "[Main]/[Counter] Give up to 1 of your opponent's Characters −3000 power during this turn. Then, up to 1 of your Characters gains +3000 power during this turn.",
     "effectJp": "【メイン】/【カウンター】相手のキャラ1枚までを、このターン中、パワー-3000。その後、自分のキャラ1枚までを、このターン中、パワー+3000。",
     "effectTh": "[เมน] / [เคาน์เตอร์] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -3000. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with 5000 power or less.",
-    "triggerJp": "【トリガー】相手のパワー5000以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-019.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-020",
@@ -489,10 +576,12 @@
     "trait": "Drum Kingdom",
     "effectEn": "[Opponent's Turn] All of your {Drum Kingdom} type Characters gain +1000 power.",
     "effectJp": "【相手のターン中】自分の特徴《ドラム王国》を持つキャラすべてを、パワー+1000。",
-    "effectTh": "[ในเทิร์นของคู่แข่ง] คาแรกเตอร์ ที่มีคุณสมบัติ &lt; ราชอาณาจักรดรัม &gt; ของฝ่ายเรา ทั้งหมด, จะมีพาวเวอร์ +1000.",
+    "effectTh": "[ในเทิร์นของคู่แข่ง] คาแรกเตอร์ ที่มีคุณสมบัติ < ราชอาณาจักรดรัม > ของฝ่ายเรา ทั้งหมด, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-020.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-021",
@@ -504,15 +593,17 @@
     "nameTh": "Carrot",
     "color": "Green",
     "power": 5000,
-    "life": 2,
+    "life": 5,
     "attribute": "Special",
     "trait": "Minks",
     "effectEn": "[Activate: Main] [Once Per Turn] If you have a {Minks} type Character, rest up to 1 of your opponent's Characters with a cost of 5 or less.",
     "effectJp": "【起動メイン】【ターン1回】自分の特徴《ミンク族》を持つキャラがいる場合、相手のコスト5以下のキャラ1枚までを、レストにする。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าเรามี คาแรกเตอร์ ที่มีคุณสมบัติ &lt; เผ่ามิงค์ &gt; อยู่ด้วยละก็, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าเรามี คาแรกเตอร์ ที่มีคุณสมบัติ < เผ่ามิงค์ > อยู่ด้วยละก็, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-021.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-021",
@@ -524,16 +615,18 @@
     "nameTh": "Carrot (Parallel)",
     "color": "Green",
     "power": 5000,
-    "life": 2,
+    "life": 5,
     "attribute": "Special",
     "trait": "Minks",
     "effectEn": "[Activate: Main] [Once Per Turn] If you have a {Minks} type Character, rest up to 1 of your opponent's Characters with a cost of 5 or less.",
     "effectJp": "【起動メイン】【ターン1回】自分の特徴《ミンク族》を持つキャラがいる場合、相手のコスト5以下のキャラ1枚までを、レストにする。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าเรามี คาแรกเตอร์ ที่มีคุณสมบัติ &lt; เผ่ามิงค์ &gt; อยู่ด้วยละก็, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าเรามี คาแรกเตอร์ ที่มีคุณสมบัติ < เผ่ามิงค์ > อยู่ด้วยละก็, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-021_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-022",
@@ -551,10 +644,12 @@
     "trait": "Minks/The Akazaya Nine",
     "effectEn": "[On Play] If your Leader has the {Minks} type, up to 2 of your opponent's rested Characters with a cost of 5 or less will not become active in your opponent's next Refresh Phase.",
     "effectJp": "【登場時】自分のリーダーが特徴《ミンク族》を持つ場合、相手のレストのコスト5以下のキャラ2枚までは、次の相手のリフレッシュフェイズでアクティブにならない。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; เผ่ามิงค์ &gt;, จะทำให้ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่ จำนวนไม่เกิน 2 ใบ, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของคู่แข่งในครั้งถัดไป.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < เผ่ามิงค์ >, จะทำให้ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่ จำนวนไม่เกิน 2 ใบ, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-022.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-023",
@@ -575,7 +670,9 @@
     "effectTh": "[เมื่อลงสนาม] / [เมื่อโจมตี] ทำให้ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 7 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่ จำนวนไม่เกิน 1 ใบ, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-023.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-023",
@@ -597,7 +694,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-023_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-024",
@@ -618,7 +717,9 @@
     "effectTh": "[เมื่อโจมตี] ทำให้ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่ จำนวนไม่เกิน 1 ใบ, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-024.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-025",
@@ -639,7 +740,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำให้ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่ จำนวนไม่เกิน 1 ใบ, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-025.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-026",
@@ -660,7 +763,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ทำให้ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่ จำนวนไม่เกิน 1 ใบ, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-026.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-027",
@@ -681,7 +786,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-027.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-028",
@@ -697,12 +804,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Minks/The Akazaya Nine",
-    "effectEn": "[On Play] If your opponent has 7 or more rested cards, this Character gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【登場時】相手のレストのカードが7枚以上ある場合、このキャラは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เมื่อลงสนาม] ถ้าคู่แข่งมีการ์ด ที่กำลังเรสต์อยู่ จำนวน 7 ใบ หรือมากกว่า, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[On Play] If your opponent has 7 or more rested cards, this Character gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】相手のレストのカードが7枚以上ある場合、このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] ถ้าคู่แข่งมีการ์ด ที่กำลังเรสต์อยู่ จำนวน 7 ใบ หรือมากกว่า, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-028.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-029",
@@ -719,10 +828,12 @@
     "trait": "Minks/Big Mom Pirates",
     "effectEn": "If this Character is active, your {Minks} type Characters with a cost of 3 or less other than [Pekoms] cannot be K.O.'d by effects.",
     "effectJp": "このキャラがアクティブの場合、「ペコムズ」以外の自分のコスト3以下の特徴《ミンク族》を持つキャラは、効果でKOされない。",
-    "effectTh": "ขณะที่คาแรกเตอร์นี้กำลัง แอ็คทีฟ อยู่, คาแรกเตอร์ใบอื่นของเรา ที่มีคอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ &lt; เผ่ามิงค์ &gt; นอกเหนือจาก [Pekoms], จะไม่ถูก KO จากความสามารถใดๆ.",
+    "effectTh": "ขณะที่คาแรกเตอร์นี้กำลัง แอ็คทีฟ อยู่, คาแรกเตอร์ใบอื่นของเรา ที่มีคอสต์ 3 หรือต่ำกว่า และมีคุณสมบัติ < เผ่ามิงค์ > นอกเหนือจาก [Pekoms], จะไม่ถูก KO จากความสามารถใดๆ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-029.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-030",
@@ -738,12 +849,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Minks",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] Choose one:<br>• Rest up to 1 of your opponent's DON!! cards.<br>• K.O. up to 1 of your opponent's rested Characters with a cost of 6 or less.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【KO時】以下から1つを選ぶ。<br>・相手のドン‼1枚までを、レストにする。<br>・相手のレストのコスト6以下のキャラ1枚までを、KOする。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] เลือก 1 อย่าง จากดังต่อไปนี้.<br>• ทำการ เรสต์ ด้ง!! ของคู่แข่ง, จำนวนไม่เกิน 1 ใบ<br>• ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On K.O.] Choose one:• Rest up to 1 of your opponent's DON!! cards.• K.O. up to 1 of your opponent's rested Characters with a cost of 6 or less.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【KO時】以下から1つを選ぶ。・相手のドン‼1枚までを、レストにする。・相手のレストのコスト6以下のキャラ1枚までを、KOする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] เลือก 1 อย่าง จากดังต่อไปนี้.• ทำการ เรสต์ ด้ง!! ของคู่แข่ง, จำนวนไม่เกิน 1 ใบ• ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-030.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-030",
@@ -759,13 +872,15 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Minks",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] Choose one:<br>• Rest up to 1 of your opponent's DON!! cards.<br>• K.O. up to 1 of your opponent's rested Characters with a cost of 6 or less.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【KO時】以下から1つを選ぶ。<br>・相手のドン‼1枚までを、レストにする。<br>・相手のレストのコスト6以下のキャラ1枚までを、KOする。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] เลือก 1 อย่าง จากดังต่อไปนี้.<br>• ทำการ เรสต์ ด้ง!! ของคู่แข่ง, จำนวนไม่เกิน 1 ใบ<br>• ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On K.O.] Choose one:• Rest up to 1 of your opponent's DON!! cards.• K.O. up to 1 of your opponent's rested Characters with a cost of 6 or less.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【KO時】以下から1つを選ぶ。・相手のドン‼1枚までを、レストにする。・相手のレストのコスト6以下のキャラ1枚までを、KOする。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] เลือก 1 อย่าง จากดังต่อไปนี้.• ทำการ เรสต์ ด้ง!! ของคู่แข่ง, จำนวนไม่เกิน 1 ใบ• ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-030_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-031",
@@ -783,10 +898,12 @@
     "trait": "Minks",
     "effectEn": "[On Play] Set up to 1 of your {Minks} type Characters with a cost of 2 or less as active.",
     "effectJp": "【登場時】自分のコスト2以下の特徴《ミンク族》を持つキャラ1枚までを、アクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] ทำให้ คาแรกเตอร์ของเรา ที่มีคอสต์ 2 หรือต่ำกว่า และมีคุณสมบัติ &lt; เผ่ามิงค์ &gt; จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectTh": "[เมื่อลงสนาม] ทำให้ คาแรกเตอร์ของเรา ที่มีคอสต์ 2 หรือต่ำกว่า และมีคุณสมบัติ < เผ่ามิงค์ > จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-031.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-032",
@@ -803,10 +920,12 @@
     "trait": "Minks",
     "effectEn": "[Activate: Main] You may rest this Character: If your Leader has the {Minks} type, set up to 1 of your DON!! cards as active.",
     "effectJp": "【起動メイン】このキャラをレストにできる：自分のリーダーが特徴《ミンク族》を持つ場合、自分のドン‼1枚までを、アクティブにする。",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; เผ่ามิงค์ &gt;, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < เผ่ามิงค์ >, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-032.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-033",
@@ -824,10 +943,12 @@
     "trait": "Minks",
     "effectEn": "[On Play] If your Leader has the {Minks} type and your opponent has 7 or more rested cards, K.O. up to 1 of your opponent's rested Characters with a cost of 2 or less.",
     "effectJp": "【登場時】自分のリーダーが特徴《ミンク族》を持ち、相手のレストのカードが7枚以上ある場合、相手のレストのコスト2以下のキャラ1枚までを、KOする。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; เผ่ามิงค์ &gt;, และคู่แข่งมี การ์ดที่กำลังเรสต์อยู่ จำนวน 7 ใบ หรือมากกว่า, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < เผ่ามิงค์ >, และคู่แข่งมี การ์ดที่กำลังเรสต์อยู่ จำนวน 7 ใบ หรือมากกว่า, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-033.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-034",
@@ -845,10 +966,12 @@
     "trait": "Minks",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Minks} type card other than [Wanda] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「ワンダ」以外の特徴《ミンク族》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; เผ่ามิงค์ &gt; นอกเหนือจาก [Wanda] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < เผ่ามิงค์ > นอกเหนือจาก [Wanda] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-034.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-035",
@@ -869,7 +992,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-035.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-036",
@@ -885,11 +1010,11 @@
     "effectEn": "[Main] All of your opponent's rested Characters with a cost of 7 or less will not become active in your opponent's next Refresh Phase.",
     "effectJp": "【メイン】相手のレストのコスト7以下のキャラすべては、次の相手のリフレッシュフェイズでアクティブにならない。",
     "effectTh": "[เมน] ทำให้ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 7 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่ ทั้งหมด, จะไม่ถูกเปลี่ยนเป็น แอ็คทีฟ ในช่วงรีเฟรชเฟสของคู่แข่งในครั้งถัดไป.",
-    "triggerEn": "[Trigger] Rest up to 1 of your opponent's Characters.",
-    "triggerJp": "【トリガー】相手のキャラ1枚までを、レストにする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-036.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-037",
@@ -904,12 +1029,12 @@
     "trait": "Minks",
     "effectEn": "[Main] You may rest 1 of your {Minks} type Characters: Rest up to 1 of your opponent's Characters.",
     "effectJp": "【メイン】自分の特徴《ミンク族》を持つキャラ1枚をレストにできる：相手のキャラ1枚までを、レストにする。",
-    "effectTh": "[เมน] สามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; เผ่ามิงค์ &gt; จำนวน 1 ใบ : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Draw 1 card.",
-    "triggerJp": "【トリガー】カード1枚を引く。",
+    "effectTh": "[เมน] สามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < เผ่ามิงค์ > จำนวน 1 ใบ : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-037.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-038",
@@ -925,11 +1050,11 @@
     "effectEn": "[Main] You may rest 2 of your Characters: None of your Characters can be K.O.'d by your opponent's effects until the end of your opponent's next turn.",
     "effectJp": "【メイン】自分のキャラ2枚をレストにできる：自分のキャラすべては、次の相手のターン終了時まで、相手の効果でKOされない。",
     "effectTh": "[เมน] สามารถ เรสต์ คาแรกเตอร์ของเรา จำนวน 2 ใบ : คาแรกเตอร์ของฝ่ายเรา ทั้งหมด, จะไม่ถูก KO จากความสามารถของคู่แข่ง, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
-    "triggerEn": "[Trigger] Rest up to 1 of your opponent's Characters with a cost of 3 or less.",
-    "triggerJp": "【トリガー】相手のコスト3以下のキャラ1枚までを、レストにする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-038.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-039",
@@ -942,12 +1067,14 @@
     "color": "Green",
     "cost": 3,
     "trait": "Animal",
-    "effectEn": "[Activate: Main] You may rest this Stage: If your Leader has the {Minks} type, set up to 1 of your DON!! cards as active.<br>[End of Your Turn] Set up to 1 of your {Minks} type Characters as active.",
-    "effectJp": "【起動メイン】このステージをレストにできる：自分のリーダーが特徴《ミンク族》を持つ場合、自分のドン‼1枚までを、アクティブにする。<br>【自分のターン終了時】自分の特徴《ミンク族》を持つキャラ1枚までを、アクティブにする。",
-    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ สเตจนี้ : ถ้า ลีดเดอร์ ของเรา มีคุณสมบัติ &lt; เผ่ามิงค์ &gt;, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.<br>[เมื่อจบเทิร์นของเรา] ทำให้ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; เผ่ามิงค์ &gt; จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectEn": "[Activate: Main] You may rest this Stage: If your Leader has the {Minks} type, set up to 1 of your DON!! cards as active.[End of Your Turn] Set up to 1 of your {Minks} type Characters as active.",
+    "effectJp": "【起動メイン】このステージをレストにできる：自分のリーダーが特徴《ミンク族》を持つ場合、自分のドン‼1枚までを、アクティブにする。【自分のターン終了時】自分の特徴《ミンク族》を持つキャラ1枚までを、アクティブにする。",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ สเตจนี้ : ถ้า ลีดเดอร์ ของเรา มีคุณสมบัติ < เผ่ามิงค์ >, ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.[เมื่อจบเทิร์นของเรา] ทำให้ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < เผ่ามิงค์ > จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-039.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-040",
@@ -968,7 +1095,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ด ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ จากบนมือของเรา จำนวน 2 ใบ มาแสดงให้ดู : ถ้าลีดเดอร์ของเรา ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ, จะนำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-040.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-041",
@@ -986,10 +1115,12 @@
     "trait": "Amazon Lily",
     "effectEn": "[Activate: Main] You may return this Character to the owner's hand: If your Leader has the {Kuja Pirates} type, place up to 1 of your opponent's Characters with a cost of 1 or less at the bottom of the owner's deck.",
     "effectJp": "【起動メイン】このキャラを持ち主の手札に戻すことができる：自分のリーダーが特徴《九蛇海賊団》を持つ場合、相手のコスト1以下のキャラ1枚までを、持ち主のデッキの下に置く。",
-    "effectTh": "[ใช้งาน : เมน] สามารถนำ คาแรกเตอร์นี้ กลับขึ้นมือของเจ้าของ : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดคุจา &gt;, นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
+    "effectTh": "[ใช้งาน : เมน] สามารถนำ คาแรกเตอร์นี้ กลับขึ้นมือของเจ้าของ : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดคุจา >, นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-041.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-042",
@@ -1010,7 +1141,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] นำ คาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-042.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-043",
@@ -1030,7 +1163,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ, และเรามี ไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, คาแรกเตอร์ของคู่แข่ง ทั้งหมด, จะถูกทำให้ขณะที่กำลังจะโจมตี, จะต้องทิ้งการ์ดบนมือของตัวเอง จำนวน 2 ใบ หรือไม่อย่างนั้นจะไม่สามารถโจมตีออก, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-043.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-043",
@@ -1051,7 +1186,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-043_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-044",
@@ -1072,7 +1209,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำการ์ด ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ จากบนมือของเรา จำนวน 2 ใบ มาแสดงให้ดู : ในเทิร์นนี้, คาแรกเตอร์นี้, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-044.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-045",
@@ -1093,7 +1232,9 @@
     "effectTh": "ถ้าคาแรกเตอร์นี้กำลังจะถูก KO, หรือว่า กำลังจะถูกนำออกจากสนาม โดยความสามารถของคู่แข่ง, คาแรกเตอร์นี้ จะถูกนำไปวางที่แทรชแทน, และจั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-045.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-046",
@@ -1114,7 +1255,9 @@
     "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมีคาแรกเตอร์ของใครก็ตาม ถูกนำออกจากสนาม โดยความสามารถของฝ่ายเรา, ถ้าคู่แข่งมีการ์ดบนมือ จำนวน 5 ใบ หรือมากกว่าละก็, คู่แข่งจะต้องนำการ์ดบนมือของตัวเอง จำนวน 1 ใบ ไปวางที่ข้างใต้เด็ค. จากนั้น, จะทำการ เรสต์ คาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-046.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-047",
@@ -1135,7 +1278,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถนำ คาแรกเตอร์ของเรา จำนวน 1 ใบ นอกเหนือจากคาแรกเตอร์นี้ กลับขึ้นมือของเจ้าของ : นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 6 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-047.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-048",
@@ -1156,7 +1301,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-048.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-049",
@@ -1172,12 +1319,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Whitebeard Pirates",
-    "effectEn": "[On Play] Reveal 1 card from the top of your deck and place it at the top or bottom of your deck. If the revealed card's type includes \"Whitebeard Pirates\", this Character gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【登場時】自分のデッキの上から1枚を公開し、そのカードをデッキの上か下に置く。公開したカードが『白ひげ海賊団』を含む特徴を持つ場合、このキャラは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เมื่อลงสนาม] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, แล้วนำไปวางที่ ข้างบน หรือ ข้างใต้เด็ค. ถ้าการ์ดที่นำมาแสดงให้ดู ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[On Play] Reveal 1 card from the top of your deck and place it at the top or bottom of your deck. If the revealed card's type includes \"Whitebeard Pirates\", this Character gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】自分のデッキの上から1枚を公開し、そのカードをデッキの上か下に置く。公開したカードが『白ひげ海賊団』を含む特徴を持つ場合、このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, แล้วนำไปวางที่ ข้างบน หรือ ข้างใต้เด็ค. ถ้าการ์ดที่นำมาแสดงให้ดู ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติละก็, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-049.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-050",
@@ -1193,12 +1342,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Fish-Man/Whitebeard Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Draw 2 cards and place 2 cards from your hand at the top or bottom of your deck in any order.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】カード2枚を引き、自分の手札2枚を好きな順番で並び替え、デッキの上か下に置く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, และนำการ์ดบนมือของเรา จำนวน 2 ใบ มาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือ ข้างใต้เด็ค.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Draw 2 cards and place 2 cards from your hand at the top or bottom of your deck in any order.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】カード2枚を引き、自分の手札2枚を好きな順番で並び替え、デッキの上か下に置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, และนำการ์ดบนมือของเรา จำนวน 2 ใบ มาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือ ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-050.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-051",
@@ -1219,7 +1370,9 @@
     "effectTh": "[เทิร์นตัวเอง] [เมื่อลงสนาม] ในเทิร์นนี้, [Edward Weevil] ของฝ่ายเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-051.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-052",
@@ -1240,7 +1393,9 @@
     "effectTh": "[เมื่อลงสนาม] นำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, แล้วหาคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ จำนวนไม่เกิน 1 ใบ, นำลงสนาม. จากนั้น, นำการ์ดที่เหลือไปวางที่ ข้างบน หรือ ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-052.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-052",
@@ -1262,7 +1417,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-052_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-053",
@@ -1278,11 +1435,11 @@
     "effectEn": "[Main] If your Leader's type includes \"Whitebeard Pirates\", look at 3 cards from the top of your deck; reveal up to 1 card with a type including \"Whitebeard Pirates\" or [Monkey.D.Luffy] and add it to your hand. Then, place the rest at the top or bottom of your deck in any order.",
     "effectJp": "【メイン】自分のリーダーが『白ひげ海賊団』を含む特徴を持つ場合、自分のデッキの上から3枚を見て、『白ひげ海賊団』を含む特徴を持つカードか「モンキー・D・ルフィ」1枚までを公開し、手札に加える。その後、残りを好きな順番で並び替え、デッキの上か下に置く。",
     "effectTh": "[เมน] ถ้าลีดเดอร์ของเรา ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่ระบุคำว่า [ กลุ่มโจรสลัดหนวดขาว ] รวมอยู่ในคุณสมบัติ จำนวนไม่เกิน 1 ใบ หรือ นำ [Monkey.D.Luffy] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างบน หรือ ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Draw 1 card.",
-    "triggerJp": "【トリガー】カード1枚を引く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-053.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-054",
@@ -1300,7 +1457,9 @@
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000. จากนั้น, จะต้องนำการ์ดจากข้างบนเด็คของเรา จำนวน 1 ใบ มาแสดงให้ดู, แล้วหาคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า ซึ่งระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ จำนวนไม่เกิน 1 ใบ, นำลงสนาม. จากนั้น, นำการ์ดที่เหลือไปวาง ที่ข้างบน หรือ ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-054.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-055",
@@ -1318,7 +1477,9 @@
     "effectTh": "[เมน] สามารถนำการ์ด ที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ จากบนมือของเรา จำนวน 2 ใบ มาแสดงให้ดู : นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 6 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-055.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-056",
@@ -1334,11 +1495,11 @@
     "effectEn": "[Your Turn] [Once Per Turn] When your Character with a type including \"Whitebeard Pirates\" is removed from the field by an effect, draw 1 card. Then, place 1 card from your hand at the top or bottom of your deck.",
     "effectJp": "【自分のターン中】【ターン1回】自分の『白ひげ海賊団』を含む特徴を持つキャラが効果で場を離れた時、カード1枚を引く。その後、自分の手札1枚をデッキの上か下に置く。",
     "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมีคาแรกเตอร์ของเรา ที่ระบุคำว่า [ กลุ่มโจรสลัดหนวดขาว ] รวมอยู่ในคุณสมบัติ ถูกนำออกจากสนามโดยความสามารถของใครก็ตาม, จะต้องจั่วการ์ด จำนวน 1 ใบ. จากนั้น, นำการ์ดบนมือของเรา จำนวน 1 ใบ ไปวางที่ข้างบน หรือ ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-056.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-057",
@@ -1350,15 +1511,17 @@
     "nameTh": "King",
     "color": "Purple/Black",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Special",
     "trait": "Animal Kingdom Pirates",
-    "effectEn": "[Activate: Main] [Once Per Turn] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Choose one:<br>• If you have 5 or less cards in your hand, draw 1 card.<br>• Give up to 1 of your opponent's Characters −2 cost during this turn.",
-    "effectJp": "【起動メイン】【ターン1回】ドン‼-2(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：以下から1つを選ぶ。<br>・自分の手札が5枚以下の場合、カード1枚を引く。<br>・相手のキャラ1枚までを、このターン中、コスト-2。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : เลือก 1 อย่าง จากดังต่อไปนี้.<br>• ถ้าเรามีการ์ดบนมือ จำนวน 5 ใบ หรือน้อยกว่า, จั่วการ์ด จำนวน 1 ใบ.<br>• ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
+    "effectEn": "[Activate: Main] [Once Per Turn] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Choose one:• If you have 5 or less cards in your hand, draw 1 card.• Give up to 1 of your opponent's Characters −2 cost during this turn.",
+    "effectJp": "【起動メイン】【ターン1回】ドン‼-2(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：以下から1つを選ぶ。・自分の手札が5枚以下の場合、カード1枚を引く。・相手のキャラ1枚までを、このターン中、コスト-2。",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : เลือก 1 อย่าง จากดังต่อไปนี้.• ถ้าเรามีการ์ดบนมือ จำนวน 5 ใบ หรือน้อยกว่า, จั่วการ์ด จำนวน 1 ใบ.• ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-057.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-057",
@@ -1370,16 +1533,18 @@
     "nameTh": "King (Parallel)",
     "color": "Purple/Black",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Special",
     "trait": "Animal Kingdom Pirates",
-    "effectEn": "[Activate: Main] [Once Per Turn] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Choose one:<br>• If you have 5 or less cards in your hand, draw 1 card.<br>• Give up to 1 of your opponent's Characters −2 cost during this turn.",
-    "effectJp": "【起動メイン】【ターン1回】ドン‼-2(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：以下から1つを選ぶ。<br>・自分の手札が5枚以下の場合、カード1枚を引く。<br>・相手のキャラ1枚までを、このターン中、コスト-2。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : เลือก 1 อย่าง จากดังต่อไปนี้.<br>• ถ้าเรามีการ์ดบนมือ จำนวน 5 ใบ หรือน้อยกว่า, จั่วการ์ด จำนวน 1 ใบ.<br>• ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
+    "effectEn": "[Activate: Main] [Once Per Turn] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Choose one:• If you have 5 or less cards in your hand, draw 1 card.• Give up to 1 of your opponent's Characters −2 cost during this turn.",
+    "effectJp": "【起動メイン】【ターン1回】ドン‼-2(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：以下から1つを選ぶ。・自分の手札が5枚以下の場合、カード1枚を引く。・相手のキャラ1枚までを、このターン中、コスト-2。",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : เลือก 1 อย่าง จากดังต่อไปนี้.• ถ้าเรามีการ์ดบนมือ จำนวน 5 ใบ หรือน้อยกว่า, จั่วการ์ด จำนวน 1 ใบ.• ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-057_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-058",
@@ -1391,7 +1556,7 @@
     "nameTh": "Charlotte Pudding",
     "color": "Purple/Yellow",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Wisdom",
     "trait": "Big Mom Pirates",
     "effectEn": "[When Attacking] You may turn 2 cards from the top of your Life cards face-up: Add up to 1 DON!! card from your DON!! deck and rest it.",
@@ -1399,7 +1564,9 @@
     "effectTh": "[เมื่อโจมตี] สามารถหงาย ไลฟ์ ใบบนสุดของเรา จำนวน 2 ใบ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-058.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-058",
@@ -1411,7 +1578,7 @@
     "nameTh": "Charlotte Pudding (Parallel)",
     "color": "Purple/Yellow",
     "power": 5000,
-    "life": 2,
+    "life": 4,
     "attribute": "Wisdom",
     "trait": "Big Mom Pirates",
     "effectEn": "[When Attacking] You may turn 2 cards from the top of your Life cards face-up: Add up to 1 DON!! card from your DON!! deck and rest it.",
@@ -1420,7 +1587,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-058_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-059",
@@ -1438,10 +1607,12 @@
     "trait": "Lunarian/Animal Kingdom Pirates",
     "effectEn": "[Activate: Main] You may trash this Character: If your Leader has the {Animal Kingdom Pirates} type and you have 10 DON!! cards on your field, play up to 1 [King] with a cost of 7 or less from your hand.",
     "effectJp": "【起動メイン】このキャラをトラッシュに置くことができる：自分のリーダーが特徴《百獣海賊団》を持ち、自分の場にドン‼が10枚ある場合、自分の手札からコスト7以下の「キング」1枚までを、登場させる。",
-    "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดร้อยอสูร &gt;, และในสนามของเรามี ด้ง!! อยู่จำนวน 10 ใบพอดี, ให้นำ [King] ที่มีคอสต์ 7 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดร้อยอสูร >, และในสนามของเรามี ด้ง!! อยู่จำนวน 10 ใบพอดี, ให้นำ [King] ที่มีคอสต์ 7 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-059.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-060",
@@ -1456,12 +1627,14 @@
     "power": 8000,
     "attribute": "Special",
     "trait": "Animal Kingdom Pirates",
-    "effectEn": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your opponent has 5 or more DON!! cards on their field, this Character gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【登場時】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：相手の場のドン‼が5枚以上ある場合、このキャラは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าในสนามของคู่แข่งมี ด้ง!! อยู่ 5 ใบ หรือมากกว่า, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your opponent has 5 or more DON!! cards on their field, this Character gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：相手の場のドン‼が5枚以上ある場合、このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าในสนามของคู่แข่งมี ด้ง!! อยู่ 5 ใบ หรือมากกว่า, ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-060.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-061",
@@ -1482,7 +1655,9 @@
     "effectTh": "[เมื่อโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-061.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-062",
@@ -1500,10 +1675,12 @@
     "trait": "Big Mom Pirates",
     "effectEn": "[Activate: Main] You may trash this Character: If your Leader has the {Big Mom Pirates} type, play up to 1 [Charlotte Katakuri] from your hand with a cost of 3 or more that is equal to or less than the number of DON!! cards on your opponent's field.",
     "effectJp": "【起動メイン】このキャラをトラッシュに置くことができる：自分のリーダーが特徴《ビッグ・マム海賊団》を持つ場合、自分の手札からコスト3以上でかつ、相手の場のドン‼の枚数以下のコストを持つ「シャーロット・カタクリ」1枚までを、登場させる。",
-    "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดบิ๊กมัม &gt;, ให้นำ [Charlotte Katakuri] ที่มีคอสต์ 3 หรือมากกว่า แต่จะต้องไม่สูงไปกว่า จำนวน ด้ง!! บนสนามของคู่แข่ง, จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[ใช้งาน : เมน] สามารถนำคาแรกเตอร์นี้ ไปวางที่แทรช : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดบิ๊กมัม >, ให้นำ [Charlotte Katakuri] ที่มีคอสต์ 3 หรือมากกว่า แต่จะต้องไม่สูงไปกว่า จำนวน ด้ง!! บนสนามของคู่แข่ง, จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-062.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-063",
@@ -1524,7 +1701,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถคว่ำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-063.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-064",
@@ -1545,7 +1724,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำ [Biscuit Warrior] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-064.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-065",
@@ -1566,7 +1747,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-065.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-066",
@@ -1582,12 +1765,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Big Mom Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] Add up to 1 DON!! card from your DON!! deck and rest it.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【KO時】ドン‼デッキからドン‼1枚までを、レストで追加する。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On K.O.] Add up to 1 DON!! card from your DON!! deck and rest it.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【KO時】ドン‼デッキからドン‼1枚までを、レストで追加する。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-066.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-067",
@@ -1608,7 +1793,9 @@
     "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมี ด้ง!! ในสนามของเรา ถูกนำกลับ ด้ง!! เด็ค, จะได้นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-067.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-067",
@@ -1630,7 +1817,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-067_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-068",
@@ -1648,11 +1837,11 @@
     "effectEn": "[On K.O.] Add up to 1 DON!! card from your DON!! deck and rest it.",
     "effectJp": "【KO時】ドン‼デッキからドン‼1枚までを、レストで追加する。",
     "effectTh": "[เมื่อถูก KO] นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ มาวางเพิ่มแบบ เรสต์.",
-    "triggerEn": "[Trigger] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Play this card.",
-    "triggerJp": "【トリガー】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-068.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-069",
@@ -1672,7 +1861,9 @@
     "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ), สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : นำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, จะนำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์ของคู่แข่ง แบบหงายหน้า.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-069.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-069",
@@ -1693,7 +1884,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-069_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-070",
@@ -1709,12 +1902,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Big Mom Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Play up to 1 [Viscount Hiyoko] with a cost of 5 or less from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【KO時】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：自分の手札からコスト5以下の「ヒヨコ子爵」1枚までを、登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำ [Viscount Hiyoko] ที่มีคอสต์ 5 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On K.O.] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Play up to 1 [Viscount Hiyoko] with a cost of 5 or less from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【KO時】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：自分の手札からコスト5以下の「ヒヨコ子爵」1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำ [Viscount Hiyoko] ที่มีคอสต์ 5 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-070.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-071",
@@ -1735,7 +1930,9 @@
     "effectTh": "[ในเทิร์นของคู่แข่ง] [เมื่อถูก KO] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำ [Baron Tamako] ที่มีคอสต์ 4 หรือต่ำกว่า จากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, ชัฟเฟิลเด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-071.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-072",
@@ -1751,12 +1948,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Big Mom Pirates",
-    "effectEn": "Under the rules of this game, you may have any number of this card in your deck.<br>[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
-    "effectJp": "ルール上、このカードはデッキに何枚でも入れることができる。<br>【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
-    "effectTh": "การ์ดใบนี้ จะสามารถใส่ในเด็ค จำนวนกี่ใบก็ได้, แต่จะต้องเป็นไปตามกฎ.<br>[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectEn": "Under the rules of this game, you may have any number of this card in your deck.[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
+    "effectJp": "ルール上、このカードはデッキに何枚でも入れることができる。【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
+    "effectTh": "การ์ดใบนี้ จะสามารถใส่ในเด็ค จำนวนกี่ใบก็ได้, แต่จะต้องเป็นไปตามกฎ.[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-072.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-073",
@@ -1777,7 +1976,9 @@
     "effectTh": "[ในเทิร์นของคู่แข่ง] [เมื่อถูก KO] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำ [Count Niwatori] ที่มีคอสต์ 6 หรือต่ำกว่า จากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, ชัฟเฟิลเด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-073.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-074",
@@ -1798,7 +1999,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ถ้าเราไม่มีคาแรกเตอร์ [Black Maria] ใบอื่น อยู่เลย, นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 5 ใบ, มาวางเพิ่มแบบ เรสต์. จากนั้น, ในตอนจบเทิร์นนี้, จะต้องนำ ด้ง!! ในสนามของเรา กลับด้ง!! เด็ค จนกระทั่งที่อยู่ในสนามของเรา มีเท่ากับจำนวนของ ด้ง!! ที่อยู่ในสนามของคู่แข่ง.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-074.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-074",
@@ -1820,7 +2023,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-074_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-075",
@@ -1836,11 +2041,11 @@
     "effectEn": "[Main] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Rest up to 1 of your opponent's Characters with a cost of 2 or less. Then, turn all of your Life cards face-down.",
     "effectJp": "【メイン】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：相手のコスト2以下のキャラ1枚までを、レストにする。その後、自分のライフすべてを裏向きにする。",
     "effectTh": "[เมน] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, ทำให้ ไลฟ์ของเรา ทั้งหมด เปลี่ยนเป็นคว่ำ.",
-    "triggerEn": "[Trigger] Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-075.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-076",
@@ -1856,11 +2061,11 @@
     "effectEn": "[Main] Add up to 1 DON!! card from your DON!! deck and set it as active. Then, if your opponent has a Character with 6000 power or more, add up to 1 DON!! card from your DON!! deck and set it as active.",
     "effectJp": "【メイン】ドン‼デッキからドン‼1枚までを、アクティブで追加する。その後、相手のパワー6000以上のキャラがいる場合、ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
     "effectTh": "[เมน] นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ. จากนั้น, ถ้าคู่แข่งมีคาแรกเตอร์ ที่มีพาวเวอร์ 6000 หรือสูงกว่า อยู่ด้วยละก็, จะได้นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
-    "triggerEn": "[Trigger] Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン‼デッキからドン‼1枚までを、アクティブで追加する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-076.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-077",
@@ -1875,10 +2080,12 @@
     "trait": "The Four Emperors/Animal Kingdom Pirates/Big Mom Pirates",
     "effectEn": "[Main] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader has the {Animal Kingdom Pirates} or {Big Mom Pirates} type, K.O. up to 2 of your opponent's Characters with a cost of 6 or less.",
     "effectJp": "【メイン】ドン‼-2(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：自分のリーダーが特徴《百獣海賊団》か《ビッグ・マム海賊団》を持つ場合、相手のコスト6以下のキャラ2枚までを、KOする。",
-    "effectTh": "[เมน] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้า ลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดร้อยอสูร &gt; หรือ &lt; กลุ่มโจรสลัดบิ๊กมัม &gt;, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า, จำนวนไม่เกิน 2 ใบ.",
+    "effectTh": "[เมน] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้า ลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดร้อยอสูร > หรือ < กลุ่มโจรสลัดบิ๊กมัม >, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า, จำนวนไม่เกิน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-077.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-078",
@@ -1899,7 +2106,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-078.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-079",
@@ -1919,7 +2128,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ถ้าคาแรกเตอร์นี้ เพิ่งลงสนามมา ในเทิร์นนี้, นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 7 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช. จากนั้น, คู่แข่งจะต้องทิ้งการ์ดบนมือของตัวเอง จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-079.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-079",
@@ -1940,7 +2151,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-079_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-080",
@@ -1958,10 +2171,12 @@
     "trait": "Animal Kingdom Pirates",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Animal Kingdom Pirates} type card other than [Queen] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「クイーン」以外の特徴《百獣海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดร้อยอสูร &gt; นอกเหนือจาก [Queen] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < กลุ่มโจรสลัดร้อยอสูร > นอกเหนือจาก [Queen] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-080.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-080",
@@ -1979,11 +2194,13 @@
     "trait": "Animal Kingdom Pirates",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Animal Kingdom Pirates} type card other than [Queen] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「クイーン」以外の特徴《百獣海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดร้อยอสูร &gt; นอกเหนือจาก [Queen] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ที่มีคุณสมบัติ < กลุ่มโจรสลัดร้อยอสูร > นอกเหนือจาก [Queen] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-080_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-081",
@@ -2004,7 +2221,9 @@
     "effectTh": "[เมื่อโจมตี] สามารถนำการ์ด ที่ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ ซึ่งอยู่ในแทรชของเรา จำนวน 3 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 0, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-081.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-082",
@@ -2025,7 +2244,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ ด้ง!! ของเรา จำนวน 1 ใบ, และ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-082.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-083",
@@ -2046,7 +2267,9 @@
     "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] คาแรกเตอร์ของคู่แข่ง ทั้งหมด, จะมีคอสต์ -1.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-083.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-084",
@@ -2061,12 +2284,14 @@
     "power": 8000,
     "attribute": "Slash",
     "trait": "Animal Kingdom Pirates",
-    "effectEn": "This Character gains +4 cost.<br>[Activate: Main] You may rest this Character: Draw 1 card and trash 1 card from your hand. Then, K.O. up to 1 of your opponent's Characters with a cost of 3 or less.",
-    "effectJp": "このキャラのコスト+4。<br>【起動メイン】このキャラをレストにできる：カード1枚を引き、自分の手札1枚を捨てる。その後、相手のコスト3以下のキャラ1枚までを、KOする。",
-    "effectTh": "คาแรกเตอร์นี้ จะมีคอสต์ +4.<br>[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : จั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ. จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "This Character gains +4 cost.[Activate: Main] You may rest this Character: Draw 1 card and trash 1 card from your hand. Then, K.O. up to 1 of your opponent's Characters with a cost of 3 or less.",
+    "effectJp": "このキャラのコスト+4。【起動メイン】このキャラをレストにできる：カード1枚を引き、自分の手札1枚を捨てる。その後、相手のコスト3以下のキャラ1枚までを、KOする。",
+    "effectTh": "คาแรกเตอร์นี้ จะมีคอสต์ +4.[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : จั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ. จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-084.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-084",
@@ -2081,13 +2306,15 @@
     "power": 8000,
     "attribute": "Slash",
     "trait": "Animal Kingdom Pirates",
-    "effectEn": "This Character gains +4 cost.<br>[Activate: Main] You may rest this Character: Draw 1 card and trash 1 card from your hand. Then, K.O. up to 1 of your opponent's Characters with a cost of 3 or less.",
-    "effectJp": "このキャラのコスト+4。<br>【起動メイン】このキャラをレストにできる：カード1枚を引き、自分の手札1枚を捨てる。その後、相手のコスト3以下のキャラ1枚までを、KOする。",
-    "effectTh": "คาแรกเตอร์นี้ จะมีคอสต์ +4.<br>[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : จั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ. จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "This Character gains +4 cost.[Activate: Main] You may rest this Character: Draw 1 card and trash 1 card from your hand. Then, K.O. up to 1 of your opponent's Characters with a cost of 3 or less.",
+    "effectJp": "このキャラのコスト+4。【起動メイン】このキャラをレストにできる：カード1枚を引き、自分の手札1枚を捨てる。その後、相手のコスト3以下のキャラ1枚までを、KOする。",
+    "effectTh": "คาแรกเตอร์นี้ จะมีคอสต์ +4.[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : จั่วการ์ด จำนวน 1 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ. จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-084_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-085",
@@ -2107,7 +2334,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ถ้าเรามี คาแรกเตอร์ ที่มีคอสต์ 8 หรือสูงกว่า อยู่ด้วยละก็, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-085.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-086",
@@ -2128,7 +2357,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าคู่แข่งมี คาแรกเตอร์ ที่มีคอสต์ 0 อยู่ด้วยละก็, จะได้จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-086.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-087",
@@ -2144,12 +2375,14 @@
     "counter": 1000,
     "attribute": "Ranged",
     "trait": "Animal Kingdom Pirates/On-Air Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[Activate: Main] [Once Per Turn] Give up to 1 of your opponent's Characters −1 cost during this turn.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【起動メイン】【ターン1回】相手のキャラ1枚までを、このターン中、コスト-1。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -1.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[Activate: Main] [Once Per Turn] Give up to 1 of your opponent's Characters −1 cost during this turn.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【起動メイン】【ターン1回】相手のキャラ1枚までを、このターン中、コスト-1。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -1.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-087.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-088",
@@ -2170,7 +2403,9 @@
     "effectTh": "[เมื่อลงสนาม] คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ +1, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-088.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-089",
@@ -2191,7 +2426,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-089.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-090",
@@ -2209,10 +2446,12 @@
     "trait": "Animal Kingdom Pirates/SMILE",
     "effectEn": "[On Play] Play up to 1 {SMILE} type Character card with a cost of 2 or less from your trash.",
     "effectJp": "【登場時】自分のトラッシュからコスト2以下の特徴《SMILE》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 2 หรือต่ำกว่า และมีคุณสมบัติ &lt; SMILE &gt; จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 2 หรือต่ำกว่า และมีคุณสมบัติ < SMILE > จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-090.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-091",
@@ -2231,11 +2470,11 @@
     "effectEn": "[On Play] You may trash 1 card from your hand: K.O. up to 1 of your opponent's Characters with a cost of 3 or less.",
     "effectJp": "【登場時】自分の手札1枚を捨てることができる：相手のコスト3以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with a cost of 3 or less.",
-    "triggerJp": "【トリガー】相手のコスト3以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-091.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-092",
@@ -2256,7 +2495,9 @@
     "effectTh": "[เมื่อลงสนาม] นำ [Ulti] ที่มีคอสต์ 4 หรือต่ำกว่า จากในแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-092.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-093",
@@ -2276,7 +2517,9 @@
     "effectTh": "[ด้ง!! x 1] คาแรกเตอร์นี้ จะมีคอสต์ +2.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-093.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-094",
@@ -2292,11 +2535,11 @@
     "effectEn": "[Main]/[Counter] You may place 3 cards from your trash at the bottom of your deck in any order: K.O. up to 1 of your opponent's Characters with a cost of 2 or less.",
     "effectJp": "【メイン】/【カウンター】自分のトラッシュからカード3枚を好きな順番でデッキの下に置くことができる：相手のコスト2以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] / [เคาน์เตอร์] สามารถนำการ์ดที่อยู่ในแทรชของเรา จำนวน 3 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-094.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-095",
@@ -2312,11 +2555,11 @@
     "effectEn": "[Main] If you have 10 or more cards in your trash, up to 1 of your Characters gains +2000 power until the end of your opponent's next turn.",
     "effectJp": "【メイン】自分のトラッシュが10枚以上ある場合、自分のキャラ1枚までを、次の相手のターン終了時まで、パワー+2000。",
     "effectTh": "[เมน] ถ้าเรามีการ์ดอยู่ในแทรช จำนวน 10 ใบ หรือมากกว่า, ทำให้ คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
-    "triggerEn": "[Trigger] Up to 1 of your Leader or Character cards gains +2000 power during this turn.",
-    "triggerJp": "【トリガー】自分のリーダーかキャラ1枚までを、このターン中、パワー+2000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-095.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-096",
@@ -2332,11 +2575,11 @@
     "effectEn": "[Counter] Trash 1 card from the top of your deck. If the trashed card has a cost of 6 or more, up to 1 of your Leader or Character cards gains +5000 power during this battle.",
     "effectJp": "【カウンター】自分のデッキの上から1枚をトラッシュに置く。置いたカードがコスト6以上の場合、自分のリーダーかキャラ1枚までを、このバトル中、パワー+5000。",
     "effectTh": "[เคาน์เตอร์] นำการ์ดจากใบบนสุดของเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช. ถ้าการ์ดที่ถูกนำไปวางที่แทรช มีคอสต์ 6 หรือสูงกว่าละก็, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +5000.",
-    "triggerEn": "[Trigger] Play up to 1 black Character card with a cost of 3 or less from your trash.",
-    "triggerJp": "【トリガー】自分のトラッシュからコスト3以下の黒のキャラカード1枚までを、登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-096.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-097",
@@ -2351,12 +2594,12 @@
     "trait": "Animal Kingdom Pirates",
     "effectEn": "[Main] If your Leader has the {Animal Kingdom Pirates} type, give up to 1 of your opponent's Characters −2 cost during this turn. Then, K.O. up to 1 of your opponent's Characters with a cost of 0.",
     "effectJp": "【メイン】自分のリーダーが特徴《百獣海賊団》を持つ場合、相手のキャラ1枚までを、このターン中、コスト-2。その後、相手のコスト0のキャラ1枚までを、KOする。",
-    "effectTh": "[เมน] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดร้อยอสูร &gt;, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2. จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 0, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with a cost of 3 or less.",
-    "triggerJp": "【トリガー】相手のコスト3以下のキャラ1枚までを、KOする。",
+    "effectTh": "[เมน] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดร้อยอสูร >, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2. จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 0, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-097.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-098",
@@ -2368,15 +2611,17 @@
     "nameTh": "Kalgara",
     "color": "Yellow",
     "power": 5000,
-    "life": 2,
+    "life": 5,
     "attribute": "Slash",
     "trait": "Jaya/Sky Island/Shandian Warrior",
     "effectEn": "[DON!! x1] [When Attacking] Play up to 1 {Shandian Warrior} type Character card from your hand with a cost equal to or less than the number of DON!! cards on your field. If you do, add 1 card from the top of your Life cards to your hand.",
     "effectJp": "【ドン‼×1】【アタック時】自分の手札から自分の場のドン‼の枚数以下のコストを持ち、特徴《シャンドラの戦士》を持つキャラカード1枚までを、登場させる。登場させた場合、自分のライフの上から1枚を手札に加える。",
-    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] นำ คาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; นักรบแห่งแชนโดรา &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม, ซึ่งจะต้องมีค่าคอสต์ไม่สูงไปกว่า จำนวน ด้ง!! ที่อยู่บนสนามของเรา. ถ้านำลงสนามละก็, จะต้องนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ.",
+    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] นำ คาแรกเตอร์การ์ด ที่มีคุณสมบัติ < นักรบแห่งแชนโดรา > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม, ซึ่งจะต้องมีค่าคอสต์ไม่สูงไปกว่า จำนวน ด้ง!! ที่อยู่บนสนามของเรา. ถ้านำลงสนามละก็, จะต้องนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-098.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-098",
@@ -2388,16 +2633,18 @@
     "nameTh": "Kalgara (Parallel)",
     "color": "Yellow",
     "power": 5000,
-    "life": 2,
+    "life": 5,
     "attribute": "Slash",
     "trait": "Jaya/Sky Island/Shandian Warrior",
     "effectEn": "[DON!! x1] [When Attacking] Play up to 1 {Shandian Warrior} type Character card from your hand with a cost equal to or less than the number of DON!! cards on your field. If you do, add 1 card from the top of your Life cards to your hand.",
     "effectJp": "【ドン‼×1】【アタック時】自分の手札から自分の場のドン‼の枚数以下のコストを持ち、特徴《シャンドラの戦士》を持つキャラカード1枚までを、登場させる。登場させた場合、自分のライフの上から1枚を手札に加える。",
-    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] นำ คาแรกเตอร์การ์ด ที่มีคุณสมบัติ &lt; นักรบแห่งแชนโดรา &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม, ซึ่งจะต้องมีค่าคอสต์ไม่สูงไปกว่า จำนวน ด้ง!! ที่อยู่บนสนามของเรา. ถ้านำลงสนามละก็, จะต้องนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ.",
+    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] นำ คาแรกเตอร์การ์ด ที่มีคุณสมบัติ < นักรบแห่งแชนโดรา > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม, ซึ่งจะต้องมีค่าคอสต์ไม่สูงไปกว่า จำนวน ด้ง!! ที่อยู่บนสนามของเรา. ถ้านำลงสนามละก็, จะต้องนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-098_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-099",
@@ -2418,7 +2665,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-099.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-100",
@@ -2439,7 +2688,9 @@
     "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 7 ใบ, แล้วนำ [Upper Yard] จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-100.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-101",
@@ -2457,10 +2708,12 @@
     "trait": "Big Mom Pirates",
     "effectEn": "[Activate: Main] [Once Per Turn] You may trash 1 card from the top of your Life cards: If your Leader has the {Big Mom Pirates} type, add 1 card from the top of your deck to the top of your Life cards at the end of this turn.",
     "effectJp": "【起動メイン】【ターン1回】自分のライフの上から1枚をトラッシュに置くことができる：自分のリーダーが特徴《ビッグ・マム海賊団》を持つ場合、このターン終了時、自分のデッキの上から1枚を、ライフの上に加える。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ ไปวางที่แทรช : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดบิ๊กมัม &gt;, ในตอนจบเทิร์นนี้, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ ไปวางที่แทรช : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดบิ๊กมัม >, ในตอนจบเทิร์นนี้, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-101.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-102",
@@ -2481,7 +2734,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ที่มีคอสต์ไม่สูงไปกว่า จำนวนไลฟ์ของเรา.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-102.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-103",
@@ -2502,7 +2757,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือ : คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-103.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-104",
@@ -2521,11 +2778,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card. Then, draw 1 card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。その後、カード1枚を引く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-104.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-105",
@@ -2544,11 +2801,11 @@
     "effectEn": "[DON!! x1] [Your Turn] [Once Per Turn] When a card is removed from your opponent's Life cards, draw 2 cards and trash 1 card from your hand.",
     "effectJp": "【ドン‼×1】【自分のターン中】【ターン1回】相手のライフが離れた時、カード2枚を引き、自分の手札1枚を捨てる。",
     "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมีการ์ดถูกนำออกจาก ไลฟ์ ของคู่แข่ง, จะต้องจั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
-    "triggerEn": "[Trigger] Draw 2 cards and trash 1 card from your hand.",
-    "triggerJp": "【トリガー】カード2枚を引き、自分の手札1枚を捨てる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-105.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-105",
@@ -2567,12 +2824,12 @@
     "effectEn": "[DON!! x1] [Your Turn] [Once Per Turn] When a card is removed from your opponent's Life cards, draw 2 cards and trash 1 card from your hand.",
     "effectJp": "【ドン‼×1】【自分のターン中】【ターン1回】相手のライフが離れた時、カード2枚を引き、自分の手札1枚を捨てる。",
     "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมีการ์ดถูกนำออกจาก ไลฟ์ ของคู่แข่ง, จะต้องจั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
-    "triggerEn": "[Trigger] Draw 2 cards and trash 1 card from your hand.",
-    "triggerJp": "【トリガー】カード2枚を引き、自分の手札1枚を捨てる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-105_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-106",
@@ -2591,11 +2848,11 @@
     "effectEn": "[On Play] You may trash 1 card with a [Trigger] from your hand: K.O. up to 1 of your opponent's Characters with a cost of 5 or less. Then, if you have 3 or less cards in your hand, draw 1 card.",
     "effectJp": "【登場時】自分の手札から【トリガー】を持つカード1枚を捨てることができる：相手のコスト5以下のキャラ1枚までを、KOする。その後、自分の手札が3枚以下の場合、カード1枚を引く。",
     "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ด ที่มี [ทริกเกอร์] จากบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, ถ้าเรามีการ์ดบนมือ จำนวน 3 ใบ หรือน้อยกว่า, จะได้จั่วการ์ด จำนวน 1 ใบ.",
-    "triggerEn": "[Trigger] Activate this card's [On Play] effect.",
-    "triggerJp": "【トリガー】このカードの【登場時】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-106.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-106",
@@ -2614,12 +2871,12 @@
     "effectEn": "[On Play] You may trash 1 card with a [Trigger] from your hand: K.O. up to 1 of your opponent's Characters with a cost of 5 or less. Then, if you have 3 or less cards in your hand, draw 1 card.",
     "effectJp": "【登場時】自分の手札から【トリガー】を持つカード1枚を捨てることができる：相手のコスト5以下のキャラ1枚までを、KOする。その後、自分の手札が3枚以下の場合、カード1枚を引く。",
     "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ด ที่มี [ทริกเกอร์] จากบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, ถ้าเรามีการ์ดบนมือ จำนวน 3 ใบ หรือน้อยกว่า, จะได้จั่วการ์ด จำนวน 1 ใบ.",
-    "triggerEn": "[Trigger] Activate this card's [On Play] effect.",
-    "triggerJp": "【トリガー】このカードの【登場時】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-106_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-107",
@@ -2640,7 +2897,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, [Charlotte Pudding] ของฝ่ายเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-107.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-108",
@@ -2661,7 +2920,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-108.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-109",
@@ -2679,10 +2940,12 @@
     "trait": "Jaya/Botanist",
     "effectEn": "[On Play] If your Leader has the {Shandian Warrior} type and you have a [Kalgara] Character, add up to 1 card from the top of your deck to the top of your Life cards.",
     "effectJp": "【登場時】自分のリーダーが特徴《シャンドラの戦士》を持ち、自分のキャラの「カルガラ」がいる場合、自分のデッキの上から1枚までを、ライフの上に加える。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; นักรบแห่งแชนโดรา &gt;, และเรามีคาแรกเตอร์ [Kalgara] อยู่ด้วยละก็, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < นักรบแห่งแชนโดรา >, และเรามีคาแรกเตอร์ [Kalgara] อยู่ด้วยละก็, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-109.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-110",
@@ -2703,7 +2966,9 @@
     "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำ [Upper Yard] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค, และนำ [Upper Yard] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-110.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-110",
@@ -2725,7 +2990,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-110_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-111",
@@ -2744,11 +3011,11 @@
     "effectEn": "[DON!! x1] [When Attacking] Your opponent cannot activate [Blocker] during this battle.",
     "effectJp": "【ドン‼×1】【アタック時】相手は、このバトル中、【ブロッカー】を発動できない。",
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ในแบทเทิลนี้, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์].",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: If you have 2 or less Life cards, play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：自分のライフが2枚以下の場合、このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-111.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-112",
@@ -2767,11 +3034,11 @@
     "effectEn": "[On Play] Up to 1 of your opponent's Characters with a cost of 6 or less other than [Monkey.D.Luffy] cannot attack until the end of your opponent's next turn.",
     "effectJp": "【登場時】「モンキー・D・ルフィ」以外の相手のコスト6以下のキャラ1枚までは、次の相手のターン終了時まで、アタックできない。",
     "effectTh": "[เมื่อลงสนาม] ทำให้ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า นอกเหนือจาก [Monkey.D.Luffy] จำนวนไม่เกิน 1 ใบ, จะไม่สามารถโจมตี, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
-    "triggerEn": "[Trigger] Activate this card's [On Play] effect.",
-    "triggerJp": "【トリガー】このカードの【登場時】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-112.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-112",
@@ -2790,12 +3057,12 @@
     "effectEn": "[On Play] Up to 1 of your opponent's Characters with a cost of 6 or less other than [Monkey.D.Luffy] cannot attack until the end of your opponent's next turn.",
     "effectJp": "【登場時】「モンキー・D・ルフィ」以外の相手のコスト6以下のキャラ1枚までは、次の相手のターン終了時まで、アタックできない。",
     "effectTh": "[เมื่อลงสนาม] ทำให้ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า นอกเหนือจาก [Monkey.D.Luffy] จำนวนไม่เกิน 1 ใบ, จะไม่สามารถโจมตี, จนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป.",
-    "triggerEn": "[Trigger] Activate this card's [On Play] effect.",
-    "triggerJp": "【トリガー】このカードの【登場時】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-112_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-113",
@@ -2814,11 +3081,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: If you have 2 or less Life cards, play this card and K.O. up to 1 of your opponent's Characters with a cost of 3 or less.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：自分のライフが2枚以下の場合、このカードを登場させ、相手のコスト3以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-113.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-114",
@@ -2834,14 +3101,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Egghead/Seraphim",
-    "effectEn": "[DON!! x1] If you have less Life cards than your opponent, this Character cannot be K.O.'d in battle by &lt;Slash&gt; attribute cards and gains +2000 power.",
+    "effectEn": "[DON!! x1] If you have less Life cards than your opponent, this Character cannot be K.O.'d in battle by <Slash> attribute cards and gains +2000 power.",
     "effectJp": "【ドン‼×1】自分のライフの枚数が相手より少ない場合、このキャラは属性(斬)を持つカードとのバトルでKOされず、このキャラのパワー+2000。",
     "effectTh": "[ด้ง!! x 1] ถ้าเรามี ไลฟ์ น้อยกว่าคู่แข่งละก็, คาแรกเตอร์นี้ จะไม่ถูก KO จากการแบทเทิลกับ การ์ดที่มีคุณลักษณะ (ฟัน), และคาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: If you have 2 or less Life cards, play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：自分のライフが2枚以下の場合、このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-114.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-115",
@@ -2856,12 +3123,12 @@
     "trait": "Sky Island/Shandian Warrior",
     "effectEn": "[Counter] If your Leader has the {Shandian Warrior} type, up to 1 of your Leader or Character cards gains +3000 power during this battle. Then, play up to 1 [Upper Yard] from your hand.",
     "effectJp": "【カウンター】自分のリーダーが特徴《シャンドラの戦士》を持つ場合、自分のリーダーかキャラ1枚までを、このバトル中、パワー+3000。その後、自分の手札から「アッパーヤード」1枚までを、登場させる。",
-    "effectTh": "[เคาน์เตอร์] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; นักรบแห่งแชนโดรา &gt;, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000. จากนั้น, นำ [Upper Yard] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
-    "triggerEn": "[Trigger] Draw 2 cards and trash 1 card from your hand.",
-    "triggerJp": "【トリガー】カード2枚を引き、自分の手札1枚を捨てる。",
+    "effectTh": "[เคาน์เตอร์] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < นักรบแห่งแชนโดรา >, ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000. จากนั้น, นำ [Upper Yard] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-115.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-116",
@@ -2876,10 +3143,12 @@
     "trait": "Sky Island/Shandian Warrior",
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, you may add 1 card from the top or bottom of your Life cards to your hand. If you do, add up to 1 {Shandian Warrior} type card from your hand to the top of your Life cards face-up.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、自分のライフの上か下から1枚を手札に加えてもよい。そうした場合、自分の手札から特徴《シャンドラの戦士》を持つカード1枚までを、ライフの上に表向きで加える。",
-    "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. จากนั้น, จะสามารถนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือก็ได้. ถ้าหากว่าทำละก็, จะได้นำการ์ด ที่มีคุณสมบัติ &lt; นักรบแห่งแชนโดรา &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่ ข้างบนสุด ของไลฟ์ แบบหงายหน้า.",
+    "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000. จากนั้น, จะสามารถนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นสู่บนมือก็ได้. ถ้าหากว่าทำละก็, จะได้นำการ์ด ที่มีคุณสมบัติ < นักรบแห่งแชนโดรา > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่ ข้างบนสุด ของไลฟ์ แบบหงายหน้า.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-116.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-117",
@@ -2895,11 +3164,11 @@
     "effectEn": "[Main] You may trash 1 card from the top of your Life cards: K.O. up to 1 of your opponent's Characters with a cost of 7 or less.",
     "effectJp": "【メイン】自分のライフの上から1枚をトラッシュに置くことができる：相手のコスト7以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] สามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ ไปวางที่แทรช : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 7 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] You may add 1 card from the top of your Life cards to your hand: Add up to 1 card from your hand to the top of your Life cards.",
-    "triggerJp": "【トリガー】自分のライフの上から1枚を手札に加えることができる：自分の手札1枚までを、ライフの上に加える。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-117.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-118",
@@ -2919,7 +3188,9 @@
     "effectTh": "[เมื่อลงสนาม] เลือกคาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 2 ใบ, และจนกระทั่งถึงตอนจบเทิร์นของคู่แข่งในครั้งถัดไป, จะทำให้จำนวน 1 ใบ มีพาวเวอร์ -3000, และทำให้ที่เหลือ มีพาวเวอร์ -2000. จากนั้น, จะทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-118.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-118",
@@ -2940,7 +3211,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-118_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-118",
@@ -2961,40 +3234,44 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-118_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-119",
     "cardCode": "OP08-119",
     "rarity": "SEC",
     "cardType": "CHARACTER",
-    "nameEn": "Kaido &amp; Linlin",
+    "nameEn": "Kaido & Linlin",
     "nameJp": "カイドウ＆リンリン",
-    "nameTh": "Kaido &amp; Linlin",
+    "nameTh": "Kaido & Linlin",
     "color": "Purple",
     "cost": 10,
     "power": 12000,
-    "attribute": "Strike",
+    "attribute": "Strike/Special",
     "trait": "The Four Emperors/Animal Kingdom Pirates/Big Mom Pirates",
     "effectEn": "[When Attacking] DON!! −10: K.O. all Characters other than this Character. Then, add up to 1 card from the top of your deck to the top of your Life cards and trash up to 1 card from the top of your opponent's Life cards.",
     "effectJp": "【アタック時】ドン‼-10：このキャラ以外のキャラすべてを、KOする。その後、自分のデッキの上から1枚までを、ライフの上に加え、相手のライフの上から1枚までを、トラッシュに置く。",
     "effectTh": "[เมื่อโจมตี] ด้ง!! - 10 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ KO คาแรกเตอร์ใบอื่น นอกเหนือจากคาแรกเตอร์นี้, ทั้งหมด. จากนั้น, จะนำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่บนสุดของไลฟ์, และนำ ไลฟ์ ใบบนสุดของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-119.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   },
   {
     "code": "OP08-119",
     "cardCode": "OP08-119_p1",
     "rarity": "P-SEC",
     "cardType": "CHARACTER",
-    "nameEn": "Kaido &amp; Linlin (Parallel)",
+    "nameEn": "Kaido & Linlin (Parallel)",
     "nameJp": "カイドウ＆リンリン",
-    "nameTh": "Kaido &amp; Linlin (Parallel)",
+    "nameTh": "Kaido & Linlin (Parallel)",
     "color": "Purple",
     "cost": 10,
     "power": 12000,
-    "attribute": "Strike",
+    "attribute": "Strike/Special",
     "trait": "The Four Emperors/Animal Kingdom Pirates/Big Mom Pirates",
     "effectEn": "[When Attacking] DON!! −10: K.O. all Characters other than this Character. Then, add up to 1 card from the top of your deck to the top of your Life cards and trash up to 1 card from the top of your opponent's Life cards.",
     "effectJp": "【アタック時】ドン‼-10：このキャラ以外のキャラすべてを、KOする。その後、自分のデッキの上から1枚までを、ライフの上に加え、相手のライフの上から1枚までを、トラッシュに置く。",
@@ -3002,6 +3279,104 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP08-119_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
+  },
+  {
+    "code": "ST02-007",
+    "cardCode": "ST02-007_p3",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Jewelry Bonney (Parallel)",
+    "nameJp": "ジュエリー・ボニー",
+    "nameTh": "Jewelry Bonney (Parallel)",
+    "color": "Green",
+    "cost": 1,
+    "power": 1000,
+    "counter": 1000,
+    "attribute": "Special",
+    "trait": "Supernovas/Bonney Pirates",
+    "effectEn": "[Activate: Main] ➀ (You may rest the specified number of DON!! cards in your cost area.) You may rest this Character: Look at 5 cards from the top of your deck; reveal up to 1 {Supernovas} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "【起動メイン】①(コストエリアのドン‼を指定の数レストにできる)，このキャラをレストにできる：自分のデッキの上から5枚を見て、特徴《超新星》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "[ใช้งาน : เมน] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถ เรสต์ คาแรกเตอร์นี้ : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < ซูเปอร์โนวา> จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST02-007_p3.png",
+    "isParallel": true,
+    "parallelIndex": 3,
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
+  },
+  {
+    "code": "ST03-004",
+    "cardCode": "ST03-004_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Gecko Moria (Parallel)",
+    "nameJp": "ゲッコー・モリア",
+    "nameTh": "Gecko Moria (Parallel)",
+    "color": "Blue",
+    "cost": 4,
+    "power": 5000,
+    "counter": 1000,
+    "attribute": "Special",
+    "trait": "The Seven Warlords of the Sea/Thriller Bark Pirates",
+    "effectEn": "[On Play] Add up to 1 {The Seven Warlords of the Sea} or {Thriller Bark Pirates} type Character with a cost of 4 or less other than [Gecko Moria] from your trash to your hand.",
+    "effectJp": "【登場時】自分のトラッシュの「ゲッコー・モリア」以外のコスト4以下の特徴《王下七武海》か《スリラーバーク海賊団》を持つキャラカード1枚までを、手札に加える。",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ที่มีคุณสมบัติ < เจ็ดเทพโจรสลัด > หรือ < กลุ่มโจรสลัดธริลเลอร์บาร์ค > ที่อยู่ในแทรชของเรา, นอกเหนือจาก [Gecko Moria], จำนวน 1 ใบ, ขึ้นสู่บนมือ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-004_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
+  },
+  {
+    "code": "ST04-005",
+    "cardCode": "ST04-005_p3",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Queen (Parallel)",
+    "nameJp": "クイーン",
+    "nameTh": "Queen (Parallel)",
+    "color": "Purple",
+    "cost": 5,
+    "power": 6000,
+    "counter": 1000,
+    "attribute": "Strike",
+    "trait": "Animal Kingdom Pirates",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Draw 2 cards and trash 1 card from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：カード2枚を引き、自分の手札1枚を捨てる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : จั่วการ์ด 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST04-005_p3.png",
+    "isParallel": true,
+    "parallelIndex": 3,
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
+  },
+  {
+    "code": "ST06-006",
+    "cardCode": "ST06-006_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Tashigi (Parallel)",
+    "nameJp": "たしぎ",
+    "nameTh": "Tashigi (Parallel)",
+    "color": "Black",
+    "cost": 3,
+    "power": 4000,
+    "counter": 2000,
+    "attribute": "Slash",
+    "trait": "Navy",
+    "effectEn": "[Activate: Main] You may rest this Character: Give up to 1 of your opponent's Characters −2 cost during this turn.",
+    "effectJp": "【起動メイン】このキャラをレストにできる：相手のキャラ1枚までを、このターン中、コスト-2。",
+    "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST06-006_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Two Legends- [OP-08]"
+    ]
   }
 ]

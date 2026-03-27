@@ -9,7 +9,7 @@
     "nameTh": "Roronoa Zoro",
     "color": "Red",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Slash",
     "trait": "Supernovas/Straw Hat Crew",
     "effectEn": "[DON!! x1] [Your Turn] All of your Characters gain +1000 power.",
@@ -17,7 +17,9 @@
     "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] คาแรกเตอร์ของเราทั้งหมด, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-001",
@@ -29,6 +31,7 @@
     "nameTh": "Roronoa Zoro (Parallel)",
     "color": "Red",
     "power": 5000,
+    "life": 5,
     "attribute": "Slash",
     "trait": "Supernovas/Straw Hat Crew",
     "effectEn": "[DON!! x1] [Your Turn] All of your Characters gain +1000 power.",
@@ -36,7 +39,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-001_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-001",
@@ -45,16 +50,17 @@
     "cardType": "LEADER",
     "nameEn": "",
     "nameJp": "ロロノア・ゾロ",
-    "color": "Red",
+    "color": "赤",
     "power": 5000,
-    "life": 1,
-    "attribute": "Slash",
+    "life": 5,
     "trait": "超新星/麦わらの一味",
     "effectJp": "【ドン‼×1】【自分のターン中】自分のキャラすべてを、パワー+1000。",
-    "imageUrl": "https://www.onepiece-cardgame.com/images/cardlist/card/OP01-001_p2.png",
+    "imageUrl": "https://onepiece-cardgame.com/images/cardlist/card/OP01-001_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "ROMANCE DAWN【OP-01】"
+    ]
   },
   {
     "code": "OP01-002",
@@ -66,7 +72,7 @@
     "nameTh": "Trafalgar Law",
     "color": "Red/Green",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Supernovas/Heart Pirates",
     "effectEn": "[Activate: Main] [Once Per Turn] ➁ (You may rest the specified number of DON!! cards in your cost area.): If you have 5 Characters, return 1 of your Characters to your hand. Then, play up to 1 Character with a cost of 5 or less from your hand that is a different color than the returned Character.",
@@ -74,7 +80,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ถ้าเรามีคาแรกเตอร์อยู่ 5 ใบพอดี, นำคาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ กลับขึ้นมือของเจ้าของ, แล้วนำคาแรกเตอร์ ที่มีคอสต์ 5 หรือต่ำกว่า ที่มี “ธีมสี” แตกต่างจากคาแรกเตอร์ที่เพิ่งถูกนำกลับขึ้นมือ, จากบนมือของเรา จำนวนไม่เกิน 1 ใบ ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-002",
@@ -86,7 +94,7 @@
     "nameTh": "Trafalgar Law (Parallel)",
     "color": "Red/Green",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Supernovas/Heart Pirates",
     "effectEn": "[Activate: Main] [Once Per Turn] ➁ (You may rest the specified number of DON!! cards in your cost area.): If you have 5 Characters, return 1 of your Characters to your hand. Then, play up to 1 Character with a cost of 5 or less from your hand that is a different color than the returned Character.",
@@ -95,7 +103,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-002_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-003",
@@ -107,15 +117,17 @@
     "nameTh": "Monkey.D.Luffy",
     "color": "Red/Green",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Strike",
     "trait": "Supernovas/Straw Hat Crew",
     "effectEn": "[Activate: Main] [Once Per Turn] ➃ (You may rest the specified number of DON!! cards in your cost area.): Set up to 1 of your {Supernovas} or {Straw Hat Crew} type Character cards with a cost of 5 or less as active. It gains +1000 power during this turn.",
     "effectJp": "【起動メイン】【ターン1回】④(コストエリアのドン‼を指定の数レストにできる)：自分のコスト5以下の特徴《超新星》か《麦わらの一味》を持つキャラ1枚までを、アクティブにし、そのキャラを、このターン中、パワー+1000。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (4) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 5 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; หรือ &lt; กลุ่มหมวกฟาง &gt; จำนวนไม่เกิน 1 ใบ, และในเทิร์นนี้, คาแรกเตอร์นั้น, จะมีพาวเวอร์ +1000.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (4) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 5 หรือต่ำกว่า ที่มีคุณสมบัติ < ซูเปอร์โนวา > หรือ < กลุ่มหมวกฟาง > จำนวนไม่เกิน 1 ใบ, และในเทิร์นนี้, คาแรกเตอร์นั้น, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-003",
@@ -127,16 +139,18 @@
     "nameTh": "Monkey.D.Luffy (Parallel)",
     "color": "Red/Green",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Strike",
     "trait": "Supernovas/Straw Hat Crew",
     "effectEn": "[Activate: Main] [Once Per Turn] ➃ (You may rest the specified number of DON!! cards in your cost area.): Set up to 1 of your {Supernovas} or {Straw Hat Crew} type Character cards with a cost of 5 or less as active. It gains +1000 power during this turn.",
     "effectJp": "【起動メイン】【ターン1回】④(コストエリアのドン‼を指定の数レストにできる)：自分のコスト5以下の特徴《超新星》か《麦わらの一味》を持つキャラ1枚までを、アクティブにし、そのキャラを、このターン中、パワー+1000。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (4) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 5 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; ซูเปอร์โนวา &gt; หรือ &lt; กลุ่มหมวกฟาง &gt; จำนวนไม่เกิน 1 ใบ, และในเทิร์นนี้, คาแรกเตอร์นั้น, จะมีพาวเวอร์ +1000.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] (4) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 5 หรือต่ำกว่า ที่มีคุณสมบัติ < ซูเปอร์โนวา > หรือ < กลุ่มหมวกฟาง > จำนวนไม่เกิน 1 ใบ, และในเทิร์นนี้, คาแรกเตอร์นั้น, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-003_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-004",
@@ -157,7 +171,9 @@
     "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อคู่แข่งใช้งานอีเวนต์, เราจะได้จั่วการ์ด 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-005",
@@ -177,7 +193,9 @@
     "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์การ์ด “ธีมสีแดง” ที่มีคอสต์ 3 หรือต่ำกว่า ซึ่งอยู่ในแทรชของเรา และไม่ใช่ [Uta] จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-006",
@@ -197,7 +215,9 @@
     "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-007",
@@ -218,7 +238,9 @@
     "effectTh": "[เมื่อถูก KO] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 4000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-008",
@@ -234,11 +256,13 @@
     "attribute": "Slash",
     "trait": "Supernovas/Beautiful Pirates",
     "effectEn": "[On Play] You may add 1 card from your Life area to your hand: This Character gains [Rush] during this turn. (This card can attack on the turn in which it is played.)",
-    "effectJp": "【登場時】自分のライフ1枚を手札に加えることができる：このキャラは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เมื่อลงสนาม] สามารถนำไลฟ์ของเรา จำนวน 1 ใบ ขึ้นสู่บนมือ : ในเทิร์นนี้, คาแรกเตอร์นี้จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectJp": "【登場時】自分のライフ1枚を手札に加えることができる：このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำไลฟ์ของเรา จำนวน 1 ใบ ขึ้นสู่บนมือ : ในเทิร์นนี้, คาแรกเตอร์นี้จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "Rule Revisions and Card Errata"
+    ]
   },
   {
     "code": "OP01-008",
@@ -254,12 +278,14 @@
     "attribute": "Slash",
     "trait": "Supernovas/Beautiful Pirates",
     "effectEn": "[On Play] You may add 1 card from your Life area to your hand: This Character gains [Rush] during this turn. (This card can attack on the turn in which it is played.)",
-    "effectJp": "【登場時】自分のライフ1枚を手札に加えることができる：このキャラは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เมื่อลงสนาม] สามารถนำไลฟ์ของเรา จำนวน 1 ใบ ขึ้นสู่บนมือ : ในเทิร์นนี้, คาแรกเตอร์นี้จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectJp": "【登場時】自分のライフ1枚を手札に加えることができる：このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำไลฟ์ของเรา จำนวน 1 ใบ ขึ้นสู่บนมือ : ในเทิร์นนี้, คาแรกเตอร์นี้จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-008_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "Rule Revisions and Card Errata"
+    ]
   },
   {
     "code": "OP01-009",
@@ -278,11 +304,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-010",
@@ -303,7 +329,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-011",
@@ -324,7 +352,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ดบนมือของเรา จำนวน 1 ใบ ไปวางที่ข้างใต้เด็ค : จั่วการ์ด 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-012",
@@ -345,7 +375,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-013",
@@ -366,7 +398,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถนำไลฟ์ของเรา จำนวน 1 ใบ ขึ้นสู่บนมือ : ในเทิร์นนี้, คาแรกเตอร์นี้, จะมีพาวเวอร์ +2000, หลังจากนั้น, นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ มาใส่ให้กับคาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "Rule Revisions and Card Errata"
+    ]
   },
   {
     "code": "OP01-013",
@@ -387,7 +421,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-013_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "Rule Revisions and Card Errata"
+    ]
   },
   {
     "code": "OP01-013",
@@ -396,17 +432,18 @@
     "cardType": "CHARACTER",
     "nameEn": "",
     "nameJp": "サンジ",
-    "color": "Red",
+    "color": "赤",
     "cost": 2,
     "power": 3000,
     "counter": 2000,
-    "attribute": "Strike",
     "trait": "麦わらの一味",
     "effectJp": "【起動メイン】【ターン1回】自分のライフ1枚を手札に加えることができる：このキャラは、このターン中、パワー+2000。その後、このキャラにレストのドン‼2枚までを付与する。",
-    "imageUrl": "https://www.onepiece-cardgame.com/images/cardlist/card/OP01-013_p2.png",
+    "imageUrl": "https://onepiece-cardgame.com/images/cardlist/card/OP01-013_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "ROMANCE DAWN【OP-01】"
+    ]
   },
   {
     "code": "OP01-014",
@@ -421,12 +458,14 @@
     "power": 5000,
     "attribute": "Strike",
     "trait": "Fish-Man/Straw Hat Crew",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x1] [On Block] Play up to 1 red Character card with a cost of 2 or less from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ドン‼×1】【ブロック時】自分の手札からコスト2以下の赤のキャラカード1枚までを、登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ด้ง!! x 1] [เมื่อบล็อก] นำคาแรกเตอร์ “ธีมสีแดง” ที่มีคอสต์ 2 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.<br>",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[DON!! x1] [On Block] Play up to 1 red Character card with a cost of 2 or less from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ドン‼×1】【ブロック時】自分の手札からコスト2以下の赤のキャラカード1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ด้ง!! x 1] [เมื่อบล็อก] นำคาแรกเตอร์ “ธีมสีแดง” ที่มีคอสต์ 2 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-015",
@@ -444,10 +483,12 @@
     "trait": "Animal/Straw Hat Crew",
     "effectEn": "[DON!! x1] [When Attacking] You may trash 1 card from your hand: Add up to 1 {Straw Hat Crew} type Character card other than [Tony Tony.Chopper] with a cost of 4 or less from your trash to your hand.",
     "effectJp": "【ドン‼×1】【アタック時】自分の手札1枚を捨てることができる：自分のトラッシュの「トニートニー・チョッパー」以外のコスト4以下の特徴《麦わらの一味》を持つキャラカード1枚までを、手札に加える。",
-    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : นำคาแรกเตอร์การ์ดที่มีคอสต์ 4 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; ที่อยู่ในแทรชของเรา, นอกเหนือจาก [Tony Tony.Chopper] จำนวนไม่เกิน 1 ใบ, ขึ้นสู่บนมือ.",
+    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : นำคาแรกเตอร์การ์ดที่มีคอสต์ 4 หรือต่ำกว่า ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > ที่อยู่ในแทรชของเรา, นอกเหนือจาก [Tony Tony.Chopper] จำนวนไม่เกิน 1 ใบ, ขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-016",
@@ -465,10 +506,12 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Straw Hat Crew} type Character card other than [Nami] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「ナミ」以外の特徴《麦わらの一味》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; นอกเหนือจาก [Nami] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < กลุ่มหมวกฟาง > นอกเหนือจาก [Nami] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-016",
@@ -485,11 +528,13 @@
     "attribute": "Special",
     "trait": "Straw Hat Crew",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Straw Hat Crew} type Character card other than [Nami] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; นอกเหนือจาก [Nami] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < กลุ่มหมวกฟาง > นอกเหนือจาก [Nami] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-016_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-016",
@@ -498,17 +543,18 @@
     "cardType": "CHARACTER",
     "nameEn": "",
     "nameJp": "ナミ",
-    "color": "Red",
+    "color": "赤",
     "cost": 1,
     "power": 2000,
     "counter": 1000,
-    "attribute": "Special",
     "trait": "麦わらの一味",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「ナミ」以外の特徴《麦わらの一味》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "imageUrl": "https://www.onepiece-cardgame.com/images/cardlist/card/OP01-016_p2.png",
+    "imageUrl": "https://onepiece-cardgame.com/images/cardlist/card/OP01-016_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "ROMANCE DAWN【OP-01】"
+    ]
   },
   {
     "code": "OP01-017",
@@ -529,7 +575,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-018",
@@ -550,7 +598,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-018.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-019",
@@ -566,12 +616,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Supernovas/Barto Club",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x2] [Opponent's Turn] This Character gains +3000 power.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ドン‼×2】【相手のターン中】このキャラはパワー+3000。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ด้ง!! x 2] [เทิร์นคู่แข่ง] คาแรกเตอร์นี้, จะมีพาวเวอร์ + 3000.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[DON!! x2] [Opponent's Turn] This Character gains +3000 power.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ドン‼×2】【相手のターン中】このキャラはパワー+3000。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ด้ง!! x 2] [เทิร์นคู่แข่ง] คาแรกเตอร์นี้, จะมีพาวเวอร์ + 3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-019.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-020",
@@ -592,7 +644,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-020.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-021",
@@ -612,7 +666,9 @@
     "effectTh": "[ด้ง!! x 1] คาแรกเตอร์นี้, จะสามารถโจมตีใส่คาแรกเตอร์ของคู่แข่งที่กำลังแอ็คทีฟอยู่ได้ด้วย.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-021.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-022",
@@ -633,7 +689,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 2 ใบ, จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-022.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-023",
@@ -654,7 +712,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-023.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-024",
@@ -670,12 +730,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Supernovas/Straw Hat Crew",
-    "effectEn": "[DON!! x2] This Character cannot be K.O.'d in battle by &lt;Strike&gt; attribute Characters.<br>[Activate: Main] [Once Per Turn] Give this Character up to 2 rested DON!! cards.",
-    "effectJp": "【ドン‼×2】このキャラは、属性 (打)を持つキャラとのバトルではKOされない。<br>【起動メイン】【ターン1回】このキャラにレストのドン‼2枚までを付与する。",
-    "effectTh": "[ด้ง!! x 2] คาแรกเตอร์นี้, จะไม่ถูก KO จากการแบทเทิลกับคาแรกเตอร์ที่มีคุณลักษณะ (ตี).<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ มาใส่ให้กับคาแรกเตอร์นี้.",
+    "effectEn": "[DON!! x2] This Character cannot be K.O.'d in battle by <Strike> attribute Characters.[Activate: Main] [Once Per Turn] Give this Character up to 2 rested DON!! cards.",
+    "effectJp": "【ドン‼×2】このキャラは、属性 (打)を持つキャラとのバトルではKOされない。【起動メイン】【ターン1回】このキャラにレストのドン‼2枚までを付与する。",
+    "effectTh": "[ด้ง!! x 2] คาแรกเตอร์นี้, จะไม่ถูก KO จากการแบทเทิลกับคาแรกเตอร์ที่มีคุณลักษณะ (ตี).[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ มาใส่ให้กับคาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-024.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-024",
@@ -691,13 +753,15 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Supernovas/Straw Hat Crew",
-    "effectEn": "[DON!! x2] This Character cannot be K.O.'d in battle by &lt;Strike&gt;  attribute Characters.<br>[Activate: Main] [Once Per Turn] Give this Character up to 2 rested DON!! cards.",
-    "effectJp": "【ドン‼×2】このキャラは、属性 (打)を持つキャラとのバトルではKOされない。<br>【起動メイン】【ターン1回】このキャラにレストのドン‼2枚までを付与する。",
-    "effectTh": "[ด้ง!! x 2] คาแรกเตอร์นี้, จะไม่ถูก KO จากการแบทเทิลกับคาแรกเตอร์ที่มีคุณลักษณะ (ตี).<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ มาใส่ให้กับคาแรกเตอร์นี้.",
+    "effectEn": "[DON!! x2] This Character cannot be K.O.'d in battle by <Strike>  attribute Characters.[Activate: Main] [Once Per Turn] Give this Character up to 2 rested DON!! cards.",
+    "effectJp": "【ドン‼×2】このキャラは、属性 (打)を持つキャラとのバトルではKOされない。【起動メイン】【ターン1回】このキャラにレストのドン‼2枚までを付与する。",
+    "effectTh": "[ด้ง!! x 2] คาแรกเตอร์นี้, จะไม่ถูก KO จากการแบทเทิลกับคาแรกเตอร์ที่มีคุณลักษณะ (ตี).[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 2 ใบ มาใส่ให้กับคาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-024_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-025",
@@ -717,7 +781,9 @@
     "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-025.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-025",
@@ -738,7 +804,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-025_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-026",
@@ -754,11 +822,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, K.O. up to 1 of your opponent's Characters with 4000 power or less.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、相手のパワー4000以下のキャラ1枚までを、KOする。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +4000, จากนั้น, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 4000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Give your opponent's Leader or 1 of their Characters ?10000 power during this turn.",
-    "triggerJp": "【トリガー】相手のリーダーかキャラ1枚までを、このターン中、パワー-10000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-026.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-027",
@@ -776,7 +844,9 @@
     "effectTh": "[เมน] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -10000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-027.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-028",
@@ -792,11 +862,11 @@
     "effectEn": "[Counter] Give up to 1 of your opponent's Leader or Character cards −2000 power during this turn.",
     "effectJp": "【カウンター】相手のリーダーかキャラ1枚までを、このターン中、パワー-2000。",
     "effectTh": "[เคาน์เตอร์] ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
-    "triggerEn": "[Trigger] Activate this card's [Counter] effect.",
-    "triggerJp": "【トリガー】このカードの【カウンター】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-028.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-029",
@@ -812,11 +882,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +2000 power during this battle. Then, if you have 2 or less Life cards, that card gains an additional +2000 power.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+2000。その後、自分のライフが2枚以下の場合、そのカードを、このバトル中、パワー+2000。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000, จากนั้น, ถ้าเรามี ไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, ในแบทเทิลนี้, การ์ดใบนั้น, จะมีพาวเวอร์ +2000.",
-    "triggerEn": "[Trigger] Your Leader or 1 of your Characters gains +1000 power during this turn.",
-    "triggerJp": "【トリガー】自分のリーダーかキャラ1枚までを、このターン中、パワー+1000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-029.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-030",
@@ -831,12 +901,12 @@
     "trait": "Straw Hat Crew",
     "effectEn": "[Main] Look at 5 cards from the top of your deck; reveal up to 1 {Straw Hat Crew} type Character card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】自分のデッキの上から5枚を見て、特徴《麦わらの一味》を持つキャラカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "ความสามารถ :<br>[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด คาแรกเตอร์ ที่มีคุณสมบัติ &lt; กลุ่มหมวกฟาง &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค..",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
+    "effectTh": "ความสามารถ :[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด คาแรกเตอร์ ที่มีคุณสมบัติ < กลุ่มหมวกฟาง > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค..",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-030.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-031",
@@ -848,15 +918,17 @@
     "nameTh": "Kouzuki Oden",
     "color": "Green",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Slash",
     "trait": "Land of Wano/Kouzuki Clan",
     "effectEn": "[Activate: Main] [Once Per Turn] You can trash 1 {Land of Wano} type card from your hand: Set up to 2 of your DON!! cards as active.",
     "effectJp": "【起動メイン】【ターン1回】自分の手札から特徴《ワノ国》を持つカード1枚を捨てることができる：自分のドン‼2枚までをアクティブにする。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ด ที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt; จากบนมือของเรา จำนวน 1 ใบ : ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ด ที่มีคุณสมบัติ < วาโนะคุนิ > จากบนมือของเรา จำนวน 1 ใบ : ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-031.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-031",
@@ -868,16 +940,18 @@
     "nameTh": "Kouzuki Oden (Parallel)",
     "color": "Green",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Slash",
     "trait": "Land of Wano/Kouzuki Clan",
     "effectEn": "[Activate: Main] [Once Per Turn] You can trash 1 {Land of Wano} type card from your hand: Set up to 2 of your DON!! cards as active.",
     "effectJp": "【起動メイン】【ターン1回】自分の手札から特徴《ワノ国》を持つカード1枚を捨てることができる：自分のドン‼2枚までをアクティブにする。",
-    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ด ที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt; จากบนมือของเรา จำนวน 1 ใบ : ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ เปลี่ยนเป็น แอ็คทีฟ.",
+    "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ด ที่มีคุณสมบัติ < วาโนะคุนิ > จากบนมือของเรา จำนวน 1 ใบ : ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-031_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-032",
@@ -898,7 +972,9 @@
     "effectTh": "[ด้ง!! x 1] ถ้าคู่แข่งมีคาแรกเตอร์ ที่กำลังเรสต์อยู่ จำนวน 2 ใบ หรือมากกว่า, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-032.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-033",
@@ -919,7 +995,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-033.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-034",
@@ -940,7 +1018,9 @@
     "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 1 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-034.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-034",
@@ -962,7 +1042,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-034_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-035",
@@ -982,7 +1064,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-035.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-036",
@@ -1003,7 +1087,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-036.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-037",
@@ -1022,11 +1108,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-037.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-038",
@@ -1042,12 +1128,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Land of Wano/The Akazaya Nine",
-    "effectEn": "[DON!! x1] [When Attacking] K.O. up to 1 of your opponent's rested Characters with a cost of 2 or less.<br>[On K.O.] Your opponent chooses 1 card from your hand; trash that card.",
-    "effectJp": "【ドン‼×1】【アタック時】相手のレストのコスト2以下のキャラ1枚までを、KOする。<br>【KO時】自分の手札1枚を相手が選び、捨てる。",
-    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่ จำนวนไม่เกิน 1 ใบ.<br>[เมื่อถูก KO] คู่แข่งเลือกการ์ดบนมือของเรา (ไม่ได้ดูการ์ดในมือ) จำนวน 1 ใบ, แล้วทิ้ง.",
+    "effectEn": "[DON!! x1] [When Attacking] K.O. up to 1 of your opponent's rested Characters with a cost of 2 or less.[On K.O.] Your opponent chooses 1 card from your hand; trash that card.",
+    "effectJp": "【ドン‼×1】【アタック時】相手のレストのコスト2以下のキャラ1枚までを、KOする。【KO時】自分の手札1枚を相手が選び、捨てる。",
+    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่ จำนวนไม่เกิน 1 ใบ.[เมื่อถูก KO] คู่แข่งเลือกการ์ดบนมือของเรา (ไม่ได้ดูการ์ดในมือ) จำนวน 1 ใบ, แล้วทิ้ง.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-038.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-039",
@@ -1063,12 +1151,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Supernovas/Kid Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x1] [On Block] If you have 3 or more Characters, draw 1 card.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ドン‼×1】【ブロック時】自分のキャラが３枚以上いる場合、カード1枚を引く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ด้ง!! x 1] [เมื่อบล็อก] ถ้าเรามีคาแรกเตอร์ จำนวน 3 ใบ หรือมากกว่า, จั่วการ์ด 1 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[DON!! x1] [On Block] If you have 3 or more Characters, draw 1 card.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ドン‼×1】【ブロック時】自分のキャラが３枚以上いる場合、カード1枚を引く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ด้ง!! x 1] [เมื่อบล็อก] ถ้าเรามีคาแรกเตอร์ จำนวน 3 ใบ หรือมากกว่า, จั่วการ์ด 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-039.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-040",
@@ -1083,12 +1173,14 @@
     "power": 6000,
     "attribute": "Slash",
     "trait": "Land of Wano/The Akazaya Nine",
-    "effectEn": "[On Play] If your Leader is [Kouzuki Oden], play up to 1 {The Akazaya Nine} type Character card with a cost of 3 or less from your hand.<br>[DON!! x1] [When Attacking] [Once Per Turn] Set up to 1 of your {The Akazaya Nine} type Character cards with a cost of 3 or less as active.",
-    "effectJp": "【登場時】自分のリーダーが「光月おでん」の場合、自分の手札からコスト3以下の特徴《赤鞘九人男》を持つキャラカード1枚までを、登場させる。<br>【ドン‼×1】【アタック時】【ターン1回】自分のコスト3以下の特徴《赤鞘九人男》を持つキャラ1枚までを、アクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Kouzuki Oden], นำคาแรกเตอร์ ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; เก้าปลอกดาบแดง &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.<br>[ด้ง!! x 1] [เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; เก้าปลอกดาบแดง &gt; จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[On Play] If your Leader is [Kouzuki Oden], play up to 1 {The Akazaya Nine} type Character card with a cost of 3 or less from your hand.[DON!! x1] [When Attacking] [Once Per Turn] Set up to 1 of your {The Akazaya Nine} type Character cards with a cost of 3 or less as active.",
+    "effectJp": "【登場時】自分のリーダーが「光月おでん」の場合、自分の手札からコスト3以下の特徴《赤鞘九人男》を持つキャラカード1枚までを、登場させる。【ドン‼×1】【アタック時】【ターン1回】自分のコスト3以下の特徴《赤鞘九人男》を持つキャラ1枚までを、アクティブにする。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Kouzuki Oden], นำคาแรกเตอร์ ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ < เก้าปลอกดาบแดง > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.[ด้ง!! x 1] [เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ < เก้าปลอกดาบแดง > จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-040.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-040",
@@ -1103,13 +1195,15 @@
     "power": 6000,
     "attribute": "Slash",
     "trait": "Land of Wano/The Akazaya Nine",
-    "effectEn": "[On Play] If your Leader is [Kouzuki Oden], play up to 1 {The Akazaya Nine} type Character card with a cost of 3 or less from your hand.<br>[DON!! x1] [When Attacking] [Once Per Turn] Set up to 1 of your {The Akazaya Nine} type Character cards with a cost of 3 or less as active.",
-    "effectJp": "【登場時】自分のリーダーが「光月おでん」の場合、自分の手札からコスト3以下の特徴《赤鞘九人男》を持つキャラカード1枚までを、登場させる。<br>【ドン‼×1】【アタック時】【ターン1回】自分のコスト3以下の特徴《赤鞘九人男》を持つキャラ1枚までを、アクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Kouzuki Oden], นำคาแรกเตอร์ ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; เก้าปลอกดาบแดง &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.<br>[ด้ง!! x 1] [เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; เก้าปลอกดาบแดง &gt; จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[On Play] If your Leader is [Kouzuki Oden], play up to 1 {The Akazaya Nine} type Character card with a cost of 3 or less from your hand.[DON!! x1] [When Attacking] [Once Per Turn] Set up to 1 of your {The Akazaya Nine} type Character cards with a cost of 3 or less as active.",
+    "effectJp": "【登場時】自分のリーダーが「光月おでん」の場合、自分の手札からコスト3以下の特徴《赤鞘九人男》を持つキャラカード1枚までを、登場させる。【ドン‼×1】【アタック時】【ターン1回】自分のコスト3以下の特徴《赤鞘九人男》を持つキャラ1枚までを、アクティブにする。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Kouzuki Oden], นำคาแรกเตอร์ ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ < เก้าปลอกดาบแดง > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.[ด้ง!! x 1] [เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ < เก้าปลอกดาบแดง > จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-040_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-041",
@@ -1126,10 +1220,12 @@
     "trait": "Land of Wano/Kouzuki Clan",
     "effectEn": "[Activate: Main] ➀ (You may rest the specified number of DON!! cards in your cost area) You may rest this Character: Look at 5 cards from the top of your deck; reveal up to 1 {Land of Wano} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【起動メイン】①(コストエリアのドン‼を指定の数レストにできる)，このキャラをレストにできる：自分のデッキの上から5枚を見て、特徴《ワノ国》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[ใช้งาน : เมน] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) , สามารถ เรสต์ คาแรกเตอร์นี้ : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[ใช้งาน : เมน] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) , สามารถ เรสต์ คาแรกเตอร์นี้ : ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < วาโนะคุนิ > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-041.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-042",
@@ -1146,10 +1242,12 @@
     "trait": "Land of Wano/Kouzuki Clan",
     "effectEn": "[On Play] ③ (You may rest the specified number of DON!! cards in your cost area.): If your Leader is [Kouzuki Oden], set up to 1 of your {Land of Wano} type Character cards with a cost of 3 or less as active.",
     "effectJp": "【登場時】③(コストエリアのドン‼を指定の数レストにできる)：自分のリーダーが「光月おでん」の場合、自分のコスト3以下の特徴《ワノ国》を持つキャラ1枚までを、アクティブにする。",
-    "effectTh": "[เมื่อลงสนาม] (3) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเราคือ [Kouzuki Oden], ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt; จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[เมื่อลงสนาม] (3) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเราคือ [Kouzuki Oden], ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ < วาโนะคุนิ > จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-042.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-043",
@@ -1170,7 +1268,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-043.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-044",
@@ -1186,12 +1286,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Heart Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] If you don't have [Penguin], play up to 1 [Penguin] from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分の「ペンギン」がいない場合、自分の手札から「ペンギン」1枚までを、登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ถ้าเราไม่มี [Penguin] อยู่ด้วยละก็, ให้นำ [Penguin] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ ลงสนาม.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] If you don't have [Penguin], play up to 1 [Penguin] from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分の「ペンギン」がいない場合、自分の手札から「ペンギン」1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ถ้าเราไม่มี [Penguin] อยู่ด้วยละก็, ให้นำ [Penguin] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-044.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-045",
@@ -1212,7 +1314,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-045.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-046",
@@ -1232,7 +1336,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ถ้าลีดเดอร์ของเราคือ [Kouzuki Oden], ทำให้ ด้ง!! ของเรา จำนวนไม่เกิน 2 ใบ, เปลี่ยนเป็น แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-046.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-047",
@@ -1247,12 +1353,14 @@
     "power": 6000,
     "attribute": "Slash",
     "trait": "Supernovas/Heart Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] You may return 1 Character to your hand: Play up to 1 Character card with a cost of 3 or less from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のキャラ1枚を持ち主の手札に戻すことができる：自分の手札からコスト3以下のキャラカード1枚までを、登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] สามารถนำคาแรกเตอร์ของเรา จำนวน 1 ใบ กลับขึ้นมือเจ้าของ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] You may return 1 Character to your hand: Play up to 1 Character card with a cost of 3 or less from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のキャラ1枚を持ち主の手札に戻すことができる：自分の手札からコスト3以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] สามารถนำคาแรกเตอร์ของเรา จำนวน 1 ใบ กลับขึ้นมือเจ้าของ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-047.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-047",
@@ -1267,13 +1375,15 @@
     "power": 6000,
     "attribute": "Slash",
     "trait": "Supernovas/Heart Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] You may return 1 Character to your hand: Play up to 1 Character card with a cost of 3 or less from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のキャラ1枚を持ち主の手札に戻すことができる：自分の手札からコスト3以下のキャラカード1枚までを、登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] สามารถนำคาแรกเตอร์ของเรา จำนวน 1 ใบ กลับขึ้นมือเจ้าของ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] You may return 1 Character to your hand: Play up to 1 Character card with a cost of 3 or less from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のキャラ1枚を持ち主の手札に戻すことができる：自分の手札からコスト3以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] สามารถนำคาแรกเตอร์ของเรา จำนวน 1 ใบ กลับขึ้นมือเจ้าของ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-047_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-048",
@@ -1294,7 +1404,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-048.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-048",
@@ -1316,7 +1428,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-048_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-049",
@@ -1334,10 +1448,12 @@
     "trait": "Minks/Heart Pirates",
     "effectEn": "[DON!! x1] [When Attacking] Play up to 1 {Heart Pirates} type card other than [Bepo] with a cost of 4 or less from your hand.",
     "effectJp": "【ドン‼×1】【アタック時】自分の手札からコスト4以下の「ベポ」以外の特徴《ハートの海賊団》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดฮาร์ท &gt; นอกเหนือจาก [Bepo] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] นำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ที่มีคุณสมบัติ < กลุ่มโจรสลัดฮาร์ท > นอกเหนือจาก [Bepo] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-049.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-050",
@@ -1353,12 +1469,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Heart Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] If you don't have [Shachi], play up to 1 [Shachi] from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分の「シャチ」がいない場合、自分の手札から「シャチ」1枚までを、登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ถ้าเราไม่มี [Shachi] อยู่ด้วยละก็, ให้นำ [Shachi] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] If you don't have [Shachi], play up to 1 [Shachi] from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分の「シャチ」がいない場合、自分の手札から「シャチ」1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ถ้าเราไม่มี [Shachi] อยู่ด้วยละก็, ให้นำ [Shachi] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-050.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-051",
@@ -1373,12 +1491,14 @@
     "power": 8000,
     "attribute": "Special",
     "trait": "Supernovas/Kid Pirates",
-    "effectEn": "[DON!! x1] [Opponent's Turn] If this Character is rested, your opponent cannot attack any card other than the Character [Eustass\"Captain\"Kid].<br>[Activate: Main] [Once Per Turn] You may rest this Character: Play up to 1 Character card with a cost of 3 or less from your hand.",
-    "effectJp": "【ドン‼×1】【相手のターン中】このキャラがレストの場合、相手はキャラの「ユースタス・キッド」以外にアタックできない。<br>【起動メイン】【ターン1回】このキャラをレストにできる：自分の手札からコスト3以下のキャラカード1枚までを、登場させる。",
-    "effectTh": "[ด้ง!! x 1] [เทิร์นคู่แข่ง] ถ้าคาแรกเตอร์นี้กำลังเรสต์อยู่, นอกเหนือจากคาแรกเตอร์ [Eustass “Captain” Kid] แล้ว คู่แข่งจะโจมตีใส่การ์ดใบอื่นไม่ได้เลย.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ คาแรกเตอร์นี้ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[DON!! x1] [Opponent's Turn] If this Character is rested, your opponent cannot attack any card other than the Character [Eustass\"Captain\"Kid].[Activate: Main] [Once Per Turn] You may rest this Character: Play up to 1 Character card with a cost of 3 or less from your hand.",
+    "effectJp": "【ドン‼×1】【相手のターン中】このキャラがレストの場合、相手はキャラの「ユースタス・キッド」以外にアタックできない。【起動メイン】【ターン1回】このキャラをレストにできる：自分の手札からコスト3以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "[ด้ง!! x 1] [เทิร์นคู่แข่ง] ถ้าคาแรกเตอร์นี้กำลังเรสต์อยู่, นอกเหนือจากคาแรกเตอร์ [Eustass “Captain” Kid] แล้ว คู่แข่งจะโจมตีใส่การ์ดใบอื่นไม่ได้เลย.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ คาแรกเตอร์นี้ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-051.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-051",
@@ -1393,13 +1513,15 @@
     "power": 8000,
     "attribute": "Special",
     "trait": "Supernovas/Kid Pirates",
-    "effectEn": "[DON!! x1] [Opponent's Turn] If this Character is rested, your opponent cannot attack any card other than the Character [Eustass\"Captain\"Kid].<br>[Activate: Main] [Once Per Turn] You may rest this Character: Play up to 1 Character card with a cost of 3 or less from your hand.",
-    "effectJp": "【ドン‼×1】【相手のターン中】このキャラがレストの場合、相手はキャラの「ユースタス・キッド」以外にアタックできない。<br>【起動メイン】【ターン1回】このキャラをレストにできる：自分の手札からコスト3以下のキャラカード1枚までを、登場させる。",
-    "effectTh": "[ด้ง!! x 1] [เทิร์นคู่แข่ง] ถ้าคาแรกเตอร์นี้กำลังเรสต์อยู่, นอกเหนือจากคาแรกเตอร์ [Eustass “Captain” Kid] แล้ว คู่แข่งจะโจมตีใส่การ์ดใบอื่นไม่ได้เลย.<br>[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ คาแรกเตอร์นี้ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[DON!! x1] [Opponent's Turn] If this Character is rested, your opponent cannot attack any card other than the Character [Eustass\"Captain\"Kid].[Activate: Main] [Once Per Turn] You may rest this Character: Play up to 1 Character card with a cost of 3 or less from your hand.",
+    "effectJp": "【ドン‼×1】【相手のターン中】このキャラがレストの場合、相手はキャラの「ユースタス・キッド」以外にアタックできない。【起動メイン】【ターン1回】このキャラをレストにできる：自分の手札からコスト3以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "[ด้ง!! x 1] [เทิร์นคู่แข่ง] ถ้าคาแรกเตอร์นี้กำลังเรสต์อยู่, นอกเหนือจากคาแรกเตอร์ [Eustass “Captain” Kid] แล้ว คู่แข่งจะโจมตีใส่การ์ดใบอื่นไม่ได้เลย.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ คาแรกเตอร์นี้ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-051_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-052",
@@ -1420,7 +1542,9 @@
     "effectTh": "[เมื่อโจมตี] [เทิร์นละ 1 ครั้ง] ถ้าเรามีคาแรกเตอร์ ซึ่งกำลังเรสต์อยู่ จำนวน 2 ใบ หรือมากกว่า, จั่วการ์ด 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-052.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-053",
@@ -1441,7 +1565,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-053.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-054",
@@ -1462,7 +1588,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-054.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-055",
@@ -1480,7 +1608,9 @@
     "effectTh": "[เมน] ทำการ เรสต์ คาแรกเตอร์ของเรา จำนวน 2 ใบ : จั่วการ์ด 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-055.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-056",
@@ -1498,7 +1628,9 @@
     "effectTh": "[เมน] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-056.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-057",
@@ -1514,11 +1646,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +2000 power during this battle. Then, set up to 1 of your Characters as active.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+2000。その後、自分のキャラ1枚までを、アクティブにする。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ + 2000. จากนั้น, ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] K.O. 1 of your opponent's rested Characters with a cost of 4 or less.",
-    "triggerJp": "【トリガー】相手のレストのコスト4以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-057.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-058",
@@ -1534,11 +1666,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, rest up to 1 of your opponent's Characters with a cost of 4 or less.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、相手のコスト4以下のキャラ1枚までを、レストにする。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ + 4000. จากนั้น, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Rest 1 of your opponent's Characters.",
-    "triggerJp": "【トリガー】相手のキャラ1枚までを、レストにする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-058.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-059",
@@ -1553,10 +1685,12 @@
     "trait": "Land of Wano",
     "effectEn": "[Main] You may trash 1 {Land of Wano} type card from your hand: Set up to 1 of your {Land of Wano} type Character cards with a cost of 3 or less as active.",
     "effectJp": "【メイン】自分の手札から特徴《ワノ国》を持つカード1枚を捨てることができる：自分のコスト3以下の特徴《ワノ国》を持つキャラ1枚までを、アクティブにする。",
-    "effectTh": "[เมน] สามารถทิ้งการ์ดที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt; จากบนมือของเรา จำนวน 1 ใบ : ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; วาโนะคุนิ &gt; จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[เมน] สามารถทิ้งการ์ดที่มีคุณสมบัติ < วาโนะคุนิ > จากบนมือของเรา จำนวน 1 ใบ : ทำการ แอ็คทีฟ คาแรกเตอร์ของเรา ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ < วาโนะคุนิ > จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-059.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-060",
@@ -1568,15 +1702,17 @@
     "nameTh": "Donquixote Doflamingo",
     "color": "Blue",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
     "effectEn": "[DON!! x2] [When Attacking] ➀ (You may rest the specified number of DON!! cards in your cost area.): Reveal 1 card from the top of your deck. If that card is a {The Seven Warlords of the Sea} type Character card with a cost of 4 or less, you may play that card rested.",
     "effectJp": "【ドン‼×2】【アタック時】①(コストエリアのドン‼を指定の数レストにできる)：自分のデッキの一番上を公開し、そのカードがコスト4以下の特徴《王下七武海》を持つキャラカードの場合、レストで登場させてもよい。",
-    "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำการ์ดใบบนสุดของเด็คของเรามาแสดงให้ดู, ถ้าการ์ดใบนั้นเป็นคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; เจ็ดเทพโจรสลัด &gt;, จะเลือกนำลงสนามในสภาพเรสต์ได้ด้วย.",
+    "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำการ์ดใบบนสุดของเด็คของเรามาแสดงให้ดู, ถ้าการ์ดใบนั้นเป็นคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ที่มีคุณสมบัติ < เจ็ดเทพโจรสลัด >, จะเลือกนำลงสนามในสภาพเรสต์ได้ด้วย.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-060.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-060",
@@ -1588,16 +1724,18 @@
     "nameTh": "Donquixote Doflamingo (Parallel)",
     "color": "Blue",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
     "effectEn": "[DON!! x2] [When Attacking] ➀ (You may rest the specified number of DON!! cards in your cost area.): Reveal 1 card from the top of your deck. If that card is a {The Seven Warlords of the Sea} type Character card with a cost of 4 or less, you may play that card rested.",
     "effectJp": "【ドン‼×2】【アタック時】①(コストエリアのドン‼を指定の数レストにできる)：自分のデッキの一番上を公開し、そのカードがコスト4以下の特徴《王下七武海》を持つキャラカードの場合、レストで登場させてもよい。",
-    "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำการ์ดใบบนสุดของเด็คของเรามาแสดงให้ดู, ถ้าการ์ดใบนั้นเป็นคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; เจ็ดเทพโจรสลัด &gt;, จะเลือกนำลงสนามในสภาพเรสต์ได้ด้วย.",
+    "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำการ์ดใบบนสุดของเด็คของเรามาแสดงให้ดู, ถ้าการ์ดใบนั้นเป็นคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ที่มีคุณสมบัติ < เจ็ดเทพโจรสลัด >, จะเลือกนำลงสนามในสภาพเรสต์ได้ด้วย.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-060_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-061",
@@ -1609,7 +1747,7 @@
     "nameTh": "Kaido",
     "color": "Blue/Purple",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Strike",
     "trait": "The Four Emperors/Animal Kingdom Pirates",
     "effectEn": "[DON!! x1] [Your Turn] [Once Per Turn] When your opponent's Character is K.O.'d, add up to 1 DON!! card from your DON!! deck and set it as active.",
@@ -1617,7 +1755,9 @@
     "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] เมื่อมีคาแรกเตอร์ของคู่แข่งถูก KO, นำ ด้ง!! จากด้ง!! เด็ค ของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-061.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-061",
@@ -1629,7 +1769,7 @@
     "nameTh": "Kaido (Parallel)",
     "color": "Blue/Purple",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Strike",
     "trait": "The Four Emperors/Animal Kingdom Pirates",
     "effectEn": "[DON!! x1] [Your Turn] [Once Per Turn] When your opponent's Character is K.O.'d, add up to 1 DON!! card from your DON!! deck and set it as active.",
@@ -1638,7 +1778,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-061_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-062",
@@ -1650,7 +1792,7 @@
     "nameTh": "Crocodile",
     "color": "Blue/Purple",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Baroque Works",
     "effectEn": "[DON!! x1] When you activate an Event, you may draw 1 card if you have 4 or less cards in your hand and haven't drawn a card using this Leader's effect during this turn.",
@@ -1658,7 +1800,9 @@
     "effectTh": "[ด้ง!! x 1] ตอนที่เราใช้งานอีเวนต์, ถ้าเรามีการ์ดบนมือ จำนวน 4 ใบ หรือน้อยกว่า, และในเทิร์นนี้, ยังไม่เคยจั่วการ์ดจากความสามารถของลีดเดอร์นี้มาก่อน, จะสามารถจั่วการ์ด 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-062.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-062",
@@ -1670,7 +1814,7 @@
     "nameTh": "Crocodile (Parallel)",
     "color": "Blue/Purple",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Baroque Works",
     "effectEn": "[DON!! x1] When you activate an Event, you may draw 1 card if you have 4 or less cards in your hand and haven't drawn a card using this Leader's effect during this turn.",
@@ -1679,7 +1823,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-062_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-063",
@@ -1700,7 +1846,9 @@
     "effectTh": "[ด้ง!! x 1] [ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : เราจะได้เลือกการ์ดบนมือของคู่แข่ง (ไม่ได้ดูก่อน) จำนวน 1 ใบ, แล้วนำออกมาแสดงให้ดู. ถ้าการ์ดที่ถูกนำมาแสดงให้ดูเป็นอีเวนต์, จะนำ ไลฟ์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-063.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "Rule Revisions and Card Errata"
+    ]
   },
   {
     "code": "OP01-064",
@@ -1721,7 +1869,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-064.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-064",
@@ -1743,7 +1893,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-064_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-065",
@@ -1764,7 +1916,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-065.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-066",
@@ -1785,7 +1939,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-066.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-067",
@@ -1801,12 +1957,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Baroque Works",
-    "effectEn": "[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)<br>[DON!! x1] Give blue Events in your hand −1 cost.",
-    "effectJp": "【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)<br>【ドン‼×1】自分の手札の青のイベントを、コスト-1。",
-    "effectTh": "[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน) <br>[ด้ง!! x 1] อีเวนต์ “ธีมสีฟ้า” บนมือของเรา, จะมีคอสต์ -1.",
+    "effectEn": "[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)[DON!! x1] Give blue Events in your hand −1 cost.",
+    "effectJp": "【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)【ドン‼×1】自分の手札の青のイベントを、コスト-1。",
+    "effectTh": "[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน) [ด้ง!! x 1] อีเวนต์ “ธีมสีฟ้า” บนมือของเรา, จะมีคอสต์ -1.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-067.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-067",
@@ -1822,13 +1980,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Baroque Works",
-    "effectEn": "[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)<br>[DON!! x1] Give blue Events in your hand −1 cost.",
-    "effectJp": "【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)<br>【ドン‼×1】自分の手札の青のイベントを、コスト-1。",
-    "effectTh": "[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน) <br>[ด้ง!! x 1] อีเวนต์ “ธีมสีฟ้า” บนมือของเรา, จะมีคอสต์ -1.",
+    "effectEn": "[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)[DON!! x1] Give blue Events in your hand −1 cost.",
+    "effectJp": "【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)【ドン‼×1】自分の手札の青のイベントを、コスト-1。",
+    "effectTh": "[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน) [ด้ง!! x 1] อีเวนต์ “ธีมสีฟ้า” บนมือของเรา, จะมีคอสต์ -1.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-067_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-068",
@@ -1844,12 +2004,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Thriller Bark Pirates",
-    "effectEn": "[Your Turn] This Character gains [Double Attack] if you have 5 or more cards in your hand.<br>(This card deals 2 damage.)",
-    "effectJp": "【自分のターン中】自分の手札が5枚以上の場合、このキャラは、【ダブルアタック】を得る。<br>(このカードが与えるダメージは2になる)",
-    "effectTh": "[เทิร์นตัวเอง] ถ้าเรามีการ์ดบนมือ จำนวน 5 ใบ หรือมากกว่า, คาแรกเตอร์นี้จะได้รับ [ดับเบิ้ลแอทแทค].<br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
+    "effectEn": "[Your Turn] This Character gains [Double Attack] if you have 5 or more cards in your hand.(This card deals 2 damage.)",
+    "effectJp": "【自分のターン中】自分の手札が5枚以上の場合、このキャラは、【ダブルアタック】を得る。(このカードが与えるダメージは2になる)",
+    "effectTh": "[เทิร์นตัวเอง] ถ้าเรามีการ์ดบนมือ จำนวน 5 ใบ หรือมากกว่า, คาแรกเตอร์นี้จะได้รับ [ดับเบิ้ลแอทแทค].(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-068.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-069",
@@ -1870,7 +2032,9 @@
     "effectTh": "[เมื่อถูก KO] นำ [Smiley] จากเด็คของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม, แล้วชัฟเฟิลเด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-069.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-070",
@@ -1890,7 +2054,9 @@
     "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 7 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-070.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-070",
@@ -1911,7 +2077,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-070_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-071",
@@ -1926,14 +2094,14 @@
     "power": 2000,
     "attribute": "Strike",
     "trait": "Fish-Man/Straw Hat Crew",
-    "effectEn": "[On Play] Place up to 1 Character with a cost of 3 or less at the bottom of the owner's deck.<br>[Trigger] Play this card.",
+    "effectEn": "[On Play] Place up to 1 Character with a cost of 3 or less at the bottom of the owner's deck.[Trigger] Play this card.",
     "effectJp": "【登場時】コスト3以下のキャラ1枚までを、持ち主のデッキの下に置く。",
     "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-071.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-072",
@@ -1954,7 +2122,9 @@
     "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] คาแรกเตอร์นี้จะมีพาวเวอร์ +1000, ต่อการ์ดบนมือของเราจำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-072.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-073",
@@ -1970,12 +2140,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Look at 5 cards from the top of your deck and place them at the top or bottom of the deck in any order.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のデッキの上から5枚を見て、好きな順番に並び変え、デッキの上か下に置く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือข้างใต้เด็ค.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Look at 5 cards from the top of your deck and place them at the top or bottom of the deck in any order.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のデッキの上から5枚を見て、好きな順番に並び変え、デッキの上か下に置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-073.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-073",
@@ -1991,13 +2163,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Look at 5 cards from the top of your deck and place them at the top or bottom of the deck in any order.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分のデッキの上から5枚を見て、好きな順番に並び変え、デッキの上か下に置く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือข้างใต้เด็ค.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Look at 5 cards from the top of your deck and place them at the top or bottom of the deck in any order.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分のデッキの上から5枚を見て、好きな順番に並び変え、デッキの上か下に置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-073_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-074",
@@ -2013,12 +2187,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "The Seven Warlords of the Sea/Revolutionary Army",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] Play up to 1 [Pacifista] with a cost of 4 or less from your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【KO時】自分の手札からコスト4以下の「パシフィスタ」1枚までを、登場させる。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] นำ [Pacifista] ที่มีคอสต์ 4 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On K.O.] Play up to 1 [Pacifista] with a cost of 4 or less from your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【KO時】自分の手札からコスト4以下の「パシフィスタ」1枚までを、登場させる。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] นำ [Pacifista] ที่มีคอสต์ 4 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-074.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-075",
@@ -2033,12 +2209,14 @@
     "power": 5000,
     "attribute": "Special",
     "trait": "Biological Weapon/Navy",
-    "effectEn": "Under the rules of this game, you may have any number of this card in your deck.<br>[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
-    "effectJp": "ルール上、このカードはデッキに何枚でも入れる事ができる。<br>【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
-    "effectTh": "เราสามารถใส่การ์ดใบนี้ในเด็คจำนวนกี่ใบก็ได้ (แต่ต้องไม่เกินจำนวนสูงสุดของเด็ค).<br>[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectEn": "Under the rules of this game, you may have any number of this card in your deck.[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
+    "effectJp": "ルール上、このカードはデッキに何枚でも入れる事ができる。【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
+    "effectTh": "เราสามารถใส่การ์ดใบนี้ในเด็คจำนวนกี่ใบก็ได้ (แต่ต้องไม่เกินจำนวนสูงสุดของเด็ค).[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-075.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-076",
@@ -2059,7 +2237,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-076.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-077",
@@ -2080,7 +2260,9 @@
     "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-077.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-077",
@@ -2102,7 +2284,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-077_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-078",
@@ -2118,12 +2302,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Kuja Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x1] [When Attacking]/[On Block] Draw 1 card if you have 5 or less cards in your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ドン‼×1】【アタック時】/【ブロック時】自分の手札が5枚以下の場合、カード1枚を引く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ด้ง!! x 1] [เมื่อโจมตี] / [เมื่อบล็อก] ถ้าเรามีการ์ดบนมืออยู่ 5 ใบ หรือน้อยกว่า, จั่วการ์ด 1 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[DON!! x1] [When Attacking]/[On Block] Draw 1 card if you have 5 or less cards in your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ドン‼×1】【アタック時】/【ブロック時】自分の手札が5枚以下の場合、カード1枚を引く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ด้ง!! x 1] [เมื่อโจมตี] / [เมื่อบล็อก] ถ้าเรามีการ์ดบนมืออยู่ 5 ใบ หรือน้อยกว่า, จั่วการ์ด 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-078.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-078",
@@ -2139,13 +2325,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "The Seven Warlords of the Sea/Kuja Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x1] [When Attacking]/[On Block] Draw 1 card if you have 5 or less cards in your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ドン‼×1】【アタック時】/【ブロック時】自分の手札が5枚以下の場合、カード1枚を引く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ด้ง!! x 1] [เมื่อโจมตี] / [เมื่อบล็อก] ถ้าเรามีการ์ดบนมืออยู่ 5 ใบ หรือน้อยกว่า, จั่วการ์ด 1 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[DON!! x1] [When Attacking]/[On Block] Draw 1 card if you have 5 or less cards in your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ドン‼×1】【アタック時】/【ブロック時】自分の手札が5枚以下の場合、カード1枚を引く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ด้ง!! x 1] [เมื่อโจมตี] / [เมื่อบล็อก] ถ้าเรามีการ์ดบนมืออยู่ 5 ใบ หรือน้อยกว่า, จั่วการ์ด 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-078_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-079",
@@ -2161,12 +2349,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Baroque Works",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] If your Leader has the {Baroque Works} type, add up to 1 Event from your trash to your hand.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【KO時】自分のリーダーが特徴《B・W》を持つ場合、自分のトラッシュのイベント1枚までを、手札に加える。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; B•W &gt;, นำ อีเวนต์ ที่อยู่ในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On K.O.] If your Leader has the {Baroque Works} type, add up to 1 Event from your trash to your hand.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【KO時】自分のリーダーが特徴《B・W》を持つ場合、自分のトラッシュのイベント1枚までを、手札に加える。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < B•W >, นำ อีเวนต์ ที่อยู่ในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-079.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-080",
@@ -2187,7 +2377,9 @@
     "effectTh": "[เมื่อถูก KO] จั่วการ์ด 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-080.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-081",
@@ -2208,7 +2400,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-081.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-082",
@@ -2227,11 +2421,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-082.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-083",
@@ -2249,10 +2443,12 @@
     "trait": "Baroque Works",
     "effectEn": "[DON!! x1] [Your Turn] If your Leader has the {Baroque Works} type, this Character gains +1000 power for every 2 Events in your trash.",
     "effectJp": "【ドン‼×1】【自分のターン中】自分のリーダーが特徴《B・W》を持つ場合、自分のトラッシュにあるイベント2枚につき、このキャラはパワー+1000。",
-    "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; B•W &gt;, คาแรกเตอร์นี้จะมีพาวเวอร์ +1000, ต่ออีเวนต์ที่อยู่ในแทรชของเราจำนวน 2 ใบ.",
+    "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < B•W >, คาแรกเตอร์นี้จะมีพาวเวอร์ +1000, ต่ออีเวนต์ที่อยู่ในแทรชของเราจำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-083.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-084",
@@ -2270,10 +2466,12 @@
     "trait": "Baroque Works",
     "effectEn": "[DON!! x1] [When Attacking] Look at 5 cards from the top of your deck; reveal up to 1 {Baroque Works} type Event card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【ドン‼×1】【アタック時】自分のデッキの上から5枚を見て、特徴《B・W》を持つイベント1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำอีเวนต์ที่มีคุณสมบัติ &lt; B•W &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำอีเวนต์ที่มีคุณสมบัติ < B•W > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-084.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-085",
@@ -2291,10 +2489,12 @@
     "trait": "Baroque Works",
     "effectEn": "[On Play] If your Leader has the {Baroque Works} type, select up to 1 of your opponent's Characters with a cost of 4 or less. The selected Character cannot attack until the end of your opponent's next turn.",
     "effectJp": "【登場時】自分のリーダーが特徴《B・W》を持つ場合、相手のコスト4以下のキャラ1枚までを選ぶ。次の相手のターン終了時まで、選んだキャラはアタックできない。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; B•W &gt;, เลือกคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, จนถึงตอนจบเทิร์นของคู่แข่งในรอบถัดไป, คาแรกเตอร์ที่ถูกเลือก จะไม่สามารถโจมตี.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < B•W >, เลือกคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, จนถึงตอนจบเทิร์นของคู่แข่งในรอบถัดไป, คาแรกเตอร์ที่ถูกเลือก จะไม่สามารถโจมตี.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-085.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-086",
@@ -2310,11 +2510,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, return up to 1 active Character with a cost of 3 or less to the owner's hand.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、アクティブのコスト3以下のキャラ1枚までを、持ち主の手札に戻す。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ + 4000. จากนั้น, นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า ซึ่งกำลังแอ็คทีฟอยู่ จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
-    "triggerEn": "[Trigger] Return 1 card with a cost of 4 or less to the owner's hand.",
-    "triggerJp": "【トリガー】コスト4以下のキャラ1枚までを、持ち主の手札に戻す。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-086.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-087",
@@ -2329,12 +2529,12 @@
     "trait": "Baroque Works",
     "effectEn": "[Counter] Play up to 1 {Baroque Works} type card with a cost of 3 or less from your hand.",
     "effectJp": "【カウンター】自分の手札からコスト3以下の特徴《B・W》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "[เคาน์เตอร์] นำคาแรกเตอร์ ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; B•W &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
-    "triggerEn": "[Trigger] Activate this card's [Counter] effect.",
-    "triggerJp": "【トリガー】このカードの【カウンター】効果を発動する。",
+    "effectTh": "[เคาน์เตอร์] นำคาแรกเตอร์ ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ < B•W > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-087.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-088",
@@ -2350,11 +2550,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +2000 power during this battle. Then, look at 3 cards from the top of your deck and place them at the top or bottom of the deck in any order.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+2000。その後、自分のデッキの上から3枚を見て、好きな順番に並び変え、デッキの上か下に置く。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ + 2000. จากนั้น, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำมาเรียงในลำดับใดก็ได้, แล้วจึงค่อยนำการ์ดเหล่านั้น ไปวางที่ข้างบน หรือข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Draw 2 cards and trash 1 card from your hand.",
-    "triggerJp": "【トリガー】カード2枚を引き、自分の手札1枚を捨てる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-088.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-089",
@@ -2369,10 +2569,12 @@
     "trait": "The Seven Warlords of the Sea/Baroque Works",
     "effectEn": "[Counter] If your Leader has the {The Seven Warlords of the Sea} type, return up to 1 Character with a cost of 5 or less to the owner's hand.",
     "effectJp": "【カウンター】自分のリーダーが特徴《王下七武海》を持つ場合、コスト5以下のキャラ1枚までを、持ち主の手札に戻す。",
-    "effectTh": "[เคาน์เตอร์] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; เจ็ดเทพโจรสลัด &gt;, นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
+    "effectTh": "[เคาน์เตอร์] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < เจ็ดเทพโจรสลัด >, นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-089.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-090",
@@ -2387,10 +2589,12 @@
     "trait": "Baroque Works",
     "effectEn": "[Main] Look at 5 cards from the top of your deck; reveal up to 1 {Baroque Works} type card other than [Baroque Works] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】自分のデッキの上から5枚を見て、「バロックワークス」以外の特徴《B・W》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; B•W &gt; นอกเหนือจาก [Baroque Works] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < B•W > นอกเหนือจาก [Baroque Works] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-090.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-091",
@@ -2402,7 +2606,7 @@
     "nameTh": "King",
     "color": "Purple",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Special",
     "trait": "Animal Kingdom Pirates",
     "effectEn": "[Your Turn] If you have 10 DON!! cards on your field, give all of your opponent's Characters −1000 power.",
@@ -2410,7 +2614,9 @@
     "effectTh": "[เทิร์นตัวเอง] ถ้าในสนามของเรามี ด้ง!! อยู่ 10 ใบพอดี, คาแรกเตอร์ของคู่แข่งทั้งหมด, จะมีพาวเวอร์ -1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-091.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-091",
@@ -2422,7 +2628,7 @@
     "nameTh": "King (Parallel)",
     "color": "Purple",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Special",
     "trait": "Animal Kingdom Pirates",
     "effectEn": "[Your Turn] If you have 10 DON!! cards on your field, give all of your opponent's Characters −1000 power.",
@@ -2431,7 +2637,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-091_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-092",
@@ -2452,7 +2660,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-092.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-093",
@@ -2472,7 +2682,9 @@
     "effectTh": "[เมื่อลงสนาม] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-093.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-093",
@@ -2493,7 +2705,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-093_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-094",
@@ -2510,10 +2724,12 @@
     "trait": "The Four Emperors/Animal Kingdom Pirates",
     "effectEn": "[On Play] DON!! −6 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader has the {Animal Kingdom Pirates} type, K.O. all Characters other than this Character.",
     "effectJp": "【登場時】ドン‼-6(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：自分のリーダーが特徴《百獣海賊団》を持つ場合、このキャラ以外のキャラすべてを、KOする。",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 6 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดร้อยอสูร &gt;, ทำการ KO คาแรกเตอร์ใบอื่นทั้งหมด นอกเหนือจากคาแรกเตอร์นี้.",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 6 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดร้อยอสูร >, ทำการ KO คาแรกเตอร์ใบอื่นทั้งหมด นอกเหนือจากคาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-094.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-094",
@@ -2530,11 +2746,13 @@
     "trait": "The Four Emperors/Animal Kingdom Pirates",
     "effectEn": "[On Play] DON!! −6 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader has the {Animal Kingdom Pirates} type, K.O. all Characters other than this Character.",
     "effectJp": "【登場時】ドン‼-6(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：自分のリーダーが特徴《百獣海賊団》を持つ場合、このキャラ以外のキャラすべてを、KOする。",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 6 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดร้อยอสูร &gt;, ทำการ KO คาแรกเตอร์ใบอื่นทั้งหมด นอกเหนือจากคาแรกเตอร์นี้.",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 6 (สามารถนำ ด้ง!! ในสนามของเรากลับด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดร้อยอสูร >, ทำการ KO คาแรกเตอร์ใบอื่นทั้งหมด นอกเหนือจากคาแรกเตอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-094_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-095",
@@ -2555,7 +2773,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าในสนามของเรามี ด้ง!! อยู่ 8 ใบ หรือมากกว่า, จั่วการ์ด 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-095.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-096",
@@ -2575,7 +2795,9 @@
     "effectTh": "[เมื่อลงสนาม] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, พร้อมกับคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า อีกจำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-096.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-096",
@@ -2596,7 +2818,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-096_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-097",
@@ -2612,12 +2836,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Animal Kingdom Pirates",
-    "effectEn": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains [Rush] during this turn. Then, give up to 1 of your opponent's Characters −2000 power during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【登場時】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：このキャラは、このターン中、【速攻】を得る。その後、相手のキャラ1枚までを、このターン中、パワー-2000。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, คาแรกเตอร์นี้จะได้รับ [จู่โจมฉับพลัน]. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ –2000.<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains [Rush] during this turn. Then, give up to 1 of your opponent's Characters −2000 power during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：このキャラは、このターン中、【速攻】を得る。その後、相手のキャラ1枚までを、このターン中、パワー-2000。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, คาแรกเตอร์นี้จะได้รับ [จู่โจมฉับพลัน]. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ –2000.(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-097.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-097",
@@ -2633,13 +2859,15 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Animal Kingdom Pirates",
-    "effectEn": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains [Rush] during this turn. Then, give up to 1 of your opponent's Characters −2000 power during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【登場時】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：このキャラは、このターン中、【速攻】を得る。その後、相手のキャラ1枚までを、このターン中、パワー-2000。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, คาแรกเตอร์นี้จะได้รับ [จู่โจมฉับพลัน]. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ –2000.<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains [Rush] during this turn. Then, give up to 1 of your opponent's Characters −2000 power during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：このキャラは、このターン中、【速攻】を得る。その後、相手のキャラ1枚までを、このターン中、パワー-2000。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, คาแรกเตอร์นี้จะได้รับ [จู่โจมฉับพลัน]. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ –2000.(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-097_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-098",
@@ -2660,7 +2888,9 @@
     "effectTh": "[เมื่อลงสนาม] นำการ์ด [Artificial Devil Fruit Smile] จากเด็คของเรา จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, ทำการชัฟเฟิลเด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-098.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-099",
@@ -2678,10 +2908,12 @@
     "trait": "Land of Wano/Kurozumi Clan",
     "effectEn": "{Kurozumi Clan} type Characters other than your [Kurozumi Semimaru] cannot be K.O.'d in battle.",
     "effectJp": "自分の「黒炭せみ丸」以外の特徴《黒炭家》を持つキャラは、バトルでKOされない。",
-    "effectTh": "คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; ตระกูลคุโรซึมิ &gt; นอกจาก [Kurozumi Semimaru], จะไม่ถูก KO จากการแบทเทิล.",
+    "effectTh": "คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < ตระกูลคุโรซึมิ > นอกจาก [Kurozumi Semimaru], จะไม่ถูก KO จากการแบทเทิล.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-099.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-100",
@@ -2702,7 +2934,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-100.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-101",
@@ -2723,7 +2957,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-101.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-102",
@@ -2744,7 +2980,9 @@
     "effectTh": "[เมื่อโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : คู่แข่งจะต้องทิ้งการ์ดในมือของตัวเอง จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-102.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-102",
@@ -2766,7 +3004,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-102_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-103",
@@ -2787,7 +3027,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-103.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-104",
@@ -2806,11 +3048,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-104.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-105",
@@ -2831,7 +3073,9 @@
     "effectTh": "[เมื่อลงสนาม] เราจะได้เลือกการ์ดบนมือของคู่แข่ง (ไม่ได้ดูก่อน) จำนวน 2 ใบ, แล้วนำออกมาแสดงให้ดู.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-105.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-106",
@@ -2850,11 +3094,11 @@
     "effectEn": "[On Play] Add up to 1 DON!! card from your DON!! deck and rest it.",
     "effectJp": "【登場時】ドン‼デッキからドン‼1枚までをレストで追加する。",
     "effectTh": "[เมื่อลงสนาม] นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ มาวางเพิ่มแบบ เรสต์.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-106.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-107",
@@ -2875,7 +3119,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-107.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-108",
@@ -2896,7 +3142,9 @@
     "effectTh": "[เมื่อถูก KO] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-108.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-109",
@@ -2917,7 +3165,9 @@
     "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] ถ้าในสนามของเรามี ด้ง!! อยู่ 8 ใบ หรือมากกว่า, คาแรกเตอร์นี้จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-109.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-109",
@@ -2939,7 +3189,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-109_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-110",
@@ -2960,7 +3212,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-110.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-111",
@@ -2976,12 +3230,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Animal Kingdom Pirates",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Block] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains +1000 power during this turn.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【ブロック時】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：このターン中、このキャラはパワー+1000。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อบล็อก] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, คาแรกเตอร์นี้, จะมีพาวเวอร์ +1000.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Block] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains +1000 power during this turn.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【ブロック時】ドン‼-1(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：このターン中、このキャラはパワー+1000。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อบล็อก] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, คาแรกเตอร์นี้, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-111.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-112",
@@ -3002,7 +3258,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในเทิร์นนี้, คาแรกเตอร์นี้, จะสามารถโจมตีใส่คาแรกเตอร์ของคู่แข่ง ที่กำลังแอ็คทีฟอยู่ได้ด้วย.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-112.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-113",
@@ -3023,7 +3281,9 @@
     "effectTh": "[เมื่อถูก KO] นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-113.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-114",
@@ -3044,7 +3304,9 @@
     "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : คู่แข่งจะต้องทิ้งการ์ดในมือของตัวเอง จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-114.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-115",
@@ -3060,11 +3322,11 @@
     "effectEn": "[Main] K.O. up to 1 of your opponent's Characters with a cost of 2 or less, then add up to 1 DON!! card from your DON!! deck and set it as active.",
     "effectJp": "【メイン】相手のコスト2以下のキャラ1枚までを、KOし、ドン‼デッキからドン‼1枚までをアクティブで追加する。",
     "effectTh": "[เมน] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, และนำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ มาวางเพิ่มแบบ แอ็คทีฟ.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-115.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-116",
@@ -3079,12 +3341,12 @@
     "trait": "Animal Kingdom Pirates/SMILE",
     "effectEn": "[Main] Look at 5 cards from the top of your deck; play up to 1 {SMILE} type Character card with a cost of 3 or less. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【メイン】自分のデッキの上から5枚を見て、コスト3以下の特徴《SMILE》を持つキャラカード1枚までを、登場させる。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; SMILE &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
+    "effectTh": "[เมน] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า ที่มีคุณสมบัติ < SMILE > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-116.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-117",
@@ -3102,7 +3364,9 @@
     "effectTh": "[เมน] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-117.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-118",
@@ -3118,11 +3382,11 @@
     "effectEn": "[Counter] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Up to 1 of your Leader or Character cards gains +2000 power during this battle. Then, draw 1 card.",
     "effectJp": "【カウンター】ドン‼-2(自分の場のドン‼を指定の数ドン‼デッキに戻すことができる)：自分のリーダーかキャラ1枚までを、このバトル中、パワー+2000。その後、カード1枚を引く。",
     "effectTh": "[เคาน์เตอร์] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ + 2000. จากนั้น, จั่วการ์ด 1 ใบ.",
-    "triggerEn": "[Trigger] Add 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン‼デッキからドン‼1枚までをアクティブで追加する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-118.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-119",
@@ -3136,12 +3400,13 @@
     "cost": 2,
     "trait": "The Four Emperors/Animal Kingdom Pirates",
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, if you have 2 or less Life cards, add up to 1 DON!! card from your DON!! deck and rest it.",
-    "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、自分のライフが2枚以下の場合、ドン‼デッキからドン‼1枚までをレストで追加する。<br>【トリガー】ドン‼デッキからドン‼1枚までをアクティブで追加する。",
+    "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+4000。その後、自分のライフが2枚以下の場合、ドン‼デッキからドン‼1枚までをレストで追加する。【トリガー】ドン‼デッキからドン‼1枚までをアクティブで追加する。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ + 4000. จากนั้น, ถ้าเรามี ไลฟ์ จำนวน 2 ใบ หรือน้อยกว่า, นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ มาวางเพิ่มแบบ เรสต์.",
-    "triggerEn": "[Trigger] Add 1 DON!! card from your DON!! deck and set it as active.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-119.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-120",
@@ -3156,12 +3421,14 @@
     "power": 10000,
     "attribute": "Slash",
     "trait": "The Four Emperors/Red-Haired Pirates",
-    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)<br>[When Attacking] Your opponent cannot activate a [Blocker] Character that has 2000 or less power during this battle.",
-    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)<br>【アタック時】相手は、このバトル中、パワー2000以下のキャラの【ブロッカー】を発動できない。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] ในแบทเทิลนี้, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์] ของคาแรกเตอร์ ที่มีพาวเวอร์ 2000 หรือต่ำกว่า.",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[When Attacking] Your opponent cannot activate a [Blocker] Character that has 2000 or less power during this battle.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【アタック時】相手は、このバトル中、パワー2000以下のキャラの【ブロッカー】を発動できない。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] ในแบทเทิลนี้, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์] ของคาแรกเตอร์ ที่มีพาวเวอร์ 2000 หรือต่ำกว่า.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-120.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-120",
@@ -3176,13 +3443,15 @@
     "power": 10000,
     "attribute": "Slash",
     "trait": "The Four Emperors/Red-Haired Pirates",
-    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)<br>[When Attacking] Your opponent cannot activate a [Blocker] Character that has 2000 or less power during this battle.",
-    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)<br>【アタック時】相手は、このバトル中、パワー2000以下のキャラの【ブロッカー】を発動できない。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] ในแบทเทิลนี้, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์] ของคาแรกเตอร์ ที่มีพาวเวอร์ 2000 หรือต่ำกว่า.",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[When Attacking] Your opponent cannot activate a [Blocker] Character that has 2000 or less power during this battle.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【アタック時】相手は、このバトル中、パワー2000以下のキャラの【ブロッカー】を発動できない。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] ในแบทเทิลนี้, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์] ของคาแรกเตอร์ ที่มีพาวเวอร์ 2000 หรือต่ำกว่า.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-120_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-120",
@@ -3197,13 +3466,15 @@
     "power": 10000,
     "attribute": "Slash",
     "trait": "The Four Emperors/Red-Haired Pirates",
-    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)<br>[When Attacking] Your opponent cannot activate a [Blocker] Character that has 2000 or less power during this battle.",
-    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)<br>【アタック時】相手は、このバトル中、パワー2000以下のキャラの【ブロッカー】を発動できない。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)<br>[เมื่อโจมตี] ในแบทเทิลนี้, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์] ของคาแรกเตอร์ ที่มีพาวเวอร์ 2000 หรือต่ำกว่า.",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[When Attacking] Your opponent cannot activate a [Blocker] Character that has 2000 or less power during this battle.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【アタック時】相手は、このバトル中、パワー2000以下のキャラの【ブロッカー】を発動できない。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[เมื่อโจมตี] ในแบทเทิลนี้, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์] ของคาแรกเตอร์ ที่มีพาวเวอร์ 2000 หรือต่ำกว่า.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-120_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-121",
@@ -3219,12 +3490,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Land of Wano",
-    "effectEn": "Also treat this card's name as [Kouzuki Oden] according to the rules.<br>[Double Attack] (This card deals 2 damage.)<br>[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)",
-    "effectJp": "ルール上、このカードはカード名を「光月おでん」としても扱う。<br>【ダブルアタック】(このカードが与えるダメージは2になる)<br>【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)",
-    "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Kouzuki Oden] ด้วยตามกฏ.<br>[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)<br>[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
+    "effectEn": "Also treat this card's name as [Kouzuki Oden] according to the rules.[Double Attack] (This card deals 2 damage.)[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)",
+    "effectJp": "ルール上、このカードはカード名を「光月おでん」としても扱う。【ダブルアタック】(このカードが与えるダメージは2になる)【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)",
+    "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Kouzuki Oden] ด้วยตามกฏ.[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-121.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   },
   {
     "code": "OP01-121",
@@ -3240,12 +3513,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Land of Wano",
-    "effectEn": "Also treat this card's name as [Kouzuki Oden] according to the rules.<br>[Double Attack] (This card deals 2 damage.)<br>[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)",
-    "effectJp": "ルール上、このカードはカード名を「光月おでん」としても扱う。<br>【ダブルアタック】(このカードが与えるダメージは2になる)<br>【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)",
-    "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Kouzuki Oden] ด้วยตามกฏ.<br>[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)<br>[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
+    "effectEn": "Also treat this card's name as [Kouzuki Oden] according to the rules.[Double Attack] (This card deals 2 damage.)[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)",
+    "effectJp": "ルール上、このカードはカード名を「光月おでん」としても扱う。【ダブルアタック】(このカードが与えるダメージは2になる)【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)",
+    "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Kouzuki Oden] ด้วยตามกฏ.[ดับเบิ้ลแอทแทค] (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-121_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-ROMANCE DAWN- [OP-01]"
+    ]
   }
 ]

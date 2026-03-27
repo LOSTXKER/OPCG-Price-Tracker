@@ -1,5 +1,28 @@
 [
   {
+    "code": "OP01-051",
+    "cardCode": "OP01-051_p2",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Eustass\"Captain\"Kid (Parallel)",
+    "nameJp": "ユースタス・キッド",
+    "nameTh": "Eustass\"Captain\"Kid (Parallel)",
+    "color": "Green",
+    "cost": 8,
+    "power": 8000,
+    "attribute": "Special",
+    "trait": "Supernovas/Kid Pirates",
+    "effectEn": "[DON!! x1] [Opponent's Turn] If this Character is rested, your opponent cannot attack any card other than the Character [Eustass\"Captain\"Kid].[Activate: Main] [Once Per Turn] You may rest this Character: Play up to 1 Character card with a cost of 3 or less from your hand.",
+    "effectJp": "【ドン!!×1】【相手のターン中】このキャラがレストの場合、相手はキャラの「ユースタス・キッド」以外にアタックできない。【起動メイン】【ターン1回】このキャラをレストにできる：自分の手札からコスト3以下のキャラカード1枚までを、登場させる。",
+    "effectTh": "[ด้ง!! x 1] [เทิร์นคู่แข่ง] ถ้าคาแรกเตอร์นี้กำลังเรสต์อยู่, นอกเหนือจากคาแรกเตอร์ [Eustass “Captain” Kid] แล้ว คู่แข่งจะโจมตีใส่การ์ดใบอื่นไม่ได้เลย.[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] สามารถ เรสต์ คาแรกเตอร์นี้ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 3 หรือต่ำกว่า จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP01-051_p2.png",
+    "isParallel": true,
+    "parallelIndex": 2,
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
+  },
+  {
     "code": "OP03-001",
     "cardCode": "OP03-001",
     "rarity": "L",
@@ -9,7 +32,7 @@
     "nameTh": "Portgas.D.Ace",
     "color": "Red",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
     "effectEn": "When this Leader attacks or is attacked, you may trash any number of Event or Stage cards from your hand. This Leader gains +1000 power during this battle for every card trashed.",
@@ -17,7 +40,9 @@
     "effectTh": "เมื่อลีดเดอร์นี้ โจมตี หรือ ถูกโจมตี, จะสามารถทิ้ง อีเวนต์ หรือ สเตจการ์ด จากบนมือของเรา จำนวนกี่ใบก็ได้. ในแบทเทิลนี้, ลีดเดอร์นี้, จะมีพาวเวอร์ +1000 ต่อจำนวนการ์ด ที่ทิ้งไป 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-001.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-001",
@@ -29,7 +54,7 @@
     "nameTh": "Portgas.D.Ace (Parallel)",
     "color": "Red",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
     "effectEn": "When this Leader attacks or is attacked, you may trash any number of Event or Stage cards from your hand. This Leader gains +1000 power during this battle for every card trashed.",
@@ -38,7 +63,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-001_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-002",
@@ -59,7 +86,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ในแบทเทิลนี้, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์] ของคาแรกเตอร์ ที่มีพาวเวอร์ 2000 หรือต่ำกว่า.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-002.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-003",
@@ -80,7 +109,9 @@
     "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ นอกเหนือจาก [Izo] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-003.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-004",
@@ -96,12 +127,14 @@
     "counter": 1000,
     "attribute": "Ranged",
     "trait": "Whitebeard Pirates",
-    "effectEn": "This Character cannot attack a Leader on the turn in which it is played.<br>[DON!! x1] This Character gains [Rush].<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "このキャラは、登場したターン中、リーダーにアタックできない。<br>【ドン!!×1】このキャラは【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "คาแรกเตอร์นี้ จะยังไม่สามารถโจมตีใส่ ลีดเดอร์, ในเทิร์นที่เพิ่งลงสนาม.<br>[ด้ง!! x 1] คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "This Character cannot attack a Leader on the turn in which it is played.[DON!! x1] This Character gains [Rush].(This card can attack on the turn in which it is played.)",
+    "effectJp": "このキャラは、登場したターン中、リーダーにアタックできない。【ドン!!×1】このキャラは【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "คาแรกเตอร์นี้ จะยังไม่สามารถโจมตีใส่ ลีดเดอร์, ในเทิร์นที่เพิ่งลงสนาม.[ด้ง!! x 1] คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-004.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-005",
@@ -122,7 +155,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] ในเทิร์นนี้, คาแรกเตอร์นี้, จะมีพาวเวอร์ +2000. จากนั้น, เมื่อจบเทิร์นนี้, คาแรกเตอร์นี้จะถูกนำไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-005.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-006",
@@ -143,7 +178,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-006.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-007",
@@ -164,7 +201,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-007.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-008",
@@ -179,12 +218,14 @@
     "power": 3000,
     "attribute": "Slash",
     "trait": "Buggy Pirates",
-    "effectEn": "This Character cannot be K.O.'d in battle by &lt;Slash&gt; attribute cards.<br>[On Play] Look at 5 cards from the top of your deck; reveal up to 1 red Event and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
-    "effectJp": "このキャラは属性(斬)を持つカードとのバトルでKOされない。<br>【登場時】自分のデッキの上から5枚を見て、赤のイベント1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "คาแรกเตอร์นี้ จะไม่ถูก KO จากการแบทเทิลกับการ์ด ที่มีคุณลักษณะ (ฟัน).<br>[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำ อีเวนต์ ธีมสีแดง จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectEn": "This Character cannot be K.O.'d in battle by <Slash> attribute cards.[On Play] Look at 5 cards from the top of your deck; reveal up to 1 red Event and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
+    "effectJp": "このキャラは属性(斬)を持つカードとのバトルでKOされない。【登場時】自分のデッキの上から5枚を見て、赤のイベント1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
+    "effectTh": "คาแรกเตอร์นี้ จะไม่ถูก KO จากการแบทเทิลกับการ์ด ที่มีคุณลักษณะ (ฟัน).[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำ อีเวนต์ ธีมสีแดง จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-008.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-009",
@@ -205,7 +246,9 @@
     "effectTh": "[ใช้งาน : เมน] [เทิร์นละ 1 ครั้ง] นำ ด้ง!! ที่เรสต์อยู่ จำนวนไม่เกิน 1 ใบ, ไปใส่ให้กับ ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-009.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-010",
@@ -226,7 +269,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-010.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-011",
@@ -247,7 +292,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-011.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-012",
@@ -267,7 +314,9 @@
     "effectTh": "[เมื่อโจมตี] สามารถนำคาแรกเตอร์ ธีมสีแดง ของเรา ที่มีพาวเวอร์ 4000 หรือมากกว่า จำนวน 1 ใบ ไปวางที่แทรช : จั่วการ์ด จำนวน 1 ใบ, จากนั้น, ในแบทเทิลนี้, คาแรกเตอร์นี้, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-012.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-013",
@@ -283,12 +332,14 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
-    "effectEn": "[Your Turn] [On Play] K.O. up to 1 of your opponent's Characters with 3000 power or less.<br>[On K.O.] You may trash 1 Event from your hand: You may play this Character card from your trash rested.",
-    "effectJp": "【自分のターン中】【登場時】相手のパワー3000以下のキャラ1枚までを、KOする。<br>【KO時】自分の手札からイベント1枚を捨てることができる：このキャラカードをトラッシュからレストで登場させる。",
-    "effectTh": "[ในเทิร์นของเรา] [เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.<br>[เมื่อถูก KO] สามารถทิ้ง อีเวนต์ จากบนมือของเรา จำนวน 1 ใบ : นำคาแรกเตอร์การ์ดใบนี้ จากในแทรชของเรา ลงสนามในสภาพ เรสต์.",
+    "effectEn": "[Your Turn] [On Play] K.O. up to 1 of your opponent's Characters with 3000 power or less.[On K.O.] You may trash 1 Event from your hand: You may play this Character card from your trash rested.",
+    "effectJp": "【自分のターン中】【登場時】相手のパワー3000以下のキャラ1枚までを、KOする。【KO時】自分の手札からイベント1枚を捨てることができる：このキャラカードをトラッシュからレストで登場させる。",
+    "effectTh": "[ในเทิร์นของเรา] [เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.[เมื่อถูก KO] สามารถทิ้ง อีเวนต์ จากบนมือของเรา จำนวน 1 ใบ : นำคาแรกเตอร์การ์ดใบนี้ จากในแทรชของเรา ลงสนามในสภาพ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-013.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-013",
@@ -304,13 +355,15 @@
     "counter": 1000,
     "attribute": "Special",
     "trait": "Whitebeard Pirates",
-    "effectEn": "[Your Turn] [On Play] K.O. up to 1 of your opponent's Characters with 3000 power or less.<br>[On K.O.] You may trash 1 Event from your hand: You may play this Character card from your trash rested.",
-    "effectJp": "【自分のターン中】【登場時】相手のパワー3000以下のキャラ1枚までを、KOする。<br>【KO時】自分の手札からイベント1枚を捨てることができる：このキャラカードをトラッシュからレストで登場させる。",
-    "effectTh": "[ในเทิร์นของเรา] [เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.<br>[เมื่อถูก KO] สามารถทิ้ง อีเวนต์ จากบนมือของเรา จำนวน 1 ใบ : นำคาแรกเตอร์การ์ดใบนี้ จากในแทรชของเรา ลงสนามในสภาพ เรสต์.",
+    "effectEn": "[Your Turn] [On Play] K.O. up to 1 of your opponent's Characters with 3000 power or less.[On K.O.] You may trash 1 Event from your hand: You may play this Character card from your trash rested.",
+    "effectJp": "【自分のターン中】【登場時】相手のパワー3000以下のキャラ1枚までを、KOする。【KO時】自分の手札からイベント1枚を捨てることができる：このキャラカードをトラッシュからレストで登場させる。",
+    "effectTh": "[ในเทิร์นของเรา] [เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 3000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ.[เมื่อถูก KO] สามารถทิ้ง อีเวนต์ จากบนมือของเรา จำนวน 1 ใบ : นำคาแรกเตอร์การ์ดใบนี้ จากในแทรชของเรา ลงสนามในสภาพ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-013_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-014",
@@ -330,7 +383,9 @@
     "effectTh": "[เมื่อโจมตี] นำคาแรกเตอร์ ธีมสีแดง ที่มีคอสต์ 1 จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-014.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-015",
@@ -345,12 +400,14 @@
     "power": 2000,
     "attribute": "Wisdom",
     "trait": "ODYSSEY",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[Opponent's Turn] When this Character is K.O.'d, give up to 1 of your opponent's Leader or Character cards −2000 power during this turn.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【相手のターン中】このキャラがKOされた時、相手のリーダーかキャラ1枚までを、このターン中、パワー-2000。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ในเทิร์นของคู่แข่ง] เมื่อคาแรกเตอร์นี้ถูก KO, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[Opponent's Turn] When this Character is K.O.'d, give up to 1 of your opponent's Leader or Character cards −2000 power during this turn.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【相手のターン中】このキャラがKOされた時、相手のリーダーかキャラ1枚までを、このターン中、パワー-2000。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ในเทิร์นของคู่แข่ง] เมื่อคาแรกเตอร์นี้ถูก KO, ในเทิร์นนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ -2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-015.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-016",
@@ -363,14 +420,14 @@
     "color": "Red",
     "cost": 7,
     "trait": "Whitebeard Pirates",
-    "effectEn": "[Main] If your Leader is [Portgas.D.Ace], K.O. up to 1 of your opponent's Characters with 8000 power or less, and your Leader gains [Double Attack] and +3000 power during this turn.<br>(This card deals 2 damage.)",
-    "effectJp": "【メイン】自分のリーダーが「ポートガス・D・エース」の場合、相手のパワー8000以下のキャラ1枚までを、KOし、自分のリーダーは、このターン中、【ダブルアタック】を得て、パワー+3000。<br>(このカードが与えるダメージは2になる)",
-    "effectTh": "[เมน] ถ้าลีดเดอร์ของเราคือ [Portgas.D.Ace], ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 8000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ, และในเทิร์นนี้, ลีดเดอร์ของเราจะได้รับ [ดับเบิ้ลแอทแทค], และจะมีพาวเวอร์ +3000.<br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with 6000 power or less.",
-    "triggerJp": "【トリガー】相手のパワー6000以下のキャラ1枚までを、KOする。",
+    "effectEn": "[Main] If your Leader is [Portgas.D.Ace], K.O. up to 1 of your opponent's Characters with 8000 power or less, and your Leader gains [Double Attack] and +3000 power during this turn.(This card deals 2 damage.)",
+    "effectJp": "【メイン】自分のリーダーが「ポートガス・D・エース」の場合、相手のパワー8000以下のキャラ1枚までを、KOし、自分のリーダーは、このターン中、【ダブルアタック】を得て、パワー+3000。(このカードが与えるダメージは2になる)",
+    "effectTh": "[เมน] ถ้าลีดเดอร์ของเราคือ [Portgas.D.Ace], ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 8000 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ, และในเทิร์นนี้, ลีดเดอร์ของเราจะได้รับ [ดับเบิ้ลแอทแทค], และจะมีพาวเวอร์ +3000.(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-016.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-017",
@@ -383,14 +440,14 @@
     "color": "Red",
     "cost": 2,
     "trait": "Whitebeard Pirates",
-    "effectEn": "[Main]/[Counter] If your Leader's type includes \"Whitebeard Pirates\", give up to 1 of your opponent's Characters −4000 power during this turn.<br>",
+    "effectEn": "[Main]/[Counter] If your Leader's type includes \"Whitebeard Pirates\", give up to 1 of your opponent's Characters −4000 power during this turn.",
     "effectJp": "【メイン】/【カウンター】自分のリーダーが『白ひげ海賊団』を含む特徴を持つ場合、相手のキャラ1枚までを、このターン中、パワー-4000。",
     "effectTh": "[เมน] / [เคาน์เตอร์] ถ้าลีดเดอร์ของเรา ระบุคำว่า [กลุ่มโจรสลัดหนวดขาว] รวมอยู่ในคุณสมบัติ, ในเทิร์นนี้, คาแรกเตอร์ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ –4000.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-017.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-018",
@@ -406,11 +463,11 @@
     "effectEn": "[Main] You may trash 1 Event from your hand: K.O. up to 1 of your opponent's Characters with 5000 power or less and up to 1 of your opponent's Characters with 4000 power or less.",
     "effectJp": "【メイン】自分の手札からイベント1枚を捨てることができる：相手の、パワー5000以下のキャラ1枚までとパワー4000以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] สามารถทิ้ง อีเวนต์ จากบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 5000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, พร้อมกับคาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 4000 หรือต่ำกว่า, อีกจำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with 5000 power or less.",
-    "triggerJp": "【トリガー】相手のパワー5000以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-018.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-018",
@@ -426,12 +483,12 @@
     "effectEn": "[Main] You may trash 1 Event from your hand: K.O. up to 1 of your opponent's Characters with 5000 power or less and up to 1 of your opponent's Characters with 4000 power or less.",
     "effectJp": "【メイン】自分の手札からイベント1枚を捨てることができる：相手の、パワー5000以下のキャラ1枚までとパワー4000以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] สามารถทิ้ง อีเวนต์ จากบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 5000 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, พร้อมกับคาแรกเตอร์ของคู่แข่ง ที่มีพาวเวอร์ 4000 หรือต่ำกว่า, อีกจำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with 5000 power or less.",
-    "triggerJp": "【トリガー】相手のパワー5000以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-018_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-019",
@@ -447,11 +504,11 @@
     "effectEn": "[Main] Your Leader gains +4000 power during this turn.",
     "effectJp": "【メイン】自分のリーダーは、このターン中、パワー+4000。",
     "effectTh": "[เมน] ในเทิร์นนี้, ลีดเดอร์ของเรา, จะมีพาวเวอร์ +4000.",
-    "triggerEn": "[Trigger] Give up to 1 of your opponent's Leader or Character cards -10000 power during this turn.",
-    "triggerJp": "【トリガー】相手のリーダーかキャラ1枚までを、このターン中、パワー-10000。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-019.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-020",
@@ -469,7 +526,9 @@
     "effectTh": "[ใช้งาน : เมน] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถ เรสต์ สเตจนี้ : ถ้าลีดเดอร์ของเราคือ [Portgas.D.Ace], ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำ อีเวนต์ จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-020.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-021",
@@ -481,15 +540,17 @@
     "nameTh": "Kuro",
     "color": "Green",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Slash",
     "trait": "East Blue/Black Cat Pirates",
     "effectEn": "[Activate: Main] ③ (You may rest the specified number of DON!! cards in your cost area.) You may rest 2 of your {East Blue} type Characters: Set this Leader as active, and rest up to 1 of your opponent's Characters with a cost of 5 or less.",
     "effectJp": "【起動メイン】③(コストエリアのドン!!を指定の数レストにできる),自分の特徴《東の海》を持つキャラ2枚をレストにできる　：このリーダーをアクティブにし、相手のコスト5以下のキャラ1枚までを、レストにする。",
-    "effectTh": "[ใช้งาน : เมน] (3) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; อีสต์บลู &gt; จำนวน 2 ใบ : ทำการ แอ็คทีฟ ลีดเดอร์นี้, และทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[ใช้งาน : เมน] (3) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < อีสต์บลู > จำนวน 2 ใบ : ทำการ แอ็คทีฟ ลีดเดอร์นี้, และทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-021.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-021",
@@ -501,16 +562,18 @@
     "nameTh": "Kuro (Parallel)",
     "color": "Green",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Slash",
     "trait": "East Blue/Black Cat Pirates",
     "effectEn": "[Activate: Main] ③ (You may rest the specified number of DON!! cards in your cost area.) You may rest 2 of your {East Blue} type Characters: Set this Leader as active, and rest up to 1 of your opponent's Characters with a cost of 5 or less.",
     "effectJp": "【起動メイン】③(コストエリアのドン!!を指定の数レストにできる),自分の特徴《東の海》を持つキャラ2枚をレストにできる　：このリーダーをアクティブにし、相手のコスト5以下のキャラ1枚までを、レストにする。",
-    "effectTh": "[ใช้งาน : เมน] (3) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; อีสต์บลู &gt; จำนวน 2 ใบ : ทำการ แอ็คทีฟ ลีดเดอร์นี้, และทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
+    "effectTh": "[ใช้งาน : เมน] (3) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < อีสต์บลู > จำนวน 2 ใบ : ทำการ แอ็คทีฟ ลีดเดอร์นี้, และทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-021_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-022",
@@ -522,7 +585,7 @@
     "nameTh": "Arlong",
     "color": "Green/Yellow",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Fish-Man/East Blue/Arlong Pirates",
     "effectEn": "[DON!! x2] [When Attacking] ① (You may rest the specified number of DON!! cards in your cost area.): Play up to 1 Character card with a cost of 4 or less and a [Trigger] from your hand.",
@@ -530,7 +593,9 @@
     "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] (1) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 4 หรือต่ำกว่า ที่มี [ทริกเกอร์] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-022.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-022",
@@ -542,7 +607,7 @@
     "nameTh": "Arlong (Parallel)",
     "color": "Green/Yellow",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Slash",
     "trait": "Fish-Man/East Blue/Arlong Pirates",
     "effectEn": "[DON!! x2] [When Attacking] ① (You may rest the specified number of DON!! cards in your cost area.): Play up to 1 Character card with a cost of 4 or less and a [Trigger] from your hand.",
@@ -551,7 +616,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-022_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-023",
@@ -572,7 +639,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-023.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-024",
@@ -590,10 +659,12 @@
     "trait": "East Blue/Krieg Pirates",
     "effectEn": "[On Play] If your Leader has the {East Blue} type, rest up to 2 of your opponent's Characters with a cost of 4 or less.",
     "effectJp": "【登場時】自分のリーダーが特徴《東の海》を持つ場合、相手のコスト4以下のキャラ2枚までを、レストにする。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรามีคุณสมบัติ &lt; อีสต์บลู &gt;, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 2 ใบ.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรามีคุณสมบัติ < อีสต์บลู >, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-024.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-024",
@@ -611,11 +682,13 @@
     "trait": "East Blue/Krieg Pirates",
     "effectEn": "[On Play] If your Leader has the {East Blue} type, rest up to 2 of your opponent's Characters with a cost of 4 or less.",
     "effectJp": "【登場時】自分のリーダーが特徴《東の海》を持つ場合、相手のコスト4以下のキャラ2枚までを、レストにする。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรามีคุณสมบัติ &lt; อีสต์บลู &gt;, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 2 ใบ.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรามีคุณสมบัติ < อีสต์บลู >, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-024_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-025",
@@ -630,12 +703,14 @@
     "power": 7000,
     "attribute": "Ranged",
     "trait": "East Blue/Krieg Pirates",
-    "effectEn": "[On Play] You may trash 1 card from your hand: K.O. up to 2 of your opponent's rested Characters with a cost of 4 or less.<br>[DON!! x1] This Character gains [Double Attack].<br>(This card deals 2 damage.)",
-    "effectJp": "【登場時】自分の手札1枚を捨てることができる：相手のレストのコスト4以下のキャラ2枚までを、KOする。<br>【ドン!!×1】このキャラは【ダブルアタック】を得る。<br>(このカードが与えるダメージは2になる)",
-    "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า ที่กำลังเรสต์อยู่ จำนวนไม่เกิน 2 ใบ.<br>[ด้ง!! x 1] คาแรกเตอร์นี้จะได้รับ [ดับเบิ้ลแอทแทค]. <br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
+    "effectEn": "[On Play] You may trash 1 card from your hand: K.O. up to 2 of your opponent's rested Characters with a cost of 4 or less.[DON!! x1] This Character gains [Double Attack].(This card deals 2 damage.)",
+    "effectJp": "【登場時】自分の手札1枚を捨てることができる：相手のレストのコスト4以下のキャラ2枚までを、KOする。【ドン!!×1】このキャラは【ダブルアタック】を得る。(このカードが与えるダメージは2になる)",
+    "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า ที่กำลังเรสต์อยู่ จำนวนไม่เกิน 2 ใบ.[ด้ง!! x 1] คาแรกเตอร์นี้จะได้รับ [ดับเบิ้ลแอทแทค]. (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-025.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-025",
@@ -650,13 +725,15 @@
     "power": 7000,
     "attribute": "Ranged",
     "trait": "East Blue/Krieg Pirates",
-    "effectEn": "[On Play] You may trash 1 card from your hand: K.O. up to 2 of your opponent's rested Characters with a cost of 4 or less.<br>[DON!! x1] This Character gains [Double Attack].<br>(This card deals 2 damage.)",
-    "effectJp": "【登場時】自分の手札1枚を捨てることができる：相手のレストのコスト4以下のキャラ2枚までを、KOする。<br>【ドン!!×1】このキャラは【ダブルアタック】を得る。<br>(このカードが与えるダメージは2になる)",
-    "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า ที่กำลังเรสต์อยู่ จำนวนไม่เกิน 2 ใบ.<br>[ด้ง!! x 1] คาแรกเตอร์นี้จะได้รับ [ดับเบิ้ลแอทแทค]. <br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
+    "effectEn": "[On Play] You may trash 1 card from your hand: K.O. up to 2 of your opponent's rested Characters with a cost of 4 or less.[DON!! x1] This Character gains [Double Attack].(This card deals 2 damage.)",
+    "effectJp": "【登場時】自分の手札1枚を捨てることができる：相手のレストのコスト4以下のキャラ2枚までを、KOする。【ドン!!×1】このキャラは【ダブルアタック】を得る。(このカードが与えるダメージは2になる)",
+    "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า ที่กำลังเรสต์อยู่ จำนวนไม่เกิน 2 ใบ.[ด้ง!! x 1] คาแรกเตอร์นี้จะได้รับ [ดับเบิ้ลแอทแทค]. (ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-025_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-026",
@@ -674,12 +751,12 @@
     "trait": "Fish-Man/East Blue/Arlong Pirates",
     "effectEn": "[On Play] If your Leader has the {East Blue} type, rest up to 1 of your opponent's Characters.",
     "effectJp": "【登場時】自分のリーダーが特徴《東の海》を持つ場合、相手のキャラ1枚までを、レストにする。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; อีสต์บลู &gt;, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < อีสต์บลู >, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-026.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-027",
@@ -697,10 +774,12 @@
     "trait": "East Blue/Black Cat Pirates",
     "effectEn": "[On Play] If your Leader has the {East Blue} type, rest up to 1 of your opponent's Characters with a cost of 2 or less and, if you don't have [Buchi], play up to 1 [Buchi] from your hand.",
     "effectJp": "【登場時】自分のリーダーが特徴《東の海》を持つ場合、相手のコスト2以下のキャラ1枚までを、レストにし、自分の「ブチ」がいない場合、自分の手札から「ブチ」1枚までを、登場させる。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; อีสต์บลู &gt;, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, และถ้าเราไม่มี [Buchi] อยู่ด้วยละก็, ให้นำ [Buchi] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < อีสต์บลู >, ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, และถ้าเราไม่มี [Buchi] อยู่ด้วยละก็, ให้นำ [Buchi] จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-027.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-028",
@@ -715,12 +794,14 @@
     "power": 6000,
     "attribute": "Special",
     "trait": "East Blue/Black Cat Pirates",
-    "effectEn": "[On Play] Choose one:<br>- Set up to 1 of your {East Blue} type Leader or Character cards with a cost of 6 or less as active.<br>- Rest this Character and up to 1 of your opponent's Characters.",
-    "effectJp": "【登場時】以下から1つを選ぶ。<br>・自分の特徴《東の海》を持つ、リーダーかコスト6以下のキャラ1枚までを、アクティブにする。<br>・このキャラと相手のキャラ1枚までを、レストにする。",
-    "effectTh": "[เมื่อลงสนาม] เลือก 1 อย่าง จากดังต่อไปนี้.<br>• ทำการ แอ็คทีฟ ลีดเดอร์ หรือ คาแรกเตอร์ของเรา ที่มีคอสต์ 6 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; อีสต์บลู &gt; จำนวนไม่เกิน 1 ใบ.<br>• ทำการ เรสต์ คาแรกเตอร์นี้, พร้อมกับคาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ.",
+    "effectEn": "[On Play] Choose one:- Set up to 1 of your {East Blue} type Leader or Character cards with a cost of 6 or less as active.- Rest this Character and up to 1 of your opponent's Characters.",
+    "effectJp": "【登場時】以下から1つを選ぶ。・自分の特徴《東の海》を持つ、リーダーかコスト6以下のキャラ1枚までを、アクティブにする。・このキャラと相手のキャラ1枚までを、レストにする。",
+    "effectTh": "[เมื่อลงสนาม] เลือก 1 อย่าง จากดังต่อไปนี้.• ทำการ แอ็คทีฟ ลีดเดอร์ หรือ คาแรกเตอร์ของเรา ที่มีคอสต์ 6 หรือต่ำกว่า ที่มีคุณสมบัติ < อีสต์บลู > จำนวนไม่เกิน 1 ใบ.• ทำการ เรสต์ คาแรกเตอร์นี้, พร้อมกับคาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-028.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-029",
@@ -739,11 +820,11 @@
     "effectEn": "[On Play] K.O. up to 1 of your opponent's rested Characters with a cost of 4 or less.",
     "effectJp": "【登場時】相手のレストのコスト4以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-029.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-030",
@@ -761,12 +842,12 @@
     "trait": "East Blue/Arlong Pirates",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 green {East Blue} type card other than [Nami] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「ナミ」以外の緑の特徴《東の海》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ธีมสีเขียว ที่มีคุณสมบัติ &lt; อีสต์บลู &gt; นอกเหนือจาก [Nami] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด ธีมสีเขียว ที่มีคุณสมบัติ < อีสต์บลู > นอกเหนือจาก [Nami] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-030.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-031",
@@ -787,7 +868,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-031.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-032",
@@ -802,12 +885,14 @@
     "power": 5000,
     "attribute": "Slash",
     "trait": "East Blue/Buggy Pirates",
-    "effectEn": "This Character cannot be K.O.'d in battle by &lt;Slash&gt; attribute cards.",
+    "effectEn": "This Character cannot be K.O.'d in battle by <Slash> attribute cards.",
     "effectJp": "このキャラは、属性(斬)を持つカードとのバトルでKOされない。",
     "effectTh": "คาแรกเตอร์นี้, จะไม่ถูก KO จากการแบทเทิลกับการ์ดที่มีคุณลักษณะ (ฟัน).",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-032.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-033",
@@ -826,11 +911,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] If your Leader has the {East Blue} type, play this card.",
-    "triggerJp": "【トリガー】自分のリーダーが特徴《東の海》を持つ場合、このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-033.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-034",
@@ -851,7 +936,9 @@
     "effectTh": "[เมื่อลงสนาม] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-034.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-035",
@@ -872,7 +959,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-035.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-036",
@@ -887,12 +976,12 @@
     "trait": "East Blue/Black Cat Pirates",
     "effectEn": "[Main] You may rest 1 of your {East Blue} type Characters: Set up to 1 of your [Kuro] cards as active.",
     "effectJp": "【メイン】自分の特徴《東の海》を持つキャラ1枚をレストにできる：自分の「クロ」1枚までを、アクティブにする。",
-    "effectTh": "[เมน] สามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; อีสต์บลู &gt; จำนวน 1 ใบ : ทำการ แอ็คทีฟ [Kuro] ของฝ่ายเรา, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's rested Characters with a cost of 3 or less.",
-    "triggerJp": "【トリガー】相手のレストのコスト3以下のキャラ1枚までを、KOする。",
+    "effectTh": "[เมน] สามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < อีสต์บลู > จำนวน 1 ใบ : ทำการ แอ็คทีฟ [Kuro] ของฝ่ายเรา, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-036.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-037",
@@ -907,12 +996,12 @@
     "trait": "Fish-Man/East Blue/Arlong Pirates",
     "effectEn": "[Main] You may rest 1 of your {East Blue} type Characters: K.O. up to 1 of your opponent's rested Characters with a cost of 3 or less.",
     "effectJp": "【メイン】自分の特徴《東の海》を持つキャラ1枚をレストにできる：相手のレストのコスト3以下のキャラ1枚までを、KOする。",
-    "effectTh": "[เมน] สามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ &lt; อีสต์บลู &gt; จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Play up to 1 Character card with a cost of 4 or less and a [Trigger] from your hand.",
-    "triggerJp": "【トリガー】自分の手札からコスト4以下の【トリガー】を持つキャラカード1枚までを、登場させる。",
+    "effectTh": "[เมน] สามารถ เรสต์ คาแรกเตอร์ของเรา ที่มีคุณสมบัติ < อีสต์บลู > จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า ซึ่งกำลังเรสต์อยู่, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-037.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-038",
@@ -925,14 +1014,14 @@
     "color": "Green",
     "cost": 1,
     "trait": "East Blue/Krieg Pirates",
-    "effectEn": "[Main] Rest up to 2 of your opponent's Characters with a cost of 2 or less.<br>",
+    "effectEn": "[Main] Rest up to 2 of your opponent's Characters with a cost of 2 or less.",
     "effectJp": "【メイン】相手のコスト2以下のキャラ2枚までを、レストにする",
     "effectTh": "[เมน] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 2 ใบ.",
-    "triggerEn": "[Trigger] Rest up to 1 of your opponent's Characters with a cost of 5 or less.",
-    "triggerJp": "【トリガー】相手のコスト5以下のキャラ1枚までを、レストにする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-038.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-039",
@@ -948,11 +1037,11 @@
     "effectEn": "[Main] Rest up to 1 of your opponent's Characters with a cost of 1 or less. Then, up to 1 of your Characters gains +1000 power during this turn.",
     "effectJp": "【メイン】相手のコスト1以下のキャラ1枚までを、レストにする。その後、自分のキャラ1枚までを、このターン中、パワー+1000。",
     "effectTh": "[เมน] ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ + 1000.",
-    "triggerEn": "[Trigger] Rest up to 1 of your opponent's Characters with a cost of 4 or less.",
-    "triggerJp": "【トリガー】相手のコスト4以下のキャラ1枚までを、レストにする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-039.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-040",
@@ -964,15 +1053,17 @@
     "nameTh": "Nami",
     "color": "Blue",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Wisdom",
     "trait": "East Blue",
-    "effectEn": "When your deck is reduced to 0, you win the game instead of losing, according to the rules.<br>[DON!! x1] When this Leader's attack deals damage to your opponent's Life, you may trash 1 card from the top of your deck.",
-    "effectJp": "ルール上、自分のデッキが0枚になった場合、自分は敗北する代わりに勝利する。<br>【ドン!!×1】このリーダーのアタックによって、相手のライフにダメージを与えた時、自分のデッキの上から1枚をトラッシュに置いてもよい。",
-    "effectTh": "ถ้าในเด็คของเราเหลือการ์ด จำนวน 0 ใบ, เราจะเป็นฝ่ายชนะ, แทนที่จะแพ้ตามกฎ.<br>[ด้ง!! x 1] เมื่อการโจมตีของ ลีดเดอร์นี้ ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
+    "effectEn": "When your deck is reduced to 0, you win the game instead of losing, according to the rules.[DON!! x1] When this Leader's attack deals damage to your opponent's Life, you may trash 1 card from the top of your deck.",
+    "effectJp": "ルール上、自分のデッキが0枚になった場合、自分は敗北する代わりに勝利する。【ドン!!×1】このリーダーのアタックによって、相手のライフにダメージを与えた時、自分のデッキの上から1枚をトラッシュに置いてもよい。",
+    "effectTh": "ถ้าในเด็คของเราเหลือการ์ด จำนวน 0 ใบ, เราจะเป็นฝ่ายชนะ, แทนที่จะแพ้ตามกฎ.[ด้ง!! x 1] เมื่อการโจมตีของ ลีดเดอร์นี้ ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-040.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-040",
@@ -984,16 +1075,18 @@
     "nameTh": "Nami (Parallel)",
     "color": "Blue",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Wisdom",
     "trait": "East Blue",
-    "effectEn": "When your deck is reduced to 0, you win the game instead of losing, according to the rules.<br>[DON!! x1] When this Leader's attack deals damage to your opponent's Life, you may trash 1 card from the top of your deck.",
-    "effectJp": "ルール上、自分のデッキが0枚になった場合、自分は敗北する代わりに勝利する。<br>【ドン!!×1】このリーダーのアタックによって、相手のライフにダメージを与えた時、自分のデッキの上から1枚をトラッシュに置いてもよい。",
-    "effectTh": "ถ้าในเด็คของเราเหลือการ์ด จำนวน 0 ใบ, เราจะเป็นฝ่ายชนะ, แทนที่จะแพ้ตามกฎ.<br>[ด้ง!! x 1] เมื่อการโจมตีของ ลีดเดอร์นี้ ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
+    "effectEn": "When your deck is reduced to 0, you win the game instead of losing, according to the rules.[DON!! x1] When this Leader's attack deals damage to your opponent's Life, you may trash 1 card from the top of your deck.",
+    "effectJp": "ルール上、自分のデッキが0枚になった場合、自分は敗北する代わりに勝利する。【ドン!!×1】このリーダーのアタックによって、相手のライフにダメージを与えた時、自分のデッキの上から1枚をトラッシュに置いてもよい。",
+    "effectTh": "ถ้าในเด็คของเราเหลือการ์ด จำนวน 0 ใบ, เราจะเป็นฝ่ายชนะ, แทนที่จะแพ้ตามกฎ.[ด้ง!! x 1] เมื่อการโจมตีของ ลีดเดอร์นี้ ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-040_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-041",
@@ -1008,12 +1101,14 @@
     "power": 5000,
     "attribute": "Ranged",
     "trait": "East Blue",
-    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)<br>[DON!! x1] When this Character's attack deals damage to your opponent's Life, you may trash 7 cards from the top of your deck.",
-    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)<br>【ドン!!×1】このキャラのアタックによって、相手のライフにダメージを与えた時、自分のデッキの上から7枚をトラッシュに置いてもよい。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).<br>[ด้ง!! x 1] เมื่อการโจมตีของ คาแรกเตอร์นี้ ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 7 ใบ ไปวางที่แทรช.",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[DON!! x1] When this Character's attack deals damage to your opponent's Life, you may trash 7 cards from the top of your deck.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【ドン!!×1】このキャラのアタックによって、相手のライフにダメージを与えた時、自分のデッキの上から7枚をトラッシュに置いてもよい。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).[ด้ง!! x 1] เมื่อการโจมตีของ คาแรกเตอร์นี้ ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 7 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-041.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-041",
@@ -1028,13 +1123,15 @@
     "power": 5000,
     "attribute": "Ranged",
     "trait": "East Blue",
-    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)<br>[DON!! x1] When this Character's attack deals damage to your opponent's Life, you may trash 7 cards from the top of your deck.",
-    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)<br>【ドン!!×1】このキャラのアタックによって、相手のライフにダメージを与えた時、自分のデッキの上から7枚をトラッシュに置いてもよい。",
-    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).<br>[ด้ง!! x 1] เมื่อการโจมตีของ คาแรกเตอร์นี้ ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 7 ใบ ไปวางที่แทรช.",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[DON!! x1] When this Character's attack deals damage to your opponent's Life, you may trash 7 cards from the top of your deck.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【ドン!!×1】このキャラのアタックによって、相手のライフにダメージを与えた時、自分のデッキの上から7枚をトラッシュに置いてもよい。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้).[ด้ง!! x 1] เมื่อการโจมตีของ คาแรกเตอร์นี้ ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 7 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-041_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-042",
@@ -1054,7 +1151,9 @@
     "effectTh": "[เมื่อลงสนาม] นำ [Usopp] ที่เป็นธีมสีฟ้า ซึ่งอยู่ในแทรชของเรา จำนวนไม่เกิน 1 ใบ, เพิ่มขึ้นสู่บนมือ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-042.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-043",
@@ -1074,7 +1173,9 @@
     "effectTh": "เมื่อเรา ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 3 ใบ ไปวางที่แทรช. ถ้าทำเช่นนั้น, ให้นำคาแรกเตอร์นี้ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-043.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-044",
@@ -1094,7 +1195,9 @@
     "effectTh": "[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-044.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-045",
@@ -1110,12 +1213,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "East Blue",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[Opponent's Turn] If you have 20 or less cards in your deck, this Character gains +3000 power.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【相手のターン中】自分のデッキが20枚以下の場合、このキャラはパワー+3000。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[ในเทิร์นของคู่แข่ง] ถ้าในเด็คของเรามีการ์ดอยู่ จำนวน 20 ใบ หรือน้อยกว่า, คาแรกเตอร์นี้ จะมีพาวเวอร์ +3000.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[Opponent's Turn] If you have 20 or less cards in your deck, this Character gains +3000 power.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【相手のターン中】自分のデッキが20枚以下の場合、このキャラはパワー+3000。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[ในเทิร์นของคู่แข่ง] ถ้าในเด็คของเรามีการ์ดอยู่ จำนวน 20 ใบ หรือน้อยกว่า, คาแรกเตอร์นี้ จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-045.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-046",
@@ -1136,7 +1241,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-046.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-047",
@@ -1152,12 +1259,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "East Blue",
-    "effectEn": "[DON!! x1] When this Character's attack deals damage to your opponent's Life, you may trash 7 cards from the top of your deck.<br>[On Play] You may return up to 1 Character with a cost of 3 or less to the owner's hand, and trash 2 cards from the top of your deck.",
-    "effectJp": "【ドン!!×1】このキャラのアタックによって、相手のライフにダメージを与えた時、自分のデッキの上から7枚をトラッシュに置いてもよい。<br>【登場時】コスト3以下のキャラ1枚までを、持ち主の手札に戻し、自分のデッキの上から2枚をトラッシュに置いてもよい。",
-    "effectTh": "[ด้ง!! x 1] เมื่อการโจมตีของ คาแรกเตอร์นี้ ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ด ใบบนสุดของเด็คของเรา จำนวน 7 ใบ ไปวางที่แทรช.<br>[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ, และจะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
+    "effectEn": "[DON!! x1] When this Character's attack deals damage to your opponent's Life, you may trash 7 cards from the top of your deck.[On Play] You may return up to 1 Character with a cost of 3 or less to the owner's hand, and trash 2 cards from the top of your deck.",
+    "effectJp": "【ドン!!×1】このキャラのアタックによって、相手のライフにダメージを与えた時、自分のデッキの上から7枚をトラッシュに置いてもよい。【登場時】コスト3以下のキャラ1枚までを、持ち主の手札に戻し、自分のデッキの上から2枚をトラッシュに置いてもよい。",
+    "effectTh": "[ด้ง!! x 1] เมื่อการโจมตีของ คาแรกเตอร์นี้ ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ด ใบบนสุดของเด็คของเรา จำนวน 7 ใบ ไปวางที่แทรช.[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ, และจะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-047.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-047",
@@ -1173,13 +1282,15 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "East Blue",
-    "effectEn": "[DON!! x1] When this Character's attack deals damage to your opponent's Life, you may trash 7 cards from the top of your deck.<br>[On Play] You may return up to 1 Character with a cost of 3 or less to the owner's hand, and trash 2 cards from the top of your deck.",
-    "effectJp": "【ドン!!×1】このキャラのアタックによって、相手のライフにダメージを与えた時、自分のデッキの上から7枚をトラッシュに置いてもよい。<br>【登場時】コスト3以下のキャラ1枚までを、持ち主の手札に戻し、自分のデッキの上から2枚をトラッシュに置いてもよい。",
-    "effectTh": "[ด้ง!! x 1] เมื่อการโจมตีของ คาแรกเตอร์นี้ ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ด ใบบนสุดของเด็คของเรา จำนวน 7 ใบ ไปวางที่แทรช.<br>[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ, และจะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
+    "effectEn": "[DON!! x1] When this Character's attack deals damage to your opponent's Life, you may trash 7 cards from the top of your deck.[On Play] You may return up to 1 Character with a cost of 3 or less to the owner's hand, and trash 2 cards from the top of your deck.",
+    "effectJp": "【ドン!!×1】このキャラのアタックによって、相手のライフにダメージを与えた時、自分のデッキの上から7枚をトラッシュに置いてもよい。【登場時】コスト3以下のキャラ1枚までを、持ち主の手札に戻し、自分のデッキの上から2枚をトラッシュに置いてもよい。",
+    "effectTh": "[ด้ง!! x 1] เมื่อการโจมตีของ คาแรกเตอร์นี้ ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ด ใบบนสุดของเด็คของเรา จำนวน 7 ใบ ไปวางที่แทรช.[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ, และจะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-047_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-048",
@@ -1199,7 +1310,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเราคือ [Nami], นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-048.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-049",
@@ -1219,7 +1332,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าในเด็คของเรามีการ์ดอยู่ จำนวน 20 ใบ หรือน้อยกว่า, นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 3 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-049.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-050",
@@ -1234,12 +1349,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "East Blue",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] You may trash 1 card from the top of your deck.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【KO時】自分のデッキの上から1枚をトラッシュに置いてもよい。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] สามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On K.O.] You may trash 1 card from the top of your deck.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【KO時】自分のデッキの上から1枚をトラッシュに置いてもよい。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] สามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-050.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-051",
@@ -1255,12 +1372,14 @@
     "counter": 1000,
     "attribute": "Ranged",
     "trait": "East Blue/Former Navy",
-    "effectEn": "[DON!! x1] When this Character's attack deals damage to your opponent's Life, you may trash 7 cards from the top of your deck.<br>[On K.O.] You may trash 3 cards from the top of your deck.",
-    "effectJp": "【ドン!!×1】このキャラのアタックによって、相手のライフにダメージを与えた時、自分のデッキの上から7枚をトラッシュに置いてもよい。<br>【KO時】自分のデッキの上から3枚をトラッシュに置いてもよい。",
-    "effectTh": "[ด้ง!! x 1] เมื่อการโจมตีของ คาแรกเตอร์นี้ ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ด ใบบนสุดของเด็คของเรา จำนวน 7 ใบ ไปวางที่แทรช.<br>[เมื่อถูก KO] สามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 3 ใบ ไปวางที่แทรช.",
+    "effectEn": "[DON!! x1] When this Character's attack deals damage to your opponent's Life, you may trash 7 cards from the top of your deck.[On K.O.] You may trash 3 cards from the top of your deck.",
+    "effectJp": "【ドン!!×1】このキャラのアタックによって、相手のライフにダメージを与えた時、自分のデッキの上から7枚をトラッシュに置いてもよい。【KO時】自分のデッキの上から3枚をトラッシュに置いてもよい。",
+    "effectTh": "[ด้ง!! x 1] เมื่อการโจมตีของ คาแรกเตอร์นี้ ทำแดเมจกับไลฟ์ของคู่แข่ง, จะสามารถนำการ์ด ใบบนสุดของเด็คของเรา จำนวน 7 ใบ ไปวางที่แทรช.[เมื่อถูก KO] สามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 3 ใบ ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-051.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-052",
@@ -1281,16 +1400,18 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-052.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-053",
     "cardCode": "OP03-053",
     "rarity": "C",
     "cardType": "CHARACTER",
-    "nameEn": "Yosaku &amp; Johnny",
-    "nameJp": "ヨサク&amp;ジョニー",
-    "nameTh": "Yosaku &amp; Johnny",
+    "nameEn": "Yosaku & Johnny",
+    "nameJp": "ヨサク&ジョニー",
+    "nameTh": "Yosaku & Johnny",
     "color": "Blue",
     "cost": 1,
     "power": 3000,
@@ -1301,7 +1422,9 @@
     "effectTh": "[ด้ง!! x 1] ถ้าในเด็คของเรามีการ์ดอยู่ จำนวน 20 ใบ หรือน้อยกว่า, คาแรกเตอร์นี้ จะมีพาวเวอร์ +2000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-053.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-054",
@@ -1317,11 +1440,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +2000 power during this battle. Then, you may trash 1 card from the top of your deck.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+2000。その後、自分のデッキの上から1枚をトラッシュに置いてもよい。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +2000. จากนั้น, จะสามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 1 ใบ ไปวางที่แทรช.",
-    "triggerEn": "[Trigger] Draw 1 card, and you may trash 1 card from the top of your deck.",
-    "triggerJp": "【トリガー】カード1枚を引き、自分のデッキの上から1枚をトラッシュに置いてもよい。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-054.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-055",
@@ -1337,11 +1460,11 @@
     "effectEn": "[Counter] You may trash 1 card from your hand: Up to 1 of your Leader gains +4000 power during this battle. Then, you may trash 2 cards from the top of your deck.",
     "effectJp": "【カウンター】自分の手札1枚を捨てることができる：自分のリーダー1枚までを、このバトル中、パワー+4000。その後、自分のデッキの上から2枚をトラッシュに置いてもよい。",
     "effectTh": "[เคาน์เตอร์] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ในแบทเทิลนี้, ลีดเดอร์ของเรา จะมีพาวเวอร์ +4000. จากนั้น, สามารถนำการ์ดใบบนสุดจากเด็คของเรา จำนวน 2 ใบ ไปวางที่แทรช.",
-    "triggerEn": "[Trigger] Return up to 1 Character with a cost of 4 or less to the owner's hand.",
-    "triggerJp": "【トリガー】コスト4以下のキャラ1枚までを、持ち主の手札に戻す。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-055.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-056",
@@ -1357,11 +1480,11 @@
     "effectEn": "[Main] Draw 2 cards.",
     "effectJp": "【メイン】カード2枚を引く。",
     "effectTh": "[เมน] จั่วการ์ด จำนวน 2 ใบ.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-056.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-057",
@@ -1377,11 +1500,11 @@
     "effectEn": "[Main] Place up to 1 Character with a cost of 5 or less at the bottom of the owner's deck.",
     "effectJp": "【メイン】コスト5以下のキャラ1枚までを、持ち主のデッキの下に置く。",
     "effectTh": "[เมน] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 5 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
-    "triggerEn": "[Trigger] Place up to 1 Character with a cost of 3 or less at the bottom of the owner's deck.",
-    "triggerJp": "【トリガー】コスト3以下のキャラ1枚までを、持ち主のデッキの下に置く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-057.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-058",
@@ -1393,15 +1516,17 @@
     "nameTh": "Iceburg",
     "color": "Purple",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Wisdom",
     "trait": "Water Seven/Galley-La Company",
-    "effectEn": "This Leader cannot attack.<br>[Activate: Main] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.) You may rest this Leader: Play up to 1 {Galley-La Company} type Character card with a cost of 5 or less from your hand.",
-    "effectJp": "このリーダーはアタックできない。<br>【起動メイン】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)，このリーダーをレストにできる：自分の手札からコスト5以下の特徴《GC》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "ลีดเดอร์นี้ไม่สามารถทำการโจมตี.<br>[ใช้งาน : เมน] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ), สามารถ เรสต์ ลีดเดอร์นี้ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; GC &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "This Leader cannot attack.[Activate: Main] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.) You may rest this Leader: Play up to 1 {Galley-La Company} type Character card with a cost of 5 or less from your hand.",
+    "effectJp": "このリーダーはアタックできない。【起動メイン】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)，このリーダーをレストにできる：自分の手札からコスト5以下の特徴《GC》を持つキャラカード1枚までを、登場させる。",
+    "effectTh": "ลีดเดอร์นี้ไม่สามารถทำการโจมตี.[ใช้งาน : เมน] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ), สามารถ เรสต์ ลีดเดอร์นี้ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า ที่มีคุณสมบัติ < GC > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-058.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-058",
@@ -1413,16 +1538,18 @@
     "nameTh": "Iceburg (Parallel)",
     "color": "Purple",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Wisdom",
     "trait": "Water Seven/Galley-La Company",
-    "effectEn": "This Leader cannot attack.<br>[Activate: Main] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.) You may rest this Leader: Play up to 1 {Galley-La Company} type Character card with a cost of 5 or less from your hand.",
-    "effectJp": "このリーダーはアタックできない。<br>【起動メイン】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)，このリーダーをレストにできる：自分の手札からコスト5以下の特徴《GC》を持つキャラカード1枚までを、登場させる。",
-    "effectTh": "ลีดเดอร์นี้ไม่สามารถทำการโจมตี.<br>[ใช้งาน : เมน] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ), สามารถ เรสต์ ลีดเดอร์นี้ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า ที่มีคุณสมบัติ &lt; GC &gt; จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
+    "effectEn": "This Leader cannot attack.[Activate: Main] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.) You may rest this Leader: Play up to 1 {Galley-La Company} type Character card with a cost of 5 or less from your hand.",
+    "effectJp": "このリーダーはアタックできない。【起動メイン】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)，このリーダーをレストにできる：自分の手札からコスト5以下の特徴《GC》を持つキャラカード1枚までを、登場させる。",
+    "effectTh": "ลีดเดอร์นี้ไม่สามารถทำการโจมตี.[ใช้งาน : เมน] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ), สามารถ เรสต์ ลีดเดอร์นี้ : นำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า ที่มีคุณสมบัติ < GC > จากบนมือของเรา จำนวนไม่เกิน 1 ใบ, ลงสนาม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-058_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-059",
@@ -1438,12 +1565,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Water Seven/Galley-La Company",
-    "effectEn": "[When Attacking] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains [Banish] during this battle.<br>(When this card deals damage, the target card is trashed without activating its Trigger.)",
-    "effectJp": "【アタック時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：このキャラは、このバトル中、【バニッシュ】を得る。<br>(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)",
-    "effectTh": "[เมื่อโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในแบทเทิลนี้, คาแรกเตอร์นี้จะได้รับ [แบนนิช].<br>(ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
+    "effectEn": "[When Attacking] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains [Banish] during this battle.(When this card deals damage, the target card is trashed without activating its Trigger.)",
+    "effectJp": "【アタック時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：このキャラは、このバトル中、【バニッシュ】を得る。(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)",
+    "effectTh": "[เมื่อโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ในแบทเทิลนี้, คาแรกเตอร์นี้จะได้รับ [แบนนิช].(ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-059.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-060",
@@ -1464,16 +1593,18 @@
     "effectTh": "[เมื่อโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-060.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-061",
     "cardCode": "OP03-061",
     "rarity": "C",
     "cardType": "CHARACTER",
-    "nameEn": "Kiwi &amp; Mozu",
-    "nameJp": "キウイ&amp;モズ",
-    "nameTh": "Kiwi &amp; Mozu",
+    "nameEn": "Kiwi & Mozu",
+    "nameJp": "キウイ&モズ",
+    "nameTh": "Kiwi & Mozu",
     "color": "Purple",
     "cost": 2,
     "power": 4000,
@@ -1485,7 +1616,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-061.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-062",
@@ -1503,10 +1636,12 @@
     "trait": "Merfolk/Water Seven",
     "effectEn": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Water Seven} type card other than [Kokoro] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から5枚を見て、「ココロ」以外の特徴《W7》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; W7 &gt; นอกเหนือจาก [Kokoro] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ดที่มีคุณสมบัติ < W7 > นอกเหนือจาก [Kokoro] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-062.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-063",
@@ -1521,12 +1656,14 @@
     "power": 2000,
     "attribute": "Slash",
     "trait": "Water Seven/The Franky Family",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader has the {Water Seven} type, draw 1 card.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが特徴《W7》を持つ場合、カード1枚を引く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; W7 &gt;, จั่วการ์ด จำนวน 1 ใบ.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader has the {Water Seven} type, draw 1 card.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが特徴《W7》を持つ場合、カード1枚を引く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < W7 >, จั่วการ์ด จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-063.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-064",
@@ -1544,19 +1681,21 @@
     "trait": "Water Seven/Galley-La Company",
     "effectEn": "[On K.O.] If your Leader has the {Galley-La Company} type, add up to 1 DON!! card from your DON!! deck and rest it.",
     "effectJp": "【KO時】自分のリーダーが特徴《GC》を持つ場合、ドン!!デッキからドン!!1枚までを、レストで追加する。",
-    "effectTh": "[เมื่อถูก KO] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; GC &gt;, นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
+    "effectTh": "[เมื่อถูก KO] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < GC >, นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-064.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-065",
     "cardCode": "OP03-065",
     "rarity": "C",
     "cardType": "CHARACTER",
-    "nameEn": "Chimney &amp; Gonbe",
+    "nameEn": "Chimney & Gonbe",
     "nameJp": "チムニー＆ゴンベ",
-    "nameTh": "Chimney &amp; Gonbe",
+    "nameTh": "Chimney & Gonbe",
     "color": "Purple",
     "cost": 2,
     "power": 2000,
@@ -1568,7 +1707,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-065.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-066",
@@ -1588,7 +1729,9 @@
     "effectTh": "[เมื่อลงสนาม] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ) : นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ แอ็คทีฟ. จากนั้น, ถ้าในสนามของเรามี ด้ง!! อยู่จำนวน 8 ใบ หรือมากกว่า, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-066.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-066",
@@ -1609,7 +1752,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-066_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-067",
@@ -1627,10 +1772,12 @@
     "trait": "Water Seven/Galley-La Company",
     "effectEn": "[DON!! x1] [When Attacking] If your Leader has the {Galley-La Company} type, add up to 1 DON!! card from your DON!! deck and rest it.",
     "effectJp": "【ドン!!×1】【アタック時】自分のリーダーが特徴《GC》を持つ場合、ドン!!デッキからドン!!1枚までを、レストで追加する。",
-    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; GC &gt;, นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
+    "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < GC >, นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-067.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-068",
@@ -1646,12 +1793,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "Impel Down/Jailer Beast",
-    "effectEn": "[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)<br>[On K.O.] If your Leader has the {Impel Down} type, add up to 1 DON!! card from your DON!! deck and rest it.",
-    "effectJp": "【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)<br>【KO時】自分のリーダーが特徴《インペルダウン》を持つ場合、ドン!!デッキからドン!!1枚までを、レストで追加する。",
-    "effectTh": "[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน) <br>[เมื่อถูก KO] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; อิมเพลดาวน์ &gt;, นำ ด้ง!! จากด้ง!! เด็ค ของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
+    "effectEn": "[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)[On K.O.] If your Leader has the {Impel Down} type, add up to 1 DON!! card from your DON!! deck and rest it.",
+    "effectJp": "【バニッシュ】(このカードがダメージを与えた場合、トリガーは発動せずそのカードはトラッシュに置かれる)【KO時】自分のリーダーが特徴《インペルダウン》を持つ場合、ドン!!デッキからドン!!1枚までを、レストで追加する。",
+    "effectTh": "[แบนนิช] (ถ้าการ์ดใบนี้ทำดาเมจได้, การ์ดใบนั้นจะถูกนำไปวางที่แทรช, และทริกเกอร์จะไม่ทำงาน) [เมื่อถูก KO] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < อิมเพลดาวน์ >, นำ ด้ง!! จากด้ง!! เด็ค ของเรา จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-068.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-069",
@@ -1668,10 +1817,12 @@
     "trait": "Impel Down/Jailer Beast",
     "effectEn": "[On K.O.] If your Leader has the {Impel Down} type, draw 2 cards and trash 1 card from your hand.",
     "effectJp": "【KO時】自分のリーダーが特徴《インペルダウン》を持つ場合、カード2枚を引き、手札1枚を捨てる。",
-    "effectTh": "[เมื่อถูก KO] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; อิมเพลดาวน์ &gt;, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
+    "effectTh": "[เมื่อถูก KO] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < อิมเพลดาวน์ >, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-069.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-070",
@@ -1686,12 +1837,14 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "Water Seven/Straw Hat Crew",
-    "effectEn": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.) You may trash 1 Character card with a cost of 5 from your hand: This Character gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【登場時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)，自分の手札からコスト5のキャラカード1枚を捨てることができる：このキャラは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) สามารถทิ้งคาแรกเตอร์การ์ด ที่มีคอสต์ 5 จากบนมือของเรา จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. <br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.) You may trash 1 Character card with a cost of 5 from your hand: This Character gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)，自分の手札からコスト5のキャラカード1枚を捨てることができる：このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) สามารถทิ้งคาแรกเตอร์การ์ด ที่มีคอสต์ 5 จากบนมือของเรา จำนวน 1 ใบ : ในเทิร์นนี้, คาแรกเตอร์นี้ จะได้รับ [จู่โจมฉับพลัน]. (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-070.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-071",
@@ -1712,7 +1865,9 @@
     "effectTh": "[เมื่อโจมตี] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ เรสต์ คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-071.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-072",
@@ -1727,11 +1882,11 @@
     "effectEn": "[Counter] You may trash 1 card from your hand: Up to 1 of your Leader or Character cards gains +3000 power during this battle.",
     "effectJp": "【カウンター】自分の手札1枚を捨てることができる：自分のリーダーかキャラ1枚までを、このバトル中、パワー+3000。",
     "effectTh": "[เคาน์เตอร์] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
-    "triggerEn": "[Trigger] Add up to 1 DON!! card from your DON!! deck and set it as active.",
-    "triggerJp": "【トリガー】ドン!!デッキからドン!!1枚までを、アクティブで追加する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-072.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-073",
@@ -1746,12 +1901,12 @@
     "trait": "Water Seven/The Franky Family",
     "effectEn": "[Main] DON!! -1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader has the {Water Seven} type, K.O. up to 1 of your opponent's Characters with a cost of 2 or less.",
     "effectJp": "【メイン】ドン!!-1(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：自分のリーダーが特徴《W7》を持つ場合、相手のコスト2以下のキャラ1枚までを、KOする。",
-    "effectTh": "[เมน] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; W7 &gt;, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
+    "effectTh": "[เมน] ด้ง!! - 1 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < W7 >, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 2 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-073.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-074",
@@ -1767,11 +1922,11 @@
     "effectEn": "[Main] DON!! -2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Place up to 1 of your opponent's Characters with a cost of 4 or less at the bottom of the owner's deck.",
     "effectJp": "【メイン】ドン!!-2(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：相手のコスト4以下のキャラ1枚までを、持ち主のデッキの下に置く。",
     "effectTh": "[เมน] ด้ง!! - 2 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : นำคาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางที่ข้างใต้เด็คของเจ้าของ.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-074.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-075",
@@ -1789,7 +1944,9 @@
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ สเตจนี้ : ถ้าลีดเดอร์ของเราคือ [Iceburg], นำ ด้ง!! จากด้ง!! เด็ค จำนวนไม่เกิน 1 ใบ, มาวางเพิ่มแบบ เรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-075.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-076",
@@ -1801,7 +1958,7 @@
     "nameTh": "Rob Lucci",
     "color": "Black",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Strike",
     "trait": "CP9",
     "effectEn": "[Your Turn] [Once Per Turn] You may trash 2 cards from your hand: When your opponent's Character is K.O.'d, set this Leader as active.",
@@ -1809,7 +1966,9 @@
     "effectTh": "[เทิร์นตัวเอง] [เทิร์นละ 1 ครั้ง] สามารถทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ : เมื่อมีคาแรกเตอร์ของคู่แข่ง ถูก KO, จะทำการ แอ็คทีฟ ลีดเดอร์นี้.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-076.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-076",
@@ -1821,7 +1980,7 @@
     "nameTh": "Rob Lucci (Parallel)",
     "color": "Black",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Strike",
     "trait": "CP9",
     "effectEn": "[Your Turn] [Once Per Turn] You may trash 2 cards from your hand: When your opponent's Character is K.O.'d, set this Leader as active.",
@@ -1830,7 +1989,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-076_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-077",
@@ -1842,7 +2003,7 @@
     "nameTh": "Charlotte Linlin",
     "color": "Black/Yellow",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Special",
     "trait": "The Four Emperors/Big Mom Pirates",
     "effectEn": "[DON!! x2] [When Attacking] ② (You may rest the specified number of DON!! cards in your cost area.) You may trash 1 card from your hand: If you have 1 or less Life cards, add up to 1 card from the top of your deck to the top of your Life cards.",
@@ -1850,7 +2011,9 @@
     "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] (2) (สามารถ เรสต์ ด้ง!! ในคอสต์แอเรียตามจำนวนที่ระบุ), สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ถ้าเรามี ไลฟ์ จำนวน 1 ใบ หรือน้อยกว่า, จะนำการ์ดใบบนสุดจากเด็ค จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-077.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-077",
@@ -1862,7 +2025,7 @@
     "nameTh": "Charlotte Linlin (Parallel)",
     "color": "Black/Yellow",
     "power": 5000,
-    "life": 1,
+    "life": 4,
     "attribute": "Special",
     "trait": "The Four Emperors/Big Mom Pirates",
     "effectEn": "[DON!! x2] [When Attacking] ② (You may rest the specified number of DON!! cards in your cost area.) You may trash 1 card from your hand: If you have 1 or less Life cards, add up to 1 card from the top of your deck to the top of your Life cards.",
@@ -1871,7 +2034,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-077_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-078",
@@ -1886,12 +2051,14 @@
     "power": 9000,
     "attribute": "Slash",
     "trait": "Navy",
-    "effectEn": "[DON!! x1] [Your Turn] Give all of your opponent's Characters −3 cost.<br>[On Play] If your opponent has 6 or more cards in their hand, trash 2 cards from your opponent's hand.",
-    "effectJp": "【ドン!!×1】【自分のターン中】相手のキャラすべてをコスト-3。<br>【登場時】相手の手札が6枚以上ある場合、相手の手札2枚を捨てる。",
-    "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] คาแรกเตอร์ของคู่แข่งทั้งหมด จะมีคอสต์ -3.<br>[เมื่อลงสนาม] ถ้าบนมือของคู่แข่งมีการ์ดอยู่ จำนวน 6 ใบ หรือมากกว่า, ทิ้งการ์ดบนมือของคู่แข่ง จำนวน 2 ใบ.",
+    "effectEn": "[DON!! x1] [Your Turn] Give all of your opponent's Characters −3 cost.[On Play] If your opponent has 6 or more cards in their hand, trash 2 cards from your opponent's hand.",
+    "effectJp": "【ドン!!×1】【自分のターン中】相手のキャラすべてをコスト-3。【登場時】相手の手札が6枚以上ある場合、相手の手札2枚を捨てる。",
+    "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] คาแรกเตอร์ของคู่แข่งทั้งหมด จะมีคอสต์ -3.[เมื่อลงสนาม] ถ้าบนมือของคู่แข่งมีการ์ดอยู่ จำนวน 6 ใบ หรือมากกว่า, ทิ้งการ์ดบนมือของคู่แข่ง จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-078.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-078",
@@ -1906,13 +2073,15 @@
     "power": 9000,
     "attribute": "Slash",
     "trait": "Navy",
-    "effectEn": "[DON!! x1] [Your Turn] Give all of your opponent's Characters −3 cost.<br>[On Play] If your opponent has 6 or more cards in their hand, trash 2 cards from your opponent's hand.",
-    "effectJp": "【ドン!!×1】【自分のターン中】相手のキャラすべてをコスト-3。<br>【登場時】相手の手札が6枚以上ある場合、相手の手札2枚を捨てる。",
-    "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] คาแรกเตอร์ของคู่แข่งทั้งหมด จะมีคอสต์ -3.<br>[เมื่อลงสนาม] ถ้าบนมือของคู่แข่งมีการ์ดอยู่ จำนวน 6 ใบ หรือมากกว่า, ทิ้งการ์ดบนมือของคู่แข่ง จำนวน 2 ใบ.",
+    "effectEn": "[DON!! x1] [Your Turn] Give all of your opponent's Characters −3 cost.[On Play] If your opponent has 6 or more cards in their hand, trash 2 cards from your opponent's hand.",
+    "effectJp": "【ドン!!×1】【自分のターン中】相手のキャラすべてをコスト-3。【登場時】相手の手札が6枚以上ある場合、相手の手札2枚を捨てる。",
+    "effectTh": "[ด้ง!! x 1] [เทิร์นตัวเอง] คาแรกเตอร์ของคู่แข่งทั้งหมด จะมีคอสต์ -3.[เมื่อลงสนาม] ถ้าบนมือของคู่แข่งมีการ์ดอยู่ จำนวน 6 ใบ หรือมากกว่า, ทิ้งการ์ดบนมือของคู่แข่ง จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-078_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-079",
@@ -1933,7 +2102,9 @@
     "effectTh": "[ด้ง!! x 1] คาแรกเตอร์นี้ จะไม่ถูก KO จากการแบทเทิล.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-079.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-080",
@@ -1954,7 +2125,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ด ที่ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ ที่อยู่ในแทรชของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็คของเรา : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-080.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-080",
@@ -1976,7 +2149,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-080_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-081",
@@ -1997,7 +2172,9 @@
     "effectTh": "[เมื่อลงสนาม] จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-081.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-081",
@@ -2019,7 +2196,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-081_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-082",
@@ -2040,7 +2219,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-082.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-083",
@@ -2060,7 +2241,9 @@
     "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำการ์ด จำนวนไม่เกิน 2 ใบ, ไปวางที่แทรช, จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-083.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-084",
@@ -2081,7 +2264,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-084.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-085",
@@ -2102,7 +2287,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-085.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-086",
@@ -2123,7 +2310,9 @@
     "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ด ที่ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ นอกเหนือจาก [Spandam] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-086.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-086",
@@ -2145,7 +2334,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-086_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-087",
@@ -2166,7 +2357,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-087.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-088",
@@ -2182,12 +2375,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "CP9",
-    "effectEn": "This Character cannot be K.O.'d by effects.<br>[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
-    "effectJp": "このキャラは効果でKOされない。<br>【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
-    "effectTh": "คาแรกเตอร์นี้ จะไม่ถูก KO จากความสามารถใดๆ.<br>[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
+    "effectEn": "This Character cannot be K.O.'d by effects.[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)",
+    "effectJp": "このキャラは効果でKOされない。【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)",
+    "effectTh": "คาแรกเตอร์นี้ จะไม่ถูก KO จากความสามารถใดๆ.[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-088.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-089",
@@ -2205,10 +2400,12 @@
     "trait": "Navy",
     "effectEn": "[On Play] Look at 3 cards from the top of your deck; reveal up to 1 {Navy} type card other than [Brannew] and add it to your hand. Then, trash the rest.",
     "effectJp": "【登場時】自分のデッキの上から3枚を見て、「ブランニュー」以外の特徴《海軍》を持つカード1枚までを公開し、手札に加える。その後、残りをトラッシュに置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กองทัพเรือ &gt; นอกเหนือจาก [Brannew] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่แทรช.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ดที่มีคุณสมบัติ < กองทัพเรือ > นอกเหนือจาก [Brannew] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-089.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-090",
@@ -2224,12 +2421,14 @@
     "counter": 1000,
     "attribute": "Strike",
     "trait": "CP9",
-    "effectEn": "[DON!! x1] This Character gains [Blocker].<br>(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] Play up to 1 Character card with a type including \"CP\" and a cost of 4 or less from your trash rested.",
-    "effectJp": "【ドン!!×1】このキャラは【ブロッカー】を得る。<br>(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【KO時】自分のトラッシュからコスト4以下の『CP』を含む特徴を持つキャラカード1枚までを、レストで登場させる。",
-    "effectTh": "[ด้ง!! x 1] คาแรกเตอร์นี้จะได้รับ [บล็อกเกอร์].<br>(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ที่ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ และมีคอสต์ 4 หรือต่ำกว่า จากแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพเรสต์.",
+    "effectEn": "[DON!! x1] This Character gains [Blocker].(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On K.O.] Play up to 1 Character card with a type including \"CP\" and a cost of 4 or less from your trash rested.",
+    "effectJp": "【ドン!!×1】このキャラは【ブロッカー】を得る。(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【KO時】自分のトラッシュからコスト4以下の『CP』を含む特徴を持つキャラカード1枚までを、レストで登場させる。",
+    "effectTh": "[ด้ง!! x 1] คาแรกเตอร์นี้จะได้รับ [บล็อกเกอร์].(ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อถูก KO] นำคาแรกเตอร์การ์ด ที่ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ และมีคอสต์ 4 หรือต่ำกว่า จากแทรชของเรา จำนวนไม่เกิน 1 ใบ, ลงสนามในสภาพเรสต์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-090.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-091",
@@ -2249,7 +2448,9 @@
     "effectTh": "[เมื่อลงสนาม] ในเทิร์นนี้, คาแรกเตอร์ ที่แต่เดิมไม่มีความสามารถ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีค่าคอสต์กลายเป็น 0.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-091.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-092",
@@ -2264,12 +2465,14 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "CP9",
-    "effectEn": "[On Play] You may place 2 cards with a type including \"CP\" from your trash at the bottom of your deck in any order: This Character gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【登場時】自分のトラッシュの『CP』を含む特徴を持つカード2枚を好きな順番でデッキの下に置くことができる：このキャラは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ด ที่ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ ที่อยู่ในแทรชของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็คของเรา : ในเทิร์นนี้, คาแรกเตอร์นี้, จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[On Play] You may place 2 cards with a type including \"CP\" from your trash at the bottom of your deck in any order: This Character gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】自分のトラッシュの『CP』を含む特徴を持つカード2枚を好きな順番でデッキの下に置くことができる：このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ด ที่ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ ที่อยู่ในแทรชของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็คของเรา : ในเทิร์นนี้, คาแรกเตอร์นี้, จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-092.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-092",
@@ -2284,13 +2487,15 @@
     "power": 7000,
     "attribute": "Strike",
     "trait": "CP9",
-    "effectEn": "[On Play] You may place 2 cards with a type including \"CP\" from your trash at the bottom of your deck in any order: This Character gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
-    "effectJp": "【登場時】自分のトラッシュの『CP』を含む特徴を持つカード2枚を好きな順番でデッキの下に置くことができる：このキャラは、このターン中、【速攻】を得る。<br>(このカードは登場したターンにアタックできる)",
-    "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ด ที่ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ ที่อยู่ในแทรชของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็คของเรา : ในเทิร์นนี้, คาแรกเตอร์นี้, จะได้รับ [จู่โจมฉับพลัน].<br>(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "effectEn": "[On Play] You may place 2 cards with a type including \"CP\" from your trash at the bottom of your deck in any order: This Character gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】自分のトラッシュの『CP』を含む特徴を持つカード2枚を好きな順番でデッキの下に置くことができる：このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] สามารถนำการ์ด ที่ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ ที่อยู่ในแทรชของเรา จำนวน 2 ใบ ไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็คของเรา : ในเทิร์นนี้, คาแรกเตอร์นี้, จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-092_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-093",
@@ -2310,7 +2515,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ถ้าลีดเดอร์ของเรา ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-093.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-094",
@@ -2326,11 +2533,11 @@
     "effectEn": "[Main] If your Leader's type includes \"CP\", look at 5 cards from the top of your deck; play up to 1 Character card with a type including \"CP\" and a cost of 5 or less. Then, trash the rest.",
     "effectJp": "【メイン】自分のリーダーが『CP』を含む特徴を持つ場合、自分のデッキの上から5枚を見て、コスト5以下の『CP』を含む特徴を持つキャラカード1枚までを、登場させる。その後、残りをトラッシュに置く。",
     "effectTh": "[เมน] ถ้าลีดเดอร์ของเรา ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ, ดูการ์ดจากข้างบนเด็คของเรา จำนวน 5 ใบ, และนำคาแรกเตอร์การ์ด ที่มีคอสต์ 5 หรือต่ำกว่า ที่ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ จำนวนไม่เกิน 1 ใบ, ลงสนาม. จากนั้น, นำการ์ดที่เหลือไปวางที่แทรช.",
-    "triggerEn": "[Trigger] Play up to 1 black Character card with a cost of 3 or less from your trash.",
-    "triggerJp": "【トリガー】自分のトラッシュからコスト3以下の黒のキャラカード1枚までを、登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-094.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-095",
@@ -2346,11 +2553,11 @@
     "effectEn": "[Main] Give up to 2 of your opponent's Characters -2 cost during this turn.",
     "effectJp": "【メイン】相手のキャラ2枚までを、このターン中、コスト-2。",
     "effectTh": "[เมน] ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 2 ใบ, จะมีคอสต์ -2.",
-    "triggerEn": "[Trigger] Your opponent trashes 1 card from their hand.",
-    "triggerJp": "【トリガー】相手は自身の手札1枚を捨てる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-095.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-096",
@@ -2366,11 +2573,11 @@
     "effectEn": "[Main] K.O. up to 1 of your opponent's Characters with a cost of 0 or your opponent's Stages with a cost of 3 or less.",
     "effectJp": "【メイン】相手のコスト0のキャラか、相手のコスト3以下のステージ1枚までを、KOする。",
     "effectTh": "[เมน] ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 0, หรือทำการ KO สเตจของคู่แข่ง ที่มีคอสต์ 3 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Draw 2 cards.",
-    "triggerJp": "【トリガー】カード2枚を引く。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-096.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-097",
@@ -2385,11 +2592,11 @@
     "effectEn": "[Counter] You may trash 1 card from your hand: Up to 1 of your Leader or Character cards gains +3000 power during this battle.",
     "effectJp": "【カウンター】自分の手札1枚を捨てることができる：自分のリーダーかキャラ1枚までを、このバトル中、パワー+3000。",
     "effectTh": "[เคาน์เตอร์] สามารถทิ้งการ์ดบนมือของเรา จำนวน 1 ใบ : ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +3000.",
-    "triggerEn": "[Trigger] Draw 1 card. Then, K.O. up to 1 of your opponent's Characters with a cost of 1 or less.",
-    "triggerJp": "【トリガー】カード1枚を引く。その後、相手のコスト1以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-097.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-098",
@@ -2405,11 +2612,11 @@
     "effectEn": "[Activate: Main] You may rest this Stage: If your Leader's type includes \"CP\", give up to 1 of your opponent's Characters -2 cost during this turn.",
     "effectJp": "【起動メイン】このステージをレストにできる：自分のリーダーが『CP』を含む特徴を持つ場合、相手のキャラ1枚までを、このターン中、コスト-2。",
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ สเตจนี้ : ถ้าลีดเดอร์ของเรา ระบุคำว่า [CP] รวมอยู่ในคุณสมบัติ, ในเทิร์นนี้, คาแรกเตอร์ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, จะมีคอสต์ -2.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-098.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-099",
@@ -2421,7 +2628,7 @@
     "nameTh": "Charlotte Katakuri",
     "color": "Yellow",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Strike",
     "trait": "Big Mom Pirates",
     "effectEn": "[DON!! x1] [When Attacking] Look at up to 1 card from the top of your or your opponent's Life cards, and place it at the top or bottom of the Life cards. Then, this Leader gains +1000 power during this battle.",
@@ -2429,7 +2636,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] ดู ไลฟ์ ใบบนสุด ของเรา หรือ ของคู่แข่ง จำนวนไม่เกิน 1 ใบ, และนำ ไปวางที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์เจ้าของเดิม. จากนั้น, ในแบทเทิลนี้, ลีดเดอร์นี้, จะมีพาวเวอร์ +1000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-099.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-099",
@@ -2441,7 +2650,7 @@
     "nameTh": "Charlotte Katakuri (Parallel)",
     "color": "Yellow",
     "power": 5000,
-    "life": 1,
+    "life": 5,
     "attribute": "Strike",
     "trait": "Big Mom Pirates",
     "effectEn": "[DON!! x1] [When Attacking] Look at up to 1 card from the top of your or your opponent's Life cards, and place it at the top or bottom of the Life cards. Then, this Leader gains +1000 power during this battle.",
@@ -2450,7 +2659,9 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-099_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-100",
@@ -2468,11 +2679,11 @@
     "effectEn": "-",
     "effectJp": "-",
     "effectTh": "-",
-    "triggerEn": "[Trigger] You may trash 1 card from the top or bottom of your Life cards: Play this card.",
-    "triggerJp": "【トリガー】自分のライフの上か下から1枚をトラッシュに置くことができる：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-100.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-101",
@@ -2493,7 +2704,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-101.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-102",
@@ -2514,7 +2727,9 @@
     "effectTh": "[ด้ง!! x 2] [เมื่อโจมตี] สามารถนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นบนสู่มือ : นำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-102.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-103",
@@ -2535,7 +2750,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-103.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-104",
@@ -2551,12 +2768,14 @@
     "counter": 1000,
     "attribute": "Wisdom",
     "trait": "Merfolk",
-    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Look at up to 1 card from the top of your or your opponent's Life cards, and place it at the top or bottom of the Life cards.",
-    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)<br>【登場時】自分か相手のライフの上から1枚までを見て、ライフの上か下に置く。",
-    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)<br>[เมื่อลงสนาม] ดู ไลฟ์ ใบบนสุดของคู่แข่ง จำนวนไม่เกิน 1 ใบ, และนำไปวางที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์เจ้าของเดิม.",
+    "effectEn": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)[On Play] Look at up to 1 card from the top of your or your opponent's Life cards, and place it at the top or bottom of the Life cards.",
+    "effectJp": "【ブロッカー】(相手のアタックの後、このカードをレストにし、アタックの対象をこのカードにできる)【登場時】自分か相手のライフの上から1枚までを見て、ライフの上か下に置く。",
+    "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)[เมื่อลงสนาม] ดู ไลฟ์ ใบบนสุดของคู่แข่ง จำนวนไม่เกิน 1 ใบ, และนำไปวางที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์เจ้าของเดิม.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-104.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-105",
@@ -2577,7 +2796,9 @@
     "effectTh": "[ด้ง!! x 1] [เมื่อโจมตี] สามารถทิ้งการ์ด ที่มี [ทริกเกอร์] จากบนมือของเรา จำนวน 1 ใบ : ในแบทเทิลนี้, คาแรกเตอร์นี้, จะมีพาวเวอร์ +3000.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-105.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-106",
@@ -2598,7 +2819,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-106.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-107",
@@ -2619,7 +2842,9 @@
     "effectTh": "[บล็อกเกอร์] (ขณะที่คู่แข่งโจมตี, จะสามารถ เรสต์ การ์ดใบนี้, และเปลี่ยนเป้าหมายการโจมตีมาที่การ์ดใบนี้)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-107.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-108",
@@ -2635,14 +2860,14 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Big Mom Pirates",
-    "effectEn": "[DON!! x1] If you have less Life cards than your opponent, this Character gains [Double Attack] and +1000 power.<br>(This card deals 2 damage.)",
-    "effectJp": "【ドン!!×1】自分のライフの枚数が相手より少ない場合、このキャラは【ダブルアタック】を得て、パワー+1000。<br>(このカードが与えるダメージは2になる)",
-    "effectTh": "[ด้ง!! x 1] ถ้าเรามี ไลฟ์ น้อยกว่าคู่แข่ง, คาแรกเตอร์นี้จะได้รับ [ดับเบิ้ลแอทแทค], และจะมีพาวเวอร์ +1000.<br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。",
+    "effectEn": "[DON!! x1] If you have less Life cards than your opponent, this Character gains [Double Attack] and +1000 power.(This card deals 2 damage.)",
+    "effectJp": "【ドン!!×1】自分のライフの枚数が相手より少ない場合、このキャラは【ダブルアタック】を得て、パワー+1000。(このカードが与えるダメージは2になる)",
+    "effectTh": "[ด้ง!! x 1] ถ้าเรามี ไลฟ์ น้อยกว่าคู่แข่ง, คาแรกเตอร์นี้จะได้รับ [ดับเบิ้ลแอทแทค], และจะมีพาวเวอร์ +1000.(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-108.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-108",
@@ -2658,15 +2883,15 @@
     "counter": 1000,
     "attribute": "Slash",
     "trait": "Big Mom Pirates",
-    "effectEn": "[DON!! x1] If you have less Life cards than your opponent, this Character gains [Double Attack] and +1000 power.<br>(This card deals 2 damage.)",
-    "effectJp": "【ドン!!×1】自分のライフの枚数が相手より少ない場合、このキャラは【ダブルアタック】を得て、パワー+1000。<br>(このカードが与えるダメージは2になる)",
-    "effectTh": "[ด้ง!! x 1] ถ้าเรามี ไลฟ์ น้อยกว่าคู่แข่ง, คาแรกเตอร์นี้จะได้รับ [ดับเบิ้ลแอทแทค], และจะมีพาวเวอร์ +1000.<br>(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。",
+    "effectEn": "[DON!! x1] If you have less Life cards than your opponent, this Character gains [Double Attack] and +1000 power.(This card deals 2 damage.)",
+    "effectJp": "【ドン!!×1】自分のライフの枚数が相手より少ない場合、このキャラは【ダブルアタック】を得て、パワー+1000。(このカードが与えるダメージは2になる)",
+    "effectTh": "[ด้ง!! x 1] ถ้าเรามี ไลฟ์ น้อยกว่าคู่แข่ง, คาแรกเตอร์นี้จะได้รับ [ดับเบิ้ลแอทแทค], และจะมีพาวเวอร์ +1000.(ดาเมจที่การ์ดใบนี้กระทำจะกลายเป็น 2 หน่วย)",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-108_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-109",
@@ -2686,7 +2911,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ ไปวางที่แทรช : นำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์เรา.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-109.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-110",
@@ -2705,11 +2932,11 @@
     "effectEn": "[When Attacking] You may add 1 card from the top or bottom of your Life cards to your hand: This Character gains +2000 power during this battle.",
     "effectJp": "【アタック時】自分のライフの上か下から1枚を手札に加えることができる：このキャラは、このバトル中、パワー+2000。",
     "effectTh": "[เมื่อโจมตี] สามารถนำ ไลฟ์ ใบบนสุดของเรา หรือ ใบล่างสุดของเรา จำนวน 1 ใบ เพิ่มขึ้นบนสู่มือ : ในแบทเทิลนี้, คาแรกเตอร์นี้, จะมีพาวเวอร์ +2000.",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-110.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-111",
@@ -2730,7 +2957,9 @@
     "effectTh": "-",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-111.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-112",
@@ -2748,10 +2977,12 @@
     "trait": "Big Mom Pirates",
     "effectEn": "[On Play] Look at 4 cards from the top of your deck; reveal up to 1 [Sanji] or {Big Mom Pirates} type card other than [Charlotte Pudding] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から4枚を見て、「シャーロット・プリン」以外の特徴《ビッグ・マム海賊団》を持つカードか「サンジ」1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำ [Sanji] หรือ การ์ดที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดบิ๊กมัม &gt; นอกเหนือจาก [Charlotte Pudding] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำ [Sanji] หรือ การ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดบิ๊กมัม > นอกเหนือจาก [Charlotte Pudding] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-112.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-112",
@@ -2769,11 +3000,13 @@
     "trait": "Big Mom Pirates",
     "effectEn": "[On Play] Look at 4 cards from the top of your deck; reveal up to 1 [Sanji] or {Big Mom Pirates} type card other than [Charlotte Pudding] and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【登場時】自分のデッキの上から4枚を見て、「シャーロット・プリン」以外の特徴《ビッグ・マム海賊団》を持つカードか「サンジ」1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำ [Sanji] หรือ การ์ดที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดบิ๊กมัม &gt; นอกเหนือจาก [Charlotte Pudding] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
+    "effectTh": "[เมื่อลงสนาม] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 4 ใบ, และนำ [Sanji] หรือ การ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดบิ๊กมัม > นอกเหนือจาก [Charlotte Pudding] จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-112_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-113",
@@ -2790,12 +3023,12 @@
     "trait": "Big Mom Pirates",
     "effectEn": "[On K.O.] Look at 3 cards from the top of your deck; reveal up to 1 {Big Mom Pirates} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【KO時】自分のデッキの上から3枚を見て、特徴《ビッグ・マム海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อถูก KO] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดบิ๊กมัม &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。",
+    "effectTh": "[เมื่อถูก KO] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดบิ๊กมัม > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-113.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-113",
@@ -2812,13 +3045,13 @@
     "trait": "Big Mom Pirates",
     "effectEn": "[On K.O.] Look at 3 cards from the top of your deck; reveal up to 1 {Big Mom Pirates} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order.",
     "effectJp": "【KO時】自分のデッキの上から3枚を見て、特徴《ビッグ・マム海賊団》を持つカード1枚までを公開し、手札に加える。その後、残りを好きな順番でデッキの下に置く。",
-    "effectTh": "[เมื่อถูก KO] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ดที่มีคุณสมบัติ &lt; กลุ่มโจรสลัดบิ๊กมัม &gt; จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
-    "triggerEn": "[Trigger] You may trash 1 card from your hand: Play this card.",
-    "triggerJp": "【トリガー】自分の手札1枚を捨てることができる：このカードを登場させる。",
+    "effectTh": "[เมื่อถูก KO] ดูการ์ดจากข้างบนเด็คของเรา จำนวน 3 ใบ, และนำการ์ดที่มีคุณสมบัติ < กลุ่มโจรสลัดบิ๊กมัม > จำนวนไม่เกิน 1 ใบ มาแสดงให้ดู, แล้วนำขึ้นมือ. จากนั้น, นำการ์ดที่เหลือไปวางในลำดับใดก็ได้ ที่ข้างใต้เด็ค.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-113_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-114",
@@ -2835,10 +3068,12 @@
     "trait": "The Four Emperors/Big Mom Pirates",
     "effectEn": "[On Play] If your Leader has the {Big Mom Pirates} type, add up to 1 card from the top of your deck to the top of your Life cards. Then, trash up to 1 card from the top of your opponent's Life cards.",
     "effectJp": "【登場時】自分のリーダーが特徴《ビッグ・マム海賊団》を持つ場合、自分のデッキの上から1枚までを、ライフの上に加える。その後、相手のライフの上から1枚までを、トラッシュに置く。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดบิ๊กมัม &gt;, นำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, นำ ไลฟ์ ใบบนสุดของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดบิ๊กมัม >, นำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, นำ ไลฟ์ ใบบนสุดของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-114.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-114",
@@ -2855,11 +3090,13 @@
     "trait": "The Four Emperors/Big Mom Pirates",
     "effectEn": "[On Play] If your Leader has the {Big Mom Pirates} type, add up to 1 card from the top of your deck to the top of your Life cards. Then, trash up to 1 card from the top of your opponent's Life cards.",
     "effectJp": "【登場時】自分のリーダーが特徴《ビッグ・マム海賊団》を持つ場合、自分のデッキの上から1枚までを、ライフの上に加える。その後、相手のライフの上から1枚までを、トラッシュに置く。",
-    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ &lt; กลุ่มโจรสลัดบิ๊กมัม &gt;, นำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, นำ ไลฟ์ ใบบนสุดของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.",
+    "effectTh": "[เมื่อลงสนาม] ถ้าลีดเดอร์ของเรา มีคุณสมบัติ < กลุ่มโจรสลัดบิ๊กมัม >, นำการ์ดใบบนสุดจากเด็คของเรา จำนวนไม่เกิน 1 ใบ ไปวางเพิ่มที่บนสุดของไลฟ์. จากนั้น, นำ ไลฟ์ ใบบนสุดของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-114_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-115",
@@ -2880,7 +3117,9 @@
     "effectTh": "[เมื่อลงสนาม] สามารถทิ้งการ์ด ที่มี [ทริกเกอร์] จากบนมือของเรา จำนวน 1 ใบ : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 1 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-115.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-116",
@@ -2898,11 +3137,11 @@
     "effectEn": "[On Play] Draw 3 cards and trash 2 cards from your hand.",
     "effectJp": "【登場時】カード3枚を引き、自分の手札2枚を捨てる。",
     "effectTh": "[เมื่อลงสนาม] จั่วการ์ด จำนวน 3 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-116.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-117",
@@ -2921,11 +3160,11 @@
     "effectEn": "[Activate: Main] You may rest this Character: Up to 1 of your [Charlotte Linlin] cards gains +1000 power until the start of your next turn.",
     "effectJp": "【起動メイン】このキャラをレストにできる：自分の「シャーロット・リンリン」1枚までを、次の自分のターン開始時まで、パワー+1000。",
     "effectTh": "[ใช้งาน : เมน] สามารถ เรสต์ คาแรกเตอร์นี้ : จนกระทั่งถึงช่วงเริ่มต้นเทิร์นของเราในครั้งถัดไป, [Charlotte Linlin] ของฝ่ายเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +1000.",
-    "triggerEn": "[Trigger] Play this card.",
-    "triggerJp": "【トリガー】このカードを登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-117.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-118",
@@ -2941,11 +3180,11 @@
     "effectEn": "[Counter] Up to 1 of your Leader or Character cards gains +5000 power during this battle.",
     "effectJp": "【カウンター】自分のリーダーかキャラ1枚までを、このバトル中、パワー+5000。",
     "effectTh": "[เคาน์เตอร์] ในแบทเทิลนี้, ลีดเดอร์ หรือ คาแรกเตอร์ ของเรา จำนวนไม่เกิน 1 ใบ, จะมีพาวเวอร์ +5000.",
-    "triggerEn": "[Trigger] You may trash 2 cards from your hand: Add up to 1 card from the top of your deck to the top of your Life cards.",
-    "triggerJp": "【トリガー】自分の手札2枚を捨てることができる：自分のデッキの上から1枚までを、ライフの上に加える。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-118.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-119",
@@ -2961,11 +3200,11 @@
     "effectEn": "[Main] If you have less Life cards than your opponent, K.O. up to 1 of your opponent's Characters with a cost of 4 or less.",
     "effectJp": "【メイン】自分のライフが相手より少ない場合、相手のコスト4以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] ถ้าเรามีไลฟ์ น้อยกว่าคู่แข่ง, ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 4 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] Play up to 1 Character card with a cost of 4 or less and a [Trigger] from your hand.",
-    "triggerJp": "【トリガー】自分の手札からコスト4以下の【トリガー】を持つキャラカード1枚までを、登場させる。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-119.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-120",
@@ -2981,11 +3220,11 @@
     "effectEn": "[Main] If your opponent has 4 or more Life cards, trash up to 1 card from the top of your opponent's Life cards.",
     "effectJp": "【メイン】相手のライフが4枚以上の場合、相手のライフの上から1枚までを、トラッシュに置く。",
     "effectTh": "[เมน] ถ้าคู่แข่งมี ไลฟ์ จำนวน 4 ใบ หรือมากกว่า, นำ ไลฟ์ ใบบนสุดของคู่แข่ง จำนวนไม่เกิน 1 ใบ, ไปวางที่แทรช.",
-    "triggerEn": "[Trigger] Activate this card's [Main] effect.",
-    "triggerJp": "【トリガー】このカードの【メイン】効果を発動する。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-120.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-121",
@@ -3001,11 +3240,11 @@
     "effectEn": "[Main] You may trash 1 card from the top of your Life cards: K.O. up to 1 of your opponent's Characters with a cost of 5 or less.",
     "effectJp": "【メイン】自分のライフの上から1枚をトラッシュに置くことができる：相手のコスト5以下のキャラ1枚までを、KOする。",
     "effectTh": "[เมน] สามารถนำ ไลฟ์ ใบบนสุดของเรา จำนวน 1 ใบ ไปวางที่แทรช : ทำการ KO คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 5 หรือต่ำกว่า, จำนวนไม่เกิน 1 ใบ.",
-    "triggerEn": "[Trigger] K.O. up to 1 of your opponent's Characters with a cost of 5 or less.",
-    "triggerJp": "【トリガー】相手のコスト5以下のキャラ1枚までを、KOする。",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-121.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-122",
@@ -3021,12 +3260,14 @@
     "counter": 1000,
     "attribute": "Ranged",
     "trait": "Sniper Island",
-    "effectEn": "Also treat this card's name as [Usopp] according to the rules.<br>[On Play] Return up to 1 Character with a cost of 6 or less to the owner's hand. Then, draw 2 cards and trash 2 cards from your hand.",
-    "effectJp": "ルール上、このカードはカード名を「ウソップ」としても扱う。<br>【登場時】コスト6以下のキャラ1枚までを、持ち主の手札に戻す。その後、カード2枚を引き、自分の手札2枚を捨てる。",
-    "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Usopp] ด้วยตามกฎ.<br>[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 6 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ. จากนั้น, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
+    "effectEn": "Also treat this card's name as [Usopp] according to the rules.[On Play] Return up to 1 Character with a cost of 6 or less to the owner's hand. Then, draw 2 cards and trash 2 cards from your hand.",
+    "effectJp": "ルール上、このカードはカード名を「ウソップ」としても扱う。【登場時】コスト6以下のキャラ1枚までを、持ち主の手札に戻す。その後、カード2枚を引き、自分の手札2枚を捨てる。",
+    "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Usopp] ด้วยตามกฎ.[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 6 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ. จากนั้น, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-122.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-122",
@@ -3042,13 +3283,15 @@
     "counter": 1000,
     "attribute": "Ranged",
     "trait": "Sniper Island",
-    "effectEn": "Also treat this card's name as [Usopp] according to the rules.<br>[On Play] Return up to 1 Character with a cost of 6 or less to the owner's hand. Then, draw 2 cards and trash 2 cards from your hand.",
-    "effectJp": "ルール上、このカードはカード名を「ウソップ」としても扱う。<br>【登場時】コスト6以下のキャラ1枚までを、持ち主の手札に戻す。その後、カード2枚を引き、自分の手札2枚を捨てる。",
-    "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Usopp] ด้วยตามกฎ.<br>[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 6 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ. จากนั้น, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
+    "effectEn": "Also treat this card's name as [Usopp] according to the rules.[On Play] Return up to 1 Character with a cost of 6 or less to the owner's hand. Then, draw 2 cards and trash 2 cards from your hand.",
+    "effectJp": "ルール上、このカードはカード名を「ウソップ」としても扱う。【登場時】コスト6以下のキャラ1枚までを、持ち主の手札に戻す。その後、カード2枚を引き、自分の手札2枚を捨てる。",
+    "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Usopp] ด้วยตามกฎ.[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 6 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ. จากนั้น, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-122_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-122",
@@ -3064,13 +3307,15 @@
     "counter": 1000,
     "attribute": "Ranged",
     "trait": "Sniper Island",
-    "effectEn": "Also treat this card's name as [Usopp] according to the rules.<br>[On Play] Return up to 1 Character with a cost of 6 or less to the owner's hand. Then, draw 2 cards and trash 2 cards from your hand.",
-    "effectJp": "ルール上、このカードはカード名を「ウソップ」としても扱う。<br>【登場時】コスト6以下のキャラ1枚までを、持ち主の手札に戻す。その後、カード2枚を引き、自分の手札2枚を捨てる。",
-    "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Usopp] ด้วยตามกฎ.<br>[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 6 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ. จากนั้น, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
+    "effectEn": "Also treat this card's name as [Usopp] according to the rules.[On Play] Return up to 1 Character with a cost of 6 or less to the owner's hand. Then, draw 2 cards and trash 2 cards from your hand.",
+    "effectJp": "ルール上、このカードはカード名を「ウソップ」としても扱う。【登場時】コスト6以下のキャラ1枚までを、持ち主の手札に戻す。その後、カード2枚を引き、自分の手札2枚を捨てる。",
+    "effectTh": "การ์ดใบนี้, จะนับว่ามีชื่อการ์ดเป็น [Usopp] ด้วยตามกฎ.[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 6 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือของเจ้าของ. จากนั้น, จั่วการ์ด จำนวน 2 ใบ, และทิ้งการ์ดบนมือของเรา จำนวน 2 ใบ.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-122_p2.png",
     "isParallel": true,
     "parallelIndex": 2,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-123",
@@ -3090,7 +3335,9 @@
     "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 8 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, ไปวางเพิ่มที่ ข้างบนสุด หรือ ข้างใต้สุด ของไลฟ์เจ้าของเดิม แบบหงายหน้า.",
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-123.png",
     "isParallel": false,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   },
   {
     "code": "OP03-123",
@@ -3111,6 +3358,77 @@
     "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/OP03-123_p1.png",
     "isParallel": true,
     "parallelIndex": 1,
-    "sets": []
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
+  },
+  {
+    "code": "ST01-012",
+    "cardCode": "ST01-012_p1",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Monkey.D.Luffy (Parallel)",
+    "nameJp": "モンキー・D・ルフィ",
+    "nameTh": "Monkey.D.Luffy (Parallel)",
+    "color": "Red",
+    "cost": 5,
+    "power": 6000,
+    "attribute": "Strike",
+    "trait": "Supernovas/Straw Hat Crew",
+    "effectEn": "[Rush] (This card can attack on the turn in which it is played.)[DON!! x2] [When Attacking] Your opponent cannot activate [Blocker] during this battle.",
+    "effectJp": "【速攻】(このカードは登場したターンにアタックできる)【ドン!!×2】【アタック時】相手は、このバトル中、【ブロッカー】を発動できない。",
+    "effectTh": "[จู่โจมฉับพลัน] (การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)[ด้ง!! x 2] [เมื่อโจมตี] ในแบทเทิลนี้, คู่แข่งจะไม่สามารถใช้งาน [บล็อกเกอร์].",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST01-012_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
+  },
+  {
+    "code": "ST03-009",
+    "cardCode": "ST03-009_p1",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Donquixote Doflamingo (Parallel)",
+    "nameJp": "ドンキホーテ・ドフラミンゴ",
+    "nameTh": "Donquixote Doflamingo (Parallel)",
+    "color": "Blue",
+    "cost": 7,
+    "power": 7000,
+    "attribute": "Special",
+    "trait": "The Seven Warlords of the Sea/Donquixote Pirates",
+    "effectEn": "[On Play] Return up to 1 Character with a cost of 7 or less to the owner's hand.",
+    "effectJp": "【登場時】コスト7以下のキャラ1枚までを、持ち主の手札に戻す。",
+    "effectTh": "[เมื่อลงสนาม] นำคาแรกเตอร์ของใครก็ตาม ที่มีคอสต์ 7 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ, กลับขึ้นมือเจ้าของ.",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST03-009_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
+  },
+  {
+    "code": "ST04-003",
+    "cardCode": "ST04-003_p1",
+    "rarity": "SP",
+    "cardType": "CHARACTER",
+    "nameEn": "Kaido (Parallel)",
+    "nameJp": "カイドウ",
+    "nameTh": "Kaido (Parallel)",
+    "color": "Purple",
+    "cost": 9,
+    "power": 10000,
+    "attribute": "Strike",
+    "trait": "The Four Emperors/Animal Kingdom Pirates",
+    "effectEn": "[On Play] DON!! −5 (You may return the specified number of DON!! cards from your field to your DON!! deck.): K.O. up to 1 of your opponent's Characters with a cost of 6 or less. This Character gains [Rush] during this turn.(This card can attack on the turn in which it is played.)",
+    "effectJp": "【登場時】ドン!!-5(自分の場のドン!!を指定の数ドン!!デッキに戻すことができる)：相手のコスト6以下のキャラ1枚までを、KOし、このキャラは、このターン中、【速攻】を得る。(このカードは登場したターンにアタックできる)",
+    "effectTh": "[เมื่อลงสนาม] ด้ง!! – 5 (สามารถนำ ด้ง!! ในสนามของเรากลับ ด้ง!! เด็ค ตามจำนวนที่ระบุ) : ทำการ KO ใส่คาแรกเตอร์ของคู่แข่ง ที่มีคอสต์ 6 หรือต่ำกว่า จำนวนไม่เกิน 1 ใบ. จากนั้น, ในเทิร์นนี้, คาแรกเตอร์นี้จะได้รับ [จู่โจมฉับพลัน].(การ์ดใบนี้สามารถโจมตีในเทิร์นที่เพิ่งลงสนามได้)",
+    "imageUrl": "https://asia-en.onepiece-cardgame.com/images/cardlist/card/ST04-003_p1.png",
+    "isParallel": true,
+    "parallelIndex": 1,
+    "sets": [
+      "-Pillars of Strength- [OP-03]"
+    ]
   }
 ]
