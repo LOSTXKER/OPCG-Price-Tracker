@@ -51,8 +51,12 @@ export const getSiblingVariants = cache(async (baseCode: string | null, excludeI
       isParallel: true,
       imageUrl: true,
       latestPriceJpy: true,
+      set: { select: { code: true } },
     },
-    orderBy: [{ parallelIndex: { sort: "asc", nulls: "first" } }],
+    orderBy: [
+      { set: { code: "asc" } },
+      { parallelIndex: { sort: "asc", nulls: "first" } },
+    ],
   })
 })
 

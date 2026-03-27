@@ -25,6 +25,7 @@ export interface SiblingCard {
   isParallel: boolean
   imageUrl: string | null
   latestPriceJpy: number | null
+  set: { code: string }
 }
 
 export interface CardDetailProps {
@@ -128,6 +129,9 @@ export function CardDetail({ card, siblings, communityPrice }: CardDetailProps) 
                       )}
                     </div>
                     <div>
+                      <span className="inline-block rounded bg-muted px-1 py-px font-price text-[10px] uppercase text-muted-foreground">
+                        {s.set.code}
+                      </span>
                       <RarityBadge rarity={s.rarity} size="sm" />
                       {s.latestPriceJpy != null && (
                         <p className="mt-0.5 font-price text-xs font-semibold">

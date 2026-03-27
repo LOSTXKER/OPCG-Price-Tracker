@@ -50,6 +50,9 @@ export async function matchAndUpdatePrices(
 
     const code = listing.cardCode.toUpperCase();
 
+    const parallel = isParallelListing(listing);
+    const rarity = listing.rarity || null;
+
     // 1. Match by yuyuteiId (fast path, scoped to set)
     let card = listing.yuyuteiId
       ? await db.card.findFirst({
@@ -66,24 +69,42 @@ export async function matchAndUpdatePrices(
       });
     }
 
-    // 3. Parallel match: baseCode + rarity + isParallel (scoped to set, prefer unlinked)
-    if (!card && isParallelListing(listing) && listing.rarity) {
+    // 3. baseCode match — handles PRB/ST where Yuyutei uses original codes
+    if (!card && parallel && rarity) {
       card = await db.card.findFirst({
-        where: {
-          baseCode: code,
-          isParallel: true,
-          rarity: listing.rarity,
-          yuyuteiId: null,
-          ...setFilter,
-        },
+        where: { baseCode: code, isParallel: true, rarity, yuyuteiId: null, ...setFilter },
         select: { id: true },
         orderBy: { parallelIndex: "asc" },
       });
       if (!card) {
         card = await db.card.findFirst({
-          where: { baseCode: code, isParallel: true, rarity: listing.rarity, ...setFilter },
+          where: { baseCode: code, isParallel: true, yuyuteiId: null, ...setFilter },
           select: { id: true },
           orderBy: { parallelIndex: "asc" },
+        });
+      }
+    }
+
+    if (!card && !parallel) {
+      card = await db.card.findFirst({
+        where: {
+          baseCode: code,
+          isParallel: false,
+          ...(rarity ? { rarity } : {}),
+          yuyuteiId: null,
+          ...setFilter,
+        },
+        select: { id: true },
+      });
+      if (!card) {
+        card = await db.card.findFirst({
+          where: {
+            baseCode: code,
+            isParallel: false,
+            ...(rarity ? { rarity } : {}),
+            ...setFilter,
+          },
+          select: { id: true },
         });
       }
     }
