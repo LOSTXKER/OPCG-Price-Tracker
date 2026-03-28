@@ -70,7 +70,7 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
               className={cn(
                 "flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
                 activeTab === tab.id
-                  ? "bg-foreground text-background shadow-sm"
+                  ? "bg-primary text-primary-foreground shadow-sm"
                   : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
@@ -89,7 +89,7 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
                 className={cn(
                   "rounded-md px-2.5 py-1 text-xs font-semibold tabular-nums transition-all",
                   period === p
-                    ? "bg-foreground text-background shadow-sm"
+                    ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                 )}
               >
@@ -175,11 +175,6 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
                             <p className="truncate font-medium leading-tight">{name}</p>
                             <div className="mt-0.5 flex items-center gap-1.5">
                               <RarityBadge rarity={card.rarity} size="sm" />
-                              {card.isParallel && (
-                                <span className="rounded bg-primary/80 px-1 py-px text-[10px] font-medium text-primary-foreground">
-                                  P
-                                </span>
-                              )}
                             </div>
                           </div>
                         </Link>

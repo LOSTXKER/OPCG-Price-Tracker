@@ -76,7 +76,6 @@ export function CardTable({ cards }: { cards: CardTableRow[] }) {
                       </p>
                       <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
                         {card.baseCode ?? card.cardCode}
-                        {card.isParallel && <span className="ml-1 text-primary">P</span>}
                       </p>
                     </div>
                   </Link>

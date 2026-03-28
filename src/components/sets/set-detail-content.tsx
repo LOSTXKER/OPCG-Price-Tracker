@@ -257,7 +257,7 @@ export function SetDetailContent({
                 className={cn(
                   "rounded-md px-2.5 py-1 text-xs font-semibold tabular-nums transition-all",
                   changePeriod === p
-                    ? "bg-foreground text-background shadow-sm"
+                    ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                 )}
               >

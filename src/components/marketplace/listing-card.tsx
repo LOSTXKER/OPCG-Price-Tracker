@@ -115,7 +115,7 @@ export function ListingCard({
             </Badge>
           )}
           {isFeatured && (
-            <Badge className="bg-muted/90 text-black border-0 text-[11px] shadow-sm">
+            <Badge className="bg-muted/90 text-foreground border-0 text-[11px] shadow-sm">
               Featured
             </Badge>
           )}

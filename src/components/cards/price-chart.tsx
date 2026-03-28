@@ -15,8 +15,17 @@ import { cn } from "@/lib/utils"
 import { formatByCurrency, jpyToThb, jpyToUsd } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
-const COLOR_UP = "#16c784"
-const COLOR_DOWN = "#ea3943"
+function getCssVar(name: string, fallback: string) {
+  if (typeof document === "undefined") return fallback
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback
+}
+
+function getChartColors() {
+  return {
+    up: getCssVar("--price-up", "#34C759"),
+    down: getCssVar("--price-down", "#FF3B30"),
+  }
+}
 
 const PERIODS = [
   { value: "24h", label: "24H" },
@@ -177,13 +186,14 @@ export function PriceChart({
   )
 
   const { lineColor, isUp, change } = useMemo(() => {
+    const colors = getChartColors()
     if (chartData.length < 2)
-      return { lineColor: COLOR_UP, isUp: true, change: 0 }
+      return { lineColor: colors.up, isUp: true, change: 0 }
     const first = chartData[0].priceJpy
     const last = chartData[chartData.length - 1].priceJpy
     const up = last >= first
     const chg = first > 0 ? ((last - first) / first) * 100 : 0
-    return { lineColor: up ? COLOR_UP : COLOR_DOWN, isUp: up, change: chg }
+    return { lineColor: up ? colors.up : colors.down, isUp: up, change: chg }
   }, [chartData])
 
   const lastPrice = chartData.length > 0
@@ -224,10 +234,7 @@ export function PriceChart({
               <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
                 High
               </p>
-              <p
-                className="mt-0.5 font-price text-sm font-bold tabular-nums"
-                style={{ color: COLOR_UP }}
-              >
+              <p className="mt-0.5 font-price text-sm font-bold tabular-nums text-price-up">
                 {formatPriceByCurrency(stats.high, currency)}
               </p>
             </div>
@@ -235,10 +242,7 @@ export function PriceChart({
               <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
                 Low
               </p>
-              <p
-                className="mt-0.5 font-price text-sm font-bold tabular-nums"
-                style={{ color: COLOR_DOWN }}
-              >
+              <p className="mt-0.5 font-price text-sm font-bold tabular-nums text-price-down">
                 {formatPriceByCurrency(stats.low, currency)}
               </p>
             </div>
@@ -257,7 +261,7 @@ export function PriceChart({
               <p
                 className="mt-0.5 flex items-center gap-0.5 font-price text-sm font-bold tabular-nums"
                 style={{
-                  color: isUp ? COLOR_UP : change < 0 ? COLOR_DOWN : undefined,
+                  color: isUp ? "var(--price-up)" : change < 0 ? "var(--price-down)" : undefined,
                 }}
               >
                 {isUp && change !== 0 ? (
@@ -367,7 +371,7 @@ export function PriceChart({
                   r: 5,
                   fill: lineColor,
                   strokeWidth: 2,
-                  stroke: "var(--color-background, #0a0a0a)",
+                  stroke: "var(--color-background, #fff)",
                 }}
               />
             </AreaChart>

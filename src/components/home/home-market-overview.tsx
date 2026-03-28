@@ -166,6 +166,10 @@ export function HomeMarketOverview({
   const [filterOpen, setFilterOpen] = useState(false)
   const isInitialMount = useRef(true)
 
+  useEffect(() => {
+    setSearch(initialSearch ?? "")
+  }, [initialSearch])
+
   const fetchCards = useCallback(
     (tab: TabId, sortKey: SortKey, pg: number, q: string, f: Record<string, string[]>, pMin: string, pMax: string) => {
       const tabDef = tabs.find((t) => t.id === tab) ?? tabs[0]
@@ -314,7 +318,7 @@ export function HomeMarketOverview({
               className={cn(
                 "relative shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
                 activeTab === tab.id
-                  ? "bg-foreground text-background shadow-sm"
+                  ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
               )}
             >
@@ -335,7 +339,7 @@ export function HomeMarketOverview({
                   className={cn(
                     "rounded-md px-2 py-0.5 text-xs font-semibold tabular-nums transition-all",
                     changePeriod === p
-                      ? "bg-foreground text-background shadow-sm"
+                      ? "bg-primary text-primary-foreground shadow-sm"
                       : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                   )}
                 >
@@ -352,7 +356,7 @@ export function HomeMarketOverview({
             className={cn(
               "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors",
               filterOpen || activeFilterCount > 0
-                ? "bg-foreground text-background shadow-sm"
+                ? "bg-primary text-primary-foreground shadow-sm"
                 : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
             )}
           >
@@ -362,8 +366,8 @@ export function HomeMarketOverview({
               <span className={cn(
                 "flex size-4.5 items-center justify-center rounded-full text-[10px] font-bold",
                 filterOpen || activeFilterCount > 0
-                  ? "bg-background/20 text-background"
-                  : "bg-foreground/10 text-foreground"
+                  ? "bg-primary-foreground/20 text-primary-foreground"
+                  : "bg-primary/10 text-primary"
               )}>
                 {activeFilterCount}
               </span>
@@ -960,7 +964,6 @@ function MobileCardItem({ card, rank }: { card: CardRow; rank: number }) {
         <p className="truncate text-sm font-medium leading-tight">{name}</p>
         <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
           <span className="font-mono">{card.baseCode ?? card.cardCode}</span>
-          {card.isParallel && <span className="text-primary">P</span>}
           <RarityBadge rarity={card.rarity} size="sm" />
         </div>
       </div>

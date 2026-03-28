@@ -46,7 +46,7 @@ export function BottomNav({ className }: { className?: string }) {
                 <span>{label}</span>
                 <span
                   className={cn(
-                    "h-1 w-1 rounded-full bg-foreground transition-opacity",
+                    "h-1 w-1 rounded-full bg-primary transition-opacity",
                     active ? "opacity-100" : "opacity-0"
                   )}
                 />
