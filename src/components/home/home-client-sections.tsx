@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { TrendingUp, TrendingDown } from "lucide-react"
+import { TrendingUp, TrendingDown, Layers, BarChart3, Clock, ArrowRight } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
@@ -14,35 +14,25 @@ import { useUIStore } from "@/stores/ui-store"
 export function HomeStatsStrip({
   totalCards,
   totalValue,
-  upCount,
-  downCount,
 }: {
   totalCards: number
   totalValue: number
-  upCount: number
-  downCount: number
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
-      <span className="text-muted-foreground">
-        การ์ดทั้งหมด{" "}
-        <span className="font-medium text-foreground">
+    <div className="flex flex-wrap items-center gap-2 text-sm">
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1">
+        <Layers className="size-3.5 text-muted-foreground" />
+        <span className="text-xs text-muted-foreground">การ์ดทั้งหมด</span>
+        <span className="font-price text-xs font-semibold text-foreground">
           {totalCards.toLocaleString()}
         </span>
       </span>
-      <span className="text-muted-foreground">
-        มูลค่ารวม{" "}
-        <span className="font-medium text-foreground">
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1">
+        <BarChart3 className="size-3.5 text-muted-foreground" />
+        <span className="text-xs text-muted-foreground">มูลค่ารวม</span>
+        <span className="font-price text-xs font-semibold text-foreground">
           <Price jpy={totalValue} />
         </span>
-      </span>
-      <span className="flex items-center gap-1 text-price-up">
-        <TrendingUp className="size-3.5" />
-        <span className="font-price font-medium">{upCount}</span>
-      </span>
-      <span className="flex items-center gap-1 text-price-down">
-        <TrendingDown className="size-3.5" />
-        <span className="font-price font-medium">{downCount}</span>
       </span>
     </div>
   )
@@ -68,33 +58,33 @@ export function HomeFeaturedCard({
   return (
     <Link
       href={`/cards/${card.cardCode}`}
-      className="group flex items-center gap-4 rounded-lg p-3 transition-colors hover:bg-muted/40"
+      className="group flex items-center gap-5 rounded-xl p-3 transition-colors hover:bg-muted/40"
     >
-      <div className="relative aspect-[63/88] w-[72px] shrink-0 overflow-hidden rounded bg-muted">
+      <div className="relative aspect-[63/88] w-[100px] shrink-0 overflow-hidden rounded-lg bg-muted">
         {card.imageUrl && (
           <Image
             src={card.imageUrl}
             alt={name}
             fill
-            className="object-contain"
-            sizes="72px"
+            className="object-contain transition-transform duration-300 group-hover:scale-105"
+            sizes="100px"
             placeholder="blur"
             blurDataURL={BLUR_DATA_URL}
           />
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60">
           มูลค่าสูงสุด
         </p>
-        <p className="mt-1 truncate text-sm font-semibold">{name}</p>
-        <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-          <span>{card.set.code.toUpperCase()}</span>
+        <p className="mt-1.5 truncate text-base font-semibold">{name}</p>
+        <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <span className="font-mono">{card.set.code.toUpperCase()}</span>
           <span>&middot;</span>
           <RarityBadge rarity={card.rarity} size="sm" />
         </div>
-        <p className="mt-1.5 font-price text-lg font-semibold">
-          <Price jpy={card.latestPriceJpy ?? 0} />
+        <p className="mt-2 font-price text-xl font-bold tracking-tight">
+          ~<Price jpy={card.latestPriceJpy ?? 0} />
         </p>
       </div>
     </Link>
@@ -115,16 +105,30 @@ export function HomeMiniTable({
     ? <TrendingUp className="size-3.5" />
     : <TrendingDown className="size-3.5" />
 
+  const linkHref = type === "gainers" ? "/trending?tab=gainers" : "/trending?tab=losers"
+
   return (
     <div>
-      <p className="mb-2 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        {icon}
-        {title}
-      </p>
-      {cards.length === 0 ? (
-        <p className="px-2 py-4 text-center text-xs text-muted-foreground/60">
-          ยังไม่มีการเปลี่ยนแปลง
+      <div className="mb-2.5 flex items-center justify-between">
+        <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          {icon}
+          {title}
         </p>
+        <Link
+          href={linkHref}
+          className="flex items-center gap-0.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+        >
+          ดูเพิ่มเติม
+          <ArrowRight className="size-3" />
+        </Link>
+      </div>
+      {cards.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-1.5 py-6 text-center">
+          <Clock className="size-4 text-muted-foreground/30" />
+          <p className="text-xs text-muted-foreground/40">
+            ยังไม่มีข้อมูล 24 ชม.
+          </p>
+        </div>
       ) : (
         <div className="space-y-0.5">
           {cards.slice(0, 3).map((card, i) => {

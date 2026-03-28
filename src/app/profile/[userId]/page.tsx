@@ -137,7 +137,7 @@ export default async function PublicProfilePage({ params }: PageProps) {
             {reviews.map((r) => (
               <li
                 key={r.id}
-                className="bg-card flex gap-3 rounded-lg border p-3 ring-1 ring-foreground/10"
+                className="panel flex gap-3 p-3"
               >
                 <Avatar className="size-10 shrink-0">
                   {r.reviewer.avatarUrl ? (

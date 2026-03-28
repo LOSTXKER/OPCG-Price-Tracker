@@ -10,48 +10,72 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
-import { Lock } from "lucide-react"
-
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Loader2, TrendingDown, TrendingUp } from "lucide-react"
+import { cn } from "@/lib/utils"
 import { formatByCurrency, jpyToThb, jpyToUsd } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
-const LINE_COLOR = "#3B82F6"
+const COLOR_UP = "#16c784"
+const COLOR_DOWN = "#ea3943"
 
-const PERIODS: { value: string; label: string; locked: boolean }[] = [
-  { value: "7d", label: "7d", locked: false },
-  { value: "30d", label: "30d", locked: false },
-  { value: "90d", label: "90d", locked: true },
-  { value: "1y", label: "1y", locked: true },
-  { value: "all", label: "All", locked: true },
+const PERIODS = [
+  { value: "24h", label: "24H" },
+  { value: "7d", label: "7D" },
+  { value: "30d", label: "30D" },
+  { value: "90d", label: "90D" },
+  { value: "1y", label: "1Y" },
+  { value: "all", label: "All" },
 ]
 
-export interface PriceChartProps {
-  data: { scrapedAt: string; priceJpy: number | null; priceThb?: number | null; source?: string }[]
-  period: string
-  onPeriodChange: (period: string) => void
+export interface PriceChartStats {
+  high: number
+  low: number
+  avg: number
 }
 
-function formatAxisDate(iso: string) {
+export interface PriceChartProps {
+  data: {
+    scrapedAt: string
+    priceJpy: number | null
+    priceThb?: number | null
+    source?: string
+  }[]
+  period: string
+  onPeriodChange: (period: string) => void
+  stats?: PriceChartStats | null
+  loading?: boolean
+}
+
+function formatAxisDate(iso: string, period?: string) {
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return iso
+  if (period === "24h") {
+    return d.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })
+  }
+  if (period === "1y" || period === "all") {
+    return d.toLocaleDateString("th-TH", { month: "short", year: "2-digit" })
+  }
   return d.toLocaleDateString("th-TH", { month: "short", day: "numeric" })
 }
 
-function formatTooltipDate(iso: string) {
+function formatTooltipDate(iso: string, period?: string) {
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return iso
+  if (period === "24h") {
+    return d.toLocaleString("th-TH", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  }
   return d.toLocaleDateString("th-TH", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   })
-}
-
-type ChartTooltipRow = {
-  scrapedAt: string
-  priceJpy: number
-  priceThb?: number | null
 }
 
 function formatPriceByCurrency(jpy: number, currency: string): string {
@@ -86,111 +110,273 @@ function compactPrice(jpy: number, currency: string): string {
   return `${prefix}${Math.round(value)}${suffix}`
 }
 
+type ChartRow = {
+  scrapedAt: string
+  priceJpy: number
+  priceThb?: number | null
+  source?: string
+}
+
 function ChartTooltip(props: {
   active?: boolean
-  payload?: ReadonlyArray<{ payload?: ChartTooltipRow }>
+  payload?: ReadonlyArray<{ payload?: ChartRow }>
   currency?: string
+  lineColor?: string
+  period?: string
 }) {
-  const { active, payload, currency = "JPY" } = props
+  const { active, payload, currency = "JPY", lineColor, period } = props
   if (!active || !payload?.length) return null
-  const row = payload[0].payload as ChartTooltipRow | undefined
+  const row = payload[0].payload as ChartRow | undefined
   if (!row) return null
   return (
-    <div className="bg-popover text-popover-foreground rounded-lg border px-3 py-2 text-xs shadow-md">
-      <p className="text-muted-foreground mb-1.5 font-medium">
-        {formatTooltipDate(row.scrapedAt)}
+    <div className="rounded-xl border border-border/50 bg-popover/95 px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
+      <p className="text-[10px] text-muted-foreground">
+        {formatTooltipDate(row.scrapedAt, period)}
       </p>
-      <p className="font-mono font-semibold">
+      <p
+        className="mt-1 font-price text-base font-bold"
+        style={{ color: lineColor }}
+      >
         {formatPriceByCurrency(row.priceJpy, currency)}
       </p>
+      {row.source && (
+        <p className="mt-0.5 text-[10px] text-muted-foreground/50">
+          {row.source}
+        </p>
+      )}
     </div>
   )
 }
 
-export function PriceChart({ data, period, onPeriodChange }: PriceChartProps) {
+export function PriceChart({
+  data,
+  period,
+  onPeriodChange,
+  stats,
+  loading,
+}: PriceChartProps) {
   const currency = useUIStore((s) => s.currency)
   const chartId = useId().replace(/:/g, "")
-  const gradientId = `priceArea-${chartId}`
+  const gradientId = `priceGrad-${chartId}`
 
-  const chartData = useMemo(
+  const chartData = useMemo<ChartRow[]>(
     () =>
       [...data]
+        .filter((d) => d.priceJpy != null)
         .map((d) => ({
           scrapedAt: d.scrapedAt,
-          priceJpy: d.priceJpy,
+          priceJpy: d.priceJpy!,
           priceThb: d.priceThb,
+          source: d.source,
         }))
         .sort(
           (a, b) =>
-            new Date(a.scrapedAt).getTime() - new Date(b.scrapedAt).getTime()
+            new Date(a.scrapedAt).getTime() - new Date(b.scrapedAt).getTime(),
         ),
-    [data]
+    [data],
   )
+
+  const { lineColor, isUp, change } = useMemo(() => {
+    if (chartData.length < 2)
+      return { lineColor: COLOR_UP, isUp: true, change: 0 }
+    const first = chartData[0].priceJpy
+    const last = chartData[chartData.length - 1].priceJpy
+    const up = last >= first
+    const chg = first > 0 ? ((last - first) / first) * 100 : 0
+    return { lineColor: up ? COLOR_UP : COLOR_DOWN, isUp: up, change: chg }
+  }, [chartData])
+
+  const lastPrice = chartData.length > 0
+    ? chartData[chartData.length - 1].priceJpy
+    : 0
 
   return (
     <div className="space-y-4">
-      <Tabs
-        value={period}
-        onValueChange={(next) => onPeriodChange(String(next))}
-      >
-        <TabsList variant="line" className="h-auto w-full flex-wrap justify-start gap-1">
+      {/* Period selector + loading indicator */}
+      <div className="flex items-center justify-between">
+        <div className="flex gap-1">
           {PERIODS.map((p) => (
-            <TabsTrigger key={p.value} value={p.value} className="gap-1 px-2.5">
+            <button
+              key={p.value}
+              onClick={() => onPeriodChange(p.value)}
+              disabled={loading}
+              className={cn(
+                "rounded-lg px-3 py-1.5 text-xs font-semibold transition-all",
+                period === p.value
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:bg-muted/80 hover:text-foreground",
+              )}
+            >
               {p.label}
-              {p.locked ? (
-                <Lock className="size-3.5 shrink-0 opacity-70" aria-hidden />
-              ) : null}
-            </TabsTrigger>
+            </button>
           ))}
-        </TabsList>
-      </Tabs>
+        </div>
+        {loading && (
+          <Loader2 className="size-4 animate-spin text-muted-foreground" />
+        )}
+      </div>
 
-      <div className="min-h-[280px] w-full">
-        <ResponsiveContainer width="100%" height={280}>
-          <AreaChart
-            data={chartData}
-            margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
-          >
-            <defs>
-              <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={LINE_COLOR} stopOpacity={0.35} />
-                <stop offset="95%" stopColor={LINE_COLOR} stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid
-              strokeDasharray="4 4"
-              className="stroke-border/60"
-              vertical={false}
-            />
-            <XAxis
-              dataKey="scrapedAt"
-              tickFormatter={formatAxisDate}
-              tick={{ fontSize: 12 }}
-              tickLine={false}
-              axisLine={false}
-              className="text-muted-foreground"
-              minTickGap={24}
-            />
-            <YAxis
-              tick={{ fontSize: 11 }}
-              tickLine={false}
-              axisLine={false}
-              className="text-muted-foreground font-mono"
-              tickFormatter={(v) => compactPrice(Number(v), currency)}
-              width={64}
-            />
-            <Tooltip content={<ChartTooltip currency={currency} />} />
-            <Area
-              type="monotone"
-              dataKey="priceJpy"
-              stroke={LINE_COLOR}
-              strokeWidth={2}
-              fill={`url(#${gradientId})`}
-              dot={false}
-              activeDot={{ r: 4, fill: LINE_COLOR }}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+      {/* Stats bar */}
+      {stats && stats.high > 0 && (
+        <div className="space-y-3">
+          <div className="grid grid-cols-4 gap-2">
+            <div className="rounded-lg bg-muted/30 px-2.5 py-2">
+              <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
+                High
+              </p>
+              <p
+                className="mt-0.5 font-price text-sm font-bold tabular-nums"
+                style={{ color: COLOR_UP }}
+              >
+                {formatPriceByCurrency(stats.high, currency)}
+              </p>
+            </div>
+            <div className="rounded-lg bg-muted/30 px-2.5 py-2">
+              <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
+                Low
+              </p>
+              <p
+                className="mt-0.5 font-price text-sm font-bold tabular-nums"
+                style={{ color: COLOR_DOWN }}
+              >
+                {formatPriceByCurrency(stats.low, currency)}
+              </p>
+            </div>
+            <div className="rounded-lg bg-muted/30 px-2.5 py-2">
+              <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
+                Avg
+              </p>
+              <p className="mt-0.5 font-price text-sm font-bold tabular-nums">
+                {formatPriceByCurrency(stats.avg, currency)}
+              </p>
+            </div>
+            <div className="rounded-lg bg-muted/30 px-2.5 py-2">
+              <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
+                Change
+              </p>
+              <p
+                className="mt-0.5 flex items-center gap-0.5 font-price text-sm font-bold tabular-nums"
+                style={{
+                  color: isUp ? COLOR_UP : change < 0 ? COLOR_DOWN : undefined,
+                }}
+              >
+                {isUp && change !== 0 ? (
+                  <TrendingUp className="size-3" />
+                ) : change < 0 ? (
+                  <TrendingDown className="size-3" />
+                ) : null}
+                {change > 0 ? "+" : ""}
+                {change.toFixed(1)}%
+              </p>
+            </div>
+          </div>
+
+          {/* Price range bar */}
+          {stats.high > stats.low && (
+            <div className="flex items-center gap-2">
+              <span className="font-price text-[10px] tabular-nums text-muted-foreground/60">
+                {compactPrice(stats.low, currency)}
+              </span>
+              <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-muted/40">
+                <div
+                  className="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
+                  style={{
+                    width: `${Math.min(100, Math.max(2, ((lastPrice - stats.low) / (stats.high - stats.low)) * 100))}%`,
+                    backgroundColor: lineColor,
+                    opacity: 0.8,
+                  }}
+                />
+              </div>
+              <span className="font-price text-[10px] tabular-nums text-muted-foreground/60">
+                {compactPrice(stats.high, currency)}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Chart area */}
+      <div
+        className={cn(
+          "min-h-[300px] w-full transition-opacity duration-300",
+          loading && "pointer-events-none opacity-40",
+        )}
+      >
+        {chartData.length > 0 ? (
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart
+              data={chartData}
+              margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={lineColor} stopOpacity={0.2} />
+                  <stop
+                    offset="100%"
+                    stopColor={lineColor}
+                    stopOpacity={0}
+                  />
+                </linearGradient>
+              </defs>
+              <CartesianGrid
+                strokeDasharray="3 3"
+                className="stroke-border/30"
+                vertical={false}
+              />
+              <XAxis
+                dataKey="scrapedAt"
+                tickFormatter={(v) => formatAxisDate(v, period)}
+                tick={{ fontSize: 11 }}
+                tickLine={false}
+                axisLine={false}
+                className="text-muted-foreground"
+                minTickGap={40}
+                dy={8}
+              />
+              <YAxis
+                tick={{ fontSize: 11 }}
+                tickLine={false}
+                axisLine={false}
+                className="text-muted-foreground font-mono"
+                tickFormatter={(v) => compactPrice(Number(v), currency)}
+                width={56}
+                domain={[
+                  (dataMin: number) => Math.floor(dataMin * 0.97),
+                  (dataMax: number) => Math.ceil(dataMax * 1.03),
+                ]}
+              />
+              <Tooltip
+                cursor={{
+                  stroke: "var(--color-muted-foreground)",
+                  strokeDasharray: "3 3",
+                  strokeWidth: 1,
+                  opacity: 0.4,
+                }}
+                content={
+                  <ChartTooltip currency={currency} lineColor={lineColor} period={period} />
+                }
+              />
+              <Area
+                type="monotone"
+                dataKey="priceJpy"
+                stroke={lineColor}
+                strokeWidth={2}
+                fill={`url(#${gradientId})`}
+                dot={false}
+                activeDot={{
+                  r: 5,
+                  fill: lineColor,
+                  strokeWidth: 2,
+                  stroke: "var(--color-background, #0a0a0a)",
+                }}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="flex h-[300px] items-center justify-center text-sm text-muted-foreground">
+            ไม่มีข้อมูลราคาสำหรับช่วงเวลานี้
+          </div>
+        )}
       </div>
     </div>
   )

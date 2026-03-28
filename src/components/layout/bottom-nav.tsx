@@ -38,12 +38,18 @@ export function BottomNav({ className }: { className?: string }) {
               <Link
                 href={href}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition-colors",
+                  "flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition-all active:scale-95",
                   active ? "text-foreground" : "text-muted-foreground"
                 )}
               >
                 <Icon className={cn("size-5", active && "stroke-[2.5]")} aria-hidden />
                 <span>{label}</span>
+                <span
+                  className={cn(
+                    "h-1 w-1 rounded-full bg-foreground transition-opacity",
+                    active ? "opacity-100" : "opacity-0"
+                  )}
+                />
               </Link>
             </li>
           );

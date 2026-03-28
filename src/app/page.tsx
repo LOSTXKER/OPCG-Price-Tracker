@@ -44,8 +44,6 @@ export default async function HomePage(props: {
   const gainers = topGainers.map(mapCardToTrending);
   const losers = topLosers.map(mapCardToTrending);
   const featured = highestPriced.length > 0 ? highestPriced[0] : null;
-  const upCount = topGainers.length;
-  const downCount = topLosers.length;
 
   const tableCards = initialTableCards.map((c) => ({
     ...c,
@@ -98,13 +96,18 @@ export default async function HomePage(props: {
   ];
 
   return (
-    <div className="space-y-6">
+    <HomeMarketOverview
+      initialCards={tableCards}
+      initialTotal={initialTableTotal}
+      initialTotalPages={initialTableTotalPages}
+      latestSetCode={newestSet?.code}
+      filterDefinitions={filterDefinitions}
+      initialSearch={initialSearch}
+    >
       {/* Stats strip */}
       <HomeStatsStrip
         totalCards={totalCards}
         totalValue={totalValue}
-        upCount={upCount}
-        downCount={downCount}
       />
 
       {/* Highlights: Featured + Gainers/Losers */}
@@ -127,16 +130,6 @@ export default async function HomePage(props: {
           />
         </div>
       </div>
-
-      {/* Main table */}
-      <HomeMarketOverview
-        initialCards={tableCards}
-        initialTotal={initialTableTotal}
-        initialTotalPages={initialTableTotalPages}
-        latestSetCode={newestSet?.code}
-        filterDefinitions={filterDefinitions}
-        initialSearch={initialSearch}
-      />
-    </div>
+    </HomeMarketOverview>
   );
 }

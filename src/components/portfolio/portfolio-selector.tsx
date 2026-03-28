@@ -71,15 +71,15 @@ export function PortfolioSidebar({
           <div
             key={p.id}
             className={cn(
-              "group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors cursor-pointer",
+              "group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all cursor-pointer",
               isActive
-                ? "bg-primary/8 border border-primary/20"
-                : "hover:bg-muted/60 border border-transparent"
+                ? "bg-primary/6"
+                : "hover:bg-muted/50"
             )}
             onClick={() => onSelect(p.id)}
           >
             <div className={cn(
-              "flex size-8 shrink-0 items-center justify-center rounded-lg",
+              "flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors",
               isActive ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
             )}>
               <Wallet className="size-4" />

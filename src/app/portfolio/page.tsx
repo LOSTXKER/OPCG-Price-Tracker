@@ -6,8 +6,9 @@ import { Eye, EyeOff, Plus } from "lucide-react"
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
 import { PortfolioSidebar, type PortfolioMeta } from "@/components/portfolio/portfolio-selector"
 import { PortfolioStatsStrip, type PortfolioStats } from "@/components/portfolio/portfolio-stats-strip"
-import { PortfolioHistoryChart } from "@/components/portfolio/portfolio-history-chart"
-import { PortfolioAllocationChart, type AllocationSlice } from "@/components/portfolio/portfolio-allocation-chart"
+import { PortfolioHero } from "@/components/portfolio/portfolio-hero"
+import { PortfolioCharts } from "@/components/portfolio/portfolio-charts"
+import { type AllocationSlice } from "@/components/portfolio/portfolio-allocation-chart"
 import { PortfolioAssetsTable, type AssetRow } from "@/components/portfolio/portfolio-assets-table"
 import { PortfolioTransactions, type TransactionRow } from "@/components/portfolio/portfolio-transactions"
 import { AddCardDialog, type CartItem } from "@/components/portfolio/add-card-dialog"
@@ -302,10 +303,9 @@ export default function PortfolioPage() {
         </div>
         <div className="min-w-0 flex-1 space-y-6">
           <Skeleton className="h-28 rounded-xl" />
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-24 rounded-xl" />
-            ))}
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Skeleton className="h-24 rounded-xl" />
+            <Skeleton className="h-24 rounded-xl" />
           </div>
           <Skeleton className="h-48 rounded-xl" />
         </div>
@@ -319,7 +319,7 @@ export default function PortfolioPage() {
       <aside className="w-full shrink-0 md:w-60">
         <div className="md:sticky md:top-20 md:space-y-4">
           {/* Total across all portfolios */}
-          <div className="rounded-xl border border-border bg-card p-4">
+          <div className="panel p-4">
             <div className="flex items-center justify-between">
               <p className="text-xs font-medium text-muted-foreground">ภาพรวม</p>
               <button
@@ -335,9 +335,9 @@ export default function PortfolioPage() {
           </div>
 
           {/* Portfolio list */}
-          <div className="rounded-xl border border-border bg-card">
-            <div className="flex items-center justify-between border-b border-border/60 px-4 py-2.5">
-              <p className="text-xs font-semibold text-muted-foreground">พอร์ตโฟลิโอ ({portfolioMetas.length})</p>
+          <div className="panel overflow-hidden">
+            <div className="flex items-center justify-between border-b border-border/40 px-4 py-2.5">
+              <p className="text-[11px] font-medium text-muted-foreground">พอร์ตโฟลิโอ ({portfolioMetas.length})</p>
             </div>
             <PortfolioSidebar
               portfolios={portfolioMetas}
@@ -357,7 +357,7 @@ export default function PortfolioPage() {
         {/* Top bar: portfolio name + tabs + add button */}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold tracking-tight">{activePortfolio?.name ?? "Portfolio"}</h1>
+            <h1 className="text-2xl font-bold tracking-tight">{activePortfolio?.name ?? "พอร์ตโฟลิโอ"}</h1>
             <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
               {items.length} การ์ด
             </span>
@@ -401,45 +401,23 @@ export default function PortfolioPage() {
         ) : tab === "overview" ? (
           <>
             {/* Hero value card */}
-            <div className="rounded-xl border border-border bg-card p-5">
-              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                มูลค่าพอร์ต
-              </p>
-              <div className="mt-1 flex flex-wrap items-baseline gap-3">
-                <span className="font-price text-4xl font-bold tabular-nums tracking-tight">
-                  {hideBalance ? "••••••" : <Price jpy={stats.totalValueJpy} />}
-                </span>
-                {stats.totalCostJpy > 0 && (
-                  <span className={cn(
-                    "rounded-full px-2.5 py-0.5 text-sm font-semibold tabular-nums",
-                    stats.unrealizedPnl >= 0
-                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                      : "bg-red-500/10 text-red-600 dark:text-red-400"
-                  )}>
-                    {stats.unrealizedPnl >= 0 ? "+" : ""}{stats.unrealizedPnlPercent.toFixed(2)}%
-                  </span>
-                )}
-              </div>
-            </div>
+            <PortfolioHero
+              totalValueJpy={stats.totalValueJpy}
+              totalCostJpy={stats.totalCostJpy}
+              unrealizedPnl={stats.unrealizedPnl}
+              unrealizedPnlPercent={stats.unrealizedPnlPercent}
+              hideBalance={hideBalance}
+            />
 
             {/* Stats strip */}
             <PortfolioStatsStrip stats={stats} hideBalance={hideBalance} />
 
             {/* Charts row */}
-            <div className="grid gap-4 lg:grid-cols-12">
-              <div className="rounded-xl border border-border bg-card p-5 lg:col-span-8">
-                <p className="mb-4 text-sm font-semibold">ประวัติย้อนหลัง</p>
-                <PortfolioHistoryChart data={history} />
-              </div>
-              <div className="rounded-xl border border-border bg-card p-5 lg:col-span-4">
-                <p className="mb-4 text-sm font-semibold">สัดส่วนการถือ</p>
-                <PortfolioAllocationChart data={allocation} />
-              </div>
-            </div>
+            <PortfolioCharts history={history} allocation={allocation} />
 
             {/* Assets table */}
-            <div className="overflow-hidden rounded-xl border border-border bg-card">
-              <div className="flex items-center justify-between border-b border-border/60 px-5 py-3.5">
+            <div className="panel overflow-hidden">
+              <div className="flex items-center justify-between border-b border-border/40 px-5 py-3.5">
                 <p className="text-sm font-semibold">สินทรัพย์</p>
                 <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
                   {assets.length} การ์ด
@@ -453,8 +431,8 @@ export default function PortfolioPage() {
             </div>
           </>
         ) : (
-          <div className="overflow-hidden rounded-xl border border-border bg-card">
-            <div className="border-b border-border/60 px-5 py-3.5">
+          <div className="panel overflow-hidden">
+            <div className="border-b border-border/40 px-5 py-3.5">
               <p className="text-sm font-semibold">ธุรกรรม</p>
             </div>
             <PortfolioTransactions transactions={transactions} />

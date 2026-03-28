@@ -93,6 +93,7 @@ model Card {
   viewCount       Int              @default(0)
   priceChange24h  Float?
   priceChange7d   Float?
+  priceChange30d  Float?
   latestPriceJpy  Int?
   latestPriceThb  Float?
   prices          CardPrice[]
@@ -244,9 +245,10 @@ model User {
   reviewsGiven      Review[]         @relation("ReviewsGiven")
   reviewsReceived   Review[]         @relation("ReviewsReceived")
   communityPrices   CommunityPrice[]
-  decks             Deck[]
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
+  decks              Deck[]
+  yuyuteiActions     YuyuteiMapping[]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
 
   @@index([supabaseId])
   @@index([tier])
@@ -527,6 +529,9 @@ model YuyuteiMapping {
   matchMethod   String?
   geminiScore   Float?
   status        String   @default("pending")
+  actionBy      String?
+  actionByUser  User?    @relation(fields: [actionBy], references: [id])
+  actionAt      DateTime?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

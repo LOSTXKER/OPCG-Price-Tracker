@@ -43,7 +43,7 @@ export default async function GuideSetsPage() {
             <Link
               key={set.code}
               href={`/sets/${set.code}`}
-              className="flex items-center gap-4 rounded-xl border border-border bg-card p-3 transition-colors hover:bg-accent/50"
+              className="panel flex items-center gap-4 p-3 transition-colors hover:bg-accent/50"
             >
               <span className="font-mono text-sm font-bold text-primary">
                 {set.code}

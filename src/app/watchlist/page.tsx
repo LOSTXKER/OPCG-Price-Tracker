@@ -77,8 +77,8 @@ export default function WatchlistPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-sans text-2xl font-bold tracking-tight">Watchlist</h1>
-        <p className="mt-0.5 text-sm text-muted-foreground">การ์ดที่คุณติดตาม</p>
+        <h1 className="font-sans text-2xl font-bold tracking-tight sm:text-3xl">รายการติดตาม</h1>
+        <p className="mt-1 text-sm text-muted-foreground">การ์ดที่คุณติดตาม</p>
       </div>
 
       {error ? <p className="text-destructive text-sm">{error}</p> : null}

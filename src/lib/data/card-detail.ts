@@ -60,6 +60,56 @@ export const getSiblingVariants = cache(async (baseCode: string | null, excludeI
   })
 })
 
+export const getRelatedFromSameSet = cache(async (setId: number, excludeId: number) => {
+  const withPrice = await prisma.card.findMany({
+    where: {
+      setId,
+      id: { not: excludeId },
+      latestPriceJpy: { not: null },
+      isParallel: false,
+    },
+    orderBy: { latestPriceJpy: "desc" },
+    take: 12,
+    select: {
+      id: true,
+      cardCode: true,
+      nameJp: true,
+      nameEn: true,
+      nameTh: true,
+      rarity: true,
+      isParallel: true,
+      imageUrl: true,
+      latestPriceJpy: true,
+      set: { select: { code: true } },
+    },
+  })
+  if (withPrice.length >= 6) return withPrice
+
+  const ids = withPrice.map((c) => c.id)
+  const rest = await prisma.card.findMany({
+    where: {
+      setId,
+      id: { notIn: [excludeId, ...ids] },
+      isParallel: false,
+    },
+    orderBy: { cardCode: "asc" },
+    take: 12 - withPrice.length,
+    select: {
+      id: true,
+      cardCode: true,
+      nameJp: true,
+      nameEn: true,
+      nameTh: true,
+      rarity: true,
+      isParallel: true,
+      imageUrl: true,
+      latestPriceJpy: true,
+      set: { select: { code: true } },
+    },
+  })
+  return [...withPrice, ...rest]
+})
+
 export const getCommunityPrice = cache(async (cardId: number) => {
   const result = await prisma.communityPrice.aggregate({
     where: {

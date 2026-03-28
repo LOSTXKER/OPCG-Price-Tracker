@@ -52,7 +52,7 @@ export function PortfolioAssetsTable({
     <div className="overflow-x-auto">
       <table className="w-full text-left text-sm">
         <thead>
-          <tr className="border-b border-border text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <tr className="border-b border-border/40 text-xs text-muted-foreground">
             <th className="py-2.5 pl-4 pr-3 font-medium">การ์ด</th>
             <th className="py-2.5 pr-3 text-right font-medium">ราคา</th>
             <th className="hidden py-2.5 pr-3 text-right font-medium sm:table-cell">24h</th>
@@ -109,12 +109,12 @@ function AssetRowComponent({
   }
 
   return (
-    <tr className="border-b border-border/40 transition-colors hover:bg-muted/40">
+    <tr className="border-b border-border/30 transition-colors hover:bg-muted/30">
       <td className="py-2.5 pl-4 pr-3 align-middle">
         <Link href={`/cards/${row.cardCode}`} className="flex items-center gap-3">
-          <div className="relative size-9 shrink-0 overflow-hidden rounded bg-muted">
+          <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-muted">
             {row.imageUrl ? (
-              <Image src={row.imageUrl} alt={name} fill className="object-contain" sizes="36px" />
+              <Image src={row.imageUrl} alt={name} fill className="object-contain" sizes="40px" />
             ) : (
               <div className="size-full bg-muted" />
             )}

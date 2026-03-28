@@ -15,10 +15,32 @@ export async function GET(request: NextRequest) {
         nameTh: true,
         type: true,
         releaseDate: true,
+        boxImageUrl: true,
       },
       orderBy: { releaseDate: "desc" },
     });
-    return NextResponse.json({ sets });
+
+    const topCards = await prisma.card.findMany({
+      where: {
+        setId: { in: sets.map((s) => s.id) },
+        imageUrl: { not: null },
+      },
+      orderBy: { cardCode: "asc" },
+      select: { setId: true, imageUrl: true },
+    });
+    const topCardMap = new Map<number, string>();
+    for (const tc of topCards) {
+      if (!topCardMap.has(tc.setId) && tc.imageUrl) {
+        topCardMap.set(tc.setId, tc.imageUrl);
+      }
+    }
+
+    return NextResponse.json({
+      sets: sets.map((s) => ({
+        ...s,
+        imageUrl: s.boxImageUrl ?? topCardMap.get(s.id) ?? null,
+      })),
+    });
   }
 
   const cardSet = await prisma.cardSet.findUnique({

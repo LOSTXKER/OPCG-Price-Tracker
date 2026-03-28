@@ -12,6 +12,8 @@ import { formatPct } from "@/lib/utils/pull-rate"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { useUIStore } from "@/stores/ui-store"
 
+export type ChangePeriod = "24h" | "7d" | "30d"
+
 export interface CardItemProps {
   cardCode: string
   nameJp: string
@@ -22,7 +24,11 @@ export interface CardItemProps {
   imageUrl?: string | null
   priceJpy?: number | null
   priceThb?: number | null
+  priceChange24h?: number | null
   priceChange7d?: number | null
+  priceChange30d?: number | null
+  /** Which period to display; defaults to "7d" */
+  changePeriod?: ChangePeriod
   setCode?: string
   inStock?: boolean
   /** Pull probability per box (0-1 range) shown as overlay badge */
@@ -39,19 +45,23 @@ export function CardItem({
   imageUrl,
   priceJpy,
   priceThb,
+  priceChange24h,
   priceChange7d,
+  priceChange30d,
+  changePeriod = "7d",
   setCode,
   inStock = true,
   pullChancePerBox,
 }: CardItemProps) {
   const lang = useUIStore((s) => s.language)
   const displayName = getCardName(lang, { nameEn, nameJp, nameTh })
+  const activeChange = changePeriod === "24h" ? priceChange24h : changePeriod === "30d" ? priceChange30d : priceChange7d
   return (
     <Link
       href={`/cards/${cardCode}`}
       className="group/card block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <div className="relative flex h-full flex-col overflow-hidden rounded border border-border bg-card transition-colors hover:border-primary/30">
+        <div className="panel relative flex h-full flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
         {/* Image */}
         <div className="relative aspect-[63/88] w-full bg-muted">
           {imageUrl ? (
@@ -78,18 +88,13 @@ export function CardItem({
           )}
 
           {/* Top-right badges */}
-          <div className="absolute right-1.5 top-1.5 flex flex-col items-end gap-1">
-            {isParallel && (
-              <span className="rounded bg-amber-500/90 px-1.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
-                {rarity.startsWith("P-") ? rarity : "P"}
-              </span>
-            )}
-            {!inStock && (
+          {!inStock && (
+            <div className="absolute right-1.5 top-1.5">
               <span className="rounded bg-destructive/90 px-1.5 py-0.5 text-[10px] font-medium text-white">
                 หมด
               </span>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Info */}
@@ -109,7 +114,7 @@ export function CardItem({
             <PriceDisplay
               priceJpy={priceJpy}
               priceThb={priceThb ?? undefined}
-              change={priceChange7d ?? undefined}
+              change={activeChange ?? undefined}
               size="sm"
             />
           </div>

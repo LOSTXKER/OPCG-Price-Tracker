@@ -73,6 +73,12 @@ export async function GET(request: NextRequest) {
     case "change_7d_asc":
       orderBy.priceChange7d = { sort: "asc", nulls: "last" };
       break;
+    case "change_30d_desc":
+      orderBy.priceChange30d = { sort: "desc", nulls: "last" };
+      break;
+    case "change_30d_asc":
+      orderBy.priceChange30d = { sort: "asc", nulls: "last" };
+      break;
     case "views_desc":
       orderBy.viewCount = { sort: "desc", nulls: "last" };
       break;

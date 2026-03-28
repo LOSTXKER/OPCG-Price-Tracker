@@ -1,0 +1,112 @@
+import type { Metadata } from "next";
+
+import { prisma } from "@/lib/db";
+import { TrendingTabs } from "./trending-tabs";
+
+export const revalidate = 300;
+
+export const metadata: Metadata = {
+  title: "การ์ดมาแรง — ราคาขึ้น/ลงมากสุด",
+  description: "การ์ดที่ราคาเปลี่ยนแปลงมากที่สุดใน 24 ชั่วโมง, 7 วัน และ 30 วัน",
+};
+
+const TAKE = 50;
+
+async function getTrendingData() {
+  const [gainers24h, losers24h, gainers7d, losers7d, gainers30d, losers30d, mostViewed] =
+    await Promise.all([
+      prisma.card.findMany({
+        where: { priceChange24h: { not: null, gt: 0 }, latestPriceJpy: { gt: 0 } },
+        orderBy: { priceChange24h: "desc" },
+        take: TAKE,
+        include: { set: { select: { code: true, name: true, nameEn: true } }, prices: { orderBy: { scrapedAt: "desc" }, take: 7, select: { priceJpy: true } } },
+      }),
+      prisma.card.findMany({
+        where: { priceChange24h: { not: null, lt: 0 }, latestPriceJpy: { gt: 0 } },
+        orderBy: { priceChange24h: "asc" },
+        take: TAKE,
+        include: { set: { select: { code: true, name: true, nameEn: true } }, prices: { orderBy: { scrapedAt: "desc" }, take: 7, select: { priceJpy: true } } },
+      }),
+      prisma.card.findMany({
+        where: { priceChange7d: { not: null, gt: 0 }, latestPriceJpy: { gt: 0 } },
+        orderBy: { priceChange7d: "desc" },
+        take: TAKE,
+        include: { set: { select: { code: true, name: true, nameEn: true } }, prices: { orderBy: { scrapedAt: "desc" }, take: 7, select: { priceJpy: true } } },
+      }),
+      prisma.card.findMany({
+        where: { priceChange7d: { not: null, lt: 0 }, latestPriceJpy: { gt: 0 } },
+        orderBy: { priceChange7d: "asc" },
+        take: TAKE,
+        include: { set: { select: { code: true, name: true, nameEn: true } }, prices: { orderBy: { scrapedAt: "desc" }, take: 7, select: { priceJpy: true } } },
+      }),
+      prisma.card.findMany({
+        where: { priceChange30d: { not: null, gt: 0 }, latestPriceJpy: { gt: 0 } },
+        orderBy: { priceChange30d: "desc" },
+        take: TAKE,
+        include: { set: { select: { code: true, name: true, nameEn: true } }, prices: { orderBy: { scrapedAt: "desc" }, take: 7, select: { priceJpy: true } } },
+      }),
+      prisma.card.findMany({
+        where: { priceChange30d: { not: null, lt: 0 }, latestPriceJpy: { gt: 0 } },
+        orderBy: { priceChange30d: "asc" },
+        take: TAKE,
+        include: { set: { select: { code: true, name: true, nameEn: true } }, prices: { orderBy: { scrapedAt: "desc" }, take: 7, select: { priceJpy: true } } },
+      }),
+      prisma.card.findMany({
+        where: { viewCount: { gt: 0 }, latestPriceJpy: { gt: 0 } },
+        orderBy: { viewCount: "desc" },
+        take: TAKE,
+        include: { set: { select: { code: true, name: true, nameEn: true } }, prices: { orderBy: { scrapedAt: "desc" }, take: 7, select: { priceJpy: true } } },
+      }),
+    ]);
+
+  function mapCards(cards: typeof gainers24h) {
+    return cards.map((c) => ({
+      cardCode: c.cardCode,
+      nameJp: c.nameJp,
+      nameEn: c.nameEn,
+      nameTh: c.nameTh,
+      rarity: c.rarity,
+      isParallel: c.isParallel,
+      imageUrl: c.imageUrl,
+      latestPriceJpy: c.latestPriceJpy,
+      priceChange24h: c.priceChange24h,
+      priceChange7d: c.priceChange7d,
+      priceChange30d: c.priceChange30d,
+      viewCount: c.viewCount,
+      setCode: c.set.code,
+      sparkline: c.prices.map((p) => p.priceJpy).filter((v): v is number => v != null).reverse(),
+    }));
+  }
+
+  return {
+    gainers24h: mapCards(gainers24h),
+    losers24h: mapCards(losers24h),
+    gainers7d: mapCards(gainers7d),
+    losers7d: mapCards(losers7d),
+    gainers30d: mapCards(gainers30d),
+    losers30d: mapCards(losers30d),
+    mostViewed: mapCards(mostViewed),
+  };
+}
+
+export type TrendingCardRow = Awaited<ReturnType<typeof getTrendingData>>["gainers24h"][number];
+
+export default async function TrendingPage(props: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const sp = await props.searchParams;
+  const initialTab = typeof sp.tab === "string" ? sp.tab : "gainers";
+  const data = await getTrendingData();
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-xl font-bold">การ์ดมาแรง</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          การ์ดที่ราคาเปลี่ยนแปลงมากที่สุดในช่วง 24 ชั่วโมง, 7 วัน และ 30 วัน
+        </p>
+      </div>
+      <TrendingTabs data={data} initialTab={initialTab} />
+    </div>
+  );
+}

@@ -115,7 +115,7 @@ export default function BuyingGuidePage() {
           {tips.map((tip, i) => (
             <div
               key={i}
-              className="flex items-start gap-3 rounded-lg border border-border bg-card p-3"
+              className="panel flex items-start gap-3 p-3"
             >
               <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted/10 font-sans text-xs font-bold text-foreground">
                 {i + 1}

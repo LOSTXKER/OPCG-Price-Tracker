@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useId } from "react"
+import { BarChart3 } from "lucide-react"
 import {
   Area,
   AreaChart,
@@ -31,8 +32,10 @@ export function PortfolioHistoryChart({ data }: { data: DataPoint[] }) {
 
   if (data.length < 2) {
     return (
-      <div className="flex h-40 items-center justify-center text-sm text-muted-foreground">
-        ยังไม่มีข้อมูลเพียงพอ
+      <div className="flex h-40 flex-col items-center justify-center gap-2 text-muted-foreground">
+        <BarChart3 className="size-8 opacity-30" />
+        <p className="text-sm">ยังไม่มีข้อมูลเพียงพอ</p>
+        <p className="text-[11px] opacity-60">ข้อมูลจะเริ่มบันทึกหลังจากเพิ่มการ์ด</p>
       </div>
     )
   }

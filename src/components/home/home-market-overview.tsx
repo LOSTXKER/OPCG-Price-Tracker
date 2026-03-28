@@ -12,6 +12,8 @@ import {
   LayoutGrid,
   List,
   Search,
+  SlidersHorizontal,
+  TrendingUpDown,
   X,
 } from "lucide-react"
 
@@ -20,6 +22,7 @@ import { PriceDisplay } from "@/components/shared/price-display"
 import { FilterChips, type FilterDefinition } from "@/components/shared/filter-chips"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { Price } from "@/components/shared/price-inline"
+import { Sparkline } from "@/components/shared/sparkline"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getCardName } from "@/lib/i18n"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
@@ -46,6 +49,8 @@ type SortKey =
   | "change_asc"
   | "change_7d_desc"
   | "change_7d_asc"
+  | "change_30d_desc"
+  | "change_30d_asc"
   | "views_desc"
   | "newest"
 
@@ -62,6 +67,7 @@ interface CardRow {
   latestPriceJpy?: number | null
   priceChange24h?: number | null
   priceChange7d?: number | null
+  priceChange30d?: number | null
   viewCount?: number
   setCode?: string
   set?: { code: string; name?: string; nameEn?: string | null }
@@ -78,12 +84,13 @@ interface ApiResponse {
 /*  Column sort mapping                                                */
 /* ------------------------------------------------------------------ */
 
-type ColumnId = "price" | "change24h" | "change7d"
+type ColumnId = "price" | "change24h" | "change7d" | "change30d"
 
 const COLUMN_SORTS: Record<ColumnId, { desc: SortKey; asc: SortKey }> = {
   price: { desc: "price_desc", asc: "price_asc" },
   change24h: { desc: "change_desc", asc: "change_asc" },
   change7d: { desc: "change_7d_desc", asc: "change_7d_asc" },
+  change30d: { desc: "change_30d_desc", asc: "change_30d_asc" },
 }
 
 function parseSortColumn(sort: SortKey): { col: ColumnId | null; dir: "asc" | "desc" } {
@@ -127,6 +134,7 @@ export function HomeMarketOverview({
   latestSetCode,
   filterDefinitions,
   initialSearch,
+  children,
 }: {
   initialCards: CardRow[]
   initialTotal: number
@@ -134,10 +142,12 @@ export function HomeMarketOverview({
   latestSetCode?: string
   filterDefinitions: FilterDefinition[]
   initialSearch?: string
+  children?: React.ReactNode
 }) {
   const tabs = buildTabs(latestSetCode)
 
   type ViewMode = "table" | "grid"
+  type ChangePeriod = "24h" | "7d" | "30d"
 
   const [activeTab, setActiveTab] = useState<TabId>("all")
   const [sort, setSort] = useState<SortKey>("price_desc")
@@ -151,6 +161,9 @@ export function HomeMarketOverview({
   const [viewMode, setViewMode] = useState<ViewMode>("table")
   const [minPrice, setMinPrice] = useState("")
   const [maxPrice, setMaxPrice] = useState("")
+  const [sparklines, setSparklines] = useState<Record<number, number[]>>({})
+  const [changePeriod, setChangePeriod] = useState<ChangePeriod>("7d")
+  const [filterOpen, setFilterOpen] = useState(false)
   const isInitialMount = useRef(true)
 
   const fetchCards = useCallback(
@@ -202,6 +215,17 @@ export function HomeMarketOverview({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, sort, page, search, filters, minPrice, maxPrice, fetchCards])
 
+  useEffect(() => {
+    const ids = cards.map((c) => c.id).filter((id): id is number => id != null)
+    if (ids.length === 0) return
+    const controller = new AbortController()
+    fetch(`/api/cards/sparklines?ids=${ids.join(",")}`, { signal: controller.signal })
+      .then((r) => r.json())
+      .then((data) => { if (data.sparklines) setSparklines(data.sparklines) })
+      .catch(() => {})
+    return () => controller.abort()
+  }, [cards])
+
   const handleTabChange = (tab: TabId) => {
     const tabDef = tabs.find((t) => t.id === tab) ?? tabs[0]
     setActiveTab(tab)
@@ -229,11 +253,14 @@ export function HomeMarketOverview({
     setPage(1)
   }
 
+  const activeFilterCount =
+    Object.values(filters).reduce((sum, v) => sum + v.length, 0) +
+    (minPrice ? 1 : 0) +
+    (maxPrice ? 1 : 0)
+
   const hasFilters =
     search.trim() !== "" ||
-    Object.values(filters).some((v) => v.length > 0) ||
-    minPrice !== "" ||
-    maxPrice !== ""
+    activeFilterCount > 0
 
   const clearAllFilters = () => {
     setSearch("")
@@ -247,84 +274,104 @@ export function HomeMarketOverview({
   const showViews = activeTab === "popular"
 
   return (
-    <div className="panel overflow-hidden">
-      {/* Tab bar + search */}
-      <div className="space-y-3 border-b border-border px-4 py-3">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1 overflow-x-auto">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
-                className={cn(
-                  "shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
-                  activeTab === tab.id
-                    ? "bg-foreground text-background"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                )}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+    <div className="space-y-6">
+      {/* Hero search — top of page, prominent */}
+      <form onSubmit={handleSearch} className="relative">
+        <Search className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground/70" />
+        <input
+          type="text"
+          placeholder="ค้นหาการ์ด เช่น Luffy, OP13-118, SEC..."
+          className="h-12 w-full rounded-xl border border-border/60 bg-card pl-12 pr-11 text-[15px] shadow-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 md:h-11 md:text-sm"
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value)
+            if (e.target.value === "") setPage(1)
+          }}
+        />
+        {search && (
+          <button
+            type="button"
+            onClick={() => { setSearch(""); setPage(1) }}
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <X className="size-4" />
+          </button>
+        )}
+      </form>
 
-          {/* Search */}
-          <form onSubmit={handleSearch} className="relative ml-auto max-w-[220px] flex-1">
-            <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-            <input
-              type="search"
-              placeholder="ค้นหาการ์ด..."
-              className="h-8 w-full rounded-lg border-0 bg-muted/60 pl-8 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:bg-muted focus:ring-1 focus:ring-border"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value)
-                if (e.target.value === "") setPage(1)
-              }}
-            />
-          </form>
+      {/* Stats + Highlights (passed from server component) */}
+      {children}
+
+      {/* Main table panel */}
+    <div className="panel overflow-hidden">
+      {/* Single-row toolbar: Tabs + filter button + period toggle (grid) + view toggle */}
+      <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
+        <div className="flex items-center gap-1 overflow-x-auto">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => handleTabChange(tab.id)}
+              className={cn(
+                "relative shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+                activeTab === tab.id
+                  ? "bg-foreground text-background shadow-sm"
+                  : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+              )}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        {/* Filter chips + price range + view toggle */}
-        <div className="flex flex-wrap items-center gap-2">
-          <FilterChips
-            filters={filterDefinitions}
-            selected={filters}
-            onChange={handleFilterChange}
-          />
-
-          {/* Price range */}
-          <div className="flex items-center gap-1">
-            <input
-              type="number"
-              placeholder="¥ ต่ำสุด"
-              className="h-7 w-20 rounded-md border-0 bg-muted/60 px-2 text-[13px] tabular-nums outline-none transition-colors placeholder:text-muted-foreground/60 focus:bg-muted focus:ring-1 focus:ring-border"
-              value={minPrice}
-              onChange={(e) => { setMinPrice(e.target.value); setPage(1) }}
-              min={0}
-            />
-            <span className="text-[11px] text-muted-foreground">–</span>
-            <input
-              type="number"
-              placeholder="¥ สูงสุด"
-              className="h-7 w-20 rounded-md border-0 bg-muted/60 px-2 text-[13px] tabular-nums outline-none transition-colors placeholder:text-muted-foreground/60 focus:bg-muted focus:ring-1 focus:ring-border"
-              value={maxPrice}
-              onChange={(e) => { setMaxPrice(e.target.value); setPage(1) }}
-              min={0}
-            />
-          </div>
-
-          {hasFilters && (
-            <button
-              onClick={clearAllFilters}
-              className="flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            >
-              <X className="size-3" />
-              ล้าง
-            </button>
+        <div className="ml-auto flex items-center gap-2">
+          {/* Period toggle — grid view only */}
+          {viewMode === "grid" && (
+            <div className="flex items-center gap-1 rounded-lg border border-border bg-card px-1.5 py-1 shadow-sm">
+              <TrendingUpDown className="size-3.5 text-muted-foreground" />
+              {(["24h", "7d", "30d"] as ChangePeriod[]).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setChangePeriod(p)}
+                  className={cn(
+                    "rounded-md px-2 py-0.5 text-xs font-semibold tabular-nums transition-all",
+                    changePeriod === p
+                      ? "bg-foreground text-background shadow-sm"
+                      : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                  )}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
           )}
 
+          {/* Advanced filter toggle */}
+          <button
+            type="button"
+            onClick={() => setFilterOpen((o) => !o)}
+            className={cn(
+              "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors",
+              filterOpen || activeFilterCount > 0
+                ? "bg-foreground text-background shadow-sm"
+                : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+            )}
+          >
+            <SlidersHorizontal className="size-3.5" />
+            <span className="hidden sm:inline">ตัวกรอง</span>
+            {activeFilterCount > 0 && (
+              <span className={cn(
+                "flex size-4.5 items-center justify-center rounded-full text-[10px] font-bold",
+                filterOpen || activeFilterCount > 0
+                  ? "bg-background/20 text-background"
+                  : "bg-foreground/10 text-foreground"
+              )}>
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+
           {/* View toggle */}
-          <div className="ml-auto flex items-center gap-0.5 rounded-lg bg-muted/60 p-0.5">
+          <div className="flex items-center gap-0.5 rounded-lg bg-muted/60 p-0.5">
             <button
               onClick={() => setViewMode("table")}
               className={cn(
@@ -353,12 +400,74 @@ export function HomeMarketOverview({
         </div>
       </div>
 
+      {/* Collapsible advanced filter panel */}
+      {filterOpen && (
+        <div className="border-b border-border bg-muted/20 px-4 py-3">
+          <div className="flex items-center gap-2 overflow-x-auto">
+            <FilterChips
+              filters={filterDefinitions}
+              selected={filters}
+              onChange={handleFilterChange}
+            />
+
+            {/* Price range inline */}
+            <div className="flex shrink-0 items-center gap-1.5">
+              <span className="text-xs text-muted-foreground">ราคา</span>
+              <input
+                type="number"
+                placeholder="ต่ำสุด"
+                className="h-8 w-20 rounded-lg border border-border bg-card px-2 text-sm tabular-nums outline-none placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
+                value={minPrice}
+                onChange={(e) => { setMinPrice(e.target.value); setPage(1) }}
+                min={0}
+              />
+              <span className="text-xs text-muted-foreground">–</span>
+              <input
+                type="number"
+                placeholder="สูงสุด"
+                className="h-8 w-20 rounded-lg border border-border bg-card px-2 text-sm tabular-nums outline-none placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
+                value={maxPrice}
+                onChange={(e) => { setMaxPrice(e.target.value); setPage(1) }}
+                min={0}
+              />
+            </div>
+
+            {activeFilterCount > 0 && (
+              <button
+                onClick={clearAllFilters}
+                className="flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                <X className="size-3" />
+                ล้างทั้งหมด
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Content: Table or Grid */}
       {viewMode === "table" ? (
-        <div className="overflow-x-auto">
+        <>
+        {/* Mobile card list (< sm) */}
+        <div className={cn("divide-y divide-border/40 sm:hidden", isPending && "opacity-50 transition-opacity")}>
+          {isPending && cards.length === 0
+            ? Array.from({ length: 6 }).map((_, i) => <MobileCardSkeleton key={i} />)
+            : cards.map((card, i) => (
+                <MobileCardItem
+                  key={card.cardCode}
+                  card={card}
+                  rank={(page - 1) * PAGE_SIZE + i + 1}
+                />
+              ))}
+          {!isPending && cards.length === 0 && (
+            <p className="py-12 text-center text-sm text-muted-foreground">ไม่มีข้อมูล</p>
+          )}
+        </div>
+        {/* Desktop table (>= sm) */}
+        <div className="hidden overflow-x-auto sm:block">
           <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-border text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <thead className="sticky top-0 z-10 bg-card">
+              <tr className="border-b border-border text-xs font-medium uppercase tracking-wider text-muted-foreground/70">
                 <th className="w-8 py-2.5 pl-3 pr-0 font-medium"></th>
                 <th className="w-10 py-2.5 pr-1 pl-1 font-medium">#</th>
                 <th className="py-2.5 pr-3 pl-2 font-medium">การ์ด</th>
@@ -381,20 +490,34 @@ export function HomeMarketOverview({
                   align="right"
                 />
                 {showViews ? (
-                  <th className="hidden py-2.5 pr-4 text-right font-medium md:table-cell">
+                  <th className="hidden py-2.5 pr-3 text-right font-medium md:table-cell">
                     เข้าชม
                   </th>
                 ) : (
-                  <SortableHeader
-                    label="7 วัน"
-                    column="change7d"
-                    activeCol={sortCol}
-                    dir={sortDir}
-                    onClick={handleColumnSort}
-                    align="right"
-                    className="hidden md:table-cell"
-                  />
+                  <>
+                    <SortableHeader
+                      label="7 วัน"
+                      column="change7d"
+                      activeCol={sortCol}
+                      dir={sortDir}
+                      onClick={handleColumnSort}
+                      align="right"
+                      className="hidden md:table-cell"
+                    />
+                    <SortableHeader
+                      label="30 วัน"
+                      column="change30d"
+                      activeCol={sortCol}
+                      dir={sortDir}
+                      onClick={handleColumnSort}
+                      align="right"
+                      className="hidden lg:table-cell"
+                    />
+                  </>
                 )}
+                <th className="hidden py-2.5 pr-4 font-medium xl:table-cell">
+                  กราฟ 7 วัน
+                </th>
               </tr>
             </thead>
             <tbody className={cn(isPending && "opacity-50 transition-opacity")}>
@@ -408,17 +531,19 @@ export function HomeMarketOverview({
                       card={card}
                       rank={(page - 1) * PAGE_SIZE + i + 1}
                       showViews={showViews}
+                      sparklineData={card.id != null ? sparklines[card.id] : undefined}
                     />
                   ))}
             </tbody>
           </table>
 
           {!isPending && cards.length === 0 && (
-            <p className="py-12 text-center text-sm text-muted-foreground">
+            <p className="hidden py-12 text-center text-sm text-muted-foreground sm:block">
               ไม่มีข้อมูล
             </p>
           )}
         </div>
+        </>
       ) : (
         <div className={cn("p-4", isPending && "opacity-50 transition-opacity")}>
           {isPending && cards.length === 0 ? (
@@ -434,7 +559,7 @@ export function HomeMarketOverview({
           ) : (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {cards.map((card) => (
-                <GridCard key={card.cardCode} card={card} />
+                <GridCard key={card.cardCode} card={card} changePeriod={changePeriod} />
               ))}
             </div>
           )}
@@ -445,7 +570,7 @@ export function HomeMarketOverview({
       {totalPages > 1 && (
         <div className="flex items-center justify-between border-t border-border px-4 py-3">
           <p className="text-xs text-muted-foreground">
-            {total.toLocaleString()} การ์ด
+            แสดง {((page - 1) * PAGE_SIZE + 1).toLocaleString()}-{Math.min(page * PAGE_SIZE, total).toLocaleString()} จาก {total.toLocaleString()} การ์ด
           </p>
           <div className="flex items-center gap-1">
             <button
@@ -470,6 +595,7 @@ export function HomeMarketOverview({
           </div>
         </div>
       )}
+    </div>
     </div>
   )
 }
@@ -529,34 +655,35 @@ function SortableHeader({
 /*  Table row                                                          */
 /* ------------------------------------------------------------------ */
 
-function MarketRow({ card, rank, showViews }: { card: CardRow; rank: number; showViews?: boolean }) {
+function MarketRow({ card, rank, showViews, sparklineData }: { card: CardRow; rank: number; showViews?: boolean; sparklineData?: number[] }) {
   const lang = useUIStore((s) => s.language)
   const name = getCardName(lang, card)
   const c24 = card.priceChange24h
   const c7 = card.priceChange7d
+  const c30 = card.priceChange30d
   const setCode = card.set?.code ?? card.setCode ?? ""
 
   return (
-    <tr className="border-b border-border/40 transition-colors hover:bg-muted/40">
-      <td className="py-2.5 pl-3 pr-0 align-middle">
+    <tr className="border-b border-border/40 transition-all duration-150 hover:bg-muted/50">
+      <td className="py-3 pl-3 pr-0 align-middle">
         {card.id != null && <WatchlistStar cardId={card.id} size="sm" />}
       </td>
-      <td className="py-2.5 pr-1 pl-1 align-middle">
+      <td className="py-3 pr-1 pl-1 align-middle">
         <span className="font-price text-xs text-muted-foreground">{rank}</span>
       </td>
-      <td className="py-2.5 pr-3 pl-2 align-middle">
+      <td className="py-3 pr-3 pl-2 align-middle">
         <Link
           href={`/cards/${card.cardCode}`}
           className="flex items-center gap-3"
         >
-          <div className="relative size-9 shrink-0 overflow-hidden rounded bg-muted">
+          <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted">
             {card.imageUrl ? (
               <Image
                 src={card.imageUrl}
                 alt={name}
                 fill
                 className="object-contain"
-                sizes="36px"
+                sizes="40px"
               />
             ) : (
               <div className="size-full bg-muted" />
@@ -575,29 +702,41 @@ function MarketRow({ card, rank, showViews }: { card: CardRow; rank: number; sho
           </div>
         </Link>
       </td>
-      <td className="hidden py-2.5 pr-3 align-middle font-mono text-xs text-muted-foreground md:table-cell">
+      <td className="hidden py-3 pr-3 align-middle font-mono text-xs text-muted-foreground md:table-cell">
         {setCode.toUpperCase()}
       </td>
-      <td className="hidden py-2.5 pr-3 align-middle sm:table-cell">
+      <td className="hidden py-3 pr-3 align-middle sm:table-cell">
         <RarityBadge rarity={card.rarity} size="sm" />
       </td>
-      <td className="py-2.5 pr-3 text-right align-middle font-price text-sm font-semibold">
+      <td className="py-3 pr-3 text-right align-middle font-price text-sm font-semibold">
         {card.latestPriceJpy != null ? (
           <Price jpy={card.latestPriceJpy} />
         ) : (
           "—"
         )}
       </td>
-      <td className="py-2.5 pr-3 text-right align-middle">
+      <td className="py-3 pr-3 text-right align-middle">
         <ChangeCell value={c24} />
       </td>
-      <td className="hidden py-2.5 pr-4 text-right align-middle md:table-cell">
+      <td className="hidden py-3 pr-3 text-right align-middle md:table-cell">
         {showViews ? (
           <span className="font-price text-xs text-muted-foreground">
             {(card.viewCount ?? 0).toLocaleString()}
           </span>
         ) : (
           <ChangeCell value={c7} />
+        )}
+      </td>
+      {!showViews && (
+        <td className="hidden py-3 pr-3 text-right align-middle lg:table-cell">
+          <ChangeCell value={c30} />
+        </td>
+      )}
+      <td className="hidden py-3 pr-4 align-middle xl:table-cell">
+        {sparklineData && sparklineData.length >= 2 ? (
+          <Sparkline data={sparklineData} width={80} height={28} />
+        ) : (
+          <span className="text-muted-foreground/30">—</span>
         )}
       </td>
     </tr>
@@ -660,8 +799,14 @@ function TableRowSkeleton() {
       <td className="py-2.5 pr-3">
         <Skeleton className="ml-auto h-4 w-10" />
       </td>
-      <td className="hidden py-2.5 pr-4 md:table-cell">
+      <td className="hidden py-2.5 pr-3 md:table-cell">
         <Skeleton className="ml-auto h-4 w-10" />
+      </td>
+      <td className="hidden py-2.5 pr-3 lg:table-cell">
+        <Skeleton className="ml-auto h-4 w-10" />
+      </td>
+      <td className="hidden py-2.5 pr-4 xl:table-cell">
+        <Skeleton className="h-7 w-20" />
       </td>
     </tr>
   )
@@ -695,8 +840,8 @@ function PageNumbers({
             className={cn(
               "flex size-8 items-center justify-center rounded-md text-xs font-medium transition-colors",
               current === p
-                ? "bg-foreground text-background"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                ? "bg-muted text-foreground font-semibold"
+                : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
             )}
           >
             {p}
@@ -711,17 +856,21 @@ function PageNumbers({
 /*  Grid card                                                          */
 /* ------------------------------------------------------------------ */
 
-function GridCard({ card }: { card: CardRow }) {
+function GridCard({ card, changePeriod = "7d" }: { card: CardRow; changePeriod?: "24h" | "7d" | "30d" }) {
   const lang = useUIStore((s) => s.language)
   const name = getCardName(lang, card)
   const setCode = card.set?.code ?? card.setCode ?? ""
+  const activeChange =
+    changePeriod === "24h" ? card.priceChange24h :
+    changePeriod === "30d" ? card.priceChange30d :
+    card.priceChange7d
 
   return (
     <Link
       href={`/cards/${card.cardCode}`}
       className="group/card block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <div className="relative flex flex-col overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-primary/30">
+      <div className="panel relative flex flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
         <div className="relative aspect-[63/88] w-full bg-muted">
           {card.imageUrl ? (
             <Image
@@ -740,9 +889,11 @@ function GridCard({ card }: { card: CardRow }) {
             {card.id != null && <WatchlistStar cardId={card.id} size="sm" />}
           </div>
           {card.isParallel && (
-            <span className="absolute right-1.5 top-1.5 rounded bg-primary/90 px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground">
-              P
-            </span>
+            <div className="absolute right-1.5 top-1.5">
+              <span className="rounded-md bg-primary/90 px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground">
+                P
+              </span>
+            </div>
           )}
         </div>
         <div className="flex flex-1 flex-col p-2.5">
@@ -760,7 +911,7 @@ function GridCard({ card }: { card: CardRow }) {
           <div className="mt-auto pt-1.5">
             <PriceDisplay
               priceJpy={card.latestPriceJpy}
-              change={card.priceChange7d}
+              change={activeChange}
               size="sm"
             />
           </div>
@@ -772,12 +923,76 @@ function GridCard({ card }: { card: CardRow }) {
 
 function GridCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card">
+    <div className="panel overflow-hidden">
       <Skeleton className="aspect-[63/88] w-full" />
       <div className="space-y-2 p-2.5">
         <Skeleton className="h-4 w-12" />
         <Skeleton className="h-3.5 w-24" />
         <Skeleton className="h-4 w-16" />
+      </div>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  Mobile card list item                                              */
+/* ------------------------------------------------------------------ */
+
+function MobileCardItem({ card, rank }: { card: CardRow; rank: number }) {
+  const lang = useUIStore((s) => s.language)
+  const name = getCardName(lang, card)
+  const c24 = card.priceChange24h
+
+  return (
+    <Link
+      href={`/cards/${card.cardCode}`}
+      className="flex items-center gap-3 px-4 py-3 transition-colors active:bg-muted/40"
+    >
+      <span className="w-5 shrink-0 text-center font-price text-xs text-muted-foreground">{rank}</span>
+      <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-muted">
+        {card.imageUrl ? (
+          <Image src={card.imageUrl} alt={name} fill className="object-contain" sizes="44px" />
+        ) : (
+          <div className="size-full bg-muted" />
+        )}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium leading-tight">{name}</p>
+        <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+          <span className="font-mono">{card.baseCode ?? card.cardCode}</span>
+          {card.isParallel && <span className="text-primary">P</span>}
+          <RarityBadge rarity={card.rarity} size="sm" />
+        </div>
+      </div>
+      <div className="shrink-0 text-right">
+        <p className="font-price text-sm font-semibold">
+          {card.latestPriceJpy != null ? <Price jpy={card.latestPriceJpy} /> : "—"}
+        </p>
+        {c24 != null && c24 !== 0 && (
+          <p className={cn(
+            "font-price text-[11px] font-medium",
+            c24 > 0 ? "text-price-up" : "text-price-down"
+          )}>
+            {c24 > 0 ? "+" : ""}{c24.toFixed(1)}%
+          </p>
+        )}
+      </div>
+    </Link>
+  )
+}
+
+function MobileCardSkeleton() {
+  return (
+    <div className="flex items-center gap-3 px-4 py-3">
+      <Skeleton className="h-4 w-5" />
+      <Skeleton className="size-11 rounded-lg" />
+      <div className="flex-1 space-y-1.5">
+        <Skeleton className="h-3.5 w-28" />
+        <Skeleton className="h-2.5 w-16" />
+      </div>
+      <div className="space-y-1">
+        <Skeleton className="ml-auto h-4 w-14" />
+        <Skeleton className="ml-auto h-3 w-8" />
       </div>
     </div>
   )

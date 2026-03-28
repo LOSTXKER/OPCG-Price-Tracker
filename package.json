@@ -16,7 +16,8 @@
     "pipeline": "tsx scripts/pipeline.ts",
     "translate:thai": "tsx scripts/translate-thai.ts",
     "seed:users": "tsx scripts/seed-users.ts",
-    "seed:games": "tsx scripts/seed-games.ts"
+    "seed:games": "tsx scripts/seed-games.ts",
+    "seed:prices": "tsx scripts/seed-price-history.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",

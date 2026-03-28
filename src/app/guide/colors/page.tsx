@@ -73,7 +73,7 @@ export default function ColorsPage() {
         {colors.map((color) => (
           <div
             key={color.name}
-            className="overflow-hidden rounded-xl border border-border bg-card"
+            className="panel overflow-hidden"
           >
             <div
               className="h-2"

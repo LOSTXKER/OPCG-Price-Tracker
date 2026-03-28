@@ -8,6 +8,7 @@ import {
   getAvailableSources,
   getCardByCode,
   getCommunityPrice,
+  getRelatedFromSameSet,
   getSiblingVariants,
 } from "@/lib/data/card-detail";
 import { prisma } from "@/lib/db";
@@ -45,9 +46,10 @@ export default async function CardDetailPage(props: {
     data: { viewCount: { increment: 1 } },
   });
 
-  const [communityPrice, siblings] = await Promise.all([
+  const [communityPrice, siblings, relatedCards] = await Promise.all([
     getCommunityPrice(card.id),
     getSiblingVariants(card.baseCode, card.id),
+    getRelatedFromSameSet(card.setId, card.id),
   ]);
 
   const price = deriveLatestPrice(card);
@@ -93,6 +95,7 @@ export default async function CardDetailPage(props: {
         latestPriceThb: card.latestPriceThb,
         priceChange24h: card.priceChange24h,
         priceChange7d: card.priceChange7d,
+        priceChange30d: card.priceChange30d,
         set: {
           code: card.set.code,
           name: card.set.name,
@@ -104,6 +107,7 @@ export default async function CardDetailPage(props: {
       }}
       siblings={siblings}
       communityPrice={communityPrice}
+      relatedCards={relatedCards}
     />
   );
 }

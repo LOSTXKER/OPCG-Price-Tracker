@@ -84,7 +84,7 @@ export default function RaritiesPage() {
           return (
             <div
               key={rarity.code}
-              className="flex items-start gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:bg-accent/50"
+              className="panel flex items-start gap-4 p-4 transition-colors hover:bg-accent/50"
             >
               <div
                 className="flex size-12 shrink-0 items-center justify-center rounded-lg font-sans text-lg font-bold text-white"

@@ -60,10 +60,10 @@ export function PriceDisplay({
       {hasChange && (
         <span
           className={cn(
-            "font-price",
+            "font-price rounded-md px-1 py-0.5",
             s.change,
-            up && "text-price-up",
-            down && "text-price-down",
+            up && "bg-price-up/10 text-price-up",
+            down && "bg-price-down/10 text-price-down",
             !up && !down && "text-muted-foreground"
           )}
         >

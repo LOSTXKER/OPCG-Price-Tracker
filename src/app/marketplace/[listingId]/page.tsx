@@ -148,7 +148,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
                 <span
                   className={cn(
                     "ml-2 font-mono font-medium",
-                    diffPct < 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
+                    diffPct < 0 ? "text-price-up" : "text-price-down"
                   )}
                 >
                   {diffPct > 0 ? "+" : ""}
@@ -165,7 +165,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
             </div>
           ) : null}
 
-          <div className="bg-card rounded-xl border p-4 ring-1 ring-foreground/10">
+          <div className="panel p-4">
             <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
               ผู้ขาย
             </p>

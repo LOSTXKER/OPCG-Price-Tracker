@@ -147,7 +147,7 @@ export default async function AdminDashboard() {
         {statCards.map((card) => (
           <div
             key={card.label}
-            className="rounded-xl border border-border/50 bg-card p-4"
+            className="panel p-4"
           >
             <div className="flex items-center gap-3">
               <div className={`rounded-lg p-2 ${card.bg}`}>
@@ -166,7 +166,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Rarity Breakdown */}
-      <div className="rounded-xl border border-border/50 bg-card p-4">
+      <div className="panel p-4">
         <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
           <BarChart3 className="h-5 w-5" />
           Rarity Breakdown (Base Cards)
@@ -186,7 +186,7 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      <div className="rounded-xl border border-border/50 bg-card p-4">
+      <div className="panel p-4">
         <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
           <Languages className="h-5 w-5" />
           Data Quality
@@ -237,7 +237,7 @@ export default async function AdminDashboard() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Link
           href="/admin/sets"
-          className="group rounded-xl border border-border/50 bg-card p-4 transition-colors hover:border-primary/30"
+          className="panel group p-4 transition-colors hover:shadow-md"
         >
           <Library className="mb-2 h-6 w-6 text-muted-foreground group-hover:text-primary" />
           <h3 className="font-semibold">Manage Sets</h3>
@@ -247,7 +247,7 @@ export default async function AdminDashboard() {
         </Link>
         <Link
           href="/admin/cards"
-          className="group rounded-xl border border-border/50 bg-card p-4 transition-colors hover:border-primary/30"
+          className="panel group p-4 transition-colors hover:shadow-md"
         >
           <CreditCard className="mb-2 h-6 w-6 text-muted-foreground group-hover:text-primary" />
           <h3 className="font-semibold">Browse Cards</h3>
@@ -257,7 +257,7 @@ export default async function AdminDashboard() {
         </Link>
         <Link
           href="/admin/drop-rates"
-          className="group rounded-xl border border-border/50 bg-card p-4 transition-colors hover:border-primary/30"
+          className="panel group p-4 transition-colors hover:shadow-md"
         >
           <BarChart3 className="mb-2 h-6 w-6 text-muted-foreground group-hover:text-primary" />
           <h3 className="font-semibold">Drop Rates</h3>

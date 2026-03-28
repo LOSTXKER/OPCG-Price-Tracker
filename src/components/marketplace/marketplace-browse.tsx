@@ -9,6 +9,7 @@ import {
   type FilterDefinition,
 } from "@/components/shared/filter-chips";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 export type MarketplaceBrowseListing = {
@@ -165,12 +166,8 @@ export function MarketplaceBrowse({
 
       {error ? <p className="text-destructive text-sm">{error}</p> : null}
 
-      {isPending ? (
-        <p className="text-muted-foreground text-sm">กำลังโหลด…</p>
-      ) : null}
-
-      <div>
-        {listings.length === 0 ? (
+      <div className={cn(isPending && "pointer-events-none opacity-50 transition-opacity")}>
+        {listings.length === 0 && !isPending ? (
           <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed py-16 text-center">
             <p className="text-muted-foreground text-sm">
               ยังไม่มีรายการในตลาด หรือลองเปลี่ยนตัวกรอง

@@ -26,6 +26,7 @@ import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { CardSearchResult } from "@/hooks/use-card-search"
 import { cn } from "@/lib/utils"
+import { RARITY_HEX } from "@/lib/constants/rarity"
 
 type CardWithSet = CardSearchResult & {
   set?: { code: string; name: string; nameEn?: string | null } | null
@@ -61,14 +62,14 @@ const SET_TYPE_LABELS: Record<string, string> = {
 const SET_TYPE_ORDER = ["BOOSTER", "EXTRA_BOOSTER", "STARTER", "PROMO", "OTHER"]
 
 const RARITY_OPTIONS = [
-  { code: "SEC", label: "SEC", color: "#F59E0B" },
-  { code: "SR", label: "SR", color: "#8B5CF6" },
-  { code: "R", label: "R", color: "#3B82F6" },
-  { code: "UC", label: "UC", color: "#22C55E" },
-  { code: "C", label: "C", color: "#6B7280" },
-  { code: "L", label: "Leader", color: "#F97316" },
-  { code: "SP", label: "SP", color: "#EC4899" },
-  { code: "P", label: "Promo", color: "#06B6D4" },
+  { code: "SEC", label: "SEC" },
+  { code: "SR", label: "SR" },
+  { code: "R", label: "R" },
+  { code: "UC", label: "UC" },
+  { code: "C", label: "C" },
+  { code: "L", label: "Leader" },
+  { code: "SP", label: "SP" },
+  { code: "P", label: "Promo" },
 ]
 
 const COLOR_OPTIONS = [
@@ -547,7 +548,7 @@ function SelectStep({
                         ? "text-white shadow-sm"
                         : "bg-muted text-muted-foreground hover:text-foreground"
                     )}
-                    style={activeRarity === r.code ? { backgroundColor: r.color } : undefined}
+                    style={activeRarity === r.code ? { backgroundColor: RARITY_HEX[r.code] ?? "#6B7280" } : undefined}
                   >
                     {r.label}
                   </button>

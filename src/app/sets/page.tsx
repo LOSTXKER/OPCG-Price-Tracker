@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Crown, Package } from "lucide-react";
+import { Crown, Gift, MoreHorizontal, Package, Sparkles, Swords } from "lucide-react";
 
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { ErrorBanner } from "@/components/shared/error-banner";
@@ -24,12 +24,12 @@ const TYPE_LABEL: Record<SetType, string> = {
   PROMO: "Promo",
   OTHER: "Other",
 };
-const TYPE_EMOJI: Record<SetType, string> = {
-  BOOSTER: "📦",
-  EXTRA_BOOSTER: "✨",
-  STARTER: "🃏",
-  PROMO: "🏷️",
-  OTHER: "📋",
+const TYPE_ICON: Record<SetType, React.ComponentType<{ className?: string }>> = {
+  BOOSTER: Package,
+  EXTRA_BOOSTER: Sparkles,
+  STARTER: Swords,
+  PROMO: Gift,
+  OTHER: MoreHorizontal,
 };
 
 type SetWithCard = {
@@ -105,12 +105,29 @@ export default async function SetsIndexPage() {
     .sort((a, b) => b.totalValue - a.totalValue)
     .slice(0, 5);
 
+  const totalSets = setsRaw.length;
+  const totalMarketValue = setsRaw.reduce((sum, s) => sum + s.totalValue, 0);
+
   return (
     <div className="space-y-10">
       {/* Page header */}
       <div>
         <h1 className="font-sans text-2xl font-bold tracking-tight sm:text-3xl">ชุดการ์ด</h1>
         <p className="mt-1 text-sm text-muted-foreground">เลือกชุดการ์ดเพื่อดูรายละเอียดและราคา</p>
+        {totalSets > 0 && (
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+              <Package className="size-3" />
+              {totalSets} ชุด
+            </span>
+            {totalMarketValue > 0 && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                <Crown className="size-3" />
+                มูลค่ารวม <Price jpy={totalMarketValue} />
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {dbError ? (
@@ -127,29 +144,37 @@ export default async function SetsIndexPage() {
                 <h2 className="text-sm font-semibold">ชุดที่มีมูลค่ามากที่สุด</h2>
               </div>
               <div className="divide-y divide-border/40">
-                {mostValuable.map((s, i) => (
-                  <Link
-                    key={s.id}
-                    href={`/sets/${s.code}`}
-                    className="flex items-center gap-4 px-5 py-3 transition-colors hover:bg-muted/30"
-                  >
-                    <span className={`flex size-6 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold ${i < 3 ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground"}`}>
-                      {i + 1}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-mono text-[11px] font-bold text-primary">
-                          {s.code.toUpperCase()}
-                        </span>
-                        <span className="truncate text-sm font-medium">{s.nameEn ?? s.name}</span>
+                {mostValuable.map((s, i) => {
+                  const thumb = s.boxImageUrl ?? s.topCard?.imageUrl;
+                  return (
+                    <Link
+                      key={s.id}
+                      href={`/sets/${s.code}`}
+                      className="flex items-center gap-4 px-5 py-3 transition-colors hover:bg-muted/30"
+                    >
+                      <span className={`flex size-7 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold ${i < 3 ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground"}`}>
+                        {i + 1}
+                      </span>
+                      {thumb && (
+                        <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-muted">
+                          <Image src={thumb} alt="" fill className="object-contain" sizes="40px" />
+                        </div>
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-mono text-[11px] font-bold text-primary">
+                            {s.code.toUpperCase()}
+                          </span>
+                          <span className="truncate text-sm font-medium">{s.nameEn ?? s.name}</span>
+                        </div>
                       </div>
-                    </div>
-                    <span className="shrink-0 text-xs text-muted-foreground">{s.productCardCount} ใบ</span>
-                    <span className="shrink-0 font-price text-sm font-semibold">
-                      <Price jpy={s.totalValue} />
-                    </span>
-                  </Link>
-                ))}
+                      <span className="shrink-0 text-xs text-muted-foreground">{s.productCardCount} ใบ</span>
+                      <span className="shrink-0 font-price text-sm font-semibold">
+                        <Price jpy={s.totalValue} />
+                      </span>
+                    </Link>
+                  );
+                })}
               </div>
             </section>
           )}
@@ -159,12 +184,13 @@ export default async function SetsIndexPage() {
             {TYPE_ORDER.map((type) => {
               const list = grouped.get(type) ?? [];
               if (list.length === 0) return null;
+              const TypeIcon = TYPE_ICON[type];
               return (
                 <section key={type} className="space-y-5">
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-lg">{TYPE_EMOJI[type]}</span>
+                  <div className="flex items-center gap-3 border-l-[3px] border-primary/60 pl-3">
+                    <TypeIcon className="size-4 text-primary/70" />
                     <h2 className="font-sans text-lg font-bold tracking-tight">{TYPE_LABEL[type]}</h2>
-                    <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">
+                    <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold tabular-nums text-muted-foreground">
                       {list.length}
                     </span>
                   </div>
@@ -188,56 +214,54 @@ function SetCard({ set }: { set: SetWithCard }) {
 
   return (
     <Link href={`/sets/${set.code}`} className="group block">
-      <div className="panel flex h-full flex-col overflow-hidden transition-all duration-200 hover:shadow-md hover:border-primary/20">
-        {/* Image area */}
-        <div className="relative h-36 w-full overflow-hidden bg-gradient-to-b from-muted/80 to-muted/40">
+      <div className="panel flex h-full flex-col overflow-hidden transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+        {/* Image area — portrait card ratio */}
+        <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted/30">
           {imageUrl ? (
             <Image
               src={imageUrl}
               alt={set.nameEn ?? set.name}
               fill
-              className="object-contain p-2 transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
           ) : (
             <div className="flex h-full items-center justify-center">
               <Package className="size-10 text-muted-foreground/15" />
             </div>
           )}
-          {/* Set code badge overlaid on image */}
           <div className="absolute left-2.5 top-2.5">
-            <span className="rounded-md bg-background/90 px-2 py-1 font-mono text-xs font-bold text-foreground shadow-sm backdrop-blur-sm">
+            <span className="rounded-md bg-background/80 px-2 py-0.5 font-mono text-xs font-bold text-foreground backdrop-blur-sm">
               {set.code.toUpperCase()}
             </span>
           </div>
+          {set.totalValue > 0 && (
+            <div className="absolute bottom-2.5 right-2.5">
+              <span className="rounded-md bg-background/80 px-2 py-0.5 font-price text-xs font-semibold text-foreground backdrop-blur-sm">
+                <Price jpy={set.totalValue} />
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Info */}
-        <div className="flex flex-1 flex-col gap-2 p-4">
-          <p className="text-sm font-semibold leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+        <div className="flex flex-1 flex-col gap-1.5 p-4">
+          <p className="text-sm font-semibold leading-snug line-clamp-2 transition-colors group-hover:text-primary">
             {set.nameEn ?? set.name}
           </p>
 
-          {/* Meta row */}
-          <div className="mt-auto flex items-center justify-between pt-1">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span>{set.productCardCount} ใบ</span>
-              {set.releaseDate && (
-                <>
-                  <span className="text-border">·</span>
-                  <span>
-                    {new Date(set.releaseDate).toLocaleDateString("th-TH", {
-                      year: "numeric",
-                      month: "short",
-                    })}
-                  </span>
-                </>
-              )}
-            </div>
-            {set.totalValue > 0 && (
-              <span className="font-price text-xs font-semibold text-primary">
-                <Price jpy={set.totalValue} />
-              </span>
+          <div className="mt-auto flex items-center gap-2 pt-1 text-xs text-muted-foreground">
+            <span>{set.productCardCount} ใบ</span>
+            {set.releaseDate && (
+              <>
+                <span className="text-border">·</span>
+                <span>
+                  {new Date(set.releaseDate).toLocaleDateString("th-TH", {
+                    year: "numeric",
+                    month: "short",
+                  })}
+                </span>
+              </>
             )}
           </div>
         </div>

@@ -53,7 +53,7 @@ export function PortfolioItem({
   const detailHref = `/cards/${encodeURIComponent(cardCode)}`
 
   return (
-    <div className="bg-card flex gap-3 rounded-xl border p-3 ring-1 ring-foreground/10">
+    <div className="panel flex gap-3 p-3">
       <Link
         href={detailHref}
         className="bg-muted relative h-[4.5rem] w-12 shrink-0 overflow-hidden rounded-md"
@@ -142,8 +142,8 @@ export function PortfolioItem({
             className={cn(
               "mt-2 font-mono text-sm font-medium",
               pnlPositive
-                ? "text-emerald-600 dark:text-emerald-400"
-                : "text-red-600 dark:text-red-400"
+                ? "text-price-up"
+                : "text-price-down"
             )}
           >
             P&amp;L {lineCost >= 0 ? "+" : ""}

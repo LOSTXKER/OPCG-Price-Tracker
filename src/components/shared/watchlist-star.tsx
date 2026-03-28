@@ -37,7 +37,7 @@ export function WatchlistStar({
         void toggle(cardId)
       }}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center transition-colors",
+        "inline-flex shrink-0 items-center justify-center rounded-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
         loaded
           ? "text-muted-foreground/40 hover:text-amber-400"
           : "pointer-events-none text-muted-foreground/20",

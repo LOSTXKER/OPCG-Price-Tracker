@@ -1,5 +1,6 @@
 "use client"
 
+import { PieChartIcon } from "lucide-react"
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
 
 export type AllocationSlice = {
@@ -26,8 +27,9 @@ export function PortfolioAllocationChart({
 }) {
   if (data.length === 0) {
     return (
-      <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
-        ไม่มีข้อมูล
+      <div className="flex h-48 flex-col items-center justify-center gap-2 text-muted-foreground">
+        <PieChartIcon className="size-8 opacity-30" />
+        <p className="text-sm">ไม่มีข้อมูล</p>
       </div>
     )
   }

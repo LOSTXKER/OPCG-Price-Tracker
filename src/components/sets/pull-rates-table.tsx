@@ -5,6 +5,7 @@ import { AlertTriangle } from "lucide-react";
 
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import { pullChance, formatPct, PACKS_PER_BOX, BOXES_PER_CARTON } from "@/lib/utils/pull-rate";
+import { RARITY_BAR_COLOR } from "@/lib/constants/rarity";
 
 type Unit = "pack" | "box" | "carton";
 
@@ -12,23 +13,6 @@ const UNIT_LABELS: Record<Unit, string> = {
   pack: "ซอง",
   box: "กล่อง",
   carton: "คาตั้น",
-};
-
-const TIER_ACCENT_BG: Record<string, string> = {
-  SP: "bg-pink-500",
-  "P-SEC": "bg-amber-500",
-  SEC: "bg-amber-500",
-  "P-SR": "bg-purple-500",
-  SR: "bg-purple-500",
-  "P-R": "bg-blue-500",
-  R: "bg-blue-500",
-  L: "bg-orange-500",
-  "P-L": "bg-orange-500",
-  "P-UC": "bg-emerald-500",
-  UC: "bg-emerald-500",
-  "P-C": "bg-neutral-400",
-  C: "bg-neutral-400",
-  DON: "bg-red-500",
 };
 
 export interface PullRateRow {
@@ -66,83 +50,91 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
     : row.avgPerBox;
 
   return (
-    <div className="panel p-4 sm:p-5">
-      {/* Header */}
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <h2 className="text-sm font-semibold">Pull Rates</h2>
-        <span className="flex items-center gap-1 rounded-full bg-warning/10 px-2 py-0.5 text-[11px] font-medium text-warning">
+    <div className="pt-3">
+      {/* Header row */}
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <span className="flex items-center gap-1.5 rounded-full bg-warning/10 px-2.5 py-1 text-[11px] font-medium text-warning">
           <AlertTriangle className="size-3" />
           Community estimates
         </span>
+        <div className="ml-auto inline-flex rounded-lg bg-muted/60 p-0.5">
+          {(["pack", "box", "carton"] as Unit[]).map((u) => (
+            <button
+              key={u}
+              onClick={() => setUnit(u)}
+              className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
+                unit === u
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {UNIT_LABELS[u]}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Unit toggle */}
-      <div className="mb-4 inline-flex rounded-lg border border-border bg-muted/50 p-0.5">
-        {(["pack", "box", "carton"] as Unit[]).map((u) => (
-          <button
-            key={u}
-            onClick={() => setUnit(u)}
-            className={`rounded-md px-3.5 py-1.5 text-xs font-medium transition-all ${
-              unit === u
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {UNIT_LABELS[u]}
-          </button>
-        ))}
+      {/* Table header */}
+      <div className="mb-1 hidden items-center px-3 text-[11px] font-medium text-muted-foreground sm:flex">
+        <span className="w-20">Rarity</span>
+        <span className="flex-1" />
+        <span className="w-28 text-right">ต่อ{UNIT_LABELS[unit]}</span>
+        <span className="w-20 text-right">ใบ</span>
+        <span className="w-24 text-right">โอกาส/ใบ</span>
       </div>
 
       {/* Rows */}
-      <div className="space-y-2">
+      <div className="divide-y divide-border/40">
         {rows.map((row) => {
           const count = countForUnit(row);
           const chance = pullChance(rateForUnit(row), row.cardCount);
           const maxBar = 6;
           const barWidth = Math.min((row.avgPerBox / maxBar) * 100, 100);
-          const accent = TIER_ACCENT_BG[row.rarity] ?? "bg-neutral-400";
+          const accent = RARITY_BAR_COLOR[row.rarity] ?? "bg-neutral-400";
 
           return (
-            <div key={row.rarity} className="rounded-lg border border-border/50 p-3">
-              {/* Rarity badge */}
-              <div className="mb-2 flex items-center gap-2">
+            <div key={row.rarity} className="flex flex-col gap-1.5 px-3 py-3 transition-colors hover:bg-muted/20 sm:flex-row sm:items-center sm:gap-0">
+              {/* Badge + bar */}
+              <div className="flex items-center gap-2.5 sm:w-20">
                 <RarityBadge rarity={row.rarity} size="sm" />
+              </div>
+              <div className="hidden flex-1 px-3 sm:block">
+                <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+                  <div className={`h-full rounded-full transition-all ${accent}`} style={{ width: `${barWidth}%` }} />
+                </div>
+              </div>
+
+              {/* Mobile: bar + stats inline */}
+              <div className="flex items-center gap-3 sm:hidden">
                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                   <div className={`h-full rounded-full ${accent}`} style={{ width: `${barWidth}%` }} />
                 </div>
+                <span className="shrink-0 font-mono text-sm font-bold tabular-nums">{fmtCount(count)}</span>
+                <span className="shrink-0 text-[11px] text-muted-foreground">{row.cardCount}ใบ</span>
+                <span className="shrink-0 font-mono text-xs font-semibold tabular-nums text-primary">{formatPct(chance)}</span>
               </div>
 
-              {/* Main stats - always visible */}
-              <div className="flex items-baseline justify-between">
-                <div>
-                  <span className="font-mono text-xl font-bold tabular-nums text-primary">
-                    {fmtCount(count)}
-                  </span>
-                  <span className="ml-1 text-sm text-muted-foreground">
-                    ใบ/{UNIT_LABELS[unit]}
-                  </span>
-                </div>
-                <div className="text-right">
-                  <span className="text-xs text-muted-foreground">โอกาส/ใบ </span>
-                  <span className="font-mono text-sm font-bold tabular-nums">{formatPct(chance)}</span>
-                </div>
-              </div>
-
-              {/* Context */}
-              <p className="mt-1 text-xs text-muted-foreground">
-                rarity นี้มี {row.cardCount} ใบ
-              </p>
+              {/* Desktop stats */}
+              <span className="hidden w-28 text-right font-mono text-sm font-bold tabular-nums sm:block">
+                {fmtCount(count)}
+              </span>
+              <span className="hidden w-20 text-right text-xs text-muted-foreground sm:block">
+                {row.cardCount} ใบ
+              </span>
+              <span className="hidden w-24 text-right font-mono text-xs font-semibold tabular-nums text-primary sm:block">
+                {formatPct(chance)}
+              </span>
             </div>
           );
         })}
       </div>
 
       {/* Footer */}
-      <div className="mt-3 border-t border-border pt-3 text-xs text-muted-foreground">
-        {packsPerBox && cardsPerPack && (
-          <p>{packsPerBox} ซอง/กล่อง · {cardsPerPack} ใบ/ซอง · {BOXES_PER_CARTON} กล่อง/คาตั้น</p>
-        )}
-      </div>
+      {packsPerBox && cardsPerPack && (
+        <div className="mt-3 border-t border-border/40 pt-3 text-[11px] text-muted-foreground">
+          {packsPerBox} ซอง/กล่อง · {cardsPerPack} ใบ/ซอง · {BOXES_PER_CARTON} กล่อง/คาตั้น
+        </div>
+      )}
     </div>
   );
 }

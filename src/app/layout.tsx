@@ -8,6 +8,7 @@ import { BottomNav } from "@/components/layout/bottom-nav";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { MainChrome, PageContent } from "@/components/layout/main-chrome";
+import { ScrollToTop } from "@/components/shared/scroll-to-top";
 
 import { ThemeProvider } from "@/providers/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -73,6 +74,7 @@ export default function RootLayout({
               <Footer />
               <BottomNav />
             </MainChrome>
+            <ScrollToTop />
             <Toaster position="bottom-center" />
           </TooltipProvider>
         </ThemeProvider>

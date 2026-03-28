@@ -1,28 +1,103 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
-import { PriceChart } from "@/components/cards/price-chart"
+import { PriceChart, type PriceChartStats } from "@/components/cards/price-chart"
 
-export type CardDetailPriceChartProps = {
-  data: {
-    scrapedAt: string
-    priceJpy: number | null
-    priceThb?: number | null
-    source?: string
-  }[]
+type PriceRow = {
+  scrapedAt: string
+  priceJpy: number | null
+  priceThb?: number | null
+  source?: string
 }
 
-export function CardDetailPriceChart({ data }: CardDetailPriceChartProps) {
+export type CardDetailPriceChartProps = {
+  cardCode: string
+  data: PriceRow[]
+}
+
+function computeLocalStats(rows: PriceRow[]): PriceChartStats | null {
+  const jpyPrices = rows
+    .filter((p) => p.priceJpy != null)
+    .map((p) => p.priceJpy!)
+  if (jpyPrices.length === 0) return null
+  return {
+    high: Math.max(...jpyPrices),
+    low: Math.min(...jpyPrices),
+    avg: Math.round(
+      jpyPrices.reduce((a, b) => a + b, 0) / jpyPrices.length,
+    ),
+  }
+}
+
+export function CardDetailPriceChart({
+  cardCode,
+  data: initialData,
+}: CardDetailPriceChartProps) {
   const [period, setPeriod] = useState("30d")
+  const [data, setData] = useState<PriceRow[]>(initialData)
+  const [stats, setStats] = useState<PriceChartStats | null>(() =>
+    computeLocalStats(initialData),
+  )
+  const [loading, setLoading] = useState(false)
+  const abortRef = useRef<AbortController | null>(null)
 
-  const filtered = useMemo(() => {
-    if (period === "7d") {
-      const cutoff = Date.now() - 7 * 86_400_000
-      return data.filter((d) => new Date(d.scrapedAt).getTime() >= cutoff)
-    }
-    return data
-  }, [data, period])
+  const fetchPriceData = useCallback(
+    async (p: string) => {
+      abortRef.current?.abort()
+      const controller = new AbortController()
+      abortRef.current = controller
 
-  return <PriceChart data={filtered} period={period} onPeriodChange={setPeriod} />
+      setLoading(true)
+      try {
+        const res = await fetch(
+          `/api/cards/${encodeURIComponent(cardCode)}/prices?period=${p}`,
+          { signal: controller.signal },
+        )
+        if (!res.ok) throw new Error("Failed to fetch")
+        const json = await res.json()
+        const rows: PriceRow[] = (json.prices ?? []).map(
+          (r: Record<string, unknown>) => ({
+            scrapedAt: r.scrapedAt as string,
+            priceJpy: r.priceJpy as number | null,
+            priceThb: r.priceThb as number | null,
+            source: r.source as string | undefined,
+          }),
+        )
+        setData(rows)
+        setStats({
+          high: (json.high as number) ?? 0,
+          low: (json.low as number) ?? 0,
+          avg: (json.avg as number) ?? 0,
+        })
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "AbortError") return
+      } finally {
+        setLoading(false)
+      }
+    },
+    [cardCode],
+  )
+
+  useEffect(() => {
+    return () => abortRef.current?.abort()
+  }, [])
+
+  const handlePeriodChange = useCallback(
+    (p: string) => {
+      setPeriod(p)
+      fetchPriceData(p)
+    },
+    [fetchPriceData],
+  )
+
+  return (
+    <PriceChart
+      data={data}
+      period={period}
+      onPeriodChange={handlePeriodChange}
+      stats={stats}
+      loading={loading}
+    />
+  )
 }

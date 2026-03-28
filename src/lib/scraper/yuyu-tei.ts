@@ -47,7 +47,8 @@ export function parseSetListingPage($: cheerio.CheerioAPI): ScrapedCardListing[]
 
     const imgEl = $el.find(".product-img img.card").first();
     const altText = imgEl.attr("alt") || "";
-    const imageUrl = imgEl.attr("src") || undefined;
+    const rawImageUrl = imgEl.attr("src") || undefined;
+    const imageUrl = rawImageUrl?.replace(/\/\d+_\d+\//, "/front/");
 
     // alt format: "OP01-120 P-SEC ロロノア・ゾロ(パラレル)"
     const altMatch = altText.match(

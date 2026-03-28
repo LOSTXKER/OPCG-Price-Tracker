@@ -26,6 +26,9 @@ export async function GET(
   const now = new Date();
   let since: Date;
   switch (period) {
+    case "24h":
+      since = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      break;
     case "30d":
       since = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
       break;

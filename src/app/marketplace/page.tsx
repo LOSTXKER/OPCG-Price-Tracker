@@ -64,8 +64,8 @@ export default async function MarketplacePage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-sans text-4xl font-bold tracking-tight">Market</h1>
-        <p className="text-muted-foreground mt-2 text-base">ซื้อขายการ์ดกับชุมชน — ดูดีลดี เทียบราคาตลาด</p>
+        <h1 className="font-sans text-2xl font-bold tracking-tight sm:text-3xl">ซื้อขาย</h1>
+        <p className="mt-1 text-sm text-muted-foreground">ซื้อขายการ์ดกับชุมชน — ดูดีลดี เทียบราคาตลาด</p>
       </div>
       {dbError ? (
         <div className="flex flex-col items-center gap-4 rounded-2xl bg-muted/30 py-12 text-center">

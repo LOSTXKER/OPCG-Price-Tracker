@@ -73,7 +73,7 @@ export function PortfolioSummary({
             <div
               className={cn(
                 "mt-1 flex items-center gap-2 font-mono text-2xl font-semibold",
-                pnlPositive ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
+                pnlPositive ? "text-price-up" : "text-price-down"
               )}
             >
               {pnlPositive ? (

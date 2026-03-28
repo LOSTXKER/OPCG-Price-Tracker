@@ -113,32 +113,54 @@ Reference image (from Yuyutei):`,
 Reply with ONLY valid JSON, no markdown: {"choice": <1-based candidate number>, "confidence": <0.0 to 1.0>}`,
   });
 
-  try {
-    const response = await ai.models.generateContent({
-      model: MODEL,
-      contents: [{ role: "user", parts }],
-      config: {
-        temperature: 0,
-        maxOutputTokens: 100,
-      },
-    });
+  const MAX_RETRIES = 3;
+  const RETRY_WAIT_SEC = [5, 10, 20];
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const response = await ai.models.generateContent({
+        model: MODEL,
+        contents: [{ role: "user", parts }],
+        config: {
+          temperature: 0,
+          maxOutputTokens: 100,
+        },
+      });
 
-    const text = response.text?.trim() ?? "";
-    const json = text.replace(/```json\s*|\s*```/g, "").trim();
-    const parsed = JSON.parse(json) as { choice: number; confidence: number };
+      const text = response.text?.trim() ?? "";
+      const json = text.replace(/```json\s*|\s*```/g, "").trim();
+      const parsed = JSON.parse(json) as { choice: number; confidence: number };
 
-    const idx = parsed.choice - 1;
-    if (idx < 0 || idx >= candidateImages.length) return null;
+      const idx = parsed.choice - 1;
+      if (idx < 0 || idx >= candidateImages.length) return null;
 
-    return {
-      cardId: candidateImages[idx].candidate.cardId,
-      cardCode: candidateImages[idx].candidate.cardCode,
-      confidence: Math.min(1, Math.max(0, parsed.confidence)),
-    };
-  } catch (e) {
-    console.error("[gemini-matcher] Failed to parse response:", e);
-    return null;
+      return {
+        cardId: candidateImages[idx].candidate.cardId,
+        cardCode: candidateImages[idx].candidate.cardCode,
+        confidence: Math.min(1, Math.max(0, parsed.confidence)),
+      };
+    } catch (e: unknown) {
+      const errStr = String(e);
+      const status = (e as { status?: number }).status;
+      const is429 =
+        status === 429 ||
+        errStr.includes("429") ||
+        errStr.includes("RESOURCE_EXHAUSTED");
+
+      if (is429 && attempt < MAX_RETRIES) {
+        const waitSec = RETRY_WAIT_SEC[attempt];
+        console.warn(
+          `[gemini-matcher] Rate limited (429), waiting ${waitSec}s before retry (attempt ${attempt + 1}/${MAX_RETRIES})`
+        );
+        await new Promise((r) => setTimeout(r, waitSec * 1000));
+        continue;
+      }
+
+      console.error("[gemini-matcher] Failed:", e);
+      return null;
+    }
   }
+
+  return null;
 }
 
 /**
