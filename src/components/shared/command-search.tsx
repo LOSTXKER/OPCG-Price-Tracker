@@ -111,7 +111,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
     if (!trimmed) return
     pushRecent(trimmed)
     onClose()
-    router.push(`/?search=${encodeURIComponent(trimmed)}`)
+    router.push(`/search?q=${encodeURIComponent(trimmed)}`)
   }, [onClose, pushRecent, router])
 
   const filteredRecent = useMemo(() => {
@@ -179,6 +179,14 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
             )}
             <button
               type="button"
+              onClick={() => commitSearch(query)}
+              disabled={!query.trim()}
+              className="shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-30"
+            >
+              ค้นหา
+            </button>
+            <button
+              type="button"
               onClick={onClose}
               className="rounded-md border border-border/60 bg-muted/40 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground"
             >
@@ -239,6 +247,14 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                     )}
                   </button>
                 ))}
+                <button
+                  type="button"
+                  onClick={() => commitSearch(query)}
+                  className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
+                >
+                  <Search className="size-3" />
+                  ดูผลลัพธ์ทั้งหมดสำหรับ &ldquo;{query.trim()}&rdquo;
+                </button>
               </div>
             )}
 

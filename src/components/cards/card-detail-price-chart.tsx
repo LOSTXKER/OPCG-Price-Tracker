@@ -14,6 +14,7 @@ type PriceRow = {
 export type CardDetailPriceChartProps = {
   cardCode: string
   data: PriceRow[]
+  onPeriodChange?: (period: string) => void
 }
 
 function computeLocalStats(rows: PriceRow[]): PriceChartStats | null {
@@ -33,6 +34,7 @@ function computeLocalStats(rows: PriceRow[]): PriceChartStats | null {
 export function CardDetailPriceChart({
   cardCode,
   data: initialData,
+  onPeriodChange: onPeriodChangeExternal,
 }: CardDetailPriceChartProps) {
   const [period, setPeriod] = useState("30d")
   const [data, setData] = useState<PriceRow[]>(initialData)
@@ -86,9 +88,10 @@ export function CardDetailPriceChart({
   const handlePeriodChange = useCallback(
     (p: string) => {
       setPeriod(p)
+      onPeriodChangeExternal?.(p)
       fetchPriceData(p)
     },
-    [fetchPriceData],
+    [fetchPriceData, onPeriodChangeExternal],
   )
 
   return (

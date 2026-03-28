@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, useTransition } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import {
   ArrowDown,
   ArrowUp,
@@ -144,6 +145,7 @@ export function HomeMarketOverview({
   initialSearch?: string
   children?: React.ReactNode
 }) {
+  const router = useRouter()
   const tabs = buildTabs(latestSetCode)
 
   type ViewMode = "table" | "grid"
@@ -249,7 +251,12 @@ export function HomeMarketOverview({
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    setPage(1)
+    const trimmed = search.trim()
+    if (trimmed) {
+      router.push(`/search?q=${encodeURIComponent(trimmed)}`)
+    } else {
+      setPage(1)
+    }
   }
 
   const handleFilterChange = (key: string, values: string[]) => {
@@ -280,27 +287,35 @@ export function HomeMarketOverview({
   return (
     <div className="space-y-6">
       {/* Hero search — top of page, prominent */}
-      <form onSubmit={handleSearch} className="relative">
-        <Search className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground/70" />
-        <input
-          type="text"
-          placeholder="ค้นหาการ์ด เช่น Luffy, OP13-118, SEC..."
-          className="h-12 w-full rounded-xl border border-border/60 bg-card pl-12 pr-11 text-[15px] shadow-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 md:h-11 md:text-sm"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value)
-            if (e.target.value === "") setPage(1)
-          }}
-        />
-        {search && (
-          <button
-            type="button"
-            onClick={() => { setSearch(""); setPage(1) }}
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-          >
-            <X className="size-4" />
-          </button>
-        )}
+      <form onSubmit={handleSearch} className="flex items-center gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground/70" />
+          <input
+            type="text"
+            placeholder="ค้นหาการ์ด เช่น Luffy, OP13-118, SEC..."
+            className="h-12 w-full rounded-xl border border-border/60 bg-card pl-12 pr-11 text-[15px] shadow-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 md:h-11 md:text-sm"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value)
+              if (e.target.value === "") setPage(1)
+            }}
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={() => { setSearch(""); setPage(1) }}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              <X className="size-4" />
+            </button>
+          )}
+        </div>
+        <button
+          type="submit"
+          className="h-12 shrink-0 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 md:h-11"
+        >
+          ค้นหา
+        </button>
       </form>
 
       {/* Stats + Highlights (passed from server component) */}

@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import {
   Store,
   Gavel,
@@ -100,6 +100,7 @@ export interface CardDetailProps {
 export function CardDetail({ card, siblings, communityPrice, relatedCards }: CardDetailProps) {
   const lang = useUIStore((s) => s.language)
   const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [chartPeriod, setChartPeriod] = useState("30d")
   const set = card.set
   const displayName = getCardName(lang, card)
   const setName = getSetName(lang, set)
@@ -256,20 +257,25 @@ export function CardDetail({ card, siblings, communityPrice, relatedCards }: Car
                   />
                 </div>
               </div>
-              <div className="flex flex-wrap items-end justify-end gap-1.5">
-                {([
-                  { label: "24h", value: card.priceChange24h },
-                  { label: "7d", value: card.priceChange7d },
-                  { label: "30d", value: card.priceChange30d },
-                ] as const).map((item) => item.value != null && (
+              {(() => {
+                const map: Record<string, { label: string; value: number | null }> = {
+                  "24h": { label: "24h", value: card.priceChange24h },
+                  "7d": { label: "7d", value: card.priceChange7d },
+                  "30d": { label: "30d", value: card.priceChange30d },
+                  "1y": { label: "30d", value: card.priceChange30d },
+                  all: { label: "30d", value: card.priceChange30d },
+                }
+                const item = map[chartPeriod] ?? map["30d"]
+                if (item.value == null) return null
+                const v = item.value
+                return (
                   <span
-                    key={item.label}
-                    className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 font-price text-xs font-medium ${item.value > 0 ? "bg-price-up/10 text-price-up" : item.value < 0 ? "bg-price-down/10 text-price-down" : "text-muted-foreground"}`}
+                    className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 font-price text-xs font-medium ${v > 0 ? "bg-price-up/10 text-price-up" : v < 0 ? "bg-price-down/10 text-price-down" : "text-muted-foreground"}`}
                   >
-                    {item.label} {item.value > 0 ? "+" : ""}{item.value.toFixed(1)}%
+                    {item.label} {v > 0 ? "+" : ""}{v.toFixed(1)}%
                   </span>
-                ))}
-              </div>
+                )
+              })()}
             </div>
           </div>
 
@@ -289,7 +295,7 @@ export function CardDetail({ card, siblings, communityPrice, relatedCards }: Car
                   </td>
                   <td className="py-2.5 pr-5 text-right font-price font-semibold tabular-nums">
                     {card.price?.priceJpy != null ? (
-                      <Price jpy={card.price.priceJpy} />
+                      <Price jpy={card.price.priceJpy} thb={card.price.priceThb} />
                     ) : (
                       <span className="text-muted-foreground/40">—</span>
                     )}
@@ -329,7 +335,7 @@ export function CardDetail({ card, siblings, communityPrice, relatedCards }: Car
               {t(lang, "priceHistory")}
             </p>
             {card.chartData.length > 0 ? (
-              <CardDetailPriceChart cardCode={card.cardCode} data={card.chartData} />
+              <CardDetailPriceChart cardCode={card.cardCode} data={card.chartData} onPeriodChange={setChartPeriod} />
             ) : (
               <p className="py-6 text-center text-sm text-muted-foreground">{t(lang, "noPriceHistory")}</p>
             )}

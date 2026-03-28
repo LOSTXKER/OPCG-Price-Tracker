@@ -275,27 +275,6 @@ export function PriceChart({
             </div>
           </div>
 
-          {/* Price range bar */}
-          {stats.high > stats.low && (
-            <div className="flex items-center gap-2">
-              <span className="font-price text-[10px] tabular-nums text-muted-foreground/60">
-                {compactPrice(stats.low, currency)}
-              </span>
-              <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-muted/40">
-                <div
-                  className="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
-                  style={{
-                    width: `${Math.min(100, Math.max(2, ((lastPrice - stats.low) / (stats.high - stats.low)) * 100))}%`,
-                    backgroundColor: lineColor,
-                    opacity: 0.8,
-                  }}
-                />
-              </div>
-              <span className="font-price text-[10px] tabular-nums text-muted-foreground/60">
-                {compactPrice(stats.high, currency)}
-              </span>
-            </div>
-          )}
         </div>
       )}
 
