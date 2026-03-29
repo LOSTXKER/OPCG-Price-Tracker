@@ -1,4 +1,5 @@
 import { getAuthUser } from "@/lib/api/auth";
+import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -37,7 +38,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await request.json() as { name?: string; leaderId?: number; cardIds?: { cardId: number; quantity: number }[] };
+    const parsed = await parseJsonBody<{ name?: string; leaderId?: number; cardIds?: { cardId: number; quantity: number }[] }>(request);
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.body;
     const name = body.name?.trim();
     if (!name) {
       return NextResponse.json({ error: "name is required" }, { status: 400 });

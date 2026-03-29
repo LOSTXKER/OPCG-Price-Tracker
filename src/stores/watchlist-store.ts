@@ -35,7 +35,8 @@ export const useWatchlistStore = create<WatchlistState>()((set, get) => ({
         loaded: true,
         loading: false,
       });
-    } catch {
+    } catch (err) {
+      console.error("Watchlist load error:", err);
       set({ loading: false });
     }
   },
@@ -67,7 +68,8 @@ export const useWatchlistStore = create<WatchlistState>()((set, get) => ({
       if (!res.ok) {
         set({ ids });
       }
-    } catch {
+    } catch (err) {
+      console.error("Watchlist toggle error:", err);
       set({ ids });
     }
   },

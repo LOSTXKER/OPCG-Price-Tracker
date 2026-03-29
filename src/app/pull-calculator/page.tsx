@@ -38,8 +38,12 @@ export default function PullCalculatorPage() {
 
   useEffect(() => {
     fetch("/api/pull-calculator")
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error(`Failed to load sets: ${r.status}`)
+        return r.json()
+      })
       .then((d) => setSets(d.sets ?? []))
+      .catch((err: unknown) => { console.error(err) })
       .finally(() => setSetsLoading(false))
   }, [])
 
@@ -52,6 +56,7 @@ export default function PullCalculatorPage() {
     setLoading(true)
     try {
       const res = await fetch(`/api/pull-calculator?set=${code}`)
+      if (!res.ok) throw new Error(`Failed to load set ${code}: ${res.status}`)
       const data = await res.json()
       setDetail(data)
     } finally {

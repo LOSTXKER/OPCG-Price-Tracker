@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 import { PACKS_PER_BOX, BOXES_PER_CARTON, CARDS_PER_PACK_JP } from "@/lib/utils/pull-rate"
 import { useUIStore } from "@/stores/ui-store"
 import type { DropRate, Unit } from "./types"
-import { UNIT_LABELS, tierSort } from "./types"
+import { UNIT_LABELS, PULL_UNITS, tierSort } from "./types"
 
 interface PurchaseConfigProps {
   unit: Unit
@@ -42,7 +42,7 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
     <section className="panel overflow-hidden">
       <div className="space-y-3 p-3">
         <div className="flex w-full rounded-lg border border-border bg-muted/50 p-0.5">
-          {(["pack", "box", "carton"] as Unit[]).map((u) => (
+          {PULL_UNITS.map((u) => (
             <button
               key={u}
               onClick={() => onUnitChange(u)}

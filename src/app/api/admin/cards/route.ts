@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkIsAdmin } from "@/lib/auth/check-admin";
+import { parsePageLimit } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { Prisma } from "@/generated/prisma/client";
 
@@ -9,9 +10,7 @@ export async function GET(request: NextRequest) {
   }
 
   const sp = request.nextUrl.searchParams;
-  const page = Math.max(1, parseInt(sp.get("page") || "1", 10) || 1);
-  const limit = Math.min(100, Math.max(1, parseInt(sp.get("limit") || "50", 10) || 50));
-  const skip = (page - 1) * limit;
+  const { page, limit, skip } = parsePageLimit(sp, { defaultLimit: 50, maxLimit: 100 });
   const search = sp.get("q") || "";
   const setFilter = sp.get("set") || "";
   const rarityFilter = sp.get("rarity") || "";

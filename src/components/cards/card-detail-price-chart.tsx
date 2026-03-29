@@ -200,6 +200,7 @@ export function CardDetailPriceChart({
         setData(rows)
       } catch (err) {
         if (err instanceof DOMException && err.name === "AbortError") return
+        console.error("Failed to fetch price data:", err)
       } finally {
         setLoading(false)
       }

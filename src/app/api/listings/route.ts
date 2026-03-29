@@ -1,20 +1,14 @@
 import {
   CardCondition,
   ListingStatus,
-  type CardCondition as CardConditionType,
   type Prisma,
 } from "@/generated/prisma/client";
 import { getAuthUser } from "@/lib/api/auth";
+import { parseCondition } from "@/lib/api/parse-condition";
+import { parseListingQuantity } from "@/lib/api/request-body";
 import { cardInclude, userPublicSelect, asStringArray } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-
-const CONDITIONS = new Set<string>(Object.values(CardCondition));
-
-function parseCondition(value: unknown): CardConditionType | null {
-  if (typeof value !== "string" || !CONDITIONS.has(value)) return null;
-  return value as CardConditionType;
-}
 
 export async function GET(request: NextRequest) {
   try {
@@ -166,9 +160,9 @@ export async function POST(request: NextRequest) {
     if (body.condition !== undefined && parseCondition(body.condition) === null) {
       return NextResponse.json({ error: "Invalid condition" }, { status: 400 });
     }
-    if (!Number.isInteger(quantityRaw) || quantityRaw < 1 || quantityRaw > 9999) {
-      return NextResponse.json({ error: "quantity must be an integer from 1 to 9999" }, { status: 400 });
-    }
+    const parsedQty = parseListingQuantity(quantityRaw);
+    if (!parsedQty.ok) return parsedQty.response;
+    const quantity = parsedQty.value;
     if (body.description !== undefined && typeof body.description !== "string" && body.description !== null) {
       return NextResponse.json({ error: "description must be a string or null" }, { status: 400 });
     }
@@ -188,7 +182,7 @@ export async function POST(request: NextRequest) {
         priceJpy,
         priceThb,
         condition,
-        quantity: quantityRaw,
+        quantity,
         description,
         photos: photos.slice(0, 20).map((u) => u.slice(0, 2000)),
         shipping: shipping.slice(0, 20).map((s) => s.slice(0, 500)),

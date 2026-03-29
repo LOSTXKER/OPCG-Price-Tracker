@@ -1,5 +1,6 @@
 import { getAuthUser } from "@/lib/api/auth";
 import { cardInclude } from "@/lib/api/query-fragments";
+import { parseListingQuantity } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -40,11 +41,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const data: Record<string, unknown> = {};
 
     if (body.quantity !== undefined) {
-      const qty = Number(body.quantity);
-      if (!Number.isInteger(qty) || qty < 1 || qty > 9999) {
-        return NextResponse.json({ error: "quantity must be 1-9999" }, { status: 400 });
-      }
-      data.quantity = qty;
+      const parsedQty = parseListingQuantity(body.quantity);
+      if (!parsedQty.ok) return parsedQty.response;
+      data.quantity = parsedQty.value;
     }
     if (body.purchasePrice !== undefined) {
       if (body.purchasePrice === null) {

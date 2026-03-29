@@ -59,6 +59,59 @@ export async function POST(request: NextRequest) {
 
     const stats = { total: listings.length, cached: 0, exact: 0, aiMatched: 0, pending: 0 };
 
+    // Batch pre-fetch: all yuyuteiIds and all non-parallel card codes
+    const validListings = listings.filter((l) => l.yuyuteiId);
+    const allYuyuteiIds = validListings.map((l) => l.yuyuteiId!);
+    const nonParallelCodes = validListings
+      .filter((l) => {
+        const code = l.cardCode?.toUpperCase() ?? "";
+        return code && !code.includes("＊") && !l.name.includes("ドン!!") && !isParallelCard(l.name, l.rarity ?? "");
+      })
+      .map((l) => l.cardCode!.toUpperCase());
+
+    const [cachedCards, exactCards, parallelCandidates] = await Promise.all([
+      prisma.card.findMany({
+        where: { yuyuteiId: { in: allYuyuteiIds } },
+        select: { id: true, yuyuteiId: true },
+      }),
+      nonParallelCodes.length > 0
+        ? prisma.card.findMany({
+            where: { cardCode: { in: nonParallelCodes } },
+            select: { id: true, cardCode: true },
+          })
+        : Promise.resolve([]),
+      prisma.card.findMany({
+        where: { isParallel: true, setId: cardSet.id },
+        select: { id: true, cardCode: true, baseCode: true, imageUrl: true },
+      }),
+    ]);
+
+    const cachedByYuyuteiId = new Map(cachedCards.map((c) => [c.yuyuteiId!, c.id]));
+    const exactByCode = new Map(exactCards.map((c) => [c.cardCode, c.id]));
+    const parallelByBaseCode = new Map<string, typeof parallelCandidates>();
+    for (const c of parallelCandidates) {
+      if (!c.baseCode) continue;
+      const arr = parallelByBaseCode.get(c.baseCode) ?? [];
+      arr.push(c);
+      parallelByBaseCode.set(c.baseCode, arr);
+    }
+
+    type MappingUpsert = {
+      yuyuteiId: string;
+      scrapedCode: string;
+      scrapedRarity: string | null | undefined;
+      scrapedName: string;
+      scrapedImage: string | null | undefined;
+      priceJpy: number;
+      matchedCardId: number | null;
+      matchMethod: string | null;
+      geminiScore: number | null;
+      status: string;
+    };
+
+    const geminiUpdates: { cardId: number; yuyuteiId: string; yuyuteiUrl: string | null }[] = [];
+    const mappingRows: MappingUpsert[] = [];
+
     for (const listing of listings) {
       if (!listing.yuyuteiId) {
         stats.pending++;
@@ -76,83 +129,45 @@ export async function POST(request: NextRequest) {
 
       if (isDon) {
         status = "rejected";
-        matchMethod = null;
         stats.pending++;
-      } else {
-        // 1. Check cached yuyuteiId (global, not set-constrained)
-        const cached = await prisma.card.findFirst({
-          where: { yuyuteiId: listing.yuyuteiId },
-          select: { id: true },
-        });
-
-        if (cached) {
-          matchedCardId = cached.id;
-          matchMethod = "cached";
+      } else if (cachedByYuyuteiId.has(listing.yuyuteiId)) {
+        matchedCardId = cachedByYuyuteiId.get(listing.yuyuteiId)!;
+        matchMethod = "cached";
+        status = "matched";
+        stats.cached++;
+      } else if (!parallel) {
+        const exactId = exactByCode.get(rawCode);
+        if (exactId) {
+          matchedCardId = exactId;
+          matchMethod = "exact";
           status = "matched";
-          stats.cached++;
+          stats.exact++;
+        } else {
+          status = "pending";
+          stats.pending++;
         }
-        // 2. Non-parallel: exact cardCode match (global)
-        else if (!parallel) {
-          const exact = await prisma.card.findUnique({
-            where: { cardCode: rawCode },
-            select: { id: true },
+      } else if (listing.imageUrl) {
+        let candidates = parallelByBaseCode.get(rawCode) ?? [];
+        if (candidates.length === 0) {
+          candidates = await prisma.card.findMany({
+            where: { baseCode: rawCode, isParallel: true },
+            select: { id: true, cardCode: true, imageUrl: true, baseCode: true },
           });
-          if (exact) {
-            matchedCardId = exact.id;
-            matchMethod = "exact";
+        }
+
+        const validCandidates: MatchCandidate[] = candidates
+          .filter((c) => c.imageUrl)
+          .map((c) => ({ cardId: c.id, cardCode: c.cardCode, imageUrl: c.imageUrl! }));
+
+        if (validCandidates.length > 0) {
+          const aiResult = await matchCardImage(listing.imageUrl, validCandidates);
+          if (aiResult && aiResult.confidence >= 0.5) {
+            matchedCardId = aiResult.cardId;
+            matchMethod = "gemini";
+            geminiScore = aiResult.confidence;
             status = "matched";
-            stats.exact++;
-          } else {
-            status = "pending";
-            stats.pending++;
-          }
-        }
-        // 3. Parallel: Gemini AI image match
-        else if (listing.imageUrl) {
-          // Search in the same set first, then fall back to global
-          let candidates = await prisma.card.findMany({
-            where: { baseCode: rawCode, isParallel: true, setId: cardSet.id },
-            select: { id: true, cardCode: true, imageUrl: true },
-          });
-
-          if (candidates.length === 0) {
-            candidates = await prisma.card.findMany({
-              where: { baseCode: rawCode, isParallel: true },
-              select: { id: true, cardCode: true, imageUrl: true },
-            });
-          }
-
-          const validCandidates: MatchCandidate[] = candidates
-            .filter((c) => c.imageUrl)
-            .map((c) => ({
-              cardId: c.id,
-              cardCode: c.cardCode,
-              imageUrl: c.imageUrl!,
-            }));
-
-          if (validCandidates.length > 0) {
-            const aiResult = await matchCardImage(
-              listing.imageUrl,
-              validCandidates
-            );
-            if (aiResult && aiResult.confidence >= 0.5) {
-              matchedCardId = aiResult.cardId;
-              matchMethod = "gemini";
-              geminiScore = aiResult.confidence;
-              status = "matched";
-              stats.aiMatched++;
-
-              await prisma.card.update({
-                where: { id: aiResult.cardId },
-                data: {
-                  yuyuteiId: listing.yuyuteiId,
-                  yuyuteiUrl: listing.cardUrl,
-                },
-              });
-            } else {
-              status = "pending";
-              stats.pending++;
-            }
+            stats.aiMatched++;
+            geminiUpdates.push({ cardId: aiResult.cardId, yuyuteiId: listing.yuyuteiId, yuyuteiUrl: listing.cardUrl ?? null });
           } else {
             status = "pending";
             stats.pending++;
@@ -161,40 +176,50 @@ export async function POST(request: NextRequest) {
           status = "pending";
           stats.pending++;
         }
+      } else {
+        status = "pending";
+        stats.pending++;
       }
 
-      await prisma.yuyuteiMapping.upsert({
-        where: {
-          setCode_yuyuteiId: {
-            setCode,
-            yuyuteiId: listing.yuyuteiId,
-          },
-        },
-        create: {
-          setCode,
-          yuyuteiId: listing.yuyuteiId,
-          scrapedCode: listing.cardCode ?? "",
-          scrapedRarity: listing.rarity,
-          scrapedName: listing.name,
-          scrapedImage: listing.imageUrl,
-          priceJpy: listing.priceJpy,
-          matchedCardId,
-          matchMethod,
-          geminiScore,
-          status,
-        },
-        update: {
-          scrapedRarity: listing.rarity,
-          scrapedName: listing.name,
-          scrapedImage: listing.imageUrl,
-          priceJpy: listing.priceJpy,
-          matchedCardId,
-          matchMethod,
-          geminiScore,
-          status,
-        },
+      mappingRows.push({
+        yuyuteiId: listing.yuyuteiId,
+        scrapedCode: listing.cardCode ?? "",
+        scrapedRarity: listing.rarity,
+        scrapedName: listing.name,
+        scrapedImage: listing.imageUrl,
+        priceJpy: listing.priceJpy,
+        matchedCardId,
+        matchMethod,
+        geminiScore,
+        status,
       });
     }
+
+    // Batch writes: gemini card updates + mapping upserts
+    await Promise.all([
+      ...geminiUpdates.map((u) =>
+        prisma.card.update({
+          where: { id: u.cardId },
+          data: { yuyuteiId: u.yuyuteiId, yuyuteiUrl: u.yuyuteiUrl },
+        })
+      ),
+      ...mappingRows.map((row) =>
+        prisma.yuyuteiMapping.upsert({
+          where: { setCode_yuyuteiId: { setCode, yuyuteiId: row.yuyuteiId } },
+          create: { setCode, ...row },
+          update: {
+            scrapedRarity: row.scrapedRarity,
+            scrapedName: row.scrapedName,
+            scrapedImage: row.scrapedImage,
+            priceJpy: row.priceJpy,
+            matchedCardId: row.matchedCardId,
+            matchMethod: row.matchMethod,
+            geminiScore: row.geminiScore,
+            status: row.status,
+          },
+        })
+      ),
+    ]);
 
     return NextResponse.json({ success: true, setCode, stats });
   } catch (e) {

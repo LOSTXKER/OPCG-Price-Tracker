@@ -5,6 +5,7 @@ import { Briefcase, Check } from "lucide-react"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { displayValueToJpy } from "@/lib/utils/currency"
+import { DEFAULT_CARD_CONDITION } from "@/lib/constants/ui"
 
 import {
   Dialog,
@@ -48,6 +49,7 @@ export function CardAddToPortfolio({
         window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`
         return
       }
+      if (!portfolioRes.ok) { setError(t(lang, "loadFailed")); return }
       const pData = (await portfolioRes.json()) as { portfolios: { id: number }[] }
 
       if (pData.portfolios?.length) {
@@ -71,7 +73,7 @@ export function CardAddToPortfolio({
           cardId,
           quantity: qty,
           purchasePrice: pp,
-          condition: "NM",
+          condition: DEFAULT_CARD_CONDITION,
         }),
       })
       if (!res.ok) {

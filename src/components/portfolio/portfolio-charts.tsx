@@ -1,9 +1,19 @@
 "use client"
 
-import { PortfolioHistoryChart } from "./portfolio-history-chart"
-import { PortfolioAllocationChart, type AllocationSlice } from "./portfolio-allocation-chart"
+import dynamic from "next/dynamic"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
+import { type AllocationSlice } from "./portfolio-allocation-chart"
+
+const PortfolioHistoryChart = dynamic(
+  () => import("./portfolio-history-chart").then((m) => m.PortfolioHistoryChart),
+  { ssr: false, loading: () => <div className="h-48 animate-pulse rounded-lg bg-muted" /> }
+)
+
+const PortfolioAllocationChart = dynamic(
+  () => import("./portfolio-allocation-chart").then((m) => m.PortfolioAllocationChart),
+  { ssr: false, loading: () => <div className="h-48 animate-pulse rounded-lg bg-muted" /> }
+)
 
 interface PortfolioChartsProps {
   history: { label: string; value: number }[]

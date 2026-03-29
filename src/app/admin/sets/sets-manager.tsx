@@ -64,6 +64,9 @@ export function SetsManager({ initialSets }: { initialSets: SetRow[] }) {
           prev.map((s) => (s.id === id ? { ...s, ...editData } : s))
         );
         setEditingId(null);
+      } else {
+        console.error(`saveEdit failed: ${res.status}`);
+        setMessages((p) => ({ ...p, [id]: `Error: ${res.status}` }));
       }
     } finally {
       setLoading((p) => ({ ...p, [`edit-${id}`]: false }));

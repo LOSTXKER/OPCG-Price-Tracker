@@ -9,7 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/stores/ui-store";
-import { getLocale } from "@/lib/i18n";
+import { getLocale, t } from "@/lib/i18n";
+
+const CHAT_POLL_INTERVAL_MS = 10_000;
 
 type ChatMessage = {
   id: number;
@@ -25,6 +27,7 @@ export default function ChatPage() {
   const listingId = params.listingId;
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sendError, setSendError] = useState<string | null>(null);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -34,19 +37,21 @@ export default function ChatPage() {
   const load = useCallback(async () => {
     try {
       const res = await fetch(`/api/messages?listingId=${listingId}`);
-      if (res.ok) {
+      if (!res.ok) {
+        console.error(`Failed to load messages: ${res.status}`);
+      } else {
         const data = (await res.json()) as { messages: ChatMessage[] };
         setMessages(data.messages ?? []);
       }
-    } catch {
-      /* ignore */
+    } catch (err) {
+      console.error("Chat load error:", err);
     }
     setLoading(false);
   }, [listingId]);
 
   useEffect(() => {
     void load();
-    const interval = setInterval(() => void load(), 10000);
+    const interval = setInterval(() => void load(), CHAT_POLL_INTERVAL_MS);
     return () => clearInterval(interval);
   }, [load]);
 
@@ -58,19 +63,23 @@ export default function ChatPage() {
     const content = input.trim();
     if (!content) return;
     setSending(true);
+    setSendError(null);
     try {
       const res = await fetch("/api/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ listingId: parseInt(listingId, 10), content }),
       });
-      if (res.ok) {
+      if (!res.ok) {
+        setSendError(t(lang, "sendFailed"));
+      } else {
         const data = (await res.json()) as { message: ChatMessage };
         setMessages((prev) => [...prev, data.message]);
         setInput("");
       }
-    } catch {
-      /* ignore */
+    } catch (err) {
+      console.error("Send message error:", err);
+      setSendError(t(lang, "sendFailed"));
     }
     setSending(false);
   };
@@ -82,15 +91,15 @@ export default function ChatPage() {
           <ArrowLeft className="size-5" />
         </Link>
         <h1 className="text-lg font-semibold">
-          Chat · Listing #{listingId}
+          {t(lang, "chatHeading")} #{listingId}
         </h1>
       </div>
 
       <div className="flex-1 space-y-3 overflow-auto rounded-xl border bg-muted/20 p-4" style={{ minHeight: 300, maxHeight: "60vh" }}>
         {loading ? (
-          <p className="text-muted-foreground text-center text-sm">Loading...</p>
+          <p className="text-muted-foreground text-center text-sm">{t(lang, "loading")}</p>
         ) : messages.length === 0 ? (
-          <p className="text-muted-foreground text-center text-sm">Start the conversation</p>
+          <p className="text-muted-foreground text-center text-sm">{t(lang, "startConversation")}</p>
         ) : (
           messages.map((m) => (
             <div
@@ -124,6 +133,8 @@ export default function ChatPage() {
         <div ref={bottomRef} />
       </div>
 
+      {sendError && <p className="mt-1 text-xs text-destructive">{sendError}</p>}
+
       <form
         className="mt-3 flex gap-2"
         onSubmit={(e) => {
@@ -132,7 +143,7 @@ export default function ChatPage() {
         }}
       >
         <Input
-          placeholder="Type a message..."
+          placeholder={t(lang, "typeMessage")}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           disabled={sending}

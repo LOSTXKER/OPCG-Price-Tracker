@@ -1,3 +1,4 @@
+import { memo } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { MessageCircle, Star } from "lucide-react"
@@ -69,7 +70,7 @@ function StarRow({ rating }: { rating: number }) {
   )
 }
 
-export function ListingCard({
+function ListingCardBase({
   id,
   card,
   priceJpy,
@@ -196,3 +197,5 @@ export function ListingCard({
     </article>
   )
 }
+
+export const ListingCard = memo(ListingCardBase)

@@ -1,21 +1,15 @@
 import {
-  CardCondition,
   ListingStatus,
-  type CardCondition as CardConditionType,
   type Prisma,
 } from "@/generated/prisma/client";
 import { getAuthUser } from "@/lib/api/auth";
+import { parseCondition } from "@/lib/api/parse-condition";
+import { parseListingQuantity } from "@/lib/api/request-body";
 import { cardInclude, userPublicSelect, asStringArray } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
-const CONDITIONS = new Set<string>(Object.values(CardCondition));
 const STATUSES = new Set<string>(Object.values(ListingStatus));
-
-function parseCondition(value: unknown): CardConditionType | null {
-  if (typeof value !== "string" || !CONDITIONS.has(value)) return null;
-  return value as CardConditionType;
-}
 
 function parseStatus(value: unknown): (typeof ListingStatus)[keyof typeof ListingStatus] | null {
   if (typeof value !== "string" || !STATUSES.has(value)) return null;
@@ -86,11 +80,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     }
 
     if ("quantity" in body) {
-      const v = typeof body.quantity === "number" ? body.quantity : Number(body.quantity);
-      if (!Number.isInteger(v) || v < 1 || v > 9999) {
-        return NextResponse.json({ error: "Invalid quantity" }, { status: 400 });
-      }
-      data.quantity = v;
+      const parsedQty = parseListingQuantity(body.quantity);
+      if (!parsedQty.ok) return parsedQty.response;
+      data.quantity = parsedQty.value;
     }
 
     if ("description" in body) {

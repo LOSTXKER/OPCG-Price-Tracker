@@ -17,6 +17,7 @@ import { Price } from "@/components/shared/price-inline"
 import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
+import { fetchCards } from "@/lib/api/fetch-cards"
 import type { SearchResult } from "@/components/shared/search-results-dropdown"
 
 const STORAGE_KEY = "meecard-recent-searches"
@@ -84,10 +85,11 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
     if (trimmed.length < 2) { setResults([]); return }
     const controller = new AbortController()
     setLoading(true)
-    fetch(`/api/cards?search=${encodeURIComponent(trimmed)}&limit=8`, { signal: controller.signal })
-      .then((r) => r.json())
+    fetchCards({ search: trimmed, limit: 8 }, { signal: controller.signal })
       .then((data) => { setResults(data.cards ?? []); setActiveIdx(-1) })
-      .catch(() => {})
+      .catch((err: unknown) => {
+        if (err instanceof Error && err.name !== "AbortError") console.error("Command search failed:", err)
+      })
       .finally(() => setLoading(false))
     return () => controller.abort()
   }, [query])

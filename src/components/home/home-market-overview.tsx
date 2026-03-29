@@ -1,15 +1,8 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState, useTransition } from "react"
-import Image from "next/image"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import {
-  ArrowDown,
-  ArrowUp,
-  ArrowUpDown,
-  ChevronLeft,
-  ChevronRight,
   LayoutGrid,
   List,
   Search,
@@ -19,100 +12,39 @@ import {
   X,
 } from "lucide-react"
 
-import { RarityBadge } from "@/components/shared/rarity-badge"
-import { PriceDisplay } from "@/components/shared/price-display"
 import { FilterChips, type FilterDefinition } from "@/components/shared/filter-chips"
-import { WatchlistStar } from "@/components/shared/watchlist-star"
-import { Price } from "@/components/shared/price-inline"
-import { PriceUsd } from "@/components/shared/price-usd"
-import { Sparkline } from "@/components/shared/sparkline"
-import { Skeleton } from "@/components/ui/skeleton"
-import { getCardName, t } from "@/lib/i18n"
-import { BLUR_DATA_URL } from "@/lib/constants/ui"
+import { SortableHeader } from "@/components/shared/sortable-header"
+import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
-import { formatPct } from "@/lib/utils/currency"
+import { getColorOptions } from "@/lib/constants/card-config"
+import { buildCardsUrl } from "@/lib/api/fetch-cards"
 
-/* ------------------------------------------------------------------ */
-/*  Types                                                              */
-/* ------------------------------------------------------------------ */
+import { MarketRow, TableRowSkeleton } from "./market-row"
+import { GridCard, GridCardSkeleton } from "./grid-card"
+import { MobileCardItem, MobileCardSkeleton } from "./mobile-card-item"
+import { Pagination } from "./pagination"
+import {
+  type TabId,
+  type Tab,
+  type SortKey,
+  type PriceMode,
+  type ViewMode,
+  type ChangePeriod,
+  type ColumnId,
+  type CardRow,
+  type ApiResponse,
+  COLUMN_SORTS,
+  CHANGE_PERIODS,
+  parseSortColumn,
+  PAGE_SIZE,
+} from "./market-types"
 
-type TabId = "all" | "popular" | "latest"
-
-interface Tab {
-  id: TabId
-  label: string
-  defaultSort: SortKey
-  extraParams?: Record<string, string>
-}
-
-type SortKey =
-  | "price_desc"
-  | "price_asc"
-  | "change_desc"
-  | "change_asc"
-  | "change_7d_desc"
-  | "change_7d_asc"
-  | "change_30d_desc"
-  | "change_30d_asc"
-  | "views_desc"
-  | "newest"
-
-type PriceMode = "raw" | "psa10"
-
-interface CardRow {
-  id?: number
-  cardCode: string
-  baseCode?: string | null
-  nameJp: string
-  nameEn?: string | null
-  nameTh?: string | null
-  rarity: string
-  isParallel: boolean
-  imageUrl?: string | null
-  latestPriceJpy?: number | null
-  psa10PriceUsd?: number | null
-  priceChange24h?: number | null
-  priceChange7d?: number | null
-  priceChange30d?: number | null
-  viewCount?: number
-  setCode?: string
-  set?: { code: string; name?: string; nameEn?: string | null }
-}
-
-interface ApiResponse {
-  cards: CardRow[]
-  total: number
-  page: number
-  totalPages: number
-}
-
-/* ------------------------------------------------------------------ */
-/*  Column sort mapping                                                */
-/* ------------------------------------------------------------------ */
-
-type ColumnId = "price" | "change24h" | "change7d" | "change30d"
-
-const COLUMN_SORTS: Record<ColumnId, { desc: SortKey; asc: SortKey }> = {
-  price: { desc: "price_desc", asc: "price_asc" },
-  change24h: { desc: "change_desc", asc: "change_asc" },
-  change7d: { desc: "change_7d_desc", asc: "change_7d_asc" },
-  change30d: { desc: "change_30d_desc", asc: "change_30d_asc" },
-}
-
-function parseSortColumn(sort: SortKey): { col: ColumnId | null; dir: "asc" | "desc" } {
-  for (const [col, keys] of Object.entries(COLUMN_SORTS) as [ColumnId, { desc: SortKey; asc: SortKey }][]) {
-    if (sort === keys.desc) return { col, dir: "desc" }
-    if (sort === keys.asc) return { col, dir: "asc" }
-  }
-  return { col: null, dir: "desc" }
-}
+export type { CardRow }
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
-
-const PAGE_SIZE = 20
 
 function buildTabs(latestSetCode: string | undefined, labels: { all: string; popular: string; latest: string }): Tab[] {
   const tabs: Tab[] = [
@@ -154,16 +86,6 @@ export function HomeMarketOverview({
   const router = useRouter()
   const lang = useUIStore((s) => s.language)
 
-  const COLOR_LABELS: Record<string, string> = {
-    Red: lang === "TH" ? "แดง" : lang === "JP" ? "赤" : "Red",
-    Green: lang === "TH" ? "เขียว" : lang === "JP" ? "緑" : "Green",
-    Blue: lang === "TH" ? "ฟ้า" : lang === "JP" ? "青" : "Blue",
-    Purple: lang === "TH" ? "ม่วง" : lang === "JP" ? "紫" : "Purple",
-    Black: lang === "TH" ? "ดำ" : lang === "JP" ? "黒" : "Black",
-    Yellow: lang === "TH" ? "เหลือง" : lang === "JP" ? "黄" : "Yellow",
-    multi: lang === "TH" ? "หลายสี" : lang === "JP" ? "多色" : "Multi",
-  }
-
   const allFilterDefs: FilterDefinition[] = [
     ...filterDefinitions.map((f) => ({
       ...f,
@@ -175,7 +97,7 @@ export function HomeMarketOverview({
     {
       key: "color",
       label: t(lang, "color"),
-      options: Object.entries(COLOR_LABELS).map(([value, label]) => ({ value, label })),
+      options: getColorOptions(lang),
     },
     {
       key: "variant",
@@ -192,9 +114,6 @@ export function HomeMarketOverview({
     popular: t(lang, "popular"),
     latest: t(lang, "latestSet"),
   })
-
-  type ViewMode = "table" | "grid"
-  type ChangePeriod = "24h" | "7d" | "30d"
 
   const [activeTab, setActiveTab] = useState<TabId>("all")
   const [sort, setSort] = useState<SortKey>("price_desc")
@@ -213,33 +132,41 @@ export function HomeMarketOverview({
   const [priceMode, setPriceMode] = useState<PriceMode>("raw")
   const [filterOpen, setFilterOpen] = useState(false)
   const isInitialMount = useRef(true)
+  const fetchAbortRef = useRef<AbortController | null>(null)
 
   useEffect(() => {
     setSearch(initialSearch ?? "")
   }, [initialSearch])
 
-  const fetchCards = useCallback(
+  const fetchCardsFn = useCallback(
     (tab: TabId, sortKey: SortKey, pg: number, q: string, f: Record<string, string[]>, pMin: string, pMax: string, mode: PriceMode = "raw") => {
       const tabDef = tabs.find((t) => t.id === tab) ?? tabs[0]
-      const params = new URLSearchParams({
-        sort: sortKey,
-        page: String(pg),
-        limit: String(PAGE_SIZE),
-        ...(tabDef.extraParams ?? {}),
-      })
-      if (q.trim()) params.set("search", q.trim())
-      for (const [key, values] of Object.entries(f)) {
-        if (values.length > 0) params.set(key, values.join(","))
-      }
       const minP = parseInt(pMin)
       const maxP = parseInt(pMax)
-      if (minP > 0) params.set("minPrice", String(minP))
-      if (maxP > 0) params.set("maxPrice", String(maxP))
-      if (mode === "psa10") params.set("priceMode", "psa10")
+      const filterParams: Record<string, string> = {}
+      for (const [key, values] of Object.entries(f)) {
+        if (values.length > 0) filterParams[key] = values.join(",")
+      }
+
+      const url = buildCardsUrl({
+        sort: sortKey,
+        page: pg,
+        limit: PAGE_SIZE,
+        search: q.trim() || undefined,
+        minPrice: minP > 0 ? minP : undefined,
+        maxPrice: maxP > 0 ? maxP : undefined,
+        priceMode: mode === "psa10" ? "psa10" : undefined,
+        ...tabDef.extraParams,
+        ...filterParams,
+      })
+
+      fetchAbortRef.current?.abort()
+      const controller = new AbortController()
+      fetchAbortRef.current = controller
 
       startTransition(async () => {
         try {
-          const res = await fetch(`/api/cards?${params}`)
+          const res = await fetch(url, { signal: controller.signal })
           if (!res.ok) return
           const data: ApiResponse = await res.json()
           setCards(
@@ -250,7 +177,8 @@ export function HomeMarketOverview({
           )
           setTotal(data.total)
           setTotalPages(data.totalPages)
-        } catch {
+        } catch (e) {
+          if (e instanceof Error && e.name === "AbortError") return
           /* network error — keep stale data */
         }
       })
@@ -264,18 +192,20 @@ export function HomeMarketOverview({
       isInitialMount.current = false
       if (!initialSearch && priceMode === "raw") return
     }
-    fetchCards(activeTab, sort, page, search, filters, minPrice, maxPrice, priceMode)
+    fetchCardsFn(activeTab, sort, page, search, filters, minPrice, maxPrice, priceMode)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab, sort, page, search, filters, minPrice, maxPrice, priceMode, fetchCards])
+  }, [activeTab, sort, page, search, filters, minPrice, maxPrice, priceMode, fetchCardsFn])
 
   useEffect(() => {
     const ids = cards.map((c) => c.id).filter((id): id is number => id != null)
     if (ids.length === 0) return
     const controller = new AbortController()
     fetch(`/api/cards/sparklines?ids=${ids.join(",")}`, { signal: controller.signal })
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(`Sparklines ${r.status}`); return r.json() })
       .then((data) => { if (data.sparklines) setSparklines(data.sparklines) })
-      .catch(() => {})
+      .catch((err: unknown) => {
+        if (err instanceof Error && err.name !== "AbortError") console.error("Sparkline fetch failed:", err)
+      })
     return () => controller.abort()
   }, [cards])
 
@@ -316,10 +246,6 @@ export function HomeMarketOverview({
     (minPrice ? 1 : 0) +
     (maxPrice ? 1 : 0)
 
-  const hasFilters =
-    search.trim() !== "" ||
-    activeFilterCount > 0
-
   const clearAllFilters = () => {
     setSearch("")
     setFilters({})
@@ -333,7 +259,7 @@ export function HomeMarketOverview({
 
   return (
     <div className="space-y-6">
-      {/* Hero search — top of page, prominent */}
+      {/* Hero search */}
       <form onSubmit={handleSearch} className="flex items-center gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground/70" />
@@ -365,7 +291,6 @@ export function HomeMarketOverview({
         </button>
       </form>
 
-      {/* Stats + Highlights (passed from server component) */}
       {children}
 
       {/* Main table panel */}
@@ -390,11 +315,10 @@ export function HomeMarketOverview({
         </div>
 
         <div className="ml-auto flex items-center gap-2">
-          {/* Period toggle — grid view only */}
           {viewMode === "grid" && (
             <div className="flex items-center gap-1 rounded-lg border border-border bg-card px-1.5 py-1 shadow-sm">
               <TrendingUpDown className="size-3.5 text-muted-foreground" />
-              {(["24h", "7d", "30d"] as ChangePeriod[]).map((p) => (
+              {CHANGE_PERIODS.map((p) => (
                 <button
                   key={p}
                   onClick={() => setChangePeriod(p)}
@@ -411,7 +335,6 @@ export function HomeMarketOverview({
             </div>
           )}
 
-          {/* Advanced filter toggle */}
           <button
             type="button"
             onClick={() => setFilterOpen((o) => !o)}
@@ -436,7 +359,6 @@ export function HomeMarketOverview({
             )}
           </button>
 
-          {/* View toggle */}
           <div className="flex items-center gap-0.5 rounded-lg bg-muted/60 p-0.5">
             <button
               onClick={() => setViewMode("table")}
@@ -473,6 +395,7 @@ export function HomeMarketOverview({
         </span>
         <div className="flex items-center gap-1">
           <button
+            aria-pressed={priceMode === "raw"}
             onClick={() => { setPriceMode("raw"); setPage(1) }}
             className={cn(
               "rounded-md border px-3 py-1 text-xs font-semibold transition-all",
@@ -484,6 +407,7 @@ export function HomeMarketOverview({
             Raw
           </button>
           <button
+            aria-pressed={priceMode === "psa10"}
             onClick={() => { setPriceMode("psa10"); setPage(1) }}
             className={cn(
               "flex items-center gap-1 rounded-md border px-3 py-1 text-xs font-semibold transition-all",
@@ -508,7 +432,6 @@ export function HomeMarketOverview({
               onChange={handleFilterChange}
             />
 
-            {/* Price range inline */}
             <div className="flex shrink-0 items-center gap-1.5">
               <span className="text-xs text-muted-foreground">{t(lang, "priceLabel")}</span>
               <input
@@ -546,7 +469,6 @@ export function HomeMarketOverview({
       {/* Content: Table or Grid */}
       {viewMode === "table" ? (
         <>
-        {/* Mobile card list (< sm) */}
         <div className={cn("divide-y divide-border/40 sm:hidden", isPending && "opacity-50 transition-opacity")}>
           {isPending && cards.length === 0
             ? Array.from({ length: 6 }).map((_, i) => <MobileCardSkeleton key={i} />)
@@ -562,7 +484,6 @@ export function HomeMarketOverview({
             <p className="py-12 text-center text-sm text-muted-foreground">{t(lang, "noData")}</p>
           )}
         </div>
-        {/* Desktop table (>= sm) */}
         <div className="hidden overflow-x-auto sm:block">
           <table className="w-full text-left text-sm">
             <thead className="sticky top-0 z-10 bg-card">
@@ -572,46 +493,16 @@ export function HomeMarketOverview({
                 <th className="py-2.5 pr-3 pl-2 font-medium">{t(lang, "card")}</th>
                 <th className="hidden py-2.5 pr-3 font-medium md:table-cell">{t(lang, "set")}</th>
                 <th className="hidden py-2.5 pr-3 font-medium sm:table-cell">{t(lang, "rarity")}</th>
-                <SortableHeader
-                  label={t(lang, "price")}
-                  column="price"
-                  activeCol={sortCol}
-                  dir={sortDir}
-                  onClick={handleColumnSort}
-                  align="right"
-                />
-                <SortableHeader
-                  label="24h"
-                  column="change24h"
-                  activeCol={sortCol}
-                  dir={sortDir}
-                  onClick={handleColumnSort}
-                  align="right"
-                />
+                <SortableHeader label={t(lang, "price")} column="price" activeCol={sortCol} dir={sortDir} onClick={handleColumnSort} align="right" />
+                <SortableHeader label="24h" column="change24h" activeCol={sortCol} dir={sortDir} onClick={handleColumnSort} align="right" />
                 {showViews ? (
                   <th className="hidden py-2.5 pr-3 text-right font-medium md:table-cell">
                     {t(lang, "visits")}
                   </th>
                 ) : (
                   <>
-                    <SortableHeader
-                      label="7d"
-                      column="change7d"
-                      activeCol={sortCol}
-                      dir={sortDir}
-                      onClick={handleColumnSort}
-                      align="right"
-                      className="hidden md:table-cell"
-                    />
-                    <SortableHeader
-                      label="30d"
-                      column="change30d"
-                      activeCol={sortCol}
-                      dir={sortDir}
-                      onClick={handleColumnSort}
-                      align="right"
-                      className="hidden lg:table-cell"
-                    />
+                    <SortableHeader label="7d" column="change7d" activeCol={sortCol} dir={sortDir} onClick={handleColumnSort} align="right" className="hidden md:table-cell" />
+                    <SortableHeader label="30d" column="change30d" activeCol={sortCol} dir={sortDir} onClick={handleColumnSort} align="right" className="hidden lg:table-cell" />
                   </>
                 )}
                 <th className="hidden py-2.5 pr-4 font-medium xl:table-cell">
@@ -621,9 +512,7 @@ export function HomeMarketOverview({
             </thead>
             <tbody className={cn(isPending && "opacity-50 transition-opacity")}>
               {isPending && cards.length === 0
-                ? Array.from({ length: PAGE_SIZE }).map((_, i) => (
-                    <TableRowSkeleton key={i} />
-                  ))
+                ? Array.from({ length: PAGE_SIZE }).map((_, i) => <TableRowSkeleton key={i} />)
                 : cards.map((card, i) => (
                     <MarketRow
                       key={card.cardCode}
@@ -648,14 +537,10 @@ export function HomeMarketOverview({
         <div className={cn("p-4", isPending && "opacity-50 transition-opacity")}>
           {isPending && cards.length === 0 ? (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-              {Array.from({ length: PAGE_SIZE }).map((_, i) => (
-                <GridCardSkeleton key={i} />
-              ))}
+              {Array.from({ length: PAGE_SIZE }).map((_, i) => <GridCardSkeleton key={i} />)}
             </div>
           ) : cards.length === 0 ? (
-            <p className="py-12 text-center text-sm text-muted-foreground">
-              {t(lang, "noData")}
-            </p>
+            <p className="py-12 text-center text-sm text-muted-foreground">{t(lang, "noData")}</p>
           ) : (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {cards.map((card) => (
@@ -666,484 +551,16 @@ export function HomeMarketOverview({
         </div>
       )}
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between border-t border-border px-4 py-3">
-          <p className="text-xs text-muted-foreground">
-            {t(lang, "showingOf")} {((page - 1) * PAGE_SIZE + 1).toLocaleString()}-{Math.min(page * PAGE_SIZE, total).toLocaleString()} {t(lang, "from")} {total.toLocaleString()} {t(lang, "card")}
-          </p>
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page <= 1 || isPending}
-              className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
-            >
-              <ChevronLeft className="size-4" />
-            </button>
-            <PageNumbers
-              current={page}
-              total={totalPages}
-              onChange={setPage}
-            />
-            <button
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page >= totalPages || isPending}
-              className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
-            >
-              <ChevronRight className="size-4" />
-            </button>
-          </div>
-        </div>
-      )}
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        total={total}
+        pageSize={PAGE_SIZE}
+        isPending={isPending}
+        onPageChange={setPage}
+      />
     </div>
     </div>
   )
 }
 
-/* ------------------------------------------------------------------ */
-/*  Sortable header                                                    */
-/* ------------------------------------------------------------------ */
-
-function SortableHeader({
-  label,
-  column,
-  activeCol,
-  dir,
-  onClick,
-  align = "left",
-  className,
-}: {
-  label: string
-  column: ColumnId
-  activeCol: ColumnId | null
-  dir: "asc" | "desc"
-  onClick: (col: ColumnId) => void
-  align?: "left" | "right"
-  className?: string
-}) {
-  const isActive = activeCol === column
-  const Icon = isActive ? (dir === "asc" ? ArrowUp : ArrowDown) : ArrowUpDown
-
-  return (
-    <th
-      className={cn(
-        "cursor-pointer select-none py-2.5 pr-3 font-medium transition-colors hover:text-foreground",
-        align === "right" && "text-right",
-        className
-      )}
-      onClick={() => onClick(column)}
-    >
-      <span
-        className={cn(
-          "inline-flex items-center gap-1",
-          align === "right" && "flex-row-reverse"
-        )}
-      >
-        {label}
-        <Icon
-          className={cn(
-            "size-3",
-            isActive ? "text-foreground" : "text-muted-foreground/50"
-          )}
-        />
-      </span>
-    </th>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/*  Table row                                                          */
-/* ------------------------------------------------------------------ */
-
-function MarketRow({ card, rank, showViews, sparklineData, priceMode = "raw" }: { card: CardRow; rank: number; showViews?: boolean; sparklineData?: number[]; priceMode?: PriceMode }) {
-  const lang = useUIStore((s) => s.language)
-  const name = getCardName(lang, card)
-  const c24 = card.priceChange24h
-  const c7 = card.priceChange7d
-  const c30 = card.priceChange30d
-  const setCode = card.set?.code ?? card.setCode ?? ""
-  const isPsa = priceMode === "psa10"
-
-  return (
-    <tr className="border-b border-border/40 transition-all duration-150 hover:bg-muted/50">
-      <td className="py-3 pl-3 pr-0 align-middle">
-        {card.id != null && <WatchlistStar cardId={card.id} size="sm" />}
-      </td>
-      <td className="py-3 pr-1 pl-1 align-middle">
-        <span className="font-price text-xs text-muted-foreground">{rank}</span>
-      </td>
-      <td className="py-3 pr-3 pl-2 align-middle">
-        <Link
-          href={`/cards/${card.cardCode}`}
-          className="flex items-center gap-3"
-        >
-          <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted">
-            {card.imageUrl ? (
-              <Image
-                src={card.imageUrl}
-                alt={name}
-                fill
-                className="object-contain"
-                sizes="40px"
-              />
-            ) : (
-              <div className="size-full bg-muted" />
-            )}
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-medium leading-tight hover:text-primary">
-              {name}
-            </p>
-            <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
-              {card.baseCode ?? card.cardCode}
-              {card.isParallel && (
-                <span className="ml-1 text-primary">P</span>
-              )}
-            </p>
-          </div>
-        </Link>
-      </td>
-      <td className="hidden py-3 pr-3 align-middle font-mono text-xs text-muted-foreground md:table-cell">
-        {setCode.toUpperCase()}
-      </td>
-      <td className="hidden py-3 pr-3 align-middle sm:table-cell">
-        <RarityBadge rarity={card.rarity} size="sm" />
-      </td>
-      <td className="py-3 pr-3 text-right align-middle font-price text-sm font-semibold">
-        {isPsa ? (
-          card.psa10PriceUsd != null ? (
-            <PriceUsd usd={card.psa10PriceUsd} />
-          ) : (
-            <span className="text-muted-foreground/50">—</span>
-          )
-        ) : (
-          card.latestPriceJpy != null ? (
-            <Price jpy={card.latestPriceJpy} />
-          ) : (
-            "—"
-          )
-        )}
-      </td>
-      <td className="py-3 pr-3 text-right align-middle">
-        {isPsa ? <span className="font-price text-xs text-muted-foreground">—</span> : <ChangeCell value={c24} />}
-      </td>
-      <td className="hidden py-3 pr-3 text-right align-middle md:table-cell">
-        {showViews ? (
-          <span className="font-price text-xs text-muted-foreground">
-            {(card.viewCount ?? 0).toLocaleString()}
-          </span>
-        ) : isPsa ? (
-          <span className="font-price text-xs text-muted-foreground">—</span>
-        ) : (
-          <ChangeCell value={c7} />
-        )}
-      </td>
-      {!showViews && (
-        <td className="hidden py-3 pr-3 text-right align-middle lg:table-cell">
-          {isPsa ? <span className="font-price text-xs text-muted-foreground">—</span> : <ChangeCell value={c30} />}
-        </td>
-      )}
-      <td className="hidden py-3 pr-4 align-middle xl:table-cell">
-        {sparklineData && sparklineData.length >= 2 ? (
-          <Sparkline data={sparklineData} width={80} height={28} />
-        ) : (
-          <span className="text-muted-foreground/30">—</span>
-        )}
-      </td>
-    </tr>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/*  Helpers                                                            */
-/* ------------------------------------------------------------------ */
-
-function ChangeCell({ value }: { value?: number | null }) {
-  if (value == null)
-    return <span className="font-price text-xs text-muted-foreground">—</span>
-  const up = value > 0
-  const down = value < 0
-  return (
-    <span
-      className={cn(
-        "font-price text-xs font-medium tabular-nums",
-        up
-          ? "text-price-up"
-          : down
-            ? "text-price-down"
-            : "text-muted-foreground"
-      )}
-    >
-      {value > 0 ? "+" : ""}
-      {formatPct(value)}%
-    </span>
-  )
-}
-
-function TableRowSkeleton() {
-  return (
-    <tr className="border-b border-border/40">
-      <td className="py-2.5 pl-3 pr-0">
-        <Skeleton className="size-3.5 rounded-full" />
-      </td>
-      <td className="py-2.5 pr-1 pl-1">
-        <Skeleton className="h-4 w-5" />
-      </td>
-      <td className="py-2.5 pr-3 pl-2">
-        <div className="flex items-center gap-3">
-          <Skeleton className="size-9 rounded" />
-          <div className="space-y-1.5">
-            <Skeleton className="h-3.5 w-28" />
-            <Skeleton className="h-2.5 w-16" />
-          </div>
-        </div>
-      </td>
-      <td className="hidden py-2.5 pr-3 md:table-cell">
-        <Skeleton className="h-3.5 w-10" />
-      </td>
-      <td className="hidden py-2.5 pr-3 sm:table-cell">
-        <Skeleton className="h-5 w-10" />
-      </td>
-      <td className="py-2.5 pr-3">
-        <Skeleton className="ml-auto h-4 w-14" />
-      </td>
-      <td className="py-2.5 pr-3">
-        <Skeleton className="ml-auto h-4 w-10" />
-      </td>
-      <td className="hidden py-2.5 pr-3 md:table-cell">
-        <Skeleton className="ml-auto h-4 w-10" />
-      </td>
-      <td className="hidden py-2.5 pr-3 lg:table-cell">
-        <Skeleton className="ml-auto h-4 w-10" />
-      </td>
-      <td className="hidden py-2.5 pr-4 xl:table-cell">
-        <Skeleton className="h-7 w-20" />
-      </td>
-    </tr>
-  )
-}
-
-function PageNumbers({
-  current,
-  total,
-  onChange,
-}: {
-  current: number
-  total: number
-  onChange: (page: number) => void
-}) {
-  const pages = buildPageRange(current, total)
-
-  return (
-    <>
-      {pages.map((p, i) =>
-        p === "..." ? (
-          <span
-            key={`ellipsis-${i}`}
-            className="flex size-8 items-center justify-center text-xs text-muted-foreground"
-          >
-            ...
-          </span>
-        ) : (
-          <button
-            key={p}
-            onClick={() => onChange(p as number)}
-            className={cn(
-              "flex size-8 items-center justify-center rounded-md text-xs font-medium transition-colors",
-              current === p
-                ? "bg-muted text-foreground font-semibold"
-                : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-            )}
-          >
-            {p}
-          </button>
-        )
-      )}
-    </>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/*  Grid card                                                          */
-/* ------------------------------------------------------------------ */
-
-function GridCard({ card, changePeriod = "7d", priceMode = "raw" }: { card: CardRow; changePeriod?: "24h" | "7d" | "30d"; priceMode?: PriceMode }) {
-  const lang = useUIStore((s) => s.language)
-  const name = getCardName(lang, card)
-  const setCode = card.set?.code ?? card.setCode ?? ""
-  const isPsa = priceMode === "psa10"
-  const activeChange = isPsa
-    ? undefined
-    : changePeriod === "24h" ? card.priceChange24h
-    : changePeriod === "30d" ? card.priceChange30d
-    : card.priceChange7d
-
-  return (
-    <Link
-      href={`/cards/${card.cardCode}`}
-      className="group/card block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-    >
-      <div className="panel relative flex flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-        <div className="relative aspect-[63/88] w-full bg-muted">
-          {card.imageUrl ? (
-            <Image
-              src={card.imageUrl}
-              alt={name}
-              fill
-              className="object-contain"
-              sizes="(max-width: 640px) 45vw, (max-width: 1024px) 25vw, 18vw"
-              placeholder="blur"
-              blurDataURL={BLUR_DATA_URL}
-            />
-          ) : (
-            <div className="size-full bg-muted" />
-          )}
-          <div className="absolute left-1.5 top-1.5 z-10">
-            {card.id != null && <WatchlistStar cardId={card.id} size="sm" />}
-          </div>
-          {card.isParallel && (
-            <div className="absolute right-1.5 top-1.5">
-              <span className="rounded-md bg-primary/90 px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground">
-                P
-              </span>
-            </div>
-          )}
-        </div>
-        <div className="flex flex-1 flex-col p-2.5">
-          <div className="mb-1 flex items-center gap-1.5">
-            <RarityBadge rarity={card.rarity} size="sm" />
-            {setCode && (
-              <span className="font-mono text-[10px] text-muted-foreground">
-                {setCode.toUpperCase()}
-              </span>
-            )}
-          </div>
-          <p className="truncate text-[13px] font-medium leading-snug" title={name}>
-            {name}
-          </p>
-          <div className="mt-auto pt-1.5">
-            {isPsa ? (
-              card.psa10PriceUsd != null ? (
-                <PriceUsd usd={card.psa10PriceUsd} className="text-sm font-semibold" />
-              ) : (
-                <span className="font-price text-sm text-muted-foreground/50">—</span>
-              )
-            ) : (
-              <PriceDisplay
-                priceJpy={card.latestPriceJpy}
-                change={activeChange}
-                size="sm"
-              />
-            )}
-          </div>
-        </div>
-      </div>
-    </Link>
-  )
-}
-
-function GridCardSkeleton() {
-  return (
-    <div className="panel overflow-hidden">
-      <Skeleton className="aspect-[63/88] w-full" />
-      <div className="space-y-2 p-2.5">
-        <Skeleton className="h-4 w-12" />
-        <Skeleton className="h-3.5 w-24" />
-        <Skeleton className="h-4 w-16" />
-      </div>
-    </div>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/*  Mobile card list item                                              */
-/* ------------------------------------------------------------------ */
-
-function MobileCardItem({ card, rank, priceMode = "raw" }: { card: CardRow; rank: number; priceMode?: PriceMode }) {
-  const lang = useUIStore((s) => s.language)
-  const name = getCardName(lang, card)
-  const c24 = card.priceChange24h
-  const isPsa = priceMode === "psa10"
-
-  return (
-    <Link
-      href={`/cards/${card.cardCode}`}
-      className="flex items-center gap-3 px-4 py-3 transition-colors active:bg-muted/40"
-    >
-      <span className="w-5 shrink-0 text-center font-price text-xs text-muted-foreground">{rank}</span>
-      <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-muted">
-        {card.imageUrl ? (
-          <Image src={card.imageUrl} alt={name} fill className="object-contain" sizes="44px" />
-        ) : (
-          <div className="size-full bg-muted" />
-        )}
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium leading-tight">{name}</p>
-        <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-          <span className="font-mono">{card.baseCode ?? card.cardCode}</span>
-          <RarityBadge rarity={card.rarity} size="sm" />
-        </div>
-      </div>
-      <div className="shrink-0 text-right">
-        <p className="font-price text-sm font-semibold">
-          {isPsa ? (
-            card.psa10PriceUsd != null ? <PriceUsd usd={card.psa10PriceUsd} /> : <span className="text-muted-foreground/50">—</span>
-          ) : (
-            card.latestPriceJpy != null ? <Price jpy={card.latestPriceJpy} /> : "—"
-          )}
-        </p>
-        {!isPsa && c24 != null && c24 !== 0 && (
-          <p className={cn(
-            "font-price text-[11px] font-medium",
-            c24 > 0 ? "text-price-up" : "text-price-down"
-          )}>
-            {c24 > 0 ? "+" : ""}{formatPct(c24)}%
-          </p>
-        )}
-      </div>
-    </Link>
-  )
-}
-
-function MobileCardSkeleton() {
-  return (
-    <div className="flex items-center gap-3 px-4 py-3">
-      <Skeleton className="h-4 w-5" />
-      <Skeleton className="size-11 rounded-lg" />
-      <div className="flex-1 space-y-1.5">
-        <Skeleton className="h-3.5 w-28" />
-        <Skeleton className="h-2.5 w-16" />
-      </div>
-      <div className="space-y-1">
-        <Skeleton className="ml-auto h-4 w-14" />
-        <Skeleton className="ml-auto h-3 w-8" />
-      </div>
-    </div>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/*  Page range builder                                                 */
-/* ------------------------------------------------------------------ */
-
-function buildPageRange(
-  current: number,
-  total: number
-): (number | "...")[] {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
-
-  const pages: (number | "...")[] = []
-
-  if (current <= 4) {
-    for (let i = 1; i <= 5; i++) pages.push(i)
-    pages.push("...", total)
-  } else if (current >= total - 3) {
-    pages.push(1, "...")
-    for (let i = total - 4; i <= total; i++) pages.push(i)
-  } else {
-    pages.push(1, "...", current - 1, current, current + 1, "...", total)
-  }
-
-  return pages
-}

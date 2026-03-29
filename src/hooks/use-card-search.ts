@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { fetchCards } from "@/lib/api/fetch-cards"
 
 export type CardSearchResult = {
   id: number
@@ -35,17 +36,14 @@ export function useCardSearch({
     }
 
     setLoading(true)
-    const params = new URLSearchParams({ search: q, limit: String(limit) })
-    if (typeFilter) params.set("type", typeFilter)
 
     const t = window.setTimeout(() => {
-      void fetch(`/api/cards?${params}`)
-        .then((r) => {
-          if (!r.ok) throw new Error("fetch failed");
-          return r.json();
+      void fetchCards({ search: q, limit, type: typeFilter })
+        .then((data) => setResults((data.cards ?? []) as CardSearchResult[]))
+        .catch((err: unknown) => {
+          if (err instanceof Error && err.name !== "AbortError") console.error("Card search failed:", err)
+          setResults([])
         })
-        .then((j: { cards: CardSearchResult[] }) => setResults(j.cards ?? []))
-        .catch(() => setResults([]))
         .finally(() => setLoading(false))
     }, debounceMs)
 

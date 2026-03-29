@@ -212,8 +212,9 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  let updated = 0;
   let noMatch = 0;
+
+  const cardUpdates: { id: number; data: Record<string, unknown> }[] = [];
 
   for (const db of dbCards) {
     if (!db.baseCode) continue;
@@ -250,10 +251,16 @@ export async function POST(request: NextRequest) {
     }
 
     if (Object.keys(updates).length > 0) {
-      await prisma.card.update({ where: { id: db.id }, data: updates });
-      updated++;
+      cardUpdates.push({ id: db.id, data: updates });
     }
   }
+
+  if (cardUpdates.length > 0) {
+    await prisma.$transaction(
+      cardUpdates.map(({ id, data }) => prisma.card.update({ where: { id }, data }))
+    );
+  }
+  const updated = cardUpdates.length;
 
   // Also populate Product + ProductCard for this pack
   const product = await prisma.product.upsert({
@@ -267,24 +274,28 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  let productLinked = 0;
   const allPunkCardIds = [...enLookup.keys()];
-  for (const cardId of allPunkCardIds) {
-    const dbCard = await prisma.card.findFirst({
-      where: { baseCode: cardId.toUpperCase(), isParallel: false },
-      select: { id: true },
-    });
-    if (!dbCard) continue;
+  const upperCodes = allPunkCardIds.map((id) => id.toUpperCase());
 
-    await prisma.productCard.upsert({
-      where: {
-        productId_cardId: { productId: product.id, cardId: dbCard.id },
-      },
-      update: {},
-      create: { productId: product.id, cardId: dbCard.id },
-    });
-    productLinked++;
+  const matchedDbCards = await prisma.card.findMany({
+    where: { baseCode: { in: upperCodes }, isParallel: false },
+    select: { id: true, baseCode: true },
+  });
+
+  const existingLinks = await prisma.productCard.findMany({
+    where: { productId: product.id, cardId: { in: matchedDbCards.map((c) => c.id) } },
+    select: { cardId: true },
+  });
+  const linkedSet = new Set(existingLinks.map((l) => l.cardId));
+
+  const toCreate = matchedDbCards
+    .filter((c) => !linkedSet.has(c.id))
+    .map((c) => ({ productId: product.id, cardId: c.id }));
+
+  if (toCreate.length > 0) {
+    await prisma.productCard.createMany({ data: toCreate, skipDuplicates: true });
   }
+  const productLinked = toCreate.length;
 
   return NextResponse.json({
     success: true,

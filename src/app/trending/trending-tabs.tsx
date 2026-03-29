@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { memo, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { TrendingUp, TrendingDown, Eye } from "lucide-react"
@@ -24,7 +24,95 @@ const TABS: { id: TabId; labelKey: "topGainers" | "topLosers" | "mostViewed"; ic
   { id: "mostViewed", labelKey: "mostViewed", icon: Eye },
 ]
 
-const PERIODS: Period[] = ["24h", "7d", "30d"]
+const PERIODS: { value: Period; labelKey: "period24h" | "period7d" | "period30d" }[] = [
+  { value: "24h", labelKey: "period24h" },
+  { value: "7d", labelKey: "period7d" },
+  { value: "30d", labelKey: "period30d" },
+]
+
+interface TrendingRowProps {
+  card: TrendingCardRow
+  rank: number
+  activeTab: TabId
+  period: Period
+}
+
+const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }: TrendingRowProps) {
+  const lang = useUIStore((s) => s.language)
+  const name = getCardName(lang, card)
+  const change = activeTab === "mostViewed" ? null : getChangeValue(card, period)
+  const isUp = change != null && change > 0
+
+  return (
+    <tr
+      key={card.cardCode}
+      className="border-b border-border/40 transition-colors hover:bg-muted/30"
+    >
+      <td className="px-4 py-2.5 text-center tabular-nums text-muted-foreground">
+        {rank}
+      </td>
+      <td className="px-4 py-2.5">
+        <Link
+          href={`/cards/${card.cardCode}`}
+          className="flex items-center gap-3 hover:underline"
+        >
+          <div className="relative size-9 shrink-0 overflow-hidden rounded bg-muted">
+            {card.imageUrl && (
+              <Image
+                src={card.imageUrl}
+                alt={name}
+                fill
+                className="object-contain"
+                sizes="36px"
+                placeholder="blur"
+                blurDataURL={BLUR_DATA_URL}
+              />
+            )}
+          </div>
+          <div className="min-w-0">
+            <p className="truncate font-medium leading-tight">{name}</p>
+            <div className="mt-0.5 flex items-center gap-1.5">
+              <RarityBadge rarity={card.rarity} size="sm" />
+            </div>
+          </div>
+        </Link>
+      </td>
+      <td className="px-4 py-2.5">
+        <span className="font-mono text-xs text-muted-foreground">
+          {card.setCode.toUpperCase()}
+        </span>
+      </td>
+      <td className="px-4 py-2.5 text-right font-price tabular-nums">
+        <Price jpy={card.latestPriceJpy ?? 0} />
+      </td>
+      {activeTab === "mostViewed" ? (
+        <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
+          {(card.viewCount ?? 0).toLocaleString()}
+        </td>
+      ) : (
+        <td
+          className={cn(
+            "px-4 py-2.5 text-right font-price tabular-nums font-medium",
+            isUp ? "text-price-up" : "text-price-down"
+          )}
+        >
+          {change != null
+            ? `${change > 0 ? "+" : ""}${formatPct(change)}%`
+            : "—"}
+        </td>
+      )}
+      <td className="hidden px-4 py-2.5 sm:table-cell">
+        <div className="flex justify-end">
+          {card.sparkline.length >= 2 ? (
+            <Sparkline data={card.sparkline} width={80} height={28} />
+          ) : (
+            <span className="text-xs text-muted-foreground/30">—</span>
+          )}
+        </div>
+      </td>
+    </tr>
+  )
+})
 
 interface TrendingData {
   gainers24h: TrendingCardRow[]
@@ -83,18 +171,18 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
 
         {activeTab !== "mostViewed" && (
           <div className="ml-auto flex items-center gap-0.5 rounded-lg border border-border p-0.5">
-            {PERIODS.map((p) => (
+            {PERIODS.map(({ value, labelKey }) => (
               <button
-                key={p}
-                onClick={() => setPeriod(p)}
+                key={value}
+                onClick={() => setPeriod(value)}
                 className={cn(
                   "rounded-md px-2.5 py-1 text-xs font-semibold tabular-nums transition-all",
-                  period === p
+                  period === value
                     ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                 )}
               >
-                {p}
+                {t(lang, labelKey)}
               </button>
             ))}
           </div>
@@ -139,83 +227,15 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
                   </td>
                 </tr>
               ) : (
-                cards.map((card, i) => {
-                  const name = getCardName(lang, card)
-                  const change = activeTab === "mostViewed"
-                    ? null
-                    : getChangeValue(card, period)
-                  const isUp = change != null && change > 0
-
-                  return (
-                    <tr
-                      key={card.cardCode}
-                      className="border-b border-border/40 transition-colors hover:bg-muted/30"
-                    >
-                      <td className="px-4 py-2.5 text-center tabular-nums text-muted-foreground">
-                        {i + 1}
-                      </td>
-                      <td className="px-4 py-2.5">
-                        <Link
-                          href={`/cards/${card.cardCode}`}
-                          className="flex items-center gap-3 hover:underline"
-                        >
-                          <div className="relative size-9 shrink-0 overflow-hidden rounded bg-muted">
-                            {card.imageUrl && (
-                              <Image
-                                src={card.imageUrl}
-                                alt={name}
-                                fill
-                                className="object-contain"
-                                sizes="36px"
-                                placeholder="blur"
-                                blurDataURL={BLUR_DATA_URL}
-                              />
-                            )}
-                          </div>
-                          <div className="min-w-0">
-                            <p className="truncate font-medium leading-tight">{name}</p>
-                            <div className="mt-0.5 flex items-center gap-1.5">
-                              <RarityBadge rarity={card.rarity} size="sm" />
-                            </div>
-                          </div>
-                        </Link>
-                      </td>
-                      <td className="px-4 py-2.5">
-                        <span className="font-mono text-xs text-muted-foreground">
-                          {card.setCode.toUpperCase()}
-                        </span>
-                      </td>
-                      <td className="px-4 py-2.5 text-right font-price tabular-nums">
-                        <Price jpy={card.latestPriceJpy ?? 0} />
-                      </td>
-                      {activeTab === "mostViewed" ? (
-                        <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
-                          {(card.viewCount ?? 0).toLocaleString()}
-                        </td>
-                      ) : (
-                        <td
-                          className={cn(
-                            "px-4 py-2.5 text-right font-price tabular-nums font-medium",
-                            isUp ? "text-price-up" : "text-price-down"
-                          )}
-                        >
-                          {change != null
-                            ? `${change > 0 ? "+" : ""}${formatPct(change)}%`
-                            : "—"}
-                        </td>
-                      )}
-                      <td className="hidden px-4 py-2.5 sm:table-cell">
-                        <div className="flex justify-end">
-                          {card.sparkline.length >= 2 ? (
-                            <Sparkline data={card.sparkline} width={80} height={28} />
-                          ) : (
-                            <span className="text-xs text-muted-foreground/30">—</span>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })
+                cards.map((card, i) => (
+                  <TrendingRow
+                    key={card.cardCode}
+                    card={card}
+                    rank={i + 1}
+                    activeTab={activeTab}
+                    period={period}
+                  />
+                ))
               )}
             </tbody>
           </table>

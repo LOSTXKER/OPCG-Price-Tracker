@@ -1,4 +1,5 @@
 import { getAuthUser } from "@/lib/api/auth";
+import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -68,29 +69,28 @@ export async function PATCH(
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    const body = await request.json() as {
+    const parsed = await parseJsonBody<{
       name?: string;
       leaderId?: number | null;
       isPublic?: boolean;
       addCards?: { cardId: number; quantity: number }[];
       removeCardIds?: number[];
-    };
+    }>(request);
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.body;
 
-    if (body.removeCardIds?.length) {
-      await prisma.deckCard.deleteMany({
-        where: { deckId, cardId: { in: body.removeCardIds } },
-      });
-    }
-
-    if (body.addCards?.length) {
-      for (const c of body.addCards) {
-        await prisma.deckCard.upsert({
+    await prisma.$transaction([
+      ...(body.removeCardIds?.length
+        ? [prisma.deckCard.deleteMany({ where: { deckId, cardId: { in: body.removeCardIds } } })]
+        : []),
+      ...(body.addCards?.map((c) =>
+        prisma.deckCard.upsert({
           where: { deckId_cardId: { deckId, cardId: c.cardId } },
           update: { quantity: c.quantity || 1 },
           create: { deckId, cardId: c.cardId, quantity: c.quantity || 1 },
-        });
-      }
-    }
+        })
+      ) ?? []),
+    ]);
 
     const deck = await prisma.deck.update({
       where: { id: deckId },

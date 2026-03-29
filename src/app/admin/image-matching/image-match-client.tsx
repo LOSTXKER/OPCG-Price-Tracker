@@ -1,9 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { adminJsonFetch } from "@/lib/api/admin-client";
+import type { PaginatedApiResponse } from "@/app/admin/admin-types";
 import Image from "next/image";
 import { Check, ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { formatJpy } from "@/lib/utils/currency";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 
 interface CardEntry {
@@ -22,48 +25,47 @@ interface CardEntry {
   candidates: { pIndex: number; url: string }[];
 }
 
-interface ApiResponse {
+interface ApiResponse extends PaginatedApiResponse {
   cards: CardEntry[];
-  total: number;
-  page: number;
-  totalPages: number;
   sets: { code: string; name: string; nameEn: string | null }[];
 }
 
 export function ImageMatchClient() {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [setFilter, setSetFilter] = useState("");
   const [page, setPage] = useState(1);
   const [saving, setSaving] = useState<number | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const params = new URLSearchParams();
-    if (setFilter) params.set("set", setFilter);
-    params.set("page", String(page));
-    const res = await fetch(`/api/admin/image-matching?${params}`);
-    if (res.ok) {
-      setData(await res.json());
+    setFetchError(null);
+    try {
+      const params = new URLSearchParams();
+      if (setFilter) params.set("set", setFilter);
+      params.set("page", String(page));
+      const result = await adminJsonFetch<ApiResponse>(`/api/admin/image-matching?${params}`, { method: "GET" });
+      setData(result);
+    } catch (err) {
+      setFetchError(err instanceof Error ? err.message : "Failed to load");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, [setFilter, page]);
 
   useEffect(() => {
-    fetchData();
+    void fetchData();
   }, [fetchData]);
 
   const handleReassign = async (cardId: number, newPIndex: number) => {
     setSaving(cardId);
-    const res = await fetch("/api/admin/image-matching", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cardId, parallelIndex: newPIndex }),
-    });
-    if (res.ok) {
+    try {
+      await adminJsonFetch("/api/admin/image-matching", { method: "PATCH", body: { cardId, parallelIndex: newPIndex } });
       await fetchData();
+    } finally {
+      setSaving(null);
     }
-    setSaving(null);
   };
 
   return (
@@ -107,7 +109,11 @@ export function ImageMatchClient() {
       </div>
 
       {/* Cards Grid */}
-      {loading && !data ? (
+      {fetchError ? (
+        <div className="rounded-lg border border-destructive/30 p-8 text-center text-destructive text-sm">
+          {fetchError}
+        </div>
+      ) : loading && !data ? (
         <div className="rounded-lg border border-border/30 p-8 text-center text-muted-foreground">
           Loading...
         </div>
@@ -117,7 +123,7 @@ export function ImageMatchClient() {
         </div>
       ) : (
         <div className="space-y-4">
-          {data?.cards.map((card) => (
+          {data?.cards?.map((card) => (
             <div key={card.id} className="rounded-lg border border-border/30 p-4 space-y-3">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-sm font-semibold text-primary">
@@ -132,7 +138,7 @@ export function ImageMatchClient() {
                 </span>
                 {card.latestPriceJpy != null && (
                   <span className="text-xs font-mono text-foreground ml-auto">
-                    ¥{card.latestPriceJpy.toLocaleString()}
+                    {formatJpy(card.latestPriceJpy)}
                   </span>
                 )}
               </div>

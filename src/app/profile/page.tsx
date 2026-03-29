@@ -54,7 +54,7 @@ export default function ProfilePage() {
     setDisplayName(data.user.displayName ?? "");
     setListings(data.listings ?? []);
     setLoading(false);
-  }, []);
+  }, [lang]);
 
   useEffect(() => {
     void load();
@@ -97,7 +97,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="container mx-auto max-w-2xl px-4 py-8">
-        <p className="text-muted-foreground text-sm">Loading…</p>
+        <p className="text-muted-foreground text-sm">{t(lang, "loading")}</p>
       </div>
     );
   }

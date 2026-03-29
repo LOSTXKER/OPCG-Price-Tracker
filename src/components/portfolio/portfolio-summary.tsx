@@ -53,7 +53,7 @@ export function PortfolioSummary({
   return (
     <Card>
       <CardHeader className="border-b pb-4">
-        <CardDescription>Portfolio value</CardDescription>
+        <CardDescription>{t(lang, "portfolioValue")}</CardDescription>
         <CardTitle className="font-mono text-3xl font-semibold tracking-tight sm:text-4xl">
           <PriceDisplay
             priceJpy={totalValueJpy}
@@ -63,7 +63,7 @@ export function PortfolioSummary({
           />
         </CardTitle>
         <div className="text-muted-foreground text-sm">
-          Cost basis{" "}
+          {t(lang, "costBasis")}{" "}
           <span className="font-mono text-foreground">
             {formatJpyAmount(totalCostJpy, currency)}
           </span>
@@ -73,7 +73,7 @@ export function PortfolioSummary({
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-              Unrealized P&amp;L
+              {t(lang, "unrealizedPnl")}
             </p>
             <div
               className={cn(
@@ -98,7 +98,7 @@ export function PortfolioSummary({
           </div>
           <div className="text-right">
             <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-              Cards tracked
+              {t(lang, "cardsTracked")}
             </p>
             <p className="font-mono text-2xl font-semibold">{cardCount}</p>
           </div>
@@ -107,7 +107,7 @@ export function PortfolioSummary({
         {chartData && (
           <div>
             <p className="text-muted-foreground mb-2 text-xs font-medium tracking-wide uppercase">
-              Value over time
+              {t(lang, "valueOverTime")}
             </p>
             <div className="text-muted-foreground h-40 w-full text-xs">
               <ResponsiveContainer width="100%" height="100%">

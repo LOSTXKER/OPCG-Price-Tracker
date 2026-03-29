@@ -5,9 +5,6 @@ import Link from "next/link"
 import { useSearchParams, useRouter } from "next/navigation"
 import { useCallback, useEffect, useRef, useState, useTransition, Suspense } from "react"
 import {
-  ArrowDown,
-  ArrowUp,
-  ArrowUpDown,
   ChevronLeft,
   ChevronRight,
   Search,
@@ -17,43 +14,27 @@ import {
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
+import { SortableHeader } from "@/components/shared/sortable-header"
 import { Skeleton } from "@/components/ui/skeleton"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
-import { formatPct } from "@/lib/utils/currency"
+import { changeToneClass, formatSignedPct } from "@/lib/utils/currency"
+import { fetchCards } from "@/lib/api/fetch-cards"
+import {
+  type SortKey,
+  type ColumnId,
+  type CardRow as BaseCardRow,
+  COLUMN_SORTS,
+  parseSortColumn,
+  PAGE_SIZE,
+} from "@/components/home/market-types"
 
-type SortKey =
-  | "price_desc"
-  | "price_asc"
-  | "change_desc"
-  | "change_asc"
-  | "change_7d_desc"
-  | "change_7d_asc"
-  | "newest"
-  | "name"
-
-interface CardRow {
+interface CardRow extends BaseCardRow {
   id: number
-  cardCode: string
-  baseCode?: string | null
-  nameJp: string
-  nameEn?: string | null
-  nameTh?: string | null
-  rarity: string
-  isParallel: boolean
-  imageUrl?: string | null
-  latestPriceJpy?: number | null
   latestPriceThb?: number | null
-  priceChange24h?: number | null
-  priceChange7d?: number | null
-  priceChange30d?: number | null
-  viewCount?: number
-  set?: { code: string; name?: string; nameEn?: string | null }
 }
-
-const PAGE_SIZE = 20
 
 const SORT_KEYS: { value: SortKey; key: "sortPriceDesc" | "sortPriceAsc" | "sortGain24h" | "sortLoss24h" | "sortGain7d" | "sortLoss7d" | "sortNewest" | "sortNameAz" }[] = [
   { value: "price_desc", key: "sortPriceDesc" },
@@ -66,23 +47,7 @@ const SORT_KEYS: { value: SortKey; key: "sortPriceDesc" | "sortPriceAsc" | "sort
   { value: "name", key: "sortNameAz" },
 ]
 
-type ColumnId = "price" | "change24h" | "change7d"
-
-const COLUMN_SORTS: Record<ColumnId, { desc: SortKey; asc: SortKey }> = {
-  price: { desc: "price_desc", asc: "price_asc" },
-  change24h: { desc: "change_desc", asc: "change_asc" },
-  change7d: { desc: "change_7d_desc", asc: "change_7d_asc" },
-}
-
-function parseSortColumn(sort: SortKey): { col: ColumnId | null; dir: "asc" | "desc" } {
-  for (const [col, keys] of Object.entries(COLUMN_SORTS) as [ColumnId, { desc: SortKey; asc: SortKey }][]) {
-    if (sort === keys.desc) return { col, dir: "desc" }
-    if (sort === keys.asc) return { col, dir: "asc" }
-  }
-  return { col: null, dir: "desc" }
-}
-
-function SortableHeader({
+function SearchSortHeader({
   label,
   column,
   currentSort,
@@ -96,22 +61,22 @@ function SortableHeader({
   className?: string
 }) {
   const { col, dir } = parseSortColumn(currentSort)
-  const active = col === column
-  const toggle = () => {
-    const sorts = COLUMN_SORTS[column]
-    if (!active) onSort(sorts.desc)
+  const handleClick = (c: ColumnId) => {
+    const sorts = COLUMN_SORTS[c]
+    if (col !== c) onSort(sorts.desc)
     else onSort(dir === "desc" ? sorts.asc : sorts.desc)
   }
 
   return (
-    <button type="button" onClick={toggle} className={cn("inline-flex items-center gap-1 text-xs font-medium", className)}>
-      {label}
-      {active ? (
-        dir === "desc" ? <ArrowDown className="size-3" /> : <ArrowUp className="size-3" />
-      ) : (
-        <ArrowUpDown className="size-3 opacity-30" />
-      )}
-    </button>
+    <SortableHeader
+      label={label}
+      column={column}
+      activeCol={col}
+      dir={dir}
+      onClick={handleClick}
+      as="button"
+      className={className}
+    />
   )
 }
 
@@ -131,7 +96,9 @@ function SearchContent() {
   const [totalPages, setTotalPages] = useState(0)
   const [isPending, startTransition] = useTransition()
   const [hasSearched, setHasSearched] = useState(false)
+  const [fetchError, setFetchError] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const fetchAbortRef = useRef<AbortController | null>(null)
 
   const fetchResults = useCallback(
     (q: string, sortKey: SortKey, pg: number) => {
@@ -141,22 +108,25 @@ function SearchContent() {
         setTotalPages(0)
         return
       }
+      fetchAbortRef.current?.abort()
+      const controller = new AbortController()
+      fetchAbortRef.current = controller
+
       startTransition(async () => {
         try {
-          const params = new URLSearchParams({
-            search: q.trim(),
-            sort: sortKey,
-            page: String(pg),
-            limit: String(PAGE_SIZE),
-          })
-          const res = await fetch(`/api/cards?${params}`)
-          const data = await res.json()
-          setCards(data.cards ?? [])
+          setFetchError(false)
+          const data = await fetchCards(
+            { search: q.trim(), sort: sortKey, page: pg, limit: PAGE_SIZE },
+            { signal: controller.signal },
+          )
+          setCards(data.cards as CardRow[])
           setTotal(data.total ?? 0)
           setTotalPages(data.totalPages ?? 0)
           setHasSearched(true)
-        } catch {
-          /* ignore */
+        } catch (e) {
+          if (e instanceof Error && e.name === "AbortError") return
+          console.error("Search fetch failed:", e)
+          setFetchError(true)
         }
       })
     },
@@ -194,17 +164,8 @@ function SearchContent() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
-  const changeClass = (v: number | null | undefined) => {
-    if (v == null) return "text-muted-foreground/40"
-    if (v > 0) return "text-price-up"
-    if (v < 0) return "text-price-down"
-    return "text-muted-foreground"
-  }
-
-  const formatChange = (v: number | null | undefined) => {
-    if (v == null) return "—"
-    return `${v > 0 ? "+" : ""}${formatPct(v)}%`
-  }
+  const changeClass = changeToneClass
+  const formatChange = formatSignedPct
 
   return (
     <div className="mx-auto max-w-5xl space-y-5">
@@ -278,13 +239,13 @@ function SearchContent() {
             <div className="w-14 shrink-0" />
             <div className="min-w-0 flex-1">{t(lang, "card")}</div>
             <div className="w-20 shrink-0 text-right">
-              <SortableHeader label={t(lang, "price")} column="price" currentSort={sort} onSort={handleSortChange} className="justify-end" />
+              <SearchSortHeader label={t(lang, "price")} column="price" currentSort={sort} onSort={handleSortChange} className="justify-end" />
             </div>
             <div className="w-16 shrink-0 text-right">
-              <SortableHeader label="24h" column="change24h" currentSort={sort} onSort={handleSortChange} className="justify-end" />
+              <SearchSortHeader label="24h" column="change24h" currentSort={sort} onSort={handleSortChange} className="justify-end" />
             </div>
             <div className="w-16 shrink-0 text-right">
-              <SortableHeader label="7d" column="change7d" currentSort={sort} onSort={handleSortChange} className="justify-end" />
+              <SearchSortHeader label="7d" column="change7d" currentSort={sort} onSort={handleSortChange} className="justify-end" />
             </div>
             <div className="w-8 shrink-0" />
           </div>
@@ -346,8 +307,8 @@ function SearchContent() {
                   {formatChange(card.priceChange7d)}
                 </div>
 
-                {/* Watchlist */}
-                <div className="hidden w-8 shrink-0 sm:flex sm:justify-center" onClick={(e) => e.preventDefault()}>
+                {/* Watchlist — stopPropagation prevents navigation on the parent Link */}
+                <div className="hidden w-8 shrink-0 sm:flex sm:justify-center" onClick={(e) => { e.preventDefault(); e.stopPropagation() }}>
                   {card.id && <WatchlistStar cardId={card.id} size="sm" />}
                 </div>
               </Link>
@@ -383,8 +344,15 @@ function SearchContent() {
         </div>
       )}
 
+      {/* Fetch error */}
+      {!isPending && fetchError && (
+        <div className="panel px-4 py-8 text-center text-sm text-destructive">
+          {t(lang, "loadFailed")}
+        </div>
+      )}
+
       {/* No results */}
-      {!isPending && hasSearched && cards.length === 0 && query.trim() && (
+      {!isPending && !fetchError && hasSearched && cards.length === 0 && query.trim() && (
         <div className="panel px-4 py-16 text-center">
           <p className="text-lg font-medium">{t(lang, "noResults")}</p>
           <p className="mt-1 text-sm text-muted-foreground">

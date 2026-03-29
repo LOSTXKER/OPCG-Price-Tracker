@@ -5,6 +5,7 @@ import { AlertTriangle, BarChart3, SlidersHorizontal, X } from "lucide-react";
 
 import { CardGrid } from "@/components/cards/card-grid";
 import { CardItem, type ChangePeriod } from "@/components/cards/card-item";
+import { CHANGE_PERIODS } from "@/components/home/market-types";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import {
   Dialog,
@@ -16,14 +17,15 @@ import {
 import { cn } from "@/lib/utils";
 import {
   pullChance,
-  formatPct,
+  formatPullPct,
   PACKS_PER_BOX,
   BOXES_PER_CARTON,
 } from "@/lib/utils/pull-rate";
-import { RARITY_BAR_COLOR, RARITY_HEX } from "@/lib/constants/rarity";
-import { UNIT_LABELS, type Unit } from "@/lib/constants/ui";
+import { RARITY_BAR_COLOR, RARITY_HEX } from "@/lib/constants/rarities";
+import { UNIT_LABELS, PULL_UNITS, type Unit } from "@/lib/constants/ui";
 import { t } from "@/lib/i18n";
 import { useUIStore, type Language } from "@/stores/ui-store";
+import { CARD_COLORS, CARD_TYPE_ORDER, getCardTypeLabel } from "@/lib/constants/card-config";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -74,27 +76,6 @@ interface SetDetailContentProps {
 /*  Filter constants                                                   */
 /* ------------------------------------------------------------------ */
 
-const CARD_TYPE_ORDER = ["LEADER", "CHARACTER", "EVENT", "STAGE", "DON"] as const;
-
-function cardTypeLabel(type: string, lang: Language): string {
-  const map: Record<string, Record<Language, string>> = {
-    LEADER:    { TH: "ลีดเดอร์", EN: "Leader", JP: "リーダー" },
-    CHARACTER: { TH: "คาแรคเตอร์", EN: "Character", JP: "キャラ" },
-    EVENT:     { TH: "อีเวนท์", EN: "Event", JP: "イベント" },
-    STAGE:     { TH: "สเตจ", EN: "Stage", JP: "ステージ" },
-    DON:       { TH: "DON!!", EN: "DON!!", JP: "DON!!" },
-  };
-  return map[type]?.[lang] ?? type;
-}
-
-const COLOR_CONFIG: { value: string; dot: string; label: Record<Language, string> }[] = [
-  { value: "Red",    dot: "bg-red-500",    label: { TH: "แดง",    EN: "Red",    JP: "赤" } },
-  { value: "Green",  dot: "bg-green-500",  label: { TH: "เขียว",  EN: "Green",  JP: "緑" } },
-  { value: "Blue",   dot: "bg-blue-500",   label: { TH: "ฟ้า",    EN: "Blue",   JP: "青" } },
-  { value: "Purple", dot: "bg-purple-500", label: { TH: "ม่วง",   EN: "Purple", JP: "紫" } },
-  { value: "Black",  dot: "bg-neutral-800 dark:bg-neutral-300", label: { TH: "ดำ", EN: "Black", JP: "黒" } },
-  { value: "Yellow", dot: "bg-yellow-500", label: { TH: "เหลือง", EN: "Yellow", JP: "黄" } },
-];
 
 /* ------------------------------------------------------------------ */
 /*  Pull rate helpers                                                  */
@@ -142,7 +123,7 @@ export function SetDetailContent({
 
   const availableColors = useMemo(() => {
     const present = new Set(allCards.map((c) => c.color));
-    return COLOR_CONFIG.filter((cc) => present.has(cc.value));
+    return CARD_COLORS.filter((cc) => present.has(cc.value));
   }, [allCards]);
 
   if (totalCards === 0) {
@@ -238,7 +219,7 @@ export function SetDetailContent({
 
           {/* Period */}
           <div className="flex items-center rounded-lg bg-muted/50 p-0.5">
-            {(["24h", "7d", "30d"] as ChangePeriod[]).map((p) => (
+            {CHANGE_PERIODS.map((p) => (
               <button
                 key={p}
                 onClick={() => setChangePeriod(p)}
@@ -300,7 +281,7 @@ export function SetDetailContent({
                   </DialogHeader>
 
                   <div className="inline-flex rounded-lg bg-muted/60 p-0.5">
-                    {(["pack", "box", "carton"] as Unit[]).map((u) => (
+                    {PULL_UNITS.map((u) => (
                       <button
                         key={u}
                         onClick={() => setUnit(u)}
@@ -344,7 +325,7 @@ export function SetDetailContent({
                               </td>
                               <td className="whitespace-nowrap py-2.5 text-right font-mono text-sm font-bold tabular-nums">{fmtCount(count)}</td>
                               <td className="whitespace-nowrap py-2.5 text-right text-xs tabular-nums text-muted-foreground">{g.cards.length}</td>
-                              <td className="whitespace-nowrap py-2.5 pr-4 text-right font-mono text-xs font-semibold tabular-nums text-primary">{formatPct(chance)}</td>
+                              <td className="whitespace-nowrap py-2.5 pr-4 text-right font-mono text-xs font-semibold tabular-nums text-primary">{formatPullPct(chance)}</td>
                             </tr>
                           );
                         })}
@@ -367,7 +348,7 @@ export function SetDetailContent({
                   <button onClick={() => setActiveType("all")} className={pill(activeType === "all")}>{t(lang, "allTab")}</button>
                   {availableTypes.map((ct) => (
                     <button key={ct.value} onClick={() => setActiveType(ct.value)} className={pill(activeType === ct.value)}>
-                      {cardTypeLabel(ct.value, lang)}
+                      {getCardTypeLabel(ct.value, lang)}
                     </button>
                   ))}
                 </div>
@@ -385,7 +366,7 @@ export function SetDetailContent({
                       onClick={() => setActiveColor(cc.value)}
                       className={cn(pill(activeColor === cc.value), "flex items-center gap-1.5")}
                     >
-                      <span className={cn("size-2 rounded-full", cc.dot)} />
+                      <span className={cn("size-2 rounded-full", cc.dotClass)} />
                       {cc.label[lang]}
                     </button>
                   ))}

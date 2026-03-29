@@ -24,30 +24,39 @@ export async function GET() {
     },
   });
 
-  const enriched = await Promise.all(
-    sets.map(async (s) => {
-      const [missingEn, missingImage] = await Promise.all([
-        prisma.card.count({ where: { setId: s.id, nameEn: null } }),
-        prisma.card.count({
-          where: {
-            setId: s.id,
-            OR: [{ imageUrl: null }, { imageUrl: "" }],
-          },
-        }),
-      ]);
-      const actual = s._count.cards;
-      return {
-        ...s,
-        actualCardCount: actual,
-        missingEn,
-        missingImage,
-        completeness:
-          actual > 0
-            ? Math.round(((actual - missingEn) / actual) * 100)
-            : 0,
-      };
-    })
-  );
+  const setIds = sets.map((s) => s.id);
+
+  const [missingEnGroups, missingImageGroups] = await Promise.all([
+    prisma.card.groupBy({
+      by: ["setId"],
+      where: { setId: { in: setIds }, nameEn: null },
+      _count: true,
+    }),
+    prisma.card.groupBy({
+      by: ["setId"],
+      where: {
+        setId: { in: setIds },
+        OR: [{ imageUrl: null }, { imageUrl: "" }],
+      },
+      _count: true,
+    }),
+  ]);
+
+  const missingEnMap = new Map(missingEnGroups.map((g) => [g.setId, g._count]));
+  const missingImageMap = new Map(missingImageGroups.map((g) => [g.setId, g._count]));
+
+  const enriched = sets.map((s) => {
+    const actual = s._count.cards;
+    const missingEn = missingEnMap.get(s.id) ?? 0;
+    const missingImage = missingImageMap.get(s.id) ?? 0;
+    return {
+      ...s,
+      actualCardCount: actual,
+      missingEn,
+      missingImage,
+      completeness: actual > 0 ? Math.round(((actual - missingEn) / actual) * 100) : 0,
+    };
+  });
 
   return NextResponse.json(enriched);
 }

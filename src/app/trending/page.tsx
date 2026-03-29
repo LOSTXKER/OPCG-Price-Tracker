@@ -12,52 +12,44 @@ export const metadata: Metadata = {
 
 const TAKE = 50;
 
+const TRENDING_INCLUDE = {
+  set: { select: { code: true, name: true, nameEn: true } },
+  prices: { orderBy: { scrapedAt: "desc" as const }, take: 7, select: { priceJpy: true } },
+} as const;
+
+type TrendingQuery = {
+  key: string;
+  where: Record<string, unknown>;
+  orderBy: Record<string, "asc" | "desc">;
+};
+
+const TRENDING_QUERIES: TrendingQuery[] = [
+  { key: "gainers24h",  where: { priceChange24h: { not: null, gt: 0 }, latestPriceJpy: { gt: 0 } }, orderBy: { priceChange24h: "desc" } },
+  { key: "losers24h",   where: { priceChange24h: { not: null, lt: 0 }, latestPriceJpy: { gt: 0 } }, orderBy: { priceChange24h: "asc" } },
+  { key: "gainers7d",   where: { priceChange7d:  { not: null, gt: 0 }, latestPriceJpy: { gt: 0 } }, orderBy: { priceChange7d: "desc" } },
+  { key: "losers7d",    where: { priceChange7d:  { not: null, lt: 0 }, latestPriceJpy: { gt: 0 } }, orderBy: { priceChange7d: "asc" } },
+  { key: "gainers30d",  where: { priceChange30d: { not: null, gt: 0 }, latestPriceJpy: { gt: 0 } }, orderBy: { priceChange30d: "desc" } },
+  { key: "losers30d",   where: { priceChange30d: { not: null, lt: 0 }, latestPriceJpy: { gt: 0 } }, orderBy: { priceChange30d: "asc" } },
+  { key: "mostViewed",  where: { viewCount: { gt: 0 }, latestPriceJpy: { gt: 0 } },                 orderBy: { viewCount: "desc" } },
+];
+
 async function getTrendingData() {
-  const [gainers24h, losers24h, gainers7d, losers7d, gainers30d, losers30d, mostViewed] =
-    await Promise.all([
+  const results = await Promise.all(
+    TRENDING_QUERIES.map((q) =>
       prisma.card.findMany({
-        where: { priceChange24h: { not: null, gt: 0 }, latestPriceJpy: { gt: 0 } },
-        orderBy: { priceChange24h: "desc" },
+        where: q.where,
+        orderBy: q.orderBy,
         take: TAKE,
-        include: { set: { select: { code: true, name: true, nameEn: true } }, prices: { orderBy: { scrapedAt: "desc" }, take: 7, select: { priceJpy: true } } },
-      }),
-      prisma.card.findMany({
-        where: { priceChange24h: { not: null, lt: 0 }, latestPriceJpy: { gt: 0 } },
-        orderBy: { priceChange24h: "asc" },
-        take: TAKE,
-        include: { set: { select: { code: true, name: true, nameEn: true } }, prices: { orderBy: { scrapedAt: "desc" }, take: 7, select: { priceJpy: true } } },
-      }),
-      prisma.card.findMany({
-        where: { priceChange7d: { not: null, gt: 0 }, latestPriceJpy: { gt: 0 } },
-        orderBy: { priceChange7d: "desc" },
-        take: TAKE,
-        include: { set: { select: { code: true, name: true, nameEn: true } }, prices: { orderBy: { scrapedAt: "desc" }, take: 7, select: { priceJpy: true } } },
-      }),
-      prisma.card.findMany({
-        where: { priceChange7d: { not: null, lt: 0 }, latestPriceJpy: { gt: 0 } },
-        orderBy: { priceChange7d: "asc" },
-        take: TAKE,
-        include: { set: { select: { code: true, name: true, nameEn: true } }, prices: { orderBy: { scrapedAt: "desc" }, take: 7, select: { priceJpy: true } } },
-      }),
-      prisma.card.findMany({
-        where: { priceChange30d: { not: null, gt: 0 }, latestPriceJpy: { gt: 0 } },
-        orderBy: { priceChange30d: "desc" },
-        take: TAKE,
-        include: { set: { select: { code: true, name: true, nameEn: true } }, prices: { orderBy: { scrapedAt: "desc" }, take: 7, select: { priceJpy: true } } },
-      }),
-      prisma.card.findMany({
-        where: { priceChange30d: { not: null, lt: 0 }, latestPriceJpy: { gt: 0 } },
-        orderBy: { priceChange30d: "asc" },
-        take: TAKE,
-        include: { set: { select: { code: true, name: true, nameEn: true } }, prices: { orderBy: { scrapedAt: "desc" }, take: 7, select: { priceJpy: true } } },
-      }),
-      prisma.card.findMany({
-        where: { viewCount: { gt: 0 }, latestPriceJpy: { gt: 0 } },
-        orderBy: { viewCount: "desc" },
-        take: TAKE,
-        include: { set: { select: { code: true, name: true, nameEn: true } }, prices: { orderBy: { scrapedAt: "desc" }, take: 7, select: { priceJpy: true } } },
-      }),
-    ]);
+        include: TRENDING_INCLUDE,
+      })
+    )
+  );
+
+  const keyed = Object.fromEntries(
+    TRENDING_QUERIES.map((q, i) => [q.key, results[i]])
+  ) as Record<string, typeof results[number]>;
+
+  const { gainers24h, losers24h, gainers7d, losers7d, gainers30d, losers30d, mostViewed } = keyed;
 
   function mapCards(cards: typeof gainers24h) {
     return cards.map((c) => ({

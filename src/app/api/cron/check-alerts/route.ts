@@ -16,25 +16,26 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    let triggered = 0;
+    const now = new Date();
+    const triggeredIds: number[] = [];
+
     for (const alert of activeAlerts) {
       const price = alert.card.latestPriceJpy;
       if (price == null) continue;
-
       const hit =
         (alert.direction === "ABOVE" && price >= alert.targetPrice) ||
         (alert.direction === "BELOW" && price <= alert.targetPrice);
-
-      if (hit) {
-        await prisma.priceAlert.update({
-          where: { id: alert.id },
-          data: { isActive: false, triggeredAt: new Date() },
-        });
-        triggered++;
-      }
+      if (hit) triggeredIds.push(alert.id);
     }
 
-    return NextResponse.json({ ok: true, checked: activeAlerts.length, triggered });
+    if (triggeredIds.length > 0) {
+      await prisma.priceAlert.updateMany({
+        where: { id: { in: triggeredIds } },
+        data: { isActive: false, triggeredAt: now },
+      });
+    }
+
+    return NextResponse.json({ ok: true, checked: activeAlerts.length, triggered: triggeredIds.length });
   } catch (error) {
     console.error("cron/check-alerts:", error);
     const message = error instanceof Error ? error.message : "Alert check failed";

@@ -3,15 +3,8 @@ import { getAdminUser } from "@/lib/auth/get-admin-user";
 import { prisma } from "@/lib/db";
 import { fetchSnkrdunkPriceData, parseCardPageHtml } from "@/lib/scraper/snkrdunk";
 import { autoMatchByProductNumber, upsertSnkrdunkPrices } from "@/lib/scraper/snkrdunk-matcher";
-
-function unauthorized() {
-  return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-}
-
-const actionStamp = (userId: string) => ({
-  actionBy: userId,
-  actionAt: new Date(),
-});
+import { unauthorized, actionStamp, parseJsonBody } from "@/lib/api/admin-helpers";
+import { parsePageLimit } from "@/lib/api/request-body";
 
 /**
  * GET /api/admin/snkrdunk-matching
@@ -55,9 +48,7 @@ export async function GET(request: NextRequest) {
   // ── Paginated list ──
   const statusFilter = sp.get("status") || "";
   const searchQuery = sp.get("q")?.trim() || "";
-  const page = Math.max(1, parseInt(sp.get("page") || "1", 10));
-  const limit = Math.min(100, Math.max(1, parseInt(sp.get("limit") || "20", 10)));
-  const skip = (page - 1) * limit;
+  const { page, limit, skip } = parsePageLimit(sp, { defaultLimit: 20, maxLimit: 100 });
 
   const where: Record<string, unknown> = {};
   if (statusFilter) where.status = statusFilter;
@@ -94,44 +85,69 @@ export async function GET(request: NextRequest) {
     prisma.snkrdunkMapping.count({ where }),
   ]);
 
-  // Enrich with candidate cards (by productNumber)
-  const enriched = await Promise.all(
-    mappings.map(async (m) => {
-      let candidates: {
-        id: number;
-        cardCode: string;
-        nameJp: string;
-        nameEn: string | null;
-        rarity: string;
-        imageUrl: string | null;
-        isParallel: boolean;
-      }[] = [];
+  // Batch-fetch candidate cards for all pending mappings in a single query
+  const pendingProductNumbers = [
+    ...new Set(
+      mappings
+        .filter((m) => m.status === "pending" && m.productNumber)
+        .map((m) => m.productNumber!.toLowerCase())
+    ),
+  ];
 
-      if (m.status === "pending" && m.productNumber) {
-        candidates = await prisma.card.findMany({
-          where: {
-            OR: [
-              { cardCode: { equals: m.productNumber, mode: "insensitive" } },
-              { baseCode: { equals: m.productNumber, mode: "insensitive" } },
-            ],
-          },
-          select: {
-            id: true,
-            cardCode: true,
-            nameJp: true,
-            nameEn: true,
-            rarity: true,
-            imageUrl: true,
-            isParallel: true,
-          },
-          orderBy: [{ isParallel: "asc" }, { parallelIndex: "asc" }],
-          take: 10,
-        });
+  type CandidateCard = {
+    id: number;
+    cardCode: string;
+    nameJp: string;
+    nameEn: string | null;
+    rarity: string;
+    imageUrl: string | null;
+    isParallel: boolean;
+  };
+
+  let candidatesByPn = new Map<string, CandidateCard[]>();
+
+  if (pendingProductNumbers.length > 0) {
+    const allCandidates = await prisma.card.findMany({
+      where: {
+        OR: [
+          { cardCode: { in: pendingProductNumbers, mode: "insensitive" } },
+          { baseCode: { in: pendingProductNumbers, mode: "insensitive" } },
+        ],
+      },
+      select: {
+        id: true,
+        cardCode: true,
+        baseCode: true,
+        nameJp: true,
+        nameEn: true,
+        rarity: true,
+        imageUrl: true,
+        isParallel: true,
+      },
+      orderBy: [{ isParallel: "asc" }, { parallelIndex: "asc" }],
+    });
+
+    for (const c of allCandidates) {
+      const keys = new Set<string>();
+      if (c.cardCode) keys.add(c.cardCode.toLowerCase());
+      if (c.baseCode) keys.add(c.baseCode.toLowerCase());
+      for (const key of keys) {
+        if (pendingProductNumbers.includes(key)) {
+          const arr = candidatesByPn.get(key) ?? [];
+          arr.push(c);
+          candidatesByPn.set(key, arr);
+        }
       }
+    }
+  }
 
-      return { ...m, candidates };
-    })
-  );
+  const enriched = mappings.map((m) => {
+    const candidates =
+      m.status === "pending" && m.productNumber
+        ? (candidatesByPn.get(m.productNumber.toLowerCase()) ?? []).slice(0, 10)
+        : [];
+    return { ...m, candidates };
+  });
 
   return NextResponse.json({
     mappings: enriched,
@@ -150,8 +166,9 @@ export async function POST(request: NextRequest) {
   const admin = await getAdminUser();
   if (!admin) return unauthorized();
 
-  const body = await request.json();
-  const snkrdunkId = parseInt(body.snkrdunkId, 10);
+  const parsed = await parseJsonBody<{ snkrdunkId: number }>(request);
+  if (!parsed.ok) return parsed.response;
+  const snkrdunkId = parseInt(String(parsed.body.snkrdunkId), 10);
   if (!snkrdunkId) {
     return NextResponse.json({ error: "snkrdunkId required" }, { status: 400 });
   }
@@ -218,7 +235,11 @@ export async function PATCH(request: NextRequest) {
   const admin = await getAdminUser();
   if (!admin) return unauthorized();
 
-  const body = await request.json();
+  const parsed = await parseJsonBody<{
+    action?: string; id?: number; matchedCardId?: number;
+  }>(request);
+  if (!parsed.ok) return parsed.response;
+  const body = parsed.body;
   const stamp = actionStamp(admin.id);
 
   // ── Auto-match all pending ──
@@ -227,7 +248,7 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ success: true, autoMatched: count });
   }
 
-  const id = parseInt(body.id, 10);
+  const id = parseInt(String(body.id), 10);
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
 
   const mapping = await prisma.snkrdunkMapping.findUnique({ where: { id } });
@@ -263,7 +284,7 @@ export async function PATCH(request: NextRequest) {
   }
 
   // ── Approve / match to card ──
-  const matchedCardId = parseInt(body.matchedCardId, 10);
+  const matchedCardId = parseInt(String(body.matchedCardId), 10);
   if (!matchedCardId) {
     return NextResponse.json({ error: "matchedCardId required" }, { status: 400 });
   }
@@ -295,8 +316,9 @@ export async function DELETE(request: NextRequest) {
   const admin = await getAdminUser();
   if (!admin) return unauthorized();
 
-  const body = await request.json();
-  const id = parseInt(body.id, 10);
+  const parsed = await parseJsonBody<{ id: number }>(request);
+  if (!parsed.ok) return parsed.response;
+  const id = parseInt(String(parsed.body.id), 10);
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
 
   await prisma.snkrdunkMapping.update({

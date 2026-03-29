@@ -5,7 +5,7 @@ import { X } from "lucide-react"
 
 import { Price } from "@/components/shared/price-inline"
 import { cn } from "@/lib/utils"
-import { formatPct } from "@/lib/utils/pull-rate"
+import { formatPullPct } from "@/lib/utils/pull-rate"
 import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import type { CardItem, Unit } from "./types"
@@ -89,7 +89,7 @@ export function WantList({
                     "shrink-0 font-mono text-xs font-bold tabular-nums",
                     chance >= 0.5 ? "text-price-up" : chance >= 0.1 ? "text-chance-mid" : "text-destructive"
                   )}>
-                    {formatPct(chance)}
+                    {formatPullPct(chance)}
                   </span>
                   <button onClick={() => onRemove(card.id)} className="shrink-0 rounded p-0.5 text-muted-foreground/40 transition-colors hover:bg-muted hover:text-foreground">
                     <X className="size-3" />
@@ -107,7 +107,7 @@ export function WantList({
                   "font-mono text-base font-bold tabular-nums",
                   allChance >= 0.5 ? "text-price-up" : allChance >= 0.1 ? "text-chance-mid" : "text-destructive"
                 )}>
-                  {formatPct(allChance)}
+                  {formatPullPct(allChance)}
                 </span>
               </div>
               <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-muted">

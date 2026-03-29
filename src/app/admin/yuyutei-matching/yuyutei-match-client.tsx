@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import {
   Check,
   CheckCheck,
@@ -17,20 +16,22 @@ import {
   XCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { formatJpy } from "@/lib/utils/currency";
 import { RarityBadge } from "@/components/shared/rarity-badge";
+import {
+  relativeTime,
+  StatusBadge,
+  CardThumb,
+  Lightbox,
+  CandidatePicker,
+  type MatchingCard,
+} from "@/components/admin/matching-ui";
+import { adminJsonFetch } from "@/lib/api/admin-client";
+import type { PaginatedApiResponse } from "@/app/admin/admin-types";
 
 /* ── Types ── */
 
-interface MappingCard {
-  id: number;
-  cardCode: string;
-  imageUrl: string | null;
-  parallelIndex: number | null;
-  rarity: string;
-  nameJp: string;
-  nameEn: string | null;
-  isParallel: boolean;
-}
+type MappingCard = MatchingCard;
 
 interface Mapping {
   id: number;
@@ -54,11 +55,8 @@ interface Mapping {
 
 interface SetInfo { code: string; name: string; nameEn: string | null }
 
-interface ApiResponse {
+interface ApiResponse extends PaginatedApiResponse {
   mappings: Mapping[];
-  total: number;
-  page: number;
-  totalPages: number;
   sets: SetInfo[];
   counts: { matched: number; pending: number; suggested: number; rejected: number };
 }
@@ -68,18 +66,6 @@ interface ApiResponse {
 function yuyuHd(url: string | null): string | null {
   if (!url) return null;
   return url.replace(/\/\d+_\d+\//, "/front/");
-}
-
-function relativeTime(dateStr: string | null): string {
-  if (!dateStr) return "—";
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "เมื่อกี้";
-  if (mins < 60) return `${mins} นาที`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs} ชม.`;
-  const days = Math.floor(hrs / 24);
-  return `${days} วัน`;
 }
 
 const METHOD_INFO: { key: string; label: string; desc: string }[] = [
@@ -104,95 +90,9 @@ function Tooltip({ children, content }: { children: React.ReactNode; content: Re
   );
 }
 
-/* ── Small UI ── */
-
-function StatusBadge({ status }: { status: string }) {
-  const s: Record<string, string> = {
-    matched: "bg-green-500/15 text-green-600",
-    suggested: "bg-blue-500/15 text-blue-600",
-    pending: "bg-amber-500/15 text-amber-600",
-    rejected: "bg-red-500/15 text-red-500",
-  };
-  return <span className={cn("inline-block rounded-full px-2 py-0.5 text-[11px] font-medium leading-none whitespace-nowrap", s[status])}>{status}</span>;
-}
-
-function CardThumb({ src, size = "sm", className: cls }: { src: string | null; size?: "sm" | "md"; className?: string }) {
-  const w = size === "md" ? "w-16" : "w-12";
-  return (
-    <div className={cn("relative aspect-[63/88] overflow-hidden rounded border border-border/40 bg-muted/30 shrink-0", w, cls)}>
-      {src ? (
-        <Image src={src} alt="" fill className="object-contain" sizes={size === "md" ? "64px" : "48px"} unoptimized />
-      ) : (
-        <span className="flex h-full items-center justify-center text-[8px] text-muted-foreground">N/A</span>
-      )}
-    </div>
-  );
-}
-
-/* ── Lightbox ── */
-
-function Lightbox({ images, onClose }: { images: { src: string; label: string }[]; onClose: () => void }) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={onClose}>
-      <div className="flex gap-8 p-8" onClick={(e) => e.stopPropagation()}>
-        {images.map((img, i) => (
-          <div key={i} className="flex flex-col items-center gap-3">
-            <p className="text-sm text-white/80 font-semibold">{img.label}</p>
-            <div className="relative w-72 aspect-[63/88] overflow-hidden rounded-xl border-2 border-white/20 bg-black/50">
-              <Image src={img.src} alt={img.label} fill className="object-contain" sizes="288px" unoptimized />
-            </div>
-          </div>
-        ))}
-      </div>
-      <button onClick={onClose} className="absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 transition-colors">
-        <X className="size-6" />
-      </button>
-    </div>
-  );
-}
-
-/* ── Candidate picker ── */
-
-function CandidatePicker({
-  candidates, currentId, onPick, onZoom,
-}: {
-  candidates: MappingCard[];
-  currentId: number | null;
-  onPick: (cardId: number) => void;
-  onZoom: (card: MappingCard) => void;
-}) {
-  if (candidates.length === 0) return <span className="text-xs text-muted-foreground">ไม่พบ candidate</span>;
-
-  return (
-    <div className="flex flex-col gap-1">
-      {candidates.map((c) => (
-        <label
-          key={c.id}
-          className={cn(
-            "flex items-center gap-2 rounded-lg px-2 py-1 cursor-pointer transition-colors",
-            c.id === currentId ? "bg-blue-500/10 ring-1 ring-blue-500/40" : "hover:bg-muted/50"
-          )}
-        >
-          <input type="radio" name="candidate" checked={c.id === currentId} onChange={() => onPick(c.id)} className="accent-blue-500" />
-          <div
-            role="button" tabIndex={0}
-            onClick={(e) => { e.preventDefault(); onZoom(c); }}
-            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); onZoom(c); } }}
-            className="cursor-zoom-in"
-          >
-            <CardThumb src={c.imageUrl} />
-          </div>
-          <div className="min-w-0">
-            <p className="font-mono text-xs font-bold">{c.cardCode}</p>
-            <RarityBadge rarity={c.rarity} size="sm" />
-          </div>
-        </label>
-      ))}
-    </div>
-  );
-}
-
 /* ══════════ MAIN ══════════ */
+
+const API = "/api/admin/yuyutei-matching";
 
 export function YuyuteiMatchClient() {
   const [data, setData] = useState<ApiResponse | null>(null);
@@ -249,21 +149,21 @@ export function YuyuteiMatchClient() {
 
   const handleApprove = async (mappingId: number, cardId: number) => {
     addSaving(mappingId);
-    await fetch("/api/admin/yuyutei-matching", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: mappingId, matchedCardId: cardId }) });
+    await adminJsonFetch(API, { method: "PATCH", body: { id: mappingId, matchedCardId: cardId } });
     removeSaving(mappingId);
     await fetchData();
   };
 
   const handleUnmatch = async (mappingId: number) => {
     addSaving(mappingId);
-    await fetch("/api/admin/yuyutei-matching", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: mappingId, action: "unmatch" }) });
+    await adminJsonFetch(API, { method: "PATCH", body: { id: mappingId, action: "unmatch" } });
     removeSaving(mappingId);
     await fetchData();
   };
 
   const handleReject = async (mappingId: number) => {
     addSaving(mappingId);
-    await fetch("/api/admin/yuyutei-matching", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: mappingId }) });
+    await adminJsonFetch(API, { method: "DELETE", body: { id: mappingId } });
     removeSaving(mappingId);
     await fetchData();
   };
@@ -274,8 +174,7 @@ export function YuyuteiMatchClient() {
     const label = setFilter ? setFilter.toUpperCase() : "ทุกเซ็ต";
     if (!confirm(`อนุมัติทั้งหมดที่มี suggestion ใน ${label}?`)) return;
     setBulkBusy(true);
-    const res = await fetch("/api/admin/yuyutei-matching", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "bulk-approve", set: setFilter || undefined }) });
-    const json = await res.json();
+    const json = await adminJsonFetch<{ approved: number }>(API, { method: "PATCH", body: { action: "bulk-approve", set: setFilter || undefined } });
     alert(`อนุมัติแล้ว ${json.approved} รายการ`);
     setBulkBusy(false);
     await fetchData();
@@ -288,8 +187,7 @@ export function YuyuteiMatchClient() {
     setBulkBusy(true);
     const overrides: Record<string, number> = {};
     for (const id of ids) { if (pickedCandidate[id]) overrides[String(id)] = pickedCandidate[id]; }
-    const res = await fetch("/api/admin/yuyutei-matching", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "bulk-approve-ids", ids, overrides }) });
-    const json = await res.json();
+    const json = await adminJsonFetch<{ approved: number }>(API, { method: "PATCH", body: { action: "bulk-approve-ids", ids, overrides } });
     alert(`อนุมัติแล้ว ${json.approved} รายการ`);
     setBulkBusy(false);
     await fetchData();
@@ -300,7 +198,7 @@ export function YuyuteiMatchClient() {
     if (ids.length === 0) return;
     if (!confirm(`Reject ${ids.length} รายการที่เลือก?`)) return;
     setBulkBusy(true);
-    await fetch("/api/admin/yuyutei-matching", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "bulk-reject-ids", ids }) });
+    await adminJsonFetch(API, { method: "PATCH", body: { action: "bulk-reject-ids", ids } });
     setBulkBusy(false);
     await fetchData();
   };
@@ -793,7 +691,7 @@ export function YuyuteiMatchClient() {
 
                       {/* Price */}
                       <td className="px-3 py-3 text-right font-mono text-xs font-bold text-primary whitespace-nowrap">
-                        ¥{m.priceJpy.toLocaleString()}
+                        {formatJpy(m.priceJpy)}
                       </td>
 
                       {/* Method */}

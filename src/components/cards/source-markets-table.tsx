@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils"
 import { formatByCurrency, formatUsdByCurrency } from "@/lib/utils/currency"
+import { relativeTime } from "@/lib/utils/time"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 
@@ -37,17 +38,6 @@ function formatPrice(
   return "—"
 }
 
-function relativeTime(iso: string | null, lang: string): string {
-  if (!iso) return "—"
-  const diff = Date.now() - new Date(iso).getTime()
-  const mins = Math.floor(diff / 60_000)
-  if (mins < 1) return lang === "th" ? "เมื่อกี้" : lang === "ja" ? "たった今" : "just now"
-  if (mins < 60) return `${mins}${lang === "th" ? " น." : lang === "ja" ? "分前" : "m"}`
-  const hrs = Math.floor(mins / 60)
-  if (hrs < 24) return `${hrs}${lang === "th" ? " ชม." : lang === "ja" ? "時間前" : "h"}`
-  const days = Math.floor(hrs / 24)
-  return `${days}${lang === "th" ? " วัน" : lang === "ja" ? "日前" : "d"}`
-}
 
 export function SourceMarketsTable({ rows }: { rows: SourcePriceRow[] }) {
   const currency = useUIStore((s) => s.currency)

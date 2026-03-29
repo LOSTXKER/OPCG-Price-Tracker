@@ -16,6 +16,8 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { opcgConfig } from "@/lib/game-config";
+import { formatJpy } from "@/lib/utils/currency";
+import type { PaginatedApiResponse } from "@/app/admin/admin-types";
 
 const OFFICIAL_IMAGE_HOST = opcgConfig.officialCardImageBase
   ? new URL(opcgConfig.officialCardImageBase).hostname
@@ -44,12 +46,9 @@ interface FilterOptions {
   rarities: string[];
 }
 
-interface ApiResponse {
+interface ApiResponse extends PaginatedApiResponse {
   cards: CardRow[];
-  total: number;
-  page: number;
   limit: number;
-  totalPages: number;
 }
 
 export function CardsBrowser({
@@ -97,10 +96,13 @@ export function CardsBrowser({
 
     try {
       const res = await fetch(`/api/admin/cards?${params}`);
+      if (!res.ok) throw new Error(`Failed to load cards: ${res.status}`);
       const data: ApiResponse = await res.json();
       setCards(data.cards);
       setTotal(data.total);
       setTotalPages(data.totalPages);
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -461,7 +463,7 @@ function CardTableRow({
       </td>
       <td className="hidden px-3 py-1 text-right text-xs lg:table-cell">
         {card.latestPriceJpy != null
-          ? `¥${card.latestPriceJpy.toLocaleString()}`
+          ? formatJpy(card.latestPriceJpy)
           : "—"}
       </td>
       <td className="px-3 py-1 text-center">

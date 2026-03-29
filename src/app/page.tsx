@@ -6,8 +6,7 @@ import {
 } from "@/components/home/home-client-sections";
 import { HomeMarketOverview } from "@/components/home/home-market-overview";
 import { getHomeData, mapCardToTrending } from "@/lib/data/home";
-import { CARD_TYPE_LABELS } from "@/lib/data/cards-browse";
-import { CardType } from "@/generated/prisma/client";
+import { CARD_TYPES } from "@/lib/constants/card-config";
 import type { FilterDefinition } from "@/components/shared/filter-chips";
 
 export const revalidate = 300;
@@ -68,9 +67,9 @@ export default async function HomePage(props: {
     {
       key: "type",
       label: "type",
-      options: (Object.keys(CARD_TYPE_LABELS) as CardType[]).map((t) => ({
-        value: t,
-        label: CARD_TYPE_LABELS[t],
+      options: CARD_TYPES.map((ct) => ({
+        value: ct.code,
+        label: ct.label.EN,
       })),
     },
   ];

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { RARITY_BADGE_ACCENT } from "@/lib/constants/rarity";
+import { RARITY_BADGE_ACCENT } from "@/lib/constants/rarities";
 
 export type RarityBadgeProps = {
   rarity: string;

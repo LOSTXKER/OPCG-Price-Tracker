@@ -48,7 +48,7 @@ export default function MessagesPage() {
       setError(t(lang, "loadFailed"));
     }
     setLoading(false);
-  }, []);
+  }, [lang]);
 
   useEffect(() => {
     void load();
@@ -57,7 +57,7 @@ export default function MessagesPage() {
   if (loading) {
     return (
       <div className="container mx-auto max-w-2xl px-4 py-8">
-        <p className="text-muted-foreground text-sm">Loading...</p>
+        <p className="text-muted-foreground text-sm">{t(lang, "loading")}</p>
       </div>
     );
   }
@@ -65,10 +65,8 @@ export default function MessagesPage() {
   return (
     <div className="container mx-auto max-w-2xl space-y-6 px-4 py-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Messages</h1>
-        <p className="text-muted-foreground text-sm">
-          Chat with buyers / sellers
-        </p>
+        <h1 className="text-2xl font-semibold tracking-tight">{t(lang, "messagesTitle")}</h1>
+        <p className="text-muted-foreground text-sm">{t(lang, "messagesChatSubtitle")}</p>
       </div>
 
       {error && <p className="text-destructive text-sm">{error}</p>}

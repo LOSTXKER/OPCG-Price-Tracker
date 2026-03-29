@@ -48,7 +48,7 @@ export default function WatchlistPage() {
     const data = (await res.json()) as { items: WatchlistEntry[] };
     setItems(data.items ?? []);
     setLoading(false);
-  }, []);
+  }, [lang]);
 
   useEffect(() => {
     void load();

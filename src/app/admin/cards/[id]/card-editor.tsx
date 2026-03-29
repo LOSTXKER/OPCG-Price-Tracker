@@ -11,6 +11,7 @@ import {
   ImageIcon,
   History,
 } from "lucide-react";
+import { formatJpy } from "@/lib/utils/currency";
 
 interface Price {
   id: number;
@@ -146,6 +147,8 @@ export function CardEditor({ card }: { card: CardData }) {
       if (res.ok) {
         setForm((p) => ({ ...p, imageUrl: url }));
         setSaved(true);
+      } else {
+        setError(`Failed to update image: ${res.status}`);
       }
     } finally {
       setSaving(false);
@@ -258,7 +261,7 @@ export function CardEditor({ card }: { card: CardData }) {
               Parallel Index: {card.parallelIndex ?? "—"}
             </p>
             <p>
-              Price: {card.latestPriceJpy != null ? `¥${card.latestPriceJpy.toLocaleString()}` : "—"}
+              Price: {card.latestPriceJpy != null ? formatJpy(card.latestPriceJpy) : "—"}
             </p>
           </div>
         </div>
@@ -338,7 +341,7 @@ export function CardEditor({ card }: { card: CardData }) {
                         <td className="py-1">{p.source}</td>
                         <td className="py-1 text-right">
                           {p.priceJpy != null
-                            ? `¥${p.priceJpy.toLocaleString()}`
+                            ? formatJpy(p.priceJpy)
                             : "—"}
                         </td>
                       </tr>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { memo, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Check, Edit2, Trash2, X } from "lucide-react"
@@ -80,7 +80,7 @@ export function PortfolioAssetsTable({
   )
 }
 
-function AssetRowComponent({
+const AssetRowComponent = memo(function AssetRowComponent({
   row,
   lang,
   onUpdate,
@@ -212,7 +212,7 @@ function AssetRowComponent({
       </td>
     </tr>
   )
-}
+})
 
 function ChangeCell({ value }: { value?: number | null }) {
   if (value == null) return <span className="font-price text-xs text-muted-foreground">—</span>

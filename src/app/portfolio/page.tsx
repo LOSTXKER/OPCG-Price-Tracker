@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { getCardName, getLocale, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
+import { DEFAULT_CARD_CONDITION } from "@/lib/constants/ui"
 
 type TabId = "overview" | "transactions"
 
@@ -67,7 +68,7 @@ export default function PortfolioPage() {
     try {
       const [portfolioRes, historyRes] = await Promise.all([
         fetch("/api/portfolio"),
-        fetch("/api/portfolio/history").catch(() => null),
+        fetch("/api/portfolio/history").catch((err: unknown) => { console.error("Failed to load portfolio history:", err); return null }),
       ])
       if (!portfolioRes.ok) {
         setError(t(lang, "loadFailed"))
@@ -100,17 +101,22 @@ export default function PortfolioPage() {
       setError(t(lang, "loadFailed"))
     }
     setLoading(false)
-  }, [activeId])
+  }, [activeId, lang])
 
   const loadTransactions = useCallback(async () => {
     if (!activeId) return
     try {
       const res = await fetch(`/api/portfolio/transactions?portfolioId=${activeId}`)
-      if (res.ok) {
-        const data = (await res.json()) as { transactions: TransactionRow[] }
-        setTransactions(data.transactions ?? [])
+      if (!res.ok) {
+        setTransactions([])
+        return
       }
-    } catch { /* ignore */ }
+      const data = (await res.json()) as { transactions: TransactionRow[] }
+      setTransactions(data.transactions ?? [])
+    } catch (err) {
+      console.error("Failed to load transactions:", err)
+      setTransactions([])
+    }
   }, [activeId])
 
   useEffect(() => {
@@ -262,7 +268,7 @@ export default function PortfolioPage() {
       setActiveId(targetId)
     }
 
-    await Promise.all(
+    const results = await Promise.all(
       items.map((item) =>
         fetch("/api/portfolio/items", {
           method: "POST",
@@ -272,25 +278,35 @@ export default function PortfolioPage() {
             cardId: item.card.id,
             quantity: item.quantity,
             purchasePrice: item.purchasePrice,
-            condition: "NM",
+            condition: DEFAULT_CARD_CONDITION,
           }),
         })
       )
     )
+    const failed = results.filter((r) => !r.ok).length
+    if (failed > 0) console.error(`${failed} of ${results.length} portfolio items failed to add`)
     void load()
   }
 
   const updateItem = async (itemId: number, data: { quantity?: number; purchasePrice?: number | null }) => {
-    await fetch(`/api/portfolio/items/${itemId}`, {
+    const res = await fetch(`/api/portfolio/items/${itemId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     })
+    if (!res.ok) {
+      console.error(`Failed to update portfolio item ${itemId}: ${res.status}`)
+      return
+    }
     void load()
   }
 
   const removeItem = async (itemId: number) => {
-    await fetch(`/api/portfolio/items/${itemId}`, { method: "DELETE" })
+    const res = await fetch(`/api/portfolio/items/${itemId}`, { method: "DELETE" })
+    if (!res.ok) {
+      console.error(`Failed to remove portfolio item ${itemId}: ${res.status}`)
+      return
+    }
     void load()
   }
 

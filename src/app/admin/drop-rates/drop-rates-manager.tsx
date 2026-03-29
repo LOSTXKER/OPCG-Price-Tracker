@@ -56,7 +56,7 @@ export function DropRatesManager({
     if (!rate) return;
 
     try {
-      await fetch("/api/admin/drop-rates", {
+      const res = await fetch("/api/admin/drop-rates", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -66,7 +66,11 @@ export function DropRatesManager({
           ratePerPack: rate.ratePerPack ? parseFloat(rate.ratePerPack) : null,
         }),
       });
-      setSaved((prev) => new Set(prev).add(key));
+      if (res.ok) {
+        setSaved((prev) => new Set(prev).add(key));
+      } else {
+        console.error(`saveRate failed: ${res.status}`);
+      }
     } finally {
       setSaving(null);
     }

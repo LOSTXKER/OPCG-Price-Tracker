@@ -216,7 +216,7 @@ export function MarketplaceBrowse({
           disabled={page <= 1 || isPending}
           onClick={() => setPage((p) => Math.max(1, p - 1))}
         >
-          Prev
+          {t(lang, "prev")}
         </Button>
         <span className="text-muted-foreground text-sm tabular-nums">
           {t(lang, "pageOf")} {page} / {totalPages} ({total} {t(lang, "itemsCount")})
@@ -228,7 +228,7 @@ export function MarketplaceBrowse({
           disabled={page >= totalPages || isPending}
           onClick={() => setPage((p) => p + 1)}
         >
-          Next
+          {t(lang, "next")}
         </Button>
       </div>
     </div>

@@ -179,6 +179,26 @@ export function formatPct(value: number, decimals = 1): string {
   });
 }
 
+/**
+ * Tailwind class for a price-change delta value.
+ * Returns `text-price-up`, `text-price-down`, or a muted variant.
+ */
+export function changeToneClass(v: number | null | undefined): string {
+  if (v == null) return "text-muted-foreground/40";
+  if (v > 0) return "text-price-up";
+  if (v < 0) return "text-price-down";
+  return "text-muted-foreground";
+}
+
+/**
+ * Format a price-change delta as a signed percentage string, e.g. "+1.5%" or "-0.8%".
+ * Returns "—" for null/undefined.
+ */
+export function formatSignedPct(v: number | null | undefined, decimals = 1): string {
+  if (v == null) return "—";
+  return `${v > 0 ? "+" : ""}${formatPct(v, decimals)}%`;
+}
+
 /** Format a display-currency value in compact form for chart axes. */
 export function compactDisplayValue(value: number, currency: Currency): string {
   let prefix: string;

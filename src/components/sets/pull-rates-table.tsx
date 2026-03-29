@@ -4,9 +4,9 @@ import { useState } from "react";
 import { AlertTriangle } from "lucide-react";
 
 import { RarityBadge } from "@/components/shared/rarity-badge";
-import { pullChance, formatPct, PACKS_PER_BOX, BOXES_PER_CARTON } from "@/lib/utils/pull-rate";
-import { RARITY_BAR_COLOR } from "@/lib/constants/rarity";
-import { UNIT_LABELS, type Unit } from "@/lib/constants/ui";
+import { pullChance, formatPullPct, PACKS_PER_BOX, BOXES_PER_CARTON } from "@/lib/utils/pull-rate";
+import { RARITY_BAR_COLOR } from "@/lib/constants/rarities";
+import { UNIT_LABELS, PULL_UNITS, type Unit } from "@/lib/constants/ui";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 
@@ -54,7 +54,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
           Community estimates
         </span>
         <div className="ml-auto inline-flex rounded-lg bg-muted/60 p-0.5">
-          {(["pack", "box", "carton"] as Unit[]).map((u) => (
+          {PULL_UNITS.map((u) => (
             <button
               key={u}
               onClick={() => setUnit(u)}
@@ -107,7 +107,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
                 </div>
                 <span className="shrink-0 font-mono text-sm font-bold tabular-nums">{fmtCount(count)}</span>
                 <span className="shrink-0 text-[11px] text-muted-foreground">{row.cardCount}{t(lang, "cardsCount")}</span>
-                <span className="shrink-0 font-mono text-xs font-semibold tabular-nums text-primary">{formatPct(chance)}</span>
+                <span className="shrink-0 font-mono text-xs font-semibold tabular-nums text-primary">{formatPullPct(chance)}</span>
               </div>
 
               {/* Desktop stats */}
@@ -118,7 +118,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
                 {row.cardCount} {t(lang, "cardsCount")}
               </span>
               <span className="hidden w-24 text-right font-mono text-xs font-semibold tabular-nums text-primary sm:block">
-                {formatPct(chance)}
+                {formatPullPct(chance)}
               </span>
             </div>
           );

@@ -1,4 +1,5 @@
 import { getAuthUser } from "@/lib/api/auth";
+import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -58,10 +59,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = (await request.json()) as {
-      listingId: number;
-      content: string;
-    };
+    const parsed = await parseJsonBody<{ listingId: number; content: string }>(request);
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.body;
 
     const listingId = Number(body.listingId);
     if (!Number.isInteger(listingId) || listingId < 1) {

@@ -15,6 +15,7 @@ import { matchAndUpdatePrices, computePriceChanges } from "./price-matcher";
 import { fetchExchangeRate, saveExchangeRate } from "./exchange-rate";
 
 const DELAY_BETWEEN_SETS_MS = 1500;
+const VERBOSE = process.env.SCRAPE_VERBOSE === "true";
 
 export interface ScrapeResult {
   totalCards: number;
@@ -32,12 +33,12 @@ export async function scrapeDailyPrices(): Promise<ScrapeResult> {
 
   const rate = await fetchExchangeRate();
   await saveExchangeRate(rate);
-  console.log(`Exchange rate: 1 JPY = ${rate} THB`);
+  if (VERBOSE) console.log(`Exchange rate: 1 JPY = ${rate} THB`);
 
   for (const setCode of SET_CODES) {
     try {
       const url = getSetListingUrl(setCode);
-      console.log(`Scraping ${setCode}: ${url}`);
+      if (VERBOSE) console.log(`Scraping ${setCode}: ${url}`);
 
       const $ = await fetchWithRetry(url);
       const listings = parseSetListingPage($);
@@ -53,9 +54,7 @@ export async function scrapeDailyPrices(): Promise<ScrapeResult> {
 
       totalCards += result.matched;
       totalSets++;
-      console.log(
-        `  ${setCode}: ${result.matched}/${result.listings} matched`
-      );
+      if (VERBOSE) console.log(`  ${setCode}: ${result.matched}/${result.listings} matched`);
 
       await sleep(DELAY_BETWEEN_SETS_MS);
     } catch (setError) {

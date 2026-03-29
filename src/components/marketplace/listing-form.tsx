@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useCallback, useEffect, useId, useState } from "react"
+import { useEffect, useId, useState } from "react"
 import { useForm, type Resolver } from "react-hook-form"
 import { z } from "zod"
 
@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 import { Price } from "@/components/shared/price-inline"
+import { DEFAULT_CARD_CONDITION, MAX_LISTING_QUANTITY, MIN_LISTING_QUANTITY } from "@/lib/constants/ui"
+import { useCardSearch } from "@/hooks/use-card-search"
 
 const CONDITIONS = ["NM", "LP", "MP", "HP", "DMG"] as const
 
@@ -20,7 +22,7 @@ const listingFormSchema = z.object({
   cardCode: z.string().min(1, "Select a card or enter a code"),
   priceJpy: z.coerce.number().positive("Price must be greater than zero"),
   condition: z.enum(CONDITIONS),
-  quantity: z.coerce.number().int().min(1).max(999),
+  quantity: z.coerce.number().int().min(MIN_LISTING_QUANTITY).max(MAX_LISTING_QUANTITY),
   description: z.string(),
   shipping: z.array(z.string()),
   location: z.string().min(1, "Location is required"),
@@ -48,10 +50,14 @@ type SearchCard = {
 
 export function ListingForm({ card, onSubmit, isLoading }: ListingFormProps) {
   const formId = useId()
-  const [searchQuery, setSearchQuery] = useState("")
-  const [searchResults, setSearchResults] = useState<SearchCard[]>([])
   const [searchOpen, setSearchOpen] = useState(false)
   const [selectedPreview, setSelectedPreview] = useState<SearchCard | null>(null)
+
+  const {
+    query: searchQuery,
+    setQuery: setSearchQuery,
+    results: searchResults,
+  } = useCardSearch({ limit: 12, debounceMs: 300 })
 
   const {
     register,
@@ -64,7 +70,7 @@ export function ListingForm({ card, onSubmit, isLoading }: ListingFormProps) {
     defaultValues: {
       cardCode: card?.cardCode ?? "",
       priceJpy: card?.latestPriceJpy != null ? card.latestPriceJpy : ("" as unknown as number),
-      condition: "NM",
+      condition: DEFAULT_CARD_CONDITION,
       quantity: 1,
       description: "",
       shipping: [],
@@ -79,22 +85,6 @@ export function ListingForm({ card, onSubmit, isLoading }: ListingFormProps) {
     card?.latestPriceJpy ??
     (selectedPreview?.cardCode === cardCodeValue ? selectedPreview.latestPriceJpy : null)
 
-  const fetchCards = useCallback(async (q: string) => {
-    if (q.trim().length < 2) {
-      setSearchResults([])
-      return
-    }
-    try {
-      const params = new URLSearchParams({ search: q.trim(), limit: "12" })
-      const res = await fetch(`/api/cards?${params.toString()}`)
-      if (!res.ok) throw new Error("search failed")
-      const data = (await res.json()) as { cards: SearchCard[] }
-      setSearchResults(data.cards ?? [])
-    } catch {
-      setSearchResults([])
-    }
-  }, [])
-
   useEffect(() => {
     if (card) {
       setValue("cardCode", card.cardCode)
@@ -108,13 +98,6 @@ export function ListingForm({ card, onSubmit, isLoading }: ListingFormProps) {
       })
     }
   }, [card, setValue])
-
-  useEffect(() => {
-    const t = window.setTimeout(() => {
-      void fetchCards(searchQuery)
-    }, 300)
-    return () => window.clearTimeout(t)
-  }, [searchQuery, fetchCards])
 
   const toggleShipping = (option: string, checked: boolean) => {
     const next = checked

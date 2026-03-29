@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db"
+import { CARDS_PAGE_SIZE } from "@/lib/constants/ui"
 
 export type TrendingCard = {
   cardCode: string
@@ -13,7 +14,7 @@ export type TrendingCard = {
   set?: { code: string; name?: string }
 }
 
-const TABLE_PAGE_SIZE = 20
+const TABLE_PAGE_SIZE = CARDS_PAGE_SIZE
 
 const cardSetSelect = { code: true, name: true, nameEn: true } as const
 

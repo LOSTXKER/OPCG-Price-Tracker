@@ -38,7 +38,8 @@ export function guaranteedPull(poolSize: number, draws: number): number {
   return 1 - pMiss;
 }
 
-export function formatPct(value: number): string {
+/** Format a pull-rate probability (0–1 fraction) as a readable percentage string. */
+export function formatPullPct(value: number): string {
   const pct = value * 100;
   if (pct >= 99.95) return "~100%";
   if (pct >= 10) return `${pct.toFixed(1)}%`;
@@ -57,19 +58,6 @@ export const BOX_PATTERNS = [
   { name: "Parallel 2 Box", nameJp: "パラレル2枚箱", prob: 0.25, sec: 0, parallel: 2, sr: 3 },
 ] as const;
 
-export const CARTON_ESTIMATES = {
-  sec: 4,
-  sr: 42,
-  parallel: 8,
-  leaderParallel: 2,
-  sp: 1,
-} as const;
-
-/** P(at least 1 SEC box in N boxes) */
-export function chanceOfSecInBoxes(n: number): number {
-  const pNoSec = 1 - BOX_PATTERNS[0].prob;
-  return 1 - Math.pow(pNoSec, n);
-}
 
 /**
  * Expected parallel-art slots per box, weighted across box patterns.
@@ -162,7 +150,3 @@ export const COMMUNITY_SOURCES = [
     url: "https://www.kachiotech.com/one-piece-cardgame-rarity-guide/",
   },
 ] as const;
-
-export function officialProductUrl(setCode: string): string {
-  return `https://www.onepiece-cardgame.com/products/boosters/${setCode.toLowerCase()}.php`;
-}

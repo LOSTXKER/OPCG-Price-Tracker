@@ -1,18 +1,10 @@
-import {
-  CardCondition,
-  type CardCondition as CardConditionType,
-} from "@/generated/prisma/client";
+import { CardCondition } from "@/generated/prisma/client";
 import { getAuthUser } from "@/lib/api/auth";
+import { parseCondition } from "@/lib/api/parse-condition";
+import { parseListingQuantity } from "@/lib/api/request-body";
 import { cardInclude } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-
-const CONDITIONS = new Set<string>(Object.values(CardCondition));
-
-function parseCondition(value: unknown): CardConditionType | null {
-  if (typeof value !== "string" || !CONDITIONS.has(value)) return null;
-  return value as CardConditionType;
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -47,9 +39,9 @@ export async function POST(request: NextRequest) {
     if (!Number.isInteger(cardId) || cardId < 1) {
       return NextResponse.json({ error: "Invalid cardId" }, { status: 400 });
     }
-    if (!Number.isInteger(quantityRaw) || quantityRaw < 1 || quantityRaw > 9999) {
-      return NextResponse.json({ error: "quantity must be an integer from 1 to 9999" }, { status: 400 });
-    }
+    const parsedQty = parseListingQuantity(quantityRaw);
+    if (!parsedQty.ok) return parsedQty.response;
+    const quantity = parsedQty.value;
     if (purchasePrice !== null && (!Number.isFinite(purchasePrice) || purchasePrice < 0)) {
       return NextResponse.json({ error: "Invalid purchasePrice" }, { status: 400 });
     }
@@ -86,7 +78,7 @@ export async function POST(request: NextRequest) {
       ? await prisma.portfolioItem.update({
           where: { id: existing.id },
           data: {
-            quantity: existing.quantity + quantityRaw,
+            quantity: existing.quantity + quantity,
             ...(purchasePrice !== null ? { purchasePrice: Math.round(purchasePrice) } : {}),
             ...(typeof body.notes === "string" ? { notes: body.notes.slice(0, 2000) } : {}),
           },
@@ -98,7 +90,7 @@ export async function POST(request: NextRequest) {
           data: {
             portfolioId,
             cardId,
-            quantity: quantityRaw,
+            quantity,
             purchasePrice: purchasePrice !== null ? Math.round(purchasePrice) : null,
             condition,
             notes,
@@ -113,7 +105,7 @@ export async function POST(request: NextRequest) {
         portfolioId,
         cardId,
         type: "BUY",
-        quantity: quantityRaw,
+        quantity,
         pricePerUnit: purchasePrice !== null ? Math.round(purchasePrice) : null,
         note: notes,
       },

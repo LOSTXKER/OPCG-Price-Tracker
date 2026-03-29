@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
 import {
   Check,
   ChevronLeft,
@@ -17,19 +16,19 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { RarityBadge } from "@/components/shared/rarity-badge";
+import {
+  relativeTime,
+  StatusBadge,
+  CardThumb,
+  CandidatePicker,
+  type MatchingCard,
+} from "@/components/admin/matching-ui";
+import { adminJsonFetch } from "@/lib/api/admin-client";
+import type { PaginatedApiResponse } from "@/app/admin/admin-types";
 
 /* ── Types ── */
 
-interface MappingCard {
-  id: number;
-  cardCode: string;
-  nameJp: string;
-  nameEn: string | null;
-  rarity: string;
-  imageUrl: string | null;
-  isParallel: boolean;
-}
+type MappingCard = MatchingCard;
 
 interface Mapping {
   id: number;
@@ -50,44 +49,11 @@ interface Mapping {
   candidates: MappingCard[];
 }
 
-interface ApiResponse {
+interface ApiResponse extends PaginatedApiResponse {
   mappings: Mapping[];
-  total: number;
-  page: number;
-  totalPages: number;
 }
 
 /* ── Helpers ── */
-
-function relativeTime(dateStr: string | null): string {
-  if (!dateStr) return "—";
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "เมื่อกี้";
-  if (mins < 60) return `${mins} นาที`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs} ชม.`;
-  const days = Math.floor(hrs / 24);
-  return `${days} วัน`;
-}
-
-function StatusBadge({ status }: { status: string }) {
-  const s: Record<string, string> = {
-    matched: "bg-green-500/15 text-green-600",
-    pending: "bg-amber-500/15 text-amber-600",
-    rejected: "bg-red-500/15 text-red-500",
-  };
-  return (
-    <span
-      className={cn(
-        "inline-block rounded-full px-2 py-0.5 text-[11px] font-medium leading-none whitespace-nowrap",
-        s[status]
-      )}
-    >
-      {status}
-    </span>
-  );
-}
 
 function PriceTag({
   label,
@@ -112,42 +78,6 @@ function PriceTag({
         </span>
       ) : (
         <span className="text-[10px] text-muted-foreground/40">—</span>
-      )}
-    </div>
-  );
-}
-
-function CardThumb({
-  src,
-  size = "sm",
-  className: cls,
-}: {
-  src: string | null;
-  size?: "sm" | "md";
-  className?: string;
-}) {
-  const w = size === "md" ? "w-16" : "w-12";
-  return (
-    <div
-      className={cn(
-        "relative aspect-[63/88] overflow-hidden rounded border border-border/40 bg-muted/30 shrink-0",
-        w,
-        cls
-      )}
-    >
-      {src ? (
-        <Image
-          src={src}
-          alt=""
-          fill
-          className="object-contain"
-          sizes={size === "md" ? "64px" : "48px"}
-          unoptimized
-        />
-      ) : (
-        <span className="flex h-full items-center justify-center text-[8px] text-muted-foreground">
-          N/A
-        </span>
       )}
     </div>
   );
@@ -333,58 +263,9 @@ function AddCardDialog({
   );
 }
 
-/* ── Candidate picker ── */
-
-function CandidatePicker({
-  candidates,
-  currentId,
-  onPick,
-}: {
-  candidates: MappingCard[];
-  currentId: number | null;
-  onPick: (cardId: number) => void;
-}) {
-  if (candidates.length === 0)
-    return (
-      <span className="text-xs text-muted-foreground">
-        ไม่พบ candidate
-      </span>
-    );
-
-  return (
-    <div className="flex flex-col gap-1">
-      {candidates.map((c) => (
-        <label
-          key={c.id}
-          className={cn(
-            "flex items-center gap-2 rounded-lg px-2 py-1 cursor-pointer transition-colors",
-            c.id === currentId
-              ? "bg-blue-500/10 ring-1 ring-blue-500/40"
-              : "hover:bg-muted/50"
-          )}
-        >
-          <input
-            type="radio"
-            name="candidate"
-            checked={c.id === currentId}
-            onChange={() => onPick(c.id)}
-            className="accent-blue-500"
-          />
-          <CardThumb src={c.imageUrl} />
-          <div className="min-w-0">
-            <p className="font-mono text-xs font-bold">{c.cardCode}</p>
-            <p className="text-[10px] text-muted-foreground truncate">
-              {c.nameJp}
-            </p>
-            <RarityBadge rarity={c.rarity} size="sm" />
-          </div>
-        </label>
-      ))}
-    </div>
-  );
-}
-
 /* ══════════ MAIN ══════════ */
+
+const API = "/api/admin/snkrdunk-matching";
 
 export function SnkrdunkMatchClient() {
   const [data, setData] = useState<ApiResponse | null>(null);
@@ -437,61 +318,37 @@ export function SnkrdunkMatchClient() {
       return n;
     });
 
-  const handleApprove = async (
-    mappingId: number,
-    cardId: number
-  ) => {
+  const handleApprove = async (mappingId: number, cardId: number) => {
     addSaving(mappingId);
-    await fetch("/api/admin/snkrdunk-matching", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: mappingId, matchedCardId: cardId }),
-    });
+    await adminJsonFetch(API, { method: "PATCH", body: { id: mappingId, matchedCardId: cardId } });
     removeSaving(mappingId);
     await fetchData();
   };
 
   const handleUnmatch = async (mappingId: number) => {
     addSaving(mappingId);
-    await fetch("/api/admin/snkrdunk-matching", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: mappingId, action: "unmatch" }),
-    });
+    await adminJsonFetch(API, { method: "PATCH", body: { id: mappingId, action: "unmatch" } });
     removeSaving(mappingId);
     await fetchData();
   };
 
   const handleRefresh = async (mappingId: number) => {
     addSaving(mappingId);
-    await fetch("/api/admin/snkrdunk-matching", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: mappingId, action: "refresh" }),
-    });
+    await adminJsonFetch(API, { method: "PATCH", body: { id: mappingId, action: "refresh" } });
     removeSaving(mappingId);
     await fetchData();
   };
 
   const handleReject = async (mappingId: number) => {
     addSaving(mappingId);
-    await fetch("/api/admin/snkrdunk-matching", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: mappingId }),
-    });
+    await adminJsonFetch(API, { method: "DELETE", body: { id: mappingId } });
     removeSaving(mappingId);
     await fetchData();
   };
 
   const handleAutoMatch = async () => {
     setAutoMatchBusy(true);
-    const res = await fetch("/api/admin/snkrdunk-matching", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "auto-match" }),
-    });
-    const json = await res.json();
+    const json = await adminJsonFetch<{ autoMatched: number }>(API, { method: "PATCH", body: { action: "auto-match" } });
     alert(`Auto-matched: ${json.autoMatched} cards`);
     setAutoMatchBusy(false);
     await fetchData();

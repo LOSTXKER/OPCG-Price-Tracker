@@ -1,5 +1,6 @@
 "use client"
 
+import { memo } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -11,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { getCardName, t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
-import { formatPct } from "@/lib/utils/pull-rate"
+import { formatPullPct } from "@/lib/utils/pull-rate"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { useUIStore } from "@/stores/ui-store"
 
@@ -39,7 +40,7 @@ export interface CardItemProps {
   psa10PriceUsd?: number | null
 }
 
-export function CardItem({
+function CardItemBase({
   cardCode,
   nameJp,
   nameEn,
@@ -87,7 +88,7 @@ export function CardItem({
           {pullChancePerBox != null && pullChancePerBox > 0 && (
             <div className="absolute left-1 top-1">
               <span className="rounded bg-black/70 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-white backdrop-blur-sm">
-                {formatPct(pullChancePerBox)}
+                {formatPullPct(pullChancePerBox)}
               </span>
             </div>
           )}
@@ -134,3 +135,5 @@ export function CardItem({
     </Link>
   )
 }
+
+export const CardItem = memo(CardItemBase)

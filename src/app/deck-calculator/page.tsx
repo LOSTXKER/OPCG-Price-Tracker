@@ -59,7 +59,7 @@ export default function DeckCalculatorPage() {
       setError(t(lang, "loadFailed"));
     }
     setLoading(false);
-  }, [activeDeck]);
+  }, [activeDeck, lang]);
 
   useEffect(() => {
     void loadDecks();
@@ -74,7 +74,9 @@ export default function DeckCalculatorPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name }),
       });
-      if (res.ok) {
+      if (!res.ok) {
+        setError(t(lang, "addFailed"));
+      } else {
         const data = (await res.json()) as { deck: DeckRow };
         setDecks((prev) => [data.deck, ...prev]);
         setActiveDeck(data.deck);
@@ -97,7 +99,9 @@ export default function DeckCalculatorPage() {
             : { addCards: [{ cardId: card.id, quantity: 1 }] }
         ),
       });
-      if (res.ok) {
+      if (!res.ok) {
+        setError(t(lang, "addFailed"));
+      } else {
         const data = (await res.json()) as { deck: DeckRow };
         setActiveDeck(data.deck);
         setDecks((prev) => prev.map((d) => (d.id === data.deck.id ? data.deck : d)));
@@ -117,7 +121,9 @@ export default function DeckCalculatorPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ removeCardIds: [cardId] }),
       });
-      if (res.ok) {
+      if (!res.ok) {
+        setError(t(lang, "addFailed"));
+      } else {
         const data = (await res.json()) as { deck: DeckRow };
         setActiveDeck(data.deck);
         setDecks((prev) => prev.map((d) => (d.id === data.deck.id ? data.deck : d)));
@@ -129,7 +135,11 @@ export default function DeckCalculatorPage() {
 
   const deleteDeck = async (deckId: number) => {
     try {
-      await fetch(`/api/decks/${deckId}`, { method: "DELETE" });
+      const res = await fetch(`/api/decks/${deckId}`, { method: "DELETE" });
+      if (!res.ok) {
+        setError(t(lang, "addFailed"));
+        return;
+      }
       setDecks((prev) => prev.filter((d) => d.id !== deckId));
       if (activeDeck?.id === deckId) setActiveDeck(null);
     } catch {

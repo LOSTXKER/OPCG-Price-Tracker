@@ -5,10 +5,7 @@ import {
   matchCardImage,
   type MatchCandidate,
 } from "@/lib/scraper/gemini-matcher";
-
-function unauthorized() {
-  return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-}
+import { unauthorized } from "@/lib/api/admin-helpers";
 
 /**
  * POST /api/admin/yuyutei-matching/ai-suggest

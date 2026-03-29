@@ -29,10 +29,15 @@ import { CardAddToPortfolio } from "@/components/cards/card-add-to-portfolio"
 import { Skeleton } from "@/components/ui/skeleton"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { t, getCardName, getCardEffect, getSetName } from "@/lib/i18n"
-import { useUIStore } from "@/stores/ui-store"
+import { useUIStore, type Language } from "@/stores/ui-store"
 import { formatPct } from "@/lib/utils/currency"
 
-import { CardDetailPriceChart } from "./card-detail-price-chart"
+import dynamic from "next/dynamic"
+
+const CardDetailPriceChart = dynamic(
+  () => import("./card-detail-price-chart").then((m) => m.CardDetailPriceChart),
+  { ssr: false, loading: () => <div className="h-[340px] animate-pulse rounded-xl bg-muted" /> }
+)
 import { SourceMarketsTable } from "./source-markets-table"
 
 export interface SiblingCard {
@@ -58,6 +63,52 @@ export interface RelatedCard {
   imageUrl: string | null
   latestPriceJpy: number | null
   set: { code: string }
+}
+
+interface SiblingGridProps {
+  siblings: SiblingCard[]
+  lang: Language
+  cols: number
+  smCols?: number
+}
+
+function SiblingGrid({ siblings, lang, cols, smCols }: SiblingGridProps) {
+  return (
+    <div
+      className={cn(
+        "grid gap-2",
+        cols === 4 ? "grid-cols-4" : cols === 5 ? "grid-cols-5" : "grid-cols-4",
+        smCols === 5 && "sm:grid-cols-5",
+      )}
+    >
+      {siblings.map((s) => (
+        <Link
+          key={s.id}
+          href={`/cards/${s.cardCode}`}
+          className="group flex flex-col gap-1.5 text-center transition-transform duration-200 hover:-translate-y-0.5"
+        >
+          <div className="panel relative aspect-[63/88] w-full overflow-hidden">
+            {s.imageUrl ? (
+              <Image src={s.imageUrl} alt={getCardName(lang, s)} fill className="object-contain" sizes="100px" />
+            ) : (
+              <Skeleton className="absolute inset-0 size-full" />
+            )}
+          </div>
+          <div>
+            <span className="inline-block rounded bg-muted px-1 py-px font-price text-[10px] uppercase text-muted-foreground">
+              {s.set.code}
+            </span>
+            <RarityBadge rarity={s.rarity} size="sm" />
+            {s.latestPriceJpy != null && (
+              <p className="mt-0.5 font-price text-xs font-semibold">
+                <Price jpy={s.latestPriceJpy} />
+              </p>
+            )}
+          </div>
+        </Link>
+      ))}
+    </div>
+  )
 }
 
 export interface CardDetailProps {
@@ -197,34 +248,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
               <p className="mb-3 text-xs text-muted-foreground">
                 {t(lang, "otherVersions")} ({siblings.length})
               </p>
-              <div className="grid grid-cols-4 gap-2">
-                {siblings.map((s) => (
-                  <Link
-                    key={s.id}
-                    href={`/cards/${s.cardCode}`}
-                    className="group flex flex-col gap-1.5 text-center transition-transform duration-200 hover:-translate-y-0.5"
-                  >
-                    <div className="panel relative aspect-[63/88] w-full overflow-hidden">
-                      {s.imageUrl ? (
-                        <Image src={s.imageUrl} alt={getCardName(lang, s)} fill className="object-contain" sizes="100px" />
-                      ) : (
-                        <Skeleton className="absolute inset-0 size-full" />
-                      )}
-                    </div>
-                    <div>
-                      <span className="inline-block rounded bg-muted px-1 py-px font-price text-[10px] uppercase text-muted-foreground">
-                        {s.set.code}
-                      </span>
-                      <RarityBadge rarity={s.rarity} size="sm" />
-                      {s.latestPriceJpy != null && (
-                        <p className="mt-0.5 font-price text-xs font-semibold">
-                          <Price jpy={s.latestPriceJpy} />
-                        </p>
-                      )}
-                    </div>
-                  </Link>
-                ))}
-              </div>
+              <SiblingGrid siblings={siblings} lang={lang} cols={4} />
             </div>
           )}
         </div>
@@ -444,34 +468,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
           <p className="mb-3 text-xs text-muted-foreground">
             {t(lang, "otherVersions")} ({siblings.length})
           </p>
-          <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
-            {siblings.map((s) => (
-              <Link
-                key={s.id}
-                href={`/cards/${s.cardCode}`}
-                className="group flex flex-col gap-1.5 text-center transition-transform duration-200 hover:-translate-y-0.5"
-              >
-                <div className="panel relative aspect-[63/88] w-full overflow-hidden">
-                  {s.imageUrl ? (
-                    <Image src={s.imageUrl} alt={getCardName(lang, s)} fill className="object-contain" sizes="100px" />
-                  ) : (
-                    <Skeleton className="absolute inset-0 size-full" />
-                  )}
-                </div>
-                <div>
-                  <span className="inline-block rounded bg-muted px-1 py-px font-price text-[10px] uppercase text-muted-foreground">
-                    {s.set.code}
-                  </span>
-                  <RarityBadge rarity={s.rarity} size="sm" />
-                  {s.latestPriceJpy != null && (
-                    <p className="mt-0.5 font-price text-xs font-semibold">
-                      <Price jpy={s.latestPriceJpy} />
-                    </p>
-                  )}
-                </div>
-              </Link>
-            ))}
-          </div>
+          <SiblingGrid siblings={siblings} lang={lang} cols={4} smCols={5} />
         </div>
       )}
 
