@@ -15,6 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { PriceDisplay } from "@/components/shared/price-display";
 import { useCardSearch, type CardSearchResult } from "@/hooks/use-card-search";
+import { useUIStore } from "@/stores/ui-store";
+import { t } from "@/lib/i18n";
 
 type DeckRow = {
   id: number;
@@ -24,6 +26,7 @@ type DeckRow = {
 };
 
 export default function DeckCalculatorPage() {
+  const lang = useUIStore((s) => s.language);
   const [decks, setDecks] = useState<DeckRow[]>([]);
   const [activeDeck, setActiveDeck] = useState<DeckRow | null>(null);
   const [loading, setLoading] = useState(true);
@@ -41,7 +44,7 @@ export default function DeckCalculatorPage() {
       const res = await fetch("/api/decks");
       if (!res.ok) {
         if (res.status === 401) {
-          setError("กรุณาเข้าสู่ระบบเพื่อใช้ Deck Calculator");
+          setError(t(lang, "login"));
           setLoading(false);
           return;
         }
@@ -53,7 +56,7 @@ export default function DeckCalculatorPage() {
         setActiveDeck(data.decks[0]);
       }
     } catch {
-      setError("โหลดข้อมูลไม่สำเร็จ");
+      setError(t(lang, "loadFailed"));
     }
     setLoading(false);
   }, [activeDeck]);
@@ -78,7 +81,7 @@ export default function DeckCalculatorPage() {
         setNewDeckName("");
       }
     } catch {
-      setError("สร้าง Deck ไม่สำเร็จ");
+      setError(t(lang, "addFailed"));
     }
   };
 
@@ -100,7 +103,7 @@ export default function DeckCalculatorPage() {
         setDecks((prev) => prev.map((d) => (d.id === data.deck.id ? data.deck : d)));
       }
     } catch {
-      setError("เพิ่มการ์ดไม่สำเร็จ");
+      setError(t(lang, "addFailed"));
     }
     setDialogOpen(false);
     cardSearch.reset();
@@ -120,7 +123,7 @@ export default function DeckCalculatorPage() {
         setDecks((prev) => prev.map((d) => (d.id === data.deck.id ? data.deck : d)));
       }
     } catch {
-      setError("ลบการ์ดไม่สำเร็จ");
+      setError(t(lang, "addFailed"));
     }
   };
 
@@ -130,7 +133,7 @@ export default function DeckCalculatorPage() {
       setDecks((prev) => prev.filter((d) => d.id !== deckId));
       if (activeDeck?.id === deckId) setActiveDeck(null);
     } catch {
-      setError("ลบ Deck ไม่สำเร็จ");
+      setError(t(lang, "addFailed"));
     }
   };
 
@@ -151,7 +154,7 @@ export default function DeckCalculatorPage() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <p className="text-muted-foreground text-sm">กำลังโหลด…</p>
+        <p className="text-muted-foreground text-sm">Loading…</p>
       </div>
     );
   }
@@ -160,7 +163,7 @@ export default function DeckCalculatorPage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-sans text-2xl font-semibold tracking-tight">Deck Calculator</h1>
-        <p className="text-muted-foreground text-sm">สร้าง Deck และคำนวณราคารวม</p>
+        <p className="text-muted-foreground text-sm">Build a deck and calculate total price</p>
       </div>
 
       {error && <p className="text-destructive text-sm">{error}</p>}
@@ -168,13 +171,13 @@ export default function DeckCalculatorPage() {
       <div className="flex flex-wrap items-end gap-2">
         <div className="min-w-0 flex-1">
           <Input
-            placeholder="ชื่อ Deck ใหม่"
+            placeholder="New deck name"
             value={newDeckName}
             onChange={(e) => setNewDeckName(e.target.value)}
           />
         </div>
         <Button onClick={() => void createDeck()} disabled={!newDeckName.trim()}>
-          สร้าง Deck
+          Create Deck
         </Button>
       </div>
 
@@ -202,20 +205,20 @@ export default function DeckCalculatorPage() {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">{activeDeck.name}</h2>
             <div className="flex items-center gap-2">
-              <span className="text-muted-foreground text-sm">{totalCards}/50 ใบ</span>
+              <span className="text-muted-foreground text-sm">{totalCards}/50 {t(lang, "cardsCount")}</span>
               <Button
                 variant="destructive"
                 size="sm"
                 onClick={() => void deleteDeck(activeDeck.id)}
               >
-                ลบ Deck
+                Delete Deck
               </Button>
             </div>
           </div>
 
           <div className="rounded-xl border bg-card p-4">
             <div className="flex items-center justify-between">
-              <p className="text-muted-foreground text-sm font-medium">ราคารวม Deck</p>
+              <p className="text-muted-foreground text-sm font-medium">{t(lang, "totalValue")}</p>
               <PriceDisplay priceJpy={totalPrice} showChange={false} size="lg" />
             </div>
           </div>
@@ -232,7 +235,7 @@ export default function DeckCalculatorPage() {
                 }}
               >
                 <Plus className="mr-1 size-3" />
-                เลือก Leader
+                Select Leader
               </Button>
             </div>
             {activeDeck.leader ? (
@@ -253,13 +256,13 @@ export default function DeckCalculatorPage() {
                 <PriceDisplay priceJpy={activeDeck.leader.latestPriceJpy} showChange={false} size="sm" />
               </div>
             ) : (
-              <p className="text-muted-foreground text-sm">ยังไม่ได้เลือก Leader</p>
+              <p className="text-muted-foreground text-sm">No Leader selected</p>
             )}
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold">การ์ดใน Deck ({totalCards} ใบ)</h3>
+              <h3 className="text-sm font-semibold">Cards in Deck ({totalCards} {t(lang, "cardsCount")})</h3>
               <Button
                 size="sm"
                 variant="outline"
@@ -269,11 +272,11 @@ export default function DeckCalculatorPage() {
                 }}
               >
                 <Plus className="mr-1 size-3" />
-                เพิ่มการ์ด
+                {t(lang, "addCard")}
               </Button>
             </div>
             {activeDeck.cards.length === 0 ? (
-              <p className="text-muted-foreground text-sm">ยังไม่มีการ์ดใน Deck</p>
+              <p className="text-muted-foreground text-sm">No cards in deck yet</p>
             ) : (
               <div className="space-y-1">
                 {activeDeck.cards.map((entry) => (
@@ -316,7 +319,7 @@ export default function DeckCalculatorPage() {
         </div>
       ) : decks.length === 0 ? (
         <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed py-16 text-center">
-          <p className="text-muted-foreground text-sm">สร้าง Deck แรกของคุณ</p>
+          <p className="text-muted-foreground text-sm">Create your first deck</p>
         </div>
       ) : null}
 
@@ -324,21 +327,21 @@ export default function DeckCalculatorPage() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {searchType === "leader" ? "เลือก Leader" : "เพิ่มการ์ด"}
+              {searchType === "leader" ? "Select Leader" : t(lang, "addCard")}
             </DialogTitle>
-            <DialogDescription>พิมพ์ชื่อหรือรหัสการ์ด</DialogDescription>
+            <DialogDescription>{t(lang, "searchByNameOrCode")}</DialogDescription>
           </DialogHeader>
           <Input
-            placeholder="ค้นหา…"
+            placeholder={t(lang, "searchByNameOrCode")}
             value={cardSearch.query}
             onChange={(e) => cardSearch.setQuery(e.target.value)}
             autoComplete="off"
           />
           <div className="max-h-60 space-y-1 overflow-auto rounded-md border p-1">
             {cardSearch.query.trim().length < 2 ? (
-              <p className="text-muted-foreground px-2 py-3 text-sm">พิมพ์อย่างน้อย 2 ตัวอักษร</p>
+              <p className="text-muted-foreground px-2 py-3 text-sm">Type at least 2 characters</p>
             ) : cardSearch.results.length === 0 ? (
-              <p className="text-muted-foreground px-2 py-3 text-sm">ไม่พบผลลัพธ์</p>
+              <p className="text-muted-foreground px-2 py-3 text-sm">{t(lang, "noResults")}</p>
             ) : (
               cardSearch.results.map((c) => (
                 <button

@@ -60,7 +60,19 @@ export async function getHomeData() {
       prisma.card.findMany({
         orderBy: { latestPriceJpy: { sort: "desc", nulls: "last" } },
         take: TABLE_PAGE_SIZE,
-        include: { set: { select: cardSetSelect } },
+        include: {
+          set: { select: cardSetSelect },
+          prices: {
+            where: {
+              source: "SNKRDUNK",
+              gradeCondition: "PSA 10",
+              type: "SELL",
+            },
+            orderBy: { scrapedAt: "desc" },
+            take: 1,
+            select: { priceUsd: true },
+          },
+        },
       }),
       prisma.card.count(),
       prisma.cardSet.findMany({

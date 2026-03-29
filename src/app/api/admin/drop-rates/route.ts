@@ -64,18 +64,23 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  const body = await request.json();
-  const { setId, rarity, avgPerBox, ratePerPack } = body;
+  try {
+    const body = await request.json();
+    const { setId, rarity, avgPerBox, ratePerPack } = body;
 
-  if (!setId || !rarity) {
-    return NextResponse.json({ error: "setId and rarity are required" }, { status: 400 });
+    if (!setId || !rarity) {
+      return NextResponse.json({ error: "setId and rarity are required" }, { status: 400 });
+    }
+
+    const result = await prisma.setDropRate.upsert({
+      where: { setId_rarity: { setId, rarity } },
+      update: { avgPerBox, ratePerPack },
+      create: { setId, rarity, avgPerBox, ratePerPack },
+    });
+
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error("PATCH /api/admin/drop-rates:", error);
+    return NextResponse.json({ error: "Failed to update drop rate" }, { status: 500 });
   }
-
-  const result = await prisma.setDropRate.upsert({
-    where: { setId_rarity: { setId, rarity } },
-    update: { avgPerBox, ratePerPack },
-    create: { setId, rarity, avgPerBox, ratePerPack },
-  });
-
-  return NextResponse.json(result);
 }

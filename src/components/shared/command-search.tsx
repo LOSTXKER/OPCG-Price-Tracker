@@ -14,12 +14,12 @@ import { Clock, Search, XIcon } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
-import { getCardName } from "@/lib/i18n"
+import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
 import type { SearchResult } from "@/components/shared/search-results-dropdown"
 
-const STORAGE_KEY = "opcg-recent-searches"
+const STORAGE_KEY = "meecard-recent-searches"
 const MAX_RECENT = 6
 
 function readRecent(): string[] {
@@ -44,6 +44,7 @@ function writeRecent(items: string[]) {
 }
 
 export function CommandSearchTrigger({ onClick }: { onClick: () => void }) {
+  const lang = useUIStore((s) => s.language);
   return (
     <button
       type="button"
@@ -51,7 +52,7 @@ export function CommandSearchTrigger({ onClick }: { onClick: () => void }) {
       className="flex h-8 w-52 items-center gap-2 rounded-lg border border-border/50 bg-muted/40 px-2.5 text-sm text-muted-foreground/60 transition-colors hover:bg-muted/60 hover:text-muted-foreground lg:w-60"
     >
       <Search className="size-3.5 shrink-0" />
-      <span className="flex-1 text-left">ค้นหาการ์ด...</span>
+      <span className="flex-1 text-left">{t(lang, "searchCardsDots")}</span>
       <kbd className="hidden rounded-md border border-border/60 bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground/60 sm:inline">/</kbd>
     </button>
   )
@@ -163,7 +164,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
               value={query}
               onChange={(e) => { setQuery(e.target.value); setActiveIdx(-1) }}
               onKeyDown={handleKeyDown}
-              placeholder="ค้นหาการ์ด, ชุด, รหัส..."
+              placeholder={t(lang, "searchCardsCodesDots")}
               className="h-12 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground/50"
               aria-expanded={allItems.length > 0}
               aria-autocomplete="list"
@@ -183,7 +184,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
               disabled={!query.trim()}
               className="shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-30"
             >
-              ค้นหา
+              {t(lang, "search")}
             </button>
             <button
               type="button"
@@ -214,7 +215,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
             {results.length > 0 && (
               <div className="p-2">
                 <p className="px-2 py-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground/60">
-                  การ์ด
+                  {t(lang, "card")}
                 </p>
                 {results.map((card, i) => (
                   <button
@@ -253,7 +254,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                   className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
                 >
                   <Search className="size-3" />
-                  ดูผลลัพธ์ทั้งหมดสำหรับ &ldquo;{query.trim()}&rdquo;
+                  {t(lang, "viewAllResults")} &ldquo;{query.trim()}&rdquo;
                 </button>
               </div>
             )}
@@ -261,7 +262,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
             {results.length === 0 && !loading && filteredRecent.length > 0 && (
               <div className="p-2">
                 <p className="px-2 py-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground/60">
-                  ค้นหาล่าสุด
+                  {t(lang, "recentSearches")}
                 </p>
                 {filteredRecent.map((item, i) => (
                   <button
@@ -282,13 +283,13 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
 
             {!loading && query.trim().length >= 2 && results.length === 0 && (
               <div className="px-4 py-8 text-center text-sm text-muted-foreground">
-                ไม่พบผลลัพธ์สำหรับ &ldquo;{query.trim()}&rdquo;
+                {t(lang, "noResultsFor")} &ldquo;{query.trim()}&rdquo;
               </div>
             )}
 
             {!loading && query.trim().length < 2 && filteredRecent.length === 0 && (
               <div className="px-4 py-8 text-center text-sm text-muted-foreground/50">
-                พิมพ์เพื่อค้นหาการ์ด
+                {t(lang, "typeToSearch")}
               </div>
             )}
           </div>

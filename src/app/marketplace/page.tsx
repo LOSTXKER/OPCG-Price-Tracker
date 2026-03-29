@@ -1,6 +1,6 @@
 import { Store } from "lucide-react";
 import { ListingStatus } from "@/generated/prisma/client";
-import { MarketplaceBrowse } from "@/components/marketplace/marketplace-browse";
+import { MarketplaceBrowse, MarketplacePageHeader } from "@/components/marketplace/marketplace-browse";
 import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -63,14 +63,11 @@ export default async function MarketplacePage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-sans text-2xl font-bold tracking-tight sm:text-3xl">ซื้อขาย</h1>
-        <p className="mt-1 text-sm text-muted-foreground">ซื้อขายการ์ดกับชุมชน — ดูดีลดี เทียบราคาตลาด</p>
-      </div>
+      <MarketplacePageHeader />
       {dbError ? (
         <div className="flex flex-col items-center gap-4 rounded-2xl bg-muted/30 py-12 text-center">
           <Store className="size-10 text-muted-foreground/40" />
-          <p className="text-sm text-destructive">ไม่สามารถเชื่อมต่อฐานข้อมูลได้ กรุณาลองใหม่</p>
+          <p className="text-sm text-destructive">Failed to connect to database. Please try again.</p>
         </div>
       ) : (
         <MarketplaceBrowse

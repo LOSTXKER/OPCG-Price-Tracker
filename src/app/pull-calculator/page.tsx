@@ -10,6 +10,8 @@ import { WantList } from "@/components/pull-calculator/want-list"
 import { CardPicker } from "@/components/pull-calculator/card-picker"
 import type { SetListItem, SetDetail, DropRate, CardItem, Unit } from "@/components/pull-calculator/types"
 import { tierSort } from "@/components/pull-calculator/types"
+import { useUIStore } from "@/stores/ui-store"
+import { t } from "@/lib/i18n"
 import {
   pullChance,
   pullChanceMulti,
@@ -20,6 +22,7 @@ import {
 } from "@/lib/utils/pull-rate"
 
 export default function PullCalculatorPage() {
+  const lang = useUIStore((s) => s.language)
   const [sets, setSets] = useState<SetListItem[]>([])
   const [selectedCode, setSelectedCode] = useState<string>("")
   const [detail, setDetail] = useState<SetDetail | null>(null)
@@ -175,9 +178,9 @@ export default function PullCalculatorPage() {
           <Calculator className="size-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">คำนวณดรอปเรท</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{t(lang, "pullCalculator")}</h1>
           <p className="mt-0.5 text-sm text-muted-foreground">
-            เลือกชุดการ์ด กำหนดจำนวนซื้อ แล้วเลือกการ์ดที่อยากได้
+            {t(lang, "selectWantedCards")}
           </p>
         </div>
       </div>
@@ -248,7 +251,7 @@ export default function PullCalculatorPage() {
         {detail && !loading && (
           <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground/60 lg:col-start-1">
             <AlertTriangle className="size-3 shrink-0" />
-            Pull Rate เป็นข้อมูลประมาณการจากชุมชน ผลลัพธ์อาจแตกต่างจากการเปิดจริง
+            {t(lang, "communityEstimate")} — actual results may vary
           </p>
         )}
       </div>
@@ -257,34 +260,36 @@ export default function PullCalculatorPage() {
 }
 
 function EmptyStateLeft() {
+  const lang = useUIStore((s) => s.language)
   return (
     <div className="panel flex flex-col items-center justify-center px-6 py-16 text-center">
       <Package className="mb-4 size-12 text-muted-foreground/30" />
-      <h2 className="text-base font-semibold">เลือกชุดการ์ดเพื่อเริ่มต้น</h2>
+      <h2 className="text-base font-semibold">{t(lang, "selectSet")}</h2>
       <p className="mt-1.5 max-w-sm text-sm leading-relaxed text-muted-foreground">
-        เลือกชุด Booster จาก dropdown ด้านบน แล้วระบบจะแสดงรายการการ์ดให้เลือกคำนวณโอกาส
+        {t(lang, "selectWantedCards")}
       </p>
       <div className="mt-6 flex items-center gap-6 text-xs text-muted-foreground/60">
-        <span className="flex items-center gap-1.5"><span className="flex size-5 items-center justify-center rounded-full bg-muted font-bold text-[10px]">1</span> เลือกชุด</span>
-        <span className="flex items-center gap-1.5"><span className="flex size-5 items-center justify-center rounded-full bg-muted font-bold text-[10px]">2</span> เลือกการ์ด</span>
-        <span className="flex items-center gap-1.5"><span className="flex size-5 items-center justify-center rounded-full bg-muted font-bold text-[10px]">3</span> ดูโอกาส</span>
+        <span className="flex items-center gap-1.5"><span className="flex size-5 items-center justify-center rounded-full bg-muted font-bold text-[10px]">1</span> {t(lang, "selectSet")}</span>
+        <span className="flex items-center gap-1.5"><span className="flex size-5 items-center justify-center rounded-full bg-muted font-bold text-[10px]">2</span> {t(lang, "selectWantedCards")}</span>
+        <span className="flex items-center gap-1.5"><span className="flex size-5 items-center justify-center rounded-full bg-muted font-bold text-[10px]">3</span> {t(lang, "chanceToGetAll")}</span>
       </div>
     </div>
   )
 }
 
 function EmptyStateSidebar() {
+  const lang = useUIStore((s) => s.language)
   return (
     <div className="panel space-y-3 p-4">
       <div className="space-y-1.5 text-xs text-muted-foreground">
-        <p className="text-sm font-semibold text-foreground">การตั้งค่าและผลลัพธ์</p>
-        <p>เลือกชุดการ์ดก่อน จากนั้นกำหนดจำนวนที่จะซื้อ แล้วเลือกการ์ดที่อยากได้</p>
+        <p className="text-sm font-semibold text-foreground">Settings & Results</p>
+        <p>{t(lang, "selectSet")} → {t(lang, "selectWantedCards")}</p>
       </div>
       <div className="rounded-md border border-dashed border-border/60 bg-muted/20 p-3 text-center text-xs text-muted-foreground/50">
-        ซอง / กล่อง / คาตั้น
+        Pack / Box / Carton
       </div>
       <div className="rounded-md border border-dashed border-border/60 bg-muted/20 p-3 text-center text-xs text-muted-foreground/50">
-        รายการที่อยากได้จะแสดงที่นี่
+        {t(lang, "selectWantedCards")}
       </div>
     </div>
   )

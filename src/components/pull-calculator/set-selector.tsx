@@ -6,6 +6,7 @@ import { Check, ChevronDown, Package, Search } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
+import { t } from "@/lib/i18n"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { SetListItem } from "./types"
 
@@ -57,14 +58,14 @@ export function SetSelector({ sets, selectedCode, setsLoading, onSelect }: SetSe
     if (extras.length)
       groups.push({ label: "Extra Booster", items: extras.sort(codeSort) })
     if (others.length)
-      groups.push({ label: "อื่นๆ", items: others.sort(codeSort) })
+      groups.push({ label: t(lang, "other"), items: others.sort(codeSort) })
 
     return groups
   }, [sets, setSearch])
 
   return (
     <section className="panel space-y-3 p-4">
-      <label className="block text-sm font-semibold">เลือกชุดการ์ด</label>
+      <label className="block text-sm font-semibold">{t(lang, "selectSet")}</label>
       {setsLoading ? (
         <Skeleton className="h-10 w-full rounded-lg" />
       ) : (
@@ -89,7 +90,7 @@ export function SetSelector({ sets, selectedCode, setsLoading, onSelect }: SetSe
                 </span>
               </span>
             ) : (
-              <span className="text-muted-foreground">เลือกชุดการ์ด...</span>
+              <span className="text-muted-foreground">{t(lang, "selectSet")}...</span>
             )}
             <ChevronDown className={cn("size-4 text-muted-foreground transition-transform", showDropdown && "rotate-180")} />
           </button>
@@ -103,7 +104,7 @@ export function SetSelector({ sets, selectedCode, setsLoading, onSelect }: SetSe
                     type="text"
                     value={setSearch}
                     onChange={(e) => setSetSearch(e.target.value)}
-                    placeholder="ค้นหาชุดการ์ด..."
+                    placeholder={t(lang, "searchSet")}
                     className="h-8 w-full rounded-md border border-border bg-muted/30 pl-8 pr-3 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
                     autoFocus
                   />
@@ -112,7 +113,7 @@ export function SetSelector({ sets, selectedCode, setsLoading, onSelect }: SetSe
 
               <div className="max-h-72 overflow-y-auto py-1">
                 {groupedSets.length === 0 && (
-                  <p className="px-3 py-4 text-center text-sm text-muted-foreground">ไม่พบชุดการ์ด</p>
+                  <p className="px-3 py-4 text-center text-sm text-muted-foreground">{t(lang, "noSetsFound")}</p>
                 )}
                 {groupedSets.map((group) => (
                   <div key={group.label}>

@@ -22,7 +22,7 @@ export async function GET() {
 
     const snapshots = await prisma.portfolioSnapshot.findMany({
       where: { portfolioId: { in: portfolioIds } },
-      orderBy: { snapshotAt: "asc" },
+      orderBy: { snapshotAt: "desc" },
       take: 90,
       select: {
         totalJpy: true,
@@ -33,6 +33,8 @@ export async function GET() {
         snapshotAt: true,
       },
     });
+
+    snapshots.reverse();
 
     return NextResponse.json({ snapshots });
   } catch (error) {

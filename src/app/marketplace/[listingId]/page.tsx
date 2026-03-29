@@ -10,6 +10,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { ListingStatus } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { cn } from "@/lib/utils";
+import { formatPct } from "@/lib/utils/currency";
 import { Price } from "@/components/shared/price-inline";
 
 export const dynamic = "force-dynamic";
@@ -81,13 +82,13 @@ export default async function ListingDetailPage({ params }: PageProps) {
           href="/marketplace"
           className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
         >
-          ← กลับ
+          ← Back
         </Link>
         <Link
           href={`/cards/${encodeURIComponent(listing.card.cardCode)}`}
           className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
         >
-          หน้าการ์ด
+          Card page
         </Link>
       </div>
 
@@ -104,7 +105,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
               />
             ) : (
               <div className="text-muted-foreground flex size-full items-center justify-center text-sm">
-                ไม่มีรูป
+                No image
               </div>
             )}
           </div>
@@ -133,7 +134,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
           </div>
 
           <div>
-            <p className="text-muted-foreground text-sm">ราคาขาย</p>
+            <p className="text-muted-foreground text-sm">Asking price</p>
             <div className="mt-1">
               <PriceDisplay
                 priceJpy={listing.priceJpy}
@@ -144,7 +145,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
             </div>
             {market != null && diffPct != null ? (
               <p className="text-muted-foreground mt-2 text-sm">
-                ราคาตลาดโดยประมาณ <Price jpy={market} />
+                Approx. market price <Price jpy={market} />
                 <span
                   className={cn(
                     "ml-2 font-mono font-medium",
@@ -152,7 +153,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
                   )}
                 >
                   {diffPct > 0 ? "+" : ""}
-                  {diffPct.toFixed(0)}%
+                  {formatPct(diffPct, 0)}%
                 </span>
               </p>
             ) : null}
@@ -160,14 +161,14 @@ export default async function ListingDetailPage({ params }: PageProps) {
 
           {listing.description ? (
             <div>
-              <p className="text-muted-foreground text-sm">รายละเอียด</p>
+              <p className="text-muted-foreground text-sm">Description</p>
               <p className="mt-1 whitespace-pre-wrap text-sm">{listing.description}</p>
             </div>
           ) : null}
 
           <div className="panel p-4">
             <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-              ผู้ขาย
+              Seller
             </p>
             <div className="mt-3 flex items-center gap-3">
               <Avatar>
@@ -183,35 +184,35 @@ export default async function ListingDetailPage({ params }: PageProps) {
                   href={`/profile/${listing.user.id}`}
                   className="hover:text-primary font-medium underline-offset-4 hover:underline"
                 >
-                  {listing.user.displayName ?? "ผู้ขาย"}
+                  {listing.user.displayName ?? "Seller"}
                 </Link>
                 <p className="text-muted-foreground text-sm">
                   {listing.user.sellerRating != null
                     ? `★ ${listing.user.sellerRating.toFixed(1)}`
-                    : "ยังไม่มีคะแนน"}{" "}
-                  · {listing.user.sellerReviewCount} รีวิว
+                    : "No rating"}{" "}
+                  · {listing.user.sellerReviewCount} reviews
                 </p>
               </div>
             </div>
           </div>
 
           <div className="text-muted-foreground space-y-1 text-sm">
-            {listing.location ? <p>ที่อยู่: {listing.location}</p> : null}
+            {listing.location ? <p>Location: {listing.location}</p> : null}
             <p>
-              จัดส่ง:{" "}
-              {listing.shipping.length > 0 ? listing.shipping.join(" · ") : "ติดต่อผู้ขาย"}
+              Shipping:{" "}
+              {listing.shipping.length > 0 ? listing.shipping.join(" · ") : "Contact seller"}
             </p>
           </div>
 
           <Button type="button" variant="secondary" disabled className="w-full sm:w-auto">
-            แชท (เร็วๆ นี้)
+            Chat (coming soon)
           </Button>
         </div>
       </div>
 
       {similar.length > 0 ? (
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold">รายการใกล้เคียง</h2>
+          <h2 className="text-lg font-semibold">Similar listings</h2>
           <div className="space-y-4">
             {similar.map((l) => (
               <ListingCard

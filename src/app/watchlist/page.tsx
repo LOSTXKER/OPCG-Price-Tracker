@@ -7,6 +7,8 @@ import { CardItem } from "@/components/cards/card-item";
 import { CardGrid } from "@/components/cards/card-grid";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { Button } from "@/components/ui/button";
+import { useUIStore } from "@/stores/ui-store";
+import { t } from "@/lib/i18n";
 
 type WatchCard = {
   id: number;
@@ -29,6 +31,7 @@ type WatchlistEntry = {
 };
 
 export default function WatchlistPage() {
+  const lang = useUIStore((s) => s.language);
   const [items, setItems] = useState<WatchlistEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +41,7 @@ export default function WatchlistPage() {
     setError(null);
     const res = await fetch("/api/watchlist");
     if (!res.ok) {
-      setError("โหลด Watchlist ไม่สำเร็จ");
+      setError(t(lang, "loadFailed"));
       setLoading(false);
       return;
     }
@@ -77,8 +80,8 @@ export default function WatchlistPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-sans text-2xl font-bold tracking-tight sm:text-3xl">รายการติดตาม</h1>
-        <p className="mt-1 text-sm text-muted-foreground">การ์ดที่คุณติดตาม</p>
+        <h1 className="font-sans text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "watchlistNav")}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t(lang, "emptyWatchlistDesc")}</p>
       </div>
 
       {error ? <p className="text-destructive text-sm">{error}</p> : null}
@@ -105,7 +108,7 @@ export default function WatchlistPage() {
                 size="icon-sm"
                 variant="secondary"
                 className="absolute top-2 right-2 z-10 rounded-full bg-background/80 backdrop-blur-sm shadow-sm"
-                aria-label="ลบออกจาก Watchlist"
+                aria-label={t(lang, "removeFromWatchlist")}
                 disabled={removing === entry.cardId}
                 onClick={() => void remove(entry.cardId)}
               >

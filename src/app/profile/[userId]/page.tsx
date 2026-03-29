@@ -5,6 +5,10 @@ import { ListingCard } from "@/components/marketplace/listing-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ListingStatus } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
+import {
+  SellerName, SellerRating, SellerListingsHeader, NoOpenListingsMsg,
+  ViewDetailsLink, ReviewsHeader, NoReviewsMsg, ReviewerName,
+} from "./profile-labels";
 
 export const dynamic = "force-dynamic";
 
@@ -74,19 +78,18 @@ export default async function PublicProfilePage({ params }: PageProps) {
         </Avatar>
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
-            {user.displayName ?? "ผู้ขาย"}
+            <SellerName name={user.displayName} />
           </h1>
           <p className="text-muted-foreground text-sm">
-            {user.sellerRating != null ? `★ ${user.sellerRating.toFixed(1)}` : "ยังไม่มีคะแนน"} ·{" "}
-            {user.sellerReviewCount} รีวิว
+            <SellerRating rating={user.sellerRating} reviewCount={user.sellerReviewCount} />
           </p>
         </div>
       </div>
 
       <section className="space-y-4">
-        <h2 className="text-lg font-semibold">รายการขาย</h2>
+        <SellerListingsHeader />
         {listings.length === 0 ? (
-          <p className="text-muted-foreground text-sm">ยังไม่มีรายการที่เปิดขาย</p>
+          <NoOpenListingsMsg />
         ) : (
           <div className="space-y-4">
             {listings.map((l) => (
@@ -119,7 +122,7 @@ export default async function PublicProfilePage({ params }: PageProps) {
                     href={`/marketplace/${l.id}`}
                     className="text-primary text-sm underline-offset-4 hover:underline"
                   >
-                    ดูรายละเอียด
+                    <ViewDetailsLink />
                   </Link>
                 </div>
               </div>
@@ -129,9 +132,9 @@ export default async function PublicProfilePage({ params }: PageProps) {
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-lg font-semibold">รีวิวที่ได้รับ</h2>
+        <ReviewsHeader />
         {reviews.length === 0 ? (
-          <p className="text-muted-foreground text-sm">ยังไม่มีรีวิว</p>
+          <NoReviewsMsg />
         ) : (
           <ul className="space-y-3">
             {reviews.map((r) => (
@@ -148,9 +151,9 @@ export default async function PublicProfilePage({ params }: PageProps) {
                   </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 flex-1">
-                  <p className="font-medium">{r.reviewer.displayName ?? "ผู้รีวิว"}</p>
+                  <ReviewerName name={r.reviewer.displayName} />
                   <p className="text-muted-foreground text-sm">
-                    ให้คะแนน {r.rating}/5
+                    {r.rating}/5
                     <span className="text-muted-foreground/70 ml-2 text-xs">
                       {r.createdAt.toLocaleDateString()}
                     </span>

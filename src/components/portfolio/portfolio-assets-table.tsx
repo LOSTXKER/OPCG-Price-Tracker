@@ -7,9 +7,10 @@ import { Check, Edit2, Trash2, X } from "lucide-react"
 
 import { Price } from "@/components/shared/price-inline"
 import { RarityBadge } from "@/components/shared/rarity-badge"
-import { getCardName } from "@/lib/i18n"
+import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
+import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
 
 export type AssetRow = {
   itemId: number
@@ -53,13 +54,13 @@ export function PortfolioAssetsTable({
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-border/40 text-xs text-muted-foreground">
-            <th className="py-2.5 pl-4 pr-3 font-medium">การ์ด</th>
-            <th className="py-2.5 pr-3 text-right font-medium">ราคา</th>
+            <th className="py-2.5 pl-4 pr-3 font-medium">{t(lang, "card")}</th>
+            <th className="py-2.5 pr-3 text-right font-medium">{t(lang, "price")}</th>
             <th className="hidden py-2.5 pr-3 text-right font-medium sm:table-cell">24h</th>
             <th className="hidden py-2.5 pr-3 text-right font-medium md:table-cell">7d</th>
-            <th className="py-2.5 pr-3 text-right font-medium">มูลค่า</th>
-            <th className="hidden py-2.5 pr-3 text-right font-medium sm:table-cell">ต้นทุน</th>
-            <th className="py-2.5 pr-3 text-right font-medium">กำไร/ขาดทุน</th>
+            <th className="py-2.5 pr-3 text-right font-medium">{t(lang, "value")}</th>
+            <th className="hidden py-2.5 pr-3 text-right font-medium sm:table-cell">{t(lang, "costBasis")}</th>
+            <th className="py-2.5 pr-3 text-right font-medium">{t(lang, "pnl")}</th>
             <th className="w-20 py-2.5 pr-4 text-right font-medium"></th>
           </tr>
         </thead>
@@ -93,6 +94,7 @@ function AssetRowComponent({
   const [editing, setEditing] = useState(false)
   const [qty, setQty] = useState(String(row.quantity))
   const [cost, setCost] = useState(row.purchasePrice != null ? String(row.purchasePrice) : "")
+  const currency = useUIStore((s) => s.currency)
   const name = getCardName(lang as "TH" | "EN" | "JP", row)
   const holdingValue = (row.currentPrice ?? 0) * row.quantity
   const pnlResult = pnlCalc(row)
@@ -150,7 +152,7 @@ function AssetRowComponent({
           />
         ) : (
           <span className="font-price text-xs text-muted-foreground">
-            {row.purchasePrice != null ? `¥${(row.purchasePrice * row.quantity).toLocaleString()}` : "—"}
+            {row.purchasePrice != null ? formatJpyAmount(row.purchasePrice * row.quantity, currency) : "—"}
           </span>
         )}
       </td>
@@ -160,10 +162,10 @@ function AssetRowComponent({
             "font-price text-xs font-medium tabular-nums",
             pnlResult.pnl >= 0 ? "text-price-up" : "text-price-down"
           )}>
-            {pnlResult.pnl >= 0 ? "+" : ""}¥{pnlResult.pnl.toLocaleString()}
+            {pnlResult.pnl >= 0 ? "+" : ""}{formatJpyAmount(pnlResult.pnl, currency)}
             <br />
             <span className="text-[11px]">
-              ({pnlResult.pct >= 0 ? "+" : ""}{pnlResult.pct.toFixed(1)}%)
+              ({pnlResult.pct >= 0 ? "+" : ""}{formatPct(pnlResult.pct)}%)
             </span>
           </span>
         ) : (
@@ -219,7 +221,7 @@ function ChangeCell({ value }: { value?: number | null }) {
       "font-price text-xs font-medium tabular-nums",
       value > 0 ? "text-price-up" : value < 0 ? "text-price-down" : "text-muted-foreground"
     )}>
-      {value > 0 ? "+" : ""}{value.toFixed(1)}%
+      {value > 0 ? "+" : ""}{formatPct(value)}%
     </span>
   )
 }

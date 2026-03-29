@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 import { prisma } from "@/lib/db";
-import { TrendingTabs } from "./trending-tabs";
+import { TrendingTabs, TrendingPageHeader } from "./trending-tabs";
 
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "การ์ดมาแรง — ราคาขึ้น/ลงมากสุด",
-  description: "การ์ดที่ราคาเปลี่ยนแปลงมากที่สุดใน 24 ชั่วโมง, 7 วัน และ 30 วัน",
+  title: "Trending Cards — Biggest Price Movers",
+  description: "Cards with the most price movement in 24h, 7d, and 30d",
 };
 
 const TAKE = 50;
@@ -100,12 +100,7 @@ export default async function TrendingPage(props: {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-xl font-bold">การ์ดมาแรง</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          การ์ดที่ราคาเปลี่ยนแปลงมากที่สุดในช่วง 24 ชั่วโมง, 7 วัน และ 30 วัน
-        </p>
-      </div>
+      <TrendingPageHeader />
       <TrendingTabs data={data} initialTab={initialTab} />
     </div>
   );

@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { CARD_BG } from "@/lib/constants/ui"
 import { cn } from "@/lib/utils"
+import { formatPct } from "@/lib/utils/currency"
 import { Price } from "@/components/shared/price-inline"
 
 export interface ListingCardProps {
@@ -162,7 +163,7 @@ export function ListingCard({
                 )}
               >
                 {diffPct > 0 ? "+" : ""}
-                {diffPct.toFixed(0)}%
+                {formatPct(diffPct, 0)}%
               </span>
             </p>
           )}

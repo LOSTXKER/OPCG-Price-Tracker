@@ -8,12 +8,14 @@ import { ErrorBanner } from "@/components/shared/error-banner";
 import { SetType } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { Price } from "@/components/shared/price-inline";
+import { FormattedDate } from "@/components/shared/formatted-date";
+import { SetsPageHeader, HighestValueSetLabel, CardCountLabel } from "./sets-page-client";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "ชุดการ์ด — ดูกล่องบูสเตอร์และเด็ค",
-  description: "ดูชุดการ์ดทั้งหมด ตรวจสอบจำนวนและมูลค่าโดยประมาณ",
+  title: "Card Sets — Booster Boxes & Decks",
+  description: "Browse all card sets and check estimated values",
 };
 
 const TYPE_ORDER: SetType[] = ["BOOSTER", "EXTRA_BOOSTER", "STARTER", "PROMO", "OTHER"];
@@ -111,29 +113,12 @@ export default async function SetsIndexPage() {
   return (
     <div className="space-y-10">
       {/* Page header */}
-      <div>
-        <h1 className="font-sans text-2xl font-bold tracking-tight sm:text-3xl">ชุดการ์ด</h1>
-        <p className="mt-1 text-sm text-muted-foreground">เลือกชุดการ์ดเพื่อดูรายละเอียดและราคา</p>
-        {totalSets > 0 && (
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-              <Package className="size-3" />
-              {totalSets} ชุด
-            </span>
-            {totalMarketValue > 0 && (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                <Crown className="size-3" />
-                มูลค่ารวม <Price jpy={totalMarketValue} />
-              </span>
-            )}
-          </div>
-        )}
-      </div>
+      <SetsPageHeader totalSets={totalSets} totalMarketValue={totalMarketValue} />
 
       {dbError ? (
         <ErrorBanner />
       ) : setsRaw.length === 0 ? (
-        <KumaEmptyState title="ยังไม่มีชุดการ์ดในระบบ" />
+        <KumaEmptyState title="No card sets yet" />
       ) : (
         <>
           {/* Top 5 most valuable */}
@@ -141,7 +126,7 @@ export default async function SetsIndexPage() {
             <section className="panel overflow-hidden">
               <div className="flex items-center gap-2.5 border-b border-border/60 px-5 py-3.5">
                 <Crown className="size-4 text-amber-500" />
-                <h2 className="text-sm font-semibold">ชุดที่มีมูลค่ามากที่สุด</h2>
+                <HighestValueSetLabel />
               </div>
               <div className="divide-y divide-border/40">
                 {mostValuable.map((s, i) => {
@@ -168,7 +153,7 @@ export default async function SetsIndexPage() {
                           <span className="truncate text-sm font-medium">{s.nameEn ?? s.name}</span>
                         </div>
                       </div>
-                      <span className="shrink-0 text-xs text-muted-foreground">{s.productCardCount} ใบ</span>
+                      <CardCountLabel count={s.productCardCount} />
                       <span className="shrink-0 font-price text-sm font-semibold">
                         <Price jpy={s.totalValue} />
                       </span>
@@ -194,7 +179,7 @@ export default async function SetsIndexPage() {
                       {list.length}
                     </span>
                   </div>
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 sm:snap-none lg:grid-cols-3 xl:grid-cols-4">
                     {list.map((s) => (
                       <SetCard key={s.id} set={s} />
                     ))}
@@ -213,7 +198,7 @@ function SetCard({ set }: { set: SetWithCard }) {
   const imageUrl = set.boxImageUrl ?? set.topCard?.imageUrl;
 
   return (
-    <Link href={`/sets/${set.code}`} className="group block">
+    <Link href={`/sets/${set.code}`} className="group block w-[72vw] shrink-0 snap-start sm:w-auto sm:shrink">
       <div className="panel flex h-full flex-col overflow-hidden transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
         {/* Image area — portrait card ratio */}
         <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted/30">
@@ -251,16 +236,14 @@ function SetCard({ set }: { set: SetWithCard }) {
           </p>
 
           <div className="mt-auto flex items-center gap-2 pt-1 text-xs text-muted-foreground">
-            <span>{set.productCardCount} ใบ</span>
+            <CardCountLabel count={set.productCardCount} />
             {set.releaseDate && (
               <>
                 <span className="text-border">·</span>
-                <span>
-                  {new Date(set.releaseDate).toLocaleDateString("th-TH", {
-                    year: "numeric",
-                    month: "short",
-                  })}
-                </span>
+                <FormattedDate
+                  date={set.releaseDate}
+                  options={{ year: "numeric", month: "short" }}
+                />
               </>
             )}
           </div>

@@ -5,9 +5,10 @@ import Link from "next/link"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
-import { getCardName } from "@/lib/i18n"
+import { getCardName, t } from "@/lib/i18n"
 import { Price } from "@/components/shared/price-inline"
 import { useUIStore } from "@/stores/ui-store"
+import { formatPct } from "@/lib/utils/currency"
 
 export interface CardTableRow {
   cardCode: string
@@ -35,14 +36,14 @@ export function CardTable({ cards }: { cards: CardTableRow[] }) {
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-border text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            <th className="whitespace-nowrap pb-2.5 pr-3 pl-1 font-medium">การ์ด</th>
-            <th className="hidden whitespace-nowrap pb-2.5 pr-3 font-medium md:table-cell">ชุด</th>
-            <th className="hidden whitespace-nowrap pb-2.5 pr-3 font-medium sm:table-cell">ความหายาก</th>
-            <th className="hidden whitespace-nowrap pb-2.5 pr-3 font-medium lg:table-cell">ประเภท</th>
-            <th className="hidden whitespace-nowrap pb-2.5 pr-3 font-medium lg:table-cell">สี</th>
-            <th className="whitespace-nowrap pb-2.5 pr-3 text-right font-medium">ราคา</th>
-            <th className="whitespace-nowrap pb-2.5 pr-3 text-right font-medium">24 ชม.</th>
-            <th className="hidden whitespace-nowrap pb-2.5 text-right font-medium md:table-cell">7 วัน</th>
+            <th className="whitespace-nowrap pb-2.5 pr-3 pl-1 font-medium">{t(lang, "card")}</th>
+            <th className="hidden whitespace-nowrap pb-2.5 pr-3 font-medium md:table-cell">{t(lang, "set")}</th>
+            <th className="hidden whitespace-nowrap pb-2.5 pr-3 font-medium sm:table-cell">{t(lang, "rarity")}</th>
+            <th className="hidden whitespace-nowrap pb-2.5 pr-3 font-medium lg:table-cell">{t(lang, "type")}</th>
+            <th className="hidden whitespace-nowrap pb-2.5 pr-3 font-medium lg:table-cell">{t(lang, "color")}</th>
+            <th className="whitespace-nowrap pb-2.5 pr-3 text-right font-medium">{t(lang, "price")}</th>
+            <th className="whitespace-nowrap pb-2.5 pr-3 text-right font-medium">24h</th>
+            <th className="hidden whitespace-nowrap pb-2.5 text-right font-medium md:table-cell">7d</th>
           </tr>
         </thead>
         <tbody>
@@ -118,7 +119,7 @@ function ChangeCell({ value }: { value?: number | null }) {
     <span className={`font-mono text-xs font-medium tabular-nums ${
       up ? "text-price-up" : down ? "text-price-down" : "text-muted-foreground"
     }`}>
-      {value > 0 ? "+" : ""}{value.toFixed(1)}%
+      {value > 0 ? "+" : ""}{formatPct(value)}%
     </span>
   );
 }

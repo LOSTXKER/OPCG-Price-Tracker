@@ -1,20 +1,25 @@
+"use client";
+
 import Link from "next/link";
-
-const quickLinks = [
-  { label: "ตลาด", href: "/" },
-  { label: "ชุดการ์ด", href: "/sets" },
-  { label: "คำนวณดรอป", href: "/pull-calculator" },
-  { label: "ซื้อขาย", href: "/marketplace" },
-];
-
-const resourceLinks = [
-  { label: "คู่มือเริ่มต้น", href: "/guide/getting-started" },
-  { label: "ประเภทการ์ด", href: "/guide/card-types" },
-  { label: "ความหายาก", href: "/guide/rarities" },
-  { label: "สีในเกม", href: "/guide/colors" },
-];
+import { useUIStore } from "@/stores/ui-store";
+import { t } from "@/lib/i18n";
 
 export function Footer() {
+  const lang = useUIStore((s) => s.language);
+
+  const quickLinks = [
+    { label: t(lang, "market"), href: "/" },
+    { label: t(lang, "sets"), href: "/sets" },
+    { label: t(lang, "dropCalc"), href: "/pull-calculator" },
+    { label: t(lang, "marketplace"), href: "/marketplace" },
+  ];
+
+  const resourceLinks = [
+    { label: t(lang, "gettingStarted"), href: "/guide/getting-started" },
+    { label: t(lang, "cardTypesGuide"), href: "/guide/card-types" },
+    { label: t(lang, "raritiesGuide"), href: "/guide/rarities" },
+    { label: t(lang, "colorsGuide"), href: "/guide/colors" },
+  ];
   return (
     <footer className="hidden border-t border-border/30 md:block">
       <div className="mx-auto max-w-6xl px-4 py-10 md:px-6">
@@ -23,19 +28,18 @@ export function Footer() {
           <div className="lg:col-span-2">
             <p className="text-sm font-semibold text-foreground">Meecard</p>
             <p className="mt-2 max-w-sm text-xs leading-relaxed text-muted-foreground">
-              ราคากลางการ์ด One Piece Card Game อัปเดตทุกวัน
-              ดูราคาจาก Yuyu-tei แปลงเป็นบาท กราฟราคาย้อนหลัง
-              จัดพอร์ตและติดตามมูลค่าคอลเลคชัน
+              One Piece Card Game price tracker updated daily.
+              Prices from Yuyu-tei, portfolio & collection tracking.
             </p>
             <p className="mt-4 text-[11px] text-muted-foreground/60">
-              ข้อมูลราคาอ้างอิงจาก Yuyu-tei &middot; Card images &copy; BANDAI
+              Price data sourced from Yuyu-tei &middot; Card images &copy; BANDAI
             </p>
           </div>
 
           {/* Quick links */}
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
-              ลิงก์ด่วน
+              {t(lang, "quickLinks")}
             </p>
             <nav className="mt-3 flex flex-col gap-2">
               {quickLinks.map((link) => (
@@ -53,7 +57,7 @@ export function Footer() {
           {/* Resources */}
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
-              คู่มือ
+              {t(lang, "guide")}
             </p>
             <nav className="mt-3 flex flex-col gap-2">
               {resourceLinks.map((link) => (
@@ -76,13 +80,13 @@ export function Footer() {
           </p>
           <nav className="flex items-center gap-4 text-[11px] text-muted-foreground/50">
             <Link href="/guide" className="transition-colors hover:text-muted-foreground">
-              คู่มือ
+              {t(lang, "guide")}
             </Link>
             <a
               href="mailto:support@meecard.app"
               className="transition-colors hover:text-muted-foreground"
             >
-              ติดต่อ
+              {t(lang, "contact")}
             </a>
           </nav>
         </div>

@@ -15,7 +15,7 @@ import { AddCardDialog, type CartItem } from "@/components/portfolio/add-card-di
 import { Price } from "@/components/shared/price-inline"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { getCardName } from "@/lib/i18n"
+import { getCardName, getLocale, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
 
@@ -70,7 +70,7 @@ export default function PortfolioPage() {
         fetch("/api/portfolio/history").catch(() => null),
       ])
       if (!portfolioRes.ok) {
-        setError("โหลดข้อมูลไม่สำเร็จ")
+        setError(t(lang, "loadFailed"))
         setLoading(false)
         return
       }
@@ -85,9 +85,10 @@ export default function PortfolioPage() {
         const hData = (await historyRes.json()) as {
           snapshots: { totalJpy: number; snapshotAt: string }[]
         }
+        const locale = getLocale(lang)
         setHistory(
           (hData.snapshots ?? []).map((s) => ({
-            label: new Date(s.snapshotAt).toLocaleDateString("th-TH", {
+            label: new Date(s.snapshotAt).toLocaleDateString(locale, {
               month: "short",
               day: "numeric",
             }),
@@ -96,7 +97,7 @@ export default function PortfolioPage() {
         )
       }
     } catch {
-      setError("โหลดข้อมูลไม่สำเร็จ")
+      setError(t(lang, "loadFailed"))
     }
     setLoading(false)
   }, [activeId])
@@ -179,7 +180,7 @@ export default function PortfolioPage() {
       percent: (d.value / stats.totalValueJpy) * 100,
     }))
     if (otherValue > 0) {
-      result.push({ name: "อื่นๆ", value: otherValue, percent: (otherValue / stats.totalValueJpy) * 100 })
+      result.push({ name: t(lang, "other"), value: otherValue, percent: (otherValue / stats.totalValueJpy) * 100 })
     }
     return result
   }, [items, stats.totalValueJpy, lang])
@@ -321,7 +322,7 @@ export default function PortfolioPage() {
           {/* Total across all portfolios */}
           <div className="panel p-4">
             <div className="flex items-center justify-between">
-              <p className="text-xs font-medium text-muted-foreground">ภาพรวม</p>
+              <p className="text-xs font-medium text-muted-foreground">{t(lang, "overview")}</p>
               <button
                 onClick={() => setHideBalance(!hideBalance)}
                 className="text-muted-foreground transition-colors hover:text-foreground"
@@ -337,7 +338,7 @@ export default function PortfolioPage() {
           {/* Portfolio list */}
           <div className="panel overflow-hidden">
             <div className="flex items-center justify-between border-b border-border/40 px-4 py-2.5">
-              <p className="text-[11px] font-medium text-muted-foreground">พอร์ตโฟลิโอ ({portfolioMetas.length})</p>
+              <p className="text-[11px] font-medium text-muted-foreground">{t(lang, "portfolio")} ({portfolioMetas.length})</p>
             </div>
             <PortfolioSidebar
               portfolios={portfolioMetas}
@@ -357,31 +358,31 @@ export default function PortfolioPage() {
         {/* Top bar: portfolio name + tabs + add button */}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight">{activePortfolio?.name ?? "พอร์ตโฟลิโอ"}</h1>
+            <h1 className="text-2xl font-bold tracking-tight">{activePortfolio?.name ?? t(lang, "portfolio")}</h1>
             <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
-              {items.length} การ์ด
+              {items.length} {t(lang, "card")}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-0.5 rounded-lg bg-muted/60 p-0.5">
-              {(["overview", "transactions"] as const).map((t) => (
+              {(["overview", "transactions"] as const).map((tabId) => (
                 <button
-                  key={t}
-                  onClick={() => setTab(t)}
+                  key={tabId}
+                  onClick={() => setTab(tabId)}
                   className={cn(
                     "rounded-md px-3.5 py-1.5 text-sm font-medium transition-colors",
-                    tab === t
+                    tab === tabId
                       ? "bg-background text-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
                   )}
                 >
-                  {t === "overview" ? "ภาพรวม" : "ธุรกรรม"}
+                  {tabId === "overview" ? t(lang, "overviewTab") : t(lang, "transactionsTab")}
                 </button>
               ))}
             </div>
             <Button onClick={() => setDialogOpen(true)} className="gap-1.5">
               <Plus className="size-4" />
-              <span className="hidden sm:inline">เพิ่มการ์ด</span>
+              <span className="hidden sm:inline">{t(lang, "addCard")}</span>
             </Button>
           </div>
         </div>
@@ -394,7 +395,7 @@ export default function PortfolioPage() {
             action={
               <Button onClick={() => setDialogOpen(true)} className="gap-1.5">
                 <Plus className="size-4" />
-                เพิ่มการ์ด
+                {t(lang, "addCard")}
               </Button>
             }
           />
@@ -418,9 +419,9 @@ export default function PortfolioPage() {
             {/* Assets table */}
             <div className="panel overflow-hidden">
               <div className="flex items-center justify-between border-b border-border/40 px-5 py-3.5">
-                <p className="text-sm font-semibold">สินทรัพย์</p>
+                <p className="text-sm font-semibold">{t(lang, "assets")}</p>
                 <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
-                  {assets.length} การ์ด
+                  {assets.length} {t(lang, "card")}
                 </span>
               </div>
               <PortfolioAssetsTable
@@ -433,7 +434,7 @@ export default function PortfolioPage() {
         ) : (
           <div className="panel overflow-hidden">
             <div className="border-b border-border/40 px-5 py-3.5">
-              <p className="text-sm font-semibold">ธุรกรรม</p>
+              <p className="text-sm font-semibold">{t(lang, "transactionsTab")}</p>
             </div>
             <PortfolioTransactions transactions={transactions} />
           </div>

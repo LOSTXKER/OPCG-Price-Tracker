@@ -10,6 +10,8 @@ import { RarityBadge } from "@/components/shared/rarity-badge";
 import { RARITIES } from "@/lib/constants/rarities";
 import { prisma } from "@/lib/db";
 import { Price } from "@/components/shared/price-inline";
+import { FormattedDate } from "@/components/shared/formatted-date";
+import { SetPageStats, SetPageTopCardLabel } from "./set-page-client";
 import { pullChance, PACKS_PER_BOX } from "@/lib/utils/pull-rate";
 import {
   SetDetailContent,
@@ -66,7 +68,19 @@ const getSet = cache(async (setCode: string) => {
       ? { productCards: { some: { productId: product.id } } }
       : { setId: cardSet.id },
     orderBy: [{ latestPriceJpy: "desc" }],
-    include: { set: { select: { code: true } } },
+    include: {
+      set: { select: { code: true } },
+      prices: {
+        where: {
+          source: "SNKRDUNK",
+          gradeCondition: "PSA 10",
+          type: "SELL",
+        },
+        orderBy: { scrapedAt: "desc" },
+        take: 1,
+        select: { priceUsd: true },
+      },
+    },
   });
 
   return { ...cardSet, cards, productCardCount: cards.length };
@@ -77,10 +91,10 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const { setCode } = await props.params;
   const set = await getSet(setCode);
-  if (!set) return { title: "ไม่พบชุด" };
+  if (!set) return { title: "Set not found" };
   return {
     title: `${set.code.toUpperCase()} — ${set.nameEn ?? set.name}`,
-    description: `${set.productCardCount.toLocaleString()} ใบ · ${set.nameEn ?? set.name}`,
+    description: `${set.productCardCount.toLocaleString()} cards · ${set.nameEn ?? set.name}`,
   };
 }
 
@@ -157,6 +171,9 @@ export default async function SetDetailPage(props: {
             priceChange7d: c.priceChange7d,
             priceChange30d: c.priceChange30d,
             setCode: c.set.code,
+            psa10PriceUsd: c.prices?.[0]?.priceUsd ?? null,
+            cardType: c.cardType,
+            color: c.color,
           })
         ),
         pullRate,
@@ -169,8 +186,8 @@ export default async function SetDetailPage(props: {
     <div className="space-y-6">
       <Breadcrumb
         items={[
-          { label: "หน้าแรก", href: "/" },
-          { label: "ชุดการ์ด", href: "/sets" },
+          { label: "Home", href: "/" },
+          { label: "Sets", href: "/sets" },
           { label: set.code.toUpperCase() },
         ]}
       />
@@ -185,39 +202,17 @@ export default async function SetDetailPage(props: {
             {set.type.replaceAll("_", " ")}
           </span>
           {set.releaseDate && (
-            <span className="text-xs text-muted-foreground">
-              {set.releaseDate.toLocaleDateString("th-TH", {
-                year: "numeric",
-                month: "long",
-              })}
-            </span>
+            <FormattedDate
+              date={set.releaseDate}
+              options={{ year: "numeric", month: "long" }}
+              className="text-xs text-muted-foreground"
+            />
           )}
         </div>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
           {set.nameEn ?? set.name}
         </h1>
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-          <span>
-            <strong className="font-mono font-semibold text-foreground">
-              {cards.length}
-            </strong>{" "}
-            การ์ด
-          </span>
-          <span className="text-border">·</span>
-          <span>
-            มูลค่ารวม{" "}
-            <strong className="font-mono font-semibold text-foreground">
-              <Price jpy={totalValue} />
-            </strong>
-          </span>
-          <span className="text-border">·</span>
-          <span>
-            เฉลี่ย{" "}
-            <strong className="font-mono font-semibold text-foreground">
-              <Price jpy={avgPrice} />
-            </strong>
-          </span>
-        </div>
+        <SetPageStats cardCount={cards.length} totalValue={totalValue} avgPrice={avgPrice} />
       </div>
 
       {/* Top card spotlight */}
@@ -245,9 +240,7 @@ export default async function SetDetailPage(props: {
             <div className="min-w-0 flex-1">
               <div className="mb-0.5 flex items-center gap-1.5">
                 <Crown className="size-3 text-amber-500" />
-                <span className="text-[11px] font-medium text-muted-foreground">
-                  การ์ดแพงที่สุดในชุด
-                </span>
+                <SetPageTopCardLabel />
               </div>
               <p className="truncate text-sm font-semibold transition-colors group-hover:text-primary">
                 {topCard.nameEn ?? topCard.nameJp}

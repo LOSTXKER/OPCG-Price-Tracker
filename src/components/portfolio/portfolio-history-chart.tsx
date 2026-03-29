@@ -11,6 +11,9 @@ import {
   XAxis,
 } from "recharts"
 import { cn } from "@/lib/utils"
+import { useUIStore } from "@/stores/ui-store"
+import { t } from "@/lib/i18n"
+import { formatJpyAmount } from "@/lib/utils/currency"
 
 type DataPoint = { label: string; value: number }
 
@@ -24,6 +27,8 @@ const RANGES = [
 export function PortfolioHistoryChart({ data }: { data: DataPoint[] }) {
   const [range, setRange] = useState<string>("all")
   const fillId = `pfHistFill-${useId().replace(/:/g, "")}`
+  const lang = useUIStore((s) => s.language)
+  const currency = useUIStore((s) => s.currency)
 
   const filteredData =
     range === "all"
@@ -34,8 +39,8 @@ export function PortfolioHistoryChart({ data }: { data: DataPoint[] }) {
     return (
       <div className="flex h-40 flex-col items-center justify-center gap-2 text-muted-foreground">
         <BarChart3 className="size-8 opacity-30" />
-        <p className="text-sm">ยังไม่มีข้อมูลเพียงพอ</p>
-        <p className="text-[11px] opacity-60">ข้อมูลจะเริ่มบันทึกหลังจากเพิ่มการ์ด</p>
+        <p className="text-sm">{t(lang, "noPortfolioData")}</p>
+        <p className="text-[11px] opacity-60">{t(lang, "noPortfolioDataDesc")}</p>
       </div>
     )
   }
@@ -83,8 +88,8 @@ export function PortfolioHistoryChart({ data }: { data: DataPoint[] }) {
               }}
               formatter={(value) => {
                 const n = typeof value === "number" ? value : Number(value)
-                if (value == null || Number.isNaN(n)) return ["—", "มูลค่า"]
-                return [`¥${n.toLocaleString()}`, "มูลค่า"]
+                if (value == null || Number.isNaN(n)) return ["—", t(lang, "value")]
+                return [formatJpyAmount(n, currency), t(lang, "value")]
               }}
             />
             <Area

@@ -2,6 +2,9 @@
 
 import { PieChartIcon } from "lucide-react"
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
+import { useUIStore } from "@/stores/ui-store"
+import { t } from "@/lib/i18n"
+import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
 
 export type AllocationSlice = {
   name: string
@@ -25,11 +28,14 @@ export function PortfolioAllocationChart({
 }: {
   data: AllocationSlice[]
 }) {
+  const lang = useUIStore((s) => s.language)
+  const currency = useUIStore((s) => s.currency)
+
   if (data.length === 0) {
     return (
       <div className="flex h-48 flex-col items-center justify-center gap-2 text-muted-foreground">
         <PieChartIcon className="size-8 opacity-30" />
-        <p className="text-sm">ไม่มีข้อมูล</p>
+        <p className="text-sm">{t(lang, "noData")}</p>
       </div>
     )
   }
@@ -64,7 +70,7 @@ export function PortfolioAllocationChart({
               }}
               formatter={(value) => {
                 const n = typeof value === "number" ? value : Number(value)
-                return [`¥${n.toLocaleString()}`, "มูลค่า"]
+                return [formatJpyAmount(n, currency), t(lang, "value")]
               }}
             />
           </PieChart>
@@ -78,7 +84,7 @@ export function PortfolioAllocationChart({
               style={{ background: COLORS[i % COLORS.length] }}
             />
             <span className="truncate text-muted-foreground">{d.name}</span>
-            <span className="ml-auto shrink-0 font-price tabular-nums">{d.percent.toFixed(1)}%</span>
+            <span className="ml-auto shrink-0 font-price tabular-nums">{formatPct(d.percent)}%</span>
           </div>
         ))}
       </div>

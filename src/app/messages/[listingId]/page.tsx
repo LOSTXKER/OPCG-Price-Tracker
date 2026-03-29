@@ -8,6 +8,8 @@ import { ArrowLeft, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useUIStore } from "@/stores/ui-store";
+import { getLocale } from "@/lib/i18n";
 
 type ChatMessage = {
   id: number;
@@ -26,6 +28,8 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const lang = useUIStore((s) => s.language);
+  const locale = getLocale(lang);
 
   const load = useCallback(async () => {
     try {
@@ -78,15 +82,15 @@ export default function ChatPage() {
           <ArrowLeft className="size-5" />
         </Link>
         <h1 className="text-lg font-semibold">
-          แชท · Listing #{listingId}
+          Chat · Listing #{listingId}
         </h1>
       </div>
 
       <div className="flex-1 space-y-3 overflow-auto rounded-xl border bg-muted/20 p-4" style={{ minHeight: 300, maxHeight: "60vh" }}>
         {loading ? (
-          <p className="text-muted-foreground text-center text-sm">กำลังโหลด...</p>
+          <p className="text-muted-foreground text-center text-sm">Loading...</p>
         ) : messages.length === 0 ? (
-          <p className="text-muted-foreground text-center text-sm">เริ่มสนทนา</p>
+          <p className="text-muted-foreground text-center text-sm">Start the conversation</p>
         ) : (
           messages.map((m) => (
             <div
@@ -103,12 +107,12 @@ export default function ChatPage() {
               >
                 {!m.isOwn && (
                   <p className="text-muted-foreground mb-0.5 text-xs font-medium">
-                    {m.sender.displayName ?? "ผู้ใช้"}
+                    {m.sender.displayName ?? "User"}
                   </p>
                 )}
                 <p>{m.content}</p>
                 <p className={cn("mt-1 text-right text-[11px] opacity-60")}>
-                  {new Date(m.createdAt).toLocaleTimeString("th-TH", {
+                  {new Date(m.createdAt).toLocaleTimeString(locale, {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
@@ -128,7 +132,7 @@ export default function ChatPage() {
         }}
       >
         <Input
-          placeholder="พิมพ์ข้อความ..."
+          placeholder="Type a message..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           disabled={sending}

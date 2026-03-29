@@ -2,7 +2,7 @@ import { AlertTriangle } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function ErrorBanner({
-  message = "เจอพายุ! ไม่สามารถโหลดข้อมูลได้ ลองใหม่อีกครั้ง",
+  message = "Failed to load data. Please try again.",
   className,
 }: {
   message?: string

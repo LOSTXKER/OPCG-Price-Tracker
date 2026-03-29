@@ -11,8 +11,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
+import { useUIStore } from "@/stores/ui-store";
+import { t } from "@/lib/i18n";
 
-const nameSchema = z.string().trim().min(1, "กรุณากรอกชื่อ").max(120);
+const nameSchema = z.string().trim().min(1, "Name is required").max(120);
 
 type DbUser = {
   id: string;
@@ -31,6 +33,7 @@ type ListingBrief = {
 
 export default function ProfilePage() {
   const router = useRouter();
+  const lang = useUIStore((s) => s.language);
   const [user, setUser] = useState<DbUser | null>(null);
   const [listings, setListings] = useState<ListingBrief[]>([]);
   const [displayName, setDisplayName] = useState("");
@@ -43,7 +46,7 @@ export default function ProfilePage() {
     const res = await fetch("/api/me");
     if (!res.ok) {
       setLoading(false);
-      setError("โหลดโปรไฟล์ไม่สำเร็จ");
+      setError(t(lang, "loadFailed"));
       return;
     }
     const data = (await res.json()) as { user: DbUser; listings: ListingBrief[] };
@@ -60,7 +63,7 @@ export default function ProfilePage() {
   const saveName = async () => {
     const parsed = nameSchema.safeParse(displayName);
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? "ชื่อไม่ถูกต้อง");
+      setError(parsed.error.issues[0]?.message ?? "Invalid name");
       return;
     }
     setSaving(true);
@@ -73,7 +76,7 @@ export default function ProfilePage() {
       });
       if (!res.ok) {
         const j = (await res.json()) as { error?: string };
-        setError(j.error ?? "บันทึกไม่สำเร็จ");
+        setError(j.error ?? t(lang, "addFailed"));
         return;
       }
       const data = (await res.json()) as { user: DbUser };
@@ -94,7 +97,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="container mx-auto max-w-2xl px-4 py-8">
-        <p className="text-muted-foreground text-sm">กำลังโหลด…</p>
+        <p className="text-muted-foreground text-sm">Loading…</p>
       </div>
     );
   }
@@ -102,12 +105,12 @@ export default function ProfilePage() {
   if (!user) {
     return (
       <div className="container mx-auto flex max-w-2xl flex-col items-center gap-4 px-4 py-16 text-center">
-        <p className="text-muted-foreground text-sm">{error ?? "ไม่พบผู้ใช้"}</p>
+        <p className="text-muted-foreground text-sm">{error ?? "User not found"}</p>
         <Link
           href="/login"
           className="text-primary text-sm font-medium underline-offset-4 hover:underline"
         >
-          เข้าสู่ระบบ
+          {t(lang, "login")}
         </Link>
       </div>
     );
@@ -124,7 +127,7 @@ export default function ProfilePage() {
         </Avatar>
         <div className="min-w-0 flex-1">
           <h1 className="font-sans text-3xl font-bold tracking-tight">
-            {user.displayName ?? "ผู้ใช้"}
+            {user.displayName ?? "User"}
           </h1>
           <p className="text-muted-foreground truncate text-sm">{user.email}</p>
           <Badge variant="outline" className="mt-2">
@@ -132,35 +135,35 @@ export default function ProfilePage() {
           </Badge>
         </div>
         <Button type="button" variant="destructive" onClick={() => void logout()}>
-          ออกจากระบบ
+          {t(lang, "logout")}
         </Button>
       </div>
 
       <section className="space-y-4">
-        <h2 className="font-sans text-lg font-semibold">ตั้งค่า</h2>
+        <h2 className="font-sans text-lg font-semibold">{t(lang, "profileSettings")}</h2>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
           <div className="min-w-0 flex-1 space-y-1">
             <label htmlFor="display-name" className="text-sm font-medium">
-              ชื่อที่แสดง
+              {t(lang, "profileLabel")}
             </label>
             <Input
               id="display-name"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              placeholder="ชื่อที่แสดงใน Marketplace"
+              placeholder={t(lang, "displayNamePlaceholder")}
             />
           </div>
           <Button type="button" onClick={() => void saveName()} disabled={saving}>
-            {saving ? "กำลังบันทึก…" : "บันทึก"}
+            {saving ? t(lang, "saving") : t(lang, "save")}
           </Button>
         </div>
         {error ? <p className="text-destructive text-sm">{error}</p> : null}
       </section>
 
       <section className="space-y-4">
-        <h2 className="font-sans text-lg font-semibold">รายการขายของฉัน</h2>
+        <h2 className="font-sans text-lg font-semibold">{t(lang, "myListings")}</h2>
         {listings.length === 0 ? (
-          <p className="text-muted-foreground text-sm">ยังไม่มีรายการที่ลงขาย</p>
+          <p className="text-muted-foreground text-sm">{t(lang, "noListings")}</p>
         ) : (
           <ul className="space-y-2">
             {listings.map((l) => (

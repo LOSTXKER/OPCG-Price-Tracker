@@ -14,19 +14,19 @@ import { cn } from "@/lib/utils"
 
 const registerSchema = z
   .object({
-    email: z.string().email("อีเมลไม่ถูกต้อง"),
-    password: z.string().min(8, "รหัสผ่านอย่างน้อย 8 ตัวอักษร"),
+    email: z.string().email("Invalid email"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
     confirm: z.string(),
   })
   .refine((data) => data.password === data.confirm, {
-    message: "รหัสผ่านไม่ตรงกัน",
+    message: "Passwords do not match",
     path: ["confirm"],
   })
 
 const PASSWORD_RULES = [
-  { test: (v: string) => v.length >= 8, label: "อย่างน้อย 8 ตัวอักษร" },
-  { test: (v: string) => /[A-Z]/.test(v), label: "มีตัวพิมพ์ใหญ่อย่างน้อย 1 ตัว" },
-  { test: (v: string) => /\d/.test(v), label: "มีตัวเลขอย่างน้อย 1 ตัว" },
+  { test: (v: string) => v.length >= 8, label: "At least 8 characters" },
+  { test: (v: string) => /[A-Z]/.test(v), label: "At least 1 uppercase" },
+  { test: (v: string) => /\d/.test(v), label: "At least 1 number" },
 ]
 
 export function RegisterClient() {
@@ -65,7 +65,7 @@ export function RegisterClient() {
     const parsed = registerSchema.safeParse({ email, password, confirm })
     if (!parsed.success) {
       const first = parsed.error.issues[0]
-      setError(first?.message ?? "ข้อมูลไม่ถูกต้อง")
+      setError(first?.message ?? "Invalid data")
       return
     }
     setLoading(true)
@@ -93,19 +93,18 @@ export function RegisterClient() {
           <Logo size="lg" mono className="text-background" />
           <div className="max-w-md">
             <h2 className="text-3xl font-bold tracking-tight text-background">
-              เริ่มต้นสะสม
+              Start collecting
               <br />
-              และติดตามได้ฟรี
+              and tracking for free
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-background/60">
-              สมัครสมาชิกเพื่อสร้าง Portfolio ติดตามราคาการ์ดที่สนใจ
-              และรับการแจ้งเตือนเมื่อราคาถึงเป้าหมาย
+              Create a portfolio, track card prices, and get alerts when prices hit your target.
             </p>
             <div className="mt-8 flex flex-col gap-3">
               {[
-                "ฟรี ไม่มีค่าใช้จ่าย",
-                "สร้าง Portfolio ไม่จำกัด",
-                "แจ้งเตือนราคาอัตโนมัติ",
+                "Free, no cost",
+                "Unlimited portfolios",
+                "Automatic price alerts",
               ].map((text) => (
                 <div key={text} className="flex items-center gap-2 text-sm text-background/70">
                   <CheckCircle2 className="size-4 shrink-0 text-primary" />
@@ -130,9 +129,9 @@ export function RegisterClient() {
             </div>
 
             <div className="space-y-2 text-center">
-              <h1 className="text-2xl font-bold tracking-tight">สมัครสมาชิก</h1>
+              <h1 className="text-2xl font-bold tracking-tight">Sign up</h1>
               <p className="text-sm text-muted-foreground">
-                สร้างบัญชีเพื่อเก็บ Portfolio และ Watchlist
+                Create an account for Portfolio &amp; Watchlist
               </p>
             </div>
 
@@ -173,7 +172,7 @@ export function RegisterClient() {
                 <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-3 text-muted-foreground">หรือใช้อีเมล</span>
+                <span className="bg-background px-3 text-muted-foreground">or use email</span>
               </div>
             </div>
 
@@ -181,7 +180,7 @@ export function RegisterClient() {
             <form onSubmit={onSubmit} className="space-y-4">
               <div className="space-y-2">
                 <label htmlFor="register-email" className="text-sm font-medium">
-                  อีเมล
+                  Email
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -200,7 +199,7 @@ export function RegisterClient() {
 
               <div className="space-y-2">
                 <label htmlFor="register-password" className="text-sm font-medium">
-                  รหัสผ่าน
+                  Password
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -246,7 +245,7 @@ export function RegisterClient() {
 
               <div className="space-y-2">
                 <label htmlFor="register-confirm" className="text-sm font-medium">
-                  ยืนยันรหัสผ่าน
+                  Confirm password
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -280,21 +279,21 @@ export function RegisterClient() {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 size-4 animate-spin" />
-                    กำลังสมัคร...
+                    Signing up...
                   </>
                 ) : (
-                  "สมัครสมาชิก"
+                  "Sign up"
                 )}
               </Button>
             </form>
 
             <p className="text-center text-sm text-muted-foreground">
-              มีบัญชีแล้ว?{" "}
+              Already have an account?{" "}
               <Link
                 href={`/login?redirect=${encodeURIComponent(redirect)}`}
                 className="font-medium text-primary underline-offset-4 hover:underline"
               >
-                เข้าสู่ระบบ
+                Sign in
               </Link>
             </p>
           </div>

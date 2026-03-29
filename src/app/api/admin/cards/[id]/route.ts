@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkIsAdmin } from "@/lib/auth/check-admin";
 import { prisma } from "@/lib/db";
+import { opcgConfig } from "@/lib/game-config";
 
 export async function GET(
   _request: NextRequest,
@@ -41,8 +42,7 @@ export async function GET(
   // For parallels, generate candidate image URLs
   const candidates: { pIndex: number; url: string }[] = [];
   if (card.isParallel && card.baseCode) {
-    const bandaiBase =
-      "https://www.onepiece-cardgame.com/images/cardlist/card";
+    const bandaiBase = opcgConfig.officialCardImageBase!;
     for (let p = 1; p <= 8; p++) {
       candidates.push({
         pIndex: p,
@@ -62,49 +62,54 @@ export async function PATCH(
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  const { id } = await params;
-  const cardId = parseInt(id);
-  if (isNaN(cardId)) {
-    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
-  }
-
-  const body = await request.json();
-
-  const allowedFields = [
-    "nameJp",
-    "nameEn",
-    "nameTh",
-    "rarity",
-    "cardType",
-    "color",
-    "colorEn",
-    "cost",
-    "power",
-    "counter",
-    "life",
-    "attribute",
-    "trait",
-    "artist",
-    "effectJp",
-    "effectEn",
-    "effectTh",
-    "triggerJp",
-    "triggerEn",
-    "imageUrl",
-    "parallelIndex",
-  ];
-
-  const data: Record<string, unknown> = {};
-  for (const key of allowedFields) {
-    if (key in body) {
-      data[key] = body[key];
+  try {
+    const { id } = await params;
+    const cardId = parseInt(id);
+    if (isNaN(cardId)) {
+      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
     }
+
+    const body = await request.json();
+
+    const allowedFields = [
+      "nameJp",
+      "nameEn",
+      "nameTh",
+      "rarity",
+      "cardType",
+      "color",
+      "colorEn",
+      "cost",
+      "power",
+      "counter",
+      "life",
+      "attribute",
+      "trait",
+      "artist",
+      "effectJp",
+      "effectEn",
+      "effectTh",
+      "triggerJp",
+      "triggerEn",
+      "imageUrl",
+      "parallelIndex",
+    ];
+
+    const data: Record<string, unknown> = {};
+    for (const key of allowedFields) {
+      if (key in body) {
+        data[key] = body[key];
+      }
+    }
+
+    const updated = await prisma.card.update({
+      where: { id: cardId },
+      data,
+    });
+
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error("PATCH /api/admin/cards/[id]:", error);
+    return NextResponse.json({ error: "Failed to update card" }, { status: 500 });
   }
-
-  const updated = await prisma.card.update({
-    where: { id: cardId },
-    data,
-  });
-
-  return NextResponse.json(updated);
 }

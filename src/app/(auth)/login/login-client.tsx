@@ -10,14 +10,17 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Logo } from "@/components/brand/logo"
 import { createClient } from "@/lib/supabase/client"
+import { useUIStore } from "@/stores/ui-store"
+import { t } from "@/lib/i18n"
 
 const loginSchema = z.object({
-  email: z.string().email("อีเมลไม่ถูกต้อง"),
-  password: z.string().min(1, "กรุณากรอกรหัสผ่าน"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(1, "Password is required"),
 })
 
 export function LoginClient() {
   const router = useRouter()
+  const lang = useUIStore((s) => s.language)
   const searchParams = useSearchParams()
   const redirect = searchParams.get("redirect") || "/"
   const authError = searchParams.get("error")
@@ -26,7 +29,7 @@ export function LoginClient() {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(
-    authError === "auth_failed" ? "การเข้าสู่ระบบล้มเหลว ลองใหม่อีกครั้ง" : null
+    authError === "auth_failed" ? "Sign in failed. Please try again." : null
   )
   const [loading, setLoading] = useState(false)
   const [demoLoading, setDemoLoading] = useState(false)
@@ -41,7 +44,7 @@ export function LoginClient() {
     })
     setDemoLoading(false)
     if (signError) {
-      setError("Demo account ไม่พร้อมใช้งานขณะนี้")
+      setError("Demo account unavailable")
       return
     }
     router.push(redirect)
@@ -70,7 +73,7 @@ export function LoginClient() {
     setError(null)
     const parsed = loginSchema.safeParse({ email, password })
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? "ข้อมูลไม่ถูกต้อง")
+      setError(parsed.error.issues[0]?.message ?? "Invalid credentials")
       return
     }
     setLoading(true)
@@ -98,13 +101,12 @@ export function LoginClient() {
           <Logo size="lg" mono className="text-background" />
           <div className="max-w-md">
             <h2 className="text-3xl font-bold tracking-tight text-background">
-              ติดตามราคาการ์ด
+              Track every
               <br />
-              One Piece ทุกใบ
+              One Piece card price
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-background/60">
-              ดูราคาตลาดรายวัน สร้าง Portfolio ติดตามมูลค่าคอลเลกชัน
-              และรับแจ้งเตือนเมื่อราคาเปลี่ยนแปลง
+              Daily market prices, portfolio tracking, and price change alerts.
             </p>
           </div>
           <p className="text-xs text-background/30">
@@ -123,9 +125,9 @@ export function LoginClient() {
             </div>
 
             <div className="space-y-2 text-center">
-              <h1 className="text-2xl font-bold tracking-tight">เข้าสู่ระบบ</h1>
+              <h1 className="text-2xl font-bold tracking-tight">{t(lang, "login")}</h1>
               <p className="text-sm text-muted-foreground">
-                ใช้อีเมลหรือบัญชีโซเชียลเพื่อเข้าใช้งาน
+                Sign in with email or social account
               </p>
             </div>
 
@@ -166,7 +168,7 @@ export function LoginClient() {
                 <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-3 text-muted-foreground">หรือใช้อีเมล</span>
+                <span className="bg-background px-3 text-muted-foreground">or use email</span>
               </div>
             </div>
 
@@ -174,7 +176,7 @@ export function LoginClient() {
             <form onSubmit={onSubmit} className="space-y-4">
               <div className="space-y-2">
                 <label htmlFor="login-email" className="text-sm font-medium">
-                  อีเมล
+                  Email
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -192,7 +194,7 @@ export function LoginClient() {
               </div>
               <div className="space-y-2">
                 <label htmlFor="login-password" className="text-sm font-medium">
-                  รหัสผ่าน
+                  Password
                 </label>
                 <div className="relative">
                   <Input
@@ -225,21 +227,21 @@ export function LoginClient() {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 size-4 animate-spin" />
-                    กำลังเข้าสู่ระบบ...
+                    Signing in...
                   </>
                 ) : (
-                  "เข้าสู่ระบบ"
+                  t(lang, "login")
                 )}
               </Button>
             </form>
 
             <p className="text-center text-sm text-muted-foreground">
-              ยังไม่มีบัญชี?{" "}
+              Don&apos;t have an account?{" "}
               <Link
                 href={`/register?redirect=${encodeURIComponent(redirect)}`}
                 className="font-medium text-primary underline-offset-4 hover:underline"
               >
-                สมัครสมาชิก
+                Sign up
               </Link>
             </p>
 
@@ -249,7 +251,7 @@ export function LoginClient() {
                 <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-3 text-muted-foreground">หรือ</span>
+                <span className="bg-background px-3 text-muted-foreground">or</span>
               </div>
             </div>
             <Button
@@ -264,7 +266,7 @@ export function LoginClient() {
               ) : (
                 <Play className="size-3.5" />
               )}
-              {demoLoading ? "กำลังเข้าสู่ระบบ..." : "ทดลองใช้งาน Demo"}
+              {demoLoading ? "Signing in..." : "Try Demo"}
             </Button>
           </div>
         </div>

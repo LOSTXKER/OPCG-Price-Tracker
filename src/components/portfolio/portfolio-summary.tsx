@@ -12,6 +12,9 @@ import {
 import { PriceDisplay } from "@/components/shared/price-display"
 import { cn } from "@/lib/utils"
 import { TrendingDown, TrendingUp } from "lucide-react"
+import { useUIStore } from "@/stores/ui-store"
+import { t } from "@/lib/i18n"
+import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
 import {
   Area,
   AreaChart,
@@ -41,6 +44,8 @@ export function PortfolioSummary({
   history,
 }: PortfolioSummaryProps) {
   const chartFillId = `portfolioValueFill-${useId().replace(/:/g, "")}`
+  const lang = useUIStore((s) => s.language)
+  const currency = useUIStore((s) => s.currency)
   const pnlPositive = unrealizedPnl >= 0
   const hasHistory = history && history.length > 1
   const chartData = hasHistory ? history : undefined
@@ -60,7 +65,7 @@ export function PortfolioSummary({
         <div className="text-muted-foreground text-sm">
           Cost basis{" "}
           <span className="font-mono text-foreground">
-            ¥{totalCostJpy.toLocaleString()}
+            {formatJpyAmount(totalCostJpy, currency)}
           </span>
         </div>
       </CardHeader>
@@ -83,11 +88,11 @@ export function PortfolioSummary({
               )}
               <span>
                 {pnlPositive ? "+" : ""}
-                {unrealizedPnl.toLocaleString()} ¥
+                {formatJpyAmount(unrealizedPnl, currency)}
               </span>
               <span className="text-base font-medium opacity-90">
                 ({pnlPositive ? "+" : ""}
-                {unrealizedPnlPercent.toFixed(1)}%)
+                {formatPct(unrealizedPnlPercent)}%)
               </span>
             </div>
           </div>
@@ -130,7 +135,7 @@ export function PortfolioSummary({
                     formatter={(value) => {
                       const n = typeof value === "number" ? value : Number(value)
                       if (value == null || Number.isNaN(n)) return ["—", "Value"]
-                      return [`¥${n.toLocaleString()}`, "Value"]
+                      return [formatJpyAmount(n, currency), t(lang, "value")]
                     }}
                   />
                   <Area

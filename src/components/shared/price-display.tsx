@@ -1,6 +1,6 @@
 "use client";
 
-import { formatByCurrency } from "@/lib/utils/currency";
+import { formatByCurrency, formatPct } from "@/lib/utils/currency";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/stores/ui-store";
 
@@ -67,7 +67,7 @@ export function PriceDisplay({
             !up && !down && "text-muted-foreground"
           )}
         >
-          {changeNum! > 0 ? "+" : ""}{changeNum!.toFixed(1)}%
+          {changeNum! > 0 ? "+" : ""}{formatPct(changeNum!)}%
         </span>
       )}
     </div>

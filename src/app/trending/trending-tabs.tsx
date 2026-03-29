@@ -9,18 +9,19 @@ import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
 import { Sparkline } from "@/components/shared/sparkline"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
-import { getCardName } from "@/lib/i18n"
+import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
+import { formatPct } from "@/lib/utils/currency"
 import type { TrendingCardRow } from "./page"
 
 type TabId = "gainers" | "losers" | "mostViewed"
 type Period = "24h" | "7d" | "30d"
 
-const TABS: { id: TabId; label: string; icon: typeof TrendingUp }[] = [
-  { id: "gainers", label: "ราคาขึ้นมากสุด", icon: TrendingUp },
-  { id: "losers", label: "ราคาลงมากสุด", icon: TrendingDown },
-  { id: "mostViewed", label: "เข้าชมมากสุด", icon: Eye },
+const TABS: { id: TabId; labelKey: "topGainers" | "topLosers" | "mostViewed"; icon: typeof TrendingUp }[] = [
+  { id: "gainers", labelKey: "topGainers", icon: TrendingUp },
+  { id: "losers", labelKey: "topLosers", icon: TrendingDown },
+  { id: "mostViewed", labelKey: "mostViewed", icon: Eye },
 ]
 
 const PERIODS: Period[] = ["24h", "7d", "30d"]
@@ -75,7 +76,7 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
               )}
             >
               <Icon className="size-4" />
-              {tab.label}
+              {t(lang, tab.labelKey)}
             </button>
           )
         })}
@@ -115,18 +116,18 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
             <thead>
               <tr className="border-b border-border text-xs text-muted-foreground">
                 <th className="px-4 py-3 text-left font-medium">#</th>
-                <th className="px-4 py-3 text-left font-medium">การ์ด</th>
-                <th className="px-4 py-3 text-left font-medium">ชุด</th>
-                <th className="px-4 py-3 text-right font-medium">ราคา</th>
+                <th className="px-4 py-3 text-left font-medium">{t(lang, "card")}</th>
+                <th className="px-4 py-3 text-left font-medium">{t(lang, "set")}</th>
+                <th className="px-4 py-3 text-right font-medium">{t(lang, "price")}</th>
                 {activeTab === "mostViewed" ? (
-                  <th className="whitespace-nowrap px-4 py-3 text-right font-medium">ยอดเข้าชม</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-right font-medium">{t(lang, "visits")}</th>
                 ) : (
                   <th className="whitespace-nowrap px-4 py-3 text-right font-medium">
-                    เปลี่ยนแปลง ({period})
+                    {t(lang, "change")} ({period})
                   </th>
                 )}
                 <th className="hidden px-4 py-3 text-right font-medium sm:table-cell">
-                  กราฟ 7 วัน
+                  {t(lang, "sparkline7d")}
                 </th>
               </tr>
             </thead>
@@ -134,7 +135,7 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
               {cards.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center text-muted-foreground">
-                    ไม่มีข้อมูล
+                    {t(lang, "noData")}
                   </td>
                 </tr>
               ) : (
@@ -199,7 +200,7 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
                           )}
                         >
                           {change != null
-                            ? `${change > 0 ? "+" : ""}${change.toFixed(1)}%`
+                            ? `${change > 0 ? "+" : ""}${formatPct(change)}%`
                             : "—"}
                         </td>
                       )}
@@ -220,6 +221,16 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
           </table>
         </div>
       </div>
+    </div>
+  )
+}
+
+export function TrendingPageHeader() {
+  const lang = useUIStore((s) => s.language)
+  return (
+    <div>
+      <h1 className="text-xl font-bold">{t(lang, "trendingTitle")}</h1>
+      <p className="mt-1 text-sm text-muted-foreground">{t(lang, "trendingDesc")}</p>
     </div>
   )
 }

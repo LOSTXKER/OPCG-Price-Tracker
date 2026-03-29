@@ -5,14 +5,8 @@ import { usePathname } from "next/navigation";
 import { Calculator, Home, Package, ShoppingBag, User } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-
-const tabs = [
-  { href: "/", label: "หน้าแรก", icon: Home },
-  { href: "/sets", label: "ชุดการ์ด", icon: Package },
-  { href: "/pull-calculator", label: "คำนวณ", icon: Calculator },
-  { href: "/marketplace", label: "ซื้อขาย", icon: ShoppingBag },
-  { href: "/profile", label: "บัญชี", icon: User },
-] as const;
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 function isTabActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -21,6 +15,15 @@ function isTabActive(pathname: string, href: string) {
 
 export function BottomNav({ className }: { className?: string }) {
   const pathname = usePathname() ?? "/";
+  const lang = useUIStore((s) => s.language);
+
+  const tabs = [
+    { href: "/", label: t(lang, "home"), icon: Home },
+    { href: "/sets", label: t(lang, "sets"), icon: Package },
+    { href: "/pull-calculator", label: t(lang, "calculate"), icon: Calculator },
+    { href: "/marketplace", label: t(lang, "marketplace"), icon: ShoppingBag },
+    { href: "/profile", label: t(lang, "account"), icon: User },
+  ] as const;
 
   return (
     <nav

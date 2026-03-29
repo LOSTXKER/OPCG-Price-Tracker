@@ -12,20 +12,9 @@ import {
 } from "recharts"
 import { Loader2, TrendingDown, TrendingUp } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { formatByCurrency, jpyToThb, jpyToUsd } from "@/lib/utils/currency"
+import { compactDisplayValue, formatDisplayValue, formatPct, type Currency } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
-
-function getCssVar(name: string, fallback: string) {
-  if (typeof document === "undefined") return fallback
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback
-}
-
-function getChartColors() {
-  return {
-    up: getCssVar("--price-up", "#34C759"),
-    down: getCssVar("--price-down", "#FF3B30"),
-  }
-}
+import { getLocale, t } from "@/lib/i18n"
 
 const PERIODS = [
   { value: "24h", label: "24H" },
@@ -36,49 +25,59 @@ const PERIODS = [
   { value: "all", label: "All" },
 ]
 
-export interface PriceChartStats {
+export type ChartSeriesDef = {
+  id: string
+  label: string
+  color: string
+  dataKey: string
+}
+
+export type MergedChartRow = {
+  scrapedAt: string
+  [key: string]: number | string | undefined
+}
+
+export type ChartStats = {
   high: number
   low: number
   avg: number
+  change: number
 }
 
 export interface PriceChartProps {
-  data: {
-    scrapedAt: string
-    priceJpy: number | null
-    priceThb?: number | null
-    source?: string
-  }[]
+  mergedData: MergedChartRow[]
+  series: ChartSeriesDef[]
+  visibleSeries: Set<string>
   period: string
   onPeriodChange: (period: string) => void
-  stats?: PriceChartStats | null
   loading?: boolean
+  stats?: ChartStats | null
 }
 
-function formatAxisDate(iso: string, period?: string) {
+function formatAxisDate(iso: string, locale: string, period?: string) {
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return iso
   if (period === "24h") {
-    return d.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })
+    return d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })
   }
   if (period === "1y" || period === "all") {
-    return d.toLocaleDateString("th-TH", { month: "short", year: "2-digit" })
+    return d.toLocaleDateString(locale, { month: "short", year: "2-digit" })
   }
-  return d.toLocaleDateString("th-TH", { month: "short", day: "numeric" })
+  return d.toLocaleDateString(locale, { month: "short", day: "numeric" })
 }
 
-function formatTooltipDate(iso: string, period?: string) {
+function formatTooltipDate(iso: string, locale: string, period?: string) {
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return iso
   if (period === "24h") {
-    return d.toLocaleString("th-TH", {
+    return d.toLocaleString(locale, {
       month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     })
   }
-  return d.toLocaleDateString("th-TH", {
+  return d.toLocaleDateString(locale, {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -87,122 +86,97 @@ function formatTooltipDate(iso: string, period?: string) {
   })
 }
 
-function formatPriceByCurrency(jpy: number, currency: string): string {
-  return formatByCurrency(jpy, currency as "JPY" | "THB" | "USD").primary
-}
+function MultiSeriesTooltip(props: {
+  active?: boolean
+  payload?: ReadonlyArray<{ dataKey?: string; value?: number; color?: string }>
+  label?: string
+  series: ChartSeriesDef[]
+  visibleSeries: Set<string>
+  formatPrice: (v: number) => string
+  period?: string
+  locale?: string
+}) {
+  const { active, payload, label, series, visibleSeries, formatPrice, period, locale = "en-US" } = props
+  if (!active || !payload?.length || !label) return null
 
-function compactPrice(jpy: number, currency: string): string {
-  const c = currency as "JPY" | "THB" | "USD"
-  let value: number
-  let prefix: string
-  let suffix: string
+  const visibleEntries = series.filter((s) => visibleSeries.has(s.id))
 
-  switch (c) {
-    case "THB":
-      value = jpyToThb(jpy)
-      prefix = "~"
-      suffix = " ฿"
-      break
-    case "USD":
-      value = jpyToUsd(jpy)
-      prefix = "$"
-      suffix = ""
-      break
-    default:
-      value = jpy
-      prefix = "¥"
-      suffix = ""
+  if (visibleEntries.length === 1) {
+    const s = visibleEntries[0]
+    const entry = payload.find((p) => p.dataKey === s.dataKey)
+    if (!entry?.value) return null
+    return (
+      <div className="rounded-xl border border-border/50 bg-popover/95 px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
+        <p className="text-[10px] text-muted-foreground">
+          {formatTooltipDate(label, locale, period)}
+        </p>
+        <p className="mt-1 font-price text-sm font-bold tabular-nums" style={{ color: s.color }}>
+          {formatPrice(entry.value)}
+        </p>
+      </div>
+    )
   }
 
-  if (value >= 1_000_000) return `${prefix}${(value / 1_000_000).toFixed(1)}M${suffix}`
-  if (value >= 1_000) return `${prefix}${Math.round(value / 1_000)}K${suffix}`
-  return `${prefix}${Math.round(value)}${suffix}`
-}
-
-type ChartRow = {
-  scrapedAt: string
-  priceJpy: number
-  priceThb?: number | null
-  source?: string
-}
-
-function ChartTooltip(props: {
-  active?: boolean
-  payload?: ReadonlyArray<{ payload?: ChartRow }>
-  currency?: string
-  lineColor?: string
-  period?: string
-}) {
-  const { active, payload, currency = "JPY", lineColor, period } = props
-  if (!active || !payload?.length) return null
-  const row = payload[0].payload as ChartRow | undefined
-  if (!row) return null
   return (
     <div className="rounded-xl border border-border/50 bg-popover/95 px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
       <p className="text-[10px] text-muted-foreground">
-        {formatTooltipDate(row.scrapedAt, period)}
+        {formatTooltipDate(label, locale, period)}
       </p>
-      <p
-        className="mt-1 font-price text-base font-bold"
-        style={{ color: lineColor }}
-      >
-        {formatPriceByCurrency(row.priceJpy, currency)}
-      </p>
-      {row.source && (
-        <p className="mt-0.5 text-[10px] text-muted-foreground/50">
-          {row.source}
-        </p>
-      )}
+      <div className="mt-1.5 space-y-1">
+        {visibleEntries.map((s) => {
+          const entry = payload.find((p) => p.dataKey === s.dataKey)
+          const value = entry?.value
+          if (value == null) return null
+          return (
+            <div key={s.id} className="flex items-center gap-2">
+              <span
+                className="inline-block size-2 rounded-full"
+                style={{ backgroundColor: s.color }}
+              />
+              <span className="text-[10px] text-muted-foreground">{s.label}</span>
+              <span className="ml-auto font-price text-sm font-bold tabular-nums" style={{ color: s.color }}>
+                {formatPrice(value)}
+              </span>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
 
 export function PriceChart({
-  data,
+  mergedData,
+  series,
+  visibleSeries,
   period,
   onPeriodChange,
-  stats,
   loading,
+  stats,
 }: PriceChartProps) {
-  const currency = useUIStore((s) => s.currency)
+  const displayCurrency = useUIStore((s) => s.currency) as Currency
+  const lang = useUIStore((s) => s.language)
+  const locale = getLocale(lang)
   const chartId = useId().replace(/:/g, "")
-  const gradientId = `priceGrad-${chartId}`
 
-  const chartData = useMemo<ChartRow[]>(
-    () =>
-      [...data]
-        .filter((d) => d.priceJpy != null)
-        .map((d) => ({
-          scrapedAt: d.scrapedAt,
-          priceJpy: d.priceJpy!,
-          priceThb: d.priceThb,
-          source: d.source,
-        }))
-        .sort(
-          (a, b) =>
-            new Date(a.scrapedAt).getTime() - new Date(b.scrapedAt).getTime(),
-        ),
-    [data],
+  const visibleSeriesDefs = useMemo(
+    () => series.filter((s) => visibleSeries.has(s.id)),
+    [series, visibleSeries],
   )
 
-  const { lineColor, isUp, change } = useMemo(() => {
-    const colors = getChartColors()
-    if (chartData.length < 2)
-      return { lineColor: colors.up, isUp: true, change: 0 }
-    const first = chartData[0].priceJpy
-    const last = chartData[chartData.length - 1].priceJpy
-    const up = last >= first
-    const chg = first > 0 ? ((last - first) / first) * 100 : 0
-    return { lineColor: up ? colors.up : colors.down, isUp: up, change: chg }
-  }, [chartData])
+  const fmtPrice = useMemo(
+    () => (v: number) => formatDisplayValue(v, displayCurrency),
+    [displayCurrency],
+  )
 
-  const lastPrice = chartData.length > 0
-    ? chartData[chartData.length - 1].priceJpy
-    : 0
+  const fmtAxis = useMemo(
+    () => (v: number) => compactDisplayValue(v, displayCurrency),
+    [displayCurrency],
+  )
 
   return (
     <div className="space-y-4">
-      {/* Period selector + loading indicator */}
+      {/* Period selector */}
       <div className="flex items-center justify-between">
         <div className="flex gap-1">
           {PERIODS.map((p) => (
@@ -227,54 +201,54 @@ export function PriceChart({
       </div>
 
       {/* Stats bar */}
-      {stats && stats.high > 0 && (
-        <div className="space-y-3">
-          <div className="grid grid-cols-4 gap-2">
-            <div className="rounded-lg bg-muted/30 px-2.5 py-2">
-              <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
-                High
-              </p>
-              <p className="mt-0.5 font-price text-sm font-bold tabular-nums text-price-up">
-                {formatPriceByCurrency(stats.high, currency)}
-              </p>
-            </div>
-            <div className="rounded-lg bg-muted/30 px-2.5 py-2">
-              <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
-                Low
-              </p>
-              <p className="mt-0.5 font-price text-sm font-bold tabular-nums text-price-down">
-                {formatPriceByCurrency(stats.low, currency)}
-              </p>
-            </div>
-            <div className="rounded-lg bg-muted/30 px-2.5 py-2">
-              <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
-                Avg
-              </p>
-              <p className="mt-0.5 font-price text-sm font-bold tabular-nums">
-                {formatPriceByCurrency(stats.avg, currency)}
-              </p>
-            </div>
-            <div className="rounded-lg bg-muted/30 px-2.5 py-2">
-              <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
-                Change
-              </p>
-              <p
-                className="mt-0.5 flex items-center gap-0.5 font-price text-sm font-bold tabular-nums"
-                style={{
-                  color: isUp ? "var(--price-up)" : change < 0 ? "var(--price-down)" : undefined,
-                }}
-              >
-                {isUp && change !== 0 ? (
-                  <TrendingUp className="size-3" />
-                ) : change < 0 ? (
-                  <TrendingDown className="size-3" />
-                ) : null}
-                {change > 0 ? "+" : ""}
-                {change.toFixed(1)}%
-              </p>
-            </div>
+      {stats && (
+        <div className="grid grid-cols-4 gap-px overflow-hidden rounded-lg bg-border/30">
+          <div className="bg-background px-3 py-2">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">High</p>
+            <p className="mt-0.5 font-price text-sm font-bold tabular-nums text-price-up">
+              {fmtPrice(stats.high)}
+            </p>
           </div>
+          <div className="bg-background px-3 py-2">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">Low</p>
+            <p className="mt-0.5 font-price text-sm font-bold tabular-nums text-price-down">
+              {fmtPrice(stats.low)}
+            </p>
+          </div>
+          <div className="bg-background px-3 py-2">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">Avg</p>
+            <p className="mt-0.5 font-price text-sm font-bold tabular-nums text-foreground">
+              {fmtPrice(stats.avg)}
+            </p>
+          </div>
+          <div className="bg-background px-3 py-2">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">Change</p>
+            <p className={cn(
+              "mt-0.5 flex items-center gap-1 font-price text-sm font-bold tabular-nums",
+              stats.change >= 0 ? "text-price-up" : "text-price-down",
+            )}>
+              {stats.change >= 0
+                ? <TrendingUp className="size-3" />
+                : <TrendingDown className="size-3" />
+              }
+              {stats.change >= 0 ? "+" : ""}{formatPct(stats.change)}%
+            </p>
+          </div>
+        </div>
+      )}
 
+      {/* Legend (only when multiple series) */}
+      {visibleSeriesDefs.length > 1 && (
+        <div className="flex flex-wrap gap-x-4 gap-y-1">
+          {visibleSeriesDefs.map((s) => (
+            <div key={s.id} className="flex items-center gap-1.5">
+              <span
+                className="inline-block size-2 rounded-full"
+                style={{ backgroundColor: s.color }}
+              />
+              <span className="text-[11px] text-muted-foreground">{s.label}</span>
+            </div>
+          ))}
         </div>
       )}
 
@@ -285,21 +259,23 @@ export function PriceChart({
           loading && "pointer-events-none opacity-40",
         )}
       >
-        {chartData.length > 0 ? (
+        {mergedData.length > 0 && visibleSeriesDefs.length > 0 ? (
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart
-              data={chartData}
+              data={mergedData}
               margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
             >
               <defs>
-                <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={lineColor} stopOpacity={0.2} />
-                  <stop
-                    offset="100%"
-                    stopColor={lineColor}
-                    stopOpacity={0}
-                  />
-                </linearGradient>
+                {visibleSeriesDefs.map((s) => (
+                  <linearGradient
+                    key={s.id}
+                    id={`grad-${chartId}-${s.id}`}
+                    x1="0" y1="0" x2="0" y2="1"
+                  >
+                    <stop offset="0%" stopColor={s.color} stopOpacity={0.15} />
+                    <stop offset="100%" stopColor={s.color} stopOpacity={0} />
+                  </linearGradient>
+                ))}
               </defs>
               <CartesianGrid
                 strokeDasharray="3 3"
@@ -308,7 +284,7 @@ export function PriceChart({
               />
               <XAxis
                 dataKey="scrapedAt"
-                tickFormatter={(v) => formatAxisDate(v, period)}
+                tickFormatter={(v) => formatAxisDate(v, locale, period)}
                 tick={{ fontSize: 11 }}
                 tickLine={false}
                 axisLine={false}
@@ -321,7 +297,7 @@ export function PriceChart({
                 tickLine={false}
                 axisLine={false}
                 className="text-muted-foreground font-mono"
-                tickFormatter={(v) => compactPrice(Number(v), currency)}
+                tickFormatter={(v) => fmtAxis(Number(v))}
                 width={56}
                 domain={[
                   (dataMin: number) => Math.floor(dataMin * 0.97),
@@ -336,28 +312,38 @@ export function PriceChart({
                   opacity: 0.4,
                 }}
                 content={
-                  <ChartTooltip currency={currency} lineColor={lineColor} period={period} />
+                  <MultiSeriesTooltip
+                    series={series}
+                    visibleSeries={visibleSeries}
+                    formatPrice={fmtPrice}
+                    period={period}
+                    locale={locale}
+                  />
                 }
               />
-              <Area
-                type="monotone"
-                dataKey="priceJpy"
-                stroke={lineColor}
-                strokeWidth={2}
-                fill={`url(#${gradientId})`}
-                dot={false}
-                activeDot={{
-                  r: 5,
-                  fill: lineColor,
-                  strokeWidth: 2,
-                  stroke: "var(--color-background, #fff)",
-                }}
-              />
+              {visibleSeriesDefs.map((s) => (
+                <Area
+                  key={s.id}
+                  type="monotone"
+                  dataKey={s.dataKey}
+                  stroke={s.color}
+                  strokeWidth={2}
+                  fill={`url(#grad-${chartId}-${s.id})`}
+                  dot={false}
+                  connectNulls
+                  activeDot={{
+                    r: 4,
+                    fill: s.color,
+                    strokeWidth: 2,
+                    stroke: "var(--color-background, #fff)",
+                  }}
+                />
+              ))}
             </AreaChart>
           </ResponsiveContainer>
         ) : (
           <div className="flex h-[300px] items-center justify-center text-sm text-muted-foreground">
-            ไม่มีข้อมูลราคาสำหรับช่วงเวลานี้
+            {t(lang, "noData")}
           </div>
         )}
       </div>

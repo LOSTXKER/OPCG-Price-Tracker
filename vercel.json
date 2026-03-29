@@ -15,6 +15,10 @@
     {
       "path": "/api/cron/check-alerts",
       "schedule": "0 21 * * *"
+    },
+    {
+      "path": "/api/cron/scrape-snkrdunk",
+      "schedule": "0 18 * * *"
     }
   ]
 }

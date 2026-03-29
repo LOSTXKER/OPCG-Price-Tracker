@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export const cardInclude = {
-  set: { select: { code: true, name: true, nameEn: true } },
+  set: { select: { code: true, name: true, nameEn: true, nameTh: true } },
 } as const;
 
 export const userPublicSelect = {

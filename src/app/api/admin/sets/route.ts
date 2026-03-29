@@ -57,37 +57,42 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  const body = await request.json();
-  const { id, ...updates } = body;
+  try {
+    const body = await request.json();
+    const { id, ...updates } = body;
 
-  if (!id) {
-    return NextResponse.json({ error: "id is required" }, { status: 400 });
-  }
+    if (!id) {
+      return NextResponse.json({ error: "id is required" }, { status: 400 });
+    }
 
-  const allowedFields = [
-    "nameEn",
-    "nameTh",
-    "releaseDate",
-    "packsPerBox",
-    "cardsPerPack",
-    "boxImageUrl",
-    "msrpJpy",
-  ];
-  const data: Record<string, unknown> = {};
-  for (const key of allowedFields) {
-    if (key in updates) {
-      if (key === "releaseDate" && updates[key]) {
-        data[key] = new Date(updates[key] as string);
-      } else {
-        data[key] = updates[key];
+    const allowedFields = [
+      "nameEn",
+      "nameTh",
+      "releaseDate",
+      "packsPerBox",
+      "cardsPerPack",
+      "boxImageUrl",
+      "msrpJpy",
+    ];
+    const data: Record<string, unknown> = {};
+    for (const key of allowedFields) {
+      if (key in updates) {
+        if (key === "releaseDate" && updates[key]) {
+          data[key] = new Date(updates[key] as string);
+        } else {
+          data[key] = updates[key];
+        }
       }
     }
+
+    const updated = await prisma.cardSet.update({
+      where: { id },
+      data,
+    });
+
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error("PATCH /api/admin/sets:", error);
+    return NextResponse.json({ error: "Failed to update set" }, { status: 500 });
   }
-
-  const updated = await prisma.cardSet.update({
-    where: { id },
-    data,
-  });
-
-  return NextResponse.json(updated);
 }

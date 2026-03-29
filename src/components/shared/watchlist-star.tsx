@@ -3,6 +3,8 @@
 import { useEffect } from "react"
 import { Star } from "lucide-react"
 import { useWatchlistStore } from "@/stores/watchlist-store"
+import { useUIStore } from "@/stores/ui-store"
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
 const SIZE = {
@@ -19,6 +21,7 @@ export function WatchlistStar({
   size?: "sm" | "md"
   className?: string
 }) {
+  const lang = useUIStore((s) => s.language)
   const loaded = useWatchlistStore((s) => s.loaded)
   const watched = useWatchlistStore((s) => s.ids.has(cardId))
   const load = useWatchlistStore((s) => s.load)
@@ -44,7 +47,7 @@ export function WatchlistStar({
         watched && "text-amber-400 hover:text-amber-500",
         className
       )}
-      aria-label={watched ? "ลบออกจากรายการโปรด" : "เพิ่มในรายการโปรด"}
+      aria-label={watched ? t(lang, "removeFromWatchlist") : t(lang, "addToWatchlist")}
     >
       <Star
         className={cn(SIZE[size], watched && "fill-current")}

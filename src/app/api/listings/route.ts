@@ -28,9 +28,14 @@ export async function GET(request: NextRequest) {
     const minPriceJpy = searchParams.get("minPriceJpy");
     const maxPriceJpy = searchParams.get("maxPriceJpy");
 
+    const gameSlug = searchParams.get("game") || "";
     const where: Prisma.ListingWhereInput = {
       status: ListingStatus.ACTIVE,
     };
+
+    if (gameSlug) {
+      where.card = { set: { game: { slug: gameSlug } } };
+    }
 
     const priceJpyFilter: Prisma.IntFilter = {};
     if (minPriceJpy) {

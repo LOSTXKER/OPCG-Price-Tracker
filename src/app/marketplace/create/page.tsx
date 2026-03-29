@@ -7,9 +7,12 @@ import { useState } from "react";
 import { ListingForm, type ListingFormData } from "@/components/marketplace/listing-form";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useUIStore } from "@/stores/ui-store";
+import { t } from "@/lib/i18n";
 
 export default function CreateListingPage() {
   const router = useRouter();
+  const lang = useUIStore((s) => s.language);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,14 +23,14 @@ export default function CreateListingPage() {
       const searchRes = await fetch(
         `/api/cards?search=${encodeURIComponent(data.cardCode)}&limit=40`
       );
-      if (!searchRes.ok) throw new Error("ค้นหาการ์ดไม่สำเร็จ");
+      if (!searchRes.ok) throw new Error(t(lang, "loadFailed"));
       const searchJson = (await searchRes.json()) as {
         cards: { id: number; cardCode: string }[];
       };
       const codeUp = data.cardCode.trim().toUpperCase();
       const card = searchJson.cards?.find((c) => c.cardCode.toUpperCase() === codeUp);
       if (!card) {
-        setError("ไม่พบการ์ดในระบบ กรุณาเลือกจากรายการค้นหา");
+        setError(t(lang, "noCardsFound"));
         setLoading(false);
         return;
       }
@@ -47,7 +50,7 @@ export default function CreateListingPage() {
       });
       const body = (await res.json()) as { listing?: { id: number }; error?: string };
       if (!res.ok) {
-        setError(body.error ?? "สร้างรายการไม่สำเร็จ");
+        setError(body.error ?? t(lang, "addFailed"));
         setLoading(false);
         return;
       }
@@ -56,7 +59,7 @@ export default function CreateListingPage() {
         router.refresh();
       }
     } catch {
-      setError("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง");
+      setError(t(lang, "emptyError"));
     } finally {
       setLoading(false);
     }
@@ -66,14 +69,14 @@ export default function CreateListingPage() {
     <div className="container mx-auto max-w-lg space-y-6 px-4 py-8">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">ลงขายการ์ด</h1>
-          <p className="text-muted-foreground text-sm">กรอกข้อมูลรายการขายของคุณ</p>
+          <h1 className="text-2xl font-semibold tracking-tight">List a Card</h1>
+          <p className="text-muted-foreground text-sm">Fill in your listing details</p>
         </div>
         <Link
           href="/marketplace"
           className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
         >
-          ยกเลิก
+          Cancel
         </Link>
       </div>
       {error ? <p className="text-destructive text-sm">{error}</p> : null}

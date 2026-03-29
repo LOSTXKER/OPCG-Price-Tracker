@@ -6,7 +6,7 @@ import { X } from "lucide-react"
 import { Price } from "@/components/shared/price-inline"
 import { cn } from "@/lib/utils"
 import { formatPct } from "@/lib/utils/pull-rate"
-import { getCardName } from "@/lib/i18n"
+import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import type { CardItem, Unit } from "./types"
 import { UNIT_LABELS } from "./types"
@@ -45,7 +45,7 @@ export function WantList({
     <section className="panel overflow-hidden">
       <div className="flex items-center justify-between px-3 pb-2 pt-3">
         <h2 className="text-sm font-semibold">
-          รายการที่อยากได้
+          {t(lang, "wantList")}
           {wantCards.length > 0 && (
             <span className="ml-1 text-primary">({wantCards.length})</span>
           )}
@@ -55,13 +55,13 @@ export function WantList({
             onClick={onClearAll}
             className="text-xs text-muted-foreground transition-colors hover:text-foreground"
           >
-            ล้างทั้งหมด
+            {t(lang, "clearAll")}
           </button>
         )}
       </div>
       {wantCards.length === 0 ? (
         <p className="px-3 pb-4 text-center text-xs text-muted-foreground">
-          กดเลือกการ์ดจากฝั่งซ้าย
+          {t(lang, "selectFromLeft")}
         </p>
       ) : (
         <>
@@ -102,7 +102,7 @@ export function WantList({
           <div className="space-y-2 border-t border-border/40 bg-muted/10 px-3 py-3">
             <div className="rounded-lg bg-muted/40 px-3 py-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-muted-foreground">โอกาสได้ครบทุกใบ</span>
+                <span className="text-xs font-medium text-muted-foreground">{t(lang, "chanceToGetAll")}</span>
                 <span className={cn(
                   "font-mono text-base font-bold tabular-nums",
                   allChance >= 0.5 ? "text-price-up" : allChance >= 0.1 ? "text-chance-mid" : "text-destructive"
@@ -122,12 +122,12 @@ export function WantList({
             </div>
             <div className="space-y-1 text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">มูลค่ารวมการ์ดที่เลือก</span>
+                <span className="text-muted-foreground">{t(lang, "totalSelectedValue")}</span>
                 <span className="font-price font-bold tabular-nums"><Price jpy={totalWantValue} /></span>
               </div>
               {purchaseCost != null && (
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">ต้นทุนซื้อ ({quantity} {UNIT_LABELS[unit]})</span>
+                  <span className="text-muted-foreground">{t(lang, "purchaseCost")} ({quantity} {UNIT_LABELS[unit]})</span>
                   <span className="font-price font-bold tabular-nums"><Price jpy={purchaseCost} /></span>
                 </div>
               )}

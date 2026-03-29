@@ -8,24 +8,29 @@ export async function GET(request: NextRequest) {
   const rarity = searchParams.get("rarity") || "";
   const type = searchParams.get("type") || "";
   const color = searchParams.get("color") || "";
-  const minPrice = parseInt(searchParams.get("minPrice") || "0");
-  const maxPrice = parseInt(searchParams.get("maxPrice") || "0");
+  const minPrice = parseInt(searchParams.get("minPrice") || "0", 10) || 0;
+  const maxPrice = parseInt(searchParams.get("maxPrice") || "0", 10) || 0;
   const sort = searchParams.get("sort") || "newest";
-  const page = parseInt(searchParams.get("page") || "1");
-  const limit = Math.min(parseInt(searchParams.get("limit") || "20"), 100);
+  const page = parseInt(searchParams.get("page") || "1", 10) || 1;
+  const limit = Math.min(parseInt(searchParams.get("limit") || "20", 10) || 20, 100);
   const skip = (page - 1) * limit;
 
+  const game = searchParams.get("game") || "";
   const where: Record<string, unknown> = {};
 
+  if (game || set) {
+    const setFilter: Record<string, unknown> = {};
+    if (game) setFilter.game = { slug: game };
+    if (set) setFilter.code = set;
+    where.set = setFilter;
+  }
   if (search) {
     where.OR = [
       { nameJp: { contains: search, mode: "insensitive" } },
       { nameEn: { contains: search, mode: "insensitive" } },
+      { nameTh: { contains: search, mode: "insensitive" } },
       { cardCode: { contains: search, mode: "insensitive" } },
     ];
-  }
-  if (set) {
-    where.set = { code: set };
   }
   if (rarity) {
     where.rarity = { in: rarity.split(",") };
@@ -51,6 +56,17 @@ export async function GET(request: NextRequest) {
     where.isParallel = true;
   } else if (variant === "regular") {
     where.isParallel = false;
+  }
+
+  const priceMode = searchParams.get("priceMode") || "";
+  if (priceMode === "psa10") {
+    where.prices = {
+      some: {
+        source: "SNKRDUNK",
+        gradeCondition: "PSA 10",
+        type: "SELL",
+      },
+    };
   }
 
   let orderBy: Record<string, unknown> = {};
@@ -90,18 +106,33 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const [cards, total] = await Promise.all([
+    const [rawCards, total] = await Promise.all([
       prisma.card.findMany({
         where,
         orderBy,
         skip,
         take: limit,
         include: {
-          set: { select: { code: true, name: true, nameEn: true } },
+          set: { select: { code: true, name: true, nameEn: true, nameTh: true } },
+          prices: {
+            where: {
+              source: "SNKRDUNK",
+              gradeCondition: "PSA 10",
+              type: "SELL",
+            },
+            orderBy: { scrapedAt: "desc" },
+            take: 1,
+            select: { priceUsd: true },
+          },
         },
       }),
       prisma.card.count({ where }),
     ]);
+
+    const cards = rawCards.map(({ prices, ...rest }) => ({
+      ...rest,
+      psa10PriceUsd: prices?.[0]?.priceUsd ?? null,
+    }));
 
     return NextResponse.json({
       cards,

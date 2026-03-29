@@ -4,7 +4,7 @@ import Image from "next/image"
 import { Clock } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
-import { getCardName } from "@/lib/i18n"
+import { getCardName, t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { Price } from "@/components/shared/price-inline"
 import { useUIStore } from "@/stores/ui-store"
@@ -42,7 +42,7 @@ export function SearchResultsDropdown({
       <div className="max-h-80 overflow-y-auto">
         {loading && results.length === 0 && (
           <div className="px-4 py-3 text-sm text-muted-foreground">
-            กำลังค้นหา...
+            {t(lang, "searching")}
           </div>
         )}
 
@@ -93,7 +93,7 @@ export function SearchResultsDropdown({
         {results.length === 0 && !loading && filteredRecent.length > 0 && (
           <div className="p-1">
             <p className="px-3 py-1.5 text-xs font-medium text-muted-foreground">
-              ค้นหาล่าสุด
+              {t(lang, "recentSearches")}
             </p>
             {filteredRecent.map((item, i) => (
               <button

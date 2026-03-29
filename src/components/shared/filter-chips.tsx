@@ -13,7 +13,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { useUIStore } from "@/stores/ui-store";
 
 export type FilterDefinition = {
   key: string;
@@ -34,6 +36,7 @@ export function FilterChips({
   onChange,
   className,
 }: FilterChipsProps) {
+  const lang = useUIStore((s) => s.language);
   const hasAny = useMemo(
     () =>
       filters.some((f) => (selected[f.key]?.length ?? 0) > 0),
@@ -120,7 +123,7 @@ export function FilterChips({
           className="text-muted-foreground hover:text-foreground h-8 shrink-0 px-2"
           onClick={clearAll}
         >
-          ล้างทั้งหมด
+          {t(lang, "clearAll")}
         </Button>
       ) : null}
     </div>

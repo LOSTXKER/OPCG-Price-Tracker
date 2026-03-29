@@ -11,6 +11,8 @@ import {
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 export type MarketplaceBrowseListing = {
   id: number;
@@ -35,29 +37,6 @@ export type MarketplaceBrowseListing = {
   };
 };
 
-const FILTER_DEFS: FilterDefinition[] = [
-  {
-    key: "condition",
-    label: "สภาพ",
-    options: [
-      { value: "NM", label: "NM" },
-      { value: "LP", label: "LP" },
-      { value: "MP", label: "MP" },
-      { value: "HP", label: "HP" },
-      { value: "DMG", label: "DMG" },
-    ],
-  },
-  {
-    key: "price",
-    label: "ช่วงราคา (¥)",
-    options: [
-      { value: "0-1000", label: "ต่ำกว่า ¥1,000" },
-      { value: "1000-3000", label: "¥1,000 – 3,000" },
-      { value: "3000-8000", label: "¥3,000 – 8,000" },
-      { value: "8000-", label: "¥8,000 ขึ้นไป" },
-    ],
-  },
-];
 
 function priceBoundsFromSelection(selected: string[]): { min?: number; max?: number } {
   if (selected.length === 0) return {};
@@ -99,6 +78,31 @@ export function MarketplaceBrowse({
   initialPage: number;
   pageSize: number;
 }) {
+  const lang = useUIStore((s) => s.language);
+  const filterDefs: FilterDefinition[] = [
+    {
+      key: "condition",
+      label: t(lang, "condition"),
+      options: [
+        { value: "NM", label: "NM" },
+        { value: "LP", label: "LP" },
+        { value: "MP", label: "MP" },
+        { value: "HP", label: "HP" },
+        { value: "DMG", label: "DMG" },
+      ],
+    },
+    {
+      key: "price",
+      label: t(lang, "priceRangeJpy"),
+      options: [
+        { value: "0-1000", label: `${t(lang, "below")} ¥1,000` },
+        { value: "1000-3000", label: "¥1,000 – 3,000" },
+        { value: "3000-8000", label: "¥3,000 – 8,000" },
+        { value: "8000-", label: "¥8,000+" },
+      ],
+    },
+  ];
+
   const [selected, setSelected] = useState<Record<string, string[]>>({});
   const [page, setPage] = useState(initialPage);
   const [listings, setListings] = useState(initialListings);
@@ -125,11 +129,11 @@ export function MarketplaceBrowse({
       if (min !== undefined) params.set("minPriceJpy", String(min));
       if (max !== undefined) params.set("maxPriceJpy", String(max));
       return fetch(`/api/listings?${params.toString()}`).then(async (res) => {
-        if (!res.ok) throw new Error("โหลดรายการไม่สำเร็จ");
+        if (!res.ok) throw new Error(t(lang, "loadFailed"));
         return res.json() as Promise<BrowseResponse>;
       });
     },
-    [pageSize]
+    [pageSize, lang]
   );
 
   useEffect(() => {
@@ -145,7 +149,7 @@ export function MarketplaceBrowse({
           setError(null);
         })
         .catch((e: unknown) => {
-          setError(e instanceof Error ? e.message : "เกิดข้อผิดพลาด");
+          setError(e instanceof Error ? e.message : t(lang, "loadFailed"));
         });
     });
   }, [page, selected, fetchPage]);
@@ -154,13 +158,13 @@ export function MarketplaceBrowse({
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">
-          <FilterChips filters={FILTER_DEFS} selected={selected} onChange={onFilterChange} />
+          <FilterChips filters={filterDefs} selected={selected} onChange={onFilterChange} />
         </div>
         <Link
           href="/marketplace/create"
           className={cn(buttonVariants(), "shrink-0")}
         >
-          ลงขายการ์ด
+          {t(lang, "listCard")}
         </Link>
       </div>
 
@@ -170,7 +174,7 @@ export function MarketplaceBrowse({
         {listings.length === 0 && !isPending ? (
           <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed py-16 text-center">
             <p className="text-muted-foreground text-sm">
-              ยังไม่มีรายการในตลาด หรือลองเปลี่ยนตัวกรอง
+              {t(lang, "noListingsYet")}
             </p>
           </div>
         ) : (
@@ -212,10 +216,10 @@ export function MarketplaceBrowse({
           disabled={page <= 1 || isPending}
           onClick={() => setPage((p) => Math.max(1, p - 1))}
         >
-          ก่อนหน้า
+          Prev
         </Button>
         <span className="text-muted-foreground text-sm tabular-nums">
-          หน้า {page} / {totalPages} ({total} รายการ)
+          {t(lang, "pageOf")} {page} / {totalPages} ({total} {t(lang, "itemsCount")})
         </span>
         <Button
           type="button"
@@ -224,9 +228,21 @@ export function MarketplaceBrowse({
           disabled={page >= totalPages || isPending}
           onClick={() => setPage((p) => p + 1)}
         >
-          ถัดไป
+          Next
         </Button>
       </div>
+    </div>
+  );
+}
+
+export function MarketplacePageHeader() {
+  const lang = useUIStore((s) => s.language);
+  return (
+    <div>
+      <h1 className="font-sans text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "marketplace")}</h1>
+      <p className="mt-1 text-sm text-muted-foreground">
+        {t(lang, "marketplaceDesc")}
+      </p>
     </div>
   );
 }

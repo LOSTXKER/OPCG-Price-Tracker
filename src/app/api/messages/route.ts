@@ -10,13 +10,14 @@ export async function GET(request: NextRequest) {
     }
 
     const listingId = request.nextUrl.searchParams.get("listingId");
-    if (!listingId) {
-      return NextResponse.json({ error: "listingId is required" }, { status: 400 });
+    const listingIdNum = listingId ? parseInt(listingId, 10) : NaN;
+    if (!listingId || isNaN(listingIdNum)) {
+      return NextResponse.json({ error: "Valid listingId is required" }, { status: 400 });
     }
 
     const messages = await prisma.message.findMany({
       where: {
-        listingId: parseInt(listingId, 10),
+        listingId: listingIdNum,
         OR: [{ senderId: dbUser.id }, { receiverId: dbUser.id }],
       },
       orderBy: { createdAt: "asc" },
@@ -27,7 +28,7 @@ export async function GET(request: NextRequest) {
 
     await prisma.message.updateMany({
       where: {
-        listingId: parseInt(listingId, 10),
+        listingId: listingIdNum,
         receiverId: dbUser.id,
         isRead: false,
       },
@@ -62,12 +63,16 @@ export async function POST(request: NextRequest) {
       content: string;
     };
 
-    if (!body.listingId || !body.content?.trim()) {
-      return NextResponse.json({ error: "listingId and content required" }, { status: 400 });
+    const listingId = Number(body.listingId);
+    if (!Number.isInteger(listingId) || listingId < 1) {
+      return NextResponse.json({ error: "Valid listingId is required" }, { status: 400 });
+    }
+    if (!body.content?.trim()) {
+      return NextResponse.json({ error: "content is required" }, { status: 400 });
     }
 
     const listing = await prisma.listing.findUnique({
-      where: { id: body.listingId },
+      where: { id: listingId },
       select: { userId: true },
     });
     if (!listing) {
@@ -85,7 +90,7 @@ export async function POST(request: NextRequest) {
 
     const message = await prisma.message.create({
       data: {
-        listingId: body.listingId,
+        listingId,
         senderId: dbUser.id,
         receiverId,
         content: body.content.trim(),

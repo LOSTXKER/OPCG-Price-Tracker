@@ -6,7 +6,7 @@ import { Check, Search } from "lucide-react"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
-import { getCardName } from "@/lib/i18n"
+import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
 import type { CardItem } from "./types"
@@ -40,15 +40,9 @@ export function CardPicker({
     <section className="min-w-0 lg:col-start-1">
       <div className="panel space-y-3 p-4">
         <div className="flex items-center justify-between gap-2">
-          <h2 className="text-sm font-semibold">เลือกการ์ดที่อยากได้</h2>
-          {wantCount === 0 && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-medium text-primary">
-              <span className="size-1.5 animate-pulse rounded-full bg-primary" />
-              กดที่การ์ดเพื่อเลือก
-            </span>
-          )}
+          <h2 className="text-sm font-semibold">{t(lang, "selectWantedCards")}</h2>
           {wantCount > 0 && (
-            <span className="text-xs text-muted-foreground">เลือกแล้ว {wantCount} ใบ</span>
+            <span className="text-xs text-muted-foreground">{wantCount} {t(lang, "cardsCount")}</span>
           )}
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -56,7 +50,7 @@ export function CardPicker({
             <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
             <input
               type="search"
-              placeholder="ค้นหาชื่อหรือรหัส..."
+              placeholder={t(lang, "searchByNameOrCode")}
               value={cardSearch}
               onChange={(e) => onSearchChange(e.target.value)}
               className="h-8 w-full rounded-lg border-0 bg-muted/60 pl-8 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:bg-muted focus:ring-1 focus:ring-border"
@@ -67,7 +61,7 @@ export function CardPicker({
             onChange={(e) => onRarityChange(e.target.value)}
             className="h-8 rounded-lg border-0 bg-muted/60 px-2.5 text-sm outline-none transition-colors focus:bg-muted focus:ring-1 focus:ring-border"
           >
-            <option value="all">ทุก Rarity</option>
+            <option value="all">{t(lang, "allRarity")}</option>
             {uniqueRarities.map((r) => (
               <option key={r} value={r}>{r}</option>
             ))}
@@ -117,7 +111,7 @@ export function CardPicker({
           })}
         </div>
         {cards.length === 0 && (
-          <p className="py-8 text-center text-sm text-muted-foreground">ไม่พบการ์ด</p>
+          <p className="py-8 text-center text-sm text-muted-foreground">{t(lang, "noCardsResult")}</p>
         )}
       </div>
     </section>

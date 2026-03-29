@@ -40,7 +40,10 @@ export function useCardSearch({
 
     const t = window.setTimeout(() => {
       void fetch(`/api/cards?${params}`)
-        .then((r) => r.json())
+        .then((r) => {
+          if (!r.ok) throw new Error("fetch failed");
+          return r.json();
+        })
         .then((j: { cards: CardSearchResult[] }) => setResults(j.cards ?? []))
         .catch(() => setResults([]))
         .finally(() => setLoading(false))

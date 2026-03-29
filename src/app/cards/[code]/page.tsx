@@ -5,8 +5,11 @@ import { CardDetail } from "@/components/cards/card-detail";
 import {
   buildChartData,
   deriveLatestPrice,
+  deriveSnkrdunkPrices,
+  deriveSourcePrices,
   getAvailableSources,
   getCardByCode,
+  getChartSources,
   getCommunityPrice,
   getRelatedFromSameSet,
   getSiblingVariants,
@@ -21,12 +24,12 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const { code } = await props.params;
   const card = await getCardByCode(code);
-  if (!card) return { title: "ไม่พบการ์ด" };
+  if (!card) return { title: "Card not found" };
 
   const displayName = card.nameEn ?? card.nameJp;
   const priceText = card.latestPriceJpy != null
     ? formatJpy(card.latestPriceJpy)
-    : "ราคายังไม่มี";
+    : "Price unavailable";
 
   return {
     title: `${card.cardCode} ${displayName}`,
@@ -53,8 +56,12 @@ export default async function CardDetailPage(props: {
   ]);
 
   const price = deriveLatestPrice(card);
+  const snkrdunkPrices = deriveSnkrdunkPrices(card.prices);
+  const sourcePricesRaw = deriveSourcePrices(card.prices, "raw");
+  const sourcePricesPsa10 = deriveSourcePrices(card.prices, "psa10");
   let chartData = buildChartData(card.prices);
   const sources = getAvailableSources(card.prices);
+  const chartSources = getChartSources(card.prices);
 
   // Fallback: if no price history but card has a current price, show it as a single data point
   if (chartData.length === 0 && card.latestPriceJpy != null) {
@@ -62,7 +69,9 @@ export default async function CardDetailPage(props: {
       scrapedAt: new Date().toISOString(),
       priceJpy: card.latestPriceJpy,
       priceThb: card.latestPriceThb,
+      priceUsd: null,
       source: "YUYUTEI",
+      gradeCondition: null,
     }];
   }
 
@@ -108,6 +117,10 @@ export default async function CardDetailPage(props: {
       siblings={siblings}
       communityPrice={communityPrice}
       relatedCards={relatedCards}
+      snkrdunkPrices={snkrdunkPrices}
+      availableSources={chartSources}
+      sourcePricesRaw={sourcePricesRaw}
+      sourcePricesPsa10={sourcePricesPsa10}
     />
   );
 }

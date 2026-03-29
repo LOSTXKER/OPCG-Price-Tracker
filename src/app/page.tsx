@@ -34,8 +34,8 @@ export default async function HomePage(props: {
   if (totalCards === 0) {
     return (
       <KumaEmptyState
-        title="ยังไม่มีข้อมูลการ์ด"
-        description="ต้อง scrape ข้อมูลก่อน — รัน npm run scrape:master แล้วตามด้วย npm run scrape:prices"
+        title="No card data yet"
+        description="Run npm run scrape:master then npm run scrape:prices to populate data"
         preset="no-results"
       />
     );
@@ -45,15 +45,16 @@ export default async function HomePage(props: {
   const losers = topLosers.map(mapCardToTrending);
   const featured = highestPriced.length > 0 ? highestPriced[0] : null;
 
-  const tableCards = initialTableCards.map((c) => ({
+  const tableCards = initialTableCards.map(({ prices, ...c }) => ({
     ...c,
     setCode: c.set.code,
+    psa10PriceUsd: prices?.[0]?.priceUsd ?? null,
   }));
 
   const filterDefinitions: FilterDefinition[] = [
     {
       key: "set",
-      label: "ชุด",
+      label: "set",
       options: sets.map((s) => ({
         value: s.code,
         label: `${s.code} · ${s.nameEn ?? s.name}`,
@@ -61,37 +62,16 @@ export default async function HomePage(props: {
     },
     {
       key: "rarity",
-      label: "ความหายาก",
+      label: "rarity",
       options: rarityRows.map((r) => ({ value: r.rarity, label: r.rarity })),
     },
     {
       key: "type",
-      label: "ประเภท",
+      label: "type",
       options: (Object.keys(CARD_TYPE_LABELS) as CardType[]).map((t) => ({
         value: t,
         label: CARD_TYPE_LABELS[t],
       })),
-    },
-    {
-      key: "color",
-      label: "สี",
-      options: [
-        { value: "Red", label: "แดง" },
-        { value: "Green", label: "เขียว" },
-        { value: "Blue", label: "ฟ้า" },
-        { value: "Purple", label: "ม่วง" },
-        { value: "Black", label: "ดำ" },
-        { value: "Yellow", label: "เหลือง" },
-        { value: "multi", label: "หลายสี" },
-      ],
-    },
-    {
-      key: "variant",
-      label: "แบบ",
-      options: [
-        { value: "regular", label: "ปกติ" },
-        { value: "parallel", label: "พาราเรล" },
-      ],
     },
   ];
 
@@ -119,12 +99,10 @@ export default async function HomePage(props: {
         )}
         <div className={`grid gap-4 sm:grid-cols-2 ${featured ? "lg:col-span-8" : "lg:col-span-12"}`}>
           <HomeMiniTable
-            title="ราคาขึ้นมากสุด"
             cards={gainers}
             type="gainers"
           />
           <HomeMiniTable
-            title="ราคาลงมากสุด"
             cards={losers}
             type="losers"
           />

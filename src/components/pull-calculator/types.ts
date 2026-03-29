@@ -52,13 +52,8 @@ export interface SetDetail {
   rarityCounts: RarityCount[]
 }
 
-export type Unit = "pack" | "box" | "carton"
-
-export const UNIT_LABELS: Record<Unit, string> = {
-  pack: "ซอง",
-  box: "กล่อง",
-  carton: "คาตั้น",
-}
+export type { Unit } from "@/lib/constants/ui"
+export { UNIT_LABELS } from "@/lib/constants/ui"
 
 export const TIER_ORDER = [
   "L", "C", "UC", "R", "SR", "SEC", "SP", "SP CARD",

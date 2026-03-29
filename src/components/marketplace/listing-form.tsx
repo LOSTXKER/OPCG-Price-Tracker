@@ -14,7 +14,7 @@ import { Price } from "@/components/shared/price-inline"
 
 const CONDITIONS = ["NM", "LP", "MP", "HP", "DMG"] as const
 
-const SHIPPING_OPTIONS = ["EMS/Kerry", "นัดรับ", "Registered mail"] as const
+const SHIPPING_OPTIONS = ["EMS/Kerry", "Pickup", "Registered mail"] as const
 
 const listingFormSchema = z.object({
   cardCode: z.string().min(1, "Select a card or enter a code"),

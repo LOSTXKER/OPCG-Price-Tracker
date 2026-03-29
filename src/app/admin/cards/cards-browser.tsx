@@ -15,6 +15,11 @@ import {
   AlertTriangle,
   ExternalLink,
 } from "lucide-react";
+import { opcgConfig } from "@/lib/game-config";
+
+const OFFICIAL_IMAGE_HOST = opcgConfig.officialCardImageBase
+  ? new URL(opcgConfig.officialCardImageBase).hostname
+  : "";
 
 interface CardRow {
   id: number;
@@ -436,7 +441,7 @@ function CardTableRow({
         )}
         <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
           <span>{card.set.code.toUpperCase()}</span>
-          {card.imageUrl?.includes("onepiece-cardgame.com") ? (
+          {card.imageUrl?.includes(OFFICIAL_IMAGE_HOST) ? (
             <span className="rounded bg-green-500/10 px-1 text-green-500">Official</span>
           ) : (
             <span className="rounded bg-neutral-500/10 px-1 text-neutral-400">Legacy</span>

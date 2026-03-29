@@ -8,6 +8,7 @@ import {
   CreditCard,
   BarChart3,
   ArrowLeftRight,
+  Globe,
   LogOut,
   Shield,
 } from "lucide-react";
@@ -20,6 +21,7 @@ const NAV_ITEMS = [
   { href: "/admin/cards", label: "Cards", icon: CreditCard },
   { href: "/admin/drop-rates", label: "Drop Rates", icon: BarChart3 },
   { href: "/admin/yuyutei-matching", label: "Yuyutei Matching", icon: ArrowLeftRight },
+  { href: "/admin/snkrdunk-matching", label: "SNKRDUNK Matching", icon: Globe },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {

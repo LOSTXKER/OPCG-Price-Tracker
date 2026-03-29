@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
+import { opcgConfig } from "@/lib/game-config";
 import { CardEditor } from "./card-editor";
 
 export default async function AdminCardDetailPage({
@@ -33,8 +34,7 @@ export default async function AdminCardDetailPage({
 
   const candidates: { pIndex: number; url: string }[] = [];
   if (card.isParallel && card.baseCode) {
-    const bandaiBase =
-      "https://www.onepiece-cardgame.com/images/cardlist/card";
+    const bandaiBase = opcgConfig.officialCardImageBase!;
     for (let p = 1; p <= 8; p++) {
       candidates.push({
         pIndex: p,

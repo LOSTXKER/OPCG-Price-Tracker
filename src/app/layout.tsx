@@ -33,19 +33,18 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Meecard — ราคาการ์ด OPCG อัปเดตทุกวัน",
+    default: "Meecard — OPCG Card Prices Updated Daily",
     template: "%s | Meecard",
   },
   description:
-    "Meecard — ราคากลางการ์ด One Piece Card Game อัปเดตทุกวัน ดูราคา Yuyu-tei แปลงเป็นบาท กราฟราคาย้อนหลัง Portfolio ติดตามมูลค่า",
+    "Meecard — One Piece Card Game market prices updated daily. Track Yuyu-tei prices, view price history charts, manage your portfolio and collection value.",
   keywords: [
     "Meecard",
     "OPCG",
     "One Piece Card Game",
-    "ราคาการ์ด",
-    "การ์ดวันพีช",
-    "ราคาการ์ดวันพีช",
+    "card price",
     "OPCG price",
+    "One Piece card price",
   ],
 };
 

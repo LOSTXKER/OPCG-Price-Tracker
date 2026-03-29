@@ -27,6 +27,10 @@ import { Skeleton } from "@/components/ui/skeleton"
 import type { CardSearchResult } from "@/hooks/use-card-search"
 import { cn } from "@/lib/utils"
 import { RARITY_HEX } from "@/lib/constants/rarity"
+import { opcgConfig } from "@/lib/game-config"
+import { useUIStore } from "@/stores/ui-store"
+import { t } from "@/lib/i18n"
+import { formatJpyAmount, formatDisplayValue, jpyToDisplayValue, displayValueToJpy, currencySymbol } from "@/lib/utils/currency"
 
 type CardWithSet = CardSearchResult & {
   set?: { code: string; name: string; nameEn?: string | null } | null
@@ -56,38 +60,14 @@ const SET_TYPE_LABELS: Record<string, string> = {
   EXTRA_BOOSTER: "Extra Booster",
   STARTER: "Starter Deck",
   PROMO: "Promo",
-  OTHER: "อื่นๆ",
+  OTHER: "Other",
 }
 
 const SET_TYPE_ORDER = ["BOOSTER", "EXTRA_BOOSTER", "STARTER", "PROMO", "OTHER"]
 
-const RARITY_OPTIONS = [
-  { code: "SEC", label: "SEC" },
-  { code: "SR", label: "SR" },
-  { code: "R", label: "R" },
-  { code: "UC", label: "UC" },
-  { code: "C", label: "C" },
-  { code: "L", label: "Leader" },
-  { code: "SP", label: "SP" },
-  { code: "P", label: "Promo" },
-]
-
-const COLOR_OPTIONS = [
-  { code: "Red", label: "Red", bg: "bg-red-500" },
-  { code: "Blue", label: "Blue", bg: "bg-blue-500" },
-  { code: "Green", label: "Green", bg: "bg-green-500" },
-  { code: "Purple", label: "Purple", bg: "bg-purple-500" },
-  { code: "Black", label: "Black", bg: "bg-gray-800" },
-  { code: "Yellow", label: "Yellow", bg: "bg-yellow-400" },
-  { code: "multi", label: "Multi", bg: "bg-gradient-to-r from-red-400 to-blue-400" },
-]
-
-const TYPE_OPTIONS = [
-  { code: "LEADER", label: "Leader" },
-  { code: "CHARACTER", label: "Character" },
-  { code: "EVENT", label: "Event" },
-  { code: "STAGE", label: "Stage" },
-]
+const RARITY_OPTIONS = opcgConfig.rarityFilterOptions
+const COLOR_OPTIONS = opcgConfig.colors
+const TYPE_OPTIONS = opcgConfig.cardTypes
 
 export function AddCardDialog({
   open,
@@ -121,6 +101,8 @@ export function AddCardDialog({
   const [quantity, setQuantity] = useState(1)
   const [purchasePrice, setPurchasePrice] = useState("")
   const [submitting, setSubmitting] = useState(false)
+  const lang = useUIStore((s) => s.language)
+  const currency = useUIStore((s) => s.currency)
 
   useEffect(() => {
     if (!open || sets.length > 0) return
@@ -228,8 +210,9 @@ export function AddCardDialog({
     if (!selectedCard) return
     setSubmitting(true)
     try {
-      const price = purchasePrice.trim() === "" ? null : parseInt(purchasePrice)
-      await onAddBatch([{ card: selectedCard, quantity, purchasePrice: price }])
+      const raw = purchasePrice.trim() === "" ? null : parseInt(purchasePrice)
+      const priceJpy = raw != null ? Math.round(displayValueToJpy(raw, currency)) : null
+      await onAddBatch([{ card: selectedCard, quantity, purchasePrice: priceJpy }])
       reset()
       onOpenChange(false)
     } finally {
@@ -377,11 +360,14 @@ function SelectStep({
   clearAllFilters: () => void
   onSelectCard: (card: CardWithSet) => void
 }) {
+  const lang = useUIStore((s) => s.language)
+  const currency = useUIStore((s) => s.currency)
+
   return (
     <>
       <DialogHeader className="border-b border-border/40 px-5 pt-5 pb-4">
-        <DialogTitle>เลือกการ์ด</DialogTitle>
-        <DialogDescription>ค้นหาหรือใช้ตัวกรองเพื่อเลือกการ์ด</DialogDescription>
+        <DialogTitle>{t(lang, "addCardToPortfolio")}</DialogTitle>
+        <DialogDescription>{t(lang, "addCardToPortfolioDesc")}</DialogDescription>
       </DialogHeader>
 
       {/* Search + filter controls */}
@@ -392,7 +378,7 @@ function SelectStep({
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/50" />
             <input
               type="search"
-              placeholder="ค้นหาชื่อ, รหัสการ์ด เช่น OP09-001..."
+              placeholder={t(lang, "searchLong")}
               className="h-9 w-full rounded-lg border border-border bg-muted/30 pl-9 pr-8 text-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:bg-background focus:ring-1 focus:ring-primary/20"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -420,7 +406,7 @@ function SelectStep({
             )}
           >
             <Filter className="size-3.5" />
-            <span className="hidden sm:inline">ตัวกรอง</span>
+            <span className="hidden sm:inline">{t(lang, "filter")}</span>
             {activeFilterCount > 0 && (
               <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
                 {activeFilterCount}
@@ -435,7 +421,7 @@ function SelectStep({
             {/* Set filter */}
             <div>
               <div className="mb-1.5 flex items-center justify-between">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">ชุดการ์ด</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "set")}</span>
               </div>
               <div className="relative" ref={setDropdownRef}>
                 <button
@@ -452,7 +438,7 @@ function SelectStep({
                     <span className="truncate">
                       {activeSetInfo
                         ? `${activeSetInfo.code.toUpperCase()} — ${activeSetInfo.nameEn ?? activeSetInfo.name}`
-                        : "ทุกชุด"}
+                        : t(lang, "allSets")}
                     </span>
                   </div>
                   <div className="flex items-center gap-1">
@@ -480,7 +466,7 @@ function SelectStep({
                             : "text-muted-foreground hover:bg-muted hover:text-foreground"
                         )}
                       >
-                        ทั้งหมด
+                        {t(lang, "allTab")}
                       </button>
                       {availableTypes.map((type) => (
                         <button
@@ -505,7 +491,7 @@ function SelectStep({
                           !activeSet ? "bg-primary/8 font-medium text-primary" : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                         )}
                       >
-                        ทุกชุด
+                        {t(lang, "allSets")}
                       </button>
                       {filteredSets.map((s) => (
                         <button
@@ -536,7 +522,7 @@ function SelectStep({
 
             {/* Rarity chips */}
             <div>
-              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">ความหายาก</span>
+              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "rarity")}</span>
               <div className="flex flex-wrap gap-1.5">
                 {RARITY_OPTIONS.map((r) => (
                   <button
@@ -558,7 +544,7 @@ function SelectStep({
 
             {/* Color chips */}
             <div>
-              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">สี</span>
+              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "color")}</span>
               <div className="flex flex-wrap gap-1.5">
                 {COLOR_OPTIONS.map((c) => (
                   <button
@@ -580,7 +566,7 @@ function SelectStep({
 
             {/* Card type chips */}
             <div>
-              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">ประเภท</span>
+              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "type")}</span>
               <div className="flex flex-wrap gap-1.5">
                 {TYPE_OPTIONS.map((t) => (
                   <button
@@ -605,7 +591,7 @@ function SelectStep({
                 onClick={clearAllFilters}
                 className="text-xs font-medium text-primary hover:underline"
               >
-                ล้างตัวกรองทั้งหมด
+                {t(lang, "clearAllFilters")}
               </button>
             )}
           </div>
@@ -642,7 +628,7 @@ function SelectStep({
               onClick={clearAllFilters}
               className="text-[11px] font-medium text-muted-foreground hover:text-primary"
             >
-              ล้างทั้งหมด
+              {t(lang, "clearAll")}
             </button>
           </div>
         )}
@@ -652,7 +638,7 @@ function SelectStep({
       <div className="min-h-0 flex-1 overflow-y-auto">
         {!isFiltered && (
           <p className="px-4 pt-2 pb-1 text-[11px] text-muted-foreground/60">
-            การ์ดราคาสูงสุด — ค้นหาหรือใช้ตัวกรองเพื่อหาการ์ด
+            {t(lang, "highestValue")} — {t(lang, "addCardToPortfolioDesc")}
           </p>
         )}
 
@@ -671,8 +657,8 @@ function SelectStep({
         ) : showEmpty ? (
           <div className="flex h-40 flex-col items-center justify-center gap-1.5">
             <Search className="size-7 text-muted-foreground/15" />
-            <p className="text-sm text-muted-foreground">ไม่พบการ์ดที่ค้นหา</p>
-            <p className="text-xs text-muted-foreground/60">ลองเปลี่ยนคำค้นหาหรือตัวกรอง</p>
+            <p className="text-sm text-muted-foreground">{t(lang, "noCardsFound")}</p>
+            <p className="text-xs text-muted-foreground/60">{t(lang, "noCardsFoundDesc")}</p>
           </div>
         ) : (
           <div className="space-y-0.5 px-2 pb-3 pt-1">
@@ -714,7 +700,7 @@ function SelectStep({
                 <div className="shrink-0 text-right">
                   {card.latestPriceJpy != null && (
                     <p className="font-price text-sm font-semibold tabular-nums text-primary">
-                      ¥{card.latestPriceJpy.toLocaleString()}
+                      {formatJpyAmount(card.latestPriceJpy, currency)}
                     </p>
                   )}
                 </div>
@@ -769,6 +755,9 @@ function DetailStep({
   onBack: () => void
   onSubmit: () => void
 }) {
+  const lang = useUIStore((s) => s.language)
+  const currency = useUIStore((s) => s.currency)
+
   return (
     <>
       <DialogHeader className="border-b border-border/40 px-5 pt-5 pb-4">
@@ -780,8 +769,8 @@ function DetailStep({
             <ArrowLeft className="size-4" />
           </button>
           <div>
-            <DialogTitle>เพิ่มการ์ดเข้าพอร์ต</DialogTitle>
-            <DialogDescription className="sr-only">กรอกรายละเอียดของการ์ดที่ต้องการเพิ่ม</DialogDescription>
+            <DialogTitle>{t(lang, "addToPortfolio")}</DialogTitle>
+            <DialogDescription className="sr-only">{t(lang, "addToPortfolioDesc")}</DialogDescription>
           </div>
         </div>
       </DialogHeader>
@@ -816,7 +805,7 @@ function DetailStep({
             </div>
             {card.latestPriceJpy != null && (
               <p className="mt-1 font-price text-sm font-semibold tabular-nums text-primary">
-                ¥{card.latestPriceJpy.toLocaleString()}
+                {formatJpyAmount(card.latestPriceJpy, currency)}
               </p>
             )}
           </div>
@@ -825,7 +814,7 @@ function DetailStep({
         <div className="mt-6 space-y-5">
           {/* Quantity */}
           <div>
-            <label className="mb-2 block text-sm font-medium">จำนวน</label>
+            <label className="mb-2 block text-sm font-medium">{t(lang, "quantity")}</label>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -854,17 +843,17 @@ function DetailStep({
 
           {/* Purchase price */}
           <div>
-            <label className="mb-2 block text-sm font-medium">ราคาที่ซื้อ</label>
+            <label className="mb-2 block text-sm font-medium">{t(lang, "purchasePrice")}</label>
             <div className="relative">
               <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground/50">
-                ¥
+                {currencySymbol(currency)}
               </span>
               <input
                 type="number"
                 min={0}
                 placeholder={
                   card.latestPriceJpy != null
-                    ? card.latestPriceJpy.toLocaleString()
+                    ? Math.round(jpyToDisplayValue(card.latestPriceJpy, currency)).toLocaleString()
                     : "0"
                 }
                 value={purchasePrice}
@@ -873,7 +862,7 @@ function DetailStep({
               />
             </div>
             <p className="mt-1.5 text-[11px] text-muted-foreground/60">
-              เว้นว่างจะใช้ราคาตลาดปัจจุบัน
+              {t(lang, "useMarketPrice")}
             </p>
           </div>
 
@@ -881,13 +870,14 @@ function DetailStep({
           {(purchasePrice.trim() !== "" || card.latestPriceJpy != null) && (
             <div className="rounded-xl border border-border/50 bg-muted/20 px-4 py-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">มูลค่ารวม</span>
+                <span className="text-sm text-muted-foreground">{t(lang, "totalValue")}</span>
                 <span className="font-price text-lg font-bold tabular-nums">
-                  ¥{(
+                  {formatDisplayValue(
                     (purchasePrice.trim() !== ""
                       ? parseInt(purchasePrice) || 0
-                      : card.latestPriceJpy ?? 0) * quantity
-                  ).toLocaleString()}
+                      : Math.round(jpyToDisplayValue(card.latestPriceJpy ?? 0, currency))) * quantity,
+                    currency
+                  )}
                 </span>
               </div>
             </div>
@@ -905,10 +895,10 @@ function DetailStep({
           {submitting ? (
             <>
               <Loader2 className="size-4 animate-spin" />
-              กำลังเพิ่ม...
+              {t(lang, "adding")}
             </>
           ) : (
-            "เพิ่มเข้าพอร์ต"
+            t(lang, "addToPort")
           )}
         </Button>
       </div>

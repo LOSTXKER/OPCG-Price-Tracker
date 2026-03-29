@@ -10,7 +10,7 @@ export const getCardByCode = cache(async (rawCode: string) => {
     set: true,
     prices: {
       orderBy: { scrapedAt: "desc" as const },
-      take: 60,
+      take: 120,
       select: {
         id: true,
         source: true,
@@ -20,6 +20,7 @@ export const getCardByCode = cache(async (rawCode: string) => {
         priceUsd: true,
         priceEur: true,
         inStock: true,
+        gradeCondition: true,
         scrapedAt: true,
       },
     },
@@ -181,8 +182,138 @@ export function getAvailableSources(prices: { source: string }[]) {
   return [...new Set(prices.map((p) => p.source))]
 }
 
+export function deriveSnkrdunkPrices(
+  prices: { source: string; type: string; priceUsd: number | null; gradeCondition: string | null; scrapedAt: Date | string }[]
+) {
+  const snk = prices
+    .filter((p) => p.source === "SNKRDUNK" && p.priceUsd != null)
+    .sort((a, b) => new Date(b.scrapedAt).getTime() - new Date(a.scrapedAt).getTime())
+
+  const sellRaw = snk.find((p) => p.type === "SELL" && !p.gradeCondition)
+  const sellPsa10 = snk.find((p) => p.type === "SELL" && p.gradeCondition === "PSA 10")
+  const soldPsa10 = snk.find((p) => p.type === "SOLD" && p.gradeCondition === "PSA 10")
+  const soldAny = snk.find((p) => p.type === "SOLD" && !p.gradeCondition)
+
+  if (!sellRaw && !sellPsa10 && !soldPsa10 && !soldAny) return null
+
+  return {
+    minPriceUsd: sellRaw?.priceUsd ?? null,
+    psa10AskUsd: sellPsa10?.priceUsd ?? null,
+    psa10SoldUsd: soldPsa10?.priceUsd ?? null,
+    lastSoldUsd: soldAny?.priceUsd ?? null,
+  }
+}
+
+export type ChartSourceOption = {
+  id: string
+  label: string
+  source?: string
+  grade?: string
+  currency: "JPY" | "USD"
+}
+
+export function getChartSources(
+  prices: { source: string; gradeCondition: string | null; priceUsd: number | null }[]
+): ChartSourceOption[] {
+  const sources: ChartSourceOption[] = [
+    { id: "YUYUTEI", label: "Yuyu-tei", source: "YUYUTEI", currency: "JPY" },
+  ]
+
+  const hasSnkrRaw = prices.some(
+    (p) => p.source === "SNKRDUNK" && !p.gradeCondition && p.priceUsd != null,
+  )
+  const hasSnkrPsa10 = prices.some(
+    (p) => p.source === "SNKRDUNK" && p.gradeCondition === "PSA 10" && p.priceUsd != null,
+  )
+
+  if (hasSnkrRaw) {
+    sources.push({ id: "SNKRDUNK_RAW", label: "SNKRDUNK", source: "SNKRDUNK", grade: "raw", currency: "USD" })
+  }
+  if (hasSnkrPsa10) {
+    sources.push({ id: "SNKRDUNK_PSA10", label: "PSA 10", source: "SNKRDUNK", grade: "PSA 10", currency: "USD" })
+  }
+
+  return sources
+}
+
+export type SourcePriceRow = {
+  source: string
+  askPriceJpy: number | null
+  askPriceThb: number | null
+  askPriceUsd: number | null
+  soldPriceJpy: number | null
+  soldPriceThb: number | null
+  soldPriceUsd: number | null
+  updatedAt: string | null
+}
+
+/**
+ * Group prices by source and return the latest ask/sold per source.
+ * `grade` controls filtering: "raw" = no gradeCondition, "psa10" = gradeCondition === "PSA 10".
+ */
+export function deriveSourcePrices(
+  prices: {
+    source: string
+    type: string
+    priceJpy: number | null
+    priceThb: number | null
+    priceUsd: number | null
+    gradeCondition: string | null
+    scrapedAt: Date | string
+  }[],
+  grade: "raw" | "psa10",
+): SourcePriceRow[] {
+  const gradeFilter = grade === "psa10" ? "PSA 10" : null
+
+  const filtered = prices.filter((p) =>
+    gradeFilter ? p.gradeCondition === gradeFilter : !p.gradeCondition,
+  )
+
+  const bySource = new Map<string, typeof filtered>()
+  for (const p of filtered) {
+    const arr = bySource.get(p.source) ?? []
+    arr.push(p)
+    bySource.set(p.source, arr)
+  }
+
+  const rows: SourcePriceRow[] = []
+  for (const [source, group] of bySource) {
+    const sorted = [...group].sort(
+      (a, b) => new Date(b.scrapedAt).getTime() - new Date(a.scrapedAt).getTime(),
+    )
+    const latestSell = sorted.find((p) => p.type === "SELL")
+    const latestSold = sorted.find((p) => p.type === "SOLD")
+
+    if (!latestSell && !latestSold) continue
+
+    const latest = sorted[0]
+    rows.push({
+      source,
+      askPriceJpy: latestSell?.priceJpy ?? null,
+      askPriceThb: latestSell?.priceThb ?? null,
+      askPriceUsd: latestSell?.priceUsd ?? null,
+      soldPriceJpy: latestSold?.priceJpy ?? null,
+      soldPriceThb: latestSold?.priceThb ?? null,
+      soldPriceUsd: latestSold?.priceUsd ?? null,
+      updatedAt: latest
+        ? typeof latest.scrapedAt === "string"
+          ? latest.scrapedAt
+          : latest.scrapedAt.toISOString()
+        : null,
+    })
+  }
+
+  rows.sort((a, b) => {
+    const aPrice = a.askPriceUsd ?? a.askPriceJpy ?? Infinity
+    const bPrice = b.askPriceUsd ?? b.askPriceJpy ?? Infinity
+    return aPrice - bPrice
+  })
+
+  return rows
+}
+
 export function buildChartData(
-  prices: { scrapedAt: Date; priceJpy: number | null; priceThb: number | null; source: string }[]
+  prices: { scrapedAt: Date; priceJpy: number | null; priceThb: number | null; priceUsd: number | null; source: string; gradeCondition: string | null }[]
 ) {
   return [...prices]
     .sort((a, b) => new Date(a.scrapedAt).getTime() - new Date(b.scrapedAt).getTime())
@@ -190,6 +321,8 @@ export function buildChartData(
       scrapedAt: p.scrapedAt.toISOString(),
       priceJpy: p.priceJpy,
       priceThb: p.priceThb,
+      priceUsd: p.priceUsd,
       source: p.source,
+      gradeCondition: p.gradeCondition ?? null,
     }))
 }

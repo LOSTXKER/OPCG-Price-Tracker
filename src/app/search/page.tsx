@@ -19,9 +19,10 @@ import { Price } from "@/components/shared/price-inline"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { Skeleton } from "@/components/ui/skeleton"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
-import { getCardName } from "@/lib/i18n"
+import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
+import { formatPct } from "@/lib/utils/currency"
 
 type SortKey =
   | "price_desc"
@@ -54,15 +55,15 @@ interface CardRow {
 
 const PAGE_SIZE = 20
 
-const SORT_OPTIONS: { value: SortKey; label: string }[] = [
-  { value: "price_desc", label: "ราคาสูง → ต่ำ" },
-  { value: "price_asc", label: "ราคาต่ำ → สูง" },
-  { value: "change_desc", label: "ขึ้นมากสุด 24h" },
-  { value: "change_asc", label: "ลงมากสุด 24h" },
-  { value: "change_7d_desc", label: "ขึ้นมากสุด 7d" },
-  { value: "change_7d_asc", label: "ลงมากสุด 7d" },
-  { value: "newest", label: "ล่าสุด" },
-  { value: "name", label: "ชื่อ A-Z" },
+const SORT_KEYS: { value: SortKey; key: "sortPriceDesc" | "sortPriceAsc" | "sortGain24h" | "sortLoss24h" | "sortGain7d" | "sortLoss7d" | "sortNewest" | "sortNameAz" }[] = [
+  { value: "price_desc", key: "sortPriceDesc" },
+  { value: "price_asc", key: "sortPriceAsc" },
+  { value: "change_desc", key: "sortGain24h" },
+  { value: "change_asc", key: "sortLoss24h" },
+  { value: "change_7d_desc", key: "sortGain7d" },
+  { value: "change_7d_asc", key: "sortLoss7d" },
+  { value: "newest", key: "sortNewest" },
+  { value: "name", key: "sortNameAz" },
 ]
 
 type ColumnId = "price" | "change24h" | "change7d"
@@ -118,6 +119,7 @@ function SearchContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const lang = useUIStore((s) => s.language)
+  const SORT_OPTIONS = SORT_KEYS.map((o) => ({ value: o.value, label: t(lang, o.key) }))
 
   const initialQuery = searchParams.get("q") ?? ""
   const [query, setQuery] = useState(initialQuery)
@@ -201,7 +203,7 @@ function SearchContent() {
 
   const formatChange = (v: number | null | undefined) => {
     if (v == null) return "—"
-    return `${v > 0 ? "+" : ""}${v.toFixed(1)}%`
+    return `${v > 0 ? "+" : ""}${formatPct(v)}%`
   }
 
   return (
@@ -213,7 +215,7 @@ function SearchContent() {
           ref={inputRef}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          placeholder="ค้นหาการ์ด, ชุด, รหัส..."
+          placeholder={t(lang, "searchLong")}
           className="h-8 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground/50"
         />
         {inputValue && (
@@ -229,7 +231,7 @@ function SearchContent() {
           type="submit"
           className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
         >
-          ค้นหา
+          {t(lang, "searchButton")}
         </button>
       </form>
 
@@ -237,8 +239,8 @@ function SearchContent() {
       {hasSearched && query.trim() && (
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground">
-            ผลลัพธ์สำหรับ &ldquo;<span className="font-medium text-foreground">{query}</span>&rdquo;
-            {total > 0 && <span className="ml-1.5">({total.toLocaleString()} รายการ)</span>}
+            {t(lang, "resultsFor")} &ldquo;<span className="font-medium text-foreground">{query}</span>&rdquo;
+            {total > 0 && <span className="ml-1.5">({total.toLocaleString()} {t(lang, "items")})</span>}
           </p>
           <select
             value={sort}
@@ -274,9 +276,9 @@ function SearchContent() {
           {/* Table header */}
           <div className="hidden items-center gap-4 border-b border-border/40 px-4 py-2.5 text-xs font-medium text-muted-foreground sm:flex">
             <div className="w-14 shrink-0" />
-            <div className="min-w-0 flex-1">การ์ด</div>
+            <div className="min-w-0 flex-1">{t(lang, "card")}</div>
             <div className="w-20 shrink-0 text-right">
-              <SortableHeader label="ราคา" column="price" currentSort={sort} onSort={handleSortChange} className="justify-end" />
+              <SortableHeader label={t(lang, "price")} column="price" currentSort={sort} onSort={handleSortChange} className="justify-end" />
             </div>
             <div className="w-16 shrink-0 text-right">
               <SortableHeader label="24h" column="change24h" currentSort={sort} onSort={handleSortChange} className="justify-end" />
@@ -356,7 +358,7 @@ function SearchContent() {
           {totalPages > 1 && (
             <div className="flex items-center justify-between border-t border-border/40 px-4 py-3">
               <p className="text-xs text-muted-foreground">
-                หน้า {page} / {totalPages}
+                {t(lang, "pageOf")} {page} / {totalPages}
               </p>
               <div className="flex items-center gap-1">
                 <button
@@ -384,9 +386,9 @@ function SearchContent() {
       {/* No results */}
       {!isPending && hasSearched && cards.length === 0 && query.trim() && (
         <div className="panel px-4 py-16 text-center">
-          <p className="text-lg font-medium">ไม่พบผลลัพธ์</p>
+          <p className="text-lg font-medium">{t(lang, "noResults")}</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            ลองค้นหาด้วยคำอื่น เช่น รหัสการ์ด, ชื่อตัวละคร, หรือชื่อชุด
+            {t(lang, "tryOtherSearch")}
           </p>
         </div>
       )}
@@ -396,7 +398,7 @@ function SearchContent() {
         <div className="panel px-4 py-16 text-center">
           <Search className="mx-auto size-10 text-muted-foreground/30" />
           <p className="mt-3 text-sm text-muted-foreground">
-            พิมพ์เพื่อค้นหาการ์ด
+            {t(lang, "typeToSearch")}
           </p>
         </div>
       )}

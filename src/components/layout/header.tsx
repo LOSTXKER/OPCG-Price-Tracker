@@ -35,13 +35,14 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { useUIStore, type Language, type Currency } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
+import { t } from "@/lib/i18n";
 
-const navLinks = [
-  { href: "/", label: "ภาพรวม" },
-  { href: "/sets", label: "ชุดการ์ด" },
-  { href: "/pull-calculator", label: "คำนวณดรอปเรท" },
-  { href: "/marketplace", label: "ซื้อขาย" },
-] as const;
+const NAV_LINK_KEYS = [
+  { href: "/" as const, key: "overview" as const },
+  { href: "/sets" as const, key: "sets" as const },
+  { href: "/pull-calculator" as const, key: "pullCalculator" as const },
+  { href: "/marketplace" as const, key: "marketplace" as const },
+];
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -85,10 +86,14 @@ export function Header() {
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      setAuthUser(data.user ?? null);
-      setAuthLoaded(true);
-    });
+    supabase.auth.getUser()
+      .then(({ data }) => {
+        setAuthUser(data.user ?? null);
+        setAuthLoaded(true);
+      })
+      .catch(() => {
+        setAuthLoaded(true);
+      });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setAuthUser(session?.user ?? null);
       setAuthLoaded(true);
@@ -140,7 +145,7 @@ export function Header() {
 
           {/* Left nav */}
           <nav className="flex items-center gap-1">
-            {navLinks.map((link) => {
+            {NAV_LINK_KEYS.map((link) => {
               const active = isActive(pathname, link.href);
               return (
                 <Link
@@ -153,7 +158,7 @@ export function Header() {
                       : "text-muted-foreground hover:text-foreground"
                   )}
                 >
-                  {link.label}
+                  {t(language, link.key)}
                   {active && (
                     <span className="absolute bottom-0 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-primary" />
                   )}
@@ -178,7 +183,7 @@ export function Header() {
               )}
             >
               <Briefcase className="size-3.5" />
-              พอร์ตโฟลิโอ
+              {t(language, "portfolioNav")}
             </Link>
 
             {/* Watchlist */}
@@ -192,7 +197,7 @@ export function Header() {
               )}
             >
               <Star className={cn("size-3.5", isActive(pathname, "/watchlist") && "fill-current")} />
-              รายการโปรด
+              {t(language, "watchlistNav")}
             </Link>
 
             {/* Search */}
@@ -202,7 +207,7 @@ export function Header() {
               className="flex h-8 w-40 items-center gap-2 rounded-lg border border-border/50 bg-muted/30 px-2.5 text-muted-foreground/50 transition-colors hover:bg-muted/50 lg:w-48"
             >
               <Search className="size-3.5 shrink-0" />
-              <span className="flex-1 text-left text-xs">ค้นหา...</span>
+              <span className="flex-1 text-left text-xs">{t(language, "searchPlaceholder")}</span>
               <kbd className="rounded border border-border/50 bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground/40">/</kbd>
             </button>
 
@@ -240,7 +245,7 @@ export function Header() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => router.push("/profile")}>
                       <User className="size-4" />
-                      โปรไฟล์
+                      {t(language, "profileLabel")}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                   </>
@@ -249,7 +254,7 @@ export function Header() {
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger className="gap-2">
                     <Globe className="size-4" />
-                    ภาษา
+                    {t(language, "languageLabel")}
                     <span className="ml-auto text-xs text-muted-foreground">{language}</span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
@@ -266,7 +271,7 @@ export function Header() {
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger className="gap-2">
                     <span className="flex size-4 items-center justify-center font-price text-xs font-bold">¤</span>
-                    สกุลเงิน
+                    {t(language, "currencyLabel")}
                     <span className="ml-auto text-xs text-muted-foreground">{currency}</span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
@@ -286,7 +291,7 @@ export function Header() {
                   ) : (
                     <Moon className="size-4" />
                   )}
-                  {mounted && resolvedTheme === "dark" ? "Light Mode" : "Dark Mode"}
+                  {mounted && resolvedTheme === "dark" ? t(language, "lightMode") : t(language, "darkMode")}
                 </DropdownMenuItem>
 
                 {authLoaded && authUser && (
@@ -297,7 +302,7 @@ export function Header() {
                       onClick={() => void handleLogout()}
                     >
                       <LogOut className="size-4" />
-                      ออกจากระบบ
+                      {t(language, "logout")}
                     </DropdownMenuItem>
                   </>
                 )}
@@ -307,7 +312,7 @@ export function Header() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => router.push("/login")}>
                       <User className="size-4" />
-                      เข้าสู่ระบบ
+                      {t(language, "login")}
                     </DropdownMenuItem>
                   </>
                 )}

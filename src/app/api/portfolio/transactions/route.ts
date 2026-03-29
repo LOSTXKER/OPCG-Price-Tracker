@@ -15,7 +15,11 @@ export async function GET(request: NextRequest) {
       portfolio: { userId: dbUser.id },
     };
     if (portfolioId) {
-      where.portfolioId = parseInt(portfolioId, 10);
+      const pid = parseInt(portfolioId, 10);
+      if (isNaN(pid)) {
+        return NextResponse.json({ error: "Invalid portfolioId" }, { status: 400 });
+      }
+      where.portfolioId = pid;
     }
 
     const transactions = await prisma.portfolioTransaction.findMany({

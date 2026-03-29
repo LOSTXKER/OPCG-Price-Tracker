@@ -3,6 +3,9 @@
 import { useState } from "react"
 import { Check, Edit2, Plus, Trash2, X, Wallet } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useUIStore } from "@/stores/ui-store"
+import { t } from "@/lib/i18n"
+import { formatJpyAmount } from "@/lib/utils/currency"
 
 export type PortfolioMeta = {
   id: number
@@ -32,6 +35,8 @@ export function PortfolioSidebar({
   const [newName, setNewName] = useState("")
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editName, setEditName] = useState("")
+  const lang = useUIStore((s) => s.language)
+  const currency = useUIStore((s) => s.currency)
 
   return (
     <div className="p-1.5">
@@ -89,7 +94,7 @@ export function PortfolioSidebar({
                 {p.name}
               </p>
               <p className="text-xs text-muted-foreground">
-                {hideBalance ? "••••" : `¥${p.totalValue.toLocaleString()}`}
+                {hideBalance ? "••••" : formatJpyAmount(p.totalValue, currency)}
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
@@ -127,7 +132,7 @@ export function PortfolioSidebar({
         >
           <input
             autoFocus
-            placeholder="ชื่อพอร์ต..."
+            placeholder={t(lang, "portfolioName")}
             className="flex-1 rounded bg-muted px-2 py-1 text-sm outline-none placeholder:text-muted-foreground/60"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
@@ -147,7 +152,7 @@ export function PortfolioSidebar({
           <div className="flex size-8 items-center justify-center rounded-lg border-2 border-dashed border-border">
             <Plus className="size-3.5" />
           </div>
-          สร้างพอร์ตใหม่
+          {t(lang, "createPortfolio")}
         </button>
       )}
     </div>

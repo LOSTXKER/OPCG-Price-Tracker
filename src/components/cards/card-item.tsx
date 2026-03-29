@@ -3,10 +3,13 @@
 import Image from "next/image"
 import Link from "next/link"
 
+import { Shield } from "lucide-react"
+
 import { PriceDisplay } from "@/components/shared/price-display"
+import { PriceUsd } from "@/components/shared/price-usd"
 import { Skeleton } from "@/components/ui/skeleton"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
-import { getCardName } from "@/lib/i18n"
+import { getCardName, t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { formatPct } from "@/lib/utils/pull-rate"
 import { RarityBadge } from "@/components/shared/rarity-badge"
@@ -33,6 +36,7 @@ export interface CardItemProps {
   inStock?: boolean
   /** Pull probability per box (0-1 range) shown as overlay badge */
   pullChancePerBox?: number
+  psa10PriceUsd?: number | null
 }
 
 export function CardItem({
@@ -52,6 +56,7 @@ export function CardItem({
   setCode,
   inStock = true,
   pullChancePerBox,
+  psa10PriceUsd,
 }: CardItemProps) {
   const lang = useUIStore((s) => s.language)
   const displayName = getCardName(lang, { nameEn, nameJp, nameTh })
@@ -91,7 +96,7 @@ export function CardItem({
           {!inStock && (
             <div className="absolute right-1.5 top-1.5">
               <span className="rounded bg-destructive/90 px-1.5 py-0.5 text-[10px] font-medium text-white">
-                หมด
+                {t(lang, "outOfStock")}
               </span>
             </div>
           )}
@@ -117,6 +122,12 @@ export function CardItem({
               change={activeChange ?? undefined}
               size="sm"
             />
+            {psa10PriceUsd != null && (
+              <div className="flex items-center gap-1 mt-0.5">
+                <Shield className="size-3 text-amber-500" />
+                <PriceUsd usd={psa10PriceUsd} className="text-[11px] text-muted-foreground" />
+              </div>
+            )}
           </div>
         </div>
       </div>

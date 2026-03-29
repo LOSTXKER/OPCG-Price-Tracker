@@ -2,42 +2,11 @@
 
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useUIStore } from "@/stores/ui-store";
+import { t } from "@/lib/i18n";
 
 type KumaMood = "happy" | "excited" | "calm" | "worried" | "searching" | "shrug" | "sad" | "lost";
 type KumaEmptyPreset = "no-results" | "empty-portfolio" | "empty-watchlist" | "not-found" | "error";
-
-const PRESETS: Record<KumaEmptyPreset, { mood: KumaMood; emoji: string; title: string; description: string }> = {
-  "no-results": {
-    mood: "shrug",
-    emoji: "🐻",
-    title: "ไม่เจอการ์ดที่ค้นหา",
-    description: "ลองเปลี่ยนคำค้นหาหรือปรับ filter ดูนะ",
-  },
-  "empty-portfolio": {
-    mood: "sad",
-    emoji: "🐻",
-    title: "ยังไม่มีการ์ดในพอร์ต",
-    description: "เพิ่มการ์ดใบแรกเลย!",
-  },
-  "empty-watchlist": {
-    mood: "calm",
-    emoji: "🐻",
-    title: "ยังไม่มีการ์ดในรายการจับตา",
-    description: "กดดาวที่การ์ดที่สนใจเพื่อติดตามราคา",
-  },
-  "not-found": {
-    mood: "lost",
-    emoji: "🗺️",
-    title: "หลงทางแล้ว...",
-    description: "ไม่เจอหน้าที่ค้นหา ลองกลับหน้าแรกดู",
-  },
-  error: {
-    mood: "worried",
-    emoji: "🐻",
-    title: "มีบางอย่างผิดพลาด",
-    description: "ลองรีเฟรชหน้านี้อีกครั้ง",
-  },
-};
 
 export function KumaEmptyState({
   preset,
@@ -52,8 +21,18 @@ export function KumaEmptyState({
   action?: React.ReactNode;
   className?: string;
 }) {
+  const lang = useUIStore((s) => s.language);
+
+  const PRESETS: Record<KumaEmptyPreset, { mood: KumaMood; emoji: string; title: string; description?: string }> = {
+    "no-results": { mood: "shrug", emoji: "🐻", title: t(lang, "noResults"), description: t(lang, "noResultsDesc") },
+    "empty-portfolio": { mood: "sad", emoji: "🐻", title: t(lang, "emptyPortfolio"), description: t(lang, "emptyPortfolioDesc") },
+    "empty-watchlist": { mood: "calm", emoji: "🐻", title: t(lang, "emptyWatchlist"), description: t(lang, "emptyWatchlistDesc") },
+    "not-found": { mood: "lost", emoji: "🗺️", title: t(lang, "emptyNotFound"), description: t(lang, "emptyNotFoundDesc") },
+    error: { mood: "worried", emoji: "🐻", title: t(lang, "emptyError"), description: t(lang, "emptyErrorDesc") },
+  };
+
   const config = preset ? PRESETS[preset] : null;
-  const displayTitle = title || config?.title || "ไม่มีข้อมูล";
+  const displayTitle = title || config?.title || t(lang, "noData");
   const displayDesc = description || config?.description;
   const emoji = config?.emoji || "🐻";
 

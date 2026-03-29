@@ -6,14 +6,9 @@ import { AlertTriangle } from "lucide-react";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import { pullChance, formatPct, PACKS_PER_BOX, BOXES_PER_CARTON } from "@/lib/utils/pull-rate";
 import { RARITY_BAR_COLOR } from "@/lib/constants/rarity";
-
-type Unit = "pack" | "box" | "carton";
-
-const UNIT_LABELS: Record<Unit, string> = {
-  pack: "ซอง",
-  box: "กล่อง",
-  carton: "คาตั้น",
-};
+import { UNIT_LABELS, type Unit } from "@/lib/constants/ui";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 export interface PullRateRow {
   rarity: string;
@@ -38,6 +33,7 @@ function fmtCount(v: number): string {
 
 export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTableProps) {
   const [unit, setUnit] = useState<Unit>("box");
+  const lang = useUIStore((s) => s.language);
 
   const rateForUnit = (row: PullRateRow) =>
     unit === "pack" ? row.ratePerPack
@@ -78,9 +74,9 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
       <div className="mb-1 hidden items-center px-3 text-[11px] font-medium text-muted-foreground sm:flex">
         <span className="w-20">Rarity</span>
         <span className="flex-1" />
-        <span className="w-28 text-right">ต่อ{UNIT_LABELS[unit]}</span>
-        <span className="w-20 text-right">ใบ</span>
-        <span className="w-24 text-right">โอกาส/ใบ</span>
+        <span className="w-28 text-right">{t(lang, "perUnit")}/{UNIT_LABELS[unit]}</span>
+        <span className="w-20 text-right">{t(lang, "cardsCount")}</span>
+        <span className="w-24 text-right">{t(lang, "chancePerCard")}</span>
       </div>
 
       {/* Rows */}
@@ -110,7 +106,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
                   <div className={`h-full rounded-full ${accent}`} style={{ width: `${barWidth}%` }} />
                 </div>
                 <span className="shrink-0 font-mono text-sm font-bold tabular-nums">{fmtCount(count)}</span>
-                <span className="shrink-0 text-[11px] text-muted-foreground">{row.cardCount}ใบ</span>
+                <span className="shrink-0 text-[11px] text-muted-foreground">{row.cardCount}{t(lang, "cardsCount")}</span>
                 <span className="shrink-0 font-mono text-xs font-semibold tabular-nums text-primary">{formatPct(chance)}</span>
               </div>
 
@@ -119,7 +115,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
                 {fmtCount(count)}
               </span>
               <span className="hidden w-20 text-right text-xs text-muted-foreground sm:block">
-                {row.cardCount} ใบ
+                {row.cardCount} {t(lang, "cardsCount")}
               </span>
               <span className="hidden w-24 text-right font-mono text-xs font-semibold tabular-nums text-primary sm:block">
                 {formatPct(chance)}
@@ -132,7 +128,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
       {/* Footer */}
       {packsPerBox && cardsPerPack && (
         <div className="mt-3 border-t border-border/40 pt-3 text-[11px] text-muted-foreground">
-          {packsPerBox} ซอง/กล่อง · {cardsPerPack} ใบ/ซอง · {BOXES_PER_CARTON} กล่อง/คาตั้น
+          {packsPerBox} {t(lang, "perUnit")}/{UNIT_LABELS["pack"]} · {cardsPerPack} {t(lang, "cardsCount")}/{UNIT_LABELS["pack"]} · {BOXES_PER_CARTON} {UNIT_LABELS["box"]}/{UNIT_LABELS["carton"]}
         </div>
       )}
     </div>

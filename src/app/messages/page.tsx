@@ -6,6 +6,8 @@ import { useCallback, useEffect, useState } from "react";
 import { MessageCircle } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { useUIStore } from "@/stores/ui-store";
+import { getLocale, t } from "@/lib/i18n";
 
 type Conversation = {
   listingId: number;
@@ -25,15 +27,17 @@ export default function MessagesPage() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const lang = useUIStore((s) => s.language);
+  const locale = getLocale(lang);
 
   const load = useCallback(async () => {
     try {
       const res = await fetch("/api/messages/conversations");
       if (!res.ok) {
         if (res.status === 401) {
-          setError("กรุณาเข้าสู่ระบบ");
+          setError(t(lang, "login"));
         } else {
-          setError("โหลดข้อมูลไม่สำเร็จ");
+          setError(t(lang, "loadFailed"));
         }
         setLoading(false);
         return;
@@ -41,7 +45,7 @@ export default function MessagesPage() {
       const data = (await res.json()) as { conversations: Conversation[] };
       setConversations(data.conversations ?? []);
     } catch {
-      setError("โหลดข้อมูลไม่สำเร็จ");
+      setError(t(lang, "loadFailed"));
     }
     setLoading(false);
   }, []);
@@ -53,7 +57,7 @@ export default function MessagesPage() {
   if (loading) {
     return (
       <div className="container mx-auto max-w-2xl px-4 py-8">
-        <p className="text-muted-foreground text-sm">กำลังโหลด...</p>
+        <p className="text-muted-foreground text-sm">Loading...</p>
       </div>
     );
   }
@@ -61,9 +65,9 @@ export default function MessagesPage() {
   return (
     <div className="container mx-auto max-w-2xl space-y-6 px-4 py-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">ข้อความ</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Messages</h1>
         <p className="text-muted-foreground text-sm">
-          สนทนากับผู้ซื้อ/ผู้ขาย
+          Chat with buyers / sellers
         </p>
       </div>
 
@@ -72,7 +76,7 @@ export default function MessagesPage() {
       {conversations.length === 0 ? (
         <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed py-16 text-center">
           <MessageCircle className="text-muted-foreground size-8" />
-          <p className="text-muted-foreground text-sm">ยังไม่มีข้อความ</p>
+          <p className="text-muted-foreground text-sm">{t(lang, "noTransactions")}</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -96,12 +100,12 @@ export default function MessagesPage() {
                   {conv.listing.card.nameEn ?? conv.listing.card.nameJp}
                 </p>
                 <p className="text-muted-foreground truncate text-xs">
-                  {conv.otherUser.displayName ?? "ผู้ใช้"}: {conv.lastMessage}
+                  {conv.otherUser.displayName ?? "User"}: {conv.lastMessage}
                 </p>
               </div>
               <div className="flex shrink-0 flex-col items-end gap-1">
                 <span className="text-muted-foreground text-xs">
-                  {new Date(conv.lastMessageAt).toLocaleDateString("th-TH", {
+                  {new Date(conv.lastMessageAt).toLocaleDateString(locale, {
                     month: "short",
                     day: "numeric",
                   })}

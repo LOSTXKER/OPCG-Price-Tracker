@@ -40,6 +40,7 @@ export function buildWhere(sp: SearchParams): Prisma.CardWhereInput {
     where.OR = [
       { nameJp: { contains: search, mode: "insensitive" } },
       { nameEn: { contains: search, mode: "insensitive" } },
+      { nameTh: { contains: search, mode: "insensitive" } },
       { cardCode: { contains: search, mode: "insensitive" } },
     ]
   }

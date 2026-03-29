@@ -41,6 +41,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "optcgapi.com",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.snkrdunk.com",
+      },
+      {
+        protocol: "https",
+        hostname: "en-assets.snkrdunk.com",
+      },
     ],
   },
 };

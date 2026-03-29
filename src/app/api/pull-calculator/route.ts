@@ -2,11 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
+  try {
   const setCode = request.nextUrl.searchParams.get("set");
+  const game = request.nextUrl.searchParams.get("game") || "";
 
   if (!setCode) {
+    const where: Record<string, unknown> = { type: { in: ["BOOSTER", "EXTRA_BOOSTER"] } };
+    if (game) where.game = { slug: game };
+
     const sets = await prisma.cardSet.findMany({
-      where: { type: { in: ["BOOSTER", "EXTRA_BOOSTER"] } },
+      where,
       select: {
         id: true,
         code: true,
@@ -115,4 +120,8 @@ export async function GET(request: NextRequest) {
     cards,
     rarityCounts,
   });
+  } catch (error) {
+    console.error("GET /api/pull-calculator:", error);
+    return NextResponse.json({ error: "Failed to load pull calculator data" }, { status: 500 });
+  }
 }

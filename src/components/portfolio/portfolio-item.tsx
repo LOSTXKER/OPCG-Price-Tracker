@@ -6,6 +6,7 @@ import { PriceDisplay } from "@/components/shared/price-display"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { formatPct } from "@/lib/utils/currency"
 
 export interface PortfolioItemProps {
   cardCode: string
@@ -148,7 +149,7 @@ export function PortfolioItem({
           >
             P&amp;L {lineCost >= 0 ? "+" : ""}
             {lineCost.toLocaleString()} ¥ ({linePct >= 0 ? "+" : ""}
-            {linePct.toFixed(1)}%)
+            {formatPct(linePct)}%)
           </p>
         ) : (
           <p className="text-muted-foreground mt-2 text-xs">P&amp;L unavailable</p>

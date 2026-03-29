@@ -3,8 +3,10 @@
 import { Minus, Plus } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { PACKS_PER_BOX, BOXES_PER_CARTON, CARDS_PER_PACK_JP } from "@/lib/utils/pull-rate"
+import { useUIStore } from "@/stores/ui-store"
 import type { DropRate, Unit } from "./types"
 import { UNIT_LABELS, tierSort } from "./types"
 
@@ -17,6 +19,7 @@ interface PurchaseConfigProps {
 }
 
 export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuantityChange }: PurchaseConfigProps) {
+  const lang = useUIStore((s) => s.language)
   const meaningful = dropRates
     .filter((dr) => {
       const count =
@@ -80,15 +83,15 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
           </button>
         </div>
         <p className="text-center text-xs text-muted-foreground">
-          {unit === "pack" && `${quantity} ซอง · ${cards} ใบ`}
-          {unit === "box" && `${quantity} กล่อง = ${packs} ซอง · ${cards} ใบ`}
-          {unit === "carton" && `${quantity} คาตั้น = ${BOXES_PER_CARTON * quantity} กล่อง · ${cards} ใบ`}
+          {unit === "pack" && `${quantity} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
+          {unit === "box" && `${quantity} ${t(lang, "boxUnit")} = ${packs} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
+          {unit === "carton" && `${quantity} ${t(lang, "cartonUnit")} = ${BOXES_PER_CARTON * quantity} ${t(lang, "boxUnit")} · ${cards} ${t(lang, "cardsCount")}`}
         </p>
       </div>
       {meaningful.length > 0 && (
         <div className="border-t border-border/40 px-3 py-2.5">
           <p className="mb-2 text-[11px] font-medium text-muted-foreground">
-            {quantity} {UNIT_LABELS[unit]} จะได้ประมาณ
+            {quantity} {UNIT_LABELS[unit]} {t(lang, "estimatedYield")}
           </p>
           <div className="flex flex-wrap gap-2">
             {meaningful.map((dr) => {

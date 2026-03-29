@@ -2,6 +2,9 @@
 
 import { useState } from "react"
 import { Briefcase, Check } from "lucide-react"
+import { useUIStore } from "@/stores/ui-store"
+import { t } from "@/lib/i18n"
+import { displayValueToJpy } from "@/lib/utils/currency"
 
 import {
   Dialog,
@@ -20,6 +23,8 @@ export function CardAddToPortfolio({
   cardId: number
   cardName: string
 }) {
+  const lang = useUIStore((s) => s.language)
+  const currency = useUIStore((s) => s.currency)
   const [open, setOpen] = useState(false)
   const [quantity, setQuantity] = useState("1")
   const [price, setPrice] = useState("")
@@ -30,7 +35,8 @@ export function CardAddToPortfolio({
   const handleAdd = async () => {
     const qty = parseInt(quantity)
     if (!Number.isInteger(qty) || qty < 1) return
-    const pp = price.trim() ? parseInt(price) : null
+    const raw = price.trim() ? parseInt(price) : null
+    const pp = raw != null ? Math.round(displayValueToJpy(raw, currency)) : null
 
     setAdding(true)
     setError(null)
@@ -52,7 +58,7 @@ export function CardAddToPortfolio({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name: "Default" }),
         })
-        if (!createRes.ok) { setError("สร้างพอร์ตไม่สำเร็จ"); return }
+        if (!createRes.ok) { setError(t(lang, "createPortfolioFailed")); return }
         const created = (await createRes.json()) as { portfolio: { id: number } }
         portfolioId = created.portfolio.id
       }
@@ -70,13 +76,13 @@ export function CardAddToPortfolio({
       })
       if (!res.ok) {
         const j = (await res.json()) as { error?: string }
-        setError(j.error ?? "เพิ่มไม่สำเร็จ")
+        setError(j.error ?? t(lang, "addFailed"))
         return
       }
       setDone(true)
       setTimeout(() => { setDone(false); setOpen(false) }, 1200)
     } catch {
-      setError("เพิ่มไม่สำเร็จ")
+      setError(t(lang, "addFailed"))
     } finally {
       setAdding(false)
     }
@@ -91,36 +97,36 @@ export function CardAddToPortfolio({
         className="gap-1.5"
       >
         <Briefcase className="size-3.5" />
-        เพิ่มเข้าพอร์ต
+        {t(lang, "addToPort")}
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle>เพิ่มเข้าพอร์ต</DialogTitle>
+            <DialogTitle>{t(lang, "addToPort")}</DialogTitle>
             <DialogDescription className="truncate">{cardName}</DialogDescription>
           </DialogHeader>
 
           {done ? (
             <div className="flex flex-col items-center gap-2 py-4">
               <Check className="size-8 text-price-up" />
-              <p className="text-sm font-medium">เพิ่มแล้ว!</p>
+              <p className="text-sm font-medium">{t(lang, "added")}</p>
             </div>
           ) : (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="mb-1 block text-xs text-muted-foreground">จำนวน</label>
+                  <label className="mb-1 block text-xs text-muted-foreground">{t(lang, "quantity")}</label>
                   <Input type="number" min={1} value={quantity} onChange={(e) => setQuantity(e.target.value)} />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs text-muted-foreground">ราคาซื้อ (¥)</label>
-                  <Input type="number" min={0} placeholder="ไม่ระบุ" value={price} onChange={(e) => setPrice(e.target.value)} />
+                  <label className="mb-1 block text-xs text-muted-foreground">{t(lang, "purchasePrice")}</label>
+                  <Input type="number" min={0} placeholder={t(lang, "unspecified")} value={price} onChange={(e) => setPrice(e.target.value)} />
                 </div>
               </div>
               {error && <p className="text-xs text-destructive">{error}</p>}
               <Button className="w-full" disabled={adding} onClick={() => void handleAdd()}>
-                {adding ? "กำลังเพิ่ม..." : "เพิ่มเข้าพอร์ต"}
+                {adding ? t(lang, "adding") : t(lang, "addToPort")}
               </Button>
             </div>
           )}

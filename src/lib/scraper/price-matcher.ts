@@ -5,10 +5,10 @@
  * Scrapes Yuyutei → finds matching mapping by yuyuteiId → updates card price.
  * New/unknown listings are saved to YuyuteiMapping as "pending" for admin review.
  */
+import type { PrismaClient } from "@/generated/prisma/client";
 import type { ScrapedCardListing } from "./yuyu-tei";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-type DB = any;
+type DB = PrismaClient;
 
 export interface MatchResult {
   setCode: string;
@@ -110,12 +110,13 @@ export async function matchAndUpdatePrices(
 }
 
 /**
- * Compute 24h and 7d price change percentages for all cards with prices.
+ * Compute 24h, 7d, and 30d price change percentages for all cards with prices.
  */
 export async function computePriceChanges(db: DB): Promise<void> {
   const now = new Date();
   const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
   const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
   const cards = await db.card.findMany({
     where: { latestPriceJpy: { not: null } },
@@ -126,36 +127,33 @@ export async function computePriceChanges(db: DB): Promise<void> {
     const currentPrice = card.latestPriceJpy;
     if (!currentPrice) continue;
 
-    const price24h = await db.cardPrice.findFirst({
-      where: {
-        cardId: card.id,
-        source: "YUYUTEI",
-        scrapedAt: { lte: oneDayAgo },
-      },
-      orderBy: { scrapedAt: "desc" },
-      select: { priceJpy: true },
-    });
+    const [price24h, price7d, price30d] = await Promise.all([
+      db.cardPrice.findFirst({
+        where: { cardId: card.id, source: "YUYUTEI", scrapedAt: { lte: oneDayAgo } },
+        orderBy: { scrapedAt: "desc" },
+        select: { priceJpy: true },
+      }),
+      db.cardPrice.findFirst({
+        where: { cardId: card.id, source: "YUYUTEI", scrapedAt: { lte: sevenDaysAgo } },
+        orderBy: { scrapedAt: "desc" },
+        select: { priceJpy: true },
+      }),
+      db.cardPrice.findFirst({
+        where: { cardId: card.id, source: "YUYUTEI", scrapedAt: { lte: thirtyDaysAgo } },
+        orderBy: { scrapedAt: "desc" },
+        select: { priceJpy: true },
+      }),
+    ]);
 
-    const price7d = await db.cardPrice.findFirst({
-      where: {
-        cardId: card.id,
-        source: "YUYUTEI",
-        scrapedAt: { lte: sevenDaysAgo },
-      },
-      orderBy: { scrapedAt: "desc" },
-      select: { priceJpy: true },
-    });
-
-    const p24h = price24h?.priceJpy;
-    const p7d = price7d?.priceJpy;
-    const change24h = p24h ? ((currentPrice - p24h) / p24h) * 100 : null;
-    const change7d = p7d ? ((currentPrice - p7d) / p7d) * 100 : null;
+    const pctChange = (current: number, old: number | null | undefined) =>
+      old ? Math.round(((current - old) / old) * 100 * 100) / 100 : null;
 
     await db.card.update({
       where: { id: card.id },
       data: {
-        priceChange24h: change24h ? Math.round(change24h * 100) / 100 : null,
-        priceChange7d: change7d ? Math.round(change7d * 100) / 100 : null,
+        priceChange24h: pctChange(currentPrice, price24h?.priceJpy),
+        priceChange7d: pctChange(currentPrice, price7d?.priceJpy),
+        priceChange30d: pctChange(currentPrice, price30d?.priceJpy),
       },
     });
   }

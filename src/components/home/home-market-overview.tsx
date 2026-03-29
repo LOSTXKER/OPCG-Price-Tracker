@@ -13,6 +13,7 @@ import {
   LayoutGrid,
   List,
   Search,
+  Shield,
   SlidersHorizontal,
   TrendingUpDown,
   X,
@@ -23,12 +24,14 @@ import { PriceDisplay } from "@/components/shared/price-display"
 import { FilterChips, type FilterDefinition } from "@/components/shared/filter-chips"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { Price } from "@/components/shared/price-inline"
+import { PriceUsd } from "@/components/shared/price-usd"
 import { Sparkline } from "@/components/shared/sparkline"
 import { Skeleton } from "@/components/ui/skeleton"
-import { getCardName } from "@/lib/i18n"
+import { getCardName, t } from "@/lib/i18n"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
+import { formatPct } from "@/lib/utils/currency"
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -55,6 +58,8 @@ type SortKey =
   | "views_desc"
   | "newest"
 
+type PriceMode = "raw" | "psa10"
+
 interface CardRow {
   id?: number
   cardCode: string
@@ -66,6 +71,7 @@ interface CardRow {
   isParallel: boolean
   imageUrl?: string | null
   latestPriceJpy?: number | null
+  psa10PriceUsd?: number | null
   priceChange24h?: number | null
   priceChange7d?: number | null
   priceChange30d?: number | null
@@ -108,15 +114,15 @@ function parseSortColumn(sort: SortKey): { col: ColumnId | null; dir: "asc" | "d
 
 const PAGE_SIZE = 20
 
-function buildTabs(latestSetCode?: string): Tab[] {
+function buildTabs(latestSetCode: string | undefined, labels: { all: string; popular: string; latest: string }): Tab[] {
   const tabs: Tab[] = [
-    { id: "all", label: "ทั้งหมด", defaultSort: "price_desc" },
-    { id: "popular", label: "ยอดนิยม", defaultSort: "views_desc" },
+    { id: "all", label: labels.all, defaultSort: "price_desc" },
+    { id: "popular", label: labels.popular, defaultSort: "views_desc" },
   ]
   if (latestSetCode) {
     tabs.push({
       id: "latest",
-      label: "ชุดล่าสุด",
+      label: labels.latest,
       defaultSort: "price_desc",
       extraParams: { set: latestSetCode },
     })
@@ -146,7 +152,46 @@ export function HomeMarketOverview({
   children?: React.ReactNode
 }) {
   const router = useRouter()
-  const tabs = buildTabs(latestSetCode)
+  const lang = useUIStore((s) => s.language)
+
+  const COLOR_LABELS: Record<string, string> = {
+    Red: lang === "TH" ? "แดง" : lang === "JP" ? "赤" : "Red",
+    Green: lang === "TH" ? "เขียว" : lang === "JP" ? "緑" : "Green",
+    Blue: lang === "TH" ? "ฟ้า" : lang === "JP" ? "青" : "Blue",
+    Purple: lang === "TH" ? "ม่วง" : lang === "JP" ? "紫" : "Purple",
+    Black: lang === "TH" ? "ดำ" : lang === "JP" ? "黒" : "Black",
+    Yellow: lang === "TH" ? "เหลือง" : lang === "JP" ? "黄" : "Yellow",
+    multi: lang === "TH" ? "หลายสี" : lang === "JP" ? "多色" : "Multi",
+  }
+
+  const allFilterDefs: FilterDefinition[] = [
+    ...filterDefinitions.map((f) => ({
+      ...f,
+      label: f.key === "set" ? t(lang, "setFilter")
+        : f.key === "rarity" ? t(lang, "rarity")
+        : f.key === "type" ? t(lang, "type")
+        : f.label,
+    })),
+    {
+      key: "color",
+      label: t(lang, "color"),
+      options: Object.entries(COLOR_LABELS).map(([value, label]) => ({ value, label })),
+    },
+    {
+      key: "variant",
+      label: t(lang, "variant"),
+      options: [
+        { value: "regular", label: t(lang, "regular") },
+        { value: "parallel", label: t(lang, "parallel") },
+      ],
+    },
+  ]
+
+  const tabs = buildTabs(latestSetCode, {
+    all: t(lang, "allTab"),
+    popular: t(lang, "popular"),
+    latest: t(lang, "latestSet"),
+  })
 
   type ViewMode = "table" | "grid"
   type ChangePeriod = "24h" | "7d" | "30d"
@@ -165,6 +210,7 @@ export function HomeMarketOverview({
   const [maxPrice, setMaxPrice] = useState("")
   const [sparklines, setSparklines] = useState<Record<number, number[]>>({})
   const [changePeriod, setChangePeriod] = useState<ChangePeriod>("7d")
+  const [priceMode, setPriceMode] = useState<PriceMode>("raw")
   const [filterOpen, setFilterOpen] = useState(false)
   const isInitialMount = useRef(true)
 
@@ -173,7 +219,7 @@ export function HomeMarketOverview({
   }, [initialSearch])
 
   const fetchCards = useCallback(
-    (tab: TabId, sortKey: SortKey, pg: number, q: string, f: Record<string, string[]>, pMin: string, pMax: string) => {
+    (tab: TabId, sortKey: SortKey, pg: number, q: string, f: Record<string, string[]>, pMin: string, pMax: string, mode: PriceMode = "raw") => {
       const tabDef = tabs.find((t) => t.id === tab) ?? tabs[0]
       const params = new URLSearchParams({
         sort: sortKey,
@@ -189,6 +235,7 @@ export function HomeMarketOverview({
       const maxP = parseInt(pMax)
       if (minP > 0) params.set("minPrice", String(minP))
       if (maxP > 0) params.set("maxPrice", String(maxP))
+      if (mode === "psa10") params.set("priceMode", "psa10")
 
       startTransition(async () => {
         try {
@@ -215,11 +262,11 @@ export function HomeMarketOverview({
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false
-      if (!initialSearch) return
+      if (!initialSearch && priceMode === "raw") return
     }
-    fetchCards(activeTab, sort, page, search, filters, minPrice, maxPrice)
+    fetchCards(activeTab, sort, page, search, filters, minPrice, maxPrice, priceMode)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab, sort, page, search, filters, minPrice, maxPrice, fetchCards])
+  }, [activeTab, sort, page, search, filters, minPrice, maxPrice, priceMode, fetchCards])
 
   useEffect(() => {
     const ids = cards.map((c) => c.id).filter((id): id is number => id != null)
@@ -292,7 +339,7 @@ export function HomeMarketOverview({
           <Search className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground/70" />
           <input
             type="text"
-            placeholder="ค้นหาการ์ด เช่น Luffy, OP13-118, SEC..."
+            placeholder={t(lang, "searchLong")}
             className="h-12 w-full rounded-xl border border-border/60 bg-card pl-12 pr-11 text-[15px] shadow-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 md:h-11 md:text-sm"
             value={search}
             onChange={(e) => {
@@ -314,7 +361,7 @@ export function HomeMarketOverview({
           type="submit"
           className="h-12 shrink-0 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 md:h-11"
         >
-          ค้นหา
+          {t(lang, "searchButton")}
         </button>
       </form>
 
@@ -323,7 +370,7 @@ export function HomeMarketOverview({
 
       {/* Main table panel */}
     <div className="panel overflow-hidden">
-      {/* Single-row toolbar: Tabs + filter button + period toggle (grid) + view toggle */}
+      {/* Toolbar row 1: Tabs + filter + view */}
       <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
         <div className="flex items-center gap-1 overflow-x-auto">
           {tabs.map((tab) => (
@@ -376,7 +423,7 @@ export function HomeMarketOverview({
             )}
           >
             <SlidersHorizontal className="size-3.5" />
-            <span className="hidden sm:inline">ตัวกรอง</span>
+            <span className="hidden sm:inline">{t(lang, "filter")}</span>
             {activeFilterCount > 0 && (
               <span className={cn(
                 "flex size-4.5 items-center justify-center rounded-full text-[10px] font-bold",
@@ -419,22 +466,54 @@ export function HomeMarketOverview({
         </div>
       </div>
 
+      {/* Toolbar row 2: Raw / PSA 10 price mode */}
+      <div className="flex items-center gap-3 border-b border-border/50 bg-muted/20 px-4 py-2">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+          {t(lang, "price")}
+        </span>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => { setPriceMode("raw"); setPage(1) }}
+            className={cn(
+              "rounded-md border px-3 py-1 text-xs font-semibold transition-all",
+              priceMode === "raw"
+                ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                : "border-border bg-card text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+            )}
+          >
+            Raw
+          </button>
+          <button
+            onClick={() => { setPriceMode("psa10"); setPage(1) }}
+            className={cn(
+              "flex items-center gap-1 rounded-md border px-3 py-1 text-xs font-semibold transition-all",
+              priceMode === "psa10"
+                ? "border-amber-600 bg-amber-500/15 text-amber-700 dark:text-amber-400 shadow-sm"
+                : "border-border bg-card text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+            )}
+          >
+            <Shield className="size-3 text-amber-500" />
+            PSA 10
+          </button>
+        </div>
+      </div>
+
       {/* Collapsible advanced filter panel */}
       {filterOpen && (
         <div className="border-b border-border bg-muted/20 px-4 py-3">
           <div className="flex items-center gap-2 overflow-x-auto">
             <FilterChips
-              filters={filterDefinitions}
+              filters={allFilterDefs}
               selected={filters}
               onChange={handleFilterChange}
             />
 
             {/* Price range inline */}
             <div className="flex shrink-0 items-center gap-1.5">
-              <span className="text-xs text-muted-foreground">ราคา</span>
+              <span className="text-xs text-muted-foreground">{t(lang, "priceLabel")}</span>
               <input
                 type="number"
-                placeholder="ต่ำสุด"
+                placeholder={t(lang, "min")}
                 className="h-8 w-20 rounded-lg border border-border bg-card px-2 text-sm tabular-nums outline-none placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
                 value={minPrice}
                 onChange={(e) => { setMinPrice(e.target.value); setPage(1) }}
@@ -443,7 +522,7 @@ export function HomeMarketOverview({
               <span className="text-xs text-muted-foreground">–</span>
               <input
                 type="number"
-                placeholder="สูงสุด"
+                placeholder={t(lang, "max")}
                 className="h-8 w-20 rounded-lg border border-border bg-card px-2 text-sm tabular-nums outline-none placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
                 value={maxPrice}
                 onChange={(e) => { setMaxPrice(e.target.value); setPage(1) }}
@@ -457,7 +536,7 @@ export function HomeMarketOverview({
                 className="flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >
                 <X className="size-3" />
-                ล้างทั้งหมด
+                {t(lang, "clearAll")}
               </button>
             )}
           </div>
@@ -476,10 +555,11 @@ export function HomeMarketOverview({
                   key={card.cardCode}
                   card={card}
                   rank={(page - 1) * PAGE_SIZE + i + 1}
+                  priceMode={priceMode}
                 />
               ))}
           {!isPending && cards.length === 0 && (
-            <p className="py-12 text-center text-sm text-muted-foreground">ไม่มีข้อมูล</p>
+            <p className="py-12 text-center text-sm text-muted-foreground">{t(lang, "noData")}</p>
           )}
         </div>
         {/* Desktop table (>= sm) */}
@@ -489,11 +569,11 @@ export function HomeMarketOverview({
               <tr className="border-b border-border text-xs font-medium uppercase tracking-wider text-muted-foreground/70">
                 <th className="w-8 py-2.5 pl-3 pr-0 font-medium"></th>
                 <th className="w-10 py-2.5 pr-1 pl-1 font-medium">#</th>
-                <th className="py-2.5 pr-3 pl-2 font-medium">การ์ด</th>
-                <th className="hidden py-2.5 pr-3 font-medium md:table-cell">ชุด</th>
-                <th className="hidden py-2.5 pr-3 font-medium sm:table-cell">ความหายาก</th>
+                <th className="py-2.5 pr-3 pl-2 font-medium">{t(lang, "card")}</th>
+                <th className="hidden py-2.5 pr-3 font-medium md:table-cell">{t(lang, "set")}</th>
+                <th className="hidden py-2.5 pr-3 font-medium sm:table-cell">{t(lang, "rarity")}</th>
                 <SortableHeader
-                  label="ราคา"
+                  label={t(lang, "price")}
                   column="price"
                   activeCol={sortCol}
                   dir={sortDir}
@@ -501,7 +581,7 @@ export function HomeMarketOverview({
                   align="right"
                 />
                 <SortableHeader
-                  label="24 ชม."
+                  label="24h"
                   column="change24h"
                   activeCol={sortCol}
                   dir={sortDir}
@@ -510,12 +590,12 @@ export function HomeMarketOverview({
                 />
                 {showViews ? (
                   <th className="hidden py-2.5 pr-3 text-right font-medium md:table-cell">
-                    เข้าชม
+                    {t(lang, "visits")}
                   </th>
                 ) : (
                   <>
                     <SortableHeader
-                      label="7 วัน"
+                      label="7d"
                       column="change7d"
                       activeCol={sortCol}
                       dir={sortDir}
@@ -524,7 +604,7 @@ export function HomeMarketOverview({
                       className="hidden md:table-cell"
                     />
                     <SortableHeader
-                      label="30 วัน"
+                      label="30d"
                       column="change30d"
                       activeCol={sortCol}
                       dir={sortDir}
@@ -535,7 +615,7 @@ export function HomeMarketOverview({
                   </>
                 )}
                 <th className="hidden py-2.5 pr-4 font-medium xl:table-cell">
-                  กราฟ 7 วัน
+                  {t(lang, "sparkline7d")}
                 </th>
               </tr>
             </thead>
@@ -551,6 +631,7 @@ export function HomeMarketOverview({
                       rank={(page - 1) * PAGE_SIZE + i + 1}
                       showViews={showViews}
                       sparklineData={card.id != null ? sparklines[card.id] : undefined}
+                      priceMode={priceMode}
                     />
                   ))}
             </tbody>
@@ -558,7 +639,7 @@ export function HomeMarketOverview({
 
           {!isPending && cards.length === 0 && (
             <p className="hidden py-12 text-center text-sm text-muted-foreground sm:block">
-              ไม่มีข้อมูล
+              {t(lang, "noData")}
             </p>
           )}
         </div>
@@ -573,12 +654,12 @@ export function HomeMarketOverview({
             </div>
           ) : cards.length === 0 ? (
             <p className="py-12 text-center text-sm text-muted-foreground">
-              ไม่มีข้อมูล
+              {t(lang, "noData")}
             </p>
           ) : (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {cards.map((card) => (
-                <GridCard key={card.cardCode} card={card} changePeriod={changePeriod} />
+                <GridCard key={card.cardCode} card={card} changePeriod={changePeriod} priceMode={priceMode} />
               ))}
             </div>
           )}
@@ -589,7 +670,7 @@ export function HomeMarketOverview({
       {totalPages > 1 && (
         <div className="flex items-center justify-between border-t border-border px-4 py-3">
           <p className="text-xs text-muted-foreground">
-            แสดง {((page - 1) * PAGE_SIZE + 1).toLocaleString()}-{Math.min(page * PAGE_SIZE, total).toLocaleString()} จาก {total.toLocaleString()} การ์ด
+            {t(lang, "showingOf")} {((page - 1) * PAGE_SIZE + 1).toLocaleString()}-{Math.min(page * PAGE_SIZE, total).toLocaleString()} {t(lang, "from")} {total.toLocaleString()} {t(lang, "card")}
           </p>
           <div className="flex items-center gap-1">
             <button
@@ -674,13 +755,14 @@ function SortableHeader({
 /*  Table row                                                          */
 /* ------------------------------------------------------------------ */
 
-function MarketRow({ card, rank, showViews, sparklineData }: { card: CardRow; rank: number; showViews?: boolean; sparklineData?: number[] }) {
+function MarketRow({ card, rank, showViews, sparklineData, priceMode = "raw" }: { card: CardRow; rank: number; showViews?: boolean; sparklineData?: number[]; priceMode?: PriceMode }) {
   const lang = useUIStore((s) => s.language)
   const name = getCardName(lang, card)
   const c24 = card.priceChange24h
   const c7 = card.priceChange7d
   const c30 = card.priceChange30d
   const setCode = card.set?.code ?? card.setCode ?? ""
+  const isPsa = priceMode === "psa10"
 
   return (
     <tr className="border-b border-border/40 transition-all duration-150 hover:bg-muted/50">
@@ -728,27 +810,37 @@ function MarketRow({ card, rank, showViews, sparklineData }: { card: CardRow; ra
         <RarityBadge rarity={card.rarity} size="sm" />
       </td>
       <td className="py-3 pr-3 text-right align-middle font-price text-sm font-semibold">
-        {card.latestPriceJpy != null ? (
-          <Price jpy={card.latestPriceJpy} />
+        {isPsa ? (
+          card.psa10PriceUsd != null ? (
+            <PriceUsd usd={card.psa10PriceUsd} />
+          ) : (
+            <span className="text-muted-foreground/50">—</span>
+          )
         ) : (
-          "—"
+          card.latestPriceJpy != null ? (
+            <Price jpy={card.latestPriceJpy} />
+          ) : (
+            "—"
+          )
         )}
       </td>
       <td className="py-3 pr-3 text-right align-middle">
-        <ChangeCell value={c24} />
+        {isPsa ? <span className="font-price text-xs text-muted-foreground">—</span> : <ChangeCell value={c24} />}
       </td>
       <td className="hidden py-3 pr-3 text-right align-middle md:table-cell">
         {showViews ? (
           <span className="font-price text-xs text-muted-foreground">
             {(card.viewCount ?? 0).toLocaleString()}
           </span>
+        ) : isPsa ? (
+          <span className="font-price text-xs text-muted-foreground">—</span>
         ) : (
           <ChangeCell value={c7} />
         )}
       </td>
       {!showViews && (
         <td className="hidden py-3 pr-3 text-right align-middle lg:table-cell">
-          <ChangeCell value={c30} />
+          {isPsa ? <span className="font-price text-xs text-muted-foreground">—</span> : <ChangeCell value={c30} />}
         </td>
       )}
       <td className="hidden py-3 pr-4 align-middle xl:table-cell">
@@ -783,7 +875,7 @@ function ChangeCell({ value }: { value?: number | null }) {
       )}
     >
       {value > 0 ? "+" : ""}
-      {value.toFixed(1)}%
+      {formatPct(value)}%
     </span>
   )
 }
@@ -875,14 +967,16 @@ function PageNumbers({
 /*  Grid card                                                          */
 /* ------------------------------------------------------------------ */
 
-function GridCard({ card, changePeriod = "7d" }: { card: CardRow; changePeriod?: "24h" | "7d" | "30d" }) {
+function GridCard({ card, changePeriod = "7d", priceMode = "raw" }: { card: CardRow; changePeriod?: "24h" | "7d" | "30d"; priceMode?: PriceMode }) {
   const lang = useUIStore((s) => s.language)
   const name = getCardName(lang, card)
   const setCode = card.set?.code ?? card.setCode ?? ""
-  const activeChange =
-    changePeriod === "24h" ? card.priceChange24h :
-    changePeriod === "30d" ? card.priceChange30d :
-    card.priceChange7d
+  const isPsa = priceMode === "psa10"
+  const activeChange = isPsa
+    ? undefined
+    : changePeriod === "24h" ? card.priceChange24h
+    : changePeriod === "30d" ? card.priceChange30d
+    : card.priceChange7d
 
   return (
     <Link
@@ -928,11 +1022,19 @@ function GridCard({ card, changePeriod = "7d" }: { card: CardRow; changePeriod?:
             {name}
           </p>
           <div className="mt-auto pt-1.5">
-            <PriceDisplay
-              priceJpy={card.latestPriceJpy}
-              change={activeChange}
-              size="sm"
-            />
+            {isPsa ? (
+              card.psa10PriceUsd != null ? (
+                <PriceUsd usd={card.psa10PriceUsd} className="text-sm font-semibold" />
+              ) : (
+                <span className="font-price text-sm text-muted-foreground/50">—</span>
+              )
+            ) : (
+              <PriceDisplay
+                priceJpy={card.latestPriceJpy}
+                change={activeChange}
+                size="sm"
+              />
+            )}
           </div>
         </div>
       </div>
@@ -957,10 +1059,11 @@ function GridCardSkeleton() {
 /*  Mobile card list item                                              */
 /* ------------------------------------------------------------------ */
 
-function MobileCardItem({ card, rank }: { card: CardRow; rank: number }) {
+function MobileCardItem({ card, rank, priceMode = "raw" }: { card: CardRow; rank: number; priceMode?: PriceMode }) {
   const lang = useUIStore((s) => s.language)
   const name = getCardName(lang, card)
   const c24 = card.priceChange24h
+  const isPsa = priceMode === "psa10"
 
   return (
     <Link
@@ -984,14 +1087,18 @@ function MobileCardItem({ card, rank }: { card: CardRow; rank: number }) {
       </div>
       <div className="shrink-0 text-right">
         <p className="font-price text-sm font-semibold">
-          {card.latestPriceJpy != null ? <Price jpy={card.latestPriceJpy} /> : "—"}
+          {isPsa ? (
+            card.psa10PriceUsd != null ? <PriceUsd usd={card.psa10PriceUsd} /> : <span className="text-muted-foreground/50">—</span>
+          ) : (
+            card.latestPriceJpy != null ? <Price jpy={card.latestPriceJpy} /> : "—"
+          )}
         </p>
-        {c24 != null && c24 !== 0 && (
+        {!isPsa && c24 != null && c24 !== 0 && (
           <p className={cn(
             "font-price text-[11px] font-medium",
             c24 > 0 ? "text-price-up" : "text-price-down"
           )}>
-            {c24 > 0 ? "+" : ""}{c24.toFixed(1)}%
+            {c24 > 0 ? "+" : ""}{formatPct(c24)}%
           </p>
         )}
       </div>

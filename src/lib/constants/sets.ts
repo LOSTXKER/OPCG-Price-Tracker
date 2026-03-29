@@ -60,7 +60,7 @@ export const OPCG_SETS: SetInfo[] = [
   // Premium Boosters / Promo
   { code: "prb01", name: "ONE PIECE CARD THE BEST", nameEn: "ONE PIECE CARD THE BEST", type: "PROMO" },
   { code: "prb02", name: "ONE PIECE CARD THE BEST vol.2", nameEn: "ONE PIECE CARD THE BEST vol.2", type: "PROMO" },
+  { code: "don", name: "DON!! Card Collection", nameEn: "DON!! Card Collection", type: "PROMO" },
 ];
 
-export const SET_MAP = new Map(OPCG_SETS.map((s) => [s.code, s]));
 export const SET_CODES = OPCG_SETS.map((s) => s.code);

@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkIsAdmin } from "@/lib/auth/check-admin";
 import { prisma } from "@/lib/db";
+import { opcgConfig } from "@/lib/game-config";
 
-const BANDAI_BASE = "https://asia-en.onepiece-cardgame.com/images/cardlist/card";
+const BANDAI_BASE = opcgConfig.officialCardImageBase!;
 
 export async function GET(request: NextRequest) {
   if (!(await checkIsAdmin())) {
@@ -11,7 +12,7 @@ export async function GET(request: NextRequest) {
 
   const sp = request.nextUrl.searchParams;
   const setFilter = sp.get("set") || "";
-  const page = Math.max(1, parseInt(sp.get("page") || "1"));
+  const page = Math.max(1, parseInt(sp.get("page") || "1", 10) || 1);
   const limit = 20;
   const skip = (page - 1) * limit;
 
@@ -80,30 +81,35 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  const body = await request.json();
-  const { cardId, parallelIndex } = body;
+  try {
+    const body = await request.json();
+    const { cardId, parallelIndex } = body;
 
-  if (!cardId || parallelIndex == null) {
-    return NextResponse.json(
-      { error: "cardId and parallelIndex are required" },
-      { status: 400 }
-    );
+    if (!cardId || parallelIndex == null) {
+      return NextResponse.json(
+        { error: "cardId and parallelIndex are required" },
+        { status: 400 }
+      );
+    }
+
+    const card = await prisma.card.findUnique({
+      where: { id: cardId },
+      select: { baseCode: true },
+    });
+
+    if (!card?.baseCode) {
+      return NextResponse.json({ error: "Card not found" }, { status: 404 });
+    }
+
+    const newImageUrl = `${BANDAI_BASE}/${card.baseCode}_p${parallelIndex}.png`;
+    const updated = await prisma.card.update({
+      where: { id: cardId },
+      data: { parallelIndex, imageUrl: newImageUrl },
+    });
+
+    return NextResponse.json({ success: true, card: updated });
+  } catch (error) {
+    console.error("PATCH /api/admin/image-matching:", error);
+    return NextResponse.json({ error: "Failed to update image" }, { status: 500 });
   }
-
-  const card = await prisma.card.findUnique({
-    where: { id: cardId },
-    select: { baseCode: true },
-  });
-
-  if (!card?.baseCode) {
-    return NextResponse.json({ error: "Card not found" }, { status: 404 });
-  }
-
-  const newImageUrl = `${BANDAI_BASE}/${card.baseCode}_p${parallelIndex}.png`;
-  const updated = await prisma.card.update({
-    where: { id: cardId },
-    data: { parallelIndex, imageUrl: newImageUrl },
-  });
-
-  return NextResponse.json({ success: true, card: updated });
 }

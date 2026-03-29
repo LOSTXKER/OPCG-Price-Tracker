@@ -9,8 +9,8 @@ export async function GET(request: NextRequest) {
   }
 
   const sp = request.nextUrl.searchParams;
-  const page = Math.max(1, parseInt(sp.get("page") || "1"));
-  const limit = Math.min(100, Math.max(1, parseInt(sp.get("limit") || "50")));
+  const page = Math.max(1, parseInt(sp.get("page") || "1", 10) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(sp.get("limit") || "50", 10) || 50));
   const skip = (page - 1) * limit;
   const search = sp.get("q") || "";
   const setFilter = sp.get("set") || "";
@@ -19,6 +19,7 @@ export async function GET(request: NextRequest) {
   const parallelFilter = sp.get("parallel") || "";
 
   const where: Prisma.CardWhereInput = {};
+  const andConditions: Prisma.CardWhereInput[] = [];
 
   if (setFilter) {
     where.set = { code: setFilter };
@@ -32,21 +33,28 @@ export async function GET(request: NextRequest) {
     where.isParallel = false;
   }
   if (search) {
-    where.OR = [
-      { cardCode: { contains: search, mode: "insensitive" } },
-      { baseCode: { contains: search, mode: "insensitive" } },
-      { nameJp: { contains: search, mode: "insensitive" } },
-      { nameEn: { contains: search, mode: "insensitive" } },
-    ];
+    andConditions.push({
+      OR: [
+        { cardCode: { contains: search, mode: "insensitive" } },
+        { baseCode: { contains: search, mode: "insensitive" } },
+        { nameJp: { contains: search, mode: "insensitive" } },
+        { nameEn: { contains: search, mode: "insensitive" } },
+        { nameTh: { contains: search, mode: "insensitive" } },
+      ],
+    });
   }
   if (missingFilter === "en") {
-    where.nameEn = null;
+    andConditions.push({ nameEn: null });
   } else if (missingFilter === "th") {
-    where.nameTh = null;
+    andConditions.push({ nameTh: null });
   } else if (missingFilter === "image") {
-    where.OR = [{ imageUrl: null }, { imageUrl: "" }];
+    andConditions.push({ OR: [{ imageUrl: null }, { imageUrl: "" }] });
   } else if (missingFilter === "price") {
-    where.latestPriceJpy = null;
+    andConditions.push({ latestPriceJpy: null });
+  }
+
+  if (andConditions.length > 0) {
+    where.AND = andConditions;
   }
 
   const [cards, total] = await Promise.all([
@@ -92,33 +100,38 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  const body = await request.json();
-  const { id, ...updates } = body;
+  try {
+    const body = await request.json();
+    const { id, ...updates } = body;
 
-  if (!id) {
-    return NextResponse.json({ error: "id is required" }, { status: 400 });
-  }
-
-  const allowedFields = [
-    "nameEn",
-    "nameTh",
-    "imageUrl",
-    "rarity",
-    "cardType",
-    "color",
-    "colorEn",
-  ];
-  const data: Record<string, unknown> = {};
-  for (const key of allowedFields) {
-    if (key in updates) {
-      data[key] = updates[key];
+    if (!id) {
+      return NextResponse.json({ error: "id is required" }, { status: 400 });
     }
+
+    const allowedFields = [
+      "nameEn",
+      "nameTh",
+      "imageUrl",
+      "rarity",
+      "cardType",
+      "color",
+      "colorEn",
+    ];
+    const data: Record<string, unknown> = {};
+    for (const key of allowedFields) {
+      if (key in updates) {
+        data[key] = updates[key];
+      }
+    }
+
+    const updated = await prisma.card.update({
+      where: { id },
+      data,
+    });
+
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error("PATCH /api/admin/cards:", error);
+    return NextResponse.json({ error: "Failed to update card" }, { status: 500 });
   }
-
-  const updated = await prisma.card.update({
-    where: { id },
-    data,
-  });
-
-  return NextResponse.json(updated);
 }

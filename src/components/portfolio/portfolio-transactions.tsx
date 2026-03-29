@@ -3,8 +3,9 @@
 import Image from "next/image"
 import { ArrowDownCircle, ArrowUpCircle, MinusCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { getCardName } from "@/lib/i18n"
+import { getCardName, getLocale, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
+import { formatJpyAmount } from "@/lib/utils/currency"
 
 export type TransactionRow = {
   id: number
@@ -22,19 +23,23 @@ export type TransactionRow = {
   }
 }
 
-const TYPE_CONFIG: Record<string, { label: string; icon: typeof ArrowUpCircle; colorClass: string }> = {
-  BUY: { label: "ซื้อ", icon: ArrowDownCircle, colorClass: "text-price-up" },
-  SELL: { label: "ขาย", icon: ArrowUpCircle, colorClass: "text-price-down" },
-  REMOVE: { label: "ลบ", icon: MinusCircle, colorClass: "text-muted-foreground" },
+type TypeConfig = { labelKey: "buy" | "sell" | "remove"; icon: typeof ArrowUpCircle; colorClass: string }
+
+const TYPE_CONFIG: Record<string, TypeConfig> = {
+  BUY: { labelKey: "buy", icon: ArrowDownCircle, colorClass: "text-price-up" },
+  SELL: { labelKey: "sell", icon: ArrowUpCircle, colorClass: "text-price-down" },
+  REMOVE: { labelKey: "remove", icon: MinusCircle, colorClass: "text-muted-foreground" },
 }
 
 export function PortfolioTransactions({ transactions }: { transactions: TransactionRow[] }) {
   const lang = useUIStore((s) => s.language)
+  const currency = useUIStore((s) => s.currency)
+  const locale = getLocale(lang)
 
   if (transactions.length === 0) {
     return (
       <p className="py-12 text-center text-sm text-muted-foreground">
-        ยังไม่มีรายการ
+        {t(lang, "noTransactions")}
       </p>
     )
   }
@@ -46,6 +51,7 @@ export function PortfolioTransactions({ transactions }: { transactions: Transact
         const Icon = cfg.icon
         const name = getCardName(lang, tx.card)
         const date = new Date(tx.createdAt)
+        const label = t(lang, cfg.labelKey)
 
         return (
           <div key={tx.id} className="flex items-center gap-3 rounded-lg px-4 py-3 transition-colors hover:bg-muted/40">
@@ -60,20 +66,20 @@ export function PortfolioTransactions({ transactions }: { transactions: Transact
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">{name}</p>
               <p className="text-xs text-muted-foreground">
-                {cfg.label} ×{tx.quantity}
-                {tx.pricePerUnit != null && ` @ ¥${tx.pricePerUnit.toLocaleString()}`}
+                {label} ×{tx.quantity}
+                {tx.pricePerUnit != null && ` @ ${formatJpyAmount(tx.pricePerUnit, currency)}`}
               </p>
             </div>
             <div className="shrink-0 text-right">
               {tx.pricePerUnit != null && (
                 <p className={cn("font-price text-sm font-medium tabular-nums", cfg.colorClass)}>
-                  {tx.type === "BUY" ? "-" : "+"}¥{(tx.pricePerUnit * tx.quantity).toLocaleString()}
+                  {tx.type === "BUY" ? "-" : "+"}{formatJpyAmount(tx.pricePerUnit * tx.quantity, currency)}
                 </p>
               )}
               <p className="text-[11px] text-muted-foreground">
-                {date.toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "2-digit" })}
+                {date.toLocaleDateString(locale, { day: "numeric", month: "short", year: "2-digit" })}
                 {" "}
-                {date.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}
+                {date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}
               </p>
             </div>
           </div>

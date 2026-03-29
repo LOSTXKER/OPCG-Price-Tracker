@@ -1,0 +1,308 @@
+import { NextRequest, NextResponse } from "next/server";
+import { getAdminUser } from "@/lib/auth/get-admin-user";
+import { prisma } from "@/lib/db";
+import { fetchSnkrdunkPriceData, parseCardPageHtml } from "@/lib/scraper/snkrdunk";
+import { autoMatchByProductNumber, upsertSnkrdunkPrices } from "@/lib/scraper/snkrdunk-matcher";
+
+function unauthorized() {
+  return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+}
+
+const actionStamp = (userId: string) => ({
+  actionBy: userId,
+  actionAt: new Date(),
+});
+
+/**
+ * GET /api/admin/snkrdunk-matching
+ * - ?summary=true  → status counts per set / overall
+ * - default        → paginated mapping list with optional filters
+ *
+ * GET /api/admin/snkrdunk-matching?lookup=<snkrdunkId>
+ * - Fetch SNKRDUNK page data for a given numeric ID (for admin preview)
+ */
+export async function GET(request: NextRequest) {
+  const admin = await getAdminUser();
+  if (!admin) return unauthorized();
+
+  const sp = request.nextUrl.searchParams;
+
+  // ── Lookup a SNKRDUNK ID (preview before adding mapping) ──
+  const lookupId = sp.get("lookup");
+  if (lookupId) {
+    const id = parseInt(lookupId, 10);
+    if (!id) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+
+    try {
+      const data = await fetchSnkrdunkPriceData(id);
+      return NextResponse.json({ data });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      return NextResponse.json({ error: msg }, { status: 502 });
+    }
+  }
+
+  // ── Summary ──
+  if (sp.get("summary") === "true") {
+    const [total, byStatus] = await Promise.all([
+      prisma.snkrdunkMapping.count(),
+      prisma.snkrdunkMapping.groupBy({ by: ["status"], _count: { _all: true } }),
+    ]);
+    const counts = Object.fromEntries(byStatus.map((s) => [s.status, s._count._all]));
+    return NextResponse.json({ total, counts });
+  }
+
+  // ── Paginated list ──
+  const statusFilter = sp.get("status") || "";
+  const searchQuery = sp.get("q")?.trim() || "";
+  const page = Math.max(1, parseInt(sp.get("page") || "1", 10));
+  const limit = Math.min(100, Math.max(1, parseInt(sp.get("limit") || "20", 10)));
+  const skip = (page - 1) * limit;
+
+  const where: Record<string, unknown> = {};
+  if (statusFilter) where.status = statusFilter;
+  if (searchQuery) {
+    where.OR = [
+      { productNumber: { contains: searchQuery, mode: "insensitive" } },
+      { scrapedName: { contains: searchQuery, mode: "insensitive" } },
+    ];
+  }
+
+  const [mappings, total] = await Promise.all([
+    prisma.snkrdunkMapping.findMany({
+      where,
+      orderBy: [{ status: "asc" }, { productNumber: "asc" }],
+      skip,
+      take: limit,
+      include: {
+        matchedCard: {
+          select: {
+            id: true,
+            cardCode: true,
+            nameJp: true,
+            nameEn: true,
+            rarity: true,
+            imageUrl: true,
+            isParallel: true,
+          },
+        },
+        actionByUser: {
+          select: { displayName: true, email: true },
+        },
+      },
+    }),
+    prisma.snkrdunkMapping.count({ where }),
+  ]);
+
+  // Enrich with candidate cards (by productNumber)
+  const enriched = await Promise.all(
+    mappings.map(async (m) => {
+      let candidates: {
+        id: number;
+        cardCode: string;
+        nameJp: string;
+        nameEn: string | null;
+        rarity: string;
+        imageUrl: string | null;
+        isParallel: boolean;
+      }[] = [];
+
+      if (m.status === "pending" && m.productNumber) {
+        candidates = await prisma.card.findMany({
+          where: {
+            OR: [
+              { cardCode: { equals: m.productNumber, mode: "insensitive" } },
+              { baseCode: { equals: m.productNumber, mode: "insensitive" } },
+            ],
+          },
+          select: {
+            id: true,
+            cardCode: true,
+            nameJp: true,
+            nameEn: true,
+            rarity: true,
+            imageUrl: true,
+            isParallel: true,
+          },
+          orderBy: [{ isParallel: "asc" }, { parallelIndex: "asc" }],
+          take: 10,
+        });
+      }
+
+      return { ...m, candidates };
+    })
+  );
+
+  return NextResponse.json({
+    mappings: enriched,
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+  });
+}
+
+/**
+ * POST /api/admin/snkrdunk-matching
+ * Add a new SNKRDUNK mapping by ID (fetches data from SNKRDUNK automatically).
+ * Body: { snkrdunkId: number }
+ */
+export async function POST(request: NextRequest) {
+  const admin = await getAdminUser();
+  if (!admin) return unauthorized();
+
+  const body = await request.json();
+  const snkrdunkId = parseInt(body.snkrdunkId, 10);
+  if (!snkrdunkId) {
+    return NextResponse.json({ error: "snkrdunkId required" }, { status: 400 });
+  }
+
+  // Check if already exists
+  const existing = await prisma.snkrdunkMapping.findUnique({
+    where: { snkrdunkId },
+  });
+  if (existing) {
+    return NextResponse.json({ error: "Already exists", mapping: existing }, { status: 409 });
+  }
+
+  // Fetch data from SNKRDUNK
+  let html: string;
+  try {
+    const res = await fetch(`https://snkrdunk.com/en/trading-cards/${snkrdunkId}`, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    html = await res.text();
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: `Failed to fetch SNKRDUNK page: ${msg}` }, { status: 502 });
+  }
+
+  const summary = parseCardPageHtml(html);
+  if (!summary) {
+    return NextResponse.json(
+      { error: "Could not parse card data from SNKRDUNK page. Ensure it is a single-card page." },
+      { status: 422 }
+    );
+  }
+
+  // Create mapping entry
+  const mapping = await prisma.snkrdunkMapping.create({
+    data: {
+      snkrdunkId: summary.snkrdunkId,
+      productNumber: summary.productNumber,
+      scrapedName: summary.name,
+      thumbnailUrl: summary.thumbnailUrl,
+      minPriceUsd: summary.minPriceUsd,
+      usedMinPriceUsd: summary.usedMinPriceUsd,
+      status: "pending",
+      ...actionStamp(admin.id),
+    },
+  });
+
+  // Try auto-match by productNumber
+  const autoMatched = await autoMatchByProductNumber(prisma);
+
+  return NextResponse.json({ mapping, autoMatched }, { status: 201 });
+}
+
+/**
+ * PATCH /api/admin/snkrdunk-matching
+ * - Approve: { id, matchedCardId }
+ * - Unmatch: { id, action: "unmatch" }
+ * - Auto-match all pending: { action: "auto-match" }
+ * - Refresh prices: { id, action: "refresh" }
+ */
+export async function PATCH(request: NextRequest) {
+  const admin = await getAdminUser();
+  if (!admin) return unauthorized();
+
+  const body = await request.json();
+  const stamp = actionStamp(admin.id);
+
+  // ── Auto-match all pending ──
+  if (body.action === "auto-match") {
+    const count = await autoMatchByProductNumber(prisma);
+    return NextResponse.json({ success: true, autoMatched: count });
+  }
+
+  const id = parseInt(body.id, 10);
+  if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+
+  const mapping = await prisma.snkrdunkMapping.findUnique({ where: { id } });
+  if (!mapping) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  // ── Unmatch ──
+  if (body.action === "unmatch") {
+    await prisma.snkrdunkMapping.update({
+      where: { id },
+      data: { matchedCardId: null, matchMethod: null, status: "pending", ...stamp },
+    });
+    return NextResponse.json({ success: true });
+  }
+
+  // ── Refresh prices for this card ──
+  if (body.action === "refresh") {
+    if (!mapping.matchedCardId) {
+      return NextResponse.json({ error: "Not matched to a card yet" }, { status: 400 });
+    }
+    try {
+      const data = await fetchSnkrdunkPriceData(mapping.snkrdunkId);
+      await upsertSnkrdunkPrices(prisma, mapping.matchedCardId, mapping.id, data);
+      return NextResponse.json({
+        success: true,
+        psa10MinPriceUsd: data.psa10MinPriceUsd,
+        psa10LastSoldUsd: data.psa10LastSoldUsd,
+        lastSoldUsd: data.lastSoldUsd,
+      });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      return NextResponse.json({ error: msg }, { status: 502 });
+    }
+  }
+
+  // ── Approve / match to card ──
+  const matchedCardId = parseInt(body.matchedCardId, 10);
+  if (!matchedCardId) {
+    return NextResponse.json({ error: "matchedCardId required" }, { status: 400 });
+  }
+
+  const card = await prisma.card.findUnique({ where: { id: matchedCardId }, select: { id: true } });
+  if (!card) return NextResponse.json({ error: "Card not found" }, { status: 404 });
+
+  await prisma.snkrdunkMapping.update({
+    where: { id },
+    data: { matchedCardId, matchMethod: "admin", status: "matched", ...stamp },
+  });
+
+  // Immediately fetch and store prices
+  try {
+    const data = await fetchSnkrdunkPriceData(mapping.snkrdunkId);
+    await upsertSnkrdunkPrices(prisma, matchedCardId, id, data);
+  } catch (err) {
+    console.error("Price fetch after approve failed:", err);
+  }
+
+  return NextResponse.json({ success: true });
+}
+
+/**
+ * DELETE /api/admin/snkrdunk-matching  { id }
+ * Reject (soft-delete) a mapping.
+ */
+export async function DELETE(request: NextRequest) {
+  const admin = await getAdminUser();
+  if (!admin) return unauthorized();
+
+  const body = await request.json();
+  const id = parseInt(body.id, 10);
+  if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+
+  await prisma.snkrdunkMapping.update({
+    where: { id },
+    data: { status: "rejected", ...actionStamp(admin.id) },
+  });
+
+  return NextResponse.json({ success: true });
+}
