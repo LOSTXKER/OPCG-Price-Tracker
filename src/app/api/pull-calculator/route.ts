@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
+
+const log = createLog("api:pull-calculator");
 
 export async function GET(request: NextRequest) {
   try {
@@ -121,7 +124,7 @@ export async function GET(request: NextRequest) {
     rarityCounts,
   });
   } catch (error) {
-    console.error("GET /api/pull-calculator:", error);
+    log.error("GET /api/pull-calculator", error);
     return NextResponse.json({ error: "Failed to load pull calculator data" }, { status: 500 });
   }
 }

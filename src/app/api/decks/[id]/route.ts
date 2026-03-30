@@ -1,7 +1,10 @@
-import { getAuthUser } from "@/lib/api/auth";
+import { requireAuthUser, getAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:decks");
 
 export async function GET(
   _request: NextRequest,
@@ -43,7 +46,7 @@ export async function GET(
 
     return NextResponse.json({ deck });
   } catch (error) {
-    console.error("GET /api/decks/[id]:", error);
+    log.error("GET /api/decks/[id]", error);
     return NextResponse.json({ error: "Failed to load deck" }, { status: 500 });
   }
 }
@@ -59,13 +62,11 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid deck ID" }, { status: 400 });
     }
 
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const existing = await prisma.deck.findUnique({ where: { id: deckId } });
-    if (!existing || existing.userId !== dbUser.id) {
+    if (!existing || existing.userId !== auth.user.id) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
@@ -111,7 +112,7 @@ export async function PATCH(
 
     return NextResponse.json({ deck });
   } catch (error) {
-    console.error("PATCH /api/decks/[id]:", error);
+    log.error("PATCH /api/decks/[id]", error);
     return NextResponse.json({ error: "Failed to update deck" }, { status: 500 });
   }
 }
@@ -127,20 +128,18 @@ export async function DELETE(
       return NextResponse.json({ error: "Invalid deck ID" }, { status: 400 });
     }
 
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const existing = await prisma.deck.findUnique({ where: { id: deckId } });
-    if (!existing || existing.userId !== dbUser.id) {
+    if (!existing || existing.userId !== auth.user.id) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
     await prisma.deck.delete({ where: { id: deckId } });
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("DELETE /api/decks/[id]:", error);
+    log.error("DELETE /api/decks/[id]", error);
     return NextResponse.json({ error: "Failed to delete deck" }, { status: 500 });
   }
 }

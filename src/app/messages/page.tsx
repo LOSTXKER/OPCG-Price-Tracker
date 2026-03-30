@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { MessageCircle } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useUIStore } from "@/stores/ui-store";
 import { getLocale, t } from "@/lib/i18n";
 
@@ -56,16 +57,21 @@ export default function MessagesPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto max-w-2xl px-4 py-8">
-        <p className="text-muted-foreground text-sm">{t(lang, "loading")}</p>
+      <div className="mx-auto max-w-2xl space-y-6">
+        <Skeleton className="h-8 w-40" />
+        <div className="space-y-3">
+          <Skeleton className="h-20 rounded-xl" />
+          <Skeleton className="h-20 rounded-xl" />
+          <Skeleton className="h-20 rounded-xl" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto max-w-2xl space-y-6 px-4 py-8">
+    <div className="mx-auto max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t(lang, "messagesTitle")}</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t(lang, "messagesTitle")}</h1>
         <p className="text-muted-foreground text-sm">{t(lang, "messagesChatSubtitle")}</p>
       </div>
 

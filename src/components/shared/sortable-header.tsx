@@ -48,8 +48,9 @@ export function SortableHeader<TCol extends string>({
   return (
     <th
       className={cn(
-        "cursor-pointer select-none py-2.5 pr-3 font-medium transition-colors hover:text-foreground",
+        "group cursor-pointer select-none py-2.5 pr-3 font-medium transition-colors hover:text-foreground",
         align === "right" && "text-right",
+        isActive && "text-foreground",
         className
       )}
       onClick={() => onClick(column)}
@@ -63,8 +64,8 @@ export function SortableHeader<TCol extends string>({
         {label}
         <Icon
           className={cn(
-            "size-3",
-            isActive ? "text-foreground" : "text-muted-foreground/50"
+            "size-3 transition-opacity",
+            isActive ? "text-primary" : "opacity-0 group-hover:opacity-40"
           )}
         />
       </span>

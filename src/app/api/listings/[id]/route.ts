@@ -2,12 +2,15 @@ import {
   ListingStatus,
   type Prisma,
 } from "@/generated/prisma/client";
-import { getAuthUser } from "@/lib/api/auth";
+import { requireAuthUser } from "@/lib/api/auth";
 import { parseCondition } from "@/lib/api/parse-condition";
-import { parseListingQuantity } from "@/lib/api/request-body";
+import { parseListingQuantity, parseJsonBody } from "@/lib/api/request-body";
 import { cardInclude, userPublicSelect, asStringArray } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:listings");
 
 const STATUSES = new Set<string>(Object.values(ListingStatus));
 
@@ -26,10 +29,9 @@ async function getOwnedListing(listingId: number, userId: string) {
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
+    const dbUser = auth.user;
 
     const { id: idParam } = await context.params;
     const listingId = Number(idParam);
@@ -42,12 +44,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: "Listing not found" }, { status: 404 });
     }
 
-    let body: Record<string, unknown>;
-    try {
-      body = (await request.json()) as Record<string, unknown>;
-    } catch {
-      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-    }
+    const parsed = await parseJsonBody<Record<string, unknown>>(request);
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.body;
 
     const data: Prisma.ListingUpdateInput = {};
 
@@ -140,17 +139,16 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     return NextResponse.json({ listing });
   } catch (error) {
-    console.error("PATCH /api/listings/[id]:", error);
+    log.error("PATCH /api/listings/[id]", error);
     return NextResponse.json({ error: "Failed to update listing" }, { status: 500 });
   }
 }
 
 export async function DELETE(_request: NextRequest, context: RouteContext) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
+    const dbUser = auth.user;
 
     const { id: idParam } = await context.params;
     const listingId = Number(idParam);
@@ -174,7 +172,7 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
 
     return NextResponse.json({ listing });
   } catch (error) {
-    console.error("DELETE /api/listings/[id]:", error);
+    log.error("DELETE /api/listings/[id]", error);
     return NextResponse.json({ error: "Failed to cancel listing" }, { status: 500 });
   }
 }

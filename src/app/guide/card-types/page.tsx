@@ -1,10 +1,17 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { RelatedPages } from "@/components/shared/related-pages";
+import { JsonLd } from "@/lib/seo/json-ld-script";
+import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 
 export const metadata: Metadata = {
   title: "Card Types — คู่มือ OPCG",
+  description:
+    "Learn about all OPCG card types: Leader, Character, Event, Stage and DON!! cards. Understand how each type works in the game.",
+  alternates: { canonical: "/guide/card-types" },
 };
 
 const cardTypes = [
@@ -61,13 +68,17 @@ const cardTypes = [
 export default function CardTypesPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-8">
+      <JsonLd data={breadcrumbJsonLd([
+        { name: "Home", href: "/" },
+        { name: "Guide", href: "/guide" },
+        { name: "Card Types", href: "/guide/card-types" },
+      ])} />
       <div className="space-y-3">
-        <Link
-          href="/guide"
-          className="text-muted-foreground text-sm hover:text-foreground"
-        >
-          ← คู่มือทั้งหมด
-        </Link>
+        <Breadcrumb items={[
+          { label: "Home", href: "/" },
+          { label: "Guide", href: "/guide" },
+          { label: "Card Types" },
+        ]} />
         <h1 className="font-sans text-3xl font-bold tracking-tight">
           Card Types
         </h1>
@@ -99,6 +110,12 @@ export default function CardTypesPage() {
           </Card>
         ))}
       </div>
+
+      <RelatedPages
+        items={[
+          { href: "/search", icon: Search, title: "ค้นหาการ์ด", description: "ค้นหาตามประเภทการ์ด" },
+        ]}
+      />
 
       <div className="flex items-center justify-between border-t border-border pt-6">
         <Link

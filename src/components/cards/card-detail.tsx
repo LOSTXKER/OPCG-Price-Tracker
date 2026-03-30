@@ -24,6 +24,7 @@ import { PriceDisplay } from "@/components/shared/price-display"
 import { Price } from "@/components/shared/price-inline"
 import { PriceUsd } from "@/components/shared/price-usd"
 import { RarityBadge } from "@/components/shared/rarity-badge"
+import { CompareButton } from "@/components/shared/compare-button"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { CardAddToPortfolio } from "@/components/cards/card-add-to-portfolio"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -272,8 +273,17 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
                 {set.code.toUpperCase()} &middot; {setName}
               </Link>
             </p>
-            <div className="mt-3">
+            <div className="mt-3 flex flex-wrap items-center gap-2">
               <CardAddToPortfolio cardId={card.id} cardName={displayName} />
+              <CompareButton
+                item={{
+                  cardCode: card.cardCode,
+                  name: displayName,
+                  imageUrl: card.imageUrl,
+                  rarity: card.rarity,
+                }}
+                variant="label"
+              />
             </div>
           </div>
 

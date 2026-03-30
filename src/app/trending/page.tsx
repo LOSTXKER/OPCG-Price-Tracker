@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 
+import { BarChart3, GitCompareArrows, Layers } from "lucide-react";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { RelatedPages } from "@/components/shared/related-pages";
+import { JsonLd } from "@/lib/seo/json-ld-script";
+import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
 import { TrendingTabs, TrendingPageHeader } from "./trending-tabs";
 
@@ -7,7 +12,9 @@ export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Trending Cards — Biggest Price Movers",
-  description: "Cards with the most price movement in 24h, 7d, and 30d",
+  description:
+    "OPCG cards with the biggest price movement in the last 24 hours, 7 days, and 30 days. See top gainers and losers updated daily.",
+  alternates: { canonical: "/trending" },
 };
 
 const TAKE = 50;
@@ -91,9 +98,20 @@ export default async function TrendingPage(props: {
   const data = await getTrendingData();
 
   return (
-    <div className="space-y-6">
-      <TrendingPageHeader />
-      <TrendingTabs data={data} initialTab={initialTab} />
-    </div>
+    <>
+      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Trending", href: "/trending" }])} />
+      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Trending" }]} />
+      <div className="space-y-6">
+        <TrendingPageHeader />
+        <TrendingTabs data={data} initialTab={initialTab} />
+      </div>
+      <RelatedPages
+        items={[
+          { href: "/sets", icon: Layers, title: "ชุดการ์ด", description: "ดูทุกชุดการ์ดพร้อมมูลค่าประเมิน" },
+          { href: "/market-overview", icon: BarChart3, title: "Market Overview", description: "สถิติตลาดภาพรวม" },
+          { href: "/compare", icon: GitCompareArrows, title: "เปรียบเทียบ", description: "เทียบการ์ดหลายใบแบบ side-by-side" },
+        ]}
+      />
+    </>
   );
 }

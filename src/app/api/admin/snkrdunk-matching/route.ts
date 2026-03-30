@@ -1,3 +1,4 @@
+import { MappingStatus, MatchMethod } from "@/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminUser } from "@/lib/auth/get-admin-user";
 import { prisma } from "@/lib/db";
@@ -5,6 +6,9 @@ import { fetchSnkrdunkPriceData, parseCardPageHtml } from "@/lib/scraper/snkrdun
 import { autoMatchByProductNumber, upsertSnkrdunkPrices } from "@/lib/scraper/snkrdunk-matcher";
 import { unauthorized, actionStamp, parseJsonBody } from "@/lib/api/admin-helpers";
 import { parsePageLimit } from "@/lib/api/request-body";
+import { createLog } from "@/lib/logger";
+
+const log = createLog("admin:snkrdunk-matching");
 
 /**
  * GET /api/admin/snkrdunk-matching
@@ -89,7 +93,7 @@ export async function GET(request: NextRequest) {
   const pendingProductNumbers = [
     ...new Set(
       mappings
-        .filter((m) => m.status === "pending" && m.productNumber)
+        .filter((m) => m.status === MappingStatus.PENDING && m.productNumber)
         .map((m) => m.productNumber!.toLowerCase())
     ),
   ];
@@ -143,7 +147,7 @@ export async function GET(request: NextRequest) {
 
   const enriched = mappings.map((m) => {
     const candidates =
-      m.status === "pending" && m.productNumber
+      m.status === MappingStatus.PENDING && m.productNumber
         ? (candidatesByPn.get(m.productNumber.toLowerCase()) ?? []).slice(0, 10)
         : [];
     return { ...m, candidates };
@@ -213,7 +217,7 @@ export async function POST(request: NextRequest) {
       thumbnailUrl: summary.thumbnailUrl,
       minPriceUsd: summary.minPriceUsd,
       usedMinPriceUsd: summary.usedMinPriceUsd,
-      status: "pending",
+      status: MappingStatus.PENDING,
       ...actionStamp(admin.id),
     },
   });
@@ -258,7 +262,7 @@ export async function PATCH(request: NextRequest) {
   if (body.action === "unmatch") {
     await prisma.snkrdunkMapping.update({
       where: { id },
-      data: { matchedCardId: null, matchMethod: null, status: "pending", ...stamp },
+      data: { matchedCardId: null, matchMethod: null, status: MappingStatus.PENDING, ...stamp },
     });
     return NextResponse.json({ success: true });
   }
@@ -294,7 +298,7 @@ export async function PATCH(request: NextRequest) {
 
   await prisma.snkrdunkMapping.update({
     where: { id },
-    data: { matchedCardId, matchMethod: "admin", status: "matched", ...stamp },
+    data: { matchedCardId, matchMethod: MatchMethod.ADMIN, status: MappingStatus.MATCHED, ...stamp },
   });
 
   // Immediately fetch and store prices
@@ -302,7 +306,7 @@ export async function PATCH(request: NextRequest) {
     const data = await fetchSnkrdunkPriceData(mapping.snkrdunkId);
     await upsertSnkrdunkPrices(prisma, matchedCardId, id, data);
   } catch (err) {
-    console.error("Price fetch after approve failed:", err);
+    log.error("Price fetch after approve failed", err);
   }
 
   return NextResponse.json({ success: true });
@@ -323,7 +327,7 @@ export async function DELETE(request: NextRequest) {
 
   await prisma.snkrdunkMapping.update({
     where: { id },
-    data: { status: "rejected", ...actionStamp(admin.id) },
+    data: { status: MappingStatus.REJECTED, ...actionStamp(admin.id) },
   });
 
   return NextResponse.json({ success: true });

@@ -4,10 +4,14 @@ import {
   type AlertChannel as AlertChannelType,
   type AlertDirection as AlertDirectionType,
 } from "@/generated/prisma/client";
-import { getAuthUser } from "@/lib/api/auth";
+import { requireAuthUser } from "@/lib/api/auth";
 import { cardInclude } from "@/lib/api/query-fragments";
+import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:alerts");
 
 const DIRECTIONS = new Set<string>(Object.values(AlertDirection));
 const CHANNELS = new Set<string>(Object.values(AlertChannel));
@@ -24,37 +28,30 @@ function parseChannel(value: unknown): AlertChannelType | null {
 
 export async function GET() {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const alerts = await prisma.priceAlert.findMany({
-      where: { userId: dbUser.id },
+      where: { userId: auth.user.id },
       orderBy: { createdAt: "desc" },
       include: { card: { include: cardInclude } },
     });
 
     return NextResponse.json({ alerts });
   } catch (error) {
-    console.error("GET /api/alerts:", error);
+    log.error("GET /api/alerts", error);
     return NextResponse.json({ error: "Failed to load alerts" }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
-    let body: Record<string, unknown>;
-    try {
-      body = (await request.json()) as Record<string, unknown>;
-    } catch {
-      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-    }
+    const parsed = await parseJsonBody<Record<string, unknown>>(request);
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.body;
 
     const cardId = typeof body.cardId === "number" ? body.cardId : Number(body.cardId);
     const targetPriceRaw =
@@ -82,7 +79,7 @@ export async function POST(request: NextRequest) {
 
     const alert = await prisma.priceAlert.create({
       data: {
-        userId: dbUser.id,
+        userId: auth.user.id,
         cardId,
         targetPrice: targetPriceRaw,
         direction,
@@ -93,17 +90,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ alert }, { status: 201 });
   } catch (error) {
-    console.error("POST /api/alerts:", error);
+    log.error("POST /api/alerts", error);
     return NextResponse.json({ error: "Failed to create alert" }, { status: 500 });
   }
 }
 
 export async function DELETE(request: NextRequest) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const idParam = request.nextUrl.searchParams.get("id");
     const id = idParam ? Number(idParam) : NaN;
@@ -112,7 +107,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const alert = await prisma.priceAlert.findFirst({
-      where: { id, userId: dbUser.id },
+      where: { id, userId: auth.user.id },
     });
 
     if (!alert) {
@@ -123,7 +118,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("DELETE /api/alerts:", error);
+    log.error("DELETE /api/alerts", error);
     return NextResponse.json({ error: "Failed to delete alert" }, { status: 500 });
   }
 }

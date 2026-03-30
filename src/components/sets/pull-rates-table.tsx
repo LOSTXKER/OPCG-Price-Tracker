@@ -6,7 +6,7 @@ import { AlertTriangle } from "lucide-react";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import { pullChance, formatPullPct, PACKS_PER_BOX, BOXES_PER_CARTON } from "@/lib/utils/pull-rate";
 import { RARITY_BAR_COLOR } from "@/lib/constants/rarities";
-import { UNIT_LABELS, PULL_UNITS, type Unit } from "@/lib/constants/ui";
+import { UNIT_I18N_KEYS, PULL_UNITS, type Unit } from "@/lib/constants/ui";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 
@@ -64,7 +64,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {UNIT_LABELS[u]}
+              {t(lang, UNIT_I18N_KEYS[u])}
             </button>
           ))}
         </div>
@@ -74,7 +74,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
       <div className="mb-1 hidden items-center px-3 text-[11px] font-medium text-muted-foreground sm:flex">
         <span className="w-20">Rarity</span>
         <span className="flex-1" />
-        <span className="w-28 text-right">{t(lang, "perUnit")}/{UNIT_LABELS[unit]}</span>
+        <span className="w-28 text-right">{t(lang, "perUnit")}/{t(lang, UNIT_I18N_KEYS[unit])}</span>
         <span className="w-20 text-right">{t(lang, "cardsCount")}</span>
         <span className="w-24 text-right">{t(lang, "chancePerCard")}</span>
       </div>
@@ -128,7 +128,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
       {/* Footer */}
       {packsPerBox && cardsPerPack && (
         <div className="mt-3 border-t border-border/40 pt-3 text-[11px] text-muted-foreground">
-          {packsPerBox} {t(lang, "perUnit")}/{UNIT_LABELS["pack"]} · {cardsPerPack} {t(lang, "cardsCount")}/{UNIT_LABELS["pack"]} · {BOXES_PER_CARTON} {UNIT_LABELS["box"]}/{UNIT_LABELS["carton"]}
+          {packsPerBox} {t(lang, "perUnit")}/{t(lang, "packUnit")} · {cardsPerPack} {t(lang, "cardsCount")}/{t(lang, "packUnit")} · {BOXES_PER_CARTON} {t(lang, "boxUnit")}/{t(lang, "cartonUnit")}
         </div>
       )}
     </div>

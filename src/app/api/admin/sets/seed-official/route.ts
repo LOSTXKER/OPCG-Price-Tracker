@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
 import { checkIsAdmin } from "@/lib/auth/check-admin";
 import { prisma } from "@/lib/db";
 import * as fs from "fs";
@@ -40,12 +41,12 @@ const CARD_TYPE_MAP: Record<string, "CHARACTER" | "EVENT" | "STAGE" | "LEADER" |
 };
 
 export async function POST(request: NextRequest) {
-  if (!(await checkIsAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+  if (!(await checkIsAdmin())) return unauthorized();
 
-  const body = await request.json();
-  const setCode = body.setCode as string;
+  const parsed = await parseJsonBody<{ setCode?: string }>(request);
+  if (!parsed.ok) return parsed.response;
+
+  const setCode = parsed.body.setCode ?? "";
   if (!setCode) {
     return NextResponse.json({ error: "setCode is required" }, { status: 400 });
   }

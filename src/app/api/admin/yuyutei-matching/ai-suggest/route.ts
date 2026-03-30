@@ -1,3 +1,4 @@
+import { MappingStatus, MatchMethod } from "@/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminUser } from "@/lib/auth/get-admin-user";
 import { prisma } from "@/lib/db";
@@ -5,7 +6,10 @@ import {
   matchCardImage,
   type MatchCandidate,
 } from "@/lib/scraper/gemini-matcher";
-import { unauthorized } from "@/lib/api/admin-helpers";
+import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
+import { createLog } from "@/lib/logger";
+
+const log = createLog("admin:yuyutei-ai-suggest");
 
 /**
  * POST /api/admin/yuyutei-matching/ai-suggest
@@ -19,8 +23,9 @@ export async function POST(request: NextRequest) {
   const admin = await getAdminUser();
   if (!admin) return unauthorized();
 
-  const body = await request.json();
-  const { id } = body as { id: number };
+  const parsed = await parseJsonBody<{ id: number; force?: boolean }>(request);
+  if (!parsed.ok) return parsed.response;
+  const { id, force } = parsed.body;
 
   if (!id) {
     return NextResponse.json({ error: "id is required" }, { status: 400 });
@@ -42,12 +47,11 @@ export async function POST(request: NextRequest) {
   if (!mapping) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
-  const force = body.force === true;
 
-  if (mapping.status === "matched" && !force) {
+  if (mapping.status === MappingStatus.MATCHED && !force) {
     return NextResponse.json({ success: false, error: "Already approved", skipped: true });
   }
-  if (mapping.matchMethod === "gemini" && !force) {
+  if (mapping.matchMethod === MatchMethod.GEMINI && !force) {
     return NextResponse.json({ success: false, error: "AI เคยจับคู่แล้ว", skipped: true });
   }
 
@@ -102,9 +106,9 @@ export async function POST(request: NextRequest) {
         where: { id: mapping.id },
         data: {
           matchedCardId: result.cardId,
-          matchMethod: "gemini",
+          matchMethod: MatchMethod.GEMINI,
           geminiScore: result.confidence,
-          status: "suggested",
+          status: MappingStatus.SUGGESTED,
           actionBy: admin.id,
           actionAt: new Date(),
         },
@@ -122,7 +126,7 @@ export async function POST(request: NextRequest) {
       confidence: result?.confidence ?? 0,
     });
   } catch (e) {
-    console.error(`[ai-suggest] Error for mapping ${mapping.id}:`, e);
+    log.error(`Error for mapping ${mapping.id}`, e);
     return NextResponse.json({
       success: false,
       error: e instanceof Error ? e.message : "AI call failed",

@@ -1,10 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ListingCard } from "@/components/marketplace/listing-card";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ListingStatus } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
+import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { JsonLd } from "@/lib/seo/json-ld-script";
 import {
   SellerName, SellerRating, SellerListingsHeader, NoOpenListingsMsg,
   ViewDetailsLink, ReviewsHeader, NoReviewsMsg, ReviewerName,
@@ -15,6 +19,19 @@ export const dynamic = "force-dynamic";
 type PageProps = {
   params: Promise<{ userId: string }>;
 };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { userId } = await params;
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { displayName: true },
+  });
+  if (!user) return { title: "Profile not found" };
+  return {
+    title: user.displayName ?? "Profile",
+    description: `${user.displayName ?? "User"}'s profile on Meecard`,
+  };
+}
 
 export default async function PublicProfilePage({ params }: PageProps) {
   const { userId } = await params;
@@ -67,8 +84,19 @@ export default async function PublicProfilePage({ params }: PageProps) {
     }),
   ]);
 
+  const displayName = user.displayName ?? "Profile";
+  const crumbs = [
+    { name: "Home", href: "/" },
+    { name: "Profile", href: `/profile/${user.id}` },
+    { name: displayName, href: `/profile/${user.id}` },
+  ];
+
   return (
-    <div className="container mx-auto max-w-3xl space-y-8 px-4 py-8">
+    <div className="mx-auto max-w-3xl space-y-8">
+      <JsonLd data={breadcrumbJsonLd(crumbs)} />
+      <Breadcrumb
+        items={crumbs.map((c) => ({ label: c.name, href: c.href }))}
+      />
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <Avatar className="size-20">
           {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
@@ -77,7 +105,7 @@ export default async function PublicProfilePage({ params }: PageProps) {
           </AvatarFallback>
         </Avatar>
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
+          <h1 className="text-2xl font-bold tracking-tight">
             <SellerName name={user.displayName} />
           </h1>
           <p className="text-muted-foreground text-sm">

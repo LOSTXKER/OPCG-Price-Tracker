@@ -1,13 +1,15 @@
-import { getAuthUser } from "@/lib/api/auth";
+import { requireAuthUser } from "@/lib/api/auth";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextResponse } from "next/server";
+
+const log = createLog("api:messages");
 
 export async function GET() {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
+    const dbUser = auth.user;
 
     const messages = await prisma.message.findMany({
       where: {
@@ -55,7 +57,7 @@ export async function GET() {
 
     return NextResponse.json({ conversations });
   } catch (error) {
-    console.error("GET /api/messages/conversations:", error);
+    log.error("GET /api/messages/conversations", error);
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
 }

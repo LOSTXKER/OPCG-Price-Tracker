@@ -3,12 +3,15 @@ import {
   ListingStatus,
   type Prisma,
 } from "@/generated/prisma/client";
-import { getAuthUser } from "@/lib/api/auth";
+import { requireAuthUser } from "@/lib/api/auth";
 import { parseCondition } from "@/lib/api/parse-condition";
-import { parseListingQuantity } from "@/lib/api/request-body";
+import { parseListingQuantity, parseJsonBody, parsePageLimit } from "@/lib/api/request-body";
 import { cardInclude, userPublicSelect, asStringArray } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:listings");
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,9 +19,7 @@ export async function GET(request: NextRequest) {
     const cardIdParam = searchParams.get("cardId");
     const conditionParam = searchParams.get("condition");
     const sort = searchParams.get("sort") || "newest";
-    const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10) || 1);
-    const limit = Math.min(Math.max(1, parseInt(searchParams.get("limit") || "20", 10) || 20), 100);
-    const skip = (page - 1) * limit;
+    const { page, limit, skip } = parsePageLimit(searchParams);
     const minPriceJpy = searchParams.get("minPriceJpy");
     const maxPriceJpy = searchParams.get("maxPriceJpy");
 
@@ -101,24 +102,20 @@ export async function GET(request: NextRequest) {
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
-    console.error("GET /api/listings:", error);
+    log.error("GET /api/listings", error);
     return NextResponse.json({ error: "Failed to load listings" }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
+    const dbUser = auth.user;
 
-    let body: Record<string, unknown>;
-    try {
-      body = (await request.json()) as Record<string, unknown>;
-    } catch {
-      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-    }
+    const parsed = await parseJsonBody<Record<string, unknown>>(request);
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.body;
 
     const cardId = typeof body.cardId === "number" ? body.cardId : Number(body.cardId);
     const priceJpy = typeof body.priceJpy === "number" ? body.priceJpy : Number(body.priceJpy);
@@ -197,7 +194,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ listing }, { status: 201 });
   } catch (error) {
-    console.error("POST /api/listings:", error);
+    log.error("POST /api/listings", error);
     return NextResponse.json({ error: "Failed to create listing" }, { status: 500 });
   }
 }

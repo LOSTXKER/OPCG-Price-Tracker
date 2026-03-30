@@ -1,44 +1,69 @@
-import { authorizeCron } from "@/lib/api/cron-auth";
+import { cronHandler } from "@/lib/api/cron-auth";
 import { prisma } from "@/lib/db";
-import { NextRequest, NextResponse } from "next/server";
+import { sendEmail, priceAlertEmail } from "@/lib/email";
+import { sendLinePriceAlert } from "@/lib/line";
 
-export async function GET(request: NextRequest) {
-  if (!authorizeCron(request)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+export const GET = cronHandler(async () => {
+  const activeAlerts = await prisma.priceAlert.findMany({
+    where: { isActive: true },
+    include: {
+      card: { select: { latestPriceJpy: true, cardCode: true, nameJp: true, nameEn: true } },
+      user: { select: { email: true, lineUserId: true, emailAlerts: true, lineAlerts: true } },
+    },
+  });
+
+  const now = new Date();
+  const triggeredIds: number[] = [];
+  let emailsSent = 0;
+  let lineSent = 0;
+
+  for (const alert of activeAlerts) {
+    const price = alert.card.latestPriceJpy;
+    if (price == null) continue;
+    const hit =
+      (alert.direction === "ABOVE" && price >= alert.targetPrice) ||
+      (alert.direction === "BELOW" && price <= alert.targetPrice);
+    if (!hit) continue;
+
+    triggeredIds.push(alert.id);
+
+    const cardName = alert.card.nameEn ?? alert.card.nameJp;
+
+    if (alert.user.emailAlerts && (alert.channel === "EMAIL" || !alert.channel)) {
+      const { subject, html } = priceAlertEmail(
+        cardName,
+        alert.card.cardCode,
+        price,
+        alert.targetPrice,
+        alert.direction,
+      );
+      const result = await sendEmail({ to: alert.user.email, subject, html });
+      if (result) emailsSent++;
+    }
+
+    if (alert.user.lineAlerts && alert.user.lineUserId && alert.channel === "LINE") {
+      const ok = await sendLinePriceAlert(
+        alert.user.lineUserId,
+        cardName,
+        alert.card.cardCode,
+        price,
+        alert.direction,
+      );
+      if (ok) lineSent++;
+    }
   }
 
-  try {
-    const activeAlerts = await prisma.priceAlert.findMany({
-      where: { isActive: true },
-      include: {
-        card: { select: { latestPriceJpy: true, cardCode: true } },
-        user: { select: { email: true } },
-      },
+  if (triggeredIds.length > 0) {
+    await prisma.priceAlert.updateMany({
+      where: { id: { in: triggeredIds } },
+      data: { isActive: false, triggeredAt: now },
     });
-
-    const now = new Date();
-    const triggeredIds: number[] = [];
-
-    for (const alert of activeAlerts) {
-      const price = alert.card.latestPriceJpy;
-      if (price == null) continue;
-      const hit =
-        (alert.direction === "ABOVE" && price >= alert.targetPrice) ||
-        (alert.direction === "BELOW" && price <= alert.targetPrice);
-      if (hit) triggeredIds.push(alert.id);
-    }
-
-    if (triggeredIds.length > 0) {
-      await prisma.priceAlert.updateMany({
-        where: { id: { in: triggeredIds } },
-        data: { isActive: false, triggeredAt: now },
-      });
-    }
-
-    return NextResponse.json({ ok: true, checked: activeAlerts.length, triggered: triggeredIds.length });
-  } catch (error) {
-    console.error("cron/check-alerts:", error);
-    const message = error instanceof Error ? error.message : "Alert check failed";
-    return NextResponse.json({ error: message }, { status: 500 });
   }
-}
+
+  return {
+    checked: activeAlerts.length,
+    triggered: triggeredIds.length,
+    emailsSent,
+    lineSent,
+  };
+});

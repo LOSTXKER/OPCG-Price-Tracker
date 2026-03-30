@@ -5,6 +5,7 @@ import {
   HomeMiniTable,
 } from "@/components/home/home-client-sections";
 import { HomeMarketOverview } from "@/components/home/home-market-overview";
+import { HomeSeoContent } from "@/components/home/home-seo-content";
 import { getHomeData, mapCardToTrending } from "@/lib/data/home";
 import { CARD_TYPES } from "@/lib/constants/card-config";
 import type { FilterDefinition } from "@/components/shared/filter-chips";
@@ -75,38 +76,43 @@ export default async function HomePage(props: {
   ];
 
   return (
-    <HomeMarketOverview
-      initialCards={tableCards}
-      initialTotal={initialTableTotal}
-      initialTotalPages={initialTableTotalPages}
-      latestSetCode={newestSet?.code}
-      filterDefinitions={filterDefinitions}
-      initialSearch={initialSearch}
-    >
-      {/* Stats strip */}
-      <HomeStatsStrip
-        totalCards={totalCards}
-        totalValue={totalValue}
-      />
+    <>
+      <HomeMarketOverview
+        initialCards={tableCards}
+        initialTotal={initialTableTotal}
+        initialTotalPages={initialTableTotalPages}
+        latestSetCode={newestSet?.code}
+        filterDefinitions={filterDefinitions}
+        initialSearch={initialSearch}
+      >
+        {/* Stats strip */}
+        <HomeStatsStrip
+          totalCards={totalCards}
+          totalValue={totalValue}
+          totalSets={sets.length}
+          latestSetName={newestSet?.code?.toUpperCase()}
+          latestSetCode={newestSet?.code}
+        />
 
-      {/* Highlights: Featured + Gainers/Losers */}
-      <div className="panel grid gap-4 p-4 lg:grid-cols-12">
-        {featured && (
-          <div className="lg:col-span-4">
-            <HomeFeaturedCard card={featured} />
+        {/* Highlights: Featured + Gainers/Losers */}
+        <div className="panel grid gap-0 divide-y divide-border/40 lg:grid-cols-12 lg:divide-x lg:divide-y-0">
+          {featured && (
+            <div className="p-5 lg:col-span-4">
+              <HomeFeaturedCard card={featured} />
+            </div>
+          )}
+          <div className={`grid divide-y divide-border/40 sm:grid-cols-2 sm:divide-x sm:divide-y-0 ${featured ? "lg:col-span-8" : "lg:col-span-12"}`}>
+            <div className="p-5">
+              <HomeMiniTable cards={gainers} type="gainers" />
+            </div>
+            <div className="p-5">
+              <HomeMiniTable cards={losers} type="losers" />
+            </div>
           </div>
-        )}
-        <div className={`grid gap-4 sm:grid-cols-2 ${featured ? "lg:col-span-8" : "lg:col-span-12"}`}>
-          <HomeMiniTable
-            cards={gainers}
-            type="gainers"
-          />
-          <HomeMiniTable
-            cards={losers}
-            type="losers"
-          />
         </div>
-      </div>
-    </HomeMarketOverview>
+      </HomeMarketOverview>
+
+      <HomeSeoContent />
+    </>
   );
 }

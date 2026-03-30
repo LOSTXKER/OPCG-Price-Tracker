@@ -12,22 +12,8 @@ import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
 import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
 
-export type AssetRow = {
-  itemId: number
-  cardId: number
-  cardCode: string
-  baseCode: string | null
-  nameJp: string
-  nameEn: string | null
-  rarity: string
-  imageUrl: string | null
-  quantity: number
-  purchasePrice: number | null
-  currentPrice: number | null
-  priceChange24h: number | null
-  priceChange7d: number | null
-  condition: string
-}
+export type { AssetRow } from "@/lib/types/portfolio"
+import type { AssetRow } from "@/lib/types/portfolio"
 
 function pnlCalc(row: AssetRow) {
   if (row.purchasePrice == null || row.currentPrice == null) return null
@@ -190,22 +176,22 @@ const AssetRowComponent = memo(function AssetRowComponent({
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-end gap-1">
+          <div className="flex items-center justify-end gap-0.5">
             <button
               onClick={() => {
                 setQty(String(row.quantity))
                 setCost(row.purchasePrice != null ? String(row.purchasePrice) : "")
                 setEditing(true)
               }}
-              className="rounded p-1 text-muted-foreground hover:text-foreground"
+              className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
-              <Edit2 className="size-3.5" />
+              <Edit2 className="size-4" />
             </button>
             <button
               onClick={() => onRemove(row.itemId)}
-              className="rounded p-1 text-muted-foreground hover:text-destructive"
+              className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
             >
-              <Trash2 className="size-3.5" />
+              <Trash2 className="size-4" />
             </button>
           </div>
         )}

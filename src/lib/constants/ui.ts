@@ -18,10 +18,10 @@ export const DEFAULT_CARD_CONDITION = "NM" as const
 
 export type Unit = "pack" | "box" | "carton"
 
-export const UNIT_LABELS: Record<Unit, string> = {
-  pack: "ซอง",
-  box: "กล่อง",
-  carton: "คาตั้น",
-}
+export const UNIT_I18N_KEYS = {
+  pack: "packUnit",
+  box: "boxUnit",
+  carton: "cartonUnit",
+} as const satisfies Record<Unit, string>
 
 export const PULL_UNITS: Unit[] = ["pack", "box", "carton"]

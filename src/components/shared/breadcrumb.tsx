@@ -17,7 +17,7 @@ export function Breadcrumb({
 }) {
   return (
     <nav
-      className={cn("flex flex-wrap items-center gap-1 text-xs text-muted-foreground", className)}
+      className={cn("mb-4 flex flex-wrap items-center gap-1 text-xs text-muted-foreground", className)}
       aria-label="Breadcrumb"
     >
       {items.map((item, i) => {

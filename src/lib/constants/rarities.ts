@@ -40,18 +40,24 @@ export const BASE_RARITY_CODES = new Set(BASE_RARITIES.map((r) => r.code));
 /* ── Badge / bar / hex color maps (previously in rarity.ts) ── */
 
 export const RARITY_BADGE_ACCENT: Record<string, { text: string; bg: string }> = {
-  TR: { text: "text-red-600 dark:text-red-400", bg: "bg-red-500/8" },
-  SEC: { text: "text-amber-600 dark:text-amber-400", bg: "bg-amber-500/8" },
-  "P-SEC": { text: "text-amber-600 dark:text-amber-400", bg: "bg-amber-500/8" },
-  SP: { text: "text-amber-600 dark:text-amber-400", bg: "bg-amber-500/8" },
-  "P-SP": { text: "text-amber-600 dark:text-amber-400", bg: "bg-amber-500/8" },
-  SR: { text: "text-purple-600 dark:text-purple-400", bg: "bg-purple-500/8" },
-  "P-SR": { text: "text-purple-600 dark:text-purple-400", bg: "bg-purple-500/8" },
-  R: { text: "text-sky-600 dark:text-sky-400", bg: "bg-sky-500/8" },
-  "P-R": { text: "text-sky-600 dark:text-sky-400", bg: "bg-sky-500/8" },
-  L: { text: "text-red-600 dark:text-red-400", bg: "bg-red-500/8" },
-  "P-L": { text: "text-red-600 dark:text-red-400", bg: "bg-red-500/8" },
-  DON: { text: "text-orange-600 dark:text-orange-400", bg: "bg-orange-500/8" },
+  TR:     { text: "text-red-700 dark:text-red-300",       bg: "bg-red-500/15 dark:bg-red-500/25" },
+  SEC:    { text: "text-amber-700 dark:text-amber-300",   bg: "bg-amber-500/15 dark:bg-amber-500/25" },
+  "P-SEC":{ text: "text-amber-700 dark:text-amber-300",   bg: "bg-amber-500/15 dark:bg-amber-500/25" },
+  SP:     { text: "text-pink-700 dark:text-pink-300",     bg: "bg-pink-500/15 dark:bg-pink-500/25" },
+  "P-SP": { text: "text-pink-700 dark:text-pink-300",     bg: "bg-pink-500/15 dark:bg-pink-500/25" },
+  SR:     { text: "text-purple-700 dark:text-purple-300", bg: "bg-purple-500/15 dark:bg-purple-500/25" },
+  "P-SR": { text: "text-purple-700 dark:text-purple-300", bg: "bg-purple-500/15 dark:bg-purple-500/25" },
+  R:      { text: "text-blue-700 dark:text-blue-300",     bg: "bg-blue-500/15 dark:bg-blue-500/25" },
+  "P-R":  { text: "text-blue-700 dark:text-blue-300",     bg: "bg-blue-500/15 dark:bg-blue-500/25" },
+  UC:     { text: "text-emerald-700 dark:text-emerald-300",bg: "bg-emerald-500/15 dark:bg-emerald-500/25" },
+  "P-UC": { text: "text-emerald-700 dark:text-emerald-300",bg: "bg-emerald-500/15 dark:bg-emerald-500/25" },
+  C:      { text: "text-slate-600 dark:text-slate-300",   bg: "bg-slate-500/15 dark:bg-slate-500/25" },
+  "P-C":  { text: "text-slate-600 dark:text-slate-300",   bg: "bg-slate-500/15 dark:bg-slate-500/25" },
+  L:      { text: "text-orange-700 dark:text-orange-300", bg: "bg-orange-500/15 dark:bg-orange-500/25" },
+  "P-L":  { text: "text-orange-700 dark:text-orange-300", bg: "bg-orange-500/15 dark:bg-orange-500/25" },
+  DON:    { text: "text-red-700 dark:text-red-300",       bg: "bg-red-500/15 dark:bg-red-500/25" },
+  P:      { text: "text-cyan-700 dark:text-cyan-300",     bg: "bg-cyan-500/15 dark:bg-cyan-500/25" },
+  "P-P":  { text: "text-cyan-700 dark:text-cyan-300",     bg: "bg-cyan-500/15 dark:bg-cyan-500/25" },
 };
 
 export const RARITY_BAR_COLOR: Record<string, string> = {

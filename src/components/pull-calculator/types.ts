@@ -53,7 +53,7 @@ export interface SetDetail {
 }
 
 export type { Unit } from "@/lib/constants/ui"
-export { UNIT_LABELS, PULL_UNITS } from "@/lib/constants/ui"
+export { UNIT_I18N_KEYS, PULL_UNITS } from "@/lib/constants/ui"
 
 export const TIER_ORDER = [
   "L", "C", "UC", "R", "SR", "SEC", "SP", "SP CARD",

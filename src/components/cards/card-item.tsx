@@ -6,6 +6,7 @@ import Link from "next/link"
 
 import { Shield } from "lucide-react"
 
+import { CompareButton } from "@/components/shared/compare-button"
 import { PriceDisplay } from "@/components/shared/price-display"
 import { PriceUsd } from "@/components/shared/price-usd"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -101,6 +102,15 @@ function CardItemBase({
               </span>
             </div>
           )}
+
+          {/* Bottom-right compare button */}
+          <div className="absolute bottom-1.5 right-1.5 rounded-md bg-black/60 p-1 backdrop-blur-sm transition-opacity md:opacity-60 md:group-hover/card:opacity-100">
+            <CompareButton
+              item={{ cardCode, name: displayName, imageUrl: imageUrl ?? null, rarity }}
+              size="sm"
+              className="text-white/80 hover:text-blue-300"
+            />
+          </div>
         </div>
 
         {/* Info */}

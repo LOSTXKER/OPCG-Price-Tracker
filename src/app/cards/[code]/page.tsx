@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { CardDetail } from "@/components/cards/card-detail";
+import { JsonLd } from "@/lib/seo/json-ld-script";
+import { productJsonLd, breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import {
   buildChartData,
   deriveLatestPrice,
@@ -31,9 +34,25 @@ export async function generateMetadata(props: {
     ? formatJpy(card.latestPriceJpy)
     : "Price unavailable";
 
+  const title = `${card.cardCode} ${displayName}`;
+  const description = `${priceText} · ${displayName} (${card.rarity}) — One Piece Card Game | Meecard`;
+
   return {
-    title: `${card.cardCode} ${displayName}`,
-    description: `${priceText} · ${displayName} (${card.rarity}) — One Piece Card Game | Meecard`,
+    title,
+    description,
+    alternates: { canonical: `/cards/${card.cardCode}` },
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      images: card.imageUrl ? [{ url: card.imageUrl, alt: displayName }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: card.imageUrl ? [card.imageUrl] : undefined,
+    },
   };
 }
 
@@ -70,14 +89,36 @@ export default async function CardDetailPage(props: {
       priceJpy: card.latestPriceJpy,
       priceThb: card.latestPriceThb,
       priceUsd: null,
-      source: "YUYUTEI",
+      source: PRICE_SOURCE.YUYUTEI,
       gradeCondition: null,
     }];
   }
 
+  const displayName = card.nameEn ?? card.nameJp;
+  const setName = card.set.nameEn ?? card.set.name;
+
   return (
-    <CardDetail
-      card={{
+    <>
+      <JsonLd
+        data={productJsonLd({
+          cardCode: card.cardCode,
+          nameEn: card.nameEn,
+          nameJp: card.nameJp,
+          rarity: card.rarity,
+          imageUrl: card.imageUrl,
+          latestPriceJpy: card.latestPriceJpy,
+          set: { nameEn: card.set.nameEn, name: card.set.name },
+        })}
+      />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", href: "/" },
+          { name: setName, href: `/sets/${card.set.code}` },
+          { name: `${card.cardCode} ${displayName}`, href: `/cards/${card.cardCode}` },
+        ])}
+      />
+      <CardDetail
+        card={{
         id: card.id,
         cardCode: card.cardCode,
         baseCode: card.baseCode,
@@ -122,5 +163,6 @@ export default async function CardDetailPage(props: {
       sourcePricesRaw={sourcePricesRaw}
       sourcePricesPsa10={sourcePricesPsa10}
     />
+    </>
   );
 }

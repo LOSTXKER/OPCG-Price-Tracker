@@ -38,7 +38,7 @@ export const MarketRow = memo(function MarketRow({
   const isPsa = priceMode === "psa10"
 
   return (
-    <tr className="border-b border-border/40 transition-all duration-150 hover:bg-muted/50">
+    <tr className="border-b border-border/30 transition-colors duration-150 even:bg-muted/20 hover:bg-muted/50">
       <td className="py-3 pl-3 pr-0 align-middle">
         {card.id != null && <WatchlistStar cardId={card.id} size="sm" />}
       </td>

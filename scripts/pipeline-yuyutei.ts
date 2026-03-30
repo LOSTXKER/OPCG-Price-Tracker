@@ -12,6 +12,7 @@
  *   npx tsx scripts/pipeline-yuyutei.ts --verbose        # per-card logging
  */
 import { prisma } from "./_db";
+import { MappingStatus, MatchMethod } from "../src/generated/prisma/client";
 import { SETS } from "./sets";
 import {
   fetchWithRetry,
@@ -48,7 +49,7 @@ function isParallelListing(listing: ScrapedCardListing): boolean {
 async function suggestMatch(
   listing: ScrapedCardListing,
   setCode: string
-): Promise<{ cardId: number; method: string } | null> {
+): Promise<{ cardId: number; method: MatchMethod } | null> {
   const code = listing.cardCode!.toUpperCase();
   const parallel = isParallelListing(listing);
   const rarity = listing.rarity || null;
@@ -60,7 +61,7 @@ async function suggestMatch(
       where: { cardCode: code, ...setFilter },
       select: { id: true },
     });
-    if (exact) return { cardId: exact.id, method: "exact" };
+    if (exact) return { cardId: exact.id, method: MatchMethod.EXACT };
   }
 
   // Parallel: baseCode + isParallel + rarity
@@ -70,14 +71,14 @@ async function suggestMatch(
       select: { id: true },
       orderBy: { parallelIndex: "asc" },
     });
-    if (match) return { cardId: match.id, method: "auto-parallel" };
+    if (match) return { cardId: match.id, method: MatchMethod.AUTO_PARALLEL };
 
     const anyPar = await prisma.card.findFirst({
       where: { baseCode: code, isParallel: true, ...setFilter },
       select: { id: true },
       orderBy: { parallelIndex: "asc" },
     });
-    if (anyPar) return { cardId: anyPar.id, method: "auto-parallel-any" };
+    if (anyPar) return { cardId: anyPar.id, method: MatchMethod.AUTO_PARALLEL_ANY };
   }
 
   // Non-parallel baseCode fallback (PRB/ST reprints)
@@ -91,7 +92,7 @@ async function suggestMatch(
       },
       select: { id: true },
     });
-    if (byBase) return { cardId: byBase.id, method: "auto-basecode" };
+    if (byBase) return { cardId: byBase.id, method: MatchMethod.AUTO_BASECODE };
   }
 
   return null;
@@ -184,7 +185,7 @@ async function main() {
             priceJpy: listing.priceJpy,
             matchedCardId: suggestion?.cardId ?? null,
             matchMethod: suggestion?.method ?? null,
-            status: suggestion ? "suggested" : "pending",
+            status: suggestion ? MappingStatus.SUGGESTED : MappingStatus.PENDING,
           },
         });
         newCount++;

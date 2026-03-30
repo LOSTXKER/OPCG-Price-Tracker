@@ -1,5 +1,8 @@
 import { GoogleGenAI, type Part } from "@google/genai";
+import { serverEnv } from "@/lib/env";
+import { createLog } from "@/lib/logger";
 
+const log = createLog("scraper:gemini");
 const MODEL = "gemini-2.0-flash";
 
 export interface MatchCandidate {
@@ -15,7 +18,7 @@ export interface MatchResult {
 }
 
 function getClient(): GoogleGenAI {
-  const key = process.env.GEMINI_API_KEY;
+  const key = serverEnv().GEMINI_API_KEY;
   if (!key) throw new Error("GEMINI_API_KEY is not set");
   return new GoogleGenAI({ apiKey: key });
 }
@@ -148,14 +151,14 @@ Reply with ONLY valid JSON, no markdown: {"choice": <1-based candidate number>, 
 
       if (is429 && attempt < MAX_RETRIES) {
         const waitSec = RETRY_WAIT_SEC[attempt];
-        console.warn(
-          `[gemini-matcher] Rate limited (429), waiting ${waitSec}s before retry (attempt ${attempt + 1}/${MAX_RETRIES})`
+        log.warn(
+          `Rate limited (429), waiting ${waitSec}s before retry (attempt ${attempt + 1}/${MAX_RETRIES})`
         );
         await new Promise((r) => setTimeout(r, waitSec * 1000));
         continue;
       }
 
-      console.error("[gemini-matcher] Failed:", e);
+      log.error("Failed", e);
       return null;
     }
   }

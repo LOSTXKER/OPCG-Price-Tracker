@@ -5,7 +5,8 @@
  * Scrapes Yuyutei → finds matching mapping by yuyuteiId → updates card price.
  * New/unknown listings are saved to YuyuteiMapping as "pending" for admin review.
  */
-import type { PrismaClient } from "@/generated/prisma/client";
+import { MappingStatus, type PrismaClient } from "@/generated/prisma/client";
+import { PRICE_SOURCE } from "@/lib/constants/prices";
 import type { ScrapedCardListing } from "./yuyu-tei";
 
 type DB = PrismaClient;
@@ -43,7 +44,7 @@ export async function matchAndUpdatePrices(
       select: { id: true, matchedCardId: true, status: true },
     });
 
-    if (mapping && mapping.status === "matched" && mapping.matchedCardId) {
+    if (mapping && mapping.status === MappingStatus.MATCHED && mapping.matchedCardId) {
       const priceThb =
         options?.thbRate != null
           ? Math.round(listing.priceJpy * options.thbRate * 100) / 100
@@ -62,7 +63,7 @@ export async function matchAndUpdatePrices(
       await db.cardPrice.create({
         data: {
           cardId: mapping.matchedCardId,
-          source: "YUYUTEI",
+          source: PRICE_SOURCE.YUYUTEI,
           type: "SELL",
           priceJpy: listing.priceJpy,
           ...(priceThb != null && { priceThb }),
@@ -99,7 +100,7 @@ export async function matchAndUpdatePrices(
           scrapedName: listing.name,
           scrapedImage: listing.imageUrl || null,
           priceJpy: listing.priceJpy,
-          status: "pending",
+          status: MappingStatus.PENDING,
         },
       });
       unmatched++;
@@ -111,50 +112,53 @@ export async function matchAndUpdatePrices(
 
 /**
  * Compute 24h, 7d, and 30d price change percentages for all cards with prices.
+ * Uses a single SQL statement with LATERAL joins to batch-compute reference
+ * prices for all cards, then updates them in one pass (replaces the old N+1 loop).
  */
 export async function computePriceChanges(db: DB): Promise<void> {
-  const now = new Date();
-  const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-
-  const cards = await db.card.findMany({
-    where: { latestPriceJpy: { not: null } },
-    select: { id: true, latestPriceJpy: true },
-  });
-
-  for (const card of cards) {
-    const currentPrice = card.latestPriceJpy;
-    if (!currentPrice) continue;
-
-    const [price24h, price7d, price30d] = await Promise.all([
-      db.cardPrice.findFirst({
-        where: { cardId: card.id, source: "YUYUTEI", scrapedAt: { lte: oneDayAgo } },
-        orderBy: { scrapedAt: "desc" },
-        select: { priceJpy: true },
-      }),
-      db.cardPrice.findFirst({
-        where: { cardId: card.id, source: "YUYUTEI", scrapedAt: { lte: sevenDaysAgo } },
-        orderBy: { scrapedAt: "desc" },
-        select: { priceJpy: true },
-      }),
-      db.cardPrice.findFirst({
-        where: { cardId: card.id, source: "YUYUTEI", scrapedAt: { lte: thirtyDaysAgo } },
-        orderBy: { scrapedAt: "desc" },
-        select: { priceJpy: true },
-      }),
-    ]);
-
-    const pctChange = (current: number, old: number | null | undefined) =>
-      old ? Math.round(((current - old) / old) * 100 * 100) / 100 : null;
-
-    await db.card.update({
-      where: { id: card.id },
-      data: {
-        priceChange24h: pctChange(currentPrice, price24h?.priceJpy),
-        priceChange7d: pctChange(currentPrice, price7d?.priceJpy),
-        priceChange30d: pctChange(currentPrice, price30d?.priceJpy),
-      },
-    });
-  }
+  await db.$executeRaw`
+    UPDATE "Card" AS c
+    SET
+      "priceChange24h" = CASE
+        WHEN p24."priceJpy" IS NOT NULL AND p24."priceJpy" > 0
+        THEN ROUND(((c."latestPriceJpy" - p24."priceJpy")::numeric / p24."priceJpy") * 10000) / 100.0
+        ELSE NULL
+      END,
+      "priceChange7d" = CASE
+        WHEN p7."priceJpy" IS NOT NULL AND p7."priceJpy" > 0
+        THEN ROUND(((c."latestPriceJpy" - p7."priceJpy")::numeric / p7."priceJpy") * 10000) / 100.0
+        ELSE NULL
+      END,
+      "priceChange30d" = CASE
+        WHEN p30."priceJpy" IS NOT NULL AND p30."priceJpy" > 0
+        THEN ROUND(((c."latestPriceJpy" - p30."priceJpy")::numeric / p30."priceJpy") * 10000) / 100.0
+        ELSE NULL
+      END
+    FROM "Card" AS c2
+    LEFT JOIN LATERAL (
+      SELECT cp."priceJpy"
+      FROM "CardPrice" cp
+      WHERE cp."cardId" = c2.id AND cp."source" = 'YUYUTEI'
+        AND cp."scrapedAt" <= NOW() - INTERVAL '1 day'
+      ORDER BY cp."scrapedAt" DESC
+      LIMIT 1
+    ) p24 ON true
+    LEFT JOIN LATERAL (
+      SELECT cp."priceJpy"
+      FROM "CardPrice" cp
+      WHERE cp."cardId" = c2.id AND cp."source" = 'YUYUTEI'
+        AND cp."scrapedAt" <= NOW() - INTERVAL '7 days'
+      ORDER BY cp."scrapedAt" DESC
+      LIMIT 1
+    ) p7 ON true
+    LEFT JOIN LATERAL (
+      SELECT cp."priceJpy"
+      FROM "CardPrice" cp
+      WHERE cp."cardId" = c2.id AND cp."source" = 'YUYUTEI'
+        AND cp."scrapedAt" <= NOW() - INTERVAL '30 days'
+      ORDER BY cp."scrapedAt" DESC
+      LIMIT 1
+    ) p30 ON true
+    WHERE c.id = c2.id AND c."latestPriceJpy" IS NOT NULL
+  `;
 }

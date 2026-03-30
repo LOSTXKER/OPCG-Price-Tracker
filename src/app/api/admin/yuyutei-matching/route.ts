@@ -1,6 +1,22 @@
+import { MappingStatus, MatchMethod } from "@/generated/prisma/client";
+
+/** Admin UI `method` query uses lowercase / kebab keys; Prisma uses enum member names. */
+const METHOD_QUERY_TO_ENUM: Record<string, MatchMethod> = {
+  exact: MatchMethod.EXACT,
+  cached: MatchMethod.CACHED,
+  gemini: MatchMethod.GEMINI,
+  admin: MatchMethod.ADMIN,
+  "admin-bulk": MatchMethod.ADMIN_BULK,
+  "auto-code": MatchMethod.AUTO_CODE,
+  "auto-code-multi": MatchMethod.AUTO_CODE_MULTI,
+  "auto-parallel": MatchMethod.AUTO_PARALLEL,
+  "auto-parallel-any": MatchMethod.AUTO_PARALLEL_ANY,
+  "auto-basecode": MatchMethod.AUTO_BASECODE,
+};
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminUser } from "@/lib/auth/get-admin-user";
 import { prisma } from "@/lib/db";
+import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { unauthorized, actionStamp, parseJsonBody } from "@/lib/api/admin-helpers";
 import { parsePageLimit } from "@/lib/api/request-body";
 
@@ -24,9 +40,9 @@ export async function GET(request: NextRequest) {
       if (!setCompletion[row.setCode])
         setCompletion[row.setCode] = { total: 0, pending: 0, suggested: 0, matched: 0 };
       setCompletion[row.setCode].total += row._count._all;
-      if (row.status === "pending") setCompletion[row.setCode].pending = row._count._all;
-      if (row.status === "suggested") setCompletion[row.setCode].suggested = row._count._all;
-      if (row.status === "matched") setCompletion[row.setCode].matched = row._count._all;
+      if (row.status === MappingStatus.PENDING) setCompletion[row.setCode].pending = row._count._all;
+      if (row.status === MappingStatus.SUGGESTED) setCompletion[row.setCode].suggested = row._count._all;
+      if (row.status === MappingStatus.MATCHED) setCompletion[row.setCode].matched = row._count._all;
     }
 
     return NextResponse.json({ sets: allSets, setCompletion });
@@ -38,10 +54,15 @@ export async function GET(request: NextRequest) {
       scrapedImage: { not: null },
     };
     if (mode === "new") {
-      where.status = { in: ["pending", "suggested"] };
-      where.OR = [{ matchMethod: null }, { matchMethod: { not: "gemini" } }];
+      where.status = { in: [MappingStatus.PENDING, MappingStatus.SUGGESTED] };
+      where.OR = [
+        { matchMethod: null },
+        { matchMethod: { not: MatchMethod.GEMINI } },
+      ];
     } else {
-      where.status = { in: ["pending", "suggested", "matched"] };
+      where.status = {
+        in: [MappingStatus.PENDING, MappingStatus.SUGGESTED, MappingStatus.MATCHED],
+      };
     }
     const setParam = sp.get("set");
     if (setParam) where.setCode = setParam;
@@ -73,7 +94,12 @@ export async function GET(request: NextRequest) {
     ];
   }
   if (methodFilter) {
-    where.matchMethod = methodFilter === "none" ? null : methodFilter;
+    if (methodFilter === "none") {
+      where.matchMethod = null;
+    } else {
+      const mapped = METHOD_QUERY_TO_ENUM[methodFilter];
+      if (mapped) where.matchMethod = mapped;
+    }
   }
   if (confidenceFilter === "high") where.geminiScore = { gte: 0.8 };
   else if (confidenceFilter === "mid") where.geminiScore = { gte: 0.5, lt: 0.8 };
@@ -120,7 +146,9 @@ export async function GET(request: NextRequest) {
   const mappingToKey = new Map<number, string>();
 
   const candidateMappings = mappings.filter(
-    (m) => (m.status === "pending" || m.status === "suggested") && m.scrapedCode,
+    (m) =>
+      (m.status === MappingStatus.PENDING || m.status === MappingStatus.SUGGESTED) &&
+      m.scrapedCode,
   );
 
   if (candidateMappings.length > 0) {
@@ -210,7 +238,7 @@ export async function PATCH(request: NextRequest) {
   // ── Bulk approve all with suggestion ──
   if (body.action === "bulk-approve") {
     const where: Record<string, unknown> = {
-      status: { in: ["suggested", "pending"] },
+      status: { in: [MappingStatus.SUGGESTED, MappingStatus.PENDING] },
       matchedCardId: { not: null },
     };
     if (body.set) where.setCode = body.set;
@@ -223,7 +251,7 @@ export async function PATCH(request: NextRequest) {
     await prisma.$transaction([
       prisma.yuyuteiMapping.updateMany({
         where: { id: { in: toApprove.map((m) => m.id) } },
-        data: { status: "matched", matchMethod: "admin-bulk", ...stamp },
+        data: { status: MappingStatus.MATCHED, matchMethod: MatchMethod.ADMIN_BULK, ...stamp },
       }),
       ...toApprove.map((m) =>
         prisma.card.update({
@@ -233,7 +261,7 @@ export async function PATCH(request: NextRequest) {
       ),
       ...toApprove.map((m) =>
         prisma.cardPrice.create({
-          data: { cardId: m.matchedCardId!, source: "YUYUTEI", type: "SELL", priceJpy: m.priceJpy, inStock: true },
+          data: { cardId: m.matchedCardId!, source: PRICE_SOURCE.YUYUTEI, type: "SELL", priceJpy: m.priceJpy, inStock: true },
         })
       ),
     ]);
@@ -248,7 +276,7 @@ export async function PATCH(request: NextRequest) {
     if (ids.length === 0) return NextResponse.json({ success: true, approved: 0 });
 
     const mappings = await prisma.yuyuteiMapping.findMany({
-      where: { id: { in: ids }, status: { not: "matched" } },
+      where: { id: { in: ids }, status: { not: MappingStatus.MATCHED } },
       select: { id: true, matchedCardId: true, priceJpy: true, yuyuteiId: true },
     });
 
@@ -260,7 +288,12 @@ export async function PATCH(request: NextRequest) {
       ...toProcess.map((m) =>
         prisma.yuyuteiMapping.update({
           where: { id: m.id },
-          data: { status: "matched", matchMethod: "admin-bulk", matchedCardId: m.cardId, ...stamp },
+          data: {
+            status: MappingStatus.MATCHED,
+            matchMethod: MatchMethod.ADMIN_BULK,
+            matchedCardId: m.cardId,
+            ...stamp,
+          },
         })
       ),
       ...toProcess.map((m) =>
@@ -271,7 +304,7 @@ export async function PATCH(request: NextRequest) {
       ),
       ...toProcess.map((m) =>
         prisma.cardPrice.create({
-          data: { cardId: m.cardId, source: "YUYUTEI", type: "SELL", priceJpy: m.priceJpy, inStock: true },
+          data: { cardId: m.cardId, source: PRICE_SOURCE.YUYUTEI, type: "SELL", priceJpy: m.priceJpy, inStock: true },
         })
       ),
     ]);
@@ -285,8 +318,8 @@ export async function PATCH(request: NextRequest) {
     if (ids.length === 0) return NextResponse.json({ success: true, rejected: 0 });
 
     const { count } = await prisma.yuyuteiMapping.updateMany({
-      where: { id: { in: ids }, status: { not: "matched" } },
-      data: { status: "rejected", ...stamp },
+      where: { id: { in: ids }, status: { not: MappingStatus.MATCHED } },
+      data: { status: MappingStatus.REJECTED, ...stamp },
     });
 
     return NextResponse.json({ success: true, rejected: count });
@@ -310,7 +343,13 @@ export async function PATCH(request: NextRequest) {
     }
     await prisma.yuyuteiMapping.update({
       where: { id },
-      data: { matchedCardId: null, matchMethod: null, geminiScore: null, status: "pending", ...stamp },
+      data: {
+        matchedCardId: null,
+        matchMethod: null,
+        geminiScore: null,
+        status: MappingStatus.PENDING,
+        ...stamp,
+      },
     });
     return NextResponse.json({ success: true });
   }
@@ -323,14 +362,14 @@ export async function PATCH(request: NextRequest) {
 
   await prisma.yuyuteiMapping.update({
     where: { id },
-    data: { matchedCardId, matchMethod: "admin", status: "matched", ...stamp },
+    data: { matchedCardId, matchMethod: MatchMethod.ADMIN, status: MappingStatus.MATCHED, ...stamp },
   });
   await prisma.card.update({
     where: { id: matchedCardId },
     data: { yuyuteiId: mapping.yuyuteiId, latestPriceJpy: mapping.priceJpy },
   });
   await prisma.cardPrice.create({
-    data: { cardId: matchedCardId, source: "YUYUTEI", type: "SELL", priceJpy: mapping.priceJpy, inStock: true },
+    data: { cardId: matchedCardId, source: PRICE_SOURCE.YUYUTEI, type: "SELL", priceJpy: mapping.priceJpy, inStock: true },
   });
 
   return NextResponse.json({ success: true });
@@ -350,7 +389,7 @@ export async function DELETE(request: NextRequest) {
 
   await prisma.yuyuteiMapping.update({
     where: { id },
-    data: { status: "rejected", ...actionStamp(admin.id) },
+    data: { status: MappingStatus.REJECTED, ...actionStamp(admin.id) },
   });
 
   return NextResponse.json({ success: true });

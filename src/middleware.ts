@@ -1,5 +1,6 @@
 import { type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
+import { clientEnv } from "@/lib/env";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -7,19 +8,16 @@ export async function middleware(request: NextRequest) {
   const response = await updateSession(request);
 
   const needsAuth =
-    pathname.startsWith("/portfolio") ||
-    pathname.startsWith("/watchlist") ||
     pathname.startsWith("/marketplace/create") ||
     pathname.startsWith("/messages") ||
-    pathname.startsWith("/deck-calculator") ||
-    (pathname.startsWith("/admin") && !pathname.startsWith("/admin-login")) ||
-    pathname === "/profile";
+    (pathname.startsWith("/admin") && !pathname.startsWith("/admin-login"));
 
   if (needsAuth) {
     const { createServerClient } = await import("@supabase/ssr");
+    const { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY } = clientEnv();
     const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      NEXT_PUBLIC_SUPABASE_URL,
+      NEXT_PUBLIC_SUPABASE_ANON_KEY,
       {
         cookies: {
           getAll() {

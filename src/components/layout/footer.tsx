@@ -10,8 +10,16 @@ export function Footer() {
   const quickLinks = [
     { label: t(lang, "market"), href: "/" },
     { label: t(lang, "sets"), href: "/sets" },
-    { label: t(lang, "dropCalc"), href: "/pull-calculator" },
+    { label: "Trending", href: "/trending" },
     { label: t(lang, "marketplace"), href: "/marketplace" },
+    { label: "Blog", href: "/blog" },
+  ];
+
+  const toolLinks = [
+    { label: t(lang, "dropCalc"), href: "/pull-calculator" },
+    { label: t(lang, "deckCalculatorNav"), href: "/deck-calculator" },
+    { label: "Compare", href: "/compare" },
+    { label: "Market Overview", href: "/market-overview" },
   ];
 
   const resourceLinks = [
@@ -19,13 +27,14 @@ export function Footer() {
     { label: t(lang, "cardTypesGuide"), href: "/guide/card-types" },
     { label: t(lang, "raritiesGuide"), href: "/guide/rarities" },
     { label: t(lang, "colorsGuide"), href: "/guide/colors" },
+    { label: "Sets Guide", href: "/guide/sets" },
+    { label: "Buying Guide", href: "/guide/buying" },
   ];
   return (
     <footer className="hidden border-t border-border/30 md:block">
       <div className="mx-auto max-w-6xl px-4 py-10 md:px-6">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Brand */}
-          <div className="lg:col-span-2">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+          <div>
             <p className="text-sm font-semibold text-foreground">Meecard</p>
             <p className="mt-2 max-w-sm text-xs leading-relaxed text-muted-foreground">
               One Piece Card Game price tracker updated daily.
@@ -36,7 +45,6 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Quick links */}
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
               {t(lang, "quickLinks")}
@@ -54,12 +62,28 @@ export function Footer() {
             </nav>
           </div>
 
-          {/* Resources */}
           <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+              {t(lang, "tools")}
+            </p>
+            <nav className="mt-3 flex flex-col gap-2">
+              {toolLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          <div className="sm:col-span-2 lg:col-span-2">
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
               {t(lang, "guide")}
             </p>
-            <nav className="mt-3 flex flex-col gap-2">
+            <nav className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2">
               {resourceLinks.map((link) => (
                 <Link
                   key={link.href}

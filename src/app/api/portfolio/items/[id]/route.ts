@@ -1,17 +1,19 @@
-import { getAuthUser } from "@/lib/api/auth";
+import { TransactionType } from "@/generated/prisma/client";
+import { requireAuthUser } from "@/lib/api/auth";
 import { cardInclude } from "@/lib/api/query-fragments";
-import { parseListingQuantity } from "@/lib/api/request-body";
+import { parseListingQuantity, parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:portfolio");
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const { id: idParam } = await context.params;
     const id = Number(idParam);
@@ -27,16 +29,13 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     if (!item) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
-    if (item.portfolio.userId !== dbUser.id) {
+    if (item.portfolio.userId !== auth.user.id) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    let body: Record<string, unknown>;
-    try {
-      body = (await request.json()) as Record<string, unknown>;
-    } catch {
-      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-    }
+    const parsed = await parseJsonBody<Record<string, unknown>>(request);
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.body;
 
     const data: Record<string, unknown> = {};
 
@@ -68,17 +67,15 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     return NextResponse.json({ item: updated });
   } catch (error) {
-    console.error("PATCH /api/portfolio/items/[id]:", error);
+    log.error("PATCH /api/portfolio/items/[id]", error);
     return NextResponse.json({ error: "Failed to update item" }, { status: 500 });
   }
 }
 
 export async function DELETE(_request: NextRequest, context: RouteContext) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const { id: idParam } = await context.params;
     const id = Number(idParam);
@@ -94,7 +91,7 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
     if (!item) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
-    if (item.portfolio.userId !== dbUser.id) {
+    if (item.portfolio.userId !== auth.user.id) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -103,7 +100,7 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
         data: {
           portfolioId: item.portfolioId,
           cardId: item.cardId,
-          type: "REMOVE",
+          type: TransactionType.REMOVE,
           quantity: item.quantity,
           pricePerUnit: item.purchasePrice,
         },
@@ -113,7 +110,7 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("DELETE /api/portfolio/items/[id]:", error);
+    log.error("DELETE /api/portfolio/items/[id]", error);
     return NextResponse.json({ error: "Failed to remove portfolio item" }, { status: 500 });
   }
 }

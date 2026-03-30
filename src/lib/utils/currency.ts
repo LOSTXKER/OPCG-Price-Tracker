@@ -1,4 +1,6 @@
-const DEFAULT_JPY_THB = 0.21;
+import { FALLBACK_JPY_THB_RATE } from "@/lib/constants/prices";
+
+const DEFAULT_JPY_THB = FALLBACK_JPY_THB_RATE;
 const DEFAULT_JPY_USD = 0.0067;
 
 export function jpyToThb(jpy: number, rate?: number): number {
@@ -44,7 +46,8 @@ export function formatPrice(jpy: number, rate?: number): { jpy: string; thb: str
   };
 }
 
-export type Currency = "JPY" | "THB" | "USD";
+import type { Currency } from "@/lib/i18n";
+export type { Currency } from "@/lib/i18n";
 
 /**
  * Formats a raw JPY amount (e.g. PnL, cost) according to the active currency.

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
+import { clientEnv } from "@/lib/env";
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://kumatracker.com";
+const BASE_URL = clientEnv().NEXT_PUBLIC_APP_URL;
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -8,7 +9,19 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/admin/", "/portfolio", "/watchlist", "/profile", "/marketplace/create", "/messages"],
+        disallow: [
+          "/api/",
+          "/admin/",
+          "/admin-login",
+          "/portfolio",
+          "/watchlist",
+          "/profile",
+          "/settings",
+          "/marketplace/create",
+          "/messages",
+          "/login",
+          "/register",
+        ],
       },
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,

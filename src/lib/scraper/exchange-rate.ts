@@ -1,9 +1,14 @@
 import { prisma } from "@/lib/db";
+import { FALLBACK_JPY_THB_RATE } from "@/lib/constants/prices";
+import { serverEnv } from "@/lib/env";
+import { createLog } from "@/lib/logger";
+
+const log = createLog("scraper:exchange-rate");
 
 const API_URL = "https://v6.exchangerate-api.com/v6";
 
 export async function fetchExchangeRate(): Promise<number> {
-  const apiKey = process.env.EXCHANGE_RATE_API_KEY;
+  const apiKey = serverEnv().EXCHANGE_RATE_API_KEY;
 
   if (apiKey) {
     try {
@@ -13,7 +18,7 @@ export async function fetchExchangeRate(): Promise<number> {
         return data.conversion_rate;
       }
     } catch (error) {
-      console.error("Exchange rate API failed, using fallback:", error);
+      log.error("Exchange rate API failed, using fallback", error);
     }
   }
 
@@ -22,7 +27,7 @@ export async function fetchExchangeRate(): Promise<number> {
     orderBy: { fetchedAt: "desc" },
   });
 
-  return latest?.rate ?? 0.21;
+  return latest?.rate ?? FALLBACK_JPY_THB_RATE;
 }
 
 export async function saveExchangeRate(rate: number) {
@@ -39,5 +44,5 @@ export async function getLatestExchangeRate(): Promise<number> {
   const latest = await prisma.exchangeRate.findFirst({
     orderBy: { fetchedAt: "desc" },
   });
-  return latest?.rate ?? 0.21;
+  return latest?.rate ?? FALLBACK_JPY_THB_RATE;
 }

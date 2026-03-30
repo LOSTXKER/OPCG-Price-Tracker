@@ -1,5 +1,8 @@
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextResponse } from "next/server";
+
+const log = createLog("api:exchange-rate");
 
 export async function GET() {
   try {
@@ -12,7 +15,7 @@ export async function GET() {
       fetchedAt: latest?.fetchedAt ?? new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Error fetching exchange rate:", error);
+    log.error("Error fetching exchange rate", error);
     return NextResponse.json({ error: "Failed to fetch exchange rate" }, { status: 500 });
   }
 }

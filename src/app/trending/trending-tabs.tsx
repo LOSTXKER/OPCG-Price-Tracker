@@ -78,9 +78,12 @@ const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }:
         </Link>
       </td>
       <td className="px-4 py-2.5">
-        <span className="font-mono text-xs text-muted-foreground">
+        <Link
+          href={`/sets/${card.setCode}`}
+          className="font-mono text-xs text-muted-foreground transition-colors hover:text-primary"
+        >
           {card.setCode.toUpperCase()}
-        </span>
+        </Link>
       </td>
       <td className="px-4 py-2.5 text-right font-price tabular-nums">
         <Price jpy={card.latestPriceJpy ?? 0} />
@@ -249,7 +252,7 @@ export function TrendingPageHeader() {
   const lang = useUIStore((s) => s.language)
   return (
     <div>
-      <h1 className="text-xl font-bold">{t(lang, "trendingTitle")}</h1>
+      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "trendingTitle")}</h1>
       <p className="mt-1 text-sm text-muted-foreground">{t(lang, "trendingDesc")}</p>
     </div>
   )

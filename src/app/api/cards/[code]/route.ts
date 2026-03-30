@@ -1,5 +1,8 @@
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:cards");
 
 export async function GET(
   _request: NextRequest,
@@ -43,7 +46,7 @@ export async function GET(
       priceChange7d: card.priceChange7d,
     });
   } catch (error) {
-    console.error("Error fetching card:", error);
+    log.error("Error fetching card", error);
     return NextResponse.json({ error: "Failed to fetch card" }, { status: 500 });
   }
 }

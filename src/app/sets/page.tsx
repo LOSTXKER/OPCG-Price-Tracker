@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Crown, Gift, MoreHorizontal, Package, Sparkles, Swords } from "lucide-react";
+import { BookOpen, Calculator, Crown, Gift, Layers, MoreHorizontal, Package, Sparkles, Store, Swords, TrendingUp } from "lucide-react";
+import { RelatedPages } from "@/components/shared/related-pages";
 
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { ErrorBanner } from "@/components/shared/error-banner";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { JsonLd } from "@/lib/seo/json-ld-script";
+import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { SetType } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { Price } from "@/components/shared/price-inline";
@@ -15,7 +19,9 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Card Sets — Booster Boxes & Decks",
-  description: "Browse all card sets and check estimated values",
+  description:
+    "Browse all OPCG card sets, booster boxes and starter decks. Check estimated set values, card counts and release dates.",
+  alternates: { canonical: "/sets" },
 };
 
 const TYPE_ORDER: SetType[] = ["BOOSTER", "EXTRA_BOOSTER", "STARTER", "PROMO", "OTHER"];
@@ -111,9 +117,11 @@ export default async function SetsIndexPage() {
   const totalMarketValue = setsRaw.reduce((sum, s) => sum + s.totalValue, 0);
 
   return (
-    <div className="space-y-10">
-      {/* Page header */}
-      <SetsPageHeader totalSets={totalSets} totalMarketValue={totalMarketValue} />
+    <>
+      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Sets", href: "/sets" }])} />
+      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Sets" }]} />
+      <div className="space-y-10">
+        <SetsPageHeader totalSets={totalSets} totalMarketValue={totalMarketValue} />
 
       {dbError ? (
         <ErrorBanner />
@@ -124,18 +132,20 @@ export default async function SetsIndexPage() {
           {/* Top 5 most valuable */}
           {mostValuable.length > 0 && (
             <section className="panel overflow-hidden">
-              <div className="flex items-center gap-2.5 border-b border-border/60 px-5 py-3.5">
-                <Crown className="size-4 text-amber-500" />
+              <div className="flex items-center gap-2.5 border-b border-border/40 px-5 py-3.5">
+                <div className="flex size-7 items-center justify-center rounded-lg bg-amber-500/10">
+                  <Crown className="size-3.5 text-amber-600 dark:text-amber-400" />
+                </div>
                 <HighestValueSetLabel />
               </div>
-              <div className="divide-y divide-border/40">
+              <div className="divide-y divide-border/30">
                 {mostValuable.map((s, i) => {
                   const thumb = s.boxImageUrl ?? s.topCard?.imageUrl;
                   return (
                     <Link
                       key={s.id}
                       href={`/sets/${s.code}`}
-                      className="flex items-center gap-4 px-5 py-3 transition-colors hover:bg-muted/30"
+                      className="group flex items-center gap-4 px-5 py-3.5 transition-colors hover:bg-muted/30"
                     >
                       <span className={`flex size-7 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold ${i < 3 ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground"}`}>
                         {i + 1}
@@ -150,11 +160,11 @@ export default async function SetsIndexPage() {
                           <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-mono text-[11px] font-bold text-primary">
                             {s.code.toUpperCase()}
                           </span>
-                          <span className="truncate text-sm font-medium">{s.nameEn ?? s.name}</span>
+                          <span className="truncate text-sm font-medium transition-colors group-hover:text-primary">{s.nameEn ?? s.name}</span>
                         </div>
                       </div>
                       <CardCountLabel count={s.productCardCount} />
-                      <span className="shrink-0 font-price text-sm font-semibold">
+                      <span className="shrink-0 font-price text-sm font-bold tabular-nums">
                         <Price jpy={s.totalValue} />
                       </span>
                     </Link>
@@ -172,9 +182,11 @@ export default async function SetsIndexPage() {
               const TypeIcon = TYPE_ICON[type];
               return (
                 <section key={type} className="space-y-5">
-                  <div className="flex items-center gap-3 border-l-[3px] border-primary/60 pl-3">
-                    <TypeIcon className="size-4 text-primary/70" />
-                    <h2 className="font-sans text-lg font-bold tracking-tight">{TYPE_LABEL[type]}</h2>
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
+                      <TypeIcon className="size-4 text-primary" />
+                    </div>
+                    <h2 className="text-lg font-bold tracking-tight">{TYPE_LABEL[type]}</h2>
                     <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold tabular-nums text-muted-foreground">
                       {list.length}
                     </span>
@@ -190,7 +202,16 @@ export default async function SetsIndexPage() {
           </div>
         </>
       )}
-    </div>
+      </div>
+      <RelatedPages
+        items={[
+          { href: "/trending", icon: TrendingUp, title: "Trending", description: "การ์ดที่ราคาขยับมากที่สุด" },
+          { href: "/pull-calculator", icon: Calculator, title: "Pull Calculator", description: "คำนวณโอกาสดึงการ์ดจากกล่อง" },
+          { href: "/guide/sets", icon: BookOpen, title: "คู่มือชุดการ์ด", description: "เรียนรู้เกี่ยวกับชุดการ์ดทั้งหมด" },
+          { href: "/marketplace", icon: Store, title: "Marketplace", description: "ซื้อขายการ์ดในตลาด Meecard" },
+        ]}
+      />
+    </>
   );
 }
 
@@ -200,8 +221,8 @@ function SetCard({ set }: { set: SetWithCard }) {
   return (
     <Link href={`/sets/${set.code}`} className="group block w-[72vw] shrink-0 snap-start sm:w-auto sm:shrink">
       <div className="panel flex h-full flex-col overflow-hidden transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
-        {/* Image area — portrait card ratio */}
-        <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted/30">
+        {/* Image area */}
+        <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted/20">
           {imageUrl ? (
             <Image
               src={imageUrl}
@@ -220,31 +241,31 @@ function SetCard({ set }: { set: SetWithCard }) {
               {set.code.toUpperCase()}
             </span>
           </div>
-          {set.totalValue > 0 && (
-            <div className="absolute bottom-2.5 right-2.5">
-              <span className="rounded-md bg-background/80 px-2 py-0.5 font-price text-xs font-semibold text-foreground backdrop-blur-sm">
-                <Price jpy={set.totalValue} />
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Info */}
-        <div className="flex flex-1 flex-col gap-1.5 p-4">
+        <div className="flex flex-1 flex-col gap-1 border-t border-border/30 p-3.5">
           <p className="text-sm font-semibold leading-snug line-clamp-2 transition-colors group-hover:text-primary">
             {set.nameEn ?? set.name}
           </p>
 
-          <div className="mt-auto flex items-center gap-2 pt-1 text-xs text-muted-foreground">
-            <CardCountLabel count={set.productCardCount} />
-            {set.releaseDate && (
-              <>
-                <span className="text-border">·</span>
-                <FormattedDate
-                  date={set.releaseDate}
-                  options={{ year: "numeric", month: "short" }}
-                />
-              </>
+          <div className="mt-auto flex items-center justify-between gap-2 pt-1.5">
+            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+              <CardCountLabel count={set.productCardCount} />
+              {set.releaseDate && (
+                <>
+                  <span className="text-border">·</span>
+                  <FormattedDate
+                    date={set.releaseDate}
+                    options={{ year: "numeric", month: "short" }}
+                  />
+                </>
+              )}
+            </div>
+            {set.totalValue > 0 && (
+              <span className="shrink-0 font-price text-xs font-semibold text-foreground">
+                <Price jpy={set.totalValue} />
+              </span>
             )}
           </div>
         </div>

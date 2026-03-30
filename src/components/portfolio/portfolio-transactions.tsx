@@ -7,21 +7,8 @@ import { getCardName, getLocale, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { formatJpyAmount } from "@/lib/utils/currency"
 
-export type TransactionRow = {
-  id: number
-  type: string
-  quantity: number
-  pricePerUnit: number | null
-  note: string | null
-  createdAt: string
-  card: {
-    cardCode: string
-    nameJp: string
-    nameEn: string | null
-    imageUrl: string | null
-    rarity: string
-  }
-}
+export type { TransactionRow } from "@/lib/types/portfolio"
+import type { TransactionRow } from "@/lib/types/portfolio"
 
 type TypeConfig = { labelKey: "buy" | "sell" | "remove"; icon: typeof ArrowUpCircle; colorClass: string }
 

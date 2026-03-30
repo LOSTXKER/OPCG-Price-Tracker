@@ -1,17 +1,19 @@
-import { getAuthUser } from "@/lib/api/auth";
+import { requireAuthUser } from "@/lib/api/auth";
 import { cardInclude } from "@/lib/api/query-fragments";
+import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:portfolio");
 
 export async function GET() {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const portfolios = await prisma.portfolio.findMany({
-      where: { userId: dbUser.id },
+      where: { userId: auth.user.id },
       orderBy: { updatedAt: "desc" },
       include: {
         items: {
@@ -23,32 +25,21 @@ export async function GET() {
 
     return NextResponse.json({ portfolios });
   } catch (error) {
-    console.error("GET /api/portfolio:", error);
+    log.error("GET /api/portfolio", error);
     return NextResponse.json({ error: "Failed to load portfolios" }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
-    let body: unknown;
-    try {
-      body = await request.json();
-    } catch {
-      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-    }
+    const parsed = await parseJsonBody<{ name?: string }>(request);
+    if (!parsed.ok) return parsed.response;
 
     const name =
-      typeof body === "object" &&
-      body !== null &&
-      "name" in body &&
-      typeof (body as { name: unknown }).name === "string"
-        ? (body as { name: string }).name.trim()
-        : "";
+      typeof parsed.body.name === "string" ? parsed.body.name.trim() : "";
 
     if (!name || name.length > 120) {
       return NextResponse.json(
@@ -59,7 +50,7 @@ export async function POST(request: NextRequest) {
 
     const portfolio = await prisma.portfolio.create({
       data: {
-        userId: dbUser.id,
+        userId: auth.user.id,
         name,
       },
       include: {
@@ -71,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ portfolio }, { status: 201 });
   } catch (error) {
-    console.error("POST /api/portfolio:", error);
+    log.error("POST /api/portfolio", error);
     return NextResponse.json({ error: "Failed to create portfolio" }, { status: 500 });
   }
 }

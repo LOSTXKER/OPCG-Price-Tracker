@@ -1,10 +1,17 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Layers, Store } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { RelatedPages } from "@/components/shared/related-pages";
+import { JsonLd } from "@/lib/seo/json-ld-script";
+import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 
 export const metadata: Metadata = {
   title: "Buying Guide — คู่มือ OPCG",
+  description:
+    "Where to buy One Piece Card Game cards in Thailand and online. Trusted shops, pricing tips and what to watch out for.",
+  alternates: { canonical: "/guide/buying" },
 };
 
 const shops = [
@@ -42,13 +49,17 @@ const tips = [
 export default function BuyingGuidePage() {
   return (
     <div className="mx-auto max-w-3xl space-y-8">
+      <JsonLd data={breadcrumbJsonLd([
+        { name: "Home", href: "/" },
+        { name: "Guide", href: "/guide" },
+        { name: "Buying Guide", href: "/guide/buying" },
+      ])} />
       <div className="space-y-3">
-        <Link
-          href="/guide"
-          className="text-muted-foreground text-sm hover:text-foreground"
-        >
-          ← คู่มือทั้งหมด
-        </Link>
+        <Breadcrumb items={[
+          { label: "Home", href: "/" },
+          { label: "Guide", href: "/guide" },
+          { label: "Buying Guide" },
+        ]} />
         <h1 className="font-sans text-3xl font-bold tracking-tight">
           Buying Guide
         </h1>
@@ -145,6 +156,13 @@ export default function BuyingGuidePage() {
           </li>
         </ul>
       </div>
+
+      <RelatedPages
+        items={[
+          { href: "/marketplace", icon: Store, title: "Marketplace", description: "ซื้อขายการ์ดในตลาด Meecard" },
+          { href: "/guide/sets", icon: Layers, title: "คู่มือชุดการ์ด", description: "เรียนรู้เกี่ยวกับชุดการ์ดทั้งหมด" },
+        ]}
+      />
 
       <div className="flex items-center justify-between border-t border-border pt-6">
         <Link

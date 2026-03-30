@@ -1,5 +1,6 @@
 import { cache } from "react"
 import { prisma } from "@/lib/db"
+import { PRICE_SOURCE } from "@/lib/constants/prices"
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000
 
@@ -149,13 +150,13 @@ export function deriveLatestPrice(card: {
   latestPriceJpy: number | null
   latestPriceThb: number | null
 }) {
-  const yuyuteiPrice = card.prices.find((p) => p.source === "YUYUTEI")
+  const yuyuteiPrice = card.prices.find((p) => p.source === PRICE_SOURCE.YUYUTEI)
   if (yuyuteiPrice && yuyuteiPrice.priceJpy != null) {
     return {
       priceJpy: yuyuteiPrice.priceJpy,
       priceThb: yuyuteiPrice.priceThb,
       inStock: yuyuteiPrice.inStock,
-      source: "YUYUTEI" as const,
+      source: PRICE_SOURCE.YUYUTEI,
     }
   }
   const anyPrice = card.prices[0]
@@ -172,7 +173,7 @@ export function deriveLatestPrice(card: {
       priceJpy: card.latestPriceJpy,
       priceThb: card.latestPriceThb,
       inStock: true,
-      source: "YUYUTEI" as const,
+      source: PRICE_SOURCE.YUYUTEI,
     }
   }
   return null
@@ -186,12 +187,12 @@ export function deriveSnkrdunkPrices(
   prices: { source: string; type: string; priceUsd: number | null; gradeCondition: string | null; scrapedAt: Date | string }[]
 ) {
   const snk = prices
-    .filter((p) => p.source === "SNKRDUNK" && p.priceUsd != null)
+    .filter((p) => p.source === PRICE_SOURCE.SNKRDUNK && p.priceUsd != null)
     .sort((a, b) => new Date(b.scrapedAt).getTime() - new Date(a.scrapedAt).getTime())
 
   const sellRaw = snk.find((p) => p.type === "SELL" && !p.gradeCondition)
-  const sellPsa10 = snk.find((p) => p.type === "SELL" && p.gradeCondition === "PSA 10")
-  const soldPsa10 = snk.find((p) => p.type === "SOLD" && p.gradeCondition === "PSA 10")
+  const sellPsa10 = snk.find((p) => p.type === "SELL" && p.gradeCondition === PRICE_SOURCE.PSA_10)
+  const soldPsa10 = snk.find((p) => p.type === "SOLD" && p.gradeCondition === PRICE_SOURCE.PSA_10)
   const soldAny = snk.find((p) => p.type === "SOLD" && !p.gradeCondition)
 
   if (!sellRaw && !sellPsa10 && !soldPsa10 && !soldAny) return null
@@ -216,21 +217,21 @@ export function getChartSources(
   prices: { source: string; gradeCondition: string | null; priceUsd: number | null }[]
 ): ChartSourceOption[] {
   const sources: ChartSourceOption[] = [
-    { id: "YUYUTEI", label: "Yuyu-tei", source: "YUYUTEI", currency: "JPY" },
+    { id: PRICE_SOURCE.YUYUTEI, label: "Yuyu-tei", source: PRICE_SOURCE.YUYUTEI, currency: "JPY" },
   ]
 
   const hasSnkrRaw = prices.some(
-    (p) => p.source === "SNKRDUNK" && !p.gradeCondition && p.priceUsd != null,
+    (p) => p.source === PRICE_SOURCE.SNKRDUNK && !p.gradeCondition && p.priceUsd != null,
   )
   const hasSnkrPsa10 = prices.some(
-    (p) => p.source === "SNKRDUNK" && p.gradeCondition === "PSA 10" && p.priceUsd != null,
+    (p) => p.source === PRICE_SOURCE.SNKRDUNK && p.gradeCondition === PRICE_SOURCE.PSA_10 && p.priceUsd != null,
   )
 
   if (hasSnkrRaw) {
-    sources.push({ id: "SNKRDUNK_RAW", label: "SNKRDUNK", source: "SNKRDUNK", grade: "raw", currency: "USD" })
+    sources.push({ id: "SNKRDUNK_RAW", label: PRICE_SOURCE.SNKRDUNK, source: PRICE_SOURCE.SNKRDUNK, grade: "raw", currency: "USD" })
   }
   if (hasSnkrPsa10) {
-    sources.push({ id: "SNKRDUNK_PSA10", label: "PSA 10", source: "SNKRDUNK", grade: "PSA 10", currency: "USD" })
+    sources.push({ id: "SNKRDUNK_PSA10", label: PRICE_SOURCE.PSA_10, source: PRICE_SOURCE.SNKRDUNK, grade: PRICE_SOURCE.PSA_10, currency: "USD" })
   }
 
   return sources
@@ -263,7 +264,7 @@ export function deriveSourcePrices(
   }[],
   grade: "raw" | "psa10",
 ): SourcePriceRow[] {
-  const gradeFilter = grade === "psa10" ? "PSA 10" : null
+  const gradeFilter = grade === "psa10" ? PRICE_SOURCE.PSA_10 : null
 
   const filtered = prices.filter((p) =>
     gradeFilter ? p.gradeCondition === gradeFilter : !p.gradeCondition,

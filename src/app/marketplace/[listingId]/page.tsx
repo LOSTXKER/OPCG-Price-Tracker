@@ -1,14 +1,18 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ListingCard } from "@/components/marketplace/listing-card";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PriceDisplay } from "@/components/shared/price-display";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ListingStatus } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
+import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { JsonLd } from "@/lib/seo/json-ld-script";
 import { cn } from "@/lib/utils";
 import { formatPct } from "@/lib/utils/currency";
 import { Price } from "@/components/shared/price-inline";
@@ -18,6 +22,33 @@ export const dynamic = "force-dynamic";
 type PageProps = {
   params: Promise<{ listingId: string }>;
 };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { listingId: idParam } = await params;
+  const id = Number(idParam);
+  if (!Number.isInteger(id) || id < 1) return { title: "Listing not found" };
+
+  const listing = await prisma.listing.findFirst({
+    where: { id, status: ListingStatus.ACTIVE },
+    select: {
+      priceThb: true,
+      card: { select: { nameEn: true, nameJp: true, cardCode: true, imageUrl: true } },
+    },
+  });
+  if (!listing) return { title: "Listing not found" };
+
+  const name = listing.card.nameEn ?? listing.card.nameJp;
+  const title = `${listing.card.cardCode} ${name} — ฿${(listing.priceThb ?? 0).toLocaleString()}`;
+
+  return {
+    title,
+    description: `Buy ${name} (${listing.card.cardCode}) for ฿${(listing.priceThb ?? 0).toLocaleString()} on the Meecard marketplace.`,
+    openGraph: {
+      title,
+      images: listing.card.imageUrl ? [listing.card.imageUrl] : undefined,
+    },
+  };
+}
 
 export default async function ListingDetailPage({ params }: PageProps) {
   const { listingId: idParam } = await params;
@@ -75,8 +106,19 @@ export default async function ListingDetailPage({ params }: PageProps) {
   const diffPct =
     market != null && market > 0 ? ((listing.priceJpy - market) / market) * 100 : null;
 
+  const cardName = listing.card.nameEn ?? listing.card.nameJp;
+  const crumbs = [
+    { name: "Home", href: "/" },
+    { name: "Marketplace", href: "/marketplace" },
+    { name: cardName, href: `/marketplace/${listing.id}` },
+  ];
+
   return (
-    <div className="container mx-auto max-w-3xl space-y-8 px-4 py-8">
+    <div className="mx-auto max-w-3xl space-y-8">
+      <JsonLd data={breadcrumbJsonLd(crumbs)} />
+      <Breadcrumb
+        items={crumbs.map((c) => ({ label: c.name, href: c.href }))}
+      />
       <div className="flex flex-wrap gap-2">
         <Link
           href="/marketplace"
@@ -125,7 +167,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
 
         <div className="min-w-0 space-y-4">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight">{listing.card.nameEn ?? listing.card.nameJp}</h1>
+            <h1 className="text-2xl font-bold tracking-tight">{listing.card.nameEn ?? listing.card.nameJp}</h1>
             <p className="text-muted-foreground font-mono text-sm">{listing.card.cardCode}</p>
             <div className="mt-2 flex flex-wrap gap-2">
               <Badge variant="outline">{listing.condition}</Badge>

@@ -7,12 +7,8 @@ import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { formatJpyAmount } from "@/lib/utils/currency"
 
-export type PortfolioMeta = {
-  id: number
-  name: string
-  totalValue: number
-  itemCount: number
-}
+export type { PortfolioMeta } from "@/lib/types/portfolio"
+import type { PortfolioMeta } from "@/lib/types/portfolio"
 
 export function PortfolioSidebar({
   portfolios,
@@ -147,9 +143,9 @@ export function PortfolioSidebar({
       ) : (
         <button
           onClick={() => setCreating(true)}
-          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+          className="flex w-full items-center gap-2.5 rounded-lg border border-dashed border-border/60 px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-foreground"
         >
-          <div className="flex size-8 items-center justify-center rounded-lg border-2 border-dashed border-border">
+          <div className="flex size-8 items-center justify-center rounded-lg bg-muted">
             <Plus className="size-3.5" />
           </div>
           {t(lang, "createPortfolio")}

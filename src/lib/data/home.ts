@@ -1,5 +1,9 @@
 import { prisma } from "@/lib/db"
 import { CARDS_PAGE_SIZE } from "@/lib/constants/ui"
+import { PRICE_SOURCE } from "@/lib/constants/prices"
+import { createLog } from "@/lib/logger"
+
+const log = createLog("data:home")
 
 export type TrendingCard = {
   cardCode: string
@@ -65,8 +69,8 @@ export async function getHomeData() {
           set: { select: cardSetSelect },
           prices: {
             where: {
-              source: "SNKRDUNK",
-              gradeCondition: "PSA 10",
+              source: PRICE_SOURCE.SNKRDUNK,
+              gradeCondition: PRICE_SOURCE.PSA_10,
               type: "SELL",
             },
             orderBy: { scrapedAt: "desc" },
@@ -103,7 +107,7 @@ export async function getHomeData() {
       rarityRows,
     }
   } catch (error) {
-    console.error("Failed to fetch home data:", error)
+    log.error("Failed to fetch home data", error)
     throw error
   }
 }

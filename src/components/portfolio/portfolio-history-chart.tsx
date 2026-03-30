@@ -37,10 +37,10 @@ export function PortfolioHistoryChart({ data }: { data: DataPoint[] }) {
 
   if (data.length < 2) {
     return (
-      <div className="flex h-40 flex-col items-center justify-center gap-2 text-muted-foreground">
-        <BarChart3 className="size-8 opacity-30" />
-        <p className="text-sm">{t(lang, "noPortfolioData")}</p>
-        <p className="text-[11px] opacity-60">{t(lang, "noPortfolioDataDesc")}</p>
+      <div className="flex h-24 flex-col items-center justify-center gap-1.5 text-muted-foreground">
+        <BarChart3 className="size-6 opacity-30" />
+        <p className="text-xs">{t(lang, "noPortfolioData")}</p>
+        <p className="text-[10px] opacity-60">{t(lang, "noPortfolioDataDesc")}</p>
       </div>
     )
   }

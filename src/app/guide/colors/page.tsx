@@ -1,9 +1,16 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { RelatedPages } from "@/components/shared/related-pages";
+import { JsonLd } from "@/lib/seo/json-ld-script";
+import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 
 export const metadata: Metadata = {
   title: "Colors — คู่มือ OPCG",
+  description:
+    "Understand the color system in One Piece Card Game: Red, Blue, Green, Purple, Black and Yellow. Playstyles and strategies.",
+  alternates: { canonical: "/guide/colors" },
 };
 
 const colors = [
@@ -54,13 +61,17 @@ const colors = [
 export default function ColorsPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-8">
+      <JsonLd data={breadcrumbJsonLd([
+        { name: "Home", href: "/" },
+        { name: "Guide", href: "/guide" },
+        { name: "Colors", href: "/guide/colors" },
+      ])} />
       <div className="space-y-3">
-        <Link
-          href="/guide"
-          className="text-muted-foreground text-sm hover:text-foreground"
-        >
-          ← คู่มือทั้งหมด
-        </Link>
+        <Breadcrumb items={[
+          { label: "Home", href: "/" },
+          { label: "Guide", href: "/guide" },
+          { label: "Colors" },
+        ]} />
         <h1 className="font-sans text-3xl font-bold tracking-tight">
           Colors
         </h1>
@@ -102,6 +113,12 @@ export default function ColorsPage() {
           </div>
         ))}
       </div>
+
+      <RelatedPages
+        items={[
+          { href: "/search", icon: Search, title: "ค้นหาการ์ด", description: "ค้นหาตามสีของการ์ด" },
+        ]}
+      />
 
       <div className="flex items-center justify-between border-t border-border pt-6">
         <Link

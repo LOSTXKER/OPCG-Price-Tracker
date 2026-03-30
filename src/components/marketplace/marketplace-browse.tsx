@@ -239,7 +239,7 @@ export function MarketplacePageHeader() {
   const lang = useUIStore((s) => s.language);
   return (
     <div>
-      <h1 className="font-sans text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "marketplace")}</h1>
+      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "marketplace")}</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         {t(lang, "marketplaceDesc")}
       </p>

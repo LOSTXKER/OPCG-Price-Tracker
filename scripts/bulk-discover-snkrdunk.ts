@@ -1,7 +1,7 @@
 /**
  * Bulk discover OPCG cards from SNKRDUNK, create mappings, auto-match, and fetch prices.
  */
-import { PrismaClient } from "../src/generated/prisma/client"
+import { PrismaClient, MappingStatus, MatchMethod } from "../src/generated/prisma/client"
 import { PrismaPg } from "@prisma/adapter-pg"
 import pg from "pg"
 import dotenv from "dotenv"
@@ -92,7 +92,7 @@ async function main() {
             scrapedName: card.name,
             thumbnailUrl: card.thumbnailUrl,
             minPriceUsd: card.minPrice > 0 ? card.minPrice : null,
-            status: "pending",
+            status: MappingStatus.PENDING,
           },
         })
         created++
@@ -108,7 +108,7 @@ async function main() {
   // 4. Auto-match by productNumber → DB card
   console.log("Step 3: Auto-matching by card code...")
   const pendingMappings = await prisma.snkrdunkMapping.findMany({
-    where: { status: "pending", matchedCardId: null },
+    where: { status: MappingStatus.PENDING, matchedCardId: null },
     select: { id: true, productNumber: true, scrapedName: true },
   })
 
@@ -144,15 +144,15 @@ async function main() {
         where: { id: mapping.id },
         data: {
           matchedCardId: cards[0]!.id,
-          matchMethod: "auto-code",
-          status: "matched",
+          matchMethod: MatchMethod.AUTO_CODE,
+          status: MappingStatus.MATCHED,
         },
       })
       matched++
     } else if (cards.length > 1) {
       await prisma.snkrdunkMapping.update({
         where: { id: mapping.id },
-        data: { matchMethod: "auto-code-multi" },
+        data: { matchMethod: MatchMethod.AUTO_CODE_MULTI },
       })
       multiMatch++
     } else {
@@ -166,7 +166,7 @@ async function main() {
 
   // 5. Fetch prices for all matched cards
   const allMatched = await prisma.snkrdunkMapping.findMany({
-    where: { status: "matched", matchedCardId: { not: null } },
+    where: { status: MappingStatus.MATCHED, matchedCardId: { not: null } },
     select: { id: true, snkrdunkId: true },
   })
 

@@ -5,7 +5,11 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { Crown, ArrowRight } from "lucide-react";
 
+import { PRICE_SOURCE } from "@/lib/constants/prices";
+
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { JsonLd } from "@/lib/seo/json-ld-script";
+import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import { RARITIES } from "@/lib/constants/rarities";
 import { prisma } from "@/lib/db";
@@ -72,8 +76,8 @@ const getSet = cache(async (setCode: string) => {
       set: { select: { code: true } },
       prices: {
         where: {
-          source: "SNKRDUNK",
-          gradeCondition: "PSA 10",
+          source: PRICE_SOURCE.SNKRDUNK,
+          gradeCondition: PRICE_SOURCE.PSA_10,
           type: "SELL",
         },
         orderBy: { scrapedAt: "desc" },
@@ -92,9 +96,16 @@ export async function generateMetadata(props: {
   const { setCode } = await props.params;
   const set = await getSet(setCode);
   if (!set) return { title: "Set not found" };
+
+  const title = `${set.code.toUpperCase()} — ${set.nameEn ?? set.name}`;
+  const description = `${set.productCardCount.toLocaleString()} cards · ${set.nameEn ?? set.name} — One Piece Card Game`;
+
   return {
-    title: `${set.code.toUpperCase()} — ${set.nameEn ?? set.name}`,
-    description: `${set.productCardCount.toLocaleString()} cards · ${set.nameEn ?? set.name}`,
+    title,
+    description,
+    alternates: { canonical: `/sets/${set.code}` },
+    openGraph: { title, description, type: "article" },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
@@ -182,15 +193,25 @@ export default async function SetDetailPage(props: {
     }
   );
 
+  const setName = set.nameEn ?? set.name;
+
   return (
-    <div className="space-y-6">
-      <Breadcrumb
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Sets", href: "/sets" },
-          { label: set.code.toUpperCase() },
-        ]}
+    <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", href: "/" },
+          { name: "Sets", href: "/sets" },
+          { name: `${set.code.toUpperCase()} — ${setName}`, href: `/sets/${set.code}` },
+        ])}
       />
+      <div className="space-y-6">
+        <Breadcrumb
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Sets", href: "/sets" },
+            { label: set.code.toUpperCase() },
+          ]}
+        />
 
       {/* Hero */}
       <div>
@@ -271,5 +292,6 @@ export default async function SetDetailPage(props: {
         hasPullRates={set.dropRates.length > 0}
       />
     </div>
+    </>
   );
 }

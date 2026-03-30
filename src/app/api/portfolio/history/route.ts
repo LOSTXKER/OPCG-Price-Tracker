@@ -1,16 +1,17 @@
-import { getAuthUser } from "@/lib/api/auth";
+import { requireAuthUser } from "@/lib/api/auth";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextResponse } from "next/server";
+
+const log = createLog("api:portfolio");
 
 export async function GET() {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const portfolios = await prisma.portfolio.findMany({
-      where: { userId: dbUser.id },
+      where: { userId: auth.user.id },
       select: { id: true },
     });
 
@@ -38,7 +39,7 @@ export async function GET() {
 
     return NextResponse.json({ snapshots });
   } catch (error) {
-    console.error("GET /api/portfolio/history:", error);
+    log.error("GET /api/portfolio/history", error);
     return NextResponse.json({ error: "Failed to load history" }, { status: 500 });
   }
 }

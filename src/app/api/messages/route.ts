@@ -1,14 +1,16 @@
-import { getAuthUser } from "@/lib/api/auth";
+import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:messages");
 
 export async function GET(request: NextRequest) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
+    const dbUser = auth.user;
 
     const listingId = request.nextUrl.searchParams.get("listingId");
     const listingIdNum = listingId ? parseInt(listingId, 10) : NaN;
@@ -47,17 +49,16 @@ export async function GET(request: NextRequest) {
       })),
     });
   } catch (error) {
-    console.error("GET /api/messages:", error);
+    log.error("GET /api/messages", error);
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
+    const dbUser = auth.user;
 
     const parsed = await parseJsonBody<{ listingId: number; content: string }>(request);
     if (!parsed.ok) return parsed.response;
@@ -114,7 +115,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("POST /api/messages:", error);
+    log.error("POST /api/messages", error);
     return NextResponse.json({ error: "Failed to send" }, { status: 500 });
   }
 }

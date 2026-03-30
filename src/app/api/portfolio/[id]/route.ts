@@ -1,16 +1,18 @@
-import { getAuthUser } from "@/lib/api/auth";
+import { requireAuthUser } from "@/lib/api/auth";
+import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:portfolio");
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const { id: idStr } = await params;
     const id = parseInt(idStr, 10);
@@ -19,21 +21,17 @@ export async function PATCH(
     }
 
     const portfolio = await prisma.portfolio.findFirst({
-      where: { id, userId: dbUser.id },
+      where: { id, userId: auth.user.id },
     });
     if (!portfolio) {
       return NextResponse.json({ error: "Portfolio not found" }, { status: 404 });
     }
 
-    let body: Record<string, unknown>;
-    try {
-      body = (await request.json()) as Record<string, unknown>;
-    } catch {
-      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-    }
+    const parsed = await parseJsonBody<{ name?: string }>(request);
+    if (!parsed.ok) return parsed.response;
 
     const name =
-      typeof body.name === "string" ? body.name.trim() : undefined;
+      typeof parsed.body.name === "string" ? parsed.body.name.trim() : undefined;
 
     if (name !== undefined && (!name || name.length > 120)) {
       return NextResponse.json(
@@ -51,7 +49,7 @@ export async function PATCH(
 
     return NextResponse.json({ portfolio: updated });
   } catch (error) {
-    console.error("PATCH /api/portfolio/[id]:", error);
+    log.error("PATCH /api/portfolio/[id]", error);
     return NextResponse.json({ error: "Failed to update portfolio" }, { status: 500 });
   }
 }
@@ -61,10 +59,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const { id: idStr } = await params;
     const id = parseInt(idStr, 10);
@@ -73,7 +69,7 @@ export async function DELETE(
     }
 
     const portfolio = await prisma.portfolio.findFirst({
-      where: { id, userId: dbUser.id },
+      where: { id, userId: auth.user.id },
     });
     if (!portfolio) {
       return NextResponse.json({ error: "Portfolio not found" }, { status: 404 });
@@ -83,7 +79,7 @@ export async function DELETE(
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("DELETE /api/portfolio/[id]:", error);
+    log.error("DELETE /api/portfolio/[id]", error);
     return NextResponse.json({ error: "Failed to delete portfolio" }, { status: 500 });
   }
 }

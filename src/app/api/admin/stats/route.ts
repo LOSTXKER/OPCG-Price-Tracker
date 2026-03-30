@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
+import { unauthorized } from "@/lib/api/admin-helpers";
 import { checkIsAdmin } from "@/lib/auth/check-admin";
 import { prisma } from "@/lib/db";
 
 export async function GET() {
-  if (!(await checkIsAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+  if (!(await checkIsAdmin())) return unauthorized();
 
   const [
     totalCards,

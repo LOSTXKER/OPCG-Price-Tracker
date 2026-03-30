@@ -2,10 +2,11 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { TrendingUp, TrendingDown, Layers, BarChart3, Clock, ArrowRight } from "lucide-react"
+import { TrendingUp, TrendingDown, Layers, BarChart3, Clock, ArrowRight, ChevronRight, Package, Sparkles } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
+import { cn } from "@/lib/utils"
 import { getCardName, t } from "@/lib/i18n"
 import type { TrendingCard } from "@/lib/data/home"
 import { Price } from "@/components/shared/price-inline"
@@ -15,27 +16,77 @@ import { formatPct } from "@/lib/utils/currency"
 export function HomeStatsStrip({
   totalCards,
   totalValue,
+  totalSets,
+  latestSetName,
+  latestSetCode,
 }: {
   totalCards: number
   totalValue: number
+  totalSets?: number
+  latestSetName?: string
+  latestSetCode?: string
 }) {
   const lang = useUIStore((s) => s.language)
+
+  const stats: { icon: React.ReactNode; label: string; value: React.ReactNode; href?: string }[] = [
+    {
+      icon: <Layers className="size-3.5" />,
+      label: t(lang, "totalCards"),
+      value: totalCards.toLocaleString(),
+    },
+    {
+      icon: <BarChart3 className="size-3.5" />,
+      label: t(lang, "totalValue"),
+      value: <Price jpy={totalValue} />,
+      href: "/market-overview",
+    },
+    ...(totalSets != null
+      ? [{
+          icon: <Package className="size-3.5" />,
+          label: lang === "TH" ? "จำนวนเซ็ต" : lang === "JP" ? "セット数" : "Total Sets",
+          value: totalSets.toLocaleString(),
+          href: "/sets",
+        }]
+      : []),
+    ...(latestSetName
+      ? [{
+          icon: <Sparkles className="size-3.5" />,
+          label: lang === "TH" ? "เซ็ตล่าสุด" : lang === "JP" ? "最新セット" : "Latest Set",
+          value: latestSetName,
+          href: latestSetCode ? `/sets/${latestSetCode.toLowerCase()}` : "/sets",
+        }]
+      : []),
+  ]
+
+  const cardClass = "flex items-center gap-2.5 rounded-lg border border-border/40 bg-card px-3 py-2.5"
+  const iconClass = "flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground"
+
   return (
-    <div className="flex flex-wrap items-center gap-2 text-sm">
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1">
-        <Layers className="size-3.5 text-muted-foreground" />
-        <span className="text-xs text-muted-foreground">{t(lang, "totalCards")}</span>
-        <span className="font-price text-xs font-semibold text-foreground">
-          {totalCards.toLocaleString()}
-        </span>
-      </span>
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1">
-        <BarChart3 className="size-3.5 text-muted-foreground" />
-        <span className="text-xs text-muted-foreground">{t(lang, "totalValue")}</span>
-        <span className="font-price text-xs font-semibold text-foreground">
-          <Price jpy={totalValue} />
-        </span>
-      </span>
+    <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+      {stats.map((s, i) =>
+        s.href ? (
+          <Link
+            key={i}
+            href={s.href}
+            className={cn(cardClass, "group transition-colors hover:border-border hover:bg-muted/40")}
+          >
+            <div className={iconClass}>{s.icon}</div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] font-medium text-muted-foreground">{s.label}</p>
+              <p className="truncate font-price text-sm font-bold text-foreground">{s.value}</p>
+            </div>
+            <ChevronRight className="size-4 shrink-0 text-muted-foreground/30 transition-all group-hover:translate-x-0.5 group-hover:text-muted-foreground" />
+          </Link>
+        ) : (
+          <div key={i} className={cardClass}>
+            <div className={iconClass}>{s.icon}</div>
+            <div className="min-w-0">
+              <p className="text-[10px] font-medium text-muted-foreground">{s.label}</p>
+              <p className="truncate font-price text-sm font-bold text-foreground">{s.value}</p>
+            </div>
+          </div>
+        )
+      )}
     </div>
   )
 }
@@ -111,14 +162,21 @@ export function HomeMiniTable({
 
   return (
     <div>
-      <div className="mb-2.5 flex items-center justify-between">
-        <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          {icon}
-          {title}
-        </p>
+      <div className="mb-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className={cn(
+            "flex size-6 items-center justify-center rounded-md",
+            type === "gainers" ? "bg-green-500/10" : "bg-red-500/10"
+          )}>
+            {type === "gainers"
+              ? <TrendingUp className="size-3.5 text-green-600 dark:text-green-400" />
+              : <TrendingDown className="size-3.5 text-red-600 dark:text-red-400" />}
+          </div>
+          <p className="text-sm font-semibold text-foreground">{title}</p>
+        </div>
         <Link
           href={linkHref}
-          className="flex items-center gap-0.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
           {t(lang, "more")}
           <ArrowRight className="size-3" />

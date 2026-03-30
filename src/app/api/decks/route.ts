@@ -1,17 +1,18 @@
-import { getAuthUser } from "@/lib/api/auth";
+import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:decks");
 
 export async function GET() {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const decks = await prisma.deck.findMany({
-      where: { userId: dbUser.id },
+      where: { userId: auth.user.id },
       orderBy: { updatedAt: "desc" },
       include: {
         leader: { select: { id: true, cardCode: true, nameJp: true, nameEn: true, imageUrl: true, latestPriceJpy: true } },
@@ -26,17 +27,15 @@ export async function GET() {
 
     return NextResponse.json({ decks });
   } catch (error) {
-    console.error("GET /api/decks:", error);
+    log.error("GET /api/decks", error);
     return NextResponse.json({ error: "Failed to load decks" }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const parsed = await parseJsonBody<{ name?: string; leaderId?: number; cardIds?: { cardId: number; quantity: number }[] }>(request);
     if (!parsed.ok) return parsed.response;
@@ -48,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     const deck = await prisma.deck.create({
       data: {
-        userId: dbUser.id,
+        userId: auth.user.id,
         name,
         leaderId: body.leaderId ?? null,
         cards: body.cardIds?.length
@@ -72,7 +71,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ deck }, { status: 201 });
   } catch (error) {
-    console.error("POST /api/decks:", error);
+    log.error("POST /api/decks", error);
     return NextResponse.json({ error: "Failed to create deck" }, { status: 500 });
   }
 }

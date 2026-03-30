@@ -5,14 +5,22 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import {
-  Briefcase,
+  ArrowRightLeft,
+  BookOpen,
+  Coins,
+  Crown,
   Globe,
   LogOut,
   Moon,
   Search,
+  Settings,
+  ShoppingBag,
+  Sparkles,
   Star,
   Sun,
+  TrendingUp,
   User,
+  Zap,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 
@@ -25,9 +33,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -37,11 +42,12 @@ import { useUIStore, type Language, type Currency } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
 
-const NAV_LINK_KEYS = [
+const NAV_LINKS = [
   { href: "/" as const, key: "overview" as const },
   { href: "/sets" as const, key: "sets" as const },
   { href: "/pull-calculator" as const, key: "pullCalculator" as const },
-  { href: "/marketplace" as const, key: "marketplace" as const },
+  { href: "/deck-calculator" as const, key: "deckCalculatorNav" as const },
+  { href: "/compare" as const, key: "compareCards" as const },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -52,6 +58,22 @@ function isActive(pathname: string, href: string) {
 type AuthUser = {
   email?: string;
   user_metadata?: { avatar_url?: string; full_name?: string };
+};
+
+type UserTierValue = "FREE" | "PRO" | "PRO_PLUS" | "LIFETIME_PRO" | "LIFETIME_PRO_PLUS";
+
+const TIER_DISPLAY: Record<UserTierValue, { label: string; color: string; icon: typeof Star }> = {
+  FREE: { label: "Free", color: "bg-muted text-muted-foreground", icon: User },
+  PRO: { label: "Pro", color: "bg-blue-500/15 text-blue-600 dark:text-blue-400", icon: Zap },
+  PRO_PLUS: { label: "Pro+", color: "bg-amber-500/15 text-amber-600 dark:text-amber-400", icon: Crown },
+  LIFETIME_PRO: { label: "Pro ∞", color: "bg-purple-500/15 text-purple-600 dark:text-purple-400", icon: Sparkles },
+  LIFETIME_PRO_PLUS: { label: "Pro+ ∞", color: "bg-amber-500/15 text-amber-600 dark:text-amber-400", icon: Crown },
+};
+
+type MarketStats = {
+  totalCards: number;
+  exchangeRate: number;
+  topMover: { code: string; name: string; change: number } | null;
 };
 
 const LANG_OPTIONS: { value: Language; label: string }[] = [
@@ -75,6 +97,12 @@ export function Header() {
   const [authLoaded, setAuthLoaded] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [stats, setStats] = useState<MarketStats>({
+    totalCards: 0,
+    exchangeRate: 0.296,
+    topMover: { code: "OP13-118-P", name: "Monkey.D.Luffy", change: 5.8 },
+  });
+  const [userTier, setUserTier] = useState<UserTierValue>("FREE");
 
   const language = useUIStore((s) => s.language);
   const setLanguage = useUIStore((s) => s.setLanguage);
@@ -102,6 +130,43 @@ export function Header() {
   }, []);
 
   useEffect(() => {
+    if (!authUser) { setUserTier("FREE"); return; }
+    fetch("/api/settings")
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => { if (data?.tier) setUserTier(data.tier as UserTierValue); })
+      .catch(() => {});
+  }, [authUser]);
+
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        const [rateRes, statsRes] = await Promise.all([
+          fetch("/api/exchange-rate"),
+          fetch("/api/cards?limit=1&sort=priceChange24h&order=desc"),
+        ]);
+        const rateData = rateRes.ok ? await rateRes.json() : null;
+        const cardsData = statsRes.ok ? await statsRes.json() : null;
+
+        const top = cardsData?.cards?.[0];
+        setStats((prev) => ({
+          totalCards: cardsData?.total ?? prev.totalCards,
+          exchangeRate: rateData?.rate ?? prev.exchangeRate,
+          topMover: top
+            ? {
+                code: top.cardCode,
+                name: top.nameEn ?? top.nameJp ?? top.cardCode,
+                change: top.priceChange24h ?? 0,
+              }
+            : prev.topMover,
+        }));
+      } catch {
+        /* non-critical — keep previous/default values */
+      }
+    }
+    fetchStats();
+  }, []);
+
+  useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
@@ -125,121 +190,243 @@ export function Header() {
 
   const closeSearch = useCallback(() => setSearchOpen(false), []);
 
+  const tierInfo = TIER_DISPLAY[userTier];
+  const TierIcon = tierInfo.icon;
+  const canUpgrade = userTier === "FREE" || userTier === "PRO";
+
   return (
     <>
-    <header className="sticky top-0 z-50 hidden border-b border-border/60 bg-background/80 backdrop-blur-xl md:block">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="flex h-14 items-center">
+    <div className="sticky top-0 z-50 hidden md:block">
+      {/* ══════════ TOP BAR — market ticker + preferences ══════════ */}
+      <div className="border-b border-border/40 bg-background">
+        <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-6 text-[11.5px] lg:px-8">
+          {/* Left — market ticker chips */}
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <div className="flex items-center gap-1.5 rounded-full bg-background/60 px-2.5 py-1">
+              <ArrowRightLeft className="size-3 text-blue-500" />
+              <span className="font-medium">JPY/THB</span>
+              <span className="font-bold tabular-nums text-foreground">
+                {stats.exchangeRate.toFixed(3)}
+              </span>
+            </div>
+
+            {stats.topMover && stats.topMover.change !== 0 && (
+              <Link
+                href={`/cards/${stats.topMover.code}`}
+                className="flex items-center gap-1.5 rounded-full bg-background/60 px-2.5 py-1 transition-colors hover:bg-background"
+              >
+                <TrendingUp className="size-3 text-green-500" />
+                <span className="font-medium">Top 24h</span>
+                <span className="max-w-[120px] truncate font-bold text-foreground">
+                  {stats.topMover.name}
+                </span>
+                <span
+                  className={cn(
+                    "rounded-full px-1.5 py-0.5 text-[10px] font-bold leading-none",
+                    stats.topMover.change >= 0
+                      ? "bg-green-500/15 text-green-600 dark:text-green-400"
+                      : "bg-red-500/15 text-red-600 dark:text-red-400"
+                  )}
+                >
+                  {stats.topMover.change >= 0 ? "+" : ""}
+                  {stats.topMover.change.toFixed(1)}%
+                </span>
+              </Link>
+            )}
+          </div>
+
+          {/* Right — search + preferences (compact) */}
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="flex h-7 w-40 items-center gap-1.5 rounded-md border border-border/80 bg-background/80 px-2.5 text-muted-foreground transition-colors hover:border-border hover:bg-background lg:w-48"
+            >
+              <Search className="size-3.5 shrink-0 text-muted-foreground/60" />
+              <span className="flex-1 text-left text-[11px] text-muted-foreground/70">{t(language, "searchPlaceholder")}</span>
+              <kbd className="shrink-0 rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] leading-none text-muted-foreground/60">/</kbd>
+            </button>
+
+            <div className="mx-0.5 h-4 w-px bg-border/40" />
+
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 rounded-md px-2 py-1 font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground focus:outline-none">
+                <Globe className="size-3" />
+                <span>{language}</span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" sideOffset={6} className="min-w-[110px]">
+                <DropdownMenuRadioGroup value={language} onValueChange={(v) => setLanguage(v as Language)}>
+                  {LANG_OPTIONS.map((l) => (
+                    <DropdownMenuRadioItem key={l.value} value={l.value} className="text-xs">
+                      {l.label}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 rounded-md px-2 py-1 font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground focus:outline-none">
+                <Coins className="size-3" />
+                <span>{currency}</span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" sideOffset={6} className="min-w-[110px]">
+                <DropdownMenuRadioGroup value={currency} onValueChange={(v) => setCurrency(v as Currency)}>
+                  {CURRENCY_OPTIONS.map((c) => (
+                    <DropdownMenuRadioItem key={c.value} value={c.value} className="text-xs">
+                      {c.label}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <button
+              type="button"
+              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+              className="rounded-md px-2 py-1 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+              title={mounted && resolvedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {mounted && resolvedTheme === "dark" ? <Sun className="size-3.5" /> : <Moon className="size-3.5" />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════ BOTTOM BAR — brand + nav + user tools ══════════ */}
+      <header className="border-b border-border/50 bg-background/95 backdrop-blur-xl">
+        <div className="mx-auto flex h-12 max-w-7xl items-center px-6 lg:px-8">
           {/* Logo */}
-          <Link href="/" className="mr-8 flex shrink-0 items-center gap-2">
+          <Link href="/" className="mr-6 flex shrink-0 items-center gap-2">
             <Image
               src="/meecard.png"
               alt="Meecard"
-              width={28}
-              height={28}
+              width={26}
+              height={26}
               className="shrink-0 select-none"
               priority
             />
-            <span className="text-base font-bold tracking-tight">Meecard</span>
+            <span className="text-[15px] font-bold tracking-tight">Meecard</span>
           </Link>
 
-          {/* Left nav */}
-          <nav className="flex items-center gap-1">
-            {NAV_LINK_KEYS.map((link) => {
+          {/* Nav links */}
+          <nav className="flex items-center">
+            {NAV_LINKS.map((link) => {
               const active = isActive(pathname, link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "relative whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+                    "relative whitespace-nowrap px-2.5 py-1.5 text-[13px] font-medium transition-colors",
                     active
-                      ? "text-foreground"
+                      ? "font-semibold text-foreground"
                       : "text-muted-foreground hover:text-foreground"
                   )}
                 >
                   {t(language, link.key)}
                   {active && (
-                    <span className="absolute bottom-0 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-primary" />
+                    <span className="absolute bottom-0 left-1/2 h-[2px] w-5 -translate-x-1/2 rounded-full bg-primary" />
                   )}
                 </Link>
               );
             })}
           </nav>
 
-          {/* Spacer */}
           <div className="flex-1" />
 
-          {/* Right side */}
-          <div className="flex items-center gap-2">
-            {/* Portfolio */}
+          {/* Right — user tools */}
+          <div className="flex items-center gap-0.5">
+            {/* Marketplace — prominent */}
+            <Link
+              href="/marketplace"
+              className={cn(
+                "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
+                isActive(pathname, "/marketplace")
+                  ? "border-foreground/20 bg-foreground text-background"
+                  : "border-border bg-muted/50 text-foreground hover:bg-muted"
+              )}
+            >
+              <ShoppingBag className="size-3.5" />
+              {t(language, "marketplace")}
+            </Link>
+
+            <div className="mx-1.5 h-5 w-px bg-border/40" />
+
+            {/* Portfolio — chip style */}
             <Link
               href="/portfolio"
               className={cn(
-                "flex items-center gap-1.5 whitespace-nowrap rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors",
+                "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
                 isActive(pathname, "/portfolio")
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-amber-500/10 font-semibold text-foreground"
+                  : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
               )}
             >
-              <Briefcase className="size-3.5" />
+              <Star className="size-3.5 fill-amber-400 text-amber-400" />
               {t(language, "portfolioNav")}
             </Link>
 
-            {/* Watchlist */}
+            {/* Honey — chip style */}
             <Link
-              href="/watchlist"
+              href="/honey"
               className={cn(
-                "flex items-center gap-1.5 whitespace-nowrap rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors",
-                isActive(pathname, "/watchlist")
-                  ? "text-amber-500"
-                  : "text-muted-foreground hover:text-foreground"
+                "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                isActive(pathname, "/honey")
+                  ? "bg-amber-500/10 font-semibold text-foreground"
+                  : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
               )}
             >
-              <Star className={cn("size-3.5", isActive(pathname, "/watchlist") && "fill-current")} />
-              {t(language, "watchlistNav")}
+              <span className="text-sm leading-none">🍯</span>
+              Honey
             </Link>
 
-            {/* Search */}
-            <button
-              type="button"
-              onClick={() => setSearchOpen(true)}
-              className="flex h-8 w-40 items-center gap-2 rounded-lg border border-border/50 bg-muted/30 px-2.5 text-muted-foreground/50 transition-colors hover:bg-muted/50 lg:w-48"
-            >
-              <Search className="size-3.5 shrink-0" />
-              <span className="flex-1 text-left text-xs">{t(language, "searchPlaceholder")}</span>
-              <kbd className="rounded border border-border/50 bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground/40">/</kbd>
-            </button>
+            <div className="mx-2 h-5 w-px bg-border/40" />
 
-            {/* Profile / Auth — includes settings */}
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex h-8 items-center gap-2 rounded-lg border border-border/50 bg-muted/30 px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground focus:outline-none">
-                {authLoaded && authUser ? (
-                  <Avatar size="sm">
-                    {authUser.user_metadata?.avatar_url ? (
-                      <AvatarImage src={authUser.user_metadata.avatar_url} alt="" />
-                    ) : null}
-                    <AvatarFallback className="text-[10px]">
-                      {(authUser.user_metadata?.full_name ?? authUser.email ?? "U")
-                        .slice(0, 1)
-                        .toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                ) : (
-                  <User className="size-3.5" />
+            {/* Auth area */}
+            {authLoaded && authUser ? (
+              <div className="flex items-center gap-1.5">
+                {/* Upgrade CTA — only if not max tier */}
+                {canUpgrade && (
+                  <Link
+                    href="/pricing"
+                    className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary transition-colors hover:bg-primary/20"
+                  >
+                    <Zap className="size-3" />
+                    {language === "TH" ? "อัปเกรด" : language === "JP" ? "アップグレード" : "Upgrade"}
+                  </Link>
                 )}
-                <span className="text-xs font-medium">{language}</span>
-                <span className="text-border">·</span>
-                <span className="text-xs font-medium">{CURRENCY_SYMBOL[currency]} {currency}</span>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" sideOffset={8} className="w-48">
-                {authLoaded && authUser && (
-                  <>
+
+                {/* Profile dropdown — avatar + tier integrated */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2.5 transition-colors hover:bg-muted/60 focus:outline-none">
+                    <Avatar size="sm" className="h-7 w-7 ring-2 ring-primary/20">
+                      {authUser.user_metadata?.avatar_url ? (
+                        <AvatarImage src={authUser.user_metadata.avatar_url} alt="" />
+                      ) : null}
+                      <AvatarFallback className="bg-primary/10 text-[11px] font-bold text-primary">
+                        {(authUser.user_metadata?.full_name ?? authUser.email ?? "U").slice(0, 1).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col items-start">
+                      <span className="max-w-[80px] truncate text-[12px] font-medium leading-tight text-foreground">
+                        {authUser.user_metadata?.full_name ?? authUser.email?.split("@")[0] ?? "User"}
+                      </span>
+                      <span className={cn("text-[10px] font-semibold leading-tight", tierInfo.color.replace(/bg-\S+\s?/, ""))}>
+                        {tierInfo.label}
+                      </span>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" sideOffset={8} className="w-56">
                     <DropdownMenuGroup>
                       <DropdownMenuLabel className="font-normal">
-                        <p className="truncate text-xs text-muted-foreground">
-                          {authUser.email}
-                        </p>
+                        <p className="truncate text-xs text-muted-foreground">{authUser.email}</p>
+                        <div className="mt-1.5 flex items-center gap-1.5">
+                          <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold", tierInfo.color)}>
+                            <TierIcon className="size-2.5" />
+                            {tierInfo.label}
+                          </span>
+                        </div>
                       </DropdownMenuLabel>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
@@ -247,81 +434,56 @@ export function Header() {
                       <User className="size-4" />
                       {t(language, "profileLabel")}
                     </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push("/profile?tab=notifications")}>
+                      <Settings className="size-4" />
+                      {t(language, "settingsTitle")}
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                  </>
-                )}
-
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="gap-2">
-                    <Globe className="size-4" />
-                    {t(language, "languageLabel")}
-                    <span className="ml-auto text-xs text-muted-foreground">{language}</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
-                    <DropdownMenuRadioGroup value={language} onValueChange={(v) => setLanguage(v as Language)}>
-                      {LANG_OPTIONS.map((l) => (
-                        <DropdownMenuRadioItem key={l.value} value={l.value}>
-                          {l.label}
-                        </DropdownMenuRadioItem>
-                      ))}
-                    </DropdownMenuRadioGroup>
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="gap-2">
-                    <span className="flex size-4 items-center justify-center font-price text-xs font-bold">¤</span>
-                    {t(language, "currencyLabel")}
-                    <span className="ml-auto text-xs text-muted-foreground">{currency}</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
-                    <DropdownMenuRadioGroup value={currency} onValueChange={(v) => setCurrency(v as Currency)}>
-                      {CURRENCY_OPTIONS.map((c) => (
-                        <DropdownMenuRadioItem key={c.value} value={c.value}>
-                          {c.label}
-                        </DropdownMenuRadioItem>
-                      ))}
-                    </DropdownMenuRadioGroup>
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-
-                <DropdownMenuItem onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")} className="gap-2">
-                  {mounted && resolvedTheme === "dark" ? (
-                    <Sun className="size-4" />
-                  ) : (
-                    <Moon className="size-4" />
-                  )}
-                  {mounted && resolvedTheme === "dark" ? t(language, "lightMode") : t(language, "darkMode")}
-                </DropdownMenuItem>
-
-                {authLoaded && authUser && (
-                  <>
+                    <DropdownMenuItem onClick={() => router.push("/guide")}>
+                      <BookOpen className="size-4" />
+                      {t(language, "guide")}
+                    </DropdownMenuItem>
+                    {canUpgrade && (
+                      <DropdownMenuItem onClick={() => router.push("/pricing")} className="text-primary">
+                        <Zap className="size-4" />
+                        {language === "TH" ? "อัปเกรดแพ็กเกจ" : language === "JP" ? "プランをアップグレード" : "Upgrade Plan"}
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      variant="destructive"
-                      onClick={() => void handleLogout()}
-                    >
+                    <DropdownMenuItem variant="destructive" onClick={() => void handleLogout()}>
                       <LogOut className="size-4" />
                       {t(language, "logout")}
                     </DropdownMenuItem>
-                  </>
-                )}
-
-                {!authUser && authLoaded && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => router.push("/login")}>
-                      <User className="size-4" />
-                      {t(language, "login")}
-                    </DropdownMenuItem>
-                  </>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ) : authLoaded ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/pricing"
+                  className="flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+                >
+                  <Crown className="size-3 text-amber-500" />
+                  {language === "TH" ? "แพ็กเกจ" : language === "JP" ? "プラン" : "Plans"}
+                </Link>
+                <Link
+                  href="/login"
+                  className="rounded-full border border-border/60 px-3.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-border hover:text-foreground"
+                >
+                  {t(language, "login")}
+                </Link>
+                <Link
+                  href="/register"
+                  className="rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                >
+                  {t(language, "register")}
+                </Link>
+              </div>
+            ) : null}
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </div>
 
     <CommandSearchModal open={searchOpen} onClose={closeSearch} />
     </>

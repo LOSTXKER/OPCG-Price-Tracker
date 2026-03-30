@@ -1,18 +1,19 @@
-import { getAuthUser } from "@/lib/api/auth";
+import { requireAuthUser } from "@/lib/api/auth";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:portfolio");
 
 export async function GET(request: NextRequest) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const portfolioId = request.nextUrl.searchParams.get("portfolioId");
 
     const where: Record<string, unknown> = {
-      portfolio: { userId: dbUser.id },
+      portfolio: { userId: auth.user.id },
     };
     if (portfolioId) {
       const pid = parseInt(portfolioId, 10);
@@ -41,7 +42,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ transactions });
   } catch (error) {
-    console.error("GET /api/portfolio/transactions:", error);
+    log.error("GET /api/portfolio/transactions", error);
     return NextResponse.json({ error: "Failed to load transactions" }, { status: 500 });
   }
 }

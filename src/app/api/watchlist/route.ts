@@ -1,43 +1,39 @@
-import { getAuthUser } from "@/lib/api/auth";
+import { requireAuthUser } from "@/lib/api/auth";
 import { cardInclude } from "@/lib/api/query-fragments";
+import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:watchlist");
 
 export async function GET() {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const items = await prisma.watchlistItem.findMany({
-      where: { userId: dbUser.id },
+      where: { userId: auth.user.id },
       orderBy: { addedAt: "desc" },
       include: { card: { include: cardInclude } },
     });
 
     return NextResponse.json({ items });
   } catch (error) {
-    console.error("GET /api/watchlist:", error);
+    log.error("GET /api/watchlist", error);
     return NextResponse.json({ error: "Failed to load watchlist" }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
-    let body: Record<string, unknown>;
-    try {
-      body = (await request.json()) as Record<string, unknown>;
-    } catch {
-      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-    }
+    const parsed = await parseJsonBody<{ cardId?: unknown }>(request);
+    if (!parsed.ok) return parsed.response;
 
-    const cardId = typeof body.cardId === "number" ? body.cardId : Number(body.cardId);
+    const cardId = typeof parsed.body.cardId === "number" ? parsed.body.cardId : Number(parsed.body.cardId);
     if (!Number.isInteger(cardId) || cardId < 1) {
       return NextResponse.json({ error: "Invalid cardId" }, { status: 400 });
     }
@@ -49,10 +45,10 @@ export async function POST(request: NextRequest) {
 
     const item = await prisma.watchlistItem.upsert({
       where: {
-        userId_cardId: { userId: dbUser.id, cardId },
+        userId_cardId: { userId: auth.user.id, cardId },
       },
       create: {
-        userId: dbUser.id,
+        userId: auth.user.id,
         cardId,
       },
       update: {},
@@ -61,17 +57,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ item }, { status: 201 });
   } catch (error) {
-    console.error("POST /api/watchlist:", error);
+    log.error("POST /api/watchlist", error);
     return NextResponse.json({ error: "Failed to add to watchlist" }, { status: 500 });
   }
 }
 
 export async function DELETE(request: NextRequest) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
 
     const cardIdParam = request.nextUrl.searchParams.get("cardId");
     const cardId = cardIdParam ? Number(cardIdParam) : NaN;
@@ -80,7 +74,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const result = await prisma.watchlistItem.deleteMany({
-      where: { userId: dbUser.id, cardId },
+      where: { userId: auth.user.id, cardId },
     });
 
     if (result.count === 0) {
@@ -89,7 +83,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("DELETE /api/watchlist:", error);
+    log.error("DELETE /api/watchlist", error);
     return NextResponse.json({ error: "Failed to remove from watchlist" }, { status: 500 });
   }
 }

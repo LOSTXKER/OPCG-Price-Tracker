@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
 import { checkIsAdmin } from "@/lib/auth/check-admin";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
+
+const log = createLog("admin:drop-rates");
 
 export async function GET(request: NextRequest) {
-  if (!(await checkIsAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+  if (!(await checkIsAdmin())) return unauthorized();
 
   const setCode = request.nextUrl.searchParams.get("set");
 
@@ -60,13 +62,18 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
-  if (!(await checkIsAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+  if (!(await checkIsAdmin())) return unauthorized();
+
+  const parsed = await parseJsonBody<{
+    setId: number;
+    rarity: string;
+    avgPerBox?: number | null;
+    ratePerPack?: number | null;
+  }>(request);
+  if (!parsed.ok) return parsed.response;
 
   try {
-    const body = await request.json();
-    const { setId, rarity, avgPerBox, ratePerPack } = body;
+    const { setId, rarity, avgPerBox, ratePerPack } = parsed.body;
 
     if (!setId || !rarity) {
       return NextResponse.json({ error: "setId and rarity are required" }, { status: 400 });
@@ -80,7 +87,7 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("PATCH /api/admin/drop-rates:", error);
+    log.error("PATCH /api/admin/drop-rates", error);
     return NextResponse.json({ error: "Failed to update drop rate" }, { status: 500 });
   }
 }

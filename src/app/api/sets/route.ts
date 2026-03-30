@@ -1,5 +1,8 @@
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:sets");
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,7 +19,7 @@ export async function GET(request: NextRequest) {
     });
     return NextResponse.json({ sets });
   } catch (error) {
-    console.error("Error fetching sets:", error);
+    log.error("Error fetching sets", error);
     return NextResponse.json({ error: "Failed to fetch sets" }, { status: 500 });
   }
 }

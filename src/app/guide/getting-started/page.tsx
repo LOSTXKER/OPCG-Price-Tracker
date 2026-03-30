@@ -1,10 +1,17 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, BookOpen, Target, Trophy, Users } from "lucide-react";
+import { ArrowRight, BookOpen, Layers, LineChart, Target, Trophy, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { RelatedPages } from "@/components/shared/related-pages";
+import { JsonLd } from "@/lib/seo/json-ld-script";
+import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 
 export const metadata: Metadata = {
   title: "Getting Started — คู่มือ OPCG",
+  description:
+    "New to One Piece Card Game? Start here. Learn the basics, rules, deck building and how to play OPCG.",
+  alternates: { canonical: "/guide/getting-started" },
 };
 
 const features = [
@@ -28,13 +35,17 @@ const features = [
 export default function GettingStartedPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-8">
+      <JsonLd data={breadcrumbJsonLd([
+        { name: "Home", href: "/" },
+        { name: "Guide", href: "/guide" },
+        { name: "Getting Started", href: "/guide/getting-started" },
+      ])} />
       <div className="space-y-3">
-        <Link
-          href="/guide"
-          className="text-muted-foreground text-sm hover:text-foreground"
-        >
-          ← คู่มือทั้งหมด
-        </Link>
+        <Breadcrumb items={[
+          { label: "Home", href: "/" },
+          { label: "Guide", href: "/guide" },
+          { label: "Getting Started" },
+        ]} />
         <h1 className="font-sans text-3xl font-bold tracking-tight">
           One Piece Card Game คืออะไร?
         </h1>
@@ -93,6 +104,13 @@ export default function GettingStartedPage() {
           </p>
         </div>
       </div>
+
+      <RelatedPages
+        items={[
+          { href: "/", icon: LineChart, title: "ดูราคาการ์ด", description: "ราคาอัปเดตทุกวันจาก Yuyu-tei" },
+          { href: "/sets", icon: Layers, title: "ดูชุดการ์ด", description: "เลือกชุดที่สนใจและดูการ์ดทั้งหมด" },
+        ]}
+      />
 
       <div className="flex justify-end border-t border-border pt-6">
         <Link

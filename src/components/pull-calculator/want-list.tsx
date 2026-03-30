@@ -9,7 +9,7 @@ import { formatPullPct } from "@/lib/utils/pull-rate"
 import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import type { CardItem, Unit } from "./types"
-import { UNIT_LABELS } from "./types"
+import { UNIT_I18N_KEYS } from "./types"
 
 interface WantResult {
   card: CardItem
@@ -127,7 +127,7 @@ export function WantList({
               </div>
               {purchaseCost != null && (
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">{t(lang, "purchaseCost")} ({quantity} {UNIT_LABELS[unit]})</span>
+                  <span className="text-muted-foreground">{t(lang, "purchaseCost")} ({quantity} {t(lang, UNIT_I18N_KEYS[unit])})</span>
                   <span className="font-price font-bold tabular-nums"><Price jpy={purchaseCost} /></span>
                 </div>
               )}

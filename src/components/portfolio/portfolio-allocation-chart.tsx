@@ -6,11 +6,8 @@ import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
 
-export type AllocationSlice = {
-  name: string
-  value: number
-  percent: number
-}
+export type { AllocationSlice } from "@/lib/types/portfolio"
+import type { AllocationSlice } from "@/lib/types/portfolio"
 
 const COLORS = [
   "var(--primary)",

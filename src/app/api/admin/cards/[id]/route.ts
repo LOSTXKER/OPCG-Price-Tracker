@@ -1,15 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
 import { checkIsAdmin } from "@/lib/auth/check-admin";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { opcgConfig } from "@/lib/game-config";
+
+const log = createLog("admin:cards");
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  if (!(await checkIsAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+  if (!(await checkIsAdmin())) return unauthorized();
 
   const { id } = await params;
   const cardId = parseInt(id);
@@ -58,18 +60,19 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  if (!(await checkIsAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  if (!(await checkIsAdmin())) return unauthorized();
+
+  const { id } = await params;
+  const cardId = parseInt(id);
+  if (isNaN(cardId)) {
+    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
   }
 
-  try {
-    const { id } = await params;
-    const cardId = parseInt(id);
-    if (isNaN(cardId)) {
-      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
-    }
+  const parsed = await parseJsonBody<Record<string, unknown>>(request);
+  if (!parsed.ok) return parsed.response;
 
-    const body = await request.json();
+  try {
+    const body = parsed.body;
 
     const allowedFields = [
       "nameJp",
@@ -109,7 +112,7 @@ export async function PATCH(
 
     return NextResponse.json(updated);
   } catch (error) {
-    console.error("PATCH /api/admin/cards/[id]:", error);
+    log.error("PATCH /api/admin/cards/[id]", error);
     return NextResponse.json({ error: "Failed to update card" }, { status: 500 });
   }
 }

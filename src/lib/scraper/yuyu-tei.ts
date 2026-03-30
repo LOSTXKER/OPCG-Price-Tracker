@@ -90,27 +90,17 @@ export function parseSetListingPage($: cheerio.CheerioAPI): ScrapedCardListing[]
   return cards;
 }
 
-export function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+export { sleep } from "./http-utils";
+import { withRetry } from "./http-utils";
 
 export async function fetchWithRetry(
   url: string,
   maxRetries = 3,
   baseDelay = 2000
 ): Promise<cheerio.CheerioAPI> {
-  let lastError: Error | undefined;
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      return await fetchPage(url);
-    } catch (error) {
-      lastError = error instanceof Error ? error : new Error(String(error));
-      console.warn(`Attempt ${attempt + 1}/${maxRetries} failed for ${url}: ${lastError.message}`);
-      if (attempt < maxRetries - 1) {
-        const delay = baseDelay * Math.pow(2, attempt);
-        await sleep(delay);
-      }
-    }
-  }
-  throw lastError;
+  return withRetry(() => fetchPage(url), {
+    label: `YuyuTei ${url}`,
+    maxRetries,
+    baseDelay,
+  });
 }

@@ -1,7 +1,9 @@
-import type { Language } from "@/stores/ui-store";
 import { th } from "./i18n/th";
 import { en } from "./i18n/en";
 import { jp } from "./i18n/jp";
+
+export type Language = "TH" | "EN" | "JP";
+export type Currency = "THB" | "JPY" | "USD";
 
 const LOCALE_MAP: Record<Language, string> = {
   TH: "th-TH",

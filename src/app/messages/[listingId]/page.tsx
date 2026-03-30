@@ -85,7 +85,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="container mx-auto flex max-w-2xl flex-col px-4 py-4">
+    <div className="mx-auto flex max-w-2xl flex-col">
       <div className="mb-4 flex items-center gap-3">
         <Link href="/messages" className="text-muted-foreground hover:text-foreground">
           <ArrowLeft className="size-5" />

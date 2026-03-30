@@ -1,12 +1,19 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Layers } from "lucide-react";
 import { prisma } from "@/lib/db";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { RelatedPages } from "@/components/shared/related-pages";
+import { JsonLd } from "@/lib/seo/json-ld-script";
+import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Sets — คู่มือ OPCG",
+  description:
+    "Browse all OPCG booster sets, starter decks and extra boosters. Release dates, card counts and notable cards for each set.",
+  alternates: { canonical: "/guide/sets" },
 };
 
 export default async function GuideSetsPage() {
@@ -22,13 +29,17 @@ export default async function GuideSetsPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-8">
+      <JsonLd data={breadcrumbJsonLd([
+        { name: "Home", href: "/" },
+        { name: "Guide", href: "/guide" },
+        { name: "Sets", href: "/guide/sets" },
+      ])} />
       <div className="space-y-3">
-        <Link
-          href="/guide"
-          className="text-muted-foreground text-sm hover:text-foreground"
-        >
-          ← คู่มือทั้งหมด
-        </Link>
+        <Breadcrumb items={[
+          { label: "Home", href: "/" },
+          { label: "Guide", href: "/guide" },
+          { label: "Sets" },
+        ]} />
         <h1 className="font-sans text-3xl font-bold tracking-tight">
           Sets
         </h1>
@@ -64,6 +75,12 @@ export default async function GuideSetsPage() {
           <p className="text-muted-foreground text-sm">ยังไม่มีข้อมูลชุดในระบบ</p>
         </div>
       )}
+
+      <RelatedPages
+        items={[
+          { href: "/sets", icon: Layers, title: "ดูชุดการ์ดทั้งหมด", description: "ราคาและข้อมูลชุดการ์ดแบบ real-time" },
+        ]}
+      />
 
       <div className="flex items-center justify-between border-t border-border pt-6">
         <Link

@@ -253,29 +253,17 @@ export async function fetchSnkrdunkPriceData(
 
 // ─── Utility ──────────────────────────────────────────────────────────────────
 
-export function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+export { sleep } from "./http-utils";
+import { withRetry } from "./http-utils";
 
 export async function fetchWithRetry(
   snkrdunkId: number,
   maxRetries = 3,
   baseDelay = 2000
 ): Promise<SnkrdunkPriceData> {
-  let lastError: Error | undefined;
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      return await fetchSnkrdunkPriceData(snkrdunkId);
-    } catch (error) {
-      lastError =
-        error instanceof Error ? error : new Error(String(error));
-      console.warn(
-        `SNKRDUNK attempt ${attempt + 1}/${maxRetries} failed for ${snkrdunkId}: ${lastError.message}`
-      );
-      if (attempt < maxRetries - 1) {
-        await sleep(baseDelay * Math.pow(2, attempt));
-      }
-    }
-  }
-  throw lastError;
+  return withRetry(() => fetchSnkrdunkPriceData(snkrdunkId), {
+    label: `SNKRDUNK ${snkrdunkId}`,
+    maxRetries,
+    baseDelay,
+  });
 }

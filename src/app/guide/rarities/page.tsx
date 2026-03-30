@@ -1,10 +1,17 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, TrendingUp } from "lucide-react";
 import { RARITIES } from "@/lib/constants/rarities";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { RelatedPages } from "@/components/shared/related-pages";
+import { JsonLd } from "@/lib/seo/json-ld-script";
+import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 
 export const metadata: Metadata = {
   title: "Rarities — คู่มือ OPCG",
+  description:
+    "Complete guide to OPCG card rarities: Common, Uncommon, Rare, Super Rare, Secret Rare, and more. Pull rates and price ranges.",
+  alternates: { canonical: "/guide/rarities" },
 };
 
 const rarityDescriptions: Record<string, { thaiName: string; description: string; priceRange: string }> = {
@@ -62,13 +69,17 @@ export default function RaritiesPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-8">
+      <JsonLd data={breadcrumbJsonLd([
+        { name: "Home", href: "/" },
+        { name: "Guide", href: "/guide" },
+        { name: "Rarities", href: "/guide/rarities" },
+      ])} />
       <div className="space-y-3">
-        <Link
-          href="/guide"
-          className="text-muted-foreground text-sm hover:text-foreground"
-        >
-          ← คู่มือทั้งหมด
-        </Link>
+        <Breadcrumb items={[
+          { label: "Home", href: "/" },
+          { label: "Guide", href: "/guide" },
+          { label: "Rarities" },
+        ]} />
         <h1 className="font-sans text-3xl font-bold tracking-tight">
           Rarities
         </h1>
@@ -125,6 +136,12 @@ export default function RaritiesPage() {
           ขึ้นไป มีภาพสวยกว่าและหายากกว่าปกติ ราคาจึงสูงกว่าเวอร์ชันธรรมดา
         </p>
       </div>
+
+      <RelatedPages
+        items={[
+          { href: "/trending", icon: TrendingUp, title: "Trending", description: "ดูการ์ดที่ราคาขยับมากที่สุด" },
+        ]}
+      />
 
       <div className="flex items-center justify-between border-t border-border pt-6">
         <Link

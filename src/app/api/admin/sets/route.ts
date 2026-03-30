@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
 import { checkIsAdmin } from "@/lib/auth/check-admin";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
+
+const log = createLog("admin:sets");
 
 export async function GET() {
-  if (!(await checkIsAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+  if (!(await checkIsAdmin())) return unauthorized();
 
   const sets = await prisma.cardSet.findMany({
     orderBy: { code: "asc" },
@@ -62,13 +64,13 @@ export async function GET() {
 }
 
 export async function PATCH(request: NextRequest) {
-  if (!(await checkIsAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+  if (!(await checkIsAdmin())) return unauthorized();
+
+  const parsed = await parseJsonBody<{ id: number; [key: string]: unknown }>(request);
+  if (!parsed.ok) return parsed.response;
 
   try {
-    const body = await request.json();
-    const { id, ...updates } = body;
+    const { id, ...updates } = parsed.body;
 
     if (!id) {
       return NextResponse.json({ error: "id is required" }, { status: 400 });
@@ -101,7 +103,7 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json(updated);
   } catch (error) {
-    console.error("PATCH /api/admin/sets:", error);
+    log.error("PATCH /api/admin/sets", error);
     return NextResponse.json({ error: "Failed to update set" }, { status: 500 });
   }
 }

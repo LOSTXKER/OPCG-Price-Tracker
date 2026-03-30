@@ -1,4 +1,4 @@
-import type { Language } from "@/stores/ui-store";
+import type { Language } from "@/lib/i18n";
 
 export interface CardColorConfig {
   value: string;

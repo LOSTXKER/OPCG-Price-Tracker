@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calculator, Home, Package, ShoppingBag, User } from "lucide-react";
+import { Home, Package, ShoppingBag, Star, User } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
@@ -20,8 +20,8 @@ export function BottomNav({ className }: { className?: string }) {
   const tabs = [
     { href: "/", label: t(lang, "home"), icon: Home },
     { href: "/sets", label: t(lang, "sets"), icon: Package },
-    { href: "/pull-calculator", label: t(lang, "calculate"), icon: Calculator },
     { href: "/marketplace", label: t(lang, "marketplace"), icon: ShoppingBag },
+    { href: "/portfolio", label: t(lang, "portfolioNav"), icon: Star },
     { href: "/profile", label: t(lang, "account"), icon: User },
   ] as const;
 

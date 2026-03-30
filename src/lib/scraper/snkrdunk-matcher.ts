@@ -7,13 +7,20 @@
  *  - SOLD + gradeCondition=PSA 10  → most recently sold PSA10 price
  *  - SOLD + no gradeCondition   → most recently sold price (any condition)
  */
-import type { PrismaClient } from "@/generated/prisma/client";
+import {
+  MappingStatus,
+  MatchMethod,
+  type PrismaClient,
+} from "@/generated/prisma/client";
+import { PRICE_SOURCE } from "@/lib/constants/prices";
+import { createLog } from "@/lib/logger";
 import type { SnkrdunkPriceData } from "./snkrdunk";
-import { fetchWithRetry, sleep } from "./snkrdunk";
+import { fetchWithRetry } from "./snkrdunk";
+import { sleep, SCRAPE_DELAY_MS } from "./http-utils";
+
+const log = createLog("scraper:snkrdunk");
 
 type DB = PrismaClient;
-
-const DELAY_BETWEEN_CARDS_MS = 1500;
 
 export interface SnkrdunkMatchResult {
   processed: number;
@@ -27,7 +34,7 @@ export async function updateSnkrdunkPrices(
   db: DB
 ): Promise<SnkrdunkMatchResult> {
   const mappings = await db.snkrdunkMapping.findMany({
-    where: { status: "matched", matchedCardId: { not: null } },
+    where: { status: MappingStatus.MATCHED, matchedCardId: { not: null } },
     select: { id: true, snkrdunkId: true, matchedCardId: true },
   });
 
@@ -44,10 +51,10 @@ export async function updateSnkrdunkPrices(
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       errors.push(`snkrdunkId=${mapping.snkrdunkId}: ${msg}`);
-      console.error(`SNKRDUNK error for ${mapping.snkrdunkId}: ${msg}`);
+      log.error(`SNKRDUNK error for ${mapping.snkrdunkId}`, msg);
     }
 
-    await sleep(DELAY_BETWEEN_CARDS_MS);
+    await sleep(SCRAPE_DELAY_MS);
   }
 
   return { processed, errors };
@@ -69,7 +76,7 @@ export async function upsertSnkrdunkPrices(
     await db.cardPrice.create({
       data: {
         cardId,
-        source: "SNKRDUNK",
+        source: PRICE_SOURCE.SNKRDUNK,
         type: "SELL",
         priceUsd: summary.minPriceUsd,
         inStock: true,
@@ -82,11 +89,11 @@ export async function upsertSnkrdunkPrices(
     await db.cardPrice.create({
       data: {
         cardId,
-        source: "SNKRDUNK",
+        source: PRICE_SOURCE.SNKRDUNK,
         type: "SELL",
         priceUsd: psa10MinPriceUsd,
         inStock: true,
-        gradeCondition: "PSA 10",
+        gradeCondition: PRICE_SOURCE.PSA_10,
       },
     });
   }
@@ -96,11 +103,11 @@ export async function upsertSnkrdunkPrices(
     await db.cardPrice.create({
       data: {
         cardId,
-        source: "SNKRDUNK",
+        source: PRICE_SOURCE.SNKRDUNK,
         type: "SOLD",
         priceUsd: psa10LastSoldUsd,
         inStock: false,
-        gradeCondition: "PSA 10",
+        gradeCondition: PRICE_SOURCE.PSA_10,
       },
     });
   }
@@ -110,7 +117,7 @@ export async function upsertSnkrdunkPrices(
     await db.cardPrice.create({
       data: {
         cardId,
-        source: "SNKRDUNK",
+        source: PRICE_SOURCE.SNKRDUNK,
         type: "SOLD",
         priceUsd: lastSoldUsd,
         inStock: false,
@@ -137,7 +144,7 @@ export async function upsertSnkrdunkPrices(
  */
 export async function autoMatchByProductNumber(db: DB): Promise<number> {
   const pendingMappings = await db.snkrdunkMapping.findMany({
-    where: { status: "pending", matchedCardId: null },
+    where: { status: MappingStatus.PENDING, matchedCardId: null },
     select: { id: true, productNumber: true },
   });
 
@@ -158,8 +165,8 @@ export async function autoMatchByProductNumber(db: DB): Promise<number> {
         where: { id: mapping.id },
         data: {
           matchedCardId: cards[0]!.id,
-          matchMethod: "auto-code",
-          status: "matched",
+          matchMethod: MatchMethod.AUTO_CODE,
+          status: MappingStatus.MATCHED,
         },
       });
       autoMatched++;
@@ -167,7 +174,7 @@ export async function autoMatchByProductNumber(db: DB): Promise<number> {
       // Multiple candidates — mark as suggested, leave for admin
       await db.snkrdunkMapping.update({
         where: { id: mapping.id },
-        data: { matchMethod: "auto-code-multi" },
+        data: { matchMethod: MatchMethod.AUTO_CODE_MULTI },
       });
     }
   }

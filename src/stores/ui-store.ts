@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import type { Language, Currency } from "@/lib/i18n";
 
-export type Language = "TH" | "EN" | "JP";
-export type Currency = "THB" | "JPY" | "USD";
+export type { Language, Currency };
 type CardView = "grid" | "list";
 
 const CURRENCY_CYCLE: Currency[] = ["THB", "JPY", "USD"];

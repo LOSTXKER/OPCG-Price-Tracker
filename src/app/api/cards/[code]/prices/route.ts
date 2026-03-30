@@ -1,5 +1,9 @@
 import { prisma } from "@/lib/db";
+import { PRICE_SOURCE } from "@/lib/constants/prices";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:cards");
 
 export async function GET(
   request: NextRequest,
@@ -83,7 +87,7 @@ export async function GET(
       },
     });
 
-    const useUsd = source === "SNKRDUNK";
+    const useUsd = source === PRICE_SOURCE.SNKRDUNK;
     const currency = useUsd ? "USD" : "JPY";
 
     let high: number, low: number, avg: number;
@@ -111,7 +115,7 @@ export async function GET(
 
     return NextResponse.json({ prices, high, low, avg, sources, currency });
   } catch (error) {
-    console.error("Error fetching price history:", error);
+    log.error("Error fetching price history", error);
     return NextResponse.json(
       { error: "Failed to fetch prices" },
       { status: 500 }

@@ -52,7 +52,7 @@ export function KumaEmptyState({
         {emoji}
       </motion.div>
       <div className="space-y-1">
-        <h2 className="font-sans text-base font-semibold">{displayTitle}</h2>
+        <h2 className="text-base font-semibold">{displayTitle}</h2>
         {displayDesc && (
           <p className="max-w-sm text-sm text-muted-foreground">{displayDesc}</p>
         )}

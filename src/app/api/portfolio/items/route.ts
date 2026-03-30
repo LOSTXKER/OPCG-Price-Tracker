@@ -1,24 +1,23 @@
-import { CardCondition } from "@/generated/prisma/client";
-import { getAuthUser } from "@/lib/api/auth";
+import { CardCondition, TransactionType } from "@/generated/prisma/client";
+import { requireAuthUser } from "@/lib/api/auth";
 import { parseCondition } from "@/lib/api/parse-condition";
-import { parseListingQuantity } from "@/lib/api/request-body";
+import { parseListingQuantity, parseJsonBody } from "@/lib/api/request-body";
 import { cardInclude } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:portfolio");
 
 export async function POST(request: NextRequest) {
   try {
-    const dbUser = await getAuthUser();
-    if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
+    const dbUser = auth.user;
 
-    let body: Record<string, unknown>;
-    try {
-      body = (await request.json()) as Record<string, unknown>;
-    } catch {
-      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-    }
+    const parsed = await parseJsonBody<Record<string, unknown>>(request);
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.body;
 
     const portfolioId = typeof body.portfolioId === "number" ? body.portfolioId : Number(body.portfolioId);
     const cardId = typeof body.cardId === "number" ? body.cardId : Number(body.cardId);
@@ -104,7 +103,7 @@ export async function POST(request: NextRequest) {
       data: {
         portfolioId,
         cardId,
-        type: "BUY",
+        type: TransactionType.BUY,
         quantity,
         pricePerUnit: purchasePrice !== null ? Math.round(purchasePrice) : null,
         note: notes,
@@ -113,7 +112,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ item }, { status: existing ? 200 : 201 });
   } catch (error) {
-    console.error("POST /api/portfolio/items:", error);
+    log.error("POST /api/portfolio/items", error);
     return NextResponse.json({ error: "Failed to add portfolio item" }, { status: 500 });
   }
 }

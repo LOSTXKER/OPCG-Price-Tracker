@@ -9,13 +9,15 @@ import {
   fetchWithRetry,
   getSetListingUrl,
   parseSetListingPage,
-  sleep,
 } from "./yuyu-tei";
+import { sleep, SCRAPE_DELAY_MS } from "./http-utils";
 import { matchAndUpdatePrices, computePriceChanges } from "./price-matcher";
 import { fetchExchangeRate, saveExchangeRate } from "./exchange-rate";
+import { serverEnv } from "@/lib/env";
+import { createLog } from "@/lib/logger";
 
-const DELAY_BETWEEN_SETS_MS = 1500;
-const VERBOSE = process.env.SCRAPE_VERBOSE === "true";
+const log = createLog("scraper:daily-prices");
+const VERBOSE = serverEnv().SCRAPE_VERBOSE;
 
 export interface ScrapeResult {
   totalCards: number;
@@ -33,12 +35,12 @@ export async function scrapeDailyPrices(): Promise<ScrapeResult> {
 
   const rate = await fetchExchangeRate();
   await saveExchangeRate(rate);
-  if (VERBOSE) console.log(`Exchange rate: 1 JPY = ${rate} THB`);
+  if (VERBOSE) log.debug(`Exchange rate: 1 JPY = ${rate} THB`);
 
   for (const setCode of SET_CODES) {
     try {
       const url = getSetListingUrl(setCode);
-      if (VERBOSE) console.log(`Scraping ${setCode}: ${url}`);
+      if (VERBOSE) log.debug(`Scraping ${setCode}: ${url}`);
 
       const $ = await fetchWithRetry(url);
       const listings = parseSetListingPage($);
@@ -54,27 +56,27 @@ export async function scrapeDailyPrices(): Promise<ScrapeResult> {
 
       totalCards += result.matched;
       totalSets++;
-      if (VERBOSE) console.log(`  ${setCode}: ${result.matched}/${result.listings} matched`);
+      if (VERBOSE) log.debug(`  ${setCode}: ${result.matched}/${result.listings} matched`);
 
-      await sleep(DELAY_BETWEEN_SETS_MS);
+      await sleep(SCRAPE_DELAY_MS);
     } catch (setError) {
       const msg =
         setError instanceof Error ? setError.message : String(setError);
       errors.push(`${setCode}: ${msg}`);
-      console.error(`  ${setCode}: ERROR - ${msg}`);
+      log.error(`${setCode}: ERROR`, msg);
     }
   }
 
   await computePriceChanges(prisma);
 
   const finishedAt = new Date();
-  console.log(
+  log.info(
     `Scrape complete: ${totalCards} cards across ${totalSets} sets in ${
       (finishedAt.getTime() - startedAt.getTime()) / 1000
     }s`
   );
   if (errors.length > 0) {
-    console.warn(`Errors (${errors.length}):`, errors.slice(0, 10));
+    log.warn(`Errors (${errors.length})`, errors.slice(0, 10));
   }
 
   return { totalCards, totalSets, errors, startedAt, finishedAt };

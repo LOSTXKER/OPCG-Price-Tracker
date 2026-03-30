@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
+import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
 import { parsePageLimit } from "@/lib/api/request-body";
+import { checkIsAdmin } from "@/lib/auth/check-admin";
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { Prisma } from "@/generated/prisma/client";
 
+const log = createLog("admin:cards");
+
 export async function GET(request: NextRequest) {
-  if (!(await checkIsAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+  if (!(await checkIsAdmin())) return unauthorized();
 
   const sp = request.nextUrl.searchParams;
   const { page, limit, skip } = parsePageLimit(sp, { defaultLimit: 50, maxLimit: 100 });
@@ -95,13 +97,13 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
-  if (!(await checkIsAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+  if (!(await checkIsAdmin())) return unauthorized();
+
+  const parsed = await parseJsonBody<{ id: number; [key: string]: unknown }>(request);
+  if (!parsed.ok) return parsed.response;
 
   try {
-    const body = await request.json();
-    const { id, ...updates } = body;
+    const { id, ...updates } = parsed.body;
 
     if (!id) {
       return NextResponse.json({ error: "id is required" }, { status: 400 });
@@ -130,7 +132,7 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json(updated);
   } catch (error) {
-    console.error("PATCH /api/admin/cards:", error);
+    log.error("PATCH /api/admin/cards", error);
     return NextResponse.json({ error: "Failed to update card" }, { status: 500 });
   }
 }

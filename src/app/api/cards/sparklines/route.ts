@@ -1,5 +1,8 @@
 import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:cards");
 
 export async function GET(request: NextRequest) {
   const ids = request.nextUrl.searchParams.get("ids") || "";
@@ -53,7 +56,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ sparklines });
   } catch (error) {
-    console.error("Error fetching sparklines:", error);
+    log.error("Error fetching sparklines", error);
     return NextResponse.json({ sparklines: {} });
   }
 }

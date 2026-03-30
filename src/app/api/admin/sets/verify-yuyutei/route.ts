@@ -1,4 +1,6 @@
+import { MappingStatus, MatchMethod } from "@/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
 import { checkIsAdmin } from "@/lib/auth/check-admin";
 import { prisma } from "@/lib/db";
 import {
@@ -18,12 +20,12 @@ import { matchCardImage, type MatchCandidate } from "@/lib/scraper/gemini-matche
  * Does NOT update prices — use scrape-prices for that.
  */
 export async function POST(request: NextRequest) {
-  if (!(await checkIsAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+  if (!(await checkIsAdmin())) return unauthorized();
 
-  const body = await request.json();
-  const setCode: string = body.setCode;
+  const parsed = await parseJsonBody<{ setCode?: string }>(request);
+  if (!parsed.ok) return parsed.response;
+
+  const setCode: string = parsed.body.setCode ?? "";
 
   if (!setCode) {
     return NextResponse.json(
@@ -104,9 +106,9 @@ export async function POST(request: NextRequest) {
       scrapedImage: string | null | undefined;
       priceJpy: number;
       matchedCardId: number | null;
-      matchMethod: string | null;
+      matchMethod: MatchMethod | null;
       geminiScore: number | null;
-      status: string;
+      status: MappingStatus;
     };
 
     const geminiUpdates: { cardId: number; yuyuteiId: string; yuyuteiUrl: string | null }[] = [];
@@ -123,27 +125,27 @@ export async function POST(request: NextRequest) {
       const parallel = isParallelCard(listing.name, listing.rarity ?? "");
 
       let matchedCardId: number | null = null;
-      let matchMethod: string | null = null;
+      let matchMethod: MatchMethod | null = null;
       let geminiScore: number | null = null;
-      let status: string;
+      let status: MappingStatus;
 
       if (isDon) {
-        status = "rejected";
+        status = MappingStatus.REJECTED;
         stats.pending++;
       } else if (cachedByYuyuteiId.has(listing.yuyuteiId)) {
         matchedCardId = cachedByYuyuteiId.get(listing.yuyuteiId)!;
-        matchMethod = "cached";
-        status = "matched";
+        matchMethod = MatchMethod.CACHED;
+        status = MappingStatus.MATCHED;
         stats.cached++;
       } else if (!parallel) {
         const exactId = exactByCode.get(rawCode);
         if (exactId) {
           matchedCardId = exactId;
-          matchMethod = "exact";
-          status = "matched";
+          matchMethod = MatchMethod.EXACT;
+          status = MappingStatus.MATCHED;
           stats.exact++;
         } else {
-          status = "pending";
+          status = MappingStatus.PENDING;
           stats.pending++;
         }
       } else if (listing.imageUrl) {
@@ -163,21 +165,21 @@ export async function POST(request: NextRequest) {
           const aiResult = await matchCardImage(listing.imageUrl, validCandidates);
           if (aiResult && aiResult.confidence >= 0.5) {
             matchedCardId = aiResult.cardId;
-            matchMethod = "gemini";
+            matchMethod = MatchMethod.GEMINI;
             geminiScore = aiResult.confidence;
-            status = "matched";
+            status = MappingStatus.MATCHED;
             stats.aiMatched++;
             geminiUpdates.push({ cardId: aiResult.cardId, yuyuteiId: listing.yuyuteiId, yuyuteiUrl: listing.cardUrl ?? null });
           } else {
-            status = "pending";
+            status = MappingStatus.PENDING;
             stats.pending++;
           }
         } else {
-          status = "pending";
+          status = MappingStatus.PENDING;
           stats.pending++;
         }
       } else {
-        status = "pending";
+        status = MappingStatus.PENDING;
         stats.pending++;
       }
 

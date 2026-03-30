@@ -1,5 +1,10 @@
+import { parsePageLimit } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { PRICE_SOURCE } from "@/lib/constants/prices";
+import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
+
+const log = createLog("api:cards");
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -11,13 +16,15 @@ export async function GET(request: NextRequest) {
   const minPrice = parseInt(searchParams.get("minPrice") || "0", 10) || 0;
   const maxPrice = parseInt(searchParams.get("maxPrice") || "0", 10) || 0;
   const sort = searchParams.get("sort") || "newest";
-  const page = parseInt(searchParams.get("page") || "1", 10) || 1;
-  const limit = Math.min(parseInt(searchParams.get("limit") || "20", 10) || 20, 100);
-  const skip = (page - 1) * limit;
+  const { page, limit, skip } = parsePageLimit(searchParams);
 
+  const codes = searchParams.get("codes") || "";
   const game = searchParams.get("game") || "";
   const where: Record<string, unknown> = {};
 
+  if (codes) {
+    where.cardCode = { in: codes.split(",").filter(Boolean) };
+  }
   if (game || set) {
     const setFilter: Record<string, unknown> = {};
     if (game) setFilter.game = { slug: game };
@@ -62,8 +69,8 @@ export async function GET(request: NextRequest) {
   if (priceMode === "psa10") {
     where.prices = {
       some: {
-        source: "SNKRDUNK",
-        gradeCondition: "PSA 10",
+        source: PRICE_SOURCE.SNKRDUNK,
+        gradeCondition: PRICE_SOURCE.PSA_10,
         type: "SELL",
       },
     };
@@ -96,7 +103,7 @@ export async function GET(request: NextRequest) {
       orderBy.priceChange30d = { sort: "asc", nulls: "last" };
       break;
     case "views_desc":
-      orderBy.viewCount = { sort: "desc", nulls: "last" };
+      orderBy.viewCount = "desc";
       break;
     case "name":
       orderBy.nameJp = "asc";
@@ -116,8 +123,8 @@ export async function GET(request: NextRequest) {
           set: { select: { code: true, name: true, nameEn: true, nameTh: true } },
           prices: {
             where: {
-              source: "SNKRDUNK",
-              gradeCondition: "PSA 10",
+              source: PRICE_SOURCE.SNKRDUNK,
+              gradeCondition: PRICE_SOURCE.PSA_10,
               type: "SELL",
             },
             orderBy: { scrapedAt: "desc" },
@@ -142,7 +149,7 @@ export async function GET(request: NextRequest) {
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
-    console.error("Error fetching cards:", error);
+    log.error("Error fetching cards", error);
     return NextResponse.json({ error: "Failed to fetch cards" }, { status: 500 });
   }
 }

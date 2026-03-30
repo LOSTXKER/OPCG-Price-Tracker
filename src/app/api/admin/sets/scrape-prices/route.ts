@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
 import { checkIsAdmin } from "@/lib/auth/check-admin";
 import { prisma } from "@/lib/db";
 import {
@@ -9,12 +10,12 @@ import {
 import { matchAndUpdatePrices } from "@/lib/scraper/price-matcher";
 
 export async function POST(request: NextRequest) {
-  if (!(await checkIsAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+  if (!(await checkIsAdmin())) return unauthorized();
 
-  const body = await request.json();
-  const setCode: string = body.setCode;
+  const parsed = await parseJsonBody<{ setCode?: string }>(request);
+  if (!parsed.ok) return parsed.response;
+
+  const setCode: string = parsed.body.setCode ?? "";
 
   if (!setCode) {
     return NextResponse.json(

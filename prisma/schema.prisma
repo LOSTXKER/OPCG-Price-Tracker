@@ -20,8 +20,6 @@ model Game {
   isActive  Boolean   @default(true)
   sets      CardSet[]
   createdAt DateTime  @default(now())
-
-  @@index([slug])
 }
 
 // ============================================================
@@ -48,7 +46,6 @@ model CardSet {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
-  @@index([code])
   @@index([gameId])
 }
 
@@ -198,8 +195,6 @@ model Product {
   releaseDate DateTime?
   cards       ProductCard[]
   createdAt   DateTime      @default(now())
-
-  @@index([code])
 }
 
 model ProductCard {
@@ -229,34 +224,102 @@ model ExchangeRate {
 // ============================================================
 
 model User {
-  id                String           @id @default(cuid())
-  supabaseId        String           @unique
-  email             String           @unique
-  displayName       String?
-  avatarUrl         String?
-  tier              UserTier         @default(FREE)
-  tierExpiresAt     DateTime?
-  honeyPoints       Int              @default(0)
-  isAdmin           Boolean          @default(false)
-  sellerRating      Float?
-  sellerReviewCount Int              @default(0)
-  portfolios        Portfolio[]
-  watchlistItems    WatchlistItem[]
-  priceAlerts       PriceAlert[]
-  listings          Listing[]
-  sentMessages      Message[]        @relation("SentMessages")
-  receivedMessages  Message[]        @relation("ReceivedMessages")
-  reviewsGiven      Review[]         @relation("ReviewsGiven")
-  reviewsReceived   Review[]         @relation("ReviewsReceived")
-  communityPrices   CommunityPrice[]
-  decks              Deck[]
-  yuyuteiActions     YuyuteiMapping[]
-  snkrdunkActions    SnkrdunkMapping[]
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
+  id                  String           @id @default(cuid())
+  supabaseId          String           @unique
+  email               String           @unique
+  displayName         String?
+  avatarUrl           String?
+  tier                UserTier         @default(FREE)
+  tierExpiresAt       DateTime?
+  trialStartedAt      DateTime?
+  trialUsed           Boolean          @default(false)
+  stripeCustomerId    String?          @unique
+  stripeSubscriptionId String?
+  honeyPoints         Int              @default(0)
+  lastCheckinAt       DateTime?
+  checkinStreak       Int              @default(0)
+  lineUserId          String?          @unique
+  isAdmin             Boolean          @default(false)
+  sellerRating        Float?
+  sellerReviewCount   Int              @default(0)
+  emailAlerts         Boolean          @default(true)
+  lineAlerts          Boolean          @default(false)
+  weeklyDigest        Boolean          @default(true)
+  lastDigestAt        DateTime?
+  portfolios          Portfolio[]
+  watchlistItems      WatchlistItem[]
+  priceAlerts         PriceAlert[]
+  listings            Listing[]
+  sentMessages        Message[]        @relation("SentMessages")
+  receivedMessages    Message[]        @relation("ReceivedMessages")
+  reviewsGiven        Review[]         @relation("ReviewsGiven")
+  reviewsReceived     Review[]         @relation("ReviewsReceived")
+  communityPrices     CommunityPrice[]
+  honeyTransactions   HoneyTransaction[]
+  decks               Deck[]
+  yuyuteiActions      YuyuteiMapping[]
+  snkrdunkActions     SnkrdunkMapping[]
+  blogPosts           BlogPost[]
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
 
   @@index([supabaseId])
   @@index([tier])
+  @@index([stripeCustomerId])
+  @@index([lineUserId])
+}
+
+// ============================================================
+// HONEY SYSTEM (Engagement Points)
+// ============================================================
+
+model HoneyTransaction {
+  id        Int             @id @default(autoincrement())
+  userId    String
+  user      User            @relation(fields: [userId], references: [id])
+  amount    Int
+  type      HoneyActionType
+  reason    String
+  metadata  Json?
+  createdAt DateTime        @default(now())
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, type, createdAt])
+}
+
+enum HoneyActionType {
+  CHECKIN
+  PORTFOLIO_ADD
+  MARKETPLACE_SELL
+  REVIEW
+  REFERRAL
+  REDEEM
+  ADMIN_GRANT
+  TRIAL_BONUS
+  EXPIRED
+}
+
+model HoneyShopItem {
+  id          Int          @id @default(autoincrement())
+  name        String
+  nameEn      String?
+  nameTh      String?
+  description String?
+  cost        Int
+  type        ShopItemType
+  value       Json?
+  isActive    Boolean      @default(true)
+  stock       Int?
+  createdAt   DateTime     @default(now())
+
+  @@index([isActive])
+}
+
+enum ShopItemType {
+  TRIAL_PRO
+  TRIAL_PRO_PLUS
+  BADGE
+  CUSTOM
 }
 
 enum UserTier {
@@ -274,7 +337,7 @@ enum UserTier {
 model Portfolio {
   id           Int                    @id @default(autoincrement())
   userId       String
-  user         User                   @relation(fields: [userId], references: [id])
+  user         User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   name         String                 @default("Default")
   items        PortfolioItem[]
   snapshots    PortfolioSnapshot[]
@@ -317,19 +380,24 @@ model PortfolioItem {
 }
 
 model PortfolioTransaction {
-  id           Int       @id @default(autoincrement())
+  id           Int             @id @default(autoincrement())
   portfolioId  Int
-  portfolio    Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  portfolio    Portfolio       @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   cardId       Int
-  card         Card     @relation(fields: [cardId], references: [id])
-  type         String
+  card         Card            @relation(fields: [cardId], references: [id])
+  type         TransactionType
   quantity     Int
   pricePerUnit Int?
   note         String?
-  createdAt    DateTime @default(now())
+  createdAt    DateTime        @default(now())
 
   @@index([portfolioId, createdAt(sort: Desc)])
   @@index([cardId])
+}
+
+enum TransactionType {
+  BUY
+  REMOVE
 }
 
 enum CardCondition {
@@ -427,7 +495,7 @@ enum ListingStatus {
 model Message {
   id         Int      @id @default(autoincrement())
   listingId  Int
-  listing    Listing  @relation(fields: [listingId], references: [id])
+  listing    Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
   senderId   String
   sender     User     @relation("SentMessages", fields: [senderId], references: [id])
   receiverId String
@@ -521,7 +589,7 @@ model DeckCard {
 // ============================================================
 
 model YuyuteiMapping {
-  id            Int      @id @default(autoincrement())
+  id            Int           @id @default(autoincrement())
   setCode       String
   yuyuteiId     String
   scrapedCode   String
@@ -530,15 +598,15 @@ model YuyuteiMapping {
   scrapedImage  String?
   priceJpy      Int
   matchedCardId Int?
-  matchedCard   Card?    @relation(fields: [matchedCardId], references: [id])
-  matchMethod   String?
+  matchedCard   Card?         @relation(fields: [matchedCardId], references: [id])
+  matchMethod   MatchMethod?
   geminiScore   Float?
-  status        String   @default("pending")
+  status        MappingStatus @default(PENDING)
   actionBy      String?
-  actionByUser  User?    @relation(fields: [actionBy], references: [id])
+  actionByUser  User?         @relation(fields: [actionBy], references: [id])
   actionAt      DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
   @@unique([setCode, yuyuteiId])
   @@index([status])
@@ -551,8 +619,8 @@ model YuyuteiMapping {
 // ============================================================
 
 model SnkrdunkMapping {
-  id            Int       @id @default(autoincrement())
-  snkrdunkId    Int       @unique
+  id            Int           @id @default(autoincrement())
+  snkrdunkId    Int           @unique
   productNumber String
   scrapedName   String
   thumbnailUrl  String?
@@ -560,16 +628,68 @@ model SnkrdunkMapping {
   usedMinPriceUsd Float?
   lastSoldPsa10Usd Float?
   matchedCardId Int?
-  matchedCard   Card?     @relation(fields: [matchedCardId], references: [id])
-  matchMethod   String?
-  status        String    @default("pending")
+  matchedCard   Card?         @relation(fields: [matchedCardId], references: [id])
+  matchMethod   MatchMethod?
+  status        MappingStatus @default(PENDING)
   actionBy      String?
-  actionByUser  User?     @relation(fields: [actionBy], references: [id])
+  actionByUser  User?         @relation(fields: [actionBy], references: [id])
   actionAt      DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
   @@index([status])
   @@index([productNumber])
   @@index([matchedCardId])
+}
+
+enum MappingStatus {
+  PENDING   @map("pending")
+  SUGGESTED @map("suggested")
+  MATCHED   @map("matched")
+  REJECTED  @map("rejected")
+}
+
+enum MatchMethod {
+  EXACT           @map("exact")
+  CACHED          @map("cached")
+  GEMINI          @map("gemini")
+  AUTO_CODE       @map("auto-code")
+  AUTO_CODE_MULTI @map("auto-code-multi")
+  AUTO_PARALLEL   @map("auto-parallel")
+  AUTO_PARALLEL_ANY @map("auto-parallel-any")
+  AUTO_BASECODE   @map("auto-basecode")
+  ADMIN           @map("admin")
+  ADMIN_BULK      @map("admin-bulk")
+}
+
+// ============================================================
+// BLOG
+// ============================================================
+
+model BlogPost {
+  id          Int       @id @default(autoincrement())
+  slug        String    @unique
+  title       String
+  excerpt     String
+  content     String
+  coverImage  String?
+  category    BlogCategory
+  tags        String[]
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  authorId    String?
+  author      User?     @relation(fields: [authorId], references: [id])
+  viewCount   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([published, publishedAt])
+  @@index([category])
+}
+
+enum BlogCategory {
+  MARKET_ANALYSIS @map("market-analysis")
+  SET_REVIEW      @map("set-review")
+  TIPS            @map("tips")
+  NEWS            @map("news")
 }

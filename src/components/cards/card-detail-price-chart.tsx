@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import { PriceChart, type ChartSeriesDef, type MergedChartRow } from "@/components/cards/price-chart"
 import type { ChartSourceOption } from "@/lib/data/card-detail"
+import { PRICE_SOURCE } from "@/lib/constants/prices"
 import { t } from "@/lib/i18n"
 import { jpyToDisplayValue, usdToDisplayValue, type Currency } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
@@ -49,9 +50,9 @@ export type CardDetailPriceChartProps = {
 }
 
 function classifyRow(row: PriceRow): string | null {
-  if (row.source === "YUYUTEI") return "YUYUTEI"
-  if (row.source === "SNKRDUNK" && !row.gradeCondition) return "SNKRDUNK_RAW"
-  if (row.source === "SNKRDUNK" && row.gradeCondition === "PSA 10") return "SNKRDUNK_PSA10"
+  if (row.source === PRICE_SOURCE.YUYUTEI) return PRICE_SOURCE.YUYUTEI
+  if (row.source === PRICE_SOURCE.SNKRDUNK && !row.gradeCondition) return "SNKRDUNK_RAW"
+  if (row.source === PRICE_SOURCE.SNKRDUNK && row.gradeCondition === PRICE_SOURCE.PSA_10) return "SNKRDUNK_PSA10"
   return null
 }
 
@@ -69,7 +70,7 @@ function buildMergedData(
     const dataKey = SERIES_DATAKEYS[seriesId]
     let value: number | null = null
 
-    if (seriesId === "YUYUTEI" && row.priceJpy != null) {
+    if (seriesId === PRICE_SOURCE.YUYUTEI && row.priceJpy != null) {
       value = jpyToDisplayValue(row.priceJpy, displayCurrency)
     } else if (
       (seriesId === "SNKRDUNK_RAW" || seriesId === "SNKRDUNK_PSA10") &&
@@ -111,7 +112,7 @@ export function CardDetailPriceChart({
   }), [lang])
 
   const allSeriesIds = useMemo(() => {
-    if (!availableSources || availableSources.length === 0) return ["YUYUTEI"]
+    if (!availableSources || availableSources.length === 0) return [PRICE_SOURCE.YUYUTEI]
     return availableSources.map((s) => s.id)
   }, [availableSources])
 
@@ -119,7 +120,7 @@ export function CardDetailPriceChart({
     if (priceMode === "psa10") {
       return allSeriesIds.filter((id) => id === "SNKRDUNK_PSA10")
     }
-    return allSeriesIds.filter((id) => id === "YUYUTEI")
+    return allSeriesIds.filter((id) => id === PRICE_SOURCE.YUYUTEI)
   }, [allSeriesIds, priceMode])
 
   const [period, setPeriod] = useState("30d")

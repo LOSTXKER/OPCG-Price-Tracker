@@ -18,20 +18,27 @@ const PortfolioAllocationChart = dynamic(
 interface PortfolioChartsProps {
   history: { label: string; value: number }[]
   allocation: AllocationSlice[]
+  cardCount?: number
 }
 
-export function PortfolioCharts({ history, allocation }: PortfolioChartsProps) {
+export function PortfolioCharts({ history, allocation, cardCount = 0 }: PortfolioChartsProps) {
   const lang = useUIStore((s) => s.language)
+  const showAllocation = cardCount > 1
+
+  if (!showAllocation && history.length < 2) return null
+
   return (
-    <div className="grid gap-4 lg:grid-cols-12">
-      <div className="panel p-5 lg:col-span-7">
+    <div className={showAllocation ? "grid gap-4 lg:grid-cols-12" : ""}>
+      <div className={`panel p-5 ${showAllocation ? "lg:col-span-7" : ""}`}>
         <p className="mb-4 text-sm font-semibold">{t(lang, "history")}</p>
         <PortfolioHistoryChart data={history} />
       </div>
-      <div className="panel p-5 lg:col-span-5">
-        <p className="mb-4 text-sm font-semibold">{t(lang, "allocation")}</p>
-        <PortfolioAllocationChart data={allocation} />
-      </div>
+      {showAllocation && (
+        <div className="panel p-5 lg:col-span-5">
+          <p className="mb-4 text-sm font-semibold">{t(lang, "allocation")}</p>
+          <PortfolioAllocationChart data={allocation} />
+        </div>
+      )}
     </div>
   )
 }

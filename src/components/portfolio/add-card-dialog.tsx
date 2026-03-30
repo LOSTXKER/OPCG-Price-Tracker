@@ -29,7 +29,7 @@ export function AddCardDialog({
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onAddBatch: (items: CartItem[]) => Promise<void>
+  onAddBatch: (items: CartItem[]) => Promise<unknown>
 }) {
   const [step, setStep] = useState<"select" | "detail">("select")
   const [selectedCard, setSelectedCard] = useState<CardWithSet | null>(null)

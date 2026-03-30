@@ -14,16 +14,13 @@ export function SetsPageHeader({
   const lang = useUIStore((s) => s.language);
   return (
     <div>
-      <h1 className="font-sans text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "setsTitle")}</h1>
+      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "setsTitle")}</h1>
       <p className="mt-1 text-sm text-muted-foreground">{t(lang, "setsDesc")}</p>
-      <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-        <span className="font-medium text-foreground">
-          {totalSets} {t(lang, "setCount")}
-        </span>
-        <span>
-          {t(lang, "totalValueLabel")} <Price jpy={totalMarketValue} />
-        </span>
-      </div>
+      <p className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+        <span className="font-semibold text-foreground">{totalSets} {t(lang, "setCount")}</span>
+        <span className="text-border">·</span>
+        <span>{t(lang, "totalValueLabel")} <span className="font-semibold text-foreground"><Price jpy={totalMarketValue} /></span></span>
+      </p>
     </div>
   );
 }
