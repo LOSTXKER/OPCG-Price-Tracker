@@ -1,19 +1,10 @@
-import { MappingStatus, MatchMethod } from "@/generated/prisma/client";
-
-/** Admin UI `method` query uses lowercase / kebab keys; Prisma uses enum member names. */
-const METHOD_QUERY_TO_ENUM: Record<string, MatchMethod> = {
-  exact: MatchMethod.EXACT,
-  cached: MatchMethod.CACHED,
-  gemini: MatchMethod.GEMINI,
-  admin: MatchMethod.ADMIN,
-  "admin-bulk": MatchMethod.ADMIN_BULK,
-  "auto-code": MatchMethod.AUTO_CODE,
-  "auto-code-multi": MatchMethod.AUTO_CODE_MULTI,
-  "auto-parallel": MatchMethod.AUTO_PARALLEL,
-  "auto-parallel-any": MatchMethod.AUTO_PARALLEL_ANY,
-  "auto-basecode": MatchMethod.AUTO_BASECODE,
-};
 import { NextRequest, NextResponse } from "next/server";
+
+const VALID_METHODS = new Set([
+  "exact", "cached", "gemini", "admin", "admin-bulk",
+  "auto-code", "auto-code-multi", "auto-parallel", "auto-parallel-any", "auto-basecode",
+]);
+const VALID_STATUSES = new Set(["pending", "suggested", "matched", "rejected"]);
 import { getAdminUser } from "@/lib/auth/get-admin-user";
 import { prisma } from "@/lib/db";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
@@ -40,9 +31,9 @@ export async function GET(request: NextRequest) {
       if (!setCompletion[row.setCode])
         setCompletion[row.setCode] = { total: 0, pending: 0, suggested: 0, matched: 0 };
       setCompletion[row.setCode].total += row._count._all;
-      if (row.status === MappingStatus.PENDING) setCompletion[row.setCode].pending = row._count._all;
-      if (row.status === MappingStatus.SUGGESTED) setCompletion[row.setCode].suggested = row._count._all;
-      if (row.status === MappingStatus.MATCHED) setCompletion[row.setCode].matched = row._count._all;
+      if (row.status === "pending") setCompletion[row.setCode].pending = row._count._all;
+      if (row.status === "suggested") setCompletion[row.setCode].suggested = row._count._all;
+      if (row.status === "matched") setCompletion[row.setCode].matched = row._count._all;
     }
 
     return NextResponse.json({ sets: allSets, setCompletion });
@@ -54,14 +45,14 @@ export async function GET(request: NextRequest) {
       scrapedImage: { not: null },
     };
     if (mode === "new") {
-      where.status = { in: [MappingStatus.PENDING, MappingStatus.SUGGESTED] };
+      where.status = { in: ["pending", "suggested"] };
       where.OR = [
         { matchMethod: null },
-        { matchMethod: { not: MatchMethod.GEMINI } },
+        { matchMethod: { not: "gemini" } },
       ];
     } else {
       where.status = {
-        in: [MappingStatus.PENDING, MappingStatus.SUGGESTED, MappingStatus.MATCHED],
+        in: ["pending", "suggested", "matched"],
       };
     }
     const setParam = sp.get("set");
@@ -86,7 +77,9 @@ export async function GET(request: NextRequest) {
 
   const where: Record<string, unknown> = {};
   if (setFilter) where.setCode = setFilter;
-  if (statusFilter) where.status = statusFilter;
+  if (statusFilter) {
+    if (VALID_STATUSES.has(statusFilter)) where.status = statusFilter;
+  }
   if (searchQuery) {
     where.OR = [
       { scrapedCode: { contains: searchQuery, mode: "insensitive" } },
@@ -97,8 +90,7 @@ export async function GET(request: NextRequest) {
     if (methodFilter === "none") {
       where.matchMethod = null;
     } else {
-      const mapped = METHOD_QUERY_TO_ENUM[methodFilter];
-      if (mapped) where.matchMethod = mapped;
+      if (VALID_METHODS.has(methodFilter)) where.matchMethod = methodFilter;
     }
   }
   if (confidenceFilter === "high") where.geminiScore = { gte: 0.8 };
@@ -147,7 +139,7 @@ export async function GET(request: NextRequest) {
 
   const candidateMappings = mappings.filter(
     (m) =>
-      (m.status === MappingStatus.PENDING || m.status === MappingStatus.SUGGESTED) &&
+      (m.status === "pending" || m.status === "suggested") &&
       m.scrapedCode,
   );
 
@@ -238,7 +230,7 @@ export async function PATCH(request: NextRequest) {
   // ── Bulk approve all with suggestion ──
   if (body.action === "bulk-approve") {
     const where: Record<string, unknown> = {
-      status: { in: [MappingStatus.SUGGESTED, MappingStatus.PENDING] },
+      status: { in: ["suggested", "pending"] },
       matchedCardId: { not: null },
     };
     if (body.set) where.setCode = body.set;
@@ -251,7 +243,7 @@ export async function PATCH(request: NextRequest) {
     await prisma.$transaction([
       prisma.yuyuteiMapping.updateMany({
         where: { id: { in: toApprove.map((m) => m.id) } },
-        data: { status: MappingStatus.MATCHED, matchMethod: MatchMethod.ADMIN_BULK, ...stamp },
+        data: { status: "matched", matchMethod: "admin-bulk", ...stamp },
       }),
       ...toApprove.map((m) =>
         prisma.card.update({
@@ -276,7 +268,7 @@ export async function PATCH(request: NextRequest) {
     if (ids.length === 0) return NextResponse.json({ success: true, approved: 0 });
 
     const mappings = await prisma.yuyuteiMapping.findMany({
-      where: { id: { in: ids }, status: { not: MappingStatus.MATCHED } },
+      where: { id: { in: ids }, status: { not: "matched" } },
       select: { id: true, matchedCardId: true, priceJpy: true, yuyuteiId: true },
     });
 
@@ -289,8 +281,8 @@ export async function PATCH(request: NextRequest) {
         prisma.yuyuteiMapping.update({
           where: { id: m.id },
           data: {
-            status: MappingStatus.MATCHED,
-            matchMethod: MatchMethod.ADMIN_BULK,
+            status: "matched",
+            matchMethod: "admin-bulk",
             matchedCardId: m.cardId,
             ...stamp,
           },
@@ -318,8 +310,8 @@ export async function PATCH(request: NextRequest) {
     if (ids.length === 0) return NextResponse.json({ success: true, rejected: 0 });
 
     const { count } = await prisma.yuyuteiMapping.updateMany({
-      where: { id: { in: ids }, status: { not: MappingStatus.MATCHED } },
-      data: { status: MappingStatus.REJECTED, ...stamp },
+      where: { id: { in: ids }, status: { not: "matched" } },
+      data: { status: "rejected", ...stamp },
     });
 
     return NextResponse.json({ success: true, rejected: count });
@@ -347,7 +339,7 @@ export async function PATCH(request: NextRequest) {
         matchedCardId: null,
         matchMethod: null,
         geminiScore: null,
-        status: MappingStatus.PENDING,
+        status: "pending",
         ...stamp,
       },
     });
@@ -362,7 +354,7 @@ export async function PATCH(request: NextRequest) {
 
   await prisma.yuyuteiMapping.update({
     where: { id },
-    data: { matchedCardId, matchMethod: MatchMethod.ADMIN, status: MappingStatus.MATCHED, ...stamp },
+    data: { matchedCardId, matchMethod: "admin", status: "matched", ...stamp },
   });
   await prisma.card.update({
     where: { id: matchedCardId },
@@ -389,7 +381,7 @@ export async function DELETE(request: NextRequest) {
 
   await prisma.yuyuteiMapping.update({
     where: { id },
-    data: { status: MappingStatus.REJECTED, ...actionStamp(admin.id) },
+    data: { status: "rejected", ...actionStamp(admin.id) },
   });
 
   return NextResponse.json({ success: true });

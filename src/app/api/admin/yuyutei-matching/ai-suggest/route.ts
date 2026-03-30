@@ -1,4 +1,3 @@
-import { MappingStatus, MatchMethod } from "@/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminUser } from "@/lib/auth/get-admin-user";
 import { prisma } from "@/lib/db";
@@ -48,10 +47,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  if (mapping.status === MappingStatus.MATCHED && !force) {
+  if (mapping.status === "matched" && !force) {
     return NextResponse.json({ success: false, error: "Already approved", skipped: true });
   }
-  if (mapping.matchMethod === MatchMethod.GEMINI && !force) {
+  if (mapping.matchMethod === "gemini" && !force) {
     return NextResponse.json({ success: false, error: "AI เคยจับคู่แล้ว", skipped: true });
   }
 
@@ -106,9 +105,9 @@ export async function POST(request: NextRequest) {
         where: { id: mapping.id },
         data: {
           matchedCardId: result.cardId,
-          matchMethod: MatchMethod.GEMINI,
+          matchMethod: "gemini",
           geminiScore: result.confidence,
-          status: MappingStatus.SUGGESTED,
+          status: "suggested",
           actionBy: admin.id,
           actionAt: new Date(),
         },

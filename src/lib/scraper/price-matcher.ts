@@ -5,7 +5,7 @@
  * Scrapes Yuyutei → finds matching mapping by yuyuteiId → updates card price.
  * New/unknown listings are saved to YuyuteiMapping as "pending" for admin review.
  */
-import { MappingStatus, type PrismaClient } from "@/generated/prisma/client";
+import { type PrismaClient } from "@/generated/prisma/client";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import type { ScrapedCardListing } from "./yuyu-tei";
 
@@ -44,7 +44,7 @@ export async function matchAndUpdatePrices(
       select: { id: true, matchedCardId: true, status: true },
     });
 
-    if (mapping && mapping.status === MappingStatus.MATCHED && mapping.matchedCardId) {
+    if (mapping && mapping.status === "matched" && mapping.matchedCardId) {
       const priceThb =
         options?.thbRate != null
           ? Math.round(listing.priceJpy * options.thbRate * 100) / 100
@@ -100,7 +100,7 @@ export async function matchAndUpdatePrices(
           scrapedName: listing.name,
           scrapedImage: listing.imageUrl || null,
           priceJpy: listing.priceJpy,
-          status: MappingStatus.PENDING,
+          status: "pending",
         },
       });
       unmatched++;

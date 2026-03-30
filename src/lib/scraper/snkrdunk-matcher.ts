@@ -7,11 +7,7 @@
  *  - SOLD + gradeCondition=PSA 10  → most recently sold PSA10 price
  *  - SOLD + no gradeCondition   → most recently sold price (any condition)
  */
-import {
-  MappingStatus,
-  MatchMethod,
-  type PrismaClient,
-} from "@/generated/prisma/client";
+import { type PrismaClient } from "@/generated/prisma/client";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { createLog } from "@/lib/logger";
 import type { SnkrdunkPriceData } from "./snkrdunk";
@@ -34,7 +30,7 @@ export async function updateSnkrdunkPrices(
   db: DB
 ): Promise<SnkrdunkMatchResult> {
   const mappings = await db.snkrdunkMapping.findMany({
-    where: { status: MappingStatus.MATCHED, matchedCardId: { not: null } },
+    where: { status: "matched", matchedCardId: { not: null } },
     select: { id: true, snkrdunkId: true, matchedCardId: true },
   });
 
@@ -144,7 +140,7 @@ export async function upsertSnkrdunkPrices(
  */
 export async function autoMatchByProductNumber(db: DB): Promise<number> {
   const pendingMappings = await db.snkrdunkMapping.findMany({
-    where: { status: MappingStatus.PENDING, matchedCardId: null },
+    where: { status: "pending", matchedCardId: null },
     select: { id: true, productNumber: true },
   });
 
@@ -165,8 +161,8 @@ export async function autoMatchByProductNumber(db: DB): Promise<number> {
         where: { id: mapping.id },
         data: {
           matchedCardId: cards[0]!.id,
-          matchMethod: MatchMethod.AUTO_CODE,
-          status: MappingStatus.MATCHED,
+          matchMethod: "auto-code",
+          status: "matched",
         },
       });
       autoMatched++;
@@ -174,7 +170,7 @@ export async function autoMatchByProductNumber(db: DB): Promise<number> {
       // Multiple candidates — mark as suggested, leave for admin
       await db.snkrdunkMapping.update({
         where: { id: mapping.id },
-        data: { matchMethod: MatchMethod.AUTO_CODE_MULTI },
+        data: { matchMethod: "auto-code-multi" },
       });
     }
   }

@@ -1,4 +1,3 @@
-import { MappingStatus, MatchMethod } from "@/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
 import { checkIsAdmin } from "@/lib/auth/check-admin";
@@ -106,9 +105,9 @@ export async function POST(request: NextRequest) {
       scrapedImage: string | null | undefined;
       priceJpy: number;
       matchedCardId: number | null;
-      matchMethod: MatchMethod | null;
+      matchMethod: string | null;
       geminiScore: number | null;
-      status: MappingStatus;
+      status: string;
     };
 
     const geminiUpdates: { cardId: number; yuyuteiId: string; yuyuteiUrl: string | null }[] = [];
@@ -125,27 +124,27 @@ export async function POST(request: NextRequest) {
       const parallel = isParallelCard(listing.name, listing.rarity ?? "");
 
       let matchedCardId: number | null = null;
-      let matchMethod: MatchMethod | null = null;
+      let matchMethod: string | null = null;
       let geminiScore: number | null = null;
-      let status: MappingStatus;
+      let status: string;
 
       if (isDon) {
-        status = MappingStatus.REJECTED;
+        status = "rejected";
         stats.pending++;
       } else if (cachedByYuyuteiId.has(listing.yuyuteiId)) {
         matchedCardId = cachedByYuyuteiId.get(listing.yuyuteiId)!;
-        matchMethod = MatchMethod.CACHED;
-        status = MappingStatus.MATCHED;
+        matchMethod = "cached";
+        status = "matched";
         stats.cached++;
       } else if (!parallel) {
         const exactId = exactByCode.get(rawCode);
         if (exactId) {
           matchedCardId = exactId;
-          matchMethod = MatchMethod.EXACT;
-          status = MappingStatus.MATCHED;
+          matchMethod = "exact";
+          status = "matched";
           stats.exact++;
         } else {
-          status = MappingStatus.PENDING;
+          status = "pending";
           stats.pending++;
         }
       } else if (listing.imageUrl) {
@@ -165,21 +164,21 @@ export async function POST(request: NextRequest) {
           const aiResult = await matchCardImage(listing.imageUrl, validCandidates);
           if (aiResult && aiResult.confidence >= 0.5) {
             matchedCardId = aiResult.cardId;
-            matchMethod = MatchMethod.GEMINI;
+            matchMethod = "gemini";
             geminiScore = aiResult.confidence;
-            status = MappingStatus.MATCHED;
+            status = "matched";
             stats.aiMatched++;
             geminiUpdates.push({ cardId: aiResult.cardId, yuyuteiId: listing.yuyuteiId, yuyuteiUrl: listing.cardUrl ?? null });
           } else {
-            status = MappingStatus.PENDING;
+            status = "pending";
             stats.pending++;
           }
         } else {
-          status = MappingStatus.PENDING;
+          status = "pending";
           stats.pending++;
         }
       } else {
-        status = MappingStatus.PENDING;
+        status = "pending";
         stats.pending++;
       }
 

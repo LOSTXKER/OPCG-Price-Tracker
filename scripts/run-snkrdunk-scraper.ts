@@ -1,4 +1,4 @@
-import { PrismaClient, MappingStatus } from "../src/generated/prisma/client"
+import { PrismaClient } from "../src/generated/prisma/client"
 import { PrismaPg } from "@prisma/adapter-pg"
 import pg from "pg"
 import dotenv from "dotenv"
@@ -13,7 +13,7 @@ const prisma = new PrismaClient({ adapter })
 
 async function main() {
   const mappings = await prisma.snkrdunkMapping.findMany({
-    where: { status: MappingStatus.MATCHED, matchedCardId: { not: null } },
+    where: { status: "matched", matchedCardId: { not: null } },
     select: { id: true, snkrdunkId: true, matchedCardId: true, scrapedName: true },
   })
 

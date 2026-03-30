@@ -589,7 +589,7 @@ model DeckCard {
 // ============================================================
 
 model YuyuteiMapping {
-  id            Int           @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   setCode       String
   yuyuteiId     String
   scrapedCode   String
@@ -598,15 +598,15 @@ model YuyuteiMapping {
   scrapedImage  String?
   priceJpy      Int
   matchedCardId Int?
-  matchedCard   Card?         @relation(fields: [matchedCardId], references: [id])
-  matchMethod   MatchMethod?
+  matchedCard   Card?     @relation(fields: [matchedCardId], references: [id])
+  matchMethod   String?
   geminiScore   Float?
-  status        MappingStatus @default(PENDING)
+  status        String    @default("pending")
   actionBy      String?
-  actionByUser  User?         @relation(fields: [actionBy], references: [id])
+  actionByUser  User?     @relation(fields: [actionBy], references: [id])
   actionAt      DateTime?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   @@unique([setCode, yuyuteiId])
   @@index([status])
@@ -619,47 +619,27 @@ model YuyuteiMapping {
 // ============================================================
 
 model SnkrdunkMapping {
-  id            Int           @id @default(autoincrement())
-  snkrdunkId    Int           @unique
-  productNumber String
-  scrapedName   String
-  thumbnailUrl  String?
-  minPriceUsd   Float?
+  id              Int       @id @default(autoincrement())
+  snkrdunkId      Int       @unique
+  productNumber   String
+  scrapedName     String
+  thumbnailUrl    String?
+  minPriceUsd     Float?
   usedMinPriceUsd Float?
   lastSoldPsa10Usd Float?
-  matchedCardId Int?
-  matchedCard   Card?         @relation(fields: [matchedCardId], references: [id])
-  matchMethod   MatchMethod?
-  status        MappingStatus @default(PENDING)
-  actionBy      String?
-  actionByUser  User?         @relation(fields: [actionBy], references: [id])
-  actionAt      DateTime?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  matchedCardId   Int?
+  matchedCard     Card?     @relation(fields: [matchedCardId], references: [id])
+  matchMethod     String?
+  status          String    @default("pending")
+  actionBy        String?
+  actionByUser    User?     @relation(fields: [actionBy], references: [id])
+  actionAt        DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   @@index([status])
   @@index([productNumber])
   @@index([matchedCardId])
-}
-
-enum MappingStatus {
-  PENDING   @map("pending")
-  SUGGESTED @map("suggested")
-  MATCHED   @map("matched")
-  REJECTED  @map("rejected")
-}
-
-enum MatchMethod {
-  EXACT           @map("exact")
-  CACHED          @map("cached")
-  GEMINI          @map("gemini")
-  AUTO_CODE       @map("auto-code")
-  AUTO_CODE_MULTI @map("auto-code-multi")
-  AUTO_PARALLEL   @map("auto-parallel")
-  AUTO_PARALLEL_ANY @map("auto-parallel-any")
-  AUTO_BASECODE   @map("auto-basecode")
-  ADMIN           @map("admin")
-  ADMIN_BULK      @map("admin-bulk")
 }
 
 // ============================================================
