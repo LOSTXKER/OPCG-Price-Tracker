@@ -10,6 +10,7 @@ import { Footer } from "@/components/layout/footer";
 import { MainChrome, PageContent } from "@/components/layout/main-chrome";
 import { CompareFloatingBar } from "@/components/compare/compare-floating-bar";
 import { ScrollToTop } from "@/components/shared/scroll-to-top";
+import { MissionTracker } from "@/components/honey/mission-tracker";
 
 import { ThemeProvider } from "@/providers/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -105,6 +106,7 @@ export default function RootLayout({
             </MainChrome>
             <CompareFloatingBar />
             <ScrollToTop />
+            <MissionTracker />
             <Toaster position="bottom-center" />
           </TooltipProvider>
         </ThemeProvider>

@@ -31,6 +31,7 @@ export type HoneyData = {
   points: number;
   streak: number;
   canCheckin: boolean;
+  level?: { level: number; label: string; nextThreshold: number | null };
 };
 
 export type SubscriptionData = {
@@ -66,8 +67,8 @@ export type ProfileData = {
 
 export function getTierConfig(tier: string) {
   if (tier === "PRO_PLUS" || tier === "LIFETIME_PRO_PLUS")
-    return { label: "Pro+", color: "bg-purple-500 text-white", ring: "ring-purple-500/30" };
+    return { label: "Pro+", color: "bg-amber-600 text-white", ring: "ring-amber-500/30" };
   if (tier === "PRO" || tier === "LIFETIME_PRO")
-    return { label: "Pro", color: "bg-blue-500 text-white", ring: "ring-blue-500/30" };
+    return { label: "Pro", color: "bg-[#73533E] text-white", ring: "ring-[#A57E61]/30" };
   return { label: "Free", color: "bg-muted text-muted-foreground", ring: "ring-border" };
 }

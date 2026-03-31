@@ -65,11 +65,11 @@ export function priceAlertEmail(
     subject: `${emoji} ${cardName} ${verb} ¥${price.toLocaleString()}`,
     html: `
       <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
-        <h2 style="color: #4A9EE0;">🐻 Kuma Price Alert</h2>
+        <h2 style="color: #73533E;">🐻 Kuma Price Alert</h2>
         <p><strong>${cardName}</strong> (${cardCode}) has ${verb} <strong>¥${price.toLocaleString()}</strong>.</p>
         <p>Your target was ¥${targetPrice.toLocaleString()}.</p>
         <a href="${clientEnv().NEXT_PUBLIC_APP_URL}/cards/${cardCode}"
-           style="display: inline-block; padding: 10px 20px; background: #4A9EE0; color: white; text-decoration: none; border-radius: 8px;">
+           style="display: inline-block; padding: 10px 20px; background: #73533E; color: white; text-decoration: none; border-radius: 8px;">
           View Card
         </a>
         <p style="color: #999; font-size: 12px; margin-top: 24px;">
@@ -112,7 +112,7 @@ export function weeklyDigestEmail(
     subject: `🐻 Kuma Weekly Report — OPCG Price Trends`,
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #4A9EE0;">🐻 Weekly Report for ${userName || "Collector"}</h2>
+        <h2 style="color: #73533E;">🐻 Weekly Report for ${userName || "Collector"}</h2>
         
         <h3>📈 Top Gainers</h3>
         <ul>${gainersHtml || "<li>No significant gainers this week</li>"}</ul>
@@ -123,7 +123,7 @@ export function weeklyDigestEmail(
         ${portfolioSection}
         
         <a href="${baseUrl}/trending"
-           style="display: inline-block; padding: 10px 20px; background: #4A9EE0; color: white; text-decoration: none; border-radius: 8px;">
+           style="display: inline-block; padding: 10px 20px; background: #73533E; color: white; text-decoration: none; border-radius: 8px;">
           View Trending
         </a>
         
@@ -142,7 +142,7 @@ export function trialReminderEmail(userName: string, daysLeft: number) {
     subject: `🐻 Your Pro trial ends in ${daysLeft} day${daysLeft > 1 ? "s" : ""}`,
     html: `
       <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
-        <h2 style="color: #4A9EE0;">🐻 Trial Ending Soon</h2>
+        <h2 style="color: #73533E;">🐻 Trial Ending Soon</h2>
         <p>Hi ${userName || "there"},</p>
         <p>Your Kuma Tracker Pro trial ends in <strong>${daysLeft} day${daysLeft > 1 ? "s" : ""}</strong>.</p>
         <p>Subscribe now to keep all your Pro features:</p>
@@ -153,7 +153,7 @@ export function trialReminderEmail(userName: string, daysLeft: number) {
           <li>CSV export</li>
         </ul>
         <a href="${baseUrl}/pricing"
-           style="display: inline-block; padding: 10px 20px; background: #4A9EE0; color: white; text-decoration: none; border-radius: 8px;">
+           style="display: inline-block; padding: 10px 20px; background: #73533E; color: white; text-decoration: none; border-radius: 8px;">
           Subscribe Now
         </a>
         <p style="color: #999; font-size: 12px; margin-top: 24px;">

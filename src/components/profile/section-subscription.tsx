@@ -45,7 +45,7 @@ export function SectionSubscription({ subscription }: Props) {
             {tierCfg.label}
           </Badge>
           {isTrial && (
-            <Badge variant="outline" className="border-blue-500/50 text-blue-500">
+            <Badge variant="outline" className="border-[#A57E61]/50 text-[#A57E61]">
               {t(lang, "trialActive")} — {trialDaysLeft} {t(lang, "trialDaysLeft")}
             </Badge>
           )}

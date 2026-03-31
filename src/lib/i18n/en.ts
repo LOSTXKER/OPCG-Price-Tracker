@@ -75,6 +75,8 @@ export const en = {
   grid: "Grid",
   totalCards: "Total Cards",
   totalValue: "Total Value",
+  ctaPortfolio: "Manage collection",
+  ctaHoney: "Earn rewards",
   priceUp: "Price Up",
   priceDown: "Price Down",
   topGainers: "Top Gainers",
@@ -420,6 +422,87 @@ export const en = {
 
   // Honey
   honeySubtitle: "Earn points and redeem rewards",
+  honeyLeaderboard: "Leaderboard",
+  quests: "Quests",
+  amount: "Amount",
+  honeyRank: "Rank",
+  honeyTopEarners: "Top Earners",
+  anonymous: "Anonymous",
+
+  // Reviews
+  reviewSubmit: "Submit Review",
+  reviewSuccess: "Review submitted!",
+  reviewAlreadyExists: "You already reviewed this user",
+
+  // Daily Missions
+  dailyMissions: "Daily Missions",
+  missionCheckPrice: "Check a card price",
+  missionAddCard: "Browse the market",
+  missionViewSet: "Use a tool",
+  missionAutoHint: "Just browse normally — missions complete automatically",
+  missionComplete: "Mission complete!",
+  claimReward: "Claim Reward",
+
+  // Predictions
+  predictions: "Predictions",
+  predictUp: "Up",
+  predictDown: "Down",
+  predictionCorrect: "Correct",
+  predictionWrong: "Wrong",
+  predictionPending: "Pending",
+
+  // Honey Levels
+  honeyLevel: "Honey Level",
+  levelNewbie: "Newbie",
+  levelBronze: "Bronze",
+  levelSilver: "Silver",
+  levelGold: "Gold",
+  levelDiamond: "Diamond",
+
+  // Achievements
+  achievements: "Achievements",
+  achievementEarned: "Earned",
+  achievementLocked: "Locked",
+
+  // Monthly Raffle
+  monthlyRaffle: "Monthly Raffle",
+  raffleParticipants: "Participants",
+  raffleMyTickets: "My tickets",
+  raffleNoTickets: "No tickets yet — buy or claim free above",
+  raffleBought: "Ticket purchased!",
+  raffleFreeTicket: "Free ticket claimed!",
+  raffleNone: "No raffle this month",
+  rafflePrizes: "Prizes",
+  raffleTicketCost: "Cost per ticket",
+  raffleEndsIn: "Ends in",
+  raffleWinner: "Winner",
+  raffleDrawn: "Drawn",
+  raffleStreakRequired: "Check-in streak required for free ticket",
+  raffleCheckBack: "Check back next month for a new raffle!",
+
+  // Gifting
+  giftHoney: "Gift Honey",
+  giftRecipient: "Send honey to another user",
+  giftSent: "Gift sent!",
+  giftReceived: "Gift received!",
+
+  // Seasonal Events
+  seasonalEvent: "Seasonal Event",
+  eventActive: "Event Active",
+  eventMultiplier: "multiplier",
+
+  // Honey Expiration
+  honeyExpiring: "Points expiring soon",
+  honeyExpired: "Points expired",
+
+  // Community Price
+  communityPrice: "Community Price",
+  reportPrice: "Report Price",
+  priceReported: "Price reported!",
+
+  // Onboarding
+  onboardingComplete: "Onboarding complete!",
+  onboardingReward: "Welcome bonus",
 
   // Navigation
   backToHome: "Back to home",
@@ -427,4 +510,16 @@ export const en = {
 
   // Profile
   export: "Export",
+
+  // Home Mini Previews
+  myPortfolio: "My Portfolio",
+  noPortfolioYet: "No portfolios yet",
+  createOne: "Create one",
+  loginToTrack: "Track your collection",
+  loginToEarn: "Earn points & rewards",
+  balance: "Balance",
+  streak: "Streak",
+  viewPortfolio: "View",
+  viewHoney: "View",
+  pts: "pts",
 } as const;

@@ -102,6 +102,12 @@ export async function GET(request: NextRequest) {
     case "change_30d_asc":
       orderBy.priceChange30d = { sort: "asc", nulls: "last" };
       break;
+    case "rarity_asc":
+      orderBy.rarity = "asc";
+      break;
+    case "rarity_desc":
+      orderBy.rarity = "desc";
+      break;
     case "views_desc":
       orderBy.viewCount = "desc";
       break;
@@ -113,7 +119,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const [rawCards, total] = await Promise.all([
+    const [rawCards, total, valueAgg] = await Promise.all([
       prisma.card.findMany({
         where,
         orderBy,
@@ -134,6 +140,7 @@ export async function GET(request: NextRequest) {
         },
       }),
       prisma.card.count({ where }),
+      prisma.card.aggregate({ _sum: { latestPriceJpy: true }, where: { latestPriceJpy: { gt: 0 } } }),
     ]);
 
     const cards = rawCards.map(({ prices, ...rest }) => ({
@@ -144,6 +151,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       cards,
       total,
+      totalValue: valueAgg._sum.latestPriceJpy ?? 0,
       page,
       limit,
       totalPages: Math.ceil(total / limit),

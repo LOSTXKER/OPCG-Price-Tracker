@@ -37,6 +37,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
+import { Price } from "@/components/shared/price-inline";
 import { createClient } from "@/lib/supabase/client";
 import { useUIStore, type Language, type Currency } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
@@ -64,14 +65,15 @@ type UserTierValue = "FREE" | "PRO" | "PRO_PLUS" | "LIFETIME_PRO" | "LIFETIME_PR
 
 const TIER_DISPLAY: Record<UserTierValue, { label: string; color: string; icon: typeof Star }> = {
   FREE: { label: "Free", color: "bg-muted text-muted-foreground", icon: User },
-  PRO: { label: "Pro", color: "bg-blue-500/15 text-blue-600 dark:text-blue-400", icon: Zap },
+  PRO: { label: "Pro", color: "bg-[#A57E61]/15 text-[#73533E] dark:text-[#C49A70]", icon: Zap },
   PRO_PLUS: { label: "Pro+", color: "bg-amber-500/15 text-amber-600 dark:text-amber-400", icon: Crown },
-  LIFETIME_PRO: { label: "Pro ∞", color: "bg-purple-500/15 text-purple-600 dark:text-purple-400", icon: Sparkles },
+  LIFETIME_PRO: { label: "Pro ∞", color: "bg-[#73533E]/15 text-[#73533E] dark:text-[#E0B865]", icon: Sparkles },
   LIFETIME_PRO_PLUS: { label: "Pro+ ∞", color: "bg-amber-500/15 text-amber-600 dark:text-amber-400", icon: Crown },
 };
 
 type MarketStats = {
   totalCards: number;
+  totalValue: number;
   exchangeRate: number;
   topMover: { code: string; name: string; change: number } | null;
 };
@@ -99,6 +101,7 @@ export function Header() {
   const [mounted, setMounted] = useState(false);
   const [stats, setStats] = useState<MarketStats>({
     totalCards: 0,
+    totalValue: 0,
     exchangeRate: 0.296,
     topMover: { code: "OP13-118-P", name: "Monkey.D.Luffy", change: 5.8 },
   });
@@ -150,6 +153,7 @@ export function Header() {
         const top = cardsData?.cards?.[0];
         setStats((prev) => ({
           totalCards: cardsData?.total ?? prev.totalCards,
+          totalValue: cardsData?.totalValue ?? prev.totalValue,
           exchangeRate: rateData?.rate ?? prev.exchangeRate,
           topMover: top
             ? {
@@ -202,8 +206,26 @@ export function Header() {
         <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-6 text-[11.5px] lg:px-8">
           {/* Left — market ticker chips */}
           <div className="flex items-center gap-2 text-muted-foreground">
+            {stats.totalCards > 0 && (
+              <div className="flex items-center gap-1.5 rounded-full bg-background/60 px-2.5 py-1">
+                <span className="font-medium">{t(language, "totalCards")}</span>
+                <span className="font-bold tabular-nums text-foreground">
+                  {stats.totalCards.toLocaleString()}
+                </span>
+              </div>
+            )}
+
+            {stats.totalValue > 0 && (
+              <div className="flex items-center gap-1.5 rounded-full bg-background/60 px-2.5 py-1">
+                <span className="font-medium">{t(language, "totalValue")}</span>
+                <span className="font-bold tabular-nums text-foreground">
+                  <Price jpy={stats.totalValue} />
+                </span>
+              </div>
+            )}
+
             <div className="flex items-center gap-1.5 rounded-full bg-background/60 px-2.5 py-1">
-              <ArrowRightLeft className="size-3 text-blue-500" />
+              <ArrowRightLeft className="size-3 text-muted-foreground" />
               <span className="font-medium">JPY/THB</span>
               <span className="font-bold tabular-nums text-foreground">
                 {stats.exchangeRate.toFixed(3)}
@@ -359,11 +381,11 @@ export function Header() {
               className={cn(
                 "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
                 isActive(pathname, "/portfolio")
-                  ? "bg-amber-500/10 font-semibold text-foreground"
+                  ? "bg-amber-100 dark:bg-amber-500/10 font-semibold text-foreground"
                   : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
               )}
             >
-              <Star className="size-3.5 fill-amber-400 text-amber-400" />
+              <Star className="size-3.5 fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400" />
               {t(language, "portfolioNav")}
             </Link>
 
@@ -373,7 +395,7 @@ export function Header() {
               className={cn(
                 "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
                 isActive(pathname, "/honey")
-                  ? "bg-amber-500/10 font-semibold text-foreground"
+                  ? "bg-amber-100 dark:bg-amber-500/10 font-semibold text-foreground"
                   : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
               )}
             >
@@ -463,7 +485,7 @@ export function Header() {
                   href="/pricing"
                   className="flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
                 >
-                  <Crown className="size-3 text-amber-500" />
+                  <Crown className="size-3 text-amber-600 dark:text-amber-400" />
                   {language === "TH" ? "แพ็กเกจ" : language === "JP" ? "プラン" : "Plans"}
                 </Link>
                 <Link

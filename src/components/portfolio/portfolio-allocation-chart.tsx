@@ -11,13 +11,13 @@ import type { AllocationSlice } from "@/lib/types/portfolio"
 
 const COLORS = [
   "var(--primary)",
-  "var(--chart-2, #60a5fa)",
-  "var(--chart-3, #34d399)",
-  "var(--chart-4, #fbbf24)",
+  "var(--chart-2, #34d399)",
+  "var(--chart-3, #FA999B)",
+  "var(--chart-4, #E0B865)",
   "var(--chart-5, #f87171)",
-  "var(--chart-6, #a78bfa)",
+  "var(--chart-6, #A57E61)",
   "var(--chart-7, #fb923c)",
-  "var(--chart-8, #38bdf8)",
+  "var(--chart-8, #C49A70)",
 ]
 
 export function PortfolioAllocationChart({

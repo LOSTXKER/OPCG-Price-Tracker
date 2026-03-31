@@ -270,7 +270,7 @@ export function HomeMarketOverview({
             className={cn(
               "flex items-center gap-1 rounded-md border px-3 py-1 text-xs font-semibold transition-all",
               m.priceMode === "psa10"
-                ? "border-amber-600 bg-amber-500/15 text-amber-700 dark:text-amber-400 shadow-sm"
+                ? "border-amber-600 bg-amber-500/15 text-amber-600 dark:text-amber-400 shadow-sm"
                 : "border-border bg-card text-muted-foreground hover:bg-muted/60 hover:text-foreground"
             )}
           >
@@ -345,12 +345,12 @@ export function HomeMarketOverview({
         <div className="hidden overflow-x-auto sm:block">
           <table className="w-full text-left text-sm">
             <thead className="sticky top-0 z-10 bg-card">
-              <tr className="border-b border-border text-xs font-medium uppercase tracking-wider text-muted-foreground/70">
+              <tr className="border-b border-border text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 <th className="w-8 py-2.5 pl-3 pr-0 font-medium"></th>
                 <th className="w-10 py-2.5 pr-1 pl-1 font-medium">#</th>
                 <th className="py-2.5 pr-3 pl-2 font-medium">{t(lang, "card")}</th>
                 <th className="hidden py-2.5 pr-3 font-medium md:table-cell">{t(lang, "set")}</th>
-                <th className="hidden py-2.5 pr-3 font-medium sm:table-cell">{t(lang, "rarity")}</th>
+                <SortableHeader label={t(lang, "rarity")} column="rarity" activeCol={m.sortCol} dir={m.sortDir} onClick={m.handleColumnSort} className="hidden sm:table-cell" />
                 <SortableHeader label={t(lang, "price")} column="price" activeCol={m.sortCol} dir={m.sortDir} onClick={m.handleColumnSort} align="right" />
                 <SortableHeader label="24h" column="change24h" activeCol={m.sortCol} dir={m.sortDir} onClick={m.handleColumnSort} align="right" />
                 {m.showViews ? (

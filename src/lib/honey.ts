@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/db";
-import type { HoneyActionType, Prisma } from "@/generated/prisma/client";
+import type { HoneyActionType, Prisma, UserTier } from "@/generated/prisma/client";
+import { getLimits } from "@/lib/tier";
+import { effectiveTier } from "@/lib/tier";
 
 const HONEY_REWARDS: Partial<Record<HoneyActionType, number>> = {
   CHECKIN: 10,
@@ -8,11 +10,22 @@ const HONEY_REWARDS: Partial<Record<HoneyActionType, number>> = {
   REVIEW: 5,
   REFERRAL: 50,
   TRIAL_BONUS: 30,
+  DAILY_MISSION: 15,
+  PRICE_PREDICTION: 20,
+  DECK_SHARE: 15,
+  COMMUNITY_PRICE: 10,
+  FIRST_PURCHASE: 30,
+  ONBOARDING: 50,
+  ACHIEVEMENT: 0,
+  LUCKY_DRAW: 0,
+  RAFFLE_TICKET: 0,
+  RAFFLE_WIN: 0,
 };
 
 const DAILY_LIMITS: Partial<Record<HoneyActionType, number>> = {
   PORTFOLIO_ADD: 10,
   REVIEW: 5,
+  COMMUNITY_PRICE: 5,
 };
 
 const STREAK_MULTIPLIER: Record<number, number> = {
@@ -24,6 +37,15 @@ function getStreakMultiplier(streak: number): number {
   if (streak >= 30) return 3;
   if (streak >= 7) return 2;
   return 1;
+}
+
+async function getSeasonalMultiplier(): Promise<number> {
+  const now = new Date();
+  const event = await prisma.seasonalEvent.findFirst({
+    where: { isActive: true, startDate: { lte: now }, endDate: { gte: now } },
+    select: { honeyMultiplier: true },
+  });
+  return event?.honeyMultiplier ?? 1;
 }
 
 export async function earnHoney(
@@ -46,6 +68,7 @@ export async function earnHoney(
     if (todayCount >= dailyLimit) return null;
   }
 
+  const seasonalMultiplier = await getSeasonalMultiplier();
   let amount = baseAmount;
 
   if (type === "CHECKIN") {
@@ -62,12 +85,13 @@ export async function earnHoney(
       now.toDateString() !== lastCheckin.toDateString();
 
     const streak = isConsecutive ? user.checkinStreak + 1 : 1;
-    amount = baseAmount * getStreakMultiplier(streak) * tierMultiplier;
+    amount = Math.round(baseAmount * getStreakMultiplier(streak) * tierMultiplier * seasonalMultiplier);
 
     const updated = await prisma.user.update({
       where: { id: userId },
       data: {
         honeyPoints: { increment: amount },
+        honeyLifetimeEarned: { increment: amount },
         lastCheckinAt: now,
         checkinStreak: streak,
       },
@@ -86,11 +110,39 @@ export async function earnHoney(
     return { earned: amount, total: updated.honeyPoints };
   }
 
-  amount = baseAmount * tierMultiplier;
+  amount = Math.round(baseAmount * tierMultiplier * seasonalMultiplier);
 
   const updated = await prisma.user.update({
     where: { id: userId },
-    data: { honeyPoints: { increment: amount } },
+    data: {
+      honeyPoints: { increment: amount },
+      honeyLifetimeEarned: { increment: amount },
+    },
+  });
+
+  await prisma.honeyTransaction.create({
+    data: { userId, amount, type, reason, metadata: metadata as Prisma.InputJsonValue ?? undefined },
+  });
+
+  return { earned: amount, total: updated.honeyPoints };
+}
+
+/**
+ * Directly grant honey with a specific amount (for achievements, gifts, lucky draw, etc.)
+ */
+export async function earnHoneyDirect(
+  userId: string,
+  type: HoneyActionType,
+  amount: number,
+  reason: string,
+  metadata?: Record<string, unknown>,
+): Promise<{ earned: number; total: number }> {
+  const updated = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      honeyPoints: { increment: amount },
+      ...(amount > 0 ? { honeyLifetimeEarned: { increment: amount } } : {}),
+    },
   });
 
   await prisma.honeyTransaction.create({
@@ -140,6 +192,10 @@ export async function canCheckinToday(userId: string): Promise<boolean> {
   });
   if (!user?.lastCheckinAt) return true;
   return new Date().toDateString() !== user.lastCheckinAt.toDateString();
+}
+
+export function getHoneyMultiplier(tier: UserTier, tierExpiresAt: Date | null): number {
+  return getLimits(effectiveTier(tier, tierExpiresAt)).honeyMultiplier;
 }
 
 export { HONEY_REWARDS, STREAK_MULTIPLIER };

@@ -65,7 +65,7 @@ export function SortableHeader<TCol extends string>({
         <Icon
           className={cn(
             "size-3 transition-opacity",
-            isActive ? "text-primary" : "opacity-0 group-hover:opacity-40"
+            isActive ? "text-primary" : "text-muted-foreground/50 group-hover:text-muted-foreground"
           )}
         />
       </span>

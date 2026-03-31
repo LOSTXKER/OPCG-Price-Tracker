@@ -30,7 +30,7 @@ const guides = [
     icon: Swords,
     title: "ประเภทการ์ด",
     description: "Leader, Character, Event, Stage, DON!! — แต่ละประเภททำอะไร",
-    color: "text-blue-500",
+    color: "text-primary",
   },
   {
     href: "/guide/rarities",
@@ -44,7 +44,7 @@ const guides = [
     icon: Palette,
     title: "สี",
     description: "Red, Blue, Green, Purple, Black, Yellow — สีบอกสไตล์การเล่น",
-    color: "text-emerald-500",
+    color: "text-primary",
   },
   {
     href: "/guide/sets",

@@ -35,12 +35,12 @@ import { MAX_COMPARE } from "@/lib/constants/prices";
 import { useCompareData, type CompareCard } from "@/hooks/use-compare-data";
 
 const COLORS = [
-  "#3b82f6",
+  "#73533E",
+  "#E0B865",
+  "#A57E61",
+  "#FA999B",
   "#ef4444",
   "#10b981",
-  "#f59e0b",
-  "#8b5cf6",
-  "#ec4899",
 ];
 
 export default function CompareClient() {
@@ -486,7 +486,7 @@ function NumericCell({
       className={cn(
         "inline-block text-sm font-medium tabular-nums",
         highlight &&
-          "rounded bg-blue-500/10 px-1.5 py-0.5 font-semibold text-blue-500"
+          "rounded bg-primary/10 px-1.5 py-0.5 font-semibold text-primary"
       )}
     >
       {format ? value.toLocaleString() : value}

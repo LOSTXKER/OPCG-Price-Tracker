@@ -194,14 +194,14 @@ export function CardPickerModal({
                     className={cn(
                       "group/pick relative rounded-xl border p-1.5 text-left transition-all",
                       isSelected
-                        ? "border-blue-500 bg-blue-500/5 ring-1 ring-blue-500/30"
+                        ? "border-primary bg-primary/5 ring-1 ring-primary/30"
                         : "border-border hover:border-primary/50 hover:shadow-sm",
                       disabled && "cursor-not-allowed opacity-40"
                     )}
                   >
                     {/* Check badge */}
                     {isSelected && (
-                      <div className="absolute -right-1.5 -top-1.5 z-10 flex size-5 items-center justify-center rounded-full bg-blue-500 text-white shadow">
+                      <div className="absolute -right-1.5 -top-1.5 z-10 flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow">
                         <Check className="size-3" />
                       </div>
                     )}

@@ -27,7 +27,7 @@ const cardTypes = [
   {
     name: "Character",
     nameJp: "キャラクター",
-    color: "border-l-blue-500",
+    color: "border-l-primary",
     emoji: "⚔️",
     description:
       "ลูกทีมที่ใช้โจมตีและป้องกัน มีค่า Cost, Power, Counter และอาจมี Effect พิเศษ",
@@ -37,7 +37,7 @@ const cardTypes = [
   {
     name: "Event",
     nameJp: "イベント",
-    color: "border-l-purple-500",
+    color: "border-l-[#A57E61]",
     emoji: "✨",
     description:
       "การ์ดเวทย์ที่ใช้แล้วทิ้ง มี Effect หลากหลายตั้งแต่เสริม Power จนถึงทำลายการ์ดฝ่ายตรงข้าม",
@@ -47,7 +47,7 @@ const cardTypes = [
   {
     name: "Stage",
     nameJp: "ステージ",
-    color: "border-l-green-500",
+    color: "border-l-[#C49A70]",
     emoji: "🏴‍☠️",
     description:
       "การ์ดสนามที่ให้ Effect ต่อเนื่อง วางลงสนามแล้วอยู่ไปจนถูกทำลาย",

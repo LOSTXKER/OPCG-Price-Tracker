@@ -22,7 +22,7 @@ export default async function SetOG(props: {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "#0f0f23",
+            background: "#1C1C1E",
             color: "white",
             fontSize: 48,
           }}
@@ -53,7 +53,7 @@ export default async function SetOG(props: {
           alignItems: "center",
           justifyContent: "center",
           background:
-            "linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%)",
+            "linear-gradient(135deg, #1C1C1E 0%, #231E1A 50%, #1C1C1E 100%)",
           fontFamily: "sans-serif",
           padding: 60,
         }}
@@ -74,7 +74,7 @@ export default async function SetOG(props: {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+              background: "linear-gradient(135deg, #73533E, #E0B865)",
               borderRadius: 10,
             }}
           >
@@ -82,7 +82,7 @@ export default async function SetOG(props: {
               M
             </span>
           </div>
-          <span style={{ fontSize: 24, color: "#94a3b8", fontWeight: 600 }}>
+          <span style={{ fontSize: 24, color: "#B09A88", fontWeight: 600 }}>
             Meecard
           </span>
         </div>
@@ -91,7 +91,7 @@ export default async function SetOG(props: {
         <span
           style={{
             fontSize: 36,
-            color: "#6366f1",
+            color: "#E0B865",
             fontWeight: 700,
             letterSpacing: "0.05em",
           }}
@@ -121,7 +121,7 @@ export default async function SetOG(props: {
             gap: 24,
             marginTop: 40,
             fontSize: 26,
-            color: "#a5b4fc",
+            color: "#C49A70",
           }}
         >
           <span>{cardCount.toLocaleString()} cards</span>

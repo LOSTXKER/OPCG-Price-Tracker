@@ -16,6 +16,8 @@ export type SortKey =
   | "change_7d_asc"
   | "change_30d_desc"
   | "change_30d_asc"
+  | "rarity_desc"
+  | "rarity_asc"
   | "views_desc"
   | "newest"
   | "name"
@@ -28,7 +30,7 @@ export type ChangePeriod = "24h" | "7d" | "30d"
 
 export const CHANGE_PERIODS: ChangePeriod[] = ["24h", "7d", "30d"]
 
-export type ColumnId = "price" | "change24h" | "change7d" | "change30d"
+export type ColumnId = "price" | "rarity" | "change24h" | "change7d" | "change30d"
 
 export interface CardRow {
   id?: number
@@ -59,6 +61,7 @@ export interface ApiResponse {
 
 export const COLUMN_SORTS: Record<ColumnId, { desc: SortKey; asc: SortKey }> = {
   price: { desc: "price_desc", asc: "price_asc" },
+  rarity: { desc: "rarity_desc", asc: "rarity_asc" },
   change24h: { desc: "change_desc", asc: "change_asc" },
   change7d: { desc: "change_7d_desc", asc: "change_7d_asc" },
   change30d: { desc: "change_30d_desc", asc: "change_30d_asc" },

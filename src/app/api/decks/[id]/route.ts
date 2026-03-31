@@ -1,6 +1,7 @@
 import { requireAuthUser, getAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { earnHoney, getHoneyMultiplier } from "@/lib/honey";
 import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -109,6 +110,21 @@ export async function PATCH(
         },
       },
     });
+
+    if (body.isPublic === true && !existing.isPublic) {
+      const alreadyRewarded = await prisma.honeyTransaction.findFirst({
+        where: { userId: auth.user.id, type: "DECK_SHARE", metadata: { path: ["deckId"], equals: deckId } },
+      });
+      if (!alreadyRewarded) {
+        earnHoney(
+          auth.user.id,
+          "DECK_SHARE",
+          "Shared deck publicly",
+          { deckId },
+          getHoneyMultiplier(auth.user.tier, auth.user.tierExpiresAt),
+        ).catch(() => {});
+      }
+    }
 
     return NextResponse.json({ deck });
   } catch (error) {

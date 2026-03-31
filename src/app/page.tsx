@@ -1,8 +1,8 @@
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import {
-  HomeStatsStrip,
   HomeFeaturedCard,
   HomeMiniTable,
+  HomePreviewRow,
 } from "@/components/home/home-client-sections";
 import { HomeMarketOverview } from "@/components/home/home-market-overview";
 import { HomeSeoContent } from "@/components/home/home-seo-content";
@@ -23,7 +23,6 @@ export default async function HomePage(props: {
     highestPriced,
     newestSet,
     totalCards,
-    totalValue,
     initialTableCards,
     initialTableTotal,
     initialTableTotalPages,
@@ -85,14 +84,8 @@ export default async function HomePage(props: {
         filterDefinitions={filterDefinitions}
         initialSearch={initialSearch}
       >
-        {/* Stats strip */}
-        <HomeStatsStrip
-          totalCards={totalCards}
-          totalValue={totalValue}
-          totalSets={sets.length}
-          latestSetName={newestSet?.code?.toUpperCase()}
-          latestSetCode={newestSet?.code}
-        />
+        {/* Portfolio & Honey mini previews */}
+        <HomePreviewRow />
 
         {/* Highlights: Featured + Gainers/Losers */}
         <div className="panel grid gap-0 divide-y divide-border/40 lg:grid-cols-12 lg:divide-x lg:divide-y-0">

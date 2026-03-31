@@ -24,7 +24,7 @@ export default async function BlogOG(props: {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "#0f0f23",
+            background: "#1C1C1E",
             color: "white",
             fontSize: 48,
           }}
@@ -47,7 +47,7 @@ export default async function BlogOG(props: {
           justifyContent: "center",
           padding: 80,
           background:
-            "linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%)",
+            "linear-gradient(135deg, #1C1C1E 0%, #231E1A 50%, #1C1C1E 100%)",
           fontFamily: "sans-serif",
         }}
       >
@@ -66,7 +66,7 @@ export default async function BlogOG(props: {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+              background: "linear-gradient(135deg, #73533E, #E0B865)",
               borderRadius: 10,
             }}
           >
@@ -74,7 +74,7 @@ export default async function BlogOG(props: {
               M
             </span>
           </div>
-          <span style={{ fontSize: 22, color: "#94a3b8", fontWeight: 600 }}>
+          <span style={{ fontSize: 22, color: "#B09A88", fontWeight: 600 }}>
             Meecard Blog
           </span>
         </div>
@@ -94,7 +94,7 @@ export default async function BlogOG(props: {
         <span
           style={{
             fontSize: 22,
-            color: "#a5b4fc",
+            color: "#C49A70",
             marginTop: 24,
             maxWidth: 800,
             lineHeight: 1.4,

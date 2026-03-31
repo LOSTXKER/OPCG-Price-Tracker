@@ -4,6 +4,7 @@ import { cardInclude } from "@/lib/api/query-fragments";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { canCheckinToday } from "@/lib/honey";
+import { getHoneyLevel } from "@/lib/honey-levels";
 import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -72,6 +73,7 @@ export async function GET() {
       points: dbUser.honeyPoints,
       streak: dbUser.checkinStreak,
       canCheckin,
+      level: getHoneyLevel(dbUser.honeyLifetimeEarned),
     };
 
     const subscription = {

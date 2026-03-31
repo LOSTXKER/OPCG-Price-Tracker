@@ -25,7 +25,7 @@ export default async function CardOG(props: {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "#0f0f23",
+            background: "#1C1C1E",
             color: "white",
             fontSize: 48,
           }}
@@ -50,7 +50,7 @@ export default async function CardOG(props: {
           height: "100%",
           display: "flex",
           background:
-            "linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%)",
+            "linear-gradient(135deg, #1C1C1E 0%, #231E1A 50%, #1C1C1E 100%)",
           fontFamily: "sans-serif",
           padding: 60,
         }}
@@ -78,12 +78,12 @@ export default async function CardOG(props: {
               style={{
                 width: 300,
                 height: 420,
-                background: "#1e1e3f",
+                background: "#2C2724",
                 borderRadius: 12,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: "#6366f1",
+                color: "#E0B865",
                 fontSize: 80,
                 fontWeight: 800,
               }}
@@ -113,7 +113,7 @@ export default async function CardOG(props: {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+                background: "linear-gradient(135deg, #73533E, #E0B865)",
                 borderRadius: 8,
               }}
             >
@@ -123,13 +123,13 @@ export default async function CardOG(props: {
                 M
               </span>
             </div>
-            <span style={{ fontSize: 22, color: "#94a3b8", fontWeight: 600 }}>
+            <span style={{ fontSize: 22, color: "#B09A88", fontWeight: 600 }}>
               Meecard
             </span>
           </div>
 
           {/* Card code */}
-          <span style={{ fontSize: 24, color: "#6366f1", fontWeight: 600 }}>
+          <span style={{ fontSize: 24, color: "#E0B865", fontWeight: 600 }}>
             {card.cardCode}
           </span>
 
@@ -148,7 +148,7 @@ export default async function CardOG(props: {
 
           {/* Rarity + Set */}
           <div
-            style={{ display: "flex", gap: 16, fontSize: 22, color: "#a5b4fc" }}
+            style={{ display: "flex", gap: 16, fontSize: 22, color: "#C49A70" }}
           >
             <span>{card.rarity}</span>
             <span>·</span>

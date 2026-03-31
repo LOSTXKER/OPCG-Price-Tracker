@@ -75,6 +75,8 @@ export const jp = {
   grid: "グリッド",
   totalCards: "全カード",
   totalValue: "総額",
+  ctaPortfolio: "コレクション管理",
+  ctaHoney: "ポイントを貯める",
   priceUp: "値上がり",
   priceDown: "値下がり",
   topGainers: "値上がりランキング",
@@ -420,6 +422,87 @@ export const jp = {
 
   // Honey
   honeySubtitle: "ポイントを貯めて特典と交換",
+  honeyLeaderboard: "ランキング",
+  quests: "クエスト",
+  amount: "金額",
+  honeyRank: "順位",
+  honeyTopEarners: "トップ獲得者",
+  anonymous: "匿名",
+
+  // Reviews
+  reviewSubmit: "レビューを送信",
+  reviewSuccess: "レビューが送信されました！",
+  reviewAlreadyExists: "このユーザーのレビューは既に存在します",
+
+  // Daily Missions
+  dailyMissions: "デイリーミッション",
+  missionCheckPrice: "カード価格をチェック",
+  missionAddCard: "マーケットを閲覧",
+  missionViewSet: "ツールを使用",
+  missionAutoHint: "普段通りサイトを使うだけでミッション達成",
+  missionComplete: "ミッション完了！",
+  claimReward: "報酬を受け取る",
+
+  // Predictions
+  predictions: "価格予想",
+  predictUp: "上昇",
+  predictDown: "下落",
+  predictionCorrect: "正解",
+  predictionWrong: "不正解",
+  predictionPending: "未確定",
+
+  // Honey Levels
+  honeyLevel: "ハニーレベル",
+  levelNewbie: "ニュービー",
+  levelBronze: "ブロンズ",
+  levelSilver: "シルバー",
+  levelGold: "ゴールド",
+  levelDiamond: "ダイヤモンド",
+
+  // Achievements
+  achievements: "実績",
+  achievementEarned: "獲得済み",
+  achievementLocked: "未獲得",
+
+  // Monthly Raffle
+  monthlyRaffle: "月間抽選会",
+  raffleParticipants: "参加者",
+  raffleMyTickets: "マイチケット",
+  raffleNoTickets: "チケットなし — 上で購入または無料入手",
+  raffleBought: "チケット購入完了！",
+  raffleFreeTicket: "無料チケット取得！",
+  raffleNone: "今月の抽選はありません",
+  rafflePrizes: "賞品",
+  raffleTicketCost: "チケット単価",
+  raffleEndsIn: "締切まで",
+  raffleWinner: "当選者",
+  raffleDrawn: "抽選済み",
+  raffleStreakRequired: "連続チェックインで無料チケット獲得",
+  raffleCheckBack: "来月の抽選をお楽しみに！",
+
+  // Gifting
+  giftHoney: "ハニーを贈る",
+  giftRecipient: "他のユーザーにハニーを送る",
+  giftSent: "送信しました！",
+  giftReceived: "ハニーを受け取りました！",
+
+  // Seasonal Events
+  seasonalEvent: "シーズンイベント",
+  eventActive: "イベント開催中",
+  eventMultiplier: "倍率",
+
+  // Honey Expiration
+  honeyExpiring: "ポイントの有効期限が近づいています",
+  honeyExpired: "ポイントが失効しました",
+
+  // Community Price
+  communityPrice: "コミュニティ価格",
+  reportPrice: "価格を報告",
+  priceReported: "価格を報告しました！",
+
+  // Onboarding
+  onboardingComplete: "オンボーディング完了！",
+  onboardingReward: "ウェルカムボーナス",
 
   // Navigation
   backToHome: "ホームに戻る",
@@ -427,4 +510,16 @@ export const jp = {
 
   // Profile
   export: "エクスポート",
+
+  // Home Mini Previews
+  myPortfolio: "マイポートフォリオ",
+  noPortfolioYet: "ポートフォリオなし",
+  createOne: "作成する",
+  loginToTrack: "コレクションを管理",
+  loginToEarn: "ポイントを貯めよう",
+  balance: "残高",
+  streak: "連続",
+  viewPortfolio: "表示",
+  viewHoney: "表示",
+  pts: "pt",
 } as const;

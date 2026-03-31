@@ -100,6 +100,7 @@ model Card {
   priceAlerts     PriceAlert[]
   listings        Listing[]
   communityPrices CommunityPrice[]
+  pricePredictions    PricePrediction[]
   deckLeaders     Deck[]           @relation("DeckLeader")
   deckCards           DeckCard[]
   productCards        ProductCard[]
@@ -256,6 +257,17 @@ model User {
   reviewsReceived     Review[]         @relation("ReviewsReceived")
   communityPrices     CommunityPrice[]
   honeyTransactions   HoneyTransaction[]
+  honeyLifetimeEarned   Int              @default(0)
+  profileFrame          String?
+  onboardingCompleted   Boolean          @default(false)
+  firstPurchaseRewarded Boolean          @default(false)
+  extraPriceAlertSlots  Int              @default(0)
+  csvExportCredits      Int              @default(0)
+  badges              UserBadge[]
+  dailyMissions       DailyMission[]
+  pricePredictions    PricePrediction[]
+  achievements        UserAchievement[]
+  raffleTickets       RaffleTicket[]
   decks               Deck[]
   yuyuteiActions      YuyuteiMapping[]
   snkrdunkActions     SnkrdunkMapping[]
@@ -297,6 +309,18 @@ enum HoneyActionType {
   ADMIN_GRANT
   TRIAL_BONUS
   EXPIRED
+  DAILY_MISSION
+  PRICE_PREDICTION
+  DECK_SHARE
+  COMMUNITY_PRICE
+  FIRST_PURCHASE
+  ONBOARDING
+  ACHIEVEMENT
+  GIFT_SEND
+  GIFT_RECEIVE
+  LUCKY_DRAW
+  RAFFLE_TICKET
+  RAFFLE_WIN
 }
 
 model HoneyShopItem {
@@ -315,11 +339,135 @@ model HoneyShopItem {
   @@index([isActive])
 }
 
+model UserBadge {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  nameEn    String?
+  nameTh    String?
+  imageUrl  String?
+  grantedAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model DailyMission {
+  id            Int      @id @default(autoincrement())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date          String
+  checkedPrice  Boolean  @default(false)
+  addedCard     Boolean  @default(false)
+  viewedSet     Boolean  @default(false)
+  completed     Boolean  @default(false)
+  rewardClaimed Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@unique([userId, date])
+  @@index([userId])
+}
+
+model PricePrediction {
+  id                Int      @id @default(autoincrement())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cardId            Int
+  card              Card     @relation(fields: [cardId], references: [id])
+  direction         String
+  priceAtPrediction Int
+  weekStart         String
+  resolved          Boolean  @default(false)
+  correct           Boolean?
+  rewarded          Boolean  @default(false)
+  createdAt         DateTime @default(now())
+
+  @@unique([userId, cardId, weekStart])
+  @@index([resolved])
+}
+
+model Achievement {
+  id            Int               @id @default(autoincrement())
+  code          String            @unique
+  name          String
+  nameEn        String?
+  nameTh        String?
+  description   String?
+  criteria      Json
+  honeyReward   Int
+  badgeImageUrl String?
+  isActive      Boolean           @default(true)
+  createdAt     DateTime          @default(now())
+  users         UserAchievement[]
+}
+
+model UserAchievement {
+  id            Int         @id @default(autoincrement())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId Int
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+  earnedAt      DateTime    @default(now())
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+}
+
+model MonthlyRaffle {
+  id            Int            @id @default(autoincrement())
+  month         String         @unique // "2026-04"
+  title         String
+  titleEn       String?
+  titleTh       String?
+  description   String?
+  prizes        Json           // [{ rank: 1, name: "...", value: "..." }]
+  ticketCost    Int            @default(50)
+  maxTickets    Int            @default(5)
+  freeThreshold Int            @default(7) // streak days for free ticket
+  isActive      Boolean        @default(true)
+  drawnAt       DateTime?
+  winnerId      String?
+  winnerTicketId Int?
+  tickets       RaffleTicket[]
+  createdAt     DateTime       @default(now())
+
+  @@index([isActive, month])
+}
+
+model RaffleTicket {
+  id        Int            @id @default(autoincrement())
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  raffleId  Int
+  raffle    MonthlyRaffle  @relation(fields: [raffleId], references: [id], onDelete: Cascade)
+  isFree    Boolean        @default(false)
+  createdAt DateTime       @default(now())
+
+  @@index([raffleId, userId])
+  @@index([userId])
+}
+
+model SeasonalEvent {
+  id              Int      @id @default(autoincrement())
+  name            String
+  nameEn          String?
+  nameTh          String?
+  description     String?
+  startDate       DateTime
+  endDate         DateTime
+  honeyMultiplier Float    @default(1)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+}
+
 enum ShopItemType {
   TRIAL_PRO
   TRIAL_PRO_PLUS
   BADGE
   CUSTOM
+  PROFILE_FRAME
+  PRICE_ALERT_SLOT
+  CSV_EXPORT_PASS
 }
 
 enum UserTier {

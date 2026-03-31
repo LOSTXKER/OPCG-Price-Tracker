@@ -7,6 +7,7 @@ import { parseCondition } from "@/lib/api/parse-condition";
 import { parseListingQuantity, parseJsonBody } from "@/lib/api/request-body";
 import { cardInclude, userPublicSelect, asStringArray } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
+import { earnHoney, getHoneyMultiplier } from "@/lib/honey";
 import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -136,6 +137,16 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         user: { select: userPublicSelect },
       },
     });
+
+    if (data.status === "SOLD" && existing.status !== ListingStatus.SOLD) {
+      earnHoney(
+        dbUser.id,
+        "MARKETPLACE_SELL",
+        "Sold item on marketplace",
+        { listingId },
+        getHoneyMultiplier(dbUser.tier, dbUser.tierExpiresAt),
+      ).catch(() => {});
+    }
 
     return NextResponse.json({ listing });
   } catch (error) {

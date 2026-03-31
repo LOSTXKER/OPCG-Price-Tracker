@@ -70,15 +70,20 @@ export function SectionOverview({
 
         <Link
           href="/honey"
-          className="rounded-xl border border-border/40 bg-card p-4 transition-colors hover:border-amber-500/30"
+          className="rounded-xl border border-border/40 bg-card p-4 transition-colors hover:border-amber-600/30 dark:hover:border-amber-500/30"
         >
           <p className="text-muted-foreground text-xs">{t(lang, "profileHoney")}</p>
-          <p className="mt-1 text-lg font-semibold tracking-tight text-amber-500">
+          <p className="mt-1 text-lg font-semibold tracking-tight text-amber-600 dark:text-amber-400">
             🍯 {honey.points.toLocaleString()}
           </p>
           <div className="text-muted-foreground flex items-center gap-1 text-xs">
             <Flame className="size-3 text-orange-500" />
             {honey.streak} {t(lang, "days")} {t(lang, "profileStreak")}
+            {honey.level && (
+              <span className="ml-1.5 rounded-full bg-amber-100 dark:bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-bold text-amber-600 dark:text-amber-400">
+                {honey.level.label}
+              </span>
+            )}
           </div>
         </Link>
 
@@ -114,10 +119,10 @@ export function SectionOverview({
       </div>
 
       {/* Honey check-in */}
-      <div className="rounded-xl border border-amber-500/20 bg-gradient-to-br from-amber-400/5 to-orange-400/5 p-4">
+      <div className="rounded-xl border border-amber-600/20 dark:border-amber-500/20 bg-gradient-to-br from-amber-100/40 dark:from-amber-400/5 to-orange-100/40 dark:to-orange-400/5 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Award className="size-4 text-amber-500" />
+            <Award className="size-4 text-amber-600 dark:text-amber-400" />
             <h2 className="text-sm font-semibold">{t(lang, "honeyPoints")}</h2>
           </div>
           <Link
@@ -129,7 +134,7 @@ export function SectionOverview({
         </div>
         <div className="mt-3 flex items-center justify-between">
           <div>
-            <p className="text-2xl font-bold text-amber-500">🍯 {honey.points.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">🍯 {honey.points.toLocaleString()}</p>
             <div className="text-muted-foreground mt-0.5 flex items-center gap-1 text-xs">
               <Flame className="size-3 text-orange-500" />
               {honey.streak} {t(lang, "days")}
@@ -140,7 +145,7 @@ export function SectionOverview({
             disabled={!honey.canCheckin || checkinLoading}
             onClick={onCheckin}
             className={cn(
-              honey.canCheckin ? "bg-amber-500 hover:bg-amber-600 text-white" : "opacity-60",
+              honey.canCheckin ? "border border-amber-200 bg-amber-100 text-amber-600 hover:bg-amber-200 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400 dark:hover:bg-amber-500/20" : "opacity-60",
             )}
           >
             <Calendar className="mr-1.5 size-3.5" />

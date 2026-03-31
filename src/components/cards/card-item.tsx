@@ -108,7 +108,7 @@ function CardItemBase({
             <CompareButton
               item={{ cardCode, name: displayName, imageUrl: imageUrl ?? null, rarity }}
               size="sm"
-              className="text-white/80 hover:text-blue-300"
+              className="text-white/80 hover:text-primary"
             />
           </div>
         </div>

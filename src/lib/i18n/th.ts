@@ -75,6 +75,8 @@ export const th = {
   grid: "กริด",
   totalCards: "การ์ดทั้งหมด",
   totalValue: "มูลค่ารวม",
+  ctaPortfolio: "จัดการคอลเลกชัน",
+  ctaHoney: "สะสมแต้ม",
   priceUp: "ราคาขึ้น",
   priceDown: "ราคาลง",
   topGainers: "ราคาขึ้นมากสุด",
@@ -420,6 +422,87 @@ export const th = {
 
   // Honey
   honeySubtitle: "สะสมแต้มแลกรางวัล",
+  honeyLeaderboard: "อันดับ",
+  quests: "ภารกิจ",
+  amount: "จำนวน",
+  honeyRank: "อันดับ",
+  honeyTopEarners: "คนสะสมเยอะสุด",
+  anonymous: "ไม่ระบุชื่อ",
+
+  // Reviews
+  reviewSubmit: "ส่งรีวิว",
+  reviewSuccess: "รีวิวสำเร็จ!",
+  reviewAlreadyExists: "คุณรีวิวผู้ใช้นี้แล้ว",
+
+  // Daily Missions
+  dailyMissions: "ภารกิจประจำวัน",
+  missionCheckPrice: "เช็คราคาการ์ด",
+  missionAddCard: "เรียกดูตลาด",
+  missionViewSet: "ใช้เครื่องมือ",
+  missionAutoHint: "แค่ใช้งานเว็บตามปกติ ภารกิจจะสำเร็จเอง",
+  missionComplete: "ภารกิจสำเร็จ!",
+  claimReward: "รับรางวัล",
+
+  // Predictions
+  predictions: "ทายราคา",
+  predictUp: "ขึ้น",
+  predictDown: "ลง",
+  predictionCorrect: "ถูกต้อง",
+  predictionWrong: "ผิด",
+  predictionPending: "รอผล",
+
+  // Honey Levels
+  honeyLevel: "ระดับ Honey",
+  levelNewbie: "มือใหม่",
+  levelBronze: "บรอนซ์",
+  levelSilver: "ซิลเวอร์",
+  levelGold: "โกลด์",
+  levelDiamond: "ไดมอนด์",
+
+  // Achievements
+  achievements: "ความสำเร็จ",
+  achievementEarned: "ได้รับแล้ว",
+  achievementLocked: "ยังไม่ปลดล็อก",
+
+  // Monthly Raffle
+  monthlyRaffle: "ลุ้นรางวัลประจำเดือน",
+  raffleParticipants: "ผู้เข้าร่วม",
+  raffleMyTickets: "ตั๋วของฉัน",
+  raffleNoTickets: "ยังไม่มีตั๋ว — ซื้อหรือรับฟรีด้านบน",
+  raffleBought: "ซื้อตั๋วสำเร็จ!",
+  raffleFreeTicket: "รับตั๋วฟรีแล้ว!",
+  raffleNone: "ยังไม่มีรางวัลเดือนนี้",
+  rafflePrizes: "รางวัล",
+  raffleTicketCost: "ราคาต่อใบ",
+  raffleEndsIn: "สิ้นสุดใน",
+  raffleWinner: "ผู้ชนะ",
+  raffleDrawn: "จับรางวัลแล้ว",
+  raffleStreakRequired: "ต้องเช็คอินติดต่อกันเพื่อรับตั๋วฟรี",
+  raffleCheckBack: "กลับมาเดือนหน้าเพื่อลุ้นรางวัลใหม่!",
+
+  // Gifting
+  giftHoney: "ส่ง Honey",
+  giftRecipient: "ส่ง Honey ให้ผู้ใช้อื่น",
+  giftSent: "ส่งสำเร็จ!",
+  giftReceived: "ได้รับ Honey!",
+
+  // Seasonal Events
+  seasonalEvent: "อีเวนท์ตามฤดูกาล",
+  eventActive: "อีเวนท์กำลังดำเนินอยู่",
+  eventMultiplier: "ตัวคูณ",
+
+  // Honey Expiration
+  honeyExpiring: "แต้มใกล้หมดอายุ",
+  honeyExpired: "แต้มหมดอายุ",
+
+  // Community Price
+  communityPrice: "ราคาจากชุมชน",
+  reportPrice: "รายงานราคา",
+  priceReported: "รายงานราคาสำเร็จ!",
+
+  // Onboarding
+  onboardingComplete: "เสร็จสิ้นการเริ่มต้น!",
+  onboardingReward: "โบนัสต้อนรับ",
 
   // Navigation
   backToHome: "กลับหน้าแรก",
@@ -427,4 +510,16 @@ export const th = {
 
   // Profile
   export: "ส่งออก",
+
+  // Home Mini Previews
+  myPortfolio: "พอร์ตของฉัน",
+  noPortfolioYet: "ยังไม่มีพอร์ต",
+  createOne: "สร้างเลย",
+  loginToTrack: "ติดตามคอลเลกชันของคุณ",
+  loginToEarn: "สะสมแต้มแลกรางวัล",
+  balance: "คะแนน",
+  streak: "สตรีค",
+  viewPortfolio: "ดู",
+  viewHoney: "ดู",
+  pts: "แต้ม",
 } as const;

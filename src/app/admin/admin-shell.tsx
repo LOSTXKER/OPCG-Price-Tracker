@@ -9,6 +9,7 @@ import {
   BarChart3,
   ArrowLeftRight,
   Globe,
+  Award,
   LogOut,
   Shield,
 } from "lucide-react";
@@ -22,6 +23,7 @@ const NAV_ITEMS = [
   { href: "/admin/drop-rates", label: "Drop Rates", icon: BarChart3 },
   { href: "/admin/yuyutei-matching", label: "Yuyutei Matching", icon: ArrowLeftRight },
   { href: "/admin/snkrdunk-matching", label: "SNKRDUNK Matching", icon: Globe },
+  { href: "/admin/honey", label: "Honey", icon: Award },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {

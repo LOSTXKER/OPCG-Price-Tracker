@@ -57,7 +57,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
         />
         <SummaryCard
           icon={<TrendingUp className="size-4" />}
-          iconBg="bg-blue-500/10 text-blue-600 dark:text-blue-400"
+          iconBg="bg-primary/10 text-primary"
           label={lang === "TH" ? "ราคาเฉลี่ย" : lang === "JP" ? "平均価格" : "Avg. Price"}
           value={<Price jpy={data.avgPrice} />}
         />

@@ -33,8 +33,8 @@ export function CompareButton({
         className={cn(
           "inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all duration-200 active:scale-95",
           selected
-            ? "border-blue-500/40 bg-blue-500/10 text-blue-500"
-            : "border-border text-muted-foreground hover:border-blue-400/40 hover:bg-blue-500/5 hover:text-blue-400",
+            ? "border-primary/40 bg-primary/10 text-primary"
+            : "border-border text-muted-foreground hover:border-primary/40 hover:bg-primary/5 hover:text-primary",
           className
         )}
       >
@@ -57,8 +57,8 @@ export function CompareButton({
       className={cn(
         "inline-flex shrink-0 items-center justify-center rounded-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
         selected
-          ? "text-blue-400 hover:text-blue-500"
-          : "text-muted-foreground/40 hover:text-blue-400",
+          ? "text-primary hover:text-primary/80"
+          : "text-muted-foreground/40 hover:text-primary",
         className
       )}
       aria-label={selected ? t(lang, "removeFromCompare") : t(lang, "addToCompare")}
