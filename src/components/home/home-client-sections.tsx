@@ -93,7 +93,7 @@ export function HomePortfolioPreview() {
             <span className="text-sm font-semibold">{t(lang, "myPortfolio")}</span>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-3 px-3.5 py-3">
+        <div className="space-y-2 px-3.5 py-3 sm:grid sm:grid-cols-3 sm:gap-3 sm:space-y-0">
           {[1, 2, 3].map((i) => (
             <div key={i} className="space-y-1.5">
               <div className="h-2.5 w-12 animate-pulse rounded bg-muted" />
@@ -108,13 +108,13 @@ export function HomePortfolioPreview() {
   if (authed === false) {
     return (
       <Link href="/portfolio" className={cn(panelClass, "group transition-colors hover:border-border hover:bg-muted/40")}>
-        <div className="flex items-center gap-2.5 px-3.5 py-3">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+        <div className="flex items-center gap-2.5 px-3 py-2.5">
+          <div className="flex size-7 items-center justify-center rounded-lg bg-muted text-muted-foreground">
             <Briefcase className="size-3.5" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-medium text-muted-foreground">{t(lang, "portfolio")}</p>
-            <p className="text-sm font-semibold">{t(lang, "loginToTrack")}</p>
+            <p className="text-xs font-semibold sm:text-sm">{t(lang, "loginToTrack")}</p>
           </div>
           <LogIn className="size-4 text-muted-foreground/40 transition-all group-hover:text-muted-foreground" />
         </div>
@@ -125,15 +125,15 @@ export function HomePortfolioPreview() {
   if (empty || !data) {
     return (
       <Link href="/portfolio" className={cn(panelClass, "group transition-colors hover:border-border hover:bg-muted/40")}>
-        <div className={headerClass}>
+        <div className={cn(headerClass, "px-3 py-2")}>
           <div className="flex items-center gap-2">
             <div className={iconBg}><Briefcase className="size-3.5" /></div>
-            <span className="text-sm font-semibold">{t(lang, "myPortfolio")}</span>
+            <span className="text-xs font-semibold sm:text-sm">{t(lang, "myPortfolio")}</span>
           </div>
         </div>
-        <div className="flex items-center gap-2.5 px-3.5 py-3 text-muted-foreground">
-          <Plus className="size-4" />
-          <span className="text-xs">
+        <div className="flex items-center gap-2 px-3 py-2.5 text-muted-foreground">
+          <Plus className="size-3.5" />
+          <span className="text-[10px] sm:text-xs">
             {t(lang, "noPortfolioYet")} &mdash;{" "}
             <span className="font-medium text-foreground underline underline-offset-2">{t(lang, "createOne")}</span>
           </span>
@@ -144,39 +144,36 @@ export function HomePortfolioPreview() {
 
   return (
     <div className={panelClass}>
-      <Link href="/portfolio" className={cn(headerClass, "group transition-colors hover:bg-muted/40")}>
+      <Link href="/portfolio" className={cn(headerClass, "group px-3 py-2 transition-colors hover:bg-muted/40")}>
         <div className="flex items-center gap-2">
           <div className={iconBg}><Briefcase className="size-3.5" /></div>
-          <span className="text-sm font-semibold">{t(lang, "myPortfolio")}</span>
+          <span className="text-xs font-semibold sm:text-sm">{t(lang, "myPortfolio")}</span>
         </div>
-        <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground transition-colors group-hover:text-foreground">
-          {t(lang, "viewPortfolio")}
-          <ArrowRight className="size-3" />
-        </span>
+        <ArrowRight className="size-3 text-muted-foreground transition-colors group-hover:text-foreground" />
       </Link>
-      <div className="grid grid-cols-3 divide-x divide-border/40 px-1 py-2.5">
-        <div className="px-2.5">
+      <div className="space-y-1.5 px-3 py-2 sm:grid sm:grid-cols-3 sm:divide-x sm:divide-border/40 sm:space-y-0 sm:px-1 sm:py-2.5">
+        <div className="sm:px-2.5">
           <p className="text-[10px] font-medium text-muted-foreground">{t(lang, "portfolioValue")}</p>
-          <p className="mt-0.5 font-price text-sm font-bold">
+          <p className="mt-0.5 font-price text-xs font-bold sm:text-sm">
             <Price jpy={data.totalValue} />
           </p>
         </div>
-        <div className="px-2.5">
+        <div className="sm:px-2.5">
           <p className="text-[10px] font-medium text-muted-foreground">{t(lang, "cardsTracked")}</p>
-          <p className="mt-0.5 font-price text-sm font-bold">{data.totalCards}</p>
+          <p className="mt-0.5 font-price text-xs font-bold sm:text-sm">{data.totalCards}</p>
         </div>
-        <div className="px-2.5">
+        <div className="sm:px-2.5">
           <p className="text-[10px] font-medium text-muted-foreground">{t(lang, "unrealizedPnl")}</p>
           {data.hasCostBasis ? (
             <p className={cn(
-              "mt-0.5 font-price text-sm font-bold",
+              "mt-0.5 font-price text-xs font-bold sm:text-sm",
               data.unrealizedPnl >= 0 ? "text-price-up" : "text-price-down",
             )}>
               {data.unrealizedPnl >= 0 ? "+" : ""}
               <Price jpy={data.unrealizedPnl} />
             </p>
           ) : (
-            <p className="mt-0.5 text-sm text-muted-foreground">&mdash;</p>
+            <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">&mdash;</p>
           )}
         </div>
       </div>
@@ -241,13 +238,13 @@ export function HomeHoneyPreview() {
   if (authed === null || loading) {
     return (
       <div className={panelClass}>
-        <div className={headerClass}>
+        <div className={cn(headerClass, "px-3 py-2")}>
           <div className="flex items-center gap-2">
             <div className={iconBg}><Sparkles className="size-3.5" /></div>
-            <span className="text-sm font-semibold">{t(lang, "honeyPoints")}</span>
+            <span className="text-xs font-semibold sm:text-sm">{t(lang, "honeyPoints")}</span>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-3 px-3.5 py-3">
+        <div className="space-y-2 px-3 py-2.5 sm:grid sm:grid-cols-3 sm:gap-3 sm:space-y-0 sm:px-3.5 sm:py-3">
           {[1, 2, 3].map((i) => (
             <div key={i} className="space-y-1.5">
               <div className="h-2.5 w-12 animate-pulse rounded bg-muted" />
@@ -262,13 +259,13 @@ export function HomeHoneyPreview() {
   if (authed === false) {
     return (
       <Link href="/honey" className={cn(panelClass, "group transition-colors hover:border-border hover:bg-muted/40")}>
-        <div className="flex items-center gap-2.5 px-3.5 py-3">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400">
+        <div className="flex items-center gap-2.5 px-3 py-2.5">
+          <div className="flex size-7 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400">
             <Sparkles className="size-3.5" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-medium text-muted-foreground">{t(lang, "honeyPoints")}</p>
-            <p className="text-sm font-semibold">{t(lang, "loginToEarn")}</p>
+            <p className="text-xs font-semibold sm:text-sm">{t(lang, "loginToEarn")}</p>
           </div>
           <LogIn className="size-4 text-muted-foreground/40 transition-all group-hover:text-muted-foreground" />
         </div>
@@ -279,11 +276,11 @@ export function HomeHoneyPreview() {
   if (!data) {
     return (
       <Link href="/honey" className={cn(panelClass, "group transition-colors hover:border-border hover:bg-muted/40")}>
-        <div className="flex items-center gap-2.5 px-3.5 py-3">
+        <div className="flex items-center gap-2.5 px-3 py-2.5">
           <div className={iconBg}><Sparkles className="size-3.5" /></div>
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-medium text-muted-foreground">{t(lang, "honeyPoints")}</p>
-            <p className="text-sm font-semibold">{t(lang, "ctaHoney")}</p>
+            <p className="text-xs font-semibold sm:text-sm">{t(lang, "ctaHoney")}</p>
           </div>
           <ChevronRight className="size-4 text-muted-foreground/40" />
         </div>
@@ -295,40 +292,37 @@ export function HomeHoneyPreview() {
 
   return (
     <div className={panelClass}>
-      <Link href="/honey" className={cn(headerClass, "group transition-colors hover:bg-muted/40")}>
+      <Link href="/honey" className={cn(headerClass, "group px-3 py-2 transition-colors hover:bg-muted/40")}>
         <div className="flex items-center gap-2">
           <div className={iconBg}><Sparkles className="size-3.5" /></div>
-          <span className="text-sm font-semibold">{t(lang, "honeyPoints")}</span>
+          <span className="text-xs font-semibold sm:text-sm">{t(lang, "honeyPoints")}</span>
         </div>
-        <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground transition-colors group-hover:text-foreground">
-          {t(lang, "viewHoney")}
-          <ArrowRight className="size-3" />
-        </span>
+        <ArrowRight className="size-3 text-muted-foreground transition-colors group-hover:text-foreground" />
       </Link>
-      <div className="flex items-center divide-x divide-border/40 px-1 py-2.5">
-        <div className="flex-1 px-2.5">
+      <div className="space-y-1.5 px-3 py-2 sm:flex sm:items-center sm:divide-x sm:divide-border/40 sm:space-y-0 sm:px-1 sm:py-2.5">
+        <div className="sm:flex-1 sm:px-2.5">
           <p className="text-[10px] font-medium text-muted-foreground">{t(lang, "balance")}</p>
-          <p className="mt-0.5 font-price text-sm font-bold text-amber-600 dark:text-amber-400">
+          <p className="mt-0.5 font-price text-xs font-bold text-amber-600 dark:text-amber-400 sm:text-sm">
             {data.honeyPoints.toLocaleString()} {t(lang, "pts")}
           </p>
         </div>
-        <div className="flex-1 px-2.5">
+        <div className="sm:flex-1 sm:px-2.5">
           <p className="text-[10px] font-medium text-muted-foreground">{t(lang, "honeyLevel")}</p>
-          <p className="mt-0.5 text-sm font-bold">{t(lang, levelKey as any)}</p>
+          <p className="mt-0.5 text-xs font-bold sm:text-sm">{t(lang, levelKey as any)}</p>
         </div>
-        <div className="flex-1 px-2.5">
+        <div className="sm:flex-1 sm:px-2.5">
           <p className="text-[10px] font-medium text-muted-foreground">{t(lang, "streak")}</p>
           <div className="mt-0.5 flex items-center gap-1">
             <Flame className="size-3.5 text-orange-500" />
-            <span className="font-price text-sm font-bold">{data.checkinStreak} {t(lang, "days")}</span>
+            <span className="font-price text-xs font-bold sm:text-sm">{data.checkinStreak} {t(lang, "days")}</span>
           </div>
         </div>
         {data.canCheckin && (
-          <div className="shrink-0 px-2.5">
+          <div className="mt-2 sm:mt-0 sm:shrink-0 sm:px-2.5">
             <button
               onClick={doCheckin}
               disabled={checking}
-              className="rounded-md bg-amber-500 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-amber-600 disabled:opacity-50"
+              className="w-full rounded-md bg-amber-500 px-3 py-1.5 text-[10px] font-semibold text-white transition-colors hover:bg-amber-600 disabled:opacity-50 sm:w-auto sm:text-xs"
             >
               {checking ? "..." : t(lang, "dailyCheckin")}
             </button>
@@ -345,7 +339,7 @@ export function HomeHoneyPreview() {
 
 export function HomePreviewRow() {
   return (
-    <div className="grid gap-2.5 sm:grid-cols-2">
+    <div className="grid grid-cols-2 gap-2.5">
       <HomePortfolioPreview />
       <HomeHoneyPreview />
     </div>
