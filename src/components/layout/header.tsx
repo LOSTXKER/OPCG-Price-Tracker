@@ -216,16 +216,16 @@ export function Header() {
             )}
 
             {stats.totalValue > 0 && (
-              <div className="flex items-center gap-1.5 rounded-full bg-background/60 px-2.5 py-1">
+              <Link href="/market-overview" className="flex items-center gap-1.5 rounded-full bg-background/60 px-2.5 py-1 transition-colors hover:bg-background">
                 <span className="font-medium">{t(language, "totalValue")}</span>
-                <span className="font-bold tabular-nums text-foreground">
+                <span className="font-bold tabular-nums text-green-600 dark:text-green-400">
                   <Price jpy={stats.totalValue} />
                 </span>
-              </div>
+              </Link>
             )}
 
             <div className="flex items-center gap-1.5 rounded-full bg-background/60 px-2.5 py-1">
-              <ArrowRightLeft className="size-3 text-muted-foreground" />
+              <ArrowRightLeft className="size-3 text-blue-500" />
               <span className="font-medium">JPY/THB</span>
               <span className="font-bold tabular-nums text-foreground">
                 {stats.exchangeRate.toFixed(3)}
