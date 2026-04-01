@@ -11,24 +11,6 @@ const ITEMS: {
   value: Record<string, unknown>;
 }[] = [
   {
-    name: "Pro トライアル (1ヶ月)",
-    nameEn: "Pro Trial (1 month)",
-    nameTh: "ทดลอง Pro (1 เดือน)",
-    description: "Unlock Pro features for 30 days",
-    cost: 500,
-    type: "TRIAL_PRO",
-    value: { days: 30 },
-  },
-  {
-    name: "手数料割引 3%",
-    nameEn: "Reduced Marketplace Fee (1 month)",
-    nameTh: "ลดค่าธรรมเนียม Marketplace เหลือ 3% (1 เดือน)",
-    description: "Marketplace fee reduced to 3% for 30 days",
-    cost: 300,
-    type: "CUSTOM",
-    value: { reward: "fee_discount", feePercent: 3, days: 30 },
-  },
-  {
     name: "Kuma バッジ",
     nameEn: "Kuma Profile Badge",
     nameTh: "แบดจ์ Kuma บนโปรไฟล์",
@@ -78,7 +60,7 @@ const ITEMS: {
     nameEn: "Price Alert +1 Slot",
     nameTh: "ช่องแจ้งเตือนราคา +1",
     description: "Add one extra price alert slot permanently",
-    cost: 100,
+    cost: 150,
     type: "PRICE_ALERT_SLOT",
     value: {},
   },
@@ -91,10 +73,60 @@ const ITEMS: {
     type: "CSV_EXPORT_PASS",
     value: {},
   },
+  // Honey Exclusive packages
+  {
+    name: "Honey Pass (7日)",
+    nameEn: "Honey Pass (7 days)",
+    nameTh: "Honey Pass (7 วัน)",
+    description: "Pro features for 7 days + exclusive Honey Pass badge",
+    cost: 2000,
+    type: "TRIAL_PRO",
+    value: { days: 7, badge: "Honey Pass", badgeTh: "Honey Pass" },
+  },
+  {
+    name: "Honey Pass+ (30日)",
+    nameEn: "Honey Pass+ (30 days)",
+    nameTh: "Honey Pass+ (30 วัน)",
+    description: "Pro features for 30 days + Honey Elite badge + 1 free raffle ticket",
+    cost: 5000,
+    type: "TRIAL_PRO",
+    value: { days: 30, badge: "Honey Elite", badgeTh: "Honey Elite", freeRaffleTickets: 1 },
+  },
+  {
+    name: "Honey Pro+ Pass (30日)",
+    nameEn: "Honey Pro+ Pass (30 days)",
+    nameTh: "Honey Pro+ Pass (30 วัน)",
+    description: "Pro+ features for 30 days + exclusive badge + 2 free raffle tickets",
+    cost: 10000,
+    type: "TRIAL_PRO_PLUS",
+    value: { days: 30, badge: "Honey Pro+", badgeTh: "Honey Pro+", freeRaffleTickets: 2 },
+  },
+];
+
+const DEACTIVATE_NAMES = [
+  "Pro トライアル (1ヶ月)",
+  "手数料割引 3%",
 ];
 
 async function main() {
   console.log("Seeding Honey Shop items...");
+
+  for (const name of DEACTIVATE_NAMES) {
+    const item = await prisma.honeyShopItem.findFirst({ where: { name } });
+    if (item && item.isActive) {
+      await prisma.honeyShopItem.update({ where: { id: item.id }, data: { isActive: false } });
+      console.log(`  [deactivated] "${item.nameEn ?? name}"`);
+    }
+  }
+
+  // Update Price Alert Slot cost if it was 100
+  const alertSlot = await prisma.honeyShopItem.findFirst({
+    where: { name: "アラート枠追加 +1" },
+  });
+  if (alertSlot && alertSlot.cost === 100) {
+    await prisma.honeyShopItem.update({ where: { id: alertSlot.id }, data: { cost: 150 } });
+    console.log(`  [updated] "Price Alert +1 Slot" cost 100 -> 150`);
+  }
 
   for (const item of ITEMS) {
     const existing = await prisma.honeyShopItem.findFirst({
@@ -102,7 +134,15 @@ async function main() {
     });
 
     if (existing) {
-      console.log(`  [skip] "${item.nameEn}" already exists (id: ${existing.id})`);
+      if (existing.cost !== item.cost || existing.description !== item.description) {
+        await prisma.honeyShopItem.update({
+          where: { id: existing.id },
+          data: { cost: item.cost, description: item.description, nameEn: item.nameEn, nameTh: item.nameTh },
+        });
+        console.log(`  [updated] "${item.nameEn}" (id: ${existing.id}, cost: ${existing.cost} -> ${item.cost})`);
+      } else {
+        console.log(`  [skip] "${item.nameEn}" already exists (id: ${existing.id})`);
+      }
       continue;
     }
 

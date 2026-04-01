@@ -1,17 +1,11 @@
 import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { getWeekStart } from "@/lib/honey-utils";
 
-function getWeekStart(date: Date = new Date()): string {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-  d.setDate(diff);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
-
-export async function GET() {
+export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
@@ -25,13 +19,13 @@ export async function GET() {
   });
 
   return NextResponse.json({ predictions });
-}
+});
 
-export async function POST(request: Request) {
+export const POST = apiHandler(async (request) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
-  const parsed = await parseJsonBody<{ cardId: number; direction: "UP" | "DOWN" }>(request as never);
+  const parsed = await parseJsonBody<{ cardId: number; direction: "UP" | "DOWN" }>(request);
   if (!parsed.ok) return parsed.response;
   const { cardId, direction } = parsed.body;
 
@@ -71,4 +65,4 @@ export async function POST(request: Request) {
   });
 
   return NextResponse.json({ prediction }, { status: 201 });
-}
+});

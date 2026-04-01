@@ -78,13 +78,24 @@ async function getHoneyStats() {
 
 const TYPE_COLORS: Record<string, string> = {
   CHECKIN: "text-green-500",
-  PORTFOLIO_ADD: "text-blue-500",
   MARKETPLACE_SELL: "text-purple-500",
   REVIEW: "text-cyan-500",
   REFERRAL: "text-pink-500",
   REDEEM: "text-red-500",
   ADMIN_GRANT: "text-amber-600 dark:text-amber-400",
   TRIAL_BONUS: "text-orange-500",
+  DAILY_MISSION: "text-blue-500",
+  PRICE_PREDICTION: "text-indigo-500",
+  DECK_SHARE: "text-teal-500",
+  COMMUNITY_PRICE: "text-emerald-500",
+  ONBOARDING: "text-sky-500",
+  ACHIEVEMENT: "text-yellow-500",
+  RAFFLE_TICKET: "text-violet-500",
+  RAFFLE_WIN: "text-amber-500",
+  LEVEL_UP: "text-rose-500",
+  WEEKLY_BONUS: "text-lime-500",
+  LEADERBOARD_REWARD: "text-fuchsia-500",
+  EXPIRED: "text-gray-400",
 };
 
 export default async function AdminHoneyDashboard() {

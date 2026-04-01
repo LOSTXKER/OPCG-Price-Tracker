@@ -46,7 +46,6 @@ export const jp = {
   allTab: "すべて",
   outOfStock: "在庫なし",
   noData: "データなし",
-  itemsCount: "件",
   pageOf: "ページ",
   prev: "前へ",
   next: "次へ",
@@ -317,6 +316,11 @@ export const jp = {
   featSectionMarketplace: "マーケットプレイス",
   perMonthShort: "/月",
 
+  // Honey Pass (Pricing Page)
+  honeyPassTitle: "お金を払いたくない？Honeyで獲得しよう！",
+  honeyPassDesc: "毎日のミッションやチェックインでHoneyを貯めて、Pro機能と交換 — クレジットカード不要。",
+  honeyPassCta: "ハニーショップへ",
+
   // Settings
   settingsTitle: "設定",
   subscription: "サブスクリプション",
@@ -409,7 +413,7 @@ export const jp = {
   // Honey Earn Rules
   howToEarn: "獲得方法",
   honeyEarnCheckin: "毎日チェックイン",
-  honeyEarnPortfolio: "ポートフォリオに追加",
+  honeyEarnMissions: "デイリーミッション",
   honeyEarnSell: "マーケットで販売",
   honeyEarnReview: "レビューを書く",
   honeyEarnRefer: "友達を紹介",
@@ -424,6 +428,7 @@ export const jp = {
   honeySubtitle: "ポイントを貯めて特典と交換",
   honeyLeaderboard: "ランキング",
   quests: "クエスト",
+  activity: "アクティビティ",
   amount: "金額",
   honeyRank: "順位",
   honeyTopEarners: "トップ獲得者",
@@ -436,12 +441,43 @@ export const jp = {
 
   // Daily Missions
   dailyMissions: "デイリーミッション",
-  missionCheckPrice: "カード価格をチェック",
-  missionAddCard: "マーケットを閲覧",
-  missionViewSet: "ツールを使用",
+  missionCheckPrice: "価格をチェック",
+  missionCheckPriceHint: "カードの詳細ページを見る",
+  missionBrowseTrending: "トレンドを見る",
+  missionBrowseTrendingHint: "トレンドカードページを見る",
+  missionVisitMarketplace: "マーケットプレイス",
+  missionVisitMarketplaceHint: "出品リストを確認する",
+  missionExploreSet: "セットを閲覧",
+  missionExploreSetHint: "カードセットページを見る",
+  missionShareCard: "カードをシェア",
+  missionShareCardHint: "カードページを友達にシェア",
+  missionShareSite: "サイトをシェア",
+  missionShareSiteHint: "このサイトを誰かにシェア",
+  missionCheckWatchlist: "ウォッチリスト確認",
+  missionCheckWatchlistHint: "ウォッチリストを確認する",
+  missionCheckPortfolio: "ポートフォリオ確認",
+  missionCheckPortfolioHint: "ポートフォリオを確認する",
+  missionVisitOverview: "マーケット概要",
+  missionVisitOverviewHint: "マーケット概要ページを見る",
+  missionReadBlog: "記事を読む",
+  missionReadBlogHint: "ブログセクションを見る",
   missionAutoHint: "普段通りサイトを使うだけでミッション達成",
   missionComplete: "ミッション完了！",
+  missionPerfectDay: "パーフェクトデイ！",
+  missionPerfectDayHint: "全ミッションを達成して報酬を受け取る",
+  missionBonusLabel: "ボーナス",
+  missionProgress: "進捗",
   claimReward: "報酬を受け取る",
+  claimBonus: "ボーナスを受け取る",
+  claimTaskReward: "受取",
+
+  // Referral
+  referralLink: "あなたの紹介リンク",
+  referralCopied: "コピーしました！",
+  referralClicks: "クリック数",
+  referralTodayClicks: "今日",
+  shareButton: "シェア",
+  shareCopied: "コピー済み！",
 
   // Predictions
   predictions: "価格予想",
@@ -479,12 +515,15 @@ export const jp = {
   raffleDrawn: "抽選済み",
   raffleStreakRequired: "連続チェックインで無料チケット獲得",
   raffleCheckBack: "来月の抽選をお楽しみに！",
+  raffleHowToGet: "チケットの入手方法",
+  raffleTotalTickets: "総チケット数",
+  raffleRank1: "1位",
+  raffleRank2: "2位",
+  raffleRank3: "3位",
+  raffleBuyHint: "{cost} Honeyで購入 (最大{max}枚)",
+  raffleStreakHint: "{days}日連続チェックインで無料チケット1枚",
+  rafflePassHint: "Honey Passでボーナスチケット獲得",
 
-  // Gifting
-  giftHoney: "ハニーを贈る",
-  giftRecipient: "他のユーザーにハニーを送る",
-  giftSent: "送信しました！",
-  giftReceived: "ハニーを受け取りました！",
 
   // Seasonal Events
   seasonalEvent: "シーズンイベント",

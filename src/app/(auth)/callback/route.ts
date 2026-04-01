@@ -1,6 +1,8 @@
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/db";
+import { processReferralConversion } from "@/lib/honey-referral";
 import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: NextRequest) {
@@ -13,7 +15,12 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error && data.user) {
-      await prisma.user.upsert({
+      const existing = await prisma.user.findUnique({
+        where: { supabaseId: data.user.id },
+        select: { id: true },
+      });
+
+      const user = await prisma.user.upsert({
         where: { supabaseId: data.user.id },
         update: {
           email: data.user.email!,
@@ -27,6 +34,16 @@ export async function GET(request: NextRequest) {
           avatarUrl: data.user.user_metadata?.avatar_url,
         },
       });
+
+      if (!existing) {
+        const jar = await cookies();
+        const refCode = jar.get("ref_code")?.value;
+        if (refCode) {
+          processReferralConversion(user.id, refCode).catch(() => {});
+          jar.delete("ref_code");
+        }
+      }
+
       return NextResponse.redirect(`${origin}${redirect}`);
     }
   }

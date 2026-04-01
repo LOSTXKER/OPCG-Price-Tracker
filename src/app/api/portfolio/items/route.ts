@@ -4,7 +4,6 @@ import { parseCondition } from "@/lib/api/parse-condition";
 import { parseListingQuantity, parseJsonBody } from "@/lib/api/request-body";
 import { cardInclude } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
-import { earnHoney, getHoneyMultiplier } from "@/lib/honey";
 import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -110,14 +109,6 @@ export async function POST(request: NextRequest) {
         note: notes,
       },
     });
-
-    earnHoney(
-      dbUser.id,
-      "PORTFOLIO_ADD",
-      "Added card to portfolio",
-      { portfolioId, cardId },
-      getHoneyMultiplier(dbUser.tier, dbUser.tierExpiresAt),
-    ).catch(() => {});
 
     return NextResponse.json({ item }, { status: existing ? 200 : 201 });
   } catch (error) {

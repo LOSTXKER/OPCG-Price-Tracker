@@ -46,7 +46,6 @@ export const en = {
   allTab: "All",
   outOfStock: "Out of stock",
   noData: "No data",
-  itemsCount: "items",
   pageOf: "Page",
   prev: "Prev",
   next: "Next",
@@ -317,6 +316,11 @@ export const en = {
   featSectionMarketplace: "Marketplace",
   perMonthShort: "/mo",
 
+  // Honey Pass (Pricing Page)
+  honeyPassTitle: "Don't want to pay? Earn it with Honey!",
+  honeyPassDesc: "Complete daily missions, check in every day, and redeem Honey Points for Pro access — no credit card needed.",
+  honeyPassCta: "Go to Honey Shop",
+
   // Settings
   settingsTitle: "Settings",
   subscription: "Subscription",
@@ -409,7 +413,7 @@ export const en = {
   // Honey Earn Rules
   howToEarn: "How to Earn",
   honeyEarnCheckin: "Daily Check-in",
-  honeyEarnPortfolio: "Add to portfolio",
+  honeyEarnMissions: "Daily missions",
   honeyEarnSell: "Sell on marketplace",
   honeyEarnReview: "Write a review",
   honeyEarnRefer: "Refer a friend",
@@ -424,6 +428,7 @@ export const en = {
   honeySubtitle: "Earn points and redeem rewards",
   honeyLeaderboard: "Leaderboard",
   quests: "Quests",
+  activity: "Activity",
   amount: "Amount",
   honeyRank: "Rank",
   honeyTopEarners: "Top Earners",
@@ -436,12 +441,43 @@ export const en = {
 
   // Daily Missions
   dailyMissions: "Daily Missions",
-  missionCheckPrice: "Check a card price",
-  missionAddCard: "Browse the market",
-  missionViewSet: "Use a tool",
+  missionCheckPrice: "Check a price",
+  missionCheckPriceHint: "View any card detail page",
+  missionBrowseTrending: "Browse trending",
+  missionBrowseTrendingHint: "Check the trending cards page",
+  missionVisitMarketplace: "Visit marketplace",
+  missionVisitMarketplaceHint: "Browse marketplace listings",
+  missionExploreSet: "Explore a set",
+  missionExploreSetHint: "View a card set page",
+  missionShareCard: "Share a card",
+  missionShareCardHint: "Share a card page with friends",
+  missionShareSite: "Share the site",
+  missionShareSiteHint: "Share this site with someone",
+  missionCheckWatchlist: "Check watchlist",
+  missionCheckWatchlistHint: "Review your watchlist",
+  missionCheckPortfolio: "Check portfolio",
+  missionCheckPortfolioHint: "Visit your portfolio",
+  missionVisitOverview: "Market overview",
+  missionVisitOverviewHint: "Check the market overview page",
+  missionReadBlog: "Read a post",
+  missionReadBlogHint: "Visit the blog section",
   missionAutoHint: "Just browse normally — missions complete automatically",
   missionComplete: "Mission complete!",
+  missionPerfectDay: "Perfect Day!",
+  missionPerfectDayHint: "Complete and claim all missions",
+  missionBonusLabel: "BONUS",
+  missionProgress: "Progress",
   claimReward: "Claim Reward",
+  claimBonus: "Claim Bonus",
+  claimTaskReward: "Claim",
+
+  // Referral
+  referralLink: "Your Referral Link",
+  referralCopied: "Link copied!",
+  referralClicks: "clicks",
+  referralTodayClicks: "today",
+  shareButton: "Share",
+  shareCopied: "Copied!",
 
   // Predictions
   predictions: "Predictions",
@@ -479,12 +515,15 @@ export const en = {
   raffleDrawn: "Drawn",
   raffleStreakRequired: "Check-in streak required for free ticket",
   raffleCheckBack: "Check back next month for a new raffle!",
+  raffleHowToGet: "How to Get Tickets",
+  raffleTotalTickets: "Total Tickets",
+  raffleRank1: "1st",
+  raffleRank2: "2nd",
+  raffleRank3: "3rd",
+  raffleBuyHint: "Buy with {cost} Honey per ticket (max {max})",
+  raffleStreakHint: "{days}-day check-in streak = 1 free ticket",
+  rafflePassHint: "Redeem Honey Pass for bonus tickets",
 
-  // Gifting
-  giftHoney: "Gift Honey",
-  giftRecipient: "Send honey to another user",
-  giftSent: "Gift sent!",
-  giftReceived: "Gift received!",
 
   // Seasonal Events
   seasonalEvent: "Seasonal Event",

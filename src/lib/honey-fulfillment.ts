@@ -1,24 +1,57 @@
 import { prisma } from "@/lib/db";
 import type { HoneyShopItem } from "@/generated/prisma/client";
+import { currentMonthKey } from "@/lib/honey-utils";
+import { ShopItemValueSchema, parseJsonField, type ShopItemValueParsed } from "@/lib/honey-schemas";
+
+async function fulfillBundleExtras(userId: string, val: ShopItemValueParsed) {
+  if (val.badge) {
+    await prisma.userBadge.create({
+      data: {
+        userId,
+        name: val.badge,
+        nameEn: val.badge,
+        nameTh: val.badgeTh ?? val.badge,
+      },
+    });
+  }
+
+  const tickets = val.freeRaffleTickets ?? 0;
+  if (tickets > 0) {
+    const raffle = await prisma.monthlyRaffle.findFirst({
+      where: { month: currentMonthKey(), isActive: true },
+    });
+    if (raffle) {
+      for (let i = 0; i < tickets; i++) {
+        await prisma.raffleTicket.create({
+          data: { userId, raffleId: raffle.id },
+        });
+      }
+    }
+  }
+}
 
 export async function fulfillRedemption(userId: string, item: HoneyShopItem) {
+  const val = parseJsonField(ShopItemValueSchema, item.value, `HoneyShopItem(${item.id}).value`, {});
+
   switch (item.type) {
     case "TRIAL_PRO": {
-      const days = (item.value as Record<string, unknown>)?.days ?? 30;
+      const days = val.days ?? 30;
       const expiresAt = new Date(Date.now() + Number(days) * 86_400_000);
       await prisma.user.update({
         where: { id: userId },
         data: { tier: "PRO", tierExpiresAt: expiresAt },
       });
+      await fulfillBundleExtras(userId, val);
       break;
     }
     case "TRIAL_PRO_PLUS": {
-      const days = (item.value as Record<string, unknown>)?.days ?? 30;
+      const days = val.days ?? 30;
       const expiresAt = new Date(Date.now() + Number(days) * 86_400_000);
       await prisma.user.update({
         where: { id: userId },
         data: { tier: "PRO_PLUS", tierExpiresAt: expiresAt },
       });
+      await fulfillBundleExtras(userId, val);
       break;
     }
     case "BADGE": {
@@ -28,13 +61,13 @@ export async function fulfillRedemption(userId: string, item: HoneyShopItem) {
           name: item.name,
           nameEn: item.nameEn,
           nameTh: item.nameTh,
-          imageUrl: (item.value as Record<string, unknown>)?.imageUrl as string | null ?? null,
+          imageUrl: val.imageUrl ?? null,
         },
       });
       break;
     }
     case "PROFILE_FRAME": {
-      const frameId = (item.value as Record<string, unknown>)?.frameId as string ?? item.name;
+      const frameId = val.frameId ?? item.name;
       await prisma.user.update({
         where: { id: userId },
         data: { profileFrame: frameId },
@@ -56,8 +89,7 @@ export async function fulfillRedemption(userId: string, item: HoneyShopItem) {
       break;
     }
     case "CUSTOM": {
-      const val = item.value as Record<string, unknown> | null;
-      if (!val) break;
+      if (!item.value) break;
 
       if (val.reward === "listing_boost") {
         const hours = Number(val.hours ?? 24);

@@ -1,17 +1,14 @@
 import { prisma } from "@/lib/db";
-import { spendHoney } from "@/lib/honey";
+import { spendHoney, earnHoneyDirect } from "@/lib/honey";
+import { currentMonthKey } from "@/lib/honey-utils";
+import { RafflePrizesSchema, parseJsonField } from "@/lib/honey-schemas";
 
 export const TICKET_COST_DEFAULT = 50;
 export const MAX_TICKETS_DEFAULT = 5;
 export const FREE_STREAK_THRESHOLD = 7;
 
-function getCurrentMonth() {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-}
-
 export async function getActiveRaffle() {
-  const month = getCurrentMonth();
+  const month = currentMonthKey();
   return prisma.monthlyRaffle.findFirst({
     where: { isActive: true, month },
     include: {
@@ -44,24 +41,17 @@ export async function buyTicket(
     return { success: false, error: `Max ${raffle.maxTickets} tickets per raffle` };
   }
 
-  const spend = await spendHoney(userId, raffle.ticketCost, "Raffle ticket", {
-    raffleId,
-    month: raffle.month,
-  });
+  const spend = await spendHoney(
+    userId,
+    raffle.ticketCost,
+    `Raffle ticket: ${raffle.title}`,
+    { raffleId, month: raffle.month },
+    "RAFFLE_TICKET",
+  );
 
   if (!spend.success) {
     return { success: false, error: "Insufficient honey" };
   }
-
-  await prisma.honeyTransaction.create({
-    data: {
-      userId,
-      amount: -raffle.ticketCost,
-      type: "RAFFLE_TICKET",
-      reason: `Raffle ticket: ${raffle.title}`,
-      metadata: { raffleId, month: raffle.month },
-    },
-  });
 
   const ticket = await prisma.raffleTicket.create({
     data: { userId, raffleId },
@@ -132,22 +122,16 @@ export async function drawWinner(raffleId: number): Promise<{
     },
   });
 
-  const prizes = raffle.prizes as { rank: number; name: string; honeyBonus?: number }[];
+  const prizes = parseJsonField(RafflePrizesSchema, raffle.prizes, "MonthlyRaffle.prizes", []);
   const topPrize = prizes[0];
   if (topPrize?.honeyBonus) {
-    await prisma.user.update({
-      where: { id: winnerTicket.userId },
-      data: { honeyPoints: { increment: topPrize.honeyBonus } },
-    });
-    await prisma.honeyTransaction.create({
-      data: {
-        userId: winnerTicket.userId,
-        amount: topPrize.honeyBonus,
-        type: "RAFFLE_WIN",
-        reason: `Raffle winner: ${raffle.title} — ${topPrize.name}`,
-        metadata: { raffleId, month: raffle.month, prize: topPrize.name },
-      },
-    });
+    await earnHoneyDirect(
+      winnerTicket.userId,
+      "RAFFLE_WIN",
+      topPrize.honeyBonus,
+      `Raffle winner: ${raffle.title} — ${topPrize.name}`,
+      { raffleId, month: raffle.month, prize: topPrize.name },
+    );
   }
 
   return {

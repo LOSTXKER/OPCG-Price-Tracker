@@ -260,11 +260,12 @@ model User {
   honeyLifetimeEarned   Int              @default(0)
   profileFrame          String?
   onboardingCompleted   Boolean          @default(false)
-  firstPurchaseRewarded Boolean          @default(false)
   extraPriceAlertSlots  Int              @default(0)
   csvExportCredits      Int              @default(0)
+  referralCode          String?          @unique
   badges              UserBadge[]
   dailyMissions       DailyMission[]
+  referralLinks       ReferralLink[]
   pricePredictions    PricePrediction[]
   achievements        UserAchievement[]
   raffleTickets       RaffleTicket[]
@@ -301,7 +302,6 @@ model HoneyTransaction {
 
 enum HoneyActionType {
   CHECKIN
-  PORTFOLIO_ADD
   MARKETPLACE_SELL
   REVIEW
   REFERRAL
@@ -313,14 +313,21 @@ enum HoneyActionType {
   PRICE_PREDICTION
   DECK_SHARE
   COMMUNITY_PRICE
-  FIRST_PURCHASE
   ONBOARDING
   ACHIEVEMENT
+  RAFFLE_TICKET
+  RAFFLE_WIN
+  LEVEL_UP
+  WEEKLY_BONUS
+  LEADERBOARD_REWARD
+  // Deprecated — kept for historical transaction data
+  PORTFOLIO_ADD
   GIFT_SEND
   GIFT_RECEIVE
   LUCKY_DRAW
-  RAFFLE_TICKET
-  RAFFLE_WIN
+  FIRST_PURCHASE
+  SHARE
+  AFFILIATE
 }
 
 model HoneyShopItem {
@@ -357,11 +364,11 @@ model DailyMission {
   userId        String
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   date          String
-  checkedPrice  Boolean  @default(false)
-  addedCard     Boolean  @default(false)
-  viewedSet     Boolean  @default(false)
+  tasks         Json     @default("[]") // [{ id, done, reward, claimed }]
+  progress      Int      @default(0)
   completed     Boolean  @default(false)
-  rewardClaimed Boolean  @default(false)
+  perfectDay    Boolean  @default(false)
+  bonusClaimed  Boolean  @default(false)
   createdAt     DateTime @default(now())
 
   @@unique([userId, date])
@@ -458,6 +465,30 @@ model SeasonalEvent {
   honeyMultiplier Float    @default(1)
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
+}
+
+model ReferralLink {
+  id        Int             @id @default(autoincrement())
+  userId    String
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  code      String          @unique
+  clicks    Int             @default(0)
+  createdAt DateTime        @default(now())
+  referralClicks ReferralClick[]
+
+  @@index([userId])
+  @@index([code])
+}
+
+model ReferralClick {
+  id        Int          @id @default(autoincrement())
+  linkId    Int
+  link      ReferralLink @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  visitorIp String?
+  userAgent String?
+  createdAt DateTime     @default(now())
+
+  @@index([linkId, createdAt])
 }
 
 enum ShopItemType {

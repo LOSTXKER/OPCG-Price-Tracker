@@ -219,7 +219,7 @@ export function MarketplaceBrowse({
           {t(lang, "prev")}
         </Button>
         <span className="text-muted-foreground text-sm tabular-nums">
-          {t(lang, "pageOf")} {page} / {totalPages} ({total} {t(lang, "itemsCount")})
+          {t(lang, "pageOf")} {page} / {totalPages} ({total} {t(lang, "items")})
         </span>
         <Button
           type="button"

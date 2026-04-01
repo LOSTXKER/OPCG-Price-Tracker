@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
-import { earnHoney, earnHoneyDirect, canCheckinToday, spendHoney, getHoneyMultiplier } from "@/lib/honey";
+import { earnHoney, canCheckinToday, spendHoney, getHoneyMultiplier } from "@/lib/honey";
 import { fulfillRedemption } from "@/lib/honey-fulfillment";
 import { getHoneyLevel } from "@/lib/honey-levels";
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const user = auth.user;
@@ -37,9 +38,9 @@ export async function GET() {
     activeEvent,
     onboardingCompleted: user.onboardingCompleted,
   });
-}
+});
 
-export async function POST(request: Request) {
+export const POST = apiHandler(async (request) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const user = auth.user;
@@ -47,9 +48,7 @@ export async function POST(request: Request) {
   const parsed = await parseJsonBody<{
     action: string;
     itemId?: number;
-    recipientId?: string;
-    amount?: number;
-  }>(request as never);
+  }>(request);
   if (!parsed.ok) return parsed.response;
   const body = parsed.body;
 
@@ -113,48 +112,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, total: result.total });
   }
 
-  if (body.action === "gift") {
-    const { recipientId, amount } = body;
-    if (!recipientId || typeof recipientId !== "string") {
-      return NextResponse.json({ error: "recipientId required" }, { status: 400 });
-    }
-    if (!amount || !Number.isInteger(amount) || amount < 1) {
-      return NextResponse.json({ error: "amount must be a positive integer" }, { status: 400 });
-    }
-    if (recipientId === user.id) {
-      return NextResponse.json({ error: "Cannot gift to yourself" }, { status: 400 });
-    }
-
-    const recipient = await prisma.user.findUnique({ where: { id: recipientId } });
-    if (!recipient) {
-      return NextResponse.json({ error: "Recipient not found" }, { status: 404 });
-    }
-
-    const spend = await spendHoney(user.id, amount, `Gift to ${recipient.displayName ?? recipient.email}`, {
-      recipientId,
-      giftAmount: amount,
-    });
-    if (!spend.success) {
-      return NextResponse.json({ error: "Insufficient honey" }, { status: 400 });
-    }
-
-    await prisma.honeyTransaction.create({
-      data: {
-        userId: user.id,
-        amount: -amount,
-        type: "GIFT_SEND",
-        reason: `Gift to ${recipient.displayName ?? recipient.email}`,
-        metadata: { recipientId, giftAmount: amount },
-      },
-    });
-
-    await earnHoneyDirect(recipientId, "GIFT_RECEIVE", amount, `Gift from ${user.displayName ?? user.email}`, {
-      senderId: user.id,
-      giftAmount: amount,
-    });
-
-    return NextResponse.json({ success: true, total: spend.total });
-  }
-
   return NextResponse.json({ error: "Unknown action" }, { status: 400 });
-}
+});

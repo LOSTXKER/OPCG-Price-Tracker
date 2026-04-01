@@ -46,7 +46,6 @@ export const th = {
   allTab: "ทั้งหมด",
   outOfStock: "หมด",
   noData: "ไม่มีข้อมูล",
-  itemsCount: "รายการ",
   pageOf: "หน้า",
   prev: "ก่อนหน้า",
   next: "ถัดไป",
@@ -317,6 +316,11 @@ export const th = {
   featSectionMarketplace: "ซื้อขาย",
   perMonthShort: "/ด.",
 
+  // Honey Pass (Pricing Page)
+  honeyPassTitle: "ไม่อยากจ่ายเงิน? สะสม Honey แลกได้เลย!",
+  honeyPassDesc: "ทำภารกิจประจำวัน เช็คอินทุกวัน แล้วนำ Honey Points ไปแลก Pro ได้ — ไม่ต้องใช้บัตรเครดิต",
+  honeyPassCta: "ไปร้านค้า Honey",
+
   // Settings
   settingsTitle: "ตั้งค่า",
   subscription: "สมาชิก",
@@ -409,7 +413,7 @@ export const th = {
   // Honey Earn Rules
   howToEarn: "วิธีรับ Honey",
   honeyEarnCheckin: "เช็คอินรายวัน",
-  honeyEarnPortfolio: "เพิ่มการ์ดในพอร์ต",
+  honeyEarnMissions: "ภารกิจประจำวัน",
   honeyEarnSell: "ขายในตลาด",
   honeyEarnReview: "เขียนรีวิว",
   honeyEarnRefer: "ชวนเพื่อน",
@@ -424,6 +428,7 @@ export const th = {
   honeySubtitle: "สะสมแต้มแลกรางวัล",
   honeyLeaderboard: "อันดับ",
   quests: "ภารกิจ",
+  activity: "กิจกรรม",
   amount: "จำนวน",
   honeyRank: "อันดับ",
   honeyTopEarners: "คนสะสมเยอะสุด",
@@ -436,12 +441,43 @@ export const th = {
 
   // Daily Missions
   dailyMissions: "ภารกิจประจำวัน",
-  missionCheckPrice: "เช็คราคาการ์ด",
-  missionAddCard: "เรียกดูตลาด",
-  missionViewSet: "ใช้เครื่องมือ",
+  missionCheckPrice: "เช็คราคา",
+  missionCheckPriceHint: "ดูราคาการ์ดอย่างน้อย 1 ใบ",
+  missionBrowseTrending: "ดูการ์ดมาแรง",
+  missionBrowseTrendingHint: "เข้าดูหน้าการ์ดมาแรง",
+  missionVisitMarketplace: "เข้าดู Marketplace",
+  missionVisitMarketplaceHint: "ส่องรายการขายใน Marketplace",
+  missionExploreSet: "สำรวจเซ็ตการ์ด",
+  missionExploreSetHint: "เข้าดูหน้าเซ็ตการ์ด",
+  missionShareCard: "แชร์การ์ด",
+  missionShareCardHint: "แชร์หน้าการ์ดให้เพื่อน",
+  missionShareSite: "แชร์เว็บ",
+  missionShareSiteHint: "แชร์เว็บไซต์ให้คนรู้จัก",
+  missionCheckWatchlist: "เช็ครายการจับตา",
+  missionCheckWatchlistHint: "เข้าดู Watchlist ของคุณ",
+  missionCheckPortfolio: "เช็คพอร์ต",
+  missionCheckPortfolioHint: "เข้าดูพอร์ตของคุณ",
+  missionVisitOverview: "ดูภาพรวมตลาด",
+  missionVisitOverviewHint: "เข้าดูหน้าภาพรวมตลาด",
+  missionReadBlog: "อ่านบทความ",
+  missionReadBlogHint: "เข้าดูหน้าบทความ",
   missionAutoHint: "แค่ใช้งานเว็บตามปกติ ภารกิจจะสำเร็จเอง",
   missionComplete: "ภารกิจสำเร็จ!",
+  missionPerfectDay: "Perfect Day!",
+  missionPerfectDayHint: "ทำและรับรางวัลภารกิจทั้งหมด",
+  missionBonusLabel: "โบนัส",
+  missionProgress: "ความคืบหน้า",
   claimReward: "รับรางวัล",
+  claimBonus: "รับโบนัส",
+  claimTaskReward: "รับ",
+
+  // Referral
+  referralLink: "ลิงก์แนะนำของคุณ",
+  referralCopied: "คัดลอกลิงก์แล้ว!",
+  referralClicks: "ครั้งที่กด",
+  referralTodayClicks: "วันนี้",
+  shareButton: "แชร์",
+  shareCopied: "คัดลอกแล้ว!",
 
   // Predictions
   predictions: "ทายราคา",
@@ -479,12 +515,15 @@ export const th = {
   raffleDrawn: "จับรางวัลแล้ว",
   raffleStreakRequired: "ต้องเช็คอินติดต่อกันเพื่อรับตั๋วฟรี",
   raffleCheckBack: "กลับมาเดือนหน้าเพื่อลุ้นรางวัลใหม่!",
+  raffleHowToGet: "วิธีรับตั๋ว",
+  raffleTotalTickets: "ตั๋วทั้งหมด",
+  raffleRank1: "อันดับ 1",
+  raffleRank2: "อันดับ 2",
+  raffleRank3: "อันดับ 3",
+  raffleBuyHint: "ซื้อด้วย {cost} Honey ต่อใบ (สูงสุด {max} ใบ)",
+  raffleStreakHint: "เช็คอินติดต่อกัน {days} วัน = ตั๋วฟรี 1 ใบ",
+  rafflePassHint: "แลก Honey Pass เพื่อรับตั๋วโบนัส",
 
-  // Gifting
-  giftHoney: "ส่ง Honey",
-  giftRecipient: "ส่ง Honey ให้ผู้ใช้อื่น",
-  giftSent: "ส่งสำเร็จ!",
-  giftReceived: "ได้รับ Honey!",
 
   // Seasonal Events
   seasonalEvent: "อีเวนท์ตามฤดูกาล",

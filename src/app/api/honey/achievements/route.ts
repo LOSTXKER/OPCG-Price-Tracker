@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
@@ -26,4 +27,4 @@ export async function GET() {
   }));
 
   return NextResponse.json({ achievements: result });
-}
+});

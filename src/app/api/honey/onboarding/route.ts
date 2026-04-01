@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { earnHoney, getHoneyMultiplier } from "@/lib/honey";
 
-export async function POST() {
+export const POST = apiHandler(async () => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const user = auth.user;
@@ -11,11 +12,6 @@ export async function POST() {
   if (user.onboardingCompleted) {
     return NextResponse.json({ error: "Onboarding already completed" }, { status: 400 });
   }
-
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { onboardingCompleted: true },
-  });
 
   const result = await earnHoney(
     user.id,
@@ -25,5 +21,14 @@ export async function POST() {
     getHoneyMultiplier(user.tier, user.tierExpiresAt),
   );
 
-  return NextResponse.json({ earned: result?.earned ?? 50, total: result?.total ?? user.honeyPoints + 50 });
-}
+  if (!result) {
+    return NextResponse.json({ error: "Failed to grant onboarding reward" }, { status: 500 });
+  }
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { onboardingCompleted: true },
+  });
+
+  return NextResponse.json({ earned: result.earned, total: result.total });
+});

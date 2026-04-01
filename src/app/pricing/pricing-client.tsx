@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Check, Crown, Sparkles, X } from "lucide-react";
+import Link from "next/link";
+import { Check, Crown, Sparkles, X, Hexagon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useUIStore } from "@/stores/ui-store";
@@ -356,6 +357,36 @@ export default function PricingClient() {
             )}
           </div>
         )}
+
+      {/* Honey Pass Alternative */}
+      <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-amber-500/20 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5">
+        <div className="flex flex-col items-center gap-4 p-6 text-center sm:flex-row sm:text-left">
+          <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10">
+            <Hexagon className="size-7 text-amber-500" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-base font-bold">{t(lang, "honeyPassTitle")}</h3>
+            <p className="mt-1 text-sm text-muted-foreground">{t(lang, "honeyPassDesc")}</p>
+            <div className="mt-2 flex flex-wrap justify-center gap-2 sm:justify-start">
+              <Badge variant="secondary" className="bg-amber-500/10 text-amber-700 dark:text-amber-400">
+                Honey Pass — Pro 7 {t(lang, "days")}
+              </Badge>
+              <Badge variant="secondary" className="bg-amber-500/10 text-amber-700 dark:text-amber-400">
+                Honey Pass+ — Pro 30 {t(lang, "days")}
+              </Badge>
+              <Badge variant="secondary" className="bg-amber-500/10 text-amber-700 dark:text-amber-400">
+                Honey Pro+ — Pro+ 30 {t(lang, "days")}
+              </Badge>
+            </div>
+          </div>
+          <Link href="/honey?tab=shop">
+            <Button variant="outline" className="shrink-0 gap-1.5 border-amber-500/20 text-amber-700 hover:bg-amber-500/10 dark:text-amber-400">
+              <Hexagon className="size-4" />
+              {t(lang, "honeyPassCta")}
+            </Button>
+          </Link>
+        </div>
+      </div>
 
       {/* Plan Cards */}
       <div className="grid items-start gap-5 md:grid-cols-3">

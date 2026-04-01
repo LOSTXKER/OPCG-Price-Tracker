@@ -1,26 +1,43 @@
 import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { getActiveRaffle, getUserTickets, buyTicket, claimFreeTicket } from "@/lib/honey-raffle";
 import { prisma } from "@/lib/db";
+import { RafflePrizesSchema, parseJsonField } from "@/lib/honey-schemas";
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const user = auth.user;
 
   const raffle = await getActiveRaffle();
-  if (!raffle) {
-    const lastRaffle = await prisma.monthlyRaffle.findFirst({
-      where: { drawnAt: { not: null } },
-      orderBy: { drawnAt: "desc" },
-      select: {
-        id: true, month: true, title: true, titleEn: true, titleTh: true,
-        prizes: true, drawnAt: true, winnerId: true,
-        tickets: { select: { id: true } },
-      },
+
+  const lastDrawn = await prisma.monthlyRaffle.findFirst({
+    where: { drawnAt: { not: null } },
+    orderBy: { drawnAt: "desc" },
+    select: {
+      month: true, winnerId: true,
+      prizes: true,
+    },
+  });
+
+  let lastWinner: { displayName: string | null; month: string; prizeName: string } | null = null;
+  if (lastDrawn?.winnerId) {
+    const winner = await prisma.user.findUnique({
+      where: { id: lastDrawn.winnerId },
+      select: { displayName: true },
     });
-    return NextResponse.json({ raffle: null, lastResult: lastRaffle });
+    const prizes = parseJsonField(RafflePrizesSchema, lastDrawn.prizes, "MonthlyRaffle.prizes", []);
+    lastWinner = {
+      displayName: winner?.displayName ?? null,
+      month: lastDrawn.month,
+      prizeName: prizes[0]?.name ?? "Prize",
+    };
+  }
+
+  if (!raffle) {
+    return NextResponse.json({ raffle: null, lastWinner });
   }
 
   const myTickets = await getUserTickets(user.id, raffle.id);
@@ -41,18 +58,19 @@ export async function GET() {
       freeThreshold: raffle.freeThreshold,
       totalTickets: raffle.tickets.length,
       totalParticipants: new Set(raffle.tickets.map((t) => t.userId)).size,
+      lastWinner,
     },
     myTickets: myTickets.length,
     hasFreeTicket,
     canClaimFree: streakEligible && !hasFreeTicket,
   });
-}
+});
 
-export async function POST(request: Request) {
+export const POST = apiHandler(async (request) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
-  const parsed = await parseJsonBody<{ action: string }>(request as never);
+  const parsed = await parseJsonBody<{ action: string }>(request);
   if (!parsed.ok) return parsed.response;
 
   const raffle = await getActiveRaffle();
@@ -77,4 +95,4 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ error: "Unknown action" }, { status: 400 });
-}
+});
