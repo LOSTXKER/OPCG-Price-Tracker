@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import {
   ArrowRightLeft,
+  Award,
   BookOpen,
   Coins,
   Crown,
@@ -42,6 +43,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useUIStore, type Language, type Currency } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
+import { getHoneyLevel } from "@/lib/honey-levels";
 
 const NAV_LINKS = [
   { href: "/" as const, key: "overview" as const },
@@ -92,6 +94,14 @@ const CURRENCY_OPTIONS: { value: Currency; label: string }[] = [
 
 const CURRENCY_SYMBOL: Record<Currency, string> = { THB: "฿", JPY: "¥", USD: "$" };
 
+const RANK_DISPLAY: Record<string, { color: string; bg: string; ring: string }> = {
+  Newbie:  { color: "text-muted-foreground",                          bg: "bg-muted text-muted-foreground",                                  ring: "ring-border" },
+  Bronze:  { color: "text-amber-700 dark:text-amber-500",             bg: "bg-amber-500/15 text-amber-700 dark:text-amber-400",              ring: "ring-amber-500/30" },
+  Silver:  { color: "text-slate-500 dark:text-slate-300",             bg: "bg-slate-500/15 text-slate-600 dark:text-slate-300",              ring: "ring-slate-400/30" },
+  Gold:    { color: "text-yellow-600 dark:text-yellow-400",           bg: "bg-yellow-500/15 text-yellow-700 dark:text-yellow-400",           ring: "ring-yellow-500/30" },
+  Diamond: { color: "text-cyan-500 dark:text-cyan-300",               bg: "bg-cyan-500/15 text-cyan-600 dark:text-cyan-300",                ring: "ring-cyan-400/30" },
+};
+
 export function Header() {
   const router = useRouter();
   const pathname = usePathname() ?? "/";
@@ -106,6 +116,8 @@ export function Header() {
     topMover: { code: "OP13-118-P", name: "Monkey.D.Luffy", change: 5.8 },
   });
   const [userTier, setUserTier] = useState<UserTierValue>("FREE");
+  const [honeyPoints, setHoneyPoints] = useState(0);
+  const [honeyLifetime, setHoneyLifetime] = useState(0);
 
   const language = useUIStore((s) => s.language);
   const setLanguage = useUIStore((s) => s.setLanguage);
@@ -133,10 +145,15 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    if (!authUser) { setUserTier("FREE"); return; }
+    if (!authUser) { setUserTier("FREE"); setHoneyPoints(0); setHoneyLifetime(0); return; }
     fetch("/api/settings")
       .then((r) => r.ok ? r.json() : null)
-      .then((data) => { if (data?.tier) setUserTier(data.tier as UserTierValue); })
+      .then((data) => {
+        if (!data) return;
+        if (data.tier) setUserTier(data.tier as UserTierValue);
+        if (typeof data.honeyPoints === "number") setHoneyPoints(data.honeyPoints);
+        if (typeof data.honeyLifetimeEarned === "number") setHoneyLifetime(data.honeyLifetimeEarned);
+      })
       .catch(() => {});
   }, [authUser]);
 
@@ -198,6 +215,12 @@ export function Header() {
   const TierIcon = tierInfo.icon;
   const canUpgrade = userTier === "FREE" || userTier === "PRO";
 
+  const honeyLevel = getHoneyLevel(honeyLifetime);
+  const rankDisplay = RANK_DISPLAY[honeyLevel.label] ?? RANK_DISPLAY.Newbie;
+  const expProgress = honeyLevel.nextThreshold
+    ? Math.min(100, (honeyLifetime / honeyLevel.nextThreshold) * 100)
+    : 100;
+
   return (
     <>
     <div className="sticky top-0 z-50 hidden md:block">
@@ -207,7 +230,7 @@ export function Header() {
           {/* Left — market ticker chips */}
           <div className="flex items-center gap-2 text-muted-foreground">
             {stats.totalCards > 0 && (
-              <div className="flex items-center gap-1.5 rounded-full bg-background/60 px-2.5 py-1">
+              <div className="flex items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1">
                 <span className="font-medium">{t(language, "totalCards")}</span>
                 <span className="font-bold tabular-nums text-foreground">
                   {stats.totalCards.toLocaleString()}
@@ -216,7 +239,7 @@ export function Header() {
             )}
 
             {stats.totalValue > 0 && (
-              <Link href="/market-overview" className="flex items-center gap-1.5 rounded-full bg-background/60 px-2.5 py-1 transition-colors hover:bg-background">
+              <Link href="/market-overview" className="flex items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1 transition-colors hover:bg-muted/80">
                 <span className="font-medium">{t(language, "totalValue")}</span>
                 <span className="font-bold tabular-nums text-green-600 dark:text-green-400">
                   <Price jpy={stats.totalValue} />
@@ -224,7 +247,7 @@ export function Header() {
               </Link>
             )}
 
-            <div className="flex items-center gap-1.5 rounded-full bg-background/60 px-2.5 py-1">
+            <div className="flex items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1">
               <ArrowRightLeft className="size-3 text-blue-500" />
               <span className="font-medium">JPY/THB</span>
               <span className="font-bold tabular-nums text-foreground">
@@ -235,7 +258,7 @@ export function Header() {
             {stats.topMover && stats.topMover.change !== 0 && (
               <Link
                 href={`/cards/${stats.topMover.code}`}
-                className="flex items-center gap-1.5 rounded-full bg-background/60 px-2.5 py-1 transition-colors hover:bg-background"
+                className="flex items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1 transition-colors hover:bg-muted/80"
               >
                 <TrendingUp className="size-3 text-green-500" />
                 <span className="font-medium">Top 24h</span>
@@ -270,6 +293,19 @@ export function Header() {
             </button>
 
             <div className="mx-0.5 h-4 w-px bg-border/40" />
+
+            {authLoaded && authUser && canUpgrade && (
+              <>
+                <Link
+                  href="/pricing"
+                  className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary transition-colors hover:bg-primary/20"
+                >
+                  <Zap className="size-3" />
+                  {language === "TH" ? "อัปเกรด" : language === "JP" ? "アップグレード" : "Upgrade"}
+                </Link>
+                <div className="mx-0.5 h-4 w-px bg-border/40" />
+              </>
+            )}
 
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-1 rounded-md px-2 py-1 font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground focus:outline-none">
@@ -358,7 +394,7 @@ export function Header() {
           <div className="flex-1" />
 
           {/* Right — user tools */}
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center gap-1">
             {/* Marketplace — prominent */}
             <Link
               href="/marketplace"
@@ -389,40 +425,34 @@ export function Header() {
               {t(language, "portfolioNav")}
             </Link>
 
-            {/* Honey — chip style */}
+            {/* Honey — bordered chip with balance */}
             <Link
               href="/honey"
               className={cn(
-                "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
                 isActive(pathname, "/honey")
-                  ? "bg-amber-100 dark:bg-amber-500/10 font-semibold text-foreground"
-                  : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                  ? "border-amber-500/30 bg-amber-100 font-semibold text-foreground dark:bg-amber-500/10"
+                  : "border-amber-500/20 text-muted-foreground hover:border-amber-500/40 hover:bg-amber-500/5 hover:text-foreground"
               )}
             >
               <span className="text-sm leading-none">🍯</span>
-              Honey
+              <span>Honey</span>
+              {authLoaded && authUser && honeyPoints > 0 && (
+                <span className="font-bold tabular-nums text-amber-600 dark:text-amber-400">
+                  {honeyPoints.toLocaleString()} pt
+                </span>
+              )}
             </Link>
 
-            <div className="mx-2 h-5 w-px bg-border/40" />
+            <div className="mx-1.5 h-5 w-px bg-border/40" />
 
             {/* Auth area */}
             {authLoaded && authUser ? (
               <div className="flex items-center gap-1.5">
-                {/* Upgrade CTA — only if not max tier */}
-                {canUpgrade && (
-                  <Link
-                    href="/pricing"
-                    className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary transition-colors hover:bg-primary/20"
-                  >
-                    <Zap className="size-3" />
-                    {language === "TH" ? "อัปเกรด" : language === "JP" ? "アップグレード" : "Upgrade"}
-                  </Link>
-                )}
-
-                {/* Profile dropdown — avatar + tier integrated */}
+                {/* Profile dropdown — avatar + tier + rank */}
                 <DropdownMenu>
                   <DropdownMenuTrigger className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2.5 transition-colors hover:bg-muted/60 focus:outline-none">
-                    <Avatar size="sm" className="h-7 w-7 ring-2 ring-primary/20">
+                    <Avatar size="sm" className={cn("h-7 w-7 ring-2", rankDisplay.ring)}>
                       {authUser.user_metadata?.avatar_url ? (
                         <AvatarImage src={authUser.user_metadata.avatar_url} alt="" />
                       ) : null}
@@ -434,19 +464,80 @@ export function Header() {
                       <span className="max-w-[80px] truncate text-[12px] font-medium leading-tight text-foreground">
                         {authUser.user_metadata?.full_name ?? authUser.email?.split("@")[0] ?? "User"}
                       </span>
-                      <span className={cn("text-[10px] font-semibold leading-tight", tierInfo.color.replace(/bg-\S+\s?/, ""))}>
-                        {tierInfo.label}
-                      </span>
+                      <div className="flex items-center gap-1">
+                        <span className={cn("text-[10px] font-semibold leading-tight", tierInfo.color.replace(/bg-\S+\s?/, ""))}>
+                          {tierInfo.label}
+                        </span>
+                        <span className="text-[10px] leading-tight text-muted-foreground/50">|</span>
+                        <span className={cn("text-[10px] font-semibold leading-tight", rankDisplay.color)}>
+                          {honeyLevel.label}
+                        </span>
+                      </div>
                     </div>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" sideOffset={8} className="w-56">
+                  <DropdownMenuContent align="end" sideOffset={8} className="w-64">
                     <DropdownMenuGroup>
                       <DropdownMenuLabel className="font-normal">
+                        <p className="truncate text-sm font-medium text-foreground">
+                          {authUser.user_metadata?.full_name ?? authUser.email?.split("@")[0] ?? "User"}
+                        </p>
                         <p className="truncate text-xs text-muted-foreground">{authUser.email}</p>
-                        <div className="mt-1.5 flex items-center gap-1.5">
+
+                        {/* Package + Rank badges */}
+                        <div className="mt-2 flex items-center gap-1.5">
                           <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold", tierInfo.color)}>
                             <TierIcon className="size-2.5" />
                             {tierInfo.label}
+                          </span>
+                          <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold", rankDisplay.bg)}>
+                            <Award className="size-2.5" />
+                            {honeyLevel.label}
+                          </span>
+                        </div>
+
+                        {/* EXP progress bar */}
+                        <div className="mt-2.5">
+                          <div className="flex items-center justify-between text-[10px]">
+                            <span className="font-medium text-muted-foreground">
+                              {honeyLevel.nextThreshold ? "EXP" : "Max Rank"}
+                            </span>
+                            <span className={cn("tabular-nums font-semibold", rankDisplay.color)}>
+                              {honeyLevel.nextThreshold
+                                ? `${honeyLifetime.toLocaleString()} / ${honeyLevel.nextThreshold.toLocaleString()}`
+                                : honeyLifetime.toLocaleString()}
+                            </span>
+                          </div>
+                          <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                            <div
+                              className={cn(
+                                "h-full rounded-full transition-all",
+                                honeyLevel.label === "Diamond" ? "bg-cyan-500" :
+                                honeyLevel.label === "Gold"    ? "bg-yellow-500" :
+                                honeyLevel.label === "Silver"  ? "bg-slate-400" :
+                                honeyLevel.label === "Bronze"  ? "bg-amber-500" :
+                                                                 "bg-muted-foreground"
+                              )}
+                              style={{ width: `${expProgress}%` }}
+                            />
+                          </div>
+                          {honeyLevel.nextThreshold && (
+                            <p className="mt-0.5 text-[9px] text-muted-foreground">
+                              {(honeyLevel.nextThreshold - honeyLifetime).toLocaleString()} to {
+                                honeyLevel.level === 0 ? "Bronze" :
+                                honeyLevel.level === 1 ? "Silver" :
+                                honeyLevel.level === 2 ? "Gold"   :
+                                                         "Diamond"
+                              }
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Honey balance */}
+                        <div className="mt-2 flex items-center gap-1.5 rounded-md bg-muted/60 px-2 py-1.5">
+                          <span className="text-sm leading-none">🍯</span>
+                          <span className="text-[11px] font-medium text-muted-foreground">Honey</span>
+                          <span className="ml-auto text-xs font-bold tabular-nums text-foreground">
+                            {honeyPoints.toLocaleString()}
                           </span>
                         </div>
                       </DropdownMenuLabel>

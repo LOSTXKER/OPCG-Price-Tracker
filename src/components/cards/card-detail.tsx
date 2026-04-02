@@ -289,32 +289,37 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
 
           {/* Unified price + chart panel */}
           <div className="panel overflow-hidden">
-            {/* Mode toggle */}
+            {/* Mode toggle — segmented control */}
             {hasPsa10 && (
-              <div className="flex gap-1 px-5 pt-4">
-                <button
-                  onClick={() => setPriceMode("raw")}
-                  className={cn(
-                    "rounded-lg px-4 py-1.5 text-xs font-semibold transition-all",
-                    priceMode === "raw"
-                      ? "bg-foreground/10 text-foreground shadow-sm"
-                      : "text-muted-foreground hover:bg-muted/60 hover:text-foreground/80",
-                  )}
-                >
-                  Raw
-                </button>
-                <button
-                  onClick={() => setPriceMode("psa10")}
-                  className={cn(
-                    "flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-semibold transition-all",
-                    priceMode === "psa10"
-                      ? "bg-foreground/10 text-foreground shadow-sm"
-                      : "text-muted-foreground hover:bg-muted/60 hover:text-foreground/80",
-                  )}
-                >
-                  <Shield className="size-3 text-amber-500" />
-                  PSA 10
-                </button>
+              <div className="flex items-center gap-2.5 px-5 pt-4">
+                <span className="text-[11px] font-medium text-muted-foreground">
+                  {t(lang, "condition")}
+                </span>
+                <div className="flex rounded-full border border-border bg-muted p-0.5">
+                  <button
+                    onClick={() => setPriceMode("raw")}
+                    className={cn(
+                      "rounded-full px-4 py-1.5 text-[13px] font-semibold transition-all",
+                      priceMode === "raw"
+                        ? "bg-background text-foreground shadow ring-1 ring-border"
+                        : "text-muted-foreground hover:text-foreground/80",
+                    )}
+                  >
+                    Raw
+                  </button>
+                  <button
+                    onClick={() => setPriceMode("psa10")}
+                    className={cn(
+                      "flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[13px] font-semibold transition-all",
+                      priceMode === "psa10"
+                        ? "bg-background text-foreground shadow ring-1 ring-border"
+                        : "text-muted-foreground hover:text-foreground/80",
+                    )}
+                  >
+                    <Shield className="size-3.5 text-amber-500" />
+                    PSA 10
+                  </button>
+                </div>
               </div>
             )}
 

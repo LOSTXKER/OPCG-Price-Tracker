@@ -16,6 +16,7 @@ export async function GET() {
     stripeCustomerId: user.stripeCustomerId ? true : false,
     stripeSubscriptionId: user.stripeSubscriptionId ? true : false,
     honeyPoints: user.honeyPoints,
+    honeyLifetimeEarned: user.honeyLifetimeEarned,
     lineConnected: !!user.lineUserId,
     emailAlerts: user.emailAlerts,
     lineAlerts: user.lineAlerts,
