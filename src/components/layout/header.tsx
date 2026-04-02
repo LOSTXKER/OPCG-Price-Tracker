@@ -48,7 +48,7 @@ import { getHoneyLevel } from "@/lib/honey-levels";
 const NAV_LINKS = [
   { href: "/" as const, key: "overview" as const },
   { href: "/sets" as const, key: "sets" as const },
-  { href: "/pull-calculator" as const, key: "pullCalculator" as const },
+  { href: "/drop-calculator" as const, key: "dropCalculator" as const },
   { href: "/deck-calculator" as const, key: "deckCalculatorNav" as const },
   { href: "/compare" as const, key: "compareCards" as const },
 ];

@@ -99,17 +99,17 @@ export default function GuideLandingPage() {
       <RelatedPages
         title="เครื่องมือ"
         items={[
-          { href: "/pull-calculator", icon: Calculator, title: "Pull Calculator", description: "คำนวณโอกาสดึงการ์ดจากกล่อง" },
+          { href: "/drop-calculator", icon: Calculator, title: "Drop Calculator", description: "คำนวณโอกาสดึงการ์ดจากกล่อง" },
           { href: "/deck-calculator", icon: Calculator, title: "Deck Calculator", description: "คำนวณราคารวมเด็คของคุณ" },
           { href: "/compare", icon: GitCompareArrows, title: "เปรียบเทียบการ์ด", description: "เทียบการ์ดหลายใบแบบ side-by-side" },
           { href: "/marketplace", icon: Store, title: "Marketplace", description: "ซื้อขายการ์ดในตลาด Meecard" },
         ]}
       />
       <FaqSection items={[
-        { question: "One Piece Card Game คืออะไร?", answer: "OPCG เป็นเกมการ์ดจาก Bandai ที่อิงจากมังงะ One Piece เปิดตัวในปี 2022 มีผู้เล่นทั่วโลก เกมใช้ระบบ Leader + 50 การ์ดเด็ค" },
-        { question: "เริ่มต้นเล่นต้องใช้อะไรบ้าง?", answer: "ต้องมี Leader 1 ใบ กับเด็ค 50 ใบที่ตรงสีกับ Leader สามารถเริ่มจาก Starter Deck ที่พร้อมเล่นได้เลย" },
-        { question: "ซื้อการ์ดที่ไหนดี?", answer: "ในไทยมีหลายร้านค้าทั้งออนไลน์และหน้าร้าน ดูรายละเอียดได้ที่คู่มือการซื้อ สำหรับราคาอ้างอิงดูได้จาก Meecard" },
-        { question: "การ์ดที่แพงที่สุดมีอะไรบ้าง?", answer: "การ์ดที่แพงที่สุดมักจะเป็น SEC (Secret Rare) หรือ SP (Special) โดยเฉพาะการ์ดตัวละครยอดนิยมอย่าง Luffy, Shanks ราคาอาจถึงหลักหมื่นบาท" },
+        { question: "One Piece Card Game คืออะไร?", answer: "เกมการ์ดจาก Bandai อิงจากมังงะ One Piece เปิดตัวปี 2022 ใช้ระบบ Leader + เด็ค 50 ใบ มีคนเล่นทั่วโลก" },
+        { question: "เริ่มต้นเล่นต้องใช้อะไรบ้าง?", answer: "ใช้ Leader 1 ใบ กับเด็ค 50 ใบที่ตรงสีกับ Leader ถ้ายังไม่รู้จะเอาอะไร เริ่มจาก Starter Deck ได้เลย พร้อมเล่นทันที" },
+        { question: "ซื้อการ์ดที่ไหนดี?", answer: "ในไทยมีหลายร้านทั้งออนไลน์และหน้าร้าน ดูรายละเอียดได้ในคู่มือการซื้อ ส่วนราคาอ้างอิงดูได้ที่ Meecard" },
+        { question: "การ์ดที่แพงที่สุดมีอะไรบ้าง?", answer: "ส่วนใหญ่จะเป็น SEC (Secret Rare) หรือ SP (Special) โดยเฉพาะตัวละครยอดนิยมอย่าง Luffy, Shanks ราคาหลักหมื่นขึ้นไปเลย" },
       ]} />
     </div>
   );

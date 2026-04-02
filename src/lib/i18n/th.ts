@@ -6,7 +6,7 @@ export const th = {
   guide: "คู่มือ",
   home: "หน้าแรก",
   overview: "ภาพรวม",
-  pullCalculator: "คำนวณดรอปเรท",
+  dropCalculator: "คำนวณดรอป",
   deckCalculatorNav: "สร้างเด็ค",
   tools: "เครื่องมือ",
   portfolioNav: "พอร์ตโฟลิโอ",

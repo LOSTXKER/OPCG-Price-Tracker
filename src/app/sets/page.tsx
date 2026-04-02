@@ -206,7 +206,7 @@ export default async function SetsIndexPage() {
       <RelatedPages
         items={[
           { href: "/trending", icon: TrendingUp, title: "Trending", description: "การ์ดที่ราคาขยับมากที่สุด" },
-          { href: "/pull-calculator", icon: Calculator, title: "Pull Calculator", description: "คำนวณโอกาสดึงการ์ดจากกล่อง" },
+          { href: "/drop-calculator", icon: Calculator, title: "Drop Calculator", description: "คำนวณโอกาสดึงการ์ดจากกล่อง" },
           { href: "/guide/sets", icon: BookOpen, title: "คู่มือชุดการ์ด", description: "เรียนรู้เกี่ยวกับชุดการ์ดทั้งหมด" },
           { href: "/marketplace", icon: Store, title: "Marketplace", description: "ซื้อขายการ์ดในตลาด Meecard" },
         ]}

@@ -16,7 +16,7 @@ export function Footer() {
   ];
 
   const toolLinks = [
-    { label: t(lang, "dropCalc"), href: "/pull-calculator" },
+    { label: t(lang, "dropCalc"), href: "/drop-calculator" },
     { label: t(lang, "deckCalculatorNav"), href: "/deck-calculator" },
     { label: "Compare", href: "/compare" },
     { label: "Market Overview", href: "/market-overview" },

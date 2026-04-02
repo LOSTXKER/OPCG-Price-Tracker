@@ -6,7 +6,7 @@ export const en = {
   guide: "Guide",
   home: "Home",
   overview: "Overview",
-  pullCalculator: "Pull Rate Calculator",
+  dropCalculator: "Drop Calculator",
   deckCalculatorNav: "Deck Calculator",
   tools: "Tools",
   portfolioNav: "Portfolio",

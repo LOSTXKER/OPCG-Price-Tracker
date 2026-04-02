@@ -6,7 +6,7 @@ export const jp = {
   guide: "ガイド",
   home: "ホーム",
   overview: "概要",
-  pullCalculator: "ドロップ率計算",
+  dropCalculator: "ドロップ率計算",
   deckCalculatorNav: "デッキ計算",
   tools: "ツール",
   portfolioNav: "ポートフォリオ",

@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
         destination: "/sets/:path*",
         permanent: true,
       },
+      {
+        source: "/pull-calculator",
+        destination: "/drop-calculator",
+        permanent: true,
+      },
     ];
   },
   images: {

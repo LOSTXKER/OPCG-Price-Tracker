@@ -19,10 +19,10 @@ export default function PricingPage() {
       <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Pricing" }]} />
       <PricingClient />
       <FaqSection items={[
-        { question: "แพลน Pro ได้อะไรเพิ่ม?", answer: "Pro ได้ Price Alerts, Portfolio ไม่จำกัด, กราฟขั้นสูง, Export ข้อมูล และ Priority Support" },
-        { question: "ยกเลิกได้มั้ย?", answer: "ยกเลิกได้ตลอดเวลา แพลนจะยังใช้ได้จนหมดรอบบิล ไม่มีค่าธรรมเนียมยกเลิก" },
-        { question: "มีทดลองใช้มั้ย?", answer: "มี! สามารถทดลองใช้ Pro ได้ฟรี 7 วัน ไม่ต้องใส่บัตรเครดิต" },
-        { question: "ใช้ฟรีได้มั้ย?", answer: "ฟีเจอร์หลักเช่นดูราคา กราฟ ข้อมูลชุดการ์ด และ Pull Calculator ใช้ได้ฟรีตลอด" },
+        { question: "แพลน Pro ได้อะไรเพิ่ม?", answer: "ได้ Price Alerts, Portfolio ไม่จำกัด, กราฟขั้นสูง, Export ข้อมูล แล้วก็ Priority Support" },
+        { question: "ยกเลิกได้มั้ย?", answer: "ยกเลิกได้ตลอด แพลนจะยังใช้ได้จนหมดรอบบิล ไม่มีค่าธรรมเนียม" },
+        { question: "มีทดลองใช้มั้ย?", answer: "มี ทดลองใช้ Pro ฟรี 7 วัน ไม่ต้องใส่บัตรเครดิต" },
+        { question: "ใช้ฟรีได้มั้ย?", answer: "ดูราคา กราฟ ข้อมูลชุดการ์ด Drop Calculator ใช้ฟรีหมด อัปเกรดเมื่อไรก็ได้" },
       ]} />
     </>
   );

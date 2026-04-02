@@ -5,12 +5,12 @@ import { AlertTriangle, Calculator, ListChecks, Package, LayoutGrid } from "luci
 
 import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
-import { SetSelector } from "@/components/pull-calculator/set-selector"
-import { PurchaseConfig } from "@/components/pull-calculator/purchase-config"
-import { WantList } from "@/components/pull-calculator/want-list"
-import { CardPicker } from "@/components/pull-calculator/card-picker"
-import type { SetListItem, SetDetail, DropRate, CardItem, Unit } from "@/components/pull-calculator/types"
-import { tierSort } from "@/components/pull-calculator/types"
+import { SetSelector } from "@/components/drop-calculator/set-selector"
+import { PurchaseConfig } from "@/components/drop-calculator/purchase-config"
+import { WantList } from "@/components/drop-calculator/want-list"
+import { CardPicker } from "@/components/drop-calculator/card-picker"
+import type { SetListItem, SetDetail, DropRate, CardItem, Unit } from "@/components/drop-calculator/types"
+import { tierSort } from "@/components/drop-calculator/types"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import {
@@ -22,7 +22,7 @@ import {
   EXPECTED_PARALLEL_SLOTS_PER_BOX,
 } from "@/lib/utils/pull-rate"
 
-export default function PullCalculatorClient() {
+export default function DropCalculatorClient() {
   const lang = useUIStore((s) => s.language)
   const [sets, setSets] = useState<SetListItem[]>([])
   const [selectedCode, setSelectedCode] = useState<string>("")
@@ -39,7 +39,7 @@ export default function PullCalculatorClient() {
   const [activeTab, setActiveTab] = useState<"cards" | "results">("cards")
 
   useEffect(() => {
-    fetch("/api/pull-calculator")
+    fetch("/api/drop-calculator")
       .then((r) => {
         if (!r.ok) throw new Error(`Failed to load sets: ${r.status}`)
         return r.json()
@@ -58,7 +58,7 @@ export default function PullCalculatorClient() {
     if (!code) { setDetail(null); return }
     setLoading(true)
     try {
-      const res = await fetch(`/api/pull-calculator?set=${code}`)
+      const res = await fetch(`/api/drop-calculator?set=${code}`)
       if (!res.ok) throw new Error(`Failed to load set ${code}: ${res.status}`)
       const data = await res.json()
       setDetail(data)
@@ -191,7 +191,7 @@ export default function PullCalculatorClient() {
         <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
           <Calculator className="size-4" />
         </div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "pullCalculator")}</h1>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "dropCalculator")}</h1>
       </div>
 
       {/* ── Set Selector ── */}
