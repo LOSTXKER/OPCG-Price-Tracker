@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {
-  BarChart3,
   Calculator,
   GitCompareArrows,
   Layers,
@@ -12,28 +11,31 @@ import {
   Wallet,
 } from "lucide-react";
 import { FaqSection, type FaqItem } from "@/components/shared/faq-section";
-import { RelatedPages, type RelatedPageItem } from "@/components/shared/related-pages";
+import {
+  RelatedPages,
+  type RelatedPageItem,
+} from "@/components/shared/related-pages";
 
 const features = [
   {
     icon: LineChart,
-    title: "ราคาอัปเดตทุกวัน",
+    title: "ราคาการ์ดวันพีซอัปเดตทุกวัน",
     description:
-      "ดูราคาจาก Yuyu-tei ที่อัปเดตรายวัน มีกราฟย้อนหลังให้ดูแนวโน้มราคาได้เลย",
+      "ติดตามราคาการ์ด OPCG จาก Yuyu-tei แบบเรียลไทม์ พร้อมกราฟราคาย้อนหลังให้ดูแนวโน้มตลาด",
     href: "/market-overview",
   },
   {
     icon: Wallet,
-    title: "จัดการ Portfolio",
+    title: "จัดการ Portfolio การ์ดของคุณ",
     description:
-      "เพิ่มการ์ดที่มีอยู่ แล้วดูมูลค่ารวมเปลี่ยนแปลงแบบ real-time ได้เลย",
+      "เพิ่มการ์ด One Piece ที่ถืออยู่ แล้วดูมูลค่าพอร์ตรวมเปลี่ยนแปลงแบบเรียลไทม์ พร้อมกราฟและสถิติ",
     href: "/portfolio",
   },
   {
     icon: Calculator,
-    title: "คำนวณดรอป",
+    title: "คำนวณ Drop Rate กล่องสุ่ม",
     description:
-      "อยากรู้ว่าเปิดกี่กล่องถึงจะได้การ์ดที่ต้องการ? ลองคำนวณดูได้ด้วย drop rate จริง",
+      "จำลองการเปิดกล่องสุ่มการ์ด OPCG คำนวณโอกาสได้การ์ดที่ต้องการจาก drop rate จริง ช่วยวางแผนก่อนซื้อ",
     href: "/drop-calculator",
   },
 ];
@@ -42,38 +44,38 @@ const exploreItems: RelatedPageItem[] = [
   {
     icon: Layers,
     href: "/sets",
-    title: "ชุดการ์ด",
-    description: "ดูทุกชุดการ์ดพร้อมมูลค่าประเมิน",
+    title: "ชุดการ์ด OPCG ทั้งหมด",
+    description: "ดูทุกชุดการ์ดวันพีซพร้อมมูลค่าประเมินรวม",
   },
   {
     icon: TrendingUp,
     href: "/trending",
-    title: "Trending",
-    description: "การ์ดที่ราคาขยับมากที่สุดวันนี้",
+    title: "การ์ดวันพีซมาแรงวันนี้",
+    description: "การ์ด OPCG ที่ราคาขยับมากที่สุดในวันนี้",
   },
   {
     icon: Store,
     href: "/marketplace",
-    title: "Marketplace",
-    description: "ซื้อขายการ์ดในตลาดของ Meecard",
+    title: "ตลาดซื้อขายการ์ด",
+    description: "ซื้อขายการ์ดวันพีซในตลาดของ Meecard ราคายุติธรรม",
   },
   {
     icon: Sparkles,
     href: "/guide",
-    title: "คู่มือ OPCG",
-    description: "เรียนรู้เกมตั้งแต่เริ่มต้น",
+    title: "คู่มือ One Piece Card Game",
+    description: "เรียนรู้กฎ ระบบ rarity และเทคนิคเล่นเกม",
   },
   {
     icon: GitCompareArrows,
     href: "/compare",
-    title: "เปรียบเทียบ",
-    description: "เทียบการ์ดหลายใบแบบ side-by-side",
+    title: "เปรียบเทียบราคาการ์ด",
+    description: "เทียบราคาและข้อมูลการ์ด OPCG หลายใบแบบ side-by-side",
   },
   {
     icon: ShoppingCart,
     href: "/deck-calculator",
-    title: "Deck Calculator",
-    description: "คำนวณราคารวมเด็คของคุณ",
+    title: "คำนวณราคาเด็ค",
+    description: "คำนวณราคารวมเด็คจากราคาตลาดปัจจุบัน",
   },
 ];
 
@@ -81,59 +83,68 @@ const faqItems: FaqItem[] = [
   {
     question: "Meecard คืออะไร?",
     answer:
-      "เว็บดูราคาการ์ด OPCG ที่อัปเดตทุกวัน มีทั้ง Portfolio, Drop Calculator, เทียบราคา และตลาดซื้อขายการ์ดในที่เดียว",
+      "Meecard คือเว็บไซต์ติดตามราคาการ์ด One Piece Card Game (OPCG) ที่อัปเดตทุกวัน รวมฟีเจอร์ Portfolio, Drop Calculator, เปรียบเทียบราคา และ Marketplace ซื้อขายการ์ดไว้ในที่เดียว",
   },
   {
-    question: "ราคาการ์ดมาจากไหน?",
+    question: "ราคาการ์ด OPCG มาจากแหล่งไหน?",
     answer:
-      "ราคาหลักมาจาก Yuyu-tei ร้านการ์ดที่ใหญ่สุดในญี่ปุ่น แปลงเป็นบาทกับ USD ให้เลย แล้วก็มีราคาจาก SNKRDUNK สำหรับการ์ดเกรด PSA 10 ด้วย",
+      "ราคาหลักอ้างอิงจาก Yuyu-tei ร้านการ์ดเกมที่ใหญ่ที่สุดในญี่ปุ่น แปลงเป็นเงินบาทและ USD อัตโนมัติ นอกจากนี้ยังมีราคาการ์ดเกรด PSA 10 จาก SNKRDUNK",
   },
   {
-    question: "อัปเดตราคาบ่อยแค่ไหน?",
+    question: "อัปเดตราคาการ์ดวันพีซบ่อยแค่ไหน?",
     answer:
-      "อัปเดตอย่างน้อยวันละครั้ง มีกราฟย้อนหลังให้ดูด้วยว่าราคาเปลี่ยนไปยังไง",
+      "ราคาอัปเดตอย่างน้อยวันละ 1 ครั้ง พร้อมกราฟราคาย้อนหลังให้ดูแนวโน้มตลาดว่าการ์ดขึ้นหรือลง",
   },
   {
-    question: "Portfolio คืออะไร?",
+    question: "Portfolio ใน Meecard ใช้ทำอะไร?",
     answer:
-      "เอาไว้บันทึกการ์ดที่มีอยู่ แล้วดูมูลค่ารวมแบบ real-time ได้ มีกราฟย้อนหลัง, สัดส่วนการ์ด และ Performance ให้ดูด้วย",
+      "บันทึกการ์ดวันพีซที่คุณมี ดูมูลค่ารวมเปลี่ยนแปลงแบบเรียลไทม์ พร้อมกราฟย้อนหลัง สัดส่วนตาม rarity และผลตอบแทน (performance)",
   },
   {
-    question: "Drop Calculator ทำอะไรได้?",
+    question: "Drop Calculator คำนวณอะไรได้บ้าง?",
     answer:
-      "คำนวณโอกาสได้การ์ดที่ต้องการจากกล่อง ใส่จำนวนกล่องที่จะซื้อแล้วดูได้เลยว่าโอกาสได้การ์ดแต่ละใบเท่าไร ใช้ drop rate จริง",
+      "คำนวณโอกาสที่จะได้การ์ดที่ต้องการจากการเปิดกล่อง OPCG ใส่จำนวนกล่องแล้วดูโอกาสได้ของแต่ละ rarity โดยใช้ drop rate จริง",
   },
   {
-    question: "ใช้ฟรีมั้ย?",
+    question: "Meecard ใช้ฟรีไหม?",
     answer:
-      "ดูราคา กราฟ ข้อมูลชุดการ์ด Drop Calculator ใช้ฟรีหมด ถ้าอยากได้ Portfolio ขั้นสูง, Price Alerts หรือ Export อัปเกรดเป็น Pro ได้",
+      "ฟีเจอร์หลักอย่างราคาการ์ด กราฟย้อนหลัง ข้อมูลชุดการ์ด และ Drop Calculator ใช้ฟรีทั้งหมด สำหรับ Portfolio ขั้นสูง แจ้งเตือนราคา หรือ Export ข้อมูล สามารถอัปเกรดเป็น Pro ได้",
   },
   {
-    question: "Marketplace คืออะไร?",
+    question: "Marketplace บน Meecard คืออะไร?",
     answer:
-      "ตลาดซื้อขายการ์ดบน Meecard ลงขายเองหรือซื้อจากคนอื่นได้เลย มีราคาตลาดจริงให้อ้างอิง",
+      "ตลาดซื้อขายการ์ด One Piece ที่ผู้ใช้สามารถลงขายหรือซื้อการ์ดจากคนอื่นได้โดยตรง มีราคาตลาดจริงให้เทียบเป็นข้อมูลอ้างอิง",
   },
 ];
 
 export function HomeSeoContent() {
   return (
-    <div className="space-y-12 pt-4">
+    <div className="space-y-16 pt-6">
       {/* Features */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-semibold">Meecard ทำอะไรได้บ้าง?</h2>
+      <section className="space-y-5">
+        <div>
+          <h2 className="text-xl font-semibold">
+            Meecard ช่วยคุณติดตามราคาการ์ด One Piece ได้ยังไงบ้าง?
+          </h2>
+          <p className="mt-1.5 text-sm text-muted-foreground">
+            เครื่องมือครบชุดสำหรับนักสะสมและนักเทรดการ์ด OPCG
+          </p>
+        </div>
         <div className="grid gap-4 sm:grid-cols-3">
           {features.map((f) => (
             <Link
               key={f.href}
               href={f.href}
-              className="group flex flex-col gap-3 rounded-xl border border-border/50 bg-card p-5 transition-colors hover:bg-muted/40"
+              className="group flex flex-col gap-4 rounded-xl border border-border/50 bg-card p-6 transition-all hover:bg-muted/40 hover:shadow-md"
             >
-              <f.icon className="size-6 text-primary" />
+              <div className="flex size-11 items-center justify-center rounded-full bg-primary/10">
+                <f.icon className="size-5 text-primary" />
+              </div>
               <div>
-                <p className="text-sm font-semibold group-hover:text-primary transition-colors">
+                <p className="text-sm font-semibold transition-colors group-hover:text-primary">
                   {f.title}
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
                   {f.description}
                 </p>
               </div>
@@ -143,42 +154,44 @@ export function HomeSeoContent() {
       </section>
 
       {/* Price explainer */}
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold">
-          ราคาการ์ด OPCG ทำงานยังไง?
+      <section className="rounded-xl border border-border/50 bg-card/50 p-6 space-y-4">
+        <h2 className="text-xl font-semibold">
+          ราคาการ์ด OPCG (One Piece Card Game) กำหนดจากอะไร?
         </h2>
         <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
           <p>
-            ราคาการ์ด OPCG ขึ้นกับหลายอย่าง ทั้ง{" "}
+            ราคาการ์ดวันพีซขึ้นอยู่กับหลายปัจจัย ทั้ง{" "}
             <Link
               href="/guide/rarities"
               className="font-medium text-primary hover:underline"
             >
               ความหายาก (rarity)
-            </Link>
-            , ภาพสวยมั้ย, แรงในเกมมั้ย แล้วก็ supply/demand ในตลาด
-            การ์ดหายากอย่าง SEC หรือ SP ราคาหลักหมื่นขึ้นไป ส่วน C ไม่ถึง
-            10 บาทก็มี
+            </Link>{" "}
+            อย่าง SEC, SP, SR ภาพอาร์ตเวิร์กพิเศษ ความแรงในเมตา
+            และอุปสงค์อุปทานในตลาด การ์ดระดับ SEC หรือ SP
+            ราคาอาจสูงหลักหมื่นถึงหลักแสน ในขณะที่การ์ด Common เริ่มต้นไม่ถึง
+            10 บาท
           </p>
           <p>
-            Meecard ใช้ราคาจาก <strong>Yuyu-tei</strong>{" "}
-            ร้านการ์ดที่ใหญ่สุดในญี่ปุ่น เอามาเป็นราคากลางอ้างอิง
-            แล้วก็มีข้อมูลจาก SNKRDUNK ด้วยสำหรับการ์ดเกรด PSA 10
+            Meecard อ้างอิงราคาจาก <strong>Yuyu-tei</strong>{" "}
+            ร้านการ์ดเกมอันดับหนึ่งของญี่ปุ่น แปลงเป็นเงินบาทและ USD
+            ให้อัตโนมัติ พร้อมข้อมูลจาก SNKRDUNK สำหรับการ์ดที่ผ่านการเกรด PSA
+            10
           </p>
           <p>
-            อ่านเพิ่มเติมเรื่อง{" "}
+            เรียนรู้เพิ่มเติมเกี่ยวกับ{" "}
             <Link
               href="/guide/buying"
               className="font-medium text-primary hover:underline"
             >
-              วิธีซื้อการ์ดและร้านค้าแนะนำ
+              วิธีซื้อการ์ดวันพีซและร้านค้าแนะนำ
             </Link>{" "}
-            หรือ{" "}
+            หรือเริ่มต้นด้วย{" "}
             <Link
               href="/guide/getting-started"
               className="font-medium text-primary hover:underline"
             >
-              เริ่มต้นเล่น OPCG
+              คู่มือเล่น OPCG สำหรับมือใหม่
             </Link>
           </p>
         </div>

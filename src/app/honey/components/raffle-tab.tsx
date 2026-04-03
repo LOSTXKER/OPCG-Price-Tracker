@@ -81,7 +81,7 @@ export function RaffleTab({
           <div className="mx-auto mb-3 flex size-14 items-center justify-center rounded-2xl bg-primary/10">
             <Trophy className="size-7 text-primary" />
           </div>
-          <h2 className="text-lg font-bold">{localizedTitle(raffle, lang)}</h2>
+          <h2 className="break-words text-lg font-bold">{localizedTitle(raffle, lang)}</h2>
           {raffle.description && (
             <p className="mt-1 text-xs text-muted-foreground">{raffle.description}</p>
           )}

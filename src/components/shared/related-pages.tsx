@@ -17,16 +17,16 @@ export function RelatedPages({
 }) {
   return (
     <section className="mt-12 space-y-4">
-      <h2 className="text-lg font-semibold">{title}</h2>
+      <h2 className="text-xl font-semibold">{title}</h2>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            className="group flex items-start gap-3 rounded-xl border border-border/50 bg-card p-4 transition-colors hover:bg-muted/40"
+            className="group flex items-start gap-3 rounded-xl border border-border/50 bg-card p-4 transition-all hover:bg-muted/40 hover:shadow-md"
           >
-            <div className="mt-0.5 shrink-0 text-primary">
-              <item.icon className="size-5" />
+            <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+              <item.icon className="size-[18px] text-primary" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold transition-colors group-hover:text-primary">

@@ -122,7 +122,7 @@ export function ListingForm({ card, onSubmit, isLoading }: ListingFormProps) {
           <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
             Listing card
           </p>
-          <p className="font-medium">{card.nameEn ?? card.nameJp}</p>
+          <p className="break-words font-medium">{card.nameEn ?? card.nameJp}</p>
           <p className="text-muted-foreground font-mono text-sm">{card.cardCode}</p>
           {card.latestPriceJpy != null ? (
             <p className="text-sm">
@@ -295,7 +295,7 @@ export function ListingForm({ card, onSubmit, isLoading }: ListingFormProps) {
         ) : null}
       </div>
 
-      <Button type="submit" disabled={isLoading}>
+      <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
         {isLoading ? "Saving…" : "Submit listing"}
       </Button>
     </form>

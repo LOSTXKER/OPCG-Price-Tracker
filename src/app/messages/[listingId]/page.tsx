@@ -90,7 +90,7 @@ export default function ChatPage() {
         <Link href="/messages" className="text-muted-foreground hover:text-foreground">
           <ArrowLeft className="size-5" />
         </Link>
-        <h1 className="text-lg font-semibold">
+        <h1 className="min-w-0 truncate text-lg font-semibold">
           {t(lang, "chatHeading")} #{listingId}
         </h1>
       </div>
@@ -108,7 +108,7 @@ export default function ChatPage() {
             >
               <div
                 className={cn(
-                  "max-w-[75%] rounded-2xl px-3 py-2 text-sm",
+                  "min-w-0 max-w-[75%] rounded-2xl px-3 py-2 text-sm",
                   m.isOwn
                     ? "bg-primary text-primary-foreground"
                     : "bg-card border"
@@ -119,7 +119,7 @@ export default function ChatPage() {
                     {m.sender.displayName ?? "User"}
                   </p>
                 )}
-                <p>{m.content}</p>
+                <p className="break-words">{m.content}</p>
                 <p className={cn("mt-1 text-right text-[11px] opacity-60")}>
                   {new Date(m.createdAt).toLocaleTimeString(locale, {
                     hour: "2-digit",

@@ -167,7 +167,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
 
         <div className="min-w-0 space-y-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">{listing.card.nameEn ?? listing.card.nameJp}</h1>
+            <h1 className="break-words text-2xl font-bold tracking-tight">{listing.card.nameEn ?? listing.card.nameJp}</h1>
             <p className="text-muted-foreground font-mono text-sm">{listing.card.cardCode}</p>
             <div className="mt-2 flex flex-wrap gap-2">
               <Badge variant="outline">{listing.condition}</Badge>
@@ -204,7 +204,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
           {listing.description ? (
             <div>
               <p className="text-muted-foreground text-sm">Description</p>
-              <p className="mt-1 whitespace-pre-wrap text-sm">{listing.description}</p>
+              <p className="mt-1 break-words whitespace-pre-wrap text-sm">{listing.description}</p>
             </div>
           ) : null}
 
@@ -238,7 +238,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          <div className="text-muted-foreground space-y-1 text-sm">
+          <div className="text-muted-foreground space-y-1 break-words text-sm">
             {listing.location ? <p>Location: {listing.location}</p> : null}
             <p>
               Shipping:{" "}

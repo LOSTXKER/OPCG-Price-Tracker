@@ -118,7 +118,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             บทความทั้งหมด
           </Link>
 
-          <h1 className="text-3xl font-bold leading-tight tracking-tight">
+          <h1 className="break-words text-3xl font-bold leading-tight tracking-tight">
             {post.title}
           </h1>
 

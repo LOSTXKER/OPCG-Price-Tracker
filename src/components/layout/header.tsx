@@ -8,10 +8,12 @@ import {
   ArrowRightLeft,
   Award,
   BookOpen,
+  Check,
   Coins,
   Crown,
   Globe,
   LogOut,
+  Menu,
   Moon,
   Search,
   Settings,
@@ -596,6 +598,103 @@ export function Header() {
           </div>
         </div>
       </header>
+    </div>
+
+    {/* ══════════ MOBILE TOP BAR ══════════ */}
+    <div className="sticky top-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur-xl md:hidden">
+      <div className="flex h-12 items-center gap-2 px-3">
+        <Link href="/" className="flex shrink-0 items-center gap-2">
+          <Image src="/meecard.png" alt="Meecard" width={24} height={24} className="shrink-0 select-none" priority />
+          <span className="text-sm font-bold tracking-tight">Meecard</span>
+        </Link>
+
+        <div className="flex-1" />
+
+        <button
+          type="button"
+          onClick={() => setSearchOpen(true)}
+          className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+        >
+          <Search className="size-[18px]" />
+        </button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground focus:outline-none">
+            <Menu className="size-[18px]" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" sideOffset={8} className="w-56">
+            {authLoaded && authUser && (
+              <>
+                <div className="px-2 py-1.5">
+                  <p className="truncate text-sm font-medium">{authUser.user_metadata?.full_name ?? authUser.email?.split("@")[0] ?? "User"}</p>
+                  <p className="truncate text-xs text-muted-foreground">{authUser.email}</p>
+                </div>
+                <DropdownMenuSeparator />
+              </>
+            )}
+
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="text-[11px] text-muted-foreground">{t(language, "languageLabel")}</DropdownMenuLabel>
+              {LANG_OPTIONS.map((l) => (
+                <DropdownMenuItem key={l.value} onClick={() => setLanguage(l.value)}>
+                  <Globe className="size-4" />
+                  {l.label}
+                  {language === l.value && <Check className="ml-auto size-3.5 text-primary" />}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="text-[11px] text-muted-foreground">{t(language, "currencyLabel")}</DropdownMenuLabel>
+              {CURRENCY_OPTIONS.map((c) => (
+                <DropdownMenuItem key={c.value} onClick={() => setCurrency(c.value)}>
+                  <Coins className="size-4" />
+                  {c.label}
+                  {currency === c.value && <Check className="ml-auto size-3.5 text-primary" />}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
+              {mounted && resolvedTheme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+              {mounted && resolvedTheme === "dark" ? t(language, "lightMode") : t(language, "darkMode")}
+            </DropdownMenuItem>
+
+            {authLoaded && authUser ? (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => router.push("/profile")}>
+                  <User className="size-4" />
+                  {t(language, "profileLabel")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/honey")}>
+                  <Sparkles className="size-4" />
+                  Honey
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem variant="destructive" onClick={() => void handleLogout()}>
+                  <LogOut className="size-4" />
+                  {t(language, "logout")}
+                </DropdownMenuItem>
+              </>
+            ) : authLoaded ? (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => router.push("/login")}>
+                  <User className="size-4" />
+                  {t(language, "login")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/register")}>
+                  <Zap className="size-4" />
+                  {t(language, "register")}
+                </DropdownMenuItem>
+              </>
+            ) : null}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
 
     <CommandSearchModal open={searchOpen} onClose={closeSearch} />

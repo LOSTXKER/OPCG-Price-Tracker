@@ -312,7 +312,7 @@ export default function CompareClient() {
       {/* ── Chart Panel ── */}
       {orderedCards.length > 0 && (hasChart || chartLocked) && (
         <div className="rounded-xl border bg-card">
-          <div className="flex items-center gap-2 border-b px-4 py-3">
+          <div className="flex flex-wrap items-center gap-2 border-b px-4 py-3">
             <div className="flex size-6 items-center justify-center rounded-md bg-muted text-muted-foreground">
               <ChartLine className="size-3.5" />
             </div>
@@ -320,7 +320,7 @@ export default function CompareClient() {
               {t(lang, "comparePriceChart")}
             </h2>
             {hasChart && (
-              <div className="ml-auto flex gap-0.5 rounded-lg bg-muted p-0.5">
+              <div className="ml-auto flex gap-0.5 rounded-lg bg-muted p-0.5 max-sm:ml-0">
                 {[30, 90, 180, 365].map((d) => (
                   <button
                     key={d}

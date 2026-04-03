@@ -104,8 +104,8 @@ export default async function PublicProfilePage({ params }: PageProps) {
             {(user.displayName ?? "?").slice(0, 1).toUpperCase()}
           </AvatarFallback>
         </Avatar>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">
+        <div className="min-w-0">
+          <h1 className="break-words text-2xl font-bold tracking-tight">
             <SellerName name={user.displayName} />
           </h1>
           <p className="text-muted-foreground text-sm">
@@ -186,7 +186,7 @@ export default async function PublicProfilePage({ params }: PageProps) {
                       {r.createdAt.toLocaleDateString()}
                     </span>
                   </p>
-                  {r.comment ? <p className="mt-1 text-sm">{r.comment}</p> : null}
+                  {r.comment ? <p className="mt-1 break-words text-sm">{r.comment}</p> : null}
                 </div>
               </li>
             ))}

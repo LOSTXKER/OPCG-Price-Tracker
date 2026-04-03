@@ -41,5 +41,5 @@ export function NoReviewsMsg() {
 
 export function ReviewerName({ name }: { name: string | null }) {
   const lang = useUIStore((s) => s.language);
-  return <p className="font-medium">{name ?? t(lang, "profileLabel")}</p>;
+  return <p className="break-words font-medium">{name ?? t(lang, "profileLabel")}</p>;
 }

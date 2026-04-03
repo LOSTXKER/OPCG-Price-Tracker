@@ -262,8 +262,8 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
               <span className="font-price text-xs text-muted-foreground">{card.baseCode ?? card.cardCode}</span>
               <RarityBadge rarity={card.rarity} size="md" />
             </div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-semibold tracking-tight">
+            <div className="flex min-w-0 items-center gap-2">
+              <h1 className="min-w-0 break-words text-2xl font-semibold tracking-tight">
                 {displayName}
               </h1>
               <WatchlistStar cardId={card.id} size="md" />
@@ -469,7 +469,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
               <p className="mb-2 text-xs text-muted-foreground">
                 {t(lang, "effect")}
               </p>
-              <div className="text-sm leading-relaxed whitespace-pre-wrap">
+              <div className="break-words text-sm leading-relaxed whitespace-pre-wrap">
                 {effectText}
               </div>
             </div>
@@ -491,8 +491,8 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
       <div className="mt-6 border-t border-border/40 pt-8">
         {relatedCards && relatedCards.length > 0 && (
           <>
-            <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-base font-semibold">{t(lang, "otherCardsFrom")} {getSetName(lang, set)}</h2>
+            <div className="mb-5 flex items-center justify-between gap-2">
+              <h2 className="min-w-0 break-words text-base font-semibold">{t(lang, "otherCardsFrom")} {getSetName(lang, set)}</h2>
               <Link
                 href={`/sets/${set.code}`}
                 className="text-xs text-muted-foreground transition-colors hover:text-foreground"

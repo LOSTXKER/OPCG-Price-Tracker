@@ -141,7 +141,7 @@ export function DropRateDialog({
         </DialogHeader>
 
         <div className="space-y-3">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <div className="inline-flex rounded-lg bg-muted/60 p-0.5">
               {PULL_UNITS.map((u) => (
                 <button

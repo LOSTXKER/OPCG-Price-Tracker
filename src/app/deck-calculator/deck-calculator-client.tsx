@@ -243,8 +243,8 @@ function DeckCalculatorContent() {
 
       {activeDeck ? (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">{activeDeck.name}</h2>
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="min-w-0 truncate text-lg font-semibold">{activeDeck.name}</h2>
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground text-sm">{totalCards}/50 {t(lang, "cardsCount")}</span>
               <Button
@@ -429,8 +429,8 @@ function DeckMockPreview({ lang }: { lang: Language }) {
       </div>
 
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">My OP-09 Deck</h2>
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="min-w-0 truncate text-lg font-semibold">My OP-09 Deck</h2>
           <span className="text-muted-foreground text-sm">12/50 {t(lang, "cardsCount")}</span>
         </div>
 

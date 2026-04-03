@@ -167,7 +167,7 @@ export function CardEditor({ card }: { card: CardData }) {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div className="flex-1">
-          <h1 className="text-xl font-bold">
+          <h1 className="min-w-0 break-words text-xl font-bold">
             {card.baseCode}
             {card.isParallel && (
               <span className="ml-2 text-sm text-orange-500">Parallel</span>

@@ -104,7 +104,7 @@ export default async function BlogPage() {
                       {CATEGORY_LABELS[post.category] ?? post.category}
                     </span>
                   </div>
-                  <h2 className="text-sm font-semibold leading-snug transition-colors group-hover:text-primary">
+                  <h2 className="break-words text-sm font-semibold leading-snug transition-colors group-hover:text-primary">
                     {post.title}
                   </h2>
                   <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">

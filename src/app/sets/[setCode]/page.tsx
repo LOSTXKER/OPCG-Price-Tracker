@@ -230,7 +230,7 @@ export default async function SetDetailPage(props: {
             />
           )}
         </div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="break-words text-2xl font-bold tracking-tight sm:text-3xl">
           {set.nameEn ?? set.name}
         </h1>
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">

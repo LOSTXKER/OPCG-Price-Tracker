@@ -127,8 +127,8 @@ function PortfolioContent() {
       <main className="min-w-0 flex-1 space-y-6">
         {/* Top bar: portfolio name + tabs + add button */}
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight">{activePortfolio?.name ?? t(lang, "portfolio")}</h1>
+          <div className="flex min-w-0 items-center gap-3">
+            <h1 className="min-w-0 truncate text-2xl font-bold tracking-tight">{activePortfolio?.name ?? t(lang, "portfolio")}</h1>
             <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
               {items.length} {t(lang, "card")}
             </span>
@@ -249,8 +249,8 @@ function PortfolioMockPreview({ lang }: { lang: Language }) {
 
       <main className="min-w-0 flex-1 space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight">Main Collection</h1>
+          <div className="flex min-w-0 items-center gap-3">
+            <h1 className="min-w-0 truncate text-2xl font-bold tracking-tight">Main Collection</h1>
             <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">8 {t(lang, "card")}</span>
           </div>
           <div className="flex items-center gap-2">

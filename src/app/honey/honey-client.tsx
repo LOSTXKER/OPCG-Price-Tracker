@@ -189,7 +189,7 @@ function Toast({ message, onDismiss }: { message: string | null; onDismiss: () =
   return (
     <div className="fixed inset-x-0 bottom-4 z-50 mx-auto flex w-fit max-w-[90vw] items-center gap-2 rounded-xl border bg-background/95 px-4 py-2.5 shadow-lg backdrop-blur-sm sm:max-w-md">
       <Award className="size-4 shrink-0 text-primary" />
-      <span className="flex-1 text-xs font-semibold text-foreground">{message}</span>
+      <span className="min-w-0 flex-1 break-words text-xs font-semibold text-foreground">{message}</span>
       <button onClick={onDismiss} className="shrink-0 text-muted-foreground hover:text-foreground">
         <X className="size-3.5" />
       </button>
