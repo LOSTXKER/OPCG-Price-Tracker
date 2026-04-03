@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
-import { AlertTriangle, BarChart3, ChevronDown, SlidersHorizontal, X } from "lucide-react";
+import { SlidersHorizontal, X } from "lucide-react";
 
 import { CardGrid } from "@/components/cards/card-grid";
 import { CardItem, type ChangePeriod } from "@/components/cards/card-item";
@@ -9,14 +9,7 @@ import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { CHANGE_PERIODS } from "@/components/home/market-types";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import { cn } from "@/lib/utils";
-import {
-  pullChance,
-  formatPullPct,
-  PACKS_PER_BOX,
-  BOXES_PER_CARTON,
-} from "@/lib/utils/pull-rate";
-import { RARITY_BAR_COLOR, RARITY_HEX } from "@/lib/constants/rarities";
-import { UNIT_I18N_KEYS, PULL_UNITS, type Unit } from "@/lib/constants/ui";
+import { RARITY_HEX } from "@/lib/constants/rarities";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { CARD_COLORS, CARD_TYPE_ORDER, getCardTypeLabel } from "@/lib/constants/card-config";
@@ -61,9 +54,6 @@ export type RarityGroup = {
 interface SetDetailContentProps {
   groups: RarityGroup[];
   totalCards: number;
-  packsPerBox: number | null;
-  cardsPerPack: number | null;
-  hasPullRates: boolean;
 }
 
 /* ------------------------------------------------------------------ */
@@ -72,36 +62,19 @@ interface SetDetailContentProps {
 
 
 /* ------------------------------------------------------------------ */
-/*  Pull rate helpers                                                  */
-/* ------------------------------------------------------------------ */
-
-function fmtCount(v: number): string {
-  if (v >= 100) return `~${Math.round(v)}`;
-  if (v >= 10) return `~${v.toFixed(0)}`;
-  if (v >= 1) return `~${v.toFixed(1)}`;
-  if (v >= 0.01) return `~${v.toFixed(2)}`;
-  return `~${v.toFixed(3)}`;
-}
-
-/* ------------------------------------------------------------------ */
 /*  Main component                                                     */
 /* ------------------------------------------------------------------ */
 
 export function SetDetailContent({
   groups,
   totalCards,
-  packsPerBox,
-  cardsPerPack,
-  hasPullRates,
 }: SetDetailContentProps) {
   const [activeRarity, setActiveRarity] = useState<string>("all");
   const [activeType, setActiveType] = useState<string>("all");
   const [activeColor, setActiveColor] = useState<string>("all");
   const [changePeriod, setChangePeriod] = useState<ChangePeriod>("7d");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [unit, setUnit] = useState<Unit>("box");
   const lang = useUIStore((s) => s.language);
-  const [pullRateOpen, setPullRateOpen] = useState(false);
 
   const allCards = useMemo(() => groups.flatMap((g) => g.cards), [groups]);
 
@@ -123,23 +96,6 @@ export function SetDetailContent({
   if (totalCards === 0) {
     return <KumaEmptyState title={t(lang, "noCardsInSet")} />;
   }
-
-  const pullRateGroups = groups.filter((g) => g.pullRate);
-  const showPullRates = hasPullRates && pullRateGroups.length > 0;
-
-  const countForUnit = (pr: PullRateData) =>
-    unit === "pack"
-      ? pr.avgPerBox / PACKS_PER_BOX
-      : unit === "carton"
-        ? pr.avgPerBox * BOXES_PER_CARTON
-        : pr.avgPerBox;
-
-  const rateForUnit = (pr: PullRateData) =>
-    unit === "pack"
-      ? pr.ratePerPack
-      : unit === "carton"
-        ? pr.avgPerBox * BOXES_PER_CARTON
-        : pr.avgPerBox;
 
   const advFilterCount =
     (activeType !== "all" ? 1 : 0) + (activeColor !== "all" ? 1 : 0);
@@ -184,102 +140,17 @@ export function SetDetailContent({
 
   const pill = (active: boolean) =>
     cn(
-      "shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
+      "shrink-0 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors",
       active
-        ? "bg-muted ring-1 ring-border text-foreground shadow-sm"
-        : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+        ? "border-border bg-muted text-foreground"
+        : "border-transparent text-muted-foreground hover:bg-muted/60 hover:text-foreground"
     );
 
   return (
     <div className="space-y-4">
-      {/* ── Drop Rates — collapsible at top ── */}
-      {showPullRates && (
-        <div className="panel overflow-hidden">
-          <button
-            onClick={() => setPullRateOpen((o) => !o)}
-            className="flex w-full items-center gap-2 px-4 py-3 text-left transition-colors hover:bg-muted/30"
-          >
-            <BarChart3 className="size-4 text-primary" />
-            <span className="text-sm font-semibold">{t(lang, "dropRate")}</span>
-            <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] tabular-nums text-muted-foreground">
-              {pullRateGroups.length}
-            </span>
-            <span className="flex items-center gap-1.5 rounded-full bg-warning/10 px-2 py-0.5 text-[10px] font-medium text-warning">
-              <AlertTriangle className="size-2.5" />
-              {t(lang, "communityEstimate")}
-            </span>
-            <div className="flex-1" />
-            <ChevronDown className={cn("size-4 text-muted-foreground transition-transform", pullRateOpen && "rotate-180")} />
-          </button>
-
-          {pullRateOpen && (
-            <div className="border-t border-border/30 px-4 pb-3 pt-2">
-              <div className="mb-2 flex items-center gap-2">
-                <div className="inline-flex rounded-lg bg-muted/60 p-0.5">
-                  {PULL_UNITS.map((u) => (
-                    <button
-                      key={u}
-                      onClick={() => setUnit(u)}
-                      className={cn(
-                        "rounded-md px-3 py-1 text-xs font-medium transition-all",
-                        unit === u
-                          ? "bg-background text-foreground shadow-sm"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      {t(lang, UNIT_I18N_KEYS[u])}
-                    </button>
-                  ))}
-                </div>
-                {packsPerBox && cardsPerPack && (
-                  <span className="text-[11px] text-muted-foreground">
-                    {packsPerBox} {t(lang, "perUnit")}/{t(lang, "packUnit")} · {cardsPerPack} {t(lang, "cardsCount")}/{t(lang, "packUnit")}
-                  </span>
-                )}
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-sm">
-                  <thead className="text-[11px] font-medium text-muted-foreground">
-                    <tr className="border-b border-border/30">
-                      <th className="py-1.5 text-left font-medium">{t(lang, "level")}</th>
-                      <th className="py-1.5 text-left font-medium" />
-                      <th className="py-1.5 text-right font-medium">{t(lang, "perUnit")}/{t(lang, UNIT_I18N_KEYS[unit])}</th>
-                      <th className="py-1.5 text-right font-medium">{t(lang, "cardsCount")}</th>
-                      <th className="py-1.5 text-right font-medium">{t(lang, "chancePerCard")}</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border/20">
-                    {pullRateGroups.map((g) => {
-                      const pr = g.pullRate!;
-                      const count = countForUnit(pr);
-                      const chance = pullChance(rateForUnit(pr), g.cards.length);
-                      const barWidth = Math.min((pr.avgPerBox / 6) * 100, 100);
-                      const barColor = RARITY_BAR_COLOR[g.rarity] ?? "bg-neutral-400";
-                      return (
-                        <tr key={g.rarity}>
-                          <td className="whitespace-nowrap py-2 pl-0"><RarityBadge rarity={g.rarity} size="sm" /></td>
-                          <td className="w-full px-3 py-2">
-                            <div className="h-1.5 min-w-12 overflow-hidden rounded-full bg-muted">
-                              <div className={cn("h-full rounded-full", barColor)} style={{ width: `${barWidth}%` }} />
-                            </div>
-                          </td>
-                          <td className="whitespace-nowrap py-2 text-right font-mono text-sm font-bold tabular-nums">{fmtCount(count)}</td>
-                          <td className="whitespace-nowrap py-2 text-right text-xs tabular-nums text-muted-foreground">{g.cards.length}</td>
-                          <td className="whitespace-nowrap py-2 text-right font-mono text-xs font-semibold tabular-nums text-primary">{formatPullPct(chance)}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
       {/* ── Single merged toolbar — sticky ── */}
-      <div className="sticky top-0 z-30 -mx-4 border-b border-border/40 bg-background/95 px-4 backdrop-blur-md md:top-[86px] md:-mx-6 md:px-6">
-        <div className="flex items-center gap-2 py-2">
+      <div className="sticky top-0 z-30 -mx-4 bg-background/95 px-4 backdrop-blur-md md:top-[86px] md:-mx-6 md:px-6">
+        <div className="flex items-center gap-2 border-b border-border/40 py-2">
           {/* Left: rarity pills — scrollable */}
           <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto scrollbar-none">
             <button onClick={() => setActiveRarity("all")} className={pill(activeRarity === "all")}>
@@ -298,7 +169,7 @@ export function SetDetailContent({
           </div>
 
           {/* Right: controls — fixed */}
-          <div className="flex shrink-0 items-center gap-1.5 border-l border-border/30 pl-3">
+          <div className="flex shrink-0 items-center gap-1.5 pl-2">
             {/* Period toggle */}
             <div className="flex items-center rounded-lg bg-muted/50 p-0.5">
               {CHANGE_PERIODS.map((p) => (

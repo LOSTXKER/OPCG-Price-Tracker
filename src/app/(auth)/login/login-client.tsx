@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { z } from "zod"
-import { Eye, EyeOff, Loader2, Mail, Play } from "lucide-react"
+import { ArrowLeft, Eye, EyeOff, Loader2, Mail, Play } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -98,15 +98,13 @@ export function LoginClient() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-primary/10" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/30 via-transparent to-transparent" />
         <div className="relative flex h-full flex-col justify-between p-12">
-          <Logo size="lg" mono className="text-background" />
+          <Link href="/"><Logo size="lg" mono className="text-background" /></Link>
           <div className="max-w-md">
-            <h2 className="text-3xl font-bold tracking-tight text-background">
-              Track every
-              <br />
-              One Piece card price
+            <h2 className="whitespace-pre-line text-3xl font-bold tracking-tight text-background">
+              {t(lang, "loginHeroTitle")}
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-background/60">
-              Daily market prices, portfolio tracking, and price change alerts.
+              {t(lang, "loginHeroDesc")}
             </p>
           </div>
           <p className="text-xs text-background/30">
@@ -117,17 +115,23 @@ export function LoginClient() {
 
       {/* Form panel */}
       <div className="flex flex-1 flex-col">
-        <div className="flex flex-1 items-center justify-center px-4 py-12 sm:px-8">
+        <div className="p-4 sm:p-6">
+          <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
+            <ArrowLeft className="size-4" />
+            {t(lang, "backToHome")}
+          </Link>
+        </div>
+        <div className="flex flex-1 items-center justify-center px-4 pb-12 sm:px-8">
           <div className="w-full max-w-sm space-y-8">
             {/* Mobile logo */}
             <div className="text-center lg:hidden">
-              <Logo size="lg" />
+              <Link href="/"><Logo size="lg" /></Link>
             </div>
 
             <div className="space-y-2 text-center">
               <h1 className="text-2xl font-bold tracking-tight">{t(lang, "login")}</h1>
               <p className="text-sm text-muted-foreground">
-                Sign in with email or social account
+                {t(lang, "loginSubtitle")}
               </p>
             </div>
 
@@ -168,7 +172,7 @@ export function LoginClient() {
                 <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-3 text-muted-foreground">or use email</span>
+                <span className="bg-background px-3 text-muted-foreground">{t(lang, "orUseEmail")}</span>
               </div>
             </div>
 
@@ -176,7 +180,7 @@ export function LoginClient() {
             <form onSubmit={onSubmit} className="space-y-4">
               <div className="space-y-2">
                 <label htmlFor="login-email" className="text-sm font-medium">
-                  Email
+                  {t(lang, "emailLabel")}
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -194,7 +198,7 @@ export function LoginClient() {
               </div>
               <div className="space-y-2">
                 <label htmlFor="login-password" className="text-sm font-medium">
-                  Password
+                  {t(lang, "passwordLabel")}
                 </label>
                 <div className="relative">
                   <Input
@@ -227,7 +231,7 @@ export function LoginClient() {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 size-4 animate-spin" />
-                    Signing in...
+                    {t(lang, "signingIn")}
                   </>
                 ) : (
                   t(lang, "login")
@@ -236,12 +240,12 @@ export function LoginClient() {
             </form>
 
             <p className="text-center text-sm text-muted-foreground">
-              Don&apos;t have an account?{" "}
+              {t(lang, "noAccount")}{" "}
               <Link
                 href={`/register?redirect=${encodeURIComponent(redirect)}`}
                 className="font-medium text-primary underline-offset-4 hover:underline"
               >
-                Sign up
+                {t(lang, "register")}
               </Link>
             </p>
 
@@ -251,7 +255,7 @@ export function LoginClient() {
                 <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-3 text-muted-foreground">or</span>
+                <span className="bg-background px-3 text-muted-foreground">{t(lang, "or")}</span>
               </div>
             </div>
             <Button
@@ -266,7 +270,7 @@ export function LoginClient() {
               ) : (
                 <Play className="size-3.5" />
               )}
-              {demoLoading ? "Signing in..." : "Try Demo"}
+              {demoLoading ? t(lang, "signingIn") : t(lang, "tryDemo")}
             </Button>
           </div>
         </div>

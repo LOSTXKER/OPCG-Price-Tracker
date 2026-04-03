@@ -15,7 +15,7 @@ import { RARITIES } from "@/lib/constants/rarities";
 import { prisma } from "@/lib/db";
 import { Price } from "@/components/shared/price-inline";
 import { FormattedDate } from "@/components/shared/formatted-date";
-import { SetPageStats, SetPageTopCardLabel } from "./set-page-client";
+import { SetPageStats, SetPageTopCardLabel, DropRateDialog } from "./set-page-client";
 import { pullChance, PACKS_PER_BOX } from "@/lib/utils/pull-rate";
 import {
   SetDetailContent,
@@ -233,7 +233,16 @@ export default async function SetDetailPage(props: {
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
           {set.nameEn ?? set.name}
         </h1>
-        <SetPageStats cardCount={cards.length} totalValue={totalValue} avgPrice={avgPrice} />
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
+          <SetPageStats cardCount={cards.length} totalValue={totalValue} avgPrice={avgPrice} />
+          {set.dropRates.length > 0 && (
+            <DropRateDialog
+              groups={rarityGroups}
+              packsPerBox={set.packsPerBox}
+              cardsPerPack={set.cardsPerPack}
+            />
+          )}
+        </div>
       </div>
 
       {/* Top card spotlight */}
@@ -287,9 +296,6 @@ export default async function SetDetailPage(props: {
       <SetDetailContent
         groups={rarityGroups}
         totalCards={cards.length}
-        packsPerBox={set.packsPerBox}
-        cardsPerPack={set.cardsPerPack}
-        hasPullRates={set.dropRates.length > 0}
       />
     </div>
     </>

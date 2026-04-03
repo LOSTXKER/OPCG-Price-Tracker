@@ -308,9 +308,9 @@ export function Header() {
             )}
 
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 rounded-md px-2 py-1 font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground focus:outline-none">
+              <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-full border border-border/60 px-2.5 py-1 font-medium text-muted-foreground transition-colors hover:border-border hover:bg-muted/60 hover:text-foreground focus:outline-none">
                 <Globe className="size-3" />
-                <span>{language}</span>
+                <span>{LANG_OPTIONS.find((l) => l.value === language)?.label ?? language}</span>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" sideOffset={6} className="min-w-[110px]">
                 <DropdownMenuRadioGroup value={language} onValueChange={(v) => setLanguage(v as Language)}>
@@ -324,8 +324,8 @@ export function Header() {
             </DropdownMenu>
 
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 rounded-md px-2 py-1 font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground focus:outline-none">
-                <Coins className="size-3" />
+              <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-full border border-border/60 px-2.5 py-1 font-medium text-muted-foreground transition-colors hover:border-border hover:bg-muted/60 hover:text-foreground focus:outline-none">
+                <span>{CURRENCY_SYMBOL[currency]}</span>
                 <span>{currency}</span>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" sideOffset={6} className="min-w-[110px]">
@@ -342,10 +342,10 @@ export function Header() {
             <button
               type="button"
               onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-              className="rounded-md px-2 py-1 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
-              title={mounted && resolvedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              className="flex items-center gap-1.5 rounded-full border border-border/60 px-2.5 py-1 text-muted-foreground transition-colors hover:border-border hover:bg-muted/60 hover:text-foreground"
             >
-              {mounted && resolvedTheme === "dark" ? <Sun className="size-3.5" /> : <Moon className="size-3.5" />}
+              {mounted && resolvedTheme === "dark" ? <Sun className="size-3" /> : <Moon className="size-3" />}
+              <span className="font-medium">{mounted && resolvedTheme === "dark" ? t(language, "lightMode") : t(language, "darkMode")}</span>
             </button>
           </div>
         </div>

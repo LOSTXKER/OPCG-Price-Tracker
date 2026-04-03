@@ -243,7 +243,7 @@ export function HomeHoneyPreview() {
           <button
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); doCheckin() }}
             disabled={checking}
-            className="rounded-full bg-amber-500 px-2.5 py-1 text-[10px] font-semibold text-white transition-colors hover:bg-amber-600 disabled:opacity-50"
+            className="rounded-full border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-[10px] font-semibold text-amber-700 transition-colors hover:bg-amber-500/20 disabled:opacity-50 dark:text-amber-400"
           >
             {checking ? "..." : t(lang, "dailyCheckin")}
           </button>

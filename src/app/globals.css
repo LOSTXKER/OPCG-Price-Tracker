@@ -130,6 +130,14 @@
     -moz-osx-font-smoothing: grayscale;
     font-size: 16px;
   }
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  a[href],
+  select:not(:disabled),
+  summary,
+  [tabindex]:not([tabindex="-1"]):not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 .panel {
