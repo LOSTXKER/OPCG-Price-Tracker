@@ -4,6 +4,7 @@ import { memo } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
+import { CardImageLightbox } from "@/components/shared/card-image-lightbox"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
 import { PriceUsd } from "@/components/shared/price-usd"
@@ -34,13 +35,15 @@ export const MobileCardItem = memo(function MobileCardItem({
       className="flex items-center gap-3 px-4 py-3 transition-colors active:bg-muted/40"
     >
       <span className="w-5 shrink-0 text-center font-price text-xs text-muted-foreground">{rank}</span>
-      <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-muted">
-        {card.imageUrl ? (
-          <Image src={card.imageUrl} alt={name} fill className="object-contain" sizes="44px" />
-        ) : (
-          <div className="size-full bg-muted" />
-        )}
-      </div>
+      {card.imageUrl ? (
+        <CardImageLightbox src={card.imageUrl} alt={name}>
+          <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-muted">
+            <Image src={card.imageUrl} alt={name} fill className="object-contain" sizes="44px" />
+          </div>
+        </CardImageLightbox>
+      ) : (
+        <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-muted" />
+      )}
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium leading-tight">{name}</p>
         <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">

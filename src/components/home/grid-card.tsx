@@ -4,6 +4,7 @@ import { memo } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
+import { CardImageLightbox } from "@/components/shared/card-image-lightbox"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { PriceDisplay } from "@/components/shared/price-display"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
@@ -41,15 +42,17 @@ export const GridCard = memo(function GridCard({
       <div className="panel relative flex flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
         <div className="relative aspect-[63/88] w-full bg-muted">
           {card.imageUrl ? (
-            <Image
-              src={card.imageUrl}
-              alt={name}
-              fill
-              className="object-contain"
-              sizes="(max-width: 640px) 45vw, (max-width: 1024px) 25vw, 18vw"
-              placeholder="blur"
-              blurDataURL={BLUR_DATA_URL}
-            />
+            <CardImageLightbox src={card.imageUrl} alt={name}>
+              <Image
+                src={card.imageUrl}
+                alt={name}
+                fill
+                className="object-contain"
+                sizes="(max-width: 640px) 45vw, (max-width: 1024px) 25vw, 18vw"
+                placeholder="blur"
+                blurDataURL={BLUR_DATA_URL}
+              />
+            </CardImageLightbox>
           ) : (
             <div className="size-full bg-muted" />
           )}
@@ -68,9 +71,13 @@ export const GridCard = memo(function GridCard({
           <div className="mb-1 flex items-center gap-1.5">
             <RarityBadge rarity={card.rarity} size="sm" />
             {setCode && (
-              <span className="font-mono text-[10px] text-muted-foreground">
+              <Link
+                href={`/sets/${setCode}`}
+                onClick={(e) => e.stopPropagation()}
+                className="font-mono text-[10px] text-muted-foreground underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid"
+              >
                 {setCode.toUpperCase()}
-              </span>
+              </Link>
             )}
           </div>
           <p className="truncate text-[13px] font-medium leading-snug" title={name}>

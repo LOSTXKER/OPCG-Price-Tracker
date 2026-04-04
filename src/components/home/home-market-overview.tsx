@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import {
+  ChevronDown,
   LayoutGrid,
   List,
   Search,
@@ -12,6 +13,15 @@ import {
 } from "lucide-react"
 
 import { FilterChips, type FilterDefinition } from "@/components/shared/filter-chips"
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { SortableHeader } from "@/components/shared/sortable-header"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -68,14 +78,18 @@ export function HomeMarketOverview({
   const router = useRouter()
   const lang = useUIStore((s) => s.language)
 
+  const setDef = filterDefinitions.find((f) => f.key === "set")
+  const setOptions = setDef?.options ?? []
+
   const allFilterDefs: FilterDefinition[] = [
-    ...filterDefinitions.map((f) => ({
-      ...f,
-      label: f.key === "set" ? t(lang, "setFilter")
-        : f.key === "rarity" ? t(lang, "rarity")
-        : f.key === "type" ? t(lang, "type")
-        : f.label,
-    })),
+    ...filterDefinitions
+      .filter((f) => f.key !== "set")
+      .map((f) => ({
+        ...f,
+        label: f.key === "rarity" ? t(lang, "rarity")
+          : f.key === "type" ? t(lang, "type")
+          : f.label,
+      })),
     {
       key: "color",
       label: t(lang, "color"),
@@ -104,6 +118,8 @@ export function HomeMarketOverview({
     tabs,
     initialSearch,
   })
+
+  const selectedSets = m.filters.set ?? []
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -246,12 +262,66 @@ export function HomeMarketOverview({
         </div>
       </div>
 
-      {/* Toolbar row 2: Raw / PSA 10 price mode */}
+      {/* Toolbar row 2: Set filter + Price mode */}
       <div className="flex items-center gap-3 border-b border-border/50 bg-muted/20 px-4 py-2">
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {t(lang, "price")}
-        </span>
-        <div className="flex items-center gap-1">
+        {setOptions.length > 0 && (
+          <div className="flex items-center gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                type="button"
+                className={cn(
+                  "flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all",
+                  selectedSets.length > 0
+                    ? "border-primary bg-primary text-primary-foreground shadow-sm shadow-primary/25"
+                    : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                )}
+              >
+                {selectedSets.length > 0
+                  ? (setOptions.find((o) => o.value === selectedSets[0])?.label ?? selectedSets[0])
+                  : t(lang, "allSets")}
+                <ChevronDown className="size-3.5 opacity-60" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="max-h-72 min-w-72 overflow-y-auto">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>{t(lang, "setFilter")}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuCheckboxItem
+                    checked={selectedSets.length === 0}
+                    onCheckedChange={() => m.handleFilterChange("set", [])}
+                  >
+                    {t(lang, "allSets")}
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuSeparator />
+                  {setOptions.map((opt) => (
+                    <DropdownMenuCheckboxItem
+                      key={opt.value}
+                      checked={selectedSets.includes(opt.value)}
+                      onCheckedChange={(checked) => {
+                        m.handleFilterChange("set", checked ? [opt.value] : [])
+                      }}
+                    >
+                      {opt.label}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {selectedSets.length > 0 && (
+              <button
+                type="button"
+                onClick={() => m.handleFilterChange("set", [])}
+                className="flex items-center gap-1 rounded-full px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                <X className="size-3" />
+              </button>
+            )}
+          </div>
+        )}
+
+        <div className="ml-auto flex items-center gap-1">
+          <span className="mr-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            {t(lang, "price")}
+          </span>
           <button
             aria-pressed={m.priceMode === "raw"}
             onClick={() => { m.setPriceMode("raw"); m.setPage(1) }}

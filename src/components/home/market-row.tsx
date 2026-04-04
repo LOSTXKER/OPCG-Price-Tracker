@@ -4,6 +4,7 @@ import { memo } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
+import { CardImageLightbox } from "@/components/shared/card-image-lightbox"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { Price } from "@/components/shared/price-inline"
@@ -46,25 +47,24 @@ export const MarketRow = memo(function MarketRow({
         <span className="font-price text-xs text-muted-foreground">{rank}</span>
       </td>
       <td className="py-3 pr-3 pl-2 align-middle">
-        <Link
-          href={`/cards/${card.cardCode}`}
-          className="flex items-center gap-3"
-        >
-          <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted">
-            {card.imageUrl ? (
-              <Image
-                src={card.imageUrl}
-                alt={name}
-                fill
-                className="object-contain"
-                sizes="40px"
-              />
-            ) : (
-              <div className="size-full bg-muted" />
-            )}
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-medium leading-tight hover:text-primary">
+        <div className="flex items-center gap-3">
+          {card.imageUrl ? (
+            <CardImageLightbox src={card.imageUrl} alt={name}>
+              <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted">
+                <Image
+                  src={card.imageUrl}
+                  alt={name}
+                  fill
+                  className="object-contain"
+                  sizes="40px"
+                />
+              </div>
+            </CardImageLightbox>
+          ) : (
+            <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted" />
+          )}
+          <Link href={`/cards/${card.cardCode}`} className="min-w-0">
+            <p className="truncate text-sm font-medium leading-tight hover:text-primary hover:underline">
               {name}
             </p>
             <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
@@ -73,11 +73,15 @@ export const MarketRow = memo(function MarketRow({
                 <span className="ml-1 text-primary">P</span>
               )}
             </p>
-          </div>
-        </Link>
+          </Link>
+        </div>
       </td>
       <td className="hidden py-3 pr-3 align-middle font-mono text-xs text-muted-foreground md:table-cell">
-        {setCode.toUpperCase()}
+        {setCode && (
+          <Link href={`/sets/${setCode}`} className="underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid">
+            {setCode.toUpperCase()}
+          </Link>
+        )}
       </td>
       <td className="hidden py-3 pr-3 align-middle sm:table-cell">
         <RarityBadge rarity={card.rarity} size="sm" />
