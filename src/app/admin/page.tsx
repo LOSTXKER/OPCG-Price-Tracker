@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { raritySort } from "@/lib/constants/rarities";
 import Link from "next/link";
 import {
   Library,
@@ -131,13 +132,9 @@ export default async function AdminDashboard() {
     },
   ];
 
-  const rarityOrder = ["L", "C", "UC", "R", "SR", "SEC", "SP", "TR", "DON", "P"];
-
-  const sortedRarities = [...s.rarityCounts].sort((a, b) => {
-    const ai = rarityOrder.indexOf(a.rarity);
-    const bi = rarityOrder.indexOf(b.rarity);
-    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
-  });
+  const sortedRarities = [...s.rarityCounts].sort((a, b) =>
+    raritySort(a.rarity, b.rarity)
+  );
 
   return (
     <div className="space-y-6">

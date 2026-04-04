@@ -74,7 +74,7 @@ export function SectionOverview({
         >
           <p className="text-muted-foreground text-xs">{t(lang, "profileHoney")}</p>
           <p className="mt-1 text-lg font-semibold tracking-tight text-amber-600 dark:text-amber-400">
-            🍯 {honey.points.toLocaleString()}
+            🍯 {honey.points.toLocaleString()} pt
           </p>
           <div className="text-muted-foreground flex items-center gap-1 text-xs">
             <Flame className="size-3 text-orange-500" />
@@ -134,7 +134,7 @@ export function SectionOverview({
         </div>
         <div className="mt-3 flex items-center justify-between">
           <div>
-            <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">🍯 {honey.points.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">🍯 {honey.points.toLocaleString()} pt</p>
             <div className="text-muted-foreground mt-0.5 flex items-center gap-1 text-xs">
               <Flame className="size-3 text-orange-500" />
               {honey.streak} {t(lang, "days")}

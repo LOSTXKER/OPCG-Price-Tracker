@@ -120,13 +120,22 @@ export async function processReferralConversion(
 export async function getReferralStats(userId: string) {
   const link = await getOrCreateReferralLink(userId);
 
-  const todayClicks = await prisma.referralClick.count({
-    where: { linkId: link.id, createdAt: { gte: startOfToday() } },
-  });
+  const [todayClicks, conversionAgg] = await Promise.all([
+    prisma.referralClick.count({
+      where: { linkId: link.id, createdAt: { gte: startOfToday() } },
+    }),
+    prisma.honeyTransaction.aggregate({
+      where: { userId, type: "REFERRAL", amount: { gt: 0 } },
+      _count: true,
+      _sum: { amount: true },
+    }),
+  ]);
 
   return {
     code: link.code,
     totalClicks: link.clicks,
     todayClicks,
+    totalConversions: conversionAgg._count,
+    totalEarned: conversionAgg._sum.amount ?? 0,
   };
 }

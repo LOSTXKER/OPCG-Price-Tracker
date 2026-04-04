@@ -120,6 +120,7 @@ export function Header() {
   const [userTier, setUserTier] = useState<UserTierValue>("FREE");
   const [honeyPoints, setHoneyPoints] = useState(0);
   const [honeyLifetime, setHoneyLifetime] = useState(0);
+  const [honeyPendingActions, setHoneyPendingActions] = useState(false);
 
   const language = useUIStore((s) => s.language);
   const setLanguage = useUIStore((s) => s.setLanguage);
@@ -147,7 +148,7 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    if (!authUser) { setUserTier("FREE"); setHoneyPoints(0); setHoneyLifetime(0); return; }
+    if (!authUser) { setUserTier("FREE"); setHoneyPoints(0); setHoneyLifetime(0); setHoneyPendingActions(false); return; }
     fetch("/api/settings")
       .then((r) => r.ok ? r.json() : null)
       .then((data) => {
@@ -155,6 +156,7 @@ export function Header() {
         if (data.tier) setUserTier(data.tier as UserTierValue);
         if (typeof data.honeyPoints === "number") setHoneyPoints(data.honeyPoints);
         if (typeof data.honeyLifetimeEarned === "number") setHoneyLifetime(data.honeyLifetimeEarned);
+        if (typeof data.honeyPendingActions === "boolean") setHoneyPendingActions(data.honeyPendingActions);
       })
       .catch(() => {});
   }, [authUser]);
@@ -241,11 +243,12 @@ export function Header() {
             )}
 
             {stats.totalValue > 0 && (
-              <Link href="/market-overview" className="flex items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1 transition-colors hover:bg-muted/80">
-                <span className="font-medium">{t(language, "totalValue")}</span>
+              <Link href="/market-overview" className="group flex items-center gap-1.5 rounded-full border border-green-500/20 bg-green-500/5 px-2.5 py-1 transition-colors hover:border-green-500/40 hover:bg-green-500/10">
+                <span className="font-medium text-green-700 dark:text-green-300">{t(language, "totalValue")}</span>
                 <span className="font-bold tabular-nums text-green-600 dark:text-green-400">
                   <Price jpy={stats.totalValue} />
                 </span>
+                <TrendingUp className="size-3 text-green-500 transition-transform group-hover:translate-x-0.5" />
               </Link>
             )}
 
@@ -431,12 +434,18 @@ export function Header() {
             <Link
               href="/honey"
               className={cn(
-                "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+                "relative flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
                 isActive(pathname, "/honey")
                   ? "border-amber-500/30 bg-amber-100 font-semibold text-foreground dark:bg-amber-500/10"
                   : "border-amber-500/20 text-muted-foreground hover:border-amber-500/40 hover:bg-amber-500/5 hover:text-foreground"
               )}
             >
+              {honeyPendingActions && (
+                <span className="absolute -right-1 -top-1 flex size-2">
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75" />
+                  <span className="relative inline-flex size-2 rounded-full bg-red-500" />
+                </span>
+              )}
               <span className="text-sm leading-none">🍯</span>
               <span>Honey</span>
               {authLoaded && authUser && honeyPoints > 0 && (
@@ -539,7 +548,7 @@ export function Header() {
                           <span className="text-sm leading-none">🍯</span>
                           <span className="text-[11px] font-medium text-muted-foreground">Honey</span>
                           <span className="ml-auto text-xs font-bold tabular-nums text-foreground">
-                            {honeyPoints.toLocaleString()}
+                            {honeyPoints.toLocaleString()} pt
                           </span>
                         </div>
                       </DropdownMenuLabel>
@@ -672,6 +681,12 @@ export function Header() {
                 <DropdownMenuItem onClick={() => router.push("/honey")}>
                   <Sparkles className="size-4" />
                   Honey
+                  {honeyPendingActions && (
+                    <span className="ml-auto flex size-2">
+                      <span className="absolute inline-flex size-2 animate-ping rounded-full bg-red-400 opacity-75" />
+                      <span className="relative inline-flex size-2 rounded-full bg-red-500" />
+                    </span>
+                  )}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem variant="destructive" onClick={() => void handleLogout()}>

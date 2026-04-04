@@ -39,33 +39,53 @@ export function CardPicker({
   return (
     <section className="min-w-0 lg:col-start-1">
       <div className="panel space-y-3 p-4">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-sm font-semibold">{t(lang, "selectWantedCards")}</h2>
-          {wantCount > 0 && (
-            <span className="text-xs text-muted-foreground">{wantCount} {t(lang, "cardsCount")}</span>
-          )}
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-            <input
-              type="search"
-              placeholder={t(lang, "searchByNameOrCode")}
-              value={cardSearch}
-              onChange={(e) => onSearchChange(e.target.value)}
-              className="h-8 w-full rounded-lg border-0 bg-muted/60 pl-8 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:bg-muted focus:ring-1 focus:ring-border"
-            />
+        <div>
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="text-sm font-semibold">{t(lang, "selectWantedCards")}</h2>
+            {wantCount > 0 && (
+              <span className="text-xs text-muted-foreground">{wantCount} {t(lang, "cardsCount")}</span>
+            )}
           </div>
-          <select
-            value={rarityFilter}
-            onChange={(e) => onRarityChange(e.target.value)}
-            className="h-8 rounded-lg border-0 bg-muted/60 px-2.5 text-sm outline-none transition-colors focus:bg-muted focus:ring-1 focus:ring-border"
+          <p className="mt-0.5 text-xs text-muted-foreground">{t(lang, "clickToSelect")}</p>
+        </div>
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="search"
+            placeholder={t(lang, "searchByNameOrCode")}
+            value={cardSearch}
+            onChange={(e) => onSearchChange(e.target.value)}
+            className="h-8 w-full rounded-lg border-0 bg-muted/60 pl-8 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:bg-muted focus:ring-1 focus:ring-border"
+          />
+        </div>
+        <div className="flex gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
+          <button
+            type="button"
+            onClick={() => onRarityChange("all")}
+            className={cn(
+              "shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors",
+              rarityFilter === "all"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-muted/80"
+            )}
           >
-            <option value="all">{t(lang, "allRarity")}</option>
-            {uniqueRarities.map((r) => (
-              <option key={r} value={r}>{r}</option>
-            ))}
-          </select>
+            {t(lang, "allRarity")}
+          </button>
+          {uniqueRarities.map((r) => (
+            <button
+              key={r}
+              type="button"
+              onClick={() => onRarityChange(r)}
+              className={cn(
+                "shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                rarityFilter === r
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+              )}
+            >
+              {r}
+            </button>
+          ))}
         </div>
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5">
           {cards.map((card) => {

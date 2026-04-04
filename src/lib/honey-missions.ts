@@ -19,7 +19,7 @@ export type MissionDef = {
 
 export type MissionTask = MissionTaskParsed;
 
-function parseTasks(raw: unknown): MissionTask[] {
+export function parseTasks(raw: unknown): MissionTask[] {
   return parseJsonField(MissionTasksSchema, raw, "DailyMission.tasks", []);
 }
 

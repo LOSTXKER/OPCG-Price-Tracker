@@ -358,7 +358,7 @@ export default function PricingClient() {
           </div>
         )}
 
-      {/* Honey Pass Alternative */}
+      {/* Honey → Pro Alternative */}
       <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-amber-500/20 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5">
         <div className="flex flex-col items-center gap-4 p-6 text-center sm:flex-row sm:text-left">
           <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10">
@@ -369,13 +369,13 @@ export default function PricingClient() {
             <p className="mt-1 text-sm text-muted-foreground">{t(lang, "honeyPassDesc")}</p>
             <div className="mt-2 flex flex-wrap justify-center gap-2 sm:justify-start">
               <Badge variant="secondary" className="bg-amber-500/10 text-amber-700 dark:text-amber-400">
-                Honey Pass — Pro 7 {t(lang, "days")}
+                {lang === "TH" ? "แพ็กเกจ" : lang === "JP" ? "パッケージ" : "Package"} Pro 7 {t(lang, "days")} 🍯
               </Badge>
               <Badge variant="secondary" className="bg-amber-500/10 text-amber-700 dark:text-amber-400">
-                Honey Pass+ — Pro 30 {t(lang, "days")}
+                {lang === "TH" ? "แพ็กเกจ" : lang === "JP" ? "パッケージ" : "Package"} Pro 30 {t(lang, "days")} 🍯
               </Badge>
               <Badge variant="secondary" className="bg-amber-500/10 text-amber-700 dark:text-amber-400">
-                Honey Pro+ — Pro+ 30 {t(lang, "days")}
+                {lang === "TH" ? "แพ็กเกจ" : lang === "JP" ? "パッケージ" : "Package"} Pro+ 30 {t(lang, "days")} 🍯
               </Badge>
             </div>
           </div>

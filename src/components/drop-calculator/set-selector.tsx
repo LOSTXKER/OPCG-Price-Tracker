@@ -10,6 +10,12 @@ import { t } from "@/lib/i18n"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { SetListItem } from "./types"
 
+function setName(s: SetListItem, lang: string) {
+  if (lang === "TH") return s.nameTh ?? s.nameEn ?? s.name
+  if (lang === "EN") return s.nameEn ?? s.name
+  return s.name
+}
+
 interface SetSelectorProps {
   sets: SetListItem[]
   selectedCode: string
@@ -48,9 +54,9 @@ export function SetSelector({ sets, selectedCode, setsLoading, onSelect }: SetSe
       const bMatch = b.code.match(/(\D+)-?(\d+)/)
       if (aMatch && bMatch) {
         if (aMatch[1] !== bMatch[1]) return aMatch[1].localeCompare(bMatch[1])
-        return parseInt(bMatch[2]) - parseInt(aMatch[2])
+        return parseInt(aMatch[2]) - parseInt(bMatch[2])
       }
-      return b.code.localeCompare(a.code)
+      return a.code.localeCompare(b.code)
     }
 
     if (boosters.length)
@@ -86,7 +92,7 @@ export function SetSelector({ sets, selectedCode, setsLoading, onSelect }: SetSe
                   {selectedSet.code}
                 </span>
                 <span className="truncate">
-                  {lang === "EN" ? (selectedSet.nameEn ?? selectedSet.name) : selectedSet.name}
+                  {setName(selectedSet, lang)}
                 </span>
               </span>
             ) : (
@@ -143,7 +149,7 @@ export function SetSelector({ sets, selectedCode, setsLoading, onSelect }: SetSe
                         <span className="min-w-0 flex-1">
                           <span className="flex items-center gap-1.5">
                             <span className="shrink-0 font-mono text-xs text-muted-foreground">{s.code}</span>
-                            <span className="truncate">{lang === "EN" ? (s.nameEn ?? s.name) : s.name}</span>
+                            <span className="truncate">{setName(s, lang)}</span>
                           </span>
                         </span>
                         {s.releaseDate && (

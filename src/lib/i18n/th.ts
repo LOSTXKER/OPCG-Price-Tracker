@@ -238,6 +238,7 @@ export const th = {
   boxUnit: "กล่อง",
   cartonUnit: "คาตั้น",
   estimatedYield: "จะได้ประมาณ",
+  ifYouBuy: "ถ้าคุณซื้อ",
   wantList: "รายการที่อยากได้",
   selectFromLeft: "กดเลือกการ์ดจากฝั่งซ้าย",
   configurePurchase: "ตั้งค่าการซื้อ",
@@ -265,6 +266,8 @@ export const th = {
   checkinStreak: "เช็คอินติดต่อกัน",
   checkinDone: "เช็คอินวันนี้แล้ว",
   checkinSuccess: "เช็คอินสำเร็จ!",
+  honeyOnboardingComplete: "ทำ Onboarding สำเร็จ",
+  honeyStreakDays: "เช็คอินติดต่อกัน",
   earned: "ได้รับ",
   honeyShop: "ร้านค้า Honey",
   redeemItem: "แลก",
@@ -316,7 +319,7 @@ export const th = {
   featSectionMarketplace: "ซื้อขาย",
   perMonthShort: "/ด.",
 
-  // Honey Pass (Pricing Page)
+  // Honey → Pro (Pricing Page)
   honeyPassTitle: "ไม่อยากจ่ายเงิน? สะสม Honey แลกได้เลย!",
   honeyPassDesc: "ทำภารกิจประจำวัน เช็คอินทุกวัน แล้วนำ Honey Points ไปแลก Pro ได้ — ไม่ต้องใช้บัตรเครดิต",
   honeyPassCta: "ไปร้านค้า Honey",
@@ -522,7 +525,7 @@ export const th = {
   raffleRank3: "อันดับ 3",
   raffleBuyHint: "ซื้อด้วย {cost} Honey ต่อใบ (สูงสุด {max} ใบ)",
   raffleStreakHint: "เช็คอินติดต่อกัน {days} วัน = ตั๋วฟรี 1 ใบ",
-  rafflePassHint: "แลก Honey Pass เพื่อรับตั๋วโบนัส",
+  rafflePassHint: "แลก Pro ด้วย Honey เพื่อรับตั๋วโบนัส",
 
 
   // Seasonal Events

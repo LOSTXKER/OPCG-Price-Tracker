@@ -1,30 +1,45 @@
 "use client";
 
-import {
-  Calendar,
-  Flame,
-  History,
-  ShoppingBag,
-  Sparkles,
-  Star,
-  Trophy,
-  Users,
-  Zap,
-} from "lucide-react";
-import { t, type Language, type TranslationKey } from "@/lib/i18n";
+import { useMemo, useState } from "react";
+import { ArrowUp, History, Sparkles } from "lucide-react";
+import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { HoneyTx } from "../types";
-import { EmptyState } from "./empty-state";
+import { formatTxReason, getTxStyle } from "../types";
 
-const EARN_RULES = [
-  { labelKey: "honeyEarnCheckin", pts: "+10", icon: Calendar },
-  { labelKey: "honeyEarnMissions", pts: "+60/day", icon: Sparkles },
-  { labelKey: "honeyEarnSell", pts: "+20", icon: ShoppingBag },
-  { labelKey: "honeyEarnReview", pts: "+5", icon: Star },
-  { labelKey: "honeyEarnRefer", pts: "+100", icon: Users },
-  { labelKey: "honeyEarnStreak7", pts: "×2", icon: Flame, mult: true },
-  { labelKey: "honeyEarnStreak30", pts: "×3", icon: Trophy, mult: true },
-] as const;
+type FilterKey = "ALL" | "CHECKIN" | "DAILY_MISSION" | "ACHIEVEMENT" | "REFERRAL" | "MARKETPLACE" | "RAFFLE" | "REDEEM" | "OTHER";
+
+const FILTER_LABELS: Record<FilterKey, Record<string, string>> = {
+  ALL:          { TH: "ทั้งหมด",    EN: "All",          JP: "すべて" },
+  CHECKIN:      { TH: "เช็คอิน",    EN: "Check-in",     JP: "チェックイン" },
+  DAILY_MISSION:{ TH: "ภารกิจ",     EN: "Missions",     JP: "ミッション" },
+  ACHIEVEMENT:  { TH: "ความสำเร็จ", EN: "Achievements", JP: "実績" },
+  REFERRAL:     { TH: "แนะนำเพื่อน", EN: "Referral",    JP: "紹介" },
+  MARKETPLACE:  { TH: "ตลาด",       EN: "Marketplace",  JP: "マーケット" },
+  RAFFLE:       { TH: "ลุ้นรางวัล",  EN: "Raffle",      JP: "抽選" },
+  REDEEM:       { TH: "แลกของ",      EN: "Redeem",      JP: "交換" },
+  OTHER:        { TH: "อื่นๆ",       EN: "Other",       JP: "その他" },
+};
+
+const FILTER_TYPE_MAP: Record<FilterKey, string[]> = {
+  ALL:           [],
+  CHECKIN:       ["CHECKIN"],
+  DAILY_MISSION: ["DAILY_MISSION"],
+  ACHIEVEMENT:   ["ACHIEVEMENT", "LEVEL_UP", "ONBOARDING"],
+  REFERRAL:      ["REFERRAL"],
+  MARKETPLACE:   ["MARKETPLACE_SELL"],
+  RAFFLE:        ["RAFFLE_TICKET"],
+  REDEEM:        ["REDEEM"],
+  OTHER:         [],
+};
+
+const KNOWN_TYPES = new Set(Object.values(FILTER_TYPE_MAP).flat());
+
+function matchesFilter(tx: HoneyTx, filter: FilterKey): boolean {
+  if (filter === "ALL") return true;
+  if (filter === "OTHER") return !KNOWN_TYPES.has(tx.type);
+  return FILTER_TYPE_MAP[filter].includes(tx.type);
+}
 
 export function ActivityTab({
   lang,
@@ -33,60 +48,115 @@ export function ActivityTab({
   lang: Language;
   transactions: HoneyTx[];
 }) {
+  const [filter, setFilter] = useState<FilterKey>("ALL");
+
+  const availableFilters = useMemo(() => {
+    const typeSet = new Set(transactions.map((tx) => tx.type));
+    const filters: FilterKey[] = ["ALL"];
+    for (const key of Object.keys(FILTER_TYPE_MAP) as FilterKey[]) {
+      if (key === "ALL") continue;
+      if (key === "OTHER") {
+        if ([...typeSet].some((t) => !KNOWN_TYPES.has(t))) filters.push("OTHER");
+      } else {
+        if (FILTER_TYPE_MAP[key].some((t) => typeSet.has(t))) filters.push(key);
+      }
+    }
+    return filters;
+  }, [transactions]);
+
+  const filtered = useMemo(
+    () => transactions.filter((tx) => matchesFilter(tx, filter)),
+    [transactions, filter],
+  );
+
   return (
-    <div className="space-y-4">
-      {/* Full-width transaction history */}
-      <div className="panel">
-        <div className="border-b px-4 py-3">
-          <h2 className="text-sm font-semibold">{t(lang, "honeyHistory")}</h2>
-        </div>
-        {transactions.length === 0 ? (
-          <EmptyState icon={History} label={t(lang, "noTransactions")} />
-        ) : (
-          <div className="divide-y divide-border/40">
-            {transactions.map((tx) => <TxRow key={tx.id} tx={tx} />)}
-          </div>
-        )}
+    <div className="panel overflow-hidden">
+      <div className="border-b px-4 py-3">
+        <h2 className="text-sm font-semibold">{t(lang, "honeyHistory")}</h2>
+        <p className="mt-0.5 text-[11px] text-muted-foreground">
+          {lang === "TH" ? "ดูประวัติการรับและใช้ Honey ทั้งหมด" : lang === "JP" ? "Honeyの獲得・使用履歴" : "View all Honey earning and spending history"}
+        </p>
       </div>
 
-      {/* How to Earn -- always visible */}
-      <div className="panel">
-        <div className="px-4 py-2.5">
-          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "howToEarn")}</span>
+      {availableFilters.length > 2 && (
+        <div className="flex gap-0.5 overflow-x-auto px-4 scrollbar-none">
+          {availableFilters.map((key) => (
+            <button
+              key={key}
+              onClick={() => setFilter(key)}
+              className={cn(
+                "shrink-0 border-b-2 px-3 py-2 text-[11px] font-medium transition-colors",
+                filter === key
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground",
+              )}
+            >
+              {FILTER_LABELS[key][lang] ?? FILTER_LABELS[key].EN}
+            </button>
+          ))}
         </div>
-        <div className="grid gap-px border-t bg-border/40 sm:grid-cols-2">
-          {EARN_RULES.map((rule) => {
-            const Icon = rule.icon;
-            const isMult = "mult" in rule && rule.mult;
-            return (
-              <div key={rule.labelKey} className="flex items-center gap-2 bg-background px-4 py-2">
-                <Icon className={cn("size-3.5 shrink-0", isMult ? "text-primary" : "text-muted-foreground/60")} />
-                <span className="flex-1 truncate text-[11px]">{t(lang, rule.labelKey as TranslationKey)}</span>
-                <span className="shrink-0 text-[11px] font-bold tabular-nums text-primary">{rule.pts}</span>
-              </div>
-            );
-          })}
+      )}
+
+      {filtered.length === 0 ? (
+        transactions.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 py-12 text-center">
+            <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10">
+              <Sparkles className="size-6 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold">
+                {lang === "TH" ? "เริ่มสะสม Honey กันเลย!" : lang === "JP" ? "Honeyを集め始めよう！" : "Start earning Honey!"}
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {lang === "TH"
+                  ? "ทำภารกิจประจำวันด้านบนเพื่อรับ Honey แรกของคุณ"
+                  : lang === "JP"
+                    ? "上のデイリーミッションをクリアして最初のHoneyをゲット"
+                    : "Complete a daily mission above to earn your first Honey"}
+              </p>
+            </div>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/15"
+            >
+              <ArrowUp className="size-3.5" />
+              {lang === "TH" ? "ไปทำภารกิจ" : lang === "JP" ? "ミッションへ" : "Go to missions"}
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-2 py-14 text-center">
+            <History className="size-8 text-muted-foreground/20" />
+            <p className="text-xs text-muted-foreground/60">{t(lang, "noTransactions")}</p>
+          </div>
+        )
+      ) : (
+        <div className="divide-y divide-border/40">
+          {filtered.map((tx) => (
+            <TxRow key={tx.id} tx={tx} lang={lang} />
+          ))}
         </div>
-      </div>
+      )}
     </div>
   );
 }
 
-function TxRow({ tx }: { tx: HoneyTx }) {
+function TxRow({ tx, lang }: { tx: HoneyTx; lang: Language }) {
   const positive = tx.amount > 0;
+  const style = getTxStyle(tx);
+  const Icon = style.icon;
+
   return (
     <div className="flex items-center gap-3 px-4 py-2.5">
-      <div className={cn("flex size-7 shrink-0 items-center justify-center rounded-md", positive ? "bg-price-up/10 text-price-up" : "bg-destructive/10 text-destructive")}>
-        {positive ? <Zap className="size-3" /> : <ShoppingBag className="size-3" />}
+      <div className={cn("flex size-7 shrink-0 items-center justify-center rounded-md", style.bg)}>
+        <Icon className={cn("size-3", style.fg)} />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-xs font-medium">{tx.reason}</p>
+        <p className="truncate text-xs font-medium">{formatTxReason(tx, lang)}</p>
         <p className="text-[10px] text-muted-foreground">{new Date(tx.createdAt).toLocaleDateString()}</p>
       </div>
       <span className={cn("shrink-0 text-xs font-bold tabular-nums", positive ? "text-price-up" : "text-destructive")}>
-        {positive ? "+" : ""}{tx.amount}
+        {positive ? "+" : ""}{tx.amount} <span className="text-[10px]">🍯</span>
       </span>
     </div>
   );
 }
-

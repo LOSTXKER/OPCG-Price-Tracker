@@ -1,8 +1,9 @@
 "use client";
 
-import { Award, Calendar, CheckCircle2, Flame, Sparkles } from "lucide-react";
+import { Calendar, CheckCircle2, Flame, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { t, type Language } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import type { HoneyLevel, ActiveEvent } from "../types";
 
 export function HoneyHero({
@@ -24,87 +25,83 @@ export function HoneyHero({
   checkinLoading: boolean;
   onCheckin: () => void;
 }) {
-  const levelProgress = level?.nextThreshold ? Math.min((points / level.nextThreshold) * 100, 100) : 100;
+  const levelProgress = level?.nextThreshold
+    ? Math.min((points / level.nextThreshold) * 100, 100)
+    : 100;
 
   return (
-    <div className="panel flex h-full flex-col overflow-hidden">
-      <div className="flex flex-1 flex-col gap-3 p-4 sm:flex-row sm:items-center sm:gap-6 sm:p-5 lg:flex-col lg:items-start lg:gap-4 lg:p-4">
+    <div className="panel overflow-hidden">
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-3 px-5 py-4 sm:px-6">
         {/* Balance */}
-        <div className="flex items-center gap-3">
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 lg:size-11">
-            <Award className="size-5 text-primary lg:size-6" />
+        <div className="flex items-center gap-2.5">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10">
+            <span className="text-base leading-none">🍯</span>
           </div>
           <div>
-            <p className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">Honey</p>
-            <p className="text-2xl font-extrabold tabular-nums text-primary">
-              {points.toLocaleString()}
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Honey</p>
+            <p className="text-2xl font-extrabold tabular-nums leading-tight text-primary">
+              {points.toLocaleString()} <span className="text-sm font-bold">pt</span>
             </p>
           </div>
         </div>
 
-        {/* Badges */}
-        <div className="flex flex-1 flex-wrap items-center gap-2">
-          <div className="flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5">
-            <Flame className="size-3 text-primary" />
-            <span className="text-[11px] font-bold tabular-nums text-primary">{streak}</span>
-            <span className="text-[9px] text-primary/60">{t(lang, "days")}</span>
-          </div>
-
-          {level && (
-            <div className="flex items-center gap-1.5">
-              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
-                {level.label}
-              </span>
-              {level.nextThreshold && (
-                <div className="hidden items-center gap-1.5 sm:flex lg:hidden">
-                  <div className="h-1.5 w-20 overflow-hidden rounded-full bg-muted">
-                    <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${levelProgress}%` }} />
-                  </div>
-                  <span className="text-[9px] tabular-nums text-muted-foreground">
-                    {points}/{level.nextThreshold.toLocaleString()}
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeEvent && (
-            <div className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5">
-              <Sparkles className="size-2.5 text-primary" />
-              <span className="text-[9px] font-bold text-primary">
-                {activeEvent.honeyMultiplier}x
-              </span>
-            </div>
-          )}
+        {/* Streak */}
+        <div className={cn(
+          "flex items-center gap-1.5 rounded-full px-2.5 py-1",
+          streak >= 7 ? "bg-primary/10" : "bg-muted/60",
+        )}>
+          <Flame className={cn("size-4", streak >= 7 ? "text-primary" : "text-muted-foreground")} />
+          <span className={cn("text-sm font-bold tabular-nums", streak >= 7 ? "text-primary" : "text-foreground")}>
+            {streak}
+          </span>
+          <span className="text-xs text-muted-foreground">{t(lang, "honeyStreakDays")}</span>
         </div>
 
-        {/* Level progress bar -- visible on lg */}
-        {level?.nextThreshold && (
-          <div className="hidden w-full items-center gap-2 lg:flex">
-            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
-              <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${levelProgress}%` }} />
-            </div>
-            <span className="text-[9px] tabular-nums text-muted-foreground">
-              {points}/{level.nextThreshold.toLocaleString()}
-            </span>
+        {/* Level badge */}
+        {level && (
+          <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
+            {level.label}
+          </span>
+        )}
+
+        {/* Event multiplier */}
+        {activeEvent && (
+          <div className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1">
+            <Sparkles className="size-3 text-primary" />
+            <span className="text-[10px] font-bold text-primary">{activeEvent.honeyMultiplier}x</span>
           </div>
         )}
 
-        {/* Checkin */}
-        <div className="shrink-0">
+        {/* Check-in (pushed right) */}
+        <div className="ml-auto shrink-0">
           {canCheckin ? (
-            <Button onClick={onCheckin} disabled={checkinLoading} size="sm" className="h-8 gap-1.5 border border-primary/20 bg-primary/10 text-xs text-primary shadow-sm hover:bg-primary/15 lg:w-full">
+            <Button
+              onClick={onCheckin}
+              disabled={checkinLoading}
+              size="sm"
+              className="h-8 gap-1.5 border border-primary/20 bg-primary/10 px-3 text-xs font-semibold text-primary shadow-sm hover:bg-primary/15"
+            >
               <Calendar className="size-3.5" />
               {t(lang, "dailyCheckin")}
             </Button>
           ) : (
-            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <CheckCircle2 className="size-3.5 text-price-up" />
+            <span className="flex items-center gap-1.5 rounded-full bg-price-up/10 px-3 py-1.5 text-xs font-medium text-price-up">
+              <CheckCircle2 className="size-3.5" />
               {t(lang, "checkinDone")}
             </span>
           )}
         </div>
       </div>
+
+      {/* Thin progress strip */}
+      {level?.nextThreshold && (
+        <div className="h-1 w-full bg-muted">
+          <div
+            className="h-full bg-primary transition-all"
+            style={{ width: `${levelProgress}%` }}
+          />
+        </div>
+      )}
     </div>
   );
 }

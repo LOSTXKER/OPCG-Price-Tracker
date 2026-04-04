@@ -9,7 +9,7 @@ export type RarityInfo = {
 /** Official base rarities sourced from Bandai */
 export const BASE_RARITIES: RarityInfo[] = [
   { code: "TR", name: "Treasure Rare", order: 11, color: "#EF4444" },
-  { code: "SP", name: "Special (Manga Art)", order: 10, color: "#EC4899" },
+  { code: "SP", name: "Special", order: 10, color: "#EC4899" },
   { code: "SEC", name: "Secret Rare", order: 9, color: "#F59E0B" },
   { code: "SR", name: "Super Rare", order: 8, color: "#8B5CF6" },
   { code: "R", name: "Rare", order: 7, color: "#3B82F6" },
@@ -36,6 +36,16 @@ export const RARITIES: RarityInfo[] = [...BASE_RARITIES, ...PARALLEL_RARITIES];
 export const RARITY_MAP = new Map(RARITIES.map((r) => [r.code, r]));
 
 export const BASE_RARITY_CODES = new Set(BASE_RARITIES.map((r) => r.code));
+
+/** Compare two rarity codes: rarest first, parallel before normal within the same tier. */
+export function raritySort(a: string, b: string): number {
+  const ao = RARITY_MAP.get(a)?.order ?? -1;
+  const bo = RARITY_MAP.get(b)?.order ?? -1;
+  if (ao !== bo) return bo - ao;
+  const ap = a.startsWith("P-") ? 0 : 1;
+  const bp = b.startsWith("P-") ? 0 : 1;
+  return ap - bp;
+}
 
 /* ── Badge / bar / hex color maps (previously in rarity.ts) ── */
 

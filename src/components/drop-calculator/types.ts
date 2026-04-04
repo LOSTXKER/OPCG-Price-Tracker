@@ -55,13 +55,4 @@ export interface SetDetail {
 export type { Unit } from "@/lib/constants/ui"
 export { UNIT_I18N_KEYS, PULL_UNITS } from "@/lib/constants/ui"
 
-export const TIER_ORDER = [
-  "L", "C", "UC", "R", "SR", "SEC", "SP", "SP CARD",
-  "P-L", "P-C", "P-UC", "P-R", "P-SR", "P-SEC", "DON",
-]
-
-export function tierSort(a: string, b: string) {
-  const ai = TIER_ORDER.indexOf(a)
-  const bi = TIER_ORDER.indexOf(b)
-  return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi)
-}
+export { raritySort } from "@/lib/constants/rarities"

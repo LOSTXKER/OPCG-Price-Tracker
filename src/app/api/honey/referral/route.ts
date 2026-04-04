@@ -15,5 +15,7 @@ export const GET = apiHandler(async () => {
     referralUrl: `${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/ref/${code}`,
     totalClicks: stats.totalClicks,
     todayClicks: stats.todayClicks,
+    totalConversions: stats.totalConversions,
+    totalEarned: stats.totalEarned,
   });
 });

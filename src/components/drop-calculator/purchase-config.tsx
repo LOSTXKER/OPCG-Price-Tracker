@@ -1,6 +1,6 @@
 "use client"
 
-import { Minus, Plus } from "lucide-react"
+import { Minus, Plus, ShoppingCart } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { t } from "@/lib/i18n"
@@ -8,7 +8,8 @@ import { cn } from "@/lib/utils"
 import { PACKS_PER_BOX, BOXES_PER_CARTON, CARDS_PER_PACK_JP } from "@/lib/utils/pull-rate"
 import { useUIStore } from "@/stores/ui-store"
 import type { DropRate, Unit } from "./types"
-import { UNIT_I18N_KEYS, PULL_UNITS, tierSort } from "./types"
+import { UNIT_I18N_KEYS, PULL_UNITS } from "./types"
+import { raritySort } from "@/lib/constants/rarities"
 
 interface PurchaseConfigProps {
   unit: Unit
@@ -30,7 +31,7 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
 
   if (compact) {
     return (
-      <div className="panel flex flex-wrap items-center gap-2 p-2.5">
+      <div className="panel flex flex-wrap items-center gap-2 p-3">
         <div className="flex rounded-lg border border-border bg-muted/50 p-0.5">
           {PULL_UNITS.map((u) => (
             <button
@@ -73,9 +74,9 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
           </button>
         </div>
         <p className="text-[11px] text-muted-foreground">
-          {unit === "box" && `= ${packs} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
-          {unit === "pack" && `${cards} ${t(lang, "cardsCount")}`}
-          {unit === "carton" && `= ${BOXES_PER_CARTON * quantity} ${t(lang, "boxUnit")} · ${cards} ${t(lang, "cardsCount")}`}
+          {unit === "box" && `${t(lang, "ifYouBuy")} ${quantity} ${t(lang, "boxUnit")} = ${packs} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
+          {unit === "pack" && `${t(lang, "ifYouBuy")} ${quantity} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
+          {unit === "carton" && `${t(lang, "ifYouBuy")} ${quantity} ${t(lang, "cartonUnit")} = ${BOXES_PER_CARTON * quantity} ${t(lang, "boxUnit")} · ${cards} ${t(lang, "cardsCount")}`}
         </p>
       </div>
     )
@@ -91,11 +92,14 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
             : (dr.avgPerBox ?? 0) * BOXES_PER_CARTON * quantity
       return count >= 0.5
     })
-    .sort((a, b) => tierSort(a.rarity, b.rarity))
+    .sort((a, b) => raritySort(a.rarity, b.rarity))
 
   return (
     <section className="panel overflow-hidden">
       <div className="space-y-3 p-3">
+        <p className="text-xs font-medium text-muted-foreground">
+          {t(lang, "configurePurchase")}
+        </p>
         <div className="flex w-full rounded-lg border border-border bg-muted/50 p-0.5">
           {PULL_UNITS.map((u) => (
             <button
@@ -137,16 +141,17 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
             <Plus className="size-4" />
           </button>
         </div>
-        <p className="text-center text-xs text-muted-foreground">
+        <div className="rounded-lg bg-muted/30 px-3 py-1.5 text-center text-xs text-muted-foreground">
           {unit === "pack" && `${quantity} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
           {unit === "box" && `${quantity} ${t(lang, "boxUnit")} = ${packs} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
           {unit === "carton" && `${quantity} ${t(lang, "cartonUnit")} = ${BOXES_PER_CARTON * quantity} ${t(lang, "boxUnit")} · ${cards} ${t(lang, "cardsCount")}`}
-        </p>
+        </div>
       </div>
       {meaningful.length > 0 && (
         <div className="border-t border-border/40 px-3 py-2.5">
-          <p className="mb-2 text-[11px] font-medium text-muted-foreground">
-            {quantity} {t(lang, UNIT_I18N_KEYS[unit])} {t(lang, "estimatedYield")}
+          <p className="mb-2 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+            <ShoppingCart className="size-3 shrink-0" />
+            {t(lang, "ifYouBuy")} {quantity} {t(lang, UNIT_I18N_KEYS[unit])} {t(lang, "estimatedYield")}
           </p>
           <div className="space-y-1">
             {meaningful.map((dr) => {

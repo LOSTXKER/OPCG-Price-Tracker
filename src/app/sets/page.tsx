@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import { BookOpen, Calculator, Crown, Gift, Layers, MoreHorizontal, Package, Sparkles, Store, Swords, TrendingUp } from "lucide-react";
+import { BookOpen, Calculator, Store, TrendingUp } from "lucide-react";
 import { RelatedPages } from "@/components/shared/related-pages";
 
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
@@ -9,11 +7,12 @@ import { ErrorBanner } from "@/components/shared/error-banner";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
-import { SetType } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
-import { Price } from "@/components/shared/price-inline";
-import { FormattedDate } from "@/components/shared/formatted-date";
-import { SetsPageHeader, HighestValueSetLabel, CardCountLabel } from "./sets-page-client";
+import {
+  SetsPageHeader,
+  SetsListClient,
+  type SetWithCard,
+} from "./sets-page-client";
 
 export const dynamic = "force-dynamic";
 
@@ -22,36 +21,6 @@ export const metadata: Metadata = {
   description:
     "Browse all OPCG card sets, booster boxes and starter decks. Check estimated set values, card counts and release dates.",
   alternates: { canonical: "/sets" },
-};
-
-const TYPE_ORDER: SetType[] = ["BOOSTER", "EXTRA_BOOSTER", "STARTER", "PROMO", "OTHER"];
-const TYPE_LABEL: Record<SetType, string> = {
-  BOOSTER: "Booster Pack",
-  EXTRA_BOOSTER: "Extra Booster",
-  STARTER: "Starter Deck",
-  PROMO: "Promo",
-  OTHER: "Other",
-};
-const TYPE_ICON: Record<SetType, React.ComponentType<{ className?: string }>> = {
-  BOOSTER: Package,
-  EXTRA_BOOSTER: Sparkles,
-  STARTER: Swords,
-  PROMO: Gift,
-  OTHER: MoreHorizontal,
-};
-
-type SetWithCard = {
-  id: number;
-  code: string;
-  name: string;
-  nameEn: string | null;
-  type: SetType;
-  cardCount: number;
-  productCardCount: number;
-  releaseDate: Date | null;
-  boxImageUrl: string | null;
-  topCard: { imageUrl: string | null; latestPriceJpy: number | null } | null;
-  totalValue: number;
 };
 
 export default async function SetsIndexPage() {
@@ -68,21 +37,36 @@ export default async function SetsIndexPage() {
         select: { code: true, _count: { select: { cards: true } } },
       }),
       prisma.card.findMany({
-        where: { setId: { in: sets.map((s) => s.id) }, imageUrl: { not: null } },
+        where: {
+          setId: { in: sets.map((s) => s.id) },
+          imageUrl: { not: null },
+        },
         orderBy: { cardCode: "asc" },
         select: { setId: true, imageUrl: true, latestPriceJpy: true },
       }),
       prisma.card.groupBy({
         by: ["setId"],
-        where: { setId: { in: sets.map((s) => s.id) }, latestPriceJpy: { gt: 0 } },
+        where: {
+          setId: { in: sets.map((s) => s.id) },
+          latestPriceJpy: { gt: 0 },
+        },
         _sum: { latestPriceJpy: true },
       }),
     ]);
 
-    const productCountMap = new Map(products.map((p) => [p.code, p._count.cards]));
-    const topCardMap = new Map<number, { imageUrl: string | null; latestPriceJpy: number | null }>();
+    const productCountMap = new Map(
+      products.map((p) => [p.code, p._count.cards])
+    );
+    const topCardMap = new Map<
+      number,
+      { imageUrl: string | null; latestPriceJpy: number | null }
+    >();
     for (const tc of topCards) {
-      if (!topCardMap.has(tc.setId)) topCardMap.set(tc.setId, { imageUrl: tc.imageUrl, latestPriceJpy: tc.latestPriceJpy });
+      if (!topCardMap.has(tc.setId))
+        topCardMap.set(tc.setId, {
+          imageUrl: tc.imageUrl,
+          latestPriceJpy: tc.latestPriceJpy,
+        });
     }
     const valueMap = new Map<number, number>();
     for (const vs of valueSums) {
@@ -90,22 +74,21 @@ export default async function SetsIndexPage() {
     }
 
     setsRaw = sets.map((s) => ({
-      ...s,
+      id: s.id,
+      code: s.code,
+      name: s.name,
+      nameEn: s.nameEn,
+      type: s.type,
+      cardCount: s.cardCount,
       productCardCount: productCountMap.get(s.code) ?? s.cardCount,
+      releaseDate: s.releaseDate?.toISOString() ?? null,
+      boxImageUrl: s.boxImageUrl,
       topCard: topCardMap.get(s.id) ?? null,
       totalValue: valueMap.get(s.id) ?? 0,
     }));
   } catch (error) {
     console.error("Failed to fetch sets:", error);
     dbError = true;
-  }
-
-  const grouped = new Map<SetType, SetWithCard[]>();
-  for (const t of TYPE_ORDER) grouped.set(t, []);
-  for (const s of setsRaw) {
-    const list = grouped.get(s.type) ?? [];
-    list.push(s);
-    grouped.set(s.type, list);
   }
 
   const mostValuable = [...setsRaw]
@@ -118,158 +101,55 @@ export default async function SetsIndexPage() {
 
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Sets", href: "/sets" }])} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", href: "/" },
+          { name: "Sets", href: "/sets" },
+        ])}
+      />
       <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Sets" }]} />
       <div className="space-y-10">
-        <SetsPageHeader totalSets={totalSets} totalMarketValue={totalMarketValue} />
+        <SetsPageHeader
+          totalSets={totalSets}
+          totalMarketValue={totalMarketValue}
+        />
 
-      {dbError ? (
-        <ErrorBanner />
-      ) : setsRaw.length === 0 ? (
-        <KumaEmptyState title="No card sets yet" />
-      ) : (
-        <>
-          {/* Top 5 most valuable */}
-          {mostValuable.length > 0 && (
-            <section className="panel overflow-hidden">
-              <div className="flex items-center gap-2.5 border-b border-border/40 px-5 py-3.5">
-                <div className="flex size-7 items-center justify-center rounded-lg bg-amber-500/10">
-                  <Crown className="size-3.5 text-amber-600 dark:text-amber-400" />
-                </div>
-                <HighestValueSetLabel />
-              </div>
-              <div className="divide-y divide-border/30">
-                {mostValuable.map((s, i) => {
-                  const thumb = s.boxImageUrl ?? s.topCard?.imageUrl;
-                  return (
-                    <Link
-                      key={s.id}
-                      href={`/sets/${s.code}`}
-                      className="group flex items-center gap-4 px-5 py-3.5 transition-colors hover:bg-muted/30"
-                    >
-                      <span className={`flex size-7 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold ${i < 3 ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground"}`}>
-                        {i + 1}
-                      </span>
-                      {thumb && (
-                        <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-muted">
-                          <Image src={thumb} alt="" fill className="object-contain" sizes="40px" />
-                        </div>
-                      )}
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-mono text-[11px] font-bold text-primary">
-                            {s.code.toUpperCase()}
-                          </span>
-                          <span className="truncate text-sm font-medium transition-colors group-hover:text-primary">{s.nameEn ?? s.name}</span>
-                        </div>
-                      </div>
-                      <CardCountLabel count={s.productCardCount} />
-                      <span className="shrink-0 font-price text-sm font-bold tabular-nums">
-                        <Price jpy={s.totalValue} />
-                      </span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </section>
-          )}
-
-          {/* Sets grouped by type */}
-          <div className="space-y-12">
-            {TYPE_ORDER.map((type) => {
-              const list = grouped.get(type) ?? [];
-              if (list.length === 0) return null;
-              const TypeIcon = TYPE_ICON[type];
-              return (
-                <section key={type} className="space-y-5">
-                  <div className="flex items-center gap-3">
-                    <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
-                      <TypeIcon className="size-4 text-primary" />
-                    </div>
-                    <h2 className="text-lg font-bold tracking-tight">{TYPE_LABEL[type]}</h2>
-                    <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold tabular-nums text-muted-foreground">
-                      {list.length}
-                    </span>
-                  </div>
-                  <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 sm:snap-none lg:grid-cols-3 xl:grid-cols-4">
-                    {list.map((s) => (
-                      <SetCard key={s.id} set={s} />
-                    ))}
-                  </div>
-                </section>
-              );
-            })}
-          </div>
-        </>
-      )}
+        {dbError ? (
+          <ErrorBanner />
+        ) : setsRaw.length === 0 ? (
+          <KumaEmptyState title="No card sets yet" />
+        ) : (
+          <SetsListClient sets={setsRaw} mostValuable={mostValuable} />
+        )}
       </div>
       <RelatedPages
         items={[
-          { href: "/trending", icon: TrendingUp, title: "Trending", description: "การ์ดที่ราคาขยับมากที่สุด" },
-          { href: "/drop-calculator", icon: Calculator, title: "Drop Calculator", description: "คำนวณโอกาสดึงการ์ดจากกล่อง" },
-          { href: "/guide/sets", icon: BookOpen, title: "คู่มือชุดการ์ด", description: "เรียนรู้เกี่ยวกับชุดการ์ดทั้งหมด" },
-          { href: "/marketplace", icon: Store, title: "Marketplace", description: "ซื้อขายการ์ดในตลาด Meecard" },
+          {
+            href: "/trending",
+            icon: TrendingUp,
+            title: "การ์ดวันพีซมาแรงวันนี้",
+            description: "การ์ด OPCG ที่ราคาขยับมากที่สุดในวันนี้",
+          },
+          {
+            href: "/drop-calculator",
+            icon: Calculator,
+            title: "คำนวณ Drop Rate กล่องสุ่ม",
+            description: "จำลองเปิดกล่องการ์ด OPCG คำนวณโอกาสได้การ์ดที่ต้องการ",
+          },
+          {
+            href: "/guide/sets",
+            icon: BookOpen,
+            title: "คู่มือชุดการ์ด OPCG",
+            description: "เรียนรู้รายละเอียดชุดการ์ดวันพีซแต่ละชุด",
+          },
+          {
+            href: "/marketplace",
+            icon: Store,
+            title: "ตลาดซื้อขายการ์ด",
+            description: "ซื้อขายการ์ดวันพีซในตลาดของ Meecard ราคายุติธรรม",
+          },
         ]}
       />
     </>
-  );
-}
-
-function SetCard({ set }: { set: SetWithCard }) {
-  const imageUrl = set.boxImageUrl ?? set.topCard?.imageUrl;
-
-  return (
-    <Link href={`/sets/${set.code}`} className="group block w-[72vw] shrink-0 snap-start sm:w-auto sm:shrink">
-      <div className="panel flex h-full flex-col overflow-hidden transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
-        {/* Image area */}
-        <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted/20">
-          {imageUrl ? (
-            <Image
-              src={imageUrl}
-              alt={set.nameEn ?? set.name}
-              fill
-              className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center">
-              <Package className="size-10 text-muted-foreground/15" />
-            </div>
-          )}
-          <div className="absolute left-2.5 top-2.5">
-            <span className="rounded-md bg-background/80 px-2 py-0.5 font-mono text-xs font-bold text-foreground backdrop-blur-sm">
-              {set.code.toUpperCase()}
-            </span>
-          </div>
-        </div>
-
-        {/* Info */}
-        <div className="flex flex-1 flex-col gap-1 border-t border-border/30 p-3.5">
-          <p className="text-sm font-semibold leading-snug line-clamp-2 transition-colors group-hover:text-primary">
-            {set.nameEn ?? set.name}
-          </p>
-
-          <div className="mt-auto flex items-center justify-between gap-2 pt-1.5">
-            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-              <CardCountLabel count={set.productCardCount} />
-              {set.releaseDate && (
-                <>
-                  <span className="text-border">·</span>
-                  <FormattedDate
-                    date={set.releaseDate}
-                    options={{ year: "numeric", month: "short" }}
-                  />
-                </>
-              )}
-            </div>
-            {set.totalValue > 0 && (
-              <span className="shrink-0 font-price text-xs font-semibold text-foreground">
-                <Price jpy={set.totalValue} />
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-    </Link>
   );
 }

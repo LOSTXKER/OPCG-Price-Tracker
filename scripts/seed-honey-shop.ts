@@ -73,29 +73,29 @@ const ITEMS: {
     type: "CSV_EXPORT_PASS",
     value: {},
   },
-  // Honey Exclusive packages
+  // Pro / Pro+ packages (redeemable with Honey)
   {
-    name: "Honey Pass (7日)",
-    nameEn: "Honey Pass (7 days)",
-    nameTh: "Honey Pass (7 วัน)",
-    description: "Pro features for 7 days + exclusive Honey Pass badge",
+    name: "Pro (7日)",
+    nameEn: "Pro (7 days)",
+    nameTh: "Pro (7 วัน)",
+    description: "Pro features for 7 days + exclusive badge",
     cost: 2000,
     type: "TRIAL_PRO",
-    value: { days: 7, badge: "Honey Pass", badgeTh: "Honey Pass" },
+    value: { days: 7, badge: "Honey Pro", badgeTh: "Honey Pro" },
   },
   {
-    name: "Honey Pass+ (30日)",
-    nameEn: "Honey Pass+ (30 days)",
-    nameTh: "Honey Pass+ (30 วัน)",
+    name: "Pro (30日)",
+    nameEn: "Pro (30 days)",
+    nameTh: "Pro (30 วัน)",
     description: "Pro features for 30 days + Honey Elite badge + 1 free raffle ticket",
     cost: 5000,
     type: "TRIAL_PRO",
     value: { days: 30, badge: "Honey Elite", badgeTh: "Honey Elite", freeRaffleTickets: 1 },
   },
   {
-    name: "Honey Pro+ Pass (30日)",
-    nameEn: "Honey Pro+ Pass (30 days)",
-    nameTh: "Honey Pro+ Pass (30 วัน)",
+    name: "Pro+ (30日)",
+    nameEn: "Pro+ (30 days)",
+    nameTh: "Pro+ (30 วัน)",
     description: "Pro+ features for 30 days + exclusive badge + 2 free raffle tickets",
     cost: 10000,
     type: "TRIAL_PRO_PLUS",
@@ -108,6 +108,12 @@ const DEACTIVATE_NAMES = [
   "手数料割引 3%",
 ];
 
+const RENAME_MAP: { oldName: string; newName: string; newNameEn: string; newNameTh: string; newDesc: string }[] = [
+  { oldName: "Honey Pass (7日)", newName: "Pro (7日)", newNameEn: "Pro (7 days)", newNameTh: "Pro (7 วัน)", newDesc: "Pro features for 7 days + exclusive badge" },
+  { oldName: "Honey Pass+ (30日)", newName: "Pro (30日)", newNameEn: "Pro (30 days)", newNameTh: "Pro (30 วัน)", newDesc: "Pro features for 30 days + Honey Elite badge + 1 free raffle ticket" },
+  { oldName: "Honey Pro+ Pass (30日)", newName: "Pro+ (30日)", newNameEn: "Pro+ (30 days)", newNameTh: "Pro+ (30 วัน)", newDesc: "Pro+ features for 30 days + exclusive badge + 2 free raffle tickets" },
+];
+
 async function main() {
   console.log("Seeding Honey Shop items...");
 
@@ -116,6 +122,17 @@ async function main() {
     if (item && item.isActive) {
       await prisma.honeyShopItem.update({ where: { id: item.id }, data: { isActive: false } });
       console.log(`  [deactivated] "${item.nameEn ?? name}"`);
+    }
+  }
+
+  for (const r of RENAME_MAP) {
+    const item = await prisma.honeyShopItem.findFirst({ where: { name: r.oldName } });
+    if (item) {
+      await prisma.honeyShopItem.update({
+        where: { id: item.id },
+        data: { name: r.newName, nameEn: r.newNameEn, nameTh: r.newNameTh, description: r.newDesc },
+      });
+      console.log(`  [renamed] "${r.oldName}" -> "${r.newNameEn}"`);
     }
   }
 

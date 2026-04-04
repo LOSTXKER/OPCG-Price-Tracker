@@ -11,7 +11,7 @@ import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { RarityBadge } from "@/components/shared/rarity-badge";
-import { RARITIES } from "@/lib/constants/rarities";
+import { RARITIES, raritySort } from "@/lib/constants/rarities";
 import { prisma } from "@/lib/db";
 import { Price } from "@/components/shared/price-inline";
 import { FormattedDate } from "@/components/shared/formatted-date";
@@ -24,35 +24,6 @@ import {
 } from "@/components/sets/set-detail-content";
 
 export const dynamic = "force-dynamic";
-
-/* ------------------------------------------------------------------ */
-/*  Rarity ordering                                                    */
-/* ------------------------------------------------------------------ */
-
-const RARITY_RANK: Record<string, number> = {
-  TR: 0,
-  "P-SEC": 1,
-  SEC: 2,
-  "P-SR": 3,
-  SR: 4,
-  "P-R": 5,
-  R: 6,
-  UC: 7,
-  C: 8,
-  "P-UC": 9,
-  "P-C": 10,
-  "P-L": 11,
-  L: 12,
-  SP: 13,
-  "P-SP": 14,
-  DON: 15,
-  P: 16,
-  "P-P": 17,
-};
-
-function rarityRank(rarity: string): number {
-  return RARITY_RANK[rarity] ?? 99;
-}
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -145,7 +116,7 @@ export default async function SetDetailPage(props: {
     groupsMap.get(c.rarity)!.push(c);
   }
   const sortedEntries = [...groupsMap.entries()].sort(
-    (a, b) => rarityRank(a[0]) - rarityRank(b[0])
+    (a, b) => raritySort(a[0], b[0])
   );
 
   const rarityGroups: RarityGroup[] = sortedEntries.map(

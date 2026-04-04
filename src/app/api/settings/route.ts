@@ -2,11 +2,27 @@ import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { canCheckinToday } from "@/lib/honey";
+import { parseTasks } from "@/lib/honey-missions";
+import { todayStr } from "@/lib/honey-utils";
 
 export async function GET() {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const user = auth.user;
+
+  const [canCheckin, todayMission] = await Promise.all([
+    canCheckinToday(user.id),
+    prisma.dailyMission.findUnique({
+      where: { userId_date: { userId: user.id, date: todayStr() } },
+      select: { tasks: true, perfectDay: true, bonusClaimed: true },
+    }),
+  ]);
+
+  const hasClaimableTasks = todayMission
+    ? parseTasks(todayMission.tasks).some((t) => t.done && !t.claimed)
+      || (todayMission.perfectDay && !todayMission.bonusClaimed)
+    : false;
 
   return NextResponse.json({
     tier: user.tier,
@@ -21,6 +37,7 @@ export async function GET() {
     emailAlerts: user.emailAlerts,
     lineAlerts: user.lineAlerts,
     weeklyDigest: user.weeklyDigest,
+    honeyPendingActions: canCheckin || hasClaimableTasks,
   });
 }
 

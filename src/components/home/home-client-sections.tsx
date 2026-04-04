@@ -227,25 +227,38 @@ export function HomeHoneyPreview() {
     )
   }
 
+  const streak = data.checkinStreak
+  const checkinReward = streak >= 30 ? 30 : streak >= 7 ? 20 : 10
+
   return (
     <Link href="/honey" className={cn(panel, "group transition-colors hover:border-border hover:bg-muted/40")}>
-      <div className={icon}><Sparkles className="size-3.5" /></div>
+      <div className={icon}><span className="text-sm leading-none">🍯</span></div>
       <span className="text-xs font-semibold sm:text-sm">{t(lang, "honeyPoints")}</span>
       <div className="ml-auto flex items-center gap-2.5">
         <span className="font-price text-xs font-bold text-amber-600 dark:text-amber-400 sm:text-sm">
-          {data.honeyPoints.toLocaleString()} {t(lang, "pts")}
+          {data.honeyPoints.toLocaleString()} pt 🍯
         </span>
-        <div className="flex items-center gap-1 text-muted-foreground">
-          <Flame className="size-3 text-orange-500" />
-          <span className="font-price text-[11px] font-semibold">{data.checkinStreak}</span>
+        <div className="flex items-center gap-1 text-muted-foreground" title={t(lang, "honeyStreakDays")}>
+          <Flame className={cn("size-3", streak >= 7 ? "text-orange-500" : "text-muted-foreground")} />
+          <span className="font-price text-[11px] font-semibold">{streak}</span>
+          <span className={cn(
+            "rounded px-1 py-0.5 text-[9px] font-bold tabular-nums",
+            streak >= 30 ? "bg-amber-500/15 text-amber-600 dark:text-amber-400" : streak >= 7 ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground",
+          )}>
+            {streak >= 30 ? "3x" : streak >= 7 ? "2x" : "1x"}
+          </span>
         </div>
         {data.canCheckin ? (
           <button
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); doCheckin() }}
             disabled={checking}
-            className="rounded-full border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-[10px] font-semibold text-amber-700 transition-colors hover:bg-amber-500/20 disabled:opacity-50 dark:text-amber-400"
+            className="relative rounded-full bg-primary px-2.5 py-1 text-[10px] font-bold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
           >
-            {checking ? "..." : t(lang, "dailyCheckin")}
+            <span className="absolute -right-0.5 -top-0.5 flex size-2">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75" />
+              <span className="relative inline-flex size-2 rounded-full bg-red-500" />
+            </span>
+            {checking ? "..." : `${t(lang, "dailyCheckin")} +${checkinReward} 🍯`}
           </button>
         ) : (
           <ChevronRight className="size-3.5 shrink-0 text-muted-foreground/40 transition-colors group-hover:text-muted-foreground" />

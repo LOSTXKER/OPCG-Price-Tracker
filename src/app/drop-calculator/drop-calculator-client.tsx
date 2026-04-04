@@ -10,7 +10,7 @@ import { PurchaseConfig } from "@/components/drop-calculator/purchase-config"
 import { WantList } from "@/components/drop-calculator/want-list"
 import { CardPicker } from "@/components/drop-calculator/card-picker"
 import type { SetListItem, SetDetail, DropRate, CardItem, Unit } from "@/components/drop-calculator/types"
-import { tierSort } from "@/components/drop-calculator/types"
+import { raritySort } from "@/lib/constants/rarities"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import {
@@ -112,13 +112,13 @@ export default function DropCalculatorClient() {
           c.nameTh?.toLowerCase().includes(q)
       )
     }
-    return list
+    return [...list].sort((a, b) => raritySort(a.rarity, b.rarity))
   }, [detail, rarityFilter, cardSearch])
 
   const uniqueRarities = useMemo(() => {
     if (!detail) return []
     const set = new Set(detail.cards.map((c) => c.rarity))
-    return Array.from(set).sort(tierSort)
+    return Array.from(set).sort(raritySort)
   }, [detail])
 
   const getCardChance = useCallback(

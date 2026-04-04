@@ -238,6 +238,7 @@ export const en = {
   boxUnit: "box",
   cartonUnit: "carton",
   estimatedYield: "estimated yield",
+  ifYouBuy: "If you buy",
   wantList: "Want List",
   selectFromLeft: "Select a card from the left",
   configurePurchase: "Configure Purchase",
@@ -265,6 +266,8 @@ export const en = {
   checkinStreak: "Check-in Streak",
   checkinDone: "Already checked in today",
   checkinSuccess: "Check-in successful!",
+  honeyOnboardingComplete: "Onboarding completed",
+  honeyStreakDays: "day check-in streak",
   earned: "earned",
   honeyShop: "Honey Shop",
   redeemItem: "Redeem",
@@ -316,7 +319,7 @@ export const en = {
   featSectionMarketplace: "Marketplace",
   perMonthShort: "/mo",
 
-  // Honey Pass (Pricing Page)
+  // Honey → Pro (Pricing Page)
   honeyPassTitle: "Don't want to pay? Earn it with Honey!",
   honeyPassDesc: "Complete daily missions, check in every day, and redeem Honey Points for Pro access — no credit card needed.",
   honeyPassCta: "Go to Honey Shop",
@@ -522,7 +525,7 @@ export const en = {
   raffleRank3: "3rd",
   raffleBuyHint: "Buy with {cost} Honey per ticket (max {max})",
   raffleStreakHint: "{days}-day check-in streak = 1 free ticket",
-  rafflePassHint: "Redeem Honey Pass for bonus tickets",
+  rafflePassHint: "Redeem Pro with Honey for bonus tickets",
 
 
   // Seasonal Events

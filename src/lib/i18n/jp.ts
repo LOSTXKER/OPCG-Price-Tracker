@@ -238,6 +238,7 @@ export const jp = {
   boxUnit: "ボックス",
   cartonUnit: "カートン",
   estimatedYield: "の期待枚数",
+  ifYouBuy: "購入した場合",
   wantList: "欲しいリスト",
   selectFromLeft: "左側からカードを選択",
   configurePurchase: "購入設定",
@@ -265,6 +266,8 @@ export const jp = {
   checkinStreak: "連続チェックイン",
   checkinDone: "本日チェックイン済み",
   checkinSuccess: "チェックイン成功！",
+  honeyOnboardingComplete: "オンボーディング完了",
+  honeyStreakDays: "日連続チェックイン",
   earned: "獲得",
   honeyShop: "ハニーショップ",
   redeemItem: "交換",
@@ -316,7 +319,7 @@ export const jp = {
   featSectionMarketplace: "マーケットプレイス",
   perMonthShort: "/月",
 
-  // Honey Pass (Pricing Page)
+  // Honey → Pro (Pricing Page)
   honeyPassTitle: "お金を払いたくない？Honeyで獲得しよう！",
   honeyPassDesc: "毎日のミッションやチェックインでHoneyを貯めて、Pro機能と交換 — クレジットカード不要。",
   honeyPassCta: "ハニーショップへ",
@@ -522,7 +525,7 @@ export const jp = {
   raffleRank3: "3位",
   raffleBuyHint: "{cost} Honeyで購入 (最大{max}枚)",
   raffleStreakHint: "{days}日連続チェックインで無料チケット1枚",
-  rafflePassHint: "Honey Passでボーナスチケット獲得",
+  rafflePassHint: "HoneyでPro交換してボーナスチケット獲得",
 
 
   // Seasonal Events

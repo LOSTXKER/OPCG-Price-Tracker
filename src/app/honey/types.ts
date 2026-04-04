@@ -1,18 +1,27 @@
 import {
+  Award,
+  Calendar,
+  ClipboardList,
   History,
   Link2,
   Medal,
   ShoppingBag,
+  Sparkles,
   Ticket,
   Trophy,
+  Users,
+  Zap,
 } from "lucide-react";
-import type { TranslationKey, Language } from "@/lib/i18n";
+import { t, type TranslationKey, type Language } from "@/lib/i18n";
 
 /* ── Tab config (shared between real + mock UI) ── */
 
-export type TabKey = "activity" | "achievements" | "shop" | "raffle" | "rankings" | "referral";
+export type TabKey = "missions" | "activity" | "achievements" | "shop" | "raffle" | "rankings" | "referral";
 
-export const HONEY_TABS: { key: TabKey; icon: typeof Trophy; labelKey: TranslationKey }[] = [
+export type HoneyTabDef = { key: TabKey; icon: typeof Trophy; labelKey: TranslationKey };
+
+export const HONEY_TABS: HoneyTabDef[] = [
+  { key: "missions", icon: ClipboardList, labelKey: "dailyMissions" },
   { key: "activity", icon: History, labelKey: "activity" },
   { key: "achievements", icon: Medal, labelKey: "achievements" },
   { key: "shop", icon: ShoppingBag, labelKey: "honeyShop" },
@@ -27,9 +36,15 @@ export function localizedName(
   item: { name: string; nameEn?: string | null; nameTh?: string | null },
   lang: Language,
 ): string {
-  if (lang === "EN") return item.nameEn ?? item.name;
-  if (lang === "TH") return item.nameTh ?? item.name;
-  return item.name;
+  let raw: string;
+  if (lang === "EN") raw = item.nameEn ?? item.name;
+  else if (lang === "TH") raw = item.nameTh ?? item.name;
+  else raw = item.name;
+
+  return raw
+    .replace(/Honey Pro\+\s*Pass/gi, "Pro+")
+    .replace(/Honey Pass\+?/gi, "Pro")
+    .replace(/Pro\+?\s*(?:ทดลอง|Trial|体験)\s*/gi, (m) => m.includes("+") ? "Pro+ " : "Pro ");
 }
 
 export function localizedTitle(
@@ -39,6 +54,63 @@ export function localizedTitle(
   if (lang === "EN") return item.titleEn ?? item.title;
   if (lang === "TH") return item.titleTh ?? item.title;
   return item.title;
+}
+
+/* ── Transaction display helpers ── */
+
+const MISSION_ID_TO_LABEL: Record<string, TranslationKey> = {
+  check_price: "missionCheckPrice",
+  browse_trending: "missionBrowseTrending",
+  visit_marketplace: "missionVisitMarketplace",
+  explore_set: "missionExploreSet",
+  share_card: "missionShareCard",
+  share_site: "missionShareSite",
+  check_watchlist: "missionCheckWatchlist",
+  check_portfolio: "missionCheckPortfolio",
+  visit_overview: "missionVisitOverview",
+  read_blog: "missionReadBlog",
+  check_collection: "missionCheckPortfolio",
+};
+
+const TYPE_REASON_MAP: Record<string, TranslationKey> = {
+  CHECKIN: "dailyCheckin",
+  ONBOARDING: "honeyOnboardingComplete",
+};
+
+export function formatTxReason(tx: { type: string; reason: string }, lang: Language): string {
+  const mapped = TYPE_REASON_MAP[tx.type];
+  if (mapped) return t(lang, mapped);
+
+  if (tx.type === "DAILY_MISSION") {
+    const missionId = tx.reason.replace("Mission: ", "").replace("Perfect day bonus", "");
+    if (tx.reason.includes("Perfect day")) return t(lang, "missionPerfectDay");
+    const labelKey = MISSION_ID_TO_LABEL[missionId];
+    if (labelKey) return t(lang, labelKey);
+  }
+
+  if (tx.type === "ACHIEVEMENT") return t(lang, "achievements");
+  if (tx.type === "REFERRAL") return t(lang, "referralLink");
+  if (tx.type === "RAFFLE_TICKET") return t(lang, "monthlyRaffle");
+
+  return tx.reason;
+}
+
+export const TX_TYPE_STYLE: Record<string, { icon: typeof Zap; bg: string; fg: string }> = {
+  CHECKIN:          { icon: Calendar, bg: "bg-emerald-500/10", fg: "text-emerald-500" },
+  DAILY_MISSION:    { icon: Sparkles, bg: "bg-amber-500/10",   fg: "text-amber-500" },
+  ONBOARDING:       { icon: Award,    bg: "bg-purple-500/10",  fg: "text-purple-500" },
+  ACHIEVEMENT:      { icon: Trophy,   bg: "bg-amber-500/10",   fg: "text-amber-500" },
+  REFERRAL:         { icon: Users,    bg: "bg-cyan-500/10",    fg: "text-cyan-500" },
+  MARKETPLACE_SELL: { icon: ShoppingBag, bg: "bg-emerald-500/10", fg: "text-emerald-500" },
+  RAFFLE_TICKET:    { icon: Ticket,   bg: "bg-pink-500/10",    fg: "text-pink-500" },
+  REDEEM:           { icon: ShoppingBag, bg: "bg-destructive/10", fg: "text-destructive" },
+};
+
+const TX_DEFAULT_POSITIVE = { icon: Zap, bg: "bg-price-up/10", fg: "text-price-up" };
+const TX_DEFAULT_NEGATIVE = { icon: ShoppingBag, bg: "bg-destructive/10", fg: "text-destructive" };
+
+export function getTxStyle(tx: { type: string; amount: number }) {
+  return TX_TYPE_STYLE[tx.type] ?? (tx.amount > 0 ? TX_DEFAULT_POSITIVE : TX_DEFAULT_NEGATIVE);
 }
 
 /* ── Data types ── */
@@ -91,27 +163,11 @@ export type MissionData = {
   perfectDayBonus: number;
 };
 
-export type Prediction = {
-  id: number;
-  direction: string;
-  priceAtPrediction: number;
-  resolved: boolean;
-  correct: boolean | null;
-  weekStart: string;
-  card: {
-    id: number;
-    cardCode: string;
-    nameJp: string;
-    nameEn: string | null;
-    imageUrl: string | null;
-    latestPriceJpy: number | null;
-  };
-};
-
 export type HoneyLevel = {
   level: number;
   label: string;
   nextThreshold: number | null;
+  currentMin: number;
 };
 
 export type ActiveEvent = {

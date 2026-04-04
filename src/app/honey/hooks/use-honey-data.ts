@@ -8,7 +8,6 @@ import type {
   ShopItem,
   LeaderboardUser,
   MissionData,
-  Prediction,
   HoneyLevel,
   ActiveEvent,
   RaffleData,
@@ -25,26 +24,31 @@ export function useHoneyData() {
   const [shopItems, setShopItems] = useState<ShopItem[]>([]);
   const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>([]);
   const [mission, setMission] = useState<MissionData | null>(null);
-  const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [level, setLevel] = useState<HoneyLevel | null>(null);
   const [achievements, setAchievements] = useState<AchievementItem[]>([]);
   const [raffle, setRaffle] = useState<RaffleData | null>(null);
   const [myTickets, setMyTickets] = useState(0);
   const [canClaimFree, setCanClaimFree] = useState(false);
   const [activeEvent, setActiveEvent] = useState<ActiveEvent | null>(null);
+  const [referralUrl, setReferralUrl] = useState("");
+  const [referralTotalClicks, setReferralTotalClicks] = useState(0);
+  const [referralTodayClicks, setReferralTodayClicks] = useState(0);
+  const [referralConversions, setReferralConversions] = useState(0);
+  const [referralEarned, setReferralEarned] = useState(0);
+  const [lifetimeEarned, setLifetimeEarned] = useState(0);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
-      const [honeyRes, shopRes, lbRes, missionsRes, predRes, achRes, raffleRes] = await Promise.all([
+      const [honeyRes, shopRes, lbRes, missionsRes, achRes, raffleRes, refRes] = await Promise.all([
         fetch("/api/honey"),
         fetch("/api/honey/shop"),
         fetch("/api/honey/leaderboard"),
         fetch("/api/honey/missions"),
-        fetch("/api/honey/predictions"),
         fetch("/api/honey/achievements"),
         fetch("/api/honey/raffle"),
+        fetch("/api/honey/referral"),
       ]);
       if (honeyRes.ok) {
         const data = await honeyRes.json();
@@ -53,6 +57,7 @@ export function useHoneyData() {
         setCanCheckin(data.canCheckin);
         setTransactions(data.recentTransactions);
         if (data.level) setLevel(data.level);
+        if (typeof data.lifetimeEarned === "number") setLifetimeEarned(data.lifetimeEarned);
         if (data.activeEvent) setActiveEvent(data.activeEvent);
         if (data.onboardingCompleted === false) {
           fetch("/api/honey/onboarding", { method: "POST" })
@@ -69,7 +74,6 @@ export function useHoneyData() {
       if (shopRes.ok) setShopItems((await shopRes.json()).items);
       if (lbRes.ok) setLeaderboard((await lbRes.json()).leaderboard);
       if (missionsRes.ok) setMission((await missionsRes.json()).mission);
-      if (predRes.ok) setPredictions((await predRes.json()).predictions);
       if (achRes.ok) setAchievements((await achRes.json()).achievements);
       if (raffleRes.ok) {
         const data = await raffleRes.json();
@@ -78,6 +82,14 @@ export function useHoneyData() {
           setMyTickets(data.myTickets);
           setCanClaimFree(data.canClaimFree);
         }
+      }
+      if (refRes.ok) {
+        const data = await refRes.json();
+        setReferralUrl(data.referralUrl ?? "");
+        setReferralTotalClicks(data.totalClicks ?? 0);
+        setReferralTodayClicks(data.todayClicks ?? 0);
+        setReferralConversions(data.totalConversions ?? 0);
+        setReferralEarned(data.totalEarned ?? 0);
       }
     } catch (err) {
       console.error("Failed to load honey data:", err);
@@ -205,8 +217,10 @@ export function useHoneyData() {
   return {
     lang,
     points, streak, canCheckin, transactions, shopItems, leaderboard,
-    mission, predictions, level, achievements, raffle, myTickets,
-    canClaimFree, activeEvent, loading, message, setMessage,
+    mission, level, lifetimeEarned, achievements, raffle, myTickets,
+    canClaimFree, activeEvent,
+    referralUrl, referralTotalClicks, referralTodayClicks, referralConversions, referralEarned,
+    loading, message, setMessage,
     actions: { checkin, redeem, buyTicket, claimFreeTicket, claimTask, claimBonus, trackManualMission },
   };
 }

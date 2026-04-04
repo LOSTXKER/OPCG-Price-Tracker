@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Award, X } from "lucide-react";
+import { Award, CheckCircle2, Sparkles, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
 import { useAuthState } from "@/hooks/use-auth-state";
 import { useUIStore } from "@/stores/ui-store";
-import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useHoneyData } from "./hooks/use-honey-data";
-import { HoneyHero } from "./components/honey-hero";
-import { DailyMissionsCard } from "./components/daily-missions-card";
+import { t } from "@/lib/i18n";
+import { HoneyStatusBar } from "./components/honey-sidebar";
+import { MissionsTab } from "./components/missions-tab";
 import { ActivityTab } from "./components/activity-tab";
 import { AchievementsTab } from "./components/achievements-tab";
 import { ShopTab } from "./components/shop-tab";
@@ -26,9 +26,9 @@ export default function HoneyClient() {
 
   if (authed === null) {
     return (
-      <div className="space-y-4">
-        <Skeleton className="h-28 rounded-xl" />
-        <Skeleton className="h-24 rounded-xl" />
+      <div className="space-y-3">
+        <Skeleton className="h-14 rounded-xl" />
+        <Skeleton className="h-48 rounded-xl" />
         <Skeleton className="h-10 rounded-lg" />
         <Skeleton className="h-64 rounded-xl" />
       </div>
@@ -43,14 +43,16 @@ export default function HoneyClient() {
 }
 
 function HoneyContent() {
-  const [tab, setTab] = useState<TabKey>("activity");
+  const [tab, setTab] = useState<TabKey>("missions");
   const [checkinLoading, setCheckinLoading] = useState(false);
 
   const {
     lang,
     points, streak, canCheckin, transactions, shopItems, leaderboard,
-    mission, predictions, level, achievements, raffle, myTickets,
-    canClaimFree, activeEvent, loading, message, setMessage,
+    mission, level, lifetimeEarned, achievements, raffle, myTickets,
+    canClaimFree, activeEvent,
+    referralUrl, referralTotalClicks, referralTodayClicks, referralConversions, referralEarned,
+    loading, message, setMessage,
     actions,
   } = useHoneyData();
 
@@ -78,76 +80,49 @@ function HoneyContent() {
 
   if (loading) {
     return (
-      <div className="space-y-4">
-        <Skeleton className="h-28 rounded-xl" />
-        <Skeleton className="h-24 rounded-xl" />
+      <div className="space-y-3">
+        <Skeleton className="h-14 rounded-xl" />
+        <Skeleton className="h-48 rounded-xl" />
         <Skeleton className="h-10 rounded-lg" />
         <Skeleton className="h-64 rounded-xl" />
       </div>
     );
   }
 
-  return (
-    <div className="space-y-4">
-      {/* Hero + Missions side-by-side on lg */}
-      <div className="grid gap-4 lg:grid-cols-5">
-        <div className="lg:col-span-2">
-          <HoneyHero
-            lang={lang}
-            points={points}
-            streak={streak}
-            level={level}
-            activeEvent={activeEvent}
-            canCheckin={canCheckin}
-            checkinLoading={checkinLoading}
-            onCheckin={handleCheckin}
-          />
-        </div>
-        <div className="lg:col-span-3">
-          <DailyMissionsCard
-            lang={lang}
-            mission={mission}
-            onClaimTask={actions.claimTask}
-            onClaimBonus={actions.claimBonus}
-            onShare={handleShare}
-          />
-        </div>
-      </div>
+  const statusProps = {
+    lang,
+    points,
+    streak,
+    level,
+    lifetimeEarned,
+    activeEvent,
+    canCheckin,
+    checkinLoading,
+    onCheckin: handleCheckin,
+  } as const;
 
-      {/* Tab Bar -- icon-only on mobile */}
-      <div className="flex gap-1 overflow-x-auto rounded-xl bg-muted/50 p-1 scrollbar-none">
-        {HONEY_TABS.map((item) => {
-          const Icon = item.icon;
-          const active = tab === item.key;
-          return (
-            <button
-              key={item.key}
-              onClick={() => setTab(item.key)}
-              className={cn(
-                "flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-all sm:px-4",
-                active ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <Icon className="size-3.5" />
-              <span className="hidden sm:inline">{t(lang, item.labelKey)}</span>
-            </button>
-          );
-        })}
-      </div>
+  const missionProps = {
+    lang,
+    mission,
+    onClaimTask: actions.claimTask,
+    onClaimBonus: actions.claimBonus,
+    onShare: handleShare,
+  } as const;
 
-      {/* Tab Content */}
+  const tabContent = (
+    <>
+      {tab === "missions" && (
+        <MissionsTab {...missionProps} />
+      )}
       {tab === "activity" && (
         <ActivityTab lang={lang} transactions={transactions} />
       )}
-
       {tab === "achievements" && (
-        <AchievementsTab lang={lang} predictions={predictions} achievements={achievements} />
+        <AchievementsTab lang={lang} achievements={achievements} />
       )}
-
       {tab === "shop" && (
         <ShopTab lang={lang} shopItems={shopItems} points={points} onRedeem={actions.redeem} />
       )}
-
       {tab === "raffle" && (
         <RaffleTab
           lang={lang}
@@ -159,16 +134,52 @@ function HoneyContent() {
           onClaimFreeTicket={actions.claimFreeTicket}
         />
       )}
-
       {tab === "rankings" && (
-        <RankingsTab lang={lang} leaderboard={leaderboard} transactions={transactions} />
+        <RankingsTab lang={lang} leaderboard={leaderboard} />
       )}
-
       {tab === "referral" && (
-        <ReferralTab lang={lang} />
+        <ReferralTab
+          lang={lang}
+          referralUrl={referralUrl}
+          totalClicks={referralTotalClicks}
+          todayClicks={referralTodayClicks}
+          totalConversions={referralConversions}
+          totalEarned={referralEarned}
+        />
       )}
+    </>
+  );
 
-      {/* Floating toast */}
+  const tabBar = (
+    <div className="flex gap-0.5 overflow-x-auto border-b border-border scrollbar-none">
+      {HONEY_TABS.map((item) => {
+        const Icon = item.icon;
+        const active = tab === item.key;
+        return (
+          <button
+            key={item.key}
+            onClick={() => setTab(item.key)}
+            title={t(lang, item.labelKey)}
+            className={cn(
+              "flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2.5 text-xs font-medium transition-colors sm:px-4",
+              active
+                ? "border-primary text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground",
+            )}
+          >
+            <Icon className="size-4" />
+            <span className="hidden sm:inline">{t(lang, item.labelKey)}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  return (
+    <div className="space-y-4">
+      <HoneyStatusBar {...statusProps} />
+      {tabBar}
+      {tabContent}
       <Toast message={message} onDismiss={() => setMessage(null)} />
     </div>
   );
@@ -180,15 +191,30 @@ function Toast({ message, onDismiss }: { message: string | null; onDismiss: () =
   useEffect(() => {
     if (!message) return;
     clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(onDismiss, 3000);
+    timerRef.current = setTimeout(onDismiss, 3500);
     return () => clearTimeout(timerRef.current);
   }, [message, onDismiss]);
 
   if (!message) return null;
 
+  const lc = message.toLowerCase();
+  const isMilestone = lc.includes("perfect") || lc.includes("level") || lc.includes("onboarding");
+  const isEarn = lc.includes("check-in") || lc.includes("เช็คอิน") || lc.includes("mission") || lc.includes("ภารกิจ");
+
+  const Icon = isMilestone ? Sparkles : isEarn ? CheckCircle2 : Award;
+  const accent = isMilestone
+    ? "border-amber-500/30 bg-amber-500/5"
+    : isEarn
+      ? "border-price-up/30 bg-price-up/5"
+      : "border-primary/20 bg-background/95";
+  const iconColor = isMilestone ? "text-amber-500" : isEarn ? "text-price-up" : "text-primary";
+
   return (
-    <div className="fixed inset-x-0 bottom-4 z-50 mx-auto flex w-fit max-w-[90vw] items-center gap-2 rounded-xl border bg-background/95 px-4 py-2.5 shadow-lg backdrop-blur-sm sm:max-w-md">
-      <Award className="size-4 shrink-0 text-primary" />
+    <div className={cn(
+      "fixed inset-x-0 bottom-[env(safe-area-inset-bottom,1rem)] z-50 mx-auto mb-4 flex w-fit max-w-[90vw] animate-in fade-in slide-in-from-bottom-2 items-center gap-2.5 rounded-xl border px-4 py-3 shadow-lg backdrop-blur-sm duration-200 sm:max-w-md",
+      accent,
+    )}>
+      <Icon className={cn("size-4.5 shrink-0", iconColor)} />
       <span className="min-w-0 flex-1 break-words text-xs font-semibold text-foreground">{message}</span>
       <button onClick={onDismiss} className="shrink-0 text-muted-foreground hover:text-foreground">
         <X className="size-3.5" />

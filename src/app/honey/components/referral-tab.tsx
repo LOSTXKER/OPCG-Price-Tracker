@@ -1,37 +1,36 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Check,
   Copy,
-  Link2,
+  Gift,
   MousePointerClick,
   Share2,
+  UserPlus,
+  Users,
   Zap,
 } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { t } from "@/lib/i18n";
 import type { Language } from "@/stores/ui-store";
 
-export function ReferralTab({ lang }: { lang: Language }) {
-  const [referralUrl, setReferralUrl] = useState<string | null>(null);
-  const [totalClicks, setTotalClicks] = useState(0);
-  const [todayClicks, setTodayClicks] = useState(0);
+export function ReferralTab({
+  lang,
+  referralUrl,
+  totalClicks,
+  todayClicks,
+  totalConversions,
+  totalEarned,
+}: {
+  lang: Language;
+  referralUrl: string;
+  totalClicks: number;
+  todayClicks: number;
+  totalConversions: number;
+  totalEarned: number;
+}) {
   const [copied, setCopied] = useState(false);
-
-  const load = useCallback(async () => {
-    try {
-      const res = await fetch("/api/honey/referral");
-      if (!res.ok) return;
-      const data = await res.json();
-      setReferralUrl(data.referralUrl);
-      setTotalClicks(data.totalClicks);
-      setTodayClicks(data.todayClicks);
-    } catch { /* silent */ }
-  }, []);
-
-  useEffect(() => { load(); }, [load]);
 
   const handleCopy = async () => {
     if (!referralUrl) return;
@@ -46,62 +45,133 @@ export function ReferralTab({ lang }: { lang: Language }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (!referralUrl) {
-    return (
-      <div className="mx-auto max-w-lg space-y-4">
-        <Skeleton className="h-10 rounded-xl" />
-        <Skeleton className="h-32 rounded-xl" />
-      </div>
-    );
-  }
+  const stats = [
+    {
+      icon: MousePointerClick,
+      value: totalClicks,
+      label: { TH: "คลิกทั้งหมด", EN: "Total Clicks", JP: "総クリック数" },
+      accent: false,
+    },
+    {
+      icon: Zap,
+      value: todayClicks,
+      label: { TH: "คลิกวันนี้", EN: "Today", JP: "今日" },
+      accent: false,
+    },
+    {
+      icon: Users,
+      value: totalConversions,
+      label: { TH: "เพื่อนที่สมัคร", EN: "Friends Joined", JP: "友達登録数" },
+      accent: true,
+    },
+    {
+      icon: Gift,
+      value: totalEarned,
+      label: { TH: "Honey ที่ได้", EN: "Honey Earned", JP: "獲得Honey" },
+      accent: true,
+      isHoney: true,
+    },
+  ];
+
+  const steps = [
+    {
+      icon: Share2,
+      title: { TH: "แชร์ลิงก์ของคุณ", EN: "Share your link", JP: "リンクをシェア" },
+      desc: { TH: "ส่งลิงก์ให้เพื่อนผ่านช่องทางไหนก็ได้", EN: "Send your link to friends via any channel", JP: "友達にリンクを送信" },
+    },
+    {
+      icon: UserPlus,
+      title: { TH: "เพื่อนสมัครสมาชิก", EN: "Friend signs up", JP: "友達が登録" },
+      desc: { TH: "เพื่อนเข้าลิงก์แล้วสมัครใช้งาน Meecard", EN: "Your friend clicks the link and creates an account", JP: "友達がリンクからアカウント作成" },
+    },
+    {
+      icon: Gift,
+      title: { TH: "ทั้งคู่ได้ Honey!", EN: "Both get Honey!", JP: "両方Honeyゲット!" },
+      desc: { TH: "คุณได้ 100 🍯 เพื่อนได้ 50 🍯", EN: "You get 100 🍯, friend gets 50 🍯", JP: "あなたに100 🍯、友達に50 🍯" },
+    },
+  ];
 
   return (
-    <div className="mx-auto max-w-lg space-y-5">
+    <div className="space-y-4">
       <div className="panel overflow-hidden">
-        <div className="border-b px-5 py-4">
-          <div className="flex items-center gap-2.5">
-            <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10">
-              <Link2 className="size-4.5 text-primary" />
-            </div>
-            <div>
-              <h2 className="text-sm font-semibold">{t(lang, "referralLink")}</h2>
-              <p className="text-[11px] text-muted-foreground">Share and earn Honey</p>
-            </div>
-          </div>
+        <div className="border-b px-4 py-3">
+          <h2 className="text-sm font-semibold">{t(lang, "referralLink")}</h2>
+          <p className="mt-0.5 text-[11px] text-muted-foreground">
+            {lang === "TH" ? "แชร์ลิงก์แนะนำเพื่อรับ Honey" : lang === "JP" ? "リンクをシェアしてHoneyを獲得" : "Share your link to earn Honey"}
+          </p>
         </div>
 
-        <div className="space-y-4 p-5">
+        {/* Link + Copy */}
+        <div className="p-4">
           <div className="flex items-center gap-2">
-            <div className="min-w-0 flex-1 truncate rounded-lg bg-muted/60 px-3 py-2 font-mono text-xs text-muted-foreground">
-              {referralUrl}
+            <div className="min-w-0 flex-1 truncate rounded-lg bg-muted/60 px-3 py-2.5 font-mono text-xs text-muted-foreground">
+              {referralUrl || "..."}
             </div>
             <Button
               size="sm"
-              variant="outline"
               onClick={handleCopy}
-              className="h-9 shrink-0 gap-1.5 rounded-lg px-4 text-xs"
+              disabled={!referralUrl}
+              className="h-10 shrink-0 gap-2 rounded-lg bg-primary px-5 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
             >
-              {copied ? <Check className="size-3.5 text-price-up" /> : <Copy className="size-3.5" />}
-              {copied ? t(lang, "referralCopied") : <Share2 className="size-3.5" />}
+              {copied ? <Check className="size-4 text-price-up" /> : <Copy className="size-4" />}
+              {copied
+                ? t(lang, "referralCopied")
+                : lang === "TH" ? "คัดลอก" : lang === "JP" ? "コピー" : "Copy"}
             </Button>
           </div>
+        </div>
+      </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-xl bg-muted/40 px-4 py-3 text-center">
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {stats.map((s, i) => {
+          const Icon = s.icon;
+          return (
+            <div key={i} className="panel p-3 text-center">
               <div className="flex items-center justify-center gap-1.5">
-                <MousePointerClick className="size-4 text-muted-foreground" />
-                <span className="text-xl font-bold tabular-nums">{totalClicks}</span>
+                <Icon className={`size-4 ${s.accent ? "text-primary" : "text-muted-foreground"}`} />
+                <span className={`text-lg font-bold tabular-nums ${s.accent ? "text-primary" : ""}`}>
+                  {s.value.toLocaleString()}
+                  {s.isHoney && <span className="ml-0.5 text-xs">🍯</span>}
+                </span>
               </div>
-              <p className="mt-0.5 text-[11px] text-muted-foreground">{t(lang, "referralClicks")}</p>
+              <p className="mt-0.5 text-[10px] text-muted-foreground">
+                {s.label[lang] ?? s.label.EN}
+              </p>
             </div>
-            <div className="rounded-xl bg-primary/5 px-4 py-3 text-center">
-              <div className="flex items-center justify-center gap-1.5">
-                <Zap className="size-4 text-primary" />
-                <span className="text-xl font-bold tabular-nums text-primary">{todayClicks}</span>
+          );
+        })}
+      </div>
+
+      {/* How it works */}
+      <div className="panel overflow-hidden">
+        <div className="border-b px-4 py-3">
+          <h2 className="text-sm font-semibold">
+            {lang === "TH" ? "วิธีการทำงาน" : lang === "JP" ? "仕組み" : "How it works"}
+          </h2>
+        </div>
+        <div className="divide-y divide-border/40">
+          {steps.map((step, i) => {
+            const Icon = step.icon;
+            return (
+              <div key={i} className="flex items-start gap-4 px-4 py-4">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Icon className="size-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="flex size-5 items-center justify-center rounded-full bg-muted text-[10px] font-bold text-muted-foreground">
+                      {i + 1}
+                    </span>
+                    <p className="text-sm font-semibold">{step.title[lang] ?? step.title.EN}</p>
+                  </div>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {step.desc[lang] ?? step.desc.EN}
+                  </p>
+                </div>
               </div>
-              <p className="mt-0.5 text-[11px] text-muted-foreground">{t(lang, "referralTodayClicks")}</p>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
     </div>

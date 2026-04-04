@@ -116,7 +116,7 @@ export function RaffleTab({
             <p className={cn("text-sm font-semibold", i === 0 && "text-base")}>{prize.name}</p>
             {prize.honeyBonus != null && prize.honeyBonus > 0 && (
               <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-medium text-primary">
-                +{prize.honeyBonus} Honey
+                +{prize.honeyBonus} 🍯
               </span>
             )}
           </div>
@@ -151,7 +151,7 @@ export function RaffleTab({
                 className="flex-1 gap-1.5 border border-primary/20 bg-primary/10 text-primary hover:bg-primary/15"
               >
                 <Ticket className="size-4" />
-                {t(lang, "raffleTicketCost")}: {raffle.ticketCost} pts
+                {t(lang, "raffleTicketCost")}: {raffle.ticketCost} 🍯
               </Button>
               {canClaimFree && (
                 <Button
