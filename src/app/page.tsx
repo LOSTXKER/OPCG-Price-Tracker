@@ -23,6 +23,7 @@ export default async function HomePage(props: {
     highestPriced,
     newestSet,
     totalCards,
+    totalValue,
     initialTableCards,
     initialTableTotal,
     initialTableTotalPages,
@@ -80,12 +81,11 @@ export default async function HomePage(props: {
         initialCards={tableCards}
         initialTotal={initialTableTotal}
         initialTotalPages={initialTableTotalPages}
-        latestSetCode={newestSet?.code}
         filterDefinitions={filterDefinitions}
         initialSearch={initialSearch}
       >
         {/* Portfolio & Honey mini previews */}
-        <HomePreviewRow />
+        <HomePreviewRow totalValue={totalValue} totalCards={totalCards} />
 
         {/* Highlights: Featured + Gainers/Losers */}
         <div className="panel grid gap-0 divide-y divide-border/40 lg:grid-cols-12 lg:divide-x lg:divide-y-0">

@@ -139,7 +139,7 @@ export default async function GuideSetsPage() {
             { label: "ชุดการ์ด" },
           ]}
         />
-        <h1 className="text-3xl font-bold tracking-tight">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
           ชุดการ์ด (Sets)
         </h1>
         <p className="text-lg leading-relaxed text-muted-foreground">
@@ -188,7 +188,7 @@ export default async function GuideSetsPage() {
         <p className="text-sm text-muted-foreground">
           Booster Pack ญี่ปุ่นแบ่งเป็น 3 ขนาด:
         </p>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {[
             { label: "1 ซอง", value: "6 ใบ", color: "#3B82F6" },
             { label: "1 กล่อง", value: "24 ซอง", color: "#8B5CF6" },

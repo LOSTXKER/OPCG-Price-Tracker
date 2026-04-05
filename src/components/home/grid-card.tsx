@@ -3,6 +3,7 @@
 import { memo } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 import { CardImageLightbox } from "@/components/shared/card-image-lightbox"
 import { RarityBadge } from "@/components/shared/rarity-badge"
@@ -25,6 +26,7 @@ export const GridCard = memo(function GridCard({
   priceMode?: PriceMode
 }) {
   const lang = useUIStore((s) => s.language)
+  const router = useRouter()
   const name = getCardName(lang, card)
   const setCode = card.set?.code ?? card.setCode ?? ""
   const isPsa = priceMode === "psa10"
@@ -42,7 +44,7 @@ export const GridCard = memo(function GridCard({
       <div className="panel relative flex flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
         <div className="relative aspect-[63/88] w-full bg-muted">
           {card.imageUrl ? (
-            <CardImageLightbox src={card.imageUrl} alt={name}>
+            <CardImageLightbox src={card.imageUrl} alt={name} className="absolute inset-0">
               <Image
                 src={card.imageUrl}
                 alt={name}
@@ -71,13 +73,18 @@ export const GridCard = memo(function GridCard({
           <div className="mb-1 flex items-center gap-1.5">
             <RarityBadge rarity={card.rarity} size="sm" />
             {setCode && (
-              <Link
-                href={`/sets/${setCode}`}
-                onClick={(e) => e.stopPropagation()}
-                className="font-mono text-[10px] text-muted-foreground underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid"
+              <span
+                role="link"
+                tabIndex={-1}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  router.push(`/sets/${setCode}`)
+                }}
+                className="cursor-pointer font-mono text-[10px] text-muted-foreground underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid"
               >
                 {setCode.toUpperCase()}
-              </Link>
+              </span>
             )}
           </div>
           <p className="truncate text-[13px] font-medium leading-snug" title={name}>

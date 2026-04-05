@@ -6,7 +6,6 @@ import {
   Bell,
   Calendar,
   Eye,
-  Flame,
   Layers,
   Star,
   Store,
@@ -18,6 +17,7 @@ import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { ProfileStats, HoneyData } from "./profile-types";
+import { StreakTierIndicator } from "@/components/shared/streak-tier-indicator";
 
 type Props = {
   stats: ProfileStats;
@@ -74,11 +74,10 @@ export function SectionOverview({
         >
           <p className="text-muted-foreground text-xs">{t(lang, "profileHoney")}</p>
           <p className="mt-1 text-lg font-semibold tracking-tight text-amber-600 dark:text-amber-400">
-            🍯 {honey.points.toLocaleString()} pt
+            🍯 {honey.points.toLocaleString()}
           </p>
-          <div className="text-muted-foreground flex items-center gap-1 text-xs">
-            <Flame className="size-3 text-orange-500" />
-            {honey.streak} {t(lang, "days")} {t(lang, "profileStreak")}
+          <div className="mt-0.5 flex items-center gap-1">
+            <StreakTierIndicator streak={honey.streak} lang={lang} variant="compact" />
             {honey.level && (
               <span className="ml-1.5 rounded-full bg-amber-100 dark:bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-bold text-amber-600 dark:text-amber-400">
                 {honey.level.label}
@@ -132,13 +131,9 @@ export function SectionOverview({
             {t(lang, "viewAll")} →
           </Link>
         </div>
-        <div className="mt-3 flex items-center justify-between">
-          <div>
-            <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">🍯 {honey.points.toLocaleString()} pt</p>
-            <div className="text-muted-foreground mt-0.5 flex items-center gap-1 text-xs">
-              <Flame className="size-3 text-orange-500" />
-              {honey.streak} {t(lang, "days")}
-            </div>
+        <div className="mt-3 flex items-center justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">🍯 {honey.points.toLocaleString()}</p>
           </div>
           <Button
             size="sm"
@@ -152,6 +147,7 @@ export function SectionOverview({
             {honey.canCheckin ? t(lang, "profileCheckin") : t(lang, "profileCheckedIn")}
           </Button>
         </div>
+        <StreakTierIndicator streak={honey.streak} lang={lang} variant="expanded" className="mt-3" />
       </div>
 
       {/* Activity grid */}

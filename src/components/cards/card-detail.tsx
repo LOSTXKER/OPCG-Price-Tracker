@@ -324,7 +324,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
             )}
 
             {/* Price row: ราคาตลาด + ขายล่าสุด */}
-            <div className="grid grid-cols-2 gap-px px-5 py-4">
+            <div className="grid grid-cols-1 gap-4 px-5 py-4 sm:grid-cols-2 sm:gap-px">
               {/* ราคาตลาด */}
               <div>
                 <p className="text-[11px] text-muted-foreground">{t(lang, "marketPrice")}</p>
@@ -337,7 +337,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
                       showChange={false}
                     />
                   ) : (
-                    <p className="font-price text-3xl font-bold tabular-nums">
+                    <p className="font-price text-xl font-bold tabular-nums sm:text-3xl">
                       {snkrdunkPrices?.psa10AskUsd != null
                         ? <PriceUsd usd={snkrdunkPrices.psa10AskUsd} />
                         : snkrdunkPrices?.psa10SoldUsd != null

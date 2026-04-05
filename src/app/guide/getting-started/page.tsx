@@ -160,7 +160,7 @@ export default async function GettingStartedPage() {
             { label: "เริ่มต้น" },
           ]}
         />
-        <h1 className="text-3xl font-bold tracking-tight">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
           One Piece Card Game คืออะไร?
         </h1>
         <p className="text-lg leading-relaxed text-muted-foreground">
@@ -266,7 +266,7 @@ export default async function GettingStartedPage() {
           <div className="border-b border-border/40 px-4 py-2 text-xs font-medium text-muted-foreground">
             แผนผังสนามเล่น (ฝั่งเดียว)
           </div>
-          <div className="grid grid-cols-5 gap-2 p-4 text-center text-[11px]">
+          <div className="grid grid-cols-3 gap-2 p-4 text-center text-[11px] sm:grid-cols-5">
             <div className="flex flex-col items-center gap-1">
               <div className="flex size-14 items-center justify-center rounded-lg border-2 border-dashed border-amber-500/40 bg-amber-500/5 sm:size-16">
                 <span className="font-bold text-amber-600 dark:text-amber-400">DON!!</span>
@@ -285,13 +285,13 @@ export default async function GettingStartedPage() {
               </div>
               <span className="font-medium text-foreground">Leader</span>
             </div>
-            <div className="col-span-2 flex flex-col items-center gap-1">
+            <div className="col-span-2 flex flex-col items-center gap-1 sm:col-span-2">
               <div className="flex h-14 w-full items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 sm:h-16">
                 <span className="text-muted-foreground">Character Area</span>
               </div>
               <span className="text-muted-foreground">วาง Character / Stage</span>
             </div>
-            <div className="col-span-2 flex flex-col items-center gap-1">
+            <div className="col-span-2 flex flex-col items-center gap-1 sm:col-span-2">
               <div className="flex h-14 w-full items-center justify-center rounded-lg border-2 border-dashed border-primary/30 bg-primary/5 sm:h-16">
                 <Zap className="size-4 text-primary" />
               </div>

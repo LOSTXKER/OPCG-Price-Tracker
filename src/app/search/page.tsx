@@ -5,6 +5,7 @@ import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { prisma } from "@/lib/db";
 import SearchClient from "./search-client";
 
 export const metadata: Metadata = {
@@ -14,13 +15,33 @@ export const metadata: Metadata = {
   alternates: { canonical: "/search" },
 };
 
-export default function SearchPage() {
+async function getSearchMeta() {
+  const [sets, rarityRows] = await Promise.all([
+    prisma.cardSet.findMany({
+      select: { code: true, name: true, nameEn: true },
+      orderBy: { code: "asc" },
+    }),
+    prisma.card.findMany({
+      distinct: ["rarity"],
+      select: { rarity: true },
+      orderBy: { rarity: "asc" },
+    }),
+  ]);
+  return {
+    sets: sets.map((s) => ({ code: s.code, name: s.nameEn ?? s.name })),
+    rarities: rarityRows.map((r) => r.rarity),
+  };
+}
+
+export default async function SearchPage() {
+  const { sets, rarities } = await getSearchMeta();
+
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Search", href: "/search" }])} />
       <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Search" }]} />
       <Suspense>
-        <SearchClient />
+        <SearchClient sets={sets} rarities={rarities} />
       </Suspense>
       <RelatedPages items={[
         { href: "/sets", icon: Layers, title: "ชุดการ์ด", description: "ดูทุกชุดการ์ดพร้อมมูลค่า" },

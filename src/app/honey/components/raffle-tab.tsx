@@ -127,7 +127,7 @@ export function RaffleTab({
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
           {/* Quick stats */}
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             <div className="panel p-3 text-center">
               <p className="text-lg font-bold tabular-nums text-primary">{myTickets}</p>
               <p className="text-[10px] text-muted-foreground">{t(lang, "raffleMyTickets")}</p>
@@ -144,7 +144,7 @@ export function RaffleTab({
 
           {/* Buy / Claim buttons */}
           <div className="panel p-4">
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <Button
                 onClick={onBuyTicket}
                 disabled={points < raffle.ticketCost || myTickets >= raffle.maxTickets}
@@ -200,7 +200,7 @@ export function RaffleTab({
             </div>
             <div className="p-4">
               {myTickets > 0 ? (
-                <div className="grid grid-cols-5 gap-2">
+                <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
                   {Array.from({ length: myTickets }).map((_, i) => (
                     <div key={i} className="flex aspect-square items-center justify-center rounded-lg bg-primary/10 text-primary">
                       <Ticket className="size-4" />

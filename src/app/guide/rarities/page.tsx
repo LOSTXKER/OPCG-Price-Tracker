@@ -209,7 +209,7 @@ export default async function RaritiesPage() {
             { label: "ความหายาก" },
           ]}
         />
-        <h1 className="text-3xl font-bold tracking-tight">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
           ความหายาก (Rarities)
         </h1>
         <p className="text-lg leading-relaxed text-muted-foreground">
@@ -327,7 +327,7 @@ export default async function RaritiesPage() {
           <div className="border-b border-border/40 px-4 py-2 text-xs font-medium text-muted-foreground">
             ตัวอย่างราคา: การ์ดใบเดียวกันแต่ต่าง rarity
           </div>
-          <div className="grid grid-cols-3 divide-x divide-border/40">
+          <div className="grid grid-cols-1 divide-y divide-border/40 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {[
               { label: "SEC (ปกติ)", price: "¥500", color: "#F59E0B", sub: "ภาพมาตรฐาน" },
               { label: "P-SEC (Parallel)", price: "¥1,480", color: "#F59E0B", sub: "ภาพ alternate art" },

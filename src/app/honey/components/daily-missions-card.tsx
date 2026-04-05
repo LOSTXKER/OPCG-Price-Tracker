@@ -9,12 +9,10 @@ import {
   BookOpen,
   Calendar,
   CheckCircle2,
-  ChevronRight,
   Circle,
   Clock,
   Crown,
   Eye,
-  Flame,
   Gift,
   Layers,
   Link,
@@ -35,6 +33,7 @@ import { t, type Language, type TranslationKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useCountdown } from "../hooks/use-countdown";
 import type { MissionData, HoneyLevel, ActiveEvent } from "../types";
+import { StreakTierIndicator } from "@/components/shared/streak-tier-indicator";
 
 const RANK_LABELS: Record<string, Record<number, string>> = {
   TH: { 0: "มือใหม่", 1: "บรอนซ์", 2: "ซิลเวอร์", 3: "โกลด์", 4: "ไดมอนด์" },
@@ -43,18 +42,6 @@ const RANK_LABELS: Record<string, Record<number, string>> = {
 };
 
 const RANK_ICONS = [Shield, Shield, Star, Crown, Trophy] as const;
-
-const STREAK_TIERS = [
-  { min: 1, max: 6, mult: 1, pts: 10 },
-  { min: 7, max: 29, mult: 2, pts: 20 },
-  { min: 30, max: Infinity, mult: 3, pts: 30 },
-];
-
-function getStreakTier(streak: number) {
-  if (streak >= 30) return 2;
-  if (streak >= 7) return 1;
-  return 0;
-}
 
 const ICON_MAP: Record<string, typeof Award> = {
   Search, TrendingUp, Package, Layers, ShoppingBag, BarChart3, Circle, Share2, Link,
@@ -84,11 +71,6 @@ function MobileStreakRankRow({
   level: HoneyLevel | null;
   lifetimeEarned: number;
 }) {
-  const tierIdx = getStreakTier(streak);
-  const mult = STREAK_TIERS[tierIdx].mult;
-  const nextTier = tierIdx < 2 ? STREAK_TIERS[tierIdx + 1] : null;
-  const daysToNext = nextTier ? nextTier.min - streak : 0;
-
   const currentLevel = level?.level ?? 0;
   const currentMin = level?.currentMin ?? 0;
   const nextThreshold = level?.nextThreshold ?? null;
@@ -96,48 +78,14 @@ function MobileStreakRankRow({
   const progress = isMaxRank ? 100 : nextThreshold > currentMin
     ? Math.min(100, Math.round(((lifetimeEarned - currentMin) / (nextThreshold - currentMin)) * 100))
     : 100;
-  const remaining = isMaxRank ? 0 : (nextThreshold ?? 0) - lifetimeEarned;
   const rankLabels = RANK_LABELS[lang] ?? RANK_LABELS.EN;
   const RankIcon = RANK_ICONS[currentLevel] ?? Shield;
 
   return (
     <div className="grid grid-cols-2 gap-3 border-t px-5 py-3 sm:px-6">
       {/* Streak */}
-      <div className="space-y-2 rounded-xl border border-border/50 p-3">
-        <div className="flex items-center gap-1.5">
-          <Flame className={cn("size-3.5", streak >= 7 ? "text-orange-500" : "text-muted-foreground")} />
-          <span className="text-[10px] font-bold text-muted-foreground">Streak</span>
-        </div>
-        <div className="flex items-baseline justify-between">
-          <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-black tabular-nums leading-none text-foreground">{streak}</span>
-            <span className="text-xs font-semibold text-muted-foreground">
-              {lang === "TH" ? "วัน" : lang === "JP" ? "日" : streak === 1 ? "day" : "days"}
-            </span>
-          </div>
-          <span className={cn(
-            "rounded-md px-1.5 py-0.5 text-sm font-black tabular-nums",
-            mult >= 3 ? "bg-amber-500/15 text-amber-600 dark:text-amber-400" : mult >= 2 ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground",
-          )}>
-            {mult}x
-          </span>
-        </div>
-        {nextTier && daysToNext > 0 && (
-          <p className="flex items-center gap-0.5 text-[10px] text-muted-foreground">
-            <ChevronRight className="size-2.5" />
-            {lang === "TH"
-              ? `อีก ${daysToNext} วันถึง ${nextTier.mult}x`
-              : lang === "JP"
-                ? `あと${daysToNext}日で${nextTier.mult}x`
-                : `${daysToNext}d to ${nextTier.mult}x`}
-          </p>
-        )}
-        {tierIdx === 2 && (
-          <p className="flex items-center gap-0.5 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
-            <Flame className="size-2.5" />
-            {lang === "TH" ? "สูงสุดแล้ว!" : lang === "JP" ? "最大！" : "Max!"}
-          </p>
-        )}
+      <div className="rounded-xl border border-border/50 p-3">
+        <StreakTierIndicator streak={streak} lang={lang} variant="expanded" />
       </div>
 
       {/* Rank */}
@@ -235,7 +183,7 @@ export function DailyMissionsCard({
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Honey</p>
             <p className="text-2xl font-extrabold tabular-nums leading-tight text-primary">
-              {points.toLocaleString()} <span className="text-sm font-bold">pt</span>
+              🍯 {points.toLocaleString()}
             </p>
           </div>
         </div>

@@ -34,7 +34,7 @@ export function CompareFloatingBar() {
           animate={{ y: 0 }}
           exit={{ y: "100%" }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/80 backdrop-blur-xl"
+          className="fixed inset-x-0 bottom-16 z-40 border-t bg-background/80 backdrop-blur-xl md:bottom-0"
         >
           <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3">
             {/* Card thumbnails */}

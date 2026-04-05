@@ -8,15 +8,18 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { cn } from "@/lib/utils"
 
 export function CardImageLightbox({
   src,
   alt,
   children,
+  className,
 }: {
   src: string
   alt: string
   children: React.ReactNode
+  className?: string
 }) {
   const [open, setOpen] = useState(false)
 
@@ -29,7 +32,7 @@ export function CardImageLightbox({
           e.stopPropagation()
           setOpen(true)
         }}
-        className="group/lightbox relative cursor-zoom-in"
+        className={cn("group/lightbox relative cursor-zoom-in", className)}
       >
         {children}
         <span className="absolute inset-0 flex items-center justify-center rounded-[inherit] bg-black/0 transition-colors group-hover/lightbox:bg-black/40">

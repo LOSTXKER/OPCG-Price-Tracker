@@ -25,7 +25,7 @@ function MockStatusBar({ lang }: { lang: Language }) {
             <span className="text-base leading-none">🍯</span>
           </div>
           <p className="text-lg font-extrabold tabular-nums leading-tight text-primary">
-            1,250 <span className="text-[11px] font-bold">pt</span>
+            🍯 1,250
           </p>
         </div>
 

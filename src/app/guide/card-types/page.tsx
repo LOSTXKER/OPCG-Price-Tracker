@@ -229,7 +229,7 @@ export default async function CardTypesPage() {
             { label: "ประเภทการ์ด" },
           ]}
         />
-        <h1 className="text-3xl font-bold tracking-tight">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
           ประเภทการ์ด (Card Types)
         </h1>
         <p className="text-lg leading-relaxed text-muted-foreground">

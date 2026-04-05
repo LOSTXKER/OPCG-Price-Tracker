@@ -155,7 +155,7 @@ export function useMarketCards({
   }
 
   const activeFilterCount =
-    Object.values(filters).reduce((sum, v) => sum + v.length, 0) +
+    Object.entries(filters).reduce((sum, [key, v]) => sum + (key === "set" ? 0 : v.length), 0) +
     (minPrice ? 1 : 0) +
     (maxPrice ? 1 : 0)
 

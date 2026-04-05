@@ -28,7 +28,7 @@ export function PortfolioHero({
     <div className="panel p-5">
       <p className="text-xs text-muted-foreground">{t(lang, "portfolioValue")}</p>
       <div className="mt-1 flex flex-wrap items-baseline gap-3">
-        <span className="font-price text-4xl font-bold tabular-nums tracking-tight">
+        <span className="font-price text-2xl font-bold tabular-nums tracking-tight sm:text-4xl">
           {hideBalance ? "••••••" : <Price jpy={totalValueJpy} />}
         </span>
         {totalCostJpy > 0 && (

@@ -4,7 +4,8 @@ import Image from "next/image"
 import Link from "next/link"
 import {
   TrendingUp, TrendingDown, Clock, ArrowRight,
-  ChevronRight, Briefcase, Sparkles, Flame, LogIn, Plus,
+  ChevronRight, Briefcase, Sparkles, LogIn, Plus,
+  BarChart3, Megaphone,
 } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
 
@@ -17,6 +18,7 @@ import { Price } from "@/components/shared/price-inline"
 import { useUIStore } from "@/stores/ui-store"
 import { formatPct } from "@/lib/utils/currency"
 import { useAuthState } from "@/hooks/use-auth-state"
+import { StreakTierIndicator } from "@/components/shared/streak-tier-indicator"
 
 /* ------------------------------------------------------------------ */
 /*  Portfolio Mini Preview                                            */
@@ -80,62 +82,67 @@ export function HomePortfolioPreview() {
       .catch(() => setLoading(false))
   }, [authed])
 
-  const panel = "flex items-center gap-2.5 rounded-lg border border-border/40 bg-card px-3 py-2.5"
-  const icon = "flex size-7 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground"
+  const cardBase = "group flex flex-col rounded-xl border p-3 transition-colors"
+  const cardStyle = cn(cardBase, "border-border/40 bg-gradient-to-br from-card to-muted/20 hover:border-border")
 
   if (authed === null || loading) {
     return (
-      <div className={panel}>
-        <div className={icon}><Briefcase className="size-3.5" /></div>
-        <span className="text-xs font-semibold sm:text-sm">{t(lang, "myPortfolio")}</span>
-        <div className="ml-auto flex items-center gap-3">
-          <div className="h-4 w-16 animate-pulse rounded bg-muted" />
-          <div className="h-4 w-14 animate-pulse rounded bg-muted" />
+      <div className={cardStyle}>
+        <div className="flex items-center gap-2">
+          <Briefcase className="size-4 text-muted-foreground" />
+          <span className="text-xs font-semibold">{t(lang, "myPortfolio")}</span>
         </div>
+        <div className="mt-1.5 h-6 w-24 animate-pulse rounded bg-muted" />
+        <div className="mt-1 h-4 w-28 animate-pulse rounded bg-muted" />
       </div>
     )
   }
 
   if (authed === false) {
     return (
-      <Link href="/portfolio" className={cn(panel, "group transition-colors hover:border-border hover:bg-muted/40")}>
-        <div className={icon}><Briefcase className="size-3.5" /></div>
-        <span className="min-w-0 flex-1 text-xs font-semibold sm:text-sm">{t(lang, "loginToTrack")}</span>
-        <LogIn className="size-3.5 shrink-0 text-muted-foreground/40 transition-colors group-hover:text-muted-foreground" />
+      <Link href="/portfolio" className={cardStyle}>
+        <div className="flex items-center gap-2">
+          <Briefcase className="size-4 text-muted-foreground" />
+          <span className="text-xs font-semibold">{t(lang, "myPortfolio")}</span>
+        </div>
+        <p className="mt-3 text-sm text-muted-foreground">{t(lang, "loginToTrack")}</p>
       </Link>
     )
   }
 
   if (empty || !data) {
     return (
-      <Link href="/portfolio" className={cn(panel, "group transition-colors hover:border-border hover:bg-muted/40")}>
-        <div className={icon}><Briefcase className="size-3.5" /></div>
-        <span className="text-xs font-semibold sm:text-sm">{t(lang, "myPortfolio")}</span>
-        <span className="ml-auto text-[11px] text-muted-foreground group-hover:text-foreground">
-          {t(lang, "createOne")}
-        </span>
-        <Plus className="size-3.5 shrink-0 text-muted-foreground/40 transition-colors group-hover:text-muted-foreground" />
+      <Link href="/portfolio" className={cardStyle}>
+        <div className="flex items-center gap-2">
+          <Briefcase className="size-4 text-muted-foreground" />
+          <span className="text-xs font-semibold">{t(lang, "myPortfolio")}</span>
+        </div>
+        <p className="mt-3 text-sm text-muted-foreground">{t(lang, "createOne")}</p>
       </Link>
     )
   }
 
   return (
-    <Link href="/portfolio" className={cn(panel, "group transition-colors hover:border-border hover:bg-muted/40")}>
-      <div className={icon}><Briefcase className="size-3.5" /></div>
-      <span className="text-xs font-semibold sm:text-sm">{t(lang, "myPortfolio")}</span>
-      <div className="ml-auto flex items-center gap-3">
-        <span className="font-price text-xs font-bold sm:text-sm">
-          <Price jpy={data.totalValue} />
-        </span>
+    <Link href="/portfolio" className={cardStyle}>
+      <div className="flex items-center gap-2">
+        <Briefcase className="size-4 text-muted-foreground" />
+        <span className="text-xs font-semibold">{t(lang, "myPortfolio")}</span>
+      </div>
+      <p className="mt-1.5 font-price text-xl font-bold leading-none">
+        <Price jpy={data.totalValue} />
+      </p>
+      <div className="mt-auto flex items-center gap-2 pt-1 text-[11px]">
         {data.hasCostBasis && (
           <span className={cn(
-            "font-price text-[11px] font-semibold",
+            "font-price font-bold",
             data.unrealizedPnl >= 0 ? "text-price-up" : "text-price-down",
           )}>
-            {data.unrealizedPnl >= 0 ? "+" : ""}<Price jpy={data.unrealizedPnl} />
+            {data.unrealizedPnl >= 0 ? "+" : ""}<Price jpy={data.unrealizedPnl} /> ({data.unrealizedPnl >= 0 ? "+" : ""}{formatPct(data.unrealizedPnlPct)}%)
           </span>
         )}
-        <ChevronRight className="size-3.5 shrink-0 text-muted-foreground/40 transition-colors group-hover:text-muted-foreground" />
+        <span className="text-muted-foreground">
+          {data.totalCards.toLocaleString()} {lang === "TH" ? "การ์ด" : lang === "JP" ? "カード" : "cards"}
+        </span>
       </div>
     </Link>
   )
@@ -191,38 +198,41 @@ export function HomeHoneyPreview() {
     setChecking(false)
   }, [checking, data?.canCheckin])
 
-  const panel = "flex items-center gap-2.5 rounded-lg border border-border/40 bg-card px-3 py-2.5"
-  const icon = "flex size-7 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400"
+  const cardBase = "group flex flex-col rounded-xl border p-3 transition-colors"
+  const cardStyle = cn(cardBase, "border-border/40 bg-gradient-to-br from-card to-muted/20 hover:border-border")
 
   if (authed === null || loading) {
     return (
-      <div className={panel}>
-        <div className={icon}><Sparkles className="size-3.5" /></div>
-        <span className="text-xs font-semibold sm:text-sm">{t(lang, "honeyPoints")}</span>
-        <div className="ml-auto flex items-center gap-3">
-          <div className="h-4 w-14 animate-pulse rounded bg-muted" />
-          <div className="h-4 w-12 animate-pulse rounded bg-muted" />
+      <div className={cardStyle}>
+        <div className="flex items-center gap-2">
+          <span className="text-sm leading-none">🍯</span>
+          <span className="text-xs font-semibold">{t(lang, "honeyPoints")}</span>
         </div>
+        <div className="mt-3 h-7 w-16 animate-pulse rounded bg-muted" />
+        <div className="mt-2 h-4 w-32 animate-pulse rounded bg-muted" />
       </div>
     )
   }
 
   if (authed === false) {
     return (
-      <Link href="/honey" className={cn(panel, "group transition-colors hover:border-border hover:bg-muted/40")}>
-        <div className={icon}><Sparkles className="size-3.5" /></div>
-        <span className="min-w-0 flex-1 text-xs font-semibold sm:text-sm">{t(lang, "loginToEarn")}</span>
-        <LogIn className="size-3.5 shrink-0 text-muted-foreground/40 transition-colors group-hover:text-muted-foreground" />
+      <Link href="/honey" className={cardStyle}>
+        <div className="flex items-center gap-2">
+          <span className="text-sm leading-none">🍯</span>
+          <span className="text-xs font-semibold">{t(lang, "honeyPoints")}</span>
+        </div>
+        <p className="mt-3 text-sm text-muted-foreground">{t(lang, "loginToEarn")}</p>
       </Link>
     )
   }
 
   if (!data) {
     return (
-      <Link href="/honey" className={cn(panel, "group transition-colors hover:border-border hover:bg-muted/40")}>
-        <div className={icon}><Sparkles className="size-3.5" /></div>
-        <span className="min-w-0 flex-1 text-xs font-semibold sm:text-sm">{t(lang, "honeyPoints")}</span>
-        <ChevronRight className="size-3.5 shrink-0 text-muted-foreground/40" />
+      <Link href="/honey" className={cardStyle}>
+        <div className="flex items-center gap-2">
+          <span className="text-sm leading-none">🍯</span>
+          <span className="text-xs font-semibold">{t(lang, "honeyPoints")}</span>
+        </div>
       </Link>
     )
   }
@@ -231,52 +241,105 @@ export function HomeHoneyPreview() {
   const checkinReward = streak >= 30 ? 30 : streak >= 7 ? 20 : 10
 
   return (
-    <Link href="/honey" className={cn(panel, "group transition-colors hover:border-border hover:bg-muted/40")}>
-      <div className={icon}><span className="text-sm leading-none">🍯</span></div>
-      <span className="text-xs font-semibold sm:text-sm">{t(lang, "honeyPoints")}</span>
-      <div className="ml-auto flex items-center gap-2.5">
-        <span className="font-price text-xs font-bold text-amber-600 dark:text-amber-400 sm:text-sm">
-          {data.honeyPoints.toLocaleString()} pt 🍯
-        </span>
-        <div className="flex items-center gap-1 text-muted-foreground" title={t(lang, "honeyStreakDays")}>
-          <Flame className={cn("size-3", streak >= 7 ? "text-orange-500" : "text-muted-foreground")} />
-          <span className="font-price text-[11px] font-semibold">{streak}</span>
-          <span className={cn(
-            "rounded px-1 py-0.5 text-[9px] font-bold tabular-nums",
-            streak >= 30 ? "bg-amber-500/15 text-amber-600 dark:text-amber-400" : streak >= 7 ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground",
-          )}>
-            {streak >= 30 ? "3x" : streak >= 7 ? "2x" : "1x"}
-          </span>
-        </div>
-        {data.canCheckin ? (
-          <button
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); doCheckin() }}
-            disabled={checking}
-            className="relative rounded-full bg-primary px-2.5 py-1 text-[10px] font-bold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
-          >
-            <span className="absolute -right-0.5 -top-0.5 flex size-2">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75" />
-              <span className="relative inline-flex size-2 rounded-full bg-red-500" />
+    <Link href="/honey" className={cardStyle}>
+      <div className="flex items-center gap-2">
+        <span className="text-sm leading-none">🍯</span>
+        <span className="text-xs font-semibold">{t(lang, "honeyPoints")}</span>
+      </div>
+      <p className="mt-1.5 font-price text-xl font-bold leading-none">
+        {data.honeyPoints.toLocaleString()} <span className="text-xs font-semibold text-muted-foreground">Honey</span>
+      </p>
+      <div className="mt-auto flex items-center gap-2 pt-1">
+        <StreakTierIndicator streak={streak} lang={lang} variant="compact" />
+        <div className="ml-auto shrink-0">
+          {data.canCheckin ? (
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); doCheckin() }}
+              disabled={checking}
+              className="relative rounded-full bg-primary px-2.5 py-1 text-[10px] font-bold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+            >
+              <span className="absolute -right-0.5 -top-0.5 flex size-2">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75" />
+                <span className="relative inline-flex size-2 rounded-full bg-red-500" />
+              </span>
+              {checking ? "..." : `${t(lang, "dailyCheckin")} +${checkinReward} 🍯`}
+            </button>
+          ) : (
+            <span className="text-[10px] font-medium text-price-up">
+              ✓ {t(lang, "checkinDone")}
             </span>
-            {checking ? "..." : `${t(lang, "dailyCheckin")} +${checkinReward} 🍯`}
-          </button>
-        ) : (
-          <ChevronRight className="size-3.5 shrink-0 text-muted-foreground/40 transition-colors group-hover:text-muted-foreground" />
-        )}
+          )}
+        </div>
       </div>
     </Link>
   )
 }
 
 /* ------------------------------------------------------------------ */
-/*  Preview Row (wraps both mini previews)                            */
+/*  Market Value Card                                                  */
 /* ------------------------------------------------------------------ */
 
-export function HomePreviewRow() {
+function HomeMarketValueCard({ totalValue, totalCards }: { totalValue: number; totalCards: number }) {
+  const lang = useUIStore((s) => s.language)
+  const cardBase = "group flex flex-col rounded-xl border p-3 transition-colors"
+  const cardStyle = cn(cardBase, "border-border/40 bg-gradient-to-br from-card to-muted/20 hover:border-border")
+  const label = lang === "TH" ? "มูลค่ารวมตลาด" : lang === "JP" ? "市場総額" : "Market Value"
+  const cardLabel = lang === "TH" ? "การ์ด" : lang === "JP" ? "カード" : "cards"
+
   return (
-    <div className="grid grid-cols-2 gap-2.5">
+    <Link href="/market-overview" className={cardStyle}>
+      <div className="flex items-center gap-2">
+        <BarChart3 className="size-4 text-muted-foreground" />
+        <span className="text-xs font-semibold">{label}</span>
+      </div>
+      <p className="mt-1.5 font-price text-xl font-bold leading-none">
+        <Price jpy={totalValue} />
+      </p>
+      <p className="mt-auto pt-1 text-[11px] text-muted-foreground">
+        {totalCards.toLocaleString()} {cardLabel}
+      </p>
+    </Link>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  Ad Space Card                                                      */
+/* ------------------------------------------------------------------ */
+
+function HomeAdCard() {
+  const lang = useUIStore((s) => s.language)
+  const label = lang === "TH" ? "โฆษณา" : lang === "JP" ? "広告" : "Ad"
+
+  return (
+    <Link
+      href="/pricing"
+      className="group relative overflow-hidden rounded-xl border border-border/40 transition-colors hover:border-border"
+    >
+      <Image
+        src="/ad-banner.png"
+        alt="Advertisement"
+        fill
+        sizes="(min-width: 1024px) 25vw, 50vw"
+        className="object-cover"
+      />
+      <span className="absolute right-1.5 top-1.5 z-10 rounded bg-black/50 px-1.5 py-0.5 text-[9px] font-medium text-white/70">
+        {label}
+      </span>
+    </Link>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  Preview Row (wraps all 4 preview cards)                            */
+/* ------------------------------------------------------------------ */
+
+export function HomePreviewRow({ totalValue, totalCards }: { totalValue: number; totalCards: number }) {
+  return (
+    <div className="hidden auto-rows-fr gap-2.5 lg:grid lg:grid-cols-4">
       <HomePortfolioPreview />
       <HomeHoneyPreview />
+      <HomeMarketValueCard totalValue={totalValue} totalCards={totalCards} />
+      <HomeAdCard />
     </div>
   )
 }

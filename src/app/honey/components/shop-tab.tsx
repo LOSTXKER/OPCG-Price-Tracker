@@ -69,7 +69,7 @@ export function ShopTab({
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold">{t(lang, "honeyShop")}</h2>
             <span className="flex items-center gap-1 text-xs font-bold tabular-nums text-primary">
-              {points.toLocaleString()} pt <span className="text-[10px]">🍯</span>
+              🍯 {points.toLocaleString()}
             </span>
           </div>
           <p className="mt-0.5 text-[11px] text-muted-foreground">

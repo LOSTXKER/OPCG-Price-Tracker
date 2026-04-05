@@ -65,6 +65,7 @@ export const th = {
   clearFilter: "ล้างตัวกรอง",
   setFilter: "ชุดการ์ด",
   allSets: "ทุกชุด",
+  allRarities: "ทุกความหายาก",
   allItems: "ทั้งหมด",
   rarity: "ความหายาก",
   variant: "เวอร์ชัน",
@@ -151,6 +152,7 @@ export const th = {
   bestPerformer: "ผลงานดีที่สุด",
   worstPerformer: "ผลงานแย่ที่สุด",
   loadFailed: "โหลดข้อมูลไม่สำเร็จ",
+  retry: "ลองใหม่",
   other: "อื่นๆ",
   emptyPortfolio: "ยังไม่มีการ์ดในพอร์ต",
   emptyPortfolioDesc: "เพิ่มการ์ดใบแรกเพื่อเริ่มติดตามมูลค่า",
@@ -319,8 +321,10 @@ export const th = {
   featSectionMarketplace: "ซื้อขาย",
   perMonthShort: "/ด.",
 
+  compareAllFeatures: "เปรียบเทียบฟีเจอร์ทั้งหมด",
+
   // Honey → Pro (Pricing Page)
-  honeyPassTitle: "ไม่อยากจ่ายเงิน? สะสม Honey แลกได้เลย!",
+  honeyPassTitle: "ไม่ต้องจ่ายสักบาท ก็ได้ Pro!",
   honeyPassDesc: "ทำภารกิจประจำวัน เช็คอินทุกวัน แล้วนำ Honey Points ไปแลก Pro ได้ — ไม่ต้องใช้บัตรเครดิต",
   honeyPassCta: "ไปร้านค้า Honey",
 
@@ -545,6 +549,16 @@ export const th = {
   // Onboarding
   onboardingComplete: "เสร็จสิ้นการเริ่มต้น!",
   onboardingReward: "โบนัสต้อนรับ",
+
+  // Market Overview
+  marketOverviewTitle: "ภาพรวมตลาด",
+  marketOverviewSubtitle: "สรุปมูลค่าและสถิติของตลาดการ์ด One Piece TCG",
+  avgPrice: "ราคาเฉลี่ย",
+  totalSets: "จำนวนเซ็ต",
+  valueByRarity: "มูลค่าตาม Rarity",
+  topSetsByValue: "เซ็ตที่มูลค่าสูงสุด",
+  mostValuableCards: "การ์ดที่มูลค่าสูงสุด",
+  cardUnit: "ใบ",
 
   // Navigation
   backToHome: "กลับหน้าแรก",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Check, Crown, Sparkles, X, Hexagon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -72,6 +72,12 @@ const PLANS: PlanDef[] = [
     ctaClass: "bg-primary text-primary-foreground hover:bg-primary/90",
   },
 ];
+
+const PLAN_HIGHLIGHTS: Record<string, string[]> = {
+  FREE: ["priceHistory", "portfolioCards", "priceAlerts", "compareCards"],
+  PRO: ["priceHistory", "csvExport", "portfolioCount", "priceAlerts"],
+  PRO_PLUS: ["priceHistory", "portfolioCards", "priceAlerts", "autoPricing"],
+};
 
 type FeatureRow = {
   key: string;
@@ -182,6 +188,12 @@ const FEATURE_SECTIONS: FeatureSection[] = [
   },
 ];
 
+const ALL_ROWS = FEATURE_SECTIONS.flatMap((s) => s.rows);
+
+function findRow(key: string) {
+  return ALL_ROWS.find((r) => r.key === key);
+}
+
 export default function PricingClient() {
   const lang = useUIStore((s) => s.language);
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
@@ -275,6 +287,21 @@ export default function PricingClient() {
     );
   };
 
+  const renderHighlightValue = (val: string | boolean) => {
+    if (typeof val === "boolean") {
+      return val ? (
+        <Check className="h-3.5 w-3.5 text-green-500 dark:text-green-400" />
+      ) : (
+        <X className="h-3.5 w-3.5 text-muted-foreground/30" />
+      );
+    }
+    return (
+      <span className="font-semibold text-foreground">
+        {val === "∞" ? t(lang, "unlimited") : val}
+      </span>
+    );
+  };
+
   return (
     <div className="mx-auto max-w-5xl space-y-10">
       {/* Header */}
@@ -316,37 +343,16 @@ export default function PricingClient() {
         </div>
       </div>
 
-      {/* Free trial banner */}
-      {settings && !settings.trialUsed && settings.tier === "FREE" && (
-        <div className="mx-auto max-w-lg rounded-2xl border border-border bg-muted/30 p-6 text-center">
-          <p className="text-lg font-semibold">{t(lang, "startTrial")}</p>
-          <p className="mt-1.5 text-sm text-muted-foreground">
-            {lang === "TH"
-              ? "ไม่ต้องใส่บัตรเครดิต ใช้ Pro ได้เต็ม 14 วัน"
-              : lang === "JP"
-                ? "クレジットカード不要。14日間Pro全機能をお試し"
-                : "No credit card required. Full Pro access for 14 days."}
-          </p>
-          <Button
-            onClick={handleTrial}
-            disabled={loading === "trial"}
-            className="mt-4 px-8"
-          >
-            {loading === "trial" ? "..." : t(lang, "startTrial")}
-          </Button>
-        </div>
-      )}
-
-      {/* Trial active banner */}
+      {/* Trial active banner (compact) */}
       {settings?.trialStartedAt &&
         settings.tier !== "FREE" &&
         !settings.stripeSubscriptionId && (
-          <div className="mx-auto max-w-lg rounded-2xl border border-border bg-muted/30 p-5 text-center">
+          <div className="mx-auto flex max-w-lg items-center justify-center gap-3 rounded-xl border border-border bg-muted/30 px-5 py-3">
             <Badge variant="secondary">
               {t(lang, "trialActive")}
             </Badge>
             {settings.tierExpiresAt && (
-              <p className="mt-2 text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 {t(lang, "trialEndsIn")}{" "}
                 {Math.ceil(
                   (new Date(settings.tierExpiresAt).getTime() - Date.now()) /
@@ -358,42 +364,12 @@ export default function PricingClient() {
           </div>
         )}
 
-      {/* Honey → Pro Alternative */}
-      <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-amber-500/20 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5">
-        <div className="flex flex-col items-center gap-4 p-6 text-center sm:flex-row sm:text-left">
-          <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10">
-            <Hexagon className="size-7 text-amber-500" />
-          </div>
-          <div className="flex-1">
-            <h3 className="text-base font-bold">{t(lang, "honeyPassTitle")}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{t(lang, "honeyPassDesc")}</p>
-            <div className="mt-2 flex flex-wrap justify-center gap-2 sm:justify-start">
-              <Badge variant="secondary" className="bg-amber-500/10 text-amber-700 dark:text-amber-400">
-                {lang === "TH" ? "แพ็กเกจ" : lang === "JP" ? "パッケージ" : "Package"} Pro 7 {t(lang, "days")} 🍯
-              </Badge>
-              <Badge variant="secondary" className="bg-amber-500/10 text-amber-700 dark:text-amber-400">
-                {lang === "TH" ? "แพ็กเกจ" : lang === "JP" ? "パッケージ" : "Package"} Pro 30 {t(lang, "days")} 🍯
-              </Badge>
-              <Badge variant="secondary" className="bg-amber-500/10 text-amber-700 dark:text-amber-400">
-                {lang === "TH" ? "แพ็กเกจ" : lang === "JP" ? "パッケージ" : "Package"} Pro+ 30 {t(lang, "days")} 🍯
-              </Badge>
-            </div>
-          </div>
-          <Link href="/honey?tab=shop">
-            <Button variant="outline" className="shrink-0 gap-1.5 border-amber-500/20 text-amber-700 hover:bg-amber-500/10 dark:text-amber-400">
-              <Hexagon className="size-4" />
-              {t(lang, "honeyPassCta")}
-            </Button>
-          </Link>
-        </div>
-      </div>
-
-      {/* Plan Cards */}
+      {/* Compact Plan Cards */}
       <div className="grid items-start gap-5 md:grid-cols-3">
         {PLANS.map((plan) => (
           <div
             key={plan.key}
-            className={`relative rounded-2xl border p-6 ${plan.cardClass}`}
+            className={`relative flex flex-col rounded-2xl border p-6 ${plan.cardClass}`}
           >
             {/* Badge */}
             {plan.popular && (
@@ -409,79 +385,70 @@ export default function PricingClient() {
               </Badge>
             )}
 
-            {/* Plan header */}
-            <div className="pb-5 border-b border-border/50">
-              <div className="flex items-center gap-2.5">
-                {plan.icon && (
-                  <plan.icon className={`h-6 w-6 ${plan.iconClass}`} />
-                )}
-                <div>
-                  <h2 className="text-lg font-bold leading-tight">
-                    {tierName(plan.key)}
-                  </h2>
-                  <p className="text-xs text-muted-foreground">
-                    {t(lang, plan.subtitleKey)}
-                  </p>
-                </div>
-              </div>
-
-              {plan.monthlyPrice ? (
-                <div className="mt-4">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-extrabold tracking-tight">
-                      {billing === "monthly"
-                        ? plan.monthlyPrice
-                        : plan.yearlyPrice}
-                    </span>
-                    <span className="text-sm text-muted-foreground">
-                      {billing === "monthly"
-                        ? t(lang, "perMonth")
-                        : t(lang, "perYear")}
-                    </span>
-                  </div>
-                  {billing === "yearly" && plan.yearlyPerMonth && (
-                    <p className="mt-0.5 text-xs font-medium text-green-600 dark:text-green-400">
-                      ~{plan.yearlyPerMonth}
-                      {t(lang, "perMonthShort")}
-                    </p>
-                  )}
-                </div>
-              ) : (
-                <p className="mt-4 text-4xl font-extrabold tracking-tight">
-                  {t(lang, "freePlan")}
-                </p>
+            {/* Plan name + price */}
+            <div className="flex items-center gap-2.5">
+              {plan.icon && (
+                <plan.icon className={`h-6 w-6 ${plan.iconClass}`} />
               )}
+              <div>
+                <h2 className="text-lg font-bold leading-tight">
+                  {tierName(plan.key)}
+                </h2>
+                <p className="text-xs text-muted-foreground">
+                  {t(lang, plan.subtitleKey)}
+                </p>
+              </div>
             </div>
 
-            {/* Feature sections */}
-            <div className="mt-5 space-y-4">
-              {FEATURE_SECTIONS.map((section, idx) => (
-                <div key={section.titleKey}>
-                  {idx > 0 && (
-                    <div className="mb-3.5 border-t border-border/30" />
-                  )}
-                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60">
-                    {t(lang, section.titleKey)}
-                  </p>
-                  <div className="space-y-2">
-                    {section.rows.map((row) => (
-                      <div
-                        key={row.key}
-                        className="flex items-center justify-between text-[13px]"
-                      >
-                        <span className="text-muted-foreground">
-                          {t(lang, row.labelKey)}
-                        </span>
-                        {renderValue(row.values[plan.key], plan.key)}
-                      </div>
-                    ))}
-                  </div>
+            {plan.monthlyPrice ? (
+              <div className="mt-4">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-extrabold tracking-tight">
+                    {billing === "monthly"
+                      ? plan.monthlyPrice
+                      : plan.yearlyPrice}
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    {billing === "monthly"
+                      ? t(lang, "perMonth")
+                      : t(lang, "perYear")}
+                  </span>
                 </div>
-              ))}
+                {billing === "yearly" && plan.yearlyPerMonth && (
+                  <p className="mt-0.5 text-xs font-medium text-green-600 dark:text-green-400">
+                    ~{plan.yearlyPerMonth}
+                    {t(lang, "perMonthShort")}
+                  </p>
+                )}
+              </div>
+            ) : (
+              <p className="mt-4 text-3xl font-extrabold tracking-tight">
+                {t(lang, "freePlan")}
+              </p>
+            )}
+
+            {/* Key highlights */}
+            <div className="mt-5 flex-1 space-y-2.5 border-t border-border/50 pt-5">
+              {PLAN_HIGHLIGHTS[plan.key]?.map((featureKey) => {
+                const row = findRow(featureKey);
+                if (!row) return null;
+                const val = row.values[plan.key];
+                return (
+                  <div
+                    key={featureKey}
+                    className="flex items-center justify-between text-[13px]"
+                  >
+                    <span className="text-muted-foreground">
+                      {t(lang, row.labelKey)}
+                    </span>
+                    {renderHighlightValue(val)}
+                  </div>
+                );
+              })}
             </div>
 
             {/* CTA */}
-            <div className="mt-6 pt-5 border-t border-border/50">
+            <div className="mt-5 space-y-2">
               {isCurrentPlan(plan.key) ? (
                 <Button disabled variant="outline" className="w-full">
                   {t(lang, "currentPlan")}
@@ -489,23 +456,169 @@ export default function PricingClient() {
               ) : plan.key === "FREE" ? (
                 settings ? null : <div className="h-9" />
               ) : (
-                <Button
-                  className={`w-full ${plan.ctaClass ?? ""}`}
-                  onClick={() => {
-                    const planKey =
-                      billing === "monthly"
-                        ? plan.monthlyPlan
-                        : plan.yearlyPlan;
-                    if (planKey) handleSubscribe(planKey);
-                  }}
-                  disabled={loading != null}
-                >
-                  {t(lang, "subscribe")}
-                </Button>
+                <>
+                  <Button
+                    className={`w-full ${plan.ctaClass ?? ""}`}
+                    onClick={() => {
+                      const planKey =
+                        billing === "monthly"
+                          ? plan.monthlyPlan
+                          : plan.yearlyPlan;
+                      if (planKey) handleSubscribe(planKey);
+                    }}
+                    disabled={loading != null}
+                  >
+                    {t(lang, "subscribe")}
+                  </Button>
+                  {plan.key === "PRO" &&
+                    settings &&
+                    !settings.trialUsed &&
+                    settings.tier === "FREE" && (
+                      <Button
+                        variant="ghost"
+                        className="w-full text-xs text-muted-foreground"
+                        onClick={handleTrial}
+                        disabled={loading === "trial"}
+                      >
+                        {loading === "trial"
+                          ? "..."
+                          : t(lang, "startTrial")}
+                      </Button>
+                    )}
+                </>
               )}
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Honey → Pro Alternative */}
+      <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-amber-500/20 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5">
+        <div className="flex flex-col items-center gap-4 p-6 text-center sm:flex-row sm:text-left">
+          <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10">
+            <Hexagon className="size-7 text-amber-500" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-base font-bold">
+              {t(lang, "honeyPassTitle")}
+            </h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {t(lang, "honeyPassDesc")}
+            </p>
+            <div className="mt-2 flex flex-wrap justify-center gap-2 sm:justify-start">
+              <Badge
+                variant="secondary"
+                className="bg-amber-500/10 text-amber-700 dark:text-amber-400"
+              >
+                {lang === "TH"
+                  ? "แพ็กเกจ"
+                  : lang === "JP"
+                    ? "パッケージ"
+                    : "Package"}{" "}
+                Pro 7 {t(lang, "days")} 🍯
+              </Badge>
+              <Badge
+                variant="secondary"
+                className="bg-amber-500/10 text-amber-700 dark:text-amber-400"
+              >
+                {lang === "TH"
+                  ? "แพ็กเกจ"
+                  : lang === "JP"
+                    ? "パッケージ"
+                    : "Package"}{" "}
+                Pro 30 {t(lang, "days")} 🍯
+              </Badge>
+              <Badge
+                variant="secondary"
+                className="bg-amber-500/10 text-amber-700 dark:text-amber-400"
+              >
+                {lang === "TH"
+                  ? "แพ็กเกจ"
+                  : lang === "JP"
+                    ? "パッケージ"
+                    : "Package"}{" "}
+                Pro+ 30 {t(lang, "days")} 🍯
+              </Badge>
+            </div>
+          </div>
+          <Link href="/honey?tab=shop">
+            <Button
+              variant="outline"
+              className="shrink-0 gap-1.5 border-amber-500/20 text-amber-700 hover:bg-amber-500/10 dark:text-amber-400"
+            >
+              <Hexagon className="size-4" />
+              {t(lang, "honeyPassCta")}
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      {/* Full Feature Comparison Table */}
+      <div>
+        <h2 className="mb-6 text-center text-xl font-bold">
+          {t(lang, "compareAllFeatures")}
+        </h2>
+        <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+          <table className="w-full min-w-[600px] border-separate border-spacing-0 text-sm">
+            <thead>
+              <tr>
+                <th className="sticky top-0 z-10 bg-background pb-3 text-left font-medium text-muted-foreground" />
+                {PLANS.map((plan) => (
+                  <th
+                    key={plan.key}
+                    className="sticky top-0 z-10 bg-background pb-3 text-center font-bold"
+                  >
+                    <div className="flex items-center justify-center gap-1.5">
+                      {plan.icon && (
+                        <plan.icon
+                          className={`h-4 w-4 ${plan.iconClass}`}
+                        />
+                      )}
+                      {tierName(plan.key)}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {FEATURE_SECTIONS.map((section) => (
+                <Fragment key={section.titleKey}>
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="pb-2 pt-5 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60"
+                    >
+                      {t(lang, section.titleKey)}
+                    </td>
+                  </tr>
+                  {section.rows.map((row) => (
+                    <tr
+                      key={row.key}
+                      className="border-b border-border/30 last:border-b-0"
+                    >
+                      <td className="py-2.5 pr-4 text-muted-foreground">
+                        {t(lang, row.labelKey)}
+                      </td>
+                      {PLANS.map((plan) => (
+                        <td
+                          key={plan.key}
+                          className="py-2.5 text-center text-[13px]"
+                        >
+                          <span className="inline-flex items-center justify-center">
+                            {renderValue(
+                              row.values[plan.key],
+                              plan.key,
+                            )}
+                          </span>
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

@@ -178,17 +178,17 @@ export function PriceChart({
     <div className="space-y-4">
       {/* Period selector */}
       <div className="flex items-center justify-between">
-        <div className="flex gap-1">
+        <div className="flex items-center gap-0.5 rounded-full border border-border/50 p-0.5">
           {PERIODS.map((p) => (
             <button
               key={p.value}
               onClick={() => onPeriodChange(p.value)}
               disabled={loading}
               className={cn(
-                "rounded-lg px-3 py-1.5 text-xs font-semibold transition-all",
+                "rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums transition-all",
                 period === p.value
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:bg-muted/80 hover:text-foreground",
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               {p.label}
@@ -202,7 +202,7 @@ export function PriceChart({
 
       {/* Stats bar */}
       {stats && (
-        <div className="grid grid-cols-4 gap-px overflow-hidden rounded-lg bg-border/30">
+        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg bg-border/30 sm:grid-cols-4">
           <div className="bg-background px-3 py-2">
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">High</p>
             <p className="mt-0.5 font-price text-sm font-bold tabular-nums text-price-up">

@@ -107,7 +107,7 @@ function ProfileLayoutInner({ children }: { children: ReactNode }) {
         <p className="truncate text-xs text-muted-foreground">{user.email}</p>
       </div>
       <div className="shrink-0 text-right">
-        <p className="text-sm font-semibold text-amber-500">🍯 {honey.points.toLocaleString()} pt</p>
+        <p className="text-sm font-semibold text-amber-500">🍯 {honey.points.toLocaleString()}</p>
         <p className="text-[10px] text-muted-foreground">
           {t(lang, "memberSince")}{" "}
           {new Date(user.createdAt).toLocaleDateString(
@@ -231,7 +231,7 @@ function ProfileMockPreview({ lang }: { lang: Language }) {
             </div>
             <div className="rounded-xl border border-amber-500/20 bg-gradient-to-br from-amber-400/5 to-orange-400/5 p-4">
               <p className="text-sm font-semibold">{t(lang, "honeyPoints")}</p>
-              <p className="mt-2 text-2xl font-bold text-amber-500">🍯 250 pt</p>
+              <p className="mt-2 text-2xl font-bold text-amber-500">🍯 250</p>
               <div className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
                 🔥 3 {t(lang, "days")}
               </div>

@@ -40,7 +40,7 @@ export function HoneyHero({
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Honey</p>
             <p className="text-2xl font-extrabold tabular-nums leading-tight text-primary">
-              {points.toLocaleString()} <span className="text-sm font-bold">pt</span>
+              🍯 {points.toLocaleString()}
             </p>
           </div>
         </div>

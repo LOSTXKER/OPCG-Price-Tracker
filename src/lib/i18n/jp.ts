@@ -65,6 +65,7 @@ export const jp = {
   clearFilter: "フィルター解除",
   setFilter: "セット",
   allSets: "全セット",
+  allRarities: "全レアリティ",
   allItems: "すべて",
   rarity: "レアリティ",
   variant: "バージョン",
@@ -151,6 +152,7 @@ export const jp = {
   bestPerformer: "最高パフォーマー",
   worstPerformer: "最低パフォーマー",
   loadFailed: "データの読み込みに失敗しました",
+  retry: "再試行",
   other: "その他",
   emptyPortfolio: "ポートフォリオにカードがありません",
   emptyPortfolioDesc: "最初のカードを追加して価値を追跡しましょう",
@@ -318,6 +320,8 @@ export const jp = {
   featSectionAnalytics: "分析",
   featSectionMarketplace: "マーケットプレイス",
   perMonthShort: "/月",
+
+  compareAllFeatures: "全機能を比較",
 
   // Honey → Pro (Pricing Page)
   honeyPassTitle: "お金を払いたくない？Honeyで獲得しよう！",
@@ -545,6 +549,16 @@ export const jp = {
   // Onboarding
   onboardingComplete: "オンボーディング完了！",
   onboardingReward: "ウェルカムボーナス",
+
+  // Market Overview
+  marketOverviewTitle: "マーケット概要",
+  marketOverviewSubtitle: "ワンピースTCGカード市場の統計とサマリー",
+  avgPrice: "平均価格",
+  totalSets: "セット数",
+  valueByRarity: "レアリティ別の価値",
+  topSetsByValue: "価値の高いセットTOP10",
+  mostValuableCards: "最も価値のあるカード",
+  cardUnit: "枚",
 
   // Navigation
   backToHome: "ホームに戻る",

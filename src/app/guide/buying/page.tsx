@@ -60,7 +60,7 @@ export default function BuyingGuidePage() {
           { label: "Guide", href: "/guide" },
           { label: "Buying Guide" },
         ]} />
-        <h1 className="font-sans text-3xl font-bold tracking-tight">
+        <h1 className="font-sans text-2xl font-bold tracking-tight sm:text-3xl">
           Buying Guide
         </h1>
         <p className="text-muted-foreground text-lg">

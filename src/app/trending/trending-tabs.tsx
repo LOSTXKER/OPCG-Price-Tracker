@@ -3,7 +3,7 @@
 import { memo, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { TrendingUp, TrendingDown, Eye } from "lucide-react"
+import { TrendingUp, TrendingDown, TrendingUpDown, Eye } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
@@ -173,16 +173,17 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
         })}
 
         {activeTab !== "mostViewed" && (
-          <div className="ml-auto flex items-center gap-0.5 rounded-lg border border-border p-0.5">
+          <div className="ml-auto flex items-center gap-0.5 rounded-full border border-border/50 p-0.5">
+            <TrendingUpDown className="mx-1.5 size-3.5 text-muted-foreground/50" />
             {PERIODS.map(({ value, labelKey }) => (
               <button
                 key={value}
                 onClick={() => setPeriod(value)}
                 className={cn(
-                  "rounded-md px-2.5 py-1 text-xs font-semibold tabular-nums transition-all",
+                  "rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums transition-all",
                   period === value
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {t(lang, labelKey)}

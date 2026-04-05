@@ -48,7 +48,7 @@ export function SortableHeader<TCol extends string>({
   return (
     <th
       className={cn(
-        "group cursor-pointer select-none py-2.5 pr-3 font-medium transition-colors hover:text-foreground",
+        "group cursor-pointer select-none whitespace-nowrap py-2.5 pr-3 font-medium transition-colors hover:text-foreground",
         align === "right" && "text-right",
         isActive && "text-foreground",
         className
@@ -62,12 +62,14 @@ export function SortableHeader<TCol extends string>({
         )}
       >
         {label}
-        <Icon
-          className={cn(
-            "size-3 transition-opacity",
-            isActive ? "text-primary" : "text-muted-foreground/50 group-hover:text-muted-foreground"
-          )}
-        />
+        <span className="inline-flex size-3 shrink-0 items-center justify-center">
+          <Icon
+            className={cn(
+              "size-3 transition-opacity",
+              isActive ? "text-primary" : "text-muted-foreground/50 group-hover:text-muted-foreground"
+            )}
+          />
+        </span>
       </span>
     </th>
   );

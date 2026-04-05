@@ -65,6 +65,7 @@ export const en = {
   clearFilter: "Clear filters",
   setFilter: "Set",
   allSets: "All sets",
+  allRarities: "All rarities",
   allItems: "All",
   rarity: "Rarity",
   variant: "Variant",
@@ -151,6 +152,7 @@ export const en = {
   bestPerformer: "Best performer",
   worstPerformer: "Worst performer",
   loadFailed: "Failed to load data",
+  retry: "Retry",
   other: "Others",
   emptyPortfolio: "No cards in portfolio",
   emptyPortfolioDesc: "Add your first card to start tracking value",
@@ -318,6 +320,8 @@ export const en = {
   featSectionAnalytics: "Analytics",
   featSectionMarketplace: "Marketplace",
   perMonthShort: "/mo",
+
+  compareAllFeatures: "Compare all features",
 
   // Honey → Pro (Pricing Page)
   honeyPassTitle: "Don't want to pay? Earn it with Honey!",
@@ -545,6 +549,16 @@ export const en = {
   // Onboarding
   onboardingComplete: "Onboarding complete!",
   onboardingReward: "Welcome bonus",
+
+  // Market Overview
+  marketOverviewTitle: "Market Overview",
+  marketOverviewSubtitle: "Summary of the One Piece TCG card market statistics",
+  avgPrice: "Avg. Price",
+  totalSets: "Total Sets",
+  valueByRarity: "Value by Rarity",
+  topSetsByValue: "Top Sets by Value",
+  mostValuableCards: "Most Valuable Cards",
+  cardUnit: "cards",
 
   // Navigation
   backToHome: "Back to home",

@@ -152,7 +152,7 @@ export default async function ColorsPage() {
             { label: "สี" },
           ]}
         />
-        <h1 className="text-3xl font-bold tracking-tight">สี (Colors)</h1>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">สี (Colors)</h1>
         <p className="text-lg leading-relaxed text-muted-foreground">
           ใน OPCG การ์ด <strong className="text-foreground">Leader</strong>{" "}
           กำหนดสีของเด็ค — แต่ละสีมี playstyle ที่ต่างกัน

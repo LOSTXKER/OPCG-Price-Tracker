@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import {
   Calendar,
   CheckCircle2,
-  ChevronRight,
-  Flame,
   Shield,
   Sparkles,
   Star,
@@ -17,6 +15,8 @@ import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { HoneyLevel, ActiveEvent } from "../types";
 import { RankInfoPopover } from "./rank-info-popover";
+import { HowToEarnPopover } from "./how-to-earn-popover";
+import { StreakTierIndicator } from "@/components/shared/streak-tier-indicator";
 
 const RANK_LABELS: Record<string, Record<number, string>> = {
   TH: { 0: "มือใหม่", 1: "บรอนซ์", 2: "ซิลเวอร์", 3: "โกลด์", 4: "ไดมอนด์" },
@@ -117,7 +117,7 @@ export function HoneyStatusBar(props: StatusProps) {
   } = props;
   const {
     currentLevel, nextThreshold, isMaxRank, progress,
-    rankLabels, RankIcon, mult, nextTier, daysToNext,
+    rankLabels, RankIcon,
   } = useStatusData(props);
 
   return (
@@ -129,22 +129,34 @@ export function HoneyStatusBar(props: StatusProps) {
             <span className="text-base leading-none">🍯</span>
           </div>
           <p className="text-lg font-extrabold tabular-nums leading-tight text-primary">
-            {points.toLocaleString()} <span className="text-[11px] font-bold">pt</span>
+            🍯 {points.toLocaleString()}
           </p>
+          <HowToEarnPopover lang={lang} />
         </div>
 
         <div className="flex items-center gap-2">
           <RankIcon className="size-4 shrink-0 text-primary" />
           <span className="text-sm font-extrabold text-primary">{rankLabels[currentLevel]}</span>
           {!isMaxRank ? (
-            <div className="flex min-w-0 flex-1 items-center gap-1.5">
-              <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-muted">
-                <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progress}%` }} />
+            <>
+              <div className="flex min-w-0 flex-1 items-center gap-1.5">
+                <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-muted">
+                  <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progress}%` }} />
+                </div>
+                <span className="shrink-0 text-[10px] tabular-nums text-muted-foreground">
+                  {lifetimeEarned.toLocaleString()}/{nextThreshold!.toLocaleString()}
+                </span>
               </div>
-              <span className="shrink-0 text-[10px] tabular-nums text-muted-foreground">
-                {lifetimeEarned.toLocaleString()}/{nextThreshold!.toLocaleString()}
-              </span>
-            </div>
+              {(() => {
+                const NextIcon = RANK_ICONS[currentLevel + 1] ?? Shield;
+                return (
+                  <span className="flex shrink-0 items-center gap-1 text-[10px] font-semibold text-muted-foreground">
+                    <NextIcon className="size-3" />
+                    {rankLabels[currentLevel + 1]}
+                  </span>
+                );
+              })()}
+            </>
           ) : (
             <span className="flex items-center gap-0.5 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
               <Trophy className="size-3" /> MAX
@@ -155,52 +167,19 @@ export function HoneyStatusBar(props: StatusProps) {
       </div>
 
       {/* Right: Streak + Check-in (inline) */}
-      <div className="panel space-y-2 px-4 py-3">
-        <div className="flex items-center gap-2.5">
-          <div className={cn(
-            "flex size-9 shrink-0 items-center justify-center rounded-lg",
-            streak >= 7 ? "bg-orange-500/10" : "bg-muted",
-          )}>
-            <Flame className={cn("size-5", streak >= 7 ? "text-orange-500" : "text-muted-foreground")} />
-          </div>
-          <p className="min-w-0 text-lg font-extrabold tabular-nums leading-tight">
-            {streak} <span className="text-[11px] font-bold text-muted-foreground">{lang === "TH" ? "วัน" : lang === "JP" ? "日" : streak === 1 ? "day" : "days"}</span>
-            <span className={cn(
-              "ml-1.5 rounded px-1.5 py-0.5 text-[11px] font-black tabular-nums",
-              mult >= 3 ? "bg-amber-500/15 text-amber-600 dark:text-amber-400" : mult >= 2 ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground",
-            )}>
-              {mult}x
-            </span>
-          </p>
-          <div className="ml-auto">
+      <div className="panel space-y-3 px-4 py-3">
+        <div className="flex items-center justify-between">
+          <StreakTierIndicator streak={streak} lang={lang} variant="expanded" className="min-w-0 flex-1" />
+          <div className="ml-3 shrink-0">
             <CheckinButton lang={lang} streak={streak} canCheckin={canCheckin} checkinLoading={checkinLoading} onCheckin={onCheckin} />
           </div>
         </div>
-
-        <div className="pl-[46px]">
-          {nextTier && daysToNext > 0 && (
-            <p className="flex items-center gap-0.5 text-[10px] text-muted-foreground">
-              <ChevronRight className="size-3" />
-              {lang === "TH"
-                ? `อีก ${daysToNext} วันถึง ${nextTier.mult}x`
-                : lang === "JP"
-                  ? `あと${daysToNext}日で${nextTier.mult}x`
-                  : `${daysToNext}d to ${nextTier.mult}x`}
-              {activeEvent && (
-                <span className="ml-1 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5">
-                  <Sparkles className="size-3 text-primary" />
-                  <span className="text-[10px] font-bold text-primary">{activeEvent.honeyMultiplier}x</span>
-                </span>
-              )}
-            </p>
-          )}
-          {(!nextTier || daysToNext <= 0) && activeEvent && (
-            <p className="flex items-center gap-1 text-[10px]">
-              <Sparkles className="size-3 text-primary" />
-              <span className="font-bold text-primary">{activeEvent.honeyMultiplier}x</span>
-            </p>
-          )}
-        </div>
+        {activeEvent && (
+          <p className="flex items-center gap-1 text-[10px]">
+            <Sparkles className="size-3 text-primary" />
+            <span className="font-bold text-primary">{activeEvent.honeyMultiplier}x {lang === "TH" ? "อีเวนต์โบนัส" : lang === "JP" ? "イベントボーナス" : "Event bonus"}</span>
+          </p>
+        )}
       </div>
     </div>
   );

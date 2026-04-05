@@ -450,7 +450,7 @@ export function Header() {
               <span>Honey</span>
               {authLoaded && authUser && honeyPoints > 0 && (
                 <span className="font-bold tabular-nums text-amber-600 dark:text-amber-400">
-                  {honeyPoints.toLocaleString()} pt
+                  {honeyPoints.toLocaleString()}
                 </span>
               )}
             </Link>
@@ -548,7 +548,7 @@ export function Header() {
                           <span className="text-sm leading-none">🍯</span>
                           <span className="text-[11px] font-medium text-muted-foreground">Honey</span>
                           <span className="ml-auto text-xs font-bold tabular-nums text-foreground">
-                            {honeyPoints.toLocaleString()} pt
+                            {honeyPoints.toLocaleString()}
                           </span>
                         </div>
                       </DropdownMenuLabel>

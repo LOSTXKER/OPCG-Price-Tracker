@@ -291,14 +291,14 @@ function SetCard({ set }: { set: SetWithCard }) {
               <Package className="size-10 text-muted-foreground/15" />
             </div>
           )}
-          <div className="absolute left-2.5 top-2.5">
-            <span className="rounded-md bg-background/80 px-2 py-0.5 font-mono text-xs font-bold text-foreground backdrop-blur-sm">
-              {set.code.toUpperCase()}
-            </span>
-          </div>
         </div>
 
         <div className="flex flex-1 flex-col gap-1 border-t border-border/30 p-3">
+          <div className="mb-0.5 flex items-center gap-2">
+            <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-mono text-[11px] font-bold text-primary">
+              {set.code.toUpperCase()}
+            </span>
+          </div>
           <p className="text-sm font-semibold leading-snug line-clamp-2 transition-colors group-hover:text-primary">
             {set.nameEn ?? set.name}
           </p>

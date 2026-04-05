@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
-import { SlidersHorizontal, X } from "lucide-react";
+import { SlidersHorizontal, TrendingUpDown, X } from "lucide-react";
 
 import { CardGrid } from "@/components/cards/card-grid";
 import { CardItem, type ChangePeriod } from "@/components/cards/card-item";
@@ -171,13 +171,14 @@ export function SetDetailContent({
           {/* Right: controls — fixed */}
           <div className="flex shrink-0 items-center gap-1.5 pl-2">
             {/* Period toggle */}
-            <div className="flex items-center rounded-lg bg-muted/50 p-0.5">
+            <div className="flex items-center gap-0.5 rounded-full border border-border/50 p-0.5">
+              <TrendingUpDown className="mx-1.5 size-3.5 text-muted-foreground/50" />
               {CHANGE_PERIODS.map((p) => (
                 <button
                   key={p}
                   onClick={() => setChangePeriod(p)}
                   className={cn(
-                    "rounded-md px-2 py-1 text-[11px] font-medium tabular-nums transition-colors",
+                    "rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums transition-all",
                     changePeriod === p
                       ? "bg-background text-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"

@@ -25,6 +25,7 @@ async function getMarketData() {
     setCount,
     rarityBreakdown,
     topSetsByValue,
+    topCards,
   ] = await Promise.all([
     prisma.card.count(),
 
@@ -49,17 +50,34 @@ async function getMarketData() {
       ORDER BY total_value DESC
     `,
 
-    prisma.$queryRaw<{ code: string; name: string; name_en: string | null; card_count: bigint; total_value: number }[]>`
+    prisma.$queryRaw<{ code: string; name: string; name_en: string | null; box_image_url: string | null; card_count: bigint; total_value: number }[]>`
       SELECT s.code, s.name, s."nameEn" as name_en,
+             s."boxImageUrl" as box_image_url,
              COUNT(c.id)::bigint as card_count,
              COALESCE(SUM(c."latestPriceJpy"), 0) as total_value
       FROM "CardSet" s
       JOIN "Card" c ON c."setId" = s.id
       WHERE c."latestPriceJpy" > 0
-      GROUP BY s.id, s.code, s.name, s."nameEn"
+      GROUP BY s.id, s.code, s.name, s."nameEn", s."boxImageUrl"
       ORDER BY total_value DESC
       LIMIT 10
     `,
+
+    prisma.card.findMany({
+      where: { latestPriceJpy: { gt: 0 } },
+      orderBy: { latestPriceJpy: "desc" },
+      take: 6,
+      select: {
+        cardCode: true,
+        nameJp: true,
+        nameEn: true,
+        nameTh: true,
+        rarity: true,
+        imageUrl: true,
+        latestPriceJpy: true,
+        set: { select: { code: true } },
+      },
+    }),
   ])
 
   return {
@@ -75,8 +93,19 @@ async function getMarketData() {
     topSetsByValue: topSetsByValue.map((s) => ({
       code: s.code,
       name: s.name_en ?? s.name,
+      boxImageUrl: s.box_image_url,
       cardCount: Number(s.card_count),
       totalValue: Number(s.total_value),
+    })),
+    topCards: topCards.map((c) => ({
+      cardCode: c.cardCode,
+      nameJp: c.nameJp,
+      nameEn: c.nameEn,
+      nameTh: c.nameTh,
+      rarity: c.rarity,
+      imageUrl: c.imageUrl,
+      latestPriceJpy: c.latestPriceJpy ?? 0,
+      setCode: c.set.code,
     })),
   }
 }
