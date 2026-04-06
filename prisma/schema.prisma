@@ -262,9 +262,11 @@ model User {
   onboardingCompleted   Boolean          @default(false)
   extraPriceAlertSlots  Int              @default(0)
   csvExportCredits      Int              @default(0)
+  ticketBalance         Int              @default(0)
   referralCode          String?          @unique
   badges              UserBadge[]
   dailyMissions       DailyMission[]
+  monthlyMissions     MonthlyMission[]
   referralLinks       ReferralLink[]
   pricePredictions    PricePrediction[]
   achievements        UserAchievement[]
@@ -319,6 +321,7 @@ enum HoneyActionType {
   RAFFLE_WIN
   LEVEL_UP
   WEEKLY_BONUS
+  MONTHLY_MISSION
   LEADERBOARD_REWARD
   // Deprecated — kept for historical transaction data
   PORTFOLIO_ADD
@@ -421,23 +424,28 @@ model UserAchievement {
 }
 
 model MonthlyRaffle {
-  id            Int            @id @default(autoincrement())
-  month         String         @unique // "2026-04"
-  title         String
-  titleEn       String?
-  titleTh       String?
-  description   String?
-  prizes        Json           // [{ rank: 1, name: "...", value: "..." }]
-  ticketCost    Int            @default(50)
-  maxTickets    Int            @default(5)
-  freeThreshold Int            @default(7) // streak days for free ticket
-  isActive      Boolean        @default(true)
-  drawnAt       DateTime?
-  winnerId      String?
+  id             Int            @id @default(autoincrement())
+  month          String         // "2026-04"
+  slug           String         @default("default")
+  title          String
+  titleEn        String?
+  titleTh        String?
+  description    String?
+  imageUrl       String?
+  color          String?
+  prizes         Json           // [{ rank, name, imageUrl?, honeyBonus? }]
+  ticketCost     Int            @default(50)
+  maxTickets     Int            @default(5)
+  freeThreshold  Int            @default(7) // streak days for free ticket
+  sortOrder      Int            @default(0)
+  isActive       Boolean        @default(true)
+  drawnAt        DateTime?
+  winnerId       String?
   winnerTicketId Int?
-  tickets       RaffleTicket[]
-  createdAt     DateTime       @default(now())
+  tickets        RaffleTicket[]
+  createdAt      DateTime       @default(now())
 
+  @@unique([month, slug])
   @@index([isActive, month])
 }
 
@@ -451,6 +459,19 @@ model RaffleTicket {
   createdAt DateTime       @default(now())
 
   @@index([raffleId, userId])
+  @@index([userId])
+}
+
+model MonthlyMission {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  month     String   // "2026-04"
+  tasks     Json     // [{ id, done, claimed, progress, target }]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, month])
   @@index([userId])
 }
 
@@ -499,6 +520,7 @@ enum ShopItemType {
   PROFILE_FRAME
   PRICE_ALERT_SLOT
   CSV_EXPORT_PASS
+  RAFFLE_TICKET
 }
 
 enum UserTier {

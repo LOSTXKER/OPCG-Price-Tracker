@@ -2,6 +2,7 @@ import { z } from "zod/v4";
 
 const serverSchema = z.object({
   DATABASE_URL: z.string().min(1),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   CRON_SECRET: z.string().optional(),
   EXCHANGE_RATE_API_KEY: z.string().optional(),
   GEMINI_API_KEY: z.string().optional(),

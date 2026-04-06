@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { spendHoney, earnHoneyDirect } from "@/lib/honey";
+import { earnHoneyDirect } from "@/lib/honey";
 import { currentMonthKey } from "@/lib/honey-utils";
 import { RafflePrizesSchema, parseJsonField } from "@/lib/honey-schemas";
 
@@ -7,14 +7,21 @@ export const TICKET_COST_DEFAULT = 50;
 export const MAX_TICKETS_DEFAULT = 5;
 export const FREE_STREAK_THRESHOLD = 7;
 
-export async function getActiveRaffle() {
+export async function getActiveRaffles() {
   const month = currentMonthKey();
-  return prisma.monthlyRaffle.findFirst({
+  return prisma.monthlyRaffle.findMany({
     where: { isActive: true, month },
+    orderBy: { sortOrder: "asc" },
     include: {
       tickets: { select: { id: true, userId: true, isFree: true } },
     },
   });
+}
+
+/** @deprecated Use getActiveRaffles() for multi-machine support */
+export async function getActiveRaffle() {
+  const raffles = await getActiveRaffles();
+  return raffles[0] ?? null;
 }
 
 export async function getUserTickets(userId: string, raffleId: number) {
@@ -24,10 +31,20 @@ export async function getUserTickets(userId: string, raffleId: number) {
   });
 }
 
+export async function getUserTicketsForMonth(userId: string, month: string) {
+  return prisma.raffleTicket.findMany({
+    where: {
+      userId,
+      raffle: { month },
+    },
+    select: { id: true, raffleId: true, isFree: true },
+  });
+}
+
 export async function buyTicket(
   userId: string,
   raffleId: number,
-): Promise<{ success: true; ticketId: number; total: number } | { success: false; error: string }> {
+): Promise<{ success: true; ticketId: number; ticketBalance: number } | { success: false; error: string }> {
   const raffle = await prisma.monthlyRaffle.findUnique({
     where: { id: raffleId },
     include: { tickets: { where: { userId } } },
@@ -41,56 +58,70 @@ export async function buyTicket(
     return { success: false, error: `Max ${raffle.maxTickets} tickets per raffle` };
   }
 
-  const spend = await spendHoney(
-    userId,
-    raffle.ticketCost,
-    `Raffle ticket: ${raffle.title}`,
-    { raffleId, month: raffle.month },
-    "RAFFLE_TICKET",
-  );
-
-  if (!spend.success) {
-    return { success: false, error: "Insufficient honey" };
-  }
-
-  const ticket = await prisma.raffleTicket.create({
-    data: { userId, raffleId },
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { ticketBalance: true },
   });
 
-  return { success: true, ticketId: ticket.id, total: spend.total };
+  if (!user || user.ticketBalance < 1) {
+    return { success: false, error: "No tickets available" };
+  }
+
+  const [updatedUser, ticket] = await prisma.$transaction([
+    prisma.user.update({
+      where: { id: userId },
+      data: { ticketBalance: { decrement: 1 } },
+      select: { ticketBalance: true },
+    }),
+    prisma.raffleTicket.create({
+      data: { userId, raffleId },
+    }),
+  ]);
+
+  return { success: true, ticketId: ticket.id, ticketBalance: updatedUser.ticketBalance };
 }
 
 export async function claimFreeTicket(
   userId: string,
-  raffleId: number,
-): Promise<{ success: true; ticketId: number } | { success: false; error: string }> {
-  const raffle = await prisma.monthlyRaffle.findUnique({
-    where: { id: raffleId },
-    include: { tickets: { where: { userId, isFree: true } } },
+): Promise<{ success: true; ticketBalance: number } | { success: false; error: string }> {
+  const month = currentMonthKey();
+
+  const existingFree = await prisma.raffleTicket.findFirst({
+    where: {
+      userId,
+      isFree: true,
+      raffle: { month },
+    },
   });
 
-  if (!raffle || !raffle.isActive || raffle.drawnAt) {
-    return { success: false, error: "Raffle not available" };
+  if (existingFree) {
+    return { success: false, error: "Free ticket already claimed this month" };
   }
 
-  if (raffle.tickets.length > 0) {
-    return { success: false, error: "Free ticket already claimed" };
-  }
+  const raffles = await prisma.monthlyRaffle.findMany({
+    where: { isActive: true, month },
+  });
+
+  const minThreshold = raffles.length > 0
+    ? Math.min(...raffles.map((r) => r.freeThreshold))
+    : FREE_STREAK_THRESHOLD;
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { checkinStreak: true },
   });
 
-  if (!user || user.checkinStreak < raffle.freeThreshold) {
-    return { success: false, error: `Need ${raffle.freeThreshold}-day streak for free ticket` };
+  if (!user || user.checkinStreak < minThreshold) {
+    return { success: false, error: `Need ${minThreshold}-day streak for free ticket` };
   }
 
-  const ticket = await prisma.raffleTicket.create({
-    data: { userId, raffleId, isFree: true },
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: { ticketBalance: { increment: 1 } },
+    select: { ticketBalance: true },
   });
 
-  return { success: true, ticketId: ticket.id };
+  return { success: true, ticketBalance: updatedUser.ticketBalance };
 }
 
 export async function drawWinner(raffleId: number): Promise<{

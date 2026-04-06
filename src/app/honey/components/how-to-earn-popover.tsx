@@ -6,10 +6,17 @@ import {
   HelpCircle,
   ShoppingBag,
   Star,
+  Ticket,
   Users,
 } from "lucide-react";
 import { Popover } from "@base-ui/react/popover";
 import { t, type Language } from "@/lib/i18n";
+
+const POPOVER_POPUP_CLASS =
+  "w-56 rounded-lg border bg-background p-3 shadow-lg data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95";
+
+const POPOVER_ARROW_CLASS =
+  "size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px] border bg-background data-[side=bottom]:top-1 data-[side=top]:-bottom-2.5";
 
 const EARN_METHODS = [
   { icon: Calendar, labelKey: "honeyEarnCheckin" as const, reward: "10–30 pt" },
@@ -17,6 +24,11 @@ const EARN_METHODS = [
   { icon: ShoppingBag, labelKey: "honeyEarnSell" as const, reward: "10 pt" },
   { icon: Star, labelKey: "honeyEarnReview" as const, reward: "15 pt" },
   { icon: Users, labelKey: "honeyEarnRefer" as const, reward: "50 pt" },
+];
+
+const USE_METHODS = [
+  { icon: ShoppingBag, labelKey: "honeyUseShop" as const },
+  { icon: Ticket, labelKey: "honeyUseBuyTicket" as const },
 ];
 
 export function HowToEarnPopover({ lang }: { lang: Language }) {
@@ -29,7 +41,7 @@ export function HowToEarnPopover({ lang }: { lang: Language }) {
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner side="bottom" sideOffset={6} align="center" className="z-50">
-          <Popover.Popup className="w-56 rounded-lg border bg-background p-3 shadow-lg data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95">
+          <Popover.Popup className={POPOVER_POPUP_CLASS}>
             <p className="mb-2 text-xs font-semibold text-foreground">
               {t(lang, "howToEarn")}
             </p>
@@ -45,7 +57,23 @@ export function HowToEarnPopover({ lang }: { lang: Language }) {
                 </div>
               ))}
             </div>
-            <Popover.Arrow className="size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px] border bg-background data-[side=bottom]:top-1 data-[side=top]:-bottom-2.5" />
+
+            <p className="mb-2 mt-3 border-t pt-2 text-xs font-semibold text-foreground">
+              {t(lang, "howToUseHoney")}
+            </p>
+            <div className="space-y-1.5">
+              {USE_METHODS.map(({ icon: Icon, labelKey }) => (
+                <div
+                  key={labelKey}
+                  className="flex items-center gap-2 rounded-md px-2 py-1 text-xs text-muted-foreground"
+                >
+                  <Icon className="size-3.5 shrink-0" />
+                  <span className="flex-1">{t(lang, labelKey)}</span>
+                </div>
+              ))}
+            </div>
+
+            <Popover.Arrow className={POPOVER_ARROW_CLASS} />
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>

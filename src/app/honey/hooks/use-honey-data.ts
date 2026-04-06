@@ -11,7 +11,9 @@ import type {
   HoneyLevel,
   ActiveEvent,
   RaffleData,
+  RaffleWinner,
   AchievementItem,
+  RaffleMissionsData,
 } from "../types";
 
 export function useHoneyData() {
@@ -26,9 +28,12 @@ export function useHoneyData() {
   const [mission, setMission] = useState<MissionData | null>(null);
   const [level, setLevel] = useState<HoneyLevel | null>(null);
   const [achievements, setAchievements] = useState<AchievementItem[]>([]);
-  const [raffle, setRaffle] = useState<RaffleData | null>(null);
-  const [myTickets, setMyTickets] = useState(0);
+  const [machines, setMachines] = useState<RaffleData[]>([]);
+  const [myTickets, setMyTickets] = useState<Record<number, number>>({});
+  const [ticketBalance, setTicketBalance] = useState(0);
   const [canClaimFree, setCanClaimFree] = useState(false);
+  const [lastWinners, setLastWinners] = useState<RaffleWinner[]>([]);
+  const [raffleMissions, setRaffleMissions] = useState<RaffleMissionsData | null>(null);
   const [activeEvent, setActiveEvent] = useState<ActiveEvent | null>(null);
   const [referralUrl, setReferralUrl] = useState("");
   const [referralTotalClicks, setReferralTotalClicks] = useState(0);
@@ -41,7 +46,7 @@ export function useHoneyData() {
 
   const load = useCallback(async () => {
     try {
-      const [honeyRes, shopRes, lbRes, missionsRes, achRes, raffleRes, refRes] = await Promise.all([
+      const [honeyRes, shopRes, lbRes, missionsRes, achRes, raffleRes, refRes, rmRes] = await Promise.all([
         fetch("/api/honey"),
         fetch("/api/honey/shop"),
         fetch("/api/honey/leaderboard"),
@@ -49,6 +54,7 @@ export function useHoneyData() {
         fetch("/api/honey/achievements"),
         fetch("/api/honey/raffle"),
         fetch("/api/honey/referral"),
+        fetch("/api/honey/raffle-missions"),
       ]);
       if (honeyRes.ok) {
         const data = await honeyRes.json();
@@ -77,11 +83,11 @@ export function useHoneyData() {
       if (achRes.ok) setAchievements((await achRes.json()).achievements);
       if (raffleRes.ok) {
         const data = await raffleRes.json();
-        if (data.raffle) {
-          setRaffle(data.raffle);
-          setMyTickets(data.myTickets);
-          setCanClaimFree(data.canClaimFree);
-        }
+        setMachines(data.machines ?? []);
+        setMyTickets(data.myTickets ?? {});
+        setTicketBalance(data.ticketBalance ?? 0);
+        setCanClaimFree(data.canClaimFree ?? false);
+        setLastWinners(data.lastWinners ?? []);
       }
       if (refRes.ok) {
         const data = await refRes.json();
@@ -90,6 +96,10 @@ export function useHoneyData() {
         setReferralTodayClicks(data.todayClicks ?? 0);
         setReferralConversions(data.totalConversions ?? 0);
         setReferralEarned(data.totalEarned ?? 0);
+      }
+      if (rmRes.ok) {
+        const data = await rmRes.json();
+        setRaffleMissions(data.missions ?? null);
       }
     } catch (err) {
       console.error("Failed to load honey data:", err);
@@ -136,18 +146,18 @@ export function useHoneyData() {
     } catch { setMessage(t(lang, "redeemFailed")); }
   };
 
-  const buyTicket = async () => {
+  const buyTicket = async (raffleId: number) => {
     setMessage(null);
     try {
       const res = await fetch("/api/honey/raffle", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "buy" }),
+        body: JSON.stringify({ action: "buy", raffleId }),
       });
       const data = await res.json();
       if (res.ok) {
-        setMyTickets((p) => p + 1);
-        if (data.total != null) setPoints(data.total);
+        setMyTickets((prev) => ({ ...prev, [raffleId]: (prev[raffleId] ?? 0) + 1 }));
+        if (data.ticketBalance != null) setTicketBalance(data.ticketBalance);
         setMessage(t(lang, "raffleBought"));
         load();
       } else setMessage(data.error);
@@ -163,8 +173,11 @@ export function useHoneyData() {
         body: JSON.stringify({ action: "claim-free" }),
       });
       const data = await res.json();
-      if (res.ok) { setMyTickets((p) => p + 1); setCanClaimFree(false); setMessage(t(lang, "raffleFreeTicket")); }
-      else setMessage(data.error);
+      if (res.ok) {
+        if (data.ticketBalance != null) setTicketBalance(data.ticketBalance);
+        setCanClaimFree(false);
+        setMessage(t(lang, "raffleFreeTicket"));
+      } else setMessage(data.error);
     } catch { setMessage(t(lang, "redeemFailed")); }
   };
 
@@ -214,13 +227,64 @@ export function useHoneyData() {
     } catch { /* silent */ }
   };
 
+  const trackRaffleMission = async (missionId: string) => {
+    try {
+      const res = await fetch("/api/honey/raffle-missions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "track", missionId }),
+      });
+      const data = await res.json();
+      if (res.ok) setRaffleMissions(data.missions ?? null);
+    } catch { /* silent */ }
+  };
+
+  const claimRaffleMission = async (missionId: string) => {
+    setMessage(null);
+    try {
+      const res = await fetch("/api/honey/raffle-missions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "claim", missionId }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setRaffleMissions(data.missions ?? null);
+        const parts: string[] = [];
+        if (data.earned) parts.push(`+${data.earned} Honey`);
+        if (data.ticketAwarded) parts.push("+1 Ticket");
+        if (parts.length) setMessage(parts.join(" & "));
+        load();
+      } else setMessage(data.error);
+    } catch { setMessage(t(lang, "redeemFailed")); }
+  };
+
+  const claimRaffleMissionBonusAction = async () => {
+    setMessage(null);
+    try {
+      const res = await fetch("/api/honey/raffle-missions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "claim-bonus" }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setRaffleMissions(data.missions ?? null);
+        if (data.ticketAwarded) setMessage("+1 Free Ticket!");
+        load();
+      } else setMessage(data.error);
+    } catch { setMessage(t(lang, "redeemFailed")); }
+  };
+
   return {
     lang,
     points, streak, canCheckin, transactions, shopItems, leaderboard,
-    mission, level, lifetimeEarned, achievements, raffle, myTickets,
-    canClaimFree, activeEvent,
+    mission, level, lifetimeEarned, achievements,
+    machines, myTickets, ticketBalance, canClaimFree, lastWinners,
+    raffleMissions,
+    activeEvent,
     referralUrl, referralTotalClicks, referralTodayClicks, referralConversions, referralEarned,
     loading, message, setMessage,
-    actions: { checkin, redeem, buyTicket, claimFreeTicket, claimTask, claimBonus, trackManualMission },
+    actions: { checkin, redeem, buyTicket, claimFreeTicket, claimTask, claimBonus, trackManualMission, trackRaffleMission, claimRaffleMission, claimRaffleMissionBonusAction },
   };
 }

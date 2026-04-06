@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/db";
 import type { HoneyShopItem } from "@/generated/prisma/client";
-import { currentMonthKey } from "@/lib/honey-utils";
 import { ShopItemValueSchema, parseJsonField, type ShopItemValueParsed } from "@/lib/honey-schemas";
 
 async function fulfillBundleExtras(userId: string, val: ShopItemValueParsed) {
@@ -17,16 +16,10 @@ async function fulfillBundleExtras(userId: string, val: ShopItemValueParsed) {
 
   const tickets = val.freeRaffleTickets ?? 0;
   if (tickets > 0) {
-    const raffle = await prisma.monthlyRaffle.findFirst({
-      where: { month: currentMonthKey(), isActive: true },
+    await prisma.user.update({
+      where: { id: userId },
+      data: { ticketBalance: { increment: tickets } },
     });
-    if (raffle) {
-      for (let i = 0; i < tickets; i++) {
-        await prisma.raffleTicket.create({
-          data: { userId, raffleId: raffle.id },
-        });
-      }
-    }
   }
 }
 
@@ -85,6 +78,14 @@ export async function fulfillRedemption(userId: string, item: HoneyShopItem) {
       await prisma.user.update({
         where: { id: userId },
         data: { csvExportCredits: { increment: 1 } },
+      });
+      break;
+    }
+    case "RAFFLE_TICKET": {
+      const qty = val.quantity ?? 1;
+      await prisma.user.update({
+        where: { id: userId },
+        data: { ticketBalance: { increment: qty } },
       });
       break;
     }

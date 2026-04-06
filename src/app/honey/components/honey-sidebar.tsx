@@ -4,19 +4,26 @@ import { useEffect, useState } from "react";
 import {
   Calendar,
   CheckCircle2,
+  ClipboardList,
+  Coins,
+  Flame,
+  HelpCircle,
+  Info,
   Shield,
   Sparkles,
   Star,
   Crown,
+  Ticket,
   Trophy,
 } from "lucide-react";
+import { Popover } from "@base-ui/react/popover";
 import { Button } from "@/components/ui/button";
-import { t, type Language } from "@/lib/i18n";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { t, type Language } from "@/lib/i18n";
 import type { HoneyLevel, ActiveEvent } from "../types";
 import { RankInfoPopover } from "./rank-info-popover";
 import { HowToEarnPopover } from "./how-to-earn-popover";
-import { StreakTierIndicator } from "@/components/shared/streak-tier-indicator";
 
 const RANK_LABELS: Record<string, Record<number, string>> = {
   TH: { 0: "มือใหม่", 1: "บรอนซ์", 2: "ซิลเวอร์", 3: "โกลด์", 4: "ไดมอนด์" },
@@ -30,17 +37,43 @@ const STREAK_TIERS = [
   { min: 1, max: 6, mult: 1, pts: 10 },
   { min: 7, max: 29, mult: 2, pts: 20 },
   { min: 30, max: Infinity, mult: 3, pts: 30 },
-];
+] as const;
 
-function getStreakTier(streak: number) {
+function getStreakReward(streak: number) {
+  if (streak >= 30) return 30;
+  if (streak >= 7) return 20;
+  return 10;
+}
+
+function getStreakTierIdx(streak: number) {
   if (streak >= 30) return 2;
   if (streak >= 7) return 1;
   return 0;
 }
 
+function streakDayText(lang: Language, n: number) {
+  if (lang === "TH") return `${n} วัน`;
+  if (lang === "JP") return `${n}日`;
+  return n === 1 ? `${n} day` : `${n} days`;
+}
+
+function dayLabel(lang: Language, n: number) {
+  if (lang === "TH") return `${n} วัน`;
+  if (lang === "JP") return `${n}日`;
+  return n === 1 ? `${n} day` : `${n} days`;
+}
+
+function perDayUnit(lang: Language) {
+  if (lang === "TH") return "/วัน";
+  if (lang === "JP") return "/日";
+  return "/day";
+}
+
 export type StatusProps = {
   lang: Language;
   points: number;
+  ticketBalance: number;
+  ticketsUsedThisMonth: number;
   streak: number;
   level: HoneyLevel | null;
   lifetimeEarned: number;
@@ -51,23 +84,171 @@ export type StatusProps = {
 };
 
 function useStatusData(props: StatusProps) {
-  const { level, lifetimeEarned, lang, streak } = props;
+  const { level, lang } = props;
   const currentLevel = level?.level ?? 0;
   const nextThreshold = level?.nextThreshold ?? null;
-  const currentMin = level?.currentMin ?? 0;
   const isMaxRank = nextThreshold === null;
-  const progress = isMaxRank ? 100 : nextThreshold > currentMin
-    ? Math.min(100, Math.round(((lifetimeEarned - currentMin) / (nextThreshold - currentMin)) * 100))
-    : 100;
   const rankLabels = RANK_LABELS[lang] ?? RANK_LABELS.EN;
   const RankIcon = RANK_ICONS[currentLevel] ?? Shield;
-  const tierIdx = getStreakTier(streak);
-  const mult = STREAK_TIERS[tierIdx].mult;
-  const nextTier = tierIdx < 2 ? STREAK_TIERS[tierIdx + 1] : null;
-  const daysToNext = nextTier ? nextTier.min - streak : 0;
 
-  return { currentLevel, nextThreshold, currentMin, isMaxRank, progress, rankLabels, RankIcon, tierIdx, mult, nextTier, daysToNext };
+  return { currentLevel, nextThreshold, isMaxRank, rankLabels, RankIcon };
 }
+
+/* ------------------------------------------------------------------ */
+/*  Shared popover styles                                              */
+/* ------------------------------------------------------------------ */
+
+const POPOVER_POPUP_CLASS =
+  "w-56 rounded-lg border bg-background p-3 shadow-lg data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95";
+
+const POPOVER_ARROW_CLASS =
+  "size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px] border bg-background data-[side=bottom]:top-1 data-[side=top]:-bottom-2.5";
+
+const INFO_TRIGGER_CLASS =
+  "inline-flex size-5 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground";
+
+/* ------------------------------------------------------------------ */
+/*  Ticket Info Popover                                                */
+/* ------------------------------------------------------------------ */
+
+function TicketInfoPopover({ lang }: { lang: Language }) {
+  const earnMethods = [
+    { icon: Coins, label: t(lang, "ticketMethodBuy") },
+    { icon: Flame, label: t(lang, "ticketMethodFree") },
+    { icon: ClipboardList, label: t(lang, "ticketMethodMission") },
+  ];
+
+  return (
+    <Popover.Root>
+      <Popover.Trigger className={INFO_TRIGGER_CLASS}>
+        <Info className="size-3.5" />
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Positioner side="bottom" sideOffset={6} align="center" className="z-50">
+          <Popover.Popup className={POPOVER_POPUP_CLASS}>
+            <p className="mb-2 text-xs font-semibold text-foreground">
+              {t(lang, "raffleHowToGet")}
+            </p>
+            <div className="space-y-1.5">
+              {earnMethods.map(({ icon: Icon, label }) => (
+                <div key={label} className="flex items-center gap-2 rounded-md px-2 py-1 text-xs text-muted-foreground">
+                  <Icon className="size-3.5 shrink-0" />
+                  <span className="flex-1">{label}</span>
+                </div>
+              ))}
+            </div>
+
+            <p className="mb-2 mt-3 border-t pt-2 text-xs font-semibold text-foreground">
+              {t(lang, "howToUseTicket")}
+            </p>
+            <div className="flex items-center gap-2 rounded-md px-2 py-1 text-xs text-muted-foreground">
+              <Ticket className="size-3.5 shrink-0" />
+              <span className="flex-1">{t(lang, "ticketUseRaffle")}</span>
+            </div>
+
+            <Popover.Arrow className={POPOVER_ARROW_CLASS} />
+          </Popover.Popup>
+        </Popover.Positioner>
+      </Popover.Portal>
+    </Popover.Root>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Streak Info Popover                                                */
+/* ------------------------------------------------------------------ */
+
+function StreakInfoPopover({ lang }: { lang: Language }) {
+  return (
+    <Popover.Root>
+      <Popover.Trigger className={INFO_TRIGGER_CLASS}>
+        <HelpCircle className="size-3.5" />
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Positioner side="bottom" sideOffset={6} align="center" className="z-50">
+          <Popover.Popup className={POPOVER_POPUP_CLASS}>
+            <p className="mb-2 text-xs font-semibold text-foreground">
+              {t(lang, "streakInfoTitle")}
+            </p>
+            <div className="space-y-1.5">
+              {STREAK_TIERS.map((tier, i) => (
+                <div key={i} className="flex items-center gap-2 rounded-md px-2 py-1 text-xs">
+                  <span className={cn(
+                    "flex size-5 shrink-0 items-center justify-center rounded-full text-[9px] font-black",
+                    i === 0 ? "bg-muted text-muted-foreground"
+                      : i === 1 ? "bg-primary/10 text-primary"
+                        : "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+                  )}>
+                    {tier.mult}x
+                  </span>
+                  <span className="flex-1 text-muted-foreground">
+                    {i === 0 ? t(lang, "streakInfoStart") : `${dayLabel(lang, tier.min)}+`}
+                  </span>
+                  <span className="font-semibold tabular-nums text-foreground">
+                    +{tier.pts} 🍯
+                  </span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-2 border-t pt-2 text-[10px] text-muted-foreground">
+              {t(lang, "streakInfoDesc")}
+            </p>
+            <Popover.Arrow className={POPOVER_ARROW_CLASS} />
+          </Popover.Popup>
+        </Popover.Positioner>
+      </Popover.Portal>
+    </Popover.Root>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Stat Card                                                          */
+/* ------------------------------------------------------------------ */
+
+function StatCard({
+  icon,
+  iconClassName,
+  label,
+  value,
+  subValue,
+  tooltipText,
+  popover,
+}: {
+  icon: React.ReactNode;
+  iconClassName: string;
+  label: string;
+  value: React.ReactNode;
+  subValue?: React.ReactNode;
+  tooltipText: string;
+  popover?: React.ReactNode;
+}) {
+  return (
+    <div className="panel relative p-3">
+      {popover && (
+        <div className="absolute right-2 top-2">{popover}</div>
+      )}
+      <Tooltip>
+        <TooltipTrigger className="flex w-full items-center gap-3 text-left">
+          <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl", iconClassName)}>
+            {icon}
+          </div>
+          <div className="min-w-0">
+            <p className="text-[11px] font-medium text-muted-foreground">{label}</p>
+            <p className="text-lg font-bold tabular-nums leading-tight">{value}</p>
+            {subValue && (
+              <p className="text-[10px] tabular-nums text-muted-foreground">{subValue}</p>
+            )}
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>{tooltipText}</TooltipContent>
+      </Tooltip>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Check-in Button                                                    */
+/* ------------------------------------------------------------------ */
 
 function CheckinButton({ lang, streak, canCheckin, checkinLoading, onCheckin }: {
   lang: Language; streak: number; canCheckin: boolean; checkinLoading: boolean; onCheckin: () => void;
@@ -95,9 +276,9 @@ function CheckinButton({ lang, streak, canCheckin, checkinLoading, onCheckin }: 
           </span>
         )}
         <Calendar className="size-3.5" />
-        <span className="hidden sm:inline">{t(lang, "dailyCheckin")}</span>
+        {t(lang, "dailyCheckin")}
         <span className="rounded bg-white/20 px-1 py-px text-[9px] font-bold">
-          +{streak >= 30 ? 30 : streak >= 7 ? 20 : 10} 🍯
+          +{getStreakReward(streak)} 🍯
         </span>
       </Button>
     );
@@ -110,77 +291,106 @@ function CheckinButton({ lang, streak, canCheckin, checkinLoading, onCheckin }: 
   );
 }
 
+/* ------------------------------------------------------------------ */
+/*  Main Banner                                                        */
+/* ------------------------------------------------------------------ */
+
 export function HoneyStatusBar(props: StatusProps) {
   const {
-    lang, points, streak, level, lifetimeEarned, activeEvent,
+    lang, points, ticketBalance, ticketsUsedThisMonth, streak, level, lifetimeEarned, activeEvent,
     canCheckin, checkinLoading, onCheckin,
   } = props;
   const {
-    currentLevel, nextThreshold, isMaxRank, progress,
+    currentLevel, nextThreshold, isMaxRank,
     rankLabels, RankIcon,
   } = useStatusData(props);
 
+  const tierIdx = getStreakTierIdx(streak);
+  const streakReward = getStreakReward(streak);
+
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      {/* Left: Honey + Rank */}
-      <div className="panel space-y-3 px-4 py-3">
-        <div className="flex items-center gap-2.5">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/10">
-            <span className="text-base leading-none">🍯</span>
+    <TooltipProvider delay={300}>
+      <div className="space-y-4">
+        {/* Header row */}
+        <div className="flex items-center gap-4">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl font-bold">{t(lang, "honeyPageTitle")}</h1>
+            <p className="mt-0.5 text-sm text-muted-foreground">{t(lang, "honeySubtitle")}</p>
           </div>
-          <p className="text-lg font-extrabold tabular-nums leading-tight text-primary">
-            🍯 {points.toLocaleString()}
-          </p>
-          <HowToEarnPopover lang={lang} />
-        </div>
 
-        <div className="flex items-center gap-2">
-          <RankIcon className="size-4 shrink-0 text-primary" />
-          <span className="text-sm font-extrabold text-primary">{rankLabels[currentLevel]}</span>
-          {!isMaxRank ? (
-            <>
-              <div className="flex min-w-0 flex-1 items-center gap-1.5">
-                <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-muted">
-                  <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progress}%` }} />
-                </div>
-                <span className="shrink-0 text-[10px] tabular-nums text-muted-foreground">
-                  {lifetimeEarned.toLocaleString()}/{nextThreshold!.toLocaleString()}
+          <div className="flex shrink-0 items-center gap-2">
+            {activeEvent && (
+              <p className="hidden items-center gap-1 text-[10px] sm:flex">
+                <Sparkles className="size-3 text-primary" />
+                <span className="font-bold text-primary">
+                  {activeEvent.honeyMultiplier}x{" "}
+                  {lang === "TH" ? "อีเวนต์โบนัส" : lang === "JP" ? "イベントボーナス" : "Event bonus"}
                 </span>
-              </div>
-              {(() => {
-                const NextIcon = RANK_ICONS[currentLevel + 1] ?? Shield;
-                return (
-                  <span className="flex shrink-0 items-center gap-1 text-[10px] font-semibold text-muted-foreground">
-                    <NextIcon className="size-3" />
-                    {rankLabels[currentLevel + 1]}
-                  </span>
-                );
-              })()}
-            </>
-          ) : (
-            <span className="flex items-center gap-0.5 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
-              <Trophy className="size-3" /> MAX
-            </span>
-          )}
-          <RankInfoPopover lang={lang} level={level} lifetimeEarned={lifetimeEarned} />
-        </div>
-      </div>
-
-      {/* Right: Streak + Check-in (inline) */}
-      <div className="panel space-y-3 px-4 py-3">
-        <div className="flex items-center justify-between">
-          <StreakTierIndicator streak={streak} lang={lang} variant="expanded" className="min-w-0 flex-1" />
-          <div className="ml-3 shrink-0">
-            <CheckinButton lang={lang} streak={streak} canCheckin={canCheckin} checkinLoading={checkinLoading} onCheckin={onCheckin} />
+              </p>
+            )}
+            <CheckinButton
+              lang={lang}
+              streak={streak}
+              canCheckin={canCheckin}
+              checkinLoading={checkinLoading}
+              onCheckin={onCheckin}
+            />
           </div>
         </div>
-        {activeEvent && (
-          <p className="flex items-center gap-1 text-[10px]">
-            <Sparkles className="size-3 text-primary" />
-            <span className="font-bold text-primary">{activeEvent.honeyMultiplier}x {lang === "TH" ? "อีเวนต์โบนัส" : lang === "JP" ? "イベントボーナス" : "Event bonus"}</span>
-          </p>
-        )}
+
+        {/* Stat cards grid */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <StatCard
+            icon={<span className="text-xl leading-none">🍯</span>}
+            iconClassName="bg-amber-500/10"
+            label={t(lang, "honeyLabel")}
+            value={points.toLocaleString()}
+            subValue={`${t(lang, "honeyLifetimeEarned")} ${lifetimeEarned.toLocaleString()}`}
+            tooltipText={t(lang, "honeyBalanceTooltip")}
+            popover={<HowToEarnPopover lang={lang} />}
+          />
+
+          <StatCard
+            icon={<Ticket className="size-5" />}
+            iconClassName="bg-primary/10 text-primary"
+            label={t(lang, "ticketLabel")}
+            value={ticketBalance.toLocaleString()}
+            subValue={`${t(lang, "ticketUsedThisMonth")} ${ticketsUsedThisMonth}`}
+            tooltipText={t(lang, "ticketTooltip")}
+            popover={<TicketInfoPopover lang={lang} />}
+          />
+
+          <StatCard
+            icon={<Flame className="size-5" />}
+            iconClassName={cn(
+              tierIdx >= 2
+                ? "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+                : tierIdx >= 1
+                  ? "bg-orange-500/10 text-orange-500"
+                  : "bg-muted text-muted-foreground",
+            )}
+            label={t(lang, "streakLabel")}
+            value={streakDayText(lang, streak)}
+            subValue={`+${streakReward} 🍯${perDayUnit(lang)}`}
+            tooltipText={t(lang, "streakTooltip")}
+            popover={<StreakInfoPopover lang={lang} />}
+          />
+
+          <StatCard
+            icon={<RankIcon className="size-5" />}
+            iconClassName="bg-primary/10 text-primary"
+            label={t(lang, "rankLabel")}
+            value={rankLabels[currentLevel]}
+            subValue={
+              !isMaxRank
+                ? `${lifetimeEarned.toLocaleString()} / ${nextThreshold!.toLocaleString()}`
+                : "MAX"
+            }
+            tooltipText={t(lang, "rankTooltip")}
+            popover={<RankInfoPopover lang={lang} level={level} lifetimeEarned={lifetimeEarned} />}
+          />
+        </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 }

@@ -22,3 +22,23 @@ export function useCountdown() {
   }, []);
   return timeLeft;
 }
+
+/** Days + hours remaining until the end of the current month. */
+export function useMonthCountdown(): { days: number; hours: number } {
+  const [left, setLeft] = useState({ days: 0, hours: 0 });
+  useEffect(() => {
+    function calc() {
+      const now = new Date();
+      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1, 0, 0, 0, 0);
+      const diff = Math.max(0, endOfMonth.getTime() - now.getTime());
+      return {
+        days: Math.floor(diff / 86_400_000),
+        hours: Math.floor((diff % 86_400_000) / 3_600_000),
+      };
+    }
+    setLeft(calc());
+    const id = setInterval(() => setLeft(calc()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+  return left;
+}

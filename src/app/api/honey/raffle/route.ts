@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
-import { getActiveRaffle, getUserTickets, buyTicket, claimFreeTicket } from "@/lib/honey-raffle";
+import { getActiveRaffles, getUserTicketsForMonth, buyTicket, claimFreeTicket } from "@/lib/honey-raffle";
+import { currentMonthKey } from "@/lib/honey-utils";
 import { prisma } from "@/lib/db";
 import { RafflePrizesSchema, parseJsonField } from "@/lib/honey-schemas";
 
@@ -11,58 +12,79 @@ export const GET = apiHandler(async () => {
   if (!auth.ok) return auth.response;
   const user = auth.user;
 
-  const raffle = await getActiveRaffle();
+  const raffles = await getActiveRaffles();
+  const month = currentMonthKey();
 
-  const lastDrawn = await prisma.monthlyRaffle.findFirst({
-    where: { drawnAt: { not: null } },
+  const allUserTickets = await getUserTicketsForMonth(user.id, month);
+
+  const myTickets: Record<number, number> = {};
+  let freeClaimedThisMonth = false;
+  for (const t of allUserTickets) {
+    myTickets[t.raffleId] = (myTickets[t.raffleId] ?? 0) + 1;
+    if (t.isFree) freeClaimedThisMonth = true;
+  }
+
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { ticketBalance: true, checkinStreak: true },
+  });
+  const ticketBalance = dbUser?.ticketBalance ?? 0;
+
+  const minFreeThreshold = raffles.length > 0
+    ? Math.min(...raffles.map((r) => r.freeThreshold))
+    : 7;
+  const canClaimFree = (dbUser?.checkinStreak ?? 0) >= minFreeThreshold && !freeClaimedThisMonth;
+
+  // Last winners from recent drawn raffles
+  const recentDrawn = await prisma.monthlyRaffle.findMany({
+    where: { drawnAt: { not: null }, winnerId: { not: null } },
     orderBy: { drawnAt: "desc" },
-    select: {
-      month: true, winnerId: true,
-      prizes: true,
-    },
+    take: 5,
+    select: { month: true, winnerId: true, prizes: true, title: true, slug: true },
   });
 
-  let lastWinner: { displayName: string | null; month: string; prizeName: string } | null = null;
-  if (lastDrawn?.winnerId) {
-    const winner = await prisma.user.findUnique({
-      where: { id: lastDrawn.winnerId },
-      select: { displayName: true },
-    });
-    const prizes = parseJsonField(RafflePrizesSchema, lastDrawn.prizes, "MonthlyRaffle.prizes", []);
-    lastWinner = {
-      displayName: winner?.displayName ?? null,
-      month: lastDrawn.month,
+  const winnerUserIds = [...new Set(recentDrawn.map((r) => r.winnerId!))];
+  const winnerUsers = winnerUserIds.length > 0
+    ? await prisma.user.findMany({
+        where: { id: { in: winnerUserIds } },
+        select: { id: true, displayName: true },
+      })
+    : [];
+  const userMap = Object.fromEntries(winnerUsers.map((u) => [u.id, u.displayName]));
+
+  const lastWinners = recentDrawn.map((r) => {
+    const prizes = parseJsonField(RafflePrizesSchema, r.prizes, "MonthlyRaffle.prizes", []);
+    return {
+      displayName: userMap[r.winnerId!] ?? null,
+      month: r.month,
       prizeName: prizes[0]?.name ?? "Prize",
+      machineTitle: r.title,
+      machineSlug: r.slug,
     };
-  }
-
-  if (!raffle) {
-    return NextResponse.json({ raffle: null, lastWinner });
-  }
-
-  const myTickets = await getUserTickets(user.id, raffle.id);
-  const hasFreeTicket = myTickets.some((t) => t.isFree);
-  const streakEligible = user.checkinStreak >= raffle.freeThreshold;
+  });
 
   return NextResponse.json({
-    raffle: {
-      id: raffle.id,
-      month: raffle.month,
-      title: raffle.title,
-      titleEn: raffle.titleEn,
-      titleTh: raffle.titleTh,
-      description: raffle.description,
-      prizes: raffle.prizes,
-      ticketCost: raffle.ticketCost,
-      maxTickets: raffle.maxTickets,
-      freeThreshold: raffle.freeThreshold,
-      totalTickets: raffle.tickets.length,
-      totalParticipants: new Set(raffle.tickets.map((t) => t.userId)).size,
-      lastWinner,
-    },
-    myTickets: myTickets.length,
-    hasFreeTicket,
-    canClaimFree: streakEligible && !hasFreeTicket,
+    machines: raffles.map((r) => ({
+      id: r.id,
+      month: r.month,
+      slug: r.slug,
+      title: r.title,
+      titleEn: r.titleEn,
+      titleTh: r.titleTh,
+      description: r.description,
+      imageUrl: r.imageUrl,
+      color: r.color,
+      prizes: r.prizes,
+      ticketCost: r.ticketCost,
+      maxTickets: r.maxTickets,
+      freeThreshold: r.freeThreshold,
+      totalTickets: r.tickets.length,
+      totalParticipants: new Set(r.tickets.map((t) => t.userId)).size,
+    })),
+    myTickets,
+    ticketBalance,
+    canClaimFree,
+    lastWinners,
   });
 });
 
@@ -70,28 +92,28 @@ export const POST = apiHandler(async (request) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
-  const parsed = await parseJsonBody<{ action: string }>(request);
+  const parsed = await parseJsonBody<{ action: string; raffleId?: number }>(request);
   if (!parsed.ok) return parsed.response;
 
-  const raffle = await getActiveRaffle();
-  if (!raffle) {
-    return NextResponse.json({ error: "No active raffle" }, { status: 404 });
-  }
+  const { action, raffleId } = parsed.body;
 
-  if (parsed.body.action === "buy") {
-    const result = await buyTicket(auth.user.id, raffle.id);
+  if (action === "buy") {
+    if (!raffleId) {
+      return NextResponse.json({ error: "raffleId required" }, { status: 400 });
+    }
+    const result = await buyTicket(auth.user.id, raffleId);
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
-    return NextResponse.json({ ticketId: result.ticketId, total: result.total });
+    return NextResponse.json({ ticketId: result.ticketId, ticketBalance: result.ticketBalance });
   }
 
-  if (parsed.body.action === "claim-free") {
-    const result = await claimFreeTicket(auth.user.id, raffle.id);
+  if (action === "claim-free") {
+    const result = await claimFreeTicket(auth.user.id);
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
-    return NextResponse.json({ ticketId: result.ticketId });
+    return NextResponse.json({ ticketBalance: result.ticketBalance });
   }
 
   return NextResponse.json({ error: "Unknown action" }, { status: 400 });

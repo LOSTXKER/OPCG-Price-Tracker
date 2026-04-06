@@ -49,8 +49,10 @@ function HoneyContent() {
   const {
     lang,
     points, streak, canCheckin, transactions, shopItems, leaderboard,
-    mission, level, lifetimeEarned, achievements, raffle, myTickets,
-    canClaimFree, activeEvent,
+    mission, level, lifetimeEarned, achievements,
+    machines, myTickets, ticketBalance, canClaimFree, lastWinners,
+    raffleMissions,
+    activeEvent,
     referralUrl, referralTotalClicks, referralTodayClicks, referralConversions, referralEarned,
     loading, message, setMessage,
     actions,
@@ -89,9 +91,13 @@ function HoneyContent() {
     );
   }
 
+  const ticketsUsedThisMonth = Object.values(myTickets).reduce((s, n) => s + n, 0);
+
   const statusProps = {
     lang,
     points,
+    ticketBalance,
+    ticketsUsedThisMonth,
     streak,
     level,
     lifetimeEarned,
@@ -104,9 +110,13 @@ function HoneyContent() {
   const missionProps = {
     lang,
     mission,
+    raffleMissions,
     onClaimTask: actions.claimTask,
     onClaimBonus: actions.claimBonus,
     onShare: handleShare,
+    onTrackRaffleMission: actions.trackRaffleMission,
+    onClaimRaffleMission: actions.claimRaffleMission,
+    onClaimRaffleMissionBonus: actions.claimRaffleMissionBonusAction,
   } as const;
 
   const tabContent = (
@@ -126,10 +136,11 @@ function HoneyContent() {
       {tab === "raffle" && (
         <RaffleTab
           lang={lang}
-          raffle={raffle}
+          machines={machines}
           myTickets={myTickets}
+          ticketBalance={ticketBalance}
           canClaimFree={canClaimFree}
-          points={points}
+          lastWinners={lastWinners}
           onBuyTicket={actions.buyTicket}
           onClaimFreeTicket={actions.claimFreeTicket}
         />

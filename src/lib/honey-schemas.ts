@@ -31,6 +31,7 @@ export type AchievementCriteriaParsed = z.infer<typeof AchievementCriteriaSchema
 export const RafflePrizeSchema = z.object({
   rank: z.number(),
   name: z.string(),
+  imageUrl: z.string().optional(),
   honeyBonus: z.number().optional(),
 });
 export const RafflePrizesSchema = z.array(RafflePrizeSchema);
@@ -47,6 +48,7 @@ export const ShopItemValueSchema = z
     freeRaffleTickets: z.number().optional(),
     reward: z.string().optional(),
     hours: z.number().optional(),
+    quantity: z.number().optional(),
   })
   .passthrough();
 export type ShopItemValueParsed = z.infer<typeof ShopItemValueSchema>;

@@ -16,6 +16,7 @@ const SHOP_CAT_LABELS: Record<string, Record<string, string>> = {
   BADGE:            { TH: "แบดจ์",               EN: "Badges",       JP: "バッジ" },
   PRICE_ALERT_SLOT: { TH: "แจ้งเตือน",          EN: "Alerts",       JP: "アラート" },
   CSV_EXPORT_PASS:  { TH: "ส่งออก",             EN: "Export",       JP: "エクスポート" },
+  RAFFLE_TICKET:    { TH: "ตั๋วลุ้นรางวัล",     EN: "Tickets",      JP: "チケット" },
   CUSTOM:           { TH: "อื่นๆ",              EN: "Other",        JP: "その他" },
 };
 
@@ -27,6 +28,9 @@ const DESC_I18N: { match: string; TH: string; JP: string }[] = [
   { match: "extra price alert",         TH: "เพิ่มช่องแจ้งเตือนราคาถาวร +1 ช่อง",                JP: "価格アラート枠を1つ追加（永久）" },
   { match: "Kuma badge",                TH: "แบดจ์ Kuma สุดพิเศษบนโปรไฟล์ของคุณ",                JP: "プロフィールにKumaバッジを表示" },
   { match: "Export your portfolio",      TH: "ส่งออกพอร์ตโฟลิโอเป็นไฟล์ CSV 1 ครั้ง",            JP: "ポートフォリオをCSVで1回エクスポート" },
+  { match: "Use tickets to enter",      TH: "ใช้ตั๋วเข้าร่วมลุ้นรางวัลประจำเดือน",                JP: "チケットで月間抽選に参加" },
+  { match: "Buy 3 tickets",             TH: "ซื้อ 3 ใบในราคาประหยัด",                              JP: "3枚をお得に購入" },
+  { match: "Best value! 5",             TH: "คุ้มที่สุด! แพ็ค 5 ใบ",                               JP: "最もお得！5枚パック" },
   { match: "Pro features for 7 days",   TH: "ใช้งานฟีเจอร์ Pro ได้ 7 วัน + แบดจ์พิเศษ",          JP: "Pro機能を7日間利用 + 限定バッジ" },
   { match: "Pro features for 30 days",  TH: "ใช้งานฟีเจอร์ Pro ได้ 30 วัน + แบดจ์ Honey Elite + ตั๋วชิงรางวัลฟรี 1 ใบ", JP: "Pro機能を30日間利用 + Honey Eliteバッジ + 抽選チケット1枚" },
   { match: "Pro+ features for 30 days", TH: "ใช้งานฟีเจอร์ Pro+ ได้ 30 วัน + แบดจ์พิเศษ + ตั๋วชิงรางวัลฟรี 2 ใบ", JP: "Pro+機能を30日間利用 + 限定バッジ + 抽選チケット2枚" },

@@ -181,17 +181,56 @@ export type ActiveEvent = {
 export type RaffleData = {
   id: number;
   month: string;
+  slug: string;
   title: string;
   titleEn: string | null;
   titleTh: string | null;
   description: string | null;
-  prizes: { rank: number; name: string; honeyBonus?: number }[];
+  imageUrl: string | null;
+  color: string | null;
+  prizes: { rank: number; name: string; imageUrl?: string; honeyBonus?: number }[];
   ticketCost: number;
   maxTickets: number;
   freeThreshold: number;
   totalTickets: number;
   totalParticipants: number;
-  lastWinner?: { displayName: string | null; month: string; prizeName: string } | null;
+};
+
+export type RaffleWinner = {
+  displayName: string | null;
+  month: string;
+  prizeName: string;
+  machineTitle: string;
+  machineSlug: string;
+};
+
+export type RaffleMissionTask = {
+  id: string;
+  done: boolean;
+  claimed: boolean;
+  progress: number;
+  target: number;
+  labelKey: string;
+  hintKey: string;
+  icon: string;
+  trackType: "auto-path" | "manual";
+  reward: { honey: number; ticket: number };
+};
+
+export type RaffleMissionBonus = {
+  done: boolean;
+  claimed: boolean;
+  progress: number;
+  target: number;
+  reward: { honey: number; ticket: number };
+};
+
+export type RaffleMissionsData = {
+  month: string;
+  completedCount: number;
+  totalCount: number;
+  tasks: RaffleMissionTask[];
+  bonus: RaffleMissionBonus;
 };
 
 export type AchievementItem = {
