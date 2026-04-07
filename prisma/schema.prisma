@@ -230,6 +230,8 @@ model User {
   email               String           @unique
   displayName         String?
   avatarUrl           String?
+  coverImageUrl       String?
+  bio                 String?          @db.VarChar(500)
   tier                UserTier         @default(FREE)
   tierExpiresAt       DateTime?
   trialStartedAt      DateTime?
@@ -246,6 +248,23 @@ model User {
   emailAlerts         Boolean          @default(true)
   lineAlerts          Boolean          @default(false)
   weeklyDigest        Boolean          @default(true)
+  notifyPriceEmail    Boolean          @default(true)
+  notifyPriceWeb      Boolean          @default(true)
+  notifyPriceLine     Boolean          @default(false)
+  notifyMarketEmail   Boolean          @default(true)
+  notifyMarketWeb     Boolean          @default(true)
+  notifyMarketLine    Boolean          @default(false)
+  notifyHoneyEmail    Boolean          @default(true)
+  notifyHoneyWeb      Boolean          @default(true)
+  notifyHoneyLine     Boolean          @default(false)
+  notifyDigestEmail   Boolean          @default(true)
+  notifyDigestWeb     Boolean          @default(true)
+  notifyDigestLine    Boolean          @default(false)
+  profileVisibility   String           @default("public")
+  showCollection      Boolean          @default(true)
+  showListings        Boolean          @default(true)
+  showDecks           Boolean          @default(true)
+  showStats           Boolean          @default(true)
   lastDigestAt        DateTime?
   portfolios          Portfolio[]
   watchlistItems      WatchlistItem[]
@@ -275,6 +294,12 @@ model User {
   yuyuteiActions      YuyuteiMapping[]
   snkrdunkActions     SnkrdunkMapping[]
   blogPosts           BlogPost[]
+  loginHistory        LoginHistory[]
+  savedFilters        SavedFilter[]
+  notifications       Notification[]
+  shippingAddresses   ShippingAddress[]
+  cancelReasons       CancelReason[]
+  deletedAt           DateTime?
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
 
@@ -282,6 +307,7 @@ model User {
   @@index([tier])
   @@index([stripeCustomerId])
   @@index([lineUserId])
+  @@index([deletedAt])
 }
 
 // ============================================================
@@ -873,4 +899,131 @@ enum BlogCategory {
   SET_REVIEW      @map("set-review")
   TIPS            @map("tips")
   NEWS            @map("news")
+}
+
+// ============================================================
+// LOGIN HISTORY (Gap 3)
+// ============================================================
+
+model LoginHistory {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  method    String
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt(sort: Desc)])
+}
+
+// ============================================================
+// SAVED FILTERS (Gap 4)
+// ============================================================
+
+model SavedFilter {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  filters   Json
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ============================================================
+// SYSTEM CONFIG (Gap 8)
+// ============================================================
+
+model SystemConfig {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+}
+
+model RateLimitEntry {
+  key     String   @id
+  count   Int
+  resetAt DateTime
+
+  @@index([resetAt])
+}
+
+// ============================================================
+// AUDIT LOG (Gap 9)
+// ============================================================
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  action    String
+  entity    String
+  entityId  String?
+  userId    String?
+  details   Json?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt(sort: Desc)])
+  @@index([entity, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+}
+
+// ============================================================
+// IN-APP NOTIFICATIONS (Gap 10)
+// ============================================================
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  message   String
+  data      Json?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  readAt    DateTime?
+
+  @@index([userId, read, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+}
+
+// ============================================================
+// CANCEL REASONS (Subscription churn analytics)
+// ============================================================
+
+model CancelReason {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reason    String
+  comment   String?  @db.VarChar(1000)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt(sort: Desc)])
+}
+
+// ============================================================
+// SHIPPING ADDRESSES
+// ============================================================
+
+model ShippingAddress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label       String?
+  fullName    String
+  phone       String?
+  addressLine String
+  district    String?
+  province    String
+  postalCode  String
+  country     String   @default("TH")
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }

@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { ListingCard } from "@/components/marketplace/listing-card";
-import { Breadcrumb } from "@/components/shared/breadcrumb";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ListingStatus } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
+import { createClient } from "@/lib/supabase/server";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { JsonLd } from "@/lib/seo/json-ld-script";
-import {
-  SellerName, SellerRating, SellerListingsHeader, NoOpenListingsMsg,
-  ViewDetailsLink, ReviewsHeader, NoReviewsMsg, ReviewerName,
-} from "./profile-labels";
+import { PublicProfileClient } from "./public-profile-client";
 
 export const dynamic = "force-dynamic";
 
@@ -24,12 +18,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { userId } = await params;
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { displayName: true },
+    select: { displayName: true, bio: true, sellerRating: true, sellerReviewCount: true },
   });
   if (!user) return { title: "Profile not found" };
+  const name = user.displayName ?? "User";
+  const desc = user.bio
+    ?? `${name} on Meecard — ${user.sellerReviewCount} reviews${user.sellerRating ? `, ★ ${user.sellerRating.toFixed(1)}` : ""}`;
   return {
-    title: user.displayName ?? "Profile",
-    description: `${user.displayName ?? "User"}'s profile on Meecard`,
+    title: `${name} | Meecard`,
+    description: desc,
+    openGraph: { title: name, description: desc },
   };
 }
 
@@ -40,14 +38,28 @@ export default async function PublicProfilePage({ params }: PageProps) {
   }
 
   const user = await prisma.user.findUnique({
-    where: { id: userId },
+    where: { id: userId, deletedAt: null },
     select: {
       id: true,
       displayName: true,
       avatarUrl: true,
+      coverImageUrl: true,
+      bio: true,
+      tier: true,
       sellerRating: true,
       sellerReviewCount: true,
       createdAt: true,
+      profileVisibility: true,
+      showCollection: true,
+      showListings: true,
+      showDecks: true,
+      showStats: true,
+      _count: {
+        select: {
+          listings: { where: { status: ListingStatus.ACTIVE } },
+          reviewsReceived: true,
+        },
+      },
     },
   });
 
@@ -55,25 +67,70 @@ export default async function PublicProfilePage({ params }: PageProps) {
     notFound();
   }
 
-  const [listings, reviews] = await Promise.all([
-    prisma.listing.findMany({
-      where: { userId: user.id, status: ListingStatus.ACTIVE },
-      orderBy: { createdAt: "desc" },
-      take: 24,
-      include: {
-        card: {
-          include: { set: { select: { code: true, name: true, nameEn: true } } },
-        },
-        user: {
-          select: {
-            displayName: true,
-            avatarUrl: true,
-            sellerRating: true,
-            sellerReviewCount: true,
+  let isOwner = false;
+  try {
+    const supabase = await createClient();
+    const { data: { user: authUser } } = await supabase.auth.getUser();
+    if (authUser) {
+      const dbViewer = await prisma.user.findUnique({
+        where: { supabaseId: authUser.id },
+        select: { id: true },
+      });
+      isOwner = dbViewer?.id === user.id;
+    }
+  } catch {
+    // not logged in
+  }
+
+  if (!isOwner && user.profileVisibility === "private") {
+    return (
+      <PublicProfileClient
+        user={{
+          id: user.id,
+          displayName: user.displayName,
+          avatarUrl: user.avatarUrl,
+          coverImageUrl: null,
+          bio: null,
+          tier: user.tier,
+          sellerRating: null,
+          sellerReviewCount: 0,
+          createdAt: user.createdAt.toISOString(),
+        }}
+        stats={{ listingCount: 0, reviewCount: 0, portfolioCardCount: 0, watchlistCount: 0 }}
+        listings={[]}
+        reviews={[]}
+        collectionCards={[]}
+        watchlistCards={[]}
+        isOwner={false}
+        isPrivate
+      />
+    );
+  }
+
+  const canShowListings = isOwner || user.showListings;
+  const canShowCollection = isOwner || user.showCollection;
+
+  const [listings, reviews, portfolioCards, watchlistCards, portfolioCardCount, watchlistCount] = await Promise.all([
+    canShowListings
+      ? prisma.listing.findMany({
+          where: { userId: user.id, status: ListingStatus.ACTIVE },
+          orderBy: { createdAt: "desc" },
+          take: 24,
+          include: {
+            card: {
+              include: { set: { select: { code: true, name: true, nameEn: true } } },
+            },
+            user: {
+              select: {
+                displayName: true,
+                avatarUrl: true,
+                sellerRating: true,
+                sellerReviewCount: true,
+              },
+            },
           },
-        },
-      },
-    }),
+        })
+      : Promise.resolve([]),
     prisma.review.findMany({
       where: { revieweeId: user.id },
       orderBy: { createdAt: "desc" },
@@ -82,117 +139,146 @@ export default async function PublicProfilePage({ params }: PageProps) {
         reviewer: { select: { displayName: true, avatarUrl: true } },
       },
     }),
+    canShowCollection
+      ? prisma.portfolioItem.findMany({
+          where: { portfolio: { userId: user.id } },
+          take: 30,
+          orderBy: { addedAt: "desc" },
+          select: {
+            id: true,
+            card: {
+              select: {
+                cardCode: true,
+                nameJp: true,
+                nameEn: true,
+                rarity: true,
+                imageUrl: true,
+                latestPriceJpy: true,
+                latestPriceThb: true,
+                set: { select: { code: true } },
+              },
+            },
+          },
+        })
+      : Promise.resolve([]),
+    prisma.watchlistItem.findMany({
+      where: { userId: user.id },
+      take: 30,
+      orderBy: { addedAt: "desc" },
+      select: {
+        id: true,
+        card: {
+          select: {
+            cardCode: true,
+            nameJp: true,
+            nameEn: true,
+            rarity: true,
+            imageUrl: true,
+            latestPriceJpy: true,
+            latestPriceThb: true,
+            set: { select: { code: true } },
+          },
+        },
+      },
+    }),
+    canShowCollection
+      ? prisma.portfolioItem.count({ where: { portfolio: { userId: user.id } } })
+      : Promise.resolve(0),
+    prisma.watchlistItem.count({ where: { userId: user.id } }),
   ]);
 
-  const displayName = user.displayName ?? "Profile";
+  const displayName = user.displayName ?? "User";
   const crumbs = [
     { name: "Home", href: "/" },
-    { name: "Profile", href: `/profile/${user.id}` },
     { name: displayName, href: `/profile/${user.id}` },
   ];
 
+  const serializedListings = listings.map((l) => ({
+    id: l.id,
+    priceJpy: l.priceJpy,
+    priceThb: l.priceThb,
+    condition: l.condition,
+    shipping: l.shipping,
+    location: l.location,
+    isFeatured: l.isFeatured,
+    card: {
+      cardCode: l.card.cardCode,
+      nameJp: l.card.nameJp,
+      nameEn: l.card.nameEn,
+      rarity: l.card.rarity,
+      imageUrl: l.card.imageUrl,
+      latestPriceJpy: l.card.latestPriceJpy,
+    },
+    seller: {
+      displayName: l.user.displayName,
+      avatarUrl: l.user.avatarUrl,
+      sellerRating: l.user.sellerRating,
+      sellerReviewCount: l.user.sellerReviewCount,
+    },
+  }));
+
+  const serializedReviews = reviews.map((r) => ({
+    id: r.id,
+    rating: r.rating,
+    comment: r.comment,
+    createdAt: r.createdAt.toISOString(),
+    reviewer: {
+      displayName: r.reviewer.displayName,
+      avatarUrl: r.reviewer.avatarUrl,
+    },
+  }));
+
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
-      <JsonLd data={breadcrumbJsonLd(crumbs)} />
-      <Breadcrumb
-        items={crumbs.map((c) => ({ label: c.name, href: c.href }))}
+    <>
+      <JsonLd data={breadcrumbJsonLd(crumbs.map((c) => ({ name: c.name, href: c.href })))} />
+      <PublicProfileClient
+        user={{
+          id: user.id,
+          displayName: user.displayName,
+          avatarUrl: user.avatarUrl,
+          coverImageUrl: user.coverImageUrl,
+          bio: user.bio,
+          tier: user.tier,
+          sellerRating: user.sellerRating,
+          sellerReviewCount: user.sellerReviewCount,
+          createdAt: user.createdAt.toISOString(),
+        }}
+        stats={{
+          listingCount: user._count.listings,
+          reviewCount: user._count.reviewsReceived,
+          portfolioCardCount,
+          watchlistCount,
+        }}
+        listings={serializedListings}
+        reviews={serializedReviews}
+        collectionCards={portfolioCards.map((pi) => ({
+          cardCode: pi.card.cardCode,
+          nameJp: pi.card.nameJp,
+          nameEn: pi.card.nameEn,
+          rarity: pi.card.rarity,
+          imageUrl: pi.card.imageUrl,
+          priceJpy: pi.card.latestPriceJpy,
+          priceThb: pi.card.latestPriceThb,
+          setCode: pi.card.set?.code,
+        }))}
+        watchlistCards={watchlistCards.map((wi) => ({
+          cardCode: wi.card.cardCode,
+          nameJp: wi.card.nameJp,
+          nameEn: wi.card.nameEn,
+          rarity: wi.card.rarity,
+          imageUrl: wi.card.imageUrl,
+          priceJpy: wi.card.latestPriceJpy,
+          priceThb: wi.card.latestPriceThb,
+          setCode: wi.card.set?.code,
+        }))}
+        isOwner={isOwner}
+        hiddenSections={!isOwner ? {
+          listings: !user.showListings,
+          collection: !user.showCollection,
+          decks: !user.showDecks,
+          stats: !user.showStats,
+        } : undefined}
       />
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <Avatar className="size-20">
-          {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
-          <AvatarFallback className="text-lg">
-            {(user.displayName ?? "?").slice(0, 1).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        <div className="min-w-0">
-          <h1 className="break-words text-2xl font-bold tracking-tight">
-            <SellerName name={user.displayName} />
-          </h1>
-          <p className="text-muted-foreground text-sm">
-            <SellerRating rating={user.sellerRating} reviewCount={user.sellerReviewCount} />
-          </p>
-        </div>
-      </div>
-
-      <section className="space-y-4">
-        <SellerListingsHeader />
-        {listings.length === 0 ? (
-          <NoOpenListingsMsg />
-        ) : (
-          <div className="space-y-4">
-            {listings.map((l) => (
-              <div key={l.id} className="space-y-2">
-                <ListingCard
-                  id={l.id}
-                  card={{
-                    cardCode: l.card.cardCode,
-                    nameJp: l.card.nameJp,
-                    nameEn: l.card.nameEn,
-                    rarity: l.card.rarity,
-                    imageUrl: l.card.imageUrl,
-                    latestPriceJpy: l.card.latestPriceJpy,
-                  }}
-                  priceJpy={l.priceJpy}
-                  priceThb={l.priceThb}
-                  condition={l.condition}
-                  seller={{
-                    displayName: l.user.displayName,
-                    avatarUrl: l.user.avatarUrl,
-                    sellerRating: l.user.sellerRating,
-                    sellerReviewCount: l.user.sellerReviewCount,
-                  }}
-                  shipping={l.shipping}
-                  location={l.location}
-                  isFeatured={l.isFeatured}
-                />
-                <div className="flex justify-end">
-                  <Link
-                    href={`/marketplace/${l.id}`}
-                    className="text-primary text-sm underline-offset-4 hover:underline"
-                  >
-                    <ViewDetailsLink />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-
-      <section className="space-y-4">
-        <ReviewsHeader />
-        {reviews.length === 0 ? (
-          <NoReviewsMsg />
-        ) : (
-          <ul className="space-y-3">
-            {reviews.map((r) => (
-              <li
-                key={r.id}
-                className="panel flex gap-3 p-3"
-              >
-                <Avatar className="size-10 shrink-0">
-                  {r.reviewer.avatarUrl ? (
-                    <AvatarImage src={r.reviewer.avatarUrl} alt="" />
-                  ) : null}
-                  <AvatarFallback>
-                    {(r.reviewer.displayName ?? "?").slice(0, 1).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="min-w-0 flex-1">
-                  <ReviewerName name={r.reviewer.displayName} />
-                  <p className="text-muted-foreground text-sm">
-                    {r.rating}/5
-                    <span className="text-muted-foreground/70 ml-2 text-xs">
-                      {r.createdAt.toLocaleDateString()}
-                    </span>
-                  </p>
-                  {r.comment ? <p className="mt-1 break-words text-sm">{r.comment}</p> : null}
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-    </div>
+    </>
   );
 }

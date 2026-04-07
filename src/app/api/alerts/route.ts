@@ -9,6 +9,7 @@ import { cardInclude } from "@/lib/api/query-fragments";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
+import { effectiveTier, getLimits } from "@/lib/tier";
 import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:alerts");
@@ -75,6 +76,25 @@ export async function POST(request: NextRequest) {
     const card = await prisma.card.findUnique({ where: { id: cardId } });
     if (!card) {
       return NextResponse.json({ error: "Card not found" }, { status: 404 });
+    }
+
+    const tier = effectiveTier(auth.user.tier, auth.user.tierExpiresAt);
+    const limits = getLimits(tier);
+    if (limits.priceAlerts !== Infinity) {
+      const count = await prisma.priceAlert.count({ where: { userId: auth.user.id } });
+      if (count >= limits.priceAlerts) {
+        return NextResponse.json(
+          { error: `Price alert limit reached (${limits.priceAlerts})` },
+          { status: 403 }
+        );
+      }
+    }
+
+    if (channel === AlertChannel.LINE && !limits.lineAlerts) {
+      return NextResponse.json(
+        { error: "LINE alerts require a Pro plan or higher" },
+        { status: 403 }
+      );
     }
 
     const alert = await prisma.priceAlert.create({

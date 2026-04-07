@@ -5,6 +5,7 @@ import { parseListingQuantity, parseJsonBody } from "@/lib/api/request-body";
 import { cardInclude } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
+import { effectiveTier, getLimits } from "@/lib/tier";
 import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:portfolio");
@@ -61,6 +62,20 @@ export async function POST(request: NextRequest) {
     const card = await prisma.card.findUnique({ where: { id: cardId } });
     if (!card) {
       return NextResponse.json({ error: "Card not found" }, { status: 404 });
+    }
+
+    const tier = effectiveTier(dbUser.tier, dbUser.tierExpiresAt);
+    const limits = getLimits(tier);
+    if (limits.portfolioCards !== Infinity) {
+      const totalCards = await prisma.portfolioItem.count({
+        where: { portfolio: { userId: dbUser.id } },
+      });
+      if (totalCards >= limits.portfolioCards) {
+        return NextResponse.json(
+          { error: `Portfolio card limit reached (${limits.portfolioCards})` },
+          { status: 403 }
+        );
+      }
     }
 
     const existing = await prisma.portfolioItem.findUnique({

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { recordReferralClick } from "@/lib/honey-referral";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { recordReferralClick } from "@/lib/honey/referral";
 
 export async function GET(
   request: NextRequest,

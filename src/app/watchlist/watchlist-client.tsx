@@ -10,8 +10,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
 import { Button } from "@/components/ui/button";
 import { useAuthState } from "@/hooks/use-auth-state";
+import { useTierLimits } from "@/hooks/use-tier-limits";
 import { useUIStore } from "@/stores/ui-store";
 import { t, type Language } from "@/lib/i18n";
+import { LimitCounter } from "@/components/shared/limit-counter";
 
 type WatchCard = {
   id: number;
@@ -55,6 +57,7 @@ export default function WatchlistClient() {
 
 function WatchlistContent() {
   const lang = useUIStore((s) => s.language);
+  const { limits } = useTierLimits();
   const [items, setItems] = useState<WatchlistEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -103,7 +106,12 @@ function WatchlistContent() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "watchlistNav")}</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "watchlistNav")}</h1>
+          {isFinite(limits.watchlistCards) && (
+            <LimitCounter current={items.length} max={limits.watchlistCards} />
+          )}
+        </div>
         <p className="mt-1 text-sm text-muted-foreground">{t(lang, "emptyWatchlistDesc")}</p>
       </div>
 

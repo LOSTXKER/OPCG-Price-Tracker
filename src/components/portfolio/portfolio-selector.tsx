@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { formatJpyAmount } from "@/lib/utils/currency"
+import { LimitCounter } from "@/components/shared/limit-counter"
+import { UpgradeBadge } from "@/components/shared/upgrade-badge"
 
 export type { PortfolioMeta } from "@/lib/types/portfolio"
 import type { PortfolioMeta } from "@/lib/types/portfolio"
@@ -18,6 +20,7 @@ export function PortfolioSidebar({
   onRename,
   onDelete,
   hideBalance,
+  maxPortfolios,
 }: {
   portfolios: PortfolioMeta[]
   activeId: number | null
@@ -26,6 +29,7 @@ export function PortfolioSidebar({
   onRename: (id: number, name: string) => void
   onDelete: (id: number) => void
   hideBalance?: boolean
+  maxPortfolios?: number
 }) {
   const [creating, setCreating] = useState(false)
   const [newName, setNewName] = useState("")
@@ -114,7 +118,17 @@ export function PortfolioSidebar({
       })}
 
       {/* Create new */}
-      {creating ? (
+      {maxPortfolios != null && isFinite(maxPortfolios) && (
+        <div className="flex items-center justify-end px-3 pb-1 pt-2">
+          <LimitCounter current={portfolios.length} max={maxPortfolios} />
+        </div>
+      )}
+      {maxPortfolios != null && isFinite(maxPortfolios) && portfolios.length >= maxPortfolios ? (
+        <div className="flex items-center justify-center gap-2 px-3 py-2.5 text-xs text-muted-foreground">
+          <span>{t(lang, "limitReached")}</span>
+          <UpgradeBadge />
+        </div>
+      ) : creating ? (
         <form
           className="flex items-center gap-1 px-2.5 py-2"
           onSubmit={(e) => {

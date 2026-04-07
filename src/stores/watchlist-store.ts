@@ -4,6 +4,7 @@ interface WatchlistState {
   ids: Set<number>;
   loaded: boolean;
   loading: boolean;
+  limitHit: boolean;
   load: () => Promise<void>;
   toggle: (cardId: number) => Promise<void>;
   has: (cardId: number) => boolean;
@@ -13,6 +14,7 @@ export const useWatchlistStore = create<WatchlistState>()((set, get) => ({
   ids: new Set(),
   loaded: false,
   loading: false,
+  limitHit: false,
 
   load: async () => {
     if (get().loaded || get().loading) return;
@@ -65,6 +67,11 @@ export const useWatchlistStore = create<WatchlistState>()((set, get) => ({
         return;
       }
 
+      if (res.status === 403) {
+        set({ ids, limitHit: true });
+        setTimeout(() => set({ limitHit: false }), 3000);
+        return;
+      }
       if (!res.ok) {
         set({ ids });
       }

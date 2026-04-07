@@ -1,8 +1,8 @@
-import { cookies } from "next/headers";
+﻿import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/db";
-import { processReferralConversion } from "@/lib/honey-referral";
+import { processReferralConversion } from "@/lib/honey/referral";
 import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: NextRequest) {
@@ -43,6 +43,16 @@ export async function GET(request: NextRequest) {
           jar.delete("ref_code");
         }
       }
+
+      const hdrs = await headers();
+      prisma.loginHistory.create({
+        data: {
+          userId: user.id,
+          method: data.user.app_metadata?.provider ?? "email",
+          ipAddress: hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null,
+          userAgent: hdrs.get("user-agent")?.slice(0, 500) ?? null,
+        },
+      }).catch(() => {});
 
       return NextResponse.redirect(`${origin}${redirect}`);
     }

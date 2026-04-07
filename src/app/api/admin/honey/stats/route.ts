@@ -1,11 +1,8 @@
-import { NextResponse } from "next/server";
-import { unauthorized } from "@/lib/api/admin-helpers";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 
-export async function GET() {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const GET = adminApiHandler(async (_req: NextRequest) => {
   const now = new Date();
   const todayStart = new Date(now);
   todayStart.setHours(0, 0, 0, 0);
@@ -75,4 +72,4 @@ export async function GET() {
     recentTransactions,
     topEarners,
   });
-}
+});

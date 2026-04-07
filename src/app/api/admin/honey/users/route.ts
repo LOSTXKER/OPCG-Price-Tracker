@@ -1,12 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { unauthorized } from "@/lib/api/admin-helpers";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@/generated/prisma/client";
 
-export async function GET(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const GET = adminApiHandler(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
   const search = searchParams.get("search") || "";
   const page = Math.max(1, Number(searchParams.get("page") || 1));
@@ -49,4 +46,4 @@ export async function GET(request: NextRequest) {
     limit,
     totalPages: Math.ceil(total / limit),
   });
-}
+});

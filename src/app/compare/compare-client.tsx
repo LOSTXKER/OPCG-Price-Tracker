@@ -33,6 +33,9 @@ import { getCardName, t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { MAX_COMPARE } from "@/lib/constants/prices";
 import { useCompareData, type CompareCard } from "@/hooks/use-compare-data";
+import { useTierLimits } from "@/hooks/use-tier-limits";
+import { LimitCounter } from "@/components/shared/limit-counter";
+import { UpgradeBadge } from "@/components/shared/upgrade-badge";
 
 const COLORS = [
   "#73533E",
@@ -50,6 +53,8 @@ export default function CompareClient() {
   const clearStore = useCompareStore((s) => s.clear);
 
   const [pickerOpen, setPickerOpen] = useState(false);
+  const { limits } = useTierLimits();
+  const tierMax = isFinite(limits.compareCards) ? limits.compareCards : MAX_COMPARE;
 
   const codes = useMemo(
     () => storeItems.map((i) => i.cardCode),
@@ -67,7 +72,7 @@ export default function CompareClient() {
     hasChart,
   } = useCompareData(codes);
 
-  const showAddSlot = codes.length < MAX_COMPARE;
+  const showAddSlot = codes.length < tierMax;
   const colSpan = orderedCards.length + 1 + (showAddSlot ? 1 : 0);
 
   return (
@@ -77,8 +82,11 @@ export default function CompareClient() {
         <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
           <Scale className="size-4" />
         </div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight sm:text-3xl">
           {t(lang, "compareCards")}
+          {isFinite(limits.compareCards) && (
+            <LimitCounter current={codes.length} max={limits.compareCards} />
+          )}
         </h1>
         {codes.length > 0 && (
           <button

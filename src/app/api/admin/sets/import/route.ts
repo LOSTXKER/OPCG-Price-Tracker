@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { parseJsonBody } from "@/lib/api/admin-helpers";
+import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { CardType } from "@/generated/prisma/client";
 
@@ -89,9 +89,7 @@ async function fetchPackIds(): Promise<Map<string, PackIds>> {
   return map;
 }
 
-export async function POST(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const POST = adminApiHandler(async (request: NextRequest) => {
   const parsed = await parseJsonBody<{ setCode?: string }>(request);
   if (!parsed.ok) return parsed.response;
 
@@ -308,4 +306,4 @@ export async function POST(request: NextRequest) {
     enAvailable: enLookup.size,
     thAvailable: thLookup.size,
   });
-}
+});

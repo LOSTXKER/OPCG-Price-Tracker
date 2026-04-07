@@ -7,6 +7,11 @@ function useIsChromeless() {
   return pathname.startsWith("/admin") || pathname === "/admin-login" || pathname === "/login" || pathname === "/register";
 }
 
+function useIsFullWidthPage() {
+  const pathname = usePathname();
+  return /^\/profile\/.+/.test(pathname);
+}
+
 export function MainChrome({ children }: { children: React.ReactNode }) {
   const chromeless = useIsChromeless();
   if (chromeless) return null;
@@ -15,8 +20,9 @@ export function MainChrome({ children }: { children: React.ReactNode }) {
 
 export function PageContent({ children }: { children: React.ReactNode }) {
   const chromeless = useIsChromeless();
+  const fullWidth = useIsFullWidthPage();
 
-  if (chromeless) {
+  if (chromeless || fullWidth) {
     return <>{children}</>;
   }
 

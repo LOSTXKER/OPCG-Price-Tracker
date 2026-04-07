@@ -47,6 +47,7 @@ export type CardDetailPriceChartProps = {
   availableSources?: ChartSourceOption[]
   priceMode?: "raw" | "psa10"
   onPeriodChange?: (period: string) => void
+  maxDays?: number
 }
 
 function classifyRow(row: PriceRow): string | null {
@@ -101,6 +102,7 @@ export function CardDetailPriceChart({
   availableSources,
   priceMode = "raw",
   onPeriodChange: onPeriodChangeExternal,
+  maxDays,
 }: CardDetailPriceChartProps) {
   const displayCurrency = useUIStore((s) => s.currency) as Currency
   const lang = useUIStore((s) => s.language)
@@ -231,6 +233,7 @@ export function CardDetailPriceChart({
       onPeriodChange={handlePeriodChange}
       loading={loading}
       stats={stats}
+      maxDays={maxDays}
     />
   )
 }

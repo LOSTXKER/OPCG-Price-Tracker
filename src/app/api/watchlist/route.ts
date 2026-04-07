@@ -3,6 +3,7 @@ import { cardInclude } from "@/lib/api/query-fragments";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
+import { effectiveTier, getLimits } from "@/lib/tier";
 import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:watchlist");
@@ -41,6 +42,23 @@ export async function POST(request: NextRequest) {
     const card = await prisma.card.findUnique({ where: { id: cardId } });
     if (!card) {
       return NextResponse.json({ error: "Card not found" }, { status: 404 });
+    }
+
+    const tier = effectiveTier(auth.user.tier, auth.user.tierExpiresAt);
+    const limits = getLimits(tier);
+    if (limits.watchlistCards !== Infinity) {
+      const alreadyExists = await prisma.watchlistItem.findUnique({
+        where: { userId_cardId: { userId: auth.user.id, cardId } },
+      });
+      if (!alreadyExists) {
+        const count = await prisma.watchlistItem.count({ where: { userId: auth.user.id } });
+        if (count >= limits.watchlistCards) {
+          return NextResponse.json(
+            { error: `Watchlist limit reached (${limits.watchlistCards})` },
+            { status: 403 }
+          );
+        }
+      }
     }
 
     const item = await prisma.watchlistItem.upsert({

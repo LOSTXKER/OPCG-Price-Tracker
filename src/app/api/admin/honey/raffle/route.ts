@@ -1,12 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { parseJsonBody } from "@/lib/api/admin-helpers";
+import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
-import { drawWinner } from "@/lib/honey-raffle";
+import { drawWinner } from "@/lib/honey/raffle";
 
-export async function GET() {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const GET = adminApiHandler(async (_req: NextRequest) => {
   const raffles = await prisma.monthlyRaffle.findMany({
     orderBy: [{ month: "desc" }, { sortOrder: "asc" }],
     include: {
@@ -22,7 +20,7 @@ export async function GET() {
       tickets: undefined,
     })),
   });
-}
+});
 
 type RaffleBody = {
   action?: string;
@@ -42,9 +40,7 @@ type RaffleBody = {
   sortOrder?: number;
 };
 
-export async function POST(req: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const POST = adminApiHandler(async (req: NextRequest) => {
   const parsed = await parseJsonBody<RaffleBody>(req);
   if (!parsed.ok) return parsed.response;
   const body = parsed.body;
@@ -96,11 +92,9 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json({ raffle });
-}
+});
 
-export async function PUT(req: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const PUT = adminApiHandler(async (req: NextRequest) => {
   const parsed = await parseJsonBody<{
     id: number;
     title?: string;
@@ -143,11 +137,9 @@ export async function PUT(req: NextRequest) {
   });
 
   return NextResponse.json({ raffle });
-}
+});
 
-export async function DELETE(req: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const DELETE = adminApiHandler(async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const id = Number(searchParams.get("id"));
 
@@ -168,4 +160,4 @@ export async function DELETE(req: NextRequest) {
   await prisma.monthlyRaffle.delete({ where: { id } });
 
   return NextResponse.json({ deleted: true });
-}
+});

@@ -11,7 +11,11 @@ import {
   ImageIcon,
   History,
 } from "lucide-react";
+import { toast } from "sonner";
 import { formatJpy } from "@/lib/utils/currency";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Price {
   id: number;
@@ -92,7 +96,6 @@ export function CardEditor({ card }: { card: CardData }) {
 
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   function handleChange(key: string, value: string, type?: string) {
     let parsed: unknown = value;
@@ -105,7 +108,6 @@ export function CardEditor({ card }: { card: CardData }) {
 
   async function handleSave() {
     setSaving(true);
-    setError(null);
     try {
       const payload: Record<string, unknown> = {};
       for (const f of [...TEXT_FIELDS, ...TEXTAREA_FIELDS]) {
@@ -116,6 +118,7 @@ export function CardEditor({ card }: { card: CardData }) {
       }
       if (Object.keys(payload).length === 0) {
         setSaved(true);
+        toast.info("No changes to save");
         return;
       }
       const res = await fetch(`/api/admin/cards/${card.id}`, {
@@ -125,12 +128,13 @@ export function CardEditor({ card }: { card: CardData }) {
       });
       if (!res.ok) {
         const data = await res.json();
-        setError(data.error || "Save failed");
+        toast.error(data.error || "Save failed");
       } else {
         setSaved(true);
+        toast.success("Card saved");
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Save failed");
+      toast.error(e instanceof Error ? e.message : "Save failed");
     } finally {
       setSaving(false);
     }
@@ -147,8 +151,9 @@ export function CardEditor({ card }: { card: CardData }) {
       if (res.ok) {
         setForm((p) => ({ ...p, imageUrl: url }));
         setSaved(true);
+        toast.success("Image updated");
       } else {
-        setError(`Failed to update image: ${res.status}`);
+        toast.error(`Failed to update image: ${res.status}`);
       }
     } finally {
       setSaving(false);
@@ -160,12 +165,9 @@ export function CardEditor({ card }: { card: CardData }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <Link
-          href="/admin/cards"
-          className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
-        >
+        <Button variant="ghost" size="icon-sm" render={<Link href="/admin/cards" />}>
           <ArrowLeft className="h-5 w-5" />
-        </Link>
+        </Button>
         <div className="flex-1">
           <h1 className="min-w-0 break-words text-xl font-bold">
             {card.baseCode}
@@ -177,11 +179,7 @@ export function CardEditor({ card }: { card: CardData }) {
             {card.set.code.toUpperCase()} &middot; {card.cardCode}
           </p>
         </div>
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-        >
+        <Button onClick={handleSave} disabled={saving}>
           {saving ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : saved ? (
@@ -190,14 +188,8 @@ export function CardEditor({ card }: { card: CardData }) {
             <Save className="h-4 w-4" />
           )}
           {saved ? "Saved" : "Save"}
-        </button>
+        </Button>
       </div>
-
-      {error && (
-        <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2 text-sm text-destructive">
-          {error}
-        </div>
-      )}
 
       <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
         {/* Image Preview */}
@@ -254,102 +246,108 @@ export function CardEditor({ card }: { card: CardData }) {
           )}
 
           <div className="text-xs text-muted-foreground">
-            <p>
-              Yuyu-tei ID: {card.yuyuteiId || "—"}
-            </p>
-            <p>
-              Parallel Index: {card.parallelIndex ?? "—"}
-            </p>
-            <p>
-              Price: {card.latestPriceJpy != null ? formatJpy(card.latestPriceJpy) : "—"}
-            </p>
+            <p>Yuyu-tei ID: {card.yuyuteiId || "—"}</p>
+            <p>Parallel Index: {card.parallelIndex ?? "—"}</p>
+            <p>Price: {card.latestPriceJpy != null ? formatJpy(card.latestPriceJpy) : "—"}</p>
           </div>
         </div>
 
         {/* Form Fields */}
         <div className="space-y-6">
-          <div className="rounded-xl border border-border/50 p-4">
-            <h2 className="mb-4 text-sm font-semibold">Card Details</h2>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {TEXT_FIELDS.map((f) => (
-                <label key={f.key} className="space-y-1">
-                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    {f.label}
-                    {f.official && (
-                      <span className="rounded bg-green-500/10 px-1 py-px text-[9px] font-medium text-green-600 dark:text-green-400">
-                        Official
-                      </span>
-                    )}
-                  </span>
-                  <input
-                    type={f.type === "number" ? "number" : "text"}
-                    value={String(form[f.key] ?? "")}
-                    onChange={(e) =>
-                      handleChange(f.key, e.target.value, f.type)
-                    }
-                    className={`w-full rounded-md border bg-background px-2 py-1.5 text-sm ${f.official ? "border-green-500/20" : "border-border"}`}
-                  />
-                </label>
-              ))}
-            </div>
-          </div>
+          <Card>
+            <CardHeader className="border-b">
+              <CardTitle>Card Details</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {TEXT_FIELDS.map((f) => (
+                  <div key={f.key} className="space-y-1.5">
+                    <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                      {f.label}
+                      {f.official && (
+                        <span className="rounded bg-green-500/10 px-1 py-px text-[9px] font-medium text-green-600 dark:text-green-400">
+                          Official
+                        </span>
+                      )}
+                    </label>
+                    <Input
+                      type={f.type === "number" ? "number" : "text"}
+                      value={String(form[f.key] ?? "")}
+                      onChange={(e) =>
+                        handleChange(f.key, e.target.value, f.type)
+                      }
+                      className={f.official ? "border-green-500/20" : ""}
+                    />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
-          <div className="rounded-xl border border-border/50 p-4">
-            <h2 className="mb-4 text-sm font-semibold">Text Content</h2>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {TEXTAREA_FIELDS.map((f) => (
-                <label key={f.key} className="space-y-1">
-                  <span className="text-xs text-muted-foreground">
-                    {f.label}
-                  </span>
-                  <textarea
-                    rows={3}
-                    value={String(form[f.key] ?? "")}
-                    onChange={(e) => handleChange(f.key, e.target.value)}
-                    className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
-                  />
-                </label>
-              ))}
-            </div>
-          </div>
+          <Card>
+            <CardHeader className="border-b">
+              <CardTitle>Text Content</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {TEXTAREA_FIELDS.map((f) => (
+                  <div key={f.key} className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground">
+                      {f.label}
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={String(form[f.key] ?? "")}
+                      onChange={(e) => handleChange(f.key, e.target.value)}
+                      className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 dark:bg-input/30"
+                    />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Price History */}
           {card.prices.length > 0 && (
-            <div className="rounded-xl border border-border/50 p-4">
-              <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold">
-                <History className="h-4 w-4" />
-                Price History (last {card.prices.length})
-              </h2>
-              <div className="max-h-60 overflow-y-auto">
-                <table className="w-full text-xs">
-                  <thead>
-                    <tr className="border-b text-muted-foreground">
-                      <th className="pb-1 text-left">Date</th>
-                      <th className="pb-1 text-left">Source</th>
-                      <th className="pb-1 text-right">Price</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {card.prices.map((p) => (
-                      <tr
-                        key={p.id}
-                        className="border-b border-border/20"
-                      >
-                        <td className="py-1">
-                          {new Date(p.scrapedAt).toLocaleDateString()}
-                        </td>
-                        <td className="py-1">{p.source}</td>
-                        <td className="py-1 text-right">
-                          {p.priceJpy != null
-                            ? formatJpy(p.priceJpy)
-                            : "—"}
-                        </td>
+            <Card>
+              <CardHeader className="border-b">
+                <CardTitle className="flex items-center gap-2">
+                  <History className="h-4 w-4 text-muted-foreground" />
+                  Price History (last {card.prices.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="max-h-60 overflow-y-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b text-muted-foreground">
+                        <th className="pb-1 text-left">Date</th>
+                        <th className="pb-1 text-left">Source</th>
+                        <th className="pb-1 text-right">Price</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                    </thead>
+                    <tbody>
+                      {card.prices.map((p) => (
+                        <tr
+                          key={p.id}
+                          className="border-b border-border/20"
+                        >
+                          <td className="py-1">
+                            {new Date(p.scrapedAt).toLocaleDateString()}
+                          </td>
+                          <td className="py-1">{p.source}</td>
+                          <td className="py-1 text-right tabular-nums">
+                            {p.priceJpy != null
+                              ? formatJpy(p.priceJpy)
+                              : "—"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
           )}
         </div>
       </div>

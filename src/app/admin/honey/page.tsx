@@ -2,15 +2,14 @@ import { prisma } from "@/lib/db";
 import Link from "next/link";
 import {
   Award,
-  CalendarDays,
   ShoppingBag,
-  Ticket,
-  Trophy,
-  Users,
   TrendingUp,
   ArrowRight,
   Zap,
 } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { AdminStatCard } from "@/components/admin/admin-stat-card";
+import { Card, CardContent, CardHeader, CardTitle, CardAction } from "@/components/ui/card";
 
 async function getHoneyStats() {
   const now = new Date();
@@ -136,129 +135,85 @@ export default async function AdminHoneyDashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Honey System</h1>
-        <div className="flex gap-2">
-          <Link
-            href="/admin/honey/shop"
-            className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
-          >
-            <ShoppingBag className="h-4 w-4" />
-            Shop Items
-          </Link>
-          <Link
-            href="/admin/honey/users"
-            className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
-          >
-            <Users className="h-4 w-4" />
-            Users
-          </Link>
-          <Link
-            href="/admin/honey/achievements"
-            className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
-          >
-            <Trophy className="h-4 w-4" />
-            Achievements
-          </Link>
-          <Link
-            href="/admin/honey/raffle"
-            className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
-          >
-            <Ticket className="h-4 w-4" />
-            Raffle
-          </Link>
-          <Link
-            href="/admin/honey/events"
-            className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
-          >
-            <CalendarDays className="h-4 w-4" />
-            Events
-          </Link>
-        </div>
-      </div>
+      <AdminPageHeader title="Honey System" icon={Award} />
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => (
-          <div key={card.label} className="panel p-4">
-            <div className="flex items-center gap-3">
-              <div className={`rounded-lg p-2 ${card.bg}`}>
-                <card.icon className={`h-5 w-5 ${card.color}`} />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">{card.label}</p>
-                <p className="text-2xl font-bold">{card.value}</p>
-                {card.sub && (
-                  <p className="text-xs text-muted-foreground">{card.sub}</p>
-                )}
-              </div>
-            </div>
-          </div>
+          <AdminStatCard key={card.label} {...card} />
         ))}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
         {/* Top Earners */}
-        <div className="panel p-4">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-semibold">Top Earners</h2>
-            <Link href="/admin/honey/users" className="text-xs text-muted-foreground hover:text-primary">
-              View all <ArrowRight className="ml-0.5 inline h-3 w-3" />
-            </Link>
-          </div>
-          <div className="space-y-2">
-            {s.topEarners.map((u, i) => (
-              <Link
-                key={u.id}
-                href={`/admin/honey/users?search=${encodeURIComponent(u.email)}`}
-                className="flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-muted"
-              >
-                <span className="w-5 text-center text-xs font-bold text-muted-foreground">
-                  {i + 1}
-                </span>
-                <span className="flex-1 truncate text-sm">
-                  {u.displayName ?? u.email}
-                </span>
-                <span className="text-sm font-bold tabular-nums text-amber-600 dark:text-amber-400">
-                  {u.honeyPoints.toLocaleString()}
-                </span>
+        <Card>
+          <CardHeader>
+            <CardTitle>Top Earners</CardTitle>
+            <CardAction>
+              <Link href="/admin/users" className="text-xs text-muted-foreground hover:text-primary">
+                View all <ArrowRight className="ml-0.5 inline h-3 w-3" />
               </Link>
-            ))}
-            {s.topEarners.length === 0 && (
-              <p className="py-4 text-center text-sm text-muted-foreground">No users yet</p>
-            )}
-          </div>
-        </div>
+            </CardAction>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-1">
+              {s.topEarners.map((u, i) => (
+                <Link
+                  key={u.id}
+                  href={`/admin/users?search=${encodeURIComponent(u.email)}`}
+                  className="flex items-center gap-2 rounded-lg px-2 py-2 transition-colors hover:bg-muted"
+                >
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
+                    {i + 1}
+                  </span>
+                  <span className="flex-1 truncate text-sm">
+                    {u.displayName ?? u.email}
+                  </span>
+                  <span className="text-sm font-bold tabular-nums text-amber-600 dark:text-amber-400">
+                    {u.honeyPoints.toLocaleString()}
+                  </span>
+                </Link>
+              ))}
+              {s.topEarners.length === 0 && (
+                <p className="py-4 text-center text-sm text-muted-foreground">No users yet</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Recent Transactions */}
-        <div className="panel col-span-1 p-4 lg:col-span-2">
-          <h2 className="mb-3 font-semibold">Recent Transactions</h2>
-          <div className="max-h-80 space-y-1 overflow-y-auto">
-            {s.recentTransactions.map((tx) => (
-              <div key={tx.id} className="flex items-center gap-2 rounded px-2 py-1.5 text-sm">
-                <Zap className={`h-3.5 w-3.5 shrink-0 ${tx.amount > 0 ? "text-green-500" : "text-red-500"}`} />
-                <span className="w-20 truncate text-xs text-muted-foreground">
-                  {tx.user.displayName ?? tx.user.email}
-                </span>
-                <span className={`w-20 text-xs font-medium ${TYPE_COLORS[tx.type] ?? "text-muted-foreground"}`}>
-                  {tx.type}
-                </span>
-                <span className="flex-1 truncate text-xs text-muted-foreground">
-                  {tx.reason}
-                </span>
-                <span className={`shrink-0 text-xs font-bold tabular-nums ${tx.amount > 0 ? "text-green-500" : "text-red-500"}`}>
-                  {tx.amount > 0 ? "+" : ""}{tx.amount}
-                </span>
-                <span className="shrink-0 text-[10px] text-muted-foreground">
-                  {new Date(tx.createdAt).toLocaleDateString()}
-                </span>
-              </div>
-            ))}
-            {s.recentTransactions.length === 0 && (
-              <p className="py-8 text-center text-sm text-muted-foreground">No transactions yet</p>
-            )}
-          </div>
-        </div>
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Recent Transactions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="max-h-80 space-y-0.5 overflow-y-auto">
+              {s.recentTransactions.map((tx) => (
+                <div key={tx.id} className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-muted/50">
+                  <Zap className={`h-3.5 w-3.5 shrink-0 ${tx.amount > 0 ? "text-green-500" : "text-red-500"}`} />
+                  <span className="w-20 truncate text-xs text-muted-foreground">
+                    {tx.user.displayName ?? tx.user.email}
+                  </span>
+                  <span className={`w-20 text-xs font-medium ${TYPE_COLORS[tx.type] ?? "text-muted-foreground"}`}>
+                    {tx.type}
+                  </span>
+                  <span className="flex-1 truncate text-xs text-muted-foreground">
+                    {tx.reason}
+                  </span>
+                  <span className={`shrink-0 text-xs font-bold tabular-nums ${tx.amount > 0 ? "text-green-500" : "text-red-500"}`}>
+                    {tx.amount > 0 ? "+" : ""}{tx.amount}
+                  </span>
+                  <span className="shrink-0 text-[10px] text-muted-foreground">
+                    {new Date(tx.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+              ))}
+              {s.recentTransactions.length === 0 && (
+                <p className="py-8 text-center text-sm text-muted-foreground">No transactions yet</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

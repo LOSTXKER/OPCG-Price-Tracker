@@ -2,6 +2,7 @@ import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
+import { effectiveTier, getLimits } from "@/lib/tier";
 import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:decks");
@@ -43,6 +44,18 @@ export async function POST(request: NextRequest) {
     const name = body.name?.trim();
     if (!name) {
       return NextResponse.json({ error: "name is required" }, { status: 400 });
+    }
+
+    const tier = effectiveTier(auth.user.tier, auth.user.tierExpiresAt);
+    const limits = getLimits(tier);
+    if (limits.deckCount !== Infinity) {
+      const count = await prisma.deck.count({ where: { userId: auth.user.id } });
+      if (count >= limits.deckCount) {
+        return NextResponse.json(
+          { error: `Deck limit reached (${limits.deckCount})` },
+          { status: 403 }
+        );
+      }
     }
 
     const deck = await prisma.deck.create({

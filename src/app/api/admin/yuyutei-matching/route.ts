@@ -1,20 +1,21 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { unauthorized, actionStamp, parseJsonBody } from "@/lib/api/admin-helpers";
+import { adminApiHandler } from "@/lib/api/api-handler";
+import { getAdminUser } from "@/lib/auth";
+import { PRICE_SOURCE } from "@/lib/constants/prices";
+import { prisma } from "@/lib/db";
+import { parsePageLimit } from "@/lib/api/request-body";
 
 const VALID_METHODS = new Set([
   "exact", "cached", "gemini", "admin", "admin-bulk",
   "auto-code", "auto-code-multi", "auto-parallel", "auto-parallel-any", "auto-basecode",
 ]);
 const VALID_STATUSES = new Set(["pending", "suggested", "matched", "rejected"]);
-import { getAdminUser } from "@/lib/auth/get-admin-user";
-import { prisma } from "@/lib/db";
-import { PRICE_SOURCE } from "@/lib/constants/prices";
-import { unauthorized, actionStamp, parseJsonBody } from "@/lib/api/admin-helpers";
-import { parsePageLimit } from "@/lib/api/request-body";
 
 /**
  * GET /api/admin/yuyutei-matching?set=&status=&page=
  */
-export async function GET(request: NextRequest) {
+export const GET = adminApiHandler(async (request: NextRequest) => {
   const admin = await getAdminUser();
   if (!admin) return unauthorized();
 
@@ -210,12 +211,12 @@ export async function GET(request: NextRequest) {
       rejected: counts.rejected ?? 0,
     },
   });
-}
+});
 
 /**
  * PATCH /api/admin/yuyutei-matching
  */
-export async function PATCH(request: NextRequest) {
+export const PATCH = adminApiHandler(async (request: NextRequest) => {
   const admin = await getAdminUser();
   if (!admin) return unauthorized();
 
@@ -365,12 +366,12 @@ export async function PATCH(request: NextRequest) {
   });
 
   return NextResponse.json({ success: true });
-}
+});
 
 /**
  * DELETE /api/admin/yuyutei-matching  { id }
  */
-export async function DELETE(request: NextRequest) {
+export const DELETE = adminApiHandler(async (request: NextRequest) => {
   const admin = await getAdminUser();
   if (!admin) return unauthorized();
 
@@ -385,4 +386,4 @@ export async function DELETE(request: NextRequest) {
   });
 
   return NextResponse.json({ success: true });
-}
+});

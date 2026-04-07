@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { parseJsonBody } from "@/lib/api/admin-helpers";
+import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import * as fs from "fs";
 import * as path from "path";
@@ -40,9 +40,7 @@ const CARD_TYPE_MAP: Record<string, "CHARACTER" | "EVENT" | "STAGE" | "LEADER" |
   DON: "DON",
 };
 
-export async function POST(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const POST = adminApiHandler(async (request: NextRequest) => {
   const parsed = await parseJsonBody<{ setCode?: string }>(request);
   if (!parsed.ok) return parsed.response;
 
@@ -117,4 +115,4 @@ export async function POST(request: NextRequest) {
   });
 
   return NextResponse.json({ created, updated, total: cards.length });
-}
+});

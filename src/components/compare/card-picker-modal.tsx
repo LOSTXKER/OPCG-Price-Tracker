@@ -12,6 +12,8 @@ import { useUIStore } from "@/stores/ui-store"
 import { getCardName, t } from "@/lib/i18n"
 import { fetchCards, type CardResult } from "@/lib/api/fetch-cards"
 import { cn } from "@/lib/utils"
+import { useTierLimits } from "@/hooks/use-tier-limits"
+import { UpgradeBadge } from "@/components/shared/upgrade-badge"
 
 type CardSet = {
   code: string
@@ -41,8 +43,11 @@ export function CardPickerModal({
   const inputRef = useRef<HTMLInputElement>(null)
   const abortRef = useRef<AbortController | null>(null)
 
+  const { limits } = useTierLimits()
+  const tierMax = isFinite(limits.compareCards) ? limits.compareCards : 6
+
   const selectedCodes = new Set(storeItems.map((i) => i.cardCode))
-  const atLimit = storeItems.length >= 6
+  const atLimit = storeItems.length >= tierMax
 
   useEffect(() => {
     if (open) {
@@ -258,9 +263,12 @@ export function CardPickerModal({
 
         {/* Footer with count */}
         <div className="flex items-center justify-between border-t px-4 py-2.5">
-          <p className="text-xs text-muted-foreground">
-            {storeItems.length}/6 {t(lang, "card")}
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="text-xs text-muted-foreground">
+              {storeItems.length}/{tierMax} {t(lang, "card")}
+            </p>
+            {atLimit && isFinite(limits.compareCards) && <UpgradeBadge />}
+          </div>
           <button
             onClick={onClose}
             className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"

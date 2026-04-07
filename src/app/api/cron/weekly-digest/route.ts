@@ -1,6 +1,7 @@
 import { cronHandler } from "@/lib/api/cron-auth";
 import { prisma } from "@/lib/db";
 import { sendEmail, weeklyDigestEmail } from "@/lib/email";
+import { isTierActive, getLimits } from "@/lib/tier";
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +35,7 @@ export const GET = cronHandler(async () => {
 
   const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
-  const subscribers = await prisma.user.findMany({
+  const allSubscribers = await prisma.user.findMany({
     where: {
       weeklyDigest: true,
       OR: [{ lastDigestAt: null }, { lastDigestAt: { lte: oneWeekAgo } }],
@@ -43,6 +44,8 @@ export const GET = cronHandler(async () => {
       id: true,
       email: true,
       displayName: true,
+      tier: true,
+      tierExpiresAt: true,
       portfolios: {
         take: 1,
         select: {
@@ -54,6 +57,11 @@ export const GET = cronHandler(async () => {
         },
       },
     },
+  });
+
+  const subscribers = allSubscribers.filter((u) => {
+    if (!isTierActive(u.tier, u.tierExpiresAt)) return false;
+    return getLimits(u.tier).weeklyDigest;
   });
 
   let sent = 0;

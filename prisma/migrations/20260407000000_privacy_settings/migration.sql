@@ -1,0 +1,6 @@
+-- Privacy settings
+ALTER TABLE "User" ADD COLUMN "profileVisibility" TEXT NOT NULL DEFAULT 'public';
+ALTER TABLE "User" ADD COLUMN "showCollection" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "User" ADD COLUMN "showListings" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "User" ADD COLUMN "showDecks" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "User" ADD COLUMN "showStats" BOOLEAN NOT NULL DEFAULT true;

@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
-import { getWeekStart } from "@/lib/honey-utils";
+import { getWeekStart } from "@/lib/honey/utils";
 
 export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();

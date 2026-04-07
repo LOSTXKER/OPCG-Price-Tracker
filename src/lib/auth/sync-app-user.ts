@@ -1,8 +1,8 @@
-import type { User } from "@supabase/supabase-js";
+﻿import type { User } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 import { prisma } from "@/lib/db";
-import { processReferralConversion } from "@/lib/honey-referral";
+import { processReferralConversion } from "@/lib/honey/referral";
 
 /** Ensures a Prisma User exists for the signed-in Supabase user (email sign-up, etc.). */
 export async function syncAppUser(authUser: User) {

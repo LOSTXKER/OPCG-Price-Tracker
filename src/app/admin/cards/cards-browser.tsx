@@ -6,18 +6,25 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   Search,
-  ChevronLeft,
-  ChevronRight,
   Pencil,
   Check,
   X,
   Loader2,
   AlertTriangle,
   ExternalLink,
+  CreditCard,
 } from "lucide-react";
+import { toast } from "sonner";
 import { opcgConfig } from "@/lib/game-config";
 import { formatJpy } from "@/lib/utils/currency";
 import type { PaginatedApiResponse } from "@/app/admin/admin-types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { AdminPagination } from "@/components/admin/admin-pagination";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const OFFICIAL_IMAGE_HOST = opcgConfig.officialCardImageBase
   ? new URL(opcgConfig.officialCardImageBase).hostname
@@ -154,7 +161,12 @@ export function CardsBrowser({
           )
         );
         setEditingId(null);
+        toast.success("Card updated");
+      } else {
+        toast.error("Failed to save card");
       }
+    } catch {
+      toast.error("Network error");
     } finally {
       setSaving(false);
     }
@@ -169,121 +181,145 @@ export function CardsBrowser({
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-2xl font-bold">Cards</h1>
-        <span className="text-sm text-muted-foreground">
-          {total.toLocaleString()} total
-        </span>
-      </div>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Cards"
+        icon={CreditCard}
+        badge={
+          <Badge variant="secondary">{total.toLocaleString()} total</Badge>
+        }
+      />
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2">
         <form onSubmit={handleSearch} className="relative">
-          <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
+          <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
             type="text"
             placeholder="Search code or name..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="h-8 rounded-md border border-border bg-background pl-8 pr-3 text-sm"
+            className="h-8 w-52 pl-8"
           />
         </form>
 
-        <select
-          value={setFilter}
-          onChange={(e) => {
-            setSetFilter(e.target.value);
+        <Select
+          value={setFilter || "_all"}
+          onValueChange={(v) => {
+            setSetFilter(v === "_all" ? "" : v ?? "");
             setPage(1);
           }}
-          className="h-8 rounded-md border border-border bg-background px-2 text-sm"
         >
-          <option value="">All Sets</option>
-          {filterOptions.sets.map((s) => (
-            <option key={s.code} value={s.code}>
-              {s.code.toUpperCase()}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger className="h-8 w-36">
+            <SelectValue placeholder="All Sets" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="_all">All Sets</SelectItem>
+            {filterOptions.sets.map((s) => (
+              <SelectItem key={s.code} value={s.code}>
+                {s.code.toUpperCase()}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-        <select
-          value={rarityFilter}
-          onChange={(e) => {
-            setRarityFilter(e.target.value);
+        <Select
+          value={rarityFilter || "_all"}
+          onValueChange={(v) => {
+            setRarityFilter(v === "_all" ? "" : v ?? "");
             setPage(1);
           }}
-          className="h-8 rounded-md border border-border bg-background px-2 text-sm"
         >
-          <option value="">All Rarities</option>
-          {filterOptions.rarities.map((r) => (
-            <option key={r} value={r}>
-              {r}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger className="h-8 w-36">
+            <SelectValue placeholder="All Rarities" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="_all">All Rarities</SelectItem>
+            {filterOptions.rarities.map((r) => (
+              <SelectItem key={r} value={r}>
+                {r}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-        <select
-          value={missingFilter}
-          onChange={(e) => {
-            setMissingFilter(e.target.value);
+        <Select
+          value={missingFilter || "_none"}
+          onValueChange={(v) => {
+            setMissingFilter(v === "_none" ? "" : v ?? "");
             setPage(1);
           }}
-          className="h-8 rounded-md border border-border bg-background px-2 text-sm"
         >
-          <option value="">No Filter</option>
-          <option value="price">Missing Price</option>
-          <option value="en">Missing EN Name</option>
-          <option value="th">Missing TH Name</option>
-          <option value="image">Missing Image</option>
-        </select>
+          <SelectTrigger className="h-8 w-36">
+            <SelectValue placeholder="No Filter" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="_none">No Filter</SelectItem>
+            <SelectItem value="price">Missing Price</SelectItem>
+            <SelectItem value="en">Missing EN Name</SelectItem>
+            <SelectItem value="th">Missing TH Name</SelectItem>
+            <SelectItem value="image">Missing Image</SelectItem>
+          </SelectContent>
+        </Select>
 
-        <select
-          value={parallelFilter}
-          onChange={(e) => {
-            setParallelFilter(e.target.value);
+        <Select
+          value={parallelFilter || "_all"}
+          onValueChange={(v) => {
+            setParallelFilter(v === "_all" ? "" : v ?? "");
             setPage(1);
           }}
-          className="h-8 rounded-md border border-border bg-background px-2 text-sm"
         >
-          <option value="">All Variants</option>
-          <option value="false">Regular Only</option>
-          <option value="true">Parallel Only</option>
-        </select>
+          <SelectTrigger className="h-8 w-36">
+            <SelectValue placeholder="All Variants" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="_all">All Variants</SelectItem>
+            <SelectItem value="false">Regular Only</SelectItem>
+            <SelectItem value="true">Parallel Only</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Table */}
       <div className="overflow-x-auto rounded-xl border border-border/50">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border/50 bg-muted/50">
-              <th className="w-12 px-2 py-2 text-center text-[10px] font-medium text-muted-foreground">Image</th>
-              <th className="px-3 py-2 text-left font-medium">Code</th>
-              <th className="px-3 py-2 text-left font-medium">Name (JP)</th>
-              <th className="hidden px-3 py-2 text-left font-medium md:table-cell">
+            <tr className="border-b border-border/50 bg-muted/30">
+              <th className="w-12 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground">Image</th>
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">Code</th>
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">Name (JP)</th>
+              <th className="hidden px-4 py-2.5 text-left text-xs font-medium text-muted-foreground md:table-cell">
                 Name (EN)
               </th>
-              <th className="hidden px-3 py-2 text-center font-medium sm:table-cell">
+              <th className="hidden px-4 py-2.5 text-center text-xs font-medium text-muted-foreground sm:table-cell">
                 Rarity
               </th>
-              <th className="hidden px-3 py-2 text-right font-medium lg:table-cell">
+              <th className="hidden px-4 py-2.5 text-right text-xs font-medium text-muted-foreground lg:table-cell">
                 Price
               </th>
-              <th className="px-3 py-2 text-center font-medium">Status</th>
-              <th className="w-20 px-2 py-2"></th>
+              <th className="px-4 py-2.5 text-center text-xs font-medium text-muted-foreground">Status</th>
+              <th className="w-20 px-2 py-2.5"></th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr>
-                <td colSpan={8} className="py-12 text-center">
-                  <Loader2 className="mx-auto h-6 w-6 animate-spin text-muted-foreground" />
-                </td>
-              </tr>
+              Array.from({ length: 8 }).map((_, i) => (
+                <tr key={i} className="border-b border-border/20">
+                  <td className="px-2 py-2"><Skeleton className="mx-auto h-11 w-8 rounded" /></td>
+                  <td className="px-4 py-2"><Skeleton className="h-4 w-20" /></td>
+                  <td className="px-4 py-2"><Skeleton className="h-4 w-28" /></td>
+                  <td className="hidden px-4 py-2 md:table-cell"><Skeleton className="h-4 w-24" /></td>
+                  <td className="hidden px-4 py-2 sm:table-cell"><Skeleton className="mx-auto h-4 w-8" /></td>
+                  <td className="hidden px-4 py-2 lg:table-cell"><Skeleton className="ml-auto h-4 w-16" /></td>
+                  <td className="px-4 py-2"><Skeleton className="mx-auto h-4 w-4" /></td>
+                  <td className="px-2 py-2"><Skeleton className="h-4 w-12" /></td>
+                </tr>
+              ))
             ) : cards.length === 0 ? (
               <tr>
                 <td
                   colSpan={8}
-                  className="py-12 text-center text-muted-foreground"
+                  className="py-16 text-center text-muted-foreground"
                 >
                   No cards found
                 </td>
@@ -309,30 +345,12 @@ export function CardsBrowser({
         </table>
       </div>
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page <= 1}
-            className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1 text-sm disabled:opacity-50"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Prev
-          </button>
-          <span className="text-sm text-muted-foreground">
-            Page {page} of {totalPages}
-          </span>
-          <button
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={page >= totalPages}
-            className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1 text-sm disabled:opacity-50"
-          >
-            Next
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
-      )}
+      <AdminPagination
+        page={page}
+        totalPages={totalPages}
+        total={total}
+        onPageChange={setPage}
+      />
     </div>
   );
 }
@@ -360,7 +378,7 @@ function CardTableRow({
 
   if (editing) {
     return (
-      <tr className="border-b border-border/30 bg-primary/5">
+      <tr className="border-b border-border/20 bg-primary/5">
         <td className="px-2 py-2">
           {card.imageUrl ? (
             <Image src={card.imageUrl} alt="" width={32} height={44} className="rounded" unoptimized />
@@ -368,52 +386,50 @@ function CardTableRow({
             <div className="flex h-11 w-8 items-center justify-center rounded bg-muted text-[9px] text-muted-foreground">?</div>
           )}
         </td>
-        <td className="px-3 py-2 font-mono text-xs">{card.baseCode}</td>
-        <td colSpan={4} className="px-3 py-2">
-          <div className="space-y-1">
-            <input
-              type="text"
+        <td className="px-4 py-2 font-mono text-xs">{card.baseCode}</td>
+        <td colSpan={4} className="px-4 py-2">
+          <div className="space-y-1.5">
+            <Input
               placeholder="English name"
               value={editData.nameEn || ""}
               onChange={(e) => onEditChange("nameEn", e.target.value)}
-              className="w-full rounded border border-border bg-background px-2 py-0.5 text-sm"
+              className="h-7"
             />
-            <input
-              type="text"
+            <Input
               placeholder="Thai name"
               value={editData.nameTh || ""}
               onChange={(e) => onEditChange("nameTh", e.target.value)}
-              className="w-full rounded border border-border bg-background px-2 py-0.5 text-sm"
+              className="h-7"
             />
-            <input
-              type="text"
+            <Input
               placeholder="Image URL"
               value={editData.imageUrl || ""}
               onChange={(e) => onEditChange("imageUrl", e.target.value)}
-              className="w-full rounded border border-border bg-background px-2 py-0.5 text-sm font-mono text-xs"
+              className="h-7 font-mono text-xs"
             />
           </div>
         </td>
         <td></td>
         <td className="px-2 py-2">
           <div className="flex gap-1">
-            <button
+            <Button
+              size="icon-xs"
               onClick={onSaveEdit}
               disabled={saving}
-              className="rounded bg-primary p-1 text-primary-foreground"
             >
               {saving ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
               ) : (
-                <Check className="h-4 w-4" />
+                <Check className="h-3.5 w-3.5" />
               )}
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="outline"
+              size="icon-xs"
               onClick={onCancelEdit}
-              className="rounded bg-muted p-1 text-muted-foreground"
             >
-              <X className="h-4 w-4" />
-            </button>
+              <X className="h-3.5 w-3.5" />
+            </Button>
           </div>
         </td>
       </tr>
@@ -421,15 +437,15 @@ function CardTableRow({
   }
 
   return (
-    <tr className="border-b border-border/30 hover:bg-muted/20">
-      <td className="px-2 py-1">
+    <tr className="border-b border-border/20 transition-colors hover:bg-muted/20">
+      <td className="px-2 py-1.5">
         {card.imageUrl ? (
           <Image src={card.imageUrl} alt="" width={32} height={44} className="rounded" unoptimized />
         ) : (
           <div className="flex h-11 w-8 items-center justify-center rounded bg-muted text-[9px] text-muted-foreground">?</div>
         )}
       </td>
-      <td className="px-3 py-1">
+      <td className="px-4 py-1.5">
         <Link
           href={`/admin/cards/${card.id}`}
           className="font-mono text-xs font-bold hover:text-primary"
@@ -450,41 +466,42 @@ function CardTableRow({
           )}
         </div>
       </td>
-      <td className="max-w-[140px] truncate px-3 py-1 text-xs">
+      <td className="max-w-[140px] truncate px-4 py-1.5 text-xs">
         {card.nameJp}
       </td>
-      <td className="hidden max-w-[160px] truncate px-3 py-1 text-xs md:table-cell">
+      <td className="hidden max-w-[160px] truncate px-4 py-1.5 text-xs md:table-cell">
         {card.nameEn || (
           <span className="text-muted-foreground/50">—</span>
         )}
       </td>
-      <td className="hidden px-3 py-1 text-center text-xs sm:table-cell">
+      <td className="hidden px-4 py-1.5 text-center text-xs sm:table-cell">
         {card.rarity}
       </td>
-      <td className="hidden px-3 py-1 text-right text-xs lg:table-cell">
+      <td className="hidden px-4 py-1.5 text-right text-xs tabular-nums lg:table-cell">
         {card.latestPriceJpy != null
           ? formatJpy(card.latestPriceJpy)
           : "—"}
       </td>
-      <td className="px-3 py-1 text-center">
+      <td className="px-4 py-1.5 text-center">
         {hasIssue ? (
           <AlertTriangle className="mx-auto h-4 w-4 text-amber-500" />
         ) : (
           <Check className="mx-auto h-4 w-4 text-green-500" />
         )}
       </td>
-      <td className="px-2 py-1">
+      <td className="px-2 py-1.5">
         <div className="flex gap-1">
-          <button
+          <Button
+            variant="ghost"
+            size="icon-xs"
             onClick={onStartEdit}
-            className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
             title="Quick edit"
           >
             <Pencil className="h-3.5 w-3.5" />
-          </button>
+          </Button>
           <Link
             href={`/admin/cards/${card.id}`}
-            className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             title="Full editor"
           >
             <ExternalLink className="h-3.5 w-3.5" />

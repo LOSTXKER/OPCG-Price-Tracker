@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { parseJsonBody } from "@/lib/api/admin-helpers";
+import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import {
   fetchWithRetry,
@@ -18,9 +18,7 @@ import { matchCardImage, type MatchCandidate } from "@/lib/scraper/gemini-matche
  * Stores all results in YuyuteiMapping for admin review.
  * Does NOT update prices — use scrape-prices for that.
  */
-export async function POST(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const POST = adminApiHandler(async (request: NextRequest) => {
   const parsed = await parseJsonBody<{ setCode?: string }>(request);
   if (!parsed.ok) return parsed.response;
 
@@ -231,4 +229,4 @@ export async function POST(request: NextRequest) {
       { status: 502 }
     );
   }
-}
+});

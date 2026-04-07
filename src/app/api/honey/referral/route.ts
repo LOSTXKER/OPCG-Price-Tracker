@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
-import { ensureReferralCode, getReferralStats } from "@/lib/honey-referral";
+import { ensureReferralCode, getReferralStats } from "@/lib/honey/referral";
 
 export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();

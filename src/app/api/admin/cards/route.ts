@@ -1,16 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
-import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { parseJsonBody } from "@/lib/api/admin-helpers";
+import { adminApiHandler } from "@/lib/api/api-handler";
 import { parsePageLimit } from "@/lib/api/request-body";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
 import { Prisma } from "@/generated/prisma/client";
 
 const log = createLog("admin:cards");
 
-export async function GET(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const GET = adminApiHandler(async (request: NextRequest) => {
   const sp = request.nextUrl.searchParams;
   const { page, limit, skip } = parsePageLimit(sp, { defaultLimit: 50, maxLimit: 100 });
   const search = sp.get("q") || "";
@@ -94,11 +92,9 @@ export async function GET(request: NextRequest) {
     limit,
     totalPages: Math.ceil(total / limit),
   });
-}
+});
 
-export async function PATCH(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const PATCH = adminApiHandler(async (request: NextRequest) => {
   const parsed = await parseJsonBody<{ id: number; [key: string]: unknown }>(request);
   if (!parsed.ok) return parsed.response;
 
@@ -135,4 +131,4 @@ export async function PATCH(request: NextRequest) {
     log.error("PATCH /api/admin/cards", error);
     return NextResponse.json({ error: "Failed to update card" }, { status: 500 });
   }
-}
+});

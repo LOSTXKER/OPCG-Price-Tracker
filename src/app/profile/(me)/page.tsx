@@ -1,52 +1,35 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { ProfileMobileMenu } from "@/components/profile/profile-sidebar";
-import { SectionOverview } from "@/components/profile/section-overview";
-import { useProfileData } from "@/components/profile/profile-data-context";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
-const TAB_REDIRECTS: Record<string, string> = {
-  subscription: "/profile/subscription",
-  notifications: "/profile/notifications",
-  marketplace: "/profile/marketplace",
-  export: "/profile/export",
-  account: "/profile/account",
-};
-
-export default function ProfileOverviewPage() {
+export default function ProfileRedirectPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const { data, checkinLoading, handleCheckin } = useProfileData();
 
-  const tabParam = searchParams.get("tab");
   useEffect(() => {
-    if (tabParam && TAB_REDIRECTS[tabParam]) {
-      router.replace(TAB_REDIRECTS[tabParam]);
-    }
-  }, [tabParam, router]);
-
-  if (!data) return null;
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) {
+        router.replace("/login?redirect=/settings");
+        return;
+      }
+      fetch("/api/me")
+        .then((r) => r.json())
+        .then((json: { user?: { id: string } }) => {
+          if (json.user?.id) {
+            router.replace(`/profile/${json.user.id}`);
+          } else {
+            router.replace("/login");
+          }
+        })
+        .catch(() => router.replace("/login"));
+    });
+  }, [router]);
 
   return (
-    <>
-      {/* Desktop: overview section */}
-      <div className="hidden md:block space-y-5">
-        <SectionOverview
-          stats={data.stats}
-          honey={data.honey}
-          userId={data.user.id}
-          sellerRating={data.user.sellerRating}
-          sellerReviewCount={data.user.sellerReviewCount}
-          checkinLoading={checkinLoading}
-          onCheckin={() => void handleCheckin()}
-        />
-      </div>
-
-      {/* Mobile: show menu list (overview is the "home" of profile on mobile) */}
-      <div className="md:hidden">
-        <ProfileMobileMenu />
-      </div>
-    </>
+    <div className="flex min-h-[50vh] items-center justify-center">
+      <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+    </div>
   );
 }

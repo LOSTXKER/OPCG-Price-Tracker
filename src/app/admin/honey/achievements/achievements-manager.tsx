@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import { Plus, Trophy, Users } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 
 type Achievement = {
   id: number;
@@ -18,6 +24,9 @@ type Achievement = {
   createdAt: string;
   _count: { users: number };
 };
+
+const filterSelectClass =
+  "h-9 w-full rounded-lg border border-input bg-transparent px-3 py-1.5 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 dark:bg-input/30";
 
 export function AchievementsManager({ initialAchievements }: { initialAchievements: Achievement[] }) {
   const [achievements, setAchievements] = useState(initialAchievements);
@@ -52,65 +61,76 @@ export function AchievementsManager({ initialAchievements }: { initialAchievemen
       setAchievements((prev) => [{ ...data.achievement, _count: { users: 0 } }, ...prev]);
       setShowForm(false);
       setForm({ code: "", name: "", nameEn: "", nameTh: "", description: "", criteriaType: "portfolio_count", criteriaTarget: 100, honeyReward: 50 });
+      toast.success("Achievement created");
+    } else {
+      toast.error("Failed to create achievement");
     }
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Achievements</h1>
-        <Button size="sm" onClick={() => setShowForm(!showForm)} className="gap-1.5">
-          <Plus className="h-4 w-4" /> New Achievement
-        </Button>
-      </div>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Achievements"
+        icon={Trophy}
+        badge={<Badge variant="secondary">{achievements.length} total</Badge>}
+        actions={
+          <Button size="sm" onClick={() => setShowForm(!showForm)}>
+            <Plus className="h-4 w-4" /> New Achievement
+          </Button>
+        }
+      />
 
       {showForm && (
-        <div className="panel space-y-3 p-4">
-          <h2 className="font-semibold">Create Achievement</h2>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <input placeholder="Code (e.g. portfolio_100)" value={form.code} onChange={(e) => setForm((f) => ({ ...f, code: e.target.value }))} className="rounded-lg border bg-background px-3 py-2 text-sm" />
-            <input placeholder="Name (JP)" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} className="rounded-lg border bg-background px-3 py-2 text-sm" />
-            <input placeholder="Name (EN)" value={form.nameEn} onChange={(e) => setForm((f) => ({ ...f, nameEn: e.target.value }))} className="rounded-lg border bg-background px-3 py-2 text-sm" />
-            <input placeholder="Name (TH)" value={form.nameTh} onChange={(e) => setForm((f) => ({ ...f, nameTh: e.target.value }))} className="rounded-lg border bg-background px-3 py-2 text-sm" />
-            <input placeholder="Description" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} className="rounded-lg border bg-background px-3 py-2 text-sm sm:col-span-2" />
-            <select value={form.criteriaType} onChange={(e) => setForm((f) => ({ ...f, criteriaType: e.target.value }))} className="rounded-lg border bg-background px-3 py-2 text-sm">
-              <option value="portfolio_count">Portfolio Count</option>
-              <option value="checkin_streak">Check-in Streak</option>
-              <option value="first_sell">First Sell</option>
-              <option value="first_review">First Review</option>
-              <option value="correct_predictions">Correct Predictions</option>
-            </select>
-            <input type="number" placeholder="Target" value={form.criteriaTarget} onChange={(e) => setForm((f) => ({ ...f, criteriaTarget: Number(e.target.value) }))} className="rounded-lg border bg-background px-3 py-2 text-sm" />
-            <input type="number" placeholder="Honey Reward" value={form.honeyReward} onChange={(e) => setForm((f) => ({ ...f, honeyReward: Number(e.target.value) }))} className="rounded-lg border bg-background px-3 py-2 text-sm" />
-          </div>
-          <div className="flex gap-2">
-            <Button size="sm" onClick={handleCreate}>Create</Button>
-            <Button size="sm" variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>
-          </div>
-        </div>
+        <Card>
+          <CardContent>
+            <h2 className="mb-3 font-semibold">Create Achievement</h2>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Input placeholder="Code (e.g. portfolio_100)" value={form.code} onChange={(e) => setForm((f) => ({ ...f, code: e.target.value }))} />
+              <Input placeholder="Name (JP)" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
+              <Input placeholder="Name (EN)" value={form.nameEn} onChange={(e) => setForm((f) => ({ ...f, nameEn: e.target.value }))} />
+              <Input placeholder="Name (TH)" value={form.nameTh} onChange={(e) => setForm((f) => ({ ...f, nameTh: e.target.value }))} />
+              <Input placeholder="Description" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} className="sm:col-span-2" />
+              <select value={form.criteriaType} onChange={(e) => setForm((f) => ({ ...f, criteriaType: e.target.value }))} className={filterSelectClass}>
+                <option value="portfolio_count">Portfolio Count</option>
+                <option value="checkin_streak">Check-in Streak</option>
+                <option value="first_sell">First Sell</option>
+                <option value="first_review">First Review</option>
+                <option value="correct_predictions">Correct Predictions</option>
+              </select>
+              <Input type="number" placeholder="Target" value={form.criteriaTarget} onChange={(e) => setForm((f) => ({ ...f, criteriaTarget: Number(e.target.value) }))} />
+              <Input type="number" placeholder="Honey Reward" value={form.honeyReward} onChange={(e) => setForm((f) => ({ ...f, honeyReward: Number(e.target.value) }))} />
+            </div>
+            <div className="mt-4 flex gap-2">
+              <Button size="sm" onClick={handleCreate}>Create</Button>
+              <Button size="sm" variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       <div className="space-y-2">
         {achievements.map((ach) => (
-          <div key={ach.id} className="panel flex items-center gap-3 p-4">
-            <div className="rounded-lg bg-amber-100 dark:bg-amber-500/10 p-2">
-              <Trophy className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="font-semibold">{ach.nameEn ?? ach.name}</p>
-              <p className="text-xs text-muted-foreground">{ach.description}</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Code: <code className="text-foreground">{ach.code}</code> | Criteria: {JSON.stringify(ach.criteria)} | Reward: <span className="text-amber-600 dark:text-amber-400 font-bold">{ach.honeyReward} pts</span>
-              </p>
-            </div>
-            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <Users className="h-4 w-4" />
-              {ach._count.users}
-            </div>
-          </div>
+          <Card key={ach.id} size="sm">
+            <CardContent className="flex items-center gap-3">
+              <div className="shrink-0 rounded-lg bg-amber-100 p-2 dark:bg-amber-500/10">
+                <Trophy className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold">{ach.nameEn ?? ach.name}</p>
+                <p className="text-xs text-muted-foreground">{ach.description}</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Code: <code className="text-foreground">{ach.code}</code> | Criteria: {JSON.stringify(ach.criteria)} | Reward: <span className="font-bold text-amber-600 dark:text-amber-400">{ach.honeyReward} pts</span>
+                </p>
+              </div>
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <Users className="h-4 w-4" />
+                {ach._count.users}
+              </div>
+            </CardContent>
+          </Card>
         ))}
         {achievements.length === 0 && (
-          <p className="py-8 text-center text-sm text-muted-foreground">No achievements yet</p>
+          <AdminEmptyState icon={Trophy} title="No achievements yet" />
         )}
       </div>
     </div>

@@ -1,14 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
-import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { parseJsonBody } from "@/lib/api/admin-helpers";
+import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
 
 const log = createLog("admin:sets");
 
-export async function GET() {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const GET = adminApiHandler(async (_request: NextRequest) => {
   const sets = await prisma.cardSet.findMany({
     orderBy: { code: "asc" },
     select: {
@@ -61,11 +59,9 @@ export async function GET() {
   });
 
   return NextResponse.json(enriched);
-}
+});
 
-export async function PATCH(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const PATCH = adminApiHandler(async (request: NextRequest) => {
   const parsed = await parseJsonBody<{ id: number; [key: string]: unknown }>(request);
   if (!parsed.ok) return parsed.response;
 
@@ -106,4 +102,4 @@ export async function PATCH(request: NextRequest) {
     log.error("PATCH /api/admin/sets", error);
     return NextResponse.json({ error: "Failed to update set" }, { status: 500 });
   }
-}
+});

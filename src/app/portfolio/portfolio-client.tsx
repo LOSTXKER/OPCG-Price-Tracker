@@ -20,6 +20,7 @@ import { t, type Language } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
 import { usePortfolioApi } from "@/hooks/use-portfolio-api"
+import { useTierLimits } from "@/hooks/use-tier-limits"
 
 type TabId = "overview" | "transactions"
 
@@ -48,6 +49,7 @@ function PortfolioContent() {
   const [tab, setTab] = useState<TabId>("overview")
   const [dialogOpen, setDialogOpen] = useState(false)
   const [hideBalance, setHideBalance] = useState(false)
+  const { limits } = useTierLimits()
 
   const p = usePortfolioApi()
 
@@ -118,6 +120,7 @@ function PortfolioContent() {
               onRename={renamePortfolio}
               onDelete={deletePortfolio}
               hideBalance={hideBalance}
+              maxPortfolios={limits.portfolioCount}
             />
           </div>
         </div>

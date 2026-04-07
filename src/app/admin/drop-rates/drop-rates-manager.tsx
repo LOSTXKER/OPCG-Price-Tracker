@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Save, Loader2, Check } from "lucide-react";
+import { ChevronDown, ChevronUp, Save, Loader2, Check, BarChart3 } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { Badge } from "@/components/ui/badge";
 
 interface DropRate {
   id: number;
@@ -68,9 +73,12 @@ export function DropRatesManager({
       });
       if (res.ok) {
         setSaved((prev) => new Set(prev).add(key));
+        toast.success(`${rarity} rate saved`);
       } else {
-        console.error(`saveRate failed: ${res.status}`);
+        toast.error(`Failed to save ${rarity} rate`);
       }
+    } catch {
+      toast.error("Network error");
     } finally {
       setSaving(null);
     }
@@ -81,23 +89,25 @@ export function DropRatesManager({
   }
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Drop Rates</h1>
-      <p className="text-sm text-muted-foreground">
-        View and edit pull rates per set. Changes are saved per-rarity.
-      </p>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Drop Rates"
+        description="View and edit pull rates per set. Changes are saved per-rarity."
+        icon={BarChart3}
+        badge={<Badge variant="secondary">{sets.length} sets</Badge>}
+      />
 
       <div className="space-y-2">
         {sets.map((set) => {
           const expanded = expandedCode === set.code;
           return (
-            <div key={set.id} className="rounded-xl border border-border/50">
+            <div key={set.id} className="overflow-hidden rounded-xl border border-border/50">
               <button
                 onClick={() => {
                   toggleExpand(set.code);
                   if (!expanded) initEdit(set);
                 }}
-                className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-muted/20"
+                className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/20"
               >
                 <span className="font-mono text-sm font-bold uppercase">{set.code}</span>
                 <span className="flex-1 text-sm">{set.nameEn || set.name}</span>
@@ -113,89 +123,92 @@ export function DropRatesManager({
                     Packs/Box: {set.packsPerBox ?? "—"} · Cards/Pack: {set.cardsPerPack ?? "—"}
                   </div>
 
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border/30 text-xs text-muted-foreground">
-                        <th className="px-2 py-1 text-left">Rarity</th>
-                        <th className="px-2 py-1 text-center">Cards in Pool</th>
-                        <th className="px-2 py-1 text-right">Avg/Box</th>
-                        <th className="px-2 py-1 text-right">Rate/Pack</th>
-                        <th className="w-10 px-2 py-1"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {set.dropRates.map((dr) => {
-                        const key = `${set.id}-${dr.rarity}`;
-                        const isSaving = saving === key;
-                        const isSaved = saved.has(key);
-                        const isParallel = dr.rarity.startsWith("P-");
-                        const pool = getCount(set.id, dr.rarity, isParallel);
+                  <div className="overflow-x-auto rounded-lg border border-border/30">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-border/30 bg-muted/20">
+                          <th className="px-3 py-2 text-left text-xs font-medium text-muted-foreground">Rarity</th>
+                          <th className="px-3 py-2 text-center text-xs font-medium text-muted-foreground">Cards in Pool</th>
+                          <th className="px-3 py-2 text-right text-xs font-medium text-muted-foreground">Avg/Box</th>
+                          <th className="px-3 py-2 text-right text-xs font-medium text-muted-foreground">Rate/Pack</th>
+                          <th className="w-10 px-2 py-2"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {set.dropRates.map((dr) => {
+                          const key = `${set.id}-${dr.rarity}`;
+                          const isSaving = saving === key;
+                          const isSaved = saved.has(key);
+                          const isParallel = dr.rarity.startsWith("P-");
+                          const pool = getCount(set.id, dr.rarity, isParallel);
 
-                        return (
-                          <tr key={dr.rarity} className="border-b border-border/20">
-                            <td className="px-2 py-1.5">
-                              <span className={`font-mono text-xs font-bold ${isParallel ? "text-amber-500" : ""}`}>
-                                {dr.rarity}
-                              </span>
-                            </td>
-                            <td className="px-2 py-1.5 text-center text-xs text-muted-foreground">
-                              {pool || "—"}
-                            </td>
-                            <td className="px-2 py-1.5 text-right">
-                              <input
-                                type="number"
-                                step="0.01"
-                                value={editRates[dr.rarity]?.avgPerBox ?? ""}
-                                onChange={(e) =>
-                                  setEditRates((prev) => ({
-                                    ...prev,
-                                    [dr.rarity]: {
-                                      ...prev[dr.rarity],
-                                      avgPerBox: e.target.value,
-                                    },
-                                  }))
-                                }
-                                className="w-20 rounded border border-border bg-background px-1.5 py-0.5 text-right text-xs"
-                              />
-                            </td>
-                            <td className="px-2 py-1.5 text-right">
-                              <input
-                                type="number"
-                                step="0.001"
-                                value={editRates[dr.rarity]?.ratePerPack ?? ""}
-                                onChange={(e) =>
-                                  setEditRates((prev) => ({
-                                    ...prev,
-                                    [dr.rarity]: {
-                                      ...prev[dr.rarity],
-                                      ratePerPack: e.target.value,
-                                    },
-                                  }))
-                                }
-                                className="w-20 rounded border border-border bg-background px-1.5 py-0.5 text-right text-xs"
-                              />
-                            </td>
-                            <td className="px-2 py-1.5 text-center">
-                              <button
-                                onClick={() => saveRate(set.id, dr.rarity)}
-                                disabled={isSaving}
-                                className="rounded p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-50"
-                                title="Save"
-                              >
-                                {isSaving ? (
-                                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                ) : isSaved ? (
-                                  <Check className="h-3.5 w-3.5 text-green-500" />
-                                ) : (
-                                  <Save className="h-3.5 w-3.5" />
-                                )}
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                          return (
+                            <tr key={dr.rarity} className="border-b border-border/20">
+                              <td className="px-3 py-2">
+                                <span className={`font-mono text-xs font-bold ${isParallel ? "text-amber-500" : ""}`}>
+                                  {dr.rarity}
+                                </span>
+                              </td>
+                              <td className="px-3 py-2 text-center text-xs text-muted-foreground">
+                                {pool || "—"}
+                              </td>
+                              <td className="px-3 py-2 text-right">
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={editRates[dr.rarity]?.avgPerBox ?? ""}
+                                  onChange={(e) =>
+                                    setEditRates((prev) => ({
+                                      ...prev,
+                                      [dr.rarity]: {
+                                        ...prev[dr.rarity],
+                                        avgPerBox: e.target.value,
+                                      },
+                                    }))
+                                  }
+                                  className="ml-auto h-7 w-20 text-right text-xs"
+                                />
+                              </td>
+                              <td className="px-3 py-2 text-right">
+                                <Input
+                                  type="number"
+                                  step="0.001"
+                                  value={editRates[dr.rarity]?.ratePerPack ?? ""}
+                                  onChange={(e) =>
+                                    setEditRates((prev) => ({
+                                      ...prev,
+                                      [dr.rarity]: {
+                                        ...prev[dr.rarity],
+                                        ratePerPack: e.target.value,
+                                      },
+                                    }))
+                                  }
+                                  className="ml-auto h-7 w-20 text-right text-xs"
+                                />
+                              </td>
+                              <td className="px-2 py-2 text-center">
+                                <Button
+                                  variant="ghost"
+                                  size="icon-xs"
+                                  onClick={() => saveRate(set.id, dr.rarity)}
+                                  disabled={isSaving}
+                                  title="Save"
+                                >
+                                  {isSaving ? (
+                                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                  ) : isSaved ? (
+                                    <Check className="h-3.5 w-3.5 text-green-500" />
+                                  ) : (
+                                    <Save className="h-3.5 w-3.5" />
+                                  )}
+                                </Button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )}
             </div>

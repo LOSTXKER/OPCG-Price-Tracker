@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getAdminUser } from "@/lib/auth/get-admin-user";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { adminApiHandler } from "@/lib/api/api-handler";
+import { getAdminUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import {
   matchCardImage,
@@ -18,7 +19,7 @@ const log = createLog("admin:yuyutei-ai-suggest");
  *
  * Returns: { success, matchedCardCode?, confidence?, error? }
  */
-export async function POST(request: NextRequest) {
+export const POST = adminApiHandler(async (request: NextRequest) => {
   const admin = await getAdminUser();
   if (!admin) return unauthorized();
 
@@ -131,4 +132,4 @@ export async function POST(request: NextRequest) {
       error: e instanceof Error ? e.message : "AI call failed",
     });
   }
-}
+});

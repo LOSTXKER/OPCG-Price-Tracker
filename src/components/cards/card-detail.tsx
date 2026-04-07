@@ -32,6 +32,7 @@ import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { t, getCardName, getCardEffect, getSetName } from "@/lib/i18n"
 import { useUIStore, type Language } from "@/stores/ui-store"
 import { formatPct } from "@/lib/utils/currency"
+import { useTierLimits } from "@/hooks/use-tier-limits"
 
 import dynamic from "next/dynamic"
 
@@ -161,6 +162,7 @@ export interface CardDetailProps {
 
 export function CardDetail({ card, siblings, communityPrice: _communityPrice, relatedCards, snkrdunkPrices, availableSources, sourcePricesRaw, sourcePricesPsa10 }: CardDetailProps) {
   const lang = useUIStore((s) => s.language)
+  const { limits } = useTierLimits()
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [chartPeriod, setChartPeriod] = useState("30d")
   const [priceMode, setPriceMode] = useState<"raw" | "psa10">("raw")
@@ -395,7 +397,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
             {/* Chart */}
             <div className="px-5 py-4">
               {card.chartData.length > 0 ? (
-                <CardDetailPriceChart cardCode={card.cardCode} data={card.chartData} availableSources={availableSources} priceMode={priceMode} onPeriodChange={setChartPeriod} />
+                <CardDetailPriceChart cardCode={card.cardCode} data={card.chartData} availableSources={availableSources} priceMode={priceMode} onPeriodChange={setChartPeriod} maxDays={limits.priceHistoryDays} />
               ) : (
                 <p className="py-6 text-center text-sm text-muted-foreground">{t(lang, "noPriceHistory")}</p>
               )}

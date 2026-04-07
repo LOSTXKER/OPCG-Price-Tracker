@@ -1,21 +1,17 @@
-import { NextRequest, NextResponse } from "next/server";
-import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { parseJsonBody } from "@/lib/api/admin-helpers";
+import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 
-export async function GET() {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const GET = adminApiHandler(async (_req: NextRequest) => {
   const achievements = await prisma.achievement.findMany({
     orderBy: { createdAt: "desc" },
     include: { _count: { select: { users: true } } },
   });
   return NextResponse.json({ achievements });
-}
+});
 
-export async function POST(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const POST = adminApiHandler(async (request: NextRequest) => {
   const parsed = await parseJsonBody<{
     code: string;
     name: string;
@@ -47,4 +43,4 @@ export async function POST(request: NextRequest) {
   });
 
   return NextResponse.json({ achievement }, { status: 201 });
-}
+});

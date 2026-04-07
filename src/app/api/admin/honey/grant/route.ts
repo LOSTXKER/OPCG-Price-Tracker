@@ -1,9 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
-import { getAdminUser } from "@/lib/auth/get-admin-user";
+import { adminApiHandler } from "@/lib/api/api-handler";
+import { getAdminUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
-export async function POST(request: NextRequest) {
+export const POST = adminApiHandler(async (request: NextRequest) => {
   const admin = await getAdminUser();
   if (!admin) return unauthorized();
 
@@ -49,4 +50,4 @@ export async function POST(request: NextRequest) {
     success: true,
     honeyPoints: updated.honeyPoints,
   });
-}
+});

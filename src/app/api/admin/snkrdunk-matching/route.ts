@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getAdminUser } from "@/lib/auth/get-admin-user";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { adminApiHandler } from "@/lib/api/api-handler";
+import { getAdminUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { fetchSnkrdunkPriceData, parseCardPageHtml } from "@/lib/scraper/snkrdunk";
 import { autoMatchByProductNumber, upsertSnkrdunkPrices } from "@/lib/scraper/snkrdunk-matcher";
@@ -17,7 +18,7 @@ const log = createLog("admin:snkrdunk-matching");
  * GET /api/admin/snkrdunk-matching?lookup=<snkrdunkId>
  * - Fetch SNKRDUNK page data for a given numeric ID (for admin preview)
  */
-export async function GET(request: NextRequest) {
+export const GET = adminApiHandler(async (request: NextRequest) => {
   const admin = await getAdminUser();
   if (!admin) return unauthorized();
 
@@ -161,14 +162,14 @@ export async function GET(request: NextRequest) {
     page,
     totalPages: Math.ceil(total / limit),
   });
-}
+});
 
 /**
  * POST /api/admin/snkrdunk-matching
  * Add a new SNKRDUNK mapping by ID (fetches data from SNKRDUNK automatically).
  * Body: { snkrdunkId: number }
  */
-export async function POST(request: NextRequest) {
+export const POST = adminApiHandler(async (request: NextRequest) => {
   const admin = await getAdminUser();
   if (!admin) return unauthorized();
 
@@ -228,7 +229,7 @@ export async function POST(request: NextRequest) {
   const autoMatched = await autoMatchByProductNumber(prisma);
 
   return NextResponse.json({ mapping, autoMatched }, { status: 201 });
-}
+});
 
 /**
  * PATCH /api/admin/snkrdunk-matching
@@ -237,7 +238,7 @@ export async function POST(request: NextRequest) {
  * - Auto-match all pending: { action: "auto-match" }
  * - Refresh prices: { id, action: "refresh" }
  */
-export async function PATCH(request: NextRequest) {
+export const PATCH = adminApiHandler(async (request: NextRequest) => {
   const admin = await getAdminUser();
   if (!admin) return unauthorized();
 
@@ -312,13 +313,13 @@ export async function PATCH(request: NextRequest) {
   }
 
   return NextResponse.json({ success: true });
-}
+});
 
 /**
  * DELETE /api/admin/snkrdunk-matching  { id }
  * Reject (soft-delete) a mapping.
  */
-export async function DELETE(request: NextRequest) {
+export const DELETE = adminApiHandler(async (request: NextRequest) => {
   const admin = await getAdminUser();
   if (!admin) return unauthorized();
 
@@ -333,4 +334,4 @@ export async function DELETE(request: NextRequest) {
   });
 
   return NextResponse.json({ success: true });
-}
+});

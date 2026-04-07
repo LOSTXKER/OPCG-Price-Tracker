@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
-import { getAdminUser } from "@/lib/auth/get-admin-user";
+import { adminApiHandler } from "@/lib/api/api-handler";
+import { getAdminUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { BlogCategory } from "@/generated/prisma/client";
 
@@ -12,11 +12,7 @@ const BLOG_CATEGORY_MAP: Record<string, BlogCategory> = {
   news: BlogCategory.NEWS,
 };
 
-export async function POST(req: NextRequest) {
-  if (!(await checkIsAdmin())) {
-    return unauthorized();
-  }
-
+export const POST = adminApiHandler(async (req: NextRequest) => {
   const parsed = await parseJsonBody<{
     title: string; slug: string; excerpt: string; content: string;
     coverImage?: string; category: string; tags?: string[]; published?: boolean;
@@ -51,4 +47,4 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json({ id: post.id }, { status: 201 });
-}
+});

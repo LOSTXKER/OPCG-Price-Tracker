@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
-import { getActiveRaffles, getUserTicketsForMonth, buyTicket, claimFreeTicket } from "@/lib/honey-raffle";
-import { currentMonthKey } from "@/lib/honey-utils";
+import { getActiveRaffles, getUserTicketsForMonth, buyTicket, claimFreeTicket } from "@/lib/honey/raffle";
+import { currentMonthKey } from "@/lib/honey/utils";
 import { prisma } from "@/lib/db";
-import { RafflePrizesSchema, parseJsonField } from "@/lib/honey-schemas";
+import { RafflePrizesSchema, parseJsonField } from "@/lib/honey/schemas";
 
 export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();

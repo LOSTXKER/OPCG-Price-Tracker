@@ -1,23 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
-import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { parseJsonBody } from "@/lib/api/admin-helpers";
+import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import type { ShopItemType } from "@/generated/prisma/client";
 
 const VALID_TYPES = new Set(["TRIAL_PRO", "TRIAL_PRO_PLUS", "BADGE", "CUSTOM", "PROFILE_FRAME", "PRICE_ALERT_SLOT", "CSV_EXPORT_PASS"]);
 
-export async function GET() {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const GET = adminApiHandler(async (_req: NextRequest) => {
   const items = await prisma.honeyShopItem.findMany({
     orderBy: [{ isActive: "desc" }, { cost: "asc" }],
   });
   return NextResponse.json({ items });
-}
+});
 
-export async function POST(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const POST = adminApiHandler(async (request: NextRequest) => {
   const parsed = await parseJsonBody<{
     name: string;
     nameEn?: string;
@@ -57,4 +53,4 @@ export async function POST(request: NextRequest) {
   });
 
   return NextResponse.json({ item }, { status: 201 });
-}
+});

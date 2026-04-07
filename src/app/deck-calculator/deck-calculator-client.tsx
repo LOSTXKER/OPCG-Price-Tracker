@@ -18,8 +18,11 @@ import { Input } from "@/components/ui/input";
 import { PriceDisplay } from "@/components/shared/price-display";
 import { useAuthState } from "@/hooks/use-auth-state";
 import { useCardSearch, type CardSearchResult } from "@/hooks/use-card-search";
+import { useTierLimits } from "@/hooks/use-tier-limits";
 import { useUIStore } from "@/stores/ui-store";
 import { t, type Language } from "@/lib/i18n";
+import { LimitCounter } from "@/components/shared/limit-counter";
+import { UpgradeBadge } from "@/components/shared/upgrade-badge";
 
 type DeckRow = {
   id: number;
@@ -60,6 +63,8 @@ function DeckCalculatorContent() {
     typeFilter: searchType === "leader" ? "LEADER" : undefined,
   });
   const [newDeckName, setNewDeckName] = useState("");
+  const { limits } = useTierLimits();
+  const deckLimitReached = isFinite(limits.deckCount) && decks.length >= limits.deckCount;
 
   const loadDecks = useCallback(async () => {
     setError(null);
@@ -215,11 +220,24 @@ function DeckCalculatorContent() {
             placeholder={t(lang, "newDeckName")}
             value={newDeckName}
             onChange={(e) => setNewDeckName(e.target.value)}
+            disabled={deckLimitReached}
           />
         </div>
-        <Button onClick={() => void createDeck()} disabled={!newDeckName.trim()}>
-          {t(lang, "createDeck")}
-        </Button>
+        {deckLimitReached ? (
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <LimitCounter current={decks.length} max={limits.deckCount} />
+            <UpgradeBadge />
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Button onClick={() => void createDeck()} disabled={!newDeckName.trim()}>
+              {t(lang, "createDeck")}
+            </Button>
+            {isFinite(limits.deckCount) && (
+              <LimitCounter current={decks.length} max={limits.deckCount} />
+            )}
+          </div>
+        )}
       </div>
 
       {decks.length > 1 && (

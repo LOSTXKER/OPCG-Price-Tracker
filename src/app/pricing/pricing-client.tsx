@@ -2,12 +2,17 @@
 
 import { Fragment, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Check, Crown, Sparkles, X, Hexagon } from "lucide-react";
+import { Check, X, Hexagon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
-import type { TranslationKey } from "@/lib/i18n";
+import {
+  PLANS,
+  PLAN_HIGHLIGHTS,
+  FEATURE_SECTIONS,
+  findRow,
+} from "@/lib/plan-features";
 
 type Settings = {
   tier: string;
@@ -16,183 +21,6 @@ type Settings = {
   trialStartedAt: string | null;
   stripeSubscriptionId: boolean;
 };
-
-type PlanDef = {
-  key: string;
-  icon: typeof Crown | null;
-  iconClass: string;
-  cardClass: string;
-  popular?: boolean;
-  badge?: TranslationKey;
-  badgeClass?: string;
-  subtitleKey: TranslationKey;
-  monthlyPlan?: string;
-  yearlyPlan?: string;
-  monthlyPrice?: string;
-  yearlyPrice?: string;
-  yearlyPerMonth?: string;
-  ctaClass?: string;
-};
-
-const PLANS: PlanDef[] = [
-  {
-    key: "FREE",
-    icon: null,
-    iconClass: "",
-    cardClass: "border-border bg-card",
-    subtitleKey: "freeSubtitle",
-  },
-  {
-    key: "PRO",
-    icon: Crown,
-    iconClass: "text-foreground",
-    cardClass: "border-foreground/20 bg-card shadow-md",
-    popular: true,
-    subtitleKey: "proSubtitle",
-    monthlyPlan: "PRO_MONTHLY",
-    yearlyPlan: "PRO_YEARLY",
-    monthlyPrice: "฿129",
-    yearlyPrice: "฿990",
-    yearlyPerMonth: "฿83",
-    ctaClass: "bg-primary text-primary-foreground hover:bg-primary/90",
-  },
-  {
-    key: "PRO_PLUS",
-    icon: Sparkles,
-    iconClass: "text-foreground",
-    cardClass: "border-foreground/20 bg-card shadow-md",
-    badge: "bestForTraders",
-    badgeClass: "bg-foreground text-background border-0",
-    subtitleKey: "proPlusSubtitle",
-    monthlyPlan: "PRO_PLUS_MONTHLY",
-    yearlyPlan: "PRO_PLUS_YEARLY",
-    monthlyPrice: "฿249",
-    yearlyPrice: "฿1,990",
-    yearlyPerMonth: "฿166",
-    ctaClass: "bg-primary text-primary-foreground hover:bg-primary/90",
-  },
-];
-
-const PLAN_HIGHLIGHTS: Record<string, string[]> = {
-  FREE: ["priceHistory", "portfolioCards", "priceAlerts", "compareCards"],
-  PRO: ["priceHistory", "csvExport", "portfolioCount", "priceAlerts"],
-  PRO_PLUS: ["priceHistory", "portfolioCards", "priceAlerts", "autoPricing"],
-};
-
-type FeatureRow = {
-  key: string;
-  labelKey: TranslationKey;
-  values: Record<string, string | boolean>;
-};
-
-type FeatureSection = {
-  titleKey: TranslationKey;
-  rows: FeatureRow[];
-};
-
-const FEATURE_SECTIONS: FeatureSection[] = [
-  {
-    titleKey: "featSectionCore",
-    rows: [
-      {
-        key: "priceHistory",
-        labelKey: "featPriceHistory",
-        values: { FREE: "30 days", PRO: "1 year", PRO_PLUS: "All-time" },
-      },
-      {
-        key: "compareCards",
-        labelKey: "featCardCompare",
-        values: { FREE: "2", PRO: "5", PRO_PLUS: "∞" },
-      },
-      {
-        key: "csvExport",
-        labelKey: "featCsvExport",
-        values: { FREE: false, PRO: true, PRO_PLUS: true },
-      },
-      {
-        key: "honeyMultiplier",
-        labelKey: "featHoneyMultiplier",
-        values: { FREE: "1x", PRO: "2x", PRO_PLUS: "3x" },
-      },
-    ],
-  },
-  {
-    titleKey: "featSectionPortfolio",
-    rows: [
-      {
-        key: "portfolioCards",
-        labelKey: "featPortfolioCards",
-        values: { FREE: "30", PRO: "300", PRO_PLUS: "∞" },
-      },
-      {
-        key: "portfolioCount",
-        labelKey: "featPortfolioCount",
-        values: { FREE: "1", PRO: "5", PRO_PLUS: "∞" },
-      },
-      {
-        key: "watchlistCards",
-        labelKey: "featWatchlistCards",
-        values: { FREE: "15", PRO: "100", PRO_PLUS: "∞" },
-      },
-      {
-        key: "decks",
-        labelKey: "featDecks",
-        values: { FREE: "1", PRO: "10", PRO_PLUS: "∞" },
-      },
-    ],
-  },
-  {
-    titleKey: "featSectionAlerts",
-    rows: [
-      {
-        key: "priceAlerts",
-        labelKey: "featPriceAlerts",
-        values: { FREE: "3", PRO: "30", PRO_PLUS: "∞" },
-      },
-      {
-        key: "lineAlerts",
-        labelKey: "featLineAlerts",
-        values: { FREE: false, PRO: true, PRO_PLUS: true },
-      },
-      {
-        key: "weeklyDigest",
-        labelKey: "featWeeklyDigest",
-        values: { FREE: false, PRO: true, PRO_PLUS: true },
-      },
-    ],
-  },
-  {
-    titleKey: "featSectionMarketplace",
-    rows: [
-      {
-        key: "marketplaceFee",
-        labelKey: "featMarketplaceFee",
-        values: { FREE: "5%", PRO: "4%", PRO_PLUS: "3%" },
-      },
-      {
-        key: "listingBoost",
-        labelKey: "featListingBoost",
-        values: { FREE: false, PRO: "1", PRO_PLUS: "3" },
-      },
-      {
-        key: "autoPricing",
-        labelKey: "featAutoPricing",
-        values: { FREE: false, PRO: false, PRO_PLUS: true },
-      },
-      {
-        key: "bulkPriceLookup",
-        labelKey: "featBulkPriceLookup",
-        values: { FREE: false, PRO: "100/day", PRO_PLUS: "500/day" },
-      },
-    ],
-  },
-];
-
-const ALL_ROWS = FEATURE_SECTIONS.flatMap((s) => s.rows);
-
-function findRow(key: string) {
-  return ALL_ROWS.find((r) => r.key === key);
-}
 
 export default function PricingClient() {
   const lang = useUIStore((s) => s.language);

@@ -24,6 +24,7 @@ export function WatchlistStar({
   const lang = useUIStore((s) => s.language)
   const loaded = useWatchlistStore((s) => s.loaded)
   const watched = useWatchlistStore((s) => s.ids.has(cardId))
+  const limitHit = useWatchlistStore((s) => s.limitHit)
   const load = useWatchlistStore((s) => s.load)
   const toggle = useWatchlistStore((s) => s.toggle)
 
@@ -45,9 +46,11 @@ export function WatchlistStar({
           ? "text-muted-foreground/40 hover:text-amber-400"
           : "pointer-events-none text-muted-foreground/20",
         watched && "text-amber-400 hover:text-amber-500",
+        limitHit && !watched && "animate-pulse text-destructive",
         className
       )}
       aria-label={watched ? t(lang, "removeFromWatchlist") : t(lang, "addToWatchlist")}
+      title={limitHit && !watched ? t(lang, "limitReachedUpgrade") : undefined}
     >
       <Star
         className={cn(SIZE[size], watched && "fill-current")}

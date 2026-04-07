@@ -10,19 +10,19 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
-import { Loader2, TrendingDown, TrendingUp } from "lucide-react"
+import { Lock, Loader2, TrendingDown, TrendingUp } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { compactDisplayValue, formatDisplayValue, formatPct, type Currency } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 import { getLocale, t } from "@/lib/i18n"
 
 const PERIODS = [
-  { value: "24h", label: "24H" },
-  { value: "7d", label: "7D" },
-  { value: "30d", label: "30D" },
-  { value: "90d", label: "90D" },
-  { value: "1y", label: "1Y" },
-  { value: "all", label: "All" },
+  { value: "24h", label: "24H", days: 1 },
+  { value: "7d", label: "7D", days: 7 },
+  { value: "30d", label: "30D", days: 30 },
+  { value: "90d", label: "90D", days: 90 },
+  { value: "1y", label: "1Y", days: 365 },
+  { value: "all", label: "All", days: Infinity },
 ]
 
 export type ChartSeriesDef = {
@@ -52,6 +52,7 @@ export interface PriceChartProps {
   onPeriodChange: (period: string) => void
   loading?: boolean
   stats?: ChartStats | null
+  maxDays?: number
 }
 
 function formatAxisDate(iso: string, locale: string, period?: string) {
@@ -153,6 +154,7 @@ export function PriceChart({
   onPeriodChange,
   loading,
   stats,
+  maxDays,
 }: PriceChartProps) {
   const displayCurrency = useUIStore((s) => s.currency) as Currency
   const lang = useUIStore((s) => s.language)
@@ -179,21 +181,28 @@ export function PriceChart({
       {/* Period selector */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-0.5 rounded-full border border-border/50 p-0.5">
-          {PERIODS.map((p) => (
-            <button
-              key={p.value}
-              onClick={() => onPeriodChange(p.value)}
-              disabled={loading}
-              className={cn(
-                "rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums transition-all",
-                period === p.value
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {p.label}
-            </button>
-          ))}
+          {PERIODS.map((p) => {
+            const locked = maxDays != null && isFinite(maxDays) && p.days > maxDays
+            return (
+              <button
+                key={p.value}
+                onClick={() => !locked && onPeriodChange(p.value)}
+                disabled={loading || locked}
+                title={locked ? t(lang, "upgradeToUnlock") : undefined}
+                className={cn(
+                  "inline-flex items-center gap-0.5 rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums transition-all",
+                  locked
+                    ? "cursor-not-allowed text-muted-foreground/40"
+                    : period === p.value
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {p.label}
+                {locked && <Lock className="size-2.5" />}
+              </button>
+            )
+          })}
         </div>
         {loading && (
           <Loader2 className="size-4 animate-spin text-muted-foreground" />

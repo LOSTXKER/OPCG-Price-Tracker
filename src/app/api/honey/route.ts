@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { earnHoney, canCheckinToday, spendHoney, getHoneyMultiplier } from "@/lib/honey";
-import { fulfillRedemption } from "@/lib/honey-fulfillment";
-import { getHoneyLevel } from "@/lib/honey-levels";
+import { fulfillRedemption } from "@/lib/honey/fulfillment";
+import { getHoneyLevel } from "@/lib/honey/levels";
 
 export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();

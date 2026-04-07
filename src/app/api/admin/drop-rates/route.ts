@@ -1,14 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
-import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { parseJsonBody } from "@/lib/api/admin-helpers";
+import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
 
 const log = createLog("admin:drop-rates");
 
-export async function GET(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const GET = adminApiHandler(async (request: NextRequest) => {
   const setCode = request.nextUrl.searchParams.get("set");
 
   if (!setCode) {
@@ -59,11 +57,9 @@ export async function GET(request: NextRequest) {
       count: r._count,
     })),
   });
-}
+});
 
-export async function PATCH(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const PATCH = adminApiHandler(async (request: NextRequest) => {
   const parsed = await parseJsonBody<{
     setId: number;
     rarity: string;
@@ -90,4 +86,4 @@ export async function PATCH(request: NextRequest) {
     log.error("PATCH /api/admin/drop-rates", error);
     return NextResponse.json({ error: "Failed to update drop rate" }, { status: 500 });
   }
-}
+});

@@ -28,6 +28,7 @@ import {
 import { useTheme } from "next-themes";
 
 import { CommandSearchModal } from "@/components/shared/command-search";
+import { NotificationBell } from "@/components/shared/notification-bell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -45,7 +46,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useUIStore, type Language, type Currency } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
-import { getHoneyLevel } from "@/lib/honey-levels";
+import { getHoneyLevel } from "@/lib/honey/levels";
 
 const NAV_LINKS = [
   { href: "/" as const, key: "overview" as const },
@@ -121,6 +122,9 @@ export function Header() {
   const [honeyPoints, setHoneyPoints] = useState(0);
   const [honeyLifetime, setHoneyLifetime] = useState(0);
   const [honeyPendingActions, setHoneyPendingActions] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [appDisplayName, setAppDisplayName] = useState<string | null>(null);
+  const [appAvatarUrl, setAppAvatarUrl] = useState<string | null>(null);
 
   const language = useUIStore((s) => s.language);
   const setLanguage = useUIStore((s) => s.setLanguage);
@@ -148,15 +152,18 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    if (!authUser) { setUserTier("FREE"); setHoneyPoints(0); setHoneyLifetime(0); setHoneyPendingActions(false); return; }
+    if (!authUser) { setUserTier("FREE"); setHoneyPoints(0); setHoneyLifetime(0); setHoneyPendingActions(false); setUserId(null); setAppDisplayName(null); setAppAvatarUrl(null); return; }
     fetch("/api/settings")
       .then((r) => r.ok ? r.json() : null)
       .then((data) => {
         if (!data) return;
+        if (data.id) setUserId(data.id as string);
         if (data.tier) setUserTier(data.tier as UserTierValue);
         if (typeof data.honeyPoints === "number") setHoneyPoints(data.honeyPoints);
         if (typeof data.honeyLifetimeEarned === "number") setHoneyLifetime(data.honeyLifetimeEarned);
         if (typeof data.honeyPendingActions === "boolean") setHoneyPendingActions(data.honeyPendingActions);
+        if (typeof data.displayName === "string") setAppDisplayName(data.displayName);
+        if (typeof data.avatarUrl === "string") setAppAvatarUrl(data.avatarUrl);
       })
       .catch(() => {});
   }, [authUser]);
@@ -218,6 +225,9 @@ export function Header() {
   const tierInfo = TIER_DISPLAY[userTier];
   const TierIcon = tierInfo.icon;
   const canUpgrade = userTier === "FREE" || userTier === "PRO";
+
+  const userName = appDisplayName ?? authUser?.user_metadata?.full_name ?? authUser?.email?.split("@")[0] ?? "User";
+  const userAvatar = appAvatarUrl ?? authUser?.user_metadata?.avatar_url ?? null;
 
   const honeyLevel = getHoneyLevel(honeyLifetime);
   const rankDisplay = RANK_DISPLAY[honeyLevel.label] ?? RANK_DISPLAY.Newbie;
@@ -460,20 +470,21 @@ export function Header() {
             {/* Auth area */}
             {authLoaded && authUser ? (
               <div className="flex items-center gap-1.5">
+                <NotificationBell />
                 {/* Profile dropdown — avatar + tier + rank */}
                 <DropdownMenu>
                   <DropdownMenuTrigger className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2.5 transition-colors hover:bg-muted/60 focus:outline-none">
                     <Avatar size="sm" className={cn("h-7 w-7 ring-2", rankDisplay.ring)}>
-                      {authUser.user_metadata?.avatar_url ? (
-                        <AvatarImage src={authUser.user_metadata.avatar_url} alt="" />
+                      {userAvatar ? (
+                        <AvatarImage src={userAvatar} alt="" />
                       ) : null}
                       <AvatarFallback className="bg-primary/10 text-[11px] font-bold text-primary">
-                        {(authUser.user_metadata?.full_name ?? authUser.email ?? "U").slice(0, 1).toUpperCase()}
+                        {userName.slice(0, 1).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col items-start">
                       <span className="max-w-[80px] truncate text-[12px] font-medium leading-tight text-foreground">
-                        {authUser.user_metadata?.full_name ?? authUser.email?.split("@")[0] ?? "User"}
+                        {userName}
                       </span>
                       <div className="flex items-center gap-1">
                         <span className={cn("text-[10px] font-semibold leading-tight", tierInfo.color.replace(/bg-\S+\s?/, ""))}>
@@ -490,7 +501,7 @@ export function Header() {
                     <DropdownMenuGroup>
                       <DropdownMenuLabel className="font-normal">
                         <p className="truncate text-sm font-medium text-foreground">
-                          {authUser.user_metadata?.full_name ?? authUser.email?.split("@")[0] ?? "User"}
+                          {userName}
                         </p>
                         <p className="truncate text-xs text-muted-foreground">{authUser.email}</p>
 
@@ -554,11 +565,11 @@ export function Header() {
                       </DropdownMenuLabel>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => router.push("/profile")}>
+                    <DropdownMenuItem onClick={() => router.push(userId ? `/profile/${userId}` : "/profile")}>
                       <User className="size-4" />
                       {t(language, "profileLabel")}
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push("/profile?tab=notifications")}>
+                    <DropdownMenuItem onClick={() => router.push("/settings")}>
                       <Settings className="size-4" />
                       {t(language, "settingsTitle")}
                     </DropdownMenuItem>
@@ -635,7 +646,7 @@ export function Header() {
             {authLoaded && authUser && (
               <>
                 <div className="px-2 py-1.5">
-                  <p className="truncate text-sm font-medium">{authUser.user_metadata?.full_name ?? authUser.email?.split("@")[0] ?? "User"}</p>
+                  <p className="truncate text-sm font-medium">{userName}</p>
                   <p className="truncate text-xs text-muted-foreground">{authUser.email}</p>
                 </div>
                 <DropdownMenuSeparator />
@@ -674,9 +685,13 @@ export function Header() {
             {authLoaded && authUser ? (
               <>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push("/profile")}>
+                <DropdownMenuItem onClick={() => router.push(userId ? `/profile/${userId}` : "/profile")}>
                   <User className="size-4" />
                   {t(language, "profileLabel")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/settings")}>
+                  <Settings className="size-4" />
+                  {t(language, "settingsTitle")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push("/honey")}>
                   <Sparkles className="size-4" />

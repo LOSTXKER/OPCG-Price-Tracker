@@ -1,20 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
-import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { parseJsonBody } from "@/lib/api/admin-helpers";
+import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 
-export async function GET() {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const GET = adminApiHandler(async (_req: NextRequest) => {
   const events = await prisma.seasonalEvent.findMany({
     orderBy: { startDate: "desc" },
   });
   return NextResponse.json({ events });
-}
+});
 
-export async function POST(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const POST = adminApiHandler(async (request: NextRequest) => {
   const parsed = await parseJsonBody<{
     name: string;
     nameEn?: string;
@@ -44,11 +40,9 @@ export async function POST(request: NextRequest) {
   });
 
   return NextResponse.json({ event }, { status: 201 });
-}
+});
 
-export async function PATCH(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const PATCH = adminApiHandler(async (request: NextRequest) => {
   const parsed = await parseJsonBody<{
     id: number;
     name?: string;
@@ -82,4 +76,4 @@ export async function PATCH(request: NextRequest) {
   });
 
   return NextResponse.json({ event });
-}
+});

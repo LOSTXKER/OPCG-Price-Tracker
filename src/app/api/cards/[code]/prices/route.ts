@@ -1,6 +1,8 @@
+import { getAuthUser } from "@/lib/api/auth";
 import { prisma } from "@/lib/db";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { createLog } from "@/lib/logger";
+import { effectiveTier, getLimits } from "@/lib/tier";
 import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:cards");
@@ -33,27 +35,26 @@ export async function GET(
       return NextResponse.json({ error: "Card not found" }, { status: 404 });
     }
 
+    const dbUser = await getAuthUser();
+    const tier = dbUser ? effectiveTier(dbUser.tier, dbUser.tierExpiresAt) : "FREE";
+    const limits = getLimits(tier);
+    const maxDays = limits.priceHistoryDays === Infinity ? Infinity : limits.priceHistoryDays;
+
+    const PERIOD_DAYS: Record<string, number> = {
+      "24h": 1,
+      "7d": 7,
+      "30d": 30,
+      "90d": 90,
+      "1y": 365,
+      all: Infinity,
+    };
+    const requestedDays = PERIOD_DAYS[period] ?? 7;
+    const effectiveDays = maxDays === Infinity ? requestedDays : Math.min(requestedDays, maxDays);
+
     const now = new Date();
-    let since: Date;
-    switch (period) {
-      case "24h":
-        since = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-        break;
-      case "30d":
-        since = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        break;
-      case "90d":
-        since = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
-        break;
-      case "1y":
-        since = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
-        break;
-      case "all":
-        since = new Date(0);
-        break;
-      default:
-        since = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    }
+    const since = effectiveDays === Infinity
+      ? new Date(0)
+      : new Date(now.getTime() - effectiveDays * 24 * 60 * 60 * 1000);
 
     const whereClause: Record<string, unknown> = {
       cardId: card.id,

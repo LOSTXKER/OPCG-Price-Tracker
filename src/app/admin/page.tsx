@@ -10,7 +10,11 @@ import {
   BarChart3,
   Database,
   DollarSign,
+  LayoutDashboard,
 } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { AdminStatCard } from "@/components/admin/admin-stat-card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 async function getStats() {
   const [
@@ -138,129 +142,127 @@ export default async function AdminDashboard() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
+      <AdminPageHeader
+        title="Dashboard"
+        description="Overview of card data, pricing, and quality metrics"
+        icon={LayoutDashboard}
+      />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => (
-          <div
-            key={card.label}
-            className="panel p-4"
-          >
-            <div className="flex items-center gap-3">
-              <div className={`rounded-lg p-2 ${card.bg}`}>
-                <card.icon className={`h-5 w-5 ${card.color}`} />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">{card.label}</p>
-                <p className="text-2xl font-bold">{card.value}</p>
-                {card.sub && (
-                  <p className="text-xs text-muted-foreground">{card.sub}</p>
-                )}
-              </div>
-            </div>
-          </div>
+          <AdminStatCard key={card.label} {...card} />
         ))}
       </div>
 
-      {/* Rarity Breakdown */}
-      <div className="panel p-4">
-        <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-          <BarChart3 className="h-5 w-5" />
-          Rarity Breakdown (Base Cards)
-        </h2>
-        <div className="flex flex-wrap gap-3">
-          {sortedRarities.map((r) => (
-            <Link
-              key={r.rarity}
-              href={`/admin/cards?rarity=${r.rarity}&parallel=false`}
-              className="flex items-center gap-2 rounded-lg border border-border/50 px-3 py-2 transition-colors hover:border-primary/30"
-            >
-              <div className={`h-3 w-3 rounded-full ${RARITY_COLORS[r.rarity] ?? "bg-muted"}`} />
-              <span className="font-mono text-sm font-bold">{r.rarity}</span>
-              <span className="text-sm text-muted-foreground">{r.count}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
+      <Card>
+        <CardHeader className="border-b">
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="h-5 w-5 text-muted-foreground" />
+            Rarity Breakdown (Base Cards)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            {sortedRarities.map((r) => (
+              <Link
+                key={r.rarity}
+                href={`/admin/cards?rarity=${r.rarity}&parallel=false`}
+                className="flex items-center gap-2 rounded-lg border border-border/50 px-3 py-2 transition-colors hover:border-primary/30 hover:bg-muted/50"
+              >
+                <div className={`h-3 w-3 rounded-full ${RARITY_COLORS[r.rarity] ?? "bg-muted"}`} />
+                <span className="font-mono text-sm font-bold">{r.rarity}</span>
+                <span className="text-sm text-muted-foreground">{r.count}</span>
+              </Link>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
-      <div className="panel p-4">
-        <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-          <Languages className="h-5 w-5" />
-          Data Quality
-        </h2>
-        <div className="space-y-4">
-          {qualityItems.map((item) => {
-            const pctValue =
-              item.total > 0 ? (item.have / item.total) * 100 : 0;
-            const isGood = pctValue >= 90;
-            return (
-              <div key={item.label}>
-                <div className="mb-1 flex items-center justify-between text-sm">
-                  <span className="flex items-center gap-2">
-                    {isGood ? (
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                    ) : (
-                      <AlertTriangle className="h-4 w-4 text-amber-500" />
-                    )}
-                    {item.label}
-                  </span>
-                  <Link
-                    href={item.href}
-                    className="text-xs text-muted-foreground hover:text-primary"
-                  >
-                    {item.missing > 0
-                      ? `${item.missing.toLocaleString()} missing`
-                      : "All good"}
-                  </Link>
+      <Card>
+        <CardHeader className="border-b">
+          <CardTitle className="flex items-center gap-2">
+            <Languages className="h-5 w-5 text-muted-foreground" />
+            Data Quality
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {qualityItems.map((item) => {
+              const pctValue =
+                item.total > 0 ? (item.have / item.total) * 100 : 0;
+              const isGood = pctValue >= 90;
+              return (
+                <div key={item.label}>
+                  <div className="mb-1 flex items-center justify-between text-sm">
+                    <span className="flex items-center gap-2">
+                      {isGood ? (
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <AlertTriangle className="h-4 w-4 text-amber-500" />
+                      )}
+                      {item.label}
+                    </span>
+                    <Link
+                      href={item.href}
+                      className="text-xs text-muted-foreground hover:text-primary"
+                    >
+                      {item.missing > 0
+                        ? `${item.missing.toLocaleString()} missing`
+                        : "All good"}
+                    </Link>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-muted">
+                    <div
+                      className={`h-full rounded-full transition-all ${
+                        isGood ? "bg-green-500" : "bg-amber-500"
+                      }`}
+                      style={{ width: `${Math.min(pctValue, 100)}%` }}
+                    />
+                  </div>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {item.have.toLocaleString()} / {item.total.toLocaleString()} (
+                    {pctValue.toFixed(1)}%)
+                  </p>
                 </div>
-                <div className="h-2 overflow-hidden rounded-full bg-muted">
-                  <div
-                    className={`h-full rounded-full transition-all ${
-                      isGood ? "bg-green-500" : "bg-amber-500"
-                    }`}
-                    style={{ width: `${Math.min(pctValue, 100)}%` }}
-                  />
-                </div>
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  {item.have.toLocaleString()} / {item.total.toLocaleString()} (
-                  {pctValue.toFixed(1)}%)
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Link
-          href="/admin/sets"
-          className="panel group p-4 transition-colors hover:shadow-md"
-        >
-          <Library className="mb-2 h-6 w-6 text-muted-foreground group-hover:text-primary" />
-          <h3 className="font-semibold">Manage Sets</h3>
-          <p className="text-sm text-muted-foreground">
-            View sets, scrape prices
-          </p>
+        <Link href="/admin/sets" className="group">
+          <Card className="h-full transition-shadow hover:shadow-md">
+            <CardContent>
+              <Library className="mb-2 h-6 w-6 text-muted-foreground group-hover:text-primary" />
+              <h3 className="font-semibold">Manage Sets</h3>
+              <p className="text-sm text-muted-foreground">
+                View sets, scrape prices
+              </p>
+            </CardContent>
+          </Card>
         </Link>
-        <Link
-          href="/admin/cards"
-          className="panel group p-4 transition-colors hover:shadow-md"
-        >
-          <CreditCard className="mb-2 h-6 w-6 text-muted-foreground group-hover:text-primary" />
-          <h3 className="font-semibold">Browse Cards</h3>
-          <p className="text-sm text-muted-foreground">
-            Search, filter, verify card data
-          </p>
+        <Link href="/admin/cards" className="group">
+          <Card className="h-full transition-shadow hover:shadow-md">
+            <CardContent>
+              <CreditCard className="mb-2 h-6 w-6 text-muted-foreground group-hover:text-primary" />
+              <h3 className="font-semibold">Browse Cards</h3>
+              <p className="text-sm text-muted-foreground">
+                Search, filter, verify card data
+              </p>
+            </CardContent>
+          </Card>
         </Link>
-        <Link
-          href="/admin/drop-rates"
-          className="panel group p-4 transition-colors hover:shadow-md"
-        >
-          <BarChart3 className="mb-2 h-6 w-6 text-muted-foreground group-hover:text-primary" />
-          <h3 className="font-semibold">Drop Rates</h3>
-          <p className="text-sm text-muted-foreground">
-            View and edit pull rates per set
-          </p>
+        <Link href="/admin/drop-rates" className="group">
+          <Card className="h-full transition-shadow hover:shadow-md">
+            <CardContent>
+              <BarChart3 className="mb-2 h-6 w-6 text-muted-foreground group-hover:text-primary" />
+              <h3 className="font-semibold">Drop Rates</h3>
+              <p className="text-sm text-muted-foreground">
+                View and edit pull rates per set
+              </p>
+            </CardContent>
+          </Card>
         </Link>
       </div>
     </div>

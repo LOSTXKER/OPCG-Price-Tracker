@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
-import { syncAppUser } from "@/lib/auth/sync-app-user";
+import { syncAppUser } from "@/lib/auth";
 
 /**
  * Resolves the current Supabase session to an app-level User (upsert).

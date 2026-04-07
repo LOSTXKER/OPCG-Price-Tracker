@@ -221,6 +221,15 @@ export function LoginClient() {
                 </div>
               </div>
 
+              <div className="flex justify-end">
+                <Link
+                  href="/forgot-password"
+                  className="text-xs text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+                >
+                  {t(lang, "forgotPassword")}
+                </Link>
+              </div>
+
               {error && (
                 <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
                   {error}

@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
-import { unauthorized } from "@/lib/api/admin-helpers";
+import { adminApiHandler } from "@/lib/api/api-handler";
 import { clientEnv, serverEnv } from "@/lib/env";
 
 const BUCKET = "raffle-images";
@@ -25,9 +24,7 @@ async function ensureBucket(supabase: Awaited<ReturnType<typeof getSupabaseAdmin
   }
 }
 
-export async function POST(req: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const POST = adminApiHandler(async (req: NextRequest) => {
   const formData = await req.formData();
   const file = formData.get("file") as File | null;
   const folder = (formData.get("folder") as string) || "general";
@@ -69,4 +66,4 @@ export async function POST(req: NextRequest) {
     const message = err instanceof Error ? err.message : "Upload failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }
-}
+});

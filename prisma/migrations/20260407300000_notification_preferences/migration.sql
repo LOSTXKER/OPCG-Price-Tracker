@@ -1,0 +1,13 @@
+-- AlterTable: per-type per-channel notification preferences
+ALTER TABLE "User" ADD COLUMN "notifyPriceEmail" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "User" ADD COLUMN "notifyPriceWeb" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "User" ADD COLUMN "notifyPriceLine" BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE "User" ADD COLUMN "notifyMarketEmail" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "User" ADD COLUMN "notifyMarketWeb" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "User" ADD COLUMN "notifyMarketLine" BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE "User" ADD COLUMN "notifyHoneyEmail" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "User" ADD COLUMN "notifyHoneyWeb" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "User" ADD COLUMN "notifyHoneyLine" BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE "User" ADD COLUMN "notifyDigestEmail" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "User" ADD COLUMN "notifyDigestWeb" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "User" ADD COLUMN "notifyDigestLine" BOOLEAN NOT NULL DEFAULT false;

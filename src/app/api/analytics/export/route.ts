@@ -107,5 +107,98 @@ export async function GET(request: NextRequest) {
     });
   }
 
+  if (type === "listings") {
+    const listings = await prisma.listing.findMany({
+      where: { userId: user.id },
+      include: {
+        card: {
+          select: {
+            cardCode: true,
+            nameJp: true,
+            nameEn: true,
+            rarity: true,
+            latestPriceJpy: true,
+            set: { select: { code: true } },
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    const header = "Card Code,Name,Set,Rarity,Price (JPY),Price (THB),Condition,Quantity,Status,Created\n";
+    const rows = listings
+      .map((l) => {
+        const c = l.card;
+        return [
+          c.cardCode,
+          `"${(c.nameEn ?? c.nameJp).replace(/"/g, '""')}"`,
+          c.set.code,
+          c.rarity,
+          l.priceJpy,
+          l.priceThb ?? "",
+          l.condition,
+          l.quantity,
+          l.status,
+          l.createdAt.toISOString().slice(0, 10),
+        ].join(",");
+      })
+      .join("\n");
+
+    return new NextResponse(header + rows, {
+      headers: {
+        "Content-Type": "text/csv",
+        "Content-Disposition": `attachment; filename="listings-${new Date().toISOString().slice(0, 10)}.csv"`,
+      },
+    });
+  }
+
+  if (type === "decks") {
+    const decks = await prisma.deck.findMany({
+      where: { userId: user.id },
+      include: {
+        cards: {
+          include: {
+            card: {
+              select: {
+                cardCode: true,
+                nameJp: true,
+                nameEn: true,
+                rarity: true,
+              },
+            },
+          },
+        },
+        leader: {
+          select: { cardCode: true, nameJp: true, nameEn: true },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    const header = "Deck Name,Leader,Card Code,Card Name,Rarity,Quantity\n";
+    const rows = decks
+      .flatMap((d) =>
+        d.cards.map((dc) => {
+          const c = dc.card;
+          return [
+            `"${d.name.replace(/"/g, '""')}"`,
+            d.leader ? `"${(d.leader.nameEn ?? d.leader.nameJp).replace(/"/g, '""')}"` : "",
+            c.cardCode,
+            `"${(c.nameEn ?? c.nameJp).replace(/"/g, '""')}"`,
+            c.rarity,
+            dc.quantity,
+          ].join(",");
+        }),
+      )
+      .join("\n");
+
+    return new NextResponse(header + rows, {
+      headers: {
+        "Content-Type": "text/csv",
+        "Content-Disposition": `attachment; filename="decks-${new Date().toISOString().slice(0, 10)}.csv"`,
+      },
+    });
+  }
+
   return NextResponse.json({ error: "Invalid type" }, { status: 400 });
 }

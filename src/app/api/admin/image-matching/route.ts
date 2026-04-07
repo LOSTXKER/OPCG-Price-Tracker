@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
-import { checkIsAdmin } from "@/lib/auth/check-admin";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { parseJsonBody } from "@/lib/api/admin-helpers";
+import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
 import { opcgConfig } from "@/lib/game-config";
@@ -8,9 +8,7 @@ import { opcgConfig } from "@/lib/game-config";
 const BANDAI_BASE = opcgConfig.officialCardImageBase!;
 const log = createLog("admin:image-matching");
 
-export async function GET(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const GET = adminApiHandler(async (request: NextRequest) => {
   const sp = request.nextUrl.searchParams;
   const setFilter = sp.get("set") || "";
   const page = Math.max(1, parseInt(sp.get("page") || "1", 10) || 1);
@@ -75,11 +73,9 @@ export async function GET(request: NextRequest) {
     totalPages: Math.ceil(total / limit),
     sets,
   });
-}
+});
 
-export async function PATCH(request: NextRequest) {
-  if (!(await checkIsAdmin())) return unauthorized();
-
+export const PATCH = adminApiHandler(async (request: NextRequest) => {
   const parsed = await parseJsonBody<{
     cardId: number;
     parallelIndex: number;
@@ -116,4 +112,4 @@ export async function PATCH(request: NextRequest) {
     log.error("PATCH /api/admin/image-matching", error);
     return NextResponse.json({ error: "Failed to update image" }, { status: 500 });
   }
-}
+});

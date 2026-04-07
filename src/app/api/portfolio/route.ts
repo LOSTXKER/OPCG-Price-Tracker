@@ -3,6 +3,7 @@ import { cardInclude } from "@/lib/api/query-fragments";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
+import { effectiveTier, getLimits } from "@/lib/tier";
 import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:portfolio");
@@ -46,6 +47,18 @@ export async function POST(request: NextRequest) {
         { error: "name is required and must be at most 120 characters" },
         { status: 400 }
       );
+    }
+
+    const tier = effectiveTier(auth.user.tier, auth.user.tierExpiresAt);
+    const limits = getLimits(tier);
+    if (limits.portfolioCount !== Infinity) {
+      const count = await prisma.portfolio.count({ where: { userId: auth.user.id } });
+      if (count >= limits.portfolioCount) {
+        return NextResponse.json(
+          { error: `Portfolio limit reached (${limits.portfolioCount})` },
+          { status: 403 }
+        );
+      }
     }
 
     const portfolio = await prisma.portfolio.create({
