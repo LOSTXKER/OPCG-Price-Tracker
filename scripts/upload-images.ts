@@ -1,36 +1,45 @@
 /**
- * Download card images from external CDN and upload to Supabase Storage.
+ * Download card images from external CDN and upload to Cloudflare R2.
  *
  * After seed-cards.ts populates the DB with Punk Records image URLs
  * (pointing to asia-en.onepiece-cardgame.com), this script:
  *   1. Queries cards with external imageUrl
  *   2. Downloads each image
- *   3. Uploads to Supabase Storage bucket "card-images"
- *   4. Updates Card.imageUrl to the Supabase public URL
+ *   3. Uploads to Cloudflare R2 bucket
+ *   4. Updates Card.imageUrl to the R2 public URL
  *
  * Usage:
  *   npx tsx scripts/upload-images.ts                # all cards
  *   npx tsx scripts/upload-images.ts --sets=op09    # specific sets
- *   npx tsx scripts/upload-images.ts --force        # re-upload even if already on Supabase
+ *   npx tsx scripts/upload-images.ts --force        # re-upload even if already on R2
  */
 import "dotenv/config";
-import { createClient } from "@supabase/supabase-js";
+import { S3Client, PutObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "./_db";
 import { SETS } from "./sets";
 
-const BUCKET = "card-images";
 const CONCURRENCY = 5;
 const DELAY_BETWEEN_BATCHES_MS = 200;
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID!;
+const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY!;
+const R2_ENDPOINT = process.env.R2_ENDPOINT!;
+const R2_BUCKET = process.env.R2_BUCKET!;
+const R2_PUBLIC_URL = process.env.NEXT_PUBLIC_R2_PUBLIC_URL!;
 
-if (!supabaseUrl || !supabaseKey) {
-  console.error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env");
+if (!R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY || !R2_ENDPOINT || !R2_BUCKET || !R2_PUBLIC_URL) {
+  console.error("Missing R2 environment variables. Check .env");
   process.exit(1);
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+const s3 = new S3Client({
+  region: "auto",
+  endpoint: R2_ENDPOINT,
+  credentials: {
+    accessKeyId: R2_ACCESS_KEY_ID,
+    secretAccessKey: R2_SECRET_ACCESS_KEY,
+  },
+});
 
 function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
@@ -48,21 +57,6 @@ function storagePath(cardCode: string): string {
   return `${setCode}/${safe}.png`;
 }
 
-async function ensureBucketExists() {
-  const { data: buckets } = await supabase.storage.listBuckets();
-  const exists = buckets?.some((b) => b.name === BUCKET);
-  if (!exists) {
-    const { error } = await supabase.storage.createBucket(BUCKET, {
-      public: true,
-      fileSizeLimit: 2 * 1024 * 1024,
-    });
-    if (error) throw new Error(`Failed to create bucket: ${error.message}`);
-    console.log(`  Created Supabase Storage bucket "${BUCKET}"`);
-  } else {
-    console.log(`  Bucket "${BUCKET}" already exists`);
-  }
-}
-
 async function downloadImage(url: string): Promise<Buffer | null> {
   try {
     const res = await fetch(url, {
@@ -76,20 +70,23 @@ async function downloadImage(url: string): Promise<Buffer | null> {
   }
 }
 
-async function uploadToStorage(
-  path: string,
+async function uploadToR2(
+  key: string,
   data: Buffer,
   contentType: string
 ): Promise<string | null> {
-  const { error } = await supabase.storage
-    .from(BUCKET)
-    .upload(path, data, { contentType, upsert: true });
-  if (error) {
-    console.warn(`    Upload error for ${path}: ${error.message}`);
+  try {
+    await s3.send(new PutObjectCommand({
+      Bucket: R2_BUCKET,
+      Key: key,
+      Body: data,
+      ContentType: contentType,
+    }));
+    return `${R2_PUBLIC_URL}/${key}`;
+  } catch (err) {
+    console.warn(`    Upload error for ${key}: ${String(err)}`);
     return null;
   }
-  const { data: publicUrlData } = supabase.storage.from(BUCKET).getPublicUrl(path);
-  return publicUrlData.publicUrl;
 }
 
 async function processCard(card: {
@@ -99,7 +96,7 @@ async function processCard(card: {
 }): Promise<{ ok: boolean; skipped?: boolean }> {
   if (!card.imageUrl) return { ok: false };
 
-  const path = storagePath(card.cardCode);
+  const key = storagePath(card.cardCode);
   const buf = await downloadImage(card.imageUrl);
   if (!buf) {
     console.warn(`    FAIL download ${card.cardCode}: ${card.imageUrl}`);
@@ -110,7 +107,7 @@ async function processCard(card: {
     ? "image/jpeg"
     : "image/png";
 
-  const publicUrl = await uploadToStorage(path, buf, contentType);
+  const publicUrl = await uploadToR2(key, buf, contentType);
   if (!publicUrl) return { ok: false };
 
   await prisma.card.update({
@@ -130,20 +127,17 @@ async function main() {
     : null;
 
   console.log("╔══════════════════════════════════════════════════╗");
-  console.log("║   Upload Card Images to Supabase Storage         ║");
+  console.log("║   Upload Card Images to Cloudflare R2            ║");
   console.log("╚══════════════════════════════════════════════════╝");
   console.log(`  force: ${force}, sets: ${setsFilter ? [...setsFilter].join(",") : "all"}\n`);
-
-  await ensureBucketExists();
 
   const setFilter = setsFilter
     ? { set: { code: { in: [...setsFilter] } } }
     : {};
 
-  const supabaseHost = new URL(supabaseUrl!).host;
   const externalFilter = force
     ? {}
-    : { NOT: { imageUrl: { contains: supabaseHost } } };
+    : { NOT: { imageUrl: { contains: R2_PUBLIC_URL } } };
 
   const cards = await prisma.card.findMany({
     where: {
