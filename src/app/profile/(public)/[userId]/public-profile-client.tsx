@@ -177,8 +177,10 @@ export function PublicProfileClient({
   if (isPrivate) {
     return (
       <div className="pb-16">
-        <div className={cn("relative h-44 bg-gradient-to-br sm:h-52", bannerGradient)}>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_60%,rgba(255,255,255,0.08),transparent_60%)]" />
+        <div className="mx-auto w-full max-w-5xl px-4 sm:px-6">
+          <div className={cn("relative h-44 overflow-hidden rounded-2xl bg-gradient-to-br sm:h-52", bannerGradient)}>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_60%,rgba(255,255,255,0.08),transparent_60%)]" />
+          </div>
         </div>
         <div className="relative mx-auto w-full max-w-5xl px-4 sm:px-6">
           <div className="-mt-16 flex flex-col items-center gap-4 pt-24 text-center">
@@ -196,21 +198,23 @@ export function PublicProfileClient({
   return (
     <div className="pb-16">
       {/* ── Banner ── */}
-      <div className="relative h-44 sm:h-52">
-        {user.coverImageUrl ? (
-          <Image
-            src={user.coverImageUrl}
-            alt=""
-            fill
-            className="object-cover"
-            priority
-          />
-        ) : (
-          <div className={cn("absolute inset-0 bg-gradient-to-br", bannerGradient)}>
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M0%200h40v40H0z%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%221%22%20fill%3D%22rgba(255%2C255%2C255%2C0.04)%22%2F%3E%3C%2Fsvg%3E')] bg-repeat" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_60%,rgba(255,255,255,0.08),transparent_60%)]" />
-          </div>
-        )}
+      <div className="mx-auto w-full max-w-5xl px-4 sm:px-6">
+        <div className="relative h-44 overflow-hidden rounded-2xl sm:h-52">
+          {user.coverImageUrl ? (
+            <Image
+              src={user.coverImageUrl}
+              alt=""
+              fill
+              className="object-cover"
+              priority
+            />
+          ) : (
+            <div className={cn("absolute inset-0 bg-gradient-to-br", bannerGradient)}>
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M0%200h40v40H0z%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%221%22%20fill%3D%22rgba(255%2C255%2C255%2C0.04)%22%2F%3E%3C%2Fsvg%3E')] bg-repeat" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_60%,rgba(255,255,255,0.08),transparent_60%)]" />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ── Profile hero ── */}

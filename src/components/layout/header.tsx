@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   ArrowRightLeft,
   Award,
+  Bookmark,
   BookOpen,
   Check,
   Coins,
@@ -14,6 +15,7 @@ import {
   Globe,
   LogOut,
   Menu,
+  MessageCircle,
   Moon,
   Search,
   Settings,
@@ -122,6 +124,7 @@ export function Header() {
   const [honeyPoints, setHoneyPoints] = useState(0);
   const [honeyLifetime, setHoneyLifetime] = useState(0);
   const [honeyPendingActions, setHoneyPendingActions] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState(0);
   const [userId, setUserId] = useState<string | null>(null);
   const [appDisplayName, setAppDisplayName] = useState<string | null>(null);
   const [appAvatarUrl, setAppAvatarUrl] = useState<string | null>(null);
@@ -152,7 +155,7 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    if (!authUser) { setUserTier("FREE"); setHoneyPoints(0); setHoneyLifetime(0); setHoneyPendingActions(false); setUserId(null); setAppDisplayName(null); setAppAvatarUrl(null); return; }
+    if (!authUser) { setUserTier("FREE"); setHoneyPoints(0); setHoneyLifetime(0); setHoneyPendingActions(false); setUserId(null); setAppDisplayName(null); setAppAvatarUrl(null); setUnreadMessages(0); return; }
     fetch("/api/settings")
       .then((r) => r.ok ? r.json() : null)
       .then((data) => {
@@ -165,6 +168,10 @@ export function Header() {
         if (typeof data.displayName === "string") setAppDisplayName(data.displayName);
         if (typeof data.avatarUrl === "string") setAppAvatarUrl(data.avatarUrl);
       })
+      .catch(() => {});
+    fetch("/api/messages/unread-count")
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => { if (typeof data?.count === "number") setUnreadMessages(data.count); })
       .catch(() => {});
   }, [authUser]);
 
@@ -440,6 +447,25 @@ export function Header() {
               {t(language, "portfolioNav")}
             </Link>
 
+            {/* Watchlist — chip style */}
+            <Link
+              href="/watchlist"
+              className={cn(
+                "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                isActive(pathname, "/watchlist")
+                  ? "bg-blue-100 dark:bg-blue-500/10 font-semibold text-foreground"
+                  : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+              )}
+            >
+              <Bookmark className={cn(
+                "size-3.5",
+                isActive(pathname, "/watchlist")
+                  ? "fill-blue-500 text-blue-500 dark:fill-blue-400 dark:text-blue-400"
+                  : "text-blue-500 dark:text-blue-400"
+              )} />
+              {t(language, "watchlistNav")}
+            </Link>
+
             {/* Honey — bordered chip with balance */}
             <Link
               href="/honey"
@@ -470,6 +496,23 @@ export function Header() {
             {/* Auth area */}
             {authLoaded && authUser ? (
               <div className="flex items-center gap-1.5">
+                {/* Messages */}
+                <Link
+                  href="/messages"
+                  className={cn(
+                    "relative flex size-8 items-center justify-center rounded-lg transition-colors",
+                    isActive(pathname, "/messages")
+                      ? "bg-muted text-foreground"
+                      : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                  )}
+                >
+                  <MessageCircle className="size-4" />
+                  {unreadMessages > 0 && (
+                    <span className="absolute -right-0.5 -top-0.5 flex min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-4 text-white">
+                      {unreadMessages > 99 ? "99+" : unreadMessages}
+                    </span>
+                  )}
+                </Link>
                 <NotificationBell />
                 {/* Profile dropdown — avatar + tier + rank */}
                 <DropdownMenu>
@@ -692,6 +735,19 @@ export function Header() {
                 <DropdownMenuItem onClick={() => router.push("/settings")}>
                   <Settings className="size-4" />
                   {t(language, "settingsTitle")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/watchlist")}>
+                  <Bookmark className="size-4 text-blue-500 dark:text-blue-400" />
+                  {t(language, "watchlistNav")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/messages")}>
+                  <MessageCircle className="size-4" />
+                  {t(language, "messagesTitle")}
+                  {unreadMessages > 0 && (
+                    <span className="ml-auto flex min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-4 text-white">
+                      {unreadMessages > 99 ? "99+" : unreadMessages}
+                    </span>
+                  )}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push("/honey")}>
                   <Sparkles className="size-4" />
