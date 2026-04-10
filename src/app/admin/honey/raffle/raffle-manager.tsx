@@ -480,7 +480,7 @@ export function RaffleManager({ initialRaffles }: { initialRaffles: Raffle[] }) 
                           className="mt-1 w-full rounded-lg border bg-background px-3 py-2 text-sm"
                         />
                         <div className="flex items-center gap-2">
-                          <span className="shrink-0 text-[10px] text-muted-foreground">+ Honey Bonus</span>
+                          <span className="shrink-0 text-xs text-muted-foreground">+ Honey Bonus</span>
                           <input
                             type="number"
                             value={prize.honeyBonus ?? 0}
@@ -545,7 +545,7 @@ export function RaffleManager({ initialRaffles }: { initialRaffles: Raffle[] }) 
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-sm font-semibold">{month}</span>
                     {isCurrent && (
-                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
                         CURRENT
                       </span>
                     )}
@@ -623,17 +623,17 @@ function MachineCard({
           <div className="flex items-start justify-between gap-2">
             <div>
               <div className="flex items-center gap-2">
-                <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground">
                   {r.slug}
                 </span>
                 {r.isActive && !r.drawnAt && (
-                  <span className="rounded-full bg-price-up/10 px-2 py-0.5 text-[10px] font-bold text-price-up">ACTIVE</span>
+                  <span className="rounded-full bg-price-up/10 px-2 py-0.5 text-xs font-bold text-price-up">ACTIVE</span>
                 )}
                 {r.drawnAt && (
-                  <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-500">DRAWN</span>
+                  <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-bold text-amber-500">DRAWN</span>
                 )}
                 {!r.isActive && !r.drawnAt && (
-                  <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold text-muted-foreground">INACTIVE</span>
+                  <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-bold text-muted-foreground">INACTIVE</span>
                 )}
               </div>
               <h3 className="mt-1 text-sm font-semibold">{r.title}</h3>
@@ -641,7 +641,7 @@ function MachineCard({
             </div>
             <div className="shrink-0 text-right">
               <p className="text-sm font-bold tabular-nums">{r.totalTickets}</p>
-              <p className="text-[10px] text-muted-foreground">{r.totalParticipants} players</p>
+              <p className="text-xs text-muted-foreground">{r.totalParticipants} players</p>
             </div>
           </div>
 
@@ -663,8 +663,8 @@ function MachineCard({
                   ) : (
                     <Gift className="size-3.5 text-amber-500" />
                   )}
-                  <span className="text-[11px] font-medium">#{p.rank} {p.name}</span>
-                  {p.honeyBonus ? <span className="text-[10px] text-amber-500">+{p.honeyBonus}</span> : null}
+                  <span className="text-xs font-medium">#{p.rank} {p.name}</span>
+                  {p.honeyBonus ? <span className="text-xs text-amber-500">+{p.honeyBonus}</span> : null}
                 </div>
               ))}
             </div>
@@ -673,7 +673,7 @@ function MachineCard({
           {/* Winner */}
           {r.drawnAt && r.winnerId && (
             <div className="mt-2 rounded-lg bg-amber-500/5 border border-amber-500/20 px-3 py-1.5 text-xs">
-              <span className="font-medium text-amber-600">Winner:</span> <span className="font-mono text-[11px]">{r.winnerId}</span>
+              <span className="font-medium text-amber-600">Winner:</span> <span className="font-mono text-xs">{r.winnerId}</span>
             </div>
           )}
 
@@ -734,7 +734,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
   return (
     <div>
       <label className="text-xs font-medium text-muted-foreground">{label}</label>
-      {hint && <span className="ml-1.5 text-[10px] text-muted-foreground/60">({hint})</span>}
+      {hint && <span className="ml-1.5 text-xs text-muted-foreground/60">({hint})</span>}
       {children}
     </div>
   );

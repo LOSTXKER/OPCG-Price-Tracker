@@ -198,22 +198,22 @@ export default async function GettingStartedPage() {
           <div className="flex items-center gap-6 rounded-xl border border-border/50 bg-card px-5 py-4">
             {leader?.imageUrl && (
               <Link href={`/cards/${leader.cardCode}`} className="group shrink-0">
-                <p className="mb-1.5 text-center text-[10px] font-medium text-muted-foreground">Leader</p>
+                <p className="mb-1.5 text-center text-xs font-medium text-muted-foreground">Leader</p>
                 <div className="relative aspect-[63/88] w-20 overflow-hidden rounded-lg bg-muted transition-transform group-hover:-translate-y-0.5">
                   <Image src={leader.imageUrl} alt={leader.nameEn ?? leader.nameJp} fill className="object-contain" sizes="80px" />
                 </div>
-                <p className="mt-1 max-w-20 truncate text-center text-[10px] text-muted-foreground">
+                <p className="mt-1 max-w-20 truncate text-center text-xs text-muted-foreground">
                   {leader.nameEn ?? leader.nameJp}
                 </p>
               </Link>
             )}
             {don?.imageUrl && (
               <Link href={`/cards/${don.cardCode}`} className="group shrink-0">
-                <p className="mb-1.5 text-center text-[10px] font-medium text-muted-foreground">DON!!</p>
+                <p className="mb-1.5 text-center text-xs font-medium text-muted-foreground">DON!!</p>
                 <div className="relative aspect-[63/88] w-20 overflow-hidden rounded-lg bg-muted transition-transform group-hover:-translate-y-0.5">
                   <Image src={don.imageUrl} alt={don.nameEn ?? don.nameJp} fill className="object-contain" sizes="80px" />
                 </div>
-                <p className="mt-1 max-w-20 truncate text-center text-[10px] text-muted-foreground">
+                <p className="mt-1 max-w-20 truncate text-center text-xs text-muted-foreground">
                   {don.nameEn ?? don.nameJp}
                 </p>
               </Link>
@@ -266,7 +266,7 @@ export default async function GettingStartedPage() {
           <div className="border-b border-border/40 px-4 py-2 text-xs font-medium text-muted-foreground">
             แผนผังสนามเล่น (ฝั่งเดียว)
           </div>
-          <div className="grid grid-cols-3 gap-2 p-4 text-center text-[11px] sm:grid-cols-5">
+          <div className="grid grid-cols-3 gap-2 p-4 text-center text-xs sm:grid-cols-5">
             <div className="flex flex-col items-center gap-1">
               <div className="flex size-14 items-center justify-center rounded-lg border-2 border-dashed border-amber-500/40 bg-amber-500/5 sm:size-16">
                 <span className="font-bold text-amber-600 dark:text-amber-400">DON!!</span>

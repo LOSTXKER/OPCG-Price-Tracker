@@ -32,7 +32,7 @@ export function Footer() {
   ];
   return (
     <footer className="hidden border-t border-border/30 md:block">
-      <div className="mx-auto max-w-6xl px-4 py-10 md:px-6">
+      <div className="mx-auto max-w-7xl px-4 py-10 md:px-6 lg:px-8">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
           <div>
             <p className="text-sm font-semibold text-foreground">Meecard</p>
@@ -40,7 +40,7 @@ export function Footer() {
               One Piece Card Game price tracker updated daily.
               Prices from Yuyu-tei, portfolio & collection tracking.
             </p>
-            <p className="mt-4 text-[11px] text-muted-foreground/60">
+            <p className="mt-4 text-xs text-muted-foreground/60">
               Price data sourced from Yuyu-tei &middot; Card images &copy; BANDAI
             </p>
           </div>
@@ -99,10 +99,10 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-8 flex items-center justify-between border-t border-border/30 pt-6">
-          <p className="text-[11px] text-muted-foreground/50">
+          <p className="text-xs text-muted-foreground/50">
             &copy; {new Date().getFullYear()} Meecard
           </p>
-          <nav className="flex items-center gap-4 text-[11px] text-muted-foreground/50">
+          <nav className="flex items-center gap-4 text-xs text-muted-foreground/50">
             <Link href="/guide" className="transition-colors hover:text-muted-foreground">
               {t(lang, "guide")}
             </Link>

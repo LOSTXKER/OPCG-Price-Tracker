@@ -1,0 +1,417 @@
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import { useEffect, useState, useCallback } from "react";
+import { ArrowLeft, Loader2, Save, Package } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+
+type ListingData = {
+  id: number;
+  priceJpy: number;
+  priceThb: number | null;
+  condition: string;
+  quantity: number;
+  description: string | null;
+  photos: string[];
+  shipping: string[];
+  location: string | null;
+  status: string;
+  card: {
+    id: number;
+    cardCode: string;
+    nameJp: string;
+    nameEn: string | null;
+    rarity: string;
+    imageUrl: string | null;
+    set: { code: string; name: string };
+  };
+};
+
+const CONDITIONS = [
+  { value: "NM", label: "Near Mint" },
+  { value: "LP", label: "Lightly Played" },
+  { value: "MP", label: "Moderately Played" },
+  { value: "HP", label: "Heavily Played" },
+  { value: "DMG", label: "Damaged" },
+];
+
+const SHIPPING_OPTIONS = [
+  "ส่งทั่วไทย (Kerry/Flash)",
+  "EMS / ไปรษณีย์ลงทะเบียน",
+  "นัดรับ กรุงเทพฯ",
+  "นัดรับ ต่างจังหวัด",
+];
+
+export default function SellerEditListingPage() {
+  const params = useParams();
+  const listingId = params.id as string;
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [listing, setListing] = useState<ListingData | null>(null);
+
+  // Form state
+  const [priceJpy, setPriceJpy] = useState(0);
+  const [priceThb, setPriceThb] = useState<string>("");
+  const [condition, setCondition] = useState("NM");
+  const [quantity, setQuantity] = useState(1);
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
+  const [shippingMethods, setShippingMethods] = useState<string[]>([]);
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+
+  useEffect(() => {
+    async function loadListing() {
+      try {
+        const res = await fetch(`/api/seller/listings?limit=100`);
+        if (!res.ok) throw new Error("Failed to load");
+        const data = await res.json();
+        const found = data.listings.find(
+          (l: ListingData) => l.id === Number(listingId)
+        );
+        if (!found) throw new Error("Listing not found");
+
+        setListing(found);
+        setPriceJpy(found.priceJpy);
+        setPriceThb(found.priceThb != null ? String(found.priceThb) : "");
+        setCondition(found.condition);
+        setQuantity(found.quantity);
+        setDescription(found.description ?? "");
+        setLocation(found.location ?? "");
+        setShippingMethods(found.shipping ?? []);
+        setPhotos(found.photos ?? []);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "ไม่สามารถโหลดข้อมูลได้");
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadListing();
+  }, [listingId]);
+
+  const handlePhotoUpload = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    setUploadingPhoto(true);
+    try {
+      for (const file of Array.from(files)) {
+        if (photos.length >= 5) break;
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await fetch("/api/listings/upload", {
+          method: "POST",
+          body: formData,
+        });
+        if (!res.ok) continue;
+        const data = await res.json();
+        if (data.url) {
+          setPhotos((prev) => [...prev, data.url]);
+        }
+      }
+    } finally {
+      setUploadingPhoto(false);
+    }
+  };
+
+  const handleSave = useCallback(async () => {
+    setError(null);
+    setSuccess(false);
+    setSaving(true);
+
+    try {
+      const body: Record<string, unknown> = {
+        priceJpy,
+        condition,
+        quantity,
+        description: description.trim() || null,
+        location: location.trim() || null,
+        shipping: shippingMethods,
+        photos,
+      };
+
+      const thbValue = parseFloat(priceThb);
+      if (!isNaN(thbValue) && thbValue > 0) {
+        body.priceThb = thbValue;
+      } else {
+        body.priceThb = null;
+      }
+
+      const res = await fetch(`/api/listings/${listingId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json.error ?? "บันทึกไม่สำเร็จ");
+        return;
+      }
+
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch {
+      setError("เกิดข้อผิดพลาด กรุณาลองอีกครั้ง");
+    } finally {
+      setSaving(false);
+    }
+  }, [priceJpy, priceThb, condition, quantity, description, location, shippingMethods, photos, listingId]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[400px] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (error && !listing) {
+    return (
+      <div className="space-y-4">
+        <Button variant="ghost" size="sm" render={<Link href="/seller/listings" />}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          กลับ
+        </Button>
+        <div className="flex flex-col items-center justify-center py-20 text-center text-muted-foreground">
+          <Package className="mb-3 h-12 w-12 opacity-30" />
+          <p className="text-lg font-medium">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!listing) return null;
+
+  return (
+    <div className="mx-auto max-w-2xl space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="icon-sm" render={<Link href="/seller/listings" />}>
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <div className="flex-1">
+          <h1 className="text-xl font-bold tracking-tight">แก้ไขสินค้า</h1>
+          <p className="text-sm text-muted-foreground">
+            #{listing.id} • {listing.card.cardCode}
+          </p>
+        </div>
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Save className="mr-2 h-4 w-4" />
+          )}
+          บันทึก
+        </Button>
+      </div>
+
+      {error && <p className="text-sm text-destructive">{error}</p>}
+      {success && (
+        <p className="text-sm text-green-600 dark:text-green-400">
+          บันทึกสำเร็จแล้ว
+        </p>
+      )}
+
+      {/* Card info (readonly) */}
+      <div className="panel flex items-center gap-4 rounded-xl p-4">
+        {listing.card.imageUrl ? (
+          <Image
+            src={listing.card.imageUrl}
+            alt={listing.card.nameEn ?? listing.card.nameJp}
+            width={60}
+            height={84}
+            className="rounded object-cover"
+          />
+        ) : (
+          <div className="flex h-[84px] w-[60px] items-center justify-center rounded bg-muted">
+            <Package className="h-6 w-6 text-muted-foreground" />
+          </div>
+        )}
+        <div>
+          <p className="font-semibold">
+            {listing.card.nameEn ?? listing.card.nameJp}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {listing.card.cardCode}
+          </p>
+          <div className="mt-1 flex gap-1.5">
+            <Badge variant="secondary">{listing.card.rarity}</Badge>
+            <Badge variant="secondary">{listing.card.set.name}</Badge>
+          </div>
+        </div>
+      </div>
+
+      {/* Pricing */}
+      <div className="panel space-y-4 rounded-xl p-4">
+        <h2 className="font-semibold">ราคาและสภาพ</h2>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="mb-1 block text-sm font-medium">ราคา (JPY) *</label>
+            <Input
+              type="number"
+              min={1}
+              value={priceJpy}
+              onChange={(e) => setPriceJpy(Number(e.target.value))}
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium">ราคา (THB)</label>
+            <Input
+              type="number"
+              min={0}
+              step="0.01"
+              value={priceThb}
+              onChange={(e) => setPriceThb(e.target.value)}
+              placeholder="ไม่บังคับ"
+            />
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="mb-1 block text-sm font-medium">สภาพการ์ด</label>
+            <select
+              value={condition}
+              onChange={(e) => setCondition(e.target.value)}
+              className="h-10 w-full rounded-lg border border-border bg-background px-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            >
+              {CONDITIONS.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium">จำนวน</label>
+            <Input
+              type="number"
+              min={1}
+              max={99}
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Description */}
+      <div className="panel space-y-4 rounded-xl p-4">
+        <h2 className="font-semibold">รายละเอียด</h2>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows={4}
+          placeholder="อธิบายรายละเอียดเพิ่มเติม เช่น สภาพจริง, ข้อดี-เสีย"
+          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+        />
+      </div>
+
+      {/* Photos */}
+      <div className="panel space-y-4 rounded-xl p-4">
+        <h2 className="font-semibold">ภาพสินค้าจริง</h2>
+        <div className="flex flex-wrap gap-3">
+          {photos.map((url, i) => (
+            <div key={i} className="group relative">
+              <Image
+                src={url}
+                alt={`Photo ${i + 1}`}
+                width={80}
+                height={80}
+                className="rounded-lg border border-border object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => setPhotos((prev) => prev.filter((_, j) => j !== i))}
+                className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs font-bold text-white opacity-0 transition-opacity group-hover:opacity-100"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+          {photos.length < 5 && (
+            <label className="flex h-[80px] w-[80px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary">
+              {uploadingPhoto ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <span className="text-2xl">+</span>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                onChange={(e) => handlePhotoUpload(e.target.files)}
+                disabled={uploadingPhoto}
+              />
+            </label>
+          )}
+        </div>
+        <p className="text-xs text-muted-foreground">
+          สูงสุด 5 รูป • รองรับ JPG, PNG, WebP
+        </p>
+      </div>
+
+      {/* Shipping */}
+      <div className="panel space-y-4 rounded-xl p-4">
+        <h2 className="font-semibold">การจัดส่ง</h2>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium">ที่อยู่ / พื้นที่</label>
+          <Input
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="เช่น กรุงเทพฯ, เชียงใหม่"
+          />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-medium">วิธีจัดส่ง</label>
+          <div className="space-y-2">
+            {SHIPPING_OPTIONS.map((opt) => (
+              <label key={opt} className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={shippingMethods.includes(opt)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setShippingMethods((prev) => [...prev, opt]);
+                    } else {
+                      setShippingMethods((prev) =>
+                        prev.filter((m) => m !== opt)
+                      );
+                    }
+                  }}
+                  className="rounded border-border"
+                />
+                {opt}
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom save button */}
+      <div className="flex justify-end gap-3 pb-8">
+        <Button variant="outline" render={<Link href="/seller/listings" />}>
+          ยกเลิก
+        </Button>
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Save className="mr-2 h-4 w-4" />
+          )}
+          บันทึกการเปลี่ยนแปลง
+        </Button>
+      </div>
+    </div>
+  );
+}

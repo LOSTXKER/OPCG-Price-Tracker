@@ -141,7 +141,7 @@ export function SectionAccount({ user, onUserUpdate }: Props) {
   function PrivacyFeedback({ field }: { field: string }) {
     if (errorField === field) {
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-[11px] font-medium text-destructive animate-in fade-in zoom-in-95">
+        <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in zoom-in-95">
           <CircleAlert className="size-3" />
           {t(lang, "saveFailed")}
         </span>
@@ -149,7 +149,7 @@ export function SectionAccount({ user, onUserUpdate }: Props) {
     }
     if (savedField === field) {
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 animate-in fade-in zoom-in-95">
+        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 animate-in fade-in zoom-in-95">
           <CircleCheck className="size-3" />
           {t(lang, "saved")}
         </span>
@@ -343,7 +343,7 @@ export function SectionAccount({ user, onUserUpdate }: Props) {
                   )}
                   {t(lang, "changeCover")}
                 </div>
-                <span className="text-[10px] text-muted-foreground/50">1200×300px</span>
+                <span className="text-xs text-muted-foreground/50">1200×300px</span>
               </div>
             </button>
           )}
@@ -380,12 +380,12 @@ export function SectionAccount({ user, onUserUpdate }: Props) {
                   onChange={(e) => void handleAvatarChange(e)}
                 />
               </button>
-              <span className="text-[10px] text-muted-foreground/40">200×200px</span>
+              <span className="text-xs text-muted-foreground/40">200×200px</span>
             </div>
             <div className="min-w-0 flex-1 pb-0.5">
               <p className="truncate text-base font-semibold">{user.displayName ?? user.email}</p>
               <p className="truncate text-xs text-muted-foreground">{user.email}</p>
-              <p className="mt-0.5 text-[11px] text-muted-foreground/60">
+              <p className="mt-0.5 text-xs text-muted-foreground/60">
                 {t(lang, "memberSince")} {memberSince}
               </p>
             </div>
@@ -450,7 +450,7 @@ export function SectionAccount({ user, onUserUpdate }: Props) {
                   autoFocus
                 />
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-muted-foreground">{bio.length}/500</span>
+                  <span className="text-xs text-muted-foreground">{bio.length}/500</span>
                   <Button size="sm" onClick={() => void saveBio()} disabled={saving}>
                     {t(lang, "save")}
                   </Button>
@@ -484,7 +484,7 @@ export function SectionAccount({ user, onUserUpdate }: Props) {
             <Mail className="size-3.5 text-muted-foreground" />
             <span className="text-sm">{user.email}</span>
           </div>
-          <p className="mt-1 text-[11px] text-muted-foreground/60">{t(lang, "emailReadonly")}</p>
+          <p className="mt-1 text-xs text-muted-foreground/60">{t(lang, "emailReadonly")}</p>
         </div>
       </div>
 
@@ -542,7 +542,7 @@ export function SectionAccount({ user, onUserUpdate }: Props) {
                     <p className="text-sm font-medium">{t(lang, labelKey)}</p>
                     <PrivacyFeedback field={field} />
                   </div>
-                  <p className="text-[11px] text-muted-foreground">{t(lang, descKey)}</p>
+                  <p className="text-xs text-muted-foreground">{t(lang, descKey)}</p>
                 </div>
               </div>
               <Toggle

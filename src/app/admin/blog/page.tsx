@@ -110,7 +110,7 @@ export default async function AdminBlogPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <Badge variant="secondary" className="text-[11px]">{post.category}</Badge>
+                    <Badge variant="secondary" className="text-xs">{post.category}</Badge>
                   </td>
                   <td className="px-4 py-3 text-center">
                     {post.published ? (

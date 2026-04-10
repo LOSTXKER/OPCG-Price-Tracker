@@ -63,7 +63,7 @@ export function CompareFloatingBar() {
                   >
                     <X className="size-2.5" />
                   </button>
-                  <p className="mt-0.5 w-[43px] truncate text-center text-[9px] text-muted-foreground">
+                  <p className="mt-0.5 w-[43px] truncate text-center text-xs text-muted-foreground">
                     {item.cardCode}
                   </p>
                 </div>

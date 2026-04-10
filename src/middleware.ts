@@ -1,7 +1,10 @@
-import { type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
+  if (process.env.NEXT_PUBLIC_BYPASS_AUTH === "true") {
+    return NextResponse.next();
+  }
   const { pathname } = request.nextUrl;
 
   const { response, user } = await updateSession(request);

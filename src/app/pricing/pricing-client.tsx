@@ -131,7 +131,7 @@ export default function PricingClient() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-10">
+    <div className="mx-auto max-w-7xl space-y-10">
       {/* Header */}
       <div className="text-center">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -164,7 +164,7 @@ export default function PricingClient() {
             }`}
           >
             {t(lang, "yearly")}
-            <span className="rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-semibold text-green-600 dark:text-green-400">
+            <span className="rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-semibold text-green-600 dark:text-green-400">
               -36%
             </span>
           </button>
@@ -201,13 +201,13 @@ export default function PricingClient() {
           >
             {/* Badge */}
             {plan.popular && (
-              <Badge className="absolute -top-2.5 left-1/2 -translate-x-1/2 border-0 bg-foreground text-background text-[11px] font-semibold shadow-sm">
+              <Badge className="absolute -top-2.5 left-1/2 -translate-x-1/2 border-0 bg-foreground text-background text-xs font-semibold shadow-sm">
                 Most Popular
               </Badge>
             )}
             {plan.badge && (
               <Badge
-                className={`absolute -top-2.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold shadow-sm ${plan.badgeClass ?? ""}`}
+                className={`absolute -top-2.5 left-1/2 -translate-x-1/2 text-xs font-semibold shadow-sm ${plan.badgeClass ?? ""}`}
               >
                 {t(lang, plan.badge)}
               </Badge>
@@ -264,7 +264,7 @@ export default function PricingClient() {
                 return (
                   <div
                     key={featureKey}
-                    className="flex items-center justify-between text-[13px]"
+                    className="flex items-center justify-between text-sm"
                   >
                     <span className="text-muted-foreground">
                       {t(lang, row.labelKey)}
@@ -414,7 +414,7 @@ export default function PricingClient() {
                   <tr>
                     <td
                       colSpan={4}
-                      className="pb-2 pt-5 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60"
+                      className="pb-2 pt-5 text-xs font-semibold uppercase tracking-widest text-muted-foreground/60"
                     >
                       {t(lang, section.titleKey)}
                     </td>
@@ -430,7 +430,7 @@ export default function PricingClient() {
                       {PLANS.map((plan) => (
                         <td
                           key={plan.key}
-                          className="py-2.5 text-center text-[13px]"
+                          className="py-2.5 text-center text-sm"
                         >
                           <span className="inline-flex items-center justify-center">
                             {renderValue(

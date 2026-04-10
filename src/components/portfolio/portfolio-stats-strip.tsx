@@ -39,7 +39,7 @@ export function PortfolioStatsStrip({
           {pnlPositive ? <TrendingUp className="size-5" /> : <TrendingDown className="size-5" />}
         </div>
         <div className="min-w-0">
-          <p className="text-[11px] font-medium text-muted-foreground">{t(lang, "unrealizedPnl")}</p>
+          <p className="text-xs font-medium text-muted-foreground">{t(lang, "unrealizedPnl")}</p>
           <p className={cn(
             "font-price text-lg font-bold tabular-nums",
             hasCost
@@ -68,7 +68,7 @@ export function PortfolioStatsStrip({
                 <TrendingUp className="size-4" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-[11px] font-medium text-muted-foreground">{t(lang, "bestPerformer")}</p>
+                <p className="text-xs font-medium text-muted-foreground">{t(lang, "bestPerformer")}</p>
                 {stats.bestPerformer ? (
                   <div className="flex items-baseline gap-2">
                     <p className="truncate text-sm font-semibold">{stats.bestPerformer.name}</p>
@@ -87,7 +87,7 @@ export function PortfolioStatsStrip({
                 <TrendingDown className="size-4" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-[11px] font-medium text-muted-foreground">{t(lang, "worstPerformer")}</p>
+                <p className="text-xs font-medium text-muted-foreground">{t(lang, "worstPerformer")}</p>
                 {stats.worstPerformer ? (
                   <div className="flex items-baseline gap-2">
                     <p className="truncate text-sm font-semibold">{stats.worstPerformer.name}</p>

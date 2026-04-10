@@ -140,22 +140,16 @@ export function RaffleTab({
       )}
 
       {/* Header */}
-      <div>
-        <div className="mb-1 flex items-center gap-2">
-          <h2 className="text-lg font-bold tracking-tight">
-            {t(lang, "monthlyRaffle")}
-          </h2>
-          <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold tabular-nums text-muted-foreground">
-            {machines.length}
-          </span>
-        </div>
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-          <span>{t(lang, "raffleMachineSubtitle")}</span>
-          <span className="text-border">&middot;</span>
-          <span className="flex items-center gap-1">
+      <div className="panel overflow-hidden">
+        <div className="flex items-start justify-between gap-2 px-4 py-3.5">
+          <div>
+            <h2 className="text-sm font-bold">{t(lang, "monthlyRaffle")}</h2>
+            <p className="mt-0.5 text-xs text-muted-foreground">{t(lang, "raffleMachineSubtitle")}</p>
+          </div>
+          <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1 text-xs text-muted-foreground">
             <Clock className="size-3" />
             <span className="font-mono tabular-nums">{countdown}</span>
-          </span>
+          </div>
         </div>
       </div>
 
@@ -195,7 +189,7 @@ export function RaffleTab({
                 </div>
 
                 {/* Info section */}
-                <div className="flex flex-1 flex-col border-t border-border/30 p-3">
+                <div className="flex flex-1 flex-col border-t border-border/30 p-4">
                   <h3
                     className="text-sm font-semibold leading-snug transition-colors group-hover/card:text-primary"
                     style={accent ? { color: accent } : undefined}
@@ -247,7 +241,7 @@ export function RaffleTab({
                               {prize.name}
                             </p>
                             {prize.honeyBonus != null && prize.honeyBonus > 0 && (
-                              <p className="text-[9px] font-bold text-primary">
+                              <p className="text-xs font-bold text-primary">
                                 +{prize.honeyBonus} 🍯
                               </p>
                             )}
@@ -260,36 +254,36 @@ export function RaffleTab({
                   {/* Stats grid */}
                   <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 border-t border-border/30 pt-3">
                     <div>
-                      <p className="text-[10px] text-muted-foreground">{t(lang, "raffleDrawDate")}</p>
+                      <p className="text-xs text-muted-foreground">{t(lang, "raffleDrawDate")}</p>
                       <p className="flex items-center gap-1 text-xs font-semibold">
                         <Calendar className="size-3 text-muted-foreground" />
                         {drawDateStr}
                       </p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-muted-foreground">{t(lang, "raffleMyTickets")}</p>
+                      <p className="text-xs text-muted-foreground">{t(lang, "raffleMyTickets")}</p>
                       <p className="text-xs font-semibold">{tix} / {machine.maxTickets}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-muted-foreground">{t(lang, "raffleTotalTickets")}</p>
+                      <p className="text-xs text-muted-foreground">{t(lang, "raffleTotalTickets")}</p>
                       <p className="text-xs font-semibold">{machine.totalTickets}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-muted-foreground">{t(lang, "raffleParticipants")}</p>
+                      <p className="text-xs text-muted-foreground">{t(lang, "raffleParticipants")}</p>
                       <p className="flex items-center gap-1 text-xs font-semibold">
                         <Users className="size-3 text-muted-foreground" />
                         {machine.totalParticipants}
                       </p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-muted-foreground">{t(lang, "raffleWinChance")}</p>
+                      <p className="text-xs text-muted-foreground">{t(lang, "raffleWinChance")}</p>
                       <p className="text-xs font-semibold text-primary">{chance}%</p>
                     </div>
                   </div>
 
                   {/* Use ticket CTA */}
                   <div className="mt-3 border-t border-border/30 pt-3">
-                    <p className="mb-2 text-center text-[10px] text-muted-foreground">
+                    <p className="mb-2 text-center text-xs text-muted-foreground">
                       {t(lang, "raffleEntriesOutOf")
                         .replace("{my}", String(tix))
                         .replace("{total}", String(machine.totalTickets))}
@@ -300,7 +294,7 @@ export function RaffleTab({
                         <p className="text-xs font-semibold">
                           {t(lang, "raffleUseConfirm")}
                         </p>
-                        <p className="text-[10px] text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                           {t(lang, "raffleUseConfirmDesc")
                             .replace("{remaining}", String(ticketBalance - 1))}
                         </p>
@@ -361,9 +355,9 @@ export function RaffleTab({
       {/* Free Ticket CTA */}
       {canClaimFree && (
         <div className="panel overflow-hidden">
-          <div className="flex items-center gap-3 px-4 py-3">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10">
-              <Gift className="size-5 text-primary" />
+          <div className="flex items-center gap-3.5 px-4 py-3.5">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/10">
+              <Gift className="size-5 text-rose-600 dark:text-rose-400" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-xs font-semibold">
@@ -382,16 +376,16 @@ export function RaffleTab({
       )}
 
       {!canClaimFree && (
-        <div className="flex items-center gap-2 rounded-xl bg-muted/30 px-3 py-2 text-[11px] text-muted-foreground">
-          <Gift className="size-3 text-primary/40" />
+        <div className="flex items-center gap-2 rounded-xl bg-muted/30 px-3.5 py-2.5 text-xs text-muted-foreground">
+          <Gift className="size-3.5 text-rose-500/40" />
           {t(lang, "raffleFreeClaimed")}
         </div>
       )}
 
       {/* How to get tickets */}
       <div className="panel overflow-hidden">
-        <div className="border-b px-4 py-3">
-          <h2 className="text-sm font-semibold">{t(lang, "raffleHowToGet")}</h2>
+        <div className="border-b px-4 py-3.5">
+          <h2 className="text-sm font-bold">{t(lang, "raffleHowToGet")}</h2>
         </div>
         <div className="divide-y divide-border/40">
           {[
@@ -405,9 +399,9 @@ export function RaffleTab({
             },
             { icon: Gift, text: t(lang, "ticketMethodMission") },
           ].map((item, i) => (
-            <div key={i} className="flex items-center gap-3 px-4 py-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <item.icon className="size-4" />
+            <div key={i} className="flex items-center gap-3.5 px-4 py-3.5">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                <item.icon className="size-4.5" />
               </div>
               <p className="min-w-0 flex-1 text-xs text-muted-foreground">
                 {item.text}
@@ -431,7 +425,7 @@ export function RaffleTab({
                 <span className="truncate text-xs font-medium">
                   {w.displayName ?? t(lang, "anonymous")}
                 </span>
-                <span className="ml-auto shrink-0 text-[10px] text-muted-foreground">
+                <span className="ml-auto shrink-0 text-xs text-muted-foreground">
                   {w.month} — {w.prizeName}
                 </span>
               </div>

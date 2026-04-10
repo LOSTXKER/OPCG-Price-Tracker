@@ -226,7 +226,7 @@ export default async function ColorsPage() {
                                   />
                                 )}
                               </div>
-                              <p className="mt-1 max-w-16 truncate text-center text-[10px] text-muted-foreground">
+                              <p className="mt-1 max-w-16 truncate text-center text-xs text-muted-foreground">
                                 {leader.nameEn ?? leader.nameJp}
                               </p>
                             </Link>

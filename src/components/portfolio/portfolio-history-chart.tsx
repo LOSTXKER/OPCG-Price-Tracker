@@ -40,7 +40,7 @@ export function PortfolioHistoryChart({ data }: { data: DataPoint[] }) {
       <div className="flex h-24 flex-col items-center justify-center gap-1.5 text-muted-foreground">
         <BarChart3 className="size-6 opacity-30" />
         <p className="text-xs">{t(lang, "noPortfolioData")}</p>
-        <p className="text-[10px] opacity-60">{t(lang, "noPortfolioDataDesc")}</p>
+        <p className="text-xs opacity-60">{t(lang, "noPortfolioDataDesc")}</p>
       </div>
     )
   }

@@ -100,7 +100,7 @@ export default async function BlogPage() {
                 )}
                 <div className="space-y-2 p-5">
                   <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+                    <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
                       {CATEGORY_LABELS[post.category] ?? post.category}
                     </span>
                   </div>
@@ -110,7 +110,7 @@ export default async function BlogPage() {
                   <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                     {post.excerpt}
                   </p>
-                  <div className="flex items-center gap-3 pt-1 text-[11px] text-muted-foreground/60">
+                  <div className="flex items-center gap-3 pt-1 text-xs text-muted-foreground/60">
                     {post.publishedAt && (
                       <span className="inline-flex items-center gap-1">
                         <Calendar className="size-3" />

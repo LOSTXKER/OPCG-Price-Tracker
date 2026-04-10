@@ -102,12 +102,12 @@ function MobileStreakRankRow({
             <div className="h-1.5 overflow-hidden rounded-full bg-muted">
               <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progress}%` }} />
             </div>
-            <p className="text-[10px] tabular-nums text-muted-foreground">
+            <p className="text-xs tabular-nums text-muted-foreground">
               {lifetimeEarned.toLocaleString()} / {nextThreshold!.toLocaleString()} pt
             </p>
           </div>
         ) : (
-          <p className="flex items-center gap-1 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
+          <p className="flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
             <Trophy className="size-2.5" />
             {lang === "TH" ? "สูงสุดแล้ว!" : lang === "JP" ? "最高！" : "Max!"}
           </p>
@@ -181,7 +181,7 @@ export function DailyMissionsCard({
             <span className="text-base leading-none">🍯</span>
           </div>
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Honey</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Honey</p>
             <p className="text-2xl font-extrabold tabular-nums leading-tight text-primary">
               🍯 {points.toLocaleString()}
             </p>
@@ -209,7 +209,7 @@ export function DailyMissionsCard({
               </span>
               <Calendar className="size-4" />
               {t(lang, "dailyCheckin")}
-              <span className="ml-0.5 rounded-md bg-white/20 px-1.5 py-0.5 text-[10px] font-bold">
+              <span className="ml-0.5 rounded-md bg-white/20 px-1.5 py-0.5 text-xs font-bold">
                 +{streak >= 30 ? 30 : streak >= 7 ? 20 : 10} 🍯
               </span>
             </Button>
@@ -280,7 +280,7 @@ export function DailyMissionsCard({
                     "flex items-center gap-1 rounded-lg px-2 py-0.5 text-xs font-bold tabular-nums",
                     task.claimed ? "bg-price-up/10 text-price-up" : "bg-primary/10 text-primary",
                   )}>
-                    +{task.reward} <span className="text-[10px] leading-none">🍯</span>
+                    +{task.reward} <span className="text-xs leading-none">🍯</span>
                   </span>
                 </div>
 
@@ -376,7 +376,7 @@ export function DailyMissionsCard({
             <div className="mt-auto pt-3">
               {bonusClaimed ? (
                 <div className="flex h-9 items-center justify-center gap-1.5 rounded-xl bg-price-up/10 text-xs font-semibold text-price-up">
-                  <CheckCircle2 className="size-4" />+{perfectDayBonus} <span className="text-[10px] leading-none">🍯</span>
+                  <CheckCircle2 className="size-4" />+{perfectDayBonus} <span className="text-xs leading-none">🍯</span>
                 </div>
               ) : allDone && allClaimed ? (
                 <Button
@@ -390,7 +390,7 @@ export function DailyMissionsCard({
                 </Button>
               ) : (
                 <div className="flex h-9 items-center justify-center gap-1.5 rounded-xl bg-muted/50 text-xs text-muted-foreground">
-                  <Lock className="size-3.5" />+{perfectDayBonus} <span className="text-[10px] leading-none">🍯</span>
+                  <Lock className="size-3.5" />+{perfectDayBonus} <span className="text-xs leading-none">🍯</span>
                 </div>
               )}
             </div>

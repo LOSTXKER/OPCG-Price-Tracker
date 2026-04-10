@@ -209,7 +209,7 @@ export function SetsListClient({
                   )}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-mono text-[11px] font-bold text-primary">
+                      <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-mono text-xs font-bold text-primary">
                         {s.code.toUpperCase()}
                       </span>
                       <span className="truncate text-sm font-medium transition-colors group-hover:text-primary">
@@ -295,7 +295,7 @@ function SetCard({ set }: { set: SetWithCard }) {
 
         <div className="flex flex-1 flex-col gap-1 border-t border-border/30 p-3">
           <div className="mb-0.5 flex items-center gap-2">
-            <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-mono text-[11px] font-bold text-primary">
+            <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-mono text-xs font-bold text-primary">
               {set.code.toUpperCase()}
             </span>
           </div>
@@ -304,7 +304,7 @@ function SetCard({ set }: { set: SetWithCard }) {
           </p>
 
           <div className="mt-auto flex items-center justify-between gap-2 pt-1.5">
-            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <CardCountLabel count={set.productCardCount} />
               {set.releaseDate && (
                 <>

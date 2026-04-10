@@ -97,7 +97,7 @@ function SiblingGrid({ siblings, lang, cols, smCols }: SiblingGridProps) {
             )}
           </div>
           <div>
-            <span className="inline-block rounded bg-muted px-1 py-px font-price text-[10px] uppercase text-muted-foreground">
+            <span className="inline-block rounded bg-muted px-1 py-px font-price text-xs uppercase text-muted-foreground">
               {s.set.code}
             </span>
             <RarityBadge rarity={s.rarity} size="sm" />
@@ -294,14 +294,14 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
             {/* Mode toggle — segmented control */}
             {hasPsa10 && (
               <div className="flex items-center gap-2.5 px-5 pt-4">
-                <span className="text-[11px] font-medium text-muted-foreground">
+                <span className="text-xs font-medium text-muted-foreground">
                   {t(lang, "condition")}
                 </span>
                 <div className="flex rounded-full border border-border bg-muted p-0.5">
                   <button
                     onClick={() => setPriceMode("raw")}
                     className={cn(
-                      "rounded-full px-4 py-1.5 text-[13px] font-semibold transition-all",
+                      "rounded-full px-4 py-1.5 text-sm font-semibold transition-all",
                       priceMode === "raw"
                         ? "bg-background text-foreground shadow ring-1 ring-border"
                         : "text-muted-foreground hover:text-foreground/80",
@@ -312,7 +312,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
                   <button
                     onClick={() => setPriceMode("psa10")}
                     className={cn(
-                      "flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[13px] font-semibold transition-all",
+                      "flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-semibold transition-all",
                       priceMode === "psa10"
                         ? "bg-background text-foreground shadow ring-1 ring-border"
                         : "text-muted-foreground hover:text-foreground/80",
@@ -329,7 +329,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
             <div className="grid grid-cols-1 gap-4 px-5 py-4 sm:grid-cols-2 sm:gap-px">
               {/* ราคาตลาด */}
               <div>
-                <p className="text-[11px] text-muted-foreground">{t(lang, "marketPrice")}</p>
+                <p className="text-xs text-muted-foreground">{t(lang, "marketPrice")}</p>
                 <div className="mt-1 flex items-baseline gap-2">
                   {priceMode === "raw" ? (
                     <PriceDisplay
@@ -360,7 +360,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
                     return (
                       <span
                         className={cn(
-                          "inline-flex items-center rounded-md px-1.5 py-0.5 font-price text-[11px] font-medium",
+                          "inline-flex items-center rounded-md px-1.5 py-0.5 font-price text-xs font-medium",
                           v > 0 ? "bg-price-up/10 text-price-up" : v < 0 ? "bg-price-down/10 text-price-down" : "text-muted-foreground",
                         )}
                       >
@@ -369,14 +369,14 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
                     )
                   })()}
                 </div>
-                <p className="mt-1 text-[10px] text-muted-foreground/50">
+                <p className="mt-1 text-xs text-muted-foreground/50">
                   {priceMode === "raw" ? "Yuyu-tei" : "SNKRDUNK"}
                 </p>
               </div>
 
               {/* ขายล่าสุด */}
               <div className="border-l border-border/30 pl-5">
-                <p className="text-[11px] text-muted-foreground">{t(lang, "lastSold")}</p>
+                <p className="text-xs text-muted-foreground">{t(lang, "lastSold")}</p>
                 <p className="mt-1 font-price text-2xl font-bold tabular-nums">
                   {priceMode === "raw"
                     ? (snkrdunkPrices?.lastSoldUsd != null
@@ -387,7 +387,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
                         : <span className="text-muted-foreground/40">—</span>)
                   }
                 </p>
-                <p className="mt-1 text-[10px] text-muted-foreground/50">SNKRDUNK</p>
+                <p className="mt-1 text-xs text-muted-foreground/50">SNKRDUNK</p>
               </div>
             </div>
 
@@ -433,7 +433,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
                 { label: t(lang, "life"), value: card.life, icon: Heart },
               ].map((s) => (
                 <div key={s.label} className="rounded-lg bg-muted/30 px-3 py-2.5">
-                  <p className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                  <p className="flex items-center gap-1 text-xs text-muted-foreground">
                     <s.icon className="size-3" />
                     {s.label}
                   </p>
@@ -445,7 +445,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
               <div className="mt-2 grid grid-cols-2 gap-2">
                 {card.attribute && (
                   <div className="rounded-lg bg-muted/30 px-3 py-2.5">
-                    <p className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                    <p className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Crosshair className="size-3" />
                       {t(lang, "attribute")}
                     </p>
@@ -454,7 +454,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
                 )}
                 {card.trait && (
                   <div className="rounded-lg bg-muted/30 px-3 py-2.5">
-                    <p className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                    <p className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Fingerprint className="size-3" />
                       {t(lang, "trait")}
                     </p>

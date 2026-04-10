@@ -69,14 +69,19 @@ export default async function PublicProfilePage({ params }: PageProps) {
 
   let isOwner = false;
   try {
-    const supabase = await createClient();
-    const { data: { user: authUser } } = await supabase.auth.getUser();
-    if (authUser) {
-      const dbViewer = await prisma.user.findUnique({
-        where: { supabaseId: authUser.id },
-        select: { id: true },
-      });
-      isOwner = dbViewer?.id === user.id;
+    if (process.env.NEXT_PUBLIC_BYPASS_AUTH === "true") {
+      const firstUser = await prisma.user.findFirst({ select: { id: true } });
+      isOwner = firstUser?.id === user.id;
+    } else {
+      const supabase = await createClient();
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (authUser) {
+        const dbViewer = await prisma.user.findUnique({
+          where: { supabaseId: authUser.id },
+          select: { id: true },
+        });
+        isOwner = dbViewer?.id === user.id;
+      }
     }
   } catch {
     // not logged in

@@ -177,12 +177,12 @@ export function PublicProfileClient({
   if (isPrivate) {
     return (
       <div className="pb-16">
-        <div className="mx-auto w-full max-w-5xl px-4 sm:px-6">
-          <div className={cn("relative h-44 overflow-hidden rounded-2xl bg-gradient-to-br sm:h-52", bannerGradient)}>
+        <div className="mx-auto w-full max-w-7xl px-4 pt-6 md:px-6 lg:px-8">
+          <div className={cn("relative h-40 overflow-hidden rounded-2xl bg-gradient-to-br sm:h-48", bannerGradient)}>
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_60%,rgba(255,255,255,0.08),transparent_60%)]" />
           </div>
         </div>
-        <div className="relative mx-auto w-full max-w-5xl px-4 sm:px-6">
+        <div className="relative mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8">
           <div className="-mt-16 flex flex-col items-center gap-4 pt-24 text-center">
             <div className="flex size-16 items-center justify-center rounded-2xl bg-muted/60">
               <Lock className="size-8 text-muted-foreground/40" />
@@ -198,8 +198,8 @@ export function PublicProfileClient({
   return (
     <div className="pb-16">
       {/* ── Banner ── */}
-      <div className="mx-auto w-full max-w-5xl px-4 sm:px-6">
-        <div className="relative h-44 overflow-hidden rounded-2xl sm:h-52">
+      <div className="mx-auto w-full max-w-7xl px-4 pt-6 md:px-6 lg:px-8">
+        <div className="relative h-40 overflow-hidden rounded-2xl sm:h-48">
           {user.coverImageUrl ? (
             <Image
               src={user.coverImageUrl}
@@ -218,69 +218,70 @@ export function PublicProfileClient({
       </div>
 
       {/* ── Profile hero ── */}
-      <div className="relative mx-auto w-full max-w-5xl px-4 sm:px-6">
-        <div className="-mt-16 sm:-mt-20">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:gap-6">
+      <div className="relative mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8">
+        <div className="mt-4 flex items-center justify-between gap-4">
+          {/* Left: Avatar + Name/Bio beside it */}
+          <div className="flex min-w-0 items-center gap-4">
             <Avatar
               className={cn(
-                "size-28 shrink-0 border-[5px] border-background shadow-xl sm:size-36",
+                "size-16 shrink-0 border-[3px] border-background shadow-md sm:size-20",
                 tierCfg.ring,
                 "ring-2",
               )}
             >
               {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
-              <AvatarFallback className="bg-muted text-3xl font-bold sm:text-4xl">
+              <AvatarFallback className="bg-muted text-2xl font-bold sm:text-3xl">
                 {(user.displayName ?? "?").slice(0, 1).toUpperCase()}
               </AvatarFallback>
             </Avatar>
 
-            <div className="min-w-0 flex-1 pb-1">
-              <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="break-words text-2xl font-extrabold tracking-tight sm:text-3xl">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="break-words text-xl font-extrabold tracking-tight sm:text-2xl">
                   {user.displayName ?? "User"}
                 </h1>
-                <Badge className={cn("shrink-0 text-[10px] font-semibold", tierCfg.color)}>
+                <Badge className={cn("shrink-0 text-xs font-semibold", tierCfg.color)}>
                   {tierCfg.label}
                 </Badge>
               </div>
               {user.bio && (
-                <p className="mt-1.5 max-w-lg text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-0.5 max-w-sm truncate text-xs text-muted-foreground sm:max-w-md sm:text-sm">
                   {user.bio}
                 </p>
               )}
-              <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground/70">
+              <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground/60">
                 <Calendar className="size-3" />
                 {t(lang, "memberSince")} {memberSince}
               </p>
             </div>
+          </div>
 
-            {/* Action buttons */}
-            <div className="flex shrink-0 gap-2 pb-1">
-              {isOwner && (
-                <>
-                  <Link href="/settings/account">
-                    <Button variant="outline" size="sm" className="gap-1.5 rounded-full">
-                      <Pencil className="size-3.5" />
-                      {t(lang, "editProfile")}
-                    </Button>
-                  </Link>
-                  <Link href="/settings">
-                    <Button variant="outline" size="sm" className="gap-1.5 rounded-full">
-                      <Settings className="size-3.5" />
-                      {t(lang, "profileSettings")}
-                    </Button>
-                  </Link>
-                </>
-              )}
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => void handleShare()}
-                className="relative rounded-full"
-              >
-                {copied ? <Check className="size-4 text-green-500" /> : <Share2 className="size-4" />}
-              </Button>
-            </div>
+          {/* Right: Action buttons */}
+          <div className="flex shrink-0 gap-2">
+            {isOwner && (
+              <>
+                <Link href="/settings/account">
+                  <Button variant="outline" size="sm" className="gap-1.5 rounded-full">
+                    <Pencil className="size-3.5" />
+                    {t(lang, "editProfile")}
+                  </Button>
+                </Link>
+                <Link href="/settings">
+                  <Button variant="outline" size="sm" className="gap-1.5 rounded-full">
+                    <Settings className="size-3.5" />
+                    {t(lang, "profileSettings")}
+                  </Button>
+                </Link>
+              </>
+            )}
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => void handleShare()}
+              className="relative rounded-full"
+            >
+              {copied ? <Check className="size-4 text-green-500" /> : <Share2 className="size-4" />}
+            </Button>
           </div>
         </div>
 
@@ -295,7 +296,7 @@ export function PublicProfileClient({
                 {Icon && <Icon className="size-4 fill-amber-400 text-amber-400" />}
                 {value}
               </span>
-              <span className="text-[10px] font-medium text-muted-foreground">{t(lang, labelKey)}</span>
+              <span className="text-xs font-medium text-muted-foreground">{t(lang, labelKey)}</span>
             </div>
           ))}
         </div>

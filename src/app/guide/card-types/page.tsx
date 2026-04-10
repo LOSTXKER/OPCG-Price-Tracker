@@ -258,7 +258,7 @@ export default async function CardTypesPage() {
                   </div>
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {featured.stats.map((s) => (
-                      <span key={s} className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
+                      <span key={s} className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
                         {s}
                       </span>
                     ))}
@@ -276,7 +276,7 @@ export default async function CardTypesPage() {
               </div>
               {examples.length > 0 && (
                 <div className="border-t border-orange-500/10 px-6 py-3">
-                  <p className="mb-2 text-[10px] font-medium text-muted-foreground">ตัวอย่างการ์ด Leader</p>
+                  <p className="mb-2 text-xs font-medium text-muted-foreground">ตัวอย่างการ์ด Leader</p>
                   <div className="flex gap-2">
                     {examples.map((card) => (
                       <Link key={card.cardCode} href={`/cards/${card.cardCode}`} className="group shrink-0">
@@ -313,7 +313,7 @@ export default async function CardTypesPage() {
                       </div>
                       <div className="mt-1.5 flex flex-wrap gap-1">
                         {type.stats.map((s) => (
-                          <span key={s} className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                          <span key={s} className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
                             {s}
                           </span>
                         ))}
@@ -332,7 +332,7 @@ export default async function CardTypesPage() {
                 </div>
                 {examples.length > 0 && (
                   <div className={`border-t px-5 py-3 ${type.borderColor}`}>
-                    <p className="mb-2 text-[10px] font-medium text-muted-foreground">ตัวอย่างการ์ด</p>
+                    <p className="mb-2 text-xs font-medium text-muted-foreground">ตัวอย่างการ์ด</p>
                     <div className="flex gap-2">
                       {examples.map((card) => (
                         <Link key={card.cardCode} href={`/cards/${card.cardCode}`} className="group shrink-0">
@@ -367,10 +367,10 @@ export default async function CardTypesPage() {
             <div className="aspect-[63/88] w-full rounded-xl border-2 border-border bg-muted/20 p-3">
               {/* Top row: Cost, Power, Attribute */}
               <div className="flex items-start justify-between">
-                <div className="flex size-8 items-center justify-center rounded-lg border border-dashed border-blue-500/40 bg-blue-500/10 text-[10px] font-bold text-blue-500">
+                <div className="flex size-8 items-center justify-center rounded-lg border border-dashed border-blue-500/40 bg-blue-500/10 text-xs font-bold text-blue-500">
                   Cost
                 </div>
-                <div className="flex h-8 items-center justify-center rounded-lg border border-dashed border-rose-500/40 bg-rose-500/10 px-2 text-[10px] font-bold text-rose-500">
+                <div className="flex h-8 items-center justify-center rounded-lg border border-dashed border-rose-500/40 bg-rose-500/10 px-2 text-xs font-bold text-rose-500">
                   Power
                 </div>
                 <div className="flex size-8 items-center justify-center rounded-lg border border-dashed border-amber-500/40 bg-amber-500/10 text-[8px] font-bold text-amber-500">
@@ -393,7 +393,7 @@ export default async function CardTypesPage() {
                     Color
                   </span>
                 </div>
-                <div className="rounded border border-dashed border-foreground/20 bg-foreground/5 px-1.5 py-0.5 text-[9px] font-semibold text-foreground/70">
+                <div className="rounded border border-dashed border-foreground/20 bg-foreground/5 px-1.5 py-0.5 text-xs font-semibold text-foreground/70">
                   Name
                 </div>
                 <div className="rounded border border-dashed border-emerald-500/40 bg-emerald-500/10 px-1.5 py-0.5 text-[8px] font-bold text-emerald-500">
@@ -418,7 +418,7 @@ export default async function CardTypesPage() {
             </div>
 
             {/* Labels outside */}
-            <div className="mt-3 flex flex-wrap justify-center gap-2 text-[10px] text-muted-foreground">
+            <div className="mt-3 flex flex-wrap justify-center gap-2 text-xs text-muted-foreground">
               <span className="rounded bg-muted px-2 py-0.5">R = Rarity</span>
               <span className="rounded bg-muted px-2 py-0.5">2 = Block Icon</span>
               <span className="rounded bg-muted px-2 py-0.5">Attr = Attribute</span>
@@ -442,7 +442,7 @@ export default async function CardTypesPage() {
               <div className="min-w-0">
                 <p className="text-sm font-semibold">{stat.name}</p>
                 <p className="text-xs leading-relaxed text-muted-foreground">{stat.desc}</p>
-                <p className="mt-0.5 text-[10px] text-muted-foreground/60">
+                <p className="mt-0.5 text-xs text-muted-foreground/60">
                   {stat.types}
                 </p>
               </div>

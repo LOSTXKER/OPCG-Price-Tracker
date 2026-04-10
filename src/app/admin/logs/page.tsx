@@ -139,7 +139,7 @@ export default function AdminLogsPage() {
                     {new Date(log.createdAt).toLocaleString()}
                   </td>
                   <td className="px-4 py-2.5">
-                    <Badge variant="default" className="text-[11px]">
+                    <Badge variant="default" className="text-xs">
                       {log.action}
                     </Badge>
                   </td>

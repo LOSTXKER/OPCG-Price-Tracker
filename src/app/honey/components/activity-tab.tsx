@@ -71,24 +71,24 @@ export function ActivityTab({
 
   return (
     <div className="panel overflow-hidden">
-      <div className="border-b px-4 py-3">
-        <h2 className="text-sm font-semibold">{t(lang, "honeyHistory")}</h2>
-        <p className="mt-0.5 text-[11px] text-muted-foreground">
+      <div className="border-b px-4 py-3.5">
+        <h2 className="text-sm font-bold">{t(lang, "honeyHistory")}</h2>
+        <p className="mt-0.5 text-xs text-muted-foreground">
           {lang === "TH" ? "ดูประวัติการรับและใช้ Honey ทั้งหมด" : lang === "JP" ? "Honeyの獲得・使用履歴" : "View all Honey earning and spending history"}
         </p>
       </div>
 
       {availableFilters.length > 2 && (
-        <div className="flex gap-0.5 overflow-x-auto px-4 scrollbar-none">
+        <div className="flex gap-1 overflow-x-auto bg-muted/20 px-4 py-1.5 scrollbar-none">
           {availableFilters.map((key) => (
             <button
               key={key}
               onClick={() => setFilter(key)}
               className={cn(
-                "shrink-0 border-b-2 px-3 py-2 text-[11px] font-medium transition-colors",
+                "shrink-0 rounded-md px-3 py-1.5 text-xs font-medium transition-all",
                 filter === key
-                  ? "border-primary text-primary"
-                  : "border-transparent text-muted-foreground hover:text-foreground",
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
               )}
             >
               {FILTER_LABELS[key][lang] ?? FILTER_LABELS[key].EN}
@@ -146,16 +146,16 @@ function TxRow({ tx, lang }: { tx: HoneyTx; lang: Language }) {
   const Icon = style.icon;
 
   return (
-    <div className="flex items-center gap-3 px-4 py-2.5">
-      <div className={cn("flex size-7 shrink-0 items-center justify-center rounded-md", style.bg)}>
-        <Icon className={cn("size-3", style.fg)} />
+    <div className="flex items-center gap-3 px-4 py-3">
+      <div className={cn("flex size-8 shrink-0 items-center justify-center rounded-lg", style.bg)}>
+        <Icon className={cn("size-3.5", style.fg)} />
       </div>
       <div className="min-w-0 flex-1">
         <p className="truncate text-xs font-medium">{formatTxReason(tx, lang)}</p>
-        <p className="text-[10px] text-muted-foreground">{new Date(tx.createdAt).toLocaleDateString()}</p>
+        <p className="text-xs text-muted-foreground">{new Date(tx.createdAt).toLocaleDateString()}</p>
       </div>
       <span className={cn("shrink-0 text-xs font-bold tabular-nums", positive ? "text-price-up" : "text-destructive")}>
-        {positive ? "+" : ""}{tx.amount} <span className="text-[10px]">🍯</span>
+        {positive ? "+" : ""}{tx.amount} <span className="text-xs">🍯</span>
       </span>
     </div>
   );

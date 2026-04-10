@@ -75,7 +75,7 @@ export function PortfolioAllocationChart({
       </div>
       <div className="min-w-0 flex-1 space-y-1.5">
         {data.map((d, i) => (
-          <div key={d.name} className="flex items-center gap-2 text-xs">
+          <div key={`${d.name}-${i}`} className="flex items-center gap-2 text-xs">
             <span
               className="size-2.5 shrink-0 rounded-full"
               style={{ background: COLORS[i % COLORS.length] }}

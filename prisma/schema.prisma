@@ -272,8 +272,13 @@ model User {
   listings            Listing[]
   sentMessages        Message[]        @relation("SentMessages")
   receivedMessages    Message[]        @relation("ReceivedMessages")
+  offersMade          Offer[]          @relation("OffersMade")
+  offersReceived      Offer[]          @relation("OffersReceived")
+  ordersBought        Order[]          @relation("OrdersBought")
+  ordersSold          Order[]          @relation("OrdersSold")
   reviewsGiven        Review[]         @relation("ReviewsGiven")
   reviewsReceived     Review[]         @relation("ReviewsReceived")
+  savedListings       SavedListing[]
   communityPrices     CommunityPrice[]
   honeyTransactions   HoneyTransaction[]
   honeyLifetimeEarned   Int              @default(0)
@@ -701,7 +706,11 @@ model Listing {
   isFeatured   Boolean       @default(false)
   isBoosted    Boolean       @default(false)
   boostedUntil DateTime?
+  viewCount    Int           @default(0)
   messages     Message[]
+  offers       Offer[]
+  orders       Order[]
+  savedBy      SavedListing[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
@@ -709,6 +718,18 @@ model Listing {
   @@index([userId, status])
   @@index([status, createdAt(sort: Desc)])
   @@index([isFeatured, status])
+}
+
+model SavedListing {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listingId Int
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, listingId])
+  @@index([userId])
 }
 
 enum ListingStatus {
@@ -719,20 +740,113 @@ enum ListingStatus {
   CANCELLED
 }
 
+enum OfferStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  EXPIRED
+  CANCELLED
+  COUNTERED
+}
+
+enum OrderStatus {
+  AWAITING_PAYMENT
+  PAID
+  SHIPPED
+  DELIVERED
+  COMPLETED
+  CANCELLED
+  DISPUTED
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  OFFER
+  ORDER_UPDATE
+  SYSTEM
+}
+
+model Offer {
+  id        Int         @id @default(autoincrement())
+  listingId Int
+  listing   Listing     @relation(fields: [listingId], references: [id])
+  buyerId   String
+  buyer     User        @relation("OffersMade", fields: [buyerId], references: [id])
+  sellerId  String
+  seller    User        @relation("OffersReceived", fields: [sellerId], references: [id])
+  priceThb  Float
+  status    OfferStatus @default(PENDING)
+  note      String?
+  parentId  Int?
+  parent    Offer?      @relation("CounterOffers", fields: [parentId], references: [id])
+  counters  Offer[]     @relation("CounterOffers")
+  order     Order?
+  messages  Message[]
+  expiresAt DateTime?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([listingId, status])
+  @@index([buyerId])
+  @@index([sellerId])
+}
+
+model Order {
+  id                Int              @id @default(autoincrement())
+  listingId         Int
+  listing           Listing          @relation(fields: [listingId], references: [id])
+  offerId           Int?             @unique
+  offer             Offer?           @relation(fields: [offerId], references: [id])
+  buyerId           String
+  buyer             User             @relation("OrdersBought", fields: [buyerId], references: [id])
+  sellerId          String
+  seller            User             @relation("OrdersSold", fields: [sellerId], references: [id])
+  priceThb          Float
+  status            OrderStatus      @default(AWAITING_PAYMENT)
+  shippingMethod    String?
+  trackingNumber    String?
+  shippingAddressId String?
+  shippingAddress   ShippingAddress?  @relation(fields: [shippingAddressId], references: [id])
+  note              String?
+  paidAt            DateTime?
+  shippedAt         DateTime?
+  deliveredAt       DateTime?
+  completedAt       DateTime?
+  cancelledAt       DateTime?
+  cancelReason      String?
+  messages          Message[]
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  @@index([listingId])
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([status])
+}
+
 model Message {
-  id         Int      @id @default(autoincrement())
+  id         Int         @id @default(autoincrement())
   listingId  Int
-  listing    Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  listing    Listing     @relation(fields: [listingId], references: [id], onDelete: Cascade)
   senderId   String
-  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  sender     User        @relation("SentMessages", fields: [senderId], references: [id])
   receiverId String
-  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  receiver   User        @relation("ReceivedMessages", fields: [receiverId], references: [id])
   content    String
-  isRead     Boolean  @default(false)
-  createdAt  DateTime @default(now())
+  type       MessageType @default(TEXT)
+  offerId    Int?
+  offer      Offer?      @relation(fields: [offerId], references: [id])
+  orderId    Int?
+  order      Order?      @relation(fields: [orderId], references: [id])
+  metadata   Json?
+  isRead     Boolean     @default(false)
+  createdAt  DateTime    @default(now())
 
   @@index([listingId, createdAt])
   @@index([receiverId, isRead])
+  @@index([offerId])
+  @@index([orderId])
 }
 
 model Review {
@@ -1022,6 +1136,7 @@ model ShippingAddress {
   postalCode  String
   country     String   @default("TH")
   isDefault   Boolean  @default(false)
+  orders      Order[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

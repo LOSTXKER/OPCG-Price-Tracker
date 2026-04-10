@@ -1,21 +1,28 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { MapPin, Truck, MessageCircle, Eye, Clock, ChevronRight } from "lucide-react";
 
 import { ListingCard } from "@/components/marketplace/listing-card";
+import { ReviewSection } from "@/components/marketplace/review-section";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PriceDisplay } from "@/components/shared/price-display";
+import { RarityBadge } from "@/components/shared/rarity-badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { ListingStatus } from "@/generated/prisma/client";
+import { buttonVariants } from "@/components/ui/button-variants";
+import { ListingStatus, OrderStatus } from "@/generated/prisma/client";
+import { getAuthUser } from "@/lib/api/auth";
 import { prisma } from "@/lib/db";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { cn } from "@/lib/utils";
 import { formatPct } from "@/lib/utils/currency";
 import { Price } from "@/components/shared/price-inline";
+import { ImageGallery, type GalleryImage } from "./image-gallery";
+import { ListingActionButtons } from "./listing-actions";
+import { SaveButton } from "./save-button";
+import { ViewTracker } from "./view-tracker";
 
 export const dynamic = "force-dynamic";
 
@@ -50,6 +57,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+function timeAgo(date: Date): string {
+  const diff = Date.now() - new Date(date).getTime();
+  const mins = Math.floor(diff / 60_000);
+  if (mins < 1) return "เมื่อสักครู่";
+  if (mins < 60) return `${mins} นาทีที่แล้ว`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours} ชั่วโมงที่แล้ว`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days} วันที่แล้ว`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months} เดือนที่แล้ว`;
+  return `${Math.floor(months / 12)} ปีที่แล้ว`;
+}
+
 export default async function ListingDetailPage({ params }: PageProps) {
   const { listingId: idParam } = await params;
   const listingId = Number(idParam);
@@ -57,50 +78,109 @@ export default async function ListingDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  const listing = await prisma.listing.findFirst({
-    where: { id: listingId, status: ListingStatus.ACTIVE },
-    include: {
-      card: {
-        include: { set: { select: { code: true, name: true, nameEn: true } } },
-      },
-      user: {
-        select: {
-          id: true,
-          displayName: true,
-          avatarUrl: true,
-          sellerRating: true,
-          sellerReviewCount: true,
+  const [listing, currentUser] = await Promise.all([
+    prisma.listing.findFirst({
+      where: { id: listingId, status: ListingStatus.ACTIVE },
+      include: {
+        card: {
+          include: { set: { select: { code: true, name: true, nameEn: true } } },
+        },
+        user: {
+          select: {
+            id: true,
+            displayName: true,
+            avatarUrl: true,
+            sellerRating: true,
+            sellerReviewCount: true,
+            bio: true,
+            createdAt: true,
+          },
         },
       },
-    },
-  });
+    }),
+    getAuthUser().catch(() => null),
+  ]);
 
   if (!listing) {
     notFound();
   }
 
-  const similar = await prisma.listing.findMany({
-    where: {
-      cardId: listing.cardId,
-      status: ListingStatus.ACTIVE,
-      id: { not: listing.id },
-    },
-    orderBy: { createdAt: "desc" },
-    take: 6,
-    include: {
-      card: {
-        include: { set: { select: { code: true, name: true, nameEn: true } } },
-      },
-      user: {
-        select: {
-          displayName: true,
-          avatarUrl: true,
-          sellerRating: true,
-          sellerReviewCount: true,
+  const isSaved = currentUser
+    ? !!(await prisma.savedListing
+        ?.findUnique({
+          where: {
+            userId_listingId: { userId: currentUser.id, listingId: listing.id },
+          },
+        })
+        .catch(() => null))
+    : false;
+
+  const [similar, sellerListings, sellerListingCount, completedOrderCount, reviews] =
+    await Promise.all([
+      prisma.listing.findMany({
+        where: {
+          cardId: listing.cardId,
+          status: ListingStatus.ACTIVE,
+          id: { not: listing.id },
+          userId: { not: listing.userId },
         },
-      },
-    },
-  });
+        orderBy: { createdAt: "desc" },
+        take: 6,
+        include: {
+          card: {
+            include: { set: { select: { code: true, name: true, nameEn: true } } },
+          },
+          user: {
+            select: {
+              displayName: true,
+              avatarUrl: true,
+              sellerRating: true,
+              sellerReviewCount: true,
+            },
+          },
+        },
+      }),
+      prisma.listing.findMany({
+        where: {
+          userId: listing.userId,
+          status: ListingStatus.ACTIVE,
+          id: { not: listing.id },
+        },
+        orderBy: { createdAt: "desc" },
+        take: 6,
+        include: {
+          card: {
+            include: { set: { select: { code: true, name: true, nameEn: true } } },
+          },
+          user: {
+            select: {
+              displayName: true,
+              avatarUrl: true,
+              sellerRating: true,
+              sellerReviewCount: true,
+            },
+          },
+        },
+      }),
+      prisma.listing.count({
+        where: { userId: listing.userId, status: ListingStatus.ACTIVE },
+      }),
+      prisma.order
+        ?.count({
+          where: { sellerId: listing.userId, status: OrderStatus.COMPLETED },
+        })
+        .catch(() => 0) ?? Promise.resolve(0),
+      prisma.review
+        ?.findMany({
+          where: { revieweeId: listing.userId },
+          include: {
+            reviewer: { select: { displayName: true, avatarUrl: true } },
+          },
+          orderBy: { createdAt: "desc" },
+          take: 10,
+        })
+        .catch(() => []) ?? Promise.resolve([]),
+    ]);
 
   const market = listing.card.latestPriceJpy;
   const diffPct =
@@ -113,149 +193,263 @@ export default async function ListingDetailPage({ params }: PageProps) {
     { name: cardName, href: `/marketplace/${listing.id}` },
   ];
 
+  const setName =
+    listing.card.set?.nameEn ?? listing.card.set?.name ?? listing.card.set?.code;
+  const sellerName = listing.user.displayName ?? "Seller";
+
+  const galleryImages: GalleryImage[] = [
+    ...(listing.card.imageUrl
+      ? [{ src: listing.card.imageUrl, alt: cardName, isCard: true }]
+      : []),
+    ...listing.photos.map((url) => ({
+      src: url,
+      alt: `${cardName} — ภาพสินค้าจริง`,
+      isCard: false,
+    })),
+  ];
+
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
+    <div className="mx-auto max-w-7xl space-y-10">
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
+      <ViewTracker listingId={listing.id} />
       <Breadcrumb
         items={crumbs.map((c) => ({ label: c.name, href: c.href }))}
       />
-      <div className="flex flex-wrap gap-2">
-        <Link
-          href="/marketplace"
-          className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-        >
-          ← Back
-        </Link>
-        <Link
-          href={`/cards/${encodeURIComponent(listing.card.cardCode)}`}
-          className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-        >
-          Card page
-        </Link>
-      </div>
 
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,280px)_1fr]">
-        <div className="space-y-3">
-          <div className="bg-muted relative aspect-[63/88] w-full max-w-xs overflow-hidden rounded-xl border">
-            {listing.card.imageUrl ? (
-              <Image
-                src={listing.card.imageUrl}
-                alt={listing.card.nameEn ?? listing.card.nameJp}
-                fill
-                className="object-cover"
-                sizes="280px"
-              />
-            ) : (
-              <div className="text-muted-foreground flex size-full items-center justify-center text-sm">
-                No image
-              </div>
-            )}
+      {/* ============ Top: Image LEFT + Info RIGHT ============ */}
+      <div className="grid gap-8 lg:grid-cols-[420px_1fr]">
+
+        {/* -------- LEFT: Image Gallery (sticky) -------- */}
+        <div>
+          <div className="lg:sticky lg:top-24 space-y-3">
+            <ImageGallery images={galleryImages} />
+
+            <Link
+              href={`/cards/${encodeURIComponent(listing.card.cardCode)}`}
+              className={cn(
+                buttonVariants({ variant: "outline", size: "sm" }),
+                "w-full text-xs"
+              )}
+            >
+              ดูข้อมูลการ์ดและราคาย้อนหลัง
+            </Link>
           </div>
-          {listing.photos.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {listing.photos.map((url) => (
-                <div
-                  key={url}
-                  className="border-border relative h-20 w-16 overflow-hidden rounded-md border"
-                >
-                  <Image src={url} alt="" fill className="object-cover" sizes="64px" />
-                </div>
-              ))}
-            </div>
-          ) : null}
         </div>
 
-        <div className="min-w-0 space-y-4">
-          <div>
-            <h1 className="break-words text-2xl font-bold tracking-tight">{listing.card.nameEn ?? listing.card.nameJp}</h1>
-            <p className="text-muted-foreground font-mono text-sm">{listing.card.cardCode}</p>
-            <div className="mt-2 flex flex-wrap gap-2">
+        {/* -------- RIGHT: 3 Visual Blocks -------- */}
+        <div className="min-w-0 space-y-6">
+
+          {/* ── Block A: Product Identity ── */}
+          <div className="space-y-4">
+            <div className="flex items-start gap-3">
+              <h1 className="min-w-0 flex-1 break-words text-2xl font-bold tracking-tight lg:text-3xl">
+                {cardName}
+              </h1>
+              <SaveButton listingId={listing.id} initialSaved={isSaved} />
+            </div>
+
+            <p className="text-muted-foreground font-mono text-sm tracking-wide">
+              {listing.card.cardCode}
+            </p>
+
+            <div className="flex flex-wrap gap-2">
+              <RarityBadge rarity={listing.card.rarity} />
               <Badge variant="outline">{listing.condition}</Badge>
-              <Badge variant="secondary">×{listing.quantity}</Badge>
+              <Badge variant="secondary">x{listing.quantity}</Badge>
+              {setName && (
+                <Badge variant="outline" className="font-normal">
+                  {setName}
+                </Badge>
+              )}
+            </div>
+
+            <div className="text-muted-foreground flex items-center gap-3 text-xs">
+              <span className="inline-flex items-center gap-1">
+                <Clock className="size-3" />
+                ลงขาย{timeAgo(listing.createdAt)}
+              </span>
+              <span>·</span>
+              <span className="inline-flex items-center gap-1">
+                <Eye className="size-3" />
+                {(listing.viewCount ?? 0).toLocaleString()} เข้าชม
+              </span>
             </div>
           </div>
 
-          <div>
-            <p className="text-muted-foreground text-sm">Asking price</p>
-            <div className="mt-1">
+          {/* ── Block B: Price + Actions ── */}
+          <div className="panel space-y-5 p-6">
+            <div className="space-y-3">
               <PriceDisplay
                 priceJpy={listing.priceJpy}
                 priceThb={listing.priceThb ?? undefined}
                 showChange={false}
                 size="lg"
               />
-            </div>
-            {market != null && diffPct != null ? (
-              <p className="text-muted-foreground mt-2 text-sm">
-                Approx. market price <Price jpy={market} />
-                <span
-                  className={cn(
-                    "ml-2 font-mono font-medium",
-                    diffPct < 0 ? "text-price-up" : "text-price-down"
-                  )}
-                >
-                  {diffPct > 0 ? "+" : ""}
-                  {formatPct(diffPct, 0)}%
-                </span>
-              </p>
-            ) : null}
-          </div>
 
-          {listing.description ? (
-            <div>
-              <p className="text-muted-foreground text-sm">Description</p>
-              <p className="mt-1 break-words whitespace-pre-wrap text-sm">{listing.description}</p>
-            </div>
-          ) : null}
-
-          <div className="panel p-4">
-            <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-              Seller
-            </p>
-            <div className="mt-3 flex items-center gap-3">
-              <Avatar>
-                {listing.user.avatarUrl ? (
-                  <AvatarImage src={listing.user.avatarUrl} alt="" />
-                ) : null}
-                <AvatarFallback>
-                  {(listing.user.displayName ?? "?").slice(0, 1).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="min-w-0">
-                <Link
-                  href={`/profile/${listing.user.id}`}
-                  className="hover:text-primary font-medium underline-offset-4 hover:underline"
-                >
-                  {listing.user.displayName ?? "Seller"}
-                </Link>
+              {market != null && diffPct != null && (
                 <p className="text-muted-foreground text-sm">
-                  {listing.user.sellerRating != null
-                    ? `★ ${listing.user.sellerRating.toFixed(1)}`
-                    : "No rating"}{" "}
-                  · {listing.user.sellerReviewCount} reviews
+                  ราคาตลาด{" "}
+                  <Price jpy={market} className="font-medium" />
+                  <span
+                    className={cn(
+                      "ml-2 font-mono font-medium",
+                      diffPct < 0 ? "text-price-up" : "text-price-down"
+                    )}
+                  >
+                    {diffPct > 0 ? "+" : ""}
+                    {formatPct(diffPct, 0)}%
+                  </span>
                 </p>
+              )}
+
+              {diffPct != null && diffPct <= -10 && (
+                <Badge className="bg-price-up/90 border-0 text-white">
+                  Best Deal — ถูกกว่าตลาด {Math.abs(Math.round(diffPct))}%
+                </Badge>
+              )}
+              {diffPct != null && diffPct >= 15 && (
+                <Badge variant="destructive">
+                  Above Market — แพงกว่าตลาด {Math.round(diffPct)}%
+                </Badge>
+              )}
+            </div>
+
+            <div className="space-y-3">
+              <Link
+                href={`/messages/${listing.id}`}
+                className={cn(
+                  buttonVariants({ variant: "default", size: "lg" }),
+                  "w-full gap-2 text-base"
+                )}
+              >
+                <MessageCircle className="size-5" />
+                สนใจซื้อ / Chat
+              </Link>
+              <div className="grid grid-cols-2 gap-3">
+                <ListingActionButtons
+                  listingId={listing.id}
+                  priceThb={listing.priceThb ?? 0}
+                  marketPriceThb={listing.card.latestPriceThb}
+                />
               </div>
             </div>
           </div>
 
-          <div className="text-muted-foreground space-y-1 break-words text-sm">
-            {listing.location ? <p>Location: {listing.location}</p> : null}
-            <p>
-              Shipping:{" "}
-              {listing.shipping.length > 0 ? listing.shipping.join(" · ") : "Contact seller"}
-            </p>
+          {/* ── Block C: Seller + Shipping ── */}
+          <div className="panel overflow-hidden">
+            <div className="flex items-center gap-4 p-5">
+              <Avatar className="size-14 border">
+                {listing.user.avatarUrl ? (
+                  <AvatarImage src={listing.user.avatarUrl} alt={sellerName} />
+                ) : null}
+                <AvatarFallback className="text-lg font-bold">
+                  {sellerName.slice(0, 1).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <Link
+                  href={`/profile/${listing.user.id}`}
+                  className="hover:text-primary text-base font-semibold underline-offset-4 hover:underline"
+                >
+                  {sellerName}
+                </Link>
+                <p className="text-muted-foreground mt-0.5 text-sm">
+                  {listing.user.sellerRating != null
+                    ? `★ ${listing.user.sellerRating.toFixed(1)} (${listing.user.sellerReviewCount} รีวิว)`
+                    : "ยังไม่มีรีวิว"}
+                  {" · "}
+                  {sellerListingCount} รายการ
+                  {" · "}
+                  {completedOrderCount} ขายสำเร็จ
+                </p>
+                <Link
+                  href={`/profile/${listing.user.id}`}
+                  className="text-primary mt-1 inline-flex items-center gap-0.5 text-xs font-medium hover:underline"
+                >
+                  ดูโปรไฟล์
+                  <ChevronRight className="size-3" />
+                </Link>
+              </div>
+            </div>
+
+            <div className="border-border text-muted-foreground space-y-2 border-t px-5 py-4 text-sm">
+              <div className="flex items-start gap-2">
+                <Truck className="mt-0.5 size-4 flex-shrink-0" />
+                <span>
+                  {listing.shipping.length > 0
+                    ? listing.shipping.join(" · ")
+                    : "ติดต่อผู้ขาย"}
+                </span>
+              </div>
+              {listing.location && (
+                <div className="flex items-start gap-2">
+                  <MapPin className="mt-0.5 size-4 flex-shrink-0" />
+                  <span>{listing.location}</span>
+                </div>
+              )}
+            </div>
           </div>
 
-          <Button type="button" variant="secondary" disabled className="w-full sm:w-auto">
-            Chat (coming soon)
-          </Button>
         </div>
       </div>
 
-      {similar.length > 0 ? (
+      {/* ============ Full-Width Sections Below ============ */}
+
+      {/* Description */}
+      {listing.description && (
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold">Similar listings</h2>
-          <div className="space-y-4">
+          <h2 className="text-lg font-semibold">รายละเอียดจากผู้ขาย</h2>
+          <div className="panel p-5">
+            <p className="break-words whitespace-pre-wrap text-sm leading-relaxed">
+              {listing.description}
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* Seller's Other Listings */}
+      {sellerListings.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="text-lg font-semibold">
+            รายการอื่นจาก {sellerName}
+          </h2>
+          <div className="flex gap-4 overflow-x-auto pb-2">
+            {sellerListings.map((l) => (
+              <div key={l.id} className="w-52 flex-shrink-0">
+                <ListingCard
+                  id={l.id}
+                  card={{
+                    cardCode: l.card.cardCode,
+                    nameJp: l.card.nameJp,
+                    nameEn: l.card.nameEn,
+                    rarity: l.card.rarity,
+                    imageUrl: l.card.imageUrl,
+                    latestPriceJpy: l.card.latestPriceJpy,
+                  }}
+                  priceJpy={l.priceJpy}
+                  priceThb={l.priceThb}
+                  condition={l.condition}
+                  seller={{
+                    displayName: l.user.displayName,
+                    avatarUrl: l.user.avatarUrl,
+                    sellerRating: l.user.sellerRating,
+                    sellerReviewCount: l.user.sellerReviewCount,
+                  }}
+                  shipping={l.shipping}
+                  location={l.location}
+                  isFeatured={l.isFeatured}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Similar Listings */}
+      {similar.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="text-lg font-semibold">รายการที่คล้ายกัน</h2>
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {similar.map((l) => (
               <ListingCard
                 key={l.id}
@@ -284,7 +478,19 @@ export default async function ListingDetailPage({ params }: PageProps) {
             ))}
           </div>
         </section>
-      ) : null}
+      )}
+
+      {/* Reviews */}
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold">
+          รีวิวผู้ขาย ({listing.user.sellerReviewCount})
+        </h2>
+        <ReviewSection
+          reviews={reviews}
+          averageRating={listing.user.sellerRating}
+          totalCount={listing.user.sellerReviewCount}
+        />
+      </section>
     </div>
   );
 }

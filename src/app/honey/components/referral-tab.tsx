@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { t } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import type { Language } from "@/stores/ui-store";
 
 export function ReferralTab({
@@ -94,9 +95,9 @@ export function ReferralTab({
   return (
     <div className="space-y-4">
       <div className="panel overflow-hidden">
-        <div className="border-b px-4 py-3">
-          <h2 className="text-sm font-semibold">{t(lang, "referralLink")}</h2>
-          <p className="mt-0.5 text-[11px] text-muted-foreground">
+        <div className="border-b px-4 py-3.5">
+          <h2 className="text-sm font-bold">{t(lang, "referralLink")}</h2>
+          <p className="mt-0.5 text-xs text-muted-foreground">
             {lang === "TH" ? "แชร์ลิงก์แนะนำเพื่อรับ Honey" : lang === "JP" ? "リンクをシェアしてHoneyを獲得" : "Share your link to earn Honey"}
           </p>
         </div>
@@ -127,15 +128,15 @@ export function ReferralTab({
         {stats.map((s, i) => {
           const Icon = s.icon;
           return (
-            <div key={i} className="panel p-3 text-center">
+            <div key={i} className={cn("panel p-4 text-center", s.accent ? "border-teal-500/20 bg-teal-500/[0.03] dark:bg-teal-500/[0.04]" : "")}>
               <div className="flex items-center justify-center gap-1.5">
-                <Icon className={`size-4 ${s.accent ? "text-primary" : "text-muted-foreground"}`} />
-                <span className={`text-lg font-bold tabular-nums ${s.accent ? "text-primary" : ""}`}>
+                <Icon className={cn("size-4", s.accent ? "text-teal-600 dark:text-teal-400" : "text-muted-foreground")} />
+                <span className={cn("text-lg font-bold tabular-nums", s.accent ? "text-teal-600 dark:text-teal-400" : "")}>
                   {s.value.toLocaleString()}
                   {s.isHoney && <span className="ml-0.5 text-xs">🍯</span>}
                 </span>
               </div>
-              <p className="mt-0.5 text-[10px] text-muted-foreground">
+              <p className="mt-1 text-xs text-muted-foreground">
                 {s.label[lang] ?? s.label.EN}
               </p>
             </div>
@@ -145,8 +146,8 @@ export function ReferralTab({
 
       {/* How it works */}
       <div className="panel overflow-hidden">
-        <div className="border-b px-4 py-3">
-          <h2 className="text-sm font-semibold">
+        <div className="border-b px-4 py-3.5">
+          <h2 className="text-sm font-bold">
             {lang === "TH" ? "วิธีการทำงาน" : lang === "JP" ? "仕組み" : "How it works"}
           </h2>
         </div>
@@ -155,12 +156,12 @@ export function ReferralTab({
             const Icon = step.icon;
             return (
               <div key={i} className="flex items-start gap-4 px-4 py-4">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400">
                   <Icon className="size-5" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="flex size-5 items-center justify-center rounded-full bg-muted text-[10px] font-bold text-muted-foreground">
+                    <span className="flex size-5 items-center justify-center rounded-full bg-teal-500/10 text-xs font-bold text-teal-600 dark:text-teal-400">
                       {i + 1}
                     </span>
                     <p className="text-sm font-semibold">{step.title[lang] ?? step.title.EN}</p>

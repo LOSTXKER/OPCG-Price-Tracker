@@ -88,7 +88,7 @@ function CardItemBase({
           {/* Top-left pull chance badge */}
           {pullChancePerBox != null && pullChancePerBox > 0 && (
             <div className="absolute left-1 top-1">
-              <span className="rounded bg-black/70 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-white backdrop-blur-sm">
+              <span className="rounded bg-black/70 px-1.5 py-0.5 font-mono text-xs font-semibold text-white backdrop-blur-sm">
                 {formatPullPct(pullChancePerBox)}
               </span>
             </div>
@@ -97,7 +97,7 @@ function CardItemBase({
           {/* Top-right badges */}
           {!inStock && (
             <div className="absolute right-1.5 top-1.5">
-              <span className="rounded bg-destructive/90 px-1.5 py-0.5 text-[10px] font-medium text-white">
+              <span className="rounded bg-destructive/90 px-1.5 py-0.5 text-xs font-medium text-white">
                 {t(lang, "outOfStock")}
               </span>
             </div>
@@ -118,12 +118,12 @@ function CardItemBase({
           <div className="mb-1 flex items-center gap-1.5">
             <RarityBadge rarity={rarity} size="sm" />
             {setCode && (
-              <span className="font-mono text-[10px] text-muted-foreground">
+              <span className="font-mono text-xs text-muted-foreground">
                 {setCode.toUpperCase()}
               </span>
             )}
           </div>
-          <p className="truncate text-[13px] font-medium leading-snug" title={displayName}>
+          <p className="truncate text-sm font-medium leading-snug" title={displayName}>
             {displayName}
           </p>
           <div className="mt-auto pt-1.5">
@@ -136,7 +136,7 @@ function CardItemBase({
             {psa10PriceUsd != null && (
               <div className="flex items-center gap-1 mt-0.5">
                 <Shield className="size-3 text-amber-500" />
-                <PriceUsd usd={psa10PriceUsd} className="text-[11px] text-muted-foreground" />
+                <PriceUsd usd={psa10PriceUsd} className="text-xs text-muted-foreground" />
               </div>
             )}
           </div>

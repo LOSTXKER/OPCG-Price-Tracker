@@ -115,14 +115,14 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
                       />
                     </div>
                   </div>
-                  <span className="w-9 shrink-0 text-right text-[10px] font-medium tabular-nums text-muted-foreground">
+                  <span className="w-9 shrink-0 text-right text-xs font-medium tabular-nums text-muted-foreground">
                     {pct.toFixed(1)}%
                   </span>
                   <div className="w-28 shrink-0 text-right">
                     <p className="whitespace-nowrap font-price text-sm font-semibold tabular-nums">
                       <Price jpy={r.totalValue} />
                     </p>
-                    <p className="whitespace-nowrap text-[10px] tabular-nums text-muted-foreground">
+                    <p className="whitespace-nowrap text-xs tabular-nums text-muted-foreground">
                       {r.count.toLocaleString()} {t(lang, "cardUnit")}
                     </p>
                   </div>
@@ -177,7 +177,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
                     <p className="whitespace-nowrap font-price text-sm font-semibold tabular-nums">
                       <Price jpy={s.totalValue} />
                     </p>
-                    <p className="whitespace-nowrap text-[10px] tabular-nums text-muted-foreground">
+                    <p className="whitespace-nowrap text-xs tabular-nums text-muted-foreground">
                       {s.cardCount.toLocaleString()} {t(lang, "cardUnit")}
                     </p>
                   </div>
@@ -210,7 +210,7 @@ function SummaryCard({
         {icon}
       </div>
       <div className="min-w-0">
-        <p className="text-[11px] font-medium text-muted-foreground">{label}</p>
+        <p className="text-xs font-medium text-muted-foreground">{label}</p>
         <p className="truncate font-price text-lg font-bold text-foreground">{value}</p>
       </div>
     </div>
@@ -261,7 +261,7 @@ function TopCardTile({
         <p className="line-clamp-1 text-xs font-medium leading-tight">{name}</p>
         <div className="flex items-center gap-1">
           <RarityBadge rarity={card.rarity} size="sm" />
-          <span className="font-mono text-[10px] text-muted-foreground">{card.setCode.toUpperCase()}</span>
+          <span className="font-mono text-xs text-muted-foreground">{card.setCode.toUpperCase()}</span>
         </div>
         <p className="mt-auto font-price text-sm font-bold">
           <Price jpy={card.latestPriceJpy} />

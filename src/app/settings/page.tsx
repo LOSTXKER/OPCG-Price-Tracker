@@ -51,10 +51,10 @@ export default function SettingsIndexPage() {
               {user.displayName ?? "User"}
             </p>
             <div className="mt-0.5 flex items-center gap-1.5">
-              <Badge className={cn("text-[9px] font-semibold", tierCfg.color)}>
+              <Badge className={cn("text-xs font-semibold", tierCfg.color)}>
                 {tierCfg.label}
               </Badge>
-              <span className="text-[11px] text-muted-foreground">
+              <span className="text-xs text-muted-foreground">
                 {t(lang, "viewPublicProfile")}
               </span>
             </div>

@@ -69,25 +69,25 @@ export function ShopTab({
   return (
     <div className="space-y-4">
       <div className="panel overflow-hidden">
-        <div className="border-b px-4 py-3">
+        <div className="border-b px-4 py-3.5">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold">{t(lang, "honeyShop")}</h2>
-            <span className="flex items-center gap-1 text-xs font-bold tabular-nums text-primary">
+            <h2 className="text-sm font-bold">{t(lang, "honeyShop")}</h2>
+            <span className="flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-bold tabular-nums text-amber-700 dark:text-amber-400">
               🍯 {points.toLocaleString()}
             </span>
           </div>
-          <p className="mt-0.5 text-[11px] text-muted-foreground">
+          <p className="mt-0.5 text-xs text-muted-foreground">
             {lang === "TH" ? "ใช้ Honey แลกของรางวัลพิเศษ" : lang === "JP" ? "Honeyを使って特別な報酬と交換" : "Redeem Honey for exclusive rewards"}
           </p>
         </div>
-        <div className="flex items-center gap-0.5 overflow-x-auto px-4 scrollbar-none">
+        <div className="flex items-center gap-1 overflow-x-auto bg-muted/20 px-4 py-1.5 scrollbar-none">
           {activeCategories.map((cat) => (
             <button
               key={cat}
               onClick={() => setShopFilter(cat)}
               className={cn(
-                "shrink-0 border-b-2 px-3 py-2 text-[11px] font-medium transition-colors",
-                shopFilter === cat ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"
+                "shrink-0 rounded-md px-3 py-1.5 text-xs font-medium transition-all",
+                shopFilter === cat ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:bg-background/50 hover:text-foreground"
               )}
             >
               {catLabel(cat)}
@@ -128,7 +128,7 @@ export function ShopTab({
                       </h3>
                       <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
                         <span className={cn(
-                          "rounded-full px-1.5 py-0.5 text-[9px] font-medium",
+                          "rounded-full px-1.5 py-0.5 text-xs font-medium",
                           isTrial ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground",
                         )}>{catLabel(item.type)}</span>
                       </div>
@@ -137,7 +137,7 @@ export function ShopTab({
                   {item.description && <p className="mb-3 text-xs text-muted-foreground line-clamp-2">{localizedDesc(item.description, lang)}</p>}
                   <div className="mt-auto flex items-center justify-between">
                     <span className="text-sm font-bold tabular-nums text-primary">{item.cost} 🍯</span>
-                    <Button size="sm" onClick={() => onRedeem(item.id)} disabled={!canAfford || !inStock} className="h-7 gap-1 border border-primary/20 bg-primary/10 text-xs text-primary hover:bg-primary/15">
+                    <Button size="sm" onClick={() => onRedeem(item.id)} disabled={!canAfford || !inStock} className="gap-1.5 border border-primary/20 bg-primary/10 text-xs text-primary hover:bg-primary/15">
                       {t(lang, "redeemItem")}
                     </Button>
                   </div>

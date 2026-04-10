@@ -203,7 +203,7 @@ export function SetDetailContent({
                 <SlidersHorizontal className="size-3.5" />
                 <span className="hidden sm:inline">{t(lang, "filter")}</span>
                 {advFilterCount > 0 && !filterOpen && (
-                  <span className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[9px] font-bold text-destructive-foreground">
+                  <span className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-destructive text-xs font-bold text-destructive-foreground">
                     {advFilterCount}
                   </span>
                 )}
@@ -218,7 +218,7 @@ export function SetDetailContent({
                       {advFilterCount > 0 && (
                         <button
                           onClick={clearAdvFilters}
-                          className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                         >
                           <X className="size-3" />
                           {t(lang, "clearAll")}
@@ -235,7 +235,7 @@ export function SetDetailContent({
 
                   {availableTypes.length > 1 && (
                     <div className="mb-3">
-                      <span className="mb-1.5 block text-[11px] font-medium text-muted-foreground">{t(lang, "type")}</span>
+                      <span className="mb-1.5 block text-xs font-medium text-muted-foreground">{t(lang, "type")}</span>
                       <div className="flex flex-wrap gap-1">
                         <button onClick={() => setActiveType("all")} className={pill(activeType === "all")}>{t(lang, "allTab")}</button>
                         {availableTypes.map((ct) => (
@@ -249,7 +249,7 @@ export function SetDetailContent({
 
                   {availableColors.length > 1 && (
                     <div>
-                      <span className="mb-1.5 block text-[11px] font-medium text-muted-foreground">{t(lang, "color")}</span>
+                      <span className="mb-1.5 block text-xs font-medium text-muted-foreground">{t(lang, "color")}</span>
                       <div className="flex flex-wrap gap-1">
                         <button onClick={() => setActiveColor("all")} className={pill(activeColor === "all")}>{t(lang, "allTab")}</button>
                         {availableColors.map((cc) => (

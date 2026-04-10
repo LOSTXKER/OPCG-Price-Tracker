@@ -134,7 +134,7 @@ function NavContent({
       <nav className="flex-1 space-y-5">
         {NAV_SECTIONS.map((section) => (
           <div key={section.label}>
-            <p className="mb-1 px-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+            <p className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
               {section.label}
             </p>
             <div className="space-y-0.5">

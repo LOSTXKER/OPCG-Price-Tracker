@@ -17,7 +17,7 @@ export function LimitCounter({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[10px] font-semibold tabular-nums",
+        "inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-xs font-semibold tabular-nums",
         isFull
           ? "bg-destructive/10 text-destructive"
           : isHigh

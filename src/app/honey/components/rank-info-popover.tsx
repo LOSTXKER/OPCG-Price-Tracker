@@ -69,7 +69,7 @@ export function RankInfoPopover({
                 );
               })}
             </div>
-            <div className="mt-2 border-t pt-2 text-[10px] text-muted-foreground">
+            <div className="mt-2 border-t pt-2 text-xs text-muted-foreground">
               {lang === "TH"
                 ? `สะสมทั้งหมด: ${lifetimeEarned.toLocaleString()} pt`
                 : lang === "JP"

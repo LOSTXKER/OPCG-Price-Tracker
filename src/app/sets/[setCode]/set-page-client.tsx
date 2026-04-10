@@ -64,7 +64,7 @@ export function SetPageStats({
 export function SetPageTopCardLabel() {
   const lang = useUIStore((s) => s.language);
   return (
-    <span className="text-[11px] font-medium text-muted-foreground">
+    <span className="text-xs font-medium text-muted-foreground">
       {t(lang, "highestValue")}
     </span>
   );
@@ -130,7 +130,7 @@ export function DropRateDialog({
           <DialogTitle className="flex items-center gap-2">
             <BarChart3 className="size-4 text-primary" />
             {t(lang, "dropRate")}
-            <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] tabular-nums text-muted-foreground">
+            <span className="rounded-full bg-muted px-2 py-0.5 text-xs tabular-nums text-muted-foreground">
               {pullRateGroups.length}
             </span>
           </DialogTitle>
@@ -159,7 +159,7 @@ export function DropRateDialog({
               ))}
             </div>
             {packsPerBox && cardsPerPack && (
-              <span className="text-[11px] text-muted-foreground">
+              <span className="text-xs text-muted-foreground">
                 {packsPerBox} {t(lang, "perUnit")}/{t(lang, "packUnit")} · {cardsPerPack} {t(lang, "cardsCount")}/{t(lang, "packUnit")}
               </span>
             )}
@@ -167,7 +167,7 @@ export function DropRateDialog({
 
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
-              <thead className="text-[11px] font-medium text-muted-foreground">
+              <thead className="text-xs font-medium text-muted-foreground">
                 <tr className="border-b border-border/30">
                   <th className="py-1.5 text-left font-medium">{t(lang, "level")}</th>
                   <th className="py-1.5 text-left font-medium" />

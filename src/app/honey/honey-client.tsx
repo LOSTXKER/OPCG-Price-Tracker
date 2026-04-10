@@ -162,7 +162,7 @@ function HoneyContent() {
   );
 
   const tabBar = (
-    <div className="flex gap-0.5 overflow-x-auto border-b border-border scrollbar-none">
+    <div className="flex gap-0.5 overflow-x-auto rounded-lg bg-muted/30 p-1 scrollbar-none">
       {HONEY_TABS.map((item) => {
         const Icon = item.icon;
         const active = tab === item.key;
@@ -172,10 +172,10 @@ function HoneyContent() {
             onClick={() => setTab(item.key)}
             title={t(lang, item.labelKey)}
             className={cn(
-              "flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2.5 text-xs font-medium transition-colors sm:px-4",
+              "flex shrink-0 items-center gap-2 rounded-md px-3.5 py-2.5 text-xs font-medium transition-all sm:px-4",
               active
-                ? "border-primary text-foreground"
-                : "border-transparent text-muted-foreground hover:text-foreground",
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
             )}
           >
             <Icon className="size-4" />

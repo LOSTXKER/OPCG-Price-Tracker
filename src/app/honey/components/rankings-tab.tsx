@@ -31,9 +31,9 @@ export function RankingsTab({
 
   return (
     <div className="panel overflow-hidden">
-      <div className="border-b px-4 py-3">
-        <h2 className="text-sm font-semibold">{t(lang, "honeyLeaderboard")}</h2>
-        <p className="mt-0.5 text-[11px] text-muted-foreground">
+      <div className="border-b px-4 py-3.5">
+        <h2 className="text-sm font-bold">{t(lang, "honeyLeaderboard")}</h2>
+        <p className="mt-0.5 text-xs text-muted-foreground">
           {lang === "TH" ? "ดูอันดับผู้ใช้ที่สะสม Honey มากที่สุด" : lang === "JP" ? "最もHoneyを獲得したユーザーランキング" : "See who has earned the most Honey"}
         </p>
       </div>
@@ -41,16 +41,16 @@ export function RankingsTab({
         <EmptyState icon={Trophy} label={t(lang, "honeyLeaderboard")} />
       ) : (
         <>
-          <div className="flex gap-0.5 overflow-x-auto px-4 scrollbar-none">
+          <div className="flex gap-1 overflow-x-auto bg-muted/20 px-4 py-1.5 scrollbar-none">
             {(["HONEY", "STREAK"] as RankSort[]).map((key) => (
               <button
                 key={key}
                 onClick={() => setSort(key)}
                 className={cn(
-                  "shrink-0 border-b-2 px-3 py-2 text-[11px] font-medium transition-colors",
+                  "shrink-0 rounded-md px-3 py-1.5 text-xs font-medium transition-all",
                   sort === key
-                    ? "border-primary text-primary"
-                    : "border-transparent text-muted-foreground hover:text-foreground",
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
                 )}
               >
                 {SORT_LABELS[key][lang] ?? SORT_LABELS[key].EN}
@@ -60,7 +60,7 @@ export function RankingsTab({
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="border-b bg-muted/30">
-                <tr className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+                <tr className="text-xs font-medium uppercase tracking-wider text-muted-foreground/70">
                   <th className="w-12 px-4 py-2.5">#</th>
                   <th className="px-4 py-2.5">{t(lang, "anonymous")}</th>
                   <th className="px-4 py-2.5 text-right">Honey</th>
@@ -72,10 +72,10 @@ export function RankingsTab({
                   <tr key={user.id} className="transition-colors hover:bg-muted/20">
                     <td className="px-4 py-2.5">
                       <div className={cn(
-                        "flex size-6 items-center justify-center rounded-md text-[10px] font-bold",
-                        i === 0 ? "bg-primary/10 text-primary" : i === 1 ? "bg-muted text-muted-foreground" : i === 2 ? "bg-accent text-accent-foreground" : "text-muted-foreground"
+                        "flex size-7 items-center justify-center rounded-lg text-xs font-bold",
+                        i === 0 ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : i === 1 ? "bg-slate-300/15 text-slate-500 dark:text-slate-400" : i === 2 ? "bg-orange-500/10 text-orange-600 dark:text-orange-400" : "text-muted-foreground"
                       )}>
-                        {i < 3 ? <Trophy className="size-3" /> : i + 1}
+                        {i < 3 ? <Trophy className="size-3.5" /> : i + 1}
                       </div>
                     </td>
                     <td className="px-4 py-2.5">

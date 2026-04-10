@@ -8,22 +8,33 @@ export default function ProfileRedirectPage() {
   const router = useRouter();
 
   useEffect(() => {
+    const bypass = process.env.NEXT_PUBLIC_BYPASS_AUTH === "true";
+
+    const fetchProfile = () => {
+      fetch("/api/me")
+        .then((r) => r.json())
+        .then((json: { user?: { id: string } }) => {
+          if (json.user?.id) {
+            router.replace(`/profile/${json.user.id}`);
+          } else if (!bypass) {
+            router.replace("/login");
+          }
+        })
+        .catch(() => { if (!bypass) router.replace("/login"); });
+    };
+
+    if (bypass) {
+      fetchProfile();
+      return;
+    }
+
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) {
         router.replace("/login?redirect=/settings");
         return;
       }
-      fetch("/api/me")
-        .then((r) => r.json())
-        .then((json: { user?: { id: string } }) => {
-          if (json.user?.id) {
-            router.replace(`/profile/${json.user.id}`);
-          } else {
-            router.replace("/login");
-          }
-        })
-        .catch(() => router.replace("/login"));
+      fetchProfile();
     });
   }, [router]);
 

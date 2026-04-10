@@ -63,7 +63,7 @@ export const GridCard = memo(function GridCard({
           </div>
           {card.isParallel && (
             <div className="absolute right-1.5 top-1.5">
-              <span className="rounded-md bg-primary/90 px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground">
+              <span className="rounded-md bg-primary/90 px-1.5 py-0.5 text-xs font-medium text-primary-foreground">
                 P
               </span>
             </div>
@@ -81,13 +81,13 @@ export const GridCard = memo(function GridCard({
                   e.stopPropagation()
                   router.push(`/sets/${setCode}`)
                 }}
-                className="cursor-pointer font-mono text-[10px] text-muted-foreground underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid"
+                className="cursor-pointer font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid"
               >
                 {setCode.toUpperCase()}
               </span>
             )}
           </div>
-          <p className="truncate text-[13px] font-medium leading-snug" title={name}>
+          <p className="truncate text-sm font-medium leading-snug" title={name}>
             {name}
           </p>
           <div className="mt-auto pt-1.5">

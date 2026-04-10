@@ -262,7 +262,7 @@ export default async function RaritiesPage() {
                 </div>
                 {examples.length > 0 && (
                   <div className="border-t px-5 py-3" style={{ borderColor: `${rarity.color}15` }}>
-                    <p className="mb-2 text-[10px] font-medium text-muted-foreground">ตัวอย่างการ์ด</p>
+                    <p className="mb-2 text-xs font-medium text-muted-foreground">ตัวอย่างการ์ด</p>
                     <div className="flex gap-2">
                       {examples.map((card) => (
                         <Link key={card.cardCode} href={`/cards/${card.cardCode}`} className="group shrink-0">
@@ -297,7 +297,7 @@ export default async function RaritiesPage() {
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline gap-1.5">
                   <h3 className="text-sm font-semibold">{rarity.name}</h3>
-                  <span className="text-[10px] text-muted-foreground">{rarity.perSet}</span>
+                  <span className="text-xs text-muted-foreground">{rarity.perSet}</span>
                 </div>
                 <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
                   {rarity.description}
@@ -334,11 +334,11 @@ export default async function RaritiesPage() {
               { label: "Super Parallel", price: "¥198,000", color: "#EC4899", sub: "manga art หายากสุด" },
             ].map((item) => (
               <div key={item.label} className="p-4 text-center">
-                <p className="text-[11px] font-medium text-muted-foreground">{item.label}</p>
+                <p className="text-xs font-medium text-muted-foreground">{item.label}</p>
                 <p className="mt-1 font-mono text-lg font-bold" style={{ color: item.color }}>
                   {item.price}
                 </p>
-                <p className="mt-0.5 text-[10px] text-muted-foreground">{item.sub}</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">{item.sub}</p>
               </div>
             ))}
           </div>
@@ -380,7 +380,7 @@ export default async function RaritiesPage() {
                       <Image src={card.imageUrl} alt={card.nameEn ?? card.nameJp} fill className="object-contain" sizes="64px" />
                     )}
                   </div>
-                  <p className="mt-1 max-w-16 truncate text-center text-[10px] text-muted-foreground">
+                  <p className="mt-1 max-w-16 truncate text-center text-xs text-muted-foreground">
                     {card.nameEn ?? card.nameJp}
                   </p>
                 </Link>
@@ -473,15 +473,15 @@ export default async function RaritiesPage() {
           </p>
           <div className="mt-3 space-y-1.5">
             <div className="flex items-center gap-2">
-              <span className="flex size-6 items-center justify-center rounded bg-amber-500 text-[10px] font-bold text-white">1</span>
+              <span className="flex size-6 items-center justify-center rounded bg-amber-500 text-xs font-bold text-white">1</span>
               <span>กล่องที่ 1 → ได้ <strong className="text-foreground">SEC</strong> 1 ใบ (ไม่ได้ Parallel)</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="flex size-6 items-center justify-center rounded bg-purple-500 text-[10px] font-bold text-white">2</span>
+              <span className="flex size-6 items-center justify-center rounded bg-purple-500 text-xs font-bold text-white">2</span>
               <span>กล่องที่ 2 → ได้ <strong className="text-foreground">Parallel</strong> 1 ใบ (ไม่ได้ SEC)</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="flex size-6 items-center justify-center rounded bg-blue-500 text-[10px] font-bold text-white">3</span>
+              <span className="flex size-6 items-center justify-center rounded bg-blue-500 text-xs font-bold text-white">3</span>
               <span>กล่องที่ 3 → ได้ <strong className="text-foreground">Parallel</strong> 2 ใบ (ไม่ได้ SEC)</span>
             </div>
           </div>

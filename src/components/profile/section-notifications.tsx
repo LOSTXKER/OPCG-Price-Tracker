@@ -42,15 +42,15 @@ function Toggle({
       disabled={disabled}
       onClick={() => onChange(!checked)}
       className={cn(
-        "relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors",
+        "relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors",
         checked ? "bg-primary" : "bg-muted",
         disabled && "cursor-not-allowed opacity-40",
       )}
     >
       <span
         className={cn(
-          "pointer-events-none block size-4 rounded-full bg-white shadow-sm transition-transform",
-          checked ? "translate-x-4" : "translate-x-0",
+          "pointer-events-none block size-5 rounded-full bg-background shadow ring-1 ring-border/10 transition-transform",
+          checked ? "translate-x-5" : "translate-x-0",
         )}
       />
     </button>
@@ -220,7 +220,7 @@ export function SectionNotifications({ settings, onReload }: Props) {
   function Feedback({ field }: { field: string }) {
     if (errorField === field) {
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-[11px] font-medium text-destructive animate-in fade-in zoom-in-95">
+        <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in zoom-in-95">
           <CircleAlert className="size-3" />
           {t(lang, "saveFailed")}
         </span>
@@ -228,7 +228,7 @@ export function SectionNotifications({ settings, onReload }: Props) {
     }
     if (savedField === field) {
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 animate-in fade-in zoom-in-95">
+        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 animate-in fade-in zoom-in-95">
           <CircleCheck className="size-3" />
           {t(lang, "saved")}
         </span>
@@ -263,7 +263,7 @@ export function SectionNotifications({ settings, onReload }: Props) {
         <div className="flex items-center justify-between rounded-xl border border-border/40 bg-card px-5 py-3">
           <div className="flex items-center gap-3">
             <MessageCircle className="size-4 text-green-600 dark:text-green-400" />
-            <Badge variant="secondary" className="text-[11px] text-green-600 dark:text-green-400">
+            <Badge variant="secondary" className="text-xs text-green-600 dark:text-green-400">
               {t(lang, "lineConnected")}
             </Badge>
           </div>
@@ -292,7 +292,7 @@ export function SectionNotifications({ settings, onReload }: Props) {
                     <Feedback field={nt.webField} />
                     <Feedback field={nt.lineField} />
                   </div>
-                  <p className="text-[11px] text-muted-foreground leading-tight mt-0.5">{t(lang, nt.descKey)}</p>
+                  <p className="text-xs text-muted-foreground leading-tight mt-0.5">{t(lang, nt.descKey)}</p>
 
                   <div className="flex items-center gap-5 mt-3">
                     <ChannelToggle

@@ -18,7 +18,7 @@ export function StatusBadge({ status }: { status: string }) {
   return (
     <span
       className={cn(
-        "inline-block rounded-full px-2 py-0.5 text-[11px] font-medium leading-none whitespace-nowrap",
+        "inline-block rounded-full px-2 py-0.5 text-xs font-medium leading-none whitespace-nowrap",
         STATUS_STYLES[status]
       )}
     >
@@ -177,7 +177,7 @@ export function CandidatePicker({
           )}
           <div className="min-w-0">
             <p className="font-mono text-xs font-bold">{c.cardCode}</p>
-            <p className="text-[10px] text-muted-foreground truncate">
+            <p className="text-xs text-muted-foreground truncate">
               {c.nameJp}
             </p>
             <RarityBadge rarity={c.rarity} size="sm" />

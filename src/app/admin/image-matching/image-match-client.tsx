@@ -146,7 +146,7 @@ export function ImageMatchClient() {
               <div className="flex items-start gap-4">
                 {/* Current image */}
                 <div className="space-y-1.5 shrink-0">
-                  <p className="text-[11px] text-muted-foreground font-medium">
+                  <p className="text-xs text-muted-foreground font-medium">
                     Current (p{card.parallelIndex ?? "?"})
                   </p>
                   <div className="relative aspect-[63/88] w-24 overflow-hidden rounded-lg border-2 border-primary/50 bg-muted/30">
@@ -186,7 +186,7 @@ export function ImageMatchClient() {
                             : "hover:bg-muted/50 ring-1 ring-border/30"
                         )}
                       >
-                        <p className="text-[11px] text-center font-mono font-medium">
+                        <p className="text-xs text-center font-mono font-medium">
                           _p{c.pIndex}
                           {isActive && (
                             <Check className="inline ml-1 size-3 text-primary" />

@@ -315,7 +315,7 @@ export default async function GuideSetsPage() {
                       </div>
                     ) : (
                       <div
-                        className="flex size-10 shrink-0 items-center justify-center rounded-lg text-[10px] font-bold text-white"
+                        className="flex size-10 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white"
                         style={{ backgroundColor: info.color }}
                       >
                         {set.code.split("-")[0]}

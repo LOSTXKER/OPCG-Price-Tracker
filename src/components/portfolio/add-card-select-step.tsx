@@ -145,7 +145,7 @@ export function SelectStep({
             {/* Set filter */}
             <div>
               <div className="mb-1.5 flex items-center justify-between">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "set")}</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "set")}</span>
               </div>
               <div className="relative" ref={setDropdownRef}>
                 <button
@@ -184,7 +184,7 @@ export function SelectStep({
                       <button
                         onClick={() => setActiveType(null)}
                         className={cn(
-                          "rounded px-2 py-0.5 text-[11px] font-medium transition-colors",
+                          "rounded px-2 py-0.5 text-xs font-medium transition-colors",
                           activeType === null
                             ? "bg-primary text-primary-foreground"
                             : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -197,7 +197,7 @@ export function SelectStep({
                           key={type}
                           onClick={() => setActiveType(activeType === type ? null : type)}
                           className={cn(
-                            "rounded px-2 py-0.5 text-[11px] font-medium transition-colors",
+                            "rounded px-2 py-0.5 text-xs font-medium transition-colors",
                             activeType === type
                               ? "bg-primary text-primary-foreground"
                               : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -227,7 +227,7 @@ export function SelectStep({
                           )}
                         >
                           <span className={cn(
-                            "shrink-0 rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] font-bold",
+                            "shrink-0 rounded bg-muted px-1.5 py-0.5 font-mono text-xs font-bold",
                             activeSet === s.code && "bg-primary/15 text-primary"
                           )}>
                             {s.code.toUpperCase()}
@@ -235,7 +235,7 @@ export function SelectStep({
                           <span className="min-w-0 flex-1 truncate text-xs">
                             {s.nameEn ?? s.name}
                           </span>
-                          <span className="shrink-0 text-[10px] text-muted-foreground">{s._count.cards}</span>
+                          <span className="shrink-0 text-xs text-muted-foreground">{s._count.cards}</span>
                         </button>
                       ))}
                     </div>
@@ -246,7 +246,7 @@ export function SelectStep({
 
             {/* Rarity chips */}
             <div>
-              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "rarity")}</span>
+              <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "rarity")}</span>
               <div className="flex flex-wrap gap-1.5">
                 {RARITY_OPTIONS.map((r) => (
                   <button
@@ -268,7 +268,7 @@ export function SelectStep({
 
             {/* Color chips */}
             <div>
-              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "color")}</span>
+              <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "color")}</span>
               <div className="flex flex-wrap gap-1.5">
                 {COLOR_OPTIONS.map((c) => (
                   <button
@@ -290,7 +290,7 @@ export function SelectStep({
 
             {/* Card type chips */}
             <div>
-              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "type")}</span>
+              <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "type")}</span>
               <div className="flex flex-wrap gap-1.5">
                 {TYPE_OPTIONS.map((t) => (
                   <button
@@ -349,7 +349,7 @@ export function SelectStep({
             )}
             <button
               onClick={clearAllFilters}
-              className="text-[11px] font-medium text-muted-foreground hover:text-primary"
+              className="text-xs font-medium text-muted-foreground hover:text-primary"
             >
               {t(lang, "clearAll")}
             </button>
@@ -360,7 +360,7 @@ export function SelectStep({
       {/* Card list */}
       <div className="min-h-0 flex-1 overflow-y-auto">
         {!isFiltered && (
-          <p className="px-4 pt-2 pb-1 text-[11px] text-muted-foreground/60">
+          <p className="px-4 pt-2 pb-1 text-xs text-muted-foreground/60">
             {t(lang, "highestValue")} — {t(lang, "addCardToPortfolioDesc")}
           </p>
         )}
@@ -446,7 +446,7 @@ export function SelectStep({
 
 function FilterTag({ label, onRemove }: { label: string; onRemove: () => void }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[11px] font-medium text-primary">
+    <span className="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-xs font-medium text-primary">
       {label}
       <button onClick={onRemove} className="rounded-full p-0.5 hover:bg-primary/10">
         <X className="size-2.5" />

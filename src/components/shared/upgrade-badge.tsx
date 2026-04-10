@@ -16,7 +16,7 @@ export function UpgradeBadge({
     <Link
       href="/pricing"
       className={cn(
-        "inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary transition-colors hover:bg-primary/20",
+        "inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/20",
         className,
       )}
     >

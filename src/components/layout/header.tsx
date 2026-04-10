@@ -10,18 +10,23 @@ import {
   Bookmark,
   BookOpen,
   Check,
+  ChevronDown,
   Coins,
   Crown,
+  Dices,
   Globe,
+  LayoutGrid,
   LogOut,
   Menu,
   MessageCircle,
   Moon,
   Search,
   Settings,
+  Heart,
   ShoppingBag,
   Sparkles,
   Star,
+  Store,
   Sun,
   TrendingUp,
   User,
@@ -53,9 +58,13 @@ import { getHoneyLevel } from "@/lib/honey/levels";
 const NAV_LINKS = [
   { href: "/" as const, key: "overview" as const },
   { href: "/sets" as const, key: "sets" as const },
-  { href: "/drop-calculator" as const, key: "dropCalculator" as const },
-  { href: "/deck-calculator" as const, key: "deckCalculatorNav" as const },
-  { href: "/compare" as const, key: "compareCards" as const },
+  { href: "/marketplace" as const, key: "marketplace" as const },
+];
+
+const TOOL_LINKS = [
+  { href: "/drop-calculator" as const, key: "dropCalculator" as const, icon: Dices },
+  { href: "/deck-calculator" as const, key: "deckCalculatorNav" as const, icon: LayoutGrid },
+  { href: "/compare" as const, key: "compareCards" as const, icon: ArrowRightLeft },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -138,6 +147,11 @@ export function Header() {
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
+    if (process.env.NEXT_PUBLIC_BYPASS_AUTH === "true") {
+      setAuthUser({ id: "dev-bypass", email: "dev@localhost" } as import("@supabase/supabase-js").User);
+      setAuthLoaded(true);
+      return;
+    }
     const supabase = createClient();
     supabase.auth.getUser()
       .then(({ data }) => {
@@ -222,7 +236,7 @@ export function Header() {
 
   const handleLogout = async () => {
     const supabase = createClient();
-    await supabase.auth.signOut();
+    supabase.auth.signOut().catch(() => {});
     router.push("/login");
     router.refresh();
   };
@@ -247,7 +261,7 @@ export function Header() {
     <div className="sticky top-0 z-50 hidden md:block">
       {/* ══════════ TOP BAR — market ticker + preferences ══════════ */}
       <div className="border-b border-border/40 bg-background">
-        <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-6 text-[11.5px] lg:px-8">
+        <div className="mx-auto flex h-10 max-w-7xl items-center justify-between px-6 text-[11.5px] lg:px-8">
           {/* Left — market ticker chips */}
           <div className="flex items-center gap-2 text-muted-foreground">
             {stats.totalCards > 0 && (
@@ -375,18 +389,18 @@ export function Header() {
 
       {/* ══════════ BOTTOM BAR — brand + nav + user tools ══════════ */}
       <header className="border-b border-border/50 bg-background/95 backdrop-blur-xl">
-        <div className="mx-auto flex h-12 max-w-7xl items-center px-6 lg:px-8">
+        <div className="mx-auto flex h-14 max-w-7xl items-center px-6 lg:px-8">
           {/* Logo */}
-          <Link href="/" className="mr-6 flex shrink-0 items-center gap-2">
+          <Link href="/" className="mr-8 flex shrink-0 items-center gap-2.5">
             <Image
               src="/meecard.png"
               alt="Meecard"
-              width={26}
-              height={26}
+              width={28}
+              height={28}
               className="shrink-0 select-none"
               priority
             />
-            <span className="text-[15px] font-bold tracking-tight">Meecard</span>
+            <span className="text-base font-bold tracking-tight">Meecard</span>
           </Link>
 
           {/* Nav links */}
@@ -398,7 +412,7 @@ export function Header() {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "relative whitespace-nowrap px-2.5 py-1.5 text-[13px] font-medium transition-colors",
+                    "relative whitespace-nowrap px-3 py-2 text-sm font-medium transition-colors",
                     active
                       ? "font-semibold text-foreground"
                       : "text-muted-foreground hover:text-foreground"
@@ -411,28 +425,52 @@ export function Header() {
                 </Link>
               );
             })}
+
+            {/* Tools dropdown */}
+            {(() => {
+              const toolActive = TOOL_LINKS.some((l) => isActive(pathname, l.href));
+              return (
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    className={cn(
+                      "relative flex items-center gap-1 whitespace-nowrap px-3 py-2 text-sm font-medium transition-colors focus:outline-none",
+                      toolActive
+                        ? "font-semibold text-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {t(language, "tools")}
+                    <ChevronDown className="size-3" />
+                    {toolActive && (
+                      <span className="absolute bottom-0 left-1/2 h-[2px] w-5 -translate-x-1/2 rounded-full bg-primary" />
+                    )}
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" sideOffset={8} className="min-w-[180px]">
+                    {TOOL_LINKS.map((link) => {
+                      const Icon = link.icon;
+                      return (
+                        <DropdownMenuItem
+                          key={link.href}
+                          onClick={() => router.push(link.href)}
+                          className={cn(
+                            isActive(pathname, link.href) && "font-semibold text-foreground"
+                          )}
+                        >
+                          <Icon className="size-4" />
+                          {t(language, link.key)}
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              );
+            })()}
           </nav>
 
           <div className="flex-1" />
 
           {/* Right — user tools */}
-          <div className="flex items-center gap-1">
-            {/* Marketplace — prominent */}
-            <Link
-              href="/marketplace"
-              className={cn(
-                "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
-                isActive(pathname, "/marketplace")
-                  ? "border-foreground/20 bg-foreground text-background"
-                  : "border-border bg-muted/50 text-foreground hover:bg-muted"
-              )}
-            >
-              <ShoppingBag className="size-3.5" />
-              {t(language, "marketplace")}
-            </Link>
-
-            <div className="mx-1.5 h-5 w-px bg-border/40" />
-
+          <div className="flex items-center gap-1.5">
             {/* Portfolio — chip style */}
             <Link
               href="/portfolio"
@@ -500,7 +538,7 @@ export function Header() {
                 <Link
                   href="/messages"
                   className={cn(
-                    "relative flex size-8 items-center justify-center rounded-lg transition-colors",
+                    "relative flex size-9 items-center justify-center rounded-lg transition-colors",
                     isActive(pathname, "/messages")
                       ? "bg-muted text-foreground"
                       : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
@@ -521,12 +559,12 @@ export function Header() {
                       {userAvatar ? (
                         <AvatarImage src={userAvatar} alt="" />
                       ) : null}
-                      <AvatarFallback className="bg-primary/10 text-[11px] font-bold text-primary">
+                      <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
                         {userName.slice(0, 1).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col items-start">
-                      <span className="max-w-[80px] truncate text-[12px] font-medium leading-tight text-foreground">
+                      <span className="max-w-[80px] truncate text-xs font-medium leading-tight text-foreground">
                         {userName}
                       </span>
                       <div className="flex items-center gap-1">
@@ -586,7 +624,7 @@ export function Header() {
                             />
                           </div>
                           {honeyLevel.nextThreshold && (
-                            <p className="mt-0.5 text-[9px] text-muted-foreground">
+                            <p className="mt-0.5 text-xs text-muted-foreground">
                               {(honeyLevel.nextThreshold - honeyLifetime).toLocaleString()} to {
                                 honeyLevel.level === 0 ? "Bronze" :
                                 honeyLevel.level === 1 ? "Silver" :
@@ -600,7 +638,7 @@ export function Header() {
                         {/* Honey balance */}
                         <div className="mt-2 flex items-center gap-1.5 rounded-md bg-muted/60 px-2 py-1.5">
                           <span className="text-sm leading-none">🍯</span>
-                          <span className="text-[11px] font-medium text-muted-foreground">Honey</span>
+                          <span className="text-xs font-medium text-muted-foreground">Honey</span>
                           <span className="ml-auto text-xs font-bold tabular-nums text-foreground">
                             {honeyPoints.toLocaleString()}
                           </span>
@@ -615,6 +653,18 @@ export function Header() {
                     <DropdownMenuItem onClick={() => router.push("/settings")}>
                       <Settings className="size-4" />
                       {t(language, "settingsTitle")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push("/seller")}>
+                      <Store className="size-4" />
+                      {language === "TH" ? "ศูนย์ผู้ขาย" : language === "JP" ? "販売センター" : "Seller Center"}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push("/orders")}>
+                      <ShoppingBag className="size-4" />
+                      {language === "TH" ? "คำสั่งซื้อของฉัน" : language === "JP" ? "購入履歴" : "My Orders"}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push("/saved")}>
+                      <Heart className="size-4" />
+                      {language === "TH" ? "รายการที่บันทึก" : language === "JP" ? "保存済み" : "Saved Listings"}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => router.push("/guide")}>
@@ -639,7 +689,7 @@ export function Header() {
               <div className="flex items-center gap-2">
                 <Link
                   href="/pricing"
-                  className="flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+                  className="flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
                 >
                   <Crown className="size-3 text-amber-600 dark:text-amber-400" />
                   {language === "TH" ? "แพ็กเกจ" : language === "JP" ? "プラン" : "Plans"}
@@ -665,10 +715,10 @@ export function Header() {
 
     {/* ══════════ MOBILE TOP BAR ══════════ */}
     <div className="sticky top-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur-xl md:hidden">
-      <div className="flex h-12 items-center gap-2 px-3">
+      <div className="flex h-14 items-center gap-2 px-4">
         <Link href="/" className="flex shrink-0 items-center gap-2">
-          <Image src="/meecard.png" alt="Meecard" width={24} height={24} className="shrink-0 select-none" priority />
-          <span className="text-sm font-bold tracking-tight">Meecard</span>
+          <Image src="/meecard.png" alt="Meecard" width={26} height={26} className="shrink-0 select-none" priority />
+          <span className="text-base font-bold tracking-tight">Meecard</span>
         </Link>
 
         <div className="flex-1" />
@@ -697,7 +747,7 @@ export function Header() {
             )}
 
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-[11px] text-muted-foreground">{t(language, "languageLabel")}</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-xs text-muted-foreground">{t(language, "languageLabel")}</DropdownMenuLabel>
               {LANG_OPTIONS.map((l) => (
                 <DropdownMenuItem key={l.value} onClick={() => setLanguage(l.value)}>
                   <Globe className="size-4" />
@@ -709,7 +759,7 @@ export function Header() {
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-[11px] text-muted-foreground">{t(language, "currencyLabel")}</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-xs text-muted-foreground">{t(language, "currencyLabel")}</DropdownMenuLabel>
               {CURRENCY_OPTIONS.map((c) => (
                 <DropdownMenuItem key={c.value} onClick={() => setCurrency(c.value)}>
                   <Coins className="size-4" />
@@ -735,6 +785,18 @@ export function Header() {
                 <DropdownMenuItem onClick={() => router.push("/settings")}>
                   <Settings className="size-4" />
                   {t(language, "settingsTitle")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/seller")}>
+                  <Store className="size-4" />
+                  {language === "TH" ? "ศูนย์ผู้ขาย" : language === "JP" ? "販売センター" : "Seller Center"}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/orders")}>
+                  <ShoppingBag className="size-4" />
+                  {language === "TH" ? "คำสั่งซื้อของฉัน" : language === "JP" ? "購入履歴" : "My Orders"}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/saved")}>
+                  <Heart className="size-4" />
+                  {language === "TH" ? "รายการที่บันทึก" : language === "JP" ? "保存済み" : "Saved Listings"}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push("/watchlist")}>
                   <Bookmark className="size-4 text-blue-500 dark:text-blue-400" />

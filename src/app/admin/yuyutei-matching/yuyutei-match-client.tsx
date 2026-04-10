@@ -653,8 +653,8 @@ export function YuyuteiMatchClient() {
                               <span className="font-mono text-xs font-bold">{m.scrapedCode}</span>
                               {m.scrapedRarity && <RarityBadge rarity={m.scrapedRarity} size="sm" />}
                             </div>
-                            <p className="text-[11px] text-muted-foreground truncate max-w-[180px]" title={m.scrapedName}>{m.scrapedName}</p>
-                            <p className="text-[10px] text-muted-foreground/50 font-mono">{m.setCode.toUpperCase()} · {m.yuyuteiId}</p>
+                            <p className="text-xs text-muted-foreground truncate max-w-[180px]" title={m.scrapedName}>{m.scrapedName}</p>
+                            <p className="text-xs text-muted-foreground/50 font-mono">{m.setCode.toUpperCase()} · {m.yuyuteiId}</p>
                           </div>
                         </div>
                       </td>
@@ -676,7 +676,7 @@ export function YuyuteiMatchClient() {
                             <div className="min-w-0">
                               <p className="font-mono text-xs font-bold text-green-600">{m.matchedCard!.cardCode}</p>
                               <RarityBadge rarity={m.matchedCard!.rarity} size="sm" />
-                              <p className="text-[10px] text-muted-foreground truncate max-w-[120px]">{m.matchedCard!.nameEn ?? m.matchedCard!.nameJp}</p>
+                              <p className="text-xs text-muted-foreground truncate max-w-[120px]">{m.matchedCard!.nameEn ?? m.matchedCard!.nameJp}</p>
                             </div>
                           </div>
                         ) : (
@@ -699,13 +699,13 @@ export function YuyuteiMatchClient() {
                         {m.matchMethod ? (
                           <div className="flex flex-col gap-0.5">
                             <Tooltip content={METHOD_INFO.find((x) => x.key === m.matchMethod)?.desc ?? m.matchMethod}>
-                              <span className="inline-block cursor-help rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                              <span className="inline-block cursor-help rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground">
                                 {m.matchMethod}
                               </span>
                             </Tooltip>
                             {m.geminiScore != null && (
                               <span className={cn(
-                                "inline-block rounded px-1.5 py-0.5 text-[10px] font-bold w-fit",
+                                "inline-block rounded px-1.5 py-0.5 text-xs font-bold w-fit",
                                 m.geminiScore >= 0.8 ? "bg-green-500/15 text-green-600" :
                                 m.geminiScore >= 0.5 ? "bg-amber-500/15 text-amber-600" :
                                 "bg-red-500/15 text-red-500"
@@ -715,7 +715,7 @@ export function YuyuteiMatchClient() {
                             )}
                           </div>
                         ) : (
-                          <span className="text-[11px] text-muted-foreground/50">—</span>
+                          <span className="text-xs text-muted-foreground/50">—</span>
                         )}
                       </td>
 
@@ -723,15 +723,15 @@ export function YuyuteiMatchClient() {
                       <td className="px-3 py-3">
                         {m.actionByUser ? (
                           <div className="min-w-0">
-                            <p className="text-[11px] font-medium truncate max-w-[120px]" title={m.actionByUser.email}>
+                            <p className="text-xs font-medium truncate max-w-[120px]" title={m.actionByUser.email}>
                               {m.actionByUser.displayName || m.actionByUser.email.split("@")[0]}
                             </p>
-                            <p className="text-[10px] text-muted-foreground" title={m.actionAt ? new Date(m.actionAt).toLocaleString("th-TH") : ""}>
+                            <p className="text-xs text-muted-foreground" title={m.actionAt ? new Date(m.actionAt).toLocaleString("th-TH") : ""}>
                               {relativeTime(m.actionAt)}
                             </p>
                           </div>
                         ) : (
-                          <span className="text-[11px] text-muted-foreground/50">—</span>
+                          <span className="text-xs text-muted-foreground/50">—</span>
                         )}
                       </td>
 

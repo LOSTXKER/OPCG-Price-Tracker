@@ -236,7 +236,7 @@ export function CardEditor({ card }: { card: CardData }) {
                       className="w-full object-contain"
                       unoptimized
                     />
-                    <div className="bg-muted/50 py-0.5 text-center text-[10px]">
+                    <div className="bg-muted/50 py-0.5 text-center text-xs">
                       _p{c.pIndex}
                     </div>
                   </button>
@@ -265,7 +265,7 @@ export function CardEditor({ card }: { card: CardData }) {
                     <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                       {f.label}
                       {f.official && (
-                        <span className="rounded bg-green-500/10 px-1 py-px text-[9px] font-medium text-green-600 dark:text-green-400">
+                        <span className="rounded bg-green-500/10 px-1 py-px text-xs font-medium text-green-600 dark:text-green-400">
                           Official
                         </span>
                       )}

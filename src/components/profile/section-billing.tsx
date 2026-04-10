@@ -86,7 +86,7 @@ export function SectionBilling() {
                     <td className="px-2 py-2.5">
                       <Badge
                         variant={inv.status === "paid" ? "default" : "destructive"}
-                        className="text-[10px]"
+                        className="text-xs"
                       >
                         {inv.status === "paid"
                           ? t(lang, "invoicePaid")

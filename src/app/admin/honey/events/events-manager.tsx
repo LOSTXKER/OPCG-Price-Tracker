@@ -138,8 +138,8 @@ export function EventsManager({ initialEvents }: { initialEvents: SeasonalEvent[
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <p className="font-semibold">{ev.nameEn ?? ev.name}</p>
-                    {isLive && <Badge className="bg-green-500/10 text-[10px] text-green-500">LIVE</Badge>}
-                    {!ev.isActive && <Badge variant="secondary" className="text-[10px]">DISABLED</Badge>}
+                    {isLive && <Badge className="bg-green-500/10 text-xs text-green-500">LIVE</Badge>}
+                    {!ev.isActive && <Badge variant="secondary" className="text-xs">DISABLED</Badge>}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {start.toLocaleDateString()} ~ {end.toLocaleDateString()} | {ev.honeyMultiplier}x multiplier

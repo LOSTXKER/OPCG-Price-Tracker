@@ -146,7 +146,7 @@ export function ImageUploader({
             <span className="text-xs text-muted-foreground">
               Drop image here or click to upload
             </span>
-            <span className="text-[10px] text-muted-foreground/50">
+            <span className="text-xs text-muted-foreground/50">
               PNG, JPG, WebP (max 5MB)
             </span>
           </>

@@ -63,7 +63,7 @@ export function PortfolioTransactions({ transactions }: { transactions: Transact
                   {tx.type === "BUY" ? "-" : "+"}{formatJpyAmount(tx.pricePerUnit * tx.quantity, currency)}
                 </p>
               )}
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 {date.toLocaleDateString(locale, { day: "numeric", month: "short", year: "2-digit" })}
                 {" "}
                 {date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}

@@ -257,7 +257,7 @@ function SearchContent({
               <select
                 value={selectedSet}
                 onChange={(e) => handleSetChange(e.target.value)}
-                className="h-8 min-w-0 flex-1 truncate rounded-lg border border-border/50 bg-card px-2.5 text-xs font-semibold text-foreground transition-colors hover:border-border focus:border-primary/50 focus:outline-none sm:flex-none sm:min-w-[170px] sm:text-sm"
+                className="h-9 min-w-0 flex-1 truncate rounded-lg border border-border/50 bg-card px-3 text-xs font-semibold text-foreground transition-colors hover:border-border focus:border-primary/50 focus:outline-none sm:flex-none sm:min-w-[170px] sm:text-sm"
               >
                 <option value="">{t(lang, "allSets")}</option>
                 {sets.map((s) => (
@@ -271,7 +271,7 @@ function SearchContent({
               <select
                 value={selectedRarity}
                 onChange={(e) => handleRarityChange(e.target.value)}
-                className="h-8 min-w-0 truncate rounded-lg border border-border/50 bg-card px-2.5 text-xs font-semibold text-foreground transition-colors hover:border-border focus:border-primary/50 focus:outline-none sm:min-w-[120px] sm:text-sm"
+                className="h-9 min-w-0 truncate rounded-lg border border-border/50 bg-card px-3 text-xs font-semibold text-foreground transition-colors hover:border-border focus:border-primary/50 focus:outline-none sm:min-w-[120px] sm:text-sm"
               >
                 <option value="">{t(lang, "allRarities")}</option>
                 {rarities.map((r) => (
@@ -284,7 +284,7 @@ function SearchContent({
             <select
               value={sort}
               onChange={(e) => handleSortChange(e.target.value as SortKey)}
-              className="hidden h-8 rounded-lg border border-border/50 bg-card px-2.5 text-xs font-semibold text-foreground transition-colors hover:border-border focus:border-primary/50 focus:outline-none sm:block sm:min-w-[140px] sm:text-sm"
+              className="hidden h-9 rounded-lg border border-border/50 bg-card px-3 text-xs font-semibold text-foreground transition-colors hover:border-border focus:border-primary/50 focus:outline-none sm:block sm:min-w-[140px] sm:text-sm"
             >
               {SORT_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>{o.label}</option>
@@ -544,7 +544,7 @@ function SearchTableRow({ card, rank }: { card: CardRow; rank: number }) {
             <p className="truncate text-sm font-medium leading-tight hover:text-primary hover:underline">
               {name}
             </p>
-            <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-0.5 font-mono text-xs text-muted-foreground">
               {card.baseCode ?? card.cardCode}
               {card.isParallel && <span className="ml-1 text-primary">P</span>}
             </p>

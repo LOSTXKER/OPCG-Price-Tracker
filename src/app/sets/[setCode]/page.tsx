@@ -190,7 +190,7 @@ export default async function SetDetailPage(props: {
           <span className="rounded-md bg-primary/10 px-2 py-0.5 font-mono text-xs font-bold text-primary">
             {set.code.toUpperCase()}
           </span>
-          <span className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
+          <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
             {set.type.replaceAll("_", " ")}
           </span>
           {set.releaseDate && (
@@ -248,7 +248,7 @@ export default async function SetDetailPage(props: {
               </p>
               <div className="mt-0.5 flex items-center gap-1.5">
                 <RarityBadge rarity={topCard.rarity} size="sm" />
-                <span className="font-mono text-[11px] text-muted-foreground">
+                <span className="font-mono text-xs text-muted-foreground">
                   {topCard.cardCode}
                 </span>
               </div>

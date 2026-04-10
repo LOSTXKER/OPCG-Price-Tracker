@@ -108,7 +108,7 @@ function MultiSeriesTooltip(props: {
     if (!entry?.value) return null
     return (
       <div className="rounded-xl border border-border/50 bg-popover/95 px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
-        <p className="text-[10px] text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           {formatTooltipDate(label, locale, period)}
         </p>
         <p className="mt-1 font-price text-sm font-bold tabular-nums" style={{ color: s.color }}>
@@ -120,7 +120,7 @@ function MultiSeriesTooltip(props: {
 
   return (
     <div className="rounded-xl border border-border/50 bg-popover/95 px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
-      <p className="text-[10px] text-muted-foreground">
+      <p className="text-xs text-muted-foreground">
         {formatTooltipDate(label, locale, period)}
       </p>
       <div className="mt-1.5 space-y-1">
@@ -134,7 +134,7 @@ function MultiSeriesTooltip(props: {
                 className="inline-block size-2 rounded-full"
                 style={{ backgroundColor: s.color }}
               />
-              <span className="text-[10px] text-muted-foreground">{s.label}</span>
+              <span className="text-xs text-muted-foreground">{s.label}</span>
               <span className="ml-auto font-price text-sm font-bold tabular-nums" style={{ color: s.color }}>
                 {formatPrice(value)}
               </span>
@@ -213,25 +213,25 @@ export function PriceChart({
       {stats && (
         <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg bg-border/30 sm:grid-cols-4">
           <div className="bg-background px-3 py-2">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">High</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground/70">High</p>
             <p className="mt-0.5 font-price text-sm font-bold tabular-nums text-price-up">
               {fmtPrice(stats.high)}
             </p>
           </div>
           <div className="bg-background px-3 py-2">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">Low</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground/70">Low</p>
             <p className="mt-0.5 font-price text-sm font-bold tabular-nums text-price-down">
               {fmtPrice(stats.low)}
             </p>
           </div>
           <div className="bg-background px-3 py-2">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">Avg</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground/70">Avg</p>
             <p className="mt-0.5 font-price text-sm font-bold tabular-nums text-foreground">
               {fmtPrice(stats.avg)}
             </p>
           </div>
           <div className="bg-background px-3 py-2">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">Change</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground/70">Change</p>
             <p className={cn(
               "mt-0.5 flex items-center gap-1 font-price text-sm font-bold tabular-nums",
               stats.change >= 0 ? "text-price-up" : "text-price-down",
@@ -255,7 +255,7 @@ export function PriceChart({
                 className="inline-block size-2 rounded-full"
                 style={{ backgroundColor: s.color }}
               />
-              <span className="text-[11px] text-muted-foreground">{s.label}</span>
+              <span className="text-xs text-muted-foreground">{s.label}</span>
             </div>
           ))}
         </div>

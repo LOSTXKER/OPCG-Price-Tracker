@@ -82,7 +82,7 @@ export function HomePortfolioPreview() {
       .catch(() => setLoading(false))
   }, [authed])
 
-  const cardBase = "group flex flex-col rounded-xl border p-3 transition-colors"
+  const cardBase = "group flex flex-col rounded-xl border p-4 transition-colors"
   const cardStyle = cn(cardBase, "border-border/40 bg-gradient-to-br from-card to-muted/20 hover:border-border")
 
   if (authed === null || loading) {
@@ -92,8 +92,8 @@ export function HomePortfolioPreview() {
           <Briefcase className="size-4 text-muted-foreground" />
           <span className="text-xs font-semibold">{t(lang, "myPortfolio")}</span>
         </div>
-        <div className="mt-1.5 h-6 w-24 animate-pulse rounded bg-muted" />
-        <div className="mt-1 h-4 w-28 animate-pulse rounded bg-muted" />
+        <div className="mt-2 h-7 w-24 animate-pulse rounded bg-muted" />
+        <div className="mt-1.5 h-4 w-28 animate-pulse rounded bg-muted" />
       </div>
     )
   }
@@ -128,10 +128,10 @@ export function HomePortfolioPreview() {
         <Briefcase className="size-4 text-muted-foreground" />
         <span className="text-xs font-semibold">{t(lang, "myPortfolio")}</span>
       </div>
-      <p className="mt-1.5 font-price text-xl font-bold leading-none">
+      <p className="mt-2 font-price text-xl font-bold leading-none">
         <Price jpy={data.totalValue} />
       </p>
-      <div className="mt-auto flex items-center gap-2 pt-1 text-[11px]">
+      <div className="mt-auto flex items-center gap-2 pt-1.5 text-xs">
         {data.hasCostBasis && (
           <span className={cn(
             "font-price font-bold",
@@ -198,7 +198,7 @@ export function HomeHoneyPreview() {
     setChecking(false)
   }, [checking, data?.canCheckin])
 
-  const cardBase = "group flex flex-col rounded-xl border p-3 transition-colors"
+  const cardBase = "group flex flex-col rounded-xl border p-4 transition-colors"
   const cardStyle = cn(cardBase, "border-border/40 bg-gradient-to-br from-card to-muted/20 hover:border-border")
 
   if (authed === null || loading) {
@@ -246,17 +246,17 @@ export function HomeHoneyPreview() {
         <span className="text-sm leading-none">🍯</span>
         <span className="text-xs font-semibold">{t(lang, "honeyPoints")}</span>
       </div>
-      <p className="mt-1.5 font-price text-xl font-bold leading-none">
+      <p className="mt-2 font-price text-xl font-bold leading-none">
         {data.honeyPoints.toLocaleString()} <span className="text-xs font-semibold text-muted-foreground">Honey</span>
       </p>
-      <div className="mt-auto flex items-center gap-2 pt-1">
+      <div className="mt-auto flex flex-wrap items-center gap-2 pt-1.5">
         <StreakTierIndicator streak={streak} lang={lang} variant="compact" />
         <div className="ml-auto shrink-0">
           {data.canCheckin ? (
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); doCheckin() }}
               disabled={checking}
-              className="relative rounded-full bg-primary px-2.5 py-1 text-[10px] font-bold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+              className="relative rounded-full bg-primary px-2.5 py-1.5 text-[11px] font-bold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
             >
               <span className="absolute -right-0.5 -top-0.5 flex size-2">
                 <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75" />
@@ -265,7 +265,7 @@ export function HomeHoneyPreview() {
               {checking ? "..." : `${t(lang, "dailyCheckin")} +${checkinReward} 🍯`}
             </button>
           ) : (
-            <span className="text-[10px] font-medium text-price-up">
+            <span className="text-xs font-medium text-price-up">
               ✓ {t(lang, "checkinDone")}
             </span>
           )}
@@ -281,7 +281,7 @@ export function HomeHoneyPreview() {
 
 function HomeMarketValueCard({ totalValue, totalCards }: { totalValue: number; totalCards: number }) {
   const lang = useUIStore((s) => s.language)
-  const cardBase = "group flex flex-col rounded-xl border p-3 transition-colors"
+  const cardBase = "group flex flex-col rounded-xl border p-4 transition-colors"
   const cardStyle = cn(cardBase, "border-border/40 bg-gradient-to-br from-card to-muted/20 hover:border-border")
   const label = lang === "TH" ? "มูลค่ารวมตลาด" : lang === "JP" ? "市場総額" : "Market Value"
   const cardLabel = lang === "TH" ? "การ์ด" : lang === "JP" ? "カード" : "cards"
@@ -292,10 +292,10 @@ function HomeMarketValueCard({ totalValue, totalCards }: { totalValue: number; t
         <BarChart3 className="size-4 text-muted-foreground" />
         <span className="text-xs font-semibold">{label}</span>
       </div>
-      <p className="mt-1.5 font-price text-xl font-bold leading-none">
+      <p className="mt-2 font-price text-xl font-bold leading-none">
         <Price jpy={totalValue} />
       </p>
-      <p className="mt-auto pt-1 text-[11px] text-muted-foreground">
+      <p className="mt-auto pt-1.5 text-xs text-muted-foreground">
         {totalCards.toLocaleString()} {cardLabel}
       </p>
     </Link>
@@ -322,7 +322,7 @@ function HomeAdCard() {
         sizes="(min-width: 1024px) 25vw, 50vw"
         className="object-cover"
       />
-      <span className="absolute right-1.5 top-1.5 z-10 rounded bg-black/50 px-1.5 py-0.5 text-[9px] font-medium text-white/70">
+      <span className="absolute right-1.5 top-1.5 z-10 rounded bg-black/50 px-1.5 py-0.5 text-xs font-medium text-white/70">
         {label}
       </span>
     </Link>
@@ -335,7 +335,7 @@ function HomeAdCard() {
 
 export function HomePreviewRow({ totalValue, totalCards }: { totalValue: number; totalCards: number }) {
   return (
-    <div className="hidden auto-rows-fr gap-2.5 lg:grid lg:grid-cols-4">
+    <div className="hidden auto-rows-fr gap-3 lg:grid lg:grid-cols-4">
       <HomePortfolioPreview />
       <HomeHoneyPreview />
       <HomeMarketValueCard totalValue={totalValue} totalCards={totalCards} />
@@ -381,7 +381,7 @@ export function HomeFeaturedCard({
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
           {label}
         </p>
         <p className="mt-1.5 truncate text-base font-semibold">{name}</p>
@@ -469,12 +469,12 @@ export function HomeMiniTable({
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13px] font-medium leading-tight">
+                  <p className="truncate text-sm font-medium leading-tight">
                     {name}
                   </p>
                 </div>
                 <span
-                  className={`shrink-0 font-price text-[13px] font-medium ${
+                  className={`shrink-0 font-price text-sm font-medium ${
                     isUp ? "text-price-up" : type === "losers" ? "text-price-down" : "text-muted-foreground"
                   }`}
                 >

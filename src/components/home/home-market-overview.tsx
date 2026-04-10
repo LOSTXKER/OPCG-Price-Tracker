@@ -166,7 +166,7 @@ function HeroSearchBar() {
             type="text"
             placeholder={t(lang, "searchLong")}
             className={cn(
-              "h-11 w-full border border-r-0 border-border/60 bg-card pl-12 pr-11 text-sm shadow-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-2 focus:ring-primary/20",
+              "h-12 w-full border border-r-0 border-border/60 bg-card pl-12 pr-11 text-sm shadow-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-2 focus:ring-primary/20",
               hasDropdown ? "rounded-tl-xl" : "rounded-l-xl"
             )}
             value={query}
@@ -188,7 +188,7 @@ function HeroSearchBar() {
         <button
           type="submit"
           className={cn(
-            "h-11 shrink-0 bg-primary px-6 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90",
+            "h-12 shrink-0 bg-primary px-6 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90",
             hasDropdown ? "rounded-tr-xl" : "rounded-r-xl"
           )}
         >
@@ -263,7 +263,7 @@ function HeroSearchBar() {
             {/* Recent searches */}
             {results.length === 0 && !loading && filteredRecent.length > 0 && (
               <div className="p-2">
-                <p className="px-2 py-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground/60">
+                <p className="px-2 py-1 text-xs font-medium uppercase tracking-wider text-muted-foreground/60">
                   {t(lang, "recentSearches")}
                 </p>
                 {filteredRecent.map((item, i) => (
@@ -373,14 +373,14 @@ export function HomeMarketOverview({
       {/* Main table panel */}
     <div className="panel overflow-hidden">
       {/* Row 1: Tabs + Filter + View toggle */}
-      <div className="flex items-center gap-2 border-b border-border/60 px-4 py-2">
+      <div className="flex items-center gap-2 border-b border-border/60 px-4 py-2.5">
         <div className="flex items-center rounded-lg bg-muted/50 p-0.5">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => m.handleTabChange(tab.id)}
               className={cn(
-                "relative shrink-0 rounded-md px-3 py-1.5 text-xs font-semibold transition-all",
+                "relative shrink-0 rounded-md px-3.5 py-2 text-xs font-semibold transition-all",
                 m.activeTab === tab.id
                   ? "bg-background text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
@@ -474,7 +474,7 @@ export function HomeMarketOverview({
               onChange={(e) =>
                 m.handleFilterChange("set", e.target.value ? [e.target.value] : [])
               }
-              className="h-9 min-w-0 flex-1 truncate rounded-lg border border-border/50 bg-card px-3 text-xs font-semibold text-foreground transition-colors hover:border-border focus:border-primary/50 focus:outline-none sm:flex-none sm:min-w-[180px] sm:text-sm"
+              className="h-10 min-w-0 flex-1 truncate rounded-lg border border-border/50 bg-card px-3 text-xs font-semibold text-foreground transition-colors hover:border-border focus:border-primary/50 focus:outline-none sm:flex-none sm:min-w-[180px] sm:text-sm"
             >
               <option value="">{t(lang, "allSets")}</option>
               {setOptions.map((opt) => (
@@ -490,7 +490,7 @@ export function HomeMarketOverview({
             <input
               type="text"
               placeholder={t(lang, "searchLong")}
-              className="h-9 w-full rounded-lg border border-border/50 bg-card pl-9 pr-8 text-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/50"
+              className="h-10 w-full rounded-lg border border-border/50 bg-card pl-9 pr-8 text-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/50"
               value={m.search}
               onChange={(e) => {
                 m.setSearch(e.target.value)
@@ -523,14 +523,14 @@ export function HomeMarketOverview({
           </button>
 
           <div className="ml-auto flex items-center gap-1">
-            <span className="mr-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            <span className="mr-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               {t(lang, "price")}
             </span>
             <button
               aria-pressed={m.priceMode === "raw"}
               onClick={() => { m.setPriceMode("raw"); m.setPage(1) }}
               className={cn(
-                "rounded-md border px-3 py-1 text-xs font-semibold transition-all",
+                "rounded-md border px-3 py-1.5 text-xs font-semibold transition-all",
                 m.priceMode === "raw"
                   ? "border-primary bg-primary text-primary-foreground shadow-sm"
                   : "border-border bg-card text-muted-foreground hover:bg-muted/60 hover:text-foreground"
@@ -542,7 +542,7 @@ export function HomeMarketOverview({
               aria-pressed={m.priceMode === "psa10"}
               onClick={() => { m.setPriceMode("psa10"); m.setPage(1) }}
               className={cn(
-                "flex items-center gap-1 rounded-md border px-3 py-1 text-xs font-semibold transition-all",
+                "flex items-center gap-1 rounded-md border px-3 py-1.5 text-xs font-semibold transition-all",
                 m.priceMode === "psa10"
                   ? "border-amber-600 bg-amber-500/15 text-amber-600 dark:text-amber-400 shadow-sm"
                   : "border-border bg-card text-muted-foreground hover:bg-muted/60 hover:text-foreground"
@@ -561,7 +561,7 @@ export function HomeMarketOverview({
               <input
                 type="text"
                 placeholder={t(lang, "searchLong")}
-                className="h-9 w-full rounded-lg border border-border/50 bg-card pl-9 pr-8 text-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/50"
+                className="h-10 w-full rounded-lg border border-border/50 bg-card pl-9 pr-8 text-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/50"
                 value={m.search}
                 autoFocus
                 onChange={(e) => {
@@ -598,7 +598,7 @@ export function HomeMarketOverview({
               <input
                 type="number"
                 placeholder={t(lang, "min")}
-                className="h-8 w-20 rounded-lg border border-border bg-card px-2 text-sm tabular-nums outline-none placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
+                className="h-9 w-20 rounded-lg border border-border bg-card px-2 text-sm tabular-nums outline-none placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
                 value={m.minPrice}
                 onChange={(e) => { m.setMinPrice(e.target.value); m.setPage(1) }}
                 min={0}
@@ -607,7 +607,7 @@ export function HomeMarketOverview({
               <input
                 type="number"
                 placeholder={t(lang, "max")}
-                className="h-8 w-20 rounded-lg border border-border bg-card px-2 text-sm tabular-nums outline-none placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
+                className="h-9 w-20 rounded-lg border border-border bg-card px-2 text-sm tabular-nums outline-none placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
                 value={m.maxPrice}
                 onChange={(e) => { m.setMaxPrice(e.target.value); m.setPage(1) }}
                 min={0}

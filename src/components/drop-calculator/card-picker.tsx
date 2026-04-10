@@ -118,11 +118,11 @@ export function CardPicker({
                   )}
                 </div>
                 <div className="px-1.5 py-1">
-                  <p className="truncate text-[11px] font-medium leading-tight">{name}</p>
+                  <p className="truncate text-xs font-medium leading-tight">{name}</p>
                   <div className="mt-0.5 flex items-center justify-between">
                     <RarityBadge rarity={card.rarity} size="sm" />
                     {card.latestPriceJpy != null && card.latestPriceJpy > 0 && (
-                      <span className="font-price text-[11px] tabular-nums text-muted-foreground"><Price jpy={card.latestPriceJpy} /></span>
+                      <span className="font-price text-xs tabular-nums text-muted-foreground"><Price jpy={card.latestPriceJpy} /></span>
                     )}
                   </div>
                 </div>

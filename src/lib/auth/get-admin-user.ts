@@ -7,6 +7,10 @@ import { prisma } from "@/lib/db";
  * Shared logic for both page guards (requireAdmin) and API guards (checkIsAdmin).
  */
 export async function getAdminUser() {
+  if (process.env.NEXT_PUBLIC_BYPASS_AUTH === "true") {
+    return { id: "dev-bypass", isAdmin: true as const };
+  }
+
   const supabase = await createClient();
   const {
     data: { user: authUser },

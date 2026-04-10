@@ -236,7 +236,7 @@ export function SectionAddresses() {
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold">{addr.label || addr.fullName}</span>
                     {addr.isDefault && (
-                      <Badge variant="secondary" className="text-[9px] text-emerald-600 dark:text-emerald-400">
+                      <Badge variant="secondary" className="text-xs text-emerald-600 dark:text-emerald-400">
                         {t(lang, "defaultAddress")}
                       </Badge>
                     )}

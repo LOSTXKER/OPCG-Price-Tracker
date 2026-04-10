@@ -9,9 +9,12 @@ import { createClient } from "@/lib/supabase/client";
  * Subscribes to auth state changes so login/logout in the same tab updates.
  */
 export function useAuthState(): { authed: boolean | null } {
-  const [authed, setAuthed] = useState<boolean | null>(null);
+  const bypass = process.env.NEXT_PUBLIC_BYPASS_AUTH === "true";
+  const [authed, setAuthed] = useState<boolean | null>(bypass ? true : null);
 
   useEffect(() => {
+    if (bypass) return;
+
     const supabase = createClient();
 
     supabase.auth.getUser().then(({ data }) => setAuthed(!!data.user));
@@ -23,7 +26,7 @@ export function useAuthState(): { authed: boolean | null } {
     );
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [bypass]);
 
   return { authed };
 }

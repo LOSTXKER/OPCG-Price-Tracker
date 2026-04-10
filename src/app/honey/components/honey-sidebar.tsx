@@ -174,7 +174,7 @@ function StreakInfoPopover({ lang }: { lang: Language }) {
               {STREAK_TIERS.map((tier, i) => (
                 <div key={i} className="flex items-center gap-2 rounded-md px-2 py-1 text-xs">
                   <span className={cn(
-                    "flex size-5 shrink-0 items-center justify-center rounded-full text-[9px] font-black",
+                    "flex size-5 shrink-0 items-center justify-center rounded-full text-xs font-black",
                     i === 0 ? "bg-muted text-muted-foreground"
                       : i === 1 ? "bg-primary/10 text-primary"
                         : "bg-amber-500/15 text-amber-600 dark:text-amber-400",
@@ -190,7 +190,7 @@ function StreakInfoPopover({ lang }: { lang: Language }) {
                 </div>
               ))}
             </div>
-            <p className="mt-2 border-t pt-2 text-[10px] text-muted-foreground">
+            <p className="mt-2 border-t pt-2 text-xs text-muted-foreground">
               {t(lang, "streakInfoDesc")}
             </p>
             <Popover.Arrow className={POPOVER_ARROW_CLASS} />
@@ -208,6 +208,7 @@ function StreakInfoPopover({ lang }: { lang: Language }) {
 function StatCard({
   icon,
   iconClassName,
+  tintClassName,
   label,
   value,
   subValue,
@@ -216,6 +217,7 @@ function StatCard({
 }: {
   icon: React.ReactNode;
   iconClassName: string;
+  tintClassName?: string;
   label: string;
   value: React.ReactNode;
   subValue?: React.ReactNode;
@@ -223,20 +225,20 @@ function StatCard({
   popover?: React.ReactNode;
 }) {
   return (
-    <div className="panel relative p-3">
+    <div className={cn("relative overflow-hidden rounded-xl border p-4", tintClassName ?? "panel")}>
       {popover && (
-        <div className="absolute right-2 top-2">{popover}</div>
+        <div className="absolute right-2.5 top-2.5">{popover}</div>
       )}
       <Tooltip>
         <TooltipTrigger className="flex w-full items-center gap-3 text-left">
-          <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl", iconClassName)}>
+          <div className={cn("flex size-11 shrink-0 items-center justify-center rounded-xl", iconClassName)}>
             {icon}
           </div>
           <div className="min-w-0">
-            <p className="text-[11px] font-medium text-muted-foreground">{label}</p>
+            <p className="text-xs font-medium text-muted-foreground">{label}</p>
             <p className="text-lg font-bold tabular-nums leading-tight">{value}</p>
             {subValue && (
-              <p className="text-[10px] tabular-nums text-muted-foreground">{subValue}</p>
+              <p className="mt-0.5 text-[11px] tabular-nums text-muted-foreground">{subValue}</p>
             )}
           </div>
         </TooltipTrigger>
@@ -267,7 +269,7 @@ function CheckinButton({ lang, streak, canCheckin, checkinLoading, onCheckin }: 
         onClick={onCheckin}
         disabled={checkinLoading}
         size="sm"
-        className="relative h-8 shrink-0 gap-1 bg-primary px-3 text-[11px] font-bold text-primary-foreground shadow-sm hover:bg-primary/90"
+        className="relative shrink-0 gap-1.5 bg-primary px-4 text-xs font-bold text-primary-foreground shadow-sm hover:bg-primary/90"
       >
         {showPing && (
           <span className="absolute -right-1 -top-1 flex size-2.5">
@@ -277,14 +279,14 @@ function CheckinButton({ lang, streak, canCheckin, checkinLoading, onCheckin }: 
         )}
         <Calendar className="size-3.5" />
         {t(lang, "dailyCheckin")}
-        <span className="rounded bg-white/20 px-1 py-px text-[9px] font-bold">
+        <span className="rounded bg-white/20 px-1 py-px text-xs font-bold">
           +{getStreakReward(streak)} 🍯
         </span>
       </Button>
     );
   }
   return (
-    <div className="flex shrink-0 items-center gap-1 rounded-lg bg-price-up/10 px-2.5 py-1.5 text-[11px] font-medium text-price-up">
+    <div className="flex shrink-0 items-center gap-1.5 rounded-lg bg-price-up/10 px-3 py-2 text-xs font-medium text-price-up">
       <CheckCircle2 className="size-3.5" />
       {t(lang, "checkinDone")}
     </div>
@@ -320,7 +322,7 @@ export function HoneyStatusBar(props: StatusProps) {
 
           <div className="flex shrink-0 items-center gap-2">
             {activeEvent && (
-              <p className="hidden items-center gap-1 text-[10px] sm:flex">
+              <p className="hidden items-center gap-1 text-xs sm:flex">
                 <Sparkles className="size-3 text-primary" />
                 <span className="font-bold text-primary">
                   {activeEvent.honeyMultiplier}x{" "}
@@ -342,7 +344,8 @@ export function HoneyStatusBar(props: StatusProps) {
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatCard
             icon={<span className="text-xl leading-none">🍯</span>}
-            iconClassName="bg-amber-500/10"
+            iconClassName="bg-amber-500/15"
+            tintClassName="border-amber-500/20 bg-amber-500/[0.03] dark:bg-amber-500/[0.04]"
             label={t(lang, "honeyLabel")}
             value={points.toLocaleString()}
             subValue={`${t(lang, "honeyLifetimeEarned")} ${lifetimeEarned.toLocaleString()}`}
@@ -352,7 +355,8 @@ export function HoneyStatusBar(props: StatusProps) {
 
           <StatCard
             icon={<Ticket className="size-5" />}
-            iconClassName="bg-primary/10 text-primary"
+            iconClassName="bg-blue-500/15 text-blue-600 dark:text-blue-400"
+            tintClassName="border-blue-500/20 bg-blue-500/[0.03] dark:bg-blue-500/[0.04]"
             label={t(lang, "ticketLabel")}
             value={ticketBalance.toLocaleString()}
             subValue={`${t(lang, "ticketUsedThisMonth")} ${ticketsUsedThisMonth}`}
@@ -366,9 +370,10 @@ export function HoneyStatusBar(props: StatusProps) {
               tierIdx >= 2
                 ? "bg-amber-500/15 text-amber-600 dark:text-amber-400"
                 : tierIdx >= 1
-                  ? "bg-orange-500/10 text-orange-500"
+                  ? "bg-orange-500/15 text-orange-500"
                   : "bg-muted text-muted-foreground",
             )}
+            tintClassName="border-orange-500/20 bg-orange-500/[0.03] dark:bg-orange-500/[0.04]"
             label={t(lang, "streakLabel")}
             value={streakDayText(lang, streak)}
             subValue={`+${streakReward} 🍯${perDayUnit(lang)}`}
@@ -378,7 +383,8 @@ export function HoneyStatusBar(props: StatusProps) {
 
           <StatCard
             icon={<RankIcon className="size-5" />}
-            iconClassName="bg-primary/10 text-primary"
+            iconClassName="bg-purple-500/15 text-purple-600 dark:text-purple-400"
+            tintClassName="border-purple-500/20 bg-purple-500/[0.03] dark:bg-purple-500/[0.04]"
             label={t(lang, "rankLabel")}
             value={rankLabels[currentLevel]}
             subValue={

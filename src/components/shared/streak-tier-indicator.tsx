@@ -71,7 +71,7 @@ function CompactStreak({
     <div className={cn("flex items-center gap-1.5", className)}>
       <Flame className={cn("size-3.5 shrink-0", tierIdx >= 1 ? "text-orange-500" : "text-muted-foreground")} />
       <span className="text-[11px] font-bold tabular-nums">{streakText}</span>
-      <span className="text-[9px] font-semibold text-muted-foreground">{rewardText}</span>
+      <span className="text-[11px] font-semibold text-muted-foreground">{rewardText}</span>
     </div>
   )
 }
@@ -105,7 +105,7 @@ function ExpandedStreak({
         {lang === "TH" ? "วัน" : lang === "JP" ? "日" : streak === 1 ? "day" : "days"}
       </span>
       <span className={cn(
-        "ml-auto rounded px-1.5 py-0.5 text-[10px] font-bold tabular-nums whitespace-nowrap",
+        "ml-auto rounded px-1.5 py-0.5 text-xs font-bold tabular-nums whitespace-nowrap",
         tierIdx >= 2 ? "bg-amber-500/15 text-amber-600 dark:text-amber-400"
           : tierIdx >= 1 ? "bg-primary/10 text-primary"
           : "bg-muted text-muted-foreground",
@@ -147,7 +147,7 @@ function StreakInfoPopover({ lang }: { lang: Language }) {
               {STREAK_TIERS.map((tier, i) => (
                 <div key={i} className="flex items-center gap-2 rounded-md px-2 py-1 text-xs">
                   <span className={cn(
-                    "flex size-5 shrink-0 items-center justify-center rounded-full text-[9px] font-black",
+                    "flex size-5 shrink-0 items-center justify-center rounded-full text-xs font-black",
                     i === 0 ? "bg-muted text-muted-foreground" : i === 1 ? "bg-primary/10 text-primary" : "bg-amber-500/15 text-amber-600 dark:text-amber-400",
                   )}>
                     {tier.mult}x
@@ -163,7 +163,7 @@ function StreakInfoPopover({ lang }: { lang: Language }) {
                 </div>
               ))}
             </div>
-            <p className="mt-2 border-t pt-2 text-[10px] text-muted-foreground">{desc}</p>
+            <p className="mt-2 border-t pt-2 text-xs text-muted-foreground">{desc}</p>
             <Popover.Arrow className="size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px] border bg-background data-[side=bottom]:top-1 data-[side=top]:-bottom-2.5" />
           </Popover.Popup>
         </Popover.Positioner>

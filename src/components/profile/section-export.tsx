@@ -66,7 +66,7 @@ export function SectionExport() {
                 </div>
               </div>
               <div className="mt-4 flex items-center justify-between">
-                <span className="rounded-md bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                <span className="rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
                   CSV
                 </span>
                 <a

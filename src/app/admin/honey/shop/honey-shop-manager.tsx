@@ -336,7 +336,7 @@ export function HoneyShopManager({ initialItems }: { initialItems: ShopItem[] })
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium ${TYPE_COLORS[item.type] ?? "bg-muted"}`}>
+                    <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${TYPE_COLORS[item.type] ?? "bg-muted"}`}>
                       {TYPE_LABELS[item.type] ?? item.type}
                     </span>
                   </td>

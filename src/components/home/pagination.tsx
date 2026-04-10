@@ -33,7 +33,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(Math.max(1, page - 1))}
           disabled={page <= 1 || isPending}
-          className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+          className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
         >
           <ChevronLeft className="size-4" />
         </button>
@@ -41,7 +41,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(Math.min(totalPages, page + 1))}
           disabled={page >= totalPages || isPending}
-          className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+          className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
         >
           <ChevronRight className="size-4" />
         </button>
@@ -67,7 +67,7 @@ function PageNumbers({
         p === "..." ? (
           <span
             key={`ellipsis-${i}`}
-            className="flex size-8 items-center justify-center text-xs text-muted-foreground"
+            className="flex size-9 items-center justify-center text-xs text-muted-foreground"
           >
             ...
           </span>
@@ -76,7 +76,7 @@ function PageNumbers({
             key={p}
             onClick={() => onChange(p as number)}
             className={cn(
-              "flex size-8 items-center justify-center rounded-md text-xs font-medium transition-colors",
+              "flex size-9 items-center justify-center rounded-md text-xs font-medium transition-colors",
               current === p
                 ? "bg-muted text-foreground font-semibold"
                 : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"

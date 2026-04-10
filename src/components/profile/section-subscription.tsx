@@ -118,10 +118,10 @@ function UsageRow({ icon: Icon, label, desc, current, max, color, lang }: {
         <div className="flex items-center justify-between gap-2">
           <div className="min-w-0">
             <span className="text-sm">{label}</span>
-            {desc && <p className="text-[10px] text-muted-foreground/60 leading-tight">{desc}</p>}
+            {desc && <p className="text-xs text-muted-foreground/60 leading-tight">{desc}</p>}
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
-            {isFull && <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">{t(lang, "usageFull")}</span>}
+            {isFull && <span className="rounded bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">{t(lang, "usageFull")}</span>}
             <span className={cn("text-xs font-medium tabular-nums", isFull ? "text-muted-foreground" : isHigh ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground")}>
               {current}/{isUnlimited ? "∞" : max}
             </span>
@@ -269,7 +269,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
                 {plan.icon && <plan.icon className={cn("size-5", plan.iconClass)} />}
                 <div>
                   <h3 className="text-base font-bold leading-tight">{tierName(plan.key, lang)}</h3>
-                  <p className="text-[11px] text-muted-foreground">{t(lang, plan.subtitleKey)}</p>
+                  <p className="text-xs text-muted-foreground">{t(lang, plan.subtitleKey)}</p>
                 </div>
               </div>
 
@@ -290,7 +290,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
                   if (!row) return null;
                   const val = row.values[plan.key];
                   return (
-                    <div key={featureKey} className="flex items-center justify-between text-[12px]">
+                    <div key={featureKey} className="flex items-center justify-between text-xs">
                       <span className="text-muted-foreground">{t(lang, row.labelKey)}</span>
                       <RenderHighlightValue val={val} lang={lang} />
                     </div>
@@ -409,7 +409,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
                       <div className="flex items-center justify-center gap-1.5">
                         {plan.icon && <plan.icon className={cn("size-4", plan.iconClass)} />}
                         <span className={isCurrent ? "text-foreground" : ""}>{tierName(plan.key, lang)}</span>
-                        {isCurrent && <span className="text-[10px] text-primary">★</span>}
+                        {isCurrent && <span className="text-xs text-primary">★</span>}
                       </div>
                     </th>
                   );
@@ -420,7 +420,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
               {FEATURE_SECTIONS.map((section) => (
                 <Fragment key={section.titleKey}>
                   <tr>
-                    <td colSpan={4} className="pb-2 pt-5 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+                    <td colSpan={4} className="pb-2 pt-5 text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
                       {t(lang, section.titleKey)}
                     </td>
                   </tr>
@@ -429,7 +429,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
                       <td className="py-2.5 pr-4 text-muted-foreground">{t(lang, row.labelKey)}</td>
                       {PLANS.map((plan) => (
                         <td key={plan.key} className={cn(
-                          "py-2.5 text-center text-[13px]",
+                          "py-2.5 text-center text-sm",
                           isCurrentPlan(plan.key, subscription.tier) && "text-foreground",
                         )}>
                           <span className="inline-flex items-center justify-center">

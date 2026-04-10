@@ -279,7 +279,7 @@ export default function DropCalculatorClient() {
                 onSearchChange={setCardSearch}
                 onRarityChange={setRarityFilter}
               />
-              <p className="mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground/60">
+              <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground/60">
                 <AlertTriangle className="size-3 shrink-0" />
                 {t(lang, "communityEstimate")}
               </p>
@@ -329,7 +329,7 @@ export default function DropCalculatorClient() {
               />
             )}
             {detail && !loading && (
-              <p className="mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground/60">
+              <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground/60">
                 <AlertTriangle className="size-3 shrink-0" />
                 {t(lang, "communityEstimate")}
               </p>

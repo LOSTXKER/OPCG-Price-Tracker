@@ -80,7 +80,7 @@ export function NotificationBell() {
       >
         <Bell className="size-4" />
         {unreadCount > 0 && (
-          <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
+          <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -117,7 +117,7 @@ export function NotificationBell() {
                   <div className="flex-1 min-w-0">
                     <p className={cn("text-sm", !item.read && "font-medium")}>{item.title}</p>
                     <p className="mt-0.5 text-xs text-muted-foreground line-clamp-2">{item.message}</p>
-                    <p className="mt-1 text-[10px] text-muted-foreground/60">
+                    <p className="mt-1 text-xs text-muted-foreground/60">
                       {new Date(item.createdAt).toLocaleDateString(undefined, {
                         month: "short",
                         day: "numeric",

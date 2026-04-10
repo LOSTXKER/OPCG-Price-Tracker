@@ -77,7 +77,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
 
   if (!data) {
     return (
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 px-4 py-16 text-center">
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-4 py-16 text-center md:px-6 lg:px-8">
         <p className="text-sm text-muted-foreground">{error ?? "User not found"}</p>
         <Link
           href="/login"
@@ -93,7 +93,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
   const tierCfg = getTierConfig(subscription.tier);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-2 md:py-6">
+    <div className="mx-auto max-w-7xl px-4 py-2 md:px-6 md:py-6 lg:px-8">
       {/* Mobile: back button on sub-routes */}
       {!isIndex && (
         <div className="mb-4 md:hidden">
@@ -120,7 +120,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
               </Avatar>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold">{user.displayName ?? "User"}</p>
-                <Badge className={cn("mt-0.5 text-[9px] font-semibold", tierCfg.color)}>
+                <Badge className={cn("mt-0.5 text-xs font-semibold", tierCfg.color)}>
                   {tierCfg.label}
                 </Badge>
               </div>
@@ -146,7 +146,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
                   return (
                     <div key={group}>
                       {group !== "general" && <div className="my-2 h-px bg-border/40" />}
-                      <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                      <p className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
                         {t(lang, groupLabels[group])}
                       </p>
                       {items.map(({ id, href, icon: Icon, labelKey }) => {
@@ -156,7 +156,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
                             key={id}
                             href={href}
                             className={cn(
-                              "group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] font-medium transition-all",
+                              "group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all",
                               active
                                 ? "bg-secondary text-secondary-foreground"
                                 : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground",
@@ -192,7 +192,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
 
 function SettingsLoadingSkeleton() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-6">
+    <div className="mx-auto max-w-7xl px-4 py-6 md:px-6 lg:px-8">
       {/* Mobile skeleton */}
       <div className="space-y-5 md:hidden">
         <div className="h-7 w-32 animate-pulse rounded bg-secondary" />

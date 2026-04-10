@@ -44,7 +44,7 @@ export default function RootError({
         </pre>
       )}
       {error.digest && (
-        <p className="font-mono text-[10px] text-muted-foreground/50">
+        <p className="font-mono text-xs text-muted-foreground/50">
           Error ID: {error.digest}
         </p>
       )}

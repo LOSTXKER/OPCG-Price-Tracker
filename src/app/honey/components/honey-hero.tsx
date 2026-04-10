@@ -38,7 +38,7 @@ export function HoneyHero({
             <span className="text-base leading-none">🍯</span>
           </div>
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Honey</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Honey</p>
             <p className="text-2xl font-extrabold tabular-nums leading-tight text-primary">
               🍯 {points.toLocaleString()}
             </p>
@@ -68,7 +68,7 @@ export function HoneyHero({
         {activeEvent && (
           <div className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1">
             <Sparkles className="size-3 text-primary" />
-            <span className="text-[10px] font-bold text-primary">{activeEvent.honeyMultiplier}x</span>
+            <span className="text-xs font-bold text-primary">{activeEvent.honeyMultiplier}x</span>
           </div>
         )}
 

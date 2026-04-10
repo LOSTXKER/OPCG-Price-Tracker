@@ -67,7 +67,7 @@ export const MarketRow = memo(function MarketRow({
             <p className="truncate text-sm font-medium leading-tight hover:text-primary hover:underline">
               {name}
             </p>
-            <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-0.5 font-mono text-xs text-muted-foreground">
               {card.baseCode ?? card.cardCode}
               {card.isParallel && (
                 <span className="ml-1 text-primary">P</span>

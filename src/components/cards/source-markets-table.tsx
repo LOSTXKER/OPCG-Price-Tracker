@@ -47,13 +47,13 @@ export function SourceMarketsTable({ rows }: { rows: SourcePriceRow[] }) {
 
   return (
     <div>
-      <p className="mb-3 text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+      <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground/70">
         {t(lang, "sourceMarkets")}
       </p>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-border/30 text-[10px] uppercase tracking-wider text-muted-foreground/60">
+            <tr className="border-b border-border/30 text-xs uppercase tracking-wider text-muted-foreground/60">
               <th className="pb-2 pr-3 font-medium">#</th>
               <th className="pb-2 pr-3 font-medium">{t(lang, "sourceRef")}</th>
               <th className="pb-2 pr-3 text-right font-medium">{t(lang, "listing")}</th>
@@ -110,7 +110,7 @@ export function SourceMarketsTable({ rows }: { rows: SourcePriceRow[] }) {
                       {soldStr}
                     </span>
                   </td>
-                  <td className="py-2.5 text-right text-[10px] text-muted-foreground/50">
+                  <td className="py-2.5 text-right text-xs text-muted-foreground/50">
                     {relativeTime(row.updatedAt, lang)}
                   </td>
                 </tr>

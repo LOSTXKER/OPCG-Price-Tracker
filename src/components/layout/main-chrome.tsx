@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 function useIsChromeless() {
   const pathname = usePathname();
-  return pathname.startsWith("/admin") || pathname === "/admin-login" || pathname === "/login" || pathname === "/register";
+  return pathname.startsWith("/admin") || pathname === "/admin-login" || pathname === "/login" || pathname === "/register" || pathname.startsWith("/messages") || pathname.startsWith("/seller");
 }
 
 function useIsFullWidthPage() {
@@ -27,7 +27,7 @@ export function PageContent({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 px-4 pt-8 pb-32 md:px-6 md:pt-10 md:pb-24">
+    <main className="mx-auto w-full max-w-7xl flex-1 px-4 pt-8 pb-32 md:px-6 md:pt-10 md:pb-24 lg:px-8">
       {children}
     </main>
   );

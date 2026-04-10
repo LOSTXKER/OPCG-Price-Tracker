@@ -24,12 +24,34 @@ export async function GET(request: NextRequest) {
     const maxPriceJpy = searchParams.get("maxPriceJpy");
 
     const gameSlug = searchParams.get("game") || "";
+    const rarityParam = searchParams.get("rarity");
+    const searchQuery = searchParams.get("q");
     const where: Prisma.ListingWhereInput = {
       status: ListingStatus.ACTIVE,
     };
 
+    const cardFilter: Prisma.CardWhereInput = {};
     if (gameSlug) {
-      where.card = { set: { game: { slug: gameSlug } } };
+      cardFilter.set = { game: { slug: gameSlug } };
+    }
+    if (rarityParam) {
+      const rarities = rarityParam.split(",").map((r) => r.trim()).filter(Boolean);
+      if (rarities.length === 1) {
+        cardFilter.rarity = rarities[0];
+      } else if (rarities.length > 1) {
+        cardFilter.rarity = { in: rarities };
+      }
+    }
+    if (searchQuery) {
+      const q = searchQuery.trim();
+      cardFilter.OR = [
+        { cardCode: { contains: q, mode: "insensitive" } },
+        { nameJp: { contains: q, mode: "insensitive" } },
+        { nameEn: { contains: q, mode: "insensitive" } },
+      ];
+    }
+    if (Object.keys(cardFilter).length > 0) {
+      where.card = cardFilter;
     }
 
     const priceJpyFilter: Prisma.IntFilter = {};

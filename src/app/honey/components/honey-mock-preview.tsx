@@ -34,8 +34,8 @@ function MockStatusBar({ lang }: { lang: Language }) {
         <div className="flex items-center gap-2">
           <Flame className="size-4 text-orange-500" />
           <span className="text-sm font-extrabold tabular-nums">7</span>
-          <span className="text-[11px] text-muted-foreground">{lang === "TH" ? "วัน" : "days"}</span>
-          <span className="rounded px-1.5 py-0.5 text-[11px] font-black tabular-nums bg-primary/10 text-primary">2x</span>
+          <span className="text-xs text-muted-foreground">{lang === "TH" ? "วัน" : "days"}</span>
+          <span className="rounded px-1.5 py-0.5 text-xs font-black tabular-nums bg-primary/10 text-primary">2x</span>
         </div>
 
         <div className="hidden h-8 w-px bg-border sm:block" />
@@ -46,7 +46,7 @@ function MockStatusBar({ lang }: { lang: Language }) {
           <div className="h-1.5 w-12 overflow-hidden rounded-full bg-muted sm:w-16">
             <div className="h-full w-[60%] rounded-full bg-primary" />
           </div>
-          <span className="text-[10px] tabular-nums text-muted-foreground">3,000/5,000</span>
+          <span className="text-xs tabular-nums text-muted-foreground">3,000/5,000</span>
         </div>
 
         <div className="ml-auto shrink-0">
@@ -74,7 +74,7 @@ function MockMissionsGrid({ lang }: { lang: Language }) {
           <Sparkles className="size-4 text-primary" />
           <h2 className="flex-1 text-sm font-bold">{t(lang, "dailyMissions")}</h2>
           <span className="text-sm font-bold tabular-nums text-primary">0/60</span>
-          <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Clock className="size-3" />
             <span className="font-mono tabular-nums">23:59:59</span>
           </div>
@@ -89,10 +89,10 @@ function MockMissionsGrid({ lang }: { lang: Language }) {
             <div className="flex size-9 items-center justify-center rounded-lg bg-muted text-muted-foreground">
               <m.icon className="size-4.5" />
             </div>
-            <p className="line-clamp-2 text-[11px] font-semibold leading-tight">
+            <p className="line-clamp-2 text-xs font-semibold leading-tight">
               {t(lang, m.label)}
             </p>
-            <div className="mt-auto flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-semibold text-muted-foreground">
+            <div className="mt-auto flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-semibold text-muted-foreground">
               {lang === "TH" ? "ไปทำ" : "Go"} <ArrowRight className="size-3" />
             </div>
           </div>
@@ -101,9 +101,9 @@ function MockMissionsGrid({ lang }: { lang: Language }) {
           <div className="flex size-9 items-center justify-center rounded-lg bg-muted text-muted-foreground">
             <Star className="size-4.5" />
           </div>
-          <p className="text-[11px] font-semibold leading-tight">Perfect Day!</p>
+          <p className="text-xs font-semibold leading-tight">Perfect Day!</p>
           <div className="mt-auto">
-            <span className="text-[11px] font-medium tabular-nums text-muted-foreground">+20 🍯</span>
+            <span className="text-xs font-medium tabular-nums text-muted-foreground">+20 🍯</span>
           </div>
         </div>
       </div>
@@ -151,7 +151,7 @@ function MockHistory({ lang }: { lang: Language }) {
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-medium">{row.reason}</p>
-              <p className="text-[10px] text-muted-foreground">{row.date}</p>
+              <p className="text-xs text-muted-foreground">{row.date}</p>
             </div>
             <span className="shrink-0 text-xs font-bold tabular-nums text-price-up">{row.amount}</span>
           </div>

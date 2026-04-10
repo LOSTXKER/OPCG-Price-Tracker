@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { z } from "zod"
 import { ArrowLeft, Eye, EyeOff, Loader2, Mail, Play } from "lucide-react"
 
@@ -24,6 +24,12 @@ export function LoginClient() {
   const searchParams = useSearchParams()
   const redirect = searchParams.get("redirect") || "/"
   const authError = searchParams.get("error")
+
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_BYPASS_AUTH === "true") {
+      router.replace(redirect)
+    }
+  }, [router, redirect])
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")

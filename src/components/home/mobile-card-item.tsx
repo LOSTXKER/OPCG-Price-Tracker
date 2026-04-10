@@ -46,7 +46,7 @@ export const MobileCardItem = memo(function MobileCardItem({
       )}
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium leading-tight">{name}</p>
-        <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+        <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
           <span className="font-mono">{card.baseCode ?? card.cardCode}</span>
           <RarityBadge rarity={card.rarity} size="sm" />
         </div>
@@ -60,7 +60,7 @@ export const MobileCardItem = memo(function MobileCardItem({
           )}
         </p>
         {!isPsa && c24 != null && c24 !== 0 && (
-          <p className={cn("font-price text-[11px] font-medium", changeToneClass(c24))}>
+          <p className={cn("font-price text-xs font-medium", changeToneClass(c24))}>
             {formatSignedPct(c24)}
           </p>
         )}

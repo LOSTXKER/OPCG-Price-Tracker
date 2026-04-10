@@ -18,13 +18,15 @@
 
 ### เป้าหมายตามระยะเวลา
 
-| ระยะ | เป้าหมาย |
-|------|----------|
-| 0-3 เดือน | ปล่อย MVP ที่ครอบคลุมการ์ด OPCG JP ทั้งหมด มีราคากลางอัปเดตรายวัน |
-| 3-6 เดือน | มี User ลงทะเบียน 3,000+ คน เปิดระบบ Portfolio, Pro/Pro+ membership |
-| 6-9 เดือน | เปิด Marketplace ซื้อขายการ์ด + เริ่มมีรายได้จาก Marketplace Commission + Pro subscriptions |
-| 9-12 เดือน | ขยายไปรองรับ Pokemon TCG มี Active users 10,000+ ต่อเดือน + เพิ่ม Mercari JP data |
+
+| ระยะ        | เป้าหมาย                                                                                                    |
+| ----------- | ----------------------------------------------------------------------------------------------------------- |
+| 0-3 เดือน   | ปล่อย MVP ที่ครอบคลุมการ์ด OPCG JP ทั้งหมด มีราคากลางอัปเดตรายวัน                                           |
+| 3-6 เดือน   | มี User ลงทะเบียน 3,000+ คน เปิดระบบ Portfolio, Pro/Pro+ membership                                         |
+| 6-9 เดือน   | เปิด Marketplace ซื้อขายการ์ด + เริ่มมีรายได้จาก Marketplace Commission + Pro subscriptions                 |
+| 9-12 เดือน  | ขยายไปรองรับ Pokemon TCG มี Active users 10,000+ ต่อเดือน + เพิ่ม Mercari JP data                           |
 | 12-18 เดือน | กลายเป็น go-to platform ของ TCG ไทย รายได้ 120,000-200,000 บาท/เดือน + เพิ่มราคาสากล (Cardmarket/TCGPlayer) |
+
 
 ### Positioning
 
@@ -37,48 +39,57 @@
 **สไตล์:** Cute / Chibi สไตล์ญี่ปุ่น เส้นหนา สีอุ่น ใช้ได้ทั้ง Light/Dark mode
 
 **ทำไมหมี:**
+
 - "Bear market" ในภาษาการเงิน = ราคาลง -- เข้ากับ Price Tracker ที่ติดตามราคาขึ้น-ลง
 - "くま" เป็นภาษาญี่ปุ่น เข้ากับ OPCG ที่เป็นการ์ดญี่ปุ่น
 - หมีเป็นสัตว์ที่ดูน่าเชื่อถือ อบอุ่น เป็นมิตร -- ตรงกับ brand personality ที่ต้องการ
 
 #### อารมณ์ตามสภาพตลาด (แสดงที่หน้าแรก)
 
-| สภาพตลาด | อารมณ์ Kuma |
-|----------|-----------|
+
+| สภาพตลาด            | อารมณ์ Kuma                         |
+| ------------------- | ----------------------------------- |
 | ราคาขึ้นเยอะ (Bull) | ยิ้มกว้าง ตาเป็นประกาย ถือการ์ดโชว์ |
-| ราคาทรงตัว | นั่งจิบชา สบาย ๆ |
-| ราคาลงหนัก (Bear) | กอดการ์ดแน่น ตาเป็นวงกลม |
-| ชุดใหม่เพิ่งออก | ฉีกซอง booster ตื่นเต้น |
+| ราคาทรงตัว          | นั่งจิบชา สบาย ๆ                    |
+| ราคาลงหนัก (Bear)   | กอดการ์ดแน่น ตาเป็นวงกลม            |
+| ชุดใหม่เพิ่งออก     | ฉีกซอง booster ตื่นเต้น             |
+
 
 #### การใช้งาน Kuma ทั่วแพลตฟอร์ม
 
 **Loading & Empty States:**
+
 - Loading: Kuma กำลังค้นหาการ์ดในกอง
 - ไม่มีผลลัพธ์: Kuma ยักไหล่ "ไม่เจอการ์ดที่ค้นหา"
 - Portfolio ว่าง: Kuma มือเปล่า "เพิ่มการ์ดใบแรกให้ Kuma ถือหน่อย!"
 - Error 404: Kuma หลงทาง ถือแผนที่กลับหัว
 
 **Honey System (Points):**
+
 - แทนที่จะเรียก "Points" เรียกว่า **"Honey" (น้ำผึ้ง)** ให้เข้ากับ theme หมี
 - Daily Check-in: "Kuma เก็บน้ำผึ้งให้คุณแล้ว! +10 Honey"
 - เพิ่มการ์ด Portfolio: "Kuma จดราคาให้แล้ว! +10 Honey"
 - แลกรางวัล: ร้าน **"Honey Shop"**
 
 **Price Alerts:**
+
 - ราคาถึงเป้า: "Kuma แจ้งข่าวดี! [การ์ด] ลงมาถึง [ราคา] แล้ว!"
 - Weekly digest: "สรุปจาก Kuma ประจำสัปดาห์"
 
 **Achievements / Badges:**
 
-| Badge | เงื่อนไข | ภาพ Kuma |
-|-------|---------|---------|
-| Kuma Collector | สะสมการ์ดครบ 10 ใบ | หมีถือถุงใบเล็ก |
-| Kuma Hoarder | สะสมครบ 100 ใบ | หมีกอดกองการ์ดมหึมา |
-| Kuma Scout | เพิ่มการ์ดพร้อมราคาซื้อเข้า Portfolio 50 ครั้ง | หมีใส่แว่นขยาย |
-| Kuma Bestie | Login 30 วันติด | หมีกอดหัวใจ |
-| Kuma Trader | ขายของบน Marketplace 10 ครั้ง | หมีใส่แว่นตานักธุรกิจ |
+
+| Badge          | เงื่อนไข                                       | ภาพ Kuma              |
+| -------------- | ---------------------------------------------- | --------------------- |
+| Kuma Collector | สะสมการ์ดครบ 10 ใบ                             | หมีถือถุงใบเล็ก       |
+| Kuma Hoarder   | สะสมครบ 100 ใบ                                 | หมีกอดกองการ์ดมหึมา   |
+| Kuma Scout     | เพิ่มการ์ดพร้อมราคาซื้อเข้า Portfolio 50 ครั้ง | หมีใส่แว่นขยาย        |
+| Kuma Bestie    | Login 30 วันติด                                | หมีกอดหัวใจ           |
+| Kuma Trader    | ขายของบน Marketplace 10 ครั้ง                  | หมีใส่แว่นตานักธุรกิจ |
+
 
 **Seasonal Themes (เปลี่ยนตามเทศกาล):**
+
 - ปีใหม่: Kuma ใส่ชุดกิโมโน
 - สงกรานต์: Kuma ถือปืนฉีดน้ำ
 - Halloween: Kuma แต่งผี
@@ -136,56 +147,66 @@
 
 #### TCG Thailand (tcgthailand.com) -- คู่แข่งตรง Marketplace
 
-| หัวข้อ | รายละเอียด |
-|-------|-----------|
-| **โมเดล** | ตลาดซื้อ-ขาย-ประมูลการ์ดเกม (Marketplace) |
+
+| หัวข้อ           | รายละเอียด                                                                              |
+| ---------------- | --------------------------------------------------------------------------------------- |
+| **โมเดล**        | ตลาดซื้อ-ขาย-ประมูลการ์ดเกม (Marketplace)                                               |
 | **เกมที่รองรับ** | Pokemon, Yu-Gi-Oh, Magic, Vanguard, Dragon Ball, Lorcana, **OPCG (มี listing น้อยมาก)** |
-| **ค่าธรรมเนียม** | **5%** (รวมค่า payment gateway) |
-| **Escrow** | มี -- แอดมินถือเงิน จนผู้ซื้อกดยืนยันรับของ |
-| **ถอนเงิน** | Manual -- แอดมินโอนให้ภายใน 24 ชม. |
-| **ประมูล** | มีระบบประมูล |
-| **Dispute** | ผู้ซื้อกด "สินค้ามีปัญหา" → แอดมินไกล่เกลี่ย |
+| **ค่าธรรมเนียม** | **5%** (รวมค่า payment gateway)                                                         |
+| **Escrow**       | มี -- แอดมินถือเงิน จนผู้ซื้อกดยืนยันรับของ                                             |
+| **ถอนเงิน**      | Manual -- แอดมินโอนให้ภายใน 24 ชม.                                                      |
+| **ประมูล**       | มีระบบประมูล                                                                            |
+| **Dispute**      | ผู้ซื้อกด "สินค้ามีปัญหา" → แอดมินไกล่เกลี่ย                                            |
+
 
 **จุดอ่อนหลักของ TCG Thailand:**
 
-| จุดอ่อน | ผลกระทบ | โอกาสของเรา |
-|---------|---------|------------|
-| ไม่มีราคากลางอ้างอิง | ผู้ซื้อไม่รู้ว่าราคาแพงเกินไหม | **Thai Market Price** แนะนำราคาอัตโนมัติ |
-| ไม่มีกราฟราคาย้อนหลัง | ดู trend ไม่ได้ | กราฟ 7d/30d/90d/1y/All-time |
-| ไม่แยก Variant (SR/SEC/Parallel) | การ์ดเวอร์ชันต่างปนกัน ราคาต่างกัน 50 เท่า | Variant system แยกชัดทุกเวอร์ชัน |
-| ไม่มี Portfolio / Price Alert | ไม่มีเครื่องมือติดตาม | Portfolio + Watchlist + Alert ครบ |
-| ค่าส่งแยก ไม่แสดงราคารวม | ของ ฿20 ค่าส่ง ฿40 = ดูถูกแต่จ่ายแพง | แสดง "ราคารวมค่าส่ง" เรียงตาม total price |
-| รูปการ์ดมี watermark "SAMPLE" | ดูไม่สวย ไม่น่าเชื่อถือ | รูป HD จาก Bandai ไม่มี watermark |
-| ถอนเงิน manual 24 ชม. | ร้านค้าต้องรอ ไม่สะดวก | ระบบถอนเงินเร็วกว่า |
-| ค้นหาด้วย Card ID ไม่ได้ | หาการ์ดเฉพาะใบยาก | ค้นหา OP01-121, ชื่อ, filter ครบ |
-| ไม่มี "Best Deal" indicator | ไม่รู้ว่า listing ไหนคุ้มที่สุด | Badge "Best Deal" เมื่อต่ำกว่าราคากลาง 10%+ |
-| ไม่มี Auto Pricing สำหรับ Seller | ร้านค้าต้องเช็คราคาเอง | แนะนำราคาจาก Thai Market Price |
-| Design เหมือน e-commerce ทั่วไป | ไม่มี identity ไม่น่าจดจำ | Kuma branding + UI เฉพาะ card collector |
+
+| จุดอ่อน                          | ผลกระทบ                                    | โอกาสของเรา                                 |
+| -------------------------------- | ------------------------------------------ | ------------------------------------------- |
+| ไม่มีราคากลางอ้างอิง             | ผู้ซื้อไม่รู้ว่าราคาแพงเกินไหม             | **Thai Market Price** แนะนำราคาอัตโนมัติ    |
+| ไม่มีกราฟราคาย้อนหลัง            | ดู trend ไม่ได้                            | กราฟ 7d/30d/90d/1y/All-time                 |
+| ไม่แยก Variant (SR/SEC/Parallel) | การ์ดเวอร์ชันต่างปนกัน ราคาต่างกัน 50 เท่า | Variant system แยกชัดทุกเวอร์ชัน            |
+| ไม่มี Portfolio / Price Alert    | ไม่มีเครื่องมือติดตาม                      | Portfolio + Watchlist + Alert ครบ           |
+| ค่าส่งแยก ไม่แสดงราคารวม         | ของ ฿20 ค่าส่ง ฿40 = ดูถูกแต่จ่ายแพง       | แสดง "ราคารวมค่าส่ง" เรียงตาม total price   |
+| รูปการ์ดมี watermark "SAMPLE"    | ดูไม่สวย ไม่น่าเชื่อถือ                    | รูป HD จาก Bandai ไม่มี watermark           |
+| ถอนเงิน manual 24 ชม.            | ร้านค้าต้องรอ ไม่สะดวก                     | ระบบถอนเงินเร็วกว่า                         |
+| ค้นหาด้วย Card ID ไม่ได้         | หาการ์ดเฉพาะใบยาก                          | ค้นหา OP01-121, ชื่อ, filter ครบ            |
+| ไม่มี "Best Deal" indicator      | ไม่รู้ว่า listing ไหนคุ้มที่สุด            | Badge "Best Deal" เมื่อต่ำกว่าราคากลาง 10%+ |
+| ไม่มี Auto Pricing สำหรับ Seller | ร้านค้าต้องเช็คราคาเอง                     | แนะนำราคาจาก Thai Market Price              |
+| Design เหมือน e-commerce ทั่วไป  | ไม่มี identity ไม่น่าจดจำ                  | Kuma branding + UI เฉพาะ card collector     |
+
 
 #### กลุ่ม Facebook OPCG ไทย -- Volume สูงสุด
 
-| จุดแข็ง | จุดอ่อน |
-|--------|--------|
-| ฐานสมาชิกใหญ่ ซื้อขายกันตรง | ไม่มีราคากลาง ปั่นราคาง่าย |
-| ไม่มีค่าธรรมเนียม | ไม่มี escrow / ระบบป้องกัน -- โดนโกงง่าย |
-| โพสต์ง่าย รูป+ราคา | ค้นหาย้อนหลังไม่ได้ หาการ์ดเฉพาะใบยาก |
-| คุยต่อรองได้เลย | ไม่มี tracking / ไม่มี dispute resolution |
+
+| จุดแข็ง                     | จุดอ่อน                                   |
+| --------------------------- | ----------------------------------------- |
+| ฐานสมาชิกใหญ่ ซื้อขายกันตรง | ไม่มีราคากลาง ปั่นราคาง่าย                |
+| ไม่มีค่าธรรมเนียม           | ไม่มี escrow / ระบบป้องกัน -- โดนโกงง่าย  |
+| โพสต์ง่าย รูป+ราคา          | ค้นหาย้อนหลังไม่ได้ หาการ์ดเฉพาะใบยาก     |
+| คุยต่อรองได้เลย             | ไม่มี tracking / ไม่มี dispute resolution |
+
 
 #### Shopee / Lazada -- e-commerce ทั่วไป
 
-| จุดแข็ง | จุดอ่อน |
-|--------|--------|
-| คนไทยคุ้นเคย ระบบครบ | ค่า fee สูง (6-15%) |
-| Escrow + ระบบคืนเงิน | ไม่เข้าใจ TCG ไม่แยก variant |
-| ฐานผู้ใช้มหาศาล | ไม่มี price reference / ไม่มี portfolio |
+
+| จุดแข็ง              | จุดอ่อน                                 |
+| -------------------- | --------------------------------------- |
+| คนไทยคุ้นเคย ระบบครบ | ค่า fee สูง (6-15%)                     |
+| Escrow + ระบบคืนเงิน | ไม่เข้าใจ TCG ไม่แยก variant            |
+| ฐานผู้ใช้มหาศาล      | ไม่มี price reference / ไม่มี portfolio |
+
 
 #### Benchmark ต่างประเทศ
 
-| Platform | ประเทศ | Commission | จุดเด่น | ข้อจำกัดสำหรับไทย |
-|----------|--------|-----------|---------|-----------------|
-| **Magi** | ญี่ปุ่น | 8% | Escrow, Authentication, Anonymous shipping, Mystery packs | ภาษา JP เป็นหลัก ไม่รองรับไทย |
-| **TCGPlayer** | US | 10-15% | Market Price อัตโนมัติ, Buyer/Seller Protection 100%, Payment จัดการให้ทั้งหมด | ไม่รองรับ OPCG JP ไม่เน้นเอเชีย |
-| **Cardmarket** | EU | 5%+ | Private/Pro/Powerseller tiers, Trustee Service (escrow) | ภาษา EN ราคา EUR ไม่สะท้อนตลาดไทย |
+
+| Platform       | ประเทศ  | Commission | จุดเด่น                                                                        | ข้อจำกัดสำหรับไทย                 |
+| -------------- | ------- | ---------- | ------------------------------------------------------------------------------ | --------------------------------- |
+| **Magi**       | ญี่ปุ่น | 8%         | Escrow, Authentication, Anonymous shipping, Mystery packs                      | ภาษา JP เป็นหลัก ไม่รองรับไทย     |
+| **TCGPlayer**  | US      | 10-15%     | Market Price อัตโนมัติ, Buyer/Seller Protection 100%, Payment จัดการให้ทั้งหมด | ไม่รองรับ OPCG JP ไม่เน้นเอเชีย   |
+| **Cardmarket** | EU      | 5%+        | Private/Pro/Powerseller tiers, Trustee Service (escrow)                        | ภาษา EN ราคา EUR ไม่สะท้อนตลาดไทย |
+
 
 ### 3.2 จุดแข็งของเรา (Competitive Advantages)
 
@@ -229,13 +250,16 @@
 
 **แหล่งข้อมูลการ์ด (เรียงตามลำดับ priority):**
 
-| แหล่ง | ข้อมูลที่ได้ | วิธีใช้ |
-|-------|------------|--------|
+
+| แหล่ง                          | ข้อมูลที่ได้                            | วิธีใช้                      |
+| ------------------------------ | --------------------------------------- | ---------------------------- |
 | **punk-records** (GitHub JSON) | ชื่อ/stats/เอฟเฟกต์ หลายภาษา (EN/JP/TH) | Base data -- import ครั้งแรก |
-| **vegapull** (CLI tool, Rust) | ข้อมูลครบ + รูป HD จาก Bandai Official | ดึง set ใหม่ + อัปเดตรูป |
-| **OPTCG API** (optcgapi.com) | ข้อมูลการ์ด + ราคา + รูป, OP01-OP14+ | Backup / cross-check |
+| **vegapull** (CLI tool, Rust)  | ข้อมูลครบ + รูป HD จาก Bandai Official  | ดึง set ใหม่ + อัปเดตรูป     |
+| **OPTCG API** (optcgapi.com)   | ข้อมูลการ์ด + ราคา + รูป, OP01-OP14+    | Backup / cross-check         |
+
 
 **รูปภาพ:**
+
 - ดาวน์โหลดรูป HD จาก Bandai Official ผ่าน vegapull → เก็บใน Storage ตัวเอง (Supabase Storage / Cloudflare R2) → serve ผ่าน CDN
 - ห้าม Hotlink จากเว็บ Bandai หรือแหล่งอื่นโดยเด็ดขาด
 - ใส่ credit: "Card images © BANDAI" ในทุกหน้า
@@ -287,6 +311,7 @@ cards (1 record ต่อ 1 การ์ด)
 ```
 
 **Variant ID format:** `{SET}-{NUMBER}_{RARITY}_{VARIANT}`
+
 - `OP01-121_SR` → SR ปกติ
 - `OP01-121_SR_P1` → SR Parallel
 - `OP01-121_SEC` → SEC ปกติ
@@ -311,6 +336,7 @@ OP01-121_SEC        | cardmarket| "OP01-121 V.3"
 ```
 
 **รองรับ:**
+
 - การ์ดทุกชุดที่วางขายแล้ว (OP01 - ปัจจุบัน) + Starter Decks + Promo
 - แยกประเภท: Leader, Character, Event, Stage, DON!!
 - ทุก Variant: Regular, Parallel, SEC, Manga art, Special art
@@ -322,37 +348,46 @@ OP01-121_SEC        | cardmarket| "OP01-121 V.3"
 
 **MVP (เดือน 1-3) -- 2 แหล่ง:**
 
-| แหล่ง | ประเภทราคา | วิธีได้มา | สกุลเงิน |
-|-------|-----------|----------|----------|
-| **Yuyu-tei** | ราคาร้าน JP (Retail Price) | Scraper วันละ 1 ครั้ง (02:00-03:00 JST) | JPY |
-| **eBay JP** | ราคาซื้อขายจริง JP (Sold Price) | Official eBay Browse API | JPY |
+
+| แหล่ง        | ประเภทราคา                      | วิธีได้มา                               | สกุลเงิน |
+| ------------ | ------------------------------- | --------------------------------------- | -------- |
+| **Yuyu-tei** | ราคาร้าน JP (Retail Price)      | Scraper วันละ 1 ครั้ง (02:00-03:00 JST) | JPY      |
+| **eBay JP**  | ราคาซื้อขายจริง JP (Sold Price) | Official eBay Browse API                | JPY      |
+
 
 **Phase 2-3 (เดือน 3-9) -- เพิ่มอีก 3 แหล่ง (รวม 5):**
 
-| แหล่ง | ประเภทราคา | วิธีได้มา | สกุลเงิน |
-|-------|-----------|----------|----------|
-| **Portfolio Data** | ราคาที่คนไทยซื้อจริง | อัตโนมัติจาก user ใส่ราคาตอนเพิ่มการ์ดเข้า Portfolio | THB |
-| **Marketplace Listing** | ราคาที่คนไทยตั้งขาย | อัตโนมัติจาก listing บนแพลตฟอร์ม | THB |
-| **Marketplace Sold** | ราคาที่ขายสำเร็จในไทย | อัตโนมัติจาก transaction สำเร็จ | THB |
+
+| แหล่ง                   | ประเภทราคา            | วิธีได้มา                                            | สกุลเงิน |
+| ----------------------- | --------------------- | ---------------------------------------------------- | -------- |
+| **Portfolio Data**      | ราคาที่คนไทยซื้อจริง  | อัตโนมัติจาก user ใส่ราคาตอนเพิ่มการ์ดเข้า Portfolio | THB      |
+| **Marketplace Listing** | ราคาที่คนไทยตั้งขาย   | อัตโนมัติจาก listing บนแพลตฟอร์ม                     | THB      |
+| **Marketplace Sold**    | ราคาที่ขายสำเร็จในไทย | อัตโนมัติจาก transaction สำเร็จ                      | THB      |
+
 
 **Phase 3+ (เดือน 9-12) -- เพิ่มอีก 1-2 แหล่ง (รวม 6-7):**
 
-| แหล่ง | ประเภทราคา | วิธีได้มา | สกุลเงิน |
-|-------|-----------|----------|----------|
-| **Mercari JP** | ราคาซื้อขายมือสอง JP | Scrape internal API | JPY |
-| **Shopee** (ถ้าคุ้ม) | ราคาร้านไทยออนไลน์ | Scrape / Affiliate API | THB |
+
+| แหล่ง                | ประเภทราคา           | วิธีได้มา              | สกุลเงิน |
+| -------------------- | -------------------- | ---------------------- | -------- |
+| **Mercari JP**       | ราคาซื้อขายมือสอง JP | Scrape internal API    | JPY      |
+| **Shopee** (ถ้าคุ้ม) | ราคาร้านไทยออนไลน์   | Scrape / Affiliate API | THB      |
+
 
 **Phase 4+ (เดือน 12+) -- ราคาอ้างอิงสากล เพิ่มอีก 2 แหล่ง (รวม 8-9):**
 
-| แหล่ง | ประเภทราคา | วิธีได้มา | สกุลเงิน |
-|-------|-----------|----------|----------|
-| **Cardmarket** (EU) | ราคาตลาด EU | Third-party API (one-piece-api.com / cardmarket-api.com) | EUR |
-| **TCGPlayer** (US) | ราคาตลาด US | Third-party API (one-piece-api.com / tcgpricelookup.com) | USD |
+
+| แหล่ง               | ประเภทราคา  | วิธีได้มา                                                | สกุลเงิน |
+| ------------------- | ----------- | -------------------------------------------------------- | -------- |
+| **Cardmarket** (EU) | ราคาตลาด EU | Third-party API (one-piece-api.com / cardmarket-api.com) | EUR      |
+| **TCGPlayer** (US)  | ราคาตลาด US | Third-party API (one-piece-api.com / tcgpricelookup.com) | USD      |
+
 
 > Cardmarket/TCGPlayer Official API ไม่รับ developer key ใหม่แล้ว ใช้ Third-party API แทน
 > one-piece-api.com มี Free tier (100 req/วัน) และ aggregate ทั้ง Cardmarket + TCGPlayer ในที่เดียว
 
 **หลักปฏิบัติ Scraping:**
+
 - Delay 1-2 วินาทีระหว่างแต่ละ Request
 - ระบบ Alert เมื่อบอทหาข้อมูลไม่เจอ (UI เปลี่ยน)
 - เมื่อการ์ดหมด (Sold Out) ใช้ราคาล่าสุดที่บันทึกไว้ + ติดป้าย [Out of Stock]
@@ -445,13 +480,15 @@ Thai Market Price: 1,150 บาท     ← ค่าเฉลี่ยถ่ว�
 
 ช่วง MVP ใช้เครื่องมือที่มีอยู่แล้ว ไม่ต้องสร้าง Admin Panel:
 
-| งาน | ใช้เครื่องมือ | หมายเหตุ |
-|-----|-------------|---------|
-| ดู/แก้ข้อมูลใน DB | **Supabase Dashboard** หรือ **Prisma Studio** | มี GUI ดู table, แก้ record ได้เลย |
-| Monitor scraper | **Cron job + LINE Notify** | แจ้งเตือนทันทีเมื่อ scrape ล้มเหลว / ดึงข้อมูลไม่ครบ |
-| ดู analytics | **Supabase Dashboard** + SQL query ที่เซฟไว้ | จำนวน user, pageviews, ข้อมูลที่ดึงได้ |
-| จัดการ user | **Supabase Auth Dashboard** | Ban/delete user, ดู user list |
-| Import set ใหม่ | **CLI command** (รัน vegapull + import script) | ยังไม่ต้องมี GUI |
+
+| งาน               | ใช้เครื่องมือ                                  | หมายเหตุ                                             |
+| ----------------- | ---------------------------------------------- | ---------------------------------------------------- |
+| ดู/แก้ข้อมูลใน DB | **Supabase Dashboard** หรือ **Prisma Studio**  | มี GUI ดู table, แก้ record ได้เลย                   |
+| Monitor scraper   | **Cron job + LINE Notify**                     | แจ้งเตือนทันทีเมื่อ scrape ล้มเหลว / ดึงข้อมูลไม่ครบ |
+| ดู analytics      | **Supabase Dashboard** + SQL query ที่เซฟไว้   | จำนวน user, pageviews, ข้อมูลที่ดึงได้               |
+| จัดการ user       | **Supabase Auth Dashboard**                    | Ban/delete user, ดู user list                        |
+| Import set ใหม่   | **CLI command** (รัน vegapull + import script) | ยังไม่ต้องมี GUI                                     |
+
 
 > เวลาพัฒนา: 0 วัน (ใช้ของที่มีอยู่), ค่าใช้จ่าย: 0 บาท
 
@@ -491,17 +528,20 @@ Thai Market Price: 1,150 บาท     ← ค่าเฉลี่ยถ่ว�
 **Thai Market Price** คือราคากลางที่คำนวณอัตโนมัติจากหลายแหล่ง ไม่ต้องพึ่ง Manual report
 
 **แหล่งข้อมูลที่ใช้คำนวณ:**
+
 - ราคา JP (Yuyu-tei, eBay JP Sold) แปลงเป็นบาทอัตโนมัติ
 - ราคาจาก Portfolio (ราคาที่ user ซื้อจริง)
 - ราคาจาก Marketplace Listing + Sold Price
 
 **วิธีคำนวณ:**
+
 - ค่าเฉลี่ยถ่วงน้ำหนัก (Weighted Average) โดยให้น้ำหนัก Marketplace Sold > Portfolio > eBay JP > Yuyu-tei
 - ตัด Outlier อัตโนมัติ (ราคาที่สูง/ต่ำผิดปกติ)
 - แสดง Confidence level: "ข้อมูลเพียงพอ" vs "ข้อมูลจำกัด (อ้างอิง JP เป็นหลัก)"
 - อัปเดตวันละ 1 ครั้ง หรือเมื่อมี transaction ใหม่
 
 **เมื่อมี data เพียงพอ (Phase 2+):**
+
 - แสดง Thai Market Price เป็นราคาหลัก
 - แสดง breakdown จากแต่ละแหล่ง (expandable)
 - กราฟ Price trend ของ Thai Market Price แยกจาก JP Price
@@ -517,14 +557,17 @@ Thai Market Price: 1,150 บาท     ← ค่าเฉลี่ยถ่ว�
 
 **แลก Honey ได้ที่ Honey Shop:**
 
-| รางวัล | Honey ที่ใช้ |
-|--------|-------------|
-| ส่วนลด Pro membership 30% (1 เดือน) | 500 Honey |
-| ลด Marketplace Fee เหลือ 3% (1 เดือน) | 300 Honey |
-| Kuma Badge พิเศษบนโปรไฟล์ | 200 Honey |
-| Listing Boost ฟรี 1 ครั้ง | 150 Honey |
+
+| รางวัล                                | Honey ที่ใช้ |
+| ------------------------------------- | ------------ |
+| ส่วนลด Pro membership 30% (1 เดือน)   | 500 Honey    |
+| ลด Marketplace Fee เหลือ 3% (1 เดือน) | 300 Honey    |
+| Kuma Badge พิเศษบนโปรไฟล์             | 200 Honey    |
+| Listing Boost ฟรี 1 ครั้ง             | 150 Honey    |
+
 
 **ทำไม Honey System สำคัญ:**
+
 - เพิ่ม Thai Market Price data -- user ใส่ราคาซื้อใน Portfolio + ขายของบน Marketplace = data อัตโนมัติ
 - เพิ่ม Daily Active Users -- คนกลับมา login ทุกวันเพื่อเก็บ Honey ให้ Kuma
 - เป็น soft path สู่ Pro -- ได้ลองใช้ Pro ผ่านส่วนลด แล้วติดจนจ่ายเต็ม
@@ -878,18 +921,20 @@ Icons:         Lucide Icons
 
 Kuma ปรากฏในจุดที่ "ว่าง" หรือต้องการความเป็นมิตร ไม่รบกวนการดูข้อมูล:
 
-| จุดที่ใช้ | Kuma ทำอะไร | ทำไม |
-|----------|------------|------|
-| **Loading** | ค้นหาการ์ดในกอง + "Kuma กำลังหาให้..." | แทน spinner ธรรมดา ลด perceived wait time |
-| **ไม่มีผลลัพธ์** | ยักไหล่ + "ไม่เจอการ์ดที่ค้นหา" | ทำให้ empty state ไม่ดูว่างเปล่า |
-| **Portfolio ว่าง** | มือเปล่า + "เพิ่มการ์ดใบแรกให้ Kuma ถือหน่อย!" | กระตุ้น action |
-| **Error 404** | ถือแผนที่กลับหัว + "หลงทางแล้ว..." | ลดความหงุดหงิด |
-| **Daily Check-in** | ถือโหลน้ำผึ้ง + "+10 Honey! 🍯" | ให้รู้สึกได้ reward |
-| **Price Alert ถึงเป้า** | ตื่นเต้น + "Zoro SEC ลงมาถึง ฿1,000 แล้ว!" | ดึงดูดความสนใจ |
-| **Trial หมดอายุ** | ตาเศร้า + "Pro หมดแล้ว... สมัครต่อไหม?" | Loss aversion |
-| **Onboarding** | พาทัวร์ 3 step + "Kuma จะพาดูรอบ!" | ทำให้ onboarding สนุก |
-| **Honey Shop** | เป็นแคชเชียร์ ยืนหลังเคาน์เตอร์ | สร้างบรรยากาศร้านค้า |
-| **Achievement Badge** | แต่งตัวตาม badge ที่ได้ | ให้ badge มีคุณค่ามากขึ้น |
+
+| จุดที่ใช้               | Kuma ทำอะไร                                    | ทำไม                                      |
+| ----------------------- | ---------------------------------------------- | ----------------------------------------- |
+| **Loading**             | ค้นหาการ์ดในกอง + "Kuma กำลังหาให้..."         | แทน spinner ธรรมดา ลด perceived wait time |
+| **ไม่มีผลลัพธ์**        | ยักไหล่ + "ไม่เจอการ์ดที่ค้นหา"                | ทำให้ empty state ไม่ดูว่างเปล่า          |
+| **Portfolio ว่าง**      | มือเปล่า + "เพิ่มการ์ดใบแรกให้ Kuma ถือหน่อย!" | กระตุ้น action                            |
+| **Error 404**           | ถือแผนที่กลับหัว + "หลงทางแล้ว..."             | ลดความหงุดหงิด                            |
+| **Daily Check-in**      | ถือโหลน้ำผึ้ง + "+10 Honey! 🍯"                | ให้รู้สึกได้ reward                       |
+| **Price Alert ถึงเป้า** | ตื่นเต้น + "Zoro SEC ลงมาถึง ฿1,000 แล้ว!"     | ดึงดูดความสนใจ                            |
+| **Trial หมดอายุ**       | ตาเศร้า + "Pro หมดแล้ว... สมัครต่อไหม?"        | Loss aversion                             |
+| **Onboarding**          | พาทัวร์ 3 step + "Kuma จะพาดูรอบ!"             | ทำให้ onboarding สนุก                     |
+| **Honey Shop**          | เป็นแคชเชียร์ ยืนหลังเคาน์เตอร์                | สร้างบรรยากาศร้านค้า                      |
+| **Achievement Badge**   | แต่งตัวตาม badge ที่ได้                        | ให้ badge มีคุณค่ามากขึ้น                 |
+
 
 **หลักสำคัญ:** ข้อมูลราคา + กราฟ เด่นที่สุดเสมอ -- Kuma เป็น supporting character ไม่ใช่พระเอก
 
@@ -925,16 +970,18 @@ Kuma ปรากฏในจุดที่ "ว่าง" หรือต้�
 
 ### 5.7 Design Principles
 
-| หลักการ | วิธีทำ |
-|---------|-------|
-| **Data First** | ราคา + กราฟ เด่นที่สุด, Kuma เป็น supporting |
-| **Kuma ไม่รบกวน** | ใช้เฉพาะจุดว่าง (empty state, loading, onboarding) |
-| **อ่านง่าย** | ตัวเลขราคาใหญ่ชัด, สีเขียว/แดงชัดเจน, whitespace เพียงพอ |
-| **Dark mode** | รองรับทั้ง Light/Dark -- Kuma เส้นขอบหนา พื้นหลังโปร่ง |
-| **Mobile first** | ออกแบบมือถือก่อน → ขยาย desktop |
-| **Thai UX** | ภาษาไทยเป็นหลัก, ปุ่มใหญ่, Social login เด่น, Bottom tab nav |
-| **Progressive disclosure** | ข้อมูลหลักเห็นทันที, รายละเอียดซ่อนใน collapsible/tab |
-| **Consistent** | ทุกหน้าใช้ component เดียวกัน (shadcn/ui), สี/font เดียวกัน |
+
+| หลักการ                    | วิธีทำ                                                       |
+| -------------------------- | ------------------------------------------------------------ |
+| **Data First**             | ราคา + กราฟ เด่นที่สุด, Kuma เป็น supporting                 |
+| **Kuma ไม่รบกวน**          | ใช้เฉพาะจุดว่าง (empty state, loading, onboarding)           |
+| **อ่านง่าย**               | ตัวเลขราคาใหญ่ชัด, สีเขียว/แดงชัดเจน, whitespace เพียงพอ     |
+| **Dark mode**              | รองรับทั้ง Light/Dark -- Kuma เส้นขอบหนา พื้นหลังโปร่ง       |
+| **Mobile first**           | ออกแบบมือถือก่อน → ขยาย desktop                              |
+| **Thai UX**                | ภาษาไทยเป็นหลัก, ปุ่มใหญ่, Social login เด่น, Bottom tab nav |
+| **Progressive disclosure** | ข้อมูลหลักเห็นทันที, รายละเอียดซ่อนใน collapsible/tab        |
+| **Consistent**             | ทุกหน้าใช้ component เดียวกัน (shadcn/ui), สี/font เดียวกัน  |
+
 
 ---
 
@@ -968,16 +1015,18 @@ Kuma ปรากฏในจุดที่ "ว่าง" หรือต้�
 
 ### 6.2 Version Pinning (ล่าสุด ณ มีนาคม 2026)
 
-| Category | Technology | Version | หมายเหตุ |
-|----------|-----------|---------|----------|
-| **Framework** | Next.js | **16.2** | App Router, Server Components, Turbopack default |
-| **Language** | TypeScript | **5.8+** | Strict mode, path aliases |
-| **ORM** | Prisma | **7.5** | TypeScript-native engine (ไม่ใช้ Rust แล้ว), 3x faster, 90% smaller bundle |
-| **Database** | Supabase (PostgreSQL 15) | **v1.26** | Managed PostgreSQL, Auth, Storage, Realtime |
-| **Styling** | Tailwind CSS | **4.2** | CSS-first config, no tailwind.config.js |
-| **UI Components** | shadcn/ui | **v4** | Radix UI primitives, copy-paste components |
-| **Runtime** | Node.js | **22 LTS** | Required by Next.js 16 |
-| **Package Manager** | pnpm | **9.x** | เร็วกว่า npm, disk efficient |
+
+| Category            | Technology               | Version    | หมายเหตุ                                                                   |
+| ------------------- | ------------------------ | ---------- | -------------------------------------------------------------------------- |
+| **Framework**       | Next.js                  | **16.2**   | App Router, Server Components, Turbopack default                           |
+| **Language**        | TypeScript               | **5.8+**   | Strict mode, path aliases                                                  |
+| **ORM**             | Prisma                   | **7.5**    | TypeScript-native engine (ไม่ใช้ Rust แล้ว), 3x faster, 90% smaller bundle |
+| **Database**        | Supabase (PostgreSQL 15) | **v1.26**  | Managed PostgreSQL, Auth, Storage, Realtime                                |
+| **Styling**         | Tailwind CSS             | **4.2**    | CSS-first config, no tailwind.config.js                                    |
+| **UI Components**   | shadcn/ui                | **v4**     | Radix UI primitives, copy-paste components                                 |
+| **Runtime**         | Node.js                  | **22 LTS** | Required by Next.js 16                                                     |
+| **Package Manager** | pnpm                     | **9.x**    | เร็วกว่า npm, disk efficient                                               |
+
 
 ### 6.3 Frontend
 
@@ -1015,20 +1064,22 @@ next.js 16.2
 
 **Key Libraries:**
 
-| Library | ใช้ทำอะไร | Version |
-|---------|----------|---------|
-| `next` | Framework หลัก | 16.2 |
-| `react` / `react-dom` | UI rendering | 19.x |
-| `@prisma/client` | Database ORM | 7.5 |
-| `@supabase/supabase-js` | Supabase SDK | 2.x |
-| `@supabase/ssr` | Supabase Auth ใน Next.js | 0.5+ |
-| `tailwindcss` | Styling | 4.2 |
-| `recharts` | Price charts (simple) | 2.x |
-| `lightweight-charts` | Candlestick / TradingView-style | 4.x |
-| `framer-motion` | Kuma animations, transitions | 11.x |
-| `lucide-react` | Icons | latest |
-| `zod` | Schema validation (forms, API) | 3.x |
-| `next-intl` หรือ `next-i18n` | i18n (TH/EN) ถ้าต้องการ | latest |
+
+| Library                      | ใช้ทำอะไร                       | Version |
+| ---------------------------- | ------------------------------- | ------- |
+| `next`                       | Framework หลัก                  | 16.2    |
+| `react` / `react-dom`        | UI rendering                    | 19.x    |
+| `@prisma/client`             | Database ORM                    | 7.5     |
+| `@supabase/supabase-js`      | Supabase SDK                    | 2.x     |
+| `@supabase/ssr`              | Supabase Auth ใน Next.js        | 0.5+    |
+| `tailwindcss`                | Styling                         | 4.2     |
+| `recharts`                   | Price charts (simple)           | 2.x     |
+| `lightweight-charts`         | Candlestick / TradingView-style | 4.x     |
+| `framer-motion`              | Kuma animations, transitions    | 11.x    |
+| `lucide-react`               | Icons                           | latest  |
+| `zod`                        | Schema validation (forms, API)  | 3.x     |
+| `next-intl` หรือ `next-i18n` | i18n (TH/EN) ถ้าต้องการ         | latest  |
+
 
 ### 6.4 Backend & API
 
@@ -1207,14 +1258,16 @@ model Review {
 
 ### 6.5 Supabase Services
 
-| Service | ใช้ทำอะไร | Config |
-|---------|----------|--------|
-| **PostgreSQL** | Database หลัก ผ่าน Prisma ORM | Supabase Free → Pro เมื่อ scale |
-| **Auth** | Social login (Google, LINE, Facebook), Magic Link, Email/Password | ใช้ `@supabase/ssr` สำหรับ Next.js |
-| **Storage** | เก็บรูปการ์ด (HD from Bandai), รูป Marketplace listing, Avatar | Bucket: `card-images`, `listing-photos`, `avatars` |
-| **Realtime** | Marketplace chat, Live price updates, Notification | Subscribe to `listings`, `messages` channels |
-| **Edge Functions** | Webhook handlers, Background tasks ที่ไม่เหมาะกับ Vercel | เสริม Vercel API Routes |
-| **Row Level Security (RLS)** | ป้องกัน data access ระดับ row | User เห็นแค่ portfolio ตัวเอง, Admin เห็นทั้งหมด |
+
+| Service                      | ใช้ทำอะไร                                                         | Config                                             |
+| ---------------------------- | ----------------------------------------------------------------- | -------------------------------------------------- |
+| **PostgreSQL**               | Database หลัก ผ่าน Prisma ORM                                     | Supabase Free → Pro เมื่อ scale                    |
+| **Auth**                     | Social login (Google, LINE, Facebook), Magic Link, Email/Password | ใช้ `@supabase/ssr` สำหรับ Next.js                 |
+| **Storage**                  | เก็บรูปการ์ด (HD from Bandai), รูป Marketplace listing, Avatar    | Bucket: `card-images`, `listing-photos`, `avatars` |
+| **Realtime**                 | Marketplace chat, Live price updates, Notification                | Subscribe to `listings`, `messages` channels       |
+| **Edge Functions**           | Webhook handlers, Background tasks ที่ไม่เหมาะกับ Vercel          | เสริม Vercel API Routes                            |
+| **Row Level Security (RLS)** | ป้องกัน data access ระดับ row                                     | User เห็นแค่ portfolio ตัวเอง, Admin เห็นทั้งหมด   |
+
 
 **Prisma + Supabase Integration:**
 
@@ -1318,10 +1371,12 @@ Push to main
 
 ### 6.7 Payment Gateway (สำหรับ Marketplace Escrow + Pro Subscription)
 
-| Gateway | PromptPay Fee | Credit Card Fee | จุดเด่น | หมายเหตุ |
-|---------|-------------|----------------|---------|----------|
-| **Stripe Thailand** | 1.65% | 3.65% | ระบบ Escrow ผ่าน Connect, Subscription billing, Developer-friendly | แนะนำ -- API ดี, docs ดี, มี Subscription + Connect |
-| **Omise** | 1.65% | 3.65% | บริษัทไทย, Support ภาษาไทย | ทางเลือกถ้า Stripe ไม่ผ่าน KYC |
+
+| Gateway             | PromptPay Fee | Credit Card Fee | จุดเด่น                                                            | หมายเหตุ                                            |
+| ------------------- | ------------- | --------------- | ------------------------------------------------------------------ | --------------------------------------------------- |
+| **Stripe Thailand** | 1.65%         | 3.65%           | ระบบ Escrow ผ่าน Connect, Subscription billing, Developer-friendly | แนะนำ -- API ดี, docs ดี, มี Subscription + Connect |
+| **Omise**           | 1.65%         | 3.65%           | บริษัทไทย, Support ภาษาไทย                                         | ทางเลือกถ้า Stripe ไม่ผ่าน KYC                      |
+
 
 **Payment Flow (Escrow ผ่าน Stripe Connect):**
 
@@ -1377,16 +1432,18 @@ CRON_SECRET=...
 
 ### 6.9 Performance & SEO Strategy
 
-| เทคนิค | วิธีทำ | ผลลัพธ์ |
-|--------|-------|---------|
-| **SSR / ISR** | Card pages = ISR (revalidate 1 ชม.), Homepage = SSR | SEO + Fresh data |
-| **Server Components** | Default ใน Next.js 16 -- ลด JS bundle | Page load < 2 วินาที |
-| **Image Optimization** | next/image + Supabase CDN, WebP/AVIF auto | LCP ต่ำ |
-| **Database Indexing** | Prisma @@index ที่ query บ่อย | Query < 50ms |
-| **Edge Caching** | Vercel Edge Network + stale-while-revalidate | TTFB ต่ำทั่วโลก |
-| **Turbopack** | Default ใน Next.js 16.2 dev | Dev startup 87% เร็วขึ้น |
-| **Structured Data** | JSON-LD สำหรับ Product (card price) | Rich snippets ใน Google |
-| **Sitemap** | Auto-generate จาก Card database | Google index ทุกหน้าการ์ด |
+
+| เทคนิค                 | วิธีทำ                                              | ผลลัพธ์                   |
+| ---------------------- | --------------------------------------------------- | ------------------------- |
+| **SSR / ISR**          | Card pages = ISR (revalidate 1 ชม.), Homepage = SSR | SEO + Fresh data          |
+| **Server Components**  | Default ใน Next.js 16 -- ลด JS bundle               | Page load < 2 วินาที      |
+| **Image Optimization** | next/image + Supabase CDN, WebP/AVIF auto           | LCP ต่ำ                   |
+| **Database Indexing**  | Prisma @@index ที่ query บ่อย                       | Query < 50ms              |
+| **Edge Caching**       | Vercel Edge Network + stale-while-revalidate        | TTFB ต่ำทั่วโลก           |
+| **Turbopack**          | Default ใน Next.js 16.2 dev                         | Dev startup 87% เร็วขึ้น  |
+| **Structured Data**    | JSON-LD สำหรับ Product (card price)                 | Rich snippets ใน Google   |
+| **Sitemap**            | Auto-generate จาก Card database                     | Google index ทุกหน้าการ์ด |
+
 
 ---
 
@@ -1396,74 +1453,85 @@ CRON_SECRET=...
 
 #### Free Tier
 
-| ฟีเจอร์ | ขอบเขต |
-|---------|--------|
-| ดูราคาปัจจุบัน | ไม่จำกัด |
-| กราฟราคาย้อนหลัง | 7 วัน / 30 วัน |
-| ค้นหา / Filter | ครบทุกฟีเจอร์ |
-| Portfolio | สูงสุด 20 ใบ |
-| Watchlist | สูงสุด 10 ใบ |
-| Price Alerts | 3 ตัว |
-| Thai Market Price | ดูได้ ไม่จำกัด |
-| Deck Calculator | 1 Deck |
+
+| ฟีเจอร์                  | ขอบเขต           |
+| ------------------------ | ---------------- |
+| ดูราคาปัจจุบัน           | ไม่จำกัด         |
+| กราฟราคาย้อนหลัง         | 7 วัน / 30 วัน   |
+| ค้นหา / Filter           | ครบทุกฟีเจอร์    |
+| Portfolio                | สูงสุด 20 ใบ     |
+| Watchlist                | สูงสุด 10 ใบ     |
+| Price Alerts             | 3 ตัว            |
+| Thai Market Price        | ดูได้ ไม่จำกัด   |
+| Deck Calculator          | 1 Deck           |
 | **ขายของบน Marketplace** | **ได้ (Fee 5%)** |
-| **Shop Profile** | **พื้นฐาน** |
+| **Shop Profile**         | **พื้นฐาน**      |
+
 
 #### Pro Tier (129 บาท/เดือน)
 
-| ฟีเจอร์ | ขอบเขต |
-|---------|--------|
-| ทุกอย่างใน Free | รวมอยู่ |
-| กราฟราคาย้อนหลัง | 90 วัน / 1 ปี |
-| Portfolio | สูงสุด 200 ใบ + กำไร/ขาดทุน |
-| Watchlist | สูงสุด 50 ใบ |
-| Price Alerts | 20 ตัว + Email |
-| เปรียบเทียบราคาหลายการ์ด | สูงสุด 5 ใบ |
-| Export CSV/Excel | ได้ |
-| Deck Calculator | ไม่จำกัด |
-| Badge "Pro" บนโปรไฟล์ | ได้ |
-| **Marketplace Fee** | **4% (ลดจาก 5%)** |
-| **Bulk Price Lookup** | **100 การ์ด/วัน** |
-| **Shop Profile** | **ใส่โลโก้ + คำอธิบายร้าน** |
+
+| ฟีเจอร์                  | ขอบเขต                      |
+| ------------------------ | --------------------------- |
+| ทุกอย่างใน Free          | รวมอยู่                     |
+| กราฟราคาย้อนหลัง         | 90 วัน / 1 ปี               |
+| Portfolio                | สูงสุด 200 ใบ + กำไร/ขาดทุน |
+| Watchlist                | สูงสุด 50 ใบ                |
+| Price Alerts             | 20 ตัว + Email              |
+| เปรียบเทียบราคาหลายการ์ด | สูงสุด 5 ใบ                 |
+| Export CSV/Excel         | ได้                         |
+| Deck Calculator          | ไม่จำกัด                    |
+| Badge "Pro" บนโปรไฟล์    | ได้                         |
+| **Marketplace Fee**      | **4% (ลดจาก 5%)**           |
+| **Bulk Price Lookup**    | **100 การ์ด/วัน**           |
+| **Shop Profile**         | **ใส่โลโก้ + คำอธิบายร้าน** |
+
 
 #### Pro+ Tier (249 บาท/เดือน)
 
-| ฟีเจอร์ | ขอบเขต |
-|---------|--------|
-| ทุกอย่างใน Pro | รวมอยู่ |
-| กราฟราคาย้อนหลัง | All-time + เปรียบเทียบได้ไม่จำกัด |
-| Portfolio | ไม่จำกัด + กราฟพอร์ตย้อนหลัง + หลาย Collection |
-| Watchlist & Alerts | ไม่จำกัด + LINE Notify |
-| Advanced Analytics | Moving average, Set-level analytics, Price correlation |
-| **Marketplace Fee** | **3% (ลดจาก 5%)** |
-| **Bulk Price Lookup** | **500 การ์ด/วัน** |
-| **Auto Pricing Suggestion** | **แนะนำราคาจากราคากลาง** |
-| **Inventory Management** | **จัดการสต็อกการ์ด** |
-| **Listing Boost ฟรี** | **2 ครั้ง/เดือน** |
-| **Shop Profile** | **Featured shop + custom branding** |
-| Priority Support | ตอบภายใน 24 ชม. |
-| Badge "Pro+" บนโปรไฟล์ | ได้ |
+
+| ฟีเจอร์                     | ขอบเขต                                                 |
+| --------------------------- | ------------------------------------------------------ |
+| ทุกอย่างใน Pro              | รวมอยู่                                                |
+| กราฟราคาย้อนหลัง            | All-time + เปรียบเทียบได้ไม่จำกัด                      |
+| Portfolio                   | ไม่จำกัด + กราฟพอร์ตย้อนหลัง + หลาย Collection         |
+| Watchlist & Alerts          | ไม่จำกัด + LINE Notify                                 |
+| Advanced Analytics          | Moving average, Set-level analytics, Price correlation |
+| **Marketplace Fee**         | **3% (ลดจาก 5%)**                                      |
+| **Bulk Price Lookup**       | **500 การ์ด/วัน**                                      |
+| **Auto Pricing Suggestion** | **แนะนำราคาจากราคากลาง**                               |
+| **Inventory Management**    | **จัดการสต็อกการ์ด**                                   |
+| **Listing Boost ฟรี**       | **2 ครั้ง/เดือน**                                      |
+| **Shop Profile**            | **Featured shop + custom branding**                    |
+| Priority Support            | ตอบภายใน 24 ชม.                                        |
+| Badge "Pro+" บนโปรไฟล์      | ได้                                                    |
+
 
 #### Pricing Strategy
 
-| แพ็กเกจ | Pro | Pro+ |
-|---------|-----|------|
-| **Free Trial** | **14 วัน (ไม่ต้องใส่บัตร)** | **14 วัน (ไม่ต้องใส่บัตร)** |
-| รายเดือน | 129 บาท/เดือน | 249 บาท/เดือน |
-| รายปี | 990 บาท/ปี (~82 บาท/เดือน, ประหยัด 36%) | 1,990 บาท/ปี (~166 บาท/เดือน, ประหยัด 33%) |
-| Lifetime | 1,999 บาท (ครั้งเดียว, 100 คนแรก) | 3,999 บาท (ครั้งเดียว, 50 คนแรก) |
+
+| แพ็กเกจ        | Pro                                     | Pro+                                       |
+| -------------- | --------------------------------------- | ------------------------------------------ |
+| **Free Trial** | **14 วัน (ไม่ต้องใส่บัตร)**             | **14 วัน (ไม่ต้องใส่บัตร)**                |
+| รายเดือน       | 129 บาท/เดือน                           | 249 บาท/เดือน                              |
+| รายปี          | 990 บาท/ปี (~82 บาท/เดือน, ประหยัด 36%) | 1,990 บาท/ปี (~166 บาท/เดือน, ประหยัด 33%) |
+| Lifetime       | 1,999 บาท (ครั้งเดียว, 100 คนแรก)       | 3,999 บาท (ครั้งเดียว, 50 คนแรก)           |
+
 
 #### Free Trial Flow (แนวทางจาก CoinGecko)
 
-| ขั้นตอน | สิ่งที่เกิดขึ้น |
-|---------|---------------|
-| **วันที่ 1** | User กด "ทดลอง Pro ฟรี 14 วัน" ได้ฟีเจอร์ Pro/Pro+ ทั้งหมดทันที ไม่ต้องใส่บัตร |
-| **วันที่ 11** | ส่ง Email/LINE แจ้งว่า "เหลืออีก 3 วันจะหมด Trial" พร้อมสรุปว่าใช้ฟีเจอร์อะไรไปบ้าง |
+
+| ขั้นตอน       | สิ่งที่เกิดขึ้น                                                                                                    |
+| ------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **วันที่ 1**  | User กด "ทดลอง Pro ฟรี 14 วัน" ได้ฟีเจอร์ Pro/Pro+ ทั้งหมดทันที ไม่ต้องใส่บัตร                                     |
+| **วันที่ 11** | ส่ง Email/LINE แจ้งว่า "เหลืออีก 3 วันจะหมด Trial" พร้อมสรุปว่าใช้ฟีเจอร์อะไรไปบ้าง                                |
 | **วันที่ 14** | Trial หมด กลับเป็น Free tier -- แสดง Summary ว่า "คุณเคยใช้ Portfolio 85 ใบ ตอนนี้เหลือแค่ 20" สร้าง Loss aversion |
+
 
 **ทำไมไม่บังคับใส่บัตร:** ตลาดไทยคนกลัว auto-charge มาก ถ้าบังคับใส่บัตรก่อน trial conversion จะต่ำมาก ให้ลองใช้ฟรีก่อนแล้วค่อยตัดสินใจจ่ายเอง
 
 **เหตุผลเรื่องราคา:**
+
 - Pro 129 บาท/เดือน ยังถูกกว่า Netflix (169 บาท) -- ตัดสินใจง่าย
 - Pro+ 249 บาท/เดือน สำหรับ Trader/ร้านค้าที่ได้ประโยชน์เป็นหมื่นจากข้อมูล -- ROI ชัดเจน
 - Free Trial 14 วัน ลด friction -- ให้ user "ติด" ก่อนแล้วค่อยจ่าย
@@ -1473,12 +1541,14 @@ CRON_SECRET=...
 
 #### Revenue Projection (Freemium)
 
-| เดือนที่ | Registered Users | Pro (5%) | Pro+ (2%) | MRR Pro | MRR Pro+ | รายได้/เดือน |
-|----------|-----------------|---------|----------|---------|---------|-------------|
-| 3 | 1,000 | 50 | 0 | 6,450 | 0 | **6,450 บาท** |
-| 6 | 3,000 | 150 | 60 | 19,350 | 14,940 | **34,290 บาท** |
-| 9 | 6,000 | 300 | 120 | 38,700 | 29,880 | **68,580 บาท** |
-| 12 | 10,000 | 500 | 200 | 64,500 | 49,800 | **114,300 บาท** |
+
+| เดือนที่ | Registered Users | Pro (5%) | Pro+ (2%) | MRR Pro | MRR Pro+ | รายได้/เดือน    |
+| -------- | ---------------- | -------- | --------- | ------- | -------- | --------------- |
+| 3        | 1,000            | 50       | 0         | 6,450   | 0        | **6,450 บาท**   |
+| 6        | 3,000            | 150      | 60        | 19,350  | 14,940   | **34,290 บาท**  |
+| 9        | 6,000            | 300      | 120       | 38,700  | 29,880   | **68,580 บาท**  |
+| 12       | 10,000           | 500      | 200       | 64,500  | 49,800   | **114,300 บาท** |
+
 
 > Pro MRR = จำนวน x 129 บาท, Pro+ MRR = จำนวน x 249 บาท
 > ยังไม่รวม Lifetime deal one-time revenue (~400,000 บาท)
@@ -1491,26 +1561,30 @@ Marketplace คือช่องทางที่มี Revenue potential ส�
 
 #### โมเดลค่าธรรมเนียม
 
-| รายการ | ค่าธรรมเนียม | ผู้จ่าย | หมายเหตุ |
-|--------|-------------|---------|----------|
-| Transaction Fee (Free) | 5% ของราคาขาย | ผู้ขาย | เก็บเมื่อขายสำเร็จเท่านั้น (รวม Escrow) |
-| Transaction Fee (Pro) | 4% ของราคาขาย | ผู้ขาย | สมาชิก Pro ได้ Fee ลด |
-| Transaction Fee (Pro+) | 3% ของราคาขาย | ผู้ขาย | สมาชิก Pro+ ได้ Fee ต่ำสุด |
-| Listing Boost | 29-99 บาท/ครั้ง | ผู้ขาย | ดัน Listing ขึ้นหน้าแรก 24-72 ชม. |
-| Featured Listing | 149 บาท/สัปดาห์ | ผู้ขาย | Highlight + Badge "Featured" |
+
+| รายการ                 | ค่าธรรมเนียม    | ผู้จ่าย | หมายเหตุ                                |
+| ---------------------- | --------------- | ------- | --------------------------------------- |
+| Transaction Fee (Free) | 5% ของราคาขาย   | ผู้ขาย  | เก็บเมื่อขายสำเร็จเท่านั้น (รวม Escrow) |
+| Transaction Fee (Pro)  | 4% ของราคาขาย   | ผู้ขาย  | สมาชิก Pro ได้ Fee ลด                   |
+| Transaction Fee (Pro+) | 3% ของราคาขาย   | ผู้ขาย  | สมาชิก Pro+ ได้ Fee ต่ำสุด              |
+| Listing Boost          | 29-99 บาท/ครั้ง | ผู้ขาย  | ดัน Listing ขึ้นหน้าแรก 24-72 ชม.       |
+| Featured Listing       | 149 บาท/สัปดาห์ | ผู้ขาย  | Highlight + Badge "Featured"            |
+
 
 > **Escrow รวมใน Fee 5% ไม่เก็บเพิ่ม** -- TCG Thailand เก็บ 5% + มี Escrow เหมือนกัน ถ้าเราเก็บ Escrow เพิ่มจะแพงกว่าคู่แข่ง
 
 #### ทำไม 5% ถึงเหมาะสม
 
-| คู่แข่ง | Fee | Escrow | Price Reference | Portfolio | เราเทียบ |
-|--------|-----|--------|-----------------|-----------|---------|
-| **TCG Thailand** | **5%** | มี (manual 24 ชม.) | ไม่มี | ไม่มี | Fee เท่ากัน แต่ได้ฟีเจอร์เยอะกว่ามาก |
-| **Magi** (JP) | 8% | มี | ไม่มี | ไม่มี | เราถูกกว่า 3% |
-| **TCGPlayer** (US) | 10-15% | มี (อัตโนมัติ) | มี Market Price | ไม่มี | เราถูกกว่า 5-10% |
-| **Cardmarket** (EU) | 5%+ | มี | มี | ไม่มี | Fee ใกล้เคียง |
-| **Shopee** | 6-15% | มี | ไม่มี | ไม่มี | เราถูกกว่า + เข้าใจ TCG |
-| **Facebook** | 0% | ไม่มี | ไม่มี | ไม่มี | เราแพงกว่า แต่ปลอดภัยกว่า |
+
+| คู่แข่ง             | Fee    | Escrow             | Price Reference | Portfolio | เราเทียบ                             |
+| ------------------- | ------ | ------------------ | --------------- | --------- | ------------------------------------ |
+| **TCG Thailand**    | **5%** | มี (manual 24 ชม.) | ไม่มี           | ไม่มี     | Fee เท่ากัน แต่ได้ฟีเจอร์เยอะกว่ามาก |
+| **Magi** (JP)       | 8%     | มี                 | ไม่มี           | ไม่มี     | เราถูกกว่า 3%                        |
+| **TCGPlayer** (US)  | 10-15% | มี (อัตโนมัติ)     | มี Market Price | ไม่มี     | เราถูกกว่า 5-10%                     |
+| **Cardmarket** (EU) | 5%+    | มี                 | มี              | ไม่มี     | Fee ใกล้เคียง                        |
+| **Shopee**          | 6-15%  | มี                 | ไม่มี           | ไม่มี     | เราถูกกว่า + เข้าใจ TCG              |
+| **Facebook**        | 0%     | ไม่มี              | ไม่มี           | ไม่มี     | เราแพงกว่า แต่ปลอดภัยกว่า            |
+
 
 **สรุป:** 5% ต่ำพอให้ Seller ย้ายจาก Facebook มา (เพราะปลอดภัยกว่า) แต่สูงพอให้มีรายได้จริง + ถูกกว่าทุกคู่แข่งยกเว้น Facebook ที่ไม่มีระบบอะไรเลย
 
@@ -1518,11 +1592,13 @@ Marketplace คือช่องทางที่มี Revenue potential ส�
 
 สมมติ Average order value = 500 บาท, Commission 5% = 25 บาท/transaction
 
-| เดือนที่ | Active Sellers | Transactions/เดือน | GMV | Commission (5%) | Listing Boost | รายได้/เดือน |
-|----------|--------------|-------------------|-----|----------------|--------------|-------------|
-| 6 | 50 | 200 | 100,000 | 5,000 | 2,000 | 7,000 บาท |
-| 9 | 200 | 1,000 | 500,000 | 25,000 | 8,000 | 33,000 บาท |
-| 12 | 500 | 3,000 | 1,500,000 | 75,000 | 20,000 | 95,000 บาท |
+
+| เดือนที่ | Active Sellers | Transactions/เดือน | GMV       | Commission (5%) | Listing Boost | รายได้/เดือน |
+| -------- | -------------- | ------------------ | --------- | --------------- | ------------- | ------------ |
+| 6        | 50             | 200                | 100,000   | 5,000           | 2,000         | 7,000 บาท    |
+| 9        | 200            | 1,000              | 500,000   | 25,000          | 8,000         | 33,000 บาท   |
+| 12       | 500            | 3,000              | 1,500,000 | 75,000          | 20,000        | 95,000 บาท   |
+
 
 > Marketplace เป็นตัวเร่งรายได้หลัก -- ทุกๆ 1 ล้านบาท GMV = 50,000 บาทรายได้
 
@@ -1530,12 +1606,14 @@ Marketplace คือช่องทางที่มี Revenue potential ส�
 
 ### 7.3 สรุป Revenue Projection รวม (ทุกช่องทาง)
 
-| เดือนที่ | Freemium | Marketplace | รวม/เดือน |
-|----------|----------|-------------|-----------|
-| 3 | 3,870 | 0 | **3,870 บาท** |
-| 6 | 14,910 | 7,000 | **21,910 บาท** |
-| 9 | 31,350 | 33,000 | **64,350 บาท** |
-| 12 | 57,350 | 95,000 | **152,350 บาท** |
+
+| เดือนที่ | Freemium | Marketplace | รวม/เดือน       |
+| -------- | -------- | ----------- | --------------- |
+| 3        | 3,870    | 0           | **3,870 บาท**   |
+| 6        | 14,910   | 7,000       | **21,910 บาท**  |
+| 9        | 31,350   | 33,000      | **64,350 บาท**  |
+| 12       | 57,350   | 95,000      | **152,350 บาท** |
+
 
 > หมายเหตุ: ร้านค้าที่สมัคร Pro/Pro+ จะถูกนับรวมใน Freemium MRR
 > ร้านค้าที่ขายของบน Marketplace จะสร้างรายได้ผ่าน Commission ใน Marketplace
@@ -1650,46 +1728,54 @@ Badge Pro
 
 ### 9.1 Acquisition Metrics (การเข้าถึง)
 
-| KPI | เป้าหมาย (เดือนที่ 6) | เป้าหมาย (เดือนที่ 12) |
-|-----|----------------------|----------------------|
-| Monthly Active Users (MAU) | 5,000 | 15,000 |
-| Registered Users | 3,000 | 10,000 |
-| Marketplace Active Sellers | 50 | 500 |
-| Organic Search Traffic | 40% ของ Total | 60% ของ Total |
-| Pages Indexed by Google | 10,000+ | 30,000+ (รวมหน้า Listing) |
+
+| KPI                        | เป้าหมาย (เดือนที่ 6) | เป้าหมาย (เดือนที่ 12)    |
+| -------------------------- | --------------------- | ------------------------- |
+| Monthly Active Users (MAU) | 5,000                 | 15,000                    |
+| Registered Users           | 3,000                 | 10,000                    |
+| Marketplace Active Sellers | 50                    | 500                       |
+| Organic Search Traffic     | 40% ของ Total         | 60% ของ Total             |
+| Pages Indexed by Google    | 10,000+               | 30,000+ (รวมหน้า Listing) |
+
 
 ### 9.2 Engagement Metrics (การใช้งาน)
 
-| KPI | เป้าหมาย |
-|-----|----------|
-| Average Session Duration | 3+ นาที |
-| Pages per Session | 5+ หน้า |
-| Return Visit Rate (กลับมาใน 7 วัน) | 40%+ |
-| Daily Check-in Rate (ในกลุ่ม Registered) | 20%+ |
-| Portfolio Usage Rate (ในกลุ่ม Registered) | 30%+ |
-| Watchlist Usage Rate | 50%+ |
-| Free Trial to Paid Conversion | 15%+ |
+
+| KPI                                       | เป้าหมาย |
+| ----------------------------------------- | -------- |
+| Average Session Duration                  | 3+ นาที  |
+| Pages per Session                         | 5+ หน้า  |
+| Return Visit Rate (กลับมาใน 7 วัน)        | 40%+     |
+| Daily Check-in Rate (ในกลุ่ม Registered)  | 20%+     |
+| Portfolio Usage Rate (ในกลุ่ม Registered) | 30%+     |
+| Watchlist Usage Rate                      | 50%+     |
+| Free Trial to Paid Conversion             | 15%+     |
+
 
 ### 9.3 Revenue Metrics (รายได้)
 
-| KPI | เป้าหมาย |
-|-----|----------|
-| Free to Pro Conversion Rate | 5%+ |
-| Free to Pro+ Conversion Rate | 2%+ |
+
+| KPI                               | เป้าหมาย             |
+| --------------------------------- | -------------------- |
+| Free to Pro Conversion Rate       | 5%+                  |
+| Free to Pro+ Conversion Rate      | 2%+                  |
 | Total Monthly Revenue เดือนที่ 12 | 120,000-150,000+ บาท |
-| Marketplace GMV เดือนที่ 12 | 1,500,000+ บาท |
-| Churn Rate (Pro/Pro+ ยกเลิก) | ต่ำกว่า 8%/เดือน |
+| Marketplace GMV เดือนที่ 12       | 1,500,000+ บาท       |
+| Churn Rate (Pro/Pro+ ยกเลิก)      | ต่ำกว่า 8%/เดือน     |
+
 
 ### 9.4 Product Health Metrics (สุขภาพผลิตภัณฑ์)
 
-| KPI | เป้าหมาย |
-|-----|----------|
-| Scraper Success Rate | 99%+ (ดึงข้อมูลสำเร็จ) |
-| Data Freshness | อัปเดตราคาภายใน 24 ชม. |
-| Data Sources Active | MVP: 2 แหล่ง → Phase 4: 8-9 แหล่ง |
+
+| KPI                        | เป้าหมาย                                     |
+| -------------------------- | -------------------------------------------- |
+| Scraper Success Rate       | 99%+ (ดึงข้อมูลสำเร็จ)                       |
+| Data Freshness             | อัปเดตราคาภายใน 24 ชม.                       |
+| Data Sources Active        | MVP: 2 แหล่ง → Phase 4: 8-9 แหล่ง            |
 | Thai Market Price Coverage | 80%+ ของการ์ดมี data เพียงพอคำนวณ (Phase 2+) |
-| Site Uptime | 99.5%+ |
-| Page Load Time | ต่ำกว่า 2 วินาที |
+| Site Uptime                | 99.5%+                                       |
+| Page Load Time             | ต่ำกว่า 2 วินาที                             |
+
 
 ---
 
@@ -1697,38 +1783,46 @@ Badge Pro
 
 ### 10.1 ความเสี่ยงด้านเทคนิค
 
-| ความเสี่ยง | โอกาสเกิด | ผลกระทบ | แผนรับมือ |
-|-----------|-----------|---------|----------|
-| **Yuyu-tei บล็อก IP** | ปานกลาง | สูง -- ไม่มีข้อมูลราคา | 1) Delay + Rate limit ตั้งแต่ต้น 2) เตรียม Rotating proxy 3) มี Backup data source (eBay JP, Mercari) |
-| **Yuyu-tei เปลี่ยน UI** | สูง | ปานกลาง -- บอทพัง | 1) ใช้ Robust selectors 2) Alert ทันทีเมื่อ Scrape ล้มเหลว 3) ทีมพร้อมแก้ภายใน 24 ชม. |
-| **API Key / DB credentials รั่ว** | ต่ำ | สูง | 1) ใช้ .env เสมอ 2) Secret rotation ทุก 90 วัน 3) ไม่เปิดไฟล์สำคัญในไลฟ์ |
-| **Database ล่ม / ข้อมูลหาย** | ต่ำ | สูงมาก | 1) Automated daily backup 2) Point-in-time recovery 3) อย่างน้อย 2 copies ต่างตำแหน่ง |
+
+| ความเสี่ยง                        | โอกาสเกิด | ผลกระทบ                | แผนรับมือ                                                                                             |
+| --------------------------------- | --------- | ---------------------- | ----------------------------------------------------------------------------------------------------- |
+| **Yuyu-tei บล็อก IP**             | ปานกลาง   | สูง -- ไม่มีข้อมูลราคา | 1) Delay + Rate limit ตั้งแต่ต้น 2) เตรียม Rotating proxy 3) มี Backup data source (eBay JP, Mercari) |
+| **Yuyu-tei เปลี่ยน UI**           | สูง       | ปานกลาง -- บอทพัง      | 1) ใช้ Robust selectors 2) Alert ทันทีเมื่อ Scrape ล้มเหลว 3) ทีมพร้อมแก้ภายใน 24 ชม.                 |
+| **API Key / DB credentials รั่ว** | ต่ำ       | สูง                    | 1) ใช้ .env เสมอ 2) Secret rotation ทุก 90 วัน 3) ไม่เปิดไฟล์สำคัญในไลฟ์                              |
+| **Database ล่ม / ข้อมูลหาย**      | ต่ำ       | สูงมาก                 | 1) Automated daily backup 2) Point-in-time recovery 3) อย่างน้อย 2 copies ต่างตำแหน่ง                 |
+
 
 ### 10.2 ความเสี่ยงด้านธุรกิจ
 
-| ความเสี่ยง | โอกาสเกิด | ผลกระทบ | แผนรับมือ |
-|-----------|-----------|---------|----------|
-| **ถูกฟ้อง Cease & Desist** | ต่ำ | สูง | 1) ใส่ Credit แหล่งที่มาชัดเจน 2) ไม่ Hotlink 3) พร้อมสลับ Data source ทันที (eBay, Crowdsource) |
-| **คู่แข่งรายใหญ่ทำฟีเจอร์เดียวกัน** | ปานกลาง | ปานกลาง | 1) โฟกัส OPCG ให้ลึกที่สุด 2) Marketplace + Portfolio ดีกว่า 3) Community engagement สูงกว่า |
-| **User ไม่ยอมจ่าย Pro** | ปานกลาง | ต่ำ (มีช่องทางอื่น) | 1) Marketplace Commission เป็น Revenue หลักแทน 2) ปรับราคาลง / เพิ่ม Value 3) Free Trial ดึง conversion |
-| **Marketplace ไม่มีคนลง Listing (Cold start)** | สูง | สูง | 1) ทีมลง Listing ตัวอย่างเองช่วงแรก 2) 0% Fee 30 วันแรก 3) ดึงร้าน LGS มาลง Listing ฟรี 4) Referral program |
-| **หลอกลวงบน Marketplace (Scam)** | ปานกลาง | สูง | 1) Seller verification 2) Rating system 3) Escrow option 4) Dispute resolution team 5) ระงับบัญชีทันทีเมื่อพบปัญหา |
+
+| ความเสี่ยง                                     | โอกาสเกิด | ผลกระทบ             | แผนรับมือ                                                                                                          |
+| ---------------------------------------------- | --------- | ------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **ถูกฟ้อง Cease & Desist**                     | ต่ำ       | สูง                 | 1) ใส่ Credit แหล่งที่มาชัดเจน 2) ไม่ Hotlink 3) พร้อมสลับ Data source ทันที (eBay, Crowdsource)                   |
+| **คู่แข่งรายใหญ่ทำฟีเจอร์เดียวกัน**            | ปานกลาง   | ปานกลาง             | 1) โฟกัส OPCG ให้ลึกที่สุด 2) Marketplace + Portfolio ดีกว่า 3) Community engagement สูงกว่า                       |
+| **User ไม่ยอมจ่าย Pro**                        | ปานกลาง   | ต่ำ (มีช่องทางอื่น) | 1) Marketplace Commission เป็น Revenue หลักแทน 2) ปรับราคาลง / เพิ่ม Value 3) Free Trial ดึง conversion            |
+| **Marketplace ไม่มีคนลง Listing (Cold start)** | สูง       | สูง                 | 1) ทีมลง Listing ตัวอย่างเองช่วงแรก 2) 0% Fee 30 วันแรก 3) ดึงร้าน LGS มาลง Listing ฟรี 4) Referral program        |
+| **หลอกลวงบน Marketplace (Scam)**               | ปานกลาง   | สูง                 | 1) Seller verification 2) Rating system 3) Escrow option 4) Dispute resolution team 5) ระงับบัญชีทันทีเมื่อพบปัญหา |
+
 
 ### 10.3 ความเสี่ยงด้านข้อมูล
 
-| ความเสี่ยง | โอกาสเกิด | ผลกระทบ | แผนรับมือ |
-|-----------|-----------|---------|----------|
-| **ราคา JP ไม่สะท้อนตลาดไทย** | สูง | ปานกลาง | 1) Thai Market Price คำนวณอัตโนมัติจาก Portfolio + Marketplace data 2) แสดงแยก Tab พร้อม Disclaimer ชัดเจน |
-| **Thai Market Price ไม่แม่นยำ (data น้อย)** | ปานกลาง | ปานกลาง | 1) แสดง Confidence level ชัดเจน 2) ตัดค่า Outlier อัตโนมัติ 3) ถ้า data ไทยน้อย fallback เป็นราคา JP + อัตราแลกเปลี่ยน |
-| **Third-party API (Cardmarket/TCGPlayer) ปิดตัว** | ปานกลาง | ต่ำ | 1) ไม่ใช่ data หลัก (เป็นแค่ "ราคาอ้างอิงสากล") 2) มี API ทางเลือกหลายเจ้า 3) ซ่อน Tab ราคาสากลได้ทันที |
-| **ข้อมูล Master Data ไม่ครบ** | ต่ำ | ต่ำ | 1) ใช้หลายแหล่ง (Bandai official + GitHub) 2) User report missing card |
+
+| ความเสี่ยง                                        | โอกาสเกิด | ผลกระทบ | แผนรับมือ                                                                                                              |
+| ------------------------------------------------- | --------- | ------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **ราคา JP ไม่สะท้อนตลาดไทย**                      | สูง       | ปานกลาง | 1) Thai Market Price คำนวณอัตโนมัติจาก Portfolio + Marketplace data 2) แสดงแยก Tab พร้อม Disclaimer ชัดเจน             |
+| **Thai Market Price ไม่แม่นยำ (data น้อย)**       | ปานกลาง   | ปานกลาง | 1) แสดง Confidence level ชัดเจน 2) ตัดค่า Outlier อัตโนมัติ 3) ถ้า data ไทยน้อย fallback เป็นราคา JP + อัตราแลกเปลี่ยน |
+| **Third-party API (Cardmarket/TCGPlayer) ปิดตัว** | ปานกลาง   | ต่ำ     | 1) ไม่ใช่ data หลัก (เป็นแค่ "ราคาอ้างอิงสากล") 2) มี API ทางเลือกหลายเจ้า 3) ซ่อน Tab ราคาสากลได้ทันที                |
+| **ข้อมูล Master Data ไม่ครบ**                     | ต่ำ       | ต่ำ     | 1) ใช้หลายแหล่ง (Bandai official + GitHub) 2) User report missing card                                                 |
+
 
 ### 10.4 ความเสี่ยงด้านกฎหมาย
 
-| ความเสี่ยง | โอกาสเกิด | ผลกระทบ | แผนรับมือ |
-|-----------|-----------|---------|----------|
-| **ละเมิดลิขสิทธิ์รูปการ์ด** | ต่ำ-ปานกลาง | สูง | 1) ใช้รูปจาก Official source พร้อม Credit 2) อ้าง Fair Use (ใช้เพื่ออ้างอิง ไม่ใช่เพื่อขาย) 3) พร้อมลบรูปทันทีถ้าได้รับแจ้ง |
-| **PDPA (พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล)** | ต่ำ | ปานกลาง | 1) Privacy Policy + Cookie consent 2) เก็บเฉพาะข้อมูลที่จำเป็น 3) ให้ User ลบบัญชีได้ |
+
+| ความเสี่ยง                               | โอกาสเกิด   | ผลกระทบ | แผนรับมือ                                                                                                                   |
+| ---------------------------------------- | ----------- | ------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **ละเมิดลิขสิทธิ์รูปการ์ด**              | ต่ำ-ปานกลาง | สูง     | 1) ใช้รูปจาก Official source พร้อม Credit 2) อ้าง Fair Use (ใช้เพื่ออ้างอิง ไม่ใช่เพื่อขาย) 3) พร้อมลบรูปทันทีถ้าได้รับแจ้ง |
+| **PDPA (พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล)** | ต่ำ         | ปานกลาง | 1) Privacy Policy + Cookie consent 2) เก็บเฉพาะข้อมูลที่จำเป็น 3) ให้ User ลบบัญชีได้                                       |
+
 
 ---
 
@@ -1784,11 +1878,13 @@ Badge Pro
 
 ## 13. Team Structure & Roles (ทีม 2-3 คน)
 
-| Role | ความรับผิดชอบ |
-|------|-------------|
-| **Full-stack Developer (Lead)** | พัฒนาเว็บ, Scraper bot, Database, DevOps |
-| **Frontend / Design** | UI/UX Design, Responsive, Data visualization (กราฟ) |
+
+| Role                            | ความรับผิดชอบ                                                          |
+| ------------------------------- | ---------------------------------------------------------------------- |
+| **Full-stack Developer (Lead)** | พัฒนาเว็บ, Scraper bot, Database, DevOps                               |
+| **Frontend / Design**           | UI/UX Design, Responsive, Data visualization (กราฟ)                    |
 | **Content / Community Manager** | ดูแลโซเชียล, เขียน Content SEO, ดึงร้านค้ามาใช้แพลตฟอร์ม, ตอบ Feedback |
+
 
 > ในช่วง MVP ถ้ามี 2 คน: Developer ทำทั้ง Full-stack + DevOps, อีกคนทำ Design + Community
 > คนที่ 3 ค่อยเพิ่มเมื่อถึง Phase 2 เพื่อดูแล Content / Business development
@@ -1797,51 +1893,56 @@ Badge Pro
 
 ## 14. Cost Structure (ค่าใช้จ่ายโดยประมาณ)
 
-| รายการ | MVP (เดือน 1-3) | Growth (เดือน 3-6) | Scale (เดือน 6-12) | Expand (เดือน 12+) | หมายเหตุ |
-|--------|----------------|-------------------|-------------------|-------------------|----------|
-| Vercel Hosting | 0 บาท | 700 บาท | 700-1,400 บาท | 700-1,400 บาท | Pro plan เมื่อ Traffic สูง |
-| Supabase | 0 บาท | 900 บาท | 900-1,750 บาท | 900-1,750 บาท | Pro plan สำหรับ Marketplace data |
-| Domain name | 40 บาท | 40 บาท | 40 บาท | 40 บาท | ~500 บาท/ปี |
-| Exchange Rate API | 0 บาท | 0 บาท | 0 บาท | 0 บาท | Free tier เพียงพอ (JPY/EUR/USD → THB) |
-| eBay Browse API | 0 บาท | 0 บาท | 0 บาท | 0 บาท | Free tier (5,000 calls/วัน) |
-| Image/File Storage | 0 บาท | 350 บาท | 700-1,400 บาท | 700-1,400 บาท | Marketplace photos เพิ่ม usage |
-| Rotating Proxy | 0 บาท | 0-700 บาท | 700-1,750 บาท | 700-1,750 บาท | สำหรับ Yuyu-tei + Mercari scraping |
-| Email Service (Resend/SES) | 0 บาท | 0 บาท | 350-700 บาท | 350-700 บาท | Alerts, Transaction emails |
-| Payment Gateway (Stripe) | 0 บาท | 0 บาท | 1.65% PromptPay / 3.65% Card | 1.65% PromptPay / 3.65% Card | Stripe Thailand -- Escrow via Connect, Subscription via Billing |
-| **Third-party Price API** | **0 บาท** | **0 บาท** | **0 บาท** | **0-350 บาท** | **one-piece-api.com Free 100 req/วัน, Pro ~$10/เดือน ถ้าต้องการ** |
-| **รวมโดยประมาณ** | **~100-500 บาท** | **~2,000-3,000 บาท** | **~4,000-8,000 บาท** | **~4,500-9,000 บาท** | |
 
-> Margin ที่เดือน 12: รายได้ ~152,000 บาท - ค่าใช้จ่าย ~8,000 บาท = **กำไรขั้นต้น ~144,000 บาท/เดือน (95% margin)**
-> Phase 4 เพิ่ม Third-party API cost เล็กน้อย (~350 บาท/เดือน) แต่ Free tier อาจเพียงพอถ้าอัปเดตวันละ 1 ครั้ง
+| รายการ                     | MVP (เดือน 1-3)  | Growth (เดือน 3-6)   | Scale (เดือน 6-12)           | Expand (เดือน 12+)           | หมายเหตุ                                                          |
+| -------------------------- | ---------------- | -------------------- | ---------------------------- | ---------------------------- | ----------------------------------------------------------------- |
+| Vercel Hosting             | 0 บาท            | 700 บาท              | 700-1,400 บาท                | 700-1,400 บาท                | Pro plan เมื่อ Traffic สูง                                        |
+| Supabase                   | 0 บาท            | 900 บาท              | 900-1,750 บาท                | 900-1,750 บาท                | Pro plan สำหรับ Marketplace data                                  |
+| Domain name                | 40 บาท           | 40 บาท               | 40 บาท                       | 40 บาท                       | ~500 บาท/ปี                                                       |
+| Exchange Rate API          | 0 บาท            | 0 บาท                | 0 บาท                        | 0 บาท                        | Free tier เพียงพอ (JPY/EUR/USD → THB)                             |
+| eBay Browse API            | 0 บาท            | 0 บาท                | 0 บาท                        | 0 บาท                        | Free tier (5,000 calls/วัน)                                       |
+| Image/File Storage         | 0 บาท            | 350 บาท              | 700-1,400 บาท                | 700-1,400 บาท                | Marketplace photos เพิ่ม usage                                    |
+| Rotating Proxy             | 0 บาท            | 0-700 บาท            | 700-1,750 บาท                | 700-1,750 บาท                | สำหรับ Yuyu-tei + Mercari scraping                                |
+| Email Service (Resend/SES) | 0 บาท            | 0 บาท                | 350-700 บาท                  | 350-700 บาท                  | Alerts, Transaction emails                                        |
+| Payment Gateway (Stripe)   | 0 บาท            | 0 บาท                | 1.65% PromptPay / 3.65% Card | 1.65% PromptPay / 3.65% Card | Stripe Thailand -- Escrow via Connect, Subscription via Billing   |
+| **Third-party Price API**  | **0 บาท**        | **0 บาท**            | **0 บาท**                    | **0-350 บาท**                | **one-piece-api.com Free 100 req/วัน, Pro ~$10/เดือน ถ้าต้องการ** |
+| **รวมโดยประมาณ**           | **~100-500 บาท** | **~2,000-3,000 บาท** | **~4,000-8,000 บาท**         | **~4,500-9,000 บาท**         |                                                                   |
+
+
+> Margin ที่เดือน 12: รายได้ ~~152,000 บาท - ค่าใช้จ่าย ~8,000 บาท = **กำไรขั้นต้น ~144,000 บาท/เดือน (95% margin)**
+> Phase 4 เพิ่ม Third-party API cost เล็กน้อย (~~350 บาท/เดือน) แต่ Free tier อาจเพียงพอถ้าอัปเดตวันละ 1 ครั้ง
 
 ---
 
 ## Appendix: Feature Priority Matrix
 
-| ฟีเจอร์ | Impact (ผลกระทบ) | Effort (ความยาก) | Revenue Impact | Priority |
-|---------|-----------------|-----------------|---------------|----------|
-| Card Database + ราคา | สูง | ปานกลาง | ต่ำ (Foundation) | P0 (ต้องมี) |
-| Yuyu-tei Scraper (JP Retail) | สูง | ปานกลาง | ต่ำ (Foundation) | P0 |
-| eBay JP API (JP Sold Price) | สูง | ต่ำ | ต่ำ (Foundation) | P0 |
-| JPY-THB Conversion | สูง | ต่ำ | ต่ำ | P0 |
-| Search & Filter | สูง | ต่ำ | ต่ำ | P0 |
-| Price History Graph | สูง | ปานกลาง | ปานกลาง (Pro gate) | P0 |
-| Top Trending Dashboard | สูง | ต่ำ | ปานกลาง (Traffic) | P0 |
-| SEO Optimization | สูง | ต่ำ | สูง (Organic traffic, Marketplace discovery) | P0 |
-| Admin Tools (Supabase + LINE Alert) | สูง | ต่ำ (ไม่ต้องสร้าง) | ต่ำ (Operations) | P0 |
-| User Auth | ปานกลาง | ต่ำ | สูง (Pro gate) | P1 |
-| Portfolio System | สูง | สูง | สูง (Pro gate + Thai Price data) | P1 |
-| Watchlist & Alerts | ปานกลาง | ปานกลาง | สูง (Pro gate) | P1 |
-| Thai Market Price (auto-calc) | สูง | ปานกลาง | สูง (Unique value prop) | P1 |
-| Honey System (Daily Engagement) | สูง | ปานกลาง | ปานกลาง (Retention) | P1 |
-| Free Trial 14 วัน | สูง | ต่ำ | สูง (Pro conversion) | P1 |
-| **Marketplace** | **สูงมาก** | **สูง** | **สูงมาก (Revenue engine + Thai Price data)** | **P1.5** |
-| Admin Panel (/admin -- 5 หน้า) | สูง | ต่ำ (~2-3 วัน) | ต่ำ (Operations) | P1.5 |
-| Mercari JP Scraper | ปานกลาง | สูง | ต่ำ (Data quality) | P2 |
-| Deck Calculator | ปานกลาง | ปานกลาง | ต่ำ | P2 |
-| Multi-TCG Support | สูง | สูง | สูง (ขยาย TAM) | P2 |
-| LINE Notify | ปานกลาง | ต่ำ | ปานกลาง | P2 |
-| Admin Dashboard (KPI + Analytics) | ปานกลาง | ปานกลาง (~3-5 วัน) | ต่ำ (Operations) | P2 |
-| PWA / Mobile | ปานกลาง | ปานกลาง | ต่ำ | P3 |
-| Shopee Scraper (ถ้าคุ้ม) | ต่ำ | สูง | ต่ำ | P3 |
-| **Cardmarket + TCGPlayer (ราคาสากล)** | **ปานกลาง** | **ต่ำ (ใช้ Third-party API)** | **ต่ำ (Bonus feature)** | **P4** |
+
+| ฟีเจอร์                               | Impact (ผลกระทบ) | Effort (ความยาก)              | Revenue Impact                                | Priority    |
+| ------------------------------------- | ---------------- | ----------------------------- | --------------------------------------------- | ----------- |
+| Card Database + ราคา                  | สูง              | ปานกลาง                       | ต่ำ (Foundation)                              | P0 (ต้องมี) |
+| Yuyu-tei Scraper (JP Retail)          | สูง              | ปานกลาง                       | ต่ำ (Foundation)                              | P0          |
+| eBay JP API (JP Sold Price)           | สูง              | ต่ำ                           | ต่ำ (Foundation)                              | P0          |
+| JPY-THB Conversion                    | สูง              | ต่ำ                           | ต่ำ                                           | P0          |
+| Search & Filter                       | สูง              | ต่ำ                           | ต่ำ                                           | P0          |
+| Price History Graph                   | สูง              | ปานกลาง                       | ปานกลาง (Pro gate)                            | P0          |
+| Top Trending Dashboard                | สูง              | ต่ำ                           | ปานกลาง (Traffic)                             | P0          |
+| SEO Optimization                      | สูง              | ต่ำ                           | สูง (Organic traffic, Marketplace discovery)  | P0          |
+| Admin Tools (Supabase + LINE Alert)   | สูง              | ต่ำ (ไม่ต้องสร้าง)            | ต่ำ (Operations)                              | P0          |
+| User Auth                             | ปานกลาง          | ต่ำ                           | สูง (Pro gate)                                | P1          |
+| Portfolio System                      | สูง              | สูง                           | สูง (Pro gate + Thai Price data)              | P1          |
+| Watchlist & Alerts                    | ปานกลาง          | ปานกลาง                       | สูง (Pro gate)                                | P1          |
+| Thai Market Price (auto-calc)         | สูง              | ปานกลาง                       | สูง (Unique value prop)                       | P1          |
+| Honey System (Daily Engagement)       | สูง              | ปานกลาง                       | ปานกลาง (Retention)                           | P1          |
+| Free Trial 14 วัน                     | สูง              | ต่ำ                           | สูง (Pro conversion)                          | P1          |
+| **Marketplace**                       | **สูงมาก**       | **สูง**                       | **สูงมาก (Revenue engine + Thai Price data)** | **P1.5**    |
+| Admin Panel (/admin -- 5 หน้า)        | สูง              | ต่ำ (~2-3 วัน)                | ต่ำ (Operations)                              | P1.5        |
+| Mercari JP Scraper                    | ปานกลาง          | สูง                           | ต่ำ (Data quality)                            | P2          |
+| Deck Calculator                       | ปานกลาง          | ปานกลาง                       | ต่ำ                                           | P2          |
+| Multi-TCG Support                     | สูง              | สูง                           | สูง (ขยาย TAM)                                | P2          |
+| LINE Notify                           | ปานกลาง          | ต่ำ                           | ปานกลาง                                       | P2          |
+| Admin Dashboard (KPI + Analytics)     | ปานกลาง          | ปานกลาง (~3-5 วัน)            | ต่ำ (Operations)                              | P2          |
+| PWA / Mobile                          | ปานกลาง          | ปานกลาง                       | ต่ำ                                           | P3          |
+| Shopee Scraper (ถ้าคุ้ม)              | ต่ำ              | สูง                           | ต่ำ                                           | P3          |
+| **Cardmarket + TCGPlayer (ราคาสากล)** | **ปานกลาง**      | **ต่ำ (ใช้ Third-party API)** | **ต่ำ (Bonus feature)**                       | **P4**      |
+
+

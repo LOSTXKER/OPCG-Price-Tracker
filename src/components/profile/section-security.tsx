@@ -371,7 +371,7 @@ export function SectionSecurity() {
                   className="size-48"
                 />
                 {totpSecret && (
-                  <code className="select-all rounded bg-neutral-100 px-2 py-1 text-[11px] text-neutral-700">
+                  <code className="select-all rounded bg-neutral-100 px-2 py-1 text-xs text-neutral-700">
                     {totpSecret}
                   </code>
                 )}
@@ -471,11 +471,11 @@ export function SectionSecurity() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium">{device.label}</span>
-                      <Badge variant="secondary" className="text-[9px]">
+                      <Badge variant="secondary" className="text-xs">
                         {t(lang, methodLabelKey(s.method))}
                       </Badge>
                     </div>
-                    <div className="mt-0.5 flex items-center gap-2 text-[11px] text-muted-foreground">
+                    <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
                       {s.ipAddress && <span>{s.ipAddress}</span>}
                       <span>
                         {new Date(s.createdAt).toLocaleDateString(

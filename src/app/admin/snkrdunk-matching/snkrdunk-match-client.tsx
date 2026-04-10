@@ -66,7 +66,7 @@ function PriceTag({
 }) {
   return (
     <div className="flex items-baseline gap-1">
-      <span className="text-[10px] text-muted-foreground">{label}</span>
+      <span className="text-xs text-muted-foreground">{label}</span>
       {value != null ? (
         <span
           className={cn(
@@ -77,7 +77,7 @@ function PriceTag({
           ${value}
         </span>
       ) : (
-        <span className="text-[10px] text-muted-foreground/40">—</span>
+        <span className="text-xs text-muted-foreground/40">—</span>
       )}
     </div>
   );
@@ -495,14 +495,14 @@ export function SnkrdunkMatchClient() {
                           <p className="font-mono text-xs font-bold">
                             {m.productNumber}
                           </p>
-                          <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground line-clamp-2">
+                          <p className="mt-0.5 text-xs leading-tight text-muted-foreground line-clamp-2">
                             {m.scrapedName}
                           </p>
                           <a
                             href={`https://snkrdunk.com/en/trading-cards/${m.snkrdunkId}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-1 inline-flex items-center gap-1 text-[10px] text-blue-500 hover:underline"
+                            className="mt-1 inline-flex items-center gap-1 text-xs text-blue-500 hover:underline"
                           >
                             <ExternalLink className="size-2.5" />
                             {m.snkrdunkId}
@@ -539,11 +539,11 @@ export function SnkrdunkMatchClient() {
                             <p className="font-mono text-xs font-bold">
                               {m.matchedCard.cardCode}
                             </p>
-                            <p className="text-[10px] text-muted-foreground truncate">
+                            <p className="text-xs text-muted-foreground truncate">
                               {m.matchedCard.nameJp}
                             </p>
                             {m.matchMethod && (
-                              <span className="text-[9px] text-muted-foreground/60">
+                              <span className="text-xs text-muted-foreground/60">
                                 via {m.matchMethod}
                               </span>
                             )}
@@ -566,7 +566,7 @@ export function SnkrdunkMatchClient() {
                     {/* Status */}
                     <td className="px-2 py-3 text-center">
                       <StatusBadge status={m.status} />
-                      <p className="mt-1 text-[9px] text-muted-foreground">
+                      <p className="mt-1 text-xs text-muted-foreground">
                         {relativeTime(m.updatedAt)}
                       </p>
                     </td>

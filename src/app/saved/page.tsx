@@ -1,0 +1,212 @@
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
+import { useEffect, useState, useCallback } from "react";
+import { Loader2, Bookmark, Trash2, Package } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+type SavedItem = {
+  id: number;
+  createdAt: string;
+  listing: {
+    id: number;
+    priceJpy: number;
+    priceThb: number | null;
+    condition: string;
+    status: string;
+    card: {
+      cardCode: string;
+      nameJp: string;
+      nameEn: string | null;
+      rarity: string;
+      imageUrl: string | null;
+      set: { code: string; name: string };
+    };
+    user: {
+      displayName: string | null;
+      avatarUrl: string | null;
+    };
+  };
+};
+
+type ApiResponse = {
+  saved: SavedItem[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};
+
+export default function SavedListingsPage() {
+  const [data, setData] = useState<ApiResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [removing, setRemoving] = useState<number | null>(null);
+
+  const fetchSaved = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/saved?page=${page}&limit=20`);
+      if (!res.ok) throw new Error();
+      setData(await res.json());
+    } catch {
+      setData(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [page]);
+
+  useEffect(() => {
+    fetchSaved();
+  }, [fetchSaved]);
+
+  const handleRemove = async (listingId: number) => {
+    setRemoving(listingId);
+    try {
+      const res = await fetch(`/api/listings/${listingId}/save`, {
+        method: "POST",
+      });
+      if (res.ok) await fetchSaved();
+    } finally {
+      setRemoving(null);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">
+          รายการที่บันทึก
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          สินค้าที่คุณบันทึกไว้ ({data?.total ?? 0} รายการ)
+        </p>
+      </div>
+
+      {loading ? (
+        <div className="flex min-h-[300px] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      ) : !data || data.saved.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground">
+          <Bookmark className="mb-3 h-12 w-12 opacity-30" />
+          <p className="text-lg font-medium">ยังไม่มีรายการที่บันทึก</p>
+          <p className="mb-4 text-sm">
+            กดไอคอนบุ๊กมาร์กในหน้าสินค้าเพื่อบันทึก
+          </p>
+          <Button variant="outline" render={<Link href="/marketplace" />}>
+            เรียกดูตลาด
+          </Button>
+        </div>
+      ) : (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {data.saved.map((item) => {
+              const { listing } = item;
+              const cardName =
+                listing.card.nameEn ?? listing.card.nameJp;
+              const isActive = listing.status === "ACTIVE";
+
+              return (
+                <div
+                  key={item.id}
+                  className="panel group relative overflow-hidden rounded-xl transition-colors hover:bg-muted/20"
+                >
+                  {/* Remove button */}
+                  <button
+                    type="button"
+                    onClick={() => handleRemove(listing.id)}
+                    disabled={removing === listing.id}
+                    className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-background/80 text-muted-foreground opacity-0 backdrop-blur-sm transition-opacity hover:text-destructive group-hover:opacity-100"
+                  >
+                    {removing === listing.id ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Trash2 className="h-3.5 w-3.5" />
+                    )}
+                  </button>
+
+                  <Link href={`/marketplace/${listing.id}`}>
+                    {/* Image */}
+                    <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
+                      {listing.card.imageUrl ? (
+                        <Image
+                          src={listing.card.imageUrl}
+                          alt={cardName}
+                          fill
+                          className="object-contain"
+                        />
+                      ) : (
+                        <div className="flex h-full items-center justify-center">
+                          <Package className="h-8 w-8 text-muted-foreground/40" />
+                        </div>
+                      )}
+                      {!isActive && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-background/60">
+                          <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+                            {listing.status === "SOLD"
+                              ? "ขายแล้ว"
+                              : "ไม่พร้อมขาย"}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Info */}
+                    <div className="p-3">
+                      <p className="truncate text-sm font-medium">
+                        {cardName}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {listing.card.cardCode} • {listing.card.rarity}
+                      </p>
+                      <div className="mt-2 flex items-baseline justify-between">
+                        <span className="font-bold">
+                          ¥{listing.priceJpy.toLocaleString()}
+                        </span>
+                        {listing.priceThb != null && (
+                          <span className="text-xs text-muted-foreground">
+                            ฿{listing.priceThb.toLocaleString()}
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {listing.user.displayName ?? "ผู้ขาย"} •{" "}
+                        {listing.condition}
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+
+          {data.totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page <= 1}
+                onClick={() => setPage(page - 1)}
+              >
+                ก่อนหน้า
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                หน้า {data.page} / {data.totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page >= data.totalPages}
+                onClick={() => setPage(page + 1)}
+              >
+                ถัดไป
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}

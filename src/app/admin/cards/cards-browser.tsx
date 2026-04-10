@@ -383,7 +383,7 @@ function CardTableRow({
           {card.imageUrl ? (
             <Image src={card.imageUrl} alt="" width={32} height={44} className="rounded" unoptimized />
           ) : (
-            <div className="flex h-11 w-8 items-center justify-center rounded bg-muted text-[9px] text-muted-foreground">?</div>
+            <div className="flex h-11 w-8 items-center justify-center rounded bg-muted text-xs text-muted-foreground">?</div>
           )}
         </td>
         <td className="px-4 py-2 font-mono text-xs">{card.baseCode}</td>
@@ -442,7 +442,7 @@ function CardTableRow({
         {card.imageUrl ? (
           <Image src={card.imageUrl} alt="" width={32} height={44} className="rounded" unoptimized />
         ) : (
-          <div className="flex h-11 w-8 items-center justify-center rounded bg-muted text-[9px] text-muted-foreground">?</div>
+          <div className="flex h-11 w-8 items-center justify-center rounded bg-muted text-xs text-muted-foreground">?</div>
         )}
       </td>
       <td className="px-4 py-1.5">
@@ -453,11 +453,11 @@ function CardTableRow({
           {card.baseCode}
         </Link>
         {card.isParallel && (
-          <span className="ml-1 rounded bg-amber-500/20 px-1 text-[10px] font-medium text-amber-600 dark:text-amber-400">
+          <span className="ml-1 rounded bg-amber-500/20 px-1 text-xs font-medium text-amber-600 dark:text-amber-400">
             {card.rarity.startsWith("P-") ? card.rarity : "PA"}
           </span>
         )}
-        <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+        <div className="flex items-center gap-1 text-xs text-muted-foreground">
           <span>{card.set.code.toUpperCase()}</span>
           {card.imageUrl?.includes(OFFICIAL_IMAGE_HOST) ? (
             <span className="rounded bg-green-500/10 px-1 text-green-500">Official</span>

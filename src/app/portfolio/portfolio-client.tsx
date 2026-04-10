@@ -110,7 +110,7 @@ function PortfolioContent() {
           {/* Portfolio list */}
           <div className="panel overflow-hidden">
             <div className="flex items-center justify-between border-b border-border/40 px-4 py-2.5">
-              <p className="text-[11px] font-medium text-muted-foreground">{t(lang, "portfolio")} ({portfolioMetas.length})</p>
+              <p className="text-xs font-medium text-muted-foreground">{t(lang, "portfolio")} ({portfolioMetas.length})</p>
             </div>
             <PortfolioSidebar
               portfolios={portfolioMetas}
@@ -132,7 +132,7 @@ function PortfolioContent() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
             <h1 className="min-w-0 truncate text-2xl font-bold tracking-tight">{activePortfolio?.name ?? t(lang, "portfolio")}</h1>
-            <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+            <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
               {items.length} {t(lang, "card")}
             </span>
           </div>
@@ -234,7 +234,7 @@ function PortfolioMockPreview({ lang }: { lang: Language }) {
           </div>
           <div className="panel overflow-hidden">
             <div className="border-b border-border/40 px-4 py-2.5">
-              <p className="text-[11px] font-medium text-muted-foreground">{t(lang, "portfolio")} (2)</p>
+              <p className="text-xs font-medium text-muted-foreground">{t(lang, "portfolio")} (2)</p>
             </div>
             <div className="space-y-px">
               <div className="flex items-center justify-between px-4 py-2.5 bg-primary/5">
@@ -254,7 +254,7 @@ function PortfolioMockPreview({ lang }: { lang: Language }) {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
             <h1 className="min-w-0 truncate text-2xl font-bold tracking-tight">Main Collection</h1>
-            <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">8 {t(lang, "card")}</span>
+            <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">8 {t(lang, "card")}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-0.5 rounded-lg bg-muted/60 p-0.5">

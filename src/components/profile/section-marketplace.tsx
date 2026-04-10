@@ -64,7 +64,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
               <Icon className="size-4.5" />
             </div>
             <span className="text-xl font-bold leading-none tabular-nums">{value}</span>
-            <span className="text-[10px] leading-tight text-muted-foreground sm:text-xs">{label}</span>
+            <span className="text-xs leading-tight text-muted-foreground">{label}</span>
           </div>
         ))}
       </div>
@@ -130,7 +130,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
             </div>
             <div>
               <h3 className="text-sm font-semibold">{t(lang, "reputationTitle")}</h3>
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 {sellerReviewCount} {t(lang, "reviewsReceived")}
               </p>
             </div>

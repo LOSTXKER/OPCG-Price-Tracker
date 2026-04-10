@@ -49,7 +49,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
     <div className="pt-3">
       {/* Header row */}
       <div className="mb-4 flex flex-wrap items-center gap-3">
-        <span className="flex items-center gap-1.5 rounded-full bg-warning/10 px-2.5 py-1 text-[11px] font-medium text-warning">
+        <span className="flex items-center gap-1.5 rounded-full bg-warning/10 px-2.5 py-1 text-xs font-medium text-warning">
           <AlertTriangle className="size-3" />
           Community estimates
         </span>
@@ -71,7 +71,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
       </div>
 
       {/* Table header */}
-      <div className="mb-1 hidden items-center px-3 text-[11px] font-medium text-muted-foreground sm:flex">
+      <div className="mb-1 hidden items-center px-3 text-xs font-medium text-muted-foreground sm:flex">
         <span className="w-20">Rarity</span>
         <span className="flex-1" />
         <span className="w-28 text-right">{t(lang, "perUnit")}/{t(lang, UNIT_I18N_KEYS[unit])}</span>
@@ -106,7 +106,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
                   <div className={`h-full rounded-full ${accent}`} style={{ width: `${barWidth}%` }} />
                 </div>
                 <span className="shrink-0 font-mono text-sm font-bold tabular-nums">{fmtCount(count)}</span>
-                <span className="shrink-0 text-[11px] text-muted-foreground">{row.cardCount}{t(lang, "cardsCount")}</span>
+                <span className="shrink-0 text-xs text-muted-foreground">{row.cardCount}{t(lang, "cardsCount")}</span>
                 <span className="shrink-0 font-mono text-xs font-semibold tabular-nums text-primary">{formatPullPct(chance)}</span>
               </div>
 
@@ -127,7 +127,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
 
       {/* Footer */}
       {packsPerBox && cardsPerPack && (
-        <div className="mt-3 border-t border-border/40 pt-3 text-[11px] text-muted-foreground">
+        <div className="mt-3 border-t border-border/40 pt-3 text-xs text-muted-foreground">
           {packsPerBox} {t(lang, "perUnit")}/{t(lang, "packUnit")} · {cardsPerPack} {t(lang, "cardsCount")}/{t(lang, "packUnit")} · {BOXES_PER_CARTON} {t(lang, "boxUnit")}/{t(lang, "cartonUnit")}
         </div>
       )}

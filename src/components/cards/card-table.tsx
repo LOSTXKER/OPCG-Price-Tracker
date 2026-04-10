@@ -75,7 +75,7 @@ export function CardTable({ cards }: { cards: CardTableRow[] }) {
                       <p className="truncate text-sm font-medium leading-tight hover:text-primary">
                         {getCardName(lang, card)}
                       </p>
-                      <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
+                      <p className="mt-0.5 font-mono text-xs text-muted-foreground">
                         {card.baseCode ?? card.cardCode}
                       </p>
                     </div>

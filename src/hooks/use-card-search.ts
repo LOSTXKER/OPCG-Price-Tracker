@@ -12,6 +12,7 @@ export type CardSearchResult = {
   rarity?: string
   imageUrl: string | null
   latestPriceJpy: number | null
+  latestPriceThb?: number | null
   cardType?: string
 }
 

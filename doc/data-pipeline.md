@@ -4,10 +4,12 @@
 
 ระบบดึงข้อมูลการ์ด One Piece TCG จาก **2 แหล่ง** แล้วรวมกัน:
 
-| แหล่งข้อมูล | ให้อะไร | เทคนิค |
-|---|---|---|
+
+| แหล่งข้อมูล                  | ให้อะไร                                                                 | เทคนิค             |
+| ---------------------------- | ----------------------------------------------------------------------- | ------------------ |
 | **Official Bandai** (3 เว็บ) | ข้อมูลการ์ดทั้งหมด: ชื่อ, stat, effect, รูปภาพ, rarity, **SP reprints** | Cheerio parse HTML |
-| **Yuyutei** (yuyu-tei.jp) | ราคาเท่านั้น (JPY) | Cheerio parse HTML |
+| **Yuyutei** (yuyu-tei.jp)    | ราคาเท่านั้น (JPY)                                                      | Cheerio parse HTML |
+
 
 **ทำไมไม่ใช้ Punk Records?**
 Punk Records (GitHub JSON) ไม่มี SP reprint cards (เช่น OP05-067 Zoro SP ที่เปิดได้ในซอง OP09)
@@ -27,13 +29,16 @@ npx tsx scripts/pipeline.ts --wipe --sets=op09
 
 ดึงข้อมูลจาก 3 เว็บ Official ของ Bandai แล้ว merge เป็น JSON file เดียวต่อเซ็ต:
 
-| เว็บ | URL | Series ID prefix | ให้ภาษา |
-|---|---|---|---|
-| Asia English | asia-en.onepiece-cardgame.com | `556` | EN |
-| Japanese | onepiece-cardgame.com | `550` | JP |
-| Asia Thai | asia-th.onepiece-cardgame.com | `563` | TH |
+
+| เว็บ         | URL                           | Series ID prefix | ให้ภาษา |
+| ------------ | ----------------------------- | ---------------- | ------- |
+| Asia English | asia-en.onepiece-cardgame.com | `556`            | EN      |
+| Japanese     | onepiece-cardgame.com         | `550`            | JP      |
+| Asia Thai    | asia-th.onepiece-cardgame.com | `563`            | TH      |
+
 
 **Series ID Formula:**
+
 ```
 {3-digit prefix}{type digit}{2-digit number}
 
@@ -45,6 +50,7 @@ Type digits:
 ```
 
 **URL ตัวอย่าง:**
+
 ```
 https://asia-en.onepiece-cardgame.com/cardlist/?series=556109   ← OP09 EN
 https://onepiece-cardgame.com/cardlist/?series=550109            ← OP09 JP
@@ -52,6 +58,7 @@ https://asia-th.onepiece-cardgame.com/cardlist/?series=563109    ← OP09 TH
 ```
 
 **วิธี parse HTML:**
+
 - แต่ละการ์ดอยู่ใน `<dl class="modalCol" id="OP09-001">` ภายในหน้า
 - ข้อมูลอยู่ใน: `.infoCol span` (code, rarity, type), `.cardName` (ชื่อ), `.backCol` (stat, effect)
 - รูปภาพ: `<img data-src="../images/cardlist/card/OP09-001.png">`
@@ -102,6 +109,7 @@ npx tsx scripts/upload-images.ts --force       # re-upload แม้มีอย
 - ข้ามใบที่ imageUrl ชี้ไป Supabase อยู่แล้ว (เว้นแต่ใช้ `--force`)
 
 **ต้องมี ENV:**
+
 ```
 NEXT_PUBLIC_SUPABASE_URL=...
 SUPABASE_SERVICE_ROLE_KEY=...
@@ -159,6 +167,7 @@ OP09-119 มี P-SEC 2 ใบ (¥1,480 และ ¥198,000) ถ้าไม่�
 **ทำไมต้อง scope ด้วย set?**
 Yuyutei ใช้ ID ที่ซ้ำข้ามเซ็ต เช่น OP01 มี yuyu=10006, OP09 ก็มี yuyu=10006
 ถ้า query ไม่กรอง set จะเจอ:
+
 - OP09 P-SR listing (yuyu=10007) match ไปที่ EB01 card ที่ได้ yuyu=10007 จากก่อนหน้า
 - OP09 Leader ที่ถูก match ถูกต้องแล้ว ถูก overwrite ด้วยเซ็ตทีหลัง (PRB01)
 - ราคาผิดหลายร้อยใบ, parallel ไม่มีราคาเลย
@@ -199,6 +208,7 @@ Seed ข้อมูล drop rate ของแต่ละ rarity ต่อเ�
 **Script:** `scripts/scrape-daily.ts` → ใช้ `src/lib/scraper/price-matcher.ts`
 
 ลง cron run ทุกวัน เพื่ออัปเดตราคาล่าสุด:
+
 - ใช้ matching logic เดียวกับ Step 4 (ทุก query ต้อง scope ด้วย set เสมอ)
 - สร้าง CardPrice history rows ใหม่
 - คำนวณ priceChange24h, priceChange7d
@@ -225,6 +235,7 @@ Card {
 ### SP Reprint Cards
 
 การ์ด SP reprint เช่น `OP05-067_p4` (Zoro-Juurou SP ในซอง OP09):
+
 - `cardCode`: `OP05-067_p4` (code จากเซ็ตเดิม + parallel index)
 - `baseCode`: `OP05-067`
 - `setId`: **OP09** (เซ็ตที่เปิดซองได้จริง)
@@ -236,19 +247,21 @@ Official Bandai จัดการ์ดเหล่านี้ไว้ใน�
 
 ### Rarity Map
 
-| Official HTML | Internal DB |
-|---|---|
-| L | L |
-| C | C |
-| UC | UC |
-| R | R |
-| SR | SR |
-| SEC | SEC |
-| SP CARD / SPカード | SP |
-| Parallel ของ R | P-R |
-| Parallel ของ SR | P-SR |
-| Parallel ของ SEC | P-SEC |
-| Parallel ของ L | P-L |
+
+| Official HTML    | Internal DB |
+| ---------------- | ----------- |
+| L                | L           |
+| C                | C           |
+| UC               | UC          |
+| R                | R           |
+| SR               | SR          |
+| SEC              | SEC         |
+| SP CARD / SPカード  | SP          |
+| Parallel ของ R   | P-R         |
+| Parallel ของ SR  | P-SR        |
+| Parallel ของ SEC | P-SEC       |
+| Parallel ของ L   | P-L         |
+
 
 ### HTML Parsing Selectors (Official Bandai)
 
@@ -335,11 +348,13 @@ Yuyutei ใช้ ID แบบ set-local (ทุกเซ็ตเริ่ม�
 **ทุก query ที่ค้นหาการ์ดด้วย yuyuteiId ต้อง WHERE set.code = ... เสมอ**
 
 ถ้าลืม scope → cross-set contamination:
+
 - Parallel OP09 ไป match กับ Common EB01
 - Leader cards ถูก overwrite ราคาผิดทั้งหมด
 - ราคาผิดเป็นร้อยใบ แต่ matched count ดูเหมือนถูก
 
 ไฟล์ที่ต้องระวัง:
+
 - `scripts/pipeline-yuyutei.ts` — matchCard() ทุก step ต้องมี `set: { code: setCode }`
 - `src/lib/scraper/price-matcher.ts` — matchAndUpdatePrices() ทุก step ต้องมี `set: { code: setCode }`
 
@@ -349,6 +364,7 @@ Yuyutei ลิสต์ reprint cards ใน PRB ด้วย original code (เ
 แต่ DB เก็บเป็น "OP01-120_r1" (non-parallel reprint) หรือ "OP01-120_p5" (parallel reprint)
 
 **แก้ไขด้วย Step 2 ใน matcher:** baseCode fallback จะ match listing "OP01-120" กับ card ที่ baseCode="OP01-120" ในเซ็ตเดียวกัน
+
 - PRB01: **210/216 matched** (from 2/216) — 6 MISS คือ super-parallel gold foil ที่ไม่มี DB entry
 - PRB02: **181/181 matched** (100%)
 

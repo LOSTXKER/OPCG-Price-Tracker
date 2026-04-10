@@ -42,16 +42,16 @@
   --color-price-down: var(--price-down);
   --color-chance-mid: var(--chance-mid);
 
-  /* Bump the text scale so the whole site reads larger */
-  --text-xs: 0.8125rem;
+  /* Bump text scale +2px for readability */
+  --text-xs: 0.875rem;
   --text-xs--line-height: 1.25rem;
-  --text-sm: 0.9375rem;
+  --text-sm: 1rem;
   --text-sm--line-height: 1.375rem;
-  --text-base: 1.0625rem;
+  --text-base: 1.125rem;
   --text-base--line-height: 1.625rem;
-  --text-lg: 1.1875rem;
-  --text-lg--line-height: 1.75rem;
-  --text-xl: 1.3125rem;
+  --text-lg: 1.25rem;
+  --text-lg--line-height: 1.875rem;
+  --text-xl: 1.375rem;
   --text-xl--line-height: 1.875rem;
 }
 

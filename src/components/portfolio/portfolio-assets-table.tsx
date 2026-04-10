@@ -109,7 +109,7 @@ const AssetRowComponent = memo(function AssetRowComponent({
           </div>
           <div className="min-w-0">
             <p className="truncate text-sm font-medium leading-tight">{name}</p>
-            <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-0.5 font-mono text-xs text-muted-foreground">
               {row.baseCode ?? row.cardCode}
               <span className="ml-1.5 text-foreground/60">×{row.quantity}</span>
             </p>
@@ -150,7 +150,7 @@ const AssetRowComponent = memo(function AssetRowComponent({
           )}>
             {pnlResult.pnl >= 0 ? "+" : ""}{formatJpyAmount(pnlResult.pnl, currency)}
             <br />
-            <span className="text-[11px]">
+            <span className="text-xs">
               ({pnlResult.pct >= 0 ? "+" : ""}{formatPct(pnlResult.pct)}%)
             </span>
           </span>

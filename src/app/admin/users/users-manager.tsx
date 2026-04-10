@@ -272,11 +272,11 @@ export function UsersManager() {
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-lg bg-amber-50 p-3 text-center dark:bg-amber-900/20">
                   <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">{selectedUser.user.honeyPoints.toLocaleString()}</p>
-                  <p className="text-[10px] text-muted-foreground">Points</p>
+                  <p className="text-xs text-muted-foreground">Points</p>
                 </div>
                 <div className="rounded-lg bg-orange-500/5 p-3 text-center">
                   <p className="text-2xl font-bold text-orange-500">{selectedUser.user.checkinStreak}</p>
-                  <p className="text-[10px] text-muted-foreground">Streak</p>
+                  <p className="text-xs text-muted-foreground">Streak</p>
                 </div>
               </div>
 

@@ -203,7 +203,7 @@ export default async function AdminHoneyDashboard() {
                   <span className={`shrink-0 text-xs font-bold tabular-nums ${tx.amount > 0 ? "text-green-500" : "text-red-500"}`}>
                     {tx.amount > 0 ? "+" : ""}{tx.amount}
                   </span>
-                  <span className="shrink-0 text-[10px] text-muted-foreground">
+                  <span className="shrink-0 text-xs text-muted-foreground">
                     {new Date(tx.createdAt).toLocaleDateString()}
                   </span>
                 </div>

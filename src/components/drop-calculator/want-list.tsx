@@ -80,7 +80,7 @@ export function WantList({
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-xs font-medium leading-tight">{name}</p>
-                    <span className="text-[10px] text-muted-foreground">
+                    <span className="text-xs text-muted-foreground">
                       {card.rarity}
                       {card.latestPriceJpy != null && card.latestPriceJpy > 0 && <> · <Price jpy={card.latestPriceJpy} /></>}
                     </span>

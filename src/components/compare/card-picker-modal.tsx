@@ -222,7 +222,7 @@ export function CardPickerModal({
                           sizes="(max-width: 640px) 30vw, 140px"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center text-[10px] text-muted-foreground">
+                        <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
                           {card.cardCode}
                         </div>
                       )}
@@ -232,12 +232,12 @@ export function CardPickerModal({
                     <div className="mt-1.5 space-y-0.5 px-0.5">
                       <div className="flex items-center gap-1">
                         <RarityBadge rarity={card.rarity} size="sm" />
-                        <span className="font-mono text-[9px] text-muted-foreground">
+                        <span className="font-mono text-xs text-muted-foreground">
                           {card.set?.code?.toUpperCase() ?? ""}
                         </span>
                       </div>
                       <p
-                        className="truncate text-[11px] font-medium leading-tight"
+                        className="truncate text-xs font-medium leading-tight"
                         title={getCardName(lang, card)}
                       >
                         {getCardName(lang, card)}

@@ -83,7 +83,7 @@ function ListingCardBase({
   const diffPct =
     market != null && market > 0 ? ((priceJpy - market) / market) * 100 : null
   const isDeal = diffPct != null && diffPct <= -10
-  const cardHref = `/cards/${encodeURIComponent(card.cardCode)}`
+  const listingHref = `/marketplace/${id}`
 
   return (
     <article
@@ -94,7 +94,7 @@ function ListingCardBase({
       )}
     >
       <Link
-        href={cardHref}
+        href={listingHref}
         className={cn("relative h-44 w-full overflow-hidden", CARD_BG)}
       >
         {card.imageUrl ? (
@@ -112,12 +112,12 @@ function ListingCardBase({
         )}
         <div className="absolute top-2 left-2 flex flex-col gap-1">
           {isDeal && (
-            <Badge className="bg-price-up/90 text-white border-0 text-[11px] shadow-sm">
+            <Badge className="bg-price-up/90 text-white border-0 text-xs shadow-sm">
               Best Deal
             </Badge>
           )}
           {isFeatured && (
-            <Badge className="bg-muted/90 text-foreground border-0 text-[11px] shadow-sm">
+            <Badge className="bg-muted/90 text-foreground border-0 text-xs shadow-sm">
               Featured
             </Badge>
           )}
@@ -125,7 +125,7 @@ function ListingCardBase({
         <div className="absolute top-2 right-2">
           <span
             className={cn(
-              "inline-flex rounded-full border px-2 py-0.5 text-[11px] font-semibold shadow-sm",
+              "inline-flex rounded-full border px-2 py-0.5 text-xs font-semibold shadow-sm",
               conditionStyles(condition)
             )}
           >
@@ -135,7 +135,7 @@ function ListingCardBase({
       </Link>
 
       <div className="flex flex-1 flex-col gap-2 p-3">
-        <Link href={cardHref} className="hover:text-primary transition-colors">
+        <Link href={listingHref} className="hover:text-primary transition-colors">
           <p className="line-clamp-1 text-sm font-medium">{card.nameEn ?? card.nameJp}</p>
         </Link>
         <div className="flex items-center gap-1.5">
@@ -175,7 +175,7 @@ function ListingCardBase({
             {seller.avatarUrl ? (
               <AvatarImage src={seller.avatarUrl} alt="" />
             ) : null}
-            <AvatarFallback className="text-[11px]">
+            <AvatarFallback className="text-xs">
               {(seller.displayName ?? "?").slice(0, 1).toUpperCase()}
             </AvatarFallback>
           </Avatar>
