@@ -8,6 +8,8 @@ import { breadcrumbJsonLd } from "@/lib/seo/json-ld"
 import { prisma } from "@/lib/db"
 import { MarketOverviewClient } from "./market-overview-client"
 
+export const dynamic = "force-dynamic"
+
 export const revalidate = 300
 
 export const metadata: Metadata = {

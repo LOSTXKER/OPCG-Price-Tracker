@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { opcgConfig } from "@/lib/game-config";
 import { CardEditor } from "./card-editor";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminCardDetailPage({
   params,
 }: {

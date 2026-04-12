@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/db";
 import { HoneyShopManager } from "./honey-shop-manager";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminHoneyShopPage() {
   const items = await prisma.honeyShopItem.findMany({
     orderBy: [{ isActive: "desc" }, { cost: "asc" }],

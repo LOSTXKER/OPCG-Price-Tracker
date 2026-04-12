@@ -8,6 +8,8 @@ import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
 import SearchClient from "./search-client";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Search Cards",
   description:

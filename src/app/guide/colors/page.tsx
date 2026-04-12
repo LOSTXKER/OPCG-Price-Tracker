@@ -12,6 +12,8 @@ import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "สี (Colors) — คู่มือ OPCG",
   description:

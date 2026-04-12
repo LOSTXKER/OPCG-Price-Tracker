@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/db";
 import { RaffleManager } from "./raffle-manager";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminRafflePage() {
   const raffles = await prisma.monthlyRaffle.findMany({
     orderBy: [{ month: "desc" }, { sortOrder: "asc" }],

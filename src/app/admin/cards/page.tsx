@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/db";
 import { CardsBrowser } from "./cards-browser";
 
+export const dynamic = "force-dynamic";
+
 async function getFilterOptions() {
   const [sets, rarities] = await Promise.all([
     prisma.cardSet.findMany({
