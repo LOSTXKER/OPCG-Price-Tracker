@@ -37,7 +37,7 @@ export function AchievementsTab({
     <div className="panel overflow-hidden">
       <div className="border-b px-4 py-3.5">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold">{t(lang, "achievements")}</h2>
+          <h2 className="text-lg font-semibold">{t(lang, "achievements")}</h2>
           <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold tabular-nums text-primary">{earnedCount}/{achievements.length}</span>
         </div>
         <p className="mt-0.5 text-xs text-muted-foreground">

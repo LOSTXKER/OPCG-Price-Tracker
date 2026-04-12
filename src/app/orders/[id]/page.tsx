@@ -145,7 +145,7 @@ export default function BuyerOrderDetailPage() {
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div className="flex-1">
-          <h1 className="text-xl font-bold tracking-tight">
+          <h1 className="page-header">
             คำสั่งซื้อ #{order.id}
           </h1>
           <p className="text-sm text-muted-foreground">
@@ -201,7 +201,7 @@ export default function BuyerOrderDetailPage() {
 
       {/* Seller info */}
       <div className="panel rounded-xl p-4">
-        <h2 className="mb-3 font-semibold">ข้อมูลผู้ขาย</h2>
+        <h2 className="mb-3 text-lg font-semibold">ข้อมูลผู้ขาย</h2>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-sm font-bold">
@@ -224,7 +224,7 @@ export default function BuyerOrderDetailPage() {
 
       {/* Status Timeline */}
       <div className="panel rounded-xl p-4">
-        <h2 className="mb-4 font-semibold">สถานะคำสั่งซื้อ</h2>
+        <h2 className="mb-4 text-lg font-semibold">สถานะคำสั่งซื้อ</h2>
         <div className="space-y-4">
           {TIMELINE_STEPS.map((step, i) => {
             const dateVal = order[step.key as keyof OrderDetail] as
@@ -302,7 +302,7 @@ export default function BuyerOrderDetailPage() {
       {/* Shipping info */}
       {order.trackingNumber && (
         <div className="panel rounded-xl p-4">
-          <h2 className="mb-3 font-semibold">ข้อมูลจัดส่ง</h2>
+          <h2 className="mb-3 text-lg font-semibold">ข้อมูลจัดส่ง</h2>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">วิธีจัดส่ง</span>

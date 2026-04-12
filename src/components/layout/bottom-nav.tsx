@@ -42,7 +42,7 @@ export function BottomNav({ className }: { className?: string }) {
                 href={href}
                 className={cn(
                   "flex flex-col items-center gap-0.5 py-2 text-xs font-medium transition-all active:scale-95",
-                  active ? "text-foreground" : "text-muted-foreground"
+                  active ? "text-primary" : "text-muted-foreground"
                 )}
               >
                 <Icon className={cn("size-5", active && "stroke-[2.5]")} aria-hidden />

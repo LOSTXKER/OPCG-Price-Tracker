@@ -96,7 +96,7 @@ export function EventsManager({ initialEvents }: { initialEvents: SeasonalEvent[
       {showForm && (
         <Card>
           <CardContent>
-            <h2 className="mb-3 font-semibold">Create Seasonal Event</h2>
+            <h2 className="mb-3 text-lg font-semibold">Create Seasonal Event</h2>
             <div className="grid gap-3 sm:grid-cols-2">
               <Input placeholder="Name (JP)" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
               <Input placeholder="Name (EN)" value={form.nameEn} onChange={(e) => setForm((f) => ({ ...f, nameEn: e.target.value }))} />

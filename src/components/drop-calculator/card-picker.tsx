@@ -41,7 +41,7 @@ export function CardPicker({
       <div className="panel space-y-3 p-4">
         <div>
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-sm font-semibold">{t(lang, "selectWantedCards")}</h2>
+            <h2 className="text-lg font-semibold">{t(lang, "selectWantedCards")}</h2>
             {wantCount > 0 && (
               <span className="text-xs text-muted-foreground">{wantCount} {t(lang, "cardsCount")}</span>
             )}

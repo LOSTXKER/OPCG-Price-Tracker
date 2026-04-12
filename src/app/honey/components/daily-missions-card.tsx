@@ -227,7 +227,7 @@ export function DailyMissionsCard({
 
       {/* Row 2: Mission progress + countdown */}
       <div className="flex items-center gap-4 border-t px-5 py-3 sm:px-6">
-        <h2 className="shrink-0 text-sm font-bold">{t(lang, "dailyMissions")}</h2>
+        <h2 className="shrink-0 text-lg font-semibold">{t(lang, "dailyMissions")}</h2>
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
           <div
             className={cn("h-full rounded-full transition-all", allClaimed && bonusClaimed ? "bg-price-up" : "bg-primary")}

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import CompareClient from "./compare-client";
@@ -15,7 +14,6 @@ export default function ComparePage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Compare Cards", href: "/compare" }])} />
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Compare Cards" }]} />
       <CompareClient />
     </>
   );

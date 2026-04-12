@@ -153,7 +153,7 @@ export function MissionsTab({
         <div className="border-b">
           <div className="flex items-start justify-between gap-2 px-4 py-3.5">
             <div>
-              <h2 className="text-sm font-bold">{t(lang, "dailyMissions")}</h2>
+              <h2 className="text-lg font-semibold">{t(lang, "dailyMissions")}</h2>
               <p className="mt-0.5 text-xs text-muted-foreground">
                 {lang === "TH" ? "ทำภารกิจเพื่อรับ Honey ฟรีทุกวัน" : lang === "JP" ? "毎日ミッションをクリアしてHoneyを獲得" : "Complete missions to earn free Honey daily"}
               </p>
@@ -387,7 +387,7 @@ function MonthlyMissionsPanel({
       <div className="border-b">
           <div className="flex items-start justify-between gap-2 px-4 py-3.5">
           <div>
-            <h2 className="text-sm font-bold">{t(lang, "raffleSpecialMissions")}</h2>
+            <h2 className="text-lg font-semibold">{t(lang, "raffleSpecialMissions")}</h2>
             <p className="mt-0.5 text-xs text-muted-foreground">
               {t(lang, "raffleSpecialMissionsDesc")}
             </p>

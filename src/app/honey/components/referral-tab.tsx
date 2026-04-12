@@ -96,7 +96,7 @@ export function ReferralTab({
     <div className="space-y-4">
       <div className="panel overflow-hidden">
         <div className="border-b px-4 py-3.5">
-          <h2 className="text-sm font-bold">{t(lang, "referralLink")}</h2>
+          <h2 className="text-lg font-semibold">{t(lang, "referralLink")}</h2>
           <p className="mt-0.5 text-xs text-muted-foreground">
             {lang === "TH" ? "แชร์ลิงก์แนะนำเพื่อรับ Honey" : lang === "JP" ? "リンクをシェアしてHoneyを獲得" : "Share your link to earn Honey"}
           </p>
@@ -147,7 +147,7 @@ export function ReferralTab({
       {/* How it works */}
       <div className="panel overflow-hidden">
         <div className="border-b px-4 py-3.5">
-          <h2 className="text-sm font-bold">
+          <h2 className="text-lg font-semibold">
             {lang === "TH" ? "วิธีการทำงาน" : lang === "JP" ? "仕組み" : "How it works"}
           </h2>
         </div>

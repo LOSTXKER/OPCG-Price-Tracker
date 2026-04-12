@@ -62,7 +62,7 @@ export function SetsPageHeader({
   const lang = useUIStore((s) => s.language);
   return (
     <div>
-      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+      <h1 className="page-header">
         {t(lang, "setsTitle")}
       </h1>
       <p className="mt-1 text-sm text-muted-foreground">
@@ -87,7 +87,7 @@ export function SetsPageHeader({
 export function HighestValueSetLabel() {
   const lang = useUIStore((s) => s.language);
   return (
-    <h2 className="text-sm font-semibold">{t(lang, "highestValueSet")}</h2>
+    <h2 className="text-lg font-semibold">{t(lang, "highestValueSet")}</h2>
   );
 }
 
@@ -245,7 +245,7 @@ export function SetsListClient({
                   <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
                     <TypeIcon className="size-4 text-primary" />
                   </div>
-                  <h2 className="text-lg font-bold tracking-tight">
+                  <h2 className="text-lg font-semibold tracking-tight">
                     {TYPE_LABEL[type]}
                   </h2>
                   <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold tabular-nums text-muted-foreground">

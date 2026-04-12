@@ -83,7 +83,7 @@ export function AchievementsManager({ initialAchievements }: { initialAchievemen
       {showForm && (
         <Card>
           <CardContent>
-            <h2 className="mb-3 font-semibold">Create Achievement</h2>
+            <h2 className="mb-3 text-lg font-semibold">Create Achievement</h2>
             <div className="grid gap-3 sm:grid-cols-2">
               <Input placeholder="Code (e.g. portfolio_100)" value={form.code} onChange={(e) => setForm((f) => ({ ...f, code: e.target.value }))} />
               <Input placeholder="Name (JP)" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />

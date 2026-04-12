@@ -381,7 +381,7 @@ function CardTableRow({
       <tr className="border-b border-border/20 bg-primary/5">
         <td className="px-2 py-2">
           {card.imageUrl ? (
-            <Image src={card.imageUrl} alt="" width={32} height={44} className="rounded" unoptimized />
+            <Image src={card.imageUrl} alt={card.nameEn ?? card.nameJp} width={32} height={44} className="rounded" unoptimized />
           ) : (
             <div className="flex h-11 w-8 items-center justify-center rounded bg-muted text-xs text-muted-foreground">?</div>
           )}
@@ -414,6 +414,7 @@ function CardTableRow({
           <div className="flex gap-1">
             <Button
               size="icon-xs"
+              aria-label="Save"
               onClick={onSaveEdit}
               disabled={saving}
             >
@@ -426,6 +427,7 @@ function CardTableRow({
             <Button
               variant="outline"
               size="icon-xs"
+              aria-label="Cancel"
               onClick={onCancelEdit}
             >
               <X className="h-3.5 w-3.5" />
@@ -440,7 +442,7 @@ function CardTableRow({
     <tr className="border-b border-border/20 transition-colors hover:bg-muted/20">
       <td className="px-2 py-1.5">
         {card.imageUrl ? (
-          <Image src={card.imageUrl} alt="" width={32} height={44} className="rounded" unoptimized />
+          <Image src={card.imageUrl} alt={card.nameEn ?? card.nameJp} width={32} height={44} className="rounded" unoptimized />
         ) : (
           <div className="flex h-11 w-8 items-center justify-center rounded bg-muted text-xs text-muted-foreground">?</div>
         )}

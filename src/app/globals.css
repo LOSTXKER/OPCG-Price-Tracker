@@ -146,6 +146,31 @@
   border-radius: var(--radius);
 }
 
+.section-heading {
+  border-left: 3px solid var(--primary);
+  padding-left: 0.75rem;
+}
+
+.panel-accent {
+  border-top: 2px solid var(--primary);
+}
+
+.page-header {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+@media (min-width: 640px) {
+  .page-header { font-size: 1.875rem; line-height: 2.25rem; }
+}
+.page-subtitle {
+  margin-top: 0.25rem;
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  color: var(--muted-foreground);
+}
+
 .font-price {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-variant-numeric: tabular-nums;

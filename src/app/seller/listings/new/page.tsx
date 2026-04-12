@@ -114,7 +114,7 @@ export default function SellerCreateListingPage() {
     <div className="mx-auto max-w-lg space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">ลงขายการ์ด</h1>
+          <h1 className="page-header">ลงขายการ์ด</h1>
           <p className="text-sm text-muted-foreground">
             สร้างประกาศขายการ์ดของคุณ
           </p>

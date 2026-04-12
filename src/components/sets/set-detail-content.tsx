@@ -280,7 +280,7 @@ export function SetDetailContent({
             <div className="mb-5 flex items-center gap-3 py-3">
               <div className="h-px flex-1" style={{ background: `linear-gradient(to right, ${RARITY_HEX[g.rarity] ?? "var(--border)"}50, transparent)` }} />
               <RarityBadge rarity={g.rarity} size="md" />
-              <h2 className="min-w-0 truncate text-base font-bold">{g.name}</h2>
+              <h2 className="min-w-0 truncate text-lg font-semibold">{g.name}</h2>
               <span className="rounded-full bg-muted px-2 py-0.5 text-xs tabular-nums text-muted-foreground">{g.cards.length}</span>
               <div className="h-px flex-1" style={{ background: `linear-gradient(to left, ${RARITY_HEX[g.rarity] ?? "var(--border)"}50, transparent)` }} />
             </div>

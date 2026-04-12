@@ -367,7 +367,7 @@ export function SnkrdunkMatchClient() {
         <div className="flex items-center gap-3">
           <Globe className="size-6 text-primary" />
           <div>
-            <h1 className="text-xl font-bold">SNKRDUNK Matching</h1>
+            <h1 className="page-header">SNKRDUNK Matching</h1>
             <p className="text-xs text-muted-foreground">
               จับคู่การ์ดจาก SNKRDUNK เพื่อดึงราคา PSA10 / Last Sold
             </p>
@@ -425,6 +425,7 @@ export function SnkrdunkMatchClient() {
 
         <button
           onClick={() => fetchData()}
+          aria-label="Refresh"
           className="inline-flex items-center gap-1 rounded-lg border border-border bg-background p-1.5 text-xs hover:bg-muted"
         >
           <RefreshCw className={cn("size-3.5", loading && "animate-spin")} />

@@ -1,17 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState, lazy, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from "recharts";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   ArrowDown,
   ArrowUp,
@@ -24,6 +16,7 @@ import {
   TrendingUp,
   X,
 } from "lucide-react";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import { CardPickerModal } from "@/components/compare/card-picker-modal";
@@ -37,7 +30,28 @@ import { useTierLimits } from "@/hooks/use-tier-limits";
 import { LimitCounter } from "@/components/shared/limit-counter";
 import { UpgradeBadge } from "@/components/shared/upgrade-badge";
 
-const COLORS = [
+const CompareChart = lazy(() =>
+  import("./compare-chart").then((m) => ({ default: m.CompareChart }))
+);
+
+function useChartColors() {
+  const [colors, setColors] = useState(FALLBACK_COLORS);
+  useEffect(() => {
+    const style = getComputedStyle(document.documentElement);
+    const resolved = [
+      style.getPropertyValue("--chart-1").trim(),
+      style.getPropertyValue("--chart-2").trim(),
+      style.getPropertyValue("--chart-3").trim(),
+      style.getPropertyValue("--chart-4").trim(),
+      style.getPropertyValue("--chart-5").trim(),
+      style.getPropertyValue("--primary").trim(),
+    ].filter(Boolean);
+    if (resolved.length >= 5) setColors(resolved);
+  }, []);
+  return colors;
+}
+
+const FALLBACK_COLORS = [
   "#73533E",
   "#E0B865",
   "#A57E61",
@@ -51,6 +65,7 @@ export default function CompareClient() {
   const storeItems = useCompareStore((s) => s.items);
   const removeFromStore = useCompareStore((s) => s.remove);
   const clearStore = useCompareStore((s) => s.clear);
+  const COLORS = useChartColors();
 
   const [pickerOpen, setPickerOpen] = useState(false);
   const { limits } = useTierLimits();
@@ -76,13 +91,19 @@ export default function CompareClient() {
   const colSpan = orderedCards.length + 1 + (showAddSlot ? 1 : 0);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
+      <Breadcrumb
+        items={[
+          { label: t(lang, "home"), href: "/" },
+          { label: t(lang, "compareCards") },
+        ]}
+      />
       {/* ── Header ── */}
       <div className="flex items-center gap-3">
         <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
           <Scale className="size-4" />
         </div>
-        <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="page-header flex items-center gap-2">
           {t(lang, "compareCards")}
           {isFinite(limits.compareCards) && (
             <LimitCounter current={codes.length} max={limits.compareCards} />
@@ -324,7 +345,7 @@ export default function CompareClient() {
             <div className="flex size-6 items-center justify-center rounded-md bg-muted text-muted-foreground">
               <ChartLine className="size-3.5" />
             </div>
-            <h2 className="text-sm font-semibold">
+            <h2 className="text-lg font-semibold">
               {t(lang, "comparePriceChart")}
             </h2>
             {hasChart && (
@@ -348,28 +369,9 @@ export default function CompareClient() {
           </div>
 
           {hasChart && (
-            <div className="p-4">
-              <ResponsiveContainer width="100%" height={350}>
-                <LineChart data={chartData}>
-                  <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-                  <YAxis tick={{ fontSize: 11 }} />
-                  <Tooltip />
-                  <Legend />
-                  {orderedCards.map((card, i) => (
-                    <Line
-                      key={card.cardCode}
-                      type="monotone"
-                      dataKey={card.cardCode}
-                      stroke={COLORS[i % COLORS.length]}
-                      dot={false}
-                      strokeWidth={2}
-                      name={`${card.cardCode} ${getCardName(lang, card)}`}
-                      connectNulls
-                    />
-                  ))}
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            <Suspense fallback={<Skeleton className="m-4 h-[350px] rounded-lg" />}>
+              <CompareChart chartData={chartData} cards={orderedCards} colors={COLORS} />
+            </Suspense>
           )}
 
           {chartLocked && (

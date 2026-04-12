@@ -185,13 +185,13 @@ export default function DropCalculatorClient() {
   const resultsLabel = t(lang, "viewResults")
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* ── Header ── */}
       <div className="flex items-center gap-3">
         <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
           <Calculator className="size-4" />
         </div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "dropCalculator")}</h1>
+        <h1 className="page-header">{t(lang, "dropCalculator")}</h1>
       </div>
 
       {/* ── Set Selector ── */}

@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { GitCompareArrows, Layers, TrendingUp } from "lucide-react"
-import { Breadcrumb } from "@/components/shared/breadcrumb"
 import { RelatedPages } from "@/components/shared/related-pages"
 import { JsonLd } from "@/lib/seo/json-ld-script"
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld"
@@ -118,7 +117,6 @@ export default async function MarketOverviewPage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Market Overview", href: "/market-overview" }])} />
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Market Overview" }]} />
       <MarketOverviewClient data={data} />
       <RelatedPages
         items={[

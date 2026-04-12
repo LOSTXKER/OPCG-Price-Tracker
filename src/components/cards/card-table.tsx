@@ -35,7 +35,7 @@ export function CardTable({ cards }: { cards: CardTableRow[] }) {
     <div className="overflow-x-auto p-4">
       <table className="w-full text-left text-sm">
         <thead>
-          <tr className="border-b border-border text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <tr className="border-b border-border bg-muted/40 text-xs font-medium uppercase tracking-wider text-muted-foreground">
             <th className="whitespace-nowrap pb-2.5 pr-3 pl-1 font-medium">{t(lang, "card")}</th>
             <th className="hidden whitespace-nowrap pb-2.5 pr-3 font-medium md:table-cell">{t(lang, "set")}</th>
             <th className="hidden whitespace-nowrap pb-2.5 pr-3 font-medium sm:table-cell">{t(lang, "rarity")}</th>

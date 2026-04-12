@@ -123,7 +123,7 @@ export function HomeSeoContent() {
       {/* Features */}
       <section className="space-y-5">
         <div>
-          <h2 className="text-xl font-semibold">
+          <h2 className="section-heading text-lg font-semibold">
             Meecard ช่วยคุณติดตามราคาการ์ด One Piece ได้ยังไงบ้าง?
           </h2>
           <p className="mt-1.5 text-sm text-muted-foreground">
@@ -155,7 +155,7 @@ export function HomeSeoContent() {
 
       {/* Price explainer */}
       <section className="rounded-xl border border-border/50 bg-card/50 p-6 space-y-4">
-        <h2 className="text-xl font-semibold">
+        <h2 className="section-heading text-lg font-semibold">
           ราคาการ์ด OPCG (One Piece Card Game) กำหนดจากอะไร?
         </h2>
         <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">

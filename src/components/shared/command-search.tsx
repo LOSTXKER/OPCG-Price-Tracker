@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -63,10 +64,12 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
   const router = useRouter()
   const lang = useUIStore((s) => s.language)
   const inputRef = useRef<HTMLInputElement>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
 
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<SearchResult[]>([])
   const [loading, setLoading] = useState(false)
+  const [searchError, setSearchError] = useState<string | null>(null)
   const [recent, setRecent] = useState<string[]>([])
   const [activeIdx, setActiveIdx] = useState(-1)
 
@@ -75,20 +78,43 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
       setRecent(readRecent())
       setQuery("")
       setResults([])
+      setSearchError(null)
       setActiveIdx(-1)
-      requestAnimationFrame(() => inputRef.current?.focus())
+    }
+  }, [open])
+
+  useLayoutEffect(() => {
+    if (!open) return
+    const active = document.activeElement
+    previousFocusRef.current = active instanceof HTMLElement ? active : null
+    inputRef.current?.focus()
+    return () => {
+      previousFocusRef.current?.focus({ preventScroll: true })
+      previousFocusRef.current = null
     }
   }, [open])
 
   useEffect(() => {
     const trimmed = query.trim()
-    if (trimmed.length < 2) { setResults([]); return }
+    if (trimmed.length < 2) {
+      setResults([])
+      setSearchError(null)
+      return
+    }
     const controller = new AbortController()
     setLoading(true)
+    setSearchError(null)
     fetchCards({ search: trimmed, limit: 8 }, { signal: controller.signal })
-      .then((data) => { setResults(data.cards ?? []); setActiveIdx(-1) })
+      .then((data) => {
+        setResults(data.cards ?? [])
+        setSearchError(null)
+        setActiveIdx(-1)
+      })
       .catch((err: unknown) => {
-        if (err instanceof Error && err.name !== "AbortError") console.error("Command search failed:", err)
+        if (err instanceof Error && err.name === "AbortError") return
+        console.error("Command search failed:", err)
+        setResults([])
+        setSearchError("Search failed. Please try again.")
       })
       .finally(() => setLoading(false))
     return () => controller.abort()
@@ -148,7 +174,12 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-[100]">
+    <div
+      className="fixed inset-0 z-[100]"
+      role="dialog"
+      aria-modal="true"
+      aria-label={t(lang, "searchCardsDots")}
+    >
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-in fade-in-0 duration-150"
@@ -164,7 +195,10 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
             <input
               ref={inputRef}
               value={query}
-              onChange={(e) => { setQuery(e.target.value); setActiveIdx(-1) }}
+              onChange={(e) => {
+                setQuery(e.target.value)
+                setActiveIdx(-1)
+              }}
               onKeyDown={handleKeyDown}
               placeholder={t(lang, "searchCardsCodesDots")}
               className="h-12 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground/50"
@@ -174,7 +208,12 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
             {query && (
               <button
                 type="button"
-                onClick={() => { setQuery(""); setResults([]) }}
+                aria-label="Clear search"
+                onClick={() => {
+                  setQuery("")
+                  setResults([])
+                  setSearchError(null)
+                }}
                 className="flex size-6 items-center justify-center rounded-md text-muted-foreground hover:text-foreground"
               >
                 <XIcon className="size-3.5" />
@@ -231,7 +270,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                   >
                     <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-muted">
                       {card.imageUrl ? (
-                        <Image src={card.imageUrl} alt="" fill className="object-contain" sizes="40px" />
+                        <Image src={card.imageUrl} alt={getCardName(lang, card)} fill className="object-contain" sizes="40px" />
                       ) : (
                         <div className="size-full bg-muted" />
                       )}
@@ -261,6 +300,12 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
               </div>
             )}
 
+            {searchError && query.trim().length >= 2 && !loading && (
+              <div className="border-b border-destructive/10 px-4 py-3 text-center text-sm text-destructive">
+                {searchError}
+              </div>
+            )}
+
             {results.length === 0 && !loading && filteredRecent.length > 0 && (
               <div className="p-2">
                 <p className="px-2 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground/60">
@@ -283,7 +328,10 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
               </div>
             )}
 
-            {!loading && query.trim().length >= 2 && results.length === 0 && (
+            {!loading &&
+              query.trim().length >= 2 &&
+              results.length === 0 &&
+              !searchError && (
               <div className="px-4 py-8 text-center text-sm text-muted-foreground">
                 {t(lang, "noResultsFor")} &ldquo;{query.trim()}&rdquo;
               </div>

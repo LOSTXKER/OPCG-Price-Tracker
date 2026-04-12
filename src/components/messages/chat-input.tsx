@@ -60,6 +60,7 @@ export function ChatInput({
       />
       <Button
         size="icon"
+        aria-label="Send message"
         onClick={handleSend}
         disabled={disabled || !value.trim()}
         className="shrink-0"

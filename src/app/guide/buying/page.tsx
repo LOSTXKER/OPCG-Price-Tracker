@@ -48,7 +48,7 @@ const tips = [
 
 export default function BuyingGuidePage() {
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
+    <div className="mx-auto max-w-3xl space-y-12">
       <JsonLd data={breadcrumbJsonLd([
         { name: "Home", href: "/" },
         { name: "Guide", href: "/guide" },

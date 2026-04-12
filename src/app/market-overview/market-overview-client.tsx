@@ -4,7 +4,9 @@ import Image from "next/image"
 import Link from "next/link"
 import { BarChart3, Crown, Layers, Package, TrendingUp } from "lucide-react"
 
+import { Breadcrumb } from "@/components/shared/breadcrumb"
 import { RarityBadge } from "@/components/shared/rarity-badge"
+import { StatCard } from "@/components/shared/stat-card"
 import { Price } from "@/components/shared/price-inline"
 import { cn } from "@/lib/utils"
 import { RARITY_BAR_COLOR } from "@/lib/constants/rarities"
@@ -41,9 +43,15 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
 
   return (
     <div className="space-y-6">
+      <Breadcrumb
+        items={[
+          { label: t(lang, "home"), href: "/" },
+          { label: t(lang, "marketOverview") },
+        ]}
+      />
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="page-header">
           {t(lang, "marketOverviewTitle")}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -53,23 +61,23 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <SummaryCard
-          icon={<BarChart3 className="size-4" />}
+        <StatCard
+          icon={BarChart3}
           label={t(lang, "totalValue")}
           value={<Price jpy={data.totalValue} />}
         />
-        <SummaryCard
-          icon={<TrendingUp className="size-4" />}
+        <StatCard
+          icon={TrendingUp}
           label={t(lang, "avgPrice")}
           value={<Price jpy={data.avgPrice} />}
         />
-        <SummaryCard
-          icon={<Layers className="size-4" />}
+        <StatCard
+          icon={Layers}
           label={t(lang, "totalCards")}
           value={data.totalCards.toLocaleString()}
         />
-        <SummaryCard
-          icon={<Package className="size-4" />}
+        <StatCard
+          icon={Package}
           label={t(lang, "totalSets")}
           value={data.setCount.toLocaleString()}
         />
@@ -78,7 +86,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
       {/* Most valuable cards */}
       {data.topCards.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold">{t(lang, "mostValuableCards")}</h2>
+          <h2 className="text-lg font-semibold">{t(lang, "mostValuableCards")}</h2>
           <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
             {data.topCards.map((card, i) => (
               <TopCardTile key={card.cardCode} card={card} rank={i + 1} lang={lang} />
@@ -92,7 +100,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
         {/* Rarity breakdown */}
         <div className="panel overflow-hidden">
           <div className="border-b border-border/40 px-5 py-3.5">
-            <h2 className="text-sm font-semibold">{t(lang, "valueByRarity")}</h2>
+            <h2 className="text-lg font-semibold">{t(lang, "valueByRarity")}</h2>
           </div>
           <div className="divide-y divide-border/30">
             {data.rarityBreakdown.map((r) => {
@@ -135,7 +143,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
         {/* Top sets by value */}
         <div className="panel overflow-hidden">
           <div className="border-b border-border/40 px-5 py-3.5">
-            <h2 className="text-sm font-semibold">{t(lang, "topSetsByValue")}</h2>
+            <h2 className="text-lg font-semibold">{t(lang, "topSetsByValue")}</h2>
           </div>
           <div className="divide-y divide-border/30">
             {data.topSetsByValue.map((s, i) => {
@@ -195,27 +203,6 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
 /*  Summary Card                                                       */
 /* ------------------------------------------------------------------ */
 
-function SummaryCard({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode
-  label: string
-  value: React.ReactNode
-}) {
-  return (
-    <div className="panel flex items-center gap-3 px-4 py-4">
-      <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-        {icon}
-      </div>
-      <div className="min-w-0">
-        <p className="text-xs font-medium text-muted-foreground">{label}</p>
-        <p className="truncate font-price text-lg font-bold text-foreground">{value}</p>
-      </div>
-    </div>
-  )
-}
 
 /* ------------------------------------------------------------------ */
 /*  Top Card Tile                                                      */

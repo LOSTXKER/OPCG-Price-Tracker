@@ -26,7 +26,7 @@ export default function HoneyClient() {
 
   if (authed === null) {
     return (
-      <div className="space-y-3">
+      <div className="space-y-6">
         <Skeleton className="h-14 rounded-xl" />
         <Skeleton className="h-48 rounded-xl" />
         <Skeleton className="h-10 rounded-lg" />
@@ -82,7 +82,7 @@ function HoneyContent() {
 
   if (loading) {
     return (
-      <div className="space-y-3">
+      <div className="space-y-6">
         <Skeleton className="h-14 rounded-xl" />
         <Skeleton className="h-48 rounded-xl" />
         <Skeleton className="h-10 rounded-lg" />
@@ -187,7 +187,7 @@ function HoneyContent() {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <HoneyStatusBar {...statusProps} />
       {tabBar}
       {tabContent}

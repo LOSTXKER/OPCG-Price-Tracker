@@ -143,7 +143,7 @@ export function RaffleTab({
       <div className="panel overflow-hidden">
         <div className="flex items-start justify-between gap-2 px-4 py-3.5">
           <div>
-            <h2 className="text-sm font-bold">{t(lang, "monthlyRaffle")}</h2>
+            <h2 className="text-lg font-semibold">{t(lang, "monthlyRaffle")}</h2>
             <p className="mt-0.5 text-xs text-muted-foreground">{t(lang, "raffleMachineSubtitle")}</p>
           </div>
           <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1 text-xs text-muted-foreground">
@@ -385,7 +385,7 @@ export function RaffleTab({
       {/* How to get tickets */}
       <div className="panel overflow-hidden">
         <div className="border-b px-4 py-3.5">
-          <h2 className="text-sm font-bold">{t(lang, "raffleHowToGet")}</h2>
+          <h2 className="text-lg font-semibold">{t(lang, "raffleHowToGet")}</h2>
         </div>
         <div className="divide-y divide-border/40">
           {[

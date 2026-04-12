@@ -23,7 +23,7 @@ export function RelatedPages({
           <Link
             key={item.href}
             href={item.href}
-            className="group flex items-start gap-3 rounded-xl border border-border/50 bg-card p-4 transition-all hover:bg-muted/40 hover:shadow-md"
+            className="group flex items-start gap-3 rounded-xl border border-border/50 bg-card p-4 transition-all hover:border-primary/30 hover:bg-muted/40 hover:shadow-md"
           >
             <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
               <item.icon className="size-[18px] text-primary" />

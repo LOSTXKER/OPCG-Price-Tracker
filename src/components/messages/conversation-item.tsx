@@ -7,20 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import type { Conversation } from "./types";
 import { CARD_BG } from "@/lib/constants/ui";
-
-function formatRelative(iso: string) {
-  const d = new Date(iso);
-  const now = Date.now();
-  const diffMs = now - d.getTime();
-  const diffMin = Math.floor(diffMs / 60000);
-  if (diffMin < 1) return "เมื่อสักครู่";
-  if (diffMin < 60) return `${diffMin} นาที`;
-  const diffHr = Math.floor(diffMin / 60);
-  if (diffHr < 24) return `${diffHr} ชม.`;
-  const diffDay = Math.floor(diffHr / 24);
-  if (diffDay < 7) return `${diffDay} วัน`;
-  return d.toLocaleDateString("th-TH", { day: "numeric", month: "short" });
-}
+import { formatRelativeShort } from "@/lib/utils/time";
 
 const orderStatusLabel: Record<string, string> = {
   AWAITING_PAYMENT: "รอชำระ",
@@ -86,7 +73,7 @@ export function ConversationItem({
             {otherUser.displayName ?? "User"}
           </p>
           <span className="shrink-0 text-xs text-muted-foreground">
-            {formatRelative(conv.lastMessageAt)}
+            {formatRelativeShort(conv.lastMessageAt)}
           </span>
         </div>
         <p className="truncate text-xs text-muted-foreground">

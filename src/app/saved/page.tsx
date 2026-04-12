@@ -5,6 +5,9 @@ import Image from "next/image";
 import { useEffect, useState, useCallback } from "react";
 import { Loader2, Bookmark, Trash2, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { useUIStore } from "@/stores/ui-store";
+import { t } from "@/lib/i18n";
 
 type SavedItem = {
   id: number;
@@ -39,19 +42,23 @@ type ApiResponse = {
 };
 
 export default function SavedListingsPage() {
+  const lang = useUIStore((s) => s.language);
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [removing, setRemoving] = useState<number | null>(null);
 
   const fetchSaved = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch(`/api/saved?page=${page}&limit=20`);
       if (!res.ok) throw new Error();
       setData(await res.json());
     } catch {
       setData(null);
+      setError("Failed to load saved listings");
     } finally {
       setLoading(false);
     }
@@ -75,8 +82,14 @@ export default function SavedListingsPage() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumb
+        items={[
+          { label: t(lang, "home"), href: "/" },
+          { label: t(lang, "savedListings") },
+        ]}
+      />
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">
+        <h1 className="page-header">
           รายการที่บันทึก
         </h1>
         <p className="text-sm text-muted-foreground">
@@ -87,6 +100,20 @@ export default function SavedListingsPage() {
       {loading ? (
         <div className="flex min-h-[300px] items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      ) : error ? (
+        <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+          <p>{error}</p>
+          <button
+            type="button"
+            onClick={() => {
+              setError(null);
+              void fetchSaved();
+            }}
+            className="mt-1 text-xs font-medium underline"
+          >
+            ลองใหม่
+          </button>
         </div>
       ) : !data || data.saved.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground">

@@ -1,12 +1,13 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import Link from "next/link";
 import { Check, X, Hexagon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
+import { useSettings, refetchSettings } from "@/hooks/use-settings";
 import {
   PLANS,
   PLAN_HIGHLIGHTS,
@@ -14,32 +15,11 @@ import {
   findRow,
 } from "@/lib/plan-features";
 
-type Settings = {
-  tier: string;
-  tierExpiresAt: string | null;
-  trialUsed: boolean;
-  trialStartedAt: string | null;
-  stripeSubscriptionId: boolean;
-};
-
 export default function PricingClient() {
   const lang = useUIStore((s) => s.language);
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
-  const [settings, setSettings] = useState<Settings | null>(null);
+  const { settings } = useSettings();
   const [loading, setLoading] = useState<string | null>(null);
-
-  const loadSettings = useCallback(async () => {
-    try {
-      const res = await fetch("/api/settings");
-      if (res.ok) setSettings(await res.json());
-    } catch {
-      /* not logged in */
-    }
-  }, []);
-
-  useEffect(() => {
-    loadSettings();
-  }, [loadSettings]);
 
   const handleSubscribe = async (plan: string) => {
     setLoading(plan);
@@ -61,7 +41,7 @@ export default function PricingClient() {
     try {
       const res = await fetch("/api/subscription/trial", { method: "POST" });
       if (res.ok) {
-        loadSettings();
+        refetchSettings();
         setLoading(null);
       }
     } catch {
@@ -219,7 +199,7 @@ export default function PricingClient() {
                 <plan.icon className={`h-6 w-6 ${plan.iconClass}`} />
               )}
               <div>
-                <h2 className="text-lg font-bold leading-tight">
+                <h2 className="text-lg font-semibold leading-tight">
                   {tierName(plan.key)}
                 </h2>
                 <p className="text-xs text-muted-foreground">
@@ -383,7 +363,7 @@ export default function PricingClient() {
 
       {/* Full Feature Comparison Table */}
       <div>
-        <h2 className="mb-6 text-center text-xl font-bold">
+        <h2 className="mb-6 text-center text-xl font-semibold">
           {t(lang, "compareAllFeatures")}
         </h2>
         <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">

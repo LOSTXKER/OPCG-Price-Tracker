@@ -196,7 +196,7 @@ export default function SellerEditListingPage() {
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div className="flex-1">
-          <h1 className="text-xl font-bold tracking-tight">แก้ไขสินค้า</h1>
+          <h1 className="page-header">แก้ไขสินค้า</h1>
           <p className="text-sm text-muted-foreground">
             #{listing.id} • {listing.card.cardCode}
           </p>
@@ -249,7 +249,7 @@ export default function SellerEditListingPage() {
 
       {/* Pricing */}
       <div className="panel space-y-4 rounded-xl p-4">
-        <h2 className="font-semibold">ราคาและสภาพ</h2>
+        <h2 className="text-lg font-semibold">ราคาและสภาพ</h2>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
@@ -304,7 +304,7 @@ export default function SellerEditListingPage() {
 
       {/* Description */}
       <div className="panel space-y-4 rounded-xl p-4">
-        <h2 className="font-semibold">รายละเอียด</h2>
+        <h2 className="text-lg font-semibold">รายละเอียด</h2>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -316,7 +316,7 @@ export default function SellerEditListingPage() {
 
       {/* Photos */}
       <div className="panel space-y-4 rounded-xl p-4">
-        <h2 className="font-semibold">ภาพสินค้าจริง</h2>
+        <h2 className="text-lg font-semibold">ภาพสินค้าจริง</h2>
         <div className="flex flex-wrap gap-3">
           {photos.map((url, i) => (
             <div key={i} className="group relative">
@@ -361,7 +361,7 @@ export default function SellerEditListingPage() {
 
       {/* Shipping */}
       <div className="panel space-y-4 rounded-xl p-4">
-        <h2 className="font-semibold">การจัดส่ง</h2>
+        <h2 className="text-lg font-semibold">การจัดส่ง</h2>
 
         <div>
           <label className="mb-1 block text-sm font-medium">ที่อยู่ / พื้นที่</label>

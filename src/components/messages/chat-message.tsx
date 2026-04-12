@@ -1,15 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { formatChatTime } from "@/lib/utils/time";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { OfferCard } from "./offer-card";
 import type { ChatMessage } from "./types";
 import { Info } from "lucide-react";
-
-function formatTime(iso: string) {
-  const d = new Date(iso);
-  return d.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
-}
 
 interface ChatMessageProps {
   message: ChatMessage;
@@ -33,7 +29,7 @@ export function ChatMessageBubble({
           <Info className="size-3 text-muted-foreground" />
           <span className="text-xs text-muted-foreground">{message.content}</span>
           <span className="text-xs text-muted-foreground/60">
-            {formatTime(message.createdAt)}
+            {formatChatTime(message.createdAt)}
           </span>
         </div>
       </div>
@@ -62,7 +58,7 @@ export function ChatMessageBubble({
             onCounter={onCounterOffer}
           />
           <p className={cn("mt-0.5 text-xs text-muted-foreground", message.isOwn && "text-right")}>
-            {formatTime(message.createdAt)}
+            {formatChatTime(message.createdAt)}
           </p>
         </div>
       </div>
@@ -103,7 +99,7 @@ export function ChatMessageBubble({
             message.isOwn && "text-right"
           )}
         >
-          {formatTime(message.createdAt)}
+          {formatChatTime(message.createdAt)}
         </p>
       </div>
     </div>

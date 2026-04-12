@@ -18,6 +18,36 @@ const nextConfig: NextConfig = {
         destination: "/drop-calculator",
         permanent: true,
       },
+      {
+        source: "/profile/account",
+        destination: "/settings",
+        permanent: true,
+      },
+      {
+        source: "/profile/marketplace",
+        destination: "/settings",
+        permanent: true,
+      },
+      {
+        source: "/profile/subscription",
+        destination: "/settings",
+        permanent: true,
+      },
+      {
+        source: "/profile/overview",
+        destination: "/settings",
+        permanent: true,
+      },
+      {
+        source: "/profile/export",
+        destination: "/settings",
+        permanent: true,
+      },
+      {
+        source: "/profile/notifications",
+        destination: "/settings",
+        permanent: true,
+      },
     ];
   },
   images: {

@@ -31,7 +31,7 @@ export default function SettingsIndexPage() {
     <>
       {/* ── Mobile: iOS-style menu ── */}
       <div className="space-y-6 md:hidden">
-        <h1 className="text-xl font-bold tracking-tight">
+        <h1 className="page-header">
           {t(lang, "profileSettings")}
         </h1>
 

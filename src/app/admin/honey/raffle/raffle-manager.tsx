@@ -343,7 +343,7 @@ export function RaffleManager({ initialRaffles }: { initialRaffles: Raffle[] }) 
       {showForm && (
         <div className="rounded-xl border bg-card shadow-sm">
           <div className="flex items-center justify-between border-b px-5 py-3">
-            <h2 className="text-sm font-semibold">
+            <h2 className="text-lg font-semibold">
               {editingId ? "Edit Machine" : "Create New Machine"}
             </h2>
             <Button size="sm" variant="ghost" onClick={() => setShowForm(false)} className="text-xs">Cancel</Button>

@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { t } from "@/lib/i18n";
+import { getCardName, t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 
 export type MarketplaceBrowseListing = {
@@ -175,6 +175,7 @@ export function MarketplaceBrowse({
             )}
           </Button>
           <select
+            aria-label="Sort listings"
             value={sort}
             onChange={(e) => {
               setSort(e.target.value);
@@ -190,6 +191,7 @@ export function MarketplaceBrowse({
           </select>
           <div className="flex rounded-lg border border-input">
             <button
+              aria-label="Grid view"
               onClick={() => setViewMode("grid")}
               className={cn(
                 "flex size-8 items-center justify-center rounded-l-lg transition-colors",
@@ -199,6 +201,7 @@ export function MarketplaceBrowse({
               <Grid3x3 className="size-3.5" />
             </button>
             <button
+              aria-label="List view"
               onClick={() => setViewMode("list")}
               className={cn(
                 "flex size-8 items-center justify-center rounded-r-lg transition-colors",
@@ -372,6 +375,7 @@ export function MarketplaceBrowse({
 }
 
 function ListingCardListView({ listing: l }: { listing: MarketplaceBrowseListing }) {
+  const lang = useUIStore((s) => s.language);
   const market = l.card.latestPriceJpy;
   const diffPct =
     market != null && market > 0 ? ((l.priceJpy - market) / market) * 100 : null;
@@ -384,7 +388,7 @@ function ListingCardListView({ listing: l }: { listing: MarketplaceBrowseListing
     >
       <div className="size-16 shrink-0 overflow-hidden rounded-lg bg-muted">
         {l.card.imageUrl ? (
-          <img src={l.card.imageUrl} alt="" className="size-full object-contain" />
+          <img src={l.card.imageUrl} alt={getCardName(lang, l.card)} className="size-full object-contain" />
         ) : (
           <span className="flex size-full items-center justify-center text-xs text-muted-foreground">
             N/A

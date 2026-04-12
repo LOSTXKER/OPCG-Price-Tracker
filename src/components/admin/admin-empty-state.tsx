@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 
 interface AdminEmptyStateProps {
   icon?: LucideIcon;
@@ -8,25 +9,18 @@ interface AdminEmptyStateProps {
 }
 
 export function AdminEmptyState({
-  icon: Icon,
+  icon,
   title,
   description,
   action,
 }: AdminEmptyStateProps) {
   return (
-    <div className="flex flex-col items-center gap-3 py-16 text-center">
-      {Icon && (
-        <div className="rounded-xl bg-muted/50 p-4">
-          <Icon className="h-8 w-8 text-muted-foreground/40" />
-        </div>
-      )}
-      <div>
-        <p className="font-medium text-muted-foreground">{title}</p>
-        {description && (
-          <p className="mt-1 text-sm text-muted-foreground/70">{description}</p>
-        )}
-      </div>
-      {action}
-    </div>
+    <KumaEmptyState
+      variant="admin"
+      icon={icon}
+      title={title}
+      description={description}
+      action={action}
+    />
   );
 }

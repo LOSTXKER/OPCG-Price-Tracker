@@ -188,7 +188,13 @@ function ListingCardBase({
             )}
           </div>
           <Link href={`/messages/${id}`}>
-            <Button type="button" variant="ghost" size="icon" className="size-8 text-muted-foreground hover:text-primary">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Send message"
+              className="size-8 text-muted-foreground hover:text-primary"
+            >
               <MessageCircle className="size-4" />
             </Button>
           </Link>

@@ -1,12 +1,9 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { useSearchParams, useRouter } from "next/navigation"
 import { useCallback, useEffect, useRef, useState, useTransition, Suspense } from "react"
 import {
-  ChevronLeft,
-  ChevronRight,
   LayoutGrid,
   List,
   Search,
@@ -14,23 +11,17 @@ import {
   X,
 } from "lucide-react"
 
-import { RarityBadge } from "@/components/shared/rarity-badge"
-import { Price } from "@/components/shared/price-inline"
-import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { SortableHeader } from "@/components/shared/sortable-header"
 import { Skeleton } from "@/components/ui/skeleton"
 import { GridCard, GridCardSkeleton } from "@/components/home/grid-card"
 import { CardGrid } from "@/components/cards/card-grid"
-import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
-import { changeToneClass, formatSignedPct } from "@/lib/utils/currency"
 import { fetchCards } from "@/lib/api/fetch-cards"
 import {
   type SortKey,
   type ColumnId,
-  type CardRow as BaseCardRow,
   type ViewMode,
   type ChangePeriod,
   CHANGE_PERIODS,
@@ -38,11 +29,8 @@ import {
   parseSortColumn,
   PAGE_SIZE,
 } from "@/components/home/market-types"
-
-interface CardRow extends BaseCardRow {
-  id: number
-  latestPriceThb?: number | null
-}
+import { SearchTableRow, type CardRow } from "./search-table-row"
+import { SearchPagination } from "./search-pagination"
 
 type SetOption = { code: string; name: string }
 
@@ -233,7 +221,6 @@ function SearchContent({
       {/* Results summary + controls */}
       {hasSearched && query.trim() && (
         <div className="panel overflow-hidden">
-          {/* Summary row */}
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
             <p className="text-sm text-muted-foreground">
               {t(lang, "resultsFor")} &ldquo;<span className="font-medium text-foreground">{query}</span>&rdquo;
@@ -250,9 +237,7 @@ function SearchContent({
             )}
           </div>
 
-          {/* Filter / controls bar */}
           <div className="flex flex-wrap items-center gap-2 border-t border-border/40 bg-muted/20 px-4 py-2.5">
-            {/* Set filter */}
             {sets.length > 0 && (
               <select
                 value={selectedSet}
@@ -266,7 +251,6 @@ function SearchContent({
               </select>
             )}
 
-            {/* Rarity filter */}
             {rarities.length > 0 && (
               <select
                 value={selectedRarity}
@@ -280,7 +264,6 @@ function SearchContent({
               </select>
             )}
 
-            {/* Sort dropdown */}
             <select
               value={sort}
               onChange={(e) => handleSortChange(e.target.value as SortKey)}
@@ -291,9 +274,7 @@ function SearchContent({
               ))}
             </select>
 
-            {/* Spacer */}
             <div className="ml-auto flex items-center gap-1.5">
-              {/* Period selector (grid mode) */}
               {viewMode === "grid" && (
                 <div className="hidden items-center gap-0.5 rounded-full border border-border/50 p-0.5 sm:flex">
                   <TrendingUpDown className="mx-1.5 size-3.5 text-muted-foreground/50" />
@@ -314,7 +295,6 @@ function SearchContent({
                 </div>
               )}
 
-              {/* View toggle */}
               <div className="flex items-center gap-0.5 rounded-lg bg-muted/50 p-0.5">
                 <button
                   onClick={() => setViewMode("table")}
@@ -389,7 +369,6 @@ function SearchContent({
       {/* Results — Table view */}
       {!isPending && cards.length > 0 && viewMode === "table" && (
         <div className="panel overflow-hidden">
-          {/* Desktop table */}
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -421,48 +400,7 @@ function SearchContent({
 
       {/* Pagination */}
       {!isPending && totalPages > 1 && cards.length > 0 && (
-        <div className="panel flex items-center justify-between px-4 py-3">
-          <p className="text-xs tabular-nums text-muted-foreground">
-            {t(lang, "pageOf")} {page} / {totalPages}
-          </p>
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              disabled={page <= 1}
-              onClick={() => handlePageChange(page - 1)}
-              className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted disabled:opacity-30"
-            >
-              <ChevronLeft className="size-4" />
-            </button>
-            {generatePageNumbers(page, totalPages).map((p, i) =>
-              p === "..." ? (
-                <span key={`dots-${i}`} className="px-1 text-xs text-muted-foreground">...</span>
-              ) : (
-                <button
-                  key={p}
-                  type="button"
-                  onClick={() => handlePageChange(p as number)}
-                  className={cn(
-                    "flex size-8 items-center justify-center rounded-lg text-xs font-medium tabular-nums transition-colors",
-                    page === p
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  {p}
-                </button>
-              )
-            )}
-            <button
-              type="button"
-              disabled={page >= totalPages}
-              onClick={() => handlePageChange(page + 1)}
-              className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted disabled:opacity-30"
-            >
-              <ChevronRight className="size-4" />
-            </button>
-          </div>
-        </div>
+        <SearchPagination page={page} totalPages={totalPages} onPageChange={handlePageChange} />
       )}
 
       {/* Fetch error */}
@@ -501,106 +439,6 @@ function SearchContent({
       )}
     </div>
   )
-}
-
-function SearchTableRow({ card, rank }: { card: CardRow; rank: number }) {
-  const lang = useUIStore((s) => s.language)
-  const name = getCardName(lang, card)
-  const setCode = card.set?.code ?? card.setCode ?? ""
-  const c24 = card.priceChange24h
-  const c7 = card.priceChange7d
-  const c30 = card.priceChange30d
-
-  return (
-    <tr className="border-b border-border/30 transition-colors duration-150 even:bg-muted/20 hover:bg-muted/50">
-      <td className="py-3 pl-3 pr-0 align-middle">
-        {card.id != null && (
-          <span onClick={(e) => { e.preventDefault(); e.stopPropagation() }}>
-            <WatchlistStar cardId={card.id} size="sm" />
-          </span>
-        )}
-      </td>
-      <td className="py-3 pr-1 pl-1 align-middle">
-        <span className="font-price text-xs text-muted-foreground">{rank}</span>
-      </td>
-      <td className="py-3 pr-3 pl-2 align-middle">
-        <div className="flex items-center gap-3">
-          <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted">
-            {card.imageUrl ? (
-              <Image
-                src={card.imageUrl}
-                alt={name}
-                fill
-                className="object-contain"
-                sizes="40px"
-                placeholder="blur"
-                blurDataURL={BLUR_DATA_URL}
-              />
-            ) : (
-              <div className="size-full bg-muted" />
-            )}
-          </div>
-          <Link href={`/cards/${card.cardCode}`} className="min-w-0">
-            <p className="truncate text-sm font-medium leading-tight hover:text-primary hover:underline">
-              {name}
-            </p>
-            <p className="mt-0.5 font-mono text-xs text-muted-foreground">
-              {card.baseCode ?? card.cardCode}
-              {card.isParallel && <span className="ml-1 text-primary">P</span>}
-            </p>
-          </Link>
-        </div>
-      </td>
-      <td className="hidden py-3 pr-3 align-middle font-mono text-xs text-muted-foreground md:table-cell">
-        {setCode && (
-          <Link
-            href={`/sets/${setCode}`}
-            className="underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid"
-          >
-            {setCode.toUpperCase()}
-          </Link>
-        )}
-      </td>
-      <td className="hidden py-3 pr-3 align-middle sm:table-cell">
-        <RarityBadge rarity={card.rarity} size="sm" />
-      </td>
-      <td className="py-3 pr-3 text-right align-middle font-price text-sm font-semibold">
-        {card.latestPriceJpy != null ? (
-          <Price jpy={card.latestPriceJpy} thb={card.latestPriceThb} />
-        ) : (
-          <span className="text-muted-foreground/40">—</span>
-        )}
-      </td>
-      <td className="py-3 pr-3 text-right align-middle">
-        <span className={cn("font-price text-xs font-medium tabular-nums", changeToneClass(c24))}>
-          {formatSignedPct(c24)}
-        </span>
-      </td>
-      <td className="hidden py-3 pr-3 text-right align-middle md:table-cell">
-        <span className={cn("font-price text-xs font-medium tabular-nums", changeToneClass(c7))}>
-          {formatSignedPct(c7)}
-        </span>
-      </td>
-      <td className="hidden py-3 pr-3 text-right align-middle lg:table-cell">
-        <span className={cn("font-price text-xs font-medium tabular-nums", changeToneClass(c30))}>
-          {formatSignedPct(c30)}
-        </span>
-      </td>
-    </tr>
-  )
-}
-
-function generatePageNumbers(current: number, total: number): (number | "...")[] {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
-  const pages: (number | "...")[] = []
-  pages.push(1)
-  if (current > 3) pages.push("...")
-  const start = Math.max(2, current - 1)
-  const end = Math.min(total - 1, current + 1)
-  for (let i = start; i <= end; i++) pages.push(i)
-  if (current < total - 2) pages.push("...")
-  pages.push(total)
-  return pages
 }
 
 export default function SearchClient({

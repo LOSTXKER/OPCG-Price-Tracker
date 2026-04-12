@@ -71,7 +71,7 @@ export function ShopTab({
       <div className="panel overflow-hidden">
         <div className="border-b px-4 py-3.5">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold">{t(lang, "honeyShop")}</h2>
+            <h2 className="text-lg font-semibold">{t(lang, "honeyShop")}</h2>
             <span className="flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-bold tabular-nums text-amber-700 dark:text-amber-400">
               🍯 {points.toLocaleString()}
             </span>

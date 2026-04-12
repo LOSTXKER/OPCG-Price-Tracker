@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { StatCard } from "@/components/shared/stat-card";
 import {
   Package,
   Eye,
@@ -149,7 +150,7 @@ export default function SellerDashboard() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">ภาพรวมร้าน</h1>
+          <h1 className="page-header">ภาพรวมร้าน</h1>
           <p className="text-sm text-muted-foreground">
             จัดการสินค้าและติดตามยอดขายของคุณ
           </p>
@@ -163,36 +164,22 @@ export default function SellerDashboard() {
       {/* Stats Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {statCards.map((card) => {
-          const Icon = card.icon;
-          const content = (
-            <div className="flex items-center gap-3">
-              <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${card.bg}`}>
-                <Icon className={`h-5 w-5 ${card.color}`} />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">{card.label}</p>
-                <p className="text-lg font-bold">{card.value}</p>
-                {card.sub && (
-                  <p className="text-xs text-muted-foreground">{card.sub}</p>
-                )}
-              </div>
-            </div>
+          const inner = (
+            <StatCard
+              key={card.label}
+              label={card.label}
+              value={card.value}
+              sub={card.sub}
+              icon={card.icon}
+              color={card.color}
+              bg={card.bg}
+              className="transition-colors hover:bg-muted/30"
+            />
           );
           return card.href ? (
-            <Link
-              key={card.label}
-              href={card.href}
-              className="panel rounded-xl p-4 transition-colors hover:bg-muted/30"
-            >
-              {content}
-            </Link>
+            <Link key={card.label} href={card.href}>{inner}</Link>
           ) : (
-            <div
-              key={card.label}
-              className="panel rounded-xl p-4 transition-colors hover:bg-muted/30"
-            >
-              {content}
-            </div>
+            <div key={card.label}>{inner}</div>
           );
         })}
       </div>

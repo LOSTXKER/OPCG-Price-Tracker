@@ -64,7 +64,7 @@ export function PriceDisplay({
             s.change,
             up && "bg-price-up/10 text-price-up",
             down && "bg-price-down/10 text-price-down",
-            !up && !down && "text-muted-foreground"
+            !up && !down && "bg-muted/50 text-muted-foreground"
           )}
         >
           {changeNum! > 0 ? "+" : ""}{formatPct(changeNum!)}%

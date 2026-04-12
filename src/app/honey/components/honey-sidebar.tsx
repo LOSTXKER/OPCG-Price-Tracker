@@ -205,7 +205,7 @@ function StreakInfoPopover({ lang }: { lang: Language }) {
 /*  Stat Card                                                          */
 /* ------------------------------------------------------------------ */
 
-function StatCard({
+function HoneyStatCard({
   icon,
   iconClassName,
   tintClassName,
@@ -342,7 +342,7 @@ export function HoneyStatusBar(props: StatusProps) {
 
         {/* Stat cards grid */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <StatCard
+          <HoneyStatCard
             icon={<span className="text-xl leading-none">🍯</span>}
             iconClassName="bg-amber-500/15"
             tintClassName="border-amber-500/20 bg-amber-500/[0.03] dark:bg-amber-500/[0.04]"
@@ -353,7 +353,7 @@ export function HoneyStatusBar(props: StatusProps) {
             popover={<HowToEarnPopover lang={lang} />}
           />
 
-          <StatCard
+          <HoneyStatCard
             icon={<Ticket className="size-5" />}
             iconClassName="bg-blue-500/15 text-blue-600 dark:text-blue-400"
             tintClassName="border-blue-500/20 bg-blue-500/[0.03] dark:bg-blue-500/[0.04]"
@@ -364,7 +364,7 @@ export function HoneyStatusBar(props: StatusProps) {
             popover={<TicketInfoPopover lang={lang} />}
           />
 
-          <StatCard
+          <HoneyStatCard
             icon={<Flame className="size-5" />}
             iconClassName={cn(
               tierIdx >= 2
@@ -381,7 +381,7 @@ export function HoneyStatusBar(props: StatusProps) {
             popover={<StreakInfoPopover lang={lang} />}
           />
 
-          <StatCard
+          <HoneyStatCard
             icon={<RankIcon className="size-5" />}
             iconClassName="bg-purple-500/15 text-purple-600 dark:text-purple-400"
             tintClassName="border-purple-500/20 bg-purple-500/[0.03] dark:bg-purple-500/[0.04]"

@@ -25,8 +25,8 @@ export function PortfolioHero({
   const currency = useUIStore((s) => s.currency)
 
   return (
-    <div className="panel p-5">
-      <p className="text-xs text-muted-foreground">{t(lang, "portfolioValue")}</p>
+    <div className="panel panel-accent p-5">
+      <p className="text-xs text-primary/70">{t(lang, "portfolioValue")}</p>
       <div className="mt-1 flex flex-wrap items-baseline gap-3">
         <span className="font-price text-2xl font-bold tabular-nums tracking-tight sm:text-4xl">
           {hideBalance ? "••••••" : <Price jpy={totalValueJpy} />}

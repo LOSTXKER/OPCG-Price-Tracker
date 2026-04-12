@@ -255,7 +255,7 @@ export default async function CardTypesPage() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">
-                    <h2 className="text-xl font-bold">{featured.name}</h2>
+                    <h2 className="text-xl font-semibold">{featured.name}</h2>
                     <span className="text-sm text-muted-foreground">{featured.nameJp}</span>
                   </div>
                   <div className="mt-2 flex flex-wrap gap-1.5">
@@ -310,7 +310,7 @@ export default async function CardTypesPage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-baseline gap-2">
-                        <h2 className="text-sm font-bold">{type.name}</h2>
+                        <h2 className="text-xl font-semibold">{type.name}</h2>
                         <span className="text-xs text-muted-foreground">{type.nameJp}</span>
                       </div>
                       <div className="mt-1.5 flex flex-wrap gap-1">

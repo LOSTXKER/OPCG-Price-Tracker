@@ -85,7 +85,7 @@ export default function SellerOrdersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">คำสั่งซื้อ</h1>
+        <h1 className="page-header">คำสั่งซื้อ</h1>
         <p className="text-sm text-muted-foreground">
           จัดการคำสั่งซื้อจากผู้ซื้อ
         </p>

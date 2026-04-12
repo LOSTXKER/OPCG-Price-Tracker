@@ -90,7 +90,7 @@ export default function SellerReviewsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">รีวิว</h1>
+        <h1 className="page-header">รีวิว</h1>
         <p className="text-sm text-muted-foreground">
           ดูรีวิวจากผู้ซื้อ
         </p>

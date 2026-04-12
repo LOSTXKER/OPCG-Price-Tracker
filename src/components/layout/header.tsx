@@ -5,219 +5,49 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import {
-  ArrowRightLeft,
-  Award,
   Bookmark,
-  BookOpen,
-  Check,
   ChevronDown,
-  Coins,
   Crown,
-  Dices,
-  Globe,
-  LayoutGrid,
-  LogOut,
-  Menu,
-  MessageCircle,
-  Moon,
-  Search,
-  Settings,
-  Heart,
-  ShoppingBag,
-  Sparkles,
   Star,
-  Store,
-  Sun,
-  TrendingUp,
-  User,
   Zap,
 } from "lucide-react";
-import { useTheme } from "next-themes";
-
-import { CommandSearchModal } from "@/components/shared/command-search";
-import { NotificationBell } from "@/components/shared/notification-bell";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
-import { Price } from "@/components/shared/price-inline";
-import { createClient } from "@/lib/supabase/client";
-import { useUIStore, type Language, type Currency } from "@/stores/ui-store";
+import { CommandSearchModal } from "@/components/shared/command-search";
+import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
-import { getHoneyLevel } from "@/lib/honey/levels";
-
-const NAV_LINKS = [
-  { href: "/" as const, key: "overview" as const },
-  { href: "/sets" as const, key: "sets" as const },
-  { href: "/marketplace" as const, key: "marketplace" as const },
-];
-
-const TOOL_LINKS = [
-  { href: "/drop-calculator" as const, key: "dropCalculator" as const, icon: Dices },
-  { href: "/deck-calculator" as const, key: "deckCalculatorNav" as const, icon: LayoutGrid },
-  { href: "/compare" as const, key: "compareCards" as const, icon: ArrowRightLeft },
-];
-
-function isActive(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
-
-type AuthUser = {
-  email?: string;
-  user_metadata?: { avatar_url?: string; full_name?: string };
-};
-
-type UserTierValue = "FREE" | "PRO" | "PRO_PLUS" | "LIFETIME_PRO" | "LIFETIME_PRO_PLUS";
-
-const TIER_DISPLAY: Record<UserTierValue, { label: string; color: string; icon: typeof Star }> = {
-  FREE: { label: "Free", color: "bg-muted text-muted-foreground", icon: User },
-  PRO: { label: "Pro", color: "bg-[#A57E61]/15 text-[#73533E] dark:text-[#C49A70]", icon: Zap },
-  PRO_PLUS: { label: "Pro+", color: "bg-amber-500/15 text-amber-600 dark:text-amber-400", icon: Crown },
-  LIFETIME_PRO: { label: "Pro ∞", color: "bg-[#73533E]/15 text-[#73533E] dark:text-[#E0B865]", icon: Sparkles },
-  LIFETIME_PRO_PLUS: { label: "Pro+ ∞", color: "bg-amber-500/15 text-amber-600 dark:text-amber-400", icon: Crown },
-};
-
-type MarketStats = {
-  totalCards: number;
-  totalValue: number;
-  exchangeRate: number;
-  topMover: { code: string; name: string; change: number } | null;
-};
-
-const LANG_OPTIONS: { value: Language; label: string }[] = [
-  { value: "TH", label: "ไทย" },
-  { value: "EN", label: "English" },
-  { value: "JP", label: "日本語" },
-];
-
-const CURRENCY_OPTIONS: { value: Currency; label: string }[] = [
-  { value: "THB", label: "฿ THB" },
-  { value: "JPY", label: "¥ JPY" },
-  { value: "USD", label: "$ USD" },
-];
-
-const CURRENCY_SYMBOL: Record<Currency, string> = { THB: "฿", JPY: "¥", USD: "$" };
-
-const RANK_DISPLAY: Record<string, { color: string; bg: string; ring: string }> = {
-  Newbie:  { color: "text-muted-foreground",                          bg: "bg-muted text-muted-foreground",                                  ring: "ring-border" },
-  Bronze:  { color: "text-amber-700 dark:text-amber-500",             bg: "bg-amber-500/15 text-amber-700 dark:text-amber-400",              ring: "ring-amber-500/30" },
-  Silver:  { color: "text-slate-500 dark:text-slate-300",             bg: "bg-slate-500/15 text-slate-600 dark:text-slate-300",              ring: "ring-slate-400/30" },
-  Gold:    { color: "text-yellow-600 dark:text-yellow-400",           bg: "bg-yellow-500/15 text-yellow-700 dark:text-yellow-400",           ring: "ring-yellow-500/30" },
-  Diamond: { color: "text-cyan-500 dark:text-cyan-300",               bg: "bg-cyan-500/15 text-cyan-600 dark:text-cyan-300",                ring: "ring-cyan-400/30" },
-};
+import { useHeaderData } from "@/hooks/use-header-data";
+import { NAV_LINKS, TOOL_LINKS, isActive } from "./header-constants";
+import { HeaderMarketTicker } from "./header-market-ticker";
+import { HeaderUserMenu } from "./header-user-menu";
+import { HeaderMobile } from "./header-mobile";
 
 export function Header() {
   const router = useRouter();
   const pathname = usePathname() ?? "/";
-  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
-  const [authLoaded, setAuthLoaded] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [stats, setStats] = useState<MarketStats>({
-    totalCards: 0,
-    totalValue: 0,
-    exchangeRate: 0.296,
-    topMover: { code: "OP13-118-P", name: "Monkey.D.Luffy", change: 5.8 },
-  });
-  const [userTier, setUserTier] = useState<UserTierValue>("FREE");
-  const [honeyPoints, setHoneyPoints] = useState(0);
-  const [honeyLifetime, setHoneyLifetime] = useState(0);
-  const [honeyPendingActions, setHoneyPendingActions] = useState(false);
-  const [unreadMessages, setUnreadMessages] = useState(0);
-  const [userId, setUserId] = useState<string | null>(null);
-  const [appDisplayName, setAppDisplayName] = useState<string | null>(null);
-  const [appAvatarUrl, setAppAvatarUrl] = useState<string | null>(null);
-
   const language = useUIStore((s) => s.language);
-  const setLanguage = useUIStore((s) => s.setLanguage);
-  const currency = useUIStore((s) => s.currency);
-  const setCurrency = useUIStore((s) => s.setCurrency);
-  const { resolvedTheme, setTheme } = useTheme();
+  const [searchOpen, setSearchOpen] = useState(false);
 
-  useEffect(() => { setMounted(true); }, []);
-
-  useEffect(() => {
-    if (process.env.NEXT_PUBLIC_BYPASS_AUTH === "true") {
-      setAuthUser({ id: "dev-bypass", email: "dev@localhost" } as import("@supabase/supabase-js").User);
-      setAuthLoaded(true);
-      return;
-    }
-    const supabase = createClient();
-    supabase.auth.getUser()
-      .then(({ data }) => {
-        setAuthUser(data.user ?? null);
-        setAuthLoaded(true);
-      })
-      .catch(() => {
-        setAuthLoaded(true);
-      });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setAuthUser(session?.user ?? null);
-      setAuthLoaded(true);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (!authUser) { setUserTier("FREE"); setHoneyPoints(0); setHoneyLifetime(0); setHoneyPendingActions(false); setUserId(null); setAppDisplayName(null); setAppAvatarUrl(null); setUnreadMessages(0); return; }
-    fetch("/api/settings")
-      .then((r) => r.ok ? r.json() : null)
-      .then((data) => {
-        if (!data) return;
-        if (data.id) setUserId(data.id as string);
-        if (data.tier) setUserTier(data.tier as UserTierValue);
-        if (typeof data.honeyPoints === "number") setHoneyPoints(data.honeyPoints);
-        if (typeof data.honeyLifetimeEarned === "number") setHoneyLifetime(data.honeyLifetimeEarned);
-        if (typeof data.honeyPendingActions === "boolean") setHoneyPendingActions(data.honeyPendingActions);
-        if (typeof data.displayName === "string") setAppDisplayName(data.displayName);
-        if (typeof data.avatarUrl === "string") setAppAvatarUrl(data.avatarUrl);
-      })
-      .catch(() => {});
-    fetch("/api/messages/unread-count")
-      .then((r) => r.ok ? r.json() : null)
-      .then((data) => { if (typeof data?.count === "number") setUnreadMessages(data.count); })
-      .catch(() => {});
-  }, [authUser]);
-
-  useEffect(() => {
-    async function fetchStats() {
-      try {
-        const [rateRes, statsRes] = await Promise.all([
-          fetch("/api/exchange-rate"),
-          fetch("/api/cards?limit=1&sort=priceChange24h&order=desc"),
-        ]);
-        const rateData = rateRes.ok ? await rateRes.json() : null;
-        const cardsData = statsRes.ok ? await statsRes.json() : null;
-
-        const top = cardsData?.cards?.[0];
-        setStats((prev) => ({
-          totalCards: cardsData?.total ?? prev.totalCards,
-          totalValue: cardsData?.totalValue ?? prev.totalValue,
-          exchangeRate: rateData?.rate ?? prev.exchangeRate,
-          topMover: top
-            ? {
-                code: top.cardCode,
-                name: top.nameEn ?? top.nameJp ?? top.cardCode,
-                change: top.priceChange24h ?? 0,
-              }
-            : prev.topMover,
-        }));
-      } catch {
-        /* non-critical — keep previous/default values */
-      }
-    }
-    fetchStats();
-  }, []);
+  const {
+    authUser,
+    authLoaded,
+    stats,
+    userTier,
+    honeyPoints,
+    honeyLifetime,
+    honeyPendingActions,
+    unreadMessages,
+    userId,
+    userName,
+    userAvatar,
+    mounted,
+    handleLogout,
+  } = useHeaderData();
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -234,176 +64,37 @@ export function Header() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const handleLogout = async () => {
-    const supabase = createClient();
-    supabase.auth.signOut().catch(() => {});
-    router.push("/login");
-    router.refresh();
-  };
-
   const closeSearch = useCallback(() => setSearchOpen(false), []);
+  const openSearch = useCallback(() => setSearchOpen(true), []);
 
-  const tierInfo = TIER_DISPLAY[userTier];
-  const TierIcon = tierInfo.icon;
   const canUpgrade = userTier === "FREE" || userTier === "PRO";
 
-  const userName = appDisplayName ?? authUser?.user_metadata?.full_name ?? authUser?.email?.split("@")[0] ?? "User";
-  const userAvatar = appAvatarUrl ?? authUser?.user_metadata?.avatar_url ?? null;
-
-  const honeyLevel = getHoneyLevel(honeyLifetime);
-  const rankDisplay = RANK_DISPLAY[honeyLevel.label] ?? RANK_DISPLAY.Newbie;
-  const expProgress = honeyLevel.nextThreshold
-    ? Math.min(100, (honeyLifetime / honeyLevel.nextThreshold) * 100)
-    : 100;
+  const doLogout = useCallback(async () => {
+    await handleLogout();
+    router.push("/login");
+    router.refresh();
+  }, [handleLogout, router]);
 
   return (
     <>
     <div className="sticky top-0 z-50 hidden md:block">
-      {/* ══════════ TOP BAR — market ticker + preferences ══════════ */}
-      <div className="border-b border-border/40 bg-background">
-        <div className="mx-auto flex h-10 max-w-7xl items-center justify-between px-6 text-[11.5px] lg:px-8">
-          {/* Left — market ticker chips */}
-          <div className="flex items-center gap-2 text-muted-foreground">
-            {stats.totalCards > 0 && (
-              <div className="flex items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1">
-                <span className="font-medium">{t(language, "totalCards")}</span>
-                <span className="font-bold tabular-nums text-foreground">
-                  {stats.totalCards.toLocaleString()}
-                </span>
-              </div>
-            )}
-
-            {stats.totalValue > 0 && (
-              <Link href="/market-overview" className="group flex items-center gap-1.5 rounded-full border border-green-500/20 bg-green-500/5 px-2.5 py-1 transition-colors hover:border-green-500/40 hover:bg-green-500/10">
-                <span className="font-medium text-green-700 dark:text-green-300">{t(language, "totalValue")}</span>
-                <span className="font-bold tabular-nums text-green-600 dark:text-green-400">
-                  <Price jpy={stats.totalValue} />
-                </span>
-                <TrendingUp className="size-3 text-green-500 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            )}
-
-            <div className="flex items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1">
-              <ArrowRightLeft className="size-3 text-blue-500" />
-              <span className="font-medium">JPY/THB</span>
-              <span className="font-bold tabular-nums text-foreground">
-                {stats.exchangeRate.toFixed(3)}
-              </span>
-            </div>
-
-            {stats.topMover && stats.topMover.change !== 0 && (
-              <Link
-                href={`/cards/${stats.topMover.code}`}
-                className="flex items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1 transition-colors hover:bg-muted/80"
-              >
-                <TrendingUp className="size-3 text-green-500" />
-                <span className="font-medium">Top 24h</span>
-                <span className="max-w-[120px] truncate font-bold text-foreground">
-                  {stats.topMover.name}
-                </span>
-                <span
-                  className={cn(
-                    "rounded-full px-1.5 py-0.5 text-[10px] font-bold leading-none",
-                    stats.topMover.change >= 0
-                      ? "bg-green-500/15 text-green-600 dark:text-green-400"
-                      : "bg-red-500/15 text-red-600 dark:text-red-400"
-                  )}
-                >
-                  {stats.topMover.change >= 0 ? "+" : ""}
-                  {stats.topMover.change.toFixed(1)}%
-                </span>
-              </Link>
-            )}
-          </div>
-
-          {/* Right — search + preferences (compact) */}
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
-              onClick={() => setSearchOpen(true)}
-              className="flex h-7 w-40 items-center gap-1.5 rounded-md border border-border/80 bg-background/80 px-2.5 text-muted-foreground transition-colors hover:border-border hover:bg-background lg:w-48"
-            >
-              <Search className="size-3.5 shrink-0 text-muted-foreground/60" />
-              <span className="flex-1 text-left text-[11px] text-muted-foreground/70">{t(language, "searchPlaceholder")}</span>
-              <kbd className="shrink-0 rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] leading-none text-muted-foreground/60">/</kbd>
-            </button>
-
-            <div className="mx-0.5 h-4 w-px bg-border/40" />
-
-            {authLoaded && authUser && canUpgrade && (
-              <>
-                <Link
-                  href="/pricing"
-                  className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary transition-colors hover:bg-primary/20"
-                >
-                  <Zap className="size-3" />
-                  {language === "TH" ? "อัปเกรด" : language === "JP" ? "アップグレード" : "Upgrade"}
-                </Link>
-                <div className="mx-0.5 h-4 w-px bg-border/40" />
-              </>
-            )}
-
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-full border border-border/60 px-2.5 py-1 font-medium text-muted-foreground transition-colors hover:border-border hover:bg-muted/60 hover:text-foreground focus:outline-none">
-                <Globe className="size-3" />
-                <span>{LANG_OPTIONS.find((l) => l.value === language)?.label ?? language}</span>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" sideOffset={6} className="min-w-[110px]">
-                <DropdownMenuRadioGroup value={language} onValueChange={(v) => setLanguage(v as Language)}>
-                  {LANG_OPTIONS.map((l) => (
-                    <DropdownMenuRadioItem key={l.value} value={l.value} className="text-xs">
-                      {l.label}
-                    </DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-full border border-border/60 px-2.5 py-1 font-medium text-muted-foreground transition-colors hover:border-border hover:bg-muted/60 hover:text-foreground focus:outline-none">
-                <span>{CURRENCY_SYMBOL[currency]}</span>
-                <span>{currency}</span>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" sideOffset={6} className="min-w-[110px]">
-                <DropdownMenuRadioGroup value={currency} onValueChange={(v) => setCurrency(v as Currency)}>
-                  {CURRENCY_OPTIONS.map((c) => (
-                    <DropdownMenuRadioItem key={c.value} value={c.value} className="text-xs">
-                      {c.label}
-                    </DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <button
-              type="button"
-              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-              className="flex items-center gap-1.5 rounded-full border border-border/60 px-2.5 py-1 text-muted-foreground transition-colors hover:border-border hover:bg-muted/60 hover:text-foreground"
-            >
-              {mounted && resolvedTheme === "dark" ? <Sun className="size-3" /> : <Moon className="size-3" />}
-              <span className="font-medium">{mounted && resolvedTheme === "dark" ? t(language, "lightMode") : t(language, "darkMode")}</span>
-            </button>
-          </div>
-        </div>
-      </div>
+      <HeaderMarketTicker
+        stats={stats}
+        authLoaded={authLoaded}
+        authUser={authUser}
+        canUpgrade={canUpgrade}
+        mounted={mounted}
+        onSearchOpen={openSearch}
+      />
 
       {/* ══════════ BOTTOM BAR — brand + nav + user tools ══════════ */}
       <header className="border-b border-border/50 bg-background/95 backdrop-blur-xl">
         <div className="mx-auto flex h-14 max-w-7xl items-center px-6 lg:px-8">
-          {/* Logo */}
           <Link href="/" className="mr-8 flex shrink-0 items-center gap-2.5">
-            <Image
-              src="/meecard.png"
-              alt="Meecard"
-              width={28}
-              height={28}
-              className="shrink-0 select-none"
-              priority
-            />
+            <Image src="/meecard.png" alt="Meecard" width={28} height={28} className="shrink-0 select-none" priority />
             <span className="text-base font-bold tracking-tight">Meecard</span>
           </Link>
 
-          {/* Nav links */}
           <nav className="flex items-center">
             {NAV_LINKS.map((link) => {
               const active = isActive(pathname, link.href);
@@ -413,20 +104,15 @@ export function Header() {
                   href={link.href}
                   className={cn(
                     "relative whitespace-nowrap px-3 py-2 text-sm font-medium transition-colors",
-                    active
-                      ? "font-semibold text-foreground"
-                      : "text-muted-foreground hover:text-foreground"
+                    active ? "font-semibold text-foreground" : "text-muted-foreground hover:text-foreground"
                   )}
                 >
                   {t(language, link.key)}
-                  {active && (
-                    <span className="absolute bottom-0 left-1/2 h-[2px] w-5 -translate-x-1/2 rounded-full bg-primary" />
-                  )}
+                  {active && <span className="absolute bottom-0 left-1/2 h-[2px] w-5 -translate-x-1/2 rounded-full bg-primary" />}
                 </Link>
               );
             })}
 
-            {/* Tools dropdown */}
             {(() => {
               const toolActive = TOOL_LINKS.some((l) => isActive(pathname, l.href));
               return (
@@ -434,16 +120,12 @@ export function Header() {
                   <DropdownMenuTrigger
                     className={cn(
                       "relative flex items-center gap-1 whitespace-nowrap px-3 py-2 text-sm font-medium transition-colors focus:outline-none",
-                      toolActive
-                        ? "font-semibold text-foreground"
-                        : "text-muted-foreground hover:text-foreground"
+                      toolActive ? "font-semibold text-foreground" : "text-muted-foreground hover:text-foreground"
                     )}
                   >
                     {t(language, "tools")}
                     <ChevronDown className="size-3" />
-                    {toolActive && (
-                      <span className="absolute bottom-0 left-1/2 h-[2px] w-5 -translate-x-1/2 rounded-full bg-primary" />
-                    )}
+                    {toolActive && <span className="absolute bottom-0 left-1/2 h-[2px] w-5 -translate-x-1/2 rounded-full bg-primary" />}
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" sideOffset={8} className="min-w-[180px]">
                     {TOOL_LINKS.map((link) => {
@@ -452,9 +134,7 @@ export function Header() {
                         <DropdownMenuItem
                           key={link.href}
                           onClick={() => router.push(link.href)}
-                          className={cn(
-                            isActive(pathname, link.href) && "font-semibold text-foreground"
-                          )}
+                          className={cn(isActive(pathname, link.href) && "font-semibold text-foreground")}
                         >
                           <Icon className="size-4" />
                           {t(language, link.key)}
@@ -469,9 +149,7 @@ export function Header() {
 
           <div className="flex-1" />
 
-          {/* Right — user tools */}
           <div className="flex items-center gap-1.5">
-            {/* Portfolio — chip style */}
             <Link
               href="/portfolio"
               className={cn(
@@ -485,7 +163,6 @@ export function Header() {
               {t(language, "portfolioNav")}
             </Link>
 
-            {/* Watchlist — chip style */}
             <Link
               href="/watchlist"
               className={cn(
@@ -504,7 +181,6 @@ export function Header() {
               {t(language, "watchlistNav")}
             </Link>
 
-            {/* Honey — bordered chip with balance */}
             <Link
               href="/honey"
               className={cn(
@@ -531,160 +207,21 @@ export function Header() {
 
             <div className="mx-1.5 h-5 w-px bg-border/40" />
 
-            {/* Auth area */}
             {authLoaded && authUser ? (
-              <div className="flex items-center gap-1.5">
-                {/* Messages */}
-                <Link
-                  href="/messages"
-                  className={cn(
-                    "relative flex size-9 items-center justify-center rounded-lg transition-colors",
-                    isActive(pathname, "/messages")
-                      ? "bg-muted text-foreground"
-                      : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-                  )}
-                >
-                  <MessageCircle className="size-4" />
-                  {unreadMessages > 0 && (
-                    <span className="absolute -right-0.5 -top-0.5 flex min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-4 text-white">
-                      {unreadMessages > 99 ? "99+" : unreadMessages}
-                    </span>
-                  )}
-                </Link>
-                <NotificationBell />
-                {/* Profile dropdown — avatar + tier + rank */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2.5 transition-colors hover:bg-muted/60 focus:outline-none">
-                    <Avatar size="sm" className={cn("h-7 w-7 ring-2", rankDisplay.ring)}>
-                      {userAvatar ? (
-                        <AvatarImage src={userAvatar} alt="" />
-                      ) : null}
-                      <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
-                        {userName.slice(0, 1).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col items-start">
-                      <span className="max-w-[80px] truncate text-xs font-medium leading-tight text-foreground">
-                        {userName}
-                      </span>
-                      <div className="flex items-center gap-1">
-                        <span className={cn("text-[10px] font-semibold leading-tight", tierInfo.color.replace(/bg-\S+\s?/, ""))}>
-                          {tierInfo.label}
-                        </span>
-                        <span className="text-[10px] leading-tight text-muted-foreground/50">|</span>
-                        <span className={cn("text-[10px] font-semibold leading-tight", rankDisplay.color)}>
-                          {honeyLevel.label}
-                        </span>
-                      </div>
-                    </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" sideOffset={8} className="w-64">
-                    <DropdownMenuGroup>
-                      <DropdownMenuLabel className="font-normal">
-                        <p className="truncate text-sm font-medium text-foreground">
-                          {userName}
-                        </p>
-                        <p className="truncate text-xs text-muted-foreground">{authUser.email}</p>
-
-                        {/* Package + Rank badges */}
-                        <div className="mt-2 flex items-center gap-1.5">
-                          <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold", tierInfo.color)}>
-                            <TierIcon className="size-2.5" />
-                            {tierInfo.label}
-                          </span>
-                          <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold", rankDisplay.bg)}>
-                            <Award className="size-2.5" />
-                            {honeyLevel.label}
-                          </span>
-                        </div>
-
-                        {/* EXP progress bar */}
-                        <div className="mt-2.5">
-                          <div className="flex items-center justify-between text-[10px]">
-                            <span className="font-medium text-muted-foreground">
-                              {honeyLevel.nextThreshold ? "EXP" : "Max Rank"}
-                            </span>
-                            <span className={cn("tabular-nums font-semibold", rankDisplay.color)}>
-                              {honeyLevel.nextThreshold
-                                ? `${honeyLifetime.toLocaleString()} / ${honeyLevel.nextThreshold.toLocaleString()}`
-                                : honeyLifetime.toLocaleString()}
-                            </span>
-                          </div>
-                          <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                            <div
-                              className={cn(
-                                "h-full rounded-full transition-all",
-                                honeyLevel.label === "Diamond" ? "bg-cyan-500" :
-                                honeyLevel.label === "Gold"    ? "bg-yellow-500" :
-                                honeyLevel.label === "Silver"  ? "bg-slate-400" :
-                                honeyLevel.label === "Bronze"  ? "bg-amber-500" :
-                                                                 "bg-muted-foreground"
-                              )}
-                              style={{ width: `${expProgress}%` }}
-                            />
-                          </div>
-                          {honeyLevel.nextThreshold && (
-                            <p className="mt-0.5 text-xs text-muted-foreground">
-                              {(honeyLevel.nextThreshold - honeyLifetime).toLocaleString()} to {
-                                honeyLevel.level === 0 ? "Bronze" :
-                                honeyLevel.level === 1 ? "Silver" :
-                                honeyLevel.level === 2 ? "Gold"   :
-                                                         "Diamond"
-                              }
-                            </p>
-                          )}
-                        </div>
-
-                        {/* Honey balance */}
-                        <div className="mt-2 flex items-center gap-1.5 rounded-md bg-muted/60 px-2 py-1.5">
-                          <span className="text-sm leading-none">🍯</span>
-                          <span className="text-xs font-medium text-muted-foreground">Honey</span>
-                          <span className="ml-auto text-xs font-bold tabular-nums text-foreground">
-                            {honeyPoints.toLocaleString()}
-                          </span>
-                        </div>
-                      </DropdownMenuLabel>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => router.push(userId ? `/profile/${userId}` : "/profile")}>
-                      <User className="size-4" />
-                      {t(language, "profileLabel")}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push("/settings")}>
-                      <Settings className="size-4" />
-                      {t(language, "settingsTitle")}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push("/seller")}>
-                      <Store className="size-4" />
-                      {language === "TH" ? "ศูนย์ผู้ขาย" : language === "JP" ? "販売センター" : "Seller Center"}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push("/orders")}>
-                      <ShoppingBag className="size-4" />
-                      {language === "TH" ? "คำสั่งซื้อของฉัน" : language === "JP" ? "購入履歴" : "My Orders"}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push("/saved")}>
-                      <Heart className="size-4" />
-                      {language === "TH" ? "รายการที่บันทึก" : language === "JP" ? "保存済み" : "Saved Listings"}
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => router.push("/guide")}>
-                      <BookOpen className="size-4" />
-                      {t(language, "guide")}
-                    </DropdownMenuItem>
-                    {canUpgrade && (
-                      <DropdownMenuItem onClick={() => router.push("/pricing")} className="text-primary">
-                        <Zap className="size-4" />
-                        {language === "TH" ? "อัปเกรดแพ็กเกจ" : language === "JP" ? "プランをアップグレード" : "Upgrade Plan"}
-                      </DropdownMenuItem>
-                    )}
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem variant="destructive" onClick={() => void handleLogout()}>
-                      <LogOut className="size-4" />
-                      {t(language, "logout")}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+              <HeaderUserMenu
+                authUser={authUser}
+                authLoaded={authLoaded}
+                userTier={userTier}
+                userName={userName}
+                userAvatar={userAvatar}
+                userId={userId}
+                honeyPoints={honeyPoints}
+                honeyLifetime={honeyLifetime}
+                honeyPendingActions={honeyPendingActions}
+                unreadMessages={unreadMessages}
+                pathname={pathname}
+                onLogout={doLogout}
+              />
             ) : authLoaded ? (
               <div className="flex items-center gap-2">
                 <Link
@@ -713,137 +250,17 @@ export function Header() {
       </header>
     </div>
 
-    {/* ══════════ MOBILE TOP BAR ══════════ */}
-    <div className="sticky top-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur-xl md:hidden">
-      <div className="flex h-14 items-center gap-2 px-4">
-        <Link href="/" className="flex shrink-0 items-center gap-2">
-          <Image src="/meecard.png" alt="Meecard" width={26} height={26} className="shrink-0 select-none" priority />
-          <span className="text-base font-bold tracking-tight">Meecard</span>
-        </Link>
-
-        <div className="flex-1" />
-
-        <button
-          type="button"
-          onClick={() => setSearchOpen(true)}
-          className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
-        >
-          <Search className="size-[18px]" />
-        </button>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground focus:outline-none">
-            <Menu className="size-[18px]" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" sideOffset={8} className="w-56">
-            {authLoaded && authUser && (
-              <>
-                <div className="px-2 py-1.5">
-                  <p className="truncate text-sm font-medium">{userName}</p>
-                  <p className="truncate text-xs text-muted-foreground">{authUser.email}</p>
-                </div>
-                <DropdownMenuSeparator />
-              </>
-            )}
-
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-xs text-muted-foreground">{t(language, "languageLabel")}</DropdownMenuLabel>
-              {LANG_OPTIONS.map((l) => (
-                <DropdownMenuItem key={l.value} onClick={() => setLanguage(l.value)}>
-                  <Globe className="size-4" />
-                  {l.label}
-                  {language === l.value && <Check className="ml-auto size-3.5 text-primary" />}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-xs text-muted-foreground">{t(language, "currencyLabel")}</DropdownMenuLabel>
-              {CURRENCY_OPTIONS.map((c) => (
-                <DropdownMenuItem key={c.value} onClick={() => setCurrency(c.value)}>
-                  <Coins className="size-4" />
-                  {c.label}
-                  {currency === c.value && <Check className="ml-auto size-3.5 text-primary" />}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
-              {mounted && resolvedTheme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
-              {mounted && resolvedTheme === "dark" ? t(language, "lightMode") : t(language, "darkMode")}
-            </DropdownMenuItem>
-
-            {authLoaded && authUser ? (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push(userId ? `/profile/${userId}` : "/profile")}>
-                  <User className="size-4" />
-                  {t(language, "profileLabel")}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/settings")}>
-                  <Settings className="size-4" />
-                  {t(language, "settingsTitle")}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/seller")}>
-                  <Store className="size-4" />
-                  {language === "TH" ? "ศูนย์ผู้ขาย" : language === "JP" ? "販売センター" : "Seller Center"}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/orders")}>
-                  <ShoppingBag className="size-4" />
-                  {language === "TH" ? "คำสั่งซื้อของฉัน" : language === "JP" ? "購入履歴" : "My Orders"}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/saved")}>
-                  <Heart className="size-4" />
-                  {language === "TH" ? "รายการที่บันทึก" : language === "JP" ? "保存済み" : "Saved Listings"}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/watchlist")}>
-                  <Bookmark className="size-4 text-blue-500 dark:text-blue-400" />
-                  {t(language, "watchlistNav")}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/messages")}>
-                  <MessageCircle className="size-4" />
-                  {t(language, "messagesTitle")}
-                  {unreadMessages > 0 && (
-                    <span className="ml-auto flex min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-4 text-white">
-                      {unreadMessages > 99 ? "99+" : unreadMessages}
-                    </span>
-                  )}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/honey")}>
-                  <Sparkles className="size-4" />
-                  Honey
-                  {honeyPendingActions && (
-                    <span className="ml-auto flex size-2">
-                      <span className="absolute inline-flex size-2 animate-ping rounded-full bg-red-400 opacity-75" />
-                      <span className="relative inline-flex size-2 rounded-full bg-red-500" />
-                    </span>
-                  )}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive" onClick={() => void handleLogout()}>
-                  <LogOut className="size-4" />
-                  {t(language, "logout")}
-                </DropdownMenuItem>
-              </>
-            ) : authLoaded ? (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push("/login")}>
-                  <User className="size-4" />
-                  {t(language, "login")}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/register")}>
-                  <Zap className="size-4" />
-                  {t(language, "register")}
-                </DropdownMenuItem>
-              </>
-            ) : null}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </div>
+    <HeaderMobile
+      authUser={authUser}
+      authLoaded={authLoaded}
+      userName={userName}
+      userId={userId}
+      honeyPendingActions={honeyPendingActions}
+      unreadMessages={unreadMessages}
+      mounted={mounted}
+      onSearchOpen={openSearch}
+      onLogout={doLogout}
+    />
 
     <CommandSearchModal open={searchOpen} onClose={closeSearch} />
     </>

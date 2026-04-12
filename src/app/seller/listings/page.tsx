@@ -178,7 +178,7 @@ export default function SellerListingsPage() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">สินค้าของฉัน</h1>
+          <h1 className="page-header">สินค้าของฉัน</h1>
           <p className="text-sm text-muted-foreground">
             จัดการสินค้าที่คุณลงขาย
           </p>

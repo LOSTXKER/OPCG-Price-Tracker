@@ -32,7 +32,7 @@ export function RankingsTab({
   return (
     <div className="panel overflow-hidden">
       <div className="border-b px-4 py-3.5">
-        <h2 className="text-sm font-bold">{t(lang, "honeyLeaderboard")}</h2>
+        <h2 className="text-lg font-semibold">{t(lang, "honeyLeaderboard")}</h2>
         <p className="mt-0.5 text-xs text-muted-foreground">
           {lang === "TH" ? "ดูอันดับผู้ใช้ที่สะสม Honey มากที่สุด" : lang === "JP" ? "最もHoneyを獲得したユーザーランキング" : "See who has earned the most Honey"}
         </p>

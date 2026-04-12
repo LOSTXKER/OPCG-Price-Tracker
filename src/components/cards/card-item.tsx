@@ -68,7 +68,7 @@ function CardItemBase({
       href={`/cards/${cardCode}`}
       className="group/card block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-        <div className="panel relative flex h-full flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+        <div className="panel relative flex h-full flex-col overflow-hidden border border-transparent transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-md">
         {/* Image */}
         <div className="relative aspect-[63/88] w-full bg-muted">
           {imageUrl ? (

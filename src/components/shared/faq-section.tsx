@@ -20,9 +20,9 @@ export function FaqSection({
       <div className="divide-y divide-border/50 rounded-xl border border-border/50 bg-card">
         {items.map((item, i) => (
           <details key={i} className="group">
-            <summary className="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 text-sm font-medium transition-colors hover:bg-muted/30 [&::-webkit-details-marker]:hidden">
+            <summary className="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 text-sm font-medium transition-colors hover:bg-primary/5 [&::-webkit-details-marker]:hidden">
               <span>{item.question}</span>
-              <span className="shrink-0 text-muted-foreground/60 transition-transform duration-200 ease-in-out group-open:rotate-45">
+              <span className="shrink-0 text-primary/40 transition-all duration-200 ease-in-out group-open:rotate-45 group-open:text-primary">
                 +
               </span>
             </summary>

@@ -27,7 +27,7 @@ export function PortfolioStatsStrip({
   return (
     <div className={cn("grid gap-3", showBestWorst ? "sm:grid-cols-2" : "sm:grid-cols-1")}>
       {/* PnL card */}
-      <div className={cn("panel flex items-center gap-4 p-4")}>
+      <div className={cn("panel flex items-center gap-4 border-l-2 border-primary/20 p-4")}>
         <div className={cn(
           "flex size-10 shrink-0 items-center justify-center rounded-xl",
           hasCost
@@ -61,7 +61,7 @@ export function PortfolioStatsStrip({
 
       {/* Best / Worst — only show when >1 card */}
       {showBestWorst && (
-        <div className="panel p-4">
+        <div className="panel border-l-2 border-primary/20 p-4">
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-price-up/10 text-price-up">

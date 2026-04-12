@@ -35,7 +35,7 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-10 md:px-6 lg:px-8">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
           <div>
-            <p className="text-sm font-semibold text-foreground">Meecard</p>
+            <p className="text-sm font-semibold text-primary">Meecard</p>
             <p className="mt-2 max-w-sm text-xs leading-relaxed text-muted-foreground">
               One Piece Card Game price tracker updated daily.
               Prices from Yuyu-tei, portfolio & collection tracking.
@@ -46,7 +46,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+            <p className="text-xs font-semibold uppercase tracking-wider text-primary/50">
               {t(lang, "quickLinks")}
             </p>
             <nav className="mt-3 flex flex-col gap-2">
@@ -54,7 +54,7 @@ export function Footer() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+                  className="text-xs text-muted-foreground transition-colors hover:text-primary"
                 >
                   {link.label}
                 </Link>
@@ -63,7 +63,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+            <p className="text-xs font-semibold uppercase tracking-wider text-primary/50">
               {t(lang, "tools")}
             </p>
             <nav className="mt-3 flex flex-col gap-2">
@@ -71,7 +71,7 @@ export function Footer() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+                  className="text-xs text-muted-foreground transition-colors hover:text-primary"
                 >
                   {link.label}
                 </Link>
@@ -80,7 +80,7 @@ export function Footer() {
           </div>
 
           <div className="sm:col-span-2 lg:col-span-2">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+            <p className="text-xs font-semibold uppercase tracking-wider text-primary/50">
               {t(lang, "guide")}
             </p>
             <nav className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2">
@@ -88,7 +88,7 @@ export function Footer() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+                  className="text-xs text-muted-foreground transition-colors hover:text-primary"
                 >
                   {link.label}
                 </Link>
@@ -98,7 +98,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-8 flex items-center justify-between border-t border-border/30 pt-6">
+        <div className="mt-8 flex items-center justify-between border-t border-primary/15 pt-6">
           <p className="text-xs text-muted-foreground/50">
             &copy; {new Date().getFullYear()} Meecard
           </p>

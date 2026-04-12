@@ -52,7 +52,7 @@ export function ConversationSidebar({
     <aside className={cn("flex h-full flex-col border-r bg-background", className)}>
       <div className="flex items-center gap-2 border-b px-3 py-2.5">
         <Link href="/marketplace">
-          <Button variant="ghost" size="icon-sm">
+          <Button variant="ghost" size="icon-sm" aria-label="Back to marketplace">
             <ArrowLeft className="size-4" />
           </Button>
         </Link>

@@ -122,7 +122,7 @@ export default function GuideLandingPage() {
   const rest = guides.slice(1);
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-12">
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", href: "/" },
@@ -131,7 +131,7 @@ export default function GuideLandingPage() {
       />
 
       {/* ── Hero ── */}
-      <div className="relative overflow-hidden rounded-2xl bg-muted/30 px-6 pb-10 pt-6">
+      <div className="relative overflow-hidden rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/[0.04] to-muted/30 px-6 pb-10 pt-6">
         <Breadcrumb
           items={[
             { label: "Home", href: "/" },
@@ -162,7 +162,7 @@ export default function GuideLandingPage() {
                 <div className={`flex size-12 items-center justify-center rounded-xl ${featured.iconBg}`}>
                   <featured.icon className={`size-6 ${featured.iconColor}`} />
                 </div>
-                <h2 className="mt-4 text-xl font-bold transition-colors group-hover:text-primary">
+                <h2 className="mt-4 text-xl font-semibold transition-colors group-hover:text-primary">
                   {featured.title}
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -184,7 +184,7 @@ export default function GuideLandingPage() {
                   <guide.icon className={`size-5 ${guide.iconColor}`} />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h2 className="text-sm font-semibold transition-colors group-hover:text-primary">
+                  <h2 className="text-xl font-semibold transition-colors group-hover:text-primary">
                     {guide.title}
                   </h2>
                   <p className="mt-1 text-xs leading-relaxed text-muted-foreground">

@@ -72,7 +72,7 @@ export function ActivityTab({
   return (
     <div className="panel overflow-hidden">
       <div className="border-b px-4 py-3.5">
-        <h2 className="text-sm font-bold">{t(lang, "honeyHistory")}</h2>
+        <h2 className="text-lg font-semibold">{t(lang, "honeyHistory")}</h2>
         <p className="mt-0.5 text-xs text-muted-foreground">
           {lang === "TH" ? "ดูประวัติการรับและใช้ Honey ทั้งหมด" : lang === "JP" ? "Honeyの獲得・使用履歴" : "View all Honey earning and spending history"}
         </p>

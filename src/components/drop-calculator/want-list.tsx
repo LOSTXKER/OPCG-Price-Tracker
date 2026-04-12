@@ -44,7 +44,7 @@ export function WantList({
   return (
     <section className="panel overflow-hidden">
       <div className="flex items-center justify-between px-3 pb-2 pt-3">
-        <h2 className="text-sm font-semibold">
+        <h2 className="text-lg font-semibold">
           {t(lang, "wantList")}
           {wantCards.length > 0 && (
             <span className="ml-1 text-primary">({wantCards.length})</span>

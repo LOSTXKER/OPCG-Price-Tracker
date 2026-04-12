@@ -38,7 +38,7 @@ export function AdminDataTable<T>({
     <div className="overflow-x-auto rounded-xl border border-border/50">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-border/50 bg-muted/30">
+          <tr className="border-b border-border/50 bg-muted/50">
             {columns.map((col) => (
               <th
                 key={col.key}

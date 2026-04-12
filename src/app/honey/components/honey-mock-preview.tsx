@@ -72,7 +72,7 @@ function MockMissionsGrid({ lang }: { lang: Language }) {
       <div className="border-b px-4 py-3">
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-primary" />
-          <h2 className="flex-1 text-sm font-bold">{t(lang, "dailyMissions")}</h2>
+          <h2 className="flex-1 text-lg font-semibold">{t(lang, "dailyMissions")}</h2>
           <span className="text-sm font-bold tabular-nums text-primary">0/60</span>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Clock className="size-3" />
@@ -137,7 +137,7 @@ function MockHistory({ lang }: { lang: Language }) {
   return (
     <div className="panel overflow-hidden">
       <div className="border-b px-4 py-3">
-        <h2 className="text-sm font-semibold">{t(lang, "honeyHistory")}</h2>
+        <h2 className="text-lg font-semibold">{t(lang, "honeyHistory")}</h2>
       </div>
       <div className="divide-y divide-border/40">
         {[

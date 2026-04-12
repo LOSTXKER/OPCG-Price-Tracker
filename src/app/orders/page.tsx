@@ -4,7 +4,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { Loader2, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { OrderCard, type OrderListItem } from "@/components/orders/order-card";
+import { useUIStore } from "@/stores/ui-store";
+import { t } from "@/lib/i18n";
 
 type ApiResponse = {
   orders: OrderListItem[];
@@ -25,15 +28,18 @@ const STATUS_TABS = [
 ];
 
 export default function BuyerOrdersPage() {
+  const lang = useUIStore((s) => s.language);
   const router = useRouter();
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("ALL");
   const [page, setPage] = useState(1);
   const [actionLoading, setActionLoading] = useState<number | null>(null);
 
   const fetchOrders = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const params = new URLSearchParams();
       params.set("role", "buyer");
@@ -46,6 +52,7 @@ export default function BuyerOrdersPage() {
       setData(await res.json());
     } catch {
       setData(null);
+      setError("Failed to load orders");
     } finally {
       setLoading(false);
     }
@@ -60,15 +67,25 @@ export default function BuyerOrdersPage() {
     setPage(1);
   };
 
+  const [actionError, setActionError] = useState<string | null>(null);
+
   const handleStatusUpdate = async (orderId: number, status: string) => {
     setActionLoading(orderId);
+    setActionError(null);
     try {
       const res = await fetch(`/api/orders/${orderId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
       });
-      if (res.ok) await fetchOrders();
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        setActionError(body?.error ?? "อัปเดตสถานะไม่สำเร็จ กรุณาลองใหม่");
+        return;
+      }
+      await fetchOrders();
+    } catch {
+      setActionError("อัปเดตสถานะไม่สำเร็จ กรุณาลองใหม่");
     } finally {
       setActionLoading(null);
     }
@@ -80,8 +97,14 @@ export default function BuyerOrdersPage() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumb
+        items={[
+          { label: t(lang, "home"), href: "/" },
+          { label: t(lang, "myOrders") },
+        ]}
+      />
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">
+        <h1 className="page-header">
           คำสั่งซื้อของฉัน
         </h1>
         <p className="text-sm text-muted-foreground">
@@ -121,6 +144,20 @@ export default function BuyerOrdersPage() {
         <div className="flex min-h-[300px] items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
+      ) : error ? (
+        <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+          <p>{error}</p>
+          <button
+            type="button"
+            onClick={() => {
+              setError(null);
+              void fetchOrders();
+            }}
+            className="mt-1 text-xs font-medium underline"
+          >
+            ลองใหม่
+          </button>
+        </div>
       ) : !data || data.orders.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground">
           <ShoppingBag className="mb-3 h-12 w-12 opacity-30" />
@@ -131,6 +168,14 @@ export default function BuyerOrdersPage() {
         </div>
       ) : (
         <>
+          {actionError && (
+            <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+              {actionError}
+              <button type="button" onClick={() => setActionError(null)} className="ml-2 text-xs font-medium underline">
+                ปิด
+              </button>
+            </div>
+          )}
           <div className="space-y-3">
             {data.orders.map((order) => (
               <OrderCard

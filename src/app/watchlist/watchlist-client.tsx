@@ -107,7 +107,7 @@ function WatchlistContent() {
     <div className="space-y-6">
       <div>
         <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "watchlistNav")}</h1>
+          <h1 className="page-header">{t(lang, "watchlistNav")}</h1>
           {isFinite(limits.watchlistCards) && (
             <LimitCounter current={items.length} max={limits.watchlistCards} />
           )}
@@ -166,7 +166,7 @@ function WatchlistMockPreview({ lang }: { lang: Language }) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="page-header">
           {t(lang, "watchlistNav")}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">

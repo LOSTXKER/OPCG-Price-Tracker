@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { Check, Search, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
@@ -36,12 +36,15 @@ export function CardPickerModal({
   const [query, setQuery] = useState("")
   const [cards, setCards] = useState<CardResult[]>([])
   const [loading, setLoading] = useState(false)
+  const [fetchError, setFetchError] = useState<string | null>(null)
   const [sets, setSets] = useState<CardSet[]>([])
   const [selectedSet, setSelectedSet] = useState("")
   const [sort, setSort] = useState("price_desc")
 
   const inputRef = useRef<HTMLInputElement>(null)
   const abortRef = useRef<AbortController | null>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
+  const titleId = useId()
 
   const { limits } = useTierLimits()
   const tierMax = isFinite(limits.compareCards) ? limits.compareCards : 6
@@ -54,11 +57,22 @@ export function CardPickerModal({
       setQuery("")
       setSelectedSet("")
       setSort("price_desc")
-      requestAnimationFrame(() => inputRef.current?.focus())
+      setFetchError(null)
       fetch("/api/sets")
         .then((r) => r.json())
         .then((d) => setSets(d.sets ?? []))
         .catch(() => {})
+    }
+  }, [open])
+
+  useLayoutEffect(() => {
+    if (!open) return
+    const active = document.activeElement
+    previousFocusRef.current = active instanceof HTMLElement ? active : null
+    inputRef.current?.focus()
+    return () => {
+      previousFocusRef.current?.focus({ preventScroll: true })
+      previousFocusRef.current = null
     }
   }, [open])
 
@@ -68,6 +82,7 @@ export function CardPickerModal({
       const controller = new AbortController()
       abortRef.current = controller
       setLoading(true)
+      setFetchError(null)
       try {
         const data = await fetchCards(
           {
@@ -79,9 +94,12 @@ export function CardPickerModal({
           { signal: controller.signal }
         )
         setCards(data.cards ?? [])
+        setFetchError(null)
       } catch (err: unknown) {
-        if (err instanceof Error && err.name !== "AbortError")
-          console.error("Card picker fetch failed:", err)
+        if (err instanceof Error && err.name === "AbortError") return
+        console.error("Card picker fetch failed:", err)
+        setCards([])
+        setFetchError("Search failed. Please try again.")
       } finally {
         setLoading(false)
       }
@@ -110,7 +128,12 @@ export function CardPickerModal({
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-[100]">
+    <div
+      className="fixed inset-0 z-[100]"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+    >
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-in fade-in-0 duration-150"
         onClick={onClose}
@@ -119,10 +142,11 @@ export function CardPickerModal({
       <div className="relative mx-auto mt-[5vh] flex h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-popover shadow-2xl ring-1 ring-border/50 animate-in fade-in-0 slide-in-from-bottom-4 duration-200 md:mt-[8vh] md:h-[80vh]">
         {/* Header */}
         <div className="flex items-center justify-between border-b px-4 py-3">
-          <h2 className="text-base font-semibold">
+          <h2 id={titleId} className="text-lg font-semibold">
             {t(lang, "addCardToCompare")}
           </h2>
           <button
+            aria-label="Close"
             onClick={onClose}
             className="flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
           >
@@ -173,6 +197,12 @@ export function CardPickerModal({
 
         {/* Card grid */}
         <div className="flex-1 overflow-y-auto p-4">
+          {fetchError && !loading && (
+            <div className="mb-3 rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+              {fetchError}
+            </div>
+          )}
+
           {loading && cards.length === 0 && (
             <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
               {Array.from({ length: 12 }).map((_, i) => (
@@ -254,7 +284,10 @@ export function CardPickerModal({
             </div>
           )}
 
-          {!loading && cards.length === 0 && query.trim().length >= 2 && (
+          {!loading &&
+            cards.length === 0 &&
+            query.trim().length >= 2 &&
+            !fetchError && (
             <div className="py-12 text-center text-sm text-muted-foreground">
               {t(lang, "noCardsFound")}
             </div>

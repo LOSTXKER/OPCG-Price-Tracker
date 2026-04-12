@@ -311,6 +311,7 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
           <Button
             variant="ghost"
             size="icon-sm"
+            aria-label="Go back"
             className="absolute left-2 top-3 z-30 md:hidden"
             onClick={() => {
               setMobileView("list");
@@ -339,6 +340,7 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
             <Button
               variant="ghost"
               size="icon-sm"
+              aria-label="Toggle order panel"
               className="absolute right-2 top-3 z-30 lg:hidden"
               onClick={() => setShowOrderPanel((v) => !v)}
             >

@@ -242,7 +242,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
           {/* ── Block A: Product Identity ── */}
           <div className="space-y-4">
             <div className="flex items-start gap-3">
-              <h1 className="min-w-0 flex-1 break-words text-2xl font-bold tracking-tight lg:text-3xl">
+              <h1 className="page-header min-w-0 flex-1 break-words">
                 {cardName}
               </h1>
               <SaveButton listingId={listing.id} initialSaved={isSaved} />

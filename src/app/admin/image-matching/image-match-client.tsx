@@ -71,7 +71,7 @@ export function ImageMatchClient() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-sans text-xl font-bold">Image Matching</h2>
+        <h2 className="font-sans text-xl font-semibold">Image Matching</h2>
         <p className="text-muted-foreground text-sm mt-1">
           เปรียบเทียบ Bandai CDN images กับ parallel variants — เลือก _pN ที่ถูกต้องสำหรับแต่ละใบ
         </p>

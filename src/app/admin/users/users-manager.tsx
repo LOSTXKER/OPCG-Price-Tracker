@@ -165,7 +165,10 @@ export function UsersManager() {
             <h3 className="flex items-center gap-2 font-semibold">
               <Gift className="h-4 w-4 text-amber-600 dark:text-amber-400" /> Grant Honey
             </h3>
-            <button onClick={() => { setGrantUserId(null); }}>
+            <button
+              aria-label="Close"
+              onClick={() => { setGrantUserId(null); }}
+            >
               <X className="h-4 w-4 text-muted-foreground" />
             </button>
           </div>
@@ -227,6 +230,7 @@ export function UsersManager() {
                     </td>
                     <td className="px-4 py-2.5 text-right">
                       <button
+                        aria-label="Grant Honey"
                         onClick={(e) => { e.stopPropagation(); setGrantUserId(u.id); }}
                         className="rounded p-1.5 text-amber-600 transition-colors hover:bg-amber-100 dark:text-amber-400 dark:hover:bg-amber-500/10"
                         title="Grant Honey"

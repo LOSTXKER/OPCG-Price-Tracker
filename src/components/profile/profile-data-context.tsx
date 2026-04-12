@@ -10,6 +10,7 @@ import {
 } from "react";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
+import { useSettings } from "@/hooks/use-settings";
 import type {
   ProfileData,
   SettingsData,
@@ -38,27 +39,26 @@ export function useProfileData() {
 export function ProfileDataProvider({ children }: { children: ReactNode }) {
   const lang = useUIStore((s) => s.language);
   const [data, setData] = useState<ProfileData | null>(null);
-  const [settings, setSettings] = useState<SettingsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [checkinLoading, setCheckinLoading] = useState(false);
 
+  const { settings: sharedSettings } = useSettings();
+  const settings = sharedSettings as unknown as SettingsData | null;
+
   const load = useCallback(async () => {
     setError(null);
-    const [meRes, settingsRes] = await Promise.all([
-      fetch("/api/me"),
-      fetch("/api/settings"),
-    ]);
-    if (!meRes.ok) {
-      setLoading(false);
+    try {
+      const meRes = await fetch("/api/me");
+      if (!meRes.ok) {
+        setLoading(false);
+        setError(t(lang, "loadFailed"));
+        return;
+      }
+      const meJson = (await meRes.json()) as ProfileData;
+      setData(meJson);
+    } catch {
       setError(t(lang, "loadFailed"));
-      return;
-    }
-    const meJson = (await meRes.json()) as ProfileData;
-    setData(meJson);
-    if (settingsRes.ok) {
-      const settingsJson = (await settingsRes.json()) as SettingsData;
-      setSettings(settingsJson);
     }
     setLoading(false);
   }, [lang]);

@@ -67,7 +67,7 @@ export default async function BlogPage() {
 
       <div className="space-y-8">
         <div className="space-y-2 pt-4">
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Blog</h1>
+          <h1 className="page-header">Blog</h1>
           <p className="text-muted-foreground">
             วิเคราะห์ตลาด, รีวิวชุดการ์ด, เทคนิค และข่าวสาร OPCG
           </p>
@@ -104,7 +104,7 @@ export default async function BlogPage() {
                       {CATEGORY_LABELS[post.category] ?? post.category}
                     </span>
                   </div>
-                  <h2 className="break-words text-sm font-semibold leading-snug transition-colors group-hover:text-primary">
+                  <h2 className="break-words text-lg font-semibold leading-snug transition-colors group-hover:text-primary">
                     {post.title}
                   </h2>
                   <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">

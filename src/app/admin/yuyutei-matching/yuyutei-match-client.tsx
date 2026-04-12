@@ -369,7 +369,7 @@ export function YuyuteiMatchClient() {
       {/* Header */}
       <div className="flex items-end justify-between">
         <div>
-          <h2 className="text-xl font-bold">Yuyutei Price Matching</h2>
+          <h2 className="text-xl font-semibold">Yuyutei Price Matching</h2>
           <p className="text-muted-foreground text-sm mt-0.5">ติ๊กเลือก → Approve/Reject ทีเดียว หรือ Approve ทีละรายการ</p>
         </div>
         <div className="flex items-center gap-2">
@@ -789,6 +789,7 @@ export function YuyuteiMatchClient() {
               <select
                 value={perPage}
                 onChange={(e) => { setPerPage(Number(e.target.value)); setPage(1); }}
+                aria-label="Rows per page"
                 className="rounded border border-border/40 bg-transparent px-2 py-1 text-xs"
               >
                 {[20, 50, 100, 500, 1000].map((n) => (
@@ -798,9 +799,9 @@ export function YuyuteiMatchClient() {
             </div>
             {data.totalPages > 1 && (
               <div className="flex items-center gap-2">
-                <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} className="rounded border border-border/40 p-1.5 hover:bg-muted disabled:opacity-30"><ChevronLeft className="size-4" /></button>
+                <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} aria-label="Previous page" className="rounded border border-border/40 p-1.5 hover:bg-muted disabled:opacity-30"><ChevronLeft className="size-4" /></button>
                 <span className="text-sm font-mono">{page}/{data.totalPages}</span>
-                <button onClick={() => setPage((p) => Math.min(data.totalPages, p + 1))} disabled={page === data.totalPages} className="rounded border border-border/40 p-1.5 hover:bg-muted disabled:opacity-30"><ChevronRight className="size-4" /></button>
+                <button onClick={() => setPage((p) => Math.min(data.totalPages, p + 1))} disabled={page === data.totalPages} aria-label="Next page" className="rounded border border-border/40 p-1.5 hover:bg-muted disabled:opacity-30"><ChevronRight className="size-4" /></button>
               </div>
             )}
           </div>

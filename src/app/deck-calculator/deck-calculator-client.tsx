@@ -208,7 +208,7 @@ function DeckCalculatorContent() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "deckCalculatorNav")}</h1>
+        <h1 className="page-header">{t(lang, "deckCalculatorNav")}</h1>
         <p className="text-muted-foreground text-sm">{t(lang, "deckCalculatorDesc")}</p>
       </div>
 
@@ -366,6 +366,7 @@ function DeckCalculatorContent() {
                     <Button
                       variant="ghost"
                       size="icon-sm"
+                      aria-label="Remove card"
                       onClick={() => void removeCard(entry.card.id)}
                     >
                       <Trash2 className="size-3.5 text-destructive" />
@@ -431,7 +432,7 @@ function DeckMockPreview({ lang }: { lang: Language }) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "deckCalculatorNav")}</h1>
+        <h1 className="page-header">{t(lang, "deckCalculatorNav")}</h1>
         <p className="text-muted-foreground text-sm">{t(lang, "deckCalculatorDesc")}</p>
       </div>
 
