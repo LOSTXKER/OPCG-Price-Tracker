@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useSettings, invalidateSettings, refetchSettings } from "@/hooks/use-settings";
+import { useUIStore } from "@/stores/ui-store";
 import type { AuthUser, UserTierValue, MarketStats } from "@/components/layout/header-constants";
 
 export function useHeaderData() {
@@ -14,7 +15,8 @@ export function useHeaderData() {
     exchangeRate: 0.296,
     topMover: { code: "OP13-118-P", name: "Monkey.D.Luffy", change: 5.8 },
   });
-  const [unreadMessages, setUnreadMessages] = useState(0);
+  const [unreadMessages, setUnreadMessagesLocal] = useState(0);
+  const setUnreadGlobal = useUIStore((s) => s.setUnreadMessages);
   const [mounted, setMounted] = useState(false);
 
   const { settings, loaded: settingsLoaded } = useSettings();
@@ -50,14 +52,20 @@ export function useHeaderData() {
 
   useEffect(() => {
     if (!authUser) {
-      setUnreadMessages(0);
+      setUnreadMessagesLocal(0);
+      setUnreadGlobal(0);
       return;
     }
     fetch("/api/messages/unread-count")
       .then((r) => r.ok ? r.json() : null)
-      .then((data) => { if (typeof data?.count === "number") setUnreadMessages(data.count); })
+      .then((data) => {
+        if (typeof data?.count === "number") {
+          setUnreadMessagesLocal(data.count);
+          setUnreadGlobal(data.count);
+        }
+      })
       .catch(() => {});
-  }, [authUser]);
+  }, [authUser, setUnreadGlobal]);
 
   useEffect(() => {
     async function fetchStats() {

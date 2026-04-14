@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import {
   Bookmark,
   ChevronDown,
@@ -26,12 +26,14 @@ import { NAV_LINKS, TOOL_LINKS, isActive } from "./header-constants";
 import { HeaderMarketTicker } from "./header-market-ticker";
 import { HeaderUserMenu } from "./header-user-menu";
 import { HeaderMobile } from "./header-mobile";
+import { MobileMenuSheet } from "./mobile-menu-sheet";
 
 export function Header() {
   const router = useRouter();
   const pathname = usePathname() ?? "/";
   const language = useUIStore((s) => s.language);
-  const [searchOpen, setSearchOpen] = useState(false);
+  const searchOpen = useUIStore((s) => s.searchOpen);
+  const setSearchOpen = useUIStore((s) => s.setSearchOpen);
 
   const {
     authUser,
@@ -62,10 +64,10 @@ export function Header() {
     }
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [setSearchOpen]);
 
-  const closeSearch = useCallback(() => setSearchOpen(false), []);
-  const openSearch = useCallback(() => setSearchOpen(true), []);
+  const closeSearch = useCallback(() => setSearchOpen(false), [setSearchOpen]);
+  const openSearch = useCallback(() => setSearchOpen(true), [setSearchOpen]);
 
   const canUpgrade = userTier === "FREE" || userTier === "PRO";
 
@@ -87,7 +89,6 @@ export function Header() {
         onSearchOpen={openSearch}
       />
 
-      {/* ══════════ BOTTOM BAR — brand + nav + user tools ══════════ */}
       <header className="border-b border-border/50 bg-background/95 backdrop-blur-xl">
         <div className="mx-auto flex h-14 max-w-7xl items-center px-6 lg:px-8">
           <Link href="/" className="mr-8 flex shrink-0 items-center gap-2.5">
@@ -250,15 +251,19 @@ export function Header() {
       </header>
     </div>
 
-    <HeaderMobile
+    <HeaderMobile />
+
+    <MobileMenuSheet
       authUser={authUser}
       authLoaded={authLoaded}
       userName={userName}
+      userAvatar={userAvatar}
       userId={userId}
+      userTier={userTier}
+      honeyPoints={honeyPoints}
       honeyPendingActions={honeyPendingActions}
       unreadMessages={unreadMessages}
       mounted={mounted}
-      onSearchOpen={openSearch}
       onLogout={doLogout}
     />
 

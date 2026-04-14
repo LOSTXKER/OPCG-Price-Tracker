@@ -70,7 +70,7 @@ export function StepPricing({
       {/* Condition */}
       <div className="space-y-2">
         <label className="text-sm font-medium">สภาพการ์ด</label>
-        <div className="grid grid-cols-5 gap-2">
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
           {CONDITIONS.map((c) => (
             <button
               key={c}

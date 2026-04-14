@@ -271,7 +271,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
                 <p className="mt-1 text-xs text-muted-foreground/50">{priceMode === "raw" ? "Yuyu-tei" : "SNKRDUNK"}</p>
               </div>
 
-              <div className="border-l border-border/30 pl-5">
+              <div className="sm:border-l sm:border-border/30 sm:pl-5">
                 <p className="text-xs text-muted-foreground">{t(lang, "lastSold")}</p>
                 <p className="mt-1 font-price text-2xl font-bold tabular-nums">
                   {priceMode === "raw"

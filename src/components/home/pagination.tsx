@@ -25,11 +25,11 @@ export function Pagination({
   if (totalPages <= 1) return null
 
   return (
-    <div className="flex items-center justify-between border-t border-border px-4 py-3">
-      <p className="text-xs text-muted-foreground">
+    <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border px-4 py-3">
+      <p className="hidden text-xs text-muted-foreground sm:block">
         {t(lang, "showingOf")} {((page - 1) * pageSize + 1).toLocaleString()}-{Math.min(page * pageSize, total).toLocaleString()} {t(lang, "from")} {total.toLocaleString()} {t(lang, "card")}
       </p>
-      <div className="flex items-center gap-1">
+      <div className="flex flex-1 items-center justify-center gap-1 sm:flex-none sm:justify-end">
         <button
           onClick={() => onPageChange(Math.max(1, page - 1))}
           disabled={page <= 1 || isPending}

@@ -335,7 +335,7 @@ function HomeAdCard() {
 
 export function HomePreviewRow({ totalValue, totalCards }: { totalValue: number; totalCards: number }) {
   return (
-    <div className="hidden auto-rows-fr gap-3 lg:grid lg:grid-cols-4">
+    <div className="grid auto-rows-fr grid-cols-2 gap-3 lg:grid-cols-4">
       <HomePortfolioPreview />
       <HomeHoneyPreview />
       <HomeMarketValueCard totalValue={totalValue} totalCards={totalCards} />

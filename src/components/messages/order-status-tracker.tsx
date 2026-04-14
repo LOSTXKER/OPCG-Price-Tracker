@@ -14,13 +14,14 @@ import type { OrderStatusType } from "./types";
 const STEPS: {
   key: OrderStatusType;
   label: string;
+  shortLabel: string;
   icon: React.ElementType;
 }[] = [
-  { key: "AWAITING_PAYMENT", label: "รอชำระเงิน", icon: CreditCard },
-  { key: "PAID", label: "ชำระแล้ว", icon: CreditCard },
-  { key: "SHIPPED", label: "จัดส่งแล้ว", icon: Truck },
-  { key: "DELIVERED", label: "ได้รับของ", icon: Package },
-  { key: "COMPLETED", label: "เสร็จสิ้น", icon: CheckCircle2 },
+  { key: "AWAITING_PAYMENT", label: "รอชำระเงิน", shortLabel: "รอจ่าย", icon: CreditCard },
+  { key: "PAID", label: "ชำระแล้ว", shortLabel: "จ่ายแล้ว", icon: CreditCard },
+  { key: "SHIPPED", label: "จัดส่งแล้ว", shortLabel: "ส่งแล้ว", icon: Truck },
+  { key: "DELIVERED", label: "ได้รับของ", shortLabel: "ได้รับ", icon: Package },
+  { key: "COMPLETED", label: "เสร็จสิ้น", shortLabel: "เสร็จ", icon: CheckCircle2 },
 ];
 
 const STATUS_INDEX: Record<string, number> = {
@@ -87,7 +88,8 @@ export function OrderStatusTracker({
                     isActive ? "font-semibold text-foreground" : "text-muted-foreground"
                   )}
                 >
-                  {step.label}
+                  <span className="hidden sm:inline">{step.label}</span>
+                  <span className="sm:hidden">{step.shortLabel}</span>
                 </span>
               </div>
               {i < STEPS.length - 1 && (

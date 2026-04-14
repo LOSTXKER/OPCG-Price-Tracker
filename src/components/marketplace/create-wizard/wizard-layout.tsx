@@ -30,7 +30,7 @@ export function WizardLayout({
   return (
     <div className="space-y-6">
       {/* Step indicator */}
-      <nav className="flex items-center gap-2">
+      <nav className="-mx-1 flex items-center gap-1 overflow-x-auto px-1 sm:gap-2">
         {STEPS.map((step, i) => {
           const isCompleted = completedSteps.has(step.key);
           const isCurrent = step.key === currentStep;
@@ -43,7 +43,7 @@ export function WizardLayout({
                 disabled={!canClick}
                 onClick={() => canClick && onStepClick(step.key)}
                 className={cn(
-                  "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  "flex shrink-0 items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium transition-colors sm:gap-2 sm:px-3 sm:py-2",
                   isCurrent && "bg-primary text-primary-foreground",
                   isCompleted && !isCurrent && "text-primary hover:bg-primary/10",
                   !isCurrent && !isCompleted && "text-muted-foreground"

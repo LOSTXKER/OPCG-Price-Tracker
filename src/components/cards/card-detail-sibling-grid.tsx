@@ -19,9 +19,9 @@ export function SiblingGrid({ siblings, lang, cols, smCols }: SiblingGridProps) 
   return (
     <div
       className={cn(
-        "grid gap-2",
-        cols === 4 ? "grid-cols-4" : cols === 5 ? "grid-cols-5" : "grid-cols-4",
-        smCols === 5 && "sm:grid-cols-5",
+        "grid gap-2 grid-cols-3",
+        cols === 4 ? "sm:grid-cols-4" : cols === 5 ? "sm:grid-cols-5" : "sm:grid-cols-4",
+        smCols === 5 && "md:grid-cols-5",
       )}
     >
       {siblings.map((s) => (

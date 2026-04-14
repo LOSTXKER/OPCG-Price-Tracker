@@ -1,0 +1,305 @@
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import {
+  ArrowRightLeft,
+  Bookmark,
+  Dices,
+  Heart,
+  LayoutGrid,
+  LogOut,
+  MessageCircle,
+  Moon,
+  Package,
+  Settings,
+  ShoppingBag,
+  Sparkles,
+  Store,
+  Sun,
+  TrendingUp,
+  User,
+  Zap,
+  Crown,
+  BookOpen,
+} from "lucide-react";
+import { useTheme } from "next-themes";
+
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { useUIStore, type Language, type Currency } from "@/stores/ui-store";
+import { cn } from "@/lib/utils";
+import { t } from "@/lib/i18n";
+import {
+  LANG_OPTIONS,
+  CURRENCY_OPTIONS,
+  TIER_DISPLAY,
+  type AuthUser,
+  type UserTierValue,
+} from "./header-constants";
+
+interface MobileMenuSheetProps {
+  authUser: AuthUser | null;
+  authLoaded: boolean;
+  userName: string;
+  userAvatar: string | null;
+  userId: string | null;
+  userTier: UserTierValue;
+  honeyPoints: number;
+  honeyPendingActions: boolean;
+  unreadMessages: number;
+  mounted: boolean;
+  onLogout: () => Promise<void>;
+}
+
+function MenuLink({
+  href,
+  icon: Icon,
+  label,
+  badge,
+  pendingDot,
+  pathname,
+  onNav,
+}: {
+  href: string;
+  icon: typeof User;
+  label: string;
+  badge?: number;
+  pendingDot?: boolean;
+  pathname: string;
+  onNav: () => void;
+}) {
+  const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+  return (
+    <Link
+      href={href}
+      onClick={onNav}
+      className={cn(
+        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+        active
+          ? "bg-primary/10 font-semibold text-primary"
+          : "text-foreground hover:bg-muted/60"
+      )}
+    >
+      <Icon className="size-[18px] shrink-0" />
+      <span className="flex-1">{label}</span>
+      {typeof badge === "number" && badge > 0 && (
+        <span className="flex min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold leading-4 text-white">
+          {badge > 99 ? "99+" : badge}
+        </span>
+      )}
+      {pendingDot && (
+        <span className="relative flex size-2">
+          <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75" />
+          <span className="relative inline-flex size-2 rounded-full bg-red-500" />
+        </span>
+      )}
+    </Link>
+  );
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="mb-1 mt-4 px-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 first:mt-0">
+      {children}
+    </p>
+  );
+}
+
+export function MobileMenuSheet({
+  authUser,
+  authLoaded,
+  userName,
+  userAvatar,
+  userId,
+  userTier,
+  honeyPoints,
+  honeyPendingActions,
+  unreadMessages,
+  mounted,
+  onLogout,
+}: MobileMenuSheetProps) {
+  const pathname = usePathname() ?? "/";
+  const language = useUIStore((s) => s.language);
+  const setLanguage = useUIStore((s) => s.setLanguage);
+  const currency = useUIStore((s) => s.currency);
+  const setCurrency = useUIStore((s) => s.setCurrency);
+  const open = useUIStore((s) => s.mobileMenuOpen);
+  const setOpen = useUIStore((s) => s.setMobileMenuOpen);
+  const { resolvedTheme, setTheme } = useTheme();
+
+  useEffect(() => {
+    if (open) setOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  const close = () => setOpen(false);
+
+  const tier = TIER_DISPLAY[userTier];
+
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetContent side="right" className="w-[300px] overflow-y-auto p-0 sm:max-w-[300px]">
+        <SheetTitle className="sr-only">Menu</SheetTitle>
+
+        {/* User block */}
+        <div className="border-b border-border/40 p-4">
+          {authLoaded && authUser ? (
+            <div className="flex items-start gap-3">
+              <div className="size-10 shrink-0 overflow-hidden rounded-full bg-muted">
+                {userAvatar ? (
+                  <Image
+                    src={userAvatar}
+                    alt={userName}
+                    width={40}
+                    height={40}
+                    className="size-full object-cover"
+                  />
+                ) : (
+                  <div className="flex size-full items-center justify-center">
+                    <User className="size-5 text-muted-foreground" />
+                  </div>
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold">{userName}</p>
+                <p className="truncate text-xs text-muted-foreground">{authUser.email}</p>
+                <div className="mt-1.5 flex items-center gap-2">
+                  <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-semibold", tier.color)}>
+                    {tier.label}
+                  </span>
+                  {honeyPoints > 0 && (
+                    <span className="flex items-center gap-1 text-[11px] font-medium text-amber-600 dark:text-amber-400">
+                      <span>🍯</span>
+                      {honeyPoints.toLocaleString()}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : authLoaded ? (
+            <div className="flex gap-2">
+              <Link
+                href="/login"
+                onClick={close}
+                className="flex-1 rounded-lg border border-border/60 py-2.5 text-center text-sm font-medium transition-colors hover:bg-muted/60"
+              >
+                {t(language, "login")}
+              </Link>
+              <Link
+                href="/register"
+                onClick={close}
+                className="flex-1 rounded-lg bg-primary py-2.5 text-center text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+              >
+                {t(language, "register")}
+              </Link>
+            </div>
+          ) : (
+            <div className="h-10 animate-pulse rounded-lg bg-muted" />
+          )}
+        </div>
+
+        {/* Navigation sections */}
+        <div className="p-3">
+          {/* Browse */}
+          <SectionLabel>{language === "TH" ? "เรียกดู" : language === "JP" ? "ブラウズ" : "Browse"}</SectionLabel>
+          <MenuLink href="/sets" icon={Package} label={t(language, "sets")} pathname={pathname} onNav={close} />
+          <MenuLink href="/trending" icon={TrendingUp} label={language === "TH" ? "กำลังมา" : language === "JP" ? "トレンド" : "Trending"} pathname={pathname} onNav={close} />
+          <MenuLink href="/watchlist" icon={Bookmark} label={t(language, "watchlistNav")} pathname={pathname} onNav={close} />
+          <MenuLink href="/compare" icon={ArrowRightLeft} label={t(language, "compareCards")} pathname={pathname} onNav={close} />
+
+          {/* Tools */}
+          <SectionLabel>{t(language, "tools")}</SectionLabel>
+          <MenuLink href="/deck-calculator" icon={LayoutGrid} label={t(language, "deckCalculatorNav")} pathname={pathname} onNav={close} />
+          <MenuLink href="/drop-calculator" icon={Dices} label={t(language, "dropCalculator")} pathname={pathname} onNav={close} />
+
+          {/* My Account — only when logged in */}
+          {authLoaded && authUser && (
+            <>
+              <SectionLabel>{language === "TH" ? "บัญชีของฉัน" : language === "JP" ? "マイアカウント" : "My Account"}</SectionLabel>
+              <MenuLink href="/orders" icon={ShoppingBag} label={language === "TH" ? "คำสั่งซื้อ" : language === "JP" ? "購入履歴" : "My Orders"} pathname={pathname} onNav={close} />
+              <MenuLink href="/saved" icon={Heart} label={language === "TH" ? "รายการที่บันทึก" : language === "JP" ? "保存済み" : "Saved"} pathname={pathname} onNav={close} />
+              <MenuLink href="/messages" icon={MessageCircle} label={t(language, "messagesTitle")} badge={unreadMessages} pathname={pathname} onNav={close} />
+              <MenuLink href="/honey" icon={Sparkles} label="Honey" pendingDot={honeyPendingActions} pathname={pathname} onNav={close} />
+              <MenuLink href="/seller" icon={Store} label={language === "TH" ? "ศูนย์ผู้ขาย" : language === "JP" ? "販売センター" : "Seller Center"} pathname={pathname} onNav={close} />
+            </>
+          )}
+
+          {/* Preferences */}
+          <SectionLabel>{language === "TH" ? "การตั้งค่า" : language === "JP" ? "設定" : "Preferences"}</SectionLabel>
+          <div className="space-y-2 px-3 py-1">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">{t(language, "languageLabel")}</span>
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value as Language)}
+                className="rounded-md border border-border/50 bg-card px-2 py-1 text-xs font-medium"
+                aria-label="Language"
+              >
+                {LANG_OPTIONS.map((l) => (
+                  <option key={l.value} value={l.value}>{l.label}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">{t(language, "currencyLabel")}</span>
+              <select
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value as Currency)}
+                className="rounded-md border border-border/50 bg-card px-2 py-1 text-xs font-medium"
+                aria-label="Currency"
+              >
+                {CURRENCY_OPTIONS.map((c) => (
+                  <option key={c.value} value={c.value}>{c.label}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">{language === "TH" ? "ธีม" : language === "JP" ? "テーマ" : "Theme"}</span>
+              <button
+                type="button"
+                onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                className="flex items-center gap-1.5 rounded-md border border-border/50 bg-card px-2.5 py-1 text-xs font-medium transition-colors hover:bg-muted/60"
+                aria-label="Toggle theme"
+              >
+                {mounted && resolvedTheme === "dark" ? (
+                  <><Sun className="size-3.5" /> Light</>
+                ) : (
+                  <><Moon className="size-3.5" /> Dark</>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Footer links */}
+          <div className="mt-3 border-t border-border/40 pt-3">
+            {authLoaded && authUser && (
+              <MenuLink href="/settings" icon={Settings} label={t(language, "settingsTitle")} pathname={pathname} onNav={close} />
+            )}
+            <MenuLink href="/pricing" icon={Crown} label={language === "TH" ? "แพ็กเกจ" : language === "JP" ? "プラン" : "Pricing"} pathname={pathname} onNav={close} />
+            <MenuLink href="/guide" icon={BookOpen} label={language === "TH" ? "คู่มือ" : language === "JP" ? "ガイド" : "Guide"} pathname={pathname} onNav={close} />
+          </div>
+
+          {/* Logout */}
+          {authLoaded && authUser && (
+            <div className="mt-2 border-t border-border/40 pt-2">
+              <button
+                type="button"
+                onClick={() => { close(); void onLogout(); }}
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-destructive transition-colors hover:bg-destructive/10"
+              >
+                <LogOut className="size-[18px]" />
+                {t(language, "logout")}
+              </button>
+            </div>
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
