@@ -239,8 +239,8 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
               </div>
             )}
 
-            <div className="grid grid-cols-1 gap-4 px-5 py-4 sm:grid-cols-2 sm:gap-px">
-              <div>
+            <div className="grid grid-cols-1 px-5 py-4 sm:grid-cols-2 sm:gap-px">
+              <div className="pb-4 sm:pb-0">
                 <p className="text-xs text-muted-foreground">{t(lang, "marketPrice")}</p>
                 <div className="mt-1 flex items-baseline gap-2">
                   {priceMode === "raw" ? (
@@ -271,7 +271,7 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
                 <p className="mt-1 text-xs text-muted-foreground/50">{priceMode === "raw" ? "Yuyu-tei" : "SNKRDUNK"}</p>
               </div>
 
-              <div className="sm:border-l sm:border-border/30 sm:pl-5">
+              <div className="border-t border-border/30 pt-4 sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0">
                 <p className="text-xs text-muted-foreground">{t(lang, "lastSold")}</p>
                 <p className="mt-1 font-price text-2xl font-bold tabular-nums">
                   {priceMode === "raw"
