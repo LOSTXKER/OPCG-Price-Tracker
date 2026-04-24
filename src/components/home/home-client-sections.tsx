@@ -15,9 +15,11 @@ import { cn } from "@/lib/utils"
 import { getCardName, t } from "@/lib/i18n"
 import type { TrendingCard } from "@/lib/data/home"
 import { Price } from "@/components/shared/price-inline"
+import { createClient } from "@/lib/supabase/client"
 import { useUIStore } from "@/stores/ui-store"
 import { formatPct } from "@/lib/utils/currency"
 import { useAuthState } from "@/hooks/use-auth-state"
+import { invalidateSettings } from "@/hooks/use-settings"
 import { StreakTierIndicator } from "@/components/shared/streak-tier-indicator"
 
 /* ------------------------------------------------------------------ */
@@ -73,7 +75,15 @@ export function HomePortfolioPreview() {
   useEffect(() => {
     if (authed !== true) { setLoading(false); return }
     fetch("/api/portfolio")
-      .then((r) => (r.ok ? r.json() : null))
+      .then(async (r) => {
+        if (r.status === 401) {
+          invalidateSettings()
+          const supabase = createClient()
+          await supabase.auth.signOut()
+          return null
+        }
+        return r.ok ? r.json() : null
+      })
       .then((json) => {
         if (!json?.portfolios?.length) { setEmpty(true); setLoading(false); return }
         setData(summarizePortfolios(json.portfolios))
@@ -169,7 +179,15 @@ export function HomeHoneyPreview() {
   useEffect(() => {
     if (authed !== true) { setLoading(false); return }
     fetch("/api/honey")
-      .then((r) => (r.ok ? r.json() : null))
+      .then(async (r) => {
+        if (r.status === 401) {
+          invalidateSettings()
+          const supabase = createClient()
+          await supabase.auth.signOut()
+          return null
+        }
+        return r.ok ? r.json() : null
+      })
       .then((json) => {
         if (json) setData(json)
         setLoading(false)
@@ -256,7 +274,7 @@ export function HomeHoneyPreview() {
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); doCheckin() }}
               disabled={checking}
-              className="relative rounded-full bg-primary px-2.5 py-1.5 text-[11px] font-bold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+              className="relative rounded-full bg-primary px-2.5 py-1.5 text-xs font-bold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
             >
               <span className="absolute -right-0.5 -top-0.5 flex size-2">
                 <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75" />

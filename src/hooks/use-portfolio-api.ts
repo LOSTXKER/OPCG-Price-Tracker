@@ -1,8 +1,10 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { createClient } from "@/lib/supabase/client"
 import { getCardName, getLocale, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
+import { invalidateSettings } from "@/hooks/use-settings"
 import { DEFAULT_CARD_CONDITION } from "@/lib/constants/ui"
 import type { PortfolioStats, AllocationSlice, AssetRow, PortfolioMeta, TransactionRow } from "@/lib/types/portfolio"
 import type { CartItem } from "@/components/portfolio/add-card-types"
@@ -25,6 +27,7 @@ type ItemRow = {
   quantity: number
   purchasePrice: number | null
   condition: string
+  isPrivate?: boolean
   card: CardData
 }
 
@@ -56,6 +59,11 @@ export function usePortfolioApi() {
         fetch("/api/portfolio/history").catch(() => null),
       ])
       if (!portfolioRes.ok) {
+        if (portfolioRes.status === 401) {
+          invalidateSettings()
+          const supabase = createClient()
+          await supabase.auth.signOut()
+        }
         setError(t(lang, "loadFailed"))
         setLoading(false)
         return
@@ -188,6 +196,7 @@ export function usePortfolioApi() {
       priceChange24h: it.card.priceChange24h,
       priceChange7d: it.card.priceChange7d,
       condition: it.condition,
+      isPrivate: it.isPrivate ?? false,
     })),
     [items]
   )
@@ -273,7 +282,10 @@ export function usePortfolioApi() {
     return { ok: failed === 0, failed }
   }
 
-  const updateItem = async (itemId: number, data: { quantity?: number; purchasePrice?: number | null }): Promise<boolean> => {
+  const updateItem = async (
+    itemId: number,
+    data: { quantity?: number; purchasePrice?: number | null; isPrivate?: boolean },
+  ): Promise<boolean> => {
     const res = await fetch(`/api/portfolio/items/${itemId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },

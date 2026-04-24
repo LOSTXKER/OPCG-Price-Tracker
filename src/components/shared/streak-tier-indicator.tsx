@@ -70,8 +70,8 @@ function CompactStreak({
   return (
     <div className={cn("flex items-center gap-1.5", className)}>
       <Flame className={cn("size-3.5 shrink-0", tierIdx >= 1 ? "text-orange-500" : "text-muted-foreground")} />
-      <span className="text-[11px] font-bold tabular-nums">{streakText}</span>
-      <span className="text-[11px] font-semibold text-muted-foreground">{rewardText}</span>
+      <span className="text-xs font-bold tabular-nums">{streakText}</span>
+      <span className="text-xs font-semibold text-muted-foreground">{rewardText}</span>
     </div>
   )
 }

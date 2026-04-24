@@ -3,11 +3,11 @@
 import { memo, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Check, Edit2, Trash2, X } from "lucide-react"
+import { Check, Edit2, Eye, EyeOff, Trash2, X } from "lucide-react"
 
 import { Price } from "@/components/shared/price-inline"
 import { RarityBadge } from "@/components/shared/rarity-badge"
-import { getCardName, t } from "@/lib/i18n"
+import { getCardName, t, type Language } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
 import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
@@ -30,7 +30,7 @@ export function PortfolioAssetsTable({
   onRemove,
 }: {
   assets: AssetRow[]
-  onUpdate: (itemId: number, data: { quantity?: number; purchasePrice?: number | null }) => void
+  onUpdate: (itemId: number, data: { quantity?: number; purchasePrice?: number | null; isPrivate?: boolean }) => void
   onRemove: (itemId: number) => void
 }) {
   const lang = useUIStore((s) => s.language)
@@ -73,8 +73,8 @@ const AssetRowComponent = memo(function AssetRowComponent({
   onRemove,
 }: {
   row: AssetRow
-  lang: string
-  onUpdate: (itemId: number, data: { quantity?: number; purchasePrice?: number | null }) => void
+  lang: Language
+  onUpdate: (itemId: number, data: { quantity?: number; purchasePrice?: number | null; isPrivate?: boolean }) => void
   onRemove: (itemId: number) => void
 }) {
   const [editing, setEditing] = useState(false)
@@ -108,7 +108,17 @@ const AssetRowComponent = memo(function AssetRowComponent({
             )}
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-medium leading-tight">{name}</p>
+            <p className="truncate text-sm font-medium leading-tight">
+              {name}
+              {row.isPrivate && (
+                <span
+                  title={t(lang, "privateCard")}
+                  className="ml-1.5 inline-flex items-center gap-0.5 rounded-full bg-muted/80 px-1.5 py-0.5 align-middle text-[10px] font-medium text-muted-foreground"
+                >
+                  <EyeOff className="size-2.5" />
+                </span>
+              )}
+            </p>
             <p className="mt-0.5 font-mono text-xs text-muted-foreground">
               {row.baseCode ?? row.cardCode}
               <span className="ml-1.5 text-foreground/60">×{row.quantity}</span>
@@ -177,6 +187,18 @@ const AssetRowComponent = memo(function AssetRowComponent({
           </div>
         ) : (
           <div className="flex items-center justify-end gap-0.5">
+            <button
+              onClick={() => onUpdate(row.itemId, { isPrivate: !row.isPrivate })}
+              title={row.isPrivate ? t(lang, "unmarkPrivate") : t(lang, "markAsPrivate")}
+              className={cn(
+                "rounded-md p-1.5 transition-colors",
+                row.isPrivate
+                  ? "text-foreground bg-muted/60 hover:bg-muted"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
+              )}
+            >
+              {row.isPrivate ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+            </button>
             <button
               onClick={() => {
                 setQty(String(row.quantity))

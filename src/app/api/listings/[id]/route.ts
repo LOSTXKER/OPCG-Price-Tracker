@@ -67,7 +67,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         if (!Number.isFinite(v) || v < 0) {
           return NextResponse.json({ error: "Invalid priceThb" }, { status: 400 });
         }
-        data.priceThb = v;
+        // 0 means "no explicit THB price" — store as null so the UI falls back
+        // to JPY-based conversion instead of rendering "0 ฿".
+        data.priceThb = v > 0 ? v : null;
       }
     }
 

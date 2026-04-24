@@ -3,7 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
-import { Expand, Shield, X } from "lucide-react"
+import { Expand, Shield } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Breadcrumb } from "@/components/shared/breadcrumb"
@@ -13,6 +13,7 @@ import { RarityBadge } from "@/components/shared/rarity-badge"
 import { CompareButton } from "@/components/shared/compare-button"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { CardAddToPortfolio } from "@/components/cards/card-add-to-portfolio"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { t, getCardName, getSetName } from "@/lib/i18n"
@@ -159,23 +160,14 @@ export function CardDetail({ card, siblings, communityPrice: _communityPrice, re
             </p>
           </div>
 
-          {lightboxOpen && card.imageUrl && (
-            <div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-              onClick={() => setLightboxOpen(false)}
-            >
-              <button
-                className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20"
-                onClick={() => setLightboxOpen(false)}
-                aria-label="Close lightbox"
-              >
-                <X className="size-6" />
-              </button>
-              <div className="relative max-h-[90vh] max-w-[90vw]" onClick={(e) => e.stopPropagation()}>
-                <Image src={card.imageUrl} alt={card.nameEn ?? card.nameJp} width={800} height={1120} className="max-h-[90vh] w-auto rounded-lg object-contain" priority />
-              </div>
-            </div>
-          )}
+          <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
+            <DialogContent className="max-w-[90vw] border-0 bg-transparent p-0 shadow-none ring-0 sm:max-w-[90vw] [&>[data-slot=dialog-close]]:text-white [&>[data-slot=dialog-close]]:hover:bg-white/20">
+              <DialogTitle className="sr-only">{card.nameEn ?? card.nameJp}</DialogTitle>
+              {card.imageUrl && (
+                <Image src={card.imageUrl} alt={card.nameEn ?? card.nameJp} width={800} height={1120} className="mx-auto max-h-[90vh] w-auto rounded-lg object-contain" priority />
+              )}
+            </DialogContent>
+          </Dialog>
 
           {siblings.length > 0 && (
             <div className="hidden lg:block">

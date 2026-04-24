@@ -230,7 +230,6 @@ model User {
   email               String           @unique
   displayName         String?
   avatarUrl           String?
-  coverImageUrl       String?
   bio                 String?          @db.VarChar(500)
   tier                UserTier         @default(FREE)
   tierExpiresAt       DateTime?
@@ -265,6 +264,17 @@ model User {
   showListings        Boolean          @default(true)
   showDecks           Boolean          @default(true)
   showStats           Boolean          @default(true)
+  showWatchlist       Boolean          @default(true)
+  hidePortfolioPrices Boolean          @default(false)
+  hidePortfolioQty    Boolean          @default(false)
+  profileSummaryOnly  Boolean          @default(false)
+  handle              String?          @unique
+  socialLine          String?          @db.VarChar(60)
+  socialIg            String?          @db.VarChar(60)
+  socialTwitter       String?          @db.VarChar(60)
+  socialFacebook      String?          @db.VarChar(120)
+  savedByUsers        SavedSeller[]    @relation("SellerSavedBy")
+  savedSellers        SavedSeller[]    @relation("UserSavedSellers")
   lastDigestAt        DateTime?
   portfolios          Portfolio[]
   watchlistItems      WatchlistItem[]
@@ -313,6 +323,7 @@ model User {
   @@index([stripeCustomerId])
   @@index([lineUserId])
   @@index([deletedAt])
+  @@index([handle])
 }
 
 // ============================================================
@@ -604,11 +615,13 @@ model PortfolioItem {
   purchasePrice Int?
   condition     CardCondition @default(NM)
   notes         String?
+  isPrivate     Boolean       @default(false)
   addedAt       DateTime      @default(now())
 
   @@unique([portfolioId, cardId, condition])
   @@index([portfolioId])
   @@index([cardId])
+  @@index([portfolioId, isPrivate])
 }
 
 model PortfolioTransaction {
@@ -730,6 +743,21 @@ model SavedListing {
 
   @@unique([userId, listingId])
   @@index([userId])
+}
+
+// Lets a buyer "save" a seller they like (similar to Etsy's "Favorite shop"
+// or following an IG account). Used for quick access to trusted sellers.
+model SavedSeller {
+  id        Int      @id @default(autoincrement())
+  userId    String   // the buyer who saved
+  user      User     @relation("UserSavedSellers", fields: [userId], references: [id], onDelete: Cascade)
+  sellerId  String   // the seller being saved
+  seller    User     @relation("SellerSavedBy", fields: [sellerId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, sellerId])
+  @@index([userId])
+  @@index([sellerId])
 }
 
 enum ListingStatus {

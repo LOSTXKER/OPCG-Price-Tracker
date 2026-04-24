@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ProfileDataProvider, useProfileData } from "@/components/profile/profile-data-context";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
 import { getTierConfig } from "@/components/profile/profile-types";
@@ -156,18 +157,12 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
                             key={id}
                             href={href}
                             className={cn(
-                              "group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all",
+                              "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all",
                               active
-                                ? "bg-secondary text-secondary-foreground"
-                                : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground",
+                                ? "bg-primary/10 font-medium text-primary"
+                                : "text-muted-foreground hover:bg-muted hover:text-foreground",
                             )}
                           >
-                            <span
-                              className={cn(
-                                "h-4 w-0.5 rounded-full transition-all",
-                                active ? "bg-primary" : "bg-transparent group-hover:bg-border",
-                              )}
-                            />
                             <Icon className="size-4 shrink-0" />
                             {t(lang, labelKey)}
                           </Link>
@@ -195,17 +190,17 @@ function SettingsLoadingSkeleton() {
     <div className="mx-auto max-w-7xl px-4 py-6 md:px-6 lg:px-8">
       {/* Mobile skeleton */}
       <div className="space-y-5 md:hidden">
-        <div className="h-7 w-32 animate-pulse rounded bg-secondary" />
+        <Skeleton className="h-7 w-32" />
         <div className="flex items-center gap-3 rounded-xl border border-border/40 bg-card p-4">
-          <div className="size-12 animate-pulse rounded-full bg-secondary" />
+          <Skeleton className="size-12 rounded-full" />
           <div className="flex-1 space-y-1.5">
-            <div className="h-4 w-28 animate-pulse rounded bg-secondary" />
-            <div className="h-3 w-20 animate-pulse rounded bg-secondary" />
+            <Skeleton className="h-4 w-28" />
+            <Skeleton className="h-3 w-20" />
           </div>
         </div>
         {[6, 3].map((count, g) => (
           <div key={g} className="space-y-1.5">
-            <div className="h-3 w-16 animate-pulse rounded bg-secondary" />
+            <Skeleton className="h-3 w-16" />
             <div className="overflow-hidden rounded-xl border border-border/40 bg-card">
               {Array.from({ length: count }).map((_, i) => (
                 <div
@@ -215,8 +210,8 @@ function SettingsLoadingSkeleton() {
                     i > 0 && "border-t border-border/30",
                   )}
                 >
-                  <div className="size-8 animate-pulse rounded-lg bg-secondary" />
-                  <div className="h-4 w-24 animate-pulse rounded bg-secondary" />
+                  <Skeleton className="size-8 rounded-lg" />
+                  <Skeleton className="h-4 w-24" />
                 </div>
               ))}
             </div>
@@ -229,22 +224,22 @@ function SettingsLoadingSkeleton() {
         <div className="w-56 shrink-0">
           <div className="panel space-y-4 p-4">
             <div className="flex items-center gap-3">
-              <div className="size-10 animate-pulse rounded-full bg-secondary" />
+              <Skeleton className="size-10 rounded-full" />
               <div className="flex-1 space-y-1.5">
-                <div className="h-4 w-24 animate-pulse rounded bg-secondary" />
-                <div className="h-3 w-16 animate-pulse rounded bg-secondary" />
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-3 w-16" />
               </div>
             </div>
             <div className="h-px bg-border/40" />
             {Array.from({ length: 10 }).map((_, i) => (
-              <div key={i} className="h-9 animate-pulse rounded-lg bg-secondary" />
+              <Skeleton key={i} className="h-9 rounded-lg" />
             ))}
           </div>
         </div>
         <div className="min-w-0 flex-1 space-y-5">
-          <div className="h-7 w-40 animate-pulse rounded bg-secondary" />
+          <Skeleton className="h-7 w-40" />
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-32 animate-pulse rounded-xl bg-secondary" />
+            <Skeleton key={i} className="h-32 rounded-xl" />
           ))}
         </div>
       </div>

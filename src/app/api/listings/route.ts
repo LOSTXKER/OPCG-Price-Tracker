@@ -26,9 +26,37 @@ export async function GET(request: NextRequest) {
     const gameSlug = searchParams.get("game") || "";
     const rarityParam = searchParams.get("rarity");
     const searchQuery = searchParams.get("q");
+    // Item C — accept a `seller` filter so we can deep-link from a public
+    // profile to "all listings by this seller". The value can be either the
+    // user's id (cuid) or their custom @handle; we resolve handles to ids
+    // before filtering so the WHERE clause is always indexed on userId.
+    const sellerParam = searchParams.get("seller");
     const where: Prisma.ListingWhereInput = {
       status: ListingStatus.ACTIVE,
     };
+
+    if (sellerParam) {
+      const trimmed = sellerParam.trim().replace(/^@/, "").slice(0, 60);
+      if (trimmed) {
+        // Try to resolve as a handle first; fall back to treating the value
+        // as a raw user id. If neither matches we short-circuit with an
+        // empty result instead of returning the entire marketplace.
+        const seller = await prisma.user.findFirst({
+          where: { OR: [{ handle: trimmed }, { id: trimmed }] },
+          select: { id: true },
+        });
+        if (!seller) {
+          return NextResponse.json({
+            listings: [],
+            total: 0,
+            page: 1,
+            limit: parsePageLimit(searchParams).limit,
+            totalPages: 0,
+          });
+        }
+        where.userId = seller.id;
+      }
+    }
 
     const cardFilter: Prisma.CardWhereInput = {};
     if (gameSlug) {
@@ -147,7 +175,9 @@ export async function POST(request: NextRequest) {
       if (!Number.isFinite(raw) || raw < 0) {
         return NextResponse.json({ error: "Invalid priceThb" }, { status: 400 });
       }
-      priceThb = raw;
+      // Treat 0 as "not set" — it's never a meaningful listing price and would
+      // otherwise display as "0 ฿" everywhere.
+      priceThb = raw > 0 ? raw : null;
     }
     const condition = parseCondition(body.condition) ?? CardCondition.NM;
     const quantityRaw =

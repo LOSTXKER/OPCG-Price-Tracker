@@ -10,6 +10,17 @@ import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:me");
 
+const RESERVED_HANDLES = new Set([
+  "admin", "administrator", "api", "auth", "billing", "cards", "checkout",
+  "community", "dashboard", "deck", "decks", "drop-calculator", "explore",
+  "help", "home", "honey", "image", "images", "login", "logout", "marketplace",
+  "me", "messages", "news", "notifications", "onboarding", "orders", "page",
+  "pages", "portfolio", "pricing", "privacy", "profile", "public", "saved",
+  "search", "seller", "settings", "share", "signup", "signin", "static",
+  "stats", "support", "terms", "user", "users", "watchlist", "wrap", "you",
+  "meecard", "root", "system", "null", "undefined",
+]);
+
 export async function GET() {
   try {
     const auth = await requireAuthUser();
@@ -106,6 +117,14 @@ export async function PATCH(request: NextRequest) {
       showListings?: boolean;
       showDecks?: boolean;
       showStats?: boolean;
+      hidePortfolioPrices?: boolean;
+      hidePortfolioQty?: boolean;
+      profileSummaryOnly?: boolean;
+      handle?: string | null;
+      socialLine?: string | null;
+      socialIg?: string | null;
+      socialTwitter?: string | null;
+      socialFacebook?: string | null;
     }>(request);
     if (!parsed.ok) return parsed.response;
 
@@ -135,9 +154,63 @@ export async function PATCH(request: NextRequest) {
       }
     }
 
-    for (const key of ["showCollection", "showListings", "showDecks", "showStats"] as const) {
+    for (const key of [
+      "showCollection",
+      "showListings",
+      "showDecks",
+      "showStats",
+      "hidePortfolioPrices",
+      "hidePortfolioQty",
+      "profileSummaryOnly",
+    ] as const) {
       if (parsed.body[key] !== undefined) {
         data[key] = !!parsed.body[key];
+      }
+    }
+
+    // Optional social/contact handles. Stored as plain text — visitors copy/click
+    // them on the public profile. Light validation only.
+    const SOCIAL_LIMITS: Record<"socialLine" | "socialIg" | "socialTwitter" | "socialFacebook", number> = {
+      socialLine: 60,
+      socialIg: 60,
+      socialTwitter: 60,
+      socialFacebook: 120,
+    };
+    for (const key of ["socialLine", "socialIg", "socialTwitter", "socialFacebook"] as const) {
+      const raw = parsed.body[key];
+      if (raw === undefined) continue;
+      if (raw === null || raw === "") {
+        data[key] = null;
+        continue;
+      }
+      if (typeof raw !== "string") continue;
+      const trimmed = raw.trim().slice(0, SOCIAL_LIMITS[key]);
+      data[key] = trimmed || null;
+    }
+
+    if (parsed.body.handle !== undefined) {
+      const raw = parsed.body.handle;
+      if (raw === null || raw === "") {
+        data.handle = null;
+      } else if (typeof raw === "string") {
+        const handle = raw.trim().toLowerCase().replace(/^@/, "");
+        if (!/^[a-z0-9_]{3,24}$/.test(handle)) {
+          return NextResponse.json(
+            { error: "Handle must be 3-24 chars: lowercase letters, numbers, underscore" },
+            { status: 400 },
+          );
+        }
+        if (RESERVED_HANDLES.has(handle)) {
+          return NextResponse.json({ error: "This handle is reserved" }, { status: 400 });
+        }
+        const existing = await prisma.user.findUnique({
+          where: { handle },
+          select: { id: true },
+        });
+        if (existing && existing.id !== dbUser.id) {
+          return NextResponse.json({ error: "This handle is already taken" }, { status: 409 });
+        }
+        data.handle = handle;
       }
     }
 

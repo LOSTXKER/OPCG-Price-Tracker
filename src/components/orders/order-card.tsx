@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Package, MessageCircle } from "lucide-react";
+import { formatThb, formatJpy } from "@/lib/utils/currency";
 import { OrderStatusBadge } from "./order-status-badge";
 
 export type OrderListItem = {
@@ -106,10 +107,10 @@ export function OrderCard({
 
         <div className="shrink-0 text-right">
           <p className="text-lg font-bold">
-            ฿{order.priceThb.toLocaleString()}
+            {formatThb(order.priceThb)}
           </p>
           <p className="text-xs text-muted-foreground">
-            ¥{order.listing.priceJpy.toLocaleString()}
+            {formatJpy(order.listing.priceJpy)}
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
             {timeAgo(order.createdAt)}

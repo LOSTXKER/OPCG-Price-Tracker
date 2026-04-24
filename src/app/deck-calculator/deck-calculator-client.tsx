@@ -16,7 +16,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { PriceDisplay } from "@/components/shared/price-display";
+import { createClient } from "@/lib/supabase/client";
 import { useAuthState } from "@/hooks/use-auth-state";
+import { invalidateSettings } from "@/hooks/use-settings";
 import { useCardSearch, type CardSearchResult } from "@/hooks/use-card-search";
 import { useTierLimits } from "@/hooks/use-tier-limits";
 import { useUIStore } from "@/stores/ui-store";
@@ -72,7 +74,9 @@ function DeckCalculatorContent() {
       const res = await fetch("/api/decks");
       if (!res.ok) {
         if (res.status === 401) {
-          setError(t(lang, "login"));
+          invalidateSettings();
+          const supabase = createClient();
+          await supabase.auth.signOut();
           setLoading(false);
           return;
         }

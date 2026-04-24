@@ -8,9 +8,10 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
-import { useSettings } from "@/hooks/use-settings";
+import { useSettings, invalidateSettings } from "@/hooks/use-settings";
 import type {
   ProfileData,
   SettingsData,
@@ -51,6 +52,11 @@ export function ProfileDataProvider({ children }: { children: ReactNode }) {
     try {
       const meRes = await fetch("/api/me");
       if (!meRes.ok) {
+        if (meRes.status === 401) {
+          invalidateSettings();
+          const supabase = createClient();
+          await supabase.auth.signOut();
+        }
         setLoading(false);
         setError(t(lang, "loadFailed"));
         return;

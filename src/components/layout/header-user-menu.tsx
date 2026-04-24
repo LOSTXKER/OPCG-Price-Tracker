@@ -89,7 +89,7 @@ export function HeaderUserMenu({
       >
         <MessageCircle className="size-4" />
         {unreadMessages > 0 && (
-          <span className="absolute -right-0.5 -top-0.5 flex min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-4 text-white">
+          <span className="absolute -right-0.5 -top-0.5 flex min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-bold leading-4 text-white">
             {unreadMessages > 99 ? "99+" : unreadMessages}
           </span>
         )}
@@ -108,11 +108,11 @@ export function HeaderUserMenu({
               {userName}
             </span>
             <div className="flex items-center gap-1">
-              <span className={cn("text-[10px] font-semibold leading-tight", tierInfo.color.replace(/bg-\S+\s?/, ""))}>
+              <span className={cn("text-[11px] font-semibold leading-tight", tierInfo.color.replace(/bg-\S+\s?/, ""))}>
                 {tierInfo.label}
               </span>
-              <span className="text-[10px] leading-tight text-muted-foreground/50">|</span>
-              <span className={cn("text-[10px] font-semibold leading-tight", rankDisplay.color)}>
+              <span className="text-[11px] leading-tight text-muted-foreground/50">|</span>
+              <span className={cn("text-[11px] font-semibold leading-tight", rankDisplay.color)}>
                 {honeyLevel.label}
               </span>
             </div>
@@ -125,18 +125,18 @@ export function HeaderUserMenu({
               <p className="truncate text-xs text-muted-foreground">{authUser.email}</p>
 
               <div className="mt-2 flex items-center gap-1.5">
-                <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold", tierInfo.color)}>
+                <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold", tierInfo.color)}>
                   <TierIcon className="size-2.5" />
                   {tierInfo.label}
                 </span>
-                <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold", rankDisplay.bg)}>
+                <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold", rankDisplay.bg)}>
                   <Award className="size-2.5" />
                   {honeyLevel.label}
                 </span>
               </div>
 
               <div className="mt-2.5">
-                <div className="flex items-center justify-between text-[10px]">
+                <div className="flex items-center justify-between text-[11px]">
                   <span className="font-medium text-muted-foreground">
                     {honeyLevel.nextThreshold ? "EXP" : "Max Rank"}
                   </span>

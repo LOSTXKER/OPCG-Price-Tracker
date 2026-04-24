@@ -10,7 +10,6 @@ import {
   Star,
   Settings,
   Menu,
-  ChevronRight,
   Store,
   ArrowLeft,
 } from "lucide-react";
@@ -21,6 +20,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
 
 const NAV_ITEMS = [
   { href: "/seller", label: "ภาพรวม", icon: LayoutDashboard, exact: true },
@@ -38,35 +38,6 @@ const BREADCRUMB_LABELS: Record<string, string> = {
   settings: "ตั้งค่าร้าน",
   new: "ลงขายใหม่",
 };
-
-function Breadcrumbs({ pathname }: { pathname: string }) {
-  const segments = pathname.split("/").filter(Boolean);
-  if (segments.length <= 1) return null;
-
-  const crumbs = segments.slice(1).map((seg, i) => {
-    const href = "/" + segments.slice(0, i + 2).join("/");
-    const label = BREADCRUMB_LABELS[seg] ?? seg;
-    const isLast = i === segments.length - 2;
-    return { href, label, isLast };
-  });
-
-  return (
-    <nav className="mb-4 flex items-center gap-1 text-sm text-muted-foreground">
-      {crumbs.map((crumb, i) => (
-        <span key={crumb.href} className="flex items-center gap-1">
-          {i > 0 && <ChevronRight className="h-3 w-3" />}
-          {crumb.isLast ? (
-            <span className="font-medium text-foreground">{crumb.label}</span>
-          ) : (
-            <Link href={crumb.href} className="transition-colors hover:text-foreground">
-              {crumb.label}
-            </Link>
-          )}
-        </span>
-      ))}
-    </nav>
-  );
-}
 
 function NavContent({
   pathname,
@@ -104,11 +75,11 @@ function NavContent({
       </nav>
 
       <Link
-        href="/marketplace"
+        href="/"
         className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
-        กลับหน้าตลาด
+        กลับหน้าหลัก
       </Link>
     </>
   );
@@ -123,7 +94,11 @@ export function SellerShell({ children }: { children: React.ReactNode }) {
       {/* Desktop Sidebar */}
       <aside className="hidden w-56 shrink-0 flex-col border-r border-border/50 bg-muted/20 md:flex">
         <div className="sticky top-0 flex h-dvh flex-col p-3">
-          <div className="mb-6 flex items-center gap-2 px-3 pt-2">
+          <Link href="/" className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back to site
+          </Link>
+          <div className="mb-6 flex items-center gap-2 px-3 pt-1">
             <Store className="h-5 w-5 text-primary" />
             <span className="text-sm font-bold">ศูนย์ผู้ขาย</span>
           </div>
@@ -143,6 +118,10 @@ export function SellerShell({ children }: { children: React.ReactNode }) {
             </SheetTrigger>
             <SheetContent side="left" className="w-64 p-3" showCloseButton={false}>
               <SheetTitle className="sr-only">Navigation</SheetTitle>
+              <Link href="/" className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" onClick={() => setMobileOpen(false)}>
+                <ArrowLeft className="h-3.5 w-3.5" />
+                Back to site
+              </Link>
               <div className="mb-4 flex items-center gap-2 px-3 pt-1">
                 <Store className="h-5 w-5 text-primary" />
                 <span className="text-sm font-bold">ศูนย์ผู้ขาย</span>
@@ -161,7 +140,7 @@ export function SellerShell({ children }: { children: React.ReactNode }) {
 
         <main className="flex-1 px-4 py-4 md:px-6 md:py-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
-            <Breadcrumbs pathname={pathname} />
+            <Breadcrumb pathname={pathname} labelMap={BREADCRUMB_LABELS} />
             {children}
           </div>
         </main>

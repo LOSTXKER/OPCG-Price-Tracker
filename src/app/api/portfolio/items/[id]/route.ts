@@ -58,6 +58,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     if (body.notes !== undefined) {
       data.notes = typeof body.notes === "string" ? body.notes.slice(0, 2000) : null;
     }
+    if (body.isPrivate !== undefined) {
+      data.isPrivate = !!body.isPrivate;
+    }
 
     const updated = await prisma.portfolioItem.update({
       where: { id },

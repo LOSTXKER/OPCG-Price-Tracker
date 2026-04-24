@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
+import { invalidateSettings } from "@/hooks/use-settings";
 import type {
   HoneyTx,
   ShopItem,
@@ -76,6 +78,11 @@ export function useHoneyData() {
             })
             .catch(() => {});
         }
+      } else if (honeyRes.status === 401) {
+        invalidateSettings();
+        const supabase = createClient();
+        await supabase.auth.signOut();
+        return;
       }
       if (shopRes.ok) setShopItems((await shopRes.json()).items);
       if (lbRes.ok) setLeaderboard((await lbRes.json()).leaderboard);

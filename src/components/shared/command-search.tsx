@@ -55,7 +55,7 @@ export function CommandSearchTrigger({ onClick }: { onClick: () => void }) {
     >
       <Search className="size-3.5 shrink-0" />
       <span className="flex-1 text-left">{t(lang, "searchCardsDots")}</span>
-      <kbd className="hidden rounded-md border border-border/60 bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground/60 sm:inline">/</kbd>
+      <kbd className="hidden rounded-md border border-border/60 bg-background px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground/60 sm:inline">/</kbd>
     </button>
   )
 }
@@ -230,7 +230,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md border border-border/60 bg-muted/40 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground"
+              className="rounded-md border border-border/60 bg-muted/40 px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground"
             >
               ESC
             </button>

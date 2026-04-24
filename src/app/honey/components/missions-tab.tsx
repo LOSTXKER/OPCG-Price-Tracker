@@ -313,15 +313,15 @@ function RewardLabel({ honey, ticket }: { honey: number; ticket: number }) {
 function RewardBadges({ lang, honey, ticket, muted }: { lang: Language; honey: number; ticket: number; muted?: boolean }) {
   return (
     <div className={cn("mt-1.5 flex items-center gap-1.5", muted && "opacity-40")}>
-      <span className="text-[11px] text-muted-foreground">{t(lang, "rewardPrefix")}</span>
+      <span className="text-xs text-muted-foreground">{t(lang, "rewardPrefix")}</span>
       {honey > 0 && (
-        <span className="flex items-center gap-1 rounded-md bg-amber-500/10 px-2 py-0.5 text-[11px] font-bold text-amber-700 dark:text-amber-400">
+        <span className="flex items-center gap-1 rounded-md bg-amber-500/10 px-2 py-0.5 text-xs font-bold text-amber-700 dark:text-amber-400">
           <span className="text-xs leading-none">🍯</span>
           <span className="tabular-nums">x{honey}</span>
         </span>
       )}
       {ticket > 0 && (
-        <span className="flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 text-[11px] font-bold text-primary">
+        <span className="flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
           <Ticket className="size-3 text-primary" />
           <span className="tabular-nums">x{ticket}</span>
         </span>

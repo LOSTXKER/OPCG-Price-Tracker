@@ -240,7 +240,7 @@ function TopCardTile({
             <Layers className="size-8" />
           </div>
         )}
-        <span className="absolute left-1.5 top-1.5 flex size-5 items-center justify-center rounded-full bg-foreground/70 text-[10px] font-bold text-background backdrop-blur-sm">
+        <span className="absolute left-1.5 top-1.5 flex size-5 items-center justify-center rounded-full bg-foreground/70 text-[11px] font-bold text-background backdrop-blur-sm">
           {rank}
         </span>
       </div>

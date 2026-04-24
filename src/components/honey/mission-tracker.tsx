@@ -2,7 +2,9 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { useAuthState } from "@/hooks/use-auth-state";
+import { invalidateSettings } from "@/hooks/use-settings";
 
 const SETS_RE = /^\/sets\/([^/]+)/;
 const CARDS_RE = /^\/cards\/([^/]+)/;
@@ -23,6 +25,12 @@ export function MissionTracker() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "track-by-path", path: pathname }),
+    }).then(async (r) => {
+      if (r.status === 401) {
+        invalidateSettings();
+        const supabase = createClient();
+        await supabase.auth.signOut();
+      }
     }).catch((e) => console.error("[honey] mission track failed:", e));
 
     const setsMatch = SETS_RE.exec(pathname);

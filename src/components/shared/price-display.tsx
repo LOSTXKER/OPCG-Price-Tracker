@@ -3,6 +3,7 @@
 import { formatByCurrency, formatPct } from "@/lib/utils/currency";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/stores/ui-store";
+import { ArrowUp, ArrowDown } from "lucide-react";
 
 const sizeClasses = {
   sm: {
@@ -67,6 +68,9 @@ export function PriceDisplay({
             !up && !down && "bg-muted/50 text-muted-foreground"
           )}
         >
+          {up && <ArrowUp className="inline size-3" aria-hidden />}
+          {down && <ArrowDown className="inline size-3" aria-hidden />}
+          <span className="sr-only">{up ? "up" : down ? "down" : "unchanged"}</span>
           {changeNum! > 0 ? "+" : ""}{formatPct(changeNum!)}%
         </span>
       )}

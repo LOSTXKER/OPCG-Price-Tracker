@@ -3,7 +3,6 @@ export type DbUser = {
   email: string;
   displayName: string | null;
   avatarUrl: string | null;
-  coverImageUrl: string | null;
   bio: string | null;
   tier: string;
   sellerRating: number | null;
@@ -17,6 +16,14 @@ export type DbUser = {
   showListings: boolean;
   showDecks: boolean;
   showStats: boolean;
+  hidePortfolioPrices: boolean;
+  hidePortfolioQty: boolean;
+  profileSummaryOnly: boolean;
+  handle: string | null;
+  socialLine?: string | null;
+  socialIg?: string | null;
+  socialTwitter?: string | null;
+  socialFacebook?: string | null;
   stripeCustomerId?: string | null;
   createdAt: string;
 };

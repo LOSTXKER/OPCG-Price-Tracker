@@ -7,6 +7,7 @@ import { Loader2, Bookmark, Trash2, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { useUIStore } from "@/stores/ui-store";
+import { formatJpy, formatThb } from "@/lib/utils/currency";
 import { t } from "@/lib/i18n";
 
 type SavedItem = {
@@ -190,11 +191,11 @@ export default function SavedListingsPage() {
                       </p>
                       <div className="mt-2 flex items-baseline justify-between">
                         <span className="font-bold">
-                          ¥{listing.priceJpy.toLocaleString()}
+                          {formatJpy(listing.priceJpy)}
                         </span>
                         {listing.priceThb != null && (
                           <span className="text-xs text-muted-foreground">
-                            ฿{listing.priceThb.toLocaleString()}
+                            {formatThb(listing.priceThb)}
                           </span>
                         )}
                       </div>

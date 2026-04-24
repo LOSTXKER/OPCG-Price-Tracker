@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CARD_BG } from "@/lib/constants/ui";
+import { formatThb } from "@/lib/utils/currency";
 import { OrderStatusTracker } from "./order-status-tracker";
 import type { ChatListing, ChatUser } from "./types";
 import {
@@ -95,14 +96,14 @@ export function OrderSidebar({
         <div className="flex items-center justify-between">
           <span className="text-xs text-muted-foreground">ราคาลงขาย</span>
           <span className="text-sm font-bold tabular-nums">
-            ฿{(listingPrice ?? 0).toLocaleString()}
+            {formatThb(listingPrice ?? 0)}
           </span>
         </div>
         {marketPrice != null && (
           <div className="flex items-center justify-between">
             <span className="text-xs text-muted-foreground">ราคาตลาด</span>
             <span className="text-sm tabular-nums">
-              ฿{marketPrice.toLocaleString()}
+              {formatThb(marketPrice)}
             </span>
           </div>
         )}

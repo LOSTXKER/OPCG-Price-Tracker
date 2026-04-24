@@ -2,10 +2,21 @@ import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Vanity URL: /@handle → /u/handle (works regardless of auth bypass)
+  if (pathname.startsWith("/@")) {
+    const handle = pathname.slice(2).split("/")[0];
+    if (handle && /^[a-z0-9_]{3,24}$/i.test(handle)) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/u/${handle.toLowerCase()}`;
+      return NextResponse.rewrite(url);
+    }
+  }
+
   if (process.env.NEXT_PUBLIC_BYPASS_AUTH === "true") {
     return NextResponse.next();
   }
-  const { pathname } = request.nextUrl;
 
   const { response, user } = await updateSession(request);
 

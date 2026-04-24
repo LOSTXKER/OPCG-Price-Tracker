@@ -55,7 +55,7 @@ export function HeaderMarketTicker({
 
   return (
     <div className="border-b border-border/40 bg-background">
-      <div className="mx-auto flex h-10 max-w-7xl items-center justify-between px-6 text-[11.5px] lg:px-8">
+      <div className="mx-auto flex h-10 max-w-7xl items-center justify-between px-6 text-xs lg:px-8">
         {/* Left — market ticker chips */}
         <div className="flex items-center gap-2 text-muted-foreground">
           {stats.totalCards > 0 && (
@@ -97,7 +97,7 @@ export function HeaderMarketTicker({
               </span>
               <span
                 className={cn(
-                  "rounded-full px-1.5 py-0.5 text-[10px] font-bold leading-none",
+                  "rounded-full px-1.5 py-0.5 text-xs font-bold leading-none",
                   stats.topMover.change >= 0
                     ? "bg-green-500/15 text-green-600 dark:text-green-400"
                     : "bg-red-500/15 text-red-600 dark:text-red-400"
@@ -118,8 +118,8 @@ export function HeaderMarketTicker({
             className="flex h-7 w-40 items-center gap-1.5 rounded-md border border-border/80 bg-background/80 px-2.5 text-muted-foreground transition-colors hover:border-border hover:bg-background lg:w-48"
           >
             <Search className="size-3.5 shrink-0 text-muted-foreground/60" />
-            <span className="flex-1 text-left text-[11px] text-muted-foreground/70">{t(language, "searchPlaceholder")}</span>
-            <kbd className="shrink-0 rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] leading-none text-muted-foreground/60">/</kbd>
+            <span className="flex-1 text-left text-xs text-muted-foreground/70">{t(language, "searchPlaceholder")}</span>
+            <kbd className="shrink-0 rounded bg-muted px-1.5 py-0.5 font-mono text-xs leading-none text-muted-foreground/60">/</kbd>
           </button>
 
           <div className="mx-0.5 h-4 w-px bg-border/40" />
@@ -128,7 +128,7 @@ export function HeaderMarketTicker({
             <>
               <Link
                 href="/pricing"
-                className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary transition-colors hover:bg-primary/20"
+                className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary transition-colors hover:bg-primary/20"
               >
                 <Zap className="size-3" />
                 {language === "TH" ? "อัปเกรด" : language === "JP" ? "アップグレード" : "Upgrade"}

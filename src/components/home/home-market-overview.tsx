@@ -163,7 +163,7 @@ export function HomeMarketOverview({
             <span className="hidden sm:inline">{t(lang, "filter")}</span>
             {m.activeFilterCount > 0 && (
               <span className={cn(
-                "flex size-4.5 items-center justify-center rounded-full text-[10px] font-bold",
+                "flex size-4.5 items-center justify-center rounded-full text-[11px] font-bold",
                 m.filterOpen || m.activeFilterCount > 0
                   ? "bg-primary-foreground/20 text-primary-foreground"
                   : "bg-primary/10 text-primary"

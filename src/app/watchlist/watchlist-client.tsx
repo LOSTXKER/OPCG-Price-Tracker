@@ -9,7 +9,9 @@ import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/client";
 import { useAuthState } from "@/hooks/use-auth-state";
+import { invalidateSettings } from "@/hooks/use-settings";
 import { useTierLimits } from "@/hooks/use-tier-limits";
 import { useUIStore } from "@/stores/ui-store";
 import { t, type Language } from "@/lib/i18n";
@@ -67,6 +69,11 @@ function WatchlistContent() {
     setError(null);
     const res = await fetch("/api/watchlist");
     if (!res.ok) {
+      if (res.status === 401) {
+        invalidateSettings();
+        const supabase = createClient();
+        await supabase.auth.signOut();
+      }
       setError(t(lang, "loadFailed"));
       setLoading(false);
       return;

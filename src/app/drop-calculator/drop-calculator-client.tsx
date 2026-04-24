@@ -243,7 +243,7 @@ export default function DropCalculatorClient() {
                 <ListChecks className="size-4" />
                 {resultsLabel}
                 {wantCards.length > 0 && (
-                  <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                  <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
                     {wantCards.length}
                   </span>
                 )}

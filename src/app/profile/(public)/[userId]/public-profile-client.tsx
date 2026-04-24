@@ -1,105 +1,51 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import {
-  Calendar,
-  Check,
-  Eye,
-  Layers,
-  Lock,
-  Package,
-  Pencil,
-  Settings,
-  Share2,
-  Star,
-  Store,
-} from "lucide-react";
-import { ListingCard } from "@/components/marketplace/listing-card";
-import { CardItem } from "@/components/cards/card-item";
-import { CardGrid } from "@/components/cards/card-grid";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { getTierConfig } from "@/components/profile/profile-types";
+import { useCallback, useMemo } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 import { useUIStore } from "@/stores/ui-store";
-import { t, type Language } from "@/lib/i18n";
+import type { Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { formatJoinedRelative } from "@/lib/utils/relative-time";
+import type {
+  CollectionStats,
+  ProfileAchievement,
+  ProfileBadge,
+  ProfilePrivacyFlags,
+  SellerStats,
+} from "@/lib/profile/load-public-profile";
 
-type ProfileUser = {
-  id: string;
-  displayName: string | null;
-  avatarUrl: string | null;
-  coverImageUrl: string | null;
-  bio: string | null;
-  tier: string;
-  sellerRating: number | null;
-  sellerReviewCount: number;
-  createdAt: string;
-};
-
-type ProfileStats = {
-  listingCount: number;
-  reviewCount: number;
-  portfolioCardCount: number;
-  watchlistCount: number;
-};
-
-type SerializedListing = {
-  id: number;
-  priceJpy: number;
-  priceThb: number | null;
-  condition: string;
-  shipping: string[];
-  location: string | null;
-  isFeatured: boolean;
-  card: {
-    cardCode: string;
-    nameJp: string;
-    nameEn: string | null;
-    rarity: string;
-    imageUrl: string | null;
-    latestPriceJpy: number | null;
-  };
-  seller: {
-    displayName: string | null;
-    avatarUrl: string | null;
-    sellerRating: number | null;
-    sellerReviewCount: number;
-  };
-};
-
-type SerializedReview = {
-  id: number;
-  rating: number;
-  comment: string | null;
-  createdAt: string;
-  reviewer: {
-    displayName: string | null;
-    avatarUrl: string | null;
-  };
-};
-
-type ProfileCardData = {
-  cardCode: string;
-  nameJp: string;
-  nameEn: string | null;
-  rarity: string;
-  imageUrl: string | null;
-  priceJpy: number | null;
-  priceThb: number | null;
-  setCode?: string | null;
-};
-
-type HiddenSections = {
-  listings: boolean;
-  collection: boolean;
-  decks: boolean;
-  stats: boolean;
-};
-
-type Tab = "listings" | "collection" | "reviews" | "watchlist";
+import {
+  buildHeroMeta,
+  buildSocialLinks,
+  buildTrustChips,
+} from "@/components/profile/public/hero-builders";
+import { EmptyProfilePanel } from "@/components/profile/public/empty-profile-panel";
+import { PrivateProfileView } from "@/components/profile/public/private-profile-view";
+import { ProfileActionCluster } from "@/components/profile/public/profile-action-cluster";
+import { ProfileCompleteness } from "@/components/profile/public/profile-completeness";
+import { ProfileCover } from "@/components/profile/public/profile-cover";
+import { ProfileHero } from "@/components/profile/public/profile-hero";
+import { ProfileMobileCtaBar } from "@/components/profile/public/profile-mobile-cta-bar";
+import { ProfileReviewsPreview } from "@/components/profile/public/profile-reviews-preview";
+import { ProfileStatsStrip } from "@/components/profile/public/profile-stats-strip";
+import {
+  ProfileTabsNav,
+  type TabDescriptor,
+} from "@/components/profile/public/profile-tabs-nav";
+import { CollectionTabContent } from "@/components/profile/public/tabs/collection-tab";
+import { ListingsTabContent } from "@/components/profile/public/tabs/listings-tab";
+import { OverviewTabContent } from "@/components/profile/public/tabs/overview-tab";
+import { ReviewsTabContent } from "@/components/profile/public/tabs/reviews-tab";
+import { SummaryOnlyBanner } from "@/components/profile/public/tabs/summary-only-banner";
+import type {
+  ProfileCardData,
+  ProfileStats,
+  ProfileTab,
+  ProfileUser,
+  SerializedListing,
+  SerializedReview,
+} from "@/components/profile/public/types";
 
 type Props = {
   user: ProfileUser;
@@ -107,426 +53,309 @@ type Props = {
   listings: SerializedListing[];
   reviews: SerializedReview[];
   collectionCards: ProfileCardData[];
-  watchlistCards: ProfileCardData[];
+  achievements: ProfileAchievement[];
+  badges: ProfileBadge[];
+  collectionStats: CollectionStats;
+  sellerStats: SellerStats;
+  privacyFlags: ProfilePrivacyFlags;
+  firstListingId: number | null;
+  viewerSavedSeller: boolean;
+  viewerIsSignedIn: boolean;
   isOwner: boolean;
   isPrivate?: boolean;
-  hiddenSections?: HiddenSections;
 };
 
-const TIER_BANNER: Record<string, string> = {
-  FREE: "from-slate-600 via-slate-500 to-slate-400 dark:from-slate-800 dark:via-slate-700 dark:to-slate-600",
-  PRO: "from-amber-700 via-orange-500 to-yellow-400 dark:from-amber-900 dark:via-orange-700 dark:to-yellow-600",
-  LIFETIME_PRO: "from-amber-700 via-orange-500 to-yellow-400 dark:from-amber-900 dark:via-orange-700 dark:to-yellow-600",
-  PRO_PLUS: "from-yellow-600 via-amber-400 to-orange-300 dark:from-yellow-800 dark:via-amber-600 dark:to-orange-500",
-  LIFETIME_PRO_PLUS: "from-yellow-600 via-amber-400 to-orange-300 dark:from-yellow-800 dark:via-amber-600 dark:to-orange-500",
-};
-
+/**
+ * Top-level orchestrator for the public profile route. Intentionally thin:
+ *   1. compute language + derived state
+ *   2. early-return for the locked profile view
+ *   3. assemble hero + tabs + content area + (mobile) sticky CTA
+ *
+ * All visual chunks live in `@/components/profile/public/*` so each piece
+ * stays small enough to reason about in isolation.
+ */
 export function PublicProfileClient({
   user,
   stats,
   listings,
   reviews,
   collectionCards,
-  watchlistCards,
+  achievements,
+  badges,
+  collectionStats,
+  sellerStats,
+  privacyFlags,
+  firstListingId,
+  viewerSavedSeller,
+  viewerIsSignedIn,
   isOwner,
   isPrivate,
-  hiddenSections,
 }: Props) {
   const lang = useUIStore((s) => s.language);
-  const [activeTab, setActiveTab] = useState<Tab>("listings");
-  const [copied, setCopied] = useState(false);
-  const tierCfg = getTierConfig(user.tier);
-  const bannerGradient = TIER_BANNER[user.tier] ?? TIER_BANNER.FREE;
 
-  const handleShare = async () => {
-    const url = `${window.location.origin}/profile/${user.id}`;
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const memberSince = new Date(user.createdAt).toLocaleDateString(
-    lang === "TH" ? "th-TH" : lang === "JP" ? "ja-JP" : "en-US",
-    { year: "numeric", month: "short" },
-  );
-
-  const allTabs: { key: Tab; labelKey: Parameters<typeof t>[1]; count?: number }[] = [
-    { key: "listings", labelKey: "tabListings", count: stats.listingCount },
-    { key: "collection", labelKey: "tabCollection", count: stats.portfolioCardCount },
-    { key: "reviews", labelKey: "tabReviews", count: stats.reviewCount },
-    { key: "watchlist", labelKey: "tabWatchlist", count: stats.watchlistCount },
-  ];
-
-  const visibleTabs = isOwner
-    ? allTabs
-    : allTabs.filter(({ key }) => {
-        if (key === "listings" && hiddenSections?.listings) return false;
-        if (key === "collection" && hiddenSections?.collection) return false;
-        return true;
-      });
-
-  const statItems: { labelKey: Parameters<typeof t>[1]; value: string | number; icon?: typeof Star; dimmed?: boolean }[] = [
-    { labelKey: "tabListings" as const, value: stats.listingCount },
-    ...(user.sellerRating != null
-      ? [{ labelKey: "profileSellerRating" as const, value: `${user.sellerRating.toFixed(1)}`, icon: Star }]
-      : []),
-    { labelKey: "tabReviews" as const, value: stats.reviewCount },
-    { labelKey: "cardsInCollection" as const, value: stats.portfolioCardCount },
-  ];
-
+  // Privacy gate first — nothing else needs to render.
   if (isPrivate) {
-    return (
-      <div className="pb-16">
-        <div className="mx-auto w-full max-w-7xl px-4 pt-6 md:px-6 lg:px-8">
-          <div className={cn("relative h-40 overflow-hidden rounded-2xl bg-gradient-to-br sm:h-48", bannerGradient)}>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_60%,rgba(255,255,255,0.08),transparent_60%)]" />
-          </div>
-        </div>
-        <div className="relative mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8">
-          <div className="-mt-16 flex flex-col items-center gap-4 pt-24 text-center">
-            <div className="flex size-16 items-center justify-center rounded-2xl bg-muted/60">
-              <Lock className="size-8 text-muted-foreground/40" />
-            </div>
-            <h1 className="text-xl font-bold">{user.displayName ?? "User"}</h1>
-            <p className="text-sm text-muted-foreground">{t(lang, "profileIsPrivate")}</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <PrivateProfileView user={user} lang={lang} />;
   }
 
   return (
-    <div className="pb-16">
-      {/* ── Banner ── */}
-      <div className="mx-auto w-full max-w-7xl px-4 pt-6 md:px-6 lg:px-8">
-        <div className="relative h-40 overflow-hidden rounded-2xl sm:h-48">
-          {user.coverImageUrl ? (
-            <Image
-              src={user.coverImageUrl}
-              alt=""
-              fill
-              className="object-cover"
-              priority
-            />
-          ) : (
-            <div className={cn("absolute inset-0 bg-gradient-to-br", bannerGradient)}>
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M0%200h40v40H0z%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%221%22%20fill%3D%22rgba(255%2C255%2C255%2C0.04)%22%2F%3E%3C%2Fsvg%3E')] bg-repeat" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_60%,rgba(255,255,255,0.08),transparent_60%)]" />
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* ── Profile hero ── */}
-      <div className="relative mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8">
-        <div className="mt-4 flex items-center justify-between gap-4">
-          {/* Left: Avatar + Name/Bio beside it */}
-          <div className="flex min-w-0 items-center gap-4">
-            <Avatar
-              className={cn(
-                "size-16 shrink-0 border-[3px] border-background shadow-md sm:size-20",
-                tierCfg.ring,
-                "ring-2",
-              )}
-            >
-              {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
-              <AvatarFallback className="bg-muted text-2xl font-bold sm:text-3xl">
-                {(user.displayName ?? "?").slice(0, 1).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="break-words text-xl font-extrabold tracking-tight sm:text-2xl">
-                  {user.displayName ?? "User"}
-                </h1>
-                <Badge className={cn("shrink-0 text-xs font-semibold", tierCfg.color)}>
-                  {tierCfg.label}
-                </Badge>
-              </div>
-              {user.bio && (
-                <p className="mt-0.5 max-w-sm truncate text-xs text-muted-foreground sm:max-w-md sm:text-sm">
-                  {user.bio}
-                </p>
-              )}
-              <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground/60">
-                <Calendar className="size-3" />
-                {t(lang, "memberSince")} {memberSince}
-              </p>
-            </div>
-          </div>
-
-          {/* Right: Action buttons */}
-          <div className="flex shrink-0 gap-2">
-            {isOwner && (
-              <>
-                <Link href="/settings/account">
-                  <Button variant="outline" size="sm" className="gap-1.5 rounded-full">
-                    <Pencil className="size-3.5" />
-                    {t(lang, "editProfile")}
-                  </Button>
-                </Link>
-                <Link href="/settings">
-                  <Button variant="outline" size="sm" className="gap-1.5 rounded-full">
-                    <Settings className="size-3.5" />
-                    {t(lang, "profileSettings")}
-                  </Button>
-                </Link>
-              </>
-            )}
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={() => void handleShare()}
-              className="relative rounded-full"
-            >
-              {copied ? <Check className="size-4 text-green-500" /> : <Share2 className="size-4" />}
-            </Button>
-          </div>
-        </div>
-
-        {/* ── Stats ── */}
-        <div className="mt-6 flex gap-3 overflow-x-auto pb-1">
-          {statItems.map(({ labelKey, value, icon: Icon }) => (
-            <div
-              key={labelKey}
-              className="flex min-w-[80px] flex-col items-center gap-0.5 rounded-xl border border-border/40 bg-card/50 px-4 py-3 text-center backdrop-blur-sm"
-            >
-              <span className="flex items-center gap-1 text-xl font-bold tabular-nums leading-none">
-                {Icon && <Icon className="size-4 fill-amber-400 text-amber-400" />}
-                {value}
-              </span>
-              <span className="text-xs font-medium text-muted-foreground">{t(lang, labelKey)}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* ── Tabs ── */}
-        <div className="mt-6 border-b border-border/40">
-          <nav className="-mb-px flex gap-0 overflow-x-auto">
-            {visibleTabs.map(({ key, labelKey, count }) => (
-              <button
-                key={key}
-                onClick={() => setActiveTab(key)}
-                className={cn(
-                  "relative flex shrink-0 items-center gap-1.5 px-5 py-3 text-sm font-medium transition-colors",
-                  activeTab === key
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground/70",
-                )}
-              >
-                {t(lang, labelKey)}
-                {count != null && count > 0 && (
-                  <span
-                    className={cn(
-                      "rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums",
-                      activeTab === key
-                        ? "bg-primary/10 text-primary"
-                        : "bg-muted text-muted-foreground",
-                    )}
-                  >
-                    {count}
-                  </span>
-                )}
-                <span className={cn(
-                  "absolute bottom-0 left-2 right-2 h-0.5 rounded-full bg-primary transition-all duration-200",
-                  activeTab === key ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0",
-                )} />
-              </button>
-            ))}
-          </nav>
-        </div>
-
-        {/* ── Tab content ── */}
-        <div className="py-6">
-          {activeTab === "listings" && (
-            <ListingsTabContent listings={listings} isOwner={isOwner} lang={lang} />
-          )}
-          {activeTab === "reviews" && (
-            <ReviewsTabContent reviews={reviews} lang={lang} />
-          )}
-          {activeTab === "collection" && (
-            <CardListTabContent
-              cards={collectionCards}
-              icon={Layers}
-              emptyKey="noCollectionYet"
-              lang={lang}
-            />
-          )}
-          {activeTab === "watchlist" && (
-            <CardListTabContent
-              cards={watchlistCards}
-              icon={Eye}
-              emptyKey="noWatchlistYet"
-              lang={lang}
-            />
-          )}
-        </div>
-      </div>
-    </div>
+    <PublicProfileLayout
+      user={user}
+      stats={stats}
+      listings={listings}
+      reviews={reviews}
+      collectionCards={collectionCards}
+      achievements={achievements}
+      badges={badges}
+      collectionStats={collectionStats}
+      sellerStats={sellerStats}
+      privacyFlags={privacyFlags}
+      firstListingId={firstListingId}
+      viewerSavedSeller={viewerSavedSeller}
+      viewerIsSignedIn={viewerIsSignedIn}
+      isOwner={isOwner}
+      lang={lang}
+    />
   );
 }
 
-/* ── Tab content components ── */
+/* ────────────────────────────────────────────────────────────────────────── *
+ * The split below is deliberate: hooks below this point never run for the
+ * locked private view, and React's rules-of-hooks stay clean even when we
+ * early-return at the top.
+ * ────────────────────────────────────────────────────────────────────────── */
 
-function ListingsTabContent({
+function PublicProfileLayout({
+  user,
+  stats,
   listings,
+  reviews,
+  collectionCards,
+  achievements,
+  badges,
+  collectionStats,
+  sellerStats,
+  privacyFlags,
+  firstListingId,
+  viewerSavedSeller,
+  viewerIsSignedIn,
   isOwner,
   lang,
-}: {
-  listings: SerializedListing[];
-  isOwner: boolean;
-  lang: Language;
-}) {
-  if (listings.length === 0) {
-    return (
-      <div className="flex flex-col items-center gap-4 py-20 text-center">
-        <div className="flex size-14 items-center justify-center rounded-2xl bg-muted/60">
-          <Store className="size-7 text-muted-foreground/30" />
-        </div>
-        <p className="text-sm font-medium text-muted-foreground">{t(lang, "noListingsPublic")}</p>
-        {isOwner && (
-          <Link href="/marketplace/create">
-            <Button size="sm" className="gap-1.5 rounded-full">
-              <Package className="size-3.5" />
-              {t(lang, "startSelling")}
-            </Button>
-          </Link>
-        )}
-      </div>
-    );
-  }
+}: Omit<Props, "isPrivate"> & { lang: Language }) {
+  // Reuses the most recent active listing as the conversation anchor since
+  // messages are scoped to a listing in the schema.
+  const messageHref = firstListingId ? `/messages/${firstListingId}` : null;
 
-  return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {listings.map((l) => (
-        <ListingCard
-          key={l.id}
-          id={l.id}
-          card={l.card}
-          priceJpy={l.priceJpy}
-          priceThb={l.priceThb}
-          condition={l.condition}
-          seller={{
-            displayName: l.seller.displayName ?? undefined,
-            avatarUrl: l.seller.avatarUrl ?? undefined,
-            sellerRating: l.seller.sellerRating ?? undefined,
-            sellerReviewCount: l.seller.sellerReviewCount,
-          }}
-          shipping={l.shipping}
-          location={l.location}
-          isFeatured={l.isFeatured}
-        />
-      ))}
-    </div>
+  const joinedRelative = formatJoinedRelative(user.createdAt, lang);
+
+  const hasOverviewContent =
+    achievements.length > 0 ||
+    badges.length > 0 ||
+    sellerStats.reviewCount > 0 ||
+    sellerStats.completedDeals > 0;
+
+  const visibleTabs = useMemo<TabDescriptor[]>(() => {
+    const all: TabDescriptor[] = [
+      { key: "overview", labelKey: "tabOverview" },
+      { key: "listings", labelKey: "tabListings", count: stats.listingCount },
+      { key: "collection", labelKey: "tabCollection", count: stats.portfolioCardCount },
+      { key: "reviews", labelKey: "tabReviews", count: stats.reviewCount },
+    ];
+    return all.filter(({ key, count }) => {
+      if (key === "overview") return hasOverviewContent;
+      if (key === "listings") return privacyFlags.showListings && (isOwner || (count ?? 0) > 0);
+      if (key === "collection") return privacyFlags.showCollection && (isOwner || (count ?? 0) > 0);
+      if (key === "reviews") return isOwner || (count ?? 0) > 0;
+      return true;
+    });
+  }, [
+    hasOverviewContent,
+    isOwner,
+    privacyFlags.showCollection,
+    privacyFlags.showListings,
+    stats.listingCount,
+    stats.portfolioCardCount,
+    stats.reviewCount,
+  ]);
+
+  const defaultTab: ProfileTab = hasOverviewContent
+    ? "overview"
+    : stats.listingCount > 0
+      ? "listings"
+      : stats.portfolioCardCount > 0
+        ? "collection"
+        : (visibleTabs[0]?.key ?? "overview");
+
+  // ── URL ⇄ activeTab ──────────────────────────────────────────────────
+  // The active tab is *derived* from the URL — no React state — so deep
+  // links and browser back/forward Just Work without any effect dance. We
+  // use `router.replace` (not `push`) to swap tabs, which keeps the back
+  // button anchored to the previous page rather than the previous tab
+  // (matches what visitors expect: back = leave the profile).
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const allowedTabs = useMemo(
+    () => new Set<ProfileTab>(visibleTabs.map((tab) => tab.key)),
+    [visibleTabs],
   );
-}
+  const tabFromUrl = searchParams.get("tab") as ProfileTab | null;
+  const activeTab: ProfileTab =
+    tabFromUrl && allowedTabs.has(tabFromUrl) ? tabFromUrl : defaultTab;
 
-function ReviewsTabContent({
-  reviews,
-  lang,
-}: {
-  reviews: SerializedReview[];
-  lang: Language;
-}) {
-  if (reviews.length === 0) {
-    return (
-      <div className="flex flex-col items-center gap-4 py-20 text-center">
-        <div className="flex size-14 items-center justify-center rounded-2xl bg-muted/60">
-          <Star className="size-7 text-muted-foreground/30" />
-        </div>
-        <p className="text-sm font-medium text-muted-foreground">{t(lang, "noReviews")}</p>
-      </div>
-    );
-  }
+  const setActiveTab = useCallback(
+    (key: ProfileTab) => {
+      const sp = new URLSearchParams(searchParams.toString());
+      sp.set("tab", key);
+      router.replace(`${pathname}?${sp.toString()}`, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
+
+  const metaParts = useMemo(
+    () => buildHeroMeta({ user, stats, sellerStats, joinedRelative, isOwner, lang }),
+    [user, stats, sellerStats, joinedRelative, isOwner, lang],
+  );
+  const trustChips = useMemo(
+    () => buildTrustChips(sellerStats, lang),
+    [sellerStats, lang],
+  );
+  const socialLinks = useMemo(
+    () => buildSocialLinks(user.socials, lang),
+    [user.socials, lang],
+  );
+
+  // No overview content AND no listings/collection/reviews → friendly welcome.
+  const isEmptyProfile =
+    visibleTabs.length === 0 &&
+    !hasOverviewContent &&
+    stats.listingCount === 0 &&
+    stats.portfolioCardCount === 0 &&
+    stats.reviewCount === 0;
 
   return (
-    <div className="space-y-3">
-      {reviews.map((r) => (
-        <div
-          key={r.id}
-          className="flex gap-3 rounded-xl border border-border/40 bg-card p-4"
-        >
-          <Avatar className="size-10 shrink-0">
-            {r.reviewer.avatarUrl ? (
-              <AvatarImage src={r.reviewer.avatarUrl} alt="" />
-            ) : null}
-            <AvatarFallback className="text-xs">
-              {(r.reviewer.displayName ?? "?").slice(0, 1).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">
-                {r.reviewer.displayName ?? "User"}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {new Date(r.createdAt).toLocaleDateString()}
-              </span>
-            </div>
-            <div className="mt-1 flex items-center gap-0.5">
-              {Array.from({ length: 5 }, (_, i) => (
-                <Star
-                  key={i}
-                  className={cn(
-                    "size-3.5",
-                    i < r.rating
-                      ? "fill-amber-400 text-amber-400"
-                      : "text-muted-foreground/20",
-                  )}
-                />
-              ))}
-              <span className="ml-1.5 text-xs font-medium text-muted-foreground">
-                {r.rating}/5
-              </span>
-            </div>
-            {r.comment && (
-              <p className="mt-2 break-words text-sm text-foreground/80">{r.comment}</p>
+    <div className={cn("pb-24 md:pb-16")}>
+      <div className="relative mx-auto w-full max-w-5xl">
+        {/* Full-bleed cover sits at the very top of the container so it
+            visually anchors the page before the avatar overlaps it. */}
+        <ProfileCover userId={user.id} />
+
+        <div className="relative px-4 md:px-6 lg:px-8">
+          <ProfileHero
+            user={user}
+            stats={stats}
+            sellerStats={sellerStats}
+            achievements={achievements}
+            metaParts={metaParts}
+            trustChips={trustChips}
+            socialLinks={socialLinks}
+            isOwner={isOwner}
+            lang={lang}
+            actionsSlot={
+              <ProfileActionCluster
+                user={user}
+                messageHref={messageHref}
+                isOwner={isOwner}
+                viewerSavedSeller={viewerSavedSeller}
+                viewerIsSignedIn={viewerIsSignedIn}
+                lang={lang}
+              />
+            }
+          />
+
+          {isOwner && (
+            <ProfileCompleteness
+              user={user}
+              stats={stats}
+              socials={user.socials}
+              isOwner={isOwner}
+              lang={lang}
+            />
+          )}
+
+          <ProfileStatsStrip
+            user={user}
+            stats={stats}
+            sellerStats={sellerStats}
+            collectionStats={collectionStats}
+            lang={lang}
+            onJump={setActiveTab}
+          />
+
+          {/* Featured reviews — concise social proof above the fold. */}
+          <ProfileReviewsPreview
+            reviews={reviews}
+            rating={sellerStats.rating}
+            reviewCount={stats.reviewCount}
+            lang={lang}
+            onJump={setActiveTab}
+          />
+
+          <ProfileTabsNav
+            tabs={visibleTabs}
+            active={activeTab}
+            onChange={setActiveTab}
+            lang={lang}
+          />
+
+          <div className="py-6">
+            {isEmptyProfile && (
+              <EmptyProfilePanel
+                user={user}
+                messageHref={messageHref}
+                isOwner={isOwner}
+                lang={lang}
+              />
             )}
+            {/* `key={activeTab}` triggers an enter animation on every switch
+                so the tab change feels intentional, not jarring. */}
+            <div key={activeTab} className="animate-in fade-in-0 duration-200">
+              {activeTab === "overview" && (
+                <OverviewTabContent
+                  achievements={achievements}
+                  badges={badges}
+                  sellerStats={sellerStats}
+                />
+              )}
+              {activeTab === "listings" && (
+                <ListingsTabContent
+                  listings={listings}
+                  listingTotal={stats.listingCount}
+                  sellerHandleOrId={user.handle ?? user.id}
+                  isOwner={isOwner}
+                  lang={lang}
+                />
+              )}
+              {activeTab === "reviews" && (
+                <ReviewsTabContent reviews={reviews} lang={lang} />
+              )}
+              {activeTab === "collection" && (
+                privacyFlags.summaryOnly ? (
+                  <SummaryOnlyBanner stats={collectionStats} lang={lang} />
+                ) : (
+                  <CollectionTabContent
+                    cards={collectionCards}
+                    stats={collectionStats}
+                    hideQty={privacyFlags.hidePortfolioQty}
+                    isOwner={isOwner}
+                    lang={lang}
+                  />
+                )
+              )}
+            </div>
           </div>
         </div>
-      ))}
-    </div>
-  );
-}
-
-function CardListTabContent({
-  cards,
-  icon: Icon,
-  emptyKey,
-  lang,
-}: {
-  cards: ProfileCardData[];
-  icon: typeof Layers;
-  emptyKey: Parameters<typeof t>[1];
-  lang: Language;
-}) {
-  if (cards.length === 0) {
-    return (
-      <div className="flex flex-col items-center gap-4 py-20 text-center">
-        <div className="flex size-14 items-center justify-center rounded-2xl bg-muted/60">
-          <Icon className="size-7 text-muted-foreground/30" />
-        </div>
-        <p className="text-sm font-medium text-muted-foreground">{t(lang, emptyKey)}</p>
       </div>
-    );
-  }
 
-  return (
-    <CardGrid>
-      {cards.map((c) => (
-        <CardItem
-          key={c.cardCode}
-          cardCode={c.cardCode}
-          nameJp={c.nameJp}
-          nameEn={c.nameEn}
-          rarity={c.rarity}
-          imageUrl={c.imageUrl}
-          priceJpy={c.priceJpy}
-          priceThb={c.priceThb}
-          setCode={c.setCode ?? undefined}
+      {!isOwner && (
+        <ProfileMobileCtaBar
+          sellerId={user.id}
+          messageHref={messageHref}
+          viewerSavedSeller={viewerSavedSeller}
+          viewerIsSignedIn={viewerIsSignedIn}
+          lang={lang}
         />
-      ))}
-    </CardGrid>
+      )}
+    </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { formatThb } from "@/lib/utils/currency";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, X, ArrowLeftRight } from "lucide-react";
@@ -55,7 +56,7 @@ export function OfferCard({
       </div>
 
       <p className="text-lg font-bold tabular-nums">
-        ฿{offer.priceThb.toLocaleString()}
+        {formatThb(offer.priceThb)}
       </p>
 
       {offer.note && (

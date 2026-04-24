@@ -156,7 +156,7 @@ export function Header() {
               className={cn(
                 "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
                 isActive(pathname, "/portfolio")
-                  ? "bg-amber-100 dark:bg-amber-500/10 font-semibold text-foreground"
+                  ? "bg-primary/10 font-semibold text-primary"
                   : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
               )}
             >
@@ -169,26 +169,21 @@ export function Header() {
               className={cn(
                 "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
                 isActive(pathname, "/watchlist")
-                  ? "bg-blue-100 dark:bg-blue-500/10 font-semibold text-foreground"
+                  ? "bg-primary/10 font-semibold text-primary"
                   : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
               )}
             >
-              <Bookmark className={cn(
-                "size-3.5",
-                isActive(pathname, "/watchlist")
-                  ? "fill-blue-500 text-blue-500 dark:fill-blue-400 dark:text-blue-400"
-                  : "text-blue-500 dark:text-blue-400"
-              )} />
+              <Bookmark className="size-3.5 text-blue-500 dark:text-blue-400" />
               {t(language, "watchlistNav")}
             </Link>
 
             <Link
               href="/honey"
               className={cn(
-                "relative flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+                "relative flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
                 isActive(pathname, "/honey")
-                  ? "border-amber-500/30 bg-amber-100 font-semibold text-foreground dark:bg-amber-500/10"
-                  : "border-amber-500/20 text-muted-foreground hover:border-amber-500/40 hover:bg-amber-500/5 hover:text-foreground"
+                  ? "bg-primary/10 font-semibold text-primary"
+                  : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
               )}
             >
               {honeyPendingActions && (

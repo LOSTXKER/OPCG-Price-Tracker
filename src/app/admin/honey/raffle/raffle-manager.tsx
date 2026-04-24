@@ -549,7 +549,7 @@ export function RaffleManager({ initialRaffles }: { initialRaffles: Raffle[] }) 
                         CURRENT
                       </span>
                     )}
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
                       {monthRaffles.length} machine{monthRaffles.length !== 1 ? "s" : ""}
                     </span>
                   </div>

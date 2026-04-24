@@ -133,7 +133,7 @@ export function SelectStep({
             <Filter className="size-3.5" />
             <span className="hidden sm:inline">{t(lang, "filter")}</span>
             {activeFilterCount > 0 && (
-              <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+              <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
                 {activeFilterCount}
               </span>
             )}

@@ -8,16 +8,32 @@ export interface BreadcrumbItem {
   href?: string
 }
 
-export function Breadcrumb({
-  items,
-  className,
-}: {
-  items: BreadcrumbItem[]
-  className?: string
-}) {
+type BreadcrumbProps =
+  | { items: BreadcrumbItem[]; pathname?: never; labelMap?: never; className?: string }
+  | { items?: never; pathname: string; labelMap: Record<string, string>; className?: string }
+
+function buildItemsFromPathname(pathname: string, labelMap: Record<string, string>): BreadcrumbItem[] {
+  const segments = pathname.split("/").filter(Boolean)
+  if (segments.length <= 1) return []
+
+  return [
+    { label: "Home", href: "/" },
+    ...segments.slice(1).map((seg, i) => {
+      const href = "/" + segments.slice(0, i + 2).join("/")
+      const label = labelMap[seg] ?? seg
+      const isLast = i === segments.length - 2
+      return { label, href: isLast ? undefined : href }
+    }),
+  ]
+}
+
+export function Breadcrumb(props: BreadcrumbProps) {
+  const items = props.items ?? buildItemsFromPathname(props.pathname!, props.labelMap!)
+  if (items.length === 0) return null
+
   return (
     <nav
-      className={cn("mb-4 flex flex-wrap items-center gap-1 text-xs text-muted-foreground", className)}
+      className={cn("mb-4 flex flex-wrap items-center gap-1 text-xs text-muted-foreground", props.className)}
       aria-label="Breadcrumb"
     >
       {items.map((item, i) => {

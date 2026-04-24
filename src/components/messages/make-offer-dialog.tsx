@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { formatThb } from "@/lib/utils/currency";
 
 interface MakeOfferDialogProps {
   open: boolean;
@@ -73,10 +74,10 @@ export function MakeOfferDialog({
           </DialogTitle>
           <DialogDescription>
             {listingPrice != null && (
-              <>ราคาลงขาย: ฿{listingPrice.toLocaleString()}</>
+              <>ราคาลงขาย: {formatThb(listingPrice)}</>
             )}
             {marketPrice != null && (
-              <> · ราคาตลาด: ฿{marketPrice.toLocaleString()}</>
+              <> · ราคาตลาด: {formatThb(marketPrice)}</>
             )}
           </DialogDescription>
         </DialogHeader>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
-import { Grid3x3, List, Search, SlidersHorizontal } from "lucide-react";
+import { Grid3x3, List, Search, SlidersHorizontal, Store, X } from "lucide-react";
 
 import { ListingCard, type ListingCardProps } from "@/components/marketplace/listing-card";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { formatJpy, formatThb } from "@/lib/utils/currency";
 import { getCardName, t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 
@@ -55,16 +56,24 @@ const SORT_OPTIONS = [
   { value: "price_thb_desc", label: "ราคา ฿ สูง → ต่ำ" },
 ] as const;
 
+export type LockedSeller = {
+  id: string;
+  handle: string | null;
+  displayName: string | null;
+} | null;
+
 export function MarketplaceBrowse({
   initialListings,
   initialTotal,
   initialPage,
   pageSize,
+  lockedSeller = null,
 }: {
   initialListings: MarketplaceBrowseListing[];
   initialTotal: number;
   initialPage: number;
   pageSize: number;
+  lockedSeller?: LockedSeller;
 }) {
   const lang = useUIStore((s) => s.language);
   const [listings, setListings] = useState(initialListings);
@@ -96,9 +105,12 @@ export function MarketplaceBrowse({
       if (conditions.length === 1) params.set("condition", conditions[0]!);
       if (rarities.length > 0) params.set("rarity", rarities.join(","));
       if (search.trim()) params.set("q", search.trim());
+      // When deep-linked from a public profile, we keep all subsequent
+      // pagination/filter requests scoped to that seller.
+      if (lockedSeller) params.set("seller", lockedSeller.id);
       return params;
     },
-    [pageSize, sort, conditions, rarities, search]
+    [pageSize, sort, conditions, rarities, search, lockedSeller]
   );
 
   const fetchPage = useCallback(
@@ -147,6 +159,39 @@ export function MarketplaceBrowse({
 
   return (
     <div className="space-y-4">
+      {/* Item C — sticky context banner when filtered to a single seller via
+          ?seller=. Keeps the user oriented and offers a one-click escape. */}
+      {lockedSeller && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-2.5">
+          <div className="flex min-w-0 items-center gap-2 text-sm">
+            <Store className="size-4 shrink-0 text-primary" />
+            <span className="truncate text-foreground">
+              รายการขายของ{" "}
+              <Link
+                href={
+                  lockedSeller.handle
+                    ? `/u/${lockedSeller.handle}`
+                    : `/profile/${lockedSeller.id}`
+                }
+                className="font-semibold text-primary hover:underline"
+              >
+                {lockedSeller.displayName ?? lockedSeller.handle ?? "ผู้ขาย"}
+              </Link>
+            </span>
+          </div>
+          <Link
+            href="/marketplace"
+            className={cn(
+              buttonVariants({ variant: "ghost", size: "sm" }),
+              "h-7 gap-1 px-2 text-xs",
+            )}
+          >
+            <X className="size-3" />
+            ดูทั้งหมด
+          </Link>
+        </div>
+      )}
+
       {/* Search + controls bar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">
@@ -409,10 +454,10 @@ function ListingCardListView({ listing: l }: { listing: MarketplaceBrowseListing
         </p>
       </div>
       <div className="shrink-0 text-right">
-        <p className="text-sm font-bold tabular-nums">¥{l.priceJpy.toLocaleString()}</p>
+        <p className="text-sm font-bold tabular-nums">{formatJpy(l.priceJpy)}</p>
         {l.priceThb != null && (
           <p className="text-xs text-muted-foreground tabular-nums">
-            ฿{l.priceThb.toLocaleString()}
+            {formatThb(l.priceThb)}
           </p>
         )}
       </div>

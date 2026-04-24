@@ -4,6 +4,8 @@ import { useRef, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, PanelRight } from "lucide-react";
 import { ChatMessageBubble } from "./chat-message";
 import { ChatInput } from "./chat-input";
 import type { ChatMessage, ChatListing, ChatUser } from "./types";
@@ -17,6 +19,8 @@ interface ChatPanelProps {
   onAcceptOffer?: (offerId: number) => void;
   onRejectOffer?: (offerId: number) => void;
   onCounterOffer?: (offerId: number) => void;
+  onBack?: () => void;
+  onTogglePanel?: () => void;
   sending?: boolean;
   className?: string;
 }
@@ -38,6 +42,8 @@ export function ChatPanel({
   onAcceptOffer,
   onRejectOffer,
   onCounterOffer,
+  onBack,
+  onTogglePanel,
   sending = false,
   className,
 }: ChatPanelProps) {
@@ -64,6 +70,11 @@ export function ChatPanel({
     <div className={cn("flex flex-1 flex-col", className)}>
       {/* Header */}
       <div className="flex items-center gap-3 border-b bg-background px-4 py-2.5">
+        {onBack && (
+          <Button variant="ghost" size="icon-sm" aria-label="Go back" className="shrink-0 md:hidden" onClick={onBack}>
+            <ArrowLeft className="size-4" />
+          </Button>
+        )}
         <Avatar>
           {otherUser.avatarUrl && (
             <AvatarImage src={otherUser.avatarUrl} alt="" />
@@ -83,6 +94,11 @@ export function ChatPanel({
         <Badge variant="outline" className="shrink-0 text-xs">
           {listingStatusLabel[listing.status] ?? listing.status}
         </Badge>
+        {onTogglePanel && (
+          <Button variant="ghost" size="icon-sm" aria-label="Toggle order panel" className="shrink-0 lg:hidden" onClick={onTogglePanel}>
+            <PanelRight className="size-4" />
+          </Button>
+        )}
       </div>
 
       {/* Messages */}

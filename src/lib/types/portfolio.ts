@@ -28,6 +28,7 @@ export type AssetRow = {
   priceChange24h: number | null
   priceChange7d: number | null
   condition: string
+  isPrivate?: boolean
 }
 
 export type PortfolioMeta = {

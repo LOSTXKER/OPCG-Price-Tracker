@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import type { Conversation } from "./types";
 import { CARD_BG } from "@/lib/constants/ui";
+import { formatThb } from "@/lib/utils/currency";
 import { formatRelativeShort } from "@/lib/utils/time";
 
 const orderStatusLabel: Record<string, string> = {
@@ -84,7 +85,7 @@ export function ConversationItem({
             {conv.lastMessage}
           </p>
           {conv.unread > 0 && (
-            <span className="flex size-4.5 shrink-0 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+            <span className="flex size-4.5 shrink-0 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
               {conv.unread > 9 ? "9+" : conv.unread}
             </span>
           )}
@@ -96,7 +97,7 @@ export function ConversationItem({
         )}
         {!conv.activeOrder && conv.pendingOffer && (
           <Badge variant="default" className="mt-1 text-xs">
-            ข้อเสนอ ฿{conv.pendingOffer.priceThb.toLocaleString()}
+            ข้อเสนอ {formatThb(conv.pendingOffer.priceThb)}
           </Badge>
         )}
       </div>

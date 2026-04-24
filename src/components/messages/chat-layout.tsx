@@ -9,8 +9,7 @@ import { MakeOfferDialog } from "./make-offer-dialog";
 import type { Conversation, ChatMessage, ChatListing, ChatUser } from "./types";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, PanelRight } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 interface ChatLayoutProps {
   currentUserId: string;
@@ -276,8 +275,8 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      <div className="flex h-dvh items-center justify-center">
+        <Loader2 className="size-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -287,7 +286,7 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
   const isSeller = activeConv?.isSeller ?? false;
 
   return (
-    <div className="relative flex h-screen bg-background">
+    <div className="relative flex h-dvh bg-background">
       {/* Sidebar - hidden on mobile when chat is active */}
       <ConversationSidebar
         conversations={conversations}
@@ -306,22 +305,6 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
           mobileView === "list" && "max-md:hidden"
         )}
       >
-        {/* Mobile back button */}
-        {activeListingId && (
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            aria-label="Go back"
-            className="absolute left-2 top-3 z-30 md:hidden"
-            onClick={() => {
-              setMobileView("list");
-              router.push("/messages");
-            }}
-          >
-            <ArrowLeft className="size-4" />
-          </Button>
-        )}
-
         <ChatPanel
           messages={messages}
           currentUserId={currentUserId}
@@ -331,21 +314,14 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
           onAcceptOffer={handleAcceptOffer}
           onRejectOffer={handleRejectOffer}
           onCounterOffer={handleCounterOffer}
+          onBack={activeListingId ? () => { setMobileView("list"); router.push("/messages"); } : undefined}
+          onTogglePanel={listing && otherUser ? () => setShowOrderPanel((v) => !v) : undefined}
           sending={sending}
         />
 
         {/* Order sidebar - toggle on tablet, always on desktop */}
         {listing && otherUser && (
           <>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              aria-label="Toggle order panel"
-              className="absolute right-2 top-3 z-30 lg:hidden"
-              onClick={() => setShowOrderPanel((v) => !v)}
-            >
-              <PanelRight className="size-4" />
-            </Button>
             <OrderSidebar
               listing={listing}
               otherUser={otherUser}

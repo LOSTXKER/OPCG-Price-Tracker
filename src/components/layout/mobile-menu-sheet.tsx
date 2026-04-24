@@ -17,6 +17,7 @@ import {
   Settings,
   ShoppingBag,
   Sparkles,
+  Star,
   Store,
   Sun,
   TrendingUp,
@@ -82,14 +83,14 @@ function MenuLink({
       className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
         active
-          ? "bg-primary/10 font-semibold text-primary"
-          : "text-foreground hover:bg-muted/60"
+          ? "bg-primary/10 font-medium text-primary"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground"
       )}
     >
       <Icon className="size-[18px] shrink-0" />
       <span className="flex-1">{label}</span>
       {typeof badge === "number" && badge > 0 && (
-        <span className="flex min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold leading-4 text-white">
+        <span className="flex min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-xs font-bold leading-4 text-white">
           {badge > 99 ? "99+" : badge}
         </span>
       )}
@@ -105,7 +106,7 @@ function MenuLink({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mb-1 mt-4 px-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 first:mt-0">
+    <p className="mb-1 mt-4 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 first:mt-0">
       {children}
     </p>
   );
@@ -170,11 +171,11 @@ export function MobileMenuSheet({
                 <p className="truncate text-sm font-semibold">{userName}</p>
                 <p className="truncate text-xs text-muted-foreground">{authUser.email}</p>
                 <div className="mt-1.5 flex items-center gap-2">
-                  <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-semibold", tier.color)}>
+                  <span className={cn("rounded-full px-2 py-0.5 text-xs font-semibold", tier.color)}>
                     {tier.label}
                   </span>
                   {honeyPoints > 0 && (
-                    <span className="flex items-center gap-1 text-[11px] font-medium text-amber-600 dark:text-amber-400">
+                    <span className="flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400">
                       <span>🍯</span>
                       {honeyPoints.toLocaleString()}
                     </span>
@@ -222,6 +223,7 @@ export function MobileMenuSheet({
           {authLoaded && authUser && (
             <>
               <SectionLabel>{language === "TH" ? "บัญชีของฉัน" : language === "JP" ? "マイアカウント" : "My Account"}</SectionLabel>
+              <MenuLink href="/portfolio" icon={Star} label={t(language, "portfolioNav")} pathname={pathname} onNav={close} />
               <MenuLink href="/orders" icon={ShoppingBag} label={language === "TH" ? "คำสั่งซื้อ" : language === "JP" ? "購入履歴" : "My Orders"} pathname={pathname} onNav={close} />
               <MenuLink href="/saved" icon={Heart} label={language === "TH" ? "รายการที่บันทึก" : language === "JP" ? "保存済み" : "Saved"} pathname={pathname} onNav={close} />
               <MenuLink href="/messages" icon={MessageCircle} label={t(language, "messagesTitle")} badge={unreadMessages} pathname={pathname} onNav={close} />

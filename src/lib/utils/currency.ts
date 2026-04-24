@@ -66,15 +66,20 @@ export function formatJpyAmount(jpy: number, currency: Currency): string {
 
 /**
  * Formats a JPY price into { primary, secondary } strings
- * based on the active currency. When `thbExplicit` is provided
- * it is used instead of the conversion estimate.
+ * based on the active currency. When `thbExplicit` is provided AND positive
+ * it is used instead of the conversion estimate. A zero or negative explicit
+ * value is treated as "not set" and the JPY-based conversion is used — so a
+ * listing with priceJpy=7000 and priceThb=0 still renders a real THB amount
+ * instead of "0 ฿".
  */
 export function formatByCurrency(
   jpy: number,
   currency: Currency,
   thbExplicit?: number | null
 ): { primary: string; secondary: string } {
-  const thb = thbExplicit != null ? Number(thbExplicit) : jpyToThb(jpy);
+  const explicit = thbExplicit != null ? Number(thbExplicit) : null;
+  const useExplicit = explicit != null && Number.isFinite(explicit) && explicit > 0;
+  const thb = useExplicit ? explicit! : jpyToThb(jpy);
   const usd = jpyToUsd(jpy);
 
   switch (currency) {

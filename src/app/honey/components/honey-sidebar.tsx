@@ -238,7 +238,7 @@ function HoneyStatCard({
             <p className="text-xs font-medium text-muted-foreground">{label}</p>
             <p className="text-lg font-bold tabular-nums leading-tight">{value}</p>
             {subValue && (
-              <p className="mt-0.5 text-[11px] tabular-nums text-muted-foreground">{subValue}</p>
+              <p className="mt-0.5 text-xs tabular-nums text-muted-foreground">{subValue}</p>
             )}
           </div>
         </TooltipTrigger>

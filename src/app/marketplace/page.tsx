@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Layers, LineChart, ShoppingCart, Store } from "lucide-react";
 import { FaqSection } from "@/components/shared/faq-section";
 import { RelatedPages } from "@/components/shared/related-pages";
-import { ListingStatus } from "@/generated/prisma/client";
+import { ListingStatus, type Prisma } from "@/generated/prisma/client";
 import { MarketplaceBrowse, MarketplacePageHeader } from "@/components/marketplace/marketplace-browse";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
@@ -20,13 +20,40 @@ export const metadata: Metadata = {
 
 const PAGE_SIZE = 12;
 
-export default async function MarketplacePage() {
+type SearchParams = { seller?: string | string[] };
+
+export default async function MarketplacePage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
+  const rawSeller = Array.isArray(params.seller) ? params.seller[0] : params.seller;
+  const sellerKey = (rawSeller ?? "").trim().replace(/^@/, "").slice(0, 60);
+
   let listings: Parameters<typeof MarketplaceBrowse>[0]["initialListings"] = [];
   let total = 0;
   let dbError = false;
+  let lockedSeller: Parameters<typeof MarketplaceBrowse>[0]["lockedSeller"] = null;
 
   try {
-    const where = { status: ListingStatus.ACTIVE };
+    const where: Prisma.ListingWhereInput = { status: ListingStatus.ACTIVE };
+    if (sellerKey) {
+      // Resolve handle or id → seller. Unknown sellers fall back to the
+      // unfiltered view so the URL still renders something useful.
+      const seller = await prisma.user.findFirst({
+        where: { OR: [{ handle: sellerKey }, { id: sellerKey }] },
+        select: { id: true, handle: true, displayName: true },
+      });
+      if (seller) {
+        where.userId = seller.id;
+        lockedSeller = {
+          id: seller.id,
+          handle: seller.handle,
+          displayName: seller.displayName,
+        };
+      }
+    }
     const [rows, count] = await Promise.all([
       prisma.listing.findMany({
         where,
@@ -91,6 +118,7 @@ export default async function MarketplacePage() {
             initialTotal={total}
             initialPage={1}
             pageSize={PAGE_SIZE}
+            lockedSeller={lockedSeller}
           />
         )}
       </div>

@@ -92,7 +92,7 @@ function MobileStreakRankRow({
       <div className="space-y-2 rounded-xl border border-border/50 p-3">
         <div className="flex items-center gap-1.5">
           <RankIcon className="size-3.5 text-primary" />
-          <span className="text-[10px] font-bold text-muted-foreground">Rank</span>
+          <span className="text-[11px] font-bold text-muted-foreground">Rank</span>
         </div>
         <p className="text-lg font-black leading-none text-primary">
           {rankLabels[currentLevel]}
