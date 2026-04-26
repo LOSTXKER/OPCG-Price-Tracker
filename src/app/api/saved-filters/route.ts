@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { effectiveTier, getLimits } from "@/lib/tier";
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
@@ -14,9 +15,9 @@ export async function GET() {
   });
 
   return NextResponse.json({ filters });
-}
+});
 
-export async function POST(request: NextRequest) {
+export const POST = apiHandler(async (request: NextRequest) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
@@ -44,9 +45,9 @@ export async function POST(request: NextRequest) {
   });
 
   return NextResponse.json({ filter }, { status: 201 });
-}
+});
 
-export async function DELETE(request: NextRequest) {
+export const DELETE = apiHandler(async (request: NextRequest) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
@@ -59,4 +60,4 @@ export async function DELETE(request: NextRequest) {
   });
 
   return NextResponse.json({ ok: true });
-}
+});

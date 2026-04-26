@@ -4,7 +4,7 @@ import { TrendingDown, TrendingUp } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
-import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
+import { formatJpyAmount } from "@/lib/utils/currency"
 
 export type { PortfolioStats } from "@/lib/types/portfolio"
 import type { PortfolioStats } from "@/lib/types/portfolio"
@@ -20,89 +20,51 @@ export function PortfolioStatsStrip({
 }) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
-  const pnlPositive = stats.unrealizedPnl >= 0
-  const hasCost = stats.totalCostJpy > 0
   const showBestWorst = cardCount > 1
 
+  if (!showBestWorst) return null
+
   return (
-    <div className={cn("grid gap-3", showBestWorst ? "sm:grid-cols-2" : "sm:grid-cols-1")}>
-      {/* PnL card */}
-      <div className={cn("panel flex items-center gap-4 border-l-2 border-primary/20 p-4")}>
-        <div className={cn(
-          "flex size-10 shrink-0 items-center justify-center rounded-xl",
-          hasCost
-            ? pnlPositive
-              ? "bg-price-up/10 text-price-up"
-              : "bg-price-down/10 text-price-down"
-            : "bg-muted text-muted-foreground"
-        )}>
-          {pnlPositive ? <TrendingUp className="size-5" /> : <TrendingDown className="size-5" />}
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      {/* Best performer */}
+      <div className="panel flex items-center gap-3 rounded-xl px-4 py-3">
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-price-up/10 text-price-up">
+          <TrendingUp className="size-4" />
         </div>
-        <div className="min-w-0">
-          <p className="text-xs font-medium text-muted-foreground">{t(lang, "unrealizedPnl")}</p>
-          <p className={cn(
-            "font-price text-lg font-bold tabular-nums",
-            hasCost
-              ? pnlPositive ? "text-price-up" : "text-price-down"
-              : "text-foreground"
-          )}>
-            {hideBalance ? "••••" : `${pnlPositive ? "+" : ""}${formatJpyAmount(stats.unrealizedPnl, currency)}`}
-          </p>
-          {hasCost && (
-            <p className={cn(
-              "font-price text-xs tabular-nums",
-              pnlPositive ? "text-price-up/70" : "text-price-down/70"
-            )}>
-              {pnlPositive ? "+" : ""}{formatPct(stats.unrealizedPnlPercent, 2)}%
-            </p>
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] font-medium text-muted-foreground">{t(lang, "bestPerformer")}</p>
+          {stats.bestPerformer ? (
+            <div className="flex items-baseline gap-2">
+              <p className="min-w-0 truncate text-sm font-semibold">{stats.bestPerformer.name}</p>
+              <span className="shrink-0 font-price text-xs font-semibold tabular-nums text-price-up">
+                {hideBalance ? "••••" : `+${formatJpyAmount(stats.bestPerformer.pnl, currency)}`}
+              </span>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">—</p>
           )}
         </div>
       </div>
 
-      {/* Best / Worst — only show when >1 card */}
-      {showBestWorst && (
-        <div className="panel border-l-2 border-primary/20 p-4">
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-price-up/10 text-price-up">
-                <TrendingUp className="size-4" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-xs font-medium text-muted-foreground">{t(lang, "bestPerformer")}</p>
-                {stats.bestPerformer ? (
-                  <div className="flex items-baseline gap-2">
-                    <p className="truncate text-sm font-semibold">{stats.bestPerformer.name}</p>
-                    <span className="shrink-0 font-price text-xs font-medium tabular-nums text-price-up">
-                      {hideBalance ? "••••" : `+${formatJpyAmount(stats.bestPerformer.pnl, currency)}`}
-                    </span>
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">—</p>
-                )}
-              </div>
-            </div>
-            <div className="h-px bg-border/40" />
-            <div className="flex items-center gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-price-down/10 text-price-down">
-                <TrendingDown className="size-4" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-xs font-medium text-muted-foreground">{t(lang, "worstPerformer")}</p>
-                {stats.worstPerformer ? (
-                  <div className="flex items-baseline gap-2">
-                    <p className="truncate text-sm font-semibold">{stats.worstPerformer.name}</p>
-                    <span className="shrink-0 font-price text-xs font-medium tabular-nums text-price-down">
-                      {hideBalance ? "••••" : formatJpyAmount(stats.worstPerformer.pnl, currency)}
-                    </span>
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">—</p>
-                )}
-              </div>
-            </div>
-          </div>
+      {/* Worst performer */}
+      <div className="panel flex items-center gap-3 rounded-xl px-4 py-3">
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-price-down/10 text-price-down">
+          <TrendingDown className="size-4" />
         </div>
-      )}
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] font-medium text-muted-foreground">{t(lang, "worstPerformer")}</p>
+          {stats.worstPerformer ? (
+            <div className="flex items-baseline gap-2">
+              <p className="min-w-0 truncate text-sm font-semibold">{stats.worstPerformer.name}</p>
+              <span className="shrink-0 font-price text-xs font-semibold tabular-nums text-price-down">
+                {hideBalance ? "••••" : formatJpyAmount(stats.worstPerformer.pnl, currency)}
+              </span>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">—</p>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

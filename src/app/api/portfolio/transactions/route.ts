@@ -1,11 +1,12 @@
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:portfolio");
 
-export async function GET(request: NextRequest) {
+export const GET = apiHandler(async (request: NextRequest) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -45,4 +46,37 @@ export async function GET(request: NextRequest) {
     log.error("GET /api/portfolio/transactions", error);
     return NextResponse.json({ error: "Failed to load transactions" }, { status: 500 });
   }
-}
+});
+
+export const DELETE = apiHandler(async (request: NextRequest) => {
+  try {
+    const auth = await requireAuthUser();
+    if (!auth.ok) return auth.response;
+
+    const id = request.nextUrl.searchParams.get("id");
+    if (!id) {
+      return NextResponse.json({ error: "Missing id" }, { status: 400 });
+    }
+
+    const txId = parseInt(id, 10);
+    if (isNaN(txId)) {
+      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+    }
+
+    const tx = await prisma.portfolioTransaction.findUnique({
+      where: { id: txId },
+      include: { portfolio: { select: { userId: true } } },
+    });
+
+    if (!tx || tx.portfolio.userId !== auth.user.id) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    await prisma.portfolioTransaction.delete({ where: { id: txId } });
+
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    log.error("DELETE /api/portfolio/transactions", error);
+    return NextResponse.json({ error: "Failed to delete transaction" }, { status: 500 });
+  }
+});

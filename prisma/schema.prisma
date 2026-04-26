@@ -34,7 +34,7 @@ model CardSet {
   nameTh       String?
   type         SetType
   gameId       Int?
-  game         Game?         @relation(fields: [gameId], references: [id])
+  game         Game?         @relation(fields: [gameId], references: [id], onDelete: SetNull)
   releaseDate  DateTime?
   cardCount    Int           @default(0)
   packsPerBox  Int?
@@ -65,7 +65,7 @@ model Card {
   yuyuteiId       String?
   yuyuteiUrl      String?
   setId           Int
-  set             CardSet          @relation(fields: [setId], references: [id])
+  set             CardSet          @relation(fields: [setId], references: [id], onDelete: Restrict)
   nameJp          String
   nameEn          String?
   nameTh          String?
@@ -136,7 +136,7 @@ enum CardType {
 model CardPrice {
   id             Int         @id @default(autoincrement())
   cardId         Int
-  card           Card        @relation(fields: [cardId], references: [id])
+  card           Card        @relation(fields: [cardId], references: [id], onDelete: Cascade)
   source         PriceSource @default(YUYUTEI)
   type           PriceType   @default(SELL)
   priceJpy       Int?
@@ -173,7 +173,7 @@ enum PriceType {
 model SetDropRate {
   id          Int     @id @default(autoincrement())
   setId       Int
-  set         CardSet @relation(fields: [setId], references: [id])
+  set         CardSet @relation(fields: [setId], references: [id], onDelete: Cascade)
   rarity      String
   avgPerBox   Float?
   ratePerPack Float?
@@ -333,7 +333,7 @@ model User {
 model HoneyTransaction {
   id        Int             @id @default(autoincrement())
   userId    String
-  user      User            @relation(fields: [userId], references: [id])
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   amount    Int
   type      HoneyActionType
   reason    String
@@ -425,7 +425,7 @@ model PricePrediction {
   userId            String
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   cardId            Int
-  card              Card     @relation(fields: [cardId], references: [id])
+  card              Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
   direction         String
   priceAtPrediction Int
   weekStart         String
@@ -458,7 +458,7 @@ model UserAchievement {
   userId        String
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   achievementId Int
-  achievement   Achievement @relation(fields: [achievementId], references: [id])
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
   earnedAt      DateTime    @default(now())
 
   @@unique([userId, achievementId])
@@ -515,6 +515,93 @@ model MonthlyMission {
 
   @@unique([userId, month])
   @@index([userId])
+}
+
+// ── Mission Templates & Scheduling (Admin-configurable) ──
+
+enum MissionCategory {
+  DAILY
+  MONTHLY
+  SPECIAL
+}
+
+enum MissionTrackType {
+  AUTO_PATH
+  MANUAL
+  ACTION_COUNT
+}
+
+enum MissionSlotType {
+  CORE
+  DAY_OF_WEEK
+  RANDOM_POOL
+  FIXED_DATE
+  SEQUENTIAL
+}
+
+enum MissionBonusRequirement {
+  ALL_COMPLETE
+  COUNT_COMPLETE
+  STREAK_DAYS
+}
+
+model MissionTemplate {
+  id            Int                   @id @default(autoincrement())
+  code          String                @unique
+  name          String
+  nameEn        String?
+  nameTh        String?
+  description   String?
+  descriptionEn String?
+  descriptionTh String?
+  icon          String                @default("Circle")
+  category      MissionCategory       @default(DAILY)
+  trackType     MissionTrackType      @default(AUTO_PATH)
+  conditions    Json                  // { type, paths?, action?, pathPattern? }
+  rewards       Json                  // { honey, tickets?, badgeCode?, ... }
+  target        Int                   @default(1)
+  isActive      Boolean               @default(true)
+  sortOrder     Int                   @default(0)
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  scheduleRules MissionScheduleRule[]
+
+  @@index([category, isActive])
+}
+
+model MissionScheduleRule {
+  id            Int             @id @default(autoincrement())
+  templateId    Int
+  template      MissionTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  slotType      MissionSlotType
+  dayOfWeek     Int?
+  specificDates Json?
+  poolGroup     String?
+  poolPickCount Int?
+  startDate     DateTime?
+  endDate       DateTime?
+  sortOrder     Int             @default(0)
+  isActive      Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+
+  @@index([slotType, isActive])
+  @@index([templateId])
+}
+
+model MissionBonusRule {
+  id               Int                     @id @default(autoincrement())
+  name             String
+  nameEn           String?
+  nameTh           String?
+  category         MissionCategory
+  requirement      MissionBonusRequirement
+  requirementValue Int                     @default(1)
+  rewards          Json
+  isActive         Boolean                 @default(true)
+  sortOrder        Int                     @default(0)
+  createdAt        DateTime                @default(now())
+
+  @@index([category, isActive])
 }
 
 model SeasonalEvent {
@@ -610,7 +697,7 @@ model PortfolioItem {
   portfolioId   Int
   portfolio     Portfolio     @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   cardId        Int
-  card          Card          @relation(fields: [cardId], references: [id])
+  card          Card          @relation(fields: [cardId], references: [id], onDelete: Cascade)
   quantity      Int           @default(1)
   purchasePrice Int?
   condition     CardCondition @default(NM)
@@ -629,7 +716,7 @@ model PortfolioTransaction {
   portfolioId  Int
   portfolio    Portfolio       @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   cardId       Int
-  card         Card            @relation(fields: [cardId], references: [id])
+  card         Card            @relation(fields: [cardId], references: [id], onDelete: Restrict)
   type         TransactionType
   quantity     Int
   pricePerUnit Int?
@@ -660,9 +747,9 @@ enum CardCondition {
 model WatchlistItem {
   id      Int      @id @default(autoincrement())
   userId  String
-  user    User     @relation(fields: [userId], references: [id])
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   cardId  Int
-  card    Card     @relation(fields: [cardId], references: [id])
+  card    Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
   addedAt DateTime @default(now())
 
   @@unique([userId, cardId])
@@ -672,9 +759,9 @@ model WatchlistItem {
 model PriceAlert {
   id          Int            @id @default(autoincrement())
   userId      String
-  user        User           @relation(fields: [userId], references: [id])
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   cardId      Int
-  card        Card           @relation(fields: [cardId], references: [id])
+  card        Card           @relation(fields: [cardId], references: [id], onDelete: Cascade)
   targetPrice Int
   direction   AlertDirection
   channel     AlertChannel   @default(EMAIL)
@@ -704,9 +791,9 @@ enum AlertChannel {
 model Listing {
   id           Int           @id @default(autoincrement())
   userId       String
-  user         User          @relation(fields: [userId], references: [id])
+  user         User          @relation(fields: [userId], references: [id], onDelete: Restrict)
   cardId       Int
-  card         Card          @relation(fields: [cardId], references: [id])
+  card         Card          @relation(fields: [cardId], references: [id], onDelete: Restrict)
   priceJpy     Int
   priceThb     Float?
   condition    CardCondition @default(NM)
@@ -798,16 +885,16 @@ enum MessageType {
 model Offer {
   id        Int         @id @default(autoincrement())
   listingId Int
-  listing   Listing     @relation(fields: [listingId], references: [id])
+  listing   Listing     @relation(fields: [listingId], references: [id], onDelete: Restrict)
   buyerId   String
-  buyer     User        @relation("OffersMade", fields: [buyerId], references: [id])
+  buyer     User        @relation("OffersMade", fields: [buyerId], references: [id], onDelete: Restrict)
   sellerId  String
-  seller    User        @relation("OffersReceived", fields: [sellerId], references: [id])
+  seller    User        @relation("OffersReceived", fields: [sellerId], references: [id], onDelete: Restrict)
   priceThb  Float
   status    OfferStatus @default(PENDING)
   note      String?
   parentId  Int?
-  parent    Offer?      @relation("CounterOffers", fields: [parentId], references: [id])
+  parent    Offer?      @relation("CounterOffers", fields: [parentId], references: [id], onDelete: SetNull)
   counters  Offer[]     @relation("CounterOffers")
   order     Order?
   messages  Message[]
@@ -823,19 +910,19 @@ model Offer {
 model Order {
   id                Int              @id @default(autoincrement())
   listingId         Int
-  listing           Listing          @relation(fields: [listingId], references: [id])
+  listing           Listing          @relation(fields: [listingId], references: [id], onDelete: Restrict)
   offerId           Int?             @unique
-  offer             Offer?           @relation(fields: [offerId], references: [id])
+  offer             Offer?           @relation(fields: [offerId], references: [id], onDelete: SetNull)
   buyerId           String
-  buyer             User             @relation("OrdersBought", fields: [buyerId], references: [id])
+  buyer             User             @relation("OrdersBought", fields: [buyerId], references: [id], onDelete: Restrict)
   sellerId          String
-  seller            User             @relation("OrdersSold", fields: [sellerId], references: [id])
+  seller            User             @relation("OrdersSold", fields: [sellerId], references: [id], onDelete: Restrict)
   priceThb          Float
   status            OrderStatus      @default(AWAITING_PAYMENT)
   shippingMethod    String?
   trackingNumber    String?
   shippingAddressId String?
-  shippingAddress   ShippingAddress?  @relation(fields: [shippingAddressId], references: [id])
+  shippingAddress   ShippingAddress?  @relation(fields: [shippingAddressId], references: [id], onDelete: SetNull)
   note              String?
   paidAt            DateTime?
   shippedAt         DateTime?
@@ -858,15 +945,15 @@ model Message {
   listingId  Int
   listing    Listing     @relation(fields: [listingId], references: [id], onDelete: Cascade)
   senderId   String
-  sender     User        @relation("SentMessages", fields: [senderId], references: [id])
+  sender     User        @relation("SentMessages", fields: [senderId], references: [id], onDelete: Restrict)
   receiverId String
-  receiver   User        @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  receiver   User        @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Restrict)
   content    String
   type       MessageType @default(TEXT)
   offerId    Int?
-  offer      Offer?      @relation(fields: [offerId], references: [id])
+  offer      Offer?      @relation(fields: [offerId], references: [id], onDelete: SetNull)
   orderId    Int?
-  order      Order?      @relation(fields: [orderId], references: [id])
+  order      Order?      @relation(fields: [orderId], references: [id], onDelete: SetNull)
   metadata   Json?
   isRead     Boolean     @default(false)
   createdAt  DateTime    @default(now())
@@ -880,9 +967,9 @@ model Message {
 model Review {
   id         Int      @id @default(autoincrement())
   reviewerId String
-  reviewer   User     @relation("ReviewsGiven", fields: [reviewerId], references: [id])
+  reviewer   User     @relation("ReviewsGiven", fields: [reviewerId], references: [id], onDelete: Restrict)
   revieweeId String
-  reviewee   User     @relation("ReviewsReceived", fields: [revieweeId], references: [id])
+  reviewee   User     @relation("ReviewsReceived", fields: [revieweeId], references: [id], onDelete: Restrict)
   listingId  Int?
   rating     Int
   comment    String?
@@ -899,9 +986,9 @@ model Review {
 model CommunityPrice {
   id        Int                  @id @default(autoincrement())
   userId    String
-  user      User                 @relation(fields: [userId], references: [id])
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   cardId    Int
-  card      Card                 @relation(fields: [cardId], references: [id])
+  card      Card                 @relation(fields: [cardId], references: [id], onDelete: Cascade)
   priceThb  Int
   upvotes   Int                  @default(0)
   votes     CommunityPriceVote[]
@@ -929,10 +1016,10 @@ model CommunityPriceVote {
 model Deck {
   id        Int        @id @default(autoincrement())
   userId    String
-  user      User       @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   name      String
   leaderId  Int?
-  leader    Card?      @relation("DeckLeader", fields: [leaderId], references: [id])
+  leader    Card?      @relation("DeckLeader", fields: [leaderId], references: [id], onDelete: SetNull)
   cards     DeckCard[]
   isPublic  Boolean    @default(false)
   createdAt DateTime   @default(now())
@@ -946,7 +1033,7 @@ model DeckCard {
   deckId   Int
   deck     Deck @relation(fields: [deckId], references: [id], onDelete: Cascade)
   cardId   Int
-  card     Card @relation(fields: [cardId], references: [id])
+  card     Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
   quantity Int  @default(1)
 
   @@unique([deckId, cardId])
@@ -967,12 +1054,12 @@ model YuyuteiMapping {
   scrapedImage  String?
   priceJpy      Int
   matchedCardId Int?
-  matchedCard   Card?     @relation(fields: [matchedCardId], references: [id])
+  matchedCard   Card?     @relation(fields: [matchedCardId], references: [id], onDelete: SetNull)
   matchMethod   String?
   geminiScore   Float?
   status        String    @default("pending")
   actionBy      String?
-  actionByUser  User?     @relation(fields: [actionBy], references: [id])
+  actionByUser  User?     @relation(fields: [actionBy], references: [id], onDelete: SetNull)
   actionAt      DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -997,11 +1084,11 @@ model SnkrdunkMapping {
   usedMinPriceUsd Float?
   lastSoldPsa10Usd Float?
   matchedCardId   Int?
-  matchedCard     Card?     @relation(fields: [matchedCardId], references: [id])
+  matchedCard     Card?     @relation(fields: [matchedCardId], references: [id], onDelete: SetNull)
   matchMethod     String?
   status          String    @default("pending")
   actionBy        String?
-  actionByUser    User?     @relation(fields: [actionBy], references: [id])
+  actionByUser    User?     @relation(fields: [actionBy], references: [id], onDelete: SetNull)
   actionAt        DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
@@ -1027,7 +1114,7 @@ model BlogPost {
   published   Boolean   @default(false)
   publishedAt DateTime?
   authorId    String?
-  author      User?     @relation(fields: [authorId], references: [id])
+  author      User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
   viewCount   Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

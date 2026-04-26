@@ -1,3 +1,4 @@
+import { apiHandler } from "@/lib/api/api-handler";
 import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
@@ -6,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:messages");
 
-export async function GET(request: NextRequest) {
+export const GET = apiHandler(async (request: NextRequest) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -78,9 +79,9 @@ export async function GET(request: NextRequest) {
     log.error("GET /api/messages", error);
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
-}
+});
 
-export async function POST(request: NextRequest) {
+export const POST = apiHandler(async (request: NextRequest) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -173,4 +174,4 @@ export async function POST(request: NextRequest) {
     log.error("POST /api/messages", error);
     return NextResponse.json({ error: "Failed to send" }, { status: 500 });
   }
-}
+});

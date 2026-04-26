@@ -1,13 +1,14 @@
+import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:cards");
 
-export async function GET(
+export const GET = apiHandler(async (
   _request: NextRequest,
   { params }: { params: Promise<{ code: string }> }
-) {
+) => {
   const { code } = await params;
 
   try {
@@ -49,4 +50,4 @@ export async function GET(
     log.error("Error fetching card", error);
     return NextResponse.json({ error: "Failed to fetch card" }, { status: 500 });
   }
-}
+});

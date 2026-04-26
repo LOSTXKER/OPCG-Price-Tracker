@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 
 type Params = { params: Promise<{ id: string }> };
 
-export async function POST(_request: NextRequest, props: Params) {
+export const POST = apiHandler(async (_request: NextRequest, props: Params) => {
   const { id } = await props.params;
   const listingId = parseInt(id, 10);
   if (isNaN(listingId)) return NextResponse.json({ error: "Invalid" }, { status: 400 });
@@ -13,4 +14,4 @@ export async function POST(_request: NextRequest, props: Params) {
     .catch(() => {});
 
   return NextResponse.json({ ok: true });
-}
+});

@@ -8,7 +8,7 @@ import { opcgConfig } from "@/lib/game-config";
 const log = createLog("admin:cards");
 
 export const GET = adminApiHandler(
-  async (_request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  async (_request: NextRequest, _admin, { params }: { params: Promise<{ id: string }> }) => {
     const { id } = await params;
     const cardId = parseInt(id);
     if (isNaN(cardId)) {
@@ -54,7 +54,7 @@ export const GET = adminApiHandler(
 );
 
 export const PATCH = adminApiHandler(
-  async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  async (request: NextRequest, _admin, { params }: { params: Promise<{ id: string }> }) => {
     const { id } = await params;
     const cardId = parseInt(id);
     if (isNaN(cardId)) {

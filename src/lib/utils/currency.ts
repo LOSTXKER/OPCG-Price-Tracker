@@ -1,7 +1,6 @@
-import { FALLBACK_JPY_THB_RATE } from "@/lib/constants/prices";
+import { FALLBACK_JPY_THB_RATE, DEFAULT_JPY_USD } from "@/lib/constants/prices";
 
 const DEFAULT_JPY_THB = FALLBACK_JPY_THB_RATE;
-const DEFAULT_JPY_USD = 0.0067;
 
 export function jpyToThb(jpy: number, rate?: number): number {
   return Math.round(jpy * (rate ?? DEFAULT_JPY_THB) * 100) / 100;

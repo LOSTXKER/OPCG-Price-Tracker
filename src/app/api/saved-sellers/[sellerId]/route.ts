@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 
 type Ctx = { params: Promise<{ sellerId: string }> };
 
-export async function POST(_req: Request, { params }: Ctx) {
+export const POST = apiHandler(async (_req, { params }: Ctx) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const { sellerId } = await params;
@@ -36,9 +37,9 @@ export async function POST(_req: Request, { params }: Ctx) {
   });
 
   return NextResponse.json({ saved: true });
-}
+});
 
-export async function DELETE(_req: Request, { params }: Ctx) {
+export const DELETE = apiHandler(async (_req, { params }: Ctx) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const { sellerId } = await params;
@@ -48,4 +49,4 @@ export async function DELETE(_req: Request, { params }: Ctx) {
   });
 
   return NextResponse.json({ saved: false });
-}
+});

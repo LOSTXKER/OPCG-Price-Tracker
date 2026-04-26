@@ -3,6 +3,7 @@ import {
   ListingStatus,
   type Prisma,
 } from "@/generated/prisma/client";
+import { apiHandler } from "@/lib/api/api-handler";
 import { requireAuthUser } from "@/lib/api/auth";
 import { parseCondition } from "@/lib/api/parse-condition";
 import { parseListingQuantity, parseJsonBody, parsePageLimit } from "@/lib/api/request-body";
@@ -13,7 +14,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:listings");
 
-export async function GET(request: NextRequest) {
+export const GET = apiHandler(async (request: NextRequest) => {
   try {
     const searchParams = request.nextUrl.searchParams;
     const cardIdParam = searchParams.get("cardId");
@@ -155,9 +156,9 @@ export async function GET(request: NextRequest) {
     log.error("GET /api/listings", error);
     return NextResponse.json({ error: "Failed to load listings" }, { status: 500 });
   }
-}
+});
 
-export async function POST(request: NextRequest) {
+export const POST = apiHandler(async (request: NextRequest) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -249,4 +250,4 @@ export async function POST(request: NextRequest) {
     log.error("POST /api/listings", error);
     return NextResponse.json({ error: "Failed to create listing" }, { status: 500 });
   }
-}
+});

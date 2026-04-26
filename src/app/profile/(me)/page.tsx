@@ -3,12 +3,13 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { isAuthBypassed } from "@/lib/env";
 
 export default function ProfileRedirectPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const bypass = process.env.NEXT_PUBLIC_BYPASS_AUTH === "true";
+    const bypass = isAuthBypassed();
 
     const fetchProfile = () => {
       fetch("/api/me")

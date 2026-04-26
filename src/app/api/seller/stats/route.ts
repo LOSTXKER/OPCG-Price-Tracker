@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { ListingStatus, OrderStatus } from "@/generated/prisma/client";
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const userId = auth.user.id;
@@ -69,4 +70,4 @@ export async function GET() {
     reviewCount: avgRating._count,
     recentOrders,
   });
-}
+});

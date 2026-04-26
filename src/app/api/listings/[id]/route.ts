@@ -2,6 +2,7 @@ import {
   ListingStatus,
   type Prisma,
 } from "@/generated/prisma/client";
+import { apiHandler } from "@/lib/api/api-handler";
 import { requireAuthUser } from "@/lib/api/auth";
 import { parseCondition } from "@/lib/api/parse-condition";
 import { parseListingQuantity, parseJsonBody } from "@/lib/api/request-body";
@@ -28,7 +29,7 @@ async function getOwnedListing(listingId: number, userId: string) {
   });
 }
 
-export async function PATCH(request: NextRequest, context: RouteContext) {
+export const PATCH = apiHandler(async (request: NextRequest, context: RouteContext) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -155,9 +156,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     log.error("PATCH /api/listings/[id]", error);
     return NextResponse.json({ error: "Failed to update listing" }, { status: 500 });
   }
-}
+});
 
-export async function DELETE(_request: NextRequest, context: RouteContext) {
+export const DELETE = apiHandler(async (_request: NextRequest, context: RouteContext) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -188,4 +189,4 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
     log.error("DELETE /api/listings/[id]", error);
     return NextResponse.json({ error: "Failed to cancel listing" }, { status: 500 });
   }
-}
+});

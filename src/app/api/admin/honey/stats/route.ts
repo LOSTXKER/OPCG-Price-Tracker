@@ -2,7 +2,7 @@
 import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 
-export const GET = adminApiHandler(async (_req: NextRequest) => {
+export const GET = adminApiHandler(async (_req: NextRequest, _admin) => {
   const now = new Date();
   const todayStart = new Date(now);
   todayStart.setHours(0, 0, 0, 0);

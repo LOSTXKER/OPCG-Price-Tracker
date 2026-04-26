@@ -1,3 +1,4 @@
+import { apiHandler } from "@/lib/api/api-handler";
 import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
@@ -8,7 +9,7 @@ const log = createLog("api:offers");
 
 type Params = { params: Promise<{ id: string }> };
 
-export async function PATCH(request: NextRequest, props: Params) {
+export const PATCH = apiHandler(async (request: NextRequest, props: Params) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -222,4 +223,4 @@ export async function PATCH(request: NextRequest, props: Params) {
     log.error("PATCH /api/offers/[id]", error);
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
-}
+});

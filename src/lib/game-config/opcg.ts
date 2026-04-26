@@ -42,7 +42,7 @@ export const opcgConfig: GameConfig = {
     fallbackAvgPerBox: { C: 72, UC: 24, R: 24 },
   },
 
-  officialCardImageBase: "https://www.onepiece-cardgame.com/images/cardlist/card",
+  officialCardImageBase: "https://asia-en.onepiece-cardgame.com/images/cardlist/card",
 
   officialProductUrl: (setCode: string) =>
     `https://www.onepiece-cardgame.com/products/boosters/${setCode.toLowerCase()}.php`,

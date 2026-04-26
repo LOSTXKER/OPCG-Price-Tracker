@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+import { apiHandler } from "@/lib/api/api-handler";
 import { requireAuthUser } from "@/lib/api/auth";
 import { getStripe } from "@/lib/stripe";
 import { createLog } from "@/lib/logger";
 
 const log = createLog("api:me:payment-method");
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -38,4 +39,4 @@ export async function GET() {
     log.error("GET /api/me/payment-method", error);
     return NextResponse.json({ paymentMethod: null });
   }
-}
+});

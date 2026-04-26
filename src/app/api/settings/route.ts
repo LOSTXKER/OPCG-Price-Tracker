@@ -1,5 +1,6 @@
 ﻿import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { canCheckinToday } from "@/lib/honey";
@@ -7,7 +8,7 @@ import { parseTasks } from "@/lib/honey/missions";
 import { todayStr } from "@/lib/honey/utils";
 import { effectiveTier, getLimits } from "@/lib/tier";
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const user = auth.user;
@@ -55,9 +56,9 @@ export async function GET() {
     notifyDigestLine: user.notifyDigestLine,
     honeyPendingActions: canCheckin || hasClaimableTasks,
   });
-}
+});
 
-export async function PATCH(request: Request) {
+export const PATCH = apiHandler(async (request) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
@@ -133,4 +134,4 @@ export async function PATCH(request: Request) {
     notifyDigestLine: updated.notifyDigestLine,
     displayName: updated.displayName,
   });
-}
+});

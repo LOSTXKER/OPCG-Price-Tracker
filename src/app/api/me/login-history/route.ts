@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+import { apiHandler } from "@/lib/api/api-handler";
 import { requireAuthUser } from "@/lib/api/auth";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
 
 const log = createLog("api:me:login-history");
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -28,4 +29,4 @@ export async function GET() {
     log.error("GET /api/me/login-history", error);
     return NextResponse.json({ error: "Failed to load login history" }, { status: 500 });
   }
-}
+});

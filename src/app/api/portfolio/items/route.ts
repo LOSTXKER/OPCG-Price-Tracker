@@ -1,5 +1,6 @@
 import { CardCondition, TransactionType } from "@/generated/prisma/client";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { parseCondition } from "@/lib/api/parse-condition";
 import { parseListingQuantity, parseJsonBody } from "@/lib/api/request-body";
 import { cardInclude } from "@/lib/api/query-fragments";
@@ -10,7 +11,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:portfolio");
 
-export async function POST(request: NextRequest) {
+export const POST = apiHandler(async (request: NextRequest) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -130,4 +131,4 @@ export async function POST(request: NextRequest) {
     log.error("POST /api/portfolio/items", error);
     return NextResponse.json({ error: "Failed to add portfolio item" }, { status: 500 });
   }
-}
+});

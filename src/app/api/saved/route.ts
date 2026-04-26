@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { parsePageLimit } from "@/lib/api/request-body";
 import { cardInclude, userPublicSelect } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
 
-export async function GET(request: NextRequest) {
+export const GET = apiHandler(async (request: NextRequest) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const userId = auth.user.id;
@@ -36,4 +37,4 @@ export async function GET(request: NextRequest) {
     limit,
     totalPages: Math.ceil(total / limit),
   });
-}
+});

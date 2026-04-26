@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { canCheckinToday } from "@/lib/honey";
 import { getHoneyLevel } from "@/lib/honey/levels";
 import { createLog } from "@/lib/logger";
+import { apiHandler } from "@/lib/api/api-handler";
 import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:me");
@@ -21,7 +22,7 @@ const RESERVED_HANDLES = new Set([
   "meecard", "root", "system", "null", "undefined",
 ]);
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -101,9 +102,9 @@ export async function GET() {
     log.error("GET /api/me", error);
     return NextResponse.json({ error: "Failed to load profile" }, { status: 500 });
   }
-}
+});
 
-export async function PATCH(request: NextRequest) {
+export const PATCH = apiHandler(async (request: NextRequest) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -228,9 +229,9 @@ export async function PATCH(request: NextRequest) {
     log.error("PATCH /api/me", error);
     return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
   }
-}
+});
 
-export async function DELETE() {
+export const DELETE = apiHandler(async () => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -246,4 +247,4 @@ export async function DELETE() {
     log.error("DELETE /api/me", error);
     return NextResponse.json({ error: "Failed to delete account" }, { status: 500 });
   }
-}
+});

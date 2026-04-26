@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
+import { apiHandler } from "@/lib/api/api-handler";
 import { createClient } from "@/lib/supabase/server";
 import { createLog } from "@/lib/logger";
 
 const log = createLog("api:me:providers");
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   try {
     const supabase = await createClient();
     const { data: { user }, error } = await supabase.auth.getUser();
@@ -23,4 +24,4 @@ export async function GET() {
     log.error("GET /api/me/providers", error);
     return NextResponse.json({ error: "Failed to load providers" }, { status: 500 });
   }
-}
+});

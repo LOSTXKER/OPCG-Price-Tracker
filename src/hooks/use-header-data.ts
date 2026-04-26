@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useSettings, invalidateSettings, refetchSettings } from "@/hooks/use-settings";
 import { useUIStore } from "@/stores/ui-store";
+import { isAuthBypassed } from "@/lib/env";
 import type { AuthUser, UserTierValue, MarketStats } from "@/components/layout/header-constants";
 
 export function useHeaderData() {
@@ -24,7 +25,7 @@ export function useHeaderData() {
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_BYPASS_AUTH === "true") {
+    if (isAuthBypassed()) {
       setAuthUser({ id: "dev-bypass", email: "dev@localhost" } as import("@supabase/supabase-js").User);
       setAuthLoaded(true);
       return;

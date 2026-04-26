@@ -2,16 +2,26 @@ import { prisma } from "@/lib/db";
 import Link from "next/link";
 import {
   Award,
-  ShoppingBag,
+  ArrowDownUp,
   TrendingUp,
   ArrowRight,
-  Zap,
+  Package,
 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
-import { AdminStatCard } from "@/components/admin/admin-stat-card";
-import { Card, CardContent, CardHeader, CardTitle, CardAction } from "@/components/ui/card";
+import { StatCard } from "@/components/shared/stat-card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardAction,
+} from "@/components/ui/card";
+import { HoneyCharts } from "./honey-charts";
+import { HoneyTransactionList } from "./honey-transaction-list";
 
 export const dynamic = "force-dynamic";
+
+const TX_PAGE_SIZE = 30;
 
 async function getHoneyStats() {
   const now = new Date();
@@ -19,16 +29,23 @@ async function getHoneyStats() {
   todayStart.setHours(0, 0, 0, 0);
   const weekStart = new Date(now);
   weekStart.setDate(weekStart.getDate() - 7);
+  const thirtyDaysAgo = new Date(now);
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
   const [
     totalCirculation,
     earnedToday,
     earnedWeek,
     redeemedTotal,
+    redeemCount,
     activeShopItems,
+    inactiveShopItems,
     totalHoneyUsers,
     recentTransactions,
+    totalTransactions,
     topEarners,
+    last30dTransactions,
+    typeCounts,
   ] = await Promise.all([
     prisma.user.aggregate({ _sum: { honeyPoints: true } }),
     prisma.honeyTransaction.aggregate({
@@ -43,11 +60,13 @@ async function getHoneyStats() {
       where: { type: "REDEEM" },
       _sum: { amount: true },
     }),
+    prisma.honeyTransaction.count({ where: { type: "REDEEM" } }),
     prisma.honeyShopItem.count({ where: { isActive: true } }),
+    prisma.honeyShopItem.count({ where: { isActive: false } }),
     prisma.user.count({ where: { honeyPoints: { gt: 0 } } }),
     prisma.honeyTransaction.findMany({
       orderBy: { createdAt: "desc" },
-      take: 30,
+      take: TX_PAGE_SIZE,
       select: {
         id: true,
         amount: true,
@@ -57,79 +76,109 @@ async function getHoneyStats() {
         user: { select: { displayName: true, email: true } },
       },
     }),
+    prisma.honeyTransaction.count(),
     prisma.user.findMany({
       where: { honeyPoints: { gt: 0 } },
       orderBy: { honeyPoints: "desc" },
       take: 5,
-      select: { id: true, displayName: true, email: true, honeyPoints: true },
+      select: {
+        id: true,
+        displayName: true,
+        email: true,
+        honeyPoints: true,
+      },
+    }),
+    prisma.honeyTransaction.findMany({
+      where: { createdAt: { gte: thirtyDaysAgo } },
+      select: { amount: true, createdAt: true },
+    }),
+    prisma.honeyTransaction.groupBy({
+      by: ["type"],
+      _count: true,
     }),
   ]);
+
+  const dailyMap = new Map<string, { earned: number; redeemed: number }>();
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    dailyMap.set(key, { earned: 0, redeemed: 0 });
+  }
+  for (const tx of last30dTransactions) {
+    const key = new Date(tx.createdAt).toISOString().slice(0, 10);
+    const entry = dailyMap.get(key);
+    if (!entry) continue;
+    if (tx.amount > 0) {
+      entry.earned += tx.amount;
+    } else {
+      entry.redeemed += Math.abs(tx.amount);
+    }
+  }
+  const dailyData = Array.from(dailyMap.entries()).map(([date, v]) => ({
+    date,
+    earned: v.earned,
+    redeemed: v.redeemed,
+  }));
+
+  const typeCountsFormatted = typeCounts.map((tc) => ({
+    type: tc.type,
+    count: tc._count,
+  }));
 
   return {
     totalCirculation: totalCirculation._sum.honeyPoints ?? 0,
     earnedToday: earnedToday._sum.amount ?? 0,
     earnedWeek: earnedWeek._sum.amount ?? 0,
     redeemedTotal: Math.abs(redeemedTotal._sum.amount ?? 0),
+    redeemCount,
     activeShopItems,
+    inactiveShopItems,
     totalHoneyUsers,
-    recentTransactions,
+    recentTransactions: recentTransactions.map((tx) => ({
+      ...tx,
+      createdAt: tx.createdAt.toISOString(),
+    })),
+    hasMoreTransactions: totalTransactions > TX_PAGE_SIZE,
     topEarners,
+    dailyData,
+    typeCounts: typeCountsFormatted,
   };
 }
-
-const TYPE_COLORS: Record<string, string> = {
-  CHECKIN: "text-green-500",
-  MARKETPLACE_SELL: "text-purple-500",
-  REVIEW: "text-cyan-500",
-  REFERRAL: "text-pink-500",
-  REDEEM: "text-red-500",
-  ADMIN_GRANT: "text-amber-600 dark:text-amber-400",
-  TRIAL_BONUS: "text-orange-500",
-  DAILY_MISSION: "text-blue-500",
-  PRICE_PREDICTION: "text-indigo-500",
-  DECK_SHARE: "text-teal-500",
-  COMMUNITY_PRICE: "text-emerald-500",
-  ONBOARDING: "text-sky-500",
-  ACHIEVEMENT: "text-yellow-500",
-  RAFFLE_TICKET: "text-violet-500",
-  RAFFLE_WIN: "text-amber-500",
-  LEVEL_UP: "text-rose-500",
-  WEEKLY_BONUS: "text-lime-500",
-  LEADERBOARD_REWARD: "text-fuchsia-500",
-  EXPIRED: "text-gray-400",
-};
 
 export default async function AdminHoneyDashboard() {
   const s = await getHoneyStats();
 
   const statCards = [
     {
-      label: "Total Circulation",
+      label: "Honey หมุนเวียนรวม",
       value: s.totalCirculation.toLocaleString(),
-      sub: `${s.totalHoneyUsers} users with points`,
+      sub: `${s.totalHoneyUsers} คนมีคะแนน`,
       icon: Award,
       color: "text-amber-600 dark:text-amber-400",
       bg: "bg-amber-100 dark:bg-amber-500/10",
     },
     {
-      label: "Earned Today",
+      label: "ได้รับวันนี้",
       value: `+${s.earnedToday.toLocaleString()}`,
-      sub: `This week: +${s.earnedWeek.toLocaleString()}`,
+      sub: `สัปดาห์นี้: +${s.earnedWeek.toLocaleString()}`,
       icon: TrendingUp,
       color: "text-green-500",
       bg: "bg-green-500/10",
     },
     {
-      label: "Total Redeemed",
+      label: "แลกไปทั้งหมด",
       value: s.redeemedTotal.toLocaleString(),
-      icon: ShoppingBag,
+      sub: `${s.redeemCount.toLocaleString()} ครั้ง`,
+      icon: ArrowDownUp,
       color: "text-red-500",
       bg: "bg-red-500/10",
     },
     {
-      label: "Active Shop Items",
+      label: "สินค้าในร้าน",
       value: s.activeShopItems.toString(),
-      icon: ShoppingBag,
+      sub: s.inactiveShopItems > 0 ? `${s.inactiveShopItems} ปิดอยู่` : "ทุกชิ้นเปิดขาย",
+      icon: Package,
       color: "text-purple-500",
       bg: "bg-purple-500/10",
     },
@@ -137,23 +186,31 @@ export default async function AdminHoneyDashboard() {
 
   return (
     <div className="space-y-6">
-      <AdminPageHeader title="Honey System" icon={Award} />
+      <AdminPageHeader
+        title="ระบบ Honey"
+        description="ภาพรวมระบบคะแนน Honey Points"
+        icon={Award}
+      />
 
-      {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => (
-          <AdminStatCard key={card.label} {...card} />
+          <StatCard key={card.label} {...card} />
         ))}
       </div>
 
+      <HoneyCharts dailyData={s.dailyData} typeCounts={s.typeCounts} />
+
       <div className="grid gap-4 lg:grid-cols-3">
-        {/* Top Earners */}
         <Card>
           <CardHeader>
-            <CardTitle>Top Earners</CardTitle>
+            <CardTitle>ผู้มีคะแนนสูงสุด</CardTitle>
             <CardAction>
-              <Link href="/admin/users" className="text-xs text-muted-foreground hover:text-primary">
-                View all <ArrowRight className="ml-0.5 inline h-3 w-3" />
+              <Link
+                href="/admin/users"
+                className="text-xs text-muted-foreground hover:text-primary"
+              >
+                ดูทั้งหมด{" "}
+                <ArrowRight className="ml-0.5 inline size-3" />
               </Link>
             </CardAction>
           </CardHeader>
@@ -165,7 +222,7 @@ export default async function AdminHoneyDashboard() {
                   href={`/admin/users?search=${encodeURIComponent(u.email)}`}
                   className="flex items-center gap-2 rounded-lg px-2 py-2 transition-colors hover:bg-muted"
                 >
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
+                  <span className="flex size-6 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
                     {i + 1}
                   </span>
                   <span className="flex-1 truncate text-sm">
@@ -177,43 +234,23 @@ export default async function AdminHoneyDashboard() {
                 </Link>
               ))}
               {s.topEarners.length === 0 && (
-                <p className="py-4 text-center text-sm text-muted-foreground">No users yet</p>
+                <p className="py-4 text-center text-sm text-muted-foreground">
+                  ยังไม่มีผู้ใช้
+                </p>
               )}
             </div>
           </CardContent>
         </Card>
 
-        {/* Recent Transactions */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Recent Transactions</CardTitle>
+            <CardTitle>ธุรกรรมล่าสุด</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="max-h-80 space-y-0.5 overflow-y-auto">
-              {s.recentTransactions.map((tx) => (
-                <div key={tx.id} className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-muted/50">
-                  <Zap className={`h-3.5 w-3.5 shrink-0 ${tx.amount > 0 ? "text-green-500" : "text-red-500"}`} />
-                  <span className="w-20 truncate text-xs text-muted-foreground">
-                    {tx.user.displayName ?? tx.user.email}
-                  </span>
-                  <span className={`w-20 text-xs font-medium ${TYPE_COLORS[tx.type] ?? "text-muted-foreground"}`}>
-                    {tx.type}
-                  </span>
-                  <span className="flex-1 truncate text-xs text-muted-foreground">
-                    {tx.reason}
-                  </span>
-                  <span className={`shrink-0 text-xs font-bold tabular-nums ${tx.amount > 0 ? "text-green-500" : "text-red-500"}`}>
-                    {tx.amount > 0 ? "+" : ""}{tx.amount}
-                  </span>
-                  <span className="shrink-0 text-xs text-muted-foreground">
-                    {new Date(tx.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-              ))}
-              {s.recentTransactions.length === 0 && (
-                <p className="py-8 text-center text-sm text-muted-foreground">No transactions yet</p>
-              )}
-            </div>
+            <HoneyTransactionList
+              initialTransactions={s.recentTransactions}
+              initialHasMore={s.hasMoreTransactions}
+            />
           </CardContent>
         </Card>
       </div>

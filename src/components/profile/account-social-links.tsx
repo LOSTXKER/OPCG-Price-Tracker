@@ -1,0 +1,155 @@
+"use client";
+
+import { useCallback, useMemo, useState } from "react";
+import { CircleCheck, Loader2, Pencil } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { t } from "@/lib/i18n";
+import type { Language } from "@/lib/i18n";
+import type { DbUser } from "./profile-types";
+
+const SOCIAL_FIELDS = [
+  { key: "socialLine", label: "socialLineLabel", placeholder: "socialPlaceholderLine", icon: "LINE" },
+  { key: "socialIg", label: "socialIgLabel", placeholder: "socialPlaceholderIg", icon: "IG" },
+  { key: "socialTwitter", label: "socialTwitterLabel", placeholder: "socialPlaceholderTwitter", icon: "X" },
+  { key: "socialFacebook", label: "socialFacebookLabel", placeholder: "socialPlaceholderFacebook", icon: "FB" },
+] as const;
+
+type SocialKey = (typeof SOCIAL_FIELDS)[number]["key"];
+
+type AccountSocialLinksProps = {
+  user: DbUser;
+  lang: Language;
+  onUserUpdate: (user: DbUser) => void;
+};
+
+function buildState(user: DbUser): Record<SocialKey, string> {
+  return {
+    socialLine: user.socialLine ?? "",
+    socialIg: user.socialIg ?? "",
+    socialTwitter: user.socialTwitter ?? "",
+    socialFacebook: user.socialFacebook ?? "",
+  };
+}
+
+export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLinksProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [socials, setSocials] = useState(() => buildState(user));
+  const [saving, setSaving] = useState(false);
+  const [savedAt, setSavedAt] = useState<number | null>(null);
+
+  const initial = useMemo(() => buildState(user), [user]);
+
+  const dirty = useMemo(
+    () => SOCIAL_FIELDS.some((f) => socials[f.key].trim() !== initial[f.key].trim()),
+    [socials, initial],
+  );
+
+  const hasAnyValue = SOCIAL_FIELDS.some((f) => (user[f.key] as string | null)?.trim());
+
+  const cancel = useCallback(() => {
+    setIsEditing(false);
+    setSocials(buildState(user));
+  }, [user]);
+
+  const save = useCallback(async () => {
+    if (saving) return;
+    setSaving(true);
+    try {
+      const res = await fetch("/api/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          socialLine: socials.socialLine.trim() || null,
+          socialIg: socials.socialIg.trim() || null,
+          socialTwitter: socials.socialTwitter.trim() || null,
+          socialFacebook: socials.socialFacebook.trim() || null,
+        }),
+      });
+      if (res.ok) {
+        const json = (await res.json()) as { user: DbUser };
+        onUserUpdate(json.user);
+        setIsEditing(false);
+        setSavedAt(Date.now());
+      }
+    } finally {
+      setSaving(false);
+    }
+  }, [saving, socials, onUserUpdate]);
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-border/40 bg-card">
+      {/* Header */}
+      <div className="flex items-center justify-between gap-4 px-5 py-4">
+        <div>
+          <h3 className="text-sm font-semibold">{t(lang, "socialSectionTitle")}</h3>
+          <p className="mt-0.5 text-xs text-muted-foreground">
+            {t(lang, "socialSectionDesc")}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          {savedAt && Date.now() - savedAt < 2500 && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 animate-in fade-in zoom-in-95">
+              <CircleCheck className="size-3" />
+              {t(lang, "saved")}
+            </span>
+          )}
+          {!isEditing && (
+            <Button variant="outline" size="sm" onClick={() => setIsEditing(true)} className="shrink-0">
+              <Pencil className="mr-1.5 size-3" />
+              {t(lang, "edit")}
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      {isEditing ? (
+        <>
+          <div className="grid grid-cols-1 gap-3 border-t border-border/30 p-5 sm:grid-cols-2">
+            {SOCIAL_FIELDS.map((f) => (
+              <div key={f.key}>
+                <label className="text-xs font-medium text-muted-foreground" htmlFor={`social-${f.key}`}>
+                  {t(lang, f.label)}
+                </label>
+                <Input
+                  id={`social-${f.key}`}
+                  value={socials[f.key]}
+                  onChange={(e) => setSocials((s) => ({ ...s, [f.key]: e.target.value }))}
+                  placeholder={t(lang, f.placeholder)}
+                  className="mt-1 h-9"
+                  maxLength={f.key === "socialFacebook" ? 120 : 60}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center justify-end gap-2 border-t border-border/30 px-5 py-2.5">
+            <Button size="sm" variant="ghost" onClick={cancel} disabled={saving}>
+              {t(lang, "cancel")}
+            </Button>
+            <Button size="sm" onClick={() => void save()} disabled={saving || !dirty}>
+              {saving && <Loader2 className="mr-1.5 size-3 animate-spin" />}
+              {t(lang, "save")}
+            </Button>
+          </div>
+        </>
+      ) : (
+        hasAnyValue && (
+          <div className="divide-y divide-border/30 border-t border-border/30">
+            {SOCIAL_FIELDS.filter((f) => (user[f.key] as string | null)?.trim()).map((f) => (
+              <div key={f.key} className="flex items-center gap-3 px-5 py-3">
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-secondary/60 text-[10px] font-bold text-muted-foreground">
+                  {f.icon}
+                </span>
+                <div className="min-w-0">
+                  <p className="text-xs text-muted-foreground">{t(lang, f.label)}</p>
+                  <p className="truncate text-sm">{(user[f.key] as string)?.trim()}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )
+      )}
+    </div>
+  );
+}

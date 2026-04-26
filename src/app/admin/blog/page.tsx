@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = { title: "Blog Posts — Admin" };
+export const metadata: Metadata = { title: "บล็อก — แอดมิน" };
 
 export default async function AdminBlogPage() {
   let posts: {
@@ -45,53 +45,66 @@ export default async function AdminBlogPage() {
   return (
     <div className="space-y-6">
       <AdminPageHeader
-        title="Blog Posts"
+        title="บทความ"
+        description="จัดการบทความและเนื้อหาบนเว็บไซต์"
         icon={FileText}
         badge={
           posts.length > 0 ? (
-            <Badge variant="secondary">{posts.length} posts</Badge>
+            <Badge variant="secondary">{posts.length} บทความ</Badge>
           ) : undefined
         }
         actions={
           <Button render={<Link href="/admin/blog/new" />} size="sm">
-            <Plus className="h-4 w-4" />
-            New Post
+            <Plus className="size-4" />
+            สร้างบทความ
           </Button>
         }
       />
 
       {tableError ? (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-amber-500/30 bg-amber-500/5 py-12">
-          <AlertTriangle className="h-8 w-8 text-amber-500" />
+          <AlertTriangle className="size-8 text-amber-500" />
           <div className="text-center">
-            <p className="font-medium text-amber-600 dark:text-amber-400">Blog table not available</p>
+            <p className="font-medium text-amber-600 dark:text-amber-400">
+              ตารางบล็อกไม่พร้อมใช้งาน
+            </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              The blog database table may not have been created yet. Run migrations to set it up.
+              อาจยังไม่ได้สร้างตารางในฐานข้อมูล กรุณารัน migration
             </p>
           </div>
         </div>
       ) : posts.length === 0 ? (
         <AdminEmptyState
           icon={FileText}
-          title="No blog posts yet"
-          description="Create your first blog post to get started"
+          title="ยังไม่มีบทความ"
+          description="สร้างบทความแรกของคุณ"
           action={
             <Button render={<Link href="/admin/blog/new" />} size="sm">
-              <Plus className="h-4 w-4" />
-              New Post
+              <Plus className="size-4" />
+              สร้างบทความ
             </Button>
           }
         />
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-border/50">
+        <div className="overflow-x-auto rounded-xl border border-border/50 bg-card">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border/50 bg-muted/30">
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">Title</th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">Category</th>
-                <th className="px-4 py-2.5 text-center text-xs font-medium text-muted-foreground">Status</th>
-                <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">Views</th>
-                <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">Updated</th>
+                <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                  ชื่อเรื่อง
+                </th>
+                <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                  หมวดหมู่
+                </th>
+                <th className="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                  สถานะ
+                </th>
+                <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                  ยอดดู
+                </th>
+                <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                  อัปเดต
+                </th>
                 <th className="px-4 py-2.5" />
               </tr>
             </thead>
@@ -99,7 +112,7 @@ export default async function AdminBlogPage() {
               {posts.map((post) => (
                 <tr
                   key={post.id}
-                  className="border-b border-border/20 transition-colors hover:bg-muted/20"
+                  className="border-b border-border/10 transition-colors hover:bg-muted/20"
                 >
                   <td className="px-4 py-3">
                     <div>
@@ -110,16 +123,18 @@ export default async function AdminBlogPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <Badge variant="secondary" className="text-xs">{post.category}</Badge>
+                    <Badge variant="secondary" className="text-xs">
+                      {post.category}
+                    </Badge>
                   </td>
                   <td className="px-4 py-3 text-center">
                     {post.published ? (
                       <span className="inline-flex items-center gap-1 text-xs text-green-500">
-                        <Eye className="size-3" /> Published
+                        <Eye className="size-3" /> เผยแพร่แล้ว
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                        <EyeOff className="size-3" /> Draft
+                        <EyeOff className="size-3" /> ฉบับร่าง
                       </span>
                     )}
                   </td>
@@ -127,14 +142,18 @@ export default async function AdminBlogPage() {
                     {post.viewCount.toLocaleString()}
                   </td>
                   <td className="px-4 py-3 text-right text-xs text-muted-foreground">
-                    {post.updatedAt.toLocaleDateString("en", {
+                    {post.updatedAt.toLocaleDateString("th-TH", {
                       month: "short",
                       day: "numeric",
                     })}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Button variant="ghost" size="xs" render={<Link href={`/admin/blog/${post.id}`} />}>
-                      <Pencil className="size-3" /> Edit
+                    <Button
+                      variant="ghost"
+                      size="xs"
+                      render={<Link href={`/admin/blog/${post.id}`} />}
+                    >
+                      <Pencil className="size-3" /> แก้ไข
                     </Button>
                   </td>
                 </tr>

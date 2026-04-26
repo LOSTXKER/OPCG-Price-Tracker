@@ -1,3 +1,4 @@
+import { apiHandler } from "@/lib/api/api-handler";
 import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody, parsePageLimit } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
@@ -9,7 +10,7 @@ const log = createLog("api:orders");
 
 const ORDER_STATUSES = new Set(Object.values(OrderStatus));
 
-export async function GET(request: NextRequest) {
+export const GET = apiHandler(async (request: NextRequest) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -85,9 +86,9 @@ export async function GET(request: NextRequest) {
     log.error("GET /api/orders", error);
     return NextResponse.json({ error: "Failed to load orders" }, { status: 500 });
   }
-}
+});
 
-export async function POST(request: NextRequest) {
+export const POST = apiHandler(async (request: NextRequest) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -179,4 +180,4 @@ export async function POST(request: NextRequest) {
     log.error("POST /api/orders", error);
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
-}
+});

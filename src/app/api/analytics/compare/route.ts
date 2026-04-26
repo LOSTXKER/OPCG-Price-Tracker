@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { effectiveTier, getLimits } from "@/lib/tier";
 import { prisma } from "@/lib/db";
 
-export async function GET(request: NextRequest) {
+export const GET = apiHandler(async (request: NextRequest) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const user = auth.user;
@@ -95,4 +96,4 @@ export async function GET(request: NextRequest) {
   }));
 
   return NextResponse.json({ cards: result, days });
-}
+});

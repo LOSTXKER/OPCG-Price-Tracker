@@ -1,10 +1,9 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
 import { adminApiHandler } from "@/lib/api/api-handler";
-import { getAdminUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { fetchSnkrdunkPriceData, parseCardPageHtml } from "@/lib/scraper/snkrdunk";
 import { autoMatchByProductNumber, upsertSnkrdunkPrices } from "@/lib/scraper/snkrdunk-matcher";
-import { unauthorized, actionStamp, parseJsonBody } from "@/lib/api/admin-helpers";
+import { actionStamp, parseJsonBody } from "@/lib/api/admin-helpers";
 import { parsePageLimit } from "@/lib/api/request-body";
 import { createLog } from "@/lib/logger";
 
@@ -18,10 +17,7 @@ const log = createLog("admin:snkrdunk-matching");
  * GET /api/admin/snkrdunk-matching?lookup=<snkrdunkId>
  * - Fetch SNKRDUNK page data for a given numeric ID (for admin preview)
  */
-export const GET = adminApiHandler(async (request: NextRequest) => {
-  const admin = await getAdminUser();
-  if (!admin) return unauthorized();
-
+export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
   const sp = request.nextUrl.searchParams;
 
   // ── Lookup a SNKRDUNK ID (preview before adding mapping) ──
@@ -52,6 +48,7 @@ export const GET = adminApiHandler(async (request: NextRequest) => {
   // ── Paginated list ──
   const statusFilter = sp.get("status") || "";
   const searchQuery = sp.get("q")?.trim() || "";
+  const sortParam = sp.get("sort") || "";
   const { page, limit, skip } = parsePageLimit(sp, { defaultLimit: 20, maxLimit: 100 });
 
   const where: Record<string, unknown> = {};
@@ -66,10 +63,24 @@ export const GET = adminApiHandler(async (request: NextRequest) => {
     ];
   }
 
-  const [mappings, total] = await Promise.all([
+  type OrderBy = Record<string, "asc" | "desc">;
+  let orderBy: OrderBy[] = [{ status: "asc" }, { productNumber: "asc" }];
+  if (sortParam) {
+    const sortMap: Record<string, OrderBy[]> = {
+      "product-asc": [{ productNumber: "asc" }],
+      "product-desc": [{ productNumber: "desc" }],
+      "price-asc": [{ minPriceUsd: "asc" }],
+      "price-desc": [{ minPriceUsd: "desc" }],
+      "date-asc": [{ updatedAt: "asc" }],
+      "date-desc": [{ updatedAt: "desc" }],
+    };
+    if (sortMap[sortParam]) orderBy = sortMap[sortParam];
+  }
+
+  const [mappings, total, statusCounts] = await Promise.all([
     prisma.snkrdunkMapping.findMany({
       where,
-      orderBy: [{ status: "asc" }, { productNumber: "asc" }],
+      orderBy,
       skip,
       take: limit,
       include: {
@@ -90,6 +101,7 @@ export const GET = adminApiHandler(async (request: NextRequest) => {
       },
     }),
     prisma.snkrdunkMapping.count({ where }),
+    prisma.snkrdunkMapping.groupBy({ by: ["status"], _count: { _all: true } }),
   ]);
 
   // Batch-fetch candidate cards for all pending mappings in a single query
@@ -156,11 +168,14 @@ export const GET = adminApiHandler(async (request: NextRequest) => {
     return { ...m, candidates };
   });
 
+  const counts = Object.fromEntries(statusCounts.map((s) => [s.status, s._count._all]));
+
   return NextResponse.json({
     mappings: enriched,
     total,
     page,
     totalPages: Math.ceil(total / limit),
+    counts,
   });
 });
 
@@ -169,10 +184,7 @@ export const GET = adminApiHandler(async (request: NextRequest) => {
  * Add a new SNKRDUNK mapping by ID (fetches data from SNKRDUNK automatically).
  * Body: { snkrdunkId: number }
  */
-export const POST = adminApiHandler(async (request: NextRequest) => {
-  const admin = await getAdminUser();
-  if (!admin) return unauthorized();
-
+export const POST = adminApiHandler(async (request: NextRequest, admin) => {
   const parsed = await parseJsonBody<{ snkrdunkId: number }>(request);
   if (!parsed.ok) return parsed.response;
   const snkrdunkId = parseInt(String(parsed.body.snkrdunkId), 10);
@@ -238,12 +250,9 @@ export const POST = adminApiHandler(async (request: NextRequest) => {
  * - Auto-match all pending: { action: "auto-match" }
  * - Refresh prices: { id, action: "refresh" }
  */
-export const PATCH = adminApiHandler(async (request: NextRequest) => {
-  const admin = await getAdminUser();
-  if (!admin) return unauthorized();
-
+export const PATCH = adminApiHandler(async (request: NextRequest, admin) => {
   const parsed = await parseJsonBody<{
-    action?: string; id?: number; matchedCardId?: number;
+    action?: string; id?: number; ids?: number[]; matchedCardId?: number;
   }>(request);
   if (!parsed.ok) return parsed.response;
   const body = parsed.body;
@@ -253,6 +262,19 @@ export const PATCH = adminApiHandler(async (request: NextRequest) => {
   if (body.action === "auto-match") {
     const count = await autoMatchByProductNumber(prisma);
     return NextResponse.json({ success: true, autoMatched: count });
+  }
+
+  // ── Bulk approve (with same matchedCardId) ──
+  if (body.action === "bulk-approve" && Array.isArray(body.ids) && body.matchedCardId) {
+    const cardId = parseInt(String(body.matchedCardId), 10);
+    const card = await prisma.card.findUnique({ where: { id: cardId }, select: { id: true } });
+    if (!card) return NextResponse.json({ error: "Card not found" }, { status: 404 });
+    const validIds = body.ids.map((i) => parseInt(String(i), 10)).filter(Boolean);
+    const result = await prisma.snkrdunkMapping.updateMany({
+      where: { id: { in: validIds } },
+      data: { matchedCardId: cardId, matchMethod: "admin", status: "matched", ...stamp },
+    });
+    return NextResponse.json({ success: true, updated: result.count });
   }
 
   const id = parseInt(String(body.id), 10);
@@ -319,18 +341,27 @@ export const PATCH = adminApiHandler(async (request: NextRequest) => {
  * DELETE /api/admin/snkrdunk-matching  { id }
  * Reject (soft-delete) a mapping.
  */
-export const DELETE = adminApiHandler(async (request: NextRequest) => {
-  const admin = await getAdminUser();
-  if (!admin) return unauthorized();
-
-  const parsed = await parseJsonBody<{ id: number }>(request);
+export const DELETE = adminApiHandler(async (request: NextRequest, admin) => {
+  const parsed = await parseJsonBody<{ id?: number; ids?: number[] }>(request);
   if (!parsed.ok) return parsed.response;
+  const stamp = actionStamp(admin.id);
+
+  // ── Bulk reject ──
+  if (Array.isArray(parsed.body.ids) && parsed.body.ids.length > 0) {
+    const validIds = parsed.body.ids.map((i) => parseInt(String(i), 10)).filter(Boolean);
+    const result = await prisma.snkrdunkMapping.updateMany({
+      where: { id: { in: validIds } },
+      data: { status: "rejected", ...stamp },
+    });
+    return NextResponse.json({ success: true, rejected: result.count });
+  }
+
   const id = parseInt(String(parsed.body.id), 10);
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
 
   await prisma.snkrdunkMapping.update({
     where: { id },
-    data: { status: "rejected", ...actionStamp(admin.id) },
+    data: { status: "rejected", ...stamp },
   });
 
   return NextResponse.json({ success: true });

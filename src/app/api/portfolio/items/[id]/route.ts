@@ -1,5 +1,6 @@
 import { TransactionType } from "@/generated/prisma/client";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { cardInclude } from "@/lib/api/query-fragments";
 import { parseListingQuantity, parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
@@ -10,7 +11,7 @@ const log = createLog("api:portfolio");
 
 type RouteContext = { params: Promise<{ id: string }> };
 
-export async function PATCH(request: NextRequest, context: RouteContext) {
+export const PATCH = apiHandler(async (request: NextRequest, context: RouteContext) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -73,9 +74,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     log.error("PATCH /api/portfolio/items/[id]", error);
     return NextResponse.json({ error: "Failed to update item" }, { status: 500 });
   }
-}
+});
 
-export async function DELETE(_request: NextRequest, context: RouteContext) {
+export const DELETE = apiHandler(async (_request: NextRequest, context: RouteContext) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -116,4 +117,4 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
     log.error("DELETE /api/portfolio/items/[id]", error);
     return NextResponse.json({ error: "Failed to remove portfolio item" }, { status: 500 });
   }
-}
+});

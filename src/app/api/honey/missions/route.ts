@@ -16,7 +16,7 @@ export const GET = apiHandler(async () => {
   if (!auth.ok) return auth.response;
 
   const mission = await getOrCreateMission(auth.user.id);
-  return NextResponse.json({ mission: serializeMission(mission) });
+  return NextResponse.json({ mission: await serializeMission(mission) });
 });
 
 export const POST = apiHandler(async (request) => {
@@ -38,7 +38,7 @@ export const POST = apiHandler(async (request) => {
     if (!task) return NextResponse.json({ error: "Invalid task" }, { status: 400 });
     try {
       const mission = await trackMission(auth.user.id, task, { shareCompleted });
-      return NextResponse.json({ mission: serializeMission(mission) });
+      return NextResponse.json({ mission: await serializeMission(mission) });
     } catch (e) {
       return NextResponse.json({ error: (e as Error).message }, { status: 400 });
     }
@@ -48,7 +48,7 @@ export const POST = apiHandler(async (request) => {
     const { path } = parsed.body;
     if (!path) return NextResponse.json({ error: "Missing path" }, { status: 400 });
     const mission = await trackMissionByPath(auth.user.id, path);
-    return NextResponse.json({ mission: serializeMission(mission) });
+    return NextResponse.json({ mission: await serializeMission(mission) });
   }
 
   if (action === "claim-task") {
@@ -58,7 +58,7 @@ export const POST = apiHandler(async (request) => {
     if (!result.claimed) {
       return NextResponse.json({ error: "Task not completed or already claimed" }, { status: 400 });
     }
-    return NextResponse.json({ mission: serializeMission(result.mission), earned: result.earned });
+    return NextResponse.json({ mission: await serializeMission(result.mission), earned: result.earned });
   }
 
   if (action === "claim-bonus") {
@@ -66,7 +66,7 @@ export const POST = apiHandler(async (request) => {
     if (!result.claimed) {
       return NextResponse.json({ error: "Not eligible for bonus" }, { status: 400 });
     }
-    return NextResponse.json({ mission: serializeMission(result.mission), earned: result.earned });
+    return NextResponse.json({ mission: await serializeMission(result.mission), earned: result.earned });
   }
 
   return NextResponse.json({ error: "Unknown action" }, { status: 400 });

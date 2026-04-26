@@ -6,7 +6,7 @@ import { createLog } from "@/lib/logger";
 
 const log = createLog("admin:sets");
 
-export const GET = adminApiHandler(async (_request: NextRequest) => {
+export const GET = adminApiHandler(async (_request: NextRequest, _admin) => {
   const sets = await prisma.cardSet.findMany({
     orderBy: { code: "asc" },
     select: {
@@ -61,7 +61,7 @@ export const GET = adminApiHandler(async (_request: NextRequest) => {
   return NextResponse.json(enriched);
 });
 
-export const PATCH = adminApiHandler(async (request: NextRequest) => {
+export const PATCH = adminApiHandler(async (request: NextRequest, _admin) => {
   const parsed = await parseJsonBody<{ id: number; [key: string]: unknown }>(request);
   if (!parsed.ok) return parsed.response;
 

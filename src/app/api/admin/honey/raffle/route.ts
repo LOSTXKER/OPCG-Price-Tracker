@@ -4,7 +4,7 @@ import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { drawWinner } from "@/lib/honey/raffle";
 
-export const GET = adminApiHandler(async (_req: NextRequest) => {
+export const GET = adminApiHandler(async (_req: NextRequest, _admin) => {
   const raffles = await prisma.monthlyRaffle.findMany({
     orderBy: [{ month: "desc" }, { sortOrder: "asc" }],
     include: {
@@ -40,7 +40,7 @@ type RaffleBody = {
   sortOrder?: number;
 };
 
-export const POST = adminApiHandler(async (req: NextRequest) => {
+export const POST = adminApiHandler(async (req: NextRequest, _admin) => {
   const parsed = await parseJsonBody<RaffleBody>(req);
   if (!parsed.ok) return parsed.response;
   const body = parsed.body;
@@ -94,7 +94,7 @@ export const POST = adminApiHandler(async (req: NextRequest) => {
   return NextResponse.json({ raffle });
 });
 
-export const PUT = adminApiHandler(async (req: NextRequest) => {
+export const PUT = adminApiHandler(async (req: NextRequest, _admin) => {
   const parsed = await parseJsonBody<{
     id: number;
     title?: string;
@@ -139,7 +139,7 @@ export const PUT = adminApiHandler(async (req: NextRequest) => {
   return NextResponse.json({ raffle });
 });
 
-export const DELETE = adminApiHandler(async (req: NextRequest) => {
+export const DELETE = adminApiHandler(async (req: NextRequest, _admin) => {
   const { searchParams } = new URL(req.url);
   const id = Number(searchParams.get("id"));
 

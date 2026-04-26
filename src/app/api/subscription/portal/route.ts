@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { stripe } from "@/lib/stripe";
 import { clientEnv } from "@/lib/env";
 
-export async function POST() {
+export const POST = apiHandler(async () => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const user = auth.user;
@@ -20,4 +21,4 @@ export async function POST() {
   });
 
   return NextResponse.json({ url: session.url });
-}
+});

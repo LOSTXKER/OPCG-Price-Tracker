@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { clientEnv } from "@/lib/env";
 import { stripe, STRIPE_PLANS, type PlanKey } from "@/lib/stripe";
 
-export async function POST(request: Request) {
+export const POST = apiHandler(async (request) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const user = auth.user;
@@ -46,4 +47,4 @@ export async function POST(request: Request) {
   });
 
   return NextResponse.json({ url: session.url });
-}
+});

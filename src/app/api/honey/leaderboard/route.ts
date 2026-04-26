@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { apiHandler } from "@/lib/api/api-handler";
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   const users = await prisma.user.findMany({
     where: { honeyPoints: { gt: 0 } },
     orderBy: { honeyPoints: "desc" },
@@ -16,4 +17,4 @@ export async function GET() {
   });
 
   return NextResponse.json({ leaderboard: users });
-}
+});

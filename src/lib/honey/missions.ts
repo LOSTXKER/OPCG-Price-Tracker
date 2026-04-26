@@ -1,7 +1,19 @@
 import { prisma } from "@/lib/db";
 import { earnHoneyDirect, getHoneyMultiplier } from ".";
 import { todayStr } from "./utils";
-import { MissionTasksSchema, type MissionTaskParsed, parseJsonField } from "./schemas";
+import {
+  MissionTasksSchema,
+  MissionRewardsSchema,
+  type MissionTaskParsed,
+  type MissionRewardsParsed,
+  parseJsonField,
+} from "./schemas";
+import {
+  resolveDailyMissions,
+  matchConditionPath,
+  getActiveBonusRules,
+  type ResolvedMission,
+} from "./mission-resolver";
 
 /* ── Types ── */
 
@@ -23,9 +35,9 @@ export function parseTasks(raw: unknown): MissionTask[] {
   return parseJsonField(MissionTasksSchema, raw, "DailyMission.tasks", []);
 }
 
-/* ── Mission definitions ── */
+/* ── Hardcoded fallback definitions (used when no DB templates exist) ── */
 
-const CORE_MISSIONS: MissionDef[] = [
+const FALLBACK_CORE_MISSIONS: MissionDef[] = [
   {
     id: "check_price",
     labelKey: "missionCheckPrice",
@@ -55,7 +67,7 @@ const CORE_MISSIONS: MissionDef[] = [
   },
 ];
 
-const ROTATING_MISSIONS: Record<number, MissionDef> = {
+const FALLBACK_ROTATING_MISSIONS: Record<number, MissionDef> = {
   0: { id: "check_portfolio", labelKey: "missionCheckPortfolio", hintKey: "missionCheckPortfolioHint", icon: "Wallet", reward: 10, paths: ["/portfolio"], trackType: "auto-path" },
   1: { id: "explore_set", labelKey: "missionExploreSet", hintKey: "missionExploreSetHint", icon: "Layers", reward: 10, paths: [/^\/sets\/[^/]+/], trackType: "auto-path" },
   2: { id: "share_card", labelKey: "missionShareCard", hintKey: "missionShareCardHint", icon: "Share2", reward: 10, paths: [], trackType: "manual" },
@@ -65,31 +77,85 @@ const ROTATING_MISSIONS: Record<number, MissionDef> = {
   6: { id: "check_watchlist", labelKey: "missionCheckWatchlist", hintKey: "missionCheckWatchlistHint", icon: "Eye", reward: 10, paths: ["/watchlist"], trackType: "auto-path" },
 };
 
-const PERFECT_DAY_BONUS = 20;
+const FALLBACK_PERFECT_DAY_BONUS = 20;
 
-/* ── Helpers ── */
+/* ── In-memory cache for resolved templates ── */
 
+let _templateCache: { key: string; missions: ResolvedMission[] } | null = null;
+
+async function getResolvedMissions(dateStr?: string): Promise<ResolvedMission[]> {
+  const key = dateStr ?? todayStr();
+  if (_templateCache && _templateCache.key === key) return _templateCache.missions;
+  const missions = await resolveDailyMissions(key);
+  _templateCache = { key, missions };
+  return missions;
+}
+
+function trackTypeFromDb(t: string): TrackType {
+  if (t === "MANUAL") return "manual";
+  return "auto-path";
+}
+
+/* ── Fallback logic ── */
 
 function dayOfWeek(): number {
   return new Date().getDay();
 }
 
-export function getDailyMissions(): { missions: MissionDef[]; bonus: MissionDef } {
-  const bonus = ROTATING_MISSIONS[dayOfWeek()];
-  return { missions: [...CORE_MISSIONS, bonus], bonus };
+function getFallbackDefs(): MissionDef[] {
+  const bonus = FALLBACK_ROTATING_MISSIONS[dayOfWeek()];
+  return [...FALLBACK_CORE_MISSIONS, bonus];
 }
 
-export function getDailyMissionDefs(): MissionDef[] {
-  return getDailyMissions().missions;
+/* ── Public API ── */
+
+/**
+ * Get today's daily mission definitions.
+ * Tries DB-driven templates first, falls back to hardcoded if no templates configured.
+ */
+export async function getDailyMissionDefs(): Promise<MissionDef[]> {
+  const resolved = await getResolvedMissions();
+  if (resolved.length > 0) {
+    return resolved.map((r) => {
+      const rewards = r.rewards;
+      const cond = r.conditions;
+      const paths: (string | RegExp)[] = [];
+      if (cond.type === "visit_path") {
+        for (const p of cond.paths) {
+          if (p.endsWith("/*")) {
+            const prefix = p.slice(0, -2);
+            paths.push(new RegExp(`^${prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\/[^/]+`));
+          } else {
+            paths.push(p);
+          }
+        }
+      }
+      return {
+        id: r.code,
+        labelKey: r.code,
+        hintKey: r.description ?? "",
+        icon: r.icon,
+        reward: rewards.honey,
+        paths,
+        trackType: trackTypeFromDb(r.trackType),
+      };
+    });
+  }
+  return getFallbackDefs();
 }
 
-function buildTasks(): MissionTask[] {
-  return getDailyMissionDefs().map((m) => ({
+function buildTasksFromDefs(defs: MissionDef[]): MissionTask[] {
+  return defs.map((m) => ({
     id: m.id,
     done: false,
     reward: m.reward,
     claimed: false,
   }));
+}
+
+async function buildTasks(): Promise<MissionTask[]> {
+  const defs = await getDailyMissionDefs();
+  return buildTasksFromDefs(defs);
 }
 
 function matchPath(pathname: string, patterns: (string | RegExp)[]): boolean {
@@ -103,8 +169,21 @@ function matchPath(pathname: string, patterns: (string | RegExp)[]): boolean {
   return false;
 }
 
-export function pathToMissionIds(pathname: string): string[] {
-  const defs = getDailyMissionDefs();
+export async function pathToMissionIds(pathname: string): Promise<string[]> {
+  const resolved = await getResolvedMissions();
+
+  if (resolved.length > 0) {
+    const ids: string[] = [];
+    for (const r of resolved) {
+      if (r.trackType === "MANUAL" || r.trackType === "ACTION_COUNT") continue;
+      if (matchConditionPath(pathname, r.conditions)) {
+        ids.push(r.code);
+      }
+    }
+    return ids;
+  }
+
+  const defs = getFallbackDefs();
   const ids: string[] = [];
   for (const def of defs) {
     if (def.trackType === "auto-path" && matchPath(pathname, def.paths)) {
@@ -127,13 +206,12 @@ export async function getOrCreateMission(userId: string) {
     if (!existingTasks || existingTasks.length === 0) {
       return prisma.dailyMission.update({
         where: { id: existing.id },
-        data: { tasks: buildTasks() },
+        data: { tasks: await buildTasks() },
       });
     }
-    // Migrate old-format tasks (missing reward/claimed) to new format
     const needsMigration = existingTasks.some((t) => t.reward == null);
     if (needsMigration) {
-      const defs = getDailyMissionDefs();
+      const defs = await getDailyMissionDefs();
       const migrated = existingTasks.map((t) => {
         const def = defs.find((d) => d.id === t.id);
         return {
@@ -152,7 +230,7 @@ export async function getOrCreateMission(userId: string) {
   }
 
   return prisma.dailyMission.create({
-    data: { userId, date, tasks: buildTasks() },
+    data: { userId, date, tasks: await buildTasks() },
   });
 }
 
@@ -160,7 +238,7 @@ export async function getOrCreateMission(userId: string) {
  * Mark a single manual task as done. Rejects auto-path tasks.
  */
 export async function trackMission(userId: string, missionId: string, opts?: { shareCompleted?: boolean }) {
-  const defs = getDailyMissionDefs();
+  const defs = await getDailyMissionDefs();
   const def = defs.find((d) => d.id === missionId);
   if (!def || def.trackType !== "manual") {
     throw new Error(`Task "${missionId}" cannot be manually tracked`);
@@ -191,7 +269,7 @@ export async function trackMission(userId: string, missionId: string, opts?: { s
  * Track all auto-path missions that match a URL in a single DB write.
  */
 export async function trackMissionByPath(userId: string, pathname: string) {
-  const ids = pathToMissionIds(pathname);
+  const ids = await pathToMissionIds(pathname);
   if (ids.length === 0) return getOrCreateMission(userId);
 
   const mission = await getOrCreateMission(userId);
@@ -216,6 +294,16 @@ export async function trackMissionByPath(userId: string, pathname: string) {
     where: { id: mission.id },
     data: { tasks, progress, completed, perfectDay },
   });
+}
+
+/**
+ * Get reward config for a task: checks DB templates first, then falls back.
+ */
+async function getTaskReward(taskId: string): Promise<MissionRewardsParsed> {
+  const resolved = await getResolvedMissions();
+  const tpl = resolved.find((r) => r.code === taskId);
+  if (tpl) return tpl.rewards;
+  return { honey: 10, tickets: 0 };
 }
 
 /**
@@ -244,21 +332,34 @@ export async function claimTaskReward(userId: string, taskId: string) {
   });
 
   const tierMult = getHoneyMultiplier(user.tier, user.tierExpiresAt);
-  const amount = Math.round(task.reward * tierMult);
+  const rewards = await getTaskReward(taskId);
+  const amount = Math.round(rewards.honey * tierMult);
 
-  const result = await earnHoneyDirect(
-    userId,
-    "DAILY_MISSION",
-    amount,
-    `Mission: ${taskId}`,
-    { taskId, baseReward: task.reward },
-  );
+  let earned = 0;
+  if (amount > 0) {
+    const result = await earnHoneyDirect(
+      userId,
+      "DAILY_MISSION",
+      amount,
+      `Mission: ${taskId}`,
+      { taskId, baseReward: rewards.honey },
+    );
+    earned = result.earned;
+  }
 
-  return { claimed: true, mission: { ...updatedMission, tasks }, earned: result.earned };
+  if (rewards.tickets && rewards.tickets > 0) {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { ticketBalance: { increment: rewards.tickets } },
+    });
+  }
+
+  return { claimed: true, mission: { ...updatedMission, tasks }, earned };
 }
 
 /**
  * Claim perfect-day bonus (all tasks done and claimed).
+ * Reads from MissionBonusRule (ALL_COMPLETE) or falls back to hardcoded 20 honey.
  */
 export async function claimBonusReward(userId: string) {
   const mission = await getOrCreateMission(userId);
@@ -277,32 +378,53 @@ export async function claimBonusReward(userId: string) {
   });
 
   const tierMult = getHoneyMultiplier(user.tier, user.tierExpiresAt);
-  const amount = Math.round(PERFECT_DAY_BONUS * tierMult);
+
+  const bonusRules = await getActiveBonusRules("DAILY");
+  const allCompleteRule = bonusRules.find((r) => r.requirement === "ALL_COMPLETE");
+
+  let bonusRewards: MissionRewardsParsed;
+  if (allCompleteRule) {
+    bonusRewards = parseJsonField(MissionRewardsSchema, allCompleteRule.rewards, "BonusRule.rewards", {
+      honey: FALLBACK_PERFECT_DAY_BONUS,
+      tickets: 0,
+    });
+  } else {
+    bonusRewards = { honey: FALLBACK_PERFECT_DAY_BONUS, tickets: 0 };
+  }
+
+  const amount = Math.round(bonusRewards.honey * tierMult);
 
   const updatedMission = await prisma.dailyMission.update({
     where: { id: mission.id },
     data: { bonusClaimed: true, perfectDay: true },
   });
 
-  const result = await earnHoneyDirect(
-    userId,
-    "DAILY_MISSION",
-    amount,
-    "Perfect day bonus",
-    { perfectDay: true },
-  );
+  let earned = 0;
+  if (amount > 0) {
+    const result = await earnHoneyDirect(
+      userId,
+      "DAILY_MISSION",
+      amount,
+      "Perfect day bonus",
+      { perfectDay: true },
+    );
+    earned = result.earned;
+  }
+
+  if (bonusRewards.tickets && bonusRewards.tickets > 0) {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { ticketBalance: { increment: bonusRewards.tickets } },
+    });
+  }
 
   checkWeeklyBonus(userId).catch((e) => console.error("[honey] checkWeeklyBonus failed:", e));
 
-  return { claimed: true, mission: { ...updatedMission, bonusClaimed: true }, earned: result.earned };
+  return { claimed: true, mission: { ...updatedMission, bonusClaimed: true }, earned };
 }
 
-const WEEKLY_BONUS_AMOUNT = 100;
+const FALLBACK_WEEKLY_BONUS_AMOUNT = 100;
 
-/**
- * Check if the user has completed all missions for the last 7 consecutive days.
- * If so, grant a weekly bonus (once per 7-day window).
- */
 async function checkWeeklyBonus(userId: string) {
   const today = new Date();
   const dates: string[] = [];
@@ -330,27 +452,53 @@ async function checkWeeklyBonus(userId: string) {
   });
   if (existing) return;
 
-  await earnHoneyDirect(userId, "WEEKLY_BONUS", WEEKLY_BONUS_AMOUNT, "Weekly mission bonus: 7 perfect days", {
+  const bonusRules = await getActiveBonusRules("DAILY");
+  const streakRule = bonusRules.find((r) => r.requirement === "STREAK_DAYS" && r.requirementValue <= 7);
+  let weeklyAmount = FALLBACK_WEEKLY_BONUS_AMOUNT;
+  if (streakRule) {
+    const rewards = parseJsonField(MissionRewardsSchema, streakRule.rewards, "BonusRule.rewards", { honey: FALLBACK_WEEKLY_BONUS_AMOUNT, tickets: 0 });
+    weeklyAmount = rewards.honey;
+  }
+
+  await earnHoneyDirect(userId, "WEEKLY_BONUS", weeklyAmount, "Weekly mission bonus: 7 perfect days", {
     weekStart,
     weekEnd: dates[0],
   });
 }
 
 /**
- * Serialize mission for client (maps tasks to include labelKey/hintKey/icon).
+ * Get the perfect-day bonus amount from DB rules or fallback.
  */
-export function serializeMission(mission: {
+async function getPerfectDayBonus(): Promise<number> {
+  const bonusRules = await getActiveBonusRules("DAILY");
+  const allCompleteRule = bonusRules.find((r) => r.requirement === "ALL_COMPLETE");
+  if (allCompleteRule) {
+    const rewards = parseJsonField(MissionRewardsSchema, allCompleteRule.rewards, "BonusRule.rewards", { honey: FALLBACK_PERFECT_DAY_BONUS, tickets: 0 });
+    return rewards.honey;
+  }
+  return FALLBACK_PERFECT_DAY_BONUS;
+}
+
+/**
+ * Serialize mission for client (maps tasks to include labelKey/hintKey/icon).
+ * Also includes direct name/nameEn/nameTh for templates where the labelKey
+ * might not have a static i18n entry (admin-created templates).
+ */
+export async function serializeMission(mission: {
   tasks: unknown;
   progress: number;
   completed: boolean;
   perfectDay: boolean;
   bonusClaimed: boolean;
 }) {
-  const defs = getDailyMissionDefs();
+  const defs = await getDailyMissionDefs();
+  const resolved = await getResolvedMissions();
   const tasks = parseTasks(mission.tasks);
+  const perfectDayBonus = await getPerfectDayBonus();
   return {
     tasks: tasks.map((t) => {
       const def = defs.find((d) => d.id === t.id);
+      const tpl = resolved.find((r) => r.code === t.id);
       return {
         id: t.id,
         done: t.done,
@@ -360,12 +508,18 @@ export function serializeMission(mission: {
         hintKey: def?.hintKey ?? "",
         icon: def?.icon ?? "Circle",
         trackType: def?.trackType ?? "auto-path",
+        name: tpl?.name ?? null,
+        nameEn: tpl?.nameEn ?? null,
+        nameTh: tpl?.nameTh ?? null,
+        description: tpl?.description ?? null,
+        descriptionEn: tpl?.descriptionEn ?? null,
+        descriptionTh: tpl?.descriptionTh ?? null,
       };
     }),
     progress: mission.progress,
     completed: mission.completed,
     perfectDay: mission.perfectDay,
     bonusClaimed: mission.bonusClaimed,
-    perfectDayBonus: PERFECT_DAY_BONUS,
+    perfectDayBonus,
   };
 }

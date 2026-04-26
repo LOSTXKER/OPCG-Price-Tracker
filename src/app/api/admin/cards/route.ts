@@ -8,7 +8,7 @@ import { Prisma } from "@/generated/prisma/client";
 
 const log = createLog("admin:cards");
 
-export const GET = adminApiHandler(async (request: NextRequest) => {
+export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
   const sp = request.nextUrl.searchParams;
   const { page, limit, skip } = parsePageLimit(sp, { defaultLimit: 50, maxLimit: 100 });
   const search = sp.get("q") || "";
@@ -56,10 +56,20 @@ export const GET = adminApiHandler(async (request: NextRequest) => {
     where.AND = andConditions;
   }
 
+  const sortField = sp.get("sort") || "";
+  const sortOrder = sp.get("order") === "desc" ? "desc" as const : "asc" as const;
+
+  const sortMap: Record<string, Prisma.CardOrderByWithRelationInput[]> = {
+    code: [{ baseCode: sortOrder }, { isParallel: "asc" }],
+    rarity: [{ rarity: sortOrder }, { baseCode: "asc" }],
+    price: [{ latestPriceJpy: sortOrder }, { baseCode: "asc" }],
+  };
+  const orderBy = sortMap[sortField] ?? [{ baseCode: "asc" }, { isParallel: "asc" }];
+
   const [cards, total] = await Promise.all([
     prisma.card.findMany({
       where,
-      orderBy: [{ baseCode: "asc" }, { isParallel: "asc" }],
+      orderBy,
       skip,
       take: limit,
       select: {
@@ -94,7 +104,7 @@ export const GET = adminApiHandler(async (request: NextRequest) => {
   });
 });
 
-export const PATCH = adminApiHandler(async (request: NextRequest) => {
+export const PATCH = adminApiHandler(async (request: NextRequest, _admin) => {
   const parsed = await parseJsonBody<{ id: number; [key: string]: unknown }>(request);
   if (!parsed.ok) return parsed.response;
 

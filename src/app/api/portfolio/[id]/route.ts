@@ -1,4 +1,5 @@
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
@@ -6,10 +7,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:portfolio");
 
-export async function PATCH(
+export const PATCH = apiHandler(async (
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
-) {
+) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -52,12 +53,12 @@ export async function PATCH(
     log.error("PATCH /api/portfolio/[id]", error);
     return NextResponse.json({ error: "Failed to update portfolio" }, { status: 500 });
   }
-}
+});
 
-export async function DELETE(
+export const DELETE = apiHandler(async (
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
-) {
+) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -82,4 +83,4 @@ export async function DELETE(
     log.error("DELETE /api/portfolio/[id]", error);
     return NextResponse.json({ error: "Failed to delete portfolio" }, { status: 500 });
   }
-}
+});

@@ -3,14 +3,14 @@ import { parseJsonBody } from "@/lib/api/admin-helpers";
 import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 
-export const GET = adminApiHandler(async (_req: NextRequest) => {
+export const GET = adminApiHandler(async (_req: NextRequest, _admin) => {
   const events = await prisma.seasonalEvent.findMany({
     orderBy: { startDate: "desc" },
   });
   return NextResponse.json({ events });
 });
 
-export const POST = adminApiHandler(async (request: NextRequest) => {
+export const POST = adminApiHandler(async (request: NextRequest, _admin) => {
   const parsed = await parseJsonBody<{
     name: string;
     nameEn?: string;
@@ -42,7 +42,7 @@ export const POST = adminApiHandler(async (request: NextRequest) => {
   return NextResponse.json({ event }, { status: 201 });
 });
 
-export const PATCH = adminApiHandler(async (request: NextRequest) => {
+export const PATCH = adminApiHandler(async (request: NextRequest, _admin) => {
   const parsed = await parseJsonBody<{
     id: number;
     name?: string;

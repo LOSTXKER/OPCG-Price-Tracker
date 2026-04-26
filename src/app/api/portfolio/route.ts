@@ -1,4 +1,5 @@
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { cardInclude } from "@/lib/api/query-fragments";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
@@ -8,7 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:portfolio");
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -29,9 +30,9 @@ export async function GET() {
     log.error("GET /api/portfolio", error);
     return NextResponse.json({ error: "Failed to load portfolios" }, { status: 500 });
   }
-}
+});
 
-export async function POST(request: NextRequest) {
+export const POST = apiHandler(async (request: NextRequest) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -78,4 +79,4 @@ export async function POST(request: NextRequest) {
     log.error("POST /api/portfolio", error);
     return NextResponse.json({ error: "Failed to create portfolio" }, { status: 500 });
   }
-}
+});

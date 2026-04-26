@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useId } from "react"
-import { BarChart3 } from "lucide-react"
 import {
   Area,
   AreaChart,
@@ -36,43 +35,83 @@ export function PortfolioHistoryChart({ data }: { data: DataPoint[] }) {
       : data.slice(-(RANGES.find((r) => r.id === range)?.days ?? data.length))
 
   if (data.length < 2) {
+    const base = data.length === 1 ? data[0].value : 1000
+    const placeholderData = Array.from({ length: 12 }, (_, i) => ({
+      label: "",
+      value: base + Math.sin(i * 0.6) * base * 0.04 + i * base * 0.002,
+    }))
     return (
-      <div className="flex h-24 flex-col items-center justify-center gap-1.5 text-muted-foreground">
-        <BarChart3 className="size-6 opacity-30" />
-        <p className="text-xs">{t(lang, "noPortfolioData")}</p>
-        <p className="text-xs opacity-60">{t(lang, "noPortfolioDataDesc")}</p>
+      <div className="relative">
+        <div className="mb-3 flex items-center gap-1">
+          {RANGES.map((r) => (
+            <span
+              key={r.id}
+              className="rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground/30"
+            >
+              {r.label}
+            </span>
+          ))}
+        </div>
+        <div className="h-28 w-full opacity-40 sm:h-32">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={placeholderData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="var(--muted-foreground)" stopOpacity={0.08} />
+                  <stop offset="100%" stopColor="var(--muted-foreground)" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <Area
+                type="natural"
+                dataKey="value"
+                stroke="var(--muted-foreground)"
+                strokeWidth={1.5}
+                strokeOpacity={0.2}
+                fill={`url(#${fillId})`}
+                isAnimationActive={false}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-1.5 rounded-xl bg-card/90 px-5 py-3 shadow-sm backdrop-blur-md">
+            <p className="text-xs text-muted-foreground">
+              {t(lang, "noPortfolioDataDesc")}
+            </p>
+          </div>
+        </div>
       </div>
     )
   }
 
   return (
     <div>
-      <div className="mb-3 flex items-center gap-1">
+      <div className="mb-3 flex items-center gap-0.5">
         {RANGES.map((r) => (
           <button
             key={r.id}
             onClick={() => setRange(r.id)}
             className={cn(
-              "rounded-md px-2 py-0.5 text-xs font-medium transition-colors",
+              "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
               range === r.id
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground"
+                ? "bg-primary/10 text-primary"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
             {r.label}
           </button>
         ))}
       </div>
-      <div className="h-40 w-full text-xs text-muted-foreground">
+      <div className="h-44 w-full text-xs text-muted-foreground sm:h-52">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={filteredData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.35} />
+                <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.25} />
                 <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" strokeOpacity={0.5} vertical={false} />
             <XAxis
               dataKey="label"
               tickLine={false}
@@ -81,10 +120,11 @@ export function PortfolioHistoryChart({ data }: { data: DataPoint[] }) {
             />
             <Tooltip
               contentStyle={{
-                borderRadius: 8,
+                borderRadius: 10,
                 border: "1px solid var(--border)",
                 background: "var(--popover)",
                 fontSize: 13,
+                boxShadow: "0 4px 12px rgba(0,0,0,.12)",
               }}
               formatter={(value) => {
                 const n = typeof value === "number" ? value : Number(value)

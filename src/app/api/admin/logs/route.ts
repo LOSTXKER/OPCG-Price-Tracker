@@ -2,7 +2,7 @@
 import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 
-export const GET = adminApiHandler(async (request: NextRequest) => {
+export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
   const { searchParams } = request.nextUrl;
   const page = Math.max(1, Number(searchParams.get("page")) || 1);
   const limit = Math.min(100, Math.max(1, Number(searchParams.get("limit")) || 50));

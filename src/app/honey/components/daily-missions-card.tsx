@@ -48,6 +48,35 @@ const ICON_MAP: Record<string, typeof Award> = {
   BookOpen, Wallet, Eye,
 };
 
+type TaskWithNames = {
+  labelKey: string;
+  hintKey: string;
+  name?: string | null;
+  nameEn?: string | null;
+  nameTh?: string | null;
+  description?: string | null;
+  descriptionEn?: string | null;
+  descriptionTh?: string | null;
+};
+
+function getMissionLabel(lang: Language, task: TaskWithNames): string {
+  const translated = t(lang, task.labelKey as TranslationKey);
+  if (translated !== task.labelKey) return translated;
+  if (lang === "TH" && task.nameTh) return task.nameTh;
+  if (lang === "JP" && task.name) return task.name;
+  return task.nameEn ?? task.name ?? task.labelKey;
+}
+
+function getMissionHint(lang: Language, task: TaskWithNames): string {
+  if (task.hintKey) {
+    const translated = t(lang, task.hintKey as TranslationKey);
+    if (translated !== task.hintKey) return translated;
+  }
+  if (lang === "TH" && task.descriptionTh) return task.descriptionTh;
+  if (lang === "JP" && task.description) return task.description;
+  return task.descriptionEn ?? task.description ?? "";
+}
+
 const MISSION_HREF: Record<string, string> = {
   check_price: "/sets",
   browse_trending: "/trending",
@@ -288,10 +317,10 @@ export function DailyMissionsCard({
                   "mt-3 text-sm font-semibold leading-tight",
                   task.claimed && "text-muted-foreground line-through",
                 )}>
-                  {t(lang, task.labelKey as TranslationKey)}
+                  {getMissionLabel(lang, task)}
                 </p>
                 <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-                  {t(lang, task.hintKey as TranslationKey)}
+                  {getMissionHint(lang, task)}
                 </p>
 
                 <div className="mt-auto pt-3">

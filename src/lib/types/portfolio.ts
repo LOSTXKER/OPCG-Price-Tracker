@@ -11,6 +11,8 @@ export type AllocationSlice = {
   name: string
   value: number
   percent: number
+  imageUrl?: string | null
+  cardCode?: string | null
 }
 
 export type AssetRow = {
@@ -35,6 +37,7 @@ export type PortfolioMeta = {
   id: number
   name: string
   totalValue: number
+  totalCost: number
   itemCount: number
 }
 

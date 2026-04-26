@@ -2,15 +2,16 @@ import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
 import { syncAppUser } from "@/lib/auth";
+import { isAuthBypassed } from "@/lib/env";
 
 /**
  * Resolves the current Supabase session to an app-level User (upsert).
  * Returns null when no valid session exists.
  */
 export async function getAuthUser() {
-  if (process.env.NEXT_PUBLIC_BYPASS_AUTH === "true") {
+  if (isAuthBypassed()) {
     const { prisma } = await import("@/lib/db");
-    return prisma.user.findFirst();
+    return prisma.user.findFirst({ orderBy: { createdAt: "asc" } });
   }
 
   const supabase = await createClient();

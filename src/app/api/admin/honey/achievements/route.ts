@@ -3,7 +3,7 @@ import { parseJsonBody } from "@/lib/api/admin-helpers";
 import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 
-export const GET = adminApiHandler(async (_req: NextRequest) => {
+export const GET = adminApiHandler(async (_req: NextRequest, _admin) => {
   const achievements = await prisma.achievement.findMany({
     orderBy: { createdAt: "desc" },
     include: { _count: { select: { users: true } } },
@@ -11,7 +11,7 @@ export const GET = adminApiHandler(async (_req: NextRequest) => {
   return NextResponse.json({ achievements });
 });
 
-export const POST = adminApiHandler(async (request: NextRequest) => {
+export const POST = adminApiHandler(async (request: NextRequest, _admin) => {
   const parsed = await parseJsonBody<{
     code: string;
     name: string;

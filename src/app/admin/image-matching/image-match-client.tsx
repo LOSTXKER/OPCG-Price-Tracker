@@ -4,10 +4,20 @@ import { useCallback, useEffect, useState } from "react";
 import { adminJsonFetch } from "@/lib/api/admin-client";
 import type { PaginatedApiResponse } from "@/app/admin/admin-types";
 import Image from "next/image";
-import { Check, ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
+import { Check, ImageIcon, RefreshCw, Search, ZoomIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatJpy } from "@/lib/utils/currency";
 import { RarityBadge } from "@/components/shared/rarity-badge";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { AdminPagination } from "@/components/admin/admin-pagination";
+import {
+  AdminToolbar,
+  AdminFilterSelect,
+} from "@/components/admin/admin-toolbar";
+import { AdminEmptyState } from "@/components/admin/admin-empty-state";
+import { Lightbox } from "@/components/admin/matching-ui";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface CardEntry {
   id: number;
@@ -28,6 +38,8 @@ interface CardEntry {
 interface ApiResponse extends PaginatedApiResponse {
   cards: CardEntry[];
   sets: { code: string; name: string; nameEn: string | null }[];
+  matchedCount: number;
+  totalAll: number;
 }
 
 export function ImageMatchClient() {
@@ -35,8 +47,13 @@ export function ImageMatchClient() {
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [setFilter, setSetFilter] = useState("");
+  const [matchedFilter, setMatchedFilter] = useState("");
   const [page, setPage] = useState(1);
   const [saving, setSaving] = useState<number | null>(null);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+  const [lightbox, setLightbox] = useState<
+    { src: string; label: string }[] | null
+  >(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -44,15 +61,19 @@ export function ImageMatchClient() {
     try {
       const params = new URLSearchParams();
       if (setFilter) params.set("set", setFilter);
+      if (matchedFilter) params.set("matched", matchedFilter);
       params.set("page", String(page));
-      const result = await adminJsonFetch<ApiResponse>(`/api/admin/image-matching?${params}`, { method: "GET" });
+      const result = await adminJsonFetch<ApiResponse>(
+        `/api/admin/image-matching?${params}`,
+        { method: "GET" },
+      );
       setData(result);
     } catch (err) {
       setFetchError(err instanceof Error ? err.message : "Failed to load");
     } finally {
       setLoading(false);
     }
-  }, [setFilter, page]);
+  }, [setFilter, matchedFilter, page]);
 
   useEffect(() => {
     void fetchData();
@@ -61,148 +82,283 @@ export function ImageMatchClient() {
   const handleReassign = async (cardId: number, newPIndex: number) => {
     setSaving(cardId);
     try {
-      await adminJsonFetch("/api/admin/image-matching", { method: "PATCH", body: { cardId, parallelIndex: newPIndex } });
+      await adminJsonFetch("/api/admin/image-matching", {
+        method: "PATCH",
+        body: { cardId, parallelIndex: newPIndex },
+      });
+      toast.success("บันทึกแล้ว", {
+        description: `เปลี่ยนเป็น _p${newPIndex}`,
+      });
       await fetchData();
+    } catch (err) {
+      toast.error("บันทึกไม่สำเร็จ", {
+        description: err instanceof Error ? err.message : "Unknown error",
+      });
     } finally {
       setSaving(null);
     }
   };
 
+  const handleImageError = (url: string) => {
+    setFailedImages((prev) => {
+      const next = new Set(prev);
+      next.add(url);
+      return next;
+    });
+  };
+
+  const openLightbox = (
+    card: CardEntry,
+    candidate: { pIndex: number; url: string },
+  ) => {
+    const images: { src: string; label: string }[] = [];
+    if (card.imageUrl) {
+      images.push({
+        src: card.imageUrl,
+        label: `Current (p${card.parallelIndex ?? "?"})`,
+      });
+    }
+    images.push({ src: candidate.url, label: `_p${candidate.pIndex}` });
+    setLightbox(images);
+  };
+
+  const matchedPercent =
+    data && data.totalAll > 0
+      ? Math.round((data.matchedCount / data.totalAll) * 100)
+      : 0;
+
+  const setOptions = (data?.sets ?? []).map((s) => ({
+    value: s.code,
+    label: `${s.code} · ${s.nameEn ?? s.name}`,
+  }));
+
+  const matchedOptions = [
+    { value: "false", label: "ยังไม่ matched" },
+    { value: "true", label: "Matched แล้ว" },
+  ];
+
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="font-sans text-xl font-semibold">Image Matching</h2>
-        <p className="text-muted-foreground text-sm mt-1">
-          เปรียบเทียบ Bandai CDN images กับ parallel variants — เลือก _pN ที่ถูกต้องสำหรับแต่ละใบ
-        </p>
-      </div>
+      <AdminPageHeader
+        icon={ImageIcon}
+        title="Image Matching"
+        description="เปรียบเทียบ Bandai CDN images กับ parallel variants — เลือก _pN ที่ถูกต้องสำหรับแต่ละใบ"
+        badge={
+          data && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+              {data.matchedCount}/{data.totalAll} matched ({matchedPercent}%)
+            </span>
+          )
+        }
+        actions={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={fetchData}
+            disabled={loading}
+          >
+            <RefreshCw
+              className={cn("size-4 mr-1.5", loading && "animate-spin")}
+            />
+            Refresh
+          </Button>
+        }
+      />
 
-      {/* Filters */}
-      <div className="flex flex-wrap items-center gap-3">
-        <select
+      <AdminToolbar
+        actions={
+          data && (
+            <span className="text-sm text-muted-foreground">
+              {data.total} รายการ
+            </span>
+          )
+        }
+      >
+        <AdminFilterSelect
           value={setFilter}
-          onChange={(e) => {
-            setSetFilter(e.target.value);
+          onChange={(v) => {
+            setSetFilter(v);
             setPage(1);
           }}
-          className="rounded-lg border border-border bg-transparent px-3 py-2 text-sm"
-        >
-          <option value="">All Sets</option>
-          {data?.sets.map((s) => (
-            <option key={s.code} value={s.code}>
-              {s.code} · {s.nameEn ?? s.name}
-            </option>
-          ))}
-        </select>
-        <button
-          onClick={fetchData}
-          disabled={loading}
-          className="rounded-lg border border-border/40 px-3 py-2 text-sm font-medium hover:bg-muted transition-colors"
-        >
-          <RefreshCw className={cn("size-4", loading && "animate-spin")} />
-        </button>
-        {data && (
-          <span className="text-muted-foreground text-sm ml-auto">
-            {data.total} parallel cards
-          </span>
-        )}
-      </div>
+          options={setOptions}
+          placeholder="All Sets"
+          className="w-[220px]"
+        />
+        <AdminFilterSelect
+          value={matchedFilter}
+          onChange={(v) => {
+            setMatchedFilter(v);
+            setPage(1);
+          }}
+          options={matchedOptions}
+          placeholder="ทุกสถานะ"
+          className="w-[180px]"
+        />
+      </AdminToolbar>
 
-      {/* Cards Grid */}
       {fetchError ? (
-        <div className="rounded-lg border border-destructive/30 p-8 text-center text-destructive text-sm">
+        <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-8 text-center text-destructive text-sm">
           {fetchError}
         </div>
       ) : loading && !data ? (
-        <div className="rounded-lg border border-border/30 p-8 text-center text-muted-foreground">
-          Loading...
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-40 animate-pulse rounded-lg border border-border/30 bg-muted/20"
+            />
+          ))}
         </div>
       ) : data?.cards.length === 0 ? (
-        <div className="rounded-lg border border-border/30 p-8 text-center text-muted-foreground">
-          No parallel cards found
-        </div>
+        <AdminEmptyState
+          icon={Search}
+          title="ไม่พบ parallel cards"
+          description={
+            matchedFilter || setFilter
+              ? "ลองเปลี่ยนตัวกรองใหม่"
+              : "ยังไม่มี parallel cards ในระบบ"
+          }
+        />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {data?.cards?.map((card) => (
-            <div key={card.id} className="rounded-lg border border-border/30 p-4 space-y-3">
-              <div className="flex items-center gap-3">
-                <span className="font-mono text-sm font-semibold text-primary">
+            <div
+              key={card.id}
+              className={cn(
+                "rounded-xl border p-4 transition-colors",
+                saving === card.id
+                  ? "border-primary/40 bg-primary/5"
+                  : "border-border/30 bg-card",
+              )}
+            >
+              {/* Card header */}
+              <div className="mb-3 flex items-center gap-2.5">
+                <span className="font-mono text-sm font-bold text-primary">
                   {card.baseCode}
                 </span>
                 <span className="text-sm text-muted-foreground truncate">
                   {card.nameEn ?? card.nameJp}
                 </span>
                 <RarityBadge rarity={card.rarity} size="sm" />
-                <span className="text-xs text-muted-foreground">
+                <span className="rounded bg-muted/50 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground">
                   {card.set.code}
                 </span>
                 {card.latestPriceJpy != null && (
-                  <span className="text-xs font-mono text-foreground ml-auto">
+                  <span className="ml-auto font-mono text-sm font-semibold tabular-nums">
                     {formatJpy(card.latestPriceJpy)}
                   </span>
                 )}
               </div>
 
+              {/* Image matching area */}
               <div className="flex items-start gap-4">
                 {/* Current image */}
-                <div className="space-y-1.5 shrink-0">
-                  <p className="text-xs text-muted-foreground font-medium">
+                <div className="shrink-0 space-y-1.5">
+                  <p className="text-[11px] font-medium text-muted-foreground">
                     Current (p{card.parallelIndex ?? "?"})
                   </p>
-                  <div className="relative aspect-[63/88] w-24 overflow-hidden rounded-lg border-2 border-primary/50 bg-muted/30">
+                  <div
+                    className="group relative aspect-[63/88] w-28 cursor-zoom-in overflow-hidden rounded-lg border-2 border-primary/40 bg-muted/20 shadow-sm"
+                    onClick={() => {
+                      if (card.imageUrl) {
+                        setLightbox([
+                          {
+                            src: card.imageUrl,
+                            label: `Current (p${card.parallelIndex ?? "?"})`,
+                          },
+                        ]);
+                      }
+                    }}
+                  >
                     {card.imageUrl ? (
-                      <Image
-                        src={card.imageUrl}
-                        alt="Current"
-                        fill
-                        className="object-contain"
-                        sizes="96px"
-                        unoptimized
-                      />
+                      <>
+                        <Image
+                          src={card.imageUrl}
+                          alt="Current"
+                          fill
+                          className="object-contain transition-transform group-hover:scale-105"
+                          sizes="112px"
+                          unoptimized
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/20 group-hover:opacity-100">
+                          <ZoomIn className="size-5 text-white drop-shadow" />
+                        </div>
+                      </>
                     ) : (
                       <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
                         N/A
                       </div>
                     )}
+                    {card.parallelIndex != null && (
+                      <div className="absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-primary text-white shadow">
+                        <Check className="size-3" />
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                {/* Arrow */}
-                <div className="flex items-center pt-8 text-muted-foreground">→</div>
+                {/* Arrow separator */}
+                <div className="flex items-center pt-10 text-muted-foreground/50 text-lg select-none">
+                  →
+                </div>
 
-                {/* Candidates */}
-                <div className="flex flex-wrap gap-2">
+                {/* Candidate thumbnails */}
+                <div className="flex flex-wrap gap-2 min-w-0">
                   {card.candidates.map((c) => {
                     const isActive = card.parallelIndex === c.pIndex;
+                    const isFailed = failedImages.has(c.url);
+
                     return (
-                      <button
-                        key={c.pIndex}
-                        onClick={() => handleReassign(card.id, c.pIndex)}
-                        disabled={saving === card.id}
-                        className={cn(
-                          "space-y-1.5 rounded-lg p-1.5 transition-all",
-                          isActive
-                            ? "bg-primary/10 ring-2 ring-primary"
-                            : "hover:bg-muted/50 ring-1 ring-border/30"
-                        )}
-                      >
-                        <p className="text-xs text-center font-mono font-medium">
-                          _p{c.pIndex}
-                          {isActive && (
-                            <Check className="inline ml-1 size-3 text-primary" />
+                      <div key={c.pIndex} className="flex flex-col gap-1">
+                        <button
+                          onClick={() => {
+                            if (!isFailed) handleReassign(card.id, c.pIndex);
+                          }}
+                          disabled={saving === card.id || isFailed}
+                          className={cn(
+                            "group/card relative rounded-lg p-1.5 transition-all",
+                            isActive
+                              ? "bg-primary/10 ring-2 ring-primary shadow-sm"
+                              : isFailed
+                                ? "opacity-30 cursor-not-allowed ring-1 ring-border/20"
+                                : "hover:bg-muted/60 hover:ring-primary/30 ring-1 ring-border/30",
                           )}
-                        </p>
-                        <div className="relative aspect-[63/88] w-20 overflow-hidden rounded bg-muted/30">
-                          <Image
-                            src={c.url}
-                            alt={`p${c.pIndex}`}
-                            fill
-                            className="object-contain"
-                            sizes="80px"
-                            unoptimized
-                          />
-                        </div>
-                      </button>
+                        >
+                          <p className="mb-1 text-center font-mono text-[11px] font-medium">
+                            _p{c.pIndex}
+                            {isActive && (
+                              <Check className="ml-0.5 inline size-3 text-primary" />
+                            )}
+                          </p>
+                          <div className="relative aspect-[63/88] w-[72px] overflow-hidden rounded bg-muted/20">
+                            {isFailed ? (
+                              <div className="flex h-full items-center justify-center text-[10px] text-muted-foreground/60">
+                                N/A
+                              </div>
+                            ) : (
+                              <Image
+                                src={c.url}
+                                alt={`p${c.pIndex}`}
+                                fill
+                                className="object-contain"
+                                sizes="72px"
+                                onError={() => handleImageError(c.url)}
+                              />
+                            )}
+                            {!isFailed && !isActive && (
+                              <div
+                                className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover/card:bg-black/10 group-hover/card:opacity-100"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  openLightbox(card, c);
+                                }}
+                              >
+                                <ZoomIn className="size-4 text-white drop-shadow" />
+                              </div>
+                            )}
+                          </div>
+                        </button>
+                      </div>
                     );
                   })}
                 </div>
@@ -212,27 +368,18 @@ export function ImageMatchClient() {
         </div>
       )}
 
-      {/* Pagination */}
-      {data && data.totalPages > 1 && (
-        <div className="flex items-center justify-center gap-3">
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page === 1}
-            className="rounded-lg border border-border/40 p-2 hover:bg-muted disabled:opacity-30"
-          >
-            <ChevronLeft className="size-4" />
-          </button>
-          <span className="text-sm font-mono">
-            {page} / {data.totalPages}
-          </span>
-          <button
-            onClick={() => setPage((p) => Math.min(data.totalPages, p + 1))}
-            disabled={page === data.totalPages}
-            className="rounded-lg border border-border/40 p-2 hover:bg-muted disabled:opacity-30"
-          >
-            <ChevronRight className="size-4" />
-          </button>
-        </div>
+      {data && (
+        <AdminPagination
+          page={page}
+          totalPages={data.totalPages}
+          onPageChange={setPage}
+          total={data.total}
+          perPage={20}
+        />
+      )}
+
+      {lightbox && (
+        <Lightbox images={lightbox} onClose={() => setLightbox(null)} />
       )}
     </div>
   );

@@ -12,7 +12,7 @@ const BLOG_CATEGORY_MAP: Record<string, BlogCategory> = {
 };
 
 export const PUT = adminApiHandler(
-  async (req: NextRequest, props: { params: Promise<{ id: string }> }) => {
+  async (req: NextRequest, _admin, props: { params: Promise<{ id: string }> }) => {
     const { id: idParam } = await props.params;
     const id = Number(idParam);
     if (!Number.isInteger(id) || id < 1) {
@@ -62,7 +62,7 @@ export const PUT = adminApiHandler(
 );
 
 export const DELETE = adminApiHandler(
-  async (_req: NextRequest, props: { params: Promise<{ id: string }> }) => {
+  async (_req: NextRequest, _admin, props: { params: Promise<{ id: string }> }) => {
     const { id: idParam } = await props.params;
     const id = Number(idParam);
     if (!Number.isInteger(id) || id < 1) {

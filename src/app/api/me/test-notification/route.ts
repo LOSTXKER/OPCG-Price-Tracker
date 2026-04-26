@@ -1,15 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { apiHandler } from "@/lib/api/api-handler";
 import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { sendEmail } from "@/lib/email";
 import { sendLineMessage } from "@/lib/line";
 
-export async function POST(request: Request) {
+export const POST = apiHandler(async (request: NextRequest) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
-  const parsed = await parseJsonBody<{ channel: string }>(request as never);
+  const parsed = await parseJsonBody<{ channel: string }>(request);
   if (!parsed.ok) return parsed.response;
 
   const { channel } = parsed.body;
@@ -55,4 +56,4 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ error: "Invalid channel" }, { status: 400 });
-}
+});

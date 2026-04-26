@@ -15,6 +15,7 @@ import { MissionTracker } from "@/components/honey/mission-tracker";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { ConfirmDialogProvider } from "@/components/shared/confirm-dialog";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { websiteJsonLd } from "@/lib/seo/json-ld";
 import "./globals.css";
@@ -96,18 +97,20 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TooltipProvider>
-            <MainChrome>
-              <Header />
-            </MainChrome>
-            <PageContent>{children}</PageContent>
-            <MainChrome>
-              <Footer />
-              <BottomNav />
-            </MainChrome>
-            <CompareFloatingBar />
-            <ScrollToTop />
-            <MissionTracker />
-            <Toaster position="bottom-center" />
+            <ConfirmDialogProvider>
+              <MainChrome>
+                <Header />
+              </MainChrome>
+              <PageContent>{children}</PageContent>
+              <MainChrome>
+                <Footer />
+                <BottomNav />
+              </MainChrome>
+              <CompareFloatingBar />
+              <ScrollToTop />
+              <MissionTracker />
+              <Toaster position="bottom-center" />
+            </ConfirmDialogProvider>
           </TooltipProvider>
         </ThemeProvider>
       </body>

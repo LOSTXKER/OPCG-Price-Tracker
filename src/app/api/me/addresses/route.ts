@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { apiHandler } from "@/lib/api/api-handler";
 import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
@@ -6,7 +7,7 @@ import { createLog } from "@/lib/logger";
 
 const log = createLog("api:me:addresses");
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -21,9 +22,9 @@ export async function GET() {
     log.error("GET /api/me/addresses", error);
     return NextResponse.json({ error: "Failed to load addresses" }, { status: 500 });
   }
-}
+});
 
-export async function POST(request: NextRequest) {
+export const POST = apiHandler(async (request: NextRequest) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -73,4 +74,4 @@ export async function POST(request: NextRequest) {
     log.error("POST /api/me/addresses", error);
     return NextResponse.json({ error: "Failed to create address" }, { status: 500 });
   }
-}
+});

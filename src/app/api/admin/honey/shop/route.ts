@@ -6,14 +6,14 @@ import type { ShopItemType } from "@/generated/prisma/client";
 
 const VALID_TYPES = new Set(["TRIAL_PRO", "TRIAL_PRO_PLUS", "BADGE", "CUSTOM", "PROFILE_FRAME", "PRICE_ALERT_SLOT", "CSV_EXPORT_PASS"]);
 
-export const GET = adminApiHandler(async (_req: NextRequest) => {
+export const GET = adminApiHandler(async (_req: NextRequest, _admin) => {
   const items = await prisma.honeyShopItem.findMany({
     orderBy: [{ isActive: "desc" }, { cost: "asc" }],
   });
   return NextResponse.json({ items });
 });
 
-export const POST = adminApiHandler(async (request: NextRequest) => {
+export const POST = adminApiHandler(async (request: NextRequest, _admin) => {
   const parsed = await parseJsonBody<{
     name: string;
     nameEn?: string;

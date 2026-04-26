@@ -77,3 +77,8 @@ export function clientEnv(): ClientEnv {
   if (!_clientEnv) _clientEnv = parseClientEnv();
   return _clientEnv;
 }
+
+/** Whether auth is bypassed for local development. Safe for both server and client. */
+export function isAuthBypassed(): boolean {
+  return process.env.NEXT_PUBLIC_BYPASS_AUTH === "true";
+}

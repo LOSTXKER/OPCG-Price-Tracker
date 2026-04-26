@@ -1,12 +1,11 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
 import { adminApiHandler } from "@/lib/api/api-handler";
-import { getAdminUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import {
   matchCardImage,
   type MatchCandidate,
 } from "@/lib/scraper/gemini-matcher";
-import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
+import { parseJsonBody } from "@/lib/api/admin-helpers";
 import { createLog } from "@/lib/logger";
 
 const log = createLog("admin:yuyutei-ai-suggest");
@@ -19,10 +18,7 @@ const log = createLog("admin:yuyutei-ai-suggest");
  *
  * Returns: { success, matchedCardCode?, confidence?, error? }
  */
-export const POST = adminApiHandler(async (request: NextRequest) => {
-  const admin = await getAdminUser();
-  if (!admin) return unauthorized();
-
+export const POST = adminApiHandler(async (request: NextRequest, admin) => {
   const parsed = await parseJsonBody<{ id: number; force?: boolean }>(request);
   if (!parsed.ok) return parsed.response;
   const { id, force } = parsed.body;

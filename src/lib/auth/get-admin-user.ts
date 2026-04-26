@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/db";
+import { isAuthBypassed } from "@/lib/env";
 
 /**
  * Resolves the Supabase session to an admin app user.
@@ -7,7 +8,7 @@ import { prisma } from "@/lib/db";
  * Shared logic for both page guards (requireAdmin) and API guards (checkIsAdmin).
  */
 export async function getAdminUser() {
-  if (process.env.NEXT_PUBLIC_BYPASS_AUTH === "true") {
+  if (isAuthBypassed()) {
     return { id: "dev-bypass", isAdmin: true as const };
   }
 

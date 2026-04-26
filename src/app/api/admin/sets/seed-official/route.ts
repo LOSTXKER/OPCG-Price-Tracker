@@ -40,7 +40,7 @@ const CARD_TYPE_MAP: Record<string, "CHARACTER" | "EVENT" | "STAGE" | "LEADER" |
   DON: "DON",
 };
 
-export const POST = adminApiHandler(async (request: NextRequest) => {
+export const POST = adminApiHandler(async (request: NextRequest, _admin) => {
   const parsed = await parseJsonBody<{ setCode?: string }>(request);
   if (!parsed.ok) return parsed.response;
 

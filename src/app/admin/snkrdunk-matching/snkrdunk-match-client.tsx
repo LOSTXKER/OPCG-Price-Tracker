@@ -1,12 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
   Check,
   ChevronLeft,
   ChevronRight,
   ExternalLink,
   Globe,
+  Keyboard,
   Loader2,
   Plus,
   RefreshCw,
@@ -25,6 +29,7 @@ import {
 } from "@/components/admin/matching-ui";
 import { adminJsonFetch } from "@/lib/api/admin-client";
 import type { PaginatedApiResponse } from "@/app/admin/admin-types";
+import { toast } from "sonner";
 
 /* ── Types ── */
 
@@ -51,7 +56,10 @@ interface Mapping {
 
 interface ApiResponse extends PaginatedApiResponse {
   mappings: Mapping[];
+  counts: Record<string, number>;
 }
+
+type SortKey = "" | "product-asc" | "product-desc" | "price-asc" | "price-desc" | "date-asc" | "date-desc";
 
 /* ── Helpers ── */
 
@@ -79,6 +87,134 @@ function PriceTag({
       ) : (
         <span className="text-xs text-muted-foreground/40">—</span>
       )}
+    </div>
+  );
+}
+
+function CompactPrices({ m }: { m: Mapping }) {
+  const hasAny = m.minPriceUsd != null || m.usedMinPriceUsd != null || m.lastSoldPsa10Usd != null;
+  if (!hasAny) {
+    return <span className="text-xs text-muted-foreground/50">ไม่มีราคา</span>;
+  }
+  return (
+    <div className="flex flex-col gap-0.5">
+      <PriceTag label="Min" value={m.minPriceUsd} />
+      <PriceTag label="Used" value={m.usedMinPriceUsd} />
+      <PriceTag label="PSA10" value={m.lastSoldPsa10Usd} highlight />
+    </div>
+  );
+}
+
+function SortableHeader({
+  label,
+  sortKey,
+  ascKey,
+  descKey,
+  currentSort,
+  onSort,
+  className,
+}: {
+  label: string;
+  sortKey: string;
+  ascKey: SortKey;
+  descKey: SortKey;
+  currentSort: SortKey;
+  onSort: (s: SortKey) => void;
+  className?: string;
+}) {
+  const isAsc = currentSort === ascKey;
+  const isDesc = currentSort === descKey;
+  const Icon = isAsc ? ArrowUp : isDesc ? ArrowDown : ArrowUpDown;
+
+  return (
+    <button
+      onClick={() => {
+        if (isAsc) onSort(descKey);
+        else if (isDesc) onSort("");
+        else onSort(ascKey);
+      }}
+      className={cn(
+        "inline-flex items-center gap-1 font-medium hover:text-foreground transition-colors",
+        (isAsc || isDesc) && "text-foreground",
+        className
+      )}
+    >
+      {label}
+      <Icon className="size-3" />
+    </button>
+  );
+}
+
+/* ── Stats chip ── */
+
+const STATUS_META: { key: string; label: string; color: string }[] = [
+  { key: "pending", label: "Pending", color: "bg-amber-500/15 text-amber-700 hover:bg-amber-500/25" },
+  { key: "matched", label: "Matched", color: "bg-green-500/15 text-green-700 hover:bg-green-500/25" },
+  { key: "rejected", label: "Rejected", color: "bg-red-500/15 text-red-600 hover:bg-red-500/25" },
+];
+
+function StatsBar({
+  counts,
+  activeFilter,
+  onFilter,
+}: {
+  counts: Record<string, number>;
+  activeFilter: string;
+  onFilter: (s: string) => void;
+}) {
+  const totalAll = Object.values(counts).reduce((a, b) => a + b, 0);
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <button
+        onClick={() => onFilter("")}
+        className={cn(
+          "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+          activeFilter === ""
+            ? "bg-foreground text-background"
+            : "bg-muted text-muted-foreground hover:bg-muted/80"
+        )}
+      >
+        ทั้งหมด {totalAll}
+      </button>
+      {STATUS_META.map((s) => (
+        <button
+          key={s.key}
+          onClick={() => onFilter(activeFilter === s.key ? "" : s.key)}
+          className={cn(
+            "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+            activeFilter === s.key
+              ? "ring-2 ring-offset-1 ring-offset-background ring-current"
+              : "",
+            s.color
+          )}
+        >
+          {s.label} {counts[s.key] ?? 0}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* ── Keyboard shortcut legend ── */
+
+function ShortcutLegend({ visible }: { visible: boolean }) {
+  if (!visible) return null;
+  const keys = [
+    { key: "j / k", desc: "เลื่อนแถว" },
+    { key: "x", desc: "ปฏิเสธ" },
+    { key: "a", desc: "อนุมัติ" },
+    { key: "Esc", desc: "ยกเลิกเลือก" },
+  ];
+  return (
+    <div className="flex items-center gap-4 rounded-lg border border-border bg-muted/40 px-3 py-1.5">
+      {keys.map((k) => (
+        <span key={k.key} className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+          <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] font-medium text-foreground shadow-sm">
+            {k.key}
+          </kbd>
+          {k.desc}
+        </span>
+      ))}
     </div>
   );
 }
@@ -280,6 +416,11 @@ export function SnkrdunkMatchClient() {
   >({});
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [autoMatchBusy, setAutoMatchBusy] = useState(false);
+  const [sort, setSort] = useState<SortKey>("");
+  const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [focusedIdx, setFocusedIdx] = useState<number>(-1);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -294,6 +435,7 @@ export function SnkrdunkMatchClient() {
     const params = new URLSearchParams();
     if (statusFilter) params.set("status", statusFilter);
     if (searchQuery) params.set("q", searchQuery);
+    if (sort) params.set("sort", sort);
     params.set("page", String(page));
     params.set("limit", "20");
     const res = await fetch(
@@ -301,11 +443,17 @@ export function SnkrdunkMatchClient() {
     );
     if (res.ok) setData(await res.json());
     setLoading(false);
-  }, [statusFilter, searchQuery, page]);
+  }, [statusFilter, searchQuery, page, sort]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // Clear selection on filter/page change
+  useEffect(() => {
+    setSelected(new Set());
+    setFocusedIdx(-1);
+  }, [statusFilter, searchQuery, page, sort]);
 
   /* ── Actions ── */
 
@@ -349,16 +497,106 @@ export function SnkrdunkMatchClient() {
   const handleAutoMatch = async () => {
     setAutoMatchBusy(true);
     const json = await adminJsonFetch<{ autoMatched: number }>(API, { method: "PATCH", body: { action: "auto-match" } });
-    alert(`Auto-matched: ${json.autoMatched} cards`);
+    toast.success(`Auto-matched ${json.autoMatched} การ์ด`);
     setAutoMatchBusy(false);
     await fetchData();
   };
 
-  /* ── Render ── */
+  const handleBulkReject = async () => {
+    const ids = [...selected];
+    if (ids.length === 0) return;
+    setSaving(new Set(ids));
+    await adminJsonFetch(API, { method: "DELETE", body: { ids } });
+    toast.success(`ปฏิเสธ ${ids.length} รายการ`);
+    setSelected(new Set());
+    setSaving(new Set());
+    await fetchData();
+  };
+
+  /* ── Selection helpers ── */
+
+  const toggleSelect = (id: number) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (!mappings.length) return;
+    const allIds = mappings.map((m) => m.id);
+    const allSelected = allIds.every((id) => selected.has(id));
+    if (allSelected) {
+      setSelected(new Set());
+    } else {
+      setSelected(new Set(allIds));
+    }
+  };
+
+  /* ── Render data ── */
 
   const mappings = data?.mappings ?? [];
   const total = data?.total ?? 0;
   const totalPages = data?.totalPages ?? 1;
+  const counts = data?.counts ?? {};
+
+  const allOnPageSelected = mappings.length > 0 && mappings.every((m) => selected.has(m.id));
+  const someSelected = selected.size > 0;
+
+  /* ── Keyboard shortcuts ── */
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if (addDialogOpen) return;
+
+      const len = mappings.length;
+      if (!len) return;
+
+      if (e.key === "j") {
+        e.preventDefault();
+        setFocusedIdx((i) => Math.min(i + 1, len - 1));
+      } else if (e.key === "k") {
+        e.preventDefault();
+        setFocusedIdx((i) => Math.max(i - 1, 0));
+      } else if (e.key === "x" && focusedIdx >= 0 && focusedIdx < len) {
+        e.preventDefault();
+        const m = mappings[focusedIdx];
+        if (m && !saving.has(m.id)) handleReject(m.id);
+      } else if (e.key === "a" && focusedIdx >= 0 && focusedIdx < len) {
+        e.preventDefault();
+        const m = mappings[focusedIdx];
+        const cid = pickedCandidate[m.id] ?? m.matchedCardId;
+        if (m && cid && !saving.has(m.id) && m.status !== "matched") {
+          handleApprove(m.id, cid);
+        }
+      } else if (e.key === " " && focusedIdx >= 0 && focusedIdx < len) {
+        e.preventDefault();
+        toggleSelect(mappings[focusedIdx].id);
+      } else if (e.key === "Escape") {
+        setSelected(new Set());
+        setFocusedIdx(-1);
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mappings, focusedIdx, pickedCandidate, saving, addDialogOpen]);
+
+  // Scroll focused row into view
+  useEffect(() => {
+    if (focusedIdx < 0) return;
+    const row = tableRef.current?.querySelector(`[data-row-idx="${focusedIdx}"]`);
+    row?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [focusedIdx]);
+
+  const handleStatusFilter = (s: string) => {
+    setStatusFilter(s);
+    setPage(1);
+  };
 
   return (
     <div className="space-y-4">
@@ -374,6 +612,16 @@ export function SnkrdunkMatchClient() {
           </div>
         </div>
         <div className="flex gap-2">
+          <button
+            onClick={() => setShowShortcuts((v) => !v)}
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-muted",
+              showShortcuts && "bg-muted"
+            )}
+            title="Keyboard shortcuts"
+          >
+            <Keyboard className="size-3.5" />
+          </button>
           <button
             onClick={handleAutoMatch}
             disabled={autoMatchBusy}
@@ -396,6 +644,12 @@ export function SnkrdunkMatchClient() {
         </div>
       </div>
 
+      {/* Stats bar */}
+      <StatsBar counts={counts} activeFilter={statusFilter} onFilter={handleStatusFilter} />
+
+      {/* Keyboard legend */}
+      <ShortcutLegend visible={showShortcuts} />
+
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative">
@@ -408,20 +662,6 @@ export function SnkrdunkMatchClient() {
             className="h-8 w-56 rounded-lg border border-border bg-muted/30 pl-8 pr-3 text-xs outline-none focus:ring-2 focus:ring-primary/30"
           />
         </div>
-
-        <select
-          value={statusFilter}
-          onChange={(e) => {
-            setStatusFilter(e.target.value);
-            setPage(1);
-          }}
-          className="h-8 rounded-lg border border-border bg-muted/30 px-2 text-xs"
-        >
-          <option value="">ทุก status</option>
-          <option value="pending">pending</option>
-          <option value="matched">matched</option>
-          <option value="rejected">rejected</option>
-        </select>
 
         <button
           onClick={() => fetchData()}
@@ -436,22 +676,79 @@ export function SnkrdunkMatchClient() {
         </span>
       </div>
 
+      {/* Bulk action bar */}
+      {someSelected && (
+        <div className="sticky top-0 z-20 flex items-center gap-3 rounded-xl border border-border bg-background/95 px-4 py-2.5 shadow-lg backdrop-blur">
+          <span className="text-sm font-medium">
+            เลือก {selected.size} รายการ
+          </span>
+          <div className="flex-1" />
+          <button
+            onClick={handleBulkReject}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-red-500/10 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-500/20"
+          >
+            <X className="size-3.5" />
+            ปฏิเสธ {selected.size} รายการ
+          </button>
+          <button
+            onClick={() => {
+              setSelected(new Set());
+              setFocusedIdx(-1);
+            }}
+            className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted"
+          >
+            <X className="size-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* Table */}
-      <div className="overflow-hidden rounded-xl border border-border">
+      <div ref={tableRef} className="overflow-hidden rounded-xl border border-border">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border bg-muted/30 text-xs text-muted-foreground">
-              <th className="py-2.5 pl-4 pr-2 text-left font-medium">
-                SNKRDUNK
+              <th className="w-10 py-2.5 pl-3 pr-1">
+                <input
+                  type="checkbox"
+                  checked={allOnPageSelected}
+                  onChange={toggleSelectAll}
+                  className="accent-primary"
+                  aria-label="Select all"
+                />
               </th>
-              <th className="px-2 py-2.5 text-left font-medium">
-                ราคา USD
+              <th className="py-2.5 pl-1 pr-2 text-left">
+                <SortableHeader
+                  label="SNKRDUNK"
+                  sortKey="product"
+                  ascKey="product-asc"
+                  descKey="product-desc"
+                  currentSort={sort}
+                  onSort={(s) => { setSort(s); setPage(1); }}
+                />
+              </th>
+              <th className="px-2 py-2.5 text-left">
+                <SortableHeader
+                  label="ราคา USD"
+                  sortKey="price"
+                  ascKey="price-desc"
+                  descKey="price-asc"
+                  currentSort={sort}
+                  onSort={(s) => { setSort(s); setPage(1); }}
+                />
               </th>
               <th className="px-2 py-2.5 text-left font-medium">
                 Match
               </th>
-              <th className="px-2 py-2.5 text-center font-medium">
-                Status
+              <th className="px-2 py-2.5 text-center">
+                <SortableHeader
+                  label="Status"
+                  sortKey="date"
+                  ascKey="date-desc"
+                  descKey="date-asc"
+                  currentSort={sort}
+                  onSort={(s) => { setSort(s); setPage(1); }}
+                  className="justify-center"
+                />
               </th>
               <th className="px-2 py-2.5 pr-4 text-right font-medium">
                 Actions
@@ -461,35 +758,54 @@ export function SnkrdunkMatchClient() {
           <tbody className="divide-y divide-border/30">
             {loading && mappings.length === 0 ? (
               <tr>
-                <td colSpan={5} className="py-12 text-center">
+                <td colSpan={6} className="py-12 text-center">
                   <Loader2 className="mx-auto size-6 animate-spin text-muted-foreground" />
                 </td>
               </tr>
             ) : mappings.length === 0 ? (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={6}
                   className="py-12 text-center text-xs text-muted-foreground"
                 >
                   ไม่พบรายการ
                 </td>
               </tr>
             ) : (
-              mappings.map((m) => {
+              mappings.map((m, idx) => {
                 const isSaving = saving.has(m.id);
                 const candidateId =
                   pickedCandidate[m.id] ?? m.matchedCardId;
+                const isFocused = focusedIdx === idx;
+                const isSelected = selected.has(m.id);
 
                 return (
                   <tr
                     key={m.id}
+                    data-row-idx={idx}
                     className={cn(
-                      "transition-colors hover:bg-muted/20",
-                      isSaving && "opacity-50"
+                      "transition-colors",
+                      isSaving && "opacity-50",
+                      idx % 2 === 1 && "bg-muted/10",
+                      isFocused && "ring-2 ring-inset ring-primary/40 bg-primary/5",
+                      isSelected && !isFocused && "bg-primary/5",
+                      !isFocused && "hover:bg-muted/20"
                     )}
+                    onClick={() => setFocusedIdx(idx)}
                   >
+                    {/* Checkbox */}
+                    <td className="py-3 pl-3 pr-1">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleSelect(m.id)}
+                        className="accent-primary"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </td>
+
                     {/* SNKRDUNK card info */}
-                    <td className="py-3 pl-4 pr-2">
+                    <td className="py-3 pl-1 pr-2">
                       <div className="flex items-start gap-2.5">
                         <CardThumb src={m.thumbnailUrl} />
                         <div className="min-w-0">
@@ -514,21 +830,7 @@ export function SnkrdunkMatchClient() {
 
                     {/* Prices */}
                     <td className="px-2 py-3">
-                      <div className="flex flex-col gap-0.5">
-                        <PriceTag
-                          label="Min"
-                          value={m.minPriceUsd}
-                        />
-                        <PriceTag
-                          label="Used"
-                          value={m.usedMinPriceUsd}
-                        />
-                        <PriceTag
-                          label="PSA10"
-                          value={m.lastSoldPsa10Usd}
-                          highlight
-                        />
-                      </div>
+                      <CompactPrices m={m} />
                     </td>
 
                     {/* Match */}
@@ -550,6 +852,10 @@ export function SnkrdunkMatchClient() {
                             )}
                           </div>
                         </div>
+                      ) : m.candidates.length === 0 ? (
+                        <span className="inline-flex items-center rounded-md bg-muted/50 px-2 py-0.5 text-xs text-muted-foreground">
+                          ไม่พบ candidate
+                        </span>
                       ) : (
                         <CandidatePicker
                           candidates={m.candidates}

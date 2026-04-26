@@ -6,19 +6,26 @@ import {
   Award,
   CalendarDays,
   ShoppingBag,
+  Target,
   Ticket,
   Trophy,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const HONEY_TABS = [
-  { href: "/admin/honey", label: "Overview", icon: Award, exact: true },
-  { href: "/admin/honey/shop", label: "Shop", icon: ShoppingBag },
-  { href: "/admin/honey/achievements", label: "Achievements", icon: Trophy },
-  { href: "/admin/honey/raffle", label: "Raffle", icon: Ticket },
-  { href: "/admin/honey/events", label: "Events", icon: CalendarDays },
+  { href: "/admin/honey", label: "ภาพรวม", icon: Award, exact: true },
+  { href: "/admin/honey/missions", label: "ภารกิจ", icon: Target },
+  { href: "/admin/honey/shop", label: "ร้านค้า", icon: ShoppingBag },
+  { href: "/admin/honey/achievements", label: "ความสำเร็จ", icon: Trophy },
+  { href: "/admin/honey/raffle", label: "สุ่มรางวัล", icon: Ticket },
+  { href: "/admin/honey/events", label: "อีเวนต์", icon: CalendarDays },
 ];
 
-export default function HoneyLayout({ children }: { children: React.ReactNode }) {
+export default function HoneyLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
 
   function isActive(href: string, exact?: boolean) {
@@ -35,13 +42,14 @@ export default function HoneyLayout({ children }: { children: React.ReactNode })
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+              className={cn(
+                "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                 active
                   ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:bg-background/50 hover:text-foreground"
-              }`}
+                  : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
+              )}
             >
-              <tab.icon className="h-4 w-4" />
+              <tab.icon className="size-4" />
               {tab.label}
             </Link>
           );

@@ -112,6 +112,12 @@ export function usePortfolioApi() {
     }
   }, [activeId])
 
+  const deleteTransaction = useCallback(async (txId: number) => {
+    const res = await fetch(`/api/portfolio/transactions?id=${txId}`, { method: "DELETE" })
+    if (!res.ok) throw new Error("Failed to delete transaction")
+    setTransactions((prev) => prev.filter((tx) => tx.id !== txId))
+  }, [])
+
   useEffect(() => {
     void load()
   }, [load])
@@ -164,6 +170,8 @@ export function usePortfolioApi() {
       .map((it) => ({
         name: getCardName(lang, it.card),
         value: (it.card.latestPriceJpy ?? 0) * it.quantity,
+        imageUrl: it.card.imageUrl,
+        cardCode: it.card.cardCode,
       }))
       .filter((d) => d.value > 0)
       .sort((a, b) => b.value - a.value)
@@ -175,7 +183,7 @@ export function usePortfolioApi() {
       percent: (d.value / stats.totalValueJpy) * 100,
     }))
     if (otherValue > 0) {
-      result.push({ name: t(lang, "other"), value: otherValue, percent: (otherValue / stats.totalValueJpy) * 100 })
+      result.push({ name: t(lang, "other"), value: otherValue, percent: (otherValue / stats.totalValueJpy) * 100, imageUrl: null, cardCode: "" })
     }
     return result
   }, [items, stats.totalValueJpy, lang])
@@ -206,6 +214,7 @@ export function usePortfolioApi() {
       id: p.id,
       name: p.name,
       totalValue: p.items.reduce((s, it) => s + (it.card.latestPriceJpy ?? 0) * it.quantity, 0),
+      totalCost: p.items.reduce((s, it) => s + (it.purchasePrice ?? 0) * it.quantity, 0),
       itemCount: p.items.length,
     })),
     [portfolios]
@@ -324,5 +333,6 @@ export function usePortfolioApi() {
     updateItem,
     removeItem,
     loadTransactions,
+    deleteTransaction,
   }
 }

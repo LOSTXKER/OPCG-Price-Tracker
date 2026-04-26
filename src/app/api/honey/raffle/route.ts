@@ -15,7 +15,24 @@ export const GET = apiHandler(async () => {
   const raffles = await getActiveRaffles();
   const month = currentMonthKey();
 
-  const allUserTickets = await getUserTicketsForMonth(user.id, month);
+  const raffleIds = raffles.map((r) => r.id);
+  const [allUserTickets, participantCounts] = await Promise.all([
+    getUserTicketsForMonth(user.id, month),
+    raffleIds.length > 0
+      ? prisma.raffleTicket.groupBy({
+          by: ["raffleId", "userId"],
+          where: { raffleId: { in: raffleIds } },
+        }).then((rows) => {
+          const map = new Map<number, Set<string>>();
+          for (const row of rows) {
+            let s = map.get(row.raffleId);
+            if (!s) { s = new Set(); map.set(row.raffleId, s); }
+            s.add(row.userId);
+          }
+          return map;
+        })
+      : Promise.resolve(new Map<number, Set<string>>()),
+  ]);
 
   const myTickets: Record<number, number> = {};
   let freeClaimedThisMonth = false;
@@ -78,8 +95,8 @@ export const GET = apiHandler(async () => {
       ticketCost: r.ticketCost,
       maxTickets: r.maxTickets,
       freeThreshold: r.freeThreshold,
-      totalTickets: r.tickets.length,
-      totalParticipants: new Set(r.tickets.map((t) => t.userId)).size,
+      totalTickets: r._count.tickets,
+      totalParticipants: participantCounts.get(r.id)?.size ?? 0,
     })),
     myTickets,
     ticketBalance,

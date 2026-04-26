@@ -10,12 +10,14 @@ import {
   Check,
   ImageIcon,
   History,
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatJpy } from "@/lib/utils/currency";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 interface Price {
   id: number;
@@ -59,30 +61,45 @@ interface CardData {
   candidates: { pIndex: number; url: string }[];
 }
 
-const TEXT_FIELDS: { key: string; label: string; type?: string; official?: boolean }[] = [
-  { key: "nameJp", label: "Name (JP)", official: true },
-  { key: "nameEn", label: "Name (EN)", official: true },
-  { key: "nameTh", label: "Name (TH)" },
-  { key: "rarity", label: "Rarity", official: true },
-  { key: "cardType", label: "Card Type", official: true },
-  { key: "color", label: "Color (JP)", official: true },
-  { key: "colorEn", label: "Color (EN)", official: true },
+const IDENTITY_FIELDS: {
+  key: string;
+  label: string;
+  type?: string;
+  official?: boolean;
+}[] = [
+  { key: "nameJp", label: "ชื่อ (JP)", official: true },
+  { key: "nameEn", label: "ชื่อ (EN)", official: true },
+  { key: "nameTh", label: "ชื่อ (TH)" },
+  { key: "rarity", label: "ระดับ", official: true },
+  { key: "cardType", label: "ประเภทการ์ด", official: true },
+  { key: "color", label: "สี (JP)", official: true },
+  { key: "colorEn", label: "สี (EN)", official: true },
+];
+
+const STATS_FIELDS: {
+  key: string;
+  label: string;
+  type?: string;
+  official?: boolean;
+}[] = [
   { key: "cost", label: "Cost", type: "number", official: true },
   { key: "power", label: "Power", type: "number", official: true },
   { key: "counter", label: "Counter", type: "number", official: true },
   { key: "life", label: "Life", type: "number", official: true },
   { key: "attribute", label: "Attribute", official: true },
   { key: "trait", label: "Trait", official: true },
-  { key: "artist", label: "Artist" },
-  { key: "imageUrl", label: "Image URL" },
+  { key: "artist", label: "ศิลปิน" },
+  { key: "imageUrl", label: "URL รูปภาพ" },
 ];
 
+const TEXT_FIELDS = [...IDENTITY_FIELDS, ...STATS_FIELDS];
+
 const TEXTAREA_FIELDS = [
-  { key: "effectJp", label: "Effect (JP)" },
-  { key: "effectEn", label: "Effect (EN)" },
-  { key: "effectTh", label: "Effect (TH)" },
-  { key: "triggerJp", label: "Trigger (JP)" },
-  { key: "triggerEn", label: "Trigger (EN)" },
+  { key: "effectJp", label: "ความสามารถ (JP)" },
+  { key: "effectEn", label: "ความสามารถ (EN)" },
+  { key: "effectTh", label: "ความสามารถ (TH)" },
+  { key: "triggerJp", label: "ทริกเกอร์ (JP)" },
+  { key: "triggerEn", label: "ทริกเกอร์ (EN)" },
 ];
 
 export function CardEditor({ card }: { card: CardData }) {
@@ -96,6 +113,7 @@ export function CardEditor({ card }: { card: CardData }) {
 
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
 
   function handleChange(key: string, value: string, type?: string) {
     let parsed: unknown = value;
@@ -104,6 +122,7 @@ export function CardEditor({ card }: { card: CardData }) {
     }
     setForm((p) => ({ ...p, [key]: parsed }));
     setSaved(false);
+    setHasChanges(true);
   }
 
   async function handleSave() {
@@ -112,13 +131,17 @@ export function CardEditor({ card }: { card: CardData }) {
       const payload: Record<string, unknown> = {};
       for (const f of [...TEXT_FIELDS, ...TEXTAREA_FIELDS]) {
         const val = form[f.key];
-        if (val !== ((card as unknown as Record<string, unknown>)[f.key] ?? "")) {
+        if (
+          val !==
+          ((card as unknown as Record<string, unknown>)[f.key] ?? "")
+        ) {
           payload[f.key] = val === "" ? null : val;
         }
       }
       if (Object.keys(payload).length === 0) {
         setSaved(true);
-        toast.info("No changes to save");
+        setHasChanges(false);
+        toast.info("ไม่มีการเปลี่ยนแปลง");
         return;
       }
       const res = await fetch(`/api/admin/cards/${card.id}`, {
@@ -128,13 +151,14 @@ export function CardEditor({ card }: { card: CardData }) {
       });
       if (!res.ok) {
         const data = await res.json();
-        toast.error(data.error || "Save failed");
+        toast.error(data.error || "บันทึกไม่สำเร็จ");
       } else {
         setSaved(true);
-        toast.success("Card saved");
+        setHasChanges(false);
+        toast.success("บันทึกการ์ดสำเร็จ");
       }
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Save failed");
+      toast.error(e instanceof Error ? e.message : "บันทึกไม่สำเร็จ");
     } finally {
       setSaving(false);
     }
@@ -151,9 +175,9 @@ export function CardEditor({ card }: { card: CardData }) {
       if (res.ok) {
         setForm((p) => ({ ...p, imageUrl: url }));
         setSaved(true);
-        toast.success("Image updated");
+        toast.success("อัปเดตรูปภาพสำเร็จ");
       } else {
-        toast.error(`Failed to update image: ${res.status}`);
+        toast.error(`อัปเดตรูปภาพไม่สำเร็จ: ${res.status}`);
       }
     } finally {
       setSaving(false);
@@ -164,9 +188,14 @@ export function CardEditor({ card }: { card: CardData }) {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon-sm" render={<Link href="/admin/cards" />}>
-          <ArrowLeft className="h-5 w-5" />
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          render={<Link href="/admin/cards" />}
+        >
+          <ArrowLeft className="size-5" />
         </Button>
         <div className="flex-1">
           <h1 className="min-w-0 break-words text-xl font-bold">
@@ -179,16 +208,24 @@ export function CardEditor({ card }: { card: CardData }) {
             {card.set.code.toUpperCase()} &middot; {card.cardCode}
           </p>
         </div>
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : saved ? (
-            <Check className="h-4 w-4" />
-          ) : (
-            <Save className="h-4 w-4" />
+        <div className="flex items-center gap-2">
+          {hasChanges && (
+            <span className="flex items-center gap-1 text-xs text-amber-500">
+              <AlertCircle className="size-3" />
+              มีการเปลี่ยนแปลง
+            </span>
           )}
-          {saved ? "Saved" : "Save"}
-        </Button>
+          <Button onClick={handleSave} disabled={saving}>
+            {saving ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : saved ? (
+              <Check className="size-4" />
+            ) : (
+              <Save className="size-4" />
+            )}
+            {saved ? "บันทึกแล้ว" : "บันทึก"}
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
@@ -206,26 +243,25 @@ export function CardEditor({ card }: { card: CardData }) {
               />
             ) : (
               <div className="flex aspect-[5/7] w-full items-center justify-center text-muted-foreground">
-                <ImageIcon className="h-12 w-12" />
+                <ImageIcon className="size-12" />
               </div>
             )}
           </div>
 
           {card.isParallel && card.candidates.length > 0 && (
             <div>
-              <h3 className="mb-2 text-sm font-semibold">
-                Parallel Candidates
-              </h3>
+              <h3 className="mb-2 text-sm font-semibold">รูป Parallel</h3>
               <div className="grid grid-cols-4 gap-1">
                 {card.candidates.map((c) => (
                   <button
                     key={c.pIndex}
                     onClick={() => selectCandidate(c.pIndex, c.url)}
-                    className={`overflow-hidden rounded border transition-all ${
+                    className={cn(
+                      "overflow-hidden rounded border transition-all",
                       currentImage === c.url
                         ? "border-primary ring-2 ring-primary/30"
-                        : "border-border/50 hover:border-primary/50"
-                    }`}
+                        : "border-border/50 hover:border-primary/50",
+                    )}
                     title={`_p${c.pIndex}`}
                   >
                     <Image
@@ -245,51 +281,65 @@ export function CardEditor({ card }: { card: CardData }) {
             </div>
           )}
 
-          <div className="text-xs text-muted-foreground">
-            <p>Yuyu-tei ID: {card.yuyuteiId || "—"}</p>
+          <div className="space-y-1 text-xs text-muted-foreground">
+            <p>Yuyutei ID: {card.yuyuteiId || "—"}</p>
             <p>Parallel Index: {card.parallelIndex ?? "—"}</p>
-            <p>Price: {card.latestPriceJpy != null ? formatJpy(card.latestPriceJpy) : "—"}</p>
+            <p>
+              ราคา:{" "}
+              {card.latestPriceJpy != null
+                ? formatJpy(card.latestPriceJpy)
+                : "—"}
+            </p>
           </div>
         </div>
 
         {/* Form Fields */}
         <div className="space-y-6">
+          {/* Identity */}
           <Card>
             <CardHeader className="border-b">
-              <CardTitle>Card Details</CardTitle>
+              <CardTitle className="text-base">ข้อมูลการ์ด</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {TEXT_FIELDS.map((f) => (
-                  <div key={f.key} className="space-y-1.5">
-                    <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                      {f.label}
-                      {f.official && (
-                        <span className="rounded bg-green-500/10 px-1 py-px text-xs font-medium text-green-600 dark:text-green-400">
-                          Official
-                        </span>
-                      )}
-                    </label>
-                    <Input
-                      type={f.type === "number" ? "number" : "text"}
-                      value={String(form[f.key] ?? "")}
-                      onChange={(e) =>
-                        handleChange(f.key, e.target.value, f.type)
-                      }
-                      className={f.official ? "border-green-500/20" : ""}
-                    />
-                  </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {IDENTITY_FIELDS.map((f) => (
+                  <FieldInput
+                    key={f.key}
+                    field={f}
+                    value={form[f.key]}
+                    onChange={handleChange}
+                  />
                 ))}
               </div>
             </CardContent>
           </Card>
 
+          {/* Stats */}
           <Card>
             <CardHeader className="border-b">
-              <CardTitle>Text Content</CardTitle>
+              <CardTitle className="text-base">สถิติและรายละเอียด</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2">
+                {STATS_FIELDS.map((f) => (
+                  <FieldInput
+                    key={f.key}
+                    field={f}
+                    value={form[f.key]}
+                    onChange={handleChange}
+                  />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Text Content */}
+          <Card>
+            <CardHeader className="border-b">
+              <CardTitle className="text-base">ข้อความ</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 sm:grid-cols-2">
                 {TEXTAREA_FIELDS.map((f) => (
                   <div key={f.key} className="space-y-1.5">
                     <label className="text-xs font-medium text-muted-foreground">
@@ -311,9 +361,9 @@ export function CardEditor({ card }: { card: CardData }) {
           {card.prices.length > 0 && (
             <Card>
               <CardHeader className="border-b">
-                <CardTitle className="flex items-center gap-2">
-                  <History className="h-4 w-4 text-muted-foreground" />
-                  Price History (last {card.prices.length})
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <History className="size-4 text-muted-foreground" />
+                  ประวัติราคา ({card.prices.length} รายการ)
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -321,19 +371,21 @@ export function CardEditor({ card }: { card: CardData }) {
                   <table className="w-full text-xs">
                     <thead>
                       <tr className="border-b text-muted-foreground">
-                        <th className="pb-1 text-left">Date</th>
-                        <th className="pb-1 text-left">Source</th>
-                        <th className="pb-1 text-right">Price</th>
+                        <th className="pb-1 text-left">วันที่</th>
+                        <th className="pb-1 text-left">แหล่งข้อมูล</th>
+                        <th className="pb-1 text-right">ราคา</th>
                       </tr>
                     </thead>
                     <tbody>
                       {card.prices.map((p) => (
                         <tr
                           key={p.id}
-                          className="border-b border-border/20"
+                          className="border-b border-border/10"
                         >
                           <td className="py-1">
-                            {new Date(p.scrapedAt).toLocaleDateString()}
+                            {new Date(p.scrapedAt).toLocaleDateString(
+                              "th-TH",
+                            )}
                           </td>
                           <td className="py-1">{p.source}</td>
                           <td className="py-1 text-right tabular-nums">
@@ -351,6 +403,35 @@ export function CardEditor({ card }: { card: CardData }) {
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function FieldInput({
+  field,
+  value,
+  onChange,
+}: {
+  field: { key: string; label: string; type?: string; official?: boolean };
+  value: unknown;
+  onChange: (key: string, value: string, type?: string) => void;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+        {field.label}
+        {field.official && (
+          <span className="rounded bg-green-500/10 px-1 py-px text-xs font-medium text-green-600 dark:text-green-400">
+            Official
+          </span>
+        )}
+      </label>
+      <Input
+        type={field.type === "number" ? "number" : "text"}
+        value={String(value ?? "")}
+        onChange={(e) => onChange(field.key, e.target.value, field.type)}
+        className={field.official ? "border-green-500/20" : ""}
+      />
     </div>
   );
 }

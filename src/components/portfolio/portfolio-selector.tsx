@@ -1,13 +1,29 @@
 "use client"
 
 import { useState } from "react"
-import { Check, Edit2, Plus, Trash2, X, Wallet } from "lucide-react"
+import Link from "next/link"
+import { Check, Crown, Edit2, MoreHorizontal, Plus, Sparkles, Trash2, X, Wallet } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
-import { formatJpyAmount } from "@/lib/utils/currency"
-import { LimitCounter } from "@/components/shared/limit-counter"
-import { UpgradeBadge } from "@/components/shared/upgrade-badge"
+import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useConfirm } from "@/components/shared/confirm-dialog"
 
 export type { PortfolioMeta } from "@/lib/types/portfolio"
 import type { PortfolioMeta } from "@/lib/types/portfolio"
@@ -37,6 +53,31 @@ export function PortfolioSidebar({
   const [editName, setEditName] = useState("")
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
+  const confirm = useConfirm()
+
+  const handleDelete = async (p: PortfolioMeta) => {
+    if (p.itemCount > 0) {
+      await confirm({
+        title: t(lang, "deletePortfolio"),
+        description: t(lang, "portfolioHasCards"),
+        confirmLabel: "OK",
+        variant: "default",
+      })
+      return
+    }
+    const ok = await confirm({
+      title: `${t(lang, "remove")} "${p.name}"`,
+      description: t(lang, "confirmDeletePortfolio"),
+      confirmLabel: t(lang, "remove"),
+      cancelLabel: t(lang, "cancel"),
+      variant: "destructive",
+    })
+    if (ok) onDelete(p.id)
+  }
+
+  const atLimit = maxPortfolios != null && isFinite(maxPortfolios) && portfolios.length >= maxPortfolios
+  const hasLimit = maxPortfolios != null && isFinite(maxPortfolios)
+  const [upgradeOpen, setUpgradeOpen] = useState(false)
 
   return (
     <div className="p-1.5">
@@ -47,7 +88,7 @@ export function PortfolioSidebar({
           return (
             <form
               key={p.id}
-              className="flex items-center gap-1 px-2.5 py-2"
+              className="flex items-center gap-1 px-2 py-1.5"
               onSubmit={(e) => {
                 e.preventDefault()
                 if (editName.trim()) {
@@ -58,14 +99,15 @@ export function PortfolioSidebar({
             >
               <input
                 autoFocus
-                className="flex-1 rounded bg-muted px-2 py-1 text-sm outline-none"
+                className="flex-1 rounded-md border border-border bg-background px-2 py-1.5 text-sm outline-none ring-primary/30 transition-shadow focus:ring-2"
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Escape") setEditingId(null) }}
               />
-              <button type="submit" className="rounded p-1 text-muted-foreground hover:text-foreground">
+              <button type="submit" className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
                 <Check className="size-3.5" />
               </button>
-              <button type="button" onClick={() => setEditingId(null)} className="rounded p-1 text-muted-foreground hover:text-foreground">
+              <button type="button" onClick={() => setEditingId(null)} className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
                 <X className="size-3.5" />
               </button>
             </form>
@@ -76,61 +118,72 @@ export function PortfolioSidebar({
           <div
             key={p.id}
             className={cn(
-              "group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all cursor-pointer",
+              "group relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-all cursor-pointer",
               isActive
                 ? "bg-primary/6"
                 : "hover:bg-muted/50"
             )}
             onClick={() => onSelect(p.id)}
           >
+            {isActive && (
+              <div className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-primary" />
+            )}
             <div className={cn(
-              "flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors",
+              "flex size-7 shrink-0 items-center justify-center rounded-lg transition-colors",
               isActive ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
             )}>
-              <Wallet className="size-4" />
+              <Wallet className="size-3.5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className={cn("truncate text-sm", isActive ? "font-semibold" : "font-medium")}>
+              <p className={cn("truncate text-sm leading-tight", isActive ? "font-semibold" : "font-medium")}>
                 {p.name}
               </p>
-              <p className="text-xs text-muted-foreground">
-                {hideBalance ? "••••" : formatJpyAmount(p.totalValue, currency)}
-              </p>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[11px] text-muted-foreground">
+                  {hideBalance ? "••••" : formatJpyAmount(p.totalValue, currency)}
+                </span>
+                {!hideBalance && p.totalCost > 0 && (() => {
+                  const pnlPct = ((p.totalValue - p.totalCost) / p.totalCost) * 100
+                  return (
+                    <span className={cn(
+                      "font-price text-[10px] font-medium tabular-nums",
+                      pnlPct >= 0 ? "text-price-up" : "text-price-down"
+                    )}>
+                      {pnlPct >= 0 ? "+" : ""}{formatPct(pnlPct, 1)}%
+                    </span>
+                  )
+                })()}
+              </div>
             </div>
-            <div className="flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
-              <button
-                onClick={(e) => { e.stopPropagation(); setEditingId(p.id); setEditName(p.name) }}
-                className="rounded p-1 text-muted-foreground hover:text-foreground"
-              >
-                <Edit2 className="size-3" />
-              </button>
-              {portfolios.length > 1 && (
-                <button
-                  onClick={(e) => { e.stopPropagation(); onDelete(p.id) }}
-                  className="rounded p-1 text-muted-foreground hover:text-destructive"
+            {isActive && (
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  onClick={(e) => e.stopPropagation()}
+                  className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 >
-                  <Trash2 className="size-3" />
-                </button>
-              )}
-            </div>
+                  <MoreHorizontal className="size-3.5" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" side="bottom" sideOffset={4}>
+                  <DropdownMenuItem onClick={() => { setEditingId(p.id); setEditName(p.name) }}>
+                    <Edit2 />
+                    {t(lang, "edit")}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem variant="destructive" onClick={() => void handleDelete(p)}>
+                    <Trash2 />
+                    {t(lang, "deletePortfolio")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         )
       })}
 
-      {/* Create new */}
-      {maxPortfolios != null && isFinite(maxPortfolios) && (
-        <div className="flex items-center justify-end px-3 pb-1 pt-2">
-          <LimitCounter current={portfolios.length} max={maxPortfolios} />
-        </div>
-      )}
-      {maxPortfolios != null && isFinite(maxPortfolios) && portfolios.length >= maxPortfolios ? (
-        <div className="flex items-center justify-center gap-2 px-3 py-2.5 text-xs text-muted-foreground">
-          <span>{t(lang, "limitReached")}</span>
-          <UpgradeBadge />
-        </div>
-      ) : creating ? (
+      {/* Add portfolio */}
+      {creating ? (
         <form
-          className="flex items-center gap-1 px-2.5 py-2"
+          className="flex items-center gap-1 px-2 py-1.5"
           onSubmit={(e) => {
             e.preventDefault()
             if (newName.trim()) {
@@ -143,28 +196,56 @@ export function PortfolioSidebar({
           <input
             autoFocus
             placeholder={t(lang, "portfolioName")}
-            className="flex-1 rounded bg-muted px-2 py-1 text-sm outline-none placeholder:text-muted-foreground/60"
+            className="flex-1 rounded-md border border-border bg-background px-2 py-1.5 text-sm outline-none ring-primary/30 transition-shadow placeholder:text-muted-foreground/60 focus:ring-2"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Escape") setCreating(false) }}
           />
-          <button type="submit" className="rounded p-1 text-muted-foreground hover:text-foreground">
+          <button type="submit" className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
             <Check className="size-3.5" />
           </button>
-          <button type="button" onClick={() => setCreating(false)} className="rounded p-1 text-muted-foreground hover:text-foreground">
+          <button type="button" onClick={() => setCreating(false)} className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
             <X className="size-3.5" />
           </button>
         </form>
       ) : (
-        <button
-          onClick={() => setCreating(true)}
-          className="flex w-full items-center gap-2.5 rounded-lg border border-dashed border-border/60 px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-foreground"
-        >
-          <div className="flex size-8 items-center justify-center rounded-lg bg-muted">
-            <Plus className="size-3.5" />
-          </div>
-          {t(lang, "createPortfolio")}
-        </button>
+        <div className="mt-0.5 px-1">
+          <button
+            onClick={() => atLimit ? setUpgradeOpen(true) : setCreating(true)}
+            className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+          >
+            <div className="flex size-7 items-center justify-center rounded-lg border border-dashed border-border/60">
+              <Plus className="size-3.5" />
+            </div>
+            <span className="text-xs font-medium">{t(lang, "createPortfolio")}</span>
+          </button>
+        </div>
       )}
+
+      <Dialog open={upgradeOpen} onOpenChange={setUpgradeOpen}>
+        <DialogContent className="sm:max-w-xs">
+          <DialogHeader className="items-center text-center">
+            <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-primary/10">
+              <Crown className="size-5 text-primary" />
+            </div>
+            <DialogTitle>{t(lang, "portfolioLimitReached")}</DialogTitle>
+            <DialogDescription className="text-center">
+              {t(lang, "limitReachedUpgrade")}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-2 sm:justify-center">
+            <Button variant="outline" size="sm" onClick={() => setUpgradeOpen(false)}>
+              {t(lang, "cancel")}
+            </Button>
+            <Button size="sm" className="gap-1.5" onClick={() => setUpgradeOpen(false)}>
+              <Link href="/pricing" className="flex items-center gap-1.5">
+                <Sparkles className="size-3" />
+                {t(lang, "upgradePlan")}
+              </Link>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

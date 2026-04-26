@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
+import { parseJsonBody } from "@/lib/api/admin-helpers";
 import { adminApiHandler } from "@/lib/api/api-handler";
-import { getAdminUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { BlogCategory } from "@/generated/prisma/client";
 
@@ -12,7 +11,7 @@ const BLOG_CATEGORY_MAP: Record<string, BlogCategory> = {
   news: BlogCategory.NEWS,
 };
 
-export const POST = adminApiHandler(async (req: NextRequest) => {
+export const POST = adminApiHandler(async (req: NextRequest, admin) => {
   const parsed = await parseJsonBody<{
     title: string; slug: string; excerpt: string; content: string;
     coverImage?: string; category: string; tags?: string[]; published?: boolean;
@@ -24,11 +23,6 @@ export const POST = adminApiHandler(async (req: NextRequest) => {
   const blogCategory = BLOG_CATEGORY_MAP[category as string];
   if (!title || !slug || !excerpt || !content || !blogCategory) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
-  }
-
-  const admin = await getAdminUser();
-  if (!admin) {
-    return unauthorized();
   }
 
   const post = await prisma.blogPost.create({

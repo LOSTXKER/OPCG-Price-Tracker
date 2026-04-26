@@ -143,6 +143,23 @@
   border-top: 2px solid var(--primary);
 }
 
+.panel-hero {
+  background: linear-gradient(135deg, var(--card) 0%, color-mix(in srgb, var(--primary) 6%, var(--card)) 100%);
+  border-top: 2px solid var(--primary);
+}
+
+.dark .panel-hero {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 4%, var(--card)) 0%, color-mix(in srgb, var(--primary) 10%, var(--card)) 100%);
+}
+
+.stat-card {
+  background: color-mix(in srgb, var(--primary) 3%, var(--card));
+}
+
+.dark .stat-card {
+  background: color-mix(in srgb, var(--primary) 5%, var(--card));
+}
+
 .page-header {
   font-size: 1.5rem;
   line-height: 2rem;

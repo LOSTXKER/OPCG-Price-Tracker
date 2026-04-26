@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { apiHandler } from "@/lib/api/api-handler";
 import { createClient } from "@supabase/supabase-js";
 import { requireAuthUser } from "@/lib/api/auth";
 import { prisma } from "@/lib/db";
@@ -28,7 +29,7 @@ async function ensureBucket(supabase: ReturnType<typeof getSupabaseAdmin>) {
   }
 }
 
-export async function POST(req: NextRequest) {
+export const POST = apiHandler(async (req: NextRequest) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -76,4 +77,4 @@ export async function POST(req: NextRequest) {
     log.error("POST /api/me/avatar", error);
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });
   }
-}
+});

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { useConfirm } from "@/components/admin/confirm-dialog";
 import {
   Plus,
   Pencil,
@@ -77,6 +78,7 @@ const filterSelectClass =
   "h-9 w-full rounded-lg border border-input bg-transparent px-3 py-1.5 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 dark:bg-input/30";
 
 export function HoneyShopManager({ initialItems }: { initialItems: ShopItem[] }) {
+  const confirmDialog = useConfirm();
   const [items, setItems] = useState<ShopItem[]>(initialItems);
   const [editing, setEditing] = useState<number | "new" | null>(null);
   const [form, setForm] = useState<FormData>(emptyForm);
@@ -169,7 +171,8 @@ export function HoneyShopManager({ initialItems }: { initialItems: ShopItem[] })
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Deactivate this item?")) return;
+    const ok = await confirmDialog({ title: "ปิดใช้งานสินค้า", description: "ต้องการปิดใช้งานสินค้านี้หรือไม่?", confirmLabel: "ปิดใช้งาน", variant: "destructive" });
+    if (!ok) return;
     await fetch(`/api/admin/honey/shop/${id}`, { method: "DELETE" });
     toast.success("Item deactivated");
     await reload();

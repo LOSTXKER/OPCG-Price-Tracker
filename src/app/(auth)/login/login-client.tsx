@@ -12,6 +12,7 @@ import { Logo } from "@/components/brand/logo"
 import { createClient } from "@/lib/supabase/client"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
+import { isAuthBypassed } from "@/lib/env"
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),
@@ -26,7 +27,7 @@ export function LoginClient() {
   const authError = searchParams.get("error")
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_BYPASS_AUTH === "true") {
+    if (isAuthBypassed()) {
       router.replace(redirect)
     }
   }, [router, redirect])

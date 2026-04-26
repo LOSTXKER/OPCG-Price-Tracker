@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { earnHoney } from "@/lib/honey";
 
 const TRIAL_DAYS = 14;
 
-export async function POST() {
+export const POST = apiHandler(async () => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const user = auth.user;
@@ -38,4 +39,4 @@ export async function POST() {
     tier: "PRO",
     trialEndsAt: trialEnd.toISOString(),
   });
-}
+});

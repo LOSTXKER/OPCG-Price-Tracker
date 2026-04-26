@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { unauthorized } from "@/lib/api/admin-helpers";
 import { adminApiHandler } from "@/lib/api/api-handler";
-import { getAdminUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { logAudit } from "@/lib/audit";
 
@@ -17,7 +15,7 @@ const CONFIG_KEYS = [
   "notification_line_enabled",
 ] as const;
 
-export const GET = adminApiHandler(async (_req: NextRequest) => {
+export const GET = adminApiHandler(async (_req: NextRequest, _admin) => {
   const configs = await prisma.systemConfig.findMany({
     where: { key: { in: [...CONFIG_KEYS] } },
   });
@@ -28,10 +26,7 @@ export const GET = adminApiHandler(async (_req: NextRequest) => {
   return NextResponse.json({ config: configMap });
 });
 
-export const PUT = adminApiHandler(async (request: NextRequest) => {
-  const admin = await getAdminUser();
-  if (!admin) return unauthorized();
-
+export const PUT = adminApiHandler(async (request: NextRequest, admin) => {
   const body = await request.json() as Record<string, string>;
 
   const updates = Object.entries(body).filter(

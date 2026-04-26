@@ -1,4 +1,5 @@
 import { getAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { createLog } from "@/lib/logger";
@@ -7,10 +8,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:cards");
 
-export async function GET(
+export const GET = apiHandler(async (
   request: NextRequest,
   { params }: { params: Promise<{ code: string }> }
-) {
+) => {
   const { code } = await params;
   const period = request.nextUrl.searchParams.get("period") || "7d";
   const source = request.nextUrl.searchParams.get("source") || undefined;
@@ -122,4 +123,4 @@ export async function GET(
       { status: 500 }
     );
   }
-}
+});

@@ -3,7 +3,7 @@ import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
-import { earnHoney, canCheckinToday, spendHoney, getHoneyMultiplier } from "@/lib/honey";
+import { earnHoney, canCheckinToday, getHoneyMultiplier } from "@/lib/honey";
 import { fulfillRedemption } from "@/lib/honey/fulfillment";
 import { getHoneyLevel } from "@/lib/honey/levels";
 
@@ -89,27 +89,46 @@ export const POST = apiHandler(async (request) => {
       return NextResponse.json({ error: "Out of stock" }, { status: 400 });
     }
 
-    const result = await spendHoney(
-      user.id,
-      item.cost,
-      `Redeemed: ${item.name}`,
-      { itemId: item.id, itemType: item.type },
-    );
+    const currentUser = await prisma.user.findUniqueOrThrow({
+      where: { id: user.id },
+      select: { honeyPoints: true },
+    });
 
-    if (!result.success) {
-      return NextResponse.json({ error: "Insufficient honey", required: item.cost, current: result.total }, { status: 400 });
+    if (currentUser.honeyPoints < item.cost) {
+      return NextResponse.json({ error: "Insufficient honey", required: item.cost, current: currentUser.honeyPoints }, { status: 400 });
     }
 
-    if (item.stock != null) {
-      await prisma.honeyShopItem.update({
-        where: { id: item.id },
-        data: { stock: { decrement: 1 } },
-      });
-    }
+    const txOps = [
+      prisma.user.update({
+        where: { id: user.id },
+        data: {
+          honeyPoints: { decrement: item.cost },
+        },
+      }),
+      prisma.honeyTransaction.create({
+        data: {
+          userId: user.id,
+          amount: -item.cost,
+          type: "REDEEM",
+          reason: `Redeemed: ${item.name}`,
+          metadata: { itemId: item.id, itemType: item.type },
+        },
+      }),
+      ...(item.stock != null
+        ? [
+            prisma.honeyShopItem.update({
+              where: { id: item.id },
+              data: { stock: { decrement: 1 } },
+            }),
+          ]
+        : []),
+    ];
+
+    const [updatedUser] = await prisma.$transaction(txOps);
 
     await fulfillRedemption(user.id, item);
 
-    return NextResponse.json({ success: true, total: result.total });
+    return NextResponse.json({ success: true, total: (updatedUser as { honeyPoints: number }).honeyPoints });
   }
 
   return NextResponse.json({ error: "Unknown action" }, { status: 400 });

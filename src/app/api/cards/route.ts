@@ -1,3 +1,4 @@
+import { apiHandler } from "@/lib/api/api-handler";
 import { parsePageLimit } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
@@ -6,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:cards");
 
-export async function GET(request: NextRequest) {
+export const GET = apiHandler(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
   const search = searchParams.get("search") || "";
   const set = searchParams.get("set") || "";
@@ -160,4 +161,4 @@ export async function GET(request: NextRequest) {
     log.error("Error fetching cards", error);
     return NextResponse.json({ error: "Failed to fetch cards" }, { status: 500 });
   }
-}
+});

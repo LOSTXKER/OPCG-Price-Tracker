@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { apiHandler } from "@/lib/api/api-handler";
 import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
@@ -6,7 +7,7 @@ import { createLog } from "@/lib/logger";
 
 const log = createLog("api:me:cancel-reason");
 
-export async function POST(request: NextRequest) {
+export const POST = apiHandler(async (request: NextRequest) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -36,4 +37,4 @@ export async function POST(request: NextRequest) {
     log.error("POST /api/me/cancel-reason", error);
     return NextResponse.json({ error: "Failed to save" }, { status: 500 });
   }
-}
+});

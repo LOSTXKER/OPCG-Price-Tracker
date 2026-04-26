@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 
-export async function GET(request: NextRequest) {
+export const GET = apiHandler(async (request: NextRequest) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
@@ -26,4 +27,4 @@ export async function GET(request: NextRequest) {
     unreadCount,
     nextCursor: notifications.length === limit ? notifications[notifications.length - 1]?.id : null,
   });
-}
+});

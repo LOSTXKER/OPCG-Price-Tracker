@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { effectiveTier, getLimits } from "@/lib/tier";
 
-export async function POST(request: NextRequest) {
+export const POST = apiHandler(async (request: NextRequest) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
@@ -80,4 +81,4 @@ export async function POST(request: NextRequest) {
     notFound,
     usage: { used: usedToday + cleanCodes.length, limit: limits.bulkPriceLookup },
   });
-}
+});

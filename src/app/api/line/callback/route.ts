@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { requireAuthUser } from "@/lib/api/auth";
 import { serverEnv, clientEnv } from "@/lib/env";
@@ -6,7 +7,7 @@ import { createLog } from "@/lib/logger";
 
 const log = createLog("api:line");
 
-export async function GET(request: NextRequest) {
+export const GET = apiHandler(async (request: NextRequest) => {
   const code = request.nextUrl.searchParams.get("code");
   const baseUrl = clientEnv().NEXT_PUBLIC_APP_URL;
 
@@ -62,4 +63,4 @@ export async function GET(request: NextRequest) {
     log.error("callback error", err);
     return NextResponse.redirect(`${baseUrl}/profile?tab=notifications&line=error`);
   }
-}
+});

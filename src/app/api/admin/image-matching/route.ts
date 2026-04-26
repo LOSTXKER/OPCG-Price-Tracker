@@ -8,9 +8,10 @@ import { opcgConfig } from "@/lib/game-config";
 const BANDAI_BASE = opcgConfig.officialCardImageBase!;
 const log = createLog("admin:image-matching");
 
-export const GET = adminApiHandler(async (request: NextRequest) => {
+export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
   const sp = request.nextUrl.searchParams;
   const setFilter = sp.get("set") || "";
+  const matchedFilter = sp.get("matched"); // "true" | "false" | null (all)
   const page = Math.max(1, parseInt(sp.get("page") || "1", 10) || 1);
   const limit = 20;
   const skip = (page - 1) * limit;
@@ -19,8 +20,23 @@ export const GET = adminApiHandler(async (request: NextRequest) => {
   if (setFilter) {
     where.set = { code: setFilter };
   }
+  if (matchedFilter === "true") {
+    where.parallelIndex = { not: null };
+  } else if (matchedFilter === "false") {
+    where.parallelIndex = null;
+  }
 
-  const [cards, total, sets] = await Promise.all([
+  const matchedWhere: Record<string, unknown> = { isParallel: true, parallelIndex: { not: null } };
+  if (setFilter) {
+    matchedWhere.set = { code: setFilter };
+  }
+
+  const totalWhere: Record<string, unknown> = { isParallel: true };
+  if (setFilter) {
+    totalWhere.set = { code: setFilter };
+  }
+
+  const [cards, total, matchedCount, totalAll, sets] = await Promise.all([
     prisma.card.findMany({
       where,
       orderBy: [{ baseCode: "asc" }, { parallelIndex: "asc" }],
@@ -41,6 +57,8 @@ export const GET = adminApiHandler(async (request: NextRequest) => {
       },
     }),
     prisma.card.count({ where }),
+    prisma.card.count({ where: matchedWhere }),
+    prisma.card.count({ where: totalWhere }),
     prisma.cardSet.findMany({
       select: { code: true, name: true, nameEn: true },
       orderBy: { code: "asc" },
@@ -68,6 +86,8 @@ export const GET = adminApiHandler(async (request: NextRequest) => {
   return NextResponse.json({
     cards: enriched,
     total,
+    matchedCount,
+    totalAll,
     page,
     limit,
     totalPages: Math.ceil(total / limit),
@@ -75,7 +95,7 @@ export const GET = adminApiHandler(async (request: NextRequest) => {
   });
 });
 
-export const PATCH = adminApiHandler(async (request: NextRequest) => {
+export const PATCH = adminApiHandler(async (request: NextRequest, _admin) => {
   const parsed = await parseJsonBody<{
     cardId: number;
     parallelIndex: number;

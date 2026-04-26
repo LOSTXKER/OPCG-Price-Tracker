@@ -1,6 +1,7 @@
 import { ListingStatus, OrderStatus } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { createClient } from "@/lib/supabase/server";
+import { isAuthBypassed } from "@/lib/env";
 
 const RARE_RARITIES = ["SR", "SEC", "L", "SP", "P-SR", "P-SEC"];
 
@@ -81,8 +82,8 @@ export type ProfilePrivacyFlags = {
  */
 export async function resolveIsOwner(profileUserId: string): Promise<boolean> {
   try {
-    if (process.env.NEXT_PUBLIC_BYPASS_AUTH === "true") {
-      const firstUser = await prisma.user.findFirst({ select: { id: true } });
+    if (isAuthBypassed()) {
+      const firstUser = await prisma.user.findFirst({ orderBy: { createdAt: "asc" }, select: { id: true } });
       return firstUser?.id === profileUserId;
     }
     const supabase = await createClient();
@@ -182,8 +183,8 @@ export async function loadPublicProfileData(user: ProfileUserSelect, isOwner: bo
   let viewerId: string | null = null;
   if (!isOwner) {
     try {
-      if (process.env.NEXT_PUBLIC_BYPASS_AUTH === "true") {
-        const first = await prisma.user.findFirst({ select: { id: true } });
+      if (isAuthBypassed()) {
+        const first = await prisma.user.findFirst({ orderBy: { createdAt: "asc" }, select: { id: true } });
         viewerId = first?.id ?? null;
       } else {
         const supabase = await createClient();

@@ -13,7 +13,7 @@ export async function getActiveRaffles() {
     where: { isActive: true, month },
     orderBy: { sortOrder: "asc" },
     include: {
-      tickets: { select: { id: true, userId: true, isFree: true } },
+      _count: { select: { tickets: true } },
     },
   });
 }

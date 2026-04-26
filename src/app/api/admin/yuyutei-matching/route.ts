@@ -1,7 +1,6 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
-import { unauthorized, actionStamp, parseJsonBody } from "@/lib/api/admin-helpers";
+import { actionStamp, parseJsonBody } from "@/lib/api/admin-helpers";
 import { adminApiHandler } from "@/lib/api/api-handler";
-import { getAdminUser } from "@/lib/auth";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { prisma } from "@/lib/db";
 import { parsePageLimit } from "@/lib/api/request-body";
@@ -15,10 +14,7 @@ const VALID_STATUSES = new Set(["pending", "suggested", "matched", "rejected"]);
 /**
  * GET /api/admin/yuyutei-matching?set=&status=&page=
  */
-export const GET = adminApiHandler(async (request: NextRequest) => {
-  const admin = await getAdminUser();
-  if (!admin) return unauthorized();
-
+export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
   const sp = request.nextUrl.searchParams;
 
   if (sp.get("summary") === "true") {
@@ -216,10 +212,7 @@ export const GET = adminApiHandler(async (request: NextRequest) => {
 /**
  * PATCH /api/admin/yuyutei-matching
  */
-export const PATCH = adminApiHandler(async (request: NextRequest) => {
-  const admin = await getAdminUser();
-  if (!admin) return unauthorized();
-
+export const PATCH = adminApiHandler(async (request: NextRequest, admin) => {
   const parsed = await parseJsonBody<{
     action?: string; set?: string; ids?: number[]; overrides?: Record<string, number>;
     id?: number; matchedCardId?: number;
@@ -371,10 +364,7 @@ export const PATCH = adminApiHandler(async (request: NextRequest) => {
 /**
  * DELETE /api/admin/yuyutei-matching  { id }
  */
-export const DELETE = adminApiHandler(async (request: NextRequest) => {
-  const admin = await getAdminUser();
-  if (!admin) return unauthorized();
-
+export const DELETE = adminApiHandler(async (request: NextRequest, admin) => {
   const parsed = await parseJsonBody<{ id: number }>(request);
   if (!parsed.ok) return parsed.response;
   const { id } = parsed.body;

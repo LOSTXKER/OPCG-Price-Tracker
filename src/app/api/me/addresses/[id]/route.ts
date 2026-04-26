@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { apiHandler } from "@/lib/api/api-handler";
 import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
@@ -6,10 +7,10 @@ import { createLog } from "@/lib/logger";
 
 const log = createLog("api:me:addresses:id");
 
-export async function PATCH(
+export const PATCH = apiHandler(async (
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
-) {
+) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -64,12 +65,12 @@ export async function PATCH(
     log.error("PATCH /api/me/addresses/[id]", error);
     return NextResponse.json({ error: "Failed to update address" }, { status: 500 });
   }
-}
+});
 
-export async function DELETE(
+export const DELETE = apiHandler(async (
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
-) {
+) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -89,4 +90,4 @@ export async function DELETE(
     log.error("DELETE /api/me/addresses/[id]", error);
     return NextResponse.json({ error: "Failed to delete address" }, { status: 500 });
   }
-}
+});

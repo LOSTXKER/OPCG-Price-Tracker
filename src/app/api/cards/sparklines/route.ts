@@ -1,10 +1,11 @@
+import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:cards");
 
-export async function GET(request: NextRequest) {
+export const GET = apiHandler(async (request: NextRequest) => {
   const ids = request.nextUrl.searchParams.get("ids") || "";
   if (!ids) {
     return NextResponse.json({ sparklines: {} });
@@ -59,4 +60,4 @@ export async function GET(request: NextRequest) {
     log.error("Error fetching sparklines", error);
     return NextResponse.json({ sparklines: {} });
   }
-}
+});

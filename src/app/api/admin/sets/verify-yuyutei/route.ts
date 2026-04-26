@@ -18,7 +18,7 @@ import { matchCardImage, type MatchCandidate } from "@/lib/scraper/gemini-matche
  * Stores all results in YuyuteiMapping for admin review.
  * Does NOT update prices — use scrape-prices for that.
  */
-export const POST = adminApiHandler(async (request: NextRequest) => {
+export const POST = adminApiHandler(async (request: NextRequest, _admin) => {
   const parsed = await parseJsonBody<{ setCode?: string }>(request);
   if (!parsed.ok) return parsed.response;
 

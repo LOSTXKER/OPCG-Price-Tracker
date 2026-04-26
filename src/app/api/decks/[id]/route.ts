@@ -1,4 +1,5 @@
 import { requireAuthUser, getAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { earnHoney, getHoneyMultiplier } from "@/lib/honey";
@@ -7,10 +8,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:decks");
 
-export async function GET(
+export const GET = apiHandler(async (
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
-) {
+) => {
   try {
     const { id } = await params;
     const deckId = parseInt(id, 10);
@@ -50,12 +51,12 @@ export async function GET(
     log.error("GET /api/decks/[id]", error);
     return NextResponse.json({ error: "Failed to load deck" }, { status: 500 });
   }
-}
+});
 
-export async function PATCH(
+export const PATCH = apiHandler(async (
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
-) {
+) => {
   try {
     const { id } = await params;
     const deckId = parseInt(id, 10);
@@ -131,12 +132,12 @@ export async function PATCH(
     log.error("PATCH /api/decks/[id]", error);
     return NextResponse.json({ error: "Failed to update deck" }, { status: 500 });
   }
-}
+});
 
-export async function DELETE(
+export const DELETE = apiHandler(async (
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
-) {
+) => {
   try {
     const { id } = await params;
     const deckId = parseInt(id, 10);
@@ -158,4 +159,4 @@ export async function DELETE(
     log.error("DELETE /api/decks/[id]", error);
     return NextResponse.json({ error: "Failed to delete deck" }, { status: 500 });
   }
-}
+});

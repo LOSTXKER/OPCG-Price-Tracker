@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { clientEnv, serverEnv } from "@/lib/env";
 
 const BUCKET = "listing-photos";
@@ -31,7 +32,7 @@ async function ensureBucket(
   bucketChecked = true;
 }
 
-export async function POST(req: NextRequest) {
+export const POST = apiHandler(async (req: NextRequest) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
@@ -48,31 +49,27 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "File too large (max 5MB)" }, { status: 400 });
   }
 
-  try {
-    const supabase = getSupabaseAdmin();
-    await ensureBucket(supabase);
+  const supabase = getSupabaseAdmin();
+  await ensureBucket(supabase);
 
-    const ext = file.name.split(".").pop() || "png";
-    const safeName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-    const path = `${auth.user.id}/${safeName}`;
+  const ext = file.name.split(".").pop() || "png";
+  const safeName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const path = `${auth.user.id}/${safeName}`;
 
-    const buffer = Buffer.from(await file.arrayBuffer());
+  const buffer = Buffer.from(await file.arrayBuffer());
 
-    const { error } = await supabase.storage
-      .from(BUCKET)
-      .upload(path, buffer, { contentType: file.type, upsert: true });
+  const { error } = await supabase.storage
+    .from(BUCKET)
+    .upload(path, buffer, { contentType: file.type, upsert: true });
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    const { data: publicUrlData } = supabase.storage
-      .from(BUCKET)
-      .getPublicUrl(path);
-
-    return NextResponse.json({ url: publicUrlData.publicUrl });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Upload failed";
-    return NextResponse.json({ error: message }, { status: 500 });
+  if (error) {
+    console.error("[listing-upload] Supabase upload error:", error.message);
+    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
   }
-}
+
+  const { data: publicUrlData } = supabase.storage
+    .from(BUCKET)
+    .getPublicUrl(path);
+
+  return NextResponse.json({ url: publicUrlData.publicUrl });
+});

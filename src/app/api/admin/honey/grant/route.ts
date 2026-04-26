@@ -1,13 +1,9 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
-import { unauthorized, parseJsonBody } from "@/lib/api/admin-helpers";
+import { parseJsonBody } from "@/lib/api/admin-helpers";
 import { adminApiHandler } from "@/lib/api/api-handler";
-import { getAdminUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
-export const POST = adminApiHandler(async (request: NextRequest) => {
-  const admin = await getAdminUser();
-  if (!admin) return unauthorized();
-
+export const POST = adminApiHandler(async (request: NextRequest, admin) => {
   const parsed = await parseJsonBody<{
     userId: string;
     amount: number;
@@ -31,20 +27,21 @@ export const POST = adminApiHandler(async (request: NextRequest) => {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
-  const updated = await prisma.user.update({
-    where: { id: userId },
-    data: { honeyPoints: { increment: amount } },
-  });
-
-  await prisma.honeyTransaction.create({
-    data: {
-      userId,
-      amount,
-      type: "ADMIN_GRANT",
-      reason,
-      metadata: { grantedBy: admin.id },
-    },
-  });
+  const [updated] = await prisma.$transaction([
+    prisma.user.update({
+      where: { id: userId },
+      data: { honeyPoints: { increment: amount } },
+    }),
+    prisma.honeyTransaction.create({
+      data: {
+        userId,
+        amount,
+        type: "ADMIN_GRANT",
+        reason,
+        metadata: { grantedBy: admin.id },
+      },
+    }),
+  ]);
 
   return NextResponse.json({
     success: true,

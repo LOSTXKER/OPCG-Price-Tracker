@@ -7,6 +7,7 @@ import {
 import { requireAuthUser } from "@/lib/api/auth";
 import { cardInclude } from "@/lib/api/query-fragments";
 import { parseJsonBody } from "@/lib/api/request-body";
+import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
 import { effectiveTier, getLimits } from "@/lib/tier";
@@ -27,7 +28,7 @@ function parseChannel(value: unknown): AlertChannelType | null {
   return value as AlertChannelType;
 }
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -43,9 +44,9 @@ export async function GET() {
     log.error("GET /api/alerts", error);
     return NextResponse.json({ error: "Failed to load alerts" }, { status: 500 });
   }
-}
+});
 
-export async function POST(request: NextRequest) {
+export const POST = apiHandler(async (request: NextRequest) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -113,9 +114,9 @@ export async function POST(request: NextRequest) {
     log.error("POST /api/alerts", error);
     return NextResponse.json({ error: "Failed to create alert" }, { status: 500 });
   }
-}
+});
 
-export async function DELETE(request: NextRequest) {
+export const DELETE = apiHandler(async (request: NextRequest) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -141,4 +142,4 @@ export async function DELETE(request: NextRequest) {
     log.error("DELETE /api/alerts", error);
     return NextResponse.json({ error: "Failed to delete alert" }, { status: 500 });
   }
-}
+});

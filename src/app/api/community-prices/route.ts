@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
+import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { earnHoney, getHoneyMultiplier } from "@/lib/honey";
 
-export async function POST(request: Request) {
+export const POST = apiHandler(async (request) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const user = auth.user;
@@ -35,4 +36,4 @@ export async function POST(request: Request) {
   ).catch(() => {});
 
   return NextResponse.json({ price }, { status: 201 });
-}
+});

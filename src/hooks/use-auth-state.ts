@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { isAuthBypassed } from "@/lib/env";
 
 /**
  * Lightweight client-side auth check.
@@ -9,7 +10,7 @@ import { createClient } from "@/lib/supabase/client";
  * Subscribes to auth state changes so login/logout in the same tab updates.
  */
 export function useAuthState(): { authed: boolean | null } {
-  const bypass = process.env.NEXT_PUBLIC_BYPASS_AUTH === "true";
+  const bypass = isAuthBypassed();
   const [authed, setAuthed] = useState<boolean | null>(bypass ? true : null);
 
   useEffect(() => {

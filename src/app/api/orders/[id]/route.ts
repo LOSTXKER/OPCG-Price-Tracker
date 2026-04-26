@@ -1,3 +1,4 @@
+import { apiHandler } from "@/lib/api/api-handler";
 import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
@@ -31,7 +32,7 @@ const VALID_TRANSITIONS: Record<string, { next: OrderStatus; by: "buyer" | "sell
   ],
 };
 
-export async function GET(_request: NextRequest, props: Params) {
+export const GET = apiHandler(async (_request: NextRequest, props: Params) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -82,9 +83,9 @@ export async function GET(_request: NextRequest, props: Params) {
     log.error("GET /api/orders/[id]", error);
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
-}
+});
 
-export async function PATCH(request: NextRequest, props: Params) {
+export const PATCH = apiHandler(async (request: NextRequest, props: Params) => {
   try {
     const auth = await requireAuthUser();
     if (!auth.ok) return auth.response;
@@ -207,4 +208,4 @@ export async function PATCH(request: NextRequest, props: Params) {
     log.error("PATCH /api/orders/[id]", error);
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
-}
+});
