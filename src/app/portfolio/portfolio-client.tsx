@@ -1,7 +1,8 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
-import { ChevronDown, Eye, EyeOff, Plus, Wallet } from "lucide-react"
+import { ChevronDown, Eye, EyeOff, Globe, Lock, Plus, Share2, Wallet } from "lucide-react"
+import { toast } from "sonner"
 
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
 import { AuthPreviewGate } from "@/components/shared/login-gate"
@@ -13,6 +14,7 @@ import { PortfolioHero, MiniSparkline } from "@/components/portfolio/portfolio-h
 import { PortfolioInsights } from "@/components/portfolio/portfolio-insights"
 import { PortfolioAssetsTable } from "@/components/portfolio/portfolio-assets-table"
 import { PortfolioTransactions } from "@/components/portfolio/portfolio-transactions"
+import { PortfolioShareDialog } from "@/components/portfolio/portfolio-share-dialog"
 import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
 import { Price } from "@/components/shared/price-inline"
 import { Button } from "@/components/ui/button"
@@ -25,6 +27,7 @@ import { useUIStore } from "@/stores/ui-store"
 import { usePortfolioApi } from "@/hooks/use-portfolio-api"
 import { useTierLimits } from "@/hooks/use-tier-limits"
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
+import { cn } from "@/lib/utils"
 import { formatJpyAmount } from "@/lib/utils/currency"
 import type { CartItem } from "@/components/portfolio/add-card-types"
 
@@ -86,6 +89,7 @@ function PortfolioContent() {
   const currency = useUIStore((s) => s.currency)
   const [tab, setTabState] = useState<TabId>(getTabFromHash)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [shareOpen, setShareOpen] = useState(false)
   const [hideBalance, setHideBalance] = useState(false)
   const [sidebarSheetOpen, setSidebarSheetOpen] = useState(false)
   const { limits } = useTierLimits()
@@ -122,6 +126,7 @@ function PortfolioContent() {
     totalAllPortfolios,
     createPortfolio,
     renamePortfolio,
+    setPortfolioVisibility,
     deletePortfolio,
     addCardsBatch,
     updateItem,
@@ -319,14 +324,67 @@ function PortfolioContent() {
             value={tab}
             onChange={setTab}
           />
-          <Button
-            onClick={() => setDialogOpen(true)}
-            size="sm"
-            className="gap-1.5"
-          >
-            <Plus className="size-4" />
-            <span className="hidden sm:inline">{t(lang, "addCard")}</span>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShareOpen(true)}
+              disabled={items.length === 0}
+              className="gap-1.5"
+              aria-label={t(lang, "sharePortfolio")}
+              title={t(lang, "sharePortfolio")}
+            >
+              <Share2 className="size-4" />
+              <span className="hidden sm:inline">{t(lang, "sharePortfolio")}</span>
+            </Button>
+            {activePortfolio ? (
+              (() => {
+                const portfolioPublic = activePortfolio.isPublic ?? true
+                return (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const next = !portfolioPublic
+                      const ok = await setPortfolioVisibility(activePortfolio.id, next)
+                      if (ok) {
+                        toast.success(
+                          t(lang, next ? "madePortfolioPublic" : "madePortfolioPrivate"),
+                          { description: activePortfolio.name },
+                        )
+                      } else {
+                        toast.error(t(lang, "loadFailed"))
+                      }
+                    }}
+                    className={cn(
+                      "inline-flex h-8 items-center gap-1.5 rounded-md border px-2.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:px-3",
+                      portfolioPublic
+                        ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-400"
+                        : "border-amber-500/30 bg-amber-500/10 text-amber-700 hover:bg-amber-500/15 dark:text-amber-400",
+                    )}
+                    aria-label={t(lang, portfolioPublic ? "portfolioPublic" : "portfolioPrivate")}
+                    title={t(lang, "perPortfolioVisibility")}
+                  >
+                    {portfolioPublic ? (
+                      <Globe className="size-3.5" />
+                    ) : (
+                      <Lock className="size-3.5" />
+                    )}
+                    <span className="hidden sm:inline">
+                      {t(lang, portfolioPublic ? "portfolioPublic" : "portfolioPrivate")}
+                    </span>
+                  </button>
+                )
+              })()
+            ) : null}
+            <Button
+              onClick={() => setDialogOpen(true)}
+              size="sm"
+              className="gap-1.5"
+            >
+              <Plus className="size-4" />
+              <span className="hidden sm:inline">{t(lang, "addCard")}</span>
+            </Button>
+          </div>
         </div>
 
         {error && <p className="text-sm text-destructive">{error}</p>}
@@ -362,26 +420,18 @@ function PortfolioContent() {
                 assets={assets}
                 onUpdate={updateItem}
                 onRemove={removeItem}
+                hideBalance={hideBalance}
               />
             </Surface>
           </>
         ) : tab === "insights" ? (
           <PortfolioInsights history={history} allocation={allocation} />
         ) : (
-          <Surface
-            variant="panel"
-            padding="none"
-            className="overflow-hidden"
-            header={
-              <div className="border-b border-border/40 px-4 py-3 sm:px-5">
-                <p className="text-sm font-semibold">
-                  {t(lang, "transactionsTab")}
-                </p>
-              </div>
-            }
-          >
-            <PortfolioTransactions transactions={transactions} onDelete={deleteTransaction} />
-          </Surface>
+          <PortfolioTransactions
+            transactions={transactions}
+            onDelete={deleteTransaction}
+            hideBalance={hideBalance}
+          />
         )}
       </main>
 
@@ -389,6 +439,15 @@ function PortfolioContent() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         onAddBatch={addCardsBatchWithGate}
+      />
+
+      <PortfolioShareDialog
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+        portfolioName={activePortfolio?.name ?? t(lang, "portfolio")}
+        stats={stats}
+        history={history}
+        assets={assets}
       />
     </div>
   )

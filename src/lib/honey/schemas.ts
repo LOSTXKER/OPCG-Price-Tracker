@@ -122,6 +122,10 @@ export const MissionRewardsSchema = z.object({
   tickets: z.number().default(0),
   badgeCode: z.string().nullable().optional(),
   shopItemCode: z.string().nullable().optional(),
+  // Optional reward illustration shown on admin lists / mission cards. We
+  // accept null so the admin UI can clear the field with a single PUT
+  // payload instead of having to omit the key.
+  imageUrl: z.string().nullable().optional(),
   multiplierBoost: z
     .object({ value: z.number(), hours: z.number() })
     .nullable()

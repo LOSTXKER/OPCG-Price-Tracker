@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { YuyuteiMatchClient } from "./yuyutei-match-client";
 
 export const metadata: Metadata = {
-  title: "Yuyutei Matching — Admin",
+  title: "จับคู่ราคา Yuyutei — Admin",
 };
 
 export const dynamic = "force-dynamic";

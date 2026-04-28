@@ -289,6 +289,7 @@ export function SetDetailContent({
                 <CardItem
                   key={c.id}
                   cardCode={c.cardCode}
+                  cardId={c.id}
                   nameJp={c.nameJp}
                   nameEn={c.nameEn}
                   rarity={c.rarity}

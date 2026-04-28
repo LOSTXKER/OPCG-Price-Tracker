@@ -7,8 +7,6 @@ import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { t, type Language } from "@/lib/i18n"
 import { formatCount } from "@/lib/utils/currency"
 
-import { CardDetailActions } from "./actions"
-
 export function CardDetailHeader({
   card,
   setCode,
@@ -21,10 +19,7 @@ export function CardDetailHeader({
     cardCode: string
     baseCode: string | null
     rarity: string
-    imageUrl: string | null
     viewCount: number
-    latestPriceJpy: number | null
-    price: { priceJpy: number } | null
   }
   setCode: string
   setName: string
@@ -37,7 +32,7 @@ export function CardDetailHeader({
         <span className="font-price text-xs text-muted-foreground">
           {card.baseCode ?? card.cardCode}
         </span>
-        <RarityBadge rarity={card.rarity} size="md" />
+        <RarityBadge rarity={card.rarity} size="sm" />
         <span className="font-price text-xs text-muted-foreground/60">
           · {formatCount(card.viewCount)} {t(lang, "views")}
         </span>
@@ -54,14 +49,6 @@ export function CardDetailHeader({
           {setCode.toUpperCase()} &middot; {setName}
         </Link>
       </p>
-      <CardDetailActions
-        cardId={card.id}
-        cardCode={card.cardCode}
-        displayName={displayName}
-        rarity={card.rarity}
-        imageUrl={card.imageUrl}
-        currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
-      />
     </div>
   )
 }

@@ -27,7 +27,7 @@ export const GET = apiHandler(async () => {
     select: { name: true, nameEn: true, nameTh: true, honeyMultiplier: true, endDate: true },
   });
 
-  const level = getHoneyLevel(user.honeyLifetimeEarned);
+  const level = await getHoneyLevel(user.honeyLifetimeEarned);
 
   return NextResponse.json({
     honeyPoints: user.honeyPoints,
@@ -35,6 +35,7 @@ export const GET = apiHandler(async () => {
     canCheckin,
     recentTransactions: recentTx,
     level,
+    lifetimeEarned: user.honeyLifetimeEarned,
     activeEvent,
     onboardingCompleted: user.onboardingCompleted,
   });
@@ -99,7 +100,7 @@ export const POST = apiHandler(async (request) => {
     });
 
     if (item.requiredLevel > 0) {
-      const userLevel = getHoneyLevel(currentUser.honeyLifetimeEarned).level;
+      const userLevel = (await getHoneyLevel(currentUser.honeyLifetimeEarned)).level;
       if (userLevel < item.requiredLevel) {
         return NextResponse.json(
           {

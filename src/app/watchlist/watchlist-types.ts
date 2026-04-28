@@ -18,8 +18,6 @@ export type WatchCard = {
 export type WatchlistEntry = {
   id: number;
   cardId: number;
-  note: string | null;
-  targetPriceJpy: number | null;
   pinnedAt: string | null;
   addedAt: string;
   hasActiveAlert: boolean;
@@ -37,8 +35,7 @@ export type SortKey =
   | "loss"
   | "priceHigh"
   | "priceLow"
-  | "nameAz"
-  | "target";
+  | "nameAz";
 
 export type WatchlistFilters = {
   setCodes: string[];

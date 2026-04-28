@@ -5,6 +5,7 @@ import { Briefcase, Check } from "lucide-react"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { displayValueToJpy } from "@/lib/utils/currency"
+import { cn } from "@/lib/utils"
 import { DEFAULT_CARD_CONDITION } from "@/lib/constants/ui"
 
 import {
@@ -20,9 +21,11 @@ import { Input } from "@/components/ui/input"
 export function CardAddToPortfolio({
   cardId,
   cardName,
+  className,
 }: {
   cardId: number
   cardName: string
+  className?: string
 }) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
@@ -96,7 +99,7 @@ export function CardAddToPortfolio({
         variant="default"
         size="sm"
         onClick={() => { setOpen(true); setQuantity("1"); setPrice(""); setDone(false); setError(null) }}
-        className="gap-1.5"
+        className={cn("gap-1.5", className)}
       >
         <Briefcase className="size-3.5" />
         {t(lang, "addToPort")}

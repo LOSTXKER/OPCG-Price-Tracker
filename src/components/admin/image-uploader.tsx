@@ -26,11 +26,11 @@ export function ImageUploader({
     async (file: File) => {
       setError(null);
       if (!file.type.startsWith("image/")) {
-        setError("Only image files are allowed");
+        setError("รองรับเฉพาะไฟล์รูปภาพ");
         return;
       }
       if (file.size > 5 * 1024 * 1024) {
-        setError("Max file size is 5MB");
+        setError("ขนาดไฟล์สูงสุด 5MB");
         return;
       }
 
@@ -49,10 +49,10 @@ export function ImageUploader({
         if (res.ok && data.url) {
           onChange(data.url);
         } else {
-          setError(data.error || "Upload failed");
+          setError(data.error || "อัปโหลดไม่สำเร็จ");
         }
       } catch {
-        setError("Upload failed");
+        setError("อัปโหลดไม่สำเร็จ");
       } finally {
         setUploading(false);
       }
@@ -84,7 +84,7 @@ export function ImageUploader({
       <div className={cn("group relative overflow-hidden rounded-lg border", height, className)}>
         <img
           src={value}
-          alt="Uploaded"
+          alt="รูปที่อัปโหลด"
           className="size-full object-contain"
         />
         <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">
@@ -138,16 +138,16 @@ export function ImageUploader({
         {uploading ? (
           <>
             <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            <span className="text-meta">Uploading...</span>
+            <span className="text-meta">กำลังอัปโหลด...</span>
           </>
         ) : (
           <>
             <ImagePlus className="size-6 text-muted-foreground/50" />
             <span className="text-meta">
-              Drop image here or click to upload
+              ลากวางหรือคลิกเพื่ออัปโหลด
             </span>
             <span className="text-meta text-muted-foreground/50">
-              PNG, JPG, WebP (max 5MB)
+              PNG, JPG, WebP (สูงสุด 5MB)
             </span>
           </>
         )}

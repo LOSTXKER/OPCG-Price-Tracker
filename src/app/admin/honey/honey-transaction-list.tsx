@@ -1,9 +1,12 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { toast } from "sonner";
 import { Loader2, ChevronDown, Zap, Filter } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
+import { AdminNativeSelect } from "@/components/admin/admin-native-select";
 import { getTypeInfo, ALL_TYPES } from "./honey-type-labels";
 
 interface Transaction {
@@ -18,13 +21,15 @@ interface Transaction {
 interface HoneyTransactionListProps {
   initialTransactions: Transaction[];
   initialHasMore: boolean;
+  pageSize?: number;
 }
 
-const PAGE_SIZE = 30;
+const DEFAULT_PAGE_SIZE = 30;
 
 export function HoneyTransactionList({
   initialTransactions,
   initialHasMore,
+  pageSize = DEFAULT_PAGE_SIZE,
 }: HoneyTransactionListProps) {
   const [transactions, setTransactions] = useState(initialTransactions);
   const [typeFilter, setTypeFilter] = useState("");
@@ -32,55 +37,53 @@ export function HoneyTransactionList({
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(initialHasMore);
 
-  const loadMore = useCallback(async (currentPage: number, currentType: string, append: boolean) => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({
-        page: String(currentPage),
-        limit: String(PAGE_SIZE),
-      });
-      if (currentType) params.set("type", currentType);
-
-      const res = await fetch(`/api/admin/honey/transactions?${params}`);
-      if (!res.ok) return;
-      const data = await res.json();
-
-      const mapped = data.transactions.map((tx: Transaction & { createdAt: string }) => ({
-        ...tx,
-        createdAt: tx.createdAt,
-      }));
-
-      if (append) {
-        setTransactions((prev) => [...prev, ...mapped]);
-      } else {
-        setTransactions(mapped);
+  const loadMore = useCallback(
+    async (currentPage: number, currentType: string, append: boolean) => {
+      setLoading(true);
+      try {
+        const data = await adminFetch<{ transactions: Transaction[]; hasMore: boolean }>(
+          `/api/admin/honey/transactions?${buildAdminQuery({
+            page: currentPage,
+            limit: pageSize,
+            type: currentType || undefined,
+          })}`,
+        );
+        if (append) {
+          setTransactions((prev) => [...prev, ...data.transactions]);
+        } else {
+          setTransactions(data.transactions);
+        }
+        setHasMore(data.hasMore);
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "โหลดข้อมูลไม่สำเร็จ");
+      } finally {
+        setLoading(false);
       }
-      setHasMore(data.hasMore);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    [pageSize],
+  );
 
   const handleFilterChange = (newType: string) => {
     setTypeFilter(newType);
     setPage(1);
-    loadMore(1, newType, false);
+    void loadMore(1, newType, false);
   };
 
   const handleLoadMore = () => {
     const nextPage = page + 1;
     setPage(nextPage);
-    loadMore(nextPage, typeFilter, true);
+    void loadMore(nextPage, typeFilter, true);
   };
 
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
         <Filter className="size-3.5 text-muted-foreground" />
-        <select
+        <AdminNativeSelect
+          size="sm"
           value={typeFilter}
           onChange={(e) => handleFilterChange(e.target.value)}
-          className="h-8 rounded-lg border border-input bg-transparent px-2 py-1 text-xs outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 dark:bg-input/30"
+          className="w-auto"
         >
           <option value="">ทุกประเภท</option>
           {ALL_TYPES.map((type) => (
@@ -88,7 +91,7 @@ export function HoneyTransactionList({
               {getTypeInfo(type).label}
             </option>
           ))}
-        </select>
+        </AdminNativeSelect>
       </div>
 
       <div className="overflow-hidden rounded-lg border border-border/50">

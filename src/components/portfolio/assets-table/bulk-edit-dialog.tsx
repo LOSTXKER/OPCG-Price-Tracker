@@ -155,7 +155,12 @@ export function BulkEditDialog({
   assets: AssetRow[]
   onUpdate: (
     itemId: number,
-    data: { quantity?: number; purchasePrice?: number | null; isPrivate?: boolean },
+    data: {
+      quantity?: number
+      purchasePrice?: number | null
+      isPrivate?: boolean
+      notes?: string | null
+    },
   ) => void
   onRemove: (itemId: number) => void
 }) {

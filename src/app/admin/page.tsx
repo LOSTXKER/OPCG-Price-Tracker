@@ -20,9 +20,10 @@ import {
   Languages,
   ImagePlus,
 } from "lucide-react";
+import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { AdminPanel } from "@/components/admin/admin-panel";
 import { StatCard } from "@/components/shared/stat-card";
-import { Surface } from "@/components/ui/surface";
 import { DashboardCharts } from "./dashboard-charts";
 
 export const dynamic = "force-dynamic";
@@ -260,13 +261,16 @@ export default async function AdminDashboard() {
   };
 
   return (
-    <div className="space-y-5">
-      <AdminPageHeader
-        title="แดชบอร์ด"
-        description="ภาพรวมข้อมูลการ์ด ราคา และคุณภาพข้อมูล"
-        icon={LayoutDashboard}
-      />
-
+    <AdminPage
+      header={
+        <AdminPageHeader
+          title="แดชบอร์ด"
+          description="ภาพรวมข้อมูลการ์ด ราคา และคุณภาพข้อมูล"
+          icon={LayoutDashboard}
+        />
+      }
+      bodyClassName="space-y-5"
+    >
       {/* ── KPI Stats ── */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => (
@@ -278,14 +282,8 @@ export default async function AdminDashboard() {
       <DashboardCharts data={chartData} />
 
       {/* ── Data Quality ── */}
-      <Surface variant="panel" padding="md">
-        <div className="flex items-center justify-between">
-          <h3 className="flex items-center gap-2 text-sm font-semibold">
-            <BarChart3 className="size-4 text-muted-foreground" />
-            ความครบถ้วนของข้อมูล
-          </h3>
-        </div>
-        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+      <AdminPanel title="ความครบถ้วนของข้อมูล" icon={BarChart3}>
+        <div className="grid gap-4 sm:grid-cols-3">
           {qualityItems.map((item) => {
             const pctValue =
               item.total > 0 ? (item.have / item.total) * 100 : 0;
@@ -329,15 +327,11 @@ export default async function AdminDashboard() {
             );
           })}
         </div>
-      </Surface>
+      </AdminPanel>
 
       {/* ── Rarity Breakdown ── */}
-      <Surface variant="panel" padding="md">
-        <h3 className="flex items-center gap-2 text-sm font-semibold">
-          <Database className="size-4 text-muted-foreground" />
-          สรุปตามระดับความหายาก
-        </h3>
-        <div className="mt-3 flex flex-wrap gap-2">
+      <AdminPanel title="สรุปตามระดับความหายาก" icon={Database}>
+        <div className="flex flex-wrap gap-2">
           {sortedRarities.map((r, i) => (
             <Link
               key={r.rarity}
@@ -350,18 +344,17 @@ export default async function AdminDashboard() {
             </Link>
           ))}
         </div>
-      </Surface>
+      </AdminPanel>
 
       {/* ── Bottom: Recent Activity + Quick Actions ── */}
       <div className="grid gap-4 lg:grid-cols-5">
         {/* Recent Activity */}
         {s.recentLogs.length > 0 && (
-          <Surface variant="panel" padding="md" className="lg:col-span-2">
-            <div className="flex items-center justify-between">
-              <h3 className="flex items-center gap-2 text-sm font-semibold">
-                <Clock className="size-4 text-muted-foreground" />
-                กิจกรรมล่าสุด
-              </h3>
+          <AdminPanel
+            title="กิจกรรมล่าสุด"
+            icon={Clock}
+            className="lg:col-span-2"
+            actions={
               <Link
                 href="/admin/logs"
                 className="flex items-center gap-1 text-meta transition-colors hover:text-primary"
@@ -369,8 +362,9 @@ export default async function AdminDashboard() {
                 ดูทั้งหมด
                 <ArrowRight className="size-3" />
               </Link>
-            </div>
-            <div className="mt-3 space-y-0.5">
+            }
+          >
+            <div className="space-y-0.5">
               {s.recentLogs.map((log) => (
                 <div
                   key={log.id}
@@ -395,37 +389,35 @@ export default async function AdminDashboard() {
                 </div>
               ))}
             </div>
-          </Surface>
+          </AdminPanel>
         )}
 
         {/* Quick Actions */}
         <div className={s.recentLogs.length > 0 ? "lg:col-span-3" : "lg:col-span-5"}>
           <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
             {QUICK_ACTIONS.map((action) => (
-              <Link key={action.href} href={action.href} className="group">
-                <Surface
-                  variant="panel"
-                  padding="md"
-                  className="flex h-full items-start gap-3 transition-colors hover:bg-muted/20"
-                >
-                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                    <action.icon className="size-[18px] text-primary" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h4 className="text-sm font-semibold transition-colors group-hover:text-primary">
-                      {action.title}
-                    </h4>
-                    <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                      {action.description}
-                    </p>
-                  </div>
-                  <ExternalLink className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/0 transition-colors group-hover:text-muted-foreground/60" />
-                </Surface>
+              <Link
+                key={action.href}
+                href={action.href}
+                className="group flex h-full items-start gap-3 rounded-xl border border-border/60 bg-card p-4 transition-colors hover:bg-muted/20 sm:p-5"
+              >
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                  <action.icon className="size-[18px] text-primary" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h4 className="text-sm font-semibold transition-colors group-hover:text-primary">
+                    {action.title}
+                  </h4>
+                  <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+                    {action.description}
+                  </p>
+                </div>
+                <ExternalLink className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/0 transition-colors group-hover:text-muted-foreground/60" />
               </Link>
             ))}
           </div>
         </div>
       </div>
-    </div>
+    </AdminPage>
   );
 }

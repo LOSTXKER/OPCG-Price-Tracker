@@ -66,10 +66,6 @@ export function ProfileListingCard({
               {t(lang, "noImage")}
             </span>
           )}
-
-          <div className="absolute right-1 top-1">
-            <ConditionBadge condition={listing.condition} size="sm" />
-          </div>
         </div>
 
         <div className="flex flex-1 flex-col p-2.5">
@@ -79,18 +75,19 @@ export function ProfileListingCard({
           >
             {cardName}
           </p>
-          <div className="mt-1 flex items-center gap-1.5">
+          <div className="mt-1 flex flex-wrap items-center gap-1.5">
             <RarityBadge rarity={listing.card.rarity} size="sm" />
             <span className="truncate font-mono text-xs text-muted-foreground">
               {listing.card.cardCode}
             </span>
+            <ConditionBadge condition={listing.condition} size="sm" />
           </div>
 
           <div className="mt-auto flex items-baseline justify-between gap-2 pt-2">
             <p className="truncate text-base font-bold leading-tight tracking-tight text-primary">
               <Price jpy={listing.priceJpy} thb={listing.priceThb} />
             </p>
-            {meaningfulGap && (
+            {meaningfulGap ? (
               <DeltaText
                 value={diffPct}
                 decimals={0}
@@ -98,7 +95,14 @@ export function ProfileListingCard({
                 invert
                 className="shrink-0"
               />
-            )}
+            ) : listing.quantity > 1 ? (
+              // Quietly indicate stock when the seller has multiples. Only
+              // shown when no delta chip claims the slot — stacking both on
+              // a 63x88 tile makes the row feel cluttered.
+              <span className="shrink-0 text-meta tabular-nums">
+                ×{listing.quantity}
+              </span>
+            ) : null}
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import { MainChrome, PageContent } from "@/components/layout/main-chrome";
 import { CompareFloatingBar } from "@/components/compare/compare-floating-bar";
 import { ScrollToTop } from "@/components/shared/scroll-to-top";
 import { MissionTracker } from "@/components/honey/mission-tracker";
+import { CardMiniPreviewDialog } from "@/components/shared/card-mini-preview-dialog";
 
 import { ThemeProvider } from "@/providers/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -100,9 +101,10 @@ export default function RootLayout({
                   <BottomNav />
                 </MainChrome>
                 <CompareFloatingBar />
+                <CardMiniPreviewDialog />
                 <ScrollToTop />
                 <MissionTracker />
-                <Toaster position="bottom-center" />
+                <Toaster position="top-center" />
               </UpgradeDialogProvider>
             </ConfirmDialogProvider>
           </TooltipProvider>

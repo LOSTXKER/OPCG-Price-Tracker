@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { fetchCards } from "@/lib/api/fetch-cards"
 
 export type CardSearchResult = {
@@ -54,10 +54,10 @@ export function useCardSearch({
     }
   }, [query, debounceMs, limit, typeFilter])
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setQuery("")
     setResults([])
-  }
+  }, [])
 
   return { query, setQuery, results, loading, reset }
 }

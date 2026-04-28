@@ -5,9 +5,6 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  Loader2,
-  ChevronDown,
-  ChevronUp,
   Inbox,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -48,6 +45,17 @@ interface AdminDataTableProps<T> {
   sortState?: SortState;
   onSortChange?: (sort: SortState) => void;
   compact?: boolean;
+  /**
+   * Render a custom list-row layout for the `<sm` (mobile) breakpoint.
+   * When provided, the `<table>` is hidden on mobile and this callback is
+   * used to render each row as a list item instead — see [AGENTS.md] for the
+   * "no horizontal scroll on phones" rule.
+   * If omitted, the default mobile fallback uses the table columns rendered
+   * stacked into a label/value grid per row.
+   */
+  renderMobileRow?: (row: T, index: number) => React.ReactNode;
+  /** Disable the built-in mobile list fallback (forces horizontal scroll). */
+  disableMobileFallback?: boolean;
 }
 
 /* ── Main Component ── */
@@ -71,6 +79,8 @@ export function AdminDataTable<T>({
   sortState,
   onSortChange,
   compact = false,
+  renderMobileRow,
+  disableMobileFallback = false,
 }: AdminDataTableProps<T>) {
   const [internalSort, setInternalSort] = useState<SortState>({
     key: "",
@@ -141,10 +151,17 @@ export function AdminDataTable<T>({
   );
 
   const py = compact ? "py-2" : "py-3";
+  const showMobileFallback = !disableMobileFallback;
+  const mobileTableHidden = showMobileFallback ? "hidden sm:table" : "table";
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-border/50 bg-card">
-      <table className="w-full text-sm">
+    <div
+      className={cn(
+        "rounded-xl border border-border/50 bg-card",
+        showMobileFallback ? "sm:overflow-x-auto" : "overflow-x-auto",
+      )}
+    >
+      <table className={cn("w-full text-sm", mobileTableHidden)}>
         <thead>
           <tr
             className={cn(
@@ -262,7 +279,171 @@ export function AdminDataTable<T>({
           )}
         </tbody>
       </table>
+      {showMobileFallback && (
+        <div className="divide-y divide-border/40 sm:hidden">
+          {loading ? (
+            Array.from({ length: loadingRows }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3 px-4 py-3">
+                <Skeleton className="h-10 w-10 rounded-md" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-3 w-3/4" />
+                  <Skeleton className="h-3 w-1/2" />
+                </div>
+              </div>
+            ))
+          ) : sortedData.length === 0 ? (
+            <div className="flex flex-col items-center gap-3 px-4 py-12 text-muted-foreground">
+              {emptyIcon ?? (
+                <div className="flex size-12 items-center justify-center rounded-xl bg-muted/50">
+                  <Inbox className="size-6 text-muted-foreground/50" />
+                </div>
+              )}
+              <div className="text-center">
+                <p className="text-sm font-medium">{emptyMessage}</p>
+                {emptyDescription && (
+                  <p className="mt-1 text-meta text-muted-foreground/70">
+                    {emptyDescription}
+                  </p>
+                )}
+              </div>
+            </div>
+          ) : (
+            sortedData.map((row, idx) => {
+              const key = rowKey(row);
+              const isSelected = selectedKeys?.has(key) ?? false;
+              if (renderMobileRow) {
+                return (
+                  <MobileRowWrapper
+                    key={key}
+                    onClick={onRowClick ? () => onRowClick(row) : undefined}
+                    selectable={selectable}
+                    isSelected={isSelected}
+                    onToggle={() => toggleRow(key)}
+                  >
+                    {renderMobileRow(row, idx)}
+                  </MobileRowWrapper>
+                );
+              }
+              return (
+                <MobileDefaultRow
+                  key={key}
+                  row={row}
+                  columns={columns}
+                  onRowClick={onRowClick}
+                  selectable={selectable}
+                  isSelected={isSelected}
+                  onToggle={() => toggleRow(key)}
+                  expanded={isRowExpanded?.(row) ?? false}
+                  renderExpandedRow={renderExpandedRow}
+                />
+              );
+            })
+          )}
+        </div>
+      )}
     </div>
+  );
+}
+
+function MobileRowWrapper({
+  children,
+  onClick,
+  selectable,
+  isSelected,
+  onToggle,
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  selectable: boolean;
+  isSelected: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex items-start gap-3 px-4 py-3 transition-colors",
+        onClick && "cursor-pointer active:bg-muted/40",
+        isSelected && "bg-primary/[0.06]",
+      )}
+      onClick={onClick}
+    >
+      {selectable && (
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={onToggle}
+          onClick={(e) => e.stopPropagation()}
+          className="accent-primary mt-1 size-3.5 cursor-pointer rounded"
+        />
+      )}
+      <div className="min-w-0 flex-1">{children}</div>
+    </div>
+  );
+}
+
+function MobileDefaultRow<T>({
+  row,
+  columns,
+  onRowClick,
+  selectable,
+  isSelected,
+  onToggle,
+  expanded,
+  renderExpandedRow,
+}: {
+  row: T;
+  columns: Column<T>[];
+  onRowClick?: (row: T) => void;
+  selectable: boolean;
+  isSelected: boolean;
+  onToggle: () => void;
+  expanded: boolean;
+  renderExpandedRow?: (row: T) => React.ReactNode;
+}) {
+  const [primary, ...rest] = columns;
+  return (
+    <>
+      <div
+        className={cn(
+          "flex items-start gap-3 px-4 py-3 transition-colors",
+          onRowClick && "cursor-pointer active:bg-muted/40",
+          isSelected && "bg-primary/[0.06]",
+        )}
+        onClick={onRowClick ? () => onRowClick(row) : undefined}
+      >
+        {selectable && (
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={onToggle}
+            onClick={(e) => e.stopPropagation()}
+            className="accent-primary mt-1 size-3.5 cursor-pointer rounded"
+          />
+        )}
+        <div className="min-w-0 flex-1 space-y-1.5">
+          {primary && (
+            <div className="text-sm font-medium">{primary.render(row)}</div>
+          )}
+          {rest.length > 0 && (
+            <dl className="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1 text-meta">
+              {rest.map((col) => (
+                <div key={col.key} className="contents">
+                  <dt className="text-eyebrow text-muted-foreground/70">
+                    {col.header}
+                  </dt>
+                  <dd className="min-w-0 text-foreground">{col.render(row)}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+        </div>
+      </div>
+      {expanded && renderExpandedRow && (
+        <div className="border-t border-border/30 bg-muted/10 px-4 py-3">
+          {renderExpandedRow(row)}
+        </div>
+      )}
+    </>
   );
 }
 
@@ -343,12 +524,3 @@ function DataTableRow<T>({
   );
 }
 
-/* ── Loader placeholder ── */
-
-export function AdminTableLoader({ columns }: { columns: number }) {
-  return (
-    <div className="flex items-center justify-center py-16">
-      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-    </div>
-  );
-}

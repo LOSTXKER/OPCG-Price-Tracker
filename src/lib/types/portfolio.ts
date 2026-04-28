@@ -31,11 +31,13 @@ export type AssetRow = {
   priceChange7d: number | null
   condition: string
   isPrivate?: boolean
+  notes: string | null
 }
 
 export type PortfolioMeta = {
   id: number
   name: string
+  isPublic: boolean
   totalValue: number
   totalCost: number
   itemCount: number

@@ -48,45 +48,43 @@ export function AccountProfileHero({ user, lang, onUserUpdate }: AccountProfileH
   };
 
   return (
-    <div className="rounded-xl border border-border/40 bg-card p-5">
-      <div className="flex items-center gap-4">
-        <button
-          type="button"
-          className="group relative shrink-0 cursor-pointer"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={uploadingAvatar}
-          aria-label="Change avatar"
-        >
-          <Avatar className="size-16 ring-2 ring-border/40 ring-offset-2 ring-offset-card sm:size-20">
-            {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
-            <AvatarFallback className="text-xl font-bold">
-              {(user.displayName ?? user.email).slice(0, 1).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <div className="absolute -bottom-0.5 -right-0.5 flex size-6 items-center justify-center rounded-full border-2 border-card bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-110">
-            {uploadingAvatar ? (
-              <Loader2 className="size-3 animate-spin" />
-            ) : (
-              <Camera className="size-3" />
-            )}
-          </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => void handleAvatarChange(e)}
-          />
-        </button>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-h4">{user.displayName ?? user.email}</p>
-          <p className="truncate text-meta">{user.email}</p>
-          <p className="mt-0.5 text-meta text-muted-foreground/60">
-            {t(lang, "memberSince")} {memberSince}
-          </p>
+    <div className="flex items-center gap-4 py-2">
+      <button
+        type="button"
+        className="group relative shrink-0 cursor-pointer"
+        onClick={() => fileInputRef.current?.click()}
+        disabled={uploadingAvatar}
+        aria-label="Change avatar"
+      >
+        <Avatar className="size-16 ring-2 ring-border/40 ring-offset-2 ring-offset-background sm:size-[72px]">
+          {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
+          <AvatarFallback className="text-xl font-bold">
+            {(user.displayName ?? user.email).slice(0, 1).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        <div className="absolute -bottom-0.5 -right-0.5 flex size-6 items-center justify-center rounded-full border-2 border-background bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-110">
+          {uploadingAvatar ? (
+            <Loader2 className="size-3 animate-spin" />
+          ) : (
+            <Camera className="size-3" />
+          )}
         </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => void handleAvatarChange(e)}
+        />
+      </button>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-h4">{user.displayName ?? user.email}</p>
+        <p className="mt-0.5 truncate text-meta">{user.email}</p>
+        <p className="mt-0.5 text-meta text-muted-foreground/60">
+          {t(lang, "memberSince")} {memberSince}
+        </p>
+        {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
       </div>
-      {error && <p className="mt-2 text-xs text-destructive">{error}</p>}
     </div>
   );
 }

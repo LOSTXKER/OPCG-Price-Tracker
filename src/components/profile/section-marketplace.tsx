@@ -41,13 +41,10 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
   ];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="flex items-center gap-2 text-h3">
-          <Store className="size-5" />
-          {t(lang, "sellerDashboard")}
-        </h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-h2">{t(lang, "sellerDashboard")}</h2>
         <Link href="/marketplace/create">
           <Button size="sm" className="gap-1.5 rounded-full">
             <Plus className="size-3.5" />
@@ -72,7 +69,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
       {/* Active listings */}
       <div className="rounded-xl border border-border/40 bg-card">
         <div className="flex items-center justify-between border-b border-border/40 px-5 py-3">
-          <h3 className="text-sm font-semibold">{t(lang, "myListings")}</h3>
+          <h3 className="text-h5">{t(lang, "myListings")}</h3>
           <Link
             href={`/profile/${userId}`}
             className="flex items-center gap-1 text-meta transition-colors hover:text-foreground"
@@ -129,7 +126,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
               <ShieldCheck className="size-4.5 text-yellow-600 dark:text-yellow-400" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold">{t(lang, "reputationTitle")}</h3>
+              <h3 className="text-h5">{t(lang, "reputationTitle")}</h3>
               <p className="text-meta">
                 {sellerReviewCount} {t(lang, "reviewsReceived")}
               </p>

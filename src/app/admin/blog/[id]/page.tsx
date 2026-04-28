@@ -13,7 +13,7 @@ const CATEGORY_TO_SLUG: Record<BlogCategory, string> = {
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = { title: "Edit Blog Post — Admin" };
+export const metadata: Metadata = { title: "แก้ไขบทความ — แอดมิน" };
 
 export default async function EditBlogPostPage(props: {
   params: Promise<{ id: string }>;
@@ -26,21 +26,18 @@ export default async function EditBlogPostPage(props: {
   if (!post) notFound();
 
   return (
-    <div className="space-y-6">
-      <h1 className="break-words text-h1">Edit: {post.title}</h1>
-      <BlogForm
-        initial={{
-          id: post.id,
-          title: post.title,
-          slug: post.slug,
-          excerpt: post.excerpt,
-          content: post.content,
-          coverImage: post.coverImage ?? "",
-          category: CATEGORY_TO_SLUG[post.category],
-          tags: post.tags.join(", "),
-          published: post.published,
-        }}
-      />
-    </div>
+    <BlogForm
+      initial={{
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt,
+        content: post.content,
+        coverImage: post.coverImage ?? "",
+        category: CATEGORY_TO_SLUG[post.category],
+        tags: post.tags.join(", "),
+        published: post.published,
+      }}
+    />
   );
 }

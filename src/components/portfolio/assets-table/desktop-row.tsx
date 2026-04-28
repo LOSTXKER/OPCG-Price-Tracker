@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
-import { AssetActionMenu, ChangeCell } from "./action-menu"
+import { AssetActionMenu } from "./action-menu"
 import { holdingValue, pnlCalc } from "./utils"
 
 export const AssetRowComponent = memo(function AssetRowComponent({
@@ -19,11 +19,13 @@ export const AssetRowComponent = memo(function AssetRowComponent({
   lang,
   onEdit,
   onRemove,
+  hideBalance = false,
 }: {
   row: AssetRow
   lang: Language
   onEdit: () => void
   onRemove: () => void
+  hideBalance?: boolean
 }) {
   const currency = useUIStore((s) => s.currency)
   const name = getCardName(lang as "TH" | "EN" | "JP", row)
@@ -60,49 +62,42 @@ export const AssetRowComponent = memo(function AssetRowComponent({
       </td>
       <td className="py-3.5 pr-3 text-right align-middle">
         <span className="font-price text-sm font-bold tabular-nums">
-          <Price jpy={value} />
+          {hideBalance ? "••••" : <Price jpy={value} />}
         </span>
       </td>
       <td className="py-3.5 pr-3 text-right align-middle">
-        <span className="font-price text-xs tabular-nums text-muted-foreground/70">
-          {row.currentPrice != null ? <Price jpy={row.currentPrice} /> : "—"}
-        </span>
+        {hideBalance ? (
+          <span className="font-price text-xs text-muted-foreground/40">••••</span>
+        ) : row.purchasePrice != null ? (
+          <span className="font-price text-sm tabular-nums text-muted-foreground">
+            {formatJpyAmount(row.purchasePrice * row.quantity, currency)}
+          </span>
+        ) : (
+          <span className="font-price text-xs text-muted-foreground/40">—</span>
+        )}
       </td>
       <td className="py-3.5 pr-3 text-right align-middle">
-        <ChangeCell value={row.priceChange24h} />
-      </td>
-      <td className="hidden py-3.5 pr-3 text-right align-middle md:table-cell">
-        <ChangeCell value={row.priceChange7d} />
-      </td>
-      <td className="py-3.5 pr-3 text-right align-middle">
-        <span className="font-price text-xs tabular-nums text-muted-foreground/70">
-          {row.purchasePrice != null
-            ? formatJpyAmount(row.purchasePrice * row.quantity, currency)
-            : "—"}
-        </span>
-      </td>
-      <td className="py-3.5 pr-3 text-right align-middle">
-        {pnlResult ? (
-          <div>
-            <p
+        {hideBalance ? (
+          <span className="font-price text-xs text-muted-foreground/40">••••</span>
+        ) : pnlResult ? (
+          <p
+            className={cn(
+              "font-price text-sm font-bold leading-tight tabular-nums",
+              pnlResult.pnl >= 0 ? "text-price-up" : "text-price-down",
+            )}
+          >
+            {pnlResult.pnl >= 0 ? "+" : ""}
+            {formatJpyAmount(pnlResult.pnl, currency)}
+            <span
               className={cn(
-                "font-price text-xs font-bold tabular-nums leading-tight",
-                pnlResult.pnl >= 0 ? "text-price-up" : "text-price-down",
-              )}
-            >
-              {pnlResult.pnl >= 0 ? "+" : ""}
-              {formatJpyAmount(pnlResult.pnl, currency)}
-            </p>
-            <p
-              className={cn(
-                "font-price text-micro tabular-nums leading-tight",
+                "ml-1 font-price text-micro font-normal tabular-nums",
                 pnlResult.pct >= 0 ? "text-price-up/60" : "text-price-down/60",
               )}
             >
               ({pnlResult.pct >= 0 ? "+" : ""}
               {formatPct(pnlResult.pct)}%)
-            </p>
-          </div>
+            </span>
+          </p>
         ) : (
           <span className="font-price text-xs text-muted-foreground/40">—</span>
         )}

@@ -8,23 +8,6 @@ import { effectiveTier, getLimits } from "@/lib/billing";
 import { CreateWatchlistSchema } from "@/lib/watchlist/schemas";
 import { NextRequest, NextResponse } from "next/server";
 
-const NOTE_MAX = 280;
-
-function sanitizeNote(value: string | null | undefined): string | null | undefined {
-  if (value === undefined) return undefined;
-  if (value === null) return null;
-  const trimmed = value.trim();
-  if (trimmed.length === 0) return null;
-  return trimmed.slice(0, NOTE_MAX);
-}
-
-function sanitizeTargetPrice(value: number | null | undefined): number | null | undefined {
-  if (value === undefined) return undefined;
-  if (value === null) return null;
-  if (!Number.isFinite(value) || value <= 0) return null;
-  return Math.round(value);
-}
-
 export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
@@ -91,9 +74,6 @@ export const POST = apiHandler(async (request: NextRequest) => {
     }
   }
 
-  const note = sanitizeNote(parsed.body.note);
-  const targetPriceJpy = sanitizeTargetPrice(parsed.body.targetPriceJpy);
-
   const item = await prisma.watchlistItem.upsert({
     where: {
       userId_cardId: { userId: auth.user.id, cardId },
@@ -101,8 +81,6 @@ export const POST = apiHandler(async (request: NextRequest) => {
     create: {
       userId: auth.user.id,
       cardId,
-      ...(note !== undefined ? { note } : {}),
-      ...(targetPriceJpy !== undefined ? { targetPriceJpy } : {}),
     },
     update: {},
     include: { card: { include: cardInclude } },

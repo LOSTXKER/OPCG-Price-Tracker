@@ -96,9 +96,6 @@ export default async function SetsIndexPage() {
     .sort((a, b) => b.totalValue - a.totalValue)
     .slice(0, 5);
 
-  const totalSets = setsRaw.length;
-  const totalMarketValue = setsRaw.reduce((sum, s) => sum + s.totalValue, 0);
-
   return (
     <>
       <JsonLd
@@ -108,11 +105,8 @@ export default async function SetsIndexPage() {
         ])}
       />
       <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Sets" }]} />
-      <div className="space-y-10">
-        <SetsPageHeader
-          totalSets={totalSets}
-          totalMarketValue={totalMarketValue}
-        />
+      <div className="space-y-8">
+        <SetsPageHeader />
 
         {dbError ? (
           <ErrorBanner />

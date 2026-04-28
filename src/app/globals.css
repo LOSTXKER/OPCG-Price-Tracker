@@ -55,6 +55,9 @@
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
   --color-info-soft: var(--info-soft);
+  --color-neutral: var(--neutral);
+  --color-neutral-foreground: var(--neutral-foreground);
+  --color-neutral-soft: var(--neutral-soft);
 
   /* Typography scale (slightly bumped from defaults for Thai/Kanit readability) */
   --text-xs: 0.8125rem;          /* 13px (was 12px) */
@@ -116,6 +119,9 @@
   --info: #007AFF;
   --info-foreground: #FFFFFF;
   --info-soft: color-mix(in srgb, var(--info) 12%, transparent);
+  --neutral: var(--muted-foreground);
+  --neutral-foreground: var(--foreground);
+  --neutral-soft: var(--muted);
 }
 
 .dark {
@@ -162,6 +168,9 @@
   --info: #0A84FF;
   --info-foreground: #FFFFFF;
   --info-soft: color-mix(in srgb, var(--info) 16%, transparent);
+  --neutral: var(--muted-foreground);
+  --neutral-foreground: var(--foreground);
+  --neutral-soft: var(--muted);
 }
 
 @layer base {
@@ -215,6 +224,18 @@
 .dark .stat-card {
   background: color-mix(in srgb, var(--primary) 5%, var(--card));
 }
+
+/* ------------------------------------------------------------------ */
+/* Status semantic utilities                                           */
+/* Combine text color + soft background. Use on badges, pills, chips,  */
+/* small status dots. For solo color text use `text-success` etc.      */
+/* ------------------------------------------------------------------ */
+.status-success { color: var(--success); background-color: var(--success-soft); }
+.status-warning { color: var(--warning); background-color: var(--warning-soft); }
+.status-danger  { color: var(--danger);  background-color: var(--danger-soft); }
+.status-info    { color: var(--info);    background-color: var(--info-soft); }
+.status-neutral { color: var(--muted-foreground); background-color: var(--muted); }
+.status-warn    { color: var(--warning); background-color: var(--warning-soft); }
 
 /* ------------------------------------------------------------------ */
 /* Typography tokens                                                   */

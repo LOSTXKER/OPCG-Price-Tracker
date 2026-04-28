@@ -11,7 +11,15 @@ const optionalNonNegative = z.union([z.coerce.number().nonnegative(), z.null()])
 
 export const CreatePortfolioSchema = z.object({
   name: z.string().trim().min(1).max(120),
+  isPublic: z.boolean().optional(),
 });
+
+export const UpdatePortfolioSchema = z
+  .object({
+    name: z.string().trim().min(1).max(120),
+    isPublic: z.boolean(),
+  })
+  .partial();
 
 export const CreatePortfolioItemSchema = z.object({
   portfolioId: numericId,
@@ -51,6 +59,7 @@ export const CreatePortfolioTransactionSchema = z.object({
 });
 
 export type CreatePortfolioInput = z.infer<typeof CreatePortfolioSchema>;
+export type UpdatePortfolioInput = z.infer<typeof UpdatePortfolioSchema>;
 export type CreatePortfolioItemInput = z.infer<typeof CreatePortfolioItemSchema>;
 export type UpdatePortfolioItemInput = z.infer<typeof UpdatePortfolioItemSchema>;
 export type CreatePortfolioTransactionInput = z.infer<

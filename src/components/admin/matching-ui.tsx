@@ -133,7 +133,7 @@ export function CandidatePicker({
   onZoom?: (card: MatchingCard) => void;
 }) {
   if (candidates.length === 0)
-    return <span className="text-meta">ไม่พบ candidate</span>;
+    return <span className="text-meta">ไม่พบตัวเลือก</span>;
 
   return (
     <div className="flex flex-col gap-1">

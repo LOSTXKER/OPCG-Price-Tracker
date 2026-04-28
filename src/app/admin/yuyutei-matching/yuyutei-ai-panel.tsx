@@ -27,7 +27,7 @@ export function YuyuteiAiPanel({
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-violet-600" />
           <span className="text-sm font-semibold text-violet-700 dark:text-violet-300">
-            AI Matching Log
+            บันทึกการจับคู่โดย AI
           </span>
           {progress && (
             <span className="text-xs text-violet-600/70 font-mono">
@@ -40,14 +40,14 @@ export function YuyuteiAiPanel({
             onClick={onCancel}
             className="flex items-center gap-1 rounded-md bg-red-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-red-700 transition-colors"
           >
-            <Square className="size-3" /> Cancel
+            <Square className="size-3" /> ยกเลิก
           </button>
         ) : (
           <button
             onClick={onClear}
             className="text-xs text-violet-600/50 hover:text-violet-600 transition-colors"
           >
-            Clear
+            ล้าง
           </button>
         )}
       </div>

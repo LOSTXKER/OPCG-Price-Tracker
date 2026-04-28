@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Award,
   BellRing,
   BookOpen,
   Heart,
@@ -30,7 +29,13 @@ import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 import { formatCount } from "@/lib/utils/currency";
 import { t } from "@/lib/i18n";
-import { getHoneyLevel } from "@/lib/honey/levels";
+import {
+  findTierByLevel,
+  getHoneyLevelFromTiers,
+  getTierLabel,
+} from "@/lib/honey/rank-tiers";
+import { RankTierIcon } from "@/components/shared/rank-icon";
+import { useRankTiers } from "@/hooks/use-rank-tiers";
 import { TIER_DISPLAY, RANK_DISPLAY, type UserTierValue, type AuthUser } from "./header-constants";
 
 interface UserMenuProps {
@@ -71,8 +76,17 @@ export function HeaderUserMenu({
   const tierTextClass = tierInfo.color.replace(/\bbg-[^\s]+/g, "").replace(/\s+/g, " ").trim();
   const canUpgrade = userTier === "FREE" || userTier === "PRO";
 
-  const honeyLevel = getHoneyLevel(honeyLifetime);
-  const rankDisplay = RANK_DISPLAY[honeyLevel.label] ?? RANK_DISPLAY.Newbie;
+  const { tiers } = useRankTiers();
+  const honeyLevel = getHoneyLevelFromTiers(honeyLifetime, tiers);
+  const currentTier = findTierByLevel(tiers, honeyLevel.level);
+  const sorted = [...tiers].sort((a, b) => a.threshold - b.threshold);
+  const currentIdx = sorted.findIndex((t) => t.level === currentTier.level);
+  const nextTier = currentIdx >= 0 ? sorted[currentIdx + 1] : undefined;
+  const rankLabel = getTierLabel(currentTier, language);
+  const nextRankLabel = nextTier ? getTierLabel(nextTier, language) : null;
+  const accent = currentTier.color ?? null;
+  const rankImage = currentTier.imageUrl ?? null;
+  const rankDisplayFallback = RANK_DISPLAY[currentTier.labels.EN] ?? RANK_DISPLAY.Newbie;
   const expProgress = honeyLevel.nextThreshold
     ? Math.min(100, (honeyLifetime / honeyLevel.nextThreshold) * 100)
     : 100;
@@ -102,11 +116,15 @@ export function HeaderUserMenu({
       <DropdownMenu>
         <DropdownMenuTrigger
           className={cn(
-            "flex max-w-[11rem] items-center gap-2 rounded-full py-1 pl-1 pr-2 transition-colors",
+            "flex max-w-[12rem] items-center gap-2.5 rounded-full py-1.5 pl-1.5 pr-3.5 transition-colors",
             "hover:bg-muted/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/35"
           )}
         >
-          <Avatar size="sm" className={cn("h-7 w-7 shrink-0 ring-2", rankDisplay.ring)}>
+          <Avatar
+            size="sm"
+            className={cn("h-7 w-7 shrink-0 ring-2", !accent && rankDisplayFallback.ring)}
+            style={accent ? { boxShadow: `0 0 0 2px ${accent}` } : undefined}
+          >
             {userAvatar ? <AvatarImage src={userAvatar} alt="" /> : null}
             <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
               {userName.slice(0, 1).toUpperCase()}
@@ -121,7 +139,12 @@ export function HeaderUserMenu({
               <span className="select-none text-muted-foreground/40" aria-hidden>
                 ·
               </span>
-              <span className={rankDisplay.color}>{honeyLevel.label}</span>
+              <span
+                className={!accent ? rankDisplayFallback.color : undefined}
+                style={accent ? { color: accent } : undefined}
+              >
+                {rankLabel}
+              </span>
             </div>
           </div>
         </DropdownMenuTrigger>
@@ -136,9 +159,24 @@ export function HeaderUserMenu({
                   <TierIcon className="size-2.5" />
                   {tierInfo.label}
                 </span>
-                <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-micro", rankDisplay.bg)}>
-                  <Award className="size-2.5" />
-                  {honeyLevel.label}
+                <span
+                  className={cn(
+                    "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-micro",
+                    !accent && rankDisplayFallback.bg,
+                  )}
+                  style={
+                    accent
+                      ? { backgroundColor: `${accent}26`, color: accent }
+                      : undefined
+                  }
+                >
+                  {rankImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={rankImage} alt="" className="size-2.5 rounded object-contain" />
+                  ) : (
+                    <RankTierIcon name={currentTier.iconName} className="size-2.5" />
+                  )}
+                  {rankLabel}
                 </span>
               </div>
 
@@ -147,7 +185,13 @@ export function HeaderUserMenu({
                   <span className="font-medium text-muted-foreground">
                     {honeyLevel.nextThreshold ? "EXP" : "Max Rank"}
                   </span>
-                  <span className={cn("tabular-nums font-semibold", rankDisplay.color)}>
+                  <span
+                    className={cn(
+                      "tabular-nums font-semibold",
+                      !accent && rankDisplayFallback.color,
+                    )}
+                    style={accent ? { color: accent } : undefined}
+                  >
                     {honeyLevel.nextThreshold
                       ? `${formatCount(honeyLifetime)} / ${formatCount(honeyLevel.nextThreshold)}`
                       : formatCount(honeyLifetime)}
@@ -155,25 +199,16 @@ export function HeaderUserMenu({
                 </div>
                 <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
                   <div
-                    className={cn(
-                      "h-full rounded-full transition-all",
-                      honeyLevel.label === "Diamond" ? "bg-cyan-500" :
-                      honeyLevel.label === "Gold"    ? "bg-yellow-500" :
-                      honeyLevel.label === "Silver"  ? "bg-slate-400" :
-                      honeyLevel.label === "Bronze"  ? "bg-amber-500" :
-                                                       "bg-muted-foreground"
-                    )}
-                    style={{ width: `${expProgress}%` }}
+                    className="h-full rounded-full bg-primary transition-all"
+                    style={{
+                      width: `${expProgress}%`,
+                      backgroundColor: accent ?? undefined,
+                    }}
                   />
                 </div>
-                {honeyLevel.nextThreshold && (
+                {honeyLevel.nextThreshold && nextRankLabel && (
                   <p className="mt-0.5 text-xs text-muted-foreground">
-                    {formatCount(honeyLevel.nextThreshold - honeyLifetime)} to {
-                      honeyLevel.level === 0 ? "Bronze" :
-                      honeyLevel.level === 1 ? "Silver" :
-                      honeyLevel.level === 2 ? "Gold"   :
-                                               "Diamond"
-                    }
+                    {formatCount(honeyLevel.nextThreshold - honeyLifetime)} to {nextRankLabel}
                   </p>
                 )}
               </div>

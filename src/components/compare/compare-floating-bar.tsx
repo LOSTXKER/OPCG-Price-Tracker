@@ -40,7 +40,7 @@ export function CompareFloatingBar() {
             {/* Card thumbnails */}
             <div className="flex items-center gap-2 overflow-x-auto">
               {items.map((item) => (
-                <div key={item.cardCode} className="group/thumb relative shrink-0">
+                <div key={item.cardCode} className="flex shrink-0 flex-col items-center gap-0.5">
                   <div className="relative h-[60px] w-[43px] overflow-hidden rounded-md border bg-muted">
                     {item.imageUrl ? (
                       <Image
@@ -56,16 +56,17 @@ export function CompareFloatingBar() {
                       </div>
                     )}
                   </div>
-                  <button
-                    onClick={() => remove(item.cardCode)}
-                    className="absolute -right-1.5 -top-1.5 hidden size-4 items-center justify-center rounded-full bg-destructive text-white group-hover/thumb:flex"
-                    aria-label={t(lang, "removeFromCompare")}
-                  >
-                    <X className="size-2.5" />
-                  </button>
-                  <p className="mt-0.5 w-[43px] truncate text-center text-meta">
+                  <p className="w-[43px] truncate text-center text-meta">
                     {item.cardCode}
                   </p>
+                  <button
+                    type="button"
+                    onClick={() => remove(item.cardCode)}
+                    className="inline-flex size-5 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                    aria-label={t(lang, "removeFromCompare")}
+                  >
+                    <X className="size-3" />
+                  </button>
                 </div>
               ))}
 

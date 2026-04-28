@@ -94,20 +94,18 @@ function ListingCardBase({
             No image
           </span>
         )}
-        <div className="absolute top-2 right-2">
-          <ConditionBadge condition={condition} />
-        </div>
       </Link>
 
       <div className="flex flex-1 flex-col gap-2 p-3">
         <Link href={listingHref} className="hover:text-primary transition-colors">
           <p className="line-clamp-1 text-sm font-medium">{card.nameEn ?? card.nameJp}</p>
         </Link>
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
           <span className="font-mono text-xs text-muted-foreground">
             {card.cardCode}
           </span>
           <RarityBadge rarity={card.rarity} size="sm" />
+          <ConditionBadge condition={condition} />
         </div>
 
         <div className="space-y-1">

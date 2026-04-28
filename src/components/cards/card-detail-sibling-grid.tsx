@@ -42,8 +42,15 @@ export function SiblingGrid({
     <div
       className={cn(
         "grid gap-2 grid-cols-3",
-        cols === 4 ? "sm:grid-cols-4" : cols === 5 ? "sm:grid-cols-5" : "sm:grid-cols-4",
+        // Tailwind needs literal class names — switch on the prop instead of
+        // building the class via interpolation so the JIT picks them up.
+        cols === 4 && "sm:grid-cols-4",
+        cols === 5 && "sm:grid-cols-5",
+        cols === 6 && "sm:grid-cols-6",
+        cols !== 4 && cols !== 5 && cols !== 6 && "sm:grid-cols-4",
         smCols === 5 && "md:grid-cols-5",
+        smCols === 6 && "md:grid-cols-6",
+        smCols === 8 && "md:grid-cols-8",
       )}
     >
       {siblings.map((s) => {

@@ -1,14 +1,14 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { adminApiHandler } from "@/lib/api/api-handler";
+import { paginatedJson } from "@/lib/api/list-response";
+import { parsePageLimit } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@/generated/prisma/client";
 
 export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
   const searchParams = request.nextUrl.searchParams;
   const search = searchParams.get("search") || "";
-  const page = Math.max(1, Number(searchParams.get("page") || 1));
-  const limit = Math.min(100, Math.max(1, Number(searchParams.get("limit") || 20)));
-  const skip = (page - 1) * limit;
+  const { page, limit, skip } = parsePageLimit(searchParams, { defaultLimit: 20 });
 
   const where: Prisma.UserWhereInput = {};
   if (search) {
@@ -49,17 +49,19 @@ export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
     prisma.user.count({ where: { createdAt: { gte: weekStart } } }),
   ]);
 
-  return NextResponse.json({
-    users,
+  return paginatedJson({
+    rows: users,
     total,
     page,
     limit,
-    totalPages: Math.ceil(total / limit),
-    stats: {
-      totalUsers: totalAllUsers,
-      totalHoney: totalHoney._sum.honeyPoints ?? 0,
-      activeToday,
-      newThisWeek,
+    itemsKey: "users",
+    extra: {
+      stats: {
+        totalUsers: totalAllUsers,
+        totalHoney: totalHoney._sum.honeyPoints ?? 0,
+        activeToday,
+        newThisWeek,
+      },
     },
   });
 });

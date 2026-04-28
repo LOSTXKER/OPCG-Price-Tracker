@@ -21,7 +21,6 @@ export default async function HomePage(props: {
     topGainers,
     topLosers,
     highestPriced,
-    newestSet,
     totalCards,
     totalValue,
     initialTableCards,
@@ -43,7 +42,7 @@ export default async function HomePage(props: {
 
   const gainers = topGainers.map(mapCardToTrending);
   const losers = topLosers.map(mapCardToTrending);
-  const featured = highestPriced.length > 0 ? highestPriced[0] : null;
+  const featured = highestPriced[0] ?? null;
 
   const tableCards = initialTableCards.map(({ prices, ...c }) => ({
     ...c,
@@ -84,23 +83,21 @@ export default async function HomePage(props: {
         filterDefinitions={filterDefinitions}
         initialSearch={initialSearch}
       >
-        {/* Portfolio & Honey mini previews */}
+        {/* Portfolio · Honey · Market stats strip + slim Ad */}
         <HomePreviewRow totalValue={totalValue} totalCards={totalCards} />
 
-        {/* Highlights: Featured + Gainers/Losers */}
-        <div className="panel grid gap-0 divide-y divide-border/40 lg:grid-cols-12 lg:divide-x lg:divide-y-0">
+        {/* Highlights: Featured card · Top Gainers · Top Losers */}
+        <div className="panel grid divide-y divide-border/40 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-3">
           {featured && (
-            <div className="p-5 lg:col-span-4">
+            <div className="p-4 sm:col-span-2 lg:col-span-1">
               <HomeFeaturedCard card={featured} />
             </div>
           )}
-          <div className={`grid divide-y divide-border/40 sm:grid-cols-2 sm:divide-x sm:divide-y-0 ${featured ? "lg:col-span-8" : "lg:col-span-12"}`}>
-            <div className="p-5">
-              <HomeMiniTable cards={gainers} type="gainers" />
-            </div>
-            <div className="p-5">
-              <HomeMiniTable cards={losers} type="losers" />
-            </div>
+          <div className="p-4">
+            <HomeMiniTable cards={gainers} type="gainers" />
+          </div>
+          <div className="p-4">
+            <HomeMiniTable cards={losers} type="losers" />
           </div>
         </div>
       </HomeMarketOverview>

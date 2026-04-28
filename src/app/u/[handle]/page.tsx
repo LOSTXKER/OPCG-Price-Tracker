@@ -93,6 +93,7 @@ export default async function HandleProfilePage({ params }: PageProps) {
         firstListingId={serialized.firstListingId}
         viewerSavedSeller={serialized.viewerSavedSeller}
         viewerIsSignedIn={serialized.viewerIsSignedIn}
+        commerceProfile={serialized.commerceProfile}
         isOwner={isOwner}
       />
     </>

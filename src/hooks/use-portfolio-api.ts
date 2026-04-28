@@ -28,12 +28,14 @@ type ItemRow = {
   purchasePrice: number | null
   condition: string
   isPrivate?: boolean
+  notes?: string | null
   card: CardData
 }
 
 type PortfolioRow = {
   id: number
   name: string
+  isPublic: boolean
   items: ItemRow[]
 }
 
@@ -205,6 +207,7 @@ export function usePortfolioApi() {
       priceChange7d: it.card.priceChange7d,
       condition: it.condition,
       isPrivate: it.isPrivate ?? false,
+      notes: it.notes ?? null,
     })),
     [items]
   )
@@ -213,6 +216,7 @@ export function usePortfolioApi() {
     portfolios.map((p) => ({
       id: p.id,
       name: p.name,
+      isPublic: p.isPublic ?? true,
       totalValue: p.items.reduce((s, it) => s + (it.card.latestPriceJpy ?? 0) * it.quantity, 0),
       totalCost: p.items.reduce((s, it) => s + (it.purchasePrice ?? 0) * it.quantity, 0),
       itemCount: p.items.length,
@@ -243,6 +247,27 @@ export function usePortfolioApi() {
     })
     if (res.ok) { void load(); return true }
     return false
+  }
+
+  const setPortfolioVisibility = async (
+    id: number,
+    isPublic: boolean,
+  ): Promise<boolean> => {
+    setPortfolios((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, isPublic } : p)),
+    )
+    const res = await fetch(`/api/portfolio/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ isPublic }),
+    })
+    if (!res.ok) {
+      setPortfolios((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, isPublic: !isPublic } : p)),
+      )
+      return false
+    }
+    return true
   }
 
   const deletePortfolio = async (id: number): Promise<boolean> => {
@@ -296,7 +321,12 @@ export function usePortfolioApi() {
 
   const updateItem = async (
     itemId: number,
-    data: { quantity?: number; purchasePrice?: number | null; isPrivate?: boolean },
+    data: {
+      quantity?: number
+      purchasePrice?: number | null
+      isPrivate?: boolean
+      notes?: string | null
+    },
   ): Promise<boolean> => {
     const res = await fetch(`/api/portfolio/items/${itemId}`, {
       method: "PATCH",
@@ -331,6 +361,7 @@ export function usePortfolioApi() {
     totalAllPortfolios,
     createPortfolio,
     renamePortfolio,
+    setPortfolioVisibility,
     deletePortfolio,
     addCardsBatch,
     updateItem,

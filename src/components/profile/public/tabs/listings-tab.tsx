@@ -85,7 +85,10 @@ export function ListingsTabContent({
 
   // Build a single concise meta line under the title:
   //   "1 รายการ · ฿268,758"  or  "12 รายการ · ฿120 – ฿268,758"
-  const metaLine = buildListingsMeta(listings, lang);
+  // We skip the meta entirely when there's a single listing because the tab
+  // nav already tells you the count and the card itself shows the price —
+  // repeating it as a panel header just adds visual noise.
+  const metaLine = listings.length > 1 ? buildListingsMeta(listings, lang) : null;
 
   // Filtering only adds value when there's a real range to filter through.
   const showToolbar = listings.length >= TOOLBAR_THRESHOLD;

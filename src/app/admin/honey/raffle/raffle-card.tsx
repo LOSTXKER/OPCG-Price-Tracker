@@ -57,13 +57,13 @@ export function RaffleCard({
                   {r.slug}
                 </span>
                 {r.isActive && !r.drawnAt && (
-                  <span className="rounded-full bg-price-up/10 px-2 py-0.5 text-xs font-bold text-price-up">ACTIVE</span>
+                  <span className="rounded-full bg-price-up/10 px-2 py-0.5 text-xs font-bold text-price-up">เปิดใช้งาน</span>
                 )}
                 {r.drawnAt && (
-                  <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-bold text-amber-500">DRAWN</span>
+                  <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-bold text-amber-500">สุ่มแล้ว</span>
                 )}
                 {!r.isActive && !r.drawnAt && (
-                  <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-bold text-muted-foreground">INACTIVE</span>
+                  <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-bold text-muted-foreground">ปิดใช้งาน</span>
                 )}
               </div>
               <h3 className="mt-1 text-sm font-semibold">{r.title}</h3>
@@ -71,15 +71,15 @@ export function RaffleCard({
             </div>
             <div className="shrink-0 text-right">
               <p className="text-sm font-bold tabular-nums">{r.totalTickets}</p>
-              <p className="text-meta">{r.totalParticipants} players</p>
+              <p className="text-meta">{r.totalParticipants} ผู้เล่น</p>
             </div>
           </div>
 
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-meta">
-            <span>Cost: <b className="text-foreground">{r.ticketCost}</b> pts</span>
-            <span>Max: <b className="text-foreground">{r.maxTickets}</b>/user</span>
-            <span>Free at: <b className="text-foreground">{r.freeThreshold}</b>d streak</span>
-            <span>Order: {r.sortOrder}</span>
+            <span>ราคา: <b className="text-foreground">{r.ticketCost}</b> pts</span>
+            <span>สูงสุด: <b className="text-foreground">{r.maxTickets}</b>/คน</span>
+            <span>ฟรีเมื่อ: สตรีค <b className="text-foreground">{r.freeThreshold}</b> วัน</span>
+            <span>ลำดับ: {r.sortOrder}</span>
           </div>
 
           {r.prizes.length > 0 && (
@@ -100,7 +100,7 @@ export function RaffleCard({
 
           {r.drawnAt && r.winnerId && (
             <div className="mt-2 rounded-lg bg-amber-500/5 border border-amber-500/20 px-3 py-1.5 text-xs">
-              <span className="font-medium text-amber-600">Winner:</span> <span className="font-mono text-xs">{r.winnerId}</span>
+              <span className="font-medium text-amber-600">ผู้ชนะ:</span> <span className="font-mono text-xs">{r.winnerId}</span>
             </div>
           )}
 
@@ -108,10 +108,10 @@ export function RaffleCard({
             {!r.drawnAt && (
               <>
                 <Button size="sm" variant="ghost" onClick={onEdit} className="h-7 gap-1 px-2 text-xs">
-                  <Pencil className="size-3" /> Edit
+                  <Pencil className="size-3" /> แก้ไข
                 </Button>
                 <Button size="sm" variant="ghost" onClick={onToggleActive} className="h-7 gap-1 px-2 text-xs">
-                  <Power className="size-3" /> {r.isActive ? "Deactivate" : "Activate"}
+                  <Power className="size-3" /> {r.isActive ? "ปิดใช้งาน" : "เปิดใช้งาน"}
                 </Button>
                 {r.isActive && (
                   <Button
@@ -122,18 +122,18 @@ export function RaffleCard({
                     className="h-7 gap-1 px-2 text-xs"
                   >
                     {drawingId === r.id ? <Loader2 className="size-3 animate-spin" /> : <Trophy className="size-3" />}
-                    Draw Winner
+                    สุ่มผู้ชนะ
                   </Button>
                 )}
                 {r.totalTickets === 0 && (
                   <Button size="sm" variant="ghost" onClick={onDelete} className="h-7 gap-1 px-2 text-xs text-destructive hover:text-destructive">
-                    <Trash2 className="size-3" /> Delete
+                    <Trash2 className="size-3" /> ลบ
                   </Button>
                 )}
               </>
             )}
             <Button size="sm" variant="ghost" onClick={onDuplicate} className="h-7 gap-1 px-2 text-xs">
-              <Copy className="size-3" /> Duplicate
+              <Copy className="size-3" /> คัดลอก
             </Button>
           </div>
         </div>

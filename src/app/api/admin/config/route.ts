@@ -2,22 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { logAudit } from "@/lib/audit";
-
-const CONFIG_KEYS = [
-  "price_scraping_interval",
-  "card_data_interval",
-  "exchange_rate_interval",
-  "marketplace_fee_free",
-  "marketplace_fee_pro",
-  "marketplace_fee_pro_plus",
-  "primary_currency",
-  "notification_email_enabled",
-  "notification_line_enabled",
-] as const;
+import { ADMIN_CONFIG_KEYS, invalidateAdminConfigCache } from "@/lib/admin/config";
 
 export const GET = adminApiHandler(async (_req: NextRequest, _admin) => {
   const configs = await prisma.systemConfig.findMany({
-    where: { key: { in: [...CONFIG_KEYS] } },
+    where: { key: { in: [...ADMIN_CONFIG_KEYS] } },
   });
 
   const configMap: Record<string, string> = {};
@@ -30,7 +19,7 @@ export const PUT = adminApiHandler(async (request: NextRequest, admin) => {
   const body = await request.json() as Record<string, string>;
 
   const updates = Object.entries(body).filter(
-    ([key]) => (CONFIG_KEYS as readonly string[]).includes(key)
+    ([key]) => (ADMIN_CONFIG_KEYS as readonly string[]).includes(key)
   );
 
   if (updates.length === 0) {
@@ -46,6 +35,8 @@ export const PUT = adminApiHandler(async (request: NextRequest, admin) => {
       })
     )
   );
+
+  invalidateAdminConfigCache();
 
   await logAudit({
     action: "UPDATE_CONFIG",

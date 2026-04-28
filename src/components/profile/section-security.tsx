@@ -10,7 +10,6 @@ import {
   Loader2,
   Lock,
   Monitor,
-  Shield,
   ShieldCheck,
   ShieldOff,
   Smartphone,
@@ -215,24 +214,19 @@ export function SectionSecurity() {
   };
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h2 className="flex items-center gap-2 text-h3">
-          <Shield className="size-5" />
-          {t(lang, "security")}
-        </h2>
-      </div>
+    <div className="space-y-6">
+      <h2 className="text-h2">{t(lang, "security")}</h2>
 
       {/* Change password */}
       <div className="rounded-xl border border-border/40 bg-card p-5 space-y-4">
         <div className="flex items-center gap-2">
           <Lock className="size-4 text-muted-foreground" />
-          <h3 className="text-sm font-semibold">{t(lang, "changePassword")}</h3>
+          <h3 className="text-h5">{t(lang, "changePassword")}</h3>
         </div>
 
         <form onSubmit={(e) => void handleChangePassword(e)} className="max-w-sm space-y-3">
           <div className="space-y-1.5">
-            <label htmlFor="new-pw" className="text-xs font-medium text-muted-foreground">
+            <label htmlFor="new-pw" className="text-eyebrow">
               {t(lang, "newPasswordLabel")}
             </label>
             <div className="relative">
@@ -276,7 +270,7 @@ export function SectionSecurity() {
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="confirm-pw" className="text-xs font-medium text-muted-foreground">
+            <label htmlFor="confirm-pw" className="text-eyebrow">
               {t(lang, "confirmNewPasswordLabel")}
             </label>
             <Input
@@ -320,7 +314,7 @@ export function SectionSecurity() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <KeyRound className="size-4 text-muted-foreground" />
-            <h3 className="text-sm font-semibold">{t(lang, "twoFactor")}</h3>
+            <h3 className="text-h5">{t(lang, "twoFactor")}</h3>
           </div>
           {!loadingMfa && (
             <Badge
@@ -378,7 +372,7 @@ export function SectionSecurity() {
               </div>
             )}
             <div className="max-w-xs space-y-2">
-              <label className="text-xs font-medium text-muted-foreground">
+              <label className="text-eyebrow">
                 {t(lang, "enterCode")}
               </label>
               <Input
@@ -444,7 +438,7 @@ export function SectionSecurity() {
       <div className="rounded-xl border border-border/40 bg-card">
         <div className="flex items-center gap-2 border-b border-border/40 px-5 py-3">
           <History className="size-4 text-muted-foreground" />
-          <h3 className="text-sm font-semibold">{t(lang, "loginHistory")}</h3>
+          <h3 className="text-h5">{t(lang, "loginHistory")}</h3>
         </div>
 
         {loadingSessions ? (

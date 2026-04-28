@@ -1,17 +1,24 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useState } from "react";
 import {
   ScrollText,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
+import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminPagination } from "@/components/admin/admin-pagination";
-import { AdminToolbar, AdminSearch, AdminFilterSelect } from "@/components/admin/admin-toolbar";
+import { AdminToolbar, AdminSearch } from "@/components/admin/admin-toolbar";
 import { AdminDataTable, type Column } from "@/components/admin/admin-data-table";
+import {
+  AdminStatusBadge,
+  type AdminStatusTone,
+} from "@/components/admin/admin-status-badge";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { useAdminList } from "@/lib/admin/use-admin-list";
+import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
+import { buildAdminQuery } from "@/lib/admin/admin-fetch";
 
 type LogEntry = {
   id: number;
@@ -23,58 +30,45 @@ type LogEntry = {
   createdAt: string;
 };
 
-type Pagination = {
-  page: number;
-  limit: number;
+interface LogsResponse {
+  logs: LogEntry[];
   total: number;
   totalPages: number;
+}
+
+const ACTION_TONES: Record<string, AdminStatusTone> = {
+  CREATE: "success",
+  UPDATE: "info",
+  DELETE: "danger",
+  SCRAPE: "primary",
+  MATCH: "warning",
+  APPROVE: "success",
+  REJECT: "danger",
+  GRANT: "warning",
 };
 
-const ACTION_COLORS: Record<string, string> = {
-  CREATE: "bg-green-500/15 text-green-600",
-  UPDATE: "bg-blue-500/15 text-blue-600",
-  DELETE: "bg-red-500/15 text-red-500",
-  SCRAPE: "bg-purple-500/15 text-purple-600",
-  MATCH: "bg-amber-500/15 text-amber-600",
-  APPROVE: "bg-emerald-500/15 text-emerald-600",
-  REJECT: "bg-red-500/15 text-red-500",
-  GRANT: "bg-orange-500/15 text-orange-600",
-};
+const PER_PAGE = 50;
 
 export default function AdminLogsPage() {
-  const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [pagination, setPagination] = useState<Pagination>({
-    page: 1,
-    limit: 50,
-    total: 0,
-    totalPages: 0,
+  const { state, patch } = useAdminUrlState({
+    defaults: { page: 1, entity: "", action: "" },
   });
-  const [loading, setLoading] = useState(true);
-  const [entityFilter, setEntityFilter] = useState("");
-  const [actionFilter, setActionFilter] = useState("");
+  const { page, entity, action } = state;
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
-  const fetchLogs = useCallback(
-    async (page: number) => {
-      setLoading(true);
-      const params = new URLSearchParams({ page: String(page), limit: "50" });
-      if (entityFilter) params.set("entity", entityFilter);
-      if (actionFilter) params.set("action", actionFilter);
-
-      const res = await fetch(`/api/admin/logs?${params}`);
-      const data = await res.json();
-      setLogs(data.logs ?? []);
-      setPagination(
-        data.pagination ?? { page: 1, limit: 50, total: 0, totalPages: 0 },
-      );
-      setLoading(false);
-    },
-    [entityFilter, actionFilter],
-  );
-
-  useEffect(() => {
-    void fetchLogs(1);
-  }, [fetchLogs]);
+  const { data, loading } = useAdminList<LogsResponse, typeof state>({
+    url: (p) =>
+      `/api/admin/logs?${buildAdminQuery({
+        page: p.page,
+        limit: PER_PAGE,
+        entity: p.entity || undefined,
+        action: p.action || undefined,
+      })}`,
+    params: state,
+  });
+  const logs = data?.logs ?? [];
+  const total = data?.total ?? 0;
+  const totalPages = data?.totalPages ?? 0;
 
   const columns: Column<LogEntry>[] = [
     {
@@ -87,14 +81,9 @@ export default function AdminLogsPage() {
       key: "action",
       header: "การกระทำ",
       render: (log) => (
-        <span
-          className={cn(
-            "inline-block rounded-full px-2 py-0.5 text-xs font-medium",
-            ACTION_COLORS[log.action] ?? "bg-muted text-muted-foreground",
-          )}
-        >
+        <AdminStatusBadge tone={ACTION_TONES[log.action] ?? "neutral"}>
           {log.action}
-        </span>
+        </AdminStatusBadge>
       ),
     },
     {
@@ -144,34 +133,36 @@ export default function AdminLogsPage() {
   ];
 
   return (
-    <div className="space-y-6">
-      <AdminPageHeader
-        title="บันทึกระบบ"
-        description="ตรวจสอบกิจกรรมและการเปลี่ยนแปลงทั้งหมดในระบบ"
-        icon={ScrollText}
-        badge={
-          pagination.total > 0 ? (
-            <Badge variant="secondary">
-              {pagination.total.toLocaleString()} รายการ
-            </Badge>
-          ) : undefined
-        }
-      />
-
-      <AdminToolbar>
-        <AdminSearch
-          value={entityFilter}
-          onChange={setEntityFilter}
-          placeholder="กรองตามประเภท..."
-          className="w-48"
+    <AdminPage
+      header={
+        <AdminPageHeader
+          title="บันทึกระบบ"
+          description="ตรวจสอบกิจกรรมและการเปลี่ยนแปลงทั้งหมดในระบบ"
+          icon={ScrollText}
+          meta={
+            total > 0 ? (
+              <Badge variant="secondary">{total.toLocaleString()} รายการ</Badge>
+            ) : undefined
+          }
         />
-        <AdminSearch
-          value={actionFilter}
-          onChange={setActionFilter}
-          placeholder="กรองตามการกระทำ..."
-          className="w-48"
-        />
-      </AdminToolbar>
+      }
+    >
+      <div className="sticky top-0 z-20 -mx-1 bg-background/85 px-1 py-2 backdrop-blur supports-backdrop-filter:bg-background/70">
+        <AdminToolbar>
+          <AdminSearch
+            value={entity}
+            onChange={(v) => patch({ entity: v, page: 1 })}
+            placeholder="กรองตามประเภท..."
+            className="w-full sm:w-48"
+          />
+          <AdminSearch
+            value={action}
+            onChange={(v) => patch({ action: v, page: 1 })}
+            placeholder="กรองตามการกระทำ..."
+            className="w-full sm:w-48"
+          />
+        </AdminToolbar>
+      </div>
 
       <AdminDataTable
         columns={columns}
@@ -198,12 +189,12 @@ export default function AdminLogsPage() {
       />
 
       <AdminPagination
-        page={pagination.page}
-        totalPages={pagination.totalPages}
-        total={pagination.total}
-        perPage={pagination.limit}
-        onPageChange={(p) => void fetchLogs(p)}
+        page={page}
+        totalPages={totalPages}
+        total={total}
+        perPage={PER_PAGE}
+        onPageChange={(p) => patch({ page: p })}
       />
-    </div>
+    </AdminPage>
   );
 }

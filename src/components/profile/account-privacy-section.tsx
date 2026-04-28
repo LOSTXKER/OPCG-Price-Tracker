@@ -5,10 +5,10 @@ import {
   CircleAlert,
   CircleCheck,
   DollarSign,
-  Eye,
   EyeOff,
   Globe,
   Hash,
+  Info,
   Layers,
   Lock,
   ShoppingBag,
@@ -94,39 +94,48 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
     [flash, onUserUpdate],
   );
 
-  function PrivacyFeedback({ field }: { field: string }) {
-    if (errorField === field) {
-      return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in zoom-in-95">
-          <CircleAlert className="size-3" />
-          {t(lang, "saveFailed")}
-        </span>
-      );
-    }
-    if (savedField === field) {
-      return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 animate-in fade-in zoom-in-95">
-          <CircleCheck className="size-3" />
-          {t(lang, "saved")}
-        </span>
-      );
-    }
-    return null;
-  }
+  const PrivacyFeedback = useCallback(
+    ({ field }: { field: string }) => {
+      if (errorField === field) {
+        return (
+          <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in zoom-in-95">
+            <CircleAlert className="size-3" />
+            {t(lang, "saveFailed")}
+          </span>
+        );
+      }
+      if (savedField === field) {
+        return (
+          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 animate-in fade-in zoom-in-95">
+            <CircleCheck className="size-3" />
+            {t(lang, "saved")}
+          </span>
+        );
+      }
+      return null;
+    },
+    [errorField, savedField, lang],
+  );
+
+  const activeVisibility = VISIBILITY_OPTIONS.find((o) => o.value === profileVisibility);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border/40 bg-card">
-      <div className="flex items-center justify-between gap-4 px-5 py-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <Eye className="size-4 text-muted-foreground" />
-            <h3 className="text-sm font-semibold">{t(lang, "privacy")}</h3>
-            <PrivacyFeedback field="profileVisibility" />
-          </div>
-          <p className="mt-0.5 text-meta">{t(lang, "privacySubtitle")}</p>
-        </div>
-        <div className="flex items-center rounded-lg border border-border/40 p-0.5">
-          {VISIBILITY_OPTIONS.map(({ value, labelKey, icon: Icon }) => {
+    <div id="privacy" className="space-y-5 scroll-mt-24">
+      <div className="flex items-start gap-2 rounded-lg border border-border/40 bg-muted/30 px-3.5 py-2.5 text-meta">
+        <Info className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/70" />
+        <p>{t(lang, "privacyAppliesAllPortfolios")}</p>
+      </div>
+
+      {/* ── Card 1: Profile visibility ─────────────────────────────────── */}
+      <Card>
+        <CardHeader
+          eyebrow={t(lang, "privacyVisibilityEyebrow")}
+          title={t(lang, "privacyVisibilityTitle")}
+          subtitle={t(lang, "privacyVisibilitySubtitle")}
+          feedback={<PrivacyFeedback field="profileVisibility" />}
+        />
+        <div className="grid gap-2 px-5 pb-5 sm:grid-cols-2">
+          {VISIBILITY_OPTIONS.map(({ value, labelKey, descKey, icon: Icon }) => {
             const active = profileVisibility === value;
             return (
               <button
@@ -136,23 +145,45 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
                   setProfileVisibility(value);
                   void patchPrivacy("profileVisibility", value);
                 }}
+                aria-pressed={active}
                 className={cn(
-                  "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all",
+                  "group flex items-start gap-3 rounded-xl border px-4 py-3 text-left transition-all",
                   active
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground",
+                    ? "border-primary/60 bg-primary/[0.06] ring-1 ring-primary/20"
+                    : "border-border/50 hover:border-border hover:bg-foreground/[0.02]",
                 )}
               >
-                <Icon className="size-3" />
-                {t(lang, labelKey)}
+                <span
+                  className={cn(
+                    "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors",
+                    active ? "bg-primary text-primary-foreground" : "bg-secondary/60 text-muted-foreground",
+                  )}
+                >
+                  <Icon className="size-4" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-semibold">{t(lang, labelKey)}</span>
+                  <span className="mt-0.5 block text-meta">{t(lang, descKey)}</span>
+                </span>
               </button>
             );
           })}
         </div>
-      </div>
+        {activeVisibility ? (
+          <div className="border-t border-border/30 bg-secondary/20 px-5 py-2.5 text-meta">
+            {t(lang, activeVisibility.descKey)}
+          </div>
+        ) : null}
+      </Card>
 
-      <div className="border-t border-border/30">
-        <PrivacyGroup label={t(lang, "privacyGroupSections")}>
+      {/* ── Card 2: What people can see ────────────────────────────────── */}
+      <Card>
+        <CardHeader
+          eyebrow={t(lang, "privacyGroupSections")}
+          title={t(lang, "privacySectionsTitle")}
+          subtitle={t(lang, "privacySectionsSubtitle")}
+        />
+        <div className="divide-y divide-border/30 border-t border-border/30">
           {SECTION_TOGGLES.map(({ field, labelKey, descKey, icon: Icon }) => (
             <PrivacyRow
               key={field}
@@ -167,8 +198,17 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
               }}
             />
           ))}
-        </PrivacyGroup>
-        <PrivacyGroup label={t(lang, "privacyGroupAdvanced")}>
+        </div>
+      </Card>
+
+      {/* ── Card 3: Advanced ───────────────────────────────────────────── */}
+      <Card>
+        <CardHeader
+          eyebrow={t(lang, "privacyGroupAdvanced")}
+          title={t(lang, "privacyAdvancedTitle")}
+          subtitle={t(lang, "privacyAdvancedSubtitle")}
+        />
+        <div className="divide-y divide-border/30 border-t border-border/30">
           {ADVANCED_PRIVACY_TOGGLES.map(({ field, labelKey, descKey, icon: Icon }) => (
             <PrivacyRow
               key={field}
@@ -183,8 +223,41 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
               }}
             />
           ))}
-        </PrivacyGroup>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+/* ── Building blocks ────────────────────────────────────────────────── */
+
+function Card({ children }: { children: ReactNode }) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-border/40 bg-card">
+      {children}
+    </div>
+  );
+}
+
+function CardHeader({
+  eyebrow,
+  title,
+  subtitle,
+  feedback,
+}: {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  feedback?: ReactNode;
+}) {
+  return (
+    <div className="px-5 pb-3 pt-4">
+      {eyebrow ? <p className="text-eyebrow text-muted-foreground/70">{eyebrow}</p> : null}
+      <div className="mt-1 flex flex-wrap items-center gap-2">
+        <h3 className="text-h5">{title}</h3>
+        {feedback}
       </div>
+      {subtitle ? <p className="mt-1 text-meta">{subtitle}</p> : null}
     </div>
   );
 }
@@ -218,19 +291,6 @@ function Toggle({
         )}
       />
     </button>
-  );
-}
-
-function PrivacyGroup({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div className="border-t border-border/30 first:border-t-0">
-      <div className="px-5 pt-3 pb-1">
-        <p className="text-eyebrow text-muted-foreground/70">
-          {label}
-        </p>
-      </div>
-      <div className="divide-y divide-border/30">{children}</div>
-    </div>
   );
 }
 

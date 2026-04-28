@@ -90,13 +90,21 @@ export function PortfolioHero({
             <span
               className={cn(
                 "rounded-full px-3 py-1 text-sm font-bold tabular-nums sm:px-2.5 sm:text-xs",
-                isUp
-                  ? "bg-price-up/12 text-price-up"
-                  : "bg-price-down/12 text-price-down",
+                hideBalance
+                  ? "bg-muted text-muted-foreground/60"
+                  : isUp
+                    ? "bg-price-up/12 text-price-up"
+                    : "bg-price-down/12 text-price-down",
               )}
             >
-              {isUp ? "+" : ""}
-              {formatPct(unrealizedPnlPercent, 2)}%
+              {hideBalance ? (
+                "••"
+              ) : (
+                <>
+                  {isUp ? "+" : ""}
+                  {formatPct(unrealizedPnlPercent, 2)}%
+                </>
+              )}
             </span>
           )}
         </div>
@@ -138,8 +146,15 @@ export function PortfolioHero({
                     <span className="max-w-[8rem] truncate text-sm font-semibold text-foreground/90">
                       {bestPerformer!.name}
                     </span>
-                    <span className="font-price text-xs font-bold tabular-nums text-price-up">
-                      +{formatPct(bestPerformer!.pnlPercent)}%
+                    <span
+                      className={cn(
+                        "font-price text-xs font-bold tabular-nums",
+                        hideBalance ? "text-muted-foreground/40" : "text-price-up",
+                      )}
+                    >
+                      {hideBalance
+                        ? "••"
+                        : `+${formatPct(bestPerformer!.pnlPercent)}%`}
                     </span>
                   </span>
                 </Stat>
@@ -151,8 +166,15 @@ export function PortfolioHero({
                     <span className="max-w-[8rem] truncate text-sm font-semibold text-foreground/90">
                       {worstPerformer!.name}
                     </span>
-                    <span className="font-price text-xs font-bold tabular-nums text-price-down">
-                      {formatPct(worstPerformer!.pnlPercent)}%
+                    <span
+                      className={cn(
+                        "font-price text-xs font-bold tabular-nums",
+                        hideBalance ? "text-muted-foreground/40" : "text-price-down",
+                      )}
+                    >
+                      {hideBalance
+                        ? "••"
+                        : `${formatPct(worstPerformer!.pnlPercent)}%`}
                     </span>
                   </span>
                 </Stat>

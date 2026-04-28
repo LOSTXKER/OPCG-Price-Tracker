@@ -1,14 +1,13 @@
 "use client"
 
 import Link from "next/link"
+import { ChevronRight } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
 
-import { StreakTierIndicator } from "@/components/shared/streak-tier-indicator"
 import { useAuthState } from "@/hooks/use-auth-state"
 import { invalidateSettings } from "@/hooks/use-settings"
 import { t } from "@/lib/i18n"
 import { createClient } from "@/lib/supabase/client"
-import { cn } from "@/lib/utils"
 import { formatCount } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
@@ -19,24 +18,34 @@ type HoneyData = {
   level: { level: number; label: string; nextThreshold: number | null }
 }
 
-const CARD_BASE = "group flex flex-col rounded-xl border p-4 transition-colors"
-const CARD_STYLE = cn(
-  CARD_BASE,
-  "border-border/40 bg-gradient-to-br from-card to-muted/20 hover:border-border",
-)
+const METRIC_CLASS =
+  "panel group flex flex-1 flex-col justify-between gap-1.5 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md hover:[&_.metric-arrow]:translate-x-0.5 hover:[&_.metric-arrow]:text-primary hover:[&_.metric-value]:text-primary"
+
+function MetricHeader({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="flex items-center justify-between gap-2">
+      <span className="flex items-center gap-1.5 text-eyebrow">
+        <span aria-hidden className="leading-none">🍯</span>
+        {children}
+      </span>
+      <ChevronRight
+        aria-hidden
+        className="metric-arrow size-4 shrink-0 text-muted-foreground/60 transition-all"
+      />
+    </span>
+  )
+}
 
 export function HomeHoneyPreview() {
   const lang = useUIStore((s) => s.language)
   const { authed } = useAuthState()
   const [data, setData] = useState<HoneyData | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [fetchDone, setFetchDone] = useState(false)
   const [checking, setChecking] = useState(false)
 
   useEffect(() => {
-    if (authed !== true) {
-      setLoading(false)
-      return
-    }
+    if (authed !== true) return
+    let cancelled = false
     fetch("/api/honey")
       .then(async (r) => {
         if (r.status === 401) {
@@ -48,11 +57,15 @@ export function HomeHoneyPreview() {
         return r.ok ? r.json() : null
       })
       .then((json) => {
+        if (cancelled) return
         if (json) setData(json)
-        setLoading(false)
       })
-      .catch(() => setLoading(false))
+      .catch(() => { /* swallow */ })
+      .finally(() => { if (!cancelled) setFetchDone(true) })
+    return () => { cancelled = true }
   }, [authed])
+
+  const loading = authed === null || (authed === true && !fetchDone)
 
   const doCheckin = useCallback(async () => {
     if (checking || !data?.canCheckin) return
@@ -82,81 +95,64 @@ export function HomeHoneyPreview() {
     setChecking(false)
   }, [checking, data?.canCheckin])
 
-  if (authed === null || loading) {
+  if (loading) {
     return (
-      <div className={CARD_STYLE}>
-        <div className="flex items-center gap-2">
-          <span className="text-sm leading-none">🍯</span>
-          <span className="text-xs font-semibold">{t(lang, "honeyPoints")}</span>
-        </div>
-        <div className="mt-3 h-7 w-16 animate-pulse rounded bg-muted" />
-        <div className="mt-2 h-4 w-32 animate-pulse rounded bg-muted" />
+      <div className={METRIC_CLASS}>
+        <MetricHeader>{t(lang, "honeyPoints")}</MetricHeader>
+        <div className="h-6 w-16 animate-pulse rounded bg-muted" />
+        <div className="h-3 w-24 animate-pulse rounded bg-muted" />
       </div>
     )
   }
 
   if (authed === false) {
     return (
-      <Link href="/honey" className={CARD_STYLE}>
-        <div className="flex items-center gap-2">
-          <span className="text-sm leading-none">🍯</span>
-          <span className="text-xs font-semibold">{t(lang, "honeyPoints")}</span>
-        </div>
-        <p className="mt-3 text-sm text-muted-foreground">{t(lang, "loginToEarn")}</p>
+      <Link href="/honey" className={METRIC_CLASS}>
+        <MetricHeader>{t(lang, "honeyPoints")}</MetricHeader>
+        <span className="metric-value font-price text-xl font-bold leading-none">—</span>
+        <span className="text-meta">{t(lang, "loginToEarn")}</span>
       </Link>
     )
   }
 
   if (!data) {
     return (
-      <Link href="/honey" className={CARD_STYLE}>
-        <div className="flex items-center gap-2">
-          <span className="text-sm leading-none">🍯</span>
-          <span className="text-xs font-semibold">{t(lang, "honeyPoints")}</span>
-        </div>
+      <Link href="/honey" className={METRIC_CLASS}>
+        <MetricHeader>{t(lang, "honeyPoints")}</MetricHeader>
+        <span className="metric-value font-price text-xl font-bold leading-none">—</span>
+        <span className="text-meta">&nbsp;</span>
       </Link>
     )
   }
 
-  const streak = data.checkinStreak
-  const checkinReward = streak >= 30 ? 30 : streak >= 7 ? 20 : 10
+  const checkinReward =
+    data.checkinStreak >= 30 ? 30 : data.checkinStreak >= 7 ? 20 : 10
 
   return (
-    <Link href="/honey" className={CARD_STYLE}>
-      <div className="flex items-center gap-2">
-        <span className="text-sm leading-none">🍯</span>
-        <span className="text-xs font-semibold">{t(lang, "honeyPoints")}</span>
-      </div>
-      <p className="mt-2 font-price text-xl font-bold leading-none">
-        {formatCount(data.honeyPoints)}{" "}
-        <span className="text-xs font-semibold text-muted-foreground">Honey</span>
-      </p>
-      <div className="mt-auto flex flex-wrap items-center gap-2 pt-1.5">
-        <StreakTierIndicator streak={streak} lang={lang} variant="compact" />
-        <div className="ml-auto shrink-0">
-          {data.canCheckin ? (
-            <button
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                doCheckin()
-              }}
-              disabled={checking}
-              className="relative rounded-full bg-primary px-2.5 py-1.5 text-xs font-bold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
-            >
-              <span className="absolute -right-0.5 -top-0.5 flex size-2">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-danger/75 opacity-75" />
-                <span className="relative inline-flex size-2 rounded-full bg-danger" />
-              </span>
-              {checking ? "..." : `${t(lang, "dailyCheckin")} +${checkinReward} 🍯`}
-            </button>
-          ) : (
-            <span className="text-xs font-medium text-price-up">
-              ✓ {t(lang, "checkinDone")}
-            </span>
-          )}
-        </div>
-      </div>
+    <Link href="/honey" className={METRIC_CLASS}>
+      <MetricHeader>{t(lang, "honeyPoints")}</MetricHeader>
+      <span className="metric-value flex items-baseline gap-1.5 font-price text-xl font-bold leading-none tabular-nums">
+        {formatCount(data.honeyPoints)}
+        <span className="text-xs font-medium text-muted-foreground">Honey</span>
+      </span>
+      <span className="flex items-center gap-2 text-meta">
+        {data.canCheckin ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              doCheckin()
+            }}
+            disabled={checking}
+            className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+          >
+            {checking ? "..." : `${t(lang, "dailyCheckin")} +${checkinReward} 🍯`}
+          </button>
+        ) : (
+          <span className="text-price-up">✓ {t(lang, "checkinDone")}</span>
+        )}
+      </span>
     </Link>
   )
 }

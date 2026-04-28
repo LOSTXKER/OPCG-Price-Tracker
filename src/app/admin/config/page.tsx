@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Settings, Save, Loader2, Clock, DollarSign, Bell } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Settings, Clock, DollarSign, Bell, LayoutList } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AdminPanel } from "@/components/admin/admin-panel";
+import { AdminSaveBar } from "@/components/admin/admin-save-bar";
+import { AdminFormField } from "@/components/admin/admin-form-field";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { LucideIcon } from "lucide-react";
 
@@ -84,6 +86,31 @@ const CONFIG_GROUPS: ConfigGroup[] = [
     ],
   },
   {
+    title: "ค่าเริ่มต้นการแสดงผล",
+    icon: LayoutList,
+    description: "จำนวนรายการต่อหน้าในหน้าแอดมินและหน้าตลาด",
+    fields: [
+      {
+        key: "admin_default_page_size",
+        label: "หน้าแอดมิน (ทั่วไป)",
+        placeholder: "20",
+        help: "จำนวนแถวต่อหน้าในตารางแอดมินส่วนใหญ่ (ค่าเริ่มต้น: 20)",
+      },
+      {
+        key: "admin_transactions_page_size",
+        label: "ประวัติธุรกรรม Honey",
+        placeholder: "30",
+        help: "จำนวนรายการต่อรอบของหน้าธุรกรรม Honey (ค่าเริ่มต้น: 30)",
+      },
+      {
+        key: "marketplace_default_page_size",
+        label: "หน้าตลาดซื้อขาย",
+        placeholder: "24",
+        help: "จำนวนการ์ดต่อหน้าในมุมมองตลาด (ค่าเริ่มต้น: 24)",
+      },
+    ],
+  },
+  {
     title: "การแจ้งเตือน",
     icon: Bell,
     description: "เปิด/ปิดช่องทางการแจ้งเตือนต่างๆ",
@@ -106,15 +133,33 @@ const CONFIG_GROUPS: ConfigGroup[] = [
 
 export default function AdminConfigPage() {
   const [config, setConfig] = useState<ConfigMap>({});
+  const [pristine, setPristine] = useState<ConfigMap>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetch("/api/admin/config")
       .then((r) => r.json())
-      .then((d: { config: ConfigMap }) => setConfig(d.config ?? {}))
+      .then((d: { config: ConfigMap }) => {
+        const next = d.config ?? {};
+        setConfig(next);
+        setPristine(next);
+      })
       .finally(() => setLoading(false));
   }, []);
+
+  const dirtyKeys = useMemo(() => {
+    const keys = new Set<string>();
+    for (const k of Object.keys(config)) {
+      if ((config[k] ?? "") !== (pristine[k] ?? "")) keys.add(k);
+    }
+    for (const k of Object.keys(pristine)) {
+      if ((config[k] ?? "") !== (pristine[k] ?? "")) keys.add(k);
+    }
+    return keys;
+  }, [config, pristine]);
+
+  const dirty = dirtyKeys.size > 0;
 
   const handleSave = async () => {
     setSaving(true);
@@ -126,6 +171,7 @@ export default function AdminConfigPage() {
       });
       if (res.ok) {
         toast.success("บันทึกการตั้งค่าสำเร็จ");
+        setPristine(config);
       } else {
         const data = await res.json().catch(() => null);
         toast.error(data?.error || `บันทึกไม่สำเร็จ (${res.status})`);
@@ -137,72 +183,93 @@ export default function AdminConfigPage() {
     }
   };
 
+  const handleReset = () => {
+    setConfig(pristine);
+  };
+
   if (loading) {
     return (
-      <div className="space-y-6">
-        <AdminPageHeader title="การตั้งค่าระบบ" icon={Settings} />
+      <AdminPage
+        header={<AdminPageHeader title="การตั้งค่าระบบ" icon={Settings} />}
+      >
         <div className="space-y-6">
           {Array.from({ length: 3 }).map((_, i) => (
-            <Card key={i}>
-              <CardHeader>
-                <Skeleton className="h-5 w-40" />
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {Array.from({ length: 3 }).map((_, j) => (
-                    <div key={j}>
-                      <Skeleton className="mb-2 h-4 w-32" />
-                      <Skeleton className="h-9 w-full" />
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <AdminPanel key={i}>
+              <Skeleton className="mb-4 h-5 w-40" />
+              <div className="grid gap-4 sm:grid-cols-2">
+                {Array.from({ length: 3 }).map((_, j) => (
+                  <div key={j}>
+                    <Skeleton className="mb-2 h-4 w-32" />
+                    <Skeleton className="h-9 w-full" />
+                  </div>
+                ))}
+              </div>
+            </AdminPanel>
           ))}
         </div>
-      </div>
+      </AdminPage>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <AdminPageHeader
-        title="การตั้งค่าระบบ"
-        description="ตั้งค่าการทำงานของระบบ เวลาอัตโนมัติ และค่าธรรมเนียม"
-        icon={Settings}
-        actions={
-          <Button onClick={() => void handleSave()} disabled={saving} size="sm">
-            {saving ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Save className="size-4" />
-            )}
-            บันทึก
-          </Button>
-        }
-      />
-
+    <AdminPage
+      header={
+        <AdminPageHeader
+          title="การตั้งค่าระบบ"
+          description="ตั้งค่าการทำงานของระบบ เวลาอัตโนมัติ และค่าธรรมเนียม"
+          icon={Settings}
+          meta={
+            dirty ? (
+              <span className="status-warning rounded-full px-2 py-0.5 text-xs font-medium">
+                แก้ไขแล้ว {dirtyKeys.size} ค่า
+              </span>
+            ) : null
+          }
+        />
+      }
+      footer={
+        <AdminSaveBar
+          dirty={dirty}
+          saving={saving}
+          onSave={() => void handleSave()}
+          onReset={handleReset}
+          description={
+            <span className="text-muted-foreground">
+              {dirty
+                ? `แก้ไขแล้ว ${dirtyKeys.size} ค่า — ยังไม่บันทึก`
+                : "ไม่มีการเปลี่ยนแปลง"}
+            </span>
+          }
+        />
+      }
+    >
       <div className="space-y-6">
         {CONFIG_GROUPS.map((group) => (
-          <Card key={group.title}>
-            <CardHeader className="border-b">
-              <div className="flex items-center gap-3">
-                <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10">
-                  <group.icon className="size-4 text-primary" />
-                </div>
-                <div>
-                  <CardTitle className="text-base">{group.title}</CardTitle>
-                  <p className="mt-0.5 text-meta">
-                    {group.description}
-                  </p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-5 sm:grid-cols-2">
-                {group.fields.map((field) => (
-                  <div key={field.key} className="space-y-1.5">
-                    <label className="text-sm font-medium">{field.label}</label>
+          <AdminPanel
+            key={group.title}
+            title={group.title}
+            description={group.description}
+            icon={group.icon}
+          >
+            <div className="grid gap-5 sm:grid-cols-2">
+              {group.fields.map((field) => {
+                const isDirty = dirtyKeys.has(field.key);
+                return (
+                  <AdminFormField
+                    key={field.key}
+                    label={
+                      <span className="flex items-center gap-1.5">
+                        {field.label}
+                        {isDirty && (
+                          <span
+                            className="size-1.5 rounded-full bg-warning"
+                            aria-label="ยังไม่บันทึก"
+                          />
+                        )}
+                      </span>
+                    }
+                    hint={field.help}
+                  >
                     <Input
                       value={config[field.key] ?? ""}
                       onChange={(e) =>
@@ -213,18 +280,13 @@ export default function AdminConfigPage() {
                       }
                       placeholder={field.placeholder}
                     />
-                    {field.help && (
-                      <p className="text-meta text-muted-foreground/70">
-                        {field.help}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  </AdminFormField>
+                );
+              })}
+            </div>
+          </AdminPanel>
         ))}
       </div>
-    </div>
+    </AdminPage>
   );
 }

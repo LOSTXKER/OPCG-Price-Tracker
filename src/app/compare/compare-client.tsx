@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  CalendarRange,
   ChartLine,
   Info,
   Lock,
@@ -14,6 +15,7 @@ import {
   TrendingUp,
   X,
 } from "lucide-react";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { PageHeader } from "@/components/layout/page-header";
@@ -158,31 +160,23 @@ export default function CompareClient() {
                 {orderedCards.map((card, i) => (
                   <th key={card.cardCode} className="p-3 text-center align-bottom">
                     <div className="flex flex-col items-center gap-2">
-                      <div className="group relative">
-                        <button
-                          onClick={() => removeFromStore(card.cardCode)}
-                          className="absolute -right-1.5 -top-1.5 z-10 flex size-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-sm transition-opacity hover:bg-destructive/90"
-                        >
-                          <X className="size-3" />
-                        </button>
-                        <Link href={`/cards/${card.cardCode}`}>
-                          <div className="relative mx-auto h-[140px] w-[100px] overflow-hidden rounded-lg border bg-muted shadow-sm transition-transform hover:scale-[1.03] md:h-[170px] md:w-[122px]">
-                            {card.imageUrl ? (
-                              <Image
-                                src={card.imageUrl}
-                                alt={getCardName(lang, card)}
-                                fill
-                                className="object-cover"
-                                sizes="122px"
-                              />
-                            ) : (
-                              <div className="flex h-full items-center justify-center text-meta">
-                                {card.cardCode}
-                              </div>
-                            )}
-                          </div>
-                        </Link>
-                      </div>
+                      <Link href={`/cards/${card.cardCode}`}>
+                        <div className="relative mx-auto h-[140px] w-[100px] overflow-hidden rounded-lg border bg-muted shadow-sm transition-transform hover:scale-[1.03] md:h-[170px] md:w-[122px]">
+                          {card.imageUrl ? (
+                            <Image
+                              src={card.imageUrl}
+                              alt={getCardName(lang, card)}
+                              fill
+                              className="object-cover"
+                              sizes="122px"
+                            />
+                          ) : (
+                            <div className="flex h-full items-center justify-center text-meta">
+                              {card.cardCode}
+                            </div>
+                          )}
+                        </div>
+                      </Link>
                       <div className="flex flex-col items-center gap-0.5">
                         <span
                           className="size-2.5 rounded-full ring-2 ring-background"
@@ -194,6 +188,15 @@ export default function CompareClient() {
                         <p className="font-mono text-xs text-muted-foreground">
                           {card.cardCode}
                         </p>
+                        <button
+                          type="button"
+                          onClick={() => removeFromStore(card.cardCode)}
+                          className="mt-1 inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                          aria-label={t(lang, "removeFromCompare")}
+                        >
+                          <X className="size-3" />
+                          {t(lang, "remove")}
+                        </button>
                       </div>
                     </div>
                   </th>
@@ -358,21 +361,19 @@ export default function CompareClient() {
               {t(lang, "comparePriceChart")}
             </h2>
             {hasChart && (
-              <div className="ml-auto flex gap-0.5 rounded-lg bg-muted p-0.5 max-sm:ml-0">
-                {[30, 90, 180, 365].map((d) => (
-                  <button
-                    key={d}
-                    onClick={() => setDays(d)}
-                    className={cn(
-                      "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
-                      days === d
-                        ? "bg-background text-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground"
-                    )}
-                  >
-                    {d}d
-                  </button>
-                ))}
+              <div className="ml-auto max-sm:ml-0">
+                <SegmentedControl
+                  size="sm"
+                  variant="pill"
+                  leadingIcon={CalendarRange}
+                  options={[30, 90, 180, 365].map((d) => ({
+                    value: String(d),
+                    label: `${d}d`,
+                  }))}
+                  value={String(days)}
+                  onChange={(v) => setDays(Number(v))}
+                  ariaLabel={t(lang, "filter")}
+                />
               </div>
             )}
           </div>

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import type { PrivacySettingsUpdate } from "@/lib/users";
+import { clientEnv } from "@/lib/env";
 
 export const RESERVED_HANDLES = new Set([
   "admin", "administrator", "api", "auth", "billing", "cards", "checkout",
@@ -30,6 +31,7 @@ export type ProfileUpdate = {
   socialIg?: string | null;
   socialTwitter?: string | null;
   socialFacebook?: string | null;
+  coverImageUrl?: string | null;
 };
 
 const SOCIAL_LIMITS = {
@@ -116,6 +118,50 @@ export async function buildProfileUpdate(
     if (typeof raw !== "string") continue;
     const trimmed = raw.trim().slice(0, SOCIAL_LIMITS[key]);
     userData[key] = trimmed || null;
+  }
+
+  if (body.coverImageUrl !== undefined) {
+    const raw = body.coverImageUrl;
+    if (raw === null || raw === "") {
+      userData.coverImageUrl = null;
+    } else if (typeof raw === "string") {
+      const trimmed = raw.trim();
+      if (trimmed.length > 2048) {
+        return {
+          ok: false,
+          response: NextResponse.json(
+            { error: "Cover image URL is too long" },
+            { status: 400 },
+          ),
+        };
+      }
+      // Restrict cover URLs to the configured Supabase storage origin so a
+      // user can't set arbitrary remote URLs (which would leak referer headers
+      // and bypass next/image's allowlist).
+      const allowedOrigin = clientEnv().NEXT_PUBLIC_SUPABASE_URL;
+      try {
+        const url = new URL(trimmed);
+        const allowed = new URL(allowedOrigin);
+        if (url.origin !== allowed.origin) {
+          return {
+            ok: false,
+            response: NextResponse.json(
+              { error: "Cover image URL must be hosted on Supabase storage" },
+              { status: 400 },
+            ),
+          };
+        }
+      } catch {
+        return {
+          ok: false,
+          response: NextResponse.json(
+            { error: "Cover image URL is invalid" },
+            { status: 400 },
+          ),
+        };
+      }
+      userData.coverImageUrl = trimmed;
+    }
   }
 
   if (body.handle !== undefined) {

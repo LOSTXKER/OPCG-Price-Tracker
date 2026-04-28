@@ -6,6 +6,7 @@ import {
   LayoutGrid,
   List,
   Search,
+  TrendingUpDown,
   X,
 } from "lucide-react"
 
@@ -38,6 +39,7 @@ import {
 } from "@/components/home/market-types"
 import { SearchTableRow, type CardRow } from "./search-table-row"
 import { SearchPagination } from "./search-pagination"
+import { PhotoSearchButton } from "./photo-search-button"
 
 const ALL_SETS = "__all_sets__"
 const ALL_RARITIES = "__all_rarities__"
@@ -199,7 +201,7 @@ function SearchContent({
   return (
     <div className="space-y-4">
       {/* Search bar */}
-      <form onSubmit={handleSubmit} className="flex items-center">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground/50" />
           <input
@@ -222,10 +224,11 @@ function SearchContent({
         </div>
         <Button
           type="submit"
-          className="h-12 shrink-0 rounded-l-none rounded-r-xl px-6"
+          className="-ml-2 h-12 shrink-0 rounded-l-none rounded-r-xl px-6"
         >
           {t(lang, "searchButton")}
         </Button>
+        <PhotoSearchButton className="h-12" />
       </form>
 
       {/* Results summary + controls */}
@@ -318,7 +321,9 @@ function SearchContent({
                     value={changePeriod}
                     onChange={setChangePeriod}
                     size="sm"
-                    ariaLabel="Change period"
+                    variant="pill"
+                    leadingIcon={TrendingUpDown}
+                    ariaLabel={t(lang, "change")}
                   />
                 </div>
               )}

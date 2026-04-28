@@ -1,26 +1,27 @@
 "use client";
 
 import Image from "next/image";
-
 import { cn } from "@/lib/utils";
 
 /**
  * Brand-warm cover palettes — curated to live inside the Meecard
  * brown/cream/amber world rather than the generic rainbow that
- * `avatarGradient` uses for the avatar fallback. Every option is a warm
- * gradient pair (rose/copper/mocha/honey/sand/amber) that handshakes with
- * the `--primary: #73533E` accent below. Deterministic by userId so each
- * profile still gets its own personality.
+ * `avatarGradient` uses for the avatar fallback. Every option is a soft
+ * warm gradient pair (rose/copper/mocha/honey/sand/amber) that handshakes
+ * with the `--primary: #73533E` accent below. Deterministic by userId so
+ * each profile still gets its own personality, but kept at low saturation
+ * (200-tier) so the banner reads as background atmosphere rather than a
+ * loud feature wall.
  */
 const COVER_PALETTES = [
-  "from-amber-300 via-orange-300 to-rose-300",
-  "from-orange-300 via-amber-200 to-yellow-200",
-  "from-rose-300 via-orange-200 to-amber-200",
-  "from-amber-400 via-orange-300 to-amber-200",
-  "from-yellow-300 via-amber-300 to-orange-300",
-  "from-orange-400 via-amber-300 to-rose-200",
-  "from-amber-200 via-orange-200 to-rose-300",
-  "from-rose-200 via-amber-200 to-yellow-200",
+  "from-amber-200/80 via-orange-200/70 to-rose-200/70",
+  "from-orange-200/80 via-amber-100/70 to-yellow-100/70",
+  "from-rose-200/80 via-orange-100/70 to-amber-100/70",
+  "from-amber-200/80 via-orange-200/60 to-amber-100/70",
+  "from-yellow-200/80 via-amber-200/70 to-orange-200/70",
+  "from-orange-200/80 via-amber-200/60 to-rose-100/70",
+  "from-amber-100/80 via-orange-100/70 to-rose-200/70",
+  "from-rose-100/80 via-amber-100/70 to-yellow-100/70",
 ] as const;
 
 function coverGradient(seed: string): string {
@@ -34,12 +35,15 @@ function coverGradient(seed: string): string {
 /**
  * Cover banner that lives at the top of the public profile page.
  *
- * v1 design intentionally avoids any DB schema change:
- *   - default look is a deterministic gradient + radial blobs derived from
- *     `userId` (reusing `avatarGradient`) so every profile already feels
- *     bespoke without an upload step
- *   - if `coverImageUrl` is provided we render that instead, with a soft
- *     bottom-fade so the avatar / hero stay readable
+ * - When `coverImageUrl` is provided we render the user-uploaded photo with
+ *   `next/image` (Supabase storage origin allowlisted in next.config). We
+ *   keep two extra overlays (a soft dark gradient at the bottom for legibility
+ *   of any text floated on top, and a brand-warm tint) so different cover
+ *   photos still land inside our visual language instead of looking like a
+ *   pasted screenshot.
+ * - When the user hasn't uploaded a cover, we fall back to a deterministic
+ *   warm gradient seeded by `userId`, so every profile has its own banner
+ *   without an upload step.
  *
  * The banner is rendered full-bleed inside its parent container — the parent
  * is responsible for the negative inset (`-mx-4`/`-mx-6`) so the cover hugs
@@ -55,56 +59,59 @@ export function ProfileCover({
   className?: string;
 }) {
   const gradient = coverGradient(userId);
+  const hasPhoto = !!coverImageUrl;
 
   return (
     <div
       className={cn(
         "relative isolate w-full overflow-hidden",
-        // Slightly tighter than v1 (was h-32/h-44/h-56) — gives the page
-        // colour and energy without taking over the fold.
-        "h-28 sm:h-36 md:h-44",
+        // Photo banner can afford a touch more vertical room; the gradient
+        // fallback stays tight so it reads as atmospheric, not heroic.
+        hasPhoto ? "h-32 sm:h-44 md:h-56" : "h-24 sm:h-32 md:h-40",
         "rounded-2xl sm:rounded-3xl",
         className,
       )}
-      aria-hidden={!coverImageUrl}
+      aria-hidden
     >
-      {coverImageUrl ? (
+      {hasPhoto ? (
         <>
           <Image
-            src={coverImageUrl}
+            src={coverImageUrl as string}
             alt=""
             fill
-            priority
-            sizes="(max-width: 1024px) 100vw, 1024px"
+            sizes="(min-width: 1024px) 1024px, 100vw"
             className="object-cover"
+            priority={false}
           />
-          {/* Soft bottom fade so the avatar / displayName remain legible
-              regardless of the photo's contrast. */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/60 via-background/0 to-background/0" />
+          {/* Subtle warm tint so a wide variety of uploaded photos still feel
+              "ours" — keeps the page from drifting into Twitter-banner land. */}
+          <div
+            className={cn(
+              "absolute inset-0 bg-gradient-to-br opacity-25 mix-blend-soft-light",
+              gradient,
+            )}
+          />
+          {/* Bottom fade for legibility of avatar/name that overlap the cover. */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-background/15 to-transparent" />
         </>
       ) : (
         <>
-          {/* Layer 1 — base gradient derived from userId */}
-          <div className={cn("absolute inset-0 bg-gradient-to-br", gradient)} />
-          {/* Layer 2 — soft radial highlights to mimic a textured banner */}
+          <div className="absolute inset-0 bg-card" />
           <div
-            className="absolute inset-0 opacity-70 mix-blend-screen"
+            className={cn(
+              "absolute inset-0 bg-gradient-to-br opacity-90",
+              "mix-blend-multiply dark:mix-blend-screen dark:opacity-60",
+              gradient,
+            )}
+          />
+          <div
+            className="absolute inset-0 opacity-50 mix-blend-screen"
             style={{
               backgroundImage:
-                "radial-gradient(60% 80% at 15% 15%, rgba(255,255,255,0.45), transparent 60%), radial-gradient(50% 70% at 85% 30%, rgba(255,255,255,0.25), transparent 65%)",
+                "radial-gradient(70% 90% at 20% 10%, rgba(255,255,255,0.35), transparent 65%)",
             }}
           />
-          {/* Layer 3 — subtle SVG noise so the gradient doesn't read as flat */}
-          <div
-            className="absolute inset-0 opacity-[0.18] mix-blend-overlay"
-            style={{
-              backgroundImage:
-                "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='5'/><feColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")",
-              backgroundSize: "240px 240px",
-            }}
-          />
-          {/* Layer 4 — bottom fade into page bg for clean handoff to hero */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-background/10 to-transparent" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/80 via-background/10 to-transparent" />
         </>
       )}
     </div>

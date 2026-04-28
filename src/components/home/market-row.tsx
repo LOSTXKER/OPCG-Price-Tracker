@@ -4,12 +4,11 @@ import { memo } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
-import { CardImageLightbox } from "@/components/shared/card-image-lightbox"
+import { CardImageButton } from "@/components/shared/card-image-button"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { Price } from "@/components/shared/price-inline"
 import { PriceUsd } from "@/components/shared/price-usd"
-import { Sparkline } from "@/components/shared/sparkline"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getCardName } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -21,13 +20,11 @@ export const MarketRow = memo(function MarketRow({
   card,
   rank,
   showViews,
-  sparklineData,
   priceMode = "raw",
 }: {
   card: CardRow
   rank: number
   showViews?: boolean
-  sparklineData?: number[]
   priceMode?: PriceMode
 }) {
   const lang = useUIStore((s) => s.language)
@@ -49,17 +46,32 @@ export const MarketRow = memo(function MarketRow({
       <td className="py-3 pr-3 pl-2 align-middle">
         <div className="flex items-center gap-3">
           {card.imageUrl ? (
-            <CardImageLightbox src={card.imageUrl} alt={name}>
-              <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted">
-                <Image
-                  src={card.imageUrl}
-                  alt={name}
-                  fill
-                  className="object-contain"
-                  sizes="40px"
-                />
-              </div>
-            </CardImageLightbox>
+            <CardImageButton
+              card={{
+                cardCode: card.cardCode,
+                cardId: card.id ?? null,
+                nameJp: card.nameJp,
+                nameEn: card.nameEn,
+                nameTh: card.nameTh,
+                rarity: card.rarity,
+                imageUrl: card.imageUrl,
+                setCode: card.set?.code ?? card.setCode ?? null,
+                priceJpy: card.latestPriceJpy ?? null,
+                priceChange24h: card.priceChange24h ?? null,
+                priceChange7d: card.priceChange7d ?? null,
+                priceChange30d: card.priceChange30d ?? null,
+                psa10PriceUsd: card.psa10PriceUsd ?? null,
+              }}
+              className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted"
+            >
+              <Image
+                src={card.imageUrl}
+                alt={name}
+                fill
+                className="object-contain"
+                sizes="40px"
+              />
+            </CardImageButton>
           ) : (
             <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted" />
           )}
@@ -120,13 +132,6 @@ export const MarketRow = memo(function MarketRow({
           {isPsa ? <span className="font-price text-xs text-muted-foreground">—</span> : <ChangeCell value={c30} />}
         </td>
       )}
-      <td className="hidden py-3 pr-4 align-middle xl:table-cell">
-        {sparklineData && sparklineData.length >= 2 ? (
-          <Sparkline data={sparklineData} width={80} height={28} />
-        ) : (
-          <span className="text-muted-foreground/30">—</span>
-        )}
-      </td>
     </tr>
   )
 })
@@ -174,9 +179,6 @@ export function TableRowSkeleton() {
       </td>
       <td className="hidden py-2.5 pr-3 lg:table-cell">
         <Skeleton className="ml-auto h-4 w-10" />
-      </td>
-      <td className="hidden py-2.5 pr-4 xl:table-cell">
-        <Skeleton className="h-7 w-20" />
       </td>
     </tr>
   )

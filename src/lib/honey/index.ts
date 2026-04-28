@@ -328,7 +328,7 @@ export async function grantHoney(
   }
 
   if (amount > 0 && type !== "LEVEL_UP" && !options?.skipLevelCheck) {
-    const levelUp = checkLevelUp(oldLifetime, updated.honeyLifetimeEarned);
+    const levelUp = await checkLevelUp(oldLifetime, updated.honeyLifetimeEarned);
     if (levelUp) {
       await grantHoney(
         userId, levelUp.bonus, "LEVEL_UP", `Level up: ${levelUp.label}`,

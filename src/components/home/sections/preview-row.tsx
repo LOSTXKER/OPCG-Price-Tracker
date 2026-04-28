@@ -13,11 +13,15 @@ export function HomePreviewRow({
   totalCards: number
 }) {
   return (
-    <div className="hidden auto-rows-fr gap-3 lg:grid lg:grid-cols-4">
-      <HomePortfolioPreview />
-      <HomeHoneyPreview />
-      <HomeMarketValueCard totalValue={totalValue} totalCards={totalCards} />
-      <HomeAdCard />
+    <div className="hidden md:flex md:items-stretch md:gap-3">
+      <div className="flex flex-1 items-stretch gap-3">
+        <HomePortfolioPreview />
+        <HomeHoneyPreview />
+        <HomeMarketValueCard totalValue={totalValue} totalCards={totalCards} />
+      </div>
+      <div className="hidden w-[28%] max-w-[320px] shrink-0 lg:block">
+        <HomeAdCard />
+      </div>
     </div>
   )
 }

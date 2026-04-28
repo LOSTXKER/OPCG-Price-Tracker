@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Crown, Gift, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { ShopItem } from "../types";
 import { localizedName } from "../types";
+import { FilterTabs } from "./_shared/filter-tabs";
 
 const SHOP_CAT_LABELS: Record<string, Record<string, string>> = {
   ALL:              { TH: "ทั้งหมด",            EN: "All",          JP: "すべて" },
@@ -43,7 +44,6 @@ function localizedDesc(desc: string | null, lang: Language): string {
   return entry ? entry[lang] : desc.replace(/Honey Pass/gi, "Honey");
 }
 
-
 export function ShopTab({
   lang,
   shopItems,
@@ -57,8 +57,13 @@ export function ShopTab({
 }) {
   const [shopFilter, setShopFilter] = useState("ALL");
 
-  const activeCategories = ["ALL", ...new Set(shopItems.map((i) => i.type))];
-  const filteredShop = shopFilter === "ALL" ? shopItems : shopItems.filter((i) => i.type === shopFilter);
+  const activeCategories = useMemo(
+    () => ["ALL", ...new Set(shopItems.map((i) => i.type))],
+    [shopItems],
+  );
+  const filteredShop = shopFilter === "ALL"
+    ? shopItems
+    : shopItems.filter((i) => i.type === shopFilter);
 
   const catLabel = (cat: string) => {
     const labels = SHOP_CAT_LABELS[cat];
@@ -67,86 +72,84 @@ export function ShopTab({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="panel overflow-hidden">
-        <div className="border-b px-4 py-3.5">
-          <div className="flex items-center justify-between">
-            <h2 className="text-h3">{t(lang, "honeyShop")}</h2>
-            <span className="flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-bold tabular-nums text-amber-700 dark:text-amber-400">
-              🍯 {points.toLocaleString()}
-            </span>
-          </div>
-          <p className="mt-0.5 text-meta">
-            {lang === "TH" ? "ใช้ Honey แลกของรางวัลพิเศษ" : lang === "JP" ? "Honeyを使って特別な報酬と交換" : "Redeem Honey for exclusive rewards"}
-          </p>
-        </div>
-        <div className="flex items-center gap-1 overflow-x-auto bg-muted/20 px-4 py-1.5 scrollbar-none">
-          {activeCategories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setShopFilter(cat)}
-              className={cn(
-                "shrink-0 rounded-md px-3 py-1.5 text-xs font-medium transition-all",
-                shopFilter === cat ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:bg-background/50 hover:text-foreground"
-              )}
-            >
-              {catLabel(cat)}
-            </button>
-          ))}
-        </div>
+    <div className="panel overflow-hidden">
+      <div className="flex items-center justify-between border-b px-4 py-3.5">
+        <h2 className="text-h3">{t(lang, "honeyShop")}</h2>
+        <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold tabular-nums text-primary">
+          🍯 {points.toLocaleString()}
+        </span>
+      </div>
 
-        {filteredShop.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 py-14 text-center">
-            <ShoppingBag className="size-8 text-muted-foreground/20" />
-            <p className="text-meta text-muted-foreground/60">{t(lang, "noShopItems")}</p>
-          </div>
-        ) : (
-          <div className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredShop.map((item) => {
-              const canAfford = points >= item.cost;
-              const inStock = item.stock == null || item.stock > 0;
-              const isTrial = item.type === "TRIAL_PRO" || item.type === "TRIAL_PRO_PLUS";
-              const ItemIcon = isTrial ? Crown : Gift;
+      <FilterTabs<string>
+        value={shopFilter}
+        onChange={setShopFilter}
+        options={activeCategories.map((cat) => ({ key: cat, label: catLabel(cat) }))}
+        ariaLabel={t(lang, "honeyShop")}
+      />
 
-              return (
-                <div key={item.id} className={cn(
-                  "flex flex-col rounded-xl border p-4",
-                  isTrial ? "border-amber-500/20 bg-amber-500/[0.02]" : "border-border/40",
-                )}>
-                  <div className="mb-3 flex items-center gap-3">
-                    <div className={cn(
-                      "flex size-10 shrink-0 items-center justify-center rounded-lg",
-                      isTrial ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-primary/10 text-primary",
-                    )}>
-                      <ItemIcon className="size-5" />
+      {filteredShop.length === 0 ? (
+        <div className="flex flex-col items-center gap-2 py-14 text-center">
+          <ShoppingBag className="size-6 text-muted-foreground/30" />
+          <p className="text-meta">{t(lang, "noShopItems")}</p>
+        </div>
+      ) : (
+        <div className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredShop.map((item) => {
+            const canAfford = points >= item.cost;
+            const inStock = item.stock == null || item.stock > 0;
+            const isTrial = item.type === "TRIAL_PRO" || item.type === "TRIAL_PRO_PLUS";
+            const ItemIcon = isTrial ? Crown : Gift;
+            const imageUrl = typeof item.value?.imageUrl === "string" ? item.value.imageUrl : null;
+
+            return (
+              <div key={item.id} className="flex flex-col rounded-xl border p-4">
+                <div className="mb-3 flex items-center gap-3">
+                  {imageUrl ? (
+                    <img
+                      src={imageUrl}
+                      alt=""
+                      className="size-9 shrink-0 rounded-lg object-cover"
+                    />
+                  ) : (
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted/60 text-muted-foreground">
+                      <ItemIcon className="size-4.5" />
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="truncate text-sm font-semibold">
-                        {isTrial
-                          ? `${lang === "TH" ? "แพ็กเกจ" : lang === "JP" ? "パッケージ" : "Package"} ${localizedName(item, lang)}`
-                          : localizedName(item, lang)}
-                      </h3>
-                      <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
-                        <span className={cn(
-                          "rounded-full px-1.5 py-0.5 text-xs font-medium",
-                          isTrial ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground",
-                        )}>{catLabel(item.type)}</span>
-                      </div>
-                    </div>
-                  </div>
-                  {item.description && <p className="mb-3 text-meta line-clamp-2">{localizedDesc(item.description, lang)}</p>}
-                  <div className="mt-auto flex items-center justify-between">
-                    <span className="text-sm font-bold tabular-nums text-primary">{item.cost} 🍯</span>
-                    <Button size="sm" onClick={() => onRedeem(item.id)} disabled={!canAfford || !inStock} className="gap-1.5 border border-primary/20 bg-primary/10 text-xs text-primary hover:bg-primary/15">
-                      {t(lang, "redeemItem")}
-                    </Button>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <h3 className="truncate text-sm font-semibold">
+                      {isTrial
+                        ? `${lang === "TH" ? "แพ็กเกจ" : lang === "JP" ? "パッケージ" : "Package"} ${localizedName(item, lang)}`
+                        : localizedName(item, lang)}
+                    </h3>
+                    <p className="mt-0.5 text-meta">{catLabel(item.type)}</p>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+                {item.description && (
+                  <p className="mb-3 text-meta line-clamp-2">{localizedDesc(item.description, lang)}</p>
+                )}
+                <div className="mt-auto flex items-center justify-between">
+                  <span className="text-sm font-bold tabular-nums text-primary">
+                    {item.cost.toLocaleString()} 🍯
+                  </span>
+                  <Button
+                    size="sm"
+                    onClick={() => onRedeem(item.id)}
+                    disabled={!canAfford || !inStock}
+                    className={cn(
+                      "h-8 gap-1.5 text-xs",
+                      canAfford && inStock
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                        : "bg-muted text-muted-foreground",
+                    )}
+                  >
+                    {t(lang, "redeemItem")}
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

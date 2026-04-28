@@ -111,10 +111,27 @@ type ProfilePrivacySnapshot = {
   profileSummaryOnly: boolean;
 };
 
+export type CommerceProfile = {
+  /** Most-frequent location across the seller's active listings. */
+  primaryLocation: string | null;
+  /**
+   * Whether multiple distinct locations were observed (so the UI can render
+   * "หลายจังหวัด" rather than spotlighting a single province).
+   */
+  hasMultipleLocations: boolean;
+  /**
+   * Union of `Listing.shipping[]` codes across the seller's active listings,
+   * de-duplicated and capped to 4 entries (most-frequent first). Empty when
+   * the seller has no active listings.
+   */
+  shippingMethods: string[];
+};
+
 export type ProfileUserSelect = {
   id: string;
   displayName: string | null;
   avatarUrl: string | null;
+  coverImageUrl: string | null;
   bio: string | null;
   tier: string;
   sellerRating: number | null;
@@ -141,6 +158,7 @@ export const profileUserSelect = {
   id: true,
   displayName: true,
   avatarUrl: true,
+  coverImageUrl: true,
   bio: true,
   tier: true,
   sellerRating: true,
@@ -211,7 +229,10 @@ export async function loadPublicProfileData(user: ProfileUserSelect, isOwner: bo
 
   const portfolioWhere = isOwner
     ? { portfolio: { userId: user.id } }
-    : { portfolio: { userId: user.id }, isPrivate: false };
+    : {
+        portfolio: { userId: user.id, isPublic: true },
+        isPrivate: false,
+      };
 
   // Look up the viewer (if signed in) so we can resolve "did the viewer save
   // this seller?" without forcing an extra round-trip in the client.
@@ -546,6 +567,11 @@ export async function loadPublicProfileData(user: ProfileUserSelect, isOwner: bo
   // First active listing acts as a "general inquiry" anchor for the
   // profile-level Message CTA. Messages are scoped to a listing in our schema,
   // so we reuse the most recent one as the conversation thread.
+  // ─── Commerce profile (location/shipping chips for TrustBlock) ───
+  // Aggregated from listings already loaded above so we don't issue a second
+  // query. Counts → ranked codes → top 4 (visual budget on mobile).
+  const commerceProfile = buildCommerceProfile(serializedListings);
+
   const firstListingId = serializedListings[0]?.id ?? null;
 
   const socials: ProfileSocialLinks = {
@@ -585,6 +611,7 @@ export async function loadPublicProfileData(user: ProfileUserSelect, isOwner: bo
     serialized: {
       user: {
         id: user.id,
+        coverImageUrl: user.coverImageUrl,
         displayName: user.displayName,
         avatarUrl: user.avatarUrl,
         bio: user.bio,
@@ -611,8 +638,71 @@ export async function loadPublicProfileData(user: ProfileUserSelect, isOwner: bo
       firstListingId,
       viewerSavedSeller,
       viewerIsSignedIn: viewerId != null,
+      commerceProfile,
     },
     isOwner,
+  };
+}
+
+/**
+ * Aggregate location/shipping signals from the seller's active listings into
+ * a compact summary. Designed to be cheap (single pass over already-loaded
+ * data) and resilient to messy free-text locations — we lower-case for
+ * grouping but preserve the original casing of the most-frequent variant for
+ * display.
+ */
+function buildCommerceProfile(
+  listings: Array<{ shipping: string[]; location: string | null }>,
+): CommerceProfile {
+  if (listings.length === 0) {
+    return {
+      primaryLocation: null,
+      hasMultipleLocations: false,
+      shippingMethods: [],
+    };
+  }
+
+  // Locations: count by lowercased key, remember the first-seen original
+  // spelling for display so the case of the primary location reflects what
+  // the seller actually typed in their listings.
+  const locCount = new Map<string, { display: string; count: number }>();
+  for (const l of listings) {
+    const raw = l.location?.trim();
+    if (!raw) continue;
+    const key = raw.toLowerCase();
+    const existing = locCount.get(key);
+    if (existing) {
+      existing.count += 1;
+    } else {
+      locCount.set(key, { display: raw, count: 1 });
+    }
+  }
+  const rankedLocations = Array.from(locCount.values()).sort(
+    (a, b) => b.count - a.count,
+  );
+  const primaryLocation = rankedLocations[0]?.display ?? null;
+  const hasMultipleLocations = rankedLocations.length > 1;
+
+  // Shipping: count by code, top 4. Codes come from `Listing.shipping[]`
+  // which is already validated at listing-creation time, so we trust the
+  // strings here.
+  const shipCount = new Map<string, number>();
+  for (const l of listings) {
+    for (const code of l.shipping ?? []) {
+      const key = code.trim();
+      if (!key) continue;
+      shipCount.set(key, (shipCount.get(key) ?? 0) + 1);
+    }
+  }
+  const shippingMethods = Array.from(shipCount.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 4)
+    .map(([code]) => code);
+
+  return {
+    primaryLocation,
+    hasMultipleLocations,
+    shippingMethods,
   };
 }
 

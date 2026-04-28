@@ -23,6 +23,8 @@ import { useUIStore } from "@/stores/ui-store"
 
 import { parseCostValue, pnlCalc } from "./utils"
 
+const NOTES_MAX = 2000
+
 function CardEditFull({
   row,
   lang,
@@ -30,6 +32,8 @@ function CardEditFull({
   onQtyChange,
   cost,
   onCostChange,
+  notes,
+  onNotesChange,
   isPrivate,
   onPrivateChange,
   onRemove,
@@ -40,6 +44,8 @@ function CardEditFull({
   onQtyChange: (v: string) => void
   cost: string
   onCostChange: (v: string) => void
+  notes: string
+  onNotesChange: (v: string) => void
   isPrivate: boolean
   onPrivateChange: (v: boolean) => void
   onRemove: (itemId: number) => void
@@ -130,6 +136,22 @@ function CardEditFull({
         </div>
       </div>
 
+      <div>
+        <label className="mb-1.5 flex items-center justify-between text-eyebrow text-muted-foreground/60">
+          <span>{t(lang, "watchlistNote")}</span>
+          <span className="font-mono normal-case tracking-normal text-meta text-muted-foreground/50">
+            {notes.length}/{NOTES_MAX}
+          </span>
+        </label>
+        <textarea
+          className="w-full resize-none rounded-lg border border-border/40 bg-muted/20 px-3 py-2.5 text-sm outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
+          value={notes}
+          onChange={(e) => onNotesChange(e.target.value.slice(0, NOTES_MAX))}
+          rows={3}
+          placeholder={t(lang, "watchlistNotePlaceholder")}
+        />
+      </div>
+
       <div className="flex items-center gap-2">
         <button
           onClick={() => onPrivateChange(!isPrivate)}
@@ -185,7 +207,12 @@ export function SingleEditDialog({
   focusItemId: number
   onUpdate: (
     itemId: number,
-    data: { quantity?: number; purchasePrice?: number | null; isPrivate?: boolean },
+    data: {
+      quantity?: number
+      purchasePrice?: number | null
+      isPrivate?: boolean
+      notes?: string | null
+    },
   ) => void
   onRemove: (itemId: number) => void
 }) {
@@ -193,12 +220,14 @@ export function SingleEditDialog({
   const row = assets.find((a) => a.itemId === focusItemId)
   const [qty, setQty] = useState("")
   const [cost, setCost] = useState("")
+  const [notes, setNotes] = useState("")
   const [isPrivate, setIsPrivate] = useState(false)
   const [initialized, setInitialized] = useState<number | null>(null)
 
   if (row && initialized !== row.itemId) {
     setQty(String(row.quantity))
     setCost(row.purchasePrice != null ? String(row.purchasePrice) : "")
+    setNotes(row.notes ?? "")
     setIsPrivate(row.isPrivate ?? false)
     setInitialized(row.itemId)
   }
@@ -210,17 +239,28 @@ export function SingleEditDialog({
     const costVal = parseCostValue(cost)
     const costChanged = costVal !== undefined && costVal !== row.purchasePrice
     const privacyChanged = isPrivate !== row.isPrivate
-    return qtyChanged || costChanged || privacyChanged
-  }, [qty, cost, isPrivate, row])
+    const trimmedNotes = notes.trim()
+    const nextNotes = trimmedNotes.length === 0 ? null : trimmedNotes
+    const notesChanged = nextNotes !== (row.notes ?? null)
+    return qtyChanged || costChanged || privacyChanged || notesChanged
+  }, [qty, cost, notes, isPrivate, row])
 
   const handleSave = () => {
     if (!row) return
-    const data: { quantity?: number; purchasePrice?: number | null; isPrivate?: boolean } = {}
+    const data: {
+      quantity?: number
+      purchasePrice?: number | null
+      isPrivate?: boolean
+      notes?: string | null
+    } = {}
     const q = parseInt(qty)
     if (Number.isInteger(q) && q >= 1 && q !== row.quantity) data.quantity = q
     const costVal = parseCostValue(cost)
     if (costVal !== undefined && costVal !== row.purchasePrice) data.purchasePrice = costVal
     if (isPrivate !== row.isPrivate) data.isPrivate = isPrivate
+    const trimmedNotes = notes.trim()
+    const nextNotes = trimmedNotes.length === 0 ? null : trimmedNotes
+    if (nextNotes !== (row.notes ?? null)) data.notes = nextNotes
     if (Object.keys(data).length > 0) onUpdate(row.itemId, data)
     onOpenChange(false)
   }
@@ -241,6 +281,8 @@ export function SingleEditDialog({
           onQtyChange={setQty}
           cost={cost}
           onCostChange={setCost}
+          notes={notes}
+          onNotesChange={setNotes}
           isPrivate={isPrivate}
           onPrivateChange={setIsPrivate}
           onRemove={(id) => {

@@ -16,22 +16,25 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import {
   AdminSearch,
   AdminToolbar,
   AdminFilterSelect,
 } from "@/components/admin/admin-toolbar";
+import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
+import { AdminFormField } from "@/components/admin/admin-form-field";
 import { Badge } from "@/components/ui/badge";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { cn } from "@/lib/utils";
 
 const SET_TYPE_LABELS: Record<string, string> = {
-  BOOSTER: "Booster Pack",
-  EXTRA_BOOSTER: "Extra Booster",
-  STARTER: "Starter Deck",
-  PROMO: "Promo",
-  OTHER: "Other",
+  BOOSTER: "บูสเตอร์แพ็ค",
+  EXTRA_BOOSTER: "เอ็กซ์ตร้าบูสเตอร์",
+  STARTER: "สตาร์ทเตอร์เด็ค",
+  PROMO: "โปรโม",
+  OTHER: "อื่น ๆ",
 };
 
 interface SetRow {
@@ -151,33 +154,37 @@ export function SetsManager({ initialSets }: { initialSets: SetRow[] }) {
   }
 
   return (
-    <div className="space-y-5">
-      <AdminPageHeader
-        title="จัดการชุดการ์ด"
-        description="ดูชุดการ์ด แก้ไขข้อมูล และดึงราคาจากแหล่งข้อมูล"
-        icon={Library}
-        badge={<Badge variant="secondary">{sets.length} ชุด</Badge>}
-      />
-
-      <AdminToolbar>
-        <AdminSearch
-          value={search}
-          onChange={setSearch}
-          placeholder="ค้นหา code หรือชื่อ..."
-          className="w-56"
+    <AdminPage
+      header={
+        <AdminPageHeader
+          title="จัดการชุดการ์ด"
+          description="ดูชุดการ์ด แก้ไขข้อมูล และดึงราคาจากแหล่งข้อมูล"
+          icon={Library}
+          meta={<Badge variant="secondary">{sets.length} ชุด</Badge>}
         />
-        <AdminFilterSelect
-          value={typeFilter}
-          onChange={setTypeFilter}
-          placeholder="ทุกประเภท"
-          options={setTypes.map((t) => ({ value: t, label: SET_TYPE_LABELS[t] ?? t }))}
-        />
-        {(search || typeFilter) && (
-          <span className="text-meta">
-            แสดง {filteredSets.length} จาก {sets.length}
-          </span>
-        )}
-      </AdminToolbar>
+      }
+    >
+      <div className="sticky top-0 z-20 -mx-1 bg-background/85 px-1 py-2 backdrop-blur supports-backdrop-filter:bg-background/70">
+        <AdminToolbar>
+          <AdminSearch
+            value={search}
+            onChange={setSearch}
+            placeholder="ค้นหา code หรือชื่อ..."
+            className="w-full sm:w-56"
+          />
+          <AdminFilterSelect
+            value={typeFilter}
+            onChange={setTypeFilter}
+            placeholder="ทุกประเภท"
+            options={setTypes.map((t) => ({ value: t, label: SET_TYPE_LABELS[t] ?? t }))}
+          />
+          {(search || typeFilter) && (
+            <span className="text-meta">
+              แสดง {filteredSets.length} จาก {sets.length}
+            </span>
+          )}
+        </AdminToolbar>
+      </div>
 
       <div className="space-y-1.5">
         {filteredSets.map((set) => {
@@ -210,7 +217,7 @@ export function SetsManager({ initialSets }: { initialSets: SetRow[] }) {
           />
         )}
       </div>
-    </div>
+    </AdminPage>
   );
 }
 
@@ -292,10 +299,10 @@ function SetCard({
               className={cn(
                 "h-full rounded-full transition-all",
                 set.completeness >= 90
-                  ? "bg-green-500/70"
+                  ? "bg-success/70"
                   : set.completeness >= 50
-                    ? "bg-amber-500/70"
-                    : "bg-red-500/70",
+                    ? "bg-warning/70"
+                    : "bg-danger/70",
               )}
               style={{ width: `${Math.min(set.completeness, 100)}%` }}
             />
@@ -304,10 +311,10 @@ function SetCard({
             className={cn(
               "tabular-nums text-xs font-semibold",
               set.completeness >= 90
-                ? "text-green-500"
+                ? "text-success"
                 : set.completeness >= 50
-                  ? "text-amber-500"
-                  : "text-red-500",
+                  ? "text-warning"
+                  : "text-danger",
             )}
           >
             {set.completeness}%
@@ -469,16 +476,13 @@ function EditField({
   type?: string;
 }) {
   return (
-    <div className="space-y-1.5">
-      <label className="text-xs font-medium text-muted-foreground">
-        {label}
-      </label>
+    <AdminFormField label={label}>
       <Input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
-    </div>
+    </AdminFormField>
   );
 }
 
@@ -514,23 +518,11 @@ function QualityPill({
 }) {
   const isGood = missing === 0;
   return (
-    <div
-      className={cn(
-        "flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium",
-        isGood
-          ? "bg-green-500/10 text-green-600 dark:text-green-400"
-          : "bg-amber-500/10 text-amber-600 dark:text-amber-400",
-      )}
+    <AdminStatusBadge
+      tone={isGood ? "success" : "warning"}
+      icon={<Icon className="size-3" />}
     >
-      <Icon className="size-3" />
-      {label}:
-      {isGood ? (
-        <span>ครบ</span>
-      ) : (
-        <span>
-          ขาด {missing}/{total}
-        </span>
-      )}
-    </div>
+      {label}: {isGood ? "ครบ" : `ขาด ${missing}/${total}`}
+    </AdminStatusBadge>
   );
 }

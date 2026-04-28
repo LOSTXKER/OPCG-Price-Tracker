@@ -232,6 +232,7 @@ model User {
   email               String           @unique
   displayName         String?
   avatarUrl           String?
+  coverImageUrl       String?
   bio                 String?          @db.VarChar(500)
   tier                UserTier         @default(FREE)
   tierExpiresAt       DateTime?
@@ -751,6 +752,7 @@ model Portfolio {
   userId       String
   user         User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   name         String                 @default("Default")
+  isPublic     Boolean                @default(true)
   items        PortfolioItem[]
   snapshots    PortfolioSnapshot[]
   transactions PortfolioTransaction[]
@@ -758,6 +760,7 @@ model Portfolio {
   updatedAt    DateTime               @updatedAt
 
   @@index([userId])
+  @@index([userId, isPublic])
 }
 
 model PortfolioSnapshot {
@@ -827,15 +830,13 @@ enum CardCondition {
 // ============================================================
 
 model WatchlistItem {
-  id             Int       @id @default(autoincrement())
-  userId         String
-  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  cardId         Int
-  card           Card      @relation(fields: [cardId], references: [id], onDelete: Cascade)
-  note           String?   @db.VarChar(280)
-  targetPriceJpy Int?
-  pinnedAt       DateTime?
-  addedAt        DateTime  @default(now())
+  id       Int       @id @default(autoincrement())
+  userId   String
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cardId   Int
+  card     Card      @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  pinnedAt DateTime?
+  addedAt  DateTime  @default(now())
 
   @@unique([userId, cardId])
   @@index([userId])

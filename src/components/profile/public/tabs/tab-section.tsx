@@ -48,11 +48,12 @@ export function TabSection({
   return (
     <section
       className={cn(
-        // Match the rest of the site's panel rhythm — `panel` (warm card
-        // surface + soft shadow) topped with `panel-accent` (2px primary
-        // stripe) so the profile body docks visually with the home market
-        // overview, portfolio, etc.
-        "panel panel-accent p-4 md:p-5",
+        // The tab nav directly above already labels this section, so the
+        // tab body intentionally drops the `panel-accent` orange stripe
+        // and the `section-heading` left bar — both repeat what the active
+        // tab is already shouting. We keep a soft card surface so the
+        // grid sits on a defined ground without competing with the tabs.
+        "rounded-2xl border border-border/50 bg-card/40 p-4 md:p-5",
         className,
       )}
     >
@@ -60,18 +61,14 @@ export function TabSection({
         <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
           <div className="min-w-0">
             {title != null && (
-              <h2 className="section-heading text-h4">{title}</h2>
+              <h2 className="text-h4">{title}</h2>
             )}
             {meta != null && (
               <p
                 className={cn(
-                  // When there's no title, the meta line is the section
-                  // anchor — give it the same accent stripe so the panel
-                  // still reads as a labelled section. Otherwise we just
-                  // pad it to align under the title.
                   title == null
-                    ? "section-heading text-sm font-medium text-foreground/80"
-                    : "mt-0.5 pl-3 text-meta",
+                    ? "text-sm font-medium text-foreground/80"
+                    : "mt-0.5 text-meta",
                 )}
               >
                 {meta}

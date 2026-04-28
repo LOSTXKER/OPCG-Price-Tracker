@@ -1,6 +1,8 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { parseJsonBody } from "@/lib/api/admin-helpers";
 import { adminApiHandler } from "@/lib/api/api-handler";
+import { paginatedJson } from "@/lib/api/list-response";
+import { parsePageLimit } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
 import { opcgConfig } from "@/lib/game-config";
@@ -12,9 +14,7 @@ export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
   const sp = request.nextUrl.searchParams;
   const setFilter = sp.get("set") || "";
   const matchedFilter = sp.get("matched"); // "true" | "false" | null (all)
-  const page = Math.max(1, parseInt(sp.get("page") || "1", 10) || 1);
-  const limit = 20;
-  const skip = (page - 1) * limit;
+  const { page, limit, skip } = parsePageLimit(sp, { defaultLimit: 20, maxLimit: 50 });
 
   const where: Record<string, unknown> = { isParallel: true };
   if (setFilter) {
@@ -83,15 +83,13 @@ export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
     };
   });
 
-  return NextResponse.json({
-    cards: enriched,
+  return paginatedJson({
+    rows: enriched,
     total,
-    matchedCount,
-    totalAll,
     page,
     limit,
-    totalPages: Math.ceil(total / limit),
-    sets,
+    itemsKey: "cards",
+    extra: { matchedCount, totalAll, sets },
   });
 });
 

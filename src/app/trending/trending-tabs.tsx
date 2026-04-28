@@ -3,7 +3,7 @@
 import { memo, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { TrendingUp, TrendingDown, Eye } from "lucide-react"
+import { TrendingUp, TrendingDown, TrendingUpDown, Eye } from "lucide-react"
 
 import { PageHeader } from "@/components/layout/page-header"
 import { DeltaText } from "@/components/shared/delta-text"
@@ -15,7 +15,6 @@ import { SegmentedControl } from "@/components/ui/segmented-control"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
-import { cn } from "@/lib/utils"
 import { formatCount } from "@/lib/utils/currency"
 import type { TrendingCardRow } from "./page"
 
@@ -173,7 +172,9 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
               value={period}
               onChange={setPeriod}
               size="sm"
-              ariaLabel="Period"
+              variant="pill"
+              leadingIcon={TrendingUpDown}
+              ariaLabel={t(lang, "change")}
             />
           </div>
         )}

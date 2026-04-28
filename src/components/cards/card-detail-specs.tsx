@@ -9,10 +9,9 @@ import {
   Fingerprint,
 } from "lucide-react"
 
-import { t, getCardEffect } from "@/lib/i18n"
+import { t } from "@/lib/i18n"
 import type { Language } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
-import { CardEffectText } from "./card-effect-text"
 
 interface CardDetailSpecsProps {
   card: {
@@ -25,9 +24,6 @@ interface CardDetailSpecsProps {
     life?: number | null
     attribute?: string | null
     trait?: string | null
-    effectJp?: string | null
-    effectEn?: string | null
-    effectTh?: string | null
   }
   lang: Language
 }
@@ -84,9 +80,11 @@ function SpecTile({
       </p>
       <p
         className={cn(
-          "mt-0.5 flex items-center gap-1.5 font-price font-semibold",
-          emphasis ? "text-base" : "text-sm",
-          isEmpty && "text-muted-foreground/40",
+          "mt-0.5 flex items-center gap-1.5 font-price tabular-nums",
+          emphasis ? "text-base font-semibold" : "text-sm font-semibold",
+          // Soften empty placeholders so populated stats stand out and the
+          // tile doesn't visually shout "no data".
+          isEmpty && "font-normal text-muted-foreground/30",
         )}
       >
         {swatchClass && !isEmpty && (
@@ -104,64 +102,95 @@ function SpecTile({
   )
 }
 
+// Decide which spec fields are meaningful for this card. CHARACTER cards use
+// every field; LEADER omits counter (leaders can't counter); EVENT and STAGE
+// don't have power / counter / life so we hide those tiles instead of
+// rendering empty `—` placeholders that look like missing data.
+function getRelevantTiles(cardType: string) {
+  const upper = cardType.toUpperCase()
+  if (upper === "LEADER") {
+    return { power: true, counter: false, life: true }
+  }
+  if (upper === "EVENT" || upper === "STAGE") {
+    return { power: false, counter: false, life: false }
+  }
+  // CHARACTER and any unknown type — show full set.
+  return { power: true, counter: true, life: true }
+}
+
 export function CardDetailSpecs({ card, lang }: CardDetailSpecsProps) {
-  const effectText = getCardEffect(lang, card)
   const colorValue = card.colorEn ?? card.color
   const swatchClass =
     getColorSwatchClass(card.color) ?? getColorSwatchClass(card.colorEn)
+  const tiles = getRelevantTiles(card.cardType)
+
+  // Collect visible tiles so the grid auto-sizes (no orphan empty cells).
+  const visible: Array<SpecTileProps> = [
+    { label: t(lang, "type"), value: card.cardType, icon: Swords },
+    {
+      label: t(lang, "color"),
+      value: colorValue,
+      icon: Palette,
+      swatchClass,
+    },
+    { label: t(lang, "cost"), value: card.cost, icon: Coins },
+  ]
+  if (tiles.power) {
+    visible.push({
+      label: t(lang, "power"),
+      value: card.power,
+      icon: Zap,
+      emphasis: card.power != null,
+    })
+  }
+  if (tiles.counter) {
+    visible.push({
+      label: t(lang, "counter"),
+      value: card.counter,
+      icon: Shield,
+    })
+  }
+  if (tiles.life) {
+    visible.push({ label: t(lang, "life"), value: card.life, icon: Heart })
+  }
 
   return (
-    <>
-      <div className="panel p-5">
-        <p className="mb-3 text-meta">{t(lang, "details")}</p>
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-          <SpecTile label={t(lang, "type")} value={card.cardType} icon={Swords} />
-          <SpecTile
-            label={t(lang, "color")}
-            value={colorValue}
-            icon={Palette}
-            swatchClass={swatchClass}
-          />
-          <SpecTile label={t(lang, "cost")} value={card.cost} icon={Coins} />
-          <SpecTile
-            label={t(lang, "power")}
-            value={card.power}
-            icon={Zap}
-            emphasis={card.power != null}
-          />
-          <SpecTile label={t(lang, "counter")} value={card.counter} icon={Shield} />
-          <SpecTile label={t(lang, "life")} value={card.life} icon={Heart} />
-        </div>
-        {(card.attribute || card.trait) && (
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            {card.attribute && (
-              <div className="rounded-lg bg-muted/30 px-3 py-2.5">
-                <p className="flex items-center gap-1 text-meta">
-                  <Crosshair className="size-3" />
-                  {t(lang, "attribute")}
-                </p>
-                <p className="mt-0.5 text-sm">{card.attribute}</p>
-              </div>
-            )}
-            {card.trait && (
-              <div className="rounded-lg bg-muted/30 px-3 py-2.5">
-                <p className="flex items-center gap-1 text-meta">
-                  <Fingerprint className="size-3" />
-                  {t(lang, "trait")}
-                </p>
-                <p className="mt-0.5 text-sm">{card.trait}</p>
-              </div>
-            )}
-          </div>
+    <div className="panel p-5">
+      <p className="mb-3 text-meta">{t(lang, "details")}</p>
+      <div
+        className={cn(
+          "grid gap-2",
+          // 3 cols on mobile, scale up to match number of tiles on desktop
+          // so we don't end up with a half-empty row.
+          visible.length <= 3 ? "grid-cols-3" : "grid-cols-3 sm:grid-cols-6",
         )}
+      >
+        {visible.map((tile) => (
+          <SpecTile key={tile.label} {...tile} />
+        ))}
       </div>
-
-      {effectText && (
-        <div className="panel p-5">
-          <p className="mb-2 text-meta">{t(lang, "effect")}</p>
-          <CardEffectText text={effectText} />
+      {(card.attribute || card.trait) && (
+        <div className="mt-2 grid grid-cols-2 gap-2">
+          {card.attribute && (
+            <div className="rounded-lg bg-muted/30 px-3 py-2.5">
+              <p className="flex items-center gap-1 text-meta">
+                <Crosshair className="size-3" />
+                {t(lang, "attribute")}
+              </p>
+              <p className="mt-0.5 text-sm">{card.attribute}</p>
+            </div>
+          )}
+          {card.trait && (
+            <div className="rounded-lg bg-muted/30 px-3 py-2.5">
+              <p className="flex items-center gap-1 text-meta">
+                <Fingerprint className="size-3" />
+                {t(lang, "trait")}
+              </p>
+              <p className="mt-0.5 text-sm">{card.trait}</p>
+            </div>
+          )}
         </div>
       )}
-    </>
+    </div>
   )
 }

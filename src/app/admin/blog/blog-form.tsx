@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { Eye, EyeOff, Save, Loader2, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,7 +12,11 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AdminPage } from "@/components/admin/admin-page";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { AdminPanel } from "@/components/admin/admin-panel";
+import { AdminSaveBar } from "@/components/admin/admin-save-bar";
+import { AdminFormField, AdminCheckboxField } from "@/components/admin/admin-form-field";
 import { cn } from "@/lib/utils";
 
 const BLOG_CATEGORY_LABELS: Record<string, string> = {
@@ -34,6 +38,8 @@ type PostData = {
   published: boolean;
 };
 
+const FORM_ID = "admin-blog-form";
+
 function slugify(text: string) {
   return text
     .toLowerCase()
@@ -46,7 +52,7 @@ function slugify(text: string) {
 export function BlogForm({ initial }: { initial?: PostData }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [form, setForm] = useState<PostData>(
+  const initialState: PostData =
     initial ?? {
       title: "",
       slug: "",
@@ -56,12 +62,13 @@ export function BlogForm({ initial }: { initial?: PostData }) {
       category: "news",
       tags: "",
       published: false,
-    },
-  );
+    };
+  const [form, setForm] = useState<PostData>(initialState);
   const [error, setError] = useState("");
   const [showPreview, setShowPreview] = useState(false);
 
   const isEdit = initial?.id != null;
+  const dirty = JSON.stringify(form) !== JSON.stringify(initialState);
 
   function handleTitleChange(title: string) {
     setForm((f) => ({
@@ -106,196 +113,200 @@ export function BlogForm({ initial }: { initial?: PostData }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-4xl space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            onClick={() => router.back()}
-          >
-            <ArrowLeft className="size-5" />
-          </Button>
-          <h1 className="text-h1">
-            {isEdit ? "แก้ไขบทความ" : "สร้างบทความใหม่"}
-          </h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setShowPreview(!showPreview)}
-          >
-            {showPreview ? (
-              <EyeOff className="size-4" />
-            ) : (
-              <Eye className="size-4" />
-            )}
-            {showPreview ? "ซ่อนตัวอย่าง" : "ดูตัวอย่าง"}
-          </Button>
-          <Button type="submit" disabled={isPending} size="sm">
-            {isPending ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Save className="size-4" />
-            )}
-            {isPending ? "กำลังบันทึก..." : isEdit ? "อัปเดต" : "สร้าง"}
-          </Button>
-        </div>
-      </div>
+    <AdminPage
+      header={
+        <AdminPageHeader
+          title={
+            isEdit ? `แก้ไข: ${initial?.title ?? "บทความ"}` : "สร้างบทความใหม่"
+          }
+          description={isEdit ? "ปรับปรุงเนื้อหาและสถานะการเผยแพร่" : "เขียนบทความใหม่และเผยแพร่ในระบบ"}
+          actions={
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => router.back()}
+              >
+                <ArrowLeft className="size-4" />
+                กลับ
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setShowPreview(!showPreview)}
+              >
+                {showPreview ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
+                {showPreview ? "ซ่อนตัวอย่าง" : "ดูตัวอย่าง"}
+              </Button>
+            </div>
+          }
+        />
+      }
+      footer={
+        <AdminSaveBar
+          dirty={dirty || !isEdit}
+          saving={isPending}
+          onSave={() => {
+            const formEl = document.getElementById(
+              FORM_ID,
+            ) as HTMLFormElement | null;
+            formEl?.requestSubmit();
+          }}
+          saveLabel={isEdit ? "อัปเดต" : "สร้าง"}
+          description={
+            error ? (
+              <span className="text-danger">{error}</span>
+            ) : undefined
+          }
+        />
+      }
+    >
+      <form
+        id={FORM_ID}
+        onSubmit={handleSubmit}
+        className="mx-auto max-w-4xl space-y-6"
+      >
+        {error && (
+          <div className="status-danger rounded-lg px-4 py-3 text-sm">
+            {error}
+          </div>
+        )}
 
-      {error && (
-        <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
-          {error}
-        </div>
-      )}
+        <div className={cn("grid gap-6", showPreview && "lg:grid-cols-2")}>
+          <div className="space-y-6">
+            <AdminPanel title="ข้อมูลหลัก">
+              <div className="space-y-4">
+                <AdminFormField label="ชื่อเรื่อง" required>
+                  <Input
+                    required
+                    value={form.title}
+                    onChange={(e) => handleTitleChange(e.target.value)}
+                    placeholder="พิมพ์ชื่อบทความ..."
+                  />
+                </AdminFormField>
 
-      <div className={cn("grid gap-6", showPreview && "lg:grid-cols-2")}>
-        {/* Form Column */}
-        <div className="space-y-6">
-          <Card>
-            <CardHeader className="border-b">
-              <CardTitle className="text-base">ข้อมูลหลัก</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium">ชื่อเรื่อง</label>
-                <Input
-                  required
-                  value={form.title}
-                  onChange={(e) => handleTitleChange(e.target.value)}
-                  placeholder="พิมพ์ชื่อบทความ..."
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium">Slug</label>
-                <Input
-                  required
-                  value={form.slug}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, slug: e.target.value }))
-                  }
-                  className="font-mono text-sm"
-                />
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium">หมวดหมู่</label>
-                  <Select
-                    value={form.category}
-                    onValueChange={(v) =>
-                      setForm((f) => ({ ...f, category: v ?? f.category }))
+                <AdminFormField label="สลัก (slug)" required>
+                  <Input
+                    required
+                    value={form.slug}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, slug: e.target.value }))
                     }
-                  >
-                    <SelectTrigger>
-                      <span data-slot="select-value" className="flex flex-1 text-left">
-                        {BLOG_CATEGORY_LABELS[form.category] ?? form.category}
-                      </span>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="market-analysis">
-                        วิเคราะห์ตลาด
-                      </SelectItem>
-                      <SelectItem value="set-review">รีวิวชุด</SelectItem>
-                      <SelectItem value="tips">เคล็ดลับ</SelectItem>
-                      <SelectItem value="news">ข่าวสาร</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    className="font-mono text-sm"
+                  />
+                </AdminFormField>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <AdminFormField label="หมวดหมู่">
+                    <Select
+                      value={form.category}
+                      onValueChange={(v) =>
+                        setForm((f) => ({ ...f, category: v ?? f.category }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <span
+                          data-slot="select-value"
+                          className="flex flex-1 text-left"
+                        >
+                          {BLOG_CATEGORY_LABELS[form.category] ?? form.category}
+                        </span>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="market-analysis">
+                          วิเคราะห์ตลาด
+                        </SelectItem>
+                        <SelectItem value="set-review">รีวิวชุด</SelectItem>
+                        <SelectItem value="tips">เคล็ดลับ</SelectItem>
+                        <SelectItem value="news">ข่าวสาร</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </AdminFormField>
+
+                  <AdminFormField label="แท็ก (คั่นด้วย ,)">
+                    <Input
+                      placeholder="OP13, SEC, price-drop"
+                      value={form.tags}
+                      onChange={(e) =>
+                        setForm((f) => ({ ...f, tags: e.target.value }))
+                      }
+                    />
+                  </AdminFormField>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium">
-                    แท็ก (คั่นด้วย ,)
-                  </label>
+                <AdminFormField label="URL รูปหน้าปก">
                   <Input
-                    placeholder="OP13, SEC, price-drop"
-                    value={form.tags}
+                    type="url"
+                    placeholder="https://..."
+                    value={form.coverImage}
                     onChange={(e) =>
-                      setForm((f) => ({ ...f, tags: e.target.value }))
+                      setForm((f) => ({ ...f, coverImage: e.target.value }))
                     }
                   />
-                </div>
+                </AdminFormField>
               </div>
+            </AdminPanel>
 
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium">URL รูปหน้าปก</label>
-                <Input
-                  type="url"
-                  placeholder="https://..."
-                  value={form.coverImage}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, coverImage: e.target.value }))
-                  }
-                />
+            <AdminPanel title="เนื้อหา">
+              <div className="space-y-4">
+                <AdminFormField label="บทคัดย่อ" required>
+                  <Textarea
+                    required
+                    rows={2}
+                    value={form.excerpt}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, excerpt: e.target.value }))
+                    }
+                    placeholder="เขียนบทคัดย่อสั้นๆ..."
+                  />
+                </AdminFormField>
+
+                <AdminFormField label="เนื้อหา (HTML)" required>
+                  <Textarea
+                    required
+                    rows={16}
+                    value={form.content}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, content: e.target.value }))
+                    }
+                    className="font-mono text-xs"
+                    placeholder="<p>เนื้อหาบทความ...</p>"
+                  />
+                </AdminFormField>
               </div>
-            </CardContent>
-          </Card>
+            </AdminPanel>
 
-          <Card>
-            <CardHeader className="border-b">
-              <CardTitle className="text-base">เนื้อหา</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium">บทคัดย่อ</label>
-                <Textarea
-                  required
-                  rows={2}
-                  value={form.excerpt}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, excerpt: e.target.value }))
-                  }
-                  placeholder="เขียนบทคัดย่อสั้นๆ..."
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium">เนื้อหา (HTML)</label>
-                <Textarea
-                  required
-                  rows={16}
-                  value={form.content}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, content: e.target.value }))
-                  }
-                  className="font-mono text-xs"
-                  placeholder="<p>เนื้อหาบทความ...</p>"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="flex items-center gap-4">
-            <label className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
+            <div className="flex items-center gap-4">
+              <AdminCheckboxField
+                label="เผยแพร่บทความ"
                 checked={form.published}
                 onChange={(e) =>
-                  setForm((f) => ({ ...f, published: e.target.checked }))
+                  setForm((f) => ({
+                    ...f,
+                    published: (e.target as HTMLInputElement).checked,
+                  }))
                 }
-                className="size-4 rounded border-border accent-primary"
               />
-              เผยแพร่บทความ
-            </label>
+            </div>
           </div>
-        </div>
 
-        {/* Preview Column */}
-        {showPreview && (
-          <Card className="sticky top-6 h-fit">
-            <CardHeader className="border-b">
-              <CardTitle className="text-base">ตัวอย่าง</CardTitle>
-            </CardHeader>
-            <CardContent>
+          {showPreview && (
+            <AdminPanel
+              title="ตัวอย่าง"
+              className="sticky top-6 h-fit"
+            >
               <article className="prose prose-sm dark:prose-invert max-w-none">
                 <h1>{form.title || "ชื่อเรื่อง"}</h1>
                 {form.excerpt && (
-                  <p className="lead text-muted-foreground">{form.excerpt}</p>
+                  <p className="lead text-muted-foreground">
+                    {form.excerpt}
+                  </p>
                 )}
                 <div
                   dangerouslySetInnerHTML={{
@@ -303,10 +314,10 @@ export function BlogForm({ initial }: { initial?: PostData }) {
                   }}
                 />
               </article>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-    </form>
+            </AdminPanel>
+          )}
+        </div>
+      </form>
+    </AdminPage>
   );
 }

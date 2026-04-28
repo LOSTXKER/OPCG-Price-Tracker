@@ -17,6 +17,7 @@ import {
 import { useMemo } from "react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -88,7 +89,6 @@ export function WatchlistToolbar({
       { key: "priceHigh", label: t(lang, "watchlistSortPriceHigh") },
       { key: "priceLow", label: t(lang, "watchlistSortPriceLow") },
       { key: "nameAz", label: t(lang, "watchlistSortNameAz") },
-      { key: "target", label: t(lang, "watchlistSortTarget") },
     ],
     [lang]
   );
@@ -134,10 +134,10 @@ export function WatchlistToolbar({
         </div>
       )}
 
-      {/* Controls row — search + period + sort + filter + view */}
+      {/* Row 1 — primary: search left, view toggle right */}
       <div className="flex flex-wrap items-center gap-2">
         {/* Search */}
-        <div className="relative w-full sm:w-64">
+        <div className="relative w-full sm:w-72">
           <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
@@ -148,37 +148,64 @@ export function WatchlistToolbar({
           />
         </div>
 
-        {/* Period segmented */}
-        <div className="inline-flex h-9 shrink-0 items-center rounded-lg border border-border bg-card p-0.5">
-          {PERIODS.map((p) => (
+        <div className="ml-auto flex items-center gap-2">
+          {/* View toggle */}
+          <div className="inline-flex h-9 shrink-0 items-center rounded-lg border border-border bg-card p-0.5">
             <button
-              key={p}
               type="button"
-              onClick={() => onPeriodChange(p)}
+              onClick={() => onViewChange("list")}
               className={cn(
-                "h-8 rounded-md px-2.5 text-xs font-medium transition-colors",
-                period === p
+                "inline-flex h-8 items-center justify-center rounded-md px-2 text-xs font-medium transition-colors",
+                view === "list"
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:text-foreground"
               )}
+              title={t(lang, "watchlistViewList")}
+              aria-label={t(lang, "watchlistViewList")}
             >
-              {p}
+              <List className="size-4" />
             </button>
-          ))}
+            <button
+              type="button"
+              onClick={() => onViewChange("grid")}
+              className={cn(
+                "inline-flex h-8 items-center justify-center rounded-md px-2 text-xs font-medium transition-colors",
+                view === "grid"
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+              title={t(lang, "watchlistViewGrid")}
+              aria-label={t(lang, "watchlistViewGrid")}
+            >
+              <LayoutGrid className="size-4" />
+            </button>
+          </div>
         </div>
+      </div>
 
-        {/* Sort dropdown */}
+      {/* Row 2 — contextual: period + sort + filter left, limit pill right */}
+      <div className="flex flex-wrap items-center gap-2">
+        <SegmentedControl<ChangePeriod>
+          options={PERIODS.map((p) => ({ value: p, label: p }))}
+          value={period}
+          onChange={onPeriodChange}
+          size="sm"
+          variant="pill"
+          ariaLabel={t(lang, "change")}
+        />
+
+        {/* Sort dropdown — borderless ghost trigger reads as a label */}
         <DropdownMenu>
           <DropdownMenuTrigger
             className={cn(
-              buttonVariants({ variant: "outline", size: "sm" }),
-              "h-9 gap-1.5"
+              buttonVariants({ variant: "ghost", size: "sm" }),
+              "h-8 gap-1 px-2 text-muted-foreground hover:text-foreground"
             )}
           >
-            <ArrowDownUp className="size-3 text-muted-foreground" />
-            <span className="hidden sm:inline text-muted-foreground">{t(lang, "watchlistSortBy")}:</span>
-            <span className="font-medium">{activeSortLabel}</span>
-            <ChevronDown className="size-3 text-muted-foreground" />
+            <ArrowDownUp className="size-3 opacity-70" />
+            <span className="hidden sm:inline">{t(lang, "watchlistSortBy")}:</span>
+            <span className="font-medium text-foreground">{activeSortLabel}</span>
+            <ChevronDown className="size-3 opacity-70" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" sideOffset={4}>
             {sortOptions.map((opt) => (
@@ -197,26 +224,26 @@ export function WatchlistToolbar({
         <DropdownMenu>
           <DropdownMenuTrigger
             className={cn(
-              buttonVariants({
-                variant: activeFilterCount > 0 ? "default" : "outline",
-                size: "sm",
-              }),
-              "h-9 gap-1.5"
+              buttonVariants({ variant: "ghost", size: "sm" }),
+              "h-8 gap-1 px-2",
+              activeFilterCount > 0
+                ? "text-foreground"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
-            <Filter className="size-3" />
+            <Filter className="size-3 opacity-70" />
             <span>{t(lang, "watchlistFiltersButton")}</span>
             {activeFilterCount > 0 && (
               <span
                 className={cn(
-                  "rounded-full px-1.5 text-overlay tabular-nums",
-                  "bg-primary-foreground/20 text-primary-foreground"
+                  "inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-overlay tabular-nums",
+                  "bg-primary/15 text-primary ring-1 ring-primary/30"
                 )}
               >
                 {activeFilterCount}
               </span>
             )}
-            <ChevronDown className="size-3 opacity-60" />
+            <ChevronDown className="size-3 opacity-70" />
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
@@ -334,79 +361,43 @@ export function WatchlistToolbar({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Spacer */}
-        <div className="ml-auto flex items-center gap-2">
-          {/* Limit pill (compact, hidden when bulk bar is showing to avoid clutter) */}
-          {isFinite && (
-            <div
-              className={cn(
-                "flex items-center gap-1.5 rounded-md border px-2 py-1",
-                isFull
-                  ? "border-destructive/30 bg-destructive/5"
-                  : isHigh
-                    ? "border-amber-500/30 bg-amber-500/5"
-                    : "border-border bg-card"
-              )}
-              title={`${itemCount}/${limit}`}
-            >
+        {/* Limit pill — quiet meta on the right of row 2, only highlights near/at cap */}
+        {isFinite && (
+          <div
+            className={cn(
+              "ml-auto flex items-center gap-1.5 rounded-md px-2 py-1",
+              isFull
+                ? "border border-destructive/30 bg-destructive/5"
+                : isHigh
+                  ? "border border-amber-500/30 bg-amber-500/5"
+                  : ""
+            )}
+            title={`${itemCount}/${limit}`}
+          >
+            {(isFull || isHigh) && (
               <div className="hidden sm:flex h-1 w-10 overflow-hidden rounded-full bg-muted">
                 <div
                   className={cn(
                     "h-full rounded-full transition-all",
-                    isFull
-                      ? "bg-destructive"
-                      : isHigh
-                        ? "bg-amber-500"
-                        : "bg-primary"
+                    isFull ? "bg-destructive" : "bg-amber-500"
                   )}
                   style={{ width: `${usagePct}%` }}
                 />
               </div>
-              <span
-                className={cn(
-                  "text-meta tabular-nums",
-                  isFull && "text-destructive",
-                  isHigh && !isFull && "text-amber-600 dark:text-amber-400"
-                )}
-              >
-                {itemCount}/{limit}
-              </span>
-              {(isFull || isHigh) && <UpgradeBadge featureKey="watchlistCards" />}
-            </div>
-          )}
-
-          {/* View toggle */}
-          <div className="inline-flex h-9 shrink-0 items-center rounded-lg border border-border bg-card p-0.5">
-            <button
-              type="button"
-              onClick={() => onViewChange("list")}
+            )}
+            <span
               className={cn(
-                "inline-flex h-8 items-center justify-center rounded-md px-2 text-xs font-medium transition-colors",
-                view === "list"
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:text-foreground"
+                "text-meta tabular-nums",
+                !isFull && !isHigh && "text-muted-foreground",
+                isFull && "text-destructive",
+                isHigh && !isFull && "text-amber-600 dark:text-amber-400"
               )}
-              title={t(lang, "watchlistViewList")}
-              aria-label={t(lang, "watchlistViewList")}
             >
-              <List className="size-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => onViewChange("grid")}
-              className={cn(
-                "inline-flex h-8 items-center justify-center rounded-md px-2 text-xs font-medium transition-colors",
-                view === "grid"
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-              title={t(lang, "watchlistViewGrid")}
-              aria-label={t(lang, "watchlistViewGrid")}
-            >
-              <LayoutGrid className="size-4" />
-            </button>
+              {itemCount}/{limit}
+            </span>
+            {(isFull || isHigh) && <UpgradeBadge featureKey="watchlistCards" />}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

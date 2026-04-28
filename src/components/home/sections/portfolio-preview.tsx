@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Briefcase } from "lucide-react"
+import { Briefcase, ChevronRight } from "lucide-react"
 import { useEffect, useState } from "react"
 
 import { Price } from "@/components/shared/price-inline"
@@ -52,24 +52,34 @@ function summarizePortfolios(portfolios: { items: PortfolioItem[] }[]): Portfoli
   return { totalValue, totalCards, unrealizedPnl, unrealizedPnlPct, hasCostBasis }
 }
 
-const CARD_BASE = "group flex flex-col rounded-xl border p-4 transition-colors"
-const CARD_STYLE = cn(
-  CARD_BASE,
-  "border-border/40 bg-gradient-to-br from-card to-muted/20 hover:border-border",
-)
+const METRIC_CLASS =
+  "panel group flex flex-1 flex-col justify-between gap-1.5 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md hover:[&_.metric-arrow]:translate-x-0.5 hover:[&_.metric-arrow]:text-primary hover:[&_.metric-value]:text-primary"
+
+function MetricHeader({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="flex items-center justify-between gap-2">
+      <span className="flex items-center gap-1.5 text-eyebrow">
+        <Briefcase className="size-3.5" />
+        {children}
+      </span>
+      <ChevronRight
+        aria-hidden
+        className="metric-arrow size-4 shrink-0 text-muted-foreground/60 transition-all"
+      />
+    </span>
+  )
+}
 
 export function HomePortfolioPreview() {
   const lang = useUIStore((s) => s.language)
   const { authed } = useAuthState()
   const [data, setData] = useState<PortfolioSummary | null>(null)
-  const [loading, setLoading] = useState(true)
   const [empty, setEmpty] = useState(false)
+  const [fetchDone, setFetchDone] = useState(false)
 
   useEffect(() => {
-    if (authed !== true) {
-      setLoading(false)
-      return
-    }
+    if (authed !== true) return
+    let cancelled = false
     fetch("/api/portfolio")
       .then(async (r) => {
         if (r.status === 401) {
@@ -81,80 +91,72 @@ export function HomePortfolioPreview() {
         return r.ok ? r.json() : null
       })
       .then((json) => {
+        if (cancelled) return
         if (!json?.portfolios?.length) {
           setEmpty(true)
-          setLoading(false)
-          return
+        } else {
+          setData(summarizePortfolios(json.portfolios))
         }
-        setData(summarizePortfolios(json.portfolios))
-        setLoading(false)
       })
-      .catch(() => setLoading(false))
+      .catch(() => { /* swallow */ })
+      .finally(() => { if (!cancelled) setFetchDone(true) })
+    return () => { cancelled = true }
   }, [authed])
 
-  if (authed === null || loading) {
+  const loading = authed === null || (authed === true && !fetchDone)
+
+  if (loading) {
     return (
-      <div className={CARD_STYLE}>
-        <div className="flex items-center gap-2">
-          <Briefcase className="size-4 text-muted-foreground" />
-          <span className="text-xs font-semibold">{t(lang, "myPortfolio")}</span>
-        </div>
-        <div className="mt-2 h-7 w-24 animate-pulse rounded bg-muted" />
-        <div className="mt-1.5 h-4 w-28 animate-pulse rounded bg-muted" />
+      <div className={METRIC_CLASS}>
+        <MetricHeader>{t(lang, "myPortfolio")}</MetricHeader>
+        <div className="h-6 w-24 animate-pulse rounded bg-muted" />
+        <div className="h-3 w-20 animate-pulse rounded bg-muted" />
       </div>
     )
   }
 
   if (authed === false) {
     return (
-      <Link href="/portfolio" className={CARD_STYLE}>
-        <div className="flex items-center gap-2">
-          <Briefcase className="size-4 text-muted-foreground" />
-          <span className="text-xs font-semibold">{t(lang, "myPortfolio")}</span>
-        </div>
-        <p className="mt-3 text-sm text-muted-foreground">{t(lang, "loginToTrack")}</p>
+      <Link href="/portfolio" className={METRIC_CLASS}>
+        <MetricHeader>{t(lang, "myPortfolio")}</MetricHeader>
+        <span className="metric-value font-price text-xl font-bold leading-none">—</span>
+        <span className="text-meta">{t(lang, "loginToTrack")}</span>
       </Link>
     )
   }
 
   if (empty || !data) {
     return (
-      <Link href="/portfolio" className={CARD_STYLE}>
-        <div className="flex items-center gap-2">
-          <Briefcase className="size-4 text-muted-foreground" />
-          <span className="text-xs font-semibold">{t(lang, "myPortfolio")}</span>
-        </div>
-        <p className="mt-3 text-sm text-muted-foreground">{t(lang, "createOne")}</p>
+      <Link href="/portfolio" className={METRIC_CLASS}>
+        <MetricHeader>{t(lang, "myPortfolio")}</MetricHeader>
+        <span className="metric-value font-price text-xl font-bold leading-none">—</span>
+        <span className="text-meta">{t(lang, "createOne")}</span>
       </Link>
     )
   }
 
   return (
-    <Link href="/portfolio" className={CARD_STYLE}>
-      <div className="flex items-center gap-2">
-        <Briefcase className="size-4 text-muted-foreground" />
-        <span className="text-xs font-semibold">{t(lang, "myPortfolio")}</span>
-      </div>
-      <p className="mt-2 font-price text-xl font-bold leading-none">
+    <Link href="/portfolio" className={METRIC_CLASS}>
+      <MetricHeader>{t(lang, "myPortfolio")}</MetricHeader>
+      <span className="metric-value font-price text-xl font-bold leading-none tabular-nums">
         <Price jpy={data.totalValue} />
-      </p>
-      <div className="mt-auto flex items-center gap-2 pt-1.5 text-xs">
+      </span>
+      <span className="flex items-center gap-1.5 text-meta">
         {data.hasCostBasis && (
           <span
             className={cn(
-              "font-price font-bold",
+              "font-price font-semibold tabular-nums",
               data.unrealizedPnl >= 0 ? "text-price-up" : "text-price-down",
             )}
           >
             {data.unrealizedPnl >= 0 ? "+" : ""}
-            <Price jpy={data.unrealizedPnl} /> ({data.unrealizedPnl >= 0 ? "+" : ""}
-            {formatPct(data.unrealizedPnlPct)}%)
+            {formatPct(data.unrealizedPnlPct)}%
           </span>
         )}
-        <span className="text-muted-foreground">
+        <span>
           {formatCount(data.totalCards)} {t(lang, "cardUnit")}
         </span>
-      </div>
+      </span>
     </Link>
   )
 }

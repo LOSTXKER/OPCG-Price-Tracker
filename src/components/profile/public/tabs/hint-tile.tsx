@@ -6,11 +6,9 @@ import {
   ImagePlus,
   Layers,
   Package,
-  Sparkles,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-import { CARD_BG } from "@/lib/constants/ui";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -53,69 +51,47 @@ export function HintTile({
 
   const wrapperClass = cn(
     "group/hint relative flex h-full flex-col overflow-hidden rounded-xl border border-dashed",
-    "border-primary/25 bg-card/40 transition-all duration-200",
-    isInteractive &&
-      "hover:border-primary/60 hover:bg-primary/[0.04]",
+    "border-border/60 bg-transparent transition-colors duration-200",
+    isInteractive && "hover:border-primary/50 hover:bg-card/40",
     className,
   );
 
   const body = (
     <>
-      {/* Top "image" area — same aspect ratio as the paired listing card */}
-      <div
-        className={cn(
-          "relative aspect-[63/88] w-full overflow-hidden",
-          CARD_BG,
-        )}
-      >
-        {/* Brand-warm gradient wash so the empty area still feels deliberate */}
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-br from-primary/12 via-amber-500/8 to-rose-300/10"
-        />
-        {/* Soft radial glow behind the icon */}
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-70"
-          style={{
-            backgroundImage:
-              "radial-gradient(60% 50% at 50% 45%, rgba(115,83,62,0.18), transparent 70%)",
-          }}
-        />
-        {/* Centered icon medallion */}
+      {/* Top "image" area — same aspect ratio as the paired listing card.
+          Kept intentionally quiet (no gradient wash, no sparkle) so the
+          ghost tile reads as a placeholder, not a competing feature. */}
+      <div className="relative aspect-[63/88] w-full overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center">
           <div
             className={cn(
-              "relative flex size-16 items-center justify-center rounded-2xl bg-background/85 text-primary shadow-sm ring-1 ring-primary/15",
-              "transition-transform duration-200",
-              isInteractive && "group-hover/hint:scale-105",
+              "flex size-12 items-center justify-center rounded-full bg-muted/40 text-muted-foreground transition-colors duration-200",
+              isInteractive && "group-hover/hint:bg-primary/10 group-hover/hint:text-primary",
             )}
           >
-            <Icon className="size-7" aria-hidden />
-            {isInteractive && (
-              <Sparkles
-                className="absolute -right-1.5 -top-1.5 size-4 text-amber-500 opacity-80"
-                aria-hidden
-              />
-            )}
+            <Icon className="size-5" aria-hidden />
           </div>
         </div>
       </div>
 
-      {/* Bottom info area — same padding/typography as the listing card */}
+      {/* Bottom info area — same padding/typography as the listing card.
+          Title wraps to two lines (no `truncate`) because Thai action
+          phrases like "เพิ่มการ์ดในคอลเลกชัน" easily exceed the narrow
+          column width; truncating felt cramped. Subtitle is hidden when
+          it would just repeat the CTA verbatim. */}
       <div className="flex flex-1 flex-col p-2.5">
         <p
-          className="truncate text-sm font-semibold leading-snug text-foreground"
+          className="line-clamp-2 text-sm font-semibold leading-snug text-foreground"
           title={config.title}
         >
           {config.title}
         </p>
-        {config.subtitle && (
+        {config.subtitle && config.subtitle !== config.cta && (
           <p className="mt-1 line-clamp-2 text-meta">{config.subtitle}</p>
         )}
         {config.cta && (
           <div className="mt-auto pt-2">
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary">
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-primary">
               {config.cta}
               <ArrowRight
                 className={cn(
@@ -162,12 +138,15 @@ function resolveConfig({
   href?: string | null;
   lang: Language;
 }): Resolved {
+  // The narrow tile column doesn't fit a meaningful subtitle in addition
+  // to title + CTA, so for the action-oriented owner/visitor flows we
+  // intentionally drop the subtitle and let the title carry the message.
   if (kind === "listings") {
     if (isOwner) {
       return {
         icon: ImagePlus,
         title: t(lang, "completenessListing"),
-        subtitle: t(lang, "completenessSubtitle"),
+        subtitle: "",
         cta: t(lang, "startSelling"),
         href: "/marketplace/create",
       };
@@ -176,7 +155,7 @@ function resolveConfig({
       return {
         icon: Package,
         title: t(lang, "showcaseViewAll"),
-        subtitle: t(lang, "tabListings"),
+        subtitle: "",
         cta: t(lang, "showcaseViewAll"),
         href,
       };
@@ -195,7 +174,7 @@ function resolveConfig({
     return {
       icon: Layers,
       title: t(lang, "completenessCard"),
-      subtitle: t(lang, "addYourFirstCard"),
+      subtitle: "",
       cta: t(lang, "addYourFirstCard"),
       href: "/portfolio",
     };

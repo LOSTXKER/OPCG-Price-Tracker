@@ -131,6 +131,28 @@ function getFallbackDefs(): MissionDef[] {
   return [...FALLBACK_CORE_MISSIONS, bonus];
 }
 
+/**
+ * Map mission code → known i18n keys. Used when DB-resolved daily missions
+ * do not provide a description (the seed script doesn't fill description
+ * fields). Without this map, `hintKey` defaults to an empty string and the
+ * MissionCard falls back to nothing — leaving each row title-only.
+ *
+ * Codes here MUST match `scripts/seed-missions.ts` daily mission codes and
+ * the IDs in FALLBACK_CORE_MISSIONS / FALLBACK_ROTATING_MISSIONS above.
+ */
+const KNOWN_MISSION_CODE_MAP: Record<string, { labelKey: string; hintKey: string }> = {
+  check_price: { labelKey: "missionCheckPrice", hintKey: "missionCheckPriceHint" },
+  browse_trending: { labelKey: "missionBrowseTrending", hintKey: "missionBrowseTrendingHint" },
+  visit_marketplace: { labelKey: "missionVisitMarketplace", hintKey: "missionVisitMarketplaceHint" },
+  check_portfolio: { labelKey: "missionCheckPortfolio", hintKey: "missionCheckPortfolioHint" },
+  explore_set: { labelKey: "missionExploreSet", hintKey: "missionExploreSetHint" },
+  share_card: { labelKey: "missionShareCard", hintKey: "missionShareCardHint" },
+  visit_overview: { labelKey: "missionVisitOverview", hintKey: "missionVisitOverviewHint" },
+  read_blog: { labelKey: "missionReadBlog", hintKey: "missionReadBlogHint" },
+  share_site: { labelKey: "missionShareSite", hintKey: "missionShareSiteHint" },
+  check_watchlist: { labelKey: "missionCheckWatchlist", hintKey: "missionCheckWatchlistHint" },
+};
+
 /* ── Public API ── */
 
 /**
@@ -154,10 +176,11 @@ export async function getDailyMissionDefs(): Promise<MissionDef[]> {
           }
         }
       }
+      const known = KNOWN_MISSION_CODE_MAP[r.code];
       return {
         id: r.code,
-        labelKey: r.code,
-        hintKey: r.description ?? "",
+        labelKey: known?.labelKey ?? r.code,
+        hintKey: known?.hintKey ?? "",
         icon: r.icon,
         reward: rewards.honey,
         paths,

@@ -152,8 +152,10 @@ export function ProfileCompleteness({
   return (
     <section
       className={cn(
-        "mt-6 overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] via-background to-background",
-        "shadow-sm",
+        // Quiet container — subtle border + plain card surface. The progress
+        // ring already provides all the colour this block needs; piling a
+        // gradient + heavier border on top just makes the page feel busier.
+        "mt-6 overflow-hidden rounded-2xl border border-border/60 bg-card/40",
       )}
       aria-label={t(lang, "completenessTitle")}
     >
@@ -162,7 +164,7 @@ export function ProfileCompleteness({
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <h2 className="text-sm font-bold tracking-tight">{t(lang, "completenessTitle")}</h2>
+              <h2 className="text-sm font-semibold tracking-tight">{t(lang, "completenessTitle")}</h2>
               <p className="mt-0.5 text-meta">
                 {t(lang, "completenessSubtitle")}
               </p>
@@ -177,28 +179,28 @@ export function ProfileCompleteness({
             </button>
           </div>
 
-          <ul className="mt-3 grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+          <ul className="mt-3 grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
             {steps.map((s) => (
               <li key={s.key}>
                 <Link
                   href={s.href}
                   className={cn(
-                    "group/step flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs transition-colors",
+                    "group/step flex items-center gap-2 rounded-md px-1.5 py-1 text-xs transition-colors",
                     s.done
                       ? "text-muted-foreground/70"
-                      : "hover:bg-primary/5 hover:text-foreground",
+                      : "text-foreground/80 hover:text-foreground",
                   )}
                 >
                   <span
                     className={cn(
-                      "inline-flex size-5 shrink-0 items-center justify-center rounded-full",
+                      "inline-flex size-4 shrink-0 items-center justify-center rounded-full",
                       s.done
-                        ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
-                        : "bg-primary/10 text-primary",
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-primary/70",
                     )}
                   >
                     {s.done ? (
-                      <CheckCircle2 className="size-3.5" />
+                      <CheckCircle2 className="size-4" />
                     ) : (
                       <s.icon className="size-3" />
                     )}
@@ -212,7 +214,7 @@ export function ProfileCompleteness({
                     {s.label}
                   </span>
                   {!s.done && (
-                    <ChevronRight className="size-3.5 shrink-0 text-muted-foreground/50 transition-transform group-hover/step:translate-x-0.5" />
+                    <ChevronRight className="size-3.5 shrink-0 text-muted-foreground/40 transition-transform group-hover/step:translate-x-0.5" />
                   )}
                 </Link>
               </li>
@@ -243,31 +245,31 @@ export function ProfileCompleteness({
  * (we just don't animate at all here).
  */
 function ProgressRing({ pct }: { pct: number }) {
-  const radius = 22;
+  const radius = 23;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference * (1 - pct / 100);
   return (
-    <div className="relative grid size-14 shrink-0 place-items-center sm:size-16">
+    <div className="relative grid size-12 shrink-0 place-items-center sm:size-14">
       <svg viewBox="0 0 56 56" className="size-full -rotate-90">
         <circle
           cx="28"
           cy="28"
           r={radius}
-          strokeWidth="5"
+          strokeWidth="3"
           className="fill-none stroke-muted/60"
         />
         <circle
           cx="28"
           cy="28"
           r={radius}
-          strokeWidth="5"
+          strokeWidth="3"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           strokeLinecap="round"
           className="fill-none stroke-primary transition-[stroke-dashoffset] duration-500"
         />
       </svg>
-      <span className="absolute text-sm font-bold tabular-nums">{pct}%</span>
+      <span className="absolute text-xs font-semibold tabular-nums">{pct}%</span>
     </div>
   );
 }

@@ -90,6 +90,7 @@ const BREADCRUMB_LABELS: Record<string, string> = {
   achievements: "ความสำเร็จ",
   raffle: "สุ่มรางวัล",
   events: "อีเวนต์",
+  ranks: "ระดับแรงค์",
   new: "สร้างใหม่",
 };
 

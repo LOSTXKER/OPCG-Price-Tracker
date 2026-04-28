@@ -6,7 +6,7 @@ import { t, type Language } from "@/lib/i18n";
 import type { SocialLinkDescriptor } from "./hero-builders";
 
 const CHIP_CLASS =
-  "inline-flex items-center gap-1 rounded-full border border-border/50 bg-muted/40 px-2.5 py-1 text-micro text-foreground/80 transition hover:border-border hover:bg-muted/60 hover:text-foreground";
+  "inline-flex items-center gap-1.5 rounded-full border border-border/40 bg-transparent px-2.5 py-1 text-micro text-muted-foreground transition hover:border-border hover:bg-muted/40 hover:text-foreground";
 
 /**
  * Renders a single social/contact chip in the profile hero. Has two modes:
@@ -23,10 +23,23 @@ export function SocialLinkChip({
   link: SocialLinkDescriptor;
   lang: Language;
 }) {
+  // Render the platform badge (LINE / IG / X / FB) as a quiet uppercase
+  // eyebrow rather than an extrabold shout. When the visible label happens
+  // to repeat the platform name (e.g. label === "Line"), the badge prefix
+  // is hidden to avoid the "LINE Line" duplicate read.
+  const labelDuplicatesBadge =
+    link.label.replace(/^@/, "").toLowerCase() === link.badge.toLowerCase();
+
   const inner = (
     <>
-      <span className="text-overlay font-extrabold tracking-tight">{link.badge}</span>
-      <span className="max-w-[140px] truncate">{link.label}</span>
+      {!labelDuplicatesBadge && (
+        <span className="text-[0.625rem] font-semibold uppercase tracking-wider text-muted-foreground/80">
+          {link.badge}
+        </span>
+      )}
+      <span className="max-w-[140px] truncate text-foreground/80">
+        {link.label}
+      </span>
     </>
   );
 

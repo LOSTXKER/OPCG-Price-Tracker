@@ -44,13 +44,8 @@ export function SectionExport() {
   ];
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h2 className="flex items-center gap-2 text-h3">
-          <Download className="size-5" />
-          {t(lang, "goToExport")}
-        </h2>
-      </div>
+    <div className="space-y-6">
+      <h2 className="text-h2">{t(lang, "goToExport")}</h2>
 
       <LockOverlay locked={locked} featureKey="csvExport">
         <div className="grid gap-3 sm:grid-cols-2">
@@ -61,7 +56,7 @@ export function SectionExport() {
                   <Icon className="size-5" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-sm font-semibold">{t(lang, labelKey)}</h3>
+                  <h3 className="text-h5">{t(lang, labelKey)}</h3>
                   <p className="mt-0.5 text-meta">{t(lang, descKey)}</p>
                 </div>
               </div>

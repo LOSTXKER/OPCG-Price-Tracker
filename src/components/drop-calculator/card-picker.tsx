@@ -99,7 +99,7 @@ export function CardPicker({
                 className={cn(
                   "group relative overflow-hidden rounded-lg border text-left transition-all",
                   selected
-                    ? "border-primary ring-2 ring-primary/20"
+                    ? "border-primary ring-2 ring-primary"
                     : "border-border/40 hover:border-border hover:shadow-sm"
                 )}
               >
@@ -109,21 +109,21 @@ export function CardPicker({
                   ) : (
                     <div className="flex size-full items-center justify-center text-meta">No Image</div>
                   )}
-                  {selected && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-primary/10 backdrop-blur-[1px]">
-                      <div className="flex size-7 items-center justify-center rounded-full bg-primary text-primary-foreground shadow">
-                        <Check className="size-4" />
-                      </div>
-                    </div>
-                  )}
                 </div>
                 <div className="px-1.5 py-1">
                   <p className="truncate text-xs font-medium leading-tight">{name}</p>
-                  <div className="mt-0.5 flex items-center justify-between">
+                  <div className="mt-0.5 flex items-center justify-between gap-1">
                     <RarityBadge rarity={card.rarity} size="sm" />
-                    {card.latestPriceJpy != null && card.latestPriceJpy > 0 && (
-                      <span className="font-price text-xs tabular-nums text-muted-foreground"><Price jpy={card.latestPriceJpy} /></span>
-                    )}
+                    <div className="flex items-center gap-1">
+                      {card.latestPriceJpy != null && card.latestPriceJpy > 0 && (
+                        <span className="font-price text-xs tabular-nums text-muted-foreground"><Price jpy={card.latestPriceJpy} /></span>
+                      )}
+                      {selected && (
+                        <span className="inline-flex items-center justify-center rounded-full bg-primary/10 p-0.5 text-primary">
+                          <Check className="size-3" />
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </button>

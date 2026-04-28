@@ -96,30 +96,25 @@ export function ProfileTabsNav({
               onKeyDown={(e) => onKeyDown(e, idx)}
               onClick={() => onChange(key)}
               className={cn(
-                "group/tab relative inline-flex shrink-0 items-center gap-1.5 border-b-[3px] px-3 py-3 text-sm font-medium transition-colors sm:px-4",
+                // Minimal underline-only treatment — the previous version
+                // stacked a pill background AND a 3px border which read as
+                // double-emphasis. A single 2px underline + primary text
+                // colour is enough to mark the active tab.
+                "group/tab relative inline-flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-3 text-sm font-medium transition-colors sm:px-4",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-t-md",
                 isActive
-                  ? "border-primary text-primary"
+                  ? "border-primary text-foreground"
                   : "border-transparent text-muted-foreground hover:text-foreground",
               )}
             >
-              {/* Brand-tinted pill behind the active tab — replaces the old
-                  near-invisible primary/8 wash with a confident primary/10
-                  band so the selected tab reads at a glance. */}
-              {isActive && (
-                <span
-                  aria-hidden
-                  className="absolute inset-x-1 inset-y-1.5 -z-10 rounded-md bg-primary/10"
-                />
-              )}
               {t(lang, labelKey)}
               {count != null && count > 0 && (
                 <span
                   className={cn(
                     "rounded-full px-1.5 text-micro tabular-nums",
                     isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted/70 text-muted-foreground",
+                      ? "bg-primary/15 text-primary"
+                      : "bg-muted/60 text-muted-foreground",
                   )}
                 >
                   {formatTabBadge(count)}

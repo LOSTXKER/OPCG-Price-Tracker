@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Image from "next/image";
 import {
   AtSign,
@@ -9,7 +9,6 @@ import {
   Check,
   CheckCircle2,
   Copy,
-  Zap,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -27,13 +26,15 @@ import { SocialLinkChip } from "./social-link-chip";
 import type {
   HeroMetaItem,
   SocialLinkDescriptor,
-  TrustChip,
 } from "./hero-builders";
 import type { ProfileUser } from "./types";
 
 const HERO_ACHIEVEMENT_LIMIT = 5;
-const BIO_OVERFLOW_CHARS = 220;
-const BIO_OVERFLOW_LINES = 3;
+// Bumped to 280 chars / 4 lines: with `text-body` the bio reads larger and
+// reaches the clamp boundary sooner. Giving it one extra line keeps the
+// "Read more" affordance from triggering on every other profile.
+const BIO_OVERFLOW_CHARS = 280;
+const BIO_OVERFLOW_LINES = 4;
 
 /**
  * Public profile hero — sits directly under the brand-warm cover banner.
@@ -58,10 +59,8 @@ export function ProfileHero({
   user,
   achievements,
   metaParts,
-  trustChips,
   socialLinks,
   joinedRelative,
-  isOwner,
   sellerStats,
   lang,
   actionsSlot,
@@ -70,10 +69,8 @@ export function ProfileHero({
   sellerStats: SellerStats;
   achievements: ProfileAchievement[];
   metaParts: HeroMetaItem[];
-  trustChips: TrustChip[];
   socialLinks: SocialLinkDescriptor[];
   joinedRelative: string;
-  isOwner: boolean;
   lang: Language;
   /** Right-aligned action cluster (Message / Save / Share / Edit / More). */
   actionsSlot: ReactNode;
@@ -164,11 +161,15 @@ export function ProfileHero({
         )}
 
         {user.bio && (
-          <div className="mt-2 max-w-2xl">
+          <div className="mt-3 max-w-2xl">
             <p
               className={cn(
-                "whitespace-pre-line text-sm leading-relaxed text-foreground/85",
-                !bioExpanded && bioOverflows && "line-clamp-3",
+                // Bumped from `text-sm` to `text-body` so the seller's voice
+                // is the dominant typographic element in the hero — it's
+                // the only piece of long-form copy on the page and used to
+                // disappear under the surrounding meta rows.
+                "whitespace-pre-line text-body leading-relaxed text-foreground/85",
+                !bioExpanded && bioOverflows && "line-clamp-4",
               )}
             >
               {user.bio}
@@ -177,7 +178,7 @@ export function ProfileHero({
               <button
                 type="button"
                 onClick={() => setBioExpanded((v) => !v)}
-                className="mt-0.5 text-xs font-semibold text-primary hover:underline"
+                className="mt-1 text-xs font-semibold text-primary hover:underline"
               >
                 {bioExpanded ? t(lang, "bioReadLess") : t(lang, "bioReadMore")}
               </button>
@@ -185,11 +186,11 @@ export function ProfileHero({
           </div>
         )}
 
-        <HeroFactsRow
-          joinedRelative={joinedRelative}
-          trustChips={trustChips}
-          isOwner={isOwner}
-        />
+        {/* Trust facts (response time, completed deals) used to live here.
+            They moved into `ProfileTrustBlock` below the hero so the hero
+            stays focused on identity. We keep just the "joined" chip here
+            as a low-key recognition cue. */}
+        <HeroFactsRow joinedRelative={joinedRelative} />
 
         {socialLinks.length > 0 && (
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
@@ -292,60 +293,17 @@ function ActivityPill({
 }
 
 /**
- * Single-line "facts" row inspired by the X/Twitter profile header
- * ("Joined Jan 2024 · Replies in 2h · 12 sales"). Owners don't see their
- * own response/deal stats — they already know.
+ * Quiet "joined Jan 2024" recognition cue under the bio. Trust signals
+ * (response time, deals, verified badge) live in `ProfileTrustBlock`
+ * directly below the hero, so this row intentionally stays as a single
+ * fact — too few items to bother with `·` separators or a wrapper-with-
+ * Fragment dance.
  */
-function HeroFactsRow({
-  joinedRelative,
-  trustChips,
-  isOwner,
-}: {
-  joinedRelative: string;
-  trustChips: TrustChip[];
-  isOwner: boolean;
-}) {
-  const items: ReactNode[] = [];
-
-  items.push(
-    <span key="joined" className="inline-flex items-center gap-1">
+function HeroFactsRow({ joinedRelative }: { joinedRelative: string }) {
+  return (
+    <div className="mt-2 inline-flex items-center gap-1.5 text-meta">
       <CalendarDays className="size-3.5 text-muted-foreground/80" aria-hidden />
       {joinedRelative}
-    </span>,
-  );
-
-  if (!isOwner) {
-    for (const c of trustChips) {
-      items.push(
-        <span key={c.id} className="inline-flex items-center gap-1">
-          {c.iconKind === "zap" ? (
-            <Zap className="size-3.5 text-amber-500" aria-hidden />
-          ) : (
-            <CheckCircle2
-              className="size-3.5 text-emerald-500"
-              aria-hidden
-            />
-          )}
-          {c.label}
-        </span>,
-      );
-    }
-  }
-
-  if (items.length === 0) return null;
-
-  return (
-    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-meta">
-      {items.map((node, i) => (
-        <Fragment key={i}>
-          {i > 0 && (
-            <span aria-hidden className="text-muted-foreground/40">
-              ·
-            </span>
-          )}
-          {node}
-        </Fragment>
-      ))}
     </div>
   );
 }

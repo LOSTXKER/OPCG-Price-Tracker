@@ -135,9 +135,6 @@ function HoneyContent() {
     lifetimeEarned,
     activeEvent,
     shopItems,
-    canCheckin,
-    checkinLoading,
-    onCheckin: handleCheckin,
   } as const;
 
   const missionProps = {
@@ -149,9 +146,6 @@ function HoneyContent() {
     canClaimFree,
     checkinLoading,
     claimFreeLoading,
-    points,
-    level,
-    shopItems,
     onCheckin: handleCheckin,
     onClaimFreeTicket: handleClaimFreeTicket,
     onClaimTask: actions.claimTask,

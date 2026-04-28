@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { ImageUploader } from "@/components/admin/image-uploader";
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Prize } from "./raffle-manager";
+import type { Prize } from "./raffle-form";
 
-const RANK_LABELS = ["1st Prize", "2nd Prize", "3rd Prize", "4th Prize", "5th Prize"];
+const RANK_LABELS = ["รางวัลที่ 1", "รางวัลที่ 2", "รางวัลที่ 3", "รางวัลที่ 4", "รางวัลที่ 5"];
 const RANK_COLORS = [
   "border-amber-500/40 bg-amber-500/5",
   "border-slate-400/40 bg-slate-400/5",
@@ -33,7 +33,7 @@ export function PrizeEditor({ prizes, onUpdate, onAdd, onRemove }: PrizeEditorPr
           >
             <div className="mb-2 flex items-center justify-between">
               <span className="text-eyebrow">
-                {RANK_LABELS[i] ?? `#${prize.rank} Prize`}
+                {RANK_LABELS[i] ?? `รางวัลที่ ${prize.rank}`}
               </span>
               {prizes.length > 1 && (
                 <Button size="sm" variant="ghost" onClick={() => onRemove(i)} className="h-6 w-6 p-0 text-destructive hover:text-destructive">
@@ -46,11 +46,11 @@ export function PrizeEditor({ prizes, onUpdate, onAdd, onRemove }: PrizeEditorPr
                 <input
                   value={prize.name}
                   onChange={(e) => onUpdate(i, "name", e.target.value)}
-                  placeholder="Prize name (e.g. OPCG Booster Box)"
+                  placeholder="ชื่อรางวัล (เช่น OPCG Booster Box)"
                   className="mt-1 w-full rounded-lg border bg-background px-3 py-2 text-sm"
                 />
                 <div className="flex items-center gap-2">
-                  <span className="shrink-0 text-meta">+ Honey Bonus</span>
+                  <span className="shrink-0 text-meta">+ โบนัส Honey</span>
                   <input
                     type="number"
                     value={prize.honeyBonus ?? 0}
@@ -70,7 +70,7 @@ export function PrizeEditor({ prizes, onUpdate, onAdd, onRemove }: PrizeEditorPr
         ))}
       </div>
       <Button size="sm" variant="outline" onClick={onAdd} className="mt-2 w-full gap-1.5 border-dashed">
-        <Plus className="size-3.5" /> Add Another Prize
+        <Plus className="size-3.5" /> เพิ่มรางวัล
       </Button>
     </>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Bell,
@@ -32,11 +32,11 @@ import { getTierConfig, type ProfileStats, type SubscriptionData } from "./profi
 import {
   PLANS,
   PLAN_HIGHLIGHTS,
-  FEATURE_SECTIONS,
-  findRow,
+  buildFeatureSections,
   getLimits,
   type TierLimits,
 } from "@/lib/billing";
+import { useMarketplaceFees } from "@/hooks/use-marketplace-fees";
 import type { UserTier } from "@/generated/prisma/client";
 
 // ---------------------------------------------------------------------------
@@ -175,6 +175,13 @@ export function SectionSubscription({ subscription, stats }: Props) {
   const lang = useUIStore((s) => s.language);
   const limits = getLimitsForTier(subscription.tier);
   const effectiveTier = toEffectiveTier(subscription.tier);
+  const marketplaceFees = useMarketplaceFees();
+  const featureSections = useMemo(
+    () => buildFeatureSections({ marketplaceFees }),
+    [marketplaceFees],
+  );
+  const findRow = (key: string) =>
+    featureSections.flatMap((s) => s.rows).find((r) => r.key === key);
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(null);
   const [loadingPM, setLoadingPM] = useState(!!subscription.hasStripeSubscription);
@@ -236,8 +243,8 @@ export function SectionSubscription({ subscription, stats }: Props) {
     <div className="space-y-8">
       {/* Page header */}
       <div>
-        <h2 className="text-h3">{t(lang, "subscription")}</h2>
-        <p className="text-muted-foreground mt-0.5 text-sm">{t(lang, "yourPlan")}</p>
+        <h2 className="text-h2">{t(lang, "subscription")}</h2>
+        <p className="page-subtitle">{t(lang, "yourPlan")}</p>
       </div>
 
       {/* Trial banner */}
@@ -354,7 +361,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
         <div className="rounded-xl bg-card p-5">
           <div className="flex items-center gap-2 mb-3">
             <Wallet className="size-4 text-muted-foreground" />
-            <h3 className="text-sm font-semibold">{t(lang, "paymentMethod")}</h3>
+            <h3 className="text-h5">{t(lang, "paymentMethod")}</h3>
           </div>
           {loadingPM ? (
             <div className="flex justify-center py-3"><Loader2 className="size-4 animate-spin text-muted-foreground" /></div>
@@ -383,7 +390,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
       {/* ─── Usage & Quota ─── */}
       {stats && (
         <div className="rounded-xl bg-card p-5 space-y-1">
-          <h3 className="text-sm font-semibold mb-3">{t(lang, "usageQuota")}</h3>
+          <h3 className="text-h5 mb-3">{t(lang, "usageQuota")}</h3>
           <div className="divide-y divide-border/15">
             <UsageRow icon={Layers} label={t(lang, "portfolioCards")} desc={t(lang, "portfolioCardsDesc")} current={stats.portfolioCardCount} max={limits.portfolioCards} color="bg-primary" lang={lang} />
             <UsageRow icon={FolderOpen} label={t(lang, "portfolioCollections")} desc={t(lang, "portfolioCollectionsDesc")} current={stats.portfolioCount} max={limits.portfolioCount} color="bg-primary" lang={lang} />
@@ -416,7 +423,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
               </tr>
             </thead>
             <tbody>
-              {FEATURE_SECTIONS.map((section) => (
+              {featureSections.map((section) => (
                 <Fragment key={section.titleKey}>
                   <tr>
                     <td colSpan={4} className="pb-2 pt-5 text-eyebrow text-muted-foreground/60">

@@ -4,7 +4,7 @@ import { memo } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
-import { CardImageLightbox } from "@/components/shared/card-image-lightbox"
+import { CardImageButton } from "@/components/shared/card-image-button"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
 import { PriceUsd } from "@/components/shared/price-usd"
@@ -30,42 +30,59 @@ export const MobileCardItem = memo(function MobileCardItem({
   const isPsa = priceMode === "psa10"
 
   return (
-    <Link
-      href={`/cards/${card.cardCode}`}
-      className="flex items-center gap-3 px-4 py-3 transition-colors active:bg-muted/40"
-    >
+    <div className="flex items-center gap-3 px-4 py-3 transition-colors active:bg-muted/40">
       <span className="w-5 shrink-0 text-center font-price text-xs text-muted-foreground">{rank}</span>
       {card.imageUrl ? (
-        <CardImageLightbox src={card.imageUrl} alt={name}>
-          <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-muted">
-            <Image src={card.imageUrl} alt={name} fill className="object-contain" sizes="44px" />
-          </div>
-        </CardImageLightbox>
+        <CardImageButton
+          card={{
+            cardCode: card.cardCode,
+            cardId: card.id ?? null,
+            nameJp: card.nameJp,
+            nameEn: card.nameEn,
+            nameTh: card.nameTh,
+            rarity: card.rarity,
+            imageUrl: card.imageUrl,
+            setCode: card.set?.code ?? card.setCode ?? null,
+            priceJpy: card.latestPriceJpy ?? null,
+            priceChange24h: card.priceChange24h ?? null,
+            priceChange7d: card.priceChange7d ?? null,
+            priceChange30d: card.priceChange30d ?? null,
+            psa10PriceUsd: card.psa10PriceUsd ?? null,
+          }}
+          className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-muted"
+        >
+          <Image src={card.imageUrl} alt={name} fill className="object-contain" sizes="44px" />
+        </CardImageButton>
       ) : (
         <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-muted" />
       )}
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium leading-tight">{name}</p>
-        <div className="mt-0.5 flex items-center gap-1.5 text-meta">
-          <span className="font-mono">{card.baseCode ?? card.cardCode}</span>
-          <RarityBadge rarity={card.rarity} size="sm" />
+      <Link
+        href={`/cards/${card.cardCode}`}
+        className="flex min-w-0 flex-1 items-center gap-3 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium leading-tight">{name}</p>
+          <div className="mt-0.5 flex items-center gap-1.5 text-meta">
+            <span className="font-mono">{card.baseCode ?? card.cardCode}</span>
+            <RarityBadge rarity={card.rarity} size="sm" />
+          </div>
         </div>
-      </div>
-      <div className="shrink-0 text-right">
-        <p className="font-price text-sm font-semibold">
-          {isPsa ? (
-            card.psa10PriceUsd != null ? <PriceUsd usd={card.psa10PriceUsd} /> : <span className="text-muted-foreground/50">—</span>
-          ) : (
-            card.latestPriceJpy != null ? <Price jpy={card.latestPriceJpy} /> : "—"
-          )}
-        </p>
-        {!isPsa && c24 != null && c24 !== 0 && (
-          <p className={cn("font-price text-xs font-medium", changeToneClass(c24))}>
-            {formatSignedPct(c24)}
+        <div className="shrink-0 text-right">
+          <p className="font-price text-sm font-semibold">
+            {isPsa ? (
+              card.psa10PriceUsd != null ? <PriceUsd usd={card.psa10PriceUsd} /> : <span className="text-muted-foreground/50">—</span>
+            ) : (
+              card.latestPriceJpy != null ? <Price jpy={card.latestPriceJpy} /> : "—"
+            )}
           </p>
-        )}
-      </div>
-    </Link>
+          {!isPsa && c24 != null && c24 !== 0 && (
+            <p className={cn("font-price text-xs font-medium", changeToneClass(c24))}>
+              {formatSignedPct(c24)}
+            </p>
+          )}
+        </div>
+      </Link>
+    </div>
   )
 })
 

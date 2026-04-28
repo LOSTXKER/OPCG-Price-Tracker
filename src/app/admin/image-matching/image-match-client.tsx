@@ -1,13 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { adminJsonFetch } from "@/lib/api/admin-client";
+import { useState } from "react";
+import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
+import { useAdminList } from "@/lib/admin/use-admin-list";
+import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
 import type { PaginatedApiResponse } from "@/app/admin/admin-types";
 import Image from "next/image";
 import { Check, ImageIcon, RefreshCw, Search, ZoomIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatJpy } from "@/lib/utils/currency";
 import { RarityBadge } from "@/components/shared/rarity-badge";
+import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminPagination } from "@/components/admin/admin-pagination";
 import {
@@ -43,56 +46,41 @@ interface ApiResponse extends PaginatedApiResponse {
 }
 
 export function ImageMatchClient() {
-  const [data, setData] = useState<ApiResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [fetchError, setFetchError] = useState<string | null>(null);
-  const [setFilter, setSetFilter] = useState("");
-  const [matchedFilter, setMatchedFilter] = useState("");
-  const [page, setPage] = useState(1);
+  const { state, patch } = useAdminUrlState({
+    defaults: { set: "", matched: "", page: 1 },
+  });
+  const { set: setFilter, matched: matchedFilter, page } = state;
+
+  const { data, loading, error: fetchError, refetch } = useAdminList<ApiResponse, typeof state>({
+    url: (p) =>
+      `/api/admin/image-matching?${buildAdminQuery({
+        set: p.set || undefined,
+        matched: p.matched || undefined,
+        page: p.page,
+      })}`,
+    params: state,
+  });
+
   const [saving, setSaving] = useState<number | null>(null);
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
   const [lightbox, setLightbox] = useState<
     { src: string; label: string }[] | null
   >(null);
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    setFetchError(null);
-    try {
-      const params = new URLSearchParams();
-      if (setFilter) params.set("set", setFilter);
-      if (matchedFilter) params.set("matched", matchedFilter);
-      params.set("page", String(page));
-      const result = await adminJsonFetch<ApiResponse>(
-        `/api/admin/image-matching?${params}`,
-        { method: "GET" },
-      );
-      setData(result);
-    } catch (err) {
-      setFetchError(err instanceof Error ? err.message : "Failed to load");
-    } finally {
-      setLoading(false);
-    }
-  }, [setFilter, matchedFilter, page]);
-
-  useEffect(() => {
-    void fetchData();
-  }, [fetchData]);
-
   const handleReassign = async (cardId: number, newPIndex: number) => {
     setSaving(cardId);
     try {
-      await adminJsonFetch("/api/admin/image-matching", {
+      await adminFetch("/api/admin/image-matching", {
         method: "PATCH",
         body: { cardId, parallelIndex: newPIndex },
       });
       toast.success("บันทึกแล้ว", {
         description: `เปลี่ยนเป็น _p${newPIndex}`,
       });
-      await fetchData();
+      await refetch();
     } catch (err) {
       toast.error("บันทึกไม่สำเร็จ", {
-        description: err instanceof Error ? err.message : "Unknown error",
+        description: err instanceof Error ? err.message : "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ",
       });
     } finally {
       setSaving(null);
@@ -115,7 +103,7 @@ export function ImageMatchClient() {
     if (card.imageUrl) {
       images.push({
         src: card.imageUrl,
-        label: `Current (p${card.parallelIndex ?? "?"})`,
+        label: `ปัจจุบัน (p${card.parallelIndex ?? "?"})`,
       });
     }
     images.push({ src: candidate.url, label: `_p${candidate.pIndex}` });
@@ -133,68 +121,61 @@ export function ImageMatchClient() {
   }));
 
   const matchedOptions = [
-    { value: "false", label: "ยังไม่ matched" },
-    { value: "true", label: "Matched แล้ว" },
+    { value: "false", label: "ยังไม่จับคู่" },
+    { value: "true", label: "จับคู่แล้ว" },
   ];
 
   return (
-    <div className="space-y-6">
-      <AdminPageHeader
-        icon={ImageIcon}
-        title="Image Matching"
-        description="เปรียบเทียบ Bandai CDN images กับ parallel variants — เลือก _pN ที่ถูกต้องสำหรับแต่ละใบ"
-        badge={
-          data && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
-              {data.matchedCount}/{data.totalAll} matched ({matchedPercent}%)
-            </span>
-          )
-        }
-        actions={
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={fetchData}
-            disabled={loading}
-          >
-            <RefreshCw
-              className={cn("size-4 mr-1.5", loading && "animate-spin")}
-            />
-            Refresh
-          </Button>
-        }
-      />
-
-      <AdminToolbar
-        actions={
-          data && (
-            <span className="text-sm text-muted-foreground">
-              {data.total} รายการ
-            </span>
-          )
-        }
-      >
+    <AdminPage
+      header={
+        <AdminPageHeader
+          icon={ImageIcon}
+          title="จับคู่รูปภาพ"
+          description="เปรียบเทียบรูปภาพจาก Bandai CDN กับ parallel variants — เลือก _pN ที่ถูกต้องสำหรับแต่ละใบ"
+          meta={
+            data && (
+              <>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+                  จับคู่แล้ว {data.matchedCount}/{data.totalAll} ({matchedPercent}%)
+                </span>
+                <span className="text-meta">{data.total.toLocaleString()} รายการในตัวกรอง</span>
+              </>
+            )
+          }
+          actions={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => void refetch()}
+              disabled={loading}
+            >
+              <RefreshCw
+                className={cn("size-4 mr-1.5", loading && "animate-spin")}
+              />
+              รีเฟรช
+            </Button>
+          }
+        />
+      }
+    >
+      <div className="sticky top-0 z-20">
+      <AdminToolbar>
         <AdminFilterSelect
           value={setFilter}
-          onChange={(v) => {
-            setSetFilter(v);
-            setPage(1);
-          }}
+          onChange={(v) => patch({ set: v, page: 1 })}
           options={setOptions}
-          placeholder="All Sets"
+          placeholder="ทุกชุดการ์ด"
           className="w-[220px]"
         />
         <AdminFilterSelect
           value={matchedFilter}
-          onChange={(v) => {
-            setMatchedFilter(v);
-            setPage(1);
-          }}
+          onChange={(v) => patch({ matched: v, page: 1 })}
           options={matchedOptions}
           placeholder="ทุกสถานะ"
           className="w-[180px]"
         />
       </AdminToolbar>
+      </div>
 
       {fetchError ? (
         <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-8 text-center text-destructive text-sm">
@@ -212,11 +193,11 @@ export function ImageMatchClient() {
       ) : data?.cards.length === 0 ? (
         <AdminEmptyState
           icon={Search}
-          title="ไม่พบ parallel cards"
+          title="ไม่พบการ์ด parallel"
           description={
             matchedFilter || setFilter
               ? "ลองเปลี่ยนตัวกรองใหม่"
-              : "ยังไม่มี parallel cards ในระบบ"
+              : "ยังไม่มีการ์ด parallel ในระบบ"
           }
         />
       ) : (
@@ -255,16 +236,16 @@ export function ImageMatchClient() {
                 {/* Current image */}
                 <div className="shrink-0 space-y-1.5">
                   <p className="text-label text-muted-foreground">
-                    Current (p{card.parallelIndex ?? "?"})
+                    ปัจจุบัน (p{card.parallelIndex ?? "?"})
                   </p>
                   <div
                     className="group relative aspect-[63/88] w-28 cursor-zoom-in overflow-hidden rounded-lg border-2 border-primary/40 bg-muted/20 shadow-sm"
                     onClick={() => {
                       if (card.imageUrl) {
-                        setLightbox([
+                          setLightbox([
                           {
                             src: card.imageUrl,
-                            label: `Current (p${card.parallelIndex ?? "?"})`,
+                            label: `ปัจจุบัน (p${card.parallelIndex ?? "?"})`,
                           },
                         ]);
                       }
@@ -274,7 +255,7 @@ export function ImageMatchClient() {
                       <>
                         <Image
                           src={card.imageUrl}
-                          alt="Current"
+                          alt="รูปภาพปัจจุบัน"
                           fill
                           className="object-contain transition-transform group-hover:scale-105"
                           sizes="112px"
@@ -372,7 +353,7 @@ export function ImageMatchClient() {
         <AdminPagination
           page={page}
           totalPages={data.totalPages}
-          onPageChange={setPage}
+          onPageChange={(p) => patch({ page: p })}
           total={data.total}
           perPage={20}
         />
@@ -381,6 +362,6 @@ export function ImageMatchClient() {
       {lightbox && (
         <Lightbox images={lightbox} onClose={() => setLightbox(null)} />
       )}
-    </div>
+    </AdminPage>
   );
 }

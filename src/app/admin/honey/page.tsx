@@ -7,23 +7,17 @@ import {
   ArrowRight,
   Package,
 } from "lucide-react";
+import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { AdminPanel } from "@/components/admin/admin-panel";
 import { StatCard } from "@/components/shared/stat-card";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardAction,
-} from "@/components/ui/card";
 import { HoneyCharts } from "./honey-charts";
 import { HoneyTransactionList } from "./honey-transaction-list";
+import { getAdminConfig } from "@/lib/admin/config";
 
 export const dynamic = "force-dynamic";
 
-const TX_PAGE_SIZE = 30;
-
-async function getHoneyStats() {
+async function getHoneyStats(pageSize: number) {
   const now = new Date();
   const todayStart = new Date(now);
   todayStart.setHours(0, 0, 0, 0);
@@ -66,7 +60,7 @@ async function getHoneyStats() {
     prisma.user.count({ where: { honeyPoints: { gt: 0 } } }),
     prisma.honeyTransaction.findMany({
       orderBy: { createdAt: "desc" },
-      take: TX_PAGE_SIZE,
+      take: pageSize,
       select: {
         id: true,
         amount: true,
@@ -139,7 +133,8 @@ async function getHoneyStats() {
       ...tx,
       createdAt: tx.createdAt.toISOString(),
     })),
-    hasMoreTransactions: totalTransactions > TX_PAGE_SIZE,
+    hasMoreTransactions: totalTransactions > pageSize,
+    pageSize,
     topEarners,
     dailyData,
     typeCounts: typeCountsFormatted,
@@ -147,7 +142,8 @@ async function getHoneyStats() {
 }
 
 export default async function AdminHoneyDashboard() {
-  const s = await getHoneyStats();
+  const config = await getAdminConfig();
+  const s = await getHoneyStats(config.adminTransactionsPageSize);
 
   const statCards = [
     {
@@ -155,43 +151,41 @@ export default async function AdminHoneyDashboard() {
       value: s.totalCirculation.toLocaleString(),
       sub: `${s.totalHoneyUsers} คนมีคะแนน`,
       icon: Award,
-      color: "text-amber-600 dark:text-amber-400",
-      bg: "bg-amber-100 dark:bg-amber-500/10",
+      tone: "warning" as const,
     },
     {
       label: "ได้รับวันนี้",
       value: `+${s.earnedToday.toLocaleString()}`,
       sub: `สัปดาห์นี้: +${s.earnedWeek.toLocaleString()}`,
       icon: TrendingUp,
-      color: "text-green-500",
-      bg: "bg-green-500/10",
+      tone: "success" as const,
     },
     {
       label: "แลกไปทั้งหมด",
       value: s.redeemedTotal.toLocaleString(),
       sub: `${s.redeemCount.toLocaleString()} ครั้ง`,
       icon: ArrowDownUp,
-      color: "text-red-500",
-      bg: "bg-red-500/10",
+      tone: "danger" as const,
     },
     {
       label: "สินค้าในร้าน",
       value: s.activeShopItems.toString(),
       sub: s.inactiveShopItems > 0 ? `${s.inactiveShopItems} ปิดอยู่` : "ทุกชิ้นเปิดขาย",
       icon: Package,
-      color: "text-purple-500",
-      bg: "bg-purple-500/10",
+      tone: "primary" as const,
     },
   ];
 
   return (
-    <div className="space-y-6">
-      <AdminPageHeader
-        title="ระบบ Honey"
-        description="ภาพรวมระบบคะแนน Honey Points"
-        icon={Award}
-      />
-
+    <AdminPage
+      header={
+        <AdminPageHeader
+          title="ระบบ Honey"
+          description="ภาพรวมระบบคะแนน Honey Points"
+          icon={Award}
+        />
+      }
+    >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => (
           <StatCard key={card.label} {...card} />
@@ -201,59 +195,48 @@ export default async function AdminHoneyDashboard() {
       <HoneyCharts dailyData={s.dailyData} typeCounts={s.typeCounts} />
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle>ผู้มีคะแนนสูงสุด</CardTitle>
-            <CardAction>
+        <AdminPanel
+          title="ผู้มีคะแนนสูงสุด"
+          actions={
+            <Link href="/admin/users" className="text-meta hover:text-primary">
+              ดูทั้งหมด <ArrowRight className="ml-0.5 inline size-3" />
+            </Link>
+          }
+        >
+          <div className="space-y-1">
+            {s.topEarners.map((u, i) => (
               <Link
-                href="/admin/users"
-                className="text-meta hover:text-primary"
+                key={u.id}
+                href={`/admin/users?search=${encodeURIComponent(u.email)}`}
+                className="flex items-center gap-2 rounded-lg px-2 py-2 transition-colors hover:bg-muted"
               >
-                ดูทั้งหมด{" "}
-                <ArrowRight className="ml-0.5 inline size-3" />
+                <span className="flex size-6 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
+                  {i + 1}
+                </span>
+                <span className="flex-1 truncate text-sm">
+                  {u.displayName ?? u.email}
+                </span>
+                <span className="text-sm font-bold tabular-nums text-warning">
+                  {u.honeyPoints.toLocaleString()}
+                </span>
               </Link>
-            </CardAction>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-1">
-              {s.topEarners.map((u, i) => (
-                <Link
-                  key={u.id}
-                  href={`/admin/users?search=${encodeURIComponent(u.email)}`}
-                  className="flex items-center gap-2 rounded-lg px-2 py-2 transition-colors hover:bg-muted"
-                >
-                  <span className="flex size-6 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
-                    {i + 1}
-                  </span>
-                  <span className="flex-1 truncate text-sm">
-                    {u.displayName ?? u.email}
-                  </span>
-                  <span className="text-sm font-bold tabular-nums text-amber-600 dark:text-amber-400">
-                    {u.honeyPoints.toLocaleString()}
-                  </span>
-                </Link>
-              ))}
-              {s.topEarners.length === 0 && (
-                <p className="py-4 text-center text-sm text-muted-foreground">
-                  ยังไม่มีผู้ใช้
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+            ))}
+            {s.topEarners.length === 0 && (
+              <p className="py-4 text-center text-sm text-muted-foreground">
+                ยังไม่มีผู้ใช้
+              </p>
+            )}
+          </div>
+        </AdminPanel>
 
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>ธุรกรรมล่าสุด</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <HoneyTransactionList
-              initialTransactions={s.recentTransactions}
-              initialHasMore={s.hasMoreTransactions}
-            />
-          </CardContent>
-        </Card>
+        <AdminPanel title="ธุรกรรมล่าสุด" className="lg:col-span-2">
+          <HoneyTransactionList
+            initialTransactions={s.recentTransactions}
+            initialHasMore={s.hasMoreTransactions}
+            pageSize={s.pageSize}
+          />
+        </AdminPanel>
       </div>
-    </div>
+    </AdminPage>
   );
 }

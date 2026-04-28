@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Check, Edit2, MoreHorizontal, Plus, Trash2, X, Wallet } from "lucide-react"
+import { Check, Edit2, Lock, MoreHorizontal, Plus, Trash2, X, Wallet } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
@@ -125,8 +125,19 @@ export function PortfolioSidebar({
               <Wallet className="size-3.5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className={cn("truncate text-sm leading-tight", isActive ? "font-semibold" : "font-medium")}>
-                {p.name}
+              <p
+                className={cn(
+                  "flex items-center gap-1.5 truncate text-sm leading-tight",
+                  isActive ? "font-semibold" : "font-medium",
+                )}
+              >
+                <span className="truncate">{p.name}</span>
+                {!p.isPublic && (
+                  <Lock
+                    className="size-3 shrink-0 text-amber-600/80 dark:text-amber-400/80"
+                    aria-label={t(lang, "portfolioPrivate")}
+                  />
+                )}
               </p>
               <div className="flex items-center gap-1.5">
                 <span className="text-meta">

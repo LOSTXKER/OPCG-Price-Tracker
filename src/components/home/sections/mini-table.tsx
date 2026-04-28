@@ -6,7 +6,6 @@ import { ArrowRight, Clock, TrendingDown, TrendingUp } from "lucide-react"
 
 import type { TrendingCard } from "@/lib/data/home"
 import { getCardName, t } from "@/lib/i18n"
-import { cn } from "@/lib/utils"
 import { formatPct } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
@@ -20,28 +19,19 @@ export function HomeMiniTable({
   const lang = useUIStore((s) => s.language)
   const title = type === "gainers" ? t(lang, "topGainers") : t(lang, "topLosers")
   const linkHref = type === "gainers" ? "/trending?tab=gainers" : "/trending?tab=losers"
+  const TrendIcon = type === "gainers" ? TrendingUp : TrendingDown
+  const trendIconClass = type === "gainers" ? "text-price-up" : "text-price-down"
 
   return (
     <div>
-      <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div
-            className={cn(
-              "flex size-6 items-center justify-center rounded-md",
-              type === "gainers" ? "bg-green-500/10" : "bg-red-500/10",
-            )}
-          >
-            {type === "gainers" ? (
-              <TrendingUp className="size-3.5 text-green-600 dark:text-green-400" />
-            ) : (
-              <TrendingDown className="size-3.5 text-red-600 dark:text-red-400" />
-            )}
-          </div>
-          <p className="text-sm font-semibold text-foreground">{title}</p>
-        </div>
+      <div className="mb-2 flex items-center justify-between">
+        <p className="flex items-center gap-1.5 text-eyebrow">
+          <TrendIcon className={`size-3.5 ${trendIconClass}`} aria-hidden />
+          {title}
+        </p>
         <Link
           href={linkHref}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-meta transition-colors hover:bg-muted hover:text-foreground"
         >
           {t(lang, "more")}
           <ArrowRight className="size-3" />
@@ -53,8 +43,8 @@ export function HomeMiniTable({
           <p className="text-meta text-muted-foreground/40">{t(lang, "noData24h")}</p>
         </div>
       ) : (
-        <div className="space-y-0.5">
-          {cards.slice(0, 3).map((card, i) => {
+        <div>
+          {cards.slice(0, 3).map((card, idx) => {
             const name = getCardName(lang, card)
             const change = card.priceChange24h
             const isUp = change != null && change > 0
@@ -62,19 +52,19 @@ export function HomeMiniTable({
               <Link
                 key={card.cardCode}
                 href={`/cards/${card.cardCode}`}
-                className="flex items-center gap-2.5 rounded-md px-2 py-1.5 transition-colors hover:bg-muted/40"
+                className="flex items-center gap-2.5 rounded-md px-1.5 py-1 transition-colors hover:bg-muted/40"
               >
-                <span className="w-4 shrink-0 text-center font-price text-xs text-muted-foreground">
-                  {i + 1}
+                <span className="w-4 shrink-0 text-center font-price text-sm tabular-nums text-muted-foreground/70">
+                  {idx + 1}
                 </span>
-                <div className="relative size-7 shrink-0 overflow-hidden rounded bg-muted">
+                <div className="relative size-6 shrink-0 overflow-hidden rounded bg-muted">
                   {card.imageUrl && (
                     <Image
                       src={card.imageUrl}
                       alt={name}
                       fill
                       className="object-contain"
-                      sizes="28px"
+                      sizes="24px"
                     />
                   )}
                 </div>
@@ -82,7 +72,7 @@ export function HomeMiniTable({
                   <p className="truncate text-sm font-medium leading-tight">{name}</p>
                 </div>
                 <span
-                  className={`shrink-0 font-price text-sm font-medium ${
+                  className={`shrink-0 font-price text-sm font-medium tabular-nums ${
                     isUp
                       ? "text-price-up"
                       : type === "losers"

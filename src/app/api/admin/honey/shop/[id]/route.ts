@@ -2,162 +2,78 @@
 import { parseJsonBody } from "@/lib/api/admin-helpers";
 import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
-import { drawWinner } from "@/lib/honey/raffle";
+import type { ShopItemType } from "@/generated/prisma/client";
 
-export const GET = adminApiHandler(async (_req: NextRequest, _admin) => {
-  const raffles = await prisma.monthlyRaffle.findMany({
-    orderBy: [{ month: "desc" }, { sortOrder: "asc" }],
-    include: {
-      tickets: { select: { id: true, userId: true, isFree: true } },
-    },
-  });
+type Ctx = { params: Promise<{ id: string }> };
 
-  return NextResponse.json({
-    raffles: raffles.map((r) => ({
-      ...r,
-      totalTickets: r.tickets.length,
-      totalParticipants: new Set(r.tickets.map((t) => t.userId)).size,
-      tickets: undefined,
-    })),
-  });
+const VALID_TYPES = new Set<ShopItemType>([
+  "TRIAL_PRO",
+  "TRIAL_PRO_PLUS",
+  "BADGE",
+  "CUSTOM",
+  "PROFILE_FRAME",
+  "PRICE_ALERT_SLOT",
+  "CSV_EXPORT_PASS",
+] as ShopItemType[]);
+
+export const GET = adminApiHandler(async (_req: NextRequest, _admin, ctx: Ctx) => {
+  const { id } = await ctx.params;
+  const item = await prisma.honeyShopItem.findUnique({ where: { id: Number(id) } });
+  if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  return NextResponse.json({ item });
 });
 
-type RaffleBody = {
-  action?: string;
-  raffleId?: number;
-  month: string;
-  slug: string;
-  title: string;
-  titleEn?: string;
-  titleTh?: string;
-  description?: string;
-  imageUrl?: string;
-  color?: string;
-  prizes: { rank: number; name: string; imageUrl?: string; honeyBonus?: number }[];
-  ticketCost?: number;
-  maxTickets?: number;
-  freeThreshold?: number;
-  sortOrder?: number;
-};
-
-export const POST = adminApiHandler(async (req: NextRequest, _admin) => {
-  const parsed = await parseJsonBody<RaffleBody>(req);
-  if (!parsed.ok) return parsed.response;
-  const body = parsed.body;
-
-  if (body.action === "draw" && body.raffleId) {
-    const result = await drawWinner(body.raffleId);
-    if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
-    }
-    return NextResponse.json(result);
-  }
-
-  if (!body.month || !body.title || !body.prizes?.length) {
-    return NextResponse.json({ error: "month, title, prizes required" }, { status: 400 });
-  }
-
-  const slug = body.slug || "default";
-
-  const raffle = await prisma.monthlyRaffle.upsert({
-    where: { month_slug: { month: body.month, slug } },
-    update: {
-      title: body.title,
-      titleEn: body.titleEn,
-      titleTh: body.titleTh,
-      description: body.description,
-      imageUrl: body.imageUrl ?? null,
-      color: body.color ?? null,
-      prizes: body.prizes as object,
-      ticketCost: body.ticketCost ?? 50,
-      maxTickets: body.maxTickets ?? 5,
-      freeThreshold: body.freeThreshold ?? 7,
-      sortOrder: body.sortOrder ?? 0,
-    },
-    create: {
-      month: body.month,
-      slug,
-      title: body.title,
-      titleEn: body.titleEn,
-      titleTh: body.titleTh,
-      description: body.description,
-      imageUrl: body.imageUrl ?? null,
-      color: body.color ?? null,
-      prizes: body.prizes as object,
-      ticketCost: body.ticketCost ?? 50,
-      maxTickets: body.maxTickets ?? 5,
-      freeThreshold: body.freeThreshold ?? 7,
-      sortOrder: body.sortOrder ?? 0,
-    },
-  });
-
-  return NextResponse.json({ raffle });
-});
-
-export const PUT = adminApiHandler(async (req: NextRequest, _admin) => {
+export const PATCH = adminApiHandler(async (req: NextRequest, _admin, ctx: Ctx) => {
+  const { id } = await ctx.params;
   const parsed = await parseJsonBody<{
-    id: number;
-    title?: string;
-    titleEn?: string;
-    titleTh?: string;
-    description?: string;
-    imageUrl?: string | null;
-    color?: string | null;
-    prizes?: { rank: number; name: string; imageUrl?: string; honeyBonus?: number }[];
-    ticketCost?: number;
-    maxTickets?: number;
-    freeThreshold?: number;
-    sortOrder?: number;
+    name?: string;
+    nameEn?: string | null;
+    nameTh?: string | null;
+    description?: string | null;
+    cost?: number;
+    type?: string;
+    value?: unknown;
     isActive?: boolean;
+    stock?: number | null;
   }>(req);
   if (!parsed.ok) return parsed.response;
   const body = parsed.body;
 
-  if (!body.id) {
-    return NextResponse.json({ error: "id required" }, { status: 400 });
+  if (body.cost !== undefined && (!Number.isInteger(body.cost) || body.cost < 1)) {
+    return NextResponse.json({ error: "cost must be a positive integer" }, { status: 400 });
+  }
+  if (body.type !== undefined && !VALID_TYPES.has(body.type as ShopItemType)) {
+    return NextResponse.json({ error: "Invalid type" }, { status: 400 });
   }
 
   const data: Record<string, unknown> = {};
-  if (body.title !== undefined) data.title = body.title;
-  if (body.titleEn !== undefined) data.titleEn = body.titleEn;
-  if (body.titleTh !== undefined) data.titleTh = body.titleTh;
+  if (body.name !== undefined) data.name = body.name;
+  if (body.nameEn !== undefined) data.nameEn = body.nameEn;
+  if (body.nameTh !== undefined) data.nameTh = body.nameTh;
   if (body.description !== undefined) data.description = body.description;
-  if (body.imageUrl !== undefined) data.imageUrl = body.imageUrl;
-  if (body.color !== undefined) data.color = body.color;
-  if (body.prizes !== undefined) data.prizes = body.prizes as object;
-  if (body.ticketCost !== undefined) data.ticketCost = body.ticketCost;
-  if (body.maxTickets !== undefined) data.maxTickets = body.maxTickets;
-  if (body.freeThreshold !== undefined) data.freeThreshold = body.freeThreshold;
-  if (body.sortOrder !== undefined) data.sortOrder = body.sortOrder;
+  if (body.cost !== undefined) data.cost = body.cost;
+  if (body.type !== undefined) data.type = body.type as ShopItemType;
+  // `value` is JSON; passing `null` clears it. We use `=== null` explicitly so
+  // an absent field doesn't accidentally wipe an existing value.
+  if (body.value !== undefined) data.value = body.value === null ? null : (body.value as object);
   if (body.isActive !== undefined) data.isActive = body.isActive;
+  if (body.stock !== undefined) data.stock = body.stock;
 
-  const raffle = await prisma.monthlyRaffle.update({
-    where: { id: body.id },
+  const item = await prisma.honeyShopItem.update({
+    where: { id: Number(id) },
     data,
   });
 
-  return NextResponse.json({ raffle });
+  return NextResponse.json({ item });
 });
 
-export const DELETE = adminApiHandler(async (req: NextRequest, _admin) => {
-  const { searchParams } = new URL(req.url);
-  const id = Number(searchParams.get("id"));
-
-  if (!id) {
-    return NextResponse.json({ error: "id required" }, { status: 400 });
-  }
-
-  const raffle = await prisma.monthlyRaffle.findUnique({ where: { id } });
-  if (!raffle) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
-  }
-
-  if (raffle.drawnAt) {
-    return NextResponse.json({ error: "Cannot delete a drawn raffle" }, { status: 400 });
-  }
-
-  await prisma.raffleTicket.deleteMany({ where: { raffleId: id } });
-  await prisma.monthlyRaffle.delete({ where: { id } });
-
-  return NextResponse.json({ deleted: true });
+export const DELETE = adminApiHandler(async (_req: NextRequest, _admin, ctx: Ctx) => {
+  const { id } = await ctx.params;
+  // Soft-delete by deactivating: shop items can be referenced by historical
+  // honey transactions / user badges, so we never hard-delete.
+  const item = await prisma.honeyShopItem.update({
+    where: { id: Number(id) },
+    data: { isActive: false },
+  });
+  return NextResponse.json({ item });
 });

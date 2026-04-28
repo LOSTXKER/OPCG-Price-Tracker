@@ -3,7 +3,13 @@ import type { LucideIcon } from "lucide-react"
 import { Surface } from "@/components/ui/surface"
 import { cn } from "@/lib/utils"
 
-export type StatCardTone = "default" | "primary"
+export type StatCardTone =
+  | "default"
+  | "primary"
+  | "success"
+  | "warning"
+  | "danger"
+  | "info"
 
 export interface StatCardProps {
   label: string
@@ -66,7 +72,11 @@ export function StatCard({
           <div
             className={cn(
               "flex size-9 shrink-0 items-center justify-center rounded-lg",
-              "bg-muted/50",
+              tone === "success" && "bg-success-soft",
+              tone === "warning" && "bg-warning-soft",
+              tone === "danger" && "bg-danger-soft",
+              tone === "info" && "bg-info-soft",
+              (tone === "default" || tone === "primary") && "bg-muted/50",
             )}
           >
             {iconNode ?? (
@@ -74,7 +84,12 @@ export function StatCard({
                 <Icon
                   className={cn(
                     "size-[18px]",
-                    tone === "primary" ? "text-primary" : "text-muted-foreground",
+                    tone === "primary" && "text-primary",
+                    tone === "success" && "text-success",
+                    tone === "warning" && "text-warning",
+                    tone === "danger" && "text-danger",
+                    tone === "info" && "text-info",
+                    tone === "default" && "text-muted-foreground",
                   )}
                 />
               )

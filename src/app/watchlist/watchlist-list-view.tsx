@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Bell, Pin, StickyNote } from "lucide-react";
+import { Bell, Pin } from "lucide-react";
 
+import { CardImageButton } from "@/components/shared/card-image-button";
 import { MiniSparkline } from "@/components/portfolio/portfolio-hero";
 import { PriceDisplay } from "@/components/shared/price-display";
 import { RarityBadge } from "@/components/shared/rarity-badge";
@@ -27,8 +28,8 @@ export function WatchlistListView({
   onToggleSelect,
   onToggleAll,
   sparklines,
+  hasAnySparkline,
   onTogglePin,
-  onEdit,
   onSetAlert,
   onRemove,
   removingIds,
@@ -39,8 +40,8 @@ export function WatchlistListView({
   onToggleSelect: (cardId: number) => void;
   onToggleAll: () => void;
   sparklines: Record<number, number[]>;
+  hasAnySparkline: boolean;
   onTogglePin: (entry: WatchlistEntry) => void;
-  onEdit: (entry: WatchlistEntry) => void;
   onSetAlert: (entry: WatchlistEntry) => void;
   onRemove: (entry: WatchlistEntry) => void;
   removingIds: Set<number>;
@@ -52,100 +53,56 @@ export function WatchlistListView({
   if (entries.length === 0) return null;
 
   return (
-    <div className="panel overflow-hidden">
-      {/* Mobile rows */}
-      <div className="divide-y divide-border/40 sm:hidden">
+    <div className="overflow-hidden rounded-lg border border-border/40">
+      {entries.length > 1 && (
+        <div className="flex items-center gap-3 border-b border-border/40 bg-muted/20 px-3 py-2 text-meta">
+          <input
+            type="checkbox"
+            className="size-3.5 cursor-pointer accent-primary"
+            aria-label={t(lang, "watchlistSelectAll")}
+            checked={allSelected}
+            ref={(el) => {
+              if (el) el.indeterminate = someSelected;
+            }}
+            onChange={onToggleAll}
+          />
+          <span className="text-muted-foreground">
+            {allSelected || someSelected
+              ? `${selected.size} / ${entries.length}`
+              : `${entries.length} ${t(lang, "watchlistSummaryCards").toLowerCase()}`}
+          </span>
+        </div>
+      )}
+
+      <div className="divide-y divide-border/30">
         {entries.map((entry) => (
-          <MobileRow
+          <ListRow
             key={entry.id}
             entry={entry}
             period={period}
             selected={selected.has(entry.cardId)}
             onToggleSelect={() => onToggleSelect(entry.cardId)}
+            sparklineData={sparklines[entry.cardId]}
+            showSparklineSlot={hasAnySparkline}
             onTogglePin={() => onTogglePin(entry)}
-            onEdit={() => onEdit(entry)}
             onSetAlert={() => onSetAlert(entry)}
             onRemove={() => onRemove(entry)}
             removing={removingIds.has(entry.cardId)}
           />
         ))}
       </div>
-
-      {/* Desktop table */}
-      <div className="hidden overflow-x-auto sm:block">
-        <table className="w-full table-fixed text-left text-sm">
-          <colgroup>
-            <col className="w-9" />
-            <col className="w-7" />
-            <col />
-            <col className="hidden w-[80px] md:table-column" />
-            <col className="w-[120px]" />
-            <col className="w-[80px]" />
-            <col className="hidden w-[140px] lg:table-column" />
-            <col className="hidden w-[120px] xl:table-column" />
-            <col className="w-12" />
-          </colgroup>
-          <thead className="bg-card">
-            <tr className="border-b border-border text-eyebrow text-muted-foreground">
-              <th className="py-2.5 pl-3 pr-1">
-                <input
-                  type="checkbox"
-                  className="size-3.5 cursor-pointer accent-primary"
-                  aria-label={t(lang, "watchlistSelectAll")}
-                  checked={allSelected}
-                  ref={(el) => {
-                    if (el) el.indeterminate = someSelected;
-                  }}
-                  onChange={onToggleAll}
-                />
-              </th>
-              <th className="py-2.5 pr-1 text-center">
-                <Pin className="inline size-3 text-muted-foreground/60" />
-              </th>
-              <th className="py-2.5 pr-3 font-medium">{t(lang, "card")}</th>
-              <th className="hidden py-2.5 pr-3 font-medium md:table-cell">{t(lang, "set")}</th>
-              <th className="py-2.5 pr-3 text-right font-medium">{t(lang, "price")}</th>
-              <th className="py-2.5 pr-3 text-right font-medium">{period}</th>
-              <th className="hidden py-2.5 pr-3 font-medium lg:table-cell">
-                {t(lang, "watchlistTargetPriceShort")}
-              </th>
-              <th className="hidden py-2.5 pr-3 font-medium xl:table-cell">
-                {t(lang, "sparkline7d")}
-              </th>
-              <th className="py-2.5 pr-3" />
-            </tr>
-          </thead>
-          <tbody>
-            {entries.map((entry) => (
-              <DesktopRow
-                key={entry.id}
-                entry={entry}
-                period={period}
-                selected={selected.has(entry.cardId)}
-                onToggleSelect={() => onToggleSelect(entry.cardId)}
-                sparklineData={sparklines[entry.cardId]}
-                onTogglePin={() => onTogglePin(entry)}
-                onEdit={() => onEdit(entry)}
-                onSetAlert={() => onSetAlert(entry)}
-                onRemove={() => onRemove(entry)}
-                removing={removingIds.has(entry.cardId)}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 }
 
-function DesktopRow({
+function ListRow({
   entry,
   period,
   selected,
   onToggleSelect,
   sparklineData,
+  showSparklineSlot,
   onTogglePin,
-  onEdit,
   onSetAlert,
   onRemove,
   removing,
@@ -155,157 +112,8 @@ function DesktopRow({
   selected: boolean;
   onToggleSelect: () => void;
   sparklineData?: number[];
+  showSparklineSlot: boolean;
   onTogglePin: () => void;
-  onEdit: () => void;
-  onSetAlert: () => void;
-  onRemove: () => void;
-  removing: boolean;
-}) {
-  const lang = useUIStore((s) => s.language);
-  const change = getEntryChange(entry, period);
-  const displayName = getCardName(lang, entry.card);
-  const pinned = entry.pinnedAt != null;
-  const change7d = entry.card.priceChange7d;
-
-  return (
-    <tr
-      className={cn(
-        "group/row border-b border-border/40 transition-all hover:bg-muted/30",
-        pinned && "bg-primary/5",
-        removing && "opacity-40"
-      )}
-    >
-      <td className="py-3 pl-3 pr-1">
-        <input
-          type="checkbox"
-          className="size-3.5 cursor-pointer accent-primary"
-          checked={selected}
-          onChange={onToggleSelect}
-          aria-label={displayName}
-        />
-      </td>
-      <td className="py-3 pr-1 text-center">
-        <button
-          type="button"
-          onClick={onTogglePin}
-          className={cn(
-            "inline-flex size-6 items-center justify-center rounded-md transition-colors",
-            pinned
-              ? "text-primary"
-              : "text-muted-foreground/40 opacity-0 hover:text-foreground group-hover/row:opacity-100"
-          )}
-          aria-label={pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")}
-          title={pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")}
-        >
-          <Pin className={cn("size-3.5", pinned && "fill-current")} />
-        </button>
-      </td>
-      <td className="py-3 pr-3">
-        <Link
-          href={`/cards/${entry.card.cardCode}`}
-          className="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
-        >
-          <div className="relative size-10 shrink-0 overflow-hidden rounded bg-muted">
-            {entry.card.imageUrl && (
-              <Image
-                src={entry.card.imageUrl}
-                alt={displayName}
-                fill
-                sizes="40px"
-                className="object-cover"
-                placeholder="blur"
-                blurDataURL={BLUR_DATA_URL}
-              />
-            )}
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1.5">
-              <RarityBadge rarity={entry.card.rarity} size="sm" />
-              <span className="font-mono text-xs text-muted-foreground">
-                {entry.card.cardCode}
-              </span>
-              {entry.hasActiveAlert && (
-                <span
-                  className="inline-flex size-4 items-center justify-center rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400"
-                  aria-label={t(lang, "watchlistHasAlert")}
-                  title={t(lang, "watchlistHasAlert")}
-                >
-                  <Bell className="size-2.5" />
-                </span>
-              )}
-              {entry.note && (
-                <span
-                  className="inline-flex size-4 items-center justify-center rounded-full bg-muted text-muted-foreground"
-                  aria-label={t(lang, "watchlistNote")}
-                  title={entry.note}
-                >
-                  <StickyNote className="size-2.5" />
-                </span>
-              )}
-            </div>
-            <p className="truncate text-sm font-medium" title={displayName}>
-              {displayName}
-            </p>
-          </div>
-        </Link>
-      </td>
-      <td className="hidden py-3 pr-3 text-sm text-muted-foreground md:table-cell">
-        <span className="font-mono uppercase">{entry.card.set.code}</span>
-      </td>
-      <td className="py-3 pr-3 text-right">
-        <PriceDisplay
-          priceJpy={entry.card.latestPriceJpy}
-          priceThb={entry.card.latestPriceThb}
-          size="sm"
-          showChange={false}
-        />
-      </td>
-      <td className={cn("py-3 pr-3 text-right tabular-nums", changeToneClass(change))}>
-        {formatSignedPct(change)}
-      </td>
-      <td className="hidden py-3 pr-3 lg:table-cell">
-        <TargetProgress entry={entry} />
-      </td>
-      <td className="hidden py-3 pr-3 xl:table-cell">
-        {sparklineData && sparklineData.length >= 2 ? (
-          <MiniSparkline data={sparklineData} width={120} height={28} />
-        ) : (
-          <span className="text-meta text-muted-foreground/50">—</span>
-        )}
-        {change7d == null && (
-          <span className="sr-only">{t(lang, "noData")}</span>
-        )}
-      </td>
-      <td className="py-3 pr-2 text-right">
-        <WatchlistRowActions
-          entry={entry}
-          onTogglePin={onTogglePin}
-          onEdit={onEdit}
-          onSetAlert={onSetAlert}
-          onRemove={onRemove}
-        />
-      </td>
-    </tr>
-  );
-}
-
-function MobileRow({
-  entry,
-  period,
-  selected,
-  onToggleSelect,
-  onTogglePin,
-  onEdit,
-  onSetAlert,
-  onRemove,
-  removing,
-}: {
-  entry: WatchlistEntry;
-  period: ChangePeriod;
-  selected: boolean;
-  onToggleSelect: () => void;
-  onTogglePin: () => void;
-  onEdit: () => void;
   onSetAlert: () => void;
   onRemove: () => void;
   removing: boolean;
@@ -318,8 +126,7 @@ function MobileRow({
   return (
     <div
       className={cn(
-        "flex items-center gap-3 px-3 py-3 transition-all",
-        pinned && "bg-primary/5",
+        "group/row flex items-center gap-3 px-3 py-3 transition-colors hover:bg-muted/20",
         removing && "opacity-40"
       )}
     >
@@ -330,121 +137,119 @@ function MobileRow({
         onChange={onToggleSelect}
         aria-label={displayName}
       />
+
+      <button
+        type="button"
+        onClick={onTogglePin}
+        className={cn(
+          "inline-flex size-7 shrink-0 items-center justify-center rounded-md transition-colors hover:bg-muted",
+          pinned
+            ? "text-primary"
+            : "text-muted-foreground/40 hover:text-foreground"
+        )}
+        aria-label={pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")}
+        title={pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")}
+      >
+        <Pin className={cn("size-3.5", pinned && "fill-current")} />
+      </button>
+
+      {entry.card.imageUrl ? (
+        <CardImageButton
+          card={{
+            cardCode: entry.card.cardCode,
+            cardId: entry.cardId,
+            nameJp: entry.card.nameJp,
+            nameEn: entry.card.nameEn,
+            nameTh: entry.card.nameTh,
+            rarity: entry.card.rarity,
+            imageUrl: entry.card.imageUrl,
+            setCode: entry.card.set.code,
+            priceJpy: entry.card.latestPriceJpy,
+            priceThb: entry.card.latestPriceThb,
+            priceChange24h: entry.card.priceChange24h,
+            priceChange7d: entry.card.priceChange7d,
+            priceChange30d: entry.card.priceChange30d,
+          }}
+          className="relative aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-md bg-muted ring-1 ring-border/40"
+        >
+          <Image
+            src={entry.card.imageUrl}
+            alt={displayName}
+            fill
+            sizes="46px"
+            className="object-cover"
+            placeholder="blur"
+            blurDataURL={BLUR_DATA_URL}
+          />
+        </CardImageButton>
+      ) : (
+        <div className="relative aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-md bg-muted ring-1 ring-border/40" />
+      )}
+
       <Link
         href={`/cards/${entry.card.cardCode}`}
-        className="flex flex-1 items-center gap-3 focus-visible:outline-none"
+        className="flex min-w-0 flex-1 items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
-        <div className="relative size-12 shrink-0 overflow-hidden rounded bg-muted">
-          {entry.card.imageUrl && (
-            <Image
-              src={entry.card.imageUrl}
-              alt={displayName}
-              fill
-              sizes="48px"
-              className="object-cover"
-              placeholder="blur"
-              blurDataURL={BLUR_DATA_URL}
-            />
-          )}
-          {pinned && (
-            <span className="absolute -right-1 -top-1 inline-flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <Pin className="size-2.5 fill-current" />
-            </span>
-          )}
-        </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
+          <p className="truncate text-sm font-medium" title={displayName}>
+            {displayName}
+          </p>
+          <div className="mt-0.5 flex items-center gap-1.5 text-meta">
             <RarityBadge rarity={entry.card.rarity} size="sm" />
-            <span className="font-mono text-xs text-muted-foreground">
+            <span className="truncate font-mono text-muted-foreground">
               {entry.card.cardCode}
             </span>
-            {entry.hasActiveAlert && (
-              <Bell className="size-3 text-amber-500" />
-            )}
           </div>
-          <p className="truncate text-sm font-medium">{displayName}</p>
-          <div className="flex items-center justify-between gap-3 pt-0.5">
-            <PriceDisplay
-              priceJpy={entry.card.latestPriceJpy}
-              priceThb={entry.card.latestPriceThb}
-              size="sm"
-              showChange={false}
-            />
-            <span
-              className={cn(
-                "text-xs tabular-nums",
-                changeToneClass(change)
-              )}
-            >
-              {formatSignedPct(change)}
-            </span>
-          </div>
-          {entry.targetPriceJpy != null && (
-            <div className="pt-1">
-              <TargetProgress entry={entry} compact />
-            </div>
-          )}
         </div>
       </Link>
-      <WatchlistRowActions
-        entry={entry}
-        onTogglePin={onTogglePin}
-        onEdit={onEdit}
-        onSetAlert={onSetAlert}
-        onRemove={onRemove}
-      />
-    </div>
-  );
-}
 
-function TargetProgress({
-  entry,
-  compact,
-}: {
-  entry: WatchlistEntry;
-  compact?: boolean;
-}) {
-  const lang = useUIStore((s) => s.language);
-  const target = entry.targetPriceJpy;
-  const current = entry.card.latestPriceJpy;
+      {showSparklineSlot && (
+        <div className="hidden w-[120px] shrink-0 xl:block">
+          {sparklineData && sparklineData.length >= 2 ? (
+            <MiniSparkline data={sparklineData} width={120} height={28} />
+          ) : null}
+        </div>
+      )}
 
-  if (target == null) {
-    return <span className="text-meta text-muted-foreground/50">—</span>;
-  }
-
-  if (current == null) {
-    return (
-      <span className="text-meta tabular-nums text-muted-foreground">
-        ¥{target.toLocaleString()}
-      </span>
-    );
-  }
-
-  // Direction: if current > target → user is waiting for price to drop (target is below)
-  // If current < target → user wants price to climb (target is above)
-  const targetAbove = target > current;
-  const ratio = targetAbove ? current / target : target / current;
-  const pct = Math.max(0, Math.min(100, Math.round(ratio * 100)));
-  const reached = targetAbove ? current >= target : current <= target;
-
-  return (
-    <div className={cn("space-y-0.5", compact && "space-y-0")}>
-      <div className="flex items-center justify-between gap-2 text-meta tabular-nums">
-        <span className={cn(reached && "font-semibold text-price-up")}>
-          {reached ? t(lang, "watchlistTargetReached") : `¥${target.toLocaleString()}`}
-        </span>
-        {!reached && (
-          <span className="text-muted-foreground/70">{pct}%</span>
-        )}
-      </div>
-      <div className="h-1 overflow-hidden rounded-full bg-muted">
-        <div
-          className={cn(
-            "h-full rounded-full transition-all",
-            reached ? "bg-price-up" : targetAbove ? "bg-primary" : "bg-amber-500"
-          )}
-          style={{ width: `${reached ? 100 : pct}%` }}
+      <div className="flex shrink-0 flex-col items-end gap-0.5 text-right leading-tight tabular-nums">
+        <PriceDisplay
+          priceJpy={entry.card.latestPriceJpy}
+          priceThb={entry.card.latestPriceThb}
+          size="sm"
+          showChange={false}
+          className="flex-nowrap whitespace-nowrap"
         />
+        <span className={cn("text-xs", changeToneClass(change))}>
+          {formatSignedPct(change)}
+        </span>
+      </div>
+
+      <div className="flex shrink-0 items-center gap-0.5">
+        <button
+          type="button"
+          onClick={onSetAlert}
+          className={cn(
+            "inline-flex size-8 items-center justify-center rounded-md transition-colors",
+            entry.hasActiveAlert
+              ? "text-amber-500 hover:bg-amber-500/10"
+              : "text-muted-foreground/40 hover:bg-muted hover:text-foreground"
+          )}
+          aria-label={
+            entry.hasActiveAlert
+              ? t(lang, "watchlistHasAlert")
+              : t(lang, "setPriceAlert")
+          }
+          title={
+            entry.hasActiveAlert
+              ? t(lang, "watchlistHasAlert")
+              : t(lang, "setPriceAlert")
+          }
+        >
+          <Bell
+            className={cn("size-4", entry.hasActiveAlert && "fill-current")}
+          />
+        </button>
+        <WatchlistRowActions entry={entry} onRemove={onRemove} />
       </div>
     </div>
   );

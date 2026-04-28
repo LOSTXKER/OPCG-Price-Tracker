@@ -16,7 +16,6 @@ import { createClient } from "@/lib/supabase/client";
 import { getCardName, t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 
-import { WatchlistEditDialog } from "./watchlist-edit-dialog";
 import { WatchlistEmpty } from "./watchlist-empty";
 import { WatchlistGridView } from "./watchlist-grid-view";
 import { WatchlistListView } from "./watchlist-list-view";
@@ -73,8 +72,6 @@ function WatchlistContent() {
   const [filters, setFilters] = useState<WatchlistFilters>(DEFAULT_FILTERS);
   const [search, setSearch] = useState("");
 
-  const [editTarget, setEditTarget] = useState<WatchlistEntry | null>(null);
-  const [editOpen, setEditOpen] = useState(false);
   const [alertTarget, setAlertTarget] = useState<WatchlistEntry | null>(null);
   const [alertOpen, setAlertOpen] = useState(false);
 
@@ -288,9 +285,7 @@ function WatchlistContent() {
         const fresh = data.item as WatchlistEntry;
         setItems((prev) =>
           prev.map((x) =>
-            x.cardId === entry.cardId
-              ? { ...x, pinnedAt: fresh.pinnedAt, note: fresh.note, targetPriceJpy: fresh.targetPriceJpy }
-              : x
+            x.cardId === entry.cardId ? { ...x, pinnedAt: fresh.pinnedAt } : x
           )
         );
       }
@@ -298,42 +293,6 @@ function WatchlistContent() {
       setItems(previousItems);
       toast.error(t(lang, "watchlistUpdateFailed"));
     }
-  };
-
-  const handleEditSave = async (data: {
-    cardId: number;
-    note: string | null;
-    targetPriceJpy: number | null;
-  }): Promise<boolean> => {
-    const previousItems = items;
-    setItems((prev) =>
-      prev.map((x) =>
-        x.cardId === data.cardId
-          ? { ...x, note: data.note, targetPriceJpy: data.targetPriceJpy }
-          : x
-      )
-    );
-
-    try {
-      const res = await fetch(`/api/watchlist/${data.cardId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          note: data.note,
-          targetPriceJpy: data.targetPriceJpy,
-        }),
-      });
-      if (!res.ok) throw new Error("update failed");
-      return true;
-    } catch {
-      setItems(previousItems);
-      return false;
-    }
-  };
-
-  const openEdit = (entry: WatchlistEntry) => {
-    setEditTarget(entry);
-    setEditOpen(true);
   };
 
   const openSetAlert = (entry: WatchlistEntry) => {
@@ -344,6 +303,14 @@ function WatchlistContent() {
   const refreshAlerts = () => {
     void load();
   };
+
+  const hasAnySparkline = useMemo(
+    () =>
+      filteredEntries.some(
+        (e) => sparklines[e.cardId] && sparklines[e.cardId].length >= 2
+      ),
+    [filteredEntries, sparklines]
+  );
 
   if (loading) {
     return (
@@ -364,11 +331,17 @@ function WatchlistContent() {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <PageHeader
         title={t(lang, "watchlistNav")}
         description={items.length === 0 ? t(lang, "emptyWatchlistDesc") : undefined}
-      />
+      >
+        {items.length > 0 && (
+          <div className="mt-1.5">
+            <WatchlistSummary entries={items} period={period} />
+          </div>
+        )}
+      </PageHeader>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 
@@ -376,8 +349,6 @@ function WatchlistContent() {
         <WatchlistEmpty />
       ) : (
         <>
-          <WatchlistSummary entries={items} period={period} />
-
           <WatchlistToolbar
             view={view}
             onViewChange={setView}
@@ -398,7 +369,7 @@ function WatchlistContent() {
           />
 
           {filteredEntries.length === 0 ? (
-            <div className="panel py-10 text-center text-sm text-muted-foreground">
+            <div className="rounded-lg border border-dashed border-border/60 py-10 text-center text-sm text-muted-foreground">
               {t(lang, "noCardsFoundDesc")}
             </div>
           ) : view === "list" ? (
@@ -409,8 +380,8 @@ function WatchlistContent() {
               onToggleSelect={toggleSelect}
               onToggleAll={toggleSelectAll}
               sparklines={sparklines}
+              hasAnySparkline={hasAnySparkline}
               onTogglePin={(e) => void togglePin(e)}
-              onEdit={openEdit}
               onSetAlert={openSetAlert}
               onRemove={(e) => void removeSingle(e)}
               removingIds={removingIds}
@@ -422,7 +393,6 @@ function WatchlistContent() {
               selected={selected}
               onToggleSelect={toggleSelect}
               onTogglePin={(e) => void togglePin(e)}
-              onEdit={openEdit}
               onSetAlert={openSetAlert}
               onRemove={(e) => void removeSingle(e)}
               removingIds={removingIds}
@@ -430,16 +400,6 @@ function WatchlistContent() {
           )}
         </>
       )}
-
-      <WatchlistEditDialog
-        open={editOpen}
-        entry={editTarget}
-        onOpenChange={(open) => {
-          setEditOpen(open);
-          if (!open) setEditTarget(null);
-        }}
-        onSave={handleEditSave}
-      />
 
       {alertTarget && (
         <CardSetAlertDialog

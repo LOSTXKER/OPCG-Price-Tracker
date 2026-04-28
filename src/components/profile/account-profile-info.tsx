@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { AtSign, Loader2, Mail, Pencil } from "lucide-react";
+import { AtSign, Loader2, Lock, Mail, Pencil, X } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { t } from "@/lib/i18n";
 import type { Language } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import type { DbUser } from "./profile-types";
 
 const nameSchema = z.string().trim().min(1, "Name is required").max(120);
@@ -105,11 +106,21 @@ export function AccountProfileInfo({ user, lang, onUserUpdate }: AccountProfileI
   return (
     <div className="overflow-hidden rounded-xl border border-border/40 bg-card divide-y divide-border/30">
       {/* Display name */}
-      <div className="flex items-center justify-between gap-4 px-5 py-4">
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium text-muted-foreground">{t(lang, "displayNamePlaceholder")}</p>
-          {isEditing ? (
-            <div className="mt-1.5 flex items-center gap-2">
+      <FieldRow
+        label={t(lang, "displayNamePlaceholder")}
+        editing={isEditing}
+        onEdit={() => setIsEditing(true)}
+        onCancel={() => {
+          setIsEditing(false);
+          setDisplayName(user.displayName ?? "");
+          setError(null);
+        }}
+        editLabel={t(lang, "edit")}
+        cancelLabel={t(lang, "cancel")}
+      >
+        {isEditing ? (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
               <Input
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
@@ -120,156 +131,188 @@ export function AccountProfileInfo({ user, lang, onUserUpdate }: AccountProfileI
               <Button size="sm" onClick={() => void saveName()} disabled={saving}>
                 {t(lang, "save")}
               </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => { setIsEditing(false); setDisplayName(user.displayName ?? ""); setError(null); }}
-              >
-                {t(lang, "cancel")}
-              </Button>
             </div>
-          ) : (
-            <p className={user.displayName ? "mt-0.5 text-sm" : "mt-0.5 text-sm italic text-muted-foreground/50"}>
-              {user.displayName ?? t(lang, "setYourName")}
-            </p>
-          )}
-          {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
-        </div>
-        {!isEditing && (
-          <Button variant="outline" size="sm" onClick={() => setIsEditing(true)} className="shrink-0">
-            <Pencil className="mr-1.5 size-3" />
-            {t(lang, "edit")}
-          </Button>
+            {error && <p className="text-xs text-destructive">{error}</p>}
+          </div>
+        ) : (
+          <p className={cn("text-sm", !user.displayName && "italic text-muted-foreground/60")}>
+            {user.displayName ?? t(lang, "setYourName")}
+          </p>
         )}
-      </div>
+      </FieldRow>
 
       {/* Bio */}
-      <div className="flex items-start justify-between gap-4 px-5 py-4">
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium text-muted-foreground">{t(lang, "bio")}</p>
-          {isEditingBio ? (
-            <div className="mt-1.5 space-y-2">
-              <textarea
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                placeholder={t(lang, "bioPlaceholder")}
-                maxLength={500}
-                rows={3}
-                className="w-full max-w-sm resize-none rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                autoFocus
-              />
-              <div className="flex items-center gap-2">
-                <span className="text-meta">{bio.length}/500</span>
-                <Button size="sm" onClick={() => void saveBio()} disabled={saving}>
-                  {t(lang, "save")}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => { setIsEditingBio(false); setBio(user.bio ?? ""); setError(null); }}
-                >
-                  {t(lang, "cancel")}
-                </Button>
-              </div>
+      <FieldRow
+        label={t(lang, "bio")}
+        editing={isEditingBio}
+        onEdit={() => setIsEditingBio(true)}
+        onCancel={() => {
+          setIsEditingBio(false);
+          setBio(user.bio ?? "");
+          setError(null);
+        }}
+        editLabel={t(lang, "edit")}
+        cancelLabel={t(lang, "cancel")}
+        align="start"
+      >
+        {isEditingBio ? (
+          <div className="space-y-2">
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              placeholder={t(lang, "bioPlaceholder")}
+              maxLength={500}
+              rows={3}
+              className="w-full max-w-md resize-none rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              autoFocus
+            />
+            <div className="flex items-center gap-2">
+              <span className="text-meta">{bio.length}/500</span>
+              <Button size="sm" onClick={() => void saveBio()} disabled={saving}>
+                {t(lang, "save")}
+              </Button>
             </div>
-          ) : (
-            <p className={user.bio ? "mt-0.5 text-sm" : "mt-0.5 text-sm italic text-muted-foreground/50"}>
-              {user.bio || t(lang, "bioPlaceholder")}
-            </p>
-          )}
-        </div>
-        {!isEditingBio && (
-          <Button variant="outline" size="sm" onClick={() => setIsEditingBio(true)} className="shrink-0">
-            <Pencil className="mr-1.5 size-3" />
-            {t(lang, "edit")}
-          </Button>
+          </div>
+        ) : (
+          <p className={cn("text-sm", !user.bio && "italic text-muted-foreground/60")}>
+            {user.bio || t(lang, "bioPlaceholder")}
+          </p>
         )}
-      </div>
+      </FieldRow>
 
       {/* Handle */}
-      <div className="flex items-start justify-between gap-4 px-5 py-4">
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium text-muted-foreground">{t(lang, "profileHandle")}</p>
-          {isEditingHandle ? (
-            <div className="mt-1.5 space-y-2">
-              <div className="flex items-center gap-2">
-                <div className="flex flex-1 max-w-xs items-center gap-1 rounded-md border border-input bg-transparent px-3 ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
-                  <AtSign className="size-3.5 text-muted-foreground" />
-                  <input
-                    value={handleInput}
-                    onChange={(e) => setHandleInput(e.target.value)}
-                    placeholder={t(lang, "profileHandlePlaceholder")}
-                    maxLength={24}
-                    className="h-9 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-                    autoFocus
-                  />
-                </div>
-                <Button size="sm" onClick={() => void saveHandle()} disabled={savingHandle}>
-                  {savingHandle ? <Loader2 className="size-3 animate-spin" /> : t(lang, "save")}
-                </Button>
-                {user.handle && (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => {
-                      setHandleInput("");
-                      void saveHandle();
-                    }}
-                    disabled={savingHandle}
-                  >
-                    {t(lang, "profileHandleClear")}
-                  </Button>
-                )}
+      <FieldRow
+        label={t(lang, "profileHandle")}
+        editing={isEditingHandle}
+        onEdit={() => setIsEditingHandle(true)}
+        onCancel={() => {
+          setIsEditingHandle(false);
+          setHandleInput(user.handle ?? "");
+          setHandleError(null);
+        }}
+        editLabel={t(lang, "edit")}
+        cancelLabel={t(lang, "cancel")}
+        align="start"
+      >
+        {isEditingHandle ? (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="flex max-w-xs flex-1 items-center gap-1 rounded-md border border-input bg-transparent px-3 ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+                <AtSign className="size-3.5 text-muted-foreground" />
+                <input
+                  value={handleInput}
+                  onChange={(e) => setHandleInput(e.target.value)}
+                  placeholder={t(lang, "profileHandlePlaceholder")}
+                  maxLength={24}
+                  className="h-9 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                  autoFocus
+                />
+              </div>
+              <Button size="sm" onClick={() => void saveHandle()} disabled={savingHandle}>
+                {savingHandle ? <Loader2 className="size-3 animate-spin" /> : t(lang, "save")}
+              </Button>
+              {user.handle && (
                 <Button
                   size="sm"
                   variant="ghost"
                   onClick={() => {
-                    setIsEditingHandle(false);
-                    setHandleInput(user.handle ?? "");
-                    setHandleError(null);
+                    setHandleInput("");
+                    void saveHandle();
                   }}
+                  disabled={savingHandle}
                 >
-                  {t(lang, "cancel")}
+                  {t(lang, "profileHandleClear")}
                 </Button>
-              </div>
-              {handleError ? (
-                <p className="text-xs text-destructive">{handleError}</p>
-              ) : (
-                <p className="text-meta text-muted-foreground/60">{t(lang, "profileHandleHint")}</p>
               )}
             </div>
-          ) : (
-            <div className="mt-0.5 flex items-center gap-2">
-              {user.handle ? (
-                <>
-                  <AtSign className="size-3.5 text-muted-foreground" />
-                  <span className="text-sm font-medium">{user.handle}</span>
-                </>
-              ) : (
-                <span className="text-sm italic text-muted-foreground/50">
-                  {t(lang, "profileHandleDesc")}
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-        {!isEditingHandle && (
-          <Button variant="outline" size="sm" onClick={() => setIsEditingHandle(true)} className="shrink-0">
-            <Pencil className="mr-1.5 size-3" />
-            {t(lang, "edit")}
-          </Button>
+            {handleError ? (
+              <p className="text-xs text-destructive">{handleError}</p>
+            ) : (
+              <p className="text-meta text-muted-foreground/60">{t(lang, "profileHandleHint")}</p>
+            )}
+          </div>
+        ) : user.handle ? (
+          <div className="flex items-center gap-1.5">
+            <AtSign className="size-3.5 text-muted-foreground" />
+            <span className="text-sm font-medium">{user.handle}</span>
+          </div>
+        ) : (
+          <p className="text-sm italic text-muted-foreground/60">
+            {t(lang, "profileHandleDesc")}
+          </p>
         )}
-      </div>
+      </FieldRow>
 
       {/* Email (read-only) */}
-      <div className="px-5 py-4">
-        <p className="text-xs font-medium text-muted-foreground">Email</p>
-        <div className="mt-0.5 flex items-center gap-2">
-          <Mail className="size-3.5 text-muted-foreground" />
-          <span className="text-sm">{user.email}</span>
+      <div className="flex items-center justify-between gap-4 px-5 py-4">
+        <div className="min-w-0 flex-1">
+          <p className="text-eyebrow">Email</p>
+          <div className="mt-1.5 flex items-center gap-1.5">
+            <Mail className="size-3.5 text-muted-foreground" />
+            <span className="truncate text-sm">{user.email}</span>
+          </div>
         </div>
-        <p className="mt-1 text-meta text-muted-foreground/60">{t(lang, "emailReadonly")}</p>
+        <span
+          className="inline-flex shrink-0 items-center gap-1 text-meta"
+          title={t(lang, "emailReadonly")}
+        >
+          <Lock className="size-3" />
+          {t(lang, "emailReadonly")}
+        </span>
       </div>
+    </div>
+  );
+}
+
+function FieldRow({
+  label,
+  editing,
+  onEdit,
+  onCancel,
+  editLabel,
+  cancelLabel,
+  align = "center",
+  children,
+}: {
+  label: string;
+  editing: boolean;
+  onEdit: () => void;
+  onCancel: () => void;
+  editLabel: string;
+  cancelLabel: string;
+  align?: "center" | "start";
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex justify-between gap-4 px-5 py-4",
+        align === "center" ? "items-center" : "items-start",
+      )}
+    >
+      <div className="min-w-0 flex-1">
+        <p className="text-eyebrow">{label}</p>
+        <div className="mt-1.5">{children}</div>
+      </div>
+      {editing ? (
+        <button
+          type="button"
+          onClick={onCancel}
+          aria-label={cancelLabel}
+          className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        >
+          <X className="size-4" />
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={onEdit}
+          aria-label={editLabel}
+          className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        >
+          <Pencil className="size-3.5" />
+        </button>
+      )}
     </div>
   );
 }

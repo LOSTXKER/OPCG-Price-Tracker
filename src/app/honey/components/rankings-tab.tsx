@@ -6,6 +6,7 @@ import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { LeaderboardUser } from "../types";
 import { EmptyState } from "./empty-state";
+import { FilterTabs } from "./_shared/filter-tabs";
 
 type RankSort = "HONEY" | "STREAK";
 
@@ -33,30 +34,20 @@ export function RankingsTab({
     <div className="panel overflow-hidden">
       <div className="border-b px-4 py-3.5">
         <h2 className="text-h3">{t(lang, "honeyLeaderboard")}</h2>
-        <p className="mt-0.5 text-meta">
-          {lang === "TH" ? "ดูอันดับผู้ใช้ที่สะสม Honey มากที่สุด" : lang === "JP" ? "最もHoneyを獲得したユーザーランキング" : "See who has earned the most Honey"}
-        </p>
       </div>
       {leaderboard.length === 0 ? (
         <EmptyState icon={Trophy} label={t(lang, "honeyLeaderboard")} />
       ) : (
         <>
-          <div className="flex gap-1 overflow-x-auto bg-muted/20 px-4 py-1.5 scrollbar-none">
-            {(["HONEY", "STREAK"] as RankSort[]).map((key) => (
-              <button
-                key={key}
-                onClick={() => setSort(key)}
-                className={cn(
-                  "shrink-0 rounded-md px-3 py-1.5 text-xs font-medium transition-all",
-                  sort === key
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
-                )}
-              >
-                {SORT_LABELS[key][lang] ?? SORT_LABELS[key].EN}
-              </button>
-            ))}
-          </div>
+          <FilterTabs<RankSort>
+            value={sort}
+            onChange={setSort}
+            options={(["HONEY", "STREAK"] as RankSort[]).map((key) => ({
+              key,
+              label: SORT_LABELS[key][lang] ?? SORT_LABELS[key].EN,
+            }))}
+            ariaLabel={t(lang, "honeyLeaderboard")}
+          />
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="border-b bg-muted/30">
@@ -71,21 +62,31 @@ export function RankingsTab({
                 {sorted.map((user, i) => (
                   <tr key={user.id} className="transition-colors hover:bg-muted/20">
                     <td className="px-4 py-2.5">
-                      <div className={cn(
-                        "flex size-7 items-center justify-center rounded-lg text-xs font-bold",
-                        i === 0 ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : i === 1 ? "bg-slate-300/15 text-slate-500 dark:text-slate-400" : i === 2 ? "bg-orange-500/10 text-orange-600 dark:text-orange-400" : "text-muted-foreground"
-                      )}>
-                        {i < 3 ? <Trophy className="size-3.5" /> : i + 1}
-                      </div>
+                      <span
+                        className={cn(
+                          "inline-flex size-6 items-center justify-center text-xs font-bold tabular-nums",
+                          i === 0 ? "text-primary" : "text-muted-foreground",
+                        )}
+                      >
+                        {i === 0 ? <Trophy className="size-3.5" /> : i + 1}
+                      </span>
                     </td>
                     <td className="px-4 py-2.5">
                       <p className="truncate font-medium">{user.displayName ?? t(lang, "anonymous")}</p>
                     </td>
                     <td className="px-4 py-2.5 text-right">
-                      <span className={cn("font-bold tabular-nums", sort === "HONEY" ? "text-primary" : "text-foreground")}>{user.honeyPoints.toLocaleString()} <span className="text-xs font-semibold">🍯</span></span>
+                      <span className={cn(
+                        "font-bold tabular-nums",
+                        sort === "HONEY" ? "text-primary" : "text-foreground",
+                      )}>
+                        {user.honeyPoints.toLocaleString()} <span className="text-xs font-semibold">🍯</span>
+                      </span>
                     </td>
                     <td className="hidden px-4 py-2.5 text-right sm:table-cell">
-                      <div className={cn("flex items-center justify-end gap-1", sort === "STREAK" ? "text-primary" : "text-muted-foreground")}>
+                      <div className={cn(
+                        "flex items-center justify-end gap-1",
+                        sort === "STREAK" ? "text-primary" : "text-muted-foreground",
+                      )}>
                         <Flame className="size-3" />
                         <span className="tabular-nums">{user.checkinStreak}</span>
                       </div>

@@ -259,19 +259,12 @@ export function CardPickerModal({
                     className={cn(
                       "group/pick relative rounded-xl border p-1.5 text-left transition-all",
                       isSelected
-                        ? "border-primary bg-primary/5 ring-1 ring-primary/30"
+                        ? "border-primary bg-primary/5 ring-2 ring-primary"
                         : "border-border hover:border-primary/50 hover:shadow-sm",
                       disabled && "cursor-not-allowed opacity-40"
                     )}
                   >
-                    {/* Check badge */}
-                    {isSelected && (
-                      <div className="absolute -right-1.5 -top-1.5 z-10 flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow">
-                        <Check className="size-3" />
-                      </div>
-                    )}
-
-                    {/* Image */}
+                    {/* Image — clean, no overlays. Selection state lives on the tile border. */}
                     <div className="relative aspect-[63/88] w-full overflow-hidden rounded-lg bg-muted">
                       {card.imageUrl ? (
                         <Image
@@ -295,6 +288,11 @@ export function CardPickerModal({
                         <span className="font-mono text-xs text-muted-foreground">
                           {card.set?.code?.toUpperCase() ?? ""}
                         </span>
+                        {isSelected && (
+                          <span className="ml-auto inline-flex items-center gap-0.5 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary">
+                            <Check className="size-2.5" />
+                          </span>
+                        )}
                       </div>
                       <p
                         className="truncate text-xs font-medium leading-tight"

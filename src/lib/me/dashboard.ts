@@ -24,7 +24,7 @@ export type DashboardUser = {
 export async function getDashboardSnapshot(user: DashboardUser) {
   const userId = user.id;
 
-  const [listings, counts, portfolioItems, latestSnapshot, canCheckin] = await Promise.all([
+  const [listings, counts, portfolioItems, latestSnapshot, canCheckin, level] = await Promise.all([
     prisma.listing.findMany({
       where: { userId, status: ListingStatus.ACTIVE },
       orderBy: { createdAt: "desc" },
@@ -56,6 +56,7 @@ export async function getDashboardSnapshot(user: DashboardUser) {
       select: { totalJpy: true },
     }),
     canCheckinToday(userId),
+    getHoneyLevel(user.honeyLifetimeEarned),
   ]);
 
   const portfolioTotalValueJpy =
@@ -80,7 +81,7 @@ export async function getDashboardSnapshot(user: DashboardUser) {
     points: user.honeyPoints,
     streak: user.checkinStreak,
     canCheckin,
-    level: getHoneyLevel(user.honeyLifetimeEarned),
+    level,
   };
 
   const subscription = {

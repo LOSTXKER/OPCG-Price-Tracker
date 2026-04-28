@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
 import { Check, X, Hexagon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,11 @@ import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { useSettings, refetchSettings } from "@/hooks/use-settings";
+import { useMarketplaceFees } from "@/hooks/use-marketplace-fees";
 import {
   PLANS,
   PLAN_HIGHLIGHTS,
-  FEATURE_SECTIONS,
-  findRow,
+  buildFeatureSections,
 } from "@/lib/plan-features";
 
 export default function PricingClient() {
@@ -22,6 +22,13 @@ export default function PricingClient() {
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
   const { settings } = useSettings();
   const [loading, setLoading] = useState<string | null>(null);
+  const marketplaceFees = useMarketplaceFees();
+  const featureSections = useMemo(
+    () => buildFeatureSections({ marketplaceFees }),
+    [marketplaceFees],
+  );
+  const findRow = (key: string) =>
+    featureSections.flatMap((s) => s.rows).find((r) => r.key === key);
 
   const handleSubscribe = async (plan: string) => {
     setLoading(plan);
@@ -384,7 +391,7 @@ export default function PricingClient() {
               </tr>
             </thead>
             <tbody>
-              {FEATURE_SECTIONS.map((section) => (
+              {featureSections.map((section) => (
                 <Fragment key={section.titleKey}>
                   <tr>
                     <td

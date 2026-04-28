@@ -6,6 +6,10 @@ import type { TranslationKey } from "@/lib/i18n";
  * Pricing-table & plan-card metadata. Numeric values come from `TIER_LIMITS`
  * via `tierValues` so /pricing and /settings/subscription never disagree
  * with the runtime gate logic.
+ *
+ * For fields that admins can override at runtime (currently the marketplace
+ * fee per tier), call `buildFeatureSections({ marketplaceFees })` instead of
+ * importing the static `FEATURE_SECTIONS`.
  */
 
 const TIERS = ["FREE", "PRO", "PRO_PLUS"] as const;
@@ -29,6 +33,13 @@ function formatHistoryDays(days: number): string {
   return `${days} days`;
 }
 
+/** Admin-overridable fee values keyed by tier. */
+export type MarketplaceFeeOverrides = Partial<Record<TierKey, number>>;
+
+export interface BuildFeatureSectionsOptions {
+  marketplaceFees?: MarketplaceFeeOverrides;
+}
+
 export type FeatureRow = {
   key: string;
   labelKey: TranslationKey;
@@ -39,6 +50,40 @@ export type FeatureSection = {
   titleKey: TranslationKey;
   rows: FeatureRow[];
 };
+
+/**
+ * Build the pricing/comparison feature table. Admin-controlled values (e.g.
+ * marketplace fee) are sourced from `options.marketplaceFees`; fall back to
+ * compile-time defaults from `TIER_LIMITS` when not provided.
+ */
+export function buildFeatureSections(
+  options: BuildFeatureSectionsOptions = {},
+): FeatureSection[] {
+  const { marketplaceFees } = options;
+  const feeForTier = (tier: TierKey): number => {
+    const override = marketplaceFees?.[tier];
+    if (typeof override === "number" && Number.isFinite(override)) return override;
+    return TIER_LIMITS[tier].marketplaceFeePercent;
+  };
+
+  return FEATURE_SECTIONS.map((section) =>
+    section.rows.some((r) => r.key === "marketplaceFee")
+      ? {
+          ...section,
+          rows: section.rows.map((row) =>
+            row.key === "marketplaceFee"
+              ? {
+                  ...row,
+                  values: Object.fromEntries(
+                    TIERS.map((k) => [k, `${feeForTier(k)}%`]),
+                  ),
+                }
+              : row,
+          ),
+        }
+      : section,
+  );
+}
 
 export const FEATURE_SECTIONS: FeatureSection[] = [
   {

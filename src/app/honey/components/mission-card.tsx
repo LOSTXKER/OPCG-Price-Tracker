@@ -1,39 +1,10 @@
-import { ArrowRight, CheckCircle2, Gift, Ticket } from "lucide-react";
+import { ArrowRight, CheckCircle2, Gift } from "lucide-react";
 import NextLink from "next/link";
 import { Button } from "@/components/ui/button";
 import { t, type Language, type TranslationKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { localizedMissionName, localizedMissionDescription } from "../types";
-
-export function RewardBadges({
-  lang,
-  honey,
-  ticket,
-  muted,
-}: {
-  lang: Language;
-  honey: number;
-  ticket: number;
-  muted?: boolean;
-}) {
-  return (
-    <div className={cn("mt-1.5 flex items-center gap-1.5", muted && "opacity-40")}>
-      <span className="text-meta">{t(lang, "rewardPrefix")}</span>
-      {honey > 0 && (
-        <span className="flex items-center gap-1 rounded-md bg-amber-500/10 px-2 py-0.5 text-xs font-bold text-amber-700 dark:text-amber-400">
-          <span className="text-xs leading-none">🍯</span>
-          <span className="tabular-nums">x{honey}</span>
-        </span>
-      )}
-      {ticket > 0 && (
-        <span className="flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
-          <Ticket className="size-3 text-primary" />
-          <span className="tabular-nums">x{ticket}</span>
-        </span>
-      )}
-    </div>
-  );
-}
+import { RewardChips } from "./_shared/reward-chip";
 
 /**
  * Action area for a mission task. Three visual states:
@@ -62,7 +33,7 @@ export function ClaimAction({
 }) {
   if (claimed) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-meta">
+      <span className="inline-flex items-center gap-1 px-2 py-1 text-meta">
         <CheckCircle2 className="size-3.5 text-price-up" />
         {lang === "TH" ? "รับแล้ว" : lang === "JP" ? "受取済" : "Claimed"}
       </span>
@@ -77,8 +48,8 @@ export function ClaimAction({
         className="relative h-8 gap-1.5 rounded-lg bg-primary px-3 text-xs font-bold text-primary-foreground hover:bg-primary/90"
       >
         <span className="absolute -right-1 -top-1 flex size-2.5">
-          <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75" />
-          <span className="relative inline-flex size-2.5 rounded-full bg-red-500" />
+          <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary/60 opacity-75" />
+          <span className="relative inline-flex size-2.5 rounded-full bg-primary" />
         </span>
         <Gift className="size-3.5" />
         {isClaiming ? "..." : t(lang, "claimTaskReward")}
@@ -136,6 +107,12 @@ export function ClaimButton({
   );
 }
 
+/**
+ * Single row used by both daily and monthly mission grids. Replaces the
+ * earlier card variant that wrapped each row's icon in a 40x40 muted box;
+ * the icon is now inline so the page reads as a list of intents instead of
+ * a deck of tiles.
+ */
 export function MissionCard({
   lang,
   icon: Icon,
@@ -155,10 +132,6 @@ export function MissionCard({
 }: {
   lang: Language;
   icon: React.ElementType;
-  /**
-   * Optional task object for resolving template-driven name/description.
-   * When provided, takes priority over the static labelKey/hintText.
-   */
   task?: {
     name?: string | null;
     nameEn?: string | null;
@@ -183,25 +156,34 @@ export function MissionCard({
   const displayName = task ? localizedMissionName(task, lang) : null;
   const labelText = displayName ?? t(lang, labelKey as TranslationKey);
   const displayHint = task ? localizedMissionDescription(task, lang) : null;
-  const hint = displayHint ?? hintText;
+  // Use `||` rather than `??` so an empty string from the DB still falls back
+  // to the hintKey translation. Previously, daily missions stored with an
+  // empty descriptionTh/descriptionEn rendered a blank hint line and looked
+  // less detailed than monthly missions.
+  const hint = (displayHint && displayHint.trim()) || hintText;
 
   return (
-    <div className="flex items-center gap-3.5 bg-background p-4 transition-all">
-      <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-        {claimed ? <CheckCircle2 className="size-4.5" /> : <Icon className="size-4.5" />}
+    <div className="flex items-center gap-3 bg-background p-4">
+      <div
+        className={cn(
+          "flex size-7 shrink-0 items-center justify-center text-muted-foreground",
+          claimed && "text-price-up",
+        )}
+      >
+        {claimed ? <CheckCircle2 className="size-4.5" /> : <Icon className="size-4" />}
       </div>
 
       <div className="min-w-0 flex-1">
         <p className={cn("text-xs font-semibold", claimed && "text-muted-foreground line-through")}>
           {labelText}
         </p>
-        <p className="mt-0.5 text-meta line-clamp-1">
+        <p className="mt-0.5 text-meta line-clamp-2">
           {hint}
           {target != null && target > 1 && (
             <span className="ml-1 font-semibold tabular-nums">({progress}/{target})</span>
           )}
         </p>
-        <RewardBadges lang={lang} honey={honey} ticket={ticket} muted={claimed} />
+        <RewardChips honey={honey} ticket={ticket} muted={claimed} />
       </div>
 
       <div className="shrink-0">

@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ExternalLink } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { PageHeader } from "@/components/layout/page-header";
 import { useProfileData } from "@/components/profile/profile-data-context";
 import { SectionAccount } from "@/components/profile/section-account";
 import { getTierConfig } from "@/components/profile/profile-types";
@@ -30,97 +29,61 @@ export default function SettingsIndexPage() {
 
   return (
     <>
-      {/* ── Mobile: iOS-style menu ── */}
-      <div className="space-y-6 md:hidden">
-        <PageHeader title={t(lang, "profileSettings")} className="mb-0" />
+      {/* ── Mobile menu ── */}
+      <div className="space-y-7 md:hidden">
+        <h1 className="text-h2">{t(lang, "profileSettings")}</h1>
 
-        {/* User card */}
+        {/* Identity row — compact, single tap target */}
         <Link
           href={`/profile/${user.id}`}
-          className="flex items-center gap-3 rounded-xl border border-border/40 bg-card p-4 transition-colors active:bg-secondary/50"
+          className="-mx-2 flex items-center gap-3 rounded-lg px-2 py-2 transition-colors active:bg-foreground/[0.04]"
         >
-          <Avatar className={cn("size-12 ring-2 ring-offset-2 ring-offset-card", tierCfg.ring)}>
+          <Avatar className={cn("size-11 shrink-0 ring-2 ring-offset-2 ring-offset-background", tierCfg.ring)}>
             {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
-            <AvatarFallback className="text-sm font-bold">
+            <AvatarFallback className="text-base font-bold">
               {(user.displayName ?? user.email).slice(0, 1).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold">
-              {user.displayName ?? "User"}
-            </p>
-            <div className="mt-0.5 flex items-center gap-1.5">
-              <Badge className={cn("text-xs font-semibold", tierCfg.color)}>
+            <div className="flex items-center gap-1.5">
+              <p className="truncate text-sm font-semibold">{user.displayName ?? "User"}</p>
+              <Badge className={cn("h-4 px-1.5 text-[10px] font-semibold", tierCfg.color)}>
                 {tierCfg.label}
               </Badge>
-              <span className="text-meta">
-                {t(lang, "viewPublicProfile")}
-              </span>
             </div>
+            <p className="mt-0.5 inline-flex items-center gap-1 text-meta">
+              {t(lang, "viewPublicProfile")}
+              <ExternalLink className="size-3" />
+            </p>
           </div>
           <ChevronRight className="size-4 shrink-0 text-muted-foreground/40" />
         </Link>
 
-        {/* General group */}
-        <div className="space-y-1.5">
-          <p className="px-1 text-eyebrow">
-            {t(lang, "settingsGeneral")}
-          </p>
-          <div className="overflow-hidden rounded-xl border border-border/40 bg-card">
-            {generalSections.map((section, idx) => {
-              const Icon = section.icon;
-              return (
-                <Link
-                  key={section.id}
-                  href={section.href}
-                  className={cn(
-                    "flex w-full items-center gap-3 px-4 py-3.5 transition-colors active:bg-secondary/50",
-                    idx > 0 && "border-t border-border/30",
-                  )}
-                >
-                  <div className="flex size-8 items-center justify-center rounded-lg bg-secondary">
-                    <Icon className="size-4 text-primary" />
-                  </div>
-                  <span className="flex-1 text-sm font-medium">
-                    {t(lang, section.labelKey)}
-                  </span>
-                  <ChevronRight className="size-4 text-muted-foreground/40" />
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* More group */}
-        {moreSections.length > 0 && (
-          <div className="space-y-1.5">
-            <p className="px-1 text-eyebrow">
-              {t(lang, "settingsMore")}
-            </p>
-            <div className="overflow-hidden rounded-xl border border-border/40 bg-card">
-              {moreSections.map((section, idx) => {
-                const Icon = section.icon;
-                return (
-                  <Link
-                    key={section.id}
-                    href={section.href}
-                    className={cn(
-                      "flex w-full items-center gap-3 px-4 py-3.5 transition-colors active:bg-secondary/50",
-                      idx > 0 && "border-t border-border/30",
-                    )}
-                  >
-                    <div className="flex size-8 items-center justify-center rounded-lg bg-secondary">
-                      <Icon className="size-4 text-primary" />
-                    </div>
-                    <span className="flex-1 text-sm font-medium">
-                      {t(lang, section.labelKey)}
-                    </span>
-                    <ChevronRight className="size-4 text-muted-foreground/40" />
-                  </Link>
-                );
-              })}
+        {[
+          { items: generalSections, labelKey: "settingsGeneral" as const },
+          { items: moreSections, labelKey: "settingsMore" as const },
+        ].map(({ items, labelKey }, gi) =>
+          items.length === 0 ? null : (
+            <div key={gi} className="space-y-1">
+              <p className="px-3 text-eyebrow text-muted-foreground/70">{t(lang, labelKey)}</p>
+              <div className="-mx-2 flex flex-col">
+                {items.map((section) => {
+                  const Icon = section.icon;
+                  return (
+                    <Link
+                      key={section.id}
+                      href={section.href}
+                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors active:bg-foreground/[0.04]"
+                    >
+                      <Icon className="size-4 shrink-0 text-muted-foreground" />
+                      <span className="flex-1 text-sm">{t(lang, section.labelKey)}</span>
+                      <ChevronRight className="size-4 text-muted-foreground/40" />
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          ),
         )}
       </div>
 

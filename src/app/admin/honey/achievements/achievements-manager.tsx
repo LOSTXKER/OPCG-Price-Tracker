@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Trophy, Users } from "lucide-react";
-import { toast } from "sonner";
+import Link from "next/link";
+import { useCallback, useState } from "react";
+import { Pencil, Plus, Trash2, Trophy, Users } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
+import { adminFetch } from "@/lib/admin/admin-fetch";
+import { useAdminCrud } from "@/lib/admin/use-admin-crud";
 
 type Achievement = {
   id: number;
@@ -25,134 +28,120 @@ type Achievement = {
   _count: { users: number };
 };
 
-const filterSelectClass =
-  "h-9 w-full rounded-lg border border-input bg-transparent px-3 py-1.5 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 dark:bg-input/30";
-
-// Keep in sync with `AchievementCriteriaSchema` in `src/lib/honey/schemas.ts`
-// and the branches in `batchFetchStats` (`src/lib/honey/achievements.ts`).
-const CRITERIA_OPTIONS: { value: string; label: string }[] = [
-  { value: "portfolio_count",        label: "Portfolio Count (cards added)" },
-  { value: "checkin_streak",         label: "Check-in Streak (consecutive days)" },
-  { value: "first_sell",             label: "First Sell (target=1)" },
-  { value: "trades_count",           label: "Trades Count (marketplace sells)" },
-  { value: "first_review",           label: "First Review (target=1)" },
-  { value: "review_count",           label: "Review Count (reviews authored)" },
-  { value: "correct_predictions",    label: "Correct Predictions" },
-  { value: "prediction_count",       label: "Prediction Count (attempts)" },
-  { value: "referral_count",         label: "Referral Count (users referred)" },
-  { value: "honey_lifetime",         label: "Honey Lifetime Earned" },
-  { value: "watchlist_count",        label: "Watchlist Count" },
-  { value: "deck_count",             label: "Deck Count" },
-  { value: "deck_share_count",       label: "Deck Share Count (public decks)" },
-  { value: "community_price_count",  label: "Community Price Submissions" },
-  { value: "order_buy_count",        label: "Order Buy Count (completed)" },
-  { value: "perfect_day_count",      label: "Perfect Day Count" },
-  { value: "raffle_win_count",       label: "Raffle Win Count" },
-];
-
-export function AchievementsManager({ initialAchievements }: { initialAchievements: Achievement[] }) {
+export function AchievementsManager({
+  initialAchievements,
+}: {
+  initialAchievements: Achievement[];
+}) {
   const [achievements, setAchievements] = useState(initialAchievements);
-  const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({
-    code: "",
-    name: "",
-    nameEn: "",
-    nameTh: "",
-    description: "",
-    criteriaType: "portfolio_count",
-    criteriaTarget: 100,
-    honeyReward: 50,
+
+  const reload = useCallback(async () => {
+    const data = await adminFetch<{ achievements: Achievement[] }>(
+      "/api/admin/honey/achievements",
+    );
+    setAchievements(data.achievements);
+  }, []);
+
+  const crud = useAdminCrud<number>({
+    basePath: "/api/admin/honey/achievements",
+    reload,
+    deleteSuccessMessage: "ลบความสำเร็จแล้ว",
+    deleteConfirm: {
+      title: "ลบความสำเร็จ",
+      description: (id) => {
+        const a = achievements.find((x) => x.id === id);
+        const label = a?.nameEn ?? a?.name ?? "รายการนี้";
+        return `ลบ "${label}"? ผู้ใช้ที่ปลดล็อคไว้แล้วจะถูกลบด้วย (honey ที่ได้ไปแล้วยังอยู่ครบ).`;
+      },
+    },
   });
 
-  const handleCreate = async () => {
-    const res = await fetch("/api/admin/honey/achievements", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        code: form.code,
-        name: form.name,
-        nameEn: form.nameEn || undefined,
-        nameTh: form.nameTh || undefined,
-        description: form.description || undefined,
-        criteria: { type: form.criteriaType, target: form.criteriaTarget },
-        honeyReward: form.honeyReward,
-      }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      setAchievements((prev) => [{ ...data.achievement, _count: { users: 0 } }, ...prev]);
-      setShowForm(false);
-      setForm({ code: "", name: "", nameEn: "", nameTh: "", description: "", criteriaType: "portfolio_count", criteriaTarget: 100, honeyReward: 50 });
-      toast.success("Achievement created");
-    } else {
-      toast.error("Failed to create achievement");
-    }
-  };
-
   return (
-    <div className="space-y-6">
-      <AdminPageHeader
-        title="Achievements"
-        icon={Trophy}
-        badge={<Badge variant="secondary">{achievements.length} total</Badge>}
-        actions={
-          <Button size="sm" onClick={() => setShowForm(!showForm)}>
-            <Plus className="h-4 w-4" /> New Achievement
-          </Button>
-        }
-      />
-
-      {showForm && (
-        <Card>
-          <CardContent>
-            <h2 className="mb-3 text-h3">Create Achievement</h2>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Input placeholder="Code (e.g. portfolio_100)" value={form.code} onChange={(e) => setForm((f) => ({ ...f, code: e.target.value }))} />
-              <Input placeholder="Name (JP)" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
-              <Input placeholder="Name (EN)" value={form.nameEn} onChange={(e) => setForm((f) => ({ ...f, nameEn: e.target.value }))} />
-              <Input placeholder="Name (TH)" value={form.nameTh} onChange={(e) => setForm((f) => ({ ...f, nameTh: e.target.value }))} />
-              <Input placeholder="Description" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} className="sm:col-span-2" />
-              <select value={form.criteriaType} onChange={(e) => setForm((f) => ({ ...f, criteriaType: e.target.value }))} className={filterSelectClass}>
-                {CRITERIA_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
-              <Input type="number" placeholder="Target" value={form.criteriaTarget} onChange={(e) => setForm((f) => ({ ...f, criteriaTarget: Number(e.target.value) }))} />
-              <Input type="number" placeholder="Honey Reward" value={form.honeyReward} onChange={(e) => setForm((f) => ({ ...f, honeyReward: Number(e.target.value) }))} />
-            </div>
-            <div className="mt-4 flex gap-2">
-              <Button size="sm" onClick={handleCreate}>Create</Button>
-              <Button size="sm" variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
+    <AdminPage
+      header={
+        <AdminPageHeader
+          title="ความสำเร็จ"
+          icon={Trophy}
+          description="จัดการความสำเร็จพร้อมรูปแบดจ์ที่จะโชว์ให้ผู้ใช้"
+          meta={<span className="text-meta">{achievements.length} รายการ</span>}
+          actions={
+            <Button render={<Link href="/admin/honey/achievements/new" />} size="sm">
+              <Plus className="h-4 w-4" /> เพิ่มความสำเร็จ
+            </Button>
+          }
+        />
+      }
+    >
       <div className="space-y-2">
         {achievements.map((ach) => (
           <Card key={ach.id} size="sm">
             <CardContent className="flex items-center gap-3">
-              <div className="shrink-0 rounded-lg bg-amber-100 p-2 dark:bg-amber-500/10">
-                <Trophy className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-              </div>
+              {ach.badgeImageUrl ? (
+                <img
+                  src={ach.badgeImageUrl}
+                  alt=""
+                  className="size-12 shrink-0 rounded-lg object-cover"
+                />
+              ) : (
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-warning-soft">
+                  <Trophy className="h-5 w-5 text-warning" />
+                </div>
+              )}
               <div className="min-w-0 flex-1">
-                <p className="font-semibold">{ach.nameEn ?? ach.name}</p>
-                <p className="text-meta">{ach.description}</p>
+                <p className="font-semibold">
+                  {ach.nameEn ?? ach.name}
+                  {!ach.isActive && (
+                    <AdminStatusBadge tone="neutral" className="ml-2">
+                      ปิดใช้งาน
+                    </AdminStatusBadge>
+                  )}
+                </p>
+                {ach.description && <p className="text-meta">{ach.description}</p>}
                 <p className="mt-1 text-meta">
-                  Code: <code className="text-foreground">{ach.code}</code> | Criteria: {JSON.stringify(ach.criteria)} | Reward: <span className="font-bold text-amber-600 dark:text-amber-400">{ach.honeyReward} pts</span>
+                  โค้ด: <code className="text-foreground">{ach.code}</code> | เงื่อนไข:{" "}
+                  {JSON.stringify(ach.criteria)} | รางวัล:{" "}
+                  <span className="font-bold text-warning">{ach.honeyReward} pts</span>
                 </p>
               </div>
               <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                 <Users className="h-4 w-4" />
                 {ach._count.users}
               </div>
+              <div className="flex shrink-0 gap-1">
+                <Button
+                  render={<Link href={`/admin/honey/achievements/${ach.id}`} />}
+                  variant="ghost"
+                  size="icon-xs"
+                  title="แก้ไข"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon-xs"
+                  onClick={() => void crud.remove(ach.id)}
+                  disabled={crud.deleting === ach.id}
+                  className="text-destructive hover:text-destructive"
+                  title="ลบ"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ))}
         {achievements.length === 0 && (
-          <AdminEmptyState icon={Trophy} title="No achievements yet" />
+          <AdminEmptyState
+            icon={Trophy}
+            title="ยังไม่มีความสำเร็จ"
+            action={
+              <Button render={<Link href="/admin/honey/achievements/new" />} size="sm">
+                <Plus className="h-4 w-4" /> เพิ่มความสำเร็จ
+              </Button>
+            }
+          />
         )}
       </div>
-    </div>
+    </AdminPage>
   );
 }

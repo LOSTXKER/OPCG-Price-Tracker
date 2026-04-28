@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   Award,
   CalendarDays,
+  Crown,
   ShoppingBag,
   Target,
   Ticket,
@@ -14,6 +15,7 @@ import { cn } from "@/lib/utils";
 
 const HONEY_TABS = [
   { href: "/admin/honey", label: "ภาพรวม", icon: Award, exact: true },
+  { href: "/admin/honey/ranks", label: "ระดับแรงค์", icon: Crown },
   { href: "/admin/honey/missions", label: "ภารกิจ", icon: Target },
   { href: "/admin/honey/shop", label: "ร้านค้า", icon: ShoppingBag },
   { href: "/admin/honey/achievements", label: "ความสำเร็จ", icon: Trophy },

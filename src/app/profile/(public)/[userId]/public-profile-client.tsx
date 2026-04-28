@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { formatJoinedRelative } from "@/lib/utils/relative-time";
 import type {
   CollectionStats,
+  CommerceProfile,
   ProfileAchievement,
   ProfileBadge,
   ProfilePrivacyFlags,
@@ -18,7 +19,6 @@ import type {
 import {
   buildHeroMeta,
   buildSocialLinks,
-  buildTrustChips,
 } from "@/components/profile/public/hero-builders";
 import { EmptyProfilePanel } from "@/components/profile/public/empty-profile-panel";
 import { PrivateProfileView } from "@/components/profile/public/private-profile-view";
@@ -28,6 +28,7 @@ import { ProfileCover } from "@/components/profile/public/profile-cover";
 import { ProfileHero } from "@/components/profile/public/profile-hero";
 import { ProfileMobileCtaBar } from "@/components/profile/public/profile-mobile-cta-bar";
 import { ProfileReviewsPreview } from "@/components/profile/public/profile-reviews-preview";
+import { ProfileTrustBlock } from "@/components/profile/public/profile-trust-block";
 import {
   ProfileTabsNav,
   type TabDescriptor,
@@ -60,6 +61,7 @@ type Props = {
   firstListingId: number | null;
   viewerSavedSeller: boolean;
   viewerIsSignedIn: boolean;
+  commerceProfile: CommerceProfile;
   isOwner: boolean;
   isPrivate?: boolean;
 };
@@ -87,6 +89,7 @@ export function PublicProfileClient({
   firstListingId,
   viewerSavedSeller,
   viewerIsSignedIn,
+  commerceProfile,
   isOwner,
   isPrivate,
 }: Props) {
@@ -112,6 +115,7 @@ export function PublicProfileClient({
       firstListingId={firstListingId}
       viewerSavedSeller={viewerSavedSeller}
       viewerIsSignedIn={viewerIsSignedIn}
+      commerceProfile={commerceProfile}
       isOwner={isOwner}
       lang={lang}
     />
@@ -138,6 +142,7 @@ function PublicProfileLayout({
   firstListingId,
   viewerSavedSeller,
   viewerIsSignedIn,
+  commerceProfile,
   isOwner,
   lang,
 }: Omit<Props, "isPrivate"> & { lang: Language }) {
@@ -215,10 +220,6 @@ function PublicProfileLayout({
     () => buildHeroMeta({ user, stats, sellerStats, isOwner, lang }),
     [user, stats, sellerStats, isOwner, lang],
   );
-  const trustChips = useMemo(
-    () => buildTrustChips(sellerStats, lang),
-    [sellerStats, lang],
-  );
   const socialLinks = useMemo(
     () => buildSocialLinks(user.socials, lang),
     [user.socials, lang],
@@ -237,7 +238,7 @@ function PublicProfileLayout({
       <div className="relative mx-auto w-full max-w-5xl px-4 pt-6 md:px-6 md:pt-8 lg:px-8">
         {/* Brand-warm cover banner (rounded card, not full-bleed) — gives
             the page colour without overwhelming the rest of the layout. */}
-        <ProfileCover userId={user.id} />
+        <ProfileCover userId={user.id} coverImageUrl={user.coverImageUrl} />
 
         <div className="relative">
           <ProfileHero
@@ -245,10 +246,8 @@ function PublicProfileLayout({
             sellerStats={sellerStats}
             achievements={achievements}
             metaParts={metaParts}
-            trustChips={trustChips}
             socialLinks={socialLinks}
             joinedRelative={joinedRelative}
-            isOwner={isOwner}
             lang={lang}
             actionsSlot={
               <ProfileActionCluster
@@ -260,6 +259,18 @@ function PublicProfileLayout({
                 lang={lang}
               />
             }
+          />
+
+          {/* Trust strip (visitor-only) — verified facts + commerce chips.
+              Renders directly under the hero so the answer to "is this
+              seller real, where do they ship from, how do they take money?"
+              is on screen before the buyer has to scroll. */}
+          <ProfileTrustBlock
+            sellerStats={sellerStats}
+            commerceProfile={commerceProfile}
+            reviewCount={stats.reviewCount}
+            isOwner={isOwner}
+            lang={lang}
           />
 
           {isOwner && (

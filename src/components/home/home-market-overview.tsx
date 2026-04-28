@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import {
   LayoutGrid,
   List,
@@ -13,7 +12,6 @@ import {
 
 import { FilterChips, type FilterDefinition } from "@/components/shared/filter-chips"
 import { SortableHeader } from "@/components/shared/sortable-header"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -109,10 +107,9 @@ export function HomeMarketOverview({
   })
 
   const selectedSets = m.filters.set ?? []
-  const [showSearch, setShowSearch] = useState(false)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Hero search */}
       <HeroSearchBar />
 
@@ -120,118 +117,34 @@ export function HomeMarketOverview({
 
       {/* Main table panel */}
     <div className="panel overflow-hidden">
-      {/* Row 1: Tabs + Filter + View toggle */}
-      <div className="flex items-center gap-2 border-b border-border/60 px-4 py-2.5">
-        <div className="flex items-center rounded-lg bg-muted/50 p-0.5">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => m.handleTabChange(tab.id)}
-              className={cn(
-                "relative shrink-0 rounded-md px-3.5 py-2 text-xs font-semibold transition-all",
-                m.activeTab === tab.id
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="ml-auto flex items-center gap-1.5">
-          {m.viewMode === "grid" && (
-            <div className="hidden items-center gap-0.5 rounded-full border border-border/50 p-0.5 sm:flex">
-              <TrendingUpDown className="mx-1.5 size-3.5 text-muted-foreground/50" />
-              {CHANGE_PERIODS.map((p) => (
-                <button
-                  key={p}
-                  onClick={() => m.setChangePeriod(p)}
-                  className={cn(
-                    "rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums transition-all",
-                    m.changePeriod === p
-                      ? "bg-background text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  {p}
-                </button>
-              ))}
-            </div>
-          )}
-
-          <button
-            type="button"
-            onClick={() => m.setFilterOpen((o) => !o)}
-            className={cn(
-              "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors",
-              m.filterOpen || m.activeFilterCount > 0
-                ? "bg-primary text-primary-foreground shadow-sm"
-                : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-            )}
-          >
-            <SlidersHorizontal className="size-3.5" />
-            <span className="hidden sm:inline">{t(lang, "filter")}</span>
-            {m.activeFilterCount > 0 && (
-              <span className={cn(
-                "flex size-4.5 items-center justify-center rounded-full text-micro",
-                m.filterOpen || m.activeFilterCount > 0
-                  ? "bg-primary-foreground/20 text-primary-foreground"
-                  : "bg-primary/10 text-primary"
-              )}>
-                {m.activeFilterCount}
-              </span>
-            )}
-          </button>
-
-          <ViewToggle
-            modes={[
-              { value: "table", icon: List, ariaLabel: "Table view" },
-              { value: "grid", icon: LayoutGrid, ariaLabel: "Grid view" },
-            ]}
-            value={m.viewMode}
-            onChange={m.setViewMode}
-          />
-        </div>
-      </div>
-
-      {/* Row 2: Set dropdown + Search + Price mode */}
-      <div className="border-b border-border/50 bg-muted/20">
-        <div className="flex items-center gap-2.5 px-4 py-2.5 sm:gap-3">
-          {setOptions.length > 0 && (
-            <Select
-              items={[
-                { value: "__all__", label: t(lang, "allSets") },
-                ...setOptions.map((opt) => ({ value: opt.value, label: opt.label })),
-              ]}
-              value={selectedSets[0] ?? "__all__"}
-              onValueChange={(value) =>
-                m.handleFilterChange("set", value && value !== "__all__" ? [value] : [])
-              }
-            >
-              <SelectTrigger
-                size="sm"
-                className="h-10 min-w-0 flex-1 sm:flex-none sm:min-w-[180px]"
+      {/* Toolbar — single row on sm+, two rows on mobile */}
+      <div className="border-b border-border">
+        <div className="flex items-center gap-2 px-3 py-2 sm:gap-2.5 sm:px-4">
+          {/* Tabs (underline-style) */}
+          <div className="flex shrink-0 items-center gap-1 -mb-2">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => m.handleTabChange(tab.id)}
+                className={cn(
+                  "relative shrink-0 border-b-2 px-2.5 py-2 text-xs font-semibold transition-colors",
+                  m.activeTab === tab.id
+                    ? "border-primary text-foreground"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                )}
               >
-                <SelectValue placeholder={t(lang, "allSets")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="__all__">{t(lang, "allSets")}</SelectItem>
-                {setOptions.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
+                {tab.label}
+              </button>
+            ))}
+          </div>
 
-          <div className="relative hidden flex-1 sm:block">
+          {/* Search — sm+ only here */}
+          <div className="relative hidden min-w-0 flex-1 sm:block">
             <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground/50" />
             <Input
               type="text"
               placeholder={t(lang, "searchLong")}
-              className="border-border/50 bg-card pl-9 pr-8 placeholder:text-muted-foreground/40 focus-visible:border-primary/50 focus-visible:ring-0"
+              className="h-9 border-border/60 bg-card pl-9 pr-8 placeholder:text-muted-foreground/40 focus-visible:border-primary/50 focus-visible:ring-0"
               value={m.search}
               onChange={(e) => {
                 m.setSearch(e.target.value)
@@ -249,21 +162,36 @@ export function HomeMarketOverview({
             )}
           </div>
 
-          <Button
-            type="button"
-            variant={showSearch ? "default" : "ghost"}
-            size="icon-sm"
-            onClick={() => setShowSearch((v) => !v)}
-            className={cn("sm:hidden", !showSearch && "text-muted-foreground")}
-            aria-label="Search"
-          >
-            <Search className="size-4" />
-          </Button>
+          {/* Right cluster */}
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:ml-0">
+            {setOptions.length > 0 && (
+              <Select
+                items={[
+                  { value: "__all__", label: t(lang, "allSets") },
+                  ...setOptions.map((opt) => ({ value: opt.value, label: opt.label })),
+                ]}
+                value={selectedSets[0] ?? "__all__"}
+                onValueChange={(value) =>
+                  m.handleFilterChange("set", value && value !== "__all__" ? [value] : [])
+                }
+              >
+                <SelectTrigger
+                  size="sm"
+                  className="hidden h-9 sm:flex sm:min-w-[150px]"
+                >
+                  <SelectValue placeholder={t(lang, "allSets")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__all__">{t(lang, "allSets")}</SelectItem>
+                  {setOptions.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
 
-          <div className="ml-auto flex items-center gap-2">
-            <span className="text-eyebrow text-muted-foreground">
-              {t(lang, "price")}
-            </span>
             <SegmentedControl
               size="sm"
               value={m.priceMode}
@@ -274,36 +202,67 @@ export function HomeMarketOverview({
               ]}
               ariaLabel={t(lang, "price")}
             />
+
+            <button
+              type="button"
+              onClick={() => m.setFilterOpen((o) => !o)}
+              className={cn(
+                "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors",
+                m.filterOpen || m.activeFilterCount > 0
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+              )}
+            >
+              <SlidersHorizontal className="size-3.5" />
+              <span className="hidden md:inline">{t(lang, "filter")}</span>
+              {m.activeFilterCount > 0 && (
+                <span className={cn(
+                  "flex size-4.5 items-center justify-center rounded-full text-micro",
+                  m.filterOpen || m.activeFilterCount > 0
+                    ? "bg-primary-foreground/20 text-primary-foreground"
+                    : "bg-primary/10 text-primary"
+                )}>
+                  {m.activeFilterCount}
+                </span>
+              )}
+            </button>
+
+            <ViewToggle
+              modes={[
+                { value: "table", icon: List, ariaLabel: "Table view" },
+                { value: "grid", icon: LayoutGrid, ariaLabel: "Grid view" },
+              ]}
+              value={m.viewMode}
+              onChange={m.setViewMode}
+            />
           </div>
         </div>
 
-        {showSearch && (
-          <div className="border-t border-border/40 px-4 py-2 sm:hidden">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground/50" />
-              <Input
-                type="text"
-                placeholder={t(lang, "searchLong")}
-                className="border-border/50 bg-card pl-9 pr-8 placeholder:text-muted-foreground/40 focus-visible:border-primary/50 focus-visible:ring-0"
-                value={m.search}
-                autoFocus
-                onChange={(e) => {
-                  m.setSearch(e.target.value)
-                  if (e.target.value === "") m.setPage(1)
-                }}
-              />
-              {m.search && (
-                <button
-                  type="button"
-                  onClick={() => { m.setSearch(""); m.setPage(1) }}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <X className="size-3.5" />
-                </button>
-              )}
-            </div>
+        {/* Mobile-only search row */}
+        <div className="border-t border-border/40 px-3 py-2 sm:hidden">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground/50" />
+            <Input
+              type="text"
+              placeholder={t(lang, "searchLong")}
+              className="h-9 border-border/60 bg-card pl-9 pr-8 placeholder:text-muted-foreground/40 focus-visible:border-primary/50 focus-visible:ring-0"
+              value={m.search}
+              onChange={(e) => {
+                m.setSearch(e.target.value)
+                if (e.target.value === "") m.setPage(1)
+              }}
+            />
+            {m.search && (
+              <button
+                type="button"
+                onClick={() => { m.setSearch(""); m.setPage(1) }}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                <X className="size-3.5" />
+              </button>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Collapsible advanced filter panel */}
@@ -386,7 +345,6 @@ export function HomeMarketOverview({
                   <col className="hidden w-[84px] lg:table-column" />
                 </>
               )}
-              <col className="hidden w-[100px] xl:table-column" />
             </colgroup>
             <thead className="sticky top-0 z-10 bg-card">
               <tr className="border-b border-border text-eyebrow text-muted-foreground">
@@ -407,9 +365,6 @@ export function HomeMarketOverview({
                     <SortableHeader label="30d" column="change30d" activeCol={m.sortCol} dir={m.sortDir} onClick={m.handleColumnSort} align="right" className="hidden lg:table-cell" />
                   </>
                 )}
-                <th className="hidden py-2.5 pr-4 font-medium xl:table-cell">
-                  {t(lang, "sparkline7d")}
-                </th>
               </tr>
             </thead>
             <tbody className={cn(m.isPending && "opacity-50 transition-opacity")}>
@@ -421,7 +376,6 @@ export function HomeMarketOverview({
                       card={card}
                       rank={(m.page - 1) * PAGE_SIZE + i + 1}
                       showViews={m.showViews}
-                      sparklineData={card.id != null ? m.sparklines[card.id] : undefined}
                       priceMode={m.priceMode}
                     />
                   ))}
@@ -437,6 +391,17 @@ export function HomeMarketOverview({
         </>
       ) : (
         <div className={cn("p-4", m.isPending && "opacity-50 transition-opacity")}>
+          <div className="mb-3 flex justify-end">
+            <SegmentedControl
+              size="sm"
+              variant="pill"
+              leadingIcon={TrendingUpDown}
+              options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
+              value={m.changePeriod}
+              onChange={m.setChangePeriod}
+              ariaLabel={t(lang, "change")}
+            />
+          </div>
           {m.isPending && m.cards.length === 0 ? (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {Array.from({ length: PAGE_SIZE }).map((_, i) => <GridCardSkeleton key={i} />)}

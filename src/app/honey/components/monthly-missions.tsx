@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Award, Calendar, CheckCircle2, Gift, Share2 } from "lucide-react";
+import { Calendar, Gift, Share2 } from "lucide-react";
 import { t, type Language, type TranslationKey } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
 import { useMonthCountdown } from "../hooks/use-countdown";
 import type { RaffleMissionsData } from "../types";
 import { MONTHLY_ICON_MAP } from "./missions-types";
-import { ClaimButton, MissionCard, RewardBadges } from "./mission-card";
+import { ClaimButton, MissionCard } from "./mission-card";
+import { BonusRow } from "./_shared/bonus-row";
+import { HeaderPill, SectionHeader } from "./_shared/section-header";
 
 export function MonthlyMissionsPanel({
   lang,
@@ -54,74 +55,38 @@ export function MonthlyMissionsPanel({
     .replace("{days}", String(monthLeft.days))
     .replace("{hours}", String(monthLeft.hours));
 
-  const completedPct = data.totalCount > 0
-    ? Math.round((data.completedCount / data.totalCount) * 100)
-    : 0;
   const { bonus } = data;
 
   return (
     <section className="space-y-3">
-      {/* Section header — flat */}
-      <div className="flex items-start justify-between gap-2 px-1">
-        <div>
-          <p className="text-eyebrow text-primary/80">
-            {lang === "TH" ? "ประจำเดือน · ตั๋ว" : lang === "JP" ? "月間 · チケット" : "Monthly · Tickets"}
-          </p>
-          <h2 className="mt-0.5 text-h3">{t(lang, "raffleSpecialMissions")}</h2>
-          <p className="mt-0.5 text-meta">
-            {t(lang, "raffleSpecialMissionsDesc")}
-          </p>
-        </div>
-        <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-sm font-semibold text-primary">
-          <Calendar className="size-3.5" />
-          <span className="tabular-nums">{monthCountdownText}</span>
-        </div>
-      </div>
+      <SectionHeader
+        title={t(lang, "raffleSpecialMissions")}
+        description={t(lang, "raffleSpecialMissionsDesc")}
+        pill={
+          <HeaderPill icon={Calendar} tone="primary">
+            {monthCountdownText}
+          </HeaderPill>
+        }
+      />
 
-      {/* Bonus card — standard surface with a thin left accent stripe in primary */}
-      <div className="relative flex items-center gap-3 overflow-hidden rounded-xl border bg-card p-3.5">
-        <span aria-hidden className="absolute inset-y-0 left-0 w-1 bg-primary/70" />
-
-        <div className={cn(
-          "flex size-10 shrink-0 items-center justify-center rounded-xl",
-          bonus.claimed
-            ? "bg-price-up/15 text-price-up"
-            : "bg-primary/15 text-primary",
-        )}>
-          {bonus.claimed ? <CheckCircle2 className="size-5" /> : <Award className="size-5" />}
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-semibold">
-            {t(lang, "missionBonusDesc")}
-            <span className="ml-1.5 text-xs font-semibold tabular-nums text-muted-foreground">
-              ({data.completedCount}/{data.totalCount})
-            </span>
-          </p>
-          <RewardBadges lang={lang} honey={bonus.reward.honey} ticket={bonus.reward.ticket} muted={bonus.claimed} />
-          {!bonus.claimed && (
-            <div className="mt-1.5 h-1 rounded-full bg-muted">
-              <div
-                className="h-full rounded-full bg-primary/80 transition-all"
-                style={{ width: `${completedPct}%` }}
-              />
-            </div>
-          )}
-        </div>
-
-        <div className="shrink-0">
-          <ClaimButton
-            lang={lang}
-            claimed={bonus.claimed}
-            canClaim={bonus.done && !bonus.claimed}
-            isClaiming={claimingBonus}
-            onClaim={handleClaimBonus}
-          />
-        </div>
-      </div>
-
-      {/* Mission grid */}
       <div className="overflow-hidden rounded-xl border bg-card">
+        <BonusRow
+          title={t(lang, "missionBonusDesc")}
+          completed={data.completedCount}
+          total={data.totalCount}
+          honey={bonus.reward.honey}
+          ticket={bonus.reward.ticket}
+          claimed={bonus.claimed}
+          action={
+            <ClaimButton
+              lang={lang}
+              claimed={bonus.claimed}
+              canClaim={bonus.done && !bonus.claimed}
+              isClaiming={claimingBonus}
+              onClaim={handleClaimBonus}
+            />
+          }
+        />
         <div className="grid grid-cols-1 gap-px bg-border/40 sm:grid-cols-2">
           {data.tasks.map((task) => {
             const Icon = MONTHLY_ICON_MAP[task.icon] ?? Gift;
@@ -149,7 +114,7 @@ export function MonthlyMissionsPanel({
                   task.trackType === "manual" && !task.claimed && !task.done ? (
                     <button
                       onClick={handleShare}
-                      className="inline-flex h-8 items-center gap-1 rounded-lg border bg-background px-3 text-xs font-semibold text-primary transition-colors hover:bg-primary/5"
+                      className="inline-flex h-8 items-center gap-1 rounded-lg border bg-background px-3 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
                     >
                       <Share2 className="size-3" />
                       {lang === "TH" ? "แชร์" : lang === "JP" ? "シェア" : "Share"}

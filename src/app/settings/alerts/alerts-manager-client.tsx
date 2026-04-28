@@ -13,6 +13,7 @@ import {
   Mail,
   MessageCircle,
   Pencil,
+  Plus,
   RotateCcw,
   Trash2,
 } from "lucide-react";
@@ -23,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { AlertEditDialog } from "@/components/alerts/alert-edit-dialog";
+import { AlertCreateDialog } from "@/components/alerts/alert-create-dialog";
 import type { PriceAlertItem } from "@/components/alerts/alert-types";
 import { useUIStore } from "@/stores/ui-store";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
@@ -45,6 +47,7 @@ export function AlertsManagerClient() {
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<PriceAlertItem | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
   const [busyId, setBusyId] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const { openUpgradeDialog } = useUpgradeDialog();
@@ -99,6 +102,11 @@ export function AlertsManagerClient() {
 
   const onSaved = (next: PriceAlertItem) => {
     setAlerts((current) => current.map((a) => (a.id === next.id ? next : a)));
+    setFeedback({ alertId: next.id, kind: "saved" });
+  };
+
+  const onCreated = (next: PriceAlertItem) => {
+    setAlerts((current) => [next, ...current]);
     setFeedback({ alertId: next.id, kind: "saved" });
   };
 
@@ -182,11 +190,19 @@ export function AlertsManagerClient() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-h3">{t(lang, "managePriceAlerts")}</h2>
-        <p className="text-muted-foreground mt-0.5 text-sm">
-          {t(lang, "managePriceAlertsSubtitle")}
-        </p>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h2 className="text-h2">{t(lang, "managePriceAlerts")}</h2>
+          <p className="page-subtitle">{t(lang, "managePriceAlertsSubtitle")}</p>
+        </div>
+        <Button
+          size="sm"
+          onClick={() => setCreateOpen(true)}
+          className="shrink-0 gap-1.5 rounded-full"
+        >
+          <Plus className="size-3.5" />
+          {t(lang, "createAlert")}
+        </Button>
       </div>
 
       <section className="space-y-3">
@@ -197,7 +213,7 @@ export function AlertsManagerClient() {
           </span>
         </div>
         {active.length === 0 ? (
-          <ActiveEmpty />
+          <ActiveEmpty onCreate={() => setCreateOpen(true)} />
         ) : (
           <div className="space-y-2">
             {active.map((alert) => (
@@ -246,11 +262,17 @@ export function AlertsManagerClient() {
         }}
         onSaved={onSaved}
       />
+
+      <AlertCreateDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onCreated={onCreated}
+      />
     </div>
   );
 }
 
-function ActiveEmpty() {
+function ActiveEmpty({ onCreate }: { onCreate: () => void }) {
   const lang = useUIStore((s) => s.language);
   return (
     <div className="rounded-xl border border-dashed border-border/40 bg-card/50 px-6 py-10">
@@ -260,9 +282,13 @@ function ActiveEmpty() {
         title={t(lang, "noActiveAlerts")}
         description={t(lang, "noActiveAlertsDesc")}
       />
-      <div className="flex justify-center">
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <Button size="sm" onClick={onCreate} className="gap-1.5 rounded-full">
+          <Plus className="size-3.5" />
+          {t(lang, "createAlert")}
+        </Button>
         <Link href="/cards">
-          <Button variant="outline" size="sm" className="gap-1.5">
+          <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
             <Bell className="size-3.5" />
             {t(lang, "browseCardsToAlert")}
           </Button>
@@ -299,8 +325,8 @@ function AlertRow({
   const dirIsAbove = alert.direction === "ABOVE";
   const directionTone = dirIsAbove ? "text-price-up" : "text-price-down";
   const directionBg = dirIsAbove ? "bg-price-up/10" : "bg-price-down/10";
-  const directionBorder = dirIsAbove ? "border-price-up/20" : "border-price-down/20";
   const operator = dirIsAbove ? "≥" : "≤";
+  const DirectionIcon = dirIsAbove ? ArrowUp : ArrowDown;
 
   const channelEntries: Array<{
     key: string;
@@ -319,11 +345,11 @@ function AlertRow({
         alert.isActive ? "border-border/40" : "border-border/30 bg-muted/20",
       )}
     >
-      <div className="flex items-start gap-3">
-        {/* Card image */}
+      <div className="flex gap-3 sm:gap-4">
+        {/* Card image — preserves card aspect ratio (63:88 portrait) */}
         <Link
           href={`/cards/${alert.card.cardCode}`}
-          className="relative size-14 shrink-0 overflow-hidden rounded-md bg-muted"
+          className="relative aspect-[63/88] w-12 shrink-0 overflow-hidden rounded-md bg-muted sm:w-14"
         >
           {alert.card.imageUrl ? (
             <Image
@@ -331,7 +357,7 @@ function AlertRow({
               alt={cardName}
               fill
               sizes="56px"
-              className="object-cover"
+              className="object-contain"
               placeholder="blur"
               blurDataURL={BLUR_DATA_URL}
             />
@@ -339,106 +365,114 @@ function AlertRow({
         </Link>
 
         <div className="min-w-0 flex-1">
-          {/* Title row */}
-          <div className="flex flex-wrap items-center gap-2">
-            <Link
-              href={`/cards/${alert.card.cardCode}`}
-              className="truncate text-sm font-semibold hover:underline"
-            >
-              {cardName}
-            </Link>
-            <span className="text-meta text-muted-foreground/70">
-              {alert.card.cardCode}
-            </span>
-            {!alert.isActive && (
-              <Badge variant="secondary" className="text-xs">
-                {t(lang, "alertTriggered")}
-              </Badge>
-            )}
-            <FeedbackPill feedback={feedback} />
+          {/* Title + actions row */}
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <Link
+                href={`/cards/${alert.card.cardCode}`}
+                className="block truncate text-sm font-semibold hover:underline"
+              >
+                {cardName}
+              </Link>
+              <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-muted-foreground/70">
+                <span>{alert.card.cardCode}</span>
+                {!alert.isActive && (
+                  <Badge variant="secondary" className="h-4 px-1.5 text-[10px]">
+                    {t(lang, "alertTriggered")}
+                  </Badge>
+                )}
+                <FeedbackPill feedback={feedback} />
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="-mr-1 -mt-1 flex shrink-0 items-center">
+              {onEdit && (
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
+                  className="text-muted-foreground hover:text-foreground"
+                  disabled={busy}
+                  onClick={onEdit}
+                  title={t(lang, "edit")}
+                  aria-label={t(lang, "edit")}
+                >
+                  <Pencil className="size-3.5" />
+                </Button>
+              )}
+              {onReactivate && (
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
+                  className="text-muted-foreground hover:text-foreground"
+                  disabled={busy}
+                  onClick={onReactivate}
+                  title={t(lang, "reactivate")}
+                  aria-label={t(lang, "reactivate")}
+                >
+                  <RotateCcw className="size-3.5" />
+                </Button>
+              )}
+              <Button
+                size="icon-sm"
+                variant="ghost"
+                className="text-muted-foreground hover:text-destructive"
+                disabled={busy}
+                onClick={onDelete}
+                title={t(lang, "delete")}
+                aria-label={t(lang, "delete")}
+              >
+                <Trash2 className="size-3.5" />
+              </Button>
+            </div>
           </div>
 
-          {/* Detail row */}
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm">
+          {/* Trigger condition — primary info */}
+          <div className="mt-2 flex items-baseline gap-2">
             <span
               className={cn(
-                "inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs",
-                directionTone,
+                "inline-flex size-5 shrink-0 items-center justify-center rounded-full",
                 directionBg,
-                directionBorder,
+                directionTone,
               )}
+              aria-hidden
             >
-              {dirIsAbove ? (
-                <ArrowUp className="size-3" />
-              ) : (
-                <ArrowDown className="size-3" />
-              )}
-              <span className="opacity-80">
-                {t(lang, "alertTargetLabel")} {operator}
-              </span>
-              <span className="font-semibold">{target}</span>
+              <DirectionIcon className="size-3" strokeWidth={2.5} />
             </span>
+            <span className="text-eyebrow shrink-0 text-muted-foreground">
+              {t(lang, "alertTargetLabel")}
+            </span>
+            <span className={cn("text-base font-semibold tabular-nums leading-none", directionTone)}>
+              {operator} {target}
+            </span>
+          </div>
 
+          {/* Supporting info — current price + channels */}
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-muted-foreground">
             {current != null && (
-              <span className="text-meta text-muted-foreground">
+              <span>
                 {t(lang, "alertNowLabel")}{" "}
-                <span className="text-foreground">{current}</span>
+                <span className="font-medium text-foreground tabular-nums">{current}</span>
               </span>
             )}
-
-            <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-muted-foreground">
-              {channelEntries.map(({ key, label, Icon }) => (
-                <span key={key} className="inline-flex items-center gap-1">
-                  <Icon className="size-3.5" />
-                  {label}
-                </span>
-              ))}
-            </span>
-
-            {!alert.isActive && alert.triggeredAt && (
-              <span className="text-meta text-muted-foreground/70">
-                {t(lang, "alertTriggeredOn")}: {formatTriggeredAt(alert.triggeredAt, lang)}
+            {current != null && channelEntries.length > 0 && (
+              <span aria-hidden className="text-muted-foreground/30">·</span>
+            )}
+            {channelEntries.map(({ key, label, Icon }) => (
+              <span key={key} className="inline-flex items-center gap-1">
+                <Icon className="size-3" />
+                {label}
               </span>
+            ))}
+            {!alert.isActive && alert.triggeredAt && (
+              <>
+                <span aria-hidden className="text-muted-foreground/30">·</span>
+                <span className="text-muted-foreground/70">
+                  {t(lang, "alertTriggeredOn")}: {formatTriggeredAt(alert.triggeredAt, lang)}
+                </span>
+              </>
             )}
           </div>
-        </div>
-
-        {/* Actions */}
-        <div className="flex shrink-0 items-center gap-1">
-          {onEdit && (
-            <Button
-              size="sm"
-              variant="ghost"
-              className="h-8 gap-1.5 px-2"
-              disabled={busy}
-              onClick={onEdit}
-            >
-              <Pencil className="size-3.5" />
-              <span className="hidden sm:inline">{t(lang, "edit")}</span>
-            </Button>
-          )}
-          {onReactivate && (
-            <Button
-              size="sm"
-              variant="ghost"
-              className="h-8 gap-1.5 px-2"
-              disabled={busy}
-              onClick={onReactivate}
-            >
-              <RotateCcw className="size-3.5" />
-              <span className="hidden sm:inline">{t(lang, "reactivate")}</span>
-            </Button>
-          )}
-          <Button
-            size="sm"
-            variant="ghost"
-            className="h-8 gap-1.5 px-2 text-muted-foreground hover:text-destructive"
-            disabled={busy}
-            onClick={onDelete}
-          >
-            <Trash2 className="size-3.5" />
-            <span className="sr-only">{t(lang, "delete")}</span>
-          </Button>
         </div>
       </div>
     </div>

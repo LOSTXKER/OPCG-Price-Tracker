@@ -3,12 +3,10 @@
 import { useState, useMemo, useCallback } from "react";
 import {
   ChevronDown,
-  ChevronUp,
   Save,
   Loader2,
   Check,
   BarChart3,
-  Search,
   RotateCcw,
   AlertCircle,
   CheckCircle2,
@@ -16,7 +14,14 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import {
+  AdminToolbar,
+  AdminSearch,
+} from "@/components/admin/admin-toolbar";
+import { AdminEmptyState } from "@/components/admin/admin-empty-state";
+import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -237,64 +242,82 @@ export function DropRatesManager({
   }
 
   return (
-    <div className="space-y-6">
-      <AdminPageHeader
-        title="อัตราดรอป"
-        description="ดูและแก้ไขอัตราการเปิดได้ในแต่ละชุดการ์ด บันทึกได้ทีละรายการหรือทั้งชุด"
-        icon={BarChart3}
-        badge={<Badge variant="secondary">{sets.length} ชุด</Badge>}
-      />
-
-      {/* Search + Filter */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="relative flex-1">
-          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="ค้นหาชุดการ์ด (รหัส / ชื่อ)..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-        <div className="flex items-center gap-1 rounded-lg border border-border/50 bg-muted/30 p-1">
-          {(
-            [
-              { key: "all", label: "ทั้งหมด", count: sets.length },
-              {
-                key: "complete",
-                label: "ครบ",
-                count: completeCounts.complete,
-              },
-              {
-                key: "incomplete",
-                label: "ไม่ครบ",
-                count: completeCounts.incomplete,
-              },
-            ] as const
-          ).map((f) => (
-            <button
-              key={f.key}
-              onClick={() => setFilterMode(f.key)}
-              className={cn(
-                "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
-                filterMode === f.key
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground",
+    <AdminPage
+      header={
+        <AdminPageHeader
+          title="อัตราดรอป"
+          description="ดูและแก้ไขอัตราการเปิดได้ในแต่ละชุดการ์ด บันทึกได้ทีละรายการหรือทั้งชุด"
+          icon={BarChart3}
+          meta={
+            <>
+              <span className="text-meta">{sets.length} ชุด</span>
+              {completeCounts.incomplete > 0 && (
+                <AdminStatusBadge tone="warning">
+                  ไม่ครบ {completeCounts.incomplete}
+                </AdminStatusBadge>
               )}
-            >
-              {f.label}
-              <span className="ml-1 opacity-60">{f.count}</span>
-            </button>
-          ))}
-        </div>
+              {completeCounts.complete > 0 && (
+                <AdminStatusBadge tone="success">
+                  ครบ {completeCounts.complete}
+                </AdminStatusBadge>
+              )}
+            </>
+          }
+        />
+      }
+    >
+      <div className="sticky top-0 z-20">
+        <AdminToolbar
+          actions={
+            <div className="flex items-center gap-1 rounded-lg border border-border/50 bg-muted/30 p-1">
+              {(
+                [
+                  { key: "all", label: "ทั้งหมด", count: sets.length },
+                  {
+                    key: "complete",
+                    label: "ครบ",
+                    count: completeCounts.complete,
+                  },
+                  {
+                    key: "incomplete",
+                    label: "ไม่ครบ",
+                    count: completeCounts.incomplete,
+                  },
+                ] as const
+              ).map((f) => (
+                <button
+                  key={f.key}
+                  onClick={() => setFilterMode(f.key)}
+                  className={cn(
+                    "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+                    filterMode === f.key
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {f.label}
+                  <span className="ml-1 opacity-60">{f.count}</span>
+                </button>
+              ))}
+            </div>
+          }
+        >
+          <AdminSearch
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="ค้นหาชุดการ์ด (รหัส / ชื่อ)..."
+            className="w-full sm:w-72"
+          />
+        </AdminToolbar>
       </div>
 
       {/* Set List */}
       <div className="space-y-2">
         {filteredSets.length === 0 && (
-          <div className="flex items-center justify-center rounded-xl border border-dashed border-border/50 py-12 text-sm text-muted-foreground">
-            ไม่พบชุดการ์ดที่ตรงกับการค้นหา
-          </div>
+          <AdminEmptyState
+            title="ไม่พบชุดการ์ดที่ตรงกับการค้นหา"
+            description="ลองล้างตัวกรองหรือเปลี่ยนคำค้น"
+          />
         )}
 
         {filteredSets.map((set) => {
@@ -328,12 +351,12 @@ export function DropRatesManager({
 
                 {/* Completeness indicator */}
                 {complete ? (
-                  <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                  <span className="flex items-center gap-1 text-xs text-success">
                     <CheckCircle2 className="size-3.5" />
                     <span className="hidden sm:inline">ครบ</span>
                   </span>
                 ) : (
-                  <span className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400">
+                  <span className="flex items-center gap-1 text-xs text-warning">
                     <AlertCircle className="size-3.5" />
                     <span className="hidden sm:inline">ไม่ครบ</span>
                   </span>
@@ -461,9 +484,9 @@ export function DropRatesManager({
                                   className={cn(
                                     "group border-b border-border/10 transition-colors hover:bg-muted/10",
                                     idx % 2 === 1 && "bg-muted/5",
-                                    dirty &&
-                                      "bg-blue-50/50 dark:bg-blue-950/20",
-                                    showSeparator && "border-t-2 border-t-amber-200/50 dark:border-t-amber-800/30",
+                                    dirty && "bg-info-soft",
+                                    showSeparator &&
+                                      "border-t-2 border-t-warning/30",
                                   )}
                                 >
                                   <td className="px-4 py-2.5">
@@ -471,7 +494,7 @@ export function DropRatesManager({
                                       className={cn(
                                         "font-mono text-xs font-bold",
                                         isParallel
-                                          ? "text-amber-600 dark:text-amber-400"
+                                          ? "text-warning"
                                           : "text-foreground",
                                       )}
                                     >
@@ -562,13 +585,12 @@ export function DropRatesManager({
                                         {isSaving ? (
                                           <Loader2 className="size-3.5 animate-spin" />
                                         ) : isSaved && !dirty ? (
-                                          <Check className="size-3.5 text-green-500" />
+                                          <Check className="size-3.5 text-success" />
                                         ) : (
                                           <Save
                                             className={cn(
                                               "size-3.5",
-                                              dirty &&
-                                                "text-blue-500",
+                                              dirty && "text-info",
                                             )}
                                           />
                                         )}
@@ -589,6 +611,6 @@ export function DropRatesManager({
           );
         })}
       </div>
-    </div>
+    </AdminPage>
   );
 }

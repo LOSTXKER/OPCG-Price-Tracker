@@ -11,7 +11,6 @@ import {
   CheckCircle2,
   Circle,
   Clock,
-  Crown,
   Eye,
   Gift,
   Layers,
@@ -20,7 +19,6 @@ import {
   Package,
   Search,
   Share2,
-  Shield,
   ShoppingBag,
   Sparkles,
   Star,
@@ -34,14 +32,12 @@ import { cn } from "@/lib/utils";
 import { useCountdown } from "../hooks/use-countdown";
 import type { MissionData, HoneyLevel, ActiveEvent } from "../types";
 import { StreakTierIndicator } from "@/components/shared/streak-tier-indicator";
-
-const RANK_LABELS: Record<string, Record<number, string>> = {
-  TH: { 0: "มือใหม่", 1: "บรอนซ์", 2: "ซิลเวอร์", 3: "โกลด์", 4: "ไดมอนด์" },
-  EN: { 0: "Newbie", 1: "Bronze", 2: "Silver", 3: "Gold", 4: "Diamond" },
-  JP: { 0: "ニュービー", 1: "ブロンズ", 2: "シルバー", 3: "ゴールド", 4: "ダイヤモンド" },
-};
-
-const RANK_ICONS = [Shield, Shield, Star, Crown, Trophy] as const;
+import {
+  findTierByLevel,
+  getTierLabel,
+} from "@/lib/honey/rank-tiers";
+import { RankTierIcon } from "@/components/shared/rank-icon";
+import { useRankTiers } from "@/hooks/use-rank-tiers";
 
 const ICON_MAP: Record<string, typeof Award> = {
   Search, TrendingUp, Package, Layers, ShoppingBag, BarChart3, Circle, Share2, Link,
@@ -107,8 +103,11 @@ function MobileStreakRankRow({
   const progress = isMaxRank ? 100 : nextThreshold > currentMin
     ? Math.min(100, Math.round(((lifetimeEarned - currentMin) / (nextThreshold - currentMin)) * 100))
     : 100;
-  const rankLabels = RANK_LABELS[lang] ?? RANK_LABELS.EN;
-  const RankIcon = RANK_ICONS[currentLevel] ?? Shield;
+  const { tiers } = useRankTiers();
+  const currentTier = findTierByLevel(tiers, currentLevel);
+  const currentLabel = getTierLabel(currentTier, lang);
+  const accent = currentTier.color ?? null;
+  const iconImage = currentTier.imageUrl ?? null;
 
   return (
     <div className="grid grid-cols-2 gap-3 border-t px-5 py-3 sm:px-6">
@@ -120,16 +119,31 @@ function MobileStreakRankRow({
       {/* Rank */}
       <div className="space-y-2 rounded-xl border border-border/50 p-3">
         <div className="flex items-center gap-1.5">
-          <RankIcon className="size-3.5 text-primary" />
+          {iconImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={iconImage} alt="" className="size-3.5 rounded object-contain" />
+          ) : (
+            <RankTierIcon
+              name={currentTier.iconName}
+              className="size-3.5"
+              style={accent ? { color: accent } : undefined}
+            />
+          )}
           <span className="text-eyebrow text-muted-foreground">Rank</span>
         </div>
-        <p className="text-lg font-black leading-none text-primary">
-          {rankLabels[currentLevel]}
+        <p
+          className="text-lg font-black leading-none text-primary"
+          style={accent ? { color: accent } : undefined}
+        >
+          {currentLabel}
         </p>
         {!isMaxRank ? (
           <div className="space-y-0.5">
             <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-              <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progress}%` }} />
+              <div
+                className="h-full rounded-full bg-primary transition-all"
+                style={{ width: `${progress}%`, backgroundColor: accent ?? undefined }}
+              />
             </div>
             <p className="text-xs tabular-nums text-muted-foreground">
               {lifetimeEarned.toLocaleString()} / {nextThreshold!.toLocaleString()} pt

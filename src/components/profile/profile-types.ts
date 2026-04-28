@@ -3,6 +3,7 @@ export type DbUser = {
   email: string;
   displayName: string | null;
   avatarUrl: string | null;
+  coverImageUrl: string | null;
   bio: string | null;
   tier: string;
   sellerRating: number | null;

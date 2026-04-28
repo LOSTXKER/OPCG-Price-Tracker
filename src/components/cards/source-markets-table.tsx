@@ -113,7 +113,7 @@ export function SourceMarketsTable({
               <tr className="border-b border-border/30 text-eyebrow text-muted-foreground/60">
                 <th className="pb-2 pr-3 font-medium">#</th>
                 <th className="pb-2 pr-3 font-medium">{t(lang, "sourceRef")}</th>
-                <th className="pb-2 pr-3 text-right font-medium">{t(lang, "listing")}</th>
+                <th className="pb-2 pr-3 text-right font-medium">{t(lang, "marketPrice")}</th>
                 <th className="pb-2 pr-3 text-right font-medium">{t(lang, "lastSold")}</th>
                 <th className="pb-2 text-right font-medium">{t(lang, "updated")}</th>
               </tr>

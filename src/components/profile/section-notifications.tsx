@@ -245,8 +245,8 @@ export function SectionNotifications({ settings, onReload }: Props) {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h2 className="text-h3">{t(lang, "notifications")}</h2>
-        <p className="text-muted-foreground mt-0.5 text-sm">{t(lang, "notificationsSubtitle")}</p>
+        <h2 className="text-h2">{t(lang, "notifications")}</h2>
+        <p className="page-subtitle">{t(lang, "notificationsSubtitle")}</p>
       </div>
 
       {/* LINE connection banner */}
@@ -314,7 +314,7 @@ export function SectionNotifications({ settings, onReload }: Props) {
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-semibold">{t(lang, nt.labelKey)}</h3>
+                    <h3 className="text-h5">{t(lang, nt.labelKey)}</h3>
                     {cardLocked && <UpgradeBadge featureKey="weeklyDigest" />}
                     <Feedback field={nt.emailField} />
                     <Feedback field={nt.webField} />

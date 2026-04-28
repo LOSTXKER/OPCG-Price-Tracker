@@ -1,67 +1,56 @@
-export type HoneyLevel = {
-  level: number;
-  label: string;
-  nextThreshold: number | null;
-};
-
 /**
- * Honey rebalance v2 — lifetime-honey progression ladder.
+ * Server-side honey level helpers. The actual ladder is admin-editable
+ * via /admin/honey/ranks and lives in `SystemConfig` — see
+ * `./rank-tiers-server.ts` for the loader and `./rank-tiers.ts` for
+ * the schemas, defaults, and pure helpers.
  *
- * The Master tier (15,000 lifetime) anchors the high end of the
- * earning curve: an Active player reaches it around month 18, an
- * Engaged player around month 8, and that's where shop gating maxes
- * out. Bonuses below pace alongside §3.5 of the rebalance plan.
+ * `getHoneyLevel` and `checkLevelUp` are now async because they read
+ * from the rank-tier config (with an in-process TTL cache, so the
+ * actual DB hit is rare).
  */
 
-const LEVELS: { min: number; level: number; label: string }[] = [
-  { min: 15000, level: 5, label: "Master" },
-  { min: 5000, level: 4, label: "Diamond" },
-  { min: 2000, level: 3, label: "Gold" },
-  { min: 500, level: 2, label: "Silver" },
-  { min: 100, level: 1, label: "Bronze" },
-  { min: 0, level: 0, label: "Newbie" },
-];
+import {
+  DEFAULT_RANK_TIERS,
+  checkLevelUpFromTiers,
+  getHoneyLevelFromTiers,
+  type HoneyLevel,
+} from "./rank-tiers";
+import { getRankTiers } from "./rank-tiers-server";
 
-export const LEVEL_UP_BONUS: Record<number, number> = {
-  1: 50,    // Bronze (100 lifetime)
-  2: 150,   // Silver (500 lifetime)
-  3: 400,   // Gold (2,000 lifetime)
-  4: 1000,  // Diamond (5,000 lifetime)
-  5: 2500,  // Master (15,000 lifetime)
-};
+export type { HoneyLevel };
 
-/** Floor of each level — useful for shop `requiredLevel` lookups. */
-export const LEVEL_THRESHOLD: Record<number, number> = {
-  0: 0,
-  1: 100,
-  2: 500,
-  3: 2000,
-  4: 5000,
-  5: 15000,
-};
+/**
+ * Default ladder lookups, derived from `DEFAULT_RANK_TIERS`. Kept for
+ * back-compat with tests and any callers that want the *baseline*
+ * thresholds without a DB round-trip. New code should prefer reading
+ * the live tiers via `getRankTiers()` so admin overrides take effect.
+ */
+export const LEVEL_THRESHOLD: Record<number, number> = Object.fromEntries(
+  DEFAULT_RANK_TIERS.map((t) => [t.level, t.threshold]),
+);
 
-export function getHoneyLevel(lifetimeEarned: number): HoneyLevel {
-  for (let i = 0; i < LEVELS.length; i++) {
-    if (lifetimeEarned >= LEVELS[i].min) {
-      const nextThreshold = i > 0 ? LEVELS[i - 1].min : null;
-      return { level: LEVELS[i].level, label: LEVELS[i].label, nextThreshold };
-    }
-  }
-  return { level: 0, label: "Newbie", nextThreshold: 100 };
+export const LEVEL_UP_BONUS: Record<number, number> = Object.fromEntries(
+  DEFAULT_RANK_TIERS.filter((t) => t.levelUpBonus > 0).map((t) => [
+    t.level,
+    t.levelUpBonus,
+  ]),
+);
+
+export async function getHoneyLevel(lifetimeEarned: number): Promise<HoneyLevel> {
+  const tiers = await getRankTiers();
+  return getHoneyLevelFromTiers(lifetimeEarned, tiers);
 }
 
 /**
  * Returns the level-up bonus if `newLifetime` crossed a threshold that
- * `oldLifetime` hadn't reached yet. Returns null if no level-up occurred.
+ * `oldLifetime` hadn't reached yet. Returns null if no level-up
+ * occurred. Bonus amount is sourced from the destination tier's
+ * configured `levelUpBonus`.
  */
-export function checkLevelUp(
+export async function checkLevelUp(
   oldLifetime: number,
   newLifetime: number,
-): { level: number; label: string; bonus: number } | null {
-  const oldLevel = getHoneyLevel(oldLifetime);
-  const newLevel = getHoneyLevel(newLifetime);
-  if (newLevel.level <= oldLevel.level) return null;
-  const bonus = LEVEL_UP_BONUS[newLevel.level];
-  if (!bonus) return null;
-  return { level: newLevel.level, label: newLevel.label, bonus };
+): Promise<{ level: number; label: string; bonus: number } | null> {
+  const tiers = await getRankTiers();
+  return checkLevelUpFromTiers(oldLifetime, newLifetime, tiers);
 }

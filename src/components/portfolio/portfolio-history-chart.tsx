@@ -9,7 +9,8 @@ import {
   Tooltip,
   XAxis,
 } from "recharts"
-import { cn } from "@/lib/utils"
+import { CalendarRange } from "lucide-react"
+import { SegmentedControl } from "@/components/ui/segmented-control"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { formatJpyAmount } from "@/lib/utils/currency"
@@ -42,15 +43,16 @@ export function PortfolioHistoryChart({ data }: { data: DataPoint[] }) {
     }))
     return (
       <div className="relative">
-        <div className="mb-3 flex items-center gap-1">
-          {RANGES.map((r) => (
-            <span
-              key={r.id}
-              className="rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground/30"
-            >
-              {r.label}
-            </span>
-          ))}
+        <div className="mb-3 opacity-30">
+          <SegmentedControl
+            options={RANGES.map((r) => ({ value: r.id, label: r.label }))}
+            value="all"
+            onChange={() => {}}
+            size="sm"
+            variant="pill"
+            leadingIcon={CalendarRange}
+            ariaLabel={t(lang, "filter")}
+          />
         </div>
         <div className="h-28 w-full opacity-40 sm:h-32">
           <ResponsiveContainer width="100%" height="100%">
@@ -86,21 +88,16 @@ export function PortfolioHistoryChart({ data }: { data: DataPoint[] }) {
 
   return (
     <div>
-      <div className="mb-3 flex items-center gap-0.5">
-        {RANGES.map((r) => (
-          <button
-            key={r.id}
-            onClick={() => setRange(r.id)}
-            className={cn(
-              "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
-              range === r.id
-                ? "bg-primary/10 text-primary"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-            )}
-          >
-            {r.label}
-          </button>
-        ))}
+      <div className="mb-3">
+        <SegmentedControl
+          options={RANGES.map((r) => ({ value: r.id, label: r.label }))}
+          value={range}
+          onChange={setRange}
+          size="sm"
+          variant="pill"
+          leadingIcon={CalendarRange}
+          ariaLabel={t(lang, "filter")}
+        />
       </div>
       <div className="h-44 w-full text-meta sm:h-52">
         <ResponsiveContainer width="100%" height="100%">

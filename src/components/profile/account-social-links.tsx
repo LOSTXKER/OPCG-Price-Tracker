@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { CircleCheck, Loader2, Pencil } from "lucide-react";
+import { CircleCheck, Loader2, Pencil, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { t } from "@/lib/i18n";
@@ -79,13 +79,10 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
 
   return (
     <div className="overflow-hidden rounded-xl border border-border/40 bg-card">
-      {/* Header */}
-      <div className="flex items-center justify-between gap-4 px-5 py-4">
-        <div>
-          <h3 className="text-sm font-semibold">{t(lang, "socialSectionTitle")}</h3>
-          <p className="mt-0.5 text-meta">
-            {t(lang, "socialSectionDesc")}
-          </p>
+      <div className="flex items-start justify-between gap-4 px-5 py-4">
+        <div className="min-w-0">
+          <h3 className="text-h5">{t(lang, "socialSectionTitle")}</h3>
+          <p className="mt-0.5 text-meta">{t(lang, "socialSectionDesc")}</p>
         </div>
         <div className="flex items-center gap-2">
           {savedAt && Date.now() - savedAt < 2500 && (
@@ -94,22 +91,35 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
               {t(lang, "saved")}
             </span>
           )}
-          {!isEditing && (
-            <Button variant="outline" size="sm" onClick={() => setIsEditing(true)} className="shrink-0">
-              <Pencil className="mr-1.5 size-3" />
-              {t(lang, "edit")}
-            </Button>
+          {!isEditing ? (
+            <button
+              type="button"
+              onClick={() => setIsEditing(true)}
+              aria-label={t(lang, "edit")}
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              <Pencil className="size-3.5" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={cancel}
+              aria-label={t(lang, "cancel")}
+              disabled={saving}
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
+            >
+              <X className="size-4" />
+            </button>
           )}
         </div>
       </div>
 
-      {/* Content */}
       {isEditing ? (
         <>
           <div className="grid grid-cols-1 gap-3 border-t border-border/30 p-5 sm:grid-cols-2">
             {SOCIAL_FIELDS.map((f) => (
               <div key={f.key}>
-                <label className="text-xs font-medium text-muted-foreground" htmlFor={`social-${f.key}`}>
+                <label className="text-eyebrow" htmlFor={`social-${f.key}`}>
                   {t(lang, f.label)}
                 </label>
                 <Input
@@ -117,16 +127,13 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
                   value={socials[f.key]}
                   onChange={(e) => setSocials((s) => ({ ...s, [f.key]: e.target.value }))}
                   placeholder={t(lang, f.placeholder)}
-                  className="mt-1 h-9"
+                  className="mt-1.5 h-9"
                   maxLength={f.key === "socialFacebook" ? 120 : 60}
                 />
               </div>
             ))}
           </div>
           <div className="flex items-center justify-end gap-2 border-t border-border/30 px-5 py-2.5">
-            <Button size="sm" variant="ghost" onClick={cancel} disabled={saving}>
-              {t(lang, "cancel")}
-            </Button>
             <Button size="sm" onClick={() => void save()} disabled={saving || !dirty}>
               {saving && <Loader2 className="mr-1.5 size-3 animate-spin" />}
               {t(lang, "save")}
@@ -142,8 +149,8 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
                   {f.icon}
                 </span>
                 <div className="min-w-0">
-                  <p className="text-meta">{t(lang, f.label)}</p>
-                  <p className="truncate text-sm">{(user[f.key] as string)?.trim()}</p>
+                  <p className="text-eyebrow">{t(lang, f.label)}</p>
+                  <p className="mt-0.5 truncate text-sm">{(user[f.key] as string)?.trim()}</p>
                 </div>
               </div>
             ))}

@@ -85,24 +85,6 @@ export function sortEntries(
         return an.localeCompare(bn);
       });
       break;
-    case "target":
-      arr.sort((a, b) => {
-        const pin = pinnedFirst(a, b);
-        if (pin !== 0) return pin;
-        const aDist = targetDistance(a);
-        const bDist = targetDistance(b);
-        return aDist - bDist;
-      });
-      break;
   }
   return arr;
-}
-
-function targetDistance(entry: WatchlistEntry): number {
-  if (entry.targetPriceJpy == null || entry.card.latestPriceJpy == null) {
-    return Infinity;
-  }
-  const t = entry.targetPriceJpy;
-  const c = entry.card.latestPriceJpy;
-  return Math.abs(c - t) / t;
 }

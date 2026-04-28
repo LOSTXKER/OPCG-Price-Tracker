@@ -13,6 +13,7 @@ import { LoadingState } from "@/components/shared/loading-state";
 import { useUIStore } from "@/stores/ui-store";
 import { formatJpy, formatThb } from "@/lib/utils/currency";
 import { t } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 type SavedItem = {
   id: number;
@@ -146,23 +147,14 @@ export default function SavedListingsPage() {
                   key={item.id}
                   className="panel group relative overflow-hidden rounded-xl transition-colors hover:bg-muted/20"
                 >
-                  {/* Remove button */}
-                  <button
-                    type="button"
-                    onClick={() => handleRemove(listing.id)}
-                    disabled={removing === listing.id}
-                    className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-background/80 text-muted-foreground opacity-0 backdrop-blur-sm transition-opacity hover:text-destructive group-hover:opacity-100"
-                  >
-                    {removing === listing.id ? (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    ) : (
-                      <Trash2 className="h-3.5 w-3.5" />
-                    )}
-                  </button>
-
-                  <Link href={`/marketplace/${listing.id}`}>
-                    {/* Image */}
-                    <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
+                  <Link href={`/marketplace/${listing.id}`} className="block">
+                    {/* Image — clean, no overlays. Sold/inactive listings desaturate. */}
+                    <div
+                      className={cn(
+                        "relative aspect-[3/4] w-full overflow-hidden bg-muted transition",
+                        !isActive && "grayscale opacity-70",
+                      )}
+                    >
                       {listing.card.imageUrl ? (
                         <Image
                           src={listing.card.imageUrl}
@@ -175,24 +167,24 @@ export default function SavedListingsPage() {
                           <Package className="h-8 w-8 text-muted-foreground/40" />
                         </div>
                       )}
-                      {!isActive && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-background/60">
-                          <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-                            {listing.status === "SOLD"
-                              ? t(lang, "listingSold")
-                              : t(lang, "listingNotAvailable")}
-                          </span>
-                        </div>
-                      )}
                     </div>
 
                     {/* Info */}
                     <div className="p-3">
-                      <p className="truncate text-sm font-medium">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {!isActive && (
+                          <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-semibold text-muted-foreground">
+                            {listing.status === "SOLD"
+                              ? t(lang, "listingSold")
+                              : t(lang, "listingNotAvailable")}
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-1 truncate text-sm font-medium">
                         {cardName}
                       </p>
                       <p className="text-meta">
-                        {listing.card.cardCode} โ€ข {listing.card.rarity}
+                        {listing.card.cardCode} • {listing.card.rarity}
                       </p>
                       <div className="mt-2 flex items-baseline justify-between">
                         <span className="font-bold">
@@ -210,6 +202,23 @@ export default function SavedListingsPage() {
                       </p>
                     </div>
                   </Link>
+
+                  {/* Action row — sits below the tile, never overlays the art */}
+                  <div className="flex items-center justify-end gap-1 border-t border-border/60 px-2 py-1">
+                    <button
+                      type="button"
+                      onClick={() => handleRemove(listing.id)}
+                      disabled={removing === listing.id}
+                      aria-label={t(lang, "remove")}
+                      className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-destructive disabled:opacity-50"
+                    >
+                      {removing === listing.id ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-3.5 w-3.5" />
+                      )}
+                    </button>
+                  </div>
                 </div>
               );
             })}

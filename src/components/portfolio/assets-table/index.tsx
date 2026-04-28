@@ -21,13 +21,20 @@ export function PortfolioAssetsTable({
   assets,
   onUpdate,
   onRemove,
+  hideBalance = false,
 }: {
   assets: AssetRow[]
   onUpdate: (
     itemId: number,
-    data: { quantity?: number; purchasePrice?: number | null; isPrivate?: boolean },
+    data: {
+      quantity?: number
+      purchasePrice?: number | null
+      isPrivate?: boolean
+      notes?: string | null
+    },
   ) => void
   onRemove: (itemId: number) => void
+  hideBalance?: boolean
 }) {
   const lang = useUIStore((s) => s.language)
   const [searchQuery, setSearchQuery] = useState("")
@@ -110,6 +117,7 @@ export function PortfolioAssetsTable({
                 lang={lang}
                 onEdit={() => openEdit(row)}
                 onRemove={() => void handleRemove(row)}
+                hideBalance={hideBalance}
               />
             ))}
           </div>
@@ -119,6 +127,7 @@ export function PortfolioAssetsTable({
             lang={lang}
             onEdit={openEdit}
             onRemove={(row) => void handleRemove(row)}
+            hideBalance={hideBalance}
           />
         </>
       )}

@@ -5,10 +5,10 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
-import { CardImageLightbox } from "@/components/shared/card-image-lightbox"
+import { CardImageButton } from "@/components/shared/card-image-button"
+import { CardActionRow } from "@/components/shared/card-action-row"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { PriceDisplay } from "@/components/shared/price-display"
-import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { PriceUsd } from "@/components/shared/price-usd"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getCardName } from "@/lib/i18n"
@@ -37,70 +37,97 @@ export const GridCard = memo(function GridCard({
     : card.priceChange7d
 
   return (
-    <Link
-      href={`/cards/${card.cardCode}`}
-      className="group/card block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-    >
-      <div className="panel relative flex flex-col overflow-hidden transition-colors hover:bg-muted/20">
-        <div className="relative aspect-[63/88] w-full bg-muted">
-          {card.imageUrl ? (
-            <CardImageLightbox src={card.imageUrl} alt={name} className="absolute inset-0">
-              <Image
-                src={card.imageUrl}
-                alt={name}
-                fill
-                className="object-contain"
-                sizes="(max-width: 640px) 45vw, (max-width: 1024px) 25vw, 18vw"
-                placeholder="blur"
-                blurDataURL={BLUR_DATA_URL}
-              />
-            </CardImageLightbox>
-          ) : (
-            <div className="size-full bg-muted" />
+    <div className="panel group/card relative flex flex-col overflow-hidden transition-colors hover:bg-muted/20">
+      <CardImageButton
+        card={{
+          cardCode: card.cardCode,
+          cardId: card.id ?? null,
+          nameJp: card.nameJp,
+          nameEn: card.nameEn,
+          nameTh: card.nameTh,
+          rarity: card.rarity,
+          imageUrl: card.imageUrl ?? null,
+          setCode,
+          priceJpy: card.latestPriceJpy ?? null,
+          priceChange24h: card.priceChange24h ?? null,
+          priceChange7d: card.priceChange7d ?? null,
+          priceChange30d: card.priceChange30d ?? null,
+          psa10PriceUsd: card.psa10PriceUsd ?? null,
+        }}
+        className="relative aspect-[63/88] w-full bg-muted"
+      >
+        {card.imageUrl ? (
+          <Image
+            src={card.imageUrl}
+            alt={name}
+            fill
+            className="object-contain"
+            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 25vw, 18vw"
+            placeholder="blur"
+            blurDataURL={BLUR_DATA_URL}
+          />
+        ) : (
+          <div className="size-full bg-muted" />
+        )}
+      </CardImageButton>
+
+      <div className="flex flex-1 flex-col p-2.5">
+        <div className="mb-1 flex items-center gap-1.5">
+          <RarityBadge rarity={card.rarity} size="sm" />
+          {setCode && (
+            <span
+              role="link"
+              tabIndex={-1}
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                router.push(`/sets/${setCode}`)
+              }}
+              className="cursor-pointer font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid"
+            >
+              {setCode.toUpperCase()}
+            </span>
           )}
-          <div className="absolute left-1.5 top-1.5 z-10">
-            {card.id != null && <WatchlistStar cardId={card.id} size="sm" />}
-          </div>
         </div>
-        <div className="flex flex-1 flex-col p-2.5">
-          <div className="mb-1 flex items-center gap-1.5">
-            <RarityBadge rarity={card.rarity} size="sm" />
-            {setCode && (
-              <span
-                role="link"
-                tabIndex={-1}
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  router.push(`/sets/${setCode}`)
-                }}
-                className="cursor-pointer font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid"
-              >
-                {setCode.toUpperCase()}
-              </span>
-            )}
-          </div>
-          <p className="truncate text-sm font-medium leading-snug" title={name}>
-            {name}
-          </p>
-          <div className="mt-auto pt-1.5">
-            {isPsa ? (
-              card.psa10PriceUsd != null ? (
-                <PriceUsd usd={card.psa10PriceUsd} className="text-sm font-semibold" />
-              ) : (
-                <span className="font-price text-sm text-muted-foreground/50">—</span>
-              )
+        <Link
+          href={`/cards/${card.cardCode}`}
+          className="block truncate text-sm font-medium leading-snug hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          title={name}
+        >
+          {name}
+        </Link>
+        <div className="mt-auto pt-1.5">
+          {isPsa ? (
+            card.psa10PriceUsd != null ? (
+              <PriceUsd usd={card.psa10PriceUsd} className="text-sm font-semibold" />
             ) : (
-              <PriceDisplay
-                priceJpy={card.latestPriceJpy}
-                change={activeChange}
-                size="sm"
-              />
-            )}
-          </div>
+              <span className="font-price text-sm text-muted-foreground/50">—</span>
+            )
+          ) : (
+            <PriceDisplay
+              priceJpy={card.latestPriceJpy}
+              change={activeChange}
+              size="sm"
+            />
+          )}
         </div>
       </div>
-    </Link>
+
+      <CardActionRow
+        card={{
+          cardCode: card.cardCode,
+          cardId: card.id ?? null,
+          nameJp: card.nameJp,
+          nameEn: card.nameEn,
+          nameTh: card.nameTh,
+          rarity: card.rarity,
+          imageUrl: card.imageUrl ?? null,
+          setCode,
+        }}
+        show={{ detail: true, watchlist: card.id != null, compare: true }}
+        className="border-t border-border/60 px-2 py-1"
+      />
+    </div>
   )
 })
 

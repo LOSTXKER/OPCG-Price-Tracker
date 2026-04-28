@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Award,
   Gift,
@@ -14,13 +14,18 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminPagination } from "@/components/admin/admin-pagination";
 import { AdminToolbar, AdminSearch } from "@/components/admin/admin-toolbar";
 import { AdminDataTable, type Column } from "@/components/admin/admin-data-table";
+import {
+  AdminStatusBadge,
+  type AdminStatusTone,
+} from "@/components/admin/admin-status-badge";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { StatCard } from "@/components/shared/stat-card";
+import { StatCard, type StatCardTone } from "@/components/shared/stat-card";
 import {
   Dialog,
   DialogContent,
@@ -37,6 +42,9 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { useAdminList } from "@/lib/admin/use-admin-list";
+import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
+import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
 
 type UserRow = {
   id: string;
@@ -85,21 +93,26 @@ type Stats = {
   newThisWeek: number;
 };
 
-const TIER_CONFIG: Record<string, { label: string; className: string }> = {
-  FREE: { label: "Free", className: "bg-muted text-muted-foreground" },
-  PRO: { label: "Pro", className: "bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400" },
-  PRO_PLUS: { label: "Pro+", className: "bg-purple-100 text-purple-700 dark:bg-purple-500/15 dark:text-purple-400" },
-  LIFETIME_PRO: { label: "Lifetime", className: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400" },
-  LIFETIME_PRO_PLUS: { label: "Lifetime+", className: "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 dark:from-amber-500/15 dark:to-orange-500/15 dark:text-amber-400" },
+interface UsersResponse {
+  users: UserRow[];
+  total: number;
+  totalPages: number;
+  stats?: Stats;
+}
+
+const PER_PAGE = 20;
+
+const TIER_CONFIG: Record<string, { label: string; tone: AdminStatusTone }> = {
+  FREE: { label: "Free", tone: "neutral" },
+  PRO: { label: "Pro", tone: "info" },
+  PRO_PLUS: { label: "Pro+", tone: "primary" },
+  LIFETIME_PRO: { label: "Lifetime", tone: "warning" },
+  LIFETIME_PRO_PLUS: { label: "Lifetime+", tone: "warning" },
 };
 
 function TierBadge({ tier }: { tier: string }) {
   const config = TIER_CONFIG[tier] ?? TIER_CONFIG.FREE;
-  return (
-    <span className={cn("inline-flex items-center rounded-full px-2 py-0.5 text-micro", config.className)}>
-      {config.label}
-    </span>
-  );
+  return <AdminStatusBadge tone={config.tone}>{config.label}</AdminStatusBadge>;
 }
 
 function getInitials(name: string | null): string {
@@ -114,13 +127,24 @@ function getInitials(name: string | null): string {
 }
 
 export function UsersManager() {
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [users, setUsers] = useState<UserRow[]>([]);
-  const [total, setTotal] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState<Stats | null>(null);
+  const { state, patch } = useAdminUrlState({
+    defaults: { page: 1, search: "" },
+  });
+  const { page, search } = state;
+
+  const { data, loading, refetch } = useAdminList<UsersResponse, typeof state>({
+    url: (p) =>
+      `/api/admin/honey/users?${buildAdminQuery({
+        page: p.page,
+        limit: PER_PAGE,
+        search: p.search || undefined,
+      })}`,
+    params: state,
+  });
+  const users = data?.users ?? [];
+  const total = data?.total ?? 0;
+  const totalPages = data?.totalPages ?? 1;
+  const stats = data?.stats ?? null;
 
   const [selectedUser, setSelectedUser] = useState<UserDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -131,40 +155,15 @@ export function UsersManager() {
   const [grantReason, setGrantReason] = useState("");
   const [granting, setGranting] = useState(false);
 
-  const loadUsers = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: "20",
-      });
-      if (search) params.set("search", search);
-      const res = await fetch(`/api/admin/honey/users?${params}`);
-      if (res.ok) {
-        const data = await res.json();
-        setUsers(data.users);
-        setTotal(data.total);
-        setTotalPages(data.totalPages);
-        if (data.stats) setStats(data.stats);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [page, search]);
-
-  useEffect(() => {
-    loadUsers();
-  }, [loadUsers]);
-
   const loadUserDetail = async (userId: string) => {
     setDetailLoading(true);
     setSelectedUser(null);
     setSheetOpen(true);
     try {
-      const res = await fetch(`/api/admin/honey/users/${userId}`);
-      if (res.ok) {
-        setSelectedUser(await res.json());
-      }
+      const detail = await adminFetch<UserDetail>(`/api/admin/honey/users/${userId}`);
+      setSelectedUser(detail);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "โหลดข้อมูลไม่สำเร็จ");
     } finally {
       setDetailLoading(false);
     }
@@ -174,28 +173,25 @@ export function UsersManager() {
     if (!grantUser) return;
     setGranting(true);
     try {
-      const res = await fetch("/api/admin/honey/grant", {
+      const result = await adminFetch<{ honeyPoints: number }>("/api/admin/honey/grant", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+        body: {
           userId: grantUser.id,
           amount: Number(grantAmount),
           reason: grantReason,
-        }),
+        },
       });
-      const data = await res.json();
-      if (res.ok) {
-        toast.success(`ให้ Honey สำเร็จ! ยอดใหม่: ${data.honeyPoints}`);
-        setGrantAmount("");
-        setGrantReason("");
-        setGrantUser(null);
-        loadUsers();
-        if (selectedUser?.user.id === grantUser.id) {
-          loadUserDetail(grantUser.id);
-        }
-      } else {
-        toast.error(data.error || "ไม่สำเร็จ");
+      toast.success(`ให้ Honey สำเร็จ! ยอดใหม่: ${result.honeyPoints}`);
+      const grantedUserId = grantUser.id;
+      setGrantAmount("");
+      setGrantReason("");
+      setGrantUser(null);
+      void refetch();
+      if (selectedUser?.user.id === grantedUserId) {
+        void loadUserDetail(grantedUserId);
       }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "ไม่สำเร็จ");
     } finally {
       setGranting(false);
     }
@@ -222,7 +218,7 @@ export function UsersManager() {
       key: "honey",
       header: "Honey",
       headerClassName: "text-right",
-      className: "text-right font-bold tabular-nums text-amber-600 dark:text-amber-400",
+      className: "text-right font-bold tabular-nums text-warning",
       sortable: true,
       sortFn: (a, b) => a.honeyPoints - b.honeyPoints,
       render: (u) => u.honeyPoints.toLocaleString(),
@@ -233,7 +229,7 @@ export function UsersManager() {
       headerClassName: "text-right",
       className: "text-right",
       render: (u) => (
-        <span className="inline-flex items-center justify-end gap-1 text-orange-500">
+        <span className="inline-flex items-center justify-end gap-1 text-warning">
           <Flame className="size-3" /> {u.checkinStreak}
         </span>
       ),
@@ -257,7 +253,7 @@ export function UsersManager() {
             e.stopPropagation();
             setGrantUser(u);
           }}
-          className="rounded p-1.5 text-amber-600 transition-colors hover:bg-amber-100 dark:text-amber-400 dark:hover:bg-amber-500/10"
+          className="rounded p-1.5 text-warning transition-colors hover:bg-warning-soft"
           title="ให้ Honey"
         >
           <Gift className="size-3.5" />
@@ -266,48 +262,51 @@ export function UsersManager() {
     },
   ];
 
-  const statCards = stats
+  const statCards: Array<{
+    label: string;
+    value: string;
+    icon: typeof Users;
+    tone: StatCardTone;
+  }> | null = stats
     ? [
         {
           label: "ผู้ใช้ทั้งหมด",
           value: stats.totalUsers.toLocaleString(),
           icon: Users,
-          color: "text-blue-500",
-          bg: "bg-blue-500/10",
+          tone: "info",
         },
         {
           label: "Honey หมุนเวียน",
           value: stats.totalHoney.toLocaleString(),
           icon: Award,
-          color: "text-amber-600 dark:text-amber-400",
-          bg: "bg-amber-100 dark:bg-amber-500/10",
+          tone: "warning",
         },
         {
           label: "เช็คอินวันนี้",
           value: stats.activeToday.toLocaleString(),
           icon: CalendarCheck,
-          color: "text-green-500",
-          bg: "bg-green-500/10",
+          tone: "success",
         },
         {
           label: "สมาชิกใหม่สัปดาห์นี้",
           value: stats.newThisWeek.toLocaleString(),
           icon: UserPlus,
-          color: "text-violet-500",
-          bg: "bg-violet-500/10",
+          tone: "primary",
         },
       ]
     : null;
 
   return (
-    <div className="space-y-6">
-      <AdminPageHeader
-        title="ผู้ใช้งาน"
-        description="จัดการผู้ใช้ ดูข้อมูล Honey และให้คะแนน"
-        icon={Users}
-        badge={<Badge variant="secondary">{total} คน</Badge>}
-      />
-
+    <AdminPage
+      header={
+        <AdminPageHeader
+          title="ผู้ใช้งาน"
+          description="จัดการผู้ใช้ ดูข้อมูล Honey และให้คะแนน"
+          icon={Users}
+          meta={<Badge variant="secondary">{total.toLocaleString()} คน</Badge>}
+        />
+      }
+    >
       {/* Stat Cards */}
       {statCards && (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -317,16 +316,17 @@ export function UsersManager() {
         </div>
       )}
 
-      <AdminToolbar>
-        <AdminSearch
-          value={search}
-          onChange={(v) => { setSearch(v); setPage(1); }}
-          placeholder="ค้นหาอีเมลหรือชื่อ..."
-          className="w-64"
-        />
-      </AdminToolbar>
+      <div className="sticky top-0 z-20 -mx-1 bg-background/85 px-1 py-2 backdrop-blur supports-backdrop-filter:bg-background/70">
+        <AdminToolbar>
+          <AdminSearch
+            value={search}
+            onChange={(v) => patch({ search: v, page: 1 })}
+            placeholder="ค้นหาอีเมลหรือชื่อ..."
+            className="w-full sm:w-64"
+          />
+        </AdminToolbar>
+      </div>
 
-      {/* Users Table (full width) */}
       <AdminDataTable
         columns={userColumns}
         data={users}
@@ -342,8 +342,8 @@ export function UsersManager() {
         page={page}
         totalPages={totalPages}
         total={total}
-        perPage={20}
-        onPageChange={setPage}
+        perPage={PER_PAGE}
+        onPageChange={(p) => patch({ page: p })}
       />
 
       {/* Grant Honey Dialog */}
@@ -351,7 +351,7 @@ export function UsersManager() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Gift className="size-4 text-amber-600 dark:text-amber-400" />
+              <Gift className="size-4 text-warning" />
               ให้ Honey
             </DialogTitle>
             {grantUser && (
@@ -424,17 +424,17 @@ export function UsersManager() {
               <div className="space-y-5 px-4 pb-6">
                 {/* Quick Stats */}
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-lg bg-amber-50 p-3 text-center dark:bg-amber-900/20">
-                    <p className="text-2xl font-bold tabular-nums text-amber-600 dark:text-amber-400">
+                  <div className="status-warning rounded-lg p-3 text-center">
+                    <p className="text-2xl font-bold tabular-nums">
                       {selectedUser.user.honeyPoints.toLocaleString()}
                     </p>
-                    <p className="text-meta">Honey</p>
+                    <p className="text-meta text-warning/80">Honey</p>
                   </div>
-                  <div className="rounded-lg bg-orange-500/5 p-3 text-center">
-                    <p className="text-2xl font-bold tabular-nums text-orange-500">
+                  <div className="status-info rounded-lg p-3 text-center">
+                    <p className="text-2xl font-bold tabular-nums">
                       {selectedUser.user.checkinStreak}
                     </p>
-                    <p className="text-meta">สตรีค</p>
+                    <p className="text-meta text-info/80">สตรีค</p>
                   </div>
                 </div>
 
@@ -498,7 +498,7 @@ export function UsersManager() {
                         <Zap
                           className={cn(
                             "size-3 shrink-0",
-                            tx.amount > 0 ? "text-green-500" : "text-red-500",
+                            tx.amount > 0 ? "text-success" : "text-danger",
                           )}
                         />
                         <span className="flex-1 truncate text-muted-foreground">
@@ -507,7 +507,7 @@ export function UsersManager() {
                         <span
                           className={cn(
                             "shrink-0 font-bold tabular-nums",
-                            tx.amount > 0 ? "text-green-500" : "text-red-500",
+                            tx.amount > 0 ? "text-success" : "text-danger",
                           )}
                         >
                           {tx.amount > 0 ? "+" : ""}
@@ -533,7 +533,7 @@ export function UsersManager() {
                     if (row) setGrantUser(row);
                   }}
                 >
-                  <Gift className="size-3.5 text-amber-600 dark:text-amber-400" />
+                  <Gift className="size-3.5 text-warning" />
                   ให้ Honey
                 </Button>
               </div>
@@ -541,6 +541,6 @@ export function UsersManager() {
           )}
         </SheetContent>
       </Sheet>
-    </div>
+    </AdminPage>
   );
 }

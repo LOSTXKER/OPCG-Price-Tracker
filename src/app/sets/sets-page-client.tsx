@@ -3,22 +3,13 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Crown,
-  Gift,
-  MoreHorizontal,
-  Package,
-  Sparkles,
-  Swords,
-} from "lucide-react";
+import { Package } from "lucide-react";
 
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Price } from "@/components/shared/price-inline";
-import { FormattedDate } from "@/components/shared/formatted-date";
 import { PageHeader } from "@/components/layout/page-header";
-import { Surface } from "@/components/ui/surface";
 import { EmptyState } from "@/components/shared/empty-state";
 
 export type SetWithCard = {
@@ -43,61 +34,18 @@ const TYPE_LABEL: Record<string, string> = {
   PROMO: "Promo",
   OTHER: "Other",
 };
-const TYPE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
-  BOOSTER: Package,
-  EXTRA_BOOSTER: Sparkles,
-  STARTER: Swords,
-  PROMO: Gift,
-  OTHER: MoreHorizontal,
-};
 
 const ALL_TYPES = "ALL";
 
 // ─── Header ──────────────────────────────────────────────────────────
 
-export function SetsPageHeader({
-  totalSets,
-  totalMarketValue,
-}: {
-  totalSets: number;
-  totalMarketValue: number;
-}) {
+export function SetsPageHeader() {
   const lang = useUIStore((s) => s.language);
   return (
     <PageHeader
       title={t(lang, "setsTitle")}
       description={t(lang, "setsDesc")}
-      className="mb-3"
-    >
-      <p className="mt-3 flex flex-wrap items-center gap-3 text-meta">
-        <span className="font-semibold text-foreground">
-          {totalSets} {t(lang, "setCount")}
-        </span>
-        <span className="text-border">·</span>
-        <span>
-          {t(lang, "totalValueLabel")}{" "}
-          <span className="font-semibold text-foreground">
-            <Price jpy={totalMarketValue} />
-          </span>
-        </span>
-      </p>
-    </PageHeader>
-  );
-}
-
-export function HighestValueSetLabel() {
-  const lang = useUIStore((s) => s.language);
-  return (
-    <h2 className="text-h3">{t(lang, "highestValueSet")}</h2>
-  );
-}
-
-export function CardCountLabel({ count }: { count: number }) {
-  const lang = useUIStore((s) => s.language);
-  return (
-    <span className="shrink-0 text-meta">
-      {count} {t(lang, "cardsCount")}
-    </span>
+    />
   );
 }
 
@@ -139,97 +87,83 @@ export function SetsListClient({
 
   return (
     <>
-      {/* Type filter pills */}
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-        <button
-          type="button"
-          onClick={() => setActiveType(ALL_TYPES)}
-          className={cn(
-            "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors",
-            activeType === ALL_TYPES
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted text-muted-foreground hover:bg-muted/80"
-          )}
-        >
-          All <span className="ml-1 tabular-nums opacity-70">{sets.length}</span>
-        </button>
-        {TYPE_ORDER.map((type) => {
-          const count = typeCounts.get(type) ?? 0;
-          if (count === 0) return null;
-          return (
-            <button
-              key={type}
-              type="button"
-              onClick={() => setActiveType(type)}
-              className={cn(
-                "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors",
-                activeType === type
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              )}
-            >
-              {TYPE_LABEL[type]} <span className="ml-1 tabular-nums opacity-70">{count}</span>
-            </button>
-          );
-        })}
+      {/* Filter rail — ghost pills, sticky under app header */}
+      <div className="sticky top-14 z-10 -mx-4 bg-background/85 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/70 sm:mx-0 sm:px-0">
+        <div className="flex gap-2 overflow-x-auto py-2 scrollbar-none">
+          <FilterPill
+            active={activeType === ALL_TYPES}
+            onClick={() => setActiveType(ALL_TYPES)}
+            label="All"
+            count={sets.length}
+          />
+          {TYPE_ORDER.map((type) => {
+            const count = typeCounts.get(type) ?? 0;
+            if (count === 0) return null;
+            return (
+              <FilterPill
+                key={type}
+                active={activeType === type}
+                onClick={() => setActiveType(type)}
+                label={TYPE_LABEL[type]}
+                count={count}
+              />
+            );
+          })}
+        </div>
       </div>
 
-      {/* Top 5 most valuable */}
+      {/* Top 5 most valuable — minimal list */}
       {showMostValuable && mostValuable.length > 0 && (
-        <Surface as="section" variant="panel" padding="none" className="overflow-hidden">
-          <div className="flex items-center gap-2.5 border-b border-border/40 px-5 py-3.5">
-            <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10">
-              <Crown className="size-3.5 text-primary" />
-            </div>
-            <HighestValueSetLabel />
+        <section className="space-y-3">
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-eyebrow">{t(lang, "highestValueSet")}</h2>
+            <span className="text-meta">Top 5</span>
           </div>
-          <div className="divide-y divide-border/30">
+          <ol className="divide-y divide-border/30">
             {mostValuable.map((s, i) => {
               const thumb = s.boxImageUrl ?? s.topCard?.imageUrl;
               return (
-                <Link
-                  key={s.id}
-                  href={`/sets/${s.code}`}
-                  className="group flex items-center gap-4 px-5 py-3.5 transition-colors hover:bg-muted/30"
-                >
-                  <span
-                    className={cn(
-                      "flex size-7 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold",
-                      i < 3 ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground",
-                    )}
+                <li key={s.id}>
+                  <Link
+                    href={`/sets/${s.code}`}
+                    className="group flex items-center gap-4 py-3 transition-colors hover:bg-muted/20"
                   >
-                    {i + 1}
-                  </span>
-                  {thumb && (
-                    <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-muted">
-                      <Image
-                        src={thumb}
-                        alt=""
-                        fill
-                        className="object-contain"
-                        sizes="40px"
-                      />
-                    </div>
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-mono text-xs font-bold text-primary">
-                        {s.code.toUpperCase()}
-                      </span>
-                      <span className="truncate text-sm font-medium transition-colors group-hover:text-primary">
+                    <span className="w-6 shrink-0 text-right font-mono text-sm tabular-nums text-muted-foreground">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    {thumb ? (
+                      <div className="relative size-9 shrink-0 overflow-hidden rounded bg-muted/30">
+                        <Image
+                          src={thumb}
+                          alt=""
+                          fill
+                          className="object-contain"
+                          sizes="36px"
+                        />
+                      </div>
+                    ) : (
+                      <div className="size-9 shrink-0 rounded bg-muted/30" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-medium transition-colors group-hover:text-foreground">
                         {s.nameEn ?? s.name}
-                      </span>
+                      </div>
+                      <div className="text-meta font-mono">
+                        {s.code.toUpperCase()}
+                      </div>
                     </div>
-                  </div>
-                  <CardCountLabel count={s.productCardCount} />
-                  <span className="shrink-0 font-price text-sm font-bold tabular-nums">
-                    <Price jpy={s.totalValue} />
-                  </span>
-                </Link>
+                    <span className="hidden shrink-0 text-meta tabular-nums sm:inline">
+                      {s.productCardCount} {t(lang, "cardsCount")}
+                    </span>
+                    <span className="w-28 shrink-0 text-right font-price text-sm font-semibold tabular-nums">
+                      <Price jpy={s.totalValue} />
+                    </span>
+                  </Link>
+                </li>
               );
             })}
-          </div>
-        </Surface>
+          </ol>
+        </section>
       )}
 
       {/* Sets grouped by type */}
@@ -240,21 +174,13 @@ export function SetsListClient({
           {TYPE_ORDER.map((type) => {
             const list = grouped.get(type) ?? [];
             if (list.length === 0) return null;
-            const TypeIcon = TYPE_ICON[type];
             return (
-              <section key={type} className="space-y-5">
-                <div className="flex items-center gap-3">
-                  <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
-                    <TypeIcon className="size-4 text-primary" />
-                  </div>
-                  <h2 className="text-h3 tracking-tight">
-                    {TYPE_LABEL[type]}
-                  </h2>
-                  <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold tabular-nums text-muted-foreground">
-                    {list.length}
-                  </span>
+              <section key={type} className="space-y-4">
+                <div className="flex items-baseline gap-3 border-b border-border/40 pb-2">
+                  <h2 className="text-h2">{TYPE_LABEL[type]}</h2>
+                  <span className="text-meta tabular-nums">{list.length}</span>
                 </div>
-                <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 sm:snap-none lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                   {list.map((s) => (
                     <SetCard key={s.id} set={s} />
                   ))}
@@ -268,62 +194,85 @@ export function SetsListClient({
   );
 }
 
-// ─── Compact SetCard ─────────────────────────────────────────────────
+// ─── Ghost filter pill ───────────────────────────────────────────────
+
+function FilterPill({
+  active,
+  onClick,
+  label,
+  count,
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+  count: number;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+        active
+          ? "border-foreground bg-foreground text-background"
+          : "border-border/60 bg-transparent text-foreground hover:bg-muted/40"
+      )}
+    >
+      {label}
+      <span
+        className={cn(
+          "ml-1.5 tabular-nums",
+          active ? "text-background/70" : "text-muted-foreground"
+        )}
+      >
+        {count}
+      </span>
+    </button>
+  );
+}
+
+// ─── Flat SetCard ────────────────────────────────────────────────────
 
 function SetCard({ set }: { set: SetWithCard }) {
+  const lang = useUIStore((s) => s.language);
   const imageUrl = set.boxImageUrl ?? set.topCard?.imageUrl;
 
   return (
     <Link
       href={`/sets/${set.code}`}
-      className="group block w-[56vw] shrink-0 snap-start sm:w-auto sm:shrink"
+      className="group block overflow-hidden rounded-xl border border-border/60 bg-card transition-colors hover:border-border hover:bg-muted/20"
     >
-      <div className="panel flex h-full flex-col overflow-hidden transition-colors hover:bg-muted/20">
-        <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted/20">
-          {imageUrl ? (
-            <Image
-              src={imageUrl}
-              alt={set.nameEn ?? set.name}
-              fill
-              className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 640px) 56vw, (max-width: 1024px) 33vw, 20vw"
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center">
-              <Package className="size-10 text-muted-foreground/15" />
-            </div>
-          )}
-        </div>
+      <div className="overflow-hidden border-b border-border/60 bg-muted/20">
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={set.nameEn ?? set.name}
+            width={500}
+            height={700}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+            className="block h-auto w-full"
+          />
+        ) : (
+          <div className="flex aspect-[4/5] items-center justify-center">
+            <Package className="size-8 text-muted-foreground/20" />
+          </div>
+        )}
+      </div>
 
-        <div className="flex flex-1 flex-col gap-1 border-t border-border/30 p-3">
-          <div className="mb-0.5 flex items-center gap-2">
-            <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-mono text-xs font-bold text-primary">
-              {set.code.toUpperCase()}
+      <div className="space-y-1 p-3">
+        <div className="text-meta font-mono">{set.code.toUpperCase()}</div>
+        <p className="text-sm font-medium leading-snug line-clamp-2 transition-colors group-hover:text-foreground">
+          {set.nameEn ?? set.name}
+        </p>
+        <div className="flex items-center justify-between gap-2 pt-1 text-meta">
+          <span className="tabular-nums">
+            {set.productCardCount} {t(lang, "cardsCount")}
+          </span>
+          {set.totalValue > 0 && (
+            <span className="font-price text-xs font-semibold tabular-nums text-foreground">
+              <Price jpy={set.totalValue} />
             </span>
-          </div>
-          <p className="text-sm font-semibold leading-snug line-clamp-2 transition-colors group-hover:text-primary">
-            {set.nameEn ?? set.name}
-          </p>
-
-          <div className="mt-auto flex items-center justify-between gap-2 pt-1.5">
-            <div className="flex items-center gap-1.5 text-meta">
-              <CardCountLabel count={set.productCardCount} />
-              {set.releaseDate && (
-                <>
-                  <span className="text-border">·</span>
-                  <FormattedDate
-                    date={new Date(set.releaseDate)}
-                    options={{ year: "numeric", month: "short" }}
-                  />
-                </>
-              )}
-            </div>
-            {set.totalValue > 0 && (
-              <span className="shrink-0 font-price text-xs font-semibold text-foreground">
-                <Price jpy={set.totalValue} />
-              </span>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </Link>

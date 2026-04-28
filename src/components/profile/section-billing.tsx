@@ -20,15 +20,10 @@ export function SectionBilling() {
   }, []);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <div>
-        <h2 className="flex items-center gap-2 text-h3">
-          <Receipt className="size-5" />
-          {t(lang, "billingHistory")}
-        </h2>
-        <p className="mt-0.5 text-sm text-muted-foreground">
-          {t(lang, "billingSubtitle")}
-        </p>
+        <h2 className="text-h2">{t(lang, "billingHistory")}</h2>
+        <p className="page-subtitle">{t(lang, "billingSubtitle")}</p>
       </div>
 
       <div className="rounded-xl border border-border/40 bg-card p-5">
@@ -50,16 +45,16 @@ export function SectionBilling() {
             <table className="w-full min-w-[400px] text-sm">
               <thead>
                 <tr className="border-b border-border/20">
-                  <th className="py-2 pr-3 text-left text-xs font-medium text-muted-foreground">
+                  <th className="py-2 pr-3 text-left text-eyebrow">
                     {t(lang, "invoiceDate")}
                   </th>
-                  <th className="px-2 py-2 text-left text-xs font-medium text-muted-foreground">
+                  <th className="px-2 py-2 text-left text-eyebrow">
                     {t(lang, "invoiceAmount")}
                   </th>
-                  <th className="px-2 py-2 text-left text-xs font-medium text-muted-foreground">
+                  <th className="px-2 py-2 text-left text-eyebrow">
                     {t(lang, "invoiceStatus")}
                   </th>
-                  <th className="py-2 pl-2 text-right text-xs font-medium text-muted-foreground" />
+                  <th className="py-2 pl-2 text-right text-eyebrow" />
                 </tr>
               </thead>
               <tbody>

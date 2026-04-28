@@ -9,6 +9,7 @@ import {
   CreditCard,
   Download,
   ExternalLink,
+  Eye,
   MapPin,
   Receipt,
   Shield,
@@ -29,6 +30,7 @@ import { cn } from "@/lib/utils";
 
 export const SETTINGS_SECTIONS = [
   { id: "account", href: "/settings/account", icon: UserCog, labelKey: "profileTabAccount" as const, group: "general" as const },
+  { id: "privacy", href: "/settings/privacy", icon: Eye, labelKey: "privacy" as const, group: "general" as const },
   { id: "subscription", href: "/settings/subscription", icon: CreditCard, labelKey: "subscription" as const, group: "general" as const },
   { id: "billing", href: "/settings/billing", icon: Receipt, labelKey: "billingHistory" as const, group: "general" as const },
   { id: "security", href: "/settings/security", icon: Shield, labelKey: "security" as const, group: "general" as const },
@@ -111,36 +113,38 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      <div className="flex gap-8">
+      <div className="flex gap-10">
         {/* Desktop sidebar */}
         <aside className="hidden w-56 shrink-0 md:block">
-          <div className="panel sticky top-24 space-y-4 p-4">
-            <div className="flex items-center gap-3">
-              <Avatar className={cn("size-10 ring-2 ring-offset-2 ring-offset-background", tierCfg.ring)}>
+          <div>
+            {/* Identity row — single-line, click to public profile */}
+            <Link
+              href={`/profile/${user.id}`}
+              aria-label={t(lang, "viewPublicProfile")}
+              title={t(lang, "viewPublicProfile")}
+              className="group mb-6 flex items-center gap-3 rounded-lg border border-border/50 bg-card/40 px-3 py-2.5 transition-colors hover:border-border hover:bg-foreground/[0.04]"
+            >
+              <Avatar className={cn("size-9 shrink-0 ring-2 ring-offset-2 ring-offset-background", tierCfg.ring)}>
                 {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
                 <AvatarFallback className="text-sm font-bold">
                   {(user.displayName ?? user.email).slice(0, 1).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold">{user.displayName ?? "User"}</p>
-                <Badge className={cn("mt-0.5 text-xs font-semibold", tierCfg.color)}>
-                  {tierCfg.label}
-                </Badge>
+              <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <div className="flex min-w-0 items-center gap-1.5">
+                  <p className="truncate text-sm font-semibold">{user.displayName ?? "User"}</p>
+                  <Badge className={cn("h-4 shrink-0 px-1.5 text-[10px] font-semibold", tierCfg.color)}>
+                    {tierCfg.label}
+                  </Badge>
+                </div>
+                <p className="text-meta inline-flex items-center gap-1 transition-colors group-hover:text-foreground">
+                  {t(lang, "viewPublicProfile")}
+                  <ExternalLink className="size-3" />
+                </p>
               </div>
-            </div>
-
-            <Link
-              href={`/profile/${user.id}`}
-              className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {t(lang, "viewPublicProfile")}
-              <ExternalLink className="size-3" />
             </Link>
 
-            <div className="h-px bg-border/40" />
-
-            <nav className="space-y-0.5">
+            <nav className="space-y-5">
               {(() => {
                 const groups = ["general", "more"] as const;
                 const groupLabels = { general: "settingsGroupGeneral" as const, more: "settingsGroupMore" as const };
@@ -148,9 +152,8 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
                   const items = visibleSections.filter((s) => s.group === group);
                   if (items.length === 0) return null;
                   return (
-                    <div key={group}>
-                      {group !== "general" && <div className="my-2 h-px bg-border/40" />}
-                      <p className="mb-1 px-3 text-eyebrow text-muted-foreground/60">
+                    <div key={group} className="space-y-0.5">
+                      <p className="mb-1.5 px-3 text-eyebrow text-muted-foreground/70">
                         {t(lang, groupLabels[group])}
                       </p>
                       {items.map(({ id, href, icon: Icon, labelKey }) => {
@@ -159,14 +162,20 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
                           <Link
                             key={id}
                             href={href}
+                            aria-current={active ? "page" : undefined}
                             className={cn(
-                              "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all",
+                              "relative flex w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-sm transition-colors",
                               active
-                                ? "bg-primary/10 font-medium text-primary"
-                                : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                                ? "font-medium text-foreground before:absolute before:inset-y-1 before:-left-0.5 before:w-0.5 before:rounded-full before:bg-primary"
+                                : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground",
                             )}
                           >
-                            <Icon className="size-4 shrink-0" />
+                            <Icon
+                              className={cn(
+                                "size-4 shrink-0 transition-colors",
+                                active && "text-primary",
+                              )}
+                            />
                             {t(lang, labelKey)}
                           </Link>
                         );
@@ -201,7 +210,7 @@ function SettingsLoadingSkeleton() {
             <Skeleton className="h-3 w-20" />
           </div>
         </div>
-        {[6, 3].map((count, g) => (
+        {[7, 3].map((count, g) => (
           <div key={g} className="space-y-1.5">
             <Skeleton className="h-3 w-16" />
             <div className="overflow-hidden rounded-xl border border-border/40 bg-card">
@@ -223,19 +232,20 @@ function SettingsLoadingSkeleton() {
       </div>
 
       {/* Desktop skeleton */}
-      <div className="hidden gap-8 md:flex">
+      <div className="hidden gap-10 md:flex">
         <div className="w-56 shrink-0">
-          <div className="panel space-y-4 p-4">
-            <div className="flex items-center gap-3">
-              <Skeleton className="size-10 rounded-full" />
-              <div className="flex-1 space-y-1.5">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-3 w-16" />
-              </div>
+          <div className="space-y-5">
+            <div className="flex items-center gap-3 px-2 py-2">
+              <Skeleton className="size-9 rounded-full" />
+              <Skeleton className="h-4 flex-1" />
             </div>
-            <div className="h-px bg-border/40" />
-            {Array.from({ length: 10 }).map((_, i) => (
-              <Skeleton key={i} className="h-9 rounded-lg" />
+            {[7, 3].map((count, g) => (
+              <div key={g} className="space-y-1.5">
+                <Skeleton className="ml-3 h-3 w-12" />
+                {Array.from({ length: count }).map((_, i) => (
+                  <Skeleton key={i} className="h-8 rounded-md" />
+                ))}
+              </div>
             ))}
           </div>
         </div>

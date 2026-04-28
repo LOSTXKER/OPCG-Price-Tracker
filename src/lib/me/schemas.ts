@@ -20,6 +20,7 @@ export const UpdateProfileSchema = z
     socialIg: optionalNullableString,
     socialTwitter: optionalNullableString,
     socialFacebook: optionalNullableString,
+    coverImageUrl: optionalNullableString,
   })
   .partial();
 

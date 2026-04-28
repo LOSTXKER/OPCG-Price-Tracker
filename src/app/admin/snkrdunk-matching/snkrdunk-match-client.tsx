@@ -1,13 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowDown,
   ArrowUp,
   ArrowUpDown,
   Check,
-  ChevronLeft,
-  ChevronRight,
   ExternalLink,
   Globe,
   Keyboard,
@@ -22,14 +20,45 @@ import {
 import { cn } from "@/lib/utils";
 import {
   relativeTime,
-  StatusBadge,
   CardThumb,
   CandidatePicker,
   type MatchingCard,
 } from "@/components/admin/matching-ui";
+import {
+  AdminBulkBar,
+  AdminBulkAction,
+} from "@/components/admin/admin-bulk-bar";
+import { AdminPage } from "@/components/admin/admin-page";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { AdminPagination } from "@/components/admin/admin-pagination";
+import {
+  AdminStatusBadge,
+  type AdminStatusTone,
+} from "@/components/admin/admin-status-badge";
+import { AdminDialog } from "@/components/admin/admin-dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { adminJsonFetch } from "@/lib/api/admin-client";
+import { buildAdminQuery } from "@/lib/admin/admin-fetch";
+import { useAdminList } from "@/lib/admin/use-admin-list";
+import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
 import type { PaginatedApiResponse } from "@/app/admin/admin-types";
 import { toast } from "sonner";
+
+const STATUS_TONE: Record<string, AdminStatusTone> = {
+  matched: "success",
+  suggested: "info",
+  pending: "warning",
+  rejected: "danger",
+};
+
+function StatusBadge({ status }: { status: string }) {
+  return (
+    <AdminStatusBadge tone={STATUS_TONE[status] ?? "neutral"}>
+      {status}
+    </AdminStatusBadge>
+  );
+}
 
 /* ── Types ── */
 
@@ -79,7 +108,7 @@ function PriceTag({
         <span
           className={cn(
             "font-price text-xs font-semibold tabular-nums",
-            highlight && "text-green-600"
+            highlight && "text-success"
           )}
         >
           ${value}
@@ -98,8 +127,8 @@ function CompactPrices({ m }: { m: Mapping }) {
   }
   return (
     <div className="flex flex-col gap-0.5">
-      <PriceTag label="Min" value={m.minPriceUsd} />
-      <PriceTag label="Used" value={m.usedMinPriceUsd} />
+      <PriceTag label="ต่ำสุด" value={m.minPriceUsd} />
+      <PriceTag label="มือสอง" value={m.usedMinPriceUsd} />
       <PriceTag label="PSA10" value={m.lastSoldPsa10Usd} highlight />
     </div>
   );
@@ -107,7 +136,6 @@ function CompactPrices({ m }: { m: Mapping }) {
 
 function SortableHeader({
   label,
-  sortKey,
   ascKey,
   descKey,
   currentSort,
@@ -115,7 +143,7 @@ function SortableHeader({
   className,
 }: {
   label: string;
-  sortKey: string;
+  sortKey?: string;
   ascKey: SortKey;
   descKey: SortKey;
   currentSort: SortKey;
@@ -148,9 +176,9 @@ function SortableHeader({
 /* ── Stats chip ── */
 
 const STATUS_META: { key: string; label: string; color: string }[] = [
-  { key: "pending", label: "Pending", color: "bg-warning-soft text-warning hover:bg-warning/20" },
-  { key: "matched", label: "Matched", color: "bg-success-soft text-success hover:bg-success/20" },
-  { key: "rejected", label: "Rejected", color: "bg-danger-soft text-danger hover:bg-danger/20" },
+  { key: "pending", label: "รอดำเนินการ", color: "bg-warning-soft text-warning hover:bg-warning/20" },
+  { key: "matched", label: "จับคู่แล้ว", color: "bg-success-soft text-success hover:bg-success/20" },
+  { key: "rejected", label: "ปฏิเสธแล้ว", color: "bg-danger-soft text-danger hover:bg-danger/20" },
 ];
 
 function StatsBar({
@@ -203,7 +231,7 @@ function ShortcutLegend({ visible }: { visible: boolean }) {
     { key: "j / k", desc: "เลื่อนแถว" },
     { key: "x", desc: "ปฏิเสธ" },
     { key: "a", desc: "อนุมัติ" },
-    { key: "Esc", desc: "ยกเลิกเลือก" },
+    { key: "Esc", desc: "ล้างที่เลือก" },
   ];
   return (
     <div className="flex items-center gap-4 rounded-lg border border-border bg-muted/40 px-3 py-1.5">
@@ -254,7 +282,7 @@ function AddCardDialog({
       );
       const json = await res.json();
       if (!res.ok) {
-        setError(json.error || "Failed");
+        setError(json.error || "ไม่สำเร็จ");
       } else {
         setPreview({
           name: json.data.summary.name,
@@ -266,7 +294,7 @@ function AddCardDialog({
         });
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Unknown error");
+      setError(e instanceof Error ? e.message : "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ");
     }
     setBusy(false);
   };
@@ -284,7 +312,7 @@ function AddCardDialog({
       });
       const json = await res.json();
       if (!res.ok && res.status !== 409) {
-        setError(json.error || "Failed");
+        setError(json.error || "ไม่สำเร็จ");
       } else {
         onAdded();
         onClose();
@@ -292,68 +320,58 @@ function AddCardDialog({
         setPreview(null);
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Unknown error");
+      setError(e instanceof Error ? e.message : "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ");
     }
     setBusy(false);
   };
 
-  if (!open) return null;
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="w-full max-w-md rounded-2xl border border-border bg-background p-6 shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-h3">
-            เพิ่มการ์ดจาก SNKRDUNK
-          </h3>
-          <button onClick={onClose} className="rounded-full p-1 hover:bg-muted">
-            <X className="size-5" />
-          </button>
-        </div>
-
-        <p className="mb-3 text-meta">
+    <AdminDialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) onClose();
+      }}
+      size="md"
+      title="เพิ่มการ์ดจาก SNKRDUNK"
+      description={
+        <>
           ใส่ SNKRDUNK ID (เลขตอนท้าย URL เช่น{" "}
           <code className="rounded bg-muted px-1">94915</code> จาก{" "}
           <code className="rounded bg-muted px-1">
             snkrdunk.com/en/trading-cards/94915
           </code>
           )
-        </p>
-
+        </>
+      }
+    >
+      <div className="space-y-4">
         <div className="flex gap-2">
-          <input
+          <Input
             type="text"
             value={idInput}
             onChange={(e) => setIdInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleLookup()}
             placeholder="SNKRDUNK ID เช่น 94915"
-            className="flex-1 rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/30"
+            className="flex-1"
           />
-          <button
+          <Button
+            type="button"
             onClick={handleLookup}
             disabled={busy || !idInput.trim()}
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
           >
             {busy ? (
               <Loader2 className="size-4 animate-spin" />
             ) : (
               <Search className="size-4" />
             )}
-          </button>
+            ค้นหา
+          </Button>
         </div>
 
-        {error && (
-          <p className="mt-2 text-xs text-red-500">{error}</p>
-        )}
+        {error && <p className="text-xs text-danger">{error}</p>}
 
         {preview && (
-          <div className="mt-4 rounded-xl border border-border/50 bg-muted/20 p-4">
+          <div className="rounded-xl border border-border/50 bg-muted/20 p-4">
             <div className="flex gap-3">
               <CardThumb src={preview.thumbnailUrl} size="md" />
               <div className="min-w-0 flex-1">
@@ -365,37 +383,39 @@ function AddCardDialog({
                 </p>
                 <div className="mt-2 flex flex-wrap gap-3">
                   <PriceTag
-                    label="PSA10 ask"
+                    label="PSA10 ราคาขาย"
                     value={preview.psa10MinPriceUsd}
                     highlight
                   />
                   <PriceTag
-                    label="PSA10 sold"
+                    label="PSA10 ขายแล้ว"
                     value={preview.psa10LastSoldUsd}
                   />
                   <PriceTag
-                    label="Last sold"
+                    label="ขายล่าสุด"
                     value={preview.lastSoldUsd}
                   />
                 </div>
               </div>
             </div>
 
-            <button
+            <Button
+              type="button"
               onClick={handleAdd}
               disabled={busy}
-              className="mt-4 w-full rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+              className="mt-4 w-full"
             >
               {busy ? (
-                <Loader2 className="mx-auto size-4 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
               ) : (
-                "เพิ่มเข้า Mapping"
+                <Plus className="size-4" />
               )}
-            </button>
+              เพิ่มเข้ารายการจับคู่
+            </Button>
           </div>
         )}
       </div>
-    </div>
+    </AdminDialog>
   );
 }
 
@@ -404,52 +424,49 @@ function AddCardDialog({
 const API = "/api/admin/snkrdunk-matching";
 
 export function SnkrdunkMatchClient() {
-  const [data, setData] = useState<ApiResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState("pending");
-  const [searchInput, setSearchInput] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [page, setPage] = useState(1);
+  const { state, patch } = useAdminUrlState({
+    defaults: {
+      status: "pending",
+      q: "",
+      sort: "" as SortKey,
+      page: 1,
+    },
+  });
+  const { status: statusFilter, q: searchQuery, sort, page } = state;
+
+  const [searchInput, setSearchInput] = useState(searchQuery);
   const [saving, setSaving] = useState<Set<number>>(new Set());
   const [pickedCandidate, setPickedCandidate] = useState<
     Record<number, number>
   >({});
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [autoMatchBusy, setAutoMatchBusy] = useState(false);
-  const [sort, setSort] = useState<SortKey>("");
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [focusedIdx, setFocusedIdx] = useState<number>(-1);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (searchInput === searchQuery) return;
     const t = setTimeout(() => {
-      setSearchQuery(searchInput);
-      setPage(1);
+      patch({ q: searchInput, page: 1 });
     }, 400);
     return () => clearTimeout(t);
-  }, [searchInput]);
+  }, [searchInput, searchQuery, patch]);
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    const params = new URLSearchParams();
-    if (statusFilter) params.set("status", statusFilter);
-    if (searchQuery) params.set("q", searchQuery);
-    if (sort) params.set("sort", sort);
-    params.set("page", String(page));
-    params.set("limit", "20");
-    const res = await fetch(
-      `/api/admin/snkrdunk-matching?${params}`
-    );
-    if (res.ok) setData(await res.json());
-    setLoading(false);
-  }, [statusFilter, searchQuery, page, sort]);
+  const { data, loading, refetch } = useAdminList<ApiResponse, typeof state>({
+    url: (p) =>
+      `/api/admin/snkrdunk-matching?${buildAdminQuery({
+        status: p.status || undefined,
+        q: p.q || undefined,
+        sort: p.sort || undefined,
+        page: p.page,
+        limit: 20,
+      })}`,
+    params: state,
+  });
+  const fetchData = refetch;
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  // Clear selection on filter/page change
   useEffect(() => {
     setSelected(new Set());
     setFocusedIdx(-1);
@@ -497,7 +514,7 @@ export function SnkrdunkMatchClient() {
   const handleAutoMatch = async () => {
     setAutoMatchBusy(true);
     const json = await adminJsonFetch<{ autoMatched: number }>(API, { method: "PATCH", body: { action: "auto-match" } });
-    toast.success(`Auto-matched ${json.autoMatched} การ์ด`);
+    toast.success(`จับคู่อัตโนมัติแล้ว ${json.autoMatched} การ์ด`);
     setAutoMatchBusy(false);
     await fetchData();
   };
@@ -507,7 +524,7 @@ export function SnkrdunkMatchClient() {
     if (ids.length === 0) return;
     setSaving(new Set(ids));
     await adminJsonFetch(API, { method: "DELETE", body: { ids } });
-    toast.success(`ปฏิเสธ ${ids.length} รายการ`);
+    toast.success(`ปฏิเสธแล้ว ${ids.length} รายการ`);
     setSelected(new Set());
     setSaving(new Set());
     await fetchData();
@@ -543,7 +560,6 @@ export function SnkrdunkMatchClient() {
   const counts = data?.counts ?? {};
 
   const allOnPageSelected = mappings.length > 0 && mappings.every((m) => selected.has(m.id));
-  const someSelected = selected.size > 0;
 
   /* ── Keyboard shortcuts ── */
 
@@ -594,56 +610,64 @@ export function SnkrdunkMatchClient() {
   }, [focusedIdx]);
 
   const handleStatusFilter = (s: string) => {
-    setStatusFilter(s);
-    setPage(1);
+    patch({ status: s, page: 1 });
+  };
+
+  const setSort = (s: SortKey) => patch({ sort: s, page: 1 });
+  const setPage = (next: number | ((prev: number) => number)) => {
+    const value = typeof next === "function" ? next(page) : next;
+    patch({ page: value });
   };
 
   return (
-    <div className="space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Globe className="size-6 text-primary" />
-          <div>
-            <h1 className="text-h1">SNKRDUNK Matching</h1>
-            <p className="text-meta">
-              จับคู่การ์ดจาก SNKRDUNK เพื่อดึงราคา PSA10 / Last Sold
-            </p>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setShowShortcuts((v) => !v)}
-            className={cn(
-              "inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-muted",
-              showShortcuts && "bg-muted"
-            )}
-            title="Keyboard shortcuts"
-          >
-            <Keyboard className="size-3.5" />
-          </button>
-          <button
-            onClick={handleAutoMatch}
-            disabled={autoMatchBusy}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-muted disabled:opacity-50"
-          >
-            {autoMatchBusy ? (
-              <Loader2 className="size-3.5 animate-spin" />
-            ) : (
-              <Sparkles className="size-3.5" />
-            )}
-            Auto-match
-          </button>
-          <button
-            onClick={() => setAddDialogOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            <Plus className="size-3.5" />
-            เพิ่มการ์ด
-          </button>
-        </div>
-      </div>
-
+    <AdminPage
+      header={
+        <AdminPageHeader
+          title="จับคู่ SNKRDUNK"
+          description="จับคู่การ์ดจาก SNKRDUNK เพื่อดึงราคา PSA10 / ขายล่าสุด"
+          icon={Globe}
+          meta={<span className="text-meta">{total.toLocaleString()} รายการ</span>}
+          actions={
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setShowShortcuts((v) => !v)}
+                className={cn(showShortcuts && "bg-muted")}
+                title="ปุ่มลัดคีย์บอร์ด"
+                aria-label="ปุ่มลัดคีย์บอร์ด"
+              >
+                <Keyboard className="size-3.5" />
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleAutoMatch}
+                disabled={autoMatchBusy}
+              >
+                {autoMatchBusy ? (
+                  <Loader2 className="size-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="size-3.5" />
+                )}
+                จับคู่อัตโนมัติ
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => setAddDialogOpen(true)}
+              >
+                <Plus className="size-3.5" />
+                เพิ่มการ์ด
+              </Button>
+            </>
+          }
+        />
+      }
+      bodyClassName="space-y-4"
+    >
       {/* Stats bar */}
       <StatsBar counts={counts} activeFilter={statusFilter} onFilter={handleStatusFilter} />
 
@@ -651,56 +675,46 @@ export function SnkrdunkMatchClient() {
       <ShortcutLegend visible={showShortcuts} />
 
       {/* Filters */}
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="relative">
+      <div className="sticky top-0 z-20 -mx-1 flex flex-wrap items-center gap-2 bg-background/85 px-1 py-2 backdrop-blur supports-backdrop-filter:bg-background/70">
+        <div className="relative w-full sm:w-56">
           <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-          <input
+          <Input
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="ค้นหา card code หรือชื่อ…"
-            className="h-8 w-56 rounded-lg border border-border bg-muted/30 pl-8 pr-3 text-xs outline-none focus:ring-2 focus:ring-primary/30"
+            placeholder="ค้นหารหัสการ์ดหรือชื่อ…"
+            className="h-9 pl-8"
           />
         </div>
 
-        <button
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
           onClick={() => fetchData()}
-          aria-label="Refresh"
-          className="inline-flex items-center gap-1 rounded-lg border border-border bg-background p-1.5 text-xs hover:bg-muted"
+          aria-label="รีเฟรช"
         >
           <RefreshCw className={cn("size-3.5", loading && "animate-spin")} />
-        </button>
-
-        <span className="ml-auto text-meta">
-          {total} รายการ
-        </span>
+        </Button>
       </div>
 
       {/* Bulk action bar */}
-      {someSelected && (
-        <div className="sticky top-0 z-20 flex items-center gap-3 rounded-xl border border-border bg-background/95 px-4 py-2.5 shadow-lg backdrop-blur">
-          <span className="text-sm font-medium">
-            เลือก {selected.size} รายการ
-          </span>
-          <div className="flex-1" />
-          <button
-            onClick={handleBulkReject}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-red-500/10 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-500/20"
-          >
-            <X className="size-3.5" />
-            ปฏิเสธ {selected.size} รายการ
-          </button>
-          <button
-            onClick={() => {
-              setSelected(new Set());
-              setFocusedIdx(-1);
-            }}
-            className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted"
-          >
-            <X className="size-3.5" />
-          </button>
-        </div>
-      )}
+      <AdminBulkBar
+        selectedCount={selected.size}
+        onClear={() => {
+          setSelected(new Set());
+          setFocusedIdx(-1);
+        }}
+        label={(n) => `เลือก ${n} รายการ`}
+      >
+        <AdminBulkAction
+          variant="danger"
+          onClick={handleBulkReject}
+          icon={<X className="size-3.5" />}
+        >
+          ปฏิเสธ {selected.size} รายการ
+        </AdminBulkAction>
+      </AdminBulkBar>
 
       {/* Table */}
       <div ref={tableRef} className="overflow-hidden rounded-xl border border-border">
@@ -713,7 +727,7 @@ export function SnkrdunkMatchClient() {
                   checked={allOnPageSelected}
                   onChange={toggleSelectAll}
                   className="accent-primary"
-                  aria-label="Select all"
+                  aria-label="เลือกทั้งหมด"
                 />
               </th>
               <th className="py-2.5 pl-1 pr-2 text-left">
@@ -737,11 +751,11 @@ export function SnkrdunkMatchClient() {
                 />
               </th>
               <th className="px-2 py-2.5 text-left font-medium">
-                Match
+                จับคู่
               </th>
               <th className="px-2 py-2.5 text-center">
                 <SortableHeader
-                  label="Status"
+                  label="สถานะ"
                   sortKey="date"
                   ascKey="date-desc"
                   descKey="date-asc"
@@ -751,7 +765,7 @@ export function SnkrdunkMatchClient() {
                 />
               </th>
               <th className="px-2 py-2.5 pr-4 text-right font-medium">
-                Actions
+                การจัดการ
               </th>
             </tr>
           </thead>
@@ -819,7 +833,7 @@ export function SnkrdunkMatchClient() {
                             href={`https://snkrdunk.com/en/trading-cards/${m.snkrdunkId}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-1 inline-flex items-center gap-1 text-xs text-blue-500 hover:underline"
+                            className="mt-1 inline-flex items-center gap-1 text-xs text-info hover:underline"
                           >
                             <ExternalLink className="size-2.5" />
                             {m.snkrdunkId}
@@ -847,14 +861,14 @@ export function SnkrdunkMatchClient() {
                             </p>
                             {m.matchMethod && (
                               <span className="text-meta text-muted-foreground/60">
-                                via {m.matchMethod}
+                                ผ่าน {m.matchMethod}
                               </span>
                             )}
                           </div>
                         </div>
                       ) : m.candidates.length === 0 ? (
                         <span className="inline-flex items-center rounded-md bg-muted/50 px-2 py-0.5 text-meta">
-                          ไม่พบ candidate
+                          ไม่พบการ์ดที่ตรงกัน
                         </span>
                       ) : (
                         <CandidatePicker
@@ -886,7 +900,7 @@ export function SnkrdunkMatchClient() {
                             <button
                               onClick={() => handleRefresh(m.id)}
                               disabled={isSaving}
-                              className="rounded-lg p-1.5 text-blue-500 hover:bg-blue-500/10"
+                              className="rounded-lg p-1.5 text-info hover:bg-info-soft"
                               title="รีเฟรชราคา"
                             >
                               <RefreshCw className="size-3.5" />
@@ -894,7 +908,7 @@ export function SnkrdunkMatchClient() {
                             <button
                               onClick={() => handleUnmatch(m.id)}
                               disabled={isSaving}
-                              className="rounded-lg p-1.5 text-amber-500 hover:bg-amber-500/10"
+                              className="rounded-lg p-1.5 text-warning hover:bg-warning-soft"
                               title="ยกเลิกจับคู่"
                             >
                               <Undo2 className="size-3.5" />
@@ -908,7 +922,7 @@ export function SnkrdunkMatchClient() {
                                   handleApprove(m.id, candidateId)
                                 }
                                 disabled={isSaving}
-                                className="rounded-lg p-1.5 text-green-500 hover:bg-green-500/10"
+                                className="rounded-lg p-1.5 text-success hover:bg-success-soft"
                                 title="อนุมัติ"
                               >
                                 <Check className="size-3.5" />
@@ -917,7 +931,7 @@ export function SnkrdunkMatchClient() {
                             <button
                               onClick={() => handleReject(m.id)}
                               disabled={isSaving}
-                              className="rounded-lg p-1.5 text-red-500 hover:bg-red-500/10"
+                              className="rounded-lg p-1.5 text-danger hover:bg-danger-soft"
                               title="ปฏิเสธ"
                             >
                               <X className="size-3.5" />
@@ -935,29 +949,13 @@ export function SnkrdunkMatchClient() {
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2">
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page <= 1}
-            className="rounded-lg border border-border p-1.5 text-xs disabled:opacity-30"
-          >
-            <ChevronLeft className="size-4" />
-          </button>
-          <span className="text-meta">
-            {page} / {totalPages}
-          </span>
-          <button
-            onClick={() =>
-              setPage((p) => Math.min(totalPages, p + 1))
-            }
-            disabled={page >= totalPages}
-            className="rounded-lg border border-border p-1.5 text-xs disabled:opacity-30"
-          >
-            <ChevronRight className="size-4" />
-          </button>
-        </div>
-      )}
+      <AdminPagination
+        page={page}
+        totalPages={totalPages}
+        total={total}
+        perPage={20}
+        onPageChange={(p) => setPage(p)}
+      />
 
       {/* Add dialog */}
       <AddCardDialog
@@ -965,6 +963,6 @@ export function SnkrdunkMatchClient() {
         onClose={() => setAddDialogOpen(false)}
         onAdded={fetchData}
       />
-    </div>
+    </AdminPage>
   );
 }

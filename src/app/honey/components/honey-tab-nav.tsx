@@ -79,36 +79,41 @@ function DesktopSidebarNav({
       role="tablist"
       aria-orientation="vertical"
       aria-label={t(lang, "honeyPageTitle")}
-      className="hidden lg:sticky lg:top-20 lg:block lg:h-fit lg:space-y-5"
+      className="hidden lg:block lg:h-fit"
     >
-      {GROUPS.map((group) => (
-        <div key={group.id} className="space-y-1">
-          <p className="px-2 text-eyebrow">{t(lang, group.labelKey)}</p>
-          <div className="space-y-0.5">
-            {group.items.map((item) => {
-              const Icon = item.icon;
-              const active = tab === item.key;
-              return (
-                <button
-                  key={item.key}
-                  role="tab"
-                  aria-selected={active}
-                  aria-controls={`honey-tabpanel-${item.key}`}
-                  id={`honey-tab-${item.key}`}
-                  onClick={() => onTabChange(item.key)}
-                  className={cn(
-                    "flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-sm font-medium transition-colors",
-                    active
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
-                  )}
-                >
-                  <Icon className={cn("size-4 shrink-0", active && "text-primary")} />
-                  <span className="min-w-0 flex-1 truncate">{t(lang, item.labelKey)}</span>
-                </button>
-              );
-            })}
-          </div>
+      {GROUPS.map((group, gi) => (
+        <div
+          key={group.id}
+          role="group"
+          aria-label={t(lang, group.labelKey)}
+          className={cn(
+            "space-y-0.5 py-2",
+            gi > 0 && "border-t border-border/40",
+          )}
+        >
+          {group.items.map((item) => {
+            const Icon = item.icon;
+            const active = tab === item.key;
+            return (
+              <button
+                key={item.key}
+                role="tab"
+                aria-selected={active}
+                aria-controls={`honey-tabpanel-${item.key}`}
+                id={`honey-tab-${item.key}`}
+                onClick={() => onTabChange(item.key)}
+                className={cn(
+                  "flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-sm font-medium transition-colors",
+                  active
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                )}
+              >
+                <Icon className={cn("size-4 shrink-0", active && "text-primary")} />
+                <span className="min-w-0 flex-1 truncate">{t(lang, item.labelKey)}</span>
+              </button>
+            );
+          })}
         </div>
       ))}
     </nav>
@@ -144,7 +149,7 @@ function MobileTabBar({
             onClick={() => onTabChange(item.key)}
             title={t(lang, item.labelKey)}
             className={cn(
-              "flex shrink-0 items-center gap-2 rounded-md px-3.5 py-2.5 text-xs font-medium transition-all sm:px-4",
+              "flex shrink-0 items-center gap-2 rounded-md px-4 py-3 text-xs font-medium transition-all",
               active
                 ? "bg-background text-foreground shadow-sm"
                 : "text-muted-foreground hover:bg-background/50 hover:text-foreground",

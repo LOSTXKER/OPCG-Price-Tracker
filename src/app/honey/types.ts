@@ -164,6 +164,9 @@ export type ShopItem = {
   type: string;
   isActive: boolean;
   stock: number | null;
+  // Item illustration. Stored under `HoneyShopItem.value.imageUrl` server-side
+  // and surfaced on the shop card; falls back to a category icon when null.
+  value?: { imageUrl?: string | null } & Record<string, unknown> | null;
   // Honey rebalance v2
   requiredLevel?: number;
   originalCost?: number | null;
@@ -291,6 +294,7 @@ export type AchievementItem = {
   nameTh: string | null;
   description: string | null;
   honeyReward: number;
+  badgeImageUrl: string | null;
   earned: boolean;
   earnedAt: string | null;
   progress: number;

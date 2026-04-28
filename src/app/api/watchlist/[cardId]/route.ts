@@ -6,23 +6,6 @@ import { prisma } from "@/lib/db";
 import { UpdateWatchlistSchema } from "@/lib/watchlist/schemas";
 import { NextRequest, NextResponse } from "next/server";
 
-const NOTE_MAX = 280;
-
-function sanitizeNote(value: string | null | undefined): string | null | undefined {
-  if (value === undefined) return undefined;
-  if (value === null) return null;
-  const trimmed = value.trim();
-  if (trimmed.length === 0) return null;
-  return trimmed.slice(0, NOTE_MAX);
-}
-
-function sanitizeTargetPrice(value: number | null | undefined): number | null | undefined {
-  if (value === undefined) return undefined;
-  if (value === null) return null;
-  if (!Number.isFinite(value) || value <= 0) return null;
-  return Math.round(value);
-}
-
 export const PATCH = apiHandler(
   async (request: NextRequest, ctx: { params: Promise<{ cardId: string }> }) => {
     const auth = await requireAuthUser();
@@ -44,17 +27,7 @@ export const PATCH = apiHandler(
       return NextResponse.json({ error: "Watchlist item not found" }, { status: 404 });
     }
 
-    const data: {
-      note?: string | null;
-      targetPriceJpy?: number | null;
-      pinnedAt?: Date | null;
-    } = {};
-
-    const note = sanitizeNote(parsed.body.note);
-    if (note !== undefined) data.note = note;
-
-    const targetPriceJpy = sanitizeTargetPrice(parsed.body.targetPriceJpy);
-    if (targetPriceJpy !== undefined) data.targetPriceJpy = targetPriceJpy;
+    const data: { pinnedAt?: Date | null } = {};
 
     const pinnedAtRaw = parsed.body.pinnedAt;
     if (pinnedAtRaw !== undefined) {

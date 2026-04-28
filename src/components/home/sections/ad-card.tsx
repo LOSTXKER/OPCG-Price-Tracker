@@ -12,16 +12,17 @@ export function HomeAdCard() {
   return (
     <Link
       href="/pricing"
-      className="group relative overflow-hidden rounded-xl border border-border/40 transition-colors hover:border-border"
+      className="group relative block aspect-[5/2] overflow-hidden rounded-lg"
     >
       <Image
         src="/ad-banner.png"
         alt="Advertisement"
         fill
         sizes="(min-width: 1024px) 25vw, 50vw"
-        className="object-cover"
+        className="object-cover saturate-[0.85] transition-[filter] duration-200 group-hover:saturate-100"
       />
-      <span className="absolute right-1.5 top-1.5 z-10 rounded bg-black/50 px-1.5 py-0.5 text-xs font-medium text-white/70">
+      <div aria-hidden className="absolute inset-0 bg-black/30" />
+      <span className="absolute bottom-1.5 right-2 z-10 text-eyebrow text-white/70">
         {t(lang, "adLabel")}
       </span>
     </Link>

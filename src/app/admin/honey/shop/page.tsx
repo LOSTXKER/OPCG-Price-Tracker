@@ -10,6 +10,9 @@ export default async function AdminHoneyShopPage() {
 
   const serialized = items.map((item) => ({
     ...item,
+    value: (item.value && typeof item.value === "object" && !Array.isArray(item.value)
+      ? (item.value as Record<string, unknown>)
+      : null),
     createdAt: item.createdAt.toISOString(),
   }));
 

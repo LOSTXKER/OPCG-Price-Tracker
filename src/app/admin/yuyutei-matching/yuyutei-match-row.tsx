@@ -106,7 +106,7 @@ export function YuyuteiMatchRow({
                 );
             }}
             className="cursor-zoom-in hover:opacity-80 transition-opacity"
-            title="คลิกเพื่อขยายรูป"
+            title="คลิกเพื่อขยายรูปภาพ"
           >
             <CardThumb src={yuyuHd(m.scrapedImage)} size="md" />
           </div>
@@ -149,7 +149,7 @@ export function YuyuteiMatchRow({
                 if (e.key === "Enter") onLightbox(m, m.matchedCard!);
               }}
               className="cursor-zoom-in hover:opacity-80 ring-2 ring-green-500/50 rounded transition-opacity"
-              title="คลิกเพื่อขยายรูป"
+              title="คลิกเพื่อขยายรูปภาพ"
             >
               <CardThumb src={m.matchedCard!.imageUrl} size="md" />
             </div>
@@ -249,7 +249,7 @@ export function YuyuteiMatchRow({
               className="flex items-center gap-1 rounded-lg border border-amber-500/30 px-2 py-1 text-xs text-amber-600 hover:bg-amber-500/10 transition-colors"
               title="ยกเลิกการจับคู่"
             >
-              <Undo2 className="size-3" /> Unmatch
+              <Undo2 className="size-3" /> ยกเลิกจับคู่
             </button>
           ) : (
             <>
@@ -271,14 +271,14 @@ export function YuyuteiMatchRow({
                 className="flex items-center gap-1 rounded-lg bg-green-600 px-2 py-1 text-xs font-semibold text-white hover:bg-green-700 disabled:opacity-30 transition-colors"
                 title="อนุมัติการจับคู่"
               >
-                <Check className="size-3" /> Approve
+                <Check className="size-3" /> อนุมัติ
               </button>
               <button
                 onClick={() => onReject(m.id)}
                 className="flex items-center gap-1 rounded-lg border border-red-500/30 px-2 py-1 text-xs text-red-500 hover:bg-red-500/10 transition-colors"
                 title="ปฏิเสธ"
               >
-                <X className="size-3" /> Reject
+                <X className="size-3" /> ปฏิเสธ
               </button>
             </>
           )}

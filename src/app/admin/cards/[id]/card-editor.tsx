@@ -5,18 +5,19 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowLeft,
-  Save,
-  Loader2,
-  Check,
   ImageIcon,
   History,
-  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatJpy } from "@/lib/utils/currency";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AdminPage } from "@/components/admin/admin-page";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { AdminPanel } from "@/components/admin/admin-panel";
+import { AdminSaveBar } from "@/components/admin/admin-save-bar";
+import { AdminFormField } from "@/components/admin/admin-form-field";
+import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
 import { cn } from "@/lib/utils";
 
 interface Price {
@@ -82,8 +83,8 @@ const STATS_FIELDS: {
   type?: string;
   official?: boolean;
 }[] = [
-  { key: "cost", label: "Cost", type: "number", official: true },
-  { key: "power", label: "Power", type: "number", official: true },
+  { key: "cost", label: "ค่าใช้จ่าย", type: "number", official: true },
+  { key: "power", label: "พลัง", type: "number", official: true },
   { key: "counter", label: "Counter", type: "number", official: true },
   { key: "life", label: "Life", type: "number", official: true },
   { key: "attribute", label: "Attribute", official: true },
@@ -187,47 +188,41 @@ export function CardEditor({ card }: { card: CardData }) {
   const currentImage = (form.imageUrl as string) || card.imageUrl;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          render={<Link href="/admin/cards" />}
-        >
-          <ArrowLeft className="size-5" />
-        </Button>
-        <div className="flex-1">
-          <h1 className="min-w-0 break-words text-h1">
-            {card.baseCode}
-            {card.isParallel && (
-              <span className="ml-2 text-sm text-orange-500">Parallel</span>
-            )}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {card.set.code.toUpperCase()} &middot; {card.cardCode}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          {hasChanges && (
-            <span className="flex items-center gap-1 text-xs text-amber-500">
-              <AlertCircle className="size-3" />
-              มีการเปลี่ยนแปลง
+    <AdminPage
+      header={
+        <AdminPageHeader
+          title={
+            <span className="flex items-center gap-2">
+              {card.baseCode}
+              {card.isParallel && (
+                <AdminStatusBadge tone="warning">พาราเลล</AdminStatusBadge>
+              )}
+              {saved && !hasChanges && (
+                <AdminStatusBadge tone="success">บันทึกแล้ว</AdminStatusBadge>
+              )}
             </span>
-          )}
-          <Button onClick={handleSave} disabled={saving}>
-            {saving ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : saved ? (
-              <Check className="size-4" />
-            ) : (
-              <Save className="size-4" />
-            )}
-            {saved ? "บันทึกแล้ว" : "บันทึก"}
-          </Button>
-        </div>
-      </div>
-
+          }
+          description={`${card.set.code.toUpperCase()} · ${card.cardCode}`}
+          actions={
+            <Button
+              variant="ghost"
+              size="sm"
+              render={<Link href="/admin/cards" />}
+            >
+              <ArrowLeft className="size-4" />
+              กลับ
+            </Button>
+          }
+        />
+      }
+      footer={
+        <AdminSaveBar
+          dirty={hasChanges}
+          saving={saving}
+          onSave={() => void handleSave()}
+        />
+      }
+    >
       <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
         {/* Image Preview */}
         <div className="space-y-4">
@@ -250,7 +245,7 @@ export function CardEditor({ card }: { card: CardData }) {
 
           {card.isParallel && card.candidates.length > 0 && (
             <div>
-              <h3 className="mb-2 text-sm font-semibold">รูป Parallel</h3>
+              <h3 className="mb-2 text-sm font-semibold">รูปพาราเลล</h3>
               <div className="grid grid-cols-4 gap-1">
                 {card.candidates.map((c) => (
                   <button
@@ -283,7 +278,7 @@ export function CardEditor({ card }: { card: CardData }) {
 
           <div className="space-y-1 text-meta">
             <p>Yuyutei ID: {card.yuyuteiId || "—"}</p>
-            <p>Parallel Index: {card.parallelIndex ?? "—"}</p>
+            <p>ลำดับพาราเลล: {card.parallelIndex ?? "—"}</p>
             <p>
               ราคา:{" "}
               {card.latestPriceJpy != null
@@ -295,115 +290,88 @@ export function CardEditor({ card }: { card: CardData }) {
 
         {/* Form Fields */}
         <div className="space-y-6">
-          {/* Identity */}
-          <Card>
-            <CardHeader className="border-b">
-              <CardTitle className="text-base">ข้อมูลการ์ด</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {IDENTITY_FIELDS.map((f) => (
-                  <FieldInput
-                    key={f.key}
-                    field={f}
-                    value={form[f.key]}
-                    onChange={handleChange}
+          <AdminPanel title="ข้อมูลการ์ด">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {IDENTITY_FIELDS.map((f) => (
+                <FieldInput
+                  key={f.key}
+                  field={f}
+                  value={form[f.key]}
+                  onChange={handleChange}
+                />
+              ))}
+            </div>
+          </AdminPanel>
+
+          <AdminPanel title="สถิติและรายละเอียด">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {STATS_FIELDS.map((f) => (
+                <FieldInput
+                  key={f.key}
+                  field={f}
+                  value={form[f.key]}
+                  onChange={handleChange}
+                />
+              ))}
+            </div>
+          </AdminPanel>
+
+          <AdminPanel title="ข้อความ">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {TEXTAREA_FIELDS.map((f) => (
+                <AdminFormField key={f.key} label={f.label}>
+                  <textarea
+                    rows={3}
+                    value={String(form[f.key] ?? "")}
+                    onChange={(e) => handleChange(f.key, e.target.value)}
+                    className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 dark:bg-input/30"
                   />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                </AdminFormField>
+              ))}
+            </div>
+          </AdminPanel>
 
-          {/* Stats */}
-          <Card>
-            <CardHeader className="border-b">
-              <CardTitle className="text-base">สถิติและรายละเอียด</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {STATS_FIELDS.map((f) => (
-                  <FieldInput
-                    key={f.key}
-                    field={f}
-                    value={form[f.key]}
-                    onChange={handleChange}
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Text Content */}
-          <Card>
-            <CardHeader className="border-b">
-              <CardTitle className="text-base">ข้อความ</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {TEXTAREA_FIELDS.map((f) => (
-                  <div key={f.key} className="space-y-1.5">
-                    <label className="text-xs font-medium text-muted-foreground">
-                      {f.label}
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={String(form[f.key] ?? "")}
-                      onChange={(e) => handleChange(f.key, e.target.value)}
-                      className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 dark:bg-input/30"
-                    />
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Price History */}
           {card.prices.length > 0 && (
-            <Card>
-              <CardHeader className="border-b">
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <History className="size-4 text-muted-foreground" />
-                  ประวัติราคา ({card.prices.length} รายการ)
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="max-h-60 overflow-y-auto">
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="border-b text-muted-foreground">
-                        <th className="pb-1 text-left">วันที่</th>
-                        <th className="pb-1 text-left">แหล่งข้อมูล</th>
-                        <th className="pb-1 text-right">ราคา</th>
+            <AdminPanel
+              title={`ประวัติราคา (${card.prices.length} รายการ)`}
+              icon={History}
+            >
+              <div className="max-h-60 overflow-y-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="border-b text-muted-foreground">
+                      <th className="pb-1 text-left">วันที่</th>
+                      <th className="pb-1 text-left">แหล่งข้อมูล</th>
+                      <th className="pb-1 text-right">ราคา</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {card.prices.map((p) => (
+                      <tr
+                        key={p.id}
+                        className="border-b border-border/10"
+                      >
+                        <td className="py-1">
+                          {new Date(p.scrapedAt).toLocaleDateString(
+                            "th-TH",
+                          )}
+                        </td>
+                        <td className="py-1">{p.source}</td>
+                        <td className="py-1 text-right tabular-nums">
+                          {p.priceJpy != null
+                            ? formatJpy(p.priceJpy)
+                            : "—"}
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {card.prices.map((p) => (
-                        <tr
-                          key={p.id}
-                          className="border-b border-border/10"
-                        >
-                          <td className="py-1">
-                            {new Date(p.scrapedAt).toLocaleDateString(
-                              "th-TH",
-                            )}
-                          </td>
-                          <td className="py-1">{p.source}</td>
-                          <td className="py-1 text-right tabular-nums">
-                            {p.priceJpy != null
-                              ? formatJpy(p.priceJpy)
-                              : "—"}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </AdminPanel>
           )}
         </div>
       </div>
-    </div>
+    </AdminPage>
   );
 }
 
@@ -417,21 +385,22 @@ function FieldInput({
   onChange: (key: string, value: string, type?: string) => void;
 }) {
   return (
-    <div className="space-y-1.5">
-      <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-        {field.label}
-        {field.official && (
-          <span className="rounded bg-green-500/10 px-1 py-px text-xs font-medium text-green-600 dark:text-green-400">
-            Official
-          </span>
-        )}
-      </label>
+    <AdminFormField
+      label={
+        <span className="flex items-center gap-1.5">
+          {field.label}
+          {field.official && (
+            <AdminStatusBadge tone="success">ทางการ</AdminStatusBadge>
+          )}
+        </span>
+      }
+    >
       <Input
         type={field.type === "number" ? "number" : "text"}
         value={String(value ?? "")}
         onChange={(e) => onChange(field.key, e.target.value, field.type)}
-        className={field.official ? "border-green-500/20" : ""}
+        className={cn(field.official && "border-success/30")}
       />
-    </div>
+    </AdminFormField>
   );
 }

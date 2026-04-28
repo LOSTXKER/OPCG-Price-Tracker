@@ -14,13 +14,43 @@ export function CompareButton({
 }: {
   item: CompareItem
   size?: "sm" | "md"
-  variant?: "icon" | "label"
+  variant?: "icon" | "label" | "ghost"
   className?: string
 }) {
   const lang = useUIStore((s) => s.language)
   const selected = useCompareStore((s) => s.items.some((i) => i.cardCode === item.cardCode))
   const totalSelected = useCompareStore((s) => s.items.length)
   const toggle = useCompareStore((s) => s.toggle)
+
+  if (variant === "ghost") {
+    const baseLabel = selected
+      ? t(lang, "removeFromCompare")
+      : t(lang, "addToCompare")
+    const showCount = !selected && totalSelected > 0
+    const label = showCount
+      ? t(lang, "compareWithCount").replace("{n}", String(totalSelected))
+      : baseLabel
+    return (
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          toggle(item)
+        }}
+        className={cn(
+          "inline-flex items-center gap-1.5 rounded-md px-2 text-xs font-medium transition-colors",
+          selected
+            ? "text-primary hover:bg-primary/10"
+            : "text-muted-foreground hover:bg-muted hover:text-foreground",
+          className,
+        )}
+      >
+        {selected ? <Check className="size-3.5" /> : <Scale className="size-3.5" />}
+        {label}
+      </button>
+    )
+  }
 
   if (variant === "label") {
     const baseLabel = selected

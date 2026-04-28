@@ -32,7 +32,7 @@ export const POST = apiHandler(async (request: NextRequest) => {
   const parsed = await parseJsonBody(request, CreatePortfolioSchema);
   if (!parsed.ok) return parsed.response;
 
-  const name = parsed.body.name;
+  const { name, isPublic } = parsed.body;
 
   const tier = effectiveTier(auth.user.tier, auth.user.tierExpiresAt);
   const limits = getLimits(tier);
@@ -50,6 +50,7 @@ export const POST = apiHandler(async (request: NextRequest) => {
     data: {
       userId: auth.user.id,
       name,
+      ...(isPublic !== undefined ? { isPublic } : {}),
     },
     include: {
       items: {

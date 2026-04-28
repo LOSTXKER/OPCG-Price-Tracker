@@ -1,14 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { adminApiHandler } from "@/lib/api/api-handler";
+import { paginatedJson } from "@/lib/api/list-response";
+import { parsePageLimit } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@/generated/prisma/client";
 
 export const GET = adminApiHandler(async (request: NextRequest) => {
   const sp = request.nextUrl.searchParams;
-  const page = Math.max(1, Number(sp.get("page") || 1));
-  const limit = Math.min(100, Math.max(1, Number(sp.get("limit") || 30)));
+  const { page, limit, skip } = parsePageLimit(sp, { defaultLimit: 30 });
   const type = sp.get("type") || "";
-  const skip = (page - 1) * limit;
 
   const where: Prisma.HoneyTransactionWhereInput = {};
   if (type) {
@@ -33,11 +33,11 @@ export const GET = adminApiHandler(async (request: NextRequest) => {
     prisma.honeyTransaction.count({ where }),
   ]);
 
-  return NextResponse.json({
-    transactions,
+  return paginatedJson({
+    rows: transactions,
     total,
     page,
     limit,
-    hasMore: skip + transactions.length < total,
+    itemsKey: "transactions",
   });
 });

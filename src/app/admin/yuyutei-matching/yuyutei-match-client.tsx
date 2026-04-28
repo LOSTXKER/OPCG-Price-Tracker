@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
   ArrowLeftRight,
@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useConfirm } from "@/components/admin/confirm-dialog";
+import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminPagination } from "@/components/admin/admin-pagination";
 import {
@@ -25,6 +26,9 @@ import { Lightbox } from "@/components/admin/matching-ui";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { adminJsonFetch } from "@/lib/api/admin-client";
+import { buildAdminQuery } from "@/lib/admin/admin-fetch";
+import { useAdminList } from "@/lib/admin/use-admin-list";
+import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
 
 import { YuyuteiAiPanel } from "./yuyutei-ai-panel";
 import { YuyuteiBulkBar } from "./yuyutei-bulk-bar";
@@ -35,11 +39,11 @@ import { API, METHOD_INFO, yuyuHd } from "./yuyutei-types";
 /* ── Status tab config ── */
 
 const STATUS_TABS = [
-  { key: "", label: "All", dotColor: "bg-foreground/40", textColor: "text-foreground", activeBg: "bg-background shadow-sm" },
-  { key: "suggested", label: "Suggested", dotColor: "bg-info", textColor: "text-info", activeBg: "bg-background shadow-sm" },
-  { key: "pending", label: "Pending", dotColor: "bg-warning", textColor: "text-warning", activeBg: "bg-background shadow-sm" },
-  { key: "matched", label: "Matched", dotColor: "bg-success", textColor: "text-success", activeBg: "bg-background shadow-sm" },
-  { key: "rejected", label: "Rejected", dotColor: "bg-danger", textColor: "text-danger", activeBg: "bg-background shadow-sm" },
+  { key: "", label: "ทั้งหมด", dotColor: "bg-foreground/40", textColor: "text-foreground", activeBg: "bg-background shadow-sm" },
+  { key: "suggested", label: "มีคำแนะนำ", dotColor: "bg-info", textColor: "text-info", activeBg: "bg-background shadow-sm" },
+  { key: "pending", label: "รอดำเนินการ", dotColor: "bg-warning", textColor: "text-warning", activeBg: "bg-background shadow-sm" },
+  { key: "matched", label: "จับคู่แล้ว", dotColor: "bg-success", textColor: "text-success", activeBg: "bg-background shadow-sm" },
+  { key: "rejected", label: "ปฏิเสธแล้ว", dotColor: "bg-danger", textColor: "text-danger", activeBg: "bg-background shadow-sm" },
 ] as const;
 
 /* ── Skeleton rows ── */
@@ -93,18 +97,28 @@ export function YuyuteiMatchClient() {
   const confirmDialog = useConfirm();
 
   /* ── state ── */
-  const [data, setData] = useState<ApiResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const [setFilter, setSetFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("suggested");
-  const [search, setSearch] = useState("");
-  const [methodFilter, setMethodFilter] = useState("");
-  const [confidenceFilter, setConfidenceFilter] = useState("");
-  const [noMatchOnly, setNoMatchOnly] = useState(false);
-
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(20);
+  const { state, patch } = useAdminUrlState({
+    defaults: {
+      set: "",
+      status: "suggested",
+      q: "",
+      method: "",
+      confidence: "",
+      noMatch: false as boolean,
+      page: 1,
+      perPage: 20,
+    },
+  });
+  const {
+    set: setFilter,
+    status: statusFilter,
+    q: search,
+    method: methodFilter,
+    confidence: confidenceFilter,
+    noMatch: noMatchOnly,
+    page,
+    perPage,
+  } = state;
 
   const [saving, setSaving] = useState<Set<number>>(new Set());
   const [bulkBusy, setBulkBusy] = useState(false);
@@ -121,6 +135,24 @@ export function YuyuteiMatchClient() {
 
   const lastClickedRef = useRef<number | null>(null);
 
+  /* ── data fetching ── */
+
+  const { data, loading, refetch } = useAdminList<ApiResponse, typeof state>({
+    url: (p) =>
+      `${API}?${buildAdminQuery({
+        set: p.set || undefined,
+        status: p.status || undefined,
+        q: p.q || undefined,
+        method: p.method || undefined,
+        confidence: p.confidence || undefined,
+        noMatch: p.noMatch ? "true" : undefined,
+        page: p.page,
+        limit: p.perPage,
+      })}`,
+    params: state,
+  });
+  const fetchData = refetch;
+
   /* ── effects ── */
 
   useEffect(() => { setSelected(new Set()); }, [data]);
@@ -132,26 +164,6 @@ export function YuyuteiMatchClient() {
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, [selected.size]);
-
-  /* ── data fetching ── */
-
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    const params = new URLSearchParams();
-    if (setFilter) params.set("set", setFilter);
-    if (statusFilter) params.set("status", statusFilter);
-    if (search) params.set("q", search);
-    if (methodFilter) params.set("method", methodFilter);
-    if (confidenceFilter) params.set("confidence", confidenceFilter);
-    if (noMatchOnly) params.set("noMatch", "true");
-    params.set("page", String(page));
-    params.set("limit", String(perPage));
-    const res = await fetch(`${API}?${params}`);
-    if (res.ok) setData(await res.json());
-    setLoading(false);
-  }, [setFilter, statusFilter, search, methodFilter, confidenceFilter, noMatchOnly, page, perPage]);
-
-  useEffect(() => { fetchData(); }, [fetchData]);
 
   /* ── single actions ── */
 
@@ -261,13 +273,13 @@ export function YuyuteiMatchClient() {
           msg: `→ ${json.matchedCardCode} (${Math.round((json.confidence ?? 0) * 100)}%)`,
         };
       }
-      if (json.skipped) return { code: "", result: "skip", msg: json.error ?? "Skipped" };
-      return { code: "", result: "fail", msg: json.error ?? "Failed" };
+      if (json.skipped) return { code: "", result: "skip", msg: json.error ?? "ข้ามแล้ว" };
+      return { code: "", result: "fail", msg: json.error ?? "ไม่สำเร็จ" };
     } catch (e) {
       if (e instanceof DOMException && e.name === "AbortError") {
         return { code: "", result: "skip", msg: "ยกเลิกแล้ว" };
       }
-      return { code: "", result: "fail", msg: e instanceof Error ? e.message : "Network error" };
+      return { code: "", result: "fail", msg: e instanceof Error ? e.message : "เครือข่ายผิดพลาด" };
     }
   };
 
@@ -304,8 +316,8 @@ export function YuyuteiMatchClient() {
       return;
     }
 
-    const modeLabel = force ? "Re-check ทั้งหมด" : "เฉพาะที่ยังไม่ผ่าน AI";
-    const label = hasSelected ? `${ids.length} รายการที่เลือก` : setFilter ? setFilter.toUpperCase() : "ทุก set";
+    const modeLabel = force ? "รันใหม่ทั้งหมด" : "เฉพาะที่ยังไม่ผ่าน AI";
+    const label = hasSelected ? `${ids.length} รายการที่เลือก` : setFilter ? setFilter.toUpperCase() : "ทุกชุดการ์ด";
     const ok = await confirmDialog({
       title: `AI ${modeLabel}`,
       description: `${ids.length} รายการ (${label}) — ประมาณ ${ids.length * 2} วินาที`,
@@ -362,7 +374,7 @@ export function YuyuteiMatchClient() {
     aiAbortRef.current = null;
     setAiLog((prev) => [
       ...prev,
-      { code: "สรุป", result: "ok", msg: `สำเร็จ ${okCount} / ข้าม ${skipCount} / ไม่สำเร็จ ${failCount} จากทั้งหมด ${ids.length}` },
+      { code: "สรุป", result: "ok", msg: `สำเร็จ ${okCount} / ข้าม ${skipCount} / ไม่สำเร็จ ${failCount} จากทั้งหมด ${ids.length} รายการ` },
     ]);
     setAiRunning(false);
     setAiProgress(null);
@@ -414,7 +426,7 @@ export function YuyuteiMatchClient() {
     const imgs: { src: string; label: string }[] = [];
     const hd = yuyuHd(m.scrapedImage);
     if (hd) imgs.push({ src: hd, label: `Yuyutei · ${m.scrapedCode}` });
-    if (card?.imageUrl) imgs.push({ src: card.imageUrl, label: `DB · ${card.cardCode}` });
+    if (card?.imageUrl) imgs.push({ src: card.imageUrl, label: `ฐานข้อมูล · ${card.cardCode}` });
     if (imgs.length > 0) setLightbox(imgs);
   };
 
@@ -437,11 +449,7 @@ export function YuyuteiMatchClient() {
 
   const activeFilterCount = [search, methodFilter, confidenceFilter, noMatchOnly ? "1" : ""].filter(Boolean).length;
   const clearAllFilters = () => {
-    setSearch("");
-    setMethodFilter("");
-    setConfidenceFilter("");
-    setNoMatchOnly(false);
-    setPage(1);
+    patch({ q: "", method: "", confidence: "", noMatch: false, page: 1 });
   };
 
   const setOptions = (data?.sets ?? []).map((s) => ({
@@ -450,85 +458,97 @@ export function YuyuteiMatchClient() {
   }));
 
   return (
-    <div className="space-y-4">
+    <AdminPage
+      header={
+        <AdminPageHeader
+          title="จับคู่ราคา Yuyutei"
+          description="ติ๊กเลือก → อนุมัติ/ปฏิเสธทีเดียว หรืออนุมัติทีละรายการ"
+          icon={ArrowLeftRight}
+          meta={
+            <span className="text-meta">
+              {totalAll.toLocaleString()} รายการ
+            </span>
+          }
+          actions={
+            <div className="flex items-center gap-2">
+              <AdminFilterSelect
+                value={setFilter}
+                onChange={(v) => patch({ set: v, page: 1 })}
+                placeholder="ทุกชุดการ์ด"
+                options={setOptions}
+              />
+              <Button
+                variant="outline"
+                size="icon-sm"
+                onClick={fetchData}
+                disabled={loading}
+                aria-label="รีเฟรช"
+              >
+                <RefreshCw className={cn("size-4", loading && "animate-spin")} />
+              </Button>
+            </div>
+          }
+        />
+      }
+      bodyClassName="space-y-4"
+    >
       {lightbox && <Lightbox images={lightbox} onClose={() => setLightbox(null)} />}
 
-      {/* ── Header ── */}
-      <AdminPageHeader
-        title="Yuyutei Price Matching"
-        description="ติ๊กเลือก → Approve/Reject ทีเดียว หรือ Approve ทีละรายการ"
-        icon={ArrowLeftRight}
-        actions={
-          <div className="flex items-center gap-2">
-            <AdminFilterSelect
-              value={setFilter}
-              onChange={(v) => { setSetFilter(v); setPage(1); }}
-              placeholder="All Sets"
-              options={setOptions}
-            />
-            <Button
-              variant="outline"
-              size="icon-sm"
-              onClick={fetchData}
-              disabled={loading}
-              aria-label="Refresh"
-            >
-              <RefreshCw className={cn("size-4", loading && "animate-spin")} />
-            </Button>
-          </div>
-        }
-      />
-
       {/* ── Toolbar ── */}
+      <div className="sticky top-0 z-20">
       <AdminToolbar
         actions={
           <>
-            <button
+            <Button
+              variant="default"
+              size="sm"
               onClick={() => handleAiSuggestBulk(false)}
               disabled={aiRunning}
-              className="flex items-center gap-1.5 rounded-lg bg-violet-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-violet-700 disabled:opacity-30 transition-colors"
             >
               {aiRunning ? <Loader2 className="size-3.5 animate-spin" /> : <Sparkles className="size-3.5" />}
-              AI Suggest
-            </button>
-            <button
+              AI แนะนำ
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => handleAiSuggestBulk(true)}
               disabled={aiRunning}
-              className="flex items-center gap-1.5 rounded-lg border border-violet-500/40 px-3 py-1.5 text-xs font-semibold text-violet-600 hover:bg-violet-500/10 disabled:opacity-30 transition-colors"
             >
               {aiRunning ? <Loader2 className="size-3.5 animate-spin" /> : <Sparkles className="size-3.5" />}
-              AI Re-check
-            </button>
-            <button
+              AI รันใหม่
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
               onClick={handleBulkApproveAll}
               disabled={bulkBusy || suggestedCount === 0}
-              className="flex items-center gap-1.5 rounded-lg bg-green-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-green-700 disabled:opacity-30 transition-colors"
+              className="bg-success text-success-foreground hover:bg-success/90"
             >
               {bulkBusy ? <Loader2 className="size-3.5 animate-spin" /> : <CheckCheck className="size-3.5" />}
-              Approve All ({suggestedCount})
-            </button>
+              อนุมัติทั้งหมด ({suggestedCount})
+            </Button>
           </>
         }
       >
         <AdminSearch
           value={search}
-          onChange={(v) => { setSearch(v); setPage(1); }}
-          placeholder="ค้นหา code / ชื่อ..."
+          onChange={(v) => patch({ q: v, page: 1 })}
+          placeholder="ค้นหารหัส / ชื่อ..."
           className="w-48"
         />
         <AdminFilterSelect
           value={methodFilter}
-          onChange={(v) => { setMethodFilter(v); setPage(1); }}
-          placeholder="Method: All"
+          onChange={(v) => patch({ method: v, page: 1 })}
+          placeholder="วิธีจับคู่: ทั้งหมด"
           options={[
-            { value: "none", label: "ยังไม่มี method" },
+            { value: "none", label: "ยังไม่มีวิธี" },
             ...METHOD_INFO.map((m) => ({ value: m.key, label: m.label })),
           ]}
         />
         <AdminFilterSelect
           value={confidenceFilter}
-          onChange={(v) => { setConfidenceFilter(v); setPage(1); }}
-          placeholder="Confidence: All"
+          onChange={(v) => patch({ confidence: v, page: 1 })}
+          placeholder="ความเชื่อมั่น: ทั้งหมด"
           options={[
             { value: "high", label: "สูง (≥80%)" },
             { value: "mid", label: "กลาง (50-79%)" },
@@ -539,13 +559,14 @@ export function YuyuteiMatchClient() {
           <input
             type="checkbox"
             checked={noMatchOnly}
-            onChange={(e) => { setNoMatchOnly(e.target.checked); setPage(1); }}
+            onChange={(e) => patch({ noMatch: e.target.checked, page: 1 })}
             className="accent-primary size-3.5"
           />
-          <span className="text-muted-foreground text-xs">ยังไม่มี match</span>
+          <span className="text-muted-foreground text-xs">ยังไม่จับคู่</span>
         </label>
         <AdminFilterCount activeCount={activeFilterCount} onClear={clearAllFilters} />
       </AdminToolbar>
+      </div>
 
       {/* ── AI Panel ── */}
       <YuyuteiAiPanel
@@ -570,7 +591,7 @@ export function YuyuteiMatchClient() {
               return (
                 <button
                   key={tab.key}
-                  onClick={() => { setStatusFilter(tab.key); setPage(1); }}
+                  onClick={() => patch({ status: tab.key, page: 1 })}
                   className={cn(
                     "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs transition-all",
                     isActive
@@ -598,12 +619,12 @@ export function YuyuteiMatchClient() {
             <div className="flex items-center gap-2 text-meta">
               <div className="h-1.5 w-24 rounded-full bg-muted overflow-hidden">
                 <div
-                  className="h-full bg-green-500 rounded-full transition-all"
+                  className="h-full bg-success rounded-full transition-all"
                   style={{ width: `${Math.round((data.counts.matched / totalAll) * 100)}%` }}
                 />
               </div>
               <span className="tabular-nums">
-                {Math.round((data.counts.matched / totalAll) * 100)}% matched
+                จับคู่แล้ว {Math.round((data.counts.matched / totalAll) * 100)}%
               </span>
             </div>
           )}
@@ -616,14 +637,14 @@ export function YuyuteiMatchClient() {
               <thead>
                 <tr className="border-b border-border/30 bg-muted/40 text-meta">
                   <th className="px-3 py-2.5 w-10" />
-                  {showStatusCol && <th className="px-3 py-2.5 text-left w-20">Status</th>}
-                  <th className="px-3 py-2.5 text-left">Yuyutei Listing</th>
+                  {showStatusCol && <th className="px-3 py-2.5 text-left w-20">สถานะ</th>}
+                  <th className="px-3 py-2.5 text-left">รายการ Yuyutei</th>
                   <th className="px-2 py-2.5 w-6" />
-                  <th className="px-3 py-2.5 text-left">DB Card Match</th>
-                  <th className="px-3 py-2.5 text-right w-20">Price</th>
-                  <th className="px-3 py-2.5 text-left w-24">Method</th>
-                  <th className="px-3 py-2.5 text-left w-32">Updated</th>
-                  <th className="px-3 py-2.5 text-center w-32">Actions</th>
+                  <th className="px-3 py-2.5 text-left">การ์ดในฐานข้อมูล</th>
+                  <th className="px-3 py-2.5 text-right w-20">ราคา</th>
+                  <th className="px-3 py-2.5 text-left w-24">วิธีจับคู่</th>
+                  <th className="px-3 py-2.5 text-left w-32">อัปเดตล่าสุด</th>
+                  <th className="px-3 py-2.5 text-center w-32">การจัดการ</th>
                 </tr>
               </thead>
               <tbody>
@@ -634,10 +655,10 @@ export function YuyuteiMatchClient() {
         ) : data?.mappings.length === 0 ? (
           <AdminEmptyState
             icon={Search}
-            title={statusFilter === "suggested" ? "ไม่มี suggestion รออนุมัติ" : `ไม่มีรายการ ${statusFilter || "ทั้งหมด"}`}
+            title={statusFilter === "suggested" ? "ไม่มีคำแนะนำรออนุมัติ" : `ไม่มีรายการ ${statusFilter || "ทั้งหมด"}`}
             description={
-              (!setFilter ? "เลือก set จาก dropdown " : "") +
-              "ลอง filter อื่น หรือรัน npx tsx scripts/pipeline-yuyutei.ts"
+              (!setFilter ? "เลือกชุดการ์ดจากเมนู " : "") +
+              "ลองเปลี่ยนตัวกรองอื่น หรือรัน npx tsx scripts/pipeline-yuyutei.ts"
             }
           />
         ) : (
@@ -654,15 +675,15 @@ export function YuyuteiMatchClient() {
                     />
                   </th>
                   {showStatusCol && (
-                    <th className="px-3 py-2.5 text-left w-20 bg-muted/40">Status</th>
+                    <th className="px-3 py-2.5 text-left w-20 bg-muted/40">สถานะ</th>
                   )}
-                  <th className="px-3 py-2.5 text-left bg-muted/40">Yuyutei Listing</th>
+                  <th className="px-3 py-2.5 text-left bg-muted/40">รายการ Yuyutei</th>
                   <th className="px-2 py-2.5 w-6 bg-muted/40" />
-                  <th className="px-3 py-2.5 text-left bg-muted/40">DB Card Match</th>
-                  <th className="px-3 py-2.5 text-right w-20 bg-muted/40">Price</th>
-                  <th className="px-3 py-2.5 text-left w-24 bg-muted/40">Method</th>
-                  <th className="px-3 py-2.5 text-left w-32 bg-muted/40">Updated</th>
-                  <th className="px-3 py-2.5 text-center w-32 bg-muted/40">Actions</th>
+                  <th className="px-3 py-2.5 text-left bg-muted/40">การ์ดในฐานข้อมูล</th>
+                  <th className="px-3 py-2.5 text-right w-20 bg-muted/40">ราคา</th>
+                  <th className="px-3 py-2.5 text-left w-24 bg-muted/40">วิธีจับคู่</th>
+                  <th className="px-3 py-2.5 text-left w-32 bg-muted/40">อัปเดตล่าสุด</th>
+                  <th className="px-3 py-2.5 text-center w-32 bg-muted/40">การจัดการ</th>
                 </tr>
               </thead>
               <tbody>
@@ -697,10 +718,10 @@ export function YuyuteiMatchClient() {
             <AdminPagination
               page={page}
               totalPages={data.totalPages}
-              onPageChange={setPage}
+              onPageChange={(p) => patch({ page: p })}
               total={data.total}
               perPage={perPage}
-              onPerPageChange={(v) => { setPerPage(v); setPage(1); }}
+              onPerPageChange={(v) => patch({ perPage: v, page: 1 })}
               perPageOptions={[20, 50, 100, 500]}
             />
           </div>
@@ -721,6 +742,6 @@ export function YuyuteiMatchClient() {
           onClear={() => setSelected(new Set())}
         />
       )}
-    </div>
+    </AdminPage>
   );
 }

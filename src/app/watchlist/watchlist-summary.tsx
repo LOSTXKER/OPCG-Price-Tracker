@@ -1,7 +1,7 @@
 "use client";
 
-import { Bell, Eye, TrendingDown, TrendingUp, Wallet } from "lucide-react";
-import { useMemo } from "react";
+import { TrendingDown, TrendingUp } from "lucide-react";
+import { Fragment, useMemo } from "react";
 
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
@@ -10,6 +10,14 @@ import { formatJpyAmount, formatSignedPct } from "@/lib/utils/currency";
 
 import { getEntryChange, type ChangePeriod, type WatchlistEntry } from "./watchlist-types";
 
+/**
+ * Inline metadata strip for the watchlist page. Replaces the previous 4-tile
+ * KPI grid so the page reads as a calm header → toolbar → list flow.
+ *
+ * The strip renders only the segments that are meaningful for the current
+ * data (e.g. omits "0 alerts", omits gainer/loser when the list has fewer
+ * than 3 entries with meaningful movement).
+ */
 export function WatchlistSummary({
   entries,
   period,
@@ -23,6 +31,7 @@ export function WatchlistSummary({
   const stats = useMemo(() => {
     let totalValueJpy = 0;
     let alerts = 0;
+    let pinned = 0;
     let topGainer: WatchlistEntry | null = null;
     let topLoser: WatchlistEntry | null = null;
     let topGainerChange = -Infinity;
@@ -31,6 +40,7 @@ export function WatchlistSummary({
     for (const e of entries) {
       if (e.card.latestPriceJpy != null) totalValueJpy += e.card.latestPriceJpy;
       if (e.hasActiveAlert) alerts += 1;
+      if (e.pinnedAt) pinned += 1;
       const change = getEntryChange(e, period);
       if (change == null) continue;
       if (change > topGainerChange) {
@@ -43,91 +53,107 @@ export function WatchlistSummary({
       }
     }
 
+    const showMovement = entries.length >= 3;
+
     return {
       count: entries.length,
       totalValueJpy,
       alerts,
+      pinned,
       topGainer:
-        topGainer && topGainerChange > 0
+        showMovement && topGainer && topGainerChange > 0
           ? { entry: topGainer, change: topGainerChange }
           : null,
       topLoser:
-        topLoser && topLoserChange < 0
+        showMovement && topLoser && topLoserChange < 0
           ? { entry: topLoser, change: topLoserChange }
           : null,
     };
   }, [entries, period]);
 
-  const cards = [
-    {
-      key: "count",
-      icon: <Eye className="size-4 text-primary" />,
-      label: t(lang, "watchlistSummaryCards"),
-      value: stats.count.toLocaleString(),
-      sub:
-        stats.alerts > 0 ? (
-          <span className="inline-flex items-center gap-1">
-            <Bell className="size-3" />
-            {stats.alerts} {t(lang, "watchlistSummaryAlerts").toLowerCase()}
-          </span>
-        ) : undefined,
-    },
-    {
-      key: "value",
-      icon: <Wallet className="size-4 text-primary" />,
-      label: t(lang, "watchlistSummaryValue"),
-      value:
-        stats.totalValueJpy > 0
-          ? formatJpyAmount(stats.totalValueJpy, currency)
-          : "—",
-    },
-    stats.topGainer && {
-      key: "gainer",
-      icon: <TrendingUp className="size-4 text-price-up" />,
-      label: t(lang, "watchlistSummaryGainer"),
-      value: truncate(getCardLabel(stats.topGainer.entry), 18),
-      sub: formatSignedPct(stats.topGainer.change),
-      subTone: "up" as const,
-    },
-    stats.topLoser && {
-      key: "loser",
-      icon: <TrendingDown className="size-4 text-price-down" />,
-      label: t(lang, "watchlistSummaryLoser"),
-      value: truncate(getCardLabel(stats.topLoser.entry), 18),
-      sub: formatSignedPct(stats.topLoser.change),
-      subTone: "down" as const,
-    },
-  ].filter(Boolean) as Array<{
-    key: string;
-    icon: React.ReactNode;
-    label: string;
-    value: string;
-    sub?: React.ReactNode;
-    subTone?: "up" | "down";
-  }>;
+  const segments: React.ReactNode[] = [];
 
-  // Use a responsive grid that adapts to the actual card count so we
-  // never render empty "—" placeholders.
-  const colsClass =
-    cards.length === 2
-      ? "grid-cols-2"
-      : cards.length === 3
-        ? "grid-cols-2 lg:grid-cols-3"
-        : "grid-cols-2 lg:grid-cols-4";
+  segments.push(
+    <span key="count" className="tabular-nums">
+      {stats.count.toLocaleString()} {t(lang, "watchlistSummaryCards").toLowerCase()}
+    </span>
+  );
+
+  if (stats.totalValueJpy > 0) {
+    segments.push(
+      <span key="value" className="tabular-nums">
+        {formatJpyAmount(stats.totalValueJpy, currency)}
+      </span>
+    );
+  }
+
+  if (stats.alerts > 0) {
+    segments.push(
+      <span key="alerts" className="tabular-nums">
+        {stats.alerts} {t(lang, "watchlistSummaryAlerts").toLowerCase()}
+      </span>
+    );
+  }
+
+  if (stats.pinned > 0) {
+    segments.push(
+      <span key="pinned" className="tabular-nums">
+        {stats.pinned} {t(lang, "watchlistFilterPinned").toLowerCase()}
+      </span>
+    );
+  }
 
   return (
-    <div className={cn("grid gap-2.5", colsClass)}>
-      {cards.map((c) => (
-        <KpiCard
-          key={c.key}
-          icon={c.icon}
-          label={c.label}
-          value={c.value}
-          sub={c.sub}
-          subTone={c.subTone}
-        />
+    <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-meta">
+      {segments.map((node, i) => (
+        <Fragment key={i}>
+          {i > 0 && <span className="text-muted-foreground/40">·</span>}
+          {node}
+        </Fragment>
       ))}
+
+      {stats.topGainer && (
+        <MovementChip
+          tone="up"
+          label={getCardLabel(stats.topGainer.entry)}
+          change={stats.topGainer.change}
+        />
+      )}
+      {stats.topLoser && (
+        <MovementChip
+          tone="down"
+          label={getCardLabel(stats.topLoser.entry)}
+          change={stats.topLoser.change}
+        />
+      )}
     </div>
+  );
+}
+
+function MovementChip({
+  tone,
+  label,
+  change,
+}: {
+  tone: "up" | "down";
+  label: string;
+  change: number;
+}) {
+  const Icon = tone === "up" ? TrendingUp : TrendingDown;
+  return (
+    <span
+      className={cn(
+        "ml-1 inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 tabular-nums",
+        tone === "up"
+          ? "bg-price-up/10 text-price-up"
+          : "bg-price-down/10 text-price-down"
+      )}
+      title={`${label} ${formatSignedPct(change)}`}
+    >
+      <Icon className="size-3" />
+      <span className="max-w-[10rem] truncate">{truncate(label, 16)}</span>
+      <span>{formatSignedPct(change)}</span>
+    </span>
   );
 }
 
@@ -137,44 +163,4 @@ function getCardLabel(entry: WatchlistEntry): string {
 
 function truncate(s: string, max: number): string {
   return s.length > max ? `${s.slice(0, max - 1)}…` : s;
-}
-
-function KpiCard({
-  icon,
-  label,
-  value,
-  sub,
-  subTone,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  sub?: React.ReactNode;
-  subTone?: "up" | "down";
-}) {
-  return (
-    <div className="panel flex flex-col gap-0.5 px-3 py-2.5">
-      <div className="flex items-center gap-1.5 text-eyebrow">
-        {icon}
-        <span>{label}</span>
-      </div>
-      <p
-        className="truncate text-lg font-semibold tabular-nums leading-tight"
-        title={value}
-      >
-        {value}
-      </p>
-      {sub && (
-        <p
-          className={cn(
-            "text-meta tabular-nums",
-            subTone === "up" && "text-price-up",
-            subTone === "down" && "text-price-down"
-          )}
-        >
-          {sub}
-        </p>
-      )}
-    </div>
-  );
 }

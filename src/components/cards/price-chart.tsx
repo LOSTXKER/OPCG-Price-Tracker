@@ -10,13 +10,14 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
-import { Lock, Loader2, TrendingDown, TrendingUp } from "lucide-react"
+import { CalendarRange, Loader2, TrendingDown, TrendingUp } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { compactDisplayValue, formatDisplayValue, type Currency } from "@/lib/utils/currency"
 import { formatPctSmart } from "@/lib/utils/format-pct-smart"
 import { useUIStore } from "@/stores/ui-store"
 import { getLocale, t } from "@/lib/i18n"
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
+import { SegmentedControl } from "@/components/ui/segmented-control"
 
 const PERIODS = [
   { value: "24h", label: "24H", days: 1 },
@@ -188,39 +189,34 @@ export function PriceChart({
     return def.value === "all" ? t(lang, "statsScopeAllTime") : def.label
   }, [period, lang])
 
+  const periodOptions = useMemo(
+    () =>
+      PERIODS.map((p) => ({
+        value: p.value,
+        label: p.label,
+        disabled: loading,
+        locked: maxDays != null && isFinite(maxDays) && p.days > maxDays,
+        ariaLabel:
+          maxDays != null && isFinite(maxDays) && p.days > maxDays
+            ? t(lang, "upgradeToUnlock")
+            : undefined,
+      })),
+    [loading, maxDays, lang],
+  )
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-0.5 rounded-full border border-border/50 p-0.5">
-          {PERIODS.map((p) => {
-            const locked = maxDays != null && isFinite(maxDays) && p.days > maxDays
-            return (
-              <button
-                key={p.value}
-                onClick={() => {
-                  if (locked) {
-                    openUpgradeDialog({ featureKey: "priceHistoryExtended" })
-                    return
-                  }
-                  onPeriodChange(p.value)
-                }}
-                disabled={loading}
-                title={locked ? t(lang, "upgradeToUnlock") : undefined}
-                className={cn(
-                  "inline-flex items-center gap-0.5 rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums transition-all",
-                  locked
-                    ? "cursor-pointer text-muted-foreground/60 hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-400"
-                    : period === p.value
-                      ? "bg-background text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {p.label}
-                {locked && <Lock className="size-2.5" />}
-              </button>
-            )
-          })}
-        </div>
+        <SegmentedControl
+          size="sm"
+          variant="pill"
+          leadingIcon={CalendarRange}
+          options={periodOptions}
+          value={period}
+          onChange={onPeriodChange}
+          onLocked={() => openUpgradeDialog({ featureKey: "priceHistoryExtended" })}
+          ariaLabel={t(lang, "filter")}
+        />
         {loading && (
           <Loader2 className="size-4 shrink-0 animate-spin text-muted-foreground" />
         )}

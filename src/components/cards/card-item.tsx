@@ -6,7 +6,8 @@ import Link from "next/link"
 
 import { Shield } from "lucide-react"
 
-import { CompareButton } from "@/components/shared/compare-button"
+import { CardImageButton } from "@/components/shared/card-image-button"
+import { CardActionRow } from "@/components/shared/card-action-row"
 import { PriceDisplay } from "@/components/shared/price-display"
 import { PriceUsd } from "@/components/shared/price-usd"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -19,6 +20,7 @@ export type ChangePeriod = "24h" | "7d" | "30d"
 
 export interface CardItemProps {
   cardCode: string
+  cardId?: number | null
   nameJp: string
   nameEn?: string | null
   nameTh?: string | null
@@ -44,6 +46,7 @@ export interface CardItemProps {
 
 function CardItemBase({
   cardCode,
+  cardId,
   nameJp,
   nameEn,
   nameTh,
@@ -60,69 +63,89 @@ function CardItemBase({
 }: CardItemProps) {
   const lang = useUIStore((s) => s.language)
   const displayName = getCardName(lang, { nameEn, nameJp, nameTh })
-  const activeChange = changePeriod === "24h" ? priceChange24h : changePeriod === "30d" ? priceChange30d : priceChange7d
+  const activeChange =
+    changePeriod === "24h"
+      ? priceChange24h
+      : changePeriod === "30d"
+        ? priceChange30d
+        : priceChange7d
+
+  const previewCard = {
+    cardCode,
+    cardId: cardId ?? null,
+    nameJp,
+    nameEn: nameEn ?? null,
+    nameTh: nameTh ?? null,
+    rarity,
+    imageUrl: imageUrl ?? null,
+    setCode: setCode ?? null,
+    priceJpy: priceJpy ?? null,
+    priceThb: priceThb ?? null,
+    priceChange24h: priceChange24h ?? null,
+    priceChange7d: priceChange7d ?? null,
+    priceChange30d: priceChange30d ?? null,
+    psa10PriceUsd: psa10PriceUsd ?? null,
+  }
+
   return (
-    <Link
-      href={`/cards/${cardCode}`}
-      className="group/card block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-    >
-        <div className="panel relative flex h-full flex-col overflow-hidden border border-transparent transition-colors hover:border-border">
-        {/* Image */}
-        <div className="relative aspect-[63/88] w-full bg-muted">
-          {imageUrl ? (
-            <Image
-              src={imageUrl}
-              alt={displayName}
-              fill
-              className="object-contain"
-              sizes="(max-width: 640px) 45vw, (max-width: 1024px) 25vw, 18vw"
-              placeholder="blur"
-              blurDataURL={BLUR_DATA_URL}
-            />
-          ) : (
-            <Skeleton className="absolute inset-0 size-full" />
+    <div className="panel group/card relative flex h-full flex-col overflow-hidden border border-transparent transition-colors hover:border-border">
+      <CardImageButton
+        card={previewCard}
+        className="relative aspect-[63/88] w-full bg-muted"
+      >
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={displayName}
+            fill
+            className="object-contain"
+            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 25vw, 18vw"
+            placeholder="blur"
+            blurDataURL={BLUR_DATA_URL}
+          />
+        ) : (
+          <Skeleton className="absolute inset-0 size-full" />
+        )}
+      </CardImageButton>
+
+      <div className="flex flex-1 flex-col p-2.5">
+        <div className="mb-1 flex items-center gap-1.5">
+          <RarityBadge rarity={rarity} size="sm" />
+          {setCode && (
+            <span className="font-mono text-xs text-muted-foreground">
+              {setCode.toUpperCase()}
+            </span>
           )}
-
-          {/* Bottom-right compare button — functional, surfaces on hover (desktop) */}
-          <div className="absolute bottom-1.5 right-1.5 rounded-md bg-black/60 p-1 backdrop-blur-sm transition-opacity md:opacity-60 md:group-hover/card:opacity-100">
-            <CompareButton
-              item={{ cardCode, name: displayName, imageUrl: imageUrl ?? null, rarity }}
-              size="sm"
-              className="text-white/80 hover:text-primary"
-            />
-          </div>
         </div>
-
-        {/* Info */}
-        <div className="flex flex-1 flex-col p-2.5">
-          <div className="mb-1 flex items-center gap-1.5">
-            <RarityBadge rarity={rarity} size="sm" />
-            {setCode && (
-              <span className="font-mono text-xs text-muted-foreground">
-                {setCode.toUpperCase()}
-              </span>
-            )}
-          </div>
-          <p className="truncate text-sm font-medium leading-snug" title={displayName}>
-            {displayName}
-          </p>
-          <div className="mt-auto pt-1.5">
-            <PriceDisplay
-              priceJpy={priceJpy}
-              priceThb={priceThb ?? undefined}
-              change={activeChange ?? undefined}
-              size="sm"
-            />
-            {psa10PriceUsd != null && (
-              <div className="flex items-center gap-1 mt-0.5">
-                <Shield className="size-3 text-amber-500" />
-                <PriceUsd usd={psa10PriceUsd} className="text-meta" />
-              </div>
-            )}
-          </div>
+        <Link
+          href={`/cards/${cardCode}`}
+          className="block truncate text-sm font-medium leading-snug hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          title={displayName}
+        >
+          {displayName}
+        </Link>
+        <div className="mt-auto pt-1.5">
+          <PriceDisplay
+            priceJpy={priceJpy}
+            priceThb={priceThb ?? undefined}
+            change={activeChange ?? undefined}
+            size="sm"
+          />
+          {psa10PriceUsd != null && (
+            <div className="mt-0.5 flex items-center gap-1">
+              <Shield className="size-3 text-amber-500" />
+              <PriceUsd usd={psa10PriceUsd} className="text-meta" />
+            </div>
+          )}
         </div>
       </div>
-    </Link>
+
+      <CardActionRow
+        card={previewCard}
+        show={{ detail: true, watchlist: cardId != null, compare: true }}
+        className="border-t border-border/60 px-2 py-1"
+      />
+    </div>
   )
 }
 

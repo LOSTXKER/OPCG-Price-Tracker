@@ -63,6 +63,7 @@ export default async function PublicProfilePage({ params }: PageProps) {
           id: user.id,
           displayName: user.displayName,
           avatarUrl: user.avatarUrl,
+          coverImageUrl: user.coverImageUrl,
           bio: null,
           tier: user.tier,
           sellerRating: null,
@@ -105,6 +106,11 @@ export default async function PublicProfilePage({ params }: PageProps) {
         firstListingId={null}
         viewerSavedSeller={false}
         viewerIsSignedIn={false}
+        commerceProfile={{
+          primaryLocation: null,
+          hasMultipleLocations: false,
+          shippingMethods: [],
+        }}
         isOwner={false}
         isPrivate
       />
@@ -136,6 +142,7 @@ export default async function PublicProfilePage({ params }: PageProps) {
         firstListingId={serialized.firstListingId}
         viewerSavedSeller={serialized.viewerSavedSeller}
         viewerIsSignedIn={serialized.viewerIsSignedIn}
+        commerceProfile={serialized.commerceProfile}
         isOwner={isOwner}
       />
     </>

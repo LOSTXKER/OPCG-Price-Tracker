@@ -145,12 +145,9 @@ export function SectionAddresses() {
   ] as const;
 
   return (
-    <div className="space-y-5">
-      <div className="flex items-center justify-between">
-        <h2 className="flex items-center gap-2 text-h3">
-          <MapPin className="size-5" />
-          {t(lang, "addresses")}
-        </h2>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-h2">{t(lang, "addresses")}</h2>
         {!showForm && (
           <Button
             size="sm"
@@ -166,13 +163,13 @@ export function SectionAddresses() {
       {/* Add/Edit form */}
       {showForm && (
         <div className="rounded-xl border border-border/40 bg-card p-5 space-y-4">
-          <h3 className="text-sm font-semibold">
+          <h3 className="text-h5">
             {editingId ? t(lang, "editAddress") : t(lang, "addAddress")}
           </h3>
           <div className="grid gap-3 sm:grid-cols-2">
             {formFields.map(({ key, labelKey, required }) => (
-              <div key={key} className="space-y-1">
-                <label className="text-xs font-medium text-muted-foreground">
+              <div key={key} className="space-y-1.5">
+                <label className="text-eyebrow">
                   {t(lang, labelKey)}{required && " *"}
                 </label>
                 <Input
@@ -234,7 +231,7 @@ export function SectionAddresses() {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold">{addr.label || addr.fullName}</span>
+                    <span className="text-h5">{addr.label || addr.fullName}</span>
                     {addr.isDefault && (
                       <Badge variant="secondary" className="text-xs text-emerald-600 dark:text-emerald-400">
                         {t(lang, "defaultAddress")}
