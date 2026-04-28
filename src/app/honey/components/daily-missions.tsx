@@ -3,10 +3,16 @@
 import { useState } from "react";
 import { Award, CheckCircle2, Circle, Clock, Share2 } from "lucide-react";
 import { t, type Language, type TranslationKey } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import { useCountdown } from "../hooks/use-countdown";
 import type { MissionData } from "../types";
 import { ICON_MAP } from "./missions-types";
 import { ClaimButton, MissionCard, RewardBadges } from "./mission-card";
+
+function parseHours(countdown: string): number {
+  const h = parseInt(countdown.slice(0, 2), 10);
+  return Number.isFinite(h) ? h : 24;
+}
 
 export function DailyMissions({
   lang,
@@ -43,89 +49,111 @@ export function DailyMissions({
     setClaimingBonus(false);
   };
 
+  const countdownUrgent = parseHours(countdown) < 1;
+
   return (
-    <div className="overflow-hidden rounded-xl border">
-      {/* Header + Bonus */}
-      <div className="border-b">
-        <div className="flex items-start justify-between gap-2 px-4 py-3.5">
-          <div>
-            <h2 className="text-lg font-semibold">{t(lang, "dailyMissions")}</h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              {lang === "TH" ? "ทำภารกิจเพื่อรับ Honey ฟรีทุกวัน" : lang === "JP" ? "毎日ミッションをクリアしてHoneyを獲得" : "Complete missions to earn free Honey daily"}
-            </p>
-          </div>
-          <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1 text-xs text-muted-foreground">
-            <Clock className="size-3" />
-            <span className="font-mono tabular-nums">{countdown}</span>
-          </div>
+    <section className="space-y-3">
+      {/* Section header — flat, no panel; lets the bonus card below stand alone */}
+      <div className="flex items-start justify-between gap-2 px-1">
+        <div>
+          <p className="text-eyebrow">
+            {lang === "TH" ? "รายวัน" : lang === "JP" ? "デイリー" : "Daily"}
+          </p>
+          <h2 className="mt-0.5 text-h3">{t(lang, "dailyMissions")}</h2>
+          <p className="mt-0.5 text-meta">
+            {lang === "TH" ? "ทำภารกิจเพื่อรับ Honey ฟรีทุกวัน" : lang === "JP" ? "毎日ミッションをクリアしてHoneyを獲得" : "Complete missions to earn free Honey daily"}
+          </p>
         </div>
-
-        <div className="flex items-center gap-3 border-t bg-muted/10 p-3">
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-            {bonusClaimed ? <CheckCircle2 className="size-5" /> : <Award className="size-5" />}
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold">
-              {t(lang, "missionBonusDesc")}
-              <span className="ml-1.5 text-xs font-semibold tabular-nums text-muted-foreground">
-                ({completedCount}/{tasks.length})
-              </span>
-            </p>
-            <RewardBadges lang={lang} honey={perfectDayBonus} ticket={0} muted={bonusClaimed} />
-            {!bonusClaimed && (
-              <div className="mt-1.5 flex items-center gap-2">
-                <div className="h-1.5 flex-1 rounded-full bg-muted">
-                  <div
-                    className="h-full rounded-full bg-primary transition-all"
-                    style={{ width: `${progressPct}%` }}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="shrink-0">
-            <ClaimButton
-              lang={lang}
-              claimed={bonusClaimed}
-              canClaim={allDone && allClaimed && !bonusClaimed}
-              isClaiming={claimingBonus}
-              onClaim={handleClaimBonus}
-            />
-          </div>
+        <div className={cn(
+          "flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold",
+          countdownUrgent
+            ? "bg-amber-500/15 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300"
+            : "bg-muted/50 text-muted-foreground",
+        )}>
+          <Clock className="size-3.5" />
+          <span className="font-mono tabular-nums">{countdown}</span>
         </div>
       </div>
 
-      {/* Task cards */}
-      <div className="grid grid-cols-1 gap-px bg-border/40 sm:grid-cols-2">
-        {tasks.map((task) => {
-          const Icon = ICON_MAP[task.icon] ?? Circle;
-          return (
-            <MissionCard
-              key={task.id}
-              lang={lang}
-              icon={Icon}
-              labelKey={task.labelKey}
-              hintText={t(lang, task.hintKey as TranslationKey)}
-              honey={task.reward}
-              ticket={0}
-              claimed={task.claimed}
-              canClaim={task.done && !task.claimed}
-              isClaiming={claimingId === task.id}
-              onClaim={() => handleClaimTask(task.id)}
-              shareButton={
-                task.trackType === "manual" && !task.claimed && !task.done ? (
-                  <button onClick={() => onShare(task.id)} className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80">
-                    <Share2 className="size-3" />
-                    {lang === "TH" ? "แชร์" : lang === "JP" ? "シェア" : "Share"}
-                  </button>
-                ) : undefined
-              }
-            />
-          );
-        })}
+      {/* Bonus card — standard card surface with a thin left accent stripe so it
+          reads as a highlighted summary row, not a glowing standalone block */}
+      <div className="relative flex items-center gap-3 overflow-hidden rounded-xl border bg-card p-3.5">
+        <span aria-hidden className="absolute inset-y-0 left-0 w-1 bg-amber-500/70 dark:bg-amber-400/80" />
+
+        <div className={cn(
+          "flex size-10 shrink-0 items-center justify-center rounded-xl",
+          bonusClaimed
+            ? "bg-price-up/15 text-price-up"
+            : "bg-amber-500/15 text-amber-700 dark:text-amber-400",
+        )}>
+          {bonusClaimed ? <CheckCircle2 className="size-5" /> : <Award className="size-5" />}
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-semibold">
+            {t(lang, "missionBonusDesc")}
+            <span className="ml-1.5 text-xs font-semibold tabular-nums text-muted-foreground">
+              ({completedCount}/{tasks.length})
+            </span>
+          </p>
+          <RewardBadges lang={lang} honey={perfectDayBonus} ticket={0} muted={bonusClaimed} />
+          {!bonusClaimed && (
+            <div className="mt-1.5 h-1 rounded-full bg-muted">
+              <div
+                className="h-full rounded-full bg-amber-500/80 transition-all dark:bg-amber-400/80"
+                style={{ width: `${progressPct}%` }}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="shrink-0">
+          <ClaimButton
+            lang={lang}
+            claimed={bonusClaimed}
+            canClaim={allDone && allClaimed && !bonusClaimed}
+            isClaiming={claimingBonus}
+            onClaim={handleClaimBonus}
+          />
+        </div>
       </div>
-    </div>
+
+      {/* Mission grid — own panel, clean grid of tiles */}
+      <div className="overflow-hidden rounded-xl border bg-card">
+        <div className="grid grid-cols-1 gap-px bg-border/40 sm:grid-cols-2">
+          {tasks.map((task) => {
+            const Icon = ICON_MAP[task.icon] ?? Circle;
+            return (
+              <MissionCard
+                key={task.id}
+                lang={lang}
+                icon={Icon}
+                task={task}
+                labelKey={task.labelKey}
+                hintText={t(lang, task.hintKey as TranslationKey)}
+                honey={task.reward}
+                ticket={0}
+                claimed={task.claimed}
+                canClaim={task.done && !task.claimed}
+                isClaiming={claimingId === task.id}
+                onClaim={() => handleClaimTask(task.id)}
+                ctaPath={task.ctaPath}
+                shareButton={
+                  task.trackType === "manual" && !task.claimed && !task.done ? (
+                    <button
+                      onClick={() => onShare(task.id)}
+                      className="inline-flex h-8 items-center gap-1 rounded-lg border bg-background px-3 text-xs font-semibold text-primary transition-colors hover:bg-primary/5"
+                    >
+                      <Share2 className="size-3" />
+                      {lang === "TH" ? "แชร์" : lang === "JP" ? "シェア" : "Share"}
+                    </button>
+                  ) : undefined
+                }
+              />
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 }

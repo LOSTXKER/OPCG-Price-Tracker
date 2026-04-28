@@ -87,7 +87,7 @@ export function ChatPanel({
           <p className="truncate text-sm font-medium">
             {otherUser.displayName ?? "User"}
           </p>
-          <p className="truncate text-xs text-muted-foreground">
+          <p className="truncate text-meta">
             {listing.card.nameEn ?? listing.card.nameJp} · {listing.card.cardCode}
           </p>
         </div>

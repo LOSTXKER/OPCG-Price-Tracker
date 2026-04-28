@@ -5,6 +5,7 @@ import { AlertTriangle, Calculator, ListChecks, Package, LayoutGrid } from "luci
 
 import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
+import { PageHeader } from "@/components/layout/page-header"
 import { SetSelector } from "@/components/drop-calculator/set-selector"
 import { PurchaseConfig } from "@/components/drop-calculator/purchase-config"
 import { WantList } from "@/components/drop-calculator/want-list"
@@ -186,13 +187,7 @@ export default function DropCalculatorClient() {
 
   return (
     <div className="space-y-6">
-      {/* ── Header ── */}
-      <div className="flex items-center gap-3">
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-          <Calculator className="size-4" />
-        </div>
-        <h1 className="page-header">{t(lang, "dropCalculator")}</h1>
-      </div>
+      <PageHeader title={t(lang, "dropCalculator")} icon={Calculator} />
 
       {/* ── Set Selector ── */}
       <SetSelector
@@ -243,7 +238,7 @@ export default function DropCalculatorClient() {
                 <ListChecks className="size-4" />
                 {resultsLabel}
                 {wantCards.length > 0 && (
-                  <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
+                  <span className="flex size-5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
                     {wantCards.length}
                   </span>
                 )}
@@ -263,7 +258,7 @@ export default function DropCalculatorClient() {
           {!detail && !loading && (
             <div className="panel flex flex-col items-center justify-center px-6 py-10 text-center">
               <Package className="mb-2 size-8 text-muted-foreground/20" />
-              <p className="text-xs text-muted-foreground">{t(lang, "selectSet")}</p>
+              <p className="text-meta">{t(lang, "selectSet")}</p>
             </div>
           )}
           {detail && !loading && activeTab === "cards" && (
@@ -279,7 +274,7 @@ export default function DropCalculatorClient() {
                 onSearchChange={setCardSearch}
                 onRarityChange={setRarityFilter}
               />
-              <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground/60">
+              <p className="mt-3 flex items-center gap-1.5 text-meta text-muted-foreground/60">
                 <AlertTriangle className="size-3 shrink-0" />
                 {t(lang, "communityEstimate")}
               </p>
@@ -312,7 +307,7 @@ export default function DropCalculatorClient() {
             {!detail && !loading && (
               <div className="panel flex flex-col items-center justify-center px-6 py-10 text-center">
                 <Package className="mb-2 size-8 text-muted-foreground/20" />
-                <p className="text-xs text-muted-foreground">{t(lang, "selectSet")}</p>
+                <p className="text-meta">{t(lang, "selectSet")}</p>
               </div>
             )}
             {detail && !loading && (
@@ -329,7 +324,7 @@ export default function DropCalculatorClient() {
               />
             )}
             {detail && !loading && (
-              <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground/60">
+              <p className="mt-3 flex items-center gap-1.5 text-meta text-muted-foreground/60">
                 <AlertTriangle className="size-3 shrink-0" />
                 {t(lang, "communityEstimate")}
               </p>
@@ -360,7 +355,7 @@ export default function DropCalculatorClient() {
               </>
             ) : (
               <div className="panel p-4">
-                <div className="rounded-lg border border-dashed border-border/50 bg-muted/10 p-6 text-center text-xs text-muted-foreground/40">
+                <div className="rounded-lg border border-dashed border-border/50 bg-muted/10 p-6 text-center text-meta text-muted-foreground/40">
                   {t(lang, "selectSet")}
                 </div>
               </div>

@@ -105,7 +105,7 @@ export function OrderStatusTracker({
         })}
       </div>
       {trackingNumber && (
-        <p className="mt-2 text-xs text-muted-foreground">
+        <p className="mt-2 text-meta">
           {shippingMethod && <span className="font-medium">{shippingMethod}: </span>}
           <span className="font-mono">{trackingNumber}</span>
         </p>

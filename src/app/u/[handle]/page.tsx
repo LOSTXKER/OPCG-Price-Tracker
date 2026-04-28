@@ -62,7 +62,8 @@ export default async function HandleProfilePage({ params }: PageProps) {
 
   const isOwner = await resolveIsOwner(user.id);
 
-  if (!isOwner && user.profileVisibility === "private") {
+  const visibility = user.privacySettings?.profileVisibility ?? "public";
+  if (!isOwner && visibility === "private") {
     // Reuse the same private view from /profile/[userId]
     redirect(`/profile/${user.id}`);
   }

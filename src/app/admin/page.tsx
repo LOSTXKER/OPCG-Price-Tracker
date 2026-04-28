@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { StatCard } from "@/components/shared/stat-card";
+import { Surface } from "@/components/ui/surface";
 import { DashboardCharts } from "./dashboard-charts";
 
 export const dynamic = "force-dynamic";
@@ -106,18 +107,17 @@ function pct(numerator: number, denominator: number) {
   return ((numerator / denominator) * 100).toFixed(1);
 }
 
-const RARITY_DOT: Record<string, string> = {
-  TR: "bg-red-500",
-  SP: "bg-pink-500",
-  SEC: "bg-amber-500",
-  SR: "bg-purple-500",
-  R: "bg-blue-500",
-  UC: "bg-emerald-500",
-  C: "bg-neutral-400",
-  L: "bg-orange-500",
-  DON: "bg-red-400",
-  P: "bg-cyan-500",
-};
+const RARITY_PALETTE = [
+  "bg-[var(--chart-1)]",
+  "bg-[var(--chart-2)]",
+  "bg-[var(--chart-3)]",
+  "bg-[var(--chart-4)]",
+  "bg-[var(--chart-5)]",
+] as const;
+
+function rarityDot(index: number) {
+  return RARITY_PALETTE[index % RARITY_PALETTE.length];
+}
 
 function relativeTime(date: Date): string {
   const now = new Date();
@@ -131,19 +131,12 @@ function relativeTime(date: Date): string {
   return `${days} วันที่แล้ว`;
 }
 
-const ACTION_COLORS: Record<string, string> = {
-  create: "bg-green-500",
-  update: "bg-blue-500",
-  delete: "bg-red-500",
-  approve: "bg-emerald-500",
-  reject: "bg-amber-500",
-  scrape: "bg-purple-500",
-  import: "bg-cyan-500",
-};
+const ACTION_DESTRUCTIVE = ["delete", "reject"] as const;
 
 function actionDotColor(action: string) {
-  const key = Object.keys(ACTION_COLORS).find((k) => action.toLowerCase().includes(k));
-  return key ? ACTION_COLORS[key] : "bg-primary/50";
+  const lower = action.toLowerCase();
+  if (ACTION_DESTRUCTIVE.some((k) => lower.includes(k))) return "bg-destructive/70";
+  return "bg-primary/60";
 }
 
 const QUICK_ACTIONS = [
@@ -152,48 +145,36 @@ const QUICK_ACTIONS = [
     icon: Library,
     title: "จัดการชุดการ์ด",
     description: "ดูชุดการ์ดและดึงข้อมูลราคา",
-    accent: "group-hover:text-purple-500",
-    accentBg: "group-hover:bg-purple-500/10",
   },
   {
     href: "/admin/cards",
     icon: CreditCard,
     title: "เรียกดูการ์ด",
     description: "ค้นหา กรอง และตรวจสอบข้อมูล",
-    accent: "group-hover:text-blue-500",
-    accentBg: "group-hover:bg-blue-500/10",
   },
   {
     href: "/admin/yuyutei-matching",
     icon: ArrowLeftRight,
     title: "จับคู่ Yuyutei",
     description: "จัดการการจับคู่การ์ดกับราคา",
-    accent: "group-hover:text-amber-500",
-    accentBg: "group-hover:bg-amber-500/10",
   },
   {
     href: "/admin/image-matching",
     icon: ImageIcon,
     title: "จับคู่รูปภาพ",
     description: "จัดการการจับคู่รูปภาพการ์ด",
-    accent: "group-hover:text-emerald-500",
-    accentBg: "group-hover:bg-emerald-500/10",
   },
   {
     href: "/admin/drop-rates",
     icon: BarChart3,
     title: "อัตราดรอป",
     description: "ดูและแก้ไขอัตราการเปิดได้",
-    accent: "group-hover:text-cyan-500",
-    accentBg: "group-hover:bg-cyan-500/10",
   },
   {
     href: "/admin/blog/new",
     icon: FileText,
     title: "สร้างบทความ",
     description: "เขียนบทความใหม่",
-    accent: "group-hover:text-pink-500",
-    accentBg: "group-hover:bg-pink-500/10",
   },
 ];
 
@@ -212,35 +193,27 @@ export default async function AdminDashboard() {
       value: s.totalCards.toLocaleString(),
       sub: `${s.baseCards.toLocaleString()} พื้นฐาน + ${s.parallelCards.toLocaleString()} พาราเลล`,
       icon: Database,
-      color: "text-blue-500",
-      bg: "bg-blue-500/10",
     },
     {
       label: "ชุดการ์ดทั้งหมด",
       value: s.totalSets.toLocaleString(),
       icon: Library,
-      color: "text-purple-500",
-      bg: "bg-purple-500/10",
     },
     {
       label: "ความครบถ้วนราคา",
       value: `${pct(s.totalWithPrice, s.totalCards)}%`,
       sub: `${s.totalWithPrice.toLocaleString()} ใบมีราคาแล้ว`,
       icon: DollarSign,
-      color: "text-green-500",
-      bg: "bg-green-500/10",
+      tone: "primary" as const,
     },
     {
       label: "เชื่อม Yuyutei แล้ว",
       value: `${pct(s.withYuyuteiId, s.totalCards)}%`,
       sub: `${s.withYuyuteiId.toLocaleString()} ใบ`,
       icon: CheckCircle2,
-      color:
-        s.withYuyuteiId === s.totalCards ? "text-green-500" : "text-amber-500",
-      bg:
-        s.withYuyuteiId === s.totalCards
-          ? "bg-green-500/10"
-          : "bg-amber-500/10",
+      tone: (s.withYuyuteiId === s.totalCards ? "primary" : "default") as
+        | "primary"
+        | "default",
     },
   ];
 
@@ -279,10 +252,10 @@ export default async function AdminDashboard() {
       missing: item.missing,
       total: item.total,
     })),
-    rarities: sortedRarities.map((r) => ({
+    rarities: sortedRarities.map((r, i) => ({
       rarity: r.rarity,
       count: r.count,
-      color: RARITY_DOT[r.rarity] ?? "bg-muted",
+      color: rarityDot(i),
     })),
   };
 
@@ -305,7 +278,7 @@ export default async function AdminDashboard() {
       <DashboardCharts data={chartData} />
 
       {/* ── Data Quality ── */}
-      <div className="rounded-xl border border-border/50 bg-card p-5">
+      <Surface variant="panel" padding="md">
         <div className="flex items-center justify-between">
           <h3 className="flex items-center gap-2 text-sm font-semibold">
             <BarChart3 className="size-4 text-muted-foreground" />
@@ -317,16 +290,16 @@ export default async function AdminDashboard() {
             const pctValue =
               item.total > 0 ? (item.have / item.total) * 100 : 0;
             const isComplete = item.missing === 0;
-            const isGood = pctValue >= 95;
+            const isWarn = !isComplete && pctValue < 95;
             const QIcon = QUALITY_ICONS[item.label as keyof typeof QUALITY_ICONS] ?? Globe;
             return (
               <Link
                 key={item.label}
                 href={item.href}
-                className="group flex items-start gap-3 rounded-lg border border-border/30 p-3 transition-all hover:border-primary/30 hover:bg-muted/30"
+                className="group flex items-start gap-3 rounded-lg border border-border/30 p-3 transition-colors hover:bg-muted/30"
               >
-                <div className={`mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg ${isGood ? "bg-green-500/10" : "bg-amber-500/10"}`}>
-                  <QIcon className={`size-4 ${isGood ? "text-green-500" : "text-amber-500"}`} />
+                <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                  <QIcon className="size-4 text-primary" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between">
@@ -335,18 +308,18 @@ export default async function AdminDashboard() {
                   </div>
                   <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-muted/60">
                     <div
-                      className={`h-full rounded-full transition-all ${isGood ? "bg-green-500/70" : "bg-amber-500/70"}`}
+                      className="h-full rounded-full bg-primary/70 transition-all"
                       style={{ width: `${Math.min(pctValue, 100)}%` }}
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-muted-foreground">
+                  <p className="mt-1 text-meta">
                     {isComplete ? (
-                      <span className="flex items-center gap-1 text-green-500">
+                      <span className="flex items-center gap-1 text-success">
                         <CheckCircle2 className="size-3" /> ครบถ้วนแล้ว
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1">
-                        <CircleAlert className="size-3 text-amber-500" />
+                      <span className="flex items-center gap-1 text-muted-foreground">
+                        <CircleAlert className={isWarn ? "size-3 text-warning" : "size-3"} />
                         ขาด {item.missing.toLocaleString()} รายการ
                       </span>
                     )}
@@ -356,36 +329,34 @@ export default async function AdminDashboard() {
             );
           })}
         </div>
-      </div>
+      </Surface>
 
       {/* ── Rarity Breakdown ── */}
-      <div className="rounded-xl border border-border/50 bg-card p-5">
+      <Surface variant="panel" padding="md">
         <h3 className="flex items-center gap-2 text-sm font-semibold">
           <Database className="size-4 text-muted-foreground" />
           สรุปตามระดับความหายาก
         </h3>
         <div className="mt-3 flex flex-wrap gap-2">
-          {sortedRarities.map((r) => (
+          {sortedRarities.map((r, i) => (
             <Link
               key={r.rarity}
               href={`/admin/cards?rarity=${r.rarity}&parallel=false`}
-              className="flex items-center gap-2 rounded-lg border border-border/30 px-3 py-1.5 text-sm transition-all hover:border-primary/30 hover:bg-muted/40"
+              className="flex items-center gap-2 rounded-lg border border-border/30 px-3 py-1.5 text-sm transition-colors hover:bg-muted/40"
             >
-              <div
-                className={`size-2.5 rounded-full ${RARITY_DOT[r.rarity] ?? "bg-muted"}`}
-              />
+              <div className={`size-2.5 rounded-full ${rarityDot(i)}`} />
               <span className="font-mono text-xs font-bold">{r.rarity}</span>
               <span className="tabular-nums text-xs text-muted-foreground">{r.count.toLocaleString()}</span>
             </Link>
           ))}
         </div>
-      </div>
+      </Surface>
 
       {/* ── Bottom: Recent Activity + Quick Actions ── */}
       <div className="grid gap-4 lg:grid-cols-5">
         {/* Recent Activity */}
         {s.recentLogs.length > 0 && (
-          <div className="rounded-xl border border-border/50 bg-card p-5 lg:col-span-2">
+          <Surface variant="panel" padding="md" className="lg:col-span-2">
             <div className="flex items-center justify-between">
               <h3 className="flex items-center gap-2 text-sm font-semibold">
                 <Clock className="size-4 text-muted-foreground" />
@@ -393,7 +364,7 @@ export default async function AdminDashboard() {
               </h3>
               <Link
                 href="/admin/logs"
-                className="flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-primary"
+                className="flex items-center gap-1 text-meta transition-colors hover:text-primary"
               >
                 ดูทั้งหมด
                 <ArrowRight className="size-3" />
@@ -412,19 +383,19 @@ export default async function AdminDashboard() {
                       <span className="mx-1 text-muted-foreground/40">·</span>
                       <span className="text-muted-foreground">{log.entity}</span>
                       {log.entityId && (
-                        <span className="ml-1 font-mono text-[10px] text-muted-foreground/50">
+                        <span className="ml-1 font-mono text-overlay text-muted-foreground/50">
                           #{log.entityId.slice(0, 8)}
                         </span>
                       )}
                     </p>
-                    <p className="text-[11px] text-muted-foreground/50">
+                    <p className="text-meta text-muted-foreground/50">
                       {relativeTime(log.createdAt)}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          </Surface>
         )}
 
         {/* Quick Actions */}
@@ -432,20 +403,24 @@ export default async function AdminDashboard() {
           <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
             {QUICK_ACTIONS.map((action) => (
               <Link key={action.href} href={action.href} className="group">
-                <div className="flex h-full items-start gap-3 rounded-xl border border-border/50 bg-card p-4 transition-all hover:border-primary/20 hover:shadow-sm">
-                  <div className={`flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted/50 transition-colors ${action.accentBg}`}>
-                    <action.icon className={`size-[18px] text-muted-foreground transition-colors ${action.accent}`} />
+                <Surface
+                  variant="panel"
+                  padding="md"
+                  className="flex h-full items-start gap-3 transition-colors hover:bg-muted/20"
+                >
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                    <action.icon className="size-[18px] text-primary" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h4 className="text-sm font-semibold group-hover:text-primary transition-colors">
+                    <h4 className="text-sm font-semibold transition-colors group-hover:text-primary">
                       {action.title}
                     </h4>
                     <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
                       {action.description}
                     </p>
                   </div>
-                  <ExternalLink className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/0 transition-all group-hover:text-muted-foreground/60" />
-                </div>
+                  <ExternalLink className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/0 transition-colors group-hover:text-muted-foreground/60" />
+                </Surface>
               </Link>
             ))}
           </div>

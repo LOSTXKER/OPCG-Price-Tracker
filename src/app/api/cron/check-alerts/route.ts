@@ -1,14 +1,13 @@
 import { cronHandler } from "@/lib/api/cron-auth";
 import { prisma } from "@/lib/db";
-import { sendEmail, priceAlertEmail } from "@/lib/email";
-import { sendLinePriceAlert } from "@/lib/line";
+import { priceAlertEmail } from "@/lib/email";
+import { notify } from "@/lib/notify/dispatch";
 
 export const GET = cronHandler(async () => {
   const activeAlerts = await prisma.priceAlert.findMany({
     where: { isActive: true },
     include: {
       card: { select: { latestPriceJpy: true, cardCode: true, nameJp: true, nameEn: true } },
-      user: { select: { email: true, lineUserId: true, emailAlerts: true, lineAlerts: true } },
     },
   });
 
@@ -16,6 +15,7 @@ export const GET = cronHandler(async () => {
   const triggeredIds: number[] = [];
   let emailsSent = 0;
   let lineSent = 0;
+  let webSent = 0;
 
   for (const alert of activeAlerts) {
     const price = alert.card.latestPriceJpy;
@@ -28,29 +28,50 @@ export const GET = cronHandler(async () => {
     triggeredIds.push(alert.id);
 
     const cardName = alert.card.nameEn ?? alert.card.nameJp;
+    const verb = alert.direction === "BELOW" ? "dropped to" : "rose to";
+    const emoji = alert.direction === "BELOW" ? "📉" : "📈";
 
-    if (alert.user.emailAlerts && (alert.channel === "EMAIL" || !alert.channel)) {
-      const { subject, html } = priceAlertEmail(
-        cardName,
-        alert.card.cardCode,
-        price,
-        alert.targetPrice,
-        alert.direction,
-      );
-      const result = await sendEmail({ to: alert.user.email, subject, html });
-      if (result) emailsSent++;
-    }
+    // The PriceAlert.channels array (per-alert override) intersects with
+    // the user's global notification prefs handled by the orchestrator.
+    // PriceAlert uses `PUSH` for in-app/web — translate to the
+    // orchestrator's `WEB` channel.
+    const requestedChannels: ReadonlyArray<"WEB" | "EMAIL" | "LINE"> =
+      alert.channels.length > 0
+        ? alert.channels.map((c) => (c === "PUSH" ? "WEB" : c))
+        : ["WEB", "EMAIL"];
 
-    if (alert.user.lineAlerts && alert.user.lineUserId && alert.channel === "LINE") {
-      const ok = await sendLinePriceAlert(
-        alert.user.lineUserId,
-        cardName,
-        alert.card.cardCode,
+    const { subject, html } = priceAlertEmail(
+      cardName,
+      alert.card.cardCode,
+      price,
+      alert.targetPrice,
+      alert.direction,
+    );
+
+    const dispatched = await notify({
+      userId: alert.userId,
+      kind: "PRICE_ALERT",
+      type: "PRICE_ALERT",
+      title: `${emoji} ${cardName} ${verb} ¥${price.toLocaleString()}`,
+      message: `Target was ¥${alert.targetPrice.toLocaleString()}.`,
+      data: {
+        alertId: alert.id,
+        cardCode: alert.card.cardCode,
         price,
-        alert.direction,
-      );
-      if (ok) lineSent++;
-    }
+        targetPrice: alert.targetPrice,
+        direction: alert.direction,
+      },
+      channels: requestedChannels,
+      email: { subject, html },
+      lineText:
+        `${emoji} ${cardName} (${alert.card.cardCode}) ${verb} ¥${price.toLocaleString()}\n` +
+        `Target was ¥${alert.targetPrice.toLocaleString()}.`,
+      dedupKey: `price-alert:${alert.id}`,
+    });
+
+    if (dispatched.email) emailsSent++;
+    if (dispatched.line) lineSent++;
+    if (dispatched.web) webSent++;
   }
 
   if (triggeredIds.length > 0) {
@@ -65,5 +86,6 @@ export const GET = cronHandler(async () => {
     triggered: triggeredIds.length,
     emailsSent,
     lineSent,
+    webSent,
   };
 });

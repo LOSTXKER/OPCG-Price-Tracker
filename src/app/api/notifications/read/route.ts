@@ -3,12 +3,13 @@ import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { MarkNotificationReadSchema } from "@/lib/notifications/schemas";
 
 export const POST = apiHandler(async (request: NextRequest) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
-  const parsed = await parseJsonBody<{ id?: number; all?: boolean }>(request);
+  const parsed = await parseJsonBody(request, MarkNotificationReadSchema);
   if (!parsed.ok) return parsed.response;
 
   const now = new Date();

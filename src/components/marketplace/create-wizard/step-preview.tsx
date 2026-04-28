@@ -32,7 +32,7 @@ export function StepPreview({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-lg font-semibold">ตรวจสอบก่อนลงขาย</h2>
+        <h2 className="text-h3">ตรวจสอบก่อนลงขาย</h2>
         <p className="text-sm text-muted-foreground">
           ตรวจสอบรายละเอียดทั้งหมดก่อนลงประกาศ
         </p>
@@ -51,7 +51,7 @@ export function StepPreview({
                 className="object-contain"
               />
             ) : (
-              <span className="flex size-full items-center justify-center text-xs text-muted-foreground">
+              <span className="flex size-full items-center justify-center text-meta">
                 No image
               </span>
             )}

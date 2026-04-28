@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { FaqSection } from "@/components/shared/faq-section";
+import { PageHeader } from "@/components/layout/page-header";
+import { Surface } from "@/components/ui/surface";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 
@@ -24,8 +26,6 @@ interface GuideItem {
   icon: LucideIcon;
   title: string;
   description: string;
-  iconBg: string;
-  iconColor: string;
   featured?: boolean;
 }
 
@@ -36,8 +36,6 @@ const guides: GuideItem[] = [
     title: "เริ่มต้น",
     description:
       "One Piece Card Game คืออะไร? กฎพื้นฐาน วิธีเล่น และสิ่งที่มือใหม่ควรรู้ทั้งหมด เริ่มต้นที่นี่",
-    iconBg: "bg-primary/10",
-    iconColor: "text-primary",
     featured: true,
   },
   {
@@ -45,84 +43,72 @@ const guides: GuideItem[] = [
     icon: Swords,
     title: "ประเภทการ์ด",
     description: "Leader, Character, Event, Stage, DON!! — แต่ละประเภททำอะไร",
-    iconBg: "bg-rose-500/10",
-    iconColor: "text-rose-500",
   },
   {
     href: "/guide/rarities",
     icon: Sparkles,
     title: "ความหายาก",
     description: "C, UC, R, SR, SEC, SP — ยิ่งหายากยิ่งแพง",
-    iconBg: "bg-amber-500/10",
-    iconColor: "text-amber-500",
   },
   {
     href: "/guide/colors",
     icon: Palette,
     title: "สี",
     description: "Red, Blue, Green, Purple, Black, Yellow — สีบอกสไตล์การเล่น",
-    iconBg: "bg-purple-500/10",
-    iconColor: "text-purple-500",
   },
   {
     href: "/guide/sets",
     icon: Layers,
     title: "ชุดการ์ด",
     description: "ชุดการ์ดทั้งหมดตั้งแต่ OP01 — Timeline ครบ",
-    iconBg: "bg-emerald-500/10",
-    iconColor: "text-emerald-500",
   },
   {
     href: "/guide/buying",
     icon: ShoppingCart,
     title: "คู่มือการซื้อ",
     description: "ซื้อการ์ดที่ไหนดี? วิธีอ่านราคา ร้านค้าแนะนำ",
-    iconBg: "bg-cyan-500/10",
-    iconColor: "text-cyan-500",
   },
 ];
 
-const tools = [
+const tools: Array<{
+  href: string;
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}> = [
   {
     href: "/drop-calculator",
     icon: Calculator,
     title: "Drop Calculator",
     description: "คำนวณโอกาสดึงการ์ดจากกล่อง",
-    iconBg: "bg-orange-500/10",
-    iconColor: "text-orange-500",
   },
   {
     href: "/deck-calculator",
     icon: Calculator,
     title: "Deck Calculator",
     description: "คำนวณราคารวมเด็คของคุณ",
-    iconBg: "bg-violet-500/10",
-    iconColor: "text-violet-500",
   },
   {
     href: "/compare",
     icon: GitCompareArrows,
     title: "เปรียบเทียบการ์ด",
     description: "เทียบการ์ดหลายใบแบบ side-by-side",
-    iconBg: "bg-sky-500/10",
-    iconColor: "text-sky-500",
   },
   {
     href: "/marketplace",
     icon: Store,
     title: "Marketplace",
     description: "ซื้อขายการ์ดในตลาด Meecard",
-    iconBg: "bg-pink-500/10",
-    iconColor: "text-pink-500",
   },
 ];
 
 export default function GuideLandingPage() {
   const featured = guides[0];
   const rest = guides.slice(1);
+  const FeaturedIcon = featured.icon;
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-10">
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", href: "/" },
@@ -130,42 +116,38 @@ export default function GuideLandingPage() {
         ])}
       />
 
-      {/* ── Hero ── */}
-      <div className="relative overflow-hidden rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/[0.04] to-muted/30 px-6 pb-10 pt-6">
-        <Breadcrumb
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Guide" },
-          ]}
-        />
-        <div className="mx-auto mt-6 max-w-2xl text-center">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            เริ่มต้นกับ OPCG
-          </h1>
-          <p className="mt-3 text-base text-muted-foreground sm:text-lg">
-            ไม่ว่าจะเป็นมือใหม่หรือเพิ่งเข้าวงการ เราจะพาคุณรู้จักทุกอย่าง
-            เกี่ยวกับ One Piece Card Game
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        breadcrumb={
+          <Breadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Guide" },
+            ]}
+          />
+        }
+        title="เริ่มต้นกับ OPCG"
+        description="ไม่ว่าจะเป็นมือใหม่หรือเพิ่งเข้าวงการ เราจะพาคุณรู้จักทุกอย่างเกี่ยวกับ One Piece Card Game"
+      />
 
-      {/* ── Guide Cards — Bento Grid ── */}
       <section>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Featured card — spans 1 col on sm, 1 col + 2 rows on lg */}
           <Link
             href={featured.href}
             className="group relative row-span-1 sm:row-span-1 lg:row-span-2"
           >
-            <div className="flex h-full flex-col justify-between rounded-2xl border border-primary/15 bg-primary/[0.04] p-6 transition-all hover:border-primary/30 hover:shadow-lg sm:p-7">
+            <Surface
+              variant="panel"
+              padding="none"
+              className="flex h-full flex-col justify-between p-6 transition-colors group-hover:border-primary/30 sm:p-7"
+            >
               <div>
-                <div className={`flex size-12 items-center justify-center rounded-xl ${featured.iconBg}`}>
-                  <featured.icon className={`size-6 ${featured.iconColor}`} />
+                <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10">
+                  <FeaturedIcon className="size-6 text-primary" />
                 </div>
-                <h2 className="mt-4 text-xl font-semibold transition-colors group-hover:text-primary">
+                <h2 className="mt-4 text-h3 transition-colors group-hover:text-primary">
                   {featured.title}
                 </h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-2 text-body-sm text-muted-foreground">
                   {featured.description}
                 </p>
               </div>
@@ -173,72 +155,79 @@ export default function GuideLandingPage() {
                 เริ่มเลย
                 <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
               </div>
-            </div>
+            </Surface>
           </Link>
 
-          {/* Remaining guide cards */}
-          {rest.map((guide) => (
-            <Link key={guide.href} href={guide.href} className="group">
-              <div className="flex h-full items-start gap-4 rounded-2xl border border-border/50 bg-card p-5 transition-all hover:border-border hover:bg-muted/40 hover:shadow-md">
-                <div className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${guide.iconBg}`}>
-                  <guide.icon className={`size-5 ${guide.iconColor}`} />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h2 className="text-xl font-semibold transition-colors group-hover:text-primary">
-                    {guide.title}
-                  </h2>
-                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                    {guide.description}
-                  </p>
-                </div>
-                <ChevronRight className="mt-0.5 size-4 shrink-0 text-muted-foreground/30 transition-transform group-hover:translate-x-0.5 group-hover:text-muted-foreground/60" />
-              </div>
-            </Link>
-          ))}
+          {rest.map((guide) => {
+            const Icon = guide.icon;
+            return (
+              <Link key={guide.href} href={guide.href} className="group">
+                <Surface
+                  variant="outline"
+                  padding="none"
+                  className="flex h-full items-start gap-4 p-5 transition-colors group-hover:bg-muted/40"
+                >
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
+                    <Icon className="size-5 text-muted-foreground" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-h4 transition-colors group-hover:text-primary">
+                      {guide.title}
+                    </h2>
+                    <p className="mt-1 text-meta">{guide.description}</p>
+                  </div>
+                  <ChevronRight className="mt-0.5 size-4 shrink-0 text-muted-foreground/40 transition-transform group-hover:translate-x-0.5 group-hover:text-muted-foreground" />
+                </Surface>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
-      {/* ── Tools ── */}
       <section className="space-y-5">
         <div>
           <div className="flex items-center gap-2">
             <Wrench className="size-5 text-muted-foreground" />
-            <h2 className="text-xl font-semibold">เครื่องมือ</h2>
+            <h2 className="text-h3">เครื่องมือ</h2>
           </div>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-1 page-subtitle">
             เครื่องมือที่ช่วยให้คุณวิเคราะห์และวางแผนก่อนซื้อการ์ด
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {tools.map((tool) => (
-            <Link key={tool.href} href={tool.href} className="group">
-              <div className="flex h-full flex-col gap-3 rounded-2xl border border-border/50 bg-card p-5 transition-all hover:border-border hover:bg-muted/40 hover:shadow-md">
-                <div className={`flex size-10 items-center justify-center rounded-lg ${tool.iconBg}`}>
-                  <tool.icon className={`size-5 ${tool.iconColor}`} />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-sm font-semibold transition-colors group-hover:text-primary">
-                    {tool.title}
-                  </h3>
-                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                    {tool.description}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground/60 transition-colors group-hover:text-primary">
-                  เปิดเครื่องมือ
-                  <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
-                </div>
-              </div>
-            </Link>
-          ))}
+          {tools.map((tool) => {
+            const Icon = tool.icon;
+            return (
+              <Link key={tool.href} href={tool.href} className="group">
+                <Surface
+                  variant="outline"
+                  padding="none"
+                  className="flex h-full flex-col gap-3 p-5 transition-colors group-hover:bg-muted/40"
+                >
+                  <div className="flex size-10 items-center justify-center rounded-lg bg-muted">
+                    <Icon className="size-5 text-muted-foreground" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-h5 transition-colors group-hover:text-primary">
+                      {tool.title}
+                    </h3>
+                    <p className="mt-1 text-meta">{tool.description}</p>
+                  </div>
+                  <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors group-hover:text-primary">
+                    เปิดเครื่องมือ
+                    <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+                  </div>
+                </Surface>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
-      {/* ── FAQ ── */}
       <section className="space-y-5">
         <div>
-          <h2 className="text-xl font-semibold">คำถามที่พบบ่อย</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <h2 className="text-h3">คำถามที่พบบ่อย</h2>
+          <p className="mt-1 page-subtitle">
             คำตอบสำหรับคำถามยอดนิยมเกี่ยวกับ One Piece Card Game และ Meecard
           </p>
         </div>

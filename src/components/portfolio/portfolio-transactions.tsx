@@ -85,7 +85,7 @@ export function PortfolioTransactions({ transactions, onDelete }: Props) {
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold">{name}</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-meta">
                 {label} ×{tx.quantity}
                 {tx.pricePerUnit != null && ` @ ${formatJpyAmount(tx.pricePerUnit, currency)}`}
               </p>
@@ -96,7 +96,7 @@ export function PortfolioTransactions({ transactions, onDelete }: Props) {
                   {tx.type === "BUY" ? "-" : "+"}{formatJpyAmount(tx.pricePerUnit * tx.quantity, currency)}
                 </p>
               )}
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-meta">
                 {date.toLocaleDateString(locale, { day: "numeric", month: "short", year: "2-digit" })}
                 {" "}
                 {date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}

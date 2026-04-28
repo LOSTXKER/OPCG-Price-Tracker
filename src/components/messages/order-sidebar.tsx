@@ -75,7 +75,7 @@ export function OrderSidebar({
               className="object-contain"
             />
           ) : (
-            <span className="flex size-full items-center justify-center text-xs text-muted-foreground">
+            <span className="flex size-full items-center justify-center text-meta">
               No image
             </span>
           )}
@@ -87,21 +87,21 @@ export function OrderSidebar({
           <p className="text-sm font-medium group-hover:text-primary transition-colors">
             {card.nameEn ?? card.nameJp}
           </p>
-          <p className="text-xs text-muted-foreground">{card.cardCode}</p>
+          <p className="text-meta">{card.cardCode}</p>
         </Link>
       </div>
 
       {/* Pricing */}
       <div className="space-y-2 border-b p-4">
         <div className="flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">ราคาลงขาย</span>
+          <span className="text-meta">ราคาลงขาย</span>
           <span className="text-sm font-bold tabular-nums">
             {formatThb(listingPrice ?? 0)}
           </span>
         </div>
         {marketPrice != null && (
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">ราคาตลาด</span>
+            <span className="text-meta">ราคาตลาด</span>
             <span className="text-sm tabular-nums">
               {formatThb(marketPrice)}
             </span>
@@ -109,7 +109,7 @@ export function OrderSidebar({
         )}
         {diffPct != null && (
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">ส่วนต่าง</span>
+            <span className="text-meta">ส่วนต่าง</span>
             <Badge
               variant={diffPct <= -10 ? "default" : diffPct >= 15 ? "destructive" : "secondary"}
             >
@@ -123,7 +123,7 @@ export function OrderSidebar({
       {/* Order status */}
       {activeOrder && (
         <div className="space-y-3 border-b p-4">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <h3 className="text-eyebrow">
             สถานะคำสั่งซื้อ
           </h3>
           <OrderStatusTracker
@@ -203,7 +203,7 @@ export function OrderSidebar({
 
       {/* Seller info */}
       <div className="p-4">
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <h3 className="mb-2 text-eyebrow">
           {isSeller ? "ผู้ซื้อ" : "ผู้ขาย"}
         </h3>
         <div className="flex items-center gap-2">

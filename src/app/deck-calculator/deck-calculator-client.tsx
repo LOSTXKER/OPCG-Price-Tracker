@@ -23,8 +23,11 @@ import { useCardSearch, type CardSearchResult } from "@/hooks/use-card-search";
 import { useTierLimits } from "@/hooks/use-tier-limits";
 import { useUIStore } from "@/stores/ui-store";
 import { t, type Language } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import { LimitCounter } from "@/components/shared/limit-counter";
 import { UpgradeBadge } from "@/components/shared/upgrade-badge";
+import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
+import { PageHeader } from "@/components/layout/page-header";
 
 type DeckRow = {
   id: number;
@@ -66,6 +69,7 @@ function DeckCalculatorContent() {
   });
   const [newDeckName, setNewDeckName] = useState("");
   const { limits } = useTierLimits();
+  const { openUpgradeDialog } = useUpgradeDialog();
   const deckLimitReached = isFinite(limits.deckCount) && decks.length >= limits.deckCount;
 
   const loadDecks = useCallback(async () => {
@@ -211,15 +215,25 @@ function DeckCalculatorContent() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="page-header">{t(lang, "deckCalculatorNav")}</h1>
-        <p className="text-muted-foreground text-sm">{t(lang, "deckCalculatorDesc")}</p>
-      </div>
+      <PageHeader
+        title={t(lang, "deckCalculatorNav")}
+        description={t(lang, "deckCalculatorDesc")}
+      />
 
       {error && <p className="text-destructive text-sm">{error}</p>}
 
       <div className="flex flex-wrap items-end gap-2">
-        <div className="min-w-0 flex-1">
+        <div
+          className={cn(
+            "min-w-0 flex-1",
+            deckLimitReached && "cursor-pointer",
+          )}
+          onClick={
+            deckLimitReached
+              ? () => openUpgradeDialog({ featureKey: "deckCount" })
+              : undefined
+          }
+        >
           <Input
             placeholder={t(lang, "newDeckName")}
             value={newDeckName}
@@ -228,9 +242,9 @@ function DeckCalculatorContent() {
           />
         </div>
         {deckLimitReached ? (
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center gap-2 text-meta">
             <LimitCounter current={decks.length} max={limits.deckCount} />
-            <UpgradeBadge />
+            <UpgradeBadge featureKey="deckCount" />
           </div>
         ) : (
           <div className="flex items-center gap-2">
@@ -266,7 +280,7 @@ function DeckCalculatorContent() {
       {activeDeck ? (
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="min-w-0 truncate text-lg font-semibold">{activeDeck.name}</h2>
+            <h2 className="min-w-0 truncate text-h3">{activeDeck.name}</h2>
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground text-sm">{totalCards}/50 {t(lang, "cardsCount")}</span>
               <Button
@@ -435,10 +449,10 @@ function DeckMockPreview({ lang }: { lang: Language }) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="page-header">{t(lang, "deckCalculatorNav")}</h1>
-        <p className="text-muted-foreground text-sm">{t(lang, "deckCalculatorDesc")}</p>
-      </div>
+      <PageHeader
+        title={t(lang, "deckCalculatorNav")}
+        description={t(lang, "deckCalculatorDesc")}
+      />
 
       <div className="flex flex-wrap items-end gap-2">
         <div className="min-w-0 flex-1">
@@ -453,7 +467,7 @@ function DeckMockPreview({ lang }: { lang: Language }) {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-2">
-          <h2 className="min-w-0 truncate text-lg font-semibold">My OP-09 Deck</h2>
+          <h2 className="min-w-0 truncate text-h3">My OP-09 Deck</h2>
           <span className="text-muted-foreground text-sm">12/50 {t(lang, "cardsCount")}</span>
         </div>
 

@@ -170,7 +170,7 @@ export function AdminDataTable<T>({
               <th
                 key={col.key}
                 className={cn(
-                  "px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground/70",
+                  "px-4 py-2.5 text-left text-eyebrow text-muted-foreground/70",
                   col.sortable && "cursor-pointer select-none hover:text-foreground",
                   col.pin === "left" && "sticky left-0 z-[5] bg-muted/30",
                   stickyHeader && col.pin === "left" && "z-[11]",
@@ -231,7 +231,7 @@ export function AdminDataTable<T>({
                   <div>
                     <p className="text-sm font-medium">{emptyMessage}</p>
                     {emptyDescription && (
-                      <p className="mt-1 text-xs text-muted-foreground/70">
+                      <p className="mt-1 text-meta text-muted-foreground/70">
                         {emptyDescription}
                       </p>
                     )}

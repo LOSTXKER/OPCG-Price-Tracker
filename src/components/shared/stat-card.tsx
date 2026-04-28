@@ -1,47 +1,88 @@
 import type { LucideIcon } from "lucide-react"
+
+import { Surface } from "@/components/ui/surface"
 import { cn } from "@/lib/utils"
 
-interface StatCardProps {
+export type StatCardTone = "default" | "primary"
+
+export interface StatCardProps {
   label: string
   value: React.ReactNode
   sub?: React.ReactNode
   icon?: LucideIcon
   iconNode?: React.ReactNode
-  color?: string
-  bg?: string
+  /** Visual tone for the icon. Defaults to muted. */
+  tone?: StatCardTone
   className?: string
   children?: React.ReactNode
+  /**
+   * @deprecated Per-card icon color was removed during the minimal-UI sweep.
+   * Pass `tone="primary"` instead. Accepted only for backwards-compat with
+   * older call sites; ignored visually.
+   */
+  color?: string
+  /**
+   * @deprecated Per-card icon background was removed. Accepted but ignored.
+   */
+  bg?: string
 }
 
+/**
+ * Compact KPI card.
+ *
+ * Single source of truth for "label + value + icon" tiles across portfolio,
+ * seller dashboard, admin dashboard, and honey overview. Backed by `Surface`
+ * (`outline` variant) so radius, border, and hover states match other surfaces.
+ *
+ * Color discipline: there is **no** per-card color or background. The icon is
+ * always `text-muted-foreground` (or `text-primary` when `tone="primary"`) on
+ * a neutral `bg-muted/50` chip — the warm-brown theme is the only palette.
+ */
 export function StatCard({
   label,
   value,
   sub,
   icon: Icon,
   iconNode,
-  color = "text-primary",
-  bg = "bg-primary/10",
+  tone = "default",
   className,
   children,
 }: StatCardProps) {
   return (
-    <div className={cn(
-      "relative overflow-hidden rounded-xl border border-border/50 bg-card p-4 transition-colors hover:border-border",
-      className,
-    )}>
+    <Surface
+      variant="outline"
+      padding="md"
+      className={cn("relative overflow-hidden", className)}
+    >
       <div className="flex items-start justify-between">
         <div className="min-w-0 flex-1">
-          <p className="text-[13px] font-medium text-muted-foreground">{label}</p>
-          <p className="mt-1 truncate font-price text-2xl font-bold tracking-tight text-foreground">{value}</p>
-          {sub && <p className="mt-0.5 truncate text-xs text-muted-foreground/70">{sub}</p>}
+          <p className="text-label text-muted-foreground">{label}</p>
+          <p className="mt-1 truncate font-price text-h2 text-foreground">{value}</p>
+          {sub && (
+            <p className="mt-0.5 truncate text-meta text-muted-foreground/70">{sub}</p>
+          )}
         </div>
         {(Icon || iconNode) && (
-          <div className={cn("flex size-9 shrink-0 items-center justify-center rounded-lg", bg)}>
-            {iconNode ?? (Icon && <Icon className={cn("size-[18px]", color)} />)}
+          <div
+            className={cn(
+              "flex size-9 shrink-0 items-center justify-center rounded-lg",
+              "bg-muted/50",
+            )}
+          >
+            {iconNode ?? (
+              Icon && (
+                <Icon
+                  className={cn(
+                    "size-[18px]",
+                    tone === "primary" ? "text-primary" : "text-muted-foreground",
+                  )}
+                />
+              )
+            )}
           </div>
         )}
       </div>
       {children}
-    </div>
+    </Surface>
   )
 }

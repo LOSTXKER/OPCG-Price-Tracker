@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { Camera, Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { t } from "@/lib/i18n";
+import { t, getLocale } from "@/lib/i18n";
 import type { Language } from "@/lib/i18n";
 import type { DbUser } from "./profile-types";
 
@@ -19,7 +19,7 @@ export function AccountProfileHero({ user, lang, onUserUpdate }: AccountProfileH
   const [error, setError] = useState<string | null>(null);
 
   const memberSince = new Date(user.createdAt).toLocaleDateString(
-    lang === "TH" ? "th-TH" : lang === "JP" ? "ja-JP" : "en-US",
+    getLocale(lang),
     { year: "numeric", month: "short", day: "numeric" },
   );
 
@@ -79,9 +79,9 @@ export function AccountProfileHero({ user, lang, onUserUpdate }: AccountProfileH
           />
         </button>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-base font-semibold">{user.displayName ?? user.email}</p>
-          <p className="truncate text-xs text-muted-foreground">{user.email}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground/60">
+          <p className="truncate text-h4">{user.displayName ?? user.email}</p>
+          <p className="truncate text-meta">{user.email}</p>
+          <p className="mt-0.5 text-meta text-muted-foreground/60">
             {t(lang, "memberSince")} {memberSince}
           </p>
         </div>

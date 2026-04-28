@@ -44,7 +44,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
     <div className="space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="flex items-center gap-2 text-lg font-semibold">
+        <h2 className="flex items-center gap-2 text-h3">
           <Store className="size-5" />
           {t(lang, "sellerDashboard")}
         </h2>
@@ -75,7 +75,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
           <h3 className="text-sm font-semibold">{t(lang, "myListings")}</h3>
           <Link
             href={`/profile/${userId}`}
-            className="flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            className="flex items-center gap-1 text-meta transition-colors hover:text-foreground"
           >
             {t(lang, "viewPublicProfile")}
             <ExternalLink className="size-3" />
@@ -107,7 +107,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
                     <span className="font-medium">
                       {lang === "EN" ? l.card.nameEn ?? l.card.nameJp : l.card.nameJp}
                     </span>
-                    <span className="ml-2 text-xs text-muted-foreground">{l.card.cardCode}</span>
+                    <span className="ml-2 text-meta">{l.card.cardCode}</span>
                   </div>
                   <PriceDisplay
                     priceJpy={l.priceJpy}
@@ -130,7 +130,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
             </div>
             <div>
               <h3 className="text-sm font-semibold">{t(lang, "reputationTitle")}</h3>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-meta">
                 {sellerReviewCount} {t(lang, "reviewsReceived")}
               </p>
             </div>

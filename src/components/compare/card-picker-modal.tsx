@@ -4,6 +4,13 @@ import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from
 import Image from "next/image"
 import { Check, Search, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
@@ -142,7 +149,7 @@ export function CardPickerModal({
       <div className="relative mx-auto mt-[5vh] flex h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-popover shadow-2xl ring-1 ring-border/50 animate-in fade-in-0 slide-in-from-bottom-4 duration-200 md:mt-[8vh] md:h-[80vh]">
         {/* Header */}
         <div className="flex items-center justify-between border-b px-4 py-3">
-          <h2 id={titleId} className="text-lg font-semibold">
+          <h2 id={titleId} className="text-h3">
             {t(lang, "addCardToCompare")}
           </h2>
           <button
@@ -168,30 +175,53 @@ export function CardPickerModal({
           </div>
           <div className="flex gap-2">
             {/* Set filter */}
-            <select
-              value={selectedSet}
-              onChange={(e) => setSelectedSet(e.target.value)}
-              className="h-8 rounded-lg border bg-background px-2 text-xs"
+            <Select
+              items={[
+                { value: "__all__", label: t(lang, "allSets") },
+                ...sets.map((s) => ({
+                  value: s.code,
+                  label:
+                    s.code.toUpperCase() +
+                    (s.nameEn ? ` — ${s.nameEn}` : s.name ? ` — ${s.name}` : ""),
+                })),
+              ]}
+              value={selectedSet || "__all__"}
+              onValueChange={(value) => setSelectedSet(!value || value === "__all__" ? "" : value)}
             >
-              <option value="">{t(lang, "allSets")}</option>
-              {sets.map((s) => (
-                <option key={s.code} value={s.code}>
-                  {s.code.toUpperCase()}
-                  {s.nameEn ? ` — ${s.nameEn}` : s.name ? ` — ${s.name}` : ""}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger size="sm" className="text-xs">
+                <SelectValue placeholder={t(lang, "allSets")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">{t(lang, "allSets")}</SelectItem>
+                {sets.map((s) => (
+                  <SelectItem key={s.code} value={s.code}>
+                    {s.code.toUpperCase()}
+                    {s.nameEn ? ` — ${s.nameEn}` : s.name ? ` — ${s.name}` : ""}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             {/* Sort */}
-            <select
+            <Select
+              items={[
+                { value: "views_desc", label: t(lang, "popular") },
+                { value: "price_desc", label: t(lang, "sortPriceDesc") },
+                { value: "price_asc", label: t(lang, "sortPriceAsc") },
+                { value: "newest", label: t(lang, "sortNewest") },
+              ]}
               value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="h-8 rounded-lg border bg-background px-2 text-xs"
+              onValueChange={(value) => setSort(value ?? "price_desc")}
             >
-              <option value="views_desc">{t(lang, "popular")}</option>
-              <option value="price_desc">{t(lang, "sortPriceDesc")}</option>
-              <option value="price_asc">{t(lang, "sortPriceAsc")}</option>
-              <option value="newest">{t(lang, "sortNewest")}</option>
-            </select>
+              <SelectTrigger size="sm" className="text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="views_desc">{t(lang, "popular")}</SelectItem>
+                <SelectItem value="price_desc">{t(lang, "sortPriceDesc")}</SelectItem>
+                <SelectItem value="price_asc">{t(lang, "sortPriceAsc")}</SelectItem>
+                <SelectItem value="newest">{t(lang, "sortNewest")}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -252,7 +282,7 @@ export function CardPickerModal({
                           sizes="(max-width: 640px) 30vw, 140px"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
+                        <div className="flex h-full items-center justify-center text-meta">
                           {card.cardCode}
                         </div>
                       )}
@@ -297,10 +327,12 @@ export function CardPickerModal({
         {/* Footer with count */}
         <div className="flex items-center justify-between border-t px-4 py-2.5">
           <div className="flex items-center gap-2">
-            <p className="text-xs text-muted-foreground">
+            <p className="text-meta">
               {storeItems.length}/{tierMax} {t(lang, "card")}
             </p>
-            {atLimit && isFinite(limits.compareCards) && <UpgradeBadge />}
+            {atLimit && isFinite(limits.compareCards) && (
+              <UpgradeBadge featureKey="comparePlus" />
+            )}
           </div>
           <button
             onClick={onClose}

@@ -37,8 +37,19 @@ export const GET = cronHandler(async () => {
 
   const allSubscribers = await prisma.user.findMany({
     where: {
-      weeklyDigest: true,
-      OR: [{ lastDigestAt: null }, { lastDigestAt: { lte: oneWeekAgo } }],
+      // Treat "never opened settings" as opt-in (default = true) — only
+      // exclude users who explicitly switched it off.
+      AND: [
+        {
+          OR: [
+            { notificationPrefs: { is: null } },
+            { notificationPrefs: { weeklyDigest: true } },
+          ],
+        },
+        {
+          OR: [{ lastDigestAt: null }, { lastDigestAt: { lte: oneWeekAgo } }],
+        },
+      ],
     },
     select: {
       id: true,

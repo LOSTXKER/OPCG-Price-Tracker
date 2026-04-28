@@ -1,11 +1,15 @@
-"use client";
+﻿"use client";
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { Loader2, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { EmptyState } from "@/components/shared/empty-state";
+import { LoadingState } from "@/components/shared/loading-state";
 import { OrderCard, type OrderListItem } from "@/components/orders/order-card";
+import { PageHeader } from "@/components/layout/page-header";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 
@@ -19,13 +23,13 @@ type ApiResponse = {
 };
 
 const STATUS_TABS = [
-  { key: "ALL", label: "ทั้งหมด" },
-  { key: "AWAITING_PAYMENT", label: "รอชำระ" },
-  { key: "PAID", label: "รอจัดส่ง" },
-  { key: "SHIPPED", label: "กำลังจัดส่ง" },
-  { key: "COMPLETED", label: "สำเร็จ" },
-  { key: "CANCELLED", label: "ยกเลิก" },
-];
+  { key: "ALL", labelKey: "orderStatusAll" },
+  { key: "AWAITING_PAYMENT", labelKey: "orderStatusAwaitingPayment" },
+  { key: "PAID", labelKey: "orderStatusPaid" },
+  { key: "SHIPPED", labelKey: "orderStatusShipped" },
+  { key: "COMPLETED", labelKey: "orderStatusCompleted" },
+  { key: "CANCELLED", labelKey: "orderStatusCancelled" },
+] as const;
 
 export default function BuyerOrdersPage() {
   const lang = useUIStore((s) => s.language);
@@ -52,7 +56,7 @@ export default function BuyerOrdersPage() {
       setData(await res.json());
     } catch {
       setData(null);
-      setError("Failed to load orders");
+      setError(t(lang, "ordersLoadFailed"));
     } finally {
       setLoading(false);
     }
@@ -80,12 +84,12 @@ export default function BuyerOrdersPage() {
       });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        setActionError(body?.error ?? "อัปเดตสถานะไม่สำเร็จ กรุณาลองใหม่");
+        setActionError(body?.error ?? t(lang, "orderUpdateFailed"));
         return;
       }
       await fetchOrders();
     } catch {
-      setActionError("อัปเดตสถานะไม่สำเร็จ กรุณาลองใหม่");
+      setActionError(t(lang, "orderUpdateFailed"));
     } finally {
       setActionLoading(null);
     }
@@ -95,84 +99,80 @@ export default function BuyerOrdersPage() {
     ? Object.values(data.statusCounts).reduce((a, b) => a + b, 0)
     : 0;
 
+  const segmentedOptions = STATUS_TABS.map((tab) => {
+    const count =
+      tab.key === "ALL" ? totalAll : (data?.statusCounts[tab.key] ?? 0);
+    return {
+      value: tab.key,
+      label: t(lang, tab.labelKey),
+      badge:
+        count > 0 ? (
+          <span className="rounded-full bg-muted px-1.5 text-xs tabular-nums">
+            {count}
+          </span>
+        ) : undefined,
+    };
+  });
+
   return (
     <div className="space-y-6">
-      <Breadcrumb
-        items={[
-          { label: t(lang, "home"), href: "/" },
-          { label: t(lang, "myOrders") },
-        ]}
+      <PageHeader
+        title={t(lang, "myOrdersTitle")}
+        description={t(lang, "myOrdersDesc")}
+        breadcrumb={
+          <Breadcrumb
+            items={[
+              { label: t(lang, "home"), href: "/" },
+              { label: t(lang, "myOrders") },
+            ]}
+          />
+        }
       />
-      <div>
-        <h1 className="page-header">
-          คำสั่งซื้อของฉัน
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          ติดตามสถานะการสั่งซื้อทั้งหมดของคุณ
-        </p>
-      </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 overflow-x-auto rounded-lg bg-muted/50 p-1">
-        {STATUS_TABS.map((tab) => {
-          const count =
-            tab.key === "ALL" ? totalAll : (data?.statusCounts[tab.key] ?? 0);
-          return (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => handleTabChange(tab.key)}
-              className={`flex items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                activeTab === tab.key
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {tab.label}
-              {count > 0 && (
-                <span className="rounded-full bg-muted px-1.5 text-xs tabular-nums">
-                  {count}
-                </span>
-              )}
-            </button>
-          );
-        })}
+      <div className="overflow-x-auto">
+        <SegmentedControl
+          options={segmentedOptions}
+          value={activeTab}
+          onChange={handleTabChange}
+          ariaLabel="Filter orders by status"
+        />
       </div>
 
       {/* Content */}
       {loading ? (
-        <div className="flex min-h-[300px] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        </div>
+        <LoadingState variant="spinner" label={t(lang, "loading")} />
       ) : error ? (
-        <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
-          <p>{error}</p>
-          <button
-            type="button"
-            onClick={() => {
-              setError(null);
-              void fetchOrders();
-            }}
-            className="mt-1 text-xs font-medium underline"
-          >
-            ลองใหม่
-          </button>
-        </div>
+        <EmptyState
+          variant="error"
+          icon={ShoppingBag}
+          title={error}
+          action={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setError(null);
+                void fetchOrders();
+              }}
+            >
+              {t(lang, "retry")}
+            </Button>
+          }
+        />
       ) : !data || data.orders.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground">
-          <ShoppingBag className="mb-3 h-12 w-12 opacity-30" />
-          <p className="text-lg font-medium">ยังไม่มีคำสั่งซื้อ</p>
-          <p className="text-sm">
-            เมื่อคุณซื้อสินค้า คำสั่งซื้อจะปรากฏที่นี่
-          </p>
-        </div>
+        <EmptyState
+          variant="dashed"
+          icon={ShoppingBag}
+          title={t(lang, "noOrdersYet")}
+          description={t(lang, "noOrdersYetDesc")}
+        />
       ) : (
         <>
           {actionError && (
             <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
               {actionError}
               <button type="button" onClick={() => setActionError(null)} className="ml-2 text-xs font-medium underline">
-                ปิด
+                {t(lang, "close")}
               </button>
             </div>
           )}
@@ -202,10 +202,10 @@ export default function BuyerOrdersPage() {
                 disabled={page <= 1}
                 onClick={() => setPage(page - 1)}
               >
-                ก่อนหน้า
+                {t(lang, "previous")}
               </Button>
               <span className="text-sm text-muted-foreground">
-                หน้า {data.page} / {data.totalPages}
+                {t(lang, "paginationPageOf").replace("{page}", String(data.page)).replace("{total}", String(data.totalPages))}
               </span>
               <Button
                 variant="outline"
@@ -213,7 +213,7 @@ export default function BuyerOrdersPage() {
                 disabled={page >= data.totalPages}
                 onClick={() => setPage(page + 1)}
               >
-                ถัดไป
+                {t(lang, "next")}
               </Button>
             </div>
           )}
@@ -234,6 +234,8 @@ function BuyerActions({
   onStatusUpdate: (id: number, status: string) => void;
   onViewDetail: () => void;
 }) {
+  const lang = useUIStore((s) => s.language);
+
   if (loading) {
     return <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />;
   }
@@ -241,14 +243,14 @@ function BuyerActions({
   return (
     <>
       <Button variant="outline" size="sm" onClick={onViewDetail}>
-        ดูรายละเอียด
+        {t(lang, "viewDetails")}
       </Button>
       {order.status === "SHIPPED" && (
         <Button
           size="sm"
           onClick={() => onStatusUpdate(order.id, "DELIVERED")}
         >
-          ยืนยันรับสินค้า
+          {t(lang, "confirmReceived")}
         </Button>
       )}
       {order.status === "AWAITING_PAYMENT" && (
@@ -257,7 +259,7 @@ function BuyerActions({
           size="sm"
           onClick={() => onStatusUpdate(order.id, "CANCELLED")}
         >
-          ยกเลิก
+          {t(lang, "cancel")}
         </Button>
       )}
     </>

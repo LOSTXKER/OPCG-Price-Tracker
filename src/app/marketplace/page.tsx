@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Layers, LineChart, ShoppingCart, Store } from "lucide-react";
+import { Layers, LineChart, ShoppingCart } from "lucide-react";
 import { FaqSection } from "@/components/shared/faq-section";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { ListingStatus, type Prisma } from "@/generated/prisma/client";
@@ -8,6 +8,7 @@ import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
+import { MarketplaceErrorState } from "./marketplace-error-state";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,10 @@ export const metadata: Metadata = {
 
 const PAGE_SIZE = 12;
 
-type SearchParams = { seller?: string | string[] };
+type SearchParams = {
+  seller?: string | string[];
+  cardCode?: string | string[];
+};
 
 export default async function MarketplacePage({
   searchParams,
@@ -30,6 +34,14 @@ export default async function MarketplacePage({
   const params = await searchParams;
   const rawSeller = Array.isArray(params.seller) ? params.seller[0] : params.seller;
   const sellerKey = (rawSeller ?? "").trim().replace(/^@/, "").slice(0, 60);
+  const rawCardCode = Array.isArray(params.cardCode) ? params.cardCode[0] : params.cardCode;
+  // Card codes are uppercase A-Z, digits, dash and underscore (parallel suffix).
+  // Strip anything else to avoid weird query strings hitting the DB.
+  const cardCodeKey = (rawCardCode ?? "")
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9_-]/g, "")
+    .slice(0, 24);
 
   let listings: Parameters<typeof MarketplaceBrowse>[0]["initialListings"] = [];
   let total = 0;
@@ -53,6 +65,9 @@ export default async function MarketplacePage({
           displayName: seller.displayName,
         };
       }
+    }
+    if (cardCodeKey) {
+      where.card = { cardCode: cardCodeKey };
     }
     const [rows, count] = await Promise.all([
       prisma.listing.findMany({
@@ -108,10 +123,7 @@ export default async function MarketplacePage({
       <div className="space-y-8">
         <MarketplacePageHeader />
         {dbError ? (
-          <div className="flex flex-col items-center gap-4 rounded-2xl bg-muted/30 py-12 text-center">
-            <Store className="size-10 text-muted-foreground/40" />
-            <p className="text-sm text-destructive">Failed to connect to database. Please try again.</p>
-          </div>
+          <MarketplaceErrorState />
         ) : (
           <MarketplaceBrowse
             initialListings={listings}

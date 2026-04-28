@@ -1,10 +1,16 @@
-"use client";
+﻿"use client";
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { Loader2, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { OrderCard, type OrderListItem } from "@/components/orders/order-card";
+import { PageHeader } from "@/components/layout/page-header";
+import { LoadingState } from "@/components/shared/loading-state";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { t, type TranslationKey } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 type ApiResponse = {
   orders: OrderListItem[];
@@ -15,16 +21,17 @@ type ApiResponse = {
   statusCounts: Record<string, number>;
 };
 
-const STATUS_TABS = [
-  { key: "ALL", label: "ทั้งหมด" },
-  { key: "AWAITING_PAYMENT", label: "รอชำระ" },
-  { key: "PAID", label: "ชำระแล้ว" },
-  { key: "SHIPPED", label: "จัดส่งแล้ว" },
-  { key: "COMPLETED", label: "สำเร็จ" },
-  { key: "CANCELLED", label: "ยกเลิก" },
+const STATUS_TABS: ReadonlyArray<{ key: string; labelKey: TranslationKey }> = [
+  { key: "ALL", labelKey: "orderStatusAll" },
+  { key: "AWAITING_PAYMENT", labelKey: "orderStatusAwaitingPayment" },
+  { key: "PAID", labelKey: "orderStatusPaidExt" },
+  { key: "SHIPPED", labelKey: "orderStatusShippedExt" },
+  { key: "COMPLETED", labelKey: "orderStatusCompleted" },
+  { key: "CANCELLED", labelKey: "orderStatusCancelled" },
 ];
 
 export default function SellerOrdersPage() {
+  const lang = useUIStore((s) => s.language);
   const router = useRouter();
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -84,51 +91,43 @@ export default function SellerOrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="page-header">คำสั่งซื้อ</h1>
-        <p className="text-sm text-muted-foreground">
-          จัดการคำสั่งซื้อจากผู้ซื้อ
-        </p>
-      </div>
+      <PageHeader
+        title={t(lang, "sellerOrdersTitle")}
+        description={t(lang, "sellerOrdersDesc")}
+      />
 
-      {/* Tabs */}
-      <div className="flex gap-1 overflow-x-auto rounded-lg bg-muted/50 p-1">
-        {STATUS_TABS.map((tab) => {
-          const count =
-            tab.key === "ALL" ? totalAll : (data?.statusCounts[tab.key] ?? 0);
-          return (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => handleTabChange(tab.key)}
-              className={`flex items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                activeTab === tab.key
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {tab.label}
-              {count > 0 && (
-                <span className="rounded-full bg-muted px-1.5 text-xs tabular-nums">
-                  {count}
-                </span>
-              )}
-            </button>
-          );
-        })}
+      <div className="overflow-x-auto">
+        <SegmentedControl
+          value={activeTab}
+          onChange={handleTabChange}
+          ariaLabel="Filter orders by status"
+          options={STATUS_TABS.map((tab) => {
+            const count =
+              tab.key === "ALL" ? totalAll : (data?.statusCounts[tab.key] ?? 0);
+            return {
+              value: tab.key,
+              label: t(lang, tab.labelKey),
+              badge:
+                count > 0 ? (
+                  <span className="rounded-full bg-muted px-1.5 text-xs tabular-nums">
+                    {count}
+                  </span>
+                ) : undefined,
+            };
+          })}
+        />
       </div>
 
       {/* Content */}
       {loading ? (
-        <div className="flex min-h-[300px] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        </div>
+        <LoadingState variant="spinner" label={t(lang, "loading")} />
       ) : !data || data.orders.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground">
-          <ShoppingCart className="mb-3 h-12 w-12 opacity-30" />
-          <p className="text-lg font-medium">ไม่มีคำสั่งซื้อ</p>
-          <p className="text-sm">คำสั่งซื้อจะปรากฏที่นี่เมื่อมีผู้ซื้อ</p>
-        </div>
+        <KumaEmptyState
+          variant="dashed"
+          icon={ShoppingCart}
+          title={t(lang, "noOrdersYet")}
+          description={t(lang, "sellerNoOrdersDesc")}
+        />
       ) : (
         <>
           <div className="space-y-3">
@@ -159,10 +158,10 @@ export default function SellerOrdersPage() {
                 disabled={page <= 1}
                 onClick={() => setPage(page - 1)}
               >
-                ก่อนหน้า
+                {t(lang, "previous")}
               </Button>
               <span className="text-sm text-muted-foreground">
-                หน้า {data.page} / {data.totalPages}
+                {t(lang, "paginationPageOf").replace("{page}", String(data.page)).replace("{total}", String(data.totalPages))}
               </span>
               <Button
                 variant="outline"
@@ -170,7 +169,7 @@ export default function SellerOrdersPage() {
                 disabled={page >= data.totalPages}
                 onClick={() => setPage(page + 1)}
               >
-                ถัดไป
+                {t(lang, "next")}
               </Button>
             </div>
           )}
@@ -195,6 +194,8 @@ function SellerActions({
   ) => void;
   onViewDetail: () => void;
 }) {
+  const lang = useUIStore((s) => s.language);
+
   if (loading) {
     return <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />;
   }
@@ -202,11 +203,11 @@ function SellerActions({
   return (
     <>
       <Button variant="outline" size="sm" onClick={onViewDetail}>
-        ดูรายละเอียด
+        {t(lang, "viewDetails")}
       </Button>
       {order.status === "PAID" && (
         <Button size="sm" onClick={onViewDetail}>
-          จัดส่ง
+          {t(lang, "ship")}
         </Button>
       )}
       {order.status === "AWAITING_PAYMENT" && (
@@ -215,7 +216,7 @@ function SellerActions({
           size="sm"
           onClick={() => onStatusUpdate(order.id, "CANCELLED")}
         >
-          ยกเลิก
+          {t(lang, "cancel")}
         </Button>
       )}
     </>

@@ -106,7 +106,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
                   <div className={`h-full rounded-full ${accent}`} style={{ width: `${barWidth}%` }} />
                 </div>
                 <span className="shrink-0 font-mono text-sm font-bold tabular-nums">{fmtCount(count)}</span>
-                <span className="shrink-0 text-xs text-muted-foreground">{row.cardCount}{t(lang, "cardsCount")}</span>
+                <span className="shrink-0 text-meta">{row.cardCount}{t(lang, "cardsCount")}</span>
                 <span className="shrink-0 font-mono text-xs font-semibold tabular-nums text-primary">{formatPullPct(chance)}</span>
               </div>
 
@@ -114,7 +114,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
               <span className="hidden w-28 text-right font-mono text-sm font-bold tabular-nums sm:block">
                 {fmtCount(count)}
               </span>
-              <span className="hidden w-20 text-right text-xs text-muted-foreground sm:block">
+              <span className="hidden w-20 text-right text-meta sm:block">
                 {row.cardCount} {t(lang, "cardsCount")}
               </span>
               <span className="hidden w-24 text-right font-mono text-xs font-semibold tabular-nums text-primary sm:block">
@@ -127,7 +127,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
 
       {/* Footer */}
       {packsPerBox && cardsPerPack && (
-        <div className="mt-3 border-t border-border/40 pt-3 text-xs text-muted-foreground">
+        <div className="mt-3 border-t border-border/40 pt-3 text-meta">
           {packsPerBox} {t(lang, "perUnit")}/{t(lang, "packUnit")} · {cardsPerPack} {t(lang, "cardsCount")}/{t(lang, "packUnit")} · {BOXES_PER_CARTON} {t(lang, "boxUnit")}/{t(lang, "cartonUnit")}
         </div>
       )}

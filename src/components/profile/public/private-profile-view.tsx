@@ -37,7 +37,7 @@ export function PrivateProfileView({
           <div className="flex size-16 items-center justify-center rounded-2xl bg-muted/60">
             <Lock className="size-8 text-muted-foreground/40" />
           </div>
-          <h1 className="text-xl font-bold">{user.displayName ?? "User"}</h1>
+          <h1 className="text-h1">{user.displayName ?? "User"}</h1>
           <p className="text-sm text-muted-foreground">{t(lang, "profileIsPrivate")}</p>
         </div>
       </div>

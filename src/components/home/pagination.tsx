@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
+import { formatCount } from "@/lib/utils/currency"
 
 export function Pagination({
   page,
@@ -26,8 +27,8 @@ export function Pagination({
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border px-4 py-3">
-      <p className="hidden text-xs text-muted-foreground sm:block">
-        {t(lang, "showingOf")} {((page - 1) * pageSize + 1).toLocaleString()}-{Math.min(page * pageSize, total).toLocaleString()} {t(lang, "from")} {total.toLocaleString()} {t(lang, "card")}
+      <p className="hidden text-meta sm:block">
+        {t(lang, "showingOf")} {formatCount((page - 1) * pageSize + 1)}-{formatCount(Math.min(page * pageSize, total))} {t(lang, "from")} {formatCount(total)} {t(lang, "card")}
       </p>
       <div className="flex flex-1 items-center justify-center gap-1 sm:flex-none sm:justify-end">
         <button
@@ -67,7 +68,7 @@ function PageNumbers({
         p === "..." ? (
           <span
             key={`ellipsis-${i}`}
-            className="flex size-9 items-center justify-center text-xs text-muted-foreground"
+            className="flex size-9 items-center justify-center text-meta"
           >
             ...
           </span>

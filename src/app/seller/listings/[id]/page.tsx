@@ -8,6 +8,18 @@ import { ArrowLeft, Loader2, Save, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { EmptyState } from "@/components/shared/empty-state";
+import { LoadingState } from "@/components/shared/loading-state";
+import { PageHeader } from "@/components/layout/page-header";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 type ListingData = {
   id: number;
@@ -48,6 +60,7 @@ const SHIPPING_OPTIONS = [
 
 export default function SellerEditListingPage() {
   const params = useParams();
+  const lang = useUIStore((s) => s.language);
   const listingId = params.id as string;
 
   const [loading, setLoading] = useState(true);
@@ -164,11 +177,7 @@ export default function SellerEditListingPage() {
   }, [priceJpy, priceThb, condition, quantity, description, location, shippingMethods, photos, listingId]);
 
   if (loading) {
-    return (
-      <div className="flex min-h-[400px] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <LoadingState variant="spinner" />;
   }
 
   if (error && !listing) {
@@ -178,10 +187,7 @@ export default function SellerEditListingPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           กลับ
         </Button>
-        <div className="flex flex-col items-center justify-center py-20 text-center text-muted-foreground">
-          <Package className="mb-3 h-12 w-12 opacity-30" />
-          <p className="text-lg font-medium">{error}</p>
-        </div>
+        <EmptyState variant="error" icon={Package} title={error} />
       </div>
     );
   }
@@ -189,33 +195,31 @@ export default function SellerEditListingPage() {
   if (!listing) return null;
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon-sm" render={<Link href="/seller/listings" />}>
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <div className="flex-1">
-          <h1 className="page-header">แก้ไขสินค้า</h1>
-          <p className="text-sm text-muted-foreground">
-            #{listing.id} • {listing.card.cardCode}
-          </p>
-        </div>
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <Save className="mr-2 h-4 w-4" />
-          )}
-          บันทึก
-        </Button>
-      </div>
+    <div className="space-y-6">
+      <PageHeader
+        title={t(lang, "sellerEditTitle")}
+        description={`#${listing.id} • ${listing.card.cardCode}`}
+        breadcrumb={
+          <Button variant="ghost" size="sm" render={<Link href="/seller/listings" />}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            {t(lang, "back")}
+          </Button>
+        }
+        actions={
+          <Button onClick={handleSave} disabled={saving}>
+            {saving ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Save className="mr-2 h-4 w-4" />
+            )}
+            {t(lang, "save")}
+          </Button>
+        }
+      />
 
       {error && <p className="text-sm text-destructive">{error}</p>}
       {success && (
-        <p className="text-sm text-green-600 dark:text-green-400">
-          บันทึกสำเร็จแล้ว
-        </p>
+        <p className="text-sm text-success">บันทึกสำเร็จแล้ว</p>
       )}
 
       {/* Card info (readonly) */}
@@ -249,7 +253,7 @@ export default function SellerEditListingPage() {
 
       {/* Pricing */}
       <div className="panel space-y-4 rounded-xl p-4">
-        <h2 className="text-lg font-semibold">ราคาและสภาพ</h2>
+        <h2 className="text-h3">ราคาและสภาพ</h2>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
@@ -277,17 +281,22 @@ export default function SellerEditListingPage() {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="mb-1 block text-sm font-medium">สภาพการ์ด</label>
-            <select
+            <Select
+              items={CONDITIONS}
               value={condition}
-              onChange={(e) => setCondition(e.target.value)}
-              className="h-10 w-full rounded-lg border border-border bg-background px-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              onValueChange={(value) => setCondition(value ?? "NM")}
             >
-              {CONDITIONS.map((c) => (
-                <option key={c.value} value={c.value}>
-                  {c.label}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="h-10 w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {CONDITIONS.map((c) => (
+                  <SelectItem key={c.value} value={c.value}>
+                    {c.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <label className="mb-1 block text-sm font-medium">จำนวน</label>
@@ -304,7 +313,7 @@ export default function SellerEditListingPage() {
 
       {/* Description */}
       <div className="panel space-y-4 rounded-xl p-4">
-        <h2 className="text-lg font-semibold">รายละเอียด</h2>
+        <h2 className="text-h3">รายละเอียด</h2>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -316,7 +325,7 @@ export default function SellerEditListingPage() {
 
       {/* Photos */}
       <div className="panel space-y-4 rounded-xl p-4">
-        <h2 className="text-lg font-semibold">ภาพสินค้าจริง</h2>
+        <h2 className="text-h3">ภาพสินค้าจริง</h2>
         <div className="flex flex-wrap gap-3">
           {photos.map((url, i) => (
             <div key={i} className="group relative">
@@ -354,14 +363,14 @@ export default function SellerEditListingPage() {
             </label>
           )}
         </div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-meta">
           สูงสุด 5 รูป • รองรับ JPG, PNG, WebP
         </p>
       </div>
 
       {/* Shipping */}
       <div className="panel space-y-4 rounded-xl p-4">
-        <h2 className="text-lg font-semibold">การจัดส่ง</h2>
+        <h2 className="text-h3">การจัดส่ง</h2>
 
         <div>
           <label className="mb-1 block text-sm font-medium">ที่อยู่ / พื้นที่</label>

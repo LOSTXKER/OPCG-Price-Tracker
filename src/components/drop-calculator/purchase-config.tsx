@@ -73,7 +73,7 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
             <Plus className="size-3" />
           </button>
         </div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-meta">
           {unit === "box" && `${t(lang, "ifYouBuy")} ${quantity} ${t(lang, "boxUnit")} = ${packs} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
           {unit === "pack" && `${t(lang, "ifYouBuy")} ${quantity} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
           {unit === "carton" && `${t(lang, "ifYouBuy")} ${quantity} ${t(lang, "cartonUnit")} = ${BOXES_PER_CARTON * quantity} ${t(lang, "boxUnit")} · ${cards} ${t(lang, "cardsCount")}`}
@@ -141,7 +141,7 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
             <Plus className="size-4" />
           </button>
         </div>
-        <div className="rounded-lg bg-muted/30 px-3 py-1.5 text-center text-xs text-muted-foreground">
+        <div className="rounded-lg bg-muted/30 px-3 py-1.5 text-center text-meta">
           {unit === "pack" && `${quantity} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
           {unit === "box" && `${quantity} ${t(lang, "boxUnit")} = ${packs} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
           {unit === "carton" && `${quantity} ${t(lang, "cartonUnit")} = ${BOXES_PER_CARTON * quantity} ${t(lang, "boxUnit")} · ${cards} ${t(lang, "cardsCount")}`}

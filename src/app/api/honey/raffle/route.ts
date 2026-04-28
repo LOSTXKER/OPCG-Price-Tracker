@@ -6,6 +6,7 @@ import { getActiveRaffles, getUserTicketsForMonth, buyTicket, claimFreeTicket } 
 import { currentMonthKey } from "@/lib/honey/utils";
 import { prisma } from "@/lib/db";
 import { RafflePrizesSchema, parseJsonField } from "@/lib/honey/schemas";
+import { getEntitlements } from "@/lib/users/entitlements";
 
 export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();
@@ -41,11 +42,14 @@ export const GET = apiHandler(async () => {
     if (t.isFree) freeClaimedThisMonth = true;
   }
 
-  const dbUser = await prisma.user.findUnique({
-    where: { id: user.id },
-    select: { ticketBalance: true, checkinStreak: true },
-  });
-  const ticketBalance = dbUser?.ticketBalance ?? 0;
+  const [dbUser, entitlements] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: user.id },
+      select: { checkinStreak: true },
+    }),
+    getEntitlements(user.id),
+  ]);
+  const ticketBalance = entitlements.ticketBalance;
 
   const minFreeThreshold = raffles.length > 0
     ? Math.min(...raffles.map((r) => r.freeThreshold))

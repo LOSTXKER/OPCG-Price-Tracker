@@ -205,7 +205,7 @@ export function HoneyShopManager({ initialItems }: { initialItems: ShopItem[] })
       {editing !== null && (
         <Card>
           <CardContent>
-            <h2 className="mb-4 text-lg font-semibold">
+            <h2 className="mb-4 text-h3">
               {editing === "new" ? "Create Item" : "Edit Item"}
             </h2>
             {error && (
@@ -334,7 +334,7 @@ export function HoneyShopManager({ initialItems }: { initialItems: ShopItem[] })
                     <div>
                       <p className="font-medium">{item.nameEn ?? item.name}</p>
                       {item.description && (
-                        <p className="mt-0.5 text-xs text-muted-foreground">{item.description}</p>
+                        <p className="mt-0.5 text-meta">{item.description}</p>
                       )}
                     </div>
                   </td>

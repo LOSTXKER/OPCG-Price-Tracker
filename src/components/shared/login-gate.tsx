@@ -48,7 +48,7 @@ export function AuthPreviewGate({ preview }: { preview: React.ReactNode }) {
           <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-muted">
             <LogIn className="size-6 text-muted-foreground" />
           </div>
-          <h2 className="text-lg font-semibold">{t(lang, "loginRequired")}</h2>
+          <h2 className="text-h3">{t(lang, "loginRequired")}</h2>
           <p className="text-sm text-muted-foreground">
             {t(lang, "loginRequiredDesc")}
           </p>

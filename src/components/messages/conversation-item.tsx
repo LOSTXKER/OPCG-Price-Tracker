@@ -50,7 +50,7 @@ export function ConversationItem({
               className="size-full object-contain"
             />
           ) : (
-            <span className="flex size-full items-center justify-center text-xs text-muted-foreground">
+            <span className="flex size-full items-center justify-center text-meta">
               N/A
             </span>
           )}
@@ -73,19 +73,19 @@ export function ConversationItem({
           <p className="truncate text-sm font-medium">
             {otherUser.displayName ?? "User"}
           </p>
-          <span className="shrink-0 text-xs text-muted-foreground">
+          <span className="shrink-0 text-meta">
             {formatRelativeShort(conv.lastMessageAt)}
           </span>
         </div>
-        <p className="truncate text-xs text-muted-foreground">
+        <p className="truncate text-meta">
           {listing.card.nameEn ?? listing.card.nameJp}
         </p>
         <div className="mt-0.5 flex items-center gap-1.5">
-          <p className="min-w-0 flex-1 truncate text-xs text-muted-foreground/80">
+          <p className="min-w-0 flex-1 truncate text-meta text-muted-foreground/80">
             {conv.lastMessage}
           </p>
           {conv.unread > 0 && (
-            <span className="flex size-4.5 shrink-0 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
+            <span className="flex size-4.5 shrink-0 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
               {conv.unread > 9 ? "9+" : conv.unread}
             </span>
           )}

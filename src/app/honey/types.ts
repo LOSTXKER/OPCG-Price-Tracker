@@ -47,6 +47,37 @@ export function localizedName(
     .replace(/Pro\+?\s*(?:ทดลอง|Trial|体験)\s*/gi, (m) => m.includes("+") ? "Pro+ " : "Pro ");
 }
 
+/**
+ * Pick the best localized display name for a mission task.
+ * Order of preference: nameTh/nameEn (per language) → labelKey i18n → labelKey raw.
+ * Returns null if no useful name is available so callers can fall back to t(labelKey).
+ */
+export function localizedMissionName(
+  task: {
+    name?: string | null;
+    nameEn?: string | null;
+    nameTh?: string | null;
+  },
+  lang: Language,
+): string | null {
+  if (lang === "EN") return task.nameEn ?? task.name ?? null;
+  if (lang === "TH") return task.nameTh ?? task.name ?? null;
+  return task.name ?? null;
+}
+
+export function localizedMissionDescription(
+  task: {
+    description?: string | null;
+    descriptionEn?: string | null;
+    descriptionTh?: string | null;
+  },
+  lang: Language,
+): string | null {
+  if (lang === "EN") return task.descriptionEn ?? task.description ?? null;
+  if (lang === "TH") return task.descriptionTh ?? task.description ?? null;
+  return task.description ?? null;
+}
+
 export function localizedTitle(
   item: { title: string; titleEn?: string | null; titleTh?: string | null },
   lang: Language,
@@ -133,6 +164,11 @@ export type ShopItem = {
   type: string;
   isActive: boolean;
   stock: number | null;
+  // Honey rebalance v2
+  requiredLevel?: number;
+  originalCost?: number | null;
+  featuredUntil?: string | null;
+  availableUntil?: string | null;
 };
 
 export type LeaderboardUser = {
@@ -152,6 +188,13 @@ export type MissionTaskItem = {
   hintKey: string;
   icon: string;
   trackType: "auto-path" | "manual";
+  name: string | null;
+  nameEn: string | null;
+  nameTh: string | null;
+  description: string | null;
+  descriptionEn: string | null;
+  descriptionTh: string | null;
+  ctaPath: string | null;
 };
 
 export type MissionData = {
@@ -215,6 +258,13 @@ export type RaffleMissionTask = {
   icon: string;
   trackType: "auto-path" | "manual";
   reward: { honey: number; ticket: number };
+  name?: string | null;
+  nameEn?: string | null;
+  nameTh?: string | null;
+  description?: string | null;
+  descriptionEn?: string | null;
+  descriptionTh?: string | null;
+  ctaPath?: string | null;
 };
 
 export type RaffleMissionBonus = {
@@ -243,4 +293,7 @@ export type AchievementItem = {
   honeyReward: number;
   earned: boolean;
   earnedAt: string | null;
+  progress: number;
+  target: number;
+  criteriaType: string | null;
 };

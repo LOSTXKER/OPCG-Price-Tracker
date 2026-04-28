@@ -339,12 +339,12 @@ export function DropRatesManager({
                   </span>
                 )}
 
-                <span className="hidden text-xs text-muted-foreground sm:inline">
+                <span className="hidden text-meta sm:inline">
                   {set.dropRates.length} ระดับ
                 </span>
                 <Badge
                   variant="outline"
-                  className="hidden text-[10px] sm:inline-flex"
+                  className="hidden text-overlay sm:inline-flex"
                 >
                   {set.type.replace("_", " ")}
                 </Badge>
@@ -369,14 +369,14 @@ export function DropRatesManager({
                       {/* Info bar */}
                       <div className="mb-4 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-meta">
                             ซอง/กล่อง:{" "}
                             <span className="font-medium text-foreground">
                               {set.packsPerBox ?? "—"}
                             </span>
                           </span>
                           <span className="text-border">·</span>
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-meta">
                             ใบ/ซอง:{" "}
                             <span className="font-medium text-foreground">
                               {set.cardsPerPack ?? "—"}
@@ -416,16 +416,16 @@ export function DropRatesManager({
                         <table className="w-full text-sm">
                           <thead>
                             <tr className="border-b border-border/40 bg-muted/30">
-                              <th className="w-20 px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                              <th className="w-20 px-4 py-2.5 text-left text-eyebrow text-muted-foreground/70">
                                 ระดับ
                               </th>
-                              <th className="w-24 px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                              <th className="w-24 px-4 py-2.5 text-center text-eyebrow text-muted-foreground/70">
                                 ในพูล
                               </th>
-                              <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                              <th className="px-4 py-2.5 text-right text-eyebrow text-muted-foreground/70">
                                 เฉลี่ย/กล่อง
                               </th>
-                              <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                              <th className="px-4 py-2.5 text-right text-eyebrow text-muted-foreground/70">
                                 อัตรา/ซอง
                               </th>
                               <th className="w-20 px-2 py-2.5" />

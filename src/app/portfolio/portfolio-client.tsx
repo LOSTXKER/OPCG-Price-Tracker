@@ -5,6 +5,8 @@ import { ChevronDown, Eye, EyeOff, Plus, Wallet } from "lucide-react"
 
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
 import { AuthPreviewGate } from "@/components/shared/login-gate"
+import { Breadcrumb } from "@/components/shared/breadcrumb"
+import { PageHeader } from "@/components/layout/page-header"
 import { useAuthState } from "@/hooks/use-auth-state"
 import { PortfolioSidebar } from "@/components/portfolio/portfolio-selector"
 import { PortfolioHero, MiniSparkline } from "@/components/portfolio/portfolio-hero"
@@ -15,13 +17,16 @@ import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
 import { Price } from "@/components/shared/price-inline"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { SegmentedControl, type SegmentedOption } from "@/components/ui/segmented-control"
+import { Surface } from "@/components/ui/surface"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { t, type Language } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
-import { cn } from "@/lib/utils"
 import { usePortfolioApi } from "@/hooks/use-portfolio-api"
 import { useTierLimits } from "@/hooks/use-tier-limits"
+import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
 import { formatJpyAmount } from "@/lib/utils/currency"
+import type { CartItem } from "@/components/portfolio/add-card-types"
 
 type TabId = "overview" | "insights" | "transactions"
 
@@ -29,20 +34,43 @@ export default function PortfolioClient() {
   const { authed } = useAuthState()
   const lang = useUIStore((s) => s.language)
 
+  const header = (
+    <PageHeader
+      title={t(lang, "portfolioNav")}
+      description={t(lang, "portfolioPageDesc")}
+      breadcrumb={
+        <Breadcrumb items={[{ label: t(lang, "home"), href: "/" }, { label: t(lang, "portfolioNav") }]} />
+      }
+    />
+  )
+
   if (authed === null) {
     return (
-      <div className="space-y-6">
-        <div className="h-8 w-48 animate-pulse rounded bg-muted" />
-        <div className="h-64 animate-pulse rounded-xl bg-muted" />
-      </div>
+      <>
+        {header}
+        <div className="space-y-6">
+          <div className="h-8 w-48 animate-pulse rounded bg-muted" />
+          <div className="h-64 animate-pulse rounded-xl bg-muted" />
+        </div>
+      </>
     )
   }
 
   if (authed === false) {
-    return <AuthPreviewGate preview={<PortfolioMockPreview lang={lang} />} />
+    return (
+      <>
+        {header}
+        <AuthPreviewGate preview={<PortfolioMockPreview lang={lang} />} />
+      </>
+    )
   }
 
-  return <PortfolioContent />
+  return (
+    <>
+      {header}
+      <PortfolioContent />
+    </>
+  )
 }
 
 const VALID_TABS: TabId[] = ["overview", "insights", "transactions"]
@@ -101,6 +129,19 @@ function PortfolioContent() {
     deleteTransaction,
   } = p
 
+  const { openUpgradeDialog } = useUpgradeDialog()
+
+  const addCardsBatchWithGate = useCallback(
+    async (cartItems: CartItem[]) => {
+      const res = await addCardsBatch(cartItems)
+      if (res.limitReached) {
+        openUpgradeDialog({ featureKey: "portfolioCards" })
+      }
+      return res
+    },
+    [addCardsBatch, openUpgradeDialog],
+  )
+
   const items = activePortfolio?.items ?? []
 
   if (loading) {
@@ -125,10 +166,10 @@ function PortfolioContent() {
   return (
     <div className="flex flex-col gap-5 md:flex-row md:gap-6">
       {/* ──── Mobile portfolio picker ──── */}
-      <div className="flex items-center gap-2 md:hidden">
+      <div className="panel flex items-center overflow-hidden rounded-xl md:hidden">
         <button
           onClick={() => setSidebarSheetOpen(true)}
-          className="panel flex min-w-0 flex-1 items-center gap-3 rounded-xl px-3.5 py-3 active:bg-muted/50"
+          className="flex min-w-0 flex-1 items-center gap-3 px-3.5 py-3 transition-colors active:bg-muted/40"
         >
           <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <Wallet className="size-5" />
@@ -145,9 +186,11 @@ function PortfolioContent() {
           </div>
           <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
         </button>
+        <div aria-hidden className="h-8 w-px shrink-0 bg-border/40" />
         <button
           onClick={() => setHideBalance(!hideBalance)}
-          className="panel flex size-[46px] shrink-0 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:text-foreground"
+          aria-label={hideBalance ? "Show balance" : "Hide balance"}
+          className="flex size-[52px] shrink-0 items-center justify-center text-muted-foreground transition-colors hover:bg-muted/30 hover:text-foreground active:bg-muted/40"
         >
           {hideBalance ? (
             <EyeOff className="size-4" />
@@ -163,17 +206,17 @@ function PortfolioContent() {
           side="bottom"
           className="max-h-[75vh] overflow-y-auto rounded-t-2xl pb-10"
         >
-          <SheetHeader>
+          <SheetHeader className="pb-2">
             <SheetTitle>{t(lang, "portfolio")}</SheetTitle>
+            {portfolioMetas.length > 1 && (
+              <SheetDescription className="font-price tabular-nums">
+                {t(lang, "overview")}{" "}
+                <span className="font-semibold text-foreground">
+                  {hideBalance ? "••••••" : <Price jpy={totalAllPortfolios} />}
+                </span>
+              </SheetDescription>
+            )}
           </SheetHeader>
-          <div className="mx-4 mb-4 rounded-xl bg-muted/40 p-4">
-            <p className="text-xs font-medium text-muted-foreground">
-              {t(lang, "overview")}
-            </p>
-            <p className="mt-1 font-price text-2xl font-bold tabular-nums tracking-tight">
-              {hideBalance ? "••••••" : <Price jpy={totalAllPortfolios} />}
-            </p>
-          </div>
           <PortfolioSidebar
             portfolios={portfolioMetas}
             activeId={activeId}
@@ -197,7 +240,7 @@ function PortfolioContent() {
             {/* Overview section */}
             <div className="p-4 pb-3">
               <div className="flex items-center justify-between">
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                <p className="text-eyebrow text-muted-foreground/60">
                   {t(lang, "overview")}
                 </p>
                 <button
@@ -235,11 +278,11 @@ function PortfolioContent() {
             {/* Portfolio list section */}
             <div className="border-t border-border/20">
               <div className="flex items-center justify-between px-4 py-2.5">
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                <p className="text-eyebrow text-muted-foreground/60">
                   {t(lang, "portfolio")}
                 </p>
                 {isFinite(limits.portfolioCount) && (
-                  <span className="text-[10px] tabular-nums text-muted-foreground/40">
+                  <span className="text-overlay tabular-nums text-muted-foreground/40">
                     {portfolioMetas.length}/{limits.portfolioCount}
                   </span>
                 )}
@@ -264,47 +307,22 @@ function PortfolioContent() {
       <main className="min-w-0 flex-1 space-y-5 sm:space-y-6">
         {/* Top bar: tabs + add card */}
         <div className="flex items-center justify-between gap-3">
-          <div
-            role="tablist"
-            className="flex items-center gap-1 rounded-xl bg-muted/50 p-1"
-            onKeyDown={(e) => {
-              const tabs = VALID_TABS
-              const idx = tabs.indexOf(tab)
-              if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-                e.preventDefault()
-                const next = tabs[(idx + 1) % tabs.length]
-                setTab(next)
-                ;(e.currentTarget.children[(idx + 1) % tabs.length] as HTMLElement)?.focus()
-              } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-                e.preventDefault()
-                const prev = tabs[(idx - 1 + tabs.length) % tabs.length]
-                setTab(prev)
-                ;(e.currentTarget.children[(idx - 1 + tabs.length) % tabs.length] as HTMLElement)?.focus()
-              }
-            }}
-          >
-            {VALID_TABS.map((tabId) => (
-              <button
-                key={tabId}
-                role="tab"
-                aria-selected={tab === tabId}
-                tabIndex={tab === tabId ? 0 : -1}
-                onClick={() => setTab(tabId)}
-                className={cn(
-                  "rounded-lg px-3.5 py-1.5 text-sm font-medium transition-all",
-                  tab === tabId
-                    ? "bg-background text-foreground shadow-sm ring-1 ring-border/20"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {t(lang, `${tabId}Tab` as "overviewTab" | "insightsTab" | "transactionsTab")}
-              </button>
-            ))}
-          </div>
+          <SegmentedControl<TabId>
+            ariaLabel={t(lang, "portfolio")}
+            options={VALID_TABS.map<SegmentedOption<TabId>>((tabId) => ({
+              value: tabId,
+              label: t(
+                lang,
+                `${tabId}Tab` as "overviewTab" | "insightsTab" | "transactionsTab",
+              ),
+            }))}
+            value={tab}
+            onChange={setTab}
+          />
           <Button
             onClick={() => setDialogOpen(true)}
             size="sm"
-            className="gap-1.5 rounded-lg shadow-sm"
+            className="gap-1.5"
           >
             <Plus className="size-4" />
             <span className="hidden sm:inline">{t(lang, "addCard")}</span>
@@ -329,46 +347,48 @@ function PortfolioContent() {
         ) : tab === "overview" ? (
           <>
             <PortfolioHero
-              portfolioName={
-                activePortfolio?.name ?? t(lang, "portfolio")
-              }
               totalValueJpy={stats.totalValueJpy}
               totalCostJpy={stats.totalCostJpy}
               unrealizedPnl={stats.unrealizedPnl}
               unrealizedPnlPercent={stats.unrealizedPnlPercent}
               hideBalance={hideBalance}
-              cardCount={items.length}
               history={history}
               bestPerformer={stats.bestPerformer}
               worstPerformer={stats.worstPerformer}
             />
 
-            <div className="panel overflow-hidden rounded-xl ring-1 ring-border/10">
+            <Surface variant="panel" padding="none" className="overflow-hidden">
               <PortfolioAssetsTable
                 assets={assets}
                 onUpdate={updateItem}
                 onRemove={removeItem}
               />
-            </div>
+            </Surface>
           </>
         ) : tab === "insights" ? (
           <PortfolioInsights history={history} allocation={allocation} />
         ) : (
-          <div className="panel overflow-hidden rounded-xl">
-            <div className="border-b border-border/40 px-4 py-3 sm:px-5">
-              <p className="text-sm font-semibold">
-                {t(lang, "transactionsTab")}
-              </p>
-            </div>
+          <Surface
+            variant="panel"
+            padding="none"
+            className="overflow-hidden"
+            header={
+              <div className="border-b border-border/40 px-4 py-3 sm:px-5">
+                <p className="text-sm font-semibold">
+                  {t(lang, "transactionsTab")}
+                </p>
+              </div>
+            }
+          >
             <PortfolioTransactions transactions={transactions} onDelete={deleteTransaction} />
-          </div>
+          </Surface>
         )}
       </main>
 
       <AddCardDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        onAddBatch={addCardsBatch}
+        onAddBatch={addCardsBatchWithGate}
       />
     </div>
   )
@@ -414,7 +434,7 @@ function PortfolioMockPreview({ lang }: { lang: Language }) {
                 </div>
                 <div className="min-w-0 flex-1">
                   <span className="text-sm font-semibold">Main Collection</span>
-                  <p className="text-xs text-muted-foreground">¥12,300</p>
+                  <p className="text-meta">¥12,300</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 rounded-lg px-3 py-2.5">
@@ -423,7 +443,7 @@ function PortfolioMockPreview({ lang }: { lang: Language }) {
                 </div>
                 <div className="min-w-0 flex-1">
                   <span className="text-sm font-medium">OP-09 Pulls</span>
-                  <p className="text-xs text-muted-foreground">¥3,500</p>
+                  <p className="text-meta">¥3,500</p>
                 </div>
               </div>
             </div>
@@ -452,35 +472,40 @@ function PortfolioMockPreview({ lang }: { lang: Language }) {
         </div>
 
         {/* Hero mock */}
-        <div className="panel panel-hero overflow-hidden rounded-xl">
-          <div className="p-5 sm:p-6">
-            <div className="mb-4 flex items-center gap-2.5">
-              <span className="text-base font-bold tracking-tight">Main Collection</span>
-              <span className="rounded-full bg-primary/12 px-2.5 py-0.5 text-xs font-bold tabular-nums text-primary">
-                8
-              </span>
-            </div>
-            <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+        <div className="panel relative isolate overflow-hidden rounded-xl ring-1 ring-border/30">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-16 -top-20 size-48 rounded-full opacity-[0.14] blur-3xl sm:-right-24 sm:-top-24 sm:size-72 sm:opacity-[0.18]"
+            style={{ background: "var(--color-price-up)" }}
+          />
+          <div className="relative p-5 sm:p-6">
+            <p className="text-eyebrow text-muted-foreground/70">
               {t(lang, "portfolioValue")}
             </p>
-            <div className="mt-1.5 flex items-baseline gap-3">
-              <span className="font-price text-3xl font-extrabold tabular-nums tracking-tighter sm:text-[2.75rem] sm:leading-none">
-                ¥12,300
-              </span>
-              <span className="rounded-full bg-price-up/12 px-2.5 py-1 text-xs font-bold tabular-nums text-price-up">
+            <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-2">
+              <span className="font-price text-display">¥12,300</span>
+              <span className="rounded-full bg-price-up/12 px-3 py-1 text-sm font-bold tabular-nums text-price-up sm:px-2.5 sm:text-xs">
                 +10.8%
               </span>
             </div>
-            <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[13px]">
-              <span className="text-muted-foreground">
-                {t(lang, "unrealizedPnl")}{" "}
-                <span className="font-price font-bold tabular-nums text-price-up">+¥1,200</span>
-              </span>
-              <span className="hidden h-3.5 w-px bg-border/50 sm:block" />
-              <span className="text-muted-foreground">
-                {t(lang, "costBasis")}{" "}
-                <span className="font-price font-semibold tabular-nums text-foreground/80">¥11,100</span>
-              </span>
+            <div className="mt-5 flex flex-wrap items-stretch gap-x-5 gap-y-3 sm:mt-6 sm:gap-x-7">
+              <div className="flex min-w-0 flex-col gap-0.5">
+                <span className="text-eyebrow text-muted-foreground/60">
+                  {t(lang, "unrealizedPnl")}
+                </span>
+                <span className="font-price text-sm font-bold tabular-nums text-price-up">
+                  +¥1,200
+                </span>
+              </div>
+              <div aria-hidden className="hidden w-px self-stretch bg-border/40 sm:block" />
+              <div className="flex min-w-0 flex-col gap-0.5">
+                <span className="text-eyebrow text-muted-foreground/60">
+                  {t(lang, "costBasis")}
+                </span>
+                <span className="font-price text-sm font-semibold tabular-nums text-foreground/85">
+                  ¥11,100
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -508,7 +533,7 @@ function PortfolioMockPreview({ lang }: { lang: Language }) {
                 <div className="size-11 rounded-lg bg-muted/60 ring-1 ring-border/20" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold">{row.name}</p>
-                  <p className="mt-0.5 font-mono text-[11px] text-muted-foreground/60">
+                  <p className="mt-0.5 font-mono text-meta text-muted-foreground/60">
                     {row.code}
                   </p>
                 </div>

@@ -143,7 +143,7 @@ export function DetailStep({
                 className="h-10 w-full rounded-lg border border-border bg-background pl-7 pr-4 text-sm tabular-nums outline-none placeholder:text-muted-foreground/35 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
               />
             </div>
-            <p className="mt-1.5 text-xs text-muted-foreground/60">
+            <p className="mt-1.5 text-meta text-muted-foreground/60">
               {t(lang, "useMarketPrice")}
             </p>
           </div>

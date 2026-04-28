@@ -41,7 +41,7 @@ export const GridCard = memo(function GridCard({
       href={`/cards/${card.cardCode}`}
       className="group/card block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <div className="panel relative flex flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+      <div className="panel relative flex flex-col overflow-hidden transition-colors hover:bg-muted/20">
         <div className="relative aspect-[63/88] w-full bg-muted">
           {card.imageUrl ? (
             <CardImageLightbox src={card.imageUrl} alt={name} className="absolute inset-0">
@@ -61,13 +61,6 @@ export const GridCard = memo(function GridCard({
           <div className="absolute left-1.5 top-1.5 z-10">
             {card.id != null && <WatchlistStar cardId={card.id} size="sm" />}
           </div>
-          {card.isParallel && (
-            <div className="absolute right-1.5 top-1.5">
-              <span className="rounded-md bg-primary/90 px-1.5 py-0.5 text-xs font-medium text-primary-foreground">
-                P
-              </span>
-            </div>
-          )}
         </div>
         <div className="flex flex-1 flex-col p-2.5">
           <div className="mb-1 flex items-center gap-1.5">

@@ -96,7 +96,7 @@ const TIER_CONFIG: Record<string, { label: string; className: string }> = {
 function TierBadge({ tier }: { tier: string }) {
   const config = TIER_CONFIG[tier] ?? TIER_CONFIG.FREE;
   return (
-    <span className={cn("inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold", config.className)}>
+    <span className={cn("inline-flex items-center rounded-full px-2 py-0.5 text-micro", config.className)}>
       {config.label}
     </span>
   );
@@ -213,7 +213,7 @@ export function UsersManager() {
           </Avatar>
           <div className="min-w-0">
             <p className="truncate font-medium">{u.displayName ?? "—"}</p>
-            <p className="truncate text-xs text-muted-foreground">{u.email}</p>
+            <p className="truncate text-meta">{u.email}</p>
           </div>
         </div>
       ),
@@ -428,13 +428,13 @@ export function UsersManager() {
                     <p className="text-2xl font-bold tabular-nums text-amber-600 dark:text-amber-400">
                       {selectedUser.user.honeyPoints.toLocaleString()}
                     </p>
-                    <p className="text-xs text-muted-foreground">Honey</p>
+                    <p className="text-meta">Honey</p>
                   </div>
                   <div className="rounded-lg bg-orange-500/5 p-3 text-center">
                     <p className="text-2xl font-bold tabular-nums text-orange-500">
                       {selectedUser.user.checkinStreak}
                     </p>
-                    <p className="text-xs text-muted-foreground">สตรีค</p>
+                    <p className="text-meta">สตรีค</p>
                   </div>
                 </div>
 
@@ -471,7 +471,7 @@ export function UsersManager() {
                 {/* Badges */}
                 {selectedUser.user.badges.length > 0 && (
                   <div>
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <p className="mb-2 text-eyebrow">
                       ตราสัญลักษณ์
                     </p>
                     <div className="flex flex-wrap gap-1.5">
@@ -486,7 +486,7 @@ export function UsersManager() {
 
                 {/* Transactions */}
                 <div>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <p className="mb-2 text-eyebrow">
                     ประวัติธุรกรรม
                   </p>
                   <div className="max-h-72 space-y-1 overflow-y-auto">
@@ -516,7 +516,7 @@ export function UsersManager() {
                       </div>
                     ))}
                     {selectedUser.transactions.length === 0 && (
-                      <p className="py-4 text-center text-xs text-muted-foreground">
+                      <p className="py-4 text-center text-meta">
                         ไม่มีธุรกรรม
                       </p>
                     )}

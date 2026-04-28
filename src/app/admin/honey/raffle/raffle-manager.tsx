@@ -295,8 +295,8 @@ export function RaffleManager({ initialRaffles }: { initialRaffles: Raffle[] }) 
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold">Gacha Machine Management</h1>
-          <p className="mt-0.5 text-xs text-muted-foreground">
+          <h1 className="text-h1">Gacha Machine Management</h1>
+          <p className="mt-0.5 text-meta">
             Current month: <span className="font-mono font-semibold text-foreground">{currentMonth()}</span>
           </p>
         </div>
@@ -310,7 +310,7 @@ export function RaffleManager({ initialRaffles }: { initialRaffles: Raffle[] }) 
           <Calendar className="size-5 text-amber-500" />
           <div className="flex-1">
             <p className="text-sm font-medium">No machine for {currentMonth()}</p>
-            <p className="text-xs text-muted-foreground">Users won&apos;t see any raffle this month.</p>
+            <p className="text-meta">Users won&apos;t see any raffle this month.</p>
           </div>
           <Button size="sm" variant="outline" onClick={openCreateForm} className="shrink-0 gap-1.5 border-amber-500/30 text-amber-600 hover:bg-amber-500/10">
             <Plus className="size-3.5" /> Create Now
@@ -338,7 +338,7 @@ export function RaffleManager({ initialRaffles }: { initialRaffles: Raffle[] }) 
             <Ticket className="size-7 text-muted-foreground/30" />
           </div>
           <p className="text-sm font-medium text-muted-foreground">No machines yet</p>
-          <p className="text-xs text-muted-foreground/60">Create your first gacha machine to get started</p>
+          <p className="text-meta text-muted-foreground/60">Create your first gacha machine to get started</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -360,7 +360,7 @@ export function RaffleManager({ initialRaffles }: { initialRaffles: Raffle[] }) 
                         CURRENT
                       </span>
                     )}
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-micro text-muted-foreground">
                       {monthRaffles.length} machine{monthRaffles.length !== 1 ? "s" : ""}
                     </span>
                   </div>

@@ -462,7 +462,7 @@ export function MissionsManager({
           {editingTpl !== null && (
             <Card>
               <CardContent>
-                <h2 className="mb-4 text-lg font-semibold">{editingTpl === "new" ? "Create Template" : "Edit Template"}</h2>
+                <h2 className="mb-4 text-h3">{editingTpl === "new" ? "Create Template" : "Edit Template"}</h2>
                 {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   <Field label="Code (unique)">
@@ -580,7 +580,7 @@ export function MissionsManager({
                       <td className="px-4 py-3 font-mono text-xs">{t.code}</td>
                       <td className="px-4 py-3">{t.nameEn ?? t.name}</td>
                       <td className="px-4 py-3"><Badge variant="secondary">{t.category}</Badge></td>
-                      <td className="px-4 py-3 text-xs text-muted-foreground">{TRACK_TYPE_LABELS[t.trackType]}</td>
+                      <td className="px-4 py-3 text-meta">{TRACK_TYPE_LABELS[t.trackType]}</td>
                       <td className="px-4 py-3 text-right">
                         <span className="font-bold tabular-nums text-amber-600 dark:text-amber-400">{(t.rewards as Record<string, number>).honey ?? 0}</span>
                       </td>
@@ -616,7 +616,7 @@ export function MissionsManager({
           {editingSched !== null && (
             <Card>
               <CardContent>
-                <h2 className="mb-4 text-lg font-semibold">{editingSched === "new" ? "Create Schedule Rule" : "Edit Schedule Rule"}</h2>
+                <h2 className="mb-4 text-h3">{editingSched === "new" ? "Create Schedule Rule" : "Edit Schedule Rule"}</h2>
                 {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   <Field label="Template">
@@ -696,14 +696,14 @@ export function MissionsManager({
                     <tr key={r.id} className="border-b border-border/20 transition-colors hover:bg-muted/20">
                       <td className="px-4 py-3 font-mono text-xs">{r.template?.code ?? r.templateId}</td>
                       <td className="px-4 py-3"><Badge variant="secondary">{SLOT_TYPE_LABELS[r.slotType] ?? r.slotType}</Badge></td>
-                      <td className="px-4 py-3 text-xs text-muted-foreground">
+                      <td className="px-4 py-3 text-meta">
                         {r.slotType === "DAY_OF_WEEK" && r.dayOfWeek != null && DAY_NAMES[r.dayOfWeek]}
                         {r.slotType === "FIXED_DATE" && r.specificDates && (r.specificDates as string[]).join(", ")}
                         {r.slotType === "RANDOM_POOL" && `pool: ${r.poolGroup ?? "default"} (pick ${r.poolPickCount ?? 1})`}
                         {r.slotType === "SEQUENTIAL" && `pool: ${r.poolGroup ?? "default"}`}
                         {r.slotType === "CORE" && "Always"}
                       </td>
-                      <td className="px-4 py-3 text-xs text-muted-foreground">
+                      <td className="px-4 py-3 text-meta">
                         {r.startDate || r.endDate ? `${r.startDate?.slice(0, 10) ?? "∞"} → ${r.endDate?.slice(0, 10) ?? "∞"}` : "Always"}
                       </td>
                       <td className="px-4 py-3 text-center">
@@ -734,7 +734,7 @@ export function MissionsManager({
           {editingBonus !== null && (
             <Card>
               <CardContent>
-                <h2 className="mb-4 text-lg font-semibold">{editingBonus === "new" ? "Create Bonus Rule" : "Edit Bonus Rule"}</h2>
+                <h2 className="mb-4 text-h3">{editingBonus === "new" ? "Create Bonus Rule" : "Edit Bonus Rule"}</h2>
                 {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   <Field label="Name">
@@ -803,11 +803,11 @@ export function MissionsManager({
                     <tr key={r.id} className="border-b border-border/20 transition-colors hover:bg-muted/20">
                       <td className="px-4 py-3 font-medium">{r.nameEn ?? r.name}</td>
                       <td className="px-4 py-3"><Badge variant="secondary">{r.category}</Badge></td>
-                      <td className="px-4 py-3 text-xs text-muted-foreground">{BONUS_REQ_LABELS[r.requirement] ?? r.requirement} ({r.requirementValue})</td>
+                      <td className="px-4 py-3 text-meta">{BONUS_REQ_LABELS[r.requirement] ?? r.requirement} ({r.requirementValue})</td>
                       <td className="px-4 py-3 text-right">
                         <span className="font-bold tabular-nums text-amber-600 dark:text-amber-400">{(r.rewards as Record<string, number>).honey ?? 0} honey</span>
                         {((r.rewards as Record<string, number>).tickets ?? 0) > 0 && (
-                          <span className="ml-2 text-xs text-muted-foreground">+ {(r.rewards as Record<string, number>).tickets} tickets</span>
+                          <span className="ml-2 text-meta">+ {(r.rewards as Record<string, number>).tickets} tickets</span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-center">
@@ -833,7 +833,7 @@ export function MissionsManager({
         <div className="space-y-4">
           <Card>
             <CardContent>
-              <h2 className="mb-4 text-lg font-semibold">Mission Preview</h2>
+              <h2 className="mb-4 text-h3">Mission Preview</h2>
               <p className="mb-4 text-sm text-muted-foreground">ดูตัวอย่างว่าวันที่เลือกจะมีภารกิจอะไรบ้าง (ตาม schedule rules ที่ตั้งไว้)</p>
               <div className="flex items-end gap-3">
                 <Field label="Date">

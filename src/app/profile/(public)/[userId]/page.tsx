@@ -54,7 +54,9 @@ export default async function PublicProfilePage({ params }: PageProps) {
 
   const isOwner = await resolveIsOwner(user.id);
 
-  if (!isOwner && user.profileVisibility === "private") {
+  const visibility = user.privacySettings?.profileVisibility ?? "public";
+
+  if (!isOwner && visibility === "private") {
     return (
       <PublicProfileClient
         user={{

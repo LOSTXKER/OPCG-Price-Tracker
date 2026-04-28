@@ -4,14 +4,26 @@ import { useEffect, useRef, useState } from "react";
 import { CheckCircle2, ChevronDown, Clock } from "lucide-react";
 import { t, type Language } from "@/lib/i18n";
 import { useCountdown } from "../hooks/use-countdown";
-import type { MissionData, RaffleMissionsData } from "../types";
+import type { HoneyLevel, MissionData, RaffleMissionsData, ShopItem } from "../types";
+import { CheckinStreakSection } from "./checkin-streak-section";
 import { DailyMissions } from "./daily-missions";
 import { MonthlyMissionsPanel } from "./monthly-missions";
+import { NextGoalHint } from "./next-goal-hint";
 
 export function MissionsTab({
   lang,
   mission,
   raffleMissions,
+  streak,
+  canCheckin,
+  canClaimFree,
+  checkinLoading,
+  claimFreeLoading,
+  points,
+  level,
+  shopItems,
+  onCheckin,
+  onClaimFreeTicket,
   onClaimTask,
   onClaimBonus,
   onShare,
@@ -22,6 +34,16 @@ export function MissionsTab({
   lang: Language;
   mission: MissionData | null;
   raffleMissions: RaffleMissionsData | null;
+  streak: number;
+  canCheckin: boolean;
+  canClaimFree: boolean;
+  checkinLoading: boolean;
+  claimFreeLoading: boolean;
+  points: number;
+  level: HoneyLevel | null;
+  shopItems: ShopItem[];
+  onCheckin: () => void;
+  onClaimFreeTicket: () => void;
   onClaimTask: (taskId: string) => void;
   onClaimBonus: () => void;
   onShare: (taskId: string) => void;
@@ -33,10 +55,37 @@ export function MissionsTab({
   const [collapsed, setCollapsed] = useState(false);
   const prevAllComplete = useRef(false);
 
+  const checkinSection = (
+    <CheckinStreakSection
+      lang={lang}
+      streak={streak}
+      canCheckin={canCheckin}
+      canClaimFree={canClaimFree}
+      checkinLoading={checkinLoading}
+      claimFreeLoading={claimFreeLoading}
+      onCheckin={onCheckin}
+      onClaimFreeTicket={onClaimFreeTicket}
+    />
+  );
+
+  const allCompleteForEffect = mission
+    ? mission.tasks.every((tk) => tk.claimed) && mission.bonusClaimed
+    : false;
+
+  useEffect(() => {
+    if (allCompleteForEffect && !prevAllComplete.current) {
+      setCollapsed(true);
+    }
+    prevAllComplete.current = allCompleteForEffect;
+  }, [allCompleteForEffect]);
+
   if (!mission) {
     return (
-      <div className="panel p-6">
-        <p className="text-sm text-muted-foreground">{t(lang, "missionAutoHint")}</p>
+      <div className="space-y-6">
+        {checkinSection}
+        <div className="panel p-6">
+          <p className="text-sm text-muted-foreground">{t(lang, "missionAutoHint")}</p>
+        </div>
       </div>
     );
   }
@@ -47,16 +96,10 @@ export function MissionsTab({
   const allClaimed = tasks.every((tk) => tk.claimed);
   const allComplete = allClaimed && bonusClaimed;
 
-  useEffect(() => {
-    if (allComplete && !prevAllComplete.current) {
-      setCollapsed(true);
-    }
-    prevAllComplete.current = allComplete;
-  }, [allComplete]);
-
   if (allComplete && collapsed) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-6">
+        {checkinSection}
         <button
           onClick={() => setCollapsed(false)}
           className="panel flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/30"
@@ -68,7 +111,7 @@ export function MissionsTab({
             <p className="text-sm font-semibold text-price-up">
               {completedCount}/{tasks.length} {t(lang, "dailyMissions")}
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-meta">
               +{earnedReward} 🍯{" "}
               {lang === "TH" ? "วันนี้" : lang === "JP" ? "今日" : "today"}
             </p>
@@ -95,7 +138,14 @@ export function MissionsTab({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {checkinSection}
+      <NextGoalHint
+        lang={lang}
+        shopItems={shopItems}
+        points={points}
+        level={level}
+      />
       <DailyMissions
         lang={lang}
         mission={mission}

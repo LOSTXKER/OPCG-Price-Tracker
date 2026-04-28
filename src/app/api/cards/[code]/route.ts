@@ -1,9 +1,7 @@
 import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
-import { createLog } from "@/lib/logger";
+import { findCardByCode } from "@/lib/data/card-detail";
 import { NextRequest, NextResponse } from "next/server";
-
-const log = createLog("api:cards");
 
 export const GET = apiHandler(async (
   _request: NextRequest,
@@ -11,43 +9,29 @@ export const GET = apiHandler(async (
 ) => {
   const { code } = await params;
 
-  try {
-    const includeClause = {
+  const card = await findCardByCode(code, {
+    include: {
       set: true,
       prices: {
         orderBy: { scrapedAt: "desc" as const },
         take: 1,
       },
-    };
+    },
+  });
 
-    const card =
-      (await prisma.card.findUnique({
-        where: { cardCode: code.toUpperCase() },
-        include: includeClause,
-      })) ??
-      (await prisma.card.findFirst({
-        where: { baseCode: code.toUpperCase(), isParallel: false },
-        include: includeClause,
-      }));
-
-    if (!card) {
-      return NextResponse.json({ error: "Card not found" }, { status: 404 });
-    }
-
-    // Increment view count
-    await prisma.card.update({
-      where: { id: card.id },
-      data: { viewCount: { increment: 1 } },
-    });
-
-    return NextResponse.json({
-      card,
-      latestPrice: card.prices[0] || null,
-      priceChange24h: card.priceChange24h,
-      priceChange7d: card.priceChange7d,
-    });
-  } catch (error) {
-    log.error("Error fetching card", error);
-    return NextResponse.json({ error: "Failed to fetch card" }, { status: 500 });
+  if (!card) {
+    return NextResponse.json({ error: "Card not found" }, { status: 404 });
   }
+
+  await prisma.card.update({
+    where: { id: card.id },
+    data: { viewCount: { increment: 1 } },
+  });
+
+  return NextResponse.json({
+    card,
+    latestPrice: card.prices[0] || null,
+    priceChange24h: card.priceChange24h,
+    priceChange7d: card.priceChange7d,
+  });
 });

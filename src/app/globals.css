@@ -7,7 +7,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans), var(--font-thai);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
@@ -41,6 +41,33 @@
   --color-price-up: var(--price-up);
   --color-price-down: var(--price-down);
   --color-chance-mid: var(--chance-mid);
+
+  /* Semantic status tokens (additive — mirror existing colors so visual is unchanged). */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-soft: var(--info-soft);
+
+  /* Typography scale (slightly bumped from defaults for Thai/Kanit readability) */
+  --text-xs: 0.8125rem;          /* 13px (was 12px) */
+  --text-xs--line-height: 1.125rem;
+  --text-sm: 0.9375rem;          /* 15px (was 14px) */
+  --text-sm--line-height: 1.375rem;
+  --text-base: 1.0625rem;        /* 17px (was 16px) */
+  --text-base--line-height: 1.625rem;
+  --text-lg: 1.1875rem;          /* 19px (was 18px) */
+  --text-lg--line-height: 1.75rem;
+  --text-xl--line-height: 1.875rem;
+  --text-2xl--line-height: 2.125rem;
+  --text-3xl--line-height: 2.375rem;
 }
 
 :root {
@@ -74,6 +101,21 @@
   --price-up: #34C759;
   --price-down: #FF3B30;
   --chance-mid: #FF9F0A;
+
+  /* Semantic status tokens (additive). Values mirror existing palette so
+     introducing them does not change any current visual. */
+  --success: #34C759;
+  --success-foreground: #FFFFFF;
+  --success-soft: color-mix(in srgb, var(--success) 12%, transparent);
+  --warning: #FF9F0A;
+  --warning-foreground: #1D1D1F;
+  --warning-soft: color-mix(in srgb, var(--warning) 12%, transparent);
+  --danger: var(--destructive);
+  --danger-foreground: #FFFFFF;
+  --danger-soft: color-mix(in srgb, var(--danger) 12%, transparent);
+  --info: #007AFF;
+  --info-foreground: #FFFFFF;
+  --info-soft: color-mix(in srgb, var(--info) 12%, transparent);
 }
 
 .dark {
@@ -106,6 +148,20 @@
   --price-up: #30D158;
   --price-down: #FF453A;
   --chance-mid: #FF9F0A;
+
+  /* Semantic status tokens — dark variants. */
+  --success: #30D158;
+  --success-foreground: #1C1C1E;
+  --success-soft: color-mix(in srgb, var(--success) 16%, transparent);
+  --warning: #FF9F0A;
+  --warning-foreground: #1C1C1E;
+  --warning-soft: color-mix(in srgb, var(--warning) 16%, transparent);
+  --danger: var(--destructive);
+  --danger-foreground: #FFFFFF;
+  --danger-soft: color-mix(in srgb, var(--danger) 18%, transparent);
+  --info: #0A84FF;
+  --info-foreground: #FFFFFF;
+  --info-soft: color-mix(in srgb, var(--info) 16%, transparent);
 }
 
 @layer base {
@@ -116,7 +172,7 @@
     @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: 16px;
+    font-size: 17px;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled),
@@ -160,19 +216,134 @@
   background: color-mix(in srgb, var(--primary) 5%, var(--card));
 }
 
-.page-header {
-  font-size: 1.5rem;
-  line-height: 2rem;
+/* ------------------------------------------------------------------ */
+/* Typography tokens                                                   */
+/* Use these semantic classes instead of stacking text-* font-*        */
+/* tracking-* text-muted-foreground combinations.                       */
+/* ------------------------------------------------------------------ */
+
+/* Hero KPI numbers (portfolio totals, headline metrics) */
+.text-display {
+  font-size: 2.25rem;            /* 36px */
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 640px) {
+  .text-display { font-size: 2.625rem; /* 42px */ }
+}
+
+/* Page titles */
+.text-h1 {
+  font-size: 1.75rem;            /* 28px */
+  line-height: 1.2;
   font-weight: 700;
   letter-spacing: -0.025em;
 }
 @media (min-width: 640px) {
-  .page-header { font-size: 1.875rem; line-height: 2.25rem; }
+  .text-h1 { font-size: 2rem; line-height: 1.2; /* 32px */ }
 }
+
+/* Section headings */
+.text-h2 {
+  font-size: 1.375rem;           /* 22px */
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+@media (min-width: 640px) {
+  .text-h2 { font-size: 1.5rem; /* 24px */ }
+}
+
+/* Subsection headings */
+.text-h3 {
+  font-size: 1.1875rem;          /* 19px */
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+/* Card titles, panel headings */
+.text-h4 {
+  font-size: 1.0625rem;          /* 17px */
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+/* Small headings, table captions */
+.text-h5 {
+  font-size: 0.9375rem;          /* 15px */
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+/* Default body copy */
+.text-body {
+  font-size: 1.0625rem;          /* 17px */
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* Secondary body copy / dense panels */
+.text-body-sm {
+  font-size: 0.9375rem;          /* 15px */
+  line-height: 1.55;
+  font-weight: 400;
+}
+
+/* Form labels / inline labels */
+.text-label {
+  font-size: 0.8125rem;          /* 13px */
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* Captions, helper text, muted aux text */
+.text-meta {
+  font-size: 0.8125rem;          /* 13px */
+  line-height: 1.4;
+  font-weight: 400;
+  color: var(--muted-foreground);
+}
+
+/* Section eyebrows, column headers, small uppercase labels */
+.text-eyebrow {
+  font-size: 0.75rem;            /* 12px */
+  line-height: 1.3;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-foreground);
+}
+
+/* Pill / badge text — reserved for chips and badges only */
+.text-micro {
+  font-size: 0.6875rem;          /* 11px */
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+/* Image-overlay micro labels (card thumbnails) — last resort */
+.text-overlay {
+  font-size: 0.625rem;           /* 10px */
+  line-height: 1.1;
+  font-weight: 600;
+}
+
+/* Monospace / numeric mono */
+.text-code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875rem;           /* 14px */
+  font-variant-numeric: tabular-nums;
+}
+
+/* Re-base existing helpers as aliases to the new tokens (matches .text-h1 / .text-meta) */
 .page-subtitle {
   margin-top: 0.25rem;
-  font-size: var(--text-sm);
-  line-height: var(--text-sm--line-height);
+  font-size: 0.8125rem;          /* 13px */
+  line-height: 1.4;
+  font-weight: 400;
   color: var(--muted-foreground);
 }
 

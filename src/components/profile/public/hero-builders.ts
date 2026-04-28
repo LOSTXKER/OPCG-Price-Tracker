@@ -23,17 +23,20 @@ export type HeroMetaInput = {
   user: ProfileUser;
   stats: ProfileStats;
   sellerStats: SellerStats;
-  joinedRelative: string;
   isOwner: boolean;
   lang: Language;
 };
 
-/** Build the "X listings · 4.9★ (12) · Active 2h ago · Joined 6mo" meta row. */
+/**
+ * Build the "X listings · 4.9★ (12) · Active 2h ago" meta row that sits
+ * under the hero. Joined date is intentionally omitted — the hero's
+ * `HeroFactsRow` (joined · response · deals) owns that fact now so the
+ * lower meta line stays focused on activity signals.
+ */
 export function buildHeroMeta({
   user,
   stats,
   sellerStats,
-  joinedRelative,
   isOwner,
   lang,
 }: HeroMetaInput): HeroMetaItem[] {
@@ -80,7 +83,6 @@ export function buildHeroMeta({
     }
   }
 
-  out.push({ kind: "joined", label: joinedRelative });
   return out;
 }
 

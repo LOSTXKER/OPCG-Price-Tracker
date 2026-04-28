@@ -1,41 +1,40 @@
 "use client";
 
-import { Star } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 
-import { CardItem } from "@/components/cards/card-item";
-import { CardGrid } from "@/components/cards/card-grid";
-import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
-import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/client";
+import { PageHeader } from "@/components/layout/page-header";
+import { useConfirm } from "@/components/shared/confirm-dialog";
 import { useAuthState } from "@/hooks/use-auth-state";
-import { invalidateSettings } from "@/hooks/use-settings";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useTierLimits } from "@/hooks/use-tier-limits";
+import { invalidateSettings } from "@/hooks/use-settings";
+import { createClient } from "@/lib/supabase/client";
+import { getCardName, t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
-import { t, type Language } from "@/lib/i18n";
-import { LimitCounter } from "@/components/shared/limit-counter";
 
-type WatchCard = {
-  id: number;
-  cardCode: string;
-  baseCode: string | null;
-  nameJp: string;
-  nameEn: string | null;
-  rarity: string;
-  imageUrl: string | null;
-  latestPriceJpy: number | null;
-  latestPriceThb: number | null;
-  priceChange7d: number | null;
-  set: { code: string };
-};
+import { WatchlistEditDialog } from "./watchlist-edit-dialog";
+import { WatchlistEmpty } from "./watchlist-empty";
+import { WatchlistGridView } from "./watchlist-grid-view";
+import { WatchlistListView } from "./watchlist-list-view";
+import { WatchlistMockPreview } from "./watchlist-mock-preview";
+import { WatchlistSummary } from "./watchlist-summary";
+import { WatchlistToolbar } from "./watchlist-toolbar";
+import { sortEntries } from "./watchlist-sort";
+import {
+  DEFAULT_FILTERS,
+  getEntryChange,
+  type ChangePeriod,
+  type SortKey,
+  type WatchView,
+  type WatchlistEntry,
+  type WatchlistFilters,
+} from "./watchlist-types";
 
-type WatchlistEntry = {
-  id: number;
-  cardId: number;
-  card: WatchCard;
-};
+const VIEW_STORAGE_KEY = "opcg.watchlist.view";
 
 export default function WatchlistClient() {
   const { authed } = useAuthState();
@@ -60,143 +59,403 @@ export default function WatchlistClient() {
 function WatchlistContent() {
   const lang = useUIStore((s) => s.language);
   const { limits } = useTierLimits();
+  const confirm = useConfirm();
+
   const [items, setItems] = useState<WatchlistEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [removing, setRemoving] = useState<number | null>(null);
+  const [removingIds, setRemovingIds] = useState<Set<number>>(new Set());
+  const [selected, setSelected] = useState<Set<number>>(new Set());
+
+  const [view, setView] = useLocalStorage<WatchView>(VIEW_STORAGE_KEY, "list");
+  const [period, setPeriod] = useState<ChangePeriod>("7d");
+  const [sortKey, setSortKey] = useState<SortKey>("default");
+  const [filters, setFilters] = useState<WatchlistFilters>(DEFAULT_FILTERS);
+  const [search, setSearch] = useState("");
+
+  const [editTarget, setEditTarget] = useState<WatchlistEntry | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [alertTarget, setAlertTarget] = useState<WatchlistEntry | null>(null);
+  const [alertOpen, setAlertOpen] = useState(false);
+
+  const [sparklines, setSparklines] = useState<Record<number, number[]>>({});
+  const sparklineFetchedRef = useRef<Set<number>>(new Set());
 
   const load = useCallback(async () => {
     setError(null);
-    const res = await fetch("/api/watchlist");
-    if (!res.ok) {
-      if (res.status === 401) {
-        invalidateSettings();
-        const supabase = createClient();
-        await supabase.auth.signOut();
+    try {
+      const res = await fetch("/api/watchlist");
+      if (!res.ok) {
+        if (res.status === 401) {
+          invalidateSettings();
+          toast.error(t(lang, "watchlistSessionExpired"));
+          const supabase = createClient();
+          await supabase.auth.signOut();
+        } else {
+          setError(t(lang, "loadFailed"));
+        }
+        setLoading(false);
+        return;
       }
+      const data = (await res.json()) as { items: WatchlistEntry[] };
+      setItems(data.items ?? []);
+    } catch {
       setError(t(lang, "loadFailed"));
+    } finally {
       setLoading(false);
-      return;
     }
-    const data = (await res.json()) as { items: WatchlistEntry[] };
-    setItems(data.items ?? []);
-    setLoading(false);
   }, [lang]);
 
   useEffect(() => {
     void load();
   }, [load]);
 
-  const remove = async (cardId: number) => {
-    setRemoving(cardId);
-    try {
-      const res = await fetch(`/api/watchlist?cardId=${cardId}`, { method: "DELETE" });
-      if (res.ok) {
-        setItems((prev) => prev.filter((x) => x.cardId !== cardId));
-      }
-    } finally {
-      setRemoving(null);
+  // Fetch sparklines for visible cards (list view only, lazy)
+  useEffect(() => {
+    if (view !== "list") return;
+    const ids = items
+      .map((i) => i.cardId)
+      .filter((id) => !sparklineFetchedRef.current.has(id));
+    if (ids.length === 0) return;
+    ids.forEach((id) => sparklineFetchedRef.current.add(id));
+    const params = ids.slice(0, 50).join(",");
+    fetch(`/api/cards/sparklines?ids=${params}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.sparklines) {
+          setSparklines((prev) => ({ ...prev, ...data.sparklines }));
+        }
+      })
+      .catch(() => {
+        // ignore — sparkline is optional eye-candy
+      });
+  }, [items, view]);
+
+  const setOptions = useMemo(() => {
+    const seen = new Map<string, string>();
+    for (const e of items) {
+      const code = e.card.set.code;
+      if (!seen.has(code)) seen.set(code, code.toUpperCase());
     }
+    return Array.from(seen.entries())
+      .map(([code, label]) => ({ code, label }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [items]);
+
+  const filteredEntries = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    let out = items.filter((entry) => {
+      if (filters.pinnedOnly && entry.pinnedAt == null) return false;
+      if (filters.hasAlert && !entry.hasActiveAlert) return false;
+      if (filters.setCodes.length > 0 && !filters.setCodes.includes(entry.card.set.code)) {
+        return false;
+      }
+      if (filters.direction) {
+        const change = getEntryChange(entry, period);
+        if (change == null) return false;
+        if (filters.direction === "up" && change <= 0) return false;
+        if (filters.direction === "down" && change >= 0) return false;
+      }
+      if (q) {
+        const name = `${entry.card.nameEn ?? ""} ${entry.card.nameJp ?? ""} ${entry.card.nameTh ?? ""}`.toLowerCase();
+        const code = entry.card.cardCode.toLowerCase();
+        if (!name.includes(q) && !code.includes(q)) return false;
+      }
+      return true;
+    });
+
+    out = sortEntries(out, sortKey, period);
+    return out;
+  }, [items, search, filters, sortKey, period]);
+
+  const toggleSelect = (cardId: number) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(cardId)) next.delete(cardId);
+      else next.add(cardId);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    setSelected((prev) => {
+      const visibleIds = filteredEntries.map((e) => e.cardId);
+      const allSelected = visibleIds.length > 0 && visibleIds.every((id) => prev.has(id));
+      if (allSelected) {
+        const next = new Set(prev);
+        visibleIds.forEach((id) => next.delete(id));
+        return next;
+      }
+      const next = new Set(prev);
+      visibleIds.forEach((id) => next.add(id));
+      return next;
+    });
+  };
+
+  const removeSingle = async (entry: WatchlistEntry) => {
+    const cardName = getCardName(lang, entry.card);
+    const ok = await confirm({
+      title: cardName,
+      description: t(lang, "watchlistConfirmRemove"),
+      confirmLabel: t(lang, "removeFromWatchlist"),
+      cancelLabel: t(lang, "cancel"),
+      variant: "destructive",
+    });
+    if (!ok) return;
+
+    const previousItems = items;
+    setRemovingIds((prev) => new Set(prev).add(entry.cardId));
+    setItems((prev) => prev.filter((x) => x.cardId !== entry.cardId));
+    setSelected((prev) => {
+      if (!prev.has(entry.cardId)) return prev;
+      const next = new Set(prev);
+      next.delete(entry.cardId);
+      return next;
+    });
+
+    try {
+      const res = await fetch(`/api/watchlist?cardId=${entry.cardId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("remove failed");
+      toast.success(t(lang, "watchlistRemoved"));
+    } catch {
+      setItems(previousItems);
+      toast.error(t(lang, "watchlistUpdateFailed"));
+    } finally {
+      setRemovingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(entry.cardId);
+        return next;
+      });
+    }
+  };
+
+  const removeBulk = async () => {
+    if (selected.size === 0) return;
+    const ids = Array.from(selected);
+    const ok = await confirm({
+      title: t(lang, "watchlistConfirmBulkRemoveTitle"),
+      description: `${t(lang, "watchlistConfirmBulkRemoveDesc")} (${ids.length})`,
+      confirmLabel: t(lang, "watchlistRemoveSelected"),
+      cancelLabel: t(lang, "cancel"),
+      variant: "destructive",
+    });
+    if (!ok) return;
+
+    const previousItems = items;
+    setRemovingIds((prev) => {
+      const next = new Set(prev);
+      ids.forEach((id) => next.add(id));
+      return next;
+    });
+    setItems((prev) => prev.filter((x) => !selected.has(x.cardId)));
+    setSelected(new Set());
+
+    try {
+      const res = await fetch(`/api/watchlist?cardIds=${ids.join(",")}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("bulk remove failed");
+      toast.success(t(lang, "watchlistRemoved"));
+    } catch {
+      setItems(previousItems);
+      toast.error(t(lang, "watchlistUpdateFailed"));
+    } finally {
+      setRemovingIds((prev) => {
+        const next = new Set(prev);
+        ids.forEach((id) => next.delete(id));
+        return next;
+      });
+    }
+  };
+
+  const togglePin = async (entry: WatchlistEntry) => {
+    const previousItems = items;
+    const nextPinnedAt = entry.pinnedAt ? null : new Date().toISOString();
+    setItems((prev) =>
+      prev.map((x) => (x.cardId === entry.cardId ? { ...x, pinnedAt: nextPinnedAt } : x))
+    );
+    try {
+      const res = await fetch(`/api/watchlist/${entry.cardId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pinnedAt: "toggle" }),
+      });
+      if (!res.ok) throw new Error("pin failed");
+      const data = await res.json().catch(() => null);
+      if (data?.item) {
+        const fresh = data.item as WatchlistEntry;
+        setItems((prev) =>
+          prev.map((x) =>
+            x.cardId === entry.cardId
+              ? { ...x, pinnedAt: fresh.pinnedAt, note: fresh.note, targetPriceJpy: fresh.targetPriceJpy }
+              : x
+          )
+        );
+      }
+    } catch {
+      setItems(previousItems);
+      toast.error(t(lang, "watchlistUpdateFailed"));
+    }
+  };
+
+  const handleEditSave = async (data: {
+    cardId: number;
+    note: string | null;
+    targetPriceJpy: number | null;
+  }): Promise<boolean> => {
+    const previousItems = items;
+    setItems((prev) =>
+      prev.map((x) =>
+        x.cardId === data.cardId
+          ? { ...x, note: data.note, targetPriceJpy: data.targetPriceJpy }
+          : x
+      )
+    );
+
+    try {
+      const res = await fetch(`/api/watchlist/${data.cardId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          note: data.note,
+          targetPriceJpy: data.targetPriceJpy,
+        }),
+      });
+      if (!res.ok) throw new Error("update failed");
+      return true;
+    } catch {
+      setItems(previousItems);
+      return false;
+    }
+  };
+
+  const openEdit = (entry: WatchlistEntry) => {
+    setEditTarget(entry);
+    setEditOpen(true);
+  };
+
+  const openSetAlert = (entry: WatchlistEntry) => {
+    setAlertTarget(entry);
+    setAlertOpen(true);
+  };
+
+  const refreshAlerts = () => {
+    void load();
   };
 
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="panel animate-pulse p-8">
-          <div className="h-4 w-32 rounded bg-muted" />
-          <div className="mt-3 h-6 w-48 rounded bg-muted" />
+        <div className="space-y-3">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-4 w-64" />
         </div>
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-24 rounded-xl" />
+          ))}
+        </div>
+        <Skeleton className="h-12 rounded-lg" />
+        <Skeleton className="h-96 rounded-xl" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <div className="flex items-center gap-2">
-          <h1 className="page-header">{t(lang, "watchlistNav")}</h1>
-          {isFinite(limits.watchlistCards) && (
-            <LimitCounter current={items.length} max={limits.watchlistCards} />
-          )}
-        </div>
-        <p className="mt-1 text-sm text-muted-foreground">{t(lang, "emptyWatchlistDesc")}</p>
-      </div>
+    <div className="space-y-5">
+      <PageHeader
+        title={t(lang, "watchlistNav")}
+        description={items.length === 0 ? t(lang, "emptyWatchlistDesc") : undefined}
+      />
 
-      {error ? <p className="text-destructive text-sm">{error}</p> : null}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
       {items.length === 0 ? (
-        <KumaEmptyState preset="empty-watchlist" />
+        <WatchlistEmpty />
       ) : (
-        <CardGrid>
-          {items.map((entry) => (
-            <div key={entry.id} className="relative">
-              <CardItem
-                cardCode={entry.card.cardCode}
-                nameJp={entry.card.nameJp}
-                nameEn={entry.card.nameEn}
-                rarity={entry.card.rarity}
-                imageUrl={entry.card.imageUrl}
-                priceJpy={entry.card.latestPriceJpy}
-                priceThb={entry.card.latestPriceThb}
-                priceChange7d={entry.card.priceChange7d}
-                setCode={entry.card.set.code}
-              />
-              <Button
-                type="button"
-                size="icon-sm"
-                variant="secondary"
-                className="absolute top-2 right-2 z-10 rounded-full bg-background/80 backdrop-blur-sm shadow-sm"
-                aria-label={t(lang, "removeFromWatchlist")}
-                disabled={removing === entry.cardId}
-                onClick={() => void remove(entry.cardId)}
-              >
-                <Star className="size-4 fill-amber-400 text-amber-500" />
-              </Button>
+        <>
+          <WatchlistSummary entries={items} period={period} />
+
+          <WatchlistToolbar
+            view={view}
+            onViewChange={setView}
+            period={period}
+            onPeriodChange={setPeriod}
+            sortKey={sortKey}
+            onSortChange={setSortKey}
+            filters={filters}
+            onFiltersChange={setFilters}
+            search={search}
+            onSearchChange={setSearch}
+            setOptions={setOptions}
+            itemCount={items.length}
+            limit={limits.watchlistCards}
+            selectedCount={selected.size}
+            onClearSelection={() => setSelected(new Set())}
+            onBulkRemove={() => void removeBulk()}
+          />
+
+          {filteredEntries.length === 0 ? (
+            <div className="panel py-10 text-center text-sm text-muted-foreground">
+              {t(lang, "noCardsFoundDesc")}
             </div>
-          ))}
-        </CardGrid>
+          ) : view === "list" ? (
+            <WatchlistListView
+              entries={filteredEntries}
+              period={period}
+              selected={selected}
+              onToggleSelect={toggleSelect}
+              onToggleAll={toggleSelectAll}
+              sparklines={sparklines}
+              onTogglePin={(e) => void togglePin(e)}
+              onEdit={openEdit}
+              onSetAlert={openSetAlert}
+              onRemove={(e) => void removeSingle(e)}
+              removingIds={removingIds}
+            />
+          ) : (
+            <WatchlistGridView
+              entries={filteredEntries}
+              period={period}
+              selected={selected}
+              onToggleSelect={toggleSelect}
+              onTogglePin={(e) => void togglePin(e)}
+              onEdit={openEdit}
+              onSetAlert={openSetAlert}
+              onRemove={(e) => void removeSingle(e)}
+              removingIds={removingIds}
+            />
+          )}
+        </>
+      )}
+
+      <WatchlistEditDialog
+        open={editOpen}
+        entry={editTarget}
+        onOpenChange={(open) => {
+          setEditOpen(open);
+          if (!open) setEditTarget(null);
+        }}
+        onSave={handleEditSave}
+      />
+
+      {alertTarget && (
+        <CardSetAlertDialog
+          cardId={alertTarget.cardId}
+          cardName={getCardName(lang, alertTarget.card)}
+          currentPriceJpy={alertTarget.card.latestPriceJpy}
+          open={alertOpen}
+          onOpenChange={(open) => {
+            setAlertOpen(open);
+            if (!open) setAlertTarget(null);
+          }}
+          onCreated={refreshAlerts}
+          hideTrigger
+        />
       )}
     </div>
   );
 }
 
-function WatchlistMockPreview({ lang }: { lang: Language }) {
-  const cards = [
-    { code: "OP09-001", name: "Monkey D. Luffy", price: "¥3,200", change: "+12%" },
-    { code: "OP09-019", name: "Roronoa Zoro", price: "¥2,800", change: "+5%" },
-    { code: "OP09-044", name: "Boa Hancock", price: "¥1,900", change: "-3%" },
-    { code: "OP08-058", name: "Trafalgar Law", price: "¥1,500", change: "+8%" },
-    { code: "OP08-001", name: "Nami", price: "¥980", change: "+2%" },
-    { code: "OP07-034", name: "Shanks", price: "¥4,100", change: "-1%" },
-  ];
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="page-header">
-          {t(lang, "watchlistNav")}
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t(lang, "emptyWatchlistDesc")}
-        </p>
-      </div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {cards.map((c) => (
-          <div key={c.code} className="rounded-xl border border-border/40 bg-card overflow-hidden">
-            <div className="aspect-[3/4] bg-muted" />
-            <div className="p-3 space-y-1">
-              <p className="truncate text-sm font-medium">{c.name}</p>
-              <p className="font-mono text-xs text-muted-foreground">{c.code}</p>
-              <div className="flex items-center justify-between">
-                <p className="font-price text-sm font-semibold">{c.price}</p>
-                <span className={`text-xs font-medium ${c.change.startsWith("+") ? "text-green-500" : "text-red-500"}`}>
-                  {c.change}
-                </span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}

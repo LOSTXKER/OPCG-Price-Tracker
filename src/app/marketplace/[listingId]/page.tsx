@@ -209,7 +209,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
   ];
 
   return (
-    <div className="mx-auto max-w-7xl space-y-10">
+    <div className="space-y-10">
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <ViewTracker listingId={listing.id} />
       <Breadcrumb
@@ -242,7 +242,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
           {/* ── Block A: Product Identity ── */}
           <div className="space-y-4">
             <div className="flex items-start gap-3">
-              <h1 className="page-header min-w-0 flex-1 break-words">
+              <h1 className="text-h1 min-w-0 flex-1 break-words">
                 {cardName}
               </h1>
               <SaveButton listingId={listing.id} initialSaved={isSaved} />
@@ -398,7 +398,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
       {/* Description */}
       {listing.description && (
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold">รายละเอียดจากผู้ขาย</h2>
+          <h2 className="text-h3">รายละเอียดจากผู้ขาย</h2>
           <div className="panel p-5">
             <p className="break-words whitespace-pre-wrap text-sm leading-relaxed">
               {listing.description}
@@ -410,7 +410,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
       {/* Seller's Other Listings */}
       {sellerListings.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold">
+          <h2 className="text-h3">
             รายการอื่นจาก {sellerName}
           </h2>
           <div className="flex gap-4 overflow-x-auto pb-2">
@@ -448,7 +448,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
       {/* Similar Listings */}
       {similar.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold">รายการที่คล้ายกัน</h2>
+          <h2 className="text-h3">รายการที่คล้ายกัน</h2>
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {similar.map((l) => (
               <ListingCard
@@ -482,7 +482,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
 
       {/* Reviews */}
       <section className="space-y-4">
-        <h2 className="text-lg font-semibold">
+        <h2 className="text-h3">
           รีวิวผู้ขาย ({listing.user.sellerReviewCount})
         </h2>
         <ReviewSection

@@ -138,15 +138,15 @@ export function ImageUploader({
         {uploading ? (
           <>
             <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">Uploading...</span>
+            <span className="text-meta">Uploading...</span>
           </>
         ) : (
           <>
             <ImagePlus className="size-6 text-muted-foreground/50" />
-            <span className="text-xs text-muted-foreground">
+            <span className="text-meta">
               Drop image here or click to upload
             </span>
-            <span className="text-xs text-muted-foreground/50">
+            <span className="text-meta text-muted-foreground/50">
               PNG, JPG, WebP (max 5MB)
             </span>
           </>

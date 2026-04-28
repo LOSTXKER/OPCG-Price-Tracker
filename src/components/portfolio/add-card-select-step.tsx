@@ -133,7 +133,7 @@ export function SelectStep({
             <Filter className="size-3.5" />
             <span className="hidden sm:inline">{t(lang, "filter")}</span>
             {activeFilterCount > 0 && (
-              <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
+              <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
                 {activeFilterCount}
               </span>
             )}
@@ -145,7 +145,7 @@ export function SelectStep({
             {/* Set filter */}
             <div>
               <div className="mb-1.5 flex items-center justify-between">
-                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "set")}</span>
+                <span className="text-eyebrow">{t(lang, "set")}</span>
               </div>
               <div className="relative" ref={setDropdownRef}>
                 <button
@@ -235,7 +235,7 @@ export function SelectStep({
                           <span className="min-w-0 flex-1 truncate text-xs">
                             {s.nameEn ?? s.name}
                           </span>
-                          <span className="shrink-0 text-xs text-muted-foreground">{s._count.cards}</span>
+                          <span className="shrink-0 text-meta">{s._count.cards}</span>
                         </button>
                       ))}
                     </div>
@@ -246,7 +246,7 @@ export function SelectStep({
 
             {/* Rarity chips */}
             <div>
-              <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "rarity")}</span>
+              <span className="mb-1.5 block text-eyebrow">{t(lang, "rarity")}</span>
               <div className="flex flex-wrap gap-1.5">
                 {RARITY_OPTIONS.map((r) => (
                   <button
@@ -268,7 +268,7 @@ export function SelectStep({
 
             {/* Color chips */}
             <div>
-              <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "color")}</span>
+              <span className="mb-1.5 block text-eyebrow">{t(lang, "color")}</span>
               <div className="flex flex-wrap gap-1.5">
                 {COLOR_OPTIONS.map((c) => (
                   <button
@@ -290,7 +290,7 @@ export function SelectStep({
 
             {/* Card type chips */}
             <div>
-              <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t(lang, "type")}</span>
+              <span className="mb-1.5 block text-eyebrow">{t(lang, "type")}</span>
               <div className="flex flex-wrap gap-1.5">
                 {TYPE_OPTIONS.map((t) => (
                   <button
@@ -360,7 +360,7 @@ export function SelectStep({
       {/* Card list */}
       <div className="min-h-0 flex-1 overflow-y-auto">
         {!isFiltered && (
-          <p className="px-4 pt-2 pb-1 text-xs text-muted-foreground/60">
+          <p className="px-4 pt-2 pb-1 text-meta text-muted-foreground/60">
             {t(lang, "highestValue")} — {t(lang, "addCardToPortfolioDesc")}
           </p>
         )}
@@ -381,7 +381,7 @@ export function SelectStep({
           <div className="flex h-40 flex-col items-center justify-center gap-1.5">
             <Search className="size-7 text-muted-foreground/15" />
             <p className="text-sm text-muted-foreground">{t(lang, "noCardsFound")}</p>
-            <p className="text-xs text-muted-foreground/60">{t(lang, "noCardsFoundDesc")}</p>
+            <p className="text-meta text-muted-foreground/60">{t(lang, "noCardsFoundDesc")}</p>
           </div>
         ) : (
           <div className="space-y-0.5 px-2 pb-3 pt-1">

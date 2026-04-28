@@ -2,20 +2,22 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Package, Store } from "lucide-react";
+import { ChevronRight, Package, Store } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { t, type Language } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
 
 import { ProfileListingCard } from "../cards/profile-listing-card";
 import type { SerializedListing } from "../types";
+import { listingsGridClass } from "./grid-cols";
+import { HintTile } from "./hint-tile";
+import { TabSection } from "./tab-section";
 import { TabToolbar, type FilterChip, type SortOption } from "./tab-toolbar";
 
-type ListingFilter = "all" | "NM" | "LP" | "MP+" | "deal";
+type ListingFilter = "all" | "NM" | "LP" | "MP+";
 type ListingSort = "recent" | "priceAsc" | "priceDesc" | "deal";
 
-const DEAL_THRESHOLD_PCT = -10; // ≥ 10% below market = deal
+const TOOLBAR_THRESHOLD = 4;
 
 export function ListingsTabContent({
   listings,
@@ -39,7 +41,6 @@ export function ListingsTabContent({
     else if (filter === "LP") arr = arr.filter((l) => l.condition.toUpperCase() === "LP");
     else if (filter === "MP+")
       arr = arr.filter((l) => ["MP", "HP", "DMG"].includes(l.condition.toUpperCase()));
-    else if (filter === "deal") arr = arr.filter((l) => isDeal(l));
 
     switch (sort) {
       case "priceAsc":
@@ -61,44 +62,39 @@ export function ListingsTabContent({
 
   if (listings.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-4 py-20 text-center">
-        <div className="flex size-14 items-center justify-center rounded-2xl bg-muted/60">
-          <Store className="size-7 text-muted-foreground/30" />
+      <TabSection title={t(lang, "tabListings")}>
+        <div className="flex flex-col items-center gap-4 py-12 text-center">
+          <div className="flex size-14 items-center justify-center rounded-2xl bg-muted/60">
+            <Store className="size-7 text-muted-foreground/30" />
+          </div>
+          <p className="text-sm font-medium text-muted-foreground">
+            {t(lang, "noListingsPublic")}
+          </p>
+          {isOwner && (
+            <Link href="/marketplace/create">
+              <Button size="sm" className="gap-1.5 rounded-full">
+                <Package className="size-3.5" />
+                {t(lang, "startSelling")}
+              </Button>
+            </Link>
+          )}
         </div>
-        <p className="text-sm font-medium text-muted-foreground">{t(lang, "noListingsPublic")}</p>
-        {isOwner && (
-          <Link href="/marketplace/create">
-            <Button size="sm" className="gap-1.5 rounded-full">
-              <Package className="size-3.5" />
-              {t(lang, "startSelling")}
-            </Button>
-          </Link>
-        )}
-      </div>
+      </TabSection>
     );
   }
 
-  // Subtle inline meta — only worth showing if we have a real range to brag
-  // about. For a single listing the tab badge already shows the count.
-  let metaLine: string | null = null;
-  if (listings.length >= 2) {
-    const prices = listings
-      .map((l) => l.priceThb)
-      .filter((p): p is number => typeof p === "number" && p > 0);
-    if (prices.length >= 2) {
-      const min = Math.min(...prices);
-      const max = Math.max(...prices);
-      const fmt = (n: number) => `฿${Math.round(n).toLocaleString()}`;
-      metaLine = min === max ? fmt(min) : `${fmt(min)} – ${fmt(max)}`;
-    }
-  }
+  // Build a single concise meta line under the title:
+  //   "1 รายการ · ฿268,758"  or  "12 รายการ · ฿120 – ฿268,758"
+  const metaLine = buildListingsMeta(listings, lang);
+
+  // Filtering only adds value when there's a real range to filter through.
+  const showToolbar = listings.length >= TOOLBAR_THRESHOLD;
 
   const filters: FilterChip<ListingFilter>[] = [
     { value: "all", label: t(lang, "filterAll") },
     { value: "NM", label: "NM" },
     { value: "LP", label: "LP" },
     { value: "MP+", label: "MP+" },
-    { value: "deal", label: `⚡ ${t(lang, "sortDeal")}` },
   ];
 
   const sortOptions: SortOption<ListingSort>[] = [
@@ -108,20 +104,41 @@ export function ListingsTabContent({
     { value: "deal", label: t(lang, "sortDeal") },
   ];
 
-  return (
-    <div className="space-y-5">
-      <TabToolbar
-        filters={filters}
-        activeFilter={filter}
-        onFilter={setFilter}
-        sortOptions={sortOptions}
-        activeSort={sort}
-        onSort={setSort}
-        lang={lang}
-      />
+  // The marketplace "view all" CTA lives in the section header's trailing
+  // slot when the profile only loads the most recent slice — keeps the body
+  // compact and gives visitors a clear "there's more" cue right at the top.
+  const viewAllHref = `/marketplace?seller=${encodeURIComponent(sellerHandleOrId)}`;
+  const showViewAll = listingTotal > listings.length;
 
-      {metaLine && (
-        <p className="text-sm text-muted-foreground">{metaLine}</p>
+  return (
+    <TabSection
+      // Title intentionally omitted — the tab nav already heads this section
+      // ("รายการขาย 1"). Repeating it as a panel heading reads as triple-
+      // labelled visual noise. The meta line carries the count + price
+      // summary on its own and the trailing slot holds the "view all" link.
+      meta={metaLine}
+      trailing={
+        showViewAll ? (
+          <Link
+            href={viewAllHref}
+            className="inline-flex items-center gap-0.5 text-xs font-semibold text-primary hover:underline"
+          >
+            {t(lang, "listingsViewAllOnMarket").replace("{n}", String(listingTotal))}
+            <ChevronRight className="size-3.5" />
+          </Link>
+        ) : null
+      }
+    >
+      {showToolbar && (
+        <TabToolbar
+          filters={filters}
+          activeFilter={filter}
+          onFilter={setFilter}
+          sortOptions={sortOptions}
+          activeSort={sort}
+          onSort={setSort}
+          lang={lang}
+        />
       )}
 
       {filtered.length === 0 ? (
@@ -129,39 +146,48 @@ export function ListingsTabContent({
           {t(lang, "noListingsPublic")}
         </p>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-5 lg:grid-cols-4 xl:grid-cols-5">
+        <div className={listingsGridClass(filtered.length)}>
           {filtered.map((l) => (
             <ProfileListingCard key={l.id} listing={l} lang={lang} />
           ))}
+          {filtered.length === 1 && (
+            <HintTile
+              kind="listings"
+              isOwner={isOwner}
+              href={showViewAll ? viewAllHref : null}
+              lang={lang}
+            />
+          )}
         </div>
       )}
-
-      {/* Invite visitors to keep browsing the seller's full catalog on the
-          marketplace (the profile only loads the most recent 24). */}
-      {listingTotal > listings.length && (
-        <div className="flex justify-center pt-2">
-          <Link
-            href={`/marketplace?seller=${encodeURIComponent(sellerHandleOrId)}`}
-            className={cn(
-              "inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/40 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary",
-            )}
-          >
-            <Store className="size-4" />
-            {t(lang, "listingsViewAllOnMarket").replace("{n}", String(listingTotal))}
-          </Link>
-        </div>
-      )}
-    </div>
+    </TabSection>
   );
+}
+
+function buildListingsMeta(
+  listings: SerializedListing[],
+  lang: Language,
+): string {
+  const prices = listings
+    .map((l) => l.priceThb)
+    .filter((p): p is number => typeof p === "number" && p > 0);
+  const fmt = (n: number) => `฿${Math.round(n).toLocaleString()}`;
+  const countLabel = `${listings.length.toLocaleString()} ${t(lang, "tabListings").toLowerCase()}`;
+
+  if (prices.length === 0) return countLabel;
+
+  if (listings.length === 1 || prices.length === 1) {
+    return `${countLabel} · ${fmt(prices[0])}`;
+  }
+
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const priceText = min === max ? fmt(min) : `${fmt(min)} – ${fmt(max)}`;
+  return `${countLabel} · ${priceText}`;
 }
 
 function dealDelta(l: SerializedListing): number {
   const market = l.card.latestPriceJpy;
   if (market == null || market <= 0) return 0;
   return ((l.priceJpy - market) / market) * 100;
-}
-
-function isDeal(l: SerializedListing): boolean {
-  const d = dealDelta(l);
-  return d <= DEAL_THRESHOLD_PCT;
 }

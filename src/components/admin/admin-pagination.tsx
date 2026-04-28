@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { formatCount } from "@/lib/utils/currency";
 
 interface AdminPaginationProps {
   page: number;
@@ -51,11 +52,11 @@ export function AdminPagination({
         <div className="flex items-center gap-3 text-sm text-muted-foreground">
           {total != null && rangeStart != null && rangeEnd != null ? (
             <span>
-              {rangeStart.toLocaleString()}–{rangeEnd.toLocaleString()} จาก{" "}
-              {total.toLocaleString()} รายการ
+              {formatCount(rangeStart)}–{formatCount(rangeEnd)} จาก{" "}
+              {formatCount(total)} รายการ
             </span>
           ) : total != null ? (
-            <span>ทั้งหมด {total.toLocaleString()} รายการ</span>
+            <span>ทั้งหมด {formatCount(total)} รายการ</span>
           ) : null}
           {onPerPageChange && perPage && (
             <select
@@ -102,7 +103,7 @@ export function AdminPagination({
             p === "..." ? (
               <span
                 key={`dots-${i}`}
-                className="px-1 text-xs text-muted-foreground/50"
+                className="px-1 text-meta text-muted-foreground/50"
               >
                 ...
               </span>

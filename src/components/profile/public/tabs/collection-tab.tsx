@@ -10,6 +10,9 @@ import type { CollectionStats } from "@/lib/profile/load-public-profile";
 
 import { CollectionCard } from "../cards/collection-card";
 import type { ProfileCardData } from "../types";
+import { collectionGridClass } from "./grid-cols";
+import { HintTile } from "./hint-tile";
+import { TabSection } from "./tab-section";
 import { TabToolbar, type FilterChip, type SortOption } from "./tab-toolbar";
 
 const RARE_RARITIES = new Set(["SR", "SEC", "L", "SP", "P-SR", "P-SEC"]);
@@ -31,6 +34,8 @@ const RARITY_WEIGHT: Record<string, number> = {
 
 type CollectionFilter = "all" | "rare";
 type CollectionSort = "recent" | "rarity" | "set";
+
+const TOOLBAR_THRESHOLD = 4;
 
 export function CollectionTabContent({
   cards,
@@ -74,33 +79,40 @@ export function CollectionTabContent({
 
   if (isEmpty) {
     return (
-      <div className="flex flex-col items-center gap-4 py-20 text-center">
-        <div className="flex size-14 items-center justify-center rounded-2xl bg-muted/60">
-          <Layers className="size-7 text-muted-foreground/30" />
+      <TabSection title={t(lang, "tabCollection")}>
+        <div className="flex flex-col items-center gap-4 py-12 text-center">
+          <div className="flex size-14 items-center justify-center rounded-2xl bg-muted/60">
+            <Layers className="size-7 text-muted-foreground/30" />
+          </div>
+          <p className="text-sm font-medium text-muted-foreground">
+            {t(lang, "noCollectionYet")}
+          </p>
+          {isOwner && (
+            <Link href="/portfolio">
+              <Button size="sm" className="gap-1.5 rounded-full">
+                <Package className="size-3.5" />
+                {t(lang, "addYourFirstCard")}
+              </Button>
+            </Link>
+          )}
         </div>
-        <p className="text-sm font-medium text-muted-foreground">{t(lang, "noCollectionYet")}</p>
-        {isOwner && (
-          <Link href="/portfolio">
-            <Button size="sm" className="gap-1.5 rounded-full">
-              <Package className="size-3.5" />
-              {t(lang, "addYourFirstCard")}
-            </Button>
-          </Link>
-        )}
-      </div>
+      </TabSection>
     );
   }
 
   const remaining = Math.max(0, stats.totalCards - cards.length);
 
   // Conversational summary — only the brag-worthy parts.
-  const summaryParts: string[] = [];
+  const summaryParts: string[] = [
+    `${stats.totalCards.toLocaleString()} ${t(lang, "cardsInCollection").toLowerCase()}`,
+  ];
   if (stats.setsCollected > 1) {
     summaryParts.push(`${stats.setsCollected} ${t(lang, "summarySets")}`);
   }
   if (stats.rareCount > 0) {
     summaryParts.push(`${stats.rareCount} ${t(lang, "rareCardsLabel").toLowerCase()}`);
   }
+  const metaLine = summaryParts.join(" · ");
 
   // Only highlight sets where the user has made meaningful progress.
   const featuredSets = stats.topSets.filter(
@@ -122,39 +134,47 @@ export function CollectionTabContent({
     { value: "set", label: t(lang, "sortSet") },
   ];
 
-  return (
-    <div className="space-y-5">
-      <TabToolbar
-        filters={filters}
-        activeFilter={filter}
-        onFilter={setFilter}
-        sortOptions={sortOptions}
-        activeSort={sort}
-        onSort={setSort}
-        lang={lang}
-      />
+  const showToolbar = cards.length >= TOOLBAR_THRESHOLD;
 
-      {summaryParts.length > 0 && (
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-          <span>{summaryParts.join(" · ")}</span>
-          {featuredSets.length > 0 && (
-            <span className="flex flex-wrap items-center gap-1.5">
-              {featuredSets.map((s) => {
-                const name = lang === "JP" ? s.name : (s.nameEn ?? s.name);
-                return (
-                  <span
-                    key={s.code}
-                    className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary"
-                    title={`${s.cardsOwned}/${s.cardCount} (${s.completionPct}%)`}
-                  >
-                    {name}
-                    <span className="text-primary/60">{s.completionPct}%</span>
-                  </span>
-                );
-              })}
+  // Featured-set chips render as a "highlights" row directly under the
+  // header — gives visitors a quick read on the strongest sets before they
+  // scan the grid.
+  const headerExtra =
+    featuredSets.length > 0 ? (
+      <div className="flex flex-wrap items-center gap-1.5">
+        {featuredSets.map((s) => {
+          const name = lang === "JP" ? s.name : (s.nameEn ?? s.name);
+          return (
+            <span
+              key={s.code}
+              className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary"
+              title={`${s.cardsOwned}/${s.cardCount} (${s.completionPct}%)`}
+            >
+              {name}
+              <span className="text-primary/60">{s.completionPct}%</span>
             </span>
-          )}
-        </div>
+          );
+        })}
+      </div>
+    ) : null;
+
+  return (
+    <TabSection
+      // Title omitted — the tab nav already labels this section. Repeating
+      // it as a panel heading reads as redundant noise.
+      meta={metaLine}
+      headerExtra={headerExtra}
+    >
+      {showToolbar && (
+        <TabToolbar
+          filters={filters}
+          activeFilter={filter}
+          onFilter={setFilter}
+          sortOptions={sortOptions}
+          activeSort={sort}
+          onSort={setSort}
+          lang={lang}
+        />
       )}
 
       {filtered.length === 0 ? (
@@ -162,7 +182,7 @@ export function CollectionTabContent({
           {t(lang, "noCollectionYet")}
         </p>
       ) : (
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-2.5 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
+        <div className={collectionGridClass(filtered.length)}>
           {filtered.map((c) => (
             <CollectionCard
               key={c.cardCode}
@@ -172,16 +192,19 @@ export function CollectionTabContent({
               lang={lang}
             />
           ))}
+          {filtered.length === 1 && (
+            <HintTile kind="collection" isOwner={isOwner} lang={lang} />
+          )}
         </div>
       )}
 
       {remaining > 0 && (
-        <p className="text-center text-xs text-muted-foreground">
+        <p className="text-center text-meta">
           {t(lang, "collectionShowingFirst")
             .replace("{shown}", String(cards.length))
             .replace("{total}", String(stats.totalCards))}
         </p>
       )}
-    </div>
+    </TabSection>
   );
 }

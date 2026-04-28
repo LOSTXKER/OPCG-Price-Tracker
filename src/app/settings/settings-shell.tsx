@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Bell,
+  BellRing,
   ChevronLeft,
   CreditCard,
   Download,
@@ -19,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProfileDataProvider, useProfileData } from "@/components/profile/profile-data-context";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
+import { PageContainer } from "@/components/layout/page-container";
 import { getTierConfig } from "@/components/profile/profile-types";
 import { useAuthState } from "@/hooks/use-auth-state";
 import { useUIStore } from "@/stores/ui-store";
@@ -31,6 +33,7 @@ export const SETTINGS_SECTIONS = [
   { id: "billing", href: "/settings/billing", icon: Receipt, labelKey: "billingHistory" as const, group: "general" as const },
   { id: "security", href: "/settings/security", icon: Shield, labelKey: "security" as const, group: "general" as const },
   { id: "notifications", href: "/settings/notifications", icon: Bell, labelKey: "notifications" as const, group: "general" as const },
+  { id: "alerts", href: "/settings/alerts", icon: BellRing, labelKey: "managePriceAlerts" as const, group: "general" as const },
   { id: "marketplace", href: "/settings/marketplace", icon: Store, labelKey: "marketplace" as const, group: "more" as const },
   { id: "addresses", href: "/settings/addresses", icon: MapPin, labelKey: "addresses" as const, group: "more" as const },
   { id: "export", href: "/settings/export", icon: Download, labelKey: "goToExport" as const, group: "more" as const },
@@ -44,11 +47,11 @@ export function SettingsShell({ children }: { children: React.ReactNode }) {
     return (
       <AuthPreviewGate
         preview={
-          <div className="mx-auto max-w-2xl px-4 py-6">
+          <PageContainer width="reading" className="py-6">
             <div className="rounded-xl border border-border/40 bg-card p-6 text-center">
               <p className="text-sm text-muted-foreground">Sign in to manage your settings</p>
             </div>
-          </div>
+          </PageContainer>
         }
       />
     );
@@ -78,7 +81,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
 
   if (!data) {
     return (
-      <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-4 py-16 text-center md:px-6 lg:px-8">
+      <PageContainer className="flex flex-col items-center gap-4 py-16 text-center">
         <p className="text-sm text-muted-foreground">{error ?? "User not found"}</p>
         <Link
           href="/login"
@@ -86,7 +89,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
         >
           {t(lang, "login")}
         </Link>
-      </div>
+      </PageContainer>
     );
   }
 
@@ -94,7 +97,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
   const tierCfg = getTierConfig(subscription.tier);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-2 md:px-6 md:py-6 lg:px-8">
+    <PageContainer className="py-2 md:py-6">
       {/* Mobile: back button on sub-routes */}
       {!isIndex && (
         <div className="mb-4 md:hidden">
@@ -147,7 +150,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
                   return (
                     <div key={group}>
                       {group !== "general" && <div className="my-2 h-px bg-border/40" />}
-                      <p className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+                      <p className="mb-1 px-3 text-eyebrow text-muted-foreground/60">
                         {t(lang, groupLabels[group])}
                       </p>
                       {items.map(({ id, href, icon: Icon, labelKey }) => {
@@ -181,13 +184,13 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }
 
 function SettingsLoadingSkeleton() {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 md:px-6 lg:px-8">
+    <PageContainer className="py-6">
       {/* Mobile skeleton */}
       <div className="space-y-5 md:hidden">
         <Skeleton className="h-7 w-32" />
@@ -243,6 +246,6 @@ function SettingsLoadingSkeleton() {
           ))}
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }

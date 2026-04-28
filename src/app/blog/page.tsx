@@ -3,10 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { Calendar, Eye } from "lucide-react";
 
-import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
+import { BlogEmptyState } from "./blog-empty-state";
+import { BlogPageHeader } from "./blog-page-header";
 
 export const dynamic = "force-dynamic";
 
@@ -63,29 +64,18 @@ export default async function BlogPage() {
           { name: "Blog", href: "/blog" },
         ])}
       />
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Blog" }]} />
-
       <div className="space-y-8">
-        <div className="space-y-2 pt-4">
-          <h1 className="page-header">Blog</h1>
-          <p className="text-muted-foreground">
-            วิเคราะห์ตลาด, รีวิวชุดการ์ด, เทคนิค และข่าวสาร OPCG
-          </p>
-        </div>
+        <BlogPageHeader />
 
         {posts.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border/60 py-16 text-center">
-            <p className="text-sm text-muted-foreground">
-              ยังไม่มีบทความ — กลับมาเร็วๆ นี้!
-            </p>
-          </div>
+          <BlogEmptyState />
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (
               <Link
                 key={post.id}
                 href={`/blog/${post.slug}`}
-                className="group overflow-hidden rounded-xl border border-border/50 bg-card transition-colors hover:bg-muted/40"
+                className="group overflow-hidden rounded-xl border border-border/50 bg-card transition-colors hover:border-border hover:bg-muted/30"
               >
                 {post.coverImage && (
                   <div className="relative aspect-[16/9] overflow-hidden">
@@ -104,13 +94,13 @@ export default async function BlogPage() {
                       {CATEGORY_LABELS[post.category] ?? post.category}
                     </span>
                   </div>
-                  <h2 className="break-words text-lg font-semibold leading-snug transition-colors group-hover:text-primary">
+                  <h2 className="break-words text-h3 leading-snug transition-colors group-hover:text-primary">
                     {post.title}
                   </h2>
                   <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                     {post.excerpt}
                   </p>
-                  <div className="flex items-center gap-3 pt-1 text-xs text-muted-foreground/60">
+                  <div className="flex items-center gap-3 pt-1 text-meta text-muted-foreground/60">
                     {post.publishedAt && (
                       <span className="inline-flex items-center gap-1">
                         <Calendar className="size-3" />

@@ -3,7 +3,33 @@
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
-import { avatarGradient } from "@/lib/utils/avatar-gradient";
+
+/**
+ * Brand-warm cover palettes — curated to live inside the Meecard
+ * brown/cream/amber world rather than the generic rainbow that
+ * `avatarGradient` uses for the avatar fallback. Every option is a warm
+ * gradient pair (rose/copper/mocha/honey/sand/amber) that handshakes with
+ * the `--primary: #73533E` accent below. Deterministic by userId so each
+ * profile still gets its own personality.
+ */
+const COVER_PALETTES = [
+  "from-amber-300 via-orange-300 to-rose-300",
+  "from-orange-300 via-amber-200 to-yellow-200",
+  "from-rose-300 via-orange-200 to-amber-200",
+  "from-amber-400 via-orange-300 to-amber-200",
+  "from-yellow-300 via-amber-300 to-orange-300",
+  "from-orange-400 via-amber-300 to-rose-200",
+  "from-amber-200 via-orange-200 to-rose-300",
+  "from-rose-200 via-amber-200 to-yellow-200",
+] as const;
+
+function coverGradient(seed: string): string {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) {
+    h = ((h << 5) - h + seed.charCodeAt(i)) | 0;
+  }
+  return COVER_PALETTES[Math.abs(h) % COVER_PALETTES.length];
+}
 
 /**
  * Cover banner that lives at the top of the public profile page.
@@ -28,17 +54,16 @@ export function ProfileCover({
   coverImageUrl?: string | null;
   className?: string;
 }) {
-  const gradient = avatarGradient(userId);
+  const gradient = coverGradient(userId);
 
   return (
     <div
       className={cn(
         "relative isolate w-full overflow-hidden",
-        // Premium banner proportions — tall enough to feel like a hero, not
-        // a thin strip, but never large enough to push everything below the
-        // fold on mobile.
-        "h-32 sm:h-44 md:h-56",
-        "rounded-b-2xl sm:rounded-b-3xl",
+        // Slightly tighter than v1 (was h-32/h-44/h-56) — gives the page
+        // colour and energy without taking over the fold.
+        "h-28 sm:h-36 md:h-44",
+        "rounded-2xl sm:rounded-3xl",
         className,
       )}
       aria-hidden={!coverImageUrl}

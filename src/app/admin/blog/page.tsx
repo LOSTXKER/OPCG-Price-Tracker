@@ -90,19 +90,19 @@ export default async function AdminBlogPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border/50 bg-muted/30">
-                <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                <th className="px-4 py-2.5 text-left text-eyebrow text-muted-foreground/70">
                   ชื่อเรื่อง
                 </th>
-                <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                <th className="px-4 py-2.5 text-left text-eyebrow text-muted-foreground/70">
                   หมวดหมู่
                 </th>
-                <th className="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                <th className="px-4 py-2.5 text-center text-eyebrow text-muted-foreground/70">
                   สถานะ
                 </th>
-                <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                <th className="px-4 py-2.5 text-right text-eyebrow text-muted-foreground/70">
                   ยอดดู
                 </th>
-                <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                <th className="px-4 py-2.5 text-right text-eyebrow text-muted-foreground/70">
                   อัปเดต
                 </th>
                 <th className="px-4 py-2.5" />
@@ -117,7 +117,7 @@ export default async function AdminBlogPage() {
                   <td className="px-4 py-3">
                     <div>
                       <p className="font-medium">{post.title}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-meta">
                         /blog/{post.slug}
                       </p>
                     </div>
@@ -133,7 +133,7 @@ export default async function AdminBlogPage() {
                         <Eye className="size-3" /> เผยแพร่แล้ว
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                      <span className="inline-flex items-center gap-1 text-meta">
                         <EyeOff className="size-3" /> ฉบับร่าง
                       </span>
                     )}
@@ -141,7 +141,7 @@ export default async function AdminBlogPage() {
                   <td className="px-4 py-3 text-right tabular-nums text-muted-foreground">
                     {post.viewCount.toLocaleString()}
                   </td>
-                  <td className="px-4 py-3 text-right text-xs text-muted-foreground">
+                  <td className="px-4 py-3 text-right text-meta">
                     {post.updatedAt.toLocaleDateString("th-TH", {
                       month: "short",
                       day: "numeric",

@@ -2,6 +2,14 @@ import { prisma } from "@/lib/db";
 import { earnHoneyDirect } from ".";
 import { currentMonthKey } from "./utils";
 import { RafflePrizesSchema, parseJsonField } from "./schemas";
+import { notify } from "@/lib/notify/dispatch";
+import { createLog } from "@/lib/logger";
+import {
+  DEFAULT_ENTITLEMENTS,
+  incrementEntitlement,
+} from "@/lib/users/entitlements";
+
+const log = createLog("honey:raffle");
 
 export const TICKET_COST_DEFAULT = 50;
 export const MAX_TICKETS_DEFAULT = 5;
@@ -58,18 +66,18 @@ export async function buyTicket(
     return { success: false, error: `Max ${raffle.maxTickets} tickets per raffle` };
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
+  const ent = await prisma.userEntitlements.findUnique({
+    where: { userId },
     select: { ticketBalance: true },
   });
 
-  if (!user || user.ticketBalance < 1) {
+  if (!ent || ent.ticketBalance < 1) {
     return { success: false, error: "No tickets available" };
   }
 
-  const [updatedUser, ticket] = await prisma.$transaction([
-    prisma.user.update({
-      where: { id: userId },
+  const [updatedEnt, ticket] = await prisma.$transaction([
+    prisma.userEntitlements.update({
+      where: { userId },
       data: { ticketBalance: { decrement: 1 } },
       select: { ticketBalance: true },
     }),
@@ -78,7 +86,7 @@ export async function buyTicket(
     }),
   ]);
 
-  return { success: true, ticketId: ticket.id, ticketBalance: updatedUser.ticketBalance };
+  return { success: true, ticketId: ticket.id, ticketBalance: updatedEnt.ticketBalance };
 }
 
 export async function claimFreeTicket(
@@ -115,14 +123,14 @@ export async function claimFreeTicket(
     return { success: false, error: `Need ${minThreshold}-day streak for free ticket` };
   }
 
-  const updatedUser = await prisma.user.update({
-    where: { id: userId },
-    data: { ticketBalance: { increment: 1 } },
-    select: { ticketBalance: true },
-  });
+  const updatedEnt = await incrementEntitlement(userId, "ticketBalance", 1);
 
-  return { success: true, ticketBalance: updatedUser.ticketBalance };
+  return { success: true, ticketBalance: updatedEnt.ticketBalance };
 }
+
+// Tiny exposure of the default to satisfy callers that need to render a
+// "0 tickets" placeholder before the satellite has been created.
+export const DEFAULT_TICKET_BALANCE = DEFAULT_ENTITLEMENTS.ticketBalance;
 
 export async function drawWinner(raffleId: number): Promise<{
   success: boolean;
@@ -162,8 +170,21 @@ export async function drawWinner(raffleId: number): Promise<{
       topPrize.honeyBonus,
       `Raffle winner: ${raffle.title} — ${topPrize.name}`,
       { raffleId, month: raffle.month, prize: topPrize.name },
+      { idempotencyKey: `raffle-win:${raffleId}` },
     );
   }
+
+  notify({
+    userId: winnerTicket.userId,
+    kind: "HONEY",
+    type: "RAFFLE_WIN",
+    title: `🎉 You won the ${raffle.title} raffle!`,
+    message: topPrize?.name
+      ? `Prize: ${topPrize.name}${topPrize.honeyBonus ? ` (+${topPrize.honeyBonus} honey)` : ""}`
+      : "Check the raffle page for details.",
+    data: { raffleId, month: raffle.month, prize: topPrize?.name ?? null },
+    dedupKey: `raffle-win:${raffleId}`,
+  }).catch((err) => log.error("notify failed", err));
 
   return {
     success: true,

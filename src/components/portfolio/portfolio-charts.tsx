@@ -24,7 +24,7 @@ export function PortfolioCharts({ history }: PortfolioChartsProps) {
 
   return (
     <div className="panel rounded-xl p-4 sm:p-5">
-      <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+      <p className="mb-4 text-eyebrow">
         {t(lang, "history")}
       </p>
       <PortfolioHistoryChart data={history} />

@@ -10,10 +10,10 @@ import {
   deriveLatestPrice,
   deriveSnkrdunkPrices,
   deriveSourcePrices,
-  getAvailableSources,
   getCardByCode,
   getChartSources,
   getCommunityPrice,
+  getListingsForCard,
   getRelatedFromSameSet,
   getSiblingVariants,
 } from "@/lib/data/card-detail";
@@ -68,10 +68,11 @@ export default async function CardDetailPage(props: {
     data: { viewCount: { increment: 1 } },
   });
 
-  const [communityPrice, siblings, relatedCards] = await Promise.all([
+  const [communityPrice, siblings, relatedCards, listings] = await Promise.all([
     getCommunityPrice(card.id),
     getSiblingVariants(card.baseCode, card.id),
     getRelatedFromSameSet(card.setId, card.id),
+    getListingsForCard(card.id),
   ]);
 
   const price = deriveLatestPrice(card);
@@ -79,8 +80,19 @@ export default async function CardDetailPage(props: {
   const sourcePricesRaw = deriveSourcePrices(card.prices, "raw");
   const sourcePricesPsa10 = deriveSourcePrices(card.prices, "psa10");
   let chartData = buildChartData(card.prices);
-  const sources = getAvailableSources(card.prices);
   const chartSources = getChartSources(card.prices);
+
+  // Latest update timestamp from the freshest known price for this card.
+  // Compute "days since" on the server so the client component renders purely
+  // (the React 19 purity rule forbids Date.now() during render).
+  const latestUpdatedAt = card.prices[0]?.scrapedAt
+    ? new Date(card.prices[0].scrapedAt).toISOString()
+    : null;
+  const daysSinceUpdate = latestUpdatedAt
+    ? Math.floor(
+        (Date.now() - new Date(latestUpdatedAt).getTime()) / 86_400_000,
+      )
+    : null;
 
   // Fallback: if no price history but card has a current price, show it as a single data point
   if (chartData.length === 0 && card.latestPriceJpy != null) {
@@ -162,6 +174,22 @@ export default async function CardDetailPage(props: {
       availableSources={chartSources}
       sourcePricesRaw={sourcePricesRaw}
       sourcePricesPsa10={sourcePricesPsa10}
+      latestUpdatedAt={latestUpdatedAt}
+      daysSinceUpdate={daysSinceUpdate}
+      listings={listings.map((l) => ({
+        id: l.id,
+        priceJpy: l.priceJpy,
+        priceThb: l.priceThb,
+        condition: l.condition,
+        user: l.user
+          ? {
+              displayName: l.user.displayName,
+              avatarUrl: l.user.avatarUrl,
+              sellerRating: l.user.sellerRating,
+              sellerReviewCount: l.user.sellerReviewCount,
+            }
+          : null,
+      }))}
     />
     </>
   );

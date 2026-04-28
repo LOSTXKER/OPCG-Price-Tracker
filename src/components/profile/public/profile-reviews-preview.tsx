@@ -60,10 +60,8 @@ export function ProfileReviewsPreview({
     <section className="mt-8" aria-label={t(lang, "tabReviews")}>
       <div className="mb-3 flex items-baseline justify-between gap-3">
         <div className="inline-flex items-baseline gap-2">
-          <h2 className="text-sm font-bold tracking-tight">
-            {t(lang, "tabReviews")}
-          </h2>
-          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+          <h2 className="text-h5">{t(lang, "tabReviews")}</h2>
+          <span className="inline-flex items-center gap-1 text-meta">
             <Star className="size-3 fill-amber-400 text-amber-400" />
             <span className="font-semibold tabular-nums text-foreground/80">
               {rating.toFixed(1)}
@@ -75,7 +73,7 @@ export function ProfileReviewsPreview({
           <button
             type="button"
             onClick={() => onJump("reviews")}
-            className="inline-flex items-center gap-0.5 text-xs font-semibold text-primary hover:underline"
+            className="text-body-sm inline-flex items-center gap-0.5 font-semibold text-primary hover:underline"
           >
             {t(lang, "showcaseViewAll")}
             <ChevronRight className="size-3.5" />
@@ -100,7 +98,7 @@ function ReviewCard({ review, lang }: { review: SerializedReview; lang: Language
           {review.reviewer.avatarUrl ? (
             <AvatarImage src={review.reviewer.avatarUrl} alt="" />
           ) : null}
-          <AvatarFallback className="text-[10px]">
+          <AvatarFallback className="text-overlay">
             {(review.reviewer.displayName ?? "?").slice(0, 1).toUpperCase()}
           </AvatarFallback>
         </Avatar>
@@ -108,7 +106,7 @@ function ReviewCard({ review, lang }: { review: SerializedReview; lang: Language
           <p className="truncate text-xs font-semibold">
             {review.reviewer.displayName ?? "User"}
           </p>
-          <p className="text-[10px] text-muted-foreground">
+          <p className="text-overlay text-muted-foreground">
             {formatRelativeAgo(review.createdAt, lang)}
           </p>
         </div>

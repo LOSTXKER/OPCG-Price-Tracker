@@ -255,7 +255,9 @@ export function usePortfolioApi() {
     return false
   }
 
-  const addCardsBatch = async (cartItems: CartItem[]): Promise<{ ok: boolean; failed: number }> => {
+  const addCardsBatch = async (
+    cartItems: CartItem[],
+  ): Promise<{ ok: boolean; failed: number; limitReached?: boolean }> => {
     if (cartItems.length === 0) return { ok: true, failed: 0 }
 
     let targetId = activeId
@@ -287,8 +289,9 @@ export function usePortfolioApi() {
       )
     )
     const failed = results.filter((r) => !r.ok).length
+    const limitReached = results.some((r) => r.status === 403)
     void load()
-    return { ok: failed === 0, failed }
+    return { ok: failed === 0, failed, limitReached }
   }
 
   const updateItem = async (

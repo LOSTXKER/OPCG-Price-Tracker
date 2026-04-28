@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 import {
+  ArrowRight,
   CircleAlert,
   CircleCheck,
   Globe,
@@ -19,6 +21,7 @@ import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useTierLimits } from "@/hooks/use-tier-limits";
 import { UpgradeBadge } from "@/components/shared/upgrade-badge";
+import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
 import type { TranslationKey } from "@/lib/i18n";
 import type { SettingsData } from "./profile-types";
 
@@ -152,6 +155,7 @@ const NOTIF_TYPES: NotifType[] = [
 export function SectionNotifications({ settings, onReload }: Props) {
   const lang = useUIStore((s) => s.language);
   const { limits } = useTierLimits();
+  const { openUpgradeDialog } = useUpgradeDialog();
   const lineLockedByTier = !limits.lineAlerts;
   const digestLockedByTier = !limits.weeklyDigest;
 
@@ -241,7 +245,7 @@ export function SectionNotifications({ settings, onReload }: Props) {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-semibold">{t(lang, "notifications")}</h2>
+        <h2 className="text-h3">{t(lang, "notifications")}</h2>
         <p className="text-muted-foreground mt-0.5 text-sm">{t(lang, "notificationsSubtitle")}</p>
       </div>
 
@@ -267,7 +271,7 @@ export function SectionNotifications({ settings, onReload }: Props) {
               {t(lang, "lineConnected")}
             </Badge>
           </div>
-          <Button size="sm" variant="ghost" className="h-7 text-xs text-muted-foreground hover:text-destructive" onClick={() => void handleDisconnectLine()}>
+          <Button size="sm" variant="ghost" className="h-7 text-meta hover:text-destructive" onClick={() => void handleDisconnectLine()}>
             {t(lang, "disconnectLine")}
           </Button>
         </div>
@@ -279,7 +283,31 @@ export function SectionNotifications({ settings, onReload }: Props) {
           const isDigest = nt.id === "digest";
           const cardLocked = isDigest && digestLockedByTier;
           return (
-            <div key={nt.id} className={cn("rounded-xl bg-card p-5", cardLocked && "opacity-50")}>
+            <div
+              key={nt.id}
+              role={cardLocked ? "button" : undefined}
+              tabIndex={cardLocked ? 0 : undefined}
+              onClick={
+                cardLocked
+                  ? () => openUpgradeDialog({ featureKey: "weeklyDigest" })
+                  : undefined
+              }
+              onKeyDown={
+                cardLocked
+                  ? (e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        openUpgradeDialog({ featureKey: "weeklyDigest" });
+                      }
+                    }
+                  : undefined
+              }
+              className={cn(
+                "rounded-xl bg-card p-5",
+                cardLocked &&
+                  "cursor-pointer ring-1 ring-amber-500/20 hover:ring-amber-500/40",
+              )}
+            >
               <div className="flex items-start gap-3">
                 <div className={cn("flex size-9 shrink-0 items-center justify-center rounded-lg mt-0.5", nt.iconBg)}>
                   <nt.icon className={cn("size-4", nt.iconColor)} />
@@ -287,12 +315,12 @@ export function SectionNotifications({ settings, onReload }: Props) {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm font-semibold">{t(lang, nt.labelKey)}</h3>
-                    {cardLocked && <UpgradeBadge />}
+                    {cardLocked && <UpgradeBadge featureKey="weeklyDigest" />}
                     <Feedback field={nt.emailField} />
                     <Feedback field={nt.webField} />
                     <Feedback field={nt.lineField} />
                   </div>
-                  <p className="text-xs text-muted-foreground leading-tight mt-0.5">{t(lang, nt.descKey)}</p>
+                  <p className="text-meta leading-tight mt-0.5">{t(lang, nt.descKey)}</p>
 
                   <div className="flex items-center gap-5 mt-3">
                     <ChannelToggle
@@ -309,7 +337,29 @@ export function SectionNotifications({ settings, onReload }: Props) {
                       disabled={cardLocked || savingField === nt.webField}
                       onChange={(v) => void patchField(nt.webField, v)}
                     />
-                    <div className="flex items-center gap-1">
+                    <div
+                      className="flex items-center gap-1"
+                      role={lineLockedByTier && !cardLocked ? "button" : undefined}
+                      tabIndex={lineLockedByTier && !cardLocked ? 0 : undefined}
+                      onClick={
+                        lineLockedByTier && !cardLocked
+                          ? (e) => {
+                              e.stopPropagation();
+                              openUpgradeDialog({ featureKey: "lineAlerts" });
+                            }
+                          : undefined
+                      }
+                      onKeyDown={
+                        lineLockedByTier && !cardLocked
+                          ? (e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                openUpgradeDialog({ featureKey: "lineAlerts" });
+                              }
+                            }
+                          : undefined
+                      }
+                    >
                       <ChannelToggle
                         icon={MessageCircle}
                         label={t(lang, "channelLine")}
@@ -317,9 +367,21 @@ export function SectionNotifications({ settings, onReload }: Props) {
                         disabled={lineLockedByTier || cardLocked || !settings.lineConnected || savingField === nt.lineField}
                         onChange={(v) => void patchField(nt.lineField, v)}
                       />
-                      {lineLockedByTier && !cardLocked && <UpgradeBadge />}
+                      {lineLockedByTier && !cardLocked && (
+                        <UpgradeBadge featureKey="lineAlerts" />
+                      )}
                     </div>
                   </div>
+
+                  {nt.id === "price" && !cardLocked && (
+                    <Link
+                      href="/settings/alerts"
+                      className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                    >
+                      {t(lang, "manageYourAlerts")}
+                      <ArrowRight className="size-3" />
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>

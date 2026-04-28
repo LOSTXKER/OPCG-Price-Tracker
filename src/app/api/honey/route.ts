@@ -85,14 +85,32 @@ export const POST = apiHandler(async (request) => {
       return NextResponse.json({ error: "Item not available" }, { status: 404 });
     }
 
+    if (item.availableUntil && item.availableUntil < new Date()) {
+      return NextResponse.json({ error: "Item is no longer available" }, { status: 400 });
+    }
+
     if (item.stock != null && item.stock <= 0) {
       return NextResponse.json({ error: "Out of stock" }, { status: 400 });
     }
 
     const currentUser = await prisma.user.findUniqueOrThrow({
       where: { id: user.id },
-      select: { honeyPoints: true },
+      select: { honeyPoints: true, honeyLifetimeEarned: true },
     });
+
+    if (item.requiredLevel > 0) {
+      const userLevel = getHoneyLevel(currentUser.honeyLifetimeEarned).level;
+      if (userLevel < item.requiredLevel) {
+        return NextResponse.json(
+          {
+            error: "Honey Level too low for this item",
+            requiredLevel: item.requiredLevel,
+            currentLevel: userLevel,
+          },
+          { status: 403 },
+        );
+      }
+    }
 
     if (currentUser.honeyPoints < item.cost) {
       return NextResponse.json({ error: "Insufficient honey", required: item.cost, current: currentUser.honeyPoints }, { status: 400 });

@@ -60,7 +60,7 @@ export function ProfileAchievements({
         <div className="flex items-center gap-2 text-sm font-semibold">
           <Trophy className="size-4 text-amber-500" />
           {t(lang, "achievementsTitle")}
-          <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-700 dark:text-amber-400">
+          <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-micro text-amber-700 dark:text-amber-400">
             {total}
           </span>
         </div>
@@ -207,9 +207,9 @@ function AchievementRow({
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold">{localizedName(lang, item)}</p>
         {item.description && (
-          <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{item.description}</p>
+          <p className="mt-0.5 line-clamp-2 text-meta">{item.description}</p>
         )}
-        <p className="mt-1 text-[11px] text-muted-foreground/60">
+        <p className="mt-1 text-meta text-muted-foreground/60">
           {formatDate(lang, item.earnedAt)}
         </p>
       </div>

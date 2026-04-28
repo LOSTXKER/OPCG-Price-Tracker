@@ -32,8 +32,8 @@ export function RankingsTab({
   return (
     <div className="panel overflow-hidden">
       <div className="border-b px-4 py-3.5">
-        <h2 className="text-lg font-semibold">{t(lang, "honeyLeaderboard")}</h2>
-        <p className="mt-0.5 text-xs text-muted-foreground">
+        <h2 className="text-h3">{t(lang, "honeyLeaderboard")}</h2>
+        <p className="mt-0.5 text-meta">
           {lang === "TH" ? "ดูอันดับผู้ใช้ที่สะสม Honey มากที่สุด" : lang === "JP" ? "最もHoneyを獲得したユーザーランキング" : "See who has earned the most Honey"}
         </p>
       </div>
@@ -60,7 +60,7 @@ export function RankingsTab({
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="border-b bg-muted/30">
-                <tr className="text-xs font-medium uppercase tracking-wider text-muted-foreground/70">
+                <tr className="text-eyebrow text-muted-foreground/70">
                   <th className="w-12 px-4 py-2.5">#</th>
                   <th className="px-4 py-2.5">{t(lang, "anonymous")}</th>
                   <th className="px-4 py-2.5 text-right">Honey</th>

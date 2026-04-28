@@ -46,7 +46,7 @@ export const MobileCardItem = memo(function MobileCardItem({
       )}
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium leading-tight">{name}</p>
-        <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+        <div className="mt-0.5 flex items-center gap-1.5 text-meta">
           <span className="font-mono">{card.baseCode ?? card.cardCode}</span>
           <RarityBadge rarity={card.rarity} size="sm" />
         </div>

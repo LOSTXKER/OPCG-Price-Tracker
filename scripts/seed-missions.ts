@@ -42,7 +42,7 @@ const CORE_TEMPLATES: TemplateSeed[] = [
     icon: "Search",
     trackType: "AUTO_PATH",
     conditions: { type: "visit_path", paths: ["/cards/*"] },
-    rewards: { honey: 10, tickets: 0 },
+    rewards: { honey: 5, tickets: 0 },
     target: 1,
     sortOrder: 0,
   },
@@ -54,7 +54,7 @@ const CORE_TEMPLATES: TemplateSeed[] = [
     icon: "TrendingUp",
     trackType: "AUTO_PATH",
     conditions: { type: "visit_path", paths: ["/trending"] },
-    rewards: { honey: 10, tickets: 0 },
+    rewards: { honey: 5, tickets: 0 },
     target: 1,
     sortOrder: 1,
   },
@@ -66,7 +66,7 @@ const CORE_TEMPLATES: TemplateSeed[] = [
     icon: "ShoppingBag",
     trackType: "AUTO_PATH",
     conditions: { type: "visit_path", paths: ["/marketplace"] },
-    rewards: { honey: 10, tickets: 0 },
+    rewards: { honey: 5, tickets: 0 },
     target: 1,
     sortOrder: 2,
   },
@@ -81,7 +81,7 @@ const ROTATING_TEMPLATES: TemplateSeed[] = [
     icon: "Wallet",
     trackType: "AUTO_PATH",
     conditions: { type: "visit_path", paths: ["/portfolio"] },
-    rewards: { honey: 10, tickets: 0 },
+    rewards: { honey: 5, tickets: 0 },
     target: 1,
     sortOrder: 10,
   },
@@ -93,7 +93,7 @@ const ROTATING_TEMPLATES: TemplateSeed[] = [
     icon: "Layers",
     trackType: "AUTO_PATH",
     conditions: { type: "visit_path", paths: ["/sets/*"] },
-    rewards: { honey: 10, tickets: 0 },
+    rewards: { honey: 5, tickets: 0 },
     target: 1,
     sortOrder: 10,
   },
@@ -105,7 +105,7 @@ const ROTATING_TEMPLATES: TemplateSeed[] = [
     icon: "Share2",
     trackType: "MANUAL",
     conditions: { type: "manual_confirm" },
-    rewards: { honey: 10, tickets: 0 },
+    rewards: { honey: 5, tickets: 0 },
     target: 1,
     sortOrder: 10,
   },
@@ -117,7 +117,7 @@ const ROTATING_TEMPLATES: TemplateSeed[] = [
     icon: "BarChart3",
     trackType: "AUTO_PATH",
     conditions: { type: "visit_path", paths: ["/market-overview"] },
-    rewards: { honey: 10, tickets: 0 },
+    rewards: { honey: 5, tickets: 0 },
     target: 1,
     sortOrder: 10,
   },
@@ -129,7 +129,7 @@ const ROTATING_TEMPLATES: TemplateSeed[] = [
     icon: "BookOpen",
     trackType: "AUTO_PATH",
     conditions: { type: "visit_path", paths: ["/blog"] },
-    rewards: { honey: 10, tickets: 0 },
+    rewards: { honey: 5, tickets: 0 },
     target: 1,
     sortOrder: 10,
   },
@@ -141,7 +141,7 @@ const ROTATING_TEMPLATES: TemplateSeed[] = [
     icon: "Share2",
     trackType: "MANUAL",
     conditions: { type: "manual_confirm" },
-    rewards: { honey: 10, tickets: 0 },
+    rewards: { honey: 5, tickets: 0 },
     target: 1,
     sortOrder: 10,
   },
@@ -153,7 +153,7 @@ const ROTATING_TEMPLATES: TemplateSeed[] = [
     icon: "Eye",
     trackType: "AUTO_PATH",
     conditions: { type: "visit_path", paths: ["/watchlist"] },
-    rewards: { honey: 10, tickets: 0 },
+    rewards: { honey: 5, tickets: 0 },
     target: 1,
     sortOrder: 10,
   },
@@ -243,51 +243,75 @@ async function main() {
     console.log(`  Created schedule: ${s.templateCode} → ${s.slotType} day=${s.dayOfWeek ?? "all"}`);
   }
 
-  console.log("\nSeeding bonus rules...");
+  console.log("\nSeeding bonus rules (Honey rebalance v2)...");
 
-  const perfectDayExists = await prisma.missionBonusRule.findFirst({
+  // Perfect Day: 10 honey × tier (was 20). Idempotent — overwrite existing row to v2 numbers.
+  const perfectDay = await prisma.missionBonusRule.findFirst({
     where: { category: "DAILY", requirement: "ALL_COMPLETE" },
   });
-  if (!perfectDayExists) {
-    await prisma.missionBonusRule.create({
-      data: {
-        name: "Perfect Day Bonus",
-        nameEn: "Perfect Day Bonus",
-        nameTh: "โบนัสทำครบ",
-        category: "DAILY",
-        requirement: "ALL_COMPLETE",
-        requirementValue: 1,
-        rewards: { honey: 20, tickets: 0 },
-        sortOrder: 0,
-      },
-    });
-    console.log("  Created: Perfect Day Bonus (ALL_COMPLETE → 20 honey)");
+  const perfectDayPayload = {
+    name: "Perfect Day Bonus",
+    nameEn: "Perfect Day Bonus",
+    nameTh: "โบนัสทำครบ",
+    category: "DAILY" as const,
+    requirement: "ALL_COMPLETE" as const,
+    requirementValue: 1,
+    rewards: { honey: 10, tickets: 0 },
+    sortOrder: 0,
+  };
+  if (perfectDay) {
+    await prisma.missionBonusRule.update({ where: { id: perfectDay.id }, data: perfectDayPayload });
+    console.log("  [updated] Perfect Day Bonus (ALL_COMPLETE → 10 honey × tier)");
   } else {
-    console.log("  Perfect Day Bonus already exists");
+    await prisma.missionBonusRule.create({ data: perfectDayPayload });
+    console.log("  [created] Perfect Day Bonus (ALL_COMPLETE → 10 honey × tier)");
   }
 
-  const weeklyExists = await prisma.missionBonusRule.findFirst({
+  // Weekly streak: 75 honey × tier + 1 ticket (was 100 fixed).
+  const weekly = await prisma.missionBonusRule.findFirst({
     where: { category: "DAILY", requirement: "STREAK_DAYS" },
   });
-  if (!weeklyExists) {
-    await prisma.missionBonusRule.create({
-      data: {
-        name: "Weekly Streak Bonus",
-        nameEn: "Weekly Streak Bonus",
-        nameTh: "โบนัสทำครบ 7 วัน",
-        category: "DAILY",
-        requirement: "STREAK_DAYS",
-        requirementValue: 7,
-        rewards: { honey: 100, tickets: 0 },
-        sortOrder: 1,
-      },
-    });
-    console.log("  Created: Weekly Streak Bonus (STREAK_DAYS=7 → 100 honey)");
+  const weeklyPayload = {
+    name: "Weekly Streak Bonus",
+    nameEn: "Weekly Streak Bonus",
+    nameTh: "โบนัสทำครบ 7 วัน",
+    category: "DAILY" as const,
+    requirement: "STREAK_DAYS" as const,
+    requirementValue: 7,
+    rewards: { honey: 75, tickets: 1 },
+    sortOrder: 1,
+  };
+  if (weekly) {
+    await prisma.missionBonusRule.update({ where: { id: weekly.id }, data: weeklyPayload });
+    console.log("  [updated] Weekly Streak Bonus (7 days → 75 honey × tier + 1 ticket)");
   } else {
-    console.log("  Weekly Streak Bonus already exists");
+    await prisma.missionBonusRule.create({ data: weeklyPayload });
+    console.log("  [created] Weekly Streak Bonus (7 days → 75 honey × tier + 1 ticket)");
   }
 
-  console.log("\nDone! Seeded mission system.");
+  // Monthly perfect: 500 honey × tier + 3 tickets for 28 perfect days. NEW v2 bonus.
+  const monthly = await prisma.missionBonusRule.findFirst({
+    where: { category: "MONTHLY", requirement: "MONTHLY_PERFECT" },
+  });
+  const monthlyPayload = {
+    name: "Monthly Perfect Bonus",
+    nameEn: "Monthly Perfect Bonus",
+    nameTh: "โบนัสทำครบ 28 วัน",
+    category: "MONTHLY" as const,
+    requirement: "MONTHLY_PERFECT" as const,
+    requirementValue: 28,
+    rewards: { honey: 500, tickets: 3 },
+    sortOrder: 0,
+  };
+  if (monthly) {
+    await prisma.missionBonusRule.update({ where: { id: monthly.id }, data: monthlyPayload });
+    console.log("  [updated] Monthly Perfect Bonus (28 days → 500 honey × tier + 3 tickets)");
+  } else {
+    await prisma.missionBonusRule.create({ data: monthlyPayload });
+    console.log("  [created] Monthly Perfect Bonus (28 days → 500 honey × tier + 3 tickets)");
+  }
+
+  console.log("\nDone! Seeded mission system at Honey v2 numbers.");
 }
 
 main()

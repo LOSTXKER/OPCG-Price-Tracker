@@ -187,6 +187,28 @@ export function formatPct(value: number, decimals = 1): string {
 }
 
 /**
+ * Format a non-currency integer count (views, follower counts, honey,
+ * mission progress, etc.) with locale-aware grouping. Use this instead
+ * of `n.toLocaleString()` so we have one place to tweak formatting later
+ * (e.g. if we want compact `1.2k` everywhere).
+ *
+ * Negative numbers are formatted with the locale's minus sign.
+ */
+export function formatInteger(n: number, locale?: string): string {
+  return Math.trunc(n).toLocaleString(locale, { maximumFractionDigits: 0 });
+}
+
+/**
+ * Convenience alias for `formatInteger`. Use `formatCount` when the value
+ * semantically represents a count of items (cards, views, listings)
+ * rather than an arbitrary integer — both helpers do the same thing
+ * today, but the call site reads better.
+ */
+export function formatCount(n: number, locale?: string): string {
+  return formatInteger(n, locale);
+}
+
+/**
  * Tailwind class for a price-change delta value.
  * Returns `text-price-up`, `text-price-down`, or a muted variant.
  */

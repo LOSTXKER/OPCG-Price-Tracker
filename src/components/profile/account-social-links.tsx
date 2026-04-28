@@ -83,7 +83,7 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
       <div className="flex items-center justify-between gap-4 px-5 py-4">
         <div>
           <h3 className="text-sm font-semibold">{t(lang, "socialSectionTitle")}</h3>
-          <p className="mt-0.5 text-xs text-muted-foreground">
+          <p className="mt-0.5 text-meta">
             {t(lang, "socialSectionDesc")}
           </p>
         </div>
@@ -138,11 +138,11 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
           <div className="divide-y divide-border/30 border-t border-border/30">
             {SOCIAL_FIELDS.filter((f) => (user[f.key] as string | null)?.trim()).map((f) => (
               <div key={f.key} className="flex items-center gap-3 px-5 py-3">
-                <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-secondary/60 text-[10px] font-bold text-muted-foreground">
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-secondary/60 text-overlay text-muted-foreground">
                   {f.icon}
                 </span>
                 <div className="min-w-0">
-                  <p className="text-xs text-muted-foreground">{t(lang, f.label)}</p>
+                  <p className="text-meta">{t(lang, f.label)}</p>
                   <p className="truncate text-sm">{(user[f.key] as string)?.trim()}</p>
                 </div>
               </div>

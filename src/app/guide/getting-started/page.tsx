@@ -162,7 +162,7 @@ export default async function GettingStartedPage() {
             { label: "เริ่มต้น" },
           ]}
         />
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="text-h1">
           One Piece Card Game คืออะไร?
         </h1>
         <p className="text-lg leading-relaxed text-muted-foreground">
@@ -191,7 +191,7 @@ export default async function GettingStartedPage() {
             >
               <p className="text-2xl font-bold tabular-nums">{item.count}</p>
               <p className="text-sm font-semibold">{item.label}</p>
-              <p className="mt-0.5 text-xs text-muted-foreground">{item.desc}</p>
+              <p className="mt-0.5 text-meta">{item.desc}</p>
             </div>
           ))}
         </div>
@@ -201,10 +201,10 @@ export default async function GettingStartedPage() {
             {leader?.imageUrl && (
               <Link href={`/cards/${leader.cardCode}`} className="group shrink-0">
                 <p className="mb-1.5 text-center text-xs font-medium text-muted-foreground">Leader</p>
-                <div className="relative aspect-[63/88] w-20 overflow-hidden rounded-lg bg-muted transition-transform group-hover:-translate-y-0.5">
+                <div className="relative aspect-[63/88] w-20 overflow-hidden rounded-lg bg-muted">
                   <Image src={leader.imageUrl} alt={leader.nameEn ?? leader.nameJp} fill className="object-contain" sizes="80px" />
                 </div>
-                <p className="mt-1 max-w-20 truncate text-center text-xs text-muted-foreground">
+                <p className="mt-1 max-w-20 truncate text-center text-meta">
                   {leader.nameEn ?? leader.nameJp}
                 </p>
               </Link>
@@ -212,10 +212,10 @@ export default async function GettingStartedPage() {
             {don?.imageUrl && (
               <Link href={`/cards/${don.cardCode}`} className="group shrink-0">
                 <p className="mb-1.5 text-center text-xs font-medium text-muted-foreground">DON!!</p>
-                <div className="relative aspect-[63/88] w-20 overflow-hidden rounded-lg bg-muted transition-transform group-hover:-translate-y-0.5">
+                <div className="relative aspect-[63/88] w-20 overflow-hidden rounded-lg bg-muted">
                   <Image src={don.imageUrl} alt={don.nameEn ?? don.nameJp} fill className="object-contain" sizes="80px" />
                 </div>
-                <p className="mt-1 max-w-20 truncate text-center text-xs text-muted-foreground">
+                <p className="mt-1 max-w-20 truncate text-center text-meta">
                   {don.nameEn ?? don.nameJp}
                 </p>
               </Link>
@@ -343,7 +343,7 @@ export default async function GettingStartedPage() {
               <div className={`${i < TURN_PHASES.length - 1 ? "pb-6" : ""}`}>
                 <div className="flex items-baseline gap-2">
                   <h3 className="text-sm font-semibold">{phase.name}</h3>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-meta">
                     {phase.nameTh}
                   </span>
                 </div>
@@ -519,7 +519,7 @@ export default async function GettingStartedPage() {
             >
               <div className="min-w-0 flex-1">
                 <p className="font-medium">{src.label}</p>
-                <p className="text-xs text-muted-foreground">{src.desc}</p>
+                <p className="text-meta">{src.desc}</p>
               </div>
               <ExternalLink className="size-4 shrink-0 text-muted-foreground/40" />
             </a>

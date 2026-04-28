@@ -80,7 +80,7 @@ export default function AdminLogsPage() {
     {
       key: "time",
       header: "เวลา",
-      className: "whitespace-nowrap text-xs text-muted-foreground",
+      className: "whitespace-nowrap text-meta",
       render: (log) => new Date(log.createdAt).toLocaleString("th-TH"),
     },
     {
@@ -121,13 +121,13 @@ export default function AdminLogsPage() {
       className: "max-w-xs",
       render: (log) => {
         const hasDetails = log.details && JSON.stringify(log.details) !== "{}";
-        if (!hasDetails) return <span className="text-xs text-muted-foreground/50">—</span>;
+        if (!hasDetails) return <span className="text-meta text-muted-foreground/50">—</span>;
 
         const isExpanded = expandedId === log.id;
         return (
           <button
             onClick={() => setExpandedId(isExpanded ? null : log.id)}
-            className="flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            className="flex items-center gap-1 text-meta transition-colors hover:text-foreground"
           >
             <span className="truncate max-w-[200px]">
               {JSON.stringify(log.details).slice(0, 80)}

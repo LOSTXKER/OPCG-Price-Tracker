@@ -1,19 +1,26 @@
+"use client";
+
 import { Settings } from "lucide-react";
 
+import { EmptyState } from "@/components/shared/empty-state";
+import { PageHeader } from "@/components/layout/page-header";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
+
 export default function SellerSettingsPage() {
+  const lang = useUIStore((s) => s.language);
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="page-header">ตั้งค่าร้าน</h1>
-        <p className="text-sm text-muted-foreground">
-          ตั้งค่าข้อมูลร้านค้าของคุณ
-        </p>
-      </div>
-      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-20 text-center text-muted-foreground">
-        <Settings className="mb-3 h-12 w-12 opacity-30" />
-        <p className="text-lg font-medium">เร็วๆ นี้</p>
-        <p className="text-sm">ระบบตั้งค่าร้านค้ากำลังพัฒนา</p>
-      </div>
+      <PageHeader
+        title={t(lang, "sellerSettingsTitle")}
+        description={t(lang, "sellerSettingsDesc")}
+      />
+      <EmptyState
+        variant="dashed"
+        icon={Settings}
+        title={t(lang, "comingSoon")}
+        description={t(lang, "sellerSettingsComingSoon")}
+      />
     </div>
   );
 }

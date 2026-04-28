@@ -192,7 +192,7 @@ export default function AdminConfigPage() {
                 </div>
                 <div>
                   <CardTitle className="text-base">{group.title}</CardTitle>
-                  <p className="mt-0.5 text-xs text-muted-foreground">
+                  <p className="mt-0.5 text-meta">
                     {group.description}
                   </p>
                 </div>
@@ -214,7 +214,7 @@ export default function AdminConfigPage() {
                       placeholder={field.placeholder}
                     />
                     {field.help && (
-                      <p className="text-xs text-muted-foreground/70">
+                      <p className="text-meta text-muted-foreground/70">
                         {field.help}
                       </p>
                     )}

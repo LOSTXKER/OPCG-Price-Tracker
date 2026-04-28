@@ -154,7 +154,7 @@ export default async function ColorsPage() {
             { label: "สี" },
           ]}
         />
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">สี (Colors)</h1>
+        <h1 className="text-h1">สี (Colors)</h1>
         <p className="text-lg leading-relaxed text-muted-foreground">
           ใน OPCG การ์ด <strong className="text-foreground">Leader</strong>{" "}
           กำหนดสีของเด็ค — แต่ละสีมี playstyle ที่ต่างกัน
@@ -217,7 +217,7 @@ export default async function ColorsPage() {
                               href={`/cards/${leader.cardCode}`}
                               className="group shrink-0"
                             >
-                              <div className="relative aspect-[63/88] w-16 overflow-hidden rounded-lg bg-muted transition-transform group-hover:-translate-y-0.5">
+                              <div className="relative aspect-[63/88] w-16 overflow-hidden rounded-lg bg-muted">
                                 {leader.imageUrl && (
                                   <Image
                                     src={leader.imageUrl}
@@ -228,7 +228,7 @@ export default async function ColorsPage() {
                                   />
                                 )}
                               </div>
-                              <p className="mt-1 max-w-16 truncate text-center text-xs text-muted-foreground">
+                              <p className="mt-1 max-w-16 truncate text-center text-meta">
                                 {leader.nameEn ?? leader.nameJp}
                               </p>
                             </Link>
@@ -264,7 +264,7 @@ export default async function ColorsPage() {
               </div>
               <p className="mt-2 text-sm font-semibold">Leader สีเดียว</p>
               <p className="mt-1 text-2xl font-bold">5 Life</p>
-              <p className="mt-0.5 text-xs text-muted-foreground">
+              <p className="mt-0.5 text-meta">
                 ใช้การ์ดได้แค่สีเดียว
               </p>
             </div>
@@ -275,7 +275,7 @@ export default async function ColorsPage() {
               </div>
               <p className="mt-2 text-sm font-semibold">Leader 2 สี</p>
               <p className="mt-1 text-2xl font-bold">4 Life</p>
-              <p className="mt-0.5 text-xs text-muted-foreground">
+              <p className="mt-0.5 text-meta">
                 ใช้การ์ดจากทั้ง 2 สีได้
               </p>
             </div>
@@ -357,7 +357,7 @@ export default async function ColorsPage() {
                   {item.label}
                 </span>
                 <span className="text-sm font-semibold">{item.value}</span>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-meta">
                   {item.note}
                 </span>
               </div>
@@ -391,7 +391,7 @@ export default async function ColorsPage() {
             >
               <div className="min-w-0 flex-1">
                 <p className="font-medium">{src.label}</p>
-                <p className="text-xs text-muted-foreground">{src.desc}</p>
+                <p className="text-meta">{src.desc}</p>
               </div>
               <ExternalLink className="size-4 shrink-0 text-muted-foreground/40" />
             </a>

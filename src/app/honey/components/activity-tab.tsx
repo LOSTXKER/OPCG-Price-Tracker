@@ -72,8 +72,8 @@ export function ActivityTab({
   return (
     <div className="panel overflow-hidden">
       <div className="border-b px-4 py-3.5">
-        <h2 className="text-lg font-semibold">{t(lang, "honeyHistory")}</h2>
-        <p className="mt-0.5 text-xs text-muted-foreground">
+        <h2 className="text-h3">{t(lang, "honeyHistory")}</h2>
+        <p className="mt-0.5 text-meta">
           {lang === "TH" ? "ดูประวัติการรับและใช้ Honey ทั้งหมด" : lang === "JP" ? "Honeyの獲得・使用履歴" : "View all Honey earning and spending history"}
         </p>
       </div>
@@ -107,7 +107,7 @@ export function ActivityTab({
               <p className="text-sm font-semibold">
                 {lang === "TH" ? "เริ่มสะสม Honey กันเลย!" : lang === "JP" ? "Honeyを集め始めよう！" : "Start earning Honey!"}
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-meta">
                 {lang === "TH"
                   ? "ทำภารกิจประจำวันด้านบนเพื่อรับ Honey แรกของคุณ"
                   : lang === "JP"
@@ -126,7 +126,7 @@ export function ActivityTab({
         ) : (
           <div className="flex flex-col items-center gap-2 py-14 text-center">
             <History className="size-8 text-muted-foreground/20" />
-            <p className="text-xs text-muted-foreground/60">{t(lang, "noTransactions")}</p>
+            <p className="text-meta text-muted-foreground/60">{t(lang, "noTransactions")}</p>
           </div>
         )
       ) : (
@@ -152,7 +152,7 @@ function TxRow({ tx, lang }: { tx: HoneyTx; lang: Language }) {
       </div>
       <div className="min-w-0 flex-1">
         <p className="truncate text-xs font-medium">{formatTxReason(tx, lang)}</p>
-        <p className="text-xs text-muted-foreground">{new Date(tx.createdAt).toLocaleDateString()}</p>
+        <p className="text-meta">{new Date(tx.createdAt).toLocaleDateString()}</p>
       </div>
       <span className={cn("shrink-0 text-xs font-bold tabular-nums", positive ? "text-price-up" : "text-destructive")}>
         {positive ? "+" : ""}{tx.amount} <span className="text-xs">🍯</span>

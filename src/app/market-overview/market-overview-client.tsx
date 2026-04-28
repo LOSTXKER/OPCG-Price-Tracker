@@ -2,17 +2,22 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { BarChart3, Crown, Layers, Package, TrendingUp } from "lucide-react"
+import { ArrowRight, Clock, Layers, Package } from "lucide-react"
 
 import { Breadcrumb } from "@/components/shared/breadcrumb"
+import { PageHeader } from "@/components/layout/page-header"
 import { RarityBadge } from "@/components/shared/rarity-badge"
-import { StatCard } from "@/components/shared/stat-card"
 import { Price } from "@/components/shared/price-inline"
-import { cn } from "@/lib/utils"
-import { RARITY_BAR_COLOR } from "@/lib/constants/rarities"
+import { Surface } from "@/components/ui/surface"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { useUIStore } from "@/stores/ui-store"
 import { getCardName, t, type Language } from "@/lib/i18n"
+import { formatRelativeAgo } from "@/lib/utils/relative-time"
+import { formatCount } from "@/lib/utils/currency"
+
+import { DeltaPill, MarketSnapshot } from "./_components/hero-market-card"
+import { RarityBreakdown } from "./_components/rarity-breakdown"
+import { RawValueHint } from "./_components/raw-value-hint"
 
 type TopCard = {
   cardCode: string
@@ -22,7 +27,17 @@ type TopCard = {
   rarity: string
   imageUrl: string | null
   latestPriceJpy: number
+  priceChange24h: number | null
   setCode: string
+}
+
+type TopSet = {
+  code: string
+  name: string
+  boxImageUrl: string | null
+  cardCount: number
+  totalValue: number
+  change24h: number | null
 }
 
 type MarketData = {
@@ -31,119 +46,107 @@ type MarketData = {
   avgPrice: number
   setCount: number
   rarityBreakdown: { rarity: string; count: number; totalValue: number }[]
-  topSetsByValue: { code: string; name: string; boxImageUrl: string | null; cardCount: number; totalValue: number }[]
+  topSetsByValue: TopSet[]
   topCards: TopCard[]
+  movers: { up: number; down: number; flat: number }
+  weightedDelta24h: number | null
+  lastUpdatedAt: string | null
 }
 
 export function MarketOverviewClient({ data }: { data: MarketData }) {
   const lang = useUIStore((s) => s.language)
 
-  const maxRarityValue = Math.max(...data.rarityBreakdown.map((r) => r.totalValue), 1)
   const maxSetValue = Math.max(...data.topSetsByValue.map((s) => s.totalValue), 1)
 
   return (
-    <div className="space-y-6">
-      <Breadcrumb
-        items={[
-          { label: t(lang, "home"), href: "/" },
-          { label: t(lang, "marketOverview") },
-        ]}
+    <div className="space-y-8">
+      <PageHeader
+        title={t(lang, "marketOverviewTitle")}
+        breadcrumb={
+          <Breadcrumb
+            items={[
+              { label: t(lang, "home"), href: "/" },
+              { label: t(lang, "marketOverview") },
+            ]}
+          />
+        }
+        actions={
+          data.lastUpdatedAt ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-card px-3 py-1 text-meta">
+              <Clock className="size-3.5" aria-hidden="true" />
+              {t(lang, "marketLastUpdated")} {formatRelativeAgo(data.lastUpdatedAt, lang)}
+            </span>
+          ) : undefined
+        }
       />
-      {/* Header */}
-      <div>
-        <h1 className="page-header">
-          {t(lang, "marketOverviewTitle")}
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t(lang, "marketOverviewSubtitle")}
-        </p>
-      </div>
 
-      {/* Summary cards */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard
-          icon={BarChart3}
-          label={t(lang, "totalValue")}
-          value={<Price jpy={data.totalValue} />}
-        />
-        <StatCard
-          icon={TrendingUp}
-          label={t(lang, "avgPrice")}
-          value={<Price jpy={data.avgPrice} />}
-        />
-        <StatCard
-          icon={Layers}
-          label={t(lang, "totalCards")}
-          value={data.totalCards.toLocaleString()}
-        />
-        <StatCard
-          icon={Package}
-          label={t(lang, "totalSets")}
-          value={data.setCount.toLocaleString()}
-        />
-      </div>
+      {/* Unified market snapshot (hero + 3 secondary stats) */}
+      <MarketSnapshot
+        totalValue={data.totalValue}
+        weightedDelta24h={data.weightedDelta24h}
+        movers={data.movers}
+        avgPrice={data.avgPrice}
+        totalCards={data.totalCards}
+        setCount={data.setCount}
+        lang={lang}
+      />
 
       {/* Most valuable cards */}
       {data.topCards.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">{t(lang, "mostValuableCards")}</h2>
-          <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
-            {data.topCards.map((card, i) => (
-              <TopCardTile key={card.cardCode} card={card} rank={i + 1} lang={lang} />
-            ))}
+          <SectionHeader
+            title={t(lang, "mostValuableCards")}
+            caption={t(lang, "mostValuableCardsCaption")}
+            href="/?sort=price_desc"
+            ctaLabel={t(lang, "marketViewAllCards")}
+            hint={<RawValueHint lang={lang} />}
+          />
+          {/* Mobile: horizontal scroller. Desktop: grid */}
+          <div className="-mx-4 sm:mx-0">
+            <div className="scroll-fade-x flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-1 sm:hidden">
+              {data.topCards.map((card, i) => (
+                <div
+                  key={card.cardCode}
+                  className="w-[40vw] max-w-[160px] shrink-0 snap-start"
+                >
+                  <TopCardTile card={card} rank={i + 1} lang={lang} />
+                </div>
+              ))}
+            </div>
+            <div className="hidden grid-cols-3 gap-2 sm:grid lg:grid-cols-6">
+              {data.topCards.map((card, i) => (
+                <TopCardTile key={card.cardCode} card={card} rank={i + 1} lang={lang} />
+              ))}
+            </div>
           </div>
         </section>
       )}
 
       {/* Rarity + Top sets */}
       <div className="grid gap-4 lg:grid-cols-2">
-        {/* Rarity breakdown */}
-        <div className="panel overflow-hidden">
-          <div className="border-b border-border/40 px-5 py-3.5">
-            <h2 className="text-lg font-semibold">{t(lang, "valueByRarity")}</h2>
-          </div>
-          <div className="divide-y divide-border/30">
-            {data.rarityBreakdown.map((r) => {
-              const pct = (r.totalValue / data.totalValue) * 100
-              const barWidth = (r.totalValue / maxRarityValue) * 100
-              const barColor = RARITY_BAR_COLOR[r.rarity] ?? "bg-neutral-400"
-              return (
-                <div
-                  key={r.rarity}
-                  className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-muted/30"
-                >
-                  <div className="w-12 shrink-0">
-                    <RarityBadge rarity={r.rarity} size="sm" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="h-2 overflow-hidden rounded-full bg-muted">
-                      <div
-                        className={cn("h-full rounded-full transition-all", barColor)}
-                        style={{ width: `${barWidth}%` }}
-                      />
-                    </div>
-                  </div>
-                  <span className="w-9 shrink-0 text-right text-xs font-medium tabular-nums text-muted-foreground">
-                    {pct.toFixed(1)}%
-                  </span>
-                  <div className="w-28 shrink-0 text-right">
-                    <p className="whitespace-nowrap font-price text-sm font-semibold tabular-nums">
-                      <Price jpy={r.totalValue} />
-                    </p>
-                    <p className="whitespace-nowrap text-xs tabular-nums text-muted-foreground">
-                      {r.count.toLocaleString()} {t(lang, "cardUnit")}
-                    </p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
+        <RarityBreakdown
+          rows={data.rarityBreakdown}
+          totalValue={data.totalValue}
+          lang={lang}
+        />
 
         {/* Top sets by value */}
-        <div className="panel overflow-hidden">
-          <div className="border-b border-border/40 px-5 py-3.5">
-            <h2 className="text-lg font-semibold">{t(lang, "topSetsByValue")}</h2>
+        <Surface variant="panel" padding="none" className="overflow-hidden">
+          <div className="flex items-end justify-between gap-3 border-b border-border/40 px-5 py-3.5">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <h2 className="text-h4">{t(lang, "topSetsByValue")}</h2>
+                <RawValueHint lang={lang} />
+              </div>
+              <p className="text-meta">{t(lang, "topSetsByValueCaption")}</p>
+            </div>
+            <Link
+              href="/sets"
+              className="inline-flex shrink-0 items-center gap-1 text-meta transition-colors hover:text-primary"
+            >
+              {t(lang, "marketViewAllSets")}
+              <ArrowRight className="size-3" aria-hidden="true" />
+            </Link>
           </div>
           <div className="divide-y divide-border/30">
             {data.topSetsByValue.map((s, i) => {
@@ -154,55 +157,93 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
                   href={`/sets/${s.code.toLowerCase()}`}
                   className="group flex items-center gap-3 px-5 py-3 transition-colors hover:bg-muted/30"
                 >
-                  <span className="w-5 shrink-0 text-center font-price text-xs font-medium tabular-nums text-muted-foreground">
+                  <span className="w-5 shrink-0 text-center font-price text-meta tabular-nums">
                     {i + 1}
                   </span>
-                  {s.boxImageUrl && (
-                    <div className="relative size-9 shrink-0 overflow-hidden rounded bg-muted">
+                  {s.boxImageUrl ? (
+                    <div className="relative size-11 shrink-0 overflow-hidden rounded bg-muted">
                       <Image
                         src={s.boxImageUrl}
                         alt={s.name}
                         fill
                         className="object-contain"
-                        sizes="36px"
+                        sizes="44px"
                       />
+                    </div>
+                  ) : (
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded bg-muted text-muted-foreground/40">
+                      <Package className="size-4" aria-hidden="true" />
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium leading-tight group-hover:text-primary">
-                      <span className="font-mono text-xs text-muted-foreground">{s.code.toUpperCase()}</span>
-                      {" "}
+                      <span className="font-mono text-meta">{s.code.toUpperCase()}</span>{" "}
                       <span className="truncate">{s.name}</span>
                     </p>
-                    <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-muted">
-                      <div
-                        className="h-full rounded-full bg-primary/60 transition-all"
-                        style={{ width: `${barWidth}%` }}
-                      />
+                    <div className="mt-1.5 flex items-center gap-2">
+                      <div className="h-[3px] flex-1 overflow-hidden rounded-full bg-muted">
+                        <div
+                          className="h-full rounded-full bg-primary/50 transition-all"
+                          style={{ width: `${barWidth}%` }}
+                        />
+                      </div>
+                      <DeltaPill delta={s.change24h} size="sm" />
                     </div>
                   </div>
                   <div className="w-28 shrink-0 text-right">
                     <p className="whitespace-nowrap font-price text-sm font-semibold tabular-nums">
                       <Price jpy={s.totalValue} />
                     </p>
-                    <p className="whitespace-nowrap text-xs tabular-nums text-muted-foreground">
-                      {s.cardCount.toLocaleString()} {t(lang, "cardUnit")}
+                    <p className="whitespace-nowrap text-meta tabular-nums">
+                      {formatCount(s.cardCount)} {t(lang, "cardUnit")}
                     </p>
                   </div>
                 </Link>
               )
             })}
           </div>
-        </div>
+        </Surface>
       </div>
     </div>
   )
 }
 
 /* ------------------------------------------------------------------ */
-/*  Summary Card                                                       */
+/*  Section header                                                     */
 /* ------------------------------------------------------------------ */
 
+function SectionHeader({
+  title,
+  caption,
+  href,
+  ctaLabel,
+  hint,
+}: {
+  title: string
+  caption?: string
+  href: string
+  ctaLabel: string
+  hint?: React.ReactNode
+}) {
+  return (
+    <div className="flex items-end justify-between gap-3">
+      <div className="min-w-0">
+        <div className="flex items-center gap-1.5">
+          <h2 className="text-h3">{title}</h2>
+          {hint}
+        </div>
+        {caption && <p className="text-meta">{caption}</p>}
+      </div>
+      <Link
+        href={href}
+        className="inline-flex shrink-0 items-center gap-1 text-meta transition-colors hover:text-primary"
+      >
+        {ctaLabel}
+        <ArrowRight className="size-3" aria-hidden="true" />
+      </Link>
+    </div>
+  )
+}
 
 /* ------------------------------------------------------------------ */
 /*  Top Card Tile                                                      */
@@ -222,7 +263,7 @@ function TopCardTile({
   return (
     <Link
       href={`/cards/${card.cardCode}`}
-      className="group panel flex flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+      className="group panel flex flex-col overflow-hidden transition-colors hover:bg-muted/20"
     >
       <div className="relative aspect-[63/88] w-full overflow-hidden bg-muted/30">
         {card.imageUrl ? (
@@ -240,19 +281,24 @@ function TopCardTile({
             <Layers className="size-8" />
           </div>
         )}
-        <span className="absolute left-1.5 top-1.5 flex size-5 items-center justify-center rounded-full bg-foreground/70 text-[11px] font-bold text-background backdrop-blur-sm">
-          {rank}
-        </span>
       </div>
-      <div className="flex flex-1 flex-col gap-1 p-2.5">
-        <p className="line-clamp-1 text-xs font-medium leading-tight">{name}</p>
+      <div className="flex flex-1 flex-col gap-1 p-2">
+        <div className="flex items-baseline gap-1.5">
+          <span className="shrink-0 font-mono text-meta tabular-nums">#{rank}</span>
+          <p className="line-clamp-1 text-xs font-medium leading-tight">{name}</p>
+        </div>
         <div className="flex items-center gap-1">
           <RarityBadge rarity={card.rarity} size="sm" />
-          <span className="font-mono text-xs text-muted-foreground">{card.setCode.toUpperCase()}</span>
+          <span className="font-mono text-meta">{card.setCode.toUpperCase()}</span>
         </div>
-        <p className="mt-auto font-price text-sm font-bold">
-          <Price jpy={card.latestPriceJpy} />
-        </p>
+        <div className="mt-auto flex items-center justify-between gap-1.5">
+          <p className="font-price text-xs font-bold">
+            <Price jpy={card.latestPriceJpy} />
+          </p>
+          {card.priceChange24h != null && (
+            <DeltaPill delta={card.priceChange24h} size="sm" />
+          )}
+        </div>
       </div>
     </Link>
   )

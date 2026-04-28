@@ -207,7 +207,7 @@ export default async function AdminHoneyDashboard() {
             <CardAction>
               <Link
                 href="/admin/users"
-                className="text-xs text-muted-foreground hover:text-primary"
+                className="text-meta hover:text-primary"
               >
                 ดูทั้งหมด{" "}
                 <ArrowRight className="ml-0.5 inline size-3" />

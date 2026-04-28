@@ -2,6 +2,7 @@ import { ListingStatus, OrderStatus } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { createClient } from "@/lib/supabase/server";
 import { isAuthBypassed } from "@/lib/env";
+import { DEFAULT_PRIVACY_SETTINGS } from "@/lib/users";
 
 const RARE_RARITIES = ["SR", "SEC", "L", "SP", "P-SR", "P-SEC"];
 
@@ -99,6 +100,17 @@ export async function resolveIsOwner(profileUserId: string): Promise<boolean> {
   }
 }
 
+type ProfilePrivacySnapshot = {
+  profileVisibility: string;
+  showCollection: boolean;
+  showListings: boolean;
+  showDecks: boolean;
+  showStats: boolean;
+  hidePortfolioPrices: boolean;
+  hidePortfolioQty: boolean;
+  profileSummaryOnly: boolean;
+};
+
 export type ProfileUserSelect = {
   id: string;
   displayName: string | null;
@@ -109,19 +121,16 @@ export type ProfileUserSelect = {
   sellerReviewCount: number;
   createdAt: Date;
   handle: string | null;
-  profileVisibility: string;
-  showCollection: boolean;
-  showListings: boolean;
-  showDecks: boolean;
-  showStats: boolean;
-  hidePortfolioPrices: boolean;
-  hidePortfolioQty: boolean;
-  profileSummaryOnly: boolean;
   socialLine: string | null;
   socialIg: string | null;
   socialTwitter: string | null;
   socialFacebook: string | null;
   lastCheckinAt: Date | null;
+  /**
+   * 1:1 satellite — may be `null` for users who haven't customised any
+   * privacy toggle. Callers must resolve via {@link resolvePrivacy}.
+   */
+  privacySettings: ProfilePrivacySnapshot | null;
   _count: {
     listings: number;
     reviewsReceived: number;
@@ -138,19 +147,23 @@ export const profileUserSelect = {
   sellerReviewCount: true,
   createdAt: true,
   handle: true,
-  profileVisibility: true,
-  showCollection: true,
-  showListings: true,
-  showDecks: true,
-  showStats: true,
-  hidePortfolioPrices: true,
-  hidePortfolioQty: true,
-  profileSummaryOnly: true,
   socialLine: true,
   socialIg: true,
   socialTwitter: true,
   socialFacebook: true,
   lastCheckinAt: true,
+  privacySettings: {
+    select: {
+      profileVisibility: true,
+      showCollection: true,
+      showListings: true,
+      showDecks: true,
+      showStats: true,
+      hidePortfolioPrices: true,
+      hidePortfolioQty: true,
+      profileSummaryOnly: true,
+    },
+  },
   _count: {
     select: {
       listings: { where: { status: ListingStatus.ACTIVE } },
@@ -160,16 +173,38 @@ export const profileUserSelect = {
 } as const;
 
 /**
+ * Resolve the privacy snapshot for a user, applying defaults when the
+ * satellite row hasn't been written yet.
+ */
+function resolvePrivacy(user: ProfileUserSelect): ProfilePrivacySnapshot {
+  const p = user.privacySettings;
+  if (!p) {
+    return {
+      profileVisibility: DEFAULT_PRIVACY_SETTINGS.profileVisibility,
+      showCollection: DEFAULT_PRIVACY_SETTINGS.showCollection,
+      showListings: DEFAULT_PRIVACY_SETTINGS.showListings,
+      showDecks: DEFAULT_PRIVACY_SETTINGS.showDecks,
+      showStats: DEFAULT_PRIVACY_SETTINGS.showStats,
+      hidePortfolioPrices: DEFAULT_PRIVACY_SETTINGS.hidePortfolioPrices,
+      hidePortfolioQty: DEFAULT_PRIVACY_SETTINGS.hidePortfolioQty,
+      profileSummaryOnly: DEFAULT_PRIVACY_SETTINGS.profileSummaryOnly,
+    };
+  }
+  return p;
+}
+
+/**
  * Load all data needed for the public profile page given the user record.
  * Respects all privacy flags. Returns a fully-serialized payload safe to pass
  * into client components.
  */
 export async function loadPublicProfileData(user: ProfileUserSelect, isOwner: boolean) {
-  const summaryOnly = !isOwner && user.profileSummaryOnly;
-  const canShowListings = isOwner || user.showListings;
-  const canShowCollection = isOwner || user.showCollection;
-  const canShowStats = isOwner || user.showStats;
-  const canShowDecks = isOwner || user.showDecks;
+  const privacy = resolvePrivacy(user);
+  const summaryOnly = !isOwner && privacy.profileSummaryOnly;
+  const canShowListings = isOwner || privacy.showListings;
+  const canShowCollection = isOwner || privacy.showCollection;
+  const canShowStats = isOwner || privacy.showStats;
+  const canShowDecks = isOwner || privacy.showDecks;
 
   const fetchListings = canShowListings;
   const fetchCollectionList = canShowCollection && !summaryOnly;
@@ -473,8 +508,8 @@ export async function loadPublicProfileData(user: ProfileUserSelect, isOwner: bo
   };
 
   const privacyFlags: ProfilePrivacyFlags = {
-    hidePortfolioPrices: !isOwner && user.hidePortfolioPrices,
-    hidePortfolioQty: !isOwner && user.hidePortfolioQty,
+    hidePortfolioPrices: !isOwner && privacy.hidePortfolioPrices,
+    hidePortfolioQty: !isOwner && privacy.hidePortfolioQty,
     summaryOnly,
     showListings: canShowListings,
     showCollection: canShowCollection,

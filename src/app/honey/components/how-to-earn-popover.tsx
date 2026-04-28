@@ -3,20 +3,12 @@
 import {
   Calendar,
   ClipboardList,
-  HelpCircle,
   ShoppingBag,
   Star,
   Ticket,
   Users,
 } from "lucide-react";
-import { Popover } from "@base-ui/react/popover";
 import { t, type Language } from "@/lib/i18n";
-
-const POPOVER_POPUP_CLASS =
-  "w-56 rounded-lg border bg-background p-3 shadow-lg data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95";
-
-const POPOVER_ARROW_CLASS =
-  "size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px] border bg-background data-[side=bottom]:top-1 data-[side=top]:-bottom-2.5";
 
 const EARN_METHODS = [
   { icon: Calendar, labelKey: "honeyEarnCheckin" as const, reward: "10–30 pt" },
@@ -31,52 +23,44 @@ const USE_METHODS = [
   { icon: Ticket, labelKey: "honeyUseBuyTicket" as const },
 ];
 
-export function HowToEarnPopover({ lang }: { lang: Language }) {
+/**
+ * Popup body for the Honey card guide. Rendered inside `Popover.Popup` by the
+ * stat card itself — the trigger (entire card) and chrome (Root/Portal/Arrow)
+ * live in the parent component.
+ */
+export function HowToEarnGuideContent({ lang }: { lang: Language }) {
   return (
-    <Popover.Root>
-      <Popover.Trigger
-        className="inline-flex size-5 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-      >
-        <HelpCircle className="size-3.5" />
-      </Popover.Trigger>
-      <Popover.Portal>
-        <Popover.Positioner side="bottom" sideOffset={6} align="center" className="z-50">
-          <Popover.Popup className={POPOVER_POPUP_CLASS}>
-            <p className="mb-2 text-xs font-semibold text-foreground">
-              {t(lang, "howToEarn")}
-            </p>
-            <div className="space-y-1.5">
-              {EARN_METHODS.map(({ icon: Icon, labelKey, reward }) => (
-                <div
-                  key={labelKey}
-                  className="flex items-center gap-2 rounded-md px-2 py-1 text-xs text-muted-foreground"
-                >
-                  <Icon className="size-3.5 shrink-0" />
-                  <span className="flex-1">{t(lang, labelKey)}</span>
-                  <span className="tabular-nums text-foreground">{reward}</span>
-                </div>
-              ))}
-            </div>
+    <>
+      <p className="mb-2 text-xs font-semibold text-foreground">
+        {t(lang, "howToEarn")}
+      </p>
+      <div className="space-y-1.5">
+        {EARN_METHODS.map(({ icon: Icon, labelKey, reward }) => (
+          <div
+            key={labelKey}
+            className="flex items-center gap-2 rounded-md px-2 py-1 text-meta"
+          >
+            <Icon className="size-3.5 shrink-0" />
+            <span className="flex-1">{t(lang, labelKey)}</span>
+            <span className="tabular-nums text-foreground">{reward}</span>
+          </div>
+        ))}
+      </div>
 
-            <p className="mb-2 mt-3 border-t pt-2 text-xs font-semibold text-foreground">
-              {t(lang, "howToUseHoney")}
-            </p>
-            <div className="space-y-1.5">
-              {USE_METHODS.map(({ icon: Icon, labelKey }) => (
-                <div
-                  key={labelKey}
-                  className="flex items-center gap-2 rounded-md px-2 py-1 text-xs text-muted-foreground"
-                >
-                  <Icon className="size-3.5 shrink-0" />
-                  <span className="flex-1">{t(lang, labelKey)}</span>
-                </div>
-              ))}
-            </div>
-
-            <Popover.Arrow className={POPOVER_ARROW_CLASS} />
-          </Popover.Popup>
-        </Popover.Positioner>
-      </Popover.Portal>
-    </Popover.Root>
+      <p className="mb-2 mt-3 border-t pt-2 text-xs font-semibold text-foreground">
+        {t(lang, "howToUseHoney")}
+      </p>
+      <div className="space-y-1.5">
+        {USE_METHODS.map(({ icon: Icon, labelKey }) => (
+          <div
+            key={labelKey}
+            className="flex items-center gap-2 rounded-md px-2 py-1 text-meta"
+          >
+            <Icon className="size-3.5 shrink-0" />
+            <span className="flex-1">{t(lang, labelKey)}</span>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

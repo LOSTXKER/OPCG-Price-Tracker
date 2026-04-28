@@ -36,10 +36,10 @@ import { API, METHOD_INFO, yuyuHd } from "./yuyutei-types";
 
 const STATUS_TABS = [
   { key: "", label: "All", dotColor: "bg-foreground/40", textColor: "text-foreground", activeBg: "bg-background shadow-sm" },
-  { key: "suggested", label: "Suggested", dotColor: "bg-blue-500", textColor: "text-blue-600", activeBg: "bg-background shadow-sm" },
-  { key: "pending", label: "Pending", dotColor: "bg-amber-500", textColor: "text-amber-600", activeBg: "bg-background shadow-sm" },
-  { key: "matched", label: "Matched", dotColor: "bg-green-500", textColor: "text-green-600", activeBg: "bg-background shadow-sm" },
-  { key: "rejected", label: "Rejected", dotColor: "bg-red-500", textColor: "text-red-500", activeBg: "bg-background shadow-sm" },
+  { key: "suggested", label: "Suggested", dotColor: "bg-info", textColor: "text-info", activeBg: "bg-background shadow-sm" },
+  { key: "pending", label: "Pending", dotColor: "bg-warning", textColor: "text-warning", activeBg: "bg-background shadow-sm" },
+  { key: "matched", label: "Matched", dotColor: "bg-success", textColor: "text-success", activeBg: "bg-background shadow-sm" },
+  { key: "rejected", label: "Rejected", dotColor: "bg-danger", textColor: "text-danger", activeBg: "bg-background shadow-sm" },
 ] as const;
 
 /* ── Skeleton rows ── */
@@ -595,7 +595,7 @@ export function YuyuteiMatchClient() {
 
           {/* Set completion indicator */}
           {setFilter && data && totalAll > 0 && (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="flex items-center gap-2 text-meta">
               <div className="h-1.5 w-24 rounded-full bg-muted overflow-hidden">
                 <div
                   className="h-full bg-green-500 rounded-full transition-all"
@@ -614,7 +614,7 @@ export function YuyuteiMatchClient() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border/30 bg-muted/40 text-xs text-muted-foreground">
+                <tr className="border-b border-border/30 bg-muted/40 text-meta">
                   <th className="px-3 py-2.5 w-10" />
                   {showStatusCol && <th className="px-3 py-2.5 text-left w-20">Status</th>}
                   <th className="px-3 py-2.5 text-left">Yuyutei Listing</th>
@@ -644,7 +644,7 @@ export function YuyuteiMatchClient() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="sticky top-0 z-10">
-                <tr className="border-b border-border/30 bg-muted/40 text-xs text-muted-foreground">
+                <tr className="border-b border-border/30 bg-muted/40 text-meta">
                   <th className="px-3 py-2.5 w-10 bg-muted/40">
                     <input
                       type="checkbox"

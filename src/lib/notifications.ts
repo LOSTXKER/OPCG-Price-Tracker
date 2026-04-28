@@ -1,13 +1,40 @@
-import { prisma } from "@/lib/db";
 import type { Prisma } from "@/generated/prisma/client";
+
+import { prisma } from "@/lib/db";
+import { createLog } from "@/lib/logger";
+import {
+  NotificationDataSchema,
+  type NotificationData,
+} from "@/lib/notifications/schemas";
+
+const log = createLog("notifications");
 
 type PushNotificationParams = {
   userId: string;
   type: string;
   title: string;
   message: string;
-  data?: Record<string, unknown>;
+  data?: NotificationData;
 };
+
+/**
+ * Validate and serialize the optional `data` payload for a Notification
+ * row. Bad shapes are dropped (with a warning) instead of crashing the
+ * caller — this is a fire-and-forget helper for non-critical UX.
+ */
+function serializeData(
+  data: NotificationData | undefined,
+): Prisma.InputJsonValue | undefined {
+  if (!data) return undefined;
+  const parsed = NotificationDataSchema.safeParse(data);
+  if (!parsed.success) {
+    log.warn("invalid Notification.data dropped", {
+      issues: parsed.error.issues.map((i) => ({ path: i.path, message: i.message })),
+    });
+    return undefined;
+  }
+  return parsed.data as Prisma.InputJsonValue;
+}
 
 export async function pushNotification(params: PushNotificationParams): Promise<void> {
   try {
@@ -17,11 +44,11 @@ export async function pushNotification(params: PushNotificationParams): Promise<
         type: params.type,
         title: params.title,
         message: params.message,
-        data: params.data ? (params.data as Prisma.InputJsonValue) : undefined,
+        data: serializeData(params.data),
       },
     });
-  } catch {
-    // Best-effort — don't let notification failures break operations
+  } catch (err) {
+    log.error("pushNotification failed", err);
   }
 }
 
@@ -35,10 +62,10 @@ export async function pushNotificationBulk(
         type: n.type,
         title: n.title,
         message: n.message,
-        data: n.data ? (n.data as Prisma.InputJsonValue) : undefined,
+        data: serializeData(n.data),
       })),
     });
-  } catch {
-    // Best-effort
+  } catch (err) {
+    log.error("pushNotificationBulk failed", err);
   }
 }

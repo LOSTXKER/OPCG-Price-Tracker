@@ -118,7 +118,7 @@ export function BlogForm({ initial }: { initial?: PostData }) {
           >
             <ArrowLeft className="size-5" />
           </Button>
-          <h1 className="text-xl font-bold">
+          <h1 className="text-h1">
             {isEdit ? "แก้ไขบทความ" : "สร้างบทความใหม่"}
           </h1>
         </div>

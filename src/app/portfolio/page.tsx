@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Breadcrumb } from "@/components/shared/breadcrumb";
 import PortfolioClient from "./portfolio-client";
 
 export const metadata: Metadata = {
@@ -11,10 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function PortfolioPage() {
-  return (
-    <>
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Portfolio" }]} />
-      <PortfolioClient />
-    </>
-  );
+  return <PortfolioClient />;
 }

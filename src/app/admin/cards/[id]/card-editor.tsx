@@ -198,7 +198,7 @@ export function CardEditor({ card }: { card: CardData }) {
           <ArrowLeft className="size-5" />
         </Button>
         <div className="flex-1">
-          <h1 className="min-w-0 break-words text-xl font-bold">
+          <h1 className="min-w-0 break-words text-h1">
             {card.baseCode}
             {card.isParallel && (
               <span className="ml-2 text-sm text-orange-500">Parallel</span>
@@ -281,7 +281,7 @@ export function CardEditor({ card }: { card: CardData }) {
             </div>
           )}
 
-          <div className="space-y-1 text-xs text-muted-foreground">
+          <div className="space-y-1 text-meta">
             <p>Yuyutei ID: {card.yuyuteiId || "—"}</p>
             <p>Parallel Index: {card.parallelIndex ?? "—"}</p>
             <p>

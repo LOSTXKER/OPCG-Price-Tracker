@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
-import { createLog } from "@/lib/logger";
-
-const log = createLog("api:drop-calculator");
 
 export const GET = apiHandler(async (request: NextRequest) => {
-  try {
   const setCode = request.nextUrl.searchParams.get("set");
   const game = request.nextUrl.searchParams.get("game") || "";
 
@@ -124,8 +120,4 @@ export const GET = apiHandler(async (request: NextRequest) => {
     cards,
     rarityCounts,
   });
-  } catch (error) {
-    log.error("GET /api/drop-calculator", error);
-    return NextResponse.json({ error: "Failed to load drop calculator data" }, { status: 500 });
-  }
 });

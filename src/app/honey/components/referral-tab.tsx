@@ -96,8 +96,8 @@ export function ReferralTab({
     <div className="space-y-4">
       <div className="panel overflow-hidden">
         <div className="border-b px-4 py-3.5">
-          <h2 className="text-lg font-semibold">{t(lang, "referralLink")}</h2>
-          <p className="mt-0.5 text-xs text-muted-foreground">
+          <h2 className="text-h3">{t(lang, "referralLink")}</h2>
+          <p className="mt-0.5 text-meta">
             {lang === "TH" ? "แชร์ลิงก์แนะนำเพื่อรับ Honey" : lang === "JP" ? "リンクをシェアしてHoneyを獲得" : "Share your link to earn Honey"}
           </p>
         </div>
@@ -136,7 +136,7 @@ export function ReferralTab({
                   {s.isHoney && <span className="ml-0.5 text-xs">🍯</span>}
                 </span>
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-meta">
                 {s.label[lang] ?? s.label.EN}
               </p>
             </div>
@@ -147,7 +147,7 @@ export function ReferralTab({
       {/* How it works */}
       <div className="panel overflow-hidden">
         <div className="border-b px-4 py-3.5">
-          <h2 className="text-lg font-semibold">
+          <h2 className="text-h3">
             {lang === "TH" ? "วิธีการทำงาน" : lang === "JP" ? "仕組み" : "How it works"}
           </h2>
         </div>
@@ -166,7 +166,7 @@ export function ReferralTab({
                     </span>
                     <p className="text-sm font-semibold">{step.title[lang] ?? step.title.EN}</p>
                   </div>
-                  <p className="mt-0.5 text-xs text-muted-foreground">
+                  <p className="mt-0.5 text-meta">
                     {step.desc[lang] ?? step.desc.EN}
                   </p>
                 </div>

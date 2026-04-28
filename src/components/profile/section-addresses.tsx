@@ -147,7 +147,7 @@ export function SectionAddresses() {
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="flex items-center gap-2 text-lg font-semibold">
+        <h2 className="flex items-center gap-2 text-h3">
           <MapPin className="size-5" />
           {t(lang, "addresses")}
         </h2>
@@ -244,8 +244,8 @@ export function SectionAddresses() {
                   {addr.label && (
                     <p className="text-sm text-foreground">{addr.fullName}</p>
                   )}
-                  {addr.phone && <p className="text-xs text-muted-foreground">{addr.phone}</p>}
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  {addr.phone && <p className="text-meta">{addr.phone}</p>}
+                  <p className="mt-1 text-meta">
                     {addr.addressLine}
                     {addr.district ? `, ${addr.district}` : ""}
                     {`, ${addr.province} ${addr.postalCode}`}

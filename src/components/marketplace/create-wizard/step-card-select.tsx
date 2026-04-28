@@ -38,7 +38,7 @@ export function StepCardSelect({
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-lg font-semibold">เลือกการ์ดที่จะขาย</h2>
+        <h2 className="text-h3">เลือกการ์ดที่จะขาย</h2>
         <p className="text-sm text-muted-foreground">
           ค้นหาด้วยชื่อหรือรหัสการ์ด
         </p>
@@ -97,7 +97,7 @@ export function StepCardSelect({
                       className="size-full object-contain"
                     />
                   ) : (
-                    <span className="flex size-full items-center justify-center text-[8px] text-muted-foreground">
+                    <span className="flex size-full items-center justify-center text-overlay text-muted-foreground">
                       N/A
                     </span>
                   )}
@@ -106,7 +106,7 @@ export function StepCardSelect({
                   <p className="truncate text-sm font-medium">
                     {c.nameEn ?? c.nameJp}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-meta">
                     {c.cardCode}
                     {c.rarity && ` · ${c.rarity}`}
                   </p>
@@ -134,7 +134,7 @@ export function StepCardSelect({
                   className="object-contain"
                 />
               ) : (
-                <span className="flex size-full items-center justify-center text-xs text-muted-foreground">
+                <span className="flex size-full items-center justify-center text-meta">
                   No image
                 </span>
               )}

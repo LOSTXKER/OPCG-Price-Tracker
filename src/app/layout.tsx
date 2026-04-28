@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
-import {
-  DM_Sans,
-  Kanit,
-  JetBrains_Mono,
-} from "next/font/google";
+import { Kanit, JetBrains_Mono } from "next/font/google";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -16,17 +12,13 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { ConfirmDialogProvider } from "@/components/shared/confirm-dialog";
+import { UpgradeDialogProvider } from "@/components/shared/upgrade-dialog";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { websiteJsonLd } from "@/lib/seo/json-ld";
 import "./globals.css";
 
-const dmSans = DM_Sans({
-  variable: "--font-sans",
-  subsets: ["latin"],
-});
-
 const kanit = Kanit({
-  variable: "--font-thai",
+  variable: "--font-sans",
   subsets: ["thai", "latin"],
   weight: ["300", "400", "500", "600", "700"],
 });
@@ -88,7 +80,7 @@ export default function RootLayout({
         <JsonLd data={websiteJsonLd()} />
       </head>
       <body
-        className={`${dmSans.variable} ${kanit.variable} ${jetbrainsMono.variable} flex min-h-dvh flex-col font-sans antialiased`}
+        className={`${kanit.variable} ${jetbrainsMono.variable} flex min-h-dvh flex-col font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"
@@ -98,18 +90,20 @@ export default function RootLayout({
         >
           <TooltipProvider>
             <ConfirmDialogProvider>
-              <MainChrome>
-                <Header />
-              </MainChrome>
-              <PageContent>{children}</PageContent>
-              <MainChrome>
-                <Footer />
-                <BottomNav />
-              </MainChrome>
-              <CompareFloatingBar />
-              <ScrollToTop />
-              <MissionTracker />
-              <Toaster position="bottom-center" />
+              <UpgradeDialogProvider>
+                <MainChrome>
+                  <Header />
+                </MainChrome>
+                <PageContent>{children}</PageContent>
+                <MainChrome>
+                  <Footer />
+                  <BottomNav />
+                </MainChrome>
+                <CompareFloatingBar />
+                <ScrollToTop />
+                <MissionTracker />
+                <Toaster position="bottom-center" />
+              </UpgradeDialogProvider>
             </ConfirmDialogProvider>
           </TooltipProvider>
         </ThemeProvider>

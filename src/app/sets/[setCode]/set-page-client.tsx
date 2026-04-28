@@ -159,7 +159,7 @@ export function DropRateDialog({
               ))}
             </div>
             {packsPerBox && cardsPerPack && (
-              <span className="text-xs text-muted-foreground">
+              <span className="text-meta">
                 {packsPerBox} {t(lang, "perUnit")}/{t(lang, "packUnit")} · {cardsPerPack} {t(lang, "cardsCount")}/{t(lang, "packUnit")}
               </span>
             )}

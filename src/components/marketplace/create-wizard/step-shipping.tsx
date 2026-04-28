@@ -125,7 +125,7 @@ export function StepShipping({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-lg font-semibold">การจัดส่งและรายละเอียด</h2>
+        <h2 className="text-h3">การจัดส่งและรายละเอียด</h2>
         <p className="text-sm text-muted-foreground">
           ระบุวิธีจัดส่ง พื้นที่ และภาพสินค้าจริง
         </p>

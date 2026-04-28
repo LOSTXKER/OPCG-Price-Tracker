@@ -28,7 +28,6 @@ import { ProfileCover } from "@/components/profile/public/profile-cover";
 import { ProfileHero } from "@/components/profile/public/profile-hero";
 import { ProfileMobileCtaBar } from "@/components/profile/public/profile-mobile-cta-bar";
 import { ProfileReviewsPreview } from "@/components/profile/public/profile-reviews-preview";
-import { ProfileStatsStrip } from "@/components/profile/public/profile-stats-strip";
 import {
   ProfileTabsNav,
   type TabDescriptor,
@@ -213,8 +212,8 @@ function PublicProfileLayout({
   );
 
   const metaParts = useMemo(
-    () => buildHeroMeta({ user, stats, sellerStats, joinedRelative, isOwner, lang }),
-    [user, stats, sellerStats, joinedRelative, isOwner, lang],
+    () => buildHeroMeta({ user, stats, sellerStats, isOwner, lang }),
+    [user, stats, sellerStats, isOwner, lang],
   );
   const trustChips = useMemo(
     () => buildTrustChips(sellerStats, lang),
@@ -235,20 +234,20 @@ function PublicProfileLayout({
 
   return (
     <div className={cn("pb-24 md:pb-16")}>
-      <div className="relative mx-auto w-full max-w-5xl">
-        {/* Full-bleed cover sits at the very top of the container so it
-            visually anchors the page before the avatar overlaps it. */}
+      <div className="relative mx-auto w-full max-w-5xl px-4 pt-6 md:px-6 md:pt-8 lg:px-8">
+        {/* Brand-warm cover banner (rounded card, not full-bleed) — gives
+            the page colour without overwhelming the rest of the layout. */}
         <ProfileCover userId={user.id} />
 
-        <div className="relative px-4 md:px-6 lg:px-8">
+        <div className="relative">
           <ProfileHero
             user={user}
-            stats={stats}
             sellerStats={sellerStats}
             achievements={achievements}
             metaParts={metaParts}
             trustChips={trustChips}
             socialLinks={socialLinks}
+            joinedRelative={joinedRelative}
             isOwner={isOwner}
             lang={lang}
             actionsSlot={
@@ -272,15 +271,6 @@ function PublicProfileLayout({
               lang={lang}
             />
           )}
-
-          <ProfileStatsStrip
-            user={user}
-            stats={stats}
-            sellerStats={sellerStats}
-            collectionStats={collectionStats}
-            lang={lang}
-            onJump={setActiveTab}
-          />
 
           {/* Featured reviews — concise social proof above the fold. */}
           <ProfileReviewsPreview

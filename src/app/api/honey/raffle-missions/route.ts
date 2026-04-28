@@ -8,7 +8,7 @@ import {
   claimRaffleMissionReward,
   claimRaffleMissionBonus,
   serializeRaffleMissions,
-} from "@/lib/honey/raffle-missions";
+} from "@/lib/honey/missions";
 
 export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();

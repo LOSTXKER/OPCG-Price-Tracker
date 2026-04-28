@@ -23,6 +23,7 @@ import {
   AdminFilterSelect,
 } from "@/components/admin/admin-toolbar";
 import { Badge } from "@/components/ui/badge";
+import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { cn } from "@/lib/utils";
 
 const SET_TYPE_LABELS: Record<string, string> = {
@@ -172,7 +173,7 @@ export function SetsManager({ initialSets }: { initialSets: SetRow[] }) {
           options={setTypes.map((t) => ({ value: t, label: SET_TYPE_LABELS[t] ?? t }))}
         />
         {(search || typeFilter) && (
-          <span className="text-xs text-muted-foreground">
+          <span className="text-meta">
             แสดง {filteredSets.length} จาก {sets.length}
           </span>
         )}
@@ -202,12 +203,11 @@ export function SetsManager({ initialSets }: { initialSets: SetRow[] }) {
           );
         })}
         {filteredSets.length === 0 && (
-          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border/50 py-16 text-center">
-            <Package className="mb-3 size-10 text-muted-foreground/30" />
-            <p className="text-sm text-muted-foreground">
-              ไม่พบชุดการ์ดที่ตรงกับเงื่อนไข
-            </p>
-          </div>
+          <KumaEmptyState
+            variant="admin"
+            icon={Package}
+            title="ไม่พบชุดการ์ดที่ตรงกับเงื่อนไข"
+          />
         )}
       </div>
     </div>
@@ -263,7 +263,7 @@ function SetCard({
         className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/30"
       >
         {/* Code badge */}
-        <span className="inline-flex min-w-[4rem] items-center justify-center rounded-md bg-primary/8 px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-wide text-primary">
+        <span className="inline-flex min-w-[4rem] items-center justify-center rounded-md bg-primary/8 px-2 py-0.5 font-mono text-eyebrow text-primary">
           {set.code}
         </span>
 
@@ -273,7 +273,7 @@ function SetCard({
             {set.nameEn || set.name}
           </p>
           {set.nameEn && set.name !== set.nameEn && (
-            <p className="truncate text-xs text-muted-foreground">{set.name}</p>
+            <p className="truncate text-meta">{set.name}</p>
           )}
         </div>
 
@@ -282,7 +282,7 @@ function SetCard({
           <span className="tabular-nums text-sm font-semibold">
             {set.actualCardCount}
           </span>
-          <span className="text-xs text-muted-foreground">ใบ</span>
+          <span className="text-meta">ใบ</span>
         </div>
 
         {/* Completeness bar */}
@@ -491,7 +491,7 @@ function InfoTile({
 }) {
   return (
     <div className="rounded-lg bg-muted/30 px-3 py-2">
-      <p className="text-[11px] font-medium text-muted-foreground/60">
+      <p className="text-meta text-muted-foreground/60">
         {label}
       </p>
       <p className="mt-0.5 text-sm font-medium">

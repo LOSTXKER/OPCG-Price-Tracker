@@ -3,6 +3,9 @@ import { cookies } from "next/headers";
 
 import { prisma } from "@/lib/db";
 import { processReferralConversion } from "@/lib/honey/referral";
+import { createLog } from "@/lib/logger";
+
+const log = createLog("auth:sync");
 
 /** Ensures a Prisma User exists for the signed-in Supabase user (email sign-up, etc.). */
 export async function syncAppUser(authUser: User) {
@@ -33,7 +36,17 @@ export async function syncAppUser(authUser: User) {
     const jar = await cookies();
     const refCode = jar.get("ref_code")?.value;
     if (refCode) {
-      processReferralConversion(user.id, refCode).catch(() => {});
+      // Awaited and logged. We still don't surface failures to the
+      // sign-up flow because the user account is already valid; but
+      // failure to credit the referrer is now visible in `auth:sync`
+      // logs instead of silently swallowed. The grant itself is
+      // idempotent (see processReferralConversion), so repeat runs
+      // on retry are safe.
+      try {
+        await processReferralConversion(user.id, refCode);
+      } catch (err) {
+        log.error("processReferralConversion failed", err);
+      }
       jar.delete("ref_code");
     }
   }

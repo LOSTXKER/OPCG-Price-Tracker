@@ -44,7 +44,7 @@ export function WantList({
   return (
     <section className="panel overflow-hidden">
       <div className="flex items-center justify-between px-3 pb-2 pt-3">
-        <h2 className="text-lg font-semibold">
+        <h2 className="text-h3">
           {t(lang, "wantList")}
           {wantCards.length > 0 && (
             <span className="ml-1 text-primary">({wantCards.length})</span>
@@ -53,14 +53,14 @@ export function WantList({
         {wantCards.length > 0 && (
           <button
             onClick={onClearAll}
-            className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+            className="text-meta transition-colors hover:text-foreground"
           >
             {t(lang, "clearAll")}
           </button>
         )}
       </div>
       {wantCards.length === 0 ? (
-        <p className="px-3 pb-4 text-center text-xs text-muted-foreground">
+        <p className="px-3 pb-4 text-center text-meta">
           {t(lang, "selectFromLeft")}
         </p>
       ) : (
@@ -80,7 +80,7 @@ export function WantList({
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-xs font-medium leading-tight">{name}</p>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-meta">
                       {card.rarity}
                       {card.latestPriceJpy != null && card.latestPriceJpy > 0 && <> · <Price jpy={card.latestPriceJpy} /></>}
                     </span>

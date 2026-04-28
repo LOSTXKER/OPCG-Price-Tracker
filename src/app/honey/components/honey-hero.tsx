@@ -38,7 +38,7 @@ export function HoneyHero({
             <span className="text-base leading-none">🍯</span>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Honey</p>
+            <p className="text-eyebrow">Honey</p>
             <p className="text-2xl font-extrabold tabular-nums leading-tight text-primary">
               🍯 {points.toLocaleString()}
             </p>
@@ -54,12 +54,12 @@ export function HoneyHero({
           <span className={cn("text-sm font-bold tabular-nums", streak >= 7 ? "text-primary" : "text-foreground")}>
             {streak}
           </span>
-          <span className="text-xs text-muted-foreground">{t(lang, "honeyStreakDays")}</span>
+          <span className="text-meta">{t(lang, "honeyStreakDays")}</span>
         </div>
 
         {/* Level badge */}
         {level && (
-          <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
+          <span className="rounded-full bg-primary/10 px-3 py-1 text-eyebrow text-primary">
             {level.label}
           </span>
         )}

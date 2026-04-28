@@ -19,7 +19,7 @@ export function SectionAccount({ user, onUserUpdate }: Props) {
 
   return (
     <div className="space-y-6">
-      <h2 className="flex items-center gap-2 text-lg font-semibold">
+      <h2 className="flex items-center gap-2 text-h3">
         <UserCog className="size-5" />
         {t(lang, "profileTabAccount")}
       </h2>

@@ -1,23 +1,30 @@
 "use client"
 
-import Link from "next/link"
 import { useSearchParams, useRouter } from "next/navigation"
 import { useCallback, useEffect, useRef, useState, useTransition, Suspense } from "react"
 import {
   LayoutGrid,
   List,
   Search,
-  TrendingUpDown,
   X,
 } from "lucide-react"
 
 import { SortableHeader } from "@/components/shared/sortable-header"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button"
+import { Surface } from "@/components/ui/surface"
+import { SegmentedControl } from "@/components/ui/segmented-control"
+import { EmptyState } from "@/components/shared/empty-state"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select"
 import { GridCard, GridCardSkeleton } from "@/components/home/grid-card"
 import { CardGrid } from "@/components/cards/card-grid"
-import { getCardName, t } from "@/lib/i18n"
+import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
-import { cn } from "@/lib/utils"
 import { fetchCards } from "@/lib/api/fetch-cards"
 import {
   type SortKey,
@@ -31,6 +38,9 @@ import {
 } from "@/components/home/market-types"
 import { SearchTableRow, type CardRow } from "./search-table-row"
 import { SearchPagination } from "./search-pagination"
+
+const ALL_SETS = "__all_sets__"
+const ALL_RARITIES = "__all_rarities__"
 
 type SetOption = { code: string; name: string }
 
@@ -210,17 +220,17 @@ function SearchContent({
             </button>
           )}
         </div>
-        <button
+        <Button
           type="submit"
-          className="h-12 shrink-0 rounded-r-xl bg-primary px-6 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+          className="h-12 shrink-0 rounded-l-none rounded-r-xl px-6"
         >
           {t(lang, "searchButton")}
-        </button>
+        </Button>
       </form>
 
       {/* Results summary + controls */}
       {hasSearched && query.trim() && (
-        <div className="panel overflow-hidden">
+        <Surface variant="panel" padding="none" className="overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
             <p className="text-sm text-muted-foreground">
               {t(lang, "resultsFor")} &ldquo;<span className="font-medium text-foreground">{query}</span>&rdquo;
@@ -239,91 +249,93 @@ function SearchContent({
 
           <div className="flex flex-wrap items-center gap-2 border-t border-border/40 bg-muted/20 px-4 py-2.5">
             {sets.length > 0 && (
-              <select
-                value={selectedSet}
-                onChange={(e) => handleSetChange(e.target.value)}
-                className="h-9 min-w-0 flex-1 truncate rounded-lg border border-border/50 bg-card px-3 text-xs font-semibold text-foreground transition-colors hover:border-border focus:border-primary/50 focus:outline-none sm:flex-none sm:min-w-[170px] sm:text-sm"
+              <Select
+                value={selectedSet || ALL_SETS}
+                onValueChange={(v) => handleSetChange(v === ALL_SETS ? "" : v ?? "")}
               >
-                <option value="">{t(lang, "allSets")}</option>
-                {sets.map((s) => (
-                  <option key={s.code} value={s.code}>{s.code.toUpperCase()} · {s.name}</option>
-                ))}
-              </select>
+                <SelectTrigger size="sm" className="h-9 min-w-0 flex-1 sm:flex-none sm:min-w-[170px]">
+                  <span data-slot="select-value" className="flex flex-1 items-center gap-1.5 truncate text-left">
+                    {selectedSet
+                      ? sets.find((s) => s.code === selectedSet)?.name ?? selectedSet
+                      : t(lang, "allSets")}
+                  </span>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL_SETS}>{t(lang, "allSets")}</SelectItem>
+                  {sets.map((s) => (
+                    <SelectItem key={s.code} value={s.code}>
+                      {s.code.toUpperCase()} · {s.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             )}
 
             {rarities.length > 0 && (
-              <select
-                value={selectedRarity}
-                onChange={(e) => handleRarityChange(e.target.value)}
-                className="h-9 min-w-0 truncate rounded-lg border border-border/50 bg-card px-3 text-xs font-semibold text-foreground transition-colors hover:border-border focus:border-primary/50 focus:outline-none sm:min-w-[120px] sm:text-sm"
+              <Select
+                value={selectedRarity || ALL_RARITIES}
+                onValueChange={(v) => handleRarityChange(v === ALL_RARITIES ? "" : v ?? "")}
               >
-                <option value="">{t(lang, "allRarities")}</option>
-                {rarities.map((r) => (
-                  <option key={r} value={r}>{r}</option>
-                ))}
-              </select>
+                <SelectTrigger size="sm" className="h-9 min-w-0 sm:min-w-[120px]">
+                  <span data-slot="select-value" className="flex flex-1 items-center gap-1.5 truncate text-left">
+                    {selectedRarity || t(lang, "allRarities")}
+                  </span>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL_RARITIES}>{t(lang, "allRarities")}</SelectItem>
+                  {rarities.map((r) => (
+                    <SelectItem key={r} value={r}>
+                      {r}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             )}
 
-            <select
+            <Select
               value={sort}
-              onChange={(e) => handleSortChange(e.target.value as SortKey)}
-              className="hidden h-9 rounded-lg border border-border/50 bg-card px-3 text-xs font-semibold text-foreground transition-colors hover:border-border focus:border-primary/50 focus:outline-none sm:block sm:min-w-[140px] sm:text-sm"
+              onValueChange={(v) => v && handleSortChange(v as SortKey)}
             >
-              {SORT_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
+              <SelectTrigger size="sm" className="hidden h-9 sm:flex sm:min-w-[140px]">
+                <span data-slot="select-value" className="flex flex-1 items-center gap-1.5 truncate text-left">
+                  {SORT_OPTIONS.find((o) => o.value === sort)?.label ?? sort}
+                </span>
+              </SelectTrigger>
+              <SelectContent>
+                {SORT_OPTIONS.map((o) => (
+                  <SelectItem key={o.value} value={o.value}>
+                    {o.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             <div className="ml-auto flex items-center gap-1.5">
               {viewMode === "grid" && (
-                <div className="hidden items-center gap-0.5 rounded-full border border-border/50 p-0.5 sm:flex">
-                  <TrendingUpDown className="mx-1.5 size-3.5 text-muted-foreground/50" />
-                  {CHANGE_PERIODS.map((p) => (
-                    <button
-                      key={p}
-                      onClick={() => setChangePeriod(p)}
-                      className={cn(
-                        "rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums transition-all",
-                        changePeriod === p
-                          ? "bg-background text-foreground shadow-sm"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      {p}
-                    </button>
-                  ))}
+                <div className="hidden sm:block">
+                  <SegmentedControl
+                    options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
+                    value={changePeriod}
+                    onChange={setChangePeriod}
+                    size="sm"
+                    ariaLabel="Change period"
+                  />
                 </div>
               )}
 
-              <div className="flex items-center gap-0.5 rounded-lg bg-muted/50 p-0.5">
-                <button
-                  onClick={() => setViewMode("table")}
-                  className={cn(
-                    "rounded-md p-1.5 transition-colors",
-                    viewMode === "table"
-                      ? "bg-background text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                  aria-label="Table view"
-                >
-                  <List className="size-3.5" />
-                </button>
-                <button
-                  onClick={() => setViewMode("grid")}
-                  className={cn(
-                    "rounded-md p-1.5 transition-colors",
-                    viewMode === "grid"
-                      ? "bg-background text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                  aria-label="Grid view"
-                >
-                  <LayoutGrid className="size-3.5" />
-                </button>
-              </div>
+              <SegmentedControl
+                options={[
+                  { value: "table", label: "Table", icon: List, ariaLabel: "Table view" },
+                  { value: "grid", label: "Grid", icon: LayoutGrid, ariaLabel: "Grid view" },
+                ]}
+                value={viewMode}
+                onChange={setViewMode}
+                size="sm"
+                ariaLabel="View mode"
+              />
             </div>
           </div>
-        </div>
+        </Surface>
       )}
 
       {/* Loading */}
@@ -335,7 +347,7 @@ function SearchContent({
             ))}
           </CardGrid>
         ) : (
-          <div className="panel divide-y divide-border/30">
+          <Surface variant="panel" padding="none" className="divide-y divide-border/30">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="flex items-center gap-4 px-4 py-3">
                 <Skeleton className="size-12 shrink-0 rounded-lg" />
@@ -348,7 +360,7 @@ function SearchContent({
                 <Skeleton className="hidden h-3.5 w-12 rounded md:block" />
               </div>
             ))}
-          </div>
+          </Surface>
         )
       )}
 
@@ -368,11 +380,11 @@ function SearchContent({
 
       {/* Results — Table view */}
       {!isPending && cards.length > 0 && viewMode === "table" && (
-        <div className="panel overflow-hidden">
+        <Surface variant="panel" padding="none" className="overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border/40 text-xs text-muted-foreground">
+                <tr className="border-b border-border/40 text-meta">
                   <th className="w-8 py-2.5 pl-3 pr-0" />
                   <th className="w-8 py-2.5 pr-1 pl-1 text-left font-medium">#</th>
                   <th className="py-2.5 pr-3 pl-2 text-left font-medium">{t(lang, "card")}</th>
@@ -395,7 +407,7 @@ function SearchContent({
               </tbody>
             </table>
           </div>
-        </div>
+        </Surface>
       )}
 
       {/* Pagination */}
@@ -405,37 +417,34 @@ function SearchContent({
 
       {/* Fetch error */}
       {!isPending && fetchError && (
-        <div className="panel px-4 py-12 text-center">
-          <p className="text-sm text-destructive">{t(lang, "loadFailed")}</p>
-          <button
-            type="button"
-            onClick={() => refetch()}
-            className="mt-3 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            {t(lang, "retry")}
-          </button>
-        </div>
+        <EmptyState
+          variant="error"
+          title={t(lang, "loadFailed")}
+          action={
+            <Button type="button" onClick={() => refetch()}>
+              {t(lang, "retry")}
+            </Button>
+          }
+        />
       )}
 
       {/* No results */}
       {!isPending && !fetchError && hasSearched && cards.length === 0 && query.trim() && (
-        <div className="panel px-4 py-16 text-center">
-          <Search className="mx-auto size-10 text-muted-foreground/20" />
-          <p className="mt-4 text-lg font-medium">{t(lang, "noResults")}</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {t(lang, "tryOtherSearch")}
-          </p>
-        </div>
+        <EmptyState
+          variant="panel"
+          icon={Search}
+          title={t(lang, "noResults")}
+          description={t(lang, "tryOtherSearch")}
+        />
       )}
 
       {/* Initial state — no query */}
       {!hasSearched && !query.trim() && (
-        <div className="panel px-4 py-20 text-center">
-          <Search className="mx-auto size-12 text-muted-foreground/20" />
-          <p className="mt-4 text-base font-medium text-muted-foreground">
-            {t(lang, "typeToSearch")}
-          </p>
-        </div>
+        <EmptyState
+          variant="panel"
+          icon={Search}
+          title={t(lang, "typeToSearch")}
+        />
       )}
     </div>
   )

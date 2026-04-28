@@ -96,7 +96,7 @@ export function EventsManager({ initialEvents }: { initialEvents: SeasonalEvent[
       {showForm && (
         <Card>
           <CardContent>
-            <h2 className="mb-3 text-lg font-semibold">Create Seasonal Event</h2>
+            <h2 className="mb-3 text-h3">Create Seasonal Event</h2>
             <div className="grid gap-3 sm:grid-cols-2">
               <Input placeholder="Name (JP)" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
               <Input placeholder="Name (EN)" value={form.nameEn} onChange={(e) => setForm((f) => ({ ...f, nameEn: e.target.value }))} />
@@ -141,10 +141,10 @@ export function EventsManager({ initialEvents }: { initialEvents: SeasonalEvent[
                     {isLive && <Badge className="bg-green-500/10 text-xs text-green-500">LIVE</Badge>}
                     {!ev.isActive && <Badge variant="secondary" className="text-xs">DISABLED</Badge>}
                   </div>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-meta">
                     {start.toLocaleDateString()} ~ {end.toLocaleDateString()} | {ev.honeyMultiplier}x multiplier
                   </p>
-                  {ev.description && <p className="mt-0.5 text-xs text-muted-foreground">{ev.description}</p>}
+                  {ev.description && <p className="mt-0.5 text-meta">{ev.description}</p>}
                 </div>
                 <Button size="sm" variant="outline" onClick={() => toggleActive(ev.id, ev.isActive)}>
                   {ev.isActive ? "Disable" : "Enable"}

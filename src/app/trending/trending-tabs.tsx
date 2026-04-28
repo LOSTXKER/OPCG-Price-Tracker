@@ -3,16 +3,20 @@
 import { memo, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { TrendingUp, TrendingDown, TrendingUpDown, Eye } from "lucide-react"
+import { TrendingUp, TrendingDown, Eye } from "lucide-react"
 
+import { PageHeader } from "@/components/layout/page-header"
+import { DeltaText } from "@/components/shared/delta-text"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
 import { Sparkline } from "@/components/shared/sparkline"
+import { Surface } from "@/components/ui/surface"
+import { SegmentedControl } from "@/components/ui/segmented-control"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
-import { formatPct } from "@/lib/utils/currency"
+import { formatCount } from "@/lib/utils/currency"
 import type { TrendingCardRow } from "./page"
 
 type TabId = "gainers" | "losers" | "mostViewed"
@@ -41,7 +45,6 @@ const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }:
   const lang = useUIStore((s) => s.language)
   const name = getCardName(lang, card)
   const change = activeTab === "mostViewed" ? null : getChangeValue(card, period)
-  const isUp = change != null && change > 0
 
   return (
     <tr
@@ -90,18 +93,11 @@ const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }:
       </td>
       {activeTab === "mostViewed" ? (
         <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
-          {(card.viewCount ?? 0).toLocaleString()}
+          {formatCount(card.viewCount ?? 0)}
         </td>
       ) : (
-        <td
-          className={cn(
-            "px-4 py-2.5 text-right font-price tabular-nums font-medium",
-            isUp ? "text-price-up" : "text-price-down"
-          )}
-        >
-          {change != null
-            ? `${change > 0 ? "+" : ""}${formatPct(change)}%`
-            : "—"}
+        <td className="px-4 py-2.5 text-right">
+          <DeltaText value={change} suffix="%" />
         </td>
       )}
       <td className="hidden px-4 py-2.5 sm:table-cell">
@@ -109,7 +105,7 @@ const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }:
           {card.sparkline.length >= 2 ? (
             <Sparkline data={card.sparkline} width={80} height={28} />
           ) : (
-            <span className="text-xs text-muted-foreground/30">—</span>
+            <span className="text-meta text-muted-foreground/30">—</span>
           )}
         </div>
       </td>
@@ -149,52 +145,42 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
   const lang = useUIStore((s) => s.language)
   const cards = getCards(data, activeTab, period)
 
+  const tabOptions = TABS.map((tab) => ({
+    value: tab.id,
+    label: t(lang, tab.labelKey),
+    icon: tab.icon,
+  }))
+  const periodOptions = PERIODS.map(({ value, labelKey }) => ({
+    value,
+    label: t(lang, labelKey),
+  }))
+
   return (
     <div className="space-y-4">
       {/* Tabs */}
       <div className="flex flex-wrap items-center gap-2">
-        {TABS.map((tab) => {
-          const Icon = tab.icon
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
-                activeTab === tab.id
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
-            >
-              <Icon className="size-4" />
-              {t(lang, tab.labelKey)}
-            </button>
-          )
-        })}
+        <SegmentedControl
+          options={tabOptions}
+          value={activeTab}
+          onChange={setActiveTab}
+          ariaLabel={t(lang, "trendingTitle")}
+        />
 
         {activeTab !== "mostViewed" && (
-          <div className="ml-auto flex items-center gap-0.5 rounded-full border border-border/50 p-0.5">
-            <TrendingUpDown className="mx-1.5 size-3.5 text-muted-foreground/50" />
-            {PERIODS.map(({ value, labelKey }) => (
-              <button
-                key={value}
-                onClick={() => setPeriod(value)}
-                className={cn(
-                  "rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums transition-all",
-                  period === value
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {t(lang, labelKey)}
-              </button>
-            ))}
+          <div className="ml-auto">
+            <SegmentedControl
+              options={periodOptions}
+              value={period}
+              onChange={setPeriod}
+              size="sm"
+              ariaLabel="Period"
+            />
           </div>
         )}
       </div>
 
       {/* Table */}
-      <div className="panel overflow-hidden">
+      <Surface variant="panel" padding="none" className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full table-fixed text-sm">
             <colgroup>
@@ -206,19 +192,19 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
               <col className="hidden w-24 sm:table-column" />
             </colgroup>
             <thead>
-              <tr className="border-b border-border text-xs text-muted-foreground">
-                <th className="px-4 py-3 text-left font-medium">#</th>
-                <th className="px-4 py-3 text-left font-medium">{t(lang, "card")}</th>
-                <th className="px-4 py-3 text-left font-medium">{t(lang, "set")}</th>
-                <th className="px-4 py-3 text-right font-medium">{t(lang, "price")}</th>
+              <tr className="border-b border-border text-eyebrow">
+                <th className="px-4 py-3 text-left">#</th>
+                <th className="px-4 py-3 text-left">{t(lang, "card")}</th>
+                <th className="px-4 py-3 text-left">{t(lang, "set")}</th>
+                <th className="px-4 py-3 text-right">{t(lang, "price")}</th>
                 {activeTab === "mostViewed" ? (
-                  <th className="whitespace-nowrap px-4 py-3 text-right font-medium">{t(lang, "visits")}</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-right">{t(lang, "visits")}</th>
                 ) : (
-                  <th className="whitespace-nowrap px-4 py-3 text-right font-medium">
+                  <th className="whitespace-nowrap px-4 py-3 text-right">
                     {t(lang, "change")} ({period})
                   </th>
                 )}
-                <th className="hidden px-4 py-3 text-right font-medium sm:table-cell">
+                <th className="hidden px-4 py-3 text-right sm:table-cell">
                   {t(lang, "sparkline7d")}
                 </th>
               </tr>
@@ -244,7 +230,7 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
             </tbody>
           </table>
         </div>
-      </div>
+      </Surface>
     </div>
   )
 }
@@ -252,9 +238,9 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
 export function TrendingPageHeader() {
   const lang = useUIStore((s) => s.language)
   return (
-    <div>
-      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t(lang, "trendingTitle")}</h1>
-      <p className="mt-1 text-sm text-muted-foreground">{t(lang, "trendingDesc")}</p>
-    </div>
+    <PageHeader
+      title={t(lang, "trendingTitle")}
+      description={t(lang, "trendingDesc")}
+    />
   )
 }

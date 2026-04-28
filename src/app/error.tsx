@@ -33,13 +33,13 @@ export default function RootError({
           <path d="M12 17h.01" />
         </svg>
       </div>
-      <h2 className="text-lg font-semibold">Something went wrong</h2>
+      <h2 className="text-h3">Something went wrong</h2>
       <p className="max-w-md text-sm text-muted-foreground">
         An unexpected error occurred while loading this page. Please try again
         or come back later.
       </p>
       {isDev && error.message && (
-        <pre className="max-w-lg overflow-auto rounded-lg bg-muted p-3 text-left text-xs text-muted-foreground">
+        <pre className="max-w-lg overflow-auto rounded-lg bg-muted p-3 text-left text-meta">
           {error.message}
         </pre>
       )}

@@ -20,6 +20,7 @@ import {
 import { CommandSearchModal } from "@/components/shared/command-search";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
+import { formatCount } from "@/lib/utils/currency";
 import { t } from "@/lib/i18n";
 import { useHeaderData } from "@/hooks/use-header-data";
 import { NAV_LINKS, TOOL_LINKS, isActive } from "./header-constants";
@@ -154,7 +155,7 @@ export function Header() {
             <Link
               href="/portfolio"
               className={cn(
-                "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
                 isActive(pathname, "/portfolio")
                   ? "bg-primary/10 font-semibold text-primary"
                   : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
@@ -167,7 +168,7 @@ export function Header() {
             <Link
               href="/watchlist"
               className={cn(
-                "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
                 isActive(pathname, "/watchlist")
                   ? "bg-primary/10 font-semibold text-primary"
                   : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
@@ -180,7 +181,7 @@ export function Header() {
             <Link
               href="/honey"
               className={cn(
-                "relative flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                "relative flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
                 isActive(pathname, "/honey")
                   ? "bg-primary/10 font-semibold text-primary"
                   : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
@@ -196,7 +197,7 @@ export function Header() {
               <span>Honey</span>
               {authLoaded && authUser && honeyPoints > 0 && (
                 <span className="font-bold tabular-nums text-amber-600 dark:text-amber-400">
-                  {honeyPoints.toLocaleString()}
+                  {formatCount(honeyPoints)}
                 </span>
               )}
             </Link>
@@ -222,20 +223,20 @@ export function Header() {
               <div className="flex items-center gap-2">
                 <Link
                   href="/pricing"
-                  className="flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+                  className="flex items-center gap-1 rounded-full px-2.5 py-1 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
                 >
                   <Crown className="size-3 text-amber-600 dark:text-amber-400" />
                   {language === "TH" ? "แพ็กเกจ" : language === "JP" ? "プラン" : "Plans"}
                 </Link>
                 <Link
                   href="/login"
-                  className="rounded-full border border-border/60 px-3.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-border hover:text-foreground"
+                  className="rounded-full border border-border/60 px-3.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:border-border hover:text-foreground"
                 >
                   {t(language, "login")}
                 </Link>
                 <Link
                   href="/register"
-                  className="rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                  className="rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
                 >
                   {t(language, "register")}
                 </Link>
@@ -246,7 +247,7 @@ export function Header() {
       </header>
     </div>
 
-    <HeaderMobile />
+    <HeaderMobile isAuthenticated={authLoaded && Boolean(authUser)} />
 
     <MobileMenuSheet
       authUser={authUser}

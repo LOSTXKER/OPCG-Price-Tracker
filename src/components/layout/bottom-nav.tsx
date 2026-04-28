@@ -39,7 +39,7 @@ function TabLink({
         <span className="relative">
           <Icon className={cn("size-5", active && "stroke-[2.5]")} aria-hidden />
           {typeof badge === "number" && badge > 0 && (
-            <span className="absolute -right-2.5 -top-1.5 flex min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold leading-[14px] text-white">
+            <span className="absolute -right-2.5 -top-1.5 flex min-w-[16px] items-center justify-center rounded-full bg-danger px-1 text-overlay leading-[14px] text-danger-foreground">
               {badge > 99 ? "99+" : badge}
             </span>
           )}
@@ -79,7 +79,7 @@ export function BottomNav({ className }: { className?: string }) {
             aria-label="Search"
           >
             <Search className="size-5" aria-hidden />
-            <span>{lang === "TH" ? "ค้นหา" : lang === "JP" ? "検索" : "Search"}</span>
+            <span>{t(lang, "search")}</span>
             <span className="h-1 w-1 rounded-full bg-primary opacity-0" />
           </button>
         </li>
@@ -102,7 +102,7 @@ export function BottomNav({ className }: { className?: string }) {
             ) : (
               <Menu className="size-5" aria-hidden />
             )}
-            <span>{lang === "TH" ? "เมนู" : lang === "JP" ? "メニュー" : "Menu"}</span>
+            <span>{t(lang, "menuLabel")}</span>
             <span className={cn("h-1 w-1 rounded-full bg-primary transition-opacity", menuOpen ? "opacity-100" : "opacity-0")} />
           </button>
         </li>

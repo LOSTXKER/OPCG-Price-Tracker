@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import {
   ArrowRightLeft,
+  BellRing,
   Bookmark,
   Dices,
   Heart,
@@ -33,8 +34,16 @@ import {
   SheetContent,
   SheetTitle,
 } from "@/components/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useUIStore, type Language, type Currency } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
+import { formatCount } from "@/lib/utils/currency";
 import { t } from "@/lib/i18n";
 import {
   LANG_OPTIONS,
@@ -106,7 +115,7 @@ function MenuLink({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mb-1 mt-4 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 first:mt-0">
+    <p className="mb-1 mt-4 px-3 text-eyebrow text-muted-foreground/70 first:mt-0">
       {children}
     </p>
   );
@@ -171,13 +180,13 @@ export function MobileMenuSheet({
                 <p className="truncate text-sm font-semibold">{userName}</p>
                 <p className="truncate text-xs text-muted-foreground">{authUser.email}</p>
                 <div className="mt-1.5 flex items-center gap-2">
-                  <span className={cn("rounded-full px-2 py-0.5 text-xs font-semibold", tier.color)}>
+                  <span className={cn("rounded-full px-2 py-0.5 text-micro", tier.color)}>
                     {tier.label}
                   </span>
                   {honeyPoints > 0 && (
                     <span className="flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400">
                       <span>🍯</span>
-                      {honeyPoints.toLocaleString()}
+                      {formatCount(honeyPoints)}
                     </span>
                   )}
                 </div>
@@ -226,6 +235,7 @@ export function MobileMenuSheet({
               <MenuLink href="/portfolio" icon={Star} label={t(language, "portfolioNav")} pathname={pathname} onNav={close} />
               <MenuLink href="/orders" icon={ShoppingBag} label={language === "TH" ? "คำสั่งซื้อ" : language === "JP" ? "購入履歴" : "My Orders"} pathname={pathname} onNav={close} />
               <MenuLink href="/saved" icon={Heart} label={language === "TH" ? "รายการที่บันทึก" : language === "JP" ? "保存済み" : "Saved"} pathname={pathname} onNav={close} />
+              <MenuLink href="/settings/alerts" icon={BellRing} label={t(language, "managePriceAlerts")} pathname={pathname} onNav={close} />
               <MenuLink href="/messages" icon={MessageCircle} label={t(language, "messagesTitle")} badge={unreadMessages} pathname={pathname} onNav={close} />
               <MenuLink href="/honey" icon={Sparkles} label="Honey" pendingDot={honeyPendingActions} pathname={pathname} onNav={close} />
               <MenuLink href="/seller" icon={Store} label={language === "TH" ? "ศูนย์ผู้ขาย" : language === "JP" ? "販売センター" : "Seller Center"} pathname={pathname} onNav={close} />
@@ -237,29 +247,37 @@ export function MobileMenuSheet({
           <div className="space-y-2 px-3 py-1">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{t(language, "languageLabel")}</span>
-              <select
+              <Select
+                items={LANG_OPTIONS}
                 value={language}
-                onChange={(e) => setLanguage(e.target.value as Language)}
-                className="rounded-md border border-border/50 bg-card px-2 py-1 text-xs font-medium"
-                aria-label="Language"
+                onValueChange={(value) => setLanguage(value as Language)}
               >
-                {LANG_OPTIONS.map((l) => (
-                  <option key={l.value} value={l.value}>{l.label}</option>
-                ))}
-              </select>
+                <SelectTrigger size="sm" aria-label="Language" className="text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {LANG_OPTIONS.map((l) => (
+                    <SelectItem key={l.value} value={l.value}>{l.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{t(language, "currencyLabel")}</span>
-              <select
+              <Select
+                items={CURRENCY_OPTIONS}
                 value={currency}
-                onChange={(e) => setCurrency(e.target.value as Currency)}
-                className="rounded-md border border-border/50 bg-card px-2 py-1 text-xs font-medium"
-                aria-label="Currency"
+                onValueChange={(value) => setCurrency(value as Currency)}
               >
-                {CURRENCY_OPTIONS.map((c) => (
-                  <option key={c.value} value={c.value}>{c.label}</option>
-                ))}
-              </select>
+                <SelectTrigger size="sm" aria-label="Currency" className="text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {CURRENCY_OPTIONS.map((c) => (
+                    <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{language === "TH" ? "ธีม" : language === "JP" ? "テーマ" : "Theme"}</span>

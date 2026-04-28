@@ -47,7 +47,7 @@ export function SearchPagination({
         </button>
         {generatePageNumbers(page, totalPages).map((p, i) =>
           p === "..." ? (
-            <span key={`dots-${i}`} className="px-1 text-xs text-muted-foreground">...</span>
+            <span key={`dots-${i}`} className="px-1 text-meta">...</span>
           ) : (
             <button
               key={p}

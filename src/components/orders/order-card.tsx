@@ -99,7 +99,7 @@ export function OrderCard({
             {order.listing.card.cardCode} • {order.listing.card.rarity}
           </p>
           {order.trackingNumber && (
-            <p className="mt-1 text-xs text-muted-foreground">
+            <p className="mt-1 text-meta">
               Tracking: {order.trackingNumber}
             </p>
           )}
@@ -109,10 +109,10 @@ export function OrderCard({
           <p className="text-lg font-bold">
             {formatThb(order.priceThb)}
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-meta">
             {formatJpy(order.listing.priceJpy)}
           </p>
-          <p className="mt-1 text-xs text-muted-foreground">
+          <p className="mt-1 text-meta">
             {timeAgo(order.createdAt)}
           </p>
         </div>

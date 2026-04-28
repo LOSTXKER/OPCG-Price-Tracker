@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Check, X, Hexagon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/layout/page-header";
+import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { useSettings, refetchSettings } from "@/hooks/use-settings";
@@ -75,7 +77,7 @@ export default function PricingClient() {
   const renderValue = (val: string | boolean, planKey: string) => {
     if (typeof val === "boolean") {
       return val ? (
-        <Check className="h-4 w-4 text-green-500 dark:text-green-400" />
+        <Check className="h-4 w-4 text-success" />
       ) : (
         <X className="h-4 w-4 text-muted-foreground/30" />
       );
@@ -98,7 +100,7 @@ export default function PricingClient() {
   const renderHighlightValue = (val: string | boolean) => {
     if (typeof val === "boolean") {
       return val ? (
-        <Check className="h-3.5 w-3.5 text-green-500 dark:text-green-400" />
+        <Check className="h-3.5 w-3.5 text-success" />
       ) : (
         <X className="h-3.5 w-3.5 text-muted-foreground/30" />
       );
@@ -111,16 +113,12 @@ export default function PricingClient() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl space-y-10">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          {t(lang, "pricing")}
-        </h1>
-        <p className="mx-auto mt-3 max-w-md text-muted-foreground">
-          {t(lang, "pricingSubtitle")}
-        </p>
-      </div>
+    <div className="space-y-10">
+      <PageHeader
+        align="center"
+        title={t(lang, "pricing")}
+        description={t(lang, "pricingSubtitle")}
+      />
 
       {/* Billing Toggle */}
       <div className="flex justify-center">
@@ -144,7 +142,7 @@ export default function PricingClient() {
             }`}
           >
             {t(lang, "yearly")}
-            <span className="rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-semibold text-green-600 dark:text-green-400">
+            <span className="rounded-full bg-success-soft px-2 py-0.5 text-xs font-semibold text-success">
               -36%
             </span>
           </button>
@@ -175,9 +173,11 @@ export default function PricingClient() {
       {/* Compact Plan Cards */}
       <div className="grid items-start gap-5 md:grid-cols-3">
         {PLANS.map((plan) => (
-          <div
+          <Surface
             key={plan.key}
-            className={`relative flex flex-col rounded-2xl border p-6 ${plan.cardClass}`}
+            variant="outline"
+            padding="xl"
+            className={`relative flex flex-col ${plan.popular ? "border-foreground/30" : ""}`}
           >
             {/* Badge */}
             {plan.popular && (
@@ -199,10 +199,10 @@ export default function PricingClient() {
                 <plan.icon className={`h-6 w-6 ${plan.iconClass}`} />
               )}
               <div>
-                <h2 className="text-lg font-semibold leading-tight">
+                <h2 className="text-h3 leading-tight">
                   {tierName(plan.key)}
                 </h2>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-meta">
                   {t(lang, plan.subtitleKey)}
                 </p>
               </div>
@@ -211,7 +211,7 @@ export default function PricingClient() {
             {plan.monthlyPrice ? (
               <div className="mt-4">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-extrabold tracking-tight">
+                  <span className="text-display">
                     {billing === "monthly"
                       ? plan.monthlyPrice
                       : plan.yearlyPrice}
@@ -223,14 +223,14 @@ export default function PricingClient() {
                   </span>
                 </div>
                 {billing === "yearly" && plan.yearlyPerMonth && (
-                  <p className="mt-0.5 text-xs font-medium text-green-600 dark:text-green-400">
+                  <p className="mt-0.5 text-xs font-medium text-success">
                     ~{plan.yearlyPerMonth}
                     {t(lang, "perMonthShort")}
                   </p>
                 )}
               </div>
             ) : (
-              <p className="mt-4 text-3xl font-extrabold tracking-tight">
+              <p className="mt-4 text-display">
                 {t(lang, "freePlan")}
               </p>
             )}
@@ -284,7 +284,7 @@ export default function PricingClient() {
                     settings.tier === "FREE" && (
                       <Button
                         variant="ghost"
-                        className="w-full text-xs text-muted-foreground"
+                        className="w-full text-meta"
                         onClick={handleTrial}
                         disabled={loading === "trial"}
                       >
@@ -296,74 +296,69 @@ export default function PricingClient() {
                 </>
               )}
             </div>
-          </div>
+          </Surface>
         ))}
       </div>
 
       {/* Honey → Pro Alternative */}
-      <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-amber-500/20 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5">
+      <Surface
+        variant="subtle"
+        padding="none"
+        className="mx-auto max-w-2xl overflow-hidden"
+      >
         <div className="flex flex-col items-center gap-4 p-6 text-center sm:flex-row sm:text-left">
-          <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10">
-            <Hexagon className="size-7 text-amber-500" />
+          <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
+            <Hexagon className="size-7 text-primary" />
           </div>
           <div className="flex-1">
-            <h3 className="text-base font-bold">
+            <h3 className="text-h5">
               {t(lang, "honeyPassTitle")}
             </h3>
             <p className="mt-1 text-sm text-muted-foreground">
               {t(lang, "honeyPassDesc")}
             </p>
             <div className="mt-2 flex flex-wrap justify-center gap-2 sm:justify-start">
-              <Badge
-                variant="secondary"
-                className="bg-amber-500/10 text-amber-700 dark:text-amber-400"
-              >
+              <Badge variant="secondary">
                 {lang === "TH"
                   ? "แพ็กเกจ"
                   : lang === "JP"
                     ? "パッケージ"
                     : "Package"}{" "}
-                Pro 7 {t(lang, "days")} 🍯
+                Pro 7 {t(lang, "days")}
               </Badge>
-              <Badge
-                variant="secondary"
-                className="bg-amber-500/10 text-amber-700 dark:text-amber-400"
-              >
+              <Badge variant="secondary">
                 {lang === "TH"
                   ? "แพ็กเกจ"
                   : lang === "JP"
                     ? "パッケージ"
                     : "Package"}{" "}
-                Pro 30 {t(lang, "days")} 🍯
+                Pro 30 {t(lang, "days")}
               </Badge>
-              <Badge
-                variant="secondary"
-                className="bg-amber-500/10 text-amber-700 dark:text-amber-400"
-              >
+              <Badge variant="secondary">
                 {lang === "TH"
                   ? "แพ็กเกจ"
                   : lang === "JP"
                     ? "パッケージ"
                     : "Package"}{" "}
-                Pro+ 30 {t(lang, "days")} 🍯
+                Pro+ 30 {t(lang, "days")}
               </Badge>
             </div>
           </div>
           <Link href="/honey?tab=shop">
             <Button
               variant="outline"
-              className="shrink-0 gap-1.5 border-amber-500/20 text-amber-700 hover:bg-amber-500/10 dark:text-amber-400"
+              className="shrink-0 gap-1.5"
             >
               <Hexagon className="size-4" />
               {t(lang, "honeyPassCta")}
             </Button>
           </Link>
         </div>
-      </div>
+      </Surface>
 
       {/* Full Feature Comparison Table */}
       <div>
-        <h2 className="mb-6 text-center text-xl font-semibold">
+        <h2 className="mb-6 text-center text-h3">
           {t(lang, "compareAllFeatures")}
         </h2>
         <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
@@ -394,7 +389,7 @@ export default function PricingClient() {
                   <tr>
                     <td
                       colSpan={4}
-                      className="pb-2 pt-5 text-xs font-semibold uppercase tracking-widest text-muted-foreground/60"
+                      className="pb-2 pt-5 text-eyebrow text-muted-foreground/60"
                     >
                       {t(lang, section.titleKey)}
                     </td>

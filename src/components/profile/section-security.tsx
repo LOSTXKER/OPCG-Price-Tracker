@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/client";
 import { useUIStore } from "@/stores/ui-store";
-import { t } from "@/lib/i18n";
+import { t, getLocale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const passwordSchema = z
@@ -217,7 +217,7 @@ export function SectionSecurity() {
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="flex items-center gap-2 text-lg font-semibold">
+        <h2 className="flex items-center gap-2 text-h3">
           <Shield className="size-5" />
           {t(lang, "security")}
         </h2>
@@ -331,7 +331,7 @@ export function SectionSecurity() {
             </Badge>
           )}
         </div>
-        <p className="text-xs text-muted-foreground">{t(lang, "twoFactorDesc")}</p>
+        <p className="text-meta">{t(lang, "twoFactorDesc")}</p>
 
         {loadingMfa ? (
           <div className="flex justify-center py-3">
@@ -475,11 +475,11 @@ export function SectionSecurity() {
                         {t(lang, methodLabelKey(s.method))}
                       </Badge>
                     </div>
-                    <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
+                    <div className="mt-0.5 flex items-center gap-2 text-meta">
                       {s.ipAddress && <span>{s.ipAddress}</span>}
                       <span>
                         {new Date(s.createdAt).toLocaleDateString(
-                          lang === "TH" ? "th-TH" : lang === "JP" ? "ja-JP" : "en-US",
+                          getLocale(lang),
                           { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" },
                         )}
                       </span>

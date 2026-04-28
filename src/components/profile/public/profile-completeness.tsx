@@ -163,7 +163,7 @@ export function ProfileCompleteness({
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
               <h2 className="text-sm font-bold tracking-tight">{t(lang, "completenessTitle")}</h2>
-              <p className="mt-0.5 text-xs text-muted-foreground">
+              <p className="mt-0.5 text-meta">
                 {t(lang, "completenessSubtitle")}
               </p>
             </div>

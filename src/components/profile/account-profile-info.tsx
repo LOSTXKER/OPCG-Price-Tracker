@@ -159,7 +159,7 @@ export function AccountProfileInfo({ user, lang, onUserUpdate }: AccountProfileI
                 autoFocus
               />
               <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">{bio.length}/500</span>
+                <span className="text-meta">{bio.length}/500</span>
                 <Button size="sm" onClick={() => void saveBio()} disabled={saving}>
                   {t(lang, "save")}
                 </Button>
@@ -235,7 +235,7 @@ export function AccountProfileInfo({ user, lang, onUserUpdate }: AccountProfileI
               {handleError ? (
                 <p className="text-xs text-destructive">{handleError}</p>
               ) : (
-                <p className="text-xs text-muted-foreground/60">{t(lang, "profileHandleHint")}</p>
+                <p className="text-meta text-muted-foreground/60">{t(lang, "profileHandleHint")}</p>
               )}
             </div>
           ) : (
@@ -268,7 +268,7 @@ export function AccountProfileInfo({ user, lang, onUserUpdate }: AccountProfileI
           <Mail className="size-3.5 text-muted-foreground" />
           <span className="text-sm">{user.email}</span>
         </div>
-        <p className="mt-1 text-xs text-muted-foreground/60">{t(lang, "emailReadonly")}</p>
+        <p className="mt-1 text-meta text-muted-foreground/60">{t(lang, "emailReadonly")}</p>
       </div>
     </div>
   );

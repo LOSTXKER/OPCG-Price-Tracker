@@ -71,12 +71,12 @@ export function ShopTab({
       <div className="panel overflow-hidden">
         <div className="border-b px-4 py-3.5">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">{t(lang, "honeyShop")}</h2>
+            <h2 className="text-h3">{t(lang, "honeyShop")}</h2>
             <span className="flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-bold tabular-nums text-amber-700 dark:text-amber-400">
               🍯 {points.toLocaleString()}
             </span>
           </div>
-          <p className="mt-0.5 text-xs text-muted-foreground">
+          <p className="mt-0.5 text-meta">
             {lang === "TH" ? "ใช้ Honey แลกของรางวัลพิเศษ" : lang === "JP" ? "Honeyを使って特別な報酬と交換" : "Redeem Honey for exclusive rewards"}
           </p>
         </div>
@@ -98,7 +98,7 @@ export function ShopTab({
         {filteredShop.length === 0 ? (
           <div className="flex flex-col items-center gap-2 py-14 text-center">
             <ShoppingBag className="size-8 text-muted-foreground/20" />
-            <p className="text-xs text-muted-foreground/60">{t(lang, "noShopItems")}</p>
+            <p className="text-meta text-muted-foreground/60">{t(lang, "noShopItems")}</p>
           </div>
         ) : (
           <div className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -134,7 +134,7 @@ export function ShopTab({
                       </div>
                     </div>
                   </div>
-                  {item.description && <p className="mb-3 text-xs text-muted-foreground line-clamp-2">{localizedDesc(item.description, lang)}</p>}
+                  {item.description && <p className="mb-3 text-meta line-clamp-2">{localizedDesc(item.description, lang)}</p>}
                   <div className="mt-auto flex items-center justify-between">
                     <span className="text-sm font-bold tabular-nums text-primary">{item.cost} 🍯</span>
                     <Button size="sm" onClick={() => onRedeem(item.id)} disabled={!canAfford || !inStock} className="gap-1.5 border border-primary/20 bg-primary/10 text-xs text-primary hover:bg-primary/15">

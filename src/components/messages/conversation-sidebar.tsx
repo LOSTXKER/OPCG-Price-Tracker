@@ -56,7 +56,7 @@ export function ConversationSidebar({
             <ArrowLeft className="size-4" />
           </Button>
         </Link>
-        <h1 className="text-sm font-semibold">แชท</h1>
+        <h1 className="text-h4">แชท</h1>
       </div>
 
       <div className="flex gap-1 border-b px-3 py-1.5">

@@ -1,6 +1,6 @@
 import { cronHandler } from "@/lib/api/cron-auth";
 import { prisma } from "@/lib/db";
-import { earnHoneyDirect } from "@/lib/honey";
+import { earnHoney, getHoneyMultiplier } from "@/lib/honey";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +17,10 @@ export const GET = cronHandler(async () => {
 
   const unresolved = await prisma.pricePrediction.findMany({
     where: { resolved: false, weekStart: prevWeek },
-    include: { card: { select: { latestPriceJpy: true } } },
+    include: {
+      card: { select: { latestPriceJpy: true } },
+      user: { select: { tier: true, tierExpiresAt: true } },
+    },
   });
 
   let resolved = 0;
@@ -38,10 +41,17 @@ export const GET = cronHandler(async () => {
     resolved++;
 
     if (correct && !pred.rewarded) {
-      await earnHoneyDirect(pred.userId, "PRICE_PREDICTION", 20, "Correct price prediction", {
-        predictionId: pred.id,
-        cardId: pred.cardId,
-      });
+      // Route through earnHoney so PRICE_PREDICTION picks up tier × seasonal
+      // multipliers per the central policy. Returns null if the user hits
+      // a daily/global cap, which is fine — we still mark `rewarded` so the
+      // record isn't retried indefinitely.
+      await earnHoney(
+        pred.userId,
+        "PRICE_PREDICTION",
+        "Correct price prediction",
+        { predictionId: pred.id, cardId: pred.cardId },
+        getHoneyMultiplier(pred.user.tier, pred.user.tierExpiresAt),
+      );
       await prisma.pricePrediction.update({
         where: { id: pred.id },
         data: { rewarded: true },

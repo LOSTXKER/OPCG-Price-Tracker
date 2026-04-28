@@ -240,7 +240,7 @@ export function ImageMatchClient() {
                   {card.nameEn ?? card.nameJp}
                 </span>
                 <RarityBadge rarity={card.rarity} size="sm" />
-                <span className="rounded bg-muted/50 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground">
+                <span className="rounded bg-muted/50 px-1.5 py-0.5 text-overlay font-mono text-muted-foreground">
                   {card.set.code}
                 </span>
                 {card.latestPriceJpy != null && (
@@ -254,7 +254,7 @@ export function ImageMatchClient() {
               <div className="flex items-start gap-4">
                 {/* Current image */}
                 <div className="shrink-0 space-y-1.5">
-                  <p className="text-[11px] font-medium text-muted-foreground">
+                  <p className="text-label text-muted-foreground">
                     Current (p{card.parallelIndex ?? "?"})
                   </p>
                   <div
@@ -285,7 +285,7 @@ export function ImageMatchClient() {
                         </div>
                       </>
                     ) : (
-                      <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
+                      <div className="flex h-full items-center justify-center text-meta">
                         N/A
                       </div>
                     )}
@@ -324,7 +324,7 @@ export function ImageMatchClient() {
                                 : "hover:bg-muted/60 hover:ring-primary/30 ring-1 ring-border/30",
                           )}
                         >
-                          <p className="mb-1 text-center font-mono text-[11px] font-medium">
+                          <p className="mb-1 text-center font-mono text-micro">
                             _p{c.pIndex}
                             {isActive && (
                               <Check className="ml-0.5 inline size-3 text-primary" />
@@ -332,7 +332,7 @@ export function ImageMatchClient() {
                           </p>
                           <div className="relative aspect-[63/88] w-[72px] overflow-hidden rounded bg-muted/20">
                             {isFailed ? (
-                              <div className="flex h-full items-center justify-center text-[10px] text-muted-foreground/60">
+                              <div className="flex h-full items-center justify-center text-overlay text-muted-foreground/60">
                                 N/A
                               </div>
                             ) : (

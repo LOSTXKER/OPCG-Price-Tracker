@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -6,6 +6,10 @@ import { useEffect, useState, useCallback } from "react";
 import { Loader2, Bookmark, Trash2, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { PageHeader } from "@/components/layout/page-header";
+import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { EmptyState } from "@/components/shared/empty-state";
+import { LoadingState } from "@/components/shared/loading-state";
 import { useUIStore } from "@/stores/ui-store";
 import { formatJpy, formatThb } from "@/lib/utils/currency";
 import { t } from "@/lib/i18n";
@@ -59,7 +63,7 @@ export default function SavedListingsPage() {
       setData(await res.json());
     } catch {
       setData(null);
-      setError("Failed to load saved listings");
+      setError(t(lang, "failedToLoad"));
     } finally {
       setLoading(false);
     }
@@ -83,50 +87,51 @@ export default function SavedListingsPage() {
 
   return (
     <div className="space-y-6">
-      <Breadcrumb
-        items={[
-          { label: t(lang, "home"), href: "/" },
-          { label: t(lang, "savedListings") },
-        ]}
+      <PageHeader
+        title={t(lang, "savedListingsTitle")}
+        description={t(lang, "savedListingsDesc").replace("{n}", String(data?.total ?? 0))}
+        breadcrumb={
+          <Breadcrumb
+            items={[
+              { label: t(lang, "home"), href: "/" },
+              { label: t(lang, "savedListings") },
+            ]}
+          />
+        }
       />
-      <div>
-        <h1 className="page-header">
-          รายการที่บันทึก
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          สินค้าที่คุณบันทึกไว้ ({data?.total ?? 0} รายการ)
-        </p>
-      </div>
 
       {loading ? (
-        <div className="flex min-h-[300px] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        </div>
+        <LoadingState variant="spinner" label={t(lang, "loading")} />
       ) : error ? (
-        <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
-          <p>{error}</p>
-          <button
-            type="button"
-            onClick={() => {
-              setError(null);
-              void fetchSaved();
-            }}
-            className="mt-1 text-xs font-medium underline"
-          >
-            ลองใหม่
-          </button>
-        </div>
+        <EmptyState
+          variant="error"
+          icon={Bookmark}
+          title={error}
+          action={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setError(null);
+                void fetchSaved();
+              }}
+            >
+              {t(lang, "retry")}
+            </Button>
+          }
+        />
       ) : !data || data.saved.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground">
-          <Bookmark className="mb-3 h-12 w-12 opacity-30" />
-          <p className="text-lg font-medium">ยังไม่มีรายการที่บันทึก</p>
-          <p className="mb-4 text-sm">
-            กดไอคอนบุ๊กมาร์กในหน้าสินค้าเพื่อบันทึก
-          </p>
-          <Button variant="outline" render={<Link href="/marketplace" />}>
-            เรียกดูตลาด
-          </Button>
-        </div>
+        <KumaEmptyState
+          variant="dashed"
+          icon={Bookmark}
+          title={t(lang, "savedEmptyTitle")}
+          description={t(lang, "savedEmptyDesc")}
+          action={
+            <Button variant="outline" render={<Link href="/marketplace" />}>
+              {t(lang, "browseMarketplace")}
+            </Button>
+          }
+        />
       ) : (
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -174,8 +179,8 @@ export default function SavedListingsPage() {
                         <div className="absolute inset-0 flex items-center justify-center bg-background/60">
                           <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
                             {listing.status === "SOLD"
-                              ? "ขายแล้ว"
-                              : "ไม่พร้อมขาย"}
+                              ? t(lang, "listingSold")
+                              : t(lang, "listingNotAvailable")}
                           </span>
                         </div>
                       )}
@@ -186,21 +191,21 @@ export default function SavedListingsPage() {
                       <p className="truncate text-sm font-medium">
                         {cardName}
                       </p>
-                      <p className="text-xs text-muted-foreground">
-                        {listing.card.cardCode} • {listing.card.rarity}
+                      <p className="text-meta">
+                        {listing.card.cardCode} โ€ข {listing.card.rarity}
                       </p>
                       <div className="mt-2 flex items-baseline justify-between">
                         <span className="font-bold">
                           {formatJpy(listing.priceJpy)}
                         </span>
                         {listing.priceThb != null && (
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-meta">
                             {formatThb(listing.priceThb)}
                           </span>
                         )}
                       </div>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {listing.user.displayName ?? "ผู้ขาย"} •{" "}
+                      <p className="mt-1 text-meta">
+                        {listing.user.displayName ?? t(lang, "seller")} •{" "}
                         {listing.condition}
                       </p>
                     </div>
@@ -218,10 +223,10 @@ export default function SavedListingsPage() {
                 disabled={page <= 1}
                 onClick={() => setPage(page - 1)}
               >
-                ก่อนหน้า
+                {t(lang, "previous")}
               </Button>
               <span className="text-sm text-muted-foreground">
-                หน้า {data.page} / {data.totalPages}
+                {t(lang, "paginationPageOf").replace("{page}", String(data.page)).replace("{total}", String(data.totalPages))}
               </span>
               <Button
                 variant="outline"
@@ -229,7 +234,7 @@ export default function SavedListingsPage() {
                 disabled={page >= data.totalPages}
                 onClick={() => setPage(page + 1)}
               >
-                ถัดไป
+                {t(lang, "next")}
               </Button>
             </div>
           )}

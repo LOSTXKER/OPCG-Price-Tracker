@@ -12,9 +12,11 @@ import {
 } from "recharts"
 import { Lock, Loader2, TrendingDown, TrendingUp } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { compactDisplayValue, formatDisplayValue, formatPct, type Currency } from "@/lib/utils/currency"
+import { compactDisplayValue, formatDisplayValue, type Currency } from "@/lib/utils/currency"
+import { formatPctSmart } from "@/lib/utils/format-pct-smart"
 import { useUIStore } from "@/stores/ui-store"
 import { getLocale, t } from "@/lib/i18n"
+import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
 
 const PERIODS = [
   { value: "24h", label: "24H", days: 1 },
@@ -24,6 +26,8 @@ const PERIODS = [
   { value: "1y", label: "1Y", days: 365 },
   { value: "all", label: "All", days: Infinity },
 ]
+
+export const CHART_PERIODS = PERIODS
 
 export type ChartSeriesDef = {
   id: string
@@ -108,7 +112,7 @@ function MultiSeriesTooltip(props: {
     if (!entry?.value) return null
     return (
       <div className="rounded-xl border border-border/50 bg-popover/95 px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
-        <p className="text-xs text-muted-foreground">
+        <p className="text-meta">
           {formatTooltipDate(label, locale, period)}
         </p>
         <p className="mt-1 font-price text-sm font-bold tabular-nums" style={{ color: s.color }}>
@@ -120,7 +124,7 @@ function MultiSeriesTooltip(props: {
 
   return (
     <div className="rounded-xl border border-border/50 bg-popover/95 px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
-      <p className="text-xs text-muted-foreground">
+      <p className="text-meta">
         {formatTooltipDate(label, locale, period)}
       </p>
       <div className="mt-1.5 space-y-1">
@@ -134,7 +138,7 @@ function MultiSeriesTooltip(props: {
                 className="inline-block size-2 rounded-full"
                 style={{ backgroundColor: s.color }}
               />
-              <span className="text-xs text-muted-foreground">{s.label}</span>
+              <span className="text-meta">{s.label}</span>
               <span className="ml-auto font-price text-sm font-bold tabular-nums" style={{ color: s.color }}>
                 {formatPrice(value)}
               </span>
@@ -160,6 +164,7 @@ export function PriceChart({
   const lang = useUIStore((s) => s.language)
   const locale = getLocale(lang)
   const chartId = useId().replace(/:/g, "")
+  const { openUpgradeDialog } = useUpgradeDialog()
 
   const visibleSeriesDefs = useMemo(
     () => series.filter((s) => visibleSeries.has(s.id)),
@@ -176,23 +181,35 @@ export function PriceChart({
     [displayCurrency],
   )
 
+  // Period suffix for stats label, e.g. "(30D)" or "(All)"
+  const periodLabel = useMemo(() => {
+    const def = PERIODS.find((p) => p.value === period)
+    if (!def) return ""
+    return def.value === "all" ? t(lang, "statsScopeAllTime") : def.label
+  }, [period, lang])
+
   return (
     <div className="space-y-4">
-      {/* Period selector */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-0.5 rounded-full border border-border/50 p-0.5">
           {PERIODS.map((p) => {
             const locked = maxDays != null && isFinite(maxDays) && p.days > maxDays
             return (
               <button
                 key={p.value}
-                onClick={() => !locked && onPeriodChange(p.value)}
-                disabled={loading || locked}
+                onClick={() => {
+                  if (locked) {
+                    openUpgradeDialog({ featureKey: "priceHistoryExtended" })
+                    return
+                  }
+                  onPeriodChange(p.value)
+                }}
+                disabled={loading}
                 title={locked ? t(lang, "upgradeToUnlock") : undefined}
                 className={cn(
                   "inline-flex items-center gap-0.5 rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums transition-all",
                   locked
-                    ? "cursor-not-allowed text-muted-foreground/40"
+                    ? "cursor-pointer text-muted-foreground/60 hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-400"
                     : period === p.value
                       ? "bg-background text-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground",
@@ -205,46 +222,9 @@ export function PriceChart({
           })}
         </div>
         {loading && (
-          <Loader2 className="size-4 animate-spin text-muted-foreground" />
+          <Loader2 className="size-4 shrink-0 animate-spin text-muted-foreground" />
         )}
       </div>
-
-      {/* Stats bar */}
-      {stats && (
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg bg-border/30 sm:grid-cols-4">
-          <div className="bg-background px-3 py-2">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground/70">High</p>
-            <p className="mt-0.5 font-price text-sm font-bold tabular-nums text-price-up">
-              {fmtPrice(stats.high)}
-            </p>
-          </div>
-          <div className="bg-background px-3 py-2">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground/70">Low</p>
-            <p className="mt-0.5 font-price text-sm font-bold tabular-nums text-price-down">
-              {fmtPrice(stats.low)}
-            </p>
-          </div>
-          <div className="bg-background px-3 py-2">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground/70">Avg</p>
-            <p className="mt-0.5 font-price text-sm font-bold tabular-nums text-foreground">
-              {fmtPrice(stats.avg)}
-            </p>
-          </div>
-          <div className="bg-background px-3 py-2">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground/70">Change</p>
-            <p className={cn(
-              "mt-0.5 flex items-center gap-1 font-price text-sm font-bold tabular-nums",
-              stats.change >= 0 ? "text-price-up" : "text-price-down",
-            )}>
-              {stats.change >= 0
-                ? <TrendingUp className="size-3" />
-                : <TrendingDown className="size-3" />
-              }
-              {stats.change >= 0 ? "+" : ""}{formatPct(stats.change)}%
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* Legend (only when multiple series) */}
       {visibleSeriesDefs.length > 1 && (
@@ -255,7 +235,7 @@ export function PriceChart({
                 className="inline-block size-2 rounded-full"
                 style={{ backgroundColor: s.color }}
               />
-              <span className="text-xs text-muted-foreground">{s.label}</span>
+              <span className="text-meta">{s.label}</span>
             </div>
           ))}
         </div>
@@ -356,6 +336,53 @@ export function PriceChart({
           </div>
         )}
       </div>
+
+      {/* Stats summary (under the chart) */}
+      {stats && (
+        <div className="rounded-xl border border-border/40 bg-muted/20 px-4 py-3">
+          {periodLabel && (
+            <p className="mb-2.5 text-eyebrow text-muted-foreground/70">
+              {t(lang, "statsScope").replace("{period}", periodLabel)}
+            </p>
+          )}
+          <div className="grid grid-cols-2 gap-y-3 sm:grid-cols-4 sm:gap-y-0 sm:divide-x sm:divide-border/40">
+            <div className="flex flex-col gap-0.5 px-1 sm:px-4 sm:first:pl-0">
+              <span className="text-meta">{t(lang, "statsHigh")}</span>
+              <span className="font-price text-base font-semibold tabular-nums text-price-up">
+                {fmtPrice(stats.high)}
+              </span>
+            </div>
+            <div className="flex flex-col gap-0.5 px-1 sm:px-4">
+              <span className="text-meta">{t(lang, "statsLow")}</span>
+              <span className="font-price text-base font-semibold tabular-nums text-price-down">
+                {fmtPrice(stats.low)}
+              </span>
+            </div>
+            <div className="flex flex-col gap-0.5 px-1 sm:px-4">
+              <span className="text-meta">{t(lang, "statsAvg")}</span>
+              <span className="font-price text-base font-semibold tabular-nums text-foreground">
+                {fmtPrice(stats.avg)}
+              </span>
+            </div>
+            <div className="flex flex-col gap-0.5 px-1 sm:px-4 sm:last:pr-0">
+              <span className="text-meta">{t(lang, "statsChange")}</span>
+              <span
+                className={cn(
+                  "flex items-center gap-1 font-price text-base font-semibold tabular-nums",
+                  stats.change >= 0 ? "text-price-up" : "text-price-down",
+                )}
+              >
+                {stats.change >= 0 ? (
+                  <TrendingUp className="size-3.5" />
+                ) : (
+                  <TrendingDown className="size-3.5" />
+                )}
+                {formatPctSmart(stats.change)}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -3,6 +3,7 @@ import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { triggerAchievementCheck } from "@/lib/honey";
 import { getWeekStart } from "@/lib/honey/utils";
 
 export const GET = apiHandler(async () => {
@@ -63,6 +64,8 @@ export const POST = apiHandler(async (request) => {
       weekStart,
     },
   });
+
+  triggerAchievementCheck(auth.user.id);
 
   return NextResponse.json({ prediction }, { status: 201 });
 });

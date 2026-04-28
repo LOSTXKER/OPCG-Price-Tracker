@@ -10,12 +10,16 @@ import { cn } from "@/lib/utils";
 import { formatRelativeAgo } from "@/lib/utils/relative-time";
 
 import type { SerializedReview } from "../types";
+import { TabSection } from "./tab-section";
 import { TabToolbar, type FilterChip, type SortOption } from "./tab-toolbar";
 
 type ReviewFilter = "all" | "5" | "4" | "3-";
 type ReviewSort = "recent" | "highest" | "lowest";
 
 const PAGE_SIZE = 8;
+const TOOLBAR_THRESHOLD = 4;
+const SHOWCASE_MIN_REVIEWS = 3;
+const SHOWCASE_MIN_RATING = 4;
 
 export function ReviewsTabContent({
   reviews,
@@ -64,19 +68,21 @@ export function ReviewsTabContent({
 
   if (total === 0) {
     return (
-      <div className="flex flex-col items-center gap-4 py-20 text-center">
-        <div className="flex size-14 items-center justify-center rounded-2xl bg-muted/60">
-          <Star className="size-7 text-muted-foreground/30" />
+      <TabSection title={t(lang, "tabReviews")}>
+        <div className="flex flex-col items-center gap-4 py-12 text-center">
+          <div className="flex size-14 items-center justify-center rounded-2xl bg-muted/60">
+            <Star className="size-7 text-muted-foreground/30" />
+          </div>
+          <p className="text-sm font-medium text-muted-foreground">{t(lang, "noReviews")}</p>
         </div>
-        <p className="text-sm font-medium text-muted-foreground">{t(lang, "noReviews")}</p>
-      </div>
+      </TabSection>
     );
   }
 
   // "Showcase-worthy" rating header only when the seller actually has a
   // strong score. For new/weak ratings, fall back to a subtle line so 1.0★
   // doesn't get a giant headline.
-  const showcase = avg >= 4 && total >= 3;
+  const showcase = avg >= SHOWCASE_MIN_RATING && total >= SHOWCASE_MIN_REVIEWS;
 
   const filters: FilterChip<ReviewFilter>[] = [
     { value: "all", label: t(lang, "filterAll") },
@@ -93,81 +99,89 @@ export function ReviewsTabContent({
 
   const visible = filteredSorted.slice(0, visibleCount);
   const hasMore = visibleCount < filteredSorted.length;
+  const showToolbar = total >= TOOLBAR_THRESHOLD;
+
+  // Compact meta line that always appears under the title — works for both
+  // showcase and quiet modes since the showcase block uses it as a quick
+  // sublabel before the bigger numerical readout below.
+  const metaLine = (
+    <span className="inline-flex items-center gap-1">
+      <Star className="size-3 fill-amber-400 text-amber-400" />
+      <span className="font-semibold tabular-nums text-foreground/80">
+        {avg.toFixed(1)}
+      </span>
+      <span>· {total.toLocaleString()} {t(lang, "tabReviews").toLowerCase()}</span>
+    </span>
+  );
 
   return (
-    <div className="space-y-5">
-      {showcase ? (
-        <div className="flex flex-col gap-5 rounded-2xl border border-border/40 bg-card/40 p-5 sm:flex-row sm:items-center">
-          <div className="flex shrink-0 flex-col items-center gap-1 sm:w-32">
-            <p className="text-4xl font-bold tabular-nums leading-none">
-              {avg.toFixed(1)}
-            </p>
-            <div className="flex gap-0.5">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <Star
-                  key={i}
-                  className={cn(
-                    "size-3.5",
-                    i <= Math.round(avg)
-                      ? "fill-amber-400 text-amber-400"
-                      : "text-muted-foreground/20",
-                  )}
-                />
-              ))}
+    <TabSection
+      title={t(lang, "tabReviews")}
+      meta={metaLine}
+      headerExtra={
+        showcase ? (
+          <div className="flex flex-col gap-4 rounded-xl border border-border/40 bg-background/60 p-4 sm:flex-row sm:items-center">
+            <div className="flex shrink-0 flex-col items-center gap-1 sm:w-32">
+              <p className="text-4xl font-bold tabular-nums leading-none">
+                {avg.toFixed(1)}
+              </p>
+              <div className="flex gap-0.5">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <Star
+                    key={i}
+                    className={cn(
+                      "size-3.5",
+                      i <= Math.round(avg)
+                        ? "fill-amber-400 text-amber-400"
+                        : "text-muted-foreground/20",
+                    )}
+                  />
+                ))}
+              </div>
+              <p className="text-meta">
+                {total.toLocaleString()} {t(lang, "tabReviews").toLowerCase()}
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground">
-              {total} {t(lang, "tabReviews").toLowerCase()}
-            </p>
-          </div>
-          {total >= 5 && (
-            <div className="flex-1 space-y-1.5">
-              {dist.map(({ star, pct, count }) => (
-                <div key={star} className="flex items-center gap-2 text-xs">
-                  <span className="w-3 tabular-nums text-muted-foreground">{star}</span>
-                  <Star className="size-3 fill-amber-400/70 text-amber-400/70" />
-                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted/60">
-                    <div
-                      className="h-full rounded-full bg-amber-400/80"
-                      style={{ width: `${pct}%` }}
-                    />
+            {total >= 5 && (
+              <div className="flex-1 space-y-1.5">
+                {dist.map(({ star, pct, count }) => (
+                  <div key={star} className="flex items-center gap-2 text-xs">
+                    <span className="w-3 tabular-nums text-muted-foreground">{star}</span>
+                    <Star className="size-3 fill-amber-400/70 text-amber-400/70" />
+                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted/60">
+                      <div
+                        className="h-full rounded-full bg-amber-400/80"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                    <span className="w-6 text-right tabular-nums text-muted-foreground">
+                      {count}
+                    </span>
                   </div>
-                  <span className="w-6 text-right tabular-nums text-muted-foreground">
-                    {count}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      ) : (
-        <p className="text-sm text-muted-foreground">
-          <span className="inline-flex items-center gap-1">
-            <Star className="size-3 fill-amber-400 text-amber-400" />
-            <span className="font-medium text-foreground/80 tabular-nums">
-              {avg.toFixed(1)}
-            </span>
-          </span>
-          <span className="ml-1.5">
-            · {total} {t(lang, "tabReviews").toLowerCase()}
-          </span>
-        </p>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : null
+      }
+    >
+      {showToolbar && (
+        <TabToolbar
+          filters={filters}
+          activeFilter={filter}
+          onFilter={(v) => {
+            setFilter(v);
+            setVisibleCount(PAGE_SIZE);
+          }}
+          sortOptions={sortOptions}
+          activeSort={sort}
+          onSort={(v) => {
+            setSort(v);
+            setVisibleCount(PAGE_SIZE);
+          }}
+          lang={lang}
+        />
       )}
-
-      <TabToolbar
-        filters={filters}
-        activeFilter={filter}
-        onFilter={(v) => {
-          setFilter(v);
-          setVisibleCount(PAGE_SIZE);
-        }}
-        sortOptions={sortOptions}
-        activeSort={sort}
-        onSort={(v) => {
-          setSort(v);
-          setVisibleCount(PAGE_SIZE);
-        }}
-        lang={lang}
-      />
 
       {filteredSorted.length === 0 ? (
         <p className="py-12 text-center text-sm text-muted-foreground">
@@ -211,7 +225,7 @@ export function ReviewsTabContent({
                     </p>
                   )}
                 </div>
-                <p className="mt-1 px-3.5 text-[11px] text-muted-foreground">
+                <p className="mt-1 px-3.5 text-meta">
                   {formatRelativeAgo(r.createdAt, lang)}
                 </p>
               </div>
@@ -231,6 +245,6 @@ export function ReviewsTabContent({
           </Button>
         </div>
       )}
-    </div>
+    </TabSection>
   );
 }

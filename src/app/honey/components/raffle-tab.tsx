@@ -1,21 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
+  ArrowRight,
   Calendar,
-  ChevronRight,
   Clock,
-  Flame,
   Gift,
   Package,
-  ShoppingBag,
   Ticket,
   Trophy,
   Users,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { t, type Language } from "@/lib/i18n";
+import { t, getLocale, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { RaffleData, RaffleWinner } from "../types";
 import { localizedTitle } from "../types";
@@ -120,14 +119,12 @@ export function RaffleTab({
         <p className="text-sm font-medium text-muted-foreground">
           {t(lang, "raffleNone")}
         </p>
-        <p className="text-xs text-muted-foreground/60">
+        <p className="text-meta text-muted-foreground/60">
           {t(lang, "raffleCheckBack")}
         </p>
       </div>
     );
   }
-
-  const firstMachine = machines[0];
 
   return (
     <div className="space-y-5">
@@ -143,10 +140,10 @@ export function RaffleTab({
       <div className="panel overflow-hidden">
         <div className="flex items-start justify-between gap-2 px-4 py-3.5">
           <div>
-            <h2 className="text-lg font-semibold">{t(lang, "monthlyRaffle")}</h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">{t(lang, "raffleMachineSubtitle")}</p>
+            <h2 className="text-h3">{t(lang, "monthlyRaffle")}</h2>
+            <p className="mt-0.5 text-meta">{t(lang, "raffleMachineSubtitle")}</p>
           </div>
-          <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1 text-xs text-muted-foreground">
+          <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1 text-meta">
             <Clock className="size-3" />
             <span className="font-mono tabular-nums">{countdown}</span>
           </div>
@@ -165,14 +162,14 @@ export function RaffleTab({
           const accent = machine.color ?? undefined;
           const drawDate = drawDateFromMonth(machine.month);
           const drawDateStr = drawDate.toLocaleDateString(
-            lang === "TH" ? "th-TH" : lang === "JP" ? "ja-JP" : "en-US",
+            getLocale(lang),
             { day: "numeric", month: "short", year: "numeric" },
           );
           const canUse = ticketBalance >= 1 && !full;
 
           return (
             <div key={machine.id} className="group/card block">
-              <div className="panel relative flex h-full flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+              <div className="panel relative flex h-full flex-col overflow-hidden transition-colors hover:bg-muted/20">
                 {/* Hero image */}
                 <div className="aspect-[4/3] w-full overflow-hidden bg-muted/20">
                   {machine.imageUrl ? (
@@ -198,7 +195,7 @@ export function RaffleTab({
                   </h3>
 
                   {machine.description && (
-                    <p className="mt-1 text-xs text-muted-foreground">
+                    <p className="mt-1 text-meta">
                       {machine.description}
                     </p>
                   )}
@@ -254,36 +251,36 @@ export function RaffleTab({
                   {/* Stats grid */}
                   <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 border-t border-border/30 pt-3">
                     <div>
-                      <p className="text-xs text-muted-foreground">{t(lang, "raffleDrawDate")}</p>
+                      <p className="text-meta">{t(lang, "raffleDrawDate")}</p>
                       <p className="flex items-center gap-1 text-xs font-semibold">
                         <Calendar className="size-3 text-muted-foreground" />
                         {drawDateStr}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground">{t(lang, "raffleMyTickets")}</p>
+                      <p className="text-meta">{t(lang, "raffleMyTickets")}</p>
                       <p className="text-xs font-semibold">{tix} / {machine.maxTickets}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground">{t(lang, "raffleTotalTickets")}</p>
+                      <p className="text-meta">{t(lang, "raffleTotalTickets")}</p>
                       <p className="text-xs font-semibold">{machine.totalTickets}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground">{t(lang, "raffleParticipants")}</p>
+                      <p className="text-meta">{t(lang, "raffleParticipants")}</p>
                       <p className="flex items-center gap-1 text-xs font-semibold">
                         <Users className="size-3 text-muted-foreground" />
                         {machine.totalParticipants}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground">{t(lang, "raffleWinChance")}</p>
+                      <p className="text-meta">{t(lang, "raffleWinChance")}</p>
                       <p className="text-xs font-semibold text-primary">{chance}%</p>
                     </div>
                   </div>
 
                   {/* Use ticket CTA */}
                   <div className="mt-3 border-t border-border/30 pt-3">
-                    <p className="mb-2 text-center text-xs text-muted-foreground">
+                    <p className="mb-2 text-center text-meta">
                       {t(lang, "raffleEntriesOutOf")
                         .replace("{my}", String(tix))
                         .replace("{total}", String(machine.totalTickets))}
@@ -294,7 +291,7 @@ export function RaffleTab({
                         <p className="text-xs font-semibold">
                           {t(lang, "raffleUseConfirm")}
                         </p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-meta">
                           {t(lang, "raffleUseConfirmDesc")
                             .replace("{remaining}", String(ticketBalance - 1))}
                         </p>
@@ -376,63 +373,42 @@ export function RaffleTab({
       )}
 
       {!canClaimFree && (
-        <div className="flex items-center gap-2 rounded-xl bg-muted/30 px-3.5 py-2.5 text-xs text-muted-foreground">
+        <div className="flex items-center gap-2 rounded-xl bg-muted/30 px-3.5 py-2.5 text-meta">
           <Gift className="size-3.5 text-rose-500/40" />
           {t(lang, "raffleFreeClaimed")}
         </div>
       )}
 
-      {/* How to get tickets */}
-      <div className="panel overflow-hidden">
-        <div className="border-b px-4 py-3.5">
-          <h2 className="text-lg font-semibold">{t(lang, "raffleHowToGet")}</h2>
-        </div>
-        <div className="divide-y divide-border/40">
-          {[
-            { icon: ShoppingBag, text: t(lang, "ticketMethodBuy") },
-            {
-              icon: Flame,
-              text: t(lang, "raffleStreakHint").replace(
-                "{days}",
-                String(firstMachine.freeThreshold),
-              ),
-            },
-            { icon: Gift, text: t(lang, "ticketMethodMission") },
-          ].map((item, i) => (
-            <div key={i} className="flex items-center gap-3.5 px-4 py-3.5">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                <item.icon className="size-4.5" />
-              </div>
-              <p className="min-w-0 flex-1 text-xs text-muted-foreground">
-                {item.text}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Past Winners */}
-      {lastWinners.length > 0 && (
-        <details className="group rounded-xl border">
-          <summary className="flex cursor-pointer items-center justify-between px-4 py-2.5 text-xs font-semibold text-muted-foreground">
-            {t(lang, "raffleWinner")}
-            <ChevronRight className="size-3.5 transition-transform group-open:rotate-90" />
-          </summary>
-          <div className="divide-y px-1 pb-1">
+      <div className="panel overflow-hidden">
+        <div className="flex items-center justify-between border-b px-4 py-3.5">
+          <h2 className="text-h3">{t(lang, "raffleWinner")}</h2>
+          <Link
+            href="/raffle/winners"
+            className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
+          >
+            {t(lang, "winnersViewAll")}
+            <ArrowRight className="size-3" />
+          </Link>
+        </div>
+        {lastWinners.length > 0 ? (
+          <div className="divide-y divide-border/40">
             {lastWinners.map((w, i) => (
-              <div key={i} className="flex items-center gap-2.5 px-3 py-2">
+              <div key={i} className="flex items-center gap-2.5 px-4 py-2.5">
                 <Trophy className="size-3.5 shrink-0 text-amber-500" />
                 <span className="truncate text-xs font-medium">
                   {w.displayName ?? t(lang, "anonymous")}
                 </span>
-                <span className="ml-auto shrink-0 text-xs text-muted-foreground">
+                <span className="ml-auto shrink-0 text-meta">
                   {w.month} — {w.prizeName}
                 </span>
               </div>
             ))}
           </div>
-        </details>
-      )}
+        ) : (
+          <p className="px-4 py-4 text-meta">{t(lang, "winnersEmpty")}</p>
+        )}
+      </div>
     </div>
   );
 }

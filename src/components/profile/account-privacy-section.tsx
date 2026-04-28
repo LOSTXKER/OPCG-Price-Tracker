@@ -123,7 +123,7 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
             <h3 className="text-sm font-semibold">{t(lang, "privacy")}</h3>
             <PrivacyFeedback field="profileVisibility" />
           </div>
-          <p className="mt-0.5 text-xs text-muted-foreground">{t(lang, "privacySubtitle")}</p>
+          <p className="mt-0.5 text-meta">{t(lang, "privacySubtitle")}</p>
         </div>
         <div className="flex items-center rounded-lg border border-border/40 p-0.5">
           {VISIBILITY_OPTIONS.map(({ value, labelKey, icon: Icon }) => {
@@ -225,7 +225,7 @@ function PrivacyGroup({ label, children }: { label: string; children: ReactNode 
   return (
     <div className="border-t border-border/30 first:border-t-0">
       <div className="px-5 pt-3 pb-1">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+        <p className="text-eyebrow text-muted-foreground/70">
           {label}
         </p>
       </div>
@@ -260,7 +260,7 @@ function PrivacyRow({
             <p className="truncate text-sm font-medium">{label}</p>
             {feedback}
           </div>
-          <p className="text-xs text-muted-foreground">{desc}</p>
+          <p className="text-meta">{desc}</p>
         </div>
       </div>
       <Toggle checked={checked} onChange={onChange} />

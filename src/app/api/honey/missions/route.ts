@@ -29,15 +29,17 @@ export const POST = apiHandler(async (request) => {
     path?: string;
     taskId?: string;
     shareCompleted?: boolean;
+    shareTarget?: string;
+    dwellMs?: number;
   }>(request);
   if (!parsed.ok) return parsed.response;
   const { action } = parsed.body;
 
   if (action === "track") {
-    const { task, shareCompleted } = parsed.body;
+    const { task, shareCompleted, shareTarget } = parsed.body;
     if (!task) return NextResponse.json({ error: "Invalid task" }, { status: 400 });
     try {
-      const mission = await trackMission(auth.user.id, task, { shareCompleted });
+      const mission = await trackMission(auth.user.id, task, { shareCompleted, shareTarget });
       return NextResponse.json({ mission: await serializeMission(mission) });
     } catch (e) {
       return NextResponse.json({ error: (e as Error).message }, { status: 400 });
@@ -45,9 +47,9 @@ export const POST = apiHandler(async (request) => {
   }
 
   if (action === "track-by-path") {
-    const { path } = parsed.body;
+    const { path, dwellMs } = parsed.body;
     if (!path) return NextResponse.json({ error: "Missing path" }, { status: 400 });
-    const mission = await trackMissionByPath(auth.user.id, path);
+    const mission = await trackMissionByPath(auth.user.id, path, { dwellMs });
     return NextResponse.json({ mission: await serializeMission(mission) });
   }
 

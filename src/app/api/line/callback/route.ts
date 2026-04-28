@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { requireAuthUser } from "@/lib/api/auth";
 import { serverEnv, clientEnv } from "@/lib/env";
 import { createLog } from "@/lib/logger";
+import { upsertNotificationPrefs } from "@/lib/users/notification-prefs";
 
 const log = createLog("api:line");
 
@@ -55,8 +56,9 @@ export const GET = apiHandler(async (request: NextRequest) => {
 
     await prisma.user.update({
       where: { id: user.id },
-      data: { lineUserId: profile.userId, lineAlerts: true },
+      data: { lineUserId: profile.userId },
     });
+    await upsertNotificationPrefs(user.id, { lineAlerts: true });
 
     return NextResponse.redirect(`${baseUrl}/profile?tab=notifications&line=connected`);
   } catch (err) {

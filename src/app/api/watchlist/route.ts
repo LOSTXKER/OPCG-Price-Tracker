@@ -3,106 +3,149 @@ import { apiHandler } from "@/lib/api/api-handler";
 import { cardInclude } from "@/lib/api/query-fragments";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
-import { createLog } from "@/lib/logger";
-import { effectiveTier, getLimits } from "@/lib/tier";
+import { triggerAchievementCheck } from "@/lib/honey";
+import { effectiveTier, getLimits } from "@/lib/billing";
+import { CreateWatchlistSchema } from "@/lib/watchlist/schemas";
 import { NextRequest, NextResponse } from "next/server";
 
-const log = createLog("api:watchlist");
+const NOTE_MAX = 280;
+
+function sanitizeNote(value: string | null | undefined): string | null | undefined {
+  if (value === undefined) return undefined;
+  if (value === null) return null;
+  const trimmed = value.trim();
+  if (trimmed.length === 0) return null;
+  return trimmed.slice(0, NOTE_MAX);
+}
+
+function sanitizeTargetPrice(value: number | null | undefined): number | null | undefined {
+  if (value === undefined) return undefined;
+  if (value === null) return null;
+  if (!Number.isFinite(value) || value <= 0) return null;
+  return Math.round(value);
+}
 
 export const GET = apiHandler(async () => {
-  try {
-    const auth = await requireAuthUser();
-    if (!auth.ok) return auth.response;
+  const auth = await requireAuthUser();
+  if (!auth.ok) return auth.response;
 
-    const items = await prisma.watchlistItem.findMany({
-      where: { userId: auth.user.id },
-      orderBy: { addedAt: "desc" },
-      include: { card: { include: cardInclude } },
+  const items = await prisma.watchlistItem.findMany({
+    where: { userId: auth.user.id },
+    orderBy: [
+      { pinnedAt: { sort: "desc", nulls: "last" } },
+      { addedAt: "desc" },
+    ],
+    include: { card: { include: cardInclude } },
+  });
+
+  const cardIds = items.map((i) => i.cardId);
+  const alertCardIds = new Set<number>();
+  if (cardIds.length > 0) {
+    const alerts = await prisma.priceAlert.findMany({
+      where: {
+        userId: auth.user.id,
+        cardId: { in: cardIds },
+        isActive: true,
+      },
+      select: { cardId: true },
     });
-
-    return NextResponse.json({ items });
-  } catch (error) {
-    log.error("GET /api/watchlist", error);
-    return NextResponse.json({ error: "Failed to load watchlist" }, { status: 500 });
+    for (const a of alerts) alertCardIds.add(a.cardId);
   }
+
+  const augmented = items.map((item) => ({
+    ...item,
+    hasActiveAlert: alertCardIds.has(item.cardId),
+  }));
+
+  return NextResponse.json({ items: augmented });
 });
 
 export const POST = apiHandler(async (request: NextRequest) => {
-  try {
-    const auth = await requireAuthUser();
-    if (!auth.ok) return auth.response;
+  const auth = await requireAuthUser();
+  if (!auth.ok) return auth.response;
 
-    const parsed = await parseJsonBody<{ cardId?: unknown }>(request);
-    if (!parsed.ok) return parsed.response;
+  const parsed = await parseJsonBody(request, CreateWatchlistSchema);
+  if (!parsed.ok) return parsed.response;
 
-    const cardId = typeof parsed.body.cardId === "number" ? parsed.body.cardId : Number(parsed.body.cardId);
-    if (!Number.isInteger(cardId) || cardId < 1) {
-      return NextResponse.json({ error: "Invalid cardId" }, { status: 400 });
-    }
+  const cardId = parsed.body.cardId;
 
-    const card = await prisma.card.findUnique({ where: { id: cardId } });
-    if (!card) {
-      return NextResponse.json({ error: "Card not found" }, { status: 404 });
-    }
+  const card = await prisma.card.findUnique({ where: { id: cardId } });
+  if (!card) {
+    return NextResponse.json({ error: "Card not found" }, { status: 404 });
+  }
 
-    const tier = effectiveTier(auth.user.tier, auth.user.tierExpiresAt);
-    const limits = getLimits(tier);
-    if (limits.watchlistCards !== Infinity) {
-      const alreadyExists = await prisma.watchlistItem.findUnique({
-        where: { userId_cardId: { userId: auth.user.id, cardId } },
-      });
-      if (!alreadyExists) {
-        const count = await prisma.watchlistItem.count({ where: { userId: auth.user.id } });
-        if (count >= limits.watchlistCards) {
-          return NextResponse.json(
-            { error: `Watchlist limit reached (${limits.watchlistCards})` },
-            { status: 403 }
-          );
-        }
+  const tier = effectiveTier(auth.user.tier, auth.user.tierExpiresAt);
+  const limits = getLimits(tier);
+  if (limits.watchlistCards !== Infinity) {
+    const alreadyExists = await prisma.watchlistItem.findUnique({
+      where: { userId_cardId: { userId: auth.user.id, cardId } },
+    });
+    if (!alreadyExists) {
+      const count = await prisma.watchlistItem.count({ where: { userId: auth.user.id } });
+      if (count >= limits.watchlistCards) {
+        return NextResponse.json(
+          { error: `Watchlist limit reached (${limits.watchlistCards})` },
+          { status: 403 }
+        );
       }
     }
-
-    const item = await prisma.watchlistItem.upsert({
-      where: {
-        userId_cardId: { userId: auth.user.id, cardId },
-      },
-      create: {
-        userId: auth.user.id,
-        cardId,
-      },
-      update: {},
-      include: { card: { include: cardInclude } },
-    });
-
-    return NextResponse.json({ item }, { status: 201 });
-  } catch (error) {
-    log.error("POST /api/watchlist", error);
-    return NextResponse.json({ error: "Failed to add to watchlist" }, { status: 500 });
   }
+
+  const note = sanitizeNote(parsed.body.note);
+  const targetPriceJpy = sanitizeTargetPrice(parsed.body.targetPriceJpy);
+
+  const item = await prisma.watchlistItem.upsert({
+    where: {
+      userId_cardId: { userId: auth.user.id, cardId },
+    },
+    create: {
+      userId: auth.user.id,
+      cardId,
+      ...(note !== undefined ? { note } : {}),
+      ...(targetPriceJpy !== undefined ? { targetPriceJpy } : {}),
+    },
+    update: {},
+    include: { card: { include: cardInclude } },
+  });
+
+  triggerAchievementCheck(auth.user.id);
+
+  return NextResponse.json({ item }, { status: 201 });
 });
 
 export const DELETE = apiHandler(async (request: NextRequest) => {
-  try {
-    const auth = await requireAuthUser();
-    if (!auth.ok) return auth.response;
+  const auth = await requireAuthUser();
+  if (!auth.ok) return auth.response;
 
-    const cardIdParam = request.nextUrl.searchParams.get("cardId");
-    const cardId = cardIdParam ? Number(cardIdParam) : NaN;
-    if (!Number.isInteger(cardId) || cardId < 1) {
-      return NextResponse.json({ error: "Query cardId is required and must be a positive integer" }, { status: 400 });
-    }
+  const params = request.nextUrl.searchParams;
+  const cardIdParam = params.get("cardId");
+  const cardIdsParam = params.get("cardIds");
 
-    const result = await prisma.watchlistItem.deleteMany({
-      where: { userId: auth.user.id, cardId },
-    });
-
-    if (result.count === 0) {
-      return NextResponse.json({ error: "Watchlist item not found" }, { status: 404 });
-    }
-
-    return NextResponse.json({ ok: true });
-  } catch (error) {
-    log.error("DELETE /api/watchlist", error);
-    return NextResponse.json({ error: "Failed to remove from watchlist" }, { status: 500 });
+  let cardIds: number[] = [];
+  if (cardIdsParam) {
+    cardIds = cardIdsParam
+      .split(",")
+      .map((s) => Number(s.trim()))
+      .filter((n) => Number.isInteger(n) && n > 0);
+  } else if (cardIdParam) {
+    const id = Number(cardIdParam);
+    if (Number.isInteger(id) && id > 0) cardIds = [id];
   }
+
+  if (cardIds.length === 0) {
+    return NextResponse.json(
+      { error: "Query cardId or cardIds is required and must be positive integer(s)" },
+      { status: 400 }
+    );
+  }
+
+  const result = await prisma.watchlistItem.deleteMany({
+    where: { userId: auth.user.id, cardId: { in: cardIds } },
+  });
+
+  if (result.count === 0) {
+    return NextResponse.json({ error: "Watchlist item not found" }, { status: 404 });
+  }
+
+  return NextResponse.json({ ok: true, removed: result.count });
 });

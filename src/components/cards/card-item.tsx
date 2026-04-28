@@ -11,9 +11,7 @@ import { PriceDisplay } from "@/components/shared/price-display"
 import { PriceUsd } from "@/components/shared/price-usd"
 import { Skeleton } from "@/components/ui/skeleton"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
-import { getCardName, t } from "@/lib/i18n"
-import { cn } from "@/lib/utils"
-import { formatPullPct } from "@/lib/utils/pull-rate"
+import { getCardName } from "@/lib/i18n"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { useUIStore } from "@/stores/ui-store"
 
@@ -36,7 +34,10 @@ export interface CardItemProps {
   changePeriod?: ChangePeriod
   setCode?: string
   inStock?: boolean
-  /** Pull probability per box (0-1 range) shown as overlay badge */
+  /**
+   * Pull probability per box (0-1 range). Currently unused — kept for
+   * back-compat with callers; the on-card overlay was removed.
+   */
   pullChancePerBox?: number
   psa10PriceUsd?: number | null
 }
@@ -47,7 +48,6 @@ function CardItemBase({
   nameEn,
   nameTh,
   rarity,
-  isParallel,
   imageUrl,
   priceJpy,
   priceThb,
@@ -56,8 +56,6 @@ function CardItemBase({
   priceChange30d,
   changePeriod = "7d",
   setCode,
-  inStock = true,
-  pullChancePerBox,
   psa10PriceUsd,
 }: CardItemProps) {
   const lang = useUIStore((s) => s.language)
@@ -68,7 +66,7 @@ function CardItemBase({
       href={`/cards/${cardCode}`}
       className="group/card block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-        <div className="panel relative flex h-full flex-col overflow-hidden border border-transparent transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-md">
+        <div className="panel relative flex h-full flex-col overflow-hidden border border-transparent transition-colors hover:border-border">
         {/* Image */}
         <div className="relative aspect-[63/88] w-full bg-muted">
           {imageUrl ? (
@@ -85,25 +83,7 @@ function CardItemBase({
             <Skeleton className="absolute inset-0 size-full" />
           )}
 
-          {/* Top-left pull chance badge */}
-          {pullChancePerBox != null && pullChancePerBox > 0 && (
-            <div className="absolute left-1 top-1">
-              <span className="rounded bg-black/70 px-1.5 py-0.5 font-mono text-xs font-semibold text-white backdrop-blur-sm">
-                {formatPullPct(pullChancePerBox)}
-              </span>
-            </div>
-          )}
-
-          {/* Top-right badges */}
-          {!inStock && (
-            <div className="absolute right-1.5 top-1.5">
-              <span className="rounded bg-destructive/90 px-1.5 py-0.5 text-xs font-medium text-white">
-                {t(lang, "outOfStock")}
-              </span>
-            </div>
-          )}
-
-          {/* Bottom-right compare button */}
+          {/* Bottom-right compare button — functional, surfaces on hover (desktop) */}
           <div className="absolute bottom-1.5 right-1.5 rounded-md bg-black/60 p-1 backdrop-blur-sm transition-opacity md:opacity-60 md:group-hover/card:opacity-100">
             <CompareButton
               item={{ cardCode, name: displayName, imageUrl: imageUrl ?? null, rarity }}
@@ -136,7 +116,7 @@ function CardItemBase({
             {psa10PriceUsd != null && (
               <div className="flex items-center gap-1 mt-0.5">
                 <Shield className="size-3 text-amber-500" />
-                <PriceUsd usd={psa10PriceUsd} className="text-xs text-muted-foreground" />
+                <PriceUsd usd={psa10PriceUsd} className="text-meta" />
               </div>
             )}
           </div>

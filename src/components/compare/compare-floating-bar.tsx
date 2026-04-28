@@ -51,7 +51,7 @@ export function CompareFloatingBar() {
                         sizes="43px"
                       />
                     ) : (
-                      <div className="flex h-full items-center justify-center text-[8px] text-muted-foreground">
+                      <div className="flex h-full items-center justify-center text-overlay text-muted-foreground">
                         {item.cardCode}
                       </div>
                     )}
@@ -63,7 +63,7 @@ export function CompareFloatingBar() {
                   >
                     <X className="size-2.5" />
                   </button>
-                  <p className="mt-0.5 w-[43px] truncate text-center text-xs text-muted-foreground">
+                  <p className="mt-0.5 w-[43px] truncate text-center text-meta">
                     {item.cardCode}
                   </p>
                 </div>
@@ -83,7 +83,7 @@ export function CompareFloatingBar() {
             <div className="ml-auto flex shrink-0 items-center gap-2">
               <button
                 onClick={clear}
-                className="text-xs text-muted-foreground hover:text-foreground"
+                className="text-meta hover:text-foreground"
               >
                 {t(lang, "clearAll")}
               </button>

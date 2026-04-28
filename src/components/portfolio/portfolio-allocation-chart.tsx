@@ -82,13 +82,13 @@ export function PortfolioAllocationChart({
         {/* Center label */}
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
           {isEmpty ? (
-            <p className="text-[11px] text-muted-foreground">{t(lang, "noData")}</p>
+            <p className="text-meta">{t(lang, "noData")}</p>
           ) : (
             <>
               <p className="font-price text-sm font-bold tabular-nums sm:text-base">
                 {formatJpyAmount(displayTotal, currency)}
               </p>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-overlay text-muted-foreground">
                 {data.length} {t(lang, "card")}
               </p>
             </>
@@ -99,7 +99,7 @@ export function PortfolioAllocationChart({
       <div className="min-w-0 flex-1 pt-2">
         {isEmpty ? (
           <div className="flex h-full flex-col justify-center">
-            <p className="text-xs text-muted-foreground">{t(lang, "noPortfolioDataDesc")}</p>
+            <p className="text-meta">{t(lang, "noPortfolioDataDesc")}</p>
           </div>
         ) : (
           <div className="space-y-2">

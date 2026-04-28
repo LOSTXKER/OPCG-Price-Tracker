@@ -39,10 +39,10 @@ interface PortfolioInsightsProps {
 }
 
 const KPI_CONFIG = [
-  { key: "totalCards" as const, icon: Layers, color: "text-blue-400" },
-  { key: "portfolioValue" as const, icon: TrendingUp, color: "text-emerald-400" },
-  { key: "avgPerCard" as const, icon: Calculator, color: "text-amber-400" },
-  { key: "topConcentration" as const, icon: Target, color: "text-rose-400" },
+  { key: "totalCards" as const, icon: Layers },
+  { key: "portfolioValue" as const, icon: TrendingUp },
+  { key: "avgPerCard" as const, icon: Calculator },
+  { key: "topConcentration" as const, icon: Target },
 ] as const
 
 export function PortfolioInsights({ history, allocation }: PortfolioInsightsProps) {
@@ -65,17 +65,15 @@ export function PortfolioInsights({ history, allocation }: PortfolioInsightsProp
 
   return (
     <div className="space-y-4">
-      {/* KPI cards with icons and accent */}
+      {/* KPI cards — minimal, matches hero language */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {KPI_CONFIG.map(({ key, icon: Icon, color }, i) => (
-          <div key={key} className="panel rounded-xl p-4">
+        {KPI_CONFIG.map(({ key, icon: Icon }, i) => (
+          <div key={key} className="panel rounded-xl p-4 ring-1 ring-border/30">
             <div className="flex items-center gap-1.5">
-              <Icon className={`size-3.5 ${color}`} />
-              <p className="text-[11px] font-medium text-muted-foreground">
-                {t(lang, key)}
-              </p>
+              <Icon className="size-3.5 text-muted-foreground/60" />
+              <p className="text-eyebrow">{t(lang, key)}</p>
             </div>
-            <p className={`mt-1 text-lg font-bold tabular-nums ${kpiIsPrice[i] ? "font-price" : ""}`}>
+            <p className={`mt-1.5 text-xl font-bold tabular-nums sm:text-2xl ${kpiIsPrice[i] ? "font-price" : ""}`}>
               {kpiValues[i]}
             </p>
           </div>
@@ -84,7 +82,7 @@ export function PortfolioInsights({ history, allocation }: PortfolioInsightsProp
 
       {/* History chart */}
       <div className="panel rounded-xl p-4 sm:p-5">
-        <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <p className="mb-4 text-eyebrow">
           {t(lang, "history")}
         </p>
         <PortfolioHistoryChart data={history} />
@@ -92,7 +90,7 @@ export function PortfolioInsights({ history, allocation }: PortfolioInsightsProp
 
       {/* Allocation + Holdings merged panel */}
       <div className="panel rounded-xl p-4 sm:p-5">
-        <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <p className="mb-4 text-eyebrow">
           {t(lang, "allocation")}
         </p>
         <div className="flex flex-col gap-5 lg:flex-row lg:gap-6">
@@ -104,7 +102,7 @@ export function PortfolioInsights({ history, allocation }: PortfolioInsightsProp
           {/* Holdings breakdown inline */}
           {allocation.length > 0 && (
             <div className="min-w-0 flex-1">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground lg:mt-0">
+              <p className="mb-2 text-eyebrow lg:mt-0">
                 {t(lang, "holdingsBreakdown")}
               </p>
               <div className="divide-y divide-border/20">
@@ -126,21 +124,21 @@ export function PortfolioInsights({ history, allocation }: PortfolioInsightsProp
                         className="size-10 rounded-md object-cover"
                       />
                     ) : (
-                      <div className="flex size-10 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground">
+                      <div className="flex size-10 items-center justify-center rounded-md bg-muted text-meta">
                         ?
                       </div>
                     )}
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{item.name}</p>
                       {item.cardCode && (
-                        <p className="text-[11px] text-muted-foreground">{item.cardCode}</p>
+                        <p className="text-meta">{item.cardCode}</p>
                       )}
                     </div>
                     <div className="text-right">
                       <p className="font-price text-sm font-semibold tabular-nums">
                         {formatJpyAmount(item.value, currency)}
                       </p>
-                      <p className="text-[11px] tabular-nums text-muted-foreground">
+                      <p className="text-meta tabular-nums">
                         {formatPct(item.percent)}%
                       </p>
                     </div>

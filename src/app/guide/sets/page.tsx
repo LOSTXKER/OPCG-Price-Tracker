@@ -139,7 +139,7 @@ export default async function GuideSetsPage() {
             { label: "ชุดการ์ด" },
           ]}
         />
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="text-h1">
           ชุดการ์ด (Sets)
         </h1>
         <p className="text-lg leading-relaxed text-muted-foreground">
@@ -204,7 +204,7 @@ export default async function GuideSetsPage() {
               >
                 {item.value}
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-meta">
                 {item.label}
               </p>
             </div>
@@ -325,7 +325,7 @@ export default async function GuideSetsPage() {
                       <p className="truncate text-sm font-medium">
                         {set.nameEn ?? set.name}
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-meta">
                         {set.code}
                         {set.releaseDate && (
                           <>
@@ -382,7 +382,7 @@ export default async function GuideSetsPage() {
               >
                 <div className="min-w-0 flex-1">
                   <p className="font-medium">{src.label}</p>
-                  <p className="text-xs text-muted-foreground">{src.desc}</p>
+                  <p className="text-meta">{src.desc}</p>
                 </div>
                 <ArrowRight className="size-4 shrink-0 text-muted-foreground/40" />
               </Link>
@@ -396,7 +396,7 @@ export default async function GuideSetsPage() {
               >
                 <div className="min-w-0 flex-1">
                   <p className="font-medium">{src.label}</p>
-                  <p className="text-xs text-muted-foreground">{src.desc}</p>
+                  <p className="text-meta">{src.desc}</p>
                 </div>
                 <ExternalLink className="size-4 shrink-0 text-muted-foreground/40" />
               </a>

@@ -72,7 +72,7 @@ export default function AdminLoginPage() {
             />
           </div>
           <div className="text-center">
-            <h1 className="text-xl font-bold tracking-tight text-white">
+            <h1 className="text-h1 text-white">
               Admin Panel
             </h1>
             <p className="mt-1 text-sm text-zinc-500">

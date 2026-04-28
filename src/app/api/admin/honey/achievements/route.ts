@@ -2,6 +2,7 @@
 import { parseJsonBody } from "@/lib/api/admin-helpers";
 import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
+import { AchievementCriteriaSchema } from "@/lib/honey/schemas";
 
 export const GET = adminApiHandler(async (_req: NextRequest, _admin) => {
   const achievements = await prisma.achievement.findMany({
@@ -29,6 +30,14 @@ export const POST = adminApiHandler(async (request: NextRequest, _admin) => {
     return NextResponse.json({ error: "code and name required" }, { status: 400 });
   }
 
+  const criteriaParsed = AchievementCriteriaSchema.safeParse(body.criteria);
+  if (!criteriaParsed.success) {
+    return NextResponse.json(
+      { error: "Invalid criteria", details: criteriaParsed.error.format() },
+      { status: 400 },
+    );
+  }
+
   const achievement = await prisma.achievement.create({
     data: {
       code: body.code,
@@ -36,7 +45,7 @@ export const POST = adminApiHandler(async (request: NextRequest, _admin) => {
       nameEn: body.nameEn ?? null,
       nameTh: body.nameTh ?? null,
       description: body.description ?? null,
-      criteria: body.criteria as object,
+      criteria: criteriaParsed.data,
       honeyReward: body.honeyReward ?? 0,
       badgeImageUrl: body.badgeImageUrl ?? null,
     },

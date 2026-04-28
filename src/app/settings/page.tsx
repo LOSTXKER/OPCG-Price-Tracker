@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/layout/page-header";
 import { useProfileData } from "@/components/profile/profile-data-context";
 import { SectionAccount } from "@/components/profile/section-account";
 import { getTierConfig } from "@/components/profile/profile-types";
@@ -31,9 +32,7 @@ export default function SettingsIndexPage() {
     <>
       {/* ── Mobile: iOS-style menu ── */}
       <div className="space-y-6 md:hidden">
-        <h1 className="page-header">
-          {t(lang, "profileSettings")}
-        </h1>
+        <PageHeader title={t(lang, "profileSettings")} className="mb-0" />
 
         {/* User card */}
         <Link
@@ -54,7 +53,7 @@ export default function SettingsIndexPage() {
               <Badge className={cn("text-xs font-semibold", tierCfg.color)}>
                 {tierCfg.label}
               </Badge>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-meta">
                 {t(lang, "viewPublicProfile")}
               </span>
             </div>
@@ -64,7 +63,7 @@ export default function SettingsIndexPage() {
 
         {/* General group */}
         <div className="space-y-1.5">
-          <p className="px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <p className="px-1 text-eyebrow">
             {t(lang, "settingsGeneral")}
           </p>
           <div className="overflow-hidden rounded-xl border border-border/40 bg-card">
@@ -95,7 +94,7 @@ export default function SettingsIndexPage() {
         {/* More group */}
         {moreSections.length > 0 && (
           <div className="space-y-1.5">
-            <p className="px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <p className="px-1 text-eyebrow">
               {t(lang, "settingsMore")}
             </p>
             <div className="overflow-hidden rounded-xl border border-border/40 bg-card">

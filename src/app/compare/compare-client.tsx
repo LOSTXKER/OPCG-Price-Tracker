@@ -5,8 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  ArrowDown,
-  ArrowUp,
   ChartLine,
   Info,
   Lock,
@@ -18,6 +16,7 @@ import {
 } from "lucide-react";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { PageHeader } from "@/components/layout/page-header";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import { CardPickerModal } from "@/components/compare/card-picker-modal";
 import { useCompareStore } from "@/stores/compare-store";
@@ -25,10 +24,17 @@ import { useUIStore } from "@/stores/ui-store";
 import { getCardName, t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { MAX_COMPARE } from "@/lib/constants/prices";
-import { useCompareData, type CompareCard } from "@/hooks/use-compare-data";
+import { formatJpy } from "@/lib/utils/currency";
+import { useCompareData } from "@/hooks/use-compare-data";
 import { useTierLimits } from "@/hooks/use-tier-limits";
 import { LimitCounter } from "@/components/shared/limit-counter";
-import { UpgradeBadge } from "@/components/shared/upgrade-badge";
+import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
+import {
+  ChangeChip,
+  NumericCell,
+  SectionHeader,
+  SpecRow,
+} from "./_components/compare-table-cells";
 
 const CompareChart = lazy(() =>
   import("./compare-chart").then((m) => ({ default: m.CompareChart }))
@@ -70,6 +76,7 @@ export default function CompareClient() {
   const [pickerOpen, setPickerOpen] = useState(false);
   const { limits } = useTierLimits();
   const tierMax = isFinite(limits.compareCards) ? limits.compareCards : MAX_COMPARE;
+  const { openUpgradeDialog } = useUpgradeDialog();
 
   const codes = useMemo(
     () => storeItems.map((i) => i.cardCode),
@@ -92,32 +99,34 @@ export default function CompareClient() {
 
   return (
     <div className="space-y-6">
-      <Breadcrumb
-        items={[
-          { label: t(lang, "home"), href: "/" },
-          { label: t(lang, "compareCards") },
-        ]}
-      />
-      {/* ── Header ── */}
-      <div className="flex items-center gap-3">
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-          <Scale className="size-4" />
-        </div>
-        <h1 className="page-header flex items-center gap-2">
-          {t(lang, "compareCards")}
-          {isFinite(limits.compareCards) && (
+      <PageHeader
+        icon={Scale}
+        title={t(lang, "compareCards")}
+        breadcrumb={
+          <Breadcrumb
+            items={[
+              { label: t(lang, "home"), href: "/" },
+              { label: t(lang, "compareCards") },
+            ]}
+          />
+        }
+        badge={
+          isFinite(limits.compareCards) ? (
             <LimitCounter current={codes.length} max={limits.compareCards} />
-          )}
-        </h1>
-        {codes.length > 0 && (
-          <button
-            onClick={clearStore}
-            className="ml-auto text-xs text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {t(lang, "clearAll")}
-          </button>
-        )}
-      </div>
+          ) : undefined
+        }
+        actions={
+          codes.length > 0 ? (
+            <button
+              onClick={clearStore}
+              className="text-meta transition-colors hover:text-foreground"
+            >
+              {t(lang, "clearAll")}
+            </button>
+          ) : undefined
+        }
+      />
+
 
       {/* ── Empty state ── */}
       {codes.length === 0 && !loading && (
@@ -167,7 +176,7 @@ export default function CompareClient() {
                                 sizes="122px"
                               />
                             ) : (
-                              <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
+                              <div className="flex h-full items-center justify-center text-meta">
                                 {card.cardCode}
                               </div>
                             )}
@@ -233,7 +242,7 @@ export default function CompareClient() {
                           )}
                         >
                           {card.currentPrice != null
-                            ? `¥${card.currentPrice.toLocaleString()}`
+                            ? formatJpy(card.currentPrice)
                             : "—"}
                         </span>
                       </div>
@@ -345,7 +354,7 @@ export default function CompareClient() {
             <div className="flex size-6 items-center justify-center rounded-md bg-muted text-muted-foreground">
               <ChartLine className="size-3.5" />
             </div>
-            <h2 className="text-lg font-semibold">
+            <h2 className="text-h3">
               {t(lang, "comparePriceChart")}
             </h2>
             {hasChart && (
@@ -376,14 +385,17 @@ export default function CompareClient() {
 
           {chartLocked && (
             <div className="flex flex-col items-center gap-3 px-4 py-10 text-center">
-              <Lock className="size-8 text-muted-foreground/30" />
-              <p className="text-xs text-muted-foreground/70">Pro</p>
-              <Link
-                href="/pricing"
+              <Lock className="size-8 text-amber-500/60" />
+              <p className="text-meta font-semibold text-foreground">
+                {t(lang, "upgradeToUnlock")}
+              </p>
+              <button
+                type="button"
+                onClick={() => openUpgradeDialog({ featureKey: "comparePlus" })}
                 className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 {t(lang, "subscribe")}
-              </Link>
+              </button>
             </div>
           )}
         </div>
@@ -403,137 +415,3 @@ export default function CompareClient() {
   );
 }
 
-/* ─── Sub-components ─── */
-
-function SectionHeader({
-  icon,
-  label,
-  colSpan,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  colSpan: number;
-}) {
-  return (
-    <tr>
-      <td colSpan={colSpan} className="border-t border-border/60 px-4 pb-1 pt-4">
-        <div className="flex items-center gap-2">
-          <span className="flex size-5 items-center justify-center rounded-md bg-muted text-muted-foreground">
-            {icon}
-          </span>
-          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            {label}
-          </span>
-        </div>
-      </td>
-    </tr>
-  );
-}
-
-function SpecRow<T extends CompareCard>({
-  label,
-  cards,
-  children,
-  showAddSlot,
-  odd,
-  highlight,
-  getValue,
-}: {
-  label: string;
-  cards: T[];
-  children: (card: T, isHighlight: boolean) => React.ReactNode;
-  showAddSlot: boolean;
-  odd?: boolean;
-  highlight?: "min" | "max";
-  getValue?: (card: T) => number | null | undefined;
-}) {
-  const highlightIndices = useMemo(() => {
-    if (!highlight || !getValue) return new Set<number>();
-    const values = cards.map((c) => getValue(c) ?? null);
-    const valid = values.filter((v): v is number => v != null);
-    if (valid.length < 2) return new Set<number>();
-    const target =
-      highlight === "max" ? Math.max(...valid) : Math.min(...valid);
-    const indices = new Set<number>();
-    values.forEach((v, i) => {
-      if (v === target) indices.add(i);
-    });
-    return indices;
-  }, [cards, highlight, getValue]);
-
-  return (
-    <tr className={odd ? "bg-muted/20" : ""}>
-      <td
-        className="sticky left-0 z-10 w-[120px] px-4 py-2.5 text-xs font-medium text-muted-foreground md:w-[140px]"
-        style={{ backgroundColor: "inherit" }}
-      >
-        {label}
-      </td>
-      {cards.map((card, i) => (
-        <td key={card.cardCode} className="px-3 py-2.5 text-center">
-          {children(card, highlightIndices.has(i))}
-        </td>
-      ))}
-      {showAddSlot && <td />}
-    </tr>
-  );
-}
-
-function NumericCell({
-  value,
-  highlight,
-  format,
-}: {
-  value: number | null | undefined;
-  highlight?: boolean;
-  format?: boolean;
-}) {
-  if (value == null) {
-    return <span className="text-xs text-muted-foreground/50">—</span>;
-  }
-  return (
-    <span
-      className={cn(
-        "inline-block text-sm font-medium tabular-nums",
-        highlight &&
-          "rounded bg-primary/10 px-1.5 py-0.5 font-semibold text-primary"
-      )}
-    >
-      {format ? value.toLocaleString() : value}
-    </span>
-  );
-}
-
-function ChangeChip({
-  label,
-  value,
-}: {
-  label: string;
-  value: number | null | undefined;
-}) {
-  if (value == null) {
-    return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-        {label} —
-      </span>
-    );
-  }
-  const up = value >= 0;
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums",
-        up
-          ? "bg-price-up/10 text-price-up"
-          : "bg-destructive/10 text-destructive"
-      )}
-    >
-      {up ? (
-        <ArrowUp className="size-2.5" />
-      ) : (
-        <ArrowDown className="size-2.5" />
-      )}
-      {label} {Math.abs(value).toFixed(1)}%
-    </span>
-  );
-}

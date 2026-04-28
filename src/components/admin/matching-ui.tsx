@@ -57,7 +57,7 @@ export function CardThumb({
           unoptimized
         />
       ) : (
-        <span className="flex h-full items-center justify-center text-[8px] text-muted-foreground">
+        <span className="flex h-full items-center justify-center text-overlay text-muted-foreground">
           N/A
         </span>
       )}
@@ -133,7 +133,7 @@ export function CandidatePicker({
   onZoom?: (card: MatchingCard) => void;
 }) {
   if (candidates.length === 0)
-    return <span className="text-xs text-muted-foreground">ไม่พบ candidate</span>;
+    return <span className="text-meta">ไม่พบ candidate</span>;
 
   return (
     <div className="flex flex-col gap-1">
@@ -177,7 +177,7 @@ export function CandidatePicker({
           )}
           <div className="min-w-0">
             <p className="font-mono text-xs font-bold">{c.cardCode}</p>
-            <p className="text-xs text-muted-foreground truncate">
+            <p className="text-meta truncate">
               {c.nameJp}
             </p>
             <RarityBadge rarity={c.rarity} size="sm" />

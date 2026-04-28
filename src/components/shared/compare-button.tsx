@@ -19,9 +19,17 @@ export function CompareButton({
 }) {
   const lang = useUIStore((s) => s.language)
   const selected = useCompareStore((s) => s.items.some((i) => i.cardCode === item.cardCode))
+  const totalSelected = useCompareStore((s) => s.items.length)
   const toggle = useCompareStore((s) => s.toggle)
 
   if (variant === "label") {
+    const baseLabel = selected
+      ? t(lang, "removeFromCompare")
+      : t(lang, "addToCompare")
+    const showCount = !selected && totalSelected > 0
+    const label = showCount
+      ? t(lang, "compareWithCount").replace("{n}", String(totalSelected))
+      : baseLabel
     return (
       <button
         type="button"
@@ -34,12 +42,14 @@ export function CompareButton({
           "inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all duration-200 active:scale-95",
           selected
             ? "border-primary/40 bg-primary/10 text-primary"
-            : "border-border text-muted-foreground hover:border-primary/40 hover:bg-primary/5 hover:text-primary",
+            : showCount
+              ? "border-primary/40 bg-primary/5 text-primary"
+              : "border-border text-muted-foreground hover:border-primary/40 hover:bg-primary/5 hover:text-primary",
           className
         )}
       >
         {selected ? <Check className="size-3.5" /> : <Scale className="size-3.5" />}
-        {selected ? t(lang, "removeFromCompare") : t(lang, "addToCompare")}
+        {label}
       </button>
     )
   }

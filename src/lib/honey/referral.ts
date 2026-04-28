@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { earnHoney, earnHoneyDirect } from ".";
+import { earnHoney, getHoneyMultiplier } from ".";
 import { startOfToday } from "./utils";
 import { randomBytes } from "crypto";
 
@@ -79,8 +79,15 @@ export async function recordReferralClick(
 
 /**
  * Process referral conversion when a new user signs up via a referral code.
- * Grants 100 Honey to the referrer and 50 Honey to the new user.
- * Returns false if the code is invalid or the reward was already granted.
+ * Grants the REFERRAL bonus to the referrer (150 honey × tier × seasonal)
+ * and the REFERRAL_WELCOME bonus to the new user (30 honey × tier × seasonal).
+ * Returns false if the code is invalid or either reward was already granted.
+ *
+ * Race-safe: each grant carries a deterministic idempotency key
+ * (`referral:<referrerId>:<newUserId>` and
+ * `referral-welcome:<newUserId>`). The unique constraint on
+ * `HoneyTransaction.idempotencyKey` collapses concurrent retries to a
+ * single ledger row even if the check-then-act window overlaps.
  */
 export async function processReferralConversion(
   newUserId: string,
@@ -88,28 +95,42 @@ export async function processReferralConversion(
 ): Promise<boolean> {
   const referrer = await prisma.user.findFirst({
     where: { referralCode },
-    select: { id: true },
+    select: { id: true, tier: true, tierExpiresAt: true },
   });
   if (!referrer || referrer.id === newUserId) return false;
 
-  const alreadyRewarded = await prisma.honeyTransaction.findFirst({
-    where: {
-      userId: referrer.id,
-      type: "REFERRAL",
-      metadata: { path: ["referredUserId"], equals: newUserId },
-    },
-  });
-  if (alreadyRewarded) return false;
+  const result = await earnHoney(
+    referrer.id,
+    "REFERRAL",
+    "Referral: new user signed up",
+    { referredUserId: newUserId, referralCode },
+    getHoneyMultiplier(referrer.tier, referrer.tierExpiresAt),
+    { idempotencyKey: `referral:${referrer.id}:${newUserId}` },
+  );
 
-  await earnHoney(referrer.id, "REFERRAL", "Referral: new user signed up", {
-    referredUserId: newUserId,
-    referralCode,
-  });
+  // earned === 0 here means a parallel signup-flow already paid the
+  // referrer (or the cap clamped to 0); stop so we don't double-grant
+  // the welcome bonus on a retry.
+  if (!result || result.earned === 0) return false;
 
-  await earnHoneyDirect(newUserId, "REFERRAL", 50, "Welcome bonus: signed up via referral", {
-    referrerId: referrer.id,
-    referralCode,
+  // Route the referee's welcome bonus through `earnHoney("REFERRAL_WELCOME")`
+  // so it picks up tier × seasonal like the rest of the engagement table.
+  // We look up the new user's tier separately so a fresh-from-trial user
+  // still benefits from any seasonal event running at signup time.
+  const newUser = await prisma.user.findUnique({
+    where: { id: newUserId },
+    select: { tier: true, tierExpiresAt: true },
   });
+  if (newUser) {
+    await earnHoney(
+      newUserId,
+      "REFERRAL_WELCOME",
+      "Welcome bonus: signed up via referral",
+      { referrerId: referrer.id, referralCode },
+      getHoneyMultiplier(newUser.tier, newUser.tierExpiresAt),
+      { idempotencyKey: `referral-welcome:${newUserId}` },
+    );
+  }
 
   return true;
 }

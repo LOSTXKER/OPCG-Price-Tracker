@@ -136,7 +136,7 @@ export function LoginClient() {
             </div>
 
             <div className="space-y-2 text-center">
-              <h1 className="text-2xl font-bold tracking-tight">{t(lang, "login")}</h1>
+              <h1 className="text-h1">{t(lang, "login")}</h1>
               <p className="text-sm text-muted-foreground">
                 {t(lang, "loginSubtitle")}
               </p>
@@ -231,7 +231,7 @@ export function LoginClient() {
               <div className="flex justify-end">
                 <Link
                   href="/forgot-password"
-                  className="text-xs text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+                  className="text-meta underline-offset-4 hover:text-primary hover:underline"
                 >
                   {t(lang, "forgotPassword")}
                 </Link>

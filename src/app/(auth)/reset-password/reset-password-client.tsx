@@ -67,7 +67,7 @@ export function ResetPasswordClient() {
         </div>
 
         <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-bold tracking-tight">{t(lang, "resetPasswordTitle")}</h1>
+          <h1 className="text-h1">{t(lang, "resetPasswordTitle")}</h1>
           <p className="text-sm text-muted-foreground">{t(lang, "resetPasswordDesc")}</p>
         </div>
 

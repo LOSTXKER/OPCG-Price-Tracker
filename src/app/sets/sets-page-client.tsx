@@ -17,6 +17,9 @@ import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Price } from "@/components/shared/price-inline";
 import { FormattedDate } from "@/components/shared/formatted-date";
+import { PageHeader } from "@/components/layout/page-header";
+import { Surface } from "@/components/ui/surface";
+import { EmptyState } from "@/components/shared/empty-state";
 
 export type SetWithCard = {
   id: number;
@@ -61,14 +64,12 @@ export function SetsPageHeader({
 }) {
   const lang = useUIStore((s) => s.language);
   return (
-    <div>
-      <h1 className="page-header">
-        {t(lang, "setsTitle")}
-      </h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        {t(lang, "setsDesc")}
-      </p>
-      <p className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+    <PageHeader
+      title={t(lang, "setsTitle")}
+      description={t(lang, "setsDesc")}
+      className="mb-3"
+    >
+      <p className="mt-3 flex flex-wrap items-center gap-3 text-meta">
         <span className="font-semibold text-foreground">
           {totalSets} {t(lang, "setCount")}
         </span>
@@ -80,21 +81,21 @@ export function SetsPageHeader({
           </span>
         </span>
       </p>
-    </div>
+    </PageHeader>
   );
 }
 
 export function HighestValueSetLabel() {
   const lang = useUIStore((s) => s.language);
   return (
-    <h2 className="text-lg font-semibold">{t(lang, "highestValueSet")}</h2>
+    <h2 className="text-h3">{t(lang, "highestValueSet")}</h2>
   );
 }
 
 export function CardCountLabel({ count }: { count: number }) {
   const lang = useUIStore((s) => s.language);
   return (
-    <span className="shrink-0 text-xs text-muted-foreground">
+    <span className="shrink-0 text-meta">
       {count} {t(lang, "cardsCount")}
     </span>
   );
@@ -175,10 +176,10 @@ export function SetsListClient({
 
       {/* Top 5 most valuable */}
       {showMostValuable && mostValuable.length > 0 && (
-        <section className="panel overflow-hidden">
+        <Surface as="section" variant="panel" padding="none" className="overflow-hidden">
           <div className="flex items-center gap-2.5 border-b border-border/40 px-5 py-3.5">
-            <div className="flex size-7 items-center justify-center rounded-lg bg-amber-500/10">
-              <Crown className="size-3.5 text-amber-600 dark:text-amber-400" />
+            <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10">
+              <Crown className="size-3.5 text-primary" />
             </div>
             <HighestValueSetLabel />
           </div>
@@ -192,7 +193,10 @@ export function SetsListClient({
                   className="group flex items-center gap-4 px-5 py-3.5 transition-colors hover:bg-muted/30"
                 >
                   <span
-                    className={`flex size-7 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold ${i < 3 ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground"}`}
+                    className={cn(
+                      "flex size-7 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold",
+                      i < 3 ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground",
+                    )}
                   >
                     {i + 1}
                   </span>
@@ -225,14 +229,12 @@ export function SetsListClient({
               );
             })}
           </div>
-        </section>
+        </Surface>
       )}
 
       {/* Sets grouped by type */}
       {filtered.length === 0 ? (
-        <div className="py-12 text-center text-sm text-muted-foreground">
-          {t(lang, "noCardsFound")}
-        </div>
+        <EmptyState variant="dashed" title={t(lang, "noCardsFound")} />
       ) : (
         <div className="space-y-12">
           {TYPE_ORDER.map((type) => {
@@ -245,7 +247,7 @@ export function SetsListClient({
                   <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
                     <TypeIcon className="size-4 text-primary" />
                   </div>
-                  <h2 className="text-lg font-semibold tracking-tight">
+                  <h2 className="text-h3 tracking-tight">
                     {TYPE_LABEL[type]}
                   </h2>
                   <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold tabular-nums text-muted-foreground">
@@ -276,7 +278,7 @@ function SetCard({ set }: { set: SetWithCard }) {
       href={`/sets/${set.code}`}
       className="group block w-[56vw] shrink-0 snap-start sm:w-auto sm:shrink"
     >
-      <div className="panel flex h-full flex-col overflow-hidden transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+      <div className="panel flex h-full flex-col overflow-hidden transition-colors hover:bg-muted/20">
         <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted/20">
           {imageUrl ? (
             <Image
@@ -304,7 +306,7 @@ function SetCard({ set }: { set: SetWithCard }) {
           </p>
 
           <div className="mt-auto flex items-center justify-between gap-2 pt-1.5">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1.5 text-meta">
               <CardCountLabel count={set.productCardCount} />
               {set.releaseDate && (
                 <>

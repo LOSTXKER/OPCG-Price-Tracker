@@ -32,7 +32,7 @@ export function ProfileSellerCard({ stats }: { stats: SellerStats }) {
           {t(lang, "sellerCredentials")}
         </div>
         {stats.isVerified && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2 py-0.5 text-[11px] font-medium text-blue-600 dark:text-blue-400">
+          <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2 py-0.5 text-micro text-blue-600 dark:text-blue-400">
             <BadgeCheck className="size-3" />
             {t(lang, "sellerVerified")}
           </span>
@@ -68,7 +68,7 @@ export function ProfileSellerCard({ stats }: { stats: SellerStats }) {
           </div>
           <div className="mt-2 flex items-start gap-2">
             <Avatar className="size-7 shrink-0">
-              <AvatarFallback className="text-[10px]">
+              <AvatarFallback className="text-overlay">
                 {(stats.topReview.reviewerName ?? "?").slice(0, 1).toUpperCase()}
               </AvatarFallback>
             </Avatar>
@@ -122,9 +122,9 @@ function SellerStat({
       <Icon className={cn("mx-auto mb-1 size-3.5 text-muted-foreground/60", iconClass)} />
       <p className={cn("font-bold tabular-nums leading-none", smallValue ? "text-xs" : "text-lg")}>
         {value}
-        {subValue && <span className="ml-1 text-[10px] font-normal text-muted-foreground">{subValue}</span>}
+        {subValue && <span className="ml-1 text-overlay font-normal text-muted-foreground">{subValue}</span>}
       </p>
-      <p className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground">{label}</p>
+      <p className="mt-1 text-overlay uppercase tracking-wide text-muted-foreground">{label}</p>
     </div>
   );
 }

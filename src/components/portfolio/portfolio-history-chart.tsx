@@ -75,7 +75,7 @@ export function PortfolioHistoryChart({ data }: { data: DataPoint[] }) {
         </div>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="flex flex-col items-center gap-1.5 rounded-xl bg-card/90 px-5 py-3 shadow-sm backdrop-blur-md">
-            <p className="text-xs text-muted-foreground">
+            <p className="text-meta">
               {t(lang, "noPortfolioDataDesc")}
             </p>
           </div>
@@ -102,7 +102,7 @@ export function PortfolioHistoryChart({ data }: { data: DataPoint[] }) {
           </button>
         ))}
       </div>
-      <div className="h-44 w-full text-xs text-muted-foreground sm:h-52">
+      <div className="h-44 w-full text-meta sm:h-52">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={filteredData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
             <defs>

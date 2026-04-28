@@ -17,6 +17,7 @@ import { Price } from "@/components/shared/price-inline";
 import { FormattedDate } from "@/components/shared/formatted-date";
 import { SetPageStats, SetPageTopCardLabel, DropRateDialog } from "./set-page-client";
 import { pullChance, PACKS_PER_BOX } from "@/lib/utils/pull-rate";
+import { formatCount } from "@/lib/utils/currency";
 import {
   SetDetailContent,
   type RarityGroup,
@@ -69,7 +70,7 @@ export async function generateMetadata(props: {
   if (!set) return { title: "Set not found" };
 
   const title = `${set.code.toUpperCase()} — ${set.nameEn ?? set.name}`;
-  const description = `${set.productCardCount.toLocaleString()} cards · ${set.nameEn ?? set.name} — One Piece Card Game`;
+  const description = `${formatCount(set.productCardCount)} cards · ${set.nameEn ?? set.name} — One Piece Card Game`;
 
   return {
     title,
@@ -197,11 +198,11 @@ export default async function SetDetailPage(props: {
             <FormattedDate
               date={set.releaseDate}
               options={{ year: "numeric", month: "long" }}
-              className="text-xs text-muted-foreground"
+              className="text-meta"
             />
           )}
         </div>
-        <h1 className="page-header break-words">
+        <h1 className="text-h1 break-words">
           {set.nameEn ?? set.name}
         </h1>
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -222,7 +223,7 @@ export default async function SetDetailPage(props: {
           href={`/cards/${topCard.cardCode}`}
           className="group block"
         >
-          <div className="panel flex items-center gap-4 p-3 transition-all duration-200 hover:shadow-md sm:p-4">
+          <div className="panel flex items-center gap-4 p-3 transition-colors hover:bg-muted/20 sm:p-4">
             <div className="relative aspect-[63/88] w-14 shrink-0 overflow-hidden rounded-lg bg-muted sm:w-[72px]">
               {topCard.imageUrl ? (
                 <Image
@@ -240,7 +241,7 @@ export default async function SetDetailPage(props: {
             </div>
             <div className="min-w-0 flex-1">
               <div className="mb-0.5 flex items-center gap-1.5">
-                <Crown className="size-3 text-amber-500" />
+                <Crown className="size-3 text-primary" />
                 <SetPageTopCardLabel />
               </div>
               <p className="truncate text-sm font-semibold transition-colors group-hover:text-primary">

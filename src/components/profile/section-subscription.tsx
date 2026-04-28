@@ -25,7 +25,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useUIStore } from "@/stores/ui-store";
-import { t } from "@/lib/i18n";
+import { t, getLocale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { Language } from "@/lib/i18n";
 import { getTierConfig, type ProfileStats, type SubscriptionData } from "./profile-types";
@@ -34,7 +34,10 @@ import {
   PLAN_HIGHLIGHTS,
   FEATURE_SECTIONS,
   findRow,
-} from "@/lib/plan-features";
+  getLimits,
+  type TierLimits,
+} from "@/lib/billing";
+import type { UserTier } from "@/generated/prisma/client";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -53,32 +56,28 @@ type PaymentMethod = {
 
 
 // ---------------------------------------------------------------------------
-// Tier limits – single source of truth from tier.ts
+// Tier limits – derived from @/lib/billing (single source of truth)
 // ---------------------------------------------------------------------------
-import { TIER_LIMITS } from "@/lib/tier";
+type TierKey = "FREE" | "PRO" | "PRO_PLUS";
 
-type TierKey = keyof typeof TIER_LIMITS;
-
-function getLimitsForTier(tier: string) {
-  if (tier === "PRO_PLUS" || tier === "LIFETIME_PRO_PLUS") return TIER_LIMITS.PRO_PLUS;
-  if (tier === "PRO" || tier === "LIFETIME_PRO") return TIER_LIMITS.PRO;
-  return TIER_LIMITS.FREE;
+function getLimitsForTier(tier: string): TierLimits {
+  return getLimits(tier as UserTier);
 }
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-function getLocaleStr(lang: Language) {
-  return lang === "TH" ? "th-TH" : lang === "JP" ? "ja-JP" : "en-US";
-}
-
 function formatLocaleDate(dateStr: string, lang: Language) {
-  return new Date(dateStr).toLocaleDateString(getLocaleStr(lang), { year: "numeric", month: "short", day: "numeric" });
+  return new Date(dateStr).toLocaleDateString(getLocale(lang), { year: "numeric", month: "short", day: "numeric" });
 }
 
 function toEffectiveTier(tier: string): TierKey {
-  if (tier === "PRO_PLUS" || tier === "LIFETIME_PRO_PLUS") return "PRO_PLUS";
-  if (tier === "PRO" || tier === "LIFETIME_PRO") return "PRO";
+  // Treat both subscription and lifetime variants identically — display
+  // tier never differentiates them. Use `resolveEffectiveTier(...)` from
+  // `@/lib/billing` when subscription expiry must also be considered.
+  const t = tier as UserTier;
+  if (t === "PRO_PLUS" || t === "LIFETIME_PRO_PLUS") return "PRO_PLUS";
+  if (t === "PRO" || t === "LIFETIME_PRO") return "PRO";
   return "FREE";
 }
 
@@ -118,7 +117,7 @@ function UsageRow({ icon: Icon, label, desc, current, max, color, lang }: {
         <div className="flex items-center justify-between gap-2">
           <div className="min-w-0">
             <span className="text-sm">{label}</span>
-            {desc && <p className="text-xs text-muted-foreground/60 leading-tight">{desc}</p>}
+            {desc && <p className="text-meta text-muted-foreground/60 leading-tight">{desc}</p>}
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
             {isFull && <span className="rounded bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">{t(lang, "usageFull")}</span>}
@@ -237,7 +236,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
     <div className="space-y-8">
       {/* Page header */}
       <div>
-        <h2 className="text-lg font-semibold">{t(lang, "subscription")}</h2>
+        <h2 className="text-h3">{t(lang, "subscription")}</h2>
         <p className="text-muted-foreground mt-0.5 text-sm">{t(lang, "yourPlan")}</p>
       </div>
 
@@ -269,7 +268,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
                 {plan.icon && <plan.icon className={cn("size-5", plan.iconClass)} />}
                 <div>
                   <h3 className="text-base font-bold leading-tight">{tierName(plan.key, lang)}</h3>
-                  <p className="text-xs text-muted-foreground">{t(lang, plan.subtitleKey)}</p>
+                  <p className="text-meta">{t(lang, plan.subtitleKey)}</p>
                 </div>
               </div>
 
@@ -277,7 +276,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
               {plan.monthlyPrice ? (
                 <div className="mt-3 flex items-baseline gap-1">
                   <span className="text-2xl font-extrabold tracking-tight">{plan.monthlyPrice}</span>
-                  <span className="text-xs text-muted-foreground">{t(lang, "perMonth")}</span>
+                  <span className="text-meta">{t(lang, "perMonth")}</span>
                 </div>
               ) : (
                 <p className="mt-3 text-2xl font-extrabold tracking-tight">{t(lang, "freePlan")}</p>
@@ -339,7 +338,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
             </div>
             <div className="flex-1">
               <h3 className="text-sm font-bold">{t(lang, "trialCtaTitle")}</h3>
-              <p className="mt-0.5 text-xs text-muted-foreground max-w-md">{t(lang, "trialCtaDesc")}</p>
+              <p className="mt-0.5 text-meta max-w-md">{t(lang, "trialCtaDesc")}</p>
             </div>
             <Link href="/pricing" className="shrink-0">
               <Button size="sm" className="bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600">
@@ -367,7 +366,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
                 </div>
                 <div>
                   <p className="text-sm font-medium capitalize">{paymentMethod.brand} •••• {paymentMethod.last4}</p>
-                  <p className="text-xs text-muted-foreground">{t(lang, "cardExpiry")} {String(paymentMethod.expMonth).padStart(2, "0")}/{paymentMethod.expYear}</p>
+                  <p className="text-meta">{t(lang, "cardExpiry")} {String(paymentMethod.expMonth).padStart(2, "0")}/{paymentMethod.expYear}</p>
                 </div>
               </div>
               <Button variant="outline" size="sm" onClick={openPortal} disabled={portalLoading}>
@@ -420,7 +419,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
               {FEATURE_SECTIONS.map((section) => (
                 <Fragment key={section.titleKey}>
                   <tr>
-                    <td colSpan={4} className="pb-2 pt-5 text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
+                    <td colSpan={4} className="pb-2 pt-5 text-eyebrow text-muted-foreground/60">
                       {t(lang, section.titleKey)}
                     </td>
                   </tr>

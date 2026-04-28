@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { apiHandler } from "@/lib/api/api-handler";
-import { getAuthUser } from "@/lib/api/auth";
+import { requireAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
 type Params = { params: Promise<{ id: string }> };
 
 export const POST = apiHandler(async (_request: NextRequest, props: Params) => {
-  const user = await getAuthUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const auth = await requireAuthUser();
+  if (!auth.ok) return auth.response;
+  const user = auth.user;
 
   const { id } = await props.params;
   const listingId = parseInt(id, 10);

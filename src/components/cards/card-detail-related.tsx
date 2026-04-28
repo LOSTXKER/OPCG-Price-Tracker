@@ -21,12 +21,12 @@ export function CardDetailRelated({ relatedCards, set, lang }: CardDetailRelated
       {relatedCards.length > 0 && (
         <>
           <div className="mb-5 flex items-center justify-between gap-2">
-            <h2 className="min-w-0 break-words text-lg font-semibold">
+            <h2 className="min-w-0 break-words text-h3">
               {t(lang, "otherCardsFrom")} {setDisplayName}
             </h2>
             <Link
               href={`/sets/${set.code}`}
-              className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+              className="text-meta transition-colors hover:text-foreground"
             >
               {t(lang, "viewAll")} →
             </Link>
@@ -38,7 +38,7 @@ export function CardDetailRelated({ relatedCards, set, lang }: CardDetailRelated
                 <Link
                   key={rc.id}
                   href={`/cards/${rc.cardCode}`}
-                  className="group flex flex-col transition-transform duration-200 hover:-translate-y-0.5"
+                  className="group flex flex-col transition-colors"
                 >
                   <div className="panel relative aspect-[63/88] w-full overflow-hidden">
                     {rc.imageUrl ? (

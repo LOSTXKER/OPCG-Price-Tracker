@@ -211,7 +211,7 @@ export default async function RaritiesPage() {
             { label: "ความหายาก" },
           ]}
         />
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="text-h1">
           ความหายาก (Rarities)
         </h1>
         <p className="text-lg leading-relaxed text-muted-foreground">
@@ -249,7 +249,7 @@ export default async function RaritiesPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-baseline gap-2">
                       <h3 className="text-base font-bold">{rarity.name}</h3>
-                      <span className="text-xs text-muted-foreground">{rarity.perSet}</span>
+                      <span className="text-meta">{rarity.perSet}</span>
                     </div>
                     <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                       {rarity.description}
@@ -268,7 +268,7 @@ export default async function RaritiesPage() {
                     <div className="flex gap-2">
                       {examples.map((card) => (
                         <Link key={card.cardCode} href={`/cards/${card.cardCode}`} className="group shrink-0">
-                          <div className="relative aspect-[63/88] w-14 overflow-hidden rounded-lg bg-muted transition-transform group-hover:-translate-y-0.5">
+                          <div className="relative aspect-[63/88] w-14 overflow-hidden rounded-lg bg-muted">
                             {card.imageUrl && (
                               <Image src={card.imageUrl} alt={card.nameEn ?? card.nameJp} fill className="object-contain" sizes="56px" />
                             )}
@@ -299,7 +299,7 @@ export default async function RaritiesPage() {
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline gap-1.5">
                   <h3 className="text-sm font-semibold">{rarity.name}</h3>
-                  <span className="text-xs text-muted-foreground">{rarity.perSet}</span>
+                  <span className="text-meta">{rarity.perSet}</span>
                 </div>
                 <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
                   {rarity.description}
@@ -340,7 +340,7 @@ export default async function RaritiesPage() {
                 <p className="mt-1 font-mono text-lg font-bold" style={{ color: item.color }}>
                   {item.price}
                 </p>
-                <p className="mt-0.5 text-xs text-muted-foreground">{item.sub}</p>
+                <p className="mt-0.5 text-meta">{item.sub}</p>
               </div>
             ))}
           </div>
@@ -365,7 +365,7 @@ export default async function RaritiesPage() {
                 style={{ backgroundColor: p.color }}
               />
               <span className="text-xs font-semibold">{p.code}</span>
-              <span className="text-xs text-muted-foreground">{p.name}</span>
+              <span className="text-meta">{p.name}</span>
             </div>
           ))}
         </div>
@@ -377,12 +377,12 @@ export default async function RaritiesPage() {
             <div className="flex gap-2 overflow-x-auto pb-1">
               {parallels.map((card) => (
                 <Link key={card.cardCode} href={`/cards/${card.cardCode}`} className="group shrink-0">
-                  <div className="relative aspect-[63/88] w-16 overflow-hidden rounded-lg bg-muted transition-transform group-hover:-translate-y-0.5">
+                  <div className="relative aspect-[63/88] w-16 overflow-hidden rounded-lg bg-muted">
                     {card.imageUrl && (
                       <Image src={card.imageUrl} alt={card.nameEn ?? card.nameJp} fill className="object-contain" sizes="64px" />
                     )}
                   </div>
-                  <p className="mt-1 max-w-16 truncate text-center text-xs text-muted-foreground">
+                  <p className="mt-1 max-w-16 truncate text-center text-meta">
                     {card.nameEn ?? card.nameJp}
                   </p>
                 </Link>
@@ -492,7 +492,7 @@ export default async function RaritiesPage() {
         {/* 3 รูปแบบ */}
         <div>
           <p className="text-sm font-medium">โอกาสเจอแต่ละแบบ</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">
+          <p className="mt-0.5 text-meta">
             * จากข้อมูลเปิดซองของ community ญี่ปุ่น — Bandai ไม่ได้เปิดเผยตัวเลขอย่างเป็นทางการ
           </p>
         </div>
@@ -501,7 +501,7 @@ export default async function RaritiesPage() {
             <p className="w-14 shrink-0 text-2xl font-bold tabular-nums text-purple-600 dark:text-purple-400">42%</p>
             <div>
               <p className="text-sm font-semibold">Parallel 1 ใบ</p>
-              <p className="text-xs text-muted-foreground">ได้การ์ดภาพพิเศษ (alternate art) 1 ใบ</p>
+              <p className="text-meta">ได้การ์ดภาพพิเศษ (alternate art) 1 ใบ</p>
             </div>
           </div>
 
@@ -509,7 +509,7 @@ export default async function RaritiesPage() {
             <p className="w-14 shrink-0 text-2xl font-bold tabular-nums text-amber-600 dark:text-amber-400">33%</p>
             <div>
               <p className="text-sm font-semibold">SEC 1 ใบ</p>
-              <p className="text-xs text-muted-foreground">ได้ Secret Rare ภาพสวยหายาก 1 ใบ</p>
+              <p className="text-meta">ได้ Secret Rare ภาพสวยหายาก 1 ใบ</p>
             </div>
           </div>
 
@@ -517,7 +517,7 @@ export default async function RaritiesPage() {
             <p className="w-14 shrink-0 text-2xl font-bold tabular-nums text-blue-600 dark:text-blue-400">25%</p>
             <div>
               <p className="text-sm font-semibold">Parallel 2 ใบ</p>
-              <p className="text-xs text-muted-foreground">โชคดี! ได้ภาพพิเศษถึง 2 ใบ</p>
+              <p className="text-meta">โชคดี! ได้ภาพพิเศษถึง 2 ใบ</p>
             </div>
           </div>
         </div>
@@ -626,7 +626,7 @@ export default async function RaritiesPage() {
             >
               <div className="min-w-0 flex-1">
                 <p className="font-medium">{src.label}</p>
-                <p className="text-xs text-muted-foreground">{src.desc}</p>
+                <p className="text-meta">{src.desc}</p>
               </div>
               <ExternalLink className="size-4 shrink-0 text-muted-foreground/40" />
             </a>

@@ -49,7 +49,7 @@ export function OfferCard({
       )}
     >
       <div className="flex items-center justify-between">
-        <span className="text-xs text-muted-foreground">
+        <span className="text-meta">
           {isBuyer ? "คุณเสนอราคา" : "ข้อเสนอราคา"}
         </span>
         <Badge variant={config.variant}>{config.label}</Badge>
@@ -60,7 +60,7 @@ export function OfferCard({
       </p>
 
       {offer.note && (
-        <p className="text-xs text-muted-foreground">{offer.note}</p>
+        <p className="text-meta">{offer.note}</p>
       )}
 
       {isPending && isSeller && (

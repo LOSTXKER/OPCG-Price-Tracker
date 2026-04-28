@@ -319,7 +319,7 @@ export function CardsBrowser({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border/50 bg-muted/30">
-                <th className="w-14 px-2 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                <th className="w-14 px-2 py-2.5 text-center text-eyebrow text-muted-foreground/70">
                   รูป
                 </th>
                 <SortableHeader
@@ -331,10 +331,10 @@ export function CardsBrowser({
                 >
                   Code
                 </SortableHeader>
-                <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                <th className="px-4 py-2.5 text-left text-eyebrow text-muted-foreground/70">
                   ชื่อ (JP)
                 </th>
-                <th className="hidden px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 md:table-cell">
+                <th className="hidden px-4 py-2.5 text-left text-eyebrow text-muted-foreground/70 md:table-cell">
                   ชื่อ (EN)
                 </th>
                 <SortableHeader
@@ -355,7 +355,7 @@ export function CardsBrowser({
                 >
                   ราคา
                 </SortableHeader>
-                <th className="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                <th className="px-4 py-2.5 text-center text-eyebrow text-muted-foreground/70">
                   สถานะ
                 </th>
                 <th className="w-20 px-2 py-2.5" />
@@ -474,7 +474,7 @@ function CardGrid({ cards, loading }: { cards: CardRow[]; loading: boolean }) {
               unoptimized
             />
           ) : (
-            <div className="flex aspect-[63/88] w-full items-center justify-center bg-muted/30 text-xs text-muted-foreground">
+            <div className="flex aspect-[63/88] w-full items-center justify-center bg-muted/30 text-meta">
               ไม่มีรูป
             </div>
           )}
@@ -482,17 +482,15 @@ function CardGrid({ cards, loading }: { cards: CardRow[]; loading: boolean }) {
             <p className="truncate text-xs font-bold text-white">
               {card.baseCode}
             </p>
-            <p className="truncate text-[10px] text-white/70">
+            <p className="truncate text-overlay text-white/70">
               {card.rarity} · {card.latestPriceJpy != null ? formatJpy(card.latestPriceJpy) : "—"}
             </p>
           </div>
-          {card.isParallel && (
-            <span className="absolute right-1 top-1 rounded bg-amber-500/90 px-1 text-[9px] font-bold text-white">
-              PA
-            </span>
-          )}
+          {/* "!" warning is a functional admin data-quality flag (missing
+              translation or image) — kept on-card so reviewers can spot
+              incomplete entries at a glance. */}
           {(!card.nameEn || !card.imageUrl) && (
-            <span className="absolute left-1 top-1 rounded bg-amber-500/90 px-0.5 text-[8px] font-bold leading-tight text-white">
+            <span className="absolute left-1 top-1 rounded bg-amber-500/90 px-0.5 text-overlay leading-tight text-white">
               !
             </span>
           )}
@@ -523,7 +521,7 @@ function SortableHeader({
   return (
     <th
       className={cn(
-        "cursor-pointer select-none px-4 py-2.5 text-xs font-semibold uppercase tracking-wider transition-colors",
+        "cursor-pointer select-none px-4 py-2.5 text-eyebrow transition-colors",
         active ? "text-foreground" : "text-muted-foreground/70 hover:text-muted-foreground",
         className,
       )}
@@ -562,7 +560,7 @@ function StatusBadges({ card }: { card: CardRow }) {
       {missing.map((m) => (
         <span
           key={m.key}
-          className="rounded bg-amber-500/15 px-1 py-px text-[10px] font-medium leading-tight text-amber-500"
+          className="rounded bg-amber-500/15 px-1 py-px text-overlay leading-tight text-amber-500"
         >
           {m.label}
         </span>
@@ -580,7 +578,7 @@ function ImageCell({ card, size = "normal" }: { card: CardRow; size?: "normal" |
   if (!card.imageUrl) {
     return (
       <div
-        className="flex items-center justify-center rounded bg-muted text-xs text-muted-foreground"
+        className="flex items-center justify-center rounded bg-muted text-meta"
         style={{ width: w, height: h }}
       >
         ?
@@ -659,7 +657,7 @@ function CardTableRow({
         <td colSpan={4} className="px-4 py-2">
           <div className="grid gap-x-3 gap-y-1 sm:grid-cols-3">
             <div>
-              <span className="text-[10px] font-medium text-muted-foreground">EN</span>
+              <span className="text-overlay text-muted-foreground">EN</span>
               <Input
                 placeholder="English name"
                 value={editData.nameEn || ""}
@@ -670,7 +668,7 @@ function CardTableRow({
               />
             </div>
             <div>
-              <span className="text-[10px] font-medium text-muted-foreground">TH</span>
+              <span className="text-overlay text-muted-foreground">TH</span>
               <Input
                 placeholder="ชื่อภาษาไทย"
                 value={editData.nameTh || ""}
@@ -680,7 +678,7 @@ function CardTableRow({
               />
             </div>
             <div>
-              <span className="text-[10px] font-medium text-muted-foreground">Image URL</span>
+              <span className="text-overlay text-muted-foreground">Image URL</span>
               <Input
                 placeholder="https://..."
                 value={editData.imageUrl || ""}
@@ -737,7 +735,7 @@ function CardTableRow({
             {card.rarity.startsWith("P-") ? card.rarity : "PA"}
           </span>
         )}
-        <div className="text-xs text-muted-foreground">
+        <div className="text-meta">
           {card.set.code.toUpperCase()}
         </div>
       </td>

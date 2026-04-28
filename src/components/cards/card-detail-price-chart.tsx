@@ -2,12 +2,25 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
-import { PriceChart, type ChartSeriesDef, type MergedChartRow } from "@/components/cards/price-chart"
+import {
+  PriceChart,
+  type ChartSeriesDef,
+  type ChartStats,
+  type MergedChartRow,
+} from "@/components/cards/price-chart"
 import type { ChartSourceOption } from "@/lib/data/card-detail"
 import { PRICE_SOURCE } from "@/lib/constants/prices"
 import { t } from "@/lib/i18n"
 import { jpyToDisplayValue, usdToDisplayValue, type Currency } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
+
+const PERIOD_DAYS: Record<string, number> = {
+  "24h": 1,
+  "7d": 7,
+  "30d": 30,
+  "90d": 90,
+  "1y": 365,
+}
 
 const TREND_UP = "#22C55E"
 const TREND_DOWN = "#EF4444"
@@ -47,7 +60,10 @@ export type CardDetailPriceChartProps = {
   availableSources?: ChartSourceOption[]
   priceMode?: "raw" | "psa10"
   onPeriodChange?: (period: string) => void
+  /** Receive `{ period, stats }` so parent can render a unified % change badge. */
+  onStatsChange?: (info: { period: string; stats: ChartStats | null }) => void
   maxDays?: number
+  initialPeriod?: string
 }
 
 function classifyRow(row: PriceRow): string | null {
@@ -102,7 +118,9 @@ export function CardDetailPriceChart({
   availableSources,
   priceMode = "raw",
   onPeriodChange: onPeriodChangeExternal,
+  onStatsChange,
   maxDays,
+  initialPeriod = "30d",
 }: CardDetailPriceChartProps) {
   const displayCurrency = useUIStore((s) => s.currency) as Currency
   const lang = useUIStore((s) => s.language)
@@ -125,17 +143,36 @@ export function CardDetailPriceChart({
     return allSeriesIds.filter((id) => id === PRICE_SOURCE.YUYUTEI)
   }, [allSeriesIds, priceMode])
 
-  const [period, setPeriod] = useState("30d")
+  const [period, setPeriod] = useState(initialPeriod)
   const [data, setData] = useState<PriceRow[]>(initialData)
   const [loading, setLoading] = useState(false)
   const abortRef = useRef<AbortController | null>(null)
 
-  const mergedData = useMemo(
+  // Step 1: build the merged dataset across all rows the page knows about
+  // Step 2: filter client-side by the selected period so default 30D matches
+  //         the chart even before the API responds (and stats stay consistent
+  //         with the visible chart range).
+  const fullMergedData = useMemo(
     () => buildMergedData(data, allSeriesIds, displayCurrency),
     [data, allSeriesIds, displayCurrency],
   )
 
-  const stats = useMemo(() => {
+  const mergedData = useMemo<MergedChartRow[]>(() => {
+    const days = PERIOD_DAYS[period]
+    if (days == null) return fullMergedData // "all"
+    const sinceTs = Date.now() - days * 86_400_000
+    const filtered = fullMergedData.filter(
+      (r) => new Date(r.scrapedAt).getTime() >= sinceTs,
+    )
+    // Fallback: if filtering removes everything (e.g. data older than period),
+    // keep the most recent rows so the chart isn't empty on first render.
+    if (filtered.length === 0 && fullMergedData.length > 0) {
+      return fullMergedData.slice(-Math.max(2, Math.min(8, fullMergedData.length)))
+    }
+    return filtered
+  }, [fullMergedData, period])
+
+  const stats = useMemo<ChartStats | null>(() => {
     const primaryKey = activeSeriesIds[0] ? (SERIES_DATAKEYS[activeSeriesIds[0]] ?? activeSeriesIds[0]) : null
     if (!primaryKey || mergedData.length === 0) return null
 
@@ -155,6 +192,12 @@ export function CardDetailPriceChart({
 
     return { high, low, avg, change }
   }, [mergedData, activeSeriesIds])
+
+  // Bubble stats up to the parent so the price card can render a single
+  // % change badge that always matches the chart period.
+  useEffect(() => {
+    onStatsChange?.({ period, stats })
+  }, [period, stats, onStatsChange])
 
   const seriesDefs = useMemo<ChartSeriesDef[]>(
     () =>

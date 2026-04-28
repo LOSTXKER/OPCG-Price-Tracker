@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Award, CheckCircle2, Sparkles, X } from "lucide-react";
+import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { PageHeader } from "@/components/layout/page-header";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
 import { useAuthState } from "@/hooks/use-auth-state";
 import { useUIStore } from "@/stores/ui-store";
-import { cn } from "@/lib/utils";
-import { useHoneyData } from "./hooks/use-honey-data";
+import { useHoneyData } from "@/hooks/use-honey-data";
 import { t } from "@/lib/i18n";
 import { HoneyStatusBar } from "./components/honey-sidebar";
+import { HoneyTabNav } from "./components/honey-tab-nav";
+import { HoneyToast } from "./components/honey-toast";
 import { MissionsTab } from "./components/missions-tab";
 import { ActivityTab } from "./components/activity-tab";
 import { AchievementsTab } from "./components/achievements-tab";
@@ -18,33 +20,57 @@ import { RaffleTab } from "./components/raffle-tab";
 import { RankingsTab } from "./components/rankings-tab";
 import { ReferralTab } from "./components/referral-tab";
 import { HoneyMockPreview } from "./components/honey-mock-preview";
-import { HONEY_TABS, type TabKey } from "./types";
+import { type TabKey } from "./types";
 
 export default function HoneyClient() {
   const { authed } = useAuthState();
   const lang = useUIStore((s) => s.language);
 
+  const header = (
+    <PageHeader
+      title={t(lang, "honeyPageTitle")}
+      description={t(lang, "honeySubtitle")}
+      breadcrumb={
+        <Breadcrumb items={[{ label: "Home", href: "/" }, { label: t(lang, "honeyPageTitle") }]} />
+      }
+    />
+  );
+
   if (authed === null) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-14 rounded-xl" />
-        <Skeleton className="h-48 rounded-xl" />
-        <Skeleton className="h-10 rounded-lg" />
-        <Skeleton className="h-64 rounded-xl" />
-      </div>
+      <>
+        {header}
+        <div className="space-y-6">
+          <Skeleton className="h-14 rounded-xl" />
+          <Skeleton className="h-48 rounded-xl" />
+          <Skeleton className="h-10 rounded-lg" />
+          <Skeleton className="h-64 rounded-xl" />
+        </div>
+      </>
     );
   }
 
   if (authed === false) {
-    return <AuthPreviewGate preview={<HoneyMockPreview lang={lang} />} />;
+    return (
+      <>
+        {header}
+        <AuthPreviewGate preview={<HoneyMockPreview lang={lang} />} />
+      </>
+    );
   }
 
-  return <HoneyContent />;
+  return (
+    <>
+      {header}
+      <HoneyContent />
+    </>
+  );
 }
 
 function HoneyContent() {
   const [tab, setTab] = useState<TabKey>("missions");
   const [checkinLoading, setCheckinLoading] = useState(false);
+  const [claimFreeLoading, setClaimFreeLoading] = useState(false);
 
   const {
     lang,
@@ -62,6 +88,12 @@ function HoneyContent() {
     setCheckinLoading(true);
     await actions.checkin();
     setCheckinLoading(false);
+  };
+
+  const handleClaimFreeTicket = async () => {
+    setClaimFreeLoading(true);
+    await actions.claimFreeTicket();
+    setClaimFreeLoading(false);
   };
 
   const handleShare = async (taskId: string) => {
@@ -102,6 +134,7 @@ function HoneyContent() {
     level,
     lifetimeEarned,
     activeEvent,
+    shopItems,
     canCheckin,
     checkinLoading,
     onCheckin: handleCheckin,
@@ -111,6 +144,16 @@ function HoneyContent() {
     lang,
     mission,
     raffleMissions,
+    streak,
+    canCheckin,
+    canClaimFree,
+    checkinLoading,
+    claimFreeLoading,
+    points,
+    level,
+    shopItems,
+    onCheckin: handleCheckin,
+    onClaimFreeTicket: handleClaimFreeTicket,
     onClaimTask: actions.claimTask,
     onClaimBonus: actions.claimBonus,
     onShare: handleShare,
@@ -119,21 +162,26 @@ function HoneyContent() {
     onClaimRaffleMissionBonus: actions.claimRaffleMissionBonusAction,
   } as const;
 
+  const renderPanel = (key: TabKey, content: React.ReactNode) => (
+    <div
+      key={key}
+      role="tabpanel"
+      id={`honey-tabpanel-${key}`}
+      aria-labelledby={`honey-tab-${key}`}
+      hidden={tab !== key}
+    >
+      {tab === key ? content : null}
+    </div>
+  );
+
   const tabContent = (
     <>
-      {tab === "missions" && (
-        <MissionsTab {...missionProps} />
-      )}
-      {tab === "activity" && (
-        <ActivityTab lang={lang} transactions={transactions} />
-      )}
-      {tab === "achievements" && (
-        <AchievementsTab lang={lang} achievements={achievements} />
-      )}
-      {tab === "shop" && (
-        <ShopTab lang={lang} shopItems={shopItems} points={points} onRedeem={actions.redeem} />
-      )}
-      {tab === "raffle" && (
+      {renderPanel("missions", <MissionsTab {...missionProps} />)}
+      {renderPanel("activity", <ActivityTab lang={lang} transactions={transactions} />)}
+      {renderPanel("achievements", <AchievementsTab lang={lang} achievements={achievements} />)}
+      {renderPanel("shop", <ShopTab lang={lang} shopItems={shopItems} points={points} onRedeem={actions.redeem} />)}
+      {renderPanel(
+        "raffle",
         <RaffleTab
           lang={lang}
           machines={machines}
@@ -143,12 +191,11 @@ function HoneyContent() {
           lastWinners={lastWinners}
           onBuyTicket={actions.buyTicket}
           onClaimFreeTicket={actions.claimFreeTicket}
-        />
+        />,
       )}
-      {tab === "rankings" && (
-        <RankingsTab lang={lang} leaderboard={leaderboard} />
-      )}
-      {tab === "referral" && (
+      {renderPanel("rankings", <RankingsTab lang={lang} leaderboard={leaderboard} />)}
+      {renderPanel(
+        "referral",
         <ReferralTab
           lang={lang}
           referralUrl={referralUrl}
@@ -156,80 +203,19 @@ function HoneyContent() {
           todayClicks={referralTodayClicks}
           totalConversions={referralConversions}
           totalEarned={referralEarned}
-        />
+        />,
       )}
     </>
-  );
-
-  const tabBar = (
-    <div className="flex gap-0.5 overflow-x-auto rounded-lg bg-muted/30 p-1 scrollbar-none">
-      {HONEY_TABS.map((item) => {
-        const Icon = item.icon;
-        const active = tab === item.key;
-        return (
-          <button
-            key={item.key}
-            onClick={() => setTab(item.key)}
-            title={t(lang, item.labelKey)}
-            className={cn(
-              "flex shrink-0 items-center gap-2 rounded-md px-3.5 py-2.5 text-xs font-medium transition-all sm:px-4",
-              active
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
-            )}
-          >
-            <Icon className="size-4" />
-            <span className="hidden sm:inline">{t(lang, item.labelKey)}</span>
-          </button>
-        );
-      })}
-    </div>
   );
 
   return (
     <div className="space-y-6">
       <HoneyStatusBar {...statusProps} />
-      {tabBar}
-      {tabContent}
-      <Toast message={message} onDismiss={() => setMessage(null)} />
-    </div>
-  );
-}
-
-function Toast({ message, onDismiss }: { message: string | null; onDismiss: () => void }) {
-  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-
-  useEffect(() => {
-    if (!message) return;
-    clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(onDismiss, 3500);
-    return () => clearTimeout(timerRef.current);
-  }, [message, onDismiss]);
-
-  if (!message) return null;
-
-  const lc = message.toLowerCase();
-  const isMilestone = lc.includes("perfect") || lc.includes("level") || lc.includes("onboarding");
-  const isEarn = lc.includes("check-in") || lc.includes("เช็คอิน") || lc.includes("mission") || lc.includes("ภารกิจ");
-
-  const Icon = isMilestone ? Sparkles : isEarn ? CheckCircle2 : Award;
-  const accent = isMilestone
-    ? "border-amber-500/30 bg-amber-500/5"
-    : isEarn
-      ? "border-price-up/30 bg-price-up/5"
-      : "border-primary/20 bg-background/95";
-  const iconColor = isMilestone ? "text-amber-500" : isEarn ? "text-price-up" : "text-primary";
-
-  return (
-    <div className={cn(
-      "fixed inset-x-0 bottom-[env(safe-area-inset-bottom,1rem)] z-50 mx-auto mb-4 flex w-fit max-w-[90vw] animate-in fade-in slide-in-from-bottom-2 items-center gap-2.5 rounded-xl border px-4 py-3 shadow-lg backdrop-blur-sm duration-200 sm:max-w-md",
-      accent,
-    )}>
-      <Icon className={cn("size-4.5 shrink-0", iconColor)} />
-      <span className="min-w-0 flex-1 break-words text-xs font-semibold text-foreground">{message}</span>
-      <button onClick={onDismiss} className="shrink-0 text-muted-foreground hover:text-foreground">
-        <X className="size-3.5" />
-      </button>
+      <div className="lg:grid lg:grid-cols-[200px_1fr] lg:gap-8">
+        <HoneyTabNav tab={tab} onTabChange={setTab} lang={lang} />
+        <div className="mt-4 min-w-0 lg:mt-0">{tabContent}</div>
+      </div>
+      <HoneyToast message={message} onDismiss={() => setMessage(null)} />
     </div>
   );
 }

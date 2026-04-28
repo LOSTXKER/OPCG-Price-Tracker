@@ -1,9 +1,16 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Star, Loader2, MessageSquare } from "lucide-react";
+import { Star, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { EmptyState } from "@/components/shared/empty-state";
+import { LoadingState } from "@/components/shared/loading-state";
+import { PageHeader } from "@/components/layout/page-header";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import { Surface } from "@/components/ui/surface";
+import { t, getLocale } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 type ReviewItem = {
   id: number;
@@ -28,13 +35,13 @@ type ApiResponse = {
   ratingCounts: Record<number, number>;
 };
 
-const RATING_FILTERS = [
-  { key: null, label: "ทั้งหมด" },
-  { key: 5, label: "5 ดาว" },
-  { key: 4, label: "4 ดาว" },
-  { key: 3, label: "3 ดาว" },
-  { key: 2, label: "2 ดาว" },
-  { key: 1, label: "1 ดาว" },
+const RATING_FILTERS: ReadonlyArray<{ key: number | null }> = [
+  { key: null },
+  { key: 5 },
+  { key: 4 },
+  { key: 3 },
+  { key: 2 },
+  { key: 1 },
 ];
 
 function Stars({ count }: { count: number }) {
@@ -45,7 +52,7 @@ function Stars({ count }: { count: number }) {
           key={i}
           className={`h-3.5 w-3.5 ${
             i < count
-              ? "fill-amber-400 text-amber-400"
+              ? "fill-primary text-primary"
               : "fill-muted text-muted"
           }`}
         />
@@ -55,6 +62,7 @@ function Stars({ count }: { count: number }) {
 }
 
 export default function SellerReviewsPage() {
+  const lang = useUIStore((s) => s.language);
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeRating, setActiveRating] = useState<number | null>(null);
@@ -87,97 +95,100 @@ export default function SellerReviewsPage() {
     setPage(1);
   };
 
+  const filterOptions = RATING_FILTERS.map((filter) => {
+    const count =
+      filter.key === null
+        ? (data?.totalReviews ?? 0)
+        : (data?.ratingCounts[filter.key] ?? 0);
+    const value = filter.key === null ? "ALL" : String(filter.key);
+    const label =
+      filter.key === null
+        ? t(lang, "orderStatusAll")
+        : t(lang, "starsCount").replace("{n}", String(filter.key));
+    return {
+      value,
+      label,
+      badge:
+        count > 0 ? (
+          <span className="rounded-full bg-muted px-1.5 text-xs tabular-nums">
+            {count}
+          </span>
+        ) : undefined,
+    };
+  });
+  const activeFilterValue = activeRating === null ? "ALL" : String(activeRating);
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="page-header">รีวิว</h1>
-        <p className="text-sm text-muted-foreground">
-          ดูรีวิวจากผู้ซื้อ
-        </p>
-      </div>
+      <PageHeader
+        title={t(lang, "sellerReviewsTitle")}
+        description={t(lang, "sellerReviewsDesc")}
+      />
 
       {/* Rating summary */}
       {data && (
-        <div className="panel flex flex-wrap items-center gap-6 rounded-xl p-5">
-          <div className="text-center">
-            <p className="text-4xl font-bold">
-              {data.avgRating != null ? data.avgRating.toFixed(1) : "—"}
-            </p>
-            <div className="mt-1 flex justify-center">
-              <Stars count={Math.round(data.avgRating ?? 0)} />
+        <Surface variant="panel" padding="lg">
+          <div className="flex flex-wrap items-center gap-6">
+            <div className="text-center">
+              <p className="text-display">
+                {data.avgRating != null ? data.avgRating.toFixed(1) : "โ€”"}
+              </p>
+              <div className="mt-1 flex justify-center">
+                <Stars count={Math.round(data.avgRating ?? 0)} />
+              </div>
+              <p className="mt-1 text-meta text-muted-foreground">
+                {t(lang, "reviewsCount").replace("{n}", String(data.totalReviews))}
+              </p>
             </div>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {data.totalReviews} รีวิว
-            </p>
-          </div>
-          <div className="flex-1 space-y-1.5">
-            {[5, 4, 3, 2, 1].map((r) => {
-              const count = data.ratingCounts[r] ?? 0;
-              const pct =
-                data.totalReviews > 0
-                  ? (count / data.totalReviews) * 100
-                  : 0;
-              return (
-                <div key={r} className="flex items-center gap-2 text-sm">
-                  <span className="w-12 text-right text-muted-foreground">
-                    {r} ดาว
-                  </span>
-                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
-                    <div
-                      className="h-full rounded-full bg-amber-400 transition-all"
-                      style={{ width: `${pct}%` }}
-                    />
+            <div className="flex-1 space-y-1.5">
+              {[5, 4, 3, 2, 1].map((r) => {
+                const count = data.ratingCounts[r] ?? 0;
+                const pct =
+                  data.totalReviews > 0
+                    ? (count / data.totalReviews) * 100
+                    : 0;
+                return (
+                  <div key={r} className="flex items-center gap-2 text-sm">
+                    <span className="w-12 text-right text-muted-foreground">
+                      {t(lang, "starsCount").replace("{n}", String(r))}
+                    </span>
+                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
+                      <div
+                        className="h-full rounded-full bg-primary transition-all"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                    <span className="w-8 text-xs tabular-nums text-muted-foreground">
+                      {count}
+                    </span>
                   </div>
-                  <span className="w-8 text-xs tabular-nums text-muted-foreground">
-                    {count}
-                  </span>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
+        </Surface>
       )}
 
       {/* Rating filter tabs */}
-      <div className="flex gap-1 overflow-x-auto rounded-lg bg-muted/50 p-1">
-        {RATING_FILTERS.map((filter) => {
-          const count =
-            filter.key === null
-              ? (data?.totalReviews ?? 0)
-              : (data?.ratingCounts[filter.key] ?? 0);
-          return (
-            <button
-              key={filter.label}
-              type="button"
-              onClick={() => handleRatingFilter(filter.key)}
-              className={`flex items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                activeRating === filter.key
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {filter.label}
-              {count > 0 && (
-                <span className="rounded-full bg-muted px-1.5 text-xs tabular-nums">
-                  {count}
-                </span>
-              )}
-            </button>
-          );
-        })}
+      <div className="overflow-x-auto">
+        <SegmentedControl
+          options={filterOptions}
+          value={activeFilterValue}
+          onChange={(v) => handleRatingFilter(v === "ALL" ? null : Number(v))}
+          ariaLabel="Filter reviews by rating"
+        />
       </div>
 
       {/* Review list */}
       {loading ? (
-        <div className="flex min-h-[200px] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        </div>
+        <LoadingState variant="spinner" />
       ) : !data || data.reviews.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground">
-          <MessageSquare className="mb-3 h-12 w-12 opacity-30" />
-          <p className="text-lg font-medium">ยังไม่มีรีวิว</p>
-          <p className="text-sm">รีวิวจากผู้ซื้อจะปรากฏที่นี่</p>
-        </div>
+        <EmptyState
+          variant="dashed"
+          icon={MessageSquare}
+          title={t(lang, "noReviewsYet")}
+          description={t(lang, "reviewsAppearHereDesc")}
+        />
       ) : (
         <>
           <div className="space-y-3">
@@ -202,12 +213,12 @@ export default function SellerReviewsPage() {
                   </Avatar>
                   <div className="flex-1">
                     <p className="text-sm font-medium">
-                      {review.reviewer.displayName ?? "ผู้ใช้"}
+                      {review.reviewer.displayName ?? t(lang, "user")}
                     </p>
                     <div className="flex items-center gap-2">
                       <Stars count={review.rating} />
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(review.createdAt).toLocaleDateString("th-TH")}
+                      <span className="text-meta">
+                        {new Date(review.createdAt).toLocaleDateString(getLocale(lang))}
                       </span>
                     </div>
                   </div>
@@ -229,10 +240,10 @@ export default function SellerReviewsPage() {
                 disabled={page <= 1}
                 onClick={() => setPage(page - 1)}
               >
-                ก่อนหน้า
+                {t(lang, "previous")}
               </Button>
               <span className="text-sm text-muted-foreground">
-                หน้า {data.page} / {data.totalPages}
+                {t(lang, "paginationPageOf").replace("{page}", String(data.page)).replace("{total}", String(data.totalPages))}
               </span>
               <Button
                 variant="outline"
@@ -240,7 +251,7 @@ export default function SellerReviewsPage() {
                 disabled={page >= data.totalPages}
                 onClick={() => setPage(page + 1)}
               >
-                ถัดไป
+                {t(lang, "next")}
               </Button>
             </div>
           )}

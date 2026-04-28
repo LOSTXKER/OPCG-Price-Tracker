@@ -3,14 +3,14 @@ import Image from "next/image"
 import Link from "next/link"
 import { MessageCircle, Star } from "lucide-react"
 
+import { ConditionBadge } from "@/components/shared/condition-badge"
+import { DeltaText } from "@/components/shared/delta-text"
 import { PriceDisplay } from "@/components/shared/price-display"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { CARD_BG } from "@/lib/constants/ui"
 import { cn } from "@/lib/utils"
-import { formatPct } from "@/lib/utils/currency"
 import { Price } from "@/components/shared/price-inline"
 
 export interface ListingCardProps {
@@ -38,21 +38,6 @@ export interface ListingCardProps {
   isFeatured: boolean
 }
 
-function conditionStyles(condition: string) {
-  const c = condition.toUpperCase()
-  if (c === "NM")
-    return "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
-  if (c === "LP")
-    return "border-amber-500/40 bg-amber-500/10 text-amber-800 dark:text-amber-200"
-  if (c === "MP")
-    return "border-orange-500/40 bg-orange-500/10 text-orange-800 dark:text-orange-200"
-  if (c === "HP")
-    return "border-rose-500/40 bg-rose-500/10 text-rose-800 dark:text-rose-200"
-  if (c === "DMG")
-    return "border-muted-foreground/40 bg-muted text-muted-foreground"
-  return "border-border bg-muted/60 text-foreground"
-}
-
 function StarRow({ rating }: { rating: number }) {
   const full = Math.round(rating)
   return (
@@ -62,7 +47,7 @@ function StarRow({ rating }: { rating: number }) {
           key={i}
           className={cn(
             "size-3",
-            i < full ? "fill-amber-400 text-amber-400" : "text-muted-foreground/40"
+            i < full ? "fill-foreground/80 text-foreground/80" : "text-muted-foreground/40"
           )}
         />
       ))}
@@ -82,15 +67,14 @@ function ListingCardBase({
   const market = card.latestPriceJpy
   const diffPct =
     market != null && market > 0 ? ((priceJpy - market) / market) * 100 : null
-  const isDeal = diffPct != null && diffPct <= -10
   const listingHref = `/marketplace/${id}`
 
   return (
     <article
       data-listing-id={id}
       className={cn(
-        "panel flex flex-col overflow-hidden transition-shadow hover:shadow-md",
-        isFeatured && "ring-1 ring-gold/30"
+        "panel flex flex-col overflow-hidden transition-colors hover:bg-muted/20",
+        isFeatured && "border border-primary/30"
       )}
     >
       <Link
@@ -103,34 +87,15 @@ function ListingCardBase({
             alt={card.nameEn ?? card.nameJp}
             fill
             sizes="(max-width: 640px) 100vw, 33vw"
-            className="object-contain transition-transform duration-300 hover:scale-105"
+            className="object-contain"
           />
         ) : (
-          <span className="flex size-full items-center justify-center text-xs text-muted-foreground">
+          <span className="flex size-full items-center justify-center text-meta">
             No image
           </span>
         )}
-        <div className="absolute top-2 left-2 flex flex-col gap-1">
-          {isDeal && (
-            <Badge className="bg-price-up/90 text-white border-0 text-xs shadow-sm">
-              Best Deal
-            </Badge>
-          )}
-          {isFeatured && (
-            <Badge className="bg-muted/90 text-foreground border-0 text-xs shadow-sm">
-              Featured
-            </Badge>
-          )}
-        </div>
         <div className="absolute top-2 right-2">
-          <span
-            className={cn(
-              "inline-flex rounded-full border px-2 py-0.5 text-xs font-semibold shadow-sm",
-              conditionStyles(condition)
-            )}
-          >
-            {condition}
-          </span>
+          <ConditionBadge condition={condition} />
         </div>
       </Link>
 
@@ -153,19 +118,16 @@ function ListingCardBase({
             size="sm"
           />
           {market != null && diffPct != null && (
-            <p className="text-muted-foreground text-xs">
+            <p className="text-meta text-muted-foreground">
               vs <Price jpy={market} />{" "}
-              <span
-                className={cn(
-                  "font-mono font-semibold tabular-nums",
-                  diffPct < 0
-                    ? "text-price-up"
-                    : "text-price-down"
-                )}
-              >
-                {diffPct > 0 ? "+" : ""}
-                {formatPct(diffPct, 0)}%
-              </span>
+              <DeltaText
+                value={diffPct}
+                decimals={0}
+                showArrow={false}
+                size="sm"
+                invert
+                className="ml-0.5"
+              />
             </p>
           )}
         </div>

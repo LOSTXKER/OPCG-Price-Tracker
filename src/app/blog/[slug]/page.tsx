@@ -118,11 +118,11 @@ export default async function BlogPostPage({ params }: PageProps) {
             บทความทั้งหมด
           </Link>
 
-          <h1 className="page-header break-words leading-tight">
+          <h1 className="text-h1 break-words leading-tight">
             {post.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-3 text-meta">
             {post.author && (
               <span>{post.author.displayName ?? "Meecard"}</span>
             )}
@@ -147,7 +147,7 @@ export default async function BlogPostPage({ params }: PageProps) {
               {post.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground"
+                  className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-0.5 text-meta"
                 >
                   <Tag className="size-3" />
                   {tag}

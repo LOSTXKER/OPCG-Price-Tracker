@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import { GitCompareArrows, Layers, TrendingUp } from "lucide-react"
 import { RelatedPages } from "@/components/shared/related-pages"
 import { JsonLd } from "@/lib/seo/json-ld-script"
@@ -27,6 +26,11 @@ async function getMarketData() {
     rarityBreakdown,
     topSetsByValue,
     topCards,
+    gainersCount,
+    losersCount,
+    flatCount,
+    weightedDeltaRow,
+    lastUpdatedRow,
   ] = await Promise.all([
     prisma.card.count(),
 
@@ -51,11 +55,23 @@ async function getMarketData() {
       ORDER BY total_value DESC
     `,
 
-    prisma.$queryRaw<{ code: string; name: string; name_en: string | null; box_image_url: string | null; card_count: bigint; total_value: number }[]>`
+    prisma.$queryRaw<{
+      code: string
+      name: string
+      name_en: string | null
+      box_image_url: string | null
+      card_count: bigint
+      total_value: number
+      change_24h: number | null
+    }[]>`
       SELECT s.code, s.name, s."nameEn" as name_en,
              s."boxImageUrl" as box_image_url,
              COUNT(c.id)::bigint as card_count,
-             COALESCE(SUM(c."latestPriceJpy"), 0) as total_value
+             COALESCE(SUM(c."latestPriceJpy"), 0) as total_value,
+             CASE WHEN SUM(c."latestPriceJpy") > 0
+                  THEN SUM(c."latestPriceJpy" * COALESCE(c."priceChange24h", 0))
+                       / NULLIF(SUM(CASE WHEN c."priceChange24h" IS NOT NULL THEN c."latestPriceJpy" ELSE 0 END), 0)
+             END as change_24h
       FROM "CardSet" s
       JOIN "Card" c ON c."setId" = s.id
       WHERE c."latestPriceJpy" > 0
@@ -76,9 +92,36 @@ async function getMarketData() {
         rarity: true,
         imageUrl: true,
         latestPriceJpy: true,
+        priceChange24h: true,
         set: { select: { code: true } },
       },
     }),
+
+    prisma.card.count({
+      where: { latestPriceJpy: { gt: 0 }, priceChange24h: { gt: 0 } },
+    }),
+
+    prisma.card.count({
+      where: { latestPriceJpy: { gt: 0 }, priceChange24h: { lt: 0 } },
+    }),
+
+    prisma.card.count({
+      where: {
+        latestPriceJpy: { gt: 0 },
+        OR: [{ priceChange24h: 0 }, { priceChange24h: null }],
+      },
+    }),
+
+    prisma.$queryRaw<{ weighted_delta: number | null }[]>`
+      SELECT
+        SUM("latestPriceJpy" * "priceChange24h")
+          / NULLIF(SUM(CASE WHEN "priceChange24h" IS NOT NULL THEN "latestPriceJpy" ELSE 0 END), 0)
+          AS weighted_delta
+      FROM "Card"
+      WHERE "latestPriceJpy" > 0 AND "priceChange24h" IS NOT NULL
+    `,
+
+    prisma.cardPrice.aggregate({ _max: { scrapedAt: true } }),
   ])
 
   return {
@@ -97,6 +140,7 @@ async function getMarketData() {
       boxImageUrl: s.box_image_url,
       cardCount: Number(s.card_count),
       totalValue: Number(s.total_value),
+      change24h: s.change_24h == null ? null : Number(s.change_24h),
     })),
     topCards: topCards.map((c) => ({
       cardCode: c.cardCode,
@@ -106,10 +150,23 @@ async function getMarketData() {
       rarity: c.rarity,
       imageUrl: c.imageUrl,
       latestPriceJpy: c.latestPriceJpy ?? 0,
+      priceChange24h: c.priceChange24h,
       setCode: c.set.code,
     })),
+    movers: {
+      up: gainersCount,
+      down: losersCount,
+      flat: flatCount,
+    },
+    weightedDelta24h:
+      weightedDeltaRow[0]?.weighted_delta == null
+        ? null
+        : Number(weightedDeltaRow[0].weighted_delta),
+    lastUpdatedAt: lastUpdatedRow._max.scrapedAt?.toISOString() ?? null,
   }
 }
+
+export type MarketOverviewData = Awaited<ReturnType<typeof getMarketData>>
 
 export default async function MarketOverviewPage() {
   const data = await getMarketData()

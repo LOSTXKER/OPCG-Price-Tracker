@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Award,
+  BellRing,
   BookOpen,
   Heart,
   LogOut,
@@ -27,6 +28,7 @@ import {
 import { NotificationBell } from "@/components/shared/notification-bell";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
+import { formatCount } from "@/lib/utils/currency";
 import { t } from "@/lib/i18n";
 import { getHoneyLevel } from "@/lib/honey/levels";
 import { TIER_DISPLAY, RANK_DISPLAY, type UserTierValue, type AuthUser } from "./header-constants";
@@ -65,6 +67,8 @@ export function HeaderUserMenu({
 
   const tierInfo = TIER_DISPLAY[userTier];
   const TierIcon = tierInfo.icon;
+  /** Inline meta row: tier chips use `bg-*` — strip for text-only styling in the navbar trigger. */
+  const tierTextClass = tierInfo.color.replace(/\bbg-[^\s]+/g, "").replace(/\s+/g, " ").trim();
   const canUpgrade = userTier === "FREE" || userTier === "PRO";
 
   const honeyLevel = getHoneyLevel(honeyLifetime);
@@ -89,32 +93,35 @@ export function HeaderUserMenu({
       >
         <MessageCircle className="size-4" />
         {unreadMessages > 0 && (
-          <span className="absolute -right-0.5 -top-0.5 flex min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-bold leading-4 text-white">
+          <span className="absolute -right-0.5 -top-0.5 flex min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-micro leading-4 text-white">
             {unreadMessages > 99 ? "99+" : unreadMessages}
           </span>
         )}
       </Link>
       <NotificationBell />
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2.5 transition-colors hover:bg-muted/60 focus:outline-none">
-          <Avatar size="sm" className={cn("h-7 w-7 ring-2", rankDisplay.ring)}>
+        <DropdownMenuTrigger
+          className={cn(
+            "flex max-w-[11rem] items-center gap-2 rounded-full py-1 pl-1 pr-2 transition-colors",
+            "hover:bg-muted/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/35"
+          )}
+        >
+          <Avatar size="sm" className={cn("h-7 w-7 shrink-0 ring-2", rankDisplay.ring)}>
             {userAvatar ? <AvatarImage src={userAvatar} alt="" /> : null}
             <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
               {userName.slice(0, 1).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <div className="flex flex-col items-start">
-            <span className="max-w-[80px] truncate text-xs font-medium leading-tight text-foreground">
+          <div className="flex min-w-0 flex-col items-start gap-0.5 text-left">
+            <span className="max-w-[7.5rem] truncate text-sm font-medium leading-tight text-foreground">
               {userName}
             </span>
-            <div className="flex items-center gap-1">
-              <span className={cn("text-[11px] font-semibold leading-tight", tierInfo.color.replace(/bg-\S+\s?/, ""))}>
-                {tierInfo.label}
+            <div className="flex max-w-[7.5rem] flex-wrap items-center gap-x-1 gap-y-0.5 text-meta leading-tight">
+              <span className={tierTextClass}>{tierInfo.label}</span>
+              <span className="select-none text-muted-foreground/40" aria-hidden>
+                ·
               </span>
-              <span className="text-[11px] leading-tight text-muted-foreground/50">|</span>
-              <span className={cn("text-[11px] font-semibold leading-tight", rankDisplay.color)}>
-                {honeyLevel.label}
-              </span>
+              <span className={rankDisplay.color}>{honeyLevel.label}</span>
             </div>
           </div>
         </DropdownMenuTrigger>
@@ -125,25 +132,25 @@ export function HeaderUserMenu({
               <p className="truncate text-xs text-muted-foreground">{authUser.email}</p>
 
               <div className="mt-2 flex items-center gap-1.5">
-                <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold", tierInfo.color)}>
+                <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-micro", tierInfo.color)}>
                   <TierIcon className="size-2.5" />
                   {tierInfo.label}
                 </span>
-                <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold", rankDisplay.bg)}>
+                <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-micro", rankDisplay.bg)}>
                   <Award className="size-2.5" />
                   {honeyLevel.label}
                 </span>
               </div>
 
               <div className="mt-2.5">
-                <div className="flex items-center justify-between text-[11px]">
+                <div className="flex items-center justify-between text-micro">
                   <span className="font-medium text-muted-foreground">
                     {honeyLevel.nextThreshold ? "EXP" : "Max Rank"}
                   </span>
                   <span className={cn("tabular-nums font-semibold", rankDisplay.color)}>
                     {honeyLevel.nextThreshold
-                      ? `${honeyLifetime.toLocaleString()} / ${honeyLevel.nextThreshold.toLocaleString()}`
-                      : honeyLifetime.toLocaleString()}
+                      ? `${formatCount(honeyLifetime)} / ${formatCount(honeyLevel.nextThreshold)}`
+                      : formatCount(honeyLifetime)}
                   </span>
                 </div>
                 <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
@@ -161,7 +168,7 @@ export function HeaderUserMenu({
                 </div>
                 {honeyLevel.nextThreshold && (
                   <p className="mt-0.5 text-xs text-muted-foreground">
-                    {(honeyLevel.nextThreshold - honeyLifetime).toLocaleString()} to {
+                    {formatCount(honeyLevel.nextThreshold - honeyLifetime)} to {
                       honeyLevel.level === 0 ? "Bronze" :
                       honeyLevel.level === 1 ? "Silver" :
                       honeyLevel.level === 2 ? "Gold"   :
@@ -175,7 +182,7 @@ export function HeaderUserMenu({
                 <span className="text-sm leading-none">🍯</span>
                 <span className="text-xs font-medium text-muted-foreground">Honey</span>
                 <span className="ml-auto text-xs font-bold tabular-nums text-foreground">
-                  {honeyPoints.toLocaleString()}
+                  {formatCount(honeyPoints)}
                 </span>
               </div>
             </DropdownMenuLabel>
@@ -200,6 +207,10 @@ export function HeaderUserMenu({
           <DropdownMenuItem onClick={() => router.push("/saved")}>
             <Heart className="size-4" />
             {language === "TH" ? "รายการที่บันทึก" : language === "JP" ? "保存済み" : "Saved Listings"}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/settings/alerts")}>
+            <BellRing className="size-4" />
+            {t(language, "managePriceAlerts")}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => router.push("/guide")}>

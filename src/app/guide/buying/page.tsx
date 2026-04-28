@@ -60,7 +60,7 @@ export default function BuyingGuidePage() {
           { label: "Guide", href: "/guide" },
           { label: "Buying Guide" },
         ]} />
-        <h1 className="font-sans text-2xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="font-sans text-h1">
           Buying Guide
         </h1>
         <p className="text-muted-foreground text-lg">
@@ -76,7 +76,7 @@ export default function BuyingGuidePage() {
           <Card key={shop.name}>
             <CardContent className="space-y-2 p-5">
               <div className="flex items-center gap-2">
-                <h3 className="font-sans text-base font-semibold">
+                <h3 className="font-sans text-h4">
                   {shop.url ? (
                     shop.url.startsWith("/") ? (
                       <Link

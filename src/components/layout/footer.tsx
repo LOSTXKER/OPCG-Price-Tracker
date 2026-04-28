@@ -12,6 +12,7 @@ export function Footer() {
     { label: t(lang, "sets"), href: "/sets" },
     { label: "Trending", href: "/trending" },
     { label: t(lang, "marketplace"), href: "/marketplace" },
+    { label: t(lang, "winnersPageTitle"), href: "/raffle/winners" },
     { label: "Blog", href: "/blog" },
   ];
 
@@ -40,13 +41,13 @@ export function Footer() {
               One Piece Card Game price tracker updated daily.
               Prices from Yuyu-tei, portfolio & collection tracking.
             </p>
-            <p className="mt-4 text-xs text-muted-foreground/60">
+            <p className="mt-4 text-meta text-muted-foreground/60">
               Price data sourced from Yuyu-tei &middot; Card images &copy; BANDAI
             </p>
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-primary/50">
+            <p className="text-eyebrow text-primary/50">
               {t(lang, "quickLinks")}
             </p>
             <nav className="mt-3 flex flex-col gap-2">
@@ -54,7 +55,7 @@ export function Footer() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-xs text-muted-foreground transition-colors hover:text-primary"
+                  className="text-meta transition-colors hover:text-primary"
                 >
                   {link.label}
                 </Link>
@@ -63,7 +64,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-primary/50">
+            <p className="text-eyebrow text-primary/50">
               {t(lang, "tools")}
             </p>
             <nav className="mt-3 flex flex-col gap-2">
@@ -71,7 +72,7 @@ export function Footer() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-xs text-muted-foreground transition-colors hover:text-primary"
+                  className="text-meta transition-colors hover:text-primary"
                 >
                   {link.label}
                 </Link>
@@ -80,7 +81,7 @@ export function Footer() {
           </div>
 
           <div className="sm:col-span-2 lg:col-span-2">
-            <p className="text-xs font-semibold uppercase tracking-wider text-primary/50">
+            <p className="text-eyebrow text-primary/50">
               {t(lang, "guide")}
             </p>
             <nav className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2">
@@ -88,7 +89,7 @@ export function Footer() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-xs text-muted-foreground transition-colors hover:text-primary"
+                  className="text-meta transition-colors hover:text-primary"
                 >
                   {link.label}
                 </Link>
@@ -99,10 +100,10 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-8 flex items-center justify-between border-t border-primary/15 pt-6">
-          <p className="text-xs text-muted-foreground/50">
+          <p className="text-meta text-muted-foreground/50">
             &copy; {new Date().getFullYear()} Meecard
           </p>
-          <nav className="flex items-center gap-4 text-xs text-muted-foreground/50">
+          <nav className="flex items-center gap-4 text-meta text-muted-foreground/50">
             <Link href="/guide" className="transition-colors hover:text-muted-foreground">
               {t(lang, "guide")}
             </Link>

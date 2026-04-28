@@ -94,7 +94,7 @@ export function HoneyTransactionList({
       <div className="overflow-hidden rounded-lg border border-border/50">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border/50 bg-muted/30 text-xs text-muted-foreground">
+            <tr className="border-b border-border/50 bg-muted/30 text-meta">
               <th className="px-3 py-2 text-left font-medium">ผู้ใช้</th>
               <th className="px-3 py-2 text-left font-medium">ประเภท</th>
               <th className="hidden px-3 py-2 text-left font-medium sm:table-cell">รายละเอียด</th>
@@ -126,7 +126,7 @@ export function HoneyTransactionList({
                   <td className="px-3 py-2">
                     <Badge
                       className={cn(
-                        "text-[10px] font-medium",
+                        "text-overlay",
                         typeInfo.bg,
                         typeInfo.text,
                       )}
@@ -134,7 +134,7 @@ export function HoneyTransactionList({
                       {typeInfo.label}
                     </Badge>
                   </td>
-                  <td className="hidden max-w-[250px] truncate px-3 py-2 text-xs text-muted-foreground sm:table-cell">
+                  <td className="hidden max-w-[250px] truncate px-3 py-2 text-meta sm:table-cell">
                     {tx.reason}
                   </td>
                   <td className="px-3 py-2 text-right">
@@ -148,7 +148,7 @@ export function HoneyTransactionList({
                       {tx.amount.toLocaleString()}
                     </span>
                   </td>
-                  <td className="px-3 py-2 text-right text-xs text-muted-foreground">
+                  <td className="px-3 py-2 text-right text-meta">
                     {new Date(tx.createdAt).toLocaleDateString("th-TH", {
                       day: "numeric",
                       month: "short",

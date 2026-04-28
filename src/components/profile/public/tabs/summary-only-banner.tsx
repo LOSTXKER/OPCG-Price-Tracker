@@ -9,7 +9,7 @@ function SummaryStat({ value, label }: { value: number; label: string }) {
   return (
     <div className="rounded-xl border border-border/40 bg-card px-4 py-3">
       <p className="text-2xl font-bold tabular-nums leading-none">{value}</p>
-      <p className="mt-1 text-xs text-muted-foreground">{label}</p>
+      <p className="mt-1 text-meta">{label}</p>
     </div>
   );
 }

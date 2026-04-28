@@ -4,13 +4,8 @@ import { useEffect, useState } from "react";
 import { Download, ExternalLink, Loader2, Receipt } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useUIStore } from "@/stores/ui-store";
-import { t } from "@/lib/i18n";
-import type { Language } from "@/lib/i18n";
+import { t, getLocale } from "@/lib/i18n";
 import type { InvoiceItem } from "./profile-types";
-
-function getLocaleStr(lang: Language) {
-  return lang === "TH" ? "th-TH" : lang === "JP" ? "ja-JP" : "en-US";
-}
 
 export function SectionBilling() {
   const lang = useUIStore((s) => s.language);
@@ -27,7 +22,7 @@ export function SectionBilling() {
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="flex items-center gap-2 text-lg font-semibold">
+        <h2 className="flex items-center gap-2 text-h3">
           <Receipt className="size-5" />
           {t(lang, "billingHistory")}
         </h2>
@@ -70,15 +65,15 @@ export function SectionBilling() {
               <tbody>
                 {invoices.map((inv) => (
                   <tr key={inv.id} className="border-b border-border/10 last:border-0">
-                    <td className="py-2.5 pr-3 text-xs text-muted-foreground">
-                      {new Date(inv.created * 1000).toLocaleDateString(getLocaleStr(lang), {
+                    <td className="py-2.5 pr-3 text-meta">
+                      {new Date(inv.created * 1000).toLocaleDateString(getLocale(lang), {
                         year: "numeric",
                         month: "short",
                         day: "numeric",
                       })}
                     </td>
                     <td className="px-2 py-2.5 text-xs font-medium tabular-nums">
-                      {(inv.amountPaid / 100).toLocaleString(getLocaleStr(lang), {
+                      {(inv.amountPaid / 100).toLocaleString(getLocale(lang), {
                         style: "currency",
                         currency: inv.currency.toUpperCase(),
                       })}

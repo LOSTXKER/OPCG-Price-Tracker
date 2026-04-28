@@ -12,6 +12,8 @@ import {
   Cell,
 } from "recharts";
 
+import { Surface } from "@/components/ui/surface";
+
 interface ChartData {
   quality: {
     name: string;
@@ -26,20 +28,13 @@ interface ChartData {
   }[];
 }
 
-const RARITY_CHART_COLORS: Record<string, string> = {
-  C: "hsl(0, 0%, 55%)",
-  UC: "hsl(142, 60%, 45%)",
-  R: "hsl(217, 80%, 58%)",
-  SR: "hsl(262, 75%, 58%)",
-  SEC: "hsl(38, 92%, 50%)",
-  SP: "hsl(330, 75%, 55%)",
-  L: "hsl(24, 90%, 53%)",
-  TR: "hsl(0, 72%, 51%)",
-  DON: "hsl(0, 65%, 55%)",
-  P: "hsl(187, 80%, 43%)",
-};
-
-const FALLBACK_COLOR = "hsl(0, 0%, 40%)";
+const CHART_PALETTE = [
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+];
 
 export function DashboardCharts({ data }: { data: ChartData }) {
   const overallComplete = data.quality.reduce((sum, q) => sum + q.value, 0);
@@ -52,7 +47,7 @@ export function DashboardCharts({ data }: { data: ChartData }) {
   return (
     <div className="grid gap-4 lg:grid-cols-5">
       {/* Completeness Donut — compact */}
-      <div className="rounded-xl border border-border/50 bg-card p-5 lg:col-span-2">
+      <Surface variant="panel" padding="md" className="lg:col-span-2">
         <h3 className="text-sm font-semibold text-foreground">ความครบถ้วนข้อมูล</h3>
         <div className="mt-4 flex items-center gap-5">
           <div className="relative size-28 shrink-0">
@@ -73,7 +68,7 @@ export function DashboardCharts({ data }: { data: ChartData }) {
                   startAngle={90}
                   endAngle={-270}
                 >
-                  <Cell fill="hsl(142, 71%, 45%)" />
+                  <Cell fill="var(--chart-1)" />
                   <Cell fill="hsl(var(--muted))" />
                 </Pie>
               </PieChart>
@@ -93,7 +88,7 @@ export function DashboardCharts({ data }: { data: ChartData }) {
                   </div>
                   <div className="h-1.5 overflow-hidden rounded-full bg-muted/60">
                     <div
-                      className="h-full rounded-full bg-green-500/80 transition-all"
+                      className="h-full rounded-full bg-primary/70 transition-all"
                       style={{ width: `${Math.min(pctVal, 100)}%` }}
                     />
                   </div>
@@ -102,10 +97,10 @@ export function DashboardCharts({ data }: { data: ChartData }) {
             })}
           </div>
         </div>
-      </div>
+      </Surface>
 
       {/* Rarity Bar Chart */}
-      <div className="rounded-xl border border-border/50 bg-card p-5 lg:col-span-3">
+      <Surface variant="panel" padding="md" className="lg:col-span-3">
         <h3 className="text-sm font-semibold text-foreground">การ์ดตามระดับความหายาก</h3>
         <div className="mt-3 h-48">
           <ResponsiveContainer width="100%" height="100%">
@@ -143,17 +138,17 @@ export function DashboardCharts({ data }: { data: ChartData }) {
                 ]}
               />
               <Bar dataKey="count" radius={[4, 4, 0, 0]} maxBarSize={36}>
-                {data.rarities.map((entry) => (
+                {data.rarities.map((entry, i) => (
                   <Cell
                     key={entry.rarity}
-                    fill={RARITY_CHART_COLORS[entry.rarity] ?? FALLBACK_COLOR}
+                    fill={CHART_PALETTE[i % CHART_PALETTE.length]}
                   />
                 ))}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </Surface>
     </div>
   );
 }

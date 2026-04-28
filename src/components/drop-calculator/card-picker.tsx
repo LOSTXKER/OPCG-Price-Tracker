@@ -41,12 +41,12 @@ export function CardPicker({
       <div className="panel space-y-3 p-4">
         <div>
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-lg font-semibold">{t(lang, "selectWantedCards")}</h2>
+            <h2 className="text-h3">{t(lang, "selectWantedCards")}</h2>
             {wantCount > 0 && (
-              <span className="text-xs text-muted-foreground">{wantCount} {t(lang, "cardsCount")}</span>
+              <span className="text-meta">{wantCount} {t(lang, "cardsCount")}</span>
             )}
           </div>
-          <p className="mt-0.5 text-xs text-muted-foreground">{t(lang, "clickToSelect")}</p>
+          <p className="mt-0.5 text-meta">{t(lang, "clickToSelect")}</p>
         </div>
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
@@ -107,7 +107,7 @@ export function CardPicker({
                   {card.imageUrl ? (
                     <Image src={card.imageUrl} alt={name} fill className="object-contain" sizes="120px" placeholder="blur" blurDataURL={BLUR_DATA_URL} />
                   ) : (
-                    <div className="flex size-full items-center justify-center text-xs text-muted-foreground">No Image</div>
+                    <div className="flex size-full items-center justify-center text-meta">No Image</div>
                   )}
                   {selected && (
                     <div className="absolute inset-0 flex items-center justify-center bg-primary/10 backdrop-blur-[1px]">

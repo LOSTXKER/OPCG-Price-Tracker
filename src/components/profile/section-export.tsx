@@ -46,13 +46,13 @@ export function SectionExport() {
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="flex items-center gap-2 text-lg font-semibold">
+        <h2 className="flex items-center gap-2 text-h3">
           <Download className="size-5" />
           {t(lang, "goToExport")}
         </h2>
       </div>
 
-      <LockOverlay locked={locked}>
+      <LockOverlay locked={locked} featureKey="csvExport">
         <div className="grid gap-3 sm:grid-cols-2">
           {exports.map(({ labelKey, descKey, href, icon: Icon, color }) => (
             <div key={labelKey} className="flex flex-col justify-between rounded-xl border border-border/40 bg-card p-5">
@@ -62,7 +62,7 @@ export function SectionExport() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <h3 className="text-sm font-semibold">{t(lang, labelKey)}</h3>
-                  <p className="mt-0.5 text-xs text-muted-foreground">{t(lang, descKey)}</p>
+                  <p className="mt-0.5 text-meta">{t(lang, descKey)}</p>
                 </div>
               </div>
               <div className="mt-4 flex items-center justify-between">

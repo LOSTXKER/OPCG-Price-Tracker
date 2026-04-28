@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { Fragment, useState, type ReactNode } from "react";
 import Image from "next/image";
 import {
   AtSign,
   Award,
+  CalendarDays,
   Check,
   CheckCircle2,
   Copy,
-  Star,
   Zap,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -29,49 +29,50 @@ import type {
   SocialLinkDescriptor,
   TrustChip,
 } from "./hero-builders";
-import type { ProfileStats, ProfileUser } from "./types";
+import type { ProfileUser } from "./types";
 
 const HERO_ACHIEVEMENT_LIMIT = 5;
 const BIO_OVERFLOW_CHARS = 220;
 const BIO_OVERFLOW_LINES = 3;
 
 /**
- * Top of the public profile page. Sits underneath the cover banner with the
- * avatar overlapping the cover (Twitter / IG convention) so the page reads
- * "person first, content second" rather than "table of stats".
+ * Public profile hero — sits directly under the brand-warm cover banner.
  *
- * Layout summary (desktop ≥sm):
+ * Twitter/Etsy-style layout:
+ *   ┌── cover banner ──────────────────────────────────────────────┐
+ *   └─────────────────────────────────────────────────────────────┘
+ *     ┌────┐                                  [Message][Save][⋯]
+ *     │ AV │  (overlaps cover by ~half)
+ *     └────┘
+ *     Name ✓
+ *     @handle · activity dot
+ *     bio…
+ *     ⏱ joined  ·  ⚡ replies in 2h  ·  ✔ 12 deals
+ *     [LINE] [IG] [X] [FB]
+ *     🏆 🏆 🏆  +2 more
  *
- *   ┌─ Avatar (overlap)  Name ✓ [Pro]   ┃                Actions ┐
- *   │                    @handle [copy]  ┃                        │
- *   │                    bio (full row)  ┃                        │
- *   │                    [trust chips]   ┃                        │
- *   │                    [socials]       ┃                        │
- *   │                    [meta · row]    ┃                        │
- *   ├─ Achievement strip (full width, larger icons) ──────────────┤
- *
- * On mobile actions wrap below the avatar and the achievement strip becomes
- * horizontally scrollable.
+ * Quantitative stats (listings count, rating numbers) live in the dedicated
+ * `ProfileStatTiles` strip below so this section can stay calm and readable.
  */
 export function ProfileHero({
   user,
-  stats,
-  sellerStats,
   achievements,
   metaParts,
   trustChips,
   socialLinks,
+  joinedRelative,
   isOwner,
+  sellerStats,
   lang,
   actionsSlot,
 }: {
   user: ProfileUser;
-  stats: ProfileStats;
   sellerStats: SellerStats;
   achievements: ProfileAchievement[];
   metaParts: HeroMetaItem[];
   trustChips: TrustChip[];
   socialLinks: SocialLinkDescriptor[];
+  joinedRelative: string;
   isOwner: boolean;
   lang: Language;
   /** Right-aligned action cluster (Message / Save / Share / Edit / More). */
@@ -87,16 +88,18 @@ export function ProfileHero({
 
   const heroAchievements = achievements.slice(0, HERO_ACHIEVEMENT_LIMIT);
 
+  // Pull just the activity signal out of the meta parts. Listings / rating /
+  // reviews / joined now live in the dedicated stat tile strip below the hero.
+  const activityItem = metaParts.find((m) => m.kind === "activity");
+
   return (
-    <div className="relative">
-      {/* ── Top row: avatar (overlapping cover) + actions ───────────── */}
+    <section className="relative">
+      {/* ── Top row: avatar (overlapping cover) + desktop actions ── */}
       <div className="flex items-end justify-between gap-3">
         <div className="relative">
           <Avatar
             className={cn(
-              // Negative margin pulls the avatar up so it overlaps the
-              // cover by ~half its height — same trick Twitter / Etsy use.
-              "-mt-12 size-24 shrink-0 ring-4 ring-background sm:-mt-16 sm:size-28 md:-mt-20 md:size-32",
+              "-mt-12 size-24 shrink-0 ring-4 ring-background sm:-mt-14 sm:size-28 md:-mt-16 md:size-32",
               "shadow-lg",
             )}
           >
@@ -111,13 +114,10 @@ export function ProfileHero({
             </AvatarFallback>
           </Avatar>
 
-          {/* Tier label chip — replaces the colour-only ring with an
-              actually-readable badge (visitors don't memorise our tier
-              colours). Floats over the bottom-right of the avatar. */}
           {isPaidTier && (
             <span
               className={cn(
-                "absolute -bottom-1 right-0 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-md ring-2 ring-background",
+                "absolute -bottom-1 right-0 inline-flex items-center rounded-full px-2 py-0.5 text-overlay uppercase tracking-wider shadow-md ring-2 ring-background",
                 tierCfg.color,
               )}
               title={`${tierCfg.label} tier`}
@@ -127,17 +127,15 @@ export function ProfileHero({
           )}
         </div>
 
-        {/* Actions — desktop renders inline, mobile pushes them onto a
-            second row below the bio (handled by sibling div). */}
         <div className="hidden shrink-0 items-center gap-2 sm:flex">
           {actionsSlot}
         </div>
       </div>
 
-      {/* ── Identity block ───────────────────────────────────────────── */}
+      {/* ── Identity block (full-width below the avatar/actions row) ── */}
       <div className="mt-3 sm:mt-4">
         <div className="flex flex-wrap items-center gap-2">
-          <h1 className="inline-flex items-center gap-2 break-words text-2xl font-extrabold tracking-tight sm:text-3xl">
+          <h1 className="inline-flex items-center gap-2 break-words text-h1 font-extrabold">
             {user.displayName ?? "User"}
             {sellerStats.isVerified && (
               <span
@@ -151,17 +149,25 @@ export function ProfileHero({
           </h1>
         </div>
 
-        {user.handle && (
-          <HandleRow handle={user.handle} userId={user.id} lang={lang} />
+        {(user.handle || activityItem) && (
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-medium text-muted-foreground">
+            {user.handle && (
+              <HandleRow handle={user.handle} userId={user.id} lang={lang} />
+            )}
+            {activityItem && activityItem.kind === "activity" && (
+              <ActivityPill
+                label={activityItem.label}
+                tone={activityItem.tone}
+              />
+            )}
+          </div>
         )}
 
-        {/* Bio — full width row so longer text breathes. Auto-expands once
-            the visitor opts in via "Read more". */}
         {user.bio && (
           <div className="mt-2 max-w-2xl">
             <p
               className={cn(
-                "whitespace-pre-line text-sm leading-relaxed text-foreground/80 sm:text-[0.95rem]",
+                "whitespace-pre-line text-sm leading-relaxed text-foreground/85",
                 !bioExpanded && bioOverflows && "line-clamp-3",
               )}
             >
@@ -171,7 +177,7 @@ export function ProfileHero({
               <button
                 type="button"
                 onClick={() => setBioExpanded((v) => !v)}
-                className="mt-1 text-xs font-semibold text-primary hover:underline"
+                className="mt-0.5 text-xs font-semibold text-primary hover:underline"
               >
                 {bioExpanded ? t(lang, "bioReadLess") : t(lang, "bioReadMore")}
               </button>
@@ -179,27 +185,11 @@ export function ProfileHero({
           </div>
         )}
 
-        {/* Trust chips — visitors only. */}
-        {!isOwner && trustChips.length > 0 && (
-          <div className="mt-3 flex flex-wrap items-center gap-1.5">
-            {trustChips.map((c) => (
-              <span
-                key={c.id}
-                className={cn(
-                  "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold",
-                  c.tone,
-                )}
-              >
-                {c.iconKind === "zap" ? (
-                  <Zap className="size-3.5" />
-                ) : (
-                  <CheckCircle2 className="size-3.5" />
-                )}
-                {c.label}
-              </span>
-            ))}
-          </div>
-        )}
+        <HeroFactsRow
+          joinedRelative={joinedRelative}
+          trustChips={trustChips}
+          isOwner={isOwner}
+        />
 
         {socialLinks.length > 0 && (
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
@@ -208,20 +198,21 @@ export function ProfileHero({
             ))}
           </div>
         )}
-
-        <HeroMetaRow items={metaParts} stats={stats} lang={lang} />
       </div>
 
-      {/* ── Mobile actions row ──────────────────────────────────────── */}
+      {/* Mobile actions row */}
       <div className="mt-4 flex flex-wrap items-center gap-2 sm:hidden">
         {actionsSlot}
       </div>
 
-      {/* ── Achievement showcase strip ──────────────────────────────── */}
       {heroAchievements.length > 0 && (
-        <AchievementStrip items={heroAchievements} totalCount={achievements.length} lang={lang} />
+        <AchievementStrip
+          items={heroAchievements}
+          totalCount={achievements.length}
+          lang={lang}
+        />
       )}
-    </div>
+    </section>
   );
 }
 
@@ -251,12 +242,11 @@ function HandleRow({
     } catch {
       toast.error(t(lang, "shareCopyLink"));
     }
-    // Touch userId to avoid lint warning when DEBUG noise gets stripped.
     void userId;
   };
 
   return (
-    <div className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
+    <span className="inline-flex items-center gap-1.5">
       <span className="inline-flex items-center gap-0.5">
         <AtSign className="size-3.5" />
         {handle}
@@ -274,6 +264,88 @@ function HandleRow({
           <Copy className="size-3.5" />
         )}
       </button>
+    </span>
+  );
+}
+
+function ActivityPill({
+  label,
+  tone,
+}: {
+  label: string;
+  tone: "online" | "recent" | "stale" | "inactive";
+}) {
+  const dotClass =
+    tone === "online"
+      ? "bg-emerald-500"
+      : tone === "recent"
+        ? "bg-emerald-500/70"
+        : tone === "stale"
+          ? "bg-amber-500"
+          : "bg-muted-foreground/40";
+  return (
+    <span className="inline-flex items-center gap-1.5 text-meta">
+      <span aria-hidden className={cn("size-1.5 rounded-full", dotClass)} />
+      {label}
+    </span>
+  );
+}
+
+/**
+ * Single-line "facts" row inspired by the X/Twitter profile header
+ * ("Joined Jan 2024 · Replies in 2h · 12 sales"). Owners don't see their
+ * own response/deal stats — they already know.
+ */
+function HeroFactsRow({
+  joinedRelative,
+  trustChips,
+  isOwner,
+}: {
+  joinedRelative: string;
+  trustChips: TrustChip[];
+  isOwner: boolean;
+}) {
+  const items: ReactNode[] = [];
+
+  items.push(
+    <span key="joined" className="inline-flex items-center gap-1">
+      <CalendarDays className="size-3.5 text-muted-foreground/80" aria-hidden />
+      {joinedRelative}
+    </span>,
+  );
+
+  if (!isOwner) {
+    for (const c of trustChips) {
+      items.push(
+        <span key={c.id} className="inline-flex items-center gap-1">
+          {c.iconKind === "zap" ? (
+            <Zap className="size-3.5 text-amber-500" aria-hidden />
+          ) : (
+            <CheckCircle2
+              className="size-3.5 text-emerald-500"
+              aria-hidden
+            />
+          )}
+          {c.label}
+        </span>,
+      );
+    }
+  }
+
+  if (items.length === 0) return null;
+
+  return (
+    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-meta">
+      {items.map((node, i) => (
+        <Fragment key={i}>
+          {i > 0 && (
+            <span aria-hidden className="text-muted-foreground/40">
+              ·
+            </span>
+          )}
+          {node}
+        </Fragment>
+      ))}
     </div>
   );
 }
@@ -291,7 +363,7 @@ function AchievementStrip({
   return (
     <div
       className={cn(
-        "mt-5 -mx-4 flex items-center gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0",
+        "mt-3 flex items-center gap-1.5 overflow-x-auto pb-1",
         "scrollbar-none",
       )}
       aria-label={t(lang, "achievementsTitle")}
@@ -301,119 +373,34 @@ function AchievementStrip({
           key={a.code}
           title={a.nameEn ?? a.name}
           className={cn(
-            "group/ach flex shrink-0 items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/5 px-3 py-1.5",
+            "group/ach flex shrink-0 items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/5 px-2 py-1",
             "transition-colors hover:border-amber-400/60 hover:bg-amber-500/10",
           )}
         >
-          <div className="relative flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-background shadow-inner">
+          <div className="relative flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-background">
             {a.badgeImageUrl ? (
               <Image
                 src={a.badgeImageUrl}
                 alt=""
-                width={28}
-                height={28}
+                width={24}
+                height={24}
                 unoptimized
                 className="size-full object-contain"
               />
             ) : (
-              <Award className="size-4 text-amber-500" />
+              <Award className="size-3.5 text-amber-500" />
             )}
           </div>
-          <span className="max-w-[10rem] truncate text-xs font-semibold text-foreground/85">
+          <span className="max-w-[9rem] truncate text-overlay font-semibold text-foreground/85">
             {a.nameEn ?? a.name}
           </span>
         </div>
       ))}
       {remaining > 0 && (
-        <span className="shrink-0 rounded-full border border-dashed border-border/60 bg-background px-3 py-1.5 text-xs font-medium text-muted-foreground">
+        <span className="shrink-0 rounded-full border border-dashed border-border/60 bg-background px-2 py-1 text-overlay font-medium text-muted-foreground">
           +{remaining}
         </span>
       )}
     </div>
   );
-}
-
-function HeroMetaRow({
-  items,
-  stats,
-  lang,
-}: {
-  items: HeroMetaItem[];
-  stats: ProfileStats;
-  lang: Language;
-}) {
-  if (items.length === 0) return null;
-  return (
-    <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-      {items.map((item, i) => (
-        <span key={metaKey(item)} className="inline-flex items-center gap-2">
-          {i > 0 && <span aria-hidden className="text-muted-foreground/40">·</span>}
-          <HeroMetaCell item={item} stats={stats} lang={lang} />
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function metaKey(item: HeroMetaItem): string {
-  return item.kind;
-}
-
-function HeroMetaCell({
-  item,
-  stats,
-  lang,
-}: {
-  item: HeroMetaItem;
-  stats: ProfileStats;
-  lang: Language;
-}) {
-  switch (item.kind) {
-    case "listings":
-      return (
-        <span className="font-medium text-foreground/80">
-          <span className="tabular-nums">{item.count}</span>{" "}
-          <span className="font-normal text-muted-foreground/80">
-            {t(lang, "tabListings").toLowerCase()}
-          </span>
-        </span>
-      );
-    case "rating":
-      return (
-        <span className="inline-flex items-center gap-1 font-medium text-foreground/80">
-          <Star className="size-3 fill-amber-400 text-amber-400" />
-          <span className="tabular-nums">{item.rating.toFixed(1)}</span>
-          {stats.reviewCount > 0 && (
-            <span className="text-muted-foreground/70">({stats.reviewCount})</span>
-          )}
-        </span>
-      );
-    case "reviews":
-      return (
-        <span className="font-medium text-foreground/80">
-          <span className="tabular-nums">{item.count}</span>{" "}
-          <span className="font-normal text-muted-foreground/80">
-            {t(lang, "tabReviews").toLowerCase()}
-          </span>
-        </span>
-      );
-    case "activity": {
-      const dotClass =
-        item.tone === "online"
-          ? "bg-emerald-500"
-          : item.tone === "recent"
-            ? "bg-emerald-500/70"
-            : item.tone === "stale"
-              ? "bg-amber-500"
-              : "bg-muted-foreground/40";
-      return (
-        <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden className={cn("size-1.5 rounded-full", dotClass)} />
-          <span>{item.label}</span>
-        </span>
-      );
-    }
-    case "joined":
-      return <span>{item.label}</span>;
-  }
 }

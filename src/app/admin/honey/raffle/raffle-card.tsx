@@ -67,15 +67,15 @@ export function RaffleCard({
                 )}
               </div>
               <h3 className="mt-1 text-sm font-semibold">{r.title}</h3>
-              {r.description && <p className="text-xs text-muted-foreground">{r.description}</p>}
+              {r.description && <p className="text-meta">{r.description}</p>}
             </div>
             <div className="shrink-0 text-right">
               <p className="text-sm font-bold tabular-nums">{r.totalTickets}</p>
-              <p className="text-xs text-muted-foreground">{r.totalParticipants} players</p>
+              <p className="text-meta">{r.totalParticipants} players</p>
             </div>
           </div>
 
-          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-meta">
             <span>Cost: <b className="text-foreground">{r.ticketCost}</b> pts</span>
             <span>Max: <b className="text-foreground">{r.maxTickets}</b>/user</span>
             <span>Free at: <b className="text-foreground">{r.freeThreshold}</b>d streak</span>

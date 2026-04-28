@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -26,6 +26,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { PageHeader } from "@/components/layout/page-header";
+import { LoadingState } from "@/components/shared/loading-state";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { t, type TranslationKey } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 type ListingItem = {
   id: number;
@@ -62,20 +68,20 @@ type ApiResponse = {
   statusCounts: Record<string, number>;
 };
 
-const STATUS_TABS = [
-  { key: "ALL", label: "ทั้งหมด" },
-  { key: "ACTIVE", label: "กำลังขาย" },
-  { key: "SOLD", label: "ขายแล้ว" },
-  { key: "RESERVED", label: "จอง" },
-  { key: "CANCELLED", label: "ยกเลิก" },
+const STATUS_TABS: ReadonlyArray<{ key: string; labelKey: TranslationKey }> = [
+  { key: "ALL", labelKey: "orderStatusAll" },
+  { key: "ACTIVE", labelKey: "listingStatusActive" },
+  { key: "SOLD", labelKey: "listingStatusSold" },
+  { key: "RESERVED", labelKey: "listingStatusReserved" },
+  { key: "CANCELLED", labelKey: "listingStatusCancelled" },
 ];
 
-const STATUS_BADGE: Record<string, { label: string; class: string; icon: typeof CheckCircle }> = {
-  ACTIVE: { label: "กำลังขาย", class: "bg-green-500/15 text-green-700 dark:text-green-400", icon: CheckCircle },
-  SOLD: { label: "ขายแล้ว", class: "bg-blue-500/15 text-blue-700 dark:text-blue-400", icon: CheckCircle },
-  RESERVED: { label: "จอง", class: "bg-yellow-500/15 text-yellow-700 dark:text-yellow-400", icon: AlertCircle },
-  EXPIRED: { label: "หมดอายุ", class: "bg-muted text-muted-foreground", icon: XCircle },
-  CANCELLED: { label: "ยกเลิก", class: "bg-red-500/15 text-red-700 dark:text-red-400", icon: XCircle },
+const STATUS_BADGE: Record<string, { labelKey: TranslationKey; class: string; icon: typeof CheckCircle }> = {
+  ACTIVE: { labelKey: "listingStatusActive", class: "bg-success-soft text-success", icon: CheckCircle },
+  SOLD: { labelKey: "listingStatusSold", class: "bg-info-soft text-info", icon: CheckCircle },
+  RESERVED: { labelKey: "listingStatusReserved", class: "bg-warning-soft text-warning", icon: AlertCircle },
+  EXPIRED: { labelKey: "listingStatusExpired", class: "bg-muted text-muted-foreground", icon: XCircle },
+  CANCELLED: { labelKey: "listingStatusCancelled", class: "bg-danger-soft text-danger", icon: XCircle },
 };
 
 const CONDITION_LABEL: Record<string, string> = {
@@ -87,6 +93,7 @@ const CONDITION_LABEL: Record<string, string> = {
 };
 
 export default function SellerListingsPage() {
+  const lang = useUIStore((s) => s.language);
   const router = useRouter();
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -159,7 +166,7 @@ export default function SellerListingsPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("ต้องการลบประกาศนี้จริงหรือไม่?")) return;
+    if (!confirm("เธ•เนเธญเธเธเธฒเธฃเธฅเธเธเธฃเธฐเธเธฒเธจเธเธตเนเธเธฃเธดเธเธซเธฃเธทเธญเนเธกเน?")) return;
     setActionLoading(id);
     try {
       const res = await fetch(`/api/listings/${id}`, { method: "DELETE" });
@@ -175,47 +182,39 @@ export default function SellerListingsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="page-header">สินค้าของฉัน</h1>
-          <p className="text-sm text-muted-foreground">
-            จัดการสินค้าที่คุณลงขาย
-          </p>
-        </div>
-        <Button render={<Link href="/seller/listings/new" />}>
-          <Plus className="mr-2 h-4 w-4" />
-          ลงขายใหม่
-        </Button>
-      </div>
+      <PageHeader
+        title={t(lang, "sellerListingsTitle")}
+        description={t(lang, "sellerListingsDesc")}
+        actions={
+          <Button render={<Link href="/seller/listings/new" />}>
+            <Plus className="mr-2 h-4 w-4" />
+            {t(lang, "sellerListingNew")}
+          </Button>
+        }
+      />
 
-      {/* Tabs */}
-      <div className="flex gap-1 overflow-x-auto rounded-lg bg-muted/50 p-1">
-        {STATUS_TABS.map((tab) => {
-          const count =
-            tab.key === "ALL"
-              ? totalAll
-              : (data?.statusCounts[tab.key] ?? 0);
-          return (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => handleTabChange(tab.key)}
-              className={`flex items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                activeTab === tab.key
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {tab.label}
-              {count > 0 && (
-                <span className="rounded-full bg-muted px-1.5 text-xs tabular-nums">
-                  {count}
-                </span>
-              )}
-            </button>
-          );
-        })}
+      <div className="overflow-x-auto">
+        <SegmentedControl
+          value={activeTab}
+          onChange={handleTabChange}
+          ariaLabel="Filter listings by status"
+          options={STATUS_TABS.map((tab) => {
+            const count =
+              tab.key === "ALL"
+                ? totalAll
+                : (data?.statusCounts[tab.key] ?? 0);
+            return {
+              value: tab.key,
+              label: t(lang, tab.labelKey),
+              badge:
+                count > 0 ? (
+                  <span className="rounded-full bg-muted px-1.5 text-xs tabular-nums">
+                    {count}
+                  </span>
+                ) : undefined,
+            };
+          })}
+        />
       </div>
 
       {/* Search */}
@@ -225,40 +224,39 @@ export default function SellerListingsPage() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="ค้นหาด้วยรหัสการ์ดหรือชื่อ..."
+          placeholder={t(lang, "searchByCardCodeOrName")}
           className="h-10 w-full rounded-lg border border-border bg-background pl-9 pr-4 text-sm transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         />
       </form>
 
       {/* Content */}
       {loading ? (
-        <div className="flex min-h-[300px] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        </div>
+        <LoadingState variant="spinner" label={t(lang, "loading")} />
       ) : !data || data.listings.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground">
-          <Package className="mb-3 h-12 w-12 opacity-30" />
-          <p className="text-lg font-medium">ไม่พบสินค้า</p>
-          <p className="mb-4 text-sm">
-            {searchQuery
-              ? "ลองค้นหาด้วยคำค้นอื่น"
-              : "คุณยังไม่มีสินค้าที่ลงขาย"}
-          </p>
-          <Button variant="outline" render={<Link href="/seller/listings/new" />}>
-            <Plus className="mr-2 h-4 w-4" />
-            ลงขายสินค้าแรกของคุณ
-          </Button>
-        </div>
+        <KumaEmptyState
+          variant="dashed"
+          icon={Package}
+          title={t(lang, "noListingsFound")}
+          description={
+            searchQuery
+              ? t(lang, "noListingsTrySearch")
+              : t(lang, "sellerNoListingsYet")
+          }
+          action={
+            <Button variant="outline" render={<Link href="/seller/listings/new" />}>
+              <Plus className="mr-2 h-4 w-4" />
+              {t(lang, "listFirstItem")}
+            </Button>
+          }
+        />
       ) : (
         <>
           {/* Listings Table */}
           <div className="space-y-2">
             {data.listings.map((listing) => {
-              const badge = STATUS_BADGE[listing.status] ?? {
-                label: listing.status,
-                class: "bg-muted text-muted-foreground",
-                icon: AlertCircle,
-              };
+              const badge = STATUS_BADGE[listing.status];
+              const badgeLabel = badge ? t(lang, badge.labelKey) : listing.status;
+              const badgeClass = badge?.class ?? "bg-muted text-muted-foreground";
               const isLoading = actionLoading === listing.id;
 
               return (
@@ -290,17 +288,17 @@ export default function SellerListingsPage() {
                       >
                         {listing.card.nameEn ?? listing.card.nameJp}
                       </Link>
-                      <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ${badge.class}`}>
-                        {badge.label}
+                      <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ${badgeClass}`}>
+                        {badgeLabel}
                       </span>
                     </div>
-                    <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
+                    <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-meta">
                       <span>{listing.card.cardCode}</span>
                       <span>{listing.card.rarity}</span>
                       <span>{CONDITION_LABEL[listing.condition] ?? listing.condition}</span>
                       <span>x{listing.quantity}</span>
                     </div>
-                    <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground">
+                    <div className="mt-1 flex items-center gap-3 text-meta">
                       <span className="flex items-center gap-1">
                         <Eye className="h-3 w-3" />
                         {listing.viewCount}
@@ -319,11 +317,11 @@ export default function SellerListingsPage() {
                   {/* Price */}
                   <div className="shrink-0 text-right">
                     <p className="text-sm font-bold">
-                      ¥{listing.priceJpy.toLocaleString()}
+                      ยฅ{listing.priceJpy.toLocaleString()}
                     </p>
                     {listing.priceThb != null && (
-                      <p className="text-xs text-muted-foreground">
-                        ฿{listing.priceThb.toLocaleString()}
+                      <p className="text-meta">
+                        เธฟ{listing.priceThb.toLocaleString()}
                       </p>
                     )}
                   </div>
@@ -350,20 +348,20 @@ export default function SellerListingsPage() {
                         onClick={() => router.push(`/seller/listings/${listing.id}`)}
                       >
                         <Pencil className="h-4 w-4" />
-                        แก้ไข
+                        {t(lang, "edit")}
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => router.push(`/marketplace/${listing.id}`)}
                       >
                         <Eye className="h-4 w-4" />
-                        ดูหน้าสินค้า
+                        {t(lang, "viewListing")}
                       </DropdownMenuItem>
                       {listing.status === "ACTIVE" && (
                         <DropdownMenuItem
                           onClick={() => handleDeactivate(listing.id)}
                         >
                           <XCircle className="h-4 w-4" />
-                          ปิดการขาย
+                          {t(lang, "deactivateListing")}
                         </DropdownMenuItem>
                       )}
                       {listing.status === "CANCELLED" && (
@@ -371,7 +369,7 @@ export default function SellerListingsPage() {
                           onClick={() => handleReactivate(listing.id)}
                         >
                           <CheckCircle className="h-4 w-4" />
-                          เปิดขายอีกครั้ง
+                          {t(lang, "reactivateListing")}
                         </DropdownMenuItem>
                       )}
                       <DropdownMenuItem
@@ -379,7 +377,7 @@ export default function SellerListingsPage() {
                         onClick={() => handleDelete(listing.id)}
                       >
                         <Trash2 className="h-4 w-4" />
-                        ลบ
+                        {t(lang, "delete")}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -397,10 +395,10 @@ export default function SellerListingsPage() {
                 disabled={page <= 1}
                 onClick={() => setPage(page - 1)}
               >
-                ก่อนหน้า
+                {t(lang, "previous")}
               </Button>
               <span className="text-sm text-muted-foreground">
-                หน้า {data.page} / {data.totalPages}
+                {t(lang, "paginationPageOf").replace("{page}", String(data.page)).replace("{total}", String(data.totalPages))}
               </span>
               <Button
                 variant="outline"
@@ -408,7 +406,7 @@ export default function SellerListingsPage() {
                 disabled={page >= data.totalPages}
                 onClick={() => setPage(page + 1)}
               >
-                ถัดไป
+                {t(lang, "next")}
               </Button>
             </div>
           )}

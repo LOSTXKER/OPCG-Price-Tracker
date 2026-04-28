@@ -13,6 +13,17 @@ import {
 
 import { FilterChips, type FilterDefinition } from "@/components/shared/filter-chips"
 import { SortableHeader } from "@/components/shared/sortable-header"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { SegmentedControl } from "@/components/ui/segmented-control"
+import { ViewToggle } from "@/components/ui/toolbar"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
@@ -163,7 +174,7 @@ export function HomeMarketOverview({
             <span className="hidden sm:inline">{t(lang, "filter")}</span>
             {m.activeFilterCount > 0 && (
               <span className={cn(
-                "flex size-4.5 items-center justify-center rounded-full text-[11px] font-bold",
+                "flex size-4.5 items-center justify-center rounded-full text-micro",
                 m.filterOpen || m.activeFilterCount > 0
                   ? "bg-primary-foreground/20 text-primary-foreground"
                   : "bg-primary/10 text-primary"
@@ -173,32 +184,14 @@ export function HomeMarketOverview({
             )}
           </button>
 
-          <div className="flex items-center gap-0.5 rounded-lg bg-muted/50 p-0.5">
-            <button
-              onClick={() => m.setViewMode("table")}
-              className={cn(
-                "rounded-md p-1.5 transition-colors",
-                m.viewMode === "table"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-              aria-label="Table view"
-            >
-              <List className="size-3.5" />
-            </button>
-            <button
-              onClick={() => m.setViewMode("grid")}
-              className={cn(
-                "rounded-md p-1.5 transition-colors",
-                m.viewMode === "grid"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-              aria-label="Grid view"
-            >
-              <LayoutGrid className="size-3.5" />
-            </button>
-          </div>
+          <ViewToggle
+            modes={[
+              { value: "table", icon: List, ariaLabel: "Table view" },
+              { value: "grid", icon: LayoutGrid, ariaLabel: "Grid view" },
+            ]}
+            value={m.viewMode}
+            onChange={m.setViewMode}
+          />
         </div>
       </div>
 
@@ -206,28 +199,39 @@ export function HomeMarketOverview({
       <div className="border-b border-border/50 bg-muted/20">
         <div className="flex items-center gap-2.5 px-4 py-2.5 sm:gap-3">
           {setOptions.length > 0 && (
-            <select
-              value={selectedSets[0] ?? ""}
-              onChange={(e) =>
-                m.handleFilterChange("set", e.target.value ? [e.target.value] : [])
+            <Select
+              items={[
+                { value: "__all__", label: t(lang, "allSets") },
+                ...setOptions.map((opt) => ({ value: opt.value, label: opt.label })),
+              ]}
+              value={selectedSets[0] ?? "__all__"}
+              onValueChange={(value) =>
+                m.handleFilterChange("set", value && value !== "__all__" ? [value] : [])
               }
-              className="h-10 min-w-0 flex-1 truncate rounded-lg border border-border/50 bg-card px-3 text-xs font-semibold text-foreground transition-colors hover:border-border focus:border-primary/50 focus:outline-none sm:flex-none sm:min-w-[180px] sm:text-sm"
             >
-              <option value="">{t(lang, "allSets")}</option>
-              {setOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger
+                size="sm"
+                className="h-10 min-w-0 flex-1 sm:flex-none sm:min-w-[180px]"
+              >
+                <SelectValue placeholder={t(lang, "allSets")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">{t(lang, "allSets")}</SelectItem>
+                {setOptions.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           )}
 
           <div className="relative hidden flex-1 sm:block">
             <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground/50" />
-            <input
+            <Input
               type="text"
               placeholder={t(lang, "searchLong")}
-              className="h-10 w-full rounded-lg border border-border/50 bg-card pl-9 pr-8 text-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/50"
+              className="border-border/50 bg-card pl-9 pr-8 placeholder:text-muted-foreground/40 focus-visible:border-primary/50 focus-visible:ring-0"
               value={m.search}
               onChange={(e) => {
                 m.setSearch(e.target.value)
@@ -245,49 +249,31 @@ export function HomeMarketOverview({
             )}
           </div>
 
-          <button
+          <Button
             type="button"
+            variant={showSearch ? "default" : "ghost"}
+            size="icon-sm"
             onClick={() => setShowSearch((v) => !v)}
-            className={cn(
-              "rounded-lg p-2 transition-colors sm:hidden",
-              showSearch
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-            )}
+            className={cn("sm:hidden", !showSearch && "text-muted-foreground")}
             aria-label="Search"
           >
             <Search className="size-4" />
-          </button>
+          </Button>
 
-          <div className="ml-auto flex items-center gap-1">
-            <span className="mr-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <div className="ml-auto flex items-center gap-2">
+            <span className="text-eyebrow text-muted-foreground">
               {t(lang, "price")}
             </span>
-            <button
-              aria-pressed={m.priceMode === "raw"}
-              onClick={() => { m.setPriceMode("raw"); m.setPage(1) }}
-              className={cn(
-                "rounded-md border px-3 py-1.5 text-xs font-semibold transition-all",
-                m.priceMode === "raw"
-                  ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                  : "border-border bg-card text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-              )}
-            >
-              Raw
-            </button>
-            <button
-              aria-pressed={m.priceMode === "psa10"}
-              onClick={() => { m.setPriceMode("psa10"); m.setPage(1) }}
-              className={cn(
-                "flex items-center gap-1 rounded-md border px-3 py-1.5 text-xs font-semibold transition-all",
-                m.priceMode === "psa10"
-                  ? "border-amber-600 bg-amber-500/15 text-amber-600 dark:text-amber-400 shadow-sm"
-                  : "border-border bg-card text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-              )}
-            >
-              <Shield className="size-3 text-amber-500" />
-              PSA 10
-            </button>
+            <SegmentedControl
+              size="sm"
+              value={m.priceMode}
+              onChange={(value) => { m.setPriceMode(value); m.setPage(1) }}
+              options={[
+                { value: "raw", label: "Raw" },
+                { value: "psa10", label: "PSA 10", icon: Shield },
+              ]}
+              ariaLabel={t(lang, "price")}
+            />
           </div>
         </div>
 
@@ -295,10 +281,10 @@ export function HomeMarketOverview({
           <div className="border-t border-border/40 px-4 py-2 sm:hidden">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground/50" />
-              <input
+              <Input
                 type="text"
                 placeholder={t(lang, "searchLong")}
-                className="h-10 w-full rounded-lg border border-border/50 bg-card pl-9 pr-8 text-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/50"
+                className="border-border/50 bg-card pl-9 pr-8 placeholder:text-muted-foreground/40 focus-visible:border-primary/50 focus-visible:ring-0"
                 value={m.search}
                 autoFocus
                 onChange={(e) => {
@@ -331,20 +317,20 @@ export function HomeMarketOverview({
             />
 
             <div className="flex shrink-0 items-center gap-1.5">
-              <span className="text-xs text-muted-foreground">{t(lang, "priceLabel")}</span>
-              <input
+              <span className="text-meta">{t(lang, "priceLabel")}</span>
+              <Input
                 type="number"
                 placeholder={t(lang, "min")}
-                className="h-9 w-20 rounded-lg border border-border bg-card px-2 text-sm tabular-nums outline-none placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
+                className="h-9 w-20 border-border bg-card px-2 tabular-nums placeholder:text-muted-foreground/50 focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
                 value={m.minPrice}
                 onChange={(e) => { m.setMinPrice(e.target.value); m.setPage(1) }}
                 min={0}
               />
-              <span className="text-xs text-muted-foreground">–</span>
-              <input
+              <span className="text-meta">–</span>
+              <Input
                 type="number"
                 placeholder={t(lang, "max")}
-                className="h-9 w-20 rounded-lg border border-border bg-card px-2 text-sm tabular-nums outline-none placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
+                className="h-9 w-20 border-border bg-card px-2 tabular-nums placeholder:text-muted-foreground/50 focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
                 value={m.maxPrice}
                 onChange={(e) => { m.setMaxPrice(e.target.value); m.setPage(1) }}
                 min={0}
@@ -354,7 +340,7 @@ export function HomeMarketOverview({
             {m.activeFilterCount > 0 && (
               <button
                 onClick={m.clearAllFilters}
-                className="flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                className="flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-meta transition-colors hover:bg-muted hover:text-foreground"
               >
                 <X className="size-3" />
                 {t(lang, "clearAll")}
@@ -403,7 +389,7 @@ export function HomeMarketOverview({
               <col className="hidden w-[100px] xl:table-column" />
             </colgroup>
             <thead className="sticky top-0 z-10 bg-card">
-              <tr className="border-b border-border text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <tr className="border-b border-border text-eyebrow text-muted-foreground">
                 <th className="py-2.5 pl-3 pr-0 font-medium"></th>
                 <th className="py-2.5 pr-1 pl-1 font-medium">#</th>
                 <th className="py-2.5 pr-3 pl-2 font-medium">{t(lang, "card")}</th>

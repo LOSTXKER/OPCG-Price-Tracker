@@ -16,9 +16,13 @@ import {
   type ShippingData,
 } from "@/components/marketplace/create-wizard";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/layout/page-header";
 import { DEFAULT_CARD_CONDITION } from "@/lib/constants/ui";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 export default function SellerCreateListingPage() {
+  const lang = useUIStore((s) => s.language);
   const router = useRouter();
   const [step, setStep] = useState<WizardStep>("card");
   const [completedSteps, setCompletedSteps] = useState<Set<WizardStep>>(
@@ -111,18 +115,16 @@ export default function SellerCreateListingPage() {
   }, [selectedCard, pricing, shipping, router]);
 
   return (
-    <div className="mx-auto max-w-lg space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <h1 className="page-header">ลงขายการ์ด</h1>
-          <p className="text-sm text-muted-foreground">
-            สร้างประกาศขายการ์ดของคุณ
-          </p>
-        </div>
-        <Button variant="outline" size="sm" render={<Link href="/seller/listings" />}>
-          ยกเลิก
-        </Button>
-      </div>
+    <div className="space-y-6">
+      <PageHeader
+        title={t(lang, "sellerListNewTitle")}
+        description={t(lang, "sellerListNewDesc")}
+        actions={
+          <Button variant="outline" size="sm" render={<Link href="/seller/listings" />}>
+            {t(lang, "cancel")}
+          </Button>
+        }
+      />
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 

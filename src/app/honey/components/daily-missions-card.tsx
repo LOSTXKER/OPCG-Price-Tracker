@@ -121,7 +121,7 @@ function MobileStreakRankRow({
       <div className="space-y-2 rounded-xl border border-border/50 p-3">
         <div className="flex items-center gap-1.5">
           <RankIcon className="size-3.5 text-primary" />
-          <span className="text-[11px] font-bold text-muted-foreground">Rank</span>
+          <span className="text-eyebrow text-muted-foreground">Rank</span>
         </div>
         <p className="text-lg font-black leading-none text-primary">
           {rankLabels[currentLevel]}
@@ -210,7 +210,7 @@ export function DailyMissionsCard({
             <span className="text-base leading-none">🍯</span>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Honey</p>
+            <p className="text-eyebrow">Honey</p>
             <p className="text-2xl font-extrabold tabular-nums leading-tight text-primary">
               🍯 {points.toLocaleString()}
             </p>
@@ -256,7 +256,7 @@ export function DailyMissionsCard({
 
       {/* Row 2: Mission progress + countdown */}
       <div className="flex items-center gap-4 border-t px-5 py-3 sm:px-6">
-        <h2 className="shrink-0 text-lg font-semibold">{t(lang, "dailyMissions")}</h2>
+        <h2 className="shrink-0 text-h3">{t(lang, "dailyMissions")}</h2>
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
           <div
             className={cn("h-full rounded-full transition-all", allClaimed && bonusClaimed ? "bg-price-up" : "bg-primary")}
@@ -266,7 +266,7 @@ export function DailyMissionsCard({
         <span className="shrink-0 text-sm font-bold tabular-nums text-primary">
           {completedCount}/{tasks.length}
         </span>
-        <div className="flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground">
+        <div className="flex shrink-0 items-center gap-1.5 text-meta">
           <Clock className="size-3.5" />
           <span className="font-mono tabular-nums">{countdown}</span>
         </div>
@@ -362,7 +362,7 @@ export function DailyMissionsCard({
                       </Button>
                     </NextLink>
                   ) : (
-                    <div className="flex h-9 items-center justify-center gap-1.5 rounded-xl bg-muted/50 text-xs text-muted-foreground">
+                    <div className="flex h-9 items-center justify-center gap-1.5 rounded-xl bg-muted/50 text-meta">
                       <Lock className="size-3.5" />
                       {lang === "TH" ? "ยังไม่สำเร็จ" : lang === "JP" ? "未完了" : "Incomplete"}
                     </div>
@@ -418,7 +418,7 @@ export function DailyMissionsCard({
                   {claimingBonus ? "..." : lang === "TH" ? "รับรางวัล" : lang === "JP" ? "受取" : "Claim"}
                 </Button>
               ) : (
-                <div className="flex h-9 items-center justify-center gap-1.5 rounded-xl bg-muted/50 text-xs text-muted-foreground">
+                <div className="flex h-9 items-center justify-center gap-1.5 rounded-xl bg-muted/50 text-meta">
                   <Lock className="size-3.5" />+{perfectDayBonus} <span className="text-xs leading-none">🍯</span>
                 </div>
               )}

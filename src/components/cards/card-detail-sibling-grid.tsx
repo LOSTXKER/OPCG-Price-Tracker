@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
+
 import { cn } from "@/lib/utils"
 import { Price } from "@/components/shared/price-inline"
 import { RarityBadge } from "@/components/shared/rarity-badge"
@@ -13,9 +14,30 @@ interface SiblingGridProps {
   lang: Language
   cols: number
   smCols?: number
+  /**
+   * Card code of the main card on the page. Lets us draw a "current" outline
+   * on its sibling tile and compute relative price diffs.
+   */
+  mainCardCode?: string
 }
 
-export function SiblingGrid({ siblings, lang, cols, smCols }: SiblingGridProps) {
+/**
+ * Extract the variant suffix from a card code, e.g. ST26-005_p2 → "_p2".
+ * Returns an empty string for the base print so the UI doesn't render a
+ * useless extra chip on every regular card.
+ */
+function variantSuffix(code: string): string {
+  const idx = code.indexOf("_")
+  return idx === -1 ? "" : code.slice(idx)
+}
+
+export function SiblingGrid({
+  siblings,
+  lang,
+  cols,
+  smCols,
+  mainCardCode,
+}: SiblingGridProps) {
   return (
     <div
       className={cn(
@@ -24,32 +46,59 @@ export function SiblingGrid({ siblings, lang, cols, smCols }: SiblingGridProps) 
         smCols === 5 && "md:grid-cols-5",
       )}
     >
-      {siblings.map((s) => (
-        <Link
-          key={s.id}
-          href={`/cards/${s.cardCode}`}
-          className="group flex flex-col gap-1.5 text-center transition-transform duration-200 hover:-translate-y-0.5"
-        >
-          <div className="panel relative aspect-[63/88] w-full overflow-hidden">
-            {s.imageUrl ? (
-              <Image src={s.imageUrl} alt={getCardName(lang, s)} fill className="object-contain" sizes="100px" />
-            ) : (
-              <Skeleton className="absolute inset-0 size-full" />
+      {siblings.map((s) => {
+        const isCurrent = mainCardCode != null && s.cardCode === mainCardCode
+        const suffix = variantSuffix(s.cardCode)
+
+        return (
+          <Link
+            key={s.id}
+            href={`/cards/${s.cardCode}`}
+            className={cn(
+              "group flex flex-col gap-1.5 text-center transition-colors",
+              isCurrent && "pointer-events-none",
             )}
-          </div>
-          <div>
-            <span className="inline-block rounded bg-muted px-1 py-px font-price text-xs uppercase text-muted-foreground">
-              {s.set.code}
-            </span>
-            <RarityBadge rarity={s.rarity} size="sm" />
-            {s.latestPriceJpy != null && (
-              <p className="mt-0.5 font-price text-xs font-semibold">
-                <Price jpy={s.latestPriceJpy} />
-              </p>
-            )}
-          </div>
-        </Link>
-      ))}
+            aria-current={isCurrent ? "page" : undefined}
+          >
+            <div
+              className={cn(
+                "panel relative aspect-[63/88] w-full overflow-hidden",
+                isCurrent && "ring-2 ring-primary/70",
+              )}
+            >
+              {s.imageUrl ? (
+                <Image
+                  src={s.imageUrl}
+                  alt={getCardName(lang, s)}
+                  fill
+                  className="object-contain"
+                  sizes="100px"
+                />
+              ) : (
+                <Skeleton className="absolute inset-0 size-full" />
+              )}
+            </div>
+            <div>
+              <div className="flex items-center justify-center gap-1">
+                <span className="inline-block rounded bg-muted px-1 py-px font-price text-xs uppercase text-muted-foreground">
+                  {s.set.code}
+                  {suffix && (
+                    <span className="ml-0.5 text-muted-foreground/70">
+                      {suffix}
+                    </span>
+                  )}
+                </span>
+                <RarityBadge rarity={s.rarity} size="sm" />
+              </div>
+              {s.latestPriceJpy != null && (
+                <p className="mt-0.5 font-price text-xs font-semibold">
+                  <Price jpy={s.latestPriceJpy} />
+                </p>
+              )}
+            </div>
+          </Link>
+        )
+      })}
     </div>
   )
 }

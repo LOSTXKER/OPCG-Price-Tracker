@@ -28,6 +28,28 @@ type Achievement = {
 const filterSelectClass =
   "h-9 w-full rounded-lg border border-input bg-transparent px-3 py-1.5 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 dark:bg-input/30";
 
+// Keep in sync with `AchievementCriteriaSchema` in `src/lib/honey/schemas.ts`
+// and the branches in `batchFetchStats` (`src/lib/honey/achievements.ts`).
+const CRITERIA_OPTIONS: { value: string; label: string }[] = [
+  { value: "portfolio_count",        label: "Portfolio Count (cards added)" },
+  { value: "checkin_streak",         label: "Check-in Streak (consecutive days)" },
+  { value: "first_sell",             label: "First Sell (target=1)" },
+  { value: "trades_count",           label: "Trades Count (marketplace sells)" },
+  { value: "first_review",           label: "First Review (target=1)" },
+  { value: "review_count",           label: "Review Count (reviews authored)" },
+  { value: "correct_predictions",    label: "Correct Predictions" },
+  { value: "prediction_count",       label: "Prediction Count (attempts)" },
+  { value: "referral_count",         label: "Referral Count (users referred)" },
+  { value: "honey_lifetime",         label: "Honey Lifetime Earned" },
+  { value: "watchlist_count",        label: "Watchlist Count" },
+  { value: "deck_count",             label: "Deck Count" },
+  { value: "deck_share_count",       label: "Deck Share Count (public decks)" },
+  { value: "community_price_count",  label: "Community Price Submissions" },
+  { value: "order_buy_count",        label: "Order Buy Count (completed)" },
+  { value: "perfect_day_count",      label: "Perfect Day Count" },
+  { value: "raffle_win_count",       label: "Raffle Win Count" },
+];
+
 export function AchievementsManager({ initialAchievements }: { initialAchievements: Achievement[] }) {
   const [achievements, setAchievements] = useState(initialAchievements);
   const [showForm, setShowForm] = useState(false);
@@ -83,7 +105,7 @@ export function AchievementsManager({ initialAchievements }: { initialAchievemen
       {showForm && (
         <Card>
           <CardContent>
-            <h2 className="mb-3 text-lg font-semibold">Create Achievement</h2>
+            <h2 className="mb-3 text-h3">Create Achievement</h2>
             <div className="grid gap-3 sm:grid-cols-2">
               <Input placeholder="Code (e.g. portfolio_100)" value={form.code} onChange={(e) => setForm((f) => ({ ...f, code: e.target.value }))} />
               <Input placeholder="Name (JP)" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
@@ -91,11 +113,9 @@ export function AchievementsManager({ initialAchievements }: { initialAchievemen
               <Input placeholder="Name (TH)" value={form.nameTh} onChange={(e) => setForm((f) => ({ ...f, nameTh: e.target.value }))} />
               <Input placeholder="Description" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} className="sm:col-span-2" />
               <select value={form.criteriaType} onChange={(e) => setForm((f) => ({ ...f, criteriaType: e.target.value }))} className={filterSelectClass}>
-                <option value="portfolio_count">Portfolio Count</option>
-                <option value="checkin_streak">Check-in Streak</option>
-                <option value="first_sell">First Sell</option>
-                <option value="first_review">First Review</option>
-                <option value="correct_predictions">Correct Predictions</option>
+                {CRITERIA_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
               </select>
               <Input type="number" placeholder="Target" value={form.criteriaTarget} onChange={(e) => setForm((f) => ({ ...f, criteriaTarget: Number(e.target.value) }))} />
               <Input type="number" placeholder="Honey Reward" value={form.honeyReward} onChange={(e) => setForm((f) => ({ ...f, honeyReward: Number(e.target.value) }))} />
@@ -117,8 +137,8 @@ export function AchievementsManager({ initialAchievements }: { initialAchievemen
               </div>
               <div className="min-w-0 flex-1">
                 <p className="font-semibold">{ach.nameEn ?? ach.name}</p>
-                <p className="text-xs text-muted-foreground">{ach.description}</p>
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p className="text-meta">{ach.description}</p>
+                <p className="mt-1 text-meta">
                   Code: <code className="text-foreground">{ach.code}</code> | Criteria: {JSON.stringify(ach.criteria)} | Reward: <span className="font-bold text-amber-600 dark:text-amber-400">{ach.honeyReward} pts</span>
                 </p>
               </div>

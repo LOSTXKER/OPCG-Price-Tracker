@@ -8,7 +8,7 @@ import { t } from "@/lib/i18n";
 
 type KumaMood = "happy" | "excited" | "calm" | "worried" | "searching" | "shrug" | "sad" | "lost";
 type KumaEmptyPreset = "no-results" | "empty-portfolio" | "empty-watchlist" | "not-found" | "error";
-type EmptyVariant = "product" | "admin" | "minimal";
+type EmptyVariant = "product" | "admin" | "minimal" | "dashed";
 
 export function KumaEmptyState({
   preset,
@@ -46,7 +46,7 @@ export function KumaEmptyState({
     return (
       <div className={cn("flex flex-col items-center gap-2 py-14 text-center", className)}>
         <Icon className="size-8 text-muted-foreground/20" />
-        <p className="text-xs text-muted-foreground/60">{displayTitle}</p>
+        <p className="text-meta text-muted-foreground/60">{displayTitle}</p>
       </div>
     );
   }
@@ -63,6 +63,24 @@ export function KumaEmptyState({
             <p className="mt-1 text-sm text-muted-foreground/70">{displayDesc}</p>
           )}
         </div>
+        {action}
+      </div>
+    );
+  }
+
+  if (variant === "dashed") {
+    return (
+      <div
+        className={cn(
+          "flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground",
+          className,
+        )}
+      >
+        {Icon && <Icon className="mb-3 h-12 w-12 opacity-30" />}
+        <p className="text-lg font-medium text-foreground">{displayTitle}</p>
+        {displayDesc && (
+          <p className="mb-4 mt-1 text-sm text-muted-foreground">{displayDesc}</p>
+        )}
         {action}
       </div>
     );
@@ -90,7 +108,7 @@ export function KumaEmptyState({
         </motion.div>
       )}
       <div className="space-y-1">
-        <h2 className="text-lg font-semibold">{displayTitle}</h2>
+        <h2 className="text-h3">{displayTitle}</h2>
         {displayDesc && (
           <p className="max-w-sm text-sm text-muted-foreground">{displayDesc}</p>
         )}

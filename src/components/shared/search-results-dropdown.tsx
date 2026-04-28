@@ -73,7 +73,7 @@ export function SearchResultsDropdown({
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">{getCardName(lang, card)}</p>
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1.5 text-meta">
                     {card.set?.code && (
                       <span className="font-mono">{card.set.code}</span>
                     )}

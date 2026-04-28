@@ -49,7 +49,7 @@ export function RaffleForm({
   return (
     <div className="rounded-xl border bg-card shadow-sm">
       <div className="flex items-center justify-between border-b px-5 py-3">
-        <h2 className="text-lg font-semibold">
+        <h2 className="text-h3">
           {editingId ? "Edit Machine" : "Create New Machine"}
         </h2>
         <Button size="sm" variant="ghost" onClick={onCancel} className="text-xs">Cancel</Button>
@@ -193,7 +193,7 @@ function Section({ icon: Icon, title, children }: { icon: typeof Box; title: str
     <div>
       <div className="mb-3 flex items-center gap-2">
         <Icon className="size-4 text-muted-foreground" />
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{title}</h3>
+        <h3 className="text-eyebrow">{title}</h3>
       </div>
       <div className="space-y-3">{children}</div>
     </div>
@@ -204,7 +204,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
   return (
     <div>
       <label className="text-xs font-medium text-muted-foreground">{label}</label>
-      {hint && <span className="ml-1.5 text-xs text-muted-foreground/60">({hint})</span>}
+      {hint && <span className="ml-1.5 text-meta text-muted-foreground/60">({hint})</span>}
       {children}
     </div>
   );

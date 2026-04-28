@@ -65,9 +65,12 @@ export function ProfileTabsNav({
     <div
       className={cn(
         // Sticky directly under the global header. The container is wider
-        // than its parent on either side so the underline border + bg fill
-        // the viewport edge-to-edge instead of stopping at the page padding.
-        "sticky z-30 -mx-4 mt-8 border-b border-border/40 bg-background/85 px-4 backdrop-blur",
+        // than its parent on either side so the active-tab underline + bg
+        // fill the viewport edge-to-edge instead of stopping at the page
+        // padding. We deliberately omit a bottom border here — the tab
+        // section panel below docks against the nav and provides its own
+        // visual edge, so a border-b would just create a double divider.
+        "sticky z-30 -mx-4 mt-8 bg-background/85 px-4 backdrop-blur",
         "supports-[backdrop-filter]:bg-background/70",
         "top-14 md:top-[86px] md:-mx-6 md:px-6 lg:-mx-8 lg:px-8",
       )}
@@ -93,28 +96,29 @@ export function ProfileTabsNav({
               onKeyDown={(e) => onKeyDown(e, idx)}
               onClick={() => onChange(key)}
               className={cn(
-                "group/tab relative inline-flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-3 text-sm font-medium transition-colors sm:px-4",
+                "group/tab relative inline-flex shrink-0 items-center gap-1.5 border-b-[3px] px-3 py-3 text-sm font-medium transition-colors sm:px-4",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-t-md",
                 isActive
-                  ? "border-primary text-foreground"
+                  ? "border-primary text-primary"
                   : "border-transparent text-muted-foreground hover:text-foreground",
               )}
             >
-              {/* Soft pill bg for the active tab — adds the "obviously
-                  selected" cue Etsy uses, without breaking the underline. */}
+              {/* Brand-tinted pill behind the active tab — replaces the old
+                  near-invisible primary/8 wash with a confident primary/10
+                  band so the selected tab reads at a glance. */}
               {isActive && (
                 <span
                   aria-hidden
-                  className="absolute inset-x-1 inset-y-1.5 -z-10 rounded-md bg-primary/8"
+                  className="absolute inset-x-1 inset-y-1.5 -z-10 rounded-md bg-primary/10"
                 />
               )}
               {t(lang, labelKey)}
               {count != null && count > 0 && (
                 <span
                   className={cn(
-                    "rounded-full px-1.5 text-[11px] font-semibold tabular-nums",
+                    "rounded-full px-1.5 text-micro tabular-nums",
                     isActive
-                      ? "bg-primary/15 text-primary"
+                      ? "bg-primary text-primary-foreground"
                       : "bg-muted/70 text-muted-foreground",
                   )}
                 >

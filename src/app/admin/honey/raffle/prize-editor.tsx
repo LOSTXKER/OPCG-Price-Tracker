@@ -32,7 +32,7 @@ export function PrizeEditor({ prizes, onUpdate, onAdd, onRemove }: PrizeEditorPr
             className={cn("rounded-xl border p-3", RANK_COLORS[i] ?? "border-border bg-card")}
           >
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <span className="text-eyebrow">
                 {RANK_LABELS[i] ?? `#${prize.rank} Prize`}
               </span>
               {prizes.length > 1 && (
@@ -50,7 +50,7 @@ export function PrizeEditor({ prizes, onUpdate, onAdd, onRemove }: PrizeEditorPr
                   className="mt-1 w-full rounded-lg border bg-background px-3 py-2 text-sm"
                 />
                 <div className="flex items-center gap-2">
-                  <span className="shrink-0 text-xs text-muted-foreground">+ Honey Bonus</span>
+                  <span className="shrink-0 text-meta">+ Honey Bonus</span>
                   <input
                     type="number"
                     value={prize.honeyBonus ?? 0}

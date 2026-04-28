@@ -1,21 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
-import { Check, Crown, Edit2, MoreHorizontal, Plus, Sparkles, Trash2, X, Wallet } from "lucide-react"
+import { Check, Edit2, MoreHorizontal, Plus, Trash2, X, Wallet } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
-import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useConfirm } from "@/components/shared/confirm-dialog"
+import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
 
 export type { PortfolioMeta } from "@/lib/types/portfolio"
 import type { PortfolioMeta } from "@/lib/types/portfolio"
@@ -76,8 +67,7 @@ export function PortfolioSidebar({
   }
 
   const atLimit = maxPortfolios != null && isFinite(maxPortfolios) && portfolios.length >= maxPortfolios
-  const hasLimit = maxPortfolios != null && isFinite(maxPortfolios)
-  const [upgradeOpen, setUpgradeOpen] = useState(false)
+  const { openUpgradeDialog } = useUpgradeDialog()
 
   return (
     <div className="p-1.5">
@@ -139,14 +129,14 @@ export function PortfolioSidebar({
                 {p.name}
               </p>
               <div className="flex items-center gap-1.5">
-                <span className="text-[11px] text-muted-foreground">
+                <span className="text-meta">
                   {hideBalance ? "••••" : formatJpyAmount(p.totalValue, currency)}
                 </span>
                 {!hideBalance && p.totalCost > 0 && (() => {
                   const pnlPct = ((p.totalValue - p.totalCost) / p.totalCost) * 100
                   return (
                     <span className={cn(
-                      "font-price text-[10px] font-medium tabular-nums",
+                      "font-price text-overlay font-medium tabular-nums",
                       pnlPct >= 0 ? "text-price-up" : "text-price-down"
                     )}>
                       {pnlPct >= 0 ? "+" : ""}{formatPct(pnlPct, 1)}%
@@ -211,7 +201,11 @@ export function PortfolioSidebar({
       ) : (
         <div className="mt-0.5 px-1">
           <button
-            onClick={() => atLimit ? setUpgradeOpen(true) : setCreating(true)}
+            onClick={() =>
+              atLimit
+                ? openUpgradeDialog({ featureKey: "portfolioCount" })
+                : setCreating(true)
+            }
             className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
           >
             <div className="flex size-7 items-center justify-center rounded-lg border border-dashed border-border/60">
@@ -222,30 +216,6 @@ export function PortfolioSidebar({
         </div>
       )}
 
-      <Dialog open={upgradeOpen} onOpenChange={setUpgradeOpen}>
-        <DialogContent className="sm:max-w-xs">
-          <DialogHeader className="items-center text-center">
-            <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-primary/10">
-              <Crown className="size-5 text-primary" />
-            </div>
-            <DialogTitle>{t(lang, "portfolioLimitReached")}</DialogTitle>
-            <DialogDescription className="text-center">
-              {t(lang, "limitReachedUpgrade")}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="mt-2 sm:justify-center">
-            <Button variant="outline" size="sm" onClick={() => setUpgradeOpen(false)}>
-              {t(lang, "cancel")}
-            </Button>
-            <Button size="sm" className="gap-1.5" onClick={() => setUpgradeOpen(false)}>
-              <Link href="/pricing" className="flex items-center gap-1.5">
-                <Sparkles className="size-3" />
-                {t(lang, "upgradePlan")}
-              </Link>
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

@@ -120,7 +120,7 @@ export function YuyuteiMatchRow({
               )}
             </div>
             <p
-              className="text-xs text-muted-foreground truncate max-w-[180px]"
+              className="text-meta truncate max-w-[180px]"
               title={m.scrapedName}
             >
               {m.scrapedName}
@@ -158,7 +158,7 @@ export function YuyuteiMatchRow({
                 {m.matchedCard!.cardCode}
               </p>
               <RarityBadge rarity={m.matchedCard!.rarity} size="sm" />
-              <p className="text-xs text-muted-foreground truncate max-w-[120px]">
+              <p className="text-meta truncate max-w-[120px]">
                 {m.matchedCard!.nameEn ?? m.matchedCard!.nameJp}
               </p>
             </div>
@@ -207,7 +207,7 @@ export function YuyuteiMatchRow({
             )}
           </div>
         ) : (
-          <span className="text-xs text-muted-foreground/50">—</span>
+          <span className="text-meta text-muted-foreground/50">—</span>
         )}
       </td>
 
@@ -223,7 +223,7 @@ export function YuyuteiMatchRow({
                 m.actionByUser.email.split("@")[0]}
             </p>
             <p
-              className="text-xs text-muted-foreground"
+              className="text-meta"
               title={
                 m.actionAt
                   ? new Date(m.actionAt).toLocaleString("th-TH")
@@ -234,7 +234,7 @@ export function YuyuteiMatchRow({
             </p>
           </div>
         ) : (
-          <span className="text-xs text-muted-foreground/50">—</span>
+          <span className="text-meta text-muted-foreground/50">—</span>
         )}
       </td>
 

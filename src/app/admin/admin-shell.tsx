@@ -32,6 +32,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { PageContainer } from "@/components/layout/page-container";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { createClient } from "@/lib/supabase/client";
 import { useTheme } from "next-themes";
@@ -116,7 +117,7 @@ function NavContent({
         {NAV_SECTIONS.map((section) => (
           <div key={section.label}>
             {!collapsed && (
-              <p className="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50">
+              <p className="mb-1.5 px-3 text-eyebrow text-muted-foreground/50">
                 {section.label}
               </p>
             )}
@@ -319,7 +320,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               <SheetTitle className="sr-only">เมนูนำทาง</SheetTitle>
               <Link
                 href="/"
-                className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-meta transition-colors hover:bg-muted hover:text-foreground"
                 onClick={() => setMobileOpen(false)}
               >
                 <ArrowLeft className="size-3.5" />
@@ -348,10 +349,10 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         </header>
 
         <main className="flex-1 p-4 sm:p-6">
-          <div className="mx-auto max-w-7xl">
+          <PageContainer inShell>
             <Breadcrumb pathname={pathname} labelMap={BREADCRUMB_LABELS} />
             {children}
-          </div>
+          </PageContainer>
         </main>
       </div>
     </div>

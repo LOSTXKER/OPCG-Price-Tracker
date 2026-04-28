@@ -2,6 +2,7 @@
 import { parseJsonBody } from "@/lib/api/admin-helpers";
 import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
+import { grantHoney } from "@/lib/honey";
 
 export const POST = adminApiHandler(async (request: NextRequest, admin) => {
   const parsed = await parseJsonBody<{
@@ -27,24 +28,15 @@ export const POST = adminApiHandler(async (request: NextRequest, admin) => {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
-  const [updated] = await prisma.$transaction([
-    prisma.user.update({
-      where: { id: userId },
-      data: { honeyPoints: { increment: amount } },
-    }),
-    prisma.honeyTransaction.create({
-      data: {
-        userId,
-        amount,
-        type: "ADMIN_GRANT",
-        reason,
-        metadata: { grantedBy: admin.id },
-      },
-    }),
-  ]);
+  // Route through grantHoney so positive admin grants update
+  // honeyLifetimeEarned (driving levels + honey_lifetime_* achievements).
+  // Negative grants only adjust honeyPoints, matching the historical behavior.
+  const result = await grantHoney(userId, amount, "ADMIN_GRANT", reason, {
+    grantedBy: admin.id,
+  });
 
   return NextResponse.json({
     success: true,
-    honeyPoints: updated.honeyPoints,
+    honeyPoints: result.total,
   });
 });

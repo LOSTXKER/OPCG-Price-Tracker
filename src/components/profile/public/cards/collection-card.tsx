@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Lock } from "lucide-react";
 
 import { getCardName, t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -10,23 +9,26 @@ import { cn } from "@/lib/utils";
 import type { ProfileCardData } from "../types";
 
 /**
- * Binder-pocket style — pure image card, no info panel underneath. Name &
- * rarity surface only on hover (desktop) so the grid reads as a showcase
- * album, not a marketplace listing. Tap on mobile navigates to the card
- * page where full details live.
+ * Binder-pocket style — pure image card, no on-card overlays. The grid
+ * reads as a showcase album rather than a marketplace listing. Card name
+ * is exposed via `title`/`aria-label` for accessibility; tap or click
+ * navigates to the card page where full details live.
+ *
+ * `hideQty` and `showLock` are accepted for back-compat with callers but
+ * no longer rendered — decorative on-card overlays were removed
+ * site-wide in favor of a clean image surface.
  */
 export function CollectionCard({
   card,
-  hideQty,
-  showLock,
   lang,
 }: {
   card: ProfileCardData;
-  hideQty: boolean;
-  showLock: boolean;
+  // hideQty/showLock kept on the prop type for back-compat with callers
+  // but no longer rendered; ignored at runtime.
+  hideQty?: boolean;
+  showLock?: boolean;
   lang: Language;
 }) {
-  const showQty = !hideQty && card.quantity != null && card.quantity > 1;
   const displayName = getCardName(lang, {
     nameEn: card.nameEn,
     nameJp: card.nameJp,
@@ -56,41 +58,10 @@ export function CollectionCard({
             sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 20vw, (max-width: 1280px) 16vw, 14vw"
           />
         ) : (
-          <span className="flex size-full items-center justify-center text-[10px] text-muted-foreground">
+          <span className="flex size-full items-center justify-center text-overlay text-muted-foreground">
             {t(lang, "noImage")}
           </span>
         )}
-
-        {showLock && (
-          <div className="pointer-events-none absolute left-1 top-1 z-10 flex size-5 items-center justify-center rounded-full bg-black/65 text-white backdrop-blur-sm">
-            <Lock className="size-2.5" />
-          </div>
-        )}
-        {showQty && (
-          <div className="pointer-events-none absolute right-1 top-1 z-10 rounded-full bg-black/65 px-1.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm tabular-nums">
-            ×{card.quantity}
-          </div>
-        )}
-
-        <div
-          className={cn(
-            "pointer-events-none absolute inset-x-0 bottom-0 z-10",
-            "translate-y-1 opacity-0",
-            "bg-gradient-to-t from-black/85 via-black/60 to-transparent",
-            "p-1.5 pt-4",
-            "transition-all duration-200",
-            "group-hover/binder:translate-y-0 group-hover/binder:opacity-100",
-            "group-focus-visible/binder:translate-y-0 group-focus-visible/binder:opacity-100",
-            "hidden sm:block",
-          )}
-        >
-          <p className="line-clamp-1 text-[11px] font-medium text-white">
-            {displayName}
-          </p>
-          <p className="mt-0.5 font-mono text-[9px] uppercase tracking-wide text-white/70">
-            {card.cardCode}
-          </p>
-        </div>
       </div>
     </Link>
   );

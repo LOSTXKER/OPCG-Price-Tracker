@@ -1,42 +1,5 @@
-import { NextResponse } from "next/server";
-
-import { createClient } from "@/lib/supabase/server";
-import { syncAppUser } from "@/lib/auth";
-import { isAuthBypassed } from "@/lib/env";
-
 /**
- * Resolves the current Supabase session to an app-level User (upsert).
- * Returns null when no valid session exists.
+ * Compatibility re-export. The canonical location is `@/lib/auth`. New code
+ * should import `getAuthUser` / `requireAuthUser` from there directly.
  */
-export async function getAuthUser() {
-  if (isAuthBypassed()) {
-    const { prisma } = await import("@/lib/db");
-    return prisma.user.findFirst({ orderBy: { createdAt: "asc" } });
-  }
-
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return null;
-  return syncAppUser(user);
-}
-
-type AuthUser = NonNullable<Awaited<ReturnType<typeof getAuthUser>>>;
-
-/**
- * Requires an authenticated user. Returns the user on success,
- * or a 401 NextResponse on failure — matching the `parseJsonBody` convention.
- */
-export async function requireAuthUser(): Promise<
-  { ok: true; user: AuthUser } | { ok: false; response: NextResponse }
-> {
-  const dbUser = await getAuthUser();
-  if (!dbUser) {
-    return {
-      ok: false,
-      response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
-    };
-  }
-  return { ok: true, user: dbUser };
-}
+export { getAuthUser, requireAuthUser } from "@/lib/auth";

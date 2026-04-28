@@ -1,43 +1,75 @@
 import { cache } from "react"
+import type { Prisma } from "@/generated/prisma/client"
 import { prisma } from "@/lib/db"
 import { PRICE_SOURCE } from "@/lib/constants/prices"
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000
 
-export const getCardByCode = cache(async (rawCode: string) => {
+/**
+ * Resolve a card by code with the standard fallback chain:
+ *   1. exact `cardCode` match (URL-decoded)
+ *   2. uppercase `cardCode` match
+ *   3. `baseCode` match for the non-parallel printing
+ *
+ * Pass either `select` or `include` to pick the projection. The return
+ * type is generic so callers see only the fields they asked for.
+ *
+ * Single source of truth for `cards/[code]` page, `api/cards/[code]/prices`
+ * route, and any other code-based lookup. New callers should NOT re-implement
+ * the fallback chain; extend this helper instead.
+ */
+export async function findCardByCode<
+  TArgs extends { select?: Prisma.CardSelect; include?: Prisma.CardInclude },
+>(
+  rawCode: string,
+  args?: TArgs,
+): Promise<Prisma.CardGetPayload<TArgs> | null> {
   const code = decodeURIComponent(rawCode)
+  const upper = code.toUpperCase()
+  const projection = (args ?? {}) as TArgs
 
-  const includeClause = {
-    set: true,
-    prices: {
-      orderBy: { scrapedAt: "desc" as const },
-      take: 120,
-      select: {
-        id: true,
-        source: true,
-        type: true,
-        priceJpy: true,
-        priceThb: true,
-        priceUsd: true,
-        priceEur: true,
-        inStock: true,
-        gradeCondition: true,
-        scrapedAt: true,
-      },
-    },
+  const exact = (await prisma.card.findUnique({
+    where: { cardCode: code },
+    ...projection,
+  })) as Prisma.CardGetPayload<TArgs> | null
+  if (exact) return exact
+
+  if (code !== upper) {
+    const upperHit = (await prisma.card.findUnique({
+      where: { cardCode: upper },
+      ...projection,
+    })) as Prisma.CardGetPayload<TArgs> | null
+    if (upperHit) return upperHit
   }
 
-  const card = await prisma.card.findUnique({
-    where: { cardCode: code },
-    include: includeClause,
-  })
+  return (await prisma.card.findFirst({
+    where: { baseCode: upper, isParallel: false },
+    ...projection,
+  })) as Prisma.CardGetPayload<TArgs> | null
+}
 
-  if (card) return card
+const cardDetailInclude = {
+  set: true,
+  prices: {
+    orderBy: { scrapedAt: "desc" as const },
+    take: 120,
+    select: {
+      id: true,
+      source: true,
+      type: true,
+      priceJpy: true,
+      priceThb: true,
+      priceUsd: true,
+      priceEur: true,
+      inStock: true,
+      gradeCondition: true,
+      scrapedAt: true,
+    },
+  },
+} satisfies Prisma.CardInclude
 
-  return prisma.card.findFirst({
-    where: { baseCode: code.toUpperCase(), isParallel: false },
-    include: includeClause,
-  })
+export const getCardByCode = cache(async (rawCode: string) => {
+  return findCardByCode(rawCode, { include: cardDetailInclude })
 })
 
 export const getSiblingVariants = cache(async (baseCode: string | null, excludeId: number) => {

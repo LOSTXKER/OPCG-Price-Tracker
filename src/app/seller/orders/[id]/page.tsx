@@ -18,7 +18,18 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { OrderStatusBadge } from "@/components/orders/order-status-badge";
+import { PageHeader } from "@/components/layout/page-header";
+import { Surface } from "@/components/ui/surface";
+import { t, getLocale } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 type OrderDetail = {
   id: number;
@@ -71,6 +82,7 @@ const TIMELINE_STEPS = [
 
 export default function SellerOrderDetailPage() {
   const params = useParams();
+  const lang = useUIStore((s) => s.language);
   const orderId = params.id as string;
 
   const [order, setOrder] = useState<OrderDetail | null>(null);
@@ -161,28 +173,26 @@ export default function SellerOrderDetailPage() {
   const isCancelled = order.status === "CANCELLED";
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon-sm" render={<Link href="/seller/orders" />}>
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <div className="flex-1">
-          <h1 className="page-header">
-            คำสั่งซื้อ #{order.id}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {new Date(order.createdAt).toLocaleString("th-TH")}
-          </p>
-        </div>
-        <OrderStatusBadge status={order.status} />
-      </div>
+    <div className="space-y-6">
+      <PageHeader
+        title={t(lang, "orderNumber").replace("{id}", String(order.id))}
+        description={new Date(order.createdAt).toLocaleString(getLocale(lang))}
+        breadcrumb={
+          <Button variant="ghost" size="sm" render={<Link href="/seller/orders" />}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            {t(lang, "back")}
+          </Button>
+        }
+        actions={<OrderStatusBadge status={order.status} />}
+      />
 
       {actionError && (
-        <div className="flex items-center gap-2 rounded-lg bg-red-500/10 p-3 text-sm text-red-700 dark:text-red-400">
-          <AlertTriangle className="h-4 w-4 shrink-0" />
-          {actionError}
-        </div>
+        <Surface variant="subtle" padding="sm" className="border border-destructive/30 bg-destructive/5">
+          <div className="flex items-center gap-2 text-sm text-destructive">
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+            {actionError}
+          </div>
+        </Surface>
       )}
 
       {/* Product info */}
@@ -219,7 +229,7 @@ export default function SellerOrderDetailPage() {
 
       {/* Buyer info */}
       <div className="panel rounded-xl p-4">
-        <h2 className="mb-3 text-lg font-semibold">ข้อมูลผู้ซื้อ</h2>
+        <h2 className="mb-3 text-h3">ข้อมูลผู้ซื้อ</h2>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-sm font-bold">
@@ -249,7 +259,7 @@ export default function SellerOrderDetailPage() {
 
       {/* Status Timeline */}
       <div className="panel rounded-xl p-4">
-        <h2 className="mb-4 text-lg font-semibold">สถานะคำสั่งซื้อ</h2>
+        <h2 className="mb-4 text-h3">สถานะคำสั่งซื้อ</h2>
         <div className="space-y-4">
           {TIMELINE_STEPS.map((step, i) => {
             const dateVal = order[step.key as keyof OrderDetail] as
@@ -291,7 +301,7 @@ export default function SellerOrderDetailPage() {
                     {step.label}
                   </p>
                   {dateVal && (
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-meta">
                       {new Date(dateVal).toLocaleString("th-TH")}
                     </p>
                   )}
@@ -309,12 +319,12 @@ export default function SellerOrderDetailPage() {
                   ยกเลิก
                 </p>
                 {order.cancelledAt && (
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-meta">
                     {new Date(order.cancelledAt).toLocaleString("th-TH")}
                   </p>
                 )}
                 {order.cancelReason && (
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-meta">
                     เหตุผล: {order.cancelReason}
                   </p>
                 )}
@@ -327,7 +337,7 @@ export default function SellerOrderDetailPage() {
       {/* Shipping info (if shipped) */}
       {order.trackingNumber && (
         <div className="panel rounded-xl p-4">
-          <h2 className="mb-3 text-lg font-semibold">ข้อมูลจัดส่ง</h2>
+          <h2 className="mb-3 text-h3">ข้อมูลจัดส่ง</h2>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">วิธีจัดส่ง</span>
@@ -347,8 +357,8 @@ export default function SellerOrderDetailPage() {
 
       {/* Action Panel */}
       {order.status === "PAID" && (
-        <div className="panel space-y-4 rounded-xl border-blue-500/30 bg-blue-500/5 p-4">
-          <h2 className="text-lg font-semibold">จัดส่งสินค้า</h2>
+        <div className="panel space-y-4 rounded-xl p-4">
+          <h2 className="text-h3">จัดส่งสินค้า</h2>
           <p className="text-sm text-muted-foreground">
             ผู้ซื้อชำระเงินแล้ว กรุณาจัดส่งสินค้าและกรอกข้อมูลการจัดส่ง
           </p>
@@ -357,17 +367,18 @@ export default function SellerOrderDetailPage() {
               <label className="mb-1 block text-sm font-medium">
                 วิธีจัดส่ง
               </label>
-              <select
-                value={shippingMethod}
-                onChange={(e) => setShippingMethod(e.target.value)}
-                className="h-10 w-full rounded-lg border border-border bg-background px-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-              >
-                {SHIPPING_OPTIONS.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
+              <Select value={shippingMethod} onValueChange={(value) => setShippingMethod(value ?? "")}>
+                <SelectTrigger className="h-10 w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {SHIPPING_OPTIONS.map((opt) => (
+                    <SelectItem key={opt} value={opt}>
+                      {opt}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium">

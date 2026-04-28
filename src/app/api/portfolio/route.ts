@@ -3,80 +3,60 @@ import { apiHandler } from "@/lib/api/api-handler";
 import { cardInclude } from "@/lib/api/query-fragments";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
-import { createLog } from "@/lib/logger";
-import { effectiveTier, getLimits } from "@/lib/tier";
+import { effectiveTier, getLimits } from "@/lib/billing";
+import { CreatePortfolioSchema } from "@/lib/portfolio/schemas";
 import { NextRequest, NextResponse } from "next/server";
 
-const log = createLog("api:portfolio");
-
 export const GET = apiHandler(async () => {
-  try {
-    const auth = await requireAuthUser();
-    if (!auth.ok) return auth.response;
+  const auth = await requireAuthUser();
+  if (!auth.ok) return auth.response;
 
-    const portfolios = await prisma.portfolio.findMany({
-      where: { userId: auth.user.id },
-      orderBy: { updatedAt: "desc" },
-      include: {
-        items: {
-          orderBy: { addedAt: "desc" },
-          include: { card: { include: cardInclude } },
-        },
+  const portfolios = await prisma.portfolio.findMany({
+    where: { userId: auth.user.id },
+    orderBy: { updatedAt: "desc" },
+    include: {
+      items: {
+        orderBy: { addedAt: "desc" },
+        include: { card: { include: cardInclude } },
       },
-    });
+    },
+  });
 
-    return NextResponse.json({ portfolios });
-  } catch (error) {
-    log.error("GET /api/portfolio", error);
-    return NextResponse.json({ error: "Failed to load portfolios" }, { status: 500 });
-  }
+  return NextResponse.json({ portfolios });
 });
 
 export const POST = apiHandler(async (request: NextRequest) => {
-  try {
-    const auth = await requireAuthUser();
-    if (!auth.ok) return auth.response;
+  const auth = await requireAuthUser();
+  if (!auth.ok) return auth.response;
 
-    const parsed = await parseJsonBody<{ name?: string }>(request);
-    if (!parsed.ok) return parsed.response;
+  const parsed = await parseJsonBody(request, CreatePortfolioSchema);
+  if (!parsed.ok) return parsed.response;
 
-    const name =
-      typeof parsed.body.name === "string" ? parsed.body.name.trim() : "";
+  const name = parsed.body.name;
 
-    if (!name || name.length > 120) {
+  const tier = effectiveTier(auth.user.tier, auth.user.tierExpiresAt);
+  const limits = getLimits(tier);
+  if (limits.portfolioCount !== Infinity) {
+    const count = await prisma.portfolio.count({ where: { userId: auth.user.id } });
+    if (count >= limits.portfolioCount) {
       return NextResponse.json(
-        { error: "name is required and must be at most 120 characters" },
-        { status: 400 }
+        { error: `Portfolio limit reached (${limits.portfolioCount})` },
+        { status: 403 }
       );
     }
-
-    const tier = effectiveTier(auth.user.tier, auth.user.tierExpiresAt);
-    const limits = getLimits(tier);
-    if (limits.portfolioCount !== Infinity) {
-      const count = await prisma.portfolio.count({ where: { userId: auth.user.id } });
-      if (count >= limits.portfolioCount) {
-        return NextResponse.json(
-          { error: `Portfolio limit reached (${limits.portfolioCount})` },
-          { status: 403 }
-        );
-      }
-    }
-
-    const portfolio = await prisma.portfolio.create({
-      data: {
-        userId: auth.user.id,
-        name,
-      },
-      include: {
-        items: {
-          include: { card: { include: cardInclude } },
-        },
-      },
-    });
-
-    return NextResponse.json({ portfolio }, { status: 201 });
-  } catch (error) {
-    log.error("POST /api/portfolio", error);
-    return NextResponse.json({ error: "Failed to create portfolio" }, { status: 500 });
   }
+
+  const portfolio = await prisma.portfolio.create({
+    data: {
+      userId: auth.user.id,
+      name,
+    },
+    include: {
+      items: {
+        include: { card: { include: cardInclude } },
+      },
+    },
+  });
+
+  return NextResponse.json({ portfolio }, { status: 201 });
 });

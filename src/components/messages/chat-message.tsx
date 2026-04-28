@@ -27,8 +27,8 @@ export function ChatMessageBubble({
       <div className="flex justify-center py-1">
         <div className="flex items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1">
           <Info className="size-3 text-muted-foreground" />
-          <span className="text-xs text-muted-foreground">{message.content}</span>
-          <span className="text-xs text-muted-foreground/60">
+          <span className="text-meta">{message.content}</span>
+          <span className="text-meta text-muted-foreground/60">
             {formatChatTime(message.createdAt)}
           </span>
         </div>
@@ -57,7 +57,7 @@ export function ChatMessageBubble({
             onReject={onRejectOffer}
             onCounter={onCounterOffer}
           />
-          <p className={cn("mt-0.5 text-xs text-muted-foreground", message.isOwn && "text-right")}>
+          <p className={cn("mt-0.5 text-meta", message.isOwn && "text-right")}>
             {formatChatTime(message.createdAt)}
           </p>
         </div>
@@ -95,7 +95,7 @@ export function ChatMessageBubble({
         </div>
         <p
           className={cn(
-            "text-xs text-muted-foreground",
+            "text-meta",
             message.isOwn && "text-right"
           )}
         >

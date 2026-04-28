@@ -74,7 +74,7 @@ function PriceTag({
 }) {
   return (
     <div className="flex items-baseline gap-1">
-      <span className="text-xs text-muted-foreground">{label}</span>
+      <span className="text-meta">{label}</span>
       {value != null ? (
         <span
           className={cn(
@@ -85,7 +85,7 @@ function PriceTag({
           ${value}
         </span>
       ) : (
-        <span className="text-xs text-muted-foreground/40">—</span>
+        <span className="text-meta text-muted-foreground/40">—</span>
       )}
     </div>
   );
@@ -94,7 +94,7 @@ function PriceTag({
 function CompactPrices({ m }: { m: Mapping }) {
   const hasAny = m.minPriceUsd != null || m.usedMinPriceUsd != null || m.lastSoldPsa10Usd != null;
   if (!hasAny) {
-    return <span className="text-xs text-muted-foreground/50">ไม่มีราคา</span>;
+    return <span className="text-meta text-muted-foreground/50">ไม่มีราคา</span>;
   }
   return (
     <div className="flex flex-col gap-0.5">
@@ -148,9 +148,9 @@ function SortableHeader({
 /* ── Stats chip ── */
 
 const STATUS_META: { key: string; label: string; color: string }[] = [
-  { key: "pending", label: "Pending", color: "bg-amber-500/15 text-amber-700 hover:bg-amber-500/25" },
-  { key: "matched", label: "Matched", color: "bg-green-500/15 text-green-700 hover:bg-green-500/25" },
-  { key: "rejected", label: "Rejected", color: "bg-red-500/15 text-red-600 hover:bg-red-500/25" },
+  { key: "pending", label: "Pending", color: "bg-warning-soft text-warning hover:bg-warning/20" },
+  { key: "matched", label: "Matched", color: "bg-success-soft text-success hover:bg-success/20" },
+  { key: "rejected", label: "Rejected", color: "bg-danger-soft text-danger hover:bg-danger/20" },
 ];
 
 function StatsBar({
@@ -208,8 +208,8 @@ function ShortcutLegend({ visible }: { visible: boolean }) {
   return (
     <div className="flex items-center gap-4 rounded-lg border border-border bg-muted/40 px-3 py-1.5">
       {keys.map((k) => (
-        <span key={k.key} className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-          <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] font-medium text-foreground shadow-sm">
+        <span key={k.key} className="inline-flex items-center gap-1.5 text-meta">
+          <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-overlay text-foreground shadow-sm">
             {k.key}
           </kbd>
           {k.desc}
@@ -309,7 +309,7 @@ function AddCardDialog({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">
+          <h3 className="text-h3">
             เพิ่มการ์ดจาก SNKRDUNK
           </h3>
           <button onClick={onClose} className="rounded-full p-1 hover:bg-muted">
@@ -317,7 +317,7 @@ function AddCardDialog({
           </button>
         </div>
 
-        <p className="mb-3 text-xs text-muted-foreground">
+        <p className="mb-3 text-meta">
           ใส่ SNKRDUNK ID (เลขตอนท้าย URL เช่น{" "}
           <code className="rounded bg-muted px-1">94915</code> จาก{" "}
           <code className="rounded bg-muted px-1">
@@ -605,8 +605,8 @@ export function SnkrdunkMatchClient() {
         <div className="flex items-center gap-3">
           <Globe className="size-6 text-primary" />
           <div>
-            <h1 className="page-header">SNKRDUNK Matching</h1>
-            <p className="text-xs text-muted-foreground">
+            <h1 className="text-h1">SNKRDUNK Matching</h1>
+            <p className="text-meta">
               จับคู่การ์ดจาก SNKRDUNK เพื่อดึงราคา PSA10 / Last Sold
             </p>
           </div>
@@ -671,7 +671,7 @@ export function SnkrdunkMatchClient() {
           <RefreshCw className={cn("size-3.5", loading && "animate-spin")} />
         </button>
 
-        <span className="ml-auto text-xs text-muted-foreground">
+        <span className="ml-auto text-meta">
           {total} รายการ
         </span>
       </div>
@@ -706,7 +706,7 @@ export function SnkrdunkMatchClient() {
       <div ref={tableRef} className="overflow-hidden rounded-xl border border-border">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border bg-muted/30 text-xs text-muted-foreground">
+            <tr className="border-b border-border bg-muted/30 text-meta">
               <th className="w-10 py-2.5 pl-3 pr-1">
                 <input
                   type="checkbox"
@@ -766,7 +766,7 @@ export function SnkrdunkMatchClient() {
               <tr>
                 <td
                   colSpan={6}
-                  className="py-12 text-center text-xs text-muted-foreground"
+                  className="py-12 text-center text-meta"
                 >
                   ไม่พบรายการ
                 </td>
@@ -842,18 +842,18 @@ export function SnkrdunkMatchClient() {
                             <p className="font-mono text-xs font-bold">
                               {m.matchedCard.cardCode}
                             </p>
-                            <p className="text-xs text-muted-foreground truncate">
+                            <p className="text-meta truncate">
                               {m.matchedCard.nameJp}
                             </p>
                             {m.matchMethod && (
-                              <span className="text-xs text-muted-foreground/60">
+                              <span className="text-meta text-muted-foreground/60">
                                 via {m.matchMethod}
                               </span>
                             )}
                           </div>
                         </div>
                       ) : m.candidates.length === 0 ? (
-                        <span className="inline-flex items-center rounded-md bg-muted/50 px-2 py-0.5 text-xs text-muted-foreground">
+                        <span className="inline-flex items-center rounded-md bg-muted/50 px-2 py-0.5 text-meta">
                           ไม่พบ candidate
                         </span>
                       ) : (
@@ -873,7 +873,7 @@ export function SnkrdunkMatchClient() {
                     {/* Status */}
                     <td className="px-2 py-3 text-center">
                       <StatusBadge status={m.status} />
-                      <p className="mt-1 text-xs text-muted-foreground">
+                      <p className="mt-1 text-meta">
                         {relativeTime(m.updatedAt)}
                       </p>
                     </td>
@@ -944,7 +944,7 @@ export function SnkrdunkMatchClient() {
           >
             <ChevronLeft className="size-4" />
           </button>
-          <span className="text-xs text-muted-foreground">
+          <span className="text-meta">
             {page} / {totalPages}
           </span>
           <button

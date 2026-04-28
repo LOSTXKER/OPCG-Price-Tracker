@@ -27,7 +27,7 @@ export default async function EditBlogPostPage(props: {
 
   return (
     <div className="space-y-6">
-      <h1 className="break-words text-xl font-bold">Edit: {post.title}</h1>
+      <h1 className="break-words text-h1">Edit: {post.title}</h1>
       <BlogForm
         initial={{
           id: post.id,

@@ -231,7 +231,7 @@ export default async function CardTypesPage() {
             { label: "ประเภทการ์ด" },
           ]}
         />
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="text-h1">
           ประเภทการ์ด (Card Types)
         </h1>
         <p className="text-lg leading-relaxed text-muted-foreground">
@@ -282,7 +282,7 @@ export default async function CardTypesPage() {
                   <div className="flex gap-2">
                     {examples.map((card) => (
                       <Link key={card.cardCode} href={`/cards/${card.cardCode}`} className="group shrink-0">
-                        <div className="relative aspect-[63/88] w-14 overflow-hidden rounded-lg bg-muted transition-transform group-hover:-translate-y-0.5">
+                        <div className="relative aspect-[63/88] w-14 overflow-hidden rounded-lg bg-muted">
                           {card.imageUrl && (
                             <Image src={card.imageUrl} alt={card.nameEn ?? card.nameJp} fill className="object-contain" sizes="56px" />
                           )}
@@ -311,7 +311,7 @@ export default async function CardTypesPage() {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-baseline gap-2">
                         <h2 className="text-xl font-semibold">{type.name}</h2>
-                        <span className="text-xs text-muted-foreground">{type.nameJp}</span>
+                        <span className="text-meta">{type.nameJp}</span>
                       </div>
                       <div className="mt-1.5 flex flex-wrap gap-1">
                         {type.stats.map((s) => (
@@ -325,7 +325,7 @@ export default async function CardTypesPage() {
                   <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{type.role}</p>
                   <ul className="mt-2.5 space-y-1">
                     {type.rules.map((rule, i) => (
-                      <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <li key={i} className="flex items-start gap-2 text-meta">
                         <span className={`mt-1.5 size-1 shrink-0 rounded-full ${type.iconColor.replace("text-", "bg-")}`} />
                         {rule}
                       </li>
@@ -338,7 +338,7 @@ export default async function CardTypesPage() {
                     <div className="flex gap-2">
                       {examples.map((card) => (
                         <Link key={card.cardCode} href={`/cards/${card.cardCode}`} className="group shrink-0">
-                          <div className="relative aspect-[63/88] w-12 overflow-hidden rounded-lg bg-muted transition-transform group-hover:-translate-y-0.5">
+                          <div className="relative aspect-[63/88] w-12 overflow-hidden rounded-lg bg-muted">
                             {card.imageUrl && (
                               <Image src={card.imageUrl} alt={card.nameEn ?? card.nameJp} fill className="object-contain" sizes="48px" />
                             )}
@@ -375,44 +375,44 @@ export default async function CardTypesPage() {
                 <div className="flex h-8 items-center justify-center rounded-lg border border-dashed border-rose-500/40 bg-rose-500/10 px-2 text-xs font-bold text-rose-500">
                   Power
                 </div>
-                <div className="flex size-8 items-center justify-center rounded-lg border border-dashed border-amber-500/40 bg-amber-500/10 text-[8px] font-bold text-amber-500">
+                <div className="flex size-8 items-center justify-center rounded-lg border border-dashed border-amber-500/40 bg-amber-500/10 text-overlay text-amber-500">
                   Attr
                 </div>
               </div>
 
               {/* Art area */}
               <div className="mt-2 flex aspect-[4/3] items-center justify-center rounded-lg border border-dashed border-border bg-muted/30">
-                <span className="text-xs text-muted-foreground/50">Art</span>
+                <span className="text-meta text-muted-foreground/50">Art</span>
               </div>
 
               {/* Type + Name + Trait */}
               <div className="mt-2 space-y-0.5">
                 <div className="flex items-center gap-1.5">
-                  <span className="rounded border border-dashed border-purple-500/40 bg-purple-500/10 px-1.5 py-0.5 text-[8px] font-bold text-purple-500">
+                  <span className="rounded border border-dashed border-purple-500/40 bg-purple-500/10 px-1.5 py-0.5 text-overlay text-purple-500">
                     Type
                   </span>
-                  <span className="rounded border border-dashed border-primary/30 bg-primary/5 px-1.5 py-0.5 text-[8px] font-bold text-primary">
+                  <span className="rounded border border-dashed border-primary/30 bg-primary/5 px-1.5 py-0.5 text-overlay text-primary">
                     Color
                   </span>
                 </div>
                 <div className="rounded border border-dashed border-foreground/20 bg-foreground/5 px-1.5 py-0.5 text-xs font-semibold text-foreground/70">
                   Name
                 </div>
-                <div className="rounded border border-dashed border-emerald-500/40 bg-emerald-500/10 px-1.5 py-0.5 text-[8px] font-bold text-emerald-500">
+                <div className="rounded border border-dashed border-emerald-500/40 bg-emerald-500/10 px-1.5 py-0.5 text-overlay text-emerald-500">
                   Trait (สังกัด)
                 </div>
               </div>
 
               {/* Bottom row: Effect area + Rarity/Block */}
               <div className="mt-1.5 flex items-end justify-between">
-                <div className="flex-1 rounded border border-dashed border-orange-500/40 bg-orange-500/5 px-1.5 py-1 text-[7px] leading-tight text-orange-500">
+                <div className="flex-1 rounded border border-dashed border-orange-500/40 bg-orange-500/5 px-1.5 py-1 text-overlay leading-tight text-orange-500">
                   Effect / Trigger
                 </div>
                 <div className="ml-1.5 flex items-center gap-1">
-                  <span className="rounded border border-dashed border-amber-500/40 bg-amber-500/10 px-1 py-0.5 text-[8px] font-bold text-amber-500">
+                  <span className="rounded border border-dashed border-amber-500/40 bg-amber-500/10 px-1 py-0.5 text-overlay text-amber-500">
                     R
                   </span>
-                  <span className="flex size-5 items-center justify-center rounded border border-dashed border-muted-foreground/30 bg-muted/30 text-[8px] font-bold text-muted-foreground">
+                  <span className="flex size-5 items-center justify-center rounded border border-dashed border-muted-foreground/30 bg-muted/30 text-overlay text-muted-foreground">
                     2
                   </span>
                 </div>
@@ -420,7 +420,7 @@ export default async function CardTypesPage() {
             </div>
 
             {/* Labels outside */}
-            <div className="mt-3 flex flex-wrap justify-center gap-2 text-xs text-muted-foreground">
+            <div className="mt-3 flex flex-wrap justify-center gap-2 text-meta">
               <span className="rounded bg-muted px-2 py-0.5">R = Rarity</span>
               <span className="rounded bg-muted px-2 py-0.5">2 = Block Icon</span>
               <span className="rounded bg-muted px-2 py-0.5">Attr = Attribute</span>
@@ -444,7 +444,7 @@ export default async function CardTypesPage() {
               <div className="min-w-0">
                 <p className="text-sm font-semibold">{stat.name}</p>
                 <p className="text-xs leading-relaxed text-muted-foreground">{stat.desc}</p>
-                <p className="mt-0.5 text-xs text-muted-foreground/60">
+                <p className="mt-0.5 text-meta text-muted-foreground/60">
                   {stat.types}
                 </p>
               </div>
@@ -515,7 +515,7 @@ export default async function CardTypesPage() {
             >
               <div className="min-w-0 flex-1">
                 <p className="font-medium">{src.label}</p>
-                <p className="text-xs text-muted-foreground">{src.desc}</p>
+                <p className="text-meta">{src.desc}</p>
               </div>
               <ExternalLink className="size-4 shrink-0 text-muted-foreground/40" />
             </a>

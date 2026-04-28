@@ -43,7 +43,7 @@ export function ForgotPasswordClient() {
         </div>
 
         <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-bold tracking-tight">{t(lang, "forgotPasswordTitle")}</h1>
+          <h1 className="text-h1">{t(lang, "forgotPasswordTitle")}</h1>
           <p className="text-sm text-muted-foreground">{t(lang, "forgotPasswordDesc")}</p>
         </div>
 

@@ -33,7 +33,7 @@ export function Breadcrumb(props: BreadcrumbProps) {
 
   return (
     <nav
-      className={cn("mb-4 flex flex-wrap items-center gap-1 text-xs text-muted-foreground", props.className)}
+      className={cn("mb-4 flex flex-wrap items-center gap-1 text-meta", props.className)}
       aria-label="Breadcrumb"
     >
       {items.map((item, i) => {

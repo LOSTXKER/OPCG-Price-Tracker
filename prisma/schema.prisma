@@ -119,6 +119,8 @@ model Card {
   @@index([viewCount(sort: Desc)])
   @@index([priceChange24h(sort: Desc)])
   @@index([priceChange7d(sort: Desc)])
+  @@index([latestPriceJpy(sort: Desc)])
+  @@index([updatedAt(sort: Desc)])
 }
 
 enum CardType {
@@ -244,30 +246,10 @@ model User {
   isAdmin             Boolean          @default(false)
   sellerRating        Float?
   sellerReviewCount   Int              @default(0)
-  emailAlerts         Boolean          @default(true)
-  lineAlerts          Boolean          @default(false)
-  weeklyDigest        Boolean          @default(true)
-  notifyPriceEmail    Boolean          @default(true)
-  notifyPriceWeb      Boolean          @default(true)
-  notifyPriceLine     Boolean          @default(false)
-  notifyMarketEmail   Boolean          @default(true)
-  notifyMarketWeb     Boolean          @default(true)
-  notifyMarketLine    Boolean          @default(false)
-  notifyHoneyEmail    Boolean          @default(true)
-  notifyHoneyWeb      Boolean          @default(true)
-  notifyHoneyLine     Boolean          @default(false)
-  notifyDigestEmail   Boolean          @default(true)
-  notifyDigestWeb     Boolean          @default(true)
-  notifyDigestLine    Boolean          @default(false)
-  profileVisibility   String           @default("public")
-  showCollection      Boolean          @default(true)
-  showListings        Boolean          @default(true)
-  showDecks           Boolean          @default(true)
-  showStats           Boolean          @default(true)
-  showWatchlist       Boolean          @default(true)
-  hidePortfolioPrices Boolean          @default(false)
-  hidePortfolioQty    Boolean          @default(false)
-  profileSummaryOnly  Boolean          @default(false)
+  // 1:1 satellites (split from the original god-model)
+  notificationPrefs   UserNotificationPrefs?
+  privacySettings     UserPrivacySettings?
+  entitlements        UserEntitlements?
   handle              String?          @unique
   socialLine          String?          @db.VarChar(60)
   socialIg            String?          @db.VarChar(60)
@@ -294,13 +276,13 @@ model User {
   honeyLifetimeEarned   Int              @default(0)
   profileFrame          String?
   onboardingCompleted   Boolean          @default(false)
-  extraPriceAlertSlots  Int              @default(0)
-  csvExportCredits      Int              @default(0)
-  ticketBalance         Int              @default(0)
   referralCode          String?          @unique
   badges              UserBadge[]
-  dailyMissions       DailyMission[]
-  monthlyMissions     MonthlyMission[]
+  /// Unified per-cadence mission progress (Daily / Weekly / Monthly).
+  /// Replaces the legacy `dailyMissions` / `weeklyMissions` /
+  /// `monthlyMissions` 1:N relations as of 20260503 — see
+  /// `lib/honey/missions.ts`.
+  missionPeriods      UserMissionPeriod[]
   referralLinks       ReferralLink[]
   pricePredictions    PricePrediction[]
   achievements        UserAchievement[]
@@ -326,19 +308,82 @@ model User {
   @@index([handle])
 }
 
+/// Per-user notification preferences (channel toggles + per-kind opt-ins).
+/// Split from User in 20260501 — see `lib/users/notification-prefs.ts`
+/// for the read/write helpers; do not query `prisma.user.update` for
+/// these fields any more.
+model UserNotificationPrefs {
+  userId            String  @id
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  emailAlerts       Boolean @default(true)
+  lineAlerts        Boolean @default(false)
+  weeklyDigest      Boolean @default(true)
+  notifyPriceEmail  Boolean @default(true)
+  notifyPriceWeb    Boolean @default(true)
+  notifyPriceLine   Boolean @default(false)
+  notifyMarketEmail Boolean @default(true)
+  notifyMarketWeb   Boolean @default(true)
+  notifyMarketLine  Boolean @default(false)
+  notifyHoneyEmail  Boolean @default(true)
+  notifyHoneyWeb    Boolean @default(true)
+  notifyHoneyLine   Boolean @default(false)
+  notifyDigestEmail Boolean @default(true)
+  notifyDigestWeb   Boolean @default(true)
+  notifyDigestLine  Boolean @default(false)
+  updatedAt         DateTime @updatedAt
+}
+
+/// Per-user privacy / showcase toggles for the public profile.
+/// Split from User in 20260501 — see `lib/users/privacy.ts`.
+model UserPrivacySettings {
+  userId              String  @id
+  user                User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profileVisibility   String  @default("public")
+  showCollection      Boolean @default(true)
+  showListings        Boolean @default(true)
+  showDecks           Boolean @default(true)
+  showStats           Boolean @default(true)
+  showWatchlist       Boolean @default(true)
+  hidePortfolioPrices Boolean @default(false)
+  hidePortfolioQty    Boolean @default(false)
+  profileSummaryOnly  Boolean @default(false)
+  updatedAt           DateTime @updatedAt
+}
+
+/// Per-user paid/granted feature counters and time-windowed perks.
+/// Split from User in 20260501 — see `lib/users/entitlements.ts`.
+model UserEntitlements {
+  userId                  String    @id
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  extraPriceAlertSlots    Int       @default(0)
+  csvExportCredits        Int       @default(0)
+  extraWatchlistSlots     Int       @default(0)
+  bulkLookupCredits       Int       @default(0)
+  autoPricingUntil        DateTime?
+  lineAlertsUntil         DateTime?
+  weeklyListingBoostUntil DateTime?
+  ticketBalance           Int       @default(0)
+  updatedAt               DateTime  @updatedAt
+}
+
 // ============================================================
 // HONEY SYSTEM (Engagement Points)
 // ============================================================
 
 model HoneyTransaction {
-  id        Int             @id @default(autoincrement())
-  userId    String
-  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  amount    Int
-  type      HoneyActionType
-  reason    String
-  metadata  Json?
-  createdAt DateTime        @default(now())
+  id             Int             @id @default(autoincrement())
+  userId         String
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount         Int
+  type           HoneyActionType
+  reason         String
+  metadata       Json?
+  /// Sparse unique idempotency key. When set, the unique constraint
+  /// makes parallel grants for the same logical action (mission claim,
+  /// referral conversion, weekly/monthly bonus) collapse to a single
+  /// ledger row. Caller catches `P2002` and treats it as "already paid".
+  idempotencyKey String?         @unique
+  createdAt      DateTime        @default(now())
 
   @@index([userId, createdAt(sort: Desc)])
   @@index([userId, type, createdAt])
@@ -365,7 +410,20 @@ enum HoneyActionType {
   WEEKLY_BONUS
   MONTHLY_MISSION
   LEADERBOARD_REWARD
-  // Deprecated — kept for historical transaction data
+  // Honey rebalance v2 (April 2026)
+  REFERRAL_WELCOME      // referee-side welcome bonus, picks up tier/seasonal multipliers
+  MILESTONE_STREAK_7    // one-shot reward when streak first crosses 7 days
+  MILESTONE_STREAK_30   // one-shot reward when streak first crosses 30 days
+  BUYER_PURCHASE        // first marketplace purchase (and per-day capped repeats if enabled)
+  MONTHLY_PERFECT_BONUS // 28 perfect days in a month bonus payout
+  WEEKLY_MISSION        // payout from the new weekly-cadence mission engine
+  /// ── DEPRECATED — DO NOT USE FOR NEW WRITES ──
+  /// These values are frozen for back-compat with rows created before
+  /// the rebalance v2 economy. Application code must not emit them
+  /// from any new path; `DEPRECATED_HONEY_ACTION_TYPES` in
+  /// `src/lib/honey/deprecated.ts` enforces this at write time.
+  /// A future migration will collapse them into a `legacyType` String
+  /// column on `HoneyTransaction` so the enum can shrink.
   PORTFOLIO_ADD
   GIFT_SEND
   GIFT_RECEIVE
@@ -376,19 +434,26 @@ enum HoneyActionType {
 }
 
 model HoneyShopItem {
-  id          Int          @id @default(autoincrement())
-  name        String
-  nameEn      String?
-  nameTh      String?
-  description String?
-  cost        Int
-  type        ShopItemType
-  value       Json?
-  isActive    Boolean      @default(true)
-  stock       Int?
-  createdAt   DateTime     @default(now())
+  id             Int          @id @default(autoincrement())
+  name           String
+  nameEn         String?
+  nameTh         String?
+  description    String?
+  cost           Int
+  type           ShopItemType
+  value          Json?
+  isActive       Boolean      @default(true)
+  stock          Int?
+  // Honey rebalance v2: progression gating + rotating featured slot
+  requiredLevel  Int          @default(0)
+  originalCost   Int?
+  featuredUntil  DateTime?
+  availableUntil DateTime?
+  createdAt      DateTime     @default(now())
 
   @@index([isActive])
+  @@index([featuredUntil])
+  @@index([requiredLevel])
 }
 
 model UserBadge {
@@ -404,20 +469,48 @@ model UserBadge {
   @@index([userId])
 }
 
-model DailyMission {
-  id            Int      @id @default(autoincrement())
-  userId        String
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  date          String
-  tasks         Json     @default("[]") // [{ id, done, reward, claimed }]
-  progress      Int      @default(0)
-  completed     Boolean  @default(false)
-  perfectDay    Boolean  @default(false)
-  bonusClaimed  Boolean  @default(false)
-  createdAt     DateTime @default(now())
+/// Cadence axis for `UserMissionPeriod`. The `periodKey` shape depends
+/// on the cadence:
+///   - DAILY   → `YYYY-MM-DD`              (calendar day)
+///   - WEEKLY  → `YYYY-MM-DD` of Monday     (ISO week start)
+///   - MONTHLY → `YYYY-MM`                  (calendar month)
+enum MissionCadence {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
 
-  @@unique([userId, date])
-  @@index([userId])
+/// Unified per-cadence mission progress row. Replaces the legacy
+/// `DailyMission` / `WeeklyMission` / `MonthlyMission` triplet — same
+/// shape, different cadence. Logic lives in `src/lib/honey/missions.ts`
+/// (and the cadence-specific helpers that wrap it).
+///
+/// Tasks JSON shape (cadence-dependent):
+///   - DAILY   → `[{ id, done, reward, claimed }]`
+///   - WEEKLY  → `[{ id, done, claimed, progress, target, visitedKeys? }]`
+///   - MONTHLY → `[{ id, done, claimed, progress, target, visitedKeys? }]`
+model UserMissionPeriod {
+  id           Int            @id @default(autoincrement())
+  userId       String
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cadence      MissionCadence
+  periodKey    String
+  tasks        Json           @default("[]")
+  progress     Int            @default(0)
+  completed    Boolean        @default(false)
+  /// Mirrors `tasks` "all done" state. Used by the bonus-claim
+  /// `updateMany({ bonusClaimed: false })` race-guard. For DAILY this
+  /// also means "perfect day" and feeds the weekly/monthly streak
+  /// rollups; for WEEKLY/MONTHLY it just means "complete-all bonus
+  /// already paid".
+  perfectDay   Boolean        @default(false)
+  bonusClaimed Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@unique([userId, cadence, periodKey])
+  @@index([userId, cadence])
+  @@index([cadence, periodKey])
 }
 
 model PricePrediction {
@@ -504,23 +597,11 @@ model RaffleTicket {
   @@index([userId])
 }
 
-model MonthlyMission {
-  id        Int      @id @default(autoincrement())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  month     String   // "2026-04"
-  tasks     Json     // [{ id, done, claimed, progress, target }]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, month])
-  @@index([userId])
-}
-
 // ── Mission Templates & Scheduling (Admin-configurable) ──
 
 enum MissionCategory {
   DAILY
+  WEEKLY
   MONTHLY
   SPECIAL
 }
@@ -543,6 +624,7 @@ enum MissionBonusRequirement {
   ALL_COMPLETE
   COUNT_COMPLETE
   STREAK_DAYS
+  MONTHLY_PERFECT
 }
 
 model MissionTemplate {
@@ -745,15 +827,19 @@ enum CardCondition {
 // ============================================================
 
 model WatchlistItem {
-  id      Int      @id @default(autoincrement())
-  userId  String
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  cardId  Int
-  card    Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
-  addedAt DateTime @default(now())
+  id             Int       @id @default(autoincrement())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cardId         Int
+  card           Card      @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  note           String?   @db.VarChar(280)
+  targetPriceJpy Int?
+  pinnedAt       DateTime?
+  addedAt        DateTime  @default(now())
 
   @@unique([userId, cardId])
   @@index([userId])
+  @@index([userId, pinnedAt(sort: Desc)])
 }
 
 model PriceAlert {
@@ -764,7 +850,7 @@ model PriceAlert {
   card        Card           @relation(fields: [cardId], references: [id], onDelete: Cascade)
   targetPrice Int
   direction   AlertDirection
-  channel     AlertChannel   @default(EMAIL)
+  channels    AlertChannel[]
   isActive    Boolean        @default(true)
   triggeredAt DateTime?
   createdAt   DateTime       @default(now())

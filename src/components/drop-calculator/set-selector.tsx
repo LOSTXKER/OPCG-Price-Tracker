@@ -153,7 +153,7 @@ export function SetSelector({ sets, selectedCode, setsLoading, onSelect }: SetSe
                           </span>
                         </span>
                         {s.releaseDate && (
-                          <span className="shrink-0 text-xs text-muted-foreground/50">
+                          <span className="shrink-0 text-meta text-muted-foreground/50">
                             {new Date(s.releaseDate).getFullYear()}
                           </span>
                         )}

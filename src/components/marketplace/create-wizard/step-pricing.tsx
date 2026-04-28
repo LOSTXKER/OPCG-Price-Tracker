@@ -61,7 +61,7 @@ export function StepPricing({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-lg font-semibold">ราคาและสภาพ</h2>
+        <h2 className="text-h3">ราคาและสภาพ</h2>
         <p className="text-sm text-muted-foreground">
           ตั้งราคาขายและระบุสภาพการ์ด
         </p>
@@ -88,7 +88,7 @@ export function StepPricing({
           ))}
         </div>
         {data.condition && (
-          <p className="text-xs text-muted-foreground">
+          <p className="text-meta">
             {CONDITION_LABELS[data.condition]}
           </p>
         )}
@@ -122,7 +122,7 @@ export function StepPricing({
           </div>
         )}
         {marketPriceJpy != null && (
-          <p className="text-xs text-muted-foreground">
+          <p className="text-meta">
             ราคาตลาด: ¥{marketPriceJpy.toLocaleString()}
             {marketPriceThb != null && ` (~฿${marketPriceThb.toLocaleString()})`}
           </p>

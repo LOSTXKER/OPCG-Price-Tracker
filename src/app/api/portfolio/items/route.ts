@@ -1,134 +1,104 @@
 import { CardCondition, TransactionType } from "@/generated/prisma/client";
 import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
-import { parseCondition } from "@/lib/api/parse-condition";
-import { parseListingQuantity, parseJsonBody } from "@/lib/api/request-body";
+import { parseJsonBody } from "@/lib/api/request-body";
 import { cardInclude } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
-import { createLog } from "@/lib/logger";
-import { effectiveTier, getLimits } from "@/lib/tier";
+import { triggerAchievementCheck } from "@/lib/honey";
+import { effectiveTier, getLimits } from "@/lib/billing";
+import { CreatePortfolioItemSchema } from "@/lib/portfolio/schemas";
 import { NextRequest, NextResponse } from "next/server";
 
-const log = createLog("api:portfolio");
-
 export const POST = apiHandler(async (request: NextRequest) => {
-  try {
-    const auth = await requireAuthUser();
-    if (!auth.ok) return auth.response;
-    const dbUser = auth.user;
+  const auth = await requireAuthUser();
+  if (!auth.ok) return auth.response;
+  const dbUser = auth.user;
 
-    const parsed = await parseJsonBody<Record<string, unknown>>(request);
-    if (!parsed.ok) return parsed.response;
-    const body = parsed.body;
+  const parsed = await parseJsonBody(request, CreatePortfolioItemSchema);
+  if (!parsed.ok) return parsed.response;
+  const body = parsed.body;
 
-    const portfolioId = typeof body.portfolioId === "number" ? body.portfolioId : Number(body.portfolioId);
-    const cardId = typeof body.cardId === "number" ? body.cardId : Number(body.cardId);
-    const quantityRaw =
-      typeof body.quantity === "number" ? body.quantity : Number(body.quantity ?? 1);
-    const purchasePrice =
-      body.purchasePrice === null || body.purchasePrice === undefined
-        ? null
-        : typeof body.purchasePrice === "number"
-          ? body.purchasePrice
-          : Number(body.purchasePrice);
-    const condition = parseCondition(body.condition) ?? CardCondition.NM;
-    const notes = typeof body.notes === "string" ? body.notes.slice(0, 2000) : null;
+  const portfolioId = body.portfolioId;
+  const cardId = body.cardId;
+  const quantity = body.quantity;
+  const purchasePrice = body.purchasePrice ?? null;
+  const condition = body.condition ?? CardCondition.NM;
+  const notes = typeof body.notes === "string" ? body.notes.slice(0, 2000) : null;
 
-    if (!Number.isInteger(portfolioId) || portfolioId < 1) {
-      return NextResponse.json({ error: "Invalid portfolioId" }, { status: 400 });
-    }
-    if (!Number.isInteger(cardId) || cardId < 1) {
-      return NextResponse.json({ error: "Invalid cardId" }, { status: 400 });
-    }
-    const parsedQty = parseListingQuantity(quantityRaw);
-    if (!parsedQty.ok) return parsedQty.response;
-    const quantity = parsedQty.value;
-    if (purchasePrice !== null && (!Number.isFinite(purchasePrice) || purchasePrice < 0)) {
-      return NextResponse.json({ error: "Invalid purchasePrice" }, { status: 400 });
-    }
-    if (body.condition !== undefined && parseCondition(body.condition) === null) {
-      return NextResponse.json({ error: "Invalid condition" }, { status: 400 });
-    }
-    if (body.notes !== undefined && typeof body.notes !== "string") {
-      return NextResponse.json({ error: "notes must be a string" }, { status: 400 });
-    }
+  const portfolio = await prisma.portfolio.findFirst({
+    where: { id: portfolioId, userId: dbUser.id },
+  });
+  if (!portfolio) {
+    return NextResponse.json({ error: "Portfolio not found" }, { status: 404 });
+  }
 
-    const portfolio = await prisma.portfolio.findFirst({
-      where: { id: portfolioId, userId: dbUser.id },
+  const card = await prisma.card.findUnique({ where: { id: cardId } });
+  if (!card) {
+    return NextResponse.json({ error: "Card not found" }, { status: 404 });
+  }
+
+  const tier = effectiveTier(dbUser.tier, dbUser.tierExpiresAt);
+  const limits = getLimits(tier);
+  if (limits.portfolioCards !== Infinity) {
+    const totalCards = await prisma.portfolioItem.count({
+      where: { portfolio: { userId: dbUser.id } },
     });
-    if (!portfolio) {
-      return NextResponse.json({ error: "Portfolio not found" }, { status: 404 });
+    if (totalCards >= limits.portfolioCards) {
+      return NextResponse.json(
+        { error: `Portfolio card limit reached (${limits.portfolioCards})` },
+        { status: 403 }
+      );
     }
+  }
 
-    const card = await prisma.card.findUnique({ where: { id: cardId } });
-    if (!card) {
-      return NextResponse.json({ error: "Card not found" }, { status: 404 });
-    }
-
-    const tier = effectiveTier(dbUser.tier, dbUser.tierExpiresAt);
-    const limits = getLimits(tier);
-    if (limits.portfolioCards !== Infinity) {
-      const totalCards = await prisma.portfolioItem.count({
-        where: { portfolio: { userId: dbUser.id } },
-      });
-      if (totalCards >= limits.portfolioCards) {
-        return NextResponse.json(
-          { error: `Portfolio card limit reached (${limits.portfolioCards})` },
-          { status: 403 }
-        );
-      }
-    }
-
-    const existing = await prisma.portfolioItem.findUnique({
-      where: {
-        portfolioId_cardId_condition: {
-          portfolioId,
-          cardId,
-          condition,
-        },
-      },
-    });
-
-    const item = existing
-      ? await prisma.portfolioItem.update({
-          where: { id: existing.id },
-          data: {
-            quantity: existing.quantity + quantity,
-            ...(purchasePrice !== null ? { purchasePrice: Math.round(purchasePrice) } : {}),
-            ...(typeof body.notes === "string" ? { notes: body.notes.slice(0, 2000) } : {}),
-          },
-          include: {
-            card: { include: cardInclude },
-          },
-        })
-      : await prisma.portfolioItem.create({
-          data: {
-            portfolioId,
-            cardId,
-            quantity,
-            purchasePrice: purchasePrice !== null ? Math.round(purchasePrice) : null,
-            condition,
-            notes,
-          },
-          include: {
-            card: { include: cardInclude },
-          },
-        });
-
-    await prisma.portfolioTransaction.create({
-      data: {
+  const existing = await prisma.portfolioItem.findUnique({
+    where: {
+      portfolioId_cardId_condition: {
         portfolioId,
         cardId,
-        type: TransactionType.BUY,
-        quantity,
-        pricePerUnit: purchasePrice !== null ? Math.round(purchasePrice) : null,
-        note: notes,
+        condition,
       },
-    });
+    },
+  });
 
-    return NextResponse.json({ item }, { status: existing ? 200 : 201 });
-  } catch (error) {
-    log.error("POST /api/portfolio/items", error);
-    return NextResponse.json({ error: "Failed to add portfolio item" }, { status: 500 });
-  }
+  const item = existing
+    ? await prisma.portfolioItem.update({
+        where: { id: existing.id },
+        data: {
+          quantity: existing.quantity + quantity,
+          ...(purchasePrice !== null ? { purchasePrice: Math.round(purchasePrice) } : {}),
+          ...(notes !== null ? { notes } : {}),
+        },
+        include: {
+          card: { include: cardInclude },
+        },
+      })
+    : await prisma.portfolioItem.create({
+        data: {
+          portfolioId,
+          cardId,
+          quantity,
+          purchasePrice: purchasePrice !== null ? Math.round(purchasePrice) : null,
+          condition,
+          notes,
+        },
+        include: {
+          card: { include: cardInclude },
+        },
+      });
+
+  await prisma.portfolioTransaction.create({
+    data: {
+      portfolioId,
+      cardId,
+      type: TransactionType.BUY,
+      quantity,
+      pricePerUnit: purchasePrice !== null ? Math.round(purchasePrice) : null,
+      note: notes,
+    },
+  });
+
+  triggerAchievementCheck(dbUser.id);
+
+  return NextResponse.json({ item }, { status: existing ? 200 : 201 });
 });

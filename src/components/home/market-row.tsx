@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { getCardName } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
-import { changeToneClass, formatSignedPct } from "@/lib/utils/currency"
+import { changeToneClass, formatSignedPct, formatCount } from "@/lib/utils/currency"
 import type { CardRow, PriceMode } from "./market-types"
 
 export const MarketRow = memo(function MarketRow({
@@ -107,7 +107,7 @@ export const MarketRow = memo(function MarketRow({
       <td className="hidden py-3 pr-3 text-right align-middle md:table-cell">
         {showViews ? (
           <span className="font-price text-xs text-muted-foreground">
-            {(card.viewCount ?? 0).toLocaleString()}
+            {formatCount(card.viewCount ?? 0)}
           </span>
         ) : isPsa ? (
           <span className="font-price text-xs text-muted-foreground">—</span>

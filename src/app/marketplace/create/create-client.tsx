@@ -17,9 +17,13 @@ import {
 } from "@/components/marketplace/create-wizard";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { PageHeader } from "@/components/layout/page-header";
 import { DEFAULT_CARD_CONDITION } from "@/lib/constants/ui";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 export default function CreateListingClient() {
+  const lang = useUIStore((s) => s.language);
   const router = useRouter();
   const [step, setStep] = useState<WizardStep>("card");
   const [completedSteps, setCompletedSteps] = useState<Set<WizardStep>>(
@@ -113,20 +117,18 @@ export default function CreateListingClient() {
 
   return (
     <div className="mx-auto max-w-lg space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <h1 className="page-header">ลงขายการ์ด</h1>
-          <p className="text-muted-foreground text-sm">
-            สร้างประกาศขายการ์ดของคุณ
-          </p>
-        </div>
-        <Link
-          href="/marketplace"
-          className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-        >
-          ยกเลิก
-        </Link>
-      </div>
+      <PageHeader
+        title={t(lang, "sellerSellThisCard")}
+        description={t(lang, "sellerSellThisCardDesc")}
+        actions={
+          <Link
+            href="/marketplace"
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+          >
+            {t(lang, "cancel")}
+          </Link>
+        }
+      />
 
       {error && <p className="text-destructive text-sm">{error}</p>}
 

@@ -20,7 +20,22 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { PageContainer, type PageWidth } from "@/components/layout/page-container";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+
+/**
+ * Narrow-detail seller routes use a single-column layout (forms + record
+ * detail). All other seller pages get the default wide dashboard width.
+ */
+const NARROW_SELLER_ROUTES: ReadonlyArray<RegExp> = [
+  /^\/seller\/listings\/new\/?$/,
+  /^\/seller\/listings\/[^/]+\/?$/,
+  /^\/seller\/orders\/[^/]+\/?$/,
+];
+
+function resolveSellerWidth(pathname: string): PageWidth {
+  return NARROW_SELLER_ROUTES.some((re) => re.test(pathname)) ? "narrow" : "default";
+}
 
 const NAV_ITEMS = [
   { href: "/seller", label: "ภาพรวม", icon: LayoutDashboard, exact: true },
@@ -94,7 +109,7 @@ export function SellerShell({ children }: { children: React.ReactNode }) {
       {/* Desktop Sidebar */}
       <aside className="hidden w-56 shrink-0 flex-col border-r border-border/50 bg-muted/20 md:flex">
         <div className="sticky top-0 flex h-dvh flex-col p-3">
-          <Link href="/" className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+          <Link href="/" className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-meta transition-colors hover:bg-muted hover:text-foreground">
             <ArrowLeft className="h-3.5 w-3.5" />
             Back to site
           </Link>
@@ -118,7 +133,7 @@ export function SellerShell({ children }: { children: React.ReactNode }) {
             </SheetTrigger>
             <SheetContent side="left" className="w-64 p-3" showCloseButton={false}>
               <SheetTitle className="sr-only">Navigation</SheetTitle>
-              <Link href="/" className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" onClick={() => setMobileOpen(false)}>
+              <Link href="/" className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-meta transition-colors hover:bg-muted hover:text-foreground" onClick={() => setMobileOpen(false)}>
                 <ArrowLeft className="h-3.5 w-3.5" />
                 Back to site
               </Link>
@@ -139,10 +154,10 @@ export function SellerShell({ children }: { children: React.ReactNode }) {
         </header>
 
         <main className="flex-1 px-4 py-4 md:px-6 md:py-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
+          <PageContainer inShell width={resolveSellerWidth(pathname)}>
             <Breadcrumb pathname={pathname} labelMap={BREADCRUMB_LABELS} />
             {children}
-          </div>
+          </PageContainer>
         </main>
       </div>
     </div>

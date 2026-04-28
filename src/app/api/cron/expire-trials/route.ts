@@ -26,7 +26,13 @@ export const GET = cronHandler(async () => {
       stripeSubscriptionId: null,
       tierExpiresAt: { gt: threeDaysAgo, lte: threeDaysFromNow },
       tier: { not: "FREE" },
-      emailAlerts: true,
+      // Trial reminders are gated on the global email opt-in. Users who
+      // have never opened settings have no satellite row → opt-in
+      // defaults to true, so we explicitly include that case via `null`.
+      OR: [
+        { notificationPrefs: { is: null } },
+        { notificationPrefs: { emailAlerts: true } },
+      ],
     },
     select: { email: true, displayName: true, tierExpiresAt: true },
   });
