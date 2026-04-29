@@ -201,3 +201,12 @@ export function HoneyShopManager({ initialItems }: { initialItems: ShopItem[] })
                       </div>
                     </td>
                   </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </AdminPage>
+  );
+}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Pencil,
   Check,
@@ -778,4 +779,5 @@ function ImageCell({ card }: { card: CardRow }) {
         />
       </TooltipContent>
     </Tooltip>
+  );
 }
