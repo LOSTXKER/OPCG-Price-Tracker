@@ -136,6 +136,10 @@ export function RaffleTab({
         }
       />
 
+      {lastWinners.length > 0 && (
+        <RecentWinnersStrip lang={lang} winners={lastWinners} />
+      )}
+
       {canClaimFree && (
         <div className="flex items-center gap-3 rounded-xl border bg-card p-3.5">
           <Gift className="size-4 shrink-0 text-primary" />
@@ -173,38 +177,65 @@ export function RaffleTab({
         ))}
       </div>
 
-      {/* Past Winners */}
-      <div className="panel overflow-hidden">
-        <div className="flex items-center justify-between border-b px-4 py-3.5">
-          <h2 className="text-h3">{t(lang, "raffleWinner")}</h2>
-          <Link
-            href="/raffle/winners"
-            className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
-          >
-            {t(lang, "winnersViewAll")}
-            <ArrowRight className="size-3" />
-          </Link>
-        </div>
-        {lastWinners.length > 0 ? (
-          <div className="divide-y divide-border/40">
-            {lastWinners.map((w, i) => (
-              <div key={i} className="flex items-center gap-3 px-4 py-2.5">
-                <Trophy className="size-3.5 shrink-0 text-muted-foreground" />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-medium">{w.prizeName}</p>
-                  <p className="truncate text-meta">
-                    {w.displayName ?? t(lang, "anonymous")}
-                  </p>
-                </div>
-                <span className="shrink-0 text-meta tabular-nums">{w.month}</span>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="px-4 py-4 text-meta">{t(lang, "winnersEmpty")}</p>
-        )}
-      </div>
     </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Recent winners — compact social-proof strip                        */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Horizontal scrolling card rail that lives directly under the raffle
+ * header. Previous iterations put the winners list at the very bottom
+ * of the tab, which meant nobody scrolled that far to see it. Hoisting
+ * it near the top (with a "View all" link) turns it into social proof
+ * right where the user is making their "should I buy a ticket?" call.
+ */
+function RecentWinnersStrip({
+  lang,
+  winners,
+}: {
+  lang: Language;
+  winners: RaffleWinner[];
+}) {
+  return (
+    <section
+      aria-label={t(lang, "raffleWinner")}
+      className="panel overflow-hidden"
+    >
+      <header className="flex items-center justify-between gap-2 border-b px-4 py-2.5">
+        <div className="flex items-center gap-2">
+          <Trophy className="size-3.5 text-primary" />
+          <p className="text-eyebrow">{t(lang, "raffleWinner")}</p>
+        </div>
+        <Link
+          href="/raffle/winners"
+          className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
+        >
+          {t(lang, "winnersViewAll")}
+          <ArrowRight className="size-3" />
+        </Link>
+      </header>
+
+      <div className="flex gap-2 overflow-x-auto scrollbar-none px-3 py-2.5">
+        {winners.slice(0, 8).map((w, i) => (
+          <article
+            key={i}
+            className="flex min-w-[180px] max-w-[220px] shrink-0 flex-col gap-0.5 rounded-lg border bg-card px-3 py-2"
+          >
+            <p className="truncate text-xs font-semibold leading-tight">
+              {w.prizeName}
+            </p>
+            <p className="truncate text-meta">
+              {w.displayName ?? t(lang, "anonymous")}
+              <span className="mx-1.5 text-border">·</span>
+              <span className="tabular-nums">{w.month}</span>
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 
