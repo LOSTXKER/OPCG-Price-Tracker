@@ -5,7 +5,6 @@ import {
   Coins,
   Flame,
   Sparkles,
-  Target,
   Ticket,
 } from "lucide-react";
 import { Popover } from "@base-ui/react/popover";
@@ -19,7 +18,6 @@ import {
 import { RankTierIcon } from "@/components/shared/rank-icon";
 import { useRankTiers } from "@/hooks/use-rank-tiers";
 import type { HoneyLevel, ActiveEvent, ShopItem } from "../types";
-import { localizedName } from "../types";
 import { RankGuideContent } from "./rank-info-popover";
 import { HowToEarnGuideContent } from "./how-to-earn-popover";
 
@@ -257,74 +255,42 @@ function HoneyStatCard({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Honey card detail — balance footer with optional next-goal nudge  */
+/*  Honey card detail — lifetime earned summary                        */
 /* ------------------------------------------------------------------ */
 
-function pickNextGoal(
-  shopItems: ShopItem[] | undefined,
-  points: number,
-  userLevel: number,
-): ShopItem | null {
-  if (!shopItems) return null;
-  const now = Date.now();
-  const candidates = shopItems
-    .filter((item) => item.isActive)
-    .filter((item) => (item.requiredLevel ?? 0) <= userLevel)
-    .filter((item) => item.cost > points)
-    .filter((item) => !item.availableUntil || new Date(item.availableUntil).getTime() > now)
-    .filter((item) => item.stock == null || item.stock > 0);
-
-  if (candidates.length === 0) return null;
-  candidates.sort((a, b) => a.cost - b.cost);
-  return candidates[0];
-}
-
+/**
+ * Footer for the Honey stat card. Dropped the old "next goal" nudge — it
+ * read like a shop upsell pinned to the user's balance. Now it quietly
+ * reports how much honey they've earned across their whole account, which
+ * is the most useful long-term context for the balance above it.
+ */
 function HoneyCardDetail({
   lang,
   lifetimeEarned,
-  shopItems,
-  points,
-  userLevel,
 }: {
   lang: Language;
   lifetimeEarned: number;
-  shopItems?: ShopItem[];
-  points: number;
-  userLevel: number;
 }) {
-  const goal = pickNextGoal(shopItems, points, userLevel);
-
-  if (goal) {
-    const remaining = Math.max(0, goal.cost - points);
-    const goalName = localizedName(goal, lang);
-    return (
-      <div className="flex items-center gap-1.5 text-meta">
-        <Target className="size-3 shrink-0 text-primary" />
-        <span className="min-w-0 flex-1 truncate">
-          <span className="text-muted-foreground">
-            {lang === "TH" ? "เป้าหมาย: " : lang === "JP" ? "目標: " : "Goal: "}
-          </span>
-          <span className="font-semibold text-foreground">{goalName}</span>
-        </span>
-        <span className="shrink-0 font-semibold tabular-nums text-primary">
-          {remaining.toLocaleString()} 🍯
-        </span>
-      </div>
-    );
-  }
-
   if (lifetimeEarned > 0) {
     return (
       <p className="text-meta tabular-nums">
-        {t(lang, "honeyLifetimeEarned")}:{" "}
-        <span className="font-semibold text-foreground">{lifetimeEarned.toLocaleString()}</span>
+        <span className="text-muted-foreground">
+          {t(lang, "honeyLifetimeEarned")}
+        </span>{" "}
+        <span className="font-semibold text-foreground">
+          {lifetimeEarned.toLocaleString()}
+        </span>
       </p>
     );
   }
 
   return (
     <p className="text-meta">
-      {lang === "TH" ? "เริ่มเก็บ Honey วันนี้" : lang === "JP" ? "Honeyを集めよう" : "Start earning today"}
+      {lang === "TH"
+        ? "เริ่มเก็บ Honey วันนี้"
+        : lang === "JP"
+          ? "Honeyを集めよう"
+          : "Start earning today"}
     </p>
   );
 }
@@ -393,7 +359,7 @@ function RankProgress({
 export function HoneyStatusBar(props: StatusProps) {
   const {
     lang, points, ticketBalance, ticketsUsedThisMonth, streak, level, lifetimeEarned,
-    activeEvent, tierMultiplier = 1, shopItems,
+    activeEvent, tierMultiplier = 1,
   } = props;
   const { tiers } = useRankTiers();
   const {
@@ -444,9 +410,6 @@ export function HoneyStatusBar(props: StatusProps) {
             <HoneyCardDetail
               lang={lang}
               lifetimeEarned={lifetimeEarned}
-              shopItems={shopItems}
-              points={points}
-              userLevel={currentLevel}
             />
           }
           ariaLabel={t(lang, "honeyBalanceTooltip")}
