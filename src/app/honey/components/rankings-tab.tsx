@@ -48,7 +48,48 @@ export function RankingsTab({
             }))}
             ariaLabel={t(lang, "honeyLeaderboard")}
           />
-          <div className="overflow-x-auto">
+          {/* Mobile list */}
+          <div className="divide-y divide-border/40 sm:hidden">
+            {sorted.map((user, i) => (
+              <div key={user.id} className="flex items-center gap-3 px-4 py-3">
+                <span
+                  className={cn(
+                    "inline-flex size-6 shrink-0 items-center justify-center text-xs font-bold tabular-nums",
+                    i === 0 ? "text-primary" : "text-muted-foreground",
+                  )}
+                >
+                  {i === 0 ? <Trophy className="size-3.5" /> : i + 1}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium">
+                    {user.displayName ?? t(lang, "anonymous")}
+                  </p>
+                  <div
+                    className={cn(
+                      "mt-0.5 flex items-center gap-1 text-meta",
+                      sort === "STREAK" ? "text-primary" : "text-muted-foreground",
+                    )}
+                  >
+                    <Flame className="size-3" />
+                    <span className="tabular-nums">{user.checkinStreak}</span>
+                    <span>{t(lang, "days")}</span>
+                  </div>
+                </div>
+                <span
+                  className={cn(
+                    "shrink-0 font-bold tabular-nums",
+                    sort === "HONEY" ? "text-primary" : "text-foreground",
+                  )}
+                >
+                  {user.honeyPoints.toLocaleString()}{" "}
+                  <span className="text-xs font-semibold">🍯</span>
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop table */}
+          <div className="hidden sm:block">
             <table className="w-full text-left text-sm">
               <thead className="border-b bg-muted/30">
                 <tr className="text-eyebrow text-muted-foreground/70">

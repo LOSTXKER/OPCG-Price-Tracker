@@ -368,8 +368,53 @@ export default function PricingClient() {
         <h2 className="mb-6 text-center text-h3">
           {t(lang, "compareAllFeatures")}
         </h2>
-        <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
-          <table className="w-full min-w-[600px] border-separate border-spacing-0 text-sm">
+
+        {/* Mobile: per-plan card stack */}
+        <div className="space-y-4 sm:hidden">
+          {PLANS.map((plan) => (
+            <Surface
+              key={plan.key}
+              variant="outline"
+              padding="lg"
+              className="space-y-4"
+            >
+              <div className="flex items-center gap-2">
+                {plan.icon && (
+                  <plan.icon className={`h-5 w-5 ${plan.iconClass}`} />
+                )}
+                <h3 className="text-h5">{tierName(plan.key)}</h3>
+              </div>
+              <div className="space-y-4">
+                {featureSections.map((section) => (
+                  <div key={section.titleKey} className="space-y-2">
+                    <p className="text-eyebrow text-muted-foreground/60">
+                      {t(lang, section.titleKey)}
+                    </p>
+                    <div className="divide-y divide-border/30">
+                      {section.rows.map((row) => (
+                        <div
+                          key={row.key}
+                          className="flex items-center justify-between gap-3 py-2 text-sm"
+                        >
+                          <span className="text-muted-foreground">
+                            {t(lang, row.labelKey)}
+                          </span>
+                          <span className="text-right">
+                            {renderValue(row.values[plan.key], plan.key)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Surface>
+          ))}
+        </div>
+
+        {/* Desktop: comparison table */}
+        <div className="hidden sm:block">
+          <table className="w-full border-separate border-spacing-0 text-sm">
             <thead>
               <tr>
                 <th className="sticky top-0 z-10 bg-background pb-3 text-left font-medium text-muted-foreground" />
@@ -433,3 +478,4 @@ export default function PricingClient() {
     </div>
   );
 }
+

@@ -292,9 +292,9 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
         conversations={conversations}
         activeListingId={activeListingId}
         className={cn(
-          "w-80 shrink-0",
-          "max-md:absolute max-md:inset-y-0 max-md:left-0 max-md:z-20 max-md:w-full",
-          mobileView === "chat" && "max-md:hidden"
+          "absolute inset-y-0 left-0 z-20 w-full",
+          "md:static md:z-auto md:w-80 md:shrink-0",
+          mobileView === "chat" && "hidden md:flex"
         )}
       />
 
@@ -302,7 +302,7 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
       <div
         className={cn(
           "relative flex flex-1",
-          mobileView === "list" && "max-md:hidden"
+          mobileView === "list" && "hidden md:flex"
         )}
       >
         <ChatPanel
@@ -335,9 +335,9 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
               }}
               onUpdateOrder={handleUpdateOrder}
               className={cn(
-                "w-80 shrink-0",
-                "max-lg:absolute max-lg:inset-y-0 max-lg:right-0 max-lg:z-20 max-lg:w-80 max-lg:shadow-xl",
-                !showOrderPanel && "max-lg:hidden"
+                "absolute inset-y-0 right-0 z-20 w-80 shrink-0 shadow-xl",
+                "lg:static lg:z-auto lg:shadow-none",
+                !showOrderPanel && "hidden lg:flex"
               )}
             />
           </>

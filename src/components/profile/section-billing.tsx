@@ -41,8 +41,69 @@ export function SectionBilling() {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[400px] text-sm">
+          <>
+            {/* Mobile list */}
+            <div className="divide-y divide-border/20 sm:hidden">
+              {invoices.map((inv) => (
+                <div key={inv.id} className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <p className="text-sm font-medium tabular-nums">
+                      {(inv.amountPaid / 100).toLocaleString(getLocale(lang), {
+                        style: "currency",
+                        currency: inv.currency.toUpperCase(),
+                      })}
+                    </p>
+                    <p className="text-meta">
+                      {new Date(inv.created * 1000).toLocaleDateString(getLocale(lang), {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant={inv.status === "paid" ? "default" : "destructive"}
+                        className="text-xs"
+                      >
+                        {inv.status === "paid"
+                          ? t(lang, "invoicePaid")
+                          : inv.status === "open"
+                            ? t(lang, "invoicePending")
+                            : t(lang, "invoiceFailed")}
+                      </Badge>
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-1">
+                    {inv.pdfUrl && (
+                      <a
+                        href={inv.pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                        title={t(lang, "downloadInvoice")}
+                      >
+                        <Download className="size-4" />
+                      </a>
+                    )}
+                    {inv.hostedUrl && (
+                      <a
+                        href={inv.hostedUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                        title={t(lang, "viewInvoice")}
+                      >
+                        <ExternalLink className="size-4" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop table */}
+            <div className="hidden sm:block">
+            <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border/20">
                   <th className="py-2 pr-3 text-left text-eyebrow">
@@ -115,7 +176,8 @@ export function SectionBilling() {
                 ))}
               </tbody>
             </table>
-          </div>
+            </div>
+          </>
         )}
       </div>
     </div>

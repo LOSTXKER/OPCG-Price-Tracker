@@ -40,6 +40,66 @@ interface TrendingRowProps {
   period: Period
 }
 
+const MobileTrendingItem = memo(function MobileTrendingItem({
+  card,
+  rank,
+  activeTab,
+  period,
+}: TrendingRowProps) {
+  const lang = useUIStore((s) => s.language)
+  const name = getCardName(lang, card)
+  const change = activeTab === "mostViewed" ? null : getChangeValue(card, period)
+
+  return (
+    <Link
+      href={`/cards/${card.cardCode}`}
+      className="flex items-center gap-3 px-4 py-3 transition-colors active:bg-muted/40"
+    >
+      <span className="w-5 shrink-0 text-center font-price text-xs text-muted-foreground">
+        {rank}
+      </span>
+      <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-muted">
+        {card.imageUrl && (
+          <Image
+            src={card.imageUrl}
+            alt={name}
+            fill
+            className="object-contain"
+            sizes="44px"
+            placeholder="blur"
+            blurDataURL={BLUR_DATA_URL}
+          />
+        )}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium leading-tight">{name}</p>
+        <div className="mt-0.5 flex items-center gap-1.5 text-meta">
+          <span className="font-mono">{card.setCode.toUpperCase()}</span>
+          <RarityBadge rarity={card.rarity} size="sm" />
+        </div>
+      </div>
+      <div className="shrink-0 text-right">
+        <p className="font-price text-sm font-semibold tabular-nums">
+          {card.latestPriceJpy != null ? (
+            <Price jpy={card.latestPriceJpy} />
+          ) : (
+            <span className="text-muted-foreground/50">—</span>
+          )}
+        </p>
+        {activeTab === "mostViewed" ? (
+          <p className="font-price text-xs tabular-nums text-muted-foreground">
+            {formatCount(card.viewCount ?? 0)}
+          </p>
+        ) : (
+          <div className="font-price text-xs">
+            <DeltaText value={change} suffix="%" />
+          </div>
+        )}
+      </div>
+    </Link>
+  )
+})
+
 const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }: TrendingRowProps) {
   const lang = useUIStore((s) => s.language)
   const name = getCardName(lang, card)
@@ -180,8 +240,27 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
         )}
       </div>
 
-      {/* Table */}
-      <Surface variant="panel" padding="none" className="overflow-hidden">
+      {/* Mobile list */}
+      <Surface variant="panel" padding="none" className="overflow-hidden sm:hidden">
+        {cards.length === 0 ? (
+          <p className="py-12 text-center text-sm text-muted-foreground">{t(lang, "noData")}</p>
+        ) : (
+          <div className="divide-y divide-border/40">
+            {cards.map((card, i) => (
+              <MobileTrendingItem
+                key={card.cardCode}
+                card={card}
+                rank={i + 1}
+                activeTab={activeTab}
+                period={period}
+              />
+            ))}
+          </div>
+        )}
+      </Surface>
+
+      {/* Desktop table */}
+      <Surface variant="panel" padding="none" className="hidden overflow-hidden sm:block">
         <div className="overflow-x-auto">
           <table className="w-full table-fixed text-sm">
             <colgroup>

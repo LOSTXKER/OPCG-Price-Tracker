@@ -320,7 +320,106 @@ export function CardPriceHub({
               </span>
             </div>
 
-            <div className="overflow-x-auto">
+            {/* Mobile list */}
+            <div className="divide-y divide-border/10 sm:hidden">
+              {visibleSourceRows.map((row, i) => {
+                const meta =
+                  SOURCE_META[row.source] ?? {
+                    label: row.source,
+                    color: "bg-muted-foreground",
+                  }
+                const askStr = formatSourcePrice(
+                  row.askPriceJpy,
+                  row.askPriceThb,
+                  row.askPriceUsd,
+                  currency,
+                )
+                const soldStr = formatSourcePrice(
+                  row.soldPriceJpy,
+                  row.soldPriceThb,
+                  row.soldPriceUsd,
+                  currency,
+                )
+                const isBestAsk =
+                  i === 0 && (row.askPriceJpy != null || row.askPriceUsd != null)
+                const outlier = isOutlier(row.askPriceJpy, headlineJpy)
+                const SourceLabel = (
+                  <span className="flex items-center gap-2">
+                    <span className={cn("size-2 shrink-0 rounded-full", meta.color)} />
+                    <span className="text-xs font-medium">{meta.label}</span>
+                    {meta.searchUrl && (
+                      <ExternalLink className="size-3 text-muted-foreground/50" aria-hidden />
+                    )}
+                  </span>
+                )
+                return (
+                  <div
+                    key={row.source}
+                    className="flex items-start gap-3 py-3 first:pt-0 last:pb-0"
+                  >
+                    <div className="min-w-0 flex-1 space-y-1">
+                      {meta.searchUrl ? (
+                        <a
+                          href={meta.searchUrl(cardCodeForSources)}
+                          target="_blank"
+                          rel="noopener nofollow"
+                          title={t(lang, "externalLink")}
+                          className="inline-flex hover:underline underline-offset-2"
+                        >
+                          {SourceLabel}
+                        </a>
+                      ) : (
+                        SourceLabel
+                      )}
+                      <p className="text-meta text-muted-foreground/50">
+                        {relativeTime(row.updatedAt, lang)}
+                      </p>
+                    </div>
+                    <div className="shrink-0 space-y-0.5 text-right">
+                      <div className="inline-flex items-center justify-end gap-1">
+                        {outlier && (
+                          <Tooltip>
+                            <TooltipTrigger
+                              type="button"
+                              aria-label={t(lang, "priceOutlierWarn")}
+                              className="inline-flex items-center text-amber-500/80 hover:text-amber-500"
+                            >
+                              <AlertTriangle className="size-3" aria-hidden />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="max-w-[220px] leading-snug">
+                                {t(lang, "priceOutlierWarn")}
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
+                        <span
+                          className={cn(
+                            "font-price text-xs font-semibold tabular-nums",
+                            outlier
+                              ? "text-amber-600 dark:text-amber-400"
+                              : isBestAsk
+                                ? "text-price-up"
+                                : "text-foreground",
+                            askStr === "—" && "text-muted-foreground/30",
+                          )}
+                        >
+                          {askStr}
+                        </span>
+                      </div>
+                      {soldStr !== "—" && (
+                        <p className="font-price text-xs tabular-nums text-muted-foreground">
+                          {t(lang, "lastSold")}: {soldStr}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Desktop table */}
+            <div className="hidden sm:block">
               <table className="w-full text-left text-sm">
                   <thead>
                     <tr className="border-b border-border/30 text-eyebrow text-muted-foreground/60">

@@ -405,8 +405,58 @@ export function SectionSubscription({ subscription, stats }: Props) {
       {/* ─── Full Feature Comparison (same as /pricing) ─── */}
       <div>
         <h3 className="mb-4 text-center text-base font-bold">{t(lang, "compareAllFeatures")}</h3>
-        <div className="-mx-1 overflow-x-auto px-1">
-          <table className="w-full min-w-[500px] border-separate border-spacing-0 text-sm">
+
+        {/* Mobile: per-plan card stack */}
+        <div className="space-y-4 sm:hidden">
+          {PLANS.map((plan) => {
+            const isCurrent = isCurrentPlan(plan.key, subscription.tier);
+            return (
+              <div
+                key={plan.key}
+                className={cn(
+                  "rounded-xl border border-border/40 bg-card p-4 space-y-4",
+                  isCurrent && "border-primary/40",
+                )}
+              >
+                <div className="flex items-center gap-2">
+                  {plan.icon && <plan.icon className={cn("size-5", plan.iconClass)} />}
+                  <h4 className={cn("text-h5", isCurrent && "text-foreground")}>
+                    {tierName(plan.key, lang)}
+                  </h4>
+                  {isCurrent && <span className="text-xs text-primary">★</span>}
+                </div>
+                <div className="space-y-4">
+                  {featureSections.map((section) => (
+                    <div key={section.titleKey} className="space-y-2">
+                      <p className="text-eyebrow text-muted-foreground/60">
+                        {t(lang, section.titleKey)}
+                      </p>
+                      <div className="divide-y divide-border/20">
+                        {section.rows.map((row) => (
+                          <div
+                            key={row.key}
+                            className="flex items-center justify-between gap-3 py-2 text-sm"
+                          >
+                            <span className="text-muted-foreground">
+                              {t(lang, row.labelKey)}
+                            </span>
+                            <span className="text-right">
+                              <RenderValue val={row.values[plan.key]} planKey={plan.key} lang={lang} />
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Desktop: comparison table */}
+        <div className="hidden sm:block">
+          <table className="w-full border-separate border-spacing-0 text-sm">
             <thead>
               <tr>
                 <th className="pb-3 text-left font-medium text-muted-foreground" />

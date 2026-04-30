@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select"
 import { SetPicker } from "@/components/shared/set-picker"
 import { GridCard, GridCardSkeleton } from "@/components/home/grid-card"
+import { MobileCardItem, MobileCardSkeleton } from "@/components/home/mobile-card-item"
 import { CardGrid } from "@/components/cards/card-grid"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -350,18 +351,25 @@ function SearchContent({
           </CardGrid>
         ) : (
           <Surface variant="panel" padding="none" className="divide-y divide-border/30">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="flex items-center gap-4 px-4 py-3">
-                <Skeleton className="size-12 shrink-0 rounded-lg" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-4 w-40 rounded" />
-                  <Skeleton className="h-3 w-24 rounded" />
+            <div className="divide-y divide-border/30 sm:hidden">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <MobileCardSkeleton key={i} />
+              ))}
+            </div>
+            <div className="hidden divide-y divide-border/30 sm:block">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-4 px-4 py-3">
+                  <Skeleton className="size-12 shrink-0 rounded-lg" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-40 rounded" />
+                    <Skeleton className="h-3 w-24 rounded" />
+                  </div>
+                  <Skeleton className="h-4 w-20 rounded" />
+                  <Skeleton className="h-3.5 w-12 rounded" />
+                  <Skeleton className="hidden h-3.5 w-12 rounded md:block" />
                 </div>
-                <Skeleton className="hidden h-4 w-20 rounded sm:block" />
-                <Skeleton className="hidden h-3.5 w-12 rounded sm:block" />
-                <Skeleton className="hidden h-3.5 w-12 rounded md:block" />
-              </div>
-            ))}
+              ))}
+            </div>
           </Surface>
         )
       )}
@@ -383,7 +391,16 @@ function SearchContent({
       {/* Results — Table view */}
       {!isPending && cards.length > 0 && viewMode === "table" && (
         <Surface variant="panel" padding="none" className="overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="divide-y divide-border/30 sm:hidden">
+            {cards.map((card, i) => (
+              <MobileCardItem
+                key={card.cardCode}
+                card={card}
+                rank={(page - 1) * PAGE_SIZE + i + 1}
+              />
+            ))}
+          </div>
+          <div className="hidden sm:block">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border/40 text-meta">
@@ -391,7 +408,7 @@ function SearchContent({
                   <th className="w-8 py-2.5 pr-1 pl-1 text-left font-medium">#</th>
                   <th className="py-2.5 pr-3 pl-2 text-left font-medium">{t(lang, "card")}</th>
                   <th className="hidden py-2.5 pr-3 text-left font-medium md:table-cell">{t(lang, "set")}</th>
-                  <th className="hidden py-2.5 pr-3 text-left font-medium sm:table-cell">{t(lang, "rarity")}</th>
+                  <th className="py-2.5 pr-3 text-left font-medium">{t(lang, "rarity")}</th>
                   <SortableHeader label={t(lang, "price")} column="price" activeCol={sortCol} dir={sortDir} onClick={handleColumnSort} align="right" />
                   <SortableHeader label="24h" column="change24h" activeCol={sortCol} dir={sortDir} onClick={handleColumnSort} align="right" />
                   <SortableHeader label="7d" column="change7d" activeCol={sortCol} dir={sortDir} onClick={handleColumnSort} align="right" className="hidden md:table-cell" />
