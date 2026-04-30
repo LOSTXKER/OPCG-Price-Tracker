@@ -136,9 +136,7 @@ export function RaffleTab({
         }
       />
 
-      {lastWinners.length > 0 && (
-        <RecentWinnersStrip lang={lang} winners={lastWinners} />
-      )}
+      <RecentWinnersStrip lang={lang} winners={lastWinners} />
 
       {canClaimFree && (
         <div className="flex items-center gap-3 rounded-xl border bg-card p-3.5">
@@ -218,23 +216,27 @@ function RecentWinnersStrip({
         </Link>
       </header>
 
-      <div className="flex gap-2 overflow-x-auto scrollbar-none px-3 py-2.5">
-        {winners.slice(0, 8).map((w, i) => (
-          <article
-            key={i}
-            className="flex min-w-[180px] max-w-[220px] shrink-0 flex-col gap-0.5 rounded-lg border bg-card px-3 py-2"
-          >
-            <p className="truncate text-xs font-semibold leading-tight">
-              {w.prizeName}
-            </p>
-            <p className="truncate text-meta">
-              {w.displayName ?? t(lang, "anonymous")}
-              <span className="mx-1.5 text-border">·</span>
-              <span className="tabular-nums">{w.month}</span>
-            </p>
-          </article>
-        ))}
-      </div>
+      {winners.length > 0 ? (
+        <div className="flex gap-2 overflow-x-auto scrollbar-none px-3 py-2.5">
+          {winners.slice(0, 8).map((w, i) => (
+            <article
+              key={i}
+              className="flex min-w-[180px] max-w-[220px] shrink-0 flex-col gap-0.5 rounded-lg border bg-card px-3 py-2"
+            >
+              <p className="truncate text-xs font-semibold leading-tight">
+                {w.prizeName}
+              </p>
+              <p className="truncate text-meta">
+                {w.displayName ?? t(lang, "anonymous")}
+                <span className="mx-1.5 text-border">·</span>
+                <span className="tabular-nums">{w.month}</span>
+              </p>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <p className="px-4 py-3.5 text-meta">{t(lang, "winnersEmpty")}</p>
+      )}
     </section>
   );
 }
