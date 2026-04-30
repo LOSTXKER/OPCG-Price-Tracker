@@ -348,24 +348,30 @@ function MachineCard({
           ))}
         </ul>
 
-        {/* One-line stats: my entries · total entries · win chance */}
-        <div className="flex items-center gap-2 text-xs tabular-nums text-muted-foreground">
-          <span>
-            <span className="font-semibold text-foreground">{myTickets}</span>
-            <span className="text-muted-foreground"> / {machine.maxTickets}</span>
-            <span className="ml-1 text-meta">
-              {lang === "TH" ? "ของคุณ" : lang === "JP" ? "あなた" : "yours"}
-            </span>
-          </span>
-          <span className="text-border">·</span>
-          <span>
-            <span className="font-semibold text-foreground">{machine.totalTickets}</span>
-            <span className="ml-1 text-meta">
-              {lang === "TH" ? "รวม" : lang === "JP" ? "合計" : "total"}
-            </span>
-          </span>
-          <span className="text-border">·</span>
-          <span className="font-semibold text-primary">{chance}%</span>
+        {/* Stats: label on top, value underneath — scans left-to-right
+         * as "my tickets / total tickets / win chance". The old one-line
+         * "2/5 yours · 3 total · 66.7%" row relied on Thai readers
+         * parsing three mixed conventions in a row. */}
+        <div className="grid grid-cols-3 gap-2 rounded-lg border bg-muted/20 px-3 py-2 text-center">
+          <div className="flex flex-col gap-0.5">
+            <p className="text-meta">{t(lang, "raffleMyTickets")}</p>
+            <p className="text-sm font-semibold tabular-nums">
+              {myTickets}
+              <span className="text-muted-foreground">/{machine.maxTickets}</span>
+            </p>
+          </div>
+          <div className="flex flex-col gap-0.5 border-x">
+            <p className="text-meta">{t(lang, "raffleTotalTickets")}</p>
+            <p className="text-sm font-semibold tabular-nums">
+              {machine.totalTickets}
+            </p>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <p className="text-meta">{t(lang, "raffleWinChance")}</p>
+            <p className="text-sm font-semibold tabular-nums text-primary">
+              {chance}%
+            </p>
+          </div>
         </div>
 
         {/* CTA */}
