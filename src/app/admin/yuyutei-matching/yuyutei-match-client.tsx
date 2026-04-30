@@ -27,6 +27,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { adminJsonFetch } from "@/lib/api/admin-client";
 import { buildAdminQuery } from "@/lib/admin/admin-fetch";
+import { SetPicker } from "@/components/shared/set-picker";
 import { useAdminList } from "@/lib/admin/use-admin-list";
 import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
 
@@ -452,9 +453,14 @@ export function YuyuteiMatchClient() {
     patch({ q: "", method: "", confidence: "", noMatch: false, page: 1 });
   };
 
-  const setOptions = (data?.sets ?? []).map((s) => ({
-    value: s.code,
-    label: `${s.code.toUpperCase()} · ${s.nameEn ?? s.name}`,
+  const pickerSets = (data?.sets ?? []).map((s) => ({
+    code: s.code,
+    name: s.name,
+    nameEn: s.nameEn,
+    nameTh: s.nameTh ?? null,
+    type: s.type ?? "OTHER",
+    imageUrl: s.boxImageUrl ?? null,
+    releaseDate: s.releaseDate ?? null,
   }));
 
   return (
@@ -471,12 +477,16 @@ export function YuyuteiMatchClient() {
           }
           actions={
             <div className="flex items-center gap-2">
-              <AdminFilterSelect
-                value={setFilter}
-                onChange={(v) => patch({ set: v, page: 1 })}
-                placeholder="ทุกชุดการ์ด"
-                options={setOptions}
-              />
+              <div className="w-56">
+                <SetPicker
+                  sets={pickerSets}
+                  selectedCode={setFilter || null}
+                  onSelect={(code) => patch({ set: code ?? "", page: 1 })}
+                  variant="inline"
+                  nullable
+                  align="right"
+                />
+              </div>
               <Button
                 variant="outline"
                 size="icon-sm"

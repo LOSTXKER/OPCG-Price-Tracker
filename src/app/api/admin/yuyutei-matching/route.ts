@@ -112,7 +112,10 @@ export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
       },
     }),
     prisma.yuyuteiMapping.count({ where }),
-    prisma.cardSet.findMany({ select: { code: true, name: true, nameEn: true }, orderBy: { code: "asc" } }),
+    prisma.cardSet.findMany({
+      select: { code: true, name: true, nameEn: true, nameTh: true, type: true, boxImageUrl: true, releaseDate: true },
+      orderBy: { code: "asc" },
+    }),
     prisma.yuyuteiMapping.groupBy({
       by: ["status"],
       _count: true,

@@ -68,6 +68,13 @@ export type StatusProps = {
   level: HoneyLevel | null;
   lifetimeEarned: number;
   activeEvent: ActiveEvent | null;
+  /**
+   * Honey multiplier granted by the user's subscription tier (e.g. PRO=2,
+   * PRO_PLUS=3). Defaults to 1 (FREE / lapsed). Used to render a separate
+   * "Plan Nx" pill alongside the seasonal-event pill so users see what their
+   * plan contributes to earnings.
+   */
+  tierMultiplier?: number;
   shopItems?: ShopItem[];
 };
 
@@ -386,7 +393,7 @@ function RankProgress({
 export function HoneyStatusBar(props: StatusProps) {
   const {
     lang, points, ticketBalance, ticketsUsedThisMonth, streak, level, lifetimeEarned,
-    activeEvent, shopItems,
+    activeEvent, tierMultiplier = 1, shopItems,
   } = props;
   const { tiers } = useRankTiers();
   const {
@@ -400,14 +407,29 @@ export function HoneyStatusBar(props: StatusProps) {
 
   return (
     <div className="space-y-3">
-      {/* Time-bound event multiplier — only renders during an active event */}
-      {activeEvent && (
-        <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-bold text-primary">
-          <Sparkles className="size-3.5" />
-          <span>
-            {activeEvent.honeyMultiplier}x{" "}
-            {lang === "TH" ? "อีเวนต์โบนัส" : lang === "JP" ? "イベントボーナス" : "Event bonus"}
-          </span>
+      {/* Multiplier pills — render plan and event multipliers separately so
+          users can see exactly what their subscription contributes vs. the
+          time-bound seasonal event. Both stack at earn time. */}
+      {(tierMultiplier > 1 || activeEvent) && (
+        <div className="flex flex-wrap items-center gap-2">
+          {tierMultiplier > 1 && (
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/5 px-3 py-1 text-xs font-bold text-amber-600 dark:text-amber-400">
+              <Sparkles className="size-3.5" />
+              <span>
+                {tierMultiplier}x{" "}
+                {lang === "TH" ? "โบนัสแพ็กเกจ" : lang === "JP" ? "プランボーナス" : "Plan bonus"}
+              </span>
+            </div>
+          )}
+          {activeEvent && (
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-bold text-primary">
+              <Sparkles className="size-3.5" />
+              <span>
+                {activeEvent.honeyMultiplier}x{" "}
+                {lang === "TH" ? "อีเวนต์โบนัส" : lang === "JP" ? "イベントボーナス" : "Event bonus"}
+              </span>
+            </div>
+          )}
         </div>
       )}
 

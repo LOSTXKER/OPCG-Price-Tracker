@@ -1,44 +1,32 @@
 "use client"
 
-import { Edit2, MoreHorizontal, Trash2 } from "lucide-react"
+import { Pencil } from "lucide-react"
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { t, type Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { formatPct } from "@/lib/utils/currency"
 
-export function AssetActionMenu({
+export function AssetEditButton({
   lang,
   onEdit,
-  onRemove,
+  showLabel = false,
 }: {
   lang: Language
   onEdit: () => void
-  onRemove: () => void
+  showLabel?: boolean
 }) {
+  const label = t(lang, "edit")
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="shrink-0 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
-        <MoreHorizontal className="size-4" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" side="bottom" sideOffset={4}>
-        <DropdownMenuItem onClick={onEdit}>
-          <Edit2 />
-          {t(lang, "edit")}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive" onClick={onRemove}>
-          <Trash2 />
-          {t(lang, "remove")}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <button
+      type="button"
+      onClick={onEdit}
+      aria-label={label}
+      title={label}
+      className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border/40 bg-background/40 px-2 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+    >
+      <Pencil className="size-3.5" />
+      {showLabel ? <span>{label}</span> : null}
+    </button>
   )
 }
 

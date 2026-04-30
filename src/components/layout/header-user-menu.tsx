@@ -6,7 +6,9 @@ import {
   BellRing,
   BookOpen,
   Heart,
+  Info,
   LogOut,
+  Mail,
   MessageCircle,
   Settings,
   ShoppingBag,
@@ -50,6 +52,7 @@ interface UserMenuProps {
   honeyPendingActions: boolean;
   unreadMessages: number;
   pathname: string;
+  marketplaceEnabled: boolean;
   onLogout: () => Promise<void>;
 }
 
@@ -65,6 +68,7 @@ export function HeaderUserMenu({
   honeyPendingActions,
   unreadMessages,
   pathname,
+  marketplaceEnabled,
   onLogout,
 }: UserMenuProps) {
   const router = useRouter();
@@ -95,23 +99,25 @@ export function HeaderUserMenu({
 
   return (
     <div className="flex items-center gap-1.5">
-      <Link
-        href="/messages"
-        aria-label={t(language, "messagesTitle")}
-        className={cn(
-          "relative flex size-9 items-center justify-center rounded-lg transition-colors",
-          isMessagesActive
-            ? "bg-muted text-foreground"
-            : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-        )}
-      >
-        <MessageCircle className="size-4" />
-        {unreadMessages > 0 && (
-          <span className="absolute -right-0.5 -top-0.5 flex min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-micro leading-4 text-white">
-            {unreadMessages > 99 ? "99+" : unreadMessages}
-          </span>
-        )}
-      </Link>
+      {marketplaceEnabled && (
+        <Link
+          href="/messages"
+          aria-label={t(language, "messagesTitle")}
+          className={cn(
+            "relative flex size-9 items-center justify-center rounded-lg transition-colors",
+            isMessagesActive
+              ? "bg-muted text-foreground"
+              : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+          )}
+        >
+          <MessageCircle className="size-4" />
+          {unreadMessages > 0 && (
+            <span className="absolute -right-0.5 -top-0.5 flex min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-micro leading-4 text-white">
+              {unreadMessages > 99 ? "99+" : unreadMessages}
+            </span>
+          )}
+        </Link>
+      )}
       <NotificationBell />
       <DropdownMenu>
         <DropdownMenuTrigger
@@ -231,18 +237,22 @@ export function HeaderUserMenu({
             <Settings className="size-4" />
             {t(language, "settingsTitle")}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push("/seller")}>
-            <Store className="size-4" />
-            {language === "TH" ? "ศูนย์ผู้ขาย" : language === "JP" ? "販売センター" : "Seller Center"}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push("/orders")}>
-            <ShoppingBag className="size-4" />
-            {language === "TH" ? "คำสั่งซื้อของฉัน" : language === "JP" ? "購入履歴" : "My Orders"}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push("/saved")}>
-            <Heart className="size-4" />
-            {language === "TH" ? "รายการที่บันทึก" : language === "JP" ? "保存済み" : "Saved Listings"}
-          </DropdownMenuItem>
+          {marketplaceEnabled && (
+            <>
+              <DropdownMenuItem onClick={() => router.push("/seller")}>
+                <Store className="size-4" />
+                {language === "TH" ? "ศูนย์ผู้ขาย" : language === "JP" ? "販売センター" : "Seller Center"}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/orders")}>
+                <ShoppingBag className="size-4" />
+                {language === "TH" ? "คำสั่งซื้อของฉัน" : language === "JP" ? "購入履歴" : "My Orders"}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/saved")}>
+                <Heart className="size-4" />
+                {language === "TH" ? "รายการที่บันทึก" : language === "JP" ? "保存済み" : "Saved Listings"}
+              </DropdownMenuItem>
+            </>
+          )}
           <DropdownMenuItem onClick={() => router.push("/settings/alerts")}>
             <BellRing className="size-4" />
             {t(language, "managePriceAlerts")}
@@ -251,6 +261,14 @@ export function HeaderUserMenu({
           <DropdownMenuItem onClick={() => router.push("/guide")}>
             <BookOpen className="size-4" />
             {t(language, "guide")}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/about")}>
+            <Info className="size-4" />
+            {t(language, "aboutUs")}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/contact")}>
+            <Mail className="size-4" />
+            {t(language, "contactUs")}
           </DropdownMenuItem>
           {canUpgrade && (
             <DropdownMenuItem onClick={() => router.push("/pricing")} className="text-primary">

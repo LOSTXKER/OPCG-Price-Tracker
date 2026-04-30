@@ -51,12 +51,19 @@ export function listingsGridClass(count: number): string {
  */
 export function collectionGridClass(count: number): string {
   if (count <= 1) {
-    // Equal twins for the collection too — collection cards are ~120px so
-    // the hint tile gets the same footprint and reads as a sibling.
-    return "grid grid-cols-2 gap-2 max-w-[260px]";
+    // Equal twins for the collection too. We bump the container to
+    // ~340px (≈165px per tile after gap) so the lone card doesn't read as
+    // a thumbnail and — more importantly — so the paired HintTile has
+    // enough width for Thai phrases like "เพิ่มการ์ดในคอลเลกชัน" to wrap
+    // cleanly between syllables instead of breaking mid-word. Still well
+    // within the ~150–180px tile range used by the 4+ card grids below,
+    // so the lone case feels consistent with the rest of the tab.
+    return "grid grid-cols-2 gap-2.5 max-w-[340px]";
   }
   if (count === 2) {
-    return "grid grid-cols-2 gap-2 max-w-[260px]";
+    // No hint tile here, but giving two real cards the same wider footprint
+    // keeps the "few cards" cases visually consistent.
+    return "grid grid-cols-2 gap-2.5 max-w-[340px]";
   }
   if (count === 3) {
     return "grid grid-cols-3 gap-2 max-w-[400px]";

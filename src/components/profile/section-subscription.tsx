@@ -6,6 +6,7 @@ import {
   Bell,
   Check,
   CreditCard,
+  Eye,
   FolderOpen,
   Layers,
   LayoutGrid,
@@ -394,6 +395,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
           <div className="divide-y divide-border/15">
             <UsageRow icon={Layers} label={t(lang, "portfolioCards")} desc={t(lang, "portfolioCardsDesc")} current={stats.portfolioCardCount} max={limits.portfolioCards} color="bg-primary" lang={lang} />
             <UsageRow icon={FolderOpen} label={t(lang, "portfolioCollections")} desc={t(lang, "portfolioCollectionsDesc")} current={stats.portfolioCount} max={limits.portfolioCount} color="bg-primary" lang={lang} />
+            <UsageRow icon={Eye} label={t(lang, "watchlistCards")} desc={t(lang, "watchlistCardsDesc")} current={stats.watchlistCount} max={limits.watchlistCards} color="bg-amber-500" lang={lang} />
             <UsageRow icon={Bell} label={t(lang, "priceAlerts")} desc={t(lang, "priceAlertsDesc")} current={stats.priceAlertCount} max={limits.priceAlerts} color="bg-blue-500" lang={lang} />
             <UsageRow icon={LayoutGrid} label={t(lang, "deckBuilds")} desc={t(lang, "deckBuildsDesc")} current={stats.deckCount} max={limits.deckCount} color="bg-purple-500" lang={lang} />
           </div>

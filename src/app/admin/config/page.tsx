@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Settings, Clock, DollarSign, Bell, LayoutList } from "lucide-react";
+import { Settings, Clock, DollarSign, Bell, LayoutList, ToggleRight } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { AdminPage } from "@/components/admin/admin-page";
@@ -29,6 +29,19 @@ interface ConfigGroup {
 }
 
 const CONFIG_GROUPS: ConfigGroup[] = [
+  {
+    title: "ฟีเจอร์ระบบ",
+    icon: ToggleRight,
+    description: "เปิด/ปิดฟีเจอร์ทั้งโซน เพื่อทยอยปล่อยให้ผู้ใช้",
+    fields: [
+      {
+        key: "marketplace_enabled",
+        label: "เปิดใช้งาน Marketplace",
+        placeholder: "false",
+        help: "ใช้ค่า true เพื่อเปิดใช้ระบบตลาดซื้อขาย / false เพื่อซ่อนหน้า Marketplace, Seller Center, คำสั่งซื้อ และรายการที่บันทึก",
+      },
+    ],
+  },
   {
     title: "ตั้งเวลาอัตโนมัติ",
     icon: Clock,

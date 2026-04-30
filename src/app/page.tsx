@@ -52,14 +52,6 @@ export default async function HomePage(props: {
 
   const filterDefinitions: FilterDefinition[] = [
     {
-      key: "set",
-      label: "set",
-      options: sets.map((s) => ({
-        value: s.code,
-        label: `${s.code} · ${s.nameEn ?? s.name}`,
-      })),
-    },
-    {
       key: "rarity",
       label: "rarity",
       options: rarityRows.map((r) => ({ value: r.rarity, label: r.rarity })),
@@ -74,6 +66,16 @@ export default async function HomePage(props: {
     },
   ];
 
+  const setOptions = sets.map((s) => ({
+    code: s.code,
+    name: s.name,
+    nameEn: s.nameEn,
+    nameTh: s.nameTh,
+    type: s.type,
+    imageUrl: s.boxImageUrl,
+    releaseDate: s.releaseDate ? s.releaseDate.toISOString() : null,
+  }));
+
   return (
     <>
       <HomeMarketOverview
@@ -81,6 +83,7 @@ export default async function HomePage(props: {
         initialTotal={initialTableTotal}
         initialTotalPages={initialTableTotalPages}
         filterDefinitions={filterDefinitions}
+        sets={setOptions}
         initialSearch={initialSearch}
       >
         {/* Portfolio · Honey · Market stats strip + slim Ad */}

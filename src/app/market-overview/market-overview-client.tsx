@@ -16,6 +16,7 @@ import { formatRelativeAgo } from "@/lib/utils/relative-time"
 import { formatCount } from "@/lib/utils/currency"
 
 import { DeltaPill, MarketSnapshot } from "./_components/hero-market-card"
+import { PeriodChip } from "./_components/period-chip"
 import { RarityBreakdown } from "./_components/rarity-breakdown"
 import { RawValueHint } from "./_components/raw-value-hint"
 
@@ -27,7 +28,7 @@ type TopCard = {
   rarity: string
   imageUrl: string | null
   latestPriceJpy: number
-  priceChange24h: number | null
+  priceChange7d: number | null
   setCode: string
 }
 
@@ -37,7 +38,7 @@ type TopSet = {
   boxImageUrl: string | null
   cardCount: number
   totalValue: number
-  change24h: number | null
+  change7d: number | null
 }
 
 type MarketData = {
@@ -49,7 +50,7 @@ type MarketData = {
   topSetsByValue: TopSet[]
   topCards: TopCard[]
   movers: { up: number; down: number; flat: number }
-  weightedDelta24h: number | null
+  weightedDelta7d: number | null
   lastUpdatedAt: string | null
 }
 
@@ -83,7 +84,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
       {/* Unified market snapshot (hero + 3 secondary stats) */}
       <MarketSnapshot
         totalValue={data.totalValue}
-        weightedDelta24h={data.weightedDelta24h}
+        weightedDelta7d={data.weightedDelta7d}
         movers={data.movers}
         avgPrice={data.avgPrice}
         totalCards={data.totalCards}
@@ -99,7 +100,12 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
             caption={t(lang, "mostValuableCardsCaption")}
             href="/?sort=price_desc"
             ctaLabel={t(lang, "marketViewAllCards")}
-            hint={<RawValueHint lang={lang} />}
+            hint={
+              <>
+                <RawValueHint lang={lang} />
+                <PeriodChip lang={lang} />
+              </>
+            }
           />
           {/* Mobile: horizontal scroller. Desktop: grid */}
           <div className="-mx-4 sm:mx-0">
@@ -134,9 +140,10 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
         <Surface variant="panel" padding="none" className="overflow-hidden">
           <div className="flex items-end justify-between gap-3 border-b border-border/40 px-5 py-3.5">
             <div className="min-w-0">
-              <div className="flex items-center gap-1.5">
+              <div className="flex flex-wrap items-center gap-1.5">
                 <h2 className="text-h4">{t(lang, "topSetsByValue")}</h2>
                 <RawValueHint lang={lang} />
+                <PeriodChip lang={lang} />
               </div>
               <p className="text-meta">{t(lang, "topSetsByValueCaption")}</p>
             </div>
@@ -187,7 +194,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
                           style={{ width: `${barWidth}%` }}
                         />
                       </div>
-                      <DeltaPill delta={s.change24h} size="sm" />
+                      <DeltaPill delta={s.change7d} size="sm" period="7d" />
                     </div>
                   </div>
                   <div className="w-28 shrink-0 text-right">
@@ -228,7 +235,7 @@ function SectionHeader({
   return (
     <div className="flex items-end justify-between gap-3">
       <div className="min-w-0">
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
           <h2 className="text-h3">{title}</h2>
           {hint}
         </div>
@@ -295,8 +302,8 @@ function TopCardTile({
           <p className="font-price text-xs font-bold">
             <Price jpy={card.latestPriceJpy} />
           </p>
-          {card.priceChange24h != null && (
-            <DeltaPill delta={card.priceChange24h} size="sm" />
+          {card.priceChange7d != null && (
+            <DeltaPill delta={card.priceChange7d} size="sm" period="7d" />
           )}
         </div>
       </div>

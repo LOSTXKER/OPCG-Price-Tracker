@@ -28,7 +28,7 @@ import { usePortfolioApi } from "@/hooks/use-portfolio-api"
 import { useTierLimits } from "@/hooks/use-tier-limits"
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
 import { cn } from "@/lib/utils"
-import { formatJpyAmount } from "@/lib/utils/currency"
+import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
 import type { CartItem } from "@/components/portfolio/add-card-types"
 
 type TabId = "overview" | "insights" | "transactions"
@@ -136,6 +136,13 @@ function PortfolioContent() {
 
   const { openUpgradeDialog } = useUpgradeDialog()
 
+  const totalCostAllPortfolios = portfolioMetas.reduce((s, p) => s + p.totalCost, 0)
+  const totalPnlPctAll =
+    totalCostAllPortfolios > 0
+      ? ((totalAllPortfolios - totalCostAllPortfolios) / totalCostAllPortfolios) * 100
+      : 0
+  const hasOverallPnl = totalCostAllPortfolios > 0
+
   const addCardsBatchWithGate = useCallback(
     async (cartItems: CartItem[]) => {
       const res = await addCardsBatch(cartItems)
@@ -184,9 +191,24 @@ function PortfolioContent() {
               {activePortfolio?.name ?? t(lang, "portfolio")}
             </p>
             <p className="font-price text-xs tabular-nums text-muted-foreground">
-              {hideBalance
-                ? "••••"
-                : formatJpyAmount(totalAllPortfolios, currency)}
+              {hideBalance ? (
+                <>
+                  ••••
+                  {hasOverallPnl && (
+                    <span
+                      className={cn(
+                        "ml-1.5 font-semibold",
+                        totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
+                      )}
+                    >
+                      {totalPnlPctAll >= 0 ? "+" : ""}
+                      {formatPct(totalPnlPctAll, 1)}%
+                    </span>
+                  )}
+                </>
+              ) : (
+                formatJpyAmount(totalAllPortfolios, currency)
+              )}
             </p>
           </div>
           <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
@@ -216,9 +238,26 @@ function PortfolioContent() {
             {portfolioMetas.length > 1 && (
               <SheetDescription className="font-price tabular-nums">
                 {t(lang, "overview")}{" "}
-                <span className="font-semibold text-foreground">
-                  {hideBalance ? "••••••" : <Price jpy={totalAllPortfolios} />}
-                </span>
+                {hideBalance ? (
+                  <>
+                    <span className="font-semibold text-foreground">••••••</span>
+                    {hasOverallPnl && (
+                      <span
+                        className={cn(
+                          "ml-1.5 font-semibold",
+                          totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
+                        )}
+                      >
+                        {totalPnlPctAll >= 0 ? "+" : ""}
+                        {formatPct(totalPnlPctAll, 1)}%
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <span className="font-semibold text-foreground">
+                    <Price jpy={totalAllPortfolios} />
+                  </span>
+                )}
               </SheetDescription>
             )}
           </SheetHeader>
@@ -259,14 +298,29 @@ function PortfolioContent() {
                   )}
                 </button>
               </div>
-              <div className="mt-2 flex items-end gap-2">
-                <p className="font-price text-xl font-extrabold tabular-nums tracking-tight">
-                  {hideBalance ? (
-                    "••••••"
-                  ) : (
+              <div className="mt-2 flex items-baseline gap-2">
+                {hideBalance ? (
+                  <>
+                    <p className="font-price text-xl font-extrabold tabular-nums tracking-tight">
+                      ••••••
+                    </p>
+                    {hasOverallPnl && (
+                      <span
+                        className={cn(
+                          "font-price text-sm font-bold tabular-nums",
+                          totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
+                        )}
+                      >
+                        {totalPnlPctAll >= 0 ? "+" : ""}
+                        {formatPct(totalPnlPctAll, 1)}%
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <p className="font-price text-xl font-extrabold tabular-nums tracking-tight">
                     <Price jpy={totalAllPortfolios} />
-                  )}
-                </p>
+                  </p>
+                )}
               </div>
               {history.length >= 2 && (
                 <div className="mt-2.5 h-7 w-full">

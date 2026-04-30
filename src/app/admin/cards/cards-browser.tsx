@@ -48,6 +48,7 @@ import { cn } from "@/lib/utils";
 import { useAdminList } from "@/lib/admin/use-admin-list";
 import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
 import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
+import { SetPicker } from "@/components/shared/set-picker";
 
 interface CardRow {
   id: number;
@@ -68,7 +69,15 @@ interface CardRow {
 }
 
 interface FilterOptions {
-  sets: { code: string; label: string }[];
+  sets: {
+    code: string;
+    name: string;
+    nameEn: string | null;
+    nameTh?: string | null;
+    type: string;
+    imageUrl?: string | null;
+    releaseDate?: string | null;
+  }[];
   rarities: string[];
 }
 
@@ -367,15 +376,15 @@ export function CardsBrowser({
             placeholder="ค้นหา code หรือชื่อ..."
             className="w-full sm:w-52"
           />
-          <AdminFilterSelect
-            value={setFilter}
-            onChange={(v) => patch({ set: v, page: 1 })}
-            placeholder="ทุกชุด"
-            options={filterOptions.sets.map((s) => ({
-              value: s.code,
-              label: `${s.code.toUpperCase()} · ${s.label}`,
-            }))}
-          />
+          <div className="w-full sm:w-56">
+            <SetPicker
+              sets={filterOptions.sets}
+              selectedCode={setFilter || null}
+              onSelect={(code) => patch({ set: code ?? "", page: 1 })}
+              variant="inline"
+              nullable
+            />
+          </div>
           <AdminFilterSelect
             value={rarityFilter}
             onChange={(v) => patch({ rarity: v, page: 1 })}

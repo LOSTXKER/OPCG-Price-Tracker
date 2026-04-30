@@ -23,7 +23,7 @@ export function HomeMiniTable({
   const trendIconClass = type === "gainers" ? "text-price-up" : "text-price-down"
 
   return (
-    <div>
+    <div className="flex h-full flex-col">
       <div className="mb-2 flex items-center justify-between">
         <p className="flex items-center gap-1.5 text-eyebrow">
           <TrendIcon className={`size-3.5 ${trendIconClass}`} aria-hidden />
@@ -38,12 +38,12 @@ export function HomeMiniTable({
         </Link>
       </div>
       {cards.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-1.5 py-6 text-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-1.5 py-6 text-center">
           <Clock className="size-4 text-muted-foreground/30" />
           <p className="text-meta text-muted-foreground/40">{t(lang, "noData24h")}</p>
         </div>
       ) : (
-        <div>
+        <div className="flex flex-1 flex-col justify-between gap-0.5">
           {cards.slice(0, 3).map((card, idx) => {
             const name = getCardName(lang, card)
             const change = card.priceChange24h
@@ -52,19 +52,19 @@ export function HomeMiniTable({
               <Link
                 key={card.cardCode}
                 href={`/cards/${card.cardCode}`}
-                className="flex items-center gap-2.5 rounded-md px-1.5 py-1 transition-colors hover:bg-muted/40"
+                className="flex flex-1 items-center gap-2.5 rounded-md px-1.5 py-1 transition-colors hover:bg-muted/40"
               >
                 <span className="w-4 shrink-0 text-center font-price text-sm tabular-nums text-muted-foreground/70">
                   {idx + 1}
                 </span>
-                <div className="relative size-6 shrink-0 overflow-hidden rounded bg-muted">
+                <div className="relative size-7 shrink-0 overflow-hidden rounded bg-muted">
                   {card.imageUrl && (
                     <Image
                       src={card.imageUrl}
                       alt={name}
                       fill
                       className="object-contain"
-                      sizes="24px"
+                      sizes="28px"
                     />
                   )}
                 </div>

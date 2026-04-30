@@ -42,14 +42,14 @@ export function WantList({
   const lang = useUIStore((s) => s.language)
 
   return (
-    <section className="panel overflow-hidden">
-      <div className="flex items-center justify-between px-3 pb-2 pt-3">
-        <h2 className="text-h3">
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <p className="text-eyebrow">
           {t(lang, "wantList")}
           {wantCards.length > 0 && (
             <span className="ml-1 text-primary">({wantCards.length})</span>
           )}
-        </h2>
+        </p>
         {wantCards.length > 0 && (
           <button
             onClick={onClearAll}
@@ -60,16 +60,16 @@ export function WantList({
         )}
       </div>
       {wantCards.length === 0 ? (
-        <p className="px-3 pb-4 text-center text-meta">
+        <p className="py-2 text-center text-meta">
           {t(lang, "selectFromLeft")}
         </p>
       ) : (
         <>
-          <div className="max-h-[300px] space-y-0.5 overflow-y-auto px-2">
+          <ul className="max-h-[280px] space-y-0.5 overflow-y-auto -mx-1.5">
             {wantResults.map(({ card, chance }) => {
               const name = getCardName(lang, card as never)
               return (
-                <div
+                <li
                   key={card.id}
                   className="flex items-center gap-2.5 rounded-lg px-1.5 py-1.5 transition-colors hover:bg-muted/40"
                 >
@@ -94,23 +94,23 @@ export function WantList({
                   <button onClick={() => onRemove(card.id)} className="shrink-0 rounded p-0.5 text-muted-foreground/40 transition-colors hover:bg-muted hover:text-foreground">
                     <X className="size-3" />
                   </button>
-                </div>
+                </li>
               )
             })}
-          </div>
+          </ul>
 
-          <div className="space-y-2 border-t border-border/40 bg-muted/10 px-3 py-3">
-            <div className="rounded-lg bg-muted/40 px-3 py-2.5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-muted-foreground">{t(lang, "chanceToGetAll")}</span>
+          <div className="space-y-2.5 border-t border-border/40 pt-3">
+            <div>
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-eyebrow">{t(lang, "chanceToGetAll")}</span>
                 <span className={cn(
-                  "font-mono text-base font-bold tabular-nums",
+                  "font-mono text-display tabular-nums",
                   allChance >= 0.5 ? "text-price-up" : allChance >= 0.1 ? "text-chance-mid" : "text-destructive"
                 )}>
                   {formatPullPct(allChance)}
                 </span>
               </div>
-              <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-muted">
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
                 <div
                   className={cn(
                     "h-full rounded-full transition-all duration-500",
@@ -120,21 +120,21 @@ export function WantList({
                 />
               </div>
             </div>
-            <div className="space-y-1 text-xs">
+            <dl className="space-y-1 text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">{t(lang, "totalSelectedValue")}</span>
-                <span className="font-price font-bold tabular-nums"><Price jpy={totalWantValue} /></span>
+                <dt className="text-muted-foreground">{t(lang, "totalSelectedValue")}</dt>
+                <dd className="font-price font-bold tabular-nums"><Price jpy={totalWantValue} /></dd>
               </div>
               {purchaseCost != null && (
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">{t(lang, "purchaseCost")} ({quantity} {t(lang, UNIT_I18N_KEYS[unit])})</span>
-                  <span className="font-price font-bold tabular-nums"><Price jpy={purchaseCost} /></span>
+                  <dt className="text-muted-foreground">{t(lang, "purchaseCost")} ({quantity} {t(lang, UNIT_I18N_KEYS[unit])})</dt>
+                  <dd className="font-price font-bold tabular-nums"><Price jpy={purchaseCost} /></dd>
                 </div>
               )}
-            </div>
+            </dl>
           </div>
         </>
       )}
-    </section>
+    </div>
   )
 }

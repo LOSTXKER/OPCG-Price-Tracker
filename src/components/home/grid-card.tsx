@@ -5,7 +5,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
-import { CardImageButton } from "@/components/shared/card-image-button"
 import { CardActionRow } from "@/components/shared/card-action-row"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { PriceDisplay } from "@/components/shared/price-display"
@@ -38,24 +37,13 @@ export const GridCard = memo(function GridCard({
 
   return (
     <div className="panel group/card relative flex flex-col overflow-hidden transition-colors hover:bg-muted/20">
-      <CardImageButton
-        card={{
-          cardCode: card.cardCode,
-          cardId: card.id ?? null,
-          nameJp: card.nameJp,
-          nameEn: card.nameEn,
-          nameTh: card.nameTh,
-          rarity: card.rarity,
-          imageUrl: card.imageUrl ?? null,
-          setCode,
-          priceJpy: card.latestPriceJpy ?? null,
-          priceChange24h: card.priceChange24h ?? null,
-          priceChange7d: card.priceChange7d ?? null,
-          priceChange30d: card.priceChange30d ?? null,
-          psa10PriceUsd: card.psa10PriceUsd ?? null,
-        }}
-        className="relative aspect-[63/88] w-full bg-muted"
-      >
+      <Link
+        href={`/cards/${card.cardCode}`}
+        aria-label={name}
+        className="absolute inset-0 z-10 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      />
+
+      <div className="relative aspect-[63/88] w-full bg-muted">
         {card.imageUrl ? (
           <Image
             src={card.imageUrl}
@@ -69,45 +57,42 @@ export const GridCard = memo(function GridCard({
         ) : (
           <div className="size-full bg-muted" />
         )}
-      </CardImageButton>
+      </div>
 
       <div className="flex flex-1 flex-col p-2.5">
-        <div className="mb-1 flex items-center gap-1.5">
+        <div className="mb-0.5 flex items-center gap-1.5">
           <RarityBadge rarity={card.rarity} size="sm" />
           {setCode && (
             <span
               role="link"
-              tabIndex={-1}
+              tabIndex={0}
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
                 router.push(`/sets/${setCode}`)
               }}
-              className="cursor-pointer font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid"
+              className="relative z-20 cursor-pointer font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid"
             >
               {setCode.toUpperCase()}
             </span>
           )}
         </div>
-        <Link
-          href={`/cards/${card.cardCode}`}
-          className="block truncate text-sm font-medium leading-snug hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          title={name}
-        >
+        <p className="truncate text-xs leading-snug text-muted-foreground" title={name}>
           {name}
-        </Link>
+        </p>
         <div className="mt-auto pt-1.5">
           {isPsa ? (
             card.psa10PriceUsd != null ? (
-              <PriceUsd usd={card.psa10PriceUsd} className="text-sm font-semibold" />
+              <PriceUsd usd={card.psa10PriceUsd} className="text-lg font-semibold" />
             ) : (
-              <span className="font-price text-sm text-muted-foreground/50">—</span>
+              <span className="font-price text-lg font-semibold text-muted-foreground/50">—</span>
             )
           ) : (
             <PriceDisplay
               priceJpy={card.latestPriceJpy}
               change={activeChange}
-              size="sm"
+              size="card"
+              className="gap-x-1.5"
             />
           )}
         </div>
@@ -125,7 +110,7 @@ export const GridCard = memo(function GridCard({
           setCode,
         }}
         show={{ detail: true, watchlist: card.id != null, compare: true }}
-        className="border-t border-border/60 px-2 py-1"
+        className="relative z-20 border-t border-border/60 p-2"
       />
     </div>
   )

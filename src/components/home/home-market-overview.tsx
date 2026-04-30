@@ -11,15 +11,9 @@ import {
 } from "lucide-react"
 
 import { FilterChips, type FilterDefinition } from "@/components/shared/filter-chips"
+import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker"
 import { SortableHeader } from "@/components/shared/sortable-header"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { ViewToggle } from "@/components/ui/toolbar"
 import { t } from "@/lib/i18n"
@@ -54,6 +48,7 @@ export function HomeMarketOverview({
   initialTotal,
   initialTotalPages,
   filterDefinitions,
+  sets,
   initialSearch,
   children,
 }: {
@@ -61,13 +56,11 @@ export function HomeMarketOverview({
   initialTotal: number
   initialTotalPages: number
   filterDefinitions: FilterDefinition[]
+  sets: SetPickerItem[]
   initialSearch?: string
   children?: React.ReactNode
 }) {
   const lang = useUIStore((s) => s.language)
-
-  const setDef = filterDefinitions.find((f) => f.key === "set")
-  const setOptions = setDef?.options ?? []
 
   const allFilterDefs: FilterDefinition[] = [
     ...filterDefinitions
@@ -164,32 +157,19 @@ export function HomeMarketOverview({
 
           {/* Right cluster */}
           <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:ml-0">
-            {setOptions.length > 0 && (
-              <Select
-                items={[
-                  { value: "__all__", label: t(lang, "allSets") },
-                  ...setOptions.map((opt) => ({ value: opt.value, label: opt.label })),
-                ]}
-                value={selectedSets[0] ?? "__all__"}
-                onValueChange={(value) =>
-                  m.handleFilterChange("set", value && value !== "__all__" ? [value] : [])
-                }
-              >
-                <SelectTrigger
-                  size="sm"
-                  className="hidden h-9 sm:flex sm:min-w-[150px]"
-                >
-                  <SelectValue placeholder={t(lang, "allSets")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__all__">{t(lang, "allSets")}</SelectItem>
-                  {setOptions.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            {sets.length > 0 && (
+              <div className="hidden sm:block sm:w-[200px]">
+                <SetPicker
+                  sets={sets}
+                  selectedCode={selectedSets[0] ?? null}
+                  onSelect={(code) =>
+                    m.handleFilterChange("set", code ? [code] : [])
+                  }
+                  variant="inline"
+                  nullable
+                  align="right"
+                />
+              </div>
             )}
 
             <SegmentedControl

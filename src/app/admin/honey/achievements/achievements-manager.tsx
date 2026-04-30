@@ -12,6 +12,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { adminFetch } from "@/lib/admin/admin-fetch";
 import { useAdminCrud } from "@/lib/admin/use-admin-crud";
+import {
+  formatAchievementCriteria,
+  localizedAchievementDesc,
+} from "../achievement-labels";
 
 type Achievement = {
   id: number;
@@ -50,7 +54,7 @@ export function AchievementsManager({
       title: "ลบความสำเร็จ",
       description: (id) => {
         const a = achievements.find((x) => x.id === id);
-        const label = a?.nameEn ?? a?.name ?? "รายการนี้";
+        const label = a?.nameTh ?? a?.name ?? "รายการนี้";
         return `ลบ "${label}"? ผู้ใช้ที่ปลดล็อคไว้แล้วจะถูกลบด้วย (honey ที่ได้ไปแล้วยังอยู่ครบ).`;
       },
     },
@@ -89,18 +93,19 @@ export function AchievementsManager({
               )}
               <div className="min-w-0 flex-1">
                 <p className="font-semibold">
-                  {ach.nameEn ?? ach.name}
+                  {ach.nameTh ?? ach.name}
                   {!ach.isActive && (
                     <AdminStatusBadge tone="neutral" className="ml-2">
                       ปิดใช้งาน
                     </AdminStatusBadge>
                   )}
                 </p>
-                {ach.description && <p className="text-meta">{ach.description}</p>}
+                <p className="text-meta">
+                  {localizedAchievementDesc(ach.criteria, ach.description)}
+                </p>
                 <p className="mt-1 text-meta">
-                  โค้ด: <code className="text-foreground">{ach.code}</code> | เงื่อนไข:{" "}
-                  {JSON.stringify(ach.criteria)} | รางวัล:{" "}
-                  <span className="font-bold text-warning">{ach.honeyReward} pts</span>
+                  เป้าหมาย: {formatAchievementCriteria(ach.criteria)} | รางวัล:{" "}
+                  <span className="font-bold text-warning">{ach.honeyReward} แต้ม</span>
                 </p>
               </div>
               <div className="flex items-center gap-1.5 text-sm text-muted-foreground">

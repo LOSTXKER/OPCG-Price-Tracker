@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import {
   ArrowDown,
   ArrowUp,
+  ChevronDown,
   Crown,
   Eye,
   Plus,
@@ -61,8 +62,8 @@ function nextThreshold(tiers: DraftTier[]): number {
   if (tiers.length === 0) return 0;
   const maxThreshold = Math.max(...tiers.map((t) => t.threshold));
   if (maxThreshold === 0) return 100;
-  // Roughly 2-3x the previous step so the default add lands in a
-  // sensible-looking spot rather than +1.
+  // Roughly 2-3x the previous step so the default add lands in a sensible-
+  // looking spot rather than +1.
   return Math.round(maxThreshold * 2.5);
 }
 
@@ -74,9 +75,12 @@ export function RankTiersEditor({ initialTiers }: { initialTiers: RankTier[] }) 
     JSON.stringify(stripKeys(withKeys(initialTiers))),
   );
   const [saving, setSaving] = useState(false);
+  // Only one tier is expanded for editing at a time — keeps the page short
+  // and forces admins to focus on a single tier instead of scrolling through
+  // 10 fully-expanded panels.
+  const [expandedKey, setExpandedKey] = useState<string | null>(null);
   const confirmDialog = useConfirm();
-  const dirty =
-    JSON.stringify(stripKeys(tiers)) !== pristineSnapshot;
+  const dirty = JSON.stringify(stripKeys(tiers)) !== pristineSnapshot;
 
   const sortedForDisplay = useMemo(
     () => [...tiers].sort((a, b) => a.level - b.level),
@@ -120,28 +124,29 @@ export function RankTiersEditor({ initialTiers }: { initialTiers: RankTier[] }) 
     }
     const ok = await confirmDialog({
       title: "ลบระดับแรงค์",
-      description: "ผู้ใช้ที่อยู่ในระดับนี้จะถูกย้ายไประดับที่ใกล้เคียงโดยอัตโนมัติเมื่อบันทึก",
+      description:
+        "ผู้ใช้ที่อยู่ในระดับนี้จะถูกย้ายไประดับที่ใกล้เคียงโดยอัตโนมัติเมื่อบันทึก",
       confirmLabel: "ลบ",
       variant: "destructive",
     });
     if (!ok) return;
     setTiers((prev) => prev.filter((t) => t._key !== key));
+    if (expandedKey === key) setExpandedKey(null);
   };
 
   const addTier = () => {
-    setTiers((prev) => {
-      const draft: DraftTier = {
-        _key: newKey(),
-        level: nextLevel(prev),
-        threshold: nextThreshold(prev),
-        levelUpBonus: 100,
-        iconName: "Award",
-        imageUrl: null,
-        color: "#a855f7",
-        labels: { TH: "ระดับใหม่", EN: "New tier", JP: "新ランク" },
-      };
-      return [...prev, draft];
-    });
+    const draft: DraftTier = {
+      _key: newKey(),
+      level: nextLevel(tiers),
+      threshold: nextThreshold(tiers),
+      levelUpBonus: 100,
+      iconName: "Award",
+      imageUrl: null,
+      color: "#a855f7",
+      labels: { TH: "ระดับใหม่", EN: "New tier", JP: "新ランク" },
+    };
+    setTiers((prev) => [...prev, draft]);
+    setExpandedKey(draft._key);
   };
 
   const moveTier = (key: string, direction: -1 | 1) => {
@@ -154,12 +159,11 @@ export function RankTiersEditor({ initialTiers }: { initialTiers: RankTier[] }) 
       const a = sorted[idx];
       const b = sorted[swapWith];
       // Swap levels (and thresholds so ordering stays valid).
-      const next = prev.map((t) => {
+      return prev.map((t) => {
         if (t._key === a._key) return { ...t, level: b.level, threshold: b.threshold };
         if (t._key === b._key) return { ...t, level: a.level, threshold: a.threshold };
         return t;
       });
-      return next;
     });
   };
 
@@ -172,6 +176,7 @@ export function RankTiersEditor({ initialTiers }: { initialTiers: RankTier[] }) 
     });
     if (!ok) return;
     setTiers(withKeys(DEFAULT_RANK_TIERS));
+    setExpandedKey(null);
   };
 
   const handleSave = async () => {
@@ -211,20 +216,18 @@ export function RankTiersEditor({ initialTiers }: { initialTiers: RankTier[] }) 
     <AdminPage
       header={
         <AdminPageHeader
-          title="ระดับแรงค์ (Rank)"
-          description="ตั้งค่าระดับ ขอบเขตคะแนน ชื่อ (TH/EN/JP) ไอคอน รูป สี และโบนัสเลื่อนระดับ — มีผลทันทีทั่วทั้งระบบ"
+          title="ระดับแรงค์"
+          description="ตั้งค่าระดับ ขอบเขตคะแนน ชื่อ ไอคอน และโบนัสเลื่อนระดับ — มีผลทันทีทั่วทั้งระบบ"
           icon={Crown}
           meta={
-            <span className="text-meta">
-              ทั้งหมด {sortedForDisplay.length} ระดับ
-            </span>
+            <span className="text-meta">{sortedForDisplay.length} ระดับ</span>
           }
           actions={
             <>
               <Button onClick={resetToDefaults} variant="outline" size="sm">
                 <RotateCcw className="size-4" /> ค่าเริ่มต้น
               </Button>
-              <Button onClick={addTier} variant="outline" size="sm">
+              <Button onClick={addTier} size="sm">
                 <Plus className="size-4" /> เพิ่มระดับ
               </Button>
             </>
@@ -239,53 +242,65 @@ export function RankTiersEditor({ initialTiers }: { initialTiers: RankTier[] }) 
           onSave={() => void handleSave()}
           description={
             !validation.ok ? (
-              <span className="text-danger">มีข้อผิดพลาด ตรวจสอบฟอร์มก่อนบันทึก</span>
+              <span className="text-danger">
+                มีข้อผิดพลาด {validation.issues.length} รายการ
+              </span>
             ) : undefined
           }
         />
       }
     >
       {!validation.ok && (
-        <div className="status-danger rounded-lg border border-destructive/30 p-4 text-sm">
+        <div className="status-danger rounded-lg border border-destructive/30 p-3 text-xs">
           <p className="font-semibold">ยังมีข้อผิดพลาด:</p>
-          <ul className="ml-5 mt-1 list-disc space-y-0.5 text-xs">
-            {validation.issues.slice(0, 6).map((m, i) => (
+          <ul className="ml-4 mt-1 list-disc space-y-0.5">
+            {validation.issues.slice(0, 4).map((m, i) => (
               <li key={i}>{m}</li>
             ))}
-            {validation.issues.length > 6 && (
-              <li className="opacity-60">…และอีก {validation.issues.length - 6} ข้อ</li>
+            {validation.issues.length > 4 && (
+              <li className="opacity-60">…และอีก {validation.issues.length - 4} ข้อ</li>
             )}
           </ul>
         </div>
       )}
 
-      <RankPreview tiers={stripKeys(sortedForDisplay)} />
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="overflow-hidden rounded-xl border border-border/60 bg-card">
+          {sortedForDisplay.map((tier, idx) => (
+            <TierRow
+              key={tier._key}
+              tier={tier}
+              position={idx}
+              total={sortedForDisplay.length}
+              expanded={expandedKey === tier._key}
+              onToggle={() =>
+                setExpandedKey((prev) => (prev === tier._key ? null : tier._key))
+              }
+              onChange={(patch) => updateTier(tier._key, patch)}
+              onLabelChange={(lang, value) => updateLabel(tier._key, lang, value)}
+              onRemove={() => void removeTier(tier._key)}
+              onMoveUp={() => moveTier(tier._key, -1)}
+              onMoveDown={() => moveTier(tier._key, 1)}
+            />
+          ))}
+        </div>
 
-      <div className="space-y-4">
-        {sortedForDisplay.map((tier, idx) => (
-          <TierCard
-            key={tier._key}
-            tier={tier}
-            position={idx}
-            total={sortedForDisplay.length}
-            onChange={(patch) => updateTier(tier._key, patch)}
-            onLabelChange={(lang, value) => updateLabel(tier._key, lang, value)}
-            onRemove={() => void removeTier(tier._key)}
-            onMoveUp={() => moveTier(tier._key, -1)}
-            onMoveDown={() => moveTier(tier._key, 1)}
-          />
-        ))}
+        <aside className="lg:sticky lg:top-4 lg:self-start">
+          <RankPreview tiers={stripKeys(sortedForDisplay)} />
+        </aside>
       </div>
     </AdminPage>
   );
 }
 
-/* ── Tier card ───────────────────────────────────────────────────── */
+/* ── Tier row (collapsed summary + expandable edit form) ─────────────── */
 
-function TierCard({
+function TierRow({
   tier,
   position,
   total,
+  expanded,
+  onToggle,
   onChange,
   onLabelChange,
   onRemove,
@@ -295,6 +310,8 @@ function TierCard({
   tier: DraftTier;
   position: number;
   total: number;
+  expanded: boolean;
+  onToggle: () => void;
   onChange: (patch: Partial<RankTier>) => void;
   onLabelChange: (lang: "TH" | "EN" | "JP", value: string) => void;
   onRemove: () => void;
@@ -302,39 +319,33 @@ function TierCard({
   onMoveDown: () => void;
 }) {
   return (
-    <AdminPanel
-      title={
-        <span className="flex items-center gap-3">
-          <span
-            className="flex size-10 shrink-0 items-center justify-center rounded-lg ring-1 ring-border/40"
-            style={{
-              backgroundColor: tier.color ? `${tier.color}1a` : undefined,
-              color: tier.color ?? undefined,
-            }}
-          >
-            {tier.imageUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={tier.imageUrl}
-                alt=""
-                className="size-7 rounded object-contain"
-              />
-            ) : (
-              <RankTierIcon name={tier.iconName} className="size-5" />
-            )}
-          </span>
-          <span className="min-w-0 truncate">
-            Lv.{tier.level} · {tier.labels.TH || tier.labels.EN}
-          </span>
-        </span>
-      }
-      description={
-        <>
-          เริ่มที่ {tier.threshold.toLocaleString()} pt · โบนัส +
-          {tier.levelUpBonus.toLocaleString()} 🍯
-        </>
-      }
-      actions={
+    <div className={cn("border-border/50", position > 0 && "border-t")}>
+      <div
+        className={cn(
+          "flex items-center gap-3 px-4 transition-colors hover:bg-muted/30",
+          expanded && "bg-muted/20",
+        )}
+      >
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={expanded}
+          className="flex min-w-0 flex-1 items-center gap-3 py-3 text-left"
+        >
+          <TierBadge tier={tier} />
+          <div className="min-w-0 flex-1">
+            <div className="flex items-baseline gap-2">
+              <span className="text-meta tabular-nums">Lv.{tier.level}</span>
+              <span className="truncate font-medium">
+                {tier.labels.TH || tier.labels.EN || "—"}
+              </span>
+            </div>
+            <p className="text-meta tabular-nums">
+              เริ่มที่ {tier.threshold.toLocaleString()} pt · โบนัส +
+              {tier.levelUpBonus.toLocaleString()} 🍯
+            </p>
+          </div>
+        </button>
         <div className="flex shrink-0 items-center gap-1">
           <Button
             variant="ghost"
@@ -363,131 +374,142 @@ function TierCard({
           >
             <Trash2 className="size-3.5" />
           </Button>
-        </div>
-      }
-      bodyClassName="space-y-5 p-4 sm:p-5"
-    >
-        <div className="grid gap-4 sm:grid-cols-3">
-          <NumberField
-            label="ระดับ"
-            value={tier.level}
-            min={0}
-            onChange={(v) => onChange({ level: v })}
-            help="หมายเลขลำดับ (ไม่ซ้ำกัน)"
-          />
-          <NumberField
-            label="คะแนนสะสมที่ต้องการ (pt)"
-            value={tier.threshold}
-            min={0}
-            onChange={(v) => onChange({ threshold: v })}
-            help={position === 0 ? "ระดับแรกต้องเป็น 0" : "ต้องมากกว่าระดับก่อนหน้า"}
-          />
-          <NumberField
-            label="โบนัสเลื่อนระดับ (🍯)"
-            value={tier.levelUpBonus}
-            min={0}
-            onChange={(v) => onChange({ levelUpBonus: v })}
-            help={position === 0 ? "โดยปกติเป็น 0 — ระดับเริ่มต้นไม่ต้องให้โบนัส" : "Honey ที่ผู้ใช้ได้เมื่อเลื่อนเข้าระดับนี้"}
-          />
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-3">
-          <AdminFormField label="ชื่อ (TH)">
-            <Input
-              value={tier.labels.TH}
-              onChange={(e) => onLabelChange("TH", e.target.value)}
-              placeholder="เช่น บรอนซ์"
-            />
-          </AdminFormField>
-          <AdminFormField label="ชื่อ (EN)">
-            <Input
-              value={tier.labels.EN}
-              onChange={(e) => onLabelChange("EN", e.target.value)}
-              placeholder="e.g. Bronze"
-            />
-          </AdminFormField>
-          <AdminFormField label="ชื่อ (JP)">
-            <Input
-              value={tier.labels.JP}
-              onChange={(e) => onLabelChange("JP", e.target.value)}
-              placeholder="例：ブロンズ"
-            />
-          </AdminFormField>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-[1fr_auto]">
-          <AdminFormField
-            label="ไอคอน"
-            hint="ใช้เมื่อไม่มีรูปภาพแบบกำหนดเอง"
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-label={expanded ? "ย่อ" : "ขยาย"}
+            className="flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted"
           >
-            <div className="flex flex-wrap gap-1.5">
-              {ICON_OPTIONS.map((name) => {
-                const active = tier.iconName === name;
-                return (
-                  <button
-                    key={name}
-                    type="button"
-                    onClick={() => onChange({ iconName: name })}
-                    title={name}
-                    className={cn(
-                      "flex size-9 items-center justify-center rounded-lg border transition-colors",
-                      active
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border/60 text-muted-foreground hover:bg-muted",
-                    )}
-                  >
-                    <RankTierIcon name={name} className="size-4" />
-                  </button>
-                );
-              })}
-            </div>
-          </AdminFormField>
-
-          <AdminFormField label="สีเน้น">
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={tier.color ?? "#888888"}
-                onChange={(e) => onChange({ color: e.target.value })}
-                className="size-9 cursor-pointer rounded-lg border border-border/60 bg-transparent"
-                aria-label="เลือกสี"
-              />
-              <Input
-                value={tier.color ?? ""}
-                onChange={(e) =>
-                  onChange({ color: e.target.value.trim() || null })
-                }
-                placeholder="#b45309"
-                className="w-32 font-mono text-xs"
-              />
-              {tier.color && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onChange({ color: null })}
-                  className="text-meta"
-                >
-                  ล้าง
-                </Button>
+            <ChevronDown
+              className={cn(
+                "size-4 transition-transform",
+                expanded && "rotate-180",
               )}
-            </div>
-          </AdminFormField>
+            />
+          </button>
         </div>
+      </div>
 
-        <AdminFormField
-          label="รูปภาพ (ทับไอคอน, ไม่บังคับ)"
-          hint="อัปโหลดรูป PNG/SVG/WebP เช่นเหรียญตราหรือเข็มกลัดเฉพาะระดับ ใช้พื้นโปร่งใสจะเข้ากับธีมสว่าง/มืดดีที่สุด เมื่อเซ็ตรูปภาพไว้ ไอคอนจะถูกซ่อน"
-        >
-          <div className="max-w-[200px]">
-            <ImageUploader
-              value={tier.imageUrl ?? ""}
-              onChange={(url) => onChange({ imageUrl: url || null })}
-              folder="rank-tiers"
-              height="h-32"
+      {expanded && (
+        <div className="space-y-5 border-t border-border/40 bg-muted/10 px-4 py-5 sm:px-5">
+          <div className="grid gap-4 sm:grid-cols-3">
+            <NumberField
+              label="ระดับ"
+              value={tier.level}
+              min={0}
+              onChange={(v) => onChange({ level: v })}
+              hint="หมายเลขลำดับ ห้ามซ้ำ"
+            />
+            <NumberField
+              label="คะแนนสะสมขั้นต่ำ (pt)"
+              value={tier.threshold}
+              min={0}
+              onChange={(v) => onChange({ threshold: v })}
+              hint={position === 0 ? "ระดับแรกต้องเป็น 0" : "มากกว่าระดับก่อนหน้า"}
+            />
+            <NumberField
+              label="โบนัสเมื่อเลื่อน (🍯)"
+              value={tier.levelUpBonus}
+              min={0}
+              onChange={(v) => onChange({ levelUpBonus: v })}
+              hint={position === 0 ? "ระดับแรกใส่ 0" : "Honey ที่ผู้ใช้ได้เมื่อเลื่อนถึง"}
             />
           </div>
-        </AdminFormField>
-    </AdminPanel>
+
+          <AdminFormField label="ชื่อระดับ">
+            <div className="grid gap-2 sm:grid-cols-3">
+              <Input
+                value={tier.labels.TH}
+                onChange={(e) => onLabelChange("TH", e.target.value)}
+                placeholder="ไทย — เช่น บรอนซ์"
+              />
+              <Input
+                value={tier.labels.EN}
+                onChange={(e) => onLabelChange("EN", e.target.value)}
+                placeholder="English — e.g. Bronze"
+              />
+              <Input
+                value={tier.labels.JP}
+                onChange={(e) => onLabelChange("JP", e.target.value)}
+                placeholder="日本語 — 例：ブロンズ"
+              />
+            </div>
+          </AdminFormField>
+
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto_auto]">
+            <AdminFormField
+              label="ไอคอน"
+              hint="ใช้เมื่อยังไม่ได้อัปโหลดรูปภาพ"
+            >
+              <div className="flex flex-wrap gap-1.5">
+                {ICON_OPTIONS.map((name) => {
+                  const active = tier.iconName === name;
+                  return (
+                    <button
+                      key={name}
+                      type="button"
+                      onClick={() => onChange({ iconName: name })}
+                      title={name}
+                      className={cn(
+                        "flex size-9 items-center justify-center rounded-lg border transition-colors",
+                        active
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border/60 text-muted-foreground hover:bg-muted",
+                      )}
+                    >
+                      <RankTierIcon name={name} className="size-4" />
+                    </button>
+                  );
+                })}
+              </div>
+            </AdminFormField>
+
+            <AdminFormField label="สีเน้น">
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  value={tier.color ?? "#888888"}
+                  onChange={(e) => onChange({ color: e.target.value })}
+                  className="size-9 cursor-pointer rounded-lg border border-border/60 bg-transparent"
+                  aria-label="เลือกสี"
+                />
+                <Input
+                  value={tier.color ?? ""}
+                  onChange={(e) =>
+                    onChange({ color: e.target.value.trim() || null })
+                  }
+                  placeholder="#b45309"
+                  className="w-28 font-mono text-xs"
+                />
+                {tier.color && (
+                  <button
+                    type="button"
+                    onClick={() => onChange({ color: null })}
+                    className="text-meta hover:text-foreground"
+                  >
+                    ล้าง
+                  </button>
+                )}
+              </div>
+            </AdminFormField>
+
+            <AdminFormField
+              label="รูปภาพ"
+              hint="ทับไอคอนถ้าตั้งไว้"
+            >
+              <div className="w-32">
+                <ImageUploader
+                  value={tier.imageUrl ?? ""}
+                  onChange={(url) => onChange({ imageUrl: url || null })}
+                  folder="rank-tiers"
+                  height="h-24"
+                />
+              </div>
+            </AdminFormField>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -505,51 +527,66 @@ function RankPreview({ tiers }: { tiers: RankTier[] }) {
     return getHoneyLevelFromTiers(sample, tiers);
   }, [sample, tiers]);
 
+  const currentTier = level
+    ? tiers.find((t) => t.level === level.level) ?? tiers[0]
+    : tiers[0];
+
   return (
     <AdminPanel
       icon={Eye}
       title="ตัวอย่างที่ผู้ใช้จะเห็น"
-      description={`คะแนนสะสมตัวอย่าง: ${sample.toLocaleString()} pt`}
+      description={`ที่คะแนนสะสมตัวอย่าง ${sample.toLocaleString()} pt`}
       className="border-dashed"
     >
-      <div className="grid gap-2 sm:grid-cols-2">
-        <div className="rounded-lg border p-3">
-          <p className="text-eyebrow">ระดับปัจจุบัน</p>
-          <div className="mt-1 flex items-center gap-2">
-            {level && (
-              <TierBadge tier={tiers.find((t) => t.level === level.level) ?? tiers[0]} />
-            )}
-            <p className="text-h3">{level?.label ?? "—"}</p>
+      {currentTier ? (
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <TierBadge tier={currentTier} />
+            <div className="min-w-0 flex-1">
+              <p className="text-h3 truncate">
+                {currentTier.labels.TH || currentTier.labels.EN || "—"}
+              </p>
+              <p className="text-meta truncate">
+                Lv.{currentTier.level}
+                {currentTier.labels.EN ? ` · ${currentTier.labels.EN}` : ""}
+                {currentTier.labels.JP ? ` · ${currentTier.labels.JP}` : ""}
+              </p>
+            </div>
           </div>
-        </div>
-        <div className="rounded-lg border p-3">
-          <p className="text-eyebrow">ระดับทั้งหมด</p>
-          <div className="mt-1.5 space-y-1.5">
-            {tiers.map((t) => (
-              <div key={t.level} className="flex items-center gap-2 text-sm">
-                <TierBadge tier={t} small />
-                <span className="flex-1 truncate">{t.labels.TH}</span>
-                <span className="tabular-nums text-meta">
-                  {t.threshold.toLocaleString()} pt
-                </span>
+          <dl className="grid grid-cols-2 gap-2 border-t border-border/40 pt-3 text-sm">
+            <div>
+              <dt className="text-eyebrow">คะแนนขั้นต่ำ</dt>
+              <dd className="mt-0.5 font-semibold tabular-nums">
+                {currentTier.threshold.toLocaleString()} pt
+              </dd>
+            </div>
+            <div>
+              <dt className="text-eyebrow">โบนัสเลื่อน</dt>
+              <dd className="mt-0.5 font-semibold tabular-nums text-warning">
+                +{currentTier.levelUpBonus.toLocaleString()} 🍯
+              </dd>
+            </div>
+            {level?.nextThreshold != null && (
+              <div className="col-span-2">
+                <dt className="text-eyebrow">ระดับถัดไปที่</dt>
+                <dd className="mt-0.5 font-semibold tabular-nums">
+                  {level.nextThreshold.toLocaleString()} pt
+                </dd>
               </div>
-            ))}
-          </div>
+            )}
+          </dl>
         </div>
-      </div>
+      ) : (
+        <p className="text-meta">ยังไม่มีระดับ</p>
+      )}
     </AdminPanel>
   );
 }
 
-function TierBadge({ tier, small }: { tier: RankTier; small?: boolean }) {
-  const size = small ? "size-6" : "size-9";
-  const iconSize = small ? "size-3" : "size-4";
+function TierBadge({ tier }: { tier: RankTier }) {
   return (
     <div
-      className={cn(
-        "flex shrink-0 items-center justify-center rounded-md ring-1 ring-border/40",
-        size,
-      )}
+      className="flex size-10 shrink-0 items-center justify-center rounded-lg ring-1 ring-border/40"
       style={{
         backgroundColor: tier.color ? `${tier.color}1a` : undefined,
         color: tier.color ?? undefined,
@@ -557,9 +594,13 @@ function TierBadge({ tier, small }: { tier: RankTier; small?: boolean }) {
     >
       {tier.imageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={tier.imageUrl} alt="" className="size-full rounded object-contain" />
+        <img
+          src={tier.imageUrl}
+          alt=""
+          className="size-7 rounded object-contain"
+        />
       ) : (
-        <RankTierIcon name={tier.iconName} className={iconSize} />
+        <RankTierIcon name={tier.iconName} className="size-5" />
       )}
     </div>
   );
@@ -572,16 +613,16 @@ function NumberField({
   value,
   onChange,
   min,
-  help,
+  hint,
 }: {
   label: string;
   value: number;
   onChange: (v: number) => void;
   min?: number;
-  help?: string;
+  hint?: string;
 }) {
   return (
-    <AdminFormField label={label} hint={help}>
+    <AdminFormField label={label} hint={hint}>
       <Input
         type="number"
         min={min}

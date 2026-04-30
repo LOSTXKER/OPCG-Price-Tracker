@@ -96,7 +96,6 @@ export function TemplatesList({ initialTemplates }: { initialTemplates: Template
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border/50 bg-muted/30">
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">โค้ด</th>
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">ชื่อ</th>
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">หมวดหมู่</th>
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">ประเภท</th>
@@ -117,8 +116,7 @@ export function TemplatesList({ initialTemplates }: { initialTemplates: Template
                     key={t.id}
                     className="border-b border-border/20 transition-colors hover:bg-muted/20"
                   >
-                    <td className="px-4 py-3 font-mono text-xs">{t.code}</td>
-                    <td className="px-4 py-3">{t.nameEn ?? t.name}</td>
+                    <td className="px-4 py-3">{t.nameTh ?? t.name}</td>
                     <td className="px-4 py-3">
                       <Badge variant="secondary">{t.category}</Badge>
                     </td>

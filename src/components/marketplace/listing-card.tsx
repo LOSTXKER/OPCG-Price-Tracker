@@ -96,24 +96,26 @@ function ListingCardBase({
         )}
       </Link>
 
-      <div className="flex flex-1 flex-col gap-2 p-3">
-        <Link href={listingHref} className="hover:text-primary transition-colors">
-          <p className="line-clamp-1 text-sm font-medium">{card.nameEn ?? card.nameJp}</p>
-        </Link>
+      <div className="flex flex-1 flex-col gap-1.5 p-3">
         <div className="flex flex-wrap items-center gap-1.5">
+          <RarityBadge rarity={card.rarity} size="sm" />
           <span className="font-mono text-xs text-muted-foreground">
             {card.cardCode}
           </span>
-          <RarityBadge rarity={card.rarity} size="sm" />
           <ConditionBadge condition={condition} />
         </div>
+        <Link href={listingHref} className="transition-colors hover:text-primary">
+          <p className="line-clamp-1 text-xs text-muted-foreground">
+            {card.nameEn ?? card.nameJp}
+          </p>
+        </Link>
 
-        <div className="space-y-1">
+        <div className="space-y-0.5 pt-0.5">
           <PriceDisplay
             priceJpy={priceJpy}
             priceThb={priceThb ?? undefined}
             showChange={false}
-            size="sm"
+            size="card"
           />
           {market != null && diffPct != null && (
             <p className="text-meta text-muted-foreground">

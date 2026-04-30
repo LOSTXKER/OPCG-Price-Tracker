@@ -20,7 +20,15 @@ export const metadata: Metadata = {
 async function getSearchMeta() {
   const [sets, rarityRows] = await Promise.all([
     prisma.cardSet.findMany({
-      select: { code: true, name: true, nameEn: true },
+      select: {
+        code: true,
+        name: true,
+        nameEn: true,
+        nameTh: true,
+        type: true,
+        boxImageUrl: true,
+        releaseDate: true,
+      },
       orderBy: { code: "asc" },
     }),
     prisma.card.findMany({
@@ -30,7 +38,15 @@ async function getSearchMeta() {
     }),
   ]);
   return {
-    sets: sets.map((s) => ({ code: s.code, name: s.nameEn ?? s.name })),
+    sets: sets.map((s) => ({
+      code: s.code,
+      name: s.name,
+      nameEn: s.nameEn,
+      nameTh: s.nameTh,
+      type: s.type,
+      imageUrl: s.boxImageUrl,
+      releaseDate: s.releaseDate ? s.releaseDate.toISOString() : null,
+    })),
     rarities: rarityRows.map((r) => r.rarity),
   };
 }

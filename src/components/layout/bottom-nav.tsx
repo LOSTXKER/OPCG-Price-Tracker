@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, MessageCircle, Search, ShoppingBag, Menu, X } from "lucide-react";
+import { Home, Layers, MessageCircle, Search, ShoppingBag, Sparkles, Menu, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { usePublicConfig } from "@/hooks/use-public-config";
 
 function isTabActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -57,6 +58,8 @@ export function BottomNav({ className }: { className?: string }) {
   const menuOpen = useUIStore((s) => s.mobileMenuOpen);
   const toggleMenu = useUIStore((s) => s.toggleMobileMenu);
   const unread = useUIStore((s) => s.unreadMessages);
+  const { config: publicConfig } = usePublicConfig();
+  const marketplaceEnabled = publicConfig.marketplaceEnabled;
 
   return (
     <nav
@@ -68,7 +71,11 @@ export function BottomNav({ className }: { className?: string }) {
     >
       <ul className="mx-auto flex max-w-lg items-stretch justify-around">
         <TabLink href="/" label={t(lang, "home")} icon={Home} pathname={pathname} />
-        <TabLink href="/marketplace" label={t(lang, "marketplace")} icon={ShoppingBag} pathname={pathname} />
+        {marketplaceEnabled ? (
+          <TabLink href="/marketplace" label={t(lang, "marketplace")} icon={ShoppingBag} pathname={pathname} />
+        ) : (
+          <TabLink href="/sets" label={t(lang, "sets")} icon={Layers} pathname={pathname} />
+        )}
 
         {/* Search — triggers CommandSearch modal */}
         <li className="min-w-0 flex-1">
@@ -84,7 +91,11 @@ export function BottomNav({ className }: { className?: string }) {
           </button>
         </li>
 
-        <TabLink href="/messages" label={t(lang, "messagesTitle")} icon={MessageCircle} badge={unread} pathname={pathname} />
+        {marketplaceEnabled ? (
+          <TabLink href="/messages" label={t(lang, "messagesTitle")} icon={MessageCircle} badge={unread} pathname={pathname} />
+        ) : (
+          <TabLink href="/honey" label="Honey" icon={Sparkles} pathname={pathname} />
+        )}
 
         {/* Menu (opens sheet drawer) */}
         <li className="min-w-0 flex-1">

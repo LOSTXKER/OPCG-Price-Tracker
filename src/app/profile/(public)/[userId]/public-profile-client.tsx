@@ -28,14 +28,15 @@ import { ProfileCover } from "@/components/profile/public/profile-cover";
 import { ProfileHero } from "@/components/profile/public/profile-hero";
 import { ProfileMobileCtaBar } from "@/components/profile/public/profile-mobile-cta-bar";
 import { ProfileReviewsPreview } from "@/components/profile/public/profile-reviews-preview";
+import { ProfileSellerCard } from "@/components/profile/profile-seller-card";
 import { ProfileTrustBlock } from "@/components/profile/public/profile-trust-block";
 import {
   ProfileTabsNav,
   type TabDescriptor,
 } from "@/components/profile/public/profile-tabs-nav";
+import { AchievementsTabContent } from "@/components/profile/public/tabs/achievements-tab";
 import { CollectionTabContent } from "@/components/profile/public/tabs/collection-tab";
 import { ListingsTabContent } from "@/components/profile/public/tabs/listings-tab";
-import { OverviewTabContent } from "@/components/profile/public/tabs/overview-tab";
 import { ReviewsTabContent } from "@/components/profile/public/tabs/reviews-tab";
 import { SummaryOnlyBanner } from "@/components/profile/public/tabs/summary-only-banner";
 import type {
@@ -152,28 +153,26 @@ function PublicProfileLayout({
 
   const joinedRelative = formatJoinedRelative(user.createdAt, lang);
 
-  const hasOverviewContent =
-    achievements.length > 0 ||
-    badges.length > 0 ||
-    sellerStats.reviewCount > 0 ||
-    sellerStats.completedDeals > 0;
+  const achievementCount = achievements.length + badges.length;
+  const hasAchievementsTab = achievementCount > 0;
 
   const visibleTabs = useMemo<TabDescriptor[]>(() => {
     const all: TabDescriptor[] = [
-      { key: "overview", labelKey: "tabOverview" },
+      { key: "achievements", labelKey: "tabAchievements", count: achievementCount },
       { key: "listings", labelKey: "tabListings", count: stats.listingCount },
       { key: "collection", labelKey: "tabCollection", count: stats.portfolioCardCount },
       { key: "reviews", labelKey: "tabReviews", count: stats.reviewCount },
     ];
     return all.filter(({ key, count }) => {
-      if (key === "overview") return hasOverviewContent;
+      if (key === "achievements") return hasAchievementsTab;
       if (key === "listings") return privacyFlags.showListings && (isOwner || (count ?? 0) > 0);
       if (key === "collection") return privacyFlags.showCollection && (isOwner || (count ?? 0) > 0);
       if (key === "reviews") return isOwner || (count ?? 0) > 0;
       return true;
     });
   }, [
-    hasOverviewContent,
+    achievementCount,
+    hasAchievementsTab,
     isOwner,
     privacyFlags.showCollection,
     privacyFlags.showListings,
@@ -182,13 +181,16 @@ function PublicProfileLayout({
     stats.reviewCount,
   ]);
 
-  const defaultTab: ProfileTab = hasOverviewContent
-    ? "overview"
-    : stats.listingCount > 0
+  // Default to whichever tab has the most "real estate" — listings → collection
+  // → achievements → reviews — falling back to whatever tab survived filtering.
+  const defaultTab: ProfileTab =
+    stats.listingCount > 0
       ? "listings"
       : stats.portfolioCardCount > 0
         ? "collection"
-        : (visibleTabs[0]?.key ?? "overview");
+        : hasAchievementsTab
+          ? "achievements"
+          : (visibleTabs[0]?.key ?? "achievements");
 
   // ── URL ⇄ activeTab ──────────────────────────────────────────────────
   // The active tab is *derived* from the URL — no React state — so deep
@@ -225,10 +227,10 @@ function PublicProfileLayout({
     [user.socials, lang],
   );
 
-  // No overview content AND no listings/collection/reviews → friendly welcome.
+  // No meaningful tabs AND empty seller surface → friendly welcome.
   const isEmptyProfile =
     visibleTabs.length === 0 &&
-    !hasOverviewContent &&
+    !hasAchievementsTab &&
     stats.listingCount === 0 &&
     stats.portfolioCardCount === 0 &&
     stats.reviewCount === 0;
@@ -261,10 +263,12 @@ function PublicProfileLayout({
             }
           />
 
-          {/* Trust strip (visitor-only) — verified facts + commerce chips.
-              Renders directly under the hero so the answer to "is this
-              seller real, where do they ship from, how do they take money?"
-              is on screen before the buyer has to scroll. */}
+          {/* Credibility strip — visible to everyone. Renders directly
+              under the hero so the seller's headline numbers (rating,
+              deals, response) are on screen before the buyer has to
+              scroll. The trust block (visitor-only) layers commerce
+              context underneath for buyers. */}
+          <ProfileSellerCard stats={sellerStats} />
           <ProfileTrustBlock
             sellerStats={sellerStats}
             commerceProfile={commerceProfile}
@@ -311,12 +315,8 @@ function PublicProfileLayout({
             {/* `key={activeTab}` triggers an enter animation on every switch
                 so the tab change feels intentional, not jarring. */}
             <div key={activeTab} className="animate-in fade-in-0 duration-200">
-              {activeTab === "overview" && (
-                <OverviewTabContent
-                  achievements={achievements}
-                  badges={badges}
-                  sellerStats={sellerStats}
-                />
+              {activeTab === "achievements" && (
+                <AchievementsTabContent achievements={achievements} badges={badges} />
               )}
               {activeTab === "listings" && (
                 <ListingsTabContent

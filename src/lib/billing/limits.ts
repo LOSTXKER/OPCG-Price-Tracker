@@ -52,6 +52,28 @@ export function effectiveTier(tier: UserTier, expiresAt: Date | null): UserTier 
   return "FREE";
 }
 
+/**
+ * NOTE — fields advertised on /pricing but NOT yet enforced end-to-end.
+ * Keep these here so the comparison table in @/lib/billing/plans renders
+ * the existing PRO / PRO+ marketing values, but be aware that buying a
+ * subscription does NOT currently grant the underlying feature for:
+ *
+ *   - `marketplaceFeePercent` — Order flow is P2P manual settlement
+ *     (see src/app/api/orders/[id]/route.ts); no fee is ever deducted.
+ *   - `bulkPriceLookup`       — No daily quota gate exists; only the
+ *     `bulkLookupCredits` entitlement extended via Honey shop redemption.
+ *   - `listingBoostFree`      — No monthly grant on subscription renewal;
+ *     boosts only come from Honey shop (`listing_boost*` items in
+ *     src/lib/honey/fulfillment.ts).
+ *   - `autoPricing`           — No tier-based gate; any auto-pricing
+ *     consumer reads `UserEntitlements.autoPricingUntil` which is only
+ *     extended by `auto_pricing_pass` shop redemptions.
+ *   - `savedFilters`          — `/api/saved-filters` was retired in
+ *     phase 2.9; the model lingers but no read/write endpoints are wired.
+ *
+ * These will be wired during the marketplace/seller sprint. Until then
+ * `/pricing` and `/settings/subscription` show optimistic numbers.
+ */
 export const TIER_LIMITS = {
   FREE: {
     portfolioCards: 30,

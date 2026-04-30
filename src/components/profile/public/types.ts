@@ -75,4 +75,8 @@ export type ProfileCardData = {
   isPrivate?: boolean;
 };
 
-export type ProfileTab = "overview" | "listings" | "collection" | "reviews";
+export type ProfileTab =
+  | "achievements"
+  | "listings"
+  | "collection"
+  | "reviews";

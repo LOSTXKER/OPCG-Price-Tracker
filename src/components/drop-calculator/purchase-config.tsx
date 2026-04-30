@@ -1,6 +1,6 @@
 "use client"
 
-import { Minus, Plus, ShoppingCart } from "lucide-react"
+import { Minus, Plus } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { t } from "@/lib/i18n"
@@ -31,8 +31,8 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
 
   if (compact) {
     return (
-      <div className="panel flex flex-wrap items-center gap-2 p-3">
-        <div className="flex rounded-lg border border-border bg-muted/50 p-0.5">
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="flex rounded-lg border border-border bg-muted/40 p-0.5">
           {PULL_UNITS.map((u) => (
             <button
               key={u}
@@ -74,9 +74,9 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
           </button>
         </div>
         <p className="text-meta">
-          {unit === "box" && `${t(lang, "ifYouBuy")} ${quantity} ${t(lang, "boxUnit")} = ${packs} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
-          {unit === "pack" && `${t(lang, "ifYouBuy")} ${quantity} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
-          {unit === "carton" && `${t(lang, "ifYouBuy")} ${quantity} ${t(lang, "cartonUnit")} = ${BOXES_PER_CARTON * quantity} ${t(lang, "boxUnit")} · ${cards} ${t(lang, "cardsCount")}`}
+          {unit === "box" && `${quantity} ${t(lang, "boxUnit")} = ${packs} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
+          {unit === "pack" && `${quantity} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
+          {unit === "carton" && `${quantity} ${t(lang, "cartonUnit")} = ${BOXES_PER_CARTON * quantity} ${t(lang, "boxUnit")} · ${cards} ${t(lang, "cardsCount")}`}
         </p>
       </div>
     )
@@ -95,12 +95,10 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
     .sort((a, b) => raritySort(a.rarity, b.rarity))
 
   return (
-    <section className="panel overflow-hidden">
-      <div className="space-y-3 p-3">
-        <p className="text-xs font-medium text-muted-foreground">
-          {t(lang, "configurePurchase")}
-        </p>
-        <div className="flex w-full rounded-lg border border-border bg-muted/50 p-0.5">
+    <div className="space-y-4">
+      <div className="space-y-3">
+        <p className="text-eyebrow">{t(lang, "configurePurchase")}</p>
+        <div className="flex w-full rounded-lg border border-border bg-muted/40 p-0.5">
           {PULL_UNITS.map((u) => (
             <button
               key={u}
@@ -141,19 +139,18 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
             <Plus className="size-4" />
           </button>
         </div>
-        <div className="rounded-lg bg-muted/30 px-3 py-1.5 text-center text-meta">
+        <p className="text-center text-meta">
           {unit === "pack" && `${quantity} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
           {unit === "box" && `${quantity} ${t(lang, "boxUnit")} = ${packs} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
           {unit === "carton" && `${quantity} ${t(lang, "cartonUnit")} = ${BOXES_PER_CARTON * quantity} ${t(lang, "boxUnit")} · ${cards} ${t(lang, "cardsCount")}`}
-        </div>
+        </p>
       </div>
       {meaningful.length > 0 && (
-        <div className="border-t border-border/40 px-3 py-2.5">
-          <p className="mb-2 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-            <ShoppingCart className="size-3 shrink-0" />
+        <div>
+          <p className="mb-1 text-eyebrow">
             {t(lang, "ifYouBuy")} {quantity} {t(lang, UNIT_I18N_KEYS[unit])} {t(lang, "estimatedYield")}
           </p>
-          <div className="space-y-1">
+          <ul className="divide-y divide-border/40">
             {meaningful.map((dr) => {
               const count =
                 unit === "pack"
@@ -163,20 +160,20 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
                     : (dr.avgPerBox ?? 0) * BOXES_PER_CARTON * quantity
               const display = count >= 10 ? Math.round(count) : count % 1 === 0 ? count : count.toFixed(1)
               return (
-                <div
+                <li
                   key={dr.rarity}
-                  className="flex items-center justify-between rounded-md bg-muted/30 px-2.5 py-1.5"
+                  className="flex items-center justify-between py-1.5"
                 >
                   <RarityBadge rarity={dr.rarity} size="sm" />
                   <span className="font-mono text-xs font-bold tabular-nums">
                     ×{display}
                   </span>
-                </div>
+                </li>
               )
             })}
-          </div>
+          </ul>
         </div>
       )}
-    </section>
+    </div>
   )
 }

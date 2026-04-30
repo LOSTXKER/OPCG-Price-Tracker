@@ -195,7 +195,7 @@ export function ScheduleForm({
                   .filter((t) => t.isActive)
                   .map((t) => (
                     <option key={t.id} value={t.id}>
-                      {t.code} - {t.nameEn ?? t.name}
+                      {t.nameTh ?? t.name}
                     </option>
                   ))}
               </AdminNativeSelect>

@@ -10,6 +10,10 @@ const sizeClasses = {
     primary: "text-sm font-medium",
     change: "text-xs",
   },
+  card: {
+    primary: "text-lg font-semibold",
+    change: "text-xs",
+  },
   md: {
     primary: "text-xl font-semibold",
     change: "text-sm",

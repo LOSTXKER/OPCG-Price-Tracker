@@ -6,43 +6,14 @@ import { Button } from "@/components/ui/button";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { ShopItem } from "../types";
-import { localizedName } from "../types";
+import { localizedName, localizedShopDesc, localizedShopType } from "../types";
 import { FilterTabs } from "./_shared/filter-tabs";
 
-const SHOP_CAT_LABELS: Record<string, Record<string, string>> = {
-  ALL:              { TH: "ทั้งหมด",            EN: "All",          JP: "すべて" },
-  TRIAL_PRO:        { TH: "แพ็กเกจ",             EN: "Package",      JP: "パッケージ" },
-  TRIAL_PRO_PLUS:   { TH: "แพ็กเกจ",             EN: "Package",      JP: "パッケージ" },
-  PROFILE_FRAME:    { TH: "กรอบโปรไฟล์",        EN: "Frames",       JP: "フレーム" },
-  BADGE:            { TH: "แบดจ์",               EN: "Badges",       JP: "バッジ" },
-  PRICE_ALERT_SLOT: { TH: "แจ้งเตือน",          EN: "Alerts",       JP: "アラート" },
-  CSV_EXPORT_PASS:  { TH: "ส่งออก",             EN: "Export",       JP: "エクスポート" },
-  RAFFLE_TICKET:    { TH: "ตั๋วลุ้นรางวัล",     EN: "Tickets",      JP: "チケット" },
-  CUSTOM:           { TH: "อื่นๆ",              EN: "Other",        JP: "その他" },
+const ALL_LABEL: Record<Language, string> = {
+  TH: "ทั้งหมด",
+  EN: "All",
+  JP: "すべて",
 };
-
-const DESC_I18N: { match: string; TH: string; JP: string }[] = [
-  { match: "shiny gold frame",          TH: "กรอบโปรไฟล์สีทองสุดพิเศษ",                          JP: "プロフィール用のゴールドフレーム" },
-  { match: "diamond frame",             TH: "กรอบโปรไฟล์เพชรสุดพรีเมียม",                        JP: "プロフィール用のダイヤモンドフレーム" },
-  { match: "fiery frame",               TH: "กรอบโปรไฟล์ลายไฟสุดเท่",                            JP: "プロフィール用の炎フレーム" },
-  { match: "Boost your listing",        TH: "ดันรายการขายของคุณขึ้นด้านบน 24 ชั่วโมง",            JP: "出品を24時間トップに表示" },
-  { match: "extra price alert",         TH: "เพิ่มช่องแจ้งเตือนราคาถาวร +1 ช่อง",                JP: "価格アラート枠を1つ追加（永久）" },
-  { match: "Kuma badge",                TH: "แบดจ์ Kuma สุดพิเศษบนโปรไฟล์ของคุณ",                JP: "プロフィールにKumaバッジを表示" },
-  { match: "Export your portfolio",      TH: "ส่งออกพอร์ตโฟลิโอเป็นไฟล์ CSV 1 ครั้ง",            JP: "ポートフォリオをCSVで1回エクスポート" },
-  { match: "Use tickets to enter",      TH: "ใช้ตั๋วเข้าร่วมลุ้นรางวัลประจำเดือน",                JP: "チケットで月間抽選に参加" },
-  { match: "Buy 3 tickets",             TH: "ซื้อ 3 ใบในราคาประหยัด",                              JP: "3枚をお得に購入" },
-  { match: "Best value! 5",             TH: "คุ้มที่สุด! แพ็ค 5 ใบ",                               JP: "最もお得！5枚パック" },
-  { match: "Pro features for 7 days",   TH: "ใช้งานฟีเจอร์ Pro ได้ 7 วัน + แบดจ์พิเศษ",          JP: "Pro機能を7日間利用 + 限定バッジ" },
-  { match: "Pro features for 30 days",  TH: "ใช้งานฟีเจอร์ Pro ได้ 30 วัน + แบดจ์ Honey Elite + ตั๋วชิงรางวัลฟรี 1 ใบ", JP: "Pro機能を30日間利用 + Honey Eliteバッジ + 抽選チケット1枚" },
-  { match: "Pro+ features for 30 days", TH: "ใช้งานฟีเจอร์ Pro+ ได้ 30 วัน + แบดจ์พิเศษ + ตั๋วชิงรางวัลฟรี 2 ใบ", JP: "Pro+機能を30日間利用 + 限定バッジ + 抽選チケット2枚" },
-];
-
-function localizedDesc(desc: string | null, lang: Language): string {
-  if (!desc) return "";
-  if (lang === "EN") return desc.replace(/Honey Pass/gi, "Honey");
-  const entry = DESC_I18N.find((d) => desc.toLowerCase().includes(d.match.toLowerCase()));
-  return entry ? entry[lang] : desc.replace(/Honey Pass/gi, "Honey");
-}
 
 export function ShopTab({
   lang,
@@ -66,9 +37,8 @@ export function ShopTab({
     : shopItems.filter((i) => i.type === shopFilter);
 
   const catLabel = (cat: string) => {
-    const labels = SHOP_CAT_LABELS[cat];
-    if (!labels) return cat;
-    return labels[lang] ?? labels.EN;
+    if (cat === "ALL") return ALL_LABEL[lang];
+    return localizedShopType(cat, lang);
   };
 
   return (
@@ -125,7 +95,7 @@ export function ShopTab({
                   </div>
                 </div>
                 {item.description && (
-                  <p className="mb-3 text-meta line-clamp-2">{localizedDesc(item.description, lang)}</p>
+                  <p className="mb-3 text-meta line-clamp-2">{localizedShopDesc(item.description, lang)}</p>
                 )}
                 <div className="mt-auto flex items-center justify-between">
                   <span className="text-sm font-bold tabular-nums text-primary">

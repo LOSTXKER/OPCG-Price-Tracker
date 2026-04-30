@@ -14,6 +14,7 @@ import { buttonVariants } from "@/components/ui/button-variants";
 import { ListingStatus, OrderStatus } from "@/generated/prisma/client";
 import { getAuthUser } from "@/lib/api/auth";
 import { prisma } from "@/lib/db";
+import { assertMarketplaceEnabled } from "@/lib/marketplace/feature-flag";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { cn } from "@/lib/utils";
@@ -72,6 +73,7 @@ function timeAgo(date: Date): string {
 }
 
 export default async function ListingDetailPage({ params }: PageProps) {
+  await assertMarketplaceEnabled();
   const { listingId: idParam } = await params;
   const listingId = Number(idParam);
   if (!Number.isInteger(listingId) || listingId < 1) {

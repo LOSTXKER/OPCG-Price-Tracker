@@ -18,6 +18,7 @@ import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { adminFetch } from "@/lib/admin/admin-fetch";
 import { useAdminCrud } from "@/lib/admin/use-admin-crud";
+import { localizedName, localizedShopDesc, localizedShopType } from "@/app/honey/types";
 
 type ShopItem = {
   id: number;
@@ -33,17 +34,14 @@ type ShopItem = {
   createdAt: string;
 };
 
-const TYPE_LABELS: Record<string, string> = {
-  TRIAL_PRO: "ทดลอง Pro",
-  TRIAL_PRO_PLUS: "ทดลอง Pro+",
-  BADGE: "แบดจ์",
-  CUSTOM: "กำหนดเอง",
-};
-
 const TYPE_COLORS: Record<string, string> = {
   TRIAL_PRO: "status-info",
   TRIAL_PRO_PLUS: "bg-purple-500/10 text-purple-500",
   BADGE: "status-warning",
+  PROFILE_FRAME: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  PRICE_ALERT_SLOT: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+  CSV_EXPORT_PASS: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+  RAFFLE_TICKET: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
   CUSTOM: "status-success",
 };
 
@@ -145,10 +143,12 @@ export function HoneyShopManager({ initialItems }: { initialItems: ShopItem[] })
                         )}
                         <div className="min-w-0">
                           <p className="truncate font-medium">
-                            {item.nameEn ?? item.name}
+                            {localizedName(item, "TH")}
                           </p>
                           {item.description && (
-                            <p className="mt-0.5 truncate text-meta">{item.description}</p>
+                            <p className="mt-0.5 truncate text-meta">
+                              {localizedShopDesc(item.description, "TH")}
+                            </p>
                           )}
                         </div>
                       </div>
@@ -159,7 +159,7 @@ export function HoneyShopManager({ initialItems }: { initialItems: ShopItem[] })
                           TYPE_COLORS[item.type] ?? "bg-muted"
                         }`}
                       >
-                        {TYPE_LABELS[item.type] ?? item.type}
+                        {localizedShopType(item.type, "TH")}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right">

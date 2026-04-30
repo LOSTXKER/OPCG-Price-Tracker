@@ -22,11 +22,18 @@ const SIZE = {
 export function WatchlistStar({
   cardId,
   size = "sm",
+  variant = "icon",
   className,
   showTooltip = true,
 }: {
   cardId: number
   size?: "sm" | "md"
+  /**
+   * - `icon`: bare icon button (default — used in tables/headers)
+   * - `chip`: square chip with visible surface and large tap target,
+   *   for use in card grid action rows.
+   */
+  variant?: "icon" | "chip"
   className?: string
   showTooltip?: boolean
 }) {
@@ -61,11 +68,19 @@ export function WatchlistStar({
         void toggle(cardId)
       }}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
+        "inline-flex shrink-0 items-center justify-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
+        variant === "chip"
+          ? "h-9 w-9 rounded-md border border-border/60 bg-muted/30 hover:border-amber-400/60 hover:bg-amber-400/10"
+          : "rounded-sm",
         loaded
-          ? "text-muted-foreground/40 hover:text-amber-400"
+          ? variant === "chip"
+            ? "text-muted-foreground hover:text-amber-500"
+            : "text-muted-foreground/40 hover:text-amber-400"
           : "pointer-events-none text-muted-foreground/20",
-        watched && "text-amber-400 hover:text-amber-500",
+        watched &&
+          (variant === "chip"
+            ? "border-amber-400/60 bg-amber-400/10 text-amber-500 hover:bg-amber-400/15"
+            : "text-amber-400 hover:text-amber-500"),
         limitHit && !watched && "animate-pulse text-destructive",
         className
       )}

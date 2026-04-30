@@ -140,7 +140,7 @@ export function SetDetailContent({
 
   const pill = (active: boolean) =>
     cn(
-      "shrink-0 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors",
+      "shrink-0 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
       active
         ? "border-border bg-muted text-foreground"
         : "border-transparent text-muted-foreground hover:bg-muted/60 hover:text-foreground"
@@ -150,26 +150,35 @@ export function SetDetailContent({
     <div className="space-y-4">
       {/* ── Single merged toolbar — sticky ── */}
       <div className="sticky top-0 z-30 -mx-4 bg-background/95 px-4 backdrop-blur-md md:top-[86px] md:-mx-6 md:px-6">
-        <div className="flex items-center gap-2 border-b border-border/40 py-2">
+        <div className="flex flex-col gap-1.5 border-b border-border/40 py-2 sm:flex-row sm:items-center sm:gap-2">
           {/* Left: rarity pills — scrollable */}
-          <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto scrollbar-none">
+          <div className="-mx-1 flex min-w-0 flex-1 items-center gap-1 overflow-x-auto px-1 scrollbar-none">
             <button onClick={() => setActiveRarity("all")} className={pill(activeRarity === "all")}>
               {t(lang, "allTab")}
             </button>
-            {groups.map((g) => (
-              <button
-                key={g.rarity}
-                onClick={() => setActiveRarity(g.rarity)}
-                className={cn(pill(activeRarity === g.rarity), "flex items-center gap-1.5")}
-              >
-                <RarityBadge rarity={g.rarity} size="sm" />
-                <span className="tabular-nums">{g.cards.length}</span>
-              </button>
-            ))}
+            {groups.map((g) => {
+              const active = activeRarity === g.rarity;
+              const dotColor = RARITY_HEX[g.rarity] ?? "var(--muted-foreground)";
+              return (
+                <button
+                  key={g.rarity}
+                  onClick={() => setActiveRarity(g.rarity)}
+                  className={cn(pill(active), "inline-flex items-center gap-1.5")}
+                >
+                  <span
+                    aria-hidden
+                    className="size-1.5 rounded-full"
+                    style={{ backgroundColor: dotColor }}
+                  />
+                  <span className="font-semibold uppercase tracking-wide">{g.rarity}</span>
+                  <span className="tabular-nums text-muted-foreground/80">{g.cards.length}</span>
+                </button>
+              );
+            })}
           </div>
 
-          {/* Right: controls — fixed */}
-          <div className="flex shrink-0 items-center gap-1.5 pl-2">
+          {/* Right: controls — sit on row 2 on mobile, inline on sm+ */}
+          <div className="flex shrink-0 items-center justify-end gap-1.5 sm:pl-2">
             {/* Period toggle */}
             <div className="flex items-center gap-0.5 rounded-full border border-border/50 p-0.5">
               <TrendingUpDown className="mx-1.5 size-3.5 text-muted-foreground/50" />
@@ -194,7 +203,7 @@ export function SetDetailContent({
               <button
                 onClick={() => setFilterOpen((o) => !o)}
                 className={cn(
-                  "relative flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors",
+                  "relative flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors",
                   filterOpen || advFilterCount > 0
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-muted/80 hover:text-foreground"
@@ -273,16 +282,20 @@ export function SetDetailContent({
       </div>
 
       {/* ── Card Sections ── */}
-      <div className="space-y-14">
+      <div className="space-y-12">
         {visibleGroups.map((g) => (
           <section key={g.rarity}>
             {/* Section header */}
-            <div className="mb-5 flex items-center gap-3 py-3">
-              <div className="h-px flex-1" style={{ background: `linear-gradient(to right, ${RARITY_HEX[g.rarity] ?? "var(--border)"}50, transparent)` }} />
-              <RarityBadge rarity={g.rarity} size="md" />
-              <h2 className="min-w-0 truncate text-h3">{g.name}</h2>
-              <span className="rounded-full bg-muted px-2 py-0.5 text-xs tabular-nums text-muted-foreground">{g.cards.length}</span>
-              <div className="h-px flex-1" style={{ background: `linear-gradient(to left, ${RARITY_HEX[g.rarity] ?? "var(--border)"}50, transparent)` }} />
+            <div className="mb-4 flex items-center gap-3">
+              <span
+                aria-hidden
+                className="h-4 w-1 rounded-full"
+                style={{ backgroundColor: RARITY_HEX[g.rarity] ?? "var(--border)" }}
+              />
+              <RarityBadge rarity={g.rarity} size="sm" />
+              <h2 className="min-w-0 truncate text-h4">{g.name}</h2>
+              <span className="text-xs tabular-nums text-muted-foreground">{g.cards.length}</span>
+              <div className="h-px flex-1 bg-border/40" />
             </div>
             <CardGrid>
               {g.cards.map((c) => (

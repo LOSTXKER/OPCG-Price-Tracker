@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ExternalLink } from "lucide-react"
+import { ArrowUpRight } from "lucide-react"
 
 import { CompareButton } from "@/components/shared/compare-button"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
@@ -9,9 +9,6 @@ import type { CardPreviewData } from "@/stores/card-preview-store"
 import { useUIStore } from "@/stores/ui-store"
 import { getCardName, t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
-
-const ICON_BTN =
-  "inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 
 export function CardActionRow({
   card,
@@ -34,38 +31,36 @@ export function CardActionRow({
 
   return (
     <div
-      className={cn("flex items-center justify-between gap-1 px-1", className)}
+      className={cn("flex items-center gap-1.5", className)}
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="flex items-center gap-1">
-        {show.watchlist && card.cardId != null && (
-          <WatchlistStar cardId={card.cardId} size="sm" />
-        )}
-        {show.compare && (
-          <CompareButton
-            item={{
-              cardCode: card.cardCode,
-              name,
-              imageUrl: card.imageUrl ?? null,
-              rarity: card.rarity,
-            }}
-            size="sm"
-          />
-        )}
-      </div>
-      <div className="flex items-center gap-0.5">
-        {extras}
-        {show.detail && (
-          <Link
-            href={`/cards/${card.cardCode}`}
-            onClick={(e) => e.stopPropagation()}
-            aria-label={t(lang, "viewDetails")}
-            className={cn(ICON_BTN, "hover:text-primary")}
-          >
-            <ExternalLink className="size-3.5" />
-          </Link>
-        )}
-      </div>
+      {show.watchlist && card.cardId != null && (
+        <WatchlistStar cardId={card.cardId} size="sm" variant="chip" />
+      )}
+      {show.compare && (
+        <CompareButton
+          item={{
+            cardCode: card.cardCode,
+            name,
+            imageUrl: card.imageUrl ?? null,
+            rarity: card.rarity,
+          }}
+          size="sm"
+          variant="chip"
+        />
+      )}
+      {extras}
+      {show.detail && (
+        <Link
+          href={`/cards/${card.cardCode}`}
+          onClick={(e) => e.stopPropagation()}
+          aria-label={t(lang, "viewDetails")}
+          className="ml-auto inline-flex h-9 flex-1 items-center justify-center gap-1 rounded-md px-2 text-xs font-medium text-muted-foreground transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
+        >
+          <span className="truncate">{t(lang, "viewDetails")}</span>
+          <ArrowUpRight className="size-3.5 shrink-0" />
+        </Link>
+      )}
     </div>
   )
 }

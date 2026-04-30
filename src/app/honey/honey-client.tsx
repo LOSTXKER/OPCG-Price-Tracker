@@ -78,7 +78,7 @@ function HoneyContent() {
     mission, level, lifetimeEarned, achievements,
     machines, myTickets, ticketBalance, canClaimFree, lastWinners,
     raffleMissions,
-    activeEvent,
+    activeEvent, tierMultiplier,
     referralUrl, referralTotalClicks, referralTodayClicks, referralConversions, referralEarned,
     loading, message, setMessage,
     actions,
@@ -134,6 +134,7 @@ function HoneyContent() {
     level,
     lifetimeEarned,
     activeEvent,
+    tierMultiplier,
     shopItems,
   } as const;
 

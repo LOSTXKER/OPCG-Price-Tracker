@@ -87,6 +87,64 @@ export function localizedTitle(
   return item.title;
 }
 
+/* ── Honey Shop localization helpers ──
+ * Shared between the user-facing shop tab (`/honey`) and the admin shop
+ * manager (`/admin/honey/shop`) so both render the same translated labels and
+ * descriptions. The pattern-matched description map exists because the DB
+ * `HoneyShopItem.description` column is single-language (English seed copy);
+ * see `scripts/seed-honey-shop.ts`.
+ */
+
+export const SHOP_TYPE_LABELS: Record<string, Record<Language, string>> = {
+  TRIAL_PRO:        { TH: "แพ็กเกจ",             EN: "Package",       JP: "パッケージ" },
+  TRIAL_PRO_PLUS:   { TH: "แพ็กเกจ",             EN: "Package",       JP: "パッケージ" },
+  PROFILE_FRAME:    { TH: "กรอบโปรไฟล์",         EN: "Frames",        JP: "フレーム" },
+  BADGE:            { TH: "แบดจ์",               EN: "Badges",        JP: "バッジ" },
+  PRICE_ALERT_SLOT: { TH: "ช่องแจ้งเตือนราคา",   EN: "Alert Slot",    JP: "アラート枠" },
+  CSV_EXPORT_PASS:  { TH: "สิทธิ์ส่งออก CSV",    EN: "CSV Export",    JP: "CSVエクスポート" },
+  RAFFLE_TICKET:    { TH: "ตั๋วลุ้นรางวัล",      EN: "Raffle Ticket", JP: "抽選チケット" },
+  CUSTOM:           { TH: "กำหนดเอง",            EN: "Other",         JP: "その他" },
+};
+
+export function localizedShopType(type: string, lang: Language): string {
+  const entry = SHOP_TYPE_LABELS[type];
+  if (!entry) return type;
+  return entry[lang] ?? entry.EN;
+}
+
+const SHOP_DESC_I18N: { match: string; TH: string; EN?: string; JP: string }[] = [
+  { match: "entry-level bronze frame",  TH: "กรอบโปรไฟล์ทองแดงสำหรับผู้เริ่มต้น",                JP: "プロフィール用のブロンズフレーム（入門）" },
+  { match: "shiny gold frame",          TH: "กรอบโปรไฟล์สีทองสุดพิเศษ",                          JP: "プロフィール用のゴールドフレーム" },
+  { match: "diamond frame",             TH: "กรอบโปรไฟล์เพชรสุดพรีเมียม",                        JP: "プロフィール用のダイヤモンドフレーム" },
+  { match: "fiery frame",               TH: "กรอบโปรไฟล์ลายไฟสุดเท่",                            JP: "プロフィール用の炎フレーム" },
+  { match: "Boost your latest active",  TH: "ดันประกาศที่ใช้งานอยู่ล่าสุดขึ้นด้านบน 24 ชั่วโมง",   JP: "最新の出品を24時間トップに表示" },
+  { match: "Boost your listing",        TH: "ดันรายการขายของคุณขึ้นด้านบน 24 ชั่วโมง",            JP: "出品を24時間トップに表示" },
+  { match: "active listings stay boosted", TH: "ประกาศที่ใช้งานอยู่ทั้งหมดถูกดันต่อเนื่อง 7 วัน",  JP: "全アクティブ出品を7日間ブースト" },
+  { match: "auto-pricing for all",      TH: "ปลดล็อกตั้งราคาอัตโนมัติให้ทุกประกาศเป็นเวลา 7 วัน",   JP: "全出品の自動価格を7日間解放" },
+  { match: "alerts on LINE",            TH: "รับการแจ้งเตือนราคา + ตลาด ผ่าน LINE เป็นเวลา 7 วัน",  JP: "LINEで価格・市場通知を7日間受信" },
+  { match: "bulk price-lookup credits", TH: "เพิ่มเครดิตค้นหาราคาแบบกลุ่ม 50 ครั้ง (ใช้ครั้งเดียว)",  JP: "一括価格検索クレジットを50追加（単発）" },
+  { match: "Mini Kuma pet skin",        TH: "สกินเพ็ต Mini Kuma สำหรับโปรไฟล์",                    JP: "プロフィール用のミニクマペットスキン" },
+  { match: "extra price alert",         TH: "เพิ่มช่องแจ้งเตือนราคาถาวร +1 ช่อง",                JP: "価格アラート枠を1つ追加（永久）" },
+  { match: "extra watchlist slots",     TH: "เพิ่มช่องวอชลิสต์ถาวร +5 ช่อง",                      JP: "ウォッチリスト枠を5つ追加（永久）" },
+  { match: "Kuma badge",                TH: "แบดจ์ Kuma สุดพิเศษบนโปรไฟล์ของคุณ",                JP: "プロフィールにKumaバッジを表示" },
+  { match: "Export your portfolio",     TH: "ส่งออกพอร์ตโฟลิโอเป็นไฟล์ CSV 1 ครั้ง",            JP: "ポートフォリオをCSVで1回エクスポート" },
+  { match: "Use tickets to enter",      TH: "ใช้ตั๋วเข้าร่วมลุ้นรางวัลประจำเดือน",                JP: "チケットで月間抽選に参加" },
+  { match: "Buy 3 tickets",             TH: "ซื้อ 3 ใบในราคาประหยัด",                              JP: "3枚をお得に購入" },
+  { match: "Best value! 5",             TH: "คุ้มที่สุด! แพ็ค 5 ใบ",                               JP: "最もお得！5枚パック" },
+  { match: "Pro features for 7 days",   TH: "ใช้งานฟีเจอร์ Pro ได้ 7 วัน + แบดจ์พิเศษ",          JP: "Pro機能を7日間利用 + 限定バッジ" },
+  { match: "Pro features for 30 days",  TH: "ใช้งานฟีเจอร์ Pro ได้ 30 วัน + แบดจ์ Honey Elite + ตั๋วชิงรางวัลฟรี 1 ใบ", JP: "Pro機能を30日間利用 + Honey Eliteバッジ + 抽選チケット1枚" },
+  { match: "Pro features for 90 days",  TH: "ใช้งานฟีเจอร์ Pro ได้ 90 วัน + แบดจ์ Mega + ตั๋วชิงรางวัล 3 ใบ + กรอบไฟ", JP: "Pro機能を90日間利用 + Megaバッジ + 抽選チケット3枚 + 炎フレーム" },
+  { match: "Pro+ features for 30 days", TH: "ใช้งานฟีเจอร์ Pro+ ได้ 30 วัน + แบดจ์พิเศษ + ตั๋วชิงรางวัลฟรี 2 ใบ", JP: "Pro+機能を30日間利用 + 限定バッジ + 抽選チケット2枚" },
+];
+
+export function localizedShopDesc(desc: string | null, lang: Language): string {
+  if (!desc) return "";
+  if (lang === "EN") return desc.replace(/Honey Pass/gi, "Honey");
+  const entry = SHOP_DESC_I18N.find((d) => desc.toLowerCase().includes(d.match.toLowerCase()));
+  if (!entry) return desc.replace(/Honey Pass/gi, "Honey");
+  return lang === "JP" ? entry.JP : entry.TH;
+}
+
 /* ── Transaction display helpers ── */
 
 const MISSION_ID_TO_LABEL: Record<string, TranslationKey> = {

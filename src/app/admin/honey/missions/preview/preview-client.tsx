@@ -67,7 +67,6 @@ export function PreviewClient() {
             <thead>
               <tr className="border-b border-border/50 bg-muted/30">
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">#</th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">โค้ด</th>
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">ชื่อ</th>
                 <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">เป้าหมาย</th>
                 <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">รางวัล</th>
@@ -80,7 +79,6 @@ export function PreviewClient() {
                   className="border-b border-border/20 transition-colors hover:bg-muted/20"
                 >
                   <td className="px-4 py-3 text-muted-foreground">{i + 1}</td>
-                  <td className="px-4 py-3 font-mono text-xs">{m.code}</td>
                   <td className="px-4 py-3">{m.name}</td>
                   <td className="px-4 py-3 text-right tabular-nums">{m.target}</td>
                   <td className="px-4 py-3 text-right font-bold tabular-nums text-warning">

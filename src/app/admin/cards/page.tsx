@@ -6,7 +6,15 @@ export const dynamic = "force-dynamic";
 async function getFilterOptions() {
   const [sets, rarities] = await Promise.all([
     prisma.cardSet.findMany({
-      select: { code: true, name: true, nameEn: true },
+      select: {
+        code: true,
+        name: true,
+        nameEn: true,
+        nameTh: true,
+        type: true,
+        boxImageUrl: true,
+        releaseDate: true,
+      },
       orderBy: { code: "asc" },
     }),
     prisma.card.findMany({
@@ -19,7 +27,12 @@ async function getFilterOptions() {
   return {
     sets: sets.map((s) => ({
       code: s.code,
-      label: s.nameEn || s.name,
+      name: s.name,
+      nameEn: s.nameEn,
+      nameTh: s.nameTh,
+      type: s.type,
+      imageUrl: s.boxImageUrl,
+      releaseDate: s.releaseDate ? s.releaseDate.toISOString() : null,
     })),
     rarities: rarities.map((r) => r.rarity),
   };

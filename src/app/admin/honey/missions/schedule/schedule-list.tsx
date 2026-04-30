@@ -98,8 +98,8 @@ export function ScheduleList({
                   key={r.id}
                   className="border-b border-border/20 transition-colors hover:bg-muted/20"
                 >
-                  <td className="px-4 py-3 font-mono text-xs">
-                    {r.template?.code ?? r.templateId}
+                  <td className="px-4 py-3">
+                    {r.template?.name ?? `#${r.templateId}`}
                   </td>
                   <td className="px-4 py-3">
                     <Badge variant="secondary">

@@ -3,10 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { Clock, Search, X } from "lucide-react"
+import { Camera, Clock, Search, X } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
+import { PhotoSearchButton } from "@/app/search/photo-search-button"
 import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
@@ -140,7 +141,7 @@ export function HeroSearchBar() {
             type="text"
             placeholder={t(lang, "searchLong")}
             className={cn(
-              "h-12 w-full border border-r-0 border-border/60 bg-card pl-12 pr-11 text-sm shadow-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-2 focus:ring-primary/20",
+              "h-12 w-full border border-r-0 border-border/60 bg-card pl-12 pr-20 text-sm shadow-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-2 focus:ring-primary/20",
               hasDropdown ? "rounded-tl-xl" : "rounded-l-xl"
             )}
             value={query}
@@ -149,16 +150,32 @@ export function HeroSearchBar() {
             onKeyDown={handleKeyDown}
             autoComplete="off"
           />
-          {query && (
-            <button
-              type="button"
-              aria-label="Clear search"
-              onClick={() => { setQuery(""); setResults([]); inputRef.current?.focus() }}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            >
-              <X className="size-4" />
-            </button>
-          )}
+          <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-0.5">
+            {query && (
+              <button
+                type="button"
+                aria-label="Clear search"
+                onClick={() => { setQuery(""); setResults([]); inputRef.current?.focus() }}
+                className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                <X className="size-4" />
+              </button>
+            )}
+            <span aria-hidden className="h-5 w-px bg-border/60" />
+            <PhotoSearchButton
+              trigger={
+                <button
+                  type="button"
+                  aria-label={t(lang, "photoSearchTitle")}
+                  title={t(lang, "photoSearchTitle")}
+                  onClick={() => setOpen(false)}
+                  className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
+                >
+                  <Camera className="size-5" />
+                </button>
+              }
+            />
+          </div>
         </div>
         <button
           type="submit"

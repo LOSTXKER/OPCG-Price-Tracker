@@ -22,6 +22,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select"
+import { SetPicker } from "@/components/shared/set-picker"
 import { GridCard, GridCardSkeleton } from "@/components/home/grid-card"
 import { CardGrid } from "@/components/cards/card-grid"
 import { t } from "@/lib/i18n"
@@ -41,10 +42,17 @@ import { SearchTableRow, type CardRow } from "./search-table-row"
 import { SearchPagination } from "./search-pagination"
 import { PhotoSearchButton } from "./photo-search-button"
 
-const ALL_SETS = "__all_sets__"
 const ALL_RARITIES = "__all_rarities__"
 
-type SetOption = { code: string; name: string }
+type SetOption = {
+  code: string
+  name: string
+  nameEn: string | null
+  nameTh?: string | null
+  type: string
+  imageUrl?: string | null
+  releaseDate?: string | null
+}
 
 const SORT_KEYS: { value: SortKey; key: "sortPriceDesc" | "sortPriceAsc" | "sortGain24h" | "sortLoss24h" | "sortGain7d" | "sortLoss7d" | "sortNewest" | "sortNameAz" }[] = [
   { value: "price_desc", key: "sortPriceDesc" },
@@ -252,26 +260,15 @@ function SearchContent({
 
           <div className="flex flex-wrap items-center gap-2 border-t border-border/40 bg-muted/20 px-4 py-2.5">
             {sets.length > 0 && (
-              <Select
-                value={selectedSet || ALL_SETS}
-                onValueChange={(v) => handleSetChange(v === ALL_SETS ? "" : v ?? "")}
-              >
-                <SelectTrigger size="sm" className="h-9 min-w-0 flex-1 sm:flex-none sm:min-w-[170px]">
-                  <span data-slot="select-value" className="flex flex-1 items-center gap-1.5 truncate text-left">
-                    {selectedSet
-                      ? sets.find((s) => s.code === selectedSet)?.name ?? selectedSet
-                      : t(lang, "allSets")}
-                  </span>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={ALL_SETS}>{t(lang, "allSets")}</SelectItem>
-                  {sets.map((s) => (
-                    <SelectItem key={s.code} value={s.code}>
-                      {s.code.toUpperCase()} · {s.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="min-w-0 flex-1 sm:flex-none sm:w-[220px]">
+                <SetPicker
+                  sets={sets}
+                  selectedCode={selectedSet || null}
+                  onSelect={(code) => handleSetChange(code ?? "")}
+                  variant="inline"
+                  nullable
+                />
+              </div>
             )}
 
             {rarities.length > 0 && (

@@ -64,6 +64,7 @@ interface MobileMenuSheetProps {
   honeyPendingActions: boolean;
   unreadMessages: number;
   mounted: boolean;
+  marketplaceEnabled: boolean;
   onLogout: () => Promise<void>;
 }
 
@@ -132,6 +133,7 @@ export function MobileMenuSheet({
   honeyPendingActions,
   unreadMessages,
   mounted,
+  marketplaceEnabled,
   onLogout,
 }: MobileMenuSheetProps) {
   const pathname = usePathname() ?? "/";
@@ -233,12 +235,20 @@ export function MobileMenuSheet({
             <>
               <SectionLabel>{language === "TH" ? "บัญชีของฉัน" : language === "JP" ? "マイアカウント" : "My Account"}</SectionLabel>
               <MenuLink href="/portfolio" icon={Star} label={t(language, "portfolioNav")} pathname={pathname} onNav={close} />
-              <MenuLink href="/orders" icon={ShoppingBag} label={language === "TH" ? "คำสั่งซื้อ" : language === "JP" ? "購入履歴" : "My Orders"} pathname={pathname} onNav={close} />
-              <MenuLink href="/saved" icon={Heart} label={language === "TH" ? "รายการที่บันทึก" : language === "JP" ? "保存済み" : "Saved"} pathname={pathname} onNav={close} />
+              {marketplaceEnabled && (
+                <>
+                  <MenuLink href="/orders" icon={ShoppingBag} label={language === "TH" ? "คำสั่งซื้อ" : language === "JP" ? "購入履歴" : "My Orders"} pathname={pathname} onNav={close} />
+                  <MenuLink href="/saved" icon={Heart} label={language === "TH" ? "รายการที่บันทึก" : language === "JP" ? "保存済み" : "Saved"} pathname={pathname} onNav={close} />
+                </>
+              )}
               <MenuLink href="/settings/alerts" icon={BellRing} label={t(language, "managePriceAlerts")} pathname={pathname} onNav={close} />
-              <MenuLink href="/messages" icon={MessageCircle} label={t(language, "messagesTitle")} badge={unreadMessages} pathname={pathname} onNav={close} />
+              {marketplaceEnabled && (
+                <MenuLink href="/messages" icon={MessageCircle} label={t(language, "messagesTitle")} badge={unreadMessages} pathname={pathname} onNav={close} />
+              )}
               <MenuLink href="/honey" icon={Sparkles} label="Honey" pendingDot={honeyPendingActions} pathname={pathname} onNav={close} />
-              <MenuLink href="/seller" icon={Store} label={language === "TH" ? "ศูนย์ผู้ขาย" : language === "JP" ? "販売センター" : "Seller Center"} pathname={pathname} onNav={close} />
+              {marketplaceEnabled && (
+                <MenuLink href="/seller" icon={Store} label={language === "TH" ? "ศูนย์ผู้ขาย" : language === "JP" ? "販売センター" : "Seller Center"} pathname={pathname} onNav={close} />
+              )}
             </>
           )}
 

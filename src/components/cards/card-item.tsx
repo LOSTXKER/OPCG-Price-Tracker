@@ -4,9 +4,6 @@ import { memo } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
-import { Shield } from "lucide-react"
-
-import { CardImageButton } from "@/components/shared/card-image-button"
 import { CardActionRow } from "@/components/shared/card-action-row"
 import { PriceDisplay } from "@/components/shared/price-display"
 import { PriceUsd } from "@/components/shared/price-usd"
@@ -42,6 +39,14 @@ export interface CardItemProps {
    */
   pullChancePerBox?: number
   psa10PriceUsd?: number | null
+  /**
+   * Override the bottom action row.
+   * - `undefined` (default): render the standard star/compare/detail row
+   * - `null`: hide the action row entirely
+   * - ReactNode: render the provided node in place of the default row
+   *   (caller is responsible for its own border/padding)
+   */
+  actionRow?: React.ReactNode | null
 }
 
 function CardItemBase({
@@ -60,6 +65,7 @@ function CardItemBase({
   changePeriod = "7d",
   setCode,
   psa10PriceUsd,
+  actionRow,
 }: CardItemProps) {
   const lang = useUIStore((s) => s.language)
   const displayName = getCardName(lang, { nameEn, nameJp, nameTh })
@@ -89,10 +95,13 @@ function CardItemBase({
 
   return (
     <div className="panel group/card relative flex h-full flex-col overflow-hidden border border-transparent transition-colors hover:border-border">
-      <CardImageButton
-        card={previewCard}
-        className="relative aspect-[63/88] w-full bg-muted"
-      >
+      <Link
+        href={`/cards/${cardCode}`}
+        aria-label={displayName}
+        className="absolute inset-0 z-10 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      />
+
+      <div className="relative aspect-[63/88] w-full bg-muted">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -106,10 +115,10 @@ function CardItemBase({
         ) : (
           <Skeleton className="absolute inset-0 size-full" />
         )}
-      </CardImageButton>
+      </div>
 
       <div className="flex flex-1 flex-col p-2.5">
-        <div className="mb-1 flex items-center gap-1.5">
+        <div className="mb-0.5 flex items-center gap-1.5">
           <RarityBadge rarity={rarity} size="sm" />
           {setCode && (
             <span className="font-mono text-xs text-muted-foreground">
@@ -117,34 +126,37 @@ function CardItemBase({
             </span>
           )}
         </div>
-        <Link
-          href={`/cards/${cardCode}`}
-          className="block truncate text-sm font-medium leading-snug hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          title={displayName}
-        >
+        <p className="truncate text-xs leading-snug text-muted-foreground" title={displayName}>
           {displayName}
-        </Link>
+        </p>
         <div className="mt-auto pt-1.5">
           <PriceDisplay
             priceJpy={priceJpy}
             priceThb={priceThb ?? undefined}
             change={activeChange ?? undefined}
-            size="sm"
+            size="card"
+            className="gap-x-1.5"
           />
-          {psa10PriceUsd != null && (
-            <div className="mt-0.5 flex items-center gap-1">
-              <Shield className="size-3 text-amber-500" />
-              <PriceUsd usd={psa10PriceUsd} className="text-meta" />
-            </div>
-          )}
+          <div className="mt-1 flex items-baseline gap-1.5 text-meta">
+            <span className="font-medium text-amber-500">PSA 10</span>
+            {psa10PriceUsd != null ? (
+              <PriceUsd usd={psa10PriceUsd} className="text-foreground/70" />
+            ) : (
+              <span className="font-price text-muted-foreground/60">—</span>
+            )}
+          </div>
         </div>
       </div>
 
-      <CardActionRow
-        card={previewCard}
-        show={{ detail: true, watchlist: cardId != null, compare: true }}
-        className="border-t border-border/60 px-2 py-1"
-      />
+      {actionRow === undefined ? (
+        <CardActionRow
+          card={previewCard}
+          show={{ detail: true, watchlist: cardId != null, compare: true }}
+          className="relative z-20 border-t border-border/60 p-2"
+        />
+      ) : actionRow === null ? null : (
+        actionRow
+      )}
     </div>
   )
 }

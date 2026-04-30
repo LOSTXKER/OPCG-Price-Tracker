@@ -4,7 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
-import { invalidateSettings } from "@/hooks/use-settings";
+import { invalidateSettings, useSettings } from "@/hooks/use-settings";
+import { effectiveTier, getLimits } from "@/lib/billing";
+import type { UserTier } from "@/generated/prisma/client";
 import type {
   HoneyTx,
   ShopItem,
@@ -20,6 +22,15 @@ import type {
 
 export function useHoneyData() {
   const lang = useUIStore((s) => s.language);
+  const { settings } = useSettings();
+  // Mirror server logic in `getHoneyMultiplier` (lib/honey/index.ts) so the UI
+  // pill matches what the earn pipeline actually applies.
+  const tierMultiplier = (() => {
+    if (!settings) return 1;
+    const rawTier = (settings.tier ?? "FREE") as UserTier;
+    const expiresAt = settings.tierExpiresAt ? new Date(settings.tierExpiresAt) : null;
+    return getLimits(effectiveTier(rawTier, expiresAt)).honeyMultiplier;
+  })();
 
   const [points, setPoints] = useState(0);
   const [streak, setStreak] = useState(0);
@@ -292,6 +303,7 @@ export function useHoneyData() {
     machines, myTickets, ticketBalance, canClaimFree, lastWinners,
     raffleMissions,
     activeEvent,
+    tierMultiplier,
     referralUrl, referralTotalClicks, referralTodayClicks, referralConversions, referralEarned,
     loading, message, setMessage,
     actions: { checkin, redeem, buyTicket, claimFreeTicket, claimTask, claimBonus, trackManualMission, trackRaffleMission, claimRaffleMission, claimRaffleMissionBonusAction },

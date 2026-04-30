@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react"
 
-import { useConfirm } from "@/components/shared/confirm-dialog"
 import { EmptyState } from "@/components/shared/empty-state"
 import { getCardName, t } from "@/lib/i18n"
 import type { AssetRow } from "@/lib/types/portfolio"
@@ -43,7 +42,6 @@ export function PortfolioAssetsTable({
   const [sortDir, setSortDir] = useState<SortDir>("desc")
   const [editOpen, setEditOpen] = useState(false)
   const [editFocusId, setEditFocusId] = useState<number | null>(null)
-  const confirm = useConfirm()
 
   const filteredAssets = useMemo(() => {
     let result = assets
@@ -77,18 +75,6 @@ export function PortfolioAssetsTable({
     setEditOpen(true)
   }
 
-  const handleRemove = async (row: AssetRow) => {
-    const name = getCardName(lang as "TH" | "EN" | "JP", row)
-    const ok = await confirm({
-      title: `${t(lang, "remove")} ${name}`,
-      description: t(lang, "confirmRemoveCard"),
-      confirmLabel: t(lang, "remove"),
-      cancelLabel: t(lang, "cancel"),
-      variant: "destructive",
-    })
-    if (ok) onRemove(row.itemId)
-  }
-
   return (
     <>
       <AssetsToolbar
@@ -116,7 +102,6 @@ export function PortfolioAssetsTable({
                 row={row}
                 lang={lang}
                 onEdit={() => openEdit(row)}
-                onRemove={() => void handleRemove(row)}
                 hideBalance={hideBalance}
               />
             ))}
@@ -126,7 +111,6 @@ export function PortfolioAssetsTable({
             rows={filteredAssets}
             lang={lang}
             onEdit={openEdit}
-            onRemove={(row) => void handleRemove(row)}
             hideBalance={hideBalance}
           />
         </>

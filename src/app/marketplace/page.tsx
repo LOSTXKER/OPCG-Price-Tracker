@@ -8,6 +8,7 @@ import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
+import { assertMarketplaceEnabled } from "@/lib/marketplace/feature-flag";
 import { MarketplaceErrorState } from "./marketplace-error-state";
 
 export const dynamic = "force-dynamic";
@@ -31,6 +32,7 @@ export default async function MarketplacePage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
+  await assertMarketplaceEnabled();
   const params = await searchParams;
   const rawSeller = Array.isArray(params.seller) ? params.seller[0] : params.seller;
   const sellerKey = (rawSeller ?? "").trim().replace(/^@/, "").slice(0, 60);

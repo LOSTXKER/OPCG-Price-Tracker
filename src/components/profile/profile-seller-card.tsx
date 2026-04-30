@@ -1,6 +1,13 @@
 "use client";
 
-import { BadgeCheck, Clock, MessageSquareQuote, Package, ShieldCheck, Star } from "lucide-react";
+import {
+  BadgeCheck,
+  Clock,
+  MessageSquareQuote,
+  Package,
+  Star,
+  type LucideIcon,
+} from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useUIStore } from "@/stores/ui-store";
@@ -16,33 +23,35 @@ function formatResponse(lang: Language, hours: number | null): string {
   return t(lang, "responseDays").replace("{n}", String(days));
 }
 
+/**
+ * Seller credentials, rendered as an inline meta row directly under the
+ * hero. We deliberately do NOT use a card container here — the previous
+ * version was a tall card with three stat-tiles, which felt like a heavy
+ * "panel" that overpowered the rest of the hero stack for what's really
+ * just three numbers. Now it reads as quiet supporting metadata, leaving
+ * `ProfileTrustBlock` (commerce/shipping facts) to be the visible
+ * trust card for visitors.
+ *
+ * The optional top-review block is moved into a sibling card below the
+ * meta row so the row itself stays one line on most viewports.
+ */
 export function ProfileSellerCard({ stats }: { stats: SellerStats }) {
   const lang = useUIStore((s) => s.language);
 
   const hasAnything =
-    stats.reviewCount > 0 || stats.completedDeals > 0 || stats.rating != null || stats.responseHours != null;
+    stats.reviewCount > 0 ||
+    stats.completedDeals > 0 ||
+    stats.rating != null ||
+    stats.responseHours != null;
 
   if (!hasAnything) return null;
 
   return (
-    <div className="rounded-2xl border border-border/40 bg-card p-5">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm font-semibold">
-          <ShieldCheck className="size-4 text-blue-500" />
-          {t(lang, "sellerCredentials")}
-        </div>
-        {stats.isVerified && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2 py-0.5 text-micro text-blue-600 dark:text-blue-400">
-            <BadgeCheck className="size-3" />
-            {t(lang, "sellerVerified")}
-          </span>
-        )}
-      </div>
-
-      <div className="mt-3 grid grid-cols-3 gap-2">
+    <div aria-label={t(lang, "sellerCredentials")} className="mt-3 space-y-3">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-meta">
         <SellerStat
           icon={Star}
-          iconClass="text-amber-400 fill-amber-400"
+          iconClass="fill-amber-400 text-amber-400"
           value={stats.rating != null ? stats.rating.toFixed(1) : "—"}
           subValue={stats.reviewCount > 0 ? `(${stats.reviewCount})` : undefined}
           label={t(lang, "profileSellerRating")}
@@ -56,15 +65,20 @@ export function ProfileSellerCard({ stats }: { stats: SellerStats }) {
           icon={Clock}
           value={formatResponse(lang, stats.responseHours)}
           label={t(lang, "sellerResponseTime")}
-          smallValue
         />
+        {stats.isVerified && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2 py-0.5 text-micro text-blue-600 dark:text-blue-400">
+            <BadgeCheck className="size-3" />
+            {t(lang, "sellerVerified")}
+          </span>
+        )}
       </div>
 
       {stats.topReview?.comment && (
-        <div className="mt-4 rounded-xl border border-border/40 bg-card/50 p-3">
+        <div className="rounded-xl border border-border/50 bg-card/40 px-4 py-3 sm:px-5">
           <div className="flex items-center gap-2">
             <MessageSquareQuote className="size-3.5 text-muted-foreground" />
-            <p className="text-xs font-medium text-muted-foreground">{t(lang, "sellerTopReview")}</p>
+            <p className="text-eyebrow">{t(lang, "sellerTopReview")}</p>
           </div>
           <div className="mt-2 flex items-start gap-2">
             <Avatar className="size-7 shrink-0">
@@ -74,7 +88,7 @@ export function ProfileSellerCard({ stats }: { stats: SellerStats }) {
             </Avatar>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5">
-                <span className="text-xs font-medium">
+                <span className="text-body-sm font-medium">
                   {stats.topReview.reviewerName ?? "User"}
                 </span>
                 <div className="flex items-center gap-0.5">
@@ -91,7 +105,7 @@ export function ProfileSellerCard({ stats }: { stats: SellerStats }) {
                   ))}
                 </div>
               </div>
-              <p className="mt-1 line-clamp-3 text-xs text-foreground/80">
+              <p className="mt-1 line-clamp-3 text-body-sm text-foreground/80">
                 {stats.topReview.comment}
               </p>
             </div>
@@ -108,23 +122,27 @@ function SellerStat({
   value,
   subValue,
   label,
-  smallValue,
 }: {
-  icon: typeof Star;
+  icon: LucideIcon;
   iconClass?: string;
   value: string;
   subValue?: string;
   label: string;
-  smallValue?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-border/40 bg-card/50 px-3 py-2.5 text-center">
-      <Icon className={cn("mx-auto mb-1 size-3.5 text-muted-foreground/60", iconClass)} />
-      <p className={cn("font-bold tabular-nums leading-none", smallValue ? "text-xs" : "text-lg")}>
+    <span
+      className="inline-flex items-center gap-1.5 whitespace-nowrap"
+      title={label}
+    >
+      <Icon
+        aria-hidden
+        className={cn("size-3.5 shrink-0 text-muted-foreground/70", iconClass)}
+      />
+      <span className="font-semibold tabular-nums text-foreground/85">
         {value}
-        {subValue && <span className="ml-1 text-overlay font-normal text-muted-foreground">{subValue}</span>}
-      </p>
-      <p className="mt-1 text-overlay uppercase tracking-wide text-muted-foreground">{label}</p>
-    </div>
+      </span>
+      {subValue && <span className="text-foreground/55">{subValue}</span>}
+      <span className="text-muted-foreground/80">{label}</span>
+    </span>
   );
 }

@@ -9,13 +9,11 @@ export function DesktopAssetsTable({
   rows,
   lang,
   onEdit,
-  onRemove,
   hideBalance = false,
 }: {
   rows: AssetRow[]
   lang: Language
   onEdit: (row: AssetRow) => void
-  onRemove: (row: AssetRow) => void
   hideBalance?: boolean
 }) {
   return (
@@ -27,7 +25,7 @@ export function DesktopAssetsTable({
             <th className="py-3 pr-3 text-right">{t(lang, "value")}</th>
             <th className="py-3 pr-3 text-right">{t(lang, "costBasis")}</th>
             <th className="py-3 pr-3 text-right">{t(lang, "pnl")}</th>
-            <th className="w-12 py-3 pr-5 text-right" />
+            <th className="w-20 py-3 pr-5 text-right" />
           </tr>
         </thead>
         <tbody>
@@ -37,7 +35,6 @@ export function DesktopAssetsTable({
               row={row}
               lang={lang}
               onEdit={() => onEdit(row)}
-              onRemove={() => onRemove(row)}
               hideBalance={hideBalance}
             />
           ))}

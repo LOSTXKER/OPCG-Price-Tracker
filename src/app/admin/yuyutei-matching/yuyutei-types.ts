@@ -27,6 +27,10 @@ export interface SetInfo {
   code: string;
   name: string;
   nameEn: string | null;
+  nameTh?: string | null;
+  type?: string;
+  boxImageUrl?: string | null;
+  releaseDate?: string | null;
 }
 
 export interface ApiResponse extends PaginatedApiResponse {

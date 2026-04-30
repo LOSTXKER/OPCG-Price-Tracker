@@ -74,6 +74,7 @@ type UserDetail = {
       id: number;
       name: string;
       nameEn: string | null;
+      nameTh: string | null;
       grantedAt: string;
     }[];
   };
@@ -477,7 +478,7 @@ export function UsersManager() {
                     <div className="flex flex-wrap gap-1.5">
                       {selectedUser.user.badges.map((b) => (
                         <Badge key={b.id} variant="secondary" className="text-xs">
-                          {b.nameEn ?? b.name}
+                          {b.nameTh ?? b.name}
                         </Badge>
                       ))}
                     </div>

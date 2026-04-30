@@ -167,6 +167,7 @@ export function DailyMissionsCard({
   level,
   lifetimeEarned,
   activeEvent,
+  tierMultiplier = 1,
   canCheckin,
   checkinLoading,
   onCheckin,
@@ -181,6 +182,7 @@ export function DailyMissionsCard({
   level: HoneyLevel | null;
   lifetimeEarned: number;
   activeEvent: ActiveEvent | null;
+  tierMultiplier?: number;
   canCheckin: boolean;
   checkinLoading: boolean;
   onCheckin: () => void;
@@ -231,6 +233,12 @@ export function DailyMissionsCard({
           </div>
         </div>
 
+        {tierMultiplier > 1 && (
+          <div className="flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-1">
+            <Sparkles className="size-3 text-amber-600 dark:text-amber-400" />
+            <span className="text-xs font-bold text-amber-600 dark:text-amber-400">{tierMultiplier}x</span>
+          </div>
+        )}
         {activeEvent && (
           <div className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1">
             <Sparkles className="size-3 text-primary" />

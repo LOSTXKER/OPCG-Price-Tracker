@@ -7,6 +7,8 @@ import { prisma } from "@/lib/db";
  * and accessible via `getAdminConfig()` server-side.
  */
 export const ADMIN_CONFIG_KEYS = [
+  // Feature flags
+  "marketplace_enabled",
   // Cron schedules
   "price_scraping_interval",
   "card_data_interval",
@@ -28,6 +30,8 @@ export const ADMIN_CONFIG_KEYS = [
 export type AdminConfigKey = (typeof ADMIN_CONFIG_KEYS)[number];
 
 export interface AdminConfig {
+  // Feature flags
+  marketplaceEnabled: boolean;
   // Cron
   priceScrapingInterval: string;
   cardDataInterval: string;
@@ -47,6 +51,9 @@ export interface AdminConfig {
 }
 
 const DEFAULTS: AdminConfig = {
+  // Marketplace ships disabled until the storefront is ready; admins flip
+  // this on from `/admin/config` once the feature is launched.
+  marketplaceEnabled: false,
   priceScrapingInterval: "0 */6 * * *",
   cardDataInterval: "0 3 * * *",
   exchangeRateInterval: "0 */12 * * *",
@@ -105,6 +112,7 @@ export async function getAdminConfig(): Promise<AdminConfig> {
 
   const map = new Map(rows.map((r) => [r.key, r.value]));
   const data: AdminConfig = {
+    marketplaceEnabled: parseBool(map.get("marketplace_enabled"), DEFAULTS.marketplaceEnabled),
     priceScrapingInterval: map.get("price_scraping_interval") || DEFAULTS.priceScrapingInterval,
     cardDataInterval: map.get("card_data_interval") || DEFAULTS.cardDataInterval,
     exchangeRateInterval: map.get("exchange_rate_interval") || DEFAULTS.exchangeRateInterval,

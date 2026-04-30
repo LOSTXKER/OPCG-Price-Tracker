@@ -8,13 +8,14 @@ import { cn } from "@/lib/utils"
 import { t, type Language } from "@/lib/i18n"
 import { formatCount } from "@/lib/utils/currency"
 
+import { PeriodChip } from "./period-chip"
 import { RawValueHint } from "./raw-value-hint"
 
 type Movers = { up: number; down: number; flat: number }
 
 export function MarketSnapshot({
   totalValue,
-  weightedDelta24h,
+  weightedDelta7d,
   movers,
   avgPrice,
   totalCards,
@@ -22,7 +23,7 @@ export function MarketSnapshot({
   lang,
 }: {
   totalValue: number
-  weightedDelta24h: number | null
+  weightedDelta7d: number | null
   movers: Movers
   avgPrice: number
   totalCards: number
@@ -48,16 +49,20 @@ export function MarketSnapshot({
             <Price jpy={totalValue} />
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <DeltaPill delta={weightedDelta24h} />
+            <DeltaPill delta={weightedDelta7d} period="7d" />
             <span className="text-meta">{t(lang, "marketHeroDeltaLabel")}</span>
           </div>
         </div>
 
         {/* Movers gauge: stacked bar with inline % + 3-column legend below */}
         <div className="min-w-0 lg:border-l lg:border-border/40 lg:pl-10">
-          <p className="text-eyebrow">{t(lang, "marketMoversTitle")}</p>
+          <div className="flex items-center gap-1.5">
+            <p className="text-eyebrow">{t(lang, "marketMoversTitle")}</p>
+            <PeriodChip lang={lang} />
+          </div>
 
-          {/* Stacked proportional bar with inline % labels */}
+          {/* Stacked proportional bar with inline % labels — segment widths
+              represent share of cards in each direction, not price change. */}
           <div className="mt-2.5 flex h-6 w-full overflow-hidden rounded-md bg-muted">
             {upPct > 0 && (
               <div
@@ -68,6 +73,7 @@ export function MarketSnapshot({
                   color: "var(--price-up)",
                 }}
                 aria-label={`${t(lang, "moversUp")} ${upPct.toFixed(1)}%`}
+                title={`${t(lang, "moversUp")} · ${upPct.toFixed(1)}% (${formatCount(movers.up)} ${t(lang, "cardUnit")})`}
               >
                 {upPct >= 8 && (
                   <span className="px-1 font-price text-micro tabular-nums">
@@ -81,6 +87,7 @@ export function MarketSnapshot({
                 className="flex h-full items-center justify-center bg-muted-foreground/20 text-foreground"
                 style={{ width: `${flatPct}%` }}
                 aria-label={`${t(lang, "moversFlat")} ${flatPct.toFixed(1)}%`}
+                title={`${t(lang, "moversFlat")} · ${flatPct.toFixed(1)}% (${formatCount(movers.flat)} ${t(lang, "cardUnit")})`}
               >
                 {flatPct >= 8 && (
                   <span className="px-1 font-price text-micro tabular-nums">
@@ -98,6 +105,7 @@ export function MarketSnapshot({
                   color: "var(--price-down)",
                 }}
                 aria-label={`${t(lang, "moversDown")} ${downPct.toFixed(1)}%`}
+                title={`${t(lang, "moversDown")} · ${downPct.toFixed(1)}% (${formatCount(movers.down)} ${t(lang, "cardUnit")})`}
               >
                 {downPct >= 8 && (
                   <span className="px-1 font-price text-micro tabular-nums">
@@ -218,9 +226,16 @@ function SecondaryStat({
 export function DeltaPill({
   delta,
   size = "md",
+  period,
 }: {
   delta: number | null
   size?: "sm" | "md"
+  /**
+   * Optional time-window label (e.g. "24h"). When provided, sets a native
+   * tooltip and—on `md` size—renders the label inline so the % value
+   * never appears without its time context.
+   */
+  period?: string
 }) {
   if (delta == null) {
     return (
@@ -229,7 +244,13 @@ export function DeltaPill({
           "inline-flex items-center gap-1 rounded-full bg-muted text-muted-foreground",
           size === "sm" ? "px-1.5 py-0.5 text-micro" : "px-2 py-0.5 text-xs font-semibold",
         )}
+        title={period ? `${period}: —` : undefined}
       >
+        {period && size === "md" && (
+          <span className="font-mono text-[10px] uppercase tracking-wider opacity-70">
+            {period}
+          </span>
+        )}
         —
       </span>
     )
@@ -257,7 +278,13 @@ export function DeltaPill({
         size === "sm" ? "px-1.5 py-0.5 text-micro" : "px-2 py-0.5 text-xs font-semibold",
       )}
       style={{ color, background: bg }}
+      title={period ? `${period}: ${display}` : undefined}
     >
+      {period && size === "md" && (
+        <span className="font-mono text-[10px] uppercase tracking-wider opacity-70">
+          {period}
+        </span>
+      )}
       <Icon className={size === "sm" ? "size-3" : "size-3.5"} aria-hidden="true" />
       {display}
     </span>

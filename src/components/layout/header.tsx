@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 import { formatCount } from "@/lib/utils/currency";
 import { t } from "@/lib/i18n";
 import { useHeaderData } from "@/hooks/use-header-data";
+import { usePublicConfig } from "@/hooks/use-public-config";
 import { NAV_LINKS, TOOL_LINKS, isActive } from "./header-constants";
 import { HeaderMarketTicker } from "./header-market-ticker";
 import { HeaderUserMenu } from "./header-user-menu";
@@ -51,6 +52,11 @@ export function Header() {
     mounted,
     handleLogout,
   } = useHeaderData();
+
+  const { config: publicConfig } = usePublicConfig();
+  const visibleNavLinks = publicConfig.marketplaceEnabled
+    ? NAV_LINKS
+    : NAV_LINKS.filter((link) => link.href !== "/marketplace");
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -98,7 +104,7 @@ export function Header() {
           </Link>
 
           <nav className="flex items-center">
-            {NAV_LINKS.map((link) => {
+            {visibleNavLinks.map((link) => {
               const active = isActive(pathname, link.href);
               return (
                 <Link
@@ -217,6 +223,7 @@ export function Header() {
                 honeyPendingActions={honeyPendingActions}
                 unreadMessages={unreadMessages}
                 pathname={pathname}
+                marketplaceEnabled={publicConfig.marketplaceEnabled}
                 onLogout={doLogout}
               />
             ) : authLoaded ? (
@@ -260,6 +267,7 @@ export function Header() {
       honeyPendingActions={honeyPendingActions}
       unreadMessages={unreadMessages}
       mounted={mounted}
+      marketplaceEnabled={publicConfig.marketplaceEnabled}
       onLogout={doLogout}
     />
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 import {
   Dialog,
@@ -13,9 +13,7 @@ import { fetchCards } from "@/lib/api/fetch-cards"
 import { SelectStep } from "./add-card-select-step"
 import { DetailStep } from "./add-card-detail-step"
 import {
-  SET_TYPE_ORDER,
   type CardWithSet,
-  type ApiResponse,
   type SetInfo,
   type CartItem,
 } from "./add-card-types"
@@ -41,10 +39,7 @@ export function AddCardDialog({
   const [initialLoaded, setInitialLoaded] = useState(false)
 
   const [sets, setSets] = useState<SetInfo[]>([])
-  const [activeType, setActiveType] = useState<string | null>(null)
   const [activeSet, setActiveSet] = useState<string | null>(null)
-  const [setDropdownOpen, setSetDropdownOpen] = useState(false)
-  const setDropdownRef = useRef<HTMLDivElement>(null)
 
   const [activeRarity, setActiveRarity] = useState<string | null>(null)
   const [activeColor, setActiveColor] = useState<string | null>(null)
@@ -108,25 +103,12 @@ export function AddCardDialog({
     return () => { window.clearTimeout(t); setLoading(false) }
   }, [query, activeSet, activeRarity, activeColor, activeCardType, hasAnyFilter])
 
-  useEffect(() => {
-    if (!setDropdownOpen) return
-    const handler = (e: MouseEvent) => {
-      if (setDropdownRef.current && !setDropdownRef.current.contains(e.target as Node)) {
-        setSetDropdownOpen(false)
-      }
-    }
-    document.addEventListener("mousedown", handler)
-    return () => document.removeEventListener("mousedown", handler)
-  }, [setDropdownOpen])
-
   const reset = () => {
     setStep("select")
     setSelectedCard(null)
     setQuery("")
     setResults([])
-    setActiveType(null)
     setActiveSet(null)
-    setSetDropdownOpen(false)
     setActiveRarity(null)
     setActiveColor(null)
     setActiveCardType(null)
@@ -140,7 +122,6 @@ export function AddCardDialog({
     setActiveRarity(null)
     setActiveColor(null)
     setActiveCardType(null)
-    setActiveType(null)
   }
 
   const goToDetail = (card: CardWithSet) => {
@@ -169,28 +150,12 @@ export function AddCardDialog({
     }
   }
 
-  const availableTypes = useMemo(() => {
-    const typeSet = new Set(sets.map((s) => s.type))
-    return SET_TYPE_ORDER.filter((t) => typeSet.has(t))
-  }, [sets])
-
-  const filteredSets = useMemo(() => {
-    if (!activeType) return sets
-    return sets.filter((s) => s.type === activeType)
-  }, [sets, activeType])
-
-  const activeSetInfo = useMemo(
-    () => sets.find((s) => s.code === activeSet),
-    [sets, activeSet]
-  )
-
   const isFiltered = query.trim().length >= 2 || hasAnyFilter
   const displayCards = isFiltered ? results : initialCards
   const showEmpty = isFiltered && !loading && results.length === 0
 
   const selectSetCode = (code: string | null) => {
     setActiveSet(code)
-    setSetDropdownOpen(false)
   }
 
   return (
@@ -208,15 +173,7 @@ export function AddCardDialog({
             showEmpty={showEmpty}
             isFiltered={isFiltered}
             sets={sets}
-            activeType={activeType}
-            setActiveType={setActiveType}
             activeSet={activeSet}
-            activeSetInfo={activeSetInfo}
-            availableTypes={availableTypes}
-            filteredSets={filteredSets}
-            setDropdownOpen={setDropdownOpen}
-            setSetDropdownOpen={setSetDropdownOpen}
-            setDropdownRef={setDropdownRef}
             selectSetCode={selectSetCode}
             activeRarity={activeRarity}
             setActiveRarity={setActiveRarity}

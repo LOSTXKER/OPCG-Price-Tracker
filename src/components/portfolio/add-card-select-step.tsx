@@ -16,6 +16,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog"
 import { RarityBadge } from "@/components/shared/rarity-badge"
+import { SetPicker } from "@/components/shared/set-picker"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 import { RARITY_HEX } from "@/lib/constants/rarities"
@@ -23,7 +24,7 @@ import { opcgConfig } from "@/lib/game-config"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { formatJpyAmount } from "@/lib/utils/currency"
-import { SET_TYPE_LABELS, type CardWithSet, type SetInfo } from "./add-card-types"
+import { type CardWithSet, type SetInfo } from "./add-card-types"
 
 const RARITY_OPTIONS = opcgConfig.rarityFilterOptions
 const COLOR_OPTIONS = opcgConfig.colors
@@ -36,15 +37,8 @@ export function SelectStep({
   displayCards,
   showEmpty,
   isFiltered,
-  activeType,
-  setActiveType,
+  sets,
   activeSet,
-  activeSetInfo,
-  availableTypes,
-  filteredSets,
-  setDropdownOpen,
-  setSetDropdownOpen,
-  setDropdownRef,
   selectSetCode,
   activeRarity,
   setActiveRarity,
@@ -65,15 +59,7 @@ export function SelectStep({
   showEmpty: boolean
   isFiltered: boolean
   sets: SetInfo[]
-  activeType: string | null
-  setActiveType: (t: string | null) => void
   activeSet: string | null
-  activeSetInfo: SetInfo | undefined
-  availableTypes: string[]
-  filteredSets: SetInfo[]
-  setDropdownOpen: boolean
-  setSetDropdownOpen: (open: boolean) => void
-  setDropdownRef: React.RefObject<HTMLDivElement | null>
   selectSetCode: (code: string | null) => void
   activeRarity: string | null
   setActiveRarity: (r: string | null) => void
@@ -89,6 +75,8 @@ export function SelectStep({
 }) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
+
+  const activeSetInfo = sets.find((s) => s.code === activeSet)
 
   return (
     <>
@@ -147,101 +135,13 @@ export function SelectStep({
               <div className="mb-1.5 flex items-center justify-between">
                 <span className="text-eyebrow">{t(lang, "set")}</span>
               </div>
-              <div className="relative" ref={setDropdownRef}>
-                <button
-                  onClick={() => setSetDropdownOpen(!setDropdownOpen)}
-                  className={cn(
-                    "flex h-8 w-full items-center justify-between rounded-md border px-2.5 text-sm transition-colors",
-                    activeSet
-                      ? "border-primary/30 bg-primary/5 text-primary"
-                      : "border-border/60 bg-background text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <div className="flex items-center gap-2 truncate">
-                    <Package className="size-3.5 shrink-0" />
-                    <span className="truncate">
-                      {activeSetInfo
-                        ? `${activeSetInfo.code.toUpperCase()} — ${activeSetInfo.nameEn ?? activeSetInfo.name}`
-                        : t(lang, "allSets")}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    {activeSet && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); selectSetCode(null) }}
-                        className="rounded p-0.5 hover:bg-primary/10"
-                      >
-                        <X className="size-3" />
-                      </button>
-                    )}
-                    <ChevronDown className={cn("size-3.5 transition-transform", setDropdownOpen && "rotate-180")} />
-                  </div>
-                </button>
-
-                {setDropdownOpen && (
-                  <div className="absolute left-0 top-full z-50 mt-1 w-full rounded-lg border border-border bg-background shadow-lg">
-                    <div className="flex flex-wrap gap-1 border-b border-border/40 px-2.5 py-2">
-                      <button
-                        onClick={() => setActiveType(null)}
-                        className={cn(
-                          "rounded px-2 py-0.5 text-xs font-medium transition-colors",
-                          activeType === null
-                            ? "bg-primary text-primary-foreground"
-                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                        )}
-                      >
-                        {t(lang, "allTab")}
-                      </button>
-                      {availableTypes.map((type) => (
-                        <button
-                          key={type}
-                          onClick={() => setActiveType(activeType === type ? null : type)}
-                          className={cn(
-                            "rounded px-2 py-0.5 text-xs font-medium transition-colors",
-                            activeType === type
-                              ? "bg-primary text-primary-foreground"
-                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                          )}
-                        >
-                          {SET_TYPE_LABELS[type] ?? type}
-                        </button>
-                      ))}
-                    </div>
-                    <div className="max-h-48 overflow-y-auto p-1">
-                      <button
-                        onClick={() => selectSetCode(null)}
-                        className={cn(
-                          "flex w-full items-center gap-2 rounded px-2.5 py-1.5 text-left text-sm transition-colors",
-                          !activeSet ? "bg-primary/8 font-medium text-primary" : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-                        )}
-                      >
-                        {t(lang, "allSets")}
-                      </button>
-                      {filteredSets.map((s) => (
-                        <button
-                          key={s.code}
-                          onClick={() => selectSetCode(s.code)}
-                          className={cn(
-                            "flex w-full items-center gap-2 rounded px-2.5 py-1.5 text-left transition-colors",
-                            activeSet === s.code ? "bg-primary/8 text-primary" : "hover:bg-muted/60"
-                          )}
-                        >
-                          <span className={cn(
-                            "shrink-0 rounded bg-muted px-1.5 py-0.5 font-mono text-xs font-bold",
-                            activeSet === s.code && "bg-primary/15 text-primary"
-                          )}>
-                            {s.code.toUpperCase()}
-                          </span>
-                          <span className="min-w-0 flex-1 truncate text-xs">
-                            {s.nameEn ?? s.name}
-                          </span>
-                          <span className="shrink-0 text-meta">{s._count.cards}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <SetPicker
+                sets={sets.map((s) => ({ ...s, cardCount: s._count.cards }))}
+                selectedCode={activeSet}
+                onSelect={(code) => selectSetCode(code)}
+                variant="inline"
+                nullable
+              />
             </div>
 
             {/* Rarity chips */}

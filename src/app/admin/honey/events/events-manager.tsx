@@ -83,7 +83,7 @@ export function EventsManager({ initialEvents }: { initialEvents: SeasonalEvent[
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="font-semibold">{ev.nameEn ?? ev.name}</p>
+                    <p className="font-semibold">{ev.nameTh ?? ev.name}</p>
                     {isLive && <AdminStatusBadge tone="success">กำลังจัด</AdminStatusBadge>}
                     {!ev.isActive && (
                       <AdminStatusBadge tone="neutral">ปิดใช้งาน</AdminStatusBadge>

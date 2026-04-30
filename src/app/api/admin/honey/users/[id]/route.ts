@@ -20,7 +20,7 @@ export const GET = adminApiHandler(
         tierExpiresAt: true,
         createdAt: true,
         badges: {
-          select: { id: true, name: true, nameEn: true, grantedAt: true },
+          select: { id: true, name: true, nameEn: true, nameTh: true, grantedAt: true },
           orderBy: { grantedAt: "desc" },
         },
       },

@@ -4,10 +4,7 @@ import { useCallback, useRef, useState, type ComponentType, type ReactNode } fro
 import {
   CircleAlert,
   CircleCheck,
-  DollarSign,
-  EyeOff,
   Globe,
-  Hash,
   Info,
   Layers,
   Lock,
@@ -32,11 +29,16 @@ const SECTION_TOGGLES = [
   { field: "showStats" as const, labelKey: "showStats" as const, descKey: "showStatsDesc" as const, icon: Star },
 ] as const;
 
-const ADVANCED_PRIVACY_TOGGLES = [
-  { field: "hidePortfolioPrices" as const, labelKey: "hidePortfolioPrices" as const, descKey: "hidePortfolioPricesDesc" as const, icon: DollarSign },
-  { field: "hidePortfolioQty" as const, labelKey: "hidePortfolioQty" as const, descKey: "hidePortfolioQtyDesc" as const, icon: Hash },
-  { field: "profileSummaryOnly" as const, labelKey: "profileSummaryOnly" as const, descKey: "profileSummaryOnlyDesc" as const, icon: EyeOff },
-] as const;
+// The "Advanced" privacy section was removed because every toggle in it
+// behaved confusingly or invisibly:
+//   - hidePortfolioPrices / hidePortfolioQty: the public collection card is
+//     image-only and never rendered prices or qty, so the flags had no
+//     observable effect.
+//   - profileSummaryOnly: only applied when `!isOwner`, so toggling and then
+//     refreshing your own profile showed no change. Owners reasonably
+//     concluded the toggle was broken.
+// DB columns and API schema are kept for back-compat / no migration churn,
+// but the UI no longer exposes any of them.
 
 type AccountPrivacySectionProps = {
   user: DbUser;
@@ -51,9 +53,6 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
     showListings: user.showListings ?? true,
     showDecks: user.showDecks ?? true,
     showStats: user.showStats ?? true,
-    hidePortfolioPrices: user.hidePortfolioPrices ?? false,
-    hidePortfolioQty: user.hidePortfolioQty ?? false,
-    profileSummaryOnly: user.profileSummaryOnly ?? false,
   });
   const [savedField, setSavedField] = useState<string | null>(null);
   const [errorField, setErrorField] = useState<string | null>(null);
@@ -185,31 +184,6 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
         />
         <div className="divide-y divide-border/30 border-t border-border/30">
           {SECTION_TOGGLES.map(({ field, labelKey, descKey, icon: Icon }) => (
-            <PrivacyRow
-              key={field}
-              Icon={Icon}
-              label={t(lang, labelKey)}
-              desc={t(lang, descKey)}
-              feedback={<PrivacyFeedback field={field} />}
-              checked={sectionFlags[field]}
-              onChange={(v) => {
-                setSectionFlags((prev) => ({ ...prev, [field]: v }));
-                void patchPrivacy(field, v);
-              }}
-            />
-          ))}
-        </div>
-      </Card>
-
-      {/* ── Card 3: Advanced ───────────────────────────────────────────── */}
-      <Card>
-        <CardHeader
-          eyebrow={t(lang, "privacyGroupAdvanced")}
-          title={t(lang, "privacyAdvancedTitle")}
-          subtitle={t(lang, "privacyAdvancedSubtitle")}
-        />
-        <div className="divide-y divide-border/30 border-t border-border/30">
-          {ADVANCED_PRIVACY_TOGGLES.map(({ field, labelKey, descKey, icon: Icon }) => (
             <PrivacyRow
               key={field}
               Icon={Icon}

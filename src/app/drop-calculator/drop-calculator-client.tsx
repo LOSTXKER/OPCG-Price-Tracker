@@ -6,7 +6,7 @@ import { AlertTriangle, Calculator, ListChecks, Package, LayoutGrid } from "luci
 import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
 import { PageHeader } from "@/components/layout/page-header"
-import { SetSelector } from "@/components/drop-calculator/set-selector"
+import { SetPicker } from "@/components/shared/set-picker"
 import { PurchaseConfig } from "@/components/drop-calculator/purchase-config"
 import { WantList } from "@/components/drop-calculator/want-list"
 import { CardPicker } from "@/components/drop-calculator/card-picker"
@@ -185,39 +185,62 @@ export default function DropCalculatorClient() {
   const selectCardsLabel = t(lang, "selectWantedCards")
   const resultsLabel = t(lang, "viewResults")
 
+  const showEmpty = !selectedCode
+  const showLoading = !!selectedCode && loading
+
   return (
     <div className="space-y-6">
-      <PageHeader title={t(lang, "dropCalculator")} icon={Calculator} />
-
-      {/* ── Set Selector ── */}
-      <SetSelector
-        sets={sets}
-        selectedCode={selectedCode}
-        setsLoading={setsLoading}
-        onSelect={(code) => void loadSet(code)}
+      <PageHeader
+        title={t(lang, "dropCalculator")}
+        description={t(lang, "dropCalculatorDesc")}
+        icon={Calculator}
+        actions={
+          selectedCode ? (
+            <SetPicker
+              sets={sets}
+              selectedCode={selectedCode || null}
+              loading={setsLoading}
+              onSelect={(code) => void loadSet(code ?? "")}
+            />
+          ) : undefined
+        }
       />
 
-      {/* ── Main content ── */}
-      <div className={cn(
-        "transition-opacity duration-300",
-        !selectedCode && "pointer-events-none opacity-30"
-      )}>
-        {/* Mobile: compact config + tabs */}
-        {detail && !loading && (
-          <div className="space-y-3 lg:hidden">
-            <PurchaseConfig
-              unit={unit}
-              quantity={quantity}
-              dropRates={detail.dropRates}
-              onUnitChange={setUnit}
-              onQuantityChange={setQuantity}
-              compact
-            />
-            <div className="flex rounded-lg border border-border bg-muted/50 p-0.5">
+      {showEmpty && (
+        <div className="panel flex flex-col items-center justify-center gap-4 px-6 py-12 text-center sm:py-16">
+          <div className="flex size-14 items-center justify-center rounded-full bg-primary/10">
+            <Package className="size-6 text-primary" />
+          </div>
+          <div className="space-y-1">
+            <p className="text-h4">{t(lang, "selectSet")}</p>
+            <p className="mx-auto max-w-md text-meta">{t(lang, "dropCalculatorEmptyHint")}</p>
+          </div>
+          <SetPicker
+            sets={sets}
+            selectedCode={selectedCode || null}
+            loading={setsLoading}
+            onSelect={(code) => void loadSet(code ?? "")}
+            variant="cta"
+          />
+        </div>
+      )}
+
+      {showLoading && (
+        <div className="space-y-3">
+          <Skeleton className="h-14 w-full rounded-lg" />
+          <Skeleton className="h-64 w-full rounded-lg" />
+        </div>
+      )}
+
+      {!showEmpty && !showLoading && detail && (
+        <>
+          {/* Mobile: tabs */}
+          <div className="lg:hidden">
+            <div className="flex rounded-lg border border-border bg-muted/40 p-0.5">
               <button
                 onClick={() => setActiveTab("cards")}
                 className={cn(
-                  "flex flex-1 items-center justify-center gap-2 rounded-md py-2 text-sm font-medium transition-all",
+                  "flex h-10 flex-1 items-center justify-center gap-2 rounded-md text-label transition-all",
                   activeTab === "cards"
                     ? "bg-background text-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
@@ -229,7 +252,7 @@ export default function DropCalculatorClient() {
               <button
                 onClick={() => setActiveTab("results")}
                 className={cn(
-                  "flex flex-1 items-center justify-center gap-2 rounded-md py-2 text-sm font-medium transition-all",
+                  "flex h-10 flex-1 items-center justify-center gap-2 rounded-md text-label transition-all",
                   activeTab === "results"
                     ? "bg-background text-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
@@ -244,25 +267,57 @@ export default function DropCalculatorClient() {
                 )}
               </button>
             </div>
-          </div>
-        )}
 
-        {/* Mobile: tab content */}
-        <div className="mt-4 lg:hidden">
-          {loading && (
-            <div className="space-y-3">
-              <Skeleton className="h-14 w-full rounded-lg" />
-              <Skeleton className="h-64 w-full rounded-lg" />
+            <div className="mt-4">
+              {activeTab === "cards" && (
+                <>
+                  <CardPicker
+                    cards={filteredCards}
+                    uniqueRarities={uniqueRarities}
+                    wantSet={wantList}
+                    wantCount={wantCards.length}
+                    cardSearch={cardSearch}
+                    rarityFilter={rarityFilter}
+                    onToggleWant={toggleWant}
+                    onSearchChange={setCardSearch}
+                    onRarityChange={setRarityFilter}
+                  />
+                  <p className="mt-3 flex items-center gap-1.5 text-meta text-muted-foreground/60">
+                    <AlertTriangle className="size-3 shrink-0" />
+                    {t(lang, "communityEstimate")}
+                  </p>
+                </>
+              )}
+              {activeTab === "results" && (
+                <div className="panel space-y-4 p-4">
+                  <PurchaseConfig
+                    unit={unit}
+                    quantity={quantity}
+                    dropRates={detail.dropRates}
+                    onUnitChange={setUnit}
+                    onQuantityChange={setQuantity}
+                  />
+                  <div className="border-t border-border/40 pt-4">
+                    <WantList
+                      wantCards={wantCards}
+                      wantResults={wantResults}
+                      allChance={allChance}
+                      totalWantValue={totalWantValue}
+                      purchaseCost={purchaseCost}
+                      unit={unit}
+                      quantity={quantity}
+                      onRemove={toggleWant}
+                      onClearAll={() => setWantList(new Set())}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-          {!detail && !loading && (
-            <div className="panel flex flex-col items-center justify-center px-6 py-10 text-center">
-              <Package className="mb-2 size-8 text-muted-foreground/20" />
-              <p className="text-meta">{t(lang, "selectSet")}</p>
-            </div>
-          )}
-          {detail && !loading && activeTab === "cards" && (
-            <>
+          </div>
+
+          {/* Desktop: two-column layout */}
+          <div className="hidden lg:grid lg:grid-cols-[1fr_360px] lg:items-start lg:gap-6">
+            <div className="min-w-0">
               <CardPicker
                 cards={filteredCards}
                 uniqueRarities={uniqueRarities}
@@ -278,69 +333,17 @@ export default function DropCalculatorClient() {
                 <AlertTriangle className="size-3 shrink-0" />
                 {t(lang, "communityEstimate")}
               </p>
-            </>
-          )}
-          {detail && !loading && activeTab === "results" && (
-            <WantList
-              wantCards={wantCards}
-              wantResults={wantResults}
-              allChance={allChance}
-              totalWantValue={totalWantValue}
-              purchaseCost={purchaseCost}
-              unit={unit}
-              quantity={quantity}
-              onRemove={toggleWant}
-              onClearAll={() => setWantList(new Set())}
-            />
-          )}
-        </div>
+            </div>
 
-        {/* Desktop: two-column layout (no tabs) */}
-        <div className="hidden lg:grid lg:grid-cols-[1fr_360px] lg:items-start lg:gap-5">
-          <div className="min-w-0 lg:col-start-1">
-            {loading && (
-              <div className="space-y-3">
-                <Skeleton className="h-14 w-full rounded-lg" />
-                <Skeleton className="h-64 w-full rounded-lg" />
-              </div>
-            )}
-            {!detail && !loading && (
-              <div className="panel flex flex-col items-center justify-center px-6 py-10 text-center">
-                <Package className="mb-2 size-8 text-muted-foreground/20" />
-                <p className="text-meta">{t(lang, "selectSet")}</p>
-              </div>
-            )}
-            {detail && !loading && (
-              <CardPicker
-                cards={filteredCards}
-                uniqueRarities={uniqueRarities}
-                wantSet={wantList}
-                wantCount={wantCards.length}
-                cardSearch={cardSearch}
-                rarityFilter={rarityFilter}
-                onToggleWant={toggleWant}
-                onSearchChange={setCardSearch}
-                onRarityChange={setRarityFilter}
+            <aside className="panel space-y-4 p-4">
+              <PurchaseConfig
+                unit={unit}
+                quantity={quantity}
+                dropRates={detail.dropRates}
+                onUnitChange={setUnit}
+                onQuantityChange={setQuantity}
               />
-            )}
-            {detail && !loading && (
-              <p className="mt-3 flex items-center gap-1.5 text-meta text-muted-foreground/60">
-                <AlertTriangle className="size-3 shrink-0" />
-                {t(lang, "communityEstimate")}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-3 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:sticky lg:top-20 lg:h-fit">
-            {detail ? (
-              <>
-                <PurchaseConfig
-                  unit={unit}
-                  quantity={quantity}
-                  dropRates={detail.dropRates}
-                  onUnitChange={setUnit}
-                  onQuantityChange={setQuantity}
-                />
+              <div className="border-t border-border/40 pt-4">
                 <WantList
                   wantCards={wantCards}
                   wantResults={wantResults}
@@ -352,17 +355,11 @@ export default function DropCalculatorClient() {
                   onRemove={toggleWant}
                   onClearAll={() => setWantList(new Set())}
                 />
-              </>
-            ) : (
-              <div className="panel p-4">
-                <div className="rounded-lg border border-dashed border-border/50 bg-muted/10 p-6 text-center text-meta text-muted-foreground/40">
-                  {t(lang, "selectSet")}
-                </div>
               </div>
-            )}
+            </aside>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   )
 }

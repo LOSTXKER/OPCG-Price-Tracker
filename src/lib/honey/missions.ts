@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { earnHoneyDirect, getHoneyMultiplier } from ".";
 import { todayStr, currentMonthKey } from "./utils";
 import { incrementEntitlement } from "@/lib/users/entitlements";
+import { isMarketplaceEnabled } from "@/lib/marketplace/feature-flag";
 import { z } from "zod";
 import {
   MissionTasksSchema,
@@ -85,6 +86,21 @@ const FALLBACK_ROTATING_MISSIONS: Record<number, MissionDef> = {
   6: { id: "check_watchlist", labelKey: "missionCheckWatchlist", hintKey: "missionCheckWatchlistHint", icon: "Eye", reward: FALLBACK_TASK_REWARD, paths: ["/watchlist"], trackType: "auto-path" },
 };
 
+/**
+ * Mission IDs that depend on the marketplace surface being live. When the
+ * admin disables the marketplace via `/admin/config`, we drop these from
+ * the user's daily mission roster so they don't get an undeliverable task
+ * pointing at a 404 page.
+ */
+const MARKETPLACE_DEPENDENT_MISSION_IDS = new Set(["visit_marketplace"]);
+
+async function filterDisabledMissions<T extends { id: string }>(
+  missions: T[],
+): Promise<T[]> {
+  if (await isMarketplaceEnabled()) return missions;
+  return missions.filter((m) => !MARKETPLACE_DEPENDENT_MISSION_IDS.has(m.id));
+}
+
 const FALLBACK_PERFECT_DAY_BONUS = 10;
 const FALLBACK_WEEKLY_BONUS_AMOUNT = 75;
 const FALLBACK_WEEKLY_BONUS_TICKETS = 1;
@@ -162,7 +178,7 @@ const KNOWN_MISSION_CODE_MAP: Record<string, { labelKey: string; hintKey: string
 export async function getDailyMissionDefs(): Promise<MissionDef[]> {
   const resolved = await getResolvedMissions();
   if (resolved.length > 0) {
-    return resolved.map((r) => {
+    const defs = resolved.map((r): MissionDef => {
       const rewards = r.rewards;
       const cond = r.conditions;
       const paths: (string | RegExp)[] = [];
@@ -187,8 +203,9 @@ export async function getDailyMissionDefs(): Promise<MissionDef[]> {
         trackType: trackTypeFromDb(r.trackType),
       };
     });
+    return filterDisabledMissions(defs);
   }
-  return getFallbackDefs();
+  return filterDisabledMissions(getFallbackDefs());
 }
 
 function buildTasksFromDefs(defs: MissionDef[]): MissionTask[] {
@@ -218,11 +235,13 @@ function matchPath(pathname: string, patterns: (string | RegExp)[]): boolean {
 
 export async function pathToMissionIds(pathname: string): Promise<string[]> {
   const resolved = await getResolvedMissions();
+  const marketplaceOn = await isMarketplaceEnabled();
 
   if (resolved.length > 0) {
     const ids: string[] = [];
     for (const r of resolved) {
       if (r.trackType === "MANUAL" || r.trackType === "ACTION_COUNT") continue;
+      if (!marketplaceOn && MARKETPLACE_DEPENDENT_MISSION_IDS.has(r.code)) continue;
       if (matchConditionPath(pathname, r.conditions)) {
         ids.push(r.code);
       }
@@ -233,6 +252,7 @@ export async function pathToMissionIds(pathname: string): Promise<string[]> {
   const defs = getFallbackDefs();
   const ids: string[] = [];
   for (const def of defs) {
+    if (!marketplaceOn && MARKETPLACE_DEPENDENT_MISSION_IDS.has(def.id)) continue;
     if (def.trackType === "auto-path" && matchPath(pathname, def.paths)) {
       ids.push(def.id);
     }

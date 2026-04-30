@@ -223,23 +223,23 @@ export default async function SetDetailPage(props: {
           href={`/cards/${topCard.cardCode}`}
           className="group block"
         >
-          <div className="panel flex items-center gap-4 p-3 transition-colors hover:bg-muted/20 sm:p-4">
-            <div className="relative aspect-[63/88] w-14 shrink-0 overflow-hidden rounded-lg bg-muted sm:w-[72px]">
+          <div className="panel grid grid-cols-[auto_1fr_auto] items-center gap-3 p-3 transition-colors hover:bg-muted/20 sm:gap-4 sm:p-4">
+            <div className="relative aspect-[63/88] w-12 shrink-0 overflow-hidden rounded-md bg-muted sm:w-[60px]">
               {topCard.imageUrl ? (
                 <Image
                   src={topCard.imageUrl}
                   alt={topCard.nameEn ?? topCard.nameJp}
                   fill
                   className="object-contain"
-                  sizes="72px"
+                  sizes="60px"
                 />
               ) : (
                 <div className="flex h-full items-center justify-center">
-                  <Crown className="size-5 text-muted-foreground/30" />
+                  <Crown className="size-4 text-muted-foreground/30" />
                 </div>
               )}
             </div>
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0">
               <div className="mb-0.5 flex items-center gap-1.5">
                 <Crown className="size-3 text-primary" />
                 <SetPageTopCardLabel />
@@ -254,12 +254,12 @@ export default async function SetDetailPage(props: {
                 </span>
               </div>
             </div>
-            <div className="shrink-0 text-right">
-              <p className="font-mono text-lg font-bold tabular-nums sm:text-xl">
+            <div className="flex shrink-0 items-center gap-2 text-right">
+              <p className="font-mono text-base font-bold tabular-nums sm:text-lg">
                 <Price jpy={topCard.latestPriceJpy ?? 0} />
               </p>
+              <ArrowRight className="hidden size-4 text-muted-foreground/40 transition-transform group-hover:translate-x-0.5 group-hover:text-muted-foreground sm:block" />
             </div>
-            <ArrowRight className="size-4 shrink-0 text-muted-foreground/40 transition-transform group-hover:translate-x-0.5 group-hover:text-muted-foreground" />
           </div>
         </Link>
       )}

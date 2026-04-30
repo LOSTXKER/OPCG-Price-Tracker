@@ -1,121 +1,194 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import {
+  BookOpen,
+  Compass,
+  Crown,
+  Info,
+  Mail,
+  Sparkles,
+  Wrench,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useUIStore } from "@/stores/ui-store";
+import { usePublicConfig } from "@/hooks/use-public-config";
 import { t } from "@/lib/i18n";
+
+type FooterLink = {
+  href: string;
+  label: string;
+};
+
+type FooterColumn = {
+  title: string;
+  icon: LucideIcon;
+  links: FooterLink[];
+};
 
 export function Footer() {
   const lang = useUIStore((s) => s.language);
+  const { config } = usePublicConfig();
+  const year = new Date().getFullYear();
 
-  const quickLinks = [
-    { label: t(lang, "market"), href: "/" },
-    { label: t(lang, "sets"), href: "/sets" },
-    { label: "Trending", href: "/trending" },
-    { label: t(lang, "marketplace"), href: "/marketplace" },
-    { label: t(lang, "winnersPageTitle"), href: "/raffle/winners" },
-    { label: "Blog", href: "/blog" },
+  const exploreLinks: FooterLink[] = [
+    { href: "/", label: t(lang, "market") },
+    { href: "/sets", label: t(lang, "sets") },
+    { href: "/cards", label: t(lang, "cards") },
+    { href: "/trending", label: t(lang, "footerTrending") },
+    { href: "/market-overview", label: t(lang, "marketOverview") },
   ];
 
-  const toolLinks = [
-    { label: t(lang, "dropCalc"), href: "/drop-calculator" },
-    { label: t(lang, "deckCalculatorNav"), href: "/deck-calculator" },
-    { label: "Compare", href: "/compare" },
-    { label: "Market Overview", href: "/market-overview" },
+  const toolLinks: FooterLink[] = [
+    { href: "/drop-calculator", label: t(lang, "dropCalculator") },
+    { href: "/deck-calculator", label: t(lang, "deckCalculatorNav") },
+    { href: "/compare", label: t(lang, "compareCards") },
+    { href: "/portfolio", label: t(lang, "portfolioNav") },
+    { href: "/watchlist", label: t(lang, "watchlistNav") },
   ];
 
-  const resourceLinks = [
-    { label: t(lang, "gettingStarted"), href: "/guide/getting-started" },
-    { label: t(lang, "cardTypesGuide"), href: "/guide/card-types" },
-    { label: t(lang, "raritiesGuide"), href: "/guide/rarities" },
-    { label: t(lang, "colorsGuide"), href: "/guide/colors" },
-    { label: "Sets Guide", href: "/guide/sets" },
-    { label: "Buying Guide", href: "/guide/buying" },
+  const communityLinks: FooterLink[] = [
+    ...(config.marketplaceEnabled
+      ? [
+          { href: "/marketplace", label: t(lang, "marketplace") },
+          { href: "/seller", label: t(lang, "footerSell") },
+        ]
+      : []),
+    { href: "/honey", label: t(lang, "honeyPageTitle") },
+    { href: "/raffle/winners", label: t(lang, "footerPrizeWinners") },
+    { href: "/blog", label: t(lang, "footerBlog") },
+    { href: "/pricing", label: t(lang, "pricing") },
   ];
+
+  const guideLinks: FooterLink[] = [
+    { href: "/guide/getting-started", label: t(lang, "gettingStarted") },
+    { href: "/guide/card-types", label: t(lang, "cardTypesGuide") },
+    { href: "/guide/rarities", label: t(lang, "raritiesGuide") },
+    { href: "/guide/colors", label: t(lang, "colorsGuide") },
+    { href: "/guide/sets", label: t(lang, "footerSetsGuide") },
+    { href: "/guide/buying", label: t(lang, "footerBuyingGuide") },
+  ];
+
+  const columns: FooterColumn[] = [
+    { title: t(lang, "footerExplore"), icon: Compass, links: exploreLinks },
+    { title: t(lang, "tools"), icon: Wrench, links: toolLinks },
+    { title: t(lang, "footerCommunity"), icon: Sparkles, links: communityLinks },
+    { title: t(lang, "guide"), icon: BookOpen, links: guideLinks },
+  ];
+
   return (
-    <footer className="hidden border-t border-border/30 md:block">
-      <div className="mx-auto max-w-7xl px-4 py-10 md:px-6 lg:px-8">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
-          <div>
-            <p className="text-sm font-semibold text-primary">Meecard</p>
-            <p className="mt-2 max-w-sm text-xs leading-relaxed text-muted-foreground">
-              One Piece Card Game price tracker updated daily.
-              Prices from Yuyu-tei, portfolio & collection tracking.
+    <footer className="hidden border-t border-border/30 bg-gradient-to-b from-transparent via-muted/10 to-muted/20 md:block">
+      <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-12">
+          {/* Brand block */}
+          <div className="lg:col-span-4">
+            <Link href="/" className="inline-flex items-center gap-2.5">
+              <Image
+                src="/meecard.png"
+                alt="Meecard"
+                width={32}
+                height={32}
+                className="select-none"
+              />
+              <span className="text-base font-bold tracking-tight">Meecard</span>
+            </Link>
+
+            <p className="mt-4 max-w-sm text-body-sm text-muted-foreground">
+              {t(lang, "footerTagline")}
             </p>
-            <p className="mt-4 text-meta text-muted-foreground/60">
-              Price data sourced from Yuyu-tei &middot; Card images &copy; BANDAI
+
+            <div className="mt-5 flex flex-wrap items-center gap-1.5">
+              <span className="inline-flex items-center rounded-full border border-border/50 bg-background/60 px-2.5 py-1 text-micro text-muted-foreground">
+                {t(lang, "footerLanguagesLine")}
+              </span>
+              <span className="inline-flex items-center rounded-full border border-border/50 bg-background/60 px-2.5 py-1 text-micro text-muted-foreground">
+                {t(lang, "footerCurrenciesLine")}
+              </span>
+            </div>
+
+            <Link
+              href="/pricing"
+              className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-meta font-medium text-primary transition-colors hover:bg-primary/15"
+            >
+              <Crown className="size-3.5" />
+              {t(lang, "pricing")}
+            </Link>
+
+            <p className="mt-6 text-meta text-muted-foreground/70">
+              {t(lang, "footerSources")}
+            </p>
+            <p className="mt-1 max-w-sm text-meta text-muted-foreground/50">
+              {t(lang, "footerDisclaimer")}
             </p>
           </div>
 
-          <div>
-            <p className="text-eyebrow text-primary/50">
-              {t(lang, "quickLinks")}
-            </p>
-            <nav className="mt-3 flex flex-col gap-2">
-              {quickLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-meta transition-colors hover:text-primary"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-
-          <div>
-            <p className="text-eyebrow text-primary/50">
-              {t(lang, "tools")}
-            </p>
-            <nav className="mt-3 flex flex-col gap-2">
-              {toolLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-meta transition-colors hover:text-primary"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-
-          <div className="sm:col-span-2 lg:col-span-2">
-            <p className="text-eyebrow text-primary/50">
-              {t(lang, "guide")}
-            </p>
-            <nav className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2">
-              {resourceLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-meta transition-colors hover:text-primary"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+          {/* Link columns */}
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:col-span-8">
+            {columns.map((col) => (
+              <FooterColumnView key={col.title} column={col} />
+            ))}
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-8 flex items-center justify-between border-t border-primary/15 pt-6">
-          <p className="text-meta text-muted-foreground/50">
-            &copy; {new Date().getFullYear()} Meecard
+        <div className="mt-12 flex flex-col gap-3 border-t border-border/30 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-meta text-muted-foreground/70">
+            &copy; {year} Meecard
           </p>
-          <nav className="flex items-center gap-4 text-meta text-muted-foreground/50">
-            <Link href="/guide" className="transition-colors hover:text-muted-foreground">
+          <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-meta text-muted-foreground/70">
+            <Link
+              href="/about"
+              className="inline-flex items-center gap-1 transition-colors hover:text-foreground"
+            >
+              <Info className="size-3.5" />
+              {t(lang, "aboutUs")}
+            </Link>
+            <Link
+              href="/guide"
+              className="transition-colors hover:text-foreground"
+            >
               {t(lang, "guide")}
             </Link>
-            <a
-              href="mailto:support@meecard.app"
-              className="transition-colors hover:text-muted-foreground"
+            <Link
+              href="/pricing"
+              className="transition-colors hover:text-foreground"
             >
-              {t(lang, "contact")}
-            </a>
+              {t(lang, "pricing")}
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-1 transition-colors hover:text-foreground"
+            >
+              <Mail className="size-3.5" />
+              {t(lang, "contactUs")}
+            </Link>
           </nav>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterColumnView({ column }: { column: FooterColumn }) {
+  const Icon = column.icon;
+  return (
+    <div>
+      <div className="flex items-center gap-1.5">
+        <Icon className="size-3 text-primary/60" />
+        <p className="text-eyebrow text-primary/60">{column.title}</p>
+      </div>
+      <nav className="mt-3 flex flex-col gap-2">
+        {column.links.map((link) => (
+          <Link
+            key={`${column.title}-${link.href}`}
+            href={link.href}
+            className="text-meta transition-colors hover:text-foreground"
+          >
+            {link.label}
+          </Link>
+        ))}
+      </nav>
+    </div>
   );
 }

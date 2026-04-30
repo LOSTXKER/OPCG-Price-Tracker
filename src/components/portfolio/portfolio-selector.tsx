@@ -139,16 +139,16 @@ export function PortfolioSidebar({
                   />
                 )}
               </p>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-baseline gap-1.5">
                 <span className="text-meta">
                   {hideBalance ? "••••" : formatJpyAmount(p.totalValue, currency)}
                 </span>
-                {!hideBalance && p.totalCost > 0 && (() => {
+                {p.totalCost > 0 && (() => {
                   const pnlPct = ((p.totalValue - p.totalCost) / p.totalCost) * 100
                   return (
                     <span className={cn(
-                      "font-price text-overlay font-medium tabular-nums",
-                      pnlPct >= 0 ? "text-price-up" : "text-price-down"
+                      "text-micro font-medium tabular-nums",
+                      pnlPct >= 0 ? "text-price-up/80" : "text-price-down/80"
                     )}>
                       {pnlPct >= 0 ? "+" : ""}{formatPct(pnlPct, 1)}%
                     </span>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { BarChart3, AlertTriangle } from "lucide-react";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
@@ -36,28 +36,20 @@ export function SetPageStats({
 }) {
   const lang = useUIStore((s) => s.language);
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-      <span>
-        <strong className="font-mono font-semibold text-foreground">
-          {cardCount}
-        </strong>{" "}
-        {t(lang, "card")}
-      </span>
-      <span className="text-border">·</span>
-      <span>
-        {t(lang, "totalValue")}{" "}
-        <strong className="font-mono font-semibold text-foreground">
-          <Price jpy={totalValue} />
-        </strong>
-      </span>
-      <span className="text-border">·</span>
-      <span>
-        Avg{" "}
-        <strong className="font-mono font-semibold text-foreground">
-          <Price jpy={avgPrice} />
-        </strong>
-      </span>
+    <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
+      <Stat label={t(lang, "card")} value={<span className="tabular-nums">{cardCount}</span>} />
+      <Stat label={t(lang, "totalValue")} value={<Price jpy={totalValue} />} />
+      <Stat label={t(lang, "avgPrice")} value={<Price jpy={avgPrice} />} />
     </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: ReactNode }) {
+  return (
+    <span className="inline-flex items-baseline gap-1.5">
+      <span className="text-meta">{label}</span>
+      <span className="font-mono text-sm font-semibold tabular-nums text-foreground">{value}</span>
+    </span>
   );
 }
 

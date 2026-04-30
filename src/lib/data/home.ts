@@ -81,7 +81,15 @@ export async function getHomeData() {
       }),
       prisma.card.count(),
       prisma.cardSet.findMany({
-        select: { code: true, name: true, nameEn: true },
+        select: {
+          code: true,
+          name: true,
+          nameEn: true,
+          nameTh: true,
+          type: true,
+          boxImageUrl: true,
+          releaseDate: true,
+        },
         orderBy: { code: "asc" },
       }),
       prisma.card.findMany({

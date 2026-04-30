@@ -59,7 +59,12 @@ interface IdentifyResponse {
   data: { identification: IdentifiedCard; cards: MatchedCard[] }
 }
 
-export function PhotoSearchButton({ className }: { className?: string }) {
+interface PhotoSearchButtonProps {
+  className?: string
+  trigger?: React.ReactElement
+}
+
+export function PhotoSearchButton({ className, trigger }: PhotoSearchButtonProps) {
   const lang = useUIStore((s) => s.language)
   const [open, setOpen] = useState(false)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
@@ -150,19 +155,23 @@ export function PhotoSearchButton({ className }: { className?: string }) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger
-        render={
-          <Button
-            type="button"
-            variant="outline"
-            size="icon-lg"
-            aria-label={t(lang, "photoSearchTitle")}
-            className={className}
-          />
-        }
-      >
-        <Camera />
-      </DialogTrigger>
+      {trigger ? (
+        <DialogTrigger render={trigger} />
+      ) : (
+        <DialogTrigger
+          render={
+            <Button
+              type="button"
+              variant="outline"
+              size="icon-lg"
+              aria-label={t(lang, "photoSearchTitle")}
+              className={className}
+            />
+          }
+        >
+          <Camera />
+        </DialogTrigger>
+      )}
 
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>

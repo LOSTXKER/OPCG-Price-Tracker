@@ -13,7 +13,10 @@ export type SetInfo = {
   code: string
   name: string
   nameEn: string | null
+  nameTh?: string | null
   type: string
+  imageUrl?: string | null
+  releaseDate?: string | null
   _count: { cards: number }
 }
 

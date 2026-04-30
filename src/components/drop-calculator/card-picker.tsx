@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { Check, Search } from "lucide-react"
+import { Search } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
@@ -37,28 +37,26 @@ export function CardPicker({
   const lang = useUIStore((s) => s.language)
 
   return (
-    <section className="min-w-0 lg:col-start-1">
-      <div className="panel space-y-3 p-4">
-        <div>
-          <div className="flex items-center justify-between gap-2">
-            <h2 className="text-h3">{t(lang, "selectWantedCards")}</h2>
-            {wantCount > 0 && (
-              <span className="text-meta">{wantCount} {t(lang, "cardsCount")}</span>
-            )}
-          </div>
-          <p className="mt-0.5 text-meta">{t(lang, "clickToSelect")}</p>
-        </div>
-        <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+    <section className="min-w-0 space-y-4">
+      <div className="flex items-end justify-between gap-3">
+        <h2 className="text-h3">{t(lang, "selectWantedCards")}</h2>
+        {wantCount > 0 && (
+          <span className="text-meta">{wantCount} {t(lang, "cardsCount")}</span>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="relative sm:w-72">
+          <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
             placeholder={t(lang, "searchByNameOrCode")}
             value={cardSearch}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="h-8 w-full rounded-lg border-0 bg-muted/60 pl-8 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:bg-muted focus:ring-1 focus:ring-border"
+            className="h-9 w-full rounded-full border border-border bg-background pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
           />
         </div>
-        <div className="flex gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
+        <div className="flex min-w-0 flex-1 gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
           <button
             type="button"
             onClick={() => onRarityChange("all")}
@@ -87,53 +85,50 @@ export function CardPicker({
             </button>
           ))}
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 md:grid-cols-5 lg:grid-cols-5">
-          {cards.map((card) => {
-            const name = getCardName(lang, card as never)
-            const selected = wantSet.has(card.id)
-            return (
-              <button
-                key={card.id}
-                type="button"
-                onClick={() => onToggleWant(card.id)}
-                className={cn(
-                  "group relative overflow-hidden rounded-lg border text-left transition-all",
-                  selected
-                    ? "border-primary ring-2 ring-primary"
-                    : "border-border/40 hover:border-border hover:shadow-sm"
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        {cards.map((card) => {
+          const name = getCardName(lang, card as never)
+          const selected = wantSet.has(card.id)
+          return (
+            <button
+              key={card.id}
+              type="button"
+              onClick={() => onToggleWant(card.id)}
+              className={cn(
+                "group relative overflow-hidden rounded-xl text-left transition-all",
+                selected
+                  ? "ring-2 ring-primary"
+                  : "ring-1 ring-border/50 hover:ring-border"
+              )}
+            >
+              <div className="relative aspect-[63/88] bg-muted">
+                {card.imageUrl ? (
+                  <Image src={card.imageUrl} alt={name} fill className="object-contain" sizes="120px" placeholder="blur" blurDataURL={BLUR_DATA_URL} />
+                ) : (
+                  <div className="flex size-full items-center justify-center text-meta">No Image</div>
                 )}
-              >
-                <div className="relative aspect-[63/88] bg-muted">
-                  {card.imageUrl ? (
-                    <Image src={card.imageUrl} alt={name} fill className="object-contain" sizes="120px" placeholder="blur" blurDataURL={BLUR_DATA_URL} />
-                  ) : (
-                    <div className="flex size-full items-center justify-center text-meta">No Image</div>
+                {selected && (
+                  <div className="pointer-events-none absolute inset-0 bg-primary/5" />
+                )}
+              </div>
+              <div className="px-2 py-1.5">
+                <p className="truncate text-xs font-medium leading-tight">{name}</p>
+                <div className="mt-1 flex items-center justify-between gap-1">
+                  <RarityBadge rarity={card.rarity} size="sm" />
+                  {card.latestPriceJpy != null && card.latestPriceJpy > 0 && (
+                    <span className="font-price text-xs tabular-nums text-muted-foreground"><Price jpy={card.latestPriceJpy} /></span>
                   )}
                 </div>
-                <div className="px-1.5 py-1">
-                  <p className="truncate text-xs font-medium leading-tight">{name}</p>
-                  <div className="mt-0.5 flex items-center justify-between gap-1">
-                    <RarityBadge rarity={card.rarity} size="sm" />
-                    <div className="flex items-center gap-1">
-                      {card.latestPriceJpy != null && card.latestPriceJpy > 0 && (
-                        <span className="font-price text-xs tabular-nums text-muted-foreground"><Price jpy={card.latestPriceJpy} /></span>
-                      )}
-                      {selected && (
-                        <span className="inline-flex items-center justify-center rounded-full bg-primary/10 p-0.5 text-primary">
-                          <Check className="size-3" />
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </button>
-            )
-          })}
-        </div>
-        {cards.length === 0 && (
-          <p className="py-8 text-center text-sm text-muted-foreground">{t(lang, "noCardsResult")}</p>
-        )}
+              </div>
+            </button>
+          )
+        })}
       </div>
+      {cards.length === 0 && (
+        <p className="py-8 text-center text-sm text-muted-foreground">{t(lang, "noCardsResult")}</p>
+      )}
     </section>
   )
 }
