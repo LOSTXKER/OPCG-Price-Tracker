@@ -68,6 +68,16 @@ function useChartColors() {
   return colors;
 }
 
+/** Card codes in the database carry a parallel / reprint suffix like
+ * `OP13-118_p3` or `OP01-001_r1`. Those suffixes are internal plumbing —
+ * users recognise the base code, and the variant is already surfaced in
+ * the "Variant" row. Strip everything from the first underscore onwards
+ * so the rail shows a clean, familiar identifier. */
+function displayCardCode(code: string): string {
+  const idx = code.indexOf("_");
+  return idx === -1 ? code : code.slice(0, idx);
+}
+
 function findExtremeCode<T extends CompareCard>(
   cards: T[],
   pick: (c: T) => number | null | undefined,
@@ -276,7 +286,7 @@ export default function CompareClient() {
           )}
         </CompareRow>
         <CompareRow
-          label={`${t(lang, "change")} 7d`}
+          label={`${t(lang, "change")} 7 ${t(lang, "days")}`}
           cards={orderedCards}
           placeholderCount={placeholderCount}
         >
@@ -288,7 +298,7 @@ export default function CompareClient() {
           )}
         </CompareRow>
         <CompareRow
-          label={`${t(lang, "change")} 30d`}
+          label={`${t(lang, "change")} 30 ${t(lang, "days")}`}
           cards={orderedCards}
           placeholderCount={placeholderCount}
         >
@@ -533,7 +543,7 @@ function CardRail({
                           />
                         ) : (
                           <div className="flex h-full items-center justify-center text-meta">
-                            {card.cardCode}
+                            {displayCardCode(card.cardCode)}
                           </div>
                         )}
                         <span
@@ -557,7 +567,7 @@ function CardRail({
                       {getCardName(lang, card)}
                     </p>
                     <p className="font-mono text-xs text-muted-foreground">
-                      {card.cardCode}
+                      {displayCardCode(card.cardCode)}
                     </p>
                   </div>
                 </div>
