@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react"
 import Image from "next/image"
-import { Check, Search, X } from "lucide-react"
+import { Check, Loader2, Search, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
 import { RarityBadge } from "@/components/shared/rarity-badge"
+import { SetPicker } from "@/components/shared/set-picker"
 import { Price } from "@/components/shared/price-inline"
 import { useCompareStore, type CompareItem } from "@/stores/compare-store"
 import { useUIStore } from "@/stores/ui-store"
@@ -21,13 +22,20 @@ import { fetchCards, type CardResult } from "@/lib/api/fetch-cards"
 import { cn } from "@/lib/utils"
 import { useTierLimits } from "@/hooks/use-tier-limits"
 import { UpgradeBadge } from "@/components/shared/upgrade-badge"
+import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
 
 type CardSet = {
   code: string
   name: string
-  nameEn?: string | null
+  nameEn: string | null
+  nameTh?: string | null
+  type: string
+  imageUrl?: string | null
+  releaseDate?: string | null
   _count?: { cards: number }
 }
+
+const PAGE_SIZE = 24
 
 export function CardPickerModal({
   open,
@@ -43,6 +51,9 @@ export function CardPickerModal({
   const [query, setQuery] = useState("")
   const [cards, setCards] = useState<CardResult[]>([])
   const [loading, setLoading] = useState(false)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const [page, setPage] = useState(1)
   const [fetchError, setFetchError] = useState<string | null>(null)
   const [sets, setSets] = useState<CardSet[]>([])
   const [selectedSet, setSelectedSet] = useState("")
@@ -51,9 +62,12 @@ export function CardPickerModal({
   const inputRef = useRef<HTMLInputElement>(null)
   const abortRef = useRef<AbortController | null>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
+  const scrollerRef = useRef<HTMLDivElement>(null)
+  const sentinelRef = useRef<HTMLDivElement>(null)
   const titleId = useId()
 
   const { limits } = useTierLimits()
+  const { openUpgradeDialog } = useUpgradeDialog()
   const tierMax = isFinite(limits.compareCards) ? limits.compareCards : 6
 
   const selectedCodes = new Set(storeItems.map((i) => i.cardCode))
@@ -64,6 +78,9 @@ export function CardPickerModal({
       setQuery("")
       setSelectedSet("")
       setSort("price_desc")
+      setCards([])
+      setPage(1)
+      setHasMore(true)
       setFetchError(null)
       fetch("/api/sets")
         .then((r) => r.json())
@@ -84,11 +101,21 @@ export function CardPickerModal({
   }, [open])
 
   const loadCards = useCallback(
-    async (search: string, set: string, sortBy: string) => {
+    async (
+      search: string,
+      set: string,
+      sortBy: string,
+      pageNum: number,
+      append: boolean,
+    ) => {
       abortRef.current?.abort()
       const controller = new AbortController()
       abortRef.current = controller
-      setLoading(true)
+      if (append) {
+        setLoadingMore(true)
+      } else {
+        setLoading(true)
+      }
       setFetchError(null)
       try {
         const data = await fetchCards(
@@ -96,33 +123,86 @@ export function CardPickerModal({
             search: search || undefined,
             set: set || undefined,
             sort: sortBy,
-            limit: 24,
+            page: pageNum,
+            limit: PAGE_SIZE,
           },
-          { signal: controller.signal }
+          { signal: controller.signal },
         )
-        setCards(data.cards ?? [])
+        const incoming = data.cards ?? []
+        setCards((prev) => {
+          if (!append) return incoming
+          const seen = new Set(prev.map((c) => c.cardCode))
+          return [...prev, ...incoming.filter((c) => !seen.has(c.cardCode))]
+        })
+        const totalPages = data.totalPages ?? 0
+        setHasMore(pageNum < totalPages && incoming.length > 0)
         setFetchError(null)
       } catch (err: unknown) {
         if (err instanceof Error && err.name === "AbortError") return
         console.error("Card picker fetch failed:", err)
-        setCards([])
+        if (!append) setCards([])
+        setHasMore(false)
         setFetchError("Search failed. Please try again.")
       } finally {
-        setLoading(false)
+        if (append) {
+          setLoadingMore(false)
+        } else {
+          setLoading(false)
+        }
       }
     },
-    []
+    [],
   )
 
   useEffect(() => {
     if (!open) return
     const timer = setTimeout(() => {
-      loadCards(query.trim(), selectedSet, sort)
+      setPage(1)
+      setHasMore(true)
+      loadCards(query.trim(), selectedSet, sort, 1, false)
     }, query ? 300 : 0)
     return () => clearTimeout(timer)
   }, [open, query, selectedSet, sort, loadCards])
 
+  useEffect(() => {
+    if (!open) return
+    if (!hasMore) return
+    if (loading) return
+    const sentinel = sentinelRef.current
+    const scroller = scrollerRef.current
+    if (!sentinel) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        if (!entry?.isIntersecting) return
+        if (loading || loadingMore || !hasMore) return
+        const nextPage = page + 1
+        setPage(nextPage)
+        loadCards(query.trim(), selectedSet, sort, nextPage, true)
+      },
+      { root: scroller, rootMargin: "200px" },
+    )
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [
+    open,
+    hasMore,
+    loading,
+    loadingMore,
+    page,
+    query,
+    selectedSet,
+    sort,
+    loadCards,
+    cards.length,
+  ])
+
   const handleAdd = (card: CardResult) => {
+    const isSelected = selectedCodes.has(card.cardCode)
+    if (!isSelected && atLimit) {
+      openUpgradeDialog({ featureKey: "comparePlus" })
+      return
+    }
     const item: CompareItem = {
       cardCode: card.cardCode,
       name: getCardName(lang, card),
@@ -175,33 +255,16 @@ export function CardPickerModal({
           </div>
           <div className="flex gap-2">
             {/* Set filter */}
-            <Select
-              items={[
-                { value: "__all__", label: t(lang, "allSets") },
-                ...sets.map((s) => ({
-                  value: s.code,
-                  label:
-                    s.code.toUpperCase() +
-                    (s.nameEn ? ` — ${s.nameEn}` : s.name ? ` — ${s.name}` : ""),
-                })),
-              ]}
-              value={selectedSet || "__all__"}
-              onValueChange={(value) => setSelectedSet(!value || value === "__all__" ? "" : value)}
-            >
-              <SelectTrigger size="sm" className="text-xs">
-                <SelectValue placeholder={t(lang, "allSets")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="__all__">{t(lang, "allSets")}</SelectItem>
-                {sets.map((s) => (
-                  <SelectItem key={s.code} value={s.code}>
-                    {s.code.toUpperCase()}
-                    {s.nameEn ? ` — ${s.nameEn}` : s.name ? ` — ${s.name}` : ""}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {/* Sort */}
+            <div className="flex-1">
+              <SetPicker
+                sets={sets}
+                selectedCode={selectedSet || null}
+                onSelect={(code) => setSelectedSet(code ?? "")}
+                variant="inline"
+                nullable
+              />
+            </div>
+            {/* Sort — `items` feeds the trigger label via `SelectValue`. */}
             <Select
               items={[
                 { value: "views_desc", label: t(lang, "popular") },
@@ -226,7 +289,7 @@ export function CardPickerModal({
         </div>
 
         {/* Card grid */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div ref={scrollerRef} className="flex-1 overflow-y-auto p-4">
           {fetchError && !loading && (
             <div className="mb-3 rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
               {fetchError}
@@ -249,19 +312,16 @@ export function CardPickerModal({
             <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
               {cards.map((card) => {
                 const isSelected = selectedCodes.has(card.cardCode)
-                const disabled = !isSelected && atLimit
                 return (
                   <button
                     key={card.cardCode}
                     type="button"
                     onClick={() => handleAdd(card)}
-                    disabled={disabled}
                     className={cn(
                       "group/pick relative rounded-xl border p-1.5 text-left transition-all",
                       isSelected
                         ? "border-primary bg-primary/5 ring-2 ring-primary"
                         : "border-border hover:border-primary/50 hover:shadow-sm",
-                      disabled && "cursor-not-allowed opacity-40"
                     )}
                   >
                     {/* Image — clean, no overlays. Selection state lives on the tile border. */}
@@ -316,8 +376,27 @@ export function CardPickerModal({
             cards.length === 0 &&
             query.trim().length >= 2 &&
             !fetchError && (
-            <div className="py-12 text-center text-sm text-muted-foreground">
-              {t(lang, "noCardsFound")}
+              <div className="py-12 text-center text-sm text-muted-foreground">
+                {t(lang, "noCardsFound")}
+              </div>
+            )}
+
+          {/* Infinite scroll sentinel + loading-more indicator */}
+          {cards.length > 0 && hasMore && (
+            <div
+              ref={sentinelRef}
+              className="mt-4 flex items-center justify-center py-3"
+              aria-hidden={!loadingMore}
+            >
+              {loadingMore && (
+                <Loader2 className="size-4 animate-spin text-muted-foreground" />
+              )}
+            </div>
+          )}
+
+          {cards.length > 0 && !hasMore && !loading && (
+            <div className="mt-4 py-3 text-center text-meta">
+              {t(lang, "noMoreResults")}
             </div>
           )}
         </div>

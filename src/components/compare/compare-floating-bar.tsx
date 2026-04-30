@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { AnimatePresence, motion } from "framer-motion"
 import { Scale, X } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
@@ -15,14 +16,26 @@ const MAX_SLOTS = 6
 
 export function CompareFloatingBar() {
   const items = useCompareStore((s) => s.items)
+  const seen = useCompareStore((s) => s.seen)
   const remove = useCompareStore((s) => s.remove)
   const clear = useCompareStore((s) => s.clear)
   const lang = useUIStore((s) => s.language)
+  const pathname = usePathname()
 
   const [hydrated, setHydrated] = useState(false)
   useEffect(() => setHydrated(true), [])
 
   if (!hydrated) return null
+
+  // Hide when the user is already on the compare page — the rail at the top
+  // of that page already shows every card they're comparing, and a floating
+  // "Compare now" CTA would be redundant (and feels like a leftover cart).
+  if (pathname === "/compare") return null
+
+  // Once the user has actually visited /compare with this selection, treat
+  // the "cart" as checked out. They'll only see the bar again when they
+  // add a new card (which resets `seen` in the store).
+  if (seen) return null
 
   const emptySlots = MAX_SLOTS - items.length
 

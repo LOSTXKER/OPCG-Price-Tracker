@@ -5,6 +5,8 @@ import { useCompareStore, type CompareItem } from "@/stores/compare-store"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
+import { useTierLimits } from "@/hooks/use-tier-limits"
+import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
 
 export function CompareButton({
   item,
@@ -14,13 +16,32 @@ export function CompareButton({
 }: {
   item: CompareItem
   size?: "sm" | "md"
-  variant?: "icon" | "label" | "ghost"
+  /**
+   * - `icon`: bare icon button (default — used in tables/headers)
+   * - `chip`: square chip with visible surface and large tap target,
+   *   for use in card grid action rows.
+   * - `label`: full pill button with text (used on detail page)
+   * - `ghost`: text-only ghost button
+   */
+  variant?: "icon" | "chip" | "label" | "ghost"
   className?: string
 }) {
   const lang = useUIStore((s) => s.language)
   const selected = useCompareStore((s) => s.items.some((i) => i.cardCode === item.cardCode))
   const totalSelected = useCompareStore((s) => s.items.length)
   const toggle = useCompareStore((s) => s.toggle)
+  const { limits } = useTierLimits()
+  const { openUpgradeDialog } = useUpgradeDialog()
+
+  /** Add to compare when allowed, or prompt upgrade when at tier limit.
+   * We never silently drop the click — the user always sees a response. */
+  const handleToggle = () => {
+    if (!selected && totalSelected >= limits.compareCards) {
+      openUpgradeDialog({ featureKey: "comparePlus" })
+      return
+    }
+    toggle(item)
+  }
 
   if (variant === "ghost") {
     const baseLabel = selected
@@ -36,7 +57,7 @@ export function CompareButton({
         onClick={(e) => {
           e.preventDefault()
           e.stopPropagation()
-          toggle(item)
+          handleToggle()
         }}
         className={cn(
           "inline-flex items-center gap-1.5 rounded-md px-2 text-xs font-medium transition-colors",
@@ -66,7 +87,7 @@ export function CompareButton({
         onClick={(e) => {
           e.preventDefault()
           e.stopPropagation()
-          toggle(item)
+          handleToggle()
         }}
         className={cn(
           "inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all duration-200 active:scale-95",
@@ -75,7 +96,7 @@ export function CompareButton({
             : showCount
               ? "border-primary/40 bg-primary/5 text-primary"
               : "border-border text-muted-foreground hover:border-primary/40 hover:bg-primary/5 hover:text-primary",
-          className
+          className,
         )}
       >
         {selected ? <Check className="size-3.5" /> : <Scale className="size-3.5" />}
@@ -92,14 +113,21 @@ export function CompareButton({
       onClick={(e) => {
         e.preventDefault()
         e.stopPropagation()
-        toggle(item)
+        handleToggle()
       }}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
+        "inline-flex shrink-0 items-center justify-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
+        variant === "chip"
+          ? "h-9 w-9 rounded-md border border-border/60 bg-muted/30 hover:border-primary/50 hover:bg-primary/10"
+          : "rounded-sm",
         selected
-          ? "text-primary hover:text-primary/80"
-          : "text-muted-foreground/40 hover:text-primary",
-        className
+          ? variant === "chip"
+            ? "border-primary/50 bg-primary/10 text-primary hover:bg-primary/15"
+            : "text-primary hover:text-primary/80"
+          : variant === "chip"
+            ? "text-muted-foreground hover:text-primary"
+            : "text-muted-foreground/40 hover:text-primary",
+        className,
       )}
       aria-label={selected ? t(lang, "removeFromCompare") : t(lang, "addToCompare")}
     >
