@@ -14,6 +14,7 @@ import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CalendarRange, LineChart as LineChartIcon, Lock, Plus, Scale, X } from "lucide-react";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import { CHART_PERIODS } from "@/components/cards/price-chart";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PageHeader } from "@/components/layout/page-header";
 import { RarityBadge } from "@/components/shared/rarity-badge";
@@ -422,19 +423,32 @@ export default function CompareClient() {
               size="sm"
               variant="pill"
               leadingIcon={CalendarRange}
-              options={[30, 90, 180, 365].map((d) => {
+              options={CHART_PERIODS.map((p) => {
                 const locked =
                   isFinite(limits.priceHistoryDays) &&
-                  d > limits.priceHistoryDays;
+                  p.days > limits.priceHistoryDays;
                 return {
-                  value: String(d),
-                  label: `${d}d`,
+                  value: p.value,
+                  label: p.label,
                   locked,
                   ariaLabel: locked ? t(lang, "upgradeToUnlock") : undefined,
                 };
               })}
-              value={String(days)}
-              onChange={(v) => setDays(Number(v))}
+              // Map the current `days` number back to a period token. We
+              // round up for any custom value so we never end up with no
+              // selection highlighted.
+              value={
+                CHART_PERIODS.find((p) => p.days === days)?.value ??
+                CHART_PERIODS.find((p) => p.days >= days)?.value ??
+                "30d"
+              }
+              onChange={(v) => {
+                const next = CHART_PERIODS.find((p) => p.value === v);
+                if (!next) return;
+                // API caps unlimited tier at 9999 days; pass that for "all"
+                // instead of `Infinity` (which would parse to NaN).
+                setDays(isFinite(next.days) ? next.days : 9999);
+              }}
               onLocked={() =>
                 openUpgradeDialog({ featureKey: "priceHistoryExtended" })
               }
