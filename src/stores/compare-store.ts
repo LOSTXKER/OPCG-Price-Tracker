@@ -54,6 +54,15 @@ export const useCompareStore = create<CompareState>()(
     }),
     {
       name: "kuma-compare",
-    }
+      // v2 wipes any state produced by the old "auto-seed the highest-value
+      // card" behaviour, which used to silently push a card into the store
+      // on first visit to /compare. Existing users who are carrying that
+      // ghost selection get reset to a clean slate exactly once.
+      version: 2,
+      migrate: (persistedState, version) => {
+        if (version < 2) return { items: [], seen: false };
+        return persistedState as CompareState;
+      },
+    },
   )
 );
