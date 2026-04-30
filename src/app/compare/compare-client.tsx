@@ -103,6 +103,16 @@ export default function CompareClient() {
     if (storeItems.length > 0) markSeen();
   }, [markSeen, storeItems.length]);
 
+  // Compare is a task-scoped flow: pick cards, view the comparison, done.
+  // When the user leaves this page we wipe the selection so it never
+  // follows them back to home / card detail / etc. Refresh resets too —
+  // the store is in-memory only.
+  useEffect(() => {
+    return () => {
+      useCompareStore.getState().clear();
+    };
+  }, []);
+
   const [pickerOpen, setPickerOpen] = useState(false);
   const { limits } = useTierLimits();
   const tierMax = isFinite(limits.compareCards) ? limits.compareCards : MAX_COMPARE;

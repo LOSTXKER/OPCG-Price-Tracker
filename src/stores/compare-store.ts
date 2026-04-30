@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import { MAX_COMPARE } from "@/lib/constants/prices";
 
 export interface CompareItem {
@@ -25,44 +24,34 @@ interface CompareState {
   markSeen: () => void;
 }
 
-export const useCompareStore = create<CompareState>()(
-  persist(
-    (set, get) => ({
-      items: [],
-      seen: false,
+/**
+ * In-memory only: we deliberately do NOT persist the compare selection.
+ * A compare session is task-scoped — pick cards, go to /compare, done.
+ * Refreshing or navigating away resets the slate so the UI never restores
+ * a ghost selection the user no longer remembers choosing.
+ */
+export const useCompareStore = create<CompareState>()((set, get) => ({
+  items: [],
+  seen: false,
 
-      toggle: (item) =>
-        set((state) => {
-          const exists = state.items.some((i) => i.cardCode === item.cardCode);
-          if (exists) {
-            return { items: state.items.filter((i) => i.cardCode !== item.cardCode) };
-          }
-          if (state.items.length >= MAX_COMPARE) return state;
-          return { items: [...state.items, item], seen: false };
-        }),
-
-      remove: (cardCode) =>
-        set((state) => ({
-          items: state.items.filter((i) => i.cardCode !== cardCode),
-        })),
-
-      clear: () => set({ items: [], seen: false }),
-
-      has: (cardCode) => get().items.some((i) => i.cardCode === cardCode),
-
-      markSeen: () => set({ seen: true }),
+  toggle: (item) =>
+    set((state) => {
+      const exists = state.items.some((i) => i.cardCode === item.cardCode);
+      if (exists) {
+        return { items: state.items.filter((i) => i.cardCode !== item.cardCode) };
+      }
+      if (state.items.length >= MAX_COMPARE) return state;
+      return { items: [...state.items, item], seen: false };
     }),
-    {
-      name: "kuma-compare",
-      // v2 wipes any state produced by the old "auto-seed the highest-value
-      // card" behaviour, which used to silently push a card into the store
-      // on first visit to /compare. Existing users who are carrying that
-      // ghost selection get reset to a clean slate exactly once.
-      version: 2,
-      migrate: (persistedState, version) => {
-        if (version < 2) return { items: [], seen: false };
-        return persistedState as CompareState;
-      },
-    },
-  )
-);
+
+  remove: (cardCode) =>
+    set((state) => ({
+      items: state.items.filter((i) => i.cardCode !== cardCode),
+    })),
+
+  clear: () => set({ items: [], seen: false }),
+
+  has: (cardCode) => get().items.some((i) => i.cardCode === cardCode),
+
+  markSeen: () => set({ seen: true }),
+}));
