@@ -93,7 +93,7 @@ export default function CompareClient() {
     [currency],
   );
   const storeItems = useCompareStore((s) => s.items);
-  const removeFromStore = useCompareStore((s) => s.remove);
+  const removeFromStoreRaw = useCompareStore((s) => s.remove);
   const clearStore = useCompareStore((s) => s.clear);
   const markSeen = useCompareStore((s) => s.markSeen);
   const COLORS = useChartColors();
@@ -104,10 +104,12 @@ export default function CompareClient() {
     if (storeItems.length > 0) markSeen();
   }, [markSeen, storeItems.length]);
 
-  // First-time visitors land on an empty compare store. To avoid a blank
-  // page we seed the highest-value card once per mount so the user sees a
-  // live example. We respect manual removals (the ref guard stops us from
-  // ever re-seeding in the same session).
+  // First-time visitors see a live example seeded with the highest-value
+  // card. Crucially, this preview lives in local state and is NOT pushed
+  // to the global compare store — otherwise the same card's CompareButton
+  // on its detail page would render as "Remove from compare" even though
+  // the user never added it themselves.
+  const [seedCode, setSeedCode] = useState<string | null>(null);
   const seededRef = useRef(false);
   useEffect(() => {
     if (seededRef.current) return;
@@ -119,15 +121,8 @@ export default function CompareClient() {
         const res = await fetchCards({ sort: "price_desc", limit: 1 });
         const top = res.cards?.[0];
         if (cancelled || !top) return;
-        // Double-check the store is still empty — the user may have added
-        // a card while the fetch was in flight; don't clobber their choice.
         if (useCompareStore.getState().items.length > 0) return;
-        useCompareStore.getState().toggle({
-          cardCode: top.cardCode,
-          name: getCardName(lang, top),
-          imageUrl: top.imageUrl ?? null,
-          rarity: top.rarity,
-        });
+        setSeedCode(top.cardCode);
       } catch {
         /* silent — empty state is an acceptable fallback */
       }
@@ -135,18 +130,34 @@ export default function CompareClient() {
     return () => {
       cancelled = true;
     };
-  }, [lang]);
+  }, []);
 
+  // Once the user actually adds a card via the picker, drop the preview
+  // so it doesn't resurface alongside the real selection.
+  useEffect(() => {
+    if (storeItems.length > 0 && seedCode) setSeedCode(null);
+  }, [storeItems.length, seedCode]);
 
   const [pickerOpen, setPickerOpen] = useState(false);
   const { limits } = useTierLimits();
   const tierMax = isFinite(limits.compareCards) ? limits.compareCards : MAX_COMPARE;
   const { openUpgradeDialog } = useUpgradeDialog();
 
-  const codes = useMemo(
-    () => storeItems.map((i) => i.cardCode),
-    [storeItems]
-  );
+  const codes = useMemo(() => {
+    if (storeItems.length > 0) return storeItems.map((i) => i.cardCode);
+    return seedCode ? [seedCode] : [];
+  }, [storeItems, seedCode]);
+
+  // Removing a card: if the user clicks "X" on the seeded preview, we
+  // only need to clear local state (it was never in the store). Real
+  // store entries go through the normal remove action.
+  const removeFromStore = (code: string) => {
+    if (storeItems.length === 0 && seedCode === code) {
+      setSeedCode(null);
+      return;
+    }
+    removeFromStoreRaw(code);
+  };
 
   const {
     orderedCards,
