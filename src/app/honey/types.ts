@@ -298,6 +298,8 @@ export type RaffleData = {
   freeThreshold: number;
   totalTickets: number;
   totalParticipants: number;
+  drawnAt: string | null;
+  winner: { id: string; displayName: string | null; avatarUrl: string | null } | null;
 };
 
 export type RaffleWinner = {

@@ -26,12 +26,6 @@ const users = new Map<string, FakeUser>();
 const txns: FakeTxn[] = [];
 let seasonalMultiplier = 1;
 
-function todayStart(): Date {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
-
 function matchTxns(where: Record<string, unknown>): FakeTxn[] {
   return txns.filter((t) => {
     if (where.userId && t.userId !== where.userId) return false;
@@ -52,6 +46,8 @@ function matchTxns(where: Record<string, unknown>): FakeTxn[] {
 }
 
 const prismaMock = {
+  // Interactive-transaction passthrough: hand the same stub to the callback.
+  $transaction: vi.fn(async <T,>(fn: (tx: unknown) => Promise<T>): Promise<T> => fn(prismaMock)),
   user: {
     findUnique: vi.fn(async ({ where }: { where: { id: string } }) => {
       const u = users.get(where.id);

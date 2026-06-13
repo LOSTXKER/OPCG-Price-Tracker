@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ApiError, apiDelete, apiGet, apiPatch, apiPost, apiTry } from "@/lib/api/client";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 
@@ -53,11 +54,8 @@ export function SectionAddresses() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchAddresses = async () => {
-    const res = await fetch("/api/me/addresses");
-    if (res.ok) {
-      const j = await res.json() as { addresses: Address[] };
-      setAddresses(j.addresses);
-    }
+    const j = await apiTry(apiGet<{ addresses: Address[] }>("/api/me/addresses"));
+    if (j) setAddresses(j.addresses);
   };
 
   useEffect(() => {
@@ -80,41 +78,30 @@ export function SectionAddresses() {
     setSaving(true);
     setError(null);
     try {
-      const url = editingId ? `/api/me/addresses/${editingId}` : "/api/me/addresses";
-      const method = editingId ? "PATCH" : "POST";
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) {
-        const j = await res.json() as { error?: string };
-        setError(j.error ?? "Failed to save");
-        return;
+      if (editingId) {
+        await apiPatch(`/api/me/addresses/${editingId}`, form);
+      } else {
+        await apiPost("/api/me/addresses", form);
       }
       await fetchAddresses();
       resetForm();
-    } catch {
-      setError("Failed to save");
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Failed to save");
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    const res = await fetch(`/api/me/addresses/${id}`, { method: "DELETE" });
-    if (res.ok) {
+    const ok = await apiTry(apiDelete(`/api/me/addresses/${id}`));
+    if (ok !== null) {
       setAddresses((prev) => prev.filter((a) => a.id !== id));
     }
   };
 
   const handleSetDefault = async (id: string) => {
-    const res = await fetch(`/api/me/addresses/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ isDefault: true }),
-    });
-    if (res.ok) await fetchAddresses();
+    const ok = await apiTry(apiPatch(`/api/me/addresses/${id}`, { isDefault: true }));
+    if (ok !== null) await fetchAddresses();
   };
 
   const startEdit = (addr: Address) => {

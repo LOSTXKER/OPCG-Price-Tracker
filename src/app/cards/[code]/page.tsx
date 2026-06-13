@@ -19,6 +19,7 @@ import {
 } from "@/lib/data/card-detail";
 import { prisma } from "@/lib/db";
 import { formatJpy } from "@/lib/utils/currency";
+import { daysSince } from "@/lib/utils/time";
 
 export const dynamic = "force-dynamic";
 
@@ -88,11 +89,8 @@ export default async function CardDetailPage(props: {
   const latestUpdatedAt = card.prices[0]?.scrapedAt
     ? new Date(card.prices[0].scrapedAt).toISOString()
     : null;
-  const daysSinceUpdate = latestUpdatedAt
-    ? Math.floor(
-        (Date.now() - new Date(latestUpdatedAt).getTime()) / 86_400_000,
-      )
-    : null;
+  const daysSinceUpdate = latestUpdatedAt ? daysSince(latestUpdatedAt) : null;
+
 
   // Fallback: if no price history but card has a current price, show it as a single data point
   if (chartData.length === 0 && card.latestPriceJpy != null) {

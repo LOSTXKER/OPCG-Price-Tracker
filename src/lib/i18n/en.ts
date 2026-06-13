@@ -785,6 +785,8 @@ export const en = {
   raffleCancel: "Cancel",
   raffleDrawDate: "Draw date",
   raffleEntriesOutOf: "You have {my} entries out of {total} total",
+  raffleViewResult: "View result",
+  raffleWinnerAnnounced: "Winner announced",
 
   // Public Raffle Winners Archive
   winnersPageTitle: "Prize Winners",

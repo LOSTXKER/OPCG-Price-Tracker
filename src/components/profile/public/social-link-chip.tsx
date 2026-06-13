@@ -33,7 +33,7 @@ export function SocialLinkChip({
   const inner = (
     <>
       {!labelDuplicatesBadge && (
-        <span className="text-[0.625rem] font-semibold uppercase tracking-wider text-muted-foreground/80">
+        <span className="text-micro uppercase tracking-wider text-muted-foreground/80">
           {link.badge}
         </span>
       )}

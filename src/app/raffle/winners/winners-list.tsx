@@ -149,9 +149,10 @@ function WinnerCard({
   return (
     <Surface
       as="article"
+      id={`raffle-${raffle.id}`}
       variant="panel"
       padding="none"
-      className="relative flex h-full flex-col overflow-hidden transition-colors hover:bg-muted/20"
+      className="relative flex h-full scroll-mt-24 flex-col overflow-hidden transition-colors hover:bg-muted/20"
       style={accent ? { borderTop: `3px solid ${accent}` } : undefined}
     >
       <div className="aspect-[4/3] w-full overflow-hidden bg-muted/20">

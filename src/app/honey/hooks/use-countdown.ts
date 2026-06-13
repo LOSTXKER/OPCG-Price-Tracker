@@ -16,9 +16,15 @@ export function useCountdown() {
       const s = Math.floor((diff % 60_000) / 1_000);
       return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
     }
-    setTimeLeft(calc());
-    const id = setInterval(() => setTimeLeft(calc()), 1000);
-    return () => clearInterval(id);
+    // First paint stays "" (matches SSR); the async tick fills it in without
+    // a synchronous setState inside the effect body.
+    const update = () => setTimeLeft(calc());
+    const first = setTimeout(update, 0);
+    const id = setInterval(update, 1000);
+    return () => {
+      clearTimeout(first);
+      clearInterval(id);
+    };
   }, []);
   return timeLeft;
 }
@@ -36,9 +42,13 @@ export function useMonthCountdown(): { days: number; hours: number } {
         hours: Math.floor((diff % 86_400_000) / 3_600_000),
       };
     }
-    setLeft(calc());
-    const id = setInterval(() => setLeft(calc()), 60_000);
-    return () => clearInterval(id);
+    const update = () => setLeft(calc());
+    const first = setTimeout(update, 0);
+    const id = setInterval(update, 60_000);
+    return () => {
+      clearTimeout(first);
+      clearInterval(id);
+    };
   }, []);
   return left;
 }

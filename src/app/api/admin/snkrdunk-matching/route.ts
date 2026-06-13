@@ -123,7 +123,7 @@ export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
     isParallel: boolean;
   };
 
-  let candidatesByPn = new Map<string, CandidateCard[]>();
+  const candidatesByPn = new Map<string, CandidateCard[]>();
 
   if (pendingProductNumbers.length > 0) {
     const allCandidates = await prisma.card.findMany({

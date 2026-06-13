@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
+
+import { apiGet, apiTry } from "@/lib/api/client";
+import { createSharedResource } from "@/lib/api/shared-resource";
 
 /**
  * Public, unauthenticated subset of `AdminConfig` exposed to all clients via
@@ -17,49 +20,25 @@ const DEFAULTS: PublicConfig = {
   marketplaceEnabled: false,
 };
 
-let _cache: PublicConfig | null = null;
-let _promise: Promise<PublicConfig | null> | null = null;
-const _listeners = new Set<() => void>();
+const resource = createSharedResource<PublicConfig>(async () => {
+  const json = await apiTry(apiGet<{ data?: Partial<PublicConfig> }>("/api/config/public"));
+  if (!json) return null;
+  return { ...DEFAULTS, ...(json.data ?? {}) };
+});
 
-function notify() {
-  _listeners.forEach((fn) => fn());
-}
-
-function doFetch(): Promise<PublicConfig | null> {
-  if (_promise) return _promise;
-  _promise = fetch("/api/config/public")
-    .then((r) => (r.ok ? r.json() : null))
-    .then((json: { data?: Partial<PublicConfig> } | null) => {
-      _cache = { ...DEFAULTS, ...(json?.data ?? {}) };
-      _promise = null;
-      notify();
-      return _cache;
-    })
-    .catch(() => {
-      _promise = null;
-      return null;
-    });
-  return _promise;
-}
+const getServerSnapshot = () => null;
 
 /**
  * Read the public admin config (currently just `marketplaceEnabled`) on the
  * client. Returns the defaults synchronously on first render and re-renders
  * once the fetch completes, so consumers can use `config.marketplaceEnabled`
  * directly without null-checking.
- *
- * Module-level cache mirrors `use-marketplace-fees.ts` — one fetch per tab.
  */
 export function usePublicConfig(): { config: PublicConfig; loaded: boolean } {
-  const [config, setConfig] = useState<PublicConfig | null>(_cache);
+  const config = useSyncExternalStore(resource.subscribe, resource.get, getServerSnapshot);
 
   useEffect(() => {
-    const sync = () => setConfig(_cache);
-    _listeners.add(sync);
-    if (!_cache && !_promise) void doFetch();
-    return () => {
-      _listeners.delete(sync);
-    };
+    resource.ensure();
   }, []);
 
   return {

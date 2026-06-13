@@ -784,6 +784,8 @@ export const jp = {
   raffleCancel: "キャンセル",
   raffleDrawDate: "抽選日",
   raffleEntriesOutOf: "{total}件中{my}件のエントリー",
+  raffleViewResult: "結果を見る",
+  raffleWinnerAnnounced: "当選発表",
 
   // Public Raffle Winners Archive
   winnersPageTitle: "当選者発表",

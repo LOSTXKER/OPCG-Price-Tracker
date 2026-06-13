@@ -77,7 +77,7 @@ export const GET = apiHandler(async (request: NextRequest) => {
     };
   }
 
-  let orderBy: Record<string, unknown> = {};
+  const orderBy: Record<string, unknown> = {};
   switch (sort) {
     case "price_asc":
       orderBy.latestPriceJpy = { sort: "asc", nulls: "last" };

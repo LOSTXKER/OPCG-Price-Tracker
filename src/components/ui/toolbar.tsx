@@ -292,7 +292,7 @@ export const FilterButton = forwardRef<HTMLButtonElement, FilterButtonProps>(
         {showCount && (
           <span
             className={cn(
-              "ml-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-semibold tabular-nums",
+              "ml-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-micro tabular-nums",
               active
                 ? "bg-primary text-primary-foreground"
                 : "bg-primary/15 text-primary",

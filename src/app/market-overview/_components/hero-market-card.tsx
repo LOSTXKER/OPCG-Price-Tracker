@@ -247,7 +247,7 @@ export function DeltaPill({
         title={period ? `${period}: —` : undefined}
       >
         {period && size === "md" && (
-          <span className="font-mono text-[10px] uppercase tracking-wider opacity-70">
+          <span className="text-micro font-mono uppercase tracking-wider opacity-70">
             {period}
           </span>
         )}
@@ -281,7 +281,7 @@ export function DeltaPill({
       title={period ? `${period}: ${display}` : undefined}
     >
       {period && size === "md" && (
-        <span className="font-mono text-[10px] uppercase tracking-wider opacity-70">
+        <span className="text-micro font-mono uppercase tracking-wider opacity-70">
           {period}
         </span>
       )}

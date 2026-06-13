@@ -349,7 +349,7 @@ export function CardPickerModal({
                           {card.set?.code?.toUpperCase() ?? ""}
                         </span>
                         {isSelected && (
-                          <span className="ml-auto inline-flex items-center gap-0.5 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary">
+                          <span className="ml-auto inline-flex items-center gap-0.5 rounded-full bg-primary/10 px-1.5 py-0.5 text-micro text-primary">
                             <Check className="size-2.5" />
                           </span>
                         )}

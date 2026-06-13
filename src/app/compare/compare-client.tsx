@@ -54,16 +54,21 @@ const FALLBACK_COLORS = [
 function useChartColors() {
   const [colors, setColors] = useState(FALLBACK_COLORS);
   useEffect(() => {
-    const style = getComputedStyle(document.documentElement);
-    const resolved = [
-      style.getPropertyValue("--chart-1").trim(),
-      style.getPropertyValue("--chart-2").trim(),
-      style.getPropertyValue("--chart-3").trim(),
-      style.getPropertyValue("--chart-4").trim(),
-      style.getPropertyValue("--chart-5").trim(),
-      style.getPropertyValue("--primary").trim(),
-    ].filter(Boolean);
-    if (resolved.length >= 5) setColors(resolved);
+    // rAF keeps the DOM read + setState out of the synchronous effect body;
+    // fallback colors render for at most one frame.
+    const raf = requestAnimationFrame(() => {
+      const style = getComputedStyle(document.documentElement);
+      const resolved = [
+        style.getPropertyValue("--chart-1").trim(),
+        style.getPropertyValue("--chart-2").trim(),
+        style.getPropertyValue("--chart-3").trim(),
+        style.getPropertyValue("--chart-4").trim(),
+        style.getPropertyValue("--chart-5").trim(),
+        style.getPropertyValue("--primary").trim(),
+      ].filter(Boolean);
+      if (resolved.length >= 5) setColors(resolved);
+    });
+    return () => cancelAnimationFrame(raf);
   }, []);
   return colors;
 }

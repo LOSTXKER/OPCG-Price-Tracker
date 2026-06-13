@@ -74,13 +74,17 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
   const [activeIdx, setActiveIdx] = useState(-1)
 
   useEffect(() => {
-    if (open) {
+    if (!open) return
+    // Async tick keeps the reset out of the synchronous effect body; the
+    // modal opens on the same frame either way.
+    const t = setTimeout(() => {
       setRecent(readRecent())
       setQuery("")
       setResults([])
       setSearchError(null)
       setActiveIdx(-1)
-    }
+    }, 0)
+    return () => clearTimeout(t)
   }, [open])
 
   useLayoutEffect(() => {
@@ -96,28 +100,33 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
 
   useEffect(() => {
     const trimmed = query.trim()
-    if (trimmed.length < 2) {
-      setResults([])
-      setSearchError(null)
-      return
-    }
     const controller = new AbortController()
-    setLoading(true)
-    setSearchError(null)
-    fetchCards({ search: trimmed, limit: 8 }, { signal: controller.signal })
-      .then((data) => {
-        setResults(data.cards ?? [])
-        setSearchError(null)
-        setActiveIdx(-1)
-      })
-      .catch((err: unknown) => {
-        if (err instanceof Error && err.name === "AbortError") return
-        console.error("Command search failed:", err)
+    const t = setTimeout(() => {
+      if (trimmed.length < 2) {
         setResults([])
-        setSearchError("Search failed. Please try again.")
-      })
-      .finally(() => setLoading(false))
-    return () => controller.abort()
+        setSearchError(null)
+        return
+      }
+      setLoading(true)
+      setSearchError(null)
+      fetchCards({ search: trimmed, limit: 8 }, { signal: controller.signal })
+        .then((data) => {
+          setResults(data.cards ?? [])
+          setSearchError(null)
+          setActiveIdx(-1)
+        })
+        .catch((err: unknown) => {
+          if (err instanceof Error && err.name === "AbortError") return
+          console.error("Command search failed:", err)
+          setResults([])
+          setSearchError("Search failed. Please try again.")
+        })
+        .finally(() => setLoading(false))
+    }, 0)
+    return () => {
+      clearTimeout(t)
+      controller.abort()
+    }
   }, [query])
 
   const pushRecent = useCallback((q: string) => {

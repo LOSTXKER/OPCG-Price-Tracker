@@ -377,7 +377,7 @@ function AlertRow({
               <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-muted-foreground/70">
                 <span>{alert.card.cardCode}</span>
                 {!alert.isActive && (
-                  <Badge variant="secondary" className="h-4 px-1.5 text-[10px]">
+                  <Badge variant="secondary" className="h-4 px-1.5 text-micro">
                     {t(lang, "alertTriggered")}
                   </Badge>
                 )}

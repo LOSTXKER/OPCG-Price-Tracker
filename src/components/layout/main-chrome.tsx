@@ -13,6 +13,8 @@ const CHROMELESS_ROUTES: ReadonlyArray<string | RegExp> = [
   "/admin-login",
   "/login",
   "/register",
+  "/forgot-password",
+  "/reset-password",
   /^\/messages(\/|$)/,
   /^\/seller(\/|$)/,
 ];

@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { t, type Language, type TranslationKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useCountdown } from "../hooks/use-countdown";
 import type { MissionData } from "../types";
 import { ICON_MAP } from "./missions-types";
@@ -475,14 +476,10 @@ function CheckinRow({
  */
 function StreakInfoPopover({ lang }: { lang: Language }) {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (!open) return;
