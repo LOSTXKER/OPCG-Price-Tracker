@@ -19,7 +19,7 @@
 - verify ที่ `~/dev` (สด ไม่มี iCloud): lint 0 errors/81 warn ✓ · tsc clean ✓ · test 36/36 ✓ · **build ผ่าน** Compiled 6.8s, static 145/145 ✓
 
 ## ค้าง / ติดอะไร
-- เปิด PR: https://github.com/LOSTXKER/OPCG-Price-Tracker/pull/new/refactor/mobile-ux-and-data-layer
+- **branch push แล้วถึง `204b148` (16 commits วันนี้)** — รอเบส merge เอง: https://github.com/LOSTXKER/OPCG-Price-Tracker/pull/new/refactor/mobile-ux-and-data-layer (gh ไม่ติดตั้ง → merge ผ่าน GitHub UI · ห้าม push master ตรง)
 - ✅ zombie junk ลบแล้ว (svg×5, meecard.png ซ้ำ, `use-portfolio-api 2.ts` เก่า) · **`docs/MARKETPLACE_OVERHAUL.md` ไม่ใช่ junk** — เป็นแผนงาน (PLAN.md อ้างถึง) commit เก็บแล้ว
 - repo อื่นที่ย้ายมาด้วย (anajak-stock-main, Git/{anajak-erp,anajak-stock,bestos,bill-tracker}) คัดลอก source+.git แล้ว แต่ยังไม่ได้ npm install — install ตอนจะใช้
 - R2 ค้าง: ลบ `src/lib/api/admin-client.ts` (dead code — รอ confirm) · แตก client components ยักษ์ที่เหลือ · R3 i18n 152 ไฟล์ · R4 client→server pages
