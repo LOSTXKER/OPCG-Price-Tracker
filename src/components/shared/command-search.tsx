@@ -10,12 +10,26 @@ import {
   useRef,
   useState,
 } from "react"
-import { Clock, Search, XIcon } from "lucide-react"
+import {
+  ArrowRightLeft,
+  Bookmark,
+  Clock,
+  LayoutGrid,
+  LineChart,
+  Search,
+  Settings,
+  Sparkles,
+  Swords,
+  TrendingUp,
+  Wallet,
+  XIcon,
+  type LucideIcon,
+} from "lucide-react"
 
 import { Skeleton } from "@/components/ui/skeleton"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
-import { getCardName, t } from "@/lib/i18n"
+import { getCardName, t, type TranslationKey } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
 import { fetchCards } from "@/lib/api/fetch-cards"
@@ -23,6 +37,19 @@ import type { SearchResult } from "@/components/shared/search-results-dropdown"
 
 const STORAGE_KEY = "meecard-recent-searches"
 const MAX_RECENT = 6
+
+/** Navigation shortcuts surfaced in the palette (cards + "go to" pages). */
+const NAV_ACTIONS: { href: string; labelKey: TranslationKey; icon: LucideIcon }[] = [
+  { href: "/", labelKey: "market", icon: LineChart },
+  { href: "/sets", labelKey: "browse", icon: LayoutGrid },
+  { href: "/decks", labelKey: "decksAndTools", icon: Swords },
+  { href: "/portfolio", labelKey: "portfolioNav", icon: Wallet },
+  { href: "/watchlist", labelKey: "watchlistNav", icon: Bookmark },
+  { href: "/trending", labelKey: "footerTrending", icon: TrendingUp },
+  { href: "/compare", labelKey: "compareCards", icon: ArrowRightLeft },
+  { href: "/honey", labelKey: "honeyPageTitle", icon: Sparkles },
+  { href: "/settings", labelKey: "settingsTitle", icon: Settings },
+]
 
 function readRecent(): string[] {
   if (typeof window === "undefined") return []
@@ -144,6 +171,11 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
     router.push(`/cards/${code}`)
   }, [onClose, router])
 
+  const goToPage = useCallback((href: string) => {
+    onClose()
+    router.push(href)
+  }, [onClose, router])
+
   const commitSearch = useCallback((q: string) => {
     const trimmed = q.trim()
     if (!trimmed) return
@@ -158,12 +190,24 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
     return recent.filter((r) => r.toLowerCase().includes(t))
   }, [recent, query])
 
+  // Nav shortcuts: all of them when the box is empty (quick links), otherwise
+  // those whose localized label matches the query.
+  const matchedNav = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    if (!q) return NAV_ACTIONS
+    return NAV_ACTIONS.filter((a) => t(lang, a.labelKey).toLowerCase().includes(q))
+  }, [query, lang])
+
   const allItems = useMemo(() => {
-    const items: { type: "result" | "recent"; key: string }[] = []
+    const items: { type: "result" | "nav" | "recent"; key: string }[] = []
     for (const r of results) items.push({ type: "result", key: r.cardCode })
+    for (const a of matchedNav) items.push({ type: "nav", key: a.href })
     if (results.length === 0) for (const r of filteredRecent) items.push({ type: "recent", key: r })
     return items
-  }, [results, filteredRecent])
+  }, [results, matchedNav, filteredRecent])
+
+  const navBase = results.length
+  const recentBase = results.length + matchedNav.length
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") { e.preventDefault(); setActiveIdx((i) => Math.min(i + 1, allItems.length - 1)) }
@@ -173,6 +217,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
         e.preventDefault()
         const item = allItems[activeIdx]
         if (item.type === "result") goToCard(item.key)
+        else if (item.type === "nav") goToPage(item.key)
         else commitSearch(item.key)
       } else {
         commitSearch(query)
@@ -309,6 +354,32 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
               </div>
             )}
 
+            {/* Pages — navigation shortcuts (all when empty, filtered when typing) */}
+            {matchedNav.length > 0 && (
+              <div className="p-2">
+                <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/60">
+                  {t(lang, "pages")}
+                </p>
+                {matchedNav.map((action, i) => {
+                  const Icon = action.icon
+                  return (
+                    <button
+                      key={action.href}
+                      type="button"
+                      onClick={() => goToPage(action.href)}
+                      className={cn(
+                        "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm transition-colors",
+                        activeIdx === navBase + i ? "bg-accent" : "hover:bg-accent/60"
+                      )}
+                    >
+                      <Icon className="size-4 text-muted-foreground" />
+                      {t(lang, action.labelKey)}
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+
             {searchError && query.trim().length >= 2 && !loading && (
               <div className="border-b border-destructive/10 px-4 py-3 text-center text-sm text-destructive">
                 {searchError}
@@ -327,7 +398,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                     onClick={() => commitSearch(item)}
                     className={cn(
                       "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm transition-colors",
-                      activeIdx === i ? "bg-accent" : "hover:bg-accent/60"
+                      activeIdx === recentBase + i ? "bg-accent" : "hover:bg-accent/60"
                     )}
                   >
                     <Clock className="size-3.5 text-muted-foreground" />
@@ -346,7 +417,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
               </div>
             )}
 
-            {!loading && query.trim().length < 2 && filteredRecent.length === 0 && (
+            {!loading && query.trim().length < 2 && filteredRecent.length === 0 && matchedNav.length === 0 && (
               <div className="px-4 py-8 text-center text-sm text-muted-foreground/50">
                 {t(lang, "typeToSearch")}
               </div>

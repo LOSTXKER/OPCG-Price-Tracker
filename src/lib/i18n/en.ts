@@ -1666,4 +1666,5 @@ export const en = {
   consentMessage: "We use cookies to show you relevant ads.",
   consentAccept: "Accept",
   consentDecline: "Decline",
+  pages: "Pages",
 } as const;

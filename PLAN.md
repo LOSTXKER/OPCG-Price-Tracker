@@ -53,8 +53,12 @@
 - [x] `ConsentBanner` + `adConsent` ใน ui-store (persist) — dormant จน env ตั้ง (กัน nag ก่อน ads live) · ใช้ `useHydrated()`
 - [x] billing/features: key `adFree` (PRO) + `featAdFree` i18n · migrate HomeAdCard → AdSlot · + mobile home AdSlot (แก้ ad lg:-only)
 
-**P0c — polish**
-- [ ] command palette: nav shortcuts (ไม่ใช่แค่การ์ด) · footer มือถือเข้าถึงได้ · design-token pass (`.text-price` + `--game-accent`)
+**P0c — polish** ✅ verified (branch `redesign/p0c-polish`)
+- [x] command palette: เพิ่ม "Pages" nav shortcuts (Market/Browse/Decks/Portfolio/Watchlist/Trending/Compare/Honey/Settings) — ค้นหน้าได้ ไม่ใช่แค่การ์ด · keyboard nav รองรับ
+- [x] footer มือถือเข้าถึงได้ (เลิก `hidden md:block` + pb clear bottom-nav)
+- [x] design-token pass: `.text-price`/`.text-price-lg` (numeric mono) + `--game-accent` hook (default → primary, GameSwitcher set ตอน P4) — **adopt บน PriceTag ตอน P1**
+
+→ **P0 จบครบ** (P0a nav + P0b ads + P0c polish) · ถัดไป P1 core pages
 
 ### ค้างจาก audit (ทำตอน redesign แต่ละหน้า — REDESIGN.md P1+)
 - Honey nav มือถือ: 7 แท็บไอคอนล้วนไม่มี label (`honey-tab-nav.tsx:159`) + scroll แนวนอน (→ P5)

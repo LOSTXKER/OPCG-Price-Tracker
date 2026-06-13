@@ -1639,4 +1639,5 @@ export const jp = {
   consentMessage: "関連する広告を表示するためにCookieを使用します。",
   consentAccept: "同意する",
   consentDecline: "拒否",
+  pages: "ページ",
 } as const;
