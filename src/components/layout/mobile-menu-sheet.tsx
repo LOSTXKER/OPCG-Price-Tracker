@@ -8,9 +8,7 @@ import {
   ArrowRightLeft,
   BellRing,
   Bookmark,
-  Dices,
   Heart,
-  LayoutGrid,
   LogOut,
   MessageCircle,
   Moon,
@@ -21,9 +19,9 @@ import {
   Star,
   Store,
   Sun,
+  Swords,
   TrendingUp,
   User,
-  Zap,
   Crown,
   BookOpen,
 } from "lucide-react";
@@ -225,10 +223,9 @@ export function MobileMenuSheet({
           <MenuLink href="/watchlist" icon={Bookmark} label={t(language, "watchlistNav")} pathname={pathname} onNav={close} />
           <MenuLink href="/compare" icon={ArrowRightLeft} label={t(language, "compareCards")} pathname={pathname} onNav={close} />
 
-          {/* Tools */}
+          {/* Decks & Tools — hub holds deck/drop calculators, compare, and future meta/tier */}
           <SectionLabel>{t(language, "tools")}</SectionLabel>
-          <MenuLink href="/deck-calculator" icon={LayoutGrid} label={t(language, "deckCalculatorNav")} pathname={pathname} onNav={close} />
-          <MenuLink href="/drop-calculator" icon={Dices} label={t(language, "dropCalculator")} pathname={pathname} onNav={close} />
+          <MenuLink href="/decks" icon={Swords} label={t(language, "decksAndTools")} pathname={pathname} onNav={close} />
 
           {/* My Account — only when logged in */}
           {authLoaded && authUser && (

@@ -1628,4 +1628,10 @@ export const jp = {
   streakInfoDesc2: "毎日連続チェックインでボーナスが増えます。1日休むとリセットされます",
   streakFreeRaffleTicketTitle: "無料抽選チケット",
   streakTierDayOneLabel: "初日から",
+  browse: "ブラウズ",
+  decksAndTools: "デッキ＆ツール",
+  deckBuilder: "デッキ構築",
+  myDecks: "マイデッキ",
+  metaCards: "メタカード",
+  tierList: "ティアリスト",
 } as const;

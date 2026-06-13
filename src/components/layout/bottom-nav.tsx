@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Layers, MessageCircle, Search, ShoppingBag, Sparkles, Menu, X } from "lucide-react";
+import { LayoutGrid, LineChart, Menu, Swords, Wallet, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
-import { usePublicConfig } from "@/hooks/use-public-config";
 
 function isTabActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -23,7 +22,7 @@ function TabLink({
 }: {
   href: string;
   label: string;
-  icon: typeof Home;
+  icon: typeof LineChart;
   badge?: number;
   pathname: string;
 }) {
@@ -52,14 +51,17 @@ function TabLink({
   );
 }
 
+/**
+ * Mobile bottom-nav — 5 FIXED tabs. Tab identity never changes (no feature-flag
+ * swapping); flag-gated features (marketplace, messages) live inside Browse /
+ * Portfolio / More, not as tabs. Search moved to the header. See REDESIGN.md §3.
+ */
 export function BottomNav({ className }: { className?: string }) {
   const pathname = usePathname() ?? "/";
   const lang = useUIStore((s) => s.language);
   const menuOpen = useUIStore((s) => s.mobileMenuOpen);
   const toggleMenu = useUIStore((s) => s.toggleMobileMenu);
   const unread = useUIStore((s) => s.unreadMessages);
-  const { config: publicConfig } = usePublicConfig();
-  const marketplaceEnabled = publicConfig.marketplaceEnabled;
 
   return (
     <nav
@@ -70,34 +72,12 @@ export function BottomNav({ className }: { className?: string }) {
       aria-label="Navigation"
     >
       <ul className="mx-auto flex max-w-lg items-stretch justify-around">
-        <TabLink href="/" label={t(lang, "home")} icon={Home} pathname={pathname} />
-        {marketplaceEnabled ? (
-          <TabLink href="/marketplace" label={t(lang, "marketplace")} icon={ShoppingBag} pathname={pathname} />
-        ) : (
-          <TabLink href="/sets" label={t(lang, "sets")} icon={Layers} pathname={pathname} />
-        )}
+        <TabLink href="/" label={t(lang, "market")} icon={LineChart} pathname={pathname} />
+        <TabLink href="/sets" label={t(lang, "browse")} icon={LayoutGrid} pathname={pathname} />
+        <TabLink href="/decks" label={t(lang, "decks")} icon={Swords} pathname={pathname} />
+        <TabLink href="/portfolio" label={t(lang, "portfolioNav")} icon={Wallet} badge={unread} pathname={pathname} />
 
-        {/* Search — triggers CommandSearch modal */}
-        <li className="min-w-0 flex-1">
-          <button
-            type="button"
-            onClick={() => useUIStore.getState().setSearchOpen(true)}
-            className="flex w-full flex-col items-center gap-0.5 py-2 text-xs font-medium text-muted-foreground transition-all active:scale-95"
-            aria-label="Search"
-          >
-            <Search className="size-5" aria-hidden />
-            <span>{t(lang, "search")}</span>
-            <span className="h-1 w-1 rounded-full bg-primary opacity-0" />
-          </button>
-        </li>
-
-        {marketplaceEnabled ? (
-          <TabLink href="/messages" label={t(lang, "messagesTitle")} icon={MessageCircle} badge={unread} pathname={pathname} />
-        ) : (
-          <TabLink href="/honey" label="Honey" icon={Sparkles} pathname={pathname} />
-        )}
-
-        {/* Menu (opens sheet drawer) */}
+        {/* More (opens sheet drawer) */}
         <li className="min-w-0 flex-1">
           <button
             type="button"
@@ -106,14 +86,14 @@ export function BottomNav({ className }: { className?: string }) {
               "flex w-full flex-col items-center gap-0.5 py-2 text-xs font-medium transition-all active:scale-95",
               menuOpen ? "text-primary" : "text-muted-foreground"
             )}
-            aria-label="Toggle menu"
+            aria-label={t(lang, "more")}
           >
             {menuOpen ? (
               <X className="size-5 stroke-[2.5]" aria-hidden />
             ) : (
               <Menu className="size-5" aria-hidden />
             )}
-            <span>{t(lang, "menuLabel")}</span>
+            <span>{t(lang, "more")}</span>
             <span className={cn("h-1 w-1 rounded-full bg-primary transition-opacity", menuOpen ? "opacity-100" : "opacity-0")} />
           </button>
         </li>

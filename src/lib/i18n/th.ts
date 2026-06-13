@@ -1628,4 +1628,10 @@ export const th = {
   streakInfoDesc2: "เช็คอินทุกวันติดต่อกันเพื่อรับ Honey เพิ่มขึ้น หยุด 1 วันสตรีคจะรีเซ็ต",
   streakFreeRaffleTicketTitle: "ตั๋วลุ้นรางวัลฟรี",
   streakTierDayOneLabel: "เริ่มต้น",
+  browse: "เรียกดู",
+  decksAndTools: "เด็คและเครื่องมือ",
+  deckBuilder: "จัดเด็ค",
+  myDecks: "เด็คของฉัน",
+  metaCards: "การ์ดเมต้า",
+  tierList: "ทีเออร์ลิสต์",
 } as const;

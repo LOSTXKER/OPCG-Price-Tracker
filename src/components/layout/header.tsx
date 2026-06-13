@@ -6,17 +6,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import {
   Bookmark,
-  ChevronDown,
   Crown,
   Star,
-  Zap,
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { CommandSearchModal } from "@/components/shared/command-search";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
@@ -24,7 +16,7 @@ import { formatCount } from "@/lib/utils/currency";
 import { t } from "@/lib/i18n";
 import { useHeaderData } from "@/hooks/use-header-data";
 import { usePublicConfig } from "@/hooks/use-public-config";
-import { NAV_LINKS, TOOL_LINKS, isActive } from "./header-constants";
+import { NAV_LINKS, MARKETPLACE_LINK, isActive } from "./header-constants";
 import { HeaderMarketTicker } from "./header-market-ticker";
 import { HeaderUserMenu } from "./header-user-menu";
 import { HeaderMobile } from "./header-mobile";
@@ -54,9 +46,10 @@ export function Header() {
   } = useHeaderData();
 
   const { config: publicConfig } = usePublicConfig();
-  const visibleNavLinks = publicConfig.marketplaceEnabled
-    ? NAV_LINKS
-    : NAV_LINKS.filter((link) => link.href !== "/marketplace");
+  // Hubs are stable; Marketplace is appended (never swaps a hub) when enabled.
+  const navLinks = publicConfig.marketplaceEnabled
+    ? [...NAV_LINKS, MARKETPLACE_LINK]
+    : NAV_LINKS;
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -104,7 +97,7 @@ export function Header() {
           </Link>
 
           <nav className="flex items-center">
-            {visibleNavLinks.map((link) => {
+            {navLinks.map((link) => {
               const active = isActive(pathname, link.href);
               return (
                 <Link
@@ -120,39 +113,6 @@ export function Header() {
                 </Link>
               );
             })}
-
-            {(() => {
-              const toolActive = TOOL_LINKS.some((l) => isActive(pathname, l.href));
-              return (
-                <DropdownMenu>
-                  <DropdownMenuTrigger
-                    className={cn(
-                      "relative flex items-center gap-1 whitespace-nowrap px-3 py-2 text-sm font-medium transition-colors focus:outline-none",
-                      toolActive ? "font-semibold text-foreground" : "text-muted-foreground hover:text-foreground"
-                    )}
-                  >
-                    {t(language, "tools")}
-                    <ChevronDown className="size-3" />
-                    {toolActive && <span className="absolute bottom-0 left-1/2 h-[2px] w-5 -translate-x-1/2 rounded-full bg-primary" />}
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" sideOffset={8} className="min-w-[180px]">
-                    {TOOL_LINKS.map((link) => {
-                      const Icon = link.icon;
-                      return (
-                        <DropdownMenuItem
-                          key={link.href}
-                          onClick={() => router.push(link.href)}
-                          className={cn(isActive(pathname, link.href) && "font-semibold text-foreground")}
-                        >
-                          <Icon className="size-4" />
-                          {t(language, link.key)}
-                        </DropdownMenuItem>
-                      );
-                    })}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              );
-            })()}
           </nav>
 
           <div className="flex-1" />
