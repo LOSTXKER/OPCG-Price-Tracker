@@ -18,7 +18,10 @@ export const FREE_STREAK_THRESHOLD = 7;
 export async function getActiveRaffles() {
   const month = currentMonthKey();
   return prisma.monthlyRaffle.findMany({
-    where: { isActive: true, month },
+    where: {
+      month,
+      OR: [{ isActive: true }, { drawnAt: { not: null } }],
+    },
     orderBy: { sortOrder: "asc" },
     include: {
       _count: { select: { tickets: true } },
@@ -60,10 +63,6 @@ export async function buyTicket(
 
   if (!raffle || !raffle.isActive || raffle.drawnAt) {
     return { success: false, error: "Raffle not available" };
-  }
-
-  if (raffle.tickets.length >= raffle.maxTickets) {
-    return { success: false, error: `Max ${raffle.maxTickets} tickets per raffle` };
   }
 
   const ent = await prisma.userEntitlements.findUnique({

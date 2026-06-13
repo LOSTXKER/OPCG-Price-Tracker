@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState, useTransition } from "react"
+import { ApiError, apiGet } from "@/lib/api/client"
 import { buildCardsUrl } from "@/lib/api/fetch-cards"
 import {
   type TabId,
@@ -52,11 +53,14 @@ export function useMarketCards({
   const isInitialMount = useRef(true)
   const fetchAbortRef = useRef<AbortController | null>(null)
   const tabsRef = useRef(tabs)
-  tabsRef.current = tabs
+  useEffect(() => {
+    tabsRef.current = tabs
+  }, [tabs])
   const initialSearchRef = useRef(initialSearch)
 
   useEffect(() => {
-    setSearch(initialSearch ?? "")
+    const t = setTimeout(() => setSearch(initialSearch ?? ""), 0)
+    return () => clearTimeout(t)
   }, [initialSearch])
 
   const fetchCards = useCallback(
@@ -87,13 +91,8 @@ export function useMarketCards({
 
       startTransition(async () => {
         try {
-          const res = await fetch(url, { signal: controller.signal })
-          if (!res.ok) {
-            setError(`Failed to load cards (${res.status})`)
-            return
-          }
+          const data = await apiGet<ApiResponse>(url, controller.signal)
           setError(null)
-          const data: ApiResponse = await res.json()
           setCards(
             data.cards.map((c) => ({
               ...c,
@@ -104,7 +103,7 @@ export function useMarketCards({
           setTotalPages(data.totalPages)
         } catch (e) {
           if (e instanceof Error && e.name === "AbortError") return
-          setError("Failed to load cards")
+          setError(e instanceof ApiError ? `Failed to load cards (${e.status})` : "Failed to load cards")
         }
       })
     },
@@ -123,8 +122,7 @@ export function useMarketCards({
     const ids = cards.map((c) => c.id).filter((id): id is number => id != null)
     if (ids.length === 0) return
     const controller = new AbortController()
-    fetch(`/api/cards/sparklines?ids=${ids.join(",")}`, { signal: controller.signal })
-      .then((r) => { if (!r.ok) throw new Error(`Sparklines ${r.status}`); return r.json() })
+    apiGet<{ sparklines?: Record<number, number[]> }>(`/api/cards/sparklines?ids=${ids.join(",")}`, controller.signal)
       .then((data) => { if (data.sparklines) setSparklines(data.sparklines) })
       .catch((err: unknown) => {
         if (err instanceof Error && err.name !== "AbortError") console.error("Sparkline fetch failed:", err)

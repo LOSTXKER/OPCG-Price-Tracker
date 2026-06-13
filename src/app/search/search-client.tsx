@@ -96,11 +96,13 @@ function SearchContent({
   const inputRef = useRef<HTMLInputElement>(null)
   const fetchAbortRef = useRef<AbortController | null>(null)
   const sortRef = useRef(sort)
-  sortRef.current = sort
   const setRef = useRef(selectedSet)
-  setRef.current = selectedSet
   const rarityRef = useRef(selectedRarity)
-  rarityRef.current = selectedRarity
+  useEffect(() => {
+    sortRef.current = sort
+    setRef.current = selectedSet
+    rarityRef.current = selectedRarity
+  }, [sort, selectedSet, selectedRarity])
 
   const fetchResults = useCallback(
     (q: string, sortKey: SortKey, pg: number, filterSet?: string, filterRarity?: string) => {
@@ -144,10 +146,13 @@ function SearchContent({
 
   useEffect(() => {
     const q = searchParams.get("q") ?? ""
-    setQuery(q)
-    setInputValue(q)
-    setPage(1)
-    if (q.trim()) fetchResults(q, sortRef.current, 1, setRef.current, rarityRef.current)
+    const t = setTimeout(() => {
+      setQuery(q)
+      setInputValue(q)
+      setPage(1)
+      if (q.trim()) fetchResults(q, sortRef.current, 1, setRef.current, rarityRef.current)
+    }, 0)
+    return () => clearTimeout(t)
   }, [searchParams, fetchResults])
 
   useEffect(() => {

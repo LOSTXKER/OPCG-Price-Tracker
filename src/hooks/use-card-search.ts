@@ -31,14 +31,15 @@ export function useCardSearch({
 
   useEffect(() => {
     const q = query.trim()
-    if (q.length < 2) {
-      setResults([])
-      return
-    }
-
-    setLoading(true)
-
+    // All setState calls live in the debounce callback (never synchronously
+    // in the effect body); short queries clear on the next tick.
     const t = window.setTimeout(() => {
+      if (q.length < 2) {
+        setResults([])
+        setLoading(false)
+        return
+      }
+      setLoading(true)
       void fetchCards({ search: q, limit, type: typeFilter })
         .then((data) => setResults((data.cards ?? []) as CardSearchResult[]))
         .catch((err: unknown) => {
@@ -46,12 +47,9 @@ export function useCardSearch({
           setResults([])
         })
         .finally(() => setLoading(false))
-    }, debounceMs)
+    }, q.length < 2 ? 0 : debounceMs)
 
-    return () => {
-      window.clearTimeout(t)
-      setLoading(false)
-    }
+    return () => window.clearTimeout(t)
   }, [query, debounceMs, limit, typeFilter])
 
   const reset = useCallback(() => {

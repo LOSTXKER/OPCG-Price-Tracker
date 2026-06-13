@@ -84,6 +84,17 @@ export const GET = apiHandler(async () => {
     };
   });
 
+  const currentMachineWinnerIds = [
+    ...new Set(raffles.map((r) => r.winnerId).filter((id): id is string => Boolean(id))),
+  ];
+  const machineWinnerUsers = currentMachineWinnerIds.length > 0
+    ? await prisma.user.findMany({
+        where: { id: { in: currentMachineWinnerIds } },
+        select: { id: true, displayName: true, avatarUrl: true },
+      })
+    : [];
+  const winnerById = new Map(machineWinnerUsers.map((u) => [u.id, u]));
+
   return NextResponse.json({
     machines: raffles.map((r) => ({
       id: r.id,
@@ -101,6 +112,8 @@ export const GET = apiHandler(async () => {
       freeThreshold: r.freeThreshold,
       totalTickets: r._count.tickets,
       totalParticipants: participantCounts.get(r.id)?.size ?? 0,
+      drawnAt: r.drawnAt ? r.drawnAt.toISOString() : null,
+      winner: r.winnerId ? winnerById.get(r.winnerId) ?? null : null,
     })),
     myTickets,
     ticketBalance,

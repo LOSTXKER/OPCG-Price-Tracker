@@ -55,18 +55,27 @@ export function HeroSearchBar() {
   const [open, setOpen] = useState(false)
   const [activeIdx, setActiveIdx] = useState(-1)
 
-  useEffect(() => { setRecent(readRecent()) }, [])
+  useEffect(() => {
+    const t = setTimeout(() => setRecent(readRecent()), 0)
+    return () => clearTimeout(t)
+  }, [])
 
   useEffect(() => {
     const trimmed = query.trim()
-    if (trimmed.length < 2) { setResults([]); return }
     const controller = new AbortController()
-    setLoading(true)
-    fetchCards({ search: trimmed, limit: 6 }, { signal: controller.signal })
-      .then((data) => { setResults(data.cards ?? []); setActiveIdx(-1) })
-      .catch((err: unknown) => { if (err instanceof Error && err.name !== "AbortError") console.error(err) })
-      .finally(() => setLoading(false))
-    return () => controller.abort()
+    // Async tick keeps the setState calls out of the synchronous effect body.
+    const t = setTimeout(() => {
+      if (trimmed.length < 2) { setResults([]); return }
+      setLoading(true)
+      fetchCards({ search: trimmed, limit: 6 }, { signal: controller.signal })
+        .then((data) => { setResults(data.cards ?? []); setActiveIdx(-1) })
+        .catch((err: unknown) => { if (err instanceof Error && err.name !== "AbortError") console.error(err) })
+        .finally(() => setLoading(false))
+    }, 0)
+    return () => {
+      clearTimeout(t)
+      controller.abort()
+    }
   }, [query])
 
   useEffect(() => {

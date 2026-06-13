@@ -46,7 +46,6 @@ export type MarketStats = {
   totalCards: number;
   totalValue: number;
   exchangeRate: number;
-  topMover: { code: string; name: string; change: number } | null;
 };
 
 export const LANG_OPTIONS: { value: Language; label: string }[] = [

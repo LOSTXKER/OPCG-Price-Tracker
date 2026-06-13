@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState, useMemo } from "react";
 
+import { ApiError, apiGet } from "@/lib/api/client";
+
 type CompareCard = {
   cardCode: string;
   nameJp: string;
@@ -27,6 +29,31 @@ type CompareCard = {
 
 type PriceHistoryEntry = { price: number | null; date: string };
 
+/** Loose shape of a card row from `/api/cards` — only the fields this hook maps. */
+type RawCompareCard = {
+  cardCode: string;
+  nameJp: string;
+  nameEn?: string | null;
+  nameTh?: string | null;
+  rarity: string;
+  cardType: string;
+  color?: string | null;
+  colorEn?: string | null;
+  cost?: number | null;
+  power?: number | null;
+  counter?: number | null;
+  life?: number | null;
+  attribute?: string | null;
+  trait?: string | null;
+  isParallel?: boolean;
+  imageUrl?: string | null;
+  set?: { code?: string } | null;
+  latestPriceJpy?: number | null;
+  priceChange24h?: number | null;
+  priceChange7d?: number | null;
+  priceChange30d?: number | null;
+};
+
 export type { CompareCard, PriceHistoryEntry };
 
 export function useCompareData(codes: string[]) {
@@ -47,41 +74,36 @@ export function useCompareData(codes: string[]) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(
+      const data = await apiGet<{ cards?: RawCompareCard[] }>(
         `/api/cards?codes=${cardCodes.join(",")}&limit=${cardCodes.length}`
       );
-      if (!res.ok) {
-        setError(`Failed to load cards (${res.status})`);
-        return;
-      }
-      const data = await res.json();
-      const mapped: CompareCard[] = (data.cards ?? []).map(
-        (c: Record<string, unknown>) => ({
-          cardCode: c.cardCode,
-          nameJp: c.nameJp,
-          nameEn: c.nameEn ?? null,
-          nameTh: c.nameTh ?? null,
-          rarity: c.rarity,
-          cardType: c.cardType,
-          color: c.color ?? c.colorEn ?? "",
-          cost: c.cost ?? null,
-          power: c.power ?? null,
-          counter: c.counter ?? null,
-          life: c.life ?? null,
-          attribute: c.attribute ?? null,
-          trait: c.trait ?? null,
-          isParallel: !!c.isParallel,
-          imageUrl: c.imageUrl ?? null,
-          setCode: (c.set as { code?: string })?.code ?? "",
-          currentPrice: c.latestPriceJpy ?? null,
-          change24h: c.priceChange24h ?? null,
-          change7d: c.priceChange7d ?? null,
-          change30d: c.priceChange30d ?? null,
-        })
-      );
+      const mapped: CompareCard[] = (data.cards ?? []).map((c) => ({
+        cardCode: c.cardCode,
+        nameJp: c.nameJp,
+        nameEn: c.nameEn ?? null,
+        nameTh: c.nameTh ?? null,
+        rarity: c.rarity,
+        cardType: c.cardType,
+        color: c.color ?? c.colorEn ?? "",
+        cost: c.cost ?? null,
+        power: c.power ?? null,
+        counter: c.counter ?? null,
+        life: c.life ?? null,
+        attribute: c.attribute ?? null,
+        trait: c.trait ?? null,
+        isParallel: !!c.isParallel,
+        imageUrl: c.imageUrl ?? null,
+        setCode: c.set?.code ?? "",
+        currentPrice: c.latestPriceJpy ?? null,
+        change24h: c.priceChange24h ?? null,
+        change7d: c.priceChange7d ?? null,
+        change30d: c.priceChange30d ?? null,
+      }));
       setCards(mapped);
-    } catch {
-      setError("Failed to load card data");
+    } catch (err) {
+      setError(err instanceof ApiError
+        ? `Failed to load cards (${err.status})`
+        : "Failed to load card data");
     } finally {
       setLoading(false);
     }
@@ -94,23 +116,20 @@ export function useCompareData(codes: string[]) {
         return;
       }
       try {
-        const res = await fetch(
+        const data = await apiGet<{ cards?: { cardCode: string; priceHistory: PriceHistoryEntry[] }[] }>(
           `/api/analytics/compare?cards=${cardCodes.join(",")}&days=${d}`
         );
-        if (res.status === 401 || res.status === 403) {
-          setChartLocked(true);
-          return;
-        }
-        if (!res.ok) return;
         setChartLocked(false);
-        const data = await res.json();
         const map: Record<string, PriceHistoryEntry[]> = {};
         for (const card of data.cards ?? []) {
           map[card.cardCode] = card.priceHistory;
         }
         setPriceHistory(map);
-      } catch {
-        /* graceful failure */
+      } catch (err) {
+        // Pro-gated chart: 401/403 → show the lock, other failures degrade silently.
+        if (err instanceof ApiError && (err.status === 401 || err.status === 403)) {
+          setChartLocked(true);
+        }
       }
     },
     []

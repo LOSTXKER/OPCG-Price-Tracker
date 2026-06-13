@@ -102,17 +102,10 @@ export function CollectionTabContent({
 
   const remaining = Math.max(0, stats.totalCards - cards.length);
 
-  // Conversational summary — only the brag-worthy parts.
-  const summaryParts: string[] = [
-    `${stats.totalCards.toLocaleString()} ${t(lang, "cardsInCollection").toLowerCase()}`,
-  ];
-  if (stats.setsCollected > 1) {
-    summaryParts.push(`${stats.setsCollected} ${t(lang, "summarySets")}`);
-  }
-  if (stats.rareCount > 0) {
-    summaryParts.push(`${stats.rareCount} ${t(lang, "rareCardsLabel").toLowerCase()}`);
-  }
-  const metaLine = summaryParts.join(" · ");
+  // Keep the meta line minimal — just the card count. Sets/rare breakdowns
+  // are already surfaced via the featured-set chips and the rarity filter,
+  // so repeating them here reads as noise.
+  const metaLine = `${stats.totalCards.toLocaleString()} ${t(lang, "cardsInCollection").toLowerCase()}`;
 
   // Only highlight sets where the user has made meaningful progress.
   const featuredSets = stats.topSets.filter(

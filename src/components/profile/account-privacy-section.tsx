@@ -93,29 +93,6 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
     [flash, onUserUpdate],
   );
 
-  const PrivacyFeedback = useCallback(
-    ({ field }: { field: string }) => {
-      if (errorField === field) {
-        return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in zoom-in-95">
-            <CircleAlert className="size-3" />
-            {t(lang, "saveFailed")}
-          </span>
-        );
-      }
-      if (savedField === field) {
-        return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 animate-in fade-in zoom-in-95">
-            <CircleCheck className="size-3" />
-            {t(lang, "saved")}
-          </span>
-        );
-      }
-      return null;
-    },
-    [errorField, savedField, lang],
-  );
-
   const activeVisibility = VISIBILITY_OPTIONS.find((o) => o.value === profileVisibility);
 
   return (
@@ -131,7 +108,7 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
           eyebrow={t(lang, "privacyVisibilityEyebrow")}
           title={t(lang, "privacyVisibilityTitle")}
           subtitle={t(lang, "privacyVisibilitySubtitle")}
-          feedback={<PrivacyFeedback field="profileVisibility" />}
+          feedback={<PrivacyFeedback field="profileVisibility" errorField={errorField} savedField={savedField} lang={lang} />}
         />
         <div className="grid gap-2 px-5 pb-5 sm:grid-cols-2">
           {VISIBILITY_OPTIONS.map(({ value, labelKey, descKey, icon: Icon }) => {
@@ -189,7 +166,7 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
               Icon={Icon}
               label={t(lang, labelKey)}
               desc={t(lang, descKey)}
-              feedback={<PrivacyFeedback field={field} />}
+              feedback={<PrivacyFeedback field={field} errorField={errorField} savedField={savedField} lang={lang} />}
               checked={sectionFlags[field]}
               onChange={(v) => {
                 setSectionFlags((prev) => ({ ...prev, [field]: v }));
@@ -204,6 +181,36 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
 }
 
 /* ── Building blocks ────────────────────────────────────────────────── */
+
+function PrivacyFeedback({
+  field,
+  errorField,
+  savedField,
+  lang,
+}: {
+  field: string;
+  errorField: string | null;
+  savedField: string | null;
+  lang: Language;
+}) {
+  if (errorField === field) {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in zoom-in-95">
+        <CircleAlert className="size-3" />
+        {t(lang, "saveFailed")}
+      </span>
+    );
+  }
+  if (savedField === field) {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 animate-in fade-in zoom-in-95">
+        <CircleCheck className="size-3" />
+        {t(lang, "saved")}
+      </span>
+    );
+  }
+  return null;
+}
 
 function Card({ children }: { children: ReactNode }) {
   return (

@@ -107,7 +107,7 @@ export function LoginClient() {
         <div className="relative flex h-full flex-col justify-between p-12">
           <Link href="/"><Logo size="lg" mono className="text-background" /></Link>
           <div className="max-w-md">
-            <h2 className="whitespace-pre-line text-3xl font-semibold tracking-tight text-background">
+            <h2 className="text-h1 whitespace-pre-line text-background">
               {t(lang, "loginHeroTitle")}
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-background/60">

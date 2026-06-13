@@ -1,12 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { AnimatePresence, motion } from "framer-motion"
 import { X } from "lucide-react"
 import { useCompareStore } from "@/stores/compare-store"
+import { useHydrated } from "@/hooks/use-hydrated"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
@@ -26,8 +26,7 @@ export function CompareFloatingBar() {
   const lang = useUIStore((s) => s.language)
   const pathname = usePathname()
 
-  const [hydrated, setHydrated] = useState(false)
-  useEffect(() => setHydrated(true), [])
+  const hydrated = useHydrated()
 
   if (!hydrated) return null
   if (pathname === "/compare") return null
@@ -70,7 +69,7 @@ export function CompareFloatingBar() {
                     sizes="36px"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-[9px] font-mono text-muted-foreground">
+                  <div className="flex h-full items-center justify-center text-overlay font-mono text-muted-foreground">
                     {item.cardCode.slice(0, 4)}
                   </div>
                 )}

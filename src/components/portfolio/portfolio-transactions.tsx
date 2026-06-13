@@ -326,7 +326,7 @@ function TxRow({
         <div className="mt-0.5 flex items-center gap-1.5 text-meta">
           <span
             className={cn(
-              "inline-flex items-center rounded-full px-1.5 py-0.5 text-overlay font-semibold uppercase tracking-wide",
+              "inline-flex items-center rounded-full px-1.5 py-0.5 text-overlay uppercase tracking-wide",
               meta.pillClass,
             )}
           >

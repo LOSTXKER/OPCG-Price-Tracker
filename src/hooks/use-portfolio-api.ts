@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
+import { ApiError, apiDelete, apiGet, apiPatch, apiPost, apiTry } from "@/lib/api/client"
 import { getCardName, getLocale, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { invalidateSettings } from "@/hooks/use-settings"
@@ -51,36 +52,24 @@ export function usePortfolioApi() {
   const [activeId, setActiveId] = useState<number | null>(null)
 
   const activeIdRef = useRef(activeId)
-  activeIdRef.current = activeId
+  useEffect(() => {
+    activeIdRef.current = activeId
+  }, [activeId])
 
   const load = useCallback(async () => {
-    setError(null)
     try {
-      const [portfolioRes, historyRes] = await Promise.all([
-        fetch("/api/portfolio"),
-        fetch("/api/portfolio/history").catch(() => null),
+      const [data, hData] = await Promise.all([
+        apiGet<{ portfolios: PortfolioRow[] }>("/api/portfolio"),
+        apiTry(apiGet<{ snapshots: { totalJpy: number; snapshotAt: string }[] }>("/api/portfolio/history")),
       ])
-      if (!portfolioRes.ok) {
-        if (portfolioRes.status === 401) {
-          invalidateSettings()
-          const supabase = createClient()
-          await supabase.auth.signOut()
-        }
-        setError(t(lang, "loadFailed"))
-        setLoading(false)
-        return
-      }
-      const data = (await portfolioRes.json()) as { portfolios: PortfolioRow[] }
+      setError(null)
       setPortfolios(data.portfolios ?? [])
 
       if (!activeIdRef.current && data.portfolios?.length) {
         setActiveId(data.portfolios[0].id)
       }
 
-      if (historyRes?.ok) {
-        const hData = (await historyRes.json()) as {
-          snapshots: { totalJpy: number; snapshotAt: string }[]
-        }
+      if (hData) {
         const locale = getLocale(lang)
         setHistory(
           (hData.snapshots ?? []).map((s) => ({
@@ -92,7 +81,12 @@ export function usePortfolioApi() {
           }))
         )
       }
-    } catch {
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        invalidateSettings()
+        const supabase = createClient()
+        await supabase.auth.signOut()
+      }
       setError(t(lang, "loadFailed"))
     }
     setLoading(false)
@@ -100,28 +94,22 @@ export function usePortfolioApi() {
 
   const loadTransactions = useCallback(async () => {
     if (!activeId) return
-    try {
-      const res = await fetch(`/api/portfolio/transactions?portfolioId=${activeId}`)
-      if (!res.ok) {
-        setTransactions([])
-        return
-      }
-      const data = (await res.json()) as { transactions: TransactionRow[] }
-      setTransactions(data.transactions ?? [])
-    } catch (err) {
-      console.error("Failed to load transactions:", err)
-      setTransactions([])
-    }
+    const data = await apiTry(
+      apiGet<{ transactions: TransactionRow[] }>(`/api/portfolio/transactions?portfolioId=${activeId}`)
+    )
+    setTransactions(data?.transactions ?? [])
   }, [activeId])
 
   const deleteTransaction = useCallback(async (txId: number) => {
-    const res = await fetch(`/api/portfolio/transactions?id=${txId}`, { method: "DELETE" })
-    if (!res.ok) throw new Error("Failed to delete transaction")
+    await apiDelete(`/api/portfolio/transactions?id=${txId}`)
     setTransactions((prev) => prev.filter((tx) => tx.id !== txId))
   }, [])
 
   useEffect(() => {
-    void load()
+    const t = setTimeout(() => {
+      void load()
+    }, 0)
+    return () => clearTimeout(t)
   }, [load])
 
   const activePortfolio = useMemo(
@@ -129,7 +117,7 @@ export function usePortfolioApi() {
     [portfolios, activeId]
   )
 
-  const items = activePortfolio?.items ?? []
+  const items = useMemo(() => activePortfolio?.items ?? [], [activePortfolio])
 
   const stats = useMemo((): PortfolioStats => {
     let totalValueJpy = 0
@@ -230,22 +218,14 @@ export function usePortfolioApi() {
   )
 
   const createPortfolio = async (name: string): Promise<boolean> => {
-    const res = await fetch("/api/portfolio", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name }),
-    })
-    if (res.ok) { void load(); return true }
+    const res = await apiTry(apiPost("/api/portfolio", { name }))
+    if (res !== null) { void load(); return true }
     return false
   }
 
   const renamePortfolio = async (id: number, name: string): Promise<boolean> => {
-    const res = await fetch(`/api/portfolio/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name }),
-    })
-    if (res.ok) { void load(); return true }
+    const res = await apiTry(apiPatch(`/api/portfolio/${id}`, { name }))
+    if (res !== null) { void load(); return true }
     return false
   }
 
@@ -256,12 +236,8 @@ export function usePortfolioApi() {
     setPortfolios((prev) =>
       prev.map((p) => (p.id === id ? { ...p, isPublic } : p)),
     )
-    const res = await fetch(`/api/portfolio/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ isPublic }),
-    })
-    if (!res.ok) {
+    const res = await apiTry(apiPatch(`/api/portfolio/${id}`, { isPublic }))
+    if (res === null) {
       setPortfolios((prev) =>
         prev.map((p) => (p.id === id ? { ...p, isPublic: !isPublic } : p)),
       )
@@ -271,8 +247,8 @@ export function usePortfolioApi() {
   }
 
   const deletePortfolio = async (id: number): Promise<boolean> => {
-    const res = await fetch(`/api/portfolio/${id}`, { method: "DELETE" })
-    if (res.ok) {
+    const res = await apiTry(apiDelete(`/api/portfolio/${id}`))
+    if (res !== null) {
       if (activeId === id) setActiveId(null)
       void load()
       return true
@@ -287,34 +263,32 @@ export function usePortfolioApi() {
 
     let targetId = activeId
     if (!targetId) {
-      const createRes = await fetch("/api/portfolio", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: "Default" }),
-      })
-      if (!createRes.ok) return { ok: false, failed: cartItems.length }
-      const created = (await createRes.json()) as { portfolio: { id: number } }
+      const created = await apiTry(
+        apiPost<{ portfolio: { id: number } }>("/api/portfolio", { name: "Default" })
+      )
+      if (!created) return { ok: false, failed: cartItems.length }
       targetId = created.portfolio.id
       setActiveId(targetId)
     }
 
     const results = await Promise.all(
-      cartItems.map((item) =>
-        fetch("/api/portfolio/items", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
+      cartItems.map(async (item) => {
+        try {
+          await apiPost("/api/portfolio/items", {
             portfolioId: targetId,
             cardId: item.card.id,
             quantity: item.quantity,
             purchasePrice: item.purchasePrice,
             condition: DEFAULT_CARD_CONDITION,
-          }),
-        })
-      )
+          })
+          return { ok: true as const }
+        } catch (err) {
+          return { ok: false as const, status: err instanceof ApiError ? err.status : 0 }
+        }
+      })
     )
     const failed = results.filter((r) => !r.ok).length
-    const limitReached = results.some((r) => r.status === 403)
+    const limitReached = results.some((r) => !r.ok && r.status === 403)
     void load()
     return { ok: failed === 0, failed, limitReached }
   }
@@ -328,19 +302,15 @@ export function usePortfolioApi() {
       notes?: string | null
     },
   ): Promise<boolean> => {
-    const res = await fetch(`/api/portfolio/items/${itemId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
-    if (!res.ok) return false
+    const res = await apiTry(apiPatch(`/api/portfolio/items/${itemId}`, data))
+    if (res === null) return false
     void load()
     return true
   }
 
   const removeItem = async (itemId: number): Promise<boolean> => {
-    const res = await fetch(`/api/portfolio/items/${itemId}`, { method: "DELETE" })
-    if (!res.ok) return false
+    const res = await apiTry(apiDelete(`/api/portfolio/items/${itemId}`))
+    if (res === null) return false
     void load()
     return true
   }

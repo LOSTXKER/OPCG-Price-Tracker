@@ -30,7 +30,7 @@ export function ConditionBadge({ condition, className, size = "default" }: Condi
   return (
     <Badge
       variant={variant}
-      className={cn(size === "sm" && "h-4 px-1.5 text-[10px]", className)}
+      className={cn(size === "sm" && "h-4 px-1.5 text-micro", className)}
     >
       {c}
     </Badge>

@@ -9,9 +9,15 @@ const eslintConfig = defineConfig([
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
+    // Salvaged/aborted build dirs (e.g. `.next-stale-*`, `.next-failed-*`)
+    // left behind when a build is interrupted — never lint their output.
+    ".next-*/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "src/generated/**",
+    // iCloud conflict copies ("foo 2.ts") — junk artifacts, never lint them.
+    "**/* [0-9].*",
   ]),
 ]);
 

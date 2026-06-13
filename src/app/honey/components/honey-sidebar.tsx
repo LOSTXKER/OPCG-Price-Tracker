@@ -90,6 +90,7 @@ function useStatusData(props: StatusProps, tiers: RankTier[]) {
 
   const currentLabel = getTierLabel(currentTier, lang);
   const nextLabel = nextTier ? getTierLabel(nextTier, lang) : undefined;
+  const nextBonus = nextTier?.levelUpBonus ?? 0;
   const iconName = currentTier.iconName;
   const accent = currentTier.color ?? null;
   const iconImage = currentTier.imageUrl ?? null;
@@ -101,6 +102,7 @@ function useStatusData(props: StatusProps, tiers: RankTier[]) {
     isMaxRank,
     currentLabel,
     nextLabel,
+    nextBonus,
     iconName,
     accent,
     iconImage,
@@ -305,6 +307,7 @@ function RankProgress({
   currentMin,
   nextThreshold,
   nextLabel,
+  nextBonus,
   accent,
 }: {
   lang: Language;
@@ -312,6 +315,7 @@ function RankProgress({
   currentMin: number;
   nextThreshold: number | null;
   nextLabel: string | undefined;
+  nextBonus: number;
   accent?: string | null;
 }) {
   if (nextThreshold === null) {
@@ -324,7 +328,24 @@ function RankProgress({
   const span = Math.max(1, nextThreshold - currentMin);
   const filled = Math.min(span, Math.max(0, lifetimeEarned - currentMin));
   const pct = Math.round((filled / span) * 100);
-  const remaining = Math.max(0, nextThreshold - lifetimeEarned);
+  const current = Math.min(span, filled);
+
+  const progressText =
+    lang === "TH"
+      ? `${current.toLocaleString()} / ${span.toLocaleString()} pt → ${nextLabel ?? ""}`
+      : lang === "JP"
+        ? `${current.toLocaleString()} / ${span.toLocaleString()} pt → ${nextLabel ?? ""}`
+        : `${current.toLocaleString()} / ${span.toLocaleString()} pt → ${nextLabel ?? "next rank"}`;
+
+  const rewardText =
+    nextBonus > 0
+      ? lang === "TH"
+        ? `ถึง${nextLabel ?? "ขั้นถัดไป"} รับโบนัส +${nextBonus.toLocaleString()} 🍯`
+        : lang === "JP"
+          ? `${nextLabel ?? "次ランク"}到達で +${nextBonus.toLocaleString()} 🍯 ボーナス`
+          : `Reach ${nextLabel ?? "next rank"} to earn +${nextBonus.toLocaleString()} 🍯`
+      : null;
+
   return (
     <div className="space-y-1.5">
       <div className="flex items-center gap-2">
@@ -341,13 +362,12 @@ function RankProgress({
           {pct}%
         </span>
       </div>
-      <p className="text-meta tabular-nums">
-        {lang === "TH"
-          ? `อีก ${remaining.toLocaleString()} pt → ${nextLabel ?? ""}`
-          : lang === "JP"
-            ? `あと ${remaining.toLocaleString()} ptで${nextLabel ?? ""}`
-            : `${remaining.toLocaleString()} pt to ${nextLabel ?? "next rank"}`}
-      </p>
+      <p className="text-meta tabular-nums">{progressText}</p>
+      {rewardText && (
+        <p className="text-meta font-medium tabular-nums text-foreground">
+          {rewardText}
+        </p>
+      )}
     </div>
   );
 }
@@ -365,7 +385,7 @@ export function HoneyStatusBar(props: StatusProps) {
   const {
     currentLevel,
     nextThreshold, currentMin,
-    currentLabel, nextLabel,
+    currentLabel, nextLabel, nextBonus,
     iconName, accent, iconImage,
   } = useStatusData(props, tiers);
 
@@ -467,6 +487,7 @@ export function HoneyStatusBar(props: StatusProps) {
               currentMin={currentMin}
               nextThreshold={nextThreshold}
               nextLabel={nextLabel}
+              nextBonus={nextBonus}
               accent={accent}
             />
           }

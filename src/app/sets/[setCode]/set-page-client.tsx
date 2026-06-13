@@ -108,6 +108,18 @@ export function DropRateDialog({
         ? pr.avgPerBox * BOXES_PER_CARTON
         : pr.avgPerBox;
 
+  const rows = pullRateGroups.map((g) => {
+    const pr = g.pullRate!;
+    return {
+      rarity: g.rarity,
+      cardCount: g.cards.length,
+      count: countForUnit(pr),
+      chance: pullChance(rateForUnit(pr), g.cards.length),
+      barWidth: Math.min((pr.avgPerBox / 6) * 100, 100),
+      barColor: RARITY_BAR_COLOR[g.rarity] ?? "bg-neutral-400",
+    };
+  });
+
   return (
     <Dialog>
       <DialogTrigger
@@ -157,7 +169,29 @@ export function DropRateDialog({
             )}
           </div>
 
-          <div className="overflow-x-auto">
+          {/* <sm: list fallback (ตาราง 5 คอลัมน์อ่านไม่ออกบนจอแคบ) */}
+          <div className="divide-y divide-border/20 sm:hidden">
+            {rows.map((r) => (
+              <div key={r.rarity} className="space-y-1.5 py-2.5">
+                <div className="flex items-center justify-between gap-2">
+                  <RarityBadge rarity={r.rarity} size="sm" />
+                  <span className="font-mono text-sm font-bold tabular-nums">
+                    {fmtCount(r.count)}
+                    <span className="ml-1 text-xs font-medium text-muted-foreground">/{t(lang, UNIT_I18N_KEYS[unit])}</span>
+                  </span>
+                </div>
+                <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+                  <div className={cn("h-full rounded-full", r.barColor)} style={{ width: `${r.barWidth}%` }} />
+                </div>
+                <div className="flex items-center justify-between text-xs tabular-nums text-muted-foreground">
+                  <span>{r.cardCount} {t(lang, "cardsCount")}</span>
+                  <span className="font-mono font-semibold text-primary">{formatPullPct(r.chance)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden overflow-x-auto sm:block">
             <table className="w-full border-collapse text-sm">
               <thead className="text-xs font-medium text-muted-foreground">
                 <tr className="border-b border-border/30">
@@ -169,26 +203,19 @@ export function DropRateDialog({
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/20">
-                {pullRateGroups.map((g) => {
-                  const pr = g.pullRate!;
-                  const count = countForUnit(pr);
-                  const chance = pullChance(rateForUnit(pr), g.cards.length);
-                  const barWidth = Math.min((pr.avgPerBox / 6) * 100, 100);
-                  const barColor = RARITY_BAR_COLOR[g.rarity] ?? "bg-neutral-400";
-                  return (
-                    <tr key={g.rarity}>
-                      <td className="whitespace-nowrap py-2 pl-0"><RarityBadge rarity={g.rarity} size="sm" /></td>
-                      <td className="w-full px-3 py-2">
-                        <div className="h-1.5 min-w-12 overflow-hidden rounded-full bg-muted">
-                          <div className={cn("h-full rounded-full", barColor)} style={{ width: `${barWidth}%` }} />
-                        </div>
-                      </td>
-                      <td className="whitespace-nowrap py-2 pl-4 text-right font-mono text-sm font-bold tabular-nums">{fmtCount(count)}</td>
-                      <td className="whitespace-nowrap py-2 pl-3 text-right text-xs tabular-nums text-muted-foreground">{g.cards.length}</td>
-                      <td className="whitespace-nowrap py-2 pl-3 text-right font-mono text-xs font-semibold tabular-nums text-primary">{formatPullPct(chance)}</td>
-                    </tr>
-                  );
-                })}
+                {rows.map((r) => (
+                  <tr key={r.rarity}>
+                    <td className="whitespace-nowrap py-2 pl-0"><RarityBadge rarity={r.rarity} size="sm" /></td>
+                    <td className="w-full px-3 py-2">
+                      <div className="h-1.5 min-w-12 overflow-hidden rounded-full bg-muted">
+                        <div className={cn("h-full rounded-full", r.barColor)} style={{ width: `${r.barWidth}%` }} />
+                      </div>
+                    </td>
+                    <td className="whitespace-nowrap py-2 pl-4 text-right font-mono text-sm font-bold tabular-nums">{fmtCount(r.count)}</td>
+                    <td className="whitespace-nowrap py-2 pl-3 text-right text-xs tabular-nums text-muted-foreground">{r.cardCount}</td>
+                    <td className="whitespace-nowrap py-2 pl-3 text-right font-mono text-xs font-semibold tabular-nums text-primary">{formatPullPct(r.chance)}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
+import { apiGet } from "@/lib/api/client";
+import { createSharedResource } from "@/lib/api/shared-resource";
 import {
   DEFAULT_RANK_TIERS,
   RankTiersSchema,
@@ -9,67 +11,36 @@ import {
 } from "@/lib/honey/rank-tiers";
 
 /**
- * Module-level cache for the admin-configurable rank ladder. Keeps a
- * single in-flight request open across the many components that need
- * the tier list (rank card, popover, header avatar, mock preview,
- * etc.) and re-uses the resolved value for the rest of the session.
+ * Shared cache for the admin-configurable rank ladder — one request across
+ * the many components that need the tier list (rank card, popover, header
+ * avatar, mock preview, etc.). Falls back to `DEFAULT_RANK_TIERS` when the
+ * endpoint fails or returns an unexpected shape.
  *
  * `invalidateRankTiers()` is exported so the admin editor can force a
  * refresh after saving.
  */
-
-let cache: RankTier[] | null = null;
-let inflight: Promise<RankTier[]> | null = null;
-const listeners = new Set<() => void>();
-
-function notify() {
-  for (const fn of listeners) fn();
-}
-
-function fetchTiers(): Promise<RankTier[]> {
-  if (inflight) return inflight;
-  inflight = fetch("/api/honey/ranks")
-    .then((r) => (r.ok ? r.json() : null))
-    .then((data: { tiers?: unknown } | null) => {
-      const parsed = RankTiersSchema.safeParse(data?.tiers);
-      const tiers = parsed.success ? parsed.data : DEFAULT_RANK_TIERS;
-      cache = tiers;
-      inflight = null;
-      notify();
-      return tiers;
-    })
-    .catch(() => {
-      cache = DEFAULT_RANK_TIERS;
-      inflight = null;
-      notify();
-      return DEFAULT_RANK_TIERS;
-    });
-  return inflight;
-}
+const resource = createSharedResource<RankTier[]>(async () => {
+  try {
+    const data = await apiGet<{ tiers?: unknown }>("/api/honey/ranks");
+    const parsed = RankTiersSchema.safeParse(data?.tiers);
+    return parsed.success ? parsed.data : DEFAULT_RANK_TIERS;
+  } catch {
+    return DEFAULT_RANK_TIERS;
+  }
+});
 
 export function invalidateRankTiers() {
-  cache = null;
-  inflight = null;
+  resource.invalidate();
 }
 
+const getServerSnapshot = () => null;
+
 export function useRankTiers(): { tiers: RankTier[]; loaded: boolean } {
-  const [tiers, setTiers] = useState<RankTier[]>(cache ?? DEFAULT_RANK_TIERS);
-  const [loaded, setLoaded] = useState(cache !== null);
+  const tiers = useSyncExternalStore(resource.subscribe, resource.get, getServerSnapshot);
 
   useEffect(() => {
-    const sync = () => {
-      if (cache) {
-        setTiers(cache);
-        setLoaded(true);
-      }
-    };
-    listeners.add(sync);
-    if (!cache && !inflight) void fetchTiers();
-    else sync();
-    return () => {
-      listeners.delete(sync);
-    };
+    resource.ensure();
   }, []);
 
-  return { tiers, loaded };
+  return { tiers: tiers ?? DEFAULT_RANK_TIERS, loaded: tiers !== null };
 }

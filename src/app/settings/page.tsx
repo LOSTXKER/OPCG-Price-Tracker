@@ -47,7 +47,7 @@ export default function SettingsIndexPage() {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
               <p className="truncate text-sm font-semibold">{user.displayName ?? "User"}</p>
-              <Badge className={cn("h-4 px-1.5 text-[10px] font-semibold", tierCfg.color)}>
+              <Badge className={cn("h-4 px-1.5 text-micro", tierCfg.color)}>
                 {tierCfg.label}
               </Badge>
             </div>

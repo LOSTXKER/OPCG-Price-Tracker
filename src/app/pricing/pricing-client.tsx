@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
+import { daysUntil } from "@/lib/utils/time";
 import { useSettings, refetchSettings } from "@/hooks/use-settings";
 import { useMarketplaceFees } from "@/hooks/use-marketplace-fees";
 import {
@@ -39,7 +40,7 @@ export default function PricingClient() {
         body: JSON.stringify({ plan }),
       });
       const data = await res.json();
-      if (data.url) window.location.href = data.url;
+      if (data.url) window.location.assign(data.url);
     } catch {
       setLoading(null);
     }
@@ -167,10 +168,7 @@ export default function PricingClient() {
             {settings.tierExpiresAt && (
               <p className="text-sm text-muted-foreground">
                 {t(lang, "trialEndsIn")}{" "}
-                {Math.ceil(
-                  (new Date(settings.tierExpiresAt).getTime() - Date.now()) /
-                    (1000 * 60 * 60 * 24),
-                )}{" "}
+                {daysUntil(settings.tierExpiresAt)}{" "}
                 {t(lang, "days")}
               </p>
             )}

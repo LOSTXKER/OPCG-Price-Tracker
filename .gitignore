@@ -15,6 +15,7 @@
 
 # next.js
 /.next/
+/.next-*/
 /out/
 
 # production
@@ -47,3 +48,7 @@ next-env.d.ts
 
 .vercel
 .env*.local
+
+# AI / local — กันความลับ+ไฟล์ส่วนตัวหลุดขึ้น git
+CLAUDE.local.md
+.claude/settings.local.json

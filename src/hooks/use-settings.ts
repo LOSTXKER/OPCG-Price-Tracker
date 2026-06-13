@@ -1,6 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useSyncExternalStore } from "react"
+
+import { apiGet, apiTry } from "@/lib/api/client"
+import { createSharedResource } from "@/lib/api/shared-resource"
 
 export type SettingsPayload = {
   id: string
@@ -22,60 +25,26 @@ export type SettingsPayload = {
   [key: string]: unknown
 }
 
-let _cache: SettingsPayload | null = null
-let _promise: Promise<SettingsPayload | null> | null = null
-let _listeners = new Set<() => void>()
-
-function notify() {
-  _listeners.forEach((fn) => fn())
-}
-
-function doFetch(): Promise<SettingsPayload | null> {
-  if (_promise) return _promise
-  _promise = fetch("/api/settings")
-    .then((r) => (r.ok ? r.json() : null))
-    .then((data: SettingsPayload | null) => {
-      _cache = data
-      _promise = null
-      notify()
-      return data
-    })
-    .catch(() => {
-      _promise = null
-      return null
-    })
-  return _promise
-}
+const resource = createSharedResource<SettingsPayload>(() =>
+  apiTry(apiGet<SettingsPayload>("/api/settings")),
+)
 
 export function invalidateSettings() {
-  _cache = null
-  _promise = null
+  resource.invalidate()
 }
 
 export function refetchSettings() {
-  invalidateSettings()
-  return doFetch()
+  return resource.refetch()
 }
 
+const getServerSnapshot = () => null
+
 export function useSettings() {
-  const [settings, setSettings] = useState<SettingsPayload | null>(_cache)
-  const [loaded, setLoaded] = useState(_cache !== null)
+  const settings = useSyncExternalStore(resource.subscribe, resource.get, getServerSnapshot)
 
   useEffect(() => {
-    const sync = () => {
-      setSettings(_cache)
-      setLoaded(_cache !== null)
-    }
-    _listeners.add(sync)
-
-    if (!_cache && !_promise) {
-      doFetch()
-    } else if (_cache) {
-      sync()
-    }
-
-    return () => { _listeners.delete(sync) }
+    resource.ensure()
   }, [])
 
-  return { settings, loaded, refetch: refetchSettings }
+  return { settings, loaded: settings !== null, refetch: refetchSettings }
 }

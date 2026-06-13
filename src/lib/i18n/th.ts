@@ -784,6 +784,8 @@ export const th = {
   raffleCancel: "ยกเลิก",
   raffleDrawDate: "วันจับรางวัล",
   raffleEntriesOutOf: "คุณมี {my} สิทธิ์จากทั้งหมด {total}",
+  raffleViewResult: "ดูผล",
+  raffleWinnerAnnounced: "ประกาศผลแล้ว",
 
   // Public Raffle Winners Archive
   winnersPageTitle: "ประกาศผู้ชนะรางวัล",

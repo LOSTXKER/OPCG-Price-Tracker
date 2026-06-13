@@ -2,34 +2,37 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { apiGet, apiTry } from "@/lib/api/client";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useSettings, invalidateSettings, refetchSettings } from "@/hooks/use-settings";
 import { useUIStore } from "@/stores/ui-store";
 import { isAuthBypassed } from "@/lib/env";
 import type { AuthUser, UserTierValue, MarketStats } from "@/components/layout/header-constants";
 
+// Dev bypass is env-driven, so it is identical on server and client — safe
+// to resolve in the lazy initializers without a hydration mismatch.
+function bypassUser(): AuthUser | null {
+  return isAuthBypassed()
+    ? ({ id: "dev-bypass", email: "dev@localhost" } as import("@supabase/supabase-js").User)
+    : null;
+}
+
 export function useHeaderData() {
-  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
-  const [authLoaded, setAuthLoaded] = useState(false);
+  const [authUser, setAuthUser] = useState<AuthUser | null>(bypassUser);
+  const [authLoaded, setAuthLoaded] = useState(() => isAuthBypassed());
   const [stats, setStats] = useState<MarketStats>({
     totalCards: 0,
     totalValue: 0,
     exchangeRate: 0.296,
-    topMover: { code: "OP13-118-P", name: "Monkey.D.Luffy", change: 5.8 },
   });
-  const [unreadMessages, setUnreadMessagesLocal] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0);
   const setUnreadGlobal = useUIStore((s) => s.setUnreadMessages);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
 
-  const { settings, loaded: settingsLoaded } = useSettings();
-
-  useEffect(() => { setMounted(true); }, []);
+  const { settings } = useSettings();
 
   useEffect(() => {
-    if (isAuthBypassed()) {
-      setAuthUser({ id: "dev-bypass", email: "dev@localhost" } as import("@supabase/supabase-js").User);
-      setAuthLoaded(true);
-      return;
-    }
+    if (isAuthBypassed()) return;
     const supabase = createClient();
     supabase.auth.getUser()
       .then(({ data }) => {
@@ -51,51 +54,34 @@ export function useHeaderData() {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Logged-out unread count is derived (see return) — the effect only syncs
+  // the zustand mirror and fetches when a user is present.
   useEffect(() => {
     if (!authUser) {
-      setUnreadMessagesLocal(0);
       setUnreadGlobal(0);
       return;
     }
-    fetch("/api/messages/unread-count")
-      .then((r) => r.ok ? r.json() : null)
-      .then((data) => {
-        if (typeof data?.count === "number") {
-          setUnreadMessagesLocal(data.count);
-          setUnreadGlobal(data.count);
-        }
-      })
-      .catch(() => {});
+    void apiTry(apiGet<{ count?: number }>("/api/messages/unread-count")).then((data) => {
+      if (typeof data?.count === "number") {
+        setUnreadCount(data.count);
+        setUnreadGlobal(data.count);
+      }
+    });
   }, [authUser, setUnreadGlobal]);
 
   useEffect(() => {
     async function fetchStats() {
-      try {
-        const [rateRes, statsRes] = await Promise.all([
-          fetch("/api/exchange-rate"),
-          fetch("/api/cards?limit=1&sort=priceChange24h&order=desc"),
-        ]);
-        const rateData = rateRes.ok ? await rateRes.json() : null;
-        const cardsData = statsRes.ok ? await statsRes.json() : null;
-
-        const top = cardsData?.cards?.[0];
-        setStats((prev) => ({
-          totalCards: cardsData?.total ?? prev.totalCards,
-          totalValue: cardsData?.totalValue ?? prev.totalValue,
-          exchangeRate: rateData?.rate ?? prev.exchangeRate,
-          topMover: top
-            ? {
-                code: top.cardCode,
-                name: top.nameEn ?? top.nameJp ?? top.cardCode,
-                change: top.priceChange24h ?? 0,
-              }
-            : prev.topMover,
-        }));
-      } catch {
-        /* non-critical */
-      }
+      const [rateData, cardsData] = await Promise.all([
+        apiTry(apiGet<{ rate?: number }>("/api/exchange-rate")),
+        apiTry(apiGet<{ total?: number; totalValue?: number }>("/api/cards?limit=1")),
+      ]);
+      setStats((prev) => ({
+        totalCards: cardsData?.total ?? prev.totalCards,
+        totalValue: cardsData?.totalValue ?? prev.totalValue,
+        exchangeRate: rateData?.rate ?? prev.exchangeRate,
+      }));
     }
-    fetchStats();
+    void fetchStats();
   }, []);
 
   const handleLogout = async () => {
@@ -123,7 +109,7 @@ export function useHeaderData() {
     honeyPoints,
     honeyLifetime,
     honeyPendingActions,
-    unreadMessages,
+    unreadMessages: authUser ? unreadCount : 0,
     userId,
     userName,
     userAvatar,

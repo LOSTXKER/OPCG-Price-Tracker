@@ -35,6 +35,7 @@ import { Button } from "@/components/ui/button";
 import { PageContainer } from "@/components/layout/page-container";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { createClient } from "@/lib/supabase/client";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
@@ -181,8 +182,7 @@ function NavContent({
 
 function ThemeToggle({ collapsed }: { collapsed: boolean }) {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useHydrated();
 
   if (!mounted) return null;
 
@@ -218,8 +218,13 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("admin-sidebar-collapsed");
-    if (saved === "true") setCollapsed(true);
+    // Async tick keeps the setState out of the synchronous effect body
+    // (react-hooks/set-state-in-effect) while staying hydration-safe —
+    // the server cannot know the stored preference.
+    const id = window.setTimeout(() => {
+      if (localStorage.getItem("admin-sidebar-collapsed") === "true") setCollapsed(true);
+    }, 0);
+    return () => window.clearTimeout(id);
   }, []);
 
   function toggleCollapsed() {

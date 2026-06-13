@@ -32,9 +32,13 @@ function useRaffleCountdown() {
       const s = String(Math.floor((diff % 60_000) / 1_000)).padStart(2, "0");
       return `${d}d ${h}:${m}:${s}`;
     }
-    setLabel(calc());
-    const id = setInterval(() => setLabel(calc()), 1_000);
-    return () => clearInterval(id);
+    const update = () => setLabel(calc());
+    const first = setTimeout(update, 0);
+    const id = setInterval(update, 1_000);
+    return () => {
+      clearTimeout(first);
+      clearInterval(id);
+    };
   }, []);
   return label;
 }
@@ -266,17 +270,23 @@ function MachineCard({
   onStartConfirm: () => void;
   onViewImage: (img: { src: string; alt: string }) => void;
 }) {
-  const full = myTickets >= machine.maxTickets;
-  const chance = machine.totalTickets > 0
-    ? ((myTickets / machine.totalTickets) * 100).toFixed(1)
-    : "0";
   const accent = machine.color ?? undefined;
   const drawDate = drawDateFromMonth(machine.month);
   const drawDateStr = drawDate.toLocaleDateString(
     getLocale(lang),
     { day: "numeric", month: "short" },
   );
-  const canUse = ticketBalance >= 1 && !full;
+  const isDrawn = Boolean(machine.drawnAt);
+  const canUse = ticketBalance >= 1;
+  const drawnAtStr = machine.drawnAt
+    ? new Date(machine.drawnAt).toLocaleDateString(
+        getLocale(lang),
+        { day: "numeric", month: "short", year: "numeric" },
+      )
+    : null;
+  const winnerName =
+    machine.winner?.displayName?.trim() || t(lang, "anonymous");
+  const isAnonymous = !machine.winner?.displayName?.trim();
 
   return (
     <div className="panel relative flex h-full flex-col overflow-hidden transition-colors hover:bg-muted/20">
@@ -303,12 +313,19 @@ function MachineCard({
           >
             {localizedTitle(machine, lang)}
           </h3>
-          <p className="mt-0.5 flex items-center gap-1 text-meta">
-            <Calendar className="size-3" />
-            <span>
-              {t(lang, "raffleDrawDate")}: <span className="tabular-nums">{drawDateStr}</span>
+          {isDrawn ? (
+            <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-eyebrow text-primary">
+              <Trophy className="size-3" />
+              {t(lang, "raffleWinnerAnnounced")}
             </span>
-          </p>
+          ) : (
+            <p className="mt-0.5 flex items-center gap-1 text-meta">
+              <Calendar className="size-3" />
+              <span>
+                {t(lang, "raffleDrawDate")}: <span className="tabular-nums">{drawDateStr}</span>
+              </span>
+            </p>
+          )}
         </div>
 
         {/* Prizes */}
@@ -348,88 +365,122 @@ function MachineCard({
           ))}
         </ul>
 
-        {/* Stats: label on top, value underneath — scans left-to-right
-         * as "my tickets / total tickets / win chance". The old one-line
-         * "2/5 yours · 3 total · 66.7%" row relied on Thai readers
-         * parsing three mixed conventions in a row. */}
-        <div className="grid grid-cols-3 gap-2 rounded-lg border bg-muted/20 px-3 py-2 text-center">
-          <div className="flex flex-col gap-0.5">
-            <p className="text-meta">{t(lang, "raffleMyTickets")}</p>
-            <p className="text-sm font-semibold tabular-nums">
-              {myTickets}
-              <span className="text-muted-foreground">/{machine.maxTickets}</span>
-            </p>
-          </div>
-          <div className="flex flex-col gap-0.5 border-x">
-            <p className="text-meta">{t(lang, "raffleTotalTickets")}</p>
-            <p className="text-sm font-semibold tabular-nums">
-              {machine.totalTickets}
-            </p>
-          </div>
-          <div className="flex flex-col gap-0.5">
-            <p className="text-meta">{t(lang, "raffleWinChance")}</p>
-            <p className="text-sm font-semibold tabular-nums text-primary">
-              {chance}%
-            </p>
-          </div>
-        </div>
-
-        {/* CTA */}
-        <div className="mt-auto">
-          {confirming ? (
-            <div className="space-y-2 rounded-lg border bg-card p-2.5">
-              <p className="text-xs font-semibold">
-                {t(lang, "raffleUseConfirm")}
-              </p>
-              <p className="text-meta">
-                {t(lang, "raffleUseConfirmDesc")
-                  .replace("{remaining}", String(ticketBalance - 1))}
-              </p>
-              <div className="flex items-center gap-2">
-                <Button
-                  size="sm"
-                  onClick={onConfirm}
-                  className="h-8 flex-1 gap-1 text-xs"
+        {isDrawn ? (
+          <>
+            <div className="flex items-center gap-3 rounded-lg border bg-muted/20 px-3 py-2.5">
+              {machine.winner?.avatarUrl && !isAnonymous ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={machine.winner.avatarUrl}
+                  alt={winnerName}
+                  className="size-9 shrink-0 rounded-full border border-border/40 object-cover"
+                />
+              ) : (
+                <div
+                  aria-hidden="true"
+                  className="flex size-9 shrink-0 items-center justify-center rounded-full border border-border/40 bg-muted text-xs font-semibold text-muted-foreground"
                 >
-                  <Ticket className="size-3" />
-                  {t(lang, "raffleConfirm")}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={onCancelConfirm}
-                  className="h-8 flex-1 text-xs"
+                  {isAnonymous ? "?" : winnerName.slice(0, 1).toUpperCase()}
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <p
+                  className={cn(
+                    "truncate text-sm font-semibold",
+                    isAnonymous && "italic text-muted-foreground",
+                  )}
                 >
-                  {t(lang, "raffleCancel")}
-                </Button>
+                  {winnerName}
+                </p>
+                {drawnAtStr && (
+                  <p className="text-meta">
+                    {t(lang, "raffleDrawn")} · <span className="tabular-nums">{drawnAtStr}</span>
+                  </p>
+                )}
               </div>
             </div>
-          ) : (
-            <Button
-              size="sm"
-              onClick={onStartConfirm}
-              disabled={!canUse}
-              className={cn(
-                "h-9 w-full gap-1.5 text-xs font-semibold",
-                canUse
-                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                  : "bg-muted text-muted-foreground",
+            <div className="mt-auto">
+              <Button
+                size="sm"
+                render={<Link href={`/raffle/winners#raffle-${machine.id}`} />}
+                className="h-9 w-full gap-1.5 text-xs font-semibold"
+                style={accent ? { backgroundColor: accent, color: "#fff" } : undefined}
+              >
+                <Trophy className="size-3.5" />
+                {t(lang, "raffleViewResult")}
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 gap-2 rounded-lg border bg-muted/20 px-3 py-2 text-center">
+              <div className="flex flex-col gap-0.5">
+                <p className="text-meta">{t(lang, "raffleMyTickets")}</p>
+                <p className="text-sm font-semibold tabular-nums">{myTickets}</p>
+              </div>
+              <div className="flex flex-col gap-0.5 border-l">
+                <p className="text-meta">{t(lang, "raffleTotalTickets")}</p>
+                <p className="text-sm font-semibold tabular-nums">
+                  {machine.totalTickets}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-auto">
+              {confirming ? (
+                <div className="space-y-2 rounded-lg border bg-card p-2.5">
+                  <p className="text-xs font-semibold">
+                    {t(lang, "raffleUseConfirm")}
+                  </p>
+                  <p className="text-meta">
+                    {t(lang, "raffleUseConfirmDesc")
+                      .replace("{remaining}", String(ticketBalance - 1))}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      onClick={onConfirm}
+                      className="h-8 flex-1 gap-1 text-xs"
+                    >
+                      <Ticket className="size-3" />
+                      {t(lang, "raffleConfirm")}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={onCancelConfirm}
+                      className="h-8 flex-1 text-xs"
+                    >
+                      {t(lang, "raffleCancel")}
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Button
+                  size="sm"
+                  onClick={onStartConfirm}
+                  disabled={!canUse}
+                  className={cn(
+                    "h-9 w-full gap-1.5 text-xs font-semibold",
+                    canUse
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                      : "bg-muted text-muted-foreground",
+                  )}
+                  style={
+                    accent && canUse
+                      ? { backgroundColor: accent, color: "#fff" }
+                      : undefined
+                  }
+                >
+                  <Ticket className="size-3.5" />
+                  {ticketBalance < 1
+                    ? t(lang, "raffleNoTicketsMsg")
+                    : t(lang, "raffleUseTicket")}
+                </Button>
               )}
-              style={
-                accent && canUse
-                  ? { backgroundColor: accent, color: "#fff" }
-                  : undefined
-              }
-            >
-              <Ticket className="size-3.5" />
-              {full
-                ? t(lang, "raffleSoldOut")
-                : ticketBalance < 1
-                  ? t(lang, "raffleNoTicketsMsg")
-                  : t(lang, "raffleUseTicket")}
-            </Button>
-          )}
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

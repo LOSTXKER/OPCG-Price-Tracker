@@ -10,6 +10,16 @@ export function relativeTime(dateStr: string | null, lang: string = "TH"): strin
   return formatRelativeAgo(dateStr, (lang as Language) ?? "TH");
 }
 
+/** Whole days elapsed since `date` (clock read lives here, outside component render). */
+export function daysSince(date: string | Date): number {
+  return Math.floor((Date.now() - new Date(date).getTime()) / 86_400_000);
+}
+
+/** Whole days (rounded up) until `date`. */
+export function daysUntil(date: string | Date): number {
+  return Math.ceil((new Date(date).getTime() - Date.now()) / 86_400_000);
+}
+
 export function formatChatTime(iso: string) {
   return new Date(iso).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
 }

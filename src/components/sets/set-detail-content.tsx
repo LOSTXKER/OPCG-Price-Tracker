@@ -93,6 +93,19 @@ export function SetDetailContent({
     return CARD_COLORS.filter((cc) => present.has(cc.value));
   }, [allCards]);
 
+  const filterRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!filterOpen) return;
+    function handleClick(e: MouseEvent) {
+      if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
+        setFilterOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [filterOpen]);
+
   if (totalCards === 0) {
     return <KumaEmptyState title={t(lang, "noCardsInSet")} />;
   }
@@ -124,19 +137,6 @@ export function SetDetailContent({
     : baseGroups;
 
   const filteredTotal = visibleGroups.reduce((sum, g) => sum + g.cards.length, 0);
-
-  const filterRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!filterOpen) return;
-    function handleClick(e: MouseEvent) {
-      if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
-        setFilterOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [filterOpen]);
 
   const pill = (active: boolean) =>
     cn(

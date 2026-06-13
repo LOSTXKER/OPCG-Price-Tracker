@@ -97,3 +97,19 @@ Rules:
 - For new endpoints, prefer `{ data }` over arbitrary key names so callers don't have to memorize the field. Existing routes can stay with their named keys until the next break.
 - Don't mix `{ ok: true, data }` with `{ data }` in the same route family — pick one and stick with it within `src/app/api/<feature>/`.
 - 5xx errors come from `apiHandler` automatically (`{ error: "Internal server error" }`). Don't re-emit them inside the handler.
+## คำสั่งหลัก
+- ติดตั้ง: `npm install`
+- รัน dev: `npm run dev`  ·  build: `npm run build` (รัน `prisma generate` ก่อน)  ·  start: `npm run start`
+- test: `npm run test` (vitest)  ·  lint: `npm run lint` (eslint)
+- data: `npm run pipeline` / `scrape:daily` / `db:seed` / `translate:thai` (ดู `scripts/`)
+
+## 🔄 วงจรการทำงาน (บังคับ — กันหลุด 3 อย่าง)
+1. **เริ่มงาน** → อ่าน `SPEC.md` (อะไรคือเสร็จ) + `PLAN.md` (ทำถึง task ไหน) + `PROGRESS.md` (สถานะสด) ก่อนแตะโค้ด
+2. **งานใหญ่/หลายขั้น** → อัปเดต `PLAN.md` ก่อนลงมือ (แตกเป็น task ติ๊กได้) · ทำทีละ task ไม่กระโดด
+3. **ก่อนเคลม "เสร็จ"** → verify ครบทุกข้อใน `SPEC.md` (รัน lint + test + build + เปิดดูจริง) — ห้ามเคลมลอยๆ
+4. **ก่อนจบงาน** → เขียนทับ `PROGRESS.md` (ทำอะไรไป · ค้างตรงไหน · NEXT) + ติ๊ก `PLAN.md`
+
+## permission (3 ชั้น)
+- ✅ ทำได้เลย: แก้โค้ดตามที่สั่ง · รัน test/lint/build
+- ⚠️ ถามก่อน: ลบไฟล์ · แก้ Prisma schema/migration · เพิ่ม dependency · แตะ config (next/vercel/env) · รัน scrape/seed ที่เขียน DB จริง
+- ⛔ ห้าม: push เข้า `master` ตรงๆ · commit secret (.env) · ลบ/ปิด test เพื่อให้ผ่าน · `prisma migrate reset` บน DB จริง
