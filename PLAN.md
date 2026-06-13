@@ -116,9 +116,8 @@
 ## 🧹 Declutter audit (screenshot ทุกหน้า mobile+desktop ผ่าน 2 workflows) — เบสเลือก B (live pages ก่อน, marketplace=P3 ทีหลัง)
 > ผล: 10 high + 48 med · card-detail/drop-calc สะอาด (5/5) · home รกสุด (2/5) · JSON: /tmp/{mobile,desktop}-findings.json
 - [x] **Batch 1 — Home declutter** (branch `redesign/declutter-home`): market-overview toolbar wrap 2-row มือถือ · featured-card stack · mini-table tap (min-h-11) · hero-search submit px-4 sm:px-6 · verify ✓
-- [ ] **Batch 2 — Toolbar pattern**: set-detail / trending / watchlist (controls อัดแถวเดียว → wrap เหมือน home)
-- [ ] **Batch 3 — Tap target sweep**: compare X (32px) · settings badge · จุด <44px อื่น → ≥44px/min-h
-- [ ] **Batch 4 — Typography token sweep**: deck-calc · login · blog · guide/faq · related-pages · settings (inline text-sm/xs → semantic)
+- [x] **Batch 2 — Toolbar pattern: ตรวจแล้ว set-detail/trending/watchlist wrap (flex-col/flex-wrap) ดีอยู่แล้ว** — agent over-flag จากภาพแน่น แต่โค้ดถูก · ไม่แก้ (home ตัวเดียวที่ต้องแก้ = batch 1 แล้ว)
+- [x] **Batch 3+4 — tap target + token sweep** (branch `redesign/declutter-sweep`): compare X 32→36px · related-pages/faq h2 → `.text-h2` · blog badge → `.text-micro` · login labels → `.text-label` · ข้าม 15px=15px swap ที่ไม่เปลี่ยนภาพ · verify ✓
 - [ ] **Batch 5 — Honey declutter (มือถือ)**: status cards ยุบ 1 บรรทัด
 - [ ] **Batch 6 — Desktop balance**: card-detail price-hub · drop-calc sidebar · login left-panel · guide featured
 - [ ] (เก็บตก) decks + deck-calc 2 หน้า mobile review schema พลาด — รีวิวซ้ำ

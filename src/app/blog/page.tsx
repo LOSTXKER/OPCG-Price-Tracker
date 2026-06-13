@@ -90,7 +90,7 @@ export default async function BlogPage() {
                 )}
                 <div className="space-y-2 p-5">
                   <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
+                    <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-micro text-primary">
                       {CATEGORY_LABELS[post.category] ?? post.category}
                     </span>
                   </div>

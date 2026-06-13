@@ -97,7 +97,7 @@ export function CardRail({
                     <button
                       type="button"
                       onClick={() => onRemove(card.cardCode)}
-                      className="absolute right-2 top-2 inline-flex size-8 items-center justify-center rounded-full bg-background text-muted-foreground shadow-md ring-1 ring-border transition-colors hover:bg-destructive hover:text-destructive-foreground hover:ring-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="absolute right-2 top-2 inline-flex size-9 items-center justify-center rounded-full bg-background text-muted-foreground shadow-md ring-1 ring-border transition-colors hover:bg-destructive hover:text-destructive-foreground hover:ring-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       aria-label={t(lang, "removeFromCompare")}
                     >
                       <X className="size-4" />

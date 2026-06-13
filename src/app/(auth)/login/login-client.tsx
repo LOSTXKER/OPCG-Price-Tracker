@@ -186,7 +186,7 @@ export function LoginClient() {
             {/* Email form */}
             <form onSubmit={onSubmit} className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="login-email" className="text-sm font-medium">
+                <label htmlFor="login-email" className="text-label">
                   {t(lang, "emailLabel")}
                 </label>
                 <div className="relative">
@@ -204,7 +204,7 @@ export function LoginClient() {
                 </div>
               </div>
               <div className="space-y-2">
-                <label htmlFor="login-password" className="text-sm font-medium">
+                <label htmlFor="login-password" className="text-label">
                   {t(lang, "passwordLabel")}
                 </label>
                 <div className="relative">
