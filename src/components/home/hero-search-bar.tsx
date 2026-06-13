@@ -189,7 +189,7 @@ export function HeroSearchBar() {
         <button
           type="submit"
           className={cn(
-            "h-12 shrink-0 bg-primary px-6 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90",
+            "h-12 shrink-0 bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 sm:px-6",
             hasDropdown ? "rounded-tr-xl" : "rounded-r-xl"
           )}
         >

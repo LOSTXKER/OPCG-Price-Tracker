@@ -52,7 +52,7 @@ export function HomeMiniTable({
               <Link
                 key={card.cardCode}
                 href={`/cards/${card.cardCode}`}
-                className="flex flex-1 items-center gap-2.5 rounded-md px-1.5 py-1 transition-colors hover:bg-muted/40"
+                className="flex min-h-11 flex-1 items-center gap-2.5 rounded-md px-1.5 py-2 transition-colors hover:bg-muted/40"
               >
                 <span className="w-4 shrink-0 text-center font-price text-sm tabular-nums text-muted-foreground/70">
                   {idx + 1}
@@ -69,7 +69,7 @@ export function HomeMiniTable({
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium leading-tight">{name}</p>
+                  <p className="line-clamp-1 text-sm font-medium leading-tight">{name}</p>
                 </div>
                 <span
                   className={`shrink-0 font-price text-sm font-medium tabular-nums ${

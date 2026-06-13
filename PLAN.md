@@ -113,6 +113,16 @@
 
 **P4.3+ (build later)** — game-scoped queries server-side · `/[game]/` route group + redirect · backfill gameId (จาก set.game) + NOT NULL + `@@unique([gameId,cardCode])` · ขยาย CardType enum · Pokémon sets/rarities/pull-rate + scraper stack (ต้องหาแหล่งข้อมูล Pokémon ก่อน)
 
+## 🧹 Declutter audit (screenshot ทุกหน้า mobile+desktop ผ่าน 2 workflows) — เบสเลือก B (live pages ก่อน, marketplace=P3 ทีหลัง)
+> ผล: 10 high + 48 med · card-detail/drop-calc สะอาด (5/5) · home รกสุด (2/5) · JSON: /tmp/{mobile,desktop}-findings.json
+- [x] **Batch 1 — Home declutter** (branch `redesign/declutter-home`): market-overview toolbar wrap 2-row มือถือ · featured-card stack · mini-table tap (min-h-11) · hero-search submit px-4 sm:px-6 · verify ✓
+- [ ] **Batch 2 — Toolbar pattern**: set-detail / trending / watchlist (controls อัดแถวเดียว → wrap เหมือน home)
+- [ ] **Batch 3 — Tap target sweep**: compare X (32px) · settings badge · จุด <44px อื่น → ≥44px/min-h
+- [ ] **Batch 4 — Typography token sweep**: deck-calc · login · blog · guide/faq · related-pages · settings (inline text-sm/xs → semantic)
+- [ ] **Batch 5 — Honey declutter (มือถือ)**: status cards ยุบ 1 บรรทัด
+- [ ] **Batch 6 — Desktop balance**: card-detail price-hub · drop-calc sidebar · login left-panel · guide featured
+- [ ] (เก็บตก) decks + deck-calc 2 หน้า mobile review schema พลาด — รีวิวซ้ำ
+
 ## 🔧 M5 — Prisma migration drift (เก็บกวาด, ไม่เร่ง แต่ควรเคลียร์)
 > เจอตอน P4.2 deploy · drift มีมาก่อน ไม่ใช่จาก redesign
 - [ ] DB มี `20260422000000_add_saved_profile` แต่ไม่มีในโฟลเดอร์ repo · repo มี `20260429000000_drop_watchlist_note_target` ที่ DB ยังไม่ mark applied
