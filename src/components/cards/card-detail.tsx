@@ -6,6 +6,7 @@ import { Breadcrumb } from "@/components/shared/breadcrumb"
 import type { CardListing } from "@/components/cards/card-listings-section"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton"
+import { AdSlot } from "@/components/ads/ad-slot"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { t, getCardName, getSetName } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -134,14 +135,14 @@ export function CardDetail({
       />
 
       <div className="grid gap-6 lg:grid-cols-12">
-        {/* Left column — card image + sibling variants. The sibling grid
-            sits directly under the artwork so collectors can scan related
-            versions without leaving the main image's visual neighbourhood. */}
-        <div className="space-y-6 lg:col-span-5">
+        {/* Left column — card image only. Sibling variants moved to a full-width
+            section below the grid so that on mobile the price + actions land
+            right under the artwork instead of being pushed below the variants. */}
+        <div className="lg:col-span-5">
           <button
             type="button"
             onClick={() => card.imageUrl && setLightboxOpen(true)}
-            className="panel relative mx-auto aspect-[63/88] w-full max-w-[400px] cursor-zoom-in overflow-hidden ring-border transition-shadow hover:ring-2 hover:ring-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:max-w-none"
+            className="panel relative mx-auto aspect-[63/88] w-full max-w-[240px] cursor-zoom-in overflow-hidden ring-border transition-shadow hover:ring-2 hover:ring-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:max-w-[320px] lg:max-w-none"
             aria-label={card.nameEn ?? card.nameJp}
           >
             {card.imageUrl ? (
@@ -175,21 +176,6 @@ export function CardDetail({
               )}
             </DialogContent>
           </Dialog>
-
-          {siblings.length > 0 && (
-            <div>
-              <p className="mb-3 text-meta">
-                {t(lang, "otherVersions")} ({siblings.length})
-              </p>
-              <SiblingGrid
-                siblings={siblings}
-                lang={lang}
-                cols={3}
-                smCols={4}
-                mainCardCode={card.cardCode}
-              />
-            </div>
-          )}
         </div>
 
         {/* Right column — header + actions, price hub (with embedded source
@@ -229,6 +215,10 @@ export function CardDetail({
             lang={lang}
           />
 
+          {/* In-feed ad (FREE users only; placed after the price block so it
+              never crowds the primary actions). */}
+          <AdSlot placement="card-detail-mid" className="aspect-[6/1] w-full" />
+
           <CardDetailInfoTabs
             card={card}
             cardCode={card.cardCode}
@@ -238,6 +228,21 @@ export function CardDetail({
           />
         </div>
       </div>
+
+      {siblings.length > 0 && (
+        <div>
+          <p className="mb-3 text-meta">
+            {t(lang, "otherVersions")} ({siblings.length})
+          </p>
+          <SiblingGrid
+            siblings={siblings}
+            lang={lang}
+            cols={3}
+            smCols={6}
+            mainCardCode={card.cardCode}
+          />
+        </div>
+      )}
 
       <CardDetailRelated relatedCards={relatedCards ?? []} set={set} lang={lang} />
     </div>

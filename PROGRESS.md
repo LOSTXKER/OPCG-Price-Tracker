@@ -2,11 +2,11 @@
 > **เขียนทับทุกครั้ง ไม่สะสม log** (รายละเอียดอยู่ใน git history แล้ว) · hook โหลดไฟล์นี้เข้าทุก session
 > session ใหม่: อ่านอันนี้ก่อนเริ่ม แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-14 — **Design phase: P0a+P0b merged · P0c (polish) เสร็จ verified → P0 จบครบ · URL strategy = B**
+อัปเดตล่าสุด: 2026-06-14 — **P0 จบครบ (merged #7/#8/#9) · เข้า P1: card-detail mobile เสร็จ verified · URL strategy = B**
 
 ## ▶ สถานะตอนนี้
-- **P0a + P0b merged เข้า master แล้ว** (PR #7, #8) · master @ `091001b`
-- branch ทำงาน: `redesign/p0c-polish` — P0c verified, กำลังจะเปิด PR → **จบ P0 (foundation)**
+- **P0 foundation merged ครบ** (PR #7/#8/#9) · master @ `eec470b`
+- branch ทำงาน: `redesign/p1-card-detail` — P1.1 card-detail mobile verified, กำลังจะเปิด PR
 - เบสเคาะ: **URL strategy = B (`/[game]/` prefix)** · roadmap P0→P5 ใน REDESIGN.md
 
 ## ✅ P0a — Nav IA foundation (merged PR #7)
@@ -47,7 +47,11 @@
 - mock previews: portfolio-mock-preview, honey-mock-preview (เทียบ before/after)
 - workflow audit output เต็ม: `/tmp/redesign_synth/` (audit.md + ia/design-system/future-arch/roadmap-docs.md)
 
+## ✅ P1.1 — card-detail mobile (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓)
+- ย่อรูปการ์ดบนมือถือ · reorder (image → header/actions/price/info → siblings full-width → related) · AdSlot `card-detail-mid` · tap target primary CTA h-11
+
 ## ▶ NEXT
-1. **merge PR P0c** → จบ P0 (foundation) ครบ
-2. **P1 — core pages** (REDESIGN.md §7): เริ่ม **card-detail** (หน้าแย่สุด: sticky action bar, split price-hub quick-view/chart, progressive disclosure) → home/cards/sets · adopt `.text-price` บน PriceTag · วาง AdSlot จริง (`browse-in-feed`, `card-detail-mid`) · `min-h-14` tap targets
-3. (เมื่ออนุมัติ) จัดบ้าน docs ตาม REDESIGN.md §8
+1. **merge PR P1.1** (card-detail mobile)
+2. **card-detail PR#2**: progressive disclosure (chart/source-markets ยุบบนมือถือ) · sticky action bar เหนือ bottom-nav · adopt `.text-price` บน PriceDisplay
+3. P1 หน้าอื่น: home / cards / sets (`min-h-14`, AdSlot `browse-in-feed`, ยืน table→list)
+4. (เมื่ออนุมัติ) จัดบ้าน docs ตาม REDESIGN.md §8

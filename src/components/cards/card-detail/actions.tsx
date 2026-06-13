@@ -38,7 +38,7 @@ export function CardDetailActions({
       <CardAddToPortfolio
         cardId={cardId}
         cardName={displayName}
-        className="h-9 flex-1 justify-center px-5 sm:flex-none"
+        className="h-11 flex-1 justify-center px-5 sm:h-9 sm:flex-none"
       />
 
       <button
