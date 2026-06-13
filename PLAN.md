@@ -100,6 +100,21 @@
 
 → **P2 ครอบคลุมแล้ว** (portfolio + tools) · core mobile UI redesign (P0+P1+P2) เสร็จเป็นกอบเป็นกำ
 
+### P4 — Multi-game / Pokémon (REDESIGN.md §5.1) · เบสเคาะ: per-game · ขยาย enum · อนุมัติ schema
+**P4.1 — GameSwitcher + Pokémon stub** ✅ verified (branch `redesign/p4-game-switcher`) — โค้ดล้วน ไม่แตะ DB
+- [x] `pokemon.ts` stub (comingSoon) + register ใน GAME_CONFIGS · `getActiveGameConfigs()` · GameConfig +flags (shortName/comingSoon/supports*/deckRules)
+- [x] `GameSwitcher` pill ใน header (มือถือ+desktop) — OPCG active, Pokémon disabled "เร็วๆ นี้" · ใช้ `currentGame` (persist) · i18n chooseGame
+
+**P4.2 — schema migration** ⬜ ⚠️ additive (branch+PR, ห้ามแตะ DB จริงโดยไม่ยืนยัน)
+- [ ] `Card.gameId` denorm (NOT NULL, backfill จาก set.game) + `@@unique([gameId, cardCode])` (drop cardCode @unique)
+- [ ] `CardSet.gameId` → NOT NULL (backfill orphan → OPCG)
+- [ ] `gameId` บน Portfolio / Deck / Listing (+ index `[userId, gameId]` / `[gameId, status]`)
+- [ ] `gameId` บน YuyuteiMapping / SnkrdunkMapping
+- [ ] ขยาย `CardType` enum (+ POKEMON/TRAINER/ENERGY/STADIUM/SUPPORTER/TOOL)
+- [ ] `prisma generate` + build · backfill SQL · **ยืนยันก่อน apply Supabase จริง**
+
+**P4.3+ (build later)** — game-scoped queries server-side · `/[game]/` route group + redirect · Pokémon sets/rarities/pull-rate · scraper stack ใหม่
+
 ### ค้างจาก audit (ทำตอน redesign แต่ละหน้า — REDESIGN.md P1+)
 - Honey nav มือถือ: 7 แท็บไอคอนล้วนไม่มี label (`honey-tab-nav.tsx:159`) + scroll แนวนอน (→ P5)
 - card-detail หนาแน่น/ปุ่มใต้ fold (→ P1) · portfolio scroll ลึก (→ P2)

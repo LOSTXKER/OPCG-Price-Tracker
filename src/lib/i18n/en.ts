@@ -1668,4 +1668,5 @@ export const en = {
   consentDecline: "Decline",
   pages: "Pages",
   applyFilters: "Show results",
+  chooseGame: "Choose game",
 } as const;

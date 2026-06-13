@@ -35,10 +35,23 @@ export interface PullRateConfig {
   fallbackAvgPerBox: Record<string, number>;
 }
 
+export interface DeckRules {
+  /** Main deck size (OPCG 50, Pokémon 60). */
+  mainDeckSize?: number;
+  /** Max copies of a non-basic card. */
+  maxCopies?: number;
+  /** OPCG requires exactly one Leader; Pokémon does not. */
+  requiresLeader?: boolean;
+}
+
 export interface GameConfig {
   slug: string;
   name: string;
   nameEn: string;
+  /** Short label for the game-switcher pill (e.g. "OPCG", "Pokémon"). */
+  shortName?: string;
+  /** Registered but not yet browsable — switcher shows it disabled. */
+  comingSoon?: boolean;
   sets: SetInfo[];
   baseRarities: RarityInfo[];
   parallelRarities: RarityInfo[];
@@ -46,6 +59,11 @@ export interface GameConfig {
   colors: ColorOption[];
   rarityFilterOptions: RarityOption[];
   pullRate: PullRateConfig;
+  /** Per-game capability flags — gate nav entries / features. */
+  supportsMarketplace?: boolean;
+  supportsMeta?: boolean;
+  supportsTierList?: boolean;
+  deckRules?: DeckRules;
   officialCardImageBase?: string;
   officialProductUrl?: (setCode: string) => string;
 }
