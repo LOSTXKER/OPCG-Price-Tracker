@@ -69,7 +69,11 @@
 **P1.2 — card-detail sticky bar** ✅ verified (branch `redesign/p1-card-detail-2`)
 - [x] sticky action bar มือถือ (`CardDetailStickyBar`) — ราคา + Add-to-Portfolio ลอยเหนือ bottom-nav เสมอ · desktop ใช้ inline actions
 - [~] **defer มีเหตุผล**: chart-collapse (quick-view ราคาอยู่บนสุดแล้ว + Recharts ใน collapsed เสี่ยง 0-width) · adopt `.text-price` (PriceDisplay มี size system อยู่แล้ว, force-swap = regress) → ทำตอนสร้าง price surface ใหม่
-- [ ] home / cards / sets — `min-h-14` rows · AdSlot `browse-in-feed` · ยืน table→list `<sm`
+**P1.3 — ListRow primitive** ✅ verified (branch `redesign/p1-listrow`)
+- [x] `src/components/ui/list-row.tsx` — interactive row primitive (`min-h-14` tap target, focus-visible ring, leading/title/subtitle/trailing/chevron slots, Link/button/div)
+- [x] adopt ใน `CardListRow` (CardTable mobile fallback) → ได้ทั่ว cards/sets/trending ทันที
+- note: `MobileAssetCard` (PnL+notes+edit) / `OrderCard` (status header + actions footer) เป็น multi-section card จริง — คงเป็น bespoke (ไม่ force เข้า row primitive)
+- [ ] home / cards / sets — AdSlot `browse-in-feed` · ยืน table→list `<sm` · ใช้ ListRow กับ list อื่นๆ ที่ยัง hand-roll
 
 ### ค้างจาก audit (ทำตอน redesign แต่ละหน้า — REDESIGN.md P1+)
 - Honey nav มือถือ: 7 แท็บไอคอนล้วนไม่มี label (`honey-tab-nav.tsx:159`) + scroll แนวนอน (→ P5)

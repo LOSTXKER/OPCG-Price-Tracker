@@ -5,6 +5,7 @@ import Link from "next/link"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
+import { ListRow } from "@/components/ui/list-row"
 import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { formatPct } from "@/lib/utils/currency"
@@ -136,39 +137,39 @@ function CardListRow({ card }: { card: CardTableRow }) {
   const c24 = card.priceChange24h
 
   return (
-    <Link
+    <ListRow
       href={`/cards/${card.cardCode}`}
-      className="flex items-center gap-3 px-4 py-3 transition-colors active:bg-muted/40"
-    >
-      <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-muted">
-        {card.imageUrl ? (
-          <Image
-            src={card.imageUrl}
-            alt={getCardName(lang, card)}
-            fill
-            className="object-contain"
-            sizes="44px"
-          />
-        ) : (
-          <div className="size-full bg-muted" />
-        )}
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium leading-tight">
-          {getCardName(lang, card)}
-        </p>
-        <div className="mt-0.5 flex items-center gap-1.5 text-meta">
+      leading={
+        <div className="relative size-11 overflow-hidden rounded-lg bg-muted">
+          {card.imageUrl ? (
+            <Image
+              src={card.imageUrl}
+              alt={getCardName(lang, card)}
+              fill
+              className="object-contain"
+              sizes="44px"
+            />
+          ) : (
+            <div className="size-full bg-muted" />
+          )}
+        </div>
+      }
+      title={getCardName(lang, card)}
+      subtitle={
+        <>
           <span className="font-mono">{card.baseCode ?? card.cardCode}</span>
           <RarityBadge rarity={card.rarity} size="sm" />
-        </div>
-      </div>
-      <div className="shrink-0 text-right">
-        <p className="font-price text-sm font-semibold tabular-nums">
-          {card.latestPriceJpy != null ? <Price jpy={card.latestPriceJpy} /> : "—"}
-        </p>
-        {c24 != null && c24 !== 0 && <ChangeCell value={c24} />}
-      </div>
-    </Link>
+        </>
+      }
+      trailing={
+        <>
+          <p className="font-price text-sm font-semibold tabular-nums">
+            {card.latestPriceJpy != null ? <Price jpy={card.latestPriceJpy} /> : "—"}
+          </p>
+          {c24 != null && c24 !== 0 && <ChangeCell value={c24} />}
+        </>
+      }
+    />
   )
 }
 
