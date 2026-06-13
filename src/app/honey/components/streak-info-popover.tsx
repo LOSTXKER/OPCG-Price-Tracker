@@ -4,57 +4,25 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Info } from "lucide-react";
 
-import { type Language } from "@/lib/i18n";
+import { type Language, t } from "@/lib/i18n";
 import { useHydrated } from "@/hooks/use-hydrated";
-
-function streakInfoTitle(lang: Language): string {
-  if (lang === "TH") return "Honey ที่ได้จากการเช็คอิน";
-  if (lang === "JP") return "チェックインで獲得するHoney";
-  return "Honey earned per check-in";
-}
 
 type StreakNote = { icon: string; text: string };
 
 function streakInfoNotes(lang: Language): StreakNote[] {
-  if (lang === "TH") {
-    return [
-      { icon: "🎟️", text: "ครบ 7 วันรับตั๋วลุ้นฟรี (เดือนละ 1 ครั้ง)" },
-      { icon: "⏸️", text: "หยุดเช็คอิน 1 วัน สตรีคจะรีเซ็ตเป็น 0" },
-    ];
-  }
-  if (lang === "JP") {
-    return [
-      { icon: "🎟️", text: "7日達成で無料抽選券（月1回）" },
-      { icon: "⏸️", text: "1日でも逃すとストリーク0にリセット" },
-    ];
-  }
   return [
-    { icon: "🎟️", text: "Free raffle ticket at 7-day streak (once per month)" },
-    { icon: "⏸️", text: "Miss a day and your streak resets to 0" },
+    { icon: "🎟️", text: t(lang, "streakInfoNoteRaffleTicket") },
+    { icon: "⏸️", text: t(lang, "streakInfoNoteResetWarning") },
   ];
 }
 
 type StreakTier = { range: string; reward: string };
 
 function streakInfoTiers(lang: Language): StreakTier[] {
-  if (lang === "TH") {
-    return [
-      { range: "วันที่ 1-6", reward: "+10" },
-      { range: "วันที่ 7-29", reward: "+20" },
-      { range: "วันที่ 30+", reward: "+30" },
-    ];
-  }
-  if (lang === "JP") {
-    return [
-      { range: "1〜6日目", reward: "+10" },
-      { range: "7〜29日目", reward: "+20" },
-      { range: "30日目以降", reward: "+30" },
-    ];
-  }
   return [
-    { range: "Days 1–6", reward: "+10" },
-    { range: "Days 7–29", reward: "+20" },
-    { range: "Day 30+", reward: "+30" },
+    { range: t(lang, "streakInfoTierRangeDays1to6"), reward: "+10" },
+    { range: t(lang, "streakInfoTierRangeDays7to29"), reward: "+20" },
+    { range: t(lang, "streakInfoTierRangeDay30Plus"), reward: "+30" },
   ];
 }
 
@@ -122,10 +90,10 @@ export function StreakInfoPopover({ lang }: { lang: Language }) {
     };
   }, [open]);
 
-  const title = streakInfoTitle(lang);
+  const title = t(lang, "streakInfoTitle2");
   const tiers = streakInfoTiers(lang);
   const notes = streakInfoNotes(lang);
-  const perDay = lang === "JP" ? "/日" : lang === "EN" ? "/day" : "/วัน";
+  const perDay = t(lang, "streakPerDaySuffix");
 
   return (
     <>

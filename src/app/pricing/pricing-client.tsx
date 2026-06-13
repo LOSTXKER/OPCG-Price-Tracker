@@ -316,27 +316,15 @@ export default function PricingClient() {
             </p>
             <div className="mt-2 flex flex-wrap justify-center gap-2 sm:justify-start">
               <Badge variant="secondary">
-                {lang === "TH"
-                  ? "แพ็กเกจ"
-                  : lang === "JP"
-                    ? "パッケージ"
-                    : "Package"}{" "}
+                {t(lang, "shopPackagePrefix")}{" "}
                 Pro 7 {t(lang, "days")}
               </Badge>
               <Badge variant="secondary">
-                {lang === "TH"
-                  ? "แพ็กเกจ"
-                  : lang === "JP"
-                    ? "パッケージ"
-                    : "Package"}{" "}
+                {t(lang, "shopPackagePrefix")}{" "}
                 Pro 30 {t(lang, "days")}
               </Badge>
               <Badge variant="secondary">
-                {lang === "TH"
-                  ? "แพ็กเกจ"
-                  : lang === "JP"
-                    ? "パッケージ"
-                    : "Package"}{" "}
+                {t(lang, "shopPackagePrefix")}{" "}
                 Pro+ 30 {t(lang, "days")}
               </Badge>
             </div>

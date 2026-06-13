@@ -45,18 +45,6 @@ function dayLabel(lang: Language, n: number) {
   return n === 1 ? `${n} day` : `${n} days`;
 }
 
-function perDayUnit(lang: Language) {
-  if (lang === "TH") return "/วัน";
-  if (lang === "JP") return "/日";
-  return "/day";
-}
-
-function currentEarnLabel(lang: Language): string {
-  if (lang === "TH") return "ขณะนี้ได้";
-  if (lang === "JP") return "現在";
-  return "Currently";
-}
-
 export type StatusProps = {
   lang: Language;
   points: number;
@@ -288,11 +276,7 @@ function HoneyCardDetail({
 
   return (
     <p className="text-meta">
-      {lang === "TH"
-        ? "เริ่มเก็บ Honey วันนี้"
-        : lang === "JP"
-          ? "Honeyを集めよう"
-          : "Start earning today"}
+      {t(lang, "honeyStartEarningToday")}
     </p>
   );
 }
@@ -321,7 +305,7 @@ function RankProgress({
   if (nextThreshold === null) {
     return (
       <p className="text-meta tabular-nums">
-        {lang === "TH" ? "ระดับสูงสุด" : lang === "JP" ? "最高ランク" : "Max rank"}
+        {t(lang, "rankMaxRank")}
       </p>
     );
   }
@@ -403,7 +387,7 @@ export function HoneyStatusBar(props: StatusProps) {
               <Sparkles className="size-3.5" />
               <span>
                 {tierMultiplier}x{" "}
-                {lang === "TH" ? "โบนัสแพ็กเกจ" : lang === "JP" ? "プランボーナス" : "Plan bonus"}
+                {t(lang, "honeyPlanBonus")}
               </span>
             </div>
           )}
@@ -412,7 +396,7 @@ export function HoneyStatusBar(props: StatusProps) {
               <Sparkles className="size-3.5" />
               <span>
                 {activeEvent.honeyMultiplier}x{" "}
-                {lang === "TH" ? "อีเวนต์โบนัส" : lang === "JP" ? "イベントボーナス" : "Event bonus"}
+                {t(lang, "eventBonusBadge")}
               </span>
             </div>
           )}
@@ -455,9 +439,9 @@ export function HoneyStatusBar(props: StatusProps) {
           value={streakDayText(lang, streak)}
           detail={
             <p className="text-meta tabular-nums">
-              <span className="mr-0.5">{currentEarnLabel(lang)}</span>
+              <span className="mr-0.5">{t(lang, "streakCurrentEarnLabel")}</span>
               <span className="font-semibold text-foreground">
-                +{streakReward} 🍯{perDayUnit(lang)}
+                +{streakReward} 🍯{t(lang, "streakPerDaySuffix")}
               </span>
             </p>
           }

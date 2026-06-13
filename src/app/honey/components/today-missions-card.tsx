@@ -11,18 +11,6 @@ import { ClaimButton, MissionCard } from "./mission-card";
 import { BonusRow } from "./_shared/bonus-row";
 import { HeaderPill, SectionHeader } from "./_shared/section-header";
 
-function todayMissionsTitle(lang: Language): string {
-  if (lang === "TH") return "ภารกิจวันนี้";
-  if (lang === "JP") return "今日のミッション";
-  return "Today's missions";
-}
-
-function todayMissionsDescription(lang: Language): string {
-  if (lang === "TH") return "ทำภารกิจเพื่อรับ Honey และโบนัสรายวัน — รีเซ็ตทุกเที่ยงคืน";
-  if (lang === "JP") return "ミッション達成で毎日Honeyとボーナスを獲得 — 深夜にリセット";
-  return "Complete missions to earn Honey and a daily bonus — resets at midnight";
-}
-
 /* ------------------------------------------------------------------ */
 /*  MissionsCard — daily missions checklist + perfect-day bonus        */
 /* ------------------------------------------------------------------ */
@@ -58,8 +46,8 @@ export function MissionsCard({
 
   const header = (
     <SectionHeader
-      title={todayMissionsTitle(lang)}
-      description={todayMissionsDescription(lang)}
+      title={t(lang, "missionTodayTitle")}
+      description={t(lang, "missionTodayDescription")}
       pill={
         <HeaderPill icon={Clock} tone="primary">
           <span className="font-mono">{countdown}</span>
@@ -130,7 +118,7 @@ export function MissionsCard({
                       className="inline-flex h-8 items-center gap-1 rounded-lg border bg-background px-3 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
                     >
                       <Share2 className="size-3" />
-                      {lang === "TH" ? "แชร์" : lang === "JP" ? "シェア" : "Share"}
+                      {t(lang, "missionShareLabel")}
                     </button>
                   ) : undefined
                 }

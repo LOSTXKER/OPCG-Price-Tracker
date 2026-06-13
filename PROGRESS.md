@@ -41,7 +41,12 @@
 - **admin giants เสร็จครบ 5 ตัว** ✓ — ไม่มี client component >580 บรรทัดเหลือแล้ว
 - **NOTE: lint baseline = 80 warnings (เดิม 81 — ลบ ArrowUpDown ที่ไม่ใช้)**
 
+## R3 i18n — migrate inline TH/JP/EN → t(lang, key)
+- ✅ **scope จริง = 88 occurrences / 14 ไฟล์** (ไม่ใช่ 152 — ส่วนใหญ่ honey feature; admin เป็น Thai-only ถูกต้องไม่ต้อง migrate)
+- workflow 3 เฟส: (A) 18-agent extract triples → (B) ผม design 74 key กลาง เขียนเข้า th/en/jp.ts เอง (กันชน, suffix ตัวที่ collision เช่น streakInfoTitle2/3) → (C) 14-agent replace + verify (ซ่อม 2 type-widening เอง: as const / Record<K,TranslationKey>)
+- skip ถูกต้อง: 3 interpolation (`${var}`) + pluralization (`streak===1?"day":"days"`) + dynamic name fallback (getCardName-style) — ปล่อย inline
+- ลบ junk key 1 ตัว (Phase A extract ผิด) · verify: tsc clean · lint 0err/80warn · test 36/36 · build ✓
+
 ## ▶ NEXT (ทำต่อทันที)
 1. (เบส) เปิด PR + ลบ backup เก่าเมื่อพร้อม
-2. R3 i18n batch (152 ไฟล์) — แทน hardcoded TH/JP/EN ด้วย t(lang,…) / i18n keys
-3. (option) ไล่แตก component กลางๆ ที่เหลือ (400-580 บรรทัด) ถ้าต้องการ
+2. (option) i18n ที่เหลือ: interpolation cases ถ้าต้องการ placeholder pattern (`{n}` + .replace) · component กลางๆ 400-580 บรรทัด

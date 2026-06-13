@@ -104,11 +104,11 @@ function MockHero({ lang }: { lang: Language }) {
         </div>
         <div className="flex flex-1 items-center py-2.5">
           <p className="text-h2 tabular-nums leading-none">
-            {lang === "TH" ? "7 วัน" : lang === "JP" ? "7日" : "7 days"}
+            {t(lang, "streakDaysValue")}
           </p>
         </div>
         <div className="mt-auto flex items-center gap-2">
-          <span className="text-meta tabular-nums">+20 🍯{lang === "TH" ? "/วัน" : lang === "JP" ? "/日" : "/day"}</span>
+          <span className="text-meta tabular-nums">+20 🍯{t(lang, "streakPerDaySuffix")}</span>
           <span className="rounded bg-amber-500/15 px-1.5 py-px text-xs font-bold tabular-nums text-amber-600 dark:text-amber-400">2x</span>
         </div>
         <span aria-hidden className={MOCK_GUIDE_HINT_CLASS}>
@@ -125,7 +125,7 @@ function MockHero({ lang }: { lang: Language }) {
           <p className="text-eyebrow">{t(lang, "rankLabel")}</p>
         </div>
         <div className="flex flex-1 items-center py-2.5">
-          <p className="text-h2 leading-none">{lang === "TH" ? "โกลด์" : "Gold"}</p>
+          <p className="text-h2 leading-none">{t(lang, "rankTierGold")}</p>
         </div>
         <div className="mt-auto space-y-1.5">
           <div className="flex items-center gap-2">
@@ -135,7 +135,7 @@ function MockHero({ lang }: { lang: Language }) {
             <span className="shrink-0 text-xs font-semibold tabular-nums text-foreground">60%</span>
           </div>
           <p className="text-meta tabular-nums">
-            {lang === "TH" ? "อีก 2,000 pt → ไดมอนด์" : lang === "JP" ? "あと 2,000 ptで ダイヤモンド" : "2,000 pt to Diamond"}
+            {t(lang, "rankPointsToDiamond")}
           </p>
         </div>
         <span aria-hidden className={MOCK_GUIDE_HINT_CLASS}>
@@ -159,7 +159,7 @@ function MockMissionsGrid({ lang }: { lang: Language }) {
         <div className="flex items-center justify-between gap-2">
           <div>
             <p className="text-eyebrow">
-              {lang === "TH" ? "รายวัน" : lang === "JP" ? "デイリー" : "Daily"}
+              {t(lang, "missionsDailyEyebrow")}
             </p>
             <h2 className="mt-0.5 text-h3">{t(lang, "dailyMissions")}</h2>
           </div>
@@ -185,7 +185,7 @@ function MockMissionsGrid({ lang }: { lang: Language }) {
                 <p className="mt-0.5 text-meta">+{m.reward} 🍯</p>
               </div>
               <div className="inline-flex h-8 items-center gap-1 rounded-lg border bg-background px-3 text-xs font-semibold">
-                {lang === "TH" ? "ไปทำ" : lang === "JP" ? "進む" : "Go"}
+                {t(lang, "missionGoLabel")}
                 <ArrowRight className="size-3" />
               </div>
             </div>
@@ -260,7 +260,7 @@ export function HoneyMockPreview({ lang }: { lang: Language }) {
       <div className="flex flex-wrap items-center justify-end gap-2">
         <div className="inline-flex h-9 items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 text-xs font-bold text-primary">
           <Sparkles className="size-3.5" />
-          <span>2x {lang === "TH" ? "อีเวนต์โบนัส" : lang === "JP" ? "イベントボーナス" : "Event bonus"}</span>
+          <span>2x {t(lang, "eventBonusBadge")}</span>
         </div>
         <div className="inline-flex h-9 items-center gap-1.5 rounded-md bg-primary px-4 text-xs font-bold text-primary-foreground shadow-sm">
           <Calendar className="size-3.5" />

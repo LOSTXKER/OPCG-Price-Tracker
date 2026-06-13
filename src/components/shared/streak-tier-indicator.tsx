@@ -3,7 +3,7 @@
 import { Flame, HelpCircle, Ticket } from "lucide-react"
 import { Popover } from "@base-ui/react/popover"
 import { cn } from "@/lib/utils"
-import type { Language } from "@/lib/i18n"
+import { t, type Language } from "@/lib/i18n"
 
 const STREAK_TIERS = [
   { min: 1, max: 6, mult: 1, pts: 10 },
@@ -23,12 +23,6 @@ function dayLabel(lang: Language, n: number) {
   if (lang === "TH") return `${n} วัน`
   if (lang === "JP") return `${n}日`
   return n === 1 ? `${n} day` : `${n} days`
-}
-
-function perDayUnit(lang: Language) {
-  if (lang === "TH") return "/วัน"
-  if (lang === "JP") return "/日"
-  return "/day"
 }
 
 type Props = {
@@ -67,7 +61,7 @@ function CompactStreak({
       ? `${streak}日`
       : streak === 1 ? `${streak} day` : `${streak} days`
 
-  const rewardText = `+${currentTier.pts} 🍯${perDayUnit(lang)}`
+  const rewardText = `+${currentTier.pts} 🍯${t(lang, "streakPerDaySuffix")}`
 
   return (
     <div className={cn("flex items-center gap-1.5", className)}>
@@ -92,11 +86,7 @@ function ExpandedStreak({
 }) {
   const currentTier = STREAK_TIERS[tierIdx]
 
-  const streakLabel = lang === "TH"
-    ? "เช็คอินติดต่อกัน"
-    : lang === "JP"
-      ? "連続チェックイン"
-      : "Check-in streak"
+  const streakLabel = t(lang, "streakCheckInStreakLabel")
 
   return (
     <div className={cn("flex flex-wrap items-center gap-x-2 gap-y-1", className)}>
@@ -112,7 +102,7 @@ function ExpandedStreak({
           : tierIdx >= 1 ? "bg-primary/10 text-primary"
           : "bg-muted text-muted-foreground",
       )}>
-        <span className="hidden sm:inline">{lang === "TH" ? "ขณะนี้ได้รับ " : lang === "JP" ? "現在の獲得 " : "Earning "}</span>+{currentTier.pts} 🍯{perDayUnit(lang)}
+        <span className="hidden sm:inline">{t(lang, "streakEarningPrefix")} </span>+{currentTier.pts} 🍯{t(lang, "streakPerDaySuffix")}
       </span>
       <StreakInfoPopover lang={lang} />
     </div>
@@ -124,21 +114,11 @@ function ExpandedStreak({
 /* ------------------------------------------------------------------ */
 
 function StreakInfoPopover({ lang }: { lang: Language }) {
-  const title = lang === "TH" ? "สตรีคคืออะไร?"
-    : lang === "JP" ? "ストリークとは？"
-    : "What is a streak?"
+  const title = t(lang, "streakInfoTitle3")
 
-  const desc = lang === "TH"
-    ? "เช็คอินทุกวันติดต่อกันเพื่อรับ Honey เพิ่มขึ้น หยุด 1 วันสตรีคจะรีเซ็ต"
-    : lang === "JP"
-      ? "毎日連続チェックインでボーナスが増えます。1日休むとリセットされます"
-      : "Check in daily to earn more Honey. Missing a day resets your streak."
+  const desc = t(lang, "streakInfoDesc2")
 
-  const ticketTitle = lang === "TH"
-    ? "ตั๋วลุ้นรางวัลฟรี"
-    : lang === "JP"
-      ? "無料抽選チケット"
-      : "Free raffle ticket"
+  const ticketTitle = t(lang, "streakFreeRaffleTicketTitle")
 
   const ticketDesc = lang === "TH"
     ? `เช็คอินครบ ${FREE_TICKET_THRESHOLD} วันติดต่อกัน รับตั๋วลุ้นรางวัลฟรี 1 ใบ/เดือน`
@@ -168,7 +148,7 @@ function StreakInfoPopover({ lang }: { lang: Language }) {
                   </span>
                   <span className="flex-1 text-muted-foreground">
                     {i === 0
-                      ? (lang === "TH" ? "เริ่มต้น" : lang === "JP" ? "初日から" : "Day 1+")
+                      ? t(lang, "streakTierDayOneLabel")
                       : `${dayLabel(lang, tier.min)}+`}
                   </span>
                   <span className="font-semibold tabular-nums text-foreground">

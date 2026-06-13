@@ -18,24 +18,6 @@ function getStreakReward(streak: number): number {
   return 10;
 }
 
-function dayUnit(lang: Language): string {
-  if (lang === "TH") return "วัน";
-  if (lang === "JP") return "日";
-  return "days";
-}
-
-function checkinTitle(lang: Language): string {
-  if (lang === "TH") return "เช็คอินรายวัน";
-  if (lang === "JP") return "毎日チェックイン";
-  return "Daily check-in";
-}
-
-function checkinDescription(lang: Language): string {
-  if (lang === "TH") return "เช็คอินทุกวันเพื่อรักษาสตรีคและสะสม Honey";
-  if (lang === "JP") return "毎日チェックインでストリークを伸ばしHoneyを獲得";
-  return "Check in every day to keep your streak and earn Honey";
-}
-
 type StreakGoal = {
   target: number;
   label: ReactNode;
@@ -58,11 +40,11 @@ function getStreakGoal(lang: Language, streak: number): StreakGoal | null {
         <>
           <span className="font-bold tabular-nums">+20</span>
           <span aria-hidden>🍯</span>
-          <span className="text-meta">{lang === "JP" ? "/日" : lang === "EN" ? "/day" : "/วัน"}</span>
+          <span className="text-meta">{t(lang, "streakPerDaySuffix")}</span>
           <span className="text-meta">+</span>
           <span aria-hidden>🎟️</span>
           <span>
-            {lang === "TH" ? "ตั๋วฟรี" : lang === "JP" ? "無料券" : "free ticket"}
+            {t(lang, "streakGoalFreeTicket")}
           </span>
         </>
       ),
@@ -75,7 +57,7 @@ function getStreakGoal(lang: Language, streak: number): StreakGoal | null {
       <>
         <span className="font-bold tabular-nums">+30</span>
         <span aria-hidden>🍯</span>
-        <span className="text-meta">{lang === "JP" ? "/日" : lang === "EN" ? "/day" : "/วัน"}</span>
+        <span className="text-meta">{t(lang, "streakPerDaySuffix")}</span>
       </>
     ),
   };
@@ -118,11 +100,11 @@ export function StreakCard({
   return (
     <section className="space-y-3">
       <SectionHeader
-        title={checkinTitle(lang)}
-        description={checkinDescription(lang)}
+        title={t(lang, "streakCheckinTitle")}
+        description={t(lang, "streakCheckinDescription")}
         pill={
           <HeaderPill icon={Flame} tone={canCheckin ? "primary" : "muted"}>
-            {streak} {dayUnit(lang)}
+            {streak} {t(lang, "streakDayUnit")}
           </HeaderPill>
         }
       />
@@ -183,8 +165,8 @@ function CheckinRow({
   const pct = goal ? Math.round((cappedStreak / goal.target) * 100) : 100;
   const targetDays = goal?.target ?? STREAK_MILESTONE;
 
-  const dayLabel = lang === "EN" ? "Day" : lang === "JP" ? "日目" : "วันที่";
-  const checkinLabel = lang === "TH" ? "เช็คอิน" : lang === "JP" ? "チェックイン" : "Check in";
+  const dayLabel = t(lang, "streakDayLabel");
+  const checkinLabel = t(lang, "streakCheckinButton");
 
   return (
     <div className="p-4">
@@ -197,7 +179,7 @@ function CheckinRow({
             <span className="text-base font-bold tabular-nums">{cappedStreak}</span>
             {lang === "JP" && <span className="text-meta">{dayLabel}</span>}
             <span className="text-meta tabular-nums">
-              / {targetDays} {dayUnit(lang)}
+              / {targetDays} {t(lang, "streakDayUnit")}
             </span>
             <StreakInfoPopover lang={lang} />
           </div>
@@ -220,7 +202,7 @@ function CheckinRow({
           ) : (
             <>
               <CheckCircle2 className="size-3.5" />
-              {lang === "TH" ? "เช็คแล้ว" : lang === "JP" ? "完了" : "Done"}
+              {t(lang, "streakCheckinDone")}
             </>
           )}
         </Button>
@@ -230,11 +212,7 @@ function CheckinRow({
         <div className="mt-3 flex items-center gap-2 rounded-lg bg-primary/10 px-3 py-2 text-xs">
           <Trophy className="size-4 shrink-0 text-primary" />
           <span className="font-semibold text-foreground">
-            {lang === "TH"
-              ? "สตรีคสูงสุด — รับ +30 🍯/วัน ทุกวัน"
-              : lang === "JP"
-              ? "最高ストリーク — 毎日 +30 🍯"
-              : "Max streak — earning +30 🍯/day"}
+            {t(lang, "streakMaxStreak")}
           </span>
         </div>
       ) : (
@@ -271,23 +249,11 @@ function FreeTicketRow({
   claimFreeLoading: boolean;
   onClaimFreeTicket: () => void;
 }) {
-  const title = lang === "TH"
-    ? "ตั๋วลุ้นรางวัลฟรี 1 ใบ/เดือน"
-    : lang === "JP"
-      ? "月1回の無料抽選チケット"
-      : "Free raffle ticket — 1/month";
+  const title = t(lang, "streakFreeTicketTitle");
 
   const meta = canClaimFree
-    ? lang === "TH"
-      ? "ปลดล็อกแล้ว — กดรับเลย"
-      : lang === "JP"
-        ? "ロック解除済み — 受け取りましょう"
-        : "Unlocked — claim it now"
-    : lang === "TH"
-      ? "รับแล้วเดือนนี้ พบกันเดือนหน้า"
-      : lang === "JP"
-        ? "今月は受取済み — 来月またどうぞ"
-        : "Claimed this month — back next month";
+    ? t(lang, "streakFreeTicketMetaUnlocked")
+    : t(lang, "streakFreeTicketMetaClaimed");
 
   return (
     <div className="flex items-center gap-3 p-4">
@@ -317,7 +283,7 @@ function FreeTicketRow({
       ) : (
         <span className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md bg-muted px-3 text-xs font-semibold text-muted-foreground">
           <CheckCircle2 className="size-3.5" />
-          {lang === "TH" ? "รับแล้ว" : lang === "JP" ? "受取済み" : "Claimed"}
+          {t(lang, "streakFreeTicketClaimedPill")}
         </span>
       )}
     </div>

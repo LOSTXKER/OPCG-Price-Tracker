@@ -117,7 +117,7 @@ export function MonthlyMissionsPanel({
                       className="inline-flex h-8 items-center gap-1 rounded-lg border bg-background px-3 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
                     >
                       <Share2 className="size-3" />
-                      {lang === "TH" ? "แชร์" : lang === "JP" ? "シェア" : "Share"}
+                      {t(lang, "missionShareLabel")}
                     </button>
                   ) : undefined
                 }

@@ -152,7 +152,7 @@ function MobileStreakRankRow({
         ) : (
           <p className="flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
             <Trophy className="size-2.5" />
-            {lang === "TH" ? "สูงสุดแล้ว!" : lang === "JP" ? "最高！" : "Max!"}
+            {t(lang, "missionRankMax")}
           </p>
         )}
       </div>
@@ -349,7 +349,7 @@ export function DailyMissionsCard({
                   {task.claimed ? (
                     <div className="flex h-9 items-center justify-center gap-1.5 rounded-xl bg-price-up/10 text-xs font-semibold text-price-up">
                       <CheckCircle2 className="size-4" />
-                      {lang === "TH" ? "เสร็จสิ้น" : lang === "JP" ? "完了" : "Done"}
+                      {t(lang, "missionTaskDone")}
                     </div>
                   ) : canClaim ? (
                     <Button
@@ -359,9 +359,7 @@ export function DailyMissionsCard({
                       className="h-9 w-full gap-1.5 rounded-xl bg-primary text-xs font-bold text-primary-foreground shadow-sm hover:bg-primary/90"
                     >
                       <Gift className="size-4" />
-                      {isClaiming
-                        ? "..."
-                        : lang === "TH" ? "รับรางวัล" : lang === "JP" ? "受取" : "Claim"}
+                      {isClaiming ? "..." : t(lang, "missionClaimReward")}
                     </Button>
                   ) : isManual && !task.done ? (
                     <Button
@@ -370,7 +368,7 @@ export function DailyMissionsCard({
                       className="h-9 w-full gap-1.5 rounded-xl border border-primary/25 bg-primary/10 text-xs font-semibold text-primary hover:bg-primary/15"
                     >
                       <Share2 className="size-4" />
-                      {lang === "TH" ? "แชร์เลย" : lang === "JP" ? "シェア" : "Share"}
+                      {t(lang, "missionShare")}
                     </Button>
                   ) : href ? (
                     <NextLink href={href}>
@@ -379,14 +377,14 @@ export function DailyMissionsCard({
                         variant="outline"
                         className="h-9 w-full gap-1.5 rounded-xl text-xs font-semibold"
                       >
-                        {lang === "TH" ? "ไปทำเลย" : lang === "JP" ? "やってみる" : "Go"}
+                        {t(lang, "missionGo")}
                         <ArrowRight className="size-3.5" />
                       </Button>
                     </NextLink>
                   ) : (
                     <div className="flex h-9 items-center justify-center gap-1.5 rounded-xl bg-muted/50 text-meta">
                       <Lock className="size-3.5" />
-                      {lang === "TH" ? "ยังไม่สำเร็จ" : lang === "JP" ? "未完了" : "Incomplete"}
+                      {t(lang, "missionIncomplete")}
                     </div>
                   )}
                 </div>
@@ -421,7 +419,7 @@ export function DailyMissionsCard({
               Perfect Day!
             </p>
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-              {lang === "TH" ? "ทำภารกิจครบทุกอัน" : lang === "JP" ? "全ミッション達成" : "Complete all missions"}
+              {t(lang, "missionPerfectDayDesc")}
             </p>
 
             <div className="mt-auto pt-3">
@@ -437,7 +435,7 @@ export function DailyMissionsCard({
                   className="h-9 w-full gap-1.5 rounded-xl bg-primary text-xs font-bold text-primary-foreground shadow-sm hover:bg-primary/90"
                 >
                   <Gift className="size-4" />
-                  {claimingBonus ? "..." : lang === "TH" ? "รับรางวัล" : lang === "JP" ? "受取" : "Claim"}
+                  {claimingBonus ? "..." : t(lang, "missionClaimReward")}
                 </Button>
               ) : (
                 <div className="flex h-9 items-center justify-center gap-1.5 rounded-xl bg-muted/50 text-meta">

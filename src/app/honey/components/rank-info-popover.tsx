@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import type { Language } from "@/lib/i18n";
+import { t, type Language } from "@/lib/i18n";
 import {
   getTierLabel,
   type RankTier,
@@ -34,7 +34,7 @@ export function RankGuideContent({
   return (
     <>
       <p className="mb-2 text-xs font-semibold text-foreground">
-        {lang === "TH" ? "ระดับแรงค์" : lang === "JP" ? "ランク一覧" : "Rank Tiers"}
+        {t(lang, "rankGuideTiersHeading")}
       </p>
       <div className="space-y-1.5">
         {sorted.map((tier) => (
@@ -48,11 +48,7 @@ export function RankGuideContent({
         ))}
       </div>
       <div className="mt-2 border-t pt-2 text-meta">
-        {lang === "TH"
-          ? `สะสมทั้งหมด: ${lifetimeEarned.toLocaleString()} pt`
-          : lang === "JP"
-            ? `累計: ${lifetimeEarned.toLocaleString()} pt`
-            : `Lifetime: ${lifetimeEarned.toLocaleString()} pt`}
+        {`${t(lang, "rankGuideLifetimeLabel")} ${lifetimeEarned.toLocaleString()} pt`}
       </div>
     </>
   );

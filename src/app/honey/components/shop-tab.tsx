@@ -9,12 +9,6 @@ import type { ShopItem } from "../types";
 import { localizedName, localizedShopDesc, localizedShopType } from "../types";
 import { FilterTabs } from "./_shared/filter-tabs";
 
-const ALL_LABEL: Record<Language, string> = {
-  TH: "ทั้งหมด",
-  EN: "All",
-  JP: "すべて",
-};
-
 export function ShopTab({
   lang,
   shopItems,
@@ -37,7 +31,7 @@ export function ShopTab({
     : shopItems.filter((i) => i.type === shopFilter);
 
   const catLabel = (cat: string) => {
-    if (cat === "ALL") return ALL_LABEL[lang];
+    if (cat === "ALL") return t(lang, "activityFilterAll");
     return localizedShopType(cat, lang);
   };
 
@@ -88,7 +82,7 @@ export function ShopTab({
                   <div className="min-w-0 flex-1">
                     <h3 className="truncate text-sm font-semibold">
                       {isTrial
-                        ? `${lang === "TH" ? "แพ็กเกจ" : lang === "JP" ? "パッケージ" : "Package"} ${localizedName(item, lang)}`
+                        ? `${t(lang, "shopPackagePrefix")} ${localizedName(item, lang)}`
                         : localizedName(item, lang)}
                     </h3>
                     <p className="mt-0.5 text-meta">{catLabel(item.type)}</p>
