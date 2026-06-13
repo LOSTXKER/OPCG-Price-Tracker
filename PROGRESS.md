@@ -35,7 +35,8 @@
 - **user-facing giants เสร็จครบ** (5 ตัว) ✓
 - ✅ `snkrdunk-match` 973→446 (ใหญ่สุดในโปรเจกต์) → แตก `_components/{types,match-ui,add-card-dialog,mapping-row}` · main = logic + table shell
 - ✅ `cards-browser` 792→435 → แตก `_components/{types,card-cells,card-edit-form,card-mobile-row,card-grid}` · ลบ unused import ด้วย (warnings 81→80)
-- ค้าง admin: yuyutei (766) · rank-tiers (634) · drop-rates (607)
+- ✅ `yuyutei-match` 766→578 → แตก AI-suggest logic เป็น hook `use-yuyutei-ai.ts` (194) + `yuyutei-skeleton-rows.tsx` (45) · (row/ai-panel/bulk-bar แตกอยู่ก่อนแล้ว) · ซ่อม setState-in-effect ที่ refactor เผยออกมา (setTimeout 0)
+- **admin top-3 giants เสร็จ** ✓ · ค้าง admin เล็กลง: rank-tiers (634) · drop-rates (607)
 - **NOTE: lint baseline = 80 warnings แล้ว (เดิม 81 — ลบ ArrowUpDown ที่ไม่ใช้)**
 
 ## ▶ NEXT (ทำต่อทันที)
