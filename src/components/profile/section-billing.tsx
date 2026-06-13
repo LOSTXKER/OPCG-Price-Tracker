@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Download, ExternalLink, Loader2, Receipt } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useUIStore } from "@/stores/ui-store";
+import { apiGet, apiTry } from "@/lib/api/client";
 import { t, getLocale } from "@/lib/i18n";
 import type { InvoiceItem } from "./profile-types";
 
@@ -13,10 +14,11 @@ export function SectionBilling() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    void fetch("/api/me/invoices")
-      .then((r) => (r.ok ? r.json() : { invoices: [] }))
-      .then((d: { invoices: InvoiceItem[] }) => setInvoices(d.invoices))
-      .finally(() => setLoading(false));
+    void (async () => {
+      const d = await apiTry(apiGet<{ invoices: InvoiceItem[] }>("/api/me/invoices"));
+      if (d) setInvoices(d.invoices);
+      setLoading(false);
+    })();
   }, []);
 
   return (

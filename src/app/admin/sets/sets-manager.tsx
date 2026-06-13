@@ -27,6 +27,7 @@ import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
 import { AdminFormField } from "@/components/admin/admin-form-field";
 import { Badge } from "@/components/ui/badge";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { adminFetch } from "@/lib/admin/admin-fetch";
 import { cn } from "@/lib/utils";
 
 const SET_TYPE_LABELS: Record<string, string> = {
@@ -103,22 +104,19 @@ export function SetsManager({ initialSets }: { initialSets: SetRow[] }) {
   async function saveEdit(id: number) {
     setLoading((p) => ({ ...p, [`edit-${id}`]: true }));
     try {
-      const res = await fetch("/api/admin/sets", {
+      await adminFetch("/api/admin/sets", {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, ...editData }),
+        body: { id, ...editData },
       });
-      if (res.ok) {
-        setSets((prev) =>
-          prev.map((s) => (s.id === id ? { ...s, ...editData } : s)),
-        );
-        setEditingId(null);
-        toast.success("บันทึกสำเร็จ");
-      } else {
-        toast.error(`บันทึกไม่สำเร็จ: ${res.status}`);
-      }
-    } catch {
-      toast.error("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+      setSets((prev) =>
+        prev.map((s) => (s.id === id ? { ...s, ...editData } : s)),
+      );
+      setEditingId(null);
+      toast.success("บันทึกสำเร็จ");
+    } catch (e) {
+      toast.error(
+        e instanceof Error ? e.message : "เกิดข้อผิดพลาดในการเชื่อมต่อ",
+      );
     } finally {
       setLoading((p) => ({ ...p, [`edit-${id}`]: false }));
     }
@@ -129,20 +127,17 @@ export function SetsManager({ initialSets }: { initialSets: SetRow[] }) {
     setLoading((p) => ({ ...p, [key]: true }));
     const toastId = toast.loading(`กำลังดึงราคา ${setCode.toUpperCase()}...`);
     try {
-      const res = await fetch("/api/admin/sets/scrape-prices", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ setCode }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast.success(
-          `ดึงราคาสำเร็จ: ${data.upserted} ใบ, ใหม่ ${data.newCards} ใบ`,
-          { id: toastId },
-        );
-      } else {
-        toast.error(data.error || "ดึงราคาไม่สำเร็จ", { id: toastId });
-      }
+      const data = await adminFetch<{ upserted: number; newCards: number }>(
+        "/api/admin/sets/scrape-prices",
+        {
+          method: "POST",
+          body: { setCode },
+        },
+      );
+      toast.success(
+        `ดึงราคาสำเร็จ: ${data.upserted} ใบ, ใหม่ ${data.newCards} ใบ`,
+        { id: toastId },
+      );
     } catch (e) {
       toast.error(
         e instanceof Error ? e.message : "เกิดข้อผิดพลาด",

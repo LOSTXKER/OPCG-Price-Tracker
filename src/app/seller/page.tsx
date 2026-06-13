@@ -10,6 +10,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Surface } from "@/components/ui/surface";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { ApiError, apiGet } from "@/lib/api/client";
 import {
   Package,
   Eye,
@@ -82,14 +83,16 @@ export default function SellerDashboard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/seller/stats")
-      .then((r) => {
-        if (!r.ok) throw new Error("Failed to load stats");
-        return r.json();
-      })
-      .then((data) => setStats(data))
-      .catch((e) => setError(e.message))
-      .finally(() => setLoading(false));
+    (async () => {
+      try {
+        const data = await apiGet<Stats>("/api/seller/stats");
+        setStats(data);
+      } catch (err) {
+        setError(err instanceof ApiError ? err.message : "Failed to load stats");
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
   if (loading) {

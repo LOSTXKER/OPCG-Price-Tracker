@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { apiPost, apiTry } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 
 interface SaveButtonProps {
@@ -18,11 +19,8 @@ export function SaveButton({ listingId, initialSaved, className }: SaveButtonPro
   const toggle = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/listings/${listingId}/save`, { method: "POST" });
-      if (res.ok) {
-        const data = await res.json();
-        setSaved(data.saved);
-      }
+      const data = await apiTry(apiPost<{ saved: boolean }>(`/api/listings/${listingId}/save`));
+      if (data) setSaved(data.saved);
     } finally {
       setLoading(false);
     }

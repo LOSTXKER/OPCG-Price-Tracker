@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
+import { ApiError, apiPost } from "@/lib/api/client"
 import {
   AlertFormBody,
   type AlertFormValue,
@@ -95,37 +96,12 @@ export function CardSetAlertDialog({
 
     setSubmitting(true)
     try {
-      const res = await fetch("/api/alerts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          cardId,
-          targetPrice: targetJpy,
-          direction: value.direction,
-          channels: value.channels,
-        }),
+      await apiPost("/api/alerts", {
+        cardId,
+        targetPrice: targetJpy,
+        direction: value.direction,
+        channels: value.channels,
       })
-
-      if (res.status === 401) {
-        window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`
-        return
-      }
-
-      const json = await res.json().catch(() => ({}))
-      if (!res.ok) {
-        if (res.status === 403) {
-          const msg: string = typeof json?.error === "string" ? json.error : ""
-          if (msg.toLowerCase().includes("line")) {
-            openUpgradeDialog({ featureKey: "lineAlerts" })
-          } else {
-            openUpgradeDialog({ featureKey: "priceAlerts" })
-          }
-          setOpen(false)
-          return
-        }
-        setError(json?.error ?? t(lang, "priceAlertFailed"))
-        return
-      }
 
       setDone(true)
       onCreated?.()
@@ -133,8 +109,22 @@ export function CardSetAlertDialog({
         setDone(false)
         setOpen(false)
       }, 1300)
-    } catch {
-      setError(t(lang, "priceAlertFailed"))
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`
+        return
+      }
+      if (err instanceof ApiError && err.status === 403) {
+        const msg = err.message.toLowerCase()
+        if (msg.includes("line")) {
+          openUpgradeDialog({ featureKey: "lineAlerts" })
+        } else {
+          openUpgradeDialog({ featureKey: "priceAlerts" })
+        }
+        setOpen(false)
+        return
+      }
+      setError(err instanceof ApiError ? err.message : t(lang, "priceAlertFailed"))
     } finally {
       setSubmitting(false)
     }

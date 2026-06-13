@@ -23,6 +23,7 @@ import {
   type AlertFormValue,
 } from "@/components/alerts/alert-form";
 import { displayValueToJpy, formatJpy } from "@/lib/utils/currency";
+import { ApiError, apiPost } from "@/lib/api/client";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";
 import { cn } from "@/lib/utils";
 import type { PriceAlertItem } from "./alert-types";
@@ -91,42 +92,30 @@ export function AlertCreateDialog({
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/alerts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          cardId: card.id,
-          targetPrice: targetJpy,
-          direction: value.direction,
-          channels: value.channels,
-        }),
+      const json = await apiPost<{ alert: PriceAlertItem }>("/api/alerts", {
+        cardId: card.id,
+        targetPrice: targetJpy,
+        direction: value.direction,
+        channels: value.channels,
       });
 
-      if (res.status === 401) {
+      onCreated?.(json.alert);
+      onOpenChange(false);
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
         window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`;
         return;
       }
-
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        if (res.status === 403) {
-          const msg: string = typeof json?.error === "string" ? json.error : "";
-          if (msg.toLowerCase().includes("line")) {
-            openUpgradeDialog({ featureKey: "lineAlerts" });
-          } else {
-            openUpgradeDialog({ featureKey: "priceAlerts" });
-          }
-          onOpenChange(false);
-          return;
+      if (err instanceof ApiError && err.status === 403) {
+        if (err.message.toLowerCase().includes("line")) {
+          openUpgradeDialog({ featureKey: "lineAlerts" });
+        } else {
+          openUpgradeDialog({ featureKey: "priceAlerts" });
         }
-        setError(json?.error ?? t(lang, "priceAlertFailed"));
+        onOpenChange(false);
         return;
       }
-
-      onCreated?.(json.alert as PriceAlertItem);
-      onOpenChange(false);
-    } catch {
-      setError(t(lang, "priceAlertFailed"));
+      setError(err instanceof ApiError ? err.message : t(lang, "priceAlertFailed"));
     } finally {
       setSubmitting(false);
     }

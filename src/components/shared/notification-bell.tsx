@@ -16,6 +16,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { PriceAlertItem } from "@/components/alerts/alert-types";
 import { useUIStore } from "@/stores/ui-store";
+import { apiGet, apiPost, apiTry } from "@/lib/api/client";
 import { getCardName, getLocale, t, type Language } from "@/lib/i18n";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";
 import { cn } from "@/lib/utils";
@@ -48,30 +49,22 @@ export function NotificationBell() {
   const ref = useRef<HTMLDivElement>(null);
 
   const fetchNotifications = useCallback(async () => {
-    try {
-      const res = await fetch("/api/notifications?limit=10");
-      if (!res.ok) return;
-      const data = await res.json();
-      setItems(data.notifications ?? []);
-      setUnreadCount(data.unreadCount ?? 0);
-      setLoaded(true);
-    } catch {
-      /* ignore */
-    }
+    const data = await apiTry(
+      apiGet<{ notifications?: NotificationItem[]; unreadCount?: number }>(
+        "/api/notifications?limit=10",
+      ),
+    );
+    if (!data) return;
+    setItems(data.notifications ?? []);
+    setUnreadCount(data.unreadCount ?? 0);
+    setLoaded(true);
   }, []);
 
   const fetchAlerts = useCallback(async () => {
     setAlertsLoading(true);
     try {
-      const res = await fetch("/api/alerts");
-      if (!res.ok) {
-        setAlerts([]);
-        return;
-      }
-      const data = (await res.json()) as { alerts: PriceAlertItem[] };
-      setAlerts(data.alerts ?? []);
-    } catch {
-      setAlerts([]);
+      const data = await apiTry(apiGet<{ alerts: PriceAlertItem[] }>("/api/alerts"));
+      setAlerts(data?.alerts ?? []);
     } finally {
       setAlertsLoading(false);
     }
@@ -102,21 +95,13 @@ export function NotificationBell() {
   }, [open]);
 
   const markAsRead = async (id: number) => {
-    await fetch("/api/notifications/read", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
+    await apiTry(apiPost("/api/notifications/read", { id }));
     setItems((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
     setUnreadCount((c) => Math.max(0, c - 1));
   };
 
   const markAllRead = async () => {
-    await fetch("/api/notifications/read", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ all: true }),
-    });
+    await apiTry(apiPost("/api/notifications/read", { all: true }));
     setItems((prev) => prev.map((n) => ({ ...n, read: true })));
     setUnreadCount(0);
   };

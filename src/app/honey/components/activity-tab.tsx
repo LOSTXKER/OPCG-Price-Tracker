@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ArrowUp, History, Sparkles } from "lucide-react";
-import { t, type Language } from "@/lib/i18n";
+import { t, type Language, type TranslationKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { HoneyTx } from "../types";
 import { formatTxReason, getTxStyle } from "../types";
@@ -10,16 +10,16 @@ import { FilterTabs } from "./_shared/filter-tabs";
 
 type FilterKey = "ALL" | "CHECKIN" | "DAILY_MISSION" | "ACHIEVEMENT" | "REFERRAL" | "MARKETPLACE" | "RAFFLE" | "REDEEM" | "OTHER";
 
-const FILTER_LABELS: Record<FilterKey, Record<string, string>> = {
-  ALL:          { TH: "ทั้งหมด",    EN: "All",          JP: "すべて" },
-  CHECKIN:      { TH: "เช็คอิน",    EN: "Check-in",     JP: "チェックイン" },
-  DAILY_MISSION:{ TH: "ภารกิจ",     EN: "Missions",     JP: "ミッション" },
-  ACHIEVEMENT:  { TH: "ความสำเร็จ", EN: "Achievements", JP: "実績" },
-  REFERRAL:     { TH: "แนะนำเพื่อน", EN: "Referral",    JP: "紹介" },
-  MARKETPLACE:  { TH: "ตลาด",       EN: "Marketplace",  JP: "マーケット" },
-  RAFFLE:       { TH: "ลุ้นรางวัล",  EN: "Raffle",      JP: "抽選" },
-  REDEEM:       { TH: "แลกของ",      EN: "Redeem",      JP: "交換" },
-  OTHER:        { TH: "อื่นๆ",       EN: "Other",       JP: "その他" },
+const FILTER_LABEL_KEYS: Record<FilterKey, TranslationKey> = {
+  ALL: "activityFilterAll",
+  CHECKIN: "activityFilterCheckin",
+  DAILY_MISSION: "activityFilterMissions",
+  ACHIEVEMENT: "activityFilterAchievements",
+  REFERRAL: "activityFilterReferral",
+  MARKETPLACE: "activityFilterMarketplace",
+  RAFFLE: "activityFilterRaffle",
+  REDEEM: "activityFilterRedeem",
+  OTHER: "activityFilterOther",
 };
 
 const FILTER_TYPE_MAP: Record<FilterKey, string[]> = {
@@ -82,7 +82,7 @@ export function ActivityTab({
           onChange={setFilter}
           options={availableFilters.map((key) => ({
             key,
-            label: FILTER_LABELS[key][lang] ?? FILTER_LABELS[key].EN,
+            label: t(lang, FILTER_LABEL_KEYS[key]),
           }))}
           ariaLabel={t(lang, "honeyHistory")}
         />
@@ -94,14 +94,10 @@ export function ActivityTab({
             <Sparkles className="size-6 text-muted-foreground/40" />
             <div>
               <p className="text-sm font-semibold">
-                {lang === "TH" ? "เริ่มสะสม Honey กันเลย!" : lang === "JP" ? "Honeyを集め始めよう！" : "Start earning Honey!"}
+                {t(lang, "activityEmptyStartTitle")}
               </p>
               <p className="mt-1 text-meta">
-                {lang === "TH"
-                  ? "ทำภารกิจประจำวันด้านบนเพื่อรับ Honey แรก"
-                  : lang === "JP"
-                    ? "上のデイリーミッションをクリアして最初のHoneyをゲット"
-                    : "Complete a daily mission above to earn your first Honey"}
+                {t(lang, "activityEmptyStartSubtitle")}
               </p>
             </div>
             <button
@@ -109,7 +105,7 @@ export function ActivityTab({
               className="inline-flex items-center gap-1.5 rounded-md border bg-background px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
             >
               <ArrowUp className="size-3.5" />
-              {lang === "TH" ? "ไปทำภารกิจ" : lang === "JP" ? "ミッションへ" : "Go to missions"}
+              {t(lang, "activityGoToMissions")}
             </button>
           </div>
         ) : (

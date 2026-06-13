@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { Camera, Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ApiError, apiForm } from "@/lib/api/client";
 import { t, getLocale } from "@/lib/i18n";
 import type { Language } from "@/lib/i18n";
 import type { DbUser } from "./profile-types";
@@ -31,16 +32,10 @@ export function AccountProfileHero({ user, lang, onUserUpdate }: AccountProfileH
     try {
       const form = new FormData();
       form.append("file", file);
-      const res = await fetch("/api/me/avatar", { method: "POST", body: form });
-      if (!res.ok) {
-        const j = (await res.json()) as { error?: string };
-        setError(j.error ?? "Upload failed");
-        return;
-      }
-      const json = (await res.json()) as { user: DbUser };
+      const json = await apiForm<{ user: DbUser }>("/api/me/avatar", form);
       onUserUpdate(json.user);
-    } catch {
-      setError("Upload failed");
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Upload failed");
     } finally {
       setUploadingAvatar(false);
       if (fileInputRef.current) fileInputRef.current.value = "";

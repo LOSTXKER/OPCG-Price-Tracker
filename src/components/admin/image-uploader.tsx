@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { ImagePlus, Loader2, Trash2, Upload } from "lucide-react";
+import { adminForm } from "@/lib/admin/admin-fetch";
 import { cn } from "@/lib/utils";
 
 export function ImageUploader({
@@ -40,19 +41,14 @@ export function ImageUploader({
         formData.append("file", file);
         formData.append("folder", folder);
 
-        const res = await fetch("/api/admin/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        const data = await res.json();
-        if (res.ok && data.url) {
+        const data = await adminForm<{ url?: string }>("/api/admin/upload", formData);
+        if (data.url) {
           onChange(data.url);
         } else {
-          setError(data.error || "อัปโหลดไม่สำเร็จ");
+          setError("อัปโหลดไม่สำเร็จ");
         }
-      } catch {
-        setError("อัปโหลดไม่สำเร็จ");
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "อัปโหลดไม่สำเร็จ");
       } finally {
         setUploading(false);
       }

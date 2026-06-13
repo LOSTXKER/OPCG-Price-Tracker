@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { ApiError, apiGet, apiPost, apiTry } from "@/lib/api/client";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { useSettings, invalidateSettings } from "@/hooks/use-settings";
@@ -50,20 +51,14 @@ export function ProfileDataProvider({ children }: { children: ReactNode }) {
   const load = useCallback(async () => {
     setError(null);
     try {
-      const meRes = await fetch("/api/me");
-      if (!meRes.ok) {
-        if (meRes.status === 401) {
-          invalidateSettings();
-          const supabase = createClient();
-          await supabase.auth.signOut();
-        }
-        setLoading(false);
-        setError(t(lang, "loadFailed"));
-        return;
-      }
-      const meJson = (await meRes.json()) as ProfileData;
+      const meJson = await apiGet<ProfileData>("/api/me");
       setData(meJson);
-    } catch {
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        invalidateSettings();
+        const supabase = createClient();
+        await supabase.auth.signOut();
+      }
       setError(t(lang, "loadFailed"));
     }
     setLoading(false);
@@ -76,13 +71,10 @@ export function ProfileDataProvider({ children }: { children: ReactNode }) {
   const handleCheckin = useCallback(async () => {
     setCheckinLoading(true);
     try {
-      const res = await fetch("/api/honey", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "checkin" }),
-      });
-      if (res.ok) {
-        const json = await res.json();
+      const json = await apiTry(
+        apiPost<{ total: number; streak: number }>("/api/honey", { action: "checkin" }),
+      );
+      if (json) {
         setData((prev) =>
           prev
             ? {

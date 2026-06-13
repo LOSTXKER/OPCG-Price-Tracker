@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { apiPost, apiTry } from "@/lib/api/client";
 import { Button } from "@/components/ui/button";
 import { MakeOfferDialog } from "@/components/messages/make-offer-dialog";
 import { ShoppingCart, HandCoins } from "lucide-react";
@@ -24,12 +25,8 @@ export function ListingActionButtons({
   const handleBuyNow = async () => {
     setBuying(true);
     try {
-      const res = await fetch("/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ listingId }),
-      });
-      if (res.ok) {
+      const ok = await apiTry(apiPost("/api/orders", { listingId }));
+      if (ok !== null) {
         router.push(`/messages/${listingId}`);
       }
     } finally {
@@ -38,12 +35,10 @@ export function ListingActionButtons({
   };
 
   const handleMakeOffer = async (price: number, note: string) => {
-    const res = await fetch("/api/offers", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ listingId, priceThb: price, note: note || undefined }),
-    });
-    if (res.ok) {
+    const ok = await apiTry(
+      apiPost("/api/offers", { listingId, priceThb: price, note: note || undefined }),
+    );
+    if (ok !== null) {
       router.push(`/messages/${listingId}`);
     }
   };

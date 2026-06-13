@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { CircleCheck, Loader2, Pencil, X } from "lucide-react";
+import { apiPatch, apiTry } from "@/lib/api/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { t } from "@/lib/i18n";
@@ -56,18 +57,15 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
     if (saving) return;
     setSaving(true);
     try {
-      const res = await fetch("/api/me", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const json = await apiTry(
+        apiPatch<{ user: DbUser }>("/api/me", {
           socialLine: socials.socialLine.trim() || null,
           socialIg: socials.socialIg.trim() || null,
           socialTwitter: socials.socialTwitter.trim() || null,
           socialFacebook: socials.socialFacebook.trim() || null,
         }),
-      });
-      if (res.ok) {
-        const json = (await res.json()) as { user: DbUser };
+      );
+      if (json) {
         onUserUpdate(json.user);
         setIsEditing(false);
         setSavedAt(Date.now());

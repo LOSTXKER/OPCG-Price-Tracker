@@ -1,6 +1,6 @@
 /**
  * Thin wrapper around fetch for client-side JSON API calls (user-facing
- * routes). Counterpart of `adminJsonFetch` in `admin-client.ts`.
+ * routes). Counterpart of `adminFetch` in `admin/admin-fetch.ts`.
  *
  * - Serializes JSON bodies and sets Content-Type.
  * - Parses the `{ error }` envelope on non-2xx and throws `ApiError` so
@@ -25,6 +25,19 @@ type JsonRequestOptions = {
   signal?: AbortSignal;
 };
 
+/** Throw ApiError (carrying the `{ error }` envelope) when a response is non-2xx. */
+async function ensureOk(res: Response): Promise<void> {
+  if (res.ok) return;
+  let message = `Request failed: ${res.status}`;
+  try {
+    const err = (await res.json()) as { error?: string };
+    if (err?.error) message = err.error;
+  } catch {
+    /* ignore parse errors */
+  }
+  throw new ApiError(res.status, message);
+}
+
 export async function apiFetch<T = unknown>(
   url: string,
   opts: JsonRequestOptions = {},
@@ -36,16 +49,23 @@ export async function apiFetch<T = unknown>(
     body: body !== undefined ? JSON.stringify(body) : undefined,
     signal,
   });
-  if (!res.ok) {
-    let message = `Request failed: ${res.status}`;
-    try {
-      const err = (await res.json()) as { error?: string };
-      if (err?.error) message = err.error;
-    } catch {
-      /* ignore parse errors */
-    }
-    throw new ApiError(res.status, message);
-  }
+  await ensureOk(res);
+  return res.json() as Promise<T>;
+}
+
+/**
+ * Send a multipart `FormData` body (file uploads). Unlike `apiFetch`, this does
+ * NOT set Content-Type — the browser sets it with the correct multipart
+ * boundary. Same ApiError-on-non-2xx contract; returns the parsed JSON body.
+ */
+export async function apiForm<T = unknown>(
+  url: string,
+  form: FormData,
+  opts: { method?: string; signal?: AbortSignal } = {},
+): Promise<T> {
+  const { method = "POST", signal } = opts;
+  const res = await fetch(url, { method, body: form, signal });
+  await ensureOk(res);
   return res.json() as Promise<T>;
 }
 

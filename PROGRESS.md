@@ -2,31 +2,51 @@
 > **เขียนทับทุกครั้ง ไม่สะสม log** (log อยู่ใน git history แล้ว) · hook โหลดไฟล์นี้เข้าทุก session
 > session ใหม่: อ่านอันนี้ก่อนเริ่ม แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-13 (รอบ refactor — เบสสั่ง "Refactor ก่อน เดี๋ยวค่อยปรับ Design")
+อัปเดตล่าสุด: 2026-06-13 (R2 fetch-migration รอบใหญ่)
 
-## ทำถึงไหน
-- audit ทั้ง repo เสร็จ → แผน refactor อยู่ `PLAN.md` ส่วน R (R0-R4) · งานเปลี่ยน design/IA แขวนไว้ "รอเฟส redesign"
-- **R0 ครบ**: chromeless auth routes · ตาราง drop-rate dialog มี mobile fallback · เคลียร์ overflow-x-auto 30 จุด
-- **R1 typography ครบ**: text-[Npx] → text-micro/overlay · auth hero → text-h1
-- **R2 hooks ครบ**: `lib/api/client.ts` (apiFetch/ApiError/apiTry) + `lib/api/shared-resource.ts` + migrate hooks ที่มี fetch ทั้ง 9 ตัว (4 ตัว → useSyncExternalStore)
-- **lint errors 29 → 0** (พังมาก่อนแล้ว): เพิ่ม `use-hydrated.ts` แทน mounted-flag · timeout-0/rAF สำหรับ setState-in-effect · hoist conditional hooks + nested component · `daysSince/daysUntil` ใน lib/utils/time.ts
-- **ซ่อมเทสต์เก่าพัง**: earn.test.ts stub ขาด `$transaction` → 36/36 เขียว
-- **verify ครบผ่านหมด**: `eslint src` 0 errors/78 warnings ✅ · test 36/36 ✅ · `npm run build` ผ่าน (BUILD_ID: hZ81t2dR2BU6dH_cO-11w) ✅ · `tsc --noEmit` clean ✅
-- **เจอ+แก้ปัญหา env (ไม่ใช่โค้ด)**: iCloud "Optimize Storage" ดูดไฟล์ node_modules ออก (dataless) ทำ Turbopack อ่านไม่ได้ → daemon `bird` ค้าง → แก้ด้วย killall bird + `rm -rf node_modules && npm install` สด (เบสรันผ่าน `!` เพราะ harness บล็อก rm) · lockfile อัปเดตแก้ drift @emnapi ที่ค้างมาก่อน
+## ⚠️ ตำแหน่งโปรเจกต์เปลี่ยนแล้ว
+- **ที่อยู่ใหม่: `~/dev/OPCG-Price-Tracker-master`** (ย้ายออกจาก `~/Desktop/dev` ที่ iCloud sync กินไฟล์)
+- ของเดิมที่ `~/Desktop/dev` = backup เก่า (iCloud) — ยืนยันที่ใหม่โอเคแล้วค่อยลบทิ้ง + ปิด iCloud Desktop sync
+- ถ้า session นี้ยัง root อยู่ที่ `~/Desktop/dev/...` ให้ **รีสตาร์ท Claude Code จาก `~/dev/OPCG-Price-Tracker-master`**
+
+## ทำถึงไหน (refactor — เบสสั่ง "Refactor ก่อน เดี๋ยวค่อยปรับ Design")
+- **commit + push แล้ว**: branch `refactor/mobile-ux-and-data-layer` (commit `5925fc6`, 73 ไฟล์) → push origin แล้ว · ยังไม่เปิด PR (gh ไม่ได้ติดตั้ง — เปิดผ่านลิงก์ GitHub)
+- เนื้องาน: R0 (chromeless auth, sets table fallback) · R1 (typography token) · R2 (lib/api/client.ts + shared-resource.ts + migrate 9 hooks + section-addresses) · lint errors 29→0 (useHydrated, daysSince/daysUntil, hoist hooks) · ซ่อม earn.test stub
+- **R2 รอบใหม่ (workflow 91-agent): migrate raw `fetch('/api')` → `@/lib/api/client` ใน 44 client files** (internal /api fetch 99→6, เหลือเฉพาะ FormData upload) · แตก `PortfolioMockPreview` ออกเป็นไฟล์แยก (portfolio-client 661→509) · ซ่อม 2 lint error ใหม่ (setState-in-effect → ห่อ setTimeout(…,0) ตาม pattern use-portfolio-api) · net −422 บรรทัด
+- **R2 ปิด FormData: เพิ่ม `apiForm` helper (multipart, ไม่ set Content-Type) + refactor `ensureOk` ร่วม** → migrate 5 FormData upload ที่เหลือ (photo-search /api/cards/identify · listings/upload ×2 · me/cover · me/avatar)
+- **R2 admin (workflow 18-agent): migrate admin client raw fetch + legacy `adminJsonFetch` → `adminFetch` ใน 9 ไฟล์** (13 raw sites + 14 adminJsonFetch calls) · เพิ่ม `adminForm` helper + migrate image-uploader · ระวัง GET/POST default trap (adminJsonFetch default POST แต่ adminFetch default GET) — verify ผ่าน 0 high-sev · **`adminJsonFetch` retired** (`src/lib/api/admin-client.ts` ไม่มีใคร import แล้ว — ลบได้)
+- **ผลรวม: client code ไม่มี raw `fetch('/api')` เหลือเลย (0)** — ทุก client API call ผ่าน `@/lib/api/client` (user) หรือ `@/lib/admin/admin-fetch` (admin)
+- verify ที่ `~/dev` (สด ไม่มี iCloud): lint 0 errors/81 warn ✓ · tsc clean ✓ · test 36/36 ✓ · **build ผ่าน** Compiled 6.8s, static 145/145 ✓
 
 ## ค้าง / ติดอะไร
-- ⚠️ **junk จาก env ต้องลบเอง (ผม rm ไม่ได้ harness บล็อก)** — กัน lint/git/build ปนเปื้อนแล้วด้วย .gitignore `/.next-*/` + eslint ignore `.next-*` & `* [0-9].*` แต่ไฟล์ยังอยู่บนดิสก์:
-  ```
-  ! rm -rf .next-stale-rebuild .next-failed-* "src/hooks/use-portfolio-api 2.ts"
-  ```
-  (`use-portfolio-api 2.ts` = iCloud conflict copy เนื้อหาเก่า — อันตรายถ้า iCloud เอาไปทับไฟล์จริง ลบทิ้งเลย)
-- ⚠️ **ต้นเหตุจริง iCloud**: โปรเจกต์อยู่บน Desktop ที่ iCloud sync + Optimize Storage → ดูด node_modules ออก + สร้าง conflict copy ของไฟล์ที่แก้ (เจอ `use-portfolio-api 2.ts`) · **แนะนำย้ายออกจาก iCloud จริงจัง** ไม่งั้นวนซ้ำ
-- working tree: งานเก่า 15 ไฟล์ + refactor วันนี้ + package-lock.json + .gitignore/eslint.config ยังไม่ commit (~79 ไฟล์) — **เบสยังไม่เคาะวิธี commit** · changeset ใหญ่แล้ว แนะนำ commit เป็นก้อนก่อนไป R2 ต่อ
-- R2 ค้าง: fetch ใน components ~70 จุด · แตก client components ยักษ์ 5 ตัว (portfolio-client 661 ฯลฯ) · ลบ `lib/notifications.ts` (รอเบสยืนยัน)
-- R1 ค้าง: รวม empty-state · lint warnings 81 · R3 i18n 152 ไฟล์ · R4 client→server pages
-- เดิม: cron `leaderboard-rewards` ไม่อยู่ใน vercel.json (M0) · `data/cards-official/` รอเบส
+- **branch push แล้วถึง `204b148` (16 commits วันนี้)** — รอเบส merge เอง: https://github.com/LOSTXKER/OPCG-Price-Tracker/pull/new/refactor/mobile-ux-and-data-layer (gh ไม่ติดตั้ง → merge ผ่าน GitHub UI · ห้าม push master ตรง)
+- ✅ zombie junk ลบแล้ว (svg×5, meecard.png ซ้ำ, `use-portfolio-api 2.ts` เก่า) · **`docs/MARKETPLACE_OVERHAUL.md` ไม่ใช่ junk** — เป็นแผนงาน (PLAN.md อ้างถึง) commit เก็บแล้ว
+- repo อื่นที่ย้ายมาด้วย (anajak-stock-main, Git/{anajak-erp,anajak-stock,bestos,bill-tracker}) คัดลอก source+.git แล้ว แต่ยังไม่ได้ npm install — install ตอนจะใช้
+- R2 ค้าง: ลบ `src/lib/api/admin-client.ts` (dead code — รอ confirm) · แตก client components ยักษ์ที่เหลือ · R3 i18n 152 ไฟล์ · R4 client→server pages
+- yuyutei/snkrdunk: บาง mutation handler ไม่มี try/catch (unhandled reject ถ้า fail) — pre-existing ตั้งแต่ใช้ adminJsonFetch ไม่ใช่ของใหม่ · ใช้ `toastOnError` ของ adminFetch เก็บงานได้ถ้าจะปรับ
+- เดิม: cron leaderboard-rewards ไม่อยู่ใน vercel.json (M0)
+
+## R3 แตก client components ยักษ์ (เริ่มแล้ว — user-facing ก่อน)
+- ✅ `compare-client` 634→357 → แตก `_components/card-rail.tsx` (151) + `_components/compare-dossier.tsx` (175)
+- ✅ `today-card` 642→5 (barrel) → แตก `streak-card.tsx` (325) + `streak-info-popover.tsx` (178) + `today-missions-card.tsx` (144) · importer (missions-tab) ใช้ barrel เดิมต่อได้
+- ✅ `price-hub` 567→271 → แตก `price-hub-sources.tsx` (326, source markets list+table) · อ่าน currency จาก store เอง
+- ✅ `alerts-manager` 502→262 → แตก `alert-row.tsx` (248, AlertRow + FeedbackPill + formatTriggeredAt + FeedbackKind)
+- ✅ `search-client` 497→388 → แตก data/state logic เป็น hook `use-search.ts` (205) ตาม pattern useCompareData · เหลือ pure presentation
+- **user-facing giants เสร็จครบ** (5 ตัว) ✓
+- ✅ `snkrdunk-match` 973→446 (ใหญ่สุดในโปรเจกต์) → แตก `_components/{types,match-ui,add-card-dialog,mapping-row}` · main = logic + table shell
+- ✅ `cards-browser` 792→435 → แตก `_components/{types,card-cells,card-edit-form,card-mobile-row,card-grid}` · ลบ unused import ด้วย (warnings 81→80)
+- ✅ `yuyutei-match` 766→578 → แตก AI-suggest logic เป็น hook `use-yuyutei-ai.ts` (194) + `yuyutei-skeleton-rows.tsx` (45) · (row/ai-panel/bulk-bar แตกอยู่ก่อนแล้ว) · ซ่อม setState-in-effect ที่ refactor เผยออกมา (setTimeout 0)
+- ✅ `rank-tiers` 634→273 → แตก `_components/{tier-badge,tier-row,rank-preview}`
+- ✅ `drop-rates` 607→171 → แตก `_components/{types,use-drop-rates-editor (hook),set-row}` (editor เป็น prop)
+- **admin giants เสร็จครบ 5 ตัว** ✓ — ไม่มี client component >580 บรรทัดเหลือแล้ว
+- **NOTE: lint baseline = 80 warnings (เดิม 81 — ลบ ArrowUpDown ที่ไม่ใช้)**
+
+## R3 i18n — migrate inline TH/JP/EN → t(lang, key)
+- ✅ **scope จริง = 88 occurrences / 14 ไฟล์** (ไม่ใช่ 152 — ส่วนใหญ่ honey feature; admin เป็น Thai-only ถูกต้องไม่ต้อง migrate)
+- workflow 3 เฟส: (A) 18-agent extract triples → (B) ผม design 74 key กลาง เขียนเข้า th/en/jp.ts เอง (กันชน, suffix ตัวที่ collision เช่น streakInfoTitle2/3) → (C) 14-agent replace + verify (ซ่อม 2 type-widening เอง: as const / Record<K,TranslationKey>)
+- skip ถูกต้อง: 3 interpolation (`${var}`) + pluralization (`streak===1?"day":"days"`) + dynamic name fallback (getCardName-style) — ปล่อย inline
+- ลบ junk key 1 ตัว (Phase A extract ผิด) · verify: tsc clean · lint 0err/80warn · test 36/36 · build ✓
 
 ## ▶ NEXT (ทำต่อทันที)
-1. ดูผล build รอบสุดท้ายให้จบ — แดงให้แก้ก่อน (ระวัง .next corrupt = ลบทิ้ง build ใหม่)
-2. R2 ต่อ: แตก portfolio-client (แยก data hook / presentation) แล้วไล่ migrate fetch ใน components
-3. R1: รวม empty-state → ระบบเดียว
+1. (เบส) เปิด PR + ลบ backup เก่าเมื่อพร้อม
+2. (option) i18n ที่เหลือ: interpolation cases ถ้าต้องการ placeholder pattern (`{n}` + .replace) · component กลางๆ 400-580 บรรทัด

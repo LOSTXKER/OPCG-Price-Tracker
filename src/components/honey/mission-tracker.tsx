@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { ApiError, apiPost, apiTry } from "@/lib/api/client";
 import { createClient } from "@/lib/supabase/client";
 import { useAuthState } from "@/hooks/use-auth-state";
 import { invalidateSettings } from "@/hooks/use-settings";
@@ -21,43 +22,49 @@ export function MissionTracker() {
   useEffect(() => {
     if (authed !== true) return;
 
-    fetch("/api/honey/missions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "track-by-path", path: pathname }),
-    }).then(async (r) => {
-      if (r.status === 401) {
-        invalidateSettings();
-        const supabase = createClient();
-        await supabase.auth.signOut();
-      }
-    }).catch((e) => console.error("[honey] mission track failed:", e));
+    apiPost("/api/honey/missions", { action: "track-by-path", path: pathname }).catch(
+      async (e) => {
+        if (e instanceof ApiError && e.status === 401) {
+          invalidateSettings();
+          const supabase = createClient();
+          await supabase.auth.signOut();
+          return;
+        }
+        console.error("[honey] mission track failed:", e);
+      },
+    );
 
     const setsMatch = SETS_RE.exec(pathname);
     if (setsMatch) {
-      fetch("/api/honey/raffle-missions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "track", missionId: "explore_sets", dedupKey: setsMatch[1] }),
-      }).catch((e) => console.error("[honey] raffle mission track failed:", e));
+      void apiTry(
+        apiPost("/api/honey/raffle-missions", {
+          action: "track",
+          missionId: "explore_sets",
+          dedupKey: setsMatch[1],
+        }),
+      );
     }
 
     const cardsMatch = CARDS_RE.exec(pathname);
     if (cardsMatch) {
-      fetch("/api/honey/raffle-missions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "track", missionId: "check_cards", dedupKey: cardsMatch[1] }),
-      }).catch((e) => console.error("[honey] raffle mission track failed:", e));
+      void apiTry(
+        apiPost("/api/honey/raffle-missions", {
+          action: "track",
+          missionId: "check_cards",
+          dedupKey: cardsMatch[1],
+        }),
+      );
     }
 
     if (pathname === "/trending") {
       const today = new Date().toISOString().slice(0, 10);
-      fetch("/api/honey/raffle-missions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "track", missionId: "visit_trending", dedupKey: today }),
-      }).catch((e) => console.error("[honey] raffle mission track failed:", e));
+      void apiTry(
+        apiPost("/api/honey/raffle-missions", {
+          action: "track",
+          missionId: "visit_trending",
+          dedupKey: today,
+        }),
+      );
     }
   }, [pathname, authed]);
 

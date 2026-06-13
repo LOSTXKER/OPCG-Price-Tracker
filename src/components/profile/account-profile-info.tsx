@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { t } from "@/lib/i18n";
 import type { Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { ApiError, apiPatch } from "@/lib/api/client";
 import type { DbUser } from "./profile-types";
 
 const nameSchema = z.string().trim().min(1, "Name is required").max(120);
@@ -35,19 +36,12 @@ export function AccountProfileInfo({ user, lang, onUserUpdate }: AccountProfileI
     setSaving(true);
     setError(null);
     try {
-      const res = await fetch("/api/me", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      if (!res.ok) {
-        const j = (await res.json()) as { error?: string };
-        setError(j.error ?? t(lang, "addFailed"));
-        return null;
-      }
-      const json = (await res.json()) as { user: DbUser };
+      const json = await apiPatch<{ user: DbUser }>("/api/me", body);
       onUserUpdate(json.user);
       return json.user;
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : t(lang, "addFailed"));
+      return null;
     } finally {
       setSaving(false);
     }
@@ -83,21 +77,16 @@ export function AccountProfileInfo({ user, lang, onUserUpdate }: AccountProfileI
     setSavingHandle(true);
     setHandleError(null);
     try {
-      const res = await fetch("/api/me", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ handle: trimmed || null }),
-      });
-      if (!res.ok) {
-        const j = (await res.json()) as { error?: string };
-        if (res.status === 409) setHandleError(t(lang, "profileHandleTaken"));
-        else setHandleError(j.error ?? t(lang, "saveFailed"));
-        return;
-      }
-      const json = (await res.json()) as { user: DbUser };
+      const json = await apiPatch<{ user: DbUser }>("/api/me", { handle: trimmed || null });
       onUserUpdate(json.user);
       setHandleInput(json.user.handle ?? "");
       setIsEditingHandle(false);
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 409) {
+        setHandleError(t(lang, "profileHandleTaken"));
+      } else {
+        setHandleError(err instanceof ApiError ? err.message : t(lang, "saveFailed"));
+      }
     } finally {
       setSavingHandle(false);
     }

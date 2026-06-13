@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import { Price } from "@/components/shared/price-inline"
 import { useAuthState } from "@/hooks/use-auth-state"
 import { invalidateSettings } from "@/hooks/use-settings"
+import { ApiError, apiGet } from "@/lib/api/client"
 import { t } from "@/lib/i18n"
 import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
@@ -80,26 +81,26 @@ export function HomePortfolioPreview() {
   useEffect(() => {
     if (authed !== true) return
     let cancelled = false
-    fetch("/api/portfolio")
-      .then(async (r) => {
-        if (r.status === 401) {
-          invalidateSettings()
-          const supabase = createClient()
-          await supabase.auth.signOut()
-          return null
-        }
-        return r.ok ? r.json() : null
-      })
-      .then((json) => {
+    ;(async () => {
+      try {
+        const json = await apiGet<{ portfolios?: { items: PortfolioItem[] }[] }>("/api/portfolio")
         if (cancelled) return
-        if (!json?.portfolios?.length) {
+        if (!json.portfolios?.length) {
           setEmpty(true)
         } else {
           setData(summarizePortfolios(json.portfolios))
         }
-      })
-      .catch(() => { /* swallow */ })
-      .finally(() => { if (!cancelled) setFetchDone(true) })
+      } catch (err) {
+        if (err instanceof ApiError && err.status === 401) {
+          invalidateSettings()
+          const supabase = createClient()
+          await supabase.auth.signOut()
+        }
+        /* swallow other errors */
+      } finally {
+        if (!cancelled) setFetchDone(true)
+      }
+    })()
     return () => { cancelled = true }
   }, [authed])
 

@@ -11,6 +11,7 @@ import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminPanel } from "@/components/admin/admin-panel";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminFormField } from "@/components/admin/admin-form-field";
+import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
 
 import type { PreviewMission } from "../types";
 
@@ -23,9 +24,9 @@ export function PreviewClient() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/honey/missions/preview?date=${date}`);
-      if (!res.ok) throw new Error("โหลดไม่สำเร็จ");
-      const data = await res.json();
+      const data = await adminFetch<{ missions: PreviewMission[] }>(
+        `/api/admin/honey/missions/preview?${buildAdminQuery({ date })}`,
+      );
       setMissions(data.missions);
       setLoaded(true);
     } catch (err) {

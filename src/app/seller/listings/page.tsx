@@ -32,6 +32,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { t, type TranslationKey } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { apiDelete, apiGet, apiPatch, apiTry } from "@/lib/api/client";
 
 type ListingItem = {
   id: number;
@@ -104,22 +105,15 @@ export default function SellerListingsPage() {
 
   const fetchListings = useCallback(async () => {
     setLoading(true);
-    try {
-      const params = new URLSearchParams();
-      params.set("page", String(page));
-      params.set("limit", "20");
-      if (activeTab !== "ALL") params.set("status", activeTab);
-      if (searchQuery.trim()) params.set("q", searchQuery.trim());
+    const params = new URLSearchParams();
+    params.set("page", String(page));
+    params.set("limit", "20");
+    if (activeTab !== "ALL") params.set("status", activeTab);
+    if (searchQuery.trim()) params.set("q", searchQuery.trim());
 
-      const res = await fetch(`/api/seller/listings?${params}`);
-      if (!res.ok) throw new Error("Failed to load listings");
-      const json = await res.json();
-      setData(json);
-    } catch {
-      setData(null);
-    } finally {
-      setLoading(false);
-    }
+    const json = await apiTry(apiGet<ApiResponse>(`/api/seller/listings?${params}`));
+    setData(json);
+    setLoading(false);
   }, [activeTab, searchQuery, page]);
 
   useEffect(() => {
@@ -140,12 +134,8 @@ export default function SellerListingsPage() {
   const handleDeactivate = async (id: number) => {
     setActionLoading(id);
     try {
-      const res = await fetch(`/api/listings/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "CANCELLED" }),
-      });
-      if (res.ok) await fetchListings();
+      const ok = await apiTry(apiPatch(`/api/listings/${id}`, { status: "CANCELLED" }));
+      if (ok !== null) await fetchListings();
     } finally {
       setActionLoading(null);
     }
@@ -154,12 +144,8 @@ export default function SellerListingsPage() {
   const handleReactivate = async (id: number) => {
     setActionLoading(id);
     try {
-      const res = await fetch(`/api/listings/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "ACTIVE" }),
-      });
-      if (res.ok) await fetchListings();
+      const ok = await apiTry(apiPatch(`/api/listings/${id}`, { status: "ACTIVE" }));
+      if (ok !== null) await fetchListings();
     } finally {
       setActionLoading(null);
     }
@@ -169,8 +155,8 @@ export default function SellerListingsPage() {
     if (!confirm("เธ•เนเธญเธเธเธฒเธฃเธฅเธเธเธฃเธฐเธเธฒเธจเธเธตเนเธเธฃเธดเธเธซเธฃเธทเธญเนเธกเน?")) return;
     setActionLoading(id);
     try {
-      const res = await fetch(`/api/listings/${id}`, { method: "DELETE" });
-      if (res.ok) await fetchListings();
+      const ok = await apiTry(apiDelete(`/api/listings/${id}`));
+      if (ok !== null) await fetchListings();
     } finally {
       setActionLoading(null);
     }

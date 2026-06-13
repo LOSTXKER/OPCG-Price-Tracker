@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react"
 
 import { useAuthState } from "@/hooks/use-auth-state"
 import { invalidateSettings } from "@/hooks/use-settings"
+import { ApiError, apiGet, apiPost, apiTry } from "@/lib/api/client"
 import { t } from "@/lib/i18n"
 import { createClient } from "@/lib/supabase/client"
 import { formatCount } from "@/lib/utils/currency"
@@ -46,22 +47,21 @@ export function HomeHoneyPreview() {
   useEffect(() => {
     if (authed !== true) return
     let cancelled = false
-    fetch("/api/honey")
-      .then(async (r) => {
-        if (r.status === 401) {
+    ;(async () => {
+      try {
+        const json = await apiGet<HoneyData>("/api/honey")
+        if (!cancelled) setData(json)
+      } catch (err) {
+        if (err instanceof ApiError && err.status === 401) {
           invalidateSettings()
           const supabase = createClient()
           await supabase.auth.signOut()
-          return null
         }
-        return r.ok ? r.json() : null
-      })
-      .then((json) => {
-        if (cancelled) return
-        if (json) setData(json)
-      })
-      .catch(() => { /* swallow */ })
-      .finally(() => { if (!cancelled) setFetchDone(true) })
+        /* swallow other errors */
+      } finally {
+        if (!cancelled) setFetchDone(true)
+      }
+    })()
     return () => { cancelled = true }
   }, [authed])
 
@@ -70,27 +70,20 @@ export function HomeHoneyPreview() {
   const doCheckin = useCallback(async () => {
     if (checking || !data?.canCheckin) return
     setChecking(true)
-    try {
-      const res = await fetch("/api/honey", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "checkin" }),
-      })
-      if (res.ok) {
-        const result = await res.json()
-        setData((prev) =>
-          prev
-            ? {
-                ...prev,
-                honeyPoints: result.total,
-                checkinStreak: result.streak,
-                canCheckin: false,
-              }
-            : prev,
-        )
-      }
-    } catch {
-      /* silent */
+    const result = await apiTry(
+      apiPost<{ total: number; streak: number }>("/api/honey", { action: "checkin" }),
+    )
+    if (result) {
+      setData((prev) =>
+        prev
+          ? {
+              ...prev,
+              honeyPoints: result.total,
+              checkinStreak: result.streak,
+              canCheckin: false,
+            }
+          : prev,
+      )
     }
     setChecking(false)
   }, [checking, data?.canCheckin])

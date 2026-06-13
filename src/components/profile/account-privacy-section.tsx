@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { t } from "@/lib/i18n";
 import type { Language } from "@/lib/i18n";
+import { apiPatch, apiTry } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import type { DbUser } from "./profile-types";
 
@@ -75,18 +76,11 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
 
   const patchPrivacy = useCallback(
     async (field: string, value: unknown) => {
-      try {
-        const res = await fetch("/api/me", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ [field]: value }),
-        });
-        if (res.ok) {
-          const json = (await res.json()) as { user: DbUser };
-          onUserUpdate(json.user);
-        }
-        flash(field, res.ok ? "saved" : "error");
-      } catch {
+      const json = await apiTry(apiPatch<{ user: DbUser }>("/api/me", { [field]: value }));
+      if (json) {
+        onUserUpdate(json.user);
+        flash(field, "saved");
+      } else {
         flash(field, "error");
       }
     },

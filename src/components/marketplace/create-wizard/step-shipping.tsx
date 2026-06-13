@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { ApiError, apiForm } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, ImagePlus, X, Loader2 } from "lucide-react";
 
@@ -87,19 +88,13 @@ export function StepShipping({
         const form = new FormData();
         form.append("file", file);
 
-        const res = await fetch("/api/listings/upload", {
-          method: "POST",
-          body: form,
-        });
-
-        if (!res.ok) {
-          const body = await res.json().catch(() => ({}));
-          setUploadError(body.error ?? "อัปโหลดไม่สำเร็จ");
+        try {
+          const { url } = await apiForm<{ url: string }>("/api/listings/upload", form);
+          urls.push(url);
+        } catch (err) {
+          setUploadError(err instanceof ApiError ? err.message : "อัปโหลดไม่สำเร็จ");
           continue;
         }
-
-        const { url } = (await res.json()) as { url: string };
-        urls.push(url);
       }
 
       if (urls.length > 0) {

@@ -9,6 +9,7 @@ import {
   History,
 } from "lucide-react";
 import { toast } from "sonner";
+import { adminFetch } from "@/lib/admin/admin-fetch";
 import { formatJpy } from "@/lib/utils/currency";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -145,19 +146,13 @@ export function CardEditor({ card }: { card: CardData }) {
         toast.info("ไม่มีการเปลี่ยนแปลง");
         return;
       }
-      const res = await fetch(`/api/admin/cards/${card.id}`, {
+      await adminFetch(`/api/admin/cards/${card.id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: payload,
       });
-      if (!res.ok) {
-        const data = await res.json();
-        toast.error(data.error || "บันทึกไม่สำเร็จ");
-      } else {
-        setSaved(true);
-        setHasChanges(false);
-        toast.success("บันทึกการ์ดสำเร็จ");
-      }
+      setSaved(true);
+      setHasChanges(false);
+      toast.success("บันทึกการ์ดสำเร็จ");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "บันทึกไม่สำเร็จ");
     } finally {
@@ -168,18 +163,17 @@ export function CardEditor({ card }: { card: CardData }) {
   async function selectCandidate(pIndex: number, url: string) {
     setSaving(true);
     try {
-      const res = await fetch(`/api/admin/cards/${card.id}`, {
+      await adminFetch(`/api/admin/cards/${card.id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageUrl: url, parallelIndex: pIndex }),
+        body: { imageUrl: url, parallelIndex: pIndex },
       });
-      if (res.ok) {
-        setForm((p) => ({ ...p, imageUrl: url }));
-        setSaved(true);
-        toast.success("อัปเดตรูปภาพสำเร็จ");
-      } else {
-        toast.error(`อัปเดตรูปภาพไม่สำเร็จ: ${res.status}`);
-      }
+      setForm((p) => ({ ...p, imageUrl: url }));
+      setSaved(true);
+      toast.success("อัปเดตรูปภาพสำเร็จ");
+    } catch (e) {
+      toast.error(
+        e instanceof Error ? e.message : "อัปเดตรูปภาพไม่สำเร็จ",
+      );
     } finally {
       setSaving(false);
     }

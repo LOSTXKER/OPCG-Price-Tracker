@@ -35,7 +35,7 @@ export function ClaimAction({
     return (
       <span className="inline-flex items-center gap-1 px-2 py-1 text-meta">
         <CheckCircle2 className="size-3.5 text-price-up" />
-        {lang === "TH" ? "รับแล้ว" : lang === "JP" ? "受取済" : "Claimed"}
+        {t(lang, "missionClaimedLabel")}
       </span>
     );
   }
@@ -63,7 +63,7 @@ export function ClaimAction({
         href={ctaPath}
         className="inline-flex h-8 items-center gap-1 rounded-lg border bg-background px-3 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
       >
-        {lang === "TH" ? "ไปทำ" : lang === "JP" ? "進む" : "Go"}
+        {t(lang, "missionGoLabel")}
         <ArrowRight className="size-3" />
       </NextLink>
     );

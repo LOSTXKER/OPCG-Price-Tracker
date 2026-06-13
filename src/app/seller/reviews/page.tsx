@@ -11,6 +11,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Surface } from "@/components/ui/surface";
 import { t, getLocale } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { apiGet, apiTry } from "@/lib/api/client";
 
 type ReviewItem = {
   id: number;
@@ -70,24 +71,19 @@ export default function SellerReviewsPage() {
 
   const fetchReviews = useCallback(async () => {
     setLoading(true);
-    try {
-      const params = new URLSearchParams();
-      params.set("page", String(page));
-      params.set("limit", "20");
-      if (activeRating) params.set("rating", String(activeRating));
+    const params = new URLSearchParams();
+    params.set("page", String(page));
+    params.set("limit", "20");
+    if (activeRating) params.set("rating", String(activeRating));
 
-      const res = await fetch(`/api/seller/reviews?${params}`);
-      if (!res.ok) throw new Error();
-      setData(await res.json());
-    } catch {
-      setData(null);
-    } finally {
-      setLoading(false);
-    }
+    const j = await apiTry(apiGet<ApiResponse>(`/api/seller/reviews?${params}`));
+    setData(j);
+    setLoading(false);
   }, [activeRating, page]);
 
   useEffect(() => {
-    fetchReviews();
+    const t = setTimeout(() => void fetchReviews(), 0);
+    return () => clearTimeout(t);
   }, [fetchReviews]);
 
   const handleRatingFilter = (rating: number | null) => {

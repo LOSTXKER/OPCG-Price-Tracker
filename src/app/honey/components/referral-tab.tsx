@@ -50,22 +50,22 @@ export function ReferralTab({
     {
       icon: MousePointerClick,
       value: totalClicks,
-      label: { TH: "คลิกทั้งหมด", EN: "Total Clicks", JP: "総クリック数" } as const,
+      labelKey: "referralTotalClicks" as const,
     },
     {
       icon: Zap,
       value: todayClicks,
-      label: { TH: "คลิกวันนี้", EN: "Today", JP: "今日" } as const,
+      labelKey: "referralTodayClicks2" as const,
     },
     {
       icon: Users,
       value: totalConversions,
-      label: { TH: "เพื่อนที่สมัคร", EN: "Friends Joined", JP: "友達登録数" } as const,
+      labelKey: "referralFriendsJoined" as const,
     },
     {
       icon: Gift,
       value: totalEarned,
-      label: { TH: "Honey ที่ได้", EN: "Honey Earned", JP: "獲得Honey" } as const,
+      labelKey: "referralHoneyEarned" as const,
       isHoney: true,
     },
   ];
@@ -73,18 +73,18 @@ export function ReferralTab({
   const steps = [
     {
       icon: Share2,
-      title: { TH: "แชร์ลิงก์ของคุณ", EN: "Share your link", JP: "リンクをシェア" } as const,
-      desc: { TH: "ส่งลิงก์ให้เพื่อนผ่านช่องทางไหนก็ได้", EN: "Send your link to friends via any channel", JP: "友達にリンクを送信" } as const,
+      titleKey: "referralStepShareTitle" as const,
+      descKey: "referralStepShareDesc" as const,
     },
     {
       icon: UserPlus,
-      title: { TH: "เพื่อนสมัครสมาชิก", EN: "Friend signs up", JP: "友達が登録" } as const,
-      desc: { TH: "เพื่อนเข้าลิงก์แล้วสมัครใช้งาน Meecard", EN: "Your friend clicks the link and creates an account", JP: "友達がリンクからアカウント作成" } as const,
+      titleKey: "referralStepSignupTitle" as const,
+      descKey: "referralStepSignupDesc" as const,
     },
     {
       icon: Gift,
-      title: { TH: "ทั้งคู่ได้ Honey!", EN: "Both get Honey!", JP: "両方Honeyゲット!" } as const,
-      desc: { TH: "คุณได้ 100 🍯 เพื่อนได้ 50 🍯", EN: "You get 100 🍯, friend gets 50 🍯", JP: "あなたに100 🍯、友達に50 🍯" } as const,
+      titleKey: "referralStepRewardTitle" as const,
+      descKey: "referralStepRewardDesc" as const,
     },
   ];
 
@@ -92,13 +92,7 @@ export function ReferralTab({
     <div className="space-y-4">
       <SectionHeader
         title={t(lang, "referralLink")}
-        description={
-          lang === "TH"
-            ? "แชร์ลิงก์แนะนำเพื่อรับ Honey"
-            : lang === "JP"
-              ? "リンクをシェアしてHoneyを獲得"
-              : "Share your link to earn Honey"
-        }
+        description={t(lang, "referralSectionDescription")}
       />
 
       <div className="panel p-4">
@@ -115,7 +109,7 @@ export function ReferralTab({
             {copied ? <Check className="size-4 text-price-up" /> : <Copy className="size-4" />}
             {copied
               ? t(lang, "referralCopied")
-              : lang === "TH" ? "คัดลอก" : lang === "JP" ? "コピー" : "Copy"}
+              : t(lang, "referralCopyLabel")}
           </Button>
         </div>
       </div>
@@ -128,7 +122,7 @@ export function ReferralTab({
             <div key={i} className="flex flex-col items-start gap-1 p-4">
               <div className="flex items-center gap-1.5 text-meta">
                 <Icon className="size-3.5 text-muted-foreground" />
-                <span>{s.label[lang] ?? s.label.EN}</span>
+                <span>{t(lang, s.labelKey)}</span>
               </div>
               <p className="text-h2 tabular-nums leading-none">
                 {s.value.toLocaleString()}
@@ -143,7 +137,7 @@ export function ReferralTab({
       <div className="panel overflow-hidden">
         <div className="border-b px-4 py-3.5">
           <h2 className="text-h3">
-            {lang === "TH" ? "วิธีการทำงาน" : lang === "JP" ? "仕組み" : "How it works"}
+            {t(lang, "referralHowItWorksTitle")}
           </h2>
         </div>
         <div className="divide-y divide-border/40">
@@ -153,9 +147,9 @@ export function ReferralTab({
                 {i + 1}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold">{step.title[lang] ?? step.title.EN}</p>
+                <p className="text-sm font-semibold">{t(lang, step.titleKey)}</p>
                 <p className="mt-0.5 text-meta">
-                  {step.desc[lang] ?? step.desc.EN}
+                  {t(lang, step.descKey)}
                 </p>
               </div>
             </div>

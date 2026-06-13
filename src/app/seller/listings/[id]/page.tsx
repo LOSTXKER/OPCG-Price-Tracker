@@ -20,6 +20,7 @@ import { LoadingState } from "@/components/shared/loading-state";
 import { PageHeader } from "@/components/layout/page-header";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { ApiError, apiForm, apiGet, apiPatch, apiTry } from "@/lib/api/client";
 
 type ListingData = {
   id: number;
@@ -83,9 +84,9 @@ export default function SellerEditListingPage() {
   useEffect(() => {
     async function loadListing() {
       try {
-        const res = await fetch(`/api/seller/listings?limit=100`);
-        if (!res.ok) throw new Error("Failed to load");
-        const data = await res.json();
+        const data = await apiGet<{ listings: ListingData[] }>(
+          `/api/seller/listings?limit=100`
+        );
         const found = data.listings.find(
           (l: ListingData) => l.id === Number(listingId)
         );
@@ -101,7 +102,13 @@ export default function SellerEditListingPage() {
         setShippingMethods(found.shipping ?? []);
         setPhotos(found.photos ?? []);
       } catch (e) {
-        setError(e instanceof Error ? e.message : "ไม่สามารถโหลดข้อมูลได้");
+        setError(
+          e instanceof ApiError
+            ? e.message
+            : e instanceof Error
+              ? e.message
+              : "ไม่สามารถโหลดข้อมูลได้"
+        );
       } finally {
         setLoading(false);
       }
@@ -117,14 +124,12 @@ export default function SellerEditListingPage() {
         if (photos.length >= 5) break;
         const formData = new FormData();
         formData.append("file", file);
-        const res = await fetch("/api/listings/upload", {
-          method: "POST",
-          body: formData,
-        });
-        if (!res.ok) continue;
-        const data = await res.json();
-        if (data.url) {
-          setPhotos((prev) => [...prev, data.url]);
+        const data = await apiTry(
+          apiForm<{ url?: string }>("/api/listings/upload", formData),
+        );
+        if (data?.url) {
+          const url = data.url;
+          setPhotos((prev) => [...prev, url]);
         }
       }
     } finally {
@@ -155,22 +160,16 @@ export default function SellerEditListingPage() {
         body.priceThb = null;
       }
 
-      const res = await fetch(`/api/listings/${listingId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      const json = await res.json();
-      if (!res.ok) {
-        setError(json.error ?? "บันทึกไม่สำเร็จ");
-        return;
-      }
+      await apiPatch(`/api/listings/${listingId}`, body);
 
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
-    } catch {
-      setError("เกิดข้อผิดพลาด กรุณาลองอีกครั้ง");
+    } catch (err) {
+      setError(
+        err instanceof ApiError
+          ? (err.message ?? "บันทึกไม่สำเร็จ")
+          : "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง"
+      );
     } finally {
       setSaving(false);
     }

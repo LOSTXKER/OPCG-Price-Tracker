@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { PriceDisplay } from "@/components/shared/price-display";
+import { ApiError, apiDelete, apiGet, apiPatch, apiPost } from "@/lib/api/client";
 import { createClient } from "@/lib/supabase/client";
 import { useAuthState } from "@/hooks/use-auth-state";
 import { invalidateSettings } from "@/hooks/use-settings";
@@ -75,75 +76,55 @@ function DeckCalculatorContent() {
   const loadDecks = useCallback(async () => {
     setError(null);
     try {
-      const res = await fetch("/api/decks");
-      if (!res.ok) {
-        if (res.status === 401) {
-          invalidateSettings();
-          const supabase = createClient();
-          await supabase.auth.signOut();
-          setLoading(false);
-          return;
-        }
-        throw new Error("Failed");
-      }
-      const data = (await res.json()) as { decks: DeckRow[] };
+      const data = await apiGet<{ decks: DeckRow[] }>("/api/decks");
       setDecks(data.decks ?? []);
       if (!activeDeck && data.decks?.length) {
         setActiveDeck(data.decks[0]);
       }
-    } catch {
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        invalidateSettings();
+        const supabase = createClient();
+        await supabase.auth.signOut();
+        setLoading(false);
+        return;
+      }
       setError(t(lang, "loadFailed"));
     }
     setLoading(false);
   }, [activeDeck, lang]);
 
   useEffect(() => {
-    void loadDecks();
+    const t = setTimeout(() => void loadDecks(), 0);
+    return () => clearTimeout(t);
   }, [loadDecks]);
 
   const createDeck = async () => {
     const name = newDeckName.trim();
     if (!name) return;
     try {
-      const res = await fetch("/api/decks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
-      });
-      if (!res.ok) {
-        setError(t(lang, "addFailed"));
-      } else {
-        const data = (await res.json()) as { deck: DeckRow };
-        setDecks((prev) => [data.deck, ...prev]);
-        setActiveDeck(data.deck);
-        setNewDeckName("");
-      }
-    } catch {
-      setError(t(lang, "addFailed"));
+      const data = await apiPost<{ deck: DeckRow }>("/api/decks", { name });
+      setDecks((prev) => [data.deck, ...prev]);
+      setActiveDeck(data.deck);
+      setNewDeckName("");
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : t(lang, "addFailed"));
     }
   };
 
   const addCard = async (card: CardSearchResult) => {
     if (!activeDeck) return;
     try {
-      const res = await fetch(`/api/decks/${activeDeck.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          searchType === "leader"
-            ? { leaderId: card.id }
-            : { addCards: [{ cardId: card.id, quantity: 1 }] }
-        ),
-      });
-      if (!res.ok) {
-        setError(t(lang, "addFailed"));
-      } else {
-        const data = (await res.json()) as { deck: DeckRow };
-        setActiveDeck(data.deck);
-        setDecks((prev) => prev.map((d) => (d.id === data.deck.id ? data.deck : d)));
-      }
-    } catch {
-      setError(t(lang, "addFailed"));
+      const data = await apiPatch<{ deck: DeckRow }>(
+        `/api/decks/${activeDeck.id}`,
+        searchType === "leader"
+          ? { leaderId: card.id }
+          : { addCards: [{ cardId: card.id, quantity: 1 }] }
+      );
+      setActiveDeck(data.deck);
+      setDecks((prev) => prev.map((d) => (d.id === data.deck.id ? data.deck : d)));
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : t(lang, "addFailed"));
     }
     setDialogOpen(false);
     cardSearch.reset();
@@ -152,34 +133,23 @@ function DeckCalculatorContent() {
   const removeCard = async (cardId: number) => {
     if (!activeDeck) return;
     try {
-      const res = await fetch(`/api/decks/${activeDeck.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ removeCardIds: [cardId] }),
+      const data = await apiPatch<{ deck: DeckRow }>(`/api/decks/${activeDeck.id}`, {
+        removeCardIds: [cardId],
       });
-      if (!res.ok) {
-        setError(t(lang, "addFailed"));
-      } else {
-        const data = (await res.json()) as { deck: DeckRow };
-        setActiveDeck(data.deck);
-        setDecks((prev) => prev.map((d) => (d.id === data.deck.id ? data.deck : d)));
-      }
-    } catch {
-      setError(t(lang, "addFailed"));
+      setActiveDeck(data.deck);
+      setDecks((prev) => prev.map((d) => (d.id === data.deck.id ? data.deck : d)));
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : t(lang, "addFailed"));
     }
   };
 
   const deleteDeck = async (deckId: number) => {
     try {
-      const res = await fetch(`/api/decks/${deckId}`, { method: "DELETE" });
-      if (!res.ok) {
-        setError(t(lang, "addFailed"));
-        return;
-      }
+      await apiDelete(`/api/decks/${deckId}`);
       setDecks((prev) => prev.filter((d) => d.id !== deckId));
       if (activeDeck?.id === deckId) setActiveDeck(null);
-    } catch {
-      setError(t(lang, "addFailed"));
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : t(lang, "addFailed"));
     }
   };
 

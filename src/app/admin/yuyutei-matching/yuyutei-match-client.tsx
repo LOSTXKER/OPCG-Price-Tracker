@@ -23,10 +23,8 @@ import {
 } from "@/components/admin/admin-toolbar";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { Lightbox } from "@/components/admin/matching-ui";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { adminJsonFetch } from "@/lib/api/admin-client";
-import { buildAdminQuery } from "@/lib/admin/admin-fetch";
+import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
 import { SetPicker } from "@/components/shared/set-picker";
 import { useAdminList } from "@/lib/admin/use-admin-list";
 import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
@@ -34,7 +32,9 @@ import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
 import { YuyuteiAiPanel } from "./yuyutei-ai-panel";
 import { YuyuteiBulkBar } from "./yuyutei-bulk-bar";
 import { YuyuteiMatchRow } from "./yuyutei-match-row";
-import type { ApiResponse, AiLogEntry, Mapping, MappingCard } from "./yuyutei-types";
+import { SkeletonRows } from "./yuyutei-skeleton-rows";
+import { useYuyuteiAi } from "./use-yuyutei-ai";
+import type { ApiResponse, Mapping, MappingCard } from "./yuyutei-types";
 import { API, METHOD_INFO, yuyuHd } from "./yuyutei-types";
 
 /* ── Status tab config ── */
@@ -46,51 +46,6 @@ const STATUS_TABS = [
   { key: "matched", label: "จับคู่แล้ว", dotColor: "bg-success", textColor: "text-success", activeBg: "bg-background shadow-sm" },
   { key: "rejected", label: "ปฏิเสธแล้ว", dotColor: "bg-danger", textColor: "text-danger", activeBg: "bg-background shadow-sm" },
 ] as const;
-
-/* ── Skeleton rows ── */
-
-function SkeletonRows({ count = 5, showStatus = true }: { count?: number; showStatus?: boolean }) {
-  return (
-    <>
-      {Array.from({ length: count }).map((_, i) => (
-        <tr key={i} className="border-b border-border/10">
-          <td className="px-3 py-4"><Skeleton className="size-3.5 rounded" /></td>
-          {showStatus && <td className="px-3 py-4"><Skeleton className="h-5 w-16 rounded-full" /></td>}
-          <td className="px-3 py-4">
-            <div className="flex items-center gap-3">
-              <Skeleton className="w-16 aspect-[63/88] rounded shrink-0" />
-              <div className="space-y-1.5">
-                <Skeleton className="h-3.5 w-24" />
-                <Skeleton className="h-3 w-32" />
-                <Skeleton className="h-3 w-20" />
-              </div>
-            </div>
-          </td>
-          <td className="px-1 py-4" />
-          <td className="px-3 py-4">
-            <div className="flex items-center gap-3">
-              <Skeleton className="w-16 aspect-[63/88] rounded shrink-0" />
-              <div className="space-y-1.5">
-                <Skeleton className="h-3.5 w-20" />
-                <Skeleton className="h-3 w-12" />
-                <Skeleton className="h-3 w-24" />
-              </div>
-            </div>
-          </td>
-          <td className="px-3 py-4"><Skeleton className="ml-auto h-4 w-14" /></td>
-          <td className="px-3 py-4"><Skeleton className="h-5 w-16" /></td>
-          <td className="px-3 py-4">
-            <div className="space-y-1">
-              <Skeleton className="h-3.5 w-16" />
-              <Skeleton className="h-3 w-12" />
-            </div>
-          </td>
-          <td className="px-3 py-4"><Skeleton className="mx-auto h-6 w-20" /></td>
-        </tr>
-      ))}
-    </>
-  );
-}
 
 /* ══════════ MAIN ══════════ */
 
@@ -127,13 +82,6 @@ export function YuyuteiMatchClient() {
   const [pickedCandidate, setPickedCandidate] = useState<Record<number, number>>({});
   const [lightbox, setLightbox] = useState<{ src: string; label: string }[] | null>(null);
 
-  const [aiProcessing, setAiProcessing] = useState<Set<number>>(new Set());
-  const [aiRunning, setAiRunning] = useState(false);
-  const aiCancelRef = useRef(false);
-  const aiAbortRef = useRef<AbortController | null>(null);
-  const [aiLog, setAiLog] = useState<AiLogEntry[]>([]);
-  const [aiProgress, setAiProgress] = useState<{ current: number; total: number } | null>(null);
-
   const lastClickedRef = useRef<number | null>(null);
 
   /* ── data fetching ── */
@@ -154,9 +102,20 @@ export function YuyuteiMatchClient() {
   });
   const fetchData = refetch;
 
+  const ai = useYuyuteiAi({
+    mappings: data?.mappings ?? [],
+    selected,
+    setFilter,
+    confirm: confirmDialog,
+    refetch: fetchData,
+  });
+
   /* ── effects ── */
 
-  useEffect(() => { setSelected(new Set()); }, [data]);
+  useEffect(() => {
+    const t = setTimeout(() => setSelected(new Set()), 0);
+    return () => clearTimeout(t);
+  }, [data]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -173,21 +132,21 @@ export function YuyuteiMatchClient() {
 
   const handleApprove = async (mappingId: number, cardId: number) => {
     addSaving(mappingId);
-    await adminJsonFetch(API, { method: "PATCH", body: { id: mappingId, matchedCardId: cardId } });
+    await adminFetch(API, { method: "PATCH", body: { id: mappingId, matchedCardId: cardId } });
     removeSaving(mappingId);
     await fetchData();
   };
 
   const handleUnmatch = async (mappingId: number) => {
     addSaving(mappingId);
-    await adminJsonFetch(API, { method: "PATCH", body: { id: mappingId, action: "unmatch" } });
+    await adminFetch(API, { method: "PATCH", body: { id: mappingId, action: "unmatch" } });
     removeSaving(mappingId);
     await fetchData();
   };
 
   const handleReject = async (mappingId: number) => {
     addSaving(mappingId);
-    await adminJsonFetch(API, { method: "DELETE", body: { id: mappingId } });
+    await adminFetch(API, { method: "DELETE", body: { id: mappingId } });
     removeSaving(mappingId);
     await fetchData();
   };
@@ -203,7 +162,7 @@ export function YuyuteiMatchClient() {
     });
     if (!ok) return;
     setBulkBusy(true);
-    const json = await adminJsonFetch<{ approved: number }>(API, {
+    const json = await adminFetch<{ approved: number }>(API, {
       method: "PATCH",
       body: { action: "bulk-approve", set: setFilter || undefined },
     });
@@ -226,7 +185,7 @@ export function YuyuteiMatchClient() {
     for (const id of ids) {
       if (pickedCandidate[id]) overrides[String(id)] = pickedCandidate[id];
     }
-    await adminJsonFetch<{ approved: number }>(API, {
+    await adminFetch<{ approved: number }>(API, {
       method: "PATCH",
       body: { action: "bulk-approve-ids", ids, overrides },
     });
@@ -246,145 +205,10 @@ export function YuyuteiMatchClient() {
     });
     if (!ok) return;
     setBulkBusy(true);
-    await adminJsonFetch(API, { method: "PATCH", body: { action: "bulk-reject-ids", ids } });
+    await adminFetch(API, { method: "PATCH", body: { action: "bulk-reject-ids", ids } });
     toast.success(`ปฏิเสธแล้ว ${ids.length} รายการ`);
     setBulkBusy(false);
     await fetchData();
-  };
-
-  /* ── AI suggest ── */
-
-  const callAiSuggest = async (
-    mappingId: number,
-    signal?: AbortSignal,
-    force?: boolean,
-  ): Promise<{ code: string; result: "ok" | "fail" | "skip"; msg: string }> => {
-    try {
-      const res = await fetch(`${API}/ai-suggest`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: mappingId, ...(force && { force: true }) }),
-        signal,
-      });
-      const json = await res.json();
-      if (json.success) {
-        return {
-          code: json.matchedCardCode ?? "?",
-          result: "ok",
-          msg: `→ ${json.matchedCardCode} (${Math.round((json.confidence ?? 0) * 100)}%)`,
-        };
-      }
-      if (json.skipped) return { code: "", result: "skip", msg: json.error ?? "ข้ามแล้ว" };
-      return { code: "", result: "fail", msg: json.error ?? "ไม่สำเร็จ" };
-    } catch (e) {
-      if (e instanceof DOMException && e.name === "AbortError") {
-        return { code: "", result: "skip", msg: "ยกเลิกแล้ว" };
-      }
-      return { code: "", result: "fail", msg: e instanceof Error ? e.message : "เครือข่ายผิดพลาด" };
-    }
-  };
-
-  const handleAiSuggestOne = async (mappingId: number) => {
-    setAiProcessing((s) => new Set(s).add(mappingId));
-    const entry = data?.mappings.find((m) => m.id === mappingId);
-    setAiLog([{ code: entry?.scrapedCode ?? String(mappingId), result: "processing", msg: "กำลังวิเคราะห์..." }]);
-    const ac = new AbortController();
-    aiAbortRef.current = ac;
-    const logResult = await callAiSuggest(mappingId, ac.signal);
-    aiAbortRef.current = null;
-    setAiLog([{ ...logResult, code: entry?.scrapedCode ?? logResult.code }]);
-    setAiProcessing((s) => { const n = new Set(s); n.delete(mappingId); return n; });
-    await fetchData();
-  };
-
-  const handleAiSuggestBulk = async (force = false) => {
-    const hasSelected = selected.size > 0;
-    let ids: number[];
-
-    if (hasSelected) {
-      ids = [...selected];
-    } else {
-      const params = new URLSearchParams({ "ai-candidates": "true", mode: force ? "all" : "new" });
-      if (setFilter) params.set("set", setFilter);
-      const res = await fetch(`${API}?${params}`);
-      if (!res.ok) return;
-      const json = await res.json();
-      ids = (json.items as { id: number; scrapedCode: string }[]).map((i) => i.id);
-    }
-
-    if (ids.length === 0) {
-      toast.info("ไม่มีรายการที่ต้องจับคู่");
-      return;
-    }
-
-    const modeLabel = force ? "รันใหม่ทั้งหมด" : "เฉพาะที่ยังไม่ผ่าน AI";
-    const label = hasSelected ? `${ids.length} รายการที่เลือก` : setFilter ? setFilter.toUpperCase() : "ทุกชุดการ์ด";
-    const ok = await confirmDialog({
-      title: `AI ${modeLabel}`,
-      description: `${ids.length} รายการ (${label}) — ประมาณ ${ids.length * 2} วินาที`,
-      confirmLabel: "เริ่ม",
-    });
-    if (!ok) return;
-
-    aiCancelRef.current = false;
-    const ac = new AbortController();
-    aiAbortRef.current = ac;
-    setAiRunning(true);
-    setAiLog([]);
-    setAiProgress({ current: 0, total: ids.length });
-
-    let okCount = 0;
-    let failCount = 0;
-    let skipCount = 0;
-
-    for (let i = 0; i < ids.length; i++) {
-      if (aiCancelRef.current) {
-        setAiLog((prev) => [...prev, { code: "—", result: "skip", msg: `ยกเลิกแล้ว (เหลืออีก ${ids.length - i} รายการ)` }]);
-        break;
-      }
-
-      const mappingId = ids[i];
-      const entry = data?.mappings.find((m) => m.id === mappingId);
-      const code = entry?.scrapedCode ?? String(mappingId);
-
-      setAiLog((prev) => [...prev, { code, result: "processing", msg: "กำลังวิเคราะห์..." }]);
-      setAiProgress({ current: i + 1, total: ids.length });
-
-      const logResult = await callAiSuggest(mappingId, ac.signal, force);
-
-      if (aiCancelRef.current) {
-        setAiLog((prev) => [...prev, { code: "—", result: "skip", msg: `ยกเลิกแล้ว (เหลืออีก ${ids.length - i - 1} รายการ)` }]);
-        break;
-      }
-
-      if (logResult.result === "ok") okCount++;
-      else if (logResult.result === "skip") skipCount++;
-      else failCount++;
-
-      setAiLog((prev) => {
-        const updated = [...prev];
-        updated[updated.length - 1] = { ...logResult, code };
-        return updated;
-      });
-
-      if (logResult.result !== "skip" && i < ids.length - 1 && !aiCancelRef.current) {
-        await new Promise((r) => setTimeout(r, 1500));
-      }
-    }
-
-    aiAbortRef.current = null;
-    setAiLog((prev) => [
-      ...prev,
-      { code: "สรุป", result: "ok", msg: `สำเร็จ ${okCount} / ข้าม ${skipCount} / ไม่สำเร็จ ${failCount} จากทั้งหมด ${ids.length} รายการ` },
-    ]);
-    setAiRunning(false);
-    setAiProgress(null);
-    await fetchData();
-  };
-
-  const handleAiCancel = () => {
-    aiCancelRef.current = true;
-    aiAbortRef.current?.abort();
   };
 
   /* ── selection ── */
@@ -512,19 +336,19 @@ export function YuyuteiMatchClient() {
             <Button
               variant="default"
               size="sm"
-              onClick={() => handleAiSuggestBulk(false)}
-              disabled={aiRunning}
+              onClick={() => ai.handleAiSuggestBulk(false)}
+              disabled={ai.aiRunning}
             >
-              {aiRunning ? <Loader2 className="size-3.5 animate-spin" /> : <Sparkles className="size-3.5" />}
+              {ai.aiRunning ? <Loader2 className="size-3.5 animate-spin" /> : <Sparkles className="size-3.5" />}
               AI แนะนำ
             </Button>
             <Button
               variant="outline"
               size="sm"
-              onClick={() => handleAiSuggestBulk(true)}
-              disabled={aiRunning}
+              onClick={() => ai.handleAiSuggestBulk(true)}
+              disabled={ai.aiRunning}
             >
-              {aiRunning ? <Loader2 className="size-3.5 animate-spin" /> : <Sparkles className="size-3.5" />}
+              {ai.aiRunning ? <Loader2 className="size-3.5 animate-spin" /> : <Sparkles className="size-3.5" />}
               AI รันใหม่
             </Button>
             <Button
@@ -580,11 +404,11 @@ export function YuyuteiMatchClient() {
 
       {/* ── AI Panel ── */}
       <YuyuteiAiPanel
-        log={aiLog}
-        progress={aiProgress}
-        running={aiRunning}
-        onCancel={handleAiCancel}
-        onClear={() => setAiLog([])}
+        log={ai.aiLog}
+        progress={ai.aiProgress}
+        running={ai.aiRunning}
+        onCancel={ai.handleAiCancel}
+        onClear={ai.clearLog}
       />
 
       {/* ── Table ── */}
@@ -704,13 +528,13 @@ export function YuyuteiMatchClient() {
                     showStatus={showStatusCol}
                     isChecked={selected.has(m.id)}
                     isSaving={saving.has(m.id)}
-                    isAiProcessing={aiProcessing.has(m.id)}
+                    isAiProcessing={ai.aiProcessing.has(m.id)}
                     effectiveCardId={resolveCardId(m)}
                     onToggle={toggleOne}
                     onApprove={handleApprove}
                     onUnmatch={handleUnmatch}
                     onReject={handleReject}
-                    onAiSuggest={handleAiSuggestOne}
+                    onAiSuggest={ai.handleAiSuggestOne}
                     onPickCandidate={(mappingId, cardId) =>
                       setPickedCandidate((prev) => ({ ...prev, [mappingId]: cardId }))
                     }
@@ -742,11 +566,11 @@ export function YuyuteiMatchClient() {
       {someChecked && (
         <YuyuteiBulkBar
           selectedCount={selected.size}
-          aiRunning={aiRunning}
+          aiRunning={ai.aiRunning}
           bulkBusy={bulkBusy}
           canApprove={canBulkApproveSelected}
-          onAiSuggest={() => handleAiSuggestBulk(false)}
-          onAiRecheck={() => handleAiSuggestBulk(true)}
+          onAiSuggest={() => ai.handleAiSuggestBulk(false)}
+          onAiRecheck={() => ai.handleAiSuggestBulk(true)}
           onApprove={handleBulkApproveSelected}
           onReject={handleBulkRejectSelected}
           onClear={() => setSelected(new Set())}

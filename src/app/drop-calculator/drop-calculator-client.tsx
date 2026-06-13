@@ -14,6 +14,7 @@ import type { SetListItem, SetDetail, DropRate, CardItem, Unit } from "@/compone
 import { raritySort } from "@/lib/constants/rarities"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
+import { apiGet, apiTry } from "@/lib/api/client"
 import {
   pullChance,
   pullChanceMulti,
@@ -40,14 +41,11 @@ export default function DropCalculatorClient() {
   const [activeTab, setActiveTab] = useState<"cards" | "results">("cards")
 
   useEffect(() => {
-    fetch("/api/drop-calculator")
-      .then((r) => {
-        if (!r.ok) throw new Error(`Failed to load sets: ${r.status}`)
-        return r.json()
-      })
-      .then((d) => setSets(d.sets ?? []))
-      .catch((err: unknown) => { console.error(err) })
-      .finally(() => setSetsLoading(false))
+    let cancelled = false
+    void apiTry(apiGet<{ sets?: SetListItem[] }>("/api/drop-calculator"))
+      .then((d) => { if (!cancelled) setSets(d?.sets ?? []) })
+      .finally(() => { if (!cancelled) setSetsLoading(false) })
+    return () => { cancelled = true }
   }, [])
 
   const loadSet = useCallback(async (code: string) => {
@@ -59,10 +57,8 @@ export default function DropCalculatorClient() {
     if (!code) { setDetail(null); return }
     setLoading(true)
     try {
-      const res = await fetch(`/api/drop-calculator?set=${code}`)
-      if (!res.ok) throw new Error(`Failed to load set ${code}: ${res.status}`)
-      const data = await res.json()
-      setDetail(data)
+      const data = await apiTry(apiGet<SetDetail>(`/api/drop-calculator?set=${code}`))
+      if (data) setDetail(data)
     } finally {
       setLoading(false)
     }
