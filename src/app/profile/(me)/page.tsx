@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { isAuthBypassed } from "@/lib/env";
+import { apiGet, apiTry } from "@/lib/api/client";
 
 export default function ProfileRedirectPage() {
   const router = useRouter();
@@ -11,17 +12,13 @@ export default function ProfileRedirectPage() {
   useEffect(() => {
     const bypass = isAuthBypassed();
 
-    const fetchProfile = () => {
-      fetch("/api/me")
-        .then((r) => r.json())
-        .then((json: { user?: { id: string } }) => {
-          if (json.user?.id) {
-            router.replace(`/profile/${json.user.id}`);
-          } else if (!bypass) {
-            router.replace("/login");
-          }
-        })
-        .catch(() => { if (!bypass) router.replace("/login"); });
+    const fetchProfile = async () => {
+      const json = await apiTry(apiGet<{ user?: { id: string } }>("/api/me"));
+      if (json?.user?.id) {
+        router.replace(`/profile/${json.user.id}`);
+      } else if (!bypass) {
+        router.replace("/login");
+      }
     };
 
     if (bypass) {

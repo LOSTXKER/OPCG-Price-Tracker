@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react"
 
+import { apiGet, apiPatch, apiTry } from "@/lib/api/client"
+
 export interface PrivacyFlags {
   userId: string
   handle: string | null
@@ -21,41 +23,36 @@ export function useProfileVisibility() {
 
   useEffect(() => {
     let cancelled = false
-    fetch("/api/me")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (cancelled || !data?.user) return
-        setFlags({
-          userId: data.user.id,
-          handle: data.user.handle ?? null,
-          showCollection: data.user.showCollection ?? true,
-          profileVisibility: data.user.profileVisibility ?? "public",
-          showListings: data.user.showListings ?? true,
-          showDecks: data.user.showDecks ?? true,
-          showStats: data.user.showStats ?? true,
-          hidePortfolioPrices: data.user.hidePortfolioPrices ?? false,
-          hidePortfolioQty: data.user.hidePortfolioQty ?? false,
-          profileSummaryOnly: data.user.profileSummaryOnly ?? false,
-        })
+    void (async () => {
+      const data = await apiTry(
+        apiGet<{ user?: Partial<PrivacyFlags> & { id: string } } | null>("/api/me"),
+      )
+      if (cancelled || !data?.user) return
+      const user = data.user
+      setFlags({
+        userId: user.id,
+        handle: user.handle ?? null,
+        showCollection: user.showCollection ?? true,
+        profileVisibility: user.profileVisibility ?? "public",
+        showListings: user.showListings ?? true,
+        showDecks: user.showDecks ?? true,
+        showStats: user.showStats ?? true,
+        hidePortfolioPrices: user.hidePortfolioPrices ?? false,
+        hidePortfolioQty: user.hidePortfolioQty ?? false,
+        profileSummaryOnly: user.profileSummaryOnly ?? false,
       })
-      .catch(() => {})
+    })()
     return () => { cancelled = true }
   }, [])
 
   const patchField = useCallback(async (field: string, value: unknown) => {
     setSaving(true)
-    try {
-      await fetch("/api/me", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ [field]: value }),
-      })
+    // revert handled by caller; apiTry swallows failures
+    const ok = await apiTry(apiPatch("/api/me", { [field]: value }))
+    if (ok !== null) {
       setFlags((f) => f ? { ...f, [field]: value } : f)
-    } catch {
-      // revert handled by caller
-    } finally {
-      setSaving(false)
     }
+    setSaving(false)
   }, [])
 
   const toggleCollection = useCallback(async () => {
@@ -64,11 +61,7 @@ export function useProfileVisibility() {
     setFlags((f) => f ? { ...f, showCollection: next } : f)
     setSaving(true)
     try {
-      await fetch("/api/me", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ showCollection: next }),
-      })
+      await apiPatch("/api/me", { showCollection: next })
     } catch {
       setFlags((f) => f ? { ...f, showCollection: !next } : f)
     } finally {

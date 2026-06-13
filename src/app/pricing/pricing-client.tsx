@@ -11,6 +11,7 @@ import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { daysUntil } from "@/lib/utils/time";
 import { useSettings, refetchSettings } from "@/hooks/use-settings";
+import { apiPost, apiTry } from "@/lib/api/client";
 import { useMarketplaceFees } from "@/hooks/use-marketplace-fees";
 import {
   PLANS,
@@ -33,30 +34,21 @@ export default function PricingClient() {
 
   const handleSubscribe = async (plan: string) => {
     setLoading(plan);
-    try {
-      const res = await fetch("/api/subscription/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
-      });
-      const data = await res.json();
-      if (data.url) window.location.assign(data.url);
-    } catch {
+    const data = await apiTry(
+      apiPost<{ url?: string }>("/api/subscription/checkout", { plan }),
+    );
+    if (data?.url) {
+      window.location.assign(data.url);
+    } else {
       setLoading(null);
     }
   };
 
   const handleTrial = async () => {
     setLoading("trial");
-    try {
-      const res = await fetch("/api/subscription/trial", { method: "POST" });
-      if (res.ok) {
-        refetchSettings();
-        setLoading(null);
-      }
-    } catch {
-      setLoading(null);
-    }
+    const ok = await apiTry(apiPost("/api/subscription/trial"));
+    if (ok !== null) refetchSettings();
+    setLoading(null);
   };
 
   const tierName = (key: string) => {

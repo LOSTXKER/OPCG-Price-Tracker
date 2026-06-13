@@ -6,6 +6,7 @@ import { Bookmark } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { apiDelete, apiPost } from "@/lib/api/client";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -49,10 +50,12 @@ export function SaveSellerButton({
     const next = !isSaved;
     setIsSaved(next);
     try {
-      const res = await fetch(`/api/saved-sellers/${sellerId}`, {
-        method: next ? "POST" : "DELETE",
-      });
-      if (!res.ok) throw new Error("save failed");
+      const url = `/api/saved-sellers/${sellerId}`;
+      if (next) {
+        await apiPost(url);
+      } else {
+        await apiDelete(url);
+      }
     } catch {
       setIsSaved(!next);
       toast.error(t(lang, "profileSaveFailed"));

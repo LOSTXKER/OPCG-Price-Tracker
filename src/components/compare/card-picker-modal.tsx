@@ -19,6 +19,7 @@ import { useCompareStore, type CompareItem } from "@/stores/compare-store"
 import { useUIStore } from "@/stores/ui-store"
 import { getCardName, t } from "@/lib/i18n"
 import { fetchCards, type CardResult } from "@/lib/api/fetch-cards"
+import { apiGet, apiTry } from "@/lib/api/client"
 import { cn } from "@/lib/utils"
 import { useTierLimits } from "@/hooks/use-tier-limits"
 import { UpgradeBadge } from "@/components/shared/upgrade-badge"
@@ -82,10 +83,9 @@ export function CardPickerModal({
       setPage(1)
       setHasMore(true)
       setFetchError(null)
-      fetch("/api/sets")
-        .then((r) => r.json())
-        .then((d) => setSets(d.sets ?? []))
-        .catch(() => {})
+      apiTry(apiGet<{ sets: CardSet[] }>("/api/sets")).then((d) => {
+        if (d) setSets(d.sets ?? [])
+      })
     }
   }, [open])
 

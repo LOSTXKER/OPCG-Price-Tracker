@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { apiPatch, apiTry } from "@/lib/api/client";
 import { useUIStore } from "@/stores/ui-store";
 import { clientEnv } from "@/lib/env";
 import { t } from "@/lib/i18n";
@@ -181,17 +182,8 @@ export function SectionNotifications({ settings, onReload }: Props) {
     setSavedField(null);
     setErrorField(null);
     try {
-      const res = await fetch("/api/settings", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ [field]: value }),
-      });
-      if (res.ok) {
-        setSavedField(field);
-      } else {
-        setState((s) => ({ ...s, [field]: prev }));
-        setErrorField(field);
-      }
+      await apiPatch("/api/settings", { [field]: value });
+      setSavedField(field);
     } catch {
       setState((s) => ({ ...s, [field]: prev }));
       setErrorField(field);
@@ -211,14 +203,8 @@ export function SectionNotifications({ settings, onReload }: Props) {
   };
 
   const handleDisconnectLine = async () => {
-    try {
-      await fetch("/api/settings", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lineAlerts: false }),
-      });
-      onReload();
-    } catch { /* ignore */ }
+    const ok = await apiTry(apiPatch("/api/settings", { lineAlerts: false }));
+    if (ok !== null) onReload();
   };
 
   function Feedback({ field }: { field: string }) {

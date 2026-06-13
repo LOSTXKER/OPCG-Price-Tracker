@@ -11,6 +11,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { t, type TranslationKey } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { apiGet, apiPatch, apiTry } from "@/lib/api/client";
 
 type ApiResponse = {
   orders: OrderListItem[];
@@ -41,21 +42,15 @@ export default function SellerOrdersPage() {
 
   const fetchOrders = useCallback(async () => {
     setLoading(true);
-    try {
-      const params = new URLSearchParams();
-      params.set("role", "seller");
-      params.set("page", String(page));
-      params.set("limit", "20");
-      if (activeTab !== "ALL") params.set("status", activeTab);
+    const params = new URLSearchParams();
+    params.set("role", "seller");
+    params.set("page", String(page));
+    params.set("limit", "20");
+    if (activeTab !== "ALL") params.set("status", activeTab);
 
-      const res = await fetch(`/api/orders?${params}`);
-      if (!res.ok) throw new Error();
-      setData(await res.json());
-    } catch {
-      setData(null);
-    } finally {
-      setLoading(false);
-    }
+    const j = await apiTry(apiGet<ApiResponse>(`/api/orders?${params}`));
+    setData(j);
+    setLoading(false);
   }, [activeTab, page]);
 
   useEffect(() => {
@@ -74,12 +69,10 @@ export default function SellerOrdersPage() {
   ) => {
     setActionLoading(orderId);
     try {
-      const res = await fetch(`/api/orders/${orderId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status, ...extra }),
-      });
-      if (res.ok) await fetchOrders();
+      const ok = await apiTry(
+        apiPatch(`/api/orders/${orderId}`, { status, ...extra })
+      );
+      if (ok !== null) await fetchOrders();
     } finally {
       setActionLoading(null);
     }

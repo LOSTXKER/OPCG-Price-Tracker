@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
 import { PageHeader } from "@/components/layout/page-header";
 import { useConfirm } from "@/components/shared/confirm-dialog";
+import { ApiError, apiDelete, apiGet, apiPatch, apiTry } from "@/lib/api/client";
 import { useAuthState } from "@/hooks/use-auth-state";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useTierLimits } from "@/hooks/use-tier-limits";
@@ -81,23 +82,17 @@ function WatchlistContent() {
   const load = useCallback(async () => {
     setError(null);
     try {
-      const res = await fetch("/api/watchlist");
-      if (!res.ok) {
-        if (res.status === 401) {
-          invalidateSettings();
-          toast.error(t(lang, "watchlistSessionExpired"));
-          const supabase = createClient();
-          await supabase.auth.signOut();
-        } else {
-          setError(t(lang, "loadFailed"));
-        }
-        setLoading(false);
-        return;
-      }
-      const data = (await res.json()) as { items: WatchlistEntry[] };
+      const data = await apiGet<{ items: WatchlistEntry[] }>("/api/watchlist");
       setItems(data.items ?? []);
-    } catch {
-      setError(t(lang, "loadFailed"));
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        invalidateSettings();
+        toast.error(t(lang, "watchlistSessionExpired"));
+        const supabase = createClient();
+        await supabase.auth.signOut();
+      } else {
+        setError(t(lang, "loadFailed"));
+      }
     } finally {
       setLoading(false);
     }
@@ -116,16 +111,16 @@ function WatchlistContent() {
     if (ids.length === 0) return;
     ids.forEach((id) => sparklineFetchedRef.current.add(id));
     const params = ids.slice(0, 50).join(",");
-    fetch(`/api/cards/sparklines?ids=${params}`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data?.sparklines) {
-          setSparklines((prev) => ({ ...prev, ...data.sparklines }));
-        }
-      })
-      .catch(() => {
-        // ignore — sparkline is optional eye-candy
-      });
+    void apiTry(
+      apiGet<{ sparklines?: Record<number, number[]> }>(
+        `/api/cards/sparklines?ids=${params}`
+      )
+    ).then((data) => {
+      // ignore failures — sparkline is optional eye-candy
+      if (data?.sparklines) {
+        setSparklines((prev) => ({ ...prev, ...data.sparklines }));
+      }
+    });
   }, [items, view]);
 
   const setOptions = useMemo(() => {
@@ -211,10 +206,7 @@ function WatchlistContent() {
     });
 
     try {
-      const res = await fetch(`/api/watchlist?cardId=${entry.cardId}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("remove failed");
+      await apiDelete(`/api/watchlist?cardId=${entry.cardId}`);
       toast.success(t(lang, "watchlistRemoved"));
     } catch {
       setItems(previousItems);
@@ -250,10 +242,7 @@ function WatchlistContent() {
     setSelected(new Set());
 
     try {
-      const res = await fetch(`/api/watchlist?cardIds=${ids.join(",")}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("bulk remove failed");
+      await apiDelete(`/api/watchlist?cardIds=${ids.join(",")}`);
       toast.success(t(lang, "watchlistRemoved"));
     } catch {
       setItems(previousItems);
@@ -274,15 +263,12 @@ function WatchlistContent() {
       prev.map((x) => (x.cardId === entry.cardId ? { ...x, pinnedAt: nextPinnedAt } : x))
     );
     try {
-      const res = await fetch(`/api/watchlist/${entry.cardId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pinnedAt: "toggle" }),
-      });
-      if (!res.ok) throw new Error("pin failed");
-      const data = await res.json().catch(() => null);
+      const data = await apiPatch<{ item?: WatchlistEntry }>(
+        `/api/watchlist/${entry.cardId}`,
+        { pinnedAt: "toggle" }
+      );
       if (data?.item) {
-        const fresh = data.item as WatchlistEntry;
+        const fresh = data.item;
         setItems((prev) =>
           prev.map((x) =>
             x.cardId === entry.cardId ? { ...x, pinnedAt: fresh.pinnedAt } : x

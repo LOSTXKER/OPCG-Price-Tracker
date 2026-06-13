@@ -9,6 +9,7 @@ import {
   Trash2,
   Upload,
 } from "lucide-react";
+import { ApiError, apiDelete } from "@/lib/api/client";
 import { t } from "@/lib/i18n";
 import type { Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -172,22 +173,14 @@ export function AccountCoverImage({
     if (!user.coverImageUrl || removing) return;
     setRemoving(true);
     try {
-      const res = await fetch("/api/me/cover", { method: "DELETE" });
-      if (!res.ok) {
-        const json = (await res.json().catch(() => null)) as
-          | { error?: string }
-          | null;
-        showFeedback({
-          kind: "error",
-          message: json?.error ?? t(lang, "saveFailed"),
-        });
-        return;
-      }
-      const json = (await res.json()) as { user: DbUser };
+      const json = await apiDelete<{ user: DbUser }>("/api/me/cover");
       onUserUpdate(json.user);
       showFeedback({ kind: "saved" });
-    } catch {
-      showFeedback({ kind: "error", message: t(lang, "saveFailed") });
+    } catch (err) {
+      showFeedback({
+        kind: "error",
+        message: err instanceof ApiError ? err.message : t(lang, "saveFailed"),
+      });
     } finally {
       setRemoving(false);
     }

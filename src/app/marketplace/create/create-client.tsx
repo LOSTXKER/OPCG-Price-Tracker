@@ -21,6 +21,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { DEFAULT_CARD_CONDITION } from "@/lib/constants/ui";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { ApiError, apiGet, apiPost } from "@/lib/api/client";
 
 export default function CreateListingClient() {
   const lang = useUIStore((s) => s.language);
@@ -63,13 +64,11 @@ export default function CreateListingClient() {
     setSubmitting(true);
 
     try {
-      const searchRes = await fetch(
+      const searchJson = await apiGet<{
+        cards: { id: number; cardCode: string }[];
+      }>(
         `/api/cards?search=${encodeURIComponent(selectedCard.cardCode)}&limit=40`
       );
-      if (!searchRes.ok) throw new Error("Failed to search cards");
-      const searchJson = (await searchRes.json()) as {
-        cards: { id: number; cardCode: string }[];
-      };
       const codeUp = selectedCard.cardCode.trim().toUpperCase();
       const card = searchJson.cards?.find(
         (c) => c.cardCode.toUpperCase() === codeUp
@@ -80,10 +79,9 @@ export default function CreateListingClient() {
         return;
       }
 
-      const res = await fetch("/api/listings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const body = await apiPost<{ listing?: { id: number } }>(
+        "/api/listings",
+        {
           cardId: card.id,
           priceJpy: pricing.priceJpy,
           condition: pricing.condition,
@@ -92,24 +90,19 @@ export default function CreateListingClient() {
           shipping: shipping.shipping,
           location: shipping.location,
           photos: shipping.photos,
-        }),
-      });
+        }
+      );
 
-      const body = (await res.json()) as {
-        listing?: { id: number };
-        error?: string;
-      };
-      if (!res.ok) {
-        setError(body.error ?? "ลงประกาศไม่สำเร็จ");
-        setSubmitting(false);
-        return;
-      }
       if (body.listing) {
         router.push(`/marketplace/${body.listing.id}`);
         router.refresh();
       }
-    } catch {
-      setError("เกิดข้อผิดพลาด กรุณาลองอีกครั้ง");
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message || "ลงประกาศไม่สำเร็จ");
+      } else {
+        setError("เกิดข้อผิดพลาด กรุณาลองอีกครั้ง");
+      }
     } finally {
       setSubmitting(false);
     }

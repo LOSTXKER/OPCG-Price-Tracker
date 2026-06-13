@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState, useTransition } from "react"
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
 import { PageHeader } from "@/components/layout/page-header"
 import { Button } from "@/components/ui/button"
+import { ApiError, apiGet } from "@/lib/api/client"
 import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { formatCount } from "@/lib/utils/currency"
@@ -76,9 +77,11 @@ export function MarketplaceBrowse({
   const fetchPage = useCallback(
     async (pageNum: number) => {
       const params = buildParams(pageNum)
-      const res = await fetch(`/api/listings?${params.toString()}`)
-      if (!res.ok) throw new Error(t(lang, "loadFailed"))
-      return res.json() as Promise<BrowseResponse>
+      try {
+        return await apiGet<BrowseResponse>(`/api/listings?${params.toString()}`)
+      } catch (err) {
+        throw new Error(err instanceof ApiError ? err.message : t(lang, "loadFailed"))
+      }
     },
     [buildParams, lang],
   )

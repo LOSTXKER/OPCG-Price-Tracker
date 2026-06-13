@@ -11,6 +11,7 @@ import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { EmptyState } from "@/components/shared/empty-state";
 import { LoadingState } from "@/components/shared/loading-state";
 import { useUIStore } from "@/stores/ui-store";
+import { ApiError, apiGet, apiPost, apiTry } from "@/lib/api/client";
 import { formatJpy, formatThb } from "@/lib/utils/currency";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -59,12 +60,11 @@ export default function SavedListingsPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/saved?page=${page}&limit=20`);
-      if (!res.ok) throw new Error();
-      setData(await res.json());
-    } catch {
+      const json = await apiGet<ApiResponse>(`/api/saved?page=${page}&limit=20`);
+      setData(json);
+    } catch (err) {
       setData(null);
-      setError(t(lang, "failedToLoad"));
+      setError(err instanceof ApiError ? err.message : t(lang, "failedToLoad"));
     } finally {
       setLoading(false);
     }
@@ -77,10 +77,8 @@ export default function SavedListingsPage() {
   const handleRemove = async (listingId: number) => {
     setRemoving(listingId);
     try {
-      const res = await fetch(`/api/listings/${listingId}/save`, {
-        method: "POST",
-      });
-      if (res.ok) await fetchSaved();
+      const ok = await apiTry(apiPost(`/api/listings/${listingId}/save`));
+      if (ok !== null) await fetchSaved();
     } finally {
       setRemoving(null);
     }

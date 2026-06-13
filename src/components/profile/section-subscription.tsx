@@ -25,6 +25,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { apiGet, apiPost, apiTry } from "@/lib/api/client";
 import { useUIStore } from "@/stores/ui-store";
 import { t, getLocale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -194,18 +195,16 @@ export function SectionSubscription({ subscription, stats }: Props) {
 
   useEffect(() => {
     if (!subscription.hasStripeSubscription) return;
-    void fetch("/api/me/payment-method")
-      .then((r) => (r.ok ? r.json() : { paymentMethod: null }))
-      .then((d: { paymentMethod: PaymentMethod }) => setPaymentMethod(d.paymentMethod))
+    void apiTry(apiGet<{ paymentMethod: PaymentMethod }>("/api/me/payment-method"))
+      .then((d) => setPaymentMethod(d?.paymentMethod ?? null))
       .finally(() => setLoadingPM(false));
   }, [subscription.hasStripeSubscription]);
 
   const openPortal = useCallback(async () => {
     setPortalLoading(true);
     try {
-      const res = await fetch("/api/subscription/portal", { method: "POST" });
-      const json = await res.json();
-      if (json.url) window.location.href = json.url;
+      const json = await apiTry(apiPost<{ url?: string }>("/api/subscription/portal"));
+      if (json?.url) window.location.href = json.url;
     } finally {
       setPortalLoading(false);
     }
@@ -219,11 +218,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
     setCancelSubmitting(true);
     try {
       if (!skip && cancelReason) {
-        await fetch("/api/me/cancel-reason", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ reason: cancelReason, comment: cancelComment || undefined }),
-        });
+        await apiTry(apiPost("/api/me/cancel-reason", { reason: cancelReason, comment: cancelComment || undefined }));
       }
     } finally {
       setCancelDialogOpen(false);

@@ -28,6 +28,7 @@ import { AlertCreateDialog } from "@/components/alerts/alert-create-dialog";
 import type { PriceAlertItem } from "@/components/alerts/alert-types";
 import { useUIStore } from "@/stores/ui-store";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
+import { ApiError, apiDelete, apiGet, apiPatch } from "@/lib/api/client";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";
 import { getCardName, getLocale, t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -55,20 +56,13 @@ export function AlertsManagerClient() {
   const fetchAlerts = useCallback(async () => {
     try {
       setError(null);
-      const res = await fetch("/api/alerts");
-      if (res.status === 401) {
-        setAlerts([]);
-        setLoading(false);
-        return;
-      }
-      if (!res.ok) {
-        setError(t(lang, "failedToLoad"));
-        setLoading(false);
-        return;
-      }
-      const data = (await res.json()) as { alerts: PriceAlertItem[] };
+      const data = await apiGet<{ alerts: PriceAlertItem[] }>("/api/alerts");
       setAlerts(data.alerts ?? []);
-    } catch {
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        setAlerts([]);
+        return;
+      }
       setError(t(lang, "failedToLoad"));
     } finally {
       setLoading(false);
@@ -115,11 +109,7 @@ export function AlertsManagerClient() {
     if (!window.confirm(t(lang, "deleteAlertConfirm"))) return;
     setBusyId(alert.id);
     try {
-      const res = await fetch(`/api/alerts?id=${alert.id}`, { method: "DELETE" });
-      if (!res.ok) {
-        setFeedback({ alertId: alert.id, kind: "error" });
-        return;
-      }
+      await apiDelete(`/api/alerts?id=${alert.id}`);
       setAlerts((current) => current.filter((a) => a.id !== alert.id));
     } catch {
       setFeedback({ alertId: alert.id, kind: "error" });
@@ -132,29 +122,22 @@ export function AlertsManagerClient() {
     if (busyId === alert.id) return;
     setBusyId(alert.id);
     try {
-      const res = await fetch(`/api/alerts?id=${alert.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isActive: true }),
-      });
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        if (res.status === 403) {
-          const msg: string = typeof json?.error === "string" ? json.error : "";
-          if (msg.toLowerCase().includes("line")) {
-            openUpgradeDialog({ featureKey: "lineAlerts" });
-          } else {
-            openUpgradeDialog({ featureKey: "priceAlerts" });
-          }
-          return;
-        }
-        setFeedback({ alertId: alert.id, kind: "error" });
-        return;
-      }
-      const next = json.alert as PriceAlertItem;
+      const json = await apiPatch<{ alert: PriceAlertItem }>(
+        `/api/alerts?id=${alert.id}`,
+        { isActive: true },
+      );
+      const next = json.alert;
       setAlerts((current) => current.map((a) => (a.id === next.id ? next : a)));
       setFeedback({ alertId: next.id, kind: "reactivated" });
-    } catch {
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 403) {
+        if (err.message.toLowerCase().includes("line")) {
+          openUpgradeDialog({ featureKey: "lineAlerts" });
+        } else {
+          openUpgradeDialog({ featureKey: "priceAlerts" });
+        }
+        return;
+      }
       setFeedback({ alertId: alert.id, kind: "error" });
     } finally {
       setBusyId(null);

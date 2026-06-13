@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
+import { ApiError, apiGet, apiPatch, apiTry } from "@/lib/api/client";
 
 type ApiResponse = {
   orders: OrderListItem[];
@@ -51,22 +52,21 @@ export default function BuyerOrdersPage() {
   const fetchOrders = useCallback(async () => {
     setLoading(true);
     setError(null);
-    try {
-      const params = new URLSearchParams();
-      params.set("role", "buyer");
-      params.set("page", String(page));
-      params.set("limit", "20");
-      if (activeTab !== "ALL") params.set("status", activeTab);
 
-      const res = await fetch(`/api/orders?${params}`);
-      if (!res.ok) throw new Error();
-      setData(await res.json());
-    } catch {
+    const params = new URLSearchParams();
+    params.set("role", "buyer");
+    params.set("page", String(page));
+    params.set("limit", "20");
+    if (activeTab !== "ALL") params.set("status", activeTab);
+
+    const j = await apiTry(apiGet<ApiResponse>(`/api/orders?${params}`));
+    if (j) {
+      setData(j);
+    } else {
       setData(null);
       setError(t(lang, "ordersLoadFailed"));
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   }, [activeTab, page]);
 
   useEffect(() => {
@@ -84,19 +84,12 @@ export default function BuyerOrdersPage() {
     setActionLoading(orderId);
     setActionError(null);
     try {
-      const res = await fetch(`/api/orders/${orderId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        setActionError(body?.error ?? t(lang, "orderUpdateFailed"));
-        return;
-      }
+      await apiPatch(`/api/orders/${orderId}`, { status });
       await fetchOrders();
-    } catch {
-      setActionError(t(lang, "orderUpdateFailed"));
+    } catch (err) {
+      setActionError(
+        err instanceof ApiError ? err.message : t(lang, "orderUpdateFailed"),
+      );
     } finally {
       setActionLoading(null);
     }

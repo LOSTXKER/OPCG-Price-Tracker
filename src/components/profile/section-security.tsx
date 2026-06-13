@@ -18,6 +18,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { ApiError, apiFetch, apiGet, apiTry } from "@/lib/api/client";
 import { createClient } from "@/lib/supabase/client";
 import { useUIStore } from "@/stores/ui-store";
 import { t, getLocale } from "@/lib/i18n";
@@ -85,15 +86,17 @@ export function SectionSecurity() {
   ];
 
   useEffect(() => {
-    void fetch("/api/me/login-history")
-      .then((r) => (r.ok ? r.json() : { sessions: [] }))
-      .then((d: { sessions: LoginSession[] }) => setSessions(d.sessions))
-      .finally(() => setLoadingSessions(false));
+    void (async () => {
+      const j = await apiTry(apiGet<{ sessions: LoginSession[] }>("/api/me/login-history"));
+      if (j) setSessions(j.sessions);
+      setLoadingSessions(false);
+    })();
 
-    void fetch("/api/me/mfa")
-      .then((r) => (r.ok ? r.json() : { factors: [] }))
-      .then((d: { factors: MfaFactor[] }) => setMfaFactors(d.factors))
-      .finally(() => setLoadingMfa(false));
+    void (async () => {
+      const j = await apiTry(apiGet<{ factors: MfaFactor[] }>("/api/me/mfa"));
+      if (j) setMfaFactors(j.factors);
+      setLoadingMfa(false);
+    })();
   }, []);
 
   const mfaEnabled = mfaFactors.some((f) => f.status === "verified");
@@ -161,20 +164,14 @@ export function SectionSecurity() {
     setMfaError(null);
     setMfaSaving(true);
     try {
-      const res = await fetch("/api/me/mfa", {
+      await apiFetch("/api/me/mfa", {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ factorId: factor.id }),
+        body: { factorId: factor.id },
       });
-      if (!res.ok) {
-        const j = await res.json() as { error?: string };
-        setMfaError(j.error ?? "Failed to disable 2FA");
-        return;
-      }
       setMfaFactors((prev) => prev.filter((f) => f.id !== factor.id));
       setMfaStep("idle");
-    } catch {
-      setMfaError("Failed to disable 2FA");
+    } catch (err) {
+      setMfaError(err instanceof ApiError ? err.message : "Failed to disable 2FA");
     } finally {
       setMfaSaving(false);
     }

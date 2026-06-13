@@ -1,5 +1,7 @@
 import { create } from "zustand";
 
+import { ApiError, apiDelete, apiGet, apiPost } from "@/lib/api/client";
+
 interface WatchlistState {
   ids: Set<number>;
   loaded: boolean;
@@ -20,24 +22,19 @@ export const useWatchlistStore = create<WatchlistState>()((set, get) => ({
     if (get().loaded || get().loading) return;
     set({ loading: true });
     try {
-      const res = await fetch("/api/watchlist");
-      if (res.status === 401) {
-        set({ loaded: true, loading: false });
-        return;
-      }
-      if (!res.ok) {
-        set({ loading: false });
-        return;
-      }
-      const data = (await res.json()) as {
-        items: { cardId: number }[];
-      };
+      const data = await apiGet<{ items: { cardId: number }[] }>(
+        "/api/watchlist",
+      );
       set({
         ids: new Set(data.items.map((i) => i.cardId)),
         loaded: true,
         loading: false,
       });
     } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        set({ loaded: true, loading: false });
+        return;
+      }
       console.error("Watchlist load error:", err);
       set({ loading: false });
     }
@@ -53,29 +50,24 @@ export const useWatchlistStore = create<WatchlistState>()((set, get) => ({
     set({ ids: next });
 
     try {
-      const res = wasWatched
-        ? await fetch(`/api/watchlist?cardId=${cardId}`, { method: "DELETE" })
-        : await fetch("/api/watchlist", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ cardId }),
-          });
-
-      if (res.status === 401) {
+      if (wasWatched) {
+        await apiDelete(`/api/watchlist?cardId=${cardId}`);
+      } else {
+        await apiPost("/api/watchlist", { cardId });
+      }
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
         set({ ids });
         window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`;
         return;
       }
 
-      if (res.status === 403) {
+      if (err instanceof ApiError && err.status === 403) {
         set({ ids, limitHit: true });
         setTimeout(() => set({ limitHit: false }), 3000);
         return;
       }
-      if (!res.ok) {
-        set({ ids });
-      }
-    } catch (err) {
+
       console.error("Watchlist toggle error:", err);
       set({ ids });
     }

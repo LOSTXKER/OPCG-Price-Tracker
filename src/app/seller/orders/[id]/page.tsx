@@ -30,6 +30,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Surface } from "@/components/ui/surface";
 import { t, getLocale } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { ApiError, apiGet, apiPatch } from "@/lib/api/client";
 
 type OrderDetail = {
   id: number;
@@ -95,12 +96,12 @@ export default function SellerOrderDetailPage() {
 
   const fetchOrder = useCallback(async () => {
     try {
-      const res = await fetch(`/api/orders/${orderId}`);
-      if (!res.ok) throw new Error("Failed to load order");
-      const data = await res.json();
+      const data = await apiGet<{ order: OrderDetail }>(
+        `/api/orders/${orderId}`
+      );
       setOrder(data.order);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "ไม่สามารถโหลดข้อมูลได้");
+      setError(e instanceof ApiError ? e.message : "ไม่สามารถโหลดข้อมูลได้");
     } finally {
       setLoading(false);
     }
@@ -117,19 +118,12 @@ export default function SellerOrderDetailPage() {
     setActionLoading(true);
     setActionError(null);
     try {
-      const res = await fetch(`/api/orders/${orderId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status, ...extra }),
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        setActionError(data.error ?? "ดำเนินการไม่สำเร็จ");
-        return;
-      }
+      await apiPatch(`/api/orders/${orderId}`, { status, ...extra });
       await fetchOrder();
-    } catch {
-      setActionError("เกิดข้อผิดพลาด");
+    } catch (err) {
+      setActionError(
+        err instanceof ApiError ? err.message : "เกิดข้อผิดพลาด"
+      );
     } finally {
       setActionLoading(false);
     }

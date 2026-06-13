@@ -9,6 +9,7 @@ import {
 import { useUIStore } from "@/stores/ui-store"
 import { displayValueToJpy } from "@/lib/utils/currency"
 import { fetchCards } from "@/lib/api/fetch-cards"
+import { apiGet, apiTry } from "@/lib/api/client"
 
 import { SelectStep } from "./add-card-select-step"
 import { DetailStep } from "./add-card-detail-step"
@@ -53,10 +54,9 @@ export function AddCardDialog({
 
   useEffect(() => {
     if (!open || sets.length > 0) return
-    void fetch("/api/sets")
-      .then((r) => { if (!r.ok) throw new Error(`/api/sets ${r.status}`); return r.json() })
-      .then((data: { sets: SetInfo[] }) => setSets(data.sets ?? []))
-      .catch((err: unknown) => { console.error("Failed to load sets:", err) })
+    void apiTry(apiGet<{ sets: SetInfo[] }>("/api/sets")).then((data) => {
+      if (data) setSets(data.sets ?? [])
+    })
   }, [open, sets.length])
 
   const loadInitial = useCallback(async () => {

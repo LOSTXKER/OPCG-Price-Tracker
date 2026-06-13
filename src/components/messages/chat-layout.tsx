@@ -8,6 +8,7 @@ import { OrderSidebar } from "./order-sidebar";
 import { MakeOfferDialog } from "./make-offer-dialog";
 import type { Conversation, ChatMessage, ChatListing, ChatUser } from "./types";
 import { createClient } from "@/lib/supabase/client";
+import { apiGet, apiPatch, apiPost, apiTry } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
@@ -43,43 +44,28 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
   );
 
   const fetchConversations = useCallback(async () => {
-    try {
-      const res = await fetch("/api/messages/conversations");
-      if (res.ok) {
-        const data = await res.json();
-        setConversations(data.conversations || []);
-      }
-    } catch {
-      /* ignore */
-    }
+    const data = await apiTry(
+      apiGet<{ conversations?: Conversation[] }>("/api/messages/conversations")
+    );
+    if (data) setConversations(data.conversations || []);
   }, []);
 
   const fetchMessages = useCallback(async (listingId: number) => {
-    try {
-      const res = await fetch(`/api/messages?listingId=${listingId}`);
-      if (res.ok) {
-        const data = await res.json();
-        setMessages(data.messages || []);
-      }
-    } catch {
-      /* ignore */
-    }
+    const data = await apiTry(
+      apiGet<{ messages?: ChatMessage[] }>(`/api/messages?listingId=${listingId}`)
+    );
+    if (data) setMessages(data.messages || []);
   }, []);
 
   const fetchActiveOrder = useCallback(
     async (listingId: number) => {
-      try {
-        const conv = conversations.find((c) => c.listingId === listingId);
-        if (conv?.activeOrder) {
-          const res = await fetch(`/api/orders/${conv.activeOrder.id}`);
-          if (res.ok) {
-            const data = await res.json();
-            setActiveOrder(data.order);
-          }
-        } else {
-          setActiveOrder(null);
-        }
-      } catch {
+      const conv = conversations.find((c) => c.listingId === listingId);
+      if (conv?.activeOrder) {
+        const data = await apiTry(
+          apiGet<{ order: typeof activeOrder }>(`/api/orders/${conv.activeOrder.id}`)
+        );
+        setActiveOrder(data?.order ?? null);
+      } else {
         setActiveOrder(null);
       }
     },
@@ -170,13 +156,13 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
       if (!activeListingId) return;
       setSending(true);
       try {
-        const res = await fetch("/api/messages", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ listingId: activeListingId, content }),
-        });
-        if (res.ok) {
-          const data = await res.json();
+        const data = await apiTry(
+          apiPost<{ message: ChatMessage }>("/api/messages", {
+            listingId: activeListingId,
+            content,
+          })
+        );
+        if (data) {
           setMessages((prev) => [...prev, data.message]);
           fetchConversations();
         }
@@ -190,17 +176,15 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
   const handleMakeOffer = useCallback(
     async (priceThb: number, note: string) => {
       if (!activeListingId) return;
-      const res = await fetch("/api/offers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const ok = await apiTry(
+        apiPost("/api/offers", {
           listingId: activeListingId,
           priceThb,
           note: note || undefined,
           parentId: counterOfferId || undefined,
-        }),
-      });
-      if (res.ok) {
+        })
+      );
+      if (ok !== null) {
         fetchMessages(activeListingId);
         fetchConversations();
         setCounterOfferId(null);
@@ -211,12 +195,10 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
 
   const handleAcceptOffer = useCallback(
     async (offerId: number) => {
-      const res = await fetch(`/api/offers/${offerId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "accept" }),
-      });
-      if (res.ok && activeListingId) {
+      const ok = await apiTry(
+        apiPatch(`/api/offers/${offerId}`, { action: "accept" })
+      );
+      if (ok !== null && activeListingId) {
         fetchMessages(activeListingId);
         fetchConversations();
       }
@@ -226,12 +208,10 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
 
   const handleRejectOffer = useCallback(
     async (offerId: number) => {
-      const res = await fetch(`/api/offers/${offerId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "reject" }),
-      });
-      if (res.ok && activeListingId) {
+      const ok = await apiTry(
+        apiPatch(`/api/offers/${offerId}`, { action: "reject" })
+      );
+      if (ok !== null && activeListingId) {
         fetchMessages(activeListingId);
         fetchConversations();
       }
@@ -246,12 +226,10 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
 
   const handleBuyNow = useCallback(async () => {
     if (!activeListingId) return;
-    const res = await fetch("/api/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ listingId: activeListingId }),
-    });
-    if (res.ok) {
+    const ok = await apiTry(
+      apiPost("/api/orders", { listingId: activeListingId })
+    );
+    if (ok !== null) {
       fetchMessages(activeListingId);
       fetchConversations();
     }
@@ -259,12 +237,10 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
 
   const handleUpdateOrder = useCallback(
     async (orderId: number, status: string, data?: Record<string, string>) => {
-      const res = await fetch(`/api/orders/${orderId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status, ...data }),
-      });
-      if (res.ok && activeListingId) {
+      const ok = await apiTry(
+        apiPatch(`/api/orders/${orderId}`, { status, ...data })
+      );
+      if (ok !== null && activeListingId) {
         fetchMessages(activeListingId);
         fetchConversations();
         fetchActiveOrder(activeListingId);

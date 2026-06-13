@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Briefcase, Check } from "lucide-react"
+import { ApiError, apiGet, apiPost } from "@/lib/api/client"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { displayValueToJpy } from "@/lib/utils/currency"
@@ -47,41 +48,40 @@ export function CardAddToPortfolio({
     try {
       let portfolioId: number
 
-      const portfolioRes = await fetch("/api/portfolio")
-      if (portfolioRes.status === 401) {
-        window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`
+      let pData: { portfolios: { id: number }[] }
+      try {
+        pData = await apiGet<{ portfolios: { id: number }[] }>("/api/portfolio")
+      } catch (err) {
+        if (err instanceof ApiError && err.status === 401) {
+          window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`
+          return
+        }
+        setError(t(lang, "loadFailed"))
         return
       }
-      if (!portfolioRes.ok) { setError(t(lang, "loadFailed")); return }
-      const pData = (await portfolioRes.json()) as { portfolios: { id: number }[] }
 
       if (pData.portfolios?.length) {
         portfolioId = pData.portfolios[0].id
       } else {
-        const createRes = await fetch("/api/portfolio", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: "Default" }),
-        })
-        if (!createRes.ok) { setError(t(lang, "createPortfolioFailed")); return }
-        const created = (await createRes.json()) as { portfolio: { id: number } }
-        portfolioId = created.portfolio.id
+        try {
+          const created = await apiPost<{ portfolio: { id: number } }>("/api/portfolio", { name: "Default" })
+          portfolioId = created.portfolio.id
+        } catch {
+          setError(t(lang, "createPortfolioFailed"))
+          return
+        }
       }
 
-      const res = await fetch("/api/portfolio/items", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      try {
+        await apiPost("/api/portfolio/items", {
           portfolioId,
           cardId,
           quantity: qty,
           purchasePrice: pp,
           condition: DEFAULT_CARD_CONDITION,
-        }),
-      })
-      if (!res.ok) {
-        const j = (await res.json()) as { error?: string }
-        setError(j.error ?? t(lang, "addFailed"))
+        })
+      } catch (err) {
+        setError(err instanceof ApiError ? err.message : t(lang, "addFailed"))
         return
       }
       setDone(true)
