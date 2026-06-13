@@ -2,11 +2,11 @@
 > **เขียนทับทุกครั้ง ไม่สะสม log** (รายละเอียดอยู่ใน git history แล้ว) · hook โหลดไฟล์นี้เข้าทุก session
 > session ใหม่: อ่านอันนี้ก่อนเริ่ม แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-14 — **P0 จบครบ (merged #7/#8/#9) · เข้า P1: card-detail mobile เสร็จ verified · URL strategy = B**
+อัปเดตล่าสุด: 2026-06-14 — **P1.1 merged (#10) · P1.2 card-detail sticky bar เสร็จ verified · URL strategy = B**
 
 ## ▶ สถานะตอนนี้
-- **P0 foundation merged ครบ** (PR #7/#8/#9) · master @ `eec470b`
-- branch ทำงาน: `redesign/p1-card-detail` — P1.1 card-detail mobile verified, กำลังจะเปิด PR
+- merged: **P0 (#7/#8/#9) + P1.1 card-detail mobile (#10)** · master @ `64d5f71`
+- branch ทำงาน: `redesign/p1-card-detail-2` — P1.2 sticky bar verified, กำลังจะเปิด PR
 - เบสเคาะ: **URL strategy = B (`/[game]/` prefix)** · roadmap P0→P5 ใน REDESIGN.md
 
 ## ✅ P0a — Nav IA foundation (merged PR #7)
@@ -47,11 +47,14 @@
 - mock previews: portfolio-mock-preview, honey-mock-preview (เทียบ before/after)
 - workflow audit output เต็ม: `/tmp/redesign_synth/` (audit.md + ia/design-system/future-arch/roadmap-docs.md)
 
-## ✅ P1.1 — card-detail mobile (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓)
-- ย่อรูปการ์ดบนมือถือ · reorder (image → header/actions/price/info → siblings full-width → related) · AdSlot `card-detail-mid` · tap target primary CTA h-11
+## ✅ P1.1 — card-detail mobile (merged #10)
+- ย่อรูปบนมือถือ · reorder (image → header/actions/price/info → siblings full-width → related) · AdSlot `card-detail-mid` · tap target h-11
+
+## ✅ P1.2 — card-detail sticky bar (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓)
+- `CardDetailStickyBar` มือถือ: ราคา + Add-to-Portfolio ลอยเหนือ bottom-nav เสมอ (desktop ใช้ inline)
+- **defer มีเหตุผล**: chart-collapse (quick-view อยู่บนแล้ว + Recharts collapsed เสี่ยง) · `.text-price` adoption (PriceDisplay มี size system, force = regress)
 
 ## ▶ NEXT
-1. **merge PR P1.1** (card-detail mobile)
-2. **card-detail PR#2**: progressive disclosure (chart/source-markets ยุบบนมือถือ) · sticky action bar เหนือ bottom-nav · adopt `.text-price` บน PriceDisplay
-3. P1 หน้าอื่น: home / cards / sets (`min-h-14`, AdSlot `browse-in-feed`, ยืน table→list)
-4. (เมื่ออนุมัติ) จัดบ้าน docs ตาม REDESIGN.md §8
+1. **merge PR P1.2** (sticky bar) → card-detail ถือว่าครบ mobile
+2. **P1 หน้าอื่น**: home / cards / sets — `min-h-14` rows · AdSlot `browse-in-feed` · ยืน table→list `<sm` · (option) ListRow primitive รวม 3 ตัวซ้ำ
+3. (เมื่ออนุมัติ) จัดบ้าน docs ตาม REDESIGN.md §8
