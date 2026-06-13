@@ -1,9 +1,9 @@
 import { toast } from "sonner";
 
 /**
- * Shared admin JSON fetch helper.
+ * Shared admin JSON fetch helper — the canonical client wrapper for
+ * `/api/admin/*` routes.
  *
- * Differences from the older `adminJsonFetch`:
  * - GET is the default method (use `method: "POST"` etc. when mutating)
  * - Optional `toastOnError` to surface errors via sonner with a single line
  * - Optional `toastOnSuccess` for fire-and-forget mutations

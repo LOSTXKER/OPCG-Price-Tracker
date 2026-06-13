@@ -1,6 +1,6 @@
 /**
  * Thin wrapper around fetch for client-side JSON API calls (user-facing
- * routes). Counterpart of `adminJsonFetch` in `admin-client.ts`.
+ * routes). Counterpart of `adminFetch` in `admin/admin-fetch.ts`.
  *
  * - Serializes JSON bodies and sets Content-Type.
  * - Parses the `{ error }` envelope on non-2xx and throws `ApiError` so
