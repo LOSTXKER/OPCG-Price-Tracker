@@ -51,7 +51,7 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
-            className="flex size-7 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted active:scale-95"
+            className="flex size-9 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted active:scale-95"
           >
             <Minus className="size-3" />
           </button>
@@ -64,11 +64,11 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
               const v = e.target.value.replace(/\D/g, "")
               onQuantityChange(Math.max(1, Math.min(99, Number(v) || 1)))
             }}
-            className="h-7 w-10 rounded-md border border-border bg-background text-center font-mono text-xs font-semibold tabular-nums outline-none"
+            className="h-9 w-12 rounded-md border border-border bg-background text-center font-mono text-sm font-semibold tabular-nums outline-none"
           />
           <button
             onClick={() => onQuantityChange(Math.min(99, quantity + 1))}
-            className="flex size-7 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted active:scale-95"
+            className="flex size-9 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted active:scale-95"
           >
             <Plus className="size-3" />
           </button>

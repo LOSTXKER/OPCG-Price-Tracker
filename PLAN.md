@@ -92,8 +92,13 @@
 **P2.1 — portfolio** ✅ verified (branch `redesign/p2-portfolio`)
 - หมายเหตุ: portfolio อยู่ในสภาพดีอยู่แล้ว — มี tabs (overview/insights/transactions) แยก analytics, mobile picker bar, mobile asset cards
 - [x] PortfolioHero stat row (PnL/cost/best/worst) **ยุบ default บนมือถือ** + ปุ่ม "ดูรายละเอียด" · value+PnL pill โชว์เสมอ · desktop กางเต็ม (holdings เร็วขึ้นตาม audit)
-- [ ] tools: drop/deck calculator mobile (form-heavy — audit ชี้ว่ายังไม่ optimize) · card picker นิ้วโป้ง, ผลเป็น list ไม่ใช่ table
-- [ ] (option) watchlist / saved / compare review
+**P2.2 — tools tap targets** ✅ verified (branch `redesign/p2-tools`)
+- หมายเหตุ: drop-calc มี mobile tabs (cards/results) + lg grid อยู่แล้ว, deck-calc ใช้ list — mobile-structured พอควร (audit "form-heavy table" ไม่ตรงโค้ดจริง)
+- [x] drop-calc purchase-config quantity stepper `size-7→size-9` + input `h-7→h-9` (fat-finger fix ตาม audit)
+- [x] want-list remove button `p-0.5→p-1.5` + aria-label
+- [ ] (option) watchlist / saved / compare review · card-picker rarity chips py-1→py-1.5
+
+→ **P2 ครอบคลุมแล้ว** (portfolio + tools) · core mobile UI redesign (P0+P1+P2) เสร็จเป็นกอบเป็นกำ
 
 ### ค้างจาก audit (ทำตอน redesign แต่ละหน้า — REDESIGN.md P1+)
 - Honey nav มือถือ: 7 แท็บไอคอนล้วนไม่มี label (`honey-tab-nav.tsx:159`) + scroll แนวนอน (→ P5)

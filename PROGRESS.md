@@ -2,12 +2,13 @@
 > **เขียนทับทุกครั้ง ไม่สะสม log** (รายละเอียดอยู่ใน git history แล้ว) · hook โหลดไฟล์นี้เข้าทุก session
 > session ใหม่: อ่านอันนี้ก่อนเริ่ม แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-14 — **P1.5 sets merged (#14) → P1 หน้าหลักครบ · P2.1 portfolio เสร็จ verified · URL strategy = B**
+อัปเดตล่าสุด: 2026-06-14 — **P2.1 portfolio merged (#15) · P2.2 tools tap-targets เสร็จ verified · core UI redesign (P0+P1+P2) เกือบครบ · URL strategy = B**
 
 ## ▶ สถานะตอนนี้
-- merged: **P0 (#7/#8/#9) + P1.1–P1.5 (#10–#14)** · master @ `77da275`
-- branch ทำงาน: `redesign/p2-portfolio` — P2.1 verified, กำลังจะเปิด PR
+- merged: **P0 (#7/#8/#9) + P1.1–P1.5 (#10–#14) + P2.1 (#15)** · master @ `77da275`
+- branch ทำงาน: `redesign/p2-tools` — P2.2 verified, กำลังจะเปิด PR
 - เบสเคาะ: **URL strategy = B (`/[game]/` prefix)** · roadmap P0→P5 ใน REDESIGN.md
+- เบสสั่ง "ทำรวดเดียวไม่หยุดถาม" → ผมลุย UI ที่ปลอดภัยต่อ, หยุดที่กำแพง schema/decision
 
 ## ✅ P0a — Nav IA foundation (merged PR #7)
 - bottom-nav **freeze 5 tab นิ่ง** (Market·Browse·Decks·Portfolio·More) · Search ย้าย header · badge → Portfolio
@@ -62,12 +63,15 @@
 
 ## ✅ P1.5 — sets page (merged #14) → P1 หน้าหลักครบ (card-detail · cards-browse · sets)
 
-## ✅ P2.1 — portfolio (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓)
-- portfolio สภาพดีอยู่แล้ว (tabs แยก analytics, mobile picker, mobile asset cards)
-- PortfolioHero stat row ยุบ default บนมือถือ + ปุ่ม "ดูรายละเอียด" (value+PnL โชว์เสมอ, desktop กางเต็ม) → holdings เร็วขึ้น
+## ✅ P2.1 — portfolio (merged #15) · Hero stat row ยุบบนมือถือ
+
+## ✅ P2.2 — tools tap-targets (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓)
+- drop-calc stepper size-7→9 + input h-7→9 · want-list remove p-0.5→1.5 + aria-label · (drop/deck calc mobile-structured อยู่แล้ว = tabs/list)
+
+## 🧱 กำแพงที่ต้องเบสเคาะก่อนทำต่อ (ทำเองไม่ได้)
+- **P4 multi-game/Pokémon** + **P5 tier/meta/deck-builder** = ต้อง **Prisma schema migration** (⚠️ permission: ขออนุมัติ) + decision ค้าง: **Portfolio per-game vs mixed**, **CardType enum ขยาย vs string** (REDESIGN.md §6)
+- **P3 marketplace** = งาน UI ใหญ่มาก (listing wizard mobile, messaging chrome, sticky buy bar) · flag ปิดอยู่ ไม่เร่ง · ทำได้ถ้าเบสสั่ง
 
 ## ▶ NEXT
-1. **merge PR P2.1** (portfolio hero collapse)
-2. **P2 ต่อ — tools**: drop/deck calculator mobile (form-heavy, audit ชี้ยังไม่ optimize) — card picker นิ้วโป้ง, ผลเป็น list
-3. หรือข้าม **P4 multi-game** (เคาะ Portfolio per-game vs mixed + CardType enum ก่อน · schema migration ⚠️)
-4. (เมื่ออนุมัติ) จัดบ้าน docs ตาม REDESIGN.md §8
+1. **merge PR P2.2** → core UI redesign (P0+P1+P2) เสร็จเป็นกอบเป็นกำ
+2. เบสเคาะทิศ: (a) P3 marketplace UI (ใหญ่ ทำได้เลย) · (b) P4/P5 — **เคาะ decision §6 + อนุมัติ schema ก่อน** · (c) จัดบ้าน docs §8 · (d) จบรอบ deploy/ดูจริง

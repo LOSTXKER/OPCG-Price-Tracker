@@ -91,8 +91,8 @@ export function WantList({
                   )}>
                     {formatPullPct(chance)}
                   </span>
-                  <button onClick={() => onRemove(card.id)} className="shrink-0 rounded p-0.5 text-muted-foreground/40 transition-colors hover:bg-muted hover:text-foreground">
-                    <X className="size-3" />
+                  <button onClick={() => onRemove(card.id)} aria-label={t(lang, "remove")} className="shrink-0 rounded-md p-1.5 text-muted-foreground/40 transition-colors hover:bg-muted hover:text-foreground">
+                    <X className="size-3.5" />
                   </button>
                 </li>
               )
