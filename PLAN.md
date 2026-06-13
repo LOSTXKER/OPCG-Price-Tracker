@@ -73,7 +73,13 @@
 - [x] `src/components/ui/list-row.tsx` — interactive row primitive (`min-h-14` tap target, focus-visible ring, leading/title/subtitle/trailing/chevron slots, Link/button/div)
 - [x] adopt ใน `CardListRow` (CardTable mobile fallback) → ได้ทั่ว cards/sets/trending ทันที
 - note: `MobileAssetCard` (PnL+notes+edit) / `OrderCard` (status header + actions footer) เป็น multi-section card จริง — คงเป็น bespoke (ไม่ force เข้า row primitive)
-- [ ] home / cards / sets — AdSlot `browse-in-feed` · ยืน table→list `<sm` · ใช้ ListRow กับ list อื่นๆ ที่ยัง hand-roll
+**P1.4 — cards browse (HomeMarketOverview)** ✅ verified (branch `redesign/p1-cards-browse`)
+- หมายเหตุ: `/cards` redirect → `/` · การ browse จริงคือ `HomeMarketOverview` บนหน้าแรก
+- [x] filter → **bottom sheet** (เลิก inline horizontal-scroll bar ที่กินความกว้างมือถือ — AGENTS anti-pattern) · chips wrap · ปุ่ม "ดูผลลัพธ์"
+- [x] AdSlot `browse-in-feed` ใน mobile list (กลาง list, FREE only)
+- [x] i18n +1 (applyFilters) parity 1493
+- [ ] (option) set-picker บนมือถือ (ตอนนี้ `hidden sm:block`) → ใส่ใน filter sheet · grid view AdSlot
+- [ ] sets page · home polish เพิ่มเติม
 
 ### ค้างจาก audit (ทำตอน redesign แต่ละหน้า — REDESIGN.md P1+)
 - Honey nav มือถือ: 7 แท็บไอคอนล้วนไม่มี label (`honey-tab-nav.tsx:159`) + scroll แนวนอน (→ P5)

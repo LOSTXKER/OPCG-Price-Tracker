@@ -1640,4 +1640,5 @@ export const th = {
   consentAccept: "ยอมรับ",
   consentDecline: "ปฏิเสธ",
   pages: "หน้า",
+  applyFilters: "ดูผลลัพธ์",
 } as const;

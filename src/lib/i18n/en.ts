@@ -1667,4 +1667,5 @@ export const en = {
   consentAccept: "Accept",
   consentDecline: "Decline",
   pages: "Pages",
+  applyFilters: "Show results",
 } as const;
