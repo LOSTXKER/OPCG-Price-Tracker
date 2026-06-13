@@ -58,7 +58,16 @@
 - [x] footer มือถือเข้าถึงได้ (เลิก `hidden md:block` + pb clear bottom-nav)
 - [x] design-token pass: `.text-price`/`.text-price-lg` (numeric mono) + `--game-accent` hook (default → primary, GameSwitcher set ตอน P4) — **adopt บน PriceTag ตอน P1**
 
-→ **P0 จบครบ** (P0a nav + P0b ads + P0c polish) · ถัดไป P1 core pages
+→ **P0 จบครบ** (P0a nav + P0b ads + P0c polish)
+
+### P1 — Core pages (REDESIGN.md §7) · เริ่มจากหน้าแย่สุด (card-detail)
+**P1.1 — card-detail mobile** ✅ verified (branch `redesign/p1-card-detail`)
+- [x] ย่อรูปการ์ดบนมือถือ (`max-w-[240px] sm:[320px] lg:none`) — ไม่กินทั้งจอแรก
+- [x] reorder: image → header/actions/price/info → siblings (full-width) → related (เลิกดัน actions ใต้ siblings)
+- [x] AdSlot `card-detail-mid` (หลัง price-hub, FREE only)
+- [x] tap target primary CTA `h-11` บนมือถือ
+- [ ] **card-detail PR#2**: progressive disclosure (chart/source-markets ยุบบนมือถือ, quick-view ก่อน) · sticky action bar (เหนือ bottom-nav) · adopt `.text-price` บน PriceDisplay
+- [ ] home / cards / sets — `min-h-14` rows · AdSlot `browse-in-feed` · ยืน table→list `<sm`
 
 ### ค้างจาก audit (ทำตอน redesign แต่ละหน้า — REDESIGN.md P1+)
 - Honey nav มือถือ: 7 แท็บไอคอนล้วนไม่มี label (`honey-tab-nav.tsx:159`) + scroll แนวนอน (→ P5)
