@@ -312,7 +312,7 @@ export default function DropCalculatorClient() {
           </div>
 
           {/* Desktop: two-column layout */}
-          <div className="hidden lg:grid lg:grid-cols-[1fr_360px] lg:items-start lg:gap-6">
+          <div className="hidden lg:grid lg:grid-cols-[1fr_360px] lg:items-start lg:gap-6 xl:grid-cols-[1fr_320px]">
             <div className="min-w-0">
               <CardPicker
                 cards={filteredCards}

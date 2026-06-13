@@ -139,7 +139,7 @@ export function CardDetail({
         {/* Left column — card image only. Sibling variants moved to a full-width
             section below the grid so that on mobile the price + actions land
             right under the artwork instead of being pushed below the variants. */}
-        <div className="lg:col-span-5">
+        <div className="lg:col-span-4">
           <button
             type="button"
             onClick={() => card.imageUrl && setLightboxOpen(true)}
@@ -183,7 +183,7 @@ export function CardDetail({
             strip), then info tabs (specs / effect / listings). Actions sit
             with the headline so the primary CTA is visible above the fold
             instead of being pushed below the tall card image. */}
-        <div className="space-y-5 lg:col-span-7">
+        <div className="space-y-5 lg:col-span-8">
           <CardDetailHeader
             card={card}
             setCode={set.code}

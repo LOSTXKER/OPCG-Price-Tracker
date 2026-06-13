@@ -2,7 +2,7 @@
 > **เขียนทับทุกครั้ง ไม่สะสม log** (รายละเอียดอยู่ใน git history แล้ว) · hook โหลดไฟล์นี้เข้าทุก session
 > session ใหม่: อ่านอันนี้ก่อนเริ่ม แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-14 — **P4.1+P4.2 เสร็จ — multi-game seam live (config+switcher+gameId schema deployed prod) · core redesign P0–P2 + P4 foundation ครบ**
+อัปเดตล่าสุด: 2026-06-14 — **Declutter Batch 5 (honey มือถือ) + Batch 6 (desktop balance) เสร็จ + verified → declutter sweep ครบทุก batch · core redesign P0–P2 + P4 foundation + multi-game seam ครบ**
 
 ## ▶ สถานะตอนนี้
 - merged ทั้งหมด: **P0 (#7/#8/#9) · P1.1–P1.5 (#10–#14) · P2.1/2.2 (#15/#16) · P4.1 (#17) · P4.2 (#18)** = 12 PR
@@ -84,11 +84,12 @@
 - **insight:** หน้าส่วนใหญ่ดีอยู่แล้ว — card-detail/drop-calc 5/5 มือถือ · toolbars (set-detail/trending/watchlist) wrap ดีอยู่แล้ว · **home รกสุด (2/5)** = ตัวจริง
 - ✅ **Batch 1 home declutter** (#20) — toolbar wrap, featured stack, tap targets, hero-search
 - ✅ **Batch 3+4 tap+token sweep** (#21) — compare X 36px, h2→.text-h2, badge/label tokens
-- ⬜ **Batch 5 honey declutter (มือถือ)** — status cards ยุบ (3/5, complex 27-component, ทำรอบ fresh)
-- ⬜ **Batch 6 desktop balance** — card-detail price-hub, drop-calc sidebar, login left-panel (ควร verify กับ screenshot ก่อนแก้)
-- ⬜ (เก็บตก) decks + deck-calc mobile review schema พลาด
+- ✅ **Batch 5 honey declutter (มือถือ)** — ยุบ detail 3 การ์ด `hidden sm:block` + คง rank-progress strip `sm:hidden` (review จับ: ซ่อนหมดจะเสีย "+N 🍯 ถึงขั้นถัดไป" ไม่มีทางเข้าถึงอื่น) · tab `px-3 sm:px-4`
+- ✅ **Batch 6 desktop balance** — card-detail grid 4/8 + price-hub divider symmetric 24px (แก้ gutter เบี้ยว 1px/20px เดิม) · drop-calc sidebar `xl:320px` (revert `xl:grid-cols-6` — review จับ regression ขยายจอแล้วการ์ดหด 156→135px) · login+register token sweep (`text-eyebrow`/`text-body-sm` size-faithful)
+- **method:** ground-truth read + adversarial review workflow (5 agents) แทน pixel-capture · ตัด 6 findings ที่ stale/compliant/policy-conflict (login lg→md panel premise ผิด, want-list text-xs compliant) · verify: tsc clean · lint 0err/78warn · test 36/36 · build ✓
+- ⬜ (เก็บตก) decks + deck-calc mobile review schema พลาด · honey ticket-used-this-month หายบนมือถือ (low-value, ยอมรับได้)
 
 ## ▶ NEXT
-1. **Batch 5 honey + Batch 6 desktop balance** (เหลือจาก declutter — ใหญ่กว่า, ทำรอบ context สด + verify screenshot)
-2. **P3 marketplace** (ตามที่เบสเลือก B = marketplace track ทีหลัง) — ตรวจ commerce flow (เปิด flag local + login) → overhaul mobile → เปิด flag จริง
-3. **P4.3+ Pokémon** (ต้องหาแหล่งข้อมูลก่อน) · **เก็บกวาด** M5 drift · docs §8 · M0 cron
+1. **P3 marketplace** (ตามที่เบสเลือก B = marketplace track ทีหลัง) — ตรวจ commerce flow (เปิด flag local + login) → overhaul mobile → เปิด flag จริง · M3 backend ค้าง (OrderEvent, auto-complete cron, escrow/Stripe Connect, DISPUTED)
+2. **P4.3+ Pokémon** (ต้องหาแหล่งข้อมูลก่อน)
+3. **เก็บกวาด:** M5 Prisma drift (แตะ DB จริง + backup) · docs §8 (11→5 active) · M0 cron `leaderboard-rewards` ไม่อยู่ใน vercel.json
