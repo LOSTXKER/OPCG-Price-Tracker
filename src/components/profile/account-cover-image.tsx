@@ -9,7 +9,7 @@ import {
   Trash2,
   Upload,
 } from "lucide-react";
-import { ApiError, apiDelete } from "@/lib/api/client";
+import { ApiError, apiDelete, apiForm } from "@/lib/api/client";
 import { t } from "@/lib/i18n";
 import type { Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -142,25 +142,14 @@ export function AccountCoverImage({
         const file = await prepareCoverFile(rawFile);
         const form = new FormData();
         form.append("file", file);
-        const res = await fetch("/api/me/cover", {
-          method: "POST",
-          body: form,
-        });
-        if (!res.ok) {
-          const json = (await res.json().catch(() => null)) as
-            | { error?: string }
-            | null;
-          showFeedback({
-            kind: "error",
-            message: json?.error ?? t(lang, "coverUploadFailed"),
-          });
-          return;
-        }
-        const json = (await res.json()) as { user: DbUser };
+        const json = await apiForm<{ user: DbUser }>("/api/me/cover", form);
         onUserUpdate(json.user);
         showFeedback({ kind: "saved" });
-      } catch {
-        showFeedback({ kind: "error", message: t(lang, "coverUploadFailed") });
+      } catch (err) {
+        showFeedback({
+          kind: "error",
+          message: err instanceof ApiError ? err.message : t(lang, "coverUploadFailed"),
+        });
       } finally {
         setUploading(false);
         if (fileInputRef.current) fileInputRef.current.value = "";

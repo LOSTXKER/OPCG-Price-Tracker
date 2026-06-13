@@ -20,7 +20,7 @@ import { LoadingState } from "@/components/shared/loading-state";
 import { PageHeader } from "@/components/layout/page-header";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
-import { ApiError, apiGet, apiPatch } from "@/lib/api/client";
+import { ApiError, apiForm, apiGet, apiPatch, apiTry } from "@/lib/api/client";
 
 type ListingData = {
   id: number;
@@ -124,14 +124,12 @@ export default function SellerEditListingPage() {
         if (photos.length >= 5) break;
         const formData = new FormData();
         formData.append("file", file);
-        const res = await fetch("/api/listings/upload", {
-          method: "POST",
-          body: formData,
-        });
-        if (!res.ok) continue;
-        const data = await res.json();
-        if (data.url) {
-          setPhotos((prev) => [...prev, data.url]);
+        const data = await apiTry(
+          apiForm<{ url?: string }>("/api/listings/upload", formData),
+        );
+        if (data?.url) {
+          const url = data.url;
+          setPhotos((prev) => [...prev, url]);
         }
       }
     } finally {

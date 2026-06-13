@@ -19,6 +19,7 @@ import { RarityBadge } from "@/components/shared/rarity-badge"
 import { PriceDisplay } from "@/components/shared/price-display"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Surface } from "@/components/ui/surface"
+import { ApiError, apiForm } from "@/lib/api/client"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -131,23 +132,16 @@ export function PhotoSearchButton({ className, trigger }: PhotoSearchButtonProps
     try {
       const formData = new FormData()
       formData.append("file", file)
-      const res = await fetch("/api/cards/identify", {
-        method: "POST",
-        body: formData,
-      })
-      if (res.status === 401) {
-        setError(t(lang, "photoSearchAuthRequired"))
-        return
-      }
-      if (!res.ok) {
-        const body = (await res.json().catch(() => ({}))) as { error?: string }
-        setError(body.error || t(lang, "photoSearchFailed"))
-        return
-      }
-      const json = (await res.json()) as IdentifyResponse
+      const json = await apiForm<IdentifyResponse>("/api/cards/identify", formData)
       setResult(json.data)
-    } catch {
-      setError(t(lang, "photoSearchFailed"))
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        setError(t(lang, "photoSearchAuthRequired"))
+      } else if (err instanceof ApiError) {
+        setError(err.message)
+      } else {
+        setError(t(lang, "photoSearchFailed"))
+      }
     } finally {
       setLoading(false)
     }
