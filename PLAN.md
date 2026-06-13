@@ -79,7 +79,14 @@
 - [x] AdSlot `browse-in-feed` ใน mobile list (กลาง list, FREE only)
 - [x] i18n +1 (applyFilters) parity 1493
 - [ ] (option) set-picker บนมือถือ (ตอนนี้ `hidden sm:block`) → ใส่ใน filter sheet · grid view AdSlot
-- [ ] sets page · home polish เพิ่มเติม
+
+**P1.5 — sets page** ✅ verified (branch `redesign/p1-sets`)
+- หมายเหตุ: sets page ออกแบบดีอยู่แล้ว (type pills tab-scroll, grid mobile-first, SetCard) — ปรับเฉพาะจุด
+- [x] adopt `ListRow` ใน most-valuable list (reuse primitive: tap target + focus ring + leading rank/thumb)
+- [x] AdSlot `browse-in-feed` คั่นระหว่าง most-valuable กับ grouped sets
+- note: type pills (horizontal scroll) เป็น tab-scroll ที่ตั้งใจ (ไม่ใช่ anti-pattern) — คงไว้
+
+→ **P1 ครอบคลุมหน้าหลักแล้ว** (card-detail, cards-browse, sets) · เหลือ polish ปลีกย่อย → พิจารณาเข้า P2/P4
 
 ### ค้างจาก audit (ทำตอน redesign แต่ละหน้า — REDESIGN.md P1+)
 - Honey nav มือถือ: 7 แท็บไอคอนล้วนไม่มี label (`honey-tab-nav.tsx:159`) + scroll แนวนอน (→ P5)
