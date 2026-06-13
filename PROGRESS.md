@@ -79,7 +79,16 @@
 ## ⚠️ เจอ Prisma drift (มีมาก่อน, ตั้งเป็น M5 ใน PLAN)
 - DB มี `20260422000000_add_saved_profile` (ไม่มีใน repo) · repo มี `20260429000000_drop_watchlist_note_target` (DB ยังไม่ mark applied) → ควรเคลียร์ด้วย `migrate resolve` ตอนมีเวลา + backup
 
+## 🧹 Declutter audit (screenshot ทุกหน้า mobile+desktop) — เบสเลือก B (live pages ก่อน)
+- แคป 22 หน้า × 2 (mobile 390 + desktop 1440) · 2 review workflows · 10 high + 48 med (JSON: /tmp/{mobile,desktop}-findings.json)
+- **insight:** หน้าส่วนใหญ่ดีอยู่แล้ว — card-detail/drop-calc 5/5 มือถือ · toolbars (set-detail/trending/watchlist) wrap ดีอยู่แล้ว · **home รกสุด (2/5)** = ตัวจริง
+- ✅ **Batch 1 home declutter** (#20) — toolbar wrap, featured stack, tap targets, hero-search
+- ✅ **Batch 3+4 tap+token sweep** (#21) — compare X 36px, h2→.text-h2, badge/label tokens
+- ⬜ **Batch 5 honey declutter (มือถือ)** — status cards ยุบ (3/5, complex 27-component, ทำรอบ fresh)
+- ⬜ **Batch 6 desktop balance** — card-detail price-hub, drop-calc sidebar, login left-panel (ควร verify กับ screenshot ก่อนแก้)
+- ⬜ (เก็บตก) decks + deck-calc mobile review schema พลาด
+
 ## ▶ NEXT
-1. **P4.3+ (build later)** — ต้องหาแหล่งข้อมูล Pokémon ก่อน: game-scoped queries · `/[game]/` route group · backfill gameId + NOT NULL + @@unique · enum ขยาย · Pokémon sets/scraper
-2. **เก็บกวาด**: M5 prisma drift · จัดบ้าน docs (REDESIGN §8) · M0 cron leaderboard-rewards
-3. **deploy/ดูจริงบนมือถือ** — core redesign (P0–P2) + multi-game seam (P4.1/4.2) live แล้ว · เทสต์ UX จริงแล้วค่อยตัดสิน phase ต่อ (P3 marketplace / P5 meta-tier)
+1. **Batch 5 honey + Batch 6 desktop balance** (เหลือจาก declutter — ใหญ่กว่า, ทำรอบ context สด + verify screenshot)
+2. **P3 marketplace** (ตามที่เบสเลือก B = marketplace track ทีหลัง) — ตรวจ commerce flow (เปิด flag local + login) → overhaul mobile → เปิด flag จริง
+3. **P4.3+ Pokémon** (ต้องหาแหล่งข้อมูลก่อน) · **เก็บกวาด** M5 drift · docs §8 · M0 cron
