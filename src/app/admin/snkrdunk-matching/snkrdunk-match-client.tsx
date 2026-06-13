@@ -38,8 +38,7 @@ import {
 import { AdminDialog } from "@/components/admin/admin-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { adminJsonFetch } from "@/lib/api/admin-client";
-import { buildAdminQuery } from "@/lib/admin/admin-fetch";
+import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
 import { useAdminList } from "@/lib/admin/use-admin-list";
 import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
 import type { PaginatedApiResponse } from "@/app/admin/admin-types";
@@ -277,24 +276,28 @@ function AddCardDialog({
     setError("");
     setPreview(null);
     try {
-      const res = await fetch(
-        `/api/admin/snkrdunk-matching?lookup=${id}`
-      );
-      const json = await res.json();
-      if (!res.ok) {
-        setError(json.error || "ไม่สำเร็จ");
-      } else {
-        setPreview({
-          name: json.data.summary.name,
-          productNumber: json.data.summary.productNumber,
-          psa10MinPriceUsd: json.data.psa10MinPriceUsd,
-          psa10LastSoldUsd: json.data.psa10LastSoldUsd,
-          lastSoldUsd: json.data.lastSoldUsd,
-          thumbnailUrl: json.data.summary.thumbnailUrl,
-        });
-      }
+      const json = await adminFetch<{
+        data: {
+          summary: {
+            name: string;
+            productNumber: string;
+            thumbnailUrl: string | null;
+          };
+          psa10MinPriceUsd: number | null;
+          psa10LastSoldUsd: number | null;
+          lastSoldUsd: number | null;
+        };
+      }>(`/api/admin/snkrdunk-matching?lookup=${id}`);
+      setPreview({
+        name: json.data.summary.name,
+        productNumber: json.data.summary.productNumber,
+        psa10MinPriceUsd: json.data.psa10MinPriceUsd,
+        psa10LastSoldUsd: json.data.psa10LastSoldUsd,
+        lastSoldUsd: json.data.lastSoldUsd,
+        thumbnailUrl: json.data.summary.thumbnailUrl,
+      });
     } catch (e) {
-      setError(e instanceof Error ? e.message : "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ");
+      setError(e instanceof Error ? e.message : "ไม่สำเร็จ");
     }
     setBusy(false);
   };
@@ -305,22 +308,24 @@ function AddCardDialog({
     setBusy(true);
     setError("");
     try {
-      const res = await fetch("/api/admin/snkrdunk-matching", {
+      await adminFetch("/api/admin/snkrdunk-matching", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ snkrdunkId: id }),
+        body: { snkrdunkId: id },
       });
-      const json = await res.json();
-      if (!res.ok && res.status !== 409) {
-        setError(json.error || "ไม่สำเร็จ");
-      } else {
+      onAdded();
+      onClose();
+      setIdInput("");
+      setPreview(null);
+    } catch (e) {
+      // A 409 ("Already exists") is treated as success — the mapping is already present.
+      if (e instanceof Error && e.message === "Already exists") {
         onAdded();
         onClose();
         setIdInput("");
         setPreview(null);
+      } else {
+        setError(e instanceof Error ? e.message : "ไม่สำเร็จ");
       }
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ");
     }
     setBusy(false);
   };
@@ -485,35 +490,35 @@ export function SnkrdunkMatchClient() {
 
   const handleApprove = async (mappingId: number, cardId: number) => {
     addSaving(mappingId);
-    await adminJsonFetch(API, { method: "PATCH", body: { id: mappingId, matchedCardId: cardId } });
+    await adminFetch(API, { method: "PATCH", body: { id: mappingId, matchedCardId: cardId } });
     removeSaving(mappingId);
     await fetchData();
   };
 
   const handleUnmatch = async (mappingId: number) => {
     addSaving(mappingId);
-    await adminJsonFetch(API, { method: "PATCH", body: { id: mappingId, action: "unmatch" } });
+    await adminFetch(API, { method: "PATCH", body: { id: mappingId, action: "unmatch" } });
     removeSaving(mappingId);
     await fetchData();
   };
 
   const handleRefresh = async (mappingId: number) => {
     addSaving(mappingId);
-    await adminJsonFetch(API, { method: "PATCH", body: { id: mappingId, action: "refresh" } });
+    await adminFetch(API, { method: "PATCH", body: { id: mappingId, action: "refresh" } });
     removeSaving(mappingId);
     await fetchData();
   };
 
   const handleReject = async (mappingId: number) => {
     addSaving(mappingId);
-    await adminJsonFetch(API, { method: "DELETE", body: { id: mappingId } });
+    await adminFetch(API, { method: "DELETE", body: { id: mappingId } });
     removeSaving(mappingId);
     await fetchData();
   };
 
   const handleAutoMatch = async () => {
     setAutoMatchBusy(true);
-    const json = await adminJsonFetch<{ autoMatched: number }>(API, { method: "PATCH", body: { action: "auto-match" } });
+    const json = await adminFetch<{ autoMatched: number }>(API, { method: "PATCH", body: { action: "auto-match" } });
     toast.success(`จับคู่อัตโนมัติแล้ว ${json.autoMatched} การ์ด`);
     setAutoMatchBusy(false);
     await fetchData();
@@ -523,7 +528,7 @@ export function SnkrdunkMatchClient() {
     const ids = [...selected];
     if (ids.length === 0) return;
     setSaving(new Set(ids));
-    await adminJsonFetch(API, { method: "DELETE", body: { ids } });
+    await adminFetch(API, { method: "DELETE", body: { ids } });
     toast.success(`ปฏิเสธแล้ว ${ids.length} รายการ`);
     setSelected(new Set());
     setSaving(new Set());

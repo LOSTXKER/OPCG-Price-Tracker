@@ -24,6 +24,7 @@ import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { adminFetch } from "@/lib/admin/admin-fetch";
 
 interface DropRate {
   id: number;
@@ -158,28 +159,23 @@ export function DropRatesManager({
     if (!rate) return;
 
     try {
-      const res = await fetch("/api/admin/drop-rates", {
+      await adminFetch("/api/admin/drop-rates", {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+        body: {
           setId,
           rarity,
           avgPerBox: rate.avgPerBox ? parseFloat(rate.avgPerBox) : null,
           ratePerPack: rate.ratePerPack ? parseFloat(rate.ratePerPack) : null,
-        }),
+        },
       });
-      if (res.ok) {
-        setSaved((prev) => new Set(prev).add(key));
-        setOriginalRates((prev) => ({
-          ...prev,
-          [rarity]: { ...rate },
-        }));
-        toast.success(`${setCode} — บันทึก ${rarity} สำเร็จ`);
-      } else {
-        toast.error(`${setCode} — บันทึก ${rarity} ไม่สำเร็จ`);
-      }
+      setSaved((prev) => new Set(prev).add(key));
+      setOriginalRates((prev) => ({
+        ...prev,
+        [rarity]: { ...rate },
+      }));
+      toast.success(`${setCode} — บันทึก ${rarity} สำเร็จ`);
     } catch {
-      toast.error("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+      toast.error(`${setCode} — บันทึก ${rarity} ไม่สำเร็จ`);
     } finally {
       setSaving(null);
     }
@@ -202,32 +198,27 @@ export function DropRatesManager({
       .filter(Boolean);
 
     try {
-      const res = await fetch("/api/admin/drop-rates", {
+      await adminFetch("/api/admin/drop-rates", {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ batch }),
+        body: { batch },
       });
 
-      if (res.ok) {
-        const newSaved = new Set(saved);
-        const newOriginals = { ...originalRates };
-        for (const dr of set.dropRates) {
-          const key = `${set.id}-${dr.rarity}`;
-          newSaved.add(key);
-          if (editRates[dr.rarity]) {
-            newOriginals[dr.rarity] = { ...editRates[dr.rarity] };
-          }
+      const newSaved = new Set(saved);
+      const newOriginals = { ...originalRates };
+      for (const dr of set.dropRates) {
+        const key = `${set.id}-${dr.rarity}`;
+        newSaved.add(key);
+        if (editRates[dr.rarity]) {
+          newOriginals[dr.rarity] = { ...editRates[dr.rarity] };
         }
-        setSaved(newSaved);
-        setOriginalRates(newOriginals);
-        toast.success(
-          `${set.code} — บันทึกทั้งหมด ${batch.length} รายการสำเร็จ`,
-        );
-      } else {
-        toast.error(`${set.code} — บันทึกไม่สำเร็จ`);
       }
+      setSaved(newSaved);
+      setOriginalRates(newOriginals);
+      toast.success(
+        `${set.code} — บันทึกทั้งหมด ${batch.length} รายการสำเร็จ`,
+      );
     } catch {
-      toast.error("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+      toast.error(`${set.code} — บันทึกไม่สำเร็จ`);
     } finally {
       setSavingAll(false);
     }

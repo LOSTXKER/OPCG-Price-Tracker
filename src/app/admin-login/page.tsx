@@ -7,6 +7,7 @@ import { Eye, EyeOff, Loader2, Lock, ShieldCheck } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { adminFetch } from "@/lib/admin/admin-fetch"
 import { createClient } from "@/lib/supabase/client"
 
 export default function AdminLoginPage() {
@@ -40,8 +41,9 @@ export default function AdminLoginPage() {
       return
     }
 
-    const res = await fetch("/api/admin/stats")
-    if (!res.ok) {
+    try {
+      await adminFetch("/api/admin/stats")
+    } catch {
       setLoading(false)
       await supabase.auth.signOut()
       setError("บัญชีนี้ไม่มีสิทธิ์ Admin")

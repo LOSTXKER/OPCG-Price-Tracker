@@ -25,8 +25,7 @@ import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { Lightbox } from "@/components/admin/matching-ui";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { adminJsonFetch } from "@/lib/api/admin-client";
-import { buildAdminQuery } from "@/lib/admin/admin-fetch";
+import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
 import { SetPicker } from "@/components/shared/set-picker";
 import { useAdminList } from "@/lib/admin/use-admin-list";
 import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
@@ -173,21 +172,21 @@ export function YuyuteiMatchClient() {
 
   const handleApprove = async (mappingId: number, cardId: number) => {
     addSaving(mappingId);
-    await adminJsonFetch(API, { method: "PATCH", body: { id: mappingId, matchedCardId: cardId } });
+    await adminFetch(API, { method: "PATCH", body: { id: mappingId, matchedCardId: cardId } });
     removeSaving(mappingId);
     await fetchData();
   };
 
   const handleUnmatch = async (mappingId: number) => {
     addSaving(mappingId);
-    await adminJsonFetch(API, { method: "PATCH", body: { id: mappingId, action: "unmatch" } });
+    await adminFetch(API, { method: "PATCH", body: { id: mappingId, action: "unmatch" } });
     removeSaving(mappingId);
     await fetchData();
   };
 
   const handleReject = async (mappingId: number) => {
     addSaving(mappingId);
-    await adminJsonFetch(API, { method: "DELETE", body: { id: mappingId } });
+    await adminFetch(API, { method: "DELETE", body: { id: mappingId } });
     removeSaving(mappingId);
     await fetchData();
   };
@@ -203,7 +202,7 @@ export function YuyuteiMatchClient() {
     });
     if (!ok) return;
     setBulkBusy(true);
-    const json = await adminJsonFetch<{ approved: number }>(API, {
+    const json = await adminFetch<{ approved: number }>(API, {
       method: "PATCH",
       body: { action: "bulk-approve", set: setFilter || undefined },
     });
@@ -226,7 +225,7 @@ export function YuyuteiMatchClient() {
     for (const id of ids) {
       if (pickedCandidate[id]) overrides[String(id)] = pickedCandidate[id];
     }
-    await adminJsonFetch<{ approved: number }>(API, {
+    await adminFetch<{ approved: number }>(API, {
       method: "PATCH",
       body: { action: "bulk-approve-ids", ids, overrides },
     });
@@ -246,7 +245,7 @@ export function YuyuteiMatchClient() {
     });
     if (!ok) return;
     setBulkBusy(true);
-    await adminJsonFetch(API, { method: "PATCH", body: { action: "bulk-reject-ids", ids } });
+    await adminFetch(API, { method: "PATCH", body: { action: "bulk-reject-ids", ids } });
     toast.success(`ปฏิเสธแล้ว ${ids.length} รายการ`);
     setBulkBusy(false);
     await fetchData();
@@ -260,13 +259,17 @@ export function YuyuteiMatchClient() {
     force?: boolean,
   ): Promise<{ code: string; result: "ok" | "fail" | "skip"; msg: string }> => {
     try {
-      const res = await fetch(`${API}/ai-suggest`, {
+      const json = await adminFetch<{
+        success?: boolean;
+        matchedCardCode?: string;
+        confidence?: number;
+        skipped?: boolean;
+        error?: string;
+      }>(`${API}/ai-suggest`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: mappingId, ...(force && { force: true }) }),
+        body: { id: mappingId, ...(force && { force: true }) },
         signal,
       });
-      const json = await res.json();
       if (json.success) {
         return {
           code: json.matchedCardCode ?? "?",
@@ -304,12 +307,18 @@ export function YuyuteiMatchClient() {
     if (hasSelected) {
       ids = [...selected];
     } else {
-      const params = new URLSearchParams({ "ai-candidates": "true", mode: force ? "all" : "new" });
-      if (setFilter) params.set("set", setFilter);
-      const res = await fetch(`${API}?${params}`);
-      if (!res.ok) return;
-      const json = await res.json();
-      ids = (json.items as { id: number; scrapedCode: string }[]).map((i) => i.id);
+      const query = buildAdminQuery({
+        "ai-candidates": "true",
+        mode: force ? "all" : "new",
+        set: setFilter || undefined,
+      });
+      let json: { items: { id: number; scrapedCode: string }[] };
+      try {
+        json = await adminFetch<{ items: { id: number; scrapedCode: string }[] }>(`${API}?${query}`);
+      } catch {
+        return;
+      }
+      ids = json.items.map((i) => i.id);
     }
 
     if (ids.length === 0) {

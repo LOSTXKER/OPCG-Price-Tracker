@@ -10,6 +10,7 @@ import { AdminPanel } from "@/components/admin/admin-panel";
 import { AdminSaveBar } from "@/components/admin/admin-save-bar";
 import { AdminFormField } from "@/components/admin/admin-form-field";
 import { Skeleton } from "@/components/ui/skeleton";
+import { adminFetch } from "@/lib/admin/admin-fetch";
 import type { LucideIcon } from "lucide-react";
 
 type ConfigMap = Record<string, string>;
@@ -151,13 +152,13 @@ export default function AdminConfigPage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch("/api/admin/config")
-      .then((r) => r.json())
-      .then((d: { config: ConfigMap }) => {
-        const next = d.config ?? {};
+    adminFetch<{ config: ConfigMap }>("/api/admin/config")
+      .then((d) => {
+        const next = d?.config ?? {};
         setConfig(next);
         setPristine(next);
       })
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
@@ -177,20 +178,11 @@ export default function AdminConfigPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await fetch("/api/admin/config", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(config),
-      });
-      if (res.ok) {
-        toast.success("บันทึกการตั้งค่าสำเร็จ");
-        setPristine(config);
-      } else {
-        const data = await res.json().catch(() => null);
-        toast.error(data?.error || `บันทึกไม่สำเร็จ (${res.status})`);
-      }
-    } catch {
-      toast.error("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+      await adminFetch("/api/admin/config", { method: "PUT", body: config });
+      toast.success("บันทึกการตั้งค่าสำเร็จ");
+      setPristine(config);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "เกิดข้อผิดพลาดในการเชื่อมต่อ");
     } finally {
       setSaving(false);
     }

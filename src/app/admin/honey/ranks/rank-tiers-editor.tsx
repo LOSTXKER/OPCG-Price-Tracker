@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { adminFetch } from "@/lib/admin/admin-fetch";
 import { ImageUploader } from "@/components/admin/image-uploader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -186,16 +187,10 @@ export function RankTiersEditor({ initialTiers }: { initialTiers: RankTier[] }) 
     }
     setSaving(true);
     try {
-      const res = await fetch("/api/admin/honey/ranks", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(stripKeys(tiers)),
-      });
-      const data = await res.json().catch(() => null);
-      if (!res.ok) {
-        toast.error(data?.error || `บันทึกไม่สำเร็จ (${res.status})`);
-        return;
-      }
+      const data = await adminFetch<{ tiers?: RankTier[] }>(
+        "/api/admin/honey/ranks",
+        { method: "PUT", body: stripKeys(tiers) },
+      );
       toast.success("บันทึกระดับแรงค์สำเร็จ");
       invalidateRankTiers();
       if (Array.isArray(data?.tiers)) {
@@ -205,8 +200,10 @@ export function RankTiersEditor({ initialTiers }: { initialTiers: RankTier[] }) 
       } else {
         setPristineSnapshot(JSON.stringify(stripKeys(tiers)));
       }
-    } catch {
-      toast.error("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "เกิดข้อผิดพลาดในการเชื่อมต่อ",
+      );
     } finally {
       setSaving(false);
     }
