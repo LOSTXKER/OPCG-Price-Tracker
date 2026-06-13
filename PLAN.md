@@ -109,7 +109,15 @@
 - [x] `gameId Int?` (nullable) + FK SetNull + index บน **Card / Portfolio / Deck / Listing / YuyuteiMapping / SnkrdunkMapping** · Game back-relations
 - [x] migration `20260614000000_add_game_scoping` (ADD COLUMN + INDEX + FK ล้วน, transaction-safe) · `prisma generate` + build ✓
 - [~] **defer ไป P4.3** (ลด prod risk): `CardType` enum ขยาย (ALTER TYPE รันใน tx ไม่ได้) · backfill gameId · NOT NULL + `@@unique([gameId,cardCode])` — ทำหลัง Pokémon data
-- [ ] **deploy:** `prisma migrate status` (backup-check) → `prisma migrate deploy` เข้า Supabase
+- [x] **deployed เข้า Supabase prod แล้ว** (2026-06-14) — apply ผ่าน `prisma db execute` + `migrate resolve --applied` (option 1: ไม่แตะ drift) · verify gameId มีครบ 6 ตาราง
+
+**P4.3+ (build later)** — game-scoped queries server-side · `/[game]/` route group + redirect · backfill gameId (จาก set.game) + NOT NULL + `@@unique([gameId,cardCode])` · ขยาย CardType enum · Pokémon sets/rarities/pull-rate + scraper stack (ต้องหาแหล่งข้อมูล Pokémon ก่อน)
+
+## 🔧 M5 — Prisma migration drift (เก็บกวาด, ไม่เร่ง แต่ควรเคลียร์)
+> เจอตอน P4.2 deploy · drift มีมาก่อน ไม่ใช่จาก redesign
+- [ ] DB มี `20260422000000_add_saved_profile` แต่ไม่มีในโฟลเดอร์ repo · repo มี `20260429000000_drop_watchlist_note_target` ที่ DB ยังไม่ mark applied
+- [ ] สืบ + `migrate resolve` ให้ตรงความจริง DB (น่าจะ resolve --applied drop_watchlist ถ้า column ถูก drop จริงแล้ว · เพิ่ม/หา add_saved_profile migration) → ให้ `migrate status` สะอาด
+- [ ] ⚠️ แตะ DB จริง — ทำตอนมีเวลา + backup
 
 **P4.3+ (build later)** — game-scoped queries server-side · `/[game]/` route group + redirect · Pokémon sets/rarities/pull-rate · scraper stack ใหม่
 

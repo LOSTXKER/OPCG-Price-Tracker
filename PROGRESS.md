@@ -2,12 +2,12 @@
 > **เขียนทับทุกครั้ง ไม่สะสม log** (รายละเอียดอยู่ใน git history แล้ว) · hook โหลดไฟล์นี้เข้าทุก session
 > session ใหม่: อ่านอันนี้ก่อนเริ่ม แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-14 — **P2 merged (#15/#16) · เข้า P4: P4.1 GameSwitcher เสร็จ verified · เบสเคาะ per-game/ขยาย-enum/อนุมัติ schema**
+อัปเดตล่าสุด: 2026-06-14 — **P4.1+P4.2 เสร็จ — multi-game seam live (config+switcher+gameId schema deployed prod) · core redesign P0–P2 + P4 foundation ครบ**
 
 ## ▶ สถานะตอนนี้
-- merged: **P0 (#7/#8/#9) + P1.1–P1.5 (#10–#14) + P2.1/P2.2 (#15/#16)**
-- branch ทำงาน: `redesign/p4-game-switcher` — P4.1 verified, กำลังจะเปิด PR
-- **P4 decisions เคาะแล้ว:** Portfolio per-game · CardType ขยาย enum · schema approved (additive, branch+PR, ห้ามแตะ DB จริงโดยไม่ยืนยัน)
+- merged ทั้งหมด: **P0 (#7/#8/#9) · P1.1–P1.5 (#10–#14) · P2.1/2.2 (#15/#16) · P4.1 (#17) · P4.2 (#18)** = 12 PR
+- **P4.2 migration deployed เข้า Supabase prod แล้ว** (gameId 6 ตาราง)
+- **P4 decisions:** Portfolio per-game · CardType ขยาย enum · schema approved
 
 ## ✅ P0a — Nav IA foundation (merged PR #7)
 - bottom-nav **freeze 5 tab นิ่ง** (Market·Browse·Decks·Portfolio·More) · Search ย้าย header · badge → Portfolio
@@ -71,11 +71,15 @@
 - `pokemon.ts` stub config (comingSoon) + register · `getActiveGameConfigs()` · GameConfig +flags (shortName/comingSoon/supports*/deckRules)
 - `GameSwitcher` pill (header มือถือ+desktop) — OPCG active, Pokémon "เร็วๆ นี้" disabled · อ่าน/เซ็ต `currentGame` (persist)
 
-## 🧱 P4.2 — schema migration (ถัดไป · ⚠️ additive, ทำบน branch+PR, ห้ามแตะ DB จริงโดยไม่ยืนยัน)
-- `Card.gameId` (denorm) + `@@unique([gameId,cardCode])` · `CardSet.gameId` NOT NULL (backfill OPCG) · `gameId` บน Portfolio/Deck/Listing · `gameId` บน Yuyutei/Snkrdunk mappings · ขยาย `CardType` enum (Pokemon types)
-- ต้อง backfill SQL + ระวังลำดับ · game-scope queries server-side ตามมา
+## ✅ P4.2 — game-scoping schema (merged #18 + **deployed prod แล้ว**)
+- `gameId Int?` (nullable) + FK SetNull + index บน Card/Portfolio/Deck/Listing/Yuyutei/Snkrdunk · Game back-relations
+- migration `20260614000000_add_game_scoping` (additive ล้วน) · **apply เข้า Supabase prod แล้ว** ผ่าน `db execute` + `migrate resolve --applied` (option 1, ไม่แตะ drift) · verify gameId ครบ 6 ตาราง
+- defer P4.3: enum ขยาย · backfill · NOT NULL · @@unique([gameId,cardCode])
+
+## ⚠️ เจอ Prisma drift (มีมาก่อน, ตั้งเป็น M5 ใน PLAN)
+- DB มี `20260422000000_add_saved_profile` (ไม่มีใน repo) · repo มี `20260429000000_drop_watchlist_note_target` (DB ยังไม่ mark applied) → ควรเคลียร์ด้วย `migrate resolve` ตอนมีเวลา + backup
 
 ## ▶ NEXT
-1. **merge PR P4.1** (GameSwitcher)
-2. **P4.2 schema** — เขียน prisma schema + migration บน branch, `prisma generate`+build ก่อน · **ยืนยันกับเบสก่อน apply กับ Supabase จริง**
-3. (ภายหลัง) game-scoped queries · `/[game]/` route group · Pokémon data/scraper (build later)
+1. **P4.3+ (build later)** — ต้องหาแหล่งข้อมูล Pokémon ก่อน: game-scoped queries · `/[game]/` route group · backfill gameId + NOT NULL + @@unique · enum ขยาย · Pokémon sets/scraper
+2. **เก็บกวาด**: M5 prisma drift · จัดบ้าน docs (REDESIGN §8) · M0 cron leaderboard-rewards
+3. **deploy/ดูจริงบนมือถือ** — core redesign (P0–P2) + multi-game seam (P4.1/4.2) live แล้ว · เทสต์ UX จริงแล้วค่อยตัดสิน phase ต่อ (P3 marketplace / P5 meta-tier)
