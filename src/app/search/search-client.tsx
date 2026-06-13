@@ -1,7 +1,6 @@
 "use client"
 
-import { useSearchParams, useRouter } from "next/navigation"
-import { useCallback, useEffect, useRef, useState, useTransition, Suspense } from "react"
+import { Suspense } from "react"
 import {
   LayoutGrid,
   List,
@@ -28,20 +27,15 @@ import { MobileCardItem, MobileCardSkeleton } from "@/components/home/mobile-car
 import { CardGrid } from "@/components/cards/card-grid"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
-import { fetchCards } from "@/lib/api/fetch-cards"
 import {
   type SortKey,
-  type ColumnId,
-  type ViewMode,
-  type ChangePeriod,
   CHANGE_PERIODS,
-  COLUMN_SORTS,
-  parseSortColumn,
   PAGE_SIZE,
 } from "@/components/home/market-types"
-import { SearchTableRow, type CardRow } from "./search-table-row"
+import { SearchTableRow } from "./search-table-row"
 import { SearchPagination } from "./search-pagination"
 import { PhotoSearchButton } from "./photo-search-button"
+import { useSearch } from "./use-search"
 
 const ALL_RARITIES = "__all_rarities__"
 
@@ -73,144 +67,41 @@ function SearchContent({
   sets: SetOption[]
   rarities: string[]
 }) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
   const lang = useUIStore((s) => s.language)
   const SORT_OPTIONS = SORT_KEYS.map((o) => ({ value: o.value, label: t(lang, o.key) }))
 
-  const initialQuery = searchParams.get("q") ?? ""
-  const [query, setQuery] = useState(initialQuery)
-  const [inputValue, setInputValue] = useState(initialQuery)
-  const [sort, setSort] = useState<SortKey>("price_desc")
-  const [page, setPage] = useState(1)
-  const [cards, setCards] = useState<CardRow[]>([])
-  const [total, setTotal] = useState(0)
-  const [totalPages, setTotalPages] = useState(0)
-  const [isPending, startTransition] = useTransition()
-  const [hasSearched, setHasSearched] = useState(false)
-  const [fetchError, setFetchError] = useState(false)
-  const [viewMode, setViewMode] = useState<ViewMode>("table")
-  const [changePeriod, setChangePeriod] = useState<ChangePeriod>("7d")
-  const [selectedSet, setSelectedSet] = useState("")
-  const [selectedRarity, setSelectedRarity] = useState("")
-  const inputRef = useRef<HTMLInputElement>(null)
-  const fetchAbortRef = useRef<AbortController | null>(null)
-  const sortRef = useRef(sort)
-  const setRef = useRef(selectedSet)
-  const rarityRef = useRef(selectedRarity)
-  useEffect(() => {
-    sortRef.current = sort
-    setRef.current = selectedSet
-    rarityRef.current = selectedRarity
-  }, [sort, selectedSet, selectedRarity])
-
-  const fetchResults = useCallback(
-    (q: string, sortKey: SortKey, pg: number, filterSet?: string, filterRarity?: string) => {
-      if (!q.trim()) {
-        setCards([])
-        setTotal(0)
-        setTotalPages(0)
-        return
-      }
-      fetchAbortRef.current?.abort()
-      const controller = new AbortController()
-      fetchAbortRef.current = controller
-
-      startTransition(async () => {
-        try {
-          setFetchError(false)
-          const data = await fetchCards(
-            {
-              search: q.trim(),
-              sort: sortKey,
-              page: pg,
-              limit: PAGE_SIZE,
-              set: filterSet || undefined,
-              rarity: filterRarity || undefined,
-            },
-            { signal: controller.signal },
-          )
-          setCards(data.cards as CardRow[])
-          setTotal(data.total ?? 0)
-          setTotalPages(data.totalPages ?? 0)
-          setHasSearched(true)
-        } catch (e) {
-          if (e instanceof Error && e.name === "AbortError") return
-          console.error("Search fetch failed:", e)
-          setFetchError(true)
-        }
-      })
-    },
-    [],
-  )
-
-  useEffect(() => {
-    const q = searchParams.get("q") ?? ""
-    const t = setTimeout(() => {
-      setQuery(q)
-      setInputValue(q)
-      setPage(1)
-      if (q.trim()) fetchResults(q, sortRef.current, 1, setRef.current, rarityRef.current)
-    }, 0)
-    return () => clearTimeout(t)
-  }, [searchParams, fetchResults])
-
-  useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
-
-  const refetch = useCallback(
-    (overrides?: { sort?: SortKey; page?: number; set?: string; rarity?: string }) => {
-      const s = overrides?.sort ?? sort
-      const p = overrides?.page ?? 1
-      const st = overrides?.set ?? selectedSet
-      const r = overrides?.rarity ?? selectedRarity
-      fetchResults(query, s, p, st, r)
-    },
-    [query, sort, selectedSet, selectedRarity, fetchResults],
-  )
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const trimmed = inputValue.trim()
-    if (!trimmed) return
-    router.push(`/search?q=${encodeURIComponent(trimmed)}`)
-  }
-
-  const handleSortChange = (newSort: SortKey) => {
-    setSort(newSort)
-    setPage(1)
-    refetch({ sort: newSort, page: 1 })
-  }
-
-  const handleColumnSort = (col: ColumnId) => {
-    const current = parseSortColumn(sort)
-    const newSort = current.col === col
-      ? COLUMN_SORTS[col][current.dir === "desc" ? "asc" : "desc"]
-      : COLUMN_SORTS[col].desc
-    handleSortChange(newSort)
-  }
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage)
-    fetchResults(query, sort, newPage, selectedSet, selectedRarity)
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }
-
-  const handleSetChange = (v: string) => {
-    setSelectedSet(v)
-    setPage(1)
-    refetch({ set: v, page: 1 })
-  }
-
-  const handleRarityChange = (v: string) => {
-    setSelectedRarity(v)
-    setPage(1)
-    refetch({ rarity: v, page: 1 })
-  }
-
-  const { col: sortCol, dir: sortDir } = parseSortColumn(sort)
-  const activeFilterCount = (selectedSet ? 1 : 0) + (selectedRarity ? 1 : 0)
+  const {
+    query,
+    inputValue,
+    setInputValue,
+    sort,
+    page,
+    cards,
+    total,
+    totalPages,
+    isPending,
+    hasSearched,
+    fetchError,
+    viewMode,
+    setViewMode,
+    changePeriod,
+    setChangePeriod,
+    selectedSet,
+    selectedRarity,
+    inputRef,
+    sortCol,
+    sortDir,
+    activeFilterCount,
+    handleSubmit,
+    handleSortChange,
+    handleColumnSort,
+    handlePageChange,
+    handleSetChange,
+    handleRarityChange,
+    refetch,
+    clearFilters,
+    clearInput,
+  } = useSearch()
 
   return (
     <div className="space-y-4">
@@ -229,7 +120,7 @@ function SearchContent({
           {inputValue && (
             <button
               type="button"
-              onClick={() => { setInputValue(""); inputRef.current?.focus() }}
+              onClick={clearInput}
               className="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               <X className="size-4" />
@@ -256,7 +147,7 @@ function SearchContent({
             {activeFilterCount > 0 && (
               <button
                 type="button"
-                onClick={() => { setSelectedSet(""); setSelectedRarity(""); setPage(1); refetch({ set: "", rarity: "", page: 1 }) }}
+                onClick={clearFilters}
                 className="text-xs text-primary hover:underline"
               >
                 {t(lang, "clearAll")}

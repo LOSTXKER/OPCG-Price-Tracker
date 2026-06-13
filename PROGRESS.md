@@ -30,10 +30,12 @@
 - ✅ `compare-client` 634→357 → แตก `_components/card-rail.tsx` (151) + `_components/compare-dossier.tsx` (175)
 - ✅ `today-card` 642→5 (barrel) → แตก `streak-card.tsx` (325) + `streak-info-popover.tsx` (178) + `today-missions-card.tsx` (144) · importer (missions-tab) ใช้ barrel เดิมต่อได้
 - ✅ `price-hub` 567→271 → แตก `price-hub-sources.tsx` (326, source markets list+table) · อ่าน currency จาก store เอง
-- ค้าง user-facing: alerts-manager (502) · search-client (497)
-- ค้าง admin (ใหญ่สุด): snkrdunk-match (973) · cards-browser (792) · yuyutei (766)
+- ✅ `alerts-manager` 502→262 → แตก `alert-row.tsx` (248, AlertRow + FeedbackPill + formatTriggeredAt + FeedbackKind)
+- ✅ `search-client` 497→388 → แตก data/state logic เป็น hook `use-search.ts` (205) ตาม pattern useCompareData · เหลือ pure presentation
+- **user-facing giants เสร็จครบ** (5 ตัว) ✓
+- ค้าง admin (ใหญ่สุด): snkrdunk-match (973) · cards-browser (792) · yuyutei (766) · rank-tiers (634) · drop-rates (607)
 
 ## ▶ NEXT (ทำต่อทันที)
 1. (เบส) เปิด PR + ลบ backup เก่าเมื่อพร้อม
-2. แตก user-facing ที่เหลือ: alerts-manager (502) / search-client (497) → แล้วค่อยขยับไป admin giants (snkrdunk 973, cards-browser 792)
+2. แตก admin giants: snkrdunk-match (973) / cards-browser (792) / yuyutei (766) — ใหญ่สุดในโปรเจกต์
 3. รวม empty-state / R3 i18n เป็น batch (152 ไฟล์)
