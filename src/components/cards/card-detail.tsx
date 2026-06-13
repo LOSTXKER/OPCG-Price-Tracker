@@ -13,6 +13,7 @@ import { useUIStore } from "@/stores/ui-store"
 import { useTierLimits } from "@/hooks/use-tier-limits"
 
 import { CardDetailActions } from "./card-detail/actions"
+import { CardDetailStickyBar } from "./card-detail/sticky-bar"
 import { CardDetailHeader } from "./card-detail/header"
 import { CardPriceHub } from "./card-detail/price-hub"
 import { CardDetailInfoTabs } from "./card-detail/info-tabs"
@@ -245,6 +246,13 @@ export function CardDetail({
       )}
 
       <CardDetailRelated relatedCards={relatedCards ?? []} set={set} lang={lang} />
+
+      <CardDetailStickyBar
+        cardId={card.id}
+        cardName={displayName}
+        priceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
+        priceThb={card.price?.priceThb ?? card.latestPriceThb}
+      />
     </div>
   )
 }

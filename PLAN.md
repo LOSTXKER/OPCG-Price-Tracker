@@ -66,7 +66,9 @@
 - [x] reorder: image → header/actions/price/info → siblings (full-width) → related (เลิกดัน actions ใต้ siblings)
 - [x] AdSlot `card-detail-mid` (หลัง price-hub, FREE only)
 - [x] tap target primary CTA `h-11` บนมือถือ
-- [ ] **card-detail PR#2**: progressive disclosure (chart/source-markets ยุบบนมือถือ, quick-view ก่อน) · sticky action bar (เหนือ bottom-nav) · adopt `.text-price` บน PriceDisplay
+**P1.2 — card-detail sticky bar** ✅ verified (branch `redesign/p1-card-detail-2`)
+- [x] sticky action bar มือถือ (`CardDetailStickyBar`) — ราคา + Add-to-Portfolio ลอยเหนือ bottom-nav เสมอ · desktop ใช้ inline actions
+- [~] **defer มีเหตุผล**: chart-collapse (quick-view ราคาอยู่บนสุดแล้ว + Recharts ใน collapsed เสี่ยง 0-width) · adopt `.text-price` (PriceDisplay มี size system อยู่แล้ว, force-swap = regress) → ทำตอนสร้าง price surface ใหม่
 - [ ] home / cards / sets — `min-h-14` rows · AdSlot `browse-in-feed` · ยืน table→list `<sm`
 
 ### ค้างจาก audit (ทำตอน redesign แต่ละหน้า — REDESIGN.md P1+)
