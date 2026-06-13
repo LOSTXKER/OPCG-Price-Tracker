@@ -36,10 +36,29 @@
 ### R4 — client→server pages (performance มือถือ — ท้ายสุด)
 - [ ] หน้า client ล้วนที่ควรเป็น server-first: `settings/*` 9 หน้า · `saved` · `orders` · `seller/*` (เน้นหน้า first paint ช้าบน 4G)
 
-### รอเฟส redesign (ห้ามหยิบก่อนเบสเคาะ design)
-- Honey nav มือถือ: 7 แท็บไอคอนล้วนไม่มี label (`honey-tab-nav.tsx:159`) + scroll แนวนอน
-- IA bottom-nav: Portfolio ไม่อยู่ใน nav · ตอน marketplace เปิด Sets+Honey หลุดพร้อมกัน
-- Menu sheet แน่น ~16 ปลายทาง · ทางเข้า trending/market-overview จาก chrome หลัก
+## 🎨 DESIGN PHASE → ดู `REDESIGN.md` (SSOT) · URL strategy = **B (`/[game]/` prefix)** · เริ่ม P0
+> เบสเคาะ 2026-06-14 · roadmap เต็มใน REDESIGN.md §7 · branch `redesign/p0-*` (ห้าม push master ตรง)
+
+### P0 — Foundation (chrome / nav / tokens / primitives) · บล็อกทุก phase
+**P0a — Nav IA foundation** ✅ verified, PR #7 เปิดแล้ว (branch `redesign/p0-nav-foundation`)
+- [x] ui-store: เพิ่ม `currentGame` (+ partialize) — game-context พื้นฐาน (UI switcher จริงไว้ P4)
+- [x] i18n: +6 keys ×3 ภาษา parity (browse/decksAndTools/deckBuilder/myDecks/metaCards/tierList · more/decks/market มีอยู่แล้ว)
+- [x] bottom-nav: **freeze 5 tab** (Market·Browse·Decks·Portfolio·More) เลิก ternary marketplaceEnabled · ย้าย Search ออก (อยู่ header แล้ว) · badge → Portfolio
+- [x] `/decks` hub page — tool grid (deck/drop calc, compare) + meta/tier/builder disabled "coming soon" + My Decks placeholder
+- [x] header desktop: NAV_LINKS → Market/Browse/Decks · ตัด Tools dropdown (ย้ายเข้า hub) · marketplace append เมื่อ flag เปิด
+- [x] mobile-menu-sheet: Tools section → ลิงก์เดียว "Decks & Tools" → /decks
+
+**P0b — AdSlot + Consent** (ถัดไป)
+- [ ] `<AdSlot placement>` tier+consent gated + house-ad fallback + exclude chromeless
+- [ ] `ConsentBanner` + consent state ใน ui-store (blocking ก่อน ads)
+- [ ] billing/features: key `ad-free` (PRO) · migrate HomeAdCard → AdSlot
+
+**P0c — polish**
+- [ ] command palette: nav shortcuts (ไม่ใช่แค่การ์ด) · footer มือถือเข้าถึงได้ · design-token pass (`.text-price` + `--game-accent`)
+
+### ค้างจาก audit (ทำตอน redesign แต่ละหน้า — REDESIGN.md P1+)
+- Honey nav มือถือ: 7 แท็บไอคอนล้วนไม่มี label (`honey-tab-nav.tsx:159`) + scroll แนวนอน (→ P5)
+- card-detail หนาแน่น/ปุ่มใต้ fold (→ P1) · portfolio scroll ลึก (→ P2)
 
 ## M1 — Honey: เก็บงานค้างจาก rebalance v2 (`doc/honey-economy-rebalance.md` §9)
 - [ ] Achievement unlock toast — ยังไม่มี component แจ้งตอนปลดล็อก

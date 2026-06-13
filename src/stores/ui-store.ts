@@ -11,6 +11,8 @@ const LANGUAGE_CYCLE: Language[] = ["TH", "EN", "JP"];
 interface UIState {
   language: Language;
   currency: Currency;
+  /** Active card game slug (e.g. "opcg"). Scopes browse/search/decks. Game switcher UI lands in P4. */
+  currentGame: string;
   cardView: CardView;
   dismissedBanner: boolean;
   mobileMenuOpen: boolean;
@@ -20,6 +22,7 @@ interface UIState {
   cycleLanguage: () => void;
   setCurrency: (currency: Currency) => void;
   cycleCurrency: () => void;
+  setCurrentGame: (slug: string) => void;
   setCardView: (view: CardView) => void;
   dismissBanner: () => void;
   setMobileMenuOpen: (open: boolean) => void;
@@ -33,6 +36,7 @@ export const useUIStore = create<UIState>()(
     (set) => ({
       language: "TH",
       currency: "THB",
+      currentGame: "opcg",
       cardView: "grid",
       dismissedBanner: false,
       mobileMenuOpen: false,
@@ -50,6 +54,7 @@ export const useUIStore = create<UIState>()(
           const idx = CURRENCY_CYCLE.indexOf(state.currency);
           return { currency: CURRENCY_CYCLE[(idx + 1) % CURRENCY_CYCLE.length] };
         }),
+      setCurrentGame: (currentGame) => set({ currentGame }),
       setCardView: (cardView) => set({ cardView }),
       dismissBanner: () => set({ dismissedBanner: true }),
       setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
@@ -62,6 +67,7 @@ export const useUIStore = create<UIState>()(
       partialize: (state) => ({
         language: state.language,
         currency: state.currency,
+        currentGame: state.currentGame,
         cardView: state.cardView,
         dismissedBanner: state.dismissedBanner,
       }),

@@ -1655,4 +1655,10 @@ export const en = {
   streakInfoDesc2: "Check in daily to earn more Honey. Missing a day resets your streak.",
   streakFreeRaffleTicketTitle: "Free raffle ticket",
   streakTierDayOneLabel: "Day 1+",
+  browse: "Browse",
+  decksAndTools: "Decks & Tools",
+  deckBuilder: "Deck Builder",
+  myDecks: "My Decks",
+  metaCards: "Meta Cards",
+  tierList: "Tier List",
 } as const;

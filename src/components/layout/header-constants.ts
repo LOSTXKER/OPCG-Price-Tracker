@@ -10,11 +10,16 @@ import {
 } from "lucide-react";
 import type { Language, Currency } from "@/stores/ui-store";
 
+// Primary hubs (stable IA — mirrors the mobile bottom-nav). Marketplace is a
+// flag-gated card inside Browse, not a top-level hub — see MARKETPLACE_LINK.
 export const NAV_LINKS = [
-  { href: "/" as const, key: "overview" as const },
-  { href: "/sets" as const, key: "sets" as const },
-  { href: "/marketplace" as const, key: "marketplace" as const },
+  { href: "/" as const, key: "market" as const },
+  { href: "/sets" as const, key: "browse" as const },
+  { href: "/decks" as const, key: "decks" as const },
 ];
+
+// Appended to the desktop nav only when marketplaceEnabled (never swaps a hub).
+export const MARKETPLACE_LINK = { href: "/marketplace" as const, key: "marketplace" as const };
 
 export const TOOL_LINKS = [
   { href: "/drop-calculator" as const, key: "dropCalculator" as const, icon: Dices },
