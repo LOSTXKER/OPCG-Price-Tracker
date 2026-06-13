@@ -1,6 +1,7 @@
 "use client"
 
-import type { ReactNode } from "react"
+import { useState, type ReactNode } from "react"
+import { ChevronDown } from "lucide-react"
 
 import { Price } from "@/components/shared/price-inline"
 import { cn } from "@/lib/utils"
@@ -31,6 +32,9 @@ export function PortfolioHero({
 }: PortfolioHeroProps) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
+  // Stat row is collapsed by default on mobile so holdings surface sooner;
+  // always expanded on sm+. (Audit: 80% land to check holdings, not analytics.)
+  const [expanded, setExpanded] = useState(false)
 
   const historyData = history?.map((d) => d.value) ?? []
   const hasCost = totalCostJpy > 0
@@ -101,9 +105,15 @@ export function PortfolioHero({
           )}
         </div>
 
-        {/* Stat row */}
+        {/* Stat row — collapsed on mobile by default, always shown on sm+ */}
         {hasCost && (
-          <div className="mt-5 flex flex-wrap items-stretch gap-x-5 gap-y-3 sm:mt-6 sm:gap-x-7">
+          <>
+          <div
+            className={cn(
+              "mt-5 flex-wrap items-stretch gap-x-5 gap-y-3 sm:mt-6 sm:flex sm:gap-x-7",
+              expanded ? "flex" : "hidden",
+            )}
+          >
             <Stat label={t(lang, "unrealizedPnl")}>
               <span
                 className={cn(
@@ -163,6 +173,16 @@ export function PortfolioHero({
               </>
             )}
           </div>
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className="mt-3 inline-flex items-center gap-1 text-meta transition-colors hover:text-foreground sm:hidden"
+            aria-expanded={expanded}
+          >
+            {t(lang, "viewDetails")}
+            <ChevronDown className={cn("size-3.5 transition-transform", expanded && "rotate-180")} />
+          </button>
+          </>
         )}
       </div>
     </div>
