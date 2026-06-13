@@ -27,8 +27,9 @@
 - เดิม: cron leaderboard-rewards ไม่อยู่ใน vercel.json (M0)
 
 ## R3 แตก client components ยักษ์ (เริ่มแล้ว — user-facing ก่อน)
-- ✅ `compare-client` 634→357 → แตก `_components/card-rail.tsx` (151) + `_components/compare-dossier.tsx` (175) · data hook (useCompareData) มีอยู่แล้ว · verify ครบ
-- ค้าง user-facing: today-card/honey (642) · price-hub (567) · alerts-manager (502) · search-client (497)
+- ✅ `compare-client` 634→357 → แตก `_components/card-rail.tsx` (151) + `_components/compare-dossier.tsx` (175)
+- ✅ `today-card` 642→5 (barrel) → แตก `streak-card.tsx` (325) + `streak-info-popover.tsx` (178) + `today-missions-card.tsx` (144) · importer (missions-tab) ใช้ barrel เดิมต่อได้
+- ค้าง user-facing: price-hub (567) · alerts-manager (502) · search-client (497)
 - ค้าง admin (ใหญ่สุด): snkrdunk-match (973) · cards-browser (792) · yuyutei (766)
 
 ## ▶ NEXT (ทำต่อทันที)
