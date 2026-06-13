@@ -26,7 +26,12 @@
 - yuyutei/snkrdunk: บาง mutation handler ไม่มี try/catch (unhandled reject ถ้า fail) — pre-existing ตั้งแต่ใช้ adminJsonFetch ไม่ใช่ของใหม่ · ใช้ `toastOnError` ของ adminFetch เก็บงานได้ถ้าจะปรับ
 - เดิม: cron leaderboard-rewards ไม่อยู่ใน vercel.json (M0)
 
+## R3 แตก client components ยักษ์ (เริ่มแล้ว — user-facing ก่อน)
+- ✅ `compare-client` 634→357 → แตก `_components/card-rail.tsx` (151) + `_components/compare-dossier.tsx` (175) · data hook (useCompareData) มีอยู่แล้ว · verify ครบ
+- ค้าง user-facing: today-card/honey (642) · price-hub (567) · alerts-manager (502) · search-client (497)
+- ค้าง admin (ใหญ่สุด): snkrdunk-match (973) · cards-browser (792) · yuyutei (766)
+
 ## ▶ NEXT (ทำต่อทันที)
 1. (เบส) เปิด PR + ลบ backup เก่าเมื่อพร้อม
-2. ลบ `admin-client.ts` (dead code) → แตก client components ยักษ์ที่เหลือ
+2. แตก user-facing ตัวถัดไป: today-card (642) / price-hub (567)
 3. รวม empty-state / R3 i18n เป็น batch (152 ไฟล์)
