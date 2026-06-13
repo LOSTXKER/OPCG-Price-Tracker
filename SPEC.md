@@ -36,7 +36,7 @@ Stack: Next.js 16 · React 19 · Prisma 7 + Postgres (Supabase) · Stripe · LIN
 - [ ] ตอน flag ปิด: ทุกหน้า+API marketplace ต้อง 404 (invisible until launch)
 
 ### 5. Subscription / Auth / Admin
-- [ ] Stripe checkout + portal + trial Pro 7 วันไม่ใส่บัตร (cron `expire-trials`) · webhook sync สถานะ
+- [ ] Stripe checkout + portal + trial Pro 14 วันไม่ใส่บัตร (cron `expire-trials`) · webhook sync สถานะ
 - [ ] Auth ผ่าน Supabase · settings 10 หน้า (MFA, addresses, export, privacy ฯลฯ)
 - [ ] `/admin` (login แยก) จัดการ การ์ด/ชุด/blog/config/honey ทุกชิ้น/matching tools (Yuyutei/SNKRDUNK/รูป + AI suggest)
 
@@ -46,7 +46,7 @@ Stack: Next.js 16 · React 19 · Prisma 7 + Postgres (Supabase) · Stripe · LIN
 - [ ] typography ใช้ semantic token · API ใช้ `apiHandler`/`adminApiHandler` + Zod + envelope `{ error }` ตาม AGENTS.md
 - [ ] ห้าม migration ที่ทำลายข้อมูล โดยไม่ผ่านแผนใน doc/ + เบสอนุมัติ
 
-## นอกขอบเขต (ยังไม่ทำ — กัน scope creep · north star อยู่ `doc/detailed-plan.md`)
+## นอกขอบเขต (ยังไม่ทำ — กัน scope creep · north star อยู่ `doc/archive/detailed-plan-2026-04-28.md`)
 - TCG อื่น (Pokemon/Union Arena — schema รองรับแล้วผ่าน `Game` แต่ยังไม่เปิด)
 - แหล่งราคาเพิ่ม: eBay JP / Mercari / Shopee / Cardmarket / TCGPlayer
 - PWA / offline · Escrow เต็มรูป (Stripe Connect) · Cart หลายใบ · Lifetime deal

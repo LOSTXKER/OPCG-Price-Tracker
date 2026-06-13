@@ -37,9 +37,10 @@
 - **R4 data-fetching pages** (orders/saved/seller/admin ~10 หน้า) → ทำตอน redesign แต่ละหน้า
 - **i18n interpolation** (3 ตัวมี `${var}`) · **component กลางๆ 400-580 บรรทัด** · **M0** cron `leaderboard-rewards` ไม่อยู่ใน vercel.json
 
-## 📋 แผนจัดบ้าน docs (REDESIGN.md §8 — ⚠️ รออนุมัติก่อนลบ/ย้าย)
-- docs รก 11 ไฟล์ → เป้า 5 active (REDESIGN/SPEC/PLAN/PROGRESS/AGENTS) + 3 reference + archive
-- `docs/MARKETPLACE_OVERHAUL.md` = dup ของ `doc/` (byte-identical) · `doc/MTOP.pdf` 957KB binary · README เป็น bootstrap template · CLAUDE.md เกือบว่าง
+## ✅ จัดบ้าน docs (REDESIGN §8 — DONE 2026-06-14 ผ่าน workflow)
+- ลบ `docs/` dup + archive `detailed-plan`→`doc/archive/detailed-plan-2026-04-28.md` + `MTOP.pdf`→`doc/archive/` · rewrite 4 reference docs (data-pipeline R2+SNKRDUNK+crons · honey-economy weekly=scaffolding · honey-action runbook · MARKETPLACE BUILT-vs-PENDING) **cross-checked vs code จริง**
+- โครงสุดท้าย: **root = 5 SSOT** (REDESIGN/SPEC/PLAN/PROGRESS/AGENTS) · **doc/ = 4 active reference + archive/** · fix cross-refs (PLAN/SPEC/REDESIGN) + side bug schemas.ts path + SPEC trial 7→14 (code = 14)
+- (เก็บตก) README ยัง bootstrap template · CLAUDE.md เกือบว่าง (`@AGENTS.md`)
 
 ## เครื่องมือ / สภาพแวดล้อม
 - **`gh` login แล้ว** (LOSTXKER) → PR/merge ผ่าน CLI · **ห้าม push master ตรง** ใช้ PR เสมอ

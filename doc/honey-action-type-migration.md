@@ -1,99 +1,69 @@
-# `HoneyActionType` deprecation & migration plan
+# `HoneyActionType` migration runbook
 
-The `HoneyActionType` Prisma enum carries seven deprecated values that
-predate the rebalance v2 economy:
+> อัปเดตล่าสุด: 2026-06-14 · cross-checked vs code
+
+Runbook ย้ายค่า enum เก่า 7 ตัวออกจาก `HoneyActionType` ไปคอลัมน์ free-form `legacyType` เพื่อให้ enum หดเหลือเฉพาะค่าที่ใช้จริง
+
+**SSOT:** [PLAN.md M2](../PLAN.md) — ตอนนี้ freeze ด้วย runtime guard เท่านั้น · Step 1–4 ค้างทั้งก้อน (แตะ DB จริง ต้องอนุมัติก่อนรัน)
+
+## ค่าที่ deprecated (frozen)
+
+7 ค่านี้มีมาก่อน rebalance v2 economy — แถวประวัติยังต้อง validate ผ่าน enum ได้ แต่ห้ามโค้ดใหม่ emit:
 
 ```
-PORTFOLIO_ADD
-GIFT_SEND
-GIFT_RECEIVE
-LUCKY_DRAW
-FIRST_PURCHASE
-SHARE
-AFFILIATE
+PORTFOLIO_ADD  GIFT_SEND  GIFT_RECEIVE  LUCKY_DRAW
+FIRST_PURCHASE  SHARE  AFFILIATE
 ```
 
-Active `HoneyTransaction` rows for these types are read-only history.
-No new code should emit them.
+## สถานะวันนี้ (freeze-only — Step 1–4 ยังไม่ทำ)
 
-## Current state (phase 3.5)
+ทำแล้ว:
 
-- The Prisma enum still carries these values so existing rows continue
-  to validate. The `///` doc-comment block above the values in
-  `prisma/schema.prisma` flags them as deprecated.
-- A runtime guard is wired into `grantHoney` —
-  [`assertNotDeprecatedHoneyActionType`](../src/lib/honey/deprecated.ts)
-  throws if any caller tries to write a deprecated value, even when the
-  call site bypasses the TypeScript enum (e.g. via a string cast).
-- The set of deprecated values is centralized in
-  `src/lib/honey/deprecated.ts` so adding new exclusions is a one-file
-  change.
+- **Enum ยังคงค่าเก่าไว้ครบ** — [`prisma/schema.prisma:441-447`](../prisma/schema.prisma) พร้อม `///` doc-comment เหนือบล็อกที่ mark ว่า DEPRECATED
+- **Runtime guard active** — `assertNotDeprecatedHoneyActionType` ([`src/lib/honey/deprecated.ts`](../src/lib/honey/deprecated.ts)) ถูกเรียกใน `grantHoney` ที่ [`src/lib/honey/index.ts:276`](../src/lib/honey/index.ts) → throw ถ้า caller พยายามเขียนค่า deprecated แม้จะ bypass TypeScript enum ด้วย string cast ก็ตาม
+- **เซ็ตค่า deprecated รวมศูนย์** ที่ `src/lib/honey/deprecated.ts` (`DEPRECATED_HONEY_ACTION_TYPES`) — เพิ่ม/ลด exclusion แก้ไฟล์เดียว
 
-## Future migration (out of phase 3.5 scope)
+ยังไม่ทำ:
 
-The eventual goal is to shrink the enum to its active members and move
-historical labels to a dedicated free-form column so we don't pay the
-ergonomic cost of a long enum forever.
+- คอลัมน์ `legacyType` **ยังไม่มีใน schema** (มีแค่ใน `///` comment) → Step 1–4 ทั้งหมดยังค้าง
 
-### Step 1 — schema change
+## Runbook — Step 1–4 (ทำเป็นชุดเดียว ตอน coordinate ได้)
 
-Add a sibling column on `HoneyTransaction`:
+> ⚠️ ทุก Step แตะ DB จริง — เบสอนุมัติก่อนรัน migration
+
+### Step 1 — เพิ่มคอลัมน์
 
 ```prisma
 model HoneyTransaction {
   // ...existing columns...
-  legacyType String? // historical type label for rows pre-rebalance v2
+  legacyType String? // historical type label สำหรับแถว pre-rebalance v2
 }
 ```
 
-### Step 2 — backfill migration
+### Step 2 — backfill ย้ายค่าเก่า → `legacyType`
 
 ```sql
 UPDATE "HoneyTransaction"
 SET "legacyType" = "type"::text,
-    "type" = 'EXPIRED' -- or another non-positive sentinel
+    "type" = 'EXPIRED' -- sentinel non-positive
 WHERE "type" IN (
-  'PORTFOLIO_ADD',
-  'GIFT_SEND',
-  'GIFT_RECEIVE',
-  'LUCKY_DRAW',
-  'FIRST_PURCHASE',
-  'SHARE',
-  'AFFILIATE'
+  'PORTFOLIO_ADD', 'GIFT_SEND', 'GIFT_RECEIVE', 'LUCKY_DRAW',
+  'FIRST_PURCHASE', 'SHARE', 'AFFILIATE'
 );
 ```
 
-`EXPIRED` is a safe sentinel because it's non-positive and never
-contributes to multipliers; the rows are already historical and the
-amounts should remain unchanged.
+`EXPIRED` ปลอดภัยเพราะ non-positive ไม่เข้า multiplier ใดๆ · แถวเป็นประวัติอยู่แล้ว · `amount` คงเดิม
 
-### Step 3 — drop the deprecated enum members
+### Step 3 — drop enum members เก่า
 
-Once no rows reference the deprecated values, drop them from the enum:
+หลังไม่มีแถวอ้างค่า deprecated แล้ว ค่อย drop ออกจาก enum ใน schema. Postgres ลบค่า enum ตรงๆ ไม่ได้ ต้องทำ raw SQL: `ALTER TYPE ... RENAME TO` + `CREATE TYPE` (ค่าใหม่) + cast คอลัมน์ + `DROP TYPE` เก่า
 
-```prisma
-enum HoneyActionType {
-  CHECKIN
-  // ...active values only...
-  // (deprecated values removed)
-}
-```
+### Step 4 — ปรับ read site ใน `/admin/honey`
 
-This requires `ALTER TYPE ... RENAME TO` + `CREATE TYPE` + cast +
-`DROP TYPE` dance in raw SQL because Postgres doesn't allow direct
-removal of enum values.
+แถวประวัติแสดงผ่าน [`honey-transaction-list.tsx`](../src/app/admin/honey/honey-transaction-list.tsx) → `getTypeInfo(tx.type)` จาก [`honey-type-labels.ts`](../src/app/admin/honey/honey-type-labels.ts) (page.tsx เป็นแค่ตัว fetch/aggregate)
 
-### Step 4 — adjust read sites
+หมายเหตุ: ค่า deprecated **ไม่ได้อยู่ใน `HONEY_TYPE_MAP` อยู่แล้ว** — ตอนนี้ตกลง FALLBACK "อื่นๆ". หลัง backfill `tx.type` จะกลายเป็น sentinel ฉะนั้นต้องให้ list fallback ไปอ่าน `tx.legacyType` มาโชว์ label จริงแทน
 
-Admin tooling that displays transaction history will need to fall back
-to `legacyType` when the modern `type` is the sentinel. The component
-in `src/app/admin/honey/page.tsx` is the only consumer of the enum
-that surfaces historical rows in the UI today.
+## ทำไมไม่ทำทั้งหมดตอนนี้
 
-## Why not do all of this now?
-
-Phase 3.5 explicitly defers the migration; the freezing-only stance
-buys us safety against accidental new writes while leaving the heavy
-schema work for a window when we can coordinate the admin UI change
-with the migration. Treat the runtime guard above as the locking
-mechanism that makes that future window safe to schedule.
+M2 จงใจ defer การ migrate — ท่า freeze-only ซื้อความปลอดภัยจาก accidental writes ใหม่ โดยยังไม่ต้องลงงาน schema หนักจนกว่าจะ coordinate การแก้ admin UI กับ migration พร้อมกันได้ ถือ runtime guard ข้างบนเป็น locking mechanism ที่ทำให้ window นั้น schedule ได้ปลอดภัย

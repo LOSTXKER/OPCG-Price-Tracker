@@ -322,13 +322,14 @@ absorb `MARKETPLACE_OVERHAUL.md`
 | `PROGRESS.md` | session handoff | NEXT ชี้เข้า phase ใน REDESIGN.md |
 
 **archive (ย้าย `doc/archive/` ไม่ลบ):**
-- `docs/MARKETPLACE_OVERHAUL.md` — **ลบ** (dup byte-identical) · `doc/` copy → archive (เนื้อหาเข้า REDESIGN P3 + PLAN M3)
-- `doc/honey-action-type-migration.md` → archive (track เป็น PLAN M2 แล้ว)
-- `doc/MTOP.pdf` (957KB binary, ไม่ถูกอ้าง) → archive หรือออกจาก git
-- `README.md` — แทน bootstrap template ด้วย runbook 1 หน้า
+- ✅ `docs/MARKETPLACE_OVERHAUL.md` — **ลบแล้ว** (stale dup) + ลบโฟลเดอร์ `docs/` · `doc/` copy = **keep-updated** (M3 = track ถัดไป จึงคงเป็น working ref, rewritten 2026-06-14)
+- `doc/honey-action-type-migration.md` = **keep-updated** (rewritten เป็น runbook · track PLAN M2 · archive หลัง M2 ship)
+- ✅ `doc/MTOP.pdf` → **archived** `doc/archive/MTOP.pdf` (957KB binary SRS export)
+- `README.md` — แทน bootstrap template ด้วย runbook 1 หน้า (ยังไม่ทำ)
 
 **คง reference (ไม่แตะ, แค่ cite):**
-- `doc/detailed-plan.md` (134KB north-star) · `doc/honey-economy-rebalance.md` · `doc/data-pipeline.md`
+- ✅ rewritten + cross-checked vs code (2026-06-14): `doc/data-pipeline.md` · `doc/honey-economy-rebalance.md` · `doc/honey-action-type-migration.md` · `doc/MARKETPLACE_OVERHAUL.md`
+- archived: `doc/archive/detailed-plan-2026-04-28.md` (134KB north-star snapshot) · `doc/archive/MTOP.pdf`
 
 ---
 
