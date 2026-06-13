@@ -34,7 +34,9 @@
 - ✅ `search-client` 497→388 → แตก data/state logic เป็น hook `use-search.ts` (205) ตาม pattern useCompareData · เหลือ pure presentation
 - **user-facing giants เสร็จครบ** (5 ตัว) ✓
 - ✅ `snkrdunk-match` 973→446 (ใหญ่สุดในโปรเจกต์) → แตก `_components/{types,match-ui,add-card-dialog,mapping-row}` · main = logic + table shell
-- ค้าง admin: cards-browser (792) · yuyutei (766) · rank-tiers (634) · drop-rates (607)
+- ✅ `cards-browser` 792→435 → แตก `_components/{types,card-cells,card-edit-form,card-mobile-row,card-grid}` · ลบ unused import ด้วย (warnings 81→80)
+- ค้าง admin: yuyutei (766) · rank-tiers (634) · drop-rates (607)
+- **NOTE: lint baseline = 80 warnings แล้ว (เดิม 81 — ลบ ArrowUpDown ที่ไม่ใช้)**
 
 ## ▶ NEXT (ทำต่อทันที)
 1. (เบส) เปิด PR + ลบ backup เก่าเมื่อพร้อม
