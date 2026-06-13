@@ -19,6 +19,14 @@ model Game {
   logoUrl   String?
   isActive  Boolean   @default(true)
   sets      CardSet[]
+  // Game-scoping back-relations (P4 multi-game). All nullable on the owning
+  // side + onDelete: SetNull, so deleting a Game never cascades user data.
+  cards            Card[]
+  portfolios       Portfolio[]
+  decks            Deck[]
+  listings         Listing[]
+  yuyuteiMappings  YuyuteiMapping[]
+  snkrdunkMappings SnkrdunkMapping[]
   createdAt DateTime  @default(now())
 }
 
@@ -66,6 +74,10 @@ model Card {
   yuyuteiUrl      String?
   setId           Int
   set             CardSet          @relation(fields: [setId], references: [id], onDelete: Restrict)
+  // Denormalized game (P4). Nullable now; backfilled from set.game + made
+  // NOT NULL + @@unique([gameId, cardCode]) once Pokémon data lands (P4.3).
+  gameId          Int?
+  game            Game?            @relation(fields: [gameId], references: [id], onDelete: SetNull)
   nameJp          String
   nameEn          String?
   nameTh          String?
@@ -110,6 +122,7 @@ model Card {
   updatedAt           DateTime         @updatedAt
 
   @@index([setId])
+  @@index([gameId])
   @@index([baseCode])
   @@index([yuyuteiId])
   @@index([rarity])
@@ -753,6 +766,8 @@ model Portfolio {
   user         User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   name         String                 @default("Default")
   isPublic     Boolean                @default(true)
+  gameId       Int?
+  game         Game?                  @relation(fields: [gameId], references: [id], onDelete: SetNull)
   items        PortfolioItem[]
   snapshots    PortfolioSnapshot[]
   transactions PortfolioTransaction[]
@@ -761,6 +776,7 @@ model Portfolio {
 
   @@index([userId])
   @@index([userId, isPublic])
+  @@index([userId, gameId])
 }
 
 model PortfolioSnapshot {
@@ -881,6 +897,8 @@ model Listing {
   user         User          @relation(fields: [userId], references: [id], onDelete: Restrict)
   cardId       Int
   card         Card          @relation(fields: [cardId], references: [id], onDelete: Restrict)
+  gameId       Int?
+  game         Game?         @relation(fields: [gameId], references: [id], onDelete: SetNull)
   priceJpy     Int
   priceThb     Float?
   condition    CardCondition @default(NM)
@@ -905,6 +923,7 @@ model Listing {
   @@index([userId, status])
   @@index([status, createdAt(sort: Desc)])
   @@index([isFeatured, status])
+  @@index([gameId, status])
 }
 
 model SavedListing {
@@ -1107,12 +1126,15 @@ model Deck {
   name      String
   leaderId  Int?
   leader    Card?      @relation("DeckLeader", fields: [leaderId], references: [id], onDelete: SetNull)
+  gameId    Int?
+  game      Game?      @relation(fields: [gameId], references: [id], onDelete: SetNull)
   cards     DeckCard[]
   isPublic  Boolean    @default(false)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
   @@index([userId])
+  @@index([userId, gameId])
 }
 
 model DeckCard {
@@ -1142,6 +1164,8 @@ model YuyuteiMapping {
   priceJpy      Int
   matchedCardId Int?
   matchedCard   Card?     @relation(fields: [matchedCardId], references: [id], onDelete: SetNull)
+  gameId        Int?
+  game          Game?     @relation(fields: [gameId], references: [id], onDelete: SetNull)
   matchMethod   String?
   geminiScore   Float?
   status        String    @default("pending")
@@ -1155,6 +1179,7 @@ model YuyuteiMapping {
   @@index([status])
   @@index([setCode])
   @@index([matchedCardId])
+  @@index([gameId])
 }
 
 // ============================================================
@@ -1172,6 +1197,8 @@ model SnkrdunkMapping {
   lastSoldPsa10Usd Float?
   matchedCardId   Int?
   matchedCard     Card?     @relation(fields: [matchedCardId], references: [id], onDelete: SetNull)
+  gameId          Int?
+  game            Game?     @relation(fields: [gameId], references: [id], onDelete: SetNull)
   matchMethod     String?
   status          String    @default("pending")
   actionBy        String?
@@ -1183,6 +1210,7 @@ model SnkrdunkMapping {
   @@index([status])
   @@index([productNumber])
   @@index([matchedCardId])
+  @@index([gameId])
 }
 
 // ============================================================

@@ -105,13 +105,11 @@
 - [x] `pokemon.ts` stub (comingSoon) + register ใน GAME_CONFIGS · `getActiveGameConfigs()` · GameConfig +flags (shortName/comingSoon/supports*/deckRules)
 - [x] `GameSwitcher` pill ใน header (มือถือ+desktop) — OPCG active, Pokémon disabled "เร็วๆ นี้" · ใช้ `currentGame` (persist) · i18n chooseGame
 
-**P4.2 — schema migration** ⬜ ⚠️ additive (branch+PR, ห้ามแตะ DB จริงโดยไม่ยืนยัน)
-- [ ] `Card.gameId` denorm (NOT NULL, backfill จาก set.game) + `@@unique([gameId, cardCode])` (drop cardCode @unique)
-- [ ] `CardSet.gameId` → NOT NULL (backfill orphan → OPCG)
-- [ ] `gameId` บน Portfolio / Deck / Listing (+ index `[userId, gameId]` / `[gameId, status]`)
-- [ ] `gameId` บน YuyuteiMapping / SnkrdunkMapping
-- [ ] ขยาย `CardType` enum (+ POKEMON/TRAINER/ENERGY/STADIUM/SUPPORTER/TOOL)
-- [ ] `prisma generate` + build · backfill SQL · **ยืนยันก่อน apply Supabase จริง**
+**P4.2 — schema migration (additive, prod-safe)** ✅ code verified · 🔵 deploy (เบสเลือก C: ผม run migrate deploy)
+- [x] `gameId Int?` (nullable) + FK SetNull + index บน **Card / Portfolio / Deck / Listing / YuyuteiMapping / SnkrdunkMapping** · Game back-relations
+- [x] migration `20260614000000_add_game_scoping` (ADD COLUMN + INDEX + FK ล้วน, transaction-safe) · `prisma generate` + build ✓
+- [~] **defer ไป P4.3** (ลด prod risk): `CardType` enum ขยาย (ALTER TYPE รันใน tx ไม่ได้) · backfill gameId · NOT NULL + `@@unique([gameId,cardCode])` — ทำหลัง Pokémon data
+- [ ] **deploy:** `prisma migrate status` (backup-check) → `prisma migrate deploy` เข้า Supabase
 
 **P4.3+ (build later)** — game-scoped queries server-side · `/[game]/` route group + redirect · Pokémon sets/rarities/pull-rate · scraper stack ใหม่
 
