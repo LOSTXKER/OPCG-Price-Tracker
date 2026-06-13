@@ -17,7 +17,7 @@ export function RelatedPages({
 }) {
   return (
     <section className="mt-12 space-y-4">
-      <h2 className="text-xl font-semibold">{title}</h2>
+      <h2 className="text-h2">{title}</h2>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => (
           <Link
