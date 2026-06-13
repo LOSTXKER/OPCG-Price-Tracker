@@ -2,11 +2,17 @@
 > **เขียนทับทุกครั้ง ไม่สะสม log** (รายละเอียดอยู่ใน git history แล้ว) · hook โหลดไฟล์นี้เข้าทุก session
 > session ใหม่: อ่านอันนี้ก่อนเริ่ม แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-13 — **เข้า Design phase แล้ว · เขียนแผน [REDESIGN.md](REDESIGN.md) เสร็จ · รอเบสเคาะ §6 ก่อนลงมือ P0**
+อัปเดตล่าสุด: 2026-06-14 — **Design phase: P0a (nav foundation) เสร็จ + PR #7 เปิด · เบสเคาะ URL strategy = B**
 
-## ✅ master พร้อม (verified)
-- branch: `master` @ `0b24fb2` (สะอาด, ยังไม่มี commit ของ design phase) · tsc clean · lint **0 errors / 80 warnings** · test 36/36 · build ✓ (static 145/145)
-- refactor phase merge เข้า master หมดแล้ว (PR #3/#4/#5) · ไม่มี branch ค้าง
+## ▶ สถานะตอนนี้
+- branch ทำงาน: `redesign/p0-nav-foundation` @ commit `d5e7276` · **PR #7 รอ review/merge** → https://github.com/LOSTXKER/OPCG-Price-Tracker/pull/7
+- master @ `0b24fb2` (ยังไม่ merge P0a) · เบสเคาะแล้ว: **URL strategy = B (`/[game]/` prefix)**, เริ่มจาก P0
+
+## ✅ P0a — Nav IA foundation (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓ /decks static)
+- bottom-nav **freeze 5 tab นิ่ง** (Market·Browse·Decks·Portfolio·More) เลิกสลับตาม marketplaceEnabled · Search ย้ายไป header · badge unread → Portfolio
+- `/decks` hub ใหม่ (deck/drop calc + compare active · meta/tier/builder "เร็วๆ นี้" · My Decks placeholder)
+- header desktop align (Market/Browse/Decks, ตัด Tools dropdown, marketplace append) · menu-sheet Tools → Decks hub
+- ui-store `currentGame` (persist) · i18n +6 keys ×3 ภาษา (parity 1486)
 
 ## 🎨 Design phase — แผนพร้อมแล้ว (อ่าน REDESIGN.md เป็นหลัก)
 **[REDESIGN.md](REDESIGN.md) = SSOT ของ design phase** (จาก audit 7 ด้าน + synthesize 4 ด้าน ผ่าน workflow)
@@ -15,9 +21,9 @@
 - **IA ใหม่:** bottom-nav 4+More นิ่ง (Market·Browse·Decks·Portfolio·More) เลิกสลับ tab ตาม flag · GameSwitcher pill · Decks hub · AdSlot named placements
 - **roadmap:** P0 foundation (chrome/tokens/primitives) → P1 core pages (card-detail แย่สุด) → P2 portfolio/tools → P3 marketplace → P4 Pokémon → P5 meta/tier/deck
 
-## ⚠️ รอเบสเคาะ (REDESIGN.md §6) ก่อนลงมือ
-1. **URL strategy multi-game** — (A) flat+state vs (B) `/[game]/` prefix · **ผมแนะนำ B** (เบสอยากรองรับอนาคต + redesign แตะทุกหน้าอยู่แล้ว = จังหวะถูกสุด)
-2. Portfolio per-game vs mixed · 3. CardType enum ขยาย vs string · 4. เริ่ม phase ไหน (แนะนำ P0)
+## ⚠️ decision ที่ยังเหลือ (REDESIGN.md §6) — เคาะตอนถึง P4
+- ✅ URL strategy = **B (`/[game]/` prefix)** · ✅ เริ่ม P0
+- ยังไม่เคาะ (ไม่บล็อก P0): Portfolio per-game vs mixed · CardType enum ขยาย vs string → เคาะตอน P4 (multi-game)
 
 ## ⬜ งานค้างเดิม (ไม่บล็อก design)
 - **R4 data-fetching pages** (orders/saved/seller/admin ~10 หน้า) → ทำตอน redesign แต่ละหน้า
@@ -34,6 +40,7 @@
 - workflow audit output เต็ม: `/tmp/redesign_synth/` (audit.md + ia/design-system/future-arch/roadmap-docs.md)
 
 ## ▶ NEXT
-1. **เบสเคาะ REDESIGN.md §6** (URL strategy + phase เริ่มต้น)
-2. ผมแตก task P0 ลง PLAN.md → ลงมือ (branch + PR, ห้าม push master ตรง)
-3. (เมื่ออนุมัติ) จัดบ้าน docs ตาม §8
+1. **merge PR #7** (P0a) — เบส review/merge หรือสั่งผม `gh pr merge`
+2. **P0b** — `<AdSlot>` (tier+consent gated, house-ad fallback, exclude chromeless) + `ConsentBanner` + consent state ใน ui-store + billing key `ad-free` + migrate HomeAdCard
+3. **P0c** — command palette (nav shortcuts) · footer มือถือ · design-token pass (`.text-price` + `--game-accent`)
+4. (เมื่ออนุมัติ) จัดบ้าน docs ตาม REDESIGN.md §8 · จบ P0 → เข้า P1 (card-detail)

@@ -40,13 +40,13 @@
 > เบสเคาะ 2026-06-14 · roadmap เต็มใน REDESIGN.md §7 · branch `redesign/p0-*` (ห้าม push master ตรง)
 
 ### P0 — Foundation (chrome / nav / tokens / primitives) · บล็อกทุก phase
-**P0a — Nav IA foundation** (branch `redesign/p0-nav-foundation`)
-- [ ] ui-store: เพิ่ม `currentGame` (+ partialize) — game-context พื้นฐาน (UI switcher จริงไว้ P4)
-- [ ] i18n: keys ใหม่ ×3 ภาษา parity (browse/decks/more/decksAndTools/deckBuilder/myDecks/metaCards/tierList)
-- [ ] bottom-nav: **freeze 5 tab** (Market·Browse·Decks·Portfolio·More) เลิก ternary marketplaceEnabled · ย้าย Search ออก (อยู่ header แล้ว) · badge → Portfolio
-- [ ] `/decks` hub page — tool grid (deck/drop calc, compare) + meta/tier disabled "coming soon" + My Decks placeholder
-- [ ] header desktop: NAV_LINKS → Market/Browse/Decks · ตัด Tools dropdown (ย้ายเข้า hub) · marketplace append เมื่อ flag เปิด
-- [ ] mobile-menu-sheet: Tools section → ลิงก์เดียว "Decks & Tools" → /decks
+**P0a — Nav IA foundation** ✅ verified, PR #7 เปิดแล้ว (branch `redesign/p0-nav-foundation`)
+- [x] ui-store: เพิ่ม `currentGame` (+ partialize) — game-context พื้นฐาน (UI switcher จริงไว้ P4)
+- [x] i18n: +6 keys ×3 ภาษา parity (browse/decksAndTools/deckBuilder/myDecks/metaCards/tierList · more/decks/market มีอยู่แล้ว)
+- [x] bottom-nav: **freeze 5 tab** (Market·Browse·Decks·Portfolio·More) เลิก ternary marketplaceEnabled · ย้าย Search ออก (อยู่ header แล้ว) · badge → Portfolio
+- [x] `/decks` hub page — tool grid (deck/drop calc, compare) + meta/tier/builder disabled "coming soon" + My Decks placeholder
+- [x] header desktop: NAV_LINKS → Market/Browse/Decks · ตัด Tools dropdown (ย้ายเข้า hub) · marketplace append เมื่อ flag เปิด
+- [x] mobile-menu-sheet: Tools section → ลิงก์เดียว "Decks & Tools" → /decks
 
 **P0b — AdSlot + Consent** (ถัดไป)
 - [ ] `<AdSlot placement>` tier+consent gated + house-ad fallback + exclude chromeless
