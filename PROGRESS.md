@@ -2,11 +2,11 @@
 > **เขียนทับทุกครั้ง ไม่สะสม log** (รายละเอียดอยู่ใน git history แล้ว) · hook โหลดไฟล์นี้เข้าทุก session
 > session ใหม่: อ่านอันนี้ก่อนเริ่ม แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-14 — **P1.1 merged (#10) · P1.2 card-detail sticky bar เสร็จ verified · URL strategy = B**
+อัปเดตล่าสุด: 2026-06-14 — **card-detail mobile ครบ (P1.1#10/P1.2#11 merged) · P1.3 ListRow primitive เสร็จ verified · URL strategy = B**
 
 ## ▶ สถานะตอนนี้
-- merged: **P0 (#7/#8/#9) + P1.1 card-detail mobile (#10)** · master @ `64d5f71`
-- branch ทำงาน: `redesign/p1-card-detail-2` — P1.2 sticky bar verified, กำลังจะเปิด PR
+- merged: **P0 (#7/#8/#9) + P1.1 (#10) + P1.2 (#11)** · master @ `28c95f0`
+- branch ทำงาน: `redesign/p1-listrow` — P1.3 ListRow primitive verified, กำลังจะเปิด PR
 - เบสเคาะ: **URL strategy = B (`/[game]/` prefix)** · roadmap P0→P5 ใน REDESIGN.md
 
 ## ✅ P0a — Nav IA foundation (merged PR #7)
@@ -54,7 +54,11 @@
 - `CardDetailStickyBar` มือถือ: ราคา + Add-to-Portfolio ลอยเหนือ bottom-nav เสมอ (desktop ใช้ inline)
 - **defer มีเหตุผล**: chart-collapse (quick-view อยู่บนแล้ว + Recharts collapsed เสี่ยง) · `.text-price` adoption (PriceDisplay มี size system, force = regress)
 
+## ✅ P1.3 — ListRow primitive (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓)
+- `ui/list-row.tsx` (min-h-14, focus ring, leading/title/subtitle/trailing/chevron) · adopt ใน CardListRow → ใช้ทั่ว cards/sets/trending
+- MobileAssetCard/OrderCard คง bespoke (multi-section card จริง ไม่ใช่ row)
+
 ## ▶ NEXT
-1. **merge PR P1.2** (sticky bar) → card-detail ถือว่าครบ mobile
-2. **P1 หน้าอื่น**: home / cards / sets — `min-h-14` rows · AdSlot `browse-in-feed` · ยืน table→list `<sm` · (option) ListRow primitive รวม 3 ตัวซ้ำ
+1. **merge PR P1.3** (ListRow)
+2. **P1 หน้าอื่น**: home / cards / sets — AdSlot `browse-in-feed` · ยืน table→list `<sm` · ใช้ ListRow กับ list ที่ยัง hand-roll · `min-h-14` tap targets
 3. (เมื่ออนุมัติ) จัดบ้าน docs ตาม REDESIGN.md §8
