@@ -16,7 +16,8 @@ export type TierFeatureKey =
   | "savedFilters"
   | "bulkPriceLookup"
   | "autoPricing"
-  | "listingBoost";
+  | "listingBoost"
+  | "adFree";
 
 export type TierFeatureDef = {
   /** Minimum tier required to use the feature */
@@ -179,6 +180,16 @@ export const TIER_FEATURES: Record<TierFeatureKey, TierFeatureDef> = {
       "featAutoPricing",
       "featMarketplaceFee",
       "featBulkPriceLookup",
+    ],
+  },
+  adFree: {
+    requiredTier: "PRO",
+    titleKey: "featAdFree",
+    benefitKeys: [
+      "featAdFree",
+      "featPriceHistory",
+      "featPriceAlerts",
+      "featCsvExport",
     ],
   },
 };

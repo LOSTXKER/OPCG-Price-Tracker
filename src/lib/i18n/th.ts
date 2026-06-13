@@ -1634,4 +1634,9 @@ export const th = {
   myDecks: "เด็คของฉัน",
   metaCards: "การ์ดเมต้า",
   tierList: "ทีเออร์ลิสต์",
+  featAdFree: "ไม่มีโฆษณา",
+  adUpgradeTitle: "เบื่อโฆษณา? อัปเกรดเป็น Pro",
+  consentMessage: "เราใช้คุกกี้เพื่อแสดงโฆษณาที่เกี่ยวข้องกับคุณ",
+  consentAccept: "ยอมรับ",
+  consentDecline: "ปฏิเสธ",
 } as const;

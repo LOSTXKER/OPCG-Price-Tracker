@@ -1661,4 +1661,9 @@ export const en = {
   myDecks: "My Decks",
   metaCards: "Meta Cards",
   tierList: "Tier List",
+  featAdFree: "Ad-free browsing",
+  adUpgradeTitle: "Tired of ads? Go Pro",
+  consentMessage: "We use cookies to show you relevant ads.",
+  consentAccept: "Accept",
+  consentDecline: "Decline",
 } as const;

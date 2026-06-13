@@ -1634,4 +1634,9 @@ export const jp = {
   myDecks: "マイデッキ",
   metaCards: "メタカード",
   tierList: "ティアリスト",
+  featAdFree: "広告なし",
+  adUpgradeTitle: "広告が気になる？Proへ",
+  consentMessage: "関連する広告を表示するためにCookieを使用します。",
+  consentAccept: "同意する",
+  consentDecline: "拒否",
 } as const;
