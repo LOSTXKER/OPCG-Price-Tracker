@@ -128,7 +128,7 @@ export function CardPriceHub({
         </div>
       )}
 
-      <div className="grid grid-cols-1 px-5 py-4 sm:grid-cols-2 sm:gap-px">
+      <div className="grid grid-cols-1 px-5 py-4 sm:grid-cols-2 sm:gap-6">
         <div className="pb-4 sm:pb-0">
           <p className="inline-flex items-center gap-1 text-meta">
             {t(lang, "marketPrice")}
@@ -194,7 +194,7 @@ export function CardPriceHub({
           </div>
         </div>
 
-        <div className="border-t border-border/30 pt-4 sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0">
+        <div className="border-t border-border/30 pt-4 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0">
           <p className="inline-flex items-center gap-1 text-meta">
             {t(lang, "lastSold")}
             <Tooltip>

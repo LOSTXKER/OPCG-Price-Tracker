@@ -129,7 +129,7 @@ export function RegisterClient() {
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-center px-4 pb-12 sm:px-8">
-          <div className="w-full max-w-sm space-y-8">
+          <div className="w-full max-w-sm space-y-6">
             {/* Mobile logo */}
             <div className="text-center lg:hidden">
               <Link href="/"><Logo size="lg" /></Link>
@@ -137,7 +137,7 @@ export function RegisterClient() {
 
             <div className="space-y-2 text-center">
               <h1 className="text-h1">{t(lang, "register")}</h1>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-body-sm text-muted-foreground">
                 {t(lang, "registerSubtitle")}
               </p>
             </div>
@@ -178,8 +178,8 @@ export function RegisterClient() {
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-border" />
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-3 text-muted-foreground">{t(lang, "orUseEmail")}</span>
+              <div className="relative flex justify-center">
+                <span className="bg-background px-3 text-eyebrow">{t(lang, "orUseEmail")}</span>
               </div>
             </div>
 

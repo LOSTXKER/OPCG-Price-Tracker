@@ -149,7 +149,7 @@ function MobileTabBar({
             onClick={() => onTabChange(item.key)}
             title={t(lang, item.labelKey)}
             className={cn(
-              "flex shrink-0 items-center gap-2 rounded-md px-4 py-3 text-xs font-medium transition-all",
+              "flex shrink-0 items-center gap-2 rounded-md px-3 py-3 text-xs font-medium transition-all sm:px-4",
               active
                 ? "bg-background text-foreground shadow-sm"
                 : "text-muted-foreground hover:bg-background/50 hover:text-foreground",

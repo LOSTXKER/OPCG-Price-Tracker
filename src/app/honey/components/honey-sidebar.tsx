@@ -230,7 +230,11 @@ function HoneyStatCard({
           </p>
         </div>
 
-        {detail && <div className="mt-auto">{detail}</div>}
+        {/* Detail (lifetime earned / ticket usage / streak reward / rank
+            progress) collapses below sm so the 2×2 status grid stays shallow on
+            mobile and tabs sit closer to the fold. The how-to guide remains
+            reachable via the card popover; full detail returns at sm+. */}
+        {detail && <div className="mt-auto hidden sm:block">{detail}</div>}
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner side="bottom" sideOffset={6} align="center" className="z-50">
@@ -479,6 +483,24 @@ export function HoneyStatusBar(props: StatusProps) {
           guideContent={<RankGuideContent lang={lang} level={level} lifetimeEarned={lifetimeEarned} />}
         />
       </div>
+
+      {/* Mobile-only rank progress. The stat cards drop their detail below sm,
+          which would otherwise hide the single most motivating signal — how
+          close the user is to the next rank and the honey bonus they unlock.
+          Surface a compact bar here (sm:hidden) so it survives the declutter. */}
+      {nextThreshold !== null && (
+        <div className="sm:hidden">
+          <RankProgress
+            lang={lang}
+            lifetimeEarned={lifetimeEarned}
+            currentMin={currentMin}
+            nextThreshold={nextThreshold}
+            nextLabel={nextLabel}
+            nextBonus={nextBonus}
+            accent={accent}
+          />
+        </div>
+      )}
     </div>
   );
 }
