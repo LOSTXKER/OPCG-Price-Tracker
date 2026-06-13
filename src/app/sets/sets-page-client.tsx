@@ -9,6 +9,8 @@ import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Price } from "@/components/shared/price-inline";
+import { ListRow } from "@/components/ui/list-row";
+import { AdSlot } from "@/components/ads/ad-slot";
 import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
 
@@ -124,47 +126,47 @@ export function SetsListClient({
               const thumb = s.boxImageUrl ?? s.topCard?.imageUrl;
               return (
                 <li key={s.id}>
-                  <Link
+                  <ListRow
                     href={`/sets/${s.code}`}
-                    className="group flex items-center gap-4 py-3 transition-colors hover:bg-muted/20"
-                  >
-                    <span className="w-6 shrink-0 text-right font-mono text-sm tabular-nums text-muted-foreground">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    {thumb ? (
-                      <div className="relative size-9 shrink-0 overflow-hidden rounded bg-muted/30">
-                        <Image
-                          src={thumb}
-                          alt=""
-                          fill
-                          className="object-contain"
-                          sizes="36px"
-                        />
+                    className="px-0"
+                    leading={
+                      <div className="flex items-center gap-3">
+                        <span className="w-6 text-right font-mono text-sm tabular-nums text-muted-foreground">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        {thumb ? (
+                          <div className="relative size-9 overflow-hidden rounded bg-muted/30">
+                            <Image src={thumb} alt="" fill className="object-contain" sizes="36px" />
+                          </div>
+                        ) : (
+                          <div className="size-9 rounded bg-muted/30" />
+                        )}
                       </div>
-                    ) : (
-                      <div className="size-9 shrink-0 rounded bg-muted/30" />
-                    )}
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-medium transition-colors group-hover:text-foreground">
-                        {s.nameEn ?? s.name}
-                      </div>
-                      <div className="text-meta font-mono">
-                        {s.code.toUpperCase()}
-                      </div>
-                    </div>
-                    <span className="hidden shrink-0 text-meta tabular-nums sm:inline">
-                      {s.productCardCount} {t(lang, "cardsCount")}
-                    </span>
-                    <span className="w-28 shrink-0 text-right font-price text-sm font-semibold tabular-nums">
-                      <Price jpy={s.totalValue} />
-                    </span>
-                  </Link>
+                    }
+                    title={s.nameEn ?? s.name}
+                    subtitle={
+                      <>
+                        <span className="font-mono">{s.code.toUpperCase()}</span>
+                        <span className="tabular-nums">
+                          {s.productCardCount} {t(lang, "cardsCount")}
+                        </span>
+                      </>
+                    }
+                    trailing={
+                      <span className="font-price text-sm font-semibold tabular-nums">
+                        <Price jpy={s.totalValue} />
+                      </span>
+                    }
+                  />
                 </li>
               );
             })}
           </ol>
         </section>
       )}
+
+      {/* In-feed ad (FREE users only; collapses otherwise) */}
+      <AdSlot placement="browse-in-feed" className="aspect-[6/1] sm:aspect-[12/1]" />
 
       {/* Sets grouped by type */}
       {filtered.length === 0 ? (
