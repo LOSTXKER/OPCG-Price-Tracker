@@ -36,10 +36,12 @@
 - ✅ `snkrdunk-match` 973→446 (ใหญ่สุดในโปรเจกต์) → แตก `_components/{types,match-ui,add-card-dialog,mapping-row}` · main = logic + table shell
 - ✅ `cards-browser` 792→435 → แตก `_components/{types,card-cells,card-edit-form,card-mobile-row,card-grid}` · ลบ unused import ด้วย (warnings 81→80)
 - ✅ `yuyutei-match` 766→578 → แตก AI-suggest logic เป็น hook `use-yuyutei-ai.ts` (194) + `yuyutei-skeleton-rows.tsx` (45) · (row/ai-panel/bulk-bar แตกอยู่ก่อนแล้ว) · ซ่อม setState-in-effect ที่ refactor เผยออกมา (setTimeout 0)
-- **admin top-3 giants เสร็จ** ✓ · ค้าง admin เล็กลง: rank-tiers (634) · drop-rates (607)
-- **NOTE: lint baseline = 80 warnings แล้ว (เดิม 81 — ลบ ArrowUpDown ที่ไม่ใช้)**
+- ✅ `rank-tiers` 634→273 → แตก `_components/{tier-badge,tier-row,rank-preview}`
+- ✅ `drop-rates` 607→171 → แตก `_components/{types,use-drop-rates-editor (hook),set-row}` (editor เป็น prop)
+- **admin giants เสร็จครบ 5 ตัว** ✓ — ไม่มี client component >580 บรรทัดเหลือแล้ว
+- **NOTE: lint baseline = 80 warnings (เดิม 81 — ลบ ArrowUpDown ที่ไม่ใช้)**
 
 ## ▶ NEXT (ทำต่อทันที)
 1. (เบส) เปิด PR + ลบ backup เก่าเมื่อพร้อม
-2. แตก admin giants: snkrdunk-match (973) / cards-browser (792) / yuyutei (766) — ใหญ่สุดในโปรเจกต์
-3. รวม empty-state / R3 i18n เป็น batch (152 ไฟล์)
+2. R3 i18n batch (152 ไฟล์) — แทน hardcoded TH/JP/EN ด้วย t(lang,…) / i18n keys
+3. (option) ไล่แตก component กลางๆ ที่เหลือ (400-580 บรรทัด) ถ้าต้องการ

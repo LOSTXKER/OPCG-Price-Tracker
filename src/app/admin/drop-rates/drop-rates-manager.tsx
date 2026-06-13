@@ -1,19 +1,8 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
-import {
-  ChevronDown,
-  Save,
-  Loader2,
-  Check,
-  BarChart3,
-  RotateCcw,
-  AlertCircle,
-  CheckCircle2,
-} from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useState, useMemo } from "react";
+import { BarChart3 } from "lucide-react";
+
 import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import {
@@ -22,29 +11,11 @@ import {
 } from "@/components/admin/admin-toolbar";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { adminFetch } from "@/lib/admin/admin-fetch";
+import type { SetData } from "./_components/types";
+import { useDropRatesEditor } from "./_components/use-drop-rates-editor";
+import { SetRow } from "./_components/set-row";
 
-interface DropRate {
-  id: number;
-  rarity: string;
-  avgPerBox: number | null;
-  ratePerPack: number | null;
-}
-
-interface SetData {
-  id: number;
-  code: string;
-  name: string;
-  nameEn: string | null;
-  type: string;
-  packsPerBox: number | null;
-  cardsPerPack: number | null;
-  dropRates: DropRate[];
-}
-
-type RateEdits = Record<string, { avgPerBox: string; ratePerPack: string }>;
 type FilterMode = "all" | "complete" | "incomplete";
 
 function isSetComplete(set: SetData): boolean {
@@ -63,13 +34,9 @@ export function DropRatesManager({
 }) {
   const sets = initialSets;
   const [expandedCode, setExpandedCode] = useState<string | null>(null);
-  const [editRates, setEditRates] = useState<RateEdits>({});
-  const [originalRates, setOriginalRates] = useState<RateEdits>({});
-  const [saving, setSaving] = useState<string | null>(null);
-  const [saved, setSaved] = useState<Set<string>>(new Set());
-  const [savingAll, setSavingAll] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterMode, setFilterMode] = useState<FilterMode>("all");
+  const editor = useDropRatesEditor();
 
   const filteredSets = useMemo(() => {
     let result = sets;
@@ -100,136 +67,6 @@ export function DropRatesManager({
 
   function toggleExpand(code: string) {
     setExpandedCode((prev) => (prev === code ? null : code));
-  }
-
-  function initEdit(set: SetData) {
-    const rates: RateEdits = {};
-    for (const dr of set.dropRates) {
-      rates[dr.rarity] = {
-        avgPerBox: dr.avgPerBox?.toString() ?? "",
-        ratePerPack: dr.ratePerPack?.toString() ?? "",
-      };
-    }
-    setEditRates(rates);
-    setOriginalRates(rates);
-    setSaved(new Set());
-  }
-
-  const isDirty = useCallback(
-    (rarity: string) => {
-      const edit = editRates[rarity];
-      const orig = originalRates[rarity];
-      if (!edit || !orig) return false;
-      return (
-        edit.avgPerBox !== orig.avgPerBox ||
-        edit.ratePerPack !== orig.ratePerPack
-      );
-    },
-    [editRates, originalRates],
-  );
-
-  const hasAnyDirty = useMemo(() => {
-    return Object.keys(editRates).some((rarity) => isDirty(rarity));
-  }, [editRates, isDirty]);
-
-  function resetRate(rarity: string) {
-    const orig = originalRates[rarity];
-    if (!orig) return;
-    setEditRates((prev) => ({ ...prev, [rarity]: { ...orig } }));
-  }
-
-  function resetAll() {
-    setEditRates({ ...originalRates });
-  }
-
-  function calcSuggestedRate(
-    avgPerBox: string,
-    packsPerBox: number | null,
-  ): string | null {
-    if (!packsPerBox || !avgPerBox) return null;
-    const avg = parseFloat(avgPerBox);
-    if (isNaN(avg) || avg <= 0) return null;
-    return (avg / packsPerBox).toFixed(4);
-  }
-
-  async function saveRate(setId: number, rarity: string, setCode: string) {
-    const key = `${setId}-${rarity}`;
-    setSaving(key);
-    const rate = editRates[rarity];
-    if (!rate) return;
-
-    try {
-      await adminFetch("/api/admin/drop-rates", {
-        method: "PATCH",
-        body: {
-          setId,
-          rarity,
-          avgPerBox: rate.avgPerBox ? parseFloat(rate.avgPerBox) : null,
-          ratePerPack: rate.ratePerPack ? parseFloat(rate.ratePerPack) : null,
-        },
-      });
-      setSaved((prev) => new Set(prev).add(key));
-      setOriginalRates((prev) => ({
-        ...prev,
-        [rarity]: { ...rate },
-      }));
-      toast.success(`${setCode} — บันทึก ${rarity} สำเร็จ`);
-    } catch {
-      toast.error(`${setCode} — บันทึก ${rarity} ไม่สำเร็จ`);
-    } finally {
-      setSaving(null);
-    }
-  }
-
-  async function saveAllRates(set: SetData) {
-    setSavingAll(true);
-
-    const batch = set.dropRates
-      .map((dr) => {
-        const rate = editRates[dr.rarity];
-        if (!rate) return null;
-        return {
-          setId: set.id,
-          rarity: dr.rarity,
-          avgPerBox: rate.avgPerBox ? parseFloat(rate.avgPerBox) : null,
-          ratePerPack: rate.ratePerPack ? parseFloat(rate.ratePerPack) : null,
-        };
-      })
-      .filter(Boolean);
-
-    try {
-      await adminFetch("/api/admin/drop-rates", {
-        method: "PATCH",
-        body: { batch },
-      });
-
-      const newSaved = new Set(saved);
-      const newOriginals = { ...originalRates };
-      for (const dr of set.dropRates) {
-        const key = `${set.id}-${dr.rarity}`;
-        newSaved.add(key);
-        if (editRates[dr.rarity]) {
-          newOriginals[dr.rarity] = { ...editRates[dr.rarity] };
-        }
-      }
-      setSaved(newSaved);
-      setOriginalRates(newOriginals);
-      toast.success(
-        `${set.code} — บันทึกทั้งหมด ${batch.length} รายการสำเร็จ`,
-      );
-    } catch {
-      toast.error(`${set.code} — บันทึกไม่สำเร็จ`);
-    } finally {
-      setSavingAll(false);
-    }
-  }
-
-  function getCount(
-    setId: number,
-    rarity: string,
-    isParallel: boolean,
-  ): number {
-    return rarityCounts[`${setId}-${rarity}-${isParallel}`] ?? 0;
   }
 
   return (
@@ -313,292 +150,19 @@ export function DropRatesManager({
 
         {filteredSets.map((set) => {
           const expanded = expandedCode === set.code;
-          const complete = isSetComplete(set);
-
           return (
-            <div
+            <SetRow
               key={set.id}
-              className={cn(
-                "overflow-hidden rounded-xl border bg-card transition-shadow",
-                expanded
-                  ? "border-border shadow-sm"
-                  : "border-border/50 hover:border-border/80",
-              )}
-            >
-              {/* Collapsed Header */}
-              <button
-                onClick={() => {
-                  toggleExpand(set.code);
-                  if (!expanded) initEdit(set);
-                }}
-                className="flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-muted/20"
-              >
-                <span className="min-w-[4rem] font-mono text-sm font-bold uppercase tracking-wide">
-                  {set.code}
-                </span>
-                <span className="flex-1 text-sm font-medium">
-                  {set.nameEn || set.name}
-                </span>
-
-                {/* Completeness indicator */}
-                {complete ? (
-                  <span className="flex items-center gap-1 text-xs text-success">
-                    <CheckCircle2 className="size-3.5" />
-                    <span className="hidden sm:inline">ครบ</span>
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1 text-xs text-warning">
-                    <AlertCircle className="size-3.5" />
-                    <span className="hidden sm:inline">ไม่ครบ</span>
-                  </span>
-                )}
-
-                <span className="hidden text-meta sm:inline">
-                  {set.dropRates.length} ระดับ
-                </span>
-                <Badge
-                  variant="outline"
-                  className="hidden text-overlay sm:inline-flex"
-                >
-                  {set.type.replace("_", " ")}
-                </Badge>
-                <ChevronDown
-                  className={cn(
-                    "size-4 text-muted-foreground transition-transform duration-200",
-                    expanded && "rotate-180",
-                  )}
-                />
-              </button>
-
-              {/* Expanded Content */}
-              <div
-                className={cn(
-                  "grid transition-[grid-template-rows] duration-200 ease-in-out",
-                  expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
-                )}
-              >
-                <div className="overflow-hidden">
-                  {expanded && (
-                    <div className="border-t border-border/30 px-5 py-4">
-                      {/* Info bar */}
-                      <div className="mb-4 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <span className="text-meta">
-                            ซอง/กล่อง:{" "}
-                            <span className="font-medium text-foreground">
-                              {set.packsPerBox ?? "—"}
-                            </span>
-                          </span>
-                          <span className="text-border">·</span>
-                          <span className="text-meta">
-                            ใบ/ซอง:{" "}
-                            <span className="font-medium text-foreground">
-                              {set.cardsPerPack ?? "—"}
-                            </span>
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {hasAnyDirty && (
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={resetAll}
-                              className="text-muted-foreground"
-                            >
-                              <RotateCcw className="size-3.5" />
-                              รีเซ็ต
-                            </Button>
-                          )}
-                          <Button
-                            size="sm"
-                            variant={hasAnyDirty ? "default" : "outline"}
-                            onClick={() => saveAllRates(set)}
-                            disabled={savingAll}
-                          >
-                            {savingAll ? (
-                              <Loader2 className="size-3.5 animate-spin" />
-                            ) : (
-                              <Save className="size-3.5" />
-                            )}
-                            บันทึกทั้งหมด
-                          </Button>
-                        </div>
-                      </div>
-
-                      {/* Table */}
-                      <div className="overflow-x-auto rounded-lg border border-border/40">
-                        <table className="w-full text-sm">
-                          <thead>
-                            <tr className="border-b border-border/40 bg-muted/30">
-                              <th className="w-20 px-4 py-2.5 text-left text-eyebrow text-muted-foreground/70">
-                                ระดับ
-                              </th>
-                              <th className="w-24 px-4 py-2.5 text-center text-eyebrow text-muted-foreground/70">
-                                ในพูล
-                              </th>
-                              <th className="px-4 py-2.5 text-right text-eyebrow text-muted-foreground/70">
-                                เฉลี่ย/กล่อง
-                              </th>
-                              <th className="px-4 py-2.5 text-right text-eyebrow text-muted-foreground/70">
-                                อัตรา/ซอง
-                              </th>
-                              <th className="w-20 px-2 py-2.5" />
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {set.dropRates.map((dr, idx) => {
-                              const key = `${set.id}-${dr.rarity}`;
-                              const isSaving = saving === key;
-                              const isSaved = saved.has(key);
-                              const isParallel = dr.rarity.startsWith("P-");
-                              const pool = getCount(
-                                set.id,
-                                dr.rarity,
-                                isParallel,
-                              );
-                              const dirty = isDirty(dr.rarity);
-
-                              const prevIsParallel =
-                                idx > 0 &&
-                                set.dropRates[idx - 1].rarity.startsWith("P-");
-                              const showSeparator =
-                                isParallel && !prevIsParallel && idx > 0;
-
-                              const suggestedRate = calcSuggestedRate(
-                                editRates[dr.rarity]?.avgPerBox ?? "",
-                                set.packsPerBox,
-                              );
-
-                              return (
-                                <tr
-                                  key={dr.rarity}
-                                  className={cn(
-                                    "group border-b border-border/10 transition-colors hover:bg-muted/10",
-                                    idx % 2 === 1 && "bg-muted/5",
-                                    dirty && "bg-info-soft",
-                                    showSeparator &&
-                                      "border-t-2 border-t-warning/30",
-                                  )}
-                                >
-                                  <td className="px-4 py-2.5">
-                                    <span
-                                      className={cn(
-                                        "font-mono text-xs font-bold",
-                                        isParallel
-                                          ? "text-warning"
-                                          : "text-foreground",
-                                      )}
-                                    >
-                                      {dr.rarity}
-                                    </span>
-                                  </td>
-                                  <td className="px-4 py-2.5 text-center">
-                                    <span className="font-mono text-xs text-muted-foreground">
-                                      {pool || "—"}
-                                    </span>
-                                  </td>
-                                  <td className="px-4 py-2.5">
-                                    <div className="flex justify-end">
-                                      <Input
-                                        type="number"
-                                        step="0.01"
-                                        value={
-                                          editRates[dr.rarity]?.avgPerBox ?? ""
-                                        }
-                                        onChange={(e) =>
-                                          setEditRates((prev) => ({
-                                            ...prev,
-                                            [dr.rarity]: {
-                                              ...prev[dr.rarity],
-                                              avgPerBox: e.target.value,
-                                            },
-                                          }))
-                                        }
-                                        className="h-8 w-28 text-right text-xs tabular-nums"
-                                      />
-                                    </div>
-                                  </td>
-                                  <td className="px-4 py-2.5">
-                                    <div className="flex items-center justify-end gap-1">
-                                      <Input
-                                        type="number"
-                                        step="0.0001"
-                                        value={
-                                          editRates[dr.rarity]?.ratePerPack ??
-                                          ""
-                                        }
-                                        onChange={(e) =>
-                                          setEditRates((prev) => ({
-                                            ...prev,
-                                            [dr.rarity]: {
-                                              ...prev[dr.rarity],
-                                              ratePerPack: e.target.value,
-                                            },
-                                          }))
-                                        }
-                                        placeholder={
-                                          suggestedRate
-                                            ? `≈${suggestedRate}`
-                                            : undefined
-                                        }
-                                        className="h-8 w-28 text-right text-xs tabular-nums"
-                                      />
-                                    </div>
-                                  </td>
-                                  <td className="px-2 py-2.5">
-                                    <div className="flex items-center justify-center gap-0.5">
-                                      {dirty && (
-                                        <Button
-                                          variant="ghost"
-                                          size="icon-xs"
-                                          onClick={() =>
-                                            resetRate(dr.rarity)
-                                          }
-                                          title="รีเซ็ต"
-                                          className="opacity-0 group-hover:opacity-100 transition-opacity"
-                                        >
-                                          <RotateCcw className="size-3 text-muted-foreground" />
-                                        </Button>
-                                      )}
-                                      <Button
-                                        variant="ghost"
-                                        size="icon-xs"
-                                        onClick={() =>
-                                          saveRate(
-                                            set.id,
-                                            dr.rarity,
-                                            set.code,
-                                          )
-                                        }
-                                        disabled={isSaving}
-                                        title="บันทึก"
-                                      >
-                                        {isSaving ? (
-                                          <Loader2 className="size-3.5 animate-spin" />
-                                        ) : isSaved && !dirty ? (
-                                          <Check className="size-3.5 text-success" />
-                                        ) : (
-                                          <Save
-                                            className={cn(
-                                              "size-3.5",
-                                              dirty && "text-info",
-                                            )}
-                                          />
-                                        )}
-                                      </Button>
-                                    </div>
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+              set={set}
+              expanded={expanded}
+              complete={isSetComplete(set)}
+              rarityCounts={rarityCounts}
+              onToggle={() => {
+                toggleExpand(set.code);
+                if (!expanded) editor.initEdit(set);
+              }}
+              editor={editor}
+            />
           );
         })}
       </div>
