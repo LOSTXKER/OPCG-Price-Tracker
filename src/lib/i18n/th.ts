@@ -1639,4 +1639,5 @@ export const th = {
   consentMessage: "เราใช้คุกกี้เพื่อแสดงโฆษณาที่เกี่ยวข้องกับคุณ",
   consentAccept: "ยอมรับ",
   consentDecline: "ปฏิเสธ",
+  pages: "หน้า",
 } as const;

@@ -2,20 +2,25 @@
 > **เขียนทับทุกครั้ง ไม่สะสม log** (รายละเอียดอยู่ใน git history แล้ว) · hook โหลดไฟล์นี้เข้าทุก session
 > session ใหม่: อ่านอันนี้ก่อนเริ่ม แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-14 — **Design phase: P0a merged (PR #7) · P0b (ads+consent) เสร็จ verified · URL strategy = B**
+อัปเดตล่าสุด: 2026-06-14 — **Design phase: P0a+P0b merged · P0c (polish) เสร็จ verified → P0 จบครบ · URL strategy = B**
 
 ## ▶ สถานะตอนนี้
-- **P0a merged เข้า master แล้ว** (PR #7) · master @ `e9796f9`
-- branch ทำงาน: `redesign/p0b-ads-consent` — P0b verified, กำลังจะเปิด PR
+- **P0a + P0b merged เข้า master แล้ว** (PR #7, #8) · master @ `091001b`
+- branch ทำงาน: `redesign/p0c-polish` — P0c verified, กำลังจะเปิด PR → **จบ P0 (foundation)**
 - เบสเคาะ: **URL strategy = B (`/[game]/` prefix)** · roadmap P0→P5 ใน REDESIGN.md
 
 ## ✅ P0a — Nav IA foundation (merged PR #7)
 - bottom-nav **freeze 5 tab นิ่ง** (Market·Browse·Decks·Portfolio·More) · Search ย้าย header · badge → Portfolio
 - `/decks` hub · header desktop align · menu-sheet Tools→hub · ui-store `currentGame` · i18n +6 keys
 
-## ✅ P0b — AdSlot + Consent (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓)
-- `<AdSlot placement>` (`src/components/ads/`) — FREE-only + route-excluded + house-ad (Upgrade-to-Pro) · null เมื่อซ่อน · AdSense dormant จนตั้ง `NEXT_PUBLIC_ADSENSE_CLIENT`
-- `ConsentBanner` + `adConsent` (persist) dormant จน env · migrate HomeAdCard→AdSlot + mobile home ad · billing `adFree` key · i18n +5 keys (parity 1491)
+## ✅ P0b — AdSlot + Consent (merged PR #8)
+- `<AdSlot placement>` (`src/components/ads/`) — FREE-only + route-excluded + house-ad · null เมื่อซ่อน · AdSense dormant จนตั้ง `NEXT_PUBLIC_ADSENSE_CLIENT`
+- `ConsentBanner` + `adConsent` (persist) dormant จน env · migrate HomeAdCard→AdSlot + mobile home ad · billing `adFree`
+
+## ✅ P0c — polish (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓ · parity 1492×3)
+- command palette: "Pages" nav shortcuts (9 หน้า) — ค้นหน้าได้ไม่ใช่แค่การ์ด + keyboard nav
+- footer มือถือเข้าถึงได้ (เลิก `hidden md:block` + pb clear bottom-nav)
+- design tokens: `.text-price`/`.text-price-lg` + `--game-accent` (adopt บน PriceTag ตอน P1)
 
 ## 🎨 Design phase — แผนพร้อมแล้ว (อ่าน REDESIGN.md เป็นหลัก)
 **[REDESIGN.md](REDESIGN.md) = SSOT ของ design phase** (จาก audit 7 ด้าน + synthesize 4 ด้าน ผ่าน workflow)
@@ -43,7 +48,6 @@
 - workflow audit output เต็ม: `/tmp/redesign_synth/` (audit.md + ia/design-system/future-arch/roadmap-docs.md)
 
 ## ▶ NEXT
-1. **merge PR P0b** (ads+consent) — เบส review/merge หรือสั่งผม
-2. **P0c** (ปิดท้าย P0) — command palette (nav shortcuts) · footer มือถือเข้าถึงได้ · design-token pass (`.text-price` + `--game-accent`)
-3. จบ P0 → **P1 core pages** (card-detail แย่สุด → home/cards/sets) · วาง AdSlot จริงตามหน้า (browse-in-feed, card-detail-mid)
-4. (เมื่ออนุมัติ) จัดบ้าน docs ตาม REDESIGN.md §8
+1. **merge PR P0c** → จบ P0 (foundation) ครบ
+2. **P1 — core pages** (REDESIGN.md §7): เริ่ม **card-detail** (หน้าแย่สุด: sticky action bar, split price-hub quick-view/chart, progressive disclosure) → home/cards/sets · adopt `.text-price` บน PriceTag · วาง AdSlot จริง (`browse-in-feed`, `card-detail-mid`) · `min-h-14` tap targets
+3. (เมื่ออนุมัติ) จัดบ้าน docs ตาม REDESIGN.md §8

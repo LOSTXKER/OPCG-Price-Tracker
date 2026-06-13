@@ -41,6 +41,8 @@
   --color-price-up: var(--price-up);
   --color-price-down: var(--price-down);
   --color-chance-mid: var(--chance-mid);
+  /* Per-game accent (set by GameSwitcher in P4); defaults to primary. */
+  --color-game-accent: var(--game-accent);
 
   /* Semantic status tokens (additive — mirror existing colors so visual is unchanged). */
   --color-success: var(--success);
@@ -104,6 +106,7 @@
   --price-up: #34C759;
   --price-down: #FF3B30;
   --chance-mid: #FF9F0A;
+  --game-accent: var(--primary);
 
   /* Semantic status tokens (additive). Values mirror existing palette so
      introducing them does not change any current visual. */
@@ -154,6 +157,7 @@
   --price-up: #30D158;
   --price-down: #FF453A;
   --chance-mid: #FF9F0A;
+  --game-accent: var(--primary);
 
   /* Semantic status tokens — dark variants. */
   --success: #30D158;
@@ -357,6 +361,27 @@
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.875rem;           /* 14px */
   font-variant-numeric: tabular-nums;
+}
+
+/* Price — inline / table (one consistent numeric size; replaces ad-hoc
+   .font-price vs .text-code drift). Pair with an up/down arrow, never color
+   alone. Adopt on PriceTag in P1. */
+.text-price {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.9375rem;          /* 15px */
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Price — hero / card-detail headline figure */
+.text-price-lg {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 1.375rem;           /* 22px */
+  line-height: 1.2;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 
 /* Re-base existing helpers as aliases to the new tokens (matches .text-h1 / .text-meta) */
