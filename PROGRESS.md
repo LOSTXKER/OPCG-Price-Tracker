@@ -33,7 +33,8 @@
 - ✅ `alerts-manager` 502→262 → แตก `alert-row.tsx` (248, AlertRow + FeedbackPill + formatTriggeredAt + FeedbackKind)
 - ✅ `search-client` 497→388 → แตก data/state logic เป็น hook `use-search.ts` (205) ตาม pattern useCompareData · เหลือ pure presentation
 - **user-facing giants เสร็จครบ** (5 ตัว) ✓
-- ค้าง admin (ใหญ่สุด): snkrdunk-match (973) · cards-browser (792) · yuyutei (766) · rank-tiers (634) · drop-rates (607)
+- ✅ `snkrdunk-match` 973→446 (ใหญ่สุดในโปรเจกต์) → แตก `_components/{types,match-ui,add-card-dialog,mapping-row}` · main = logic + table shell
+- ค้าง admin: cards-browser (792) · yuyutei (766) · rank-tiers (634) · drop-rates (607)
 
 ## ▶ NEXT (ทำต่อทันที)
 1. (เบส) เปิด PR + ลบ backup เก่าเมื่อพร้อม

@@ -2,11 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-  ArrowDown,
-  ArrowUp,
-  ArrowUpDown,
-  Check,
-  ExternalLink,
   Globe,
   Keyboard,
   Loader2,
@@ -14,16 +9,11 @@ import {
   RefreshCw,
   Search,
   Sparkles,
-  Undo2,
   X,
 } from "lucide-react";
+import { toast } from "sonner";
+
 import { cn } from "@/lib/utils";
-import {
-  relativeTime,
-  CardThumb,
-  CandidatePicker,
-  type MatchingCard,
-} from "@/components/admin/matching-ui";
 import {
   AdminBulkBar,
   AdminBulkAction,
@@ -31,400 +21,15 @@ import {
 import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminPagination } from "@/components/admin/admin-pagination";
-import {
-  AdminStatusBadge,
-  type AdminStatusTone,
-} from "@/components/admin/admin-status-badge";
-import { AdminDialog } from "@/components/admin/admin-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
 import { useAdminList } from "@/lib/admin/use-admin-list";
 import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
-import type { PaginatedApiResponse } from "@/app/admin/admin-types";
-import { toast } from "sonner";
-
-const STATUS_TONE: Record<string, AdminStatusTone> = {
-  matched: "success",
-  suggested: "info",
-  pending: "warning",
-  rejected: "danger",
-};
-
-function StatusBadge({ status }: { status: string }) {
-  return (
-    <AdminStatusBadge tone={STATUS_TONE[status] ?? "neutral"}>
-      {status}
-    </AdminStatusBadge>
-  );
-}
-
-/* ── Types ── */
-
-type MappingCard = MatchingCard;
-
-interface Mapping {
-  id: number;
-  snkrdunkId: number;
-  productNumber: string;
-  scrapedName: string;
-  thumbnailUrl: string | null;
-  minPriceUsd: number | null;
-  usedMinPriceUsd: number | null;
-  lastSoldPsa10Usd: number | null;
-  matchedCardId: number | null;
-  matchedCard: MappingCard | null;
-  matchMethod: string | null;
-  status: string;
-  updatedAt: string;
-  actionAt: string | null;
-  actionByUser: { displayName: string | null; email: string } | null;
-  candidates: MappingCard[];
-}
-
-interface ApiResponse extends PaginatedApiResponse {
-  mappings: Mapping[];
-  counts: Record<string, number>;
-}
-
-type SortKey = "" | "product-asc" | "product-desc" | "price-asc" | "price-desc" | "date-asc" | "date-desc";
-
-/* ── Helpers ── */
-
-function PriceTag({
-  label,
-  value,
-  highlight,
-}: {
-  label: string;
-  value: number | null;
-  highlight?: boolean;
-}) {
-  return (
-    <div className="flex items-baseline gap-1">
-      <span className="text-meta">{label}</span>
-      {value != null ? (
-        <span
-          className={cn(
-            "font-price text-xs font-semibold tabular-nums",
-            highlight && "text-success"
-          )}
-        >
-          ${value}
-        </span>
-      ) : (
-        <span className="text-meta text-muted-foreground/40">—</span>
-      )}
-    </div>
-  );
-}
-
-function CompactPrices({ m }: { m: Mapping }) {
-  const hasAny = m.minPriceUsd != null || m.usedMinPriceUsd != null || m.lastSoldPsa10Usd != null;
-  if (!hasAny) {
-    return <span className="text-meta text-muted-foreground/50">ไม่มีราคา</span>;
-  }
-  return (
-    <div className="flex flex-col gap-0.5">
-      <PriceTag label="ต่ำสุด" value={m.minPriceUsd} />
-      <PriceTag label="มือสอง" value={m.usedMinPriceUsd} />
-      <PriceTag label="PSA10" value={m.lastSoldPsa10Usd} highlight />
-    </div>
-  );
-}
-
-function SortableHeader({
-  label,
-  ascKey,
-  descKey,
-  currentSort,
-  onSort,
-  className,
-}: {
-  label: string;
-  sortKey?: string;
-  ascKey: SortKey;
-  descKey: SortKey;
-  currentSort: SortKey;
-  onSort: (s: SortKey) => void;
-  className?: string;
-}) {
-  const isAsc = currentSort === ascKey;
-  const isDesc = currentSort === descKey;
-  const Icon = isAsc ? ArrowUp : isDesc ? ArrowDown : ArrowUpDown;
-
-  return (
-    <button
-      onClick={() => {
-        if (isAsc) onSort(descKey);
-        else if (isDesc) onSort("");
-        else onSort(ascKey);
-      }}
-      className={cn(
-        "inline-flex items-center gap-1 font-medium hover:text-foreground transition-colors",
-        (isAsc || isDesc) && "text-foreground",
-        className
-      )}
-    >
-      {label}
-      <Icon className="size-3" />
-    </button>
-  );
-}
-
-/* ── Stats chip ── */
-
-const STATUS_META: { key: string; label: string; color: string }[] = [
-  { key: "pending", label: "รอดำเนินการ", color: "bg-warning-soft text-warning hover:bg-warning/20" },
-  { key: "matched", label: "จับคู่แล้ว", color: "bg-success-soft text-success hover:bg-success/20" },
-  { key: "rejected", label: "ปฏิเสธแล้ว", color: "bg-danger-soft text-danger hover:bg-danger/20" },
-];
-
-function StatsBar({
-  counts,
-  activeFilter,
-  onFilter,
-}: {
-  counts: Record<string, number>;
-  activeFilter: string;
-  onFilter: (s: string) => void;
-}) {
-  const totalAll = Object.values(counts).reduce((a, b) => a + b, 0);
-  return (
-    <div className="flex flex-wrap items-center gap-2">
-      <button
-        onClick={() => onFilter("")}
-        className={cn(
-          "rounded-full px-3 py-1 text-xs font-medium transition-colors",
-          activeFilter === ""
-            ? "bg-foreground text-background"
-            : "bg-muted text-muted-foreground hover:bg-muted/80"
-        )}
-      >
-        ทั้งหมด {totalAll}
-      </button>
-      {STATUS_META.map((s) => (
-        <button
-          key={s.key}
-          onClick={() => onFilter(activeFilter === s.key ? "" : s.key)}
-          className={cn(
-            "rounded-full px-3 py-1 text-xs font-medium transition-colors",
-            activeFilter === s.key
-              ? "ring-2 ring-offset-1 ring-offset-background ring-current"
-              : "",
-            s.color
-          )}
-        >
-          {s.label} {counts[s.key] ?? 0}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-/* ── Keyboard shortcut legend ── */
-
-function ShortcutLegend({ visible }: { visible: boolean }) {
-  if (!visible) return null;
-  const keys = [
-    { key: "j / k", desc: "เลื่อนแถว" },
-    { key: "x", desc: "ปฏิเสธ" },
-    { key: "a", desc: "อนุมัติ" },
-    { key: "Esc", desc: "ล้างที่เลือก" },
-  ];
-  return (
-    <div className="flex items-center gap-4 rounded-lg border border-border bg-muted/40 px-3 py-1.5">
-      {keys.map((k) => (
-        <span key={k.key} className="inline-flex items-center gap-1.5 text-meta">
-          <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-overlay text-foreground shadow-sm">
-            {k.key}
-          </kbd>
-          {k.desc}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-/* ── Add card dialog ── */
-
-function AddCardDialog({
-  open,
-  onClose,
-  onAdded,
-}: {
-  open: boolean;
-  onClose: () => void;
-  onAdded: () => void;
-}) {
-  const [idInput, setIdInput] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const [preview, setPreview] = useState<{
-    name: string;
-    productNumber: string;
-    psa10MinPriceUsd: number | null;
-    psa10LastSoldUsd: number | null;
-    lastSoldUsd: number | null;
-    thumbnailUrl: string | null;
-  } | null>(null);
-
-  const handleLookup = async () => {
-    const id = parseInt(idInput.trim(), 10);
-    if (!id) return;
-    setBusy(true);
-    setError("");
-    setPreview(null);
-    try {
-      const json = await adminFetch<{
-        data: {
-          summary: {
-            name: string;
-            productNumber: string;
-            thumbnailUrl: string | null;
-          };
-          psa10MinPriceUsd: number | null;
-          psa10LastSoldUsd: number | null;
-          lastSoldUsd: number | null;
-        };
-      }>(`/api/admin/snkrdunk-matching?lookup=${id}`);
-      setPreview({
-        name: json.data.summary.name,
-        productNumber: json.data.summary.productNumber,
-        psa10MinPriceUsd: json.data.psa10MinPriceUsd,
-        psa10LastSoldUsd: json.data.psa10LastSoldUsd,
-        lastSoldUsd: json.data.lastSoldUsd,
-        thumbnailUrl: json.data.summary.thumbnailUrl,
-      });
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "ไม่สำเร็จ");
-    }
-    setBusy(false);
-  };
-
-  const handleAdd = async () => {
-    const id = parseInt(idInput.trim(), 10);
-    if (!id) return;
-    setBusy(true);
-    setError("");
-    try {
-      await adminFetch("/api/admin/snkrdunk-matching", {
-        method: "POST",
-        body: { snkrdunkId: id },
-      });
-      onAdded();
-      onClose();
-      setIdInput("");
-      setPreview(null);
-    } catch (e) {
-      // A 409 ("Already exists") is treated as success — the mapping is already present.
-      if (e instanceof Error && e.message === "Already exists") {
-        onAdded();
-        onClose();
-        setIdInput("");
-        setPreview(null);
-      } else {
-        setError(e instanceof Error ? e.message : "ไม่สำเร็จ");
-      }
-    }
-    setBusy(false);
-  };
-
-  return (
-    <AdminDialog
-      open={open}
-      onOpenChange={(v) => {
-        if (!v) onClose();
-      }}
-      size="md"
-      title="เพิ่มการ์ดจาก SNKRDUNK"
-      description={
-        <>
-          ใส่ SNKRDUNK ID (เลขตอนท้าย URL เช่น{" "}
-          <code className="rounded bg-muted px-1">94915</code> จาก{" "}
-          <code className="rounded bg-muted px-1">
-            snkrdunk.com/en/trading-cards/94915
-          </code>
-          )
-        </>
-      }
-    >
-      <div className="space-y-4">
-        <div className="flex gap-2">
-          <Input
-            type="text"
-            value={idInput}
-            onChange={(e) => setIdInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleLookup()}
-            placeholder="SNKRDUNK ID เช่น 94915"
-            className="flex-1"
-          />
-          <Button
-            type="button"
-            onClick={handleLookup}
-            disabled={busy || !idInput.trim()}
-          >
-            {busy ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Search className="size-4" />
-            )}
-            ค้นหา
-          </Button>
-        </div>
-
-        {error && <p className="text-xs text-danger">{error}</p>}
-
-        {preview && (
-          <div className="rounded-xl border border-border/50 bg-muted/20 p-4">
-            <div className="flex gap-3">
-              <CardThumb src={preview.thumbnailUrl} size="md" />
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold leading-tight">
-                  {preview.name}
-                </p>
-                <p className="mt-1 font-mono text-xs text-muted-foreground">
-                  {preview.productNumber}
-                </p>
-                <div className="mt-2 flex flex-wrap gap-3">
-                  <PriceTag
-                    label="PSA10 ราคาขาย"
-                    value={preview.psa10MinPriceUsd}
-                    highlight
-                  />
-                  <PriceTag
-                    label="PSA10 ขายแล้ว"
-                    value={preview.psa10LastSoldUsd}
-                  />
-                  <PriceTag
-                    label="ขายล่าสุด"
-                    value={preview.lastSoldUsd}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <Button
-              type="button"
-              onClick={handleAdd}
-              disabled={busy}
-              className="mt-4 w-full"
-            >
-              {busy ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <Plus className="size-4" />
-              )}
-              เพิ่มเข้ารายการจับคู่
-            </Button>
-          </div>
-        )}
-      </div>
-    </AdminDialog>
-  );
-}
-
-/* ══════════ MAIN ══════════ */
+import type { ApiResponse, SortKey } from "./_components/types";
+import { ShortcutLegend, SortableHeader, StatsBar } from "./_components/match-ui";
+import { AddCardDialog } from "./_components/add-card-dialog";
+import { MappingRow } from "./_components/mapping-row";
 
 const API = "/api/admin/snkrdunk-matching";
 
@@ -792,160 +397,28 @@ export function SnkrdunkMatchClient() {
               </tr>
             ) : (
               mappings.map((m, idx) => {
-                const isSaving = saving.has(m.id);
-                const candidateId =
-                  pickedCandidate[m.id] ?? m.matchedCardId;
-                const isFocused = focusedIdx === idx;
-                const isSelected = selected.has(m.id);
-
+                const candidateId = pickedCandidate[m.id] ?? m.matchedCardId;
                 return (
-                  <tr
+                  <MappingRow
                     key={m.id}
-                    data-row-idx={idx}
-                    className={cn(
-                      "transition-colors",
-                      isSaving && "opacity-50",
-                      idx % 2 === 1 && "bg-muted/10",
-                      isFocused && "ring-2 ring-inset ring-primary/40 bg-primary/5",
-                      isSelected && !isFocused && "bg-primary/5",
-                      !isFocused && "hover:bg-muted/20"
-                    )}
-                    onClick={() => setFocusedIdx(idx)}
-                  >
-                    {/* Checkbox */}
-                    <td className="py-3 pl-3 pr-1">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => toggleSelect(m.id)}
-                        className="accent-primary"
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    </td>
-
-                    {/* SNKRDUNK card info */}
-                    <td className="py-3 pl-1 pr-2">
-                      <div className="flex items-start gap-2.5">
-                        <CardThumb src={m.thumbnailUrl} />
-                        <div className="min-w-0">
-                          <p className="font-mono text-xs font-bold">
-                            {m.productNumber}
-                          </p>
-                          <p className="mt-0.5 text-xs leading-tight text-muted-foreground line-clamp-2">
-                            {m.scrapedName}
-                          </p>
-                          <a
-                            href={`https://snkrdunk.com/en/trading-cards/${m.snkrdunkId}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-1 inline-flex items-center gap-1 text-xs text-info hover:underline"
-                          >
-                            <ExternalLink className="size-2.5" />
-                            {m.snkrdunkId}
-                          </a>
-                        </div>
-                      </div>
-                    </td>
-
-                    {/* Prices */}
-                    <td className="px-2 py-3">
-                      <CompactPrices m={m} />
-                    </td>
-
-                    {/* Match */}
-                    <td className="px-2 py-3">
-                      {m.status === "matched" && m.matchedCard ? (
-                        <div className="flex items-center gap-2">
-                          <CardThumb src={m.matchedCard.imageUrl} />
-                          <div className="min-w-0">
-                            <p className="font-mono text-xs font-bold">
-                              {m.matchedCard.cardCode}
-                            </p>
-                            <p className="text-meta truncate">
-                              {m.matchedCard.nameJp}
-                            </p>
-                            {m.matchMethod && (
-                              <span className="text-meta text-muted-foreground/60">
-                                ผ่าน {m.matchMethod}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      ) : m.candidates.length === 0 ? (
-                        <span className="inline-flex items-center rounded-md bg-muted/50 px-2 py-0.5 text-meta">
-                          ไม่พบการ์ดที่ตรงกัน
-                        </span>
-                      ) : (
-                        <CandidatePicker
-                          candidates={m.candidates}
-                          currentId={candidateId}
-                          onPick={(cid) =>
-                            setPickedCandidate((p) => ({
-                              ...p,
-                              [m.id]: cid,
-                            }))
-                          }
-                        />
-                      )}
-                    </td>
-
-                    {/* Status */}
-                    <td className="px-2 py-3 text-center">
-                      <StatusBadge status={m.status} />
-                      <p className="mt-1 text-meta">
-                        {relativeTime(m.updatedAt)}
-                      </p>
-                    </td>
-
-                    {/* Actions */}
-                    <td className="px-2 py-3 pr-4">
-                      <div className="flex items-center justify-end gap-1">
-                        {m.status === "matched" ? (
-                          <>
-                            <button
-                              onClick={() => handleRefresh(m.id)}
-                              disabled={isSaving}
-                              className="rounded-lg p-1.5 text-info hover:bg-info-soft"
-                              title="รีเฟรชราคา"
-                            >
-                              <RefreshCw className="size-3.5" />
-                            </button>
-                            <button
-                              onClick={() => handleUnmatch(m.id)}
-                              disabled={isSaving}
-                              className="rounded-lg p-1.5 text-warning hover:bg-warning-soft"
-                              title="ยกเลิกจับคู่"
-                            >
-                              <Undo2 className="size-3.5" />
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            {candidateId && (
-                              <button
-                                onClick={() =>
-                                  handleApprove(m.id, candidateId)
-                                }
-                                disabled={isSaving}
-                                className="rounded-lg p-1.5 text-success hover:bg-success-soft"
-                                title="อนุมัติ"
-                              >
-                                <Check className="size-3.5" />
-                              </button>
-                            )}
-                            <button
-                              onClick={() => handleReject(m.id)}
-                              disabled={isSaving}
-                              className="rounded-lg p-1.5 text-danger hover:bg-danger-soft"
-                              title="ปฏิเสธ"
-                            >
-                              <X className="size-3.5" />
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
+                    m={m}
+                    idx={idx}
+                    isSaving={saving.has(m.id)}
+                    candidateId={candidateId}
+                    isFocused={focusedIdx === idx}
+                    isSelected={selected.has(m.id)}
+                    onFocus={() => setFocusedIdx(idx)}
+                    onToggleSelect={() => toggleSelect(m.id)}
+                    onPickCandidate={(cid) =>
+                      setPickedCandidate((p) => ({ ...p, [m.id]: cid }))
+                    }
+                    onApprove={() => {
+                      if (candidateId) handleApprove(m.id, candidateId);
+                    }}
+                    onReject={() => handleReject(m.id)}
+                    onRefresh={() => handleRefresh(m.id)}
+                    onUnmatch={() => handleUnmatch(m.id)}
+                  />
                 );
               })
             )}
