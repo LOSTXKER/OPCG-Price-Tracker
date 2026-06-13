@@ -29,10 +29,11 @@
 ## R3 แตก client components ยักษ์ (เริ่มแล้ว — user-facing ก่อน)
 - ✅ `compare-client` 634→357 → แตก `_components/card-rail.tsx` (151) + `_components/compare-dossier.tsx` (175)
 - ✅ `today-card` 642→5 (barrel) → แตก `streak-card.tsx` (325) + `streak-info-popover.tsx` (178) + `today-missions-card.tsx` (144) · importer (missions-tab) ใช้ barrel เดิมต่อได้
-- ค้าง user-facing: price-hub (567) · alerts-manager (502) · search-client (497)
+- ✅ `price-hub` 567→271 → แตก `price-hub-sources.tsx` (326, source markets list+table) · อ่าน currency จาก store เอง
+- ค้าง user-facing: alerts-manager (502) · search-client (497)
 - ค้าง admin (ใหญ่สุด): snkrdunk-match (973) · cards-browser (792) · yuyutei (766)
 
 ## ▶ NEXT (ทำต่อทันที)
 1. (เบส) เปิด PR + ลบ backup เก่าเมื่อพร้อม
-2. แตก user-facing ตัวถัดไป: today-card (642) / price-hub (567)
+2. แตก user-facing ที่เหลือ: alerts-manager (502) / search-client (497) → แล้วค่อยขยับไป admin giants (snkrdunk 973, cards-browser 792)
 3. รวม empty-state / R3 i18n เป็น batch (152 ไฟล์)
