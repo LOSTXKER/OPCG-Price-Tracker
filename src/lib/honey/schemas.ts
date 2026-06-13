@@ -55,7 +55,7 @@ export const AchievementCriteriaSchema = z.object({
     "referral_count",
     "trades_count",
     "honey_lifetime",
-    // Phase 2 expansions — see docs/honey-economy-rebalance.md.
+    // Phase 2 expansions — see doc/honey-economy-rebalance.md.
     "watchlist_count",       // WatchlistItem rows for the user
     "deck_count",            // Deck rows owned
     "deck_share_count",      // Public-deck honey grants (DECK_SHARE tx)
