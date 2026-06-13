@@ -10,6 +10,7 @@ import {
   Star,
 } from "lucide-react";
 import { CommandSearchModal } from "@/components/shared/command-search";
+import { GameSwitcher } from "@/components/layout/game-switcher";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 import { formatCount } from "@/lib/utils/currency";
@@ -91,10 +92,12 @@ export function Header() {
 
       <header className="border-b border-border/50 bg-background/95 backdrop-blur-xl">
         <div className="mx-auto flex h-14 max-w-7xl items-center px-6 lg:px-8">
-          <Link href="/" className="mr-8 flex shrink-0 items-center gap-2.5">
+          <Link href="/" className="mr-3 flex shrink-0 items-center gap-2.5">
             <Image src="/meecard.png" alt="Meecard" width={28} height={28} className="shrink-0 select-none" priority />
             <span className="text-base font-bold tracking-tight">Meecard</span>
           </Link>
+
+          <GameSwitcher className="mr-5" />
 
           <nav className="flex items-center">
             {navLinks.map((link) => {

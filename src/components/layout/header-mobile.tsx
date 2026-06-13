@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 
 import { NotificationBell } from "@/components/shared/notification-bell";
 import { Button } from "@/components/ui/button";
+import { GameSwitcher } from "@/components/layout/game-switcher";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 
@@ -20,6 +21,8 @@ export function HeaderMobile({ isAuthenticated }: { isAuthenticated: boolean }) 
           <Image src="/meecard.png" alt="Meecard" width={26} height={26} className="shrink-0 select-none" priority />
           <span className="text-base font-bold tracking-tight">Meecard</span>
         </Link>
+
+        <GameSwitcher className="ml-1.5" />
 
         <div className="flex-1" />
 

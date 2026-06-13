@@ -2,13 +2,12 @@
 > **เขียนทับทุกครั้ง ไม่สะสม log** (รายละเอียดอยู่ใน git history แล้ว) · hook โหลดไฟล์นี้เข้าทุก session
 > session ใหม่: อ่านอันนี้ก่อนเริ่ม แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-14 — **P2.1 portfolio merged (#15) · P2.2 tools tap-targets เสร็จ verified · core UI redesign (P0+P1+P2) เกือบครบ · URL strategy = B**
+อัปเดตล่าสุด: 2026-06-14 — **P2 merged (#15/#16) · เข้า P4: P4.1 GameSwitcher เสร็จ verified · เบสเคาะ per-game/ขยาย-enum/อนุมัติ schema**
 
 ## ▶ สถานะตอนนี้
-- merged: **P0 (#7/#8/#9) + P1.1–P1.5 (#10–#14) + P2.1 (#15)** · master @ `77da275`
-- branch ทำงาน: `redesign/p2-tools` — P2.2 verified, กำลังจะเปิด PR
-- เบสเคาะ: **URL strategy = B (`/[game]/` prefix)** · roadmap P0→P5 ใน REDESIGN.md
-- เบสสั่ง "ทำรวดเดียวไม่หยุดถาม" → ผมลุย UI ที่ปลอดภัยต่อ, หยุดที่กำแพง schema/decision
+- merged: **P0 (#7/#8/#9) + P1.1–P1.5 (#10–#14) + P2.1/P2.2 (#15/#16)**
+- branch ทำงาน: `redesign/p4-game-switcher` — P4.1 verified, กำลังจะเปิด PR
+- **P4 decisions เคาะแล้ว:** Portfolio per-game · CardType ขยาย enum · schema approved (additive, branch+PR, ห้ามแตะ DB จริงโดยไม่ยืนยัน)
 
 ## ✅ P0a — Nav IA foundation (merged PR #7)
 - bottom-nav **freeze 5 tab นิ่ง** (Market·Browse·Decks·Portfolio·More) · Search ย้าย header · badge → Portfolio
@@ -68,10 +67,15 @@
 ## ✅ P2.2 — tools tap-targets (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓)
 - drop-calc stepper size-7→9 + input h-7→9 · want-list remove p-0.5→1.5 + aria-label · (drop/deck calc mobile-structured อยู่แล้ว = tabs/list)
 
-## 🧱 กำแพงที่ต้องเบสเคาะก่อนทำต่อ (ทำเองไม่ได้)
-- **P4 multi-game/Pokémon** + **P5 tier/meta/deck-builder** = ต้อง **Prisma schema migration** (⚠️ permission: ขออนุมัติ) + decision ค้าง: **Portfolio per-game vs mixed**, **CardType enum ขยาย vs string** (REDESIGN.md §6)
-- **P3 marketplace** = งาน UI ใหญ่มาก (listing wizard mobile, messaging chrome, sticky buy bar) · flag ปิดอยู่ ไม่เร่ง · ทำได้ถ้าเบสสั่ง
+## ✅ P4.1 — GameSwitcher + Pokémon stub (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓ · parity 1494) — โค้ดล้วน ไม่แตะ DB
+- `pokemon.ts` stub config (comingSoon) + register · `getActiveGameConfigs()` · GameConfig +flags (shortName/comingSoon/supports*/deckRules)
+- `GameSwitcher` pill (header มือถือ+desktop) — OPCG active, Pokémon "เร็วๆ นี้" disabled · อ่าน/เซ็ต `currentGame` (persist)
+
+## 🧱 P4.2 — schema migration (ถัดไป · ⚠️ additive, ทำบน branch+PR, ห้ามแตะ DB จริงโดยไม่ยืนยัน)
+- `Card.gameId` (denorm) + `@@unique([gameId,cardCode])` · `CardSet.gameId` NOT NULL (backfill OPCG) · `gameId` บน Portfolio/Deck/Listing · `gameId` บน Yuyutei/Snkrdunk mappings · ขยาย `CardType` enum (Pokemon types)
+- ต้อง backfill SQL + ระวังลำดับ · game-scope queries server-side ตามมา
 
 ## ▶ NEXT
-1. **merge PR P2.2** → core UI redesign (P0+P1+P2) เสร็จเป็นกอบเป็นกำ
-2. เบสเคาะทิศ: (a) P3 marketplace UI (ใหญ่ ทำได้เลย) · (b) P4/P5 — **เคาะ decision §6 + อนุมัติ schema ก่อน** · (c) จัดบ้าน docs §8 · (d) จบรอบ deploy/ดูจริง
+1. **merge PR P4.1** (GameSwitcher)
+2. **P4.2 schema** — เขียน prisma schema + migration บน branch, `prisma generate`+build ก่อน · **ยืนยันกับเบสก่อน apply กับ Supabase จริง**
+3. (ภายหลัง) game-scoped queries · `/[game]/` route group · Pokémon data/scraper (build later)

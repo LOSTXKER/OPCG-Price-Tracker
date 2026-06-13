@@ -1641,4 +1641,5 @@ export const th = {
   consentDecline: "ปฏิเสธ",
   pages: "หน้า",
   applyFilters: "ดูผลลัพธ์",
+  chooseGame: "เลือกเกม",
 } as const;

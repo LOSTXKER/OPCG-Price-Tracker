@@ -1641,4 +1641,5 @@ export const jp = {
   consentDecline: "拒否",
   pages: "ページ",
   applyFilters: "結果を見る",
+  chooseGame: "ゲームを選択",
 } as const;

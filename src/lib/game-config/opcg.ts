@@ -7,6 +7,9 @@ export const opcgConfig: GameConfig = {
   slug: "opcg",
   name: "ONE PIECE CARD GAME",
   nameEn: "One Piece Card Game",
+  shortName: "OPCG",
+  supportsMarketplace: true,
+  deckRules: { mainDeckSize: 50, maxCopies: 4, requiresLeader: true },
 
   sets: OPCG_SETS,
 
