@@ -2,17 +2,20 @@
 > **เขียนทับทุกครั้ง ไม่สะสม log** (รายละเอียดอยู่ใน git history แล้ว) · hook โหลดไฟล์นี้เข้าทุก session
 > session ใหม่: อ่านอันนี้ก่อนเริ่ม แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-14 — **Design phase: P0a (nav foundation) เสร็จ + PR #7 เปิด · เบสเคาะ URL strategy = B**
+อัปเดตล่าสุด: 2026-06-14 — **Design phase: P0a merged (PR #7) · P0b (ads+consent) เสร็จ verified · URL strategy = B**
 
 ## ▶ สถานะตอนนี้
-- branch ทำงาน: `redesign/p0-nav-foundation` @ commit `d5e7276` · **PR #7 รอ review/merge** → https://github.com/LOSTXKER/OPCG-Price-Tracker/pull/7
-- master @ `0b24fb2` (ยังไม่ merge P0a) · เบสเคาะแล้ว: **URL strategy = B (`/[game]/` prefix)**, เริ่มจาก P0
+- **P0a merged เข้า master แล้ว** (PR #7) · master @ `e9796f9`
+- branch ทำงาน: `redesign/p0b-ads-consent` — P0b verified, กำลังจะเปิด PR
+- เบสเคาะ: **URL strategy = B (`/[game]/` prefix)** · roadmap P0→P5 ใน REDESIGN.md
 
-## ✅ P0a — Nav IA foundation (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓ /decks static)
-- bottom-nav **freeze 5 tab นิ่ง** (Market·Browse·Decks·Portfolio·More) เลิกสลับตาม marketplaceEnabled · Search ย้ายไป header · badge unread → Portfolio
-- `/decks` hub ใหม่ (deck/drop calc + compare active · meta/tier/builder "เร็วๆ นี้" · My Decks placeholder)
-- header desktop align (Market/Browse/Decks, ตัด Tools dropdown, marketplace append) · menu-sheet Tools → Decks hub
-- ui-store `currentGame` (persist) · i18n +6 keys ×3 ภาษา (parity 1486)
+## ✅ P0a — Nav IA foundation (merged PR #7)
+- bottom-nav **freeze 5 tab นิ่ง** (Market·Browse·Decks·Portfolio·More) · Search ย้าย header · badge → Portfolio
+- `/decks` hub · header desktop align · menu-sheet Tools→hub · ui-store `currentGame` · i18n +6 keys
+
+## ✅ P0b — AdSlot + Consent (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓)
+- `<AdSlot placement>` (`src/components/ads/`) — FREE-only + route-excluded + house-ad (Upgrade-to-Pro) · null เมื่อซ่อน · AdSense dormant จนตั้ง `NEXT_PUBLIC_ADSENSE_CLIENT`
+- `ConsentBanner` + `adConsent` (persist) dormant จน env · migrate HomeAdCard→AdSlot + mobile home ad · billing `adFree` key · i18n +5 keys (parity 1491)
 
 ## 🎨 Design phase — แผนพร้อมแล้ว (อ่าน REDESIGN.md เป็นหลัก)
 **[REDESIGN.md](REDESIGN.md) = SSOT ของ design phase** (จาก audit 7 ด้าน + synthesize 4 ด้าน ผ่าน workflow)
@@ -40,7 +43,7 @@
 - workflow audit output เต็ม: `/tmp/redesign_synth/` (audit.md + ia/design-system/future-arch/roadmap-docs.md)
 
 ## ▶ NEXT
-1. **merge PR #7** (P0a) — เบส review/merge หรือสั่งผม `gh pr merge`
-2. **P0b** — `<AdSlot>` (tier+consent gated, house-ad fallback, exclude chromeless) + `ConsentBanner` + consent state ใน ui-store + billing key `ad-free` + migrate HomeAdCard
-3. **P0c** — command palette (nav shortcuts) · footer มือถือ · design-token pass (`.text-price` + `--game-accent`)
-4. (เมื่ออนุมัติ) จัดบ้าน docs ตาม REDESIGN.md §8 · จบ P0 → เข้า P1 (card-detail)
+1. **merge PR P0b** (ads+consent) — เบส review/merge หรือสั่งผม
+2. **P0c** (ปิดท้าย P0) — command palette (nav shortcuts) · footer มือถือเข้าถึงได้ · design-token pass (`.text-price` + `--game-accent`)
+3. จบ P0 → **P1 core pages** (card-detail แย่สุด → home/cards/sets) · วาง AdSlot จริงตามหน้า (browse-in-feed, card-detail-mid)
+4. (เมื่ออนุมัติ) จัดบ้าน docs ตาม REDESIGN.md §8

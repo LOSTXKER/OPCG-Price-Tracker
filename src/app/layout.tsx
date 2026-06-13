@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { MainChrome, PageContent } from "@/components/layout/main-chrome";
 import { CompareFloatingBar } from "@/components/compare/compare-floating-bar";
+import { ConsentBanner } from "@/components/ads/consent-banner";
 import { ScrollToTop } from "@/components/shared/scroll-to-top";
 import { MissionTracker } from "@/components/honey/mission-tracker";
 import { CardMiniPreviewDialog } from "@/components/shared/card-mini-preview-dialog";
@@ -104,6 +105,7 @@ export default function RootLayout({
                 <CardMiniPreviewDialog />
                 <ScrollToTop />
                 <MissionTracker />
+                <ConsentBanner />
                 <Toaster position="top-center" />
               </UpgradeDialogProvider>
             </ConfirmDialogProvider>

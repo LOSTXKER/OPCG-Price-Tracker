@@ -4,6 +4,8 @@ import type { Language, Currency } from "@/lib/i18n";
 
 export type { Language, Currency };
 type CardView = "grid" | "list";
+/** null = undecided (banner shows when ads are live); set on user choice. */
+export type AdConsent = "granted" | "denied" | null;
 
 const CURRENCY_CYCLE: Currency[] = ["THB", "JPY", "USD"];
 const LANGUAGE_CYCLE: Language[] = ["TH", "EN", "JP"];
@@ -15,6 +17,8 @@ interface UIState {
   currentGame: string;
   cardView: CardView;
   dismissedBanner: boolean;
+  /** Ad/cookie consent for ad networks (AdSense). House ads don't need it. */
+  adConsent: AdConsent;
   mobileMenuOpen: boolean;
   searchOpen: boolean;
   unreadMessages: number;
@@ -23,6 +27,7 @@ interface UIState {
   setCurrency: (currency: Currency) => void;
   cycleCurrency: () => void;
   setCurrentGame: (slug: string) => void;
+  setAdConsent: (consent: AdConsent) => void;
   setCardView: (view: CardView) => void;
   dismissBanner: () => void;
   setMobileMenuOpen: (open: boolean) => void;
@@ -39,6 +44,7 @@ export const useUIStore = create<UIState>()(
       currentGame: "opcg",
       cardView: "grid",
       dismissedBanner: false,
+      adConsent: null,
       mobileMenuOpen: false,
       searchOpen: false,
       unreadMessages: 0,
@@ -55,6 +61,7 @@ export const useUIStore = create<UIState>()(
           return { currency: CURRENCY_CYCLE[(idx + 1) % CURRENCY_CYCLE.length] };
         }),
       setCurrentGame: (currentGame) => set({ currentGame }),
+      setAdConsent: (adConsent) => set({ adConsent }),
       setCardView: (cardView) => set({ cardView }),
       dismissBanner: () => set({ dismissedBanner: true }),
       setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
@@ -70,6 +77,7 @@ export const useUIStore = create<UIState>()(
         currentGame: state.currentGame,
         cardView: state.cardView,
         dismissedBanner: state.dismissedBanner,
+        adConsent: state.adConsent,
       }),
     }
   )

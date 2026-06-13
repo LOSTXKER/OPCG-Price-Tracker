@@ -48,10 +48,10 @@
 - [x] header desktop: NAV_LINKS → Market/Browse/Decks · ตัด Tools dropdown (ย้ายเข้า hub) · marketplace append เมื่อ flag เปิด
 - [x] mobile-menu-sheet: Tools section → ลิงก์เดียว "Decks & Tools" → /decks
 
-**P0b — AdSlot + Consent** (ถัดไป)
-- [ ] `<AdSlot placement>` tier+consent gated + house-ad fallback + exclude chromeless
-- [ ] `ConsentBanner` + consent state ใน ui-store (blocking ก่อน ads)
-- [ ] billing/features: key `ad-free` (PRO) · migrate HomeAdCard → AdSlot
+**P0b — AdSlot + Consent** ✅ verified (branch `redesign/p0b-ads-consent`)
+- [x] `<AdSlot placement>` — FREE-only + route-excluded (`src/components/ads/placements.ts`) + house-ad (Upgrade-to-Pro) · returns null เมื่อซ่อน (ไม่เหลือช่องว่าง) · AdSense path dormant จนตั้ง `NEXT_PUBLIC_ADSENSE_CLIENT`
+- [x] `ConsentBanner` + `adConsent` ใน ui-store (persist) — dormant จน env ตั้ง (กัน nag ก่อน ads live) · ใช้ `useHydrated()`
+- [x] billing/features: key `adFree` (PRO) + `featAdFree` i18n · migrate HomeAdCard → AdSlot · + mobile home AdSlot (แก้ ad lg:-only)
 
 **P0c — polish**
 - [ ] command palette: nav shortcuts (ไม่ใช่แค่การ์ด) · footer มือถือเข้าถึงได้ · design-token pass (`.text-price` + `--game-accent`)

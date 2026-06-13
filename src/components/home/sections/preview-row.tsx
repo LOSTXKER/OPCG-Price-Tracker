@@ -19,9 +19,8 @@ export function HomePreviewRow({
         <HomeHoneyPreview />
         <HomeMarketValueCard totalValue={totalValue} totalCards={totalCards} />
       </div>
-      <div className="hidden w-[28%] max-w-[320px] shrink-0 lg:block">
-        <HomeAdCard />
-      </div>
+      {/* Self-sizing + tier-gated; collapses to nothing for paid users. */}
+      <HomeAdCard />
     </div>
   )
 }

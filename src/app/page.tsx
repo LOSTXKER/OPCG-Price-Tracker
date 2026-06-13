@@ -6,6 +6,7 @@ import {
 } from "@/components/home/home-client-sections";
 import { HomeMarketOverview } from "@/components/home/home-market-overview";
 import { HomeSeoContent } from "@/components/home/home-seo-content";
+import { AdSlot } from "@/components/ads/ad-slot";
 import { getHomeData, mapCardToTrending } from "@/lib/data/home";
 import { CARD_TYPES } from "@/lib/constants/card-config";
 import type { FilterDefinition } from "@/components/shared/filter-chips";
@@ -86,8 +87,11 @@ export default async function HomePage(props: {
         sets={setOptions}
         initialSearch={initialSearch}
       >
-        {/* Portfolio · Honey · Market stats strip + slim Ad */}
+        {/* Portfolio · Honey · Market stats strip + slim Ad (desktop) */}
         <HomePreviewRow totalValue={totalValue} totalCards={totalCards} />
+
+        {/* In-feed ad — mobile only (desktop ad lives in the preview row) */}
+        <AdSlot placement="home-in-feed" className="aspect-[6/1] md:hidden" />
 
         {/* Highlights: Featured card · Top Gainers · Top Losers */}
         <div className="panel grid divide-y divide-border/40 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-3">
