@@ -2,11 +2,11 @@
 > **เขียนทับทุกครั้ง ไม่สะสม log** (รายละเอียดอยู่ใน git history แล้ว) · hook โหลดไฟล์นี้เข้าทุก session
 > session ใหม่: อ่านอันนี้ก่อนเริ่ม แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-14 — **P1.4 cards-browse merged (#13) · P1.5 sets page เสร็จ verified · URL strategy = B**
+อัปเดตล่าสุด: 2026-06-14 — **P1.5 sets merged (#14) → P1 หน้าหลักครบ · P2.1 portfolio เสร็จ verified · URL strategy = B**
 
 ## ▶ สถานะตอนนี้
-- merged: **P0 (#7/#8/#9) + P1.1–P1.4 (#10/#11/#12/#13)** · master @ `f37630c`
-- branch ทำงาน: `redesign/p1-sets` — P1.5 verified, กำลังจะเปิด PR
+- merged: **P0 (#7/#8/#9) + P1.1–P1.5 (#10–#14)** · master @ `77da275`
+- branch ทำงาน: `redesign/p2-portfolio` — P2.1 verified, กำลังจะเปิด PR
 - เบสเคาะ: **URL strategy = B (`/[game]/` prefix)** · roadmap P0→P5 ใน REDESIGN.md
 
 ## ✅ P0a — Nav IA foundation (merged PR #7)
@@ -60,13 +60,14 @@
 ## ✅ P1.4 — cards browse (merged #13)
 - browse จริง = `HomeMarketOverview` · filter → bottom sheet · AdSlot `browse-in-feed` · i18n applyFilters
 
-## ✅ P1.5 — sets page (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓)
-- adopt `ListRow` ใน most-valuable list · AdSlot `browse-in-feed` คั่น · type pills (tab-scroll) คงไว้ (ตั้งใจ ไม่ใช่ anti-pattern)
+## ✅ P1.5 — sets page (merged #14) → P1 หน้าหลักครบ (card-detail · cards-browse · sets)
+
+## ✅ P2.1 — portfolio (verified: tsc clean · lint 0err/78warn · test 36/36 · build ✓)
+- portfolio สภาพดีอยู่แล้ว (tabs แยก analytics, mobile picker, mobile asset cards)
+- PortfolioHero stat row ยุบ default บนมือถือ + ปุ่ม "ดูรายละเอียด" (value+PnL โชว์เสมอ, desktop กางเต็ม) → holdings เร็วขึ้น
 
 ## ▶ NEXT
-1. **merge PR P1.5** (sets) → **P1 ครอบคลุมหน้าหลักครบ** (card-detail · cards-browse · sets)
-2. **เลือก phase ถัดไป** (เบสเคาะ):
-   - **P2** portfolio/tools (drop/deck calc mobile) — UX utility
-   - **P4** multi-game/Pokémon — งานใหญ่ schema migration ⚠️ (เคาะ Portfolio per-game vs mixed, CardType enum ก่อน)
-   - polish P1 ปลีกย่อย: set-picker มือถือใน filter sheet · grid-view AdSlot · home
-3. (เมื่ออนุมัติ) จัดบ้าน docs ตาม REDESIGN.md §8
+1. **merge PR P2.1** (portfolio hero collapse)
+2. **P2 ต่อ — tools**: drop/deck calculator mobile (form-heavy, audit ชี้ยังไม่ optimize) — card picker นิ้วโป้ง, ผลเป็น list
+3. หรือข้าม **P4 multi-game** (เคาะ Portfolio per-game vs mixed + CardType enum ก่อน · schema migration ⚠️)
+4. (เมื่ออนุมัติ) จัดบ้าน docs ตาม REDESIGN.md §8
