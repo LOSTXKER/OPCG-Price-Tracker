@@ -127,7 +127,7 @@ export default function SellerReviewsPage() {
           <div className="flex flex-wrap items-center gap-6">
             <div className="text-center">
               <p className="text-display">
-                {data.avgRating != null ? data.avgRating.toFixed(1) : "โ€”"}
+                {data.avgRating != null ? data.avgRating.toFixed(1) : "—"}
               </p>
               <div className="mt-1 flex justify-center">
                 <Stars count={Math.round(data.avgRating ?? 0)} />
