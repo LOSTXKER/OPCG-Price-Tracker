@@ -29,7 +29,7 @@ export function HomeFeaturedCard({
   return (
     <Link
       href={`/cards/${card.cardCode}`}
-      className="group flex items-center gap-5 rounded-xl p-3 transition-colors hover:bg-muted/40"
+      className="group flex flex-col gap-3 rounded-xl p-3 transition-colors hover:bg-muted/40 sm:flex-row sm:items-center sm:gap-5"
     >
       <div className="relative aspect-[63/88] w-[100px] shrink-0 overflow-hidden rounded-lg bg-muted">
         {card.imageUrl && (
@@ -46,7 +46,7 @@ export function HomeFeaturedCard({
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-eyebrow text-muted-foreground/60">{t(lang, "highestValue")}</p>
-        <p className="mt-1.5 truncate text-h4">{name}</p>
+        <p className="mt-1.5 line-clamp-2 text-h4 sm:line-clamp-1">{name}</p>
         <div className="mt-1 flex items-center gap-1.5 text-meta">
           <span className="font-mono">{card.set.code.toUpperCase()}</span>
           <span>&middot;</span>
