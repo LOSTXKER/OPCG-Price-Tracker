@@ -10,11 +10,15 @@ import {
   X,
 } from "lucide-react"
 
+import { Fragment } from "react"
+
 import { FilterChips, type FilterDefinition } from "@/components/shared/filter-chips"
 import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker"
 import { SortableHeader } from "@/components/shared/sortable-header"
+import { AdSlot } from "@/components/ads/ad-slot"
 import { Input } from "@/components/ui/input"
 import { SegmentedControl } from "@/components/ui/segmented-control"
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
 import { ViewToggle } from "@/components/ui/toolbar"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -245,22 +249,28 @@ export function HomeMarketOverview({
         </div>
       </div>
 
-      {/* Collapsible advanced filter panel */}
-      {m.filterOpen && (
-        <div className="border-b border-border bg-muted/20 px-4 py-3">
-          <div className="flex items-center gap-2 overflow-x-auto">
-            <FilterChips
-              filters={allFilterDefs}
-              selected={m.filters}
-              onChange={m.handleFilterChange}
-            />
+      {/* Advanced filters — bottom sheet (replaces the old inline horizontal-
+          scroll bar, which ate mobile width). Same control on every breakpoint
+          so behaviour is predictable; chips wrap instead of side-scrolling. */}
+      <Sheet open={m.filterOpen} onOpenChange={m.setFilterOpen}>
+        <SheetContent side="bottom" className="max-h-[80vh] overflow-y-auto p-4">
+          <SheetTitle className="text-h4">{t(lang, "filter")}</SheetTitle>
 
-            <div className="flex shrink-0 items-center gap-1.5">
-              <span className="text-meta">{t(lang, "priceLabel")}</span>
+          <div className="mt-4 space-y-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <FilterChips
+                filters={allFilterDefs}
+                selected={m.filters}
+                onChange={m.handleFilterChange}
+              />
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <span className="text-meta shrink-0">{t(lang, "priceLabel")}</span>
               <Input
                 type="number"
                 placeholder={t(lang, "min")}
-                className="h-9 w-20 border-border bg-card px-2 tabular-nums placeholder:text-muted-foreground/50 focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
+                className="h-10 w-24 border-border bg-card px-2 tabular-nums placeholder:text-muted-foreground/50 focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
                 value={m.minPrice}
                 onChange={(e) => { m.setMinPrice(e.target.value); m.setPage(1) }}
                 min={0}
@@ -269,25 +279,35 @@ export function HomeMarketOverview({
               <Input
                 type="number"
                 placeholder={t(lang, "max")}
-                className="h-9 w-20 border-border bg-card px-2 tabular-nums placeholder:text-muted-foreground/50 focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
+                className="h-10 w-24 border-border bg-card px-2 tabular-nums placeholder:text-muted-foreground/50 focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
                 value={m.maxPrice}
                 onChange={(e) => { m.setMaxPrice(e.target.value); m.setPage(1) }}
                 min={0}
               />
             </div>
 
-            {m.activeFilterCount > 0 && (
+            <div className="flex items-center justify-between gap-2 border-t border-border/40 pt-3">
+              {m.activeFilterCount > 0 ? (
+                <button
+                  onClick={m.clearAllFilters}
+                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <X className="size-3.5" />
+                  {t(lang, "clearAll")}
+                </button>
+              ) : (
+                <span />
+              )}
               <button
-                onClick={m.clearAllFilters}
-                className="flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-meta transition-colors hover:bg-muted hover:text-foreground"
+                onClick={() => m.setFilterOpen(false)}
+                className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
               >
-                <X className="size-3" />
-                {t(lang, "clearAll")}
+                {t(lang, "applyFilters")}
               </button>
-            )}
+            </div>
           </div>
-        </div>
-      )}
+        </SheetContent>
+      </Sheet>
 
       {/* Content: Table or Grid */}
       {m.viewMode === "table" ? (
@@ -296,12 +316,17 @@ export function HomeMarketOverview({
           {m.isPending && m.cards.length === 0
             ? Array.from({ length: 6 }).map((_, i) => <MobileCardSkeleton key={i} />)
             : m.cards.map((card, i) => (
-                <MobileCardItem
-                  key={card.cardCode}
-                  card={card}
-                  rank={(m.page - 1) * PAGE_SIZE + i + 1}
-                  priceMode={m.priceMode}
-                />
+                <Fragment key={card.cardCode}>
+                  <MobileCardItem
+                    card={card}
+                    rank={(m.page - 1) * PAGE_SIZE + i + 1}
+                    priceMode={m.priceMode}
+                  />
+                  {/* In-feed ad mid-list (FREE users only; collapses otherwise) */}
+                  {i === 9 && m.cards.length > 12 && (
+                    <AdSlot placement="browse-in-feed" className="aspect-[6/1]" />
+                  )}
+                </Fragment>
               ))}
           {!m.isPending && m.cards.length === 0 && (
             <p className="py-12 text-center text-sm text-muted-foreground">{t(lang, "noData")}</p>
