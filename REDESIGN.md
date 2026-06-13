@@ -325,7 +325,7 @@ absorb `MARKETPLACE_OVERHAUL.md`
 - ✅ `docs/MARKETPLACE_OVERHAUL.md` — **ลบแล้ว** (stale dup) + ลบโฟลเดอร์ `docs/` · `doc/` copy = **keep-updated** (M3 = track ถัดไป จึงคงเป็น working ref, rewritten 2026-06-14)
 - `doc/honey-action-type-migration.md` = **keep-updated** (rewritten เป็น runbook · track PLAN M2 · archive หลัง M2 ship)
 - ✅ `doc/MTOP.pdf` → **archived** `doc/archive/MTOP.pdf` (957KB binary SRS export)
-- `README.md` — แทน bootstrap template ด้วย runbook 1 หน้า (ยังไม่ทำ)
+- ✅ `README.md` — เขียนใหม่เป็น project README (Meecard overview + getting started + commands + docs map) แทน create-next-app boilerplate
 
 **คง reference (ไม่แตะ, แค่ cite):**
 - ✅ rewritten + cross-checked vs code (2026-06-14): `doc/data-pipeline.md` · `doc/honey-economy-rebalance.md` · `doc/honey-action-type-migration.md` · `doc/MARKETPLACE_OVERHAUL.md`

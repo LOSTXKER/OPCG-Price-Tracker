@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Meecard — OPCG Price Tracker
+
+เว็บเช็คราคา **One Piece Card Game (OPCG / OPTCG)** แบบเรียลไทม์สำหรับตลาดไทย — ดูราคากลาง, จัดการ portfolio, คำนวณ drop rate, deck builder, marketplace พร้อม Stripe payments และ LINE Bot
+
+🔗 Live: [opcg-price-tracker.vercel.app](https://opcg-price-tracker.vercel.app)
+
+## Features
+
+- **Price tracking** — ราคากลางรายวันจาก Yuyutei (JPY) + SNKRDUNK (USD / PSA 10 graded), แปลงเป็น THB
+- **Portfolio & Watchlist** — ติดตามมูลค่าคอลเลกชัน, กำไร/ขาดทุน, แจ้งเตือนราคา
+- **Tools** — drop-rate calculator, deck cost calculator, card compare
+- **Marketplace** — ซื้อขายการ์ด + seller center (ปิดด้วย feature flag จนกว่าจะ launch)
+- **Gamification** — Honey rewards, missions, ranks, raffle
+- **Multilingual** — TH / EN / JP
+
+## Stack
+
+| | |
+|---|---|
+| Framework | Next.js 16 (App Router, React 19, TypeScript 5) |
+| Database | PostgreSQL + Prisma 7 (via Supabase) |
+| Styling | Tailwind CSS 4 + semantic typography tokens |
+| Auth | Supabase SSR · Payments: Stripe |
+| State | Zustand 5 · Charts: Recharts |
+| Scraping | Cheerio · Notifications: LINE Bot SDK, Resend |
+| Testing | Vitest |
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# 1. install
+npm install
+
+# 2. env — คัดลอกแล้วเติมค่า (Supabase, Stripe, R2, LINE ฯลฯ)
+cp .env.example .env.local
+
+# 3. generate Prisma client + seed ฐานข้อมูล
+npx prisma generate
+npm run db:seed
+
+# 4. dev server → http://localhost:3000
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Commands
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| คำสั่ง | ทำอะไร |
+|--------|--------|
+| `npm run dev` | dev server |
+| `npm run build` | `prisma generate` + production build |
+| `npm run start` | รัน production build |
+| `npm run lint` | ESLint |
+| `npm run test` | Vitest (`test:watch` สำหรับ watch mode) |
+| `npm run pipeline` | data pipeline เต็ม (scrape → seed → images → prices) — ดู [doc/data-pipeline.md](doc/data-pipeline.md) |
+| `npm run scrape:daily` | อัปเดตราคารายวัน |
+| `npm run db:seed` | seed ฐานข้อมูล |
+| `npm run translate:thai` | แปลชื่อการ์ดเป็นไทย |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> มี `seed:*` script ย่อยอีกหลายตัว (cards / games / honey-shop / missions / achievements …) — ดู `package.json`
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/app/          หน้าเว็บ (cards, sets, marketplace, portfolio, honey, admin)
+src/components/    React components แยกตาม feature
+src/lib/           business logic, DB queries, scrapers, integrations
+src/stores/        Zustand state · src/hooks/ custom hooks
+prisma/            schema + migrations + seed (Game → CardSet → Card → CardPrice)
+scripts/           CLI: scrape / seed / pipeline / translate
+doc/               เอกสารอ้างอิงเชิงลึก (ดู doc/README.md)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Docs
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+ก่อนแตะโค้ด อ่าน **[AGENTS.md](AGENTS.md)** — typography tokens, breakpoints, API conventions (บังคับ)
 
-## Deploy on Vercel
+| ไฟล์ | บทบาท |
+|------|-------|
+| [AGENTS.md](AGENTS.md) | conventions (typography / breakpoints / API) |
+| [REDESIGN.md](REDESIGN.md) | design-phase SSOT (IA, roadmap) |
+| [SPEC.md](SPEC.md) | what-is-done checklist |
+| [PLAN.md](PLAN.md) | code backlog (M0–M4) |
+| [PROGRESS.md](PROGRESS.md) | สถานะสด / session handoff |
+| [doc/](doc/) | reference เชิงลึก (data-pipeline, honey economy, marketplace) |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploy บน Vercel (auto จาก `master`). `npm run build` รัน `prisma generate` ก่อน build เสมอ

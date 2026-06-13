@@ -40,7 +40,7 @@
 ## ✅ จัดบ้าน docs (REDESIGN §8 — DONE 2026-06-14 ผ่าน workflow)
 - ลบ `docs/` dup + archive `detailed-plan`→`doc/archive/detailed-plan-2026-04-28.md` + `MTOP.pdf`→`doc/archive/` · rewrite 4 reference docs (data-pipeline R2+SNKRDUNK+crons · honey-economy weekly=scaffolding · honey-action runbook · MARKETPLACE BUILT-vs-PENDING) **cross-checked vs code จริง**
 - โครงสุดท้าย: **root = 5 SSOT** (REDESIGN/SPEC/PLAN/PROGRESS/AGENTS) · **doc/ = 4 active reference + archive/** · fix cross-refs (PLAN/SPEC/REDESIGN) + side bug schemas.ts path + SPEC trial 7→14 (code = 14)
-- (เก็บตก) README ยัง bootstrap template · CLAUDE.md เกือบว่าง (`@AGENTS.md`)
+- ✅ README เขียนใหม่ (Meecard overview + getting started + docs map) · CLAUDE.md เกือบว่างโดยตั้งใจ (`@AGENTS.md` import — context จริงอยู่ `.claude/CLAUDE.md`)
 
 ## เครื่องมือ / สภาพแวดล้อม
 - **`gh` login แล้ว** (LOSTXKER) → PR/merge ผ่าน CLI · **ห้าม push master ตรง** ใช้ PR เสมอ
