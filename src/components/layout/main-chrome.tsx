@@ -17,6 +17,7 @@ const CHROMELESS_ROUTES: ReadonlyArray<string | RegExp> = [
   "/reset-password",
   /^\/messages(\/|$)/,
   /^\/seller(\/|$)/,
+  /^\/proto(\/|$)/, // VISION design prototype — owns its own warm-premium shell
 ];
 
 /**
