@@ -1,0 +1,69 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   Meecard V2 — WARM premium honey theme.
+   Scoped to .v2 so it can be adopted page-by-page (flag swap) without touching
+   the live v1 theme. When the redesign is fully approved this can be promoted
+   to :root / .dark. Overrides the base token vars so existing Tailwind
+   utilities (bg-background, text-muted-foreground, text-primary, border-border)
+   pick up warm values inside the subtree.
+   ────────────────────────────────────────────────────────────────────────── */
+
+.v2 {
+  /* canvas — WARM near-black (espresso) */
+  --background: #100c09;
+  --foreground: #f6efe6;
+  --card: #17110d;
+  --card-foreground: #f6efe6;
+  --popover: #1b1410;
+  --popover-foreground: #f6efe6;
+
+  /* honey-gold = brand & primary interactive accent (constant across games) */
+  --primary: #e9b970;
+  --primary-foreground: #1a1207;
+  --secondary: #221a14;
+  --secondary-foreground: #f6efe6;
+  --muted: #1d1611;
+  --muted-foreground: #a18b78;
+  --accent: #281e16;
+  --accent-foreground: #f4d9a8;
+
+  --border: rgba(246, 239, 230, 0.09);
+  --input: rgba(246, 239, 230, 0.12);
+  --ring: #e9b970;
+
+  --price-up: #46d68b;
+  --price-down: #ff7a6b;
+  --destructive: #ff7a6b;
+  --game-accent: #e9b970;
+
+  --v-s1: rgba(246, 239, 230, 0.035);
+  --v-s2: rgba(246, 239, 230, 0.06);
+  --v-s3: rgba(246, 239, 230, 0.09);
+  --v-hair: rgba(246, 239, 230, 0.09);
+  --v-honey: #e9b970;
+  --v-honey-soft: rgba(233, 185, 112, 0.16);
+
+  background: var(--background);
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.v2 .tnum,
+.v2 [data-num] { font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.v2 .surface-1 { background: var(--v-s1); }
+.v2 .surface-2 { background: var(--v-s2); }
+.v2 .surface-3 { background: var(--v-s3); }
+.v2 .hairline { box-shadow: inset 0 0 0 1px var(--v-hair); }
+.v2 .glow-honey { background: radial-gradient(130% 90% at 50% -10%, var(--v-honey-soft), transparent 62%); }
+.v2 .frost {
+  background: color-mix(in srgb, var(--background) 72%, transparent);
+  backdrop-filter: blur(18px) saturate(1.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+}
+.v2 .ease-chrome { transition: all 200ms cubic-bezier(0.32, 0.72, 0, 1); }
+.v2 .no-sb { scrollbar-width: none; -ms-overflow-style: none; }
+.v2 .no-sb::-webkit-scrollbar { display: none; }
+
+@keyframes v2-rise { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.v2 .rise { animation: v2-rise 260ms cubic-bezier(0.32, 0.72, 0, 1); }
