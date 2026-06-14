@@ -2,9 +2,9 @@
 
 > อัปเดตล่าสุด: 2026-06-14 · cross-checked vs code
 
-ref ทางการ: **PLAN.md → M3** (Marketplace launch prep) · **REDESIGN P3** · code ที่ `src/app/{marketplace,seller,orders,saved,messages}/**` + `src/app/api/{listings,offers,orders,seller,reviews,messages}/**`
+ref ทางการ: **PLAN.md → M3** (Marketplace launch prep) · code ที่ `src/app/{marketplace,seller,orders,saved,messages}/**` + `src/app/api/{listings,offers,orders,seller,reviews,messages}/**`
 
-จุดประสงค์: เก็บ **สเปก + เหตุผลออกแบบ** ของระบบ marketplace/seller-center และระบุชัดว่าอะไร **สร้างแล้ว** อะไร **ยังค้าง** เพื่อใช้เป็น working reference ตอนเปิด track นี้ (P3 / M3)
+จุดประสงค์: เก็บ **สเปก + เหตุผลออกแบบ** ของระบบ marketplace/seller-center และระบุชัดว่าอะไร **สร้างแล้ว** อะไร **ยังค้าง** เพื่อใช้เป็น working reference ตอนเปิด track นี้ (M3)
 
 > สถานะภาพรวม: โค้ดเกือบทั้งหมดของ Phase 1–4 (ในเอกสารนี้) **สร้างเสร็จแล้ว** แต่ marketplace ทั้งหมด **ปิดด้วย feature flag** `marketplaceEnabled` (default `false` — ดู `src/lib/admin/config.ts:56`). ทุกหน้า/route ของ seller ผ่าน `assertMarketplaceEnabled()` ก่อน (`src/app/seller/layout.tsx`). งานที่เหลือคือ "launch prep" ไม่ใช่ "build from scratch" — ดูตาราง M3 ท้ายเอกสาร
 

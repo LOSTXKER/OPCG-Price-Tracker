@@ -91,7 +91,7 @@ export function HeaderMarketTicker({
           <button
             type="button"
             onClick={onSearchOpen}
-            className="flex h-8 w-44 items-center gap-1.5 rounded-md border border-border/80 bg-background/80 px-2.5 text-sm text-muted-foreground transition-colors hover:border-border hover:bg-background lg:w-52"
+            className="surface-2 hairline ease-chrome flex h-8 w-44 items-center gap-1.5 rounded-full px-3 text-sm text-muted-foreground hover:text-foreground lg:w-52"
           >
             <Search className="size-3.5 shrink-0 text-muted-foreground/60" />
             <span className="min-w-0 flex-1 truncate text-left text-muted-foreground/70">{t(language, "searchPlaceholder")}</span>

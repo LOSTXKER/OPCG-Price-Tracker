@@ -101,6 +101,7 @@ export default async function CardDetailPage(props: {
       priceUsd: null,
       source: PRICE_SOURCE.YUYUTEI,
       gradeCondition: null,
+      type: null,
     }];
   }
 
@@ -128,6 +129,7 @@ export default async function CardDetailPage(props: {
         ])}
       />
       <CardDetail
+        key={card.id}
         card={{
         id: card.id,
         cardCode: card.cardCode,

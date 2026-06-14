@@ -1,226 +1,197 @@
-# 🌏 VISION — Meecard ระดับ World-Class (Future-Proof Design)
+# 🌏 VISION — Meecard ระดับ World-Class (design north-star + build spec)
 
-> อัปเดตล่าสุด: 2026-06-14 · design north-star ใหม่ (ต่อยอดจาก [REDESIGN.md](REDESIGN.md) v1 ที่ทำ P0–P2 เสร็จแล้ว)
-> **โจทย์:** ฟีเจอร์มหาศาล (meta/tier/deck/marketplace+escrow/chat/profile/ads/multi-game/multi-source pricing) แต่ต้อง **ไม่รก · เป็นสัดส่วน · ดูโปรระดับ platform โลก** · mobile-first
-> ฐานข้อมูล: workflow research 8 surface จาก StockX · PSA · TCGplayer · SNKRDUNK · Robinhood · Card Ladder · Moxfield · Limitless · Linear · Mercari (110 web sources)
+> **ไฟล์เดียวคุมทิศดีไซน์ทั้งหมด** · อ่านก่อนแตะ UI ทุกหน้า · redesign = แก้ของเดิม **in-place** (ไม่มีเวอร์ชัน v1/v2)
+> โจทย์: ฟีเจอร์มหาศาล (pricing หลายเกรด/แหล่ง · marketplace+escrow · chat · profile · deck/meta/tier · ads · multi-game · portfolio) แต่ต้อง **ไม่รก · เป็นสัดส่วน · ดูโปรระดับ platform โลก** · mobile-first และ desktop จริง
+> สังเคราะห์จากงานวิจัย platform ระดับโลก: StockX · PSA · Card Ladder · TCGplayer · 130point · SNKRDUNK · Cardmarket · eBay Vault · Mercari · Whatnot · Robinhood · Collectr · Moxfield · Archidekt · Limitless · EDHREC · untapped.gg · Grailed · Stripe · Linear · Vercel/Geist (ดู §8)
 
 ---
 
 ## 0. หลักคิดเดียวที่ต้องจำ
 
-> **world-class ไม่ใช่ "เยอะกว่า" — แต่คือ "วินัยที่ pixel + แยกแกนให้ถูก"**
-> ฟีเจอร์ 10+ อันอยู่ในเปลือก 5 แท็บที่นิ่งได้ ถ้าตัดสินใจ primitive ครั้งเดียวแล้วไม่ drift และไม่เอา "เกม / ฟีเจอร์ / action" มาปนใน nav เดียวกัน
+> **world-class ≠ "เยอะกว่า" — แต่คือ "วินัยที่ pixel + แยกแกนให้ถูก + atom เดียวใช้ซ้ำทั้งแอป"**
+> ฟีเจอร์ 10+ อยู่ในเปลือก 5 แท็บที่นิ่งได้ ถ้า (1) ตัดสิน primitive ครั้งเดียวแล้วไม่ drift (2) ไม่เอา เกม/ฟีเจอร์/action มาปนใน nav เดียว (3) ทุกหน้าประกอบจาก atom kit ชุดเดียว
+> **นี่คือเฟส prototype — ออกแบบเผื่อ feature set เต็ม** (ให้เห็นภาพรวมทั้งระบบ) แล้วค่อยทยอย build จริง
 
 ---
 
-## 1. สถาปัตยกรรม IA — แยก 3 แกน (หัวใจของ "ไม่รก")
+## 1. Identity — Warm Premium (ค่าคงที่ ห้ามเปลี่ยน) 🐻
 
-ปัญหารกเกิดเมื่อเอา 3 สิ่งที่คนละประเภทมายัด nav เดียว แยกมันออก แล้วปัญหาหายเกือบหมด:
+น้ำตาล/ทอง-honey + หมี + Honey currency = **ตัวตน Meecard** — เป็นสินทรัพย์ ไม่ใช่ปัญหา (คู่แข่ง generic เพราะ shadcn-blue; เรามีหมี+น้ำผึ้ง)
 
-| แกน | คือ | กลไก | ผลเวลาเพิ่มฟีเจอร์ |
-|-----|-----|------|-------------------|
-| **GAME = "ที่ไหน"** | namespace ไม่ใช่ปลายทาง | `/[game]/` prefix ทุกหน้า + game-switcher pill (มุมซ้ายบน) + shell ทินต์สีตามเกม | **เพิ่ม Pokémon = 0 nav ใหม่** — แค่ค่าใหม่ของแกนเดิม |
-| **FEATURE = "อะไร"** | bottom-nav **5 ช่องคงที่ตลอดกาล** | `Home · Prices · Marketplace · Portfolio · More` | ฟีเจอร์ใหม่ = **tile ใน Hub** ไม่ใช่ tab ใหม่ |
-| **ACTION = "ยังไง"** | per-page | header-right (share/filter) + sticky-bottom CTA — ตำแหน่งเดิมทุกหน้า | ทุกหน้าใช้ grammar เดียว |
+| | |
+|---|---|
+| **Canvas** | near-black **อุ่น** (espresso `#100C09`) — ไม่ใช่ near-black เย็นแบบ Linear · depth ด้วย **luminance** (warm-white overlay) ไม่ใช่เงาดำ |
+| **Accent** | **honey-gold `#E9B970` = accent interactive เดียว** (active tab · selected · focus ring · primary CTA) — คงที่ทุกเกม |
+| **Accent scarcity** | honey **< 5% ของจอ** เสมอ · เกินนั้น = ยังไม่ premium · borders/secondary/icons = neutral |
+| **การ์ด = พระเอก** | chrome จืด espresso-neutral → foil/full-art เป็นสิ่งเดียวที่อิ่มสี |
+| **gain/loss** | เขียว/แดง (`--price-up`/`--price-down`) **สงวนไว้แค่กำไร/ขาดทุน** · ห้ามใช้บน chrome · ห้ามใช้แทน honey |
+| **per-game** | ชั้น tint บางๆ **ทับ** honey (crest · glow · กรอบการ์ด) · **ไม่กลบ** honey · Pokémon = เพิ่ม skin เหลือง/น้ำเงินบาง ไม่ใช่ repaint |
+| **หมี + Honey** | สงวนไว้ที่ empty/onboarding · milestone · escrow ("หมีถือโหลน้ำผึ้ง = เงินถูกเก็บปลอดภัย") · reward toast — ไม่รกใน data view |
 
-**กฎเหล็ก:** ถ้า game-switch + section-link + page-action ไปโผล่ใน menu เดียวกันเมื่อไหร่ = แพ้แล้ว
-
-### Bottom-nav ใหม่ (เทียบของเดิม)
-```
-ของเดิม:  Market · Browse · Decks · Portfolio · More
-ใหม่:      Home · Prices · Marketplace · Portfolio · More
-```
-- `Decks` ย้ายเข้า **More → Play hub** (ไม่ใช่ traffic หลักพอจะกิน nav slot)
-- `Marketplace` เลื่อนขึ้น nav (P3 = track ใหญ่ถัดไป, ต้องเข้าถึงเร็ว)
-- `Home` = discovery feed + universal search (เดิม Market overview)
-
-### "More" = Hub จัดกลุ่ม (ไม่ใช่ list ล้นแบบ iOS)
-วาล์วระบายแรงดัน — ฟีเจอร์ทั้งหมดมาลงที่นี่เป็น tile จัดกลุ่ม:
-```
-PLAY     → Deck Builder · Meta / Tier List · Missions · Honey
-TRACK    → Watchlist · Wishlist · Drop Calc · Price Alerts
-TRADE    → Sell / List · My Listings · Orders · Escrow · Inbox/Chat
-ACCOUNT  → Profile / Reputation · Meecard Pro · Settings
-```
-
-### Universal Search = teleport (สำคัญสุดต่อการ scale)
-search bar เด่นบนสุดของ Home — ค้นได้ทั้ง **การ์ด · เซ็ต · เด็ค · ฟีเจอร์ · action** ("เปิด portfolio", "ราคา OP13-118")
-→ จงใจ under-build nav ที่มองเห็น เพราะ search พาผู้ใช้ไปไหนก็ได้ทันที = ตัวดูดซับการโตของฟีเจอร์แบบล่องหน
-
-### Hub pages มี sub-tab 2–4 อัน (sub-feature เกาะ hub ไม่เกาะ nav กลาง)
-- Marketplace → `Buy · Sell · Orders · Escrow`
-- Portfolio → `Holdings · Performance · Watchlist`
-- Card detail → `Comps · Listings · Population · Meta`
-
-### Responsive — มือถือ **และ** desktop (ไม่ใช่มือถือยืด)
-mobile-first แต่ desktop ต้องเป็น layout จริงที่ใช้พื้นที่กว้าง ไม่ใช่คอลัมน์มือถือลอยกลางจอ · ตาม AGENTS (`md:` chrome boundary · `lg:` columns):
-
-| Surface | Mobile (`<lg`) | Desktop (`lg+`) |
-|---------|----------------|------------------|
-| **chrome** | bottom-nav 5 ช่อง + header | sidebar/rail nav ซ้าย + header กว้าง (bottom-nav → side) |
-| **card-detail** | single column (image→price→rail→chart→tabs) | **2 คอลัมน์**: รูป+identity+CTA ซ้าย (sticky) · price+chart+tabs ขวา |
-| **portfolio** | linear (hero→chart→KPI→movers→holdings) | **dashboard**: main (hero+chart+holdings) + **sidebar** (KPI+movers sticky) |
-| **marketplace/browse** | list/card 1–2 คอลัมน์ | grid หลายคอลัมน์ + filter rail ซ้าย |
-| **deck builder** | bottom-sheet add | 3-pane (pool · deck · stats) |
-
-กฎ: เนื้อหา/atom เดียวกัน — แค่ **จัด composition ต่อ breakpoint** · ตาราง→list `<sm` เสมอ · desktop เพิ่ม density ไม่เพิ่มของใหม่
+**2 บุคลิก:** MONEY surfaces (portfolio/market/price/escrow) = นิ่ง น่าเชื่อถือ, motion 150–300ms ไม่เด้ง · PLAY surfaces (deck/meta/tier/missions/honey) = มีพลัง, spring delight
 
 ---
 
-## 2. Visual Identity — vibe "ผสม" (นิ่งบนเงิน · มีพลังบน play)
+## 2. สถาปัตยกรรม IA — แยก 3 แกน (หัวใจของ "ไม่รก")
 
-> ของจริงตอนนี้ **ไม่ได้ generic เพราะสี** — มี brand honey brown/gold (`#73533E` light / `#E0B865` dark) อยู่แล้ว
-> ฟีล generic มาจาก **execution**: canvas ไม่ near-black จริง, border solid, ไม่มี depth/motion/per-game accent, tabular-nums ไม่ global
-> **แก้ที่ execution discipline ไม่ใช่รื้อสี**
+| แกน | คือ | กลไก | เพิ่มฟีเจอร์/เกม |
+|-----|-----|------|----------------|
+| **GAME = "ที่ไหน"** | namespace | `/[game]/` prefix ทุก route + game-switcher pill (ซ้ายบน) + shell tint ตามเกม | เพิ่ม Pokémon = **0 nav ใหม่** |
+| **FEATURE = "อะไร"** | bottom-nav **5 ช่องคงที่ตลอดกาล** | `Home · Prices · Marketplace · Portfolio · More` | ฟีเจอร์ใหม่ = **tile ใน More hub** ไม่ใช่ tab |
+| **ACTION = "ยังไง"** | per-page | header-right (share/filter) + sticky-bottom CTA — ตำแหน่งเดิมทุกหน้า | grammar เดียวทุกหน้า |
 
-### 🐻 Brand = หมี + honey (ค่าคงที่ ห้ามเปลี่ยน)
-น้ำตาล/ทอง-honey = ตัวตน Meecard (มาสคอตหมี + Honey currency) — **เป็นสินทรัพย์ ไม่ใช่ปัญหา** แอปทั่วไป generic เพราะใช้ shadcn blue; ของเรามีหมี+น้ำผึ้ง = มีตัวตนชัดกว่าคู่แข่ง
+**กฎเหล็ก:** ถ้า game-switch + section-link + page-action โผล่ใน menu เดียวกัน = แพ้
 
-**ทิศที่ทำให้ได้เปรียบ = "WARM premium" (ไม่ใช่ cold premium)**
-research แนะ near-black เย็น (#0B0C0E) แบบ Linear/Robinhood — แต่ถ้าทำงั้น Meecard = clone เย็นๆ เหมือนใครก็ได้ · หมี+น้ำผึ้ง ควรเป็น **near-black อุ่น (espresso/น้ำตาลเข้มมาก) + accent honey-gold + honey-glow บน hero** → พรีเมียม **และ** เป็นตัวเอง **และ** ไม่ซ้ำใคร
-
-**brand accent vs per-game (เคลียร์ความกำกวม):**
-- **honey-gold = brand & primary interactive accent คงที่ทุกเกม** (active tab · selected · focus · CTA) — หมีคุมโครงเสมอ
-- **per-game = ชั้น theming บางๆ ทับบน honey** — game crest ใน switcher · เส้น/glow ทินต์บางบนหน้า game-scoped · กรอบการ์ดสีเกม · **ไม่ใช่** เปลี่ยน accent หลักทิ้ง (Pokémon = เพิ่ม skin เหลือง/น้ำเงินบางๆ ไม่ใช่กลบ honey)
-- gain/loss เขียว/แดง = universal ทุกเกม
-
-### 2 โหมดบุคลิก (vibe = ผสม)
-| | **MONEY surfaces** (calm) | **PLAY surfaces** (energy) |
-|---|---|---|
-| หน้า | Portfolio · Marketplace · Price · Card-detail · Orders/Escrow | Deck · Meta · Tier · Missions · Honey |
-| ฟีล | นิ่ง น่าเชื่อถือ Robinhood/StockX | มีพลัง สนุก การ์ดจัดเต็ม |
-| สี | accent เดียว เงียบ, ตัวเลขเป็นพระเอก | per-game accent เด่น, holo/foil, gradient ทินต์ |
-| motion | นิ่ง (150–300ms, ไม่เด้ง) | spring delight (add-to-deck, level-up, missions) |
-
-### Token upgrades (before → after, ของจริงใน globals.css)
-| Axis | ตอนนี้ | เป้า |
-|------|--------|------|
-| **Dark canvas** | `#1C1C1E` (Apple gray, เย็น) | **WARM** near-black `~#120E0B` (น้ำตาลเข้มมาก/espresso) + ชั้นความลึกด้วย **luminance** (`--surface-1/2/3` = warm-white overlay 0.02→0.08) — premium แต่ on-brand หมี |
-| **Border** | solid 1px | `box-shadow: 0 0 0 1px` hairline (white 0.06–0.08) — ไม่ clip มุมโค้ง, transition ลื่น |
-| **Numerals** | tabular-nums 12 จุด | **global** ทุกราคา/%/qty/แกนกราฟ + mono numeral face → feel "financial instrument" |
-| **Type weight** | Kanit/Inter สม่ำเสมอ | **contrast**: 700 display (KPI) vs ~510 UI · tracking ลบบนตัวใหญ่ |
-| **Price semantic** | Apple green/red `#34C759`/`#FF3B30` | สงวนเขียว/แดงไว้ **แค่ gain/loss** · แดงนวลทาง coral (down day ไม่เหมือน error) |
-| **--game-accent** | static = primary เสมอ | honey-gold = accent หลักคงที่ · per-game = **ชั้นทินต์บางๆ ทับ** (crest/เส้น/กรอบการ์ด) ไม่กลบ honey |
-| **Elevation** | เงาทั่วไป | inline card = flat+hairline · **frosted blur + เงาซ้อนสงวนไว้ที่ bottom-nav + bottom-sheet เท่านั้น** |
-| **Empty/loading** | spinner | designed empty state + CTA · skeleton รูปร่างตาม content — **ศูนย์ spinner** |
-
-### หลักการตายตัว
-1. **ตัวเลขใหญ่ตัวเดียวต่อ screen state** — hero เดียว (ราคา/มูลค่า) ที่ display-size, ที่เหลือไล่ลง type ramp
-2. **accent scarcity** — สีเกิน 5% ของจอ = ยังไม่ premium
-3. **การ์ดคือพระเอก** — chrome จืดลงให้ foil/full-art เป็นสิ่งเดียวที่อิ่มสี
-4. **atom เดียวใช้ซ้ำทุกที่** — grade pill · seller chip · status timeline · price ladder · AdSlot · archetype chip → 10 ฟีเจอร์รู้สึกเป็น "แอปเดียว" ไม่ใช่ template ปะกัน
+- **Universal search = teleport** (Cmd+K / bar บนสุด Home) — ค้นการ์ด/เซ็ต/เด็ค/ฟีเจอร์/action · default scope = เกมปัจจุบัน + toggle "ทุกเกม" → ดูดซับการโตของฟีเจอร์แบบล่องหน (Linear model)
+- **More = Hub จัดกลุ่ม** (ไม่ใช่ list ล้น): `PLAY` (Deck/Meta/Tier/Missions/Honey) · `TRACK` (Watchlist/Wishlist/Drop Calc/Alerts) · `TRADE` (Sell/My Listings/Orders/Escrow/Inbox) · `ACCOUNT` (Profile/Pro/Settings)
+- **Hub มี sub-tab 2–4 อัน** (เกาะ hub ไม่เกาะ nav กลาง): Marketplace `Buy·Sell·Orders` · Portfolio `Holdings·Performance·Watchlist` · Card detail `Comps·Listings·Population·Meta`
+- **Responsive:** mobile = bottom-nav + single column · desktop (`lg:`) = side-rail nav + multi-zone layout จริง (ไม่ใช่คอลัมน์มือถือยืด) · atom เดียว — เปลี่ยนแค่ composition · ตาราง → list `<sm` เสมอ
 
 ---
 
-## 3. Pricing Data Model — 3 แกนราคา (JP/EN · grade · source)
+## 3. Atom Kit — สร้างครั้งเดียว 10 ฟีเจอร์ inherit (สิ่งที่ทำให้รู้สึกเป็น "แอปเดียว")
 
-> รวม eBay/EN ที่เพิ่งเพิ่ม: การ์ดมีทั้ง **JP** (Yuyutei/SNKRDUNK, JPY) และ **EN** (eBay/TCGplayer, USD)
+> ทุกหน้าประกอบจาก atom ชุดนี้ · atom เดียวกัน byte-identical ข้าม breakpoint (เปลี่ยนแค่ grid)
 
-ราคา 1 ใบมี 3 แกน — ห้ามโชว์พร้อมกันหมด (= สเปรดชีต) ใช้หลัก **"re-pricing axis ไม่ใช่ stacked panel"**:
-
-| แกน | ค่า | UI |
-|-----|-----|-----|
-| **Edition/ภาษา** | JP · EN | segmented control บนสุด (re-price ทั้งหน้า) |
-| **Grade** | Raw A/B/C · PSA 10/9/8 · BGS | **chip rail** เลื่อนแนวนอน (re-price hero+chart+comps) แต่ละ chip โชว์ราคา preview |
-| **Source** | Yuyutei · SNKRDUNK · eBay · TCGplayer | แสดงใน comps/breakdown เป็น **source badge ต่อแถว** (ไม่ใช่ตัวเลือกหลัก) |
-
-CardPrice schema ปัจจุบัน multi-source อยู่แล้ว (`source`, `priceJpy/Usd/Thb`, `gradeCondition`, `type SELL/SOLD`) → ขยายรับ `edition` (JP/EN) + source ใหม่ (EBAY, TCGPLAYER) · data-pipeline เพิ่ม scraper EN (ดู [doc/data-pipeline.md](doc/data-pipeline.md))
-
----
-
-## 4. Per-Surface Vision
-
-### 4.1 Card Detail — 5-zone showcase (หน้าที่สำคัญสุด = trust core)
-หน้าหนาแน่นสุดแต่ต้องนิ่งเหมือน Bloomberg ของการ์ด:
-```
-1. IDENTITY   รูปการ์ด (พระเอก) + ชื่อ + เซ็ต/เลข + game badge + edition segmented (JP|EN)
-2. HERO       ราคาเดียวใหญ่ + signed delta สี (เช่น "PSA 10 · ฿12,400 ▲4.2% 30d") — ตัวเลขใหญ่ตัวเดียวบนจอ
-3. GRADE RAIL chip เลื่อน [Raw A][Raw B][Raw C][PSA 10][PSA 9][PSA 8] — เลือกแล้ว re-price ทั้งหน้า, sticky
-4. CHART      เส้นเดียว bound เกรดที่เลือก · 1M/3M/1Y/All · scrubber tooltip · high/low/avg ใต้กราฟ
-5. TABS       Comps · Listings · Population · Meta (mount ทีละ panel, sticky segmented)
-```
-- **Sold comps = trust anchor**: source badge ต่อแถว (SNKRDUNK/eBay) · ราคา**ที่ซื้อขายจริง** (ไม่ใช่ราคาตั้ง) · ใหม่สุดก่อน
-- 3-stat row: `Last Sale · Lowest Listing · % Change` (StockX pattern)
-- **ห้าม** ad บนโซนราคา/sold-history เด็ดขาด
-
-### 4.2 Marketplace — "live market + escrow" ไม่ใช่กระดานประกาศ
-- **order book ต่อ (card, grade)**: Lowest Ask / Highest Bid / Last Sale + 1 ปุ่ม "Buy now" หลัก + 1 "Place bid" รอง (ไม่ใช่กำแพง listing)
-- **escrow = custody-chain timeline ที่มองเห็น** + banner ค้าง "เงิน ฿X ถูกถือไว้ปลอดภัย" → signal trust สูงสุด
-- **Buyer Protection** enumerate ใต้ปุ่ม Buy (เคสที่คุ้มครอง → refund/replace)
-- seller badge **ได้จากพฤติกรรม** (response time, on-time) ไม่ใช่ดาว vanity
-- atom เดียว: grade pill · seller chip · status timeline · price ladder — ใช้ซ้ำทุกหน้า commerce
-
-### 4.3 Portfolio — Robinhood-grade (daily-open emotional moment)
-```
-HERO    มูลค่ารวม .text-display tabular + signed delta สี + กราฟ full-bleed
-        → finger-scrub อัปเดต hero number สดๆ + date pill ลอย + haptic tick
-RANGE   1D/1W/1M/3M/1Y/ALL (chromeless, tap 44px)
-QUARTET Market Value · Cost Basis · All-time P/L · ROI% (flat borderless)
-MOVERS  "เปลี่ยนอะไรตั้งแต่เปิดล่าสุด" band ก่อน holdings
-LIST    holdings เป็น list (ไม่ใช่ table) · analytics ลึกลง 1 tap
-```
-- **แยก inflow vs outflow** — ซื้อการ์ดเพิ่มไม่นับเป็นกำไรปลอม (= เครื่องมือ investor จริง ไม่ใช่ของเล่น)
-
-### 4.4 Deck / Meta / Tier — 1 feature family, 3 ระดับ (PLAY = energetic)
-- **Tier list = visual จริง** (แถว S/A/B/C สี, art ของ Leader) เป็น default · toggle เป็นตารางได้ 1 tap
-- meta row: 1 hero stat (meta-share%/win%) + face art + ลูกศร momentum · stat ลึกหลัง tap
-- **deck editor 1 จอ**: search bottom-sheet ค้างไว้ add รัวๆ · stepper ≥44px · count/curve/cost tick ขึ้นทันที (motion polish)
-- **deck cost ผูก portfolio**: "ต้นทุน ฿X · มีอยู่แล้ว ฿Y · ขาด ฿Z" → funnel เข้า marketplace
-- game-parameterized: One Piece 50+Leader · Pokémon 60+headline (abstraction = "face art + card list + format rule")
-
-### 4.5 Chat / Profile / Reputation
-- thread เกาะ listing/offer/order — context card ค้างบนสุด (รูป+เกรด+cert#+ราคา+offer state)
-- offer/escrow milestone = **system event card** (ไม่ใช่ bubble) + countdown หมดอายุ
-- "Accept ฿X" = confirm sheet + haptic → ตกลงใน chat = commit transaction จริง
-- escrow timeline (stepper) โผล่ทั้งใน order screen + mirror ใน chat + push noti
-- inbox แยก `Buying / Selling / Updates` (คนคุยคน ≠ event อัตโนมัติ)
-- reputation = badge เดียวมีระดับ (Trusted Seller) + stats sheet (response/on-time)
-
-### 4.6 Monetization / Ads — โปร ไม่ทำลายของ
-- `AdSlot/SponsoredCard` 1 component: height คงที่ + skeleton (zero layout shift) + inherit token (radius/spacing/hairline) → sponsored ดูเป็นส่วนหนึ่งไม่ใช่แปะ
-- `AD_ZONES` allowlist (mirror `CHROMELESS_ROUTES`) — **ad-free = default**, เปิดเฉพาะ browse/discovery
-- **โซนห้าม ad เด็ดขาด**: card-detail price/sold · portfolio · checkout/escrow · chat · onboarding
-- marketplace: **Featured/promoted listing** (การ์ดจริง seller boost) มี relevance floor + cap สัดส่วน paid:organic
-- density: ≤1 ad ต่อ fold · ~1 sponsored ต่อ 8–12 organic · ไม่อยู่อันแรก ไม่ติดกัน 2 อัน
-
-### 4.7 Multi-Game (Pokémon ต่อไป)
-- game-switcher pill มุมซ้ายบน → bottom sheet เลือกเกม · shell ทินต์ accent ตามเกม
-- `/[game]/` ทุกฟีเจอร์ · สลับเกม = อยู่ฟีเจอร์เดิม (One Piece marketplace → Pokémon marketplace)
-- "All games" aggregate สำหรับ portfolio รวม
-- schema: `gameId` มีแล้ว (P4.2 deploy prod) → ขยาย config + scraper ต่อเกม
+| Atom | รับผิดชอบ | ใช้ที่ |
+|------|----------|--------|
+| `PriceTag` | `.text-price` tabular + ลูกศร ▲/▼ + สี (สีคือ reinforcement ไม่ใช่ความหมายเดียว — a11y) | ทุกที่ที่มีราคา/delta |
+| `HeroNumber` | `.text-display` + count-up `.rise` + bind กับ scrub | portfolio total · card hero price · deck cost |
+| `GradeChip` / `GradeRail` | label + preview price ในชิป + selected(honey) state | card detail · comps · listings |
+| `EditionToggle` | JP \| EN segmented (re-price ทั้งหน้า) | card detail · search filter |
+| `SourceBadge` | mark ต่อแหล่ง (Yuyutei/SNKRDUNK/eBay/TCGplayer) + region JP/EN + คลิกไปต้นทาง | comps · breakdown · chart legend |
+| `SellerChip` | avatar + behavior badge (response/on-time) + tier | marketplace · chat · listings |
+| `PriceLadder` | Lowest Ask / Highest Bid / Last Sale (3-slot) | marketplace order book |
+| `CustodyTimeline` | escrow stepper + held amount + countdown | orders · mirror ใน chat · push |
+| `EventCard` | offer/order milestone = การ์ด full-width (ไม่ใช่ bubble) | chat |
+| `ListRow` *(มีแล้ว)* | tap ≥56px · leading/title/subtitle/trailing/chevron | ทุก table→list fallback |
+| `Surface` / `.panel` *(มีแล้ว)* | การ์ดเนื้อหาใหญ่ (hairline + warm) | ทุก card |
+| `AdSlot` *(มีแล้ว)* | fixed height + skeleton + inherit token | browse zone ที่ allowlist เท่านั้น |
+| `Skeleton` *(มีแล้ว)* + `EmptyState` | loading รูปร่างตาม content · empty มี CTA | ทุก async surface |
 
 ---
 
-## 5. Top 5 Moves (เรียงตามผลต่อความรู้สึก / แรงน้อยสุด)
+## 4. Visual system — วินัยที่ทำให้ feature เยอะแต่ไม่รก (Geist/Linear/Robinhood)
 
-1. **ล็อก token set ใหม่ (globals.css)** — near-black+luminance · hairline-as-shadow · global tabular-nums · type weight · per-game accent · motion curve → ยกทุกหน้าออกจาก "flat look" ทันที **(แรงน้อย ผลมากสุด)**
-2. **card-detail 5-zone** — edition(JP/EN) + grade rail re-price + sold comps source-badged → trust core + skeleton ใช้ได้ทุกเกมตลอดไป
-3. **3-axis IA + universal search + More hub** — รับ roadmap ทั้งหมดโดย chrome ไม่โต (ทำตอน surface ยังเล็ก, retrofit ทีหลังเจ็บ)
-4. **portfolio Robinhood-grade** — hero + finger-scrub + แยก inflow/outflow
-5. **marketplace live-market + escrow** — order book + custody timeline + trust-atom kit
+### Token 3 ชั้น (primitive → semantic → component) ใน `globals.css`
+- **Primitive:** สี · `--p-s1/2/3` · `--p-hair` *(มีแล้ว)* · **เพิ่ม** `--dur-fast 120 / --dur-base 200 / --dur-slow 300` · `--ease-chrome cubic-bezier(.32,.72,0,1)` *(มีแล้ว)* · `--ease-spring`
+- **Semantic:** `--price-up/down` · `--game-accent` *(มีแล้ว)* · **เพิ่ม** `--motion-money`(base+chrome) · `--motion-play`(spring) · elevation `--elev-flat`(hairline) / `--elev-raised`(nav,sheet) / `--elev-overlay`(dialog)
+- **Component:** Button/Badge/Surface อ่าน semantic เท่านั้น — **เลิก hardcode `duration-200 ease-out`** (ตอนนี้มี 2 vocabulary motion = drift) ย้ายไป `--motion-money`
 
----
-
-## 6. Roadmap (ต่อจาก P0–P2 ที่เสร็จแล้ว)
-
-| Phase | ทำอะไร | ขึ้นกับ |
-|-------|--------|---------|
-| **V1 — Design foundation** | ล็อก token set ใหม่ (§2) + primitive kit (grade pill/seller chip/timeline/price ladder/StatHero) · ปรับ AdSlot/AD_ZONES | บล็อกทุก phase |
-| **V2 — Card-detail + pricing model** | 5-zone + edition/grade axes + sold comps · ขยาย CardPrice (edition, eBay/TCGplayer source) | V1 |
-| **V3 — IA + Home + nav** | 3-axis, bottom-nav ใหม่, More hub, universal search, game-switcher live | V1 |
-| **V4 — Marketplace + escrow + chat** | order book · custody timeline · trust atoms · inbox · profile/reputation (= P3 + M3 backend) | V1–V3 |
-| **V5 — Portfolio + analytics** | Robinhood-grade hero + scrub + inflow/outflow | V1 |
-| **V6 — Deck / Meta / Tier (PLAY)** | feature family + visual tier + deck editor + cost→portfolio | V1, V3 |
-| **V7 — EN pricing + eBay/TCGplayer** | scraper EN stack + edition axis live | V2 |
-| **V8 — Pokémon** | game config + scraper + เปิด switcher | V3, schema P4.2 |
-
-> ลำดับ spine: V1 → V2/V3 (parallel ได้) → ที่เหลือแตกแขนง · effort สูงสุด = V4 (marketplace+escrow+chat)
+### กฎตายตัว
+1. **One hero number / screen** — `.text-display` ตัวเดียวต่อหน้า (portfolio total **หรือ** card hero) · ที่เหลือไล่ลง type ramp · เกิน 1 = clutter bug
+2. **Tabular mono numerals** ทุกตัวเลขเงิน/%/qty/แกนกราฟ — ราคาไม่ขยับความกว้างตอน tick = feel "financial instrument"
+3. **▲/▼ บนทุก delta** — สีคือ reinforcement, ลูกศรคือความหมาย (colorblind/grayscale ยังอ่านได้)
+4. **Elevation:** inline card = flat + hairline เท่านั้น (ไม่ clip มุมโค้ง) · layered shadow สงวนไว้ **3 surface เท่านั้น**: bottom-nav · bottom-sheet · dialog · dark-mode hairline = warm-white overlay (สว่างกว่า canvas → ขอบอ่านด้วย luminance ไม่ใช่เส้นดำ)
+5. **Spacing scale 4px:** gap-2 ในแถวแน่น · gap-3 padding การ์ด · gap-4 ระหว่างการ์ด · gap-6 ระหว่าง section · desktop เพิ่ม density (ลด padding/เพิ่มคอลัมน์) **ไม่เพิ่มของใหม่**
+6. **ศูนย์ spinner:** skeleton รูปร่างตรงกับ layout จริง (โผล่ <300ms, animated, aria-hidden) · empty state มี illustration + 1 บรรทัด + CTA เดียว · mutation = optimistic + `.rise`
+7. **`prefers-reduced-motion`** ปิด `.rise`/`.ease-chrome`/ticker *(มีแล้ว)* — ทุก animation ใหม่ต้อง honor
 
 ---
 
-## 7. ▶ NEXT
-1. **เบสรีวิว VISION นี้** — เคาะ vibe/accent/nav delta + ลำดับ phase
-2. ผมเริ่ม **V1 (design foundation / token set)** — เป็น win เร็วที่ยกทุกหน้า + ปลดล็อกที่เหลือ
-3. แตก V1 เป็น task ใน PLAN.md + (ถ้าอยาก) ทำ mockup หน้า card-detail/portfolio ให้เห็นจริงก่อนลงโค้ด
+## 5. Per-Surface Spec (ออกแบบเต็ม feature set)
 
-> หมายเหตุ: ฐาน design เดิมแข็ง (typography tokens, breakpoint discipline, `/[game]/`, table→list, gameId schema, AdSlot) — VISION นี้ไม่ได้รื้อ แต่ **เพิ่มวินัย visual + แยก 3 แกน + วาง per-surface** ให้ทุก phase reuse
+### 5.1 Card Detail & Pricing — trust core (หน้าสำคัญสุด)
+ราคา 1 ใบมี 3 แกน (edition JP/EN · grade · source) — **ห้ามโชว์พร้อมกันหมด** (= สเปรดชีต) ใช้ "re-pricing axis" — เลือก grade chip 1 ครั้ง → ทั้งหน้า re-price (StockX size-selector model)
+
+**Zones (บน→ล่าง):**
+1. **Identity** — รูปการ์ด (พระเอก, mobile full-bleed → lightbox · `lg:` sticky ซ้าย) + ชื่อ + code + rarity/set eyebrow + share
+2. **Edition + Grade** — `EditionToggle` JP\|EN (เหนือ rail) + **`GradeRail`** chip เลื่อน `Raw A · Raw B · Raw C · PSA 10 · PSA 9 · PSA 8 · BGS` · **แต่ละ chip โชว์ราคาตัวเอง** (rail = price comparison ก่อนแตะ) · selected = honey · no-data = ghost ไม่ซ่อน · = single source of truth (Zustand) ขับ zone 3–6
+3. **Stat row (trust anchor)** — `HeroNumber` = Last Sale ของเกรดที่เลือก (ถ้าไม่มี comp จริง → modeled "est." + tooltip, Cardmarket honesty) · 2 stat รอง: `Lowest Ask` · `Δ30d` (ลูกศร ไม่ใช่สีแดง/เขียวจัด) · `SourceBadge` + freshness "as of 3h ago"
+4. **Population strip** (เฉพาะ chip graded) — บรรทัดเดียวเลื่อนได้ `PSA Pop 10→124 · 9→980 · 8→1,510` เกรด active หนา · Raw ซ่อน · tap → sheet เต็ม
+5. **Chart** — เส้นเดียว bound เกรดที่เลือก + จุด sold comp ทาบบนเส้น (tap จุด → ไฮไลต์แถว comp) · `7D·1M·3M·1Y·All` · <2 จุด = "ข้อมูลไม่พอวาดกราฟ"
+6. **Recent Sales (sold comps)** — newest-first, filter ตามเกรด · แถว: date + price + grade echo + `SourceBadge` + ↗ · **SOLD เด่น, ask หรี่ + ป้าย "asking"** (ห้ามปนกัน) · `<sm` list / `sm+` table 4-col · cap 8 → "ดูทั้งหมด" sheet
+7. **Reference markets** — ask ต่ำสุดต่อแหล่ง (PriceHubSources เดิม, ลงล่าง) — "ซื้อที่ไหนตอนนี้" vs zone 6 "ขายจริงเท่าไหร่"
+8. **Meta + related** — attributes พับได้ + "พิมพ์อื่น/parallel" + "เด็คที่ใช้การ์ดนี้"
+9. **Sticky CTA** *(global bar)* — `Add to Portfolio`(honey) · `Watchlist` · `Set Alert` (pre-fill เกรด+ราคาที่เลือก)
+
+**ห้าม:** matrix เกรด×แหล่ง×ask+sold พร้อมกัน · ad ในโซนราคา/sold เด็ดขาด · ปน asking กับ sold · ตารางเลื่อนแนวนอนบนมือถือ
+
+### 5.2 Marketplace — "live market + escrow" ไม่ใช่กระดานประกาศ
+หน่วยตลาด = **SKU triple {card, edition, grade}** ไม่ใช่ per-listing (StockX) · 1 nav slot, sub-mode `ซื้อ · ขาย · ออเดอร์`
+
+- **Order book ต่อ SKU:** `PriceLadder` = Lowest Ask / Highest Bid / Last Sale + sparkline · ladder ask/bid 3 อันดับแรก ("ดูทั้งหมด" พับ) · **2 CTA เท่านั้น**: gold "ซื้อเลย ฿X" (take lowest ask) + ghost "เสนอราคา" (bid + expiry chip 3/7/14/30 วัน + "บิดคุณอันดับ #N")
+- **Escrow = `CustodyTimeline` ที่มองเห็น:** ชำระ(held) → ส่ง → กำลังส่ง → ถึง → ตรวจ 72ชม. → ปล่อยเงิน · **held amount = hero number** ("฿12,400 เก็บไว้ปลอดภัย" + หมีถือโหลน้ำผึ้ง) · countdown ring บน node ตรวจสอบ · dispute = node แดง เงิน freeze
+- **Buyer Protection** enumerate ใต้ปุ่ม Buy (3–4 bullet ไม่ใช่ลิงก์): เงินถูกถือ · authenticate การ์ด graded · แจ้งปัญหาใน 72ชม. · ไม่ส่ง=คืนเต็ม
+- **Seller badge ได้จากพฤติกรรม** (Whatnot): ตอบไว · ส่งตรงเวลา% · ขายสำเร็จ N · ไม่มีข้อพิพาท · tier Verified/Top — ไม่ใช่ดาว vanity
+- **Fees โปร่งใส 2 ฝั่ง:** buyer เห็น itemized checkout · seller เห็น net-payout สดตอนพิมพ์ราคา ("ได้รับ ฿11,160 หลังหัก 8%") · fee% ผูก subscription tier (Pro ถูกกว่า = upsell)
+- **Dispute** = branch มี timer จาก custody timeline (เหตุผล chip + รูป + SLA) ไม่ใช่ email ตัน
+- **First-party trust:** comp ที่มาจาก escrow order จริง = badge "ขายจริงบน Meecard" (จุด gold) เด่นกว่า scraped comp
+- **ห้าม:** classifieds grid เป็นหน้าหลัก · โชว์ ladder 30 แถว · ดาว vanity เป็น signal หลัก · auctions เป็น nav tab แยก (= state ที่ 3 ของ SKU)
+
+### 5.3 Portfolio — Robinhood-grade + ซื่อสัตย์เรื่อง P/L
+**Zones:** header (portfolio switcher + add) → **Hero** (`HeroNumber` มูลค่ารวม + Delta pill, glow PnL-tint ≤18%) → **scrub chart** full-bleed (baseline = ต้น range, finger-scrub อัปเดต hero สด, snap-back `.rise`) → range `1D·1W·1M·3M·1Y·ALL` (active = honey) → **KPI quartet** (Market Value · Cost Basis · P/L · ROI% — 2×2 hairline) → **Movers** ("มูฟเวอร์วันนี้" เรียงตาม **THB swing สัมบูรณ์** ไม่ใช่ %) → **Holdings** list 2 บรรทัด (qty · name/grade/lang · value+delta) → tap = detail sheet (toggle raw/graded history, avg cost vs market, sold-comp anchor)
+
+- **กฎทอง — แยก inflow ออกจาก gain:** ซื้อการ์ดเพิ่ม **ห้าม**ทำให้เส้นมูลค่ากระโดดเป็น "กำไร" · snapshot เก็บ `netInvested` (สะสมเงินที่ใส่จริง) → P/L = marketValue − netInvested (money-weighted, Sharesight) · จุดที่ซื้อเพิ่ม = **inflow notch** (จุด honey บนแกน x, tap = "เพิ่ม Luffy ×1 ฿1,200") · นี่คือ #1 honesty bug ปัจจุบัน (cron รวม item ใหม่เข้า total)
+- realized (ขายแล้ว) แยกจาก unrealized · value ต่อใบมาจาก **smoothed sold-comp index** ไม่ใช่ scrape ล่าสุดใบเดียว
+- **ห้าม:** เส้นกระโดดตอน add card · ROI เป็น hero · ทาสี P/L เป็น honey · donut+history+treemap พร้อมกัน · 6 KPI (4 พอ)
+
+### 5.4 PLAY — Deck Builder + Meta + Tier (1 family, energetic)
+ทั้งหมดเป็น tile ใน More hub (`/decks` reserve disabled tile อยู่แล้ว — เปิดใช้) · game-namespaced · game-parameterized ด้วย `GameConfig` (deckSize, hasLeader, copyLimit, curveStat, sections)
+
+- **Deck editor จอเดียว** (Moxfield, **ฆ่า modal-per-add**): desktop 3-col (search rail ค้าง · deck กลาง · stat rail sticky) · mobile = deck list + sticky bottom "เพิ่มการ์ด" (bottom-sheet ค้างไว้ add รัวๆ) · **`QtyStepper` ≥44px** (4-copy aware, tap เลขเปิด pad 1-2-3-4) · live cost-curve (Recharts honey bar, animate) + color-identity pip (off-color = honey warning ไม่บล็อก) + count ring X/50
+- **Deck cost ผูก portfolio → marketplace** (wedge เหนือคู่แข่ง): hero = deck cost THB → own/need split bar (owned honey, missing muted) → **"ซื้อที่ขาด N ใบ"** deep-link marketplace กรอง card code นั้น · per-row owned dot จาก holdings
+- **Tier list = VISUAL default** (Limitless แต่อุ่นกว่า): แถว S/A/B/C ของ leader art (face-crop) · tile = art + 1 hero stat (meta-share% default, toggle win%) + momentum arrow · toggle → table แบบ Limitless (data crowd) · **tier คำนวณจากกฎ** (share+win+sample threshold ระบุได้) ไม่ใช่ตามใจ · S = honey ตัวเดียวในกริด
+- **Meta row** = 1 hero stat + face art + momentum arrow (tap arrow = "+3.1% ตั้งแต่ OP15")
+- **Archetype detail → "Build this deck"** (EDHREC funnel): sample list + inclusion% + "cost ฿X · มี ฿Y" → clone เป็นเด็คใหม่ ลง editor พร้อม "ซื้อที่ขาด" → marketplace · chains 3 surface + monetization
+
+### 5.5 Chat · Profile · Reputation
+- **Thread เกาะ listing:** `StickyContextCard` บนสุด (รูป+name+code+edition+grade chip+cert#+ราคา+live offer state) ยุบเหลือ 56px ตอน scroll
+- **Offer/order = `EventCard`** (full-width, center, timeline dot — **ไม่ใช่ bubble**) · MessageType มี OFFER/ORDER_UPDATE/SYSTEM อยู่แล้ว (gap คือ rendering)
+- **"Accept ฿X" = confirm sheet** (line item + fee + shipping + all-in total = hero number + gold CTA) → สร้าง Order จริง · ไม่ใช่ tap เดียว
+- **Inbox split:** `ซื้อ · ขาย · อัปเดต` (segmented) · action-needed = ขอบ honey ซ้าย
+- **Reputation = 1 tier badge** (New→Established→**Trusted Seller** gold) + stats sheet (response · on-time% · dispute rate · deals · since) · **threshold ประกาศชัด** (Grailed: "อีก 3 ดีล + คง 4.9 → Trusted") · blue isVerified = identity (แยกจาก tier = performance)
+- **Cold-start:** auto-feedback 7 วันหลัง DELIVERED ถ้าไม่มี dispute (eBay 2025) → completedDeals โตจากการส่งจริง ไม่ต้องปลอม
+- escrow milestone mirror ทั้งใน order screen + chat EventCard + push · countdown live · dispute rate โชว์จริง (= trust signal)
+
+### 5.6 Monetization & Ads — โปร ไม่ทำลายของ
+2 surface แยกกันชัด: **(A) display ads** (AdSense/house, discovery เท่านั้น) · **(B) promoted listing** (seller-paid, ของจริง) · **(C) ad-free = headline Pro perk**
+
+- **`AdSlot` เดียว:** `size` prop → fixed height (reserve ก่อน fill = CLS 0) + skeleton dims เป๊ะ + inherit token (radius/spacing/hairline) → sponsored ดู native · label "Advertisement" เงียบ ไม่ honey
+- **Allowlist + banlist** (`placements.ts` มีแล้ว → เพิ่ม AD_ZONES allowlist + unit test): **ห้ามเด็ดขาด** card-detail ราคา/sold · portfolio ทั้งหมด · checkout/escrow · chat · onboarding/auth/admin/seller
+- **Cadence (index-derived):** `shouldRenderAdAt(i)` — ไม่ใช่อันแรก, อันแรกหลัง index ≥6, ทุก ~10, ≤1/fold, ห้ามติดกัน 2
+- **Tier+consent double-gate, render null** (ไม่ใช่กล่องว่าง) เมื่อซ่อน — paid = layout reflow แน่นขึ้น (felt benefit) · unfilled → fallback House promo (ไม่ยุบ) · consent มี Google consent mode v2 + PDPA
+- **Promoted listing** = `ListingCard` เดิม + 1 badge "Featured" + relevance floor + cap ≤20%/page + dedup (featured *หรือ* organic ไม่ใช่ทั้งคู่) — ไม่ใช่ banner, เป็น inventory จริงที่เพิ่ม liquidity
+- **House promo** = creative เดียวที่ใช้ honey CTA ได้ (third-party ห้ามยืม accent)
+
+### 5.7 Multi-Game (Pokémon ต่อไป) — game = namespace ไม่ใช่ tab
+- **URL เดียว canonical:** `/[game]/<feature>/...` (TCGplayer path-prefix) · ห้ามปน subdomain/query (Limitless = cautionary) · middleware resolve `[game]` กับ `Game.slug` · legacy 301 → prefixed · aggregate `/all/portfolio` `/all/search` เท่านั้น
+- **Switcher = context switcher** (ซ้ายบน, sheet/popover): เลือกแล้ว rewrite แค่ `[game]` segment **อยู่ feature เดิม** (Marketplace→Marketplace) · row โชว์ data ตัวเอง ("128 ใบ · ฿42,300") · pin เกมที่เล่น (Cardmarket Favourites) · coming-soon = ghost + chip "soon" + notify-me
+- **`GameConfig` 1 ไฟล์** ขับทุก parameterized surface — **ห้าม `if game===pokemon` กระจาย** · deck rules/rarities/pull-rate/cardFace stat fields/sources/editions อ่านจาก config
+- **Per-game tint = ชั้นบางทับ honey** (`--game-tint`): crest · glow บนสุด · กรอบการ์ด เท่านั้น · honey คง active/CTA ทุกเกม
+- **"All games" aggregate เฉพาะ Portfolio + Search** (Collectr): hero = ผลรวม THB ข้ามเกม + breakdown ต่อเกม deep-link · deck/meta/drop-calc = single-game (อย่าฝืน)
+- **card-face abstraction:** stat rail render จาก `GameConfig.cardFace` (OP: cost/power/counter/life · Pokémon: HP/type/stage/retreat) · edition+grade rail = universal
+
+---
+
+## 6. Data model evolution (⚠️ ทุกข้อแตะ Prisma — **เบสอนุมัติก่อน migrate**)
+> schema ปัจจุบัน gameId-ready แล้ว (Game + nullable gameId + index) · นี่คือส่วนต่อยอดเพื่อรับ feature set เต็ม
+
+| ฟีเจอร์ | ต้องเพิ่ม |
+|--------|----------|
+| **Grade axis** | `CardPrice.gradeCondition` (free-text) → **Grade enum** (RAW_A/B/C · PSA_10/9/8 · BGS) · `edition` (JP/EN) เป็น column (ตอนนี้ implied by source) |
+| **Population** | `CardPopulation`(cardId, grader, grade, count, asOf) — strip โชว์ ghost จนข้อมูลมา |
+| **Modeled vs real** | API คืน last-sale จริง **และ** modeled value + flag แยกกัน (อย่ารวม server-side) |
+| **Marketplace** | `MarketSku`{cardId, edition, grade} · `Listing`→Ask ผูก SKU · `Bid` model (auto-match → Order) · Order +escrow fields (heldAt, inspectionEndsAt, releasedAt, stripeCharge/Transfer — Stripe Connect separate charges+transfers, ไม่ใช่ legal escrow) · `SellerStats` roll-up · `Dispute` model · `Comp` feed (source enum + soldAt) |
+| **Portfolio honesty** | `PortfolioSnapshot +netInvestedJpy` (money-weighted P/L) · `TransactionType +SELL` + realized vs unrealized · `Card.indexPriceJpy` (rolling median comp) แทน latestPrice ใบเดียว |
+| **PLAY** | `GameConfig` = static `src/lib/games/rules.ts` (ไม่ใช่ DB) · `MetaArchetype` + `ArchetypeCardInclusion` (อัปจาก aggregation cron) · `GET /api/decks/[id]/cost` → {costThb, ownedThb, neededThb, missing[]} |
+| **Reputation** | `sellerTier` (derive) · `SellerStats +onTimeShipPct +disputeRate` · auto-feedback cron |
+| **Ads** | `PromotedListing`(boostTier, dates, paymentId, relevanceScore) · `AdEvent` (impression/click) · consent persist server-side (PDPA) · **ไม่มี ad targeting จาก portfolio** |
+| **Multi-game** | `Game +accentTint +sortOrder +isComingSoon` · backfill `Card.gameId` → NOT NULL + `@@unique([gameId, cardCode])` · `Card.gameMeta Json?` (stat ต่อเกม) |
+
+---
+
+## 7. ลำดับ build (de-versioned — ดู checklist ใน [PLAN.md](PLAN.md))
+แก้ in-place ทีละ surface · spine: **Foundation (token+atom kit+states)** → **Card detail** (trust core, คุ้มสุด) → **Portfolio** (honesty fix + Robinhood hero) → **Marketplace+escrow** (effort สูงสุด) → **Chat/Profile** → **PLAY (deck/meta/tier)** → **Ads polish** → **Multi-game (Pokémon)** · pricing data (grade/edition/EN source) แทรกตอนทำ card detail/marketplace
+
+---
+
+## 8. Reference platforms (งานวิจัย — lookup ตอน build แต่ละ surface)
+- **Pricing/comps:** StockX (bid/ask/last-sale) · Card Ladder (sales history index) · PSA (pop report) · TCGplayer (condition selector) · 130point (true sold incl. best-offer) · SNKRDUNK (JP graded) · Cardmarket (AVG1/7/30 + honesty)
+- **Marketplace/escrow:** StockX (order book) · eBay Vault (custody as product) · Mercari (hold→deliver→72h→release) · Whatnot (behavioral trust) · Goldin/Heritage (auth premium) · Stripe Connect (separate charges+transfers)
+- **Portfolio:** Robinhood (hero+scrub) · Card Ladder · Collectr (grade-aware, slab view) · Delta/Rainbow (rows) · Sharesight (realized/unrealized honesty)
+- **PLAY:** Moxfield (single-screen editor) · Archidekt (own/need) · Limitless (meta table) · EDHREC (inclusion%) · untapped.gg (derived tiers) · Pokémon TCG Live (mobile editor)
+- **Chat/reputation:** StockX/Mercari (offer mechanics) · Grailed/Whatnot (tier badge thresholds) · eBay (feedback%, auto-feedback) · Discord/Linear (system-event rows)
+- **Ads:** AdSense/GPT + Better Ads Standards · TCGplayer (clean data table) · eBay/Amazon (promoted = native + label) · Playwire (density numbers)
+- **Multi-game:** TCGplayer/Cardmarket (path namespace) · Collectr/Slabfolio (aggregate) · Moxfield (format parameterize)
+- **Visual system:** Vercel/Geist (hairline-as-border, dark edge by light) · Linear (calm density, Cmd-K) · Robinhood (one hero number) · Stripe (restraint) · Mercari (image-led grid)

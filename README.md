@@ -76,12 +76,12 @@ doc/               เอกสารอ้างอิงเชิงลึก 
 
 | ไฟล์ | บทบาท |
 |------|-------|
-| [AGENTS.md](AGENTS.md) | conventions (typography / breakpoints / API) |
-| [REDESIGN.md](REDESIGN.md) | design-phase SSOT (IA, roadmap) |
+| [AGENTS.md](AGENTS.md) | conventions (typography / breakpoints / API) + วงจรการทำงาน + permission |
 | [SPEC.md](SPEC.md) | what-is-done checklist |
-| [PLAN.md](PLAN.md) | code backlog (M0–M4) |
+| [PLAN.md](PLAN.md) | งานค้าง (checklist) |
 | [PROGRESS.md](PROGRESS.md) | สถานะสด / session handoff |
-| [doc/](doc/) | reference เชิงลึก (data-pipeline, honey economy, marketplace) |
+| [VISION.md](VISION.md) | ทิศดีไซน์ (redesign north-star) |
+| [doc/](doc/) | reference เชิงลึก + `archive/` (REDESIGN เก่า, business plan) |
 
 ## Deploy
 

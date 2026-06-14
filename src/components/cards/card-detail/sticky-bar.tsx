@@ -1,41 +1,38 @@
 "use client"
 
 import { CardAddToPortfolio } from "@/components/cards/card-add-to-portfolio"
-import { PriceDisplay } from "@/components/shared/price-display"
-import { t } from "@/lib/i18n"
-import { useUIStore } from "@/stores/ui-store"
+import { t, type Language } from "@/lib/i18n"
+import { GradeValue } from "./grade-value"
+import type { GradeDatum } from "./grades"
 
 /**
- * Mobile-only sticky action bar (REDESIGN.md §4 — StickyActionBar). Keeps the
- * primary "Add to Portfolio" CTA + current price thumb-reachable while the user
- * scrolls the long card-detail page, instead of leaving it stranded near the
- * top. Sits ABOVE the global bottom-nav (chrome route). Desktop keeps the inline
- * actions and hides this bar.
+ * Mobile-only sticky action bar (REDESIGN §4). Keeps the primary "Add to
+ * Portfolio" CTA + the SELECTED grade's price thumb-reachable while the user
+ * scrolls the long card-detail page. Tracks the hero (selected grade) so the
+ * pinned number never contradicts the price the user is looking at. Sits ABOVE
+ * the global bottom-nav (chrome route); desktop hides this bar.
  */
 export function CardDetailStickyBar({
   cardId,
   cardName,
-  priceJpy,
-  priceThb,
+  datum,
+  gradeLabel,
+  lang,
 }: {
   cardId: number
   cardName: string
-  priceJpy: number | null
-  priceThb: number | null
+  datum: GradeDatum
+  gradeLabel: string
+  lang: Language
 }) {
-  const lang = useUIStore((s) => s.language)
-
   return (
-    <div className="fixed inset-x-0 bottom-[calc(3.5rem_+_env(safe-area-inset-bottom))] z-40 border-t border-border/40 bg-background/95 backdrop-blur-xl md:hidden">
+    <div className="frost hairline-t fixed inset-x-0 bottom-[calc(3.5rem_+_env(safe-area-inset-bottom))] z-40 md:hidden">
       <div className="mx-auto flex max-w-lg items-center justify-between gap-3 px-4 py-2.5">
         <div className="min-w-0">
-          <p className="text-meta leading-tight">{t(lang, "marketPrice")}</p>
-          <PriceDisplay
-            priceJpy={priceJpy}
-            priceThb={priceThb ?? undefined}
-            size="card"
-            showChange={false}
-          />
+          <p className="text-meta leading-tight">
+            {gradeLabel} · {t(lang, "marketPrice")}
+          </p>
+          <GradeValue datum={datum} size="md" className="text-foreground" />
         </div>
         <CardAddToPortfolio
           cardId={cardId}

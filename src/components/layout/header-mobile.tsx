@@ -15,7 +15,7 @@ export function HeaderMobile({ isAuthenticated }: { isAuthenticated: boolean }) 
   const openSearch = useUIStore((s) => s.setSearchOpen);
 
   return (
-    <div className="sticky top-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur-xl md:hidden">
+    <div className="frost sticky top-0 z-50 md:hidden" style={{ boxShadow: "inset 0 -1px 0 0 var(--p-hair)" }}>
       <div className="flex h-14 items-center gap-1 px-4">
         <Link href="/" className="flex shrink-0 items-center gap-2">
           <Image src="/meecard.png" alt="Meecard" width={26} height={26} className="shrink-0 select-none" priority />

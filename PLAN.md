@@ -2,6 +2,46 @@
 > งานใหญ่แตกเป็น task ติ๊กได้ · ทำทีละอัน · ติ๊กเมื่อ **verify แล้ว** (ไม่ใช่แค่เขียนเสร็จ)
 > ลำดับ milestone = ข้อเสนอ — เบสสลับได้ · แผนธุรกิจ/north star อยู่ `doc/archive/detailed-plan-2026-04-28.md` (archived snapshot) ไม่ใช่ไฟล์นี้
 
+## 🎨 Redesign (in-place · ทิศเต็มใน [VISION.md](VISION.md) · **ไม่มีเวอร์ชัน v1/v2**)
+> แก้ของเดิมทีละ surface ตาม spine VISION §7 · ทุก surface = adopt atom kit + verify (tsc/lint/build/test) + เปิดดูจริง · ⚠️ ข้อที่แตะ schema = เบสอนุมัติก่อน
+> 📌 กฎ design-system: การ์ดใหญ่ = `.panel` · `surface-*`/`hairline` = chip/control/nested · `.hairline` เป็น unlayered → อย่าผสมกับ ring/shadow บน element เดียว
+
+### Foundation — token + atom kit + states (บล็อกทุก surface)
+- [x] warm primitive kit + `--p-*` → `globals.css` (dark+light) · proto เหลือแต่ `.proto-root` var
+- [x] token motion/elevation: `--dur-fast/base/slow` + `--ease-chrome/spring` + `--elev-flat/raised/overlay` (light+dark) · wire `.ease-chrome`/`.rise` → token · refactor button base → `duration-[var(--dur-base)] ease-[var(--ease-chrome)]` · verify ✓ (เหลือ: ทยอย migrate 20 ไฟล์ที่ยัง hardcode `duration-*` ตอนแตะหน้านั้นๆ)
+- [ ] atom kit (สร้าง/รวม): `PriceTag` · `HeroNumber` · `GradeChip`/`GradeRail` · `EditionToggle` · `SourceBadge` · `SellerChip` · `PriceLadder` · `CustodyTimeline` · `EventCard` *(มีแล้ว: ListRow · Surface · AdSlot · Skeleton)*
+- [ ] state system: skeleton รูปร่างตาม content ทุก async + `EmptyState`+CTA · ศูนย์ spinner
+
+### Card detail — trust core ✅ (proto visionary layout · เต็มภาพ · est-labeled fill)
+- [x] **rework layout ตรง proto visionary** (เบสเลือก): grid `340px/1fr` · ซ้าย sticky = รูป+identity+EditionToggle+CTA · ขวา = hero + **3-stat box** (Last Sale·Lowest Listing·Sales 30d) + grade chips **outline-selected** + chart card + **tabs** (Comps/Listings/Population/Specs)
+- [x] **เติมตัวอย่าง + ติดป้าย est ทุกตัวที่ไม่ใช่ของจริง** (เบสเลือก) — ของจริง (Raw A=Yuyutei · PSA 10=SNKR) ไม่ติดป้าย · per-stat `EstMark` (title+aria) · recent-prices ติด Sold/Listed จาก type จริง
+- [x] adopt primitive pass แรก (glow image + sticky desktop + frost bar)
+- [x] `GradeRail` (Raw A/B/C · PSA 10/9/8 · BGS) → re-price ทั้งหน้า · `EditionToggle` JP/EN (EN=soon) · atoms ใหม่: `grades.ts` · `grade-value`(PriceTag/Amount/Delta) · `grade-rail` · `edition-toggle` · `recent-sales` · `population-strip`
+- [x] stat row: hero (เกรดที่เลือก) + Δ30d + freshness + "est." disclosure (tooltip+aria) — **เลิก fabricate ask, last-sale = ข้อมูลจริงเท่านั้น + source attribution**
+- [x] Recent prices feed (ทุกแถวติดป้าย Sold/Listed จาก `type` จริง + เกรดจริงต่อแถว) · chart bound เกรด · population strip (graded, sample-labeled)
+- [x] honesty/a11y fix รอบรีวิว: focus ring · aria-pressed (เลิก fake tablist) · `key={card.id}` กัน stale · sticky bar grade-aware · i18n 9 keys ×3 · Delta neutral 0%
+- [ ] **เปลี่ยน est → ข้อมูลจริง** เมื่อมี schema: Grade enum (Raw A/B/C·PSA 9/8) + edition JP/EN column + `Comp`/population tables (⚠️ เบสอนุมัติ migrate) — โครง UI พร้อม swap แล้ว
+
+### Portfolio — honesty + Robinhood hero
+- [ ] ⚠️ fix snapshot: `netInvested` → P/L money-weighted (เลิกเส้นกระโดดตอน add card) [schema]
+- [ ] hero + finger-scrub + inflow notch · KPI quartet · movers (เรียง THB swing) · holding detail sheet (raw/graded toggle)
+
+### Marketplace + escrow (effort สูงสุด · หลังเปิด backend flag)
+- [ ] order book ต่อ SKU + 2 CTA (buy now/place bid) · `CustodyTimeline` + held hero · buyer protection · seller behavior badge · dispute flow [schema: MarketSku/Bid/escrow/SellerStats]
+
+### Chat / Profile / Reputation
+- [ ] sticky context card · offer/order → `EventCard` · accept = confirm sheet · inbox split (ซื้อ/ขาย/อัปเดต) · tier badge + stats sheet + auto-feedback cron
+
+### PLAY — deck / meta / tier
+- [ ] deck editor จอเดียว (ฆ่า modal-per-add) + stepper ≥44px + cost curve · deck cost → own/need → "ซื้อที่ขาด" → marketplace
+- [ ] tier visual default (S/A/B/C leader art) + meta momentum · archetype "build this deck" funnel · `GameConfig`-parameterized
+
+### Ads polish
+- [ ] AdSlot `size`+skeleton (CLS 0) · AD_ZONES allowlist + ban-list **unit test** · `shouldRenderAdAt` cadence · promoted-listing governance (floor+cap+dedup)
+
+### Multi-game (Pokémon)
+- [ ] `GameConfig` (1 ไฟล์) + `/[game]/` middleware + switcher (สลับแล้วอยู่ feature เดิม) + per-game tint + all-games portfolio aggregate [schema: Game +fields · gameId NOT NULL]
+
 ## 🔴 M0 — บั๊ก/ของหลุดที่เจอจากการ audit (เร็ว ควรเก็บก่อน)
 - [ ] **cron `leaderboard-rewards` ไม่ถูก schedule ใน `vercel.json`** — route มีจริง (`/api/cron/leaderboard-rewards`) แต่ไม่เคยรันอัตโนมัติ → Top-10 monthly payout อาจไม่เคยจ่าย · เพิ่ม schedule (เสนอ: วันที่ 1 ของเดือน หลัง draw-raffle) + ตรวจย้อนหลังว่าต้อง backfill รางวัลไหม
 - [ ] งานใน working tree ค้าง commit (15 ไฟล์ raffle/header/i18n) — เก็บงานให้จบแล้ว commit
@@ -36,8 +76,8 @@
 ### R4 — client→server pages (performance มือถือ — ท้ายสุด)
 - [ ] หน้า client ล้วนที่ควรเป็น server-first: `settings/*` 9 หน้า · `saved` · `orders` · `seller/*` (เน้นหน้า first paint ช้าบน 4G)
 
-## 🎨 DESIGN PHASE → ดู `REDESIGN.md` (SSOT) · URL strategy = **B (`/[game]/` prefix)** · เริ่ม P0
-> เบสเคาะ 2026-06-14 · roadmap เต็มใน REDESIGN.md §7 · branch `redesign/p0-*` (ห้าม push master ตรง)
+## ✅ Redesign — เฟสแรก (เสร็จ + merge แล้ว · เก็บเป็น record)
+> ป้าย P0–P4 = **ของเก่า ไม่ใช้ต่อ** · redesign รอบใหม่ = in-place (ดู §🎨 Redesign ด้านบน + [VISION.md](VISION.md)) · รายละเอียดเต็มใน git history + [doc/archive/REDESIGN.md](doc/archive/REDESIGN.md) · เก็บ checklist ข้างล่างไว้ดูว่าอะไรทำไปแล้ว
 
 ### P0 — Foundation (chrome / nav / tokens / primitives) · บล็อกทุก phase
 **P0a — Nav IA foundation** ✅ verified, PR #7 เปิดแล้ว (branch `redesign/p0-nav-foundation`)
@@ -60,7 +100,7 @@
 
 → **P0 จบครบ** (P0a nav + P0b ads + P0c polish)
 
-### P1 — Core pages (REDESIGN.md §7) · เริ่มจากหน้าแย่สุด (card-detail)
+### P1 — Core pages (doc/archive/REDESIGN.md §7) · เริ่มจากหน้าแย่สุด (card-detail)
 **P1.1 — card-detail mobile** ✅ verified (branch `redesign/p1-card-detail`)
 - [x] ย่อรูปการ์ดบนมือถือ (`max-w-[240px] sm:[320px] lg:none`) — ไม่กินทั้งจอแรก
 - [x] reorder: image → header/actions/price/info → siblings (full-width) → related (เลิกดัน actions ใต้ siblings)
@@ -88,7 +128,7 @@
 
 → **P1 ครอบคลุมหน้าหลักแล้ว** (card-detail, cards-browse, sets) · เหลือ polish ปลีกย่อย
 
-### P2 — Portfolio & tools (REDESIGN.md §7)
+### P2 — Portfolio & tools (doc/archive/REDESIGN.md §7)
 **P2.1 — portfolio** ✅ verified (branch `redesign/p2-portfolio`)
 - หมายเหตุ: portfolio อยู่ในสภาพดีอยู่แล้ว — มี tabs (overview/insights/transactions) แยก analytics, mobile picker bar, mobile asset cards
 - [x] PortfolioHero stat row (PnL/cost/best/worst) **ยุบ default บนมือถือ** + ปุ่ม "ดูรายละเอียด" · value+PnL pill โชว์เสมอ · desktop กางเต็ม (holdings เร็วขึ้นตาม audit)
@@ -100,7 +140,7 @@
 
 → **P2 ครอบคลุมแล้ว** (portfolio + tools) · core mobile UI redesign (P0+P1+P2) เสร็จเป็นกอบเป็นกำ
 
-### P4 — Multi-game / Pokémon (REDESIGN.md §5.1) · เบสเคาะ: per-game · ขยาย enum · อนุมัติ schema
+### P4 — Multi-game / Pokémon (doc/archive/REDESIGN.md §5.1) · เบสเคาะ: per-game · ขยาย enum · อนุมัติ schema
 **P4.1 — GameSwitcher + Pokémon stub** ✅ verified (branch `redesign/p4-game-switcher`) — โค้ดล้วน ไม่แตะ DB
 - [x] `pokemon.ts` stub (comingSoon) + register ใน GAME_CONFIGS · `getActiveGameConfigs()` · GameConfig +flags (shortName/comingSoon/supports*/deckRules)
 - [x] `GameSwitcher` pill ใน header (มือถือ+desktop) — OPCG active, Pokémon disabled "เร็วๆ นี้" · ใช้ `currentGame` (persist) · i18n chooseGame
@@ -128,9 +168,7 @@
 - [ ] สืบ + `migrate resolve` ให้ตรงความจริง DB (น่าจะ resolve --applied drop_watchlist ถ้า column ถูก drop จริงแล้ว · เพิ่ม/หา add_saved_profile migration) → ให้ `migrate status` สะอาด
 - [ ] ⚠️ แตะ DB จริง — ทำตอนมีเวลา + backup
 
-**P4.3+ (build later)** — game-scoped queries server-side · `/[game]/` route group + redirect · Pokémon sets/rarities/pull-rate · scraper stack ใหม่
-
-### ค้างจาก audit (ทำตอน redesign แต่ละหน้า — REDESIGN.md P1+)
+### ค้างจาก audit (ทำตอน redesign แต่ละหน้า)
 - Honey nav มือถือ: 7 แท็บไอคอนล้วนไม่มี label (`honey-tab-nav.tsx:159`) + scroll แนวนอน (→ P5)
 - card-detail หนาแน่น/ปุ่มใต้ fold (→ P1) · portfolio scroll ลึก (→ P2)
 

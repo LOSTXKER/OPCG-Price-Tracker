@@ -346,7 +346,7 @@ export function deriveSourcePrices(
 }
 
 export function buildChartData(
-  prices: { scrapedAt: Date; priceJpy: number | null; priceThb: number | null; priceUsd: number | null; source: string; gradeCondition: string | null }[]
+  prices: { scrapedAt: Date; priceJpy: number | null; priceThb: number | null; priceUsd: number | null; source: string; gradeCondition: string | null; type?: string | null }[]
 ) {
   return [...prices]
     .sort((a, b) => new Date(a.scrapedAt).getTime() - new Date(b.scrapedAt).getTime())
@@ -357,5 +357,8 @@ export function buildChartData(
       priceUsd: p.priceUsd,
       source: p.source,
       gradeCondition: p.gradeCondition ?? null,
+      // SELL = listing/ask, SOLD = settled sale — carried so the UI never labels
+      // an ask as a sale (VISION §5.1 honesty rule).
+      type: p.type ?? null,
     }))
 }
