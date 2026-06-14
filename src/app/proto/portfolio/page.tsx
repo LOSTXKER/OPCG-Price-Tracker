@@ -1,8 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
-import { ArrowLeft, ChevronDown, Plus } from "lucide-react"
+import { Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Delta, ScrubChart, Spark, baht } from "../_components/kit"
 import { PF, PF_SERIES, MOVERS, HOLDINGS } from "../_components/mock"
@@ -22,19 +21,17 @@ export default function ProtoPortfolio() {
   const shownPct = scrubbing ? ((data[scrub] - start) / start) * 100 : pct
 
   return (
-    <div className="mx-auto max-w-[460px] pb-24 lg:max-w-6xl lg:pb-12">
-      {/* top bar */}
-      <header className="frost sticky top-0 z-20 flex items-center justify-between px-4 py-3 lg:px-8">
-        <Link href="/proto" className="flex size-9 items-center justify-center rounded-full surface-2 hairline">
-          <ArrowLeft className="size-4" />
-        </Link>
-        <button className="surface-2 hairline flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold">
-          ทุกเกม <ChevronDown className="size-3.5" />
+    <div className="mx-auto max-w-[460px] pb-12 lg:max-w-6xl">
+      {/* page title — personal page, login optional (demo data shown to guests) */}
+      <div className="flex items-center justify-between px-4 pt-5 lg:px-8">
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight text-foreground">พอร์ตของฉัน</h1>
+          <p className="mt-0.5 text-xs text-muted-foreground">เดโม่ · เข้าสู่ระบบเพื่อบันทึกถาวร</p>
+        </div>
+        <button className="flex size-10 items-center justify-center rounded-xl surface-2 hairline" style={{ color: "var(--primary)" }}>
+          <Plus className="size-5" />
         </button>
-        <button className="flex size-9 items-center justify-center rounded-full surface-2 hairline" style={{ color: "var(--primary)" }}>
-          <Plus className="size-4" />
-        </button>
-      </header>
+      </div>
 
       <div className="lg:grid lg:grid-cols-[1fr_340px] lg:gap-10 lg:px-8 lg:pt-4">
         {/* MAIN */}

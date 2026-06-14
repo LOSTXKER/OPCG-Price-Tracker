@@ -99,3 +99,49 @@ export const HOLDINGS = [
   { name: "Yamato", code: "OP09-118", grade: "Raw A", qty: 3, val: 23400, pct: 8.1 },
   { name: "Portgas D. Ace", code: "OP02-013", grade: "Raw A", qty: 4, val: 18600, pct: 1.1 },
 ]
+
+/* ── Browse / Home cards ────────────────────────────────────────────────── */
+export type BrowseCard = {
+  name: string
+  code: string
+  set: string
+  rarity: string
+  price: number
+  pct: number
+  series: number[]
+  grad: string // foil gradient
+}
+
+export const CARDS: BrowseCard[] = [
+  { name: "Monkey D. Luffy", code: "OP01-120", set: "OP01", rarity: "SEC", price: 48000, pct: 12.3, series: series(20, 36000, 48000, 1400, 1.4, 0.1), grad: "linear-gradient(150deg,#241808,#6d4f23,#e9b970)" },
+  { name: "Shanks", code: "OP01-121", set: "OP01", rarity: "SEC", price: 52000, pct: 4.6, series: series(20, 48000, 52000, 900, 1.8, 0.5), grad: "linear-gradient(150deg,#2a0e0e,#7a2a2a,#e98a70)" },
+  { name: "Boa Hancock", code: "OP02-116", set: "OP02", rarity: "SR", price: 19000, pct: 6.2, series: series(20, 16800, 19000, 600, 2, 0.9), grad: "linear-gradient(150deg,#2a0e22,#7a2a5a,#e970b8)" },
+  { name: "Trafalgar Law", code: "OP05-119", set: "OP05", rarity: "SEC", price: 16400, pct: -3.2, series: series(20, 17200, 16400, 420, 2.2, 1), grad: "linear-gradient(150deg,#0e1a2a,#2a4a7a,#70b0e9)" },
+  { name: "Yamato", code: "OP09-118", set: "OP09", rarity: "SR", price: 7800, pct: 8.1, series: series(20, 6900, 7800, 280, 1.8, 0.5), grad: "linear-gradient(150deg,#1a1408,#5a4818,#e9c870)" },
+  { name: "Roronoa Zoro", code: "OP01-025", set: "OP01", rarity: "SR", price: 9200, pct: 2.4, series: series(20, 8600, 9200, 220, 2, 0.3), grad: "linear-gradient(150deg,#0e2014,#1a5a3a,#70e9a0)" },
+  { name: "Nico Robin", code: "OP03-079", set: "OP03", rarity: "SR", price: 5400, pct: -1.1, series: series(20, 5600, 5400, 160, 2.1, 1.4), grad: "linear-gradient(150deg,#1a0e2a,#4a2a7a,#a070e9)" },
+  { name: "Sanji", code: "OP01-051", set: "OP01", rarity: "SR", price: 6100, pct: 3.8, series: series(20, 5500, 6100, 200, 1.9, 0.7), grad: "linear-gradient(150deg,#2a1a08,#7a5018,#e9b870)" },
+]
+
+/* ── Marketplace listings ───────────────────────────────────────────────── */
+export type MktListing = {
+  name: string
+  code: string
+  grade: string
+  edition: "JP" | "EN"
+  price: number
+  seller: string
+  rating: number
+  verified: boolean
+  featured?: boolean
+  grad: string
+}
+
+export const MKT: MktListing[] = [
+  { name: "Shanks", code: "OP01-121", grade: "PSA 10", edition: "JP", price: 52000, seller: "GrandLineTCG", rating: 4.9, verified: true, featured: true, grad: "linear-gradient(150deg,#2a0e0e,#7a2a2a,#e98a70)" },
+  { name: "Monkey D. Luffy", code: "OP01-120", grade: "PSA 9", edition: "JP", price: 23200, seller: "card_oji", rating: 4.8, verified: true, grad: "linear-gradient(150deg,#241808,#6d4f23,#e9b970)" },
+  { name: "Boa Hancock", code: "OP02-116", grade: "Raw A", edition: "EN", price: 9300, seller: "thaiopcg", rating: 4.7, verified: false, grad: "linear-gradient(150deg,#2a0e22,#7a2a5a,#e970b8)" },
+  { name: "Yamato", code: "OP09-118", grade: "PSA 10", edition: "JP", price: 28400, seller: "wano_cards", rating: 5.0, verified: true, grad: "linear-gradient(150deg,#1a1408,#5a4818,#e9c870)" },
+  { name: "Trafalgar Law", code: "OP05-119", grade: "PSA 9", edition: "EN", price: 15800, seller: "heartpirates", rating: 4.6, verified: true, grad: "linear-gradient(150deg,#0e1a2a,#2a4a7a,#70b0e9)" },
+  { name: "Roronoa Zoro", code: "OP01-025", grade: "Raw A", edition: "JP", price: 9100, seller: "santoryu", rating: 4.9, verified: true, grad: "linear-gradient(150deg,#0e2014,#1a5a3a,#70e9a0)" },
+]

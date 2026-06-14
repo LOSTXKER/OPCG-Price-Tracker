@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import {
-  ArrowLeft, BadgeCheck, ChevronRight, Heart, Plus, Share2, Shield, Star,
+  BadgeCheck, ChevronRight, Heart, Plus, Share2, Shield, Star,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Delta, Segmented, ScrubChart } from "../_components/kit"
@@ -28,19 +28,19 @@ export default function ProtoCardDetail() {
 
   return (
     <div className="mx-auto max-w-[460px] pb-24 lg:max-w-5xl lg:pb-12">
-      {/* top bar */}
-      <header className="frost sticky top-0 z-20 flex items-center justify-between px-4 py-3 lg:px-8">
-        <Link href="/proto" className="flex size-9 items-center justify-center rounded-full surface-2 hairline">
-          <ArrowLeft className="size-4" />
-        </Link>
-        <span className="surface-2 hairline flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold">
-          <span className="size-2 rounded-full" style={{ background: "#d8453a" }} />
-          One Piece
+      {/* breadcrumb — public, crawlable path (no login wall, SEO) */}
+      <nav className="flex items-center justify-between gap-2 px-4 pt-4 text-xs text-muted-foreground lg:px-8">
+        <span className="flex min-w-0 items-center gap-1 truncate">
+          <Link href="/proto" className="shrink-0 hover:text-foreground">หน้าแรก</Link>
+          <ChevronRight className="size-3 shrink-0" />
+          <Link href="/proto/browse" className="shrink-0 hover:text-foreground">ราคา</Link>
+          <ChevronRight className="size-3 shrink-0" />
+          <span className="truncate text-foreground">{CARD.code}</span>
         </span>
-        <button className="flex size-9 items-center justify-center rounded-full surface-2 hairline">
+        <button className="flex size-8 shrink-0 items-center justify-center rounded-full surface-2 hairline">
           <Share2 className="size-4" />
         </button>
-      </header>
+      </nav>
 
       <div className="lg:grid lg:grid-cols-[340px_1fr] lg:gap-10 lg:px-8 lg:pt-6">
         {/* LEFT — identity + image + CTA (sticky on desktop) */}
