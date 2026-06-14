@@ -17,9 +17,7 @@ import { ConfirmDialogProvider } from "@/components/shared/confirm-dialog";
 import { UpgradeDialogProvider } from "@/components/shared/upgrade-dialog";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { websiteJsonLd } from "@/lib/seo/json-ld";
-import { V2ThemeToggle } from "@/components/v2/theme-toggle";
 import "./globals.css";
-import "@/components/v2/theme.css";
 
 const kanit = Kanit({
   variable: "--font-sans",
@@ -82,12 +80,6 @@ export default function RootLayout({
     <html lang="th" suppressHydrationWarning>
       <head>
         <JsonLd data={websiteJsonLd()} />
-        {/* V2 warm-premium theme — apply .v2 before paint when opted in (dev toggle). */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{if(document.cookie.split('; ').includes('mc_v2=1'))document.documentElement.classList.add('v2')}catch(e){}`,
-          }}
-        />
       </head>
       <body
         className={`${kanit.variable} ${jetbrainsMono.variable} flex min-h-dvh flex-col font-sans antialiased`}
@@ -114,7 +106,6 @@ export default function RootLayout({
                 <ScrollToTop />
                 <MissionTracker />
                 <ConsentBanner />
-                <V2ThemeToggle />
                 <Toaster position="top-center" />
               </UpgradeDialogProvider>
             </ConfirmDialogProvider>

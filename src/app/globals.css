@@ -128,40 +128,41 @@
 }
 
 .dark {
-  --background: #1C1C1E;
-  --foreground: #F5F5F7;
-  --card: #1C1C1E;
-  --card-foreground: #F5F5F7;
-  --popover: #2C2C2F;
-  --popover-foreground: #F5F5F7;
-  --primary: #E0B865;
-  --primary-foreground: #1C1C1E;
-  --secondary: #262220;
-  --secondary-foreground: #F2EAE0;
-  --muted: #262220;
-  --muted-foreground: #C4B0A0;
-  --accent: #2C2724;
-  --accent-foreground: #F0D080;
-  --destructive: #FF453A;
-  --border: #3D3530;
-  --input: #3D3530;
-  --ring: #E0B865;
-  --chart-1: #E0B865;
-  --chart-2: #30D158;
-  --chart-3: #FA999B;
+  /* WARM premium (espresso + honey-gold) — redesign default for dark mode */
+  --background: #100C09;
+  --foreground: #F6EFE6;
+  --card: #17110D;
+  --card-foreground: #F6EFE6;
+  --popover: #1F1812;
+  --popover-foreground: #F6EFE6;
+  --primary: #E9B970;
+  --primary-foreground: #1A1207;
+  --secondary: #221A14;
+  --secondary-foreground: #F6EFE6;
+  --muted: #1D1611;
+  --muted-foreground: #A6907C;
+  --accent: #281E16;
+  --accent-foreground: #F4D9A8;
+  --destructive: #FF7A6B;
+  --border: rgba(246, 239, 230, 0.12);
+  --input: rgba(246, 239, 230, 0.14);
+  --ring: #E9B970;
+  --chart-1: #E9B970;
+  --chart-2: #46D68B;
+  --chart-3: #FF7A6B;
   --chart-4: #C49A70;
-  --chart-5: #FF453A;
+  --chart-5: #FF7A6B;
 
-  --panel-shadow: 0 0 0 1px rgba(224,184,101,0.08);
+  --panel-shadow: 0 0 0 1px rgba(246,239,230,0.08);
 
-  --price-up: #30D158;
-  --price-down: #FF453A;
+  --price-up: #46D68B;
+  --price-down: #FF7A6B;
   --chance-mid: #FF9F0A;
   --game-accent: var(--primary);
 
   /* Semantic status tokens — dark variants. */
-  --success: #30D158;
-  --success-foreground: #1C1C1E;
+  --success: #46D68B;
+  --success-foreground: #100C09;
   --success-soft: color-mix(in srgb, var(--success) 16%, transparent);
   --warning: #FF9F0A;
   --warning-foreground: #1C1C1E;
