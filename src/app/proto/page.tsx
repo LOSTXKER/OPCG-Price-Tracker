@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ChevronRight, Search } from "lucide-react"
 import { Delta, Spark, baht } from "./_components/kit"
 import { AdSlot } from "./_components/ads"
+import { VersionSwitch } from "./_components/chrome"
 import { CARDS, MOVERS, PF } from "./_components/mock"
 
 // CARDS sorted by absolute % move — "ราคาขยับเยอะ" list
@@ -14,8 +15,9 @@ export default function ProtoHome() {
 
   return (
     <div className="mx-auto max-w-[460px] pb-12 lg:max-w-5xl">
+      <VersionSwitch vision="/proto" real="/proto/real" active="vision" />
       {/* hero search — teleport bar (honey glow behind) */}
-      <div className="glow-honey px-4 pt-5 lg:px-8">
+      <div className="glow-honey px-4 pt-3 lg:px-8">
         <Link
           href="/proto/browse"
           className="surface-2 hairline ease-chrome flex items-center gap-2.5 rounded-full px-4 py-3 text-sm text-muted-foreground"

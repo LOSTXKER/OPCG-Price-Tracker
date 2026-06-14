@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Delta, ScrubChart, Spark, baht } from "../_components/kit"
+import { VersionSwitch } from "../_components/chrome"
 import { PF, PF_SERIES, MOVERS, HOLDINGS } from "../_components/mock"
 
 const RANGES = ["1D", "1W", "1M", "3M", "1Y", "ALL"] as const
@@ -22,8 +23,9 @@ export default function ProtoPortfolio() {
 
   return (
     <div className="mx-auto max-w-[460px] pb-12 lg:max-w-6xl">
+      <VersionSwitch vision="/proto/portfolio" real="/proto/real/portfolio" active="vision" />
       {/* page title — personal page, login optional (demo data shown to guests) */}
-      <div className="flex items-center justify-between px-4 pt-5 lg:px-8">
+      <div className="flex items-center justify-between px-4 pt-3 lg:px-8">
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight text-foreground">พอร์ตของฉัน</h1>
           <p className="mt-0.5 text-xs text-muted-foreground">เดโม่ · เข้าสู่ระบบเพื่อบันทึกถาวร</p>

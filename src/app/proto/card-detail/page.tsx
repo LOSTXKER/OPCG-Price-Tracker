@@ -7,6 +7,7 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Delta, Segmented, ScrubChart } from "../_components/kit"
+import { VersionSwitch } from "../_components/chrome"
 import { CARD, TIERS, COMPS, LISTINGS } from "../_components/mock"
 
 type Edition = "JP" | "EN"
@@ -28,6 +29,7 @@ export default function ProtoCardDetail() {
 
   return (
     <div className="mx-auto max-w-[460px] pb-24 lg:max-w-5xl lg:pb-12">
+      <VersionSwitch vision="/proto/card-detail" real="/proto/real/card-detail" active="vision" />
       {/* breadcrumb — public, crawlable path (no login wall, SEO) */}
       <nav className="flex items-center justify-between gap-2 px-4 pt-4 text-xs text-muted-foreground lg:px-8">
         <span className="flex min-w-0 items-center gap-1 truncate">

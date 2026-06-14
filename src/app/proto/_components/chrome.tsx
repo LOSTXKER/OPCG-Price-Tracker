@@ -121,6 +121,30 @@ function TopNav() {
   )
 }
 
+/**
+ * Compare toggle — flip a page between the "Visionary" (clean-slate) and the
+ * "Grounded" (faithful to the real app + warm-premium) treatments.
+ */
+export function VersionSwitch({ vision, real, active }: { vision: string; real: string; active: "vision" | "real" }) {
+  const pill = (href: string, label: string, on: boolean) => (
+    <Link
+      href={href}
+      className={cn("ease-chrome rounded-full px-3 py-1.5 text-xs font-bold", !on && "text-muted-foreground hover:text-foreground")}
+      style={on ? { background: "var(--primary)", color: "var(--primary-foreground)" } : undefined}
+    >
+      {label}
+    </Link>
+  )
+  return (
+    <div className="mx-auto max-w-7xl px-4 pt-3 lg:px-8">
+      <div className="surface-2 hairline inline-flex rounded-full p-0.5">
+        {pill(vision, "🔮 Visionary", active === "vision")}
+        {pill(real, "🏠 จากเว็บจริง", active === "real")}
+      </div>
+    </div>
+  )
+}
+
 /** Wraps every prototype page with the top navbar (no sidebar, no bottom-nav). */
 export function ProtoChrome({ children }: { children: ReactNode }) {
   return (

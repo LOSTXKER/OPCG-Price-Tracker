@@ -145,3 +145,61 @@ export const MKT: MktListing[] = [
   { name: "Trafalgar Law", code: "OP05-119", grade: "PSA 9", edition: "EN", price: 15800, seller: "heartpirates", rating: 4.6, verified: true, grad: "linear-gradient(150deg,#0e1a2a,#2a4a7a,#70b0e9)" },
   { name: "Roronoa Zoro", code: "OP01-025", grade: "Raw A", edition: "JP", price: 9100, seller: "santoryu", rating: 4.9, verified: true, grad: "linear-gradient(150deg,#0e2014,#1a5a3a,#70e9a0)" },
 ]
+
+/* ── Market screener rows (the REAL home = sortable table) ──────────────── */
+export type MarketRow = {
+  rank: number
+  name: string
+  code: string
+  set: string
+  rarity: string
+  price: number
+  c24: number
+  c7: number
+  c30: number
+  views: number
+  series: number[]
+  grad: string
+}
+
+export const MARKET: MarketRow[] = [
+  { rank: 1, name: "Shanks", code: "OP01-121", set: "OP01", rarity: "SEC", price: 52000, c24: 1.2, c7: 3.8, c30: 4.6, views: 48200, series: series(16, 48000, 52000, 700, 1.8, 0.5), grad: "linear-gradient(150deg,#2a0e0e,#7a2a2a,#e98a70)" },
+  { rank: 2, name: "Monkey D. Luffy", code: "OP01-120", set: "OP01", rarity: "SEC", price: 48000, c24: 2.4, c7: 8.1, c30: 12.3, views: 61400, series: series(16, 36000, 48000, 1200, 1.4, 0.1), grad: "linear-gradient(150deg,#241808,#6d4f23,#e9b970)" },
+  { rank: 3, name: "Yamato", code: "OP09-118", set: "OP09", rarity: "SR", price: 28400, c24: 1.1, c7: 5.2, c30: 8.1, views: 33900, series: series(16, 24000, 28400, 600, 1.8, 0.5), grad: "linear-gradient(150deg,#1a1408,#5a4818,#e9c870)" },
+  { rank: 4, name: "Boa Hancock", code: "OP02-116", set: "OP02", rarity: "SR", price: 19000, c24: -0.8, c7: 2.4, c30: 6.2, views: 41200, series: series(16, 16800, 19000, 500, 2, 0.9), grad: "linear-gradient(150deg,#2a0e22,#7a2a5a,#e970b8)" },
+  { rank: 5, name: "Trafalgar Law", code: "OP05-119", set: "OP05", rarity: "SEC", price: 16400, c24: -1.4, c7: -3.2, c30: -3.2, views: 28700, series: series(16, 17200, 16400, 380, 2.2, 1), grad: "linear-gradient(150deg,#0e1a2a,#2a4a7a,#70b0e9)" },
+  { rank: 6, name: "Roronoa Zoro", code: "OP01-025", set: "OP01", rarity: "SR", price: 9200, c24: 0.6, c7: 1.8, c30: 2.4, views: 52100, series: series(16, 8600, 9200, 200, 2, 0.3), grad: "linear-gradient(150deg,#0e2014,#1a5a3a,#70e9a0)" },
+  { rank: 7, name: "Sanji", code: "OP01-051", set: "OP01", rarity: "SR", price: 6100, c24: 1.9, c7: 3.0, c30: 3.8, views: 30500, series: series(16, 5500, 6100, 180, 1.9, 0.7), grad: "linear-gradient(150deg,#2a1a08,#7a5018,#e9b870)" },
+  { rank: 8, name: "Nico Robin", code: "OP03-079", set: "OP03", rarity: "SR", price: 5400, c24: -0.4, c7: -0.9, c30: -1.1, views: 22800, series: series(16, 5600, 5400, 150, 2.1, 1.4), grad: "linear-gradient(150deg,#1a0e2a,#4a2a7a,#a070e9)" },
+  { rank: 9, name: "Portgas D. Ace", code: "OP02-013", set: "OP02", rarity: "SR", price: 4650, c24: 0.3, c7: 0.8, c30: 1.1, views: 19400, series: series(16, 4500, 4650, 120, 2, 0.2), grad: "linear-gradient(150deg,#2a1208,#7a3818,#e97a40)" },
+  { rank: 10, name: "Eustass Kid", code: "OP05-060", set: "OP05", rarity: "SR", price: 3900, c24: 4.2, c7: 6.6, c30: 9.4, views: 17600, series: series(16, 3400, 3900, 140, 1.6, 0.8), grad: "linear-gradient(150deg,#2a0808,#7a1818,#e94040)" },
+]
+
+/* ── Portfolio transactions (real portfolio has a transactions list) ────── */
+export type Txn = { type: "buy" | "sell"; name: string; code: string; qty: number; price: number; date: string }
+export const TXNS: Txn[] = [
+  { type: "buy", name: "Shanks", code: "OP01-121", qty: 1, price: 49800, date: "14 มิ.ย." },
+  { type: "sell", name: "Nami", code: "OP01-016", qty: 2, price: 3200, date: "12 มิ.ย." },
+  { type: "buy", name: "Yamato", code: "OP09-118", qty: 3, price: 7600, date: "9 มิ.ย." },
+  { type: "buy", name: "Boa Hancock", code: "OP02-116", qty: 2, price: 18200, date: "5 มิ.ย." },
+]
+
+/* ── Card specs + multi-source strip (real card-detail) ─────────────────── */
+export const SPECS: { label: string; value: string }[] = [
+  { label: "Cost", value: "—" },
+  { label: "Power", value: "5000" },
+  { label: "Counter", value: "—" },
+  { label: "Life", value: "5" },
+  { label: "Color", value: "แดง" },
+  { label: "Type", value: "Leader" },
+  { label: "Attribute", value: "Slash" },
+  { label: "Trait", value: "Straw Hat Crew / Supernovas" },
+]
+export const EFFECT =
+  "[DON!! x1] [เมื่อโจมตี] เปิดการ์ดบนสุดของกอง ถ้าเป็นการ์ดตัวละคร ค่า Cost 5 ขึ้นไป เพิ่มลงมือ +1000 พลังจนจบเทิร์น"
+
+export const SOURCES = [
+  { source: "Yuyutei", ask: "฿9,500", sold: "฿9,200", updated: "2 ชม." },
+  { source: "SNKRDUNK", ask: "$268", sold: "$255", updated: "5 ชม." },
+  { source: "eBay (EN)", ask: "$205", sold: "$188", updated: "1 วัน" },
+]
