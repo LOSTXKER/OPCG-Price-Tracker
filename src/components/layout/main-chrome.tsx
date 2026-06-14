@@ -18,7 +18,6 @@ const CHROMELESS_ROUTES: ReadonlyArray<string | RegExp> = [
   /^\/messages(\/|$)/,
   /^\/seller(\/|$)/,
   /^\/proto(\/|$)/, // VISION design prototype — owns its own warm-premium shell
-  /^\/v2(\/|$)/, // V2 redesign build — owns its own warm-premium shell
 ];
 
 /**

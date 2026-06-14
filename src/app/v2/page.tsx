@@ -1,89 +1,117 @@
-import Link from "next/link"
-import { getHomeData, mapCardToTrending, type TrendingCard } from "@/lib/data/home"
-import { Delta, FoilThumb, Panel } from "@/components/v2/ui"
+// Phase 0 of the V2 build: an EXACT copy of the v1 home (src/app/page.tsx).
+// Same data + components, so /v2 renders identically to /. We restyle from here.
+import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import {
+  HomeFeaturedCard,
+  HomeMiniTable,
+  HomePreviewRow,
+} from "@/components/home/home-client-sections";
+import { HomeMarketOverview } from "@/components/home/home-market-overview";
+import { HomeSeoContent } from "@/components/home/home-seo-content";
+import { AdSlot } from "@/components/ads/ad-slot";
+import { getHomeData, mapCardToTrending } from "@/lib/data/home";
+import { CARD_TYPES } from "@/lib/constants/card-config";
+import type { FilterDefinition } from "@/components/shared/filter-chips";
 
-export const revalidate = 300
+export const revalidate = 300;
 
-const yen = (n: number | null) => (n == null ? "—" : "¥" + n.toLocaleString("en-US"))
-const cardName = (c: TrendingCard) => c.nameEn ?? c.nameJp
+export default async function V2HomePage(props: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const sp = await props.searchParams;
+  const initialSearch = typeof sp.search === "string" ? sp.search : "";
+  const {
+    topGainers,
+    topLosers,
+    highestPriced,
+    totalCards,
+    totalValue,
+    initialTableCards,
+    initialTableTotal,
+    initialTableTotalPages,
+    sets,
+    rarityRows,
+  } = await getHomeData();
 
-function CardRow({ c, rank, i = 0 }: { c: TrendingCard; rank?: number; i?: number }) {
+  if (totalCards === 0) {
+    return (
+      <KumaEmptyState
+        title="No card data yet"
+        description="Run npm run scrape:master then npm run scrape:prices to populate data"
+        preset="no-results"
+      />
+    );
+  }
+
+  const gainers = topGainers.map(mapCardToTrending);
+  const losers = topLosers.map(mapCardToTrending);
+  const featured = highestPriced[0] ?? null;
+
+  const tableCards = initialTableCards.map(({ prices, ...c }) => ({
+    ...c,
+    setCode: c.set.code,
+    psa10PriceUsd: prices?.[0]?.priceUsd ?? null,
+  }));
+
+  const filterDefinitions: FilterDefinition[] = [
+    {
+      key: "rarity",
+      label: "rarity",
+      options: rarityRows.map((r) => ({ value: r.rarity, label: r.rarity })),
+    },
+    {
+      key: "type",
+      label: "type",
+      options: CARD_TYPES.map((ct) => ({
+        value: ct.code,
+        label: ct.label.EN,
+      })),
+    },
+  ];
+
+  const setOptions = sets.map((s) => ({
+    code: s.code,
+    name: s.name,
+    nameEn: s.nameEn,
+    nameTh: s.nameTh,
+    type: s.type,
+    imageUrl: s.boxImageUrl,
+    releaseDate: s.releaseDate ? s.releaseDate.toISOString() : null,
+  }));
+
   return (
-    <Link
-      href={`/cards/${encodeURIComponent(c.cardCode)}`}
-      className="ease-chrome flex items-center gap-3 px-3 py-2.5 hover:surface-2"
-      style={i ? { boxShadow: "inset 0 1px 0 0 var(--v-hair)" } : undefined}
-    >
-      {rank != null && <span className="tnum w-5 shrink-0 text-center text-xs font-bold text-muted-foreground">{rank}</span>}
-      <FoilThumb src={c.imageUrl} alt={cardName(c)} className="w-9 shrink-0" />
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-foreground">{cardName(c)}</p>
-        <p className="text-[11px] text-muted-foreground">{c.set?.code ?? ""} · {c.rarity}</p>
-      </div>
-      <div className="shrink-0 text-right">
-        <p className="tnum text-sm font-bold text-foreground">{yen(c.priceJpy)}</p>
-        <Delta pct={c.priceChange24h} className="justify-end" />
-      </div>
-    </Link>
-  )
-}
+    <>
+      <HomeMarketOverview
+        initialCards={tableCards}
+        initialTotal={initialTableTotal}
+        initialTotalPages={initialTableTotalPages}
+        filterDefinitions={filterDefinitions}
+        sets={setOptions}
+        initialSearch={initialSearch}
+      >
+        {/* Portfolio · Honey · Market stats strip + slim Ad (desktop) */}
+        <HomePreviewRow totalValue={totalValue} totalCards={totalCards} />
 
-function Column({ title, cards, ranked }: { title: string; cards: TrendingCard[]; ranked?: boolean }) {
-  return (
-    <Panel className="overflow-hidden">
-      <div className="px-4 py-3" style={{ boxShadow: "inset 0 -1px 0 0 var(--v-hair)" }}>
-        <h2 className="text-sm font-extrabold tracking-tight text-foreground">{title}</h2>
-      </div>
-      <div>
-        {cards.slice(0, 8).map((c, i) => (
-          <CardRow key={c.cardCode} c={c} i={i} rank={ranked ? i + 1 : undefined} />
-        ))}
-        {cards.length === 0 && <p className="px-4 py-8 text-center text-sm text-muted-foreground">ยังไม่มีข้อมูล</p>}
-      </div>
-    </Panel>
-  )
-}
+        {/* In-feed ad — mobile only (desktop ad lives in the preview row) */}
+        <AdSlot placement="home-in-feed" className="aspect-[6/1] md:hidden" />
 
-export default async function V2Home() {
-  const { topGainers, topLosers, highestPriced, totalCards, totalValue } = await getHomeData()
-  const gainers = topGainers.map(mapCardToTrending)
-  const losers = topLosers.map(mapCardToTrending)
-  const highest = highestPriced.map(mapCardToTrending)
-
-  return (
-    <div className="mx-auto max-w-7xl px-4 pb-12 lg:px-8">
-      {/* build banner */}
-      <div className="mt-3 flex items-center gap-2 rounded-xl px-3 py-2 text-xs" style={{ background: "var(--v-honey-soft)", color: "var(--primary)" }}>
-        🏗️ V2 (กำลัง build จริง) · data จริงจาก <code className="font-mono">getHomeData()</code> · ของจริงอยู่ที่{" "}
-        <Link href="/" className="underline">/</Link>
-      </div>
-
-      {/* hero — real market stats */}
-      <section className="glow-honey -mx-4 mt-2 px-4 py-6 lg:-mx-8 lg:px-8">
-        <h1 className="text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">ตลาดการ์ด OPCG</h1>
-        <p className="mt-1 text-sm text-muted-foreground">ราคากลางรายวัน · Yuyutei · SNKRDUNK</p>
-        <div className="mt-4 flex flex-wrap gap-6">
-          <div>
-            <p className="text-[11px] uppercase tracking-wider text-muted-foreground">การ์ดทั้งหมด</p>
-            <p className="tnum text-2xl font-extrabold text-foreground">{totalCards.toLocaleString()}</p>
+        {/* Highlights: Featured card · Top Gainers · Top Losers */}
+        <div className="panel grid divide-y divide-border/40 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-3">
+          {featured && (
+            <div className="p-4 sm:col-span-2 lg:col-span-1">
+              <HomeFeaturedCard card={featured} />
+            </div>
+          )}
+          <div className="p-4">
+            <HomeMiniTable cards={gainers} type="gainers" />
           </div>
-          <div>
-            <p className="text-[11px] uppercase tracking-wider text-muted-foreground">มูลค่ารวมตลาด</p>
-            <p className="tnum text-2xl font-extrabold text-foreground">฿{Math.round(totalValue).toLocaleString()}</p>
+          <div className="p-4">
+            <HomeMiniTable cards={losers} type="losers" />
           </div>
         </div>
-      </section>
+      </HomeMarketOverview>
 
-      {/* real gainers / losers / highest-priced */}
-      <div className="mt-6 grid gap-4 lg:grid-cols-3">
-        <Column title="🔥 มาแรง (24h)" cards={gainers} />
-        <Column title="📉 ร่วงแรง (24h)" cards={losers} />
-        <Column title="💎 ราคาสูงสุด" cards={highest} ranked />
-      </div>
-
-      <p className="mt-6 text-center text-xs text-muted-foreground">
-        ตาราง ​market เต็ม (sort · filter · 7d/30d) + การ์ด/พอร์ต/ตลาด = หน้าถัดไปที่จะ build เข้าโฟลเดอร์นี้
-      </p>
-    </div>
-  )
+      <HomeSeoContent />
+    </>
+  );
 }
