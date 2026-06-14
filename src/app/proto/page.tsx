@@ -3,7 +3,7 @@ import { ArrowRight, LineChart, Wallet } from "lucide-react"
 
 export default function ProtoIndex() {
   return (
-    <div className="px-5 pb-16 pt-14">
+    <div className="mx-auto max-w-md px-5 pb-16 pt-14">
       <div className="glow-honey -mx-5 -mt-14 px-5 pb-8 pt-14">
         <p className="text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--primary)" }}>
           Meecard · VISION

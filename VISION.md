@@ -52,6 +52,19 @@ search bar เด่นบนสุดของ Home — ค้นได้ท�
 - Portfolio → `Holdings · Performance · Watchlist`
 - Card detail → `Comps · Listings · Population · Meta`
 
+### Responsive — มือถือ **และ** desktop (ไม่ใช่มือถือยืด)
+mobile-first แต่ desktop ต้องเป็น layout จริงที่ใช้พื้นที่กว้าง ไม่ใช่คอลัมน์มือถือลอยกลางจอ · ตาม AGENTS (`md:` chrome boundary · `lg:` columns):
+
+| Surface | Mobile (`<lg`) | Desktop (`lg+`) |
+|---------|----------------|------------------|
+| **chrome** | bottom-nav 5 ช่อง + header | sidebar/rail nav ซ้าย + header กว้าง (bottom-nav → side) |
+| **card-detail** | single column (image→price→rail→chart→tabs) | **2 คอลัมน์**: รูป+identity+CTA ซ้าย (sticky) · price+chart+tabs ขวา |
+| **portfolio** | linear (hero→chart→KPI→movers→holdings) | **dashboard**: main (hero+chart+holdings) + **sidebar** (KPI+movers sticky) |
+| **marketplace/browse** | list/card 1–2 คอลัมน์ | grid หลายคอลัมน์ + filter rail ซ้าย |
+| **deck builder** | bottom-sheet add | 3-pane (pool · deck · stats) |
+
+กฎ: เนื้อหา/atom เดียวกัน — แค่ **จัด composition ต่อ breakpoint** · ตาราง→list `<sm` เสมอ · desktop เพิ่ม density ไม่เพิ่มของใหม่
+
 ---
 
 ## 2. Visual Identity — vibe "ผสม" (นิ่งบนเงิน · มีพลังบน play)
