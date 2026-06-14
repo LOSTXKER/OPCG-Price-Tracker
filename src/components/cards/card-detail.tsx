@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Breadcrumb } from "@/components/shared/breadcrumb"
 import type { CardListing } from "@/components/cards/card-listings-section"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
@@ -10,13 +10,14 @@ import { AdSlot } from "@/components/ads/ad-slot"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { t, getCardName, getSetName } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
-import { useTierLimits } from "@/hooks/use-tier-limits"
 
+import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { CardDetailActions } from "./card-detail/actions"
 import { CardDetailStickyBar } from "./card-detail/sticky-bar"
-import { CardDetailHeader } from "./card-detail/header"
 import { CardPriceHub } from "./card-detail/price-hub"
 import { CardDetailInfoTabs } from "./card-detail/info-tabs"
+import { buildGradeData, defaultGradeKey, type GradeKey } from "./card-detail/grades"
+import { EditionToggle, type Edition } from "./card-detail/edition-toggle"
 import { SiblingGrid } from "./card-detail-sibling-grid"
 import { CardDetailRelated } from "./card-detail-related"
 
@@ -76,7 +77,7 @@ export interface CardDetailProps {
     priceChange30d: number | null
     set: { code: string; name: string; nameEn?: string | null; nameTh?: string | null }
     price: { priceJpy: number; priceThb: number | null; inStock: boolean } | null
-    chartData: { scrapedAt: string; priceJpy: number | null; priceThb: number | null; priceUsd: number | null; source?: string; gradeCondition?: string | null }[]
+    chartData: { scrapedAt: string; priceJpy: number | null; priceThb: number | null; priceUsd: number | null; source?: string; gradeCondition?: string | null; type?: string | null }[]
   }
   siblings: SiblingCard[]
   communityPrice?: { avgThb: number | null; reportCount: number } | null
@@ -107,25 +108,42 @@ export function CardDetail({
   communityPrice: _communityPrice,
   relatedCards,
   snkrdunkPrices,
-  availableSources,
-  sourcePricesRaw,
-  sourcePricesPsa10,
+  latestUpdatedAt,
   listings,
 }: CardDetailProps) {
   const lang = useUIStore((s) => s.language)
-  const { limits } = useTierLimits()
   const [lightboxOpen, setLightboxOpen] = useState(false)
-  const [chartPeriod, setChartPeriod] = useState("30d")
-  const [priceMode, setPriceMode] = useState<"raw" | "psa10">("raw")
-  const hasPsa10 = !!(
-    snkrdunkPrices?.psa10SoldUsd != null || snkrdunkPrices?.psa10AskUsd != null
+
+  // Per-grade pricing (VISION §5.1). Real anchors (Yuyutei raw / SNKRDUNK PSA 10)
+  // drive the rail; other grades come back as labeled estimates or ghosted.
+  const gradeData = useMemo(
+    () =>
+      buildGradeData({
+        rawAnchorJpy: card.price?.priceJpy ?? card.latestPriceJpy,
+        rawAnchorThb: card.price?.priceThb ?? card.latestPriceThb,
+        psa10AskUsd: snkrdunkPrices?.psa10AskUsd ?? null,
+        psa10SoldUsd: snkrdunkPrices?.psa10SoldUsd ?? null,
+        rawLastSoldUsd: snkrdunkPrices?.lastSoldUsd ?? null,
+        rawDelta30d: card.priceChange30d,
+      }),
+    [card.price, card.latestPriceJpy, card.latestPriceThb, card.priceChange30d, snkrdunkPrices],
   )
+  const [selectedGrade, setSelectedGrade] = useState<GradeKey>(() => defaultGradeKey(gradeData))
+  const [edition, setEdition] = useState<Edition>("JP")
   const set = card.set
   const displayName = getCardName(lang, card)
   const setName = getSetName(lang, set)
+  const sub = [card.cardType, card.isParallel ? "Parallel" : null].filter(Boolean).join(" · ")
 
   return (
-    <div className="space-y-6">
+    <div className="relative mx-auto max-w-5xl space-y-6">
+      {/* warm hero ambient — anchored to the top so the honey glow bleeds down
+          from the navbar instead of floating behind the card (VISION §1) */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[360px] w-screen -translate-x-1/2 -translate-y-10 md:-translate-y-12"
+        style={{ background: "radial-gradient(120% 80% at 50% 0%, var(--p-honey-soft), transparent 65%)" }}
+      />
       <Breadcrumb
         items={[
           { label: t(lang, "home"), href: "/" },
@@ -135,32 +153,70 @@ export function CardDetail({
         ]}
       />
 
-      <div className="grid gap-6 lg:grid-cols-12">
-        {/* Left column — card image only. Sibling variants moved to a full-width
-            section below the grid so that on mobile the price + actions land
-            right under the artwork instead of being pushed below the variants. */}
-        <div className="lg:col-span-4">
-          <button
-            type="button"
-            onClick={() => card.imageUrl && setLightboxOpen(true)}
-            className="panel relative mx-auto aspect-[63/88] w-full max-w-[240px] cursor-zoom-in overflow-hidden ring-border transition-shadow hover:ring-2 hover:ring-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:max-w-[320px] lg:max-w-none"
-            aria-label={card.nameEn ?? card.nameJp}
-          >
-            {card.imageUrl ? (
-              <Image
-                src={card.imageUrl}
-                alt={card.nameEn ?? card.nameJp}
-                fill
-                className="object-contain"
-                sizes="(max-width: 1024px) 400px, 40vw"
-                placeholder="blur"
-                blurDataURL={BLUR_DATA_URL}
-                priority
-              />
-            ) : (
-              <Skeleton className="absolute inset-0 size-full" />
-            )}
-          </button>
+      <div className="lg:grid lg:grid-cols-[340px_1fr] lg:items-start lg:gap-10">
+        {/* LEFT — identity + image + edition + CTA (sticky on desktop) — proto-exact */}
+        <div className="lg:sticky lg:top-20 lg:self-start">
+          <section className="px-5 pb-2 pt-3 lg:px-0">
+            <div className="mx-auto w-[58%] max-w-[230px] lg:w-full lg:max-w-none">
+              <button
+                type="button"
+                onClick={() => card.imageUrl && setLightboxOpen(true)}
+                className="surface-1 ease-chrome relative block aspect-[63/88] w-full cursor-zoom-in overflow-hidden rounded-2xl ring-1 ring-border hover:ring-2 hover:ring-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label={card.nameEn ?? card.nameJp}
+              >
+                {card.imageUrl ? (
+                  <Image
+                    src={card.imageUrl}
+                    alt={card.nameEn ?? card.nameJp}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 1024px) 230px, 340px"
+                    placeholder="blur"
+                    blurDataURL={BLUR_DATA_URL}
+                    priority
+                  />
+                ) : (
+                  <Skeleton className="absolute inset-0 size-full" />
+                )}
+              </button>
+            </div>
+
+            <div className="mt-4 text-center lg:text-left">
+              <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
+                <span
+                  className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+                  style={{ background: "var(--p-honey-soft)", color: "var(--primary)" }}
+                >
+                  {card.rarity}
+                </span>
+                {sub && <span className="text-xs text-muted-foreground">{sub}</span>}
+              </div>
+              <div className="mt-1.5 flex items-center justify-center gap-2 lg:justify-start">
+                <h1 className="min-w-0 break-words text-2xl font-extrabold tracking-tight text-foreground">
+                  {displayName}
+                </h1>
+                <WatchlistStar cardId={card.id} size="md" />
+              </div>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                {set.code.toUpperCase()} · {setName}
+              </p>
+            </div>
+
+            <div className="mt-4 flex justify-center lg:justify-start">
+              <EditionToggle value={edition} onChange={setEdition} enAvailable={false} />
+            </div>
+          </section>
+
+          <div className="mt-5 flex justify-center lg:justify-start">
+            <CardDetailActions
+              cardId={card.id}
+              cardCode={card.cardCode}
+              displayName={displayName}
+              rarity={card.rarity}
+              imageUrl={card.imageUrl}
+              currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
+            />
+          </div>
 
           <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
             <DialogContent className="max-w-[90vw] border-0 bg-transparent p-0 shadow-none ring-0 sm:max-w-[90vw] [&>[data-slot=dialog-close]]:text-white [&>[data-slot=dialog-close]]:hover:bg-white/20">
@@ -179,45 +235,17 @@ export function CardDetail({
           </Dialog>
         </div>
 
-        {/* Right column — header + actions, price hub (with embedded source
-            strip), then info tabs (specs / effect / listings). Actions sit
-            with the headline so the primary CTA is visible above the fold
-            instead of being pushed below the tall card image. */}
-        <div className="space-y-5 lg:col-span-8">
-          <CardDetailHeader
-            card={card}
-            setCode={set.code}
-            setName={setName}
-            displayName={displayName}
-            lang={lang}
-          />
-
-          <CardDetailActions
-            cardId={card.id}
-            cardCode={card.cardCode}
-            displayName={displayName}
-            rarity={card.rarity}
-            imageUrl={card.imageUrl}
-            currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
-          />
-
+        {/* RIGHT — price + chart, then info tabs */}
+        <div className="mt-6 space-y-5 lg:mt-0 lg:min-w-0">
           <CardPriceHub
             card={card}
-            snkrdunkPrices={snkrdunkPrices}
-            hasPsa10={hasPsa10}
-            priceMode={priceMode}
-            onPriceModeChange={setPriceMode}
-            chartPeriod={chartPeriod}
-            onChartPeriodChange={setChartPeriod}
-            availableSources={availableSources}
-            sourcePricesRaw={sourcePricesRaw}
-            sourcePricesPsa10={sourcePricesPsa10}
-            maxDays={limits.priceHistoryDays}
+            gradeData={gradeData}
+            selectedGrade={selectedGrade}
+            onSelectGrade={setSelectedGrade}
             lang={lang}
           />
 
-          {/* In-feed ad (FREE users only; placed after the price block so it
-              never crowds the primary actions). */}
+          {/* In-feed ad (FREE users only) */}
           <AdSlot placement="card-detail-mid" className="aspect-[6/1] w-full" />
 
           <CardDetailInfoTabs
@@ -225,6 +253,10 @@ export function CardDetail({
             cardCode={card.cardCode}
             cardName={displayName}
             listings={listings ?? []}
+            compBase={gradeData[selectedGrade].value.jpy ?? gradeData[selectedGrade].value.usd}
+            gradeLabel={gradeData[selectedGrade].tier.label}
+            currency={gradeData[selectedGrade].currency}
+            latestUpdatedAt={latestUpdatedAt}
             lang={lang}
           />
         </div>
@@ -250,8 +282,9 @@ export function CardDetail({
       <CardDetailStickyBar
         cardId={card.id}
         cardName={displayName}
-        priceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
-        priceThb={card.price?.priceThb ?? card.latestPriceThb}
+        datum={gradeData[selectedGrade]}
+        gradeLabel={gradeData[selectedGrade].tier.label}
+        lang={lang}
       />
     </div>
   )

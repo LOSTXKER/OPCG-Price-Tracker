@@ -32,10 +32,11 @@ export function GameSwitcher({ className }: { className?: string }) {
     return (
       <span
         className={cn(
-          "inline-flex shrink-0 items-center rounded-full border border-border/60 bg-card px-2.5 py-1 text-xs font-semibold text-foreground",
+          "surface-2 hairline inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-foreground",
           className,
         )}
       >
+        <span className="size-2 rounded-full" style={{ background: "var(--primary)" }} aria-hidden />
         {active.shortName ?? active.slug.toUpperCase()}
       </span>
     );
@@ -46,10 +47,11 @@ export function GameSwitcher({ className }: { className?: string }) {
       <DropdownMenuTrigger
         aria-label={t(lang, "chooseGame")}
         className={cn(
-          "inline-flex shrink-0 items-center gap-1 rounded-full border border-border/60 bg-card px-2.5 py-1 text-xs font-semibold text-foreground transition-colors hover:bg-muted/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+          "ease-chrome surface-2 ring-inset inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-foreground ring-1 ring-[var(--p-hair)] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
           className,
         )}
       >
+        <span className="size-2 rounded-full" style={{ background: "var(--primary)" }} aria-hidden />
         {active.shortName ?? active.slug.toUpperCase()}
         <ChevronDown className="size-3 text-muted-foreground" aria-hidden />
       </DropdownMenuTrigger>

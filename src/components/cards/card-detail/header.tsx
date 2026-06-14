@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { Eye } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
@@ -29,12 +30,12 @@ export function CardDetailHeader({
   return (
     <div>
       <div className="mb-2 flex flex-wrap items-center gap-2">
-        <span className="font-price text-xs text-muted-foreground">
+        <span className="tnum text-xs text-muted-foreground">
           {card.baseCode ?? card.cardCode}
         </span>
         <RarityBadge rarity={card.rarity} size="sm" />
-        <span className="font-price text-xs text-muted-foreground/60">
-          · {formatCount(card.viewCount)} {t(lang, "views")}
+        <span className="inline-flex items-center gap-1 tnum text-xs text-muted-foreground/60">
+          <Eye className="size-3" aria-hidden /> {formatCount(card.viewCount)} {t(lang, "views")}
         </span>
       </div>
       <div className="flex min-w-0 items-center gap-2">

@@ -2,41 +2,45 @@
 > **เขียนทับทุกครั้ง ไม่สะสม log** (รายละเอียดอยู่ใน git history) · hook โหลดไฟล์นี้ทุก session
 > session ใหม่: อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-14 — **เข้าเฟส REDESIGN จริงแบบ in-place บน main · warm-premium = default dark theme ขึ้น main แล้ว · [VISION.md](VISION.md) = north-star**
+อัปเดตล่าสุด: 2026-06-14 — **เขียนแผนดีไซน์ใหม่เสร็จ (world-class, de-versioned) ลง [VISION.md](VISION.md) + build order ใน [PLAN.md](PLAN.md)** · จาก research 8 lane (platform ระดับโลก) · จัดบ้านเอกสารเรียบแล้วก่อนหน้า
 
 ## ▶ สถานะตอนนี้
-- **redesign ทำ in-place บน v1 โดยตรง** (ไม่ทำ parallel v2 / ไม่ fork repo — สรุปแล้วว่าวิธีนี้ดีสุด, ตัด v2 toggle/scaffolding ทิ้งหมด)
-- **warm-premium = default dark theme** อยู่บน main แล้ว (`globals.css` `.dark`: espresso `#100C09` + honey-gold `#E9B970` + hairline border + coral down) — merged #27
-- **[VISION.md](VISION.md)** = design north-star อยู่บน main (3-axis IA · warm identity · per-surface direction)
+- **[VISION.md](VISION.md) = แผนดีไซน์ฉบับสมบูรณ์** (เขียนใหม่จาก research workflow 8 lane): identity warm-premium · 3-axis IA · **atom kit** · visual-system discipline · **per-surface spec เต็ม** (card detail+grades+SNKR comps · marketplace+escrow · portfolio honesty · deck/meta/tier · chat/profile/reputation · ads+AdSense · multi-game/Pokémon) · data-model evolution · reference platforms
+- **[PLAN.md](PLAN.md) §🎨 Redesign = build order** (de-versioned, ไม่มี v1/v2): Foundation → Card detail → Portfolio → Marketplace → Chat → PLAY → Ads → Multi-game
+- **เอกสารจัดเรียบแล้ว** (รอบก่อน): CLAUDE (entry+map) → @AGENTS · SPEC · PLAN · PROGRESS · VISION · doc/archive (REDESIGN เก่า) · ลบ .claude/CLAUDE.md ซ้ำ · dev.md ตามวงจรเดียวกัน
+- **โค้ดที่แตะแล้ว (ยังไม่ commit, working tree):** warm primitive kit ใน `globals.css` + card-detail refine pass-1 (glow/sticky/honey-toggle/frost) · ผ่าน verify + adversarial review
 
-## ⚠️ WORKFLOW override (สำคัญ — เบสสั่งเอง)
-- **commit ลง `main` ตรงๆ ไม่ต้อง PR/branch** (เบสสั่ง "ใช้ main ไปเลย") — **override กฎ CLAUDE.md "ห้าม push master ตรง"** สำหรับเฟสนี้
-- ยังถือ git เป็น safety net (revert ได้) · ยังรัน verify (lint/test/build) ก่อนเคลมเสร็จ
+## 📌 กฎ design-system (ใช้ทุก surface — จาก VISION §1/§4)
+- honey-gold = accent interactive เดียว **< 5% ของจอ** (active/selected/focus/CTA) · gain/loss เขียวแดงแยก · per-game tint ทับไม่กลบ honey
+- **การ์ดเนื้อหาใหญ่ = `.panel`** · `surface-*`/`hairline` = chip/control/nested · `.hairline` unlayered → อย่าผสม ring/shadow บน element เดียว
+- one hero number/screen · tabular-nums + ▲/▼ ทุก delta · ศูนย์ spinner (skeleton รูปร่างตาม content) · atom kit ใช้ซ้ำทุกหน้า
 
-## 🎨 ทิศ redesign ที่เคาะแล้ว
-- **vibe = warm premium** (espresso + honey-gold + honey-glow) — *ไม่ใช่* cold clone แบบ Linear · 🐻 brand หมี+honey = ค่าคงที่ห้ามเปลี่ยน
-- **IA = 3 แกน** (Game=namespace `/[game]/` · Feature=nav คงที่ · Action=per-page) → ฟีเจอร์เพิ่ม = tile ใน hub ไม่ใช่ tab (ดู VISION §1)
-- **method:** แอปใช้ semantic token ดีมาก → เปลี่ยน token = ทั้งแอป warm เอง · hardcoded color ที่เหลือ ~37 จุดส่วนใหญ่ semantic (สีการ์ด 青/紫/黒 · status · price) = **เก็บไว้** ไม่ใช่ clash
-- งานจริงต่อไป = **structural/layout refinement ทีละหน้า** ตาม VISION (ไม่ใช่ไล่แก้สี)
+## ▶ สถานะ build (ยังไม่ commit · อยู่ working tree)
+- **Card detail = proto visionary port (สะอาด, mock-filled)** — เบสชอบ proto กว่า (โมเดิร์น/ไม่รก) + สั่ง "ถอด est, ใช้ mock เติมให้เต็ม เพื่อดูโครงสร้าง UI": grid `340px/1fr` (ซ้าย sticky image+identity+EditionToggle+CTA · ขวา hero ใหญ่ (scrub-rebind) + 3-stat box + grade chips outline + **clean area chart** (`mini-chart` แทน Recharts) + range 1M/3M/1Y/All + High/Avg/Low + tabs Comps/Listings/Population/Specs)
+- **ถอด "est" ออกหมด** (เบสว่ารก) · ใช้ `mock.ts` (deterministic, ไม่มี RNG) เติม series/comps/sales · ของจริง (Raw A=Yuyutei, PSA 10=SNKR) ยังจริง · ⚠️ **prototype phase = mock เพื่อดู UI** — ตอน launch จริงต้องกลับมาทำ honesty labeling (VISION §5.1)
+- **logo แหล่งจริง** (favicon ดึงจริง เก็บ `public/sources/`: SNKRDUNK/Yuyutei/eBay/TCGplayer/Cardmarket/Mercari) + `SourceLogo` atom → โชว์ใน Comps แทนจุดสี
+- **font:** คง **Kanit** (= font ที่ proto ใช้ · proto ไม่ได้ตั้ง font เอง) · **เปลี่ยนตัวเลขใน card-detail จาก JetBrains Mono → Kanit tabular (`.tnum`)** = ตรงกับ proto (เลขดูเนียน ไม่ใช่ monospace แข็ง)
+- verify ครบ (tsc/lint 0err/build/test 36/36) · ยังไม่ commit
+- **Foundation slice 1 ✅** motion/elevation token (`--dur-*`/`--ease-*`/`--elev-*`) + button/`.ease-chrome`/`.rise` → token · atom kit หลักมีอยู่แล้ว (`PriceDisplay`/`Surface`/`Skeleton`/`ListRow`)
+- **Card detail เต็มภาพ ✅** (data-safe) — GradeRail (Raw A/B/C·PSA 10/9/8·BGS) + EditionToggle + stat row + Recent prices feed + population + chart · atoms ใหม่ 5 ไฟล์ (`grades.ts`/`grade-value`/`grade-rail`/`edition-toggle`/`recent-sales`/`population-strip`)
+- **ผ่าน 2 รอบ adversarial review:** รอบแรกเจอ 22 (รวม 1 blocker honesty) → fix หมด · รอบ recheck ยืนยัน **ปิดครบ ไม่มี residual**
+- **verify:** tsc ✓ · lint 0 err ✓ · build ✓ · test 36/36 ✓
+- **honesty model:** เกรดมีข้อมูลจริง (Raw A=Yuyutei · PSA 10=SNKR) = ของจริง · เกรดอื่น = "est." (ติดป้าย+tooltip+aria) · last-sale = ข้อมูลขายจริงเท่านั้น · recent-prices ทุกแถวติดป้าย Sold/Listed จาก type จริง
 
-## ⚠️ ยังไม่ verify ด้วยตา
-- warm theme เป็นการเปลี่ยนทั้งแอปที่ **AI ยืนยันด้วยตาไม่ได้** → **session หน้า: ให้เบสเปิด `localhost:3000/` (หรือ deploy preview) ดูโทนก่อน** · ถ้าสีไหนไม่เวิร์ค จูน `globals.css` `.dark` จุดเดียว (border ตั้ง hairline 0.12 · ปรับง่าย)
+## ▶ Proto-port ทั้งแอป (เบสสั่ง · restyle proto + เสียบระบบจริง · chrome ก่อน)
+- **Phase 1 Chrome ✅ (restyle-only, verified live):** header/header-mobile = `frost` + hairline · nav active = honey-soft pill · bottom-nav `frost` · game-switcher + search = proto pill (surface-2/ring) · wiring เดิมครบ (useHeaderData/flag/search/game) · proto = **top-nav** (ไม่ใช่ sidebar — เบสเคาะ restyle top-nav)
+- เหลือ chrome ปลีกย่อย (optional): mobile-menu-sheet (More drawer) · quick-pill icons (amber/blue) ยัง hardcode สี
+- **ลำดับถัดไป:** Home → Browse → Portfolio (L, Robinhood hero) → More → Marketplace (flag-off) · port plan เต็มอยู่ใน workflow output (transcript)
+- ⚠️ **dev watcher ไม่จับ tool-writes** → ต้อง restart dev + curl-verify ทุก batch (dev รันอยู่ background)
 
 ## ▶ NEXT
-1. **เบส confirm โทน warm** (เปิดดูจริง) — โอเค/ปรับ token ก่อน
-2. **refine structural ทีละหน้า บน main** — เริ่ม **card-detail** (แย่สุด/คุ้มสุดตาม VISION §4.1: 5-zone · grade rail · sold comps source-badge) → home(ตาราง market) → portfolio → marketplace
-3. (ทีหลัง) light-mode ทำ warm ให้เข้าชุด (ตอนนี้แก้แค่ dark = default) · per-game accent · ฟีเจอร์อนาคต (grade tier/edition JP-EN/escrow/Pokémon ตาม VISION)
+1. **เบสเปิดดูจริง** `localhost:3000/cards/<code>` (hard-refresh) — เคาะว่าโทน/layout โอเค
+2. **commit checkpoint** (docs + foundation + card-detail) ถ้าเบสโอเค — เป็นก้อนใหญ่, เบสอนุมัติก่อน
+3. **ไป surface ถัดไปตาม spine:** Portfolio (§4.3 — fix honesty inflow/outflow + Robinhood hero) → Marketplace → Chat → PLAY → Ads → Multi-game
+4. ⚠️ **เปลี่ยน est → จริง** ต้อง schema (Grade enum · edition JP/EN · Comp/population tables) = **เบสอนุมัติ migrate** · โครง UI พร้อม swap แล้ว
+5. (เก็บตก) orphan i18n keys เก่า (`marketPriceHelp`/`lastSoldHelp`/`noSoldHistory` — pre-existing, ไม่ใช้แล้วหลัง rewrite) ลบตอนกวาด · ทยอย migrate ~20 ไฟล์ hardcode `duration-*` → token
 
-## 📌 reference / branch
-- **[VISION.md](VISION.md)** = north-star เฟสนี้ (อ่านก่อน refine ทุกหน้า) · **[REDESIGN.md](REDESIGN.md)** = design phase v1 (P0–P2 เสร็จแล้ว, historical)
-- **PR #25** (`design/vision-prototype`) = prototype `/proto` (visionary+grounded mockups, warm-premium ทุกหน้า) + v2 scaffolding — **redundant แล้ว ปิดได้** (VISION ขึ้น main แล้ว · /proto เก็บใน git ดู ref ได้) — *เบสยังไม่เคาะปิด*
-- prototype `/proto/*` = **อยู่บน main แล้ว** (chromeless, warm-premium mockups — visionary `/proto` + grounded `/proto/real`) → เปิด `localhost:3000/proto` ดูเป็น visual ref ตอน refine · เป็น mockup ไม่ใช่โค้ดจริง (ไม่กระทบแอป)
-
-## ✅ ทำเสร็จก่อนหน้า (merged, อยู่ใน git)
-- redesign P0–P2 (#7–#16) · P4.1/4.2 multi-game seam + gameId schema deployed prod (#17/#18) · declutter sweep ทุก batch (#20–#23) · docs cleanup (#24: rewrite doc/ + archive + README) · v2 foundation (#26, ถูกแทนด้วย in-place แล้ว) · warm theme + VISION (#27)
-
-## เครื่องมือ / สภาพแวดล้อม
-- `gh` login (LOSTXKER) · **เฟสนี้: commit main ตรง** (ตาม override ข้างบน)
-- ถือ [AGENTS.md](AGENTS.md): typography tokens (ห้าม `text-[Xpx]`) · breakpoints (`sm:` data / `md:` chrome / `lg:` columns) · table→list `<sm` · apiHandler/Zod
-- verify gate มาตรฐาน: `npx tsc --noEmit` · `npm run lint` (baseline 0 err / 78 warn) · `npm run test` (36/36) · `npm run build`
-- warm token values อยู่ `globals.css` `.dark` (บรรทัด ~131) — แก้ที่เดียวกระทบทั้งแอป
+## ⚠️ permission / workflow
+- commit/push → **เบสอนุมัติก่อน** (ไม่มี override เฟสแล้ว) · ถือ [AGENTS.md](AGENTS.md): typography token · breakpoints · table→list `<sm` · apiHandler/Zod · วงจรการทำงาน
+- verify gate: `npx tsc --noEmit` · `npm run lint` (baseline 0 err) · `npm run test` (36/36) · `npm run build`
+- research เต็ม (8 lane, reference platforms + concrete spec) อยู่ใน git/transcript — VISION §8 = ดัชนี reference
