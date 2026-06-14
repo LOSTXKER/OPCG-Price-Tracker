@@ -1,6 +1,6 @@
 "use client"
 
-import { Fragment, useMemo, useState, type ReactNode } from "react"
+import { Fragment, useMemo, useState } from "react"
 import { ChevronDown, Shield } from "lucide-react"
 
 import { t, type Language } from "@/lib/i18n"
@@ -10,6 +10,7 @@ import { GRADE_TIERS, type GradeDatum, type GradeKey } from "./grades"
 import { GradeValue, Amount, Delta } from "./grade-value"
 import { MiniAreaChart } from "./mini-chart"
 import { mockSeries } from "./mock"
+import { EditionToggle, type Edition } from "./edition-toggle"
 
 const RANGES = ["1M", "3M", "1Y", "All"] as const
 
@@ -18,24 +19,28 @@ const RANGES = ["1M", "3M", "1Y", "All"] as const
 const SECONDARY_GRADES = new Set<GradeKey>(["raw_b", "raw_c", "bgs_95"])
 
 /**
- * Right column — price + chart. Ported from the proto visionary card-detail and
- * fed with real grade data (Raw A = Yuyutei, PSA 10 = SNKRDUNK; other grades
- * modeled), currency-aware. `cta` renders the primary actions right after the
- * grade rail so the price and its call-to-action stay together on every screen.
+ * Right column — the trading panel (VISION §5.1/§5.2). Reads top-to-bottom like
+ * a trading app: price + 30d move → instrument selector (edition + grade) →
+ * Bid/Ask/Last ladder → Buy/Sell → tracking actions → chart. Buy/Sell are a
+ * preview until the in-app marketplace lands; tracking actions work today.
  */
 export function CardPriceHub({
   card,
   gradeData,
   selectedGrade,
   onSelectGrade,
-  cta,
+  edition,
+  onEditionChange,
+  enAvailable = false,
   lang,
 }: {
   card: { cardCode: string }
   gradeData: Record<GradeKey, GradeDatum>
   selectedGrade: GradeKey
   onSelectGrade: (key: GradeKey) => void
-  cta?: ReactNode
+  edition: Edition
+  onEditionChange: (e: Edition) => void
+  enAvailable?: boolean
   lang: Language
 }) {
   const datum = gradeData[selectedGrade]
@@ -56,18 +61,16 @@ export function CardPriceHub({
   })
   const scrubVal = scrub != null ? series[scrub] ?? null : null
 
-  // Rail: popular grades always; secondary grades only when expanded (or when the
-  // selected grade is itself a secondary one, so the active chip is never hidden).
   const visibleTiers = GRADE_TIERS.filter(
     (gt) => !SECONDARY_GRADES.has(gt.key) || showAllGrades || gt.key === selectedGrade,
   )
 
   return (
     <div className="lg:pt-1">
-      {/* hero */}
+      {/* hero — price + 30d move */}
       <section className="text-center lg:text-left">
         <p className="text-eyebrow">
-          {tier.label} · {t(lang, "marketPrice")}
+          {tier.label} · {edition} · {t(lang, "marketPrice")}
         </p>
         <div key={selectedGrade} className="rise mt-1 flex items-end justify-center gap-3 lg:justify-start">
           {scrubVal != null ? (
@@ -76,35 +79,18 @@ export function CardPriceHub({
             <GradeValue datum={datum} size="hero" className="text-foreground" />
           )}
         </div>
-
-        {/* stat row — Last Sale (settled) · 30d trend · volume. One stat block,
-            none of which repeats the hero number. */}
-        <div className="mt-4 grid grid-cols-3 rounded-2xl surface-1 hairline py-3">
-          <div className="px-2">
-            <p className="text-eyebrow">{t(lang, "lastSold")}</p>
-            <Amount jpy={datum.lastSale.jpy} usd={datum.lastSale.usd} size="stat" className="mt-0.5 block text-foreground" />
+        {datum.delta30d && (
+          <div className="mt-2 flex items-center justify-center lg:justify-start">
+            <Delta pct={datum.delta30d.pct} lang={lang} size="lg" />
+            <span className="ml-1.5 text-sm text-muted-foreground">{t(lang, "days30")}</span>
           </div>
-          <div className="px-2" style={{ borderLeft: "1px solid var(--p-hair)" }}>
-            <p className="text-eyebrow">{t(lang, "days30")}</p>
-            {datum.delta30d ? (
-              <Delta pct={datum.delta30d.pct} lang={lang} size="md" className="mt-0.5" />
-            ) : (
-              <span className="tnum mt-0.5 block text-sm text-muted-foreground/40">—</span>
-            )}
-          </div>
-          <div className="px-2" style={{ borderLeft: "1px solid var(--p-hair)" }}>
-            <p className="text-eyebrow">{t(lang, "sales30d")}</p>
-            <p className="tnum mt-0.5 text-sm font-bold text-foreground">
-              {datum.sales30d != null ? datum.sales30d.toLocaleString() : "—"}
-            </p>
-          </div>
-        </div>
+        )}
       </section>
 
-      {/* grade chip rail — best-first, grouped Raw | Graded, popular grades shown
-          with the rest behind a "more grades" toggle */}
-      <section className="mt-5">
-        <div className="no-sb flex items-stretch gap-2 overflow-x-auto pb-1" role="group" aria-label={t(lang, "chooseGrade")}>
+      {/* instrument selector — edition + grade on one row ("what am I trading") */}
+      <section className="mt-4 flex items-center gap-2">
+        <EditionToggle value={edition} onChange={onEditionChange} enAvailable={enAvailable} />
+        <div className="no-sb flex flex-1 items-stretch gap-2 overflow-x-auto pb-1" role="group" aria-label={t(lang, "chooseGrade")}>
           {visibleTiers.map((gt, i) => {
             const prev = visibleTiers[i - 1]
             const groupBreak = prev && prev.family === "raw" && gt.family !== "raw"
@@ -120,17 +106,14 @@ export function CardPriceHub({
                   disabled={disabled}
                   onClick={() => onSelectGrade(gt.key)}
                   className={cn(
-                    "ease-chrome flex shrink-0 flex-col items-start rounded-xl px-3.5 py-2 text-left focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring",
-                    active ? "hairline" : "surface-1 hairline",
+                    "ease-chrome inline-flex shrink-0 items-center gap-1 rounded-lg px-3.5 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring",
+                    active ? "" : "surface-1 hairline text-muted-foreground hover:text-foreground",
                     disabled && "cursor-not-allowed opacity-40",
                   )}
-                  style={active ? { background: "var(--p-honey-soft)", boxShadow: "inset 0 0 0 1px var(--primary)" } : undefined}
+                  style={active ? { background: "var(--p-honey-soft)", color: "var(--primary)", boxShadow: "inset 0 0 0 1px var(--primary)" } : undefined}
                 >
-                  <span className={cn("flex items-center gap-1 text-xs font-bold", active ? "text-primary" : "text-foreground")}>
-                    {gt.family !== "raw" && <Shield className="size-3" aria-hidden />}
-                    {gt.short}
-                  </span>
-                  <GradeValue datum={d} size="xs" className="mt-0.5 text-muted-foreground" />
+                  {gt.family !== "raw" && <Shield className="size-3" aria-hidden />}
+                  {gt.short}
                 </button>
               </Fragment>
             )
@@ -148,9 +131,39 @@ export function CardPriceHub({
         </div>
       </section>
 
-      {/* primary actions — kept adjacent to the price so the CTA is reachable
-          on short laptop screens without pinning anything */}
-      {cta && <div className="mt-4">{cta}</div>}
+      {/* Buy / Sell — preview until the marketplace lands (VISION §5.2). The
+          buttons carry the ask, with last-sale + volume as one muted caption,
+          so no separate ladder block is needed. */}
+      <section className="mt-4">
+        <div className="flex gap-2">
+          <button
+            type="button"
+            title={t(lang, "comingSoon")}
+            className="ease-chrome flex h-11 flex-1 items-center justify-center gap-2 rounded-xl text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
+          >
+            {t(lang, "buyNow")}
+            <Amount jpy={datum.lowestAsk.jpy} usd={datum.lowestAsk.usd} size="sm" />
+          </button>
+          <button
+            type="button"
+            title={t(lang, "comingSoon")}
+            className="ease-chrome inline-flex h-11 flex-1 items-center justify-center rounded-xl border border-border text-sm font-semibold text-foreground hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {t(lang, "sell")}
+          </button>
+        </div>
+        <p className="text-meta mt-1.5 flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 lg:justify-start">
+          <span className="inline-flex items-center gap-1">
+            {t(lang, "lastSold")}
+            <Amount jpy={datum.lastSale.jpy} usd={datum.lastSale.usd} size="xs" className="text-foreground/70" />
+          </span>
+          {datum.sales30d != null && (
+            <span>· {datum.sales30d.toLocaleString()} {t(lang, "sales30d")}</span>
+          )}
+          <span>· {t(lang, "comingSoon")}</span>
+        </p>
+      </section>
 
       {/* chart */}
       <section className="mt-5">
@@ -174,9 +187,7 @@ export function CardPriceHub({
               ))}
             </div>
           </div>
-          <MiniAreaChart data={series} up={up} onScrub={setScrub} onScrubEnd={() => setScrub(null)} />
-          {/* hi/avg/lo as one muted caption — supporting context, not a second
-              stat block competing with the hero */}
+          <MiniAreaChart data={series} height={240} up={up} onScrub={setScrub} onScrubEnd={() => setScrub(null)} />
           <div
             className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 border-t pt-2"
             style={{ borderColor: "var(--p-hair)" }}

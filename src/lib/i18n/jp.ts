@@ -181,6 +181,8 @@ export const jp = {
   addToPort: "ポートフォリオに追加",
   buy: "購入",
   sell: "売却",
+  buyNow: "今すぐ購入",
+  highestBid: "最高入札",
   remove: "削除",
   noTransactions: "取引履歴なし",
   noMatchingTransactions: "条件に合う取引はありません",

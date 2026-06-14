@@ -16,7 +16,7 @@ import { CardDetailActions } from "./card-detail/actions"
 import { CardPriceHub } from "./card-detail/price-hub"
 import { CardDetailInfoTabs } from "./card-detail/info-tabs"
 import { buildGradeData, defaultGradeKey, type GradeKey } from "./card-detail/grades"
-import { EditionToggle, type Edition } from "./card-detail/edition-toggle"
+import { type Edition } from "./card-detail/edition-toggle"
 import { SiblingGrid } from "./card-detail-sibling-grid"
 import { CardDetailRelated } from "./card-detail-related"
 import { CardDetailSpecs } from "./card-detail-specs"
@@ -168,6 +168,40 @@ export function CardDetail({
         ]}
       />
 
+      {/* header — card identity (left) · utility actions (right). Stacks on mobile. */}
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <span
+              className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+              style={{ background: "var(--p-honey-soft)", color: "var(--primary)" }}
+            >
+              {card.rarity}
+            </span>
+            {sub && <span className="text-xs text-muted-foreground">{sub}</span>}
+          </div>
+          <div className="mt-1.5 flex items-center gap-2">
+            <h1 className="min-w-0 break-words text-2xl font-extrabold tracking-tight text-foreground lg:text-3xl">
+              {displayName}
+            </h1>
+            <WatchlistStar cardId={card.id} size="md" />
+          </div>
+          <p className="mt-0.5 text-xs text-muted-foreground">
+            {set.code.toUpperCase()} · {setName}
+          </p>
+        </div>
+        <div className="shrink-0">
+          <CardDetailActions
+            cardId={card.id}
+            cardCode={card.cardCode}
+            displayName={displayName}
+            rarity={card.rarity}
+            imageUrl={card.imageUrl}
+            currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
+          />
+        </div>
+      </div>
+
       <div className="lg:grid lg:grid-cols-[340px_1fr] lg:items-start lg:gap-10">
         {/* LEFT — identity + image + edition + CTA. Scrolls with the page
             (not pinned) so it doesn't trail the screen on desktop. */}
@@ -195,31 +229,6 @@ export function CardDetail({
                   <Skeleton className="absolute inset-0 size-full" />
                 )}
               </button>
-            </div>
-
-            <div className="mt-4 text-center lg:text-left">
-              <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
-                <span
-                  className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
-                  style={{ background: "var(--p-honey-soft)", color: "var(--primary)" }}
-                >
-                  {card.rarity}
-                </span>
-                {sub && <span className="text-xs text-muted-foreground">{sub}</span>}
-              </div>
-              <div className="mt-1.5 flex items-center justify-center gap-2 lg:justify-start">
-                <h1 className="min-w-0 break-words text-2xl font-extrabold tracking-tight text-foreground">
-                  {displayName}
-                </h1>
-                <WatchlistStar cardId={card.id} size="md" />
-              </div>
-              <p className="mt-0.5 text-xs text-muted-foreground">
-                {set.code.toUpperCase()} · {setName}
-              </p>
-            </div>
-
-            <div className="mt-4 flex justify-center lg:justify-start">
-              <EditionToggle value={edition} onChange={setEdition} enAvailable={false} />
             </div>
           </section>
 
@@ -251,16 +260,9 @@ export function CardDetail({
             gradeData={gradeData}
             selectedGrade={selectedGrade}
             onSelectGrade={setSelectedGrade}
-            cta={
-              <CardDetailActions
-                cardId={card.id}
-                cardCode={card.cardCode}
-                displayName={displayName}
-                rarity={card.rarity}
-                imageUrl={card.imageUrl}
-                currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
-              />
-            }
+            edition={edition}
+            onEditionChange={setEdition}
+            enAvailable={false}
             lang={lang}
           />
 

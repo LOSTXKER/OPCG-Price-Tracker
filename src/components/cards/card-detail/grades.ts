@@ -134,8 +134,9 @@ export function buildGradeData(input: GradeInput): Record<GradeKey, GradeDatum> 
         ? { jpy: null, usd: psa10AskUsd ?? v, isEst: false }
         : { jpy: null, usd: v != null ? r(v * EST_LOWEST_ASK) : null, isEst: true },
       lastSaleSource: realSale ? "SNKRDUNK" : null,
-      // no real graded 30d series yet — omit on the real grade, est on modeled grades
-      delta30d: !real && rawDelta30d != null ? { pct: rawDelta30d, isEst: true } : null,
+      // no real graded 30d series yet — use the raw card's 30d move as a flagged
+      // estimate across all graded tiers (swapped for a real series when comps land)
+      delta30d: rawDelta30d != null ? { pct: rawDelta30d, isEst: true } : null,
       sales30d: sampleSales(v),
       isReal: real && has,
       isEst: !real && has,

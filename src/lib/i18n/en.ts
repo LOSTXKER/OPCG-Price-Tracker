@@ -181,6 +181,8 @@ export const en = {
   addToPort: "Add to portfolio",
   buy: "Buy",
   sell: "Sell",
+  buyNow: "Buy now",
+  highestBid: "Highest Bid",
   remove: "Remove",
   noTransactions: "No transactions yet",
   noMatchingTransactions: "No transactions match your filters",

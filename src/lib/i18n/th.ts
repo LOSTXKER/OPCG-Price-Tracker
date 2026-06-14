@@ -181,6 +181,8 @@ export const th = {
   addToPort: "เพิ่มเข้าพอร์ต",
   buy: "ซื้อ",
   sell: "ขาย",
+  buyNow: "ซื้อเลย",
+  highestBid: "เสนอซื้อสูงสุด",
   remove: "ลบ",
   noTransactions: "ยังไม่มีรายการ",
   noMatchingTransactions: "ไม่พบรายการที่ตรงกับตัวกรอง",
