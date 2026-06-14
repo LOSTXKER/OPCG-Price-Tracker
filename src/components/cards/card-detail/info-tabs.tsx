@@ -7,9 +7,7 @@ import {
   CardListingsSection,
   type CardListing,
 } from "@/components/cards/card-listings-section"
-import { CardDetailSpecs } from "@/components/cards/card-detail-specs"
-import { CardEffectText } from "@/components/cards/card-effect-text"
-import { getCardEffect, t, type Language } from "@/lib/i18n"
+import { t, type Language } from "@/lib/i18n"
 import { relativeTime } from "@/lib/utils/time"
 import { cn } from "@/lib/utils"
 
@@ -17,7 +15,7 @@ import { Amount } from "./grade-value"
 import { SourceLogo } from "./source-logo"
 import { mockComps, mockSales30d } from "./mock"
 
-type Tab = "comps" | "listings" | "population" | "specs"
+type Tab = "comps" | "listings" | "population"
 
 function SourceBadge({ s }: { s: string }) {
   return (
@@ -36,12 +34,11 @@ const SAMPLE_POP = [
 ]
 
 /**
- * Lower-section tabs (VISION §5.1, proto visionary): Comps · Listings ·
- * Population · Specs. Comps/Population are clean prototype mock so the full UI
- * structure shows (เบส); Listings/Specs are real.
+ * Lower-section tabs (VISION §5.1): Comps · Listings · Population. Card specs
+ * now live beside the image (left column), so this is purely market data.
+ * Comps/Population are clean prototype mock; Listings are real.
  */
 export function CardDetailInfoTabs({
-  card,
   cardCode,
   cardName,
   listings,
@@ -51,11 +48,6 @@ export function CardDetailInfoTabs({
   latestUpdatedAt,
   lang,
 }: {
-  card: Parameters<typeof CardDetailSpecs>[0]["card"] & {
-    effectEn?: string | null
-    effectJp?: string | null
-    effectTh?: string | null
-  }
   cardCode: string
   cardName: string
   listings: CardListing[]
@@ -66,20 +58,18 @@ export function CardDetailInfoTabs({
   lang: Language
 }) {
   const [tab, setTab] = useState<Tab>("comps")
-  const effectText = getCardEffect(lang, card)
-  const hasEffect = !!effectText && effectText.trim().length > 0
 
   const comps = mockComps(compBase, gradeLabel)
   const totalSales = mockSales30d(compBase)
   const baseTime = latestUpdatedAt ? new Date(latestUpdatedAt).getTime() : null
   const compDate = (days: number) => (baseTime ? new Date(baseTime - days * 86_400_000).toISOString() : null)
   const popTotal = SAMPLE_POP.reduce((a, b) => a + b.n, 0)
+  const gemPct = SAMPLE_POP.find((r) => r.g === "PSA 10")?.pct ?? null
 
   const TABS: [Tab, string][] = [
     ["comps", t(lang, "tabComps")],
     ["listings", t(lang, "tabListings")],
     ["population", t(lang, "tabPopulation")],
-    ["specs", t(lang, "tabSpecs")],
   ]
 
   return (
@@ -139,34 +129,32 @@ export function CardDetailInfoTabs({
         )}
 
         {tab === "population" && (
-          <div className="surface-1 hairline space-y-2.5 rounded-2xl p-4">
-            <p className="text-meta flex items-center gap-1.5">
-              PSA Population · {popTotal.toLocaleString()} graded
-              <span className="text-overlay uppercase text-muted-foreground/40">{t(lang, "sampleLabel")}</span>
-            </p>
-            {SAMPLE_POP.map((r) => (
-              <div key={r.g} className="flex items-center gap-3">
-                <span className="w-16 text-xs font-semibold text-foreground">{r.g}</span>
-                <div className="surface-2 h-2 flex-1 overflow-hidden rounded-full">
-                  <div className="h-full rounded-full bg-primary" style={{ width: `${r.pct}%` }} />
+          <div className="surface-1 hairline space-y-3 rounded-2xl p-4">
+            <div className="flex items-start justify-between gap-3">
+              <p className="text-meta flex items-center gap-1.5">
+                PSA Population · {popTotal.toLocaleString()} graded
+                <span className="text-overlay uppercase text-muted-foreground/40">{t(lang, "sampleLabel")}</span>
+              </p>
+              {gemPct != null && (
+                <p className="text-meta whitespace-nowrap">
+                  {t(lang, "gemRate")} <span className="tnum font-bold text-primary">{gemPct}%</span>
+                </p>
+              )}
+            </div>
+            <div className="space-y-2.5">
+              {SAMPLE_POP.map((r) => (
+                <div key={r.g} className="flex items-center gap-3">
+                  <span className="w-16 text-xs font-semibold text-foreground">{r.g}</span>
+                  <div className="surface-2 h-2.5 flex-1 overflow-hidden rounded-full">
+                    <div className="h-full rounded-full bg-primary" style={{ width: `${r.pct}%` }} />
+                  </div>
+                  <span className="tnum w-20 shrink-0 text-right text-xs text-muted-foreground">
+                    {r.n.toLocaleString()}
+                    <span className="ml-1 text-muted-foreground/40">{r.pct}%</span>
+                  </span>
                 </div>
-                <span className="tnum w-12 text-right text-xs text-muted-foreground">
-                  {r.n.toLocaleString()}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {tab === "specs" && (
-          <div className="space-y-5">
-            <CardDetailSpecs card={card} lang={lang} />
-            {hasEffect && effectText && (
-              <div className="surface-1 hairline rounded-2xl p-5">
-                <p className="text-meta mb-3">{t(lang, "effect")}</p>
-                <CardEffectText text={effectText} />
-              </div>
-            )}
+              ))}
+            </div>
           </div>
         )}
       </div>

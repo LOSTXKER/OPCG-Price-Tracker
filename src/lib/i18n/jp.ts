@@ -144,6 +144,8 @@ export const jp = {
   high: "高値",
   avg: "平均",
   low: "安値",
+  moreGrades: "他のグレード",
+  gemRate: "GEM率",
   tabComps: "取引履歴",
   tabPopulation: "鑑定数",
   tabSpecs: "スペック",

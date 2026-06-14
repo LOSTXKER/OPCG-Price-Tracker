@@ -144,6 +144,8 @@ export const th = {
   high: "สูงสุด",
   avg: "เฉลี่ย",
   low: "ต่ำสุด",
+  moreGrades: "เกรดอื่น",
+  gemRate: "อัตรา GEM",
   tabComps: "ราคาขาย",
   tabPopulation: "จำนวนเกรด",
   tabSpecs: "สเปก",

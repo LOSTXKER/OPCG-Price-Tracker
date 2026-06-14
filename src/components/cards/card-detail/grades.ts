@@ -31,15 +31,16 @@ export interface GradeTier {
   family: GradeFamily
 }
 
-// Ascending value (cheap → premium), mirroring the proto rail (Raw C → PSA 10),
-// with BGS 9.5 as the top tier after PSA 10.
+// Best-first within each family (VISION §5.1): Raw A·B·C, then PSA 10·9·8, then
+// BGS. Order is presentation-only — buildGradeData/defaultGradeKey look tiers up
+// by key, and the EST_* multipliers are name-keyed, so reordering is safe.
 export const GRADE_TIERS: GradeTier[] = [
-  { key: "raw_c", label: "Raw C", short: "Raw C", family: "raw" },
-  { key: "raw_b", label: "Raw B", short: "Raw B", family: "raw" },
   { key: "raw_a", label: "Raw A", short: "Raw A", family: "raw" },
-  { key: "psa_8", label: "PSA 8", short: "PSA 8", family: "psa" },
-  { key: "psa_9", label: "PSA 9", short: "PSA 9", family: "psa" },
+  { key: "raw_b", label: "Raw B", short: "Raw B", family: "raw" },
+  { key: "raw_c", label: "Raw C", short: "Raw C", family: "raw" },
   { key: "psa_10", label: "PSA 10", short: "PSA 10", family: "psa" },
+  { key: "psa_9", label: "PSA 9", short: "PSA 9", family: "psa" },
+  { key: "psa_8", label: "PSA 8", short: "PSA 8", family: "psa" },
   { key: "bgs_95", label: "BGS 9.5", short: "BGS 9.5", family: "bgs" },
 ]
 

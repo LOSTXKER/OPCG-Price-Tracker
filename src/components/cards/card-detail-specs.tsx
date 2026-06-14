@@ -158,12 +158,9 @@ export function CardDetailSpecs({ card, lang }: CardDetailSpecsProps) {
     <div className="panel p-5">
       <p className="mb-3 text-meta">{t(lang, "details")}</p>
       <div
-        className={cn(
-          "grid gap-2",
-          // 3 cols on mobile, scale up to match number of tiles on desktop
-          // so we don't end up with a half-empty row.
-          visible.length <= 3 ? "grid-cols-3" : "grid-cols-3 sm:grid-cols-6",
-        )}
+        // Always 3 columns — this panel now lives in the narrow left column
+        // (≈340px on desktop), where 6 columns would crush the labels.
+        className="grid grid-cols-3 gap-2"
       >
         {visible.map((tile) => (
           <SpecTile key={tile.label} {...tile} />

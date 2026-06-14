@@ -144,6 +144,8 @@ export const en = {
   high: "High",
   avg: "Avg",
   low: "Low",
+  moreGrades: "More grades",
+  gemRate: "Gem rate",
   tabComps: "Comps",
   tabPopulation: "Population",
   tabSpecs: "Specs",

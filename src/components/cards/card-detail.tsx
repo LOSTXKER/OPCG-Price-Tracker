@@ -8,18 +8,19 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import { AdSlot } from "@/components/ads/ad-slot"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
-import { t, getCardName, getSetName } from "@/lib/i18n"
+import { t, getCardName, getSetName, getCardEffect } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { CardDetailActions } from "./card-detail/actions"
-import { CardDetailStickyBar } from "./card-detail/sticky-bar"
 import { CardPriceHub } from "./card-detail/price-hub"
 import { CardDetailInfoTabs } from "./card-detail/info-tabs"
 import { buildGradeData, defaultGradeKey, type GradeKey } from "./card-detail/grades"
 import { EditionToggle, type Edition } from "./card-detail/edition-toggle"
 import { SiblingGrid } from "./card-detail-sibling-grid"
 import { CardDetailRelated } from "./card-detail-related"
+import { CardDetailSpecs } from "./card-detail-specs"
+import { CardEffectText } from "./card-effect-text"
 
 export interface SiblingCard {
   id: number
@@ -134,6 +135,20 @@ export function CardDetail({
   const displayName = getCardName(lang, card)
   const setName = getSetName(lang, set)
   const sub = [card.cardType, card.isParallel ? "Parallel" : null].filter(Boolean).join(" · ")
+  const effectText = getCardEffect(lang, card)
+  // Spec sheet — rendered beside the image on desktop (left column), but dropped
+  // below the price on mobile so the price stays the first thing seen on a phone.
+  const specsBlock = (
+    <>
+      <CardDetailSpecs card={card} lang={lang} />
+      {effectText?.trim() && (
+        <div className="surface-1 hairline mt-3 rounded-2xl p-5">
+          <p className="text-meta mb-3">{t(lang, "effect")}</p>
+          <CardEffectText text={effectText} />
+        </div>
+      )}
+    </>
+  )
 
   return (
     <div className="relative mx-auto max-w-5xl space-y-6">
@@ -154,8 +169,9 @@ export function CardDetail({
       />
 
       <div className="lg:grid lg:grid-cols-[340px_1fr] lg:items-start lg:gap-10">
-        {/* LEFT — identity + image + edition + CTA (sticky on desktop) — proto-exact */}
-        <div className="lg:sticky lg:top-20 lg:self-start">
+        {/* LEFT — identity + image + edition + CTA. Scrolls with the page
+            (not pinned) so it doesn't trail the screen on desktop. */}
+        <div>
           <section className="px-5 pb-2 pt-3 lg:px-0">
             <div className="mx-auto w-[58%] max-w-[230px] lg:w-full lg:max-w-none">
               <button
@@ -207,16 +223,9 @@ export function CardDetail({
             </div>
           </section>
 
-          <div className="mt-5 flex justify-center lg:justify-start">
-            <CardDetailActions
-              cardId={card.id}
-              cardCode={card.cardCode}
-              displayName={displayName}
-              rarity={card.rarity}
-              imageUrl={card.imageUrl}
-              currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
-            />
-          </div>
+          {/* Desktop: spec sheet sits with the image (left = "what the card is",
+              right = "what it's worth"). On mobile it drops below the price. */}
+          <div className="mt-5 hidden lg:block">{specsBlock}</div>
 
           <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
             <DialogContent className="max-w-[90vw] border-0 bg-transparent p-0 shadow-none ring-0 sm:max-w-[90vw] [&>[data-slot=dialog-close]]:text-white [&>[data-slot=dialog-close]]:hover:bg-white/20">
@@ -235,21 +244,34 @@ export function CardDetail({
           </Dialog>
         </div>
 
-        {/* RIGHT — price + chart, then info tabs */}
+        {/* RIGHT — price + CTA + chart, then info tabs */}
         <div className="mt-6 space-y-5 lg:mt-0 lg:min-w-0">
           <CardPriceHub
             card={card}
             gradeData={gradeData}
             selectedGrade={selectedGrade}
             onSelectGrade={setSelectedGrade}
+            cta={
+              <CardDetailActions
+                cardId={card.id}
+                cardCode={card.cardCode}
+                displayName={displayName}
+                rarity={card.rarity}
+                imageUrl={card.imageUrl}
+                currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
+              />
+            }
             lang={lang}
           />
+
+          {/* Mobile: spec sheet below the price (desktop shows it in the left
+              column instead). */}
+          <div className="lg:hidden">{specsBlock}</div>
 
           {/* In-feed ad (FREE users only) */}
           <AdSlot placement="card-detail-mid" className="aspect-[6/1] w-full" />
 
           <CardDetailInfoTabs
-            card={card}
             cardCode={card.cardCode}
             cardName={displayName}
             listings={listings ?? []}
@@ -278,14 +300,6 @@ export function CardDetail({
       )}
 
       <CardDetailRelated relatedCards={relatedCards ?? []} set={set} lang={lang} />
-
-      <CardDetailStickyBar
-        cardId={card.id}
-        cardName={displayName}
-        datum={gradeData[selectedGrade]}
-        gradeLabel={gradeData[selectedGrade].tier.label}
-        lang={lang}
-      />
     </div>
   )
 }
