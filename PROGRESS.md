@@ -30,7 +30,7 @@
 ## 📌 reference / branch
 - **[VISION.md](VISION.md)** = north-star เฟสนี้ (อ่านก่อน refine ทุกหน้า) · **[REDESIGN.md](REDESIGN.md)** = design phase v1 (P0–P2 เสร็จแล้ว, historical)
 - **PR #25** (`design/vision-prototype`) = prototype `/proto` (visionary+grounded mockups, warm-premium ทุกหน้า) + v2 scaffolding — **redundant แล้ว ปิดได้** (VISION ขึ้น main แล้ว · /proto เก็บใน git ดู ref ได้) — *เบสยังไม่เคาะปิด*
-- prototype `/proto/*` ไม่อยู่บน main (อยู่ branch #25) — เป็น mockup เทียบ ไม่ใช่โค้ดจริง
+- prototype `/proto/*` = **อยู่บน main แล้ว** (chromeless, warm-premium mockups — visionary `/proto` + grounded `/proto/real`) → เปิด `localhost:3000/proto` ดูเป็น visual ref ตอน refine · เป็น mockup ไม่ใช่โค้ดจริง (ไม่กระทบแอป)
 
 ## ✅ ทำเสร็จก่อนหน้า (merged, อยู่ใน git)
 - redesign P0–P2 (#7–#16) · P4.1/4.2 multi-game seam + gameId schema deployed prod (#17/#18) · declutter sweep ทุก batch (#20–#23) · docs cleanup (#24: rewrite doc/ + archive + README) · v2 foundation (#26, ถูกแทนด้วย in-place แล้ว) · warm theme + VISION (#27)
