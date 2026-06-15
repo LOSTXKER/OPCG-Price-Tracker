@@ -18,8 +18,9 @@ import { GradeSelect } from "./card-detail/grade-select"
 import { CardChart } from "./card-detail/card-chart"
 import { CardBuySell } from "./card-detail/buy-sell"
 import { CardTierMeta } from "./card-detail/tier-meta"
-import { CardDetailInfoTabs } from "./card-detail/info-tabs"
-import { CardPortfolioCard } from "./card-detail/portfolio-card"
+import { CardRecentComps } from "./card-detail/recent-comps"
+import { CardPopulation } from "./card-detail/population"
+import { SectionHead } from "./card-detail/section-head"
 import { MeecardAsksRail } from "./card-detail/asks-rail"
 import { buildGradeData, defaultGradeKey, type GradeKey } from "./card-detail/grades"
 import { type Edition } from "./card-detail/edition-toggle"
@@ -196,10 +197,10 @@ export function CardDetail({
         </div>
       </div>
 
-      {/* decision zone — image rail · market data · holdings + asks */}
+      {/* decision zone — image · market · buy box */}
       <div className="lg:grid lg:grid-cols-[240px_1fr_300px] lg:items-start lg:gap-7">
-        {/* LEFT — image + trade + utilities (sticky on desktop) */}
-        <div className="lg:sticky lg:top-6">
+        {/* LEFT — image only (scrolls with the page, not pinned) */}
+        <div>
           <section className="px-5 pb-2 pt-3 lg:px-0">
             <div className="mx-auto w-[58%] max-w-[230px] lg:w-full lg:max-w-none">
               <button
@@ -225,20 +226,6 @@ export function CardDetail({
               </button>
             </div>
           </section>
-
-          <div className="mt-5 space-y-4 px-5 lg:px-0">
-            <CardBuySell lang={lang} />
-            <div className="flex justify-center lg:justify-start">
-              <CardDetailActions
-                cardId={card.id}
-                cardCode={card.cardCode}
-                displayName={displayName}
-                rarity={card.rarity}
-                imageUrl={card.imageUrl}
-                currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
-              />
-            </div>
-          </div>
 
           <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
             <DialogContent className="max-w-[90vw] border-0 bg-transparent p-0 shadow-none ring-0 sm:max-w-[90vw] [&>[data-slot=dialog-close]]:text-white [&>[data-slot=dialog-close]]:hover:bg-white/20">
@@ -281,23 +268,21 @@ export function CardDetail({
             latestUpdatedAt={latestUpdatedAt}
             lang={lang}
           />
-          <CardDetailInfoTabs
-            cardCode={card.cardCode}
-            cardName={displayName}
-            listings={listings ?? []}
-            compBase={gradeData[selectedGrade].value.jpy ?? gradeData[selectedGrade].value.usd}
-            gradeLabel={gradeData[selectedGrade].tier.label}
-            currency={gradeData[selectedGrade].currency}
-            latestUpdatedAt={latestUpdatedAt}
-            tabs={["comps", "population"]}
-            lang={lang}
-          />
         </div>
 
-        {/* RIGHT — your holdings + who's selling now (scrolls; empty asks is the
-            common case since marketplace is flag-gated) */}
+        {/* RIGHT — buy box: trade + utilities + who's selling now */}
         <div className="mt-8 space-y-4 lg:mt-0">
-          <CardPortfolioCard cardId={card.id} cardName={displayName} lang={lang} />
+          <CardBuySell lang={lang} />
+          <div className="flex justify-center">
+            <CardDetailActions
+              cardId={card.id}
+              cardCode={card.cardCode}
+              displayName={displayName}
+              rarity={card.rarity}
+              imageUrl={card.imageUrl}
+              currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
+            />
+          </div>
           <MeecardAsksRail
             cardId={card.id}
             cardCode={card.cardCode}
@@ -310,11 +295,29 @@ export function CardDetail({
         </div>
       </div>
 
-      {/* in-feed ad — full-width banner below the decision zone */}
+      {/* market data — full-width modules: recent sales (wide) + population */}
+      <div className="grid gap-x-8 gap-y-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <SectionHead title={t(lang, "tabComps")} />
+          <CardRecentComps
+            compBase={gradeData[selectedGrade].value.jpy ?? gradeData[selectedGrade].value.usd}
+            gradeLabel={gradeData[selectedGrade].tier.label}
+            currency={gradeData[selectedGrade].currency}
+            latestUpdatedAt={latestUpdatedAt}
+            lang={lang}
+          />
+        </div>
+        <div>
+          <SectionHead title={t(lang, "tabPopulation")} />
+          <CardPopulation lang={lang} />
+        </div>
+      </div>
+
+      {/* in-feed ad — full-width banner */}
       <AdSlot placement="card-detail-mid" className="aspect-[6/1] w-full" />
 
-      {/* card detail — full width: spec sheet (wide) + competitive meta */}
-      <div className="lg:grid lg:grid-cols-3 lg:gap-x-12">
+      {/* card facts — spec sheet (wide) + competitive meta */}
+      <div className="grid gap-x-8 gap-y-6 lg:grid-cols-3">
         <div className="lg:col-span-2">{specsBlock}</div>
         <div className="mt-5 lg:mt-0">
           <CardTierMeta lang={lang} />
@@ -323,9 +326,7 @@ export function CardDetail({
 
       {siblings.length > 0 && (
         <div>
-          <p className="mb-3 text-meta">
-            {t(lang, "otherVersions")} ({siblings.length})
-          </p>
+          <SectionHead title={`${t(lang, "otherVersions")} (${siblings.length})`} />
           <SiblingGrid
             siblings={siblings}
             lang={lang}
