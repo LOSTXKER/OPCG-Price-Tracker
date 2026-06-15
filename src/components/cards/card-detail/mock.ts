@@ -27,13 +27,15 @@ export function mockSeries(base: number | null, up: boolean, range = "3M"): numb
   const seed = b % 1000
   const drift = (up ? 1 : -1) * 0.0016 // gentle per-step trend
   let v = b * (1 - (up ? 1 : -1) * 0.085) // start ~8.5% off so drift lands on b
+  let vel = 0 // momentum — makes moves persist into trends, not per-point noise
   const out: number[] = []
   for (let i = 0; i < n; i++) {
     const r1 = hash(i * 12.9898 + seed * 78.233) // layered hashes → reads random
     const r2 = hash(i * 39.346 + seed * 11.135)
-    const shock = (r1 - 0.5) * 0.05 + (r2 - 0.5) * 0.018 // ±~2.5% jitter + fine grain
-    const meanRevert = ((b - v) / b) * 0.04 // pull back toward base
-    v = v * (1 + drift + shock + meanRevert)
+    const kick = (r1 - 0.5) * 0.04 + (r2 - 0.5) * 0.012
+    vel = vel * 0.74 + kick * 0.26 // smooth the shock so the line trends, not spikes
+    const meanRevert = ((b - v) / b) * 0.05 // pull back toward base
+    v = v * (1 + drift + vel + meanRevert)
     out.push(Math.round(v))
   }
   out[out.length - 1] = Math.round(b) // pin last point to the grade value

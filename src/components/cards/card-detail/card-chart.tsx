@@ -1,6 +1,6 @@
 "use client"
 
-import { Fragment, useMemo, useState } from "react"
+import { Fragment, useState } from "react"
 import { ChevronDown } from "lucide-react"
 
 import { getLocale, t, type Language } from "@/lib/i18n"
@@ -40,7 +40,6 @@ export function CardChart({
   const currency = useUIStore((s) => s.currency)
   const [range, setRange] = useState<(typeof RANGES)[number]>("3M")
   const [showAllGrades, setShowAllGrades] = useState(false)
-  const [scrub, setScrub] = useState<number | null>(null)
 
   const datum = gradeData[selectedGrade]
   const visibleTiers = GRADE_TIERS.filter(
@@ -76,7 +75,6 @@ export function CardChart({
   const hi = heroPts.length ? Math.max(...heroPts) : null
   const lo = heroPts.length ? Math.min(...heroPts) : null
   const avg = heroPts.length ? Math.round(heroPts.reduce((a, b) => a + b, 0) / heroPts.length) : null
-  const scrubValue = scrub != null && heroPts[scrub] != null ? heroPts[scrub] : null
 
   // Date for a given series index — same anchor + span math as the x-axis labels.
   const dateAt = (i: number) => {
@@ -89,45 +87,18 @@ export function CardChart({
     return new Date(refTime - days * 86_400_000).toLocaleDateString(getLocale(lang), fmt)
   }
 
-  // X-axis time labels — anchored to the last-updated date (a stable server
-  // value, so no hydration drift) and the selected range span.
-  const xLabels = useMemo(() => {
-    const ref = latestUpdatedAt ? new Date(latestUpdatedAt).getTime() : null
-    if (ref == null || Number.isNaN(ref)) return []
-    const span = SPAN_DAYS[range] ?? 90
-    const locale = getLocale(lang)
-    const fmt: Intl.DateTimeFormatOptions =
-      range === "1M"
-        ? { day: "numeric", month: "short" }
-        : range === "All"
-          ? { month: "short", year: "2-digit" }
-          : { month: "short" }
-    return [0, 1, 2, 3, 4].map((i) =>
-      new Date(ref - ((span * (4 - i)) / 4) * 86_400_000).toLocaleDateString(locale, fmt),
-    )
-  }, [latestUpdatedAt, range, lang])
-
   return (
     <div className="px-1">
       {/* instrument header — the chart's own headline + time axis */}
       <div className="flex items-end justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-baseline gap-2">
-            {scrubValue != null ? (
-              <>
-                <span className="tnum text-base font-bold text-foreground">{formatDisplayValue(scrubValue, currency)}</span>
-                <span className="text-meta tnum">{dateAt(scrub!)}</span>
-              </>
-            ) : (
-              <>
-                <span className="text-base font-bold text-foreground">{datum.tier.label}</span>
-                {datum.delta30d && (
-                  <span className="inline-flex items-baseline gap-1">
-                    <Delta pct={datum.delta30d.pct} lang={lang} size="md" />
-                    <span className="text-meta">{t(lang, "days30")}</span>
-                  </span>
-                )}
-              </>
+            <span className="text-base font-bold text-foreground">{datum.tier.label}</span>
+            {datum.delta30d && (
+              <span className="inline-flex items-baseline gap-1">
+                <Delta pct={datum.delta30d.pct} lang={lang} size="md" />
+                <span className="text-meta">{t(lang, "days30")}</span>
+              </span>
             )}
           </div>
         </div>
@@ -197,21 +168,7 @@ export function CardChart({
         </button>
       </div>
 
-      <MiniAreaChart
-        series={chartSeries}
-        height={300}
-        currency={currency}
-        labelAt={dateAt}
-        onScrub={setScrub}
-        onScrubEnd={() => setScrub(null)}
-      />
-      {xLabels.length > 0 && (
-        <div className="mt-1.5 flex justify-between px-1 text-[10px] text-muted-foreground/70">
-          {xLabels.map((l, i) => (
-            <span key={i} className="tnum">{l}</span>
-          ))}
-        </div>
-      )}
+      <MiniAreaChart series={chartSeries} height={300} currency={currency} labelAt={dateAt} />
       <div className="hairline-t mt-2.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 pt-2.5">
         {[
           { l: t(lang, "high"), v: hi },

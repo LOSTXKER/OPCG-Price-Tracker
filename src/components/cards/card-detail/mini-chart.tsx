@@ -1,204 +1,180 @@
 "use client"
 
-import { useId, useRef, useState } from "react"
+import { useId } from "react"
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts"
 
 import { compactDisplayValue, formatDisplayValue, type Currency } from "@/lib/utils/currency"
 
 export interface ChartSeries {
   key: string
   points: number[]
-  /** the selected grade — drawn bold/colored with area fill + end-dot. */
+  /** the selected grade — drawn bold/colored with area fill. */
   isHero: boolean
   up: boolean
   label: string
 }
 
-/** "Nice" round gridline values across [min,max] (1/2/2.5/5/10 × 10ⁿ steps). */
-function niceTicks(min: number, max: number, count = 4): number[] {
-  const span = max - min || 1
-  const raw = span / (count - 1)
-  const mag = 10 ** Math.floor(Math.log10(raw))
-  const step = ([1, 2, 2.5, 5, 10].find((s) => s * mag >= raw) ?? 10) * mag
-  const ticks: number[] = []
-  for (let v = Math.ceil(min / step) * step; v <= max + 1e-6; v += step) ticks.push(v)
-  return ticks
+type Def = { key: string; label: string; color: string; isHero: boolean }
+
+function GradeTooltip({
+  active,
+  payload,
+  label,
+  defs,
+  labelAt,
+  currency,
+}: {
+  active?: boolean
+  payload?: ReadonlyArray<{ dataKey?: string | number; value?: number }>
+  label?: number
+  defs: Def[]
+  labelAt?: (i: number) => string
+  currency: Currency
+}) {
+  if (!active || !payload?.length) return null
+  const date = labelAt && typeof label === "number" ? labelAt(label) : ""
+  // hero first, then ghosts — only series that have a value at this point
+  const rows = defs
+    .map((d) => ({ d, v: payload.find((p) => p.dataKey === d.key)?.value }))
+    .filter((r) => r.v != null)
+    .sort((a, b) => (b.v as number) - (a.v as number))
+  return (
+    <div className="surface-2 hairline rounded-md px-2.5 py-2 shadow-[var(--elev-overlay)]">
+      {date && <p className="text-meta mb-1">{date}</p>}
+      <div className="space-y-0.5">
+        {rows.map(({ d, v }) => (
+          <div key={d.key} className="flex items-center gap-2">
+            <span aria-hidden className="size-1.5 rounded-full" style={{ background: d.color }} />
+            <span className="text-meta">{d.label}</span>
+            <span
+              className="tnum ml-auto text-xs font-semibold"
+              style={{ color: d.isHero ? d.color : "var(--foreground)" }}
+            >
+              {formatDisplayValue(v as number, currency)}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 /**
- * Multi-series trading chart on ONE shared scale. Every grade is a faint grey
- * ghost; the selected (hero) grade is the bold green/red line with gradient fill,
- * end-dot, and a dashed last-price reference. A real Y price axis (nice-tick
- * gridlines + right-edge HTML price labels), a last-price pill, and a scrub
- * tooltip make it read as a genuine terminal — not a drawn SVG. All TYPE is HTML
- * overlay (the SVG uses preserveAspectRatio="none", which would shear svg text).
+ * Multi-grade price chart (Recharts) — every visible grade overlaid on ONE shared
+ * scale (the ghost ladder), the selected grade drawn as the bold green/red hero
+ * line with a gradient fill + last-price reference. A real, proportioned chart
+ * (responsive, gridlines, right price axis, hover tooltip) — not a stretched SVG.
  * Honey-gold stays reserved for chrome; only the hero carries gain/loss color.
  */
 export function MiniAreaChart({
   series,
-  height = 176,
+  height = 280,
   currency,
   labelAt,
-  onScrub,
-  onScrubEnd,
 }: {
   series: ChartSeries[]
   height?: number
   currency: Currency
   labelAt?: (i: number) => string
-  onScrub?: (i: number) => void
-  onScrubEnd?: () => void
 }) {
-  const W = 360
-  const H = height
-  const PAD = 10
   const gid = useId().replace(/:/g, "")
-  const ref = useRef<SVGSVGElement>(null)
-  const [hover, setHover] = useState<number | null>(null)
-
   const hero = series.find((s) => s.isHero) ?? series[0]
+
   if (!hero || hero.points.length < 2) {
     return (
-      <div className="flex items-center justify-center text-sm text-muted-foreground" style={{ height: H }}>
+      <div className="flex items-center justify-center text-sm text-muted-foreground" style={{ height }}>
         —
       </div>
     )
   }
 
-  // shared scale — pool every visible series so the ladder is honest
-  const all = series.flatMap((s) => s.points)
-  const min = Math.min(...all)
-  const max = Math.max(...all)
-  const range = max - min || 1
   const len = hero.points.length
-  const x = (i: number) => (i / (len - 1)) * W
-  const y = (v: number) => H - PAD - ((v - min) / range) * (H - PAD * 2)
-
-  const toLine = (pts: number[]) =>
-    pts.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(" ")
-
-  const heroPts = hero.points.map((v, i) => [x(i), y(v)] as const)
-  const heroLine = toLine(hero.points)
-  const heroArea = `${heroLine} L ${W} ${H} L 0 ${H} Z`
-  const stroke = hero.up ? "var(--price-up)" : "var(--price-down)"
+  const heroColor = hero.up ? "var(--price-up)" : "var(--price-down)"
   const ghosts = series.filter((s) => s !== hero && s.points.length >= 2)
+  const orderedDefs: Def[] = [
+    ...ghosts.map((g) => ({ key: g.key, label: g.label, color: "var(--muted-foreground)", isHero: false })),
+    { key: hero.key, label: hero.label, color: heroColor, isHero: true },
+  ]
+  const lastVal = hero.points[len - 1]
 
-  const lastV = hero.points[len - 1]
-  const lastY = y(lastV)
-  const ticks = niceTicks(min, max).filter((t) => Math.abs(y(t) - lastY) > 14) // avoid pill collision
-
-  function locate(clientX: number) {
-    const rect = ref.current?.getBoundingClientRect()
-    if (!rect) return
-    const rel = (clientX - rect.left) / rect.width
-    const i = Math.max(0, Math.min(len - 1, Math.round(rel * (len - 1))))
-    setHover(i)
-    onScrub?.(i)
-  }
-  function end() {
-    setHover(null)
-    onScrubEnd?.()
-  }
-
-  const hoverLeft = hover !== null ? (x(hover) / W) * 100 : 0
-  const flip = hoverLeft > 70
+  // one row per index; each grade is a column (shared x → shared scale ladder)
+  const data = Array.from({ length: len }, (_, i) => {
+    const row: Record<string, number> = { idx: i }
+    for (const s of series) if (s.points[i] != null) row[s.key] = s.points[i]
+    return row
+  })
 
   return (
-    <div className="relative select-none" style={{ height: H }}>
-      <svg
-        ref={ref}
-        viewBox={`0 0 ${W} ${H}`}
-        preserveAspectRatio="none"
-        className="absolute inset-0 size-full touch-none"
-        onPointerDown={(e) => {
-          e.currentTarget.setPointerCapture(e.pointerId)
-          locate(e.clientX)
-        }}
-        onPointerMove={(e) => hover !== null && locate(e.clientX)}
-        onPointerUp={end}
-        onPointerCancel={end}
-      >
+    <ResponsiveContainer width="100%" height={height}>
+      <AreaChart data={data} margin={{ top: 8, right: 4, left: 0, bottom: 0 }}>
         <defs>
           <linearGradient id={`g${gid}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={stroke} stopOpacity="0.28" />
-            <stop offset="100%" stopColor={stroke} stopOpacity="0" />
+            <stop offset="0%" stopColor={heroColor} stopOpacity={0.26} />
+            <stop offset="100%" stopColor={heroColor} stopOpacity={0} />
           </linearGradient>
         </defs>
-
-        {/* price gridlines (behind everything) */}
-        {ticks.map((t) => (
-          <line key={t} x1="0" y1={y(t)} x2={W} y2={y(t)} stroke="var(--p-hair)" strokeOpacity="0.6" strokeWidth="1" vectorEffect="non-scaling-stroke" />
-        ))}
-
-        {/* hero area backdrop, then ghosts crisp on top, then the hero line */}
-        <path d={heroArea} fill={`url(#g${gid})`} className="ease-chrome transition-opacity duration-150" />
+        <CartesianGrid strokeDasharray="3 3" className="stroke-border/25" vertical={false} />
+        <XAxis
+          dataKey="idx"
+          type="number"
+          domain={[0, len - 1]}
+          tickFormatter={(i) => labelAt?.(Number(i)) ?? ""}
+          tick={{ fontSize: 10 }}
+          tickLine={false}
+          axisLine={false}
+          className="text-muted-foreground"
+          minTickGap={56}
+          dy={6}
+        />
+        <YAxis
+          orientation="right"
+          tick={{ fontSize: 10 }}
+          tickLine={false}
+          axisLine={false}
+          className="tnum text-muted-foreground"
+          tickFormatter={(v) => compactDisplayValue(Number(v), currency)}
+          width={50}
+          domain={[(min: number) => Math.floor(min * 0.96), (max: number) => Math.ceil(max * 1.04)]}
+        />
+        <Tooltip
+          cursor={{ stroke: "var(--muted-foreground)", strokeDasharray: "3 3", strokeWidth: 1, opacity: 0.4 }}
+          content={<GradeTooltip defs={orderedDefs} labelAt={labelAt} currency={currency} />}
+        />
         {ghosts.map((g) => (
-          <path
+          <Area
             key={g.key}
-            d={toLine(g.points)}
-            fill="none"
+            type="monotone"
+            dataKey={g.key}
             stroke="var(--muted-foreground)"
-            strokeOpacity="0.3"
-            strokeWidth="1"
-            strokeLinejoin="round"
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            className="ease-chrome transition-[opacity,stroke-width] duration-150"
+            strokeOpacity={0.32}
+            strokeWidth={1}
+            fill="none"
+            dot={false}
+            isAnimationActive={false}
+            activeDot={false}
           />
         ))}
-        <path
-          d={heroLine}
-          fill="none"
-          stroke={stroke}
-          strokeWidth="2"
-          strokeLinejoin="round"
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-          className="ease-chrome transition-[opacity,stroke-width] duration-150"
+        <Area
+          type="monotone"
+          dataKey={hero.key}
+          stroke={heroColor}
+          strokeWidth={2}
+          fill={`url(#g${gid})`}
+          dot={false}
+          isAnimationActive={false}
+          activeDot={{ r: 4, fill: heroColor, strokeWidth: 2, stroke: "var(--background)" }}
         />
-
-        {/* dashed last-price reference */}
-        <line x1="0" y1={lastY} x2={W} y2={lastY} stroke={stroke} strokeDasharray="2 3" strokeOpacity="0.5" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-        <circle cx={heroPts[len - 1][0]} cy={heroPts[len - 1][1]} r="3" fill={stroke} vectorEffect="non-scaling-stroke" />
-
-        {hover !== null && (
-          <g>
-            <line x1={heroPts[hover][0]} y1="0" x2={heroPts[hover][0]} y2={H} stroke="var(--p-hair)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
-            <circle cx={heroPts[hover][0]} cy={heroPts[hover][1]} r="4.5" fill="var(--background)" stroke={stroke} strokeWidth="2.5" vectorEffect="non-scaling-stroke" />
-          </g>
-        )}
-      </svg>
-
-      {/* Y price labels — HTML overlay (svg text would shear) */}
-      {ticks.map((t) => (
-        <span
-          key={t}
-          className="text-overlay tnum pointer-events-none absolute right-0 -translate-y-1/2 bg-[var(--background)]/60 px-0.5 text-muted-foreground/70"
-          style={{ top: `${(y(t) / H) * 100}%` }}
-        >
-          {compactDisplayValue(t, currency)}
-        </span>
-      ))}
-
-      {/* last-price pill */}
-      <span
-        className="text-overlay tnum surface-2 hairline pointer-events-none absolute right-0 -translate-y-1/2 rounded px-1.5 py-0.5"
-        style={{ top: `${(lastY / H) * 100}%`, color: stroke }}
-      >
-        {formatDisplayValue(lastV, currency)}
-      </span>
-
-      {/* scrub tooltip */}
-      {hover !== null && (
-        <div
-          className="surface-2 hairline pointer-events-none absolute top-1 z-10 rounded-md px-2 py-1 shadow-[var(--elev-overlay)]"
-          style={{ left: `${Math.max(0, Math.min(100, hoverLeft))}%`, transform: flip ? "translateX(-100%)" : "translateX(0)" }}
-        >
-          {labelAt && <p className="text-meta whitespace-nowrap">{labelAt(hover)}</p>}
-          <p className="tnum whitespace-nowrap text-sm font-semibold text-foreground">
-            {formatDisplayValue(hero.points[hover], currency)}
-          </p>
-        </div>
-      )}
-    </div>
+        <ReferenceLine y={lastVal} stroke={heroColor} strokeDasharray="2 3" strokeOpacity={0.5} />
+      </AreaChart>
+    </ResponsiveContainer>
   )
 }
