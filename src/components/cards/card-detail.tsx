@@ -14,6 +14,8 @@ import { useUIStore } from "@/stores/ui-store"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { CardDetailActions } from "./card-detail/actions"
 import { CardPriceHub } from "./card-detail/price-hub"
+import { CardBuySell } from "./card-detail/buy-sell"
+import { CardTierMeta } from "./card-detail/tier-meta"
 import { CardDetailInfoTabs } from "./card-detail/info-tabs"
 import { buildGradeData, defaultGradeKey, type GradeKey } from "./card-detail/grades"
 import { type Edition } from "./card-detail/edition-toggle"
@@ -207,7 +209,7 @@ export function CardDetail({
             (not pinned) so it doesn't trail the screen on desktop. */}
         <div>
           <section className="px-5 pb-2 pt-3 lg:px-0">
-            <div className="mx-auto w-[58%] max-w-[230px] lg:w-full lg:max-w-none">
+            <div className="mx-auto w-[58%] max-w-[230px] lg:w-full lg:max-w-[280px]">
               <button
                 type="button"
                 onClick={() => card.imageUrl && setLightboxOpen(true)}
@@ -232,9 +234,19 @@ export function CardDetail({
             </div>
           </section>
 
-          {/* Desktop: spec sheet sits with the image (left = "what the card is",
-              right = "what it's worth"). On mobile it drops below the price. */}
-          <div className="mt-5 hidden lg:block">{specsBlock}</div>
+          {/* Buy / Sell — desktop sidebar (mobile renders it under the price) */}
+          <div className="mt-5 hidden px-5 lg:block lg:px-0">
+            <CardBuySell datum={gradeData[selectedGrade]} lang={lang} />
+          </div>
+
+          {/* Competitive meta + ad — desktop sidebar (mobile renders below the
+              price so the price stays first on a phone) */}
+          <div className="mt-5 hidden px-5 lg:block lg:px-0">
+            <CardTierMeta lang={lang} />
+          </div>
+          <div className="mt-5 hidden px-5 lg:block lg:px-0">
+            <AdSlot placement="card-detail-mid" className="aspect-[6/1] w-full" />
+          </div>
 
           <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
             <DialogContent className="max-w-[90vw] border-0 bg-transparent p-0 shadow-none ring-0 sm:max-w-[90vw] [&>[data-slot=dialog-close]]:text-white [&>[data-slot=dialog-close]]:hover:bg-white/20">
@@ -266,12 +278,13 @@ export function CardDetail({
             lang={lang}
           />
 
-          {/* Mobile: spec sheet below the price (desktop shows it in the left
-              column instead). */}
-          <div className="lg:hidden">{specsBlock}</div>
-
-          {/* In-feed ad (FREE users only) */}
-          <AdSlot placement="card-detail-mid" className="aspect-[6/1] w-full" />
+          {/* Buy / Sell + meta + ad — mobile (desktop renders these in the left
+              sidebar). Kept below the price so the price stays first on a phone. */}
+          <div className="space-y-5 lg:hidden">
+            <CardBuySell datum={gradeData[selectedGrade]} lang={lang} />
+            <CardTierMeta lang={lang} />
+            <AdSlot placement="card-detail-mid" className="aspect-[6/1] w-full" />
+          </div>
 
           <CardDetailInfoTabs
             cardCode={card.cardCode}
@@ -285,6 +298,9 @@ export function CardDetail({
           />
         </div>
       </div>
+
+      {/* card spec sheet — its own full-width section below the trade view */}
+      {specsBlock}
 
       {siblings.length > 0 && (
         <div>

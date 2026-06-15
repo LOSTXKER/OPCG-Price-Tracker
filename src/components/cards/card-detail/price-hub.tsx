@@ -131,40 +131,6 @@ export function CardPriceHub({
         </div>
       </section>
 
-      {/* Buy / Sell — preview until the marketplace lands (VISION §5.2). The
-          buttons carry the ask, with last-sale + volume as one muted caption,
-          so no separate ladder block is needed. */}
-      <section className="mt-4">
-        <div className="flex gap-2">
-          <button
-            type="button"
-            title={t(lang, "comingSoon")}
-            className="ease-chrome flex h-11 flex-1 items-center justify-center gap-2 rounded-xl text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
-          >
-            {t(lang, "buyNow")}
-            <Amount jpy={datum.lowestAsk.jpy} usd={datum.lowestAsk.usd} size="sm" />
-          </button>
-          <button
-            type="button"
-            title={t(lang, "comingSoon")}
-            className="ease-chrome inline-flex h-11 flex-1 items-center justify-center rounded-xl border border-border text-sm font-semibold text-foreground hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {t(lang, "sell")}
-          </button>
-        </div>
-        <p className="text-meta mt-1.5 flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 lg:justify-start">
-          <span className="inline-flex items-center gap-1">
-            {t(lang, "lastSold")}
-            <Amount jpy={datum.lastSale.jpy} usd={datum.lastSale.usd} size="xs" className="text-foreground/70" />
-          </span>
-          {datum.sales30d != null && (
-            <span>· {datum.sales30d.toLocaleString()} {t(lang, "sales30d")}</span>
-          )}
-          <span>· {t(lang, "comingSoon")}</span>
-        </p>
-      </section>
-
       {/* chart */}
       <section className="mt-5">
         <div className="rounded-2xl surface-1 hairline p-4">

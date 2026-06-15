@@ -146,6 +146,8 @@ export const th = {
   low: "ต่ำสุด",
   moreGrades: "เกรดอื่น",
   gemRate: "อัตรา GEM",
+  metaTier: "Tier ในเมตา",
+  metaShare: "ส่วนแบ่งเมตา",
   tabComps: "ราคาขาย",
   tabPopulation: "จำนวนเกรด",
   tabSpecs: "สเปก",

@@ -146,6 +146,8 @@ export const en = {
   low: "Low",
   moreGrades: "More grades",
   gemRate: "Gem rate",
+  metaTier: "Meta tier",
+  metaShare: "Meta share",
   tabComps: "Comps",
   tabPopulation: "Population",
   tabSpecs: "Specs",

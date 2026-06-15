@@ -146,6 +146,8 @@ export const jp = {
   low: "安値",
   moreGrades: "他のグレード",
   gemRate: "GEM率",
+  metaTier: "メタTIER",
+  metaShare: "メタシェア",
   tabComps: "取引履歴",
   tabPopulation: "鑑定数",
   tabSpecs: "スペック",
