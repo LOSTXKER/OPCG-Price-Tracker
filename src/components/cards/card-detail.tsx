@@ -173,27 +173,8 @@ export function CardDetail({
         ]}
       />
 
-      {/* identity — full width above the decision zone */}
-      <div className="min-w-0">
-        <div className="flex flex-wrap items-center gap-2">
-          <span
-            className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
-            style={{ background: "var(--p-honey-soft)", color: "var(--primary)" }}
-          >
-            {card.rarity}
-          </span>
-          {sub && <span className="text-xs text-muted-foreground">{sub}</span>}
-        </div>
-        <div className="mt-1.5 flex items-center gap-2">
-          <h1 className="min-w-0 break-words text-2xl font-extrabold tracking-tight text-foreground lg:text-3xl">
-            {displayName}
-          </h1>
-          <WatchlistStar cardId={card.id} size="md" />
-        </div>
-      </div>
-
-      {/* decision zone — image+facts · market · buy box */}
-      <div className="lg:grid lg:grid-cols-[260px_1fr_300px] lg:items-start lg:gap-7">
+      {/* decision zone — image · instrument (name+grade+price+chart) · buy box */}
+      <div className="lg:grid lg:grid-cols-[220px_1fr_300px] lg:items-start lg:gap-7">
         {/* LEFT — image only (scrolls with the page, not pinned) */}
         <div>
           <section className="px-5 pb-2 pt-3 lg:px-0">
@@ -222,12 +203,6 @@ export function CardDetail({
             </div>
           </section>
 
-          {/* card facts under the image — fills the rail + groups the card's identity */}
-          <div className="mt-5 space-y-5 px-5 lg:px-0">
-            {specsBlock}
-            <CardTierMeta lang={lang} />
-          </div>
-
           <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
             <DialogContent className="max-w-[90vw] border-0 bg-transparent p-0 shadow-none ring-0 sm:max-w-[90vw] [&>[data-slot=dialog-close]]:text-white [&>[data-slot=dialog-close]]:hover:bg-white/20">
               <DialogTitle className="sr-only">{card.nameEn ?? card.nameJp}</DialogTitle>
@@ -245,8 +220,25 @@ export function CardDetail({
           </Dialog>
         </div>
 
-        {/* CENTER — grade picker, price, the chart (focal point), then tabs */}
+        {/* CENTER — the instrument: name · grade · price · chart */}
         <div className="mt-8 space-y-5 lg:mt-0 lg:min-w-0">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+                style={{ background: "var(--p-honey-soft)", color: "var(--primary)" }}
+              >
+                {card.rarity}
+              </span>
+              {sub && <span className="text-xs text-muted-foreground">{sub}</span>}
+            </div>
+            <div className="mt-1.5 flex items-center gap-2">
+              <h1 className="min-w-0 break-words text-2xl font-extrabold tracking-tight text-foreground lg:text-3xl">
+                {displayName}
+              </h1>
+              <WatchlistStar cardId={card.id} size="md" />
+            </div>
+          </div>
           <div className="space-y-3">
             <GradeRail
               data={gradeData}
@@ -313,6 +305,14 @@ export function CardDetail({
         <div>
           <SectionHead title={t(lang, "tabPopulation")} />
           <CardPopulation lang={lang} />
+        </div>
+      </div>
+
+      {/* card facts — spec sheet (wide) + competitive meta */}
+      <div className="grid gap-x-8 gap-y-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">{specsBlock}</div>
+        <div className="mt-2 lg:mt-0">
+          <CardTierMeta lang={lang} />
         </div>
       </div>
 
