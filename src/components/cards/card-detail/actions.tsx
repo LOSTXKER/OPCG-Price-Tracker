@@ -57,7 +57,8 @@ export function CardDetailActions({
         cardId={cardId}
         cardName={displayName}
         variant="outline"
-        className="h-10 rounded-xl px-3.5 text-sm"
+        iconOnly
+        className="size-10 shrink-0 rounded-xl"
       />
 
       <button type="button" onClick={() => void handleShare()} aria-label={t(lang, "shareButton")} title={t(lang, "shareButton")} className={ICON_BTN}>

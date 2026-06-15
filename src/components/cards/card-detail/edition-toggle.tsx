@@ -28,7 +28,7 @@ export function EditionToggle({
           "ease-chrome min-h-9 rounded-full px-3 py-1.5",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-inset",
           value === "JP"
-            ? "bg-primary text-primary-foreground"
+            ? "bg-foreground/10 text-foreground"
             : "text-muted-foreground hover:text-foreground",
         )}
       >
@@ -43,7 +43,7 @@ export function EditionToggle({
           "ease-chrome inline-flex min-h-9 items-center gap-1 rounded-full px-3 py-1.5",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-inset",
           value === "EN"
-            ? "bg-primary text-primary-foreground"
+            ? "bg-foreground/10 text-foreground"
             : "text-muted-foreground hover:text-foreground",
           !enAvailable && "cursor-not-allowed opacity-50 hover:text-muted-foreground",
         )}

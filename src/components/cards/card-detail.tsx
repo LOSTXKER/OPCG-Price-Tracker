@@ -13,7 +13,9 @@ import { useUIStore } from "@/stores/ui-store"
 
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { CardDetailActions } from "./card-detail/actions"
-import { CardPriceHub } from "./card-detail/price-hub"
+import { CardPriceHeader } from "./card-detail/price-header"
+import { CardChart } from "./card-detail/card-chart"
+import { CardGradeSummary } from "./card-detail/grade-summary"
 import { CardBuySell } from "./card-detail/buy-sell"
 import { CardTierMeta } from "./card-detail/tier-meta"
 import { CardDetailInfoTabs } from "./card-detail/info-tabs"
@@ -191,6 +193,19 @@ export function CardDetail({
           <p className="mt-0.5 text-xs text-muted-foreground">
             {set.code.toUpperCase()} · {setName}
           </p>
+          {/* price + grade selector — the single top focal point; grade sits
+              right under the price (picked often → result is adjacent). */}
+          <div className="mt-3">
+            <CardPriceHeader
+              gradeData={gradeData}
+              selectedGrade={selectedGrade}
+              onSelectGrade={setSelectedGrade}
+              edition={edition}
+              onEditionChange={setEdition}
+              enAvailable={false}
+              lang={lang}
+            />
+          </div>
         </div>
         <div className="shrink-0">
           <CardDetailActions
@@ -234,17 +249,19 @@ export function CardDetail({
             </div>
           </section>
 
-          {/* Buy / Sell — desktop sidebar (mobile renders it under the price) */}
-          <div className="mt-5 hidden px-5 lg:block lg:px-0">
+          {/* selected-grade trade snapshot, then Buy / Sell */}
+          <div className="mt-5 px-5 lg:px-0">
+            <CardGradeSummary datum={gradeData[selectedGrade]} lang={lang} />
+          </div>
+          <div className="mt-3 px-5 lg:px-0">
             <CardBuySell datum={gradeData[selectedGrade]} lang={lang} />
           </div>
 
-          {/* Competitive meta + ad — desktop sidebar (mobile renders below the
-              price so the price stays first on a phone) */}
-          <div className="mt-5 hidden px-5 lg:block lg:px-0">
+          {/* competitive meta + in-feed ad */}
+          <div className="mt-5 px-5 lg:px-0">
             <CardTierMeta lang={lang} />
           </div>
-          <div className="mt-5 hidden px-5 lg:block lg:px-0">
+          <div className="mt-5 px-5 lg:px-0">
             <AdSlot placement="card-detail-mid" className="aspect-[6/1] w-full" />
           </div>
 
@@ -265,26 +282,9 @@ export function CardDetail({
           </Dialog>
         </div>
 
-        {/* RIGHT — price + CTA + chart, then info tabs */}
+        {/* RIGHT — the chart (focal point), then market tabs */}
         <div className="mt-6 space-y-5 lg:mt-0 lg:min-w-0">
-          <CardPriceHub
-            card={card}
-            gradeData={gradeData}
-            selectedGrade={selectedGrade}
-            onSelectGrade={setSelectedGrade}
-            edition={edition}
-            onEditionChange={setEdition}
-            enAvailable={false}
-            lang={lang}
-          />
-
-          {/* Buy / Sell + meta + ad — mobile (desktop renders these in the left
-              sidebar). Kept below the price so the price stays first on a phone. */}
-          <div className="space-y-5 lg:hidden">
-            <CardBuySell datum={gradeData[selectedGrade]} lang={lang} />
-            <CardTierMeta lang={lang} />
-            <AdSlot placement="card-detail-mid" className="aspect-[6/1] w-full" />
-          </div>
+          <CardChart datum={gradeData[selectedGrade]} cardCode={card.cardCode} lang={lang} />
 
           <CardDetailInfoTabs
             cardCode={card.cardCode}
