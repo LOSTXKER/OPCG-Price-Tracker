@@ -14,6 +14,7 @@ import { useUIStore } from "@/stores/ui-store"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { CardDetailActions } from "./card-detail/actions"
 import { CardPriceHeader } from "./card-detail/price-header"
+import { GradeSelect } from "./card-detail/grade-select"
 import { CardChart } from "./card-detail/card-chart"
 import { CardBuySell } from "./card-detail/buy-sell"
 import { CardTierMeta } from "./card-detail/tier-meta"
@@ -256,20 +257,27 @@ export function CardDetail({
           </Dialog>
         </div>
 
-        {/* CENTER — price, the chart (focal point), then market tabs */}
+        {/* CENTER — grade picker, price, the chart (focal point), then tabs */}
         <div className="mt-8 space-y-5 lg:mt-0 lg:min-w-0">
-          <CardPriceHeader
-            gradeData={gradeData}
-            selectedGrade={selectedGrade}
-            edition={edition}
-            onEditionChange={setEdition}
-            enAvailable={false}
-            lang={lang}
-          />
+          <div className="space-y-2.5">
+            <GradeSelect
+              gradeData={gradeData}
+              selectedGrade={selectedGrade}
+              onSelectGrade={setSelectedGrade}
+              lang={lang}
+            />
+            <CardPriceHeader
+              gradeData={gradeData}
+              selectedGrade={selectedGrade}
+              edition={edition}
+              onEditionChange={setEdition}
+              enAvailable={false}
+              lang={lang}
+            />
+          </div>
           <CardChart
             gradeData={gradeData}
             selectedGrade={selectedGrade}
-            onSelectGrade={setSelectedGrade}
             latestUpdatedAt={latestUpdatedAt}
             lang={lang}
           />

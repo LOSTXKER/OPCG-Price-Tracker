@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react"
 
 import { buildGradeData, defaultGradeKey, type GradeKey } from "@/components/cards/card-detail/grades"
 import { CardPriceHeader } from "@/components/cards/card-detail/price-header"
+import { GradeSelect } from "@/components/cards/card-detail/grade-select"
 import { CardChart } from "@/components/cards/card-detail/card-chart"
 import { CardBuySell } from "@/components/cards/card-detail/buy-sell"
 import { CardDetailActions } from "@/components/cards/card-detail/actions"
@@ -155,21 +156,23 @@ export default function CardRailProto() {
             </div>
           </div>
 
-          {/* price */}
-          <CardPriceHeader
-            gradeData={gradeData}
-            selectedGrade={selectedGrade}
-            edition={edition}
-            onEditionChange={setEdition}
-            enAvailable={false}
-            lang={lang}
-          />
+          {/* grade picker + price */}
+          <div className="space-y-2.5">
+            <GradeSelect gradeData={gradeData} selectedGrade={selectedGrade} onSelectGrade={setSelectedGrade} lang={lang} />
+            <CardPriceHeader
+              gradeData={gradeData}
+              selectedGrade={selectedGrade}
+              edition={edition}
+              onEditionChange={setEdition}
+              enAvailable={false}
+              lang={lang}
+            />
+          </div>
 
-          {/* overlay chart (grade selector lives here) */}
+          {/* overlay chart */}
           <CardChart
             gradeData={gradeData}
             selectedGrade={selectedGrade}
-            onSelectGrade={setSelectedGrade}
             latestUpdatedAt={UPDATED_AT}
             lang={lang}
           />
