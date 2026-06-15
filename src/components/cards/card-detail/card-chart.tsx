@@ -103,21 +103,38 @@ export function CardChart({
             )}
           </div>
         </div>
-        <div className="surface-1 hairline inline-flex shrink-0 gap-0.5 rounded-full p-0.5">
-          {RANGES.map((rg) => (
-            <button
-              key={rg}
-              type="button"
-              aria-pressed={rg === range}
-              onClick={() => setRange(rg)}
-              className={cn(
-                "ease-chrome rounded-full px-3 py-1 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
-                rg === range ? "surface-2 text-foreground" : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {rg}
-            </button>
-          ))}
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            aria-pressed={compare}
+            onClick={() => setCompare((v) => !v)}
+            title={t(lang, "compareGrades")}
+            className={cn(
+              "ease-chrome inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              compare
+                ? "bg-foreground/10 text-foreground ring-1 ring-foreground/15"
+                : "surface-1 hairline text-muted-foreground hover:text-foreground",
+            )}
+          >
+            <Layers className="size-3.5" aria-hidden />
+            <span className="hidden sm:inline">{t(lang, "compareGrades")}</span>
+          </button>
+          <div className="surface-1 hairline inline-flex shrink-0 gap-0.5 rounded-full p-0.5">
+            {RANGES.map((rg) => (
+              <button
+                key={rg}
+                type="button"
+                aria-pressed={rg === range}
+                onClick={() => setRange(rg)}
+                className={cn(
+                  "ease-chrome rounded-full px-3 py-1.5 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
+                  rg === range ? "surface-2 text-foreground" : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {rg}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -144,7 +161,7 @@ export function CardChart({
                 disabled={disabled}
                 onClick={() => onSelectGrade(gt.key)}
                 className={cn(
-                  "ease-chrome inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring",
+                  "ease-chrome inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg px-3.5 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring",
                   active
                     ? "bg-foreground/10 text-foreground ring-1 ring-foreground/15"
                     : "surface-1 hairline text-muted-foreground hover:text-foreground",
@@ -162,25 +179,10 @@ export function CardChart({
           type="button"
           aria-expanded={showAllGrades}
           onClick={() => setShowAllGrades((v) => !v)}
-          className="ease-chrome flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring"
+          className="ease-chrome flex h-9 shrink-0 items-center gap-1 rounded-lg px-3 text-xs font-semibold text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring"
         >
           {t(lang, "moreGrades")}
           <ChevronDown className={cn("ease-chrome size-3.5 transition-transform", showAllGrades && "rotate-180")} aria-hidden />
-        </button>
-
-        <button
-          type="button"
-          aria-pressed={compare}
-          onClick={() => setCompare((v) => !v)}
-          className={cn(
-            "ease-chrome inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring",
-            compare
-              ? "bg-foreground/10 text-foreground ring-1 ring-foreground/15"
-              : "text-muted-foreground hover:text-foreground",
-          )}
-        >
-          <Layers className="size-3.5" aria-hidden />
-          {t(lang, "compareGrades")}
         </button>
       </div>
 

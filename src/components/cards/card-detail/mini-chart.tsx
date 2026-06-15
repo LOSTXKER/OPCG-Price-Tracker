@@ -107,7 +107,7 @@ export function MiniAreaChart({
 
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <AreaChart key={`${hero.key}-${len}`} data={data} margin={{ top: 16, right: 48, left: 8, bottom: 8 }}>
+      <AreaChart key={`${hero.key}-${len}`} data={data} margin={{ top: 16, right: 58, left: 8, bottom: 8 }}>
         <defs>
           <linearGradient id={`g${gid}`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor={heroColor} stopOpacity={0.18} />
@@ -147,12 +147,25 @@ export function MiniAreaChart({
             type={lineType}
             dataKey={g.key}
             stroke="var(--muted-foreground)"
-            strokeOpacity={0.22}
+            strokeOpacity={0.28}
             strokeWidth={1}
             fill="none"
             dot={false}
             isAnimationActive={false}
             activeDot={false}
+          />
+        ))}
+        {/* identify each ghost line at its right end (compare-mode legend) */}
+        {ghosts.map((g) => (
+          <ReferenceDot
+            key={`tag-${g.key}`}
+            x={len - 1}
+            y={g.points[len - 1]}
+            r={2}
+            fill="var(--muted-foreground)"
+            stroke="none"
+            ifOverflow="extendDomain"
+            label={{ value: g.label, position: "right", fill: "var(--muted-foreground)", fontSize: 10 }}
           />
         ))}
         <Area
