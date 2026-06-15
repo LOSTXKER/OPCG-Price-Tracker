@@ -148,7 +148,7 @@ export const th = {
   gemRate: "อัตรา GEM",
   metaTier: "Tier ในเมตา",
   metaShare: "ส่วนแบ่งเมตา",
-  tabComps: "ราคาขาย",
+  tabComps: "ประวัติขายล่าสุด",
   tabPopulation: "จำนวนเกรด",
   tabSpecs: "สเปก",
   community: "คอมมูนิตี้",
@@ -1370,6 +1370,10 @@ export const th = {
   listThisCard: "ลงขายการ์ดนี้",
   findListings: "ดูประกาศขาย",
   viewAllListings: "ดูประกาศทั้งหมด",
+  sellingNow: "ขายอยู่บน Meecard",
+  lowestAsk: "ต่ำสุด",
+  liveLabel: "สด",
+  notifyWhenListed: "แจ้งเตือนเมื่อมีของ",
 
   // Card Detail — Stale data / source links
   updatedAgo: "อัปเดต {ago}",

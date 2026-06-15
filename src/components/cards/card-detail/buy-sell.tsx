@@ -1,23 +1,12 @@
 "use client"
 
 import { t, type Language } from "@/lib/i18n"
-import { Amount } from "./grade-value"
-import type { GradeDatum } from "./grades"
 
 /**
- * Buy / Sell trade buttons + a market-context caption (last sale · 30d volume).
- * A preview until the in-app marketplace lands (VISION §5.2). Buy keeps the page's
- * single gold accent; the selected grade drives the figures via `datum`.
+ * Buy / Sell trade buttons — a preview until the in-app marketplace lands
+ * (VISION §5.2). Buy keeps the page's single gold accent.
  */
-export function CardBuySell({
-  datum,
-  lang,
-  className,
-}: {
-  datum: GradeDatum
-  lang: Language
-  className?: string
-}) {
+export function CardBuySell({ lang, className }: { lang: Language; className?: string }) {
   return (
     <div className={className}>
       <div className="flex gap-2">
@@ -37,16 +26,6 @@ export function CardBuySell({
           {t(lang, "sell")}
         </button>
       </div>
-      <p className="text-meta mt-1.5 flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5">
-        <span className="inline-flex items-center gap-1">
-          {t(lang, "lastSold")}
-          <Amount jpy={datum.lastSale.jpy} usd={datum.lastSale.usd} size="xs" className="text-foreground/70" />
-        </span>
-        {datum.sales30d != null && (
-          <span>· {datum.sales30d.toLocaleString()} {t(lang, "sales30d")}</span>
-        )}
-        <span>· {t(lang, "comingSoon")}</span>
-      </p>
     </div>
   )
 }

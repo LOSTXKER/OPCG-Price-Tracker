@@ -46,6 +46,7 @@ export function CardDetailInfoTabs({
   gradeLabel,
   currency,
   latestUpdatedAt,
+  tabs = ["comps", "listings", "population"],
   lang,
 }: {
   cardCode: string
@@ -55,9 +56,12 @@ export function CardDetailInfoTabs({
   gradeLabel: string
   currency: "JPY" | "USD"
   latestUpdatedAt?: string | null
+  /** Which tabs to show. Defaults to all three; pass a subset to hide one
+   *  (e.g. drop "listings" when active asks live in a sibling rail). */
+  tabs?: Tab[]
   lang: Language
 }) {
-  const [tab, setTab] = useState<Tab>("comps")
+  const [tab, setTab] = useState<Tab>(tabs[0] ?? "comps")
 
   const comps = mockComps(compBase, gradeLabel)
   const totalSales = mockSales30d(compBase)
@@ -66,11 +70,13 @@ export function CardDetailInfoTabs({
   const popTotal = SAMPLE_POP.reduce((a, b) => a + b.n, 0)
   const gemPct = SAMPLE_POP.find((r) => r.g === "PSA 10")?.pct ?? null
 
-  const TABS: [Tab, string][] = [
-    ["comps", t(lang, "tabComps")],
-    ["listings", t(lang, "tabListings")],
-    ["population", t(lang, "tabPopulation")],
-  ]
+  const TABS: [Tab, string][] = (
+    [
+      ["comps", t(lang, "tabComps")],
+      ["listings", t(lang, "tabListings")],
+      ["population", t(lang, "tabPopulation")],
+    ] as [Tab, string][]
+  ).filter(([k]) => tabs.includes(k))
 
   return (
     <section className="mt-2">
@@ -87,7 +93,7 @@ export function CardDetailInfoTabs({
                 "ease-chrome shrink-0 rounded-full px-3.5 py-1.5 text-sm font-semibold",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
                 active
-                  ? "surface-2 text-foreground ring-1 ring-[var(--p-hair)]"
+                  ? "surface-2 text-foreground"
                   : "text-muted-foreground hover:text-foreground",
               )}
             >
@@ -99,7 +105,7 @@ export function CardDetailInfoTabs({
 
       <div className="mt-3">
         {tab === "comps" && (
-          <div className="overflow-hidden rounded-2xl surface-1 hairline">
+          <div className="hairline-t">
             {comps.map((c, i) => (
               <div key={i} className={cn("flex items-center gap-3 px-4 py-3", i > 0 && "hairline-t")}>
                 <SourceBadge s={c.source} />
@@ -129,16 +135,17 @@ export function CardDetailInfoTabs({
         )}
 
         {tab === "population" && (
-          <div className="surface-1 hairline space-y-3 rounded-2xl p-4">
-            <div className="flex items-start justify-between gap-3">
+          <div className="hairline-t space-y-3 pt-4">
+            <div className="flex items-end justify-between gap-3">
               <p className="text-meta flex items-center gap-1.5">
                 PSA Population · {popTotal.toLocaleString()} graded
                 <span className="text-overlay uppercase text-muted-foreground/40">{t(lang, "sampleLabel")}</span>
               </p>
               {gemPct != null && (
-                <p className="text-meta whitespace-nowrap">
-                  {t(lang, "gemRate")} <span className="tnum font-bold text-primary">{gemPct}%</span>
-                </p>
+                <div className="shrink-0 text-right">
+                  <p className="tnum text-2xl font-extrabold leading-none text-foreground">{gemPct}%</p>
+                  <p className="text-meta mt-0.5">{t(lang, "gemRate")}</p>
+                </div>
               )}
             </div>
             <div className="space-y-2.5">
@@ -146,7 +153,7 @@ export function CardDetailInfoTabs({
                 <div key={r.g} className="flex items-center gap-3">
                   <span className="w-16 text-xs font-semibold text-foreground">{r.g}</span>
                   <div className="surface-2 h-2.5 flex-1 overflow-hidden rounded-full">
-                    <div className="h-full rounded-full bg-primary" style={{ width: `${r.pct}%` }} />
+                    <div className="h-full rounded-full bg-foreground/30" style={{ width: `${r.pct}%` }} />
                   </div>
                   <span className="tnum w-20 shrink-0 text-right text-xs text-muted-foreground">
                     {r.n.toLocaleString()}

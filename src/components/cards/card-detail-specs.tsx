@@ -108,7 +108,7 @@ export function CardDetailSpecs({ card, lang }: CardDetailSpecsProps) {
   if (card.attribute) rows.push({ label: t(lang, "attribute"), icon: Crosshair, value: card.attribute })
 
   return (
-    <div className="panel p-5">
+    <div className="hairline-t pt-4">
       <p className="mb-1 text-meta">{t(lang, "details")}</p>
       <dl>
         {rows.map((r, i) => {

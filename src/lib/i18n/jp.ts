@@ -1370,6 +1370,10 @@ export const jp = {
   listThisCard: "このカードを出品",
   findListings: "出品を探す",
   viewAllListings: "すべての出品を見る",
+  sellingNow: "Meecardで販売中",
+  lowestAsk: "最安",
+  liveLabel: "ライブ",
+  notifyWhenListed: "入荷したら通知",
 
   // Card Detail — Stale data / source links
   updatedAgo: "{ago}更新",

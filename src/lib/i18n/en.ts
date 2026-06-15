@@ -148,7 +148,7 @@ export const en = {
   gemRate: "Gem rate",
   metaTier: "Meta tier",
   metaShare: "Meta share",
-  tabComps: "Comps",
+  tabComps: "Recent Sales",
   tabPopulation: "Population",
   tabSpecs: "Specs",
   community: "Community",
@@ -1397,6 +1397,10 @@ export const en = {
   listThisCard: "List this card",
   findListings: "Find listings",
   viewAllListings: "View all listings",
+  sellingNow: "Selling on Meecard",
+  lowestAsk: "Lowest",
+  liveLabel: "live",
+  notifyWhenListed: "Notify me when listed",
 
   // Card Detail — Stale data / source links
   updatedAgo: "Updated {ago}",

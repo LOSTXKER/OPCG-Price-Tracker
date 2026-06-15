@@ -15,10 +15,11 @@ import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { CardDetailActions } from "./card-detail/actions"
 import { CardPriceHeader } from "./card-detail/price-header"
 import { CardChart } from "./card-detail/card-chart"
-import { CardGradeSummary } from "./card-detail/grade-summary"
 import { CardBuySell } from "./card-detail/buy-sell"
 import { CardTierMeta } from "./card-detail/tier-meta"
 import { CardDetailInfoTabs } from "./card-detail/info-tabs"
+import { CardPortfolioCard } from "./card-detail/portfolio-card"
+import { MeecardAsksRail } from "./card-detail/asks-rail"
 import { buildGradeData, defaultGradeKey, type GradeKey } from "./card-detail/grades"
 import { type Edition } from "./card-detail/edition-toggle"
 import { SiblingGrid } from "./card-detail-sibling-grid"
@@ -117,6 +118,7 @@ export function CardDetail({
   listings,
 }: CardDetailProps) {
   const lang = useUIStore((s) => s.language)
+  const currency = useUIStore((s) => s.currency)
   const [lightboxOpen, setLightboxOpen] = useState(false)
 
   // Per-grade pricing (VISION §5.1). Real anchors (Yuyutei raw / SNKRDUNK PSA 10)
@@ -138,7 +140,9 @@ export function CardDetail({
   const set = card.set
   const displayName = getCardName(lang, card)
   const setName = getSetName(lang, set)
-  const sub = [card.cardType, card.isParallel ? "Parallel" : null].filter(Boolean).join(" · ")
+  // Header sub-line: card code (which carries the set, e.g. OP13-118) + parallel.
+  // Card type lives in the spec sheet below, not here.
+  const sub = [card.baseCode ?? card.cardCode, card.isParallel ? "Parallel" : null].filter(Boolean).join(" · ")
   const effectText = getCardEffect(lang, card)
   // Spec sheet — rendered beside the image on desktop (left column), but dropped
   // below the price on mobile so the price stays the first thing seen on a phone.
@@ -146,7 +150,7 @@ export function CardDetail({
     <>
       <CardDetailSpecs card={card} lang={lang} />
       {effectText?.trim() && (
-        <div className="surface-1 hairline mt-3 rounded-2xl p-5">
+        <div className="hairline-t mt-4 pt-4">
           <p className="text-meta mb-3">{t(lang, "effect")}</p>
           <CardEffectText text={effectText} />
         </div>
@@ -155,7 +159,7 @@ export function CardDetail({
   )
 
   return (
-    <div className="relative mx-auto max-w-5xl space-y-6">
+    <div className="relative mx-auto max-w-7xl space-y-6">
       {/* warm hero ambient — anchored to the top so the honey glow bleeds down
           from the navbar instead of floating behind the card (VISION §1) */}
       <div
@@ -172,63 +176,35 @@ export function CardDetail({
         ]}
       />
 
-      {/* header — card identity (left) · utility actions (right). Stacks on mobile. */}
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
-              style={{ background: "var(--p-honey-soft)", color: "var(--primary)" }}
-            >
-              {card.rarity}
-            </span>
-            {sub && <span className="text-xs text-muted-foreground">{sub}</span>}
-          </div>
-          <div className="mt-1.5 flex items-center gap-2">
-            <h1 className="min-w-0 break-words text-2xl font-extrabold tracking-tight text-foreground lg:text-3xl">
-              {displayName}
-            </h1>
-            <WatchlistStar cardId={card.id} size="md" />
-          </div>
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            {set.code.toUpperCase()} · {setName}
-          </p>
-          {/* price + grade selector — the single top focal point; grade sits
-              right under the price (picked often → result is adjacent). */}
-          <div className="mt-3">
-            <CardPriceHeader
-              gradeData={gradeData}
-              selectedGrade={selectedGrade}
-              onSelectGrade={setSelectedGrade}
-              edition={edition}
-              onEditionChange={setEdition}
-              enAvailable={false}
-              lang={lang}
-            />
-          </div>
+      {/* identity — full width above the decision zone */}
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <span
+            className="rounded-md px-1.5 py-0.5 text-[10px] font-bold"
+            style={{ background: "var(--p-honey-soft)", color: "var(--primary)" }}
+          >
+            {card.rarity}
+          </span>
+          {sub && <span className="text-xs text-muted-foreground">{sub}</span>}
         </div>
-        <div className="shrink-0">
-          <CardDetailActions
-            cardId={card.id}
-            cardCode={card.cardCode}
-            displayName={displayName}
-            rarity={card.rarity}
-            imageUrl={card.imageUrl}
-            currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
-          />
+        <div className="mt-1.5 flex items-center gap-2">
+          <h1 className="min-w-0 break-words text-2xl font-extrabold tracking-tight text-foreground lg:text-3xl">
+            {displayName}
+          </h1>
+          <WatchlistStar cardId={card.id} size="md" />
         </div>
       </div>
 
-      <div className="lg:grid lg:grid-cols-[340px_1fr] lg:items-start lg:gap-10">
-        {/* LEFT — identity + image + edition + CTA. Scrolls with the page
-            (not pinned) so it doesn't trail the screen on desktop. */}
-        <div>
+      {/* decision zone — image rail · market data · holdings + asks */}
+      <div className="lg:grid lg:grid-cols-[240px_1fr_300px] lg:items-start lg:gap-7">
+        {/* LEFT — image + trade + utilities (sticky on desktop) */}
+        <div className="lg:sticky lg:top-6">
           <section className="px-5 pb-2 pt-3 lg:px-0">
-            <div className="mx-auto w-[58%] max-w-[230px] lg:w-full lg:max-w-[280px]">
+            <div className="mx-auto w-[58%] max-w-[230px] lg:w-full lg:max-w-none">
               <button
                 type="button"
                 onClick={() => card.imageUrl && setLightboxOpen(true)}
-                className="surface-1 ease-chrome relative block aspect-[63/88] w-full cursor-zoom-in overflow-hidden rounded-2xl ring-1 ring-border hover:ring-2 hover:ring-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="surface-1 ease-chrome relative block aspect-[63/88] w-full cursor-zoom-in overflow-hidden rounded-2xl hairline hover:ring-2 hover:ring-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label={card.nameEn ?? card.nameJp}
               >
                 {card.imageUrl ? (
@@ -237,7 +213,7 @@ export function CardDetail({
                     alt={card.nameEn ?? card.nameJp}
                     fill
                     className="object-contain"
-                    sizes="(max-width: 1024px) 230px, 340px"
+                    sizes="(max-width: 1024px) 230px, 240px"
                     placeholder="blur"
                     blurDataURL={BLUR_DATA_URL}
                     priority
@@ -249,20 +225,18 @@ export function CardDetail({
             </div>
           </section>
 
-          {/* selected-grade trade snapshot, then Buy / Sell */}
-          <div className="mt-5 px-5 lg:px-0">
-            <CardGradeSummary datum={gradeData[selectedGrade]} lang={lang} />
-          </div>
-          <div className="mt-3 px-5 lg:px-0">
-            <CardBuySell datum={gradeData[selectedGrade]} lang={lang} />
-          </div>
-
-          {/* competitive meta + in-feed ad */}
-          <div className="mt-5 px-5 lg:px-0">
-            <CardTierMeta lang={lang} />
-          </div>
-          <div className="mt-5 px-5 lg:px-0">
-            <AdSlot placement="card-detail-mid" className="aspect-[6/1] w-full" />
+          <div className="mt-5 space-y-4 px-5 lg:px-0">
+            <CardBuySell lang={lang} />
+            <div className="flex justify-center lg:justify-start">
+              <CardDetailActions
+                cardId={card.id}
+                cardCode={card.cardCode}
+                displayName={displayName}
+                rarity={card.rarity}
+                imageUrl={card.imageUrl}
+                currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
+              />
+            </div>
           </div>
 
           <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
@@ -282,10 +256,23 @@ export function CardDetail({
           </Dialog>
         </div>
 
-        {/* RIGHT — the chart (focal point), then market tabs */}
-        <div className="mt-6 space-y-5 lg:mt-0 lg:min-w-0">
-          <CardChart datum={gradeData[selectedGrade]} cardCode={card.cardCode} lang={lang} />
-
+        {/* CENTER — price, the chart (focal point), then market tabs */}
+        <div className="mt-8 space-y-5 lg:mt-0 lg:min-w-0">
+          <CardPriceHeader
+            gradeData={gradeData}
+            selectedGrade={selectedGrade}
+            edition={edition}
+            onEditionChange={setEdition}
+            enAvailable={false}
+            lang={lang}
+          />
+          <CardChart
+            gradeData={gradeData}
+            selectedGrade={selectedGrade}
+            onSelectGrade={setSelectedGrade}
+            latestUpdatedAt={latestUpdatedAt}
+            lang={lang}
+          />
           <CardDetailInfoTabs
             cardCode={card.cardCode}
             cardName={displayName}
@@ -294,13 +281,37 @@ export function CardDetail({
             gradeLabel={gradeData[selectedGrade].tier.label}
             currency={gradeData[selectedGrade].currency}
             latestUpdatedAt={latestUpdatedAt}
+            tabs={["comps", "population"]}
+            lang={lang}
+          />
+        </div>
+
+        {/* RIGHT — your holdings + who's selling now (scrolls; empty asks is the
+            common case since marketplace is flag-gated) */}
+        <div className="mt-8 space-y-4 lg:mt-0">
+          <CardPortfolioCard cardId={card.id} cardName={displayName} lang={lang} />
+          <MeecardAsksRail
+            cardId={card.id}
+            cardCode={card.cardCode}
+            cardName={displayName}
+            listings={listings ?? []}
+            currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
+            currency={currency}
             lang={lang}
           />
         </div>
       </div>
 
-      {/* card spec sheet — its own full-width section below the trade view */}
-      {specsBlock}
+      {/* in-feed ad — full-width banner below the decision zone */}
+      <AdSlot placement="card-detail-mid" className="aspect-[6/1] w-full" />
+
+      {/* card detail — full width: spec sheet (wide) + competitive meta */}
+      <div className="lg:grid lg:grid-cols-3 lg:gap-x-12">
+        <div className="lg:col-span-2">{specsBlock}</div>
+        <div className="mt-5 lg:mt-0">
+          <CardTierMeta lang={lang} />
+        </div>
+      </div>
 
       {siblings.length > 0 && (
         <div>
