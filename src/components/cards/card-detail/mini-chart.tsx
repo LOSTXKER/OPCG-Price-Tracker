@@ -5,6 +5,7 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
+  ReferenceDot,
   ReferenceLine,
   ResponsiveContainer,
   Tooltip,
@@ -12,68 +13,57 @@ import {
   YAxis,
 } from "recharts"
 
-import { compactDisplayValue, formatDisplayValue, type Currency } from "@/lib/utils/currency"
+import { formatDisplayValue, type Currency } from "@/lib/utils/currency"
 
 export interface ChartSeries {
   key: string
   points: number[]
-  /** the selected grade — drawn bold/colored with area fill. */
+  /** the selected grade — the bold colored hero line. */
   isHero: boolean
   up: boolean
   label: string
 }
 
-type Def = { key: string; label: string; color: string; isHero: boolean }
-
-function GradeTooltip({
+/** Clean single-line hover readout (date + hero price) — replaces the boxed
+ *  multi-row tooltip; floats near the crosshair like Robinhood/Coinbase. */
+function HoverPill({
   active,
   payload,
   label,
-  defs,
+  heroKey,
+  heroColor,
   labelAt,
   currency,
 }: {
   active?: boolean
   payload?: ReadonlyArray<{ dataKey?: string | number; value?: number }>
   label?: number
-  defs: Def[]
+  heroKey: string
+  heroColor: string
   labelAt?: (i: number) => string
   currency: Currency
 }) {
   if (!active || !payload?.length) return null
+  const entry = payload.find((p) => p.dataKey === heroKey) ?? payload[0]
+  if (entry?.value == null) return null
   const date = labelAt && typeof label === "number" ? labelAt(label) : ""
-  // hero first, then ghosts — only series that have a value at this point
-  const rows = defs
-    .map((d) => ({ d, v: payload.find((p) => p.dataKey === d.key)?.value }))
-    .filter((r) => r.v != null)
-    .sort((a, b) => (b.v as number) - (a.v as number))
   return (
-    <div className="surface-2 hairline rounded-md px-2.5 py-2 shadow-[var(--elev-overlay)]">
-      {date && <p className="text-meta mb-1">{date}</p>}
-      <div className="space-y-0.5">
-        {rows.map(({ d, v }) => (
-          <div key={d.key} className="flex items-center gap-2">
-            <span aria-hidden className="size-1.5 rounded-full" style={{ background: d.color }} />
-            <span className="text-meta">{d.label}</span>
-            <span
-              className="tnum ml-auto text-xs font-semibold"
-              style={{ color: d.isHero ? d.color : "var(--foreground)" }}
-            >
-              {formatDisplayValue(v as number, currency)}
-            </span>
-          </div>
-        ))}
-      </div>
+    <div className="surface-2 hairline rounded-md px-2.5 py-1.5 shadow-[var(--elev-overlay)]">
+      {date && <p className="text-meta">{date}</p>}
+      <p className="tnum text-sm font-bold" style={{ color: heroColor }}>
+        {formatDisplayValue(entry.value as number, currency)}
+      </p>
     </div>
   )
 }
 
 /**
- * Multi-grade price chart (Recharts) — every visible grade overlaid on ONE shared
- * scale (the ghost ladder), the selected grade drawn as the bold green/red hero
- * line with a gradient fill + last-price reference. A real, proportioned chart
- * (responsive, gridlines, right price axis, hover tooltip) — not a stretched SVG.
- * Honey-gold stays reserved for chrome; only the hero carries gain/loss color.
+ * World-class price chart (Robinhood / Coinbase elegance, on Recharts). Resting
+ * state = one hero line bleeding edge-to-edge: no visible Y axis (hidden, kept
+ * for scale), ≤3 faint hairlines, a dotted period-open baseline, a glowing
+ * end-of-line dot + price tag. Hover = a snapped crosshair + a single clean date
+ * /price pill. The grade ladder is opt-in (caller passes ghosts only in compare
+ * mode). Honey-gold reserved for chrome; hero uses gain/loss color.
  */
 export function MiniAreaChart({
   series,
@@ -87,8 +77,13 @@ export function MiniAreaChart({
   labelAt?: (i: number) => string
 }) {
   const gid = useId().replace(/:/g, "")
-  const hero = series.find((s) => s.isHero) ?? series[0]
+  // SSR-safe reduced-motion read (no state/effect → no cascading render)
+  const reduced =
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
+  const hero = series.find((s) => s.isHero) ?? series[0]
   if (!hero || hero.points.length < 2) {
     return (
       <div className="flex items-center justify-center text-sm text-muted-foreground" style={{ height }}>
@@ -98,15 +93,12 @@ export function MiniAreaChart({
   }
 
   const len = hero.points.length
+  const open = hero.points[0]
+  const last = hero.points[len - 1]
   const heroColor = hero.up ? "var(--price-up)" : "var(--price-down)"
   const ghosts = series.filter((s) => s !== hero && s.points.length >= 2)
-  const orderedDefs: Def[] = [
-    ...ghosts.map((g) => ({ key: g.key, label: g.label, color: "var(--muted-foreground)", isHero: false })),
-    { key: hero.key, label: hero.label, color: heroColor, isHero: true },
-  ]
-  const lastVal = hero.points[len - 1]
+  const lineType = len < 20 ? "natural" : "linear"
 
-  // one row per index; each grade is a column (shared x → shared scale ladder)
   const data = Array.from({ length: len }, (_, i) => {
     const row: Record<string, number> = { idx: i }
     for (const s of series) if (s.points[i] != null) row[s.key] = s.points[i]
@@ -115,14 +107,17 @@ export function MiniAreaChart({
 
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <AreaChart data={data} margin={{ top: 8, right: 4, left: 0, bottom: 0 }}>
+      <AreaChart key={`${hero.key}-${len}`} data={data} margin={{ top: 16, right: 48, left: 8, bottom: 8 }}>
         <defs>
           <linearGradient id={`g${gid}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={heroColor} stopOpacity={0.26} />
+            <stop offset="0%" stopColor={heroColor} stopOpacity={0.18} />
             <stop offset="100%" stopColor={heroColor} stopOpacity={0} />
           </linearGradient>
+          <filter id={`glow${gid}`} x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="3.5" />
+          </filter>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" className="stroke-border/25" vertical={false} />
+        <CartesianGrid vertical={false} strokeDasharray="2 4" className="stroke-border/15" />
         <XAxis
           dataKey="idx"
           type="number"
@@ -132,30 +127,27 @@ export function MiniAreaChart({
           tickLine={false}
           axisLine={false}
           className="text-muted-foreground"
-          minTickGap={56}
+          minTickGap={80}
           dy={6}
         />
         <YAxis
           orientation="right"
-          tick={{ fontSize: 10 }}
-          tickLine={false}
-          axisLine={false}
-          className="tnum text-muted-foreground"
-          tickFormatter={(v) => compactDisplayValue(Number(v), currency)}
-          width={50}
-          domain={[(min: number) => Math.floor(min * 0.96), (max: number) => Math.ceil(max * 1.04)]}
+          hide
+          domain={[(min: number) => Math.floor(min * 0.94), (max: number) => Math.ceil(max * 1.06)]}
         />
         <Tooltip
-          cursor={{ stroke: "var(--muted-foreground)", strokeDasharray: "3 3", strokeWidth: 1, opacity: 0.4 }}
-          content={<GradeTooltip defs={orderedDefs} labelAt={labelAt} currency={currency} />}
+          cursor={{ stroke: "var(--muted-foreground)", strokeDasharray: "3 3", strokeWidth: 1, opacity: 0.45 }}
+          content={<HoverPill heroKey={hero.key} heroColor={heroColor} labelAt={labelAt} currency={currency} />}
         />
+        {/* period-open anchor — the one horizontal reference */}
+        <ReferenceLine y={open} stroke="var(--muted-foreground)" strokeDasharray="2 4" strokeOpacity={0.3} ifOverflow="extendDomain" />
         {ghosts.map((g) => (
           <Area
             key={g.key}
-            type="monotone"
+            type={lineType}
             dataKey={g.key}
             stroke="var(--muted-foreground)"
-            strokeOpacity={0.32}
+            strokeOpacity={0.22}
             strokeWidth={1}
             fill="none"
             dot={false}
@@ -164,16 +156,29 @@ export function MiniAreaChart({
           />
         ))}
         <Area
-          type="monotone"
+          type={lineType}
           dataKey={hero.key}
           stroke={heroColor}
           strokeWidth={2}
           fill={`url(#g${gid})`}
           dot={false}
-          isAnimationActive={false}
+          isAnimationActive={!reduced}
+          animationDuration={700}
+          animationEasing="ease-out"
           activeDot={{ r: 4, fill: heroColor, strokeWidth: 2, stroke: "var(--background)" }}
         />
-        <ReferenceLine y={lastVal} stroke={heroColor} strokeDasharray="2 3" strokeOpacity={0.5} />
+        {/* end-of-line hero: soft glow behind a crisp dot + a price tag */}
+        <ReferenceDot x={len - 1} y={last} r={7} fill={heroColor} fillOpacity={0.3} stroke="none" filter={`url(#glow${gid})`} ifOverflow="extendDomain" />
+        <ReferenceDot
+          x={len - 1}
+          y={last}
+          r={3.5}
+          fill={heroColor}
+          stroke="var(--background)"
+          strokeWidth={2}
+          ifOverflow="extendDomain"
+          label={{ value: formatDisplayValue(last, currency), position: "right", fill: heroColor, fontSize: 11, fontWeight: 700 }}
+        />
       </AreaChart>
     </ResponsiveContainer>
   )

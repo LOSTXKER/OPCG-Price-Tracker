@@ -145,6 +145,7 @@ export const en = {
   avg: "Avg",
   low: "Low",
   moreGrades: "More grades",
+  compareGrades: "Compare",
   gemRate: "Gem rate",
   metaTier: "Meta tier",
   metaShare: "Meta share",

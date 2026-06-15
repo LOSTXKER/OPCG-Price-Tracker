@@ -145,6 +145,7 @@ export const jp = {
   avg: "平均",
   low: "安値",
   moreGrades: "他のグレード",
+  compareGrades: "比較",
   gemRate: "GEM率",
   metaTier: "メタTIER",
   metaShare: "メタシェア",

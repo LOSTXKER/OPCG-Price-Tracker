@@ -36,10 +36,13 @@ export function mockSeries(base: number | null, up: boolean, range = "3M"): numb
     vel = vel * 0.74 + kick * 0.26 // smooth the shock so the line trends, not spikes
     const meanRevert = ((b - v) / b) * 0.05 // pull back toward base
     v = v * (1 + drift + vel + meanRevert)
-    out.push(Math.round(v))
+    out.push(v)
   }
-  out[out.length - 1] = Math.round(b) // pin last point to the grade value
-  return out
+  // tie the series to the headline by SCALING the whole line so the last point
+  // lands exactly on `base` — preserves the shape, no artificial end-cliff.
+  const lastRaw = out[out.length - 1]
+  const k = lastRaw > 0 ? b / lastRaw : 1
+  return out.map((x) => Math.round(x * k))
 }
 
 /**

@@ -145,6 +145,7 @@ export const th = {
   avg: "เฉลี่ย",
   low: "ต่ำสุด",
   moreGrades: "เกรดอื่น",
+  compareGrades: "เทียบเกรด",
   gemRate: "อัตรา GEM",
   metaTier: "Tier ในเมตา",
   metaShare: "ส่วนแบ่งเมตา",

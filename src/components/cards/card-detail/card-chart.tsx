@@ -1,7 +1,7 @@
 "use client"
 
 import { Fragment, useState } from "react"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, Layers } from "lucide-react"
 
 import { getLocale, t, type Language } from "@/lib/i18n"
 import { jpyToDisplayValue, usdToDisplayValue, formatDisplayValue } from "@/lib/utils/currency"
@@ -40,6 +40,7 @@ export function CardChart({
   const currency = useUIStore((s) => s.currency)
   const [range, setRange] = useState<(typeof RANGES)[number]>("3M")
   const [showAllGrades, setShowAllGrades] = useState(false)
+  const [compare, setCompare] = useState(false)
 
   const datum = gradeData[selectedGrade]
   const visibleTiers = GRADE_TIERS.filter(
@@ -166,9 +167,29 @@ export function CardChart({
           {t(lang, "moreGrades")}
           <ChevronDown className={cn("ease-chrome size-3.5 transition-transform", showAllGrades && "rotate-180")} aria-hidden />
         </button>
+
+        <button
+          type="button"
+          aria-pressed={compare}
+          onClick={() => setCompare((v) => !v)}
+          className={cn(
+            "ease-chrome inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring",
+            compare
+              ? "bg-foreground/10 text-foreground ring-1 ring-foreground/15"
+              : "text-muted-foreground hover:text-foreground",
+          )}
+        >
+          <Layers className="size-3.5" aria-hidden />
+          {t(lang, "compareGrades")}
+        </button>
       </div>
 
-      <MiniAreaChart series={chartSeries} height={300} currency={currency} labelAt={dateAt} />
+      <MiniAreaChart
+        series={compare ? chartSeries : chartSeries.filter((s) => s.isHero)}
+        height={300}
+        currency={currency}
+        labelAt={dateAt}
+      />
       <div className="hairline-t mt-2.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 pt-2.5">
         {[
           { l: t(lang, "high"), v: hi },
