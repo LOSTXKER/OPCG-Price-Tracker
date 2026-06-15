@@ -14,7 +14,7 @@ import { useUIStore } from "@/stores/ui-store"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { CardDetailActions } from "./card-detail/actions"
 import { CardPriceHeader } from "./card-detail/price-header"
-import { GradeSelect } from "./card-detail/grade-select"
+import { GradeRail } from "./card-detail/grade-rail"
 import { CardChart } from "./card-detail/card-chart"
 import { CardBuySell } from "./card-detail/buy-sell"
 import { CardTierMeta } from "./card-detail/tier-meta"
@@ -146,19 +146,14 @@ export function CardDetail({
   // Card type lives in the spec sheet below, not here.
   const sub = [card.baseCode ?? card.cardCode, card.isParallel ? "Parallel" : null].filter(Boolean).join(" · ")
   const effectText = getCardEffect(lang, card)
-  // Spec sheet — rendered beside the image on desktop (left column), but dropped
-  // below the price on mobile so the price stays the first thing seen on a phone.
-  const specsBlock = (
-    <>
-      <CardDetailSpecs card={card} lang={lang} />
-      {effectText?.trim() && (
-        <div className="hairline-t mt-4 pt-4">
-          <p className="text-meta mb-3">{t(lang, "effect")}</p>
-          <CardEffectText text={effectText} />
-        </div>
-      )}
-    </>
-  )
+  // Spec stats sit with the image (left rail); the long effect text is a
+  // separate full-width block below (kept off the mobile above-the-fold).
+  const specsBlock = <CardDetailSpecs card={card} lang={lang} />
+  const effectBlock = effectText?.trim() ? (
+    <div className="surface-1 hairline rounded-2xl p-5">
+      <CardEffectText text={effectText} />
+    </div>
+  ) : null
 
   return (
     <div className="relative mx-auto max-w-7xl space-y-6">
@@ -197,8 +192,8 @@ export function CardDetail({
         </div>
       </div>
 
-      {/* decision zone — image · market · buy box */}
-      <div className="lg:grid lg:grid-cols-[240px_1fr_300px] lg:items-start lg:gap-7">
+      {/* decision zone — image+facts · market · buy box */}
+      <div className="lg:grid lg:grid-cols-[260px_1fr_300px] lg:items-start lg:gap-7">
         {/* LEFT — image only (scrolls with the page, not pinned) */}
         <div>
           <section className="px-5 pb-2 pt-3 lg:px-0">
@@ -227,6 +222,12 @@ export function CardDetail({
             </div>
           </section>
 
+          {/* card facts under the image — fills the rail + groups the card's identity */}
+          <div className="mt-5 space-y-5 px-5 lg:px-0">
+            {specsBlock}
+            <CardTierMeta lang={lang} />
+          </div>
+
           <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
             <DialogContent className="max-w-[90vw] border-0 bg-transparent p-0 shadow-none ring-0 sm:max-w-[90vw] [&>[data-slot=dialog-close]]:text-white [&>[data-slot=dialog-close]]:hover:bg-white/20">
               <DialogTitle className="sr-only">{card.nameEn ?? card.nameJp}</DialogTitle>
@@ -246,11 +247,11 @@ export function CardDetail({
 
         {/* CENTER — grade picker, price, the chart (focal point), then tabs */}
         <div className="mt-8 space-y-5 lg:mt-0 lg:min-w-0">
-          <div className="space-y-2.5">
-            <GradeSelect
-              gradeData={gradeData}
-              selectedGrade={selectedGrade}
-              onSelectGrade={setSelectedGrade}
+          <div className="space-y-3">
+            <GradeRail
+              data={gradeData}
+              selected={selectedGrade}
+              onSelect={setSelectedGrade}
               lang={lang}
             />
             <CardPriceHeader
@@ -270,18 +271,20 @@ export function CardDetail({
           />
         </div>
 
-        {/* RIGHT — buy box: trade + utilities + who's selling now */}
+        {/* RIGHT — buy box: trade + utilities (one panel) + who's selling now */}
         <div className="mt-8 space-y-4 lg:mt-0">
-          <CardBuySell lang={lang} />
-          <div className="flex justify-center">
-            <CardDetailActions
-              cardId={card.id}
-              cardCode={card.cardCode}
-              displayName={displayName}
-              rarity={card.rarity}
-              imageUrl={card.imageUrl}
-              currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
-            />
+          <div className="surface-1 hairline space-y-4 rounded-2xl p-4">
+            <CardBuySell lang={lang} />
+            <div className="flex justify-center">
+              <CardDetailActions
+                cardId={card.id}
+                cardCode={card.cardCode}
+                displayName={displayName}
+                rarity={card.rarity}
+                imageUrl={card.imageUrl}
+                currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
+              />
+            </div>
           </div>
           <MeecardAsksRail
             cardId={card.id}
@@ -313,16 +316,15 @@ export function CardDetail({
         </div>
       </div>
 
+      {effectBlock && (
+        <div>
+          <SectionHead title={t(lang, "effect")} />
+          {effectBlock}
+        </div>
+      )}
+
       {/* in-feed ad — full-width banner */}
       <AdSlot placement="card-detail-mid" className="aspect-[6/1] w-full" />
-
-      {/* card facts — spec sheet (wide) + competitive meta */}
-      <div className="grid gap-x-8 gap-y-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">{specsBlock}</div>
-        <div className="mt-5 lg:mt-0">
-          <CardTierMeta lang={lang} />
-        </div>
-      </div>
 
       {siblings.length > 0 && (
         <div>
