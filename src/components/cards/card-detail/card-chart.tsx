@@ -132,7 +132,7 @@ export function ScrubChart({
   const x = (i: number) => padLeft + (plotW * i) / (len - 1)
   const y = (v: number) => padTop + ((yMax - v) / Math.max(1, yMax - yMin)) * plotH
   const pathOf = (pts: number[]) => pts.map((p, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(2)} ${y(p).toFixed(2)}`).join(" ")
-  const gridVals = [0, 0.5, 1].map((n) => yMax - (yMax - yMin) * n)
+  const gridVals = [0, 0.33, 0.66, 1].map((n) => yMax - (yMax - yMin) * n)
   const active = activeIndex != null ? Math.min(len - 1, Math.max(0, activeIndex)) : len - 1
   const latestIndex = len - 1
   const primaryLine = pathOf(primary.points)
@@ -178,10 +178,29 @@ export function ScrubChart({
         return (
           <g key={v}>
             <line x1={padLeft} x2={width - padRight} y1={gy} y2={gy} stroke="var(--border)" strokeDasharray="2 7" strokeOpacity="0.18" />
-            <text x={width - padRight + 10} y={gy + 4} fill="var(--muted-foreground)" opacity="0.5" fontSize="20">
+            <text x={width - padRight + 10} y={gy + 4} fill="var(--muted-foreground)" opacity="0.7" fontSize="20">
               {compactDisplayValue(v, currency)}
             </text>
           </g>
+        )
+      })}
+      {/* dated x-ticks — a real time reference frame under the plot */}
+      {[0, 1 / 3, 2 / 3, 1].map((f, idx) => {
+        const i = Math.round(f * (len - 1))
+        const label = dateAtIndex({ i, len, range, latestUpdatedAt, lang })
+        if (!label) return null
+        return (
+          <text
+            key={`xtick-${idx}`}
+            x={padLeft + plotW * f}
+            y={height - padBottom + 20}
+            textAnchor={idx === 0 ? "start" : f === 1 ? "end" : "middle"}
+            fill="var(--muted-foreground)"
+            opacity="0.7"
+            fontSize="18"
+          >
+            {label}
+          </text>
         )
       })}
       <path d={primaryArea} fill="url(#card-price-area)" />
@@ -228,12 +247,6 @@ export function ScrubChart({
           strokeWidth={s.key === primary.key ? 3 : 2}
         />
       ))}
-      <g transform={`translate(${width - padRight - 84} ${Math.min(height - padBottom - 28, Math.max(padTop + 2, y(primary.points[latestIndex]) - 14))})`} aria-hidden>
-        <rect width="78" height="28" rx="8" fill={primary.color} opacity="0.95" />
-        <text x="39" y="18" textAnchor="middle" fill="var(--primary-foreground)" fontSize="16" fontWeight="800">
-          {compactDisplayValue(primary.points[latestIndex], currency)}
-        </text>
-      </g>
       {activeIndex != null && (
         <>
           {drawn.map((s) => (

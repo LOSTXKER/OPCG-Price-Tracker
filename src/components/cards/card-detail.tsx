@@ -1,8 +1,8 @@
 "use client"
 
 import Image from "next/image"
-import { Fragment, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react"
-import { BadgeCheck, Bell, ExternalLink, Info, Share2, ShoppingBag } from "lucide-react"
+import { Fragment, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
+import { BadgeCheck, Bell, ChevronRight, ExternalLink, Info, MoveHorizontal, Plus, Share2, ShoppingBag, Tag } from "lucide-react"
 
 import { Breadcrumb } from "@/components/shared/breadcrumb"
 import type { CardListing } from "@/components/cards/card-listings-section"
@@ -28,10 +28,9 @@ import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { CardAddToPortfolio } from "@/components/cards/card-add-to-portfolio"
 import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog"
-import { CompareButton } from "@/components/shared/compare-button"
 
 import { ScrubChart, RANGES, dateAtIndex, type ChartRange, type ChartSeries } from "./card-detail/card-chart"
-import { mockGradeSeries } from "./card-detail/mock"
+import { mockComps, mockGradeSeries } from "./card-detail/mock"
 import {
   buildGradeData,
   defaultGradeKey,
@@ -197,18 +196,6 @@ function useMounted() {
   )
 }
 
-/** A flat market-stat row (label left · value right). */
-function StatRow({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div className="flex items-center justify-between gap-3 border-b border-[var(--p-hair)] py-2.5">
-      <span className="text-meta min-w-0 truncate">{label}</span>
-      <span className="tnum inline-flex shrink-0 items-center gap-1 text-right text-sm font-semibold text-foreground">
-        {children}
-      </span>
-    </div>
-  )
-}
-
 export function CardDetail({
   card,
   siblings,
@@ -311,10 +298,10 @@ export function CardDetail({
     const keys = chartMode === "raw" ? RAW_KEYS : GRADED_KEYS
     const ordered = [selectedGrade, ...keys.filter((k) => k !== selectedGrade && compareGrades.has(k))]
     const inputs = ordered
-      .map((k) => ({ k, base: statToDisplayValue(gradeData[k].value, currency), trendUp: (gradeData[k].delta30d?.pct ?? 0) >= 0 }))
+      .map((k) => ({ k, base: statToDisplayValue(gradeData[k].value, currency), trendUp: (gradeData[k].delta30d?.pct ?? 0) >= 0, pct: gradeData[k].delta30d?.pct ?? null }))
       .filter((i) => i.base != null && i.base > 0)
     if (!inputs.length) return []
-    const seriesMap = mockGradeSeries(inputs.map((i) => ({ key: i.k, base: i.base, up: i.trendUp })), range)
+    const seriesMap = mockGradeSeries(inputs.map((i) => ({ key: i.k, base: i.base, up: i.trendUp, pct: i.pct })), range)
     const solo = inputs.length === 1
     return inputs.map((i, idx) => ({
       key: i.k,
@@ -394,12 +381,6 @@ export function CardDetail({
     if (r.jpy != null) return formatByCurrency(r.jpy, currency, r.thb).primary
     return "—"
   }
-  // Stats use the same ฿-suffix formatter as the hero/chips/range so the
-  // currency symbol sits consistently AFTER the number across the page.
-  const statText = (s: Stat) => {
-    const v = statToDisplayValue(s, currency)
-    return v == null ? "—" : formatDisplayValue(v, currency)
-  }
 
   const updatedLabel = relativeDaysLabel(daysSinceUpdate, displayLang)
   const TABS: { id: string; label: string }[] = [
@@ -430,8 +411,15 @@ export function CardDetail({
 
   const colorDot = COLOR_DOT[(card.colorEn ?? card.color)?.toLowerCase() ?? ""]
   const chartHeights = "h-[210px] sm:h-[280px] lg:h-[320px]"
-  const ctaIconBtn =
-    "ease-chrome inline-flex h-10 items-center justify-center rounded-xl border border-border/55 bg-transparent text-muted-foreground hover:border-border hover:bg-foreground/[0.035] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+  // Quiet utility action — niche features (portfolio/alert/compare/share) sit in
+  // the buy box BELOW the transact CTAs, so they're borderless muted ghosts (not
+  // outlines that compete with Buy). border-0 + hover overrides neutralize
+  // CompareButton's own border + primary-tinted variant.
+  const utilityBtn =
+    "ease-chrome flex h-9 w-full items-center justify-center gap-1.5 rounded-lg border-0 bg-transparent text-sm font-medium text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
+  // Filled-neutral secondary CTA (ลงขาย / เพิ่มพอร์ต) — sits under the gold buy.
+  const secondaryBtn =
+    "ease-chrome flex h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-foreground/[0.06] text-sm font-semibold text-foreground hover:bg-foreground/[0.1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
 
   const handleShare = async () => {
     const url = typeof window !== "undefined" ? window.location.href : ""
@@ -442,6 +430,13 @@ export function CardDetail({
       /* user dismissed the share sheet — nothing to do */
     }
   }
+
+  // Recent-sales feed for the buy-box rail — prototype comps seeded by the
+  // selected grade's value (swap for the real comps feed at launch).
+  const recentSales = useMemo(() => {
+    const base = statToDisplayValue(datum.value, currency)
+    return base != null && base > 0 ? mockComps(base, gradeLabel, 5) : []
+  }, [datum.value, currency, gradeLabel])
 
   return (
     <div className="relative mx-auto max-w-7xl scroll-smooth pb-[calc(8.5rem+env(safe-area-inset-bottom))] md:pb-8">
@@ -462,81 +457,40 @@ export function CardDetail({
         </p>
       </div>
 
-      {/* ── 3-COL: identity + CTA (left) · price (center) · stats (right) ───── */}
-      <div className="mt-5 flex flex-col gap-y-6 lg:grid lg:grid-cols-[260px_minmax(0,1fr)_220px] lg:gap-x-6 lg:gap-y-0 xl:grid-cols-[300px_minmax(0,1fr)_280px] xl:gap-x-10">
-        {/* COL 1 — identity (compact: small card image + name beside) */}
-        <div id="overview" className="order-1 min-w-0 scroll-mt-20 lg:order-none lg:col-start-1 lg:row-start-1">
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => card.imageUrl && setLightboxOpen(true)}
-              className="surface-1 ease-chrome relative block aspect-[63/88] w-16 shrink-0 cursor-zoom-in overflow-hidden rounded-lg hairline hover:ring-2 hover:ring-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              aria-label={displayName}
-            >
-              {card.imageUrl ? (
-                <Image src={card.imageUrl} alt={displayName} fill className="object-contain" sizes="64px" placeholder="blur" blurDataURL={BLUR_DATA_URL} priority />
-              ) : (
-                <Skeleton className="absolute inset-0 size-full" />
-              )}
-            </button>
-            <div className="min-w-0">
-              <div className="flex items-start gap-1.5">
-                <h1 className="text-h4 min-w-0 break-words text-foreground sm:text-h3">{displayName}</h1>
-                <WatchlistStar cardId={card.id} size="md" />
-              </div>
-              <div className="text-meta mt-1 flex flex-wrap items-center gap-1.5">
-                <RarityBadge rarity={card.rarity} size="sm" />
-                <span>· {card.baseCode ?? card.cardCode}</span>
-                {colorDot && <span aria-hidden className={cn("size-2 rounded-full", colorDot)} />}
-                {card.isParallel && <span>· {t(displayLang, "parallel")}</span>}
-              </div>
+      {/* ── 3-COL: hero card image (left) · identity+price+trade (center) · stats+actions (right) ── */}
+      <div className="mt-6 flex flex-col gap-y-6 lg:grid lg:grid-cols-[200px_minmax(0,1fr)_280px] lg:items-start lg:gap-x-8 lg:gap-y-0 xl:grid-cols-[240px_minmax(0,1fr)_320px] xl:gap-x-10">
+        {/* COL 1 — the card is the hero: a large portrait (tap to zoom) */}
+        <div className="order-1 lg:col-start-1 lg:row-start-1">
+          <button
+            type="button"
+            onClick={() => card.imageUrl && setLightboxOpen(true)}
+            className="surface-1 ease-chrome relative mx-auto block aspect-[63/88] w-44 cursor-zoom-in overflow-hidden rounded-xl hairline hover:ring-2 hover:ring-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-52 lg:mx-0 lg:w-full"
+            aria-label={displayName}
+          >
+            {card.imageUrl ? (
+              <Image src={card.imageUrl} alt={displayName} fill className="object-contain" sizes="(min-width:1280px) 240px, (min-width:1024px) 200px, 208px" placeholder="blur" blurDataURL={BLUR_DATA_URL} priority />
+            ) : (
+              <Skeleton className="absolute inset-0 size-full" />
+            )}
+          </button>
+        </div>
+
+        {/* COL 2 — identity + price instrument (mobile order 2 · desktop center) */}
+        <div id="overview" className="order-2 min-w-0 scroll-mt-20 lg:order-none lg:col-start-2 lg:row-start-1">
+          {/* identity — name is now a proper title beside the hero image */}
+          <div className="min-w-0">
+            <div className="flex items-start gap-1.5">
+              <h1 className="text-h3 min-w-0 break-words text-foreground sm:text-h2">{displayName}</h1>
+              <WatchlistStar cardId={card.id} size="md" />
+            </div>
+            <div className="text-meta mt-1 flex flex-wrap items-center gap-1.5">
+              <RarityBadge rarity={card.rarity} size="sm" />
+              <span>· {card.baseCode ?? card.cardCode}</span>
+              {colorDot && <span aria-hidden className={cn("size-2 rounded-full", colorDot)} />}
+              {card.isParallel && <span>· {t(displayLang, "parallel")}</span>}
             </div>
           </div>
-        </div>
-
-        {/* COL 1 row 2 — buy CTA + secondary actions (mobile order 3, after price) */}
-        <div className="order-3 space-y-2 lg:order-none lg:col-start-1 lg:row-start-2">
-          <a
-            href="#market"
-            className="ease-chrome flex w-full items-center justify-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
-          >
-            <ShoppingBag className="size-4" aria-hidden /> {t(displayLang, "buyOnMeecard")}
-          </a>
-          {/* secondary actions — one tidy icon row: portfolio · alert · share · compare */}
-          <div className="grid grid-cols-4 gap-2">
-            <CardAddToPortfolio
-              cardId={card.id}
-              cardName={displayName}
-              variant="ghost"
-              iconOnly
-              className={cn(ctaIconBtn, "w-full [&_svg]:size-4")}
-            />
-            <button type="button" onClick={() => setAlertOpen(true)} aria-label={t(displayLang, "setPriceAlertShort")} className={ctaIconBtn}>
-              <Bell className="size-4" aria-hidden />
-            </button>
-            <button type="button" onClick={() => void handleShare()} aria-label={t(displayLang, "shareButton")} className={ctaIconBtn}>
-              <Share2 className="size-4" aria-hidden />
-            </button>
-            <CompareButton
-              item={{ cardCode: card.cardCode, name: displayName, imageUrl: card.imageUrl, rarity: card.rarity }}
-              size="md"
-              variant="icon"
-              className={cn(ctaIconBtn, "w-full [&_svg]:size-4")}
-            />
-          </div>
-          <CardSetAlertDialog
-            cardId={card.id}
-            cardName={displayName}
-            currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
-            open={alertOpen}
-            onOpenChange={setAlertOpen}
-          />
-        </div>
-
-        {/* COL 2 — price instrument (mobile order 2 · desktop center, spans both rows) */}
-        <div className="order-2 min-w-0 lg:order-none lg:col-start-2 lg:row-start-1 lg:row-span-2">
-          <div className="space-y-2">
+          <div className="mt-4 space-y-2">
             <EditionToggle value={edition} onChange={setEdition} enAvailable={false} />
             {/* grade ladder — quick chips */}
             <div role="group" aria-label={t(displayLang, "chooseGrade")} className="no-sb -mx-1 flex items-stretch gap-1 overflow-x-auto px-1">
@@ -566,7 +520,7 @@ export function CardDetail({
                         {graded && <GradeLogo family={tier.family} size={12} />}
                         {num}
                       </span>
-                      <span className={cn("text-overlay tnum", active ? "text-foreground/75" : "text-muted-foreground/50")}>
+                      <span className={cn("text-micro tnum", active ? "text-foreground/75" : "text-muted-foreground/80")}>
                         {hint != null ? compactDisplayValue(hint, currency) : "—"}
                       </span>
                     </button>
@@ -607,8 +561,8 @@ export function CardDetail({
           {band && (
             <div className="mt-4 max-w-sm">
               <div className="relative h-1.5 rounded-full bg-foreground/10">
-                <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${markerPct}%`, background: "var(--price-up)", opacity: 0.55 }} />
-                <span className="absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-background" style={{ left: `${markerPct}%`, background: "var(--price-up)" }} />
+                <div className="absolute inset-y-0 left-0 rounded-full bg-foreground/25" style={{ width: `${markerPct}%` }} />
+                <span className="absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-background bg-foreground" style={{ left: `${markerPct}%` }} />
               </div>
               <div className="text-overlay mt-1 flex justify-between text-muted-foreground">
                 <span className="tnum">{t(displayLang, "low")} · {compactDisplayValue(band.lo, currency)}</span>
@@ -620,38 +574,68 @@ export function CardDetail({
           )}
         </div>
 
-        {/* COL 3 — market stats (mobile order 4, last · desktop right) */}
-        <div className="order-4 min-w-0 border-t border-[var(--p-hair)] lg:order-none lg:col-start-3 lg:row-start-1 lg:row-span-2 lg:border-t-0 lg:pl-2">
-          <p className="text-eyebrow mb-1 hidden lg:block">{t(displayLang, "marketStats")}</p>
-          <StatRow label={t(displayLang, "lastSold")}>
-            <span>{statText(datum.lastSale)}</span>
-            {datum.lastSale.isEst && <EstMark lang={displayLang} />}
-          </StatRow>
-          <StatRow label={t(displayLang, "lowestListing")}>
-            {meecardLowest != null ? (
-              <span>{formatByCurrency(meecardLowest.priceJpy, currency, meecardLowest.priceThb).primary}</span>
-            ) : (
-              <>
-                <span>{statText(datum.lowestAsk)}</span>
-                {datum.lowestAsk.isEst && <EstMark lang={displayLang} />}
-              </>
-            )}
-          </StatRow>
-          <StatRow label={t(displayLang, "range30d")}>
-            {band ? (
-              <>
-                <span>{compactDisplayValue(band.lo, currency)} – {compactDisplayValue(band.hi, currency)}</span>
-                <EstMark lang={displayLang} />
-              </>
-            ) : (
-              <span className="text-muted-foreground/40">—</span>
-            )}
-          </StatRow>
+        {/* COL 3 — BUY BOX rail (flat, no card border): transact + ขายล่าสุด feed */}
+        <div className="order-3 min-w-0 border-t border-[var(--p-hair)] pt-4 lg:order-none lg:col-start-3 lg:row-start-1 lg:border-l lg:border-t-0 lg:border-[var(--p-hair)] lg:pl-6 lg:pt-0">
+          {/* transact — gold "ดูประกาศขาย" is the page's one gold element */}
+          <div className="space-y-2">
+            <a
+              href="#market"
+              className="ease-chrome flex h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
+            >
+              <ShoppingBag className="size-4" aria-hidden /> {t(displayLang, "viewAsksCta")}
+            </a>
+            <div className="grid grid-cols-2 gap-2">
+              <a
+                href={`/seller/listings/new?cardCode=${encodeURIComponent(card.cardCode)}`}
+                className={secondaryBtn}
+              >
+                <Tag className="size-4" aria-hidden /> {t(displayLang, "sellCta")}
+              </a>
+              <CardAddToPortfolio cardId={card.id} cardName={displayName} variant="ghost" className={secondaryBtn} />
+            </div>
+            <div className="grid grid-cols-2 gap-1">
+              <button type="button" onClick={() => setAlertOpen(true)} className={utilityBtn}>
+                <Bell className="size-4" aria-hidden /> {t(displayLang, "setPriceAlertShort")}
+              </button>
+              <button type="button" onClick={() => void handleShare()} className={utilityBtn}>
+                <Share2 className="size-4" aria-hidden /> {t(displayLang, "shareButton")}
+              </button>
+            </div>
+          </div>
+
+          {/* ขายล่าสุด — recent-sales feed (prototype comps seeded by grade; swap for real feed at launch) */}
+          {recentSales.length > 0 && (
+            <div className="mt-4 border-t border-[var(--p-hair)] pt-3">
+              <p className="text-eyebrow mb-1">{t(displayLang, "lastSold")}</p>
+              <div>
+                {recentSales.map((c, i) => (
+                  <div key={i} className="flex items-center gap-2 border-b border-[var(--p-hair)] py-2 last:border-b-0">
+                    <SourceLogo source={c.source} size={18} />
+                    <span className="min-w-0 flex-1 truncate text-xs font-medium text-foreground">{c.grade}</span>
+                    <span className="tnum shrink-0 text-sm font-semibold text-foreground">{compactDisplayValue(c.price, currency)}</span>
+                    <span className="text-meta tnum shrink-0">{relativeDaysLabel(Math.round(c.whenDays), displayLang)}</span>
+                  </div>
+                ))}
+              </div>
+              <a href="#sources" className="ease-chrome mt-1 flex w-full items-center justify-center gap-1 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground">
+                {t(displayLang, "viewSaleHistory")} <ChevronRight className="size-3" aria-hidden />
+              </a>
+            </div>
+          )}
+
+          <CardSetAlertDialog
+            cardId={card.id}
+            cardName={displayName}
+            currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
+            open={alertOpen}
+            onOpenChange={setAlertOpen}
+          />
         </div>
       </div>
 
       {/* TABS */}
-      <nav className="no-sb mt-7 flex gap-5 overflow-x-auto border-t border-[var(--p-hair)]">
+      <nav className="no-sb mt-6 flex gap-5 overflow-x-auto border-t border-[var(--p-hair)]">
         {TABS.map((tab, i) => (
           <a
             key={tab.id}
@@ -732,11 +716,15 @@ export function CardDetail({
                       onClick={() => toggleCompare(k)}
                       className={cn(
                         "ease-chrome inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                        on ? "border-transparent bg-foreground/10 text-foreground" : "border-[var(--p-hair)] text-muted-foreground hover:text-foreground",
+                        on ? "border-transparent bg-foreground/10 text-foreground" : "border-foreground/15 text-muted-foreground hover:border-foreground/30 hover:text-foreground",
                         atMax && "cursor-not-allowed opacity-40",
                       )}
                     >
-                      <span className="size-2 rounded-full" style={{ background: on ? seriesColor.get(k) ?? "var(--muted-foreground)" : "var(--muted-foreground)" }} />
+                      {on ? (
+                        <span className="size-2 rounded-full" style={{ background: seriesColor.get(k) ?? "var(--muted-foreground)" }} />
+                      ) : (
+                        <Plus className="size-3" aria-hidden />
+                      )}
                       {gradeData[k].tier.label}
                       {gradeData[k].value.isEst && <EstMark lang={displayLang} />}
                     </button>
@@ -764,6 +752,13 @@ export function CardDetail({
             />
           ) : (
             <div className={cn("rounded-xl bg-muted/10", chartHeights)} aria-hidden />
+          )}
+
+          {/* scrub affordance — the chart is draggable but that's invisible at rest */}
+          {datum.hasData && mounted && (
+            <p className="text-meta mt-2 hidden items-center justify-center gap-1.5 sm:flex">
+              <MoveHorizontal className="size-3.5" aria-hidden /> {t(displayLang, "dragChartHint")}
+            </p>
           )}
 
           {/* legend — only when overlaying multiple grades */}
@@ -820,7 +815,7 @@ export function CardDetail({
                       <span className="text-sm font-semibold text-foreground">{r.label}</span>
                       {r.verified && (
                         <span className="text-overlay inline-flex items-center gap-0.5 text-muted-foreground">
-                          <BadgeCheck className="size-3" style={{ color: "var(--price-up)" }} /> {t(displayLang, "referenceBadge")}
+                          <BadgeCheck className="size-3" /> {t(displayLang, "referenceBadge")}
                         </span>
                       )}
                     </span>
@@ -838,40 +833,34 @@ export function CardDetail({
       {/* ── ขายบน Meecard / selling on our marketplace ─────────────────────── */}
       <section id="market" className="mt-10 scroll-mt-20">
         <h2 className="text-h3 mb-3">{t(displayLang, "sellingNow")}</h2>
-        <div className="surface-1 hairline rounded-2xl">
-          <MeecardAsksRail
-            cardId={card.id}
-            cardCode={card.cardCode}
-            cardName={displayName}
-            listings={listings ?? []}
-            currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
-            currency={currency}
-            selectedGradeLabel={gradeLabel}
-            rangeHigh={band?.hi ?? null}
-            embedded
-            lang={displayLang}
-          />
-        </div>
+        <MeecardAsksRail
+          cardId={card.id}
+          cardCode={card.cardCode}
+          cardName={displayName}
+          listings={listings ?? []}
+          currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
+          currency={currency}
+          selectedGradeLabel={gradeLabel}
+          rangeHigh={band?.hi ?? null}
+          embedded
+          lang={displayLang}
+        />
       </section>
 
       {/* ── ข้อมูลการ์ด / card info ─────────────────────────────────────────── */}
       <section id="specs" className="mt-10 scroll-mt-20">
         <h2 className="text-h3 mb-3">{t(displayLang, "cardInfo")}</h2>
-        <div className="grid gap-x-8 gap-y-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <CardDetailSpecs card={card} lang={displayLang} />
-            {effectText?.trim() && (
-              <div className="mt-3" style={{ boxShadow: "inset 3px 0 0 0 color-mix(in srgb, var(--primary) 40%, transparent)" }}>
-                <div className="pl-4">
-                  <p className="text-eyebrow mb-1.5">{t(displayLang, "effect")}</p>
-                  <CardEffectText text={effectText} />
-                </div>
-              </div>
-            )}
+        <CardDetailSpecs card={card} lang={displayLang} />
+        {effectText?.trim() && (
+          <div className="mt-3" style={{ boxShadow: "inset 3px 0 0 0 color-mix(in srgb, var(--primary) 40%, transparent)" }}>
+            <div className="pl-4">
+              <p className="text-eyebrow mb-1.5">{t(displayLang, "effect")}</p>
+              <CardEffectText text={effectText} />
+            </div>
           </div>
-          <div className="mt-2 lg:mt-0">
-            <CardTierMeta lang={displayLang} />
-          </div>
+        )}
+        <div className="mt-6">
+          <CardTierMeta lang={displayLang} />
         </div>
       </section>
 
@@ -928,7 +917,7 @@ export function CardDetail({
               className="ease-chrome ml-auto flex max-w-[200px] flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
             >
-              <ShoppingBag className="size-4" aria-hidden /> {t(displayLang, "buyOnMeecard")}
+              <ShoppingBag className="size-4" aria-hidden /> {t(displayLang, "viewAsksCta")}
             </a>
           </div>
         </div>

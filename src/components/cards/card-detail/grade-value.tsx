@@ -106,7 +106,9 @@ export function Delta({
     <span
       className={cn(
         "tnum inline-flex items-center gap-0.5 font-semibold",
-        size === "lg" ? "text-base" : "text-sm",
+        // delta stays subordinate to the hero number — even the "lg" variant sits
+        // at text-sm so a 3-digit % never rivals the .text-display price.
+        size === "lg" ? "text-sm" : "text-sm",
         className,
       )}
       style={{ color }}
