@@ -41,6 +41,7 @@ tsc 0 · lint 0 · **test 36 ผ่าน** · **hydration 0** (clean restart, c
 4. **currency hydration นอกหน้านี้ยังไม่ guard** (card table/header/portfolio อ่าน `currency` ตรง = latent mismatch สำหรับ user ≠THB) — งานแยกทั้งแอป ถ้าจะทำ
 
 ## ▶ NEXT
-1. **scrape หยุด ~เม.ย. 2026** → ราคา/กราฟจริงค้าง (เห็นชัด: subline "2 เดือนที่แล้ว") · **กราฟยัง mock** (`mockSeries`) — ฟื้น cron scrape ก่อน แล้วค่อยต่อ Comp/population tables (VISION §6 · ⚠️ migrate ต้องเบสอนุมัติ) → swap est→จริง (โครง UI พร้อม swap แล้ว: แก้แค่ `grades.ts` + data layer)
-2. ขยายหน้าอื่นตาม spine (portfolio hero · marketplace) — VISION §7
-3. proto e/f/g/h เก็บเทียบใน `/proto/` · proto-h = ตัวอ้างอิง fidelity ของหน้าจริง
+> **เบส (2026-06-16): Meecard ตอนนี้ = prototype → ไม่ต้องฟื้น scrape/ดึงราคาจริง.** mock + ข้อมูลค้าง (เม.ย.) ปล่อยไว้ได้ · อย่าทักว่า data/กราฟ stale เป็นบั๊ก · โฟกัส **UI/ดีไซน์**. (วินิจฉัยเผื่ออนาคต: cron 401 เพราะ `CRON_SECRET` หายบน Vercel — ดู memory `meecard-prototype-status`)
+1. รอโจทย์ UI/ดีไซน์ถัดไปจากเบส (ปรับ card-detail ต่อ / ขยายหน้าอื่นตาม VISION §7: home · portfolio hero · marketplace)
+2. proto e/f/g/h เก็บเทียบใน `/proto/` · proto-h = ตัวอ้างอิง fidelity ของหน้าจริง
+3. ลองให้ Google Stitch ออกแบบได้ (มี `DESIGN.md` ที่ราก repo ไว้แนบ)

@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { Fragment, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react"
-import { ArrowUpRight, BadgeCheck, ExternalLink, Info, ShoppingBag } from "lucide-react"
+import { BadgeCheck, Bell, ExternalLink, Info, Share2, ShoppingBag } from "lucide-react"
 
 import { Breadcrumb } from "@/components/shared/breadcrumb"
 import type { CardListing } from "@/components/cards/card-listings-section"
@@ -27,7 +27,8 @@ import { useUIStore } from "@/stores/ui-store"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { CardAddToPortfolio } from "@/components/cards/card-add-to-portfolio"
-import { CardDetailActions } from "./card-detail/actions"
+import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog"
+import { CompareButton } from "@/components/shared/compare-button"
 
 import { ScrubChart, RANGES, dateAtIndex, type ChartRange, type ChartSeries } from "./card-detail/card-chart"
 import { mockGradeSeries } from "./card-detail/mock"
@@ -40,7 +41,7 @@ import {
   type Stat,
 } from "./card-detail/grades"
 import { GradeLogo } from "./card-detail/grade-logo"
-import { Delta, EstMark, StatValue } from "./card-detail/grade-value"
+import { Delta, EstMark } from "./card-detail/grade-value"
 import { EditionToggle, type Edition } from "./card-detail/edition-toggle"
 import { SourceLogo } from "./card-detail/source-logo"
 import { MeecardAsksRail, listingMatchesGrade } from "./card-detail/asks-rail"
@@ -235,6 +236,7 @@ export function CardDetail({
   const [compareGrades, setCompareGrades] = useState<Set<GradeKey>>(() => new Set())
   const [provTab, setProvTab] = useState<"sold" | "asks">("asks")
   const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [alertOpen, setAlertOpen] = useState(false)
   const [showStickyBuy, setShowStickyBuy] = useState(false)
   const stickySentinelRef = useRef<HTMLDivElement | null>(null)
 
@@ -392,6 +394,12 @@ export function CardDetail({
     if (r.jpy != null) return formatByCurrency(r.jpy, currency, r.thb).primary
     return "—"
   }
+  // Stats use the same ฿-suffix formatter as the hero/chips/range so the
+  // currency symbol sits consistently AFTER the number across the page.
+  const statText = (s: Stat) => {
+    const v = statToDisplayValue(s, currency)
+    return v == null ? "—" : formatDisplayValue(v, currency)
+  }
 
   const updatedLabel = relativeDaysLabel(daysSinceUpdate, displayLang)
   const TABS: { id: string; label: string }[] = [
@@ -422,6 +430,18 @@ export function CardDetail({
 
   const colorDot = COLOR_DOT[(card.colorEn ?? card.color)?.toLowerCase() ?? ""]
   const chartHeights = "h-[210px] sm:h-[280px] lg:h-[320px]"
+  const ctaIconBtn =
+    "ease-chrome inline-flex h-10 items-center justify-center rounded-xl border border-border/55 bg-transparent text-muted-foreground hover:border-border hover:bg-foreground/[0.035] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+
+  const handleShare = async () => {
+    const url = typeof window !== "undefined" ? window.location.href : ""
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) await navigator.share({ title: displayName, url })
+      else await navigator.clipboard?.writeText(url)
+    } catch {
+      /* user dismissed the share sheet — nothing to do */
+    }
+  }
 
   return (
     <div className="relative mx-auto max-w-7xl scroll-smooth pb-[calc(8.5rem+env(safe-area-inset-bottom))] md:pb-8">
@@ -442,26 +462,26 @@ export function CardDetail({
         </p>
       </div>
 
-      {/* ── TOP 3-COL: identity · price instrument · market stats ─────────── */}
-      <div className="mt-5 flex flex-col gap-y-6 lg:grid lg:grid-cols-[300px_minmax(0,1fr)_260px] lg:gap-x-10 lg:gap-y-0">
-        {/* COL 1 — identity (mobile order 1 · desktop left/top) */}
+      {/* ── 3-COL: identity + CTA (left) · price (center) · stats (right) ───── */}
+      <div className="mt-5 flex flex-col gap-y-6 lg:grid lg:grid-cols-[260px_minmax(0,1fr)_220px] lg:gap-x-6 lg:gap-y-0 xl:grid-cols-[300px_minmax(0,1fr)_280px] xl:gap-x-10">
+        {/* COL 1 — identity (compact: small card image + name beside) */}
         <div id="overview" className="order-1 min-w-0 scroll-mt-20 lg:order-none lg:col-start-1 lg:row-start-1">
-          <div className="flex items-start gap-3 lg:flex-col">
+          <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => card.imageUrl && setLightboxOpen(true)}
-              className="surface-1 ease-chrome relative block aspect-[63/88] w-24 shrink-0 cursor-zoom-in overflow-hidden rounded-xl hairline hover:ring-2 hover:ring-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:w-32"
+              className="surface-1 ease-chrome relative block aspect-[63/88] w-16 shrink-0 cursor-zoom-in overflow-hidden rounded-lg hairline hover:ring-2 hover:ring-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label={displayName}
             >
               {card.imageUrl ? (
-                <Image src={card.imageUrl} alt={displayName} fill className="object-contain" sizes="(max-width: 1024px) 96px, 128px" placeholder="blur" blurDataURL={BLUR_DATA_URL} priority />
+                <Image src={card.imageUrl} alt={displayName} fill className="object-contain" sizes="64px" placeholder="blur" blurDataURL={BLUR_DATA_URL} priority />
               ) : (
                 <Skeleton className="absolute inset-0 size-full" />
               )}
             </button>
-            <div className="min-w-0 lg:mt-3">
+            <div className="min-w-0">
               <div className="flex items-start gap-1.5">
-                <h1 className="text-h3 min-w-0 break-words text-foreground">{displayName}</h1>
+                <h1 className="text-h4 min-w-0 break-words text-foreground sm:text-h3">{displayName}</h1>
                 <WatchlistStar cardId={card.id} size="md" />
               </div>
               <div className="text-meta mt-1 flex flex-wrap items-center gap-1.5">
@@ -470,36 +490,51 @@ export function CardDetail({
                 {colorDot && <span aria-hidden className={cn("size-2 rounded-full", colorDot)} />}
                 {card.isParallel && <span>· {t(displayLang, "parallel")}</span>}
               </div>
-              <a href="#sources" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground hover:text-foreground">
-                {t(displayLang, "viewSaleHistory")} <ArrowUpRight className="size-3" aria-hidden />
-              </a>
             </div>
           </div>
         </div>
 
-        {/* acquire rail — buy CTA + secondary actions (mobile order 3, after price ·
-            desktop: left column, under the image) */}
-        <div className="order-3 space-y-3 lg:order-none lg:col-start-1 lg:row-start-2">
+        {/* COL 1 row 2 — buy CTA + secondary actions (mobile order 3, after price) */}
+        <div className="order-3 space-y-2 lg:order-none lg:col-start-1 lg:row-start-2">
           <a
             href="#market"
-            className="ease-chrome flex w-full items-center justify-center gap-1.5 rounded-xl px-5 py-3 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="ease-chrome flex w-full items-center justify-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
           >
             <ShoppingBag className="size-4" aria-hidden /> {t(displayLang, "buyOnMeecard")}
           </a>
-          <CardDetailActions
+          {/* secondary actions — one tidy icon row: portfolio · alert · share · compare */}
+          <div className="grid grid-cols-4 gap-2">
+            <CardAddToPortfolio
+              cardId={card.id}
+              cardName={displayName}
+              variant="ghost"
+              iconOnly
+              className={cn(ctaIconBtn, "w-full [&_svg]:size-4")}
+            />
+            <button type="button" onClick={() => setAlertOpen(true)} aria-label={t(displayLang, "setPriceAlertShort")} className={ctaIconBtn}>
+              <Bell className="size-4" aria-hidden />
+            </button>
+            <button type="button" onClick={() => void handleShare()} aria-label={t(displayLang, "shareButton")} className={ctaIconBtn}>
+              <Share2 className="size-4" aria-hidden />
+            </button>
+            <CompareButton
+              item={{ cardCode: card.cardCode, name: displayName, imageUrl: card.imageUrl, rarity: card.rarity }}
+              size="md"
+              variant="icon"
+              className={cn(ctaIconBtn, "w-full [&_svg]:size-4")}
+            />
+          </div>
+          <CardSetAlertDialog
             cardId={card.id}
-            cardCode={card.cardCode}
-            displayName={displayName}
-            rarity={card.rarity}
-            imageUrl={card.imageUrl}
+            cardName={displayName}
             currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
-            lang={displayLang}
-            className="sm:grid-cols-2"
+            open={alertOpen}
+            onOpenChange={setAlertOpen}
           />
         </div>
 
-        {/* COL 2 — price instrument (mobile order 2 · desktop middle, spans both rows) */}
+        {/* COL 2 — price instrument (mobile order 2 · desktop center, spans both rows) */}
         <div className="order-2 min-w-0 lg:order-none lg:col-start-2 lg:row-start-1 lg:row-span-2">
           <div className="space-y-2">
             <EditionToggle value={edition} onChange={setEdition} enAvailable={false} />
@@ -532,7 +567,7 @@ export function CardDetail({
                         {num}
                       </span>
                       <span className={cn("text-overlay tnum", active ? "text-foreground/75" : "text-muted-foreground/50")}>
-                        {hint != null ? formatDisplayValue(hint, currency) : "—"}
+                        {hint != null ? compactDisplayValue(hint, currency) : "—"}
                       </span>
                     </button>
                   </Fragment>
@@ -589,7 +624,7 @@ export function CardDetail({
         <div className="order-4 min-w-0 border-t border-[var(--p-hair)] lg:order-none lg:col-start-3 lg:row-start-1 lg:row-span-2 lg:border-t-0 lg:pl-2">
           <p className="text-eyebrow mb-1 hidden lg:block">{t(displayLang, "marketStats")}</p>
           <StatRow label={t(displayLang, "lastSold")}>
-            <StatValue stat={datum.lastSale} size="stat" />
+            <span>{statText(datum.lastSale)}</span>
             {datum.lastSale.isEst && <EstMark lang={displayLang} />}
           </StatRow>
           <StatRow label={t(displayLang, "lowestListing")}>
@@ -597,7 +632,7 @@ export function CardDetail({
               <span>{formatByCurrency(meecardLowest.priceJpy, currency, meecardLowest.priceThb).primary}</span>
             ) : (
               <>
-                <StatValue stat={datum.lowestAsk} size="stat" />
+                <span>{statText(datum.lowestAsk)}</span>
                 {datum.lowestAsk.isEst && <EstMark lang={displayLang} />}
               </>
             )}
@@ -632,7 +667,7 @@ export function CardDetail({
       </nav>
 
       {/* ── chart + reference sources (2-col on lg) ─────────────────────────── */}
-      <div id="sources" className="mt-6 grid grid-cols-1 gap-x-8 gap-y-6 scroll-mt-20 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <div id="sources" className="mt-6 grid grid-cols-1 gap-x-6 gap-y-6 scroll-mt-20 lg:grid-cols-[minmax(0,1fr)_248px] xl:grid-cols-[minmax(0,1fr)_320px] xl:gap-x-8">
         {/* CHART — filter (Raw|Graded) + range + compare overlay */}
         <div className="min-w-0">
           <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
