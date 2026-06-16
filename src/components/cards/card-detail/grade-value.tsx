@@ -14,7 +14,7 @@ const SIZE = {
   stat: "text-sm font-bold",
   sm: "text-sm font-medium",
   md: "text-lg font-semibold",
-  hero: "text-[42px] font-extrabold leading-none lg:text-[52px]",
+  hero: "text-display",
 } as const
 
 /** A bare native-currency amount (JPY or USD) in the active display currency. */

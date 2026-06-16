@@ -93,7 +93,15 @@ export function Header() {
       <header className="frost" style={{ boxShadow: "inset 0 -1px 0 0 var(--p-hair)" }}>
         <div className="mx-auto flex h-14 max-w-7xl items-center px-6 lg:px-8">
           <Link href="/" className="mr-3 flex shrink-0 items-center gap-2.5">
-            <Image src="/meecard.png" alt="Meecard" width={28} height={28} className="shrink-0 select-none" priority />
+            <Image
+              src="/meecard.png"
+              alt="Meecard"
+              width={32}
+              height={29}
+              className="h-auto shrink-0 select-none"
+              style={{ width: 28, height: "auto" }}
+              priority
+            />
             <span className="text-base font-bold tracking-tight">Meecard</span>
           </Link>
 

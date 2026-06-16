@@ -21,9 +21,10 @@ export function Logo({
       <Image
         src="/meecard.png"
         alt="Meecard"
-        width={cfg.img}
-        height={cfg.img}
-        className="shrink-0 select-none"
+        width={32}
+        height={29}
+        className="h-auto shrink-0 select-none"
+        style={{ width: cfg.img, height: "auto" }}
         priority
       />
       <span className={mono ? undefined : "text-foreground"}>Meecard</span>

@@ -68,8 +68,10 @@ export default function AdminLoginPage() {
             <Image
               src="/meecard.png"
               alt="Meecard"
-              width={40}
-              height={40}
+              width={32}
+              height={29}
+              className="h-auto"
+              style={{ width: 40, height: "auto" }}
               priority
             />
           </div>

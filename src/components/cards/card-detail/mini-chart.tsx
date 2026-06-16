@@ -24,6 +24,8 @@ export interface ChartSeries {
   label: string
 }
 
+type ScrubPoint = { index: number; value: number }
+
 /** Clean single-line hover readout (date + hero price) — replaces the boxed
  *  multi-row tooltip; floats near the crosshair like Robinhood/Coinbase. */
 function HoverPill({
@@ -70,11 +72,13 @@ export function MiniAreaChart({
   height = 280,
   currency,
   labelAt,
+  onScrub,
 }: {
   series: ChartSeries[]
   height?: number
   currency: Currency
   labelAt?: (i: number) => string
+  onScrub?: (point: ScrubPoint | null) => void
 }) {
   const gid = useId().replace(/:/g, "")
   // SSR-safe reduced-motion read (no state/effect → no cascading render)
@@ -105,19 +109,39 @@ export function MiniAreaChart({
     return row
   })
 
+  const handleScrub = (state: unknown) => {
+    const rawIndex = (state as { activeTooltipIndex?: unknown } | null)?.activeTooltipIndex
+    const parsedIndex =
+      typeof rawIndex === "number" ? rawIndex : typeof rawIndex === "string" ? Number(rawIndex) : NaN
+    const index = Number.isInteger(parsedIndex) && parsedIndex >= 0 ? parsedIndex : null
+    if (index == null) {
+      onScrub?.(null)
+      return
+    }
+    const value = data[index]?.[hero.key]
+    onScrub?.(typeof value === "number" ? { index, value } : null)
+  }
+
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <AreaChart key={`${hero.key}-${len}`} data={data} margin={{ top: 16, right: 58, left: 8, bottom: 8 }}>
+      <AreaChart
+        key={`${hero.key}-${len}`}
+        data={data}
+        margin={{ top: 16, right: 58, left: 8, bottom: 8 }}
+        onMouseMove={handleScrub}
+        onMouseLeave={() => onScrub?.(null)}
+      >
         <defs>
           <linearGradient id={`g${gid}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={heroColor} stopOpacity={0.18} />
+            <stop offset="0%" stopColor={heroColor} stopOpacity={0.28} />
+            <stop offset="60%" stopColor={heroColor} stopOpacity={0.08} />
             <stop offset="100%" stopColor={heroColor} stopOpacity={0} />
           </linearGradient>
           <filter id={`glow${gid}`} x="-100%" y="-100%" width="300%" height="300%">
             <feGaussianBlur stdDeviation="3.5" />
           </filter>
         </defs>
-        <CartesianGrid vertical={false} strokeDasharray="2 4" className="stroke-border/15" />
+        <CartesianGrid vertical={false} strokeDasharray="2 4" className="stroke-border/25" />
         <XAxis
           dataKey="idx"
           type="number"
@@ -172,7 +196,7 @@ export function MiniAreaChart({
           type={lineType}
           dataKey={hero.key}
           stroke={heroColor}
-          strokeWidth={2}
+          strokeWidth={2.5}
           fill={`url(#g${gid})`}
           dot={false}
           isAnimationActive={!reduced}
@@ -190,7 +214,6 @@ export function MiniAreaChart({
           stroke="var(--background)"
           strokeWidth={2}
           ifOverflow="extendDomain"
-          label={{ value: formatDisplayValue(last, currency), position: "right", fill: heroColor, fontSize: 11, fontWeight: 700 }}
         />
       </AreaChart>
     </ResponsiveContainer>

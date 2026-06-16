@@ -128,6 +128,7 @@ export default function CardRailProto() {
                 rarity={card.rarity}
                 imageUrl={card.imageUrl}
                 currentPriceJpy={430000}
+                lang={lang}
               />
             </div>
             <OwnershipPanel selectedGradeLabel={datum.tier.label} selectedValue={unitValue} currency={currency} />

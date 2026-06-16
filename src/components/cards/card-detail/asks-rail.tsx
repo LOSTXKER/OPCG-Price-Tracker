@@ -6,8 +6,21 @@ import { BellPlus, ChevronRight, Store } from "lucide-react"
 
 import type { CardListing } from "@/components/cards/card-listings-section"
 import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog"
-import { formatByCurrency, type Currency } from "@/lib/utils/currency"
+import { formatByCurrency, jpyToDisplayValue, type Currency } from "@/lib/utils/currency"
 import { t, type Language } from "@/lib/i18n"
+import { cn } from "@/lib/utils"
+
+function compactGradeText(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, "")
+}
+
+export function listingMatchesGrade(condition: string | null | undefined, gradeLabel: string | null | undefined) {
+  if (!gradeLabel) return true
+  const conditionKey = compactGradeText(condition ?? "")
+  const gradeKey = compactGradeText(gradeLabel)
+  if (gradeKey.startsWith("raw")) return !/(psa|bgs|cgc)/.test(conditionKey)
+  return conditionKey.includes(gradeKey)
+}
 
 /**
  * "Selling on Meecard" — active asks for THIS card from our marketplace, the
@@ -23,6 +36,9 @@ export function MeecardAsksRail({
   listings,
   currentPriceJpy,
   currency,
+  selectedGradeLabel,
+  rangeHigh,
+  embedded = false,
   lang,
 }: {
   cardId: number
@@ -31,50 +47,78 @@ export function MeecardAsksRail({
   listings: CardListing[]
   currentPriceJpy: number | null
   currency: Currency
+  selectedGradeLabel?: string
+  rangeHigh?: number | null
+  embedded?: boolean
   lang: Language
 }) {
   const [alertOpen, setAlertOpen] = useState(false)
   const marketHref = `/marketplace?cardCode=${encodeURIComponent(cardCode)}`
   const sellHref = `/seller/listings/new?cardCode=${encodeURIComponent(cardCode)}`
 
-  const sorted = [...(listings ?? [])].sort((a, b) => a.priceJpy - b.priceJpy)
+  const sorted = [...(listings ?? [])]
+    .filter((listing) => listingMatchesGrade(listing.condition, selectedGradeLabel))
+    .sort((a, b) => a.priceJpy - b.priceJpy)
   const best = sorted[0]
   const rows = sorted.slice(0, 3)
   const extra = sorted.length - rows.length
+  const bestAboveMarket =
+    best != null && rangeHigh != null && jpyToDisplayValue(best.priceJpy, currency) > rangeHigh
 
   return (
-    <div className="surface-1 hairline overflow-hidden rounded-2xl">
+    <div className={cn("overflow-hidden", embedded ? "" : "surface-1 hairline rounded-2xl")}>
       {sorted.length === 0 ? (
         <>
-          <p className="text-eyebrow px-4 pt-4">{t(lang, "sellingNow")}</p>
-          <div className="flex flex-col items-center gap-2 px-4 py-8 text-center">
-            <span className="surface-2 flex size-10 items-center justify-center rounded-full text-muted-foreground">
-              <Store className="size-4" aria-hidden />
+          <div className="flex items-center justify-between gap-3 px-4 pt-4">
+            <p className="text-eyebrow">
+              {t(lang, "sellingNow")}
+              {selectedGradeLabel && <span className="text-meta normal-case"> · {selectedGradeLabel}</span>}
+            </p>
+            <span className="surface-2 rounded-full px-2 py-1 text-micro font-semibold text-muted-foreground">
+              {t(lang, "firstListingBadge")}
             </span>
-            <p className="text-sm font-semibold text-foreground">{t(lang, "noActiveListings")}</p>
-            <p className="text-meta">{t(lang, "noActiveListingsDesc")}</p>
-            <div className="mt-1 flex w-full flex-col gap-2">
-              <button
-                type="button"
-                onClick={() => setAlertOpen(true)}
-                className="ease-chrome inline-flex items-center justify-center gap-1.5 rounded-xl border border-border py-2.5 text-sm font-semibold text-foreground hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <BellPlus className="size-4" aria-hidden /> {t(lang, "notifyWhenListed")}
-              </button>
-              <Link
-                href={sellHref}
-                className="ease-chrome inline-flex items-center justify-center rounded-xl border border-border py-2.5 text-sm font-semibold text-foreground hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                {t(lang, "listThisCard")}
-              </Link>
+          </div>
+          <div className="px-4 py-4">
+            <div className="surface-2 rounded-xl p-3 ring-1 ring-[var(--p-hair)]">
+              <div className="flex gap-3 text-left">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-background/55 text-muted-foreground">
+                  <Store className="size-4" aria-hidden />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-foreground">{t(lang, "noActiveListings")}</p>
+                  <p className="text-meta mt-0.5">{t(lang, "noActiveListingsDesc")}</p>
+                </div>
+              </div>
+              <div className="mt-3 grid gap-2">
+                <button
+                  type="button"
+                  onClick={() => setAlertOpen(true)}
+                  className="ease-chrome inline-flex h-10 items-center justify-center gap-1.5 rounded-xl border border-border bg-background/40 px-3 text-sm font-semibold text-foreground hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <BellPlus className="size-4" aria-hidden /> {t(lang, "notifyWhenListed")}
+                </button>
+                <Link
+                  href={sellHref}
+                  className="ease-chrome inline-flex h-10 items-center justify-center rounded-xl px-3 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
+                >
+                  {t(lang, "listThisCard")}
+                </Link>
+              </div>
             </div>
           </div>
+          {/*
+            Keep the empty-state actionable but quieter than the price story:
+            one message, two obvious recovery paths, no large dead vertical space.
+          */}
         </>
       ) : (
         <>
           <div className="flex items-center justify-between px-4 pt-4">
             <p className="text-eyebrow">
-              {t(lang, "sellingNow")} <span className="text-meta tnum">({sorted.length})</span>
+              {t(lang, "sellingNow")}
+              {selectedGradeLabel && <span className="text-meta normal-case"> · {selectedGradeLabel}</span>}
+              <span className="text-meta tnum"> ({sorted.length})</span>
             </p>
             <span className="inline-flex items-center gap-1">
               <span aria-hidden className="size-1.5 rounded-full" style={{ background: "var(--price-up)" }} />
@@ -84,11 +128,16 @@ export function MeecardAsksRail({
 
           <div className="hairline-t mt-3 flex items-center justify-between gap-2 px-4 py-3">
             <span className="text-eyebrow">{t(lang, "lowestAsk")}</span>
-            <span className="flex items-center gap-2">
-              <span className="surface-2 rounded px-1.5 py-0.5 text-overlay text-muted-foreground">{best.condition}</span>
-              <span className="text-h4 tnum text-foreground">
-                {formatByCurrency(best.priceJpy, currency, best.priceThb).primary}
+            <span className="flex min-w-0 flex-col items-end gap-1 text-right">
+              <span className="flex items-center gap-2">
+                <span className="surface-2 rounded px-1.5 py-0.5 text-overlay text-muted-foreground">{best.condition}</span>
+                <span className="text-h4 tnum text-foreground">
+                  {formatByCurrency(best.priceJpy, currency, best.priceThb).primary}
+                </span>
               </span>
+              {bestAboveMarket && (
+                <span className="text-overlay text-muted-foreground">{t(lang, "askAboveMarketSingleSeller")}</span>
+              )}
             </span>
           </div>
 

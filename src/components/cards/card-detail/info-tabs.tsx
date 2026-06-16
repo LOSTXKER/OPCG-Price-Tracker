@@ -14,8 +14,9 @@ import { cn } from "@/lib/utils"
 import { Amount } from "./grade-value"
 import { SourceLogo } from "./source-logo"
 import { mockComps, mockSales30d } from "./mock"
+import type { Stat } from "./grades"
 
-type Tab = "comps" | "listings" | "population"
+export type CardDetailInfoTab = "comps" | "listings" | "population"
 
 function SourceBadge({ s }: { s: string }) {
   return (
@@ -34,9 +35,9 @@ const SAMPLE_POP = [
 ]
 
 /**
- * Lower-section tabs (VISION §5.1): Comps · Listings · Population. Card specs
- * now live beside the image (left column), so this is purely market data.
- * Comps/Population are clean prototype mock; Listings are real.
+ * Lower-section tabs (VISION §5.1): evidence/research below the chart.
+ * Listings can be omitted because live asks already have a dedicated trade rail.
+ * Comps/Population are clean prototype mock; Listings are real when enabled.
  */
 export function CardDetailInfoTabs({
   cardCode,
@@ -45,8 +46,11 @@ export function CardDetailInfoTabs({
   compBase,
   gradeLabel,
   currency,
+  lastSale,
   latestUpdatedAt,
   tabs = ["comps", "listings", "population"],
+  activeTab,
+  onTabChange,
   lang,
 }: {
   cardCode: string
@@ -55,27 +59,37 @@ export function CardDetailInfoTabs({
   compBase: number | null
   gradeLabel: string
   currency: "JPY" | "USD"
+  lastSale?: Stat | null
   latestUpdatedAt?: string | null
   /** Which tabs to show. Defaults to all three; pass a subset to hide one
    *  (e.g. drop "listings" when active asks live in a sibling rail). */
-  tabs?: Tab[]
+  tabs?: CardDetailInfoTab[]
+  activeTab?: CardDetailInfoTab
+  onTabChange?: (tab: CardDetailInfoTab) => void
   lang: Language
 }) {
-  const [tab, setTab] = useState<Tab>(tabs[0] ?? "comps")
+  const [internalTab, setInternalTab] = useState<CardDetailInfoTab>(tabs[0] ?? "comps")
+  const candidateTab = activeTab ?? internalTab
+  const tab = tabs.includes(candidateTab) ? candidateTab : tabs[0] ?? "comps"
+  const setTab = (nextTab: CardDetailInfoTab) => {
+    if (!tabs.includes(nextTab)) return
+    onTabChange?.(nextTab)
+    if (activeTab == null) setInternalTab(nextTab)
+  }
 
-  const comps = mockComps(compBase, gradeLabel)
+  const comps = mockComps(compBase, gradeLabel, 7, { firstSale: lastSale })
   const totalSales = mockSales30d(compBase)
   const baseTime = latestUpdatedAt ? new Date(latestUpdatedAt).getTime() : null
   const compDate = (days: number) => (baseTime ? new Date(baseTime - days * 86_400_000).toISOString() : null)
   const popTotal = SAMPLE_POP.reduce((a, b) => a + b.n, 0)
   const gemPct = SAMPLE_POP.find((r) => r.g === "PSA 10")?.pct ?? null
 
-  const TABS: [Tab, string][] = (
+  const TABS: [CardDetailInfoTab, string][] = (
     [
       ["comps", t(lang, "tabComps")],
       ["listings", t(lang, "tabListings")],
       ["population", t(lang, "tabPopulation")],
-    ] as [Tab, string][]
+    ] as [CardDetailInfoTab, string][]
   ).filter(([k]) => tabs.includes(k))
 
   return (
@@ -106,13 +120,22 @@ export function CardDetailInfoTabs({
       <div className="mt-3">
         {tab === "comps" && (
           <div className="hairline-t">
+            <div className="flex flex-wrap items-center justify-between gap-2 px-4 pb-2 pt-4">
+              <p className="text-eyebrow">{gradeLabel}</p>
+              <p className="text-meta">{t(lang, "receiptMatchesLastSold")}</p>
+            </div>
             {comps.map((c, i) => (
               <div key={i} className={cn("flex items-center gap-3 px-4 py-3", i > 0 && "hairline-t")}>
                 <SourceBadge s={c.source} />
                 <span className="text-xs text-muted-foreground">{c.grade}</span>
+                {i === 0 && (
+                  <span className="surface-2 rounded px-1.5 py-0.5 text-overlay font-semibold uppercase text-muted-foreground">
+                    {t(lang, "lastSold")}
+                  </span>
+                )}
                 <Amount
-                  jpy={currency === "JPY" ? c.price : null}
-                  usd={currency === "USD" ? c.price : null}
+                  jpy={c.priceJpy ?? (currency === "JPY" ? c.price : null)}
+                  usd={c.priceUsd ?? (currency === "USD" ? c.price : null)}
                   size="stat"
                   className="ml-auto text-foreground"
                 />

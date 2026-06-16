@@ -6,12 +6,11 @@ import { Bell, Share2 } from "lucide-react"
 import { CardAddToPortfolio } from "@/components/cards/card-add-to-portfolio"
 import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog"
 import { CompareButton } from "@/components/shared/compare-button"
-import { useUIStore } from "@/stores/ui-store"
-import { t } from "@/lib/i18n"
+import { t, type Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
-const ICON_BTN =
-  "ease-chrome flex size-10 shrink-0 items-center justify-center rounded-xl border border-border surface-2 text-muted-foreground hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+const ACTION_BTN =
+  "ease-chrome inline-flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-xl border border-border/55 bg-transparent px-3 text-sm font-semibold text-muted-foreground hover:border-border hover:bg-foreground/[0.035] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 
 /**
  * Card-detail header actions — one compact row of utilities:
@@ -25,6 +24,7 @@ export function CardDetailActions({
   rarity,
   imageUrl,
   currentPriceJpy,
+  lang,
   className,
 }: {
   cardId: number
@@ -33,9 +33,9 @@ export function CardDetailActions({
   rarity: string
   imageUrl: string | null
   currentPriceJpy: number | null
+  lang: Language
   className?: string
 }) {
-  const lang = useUIStore((s) => s.language)
   const [alertOpen, setAlertOpen] = useState(false)
 
   const handleShare = async () => {
@@ -52,21 +52,22 @@ export function CardDetailActions({
   }
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn("grid w-full grid-cols-2 gap-2 sm:grid-cols-4", className)}>
       <CardAddToPortfolio
         cardId={cardId}
         cardName={displayName}
         variant="outline"
-        iconOnly
-        className="size-10 shrink-0 rounded-xl"
+        className="h-11 justify-center rounded-xl text-sm"
       />
 
-      <button type="button" onClick={() => void handleShare()} aria-label={t(lang, "shareButton")} title={t(lang, "shareButton")} className={ICON_BTN}>
-        <Share2 className="size-4" />
+      <button type="button" onClick={() => void handleShare()} className={ACTION_BTN}>
+        <Share2 className="size-4 shrink-0" aria-hidden />
+        <span className="truncate">{t(lang, "shareButton")}</span>
       </button>
 
-      <button type="button" onClick={() => setAlertOpen(true)} aria-label={t(lang, "setPriceAlertShort")} title={t(lang, "setPriceAlertShort")} className={ICON_BTN}>
-        <Bell className="size-4" />
+      <button type="button" onClick={() => setAlertOpen(true)} className={ACTION_BTN}>
+        <Bell className="size-4 shrink-0" aria-hidden />
+        <span className="truncate">{t(lang, "setPriceAlertShort")}</span>
       </button>
       <CardSetAlertDialog
         cardId={cardId}
@@ -79,8 +80,8 @@ export function CardDetailActions({
       <CompareButton
         item={{ cardCode, name: displayName, imageUrl, rarity }}
         size="md"
-        variant="chip"
-        className="size-10 shrink-0 rounded-xl"
+        variant="label"
+        className="h-11 justify-center rounded-xl text-sm"
       />
     </div>
   )

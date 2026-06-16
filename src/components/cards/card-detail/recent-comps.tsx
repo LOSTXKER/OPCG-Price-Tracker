@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { Amount } from "./grade-value"
 import { SourceLogo } from "./source-logo"
 import { mockComps, mockSales30d } from "./mock"
+import type { Stat } from "./grades"
 
 function SourceBadge({ s }: { s: string }) {
   return (
@@ -28,29 +29,35 @@ export function CardRecentComps({
   compBase,
   gradeLabel,
   currency,
+  firstSale,
   latestUpdatedAt,
   lang,
 }: {
   compBase: number | null
   gradeLabel: string
   currency: "JPY" | "USD"
+  firstSale?: Stat | null
   latestUpdatedAt?: string | null
   lang: Language
 }) {
-  const comps = mockComps(compBase, gradeLabel)
+  const comps = mockComps(compBase, gradeLabel, 7, { firstSale })
   const totalSales = mockSales30d(compBase)
   const baseTime = latestUpdatedAt ? new Date(latestUpdatedAt).getTime() : null
   const compDate = (days: number) => (baseTime ? new Date(baseTime - days * 86_400_000).toISOString() : null)
 
   return (
     <div className="surface-1 hairline overflow-hidden rounded-2xl">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 pb-2 pt-4">
+        <p className="text-eyebrow">{gradeLabel}</p>
+        <p className="text-meta">{t(lang, "receiptMatchesLastSold")}</p>
+      </div>
       {comps.map((c, i) => (
-        <div key={i} className={cn("flex items-center gap-3 px-4 py-3", i > 0 && "hairline-t")}>
+        <div key={i} className={cn("hairline-t flex items-center gap-3 px-4 py-3")}>
           <SourceBadge s={c.source} />
           <span className="text-xs text-muted-foreground">{c.grade}</span>
           <Amount
-            jpy={currency === "JPY" ? c.price : null}
-            usd={currency === "USD" ? c.price : null}
+            jpy={c.priceJpy ?? (currency === "JPY" ? c.price : null)}
+            usd={c.priceUsd ?? (currency === "USD" ? c.price : null)}
             size="stat"
             className="ml-auto text-foreground"
           />

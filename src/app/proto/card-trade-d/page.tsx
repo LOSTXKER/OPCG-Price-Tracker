@@ -137,6 +137,7 @@ export default function CardThreeColProto() {
                 rarity={card.rarity}
                 imageUrl={card.imageUrl}
                 currentPriceJpy={430000}
+                lang={lang}
               />
             </div>
           </div>

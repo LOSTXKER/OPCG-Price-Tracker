@@ -6,6 +6,8 @@
  * (VISION §6); only this file + grades.ts change.
  */
 
+import type { Stat } from "./grades"
+
 // Finer point counts so the line reads as real ticks, not a hand-drawn curve.
 const RANGE_POINTS: Record<string, number> = { "1M": 60, "3M": 90, "1Y": 180, All: 260 }
 
@@ -40,9 +42,12 @@ export function mockSeries(base: number | null, up: boolean, range = "3M"): numb
   }
   // tie the series to the headline by SCALING the whole line so the last point
   // lands exactly on `base` — preserves the shape, no artificial end-cliff.
+  // Keep float precision (don't round to whole units): a cheap card (~25฿) spans
+  // only a few integers, so rounding would collapse the line into a staircase.
+  // The chart plots floats; the hero/tooltip round for display.
   const lastRaw = out[out.length - 1]
   const k = lastRaw > 0 ? b / lastRaw : 1
-  return out.map((x) => Math.round(x * k))
+  return out.map((x) => x * k)
 }
 
 /**
@@ -60,19 +65,52 @@ export function mockGradeSeries(
   return out
 }
 
-export type MockComp = { source: string; grade: string; price: number; whenDays: number }
+export type MockComp = {
+  source: string
+  grade: string
+  price: number
+  priceJpy?: number | null
+  priceUsd?: number | null
+  whenDays: number
+}
+
+type MockCompOptions = {
+  /** Forces the newest receipt row to match the hero/triad "last sale". */
+  firstSale?: Stat | null
+}
 
 const SOURCES = ["SNKRDUNK", "eBay", "Yuyutei", "TCGplayer", "Cardmarket"]
 
 /** A clean recent-sales list (proto-style) seeded by `base`. */
-export function mockComps(base: number | null, gradeLabel: string, count = 7): MockComp[] {
+export function mockComps(
+  base: number | null,
+  gradeLabel: string,
+  count = 7,
+  options: MockCompOptions = {},
+): MockComp[] {
   const b = base && base > 0 ? base : 1200
+  const sourceSeed = Math.abs(Math.round(b)) % SOURCES.length
   return Array.from({ length: count }, (_, i) => ({
-    source: SOURCES[(i + (b % SOURCES.length)) % SOURCES.length],
+    source: SOURCES[(i + sourceSeed) % SOURCES.length],
     grade: gradeLabel,
-    price: Math.round(b * (1 + 0.05 * Math.sin(i + (b % 7)) - (0.015 * i) / count)),
-    whenDays: i === 0 ? 1 : i * 2 + (b % 3),
-  }))
+    ...(() => {
+      if (i === 0 && options.firstSale && (options.firstSale.jpy != null || options.firstSale.usd != null)) {
+        return {
+          source: "SNKRDUNK",
+          price: Math.round(options.firstSale.jpy ?? options.firstSale.usd ?? b),
+          priceJpy: options.firstSale.jpy,
+          priceUsd: options.firstSale.usd,
+          whenDays: 0,
+        }
+      }
+      return {
+        price: Math.round(b * (1 + 0.05 * Math.sin(i + (b % 7)) - (0.015 * i) / count)),
+        priceJpy: null,
+        priceUsd: null,
+        whenDays: i === 0 ? 1 : i * 2 + (Math.round(b) % 3),
+      }
+    })(),
+  })).sort((a, b) => a.whenDays - b.whenDays)
 }
 
 /** A plausible 30-day sales count seeded by `base`. */

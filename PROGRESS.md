@@ -1,33 +1,46 @@
 # 📍 PROGRESS — สถานะสด
-> **เขียนทับทุกครั้ง ไม่สะสม log** (รายละเอียดอยู่ใน git history) · hook โหลดไฟล์นี้ทุก session
-> session ใหม่: อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
+> **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-15 — **card-detail redesign เป็น 3-col layout + minimal trading chart ขึ้นหน้าจริงแล้ว + commit แล้ว** (branch `redesign/card-detail-pricing-layout`)
+อัปเดตล่าสุด: 2026-06-16 — **พอร์ต proto-h (CMC dashboard) เข้าหน้าจริง `/cards/[code]` เสร็จแล้ว** (in-place, wired DB จริง, ผ่าน adversarial review) · branch `redesign/card-detail-pricing-layout`
 
-## ▶ สถานะตอนนี้ (committed)
-- **หน้า `/cards/[code]` = 3 คอลัมน์**: identity เต็มกว้าง → [ซ้าย: รูป+ซื้อขาย+ปุ่ม · กลาง: ราคา+กราฟ overlay+แท็บตลาด · ขวา: พอร์ต+"ขายอยู่บน Meecard"] → ล่างเต็มกว้าง: spec+tier+siblings+related
-- **กราฟ (`mini-chart`/`card-chart`, shared):** overlay หลายเกรดบนสเกลเดียว (ghost ladder) · เส้นหยัก deterministic + แกนราคา Y (gridline + ป้าย HTML) + last-price + scrub tooltip · grade selector อยู่บนกราฟ · chips = `GradeLogo` (โลโก้บริษัท แทนคำว่า PSA) + เลขเกรด
-- **right rail:** `MeecardAsksRail` (active asks จาก `listings` จริง + empty/notify state) · `CardPortfolioCard` (add-to-portfolio จริง ไม่ปลอม holdings)
-- minimal restyle (กราฟ bleed, hairline divider) · แท็บ Comps→ประวัติขายล่าสุด · Gem Rate เด่น · population bar เลิกใช้ gold (เหลือ gold = ปุ่มซื้อจุดเดียว)
-- **proto:** card-trade-c (2-col) / card-trade-d (3-col, ตัวที่เลือก) committed เป็น visual reference
+## ▶ สถานะตอนนี้ — h เข้าหน้าจริงแล้ว ✅
+หน้าจริง `src/components/cards/card-detail.tsx` ถูก rewrite เป็นโครง CMC dashboard ตาม proto `card-trade-h` ที่เบสเลือก (server props interface **ไม่เปลี่ยน** — `src/app/cards/[code]/page.tsx` เหมือนเดิม):
 
-## ⚠️ 2 ปัญหาเปิดค้าง (ต้องตัดสินใจ/แก้)
-1. **กราฟยังเป็น MOCK** — เส้นทั้งหมดมาจาก `mockGradeSeries` (random-walk ปลอม) ไม่ใช่ราคาจริง. `card.chartData` (ประวัติจริง) ถูกส่งเข้า component แล้วแต่ไม่ได้ใช้
-2. **scrape หยุด ~5 เม.ย. 2026** — ข้อมูลล่าสุดในฐานข้อมูลเก่า 2 เดือนกว่า (30 วันล่าสุด = 0 จุดทั้งเว็บ) → ต่อให้ทำกราฟจริง มันจะค้างที่เมษา
+**โครงใหม่ (บนลงล่าง):**
+- utility row: breadcrumb + icons (โปรด/พอร์ต/เทียบ/แชร์/แจ้งเตือน — ของจริงทั้งหมด)
+- **top 3-col** (`lg:grid-cols-[260px_1fr_300px]`): identity (รูปจริง+ชื่อ+rarity+code) · price instrument (EditionToggle + grade ladder chips + **hero เดียว** + delta + subline + range band + ปุ่มทอง "ซื้อบน Meecard") · market-stats rail (ขายล่าสุด/ต่ำสุด/ช่วง30วัน/ปริมาณ/ประชากร)
+- tabs → **mid 2-col** (`[1fr_320px]`): กราฟกว้าง (`ScrubChart`) + grade-ledger rail
+- แหล่งอ้างอิง (ประกาศขาย/ขายไปแล้ว) · ขายบน Meecard (`MeecardAsksRail`) · ข้อมูลการ์ด (`CardDetailSpecs`+effect+`CardTierMeta`) · related/siblings · mobile sticky buy
 
-## 📊 ผลวัดข้อมูลจริง (read-only, 2026-06-15)
-- **Raw แน่นเกือบทุกใบ** (มัธยฐาน 25 จุด/90วัน · 104 จุด/ปี) → เส้น Raw จริงใช้ได้ ✓
-- **PSA 10 บางมาก** (446 ใบมี, ส่วนใหญ่ ~2 จุด · มีแค่ ~26 ใบที่ ≥8 จุด) → ส่วนใหญ่วาดเส้นจริงไม่ได้
-- **ทั้ง DB มีแค่ 2 เกรด: RAW + PSA 10** (9/8/BGS/RawB/C = ไม่มีข้อมูลจริงเลย → ต้อง modeled+ป้าย "est")
+**reuse DB layer เดิม:** `buildGradeData` (grade ladder จาก real anchor + flag `isEst`), `ScrubChart`/`RANGES`/`dateAtIndex` (export ใหม่จาก card-chart.tsx), `MeecardAsksRail`, `CardDetailSpecs`, `CardDetailActions`, grade helpers · เลิกใช้ wrapper `CardChart` (hero แยกออกมาไว้คอลัมน์บน), `MarketEvidence`, `CardBuySell` (ยังอยู่แต่หน้านี้ไม่ใช้)
 
-## 📌 กฎ design-system (จาก VISION §1/§4)
-- honey-gold = accent interactive เดียว **< 5% จอ** · gain/loss เขียว/แดงแยก
-- การ์ดใหญ่ = `.panel` · `surface-*`/`hairline` = chip/control · one hero number/screen · tabular-nums + ▲/▼ ทุก delta
+**ปรับหลัง feedback เบส รอบ 1 (รก/กราฟแปลก/CTA ลับ):**
+- declutter: ตัด stats 5→3 (ตัด ปริมาณ/ประชากร modeled ล้วน) · tabs → 4
+- **กราฟแปลก = `mockSeries` ปัดจำนวนเต็ม** → การ์ดถูก (~25฿) เป็นขั้นบันได · แก้: คืน **float** (เส้นเนียน) ใน `mock.ts`
 
-## ▶ NEXT (เลือกทาง)
-1. **ฟื้น scrape ก่อน** (ดูทำไม cron หยุด — `vercel.json` มี `/api/cron/scrape-snkrdunk` 0 18 * * *) ให้ข้อมูลสด แล้วค่อยต่อกราฟจริง — *แนะนำ*
-2. **ต่อกราฟจริง (Stage 1):** ป้อน `chartData` เข้า `CardChart` + helper `deriveGradeSeries` → Raw/PSA10 วาดจริงตรงที่ข้อมูลพอ, เกรดอื่น = หมุดแบน+"est" (ไม่วาดเส้นปลอม). ⚠️ 120-row cap ใน `card-detail.ts` จำกัดช่วงเป็น ~24 วัน — ต้องแก้ก่อนทำ 1Y/All
-3. **โลโก้เกรด:** หย่อนไฟล์ทางการลง `/public/grades/` (psa.png·bgs.png·cgc.png) → `GradeLogo` swap จากตัวอักษรเป็นโลโก้เอง
-4. Stage 2 (เก็บ PSA 9/8/BGS — ⚠️ เขียน DB ต้องอนุมัติ) · Stage 3 (Grade enum — เลื่อนไว้)
+**ปรับรอบ 2 (CTA ซ้าย / band คืน / กราฟ world-class) — ผ่าน `/workflow` design exploration (9 agents):**
+- **top grid = flat children + `order` + explicit grid placement**: desktop = ซ้าย[รูป+identity+CTA acquire rail] · กลาง[hero+grade chips+range band คืนมา(เขียว)] · ขวา[stats] · **mobile order = รูป→ราคา→CTA→stats** (กัน buy มาก่อนราคา) · ลบ "ต่ำสุด·N รายการ"
+- **กราฟ world-class** (`ScrubChart` rewrite → multi-series ใน card-chart.tsx · legacy `CardChart` ยังใช้ proto c/d/f แก้ให้เรียก series API): **filter Raw|Graded** (สลับ family → set primary + compare options + sources) · **compare overlay หลายเกรด same-family** (กัน Raw JPY ปน Graded USD per judge) · เส้น real=solid, **est=dashed** · crosshair + multi-row tooltip · latest pill/dots ต่อเส้น · global y-scale · **legend** ราคาล่าสุด+EstMark ต่อเส้น · palette `COMPARE_PALETTE` (เลี่ยงทอง/เขียว/แดง)
+- **chart + แหล่งอ้างอิง = 2-col** (lg `[1fr_300px]`) · ขวา = sources (ประกาศขาย/ขายไปแล้ว) · mobile stack · ย้าย section แหล่งอ้างอิงเดิมขึ้นมาเป็น sources column
+- helper: `mockGradeSeries` (per-grade series) · state `compareGrades:Set` · `switchFamily`/`toggleCompare`
+- verify: tsc 0 · lint 0 · test 36 · hydration 0 · CDP click-test compare Raw A/B/C + สลับ Graded ผ่าน
 
-> รายละเอียดแผน pipeline ราย-เกรด: workflow run ใน session 2026-06-15 (understand→plan→adversarial)
+## ⚠️ 3 การตัดสินใจสำคัญ (เพื่อความน่าเชื่อถือ = north star เบส)
+1. **default grade = Raw A** (ราคาตลาดจริง) ไม่ใช่ PSA 10 — กันการ์ดถูกโชว์ headline graded แพงเกินจริง (`gradeData.raw_a.hasData ? "raw_a" : defaultGradeKey`)
+2. **raw = Yuyutei (JPY) เท่านั้น** — ตัด SNKRDUNK USD ออกจาก raw ทั้ง anchor/source/lastSale (มันคือราคา graded ปนเข้ามา ทำให้ "ขายล่าสุด" เพี้ยน 5,861฿ ทั้งที่ raw 25฿) · ตาม doc `grades.ts`: raw→Yuyutei, PSA10→SNKRDUNK
+3. **source row ติด label = เกรดจริงของแหล่ง** (Raw/PSA 10) ไม่ใช่เกรดที่เลือก — ดู PSA 9 (modeled) → source โชว์ "SNKRDUNK · PSA 10 · 5,673฿" + hero "PSA 9 · 2,852฿ EST" = เล่าจริงว่า PSA 9 ประมาณจาก PSA 10
++ ทุกค่า modeled ติด `<EstMark/>` รวม **hero ตัวใหญ่** (เกรด modeled) · currency guard `hydrated?pref:"THB"` เหมือน displayLang
+
+## ✅ verify ครบ (อย่าเคลมลอย)
+tsc 0 · lint 0 · **test 36 ผ่าน** · **hydration 0** (clean restart, console 0 บน OP01-001 + OP01-120) · screenshot desktop+mobile + CDP-click PSA9 ยืนยัน hero EST จริง · **adversarial review workflow 16 agents → 6/12 confirmed แก้หมด**
+
+## ⚠️ gotchas (ก่อนทำต่อ)
+1. **dev restart = kill PID** (`kill $(lsof -nP -iTCP:3000 -sTCP:LISTEN -t)` + `pkill -f "OPCG.*node_modules/.bin/next"` → `npm run dev`) · **ห้าม rm .next** (เบส deny) · หลัง edit จะเห็น "1 Issue"/hydration error = **HMR staleness** ไม่ใช่บั๊กจริง → restart สะอาดแล้วเช็คใหม่ (เครื่องมือ screenshot/console อยู่ใน `.codex/*.mjs`)
+2. **screenshot มือถือ = CDP mobile emulation** (`.codex/shot.mjs`) ไม่ใช่ `--window-size`
+3. ห้าม `npm run build` ระหว่าง `next dev` (clobber .next)
+4. **currency hydration นอกหน้านี้ยังไม่ guard** (card table/header/portfolio อ่าน `currency` ตรง = latent mismatch สำหรับ user ≠THB) — งานแยกทั้งแอป ถ้าจะทำ
+
+## ▶ NEXT
+1. **scrape หยุด ~เม.ย. 2026** → ราคา/กราฟจริงค้าง (เห็นชัด: subline "2 เดือนที่แล้ว") · **กราฟยัง mock** (`mockSeries`) — ฟื้น cron scrape ก่อน แล้วค่อยต่อ Comp/population tables (VISION §6 · ⚠️ migrate ต้องเบสอนุมัติ) → swap est→จริง (โครง UI พร้อม swap แล้ว: แก้แค่ `grades.ts` + data layer)
+2. ขยายหน้าอื่นตาม spine (portfolio hero · marketplace) — VISION §7
+3. proto e/f/g/h เก็บเทียบใน `/proto/` · proto-h = ตัวอ้างอิง fidelity ของหน้าจริง
