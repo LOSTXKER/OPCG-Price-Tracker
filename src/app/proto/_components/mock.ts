@@ -203,3 +203,29 @@ export const SOURCES = [
   { source: "SNKRDUNK", ask: "$268", sold: "$255", updated: "5 ชม." },
   { source: "eBay (EN)", ask: "$205", sold: "$188", updated: "1 วัน" },
 ]
+
+/** Active asks on OUR marketplace — ascending by price (lowest = best ask).
+ *  Prices are display-currency (THB) numbers; the rail formats them. */
+export type Ask = {
+  id: number
+  seller: string
+  rating: number
+  verified: boolean
+  grade: string
+  price: number
+  qty: number
+}
+export const ASKS: Ask[] = [
+  { id: 1, seller: "GrandLineTCG", rating: 4.8, verified: true, grade: "Raw A", price: 96500, qty: 2 },
+  { id: 2, seller: "nami_shop", rating: 4.6, verified: false, grade: "PSA 8", price: 158000, qty: 1 },
+  { id: 3, seller: "KaizokuCards", rating: 4.9, verified: true, grade: "PSA 9", price: 244000, qty: 1 },
+  { id: 4, seller: "OnePieceTH", rating: 5.0, verified: true, grade: "PSA 10", price: 505000, qty: 1 },
+]
+
+/** What the user already OWNS of this card — itemized per grade (a card can be
+ *  held across many grades/conditions at once). value/cost are display-currency. */
+export type Holding = { grade: string; qty: number; value: number; cost: number }
+export const OWNED: Holding[] = [
+  { grade: "PSA 9", qty: 1, value: 244000, cost: 218000 },
+  { grade: "Raw A", qty: 2, value: 96500, cost: 84000 },
+]

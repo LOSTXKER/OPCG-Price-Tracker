@@ -1,11 +1,14 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
 import { ArrowUp } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function ScrollToTop() {
   const [visible, setVisible] = useState(false)
+  const pathname = usePathname()
+  const hideOnMobileCardDetail = /^\/cards\/[^/]+/.test(pathname)
 
   useEffect(() => {
     function onScroll() {
@@ -22,6 +25,7 @@ export function ScrollToTop() {
       aria-label="Scroll to top"
       className={cn(
         "fixed bottom-20 right-4 z-40 flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg backdrop-blur-sm transition-all duration-200 hover:bg-primary/90 md:bottom-8",
+        hideOnMobileCardDetail && "hidden md:flex",
         visible
           ? "translate-y-0 opacity-100"
           : "pointer-events-none translate-y-4 opacity-0"

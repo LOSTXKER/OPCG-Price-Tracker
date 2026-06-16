@@ -30,6 +30,7 @@ export function MissionTracker() {
           await supabase.auth.signOut();
           return;
         }
+        if (e instanceof ApiError && (e.status === 403 || e.status === 404)) return;
         console.error("[honey] mission track failed:", e);
       },
     );

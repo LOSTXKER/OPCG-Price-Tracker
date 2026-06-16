@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils"
 export type Edition = "JP" | "EN"
 
 /**
- * Edition (language) segmented control — JP | EN (VISION §5.1 / §3). A second axis
- * above the grade rail. EN is shown disabled with a "soon" chip until EN pricing
- * lands (VISION §6 / V7) — absence is signalled, not hidden.
+ * Edition (language) segmented control — JP | EN. EN stays selectable even before
+ * pricing lands so the page can show an honest empty state instead of hiding the
+ * future edition axis.
  */
 export function EditionToggle({
   value,
@@ -19,7 +19,7 @@ export function EditionToggle({
   enAvailable?: boolean
 }) {
   return (
-    <div className="surface-2 hairline inline-flex rounded-full p-0.5 text-sm font-semibold">
+    <div className="surface-2 inline-flex rounded-full p-0.5 text-sm font-semibold ring-1 ring-[var(--p-hair)]">
       <button
         type="button"
         onClick={() => onChange("JP")}
@@ -28,27 +28,25 @@ export function EditionToggle({
           "ease-chrome min-h-9 rounded-full px-3 py-1.5",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-inset",
           value === "JP"
-            ? "bg-primary text-primary-foreground"
+            ? "bg-foreground/10 text-foreground"
             : "text-muted-foreground hover:text-foreground",
         )}
       >
-        🇯🇵 JP
+        JP
       </button>
       <button
         type="button"
-        disabled={!enAvailable}
-        onClick={() => enAvailable && onChange("EN")}
+        onClick={() => onChange("EN")}
         aria-pressed={value === "EN"}
         className={cn(
           "ease-chrome inline-flex min-h-9 items-center gap-1 rounded-full px-3 py-1.5",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-inset",
           value === "EN"
-            ? "bg-primary text-primary-foreground"
+            ? "bg-foreground/10 text-foreground"
             : "text-muted-foreground hover:text-foreground",
-          !enAvailable && "cursor-not-allowed opacity-50 hover:text-muted-foreground",
         )}
       >
-        🇬🇧 EN
+        EN
         {!enAvailable && (
           <span className="text-overlay uppercase text-muted-foreground/60">soon</span>
         )}

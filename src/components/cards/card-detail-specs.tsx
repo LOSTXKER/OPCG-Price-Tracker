@@ -56,139 +56,89 @@ function getColorSwatchClass(raw: string | null | undefined): string | null {
   return COLOR_SWATCH[upper] ?? COLOR_SWATCH[first] ?? null
 }
 
-interface SpecTileProps {
-  label: string
-  value: string | number | null | undefined
-  icon: React.ComponentType<{ className?: string }>
-  swatchClass?: string | null
-  emphasis?: boolean
-}
-
-function SpecTile({
-  label,
-  value,
-  icon: Icon,
-  swatchClass,
-  emphasis,
-}: SpecTileProps) {
-  const isEmpty = value == null || value === ""
-  return (
-    <div className="rounded-lg bg-muted/30 px-3 py-2.5">
-      <p className="flex items-center gap-1 text-meta">
-        <Icon className="size-3" />
-        {label}
-      </p>
-      <p
-        className={cn(
-          "mt-0.5 flex items-center gap-1.5 font-price tabular-nums",
-          emphasis ? "text-base font-semibold" : "text-sm font-semibold",
-          // Soften empty placeholders so populated stats stand out and the
-          // tile doesn't visually shout "no data".
-          isEmpty && "font-normal text-muted-foreground/30",
-        )}
-      >
-        {swatchClass && !isEmpty && (
-          <span
-            aria-hidden
-            className={cn(
-              "inline-block size-3 rounded-full ring-1 ring-border/60",
-              swatchClass,
-            )}
-          />
-        )}
-        {isEmpty ? "—" : value}
-      </p>
-    </div>
-  )
-}
-
-// Decide which spec fields are meaningful for this card. CHARACTER cards use
-// every field; LEADER omits counter (leaders can't counter); EVENT and STAGE
-// don't have power / counter / life so we hide those tiles instead of
-// rendering empty `—` placeholders that look like missing data.
+// Which gameplay-stat fields are meaningful for this card type. LEADER omits
+// counter; EVENT/STAGE have no power/counter/life. Within an allowed type we
+// still drop any field that's actually null (below) so the sheet never shows
+// empty "—" rows.
 function getRelevantTiles(cardType: string) {
   const upper = cardType.toUpperCase()
-  if (upper === "LEADER") {
-    return { power: true, counter: false, life: true }
-  }
-  if (upper === "EVENT" || upper === "STAGE") {
-    return { power: false, counter: false, life: false }
-  }
-  // CHARACTER and any unknown type — show full set.
+  if (upper === "LEADER") return { power: true, counter: false, life: true }
+  if (upper === "EVENT" || upper === "STAGE") return { power: false, counter: false, life: false }
   return { power: true, counter: true, life: true }
 }
 
+interface SpecRow {
+  label: string
+  icon: React.ComponentType<{ className?: string }>
+  value: React.ReactNode
+  numeric?: boolean
+  emphasis?: boolean
+}
+
+/**
+ * Card spec sheet (left column, beside the image). A clean label–value list:
+ * categorical fields read as text, gameplay numbers use the tabular price font,
+ * null fields are dropped entirely, and the long trait gets its own full-width
+ * row so it never gets crushed into a half cell.
+ */
 export function CardDetailSpecs({ card, lang }: CardDetailSpecsProps) {
   const colorValue = card.colorEn ?? card.color
-  const swatchClass =
-    getColorSwatchClass(card.color) ?? getColorSwatchClass(card.colorEn)
-  const tiles = getRelevantTiles(card.cardType)
+  const swatchClass = getColorSwatchClass(card.color) ?? getColorSwatchClass(card.colorEn)
+  const allow = getRelevantTiles(card.cardType)
 
-  // Collect visible tiles so the grid auto-sizes (no orphan empty cells).
-  const visible: Array<SpecTileProps> = [
-    { label: t(lang, "type"), value: card.cardType, icon: Swords },
+  const rows: SpecRow[] = [
+    { label: t(lang, "type"), icon: Swords, value: card.cardType },
     {
       label: t(lang, "color"),
-      value: colorValue,
       icon: Palette,
-      swatchClass,
+      value: (
+        <span className="inline-flex items-center gap-1.5">
+          {swatchClass && (
+            <span aria-hidden className={cn("inline-block size-2.5 rounded-full ring-1 ring-border/60", swatchClass)} />
+          )}
+          {colorValue}
+        </span>
+      ),
     },
-    { label: t(lang, "cost"), value: card.cost, icon: Coins },
   ]
-  if (tiles.power) {
-    visible.push({
-      label: t(lang, "power"),
-      value: card.power,
-      icon: Zap,
-      emphasis: card.power != null,
-    })
-  }
-  if (tiles.counter) {
-    visible.push({
-      label: t(lang, "counter"),
-      value: card.counter,
-      icon: Shield,
-    })
-  }
-  if (tiles.life) {
-    visible.push({ label: t(lang, "life"), value: card.life, icon: Heart })
-  }
+  if (card.cost != null) rows.push({ label: t(lang, "cost"), icon: Coins, value: card.cost, numeric: true })
+  if (allow.power && card.power != null) rows.push({ label: t(lang, "power"), icon: Zap, value: card.power, numeric: true, emphasis: true })
+  if (allow.counter && card.counter != null) rows.push({ label: t(lang, "counter"), icon: Shield, value: card.counter, numeric: true })
+  if (allow.life && card.life != null) rows.push({ label: t(lang, "life"), icon: Heart, value: card.life, numeric: true })
+  if (card.attribute) rows.push({ label: t(lang, "attribute"), icon: Crosshair, value: card.attribute })
 
   return (
-    <div className="panel p-5">
-      <p className="mb-3 text-meta">{t(lang, "details")}</p>
-      <div
-        className={cn(
-          "grid gap-2",
-          // 3 cols on mobile, scale up to match number of tiles on desktop
-          // so we don't end up with a half-empty row.
-          visible.length <= 3 ? "grid-cols-3" : "grid-cols-3 sm:grid-cols-6",
-        )}
-      >
-        {visible.map((tile) => (
-          <SpecTile key={tile.label} {...tile} />
-        ))}
-      </div>
-      {(card.attribute || card.trait) && (
-        <div className="mt-2 grid grid-cols-2 gap-2">
-          {card.attribute && (
-            <div className="rounded-lg bg-muted/30 px-3 py-2.5">
-              <p className="flex items-center gap-1 text-meta">
-                <Crosshair className="size-3" />
-                {t(lang, "attribute")}
-              </p>
-              <p className="mt-0.5 text-sm">{card.attribute}</p>
+    <div className="hairline-t pt-4">
+      <p className="mb-1 text-meta">{t(lang, "details")}</p>
+      <dl>
+        {rows.map((r, i) => {
+          const Icon = r.icon
+          return (
+            <div key={r.label} className={cn("flex items-center justify-between gap-3 py-2.5", i > 0 && "hairline-t")}>
+              <dt className="text-meta flex shrink-0 items-center gap-1.5">
+                <Icon className="size-3.5" />
+                {r.label}
+              </dt>
+              <dd
+                className={cn(
+                  "min-w-0 truncate text-right text-foreground",
+                  r.numeric && "font-price tabular-nums",
+                  r.emphasis ? "text-base font-bold" : "text-sm font-semibold",
+                )}
+              >
+                {r.value}
+              </dd>
             </div>
-          )}
-          {card.trait && (
-            <div className="rounded-lg bg-muted/30 px-3 py-2.5">
-              <p className="flex items-center gap-1 text-meta">
-                <Fingerprint className="size-3" />
-                {t(lang, "trait")}
-              </p>
-              <p className="mt-0.5 text-sm">{card.trait}</p>
-            </div>
-          )}
+          )
+        })}
+      </dl>
+      {card.trait && (
+        <div className="hairline-t mt-1 pt-3">
+          <p className="text-meta mb-1 flex items-center gap-1.5">
+            <Fingerprint className="size-3.5" />
+            {t(lang, "trait")}
+          </p>
+          <p className="text-sm leading-relaxed text-foreground">{card.trait}</p>
         </div>
       )}
     </div>

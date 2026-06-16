@@ -1,15 +1,22 @@
 "use client"
 
 import { useState } from "react"
-import { Bell } from "lucide-react"
+import { Bell, Share2 } from "lucide-react"
 
 import { CardAddToPortfolio } from "@/components/cards/card-add-to-portfolio"
 import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog"
 import { CompareButton } from "@/components/shared/compare-button"
-import { useUIStore } from "@/stores/ui-store"
-import { t } from "@/lib/i18n"
+import { t, type Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
+const ACTION_BTN =
+  "ease-chrome inline-flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-xl border border-border/55 bg-transparent px-3 text-sm font-semibold text-muted-foreground hover:border-border hover:bg-foreground/[0.035] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+
+/**
+ * Card-detail header actions — one compact row of utilities:
+ * Add-to-portfolio (labelled) + Share + Alert + Compare. Lives top-right of the
+ * page header; the primary Buy/Sell live with the grade selector instead.
+ */
 export function CardDetailActions({
   cardId,
   cardCode,
@@ -17,6 +24,7 @@ export function CardDetailActions({
   rarity,
   imageUrl,
   currentPriceJpy,
+  lang,
   className,
 }: {
   cardId: number
@@ -25,31 +33,42 @@ export function CardDetailActions({
   rarity: string
   imageUrl: string | null
   currentPriceJpy: number | null
+  lang: Language
   className?: string
 }) {
-  const lang = useUIStore((s) => s.language)
   const [alertOpen, setAlertOpen] = useState(false)
 
+  const handleShare = async () => {
+    const url = typeof window !== "undefined" ? window.location.href : ""
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share({ title: displayName, url })
+      } else {
+        await navigator.clipboard?.writeText(url)
+      }
+    } catch {
+      /* user dismissed the share sheet — nothing to do */
+    }
+  }
+
   return (
-    <div className={cn("flex w-full flex-wrap items-center gap-2 sm:w-auto", className)}>
-      {/* Primary CTA stretches on mobile so it remains thumb-friendly, but
-          shrinks to its content on >= sm so it doesn't look oversized when
-          placed in a wide right-column on desktop. */}
+    <div className={cn("grid w-full grid-cols-2 gap-2 sm:grid-cols-4", className)}>
       <CardAddToPortfolio
         cardId={cardId}
         cardName={displayName}
-        className="h-11 flex-1 justify-center px-5 sm:h-9 sm:flex-none"
+        variant="outline"
+        className="h-11 justify-center rounded-xl text-sm"
       />
 
-      <button
-        type="button"
-        onClick={() => setAlertOpen(true)}
-        className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-border bg-background px-3 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
-      >
-        <Bell className="size-3.5" />
-        {t(lang, "setPriceAlertShort")}
+      <button type="button" onClick={() => void handleShare()} className={ACTION_BTN}>
+        <Share2 className="size-4 shrink-0" aria-hidden />
+        <span className="truncate">{t(lang, "shareButton")}</span>
       </button>
 
+      <button type="button" onClick={() => setAlertOpen(true)} className={ACTION_BTN}>
+        <Bell className="size-4 shrink-0" aria-hidden />
+        <span className="truncate">{t(lang, "setPriceAlertShort")}</span>
+      </button>
       <CardSetAlertDialog
         cardId={cardId}
         cardName={displayName}
@@ -60,9 +79,9 @@ export function CardDetailActions({
 
       <CompareButton
         item={{ cardCode, name: displayName, imageUrl, rarity }}
-        size="sm"
+        size="md"
         variant="label"
-        className="h-9 rounded-md"
+        className="h-11 justify-center rounded-xl text-sm"
       />
     </div>
   )

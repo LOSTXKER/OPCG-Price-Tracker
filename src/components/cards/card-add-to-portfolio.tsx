@@ -23,10 +23,14 @@ export function CardAddToPortfolio({
   cardId,
   cardName,
   className,
+  variant = "default",
+  iconOnly = false,
 }: {
   cardId: number
   cardName: string
   className?: string
+  variant?: "default" | "outline" | "secondary" | "ghost"
+  iconOnly?: boolean
 }) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
@@ -96,13 +100,15 @@ export function CardAddToPortfolio({
   return (
     <>
       <Button
-        variant="default"
+        variant={variant}
         size="sm"
         onClick={() => { setOpen(true); setQuantity("1"); setPrice(""); setDone(false); setError(null) }}
+        aria-label={iconOnly ? t(lang, "addToPort") : undefined}
+        title={iconOnly ? t(lang, "addToPort") : undefined}
         className={cn("gap-1.5", className)}
       >
-        <Briefcase className="size-3.5" />
-        {t(lang, "addToPort")}
+        <Briefcase className={iconOnly ? "size-4" : "size-3.5"} />
+        {!iconOnly && t(lang, "addToPort")}
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>

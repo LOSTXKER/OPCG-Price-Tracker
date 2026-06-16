@@ -1,46 +1,46 @@
 # 📍 PROGRESS — สถานะสด
-> **เขียนทับทุกครั้ง ไม่สะสม log** (รายละเอียดอยู่ใน git history) · hook โหลดไฟล์นี้ทุก session
-> session ใหม่: อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
+> **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-14 — **เขียนแผนดีไซน์ใหม่เสร็จ (world-class, de-versioned) ลง [VISION.md](VISION.md) + build order ใน [PLAN.md](PLAN.md)** · จาก research 8 lane (platform ระดับโลก) · จัดบ้านเอกสารเรียบแล้วก่อนหน้า
+อัปเดตล่าสุด: 2026-06-16 — **พอร์ต proto-h (CMC dashboard) เข้าหน้าจริง `/cards/[code]` เสร็จแล้ว** (in-place, wired DB จริง, ผ่าน adversarial review) · branch `redesign/card-detail-pricing-layout`
 
-## ▶ สถานะตอนนี้
-- **[VISION.md](VISION.md) = แผนดีไซน์ฉบับสมบูรณ์** (เขียนใหม่จาก research workflow 8 lane): identity warm-premium · 3-axis IA · **atom kit** · visual-system discipline · **per-surface spec เต็ม** (card detail+grades+SNKR comps · marketplace+escrow · portfolio honesty · deck/meta/tier · chat/profile/reputation · ads+AdSense · multi-game/Pokémon) · data-model evolution · reference platforms
-- **[PLAN.md](PLAN.md) §🎨 Redesign = build order** (de-versioned, ไม่มี v1/v2): Foundation → Card detail → Portfolio → Marketplace → Chat → PLAY → Ads → Multi-game
-- **เอกสารจัดเรียบแล้ว** (รอบก่อน): CLAUDE (entry+map) → @AGENTS · SPEC · PLAN · PROGRESS · VISION · doc/archive (REDESIGN เก่า) · ลบ .claude/CLAUDE.md ซ้ำ · dev.md ตามวงจรเดียวกัน
-- **โค้ดที่แตะแล้ว (ยังไม่ commit, working tree):** warm primitive kit ใน `globals.css` + card-detail refine pass-1 (glow/sticky/honey-toggle/frost) · ผ่าน verify + adversarial review
+## ▶ สถานะตอนนี้ — h เข้าหน้าจริงแล้ว ✅
+หน้าจริง `src/components/cards/card-detail.tsx` ถูก rewrite เป็นโครง CMC dashboard ตาม proto `card-trade-h` ที่เบสเลือก (server props interface **ไม่เปลี่ยน** — `src/app/cards/[code]/page.tsx` เหมือนเดิม):
 
-## 📌 กฎ design-system (ใช้ทุก surface — จาก VISION §1/§4)
-- honey-gold = accent interactive เดียว **< 5% ของจอ** (active/selected/focus/CTA) · gain/loss เขียวแดงแยก · per-game tint ทับไม่กลบ honey
-- **การ์ดเนื้อหาใหญ่ = `.panel`** · `surface-*`/`hairline` = chip/control/nested · `.hairline` unlayered → อย่าผสม ring/shadow บน element เดียว
-- one hero number/screen · tabular-nums + ▲/▼ ทุก delta · ศูนย์ spinner (skeleton รูปร่างตาม content) · atom kit ใช้ซ้ำทุกหน้า
+**โครงใหม่ (บนลงล่าง):**
+- utility row: breadcrumb + icons (โปรด/พอร์ต/เทียบ/แชร์/แจ้งเตือน — ของจริงทั้งหมด)
+- **top 3-col** (`lg:grid-cols-[260px_1fr_300px]`): identity (รูปจริง+ชื่อ+rarity+code) · price instrument (EditionToggle + grade ladder chips + **hero เดียว** + delta + subline + range band + ปุ่มทอง "ซื้อบน Meecard") · market-stats rail (ขายล่าสุด/ต่ำสุด/ช่วง30วัน/ปริมาณ/ประชากร)
+- tabs → **mid 2-col** (`[1fr_320px]`): กราฟกว้าง (`ScrubChart`) + grade-ledger rail
+- แหล่งอ้างอิง (ประกาศขาย/ขายไปแล้ว) · ขายบน Meecard (`MeecardAsksRail`) · ข้อมูลการ์ด (`CardDetailSpecs`+effect+`CardTierMeta`) · related/siblings · mobile sticky buy
 
-## ▶ สถานะ build (ยังไม่ commit · อยู่ working tree)
-- **Card detail = proto visionary port (สะอาด, mock-filled)** — เบสชอบ proto กว่า (โมเดิร์น/ไม่รก) + สั่ง "ถอด est, ใช้ mock เติมให้เต็ม เพื่อดูโครงสร้าง UI": grid `340px/1fr` (ซ้าย sticky image+identity+EditionToggle+CTA · ขวา hero ใหญ่ (scrub-rebind) + 3-stat box + grade chips outline + **clean area chart** (`mini-chart` แทน Recharts) + range 1M/3M/1Y/All + High/Avg/Low + tabs Comps/Listings/Population/Specs)
-- **ถอด "est" ออกหมด** (เบสว่ารก) · ใช้ `mock.ts` (deterministic, ไม่มี RNG) เติม series/comps/sales · ของจริง (Raw A=Yuyutei, PSA 10=SNKR) ยังจริง · ⚠️ **prototype phase = mock เพื่อดู UI** — ตอน launch จริงต้องกลับมาทำ honesty labeling (VISION §5.1)
-- **logo แหล่งจริง** (favicon ดึงจริง เก็บ `public/sources/`: SNKRDUNK/Yuyutei/eBay/TCGplayer/Cardmarket/Mercari) + `SourceLogo` atom → โชว์ใน Comps แทนจุดสี
-- **font:** คง **Kanit** (= font ที่ proto ใช้ · proto ไม่ได้ตั้ง font เอง) · **เปลี่ยนตัวเลขใน card-detail จาก JetBrains Mono → Kanit tabular (`.tnum`)** = ตรงกับ proto (เลขดูเนียน ไม่ใช่ monospace แข็ง)
-- verify ครบ (tsc/lint 0err/build/test 36/36) · ยังไม่ commit
-- **Foundation slice 1 ✅** motion/elevation token (`--dur-*`/`--ease-*`/`--elev-*`) + button/`.ease-chrome`/`.rise` → token · atom kit หลักมีอยู่แล้ว (`PriceDisplay`/`Surface`/`Skeleton`/`ListRow`)
-- **Card detail เต็มภาพ ✅** (data-safe) — GradeRail (Raw A/B/C·PSA 10/9/8·BGS) + EditionToggle + stat row + Recent prices feed + population + chart · atoms ใหม่ 5 ไฟล์ (`grades.ts`/`grade-value`/`grade-rail`/`edition-toggle`/`recent-sales`/`population-strip`)
-- **ผ่าน 2 รอบ adversarial review:** รอบแรกเจอ 22 (รวม 1 blocker honesty) → fix หมด · รอบ recheck ยืนยัน **ปิดครบ ไม่มี residual**
-- **verify:** tsc ✓ · lint 0 err ✓ · build ✓ · test 36/36 ✓
-- **honesty model:** เกรดมีข้อมูลจริง (Raw A=Yuyutei · PSA 10=SNKR) = ของจริง · เกรดอื่น = "est." (ติดป้าย+tooltip+aria) · last-sale = ข้อมูลขายจริงเท่านั้น · recent-prices ทุกแถวติดป้าย Sold/Listed จาก type จริง
+**reuse DB layer เดิม:** `buildGradeData` (grade ladder จาก real anchor + flag `isEst`), `ScrubChart`/`RANGES`/`dateAtIndex` (export ใหม่จาก card-chart.tsx), `MeecardAsksRail`, `CardDetailSpecs`, `CardDetailActions`, grade helpers · เลิกใช้ wrapper `CardChart` (hero แยกออกมาไว้คอลัมน์บน), `MarketEvidence`, `CardBuySell` (ยังอยู่แต่หน้านี้ไม่ใช้)
 
-## ▶ Proto-port ทั้งแอป (เบสสั่ง · restyle proto + เสียบระบบจริง · chrome ก่อน)
-- **Phase 1 Chrome ✅ (restyle-only, verified live):** header/header-mobile = `frost` + hairline · nav active = honey-soft pill · bottom-nav `frost` · game-switcher + search = proto pill (surface-2/ring) · wiring เดิมครบ (useHeaderData/flag/search/game) · proto = **top-nav** (ไม่ใช่ sidebar — เบสเคาะ restyle top-nav)
-- เหลือ chrome ปลีกย่อย (optional): mobile-menu-sheet (More drawer) · quick-pill icons (amber/blue) ยัง hardcode สี
-- **ลำดับถัดไป:** Home → Browse → Portfolio (L, Robinhood hero) → More → Marketplace (flag-off) · port plan เต็มอยู่ใน workflow output (transcript)
-- ⚠️ **dev watcher ไม่จับ tool-writes** → ต้อง restart dev + curl-verify ทุก batch (dev รันอยู่ background)
+**ปรับหลัง feedback เบส รอบ 1 (รก/กราฟแปลก/CTA ลับ):**
+- declutter: ตัด stats 5→3 (ตัด ปริมาณ/ประชากร modeled ล้วน) · tabs → 4
+- **กราฟแปลก = `mockSeries` ปัดจำนวนเต็ม** → การ์ดถูก (~25฿) เป็นขั้นบันได · แก้: คืน **float** (เส้นเนียน) ใน `mock.ts`
+
+**ปรับรอบ 2 (CTA ซ้าย / band คืน / กราฟ world-class) — ผ่าน `/workflow` design exploration (9 agents):**
+- **top grid = flat children + `order` + explicit grid placement**: desktop = ซ้าย[รูป+identity+CTA acquire rail] · กลาง[hero+grade chips+range band คืนมา(เขียว)] · ขวา[stats] · **mobile order = รูป→ราคา→CTA→stats** (กัน buy มาก่อนราคา) · ลบ "ต่ำสุด·N รายการ"
+- **กราฟ world-class** (`ScrubChart` rewrite → multi-series ใน card-chart.tsx · legacy `CardChart` ยังใช้ proto c/d/f แก้ให้เรียก series API): **filter Raw|Graded** (สลับ family → set primary + compare options + sources) · **compare overlay หลายเกรด same-family** (กัน Raw JPY ปน Graded USD per judge) · เส้น real=solid, **est=dashed** · crosshair + multi-row tooltip · latest pill/dots ต่อเส้น · global y-scale · **legend** ราคาล่าสุด+EstMark ต่อเส้น · palette `COMPARE_PALETTE` (เลี่ยงทอง/เขียว/แดง)
+- **chart + แหล่งอ้างอิง = 2-col** (lg `[1fr_300px]`) · ขวา = sources (ประกาศขาย/ขายไปแล้ว) · mobile stack · ย้าย section แหล่งอ้างอิงเดิมขึ้นมาเป็น sources column
+- helper: `mockGradeSeries` (per-grade series) · state `compareGrades:Set` · `switchFamily`/`toggleCompare`
+- verify: tsc 0 · lint 0 · test 36 · hydration 0 · CDP click-test compare Raw A/B/C + สลับ Graded ผ่าน
+
+## ⚠️ 3 การตัดสินใจสำคัญ (เพื่อความน่าเชื่อถือ = north star เบส)
+1. **default grade = Raw A** (ราคาตลาดจริง) ไม่ใช่ PSA 10 — กันการ์ดถูกโชว์ headline graded แพงเกินจริง (`gradeData.raw_a.hasData ? "raw_a" : defaultGradeKey`)
+2. **raw = Yuyutei (JPY) เท่านั้น** — ตัด SNKRDUNK USD ออกจาก raw ทั้ง anchor/source/lastSale (มันคือราคา graded ปนเข้ามา ทำให้ "ขายล่าสุด" เพี้ยน 5,861฿ ทั้งที่ raw 25฿) · ตาม doc `grades.ts`: raw→Yuyutei, PSA10→SNKRDUNK
+3. **source row ติด label = เกรดจริงของแหล่ง** (Raw/PSA 10) ไม่ใช่เกรดที่เลือก — ดู PSA 9 (modeled) → source โชว์ "SNKRDUNK · PSA 10 · 5,673฿" + hero "PSA 9 · 2,852฿ EST" = เล่าจริงว่า PSA 9 ประมาณจาก PSA 10
++ ทุกค่า modeled ติด `<EstMark/>` รวม **hero ตัวใหญ่** (เกรด modeled) · currency guard `hydrated?pref:"THB"` เหมือน displayLang
+
+## ✅ verify ครบ (อย่าเคลมลอย)
+tsc 0 · lint 0 · **test 36 ผ่าน** · **hydration 0** (clean restart, console 0 บน OP01-001 + OP01-120) · screenshot desktop+mobile + CDP-click PSA9 ยืนยัน hero EST จริง · **adversarial review workflow 16 agents → 6/12 confirmed แก้หมด**
+
+## ⚠️ gotchas (ก่อนทำต่อ)
+1. **dev restart = kill PID** (`kill $(lsof -nP -iTCP:3000 -sTCP:LISTEN -t)` + `pkill -f "OPCG.*node_modules/.bin/next"` → `npm run dev`) · **ห้าม rm .next** (เบส deny) · หลัง edit จะเห็น "1 Issue"/hydration error = **HMR staleness** ไม่ใช่บั๊กจริง → restart สะอาดแล้วเช็คใหม่ (เครื่องมือ screenshot/console อยู่ใน `.codex/*.mjs`)
+2. **screenshot มือถือ = CDP mobile emulation** (`.codex/shot.mjs`) ไม่ใช่ `--window-size`
+3. ห้าม `npm run build` ระหว่าง `next dev` (clobber .next)
+4. **currency hydration นอกหน้านี้ยังไม่ guard** (card table/header/portfolio อ่าน `currency` ตรง = latent mismatch สำหรับ user ≠THB) — งานแยกทั้งแอป ถ้าจะทำ
 
 ## ▶ NEXT
-1. **เบสเปิดดูจริง** `localhost:3000/cards/<code>` (hard-refresh) — เคาะว่าโทน/layout โอเค
-2. **commit checkpoint** (docs + foundation + card-detail) ถ้าเบสโอเค — เป็นก้อนใหญ่, เบสอนุมัติก่อน
-3. **ไป surface ถัดไปตาม spine:** Portfolio (§4.3 — fix honesty inflow/outflow + Robinhood hero) → Marketplace → Chat → PLAY → Ads → Multi-game
-4. ⚠️ **เปลี่ยน est → จริง** ต้อง schema (Grade enum · edition JP/EN · Comp/population tables) = **เบสอนุมัติ migrate** · โครง UI พร้อม swap แล้ว
-5. (เก็บตก) orphan i18n keys เก่า (`marketPriceHelp`/`lastSoldHelp`/`noSoldHistory` — pre-existing, ไม่ใช้แล้วหลัง rewrite) ลบตอนกวาด · ทยอย migrate ~20 ไฟล์ hardcode `duration-*` → token
-
-## ⚠️ permission / workflow
-- commit/push → **เบสอนุมัติก่อน** (ไม่มี override เฟสแล้ว) · ถือ [AGENTS.md](AGENTS.md): typography token · breakpoints · table→list `<sm` · apiHandler/Zod · วงจรการทำงาน
-- verify gate: `npx tsc --noEmit` · `npm run lint` (baseline 0 err) · `npm run test` (36/36) · `npm run build`
-- research เต็ม (8 lane, reference platforms + concrete spec) อยู่ใน git/transcript — VISION §8 = ดัชนี reference
+1. **scrape หยุด ~เม.ย. 2026** → ราคา/กราฟจริงค้าง (เห็นชัด: subline "2 เดือนที่แล้ว") · **กราฟยัง mock** (`mockSeries`) — ฟื้น cron scrape ก่อน แล้วค่อยต่อ Comp/population tables (VISION §6 · ⚠️ migrate ต้องเบสอนุมัติ) → swap est→จริง (โครง UI พร้อม swap แล้ว: แก้แค่ `grades.ts` + data layer)
+2. ขยายหน้าอื่นตาม spine (portfolio hero · marketplace) — VISION §7
+3. proto e/f/g/h เก็บเทียบใน `/proto/` · proto-h = ตัวอ้างอิง fidelity ของหน้าจริง

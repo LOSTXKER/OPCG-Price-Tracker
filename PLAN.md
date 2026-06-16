@@ -20,6 +20,20 @@
 - [x] stat row: hero (เกรดที่เลือก) + Δ30d + freshness + "est." disclosure (tooltip+aria) — **เลิก fabricate ask, last-sale = ข้อมูลจริงเท่านั้น + source attribution**
 - [x] Recent prices feed (ทุกแถวติดป้าย Sold/Listed จาก `type` จริง + เกรดจริงต่อแถว) · chart bound เกรด · population strip (graded, sample-labeled)
 - [x] honesty/a11y fix รอบรีวิว: focus ring · aria-pressed (เลิก fake tablist) · `key={card.id}` กัน stale · sticky bar grade-aware · i18n 9 keys ×3 · Delta neutral 0%
+- [x] **proto-e UX pass:** production/proto audit → left acquire rail รวมรูป+buy+asks เป็น region เดียว · chart-dominant main · quiet grade rail + JP/EN off-track · hero/triad/chart/recent receipt grade-locked · scrub morphs hero · reconciler/outlier annotations · mobile sticky bar + bottom padding · ลด number repetition บน fold · verify lint+tsc+Browser screenshots
+- [x] **world-class card detail pass 2:** mobile breadcrumb → short meta · Raw/Graded/Pop mode + controlled population tab · grade rail filter ตาม mode · price instrument polish (hero/triad/chart/range controls) · sticky buy bar แสดงหลังผ่าน chart zone เท่านั้น · empty asks/action rail ใช้งานได้จริง · i18n TH/EN/JP · verify lint+tsc+Chrome screenshots+console 0
+- [x] **world-class card detail pass 3:** mobile first fold กระชับขึ้น · premium/trust left rail · chart latest/high/low markers · CTA wording + empty asks ให้ตัดสินใจง่ายขึ้น · verify lint+tsc+test+Chrome screenshots+console 0
+- [x] **world-class card detail pass 4:** ตัด Listings tab ใต้กราฟที่ซ้ำกับ asks rail · ทำ CTA rail ให้คนใหม่เข้าใจทันที · sticky mobile พาไป section ซื้อ/ขายบนหน้าเดียว · verify lint+tsc+test+screenshots
+- [x] **world-class card detail pass 5:** เอา desktop image/acquire rail ออกจาก sticky ให้เลื่อนตามหน้า · mobile sticky CTA คงเดิมหลังผ่าน chart · verify lint+tsc+test+Browser screenshots
+- [x] **world-class card detail pass 6:** minimal JP/EN edition-first reference price · Raw/PSA10 condition · market evidence จาก source จริงเท่านั้น · CTA มี label ชัด · verify lint+tsc+test+Browser checks
+- [x] **world-class card detail pass 7:** แยกใต้กราฟเป็นตั้งขายล่าสุด/ขายล่าสุด · More grades แบบข้อมูลไม่พอสำหรับ PSA 9/8/BGS · ย้าย utility CTA ไปหัวหน้า · left rail เบาลง · verify lint+tsc+test+Browser checks
+- [x] **world-class card detail pass 8:** price-first hierarchy จริงขึ้น · ตัด honey glow หลัง hero · left rail เหลือรูปอย่างเดียว · ย้าย market/action/trade หลังกราฟให้เต็มความกว้าง desktop · action strip เบาลงและ label ชัด · verify tsc+lint+test+Browser console/no-scroll checks
+- [x] **พอร์ต proto-h (CMC dashboard) เข้าหน้าจริง `/cards/[code]`** (เบสเลือก h · in-place · reuse DB layer) ✅:
+  - [x] s0: i18n keys ที่ขาด ×3 ภาษา (gradePrices·referenceSources·marketStats·range30d·volume30d·population·viewSaleHistory·viewAllGrades·medianSources·soldTab·asksTab·buyOnMeecard·cardInfo·midPrice·itemsUnit)
+  - [x] s1: export `ScrubChart`/`RANGES`/`dateAtIndex` จาก `card-chart.tsx` (reuse SVG โดยไม่เอา hero wrapper)
+  - [x] s2: rewrite `card-detail.tsx` เป็นโครง h — top 3-col (identity·price-instrument+GradeLadder·market-stats rail) → tabs → mid 2-col (chart กว้าง·grade-ledger rail) → แหล่งอ้างอิง(asks/sold)·ขายบน Meecard·ข้อมูลการ์ด·related · mobile sticky buy · selectedGrade(GradeKey) raw-first default แทน raw/psa10 toggle · ของ modeled ติด EstMark ทุกตัว · **raw=Yuyutei-only (กัน SNKRDUNK USD ปนราคา graded)**
+  - [x] s3: verify tsc 0 · lint 0 · test 36 pass · hydration 0 (clean restart) · screenshot desktop+mobile เทียบ proto-h fidelity สูง
+  - [x] s4: adversarial review workflow (5 มิติ, 16 agents) → confirmed 6/12 → แก้หมด: hero EstMark (modeled grade), `relativeTime` ใน render → `relativeDaysLabel` pure จาก `daysSinceUpdate` + mounted-gate source time, currency guard (hydrated→THB), h1→`.text-h3`, `Parallel`→i18n · +ตาเห็นเอง: source row label = เกรดจริงของแหล่ง (PSA 10) ไม่ใช่เกรดที่เลือก
 - [ ] **เปลี่ยน est → ข้อมูลจริง** เมื่อมี schema: Grade enum (Raw A/B/C·PSA 9/8) + edition JP/EN column + `Comp`/population tables (⚠️ เบสอนุมัติ migrate) — โครง UI พร้อม swap แล้ว
 
 ### Portfolio — honesty + Robinhood hero

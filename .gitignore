@@ -52,6 +52,8 @@ next-env.d.ts
 # AI / local — กันความลับ+ไฟล์ส่วนตัวหลุดขึ้น git
 CLAUDE.local.md
 .claude/settings.local.json
+# local screenshot/CDP tooling + scratch artifacts (Nami)
+.codex/
 
 # generated artifact (render จาก REDESIGN.md ด้วย /tmp/md2html.mjs)
 REDESIGN.html
