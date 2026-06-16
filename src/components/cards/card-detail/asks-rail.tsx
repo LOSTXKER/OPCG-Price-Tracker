@@ -121,34 +121,43 @@ export function MeecardAsksRail({
               <span className="text-meta tnum"> ({sorted.length})</span>
             </p>
             <span className="inline-flex items-center gap-1">
-              <span aria-hidden className="size-1.5 rounded-full" style={{ background: "var(--price-up)" }} />
+              <span aria-hidden className="size-1.5 rounded-full" style={{ background: "var(--success)" }} />
               <span className="text-micro text-muted-foreground">{t(lang, "liveLabel")}</span>
             </span>
           </div>
 
-          <div className="hairline-t mt-3 flex items-center justify-between gap-2 px-4 py-3">
-            <span className="text-eyebrow">{t(lang, "lowestAsk")}</span>
-            <span className="flex min-w-0 flex-col items-end gap-1 text-right">
-              <span className="flex items-center gap-2">
-                <span className="surface-2 rounded px-1.5 py-0.5 text-overlay text-muted-foreground">{best.condition}</span>
-                <span className="text-h4 tnum text-foreground">
-                  {formatByCurrency(best.priceJpy, currency, best.priceThb).primary}
+          {/* Lowest-ask summary only earns its place when 2+ listings exist —
+              with a single listing it just restates that one row verbatim. */}
+          {sorted.length > 1 && (
+            <div className="hairline-t mt-3 flex items-center justify-between gap-2 px-4 py-3">
+              <span className="text-eyebrow">{t(lang, "lowestAsk")}</span>
+              <span className="flex min-w-0 flex-col items-end gap-1 text-right">
+                <span className="flex items-center gap-2">
+                  <span className="surface-2 rounded px-1.5 py-0.5 text-overlay text-muted-foreground">{best.condition}</span>
+                  <span className="text-h4 tnum text-foreground">
+                    {formatByCurrency(best.priceJpy, currency, best.priceThb).primary}
+                  </span>
                 </span>
+                {bestAboveMarket && (
+                  <span className="text-overlay text-muted-foreground">{t(lang, "askAboveMarketSingleSeller")}</span>
+                )}
               </span>
-              {bestAboveMarket && (
-                <span className="text-overlay text-muted-foreground">{t(lang, "askAboveMarketSingleSeller")}</span>
-              )}
-            </span>
-          </div>
+            </div>
+          )}
 
-          {rows.map((l) => {
+          {rows.map((l, i) => {
             const seller = l.user?.displayName ?? t(lang, "anonymous")
             const showRating = l.user?.sellerRating != null && l.user.sellerReviewCount > 0
             return (
               <Link
                 key={l.id}
                 href={`/marketplace/${l.id}`}
-                className="hairline-t ease-chrome flex items-center gap-3 px-4 py-3 hover:bg-muted/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+                className={cn(
+                  "hairline-t ease-chrome flex items-center gap-3 px-4 py-3 hover:bg-muted/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
+                  // no summary row above when there's a single listing — give the
+                  // first (only) row the gap the summary would have provided.
+                  i === 0 && sorted.length <= 1 && "mt-3",
+                )}
               >
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-semibold text-foreground">{seller}</span>

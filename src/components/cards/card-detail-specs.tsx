@@ -110,11 +110,11 @@ export function CardDetailSpecs({ card, lang }: CardDetailSpecsProps) {
   return (
     <div className="hairline-t pt-4">
       <p className="mb-1 text-meta">{t(lang, "details")}</p>
-      <dl>
-        {rows.map((r, i) => {
+      <dl className="sm:grid sm:grid-cols-2 sm:gap-x-8">
+        {rows.map((r) => {
           const Icon = r.icon
           return (
-            <div key={r.label} className={cn("flex items-center justify-between gap-3 py-2.5", i > 0 && "hairline-t")}>
+            <div key={r.label} className="hairline-t flex items-center justify-between gap-3 py-2.5">
               <dt className="text-meta flex shrink-0 items-center gap-1.5">
                 <Icon className="size-3.5" />
                 {r.label}

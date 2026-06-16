@@ -13,12 +13,10 @@ export function CardTierMeta({ lang }: { lang: Language }) {
           {t(lang, "metaTier")}
           <span className="text-overlay uppercase text-muted-foreground/40">{t(lang, "sampleLabel")}</span>
         </p>
-        <p className="mt-0.5 text-lg font-extrabold text-foreground">
-          Tier <span style={{ color: "var(--primary)" }}>A</span>
-        </p>
+        <p className="mt-0.5 text-h5 text-foreground">Tier A</p>
       </div>
       <div className="text-right">
-        <p className="tnum text-2xl font-extrabold text-foreground">12.4%</p>
+        <p className="tnum text-h4 text-foreground">12.4%</p>
         <p className="text-meta">{t(lang, "metaShare")}</p>
       </div>
     </div>

@@ -23,12 +23,20 @@ function hash(n: number): number {
  * in display currency). Mean-reverts toward base so it never runs away, and lands
  * EXACTLY on base at the last point so the chart ties to the headline price.
  */
-export function mockSeries(base: number | null, up: boolean, range = "3M"): number[] {
+export function mockSeries(base: number | null, up: boolean, range = "3M", deltaPct?: number | null): number[] {
   const b = base && base > 0 ? base : 1200
   const n = RANGE_POINTS[range] ?? 90
   const seed = b % 1000
   const drift = (up ? 1 : -1) * 0.0016 // gentle per-step trend
-  let v = b * (1 - (up ? 1 : -1) * 0.085) // start ~8.5% off so drift lands on b
+  // Start so the line climbs/falls by the REAL headline % over the window — a
+  // +350% move must read as a +350% climb, not a fixed bump (the y-domain then
+  // auto-stretches to it). Clamp so a ≤-100% delta can't divide-by-zero/flip;
+  // fall back to ±8.5% only when no delta is known.
+  const startMul =
+    deltaPct != null && Number.isFinite(deltaPct)
+      ? 1 / (1 + Math.max(-95, deltaPct) / 100)
+      : 1 - (up ? 1 : -1) * 0.085
+  let v = b * startMul // start offset so drift+rescale land on b
   let vel = 0 // momentum — makes moves persist into trends, not per-point noise
   const out: number[] = []
   for (let i = 0; i < n; i++) {
@@ -57,11 +65,11 @@ export function mockSeries(base: number | null, up: boolean, range = "3M"): numb
  * single global min/max and the grade ladder (PSA10 high → Raw low) reads true.
  */
 export function mockGradeSeries(
-  grades: { key: string; base: number | null; up: boolean }[],
+  grades: { key: string; base: number | null; up: boolean; pct?: number | null }[],
   range = "3M",
 ): Record<string, number[]> {
   const out: Record<string, number[]> = {}
-  for (const g of grades) out[g.key] = mockSeries(g.base, g.up, range)
+  for (const g of grades) out[g.key] = mockSeries(g.base, g.up, range, g.pct)
   return out
 }
 
