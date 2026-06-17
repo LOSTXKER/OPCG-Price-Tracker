@@ -1,7 +1,16 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-18 — **ยุบ Raw A/B/C → "Raw" เดียว** (เบส: domain จริงมี raw เฉยๆ) · ก่อนหน้า: chunk C cross-family + chunk D + polish merged (PR #32)
+อัปเดตล่าสุด: 2026-06-18 — **refactor pass** (ลบ dead code/proto −6.9K บรรทัด · ยุบ useMounted→useHydrated · แตก MarketsTable ออกจาก card-detail 1124→1009) · ก่อนหน้า: ยุบ Raw A/B/C→Raw (PR #33) · cross-family+polish (PR #32)
+
+## ✅ refactor (เบสสั่ง A+B+C+D)
+- **A** ลบ dead: `market-evidence.tsx` + `buy-sell.tsx` + `CardChart`/`legacyReferencePrice`/`ReferencePrice` จาก card-chart.tsx (0 import · verified)
+- **B** ลบ `src/app/proto/*` (24 ไฟล์ orphan · tracked → กู้จาก git ได้)
+- **D** ลบ local `useMounted` (ซ้ำ `useHydrated` เป๊ะ) → ใช้ hook กลาง · (helpers ซ้ำใน card-chart หายเองตอนลบ CardChart)
+- **C** แตก section "แหล่งอ้างอิง" → `card-detail/markets-table.tsx` (`MarketsTable`) · `sourceLabel`→`source-logo.tsx` shared · card-detail 1124→**1009**
+- ⚠️ **ตัดสินใจ:** ไม่แตก chart panel ต่อ — coupling แน่น (compare state ~30 ค่า) → จะกลายเป็น component prop-bag 30 ตัว = churn ไม่ใช่ decouple (karpathy) · ถ้าจะลดอีกควรทำ `useGradeModel` data-hook เป็น pass แยก
+- verify: tsc 0 · lint 0 · test 40 · hydration 0 · screenshot ผ่าน
+- ⚠️ gotcha ใหม่: ลบ route แล้ว `.next/types/validator.ts` (จาก build เก่า) ค้างอ้าง route ที่ลบ → tsc error · แก้: `rm -r .next/types` (type-only ไม่ใช่ runtime ไม่กระทบ hydration)
 
 ## บริบท session นี้
 port "multi-source pricing model" เข้าหน้าจริง `/cards/[code]` ทีละ chunk. chunk A (ตารางแหล่งราคา) + B (hero verb/recent-sales ซื่อสัตย์) + C same-family (indexed %) เสร็จไปแล้ว · **session นี้ปิด chunk C cross-family** (เทียบ Raw ↔ PSA ข้ามตระกูลบนกราฟ)
