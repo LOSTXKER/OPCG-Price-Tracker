@@ -11,7 +11,7 @@ port "multi-source pricing model" เข้าหน้าจริง `/cards/[
 - **ดีไซน์: pill เดียว binary** "เทียบกับ PSA 10" (เมื่อ primary=raw) / "เทียบกับ Raw A" (เมื่อ primary=graded) ต่อท้ายแถว เทียบเกรด · กดแล้ว overlay เส้น family ตรงข้าม (anchor จริง = solid) บนกราฟ **indexed %** · **chart-only ไม่แตะ selectedGrade/chartMode** → ตาราง #sources + hero + recent-sales ยังล็อก family เดิม (invariant หลัก)
 - ไฟล์แตะ: `card-detail.tsx` — state `vsOther` · derive `crossKey`/`crossAvailable`/`crossLabel` · seriesList append crossKey **ท้ายสุด** (primary คง index 0) · `switchFamily` เพิ่ม `setVsOther(false)` · `compareHue()` = สีต่อเกรดแบบ stable (ไม่ reshuffle ตอน toggle) · render: cross pill + ปุ่ม **ล้างทั้งหมด** + caption **indexedPctNote** (ⓘ อธิบายแกน %)
 - i18n ×3: เพิ่ม `compareVs` (เทียบกับ/vs/対) + `indexedPctNote` · reuse `clearAll`
-- **ตัดสินใจ deviate จาก verdict 1 จุด:** ข้าม "เทียบแหล่ง coming-soon chip" (verdict บอก optional) — declutter สำคัญกว่า · disabled chip ใน prod ดูยังไม่เสร็จ · ใส่ทีหลังได้
+- **polish pass (เบสสั่งทั้ง 4 จุด):** label cross → "vs [logo] เกรด" + divider คั่นจาก same-family · เพิ่ม chip **"เทียบแหล่ง · เร็วๆนี้"** (dashed disabled · key `compareSources` ×3 · gated honest) · legend เพิ่ม **Δ30d ต่อเส้น** (`<Delta>`) · caption ย่อ "เทียบเป็น % เริ่มต้นที่ 100" · verify tsc/lint/test 40/hydration 0 + screenshot ซ้ำ (desktop+mobile)
 - verify: **tsc 0 · lint 0 · test 40 · hydration 0** · CDP screenshot (`/tmp/shots/desktop-{default,compare,graded-cross}.png` + `mobile-{default,compare}.png`) ยืนยัน: solo→2 paths/แกน ฿ · กด cross→3 paths/แกน % (+149%/+96%/...) · **ตารางไม่ flip** (raw→PSA 10 ตามที่กด Graded เท่านั้น) · ทั้ง desktop+mobile+2 branch
 
 ## ✅ chunk D — ลบ proto (เบส confirm "ลบเลย" session นี้)

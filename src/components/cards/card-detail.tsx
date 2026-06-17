@@ -285,6 +285,10 @@ export function CardDetail({
   const crossKey: GradeKey = chartMode === "raw" ? "psa_10" : "raw_a"
   const crossAvailable = gradeData[crossKey].hasData
   const crossLabel = gradeData[crossKey].tier.label
+  // Cross pill mirrors the grade-ladder look: a brand logo + the bare grade number
+  // for graded anchors ("vs [PSA] 10"), the plain label for raw ("vs Raw A").
+  const crossIsGraded = gradeData[crossKey].tier.family !== "raw"
+  const crossNum = crossIsGraded ? crossLabel.replace(/^(PSA|BGS|CGC)\s*/i, "") : crossLabel
   // External source rows are labelled with the condition the SOURCE actually
   // carries (Raw via Yuyutei · PSA 10 via SNKRDUNK), never the selected modeled
   // tier — so a modeled "PSA 9" view never makes the real PSA 10 ask read as PSA 9.
@@ -302,6 +306,9 @@ export function CardDetail({
   // currency scale; a solo line keeps the green/red trend color, compare uses palette.
   const familyKeys = chartMode === "raw" ? RAW_KEYS : GRADED_KEYS
   const familyGrades = familyKeys.filter((k) => gradeData[k].hasData)
+  // Same-family compare chips (exclude the primary) — also gates the divider before
+  // the cross-family pill so the two groups read as distinct.
+  const sameFamilyCompareKeys = familyGrades.filter((k) => k !== selectedGrade)
   const seriesList = useMemo<ChartSeries[]>(() => {
     if (!mounted || !datum.hasData) return []
     const keys = chartMode === "raw" ? RAW_KEYS : GRADED_KEYS
@@ -772,9 +779,7 @@ export function CardDetail({
           {datum.hasData && (familyGrades.length > 1 || crossAvailable) && (
             <div className="no-sb mb-2 flex items-center gap-1.5 overflow-x-auto">
               <span className="text-meta shrink-0">{t(displayLang, "compareGrades")}</span>
-              {familyGrades
-                .filter((k) => k !== selectedGrade)
-                .map((k) => {
+              {sameFamilyCompareKeys.map((k) => {
                   const on = compareGrades.has(k)
                   const atMax = !on && compareGrades.size >= 3
                   return (
@@ -800,6 +805,10 @@ export function CardDetail({
                     </button>
                   )
                 })}
+              {/* divider — separates same-family chips from the cross-family anchor */}
+              {crossAvailable && sameFamilyCompareKeys.length > 0 && (
+                <span aria-hidden className="mx-0.5 h-5 w-px shrink-0 self-center bg-[var(--p-hair)]" />
+              )}
               {/* cross-family anchor — overlays the OTHER family's real grade as an
                   indexed-% line. Chart-only; never re-aims the table/hero/sales. */}
               {crossAvailable && (
@@ -811,16 +820,18 @@ export function CardDetail({
                     setVsOther((v) => !v)
                   }}
                   className={cn(
-                    "ease-chrome inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    "ease-chrome inline-flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                     vsOther ? "border-transparent bg-foreground/10 text-foreground" : "border-foreground/15 text-muted-foreground hover:border-foreground/30 hover:text-foreground",
                   )}
                 >
                   {vsOther ? (
-                    <span className="size-2 rounded-full" style={{ background: seriesColor.get(crossKey) ?? compareHue(crossKey) }} />
+                    <span className="size-2 shrink-0 rounded-full" style={{ background: seriesColor.get(crossKey) ?? compareHue(crossKey) }} />
                   ) : (
-                    <Plus className="size-3" aria-hidden />
+                    <Plus className="size-3 shrink-0" aria-hidden />
                   )}
-                  {t(displayLang, "compareVs")} {crossLabel}
+                  <span className="font-medium text-muted-foreground/70">{t(displayLang, "compareVs")}</span>
+                  {crossIsGraded && <GradeLogo family={gradeData[crossKey].tier.family} size={12} />}
+                  {crossNum}
                   {gradeData[crossKey].value.isEst && <EstMark lang={displayLang} />}
                 </button>
               )}
@@ -838,6 +849,15 @@ export function CardDetail({
                   {t(displayLang, "clearAll")}
                 </button>
               )}
+              {/* compare-sources — gated (no per-source time series yet): a dashed,
+                  non-interactive "coming soon" chip, never a fabricated source line */}
+              <span
+                aria-disabled="true"
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-dashed border-foreground/15 px-2.5 py-1 text-xs font-medium text-muted-foreground/55"
+              >
+                {t(displayLang, "compareSources")}
+                <span className="text-overlay rounded bg-foreground/[0.06] px-1 py-px uppercase">{t(displayLang, "comingSoon")}</span>
+              </span>
             </div>
           )}
           {/* indexed-% explainer — only when 2+ lines share the % axis */}
@@ -879,14 +899,18 @@ export function CardDetail({
           {/* legend — only when overlaying multiple grades */}
           {seriesList.length > 1 && (
             <div className="no-sb mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
-              {seriesList.map((s) => (
-                <span key={s.key} className="inline-flex items-center gap-1.5 text-xs">
-                  <span className="size-2.5 rounded-full" style={{ background: s.color }} />
-                  <span className="font-semibold text-foreground">{s.label}</span>
-                  <span className="tnum text-muted-foreground">{s.points.length ? formatDisplayValue(s.points[s.points.length - 1], currency) : "—"}</span>
-                  {s.isEst && <EstMark lang={displayLang} />}
-                </span>
-              ))}
+              {seriesList.map((s) => {
+                const d = gradeData[s.key as GradeKey]?.delta30d
+                return (
+                  <span key={s.key} className="inline-flex items-center gap-1.5 text-xs">
+                    <span className="size-2.5 rounded-full" style={{ background: s.color }} />
+                    <span className="font-semibold text-foreground">{s.label}</span>
+                    <span className="tnum text-muted-foreground">{s.points.length ? formatDisplayValue(s.points[s.points.length - 1], currency) : "—"}</span>
+                    {d != null && <Delta pct={d.pct} lang={displayLang} />}
+                    {s.isEst && <EstMark lang={displayLang} />}
+                  </span>
+                )
+              })}
             </div>
           )}
         </div>
