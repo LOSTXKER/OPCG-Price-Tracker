@@ -93,11 +93,14 @@ export function Delta({
   lang,
   size = "md",
   className,
+  abs,
 }: {
   pct: number
   lang: Language
   size?: "md" | "lg"
   className?: string
+  /** Pre-formatted absolute change string (display currency) shown beside the %. */
+  abs?: string
 }) {
   const flat = Math.abs(pct) < 0.05
   const up = pct > 0
@@ -116,6 +119,7 @@ export function Delta({
       {!flat && <span aria-hidden>{up ? "▲" : "▼"}</span>}
       <span className="sr-only">{flat ? "" : up ? t(lang, "deltaUp") : t(lang, "deltaDown")}</span>
       {formatPct(Math.abs(pct))}%
+      {abs && !flat && <span className="font-medium opacity-75"> · {up ? "+" : "−"}{abs}</span>}
     </span>
   )
 }

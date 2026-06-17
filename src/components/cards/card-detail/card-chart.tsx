@@ -85,6 +85,13 @@ export type ChartSeries = {
 /** Multi-series price chart. series[0] is the primary (area + bold line); the
  *  rest overlay as compare lines. Estimate series render dashed. Pointer scrub
  *  drives a shared crosshair + a multi-row tooltip (one value per series). */
+/** Rebase a price series so the first point = 100, so series of very different
+ *  magnitudes (e.g. Raw ฿9K vs PSA10 ฿42K) compare on one % axis. Pure (tested). */
+export function rebaseToIndex(points: number[]): number[] {
+  const base = points[0]
+  return base && base !== 0 ? points.map((p) => (p / base) * 100) : points
+}
+
 export function ScrubChart({
   series,
   activeIndex,
@@ -93,6 +100,7 @@ export function ScrubChart({
   lang,
   latestUpdatedAt,
   range,
+  indexed,
 }: {
   series: ChartSeries[]
   activeIndex: number | null
@@ -101,9 +109,13 @@ export function ScrubChart({
   lang: Language
   latestUpdatedAt?: string | null
   range: (typeof RANGES)[number]
+  /** Index every series to 100 at window start (% axis) — for cross-magnitude compare. */
+  indexed?: boolean
 }) {
   const currency = useUIStore((s) => s.currency)
-  const drawn = series.filter((s) => s.points.length >= 2)
+  const rawDrawn = series.filter((s) => s.points.length >= 2)
+  const drawn = indexed ? rawDrawn.map((s) => ({ ...s, points: rebaseToIndex(s.points) })) : rawDrawn
+  const fmtIndex = (v: number) => `${v >= 100 ? "+" : "−"}${Math.abs(v - 100).toFixed(0)}%`
   const primary = drawn[0]
   if (!primary) {
     return (
@@ -179,7 +191,7 @@ export function ScrubChart({
           <g key={v}>
             <line x1={padLeft} x2={width - padRight} y1={gy} y2={gy} stroke="var(--border)" strokeDasharray="2 7" strokeOpacity="0.18" />
             <text x={width - padRight + 10} y={gy + 4} fill="var(--muted-foreground)" opacity="0.7" fontSize="20">
-              {compactDisplayValue(v, currency)}
+              {indexed ? fmtIndex(v) : compactDisplayValue(v, currency)}
             </text>
           </g>
         )
@@ -262,7 +274,7 @@ export function ScrubChart({
                 <circle cx="4" cy="-4" r="4" fill={s.color} />
                 <text x="15" y="0" fill="var(--muted-foreground)" fontSize="14">{s.label}</text>
                 <text x={ttW - 24} y="0" textAnchor="end" fill="var(--foreground)" fontSize="15" fontWeight="700">
-                  {formatDisplayValue(s.points[active], currency)}
+                  {indexed ? fmtIndex(s.points[active]) : formatDisplayValue(s.points[active], currency)}
                 </text>
               </g>
             ))}
