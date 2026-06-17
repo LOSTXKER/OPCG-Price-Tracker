@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-17 — **chunk C cross-family + chunk D (ลบ proto) เสร็จทั้งคู่** · port multi-source pricing model จบครบ · เหลือแต่งาน gate (รอ data จริง)
+อัปเดตล่าสุด: 2026-06-18 — **ยุบ Raw A/B/C → "Raw" เดียว** (เบส: domain จริงมี raw เฉยๆ) · ก่อนหน้า: chunk C cross-family + chunk D + polish merged (PR #32)
 
 ## บริบท session นี้
 port "multi-source pricing model" เข้าหน้าจริง `/cards/[code]` ทีละ chunk. chunk A (ตารางแหล่งราคา) + B (hero verb/recent-sales ซื่อสัตย์) + C same-family (indexed %) เสร็จไปแล้ว · **session นี้ปิด chunk C cross-family** (เทียบ Raw ↔ PSA ข้ามตระกูลบนกราฟ)
@@ -22,7 +22,7 @@ port "multi-source pricing model" เข้าหน้าจริง `/cards/[
 - **est → ข้อมูลจริง:** PSA 9/8/BGS + graded delta30d ยัง modeled (กราฟ cross 2 เส้นเลยซ้อนกันเพราะ delta เท่ากัน = artifact ของ mock ไม่ใช่บั๊ก) · swap เมื่อมี Grade enum + Comp tables (PLAN:37)
 
 ## ⚠️ decisions (เบส confirm)
-1. Raw = เก็บ raw_a/b/c เบื้องหลัง · UI โชว์ "Raw" รวม
+1. **Raw = เกรดเดียว** (เบส confirm 18 มิ.ย.: domain ไม่มี A/B/C — Yuyutei ตั้งราคา ungraded เป็นราคาเดียว) · ยุบ `grades.ts` GradeKey `raw_a/b/c`→`raw` + ลบ EST_RAW แล้ว · (decision เดิม "เก็บ raw_a/b/c เบื้องหลัง" ยกเลิก — `listingMatchesGrade` เช็คแค่ `startsWith("raw")` ไม่พึ่ง A/B/C จริง)
 2. raw markets = Yuyutei ไม่เอา SNKRDUNK (noisy) · graded = SNKRDUNK
 3. ad → page-tail ไม่ใช่ข้างกราฟ
 4. เทียบแหล่ง ยังไม่ทำ (mock) — ship เทียบเกรด/ข้ามตระกูลก่อน

@@ -1,6 +1,6 @@
 /**
  * Grade model + per-grade data derivation for the card-detail pricing surface
- * (VISION §5.1). One card carries multiple grades (Raw A/B/C · PSA 10/9/8 · BGS);
+ * (VISION §5.1). One card carries multiple grades (Raw · PSA 10/9/8 · BGS);
  * selecting a grade re-prices the whole page.
  *
  * Real anchors come from the scrape pipeline:
@@ -20,7 +20,7 @@
 
 export type GradeFamily = "raw" | "psa" | "bgs"
 export type GradeKey =
-  | "raw_a" | "raw_b" | "raw_c"
+  | "raw"
   | "psa_10" | "psa_9" | "psa_8"
   | "bgs_95"
 
@@ -31,13 +31,11 @@ export interface GradeTier {
   family: GradeFamily
 }
 
-// Best-first within each family (VISION §5.1): Raw A·B·C, then PSA 10·9·8, then
-// BGS. Order is presentation-only — buildGradeData/defaultGradeKey look tiers up
-// by key, and the EST_* multipliers are name-keyed, so reordering is safe.
+// Best-first by family (VISION §5.1): a single ungraded Raw, then PSA 10·9·8, then
+// BGS. Raw is ONE grade — Yuyutei prices ungraded cards as a single market price,
+// not A/B/C condition tiers. Order is presentation-only (lookups are by key).
 export const GRADE_TIERS: GradeTier[] = [
-  { key: "raw_a", label: "Raw A", short: "Raw A", family: "raw" },
-  { key: "raw_b", label: "Raw B", short: "Raw B", family: "raw" },
-  { key: "raw_c", label: "Raw C", short: "Raw C", family: "raw" },
+  { key: "raw", label: "Raw", short: "Raw", family: "raw" },
   { key: "psa_10", label: "PSA 10", short: "PSA 10", family: "psa" },
   { key: "psa_9", label: "PSA 9", short: "PSA 9", family: "psa" },
   { key: "psa_8", label: "PSA 8", short: "PSA 8", family: "psa" },
@@ -72,7 +70,6 @@ export interface GradeDatum {
   hasData: boolean
 }
 
-const EST_RAW: Record<"raw_a" | "raw_b" | "raw_c", number> = { raw_a: 1, raw_b: 0.78, raw_c: 0.52 }
 const EST_PSA: Record<"psa_10" | "psa_9" | "psa_8", number> = { psa_10: 1, psa_9: 0.5, psa_8: 0.32 }
 const EST_BGS95_FROM_PSA10 = 1.15
 const EST_LAST_SALE = 0.96 // settled sales sit a touch under market
@@ -96,24 +93,24 @@ export function buildGradeData(input: GradeInput): Record<GradeKey, GradeDatum> 
   const psa10Anchor = psa10AskUsd ?? psa10SoldUsd ?? null
   const byKey = Object.fromEntries(GRADE_TIERS.map((t) => [t.key, t])) as Record<GradeKey, GradeTier>
 
-  function rawDatum(key: "raw_a" | "raw_b" | "raw_c"): GradeDatum {
-    const real = key === "raw_a"
+  function rawDatum(): GradeDatum {
+    // Raw is a single REAL market price (Yuyutei, JPY) — no modeled A/B/C tiers.
     const has = rawAnchorJpy != null && rawAnchorJpy > 0
-    const v = has ? r(rawAnchorJpy! * EST_RAW[key]) : null
-    const realSale = real && rawLastSoldUsd != null
+    const v = has ? r(rawAnchorJpy!) : null
+    const realSale = rawLastSoldUsd != null
     return {
-      tier: byKey[key],
+      tier: byKey.raw,
       currency: "JPY",
-      value: { jpy: v, usd: null, isEst: !real },
+      value: { jpy: v, usd: null, isEst: false },
       lastSale: realSale
         ? { jpy: null, usd: rawLastSoldUsd, isEst: false }
         : { jpy: v != null ? r(v * EST_LAST_SALE) : null, usd: null, isEst: true },
-      lowestAsk: { jpy: v, usd: null, isEst: !real },
+      lowestAsk: { jpy: v, usd: null, isEst: false },
       lastSaleSource: realSale ? "SNKRDUNK" : null,
-      delta30d: rawDelta30d != null ? { pct: rawDelta30d, isEst: !real } : null,
+      delta30d: rawDelta30d != null ? { pct: rawDelta30d, isEst: false } : null,
       sales30d: sampleSales(v),
-      isReal: real && has,
-      isEst: !real && has,
+      isReal: has,
+      isEst: false,
       hasData: has,
     }
   }
@@ -147,9 +144,7 @@ export function buildGradeData(input: GradeInput): Record<GradeKey, GradeDatum> 
   const bgsV = psa10Anchor != null && psa10Anchor > 0 ? r(psa10Anchor * EST_BGS95_FROM_PSA10) : null
 
   return {
-    raw_a: rawDatum("raw_a"),
-    raw_b: rawDatum("raw_b"),
-    raw_c: rawDatum("raw_c"),
+    raw: rawDatum(),
     psa_10: psaDatum("psa_10"),
     psa_9: psaDatum("psa_9"),
     psa_8: psaDatum("psa_8"),
@@ -170,11 +165,10 @@ export function buildGradeData(input: GradeInput): Record<GradeKey, GradeDatum> 
 }
 
 export function defaultGradeKey(data: Record<GradeKey, GradeDatum>): GradeKey {
-  // Prefer the headline premium grade (PSA 10), then Raw A, else first with data
-  // (proto lands on PSA 10 selected).
+  // Prefer the headline premium grade (PSA 10), then Raw, else first with data.
   if (data.psa_10.hasData) return "psa_10"
-  if (data.raw_a.hasData) return "raw_a"
-  return GRADE_TIERS.find((t) => data[t.key].hasData)?.key ?? "raw_a"
+  if (data.raw.hasData) return "raw"
+  return GRADE_TIERS.find((t) => data[t.key].hasData)?.key ?? "raw"
 }
 
 export function gradeToChartMode(key: GradeKey): "raw" | "psa10" {

@@ -150,7 +150,7 @@ function firstSource(rows: SourcePriceRow[] | undefined, source: string) {
 
 // Compare is scoped to ONE family at a time (raw OR graded) so overlaid lines
 // share a currency + price scale — never Raw(JPY) vs Graded(USD) on one axis.
-const RAW_KEYS: GradeKey[] = ["raw_a", "raw_b", "raw_c"]
+const RAW_KEYS: GradeKey[] = ["raw"]
 const GRADED_KEYS: GradeKey[] = ["psa_10", "psa_9", "psa_8", "bgs_95"]
 // Distinct compare hues (no gold — reserved for transact CTAs; no green/red —
 // those signal trend on the solo line). Used only when 2+ grades are overlaid.
@@ -216,7 +216,7 @@ export function CardDetail({
   const [range, setRange] = useState<ChartRange>("1M")
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [compareGrades, setCompareGrades] = useState<Set<GradeKey>>(() => new Set())
-  // Cross-family overlay: append the OTHER family's real anchor (PSA 10 ⇄ Raw A) as
+  // Cross-family overlay: append the OTHER family's real anchor (PSA 10 ⇄ Raw) as
   // one indexed-% chart line. Chart-only — never changes selectedGrade/chartMode, so
   // the hero + #sources table + recent-sales stay locked to the primary family.
   const [vsOther, setVsOther] = useState(false)
@@ -273,20 +273,20 @@ export function CardDetail({
   // — instead of the speculative PSA 10 premium, so a cheap card never opens with
   // an overstated graded headline. Falls back to the proto default when raw is dry.
   const [selectedGrade, setSelectedGrade] = useState<GradeKey>(() =>
-    gradeData.raw_a.hasData ? "raw_a" : defaultGradeKey(gradeData),
+    gradeData.raw.hasData ? "raw" : defaultGradeKey(gradeData),
   )
 
   const datum = gradeData[selectedGrade]
   const gradeLabel = datum.tier.label
   const chartMode = gradeToChartMode(selectedGrade)
-  // Cross-family compare anchors to the OTHER family's REAL grade (Yuyutei Raw A ⇄
+  // Cross-family compare anchors to the OTHER family's REAL grade (Yuyutei Raw ⇄
   // SNKRDUNK PSA 10) so the overlay line is solid/real, not a modeled est. The pill
   // is disabled when that anchor has no data.
-  const crossKey: GradeKey = chartMode === "raw" ? "psa_10" : "raw_a"
+  const crossKey: GradeKey = chartMode === "raw" ? "psa_10" : "raw"
   const crossAvailable = gradeData[crossKey].hasData
   const crossLabel = gradeData[crossKey].tier.label
   // Cross pill mirrors the grade-ladder look: a brand logo + the bare grade number
-  // for graded anchors ("vs [PSA] 10"), the plain label for raw ("vs Raw A").
+  // for graded anchors ("vs [PSA] 10"), the plain label for raw ("vs Raw").
   const crossIsGraded = gradeData[crossKey].tier.family !== "raw"
   const crossNum = crossIsGraded ? crossLabel.replace(/^(PSA|BGS|CGC)\s*/i, "") : crossLabel
   // External source rows are labelled with the condition the SOURCE actually

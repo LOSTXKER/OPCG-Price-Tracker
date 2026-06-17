@@ -84,7 +84,7 @@ Base text steps (Thai readability): xs 13 · sm 15 · base 17 · lg 19px.
 - **Primary button (Buy)**: solid honey-gold fill, `primary-foreground` text, pill/rounded-xl, bold, shopping-bag icon. The only gold element.
 - **Secondary actions**: outline/ghost buttons (transparent + hairline border), muted text, hover lifts to foreground. e.g. add-to-portfolio, share, price alert, compare.
 - **Segmented toggle** (edition JP|EN, Raw|Graded): pill track `--p-s2` + hairline ring; active segment = solid `foreground` bg with `background` text.
-- **Grade chips**: small pill/cell per grade showing grade label + its price; selected = `foreground/10` fill. Grade families: **Raw A · Raw B · Raw C**, **PSA 10 · 9 · 8**, **BGS 9.5** (raw family in JPY, graded in USD).
+- **Grade chips**: small pill/cell per grade showing grade label + its price; selected = `foreground/10` fill. Grade families: **Raw** (single, ungraded), **PSA 10 · 9 · 8**, **BGS 9.5** (raw family in JPY, graded in USD).
 - **Stat row**: label left (muted), value right (tabular, bold), hairline divider between rows.
 - **Source row**: source logo + name + verified check + condition·freshness, price right, external-link icon.
 - **Price chart**: SVG line + soft area gradient under the primary line; right-side price axis; dashed gridlines; latest-value pill; pointer crosshair + tooltip on scrub. **Compare mode** overlays multiple same-family grade lines (distinct non-gold colors; real=solid, estimate=dashed) with a legend. Time ranges 1M·3M·1Y·All.
@@ -100,11 +100,11 @@ Base text steps (Thai readability): xs 13 · sm 15 · base 17 · lg 19px.
 
 Desktop, three columns at top:
 - **Left rail (acquire)**: portrait card image (aspect **63:88**) + ★ favorite; card name, rarity badge, set code; then the gold **"ซื้อบน Meecard"** button + a 2×2 grid of outline actions (**เพิ่มเข้าพอร์ต · แชร์ · แจ้งเตือนราคา · เปรียบเทียบ**).
-- **Center (price instrument)**: edition toggle **JP | EN**; horizontal grade chips with prices; the **ONE hero price** (`.text-display`) + green/red ▲% + caption "ราคากลาง · JP · Raw A · อัปเดต …"; a 30-day **range bar** (ต่ำสุด – สูงสุด, est).
+- **Center (price instrument)**: edition toggle **JP | EN**; horizontal grade chips with prices; the **ONE hero price** (`.text-display`) + green/red ▲% + caption "ราคากลาง · JP · Raw · อัปเดต …"; a 30-day **range bar** (ต่ำสุด – สูงสุด, est).
 - **Right (market stats)**: flat list — ขายล่าสุด · ราคาตั้งต่ำสุด · ช่วง 30 วัน (est tags on modeled).
 
 Then: a tab row (ภาพรวม · แหล่งอ้างอิง · ขายบน Meecard · สเปก); a wide **price chart** with Raw|Graded filter + range pills + เทียบเกรด compare overlay, beside a narrow **"แหล่งอ้างอิง"** sources panel (tabs ประกาศขาย|ขายไปแล้ว: SNKRDUNK / Yuyu-tei rows); then **"ขายอยู่บน Meecard"** marketplace listings; **"ข้อมูลการ์ด"** spec sheet (Cost/Power/Counter/Life/Color/Type/Attribute/Trait + effect text); **"การ์ดอื่นในเซ็ต"** related grid.
 
 Mobile: single column in this order — image+name → grade chips → hero price + range bar → gold Buy → action grid → stats → chart → sources → listings → specs → related; plus a **sticky bottom bar** (price + gold Buy).
 
-Sample data (use real-looking values, not lorem): card **"Roronoa Zoro"**, code **OP01-001**, rarity **L (Leader)**, set **OP01 Romance Dawn**; Raw A ฿25 (▲50%), PSA 10 ฿5,673; sources SNKRDUNK (graded, USD) + Yuyu-tei (raw, JPY); currency shown in **฿ (THB)**.
+Sample data (use real-looking values, not lorem): card **"Roronoa Zoro"**, code **OP01-001**, rarity **L (Leader)**, set **OP01 Romance Dawn**; Raw ฿25 (▲50%), PSA 10 ฿5,673; sources SNKRDUNK (graded, USD) + Yuyu-tei (raw, JPY); currency shown in **฿ (THB)**.
