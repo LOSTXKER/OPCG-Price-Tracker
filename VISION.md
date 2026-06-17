@@ -96,7 +96,7 @@
 
 **Zones (บน→ล่าง):**
 1. **Identity** — รูปการ์ด (พระเอก, mobile full-bleed → lightbox · `lg:` sticky ซ้าย) + ชื่อ + code + rarity/set eyebrow + share
-2. **Edition + Grade** — `EditionToggle` JP\|EN (เหนือ rail) + **`GradeRail`** chip เลื่อน `Raw A · Raw B · Raw C · PSA 10 · PSA 9 · PSA 8 · BGS` · **แต่ละ chip โชว์ราคาตัวเอง** (rail = price comparison ก่อนแตะ) · selected = honey · no-data = ghost ไม่ซ่อน · = single source of truth (Zustand) ขับ zone 3–6
+2. **Edition + Grade** — `EditionToggle` JP\|EN (เหนือ rail) + **`GradeRail`** chip เลื่อน `Raw · PSA 10 · PSA 9 · PSA 8 · BGS` · **แต่ละ chip โชว์ราคาตัวเอง** (rail = price comparison ก่อนแตะ) · selected = honey · no-data = ghost ไม่ซ่อน · = single source of truth (Zustand) ขับ zone 3–6
 3. **Stat row (trust anchor)** — `HeroNumber` = Last Sale ของเกรดที่เลือก (ถ้าไม่มี comp จริง → modeled "est." + tooltip, Cardmarket honesty) · 2 stat รอง: `Lowest Ask` · `Δ30d` (ลูกศร ไม่ใช่สีแดง/เขียวจัด) · `SourceBadge` + freshness "as of 3h ago"
 4. **Population strip** (เฉพาะ chip graded) — บรรทัดเดียวเลื่อนได้ `PSA Pop 10→124 · 9→980 · 8→1,510` เกรด active หนา · Raw ซ่อน · tap → sheet เต็ม
 5. **Chart** — เส้นเดียว bound เกรดที่เลือก + จุด sold comp ทาบบนเส้น (tap จุด → ไฮไลต์แถว comp) · `7D·1M·3M·1Y·All` · <2 จุด = "ข้อมูลไม่พอวาดกราฟ"
