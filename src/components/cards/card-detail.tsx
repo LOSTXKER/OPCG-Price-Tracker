@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { Fragment, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
+import { Fragment, useEffect, useMemo, useRef, useState } from "react"
 import { BadgeCheck, Bell, ChevronRight, Info, MoveHorizontal, Plus, Share2, ShoppingBag, Tag } from "lucide-react"
 
 import { Breadcrumb } from "@/components/shared/breadcrumb"
@@ -183,14 +183,6 @@ function relativeDaysLabel(days: number | null | undefined, lang: Language): str
   return lang === "EN" ? `${days}d ago` : lang === "JP" ? `${days}日前` : `${days} วันที่แล้ว`
 }
 
-function useMounted() {
-  return useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  )
-}
-
 export function CardDetail({
   card,
   siblings,
@@ -210,7 +202,6 @@ export function CardDetail({
   // persisted non-THB preference, then swap post-hydration.
   const currencyPref = useUIStore((s) => s.currency)
   const currency = hydrated ? currencyPref : "THB"
-  const mounted = useMounted()
 
   const [edition, setEdition] = useState<Edition>("JP")
   const [range, setRange] = useState<ChartRange>("1M")
@@ -310,7 +301,7 @@ export function CardDetail({
   // the cross-family pill so the two groups read as distinct.
   const sameFamilyCompareKeys = familyGrades.filter((k) => k !== selectedGrade)
   const seriesList = useMemo<ChartSeries[]>(() => {
-    if (!mounted || !datum.hasData) return []
+    if (!hydrated || !datum.hasData) return []
     const keys = chartMode === "raw" ? RAW_KEYS : GRADED_KEYS
     const ordered = [selectedGrade, ...keys.filter((k) => k !== selectedGrade && compareGrades.has(k))]
     // Cross-family: append the OTHER family's real anchor LAST — keeps selectedGrade
@@ -329,7 +320,7 @@ export function CardDetail({
       color: solo ? (up ? "var(--price-up)" : "var(--price-down)") : compareHue(i.k),
       isEst: gradeData[i.k].value.isEst,
     }))
-  }, [mounted, datum.hasData, chartMode, selectedGrade, compareGrades, vsOther, crossKey, crossAvailable, gradeData, currency, range, up])
+  }, [hydrated, datum.hasData, chartMode, selectedGrade, compareGrades, vsOther, crossKey, crossAvailable, gradeData, currency, range, up])
 
   const primaryPoints = seriesList[0]?.points ?? []
   const activeValue = activeIndex != null && primaryPoints[activeIndex] != null ? primaryPoints[activeIndex] : latest
@@ -685,7 +676,7 @@ export function CardDetail({
                       <SourceLogo source={c.source} size={18} />
                       <span className="min-w-0 flex-1 truncate text-xs font-medium text-foreground">{sourceLabel(c.source)}</span>
                       <span className="tnum shrink-0 text-sm font-semibold text-foreground">{c.primary}</span>
-                      <span className="text-meta tnum shrink-0">{mounted && c.updatedAt ? relativeTime(c.updatedAt, displayLang) : ""}</span>
+                      <span className="text-meta tnum shrink-0">{hydrated && c.updatedAt ? relativeTime(c.updatedAt, displayLang) : ""}</span>
                     </div>
                   ))}
                 </div>
@@ -874,7 +865,7 @@ export function CardDetail({
                 <p className="text-meta mt-1 max-w-sm">{t(displayLang, "noEditionPriceDesc")}</p>
               </div>
             </div>
-          ) : mounted ? (
+          ) : hydrated ? (
             <ScrubChart
               series={seriesList}
               activeIndex={activeIndex}
@@ -890,7 +881,7 @@ export function CardDetail({
           )}
 
           {/* scrub affordance — the chart is draggable but that's invisible at rest */}
-          {datum.hasData && mounted && (
+          {datum.hasData && hydrated && (
             <p className="text-meta mt-2 hidden items-center justify-center gap-1.5 sm:flex">
               <MoveHorizontal className="size-3.5" aria-hidden /> {t(displayLang, "dragChartHint")}
             </p>
@@ -989,7 +980,7 @@ export function CardDetail({
                           )}
                         </td>
                         <td className="px-3 py-2.5 text-right">
-                          <span className="text-meta tnum">{mounted && r.updatedAt ? relativeTime(r.updatedAt, displayLang) : "—"}</span>
+                          <span className="text-meta tnum">{hydrated && r.updatedAt ? relativeTime(r.updatedAt, displayLang) : "—"}</span>
                         </td>
                       </tr>
                     )
@@ -1010,7 +1001,7 @@ export function CardDetail({
                         <SourceLogo source={r.source} size={20} />
                       </span>
                       <span className="min-w-0 flex-1 text-sm font-semibold text-foreground">{sourceLabel(r.source)}</span>
-                      <span className="text-meta tnum shrink-0">{mounted && r.updatedAt ? relativeTime(r.updatedAt, displayLang) : ""}</span>
+                      <span className="text-meta tnum shrink-0">{hydrated && r.updatedAt ? relativeTime(r.updatedAt, displayLang) : ""}</span>
                     </div>
                     <div className="mt-2 grid grid-cols-2 gap-2">
                       <div className="rounded-lg bg-foreground/[0.03] px-2.5 py-1.5">
