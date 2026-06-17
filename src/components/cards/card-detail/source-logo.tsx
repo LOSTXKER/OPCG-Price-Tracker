@@ -26,6 +26,12 @@ const SOURCE_LOGO: Record<string, string> = {
   MERCARI_JP: "/sources/mercari.png",
 }
 
+/** Display name for a source code — normalizes casing for the two we render most. */
+export function sourceLabel(source: string): string {
+  const s = source.toUpperCase()
+  return s === "YUYUTEI" ? "Yuyu-tei" : s === "SNKRDUNK" ? "SNKRDUNK" : source
+}
+
 export function SourceLogo({
   source,
   size = 18,

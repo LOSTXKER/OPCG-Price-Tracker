@@ -1,8 +1,8 @@
 "use client"
 
 import Image from "next/image"
-import { Fragment, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
-import { BadgeCheck, Bell, ChevronRight, Info, MoveHorizontal, Plus, Share2, ShoppingBag, Tag } from "lucide-react"
+import { Fragment, useEffect, useMemo, useRef, useState } from "react"
+import { Bell, ChevronRight, Info, MoveHorizontal, Plus, Share2, ShoppingBag, Tag } from "lucide-react"
 
 import { Breadcrumb } from "@/components/shared/breadcrumb"
 import type { CardListing } from "@/components/cards/card-listings-section"
@@ -42,7 +42,8 @@ import {
 import { GradeLogo } from "./card-detail/grade-logo"
 import { Delta, EstMark } from "./card-detail/grade-value"
 import { EditionToggle, type Edition } from "./card-detail/edition-toggle"
-import { SourceLogo } from "./card-detail/source-logo"
+import { SourceLogo, sourceLabel } from "./card-detail/source-logo"
+import { MarketsTable } from "./card-detail/markets-table"
 import { MeecardAsksRail, listingMatchesGrade } from "./card-detail/asks-rail"
 import { CardTierMeta } from "./card-detail/tier-meta"
 import { SiblingGrid } from "./card-detail-sibling-grid"
@@ -183,14 +184,6 @@ function relativeDaysLabel(days: number | null | undefined, lang: Language): str
   return lang === "EN" ? `${days}d ago` : lang === "JP" ? `${days}日前` : `${days} วันที่แล้ว`
 }
 
-function useMounted() {
-  return useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  )
-}
-
 export function CardDetail({
   card,
   siblings,
@@ -210,7 +203,6 @@ export function CardDetail({
   // persisted non-THB preference, then swap post-hydration.
   const currencyPref = useUIStore((s) => s.currency)
   const currency = hydrated ? currencyPref : "THB"
-  const mounted = useMounted()
 
   const [edition, setEdition] = useState<Edition>("JP")
   const [range, setRange] = useState<ChartRange>("1M")
@@ -310,7 +302,7 @@ export function CardDetail({
   // the cross-family pill so the two groups read as distinct.
   const sameFamilyCompareKeys = familyGrades.filter((k) => k !== selectedGrade)
   const seriesList = useMemo<ChartSeries[]>(() => {
-    if (!mounted || !datum.hasData) return []
+    if (!hydrated || !datum.hasData) return []
     const keys = chartMode === "raw" ? RAW_KEYS : GRADED_KEYS
     const ordered = [selectedGrade, ...keys.filter((k) => k !== selectedGrade && compareGrades.has(k))]
     // Cross-family: append the OTHER family's real anchor LAST — keeps selectedGrade
@@ -329,7 +321,7 @@ export function CardDetail({
       color: solo ? (up ? "var(--price-up)" : "var(--price-down)") : compareHue(i.k),
       isEst: gradeData[i.k].value.isEst,
     }))
-  }, [mounted, datum.hasData, chartMode, selectedGrade, compareGrades, vsOther, crossKey, crossAvailable, gradeData, currency, range, up])
+  }, [hydrated, datum.hasData, chartMode, selectedGrade, compareGrades, vsOther, crossKey, crossAvailable, gradeData, currency, range, up])
 
   const primaryPoints = seriesList[0]?.points ?? []
   const activeValue = activeIndex != null && primaryPoints[activeIndex] != null ? primaryPoints[activeIndex] : latest
@@ -411,14 +403,6 @@ export function CardDetail({
   }, [edition, chartMode, sourcePricesRaw, sourcePricesPsa10, rawYuyu, psaSnk, snkrdunkPrices, card.price?.priceJpy, card.price?.priceThb, card.latestPriceJpy, card.latestPriceThb, latestUpdatedAt, marketSort])
 
   const realSourceCount = marketRows.length
-
-  // Ask = listing (rendered muted); Sold = settled value (foreground).
-  // {primary: display currency, secondary: native ¥/$ when display = THB}.
-  const askCell = (r: SourcePriceRow) =>
-    r.askPriceUsd != null ? formatUsdByCurrency(r.askPriceUsd, currency) : r.askPriceJpy != null ? formatByCurrency(r.askPriceJpy, currency, r.askPriceThb) : null
-  const soldCell = (r: SourcePriceRow) =>
-    r.soldPriceUsd != null ? formatUsdByCurrency(r.soldPriceUsd, currency) : r.soldPriceJpy != null ? formatByCurrency(r.soldPriceJpy, currency, r.soldPriceThb) : null
-  const sourceLabel = (s: string) => (s.toUpperCase() === "YUYUTEI" ? "Yuyu-tei" : s.toUpperCase() === "SNKRDUNK" ? "SNKRDUNK" : s)
 
   const updatedLabel = relativeDaysLabel(daysSinceUpdate, displayLang)
   const TABS: { id: string; label: string }[] = [
@@ -685,7 +669,7 @@ export function CardDetail({
                       <SourceLogo source={c.source} size={18} />
                       <span className="min-w-0 flex-1 truncate text-xs font-medium text-foreground">{sourceLabel(c.source)}</span>
                       <span className="tnum shrink-0 text-sm font-semibold text-foreground">{c.primary}</span>
-                      <span className="text-meta tnum shrink-0">{mounted && c.updatedAt ? relativeTime(c.updatedAt, displayLang) : ""}</span>
+                      <span className="text-meta tnum shrink-0">{hydrated && c.updatedAt ? relativeTime(c.updatedAt, displayLang) : ""}</span>
                     </div>
                   ))}
                 </div>
@@ -874,7 +858,7 @@ export function CardDetail({
                 <p className="text-meta mt-1 max-w-sm">{t(displayLang, "noEditionPriceDesc")}</p>
               </div>
             </div>
-          ) : mounted ? (
+          ) : hydrated ? (
             <ScrubChart
               series={seriesList}
               activeIndex={activeIndex}
@@ -890,7 +874,7 @@ export function CardDetail({
           )}
 
           {/* scrub affordance — the chart is draggable but that's invisible at rest */}
-          {datum.hasData && mounted && (
+          {datum.hasData && hydrated && (
             <p className="text-meta mt-2 hidden items-center justify-center gap-1.5 sm:flex">
               <MoveHorizontal className="size-3.5" aria-hidden /> {t(displayLang, "dragChartHint")}
             </p>
@@ -917,124 +901,16 @@ export function CardDetail({
 
       </div>
 
-      {/* ── แหล่งราคา — per-source ask|sold, full width below the chart ──────── */}
-      <section id="sources" className="mt-8 scroll-mt-20">
-        <div className="mb-2 flex flex-wrap items-end justify-between gap-2">
-          <div>
-            <p className="text-eyebrow">{t(displayLang, "referenceSources")} · {gradeLabel}</p>
-            <p className="text-meta mt-0.5">{t(displayLang, "marketEvidenceDesc")}</p>
-          </div>
-          {realSourceCount >= 4 && (
-            <div className="inline-flex gap-0.5 rounded-full bg-foreground/[0.045] p-0.5 ring-1 ring-[var(--p-hair)]">
-              {([["price", t(displayLang, "sortByPrice")], ["fresh", t(displayLang, "sortByFresh")]] as const).map(([k, label]) => (
-                <button key={k} type="button" aria-pressed={marketSort === k} onClick={() => setMarketSort(k)} className={cn("ease-chrome rounded-full px-2.5 py-1.5 text-xs font-semibold", marketSort === k ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground")}>{label}</button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {marketRows.length === 0 ? (
-          <div className="rounded-xl bg-foreground/[0.025] p-4">
-            <p className="text-sm font-semibold text-foreground">{t(displayLang, "noLatestListings")}</p>
-            <p className="text-meta mt-1">{t(displayLang, "notEnoughDataYet")}</p>
-          </div>
-        ) : (
-          <>
-            {/* desktop table (≥sm) */}
-            <div className="hidden overflow-hidden rounded-xl hairline sm:block">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="text-eyebrow border-b border-[var(--p-hair)] bg-foreground/[0.02]">
-                    <th className="px-3 py-2 text-left font-medium">{t(displayLang, "sourceCol")}</th>
-                    <th className="px-3 py-2 text-right font-medium">{t(displayLang, "asksTab")}</th>
-                    <th className="px-3 py-2 text-right font-medium">{t(displayLang, "soldTab")}</th>
-                    <th className="px-3 py-2 text-right font-medium">{t(displayLang, "updatedCol")}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {marketRows.map((r) => {
-                    const ask = askCell(r)
-                    const sold = soldCell(r)
-                    return (
-                      <tr key={r.source} className="border-b border-[var(--p-hair)] last:border-b-0">
-                        <td className="px-3 py-2.5">
-                          <div className="flex items-center gap-2">
-                            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-background/50 ring-1 ring-[var(--p-hair)]">
-                              <SourceLogo source={r.source} size={20} />
-                            </span>
-                            <span className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
-                              {sourceLabel(r.source)}
-                              <BadgeCheck className="size-3 text-muted-foreground" aria-hidden />
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-3 py-2.5 text-right">
-                          {ask ? (
-                            <>
-                              <span className="text-price block text-muted-foreground">{ask.primary}</span>
-                              <span className="text-overlay tnum text-muted-foreground/60">{ask.secondary}</span>
-                            </>
-                          ) : (
-                            <span className="text-meta">—</span>
-                          )}
-                        </td>
-                        <td className="px-3 py-2.5 text-right">
-                          {sold ? (
-                            <>
-                              <span className="text-price block text-foreground">{sold.primary}</span>
-                              <span className="text-overlay tnum text-muted-foreground/60">{sold.secondary}</span>
-                            </>
-                          ) : (
-                            <span className="text-meta">{t(displayLang, "noLatestSales")}</span>
-                          )}
-                        </td>
-                        <td className="px-3 py-2.5 text-right">
-                          <span className="text-meta tnum">{mounted && r.updatedAt ? relativeTime(r.updatedAt, displayLang) : "—"}</span>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            {/* mobile list (<sm) */}
-            <div className="divide-y divide-[var(--p-hair)] overflow-hidden rounded-xl hairline sm:hidden">
-              {marketRows.map((r) => {
-                const ask = askCell(r)
-                const sold = soldCell(r)
-                return (
-                  <div key={r.source} className="p-3">
-                    <div className="flex items-center gap-2">
-                      <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-background/50 ring-1 ring-[var(--p-hair)]">
-                        <SourceLogo source={r.source} size={20} />
-                      </span>
-                      <span className="min-w-0 flex-1 text-sm font-semibold text-foreground">{sourceLabel(r.source)}</span>
-                      <span className="text-meta tnum shrink-0">{mounted && r.updatedAt ? relativeTime(r.updatedAt, displayLang) : ""}</span>
-                    </div>
-                    <div className="mt-2 grid grid-cols-2 gap-2">
-                      <div className="rounded-lg bg-foreground/[0.03] px-2.5 py-1.5">
-                        <p className="text-overlay text-muted-foreground">{t(displayLang, "asksTab")}</p>
-                        {ask ? <p className="text-price text-muted-foreground">{ask.primary}</p> : <p className="text-meta">—</p>}
-                      </div>
-                      <div className="rounded-lg bg-foreground/[0.03] px-2.5 py-1.5">
-                        <p className="text-overlay text-muted-foreground">{t(displayLang, "soldTab")}</p>
-                        {sold ? <p className="text-price text-foreground">{sold.primary}</p> : <p className="text-meta">{t(displayLang, "noLatestSales")}</p>}
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-
-            {/* legend — ask vs sold doctrine: a listing is not a settled value */}
-            <div className="text-meta mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
-              <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-foreground" /> <b className="font-semibold text-foreground">{t(displayLang, "soldTab")}</b> {t(displayLang, "soldLegend")}</span>
-              <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-muted-foreground/40" /> {t(displayLang, "asksTab")} {t(displayLang, "askLegend")}</span>
-            </div>
-          </>
-        )}
-      </section>
+      {/* ── แหล่งอ้างอิง — per-source ask|sold, full width below the chart ───── */}
+      <MarketsTable
+        rows={marketRows}
+        gradeLabel={gradeLabel}
+        currency={currency}
+        lang={displayLang}
+        hydrated={hydrated}
+        sort={marketSort}
+        onSortChange={setMarketSort}
+      />
 
       {/* ── ขายบน Meecard / selling on our marketplace ─────────────────────── */}
       <section id="market" className="mt-10 scroll-mt-20">
