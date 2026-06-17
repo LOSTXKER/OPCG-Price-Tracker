@@ -33,7 +33,7 @@ port "multi-source pricing model" เข้าหน้าจริง `/cards/[
 ## ⚠️ decisions (เบส confirm)
 1. **Raw = เกรดเดียว** (เบส confirm 18 มิ.ย.: domain ไม่มี A/B/C — Yuyutei ตั้งราคา ungraded เป็นราคาเดียว) · ยุบ `grades.ts` GradeKey `raw_a/b/c`→`raw` + ลบ EST_RAW แล้ว · (decision เดิม "เก็บ raw_a/b/c เบื้องหลัง" ยกเลิก — `listingMatchesGrade` เช็คแค่ `startsWith("raw")` ไม่พึ่ง A/B/C จริง)
 2. raw markets = Yuyutei ไม่เอา SNKRDUNK (noisy) · graded = SNKRDUNK
-3. ad → page-tail ไม่ใช่ข้างกราฟ
+3. **ad = คอลัมน์ขวาตรงกราฟ** (เบสสั่ง 18 มิ.ย. · override เดิม) — `AdSlot placement="card-detail-chart-side"` ใน grid track `auto` (ยุบเองเมื่อ PRO/ad-free) + ยังเก็บ page-tail `card-detail-mid` · ⚠️ ขัด VISION §4.6 (price surface ควร ad-free) แต่เบสเลือก credibility trade-off เอง
 4. เทียบแหล่ง ยังไม่ทำ (mock) — ship เทียบเกรด/ข้ามตระกูลก่อน
 5. honesty: EstMark รายค่า · ไม่ปลอม sold · cross line = anchor จริง (solid) เท่านั้น
 

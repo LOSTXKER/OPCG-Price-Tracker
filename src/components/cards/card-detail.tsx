@@ -711,8 +711,8 @@ export function CardDetail({
         ))}
       </nav>
 
-      {/* ── price chart (full width) ────────────────────────────────────────── */}
-      <div className="mt-6">
+      {/* ── price chart + side ad column ────────────────────────────────────── */}
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
         {/* CHART — filter (Raw|Graded) + range + compare overlay */}
         <div className="min-w-0">
           <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -899,6 +899,12 @@ export function CardDetail({
           )}
         </div>
 
+        {/* side ad — beside the chart (เบส request). The `auto` grid track collapses
+            when AdSlot renders null (PRO = ad-free), so no empty gap appears.
+            NOTE: VISION §4.6 keeps the price surface ad-free for credibility. */}
+        <aside className="order-last min-w-0 lg:order-none">
+          <AdSlot placement="card-detail-chart-side" className="min-h-[320px] w-full lg:sticky lg:top-20 lg:w-[300px] xl:w-[336px]" />
+        </aside>
       </div>
 
       {/* ── แหล่งอ้างอิง — per-source ask|sold, full width below the chart ───── */}
