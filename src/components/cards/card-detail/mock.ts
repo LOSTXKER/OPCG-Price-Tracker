@@ -9,7 +9,10 @@
 import type { Stat } from "./grades"
 
 // Finer point counts so the line reads as real ticks, not a hand-drawn curve.
-const RANGE_POINTS: Record<string, number> = { "1M": 60, "3M": 90, "1Y": 180, All: 260 }
+// NOTE (honesty): "7D":28 = 4 pts/day for a smooth MOCK line only. Real 7D has ~7
+// daily points and should plot as ~7 points/step-dots, not 28 interpolated — swap
+// when the dated pipeline lands so we never imply sub-daily resolution we don't have.
+const RANGE_POINTS: Record<string, number> = { "7D": 28, "1M": 60, "3M": 90, "1Y": 180, All: 260 }
 
 // fract(sin(n)*k) — a cheap deterministic hash in [0,1). Pure: same n → same out.
 // (RNG + clock APIs throw in this runtime, so all "randomness" is seeded.)

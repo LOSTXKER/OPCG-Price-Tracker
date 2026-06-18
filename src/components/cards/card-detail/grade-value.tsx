@@ -94,6 +94,7 @@ export function Delta({
   size = "md",
   className,
   abs,
+  absFirst,
 }: {
   pct: number
   lang: Language
@@ -101,6 +102,9 @@ export function Delta({
   className?: string
   /** Pre-formatted absolute change string (display currency) shown beside the %. */
   abs?: string
+  /** Render the absolute change BEFORE the % (e.g. "+380,242 ฿ · 350.1%") — Robinhood
+   *  order, used in the price hero. Default keeps "% · +abs". */
+  absFirst?: boolean
 }) {
   const flat = Math.abs(pct) < 0.05
   const up = pct > 0
@@ -118,8 +122,18 @@ export function Delta({
     >
       {!flat && <span aria-hidden>{up ? "▲" : "▼"}</span>}
       <span className="sr-only">{flat ? "" : up ? t(lang, "deltaUp") : t(lang, "deltaDown")}</span>
-      {formatPct(Math.abs(pct))}%
-      {abs && !flat && <span className="font-medium opacity-75"> · {up ? "+" : "−"}{abs}</span>}
+      {absFirst && abs && !flat ? (
+        <>
+          <span className="font-medium">{up ? "+" : "−"}{abs}</span>
+          <span className="opacity-60"> · </span>
+          {formatPct(Math.abs(pct))}%
+        </>
+      ) : (
+        <>
+          {formatPct(Math.abs(pct))}%
+          {abs && !flat && <span className="font-medium opacity-75"> · {up ? "+" : "−"}{abs}</span>}
+        </>
+      )}
     </span>
   )
 }

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 
-import { rebaseToIndex } from "./card-chart"
+import { niceTicks, rebaseToIndex } from "./card-chart"
 
 describe("rebaseToIndex", () => {
   it("rebases the first point to 100", () => {
@@ -26,5 +26,51 @@ describe("rebaseToIndex", () => {
   it("returns input unchanged when the base is 0 or the series is empty", () => {
     expect(rebaseToIndex([0, 5])).toEqual([0, 5])
     expect(rebaseToIndex([])).toEqual([])
+  })
+})
+
+describe("niceTicks", () => {
+  const stepUnit = (step: number) => step / 10 ** Math.floor(Math.log10(step))
+
+  it("produces round ฿-domain ticks (50K-style), not 56K/134K/209K/285K", () => {
+    const ticks = niceTicks(56000, 285000, 5)
+    expect(ticks.length).toBeGreaterThanOrEqual(3)
+    const step = ticks[1] - ticks[0]
+    // step is a clean 1/2/5 × 10ⁿ value, and every tick is a multiple of it
+    expect([1, 2, 5]).toContain(Math.round(stepUnit(step)))
+    for (const v of ticks) expect(Math.round(v / step) * step).toBeCloseTo(v)
+  })
+
+  it("produces round %-domain ticks for the indexed compare axis", () => {
+    const ticks = niceTicks(88, 142, 5)
+    expect(ticks).toContain(100) // the 100 baseline (+0%) is on a tick
+    for (const v of ticks) expect(v % 10).toBe(0)
+  })
+
+  it("does not divide-by-zero on a flat (min===max) series", () => {
+    const ticks = niceTicks(50, 50)
+    expect(ticks.length).toBeGreaterThanOrEqual(1)
+    expect(Number.isFinite(ticks[0])).toBe(true)
+  })
+
+  it("never excludes 2.5 → no tick that compactDisplayValue would mislabel as 3K", () => {
+    const ticks = niceTicks(0, 12500, 5)
+    const step = ticks[1] - ticks[0]
+    expect([1, 2, 5]).toContain(Math.round(stepUnit(step)))
+  })
+
+  it("keeps every returned tick within [lo, hi]", () => {
+    const cases: [number, number][] = [
+      [311, 980],
+      [9000, 46200],
+      [100, 165],
+      [56000, 285000],
+    ]
+    for (const [lo, hi] of cases) {
+      for (const v of niceTicks(lo, hi, 5)) {
+        expect(v).toBeGreaterThanOrEqual(lo)
+        expect(v).toBeLessThanOrEqual(hi)
+      }
+    }
   })
 })

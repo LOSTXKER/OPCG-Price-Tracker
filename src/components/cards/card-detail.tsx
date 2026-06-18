@@ -156,12 +156,24 @@ const GRADED_KEYS: GradeKey[] = ["psa_10", "psa_9", "psa_8", "bgs_95"]
 // Distinct compare hues (no gold — reserved for transact CTAs; no green/red —
 // those signal trend on the solo line). Used only when 2+ grades are overlaid.
 const COMPARE_PALETTE = ["#4a90e2", "#5ec9a7", "#b07ce8", "#e0699b"]
+// Hard ceiling on overlaid chart lines — even when real per-grade history lands and
+// trajectories diverge, never pile more than this many lines (keeps it legible).
+const MAX_CHART_LINES = 3
 // Compare-line color is keyed to the GRADE (a stable slot), not the overlay's
 // array position — so toggling one line on/off never recolors the others. Color-
 // only: this does NOT widen the compare SET (familyKeys stays same-family).
 const COMPARE_HUE_ORDER: GradeKey[] = [...RAW_KEYS, ...GRADED_KEYS]
 const compareHue = (key: GradeKey) =>
   COMPARE_PALETTE[Math.max(0, COMPARE_HUE_ORDER.indexOf(key)) % COMPARE_PALETTE.length]
+
+// Low/High bar period — INDEPENDENT of the chart range (CoinMarketCap pattern). No
+// "24h": one price/day makes a 24h low/high degenerate or fabricated, so the shortest
+// HONEST window is 7d. Each maps to a real RANGE_POINTS key so the mock never falls back.
+const BAR_PERIODS = ["7d", "1m", "1y", "all"] as const
+type BarPeriod = (typeof BAR_PERIODS)[number]
+const BAR_PERIOD_RANGE: Record<BarPeriod, ChartRange> = { "7d": "7D", "1m": "1M", "1y": "1Y", all: "All" }
+const barPeriodLabel = (p: BarPeriod) =>
+  p === "7d" ? "barPeriod7d" : p === "1m" ? "barPeriod1m" : p === "1y" ? "barPeriod1y" : "barPeriodAll"
 
 const COLOR_DOT: Record<string, string> = {
   red: "bg-red-500",
@@ -206,6 +218,7 @@ export function CardDetail({
 
   const [edition, setEdition] = useState<Edition>("JP")
   const [range, setRange] = useState<ChartRange>("1M")
+  const [barPeriod, setBarPeriod] = useState<BarPeriod>("1m")
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [compareGrades, setCompareGrades] = useState<Set<GradeKey>>(() => new Set())
   // Cross-family overlay: append the OTHER family's real anchor (PSA 10 ⇄ Raw) as
@@ -301,8 +314,8 @@ export function CardDetail({
   // Same-family compare chips (exclude the primary) — also gates the divider before
   // the cross-family pill so the two groups read as distinct.
   const sameFamilyCompareKeys = familyGrades.filter((k) => k !== selectedGrade)
-  const seriesList = useMemo<ChartSeries[]>(() => {
-    if (!hydrated || !datum.hasData) return []
+  const { lines: seriesList, ladderKeys } = useMemo<{ lines: ChartSeries[]; ladderKeys: GradeKey[] }>(() => {
+    if (!hydrated || !datum.hasData) return { lines: [], ladderKeys: [] }
     const keys = chartMode === "raw" ? RAW_KEYS : GRADED_KEYS
     const ordered = [selectedGrade, ...keys.filter((k) => k !== selectedGrade && compareGrades.has(k))]
     // Cross-family: append the OTHER family's real anchor LAST — keeps selectedGrade
@@ -311,16 +324,26 @@ export function CardDetail({
     const inputs = ordered
       .map((k) => ({ k, base: statToDisplayValue(gradeData[k].value, currency), trendUp: (gradeData[k].delta30d?.pct ?? 0) >= 0, pct: gradeData[k].delta30d?.pct ?? null }))
       .filter((i) => i.base != null && i.base > 0)
-    if (!inputs.length) return []
-    const seriesMap = mockGradeSeries(inputs.map((i) => ({ key: i.k, base: i.base, up: i.trendUp, pct: i.pct })), range)
-    const solo = inputs.length === 1
-    return inputs.map((i) => ({
+    if (!inputs.length) return { lines: [], ladderKeys: [] }
+    // Only DRAW a non-primary line if its modeled 30d % differs from the primary's — else
+    // its indexed trajectory is identical and N overlapping lines read as a bug. Today every
+    // graded tier + the cross anchor reuse rawDelta30d → this collapses to ONE line; the rest
+    // become a price-LEVEL ladder (their genuinely-distinct signal). No synthetic divergence is
+    // invented (honesty). Re-enables multi-line automatically once real per-grade history makes
+    // the deltas differ. Pure (no clock/RNG) → SSR-safe.
+    const primaryPct = inputs[0].pct ?? 0
+    const drawn = inputs.filter((i, idx) => idx === 0 || Math.abs((i.pct ?? 0) - primaryPct) > 0.1).slice(0, MAX_CHART_LINES)
+    const ladder = inputs.filter((i) => !drawn.includes(i)).map((i) => i.k)
+    const seriesMap = mockGradeSeries(drawn.map((i) => ({ key: i.k, base: i.base, up: i.trendUp, pct: i.pct })), range)
+    const solo = drawn.length === 1
+    const lines = drawn.map((i) => ({
       key: i.k,
       label: gradeData[i.k].tier.label,
       points: seriesMap[i.k] ?? [],
       color: solo ? (up ? "var(--price-up)" : "var(--price-down)") : compareHue(i.k),
       isEst: gradeData[i.k].value.isEst,
     }))
+    return { lines, ladderKeys: ladder }
   }, [hydrated, datum.hasData, chartMode, selectedGrade, compareGrades, vsOther, crossKey, crossAvailable, gradeData, currency, range, up])
 
   const primaryPoints = seriesList[0]?.points ?? []
@@ -358,11 +381,28 @@ export function CardDetail({
   }
   const seriesColor = new Map(seriesList.map((s) => [s.key, s.color]))
 
-  // 30-day band — modeled around the reference value until a real comp range
-  // lands (flagged `est`). Feeds the range bar + "30-day range" stat + asks-rail high.
+  // Modeled ±7% band — kept only to feed the asks-rail rangeHigh (a "sell a touch
+  // above market" hint). NOT shown to the user anymore (replaced by the real low/high bar).
   const band = latest != null ? { lo: Math.round(latest * 0.93), hi: Math.round(latest * 1.06) } : null
-  const markerPct =
-    band && band.hi > band.lo && latest != null ? Math.max(0, Math.min(100, ((latest - band.lo) / (band.hi - band.lo)) * 100)) : 50
+
+  // CoinMarketCap-style low/high bar — its OWN period (barPeriod), DECOUPLED from the
+  // chart range. min/max of a series generated for that period; marker = where the
+  // CURRENT price sits between them. Honest by construction: "low" agrees with the
+  // headline % move (a riser's low is its window-open price, not a fabricated −7%).
+  const barPoints = useMemo(() => {
+    if (!hydrated || !datum.hasData || latest == null || latest <= 0) return []
+    const m = mockGradeSeries(
+      [{ key: selectedGrade, base: latest, up, pct: datum.delta30d?.pct ?? null }],
+      BAR_PERIOD_RANGE[barPeriod],
+    )
+    return m[selectedGrade] ?? []
+  }, [hydrated, datum.hasData, datum.delta30d?.pct, selectedGrade, latest, up, barPeriod])
+  const priceLow = barPoints.length >= 2 ? Math.min(...barPoints) : null
+  const priceHigh = barPoints.length >= 2 ? Math.max(...barPoints) : null
+  const pricePos =
+    priceLow != null && priceHigh != null && priceHigh > priceLow && latest != null
+      ? Math.max(0, Math.min(100, ((latest - priceLow) / (priceHigh - priceLow)) * 100))
+      : 50
 
   const meecardAsks = useMemo(
     () => (listings ?? []).filter((l) => listingMatchesGrade(l.condition, gradeLabel)).sort((a, b) => a.priceJpy - b.priceJpy),
@@ -405,6 +445,15 @@ export function CardDetail({
   const realSourceCount = marketRows.length
 
   const updatedLabel = relativeDaysLabel(daysSinceUpdate, displayLang)
+  // Surface staleness honestly: ≥30d old → a warning-tinted chip (real --warning token),
+  // not buried muted text. Fresh data (or unknown) stays plain.
+  const isStale = daysSinceUpdate != null && daysSinceUpdate >= 30
+  // Readable timeframe for the change delta — a bare "1M" reads as "1 million" next to
+  // a big ฿ figure. At rest shows the window word; while scrubbing the chart shows the date.
+  const windowLabel = t(
+    displayLang,
+    range === "7D" ? "window7D" : range === "1M" ? "window1M" : range === "3M" ? "window3M" : range === "1Y" ? "window1Y" : "windowAll",
+  )
   const TABS: { id: string; label: string }[] = [
     { id: "overview", label: t(displayLang, "overview") },
     { id: "sources", label: t(displayLang, "referenceSources") },
@@ -565,30 +614,34 @@ export function CardDetail({
             </div>
           </div>
 
-          <div key={`${selectedGrade}-${range}`} className="rise mt-3 flex flex-wrap items-end gap-x-3 gap-y-1">
-            <span className="tnum text-display leading-none text-foreground">
-              {activeValue == null ? "—" : formatDisplayValue(activeValue, currency)}
-            </span>
-            {shownDelta != null && (
-              <span className="flex items-center pb-1">
-                <Delta pct={shownDelta} abs={shownAbs != null ? formatDisplayValue(shownAbs, currency) : undefined} lang={displayLang} size="lg" />
-                <span className="ml-1.5 text-meta text-foreground/60">{shownDate ?? range}</span>
+          <div key={`${selectedGrade}-${range}`} className="rise mt-3">
+            <div className="flex items-end gap-x-2">
+              <span className="tnum text-display leading-none text-foreground">
+                {activeValue == null ? "—" : formatDisplayValue(activeValue, currency)}
               </span>
+              {datum.hasData && datum.value.isEst && <EstMark lang={displayLang} className="pb-1.5" />}
+            </div>
+            {shownDelta != null && (
+              <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                <Delta pct={shownDelta} abs={shownAbs != null ? formatDisplayValue(shownAbs, currency) : undefined} absFirst lang={displayLang} size="lg" />
+                <span className="text-meta text-muted-foreground/70">{shownDate ?? windowLabel}</span>
+              </div>
             )}
-            {datum.hasData && datum.value.isEst && <EstMark lang={displayLang} className="pb-1.5" />}
           </div>
 
-          <p className="text-meta mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+          {/* provenance — ONE scannable line: what-it-is (ask/sold pill · source · grade)
+              then freshness at the tail. ask = outline pill, sold = green-filled (unmistakable). */}
+          <p className="text-meta mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
             {datum.value.isEst ? (
               <span>{editionLabel} · {gradeLabel}</span>
             ) : (
-              <span className="inline-flex flex-wrap items-center gap-x-1.5">
+              <>
                 <span
-                  className="rounded-full px-1.5 py-0.5 text-micro font-semibold"
-                  style={{
-                    background: heroIsSold ? "color-mix(in srgb, var(--price-up) 14%, transparent)" : "var(--p-hair)",
-                    color: heroIsSold ? "var(--price-up)" : "var(--muted-foreground)",
-                  }}
+                  className={cn(
+                    "rounded-full px-1.5 py-0.5 text-micro font-semibold",
+                    !heroIsSold && "border border-foreground/20 text-muted-foreground",
+                  )}
+                  style={heroIsSold ? { background: "color-mix(in srgb, var(--price-up) 14%, transparent)", color: "var(--price-up)" } : undefined}
                 >
                   {heroIsSold ? t(displayLang, "lastSold") : t(displayLang, "askPriceVerb")}
                 </span>
@@ -597,7 +650,7 @@ export function CardDetail({
                 </span>
                 <span className="text-muted-foreground/40">·</span>
                 <span>{editionLabel} · {gradeLabel}</span>
-              </span>
+              </>
             )}
             {realSourceCount >= 2 && (
               <>
@@ -608,22 +661,47 @@ export function CardDetail({
               </>
             )}
             <span className="text-muted-foreground/40">·</span>
-            <span className="text-muted-foreground/60">{updatedLabel}</span>
+            {/* freshness inline — stale (≥30d) reads as light amber TEXT (honest, but not a
+                loud filled chip); fresh stays muted. */}
+            <span className={cn("tnum", !isStale && "text-muted-foreground/60")} style={isStale ? { color: "var(--warning)" } : undefined}>
+              {updatedLabel}
+            </span>
           </p>
 
-          {/* 30-day range bar — reference price located within its modeled band */}
-          {band && (
-            <div className="mt-4 max-w-sm">
-              <div className="relative h-1.5 rounded-full bg-foreground/10">
-                <div className="absolute inset-y-0 left-0 rounded-full bg-foreground/25" style={{ width: `${markerPct}%` }} />
-                <span className="absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-background bg-foreground" style={{ left: `${markerPct}%` }} />
-              </div>
-              <div className="text-overlay mt-1 flex justify-between text-muted-foreground">
-                <span className="tnum">{t(displayLang, "low")} · {compactDisplayValue(band.lo, currency)}</span>
-                <span className="tnum inline-flex items-center gap-1">
-                  {t(displayLang, "high")} · {compactDisplayValue(band.hi, currency)} <EstMark lang={displayLang} />
+          {/* low / high position bar (CoinMarketCap-style) — REAL min/max over the bar's OWN
+              period (the dropdown), DECOUPLED from the chart range; the marker shows where the
+              current price sits between them. Client-only (needs the series) → no SSR mismatch. */}
+          {hydrated && priceLow != null && priceHigh != null && priceHigh > priceLow && (
+            <div className="mt-3 flex max-w-sm flex-wrap items-center gap-x-2 gap-y-1">
+              <div className="flex flex-1 items-center gap-2">
+                <span className="text-overlay tnum shrink-0 text-muted-foreground/70">
+                  {t(displayLang, "low")} {compactDisplayValue(priceLow, currency)}
+                </span>
+                <div className="relative h-1.5 flex-1 rounded-full bg-foreground/10">
+                  <div className="absolute inset-y-0 left-0 rounded-full bg-foreground/30" style={{ width: `${pricePos}%` }} />
+                  <span
+                    className="absolute top-1/2 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-background bg-foreground"
+                    style={{ left: `${pricePos}%` }}
+                  />
+                </div>
+                <span className="text-overlay tnum inline-flex shrink-0 items-center gap-1 text-muted-foreground/70">
+                  {t(displayLang, "high")} {compactDisplayValue(priceHigh, currency)}
+                  {datum.value.isEst && <EstMark lang={displayLang} />}
                 </span>
               </div>
+              {/* period selector — the bar's own window (7d/1m/1y/all), not the chart's. */}
+              <select
+                value={barPeriod}
+                onChange={(e) => setBarPeriod(e.target.value as BarPeriod)}
+                aria-label={t(displayLang, "lowHighPeriod")}
+                className="ease-chrome text-micro tnum shrink-0 rounded-full bg-foreground/[0.045] px-2 py-0.5 text-muted-foreground ring-1 ring-[var(--p-hair)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                {BAR_PERIODS.map((p) => (
+                  <option key={p} value={p}>
+                    {t(displayLang, barPeriodLabel(p))}
+                  </option>
+                ))}
+              </select>
             </div>
           )}
         </div>
@@ -780,7 +858,7 @@ export function CardDetail({
                       )}
                     >
                       {on ? (
-                        <span className="size-2 rounded-full" style={{ background: seriesColor.get(k) ?? "var(--muted-foreground)" }} />
+                        <span className="size-2 rounded-full" style={{ background: seriesColor.get(k) ?? compareHue(k) }} />
                       ) : (
                         <Plus className="size-3" aria-hidden />
                       )}
@@ -873,9 +951,10 @@ export function CardDetail({
             <div className={cn("rounded-xl bg-muted/10", chartHeights)} aria-hidden />
           )}
 
-          {/* scrub affordance — the chart is draggable but that's invisible at rest */}
+          {/* touch-only scrub hint — desktop now inspects on hover, so the hint is
+              redundant there and shows only on phones where the drag isn't obvious */}
           {datum.hasData && hydrated && (
-            <p className="text-meta mt-2 hidden items-center justify-center gap-1.5 sm:flex">
+            <p className="text-meta mt-2 flex items-center justify-center gap-1.5 sm:hidden">
               <MoveHorizontal className="size-3.5" aria-hidden /> {t(displayLang, "dragChartHint")}
             </p>
           )}
@@ -895,6 +974,43 @@ export function CardDetail({
                   </span>
                 )
               })}
+            </div>
+          )}
+
+          {/* grade ladder — toggled grades whose modeled trajectory is identical to the
+              primary's are NOT drawn as overlapping lines (honest); they show here as a real,
+              distinct price LEVEL + premium/discount vs the selected grade. */}
+          {ladderKeys.length > 0 && (
+            <div className="mt-3 rounded-xl bg-foreground/[0.025] p-3">
+              <p className="text-eyebrow mb-2">{t(displayLang, "compareGrades")}</p>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="size-2.5 shrink-0 rounded-full" style={{ background: seriesList[0]?.color ?? "var(--foreground)" }} />
+                  <span className="font-semibold text-foreground">{gradeLabel}</span>
+                  <span className="tnum ml-auto font-semibold text-foreground">
+                    {latest != null ? formatDisplayValue(latest, currency) : "—"}
+                  </span>
+                </div>
+                {ladderKeys.map((k) => {
+                  const v = statToDisplayValue(gradeData[k].value, currency)
+                  const ratio = v != null && latest != null && latest > 0 ? (v / latest) * 100 : null
+                  return (
+                    <div key={k} className="flex items-center gap-2 text-sm">
+                      <span className="size-2.5 shrink-0 rounded-full" style={{ background: compareHue(k) }} />
+                      <span className="font-medium text-foreground/85">{gradeData[k].tier.label}</span>
+                      {ratio != null && (
+                        <span className="text-meta">
+                          {ratio < 1 ? "<1" : Math.round(ratio)}% {t(displayLang, "ofGrade")} {gradeLabel}
+                        </span>
+                      )}
+                      <span className="tnum ml-auto inline-flex items-center gap-1 text-foreground/85">
+                        {v != null ? formatDisplayValue(v, currency) : "—"}
+                        {gradeData[k].value.isEst && <EstMark lang={displayLang} />}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
             </div>
           )}
         </div>
