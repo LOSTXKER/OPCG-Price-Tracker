@@ -196,7 +196,10 @@
   --elev-overlay: inset 0 0 0 1px var(--p-hair), 0 12px 48px rgba(0,0,0,0.4);
 
   --price-up: #46D68B;
-  --price-down: #FF7A6B;
+  /* Down was a pale salmon (#FF7A6B) — lighter-weight than the vivid up-mint, so dark
+     down-charts/deltas read washed-out. Push to a saturated coral so up & down carry
+     equal authority on the dark plot. */
+  --price-down: #FF6155;
   --chance-mid: #FF9F0A;
   --game-accent: var(--primary);
 

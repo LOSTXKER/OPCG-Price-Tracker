@@ -113,6 +113,8 @@ export const en = {
   marketPrice: "Market Price",
   priceHistory: "Price History",
   noPriceHistory: "No price history yet",
+  singlePricePoint: "Only one price recorded",
+  fromWindowOpen: "vs. open",
   noData24h: "No data for last 24h",
   details: "Details",
   type: "Type",

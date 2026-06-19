@@ -113,6 +113,8 @@ export const jp = {
   marketPrice: "市場価格",
   priceHistory: "価格推移",
   noPriceHistory: "価格履歴なし",
+  singlePricePoint: "記録された価格は1件のみ",
+  fromWindowOpen: "始値比",
   noData24h: "24時間データなし",
   details: "詳細",
   type: "タイプ",
