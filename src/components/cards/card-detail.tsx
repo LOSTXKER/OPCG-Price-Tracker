@@ -1,8 +1,8 @@
 "use client"
 
 import Image from "next/image"
-import { Fragment, useEffect, useMemo, useRef, useState } from "react"
-import { Bell, ChevronRight, Info, MoveHorizontal, Plus, Share2, ShoppingBag, Tag } from "lucide-react"
+import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from "react"
+import { Bell, ChevronRight, Info, MoveHorizontal, Share2, ShoppingBag, Tag } from "lucide-react"
 
 import { Breadcrumb } from "@/components/shared/breadcrumb"
 import type { CardListing } from "@/components/cards/card-listings-section"
@@ -149,23 +149,6 @@ function firstSource(rows: SourcePriceRow[] | undefined, source: string) {
 }
 
 
-// Compare is scoped to ONE family at a time (raw OR graded) so overlaid lines
-// share a currency + price scale — never Raw(JPY) vs Graded(USD) on one axis.
-const RAW_KEYS: GradeKey[] = ["raw"]
-const GRADED_KEYS: GradeKey[] = ["psa_10", "psa_9", "psa_8", "bgs_95"]
-// Distinct compare hues (no gold — reserved for transact CTAs; no green/red —
-// those signal trend on the solo line). Used only when 2+ grades are overlaid.
-const COMPARE_PALETTE = ["#4a90e2", "#5ec9a7", "#b07ce8", "#e0699b"]
-// Hard ceiling on overlaid chart lines — even when real per-grade history lands and
-// trajectories diverge, never pile more than this many lines (keeps it legible).
-const MAX_CHART_LINES = 3
-// Compare-line color is keyed to the GRADE (a stable slot), not the overlay's
-// array position — so toggling one line on/off never recolors the others. Color-
-// only: this does NOT widen the compare SET (familyKeys stays same-family).
-const COMPARE_HUE_ORDER: GradeKey[] = [...RAW_KEYS, ...GRADED_KEYS]
-const compareHue = (key: GradeKey) =>
-  COMPARE_PALETTE[Math.max(0, COMPARE_HUE_ORDER.indexOf(key)) % COMPARE_PALETTE.length]
-
 // Low/High bar period — INDEPENDENT of the chart range (CoinMarketCap pattern). No
 // "24h": one price/day makes a 24h low/high degenerate or fabricated, so the shortest
 // HONEST window is 7d. Each maps to a real RANGE_POINTS key so the mock never falls back.
@@ -184,18 +167,6 @@ const COLOR_DOT: Record<string, string> = {
   yellow: "bg-yellow-400",
 }
 
-/** Pure freshness label from the server-precomputed day count — never calls a
- *  render-time clock (React 19 purity), so server & client render identically. */
-function relativeDaysLabel(days: number | null | undefined, lang: Language): string {
-  if (days == null) return "—"
-  if (days <= 0) return lang === "EN" ? "today" : lang === "JP" ? "今日" : "วันนี้"
-  if (days >= 30) {
-    const m = Math.floor(days / 30)
-    return lang === "EN" ? `${m}mo ago` : lang === "JP" ? `${m}か月前` : `${m} เดือนที่แล้ว`
-  }
-  return lang === "EN" ? `${days}d ago` : lang === "JP" ? `${days}日前` : `${days} วันที่แล้ว`
-}
-
 export function CardDetail({
   card,
   siblings,
@@ -204,7 +175,6 @@ export function CardDetail({
   sourcePricesRaw,
   sourcePricesPsa10,
   latestUpdatedAt,
-  daysSinceUpdate,
   listings,
 }: CardDetailProps) {
   const lang = useUIStore((s) => s.language)
@@ -220,11 +190,6 @@ export function CardDetail({
   const [range, setRange] = useState<ChartRange>("1M")
   const [barPeriod, setBarPeriod] = useState<BarPeriod>("1m")
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
-  const [compareGrades, setCompareGrades] = useState<Set<GradeKey>>(() => new Set())
-  // Cross-family overlay: append the OTHER family's real anchor (PSA 10 ⇄ Raw) as
-  // one indexed-% chart line. Chart-only — never changes selectedGrade/chartMode, so
-  // the hero + #sources table + recent-sales stay locked to the primary family.
-  const [vsOther, setVsOther] = useState(false)
   const [marketSort, setMarketSort] = useState<"price" | "fresh">("price")
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [alertOpen, setAlertOpen] = useState(false)
@@ -284,102 +249,59 @@ export function CardDetail({
   const datum = gradeData[selectedGrade]
   const gradeLabel = datum.tier.label
   const chartMode = gradeToChartMode(selectedGrade)
-  // Cross-family compare anchors to the OTHER family's REAL grade (Yuyutei Raw ⇄
-  // SNKRDUNK PSA 10) so the overlay line is solid/real, not a modeled est. The pill
-  // is disabled when that anchor has no data.
-  const crossKey: GradeKey = chartMode === "raw" ? "psa_10" : "raw"
-  const crossAvailable = gradeData[crossKey].hasData
-  const crossLabel = gradeData[crossKey].tier.label
-  // Cross pill mirrors the grade-ladder look: a brand logo + the bare grade number
-  // for graded anchors ("vs [PSA] 10"), the plain label for raw ("vs Raw").
-  const crossIsGraded = gradeData[crossKey].tier.family !== "raw"
-  const crossNum = crossIsGraded ? crossLabel.replace(/^(PSA|BGS|CGC)\s*/i, "") : crossLabel
   // External source rows are labelled with the condition the SOURCE actually
   // carries (Raw via Yuyutei · PSA 10 via SNKRDUNK), never the selected modeled
   // tier — so a modeled "PSA 9" view never makes the real PSA 10 ask read as PSA 9.
-  const editionLabel = edition === "EN" ? t(displayLang, "enEdition") : t(displayLang, "jpEdition")
   const latest = statToDisplayValue(datum.value, currency)
   const up = (datum.delta30d?.pct ?? 0) >= 0
+  // The % + line must follow the SELECTED range, not a fixed 30d. We hold one real anchor
+  // (the grade's 30d delta); scale it sub-linearly by √(windowDays/30) so each range shows a
+  // DISTINCT, damped move (7D smaller, 1Y bigger) instead of a flat 30d everywhere. 1M = the
+  // real 30d; 7D/3M/1Y/All are MODELED from it (swap for real per-range history when the
+  // pipeline lands). chartUp keeps the line colour + pill arrow + % in agreement per range.
+  const rangeFactor = Math.sqrt(
+    (range === "7D" ? 7 : range === "1M" ? 30 : range === "3M" ? 90 : range === "1Y" ? 365 : 730) / 30,
+  )
+  const rangeDeltaPct = datum.delta30d?.pct != null ? datum.delta30d.pct * rangeFactor : null
+  const chartUp = (rangeDeltaPct ?? 0) >= 0
   // Hero label honesty (VISION §5.1): a settled sale vs a listing ask must read
   // differently. Raw = Yuyutei ask → "ราคาตั้งขาย"; graded with a real SNKRDUNK
   // sale → "ขายล่าสุด". Modeled tiers (PSA 9/8, isEst) keep their EstMark instead.
   const heroIsSold = datum.lastSaleSource != null
   const heroSourceCode = datum.lastSaleSource ?? (chartMode === "raw" ? "YUYUTEI" : "SNKRDUNK")
 
-  // Per-grade chart series — primary (selectedGrade) first, then same-family
-  // compare grades the user toggled on. mockGradeSeries pools them on one display-
-  // currency scale; a solo line keeps the green/red trend color, compare uses palette.
-  const familyKeys = chartMode === "raw" ? RAW_KEYS : GRADED_KEYS
-  const familyGrades = familyKeys.filter((k) => gradeData[k].hasData)
-  // Same-family compare chips (exclude the primary) — also gates the divider before
-  // the cross-family pill so the two groups read as distinct.
-  const sameFamilyCompareKeys = familyGrades.filter((k) => k !== selectedGrade)
-  const { lines: seriesList, ladderKeys } = useMemo<{ lines: ChartSeries[]; ladderKeys: GradeKey[] }>(() => {
-    if (!hydrated || !datum.hasData) return { lines: [], ladderKeys: [] }
-    const keys = chartMode === "raw" ? RAW_KEYS : GRADED_KEYS
-    const ordered = [selectedGrade, ...keys.filter((k) => k !== selectedGrade && compareGrades.has(k))]
-    // Cross-family: append the OTHER family's real anchor LAST — keeps selectedGrade
-    // at index 0 (the primary area/bold line) and same-family colors stable on toggle.
-    if (vsOther && crossAvailable && !ordered.includes(crossKey)) ordered.push(crossKey)
-    const inputs = ordered
-      .map((k) => ({ k, base: statToDisplayValue(gradeData[k].value, currency), trendUp: (gradeData[k].delta30d?.pct ?? 0) >= 0, pct: gradeData[k].delta30d?.pct ?? null }))
-      .filter((i) => i.base != null && i.base > 0)
-    if (!inputs.length) return { lines: [], ladderKeys: [] }
-    // Only DRAW a non-primary line if its modeled 30d % differs from the primary's — else
-    // its indexed trajectory is identical and N overlapping lines read as a bug. Today every
-    // graded tier + the cross anchor reuse rawDelta30d → this collapses to ONE line; the rest
-    // become a price-LEVEL ladder (their genuinely-distinct signal). No synthetic divergence is
-    // invented (honesty). Re-enables multi-line automatically once real per-grade history makes
-    // the deltas differ. Pure (no clock/RNG) → SSR-safe.
-    const primaryPct = inputs[0].pct ?? 0
-    const drawn = inputs.filter((i, idx) => idx === 0 || Math.abs((i.pct ?? 0) - primaryPct) > 0.1).slice(0, MAX_CHART_LINES)
-    const ladder = inputs.filter((i) => !drawn.includes(i)).map((i) => i.k)
-    const seriesMap = mockGradeSeries(drawn.map((i) => ({ key: i.k, base: i.base, up: i.trendUp, pct: i.pct })), range)
-    const solo = drawn.length === 1
-    const lines = drawn.map((i) => ({
-      key: i.k,
-      label: gradeData[i.k].tier.label,
-      points: seriesMap[i.k] ?? [],
-      color: solo ? (up ? "var(--price-up)" : "var(--price-down)") : compareHue(i.k),
-      isEst: gradeData[i.k].value.isEst,
-    }))
-    return { lines, ladderKeys: ladder }
-  }, [hydrated, datum.hasData, chartMode, selectedGrade, compareGrades, vsOther, crossKey, crossAvailable, gradeData, currency, range, up])
+  // Chart series — ONE line for the selected grade only. Grade compare/overlays were
+  // removed for clarity; per-grade prices still live in the grade selector chips above.
+  const seriesList = useMemo<ChartSeries[]>(() => {
+    if (!hydrated || !datum.hasData) return []
+    const base = statToDisplayValue(datum.value, currency)
+    if (base == null || base <= 0) return []
+    const seriesMap = mockGradeSeries([{ key: selectedGrade, base, up: chartUp, pct: rangeDeltaPct }], range)
+    return [
+      {
+        key: selectedGrade,
+        label: gradeLabel,
+        points: seriesMap[selectedGrade] ?? [],
+        color: chartUp ? "var(--price-up)" : "var(--price-down)",
+        isEst: datum.value.isEst,
+      },
+    ]
+  }, [hydrated, datum.hasData, datum.value, rangeDeltaPct, chartUp, selectedGrade, gradeLabel, range, currency])
 
   const primaryPoints = seriesList[0]?.points ?? []
   const activeValue = activeIndex != null && primaryPoints[activeIndex] != null ? primaryPoints[activeIndex] : latest
   const open = primaryPoints[0] ?? null
+  // % is ALWAYS the change of the DISPLAYED line over the selected window (open→now at rest,
+  // open→scrubbed while scrubbing) — so it follows the range filter and matches the line, never
+  // a stale fixed 30d. (open = primaryPoints[0] = the range's first point.)
   const shownDelta =
-    activeIndex != null && open != null && activeValue != null
-      ? ((activeValue - open) / open) * 100
-      : datum.delta30d?.pct ?? null
-  const shownAbs =
-    activeIndex != null && open != null && activeValue != null
-      ? Math.abs(activeValue - open)
-      : latest != null && datum.delta30d != null
-        ? Math.abs(latest - latest / (1 + datum.delta30d.pct / 100))
-        : null
+    open != null && activeValue != null && open !== 0 ? ((activeValue - open) / open) * 100 : null
+  // While scrubbing, the % covers open→hovered — so show that DATE SPAN (not just the hovered
+  // date) so it's clear what window the % is for. At rest the window word (windowLabel) is used.
   const shownDate =
-    activeIndex != null ? dateAtIndex({ i: activeIndex, len: primaryPoints.length, range, latestUpdatedAt, lang: displayLang }) : null
-
-  const switchFamily = (graded: boolean) => {
-    const keys = graded ? GRADED_KEYS : RAW_KEYS
-    const def = keys.find((k) => gradeData[k].hasData) ?? keys[0]
-    setActiveIndex(null)
-    setCompareGrades(new Set())
-    setVsOther(false)
-    setSelectedGrade(def)
-  }
-  const toggleCompare = (k: GradeKey) => {
-    setActiveIndex(null)
-    setCompareGrades((prev) => {
-      const next = new Set(prev)
-      if (next.has(k)) next.delete(k)
-      else if (next.size < 3) next.add(k)
-      return next
-    })
-  }
-  const seriesColor = new Map(seriesList.map((s) => [s.key, s.color]))
+    activeIndex != null && primaryPoints.length > 1
+      ? `${dateAtIndex({ i: 0, len: primaryPoints.length, range, latestUpdatedAt, lang: displayLang })} – ${dateAtIndex({ i: activeIndex, len: primaryPoints.length, range, latestUpdatedAt, lang: displayLang })}`
+      : null
 
   // Modeled ±7% band — kept only to feed the asks-rail rangeHigh (a "sell a touch
   // above market" hint). NOT shown to the user anymore (replaced by the real low/high bar).
@@ -444,16 +366,49 @@ export function CardDetail({
 
   const realSourceCount = marketRows.length
 
-  const updatedLabel = relativeDaysLabel(daysSinceUpdate, displayLang)
-  // Surface staleness honestly: ≥30d old → a warning-tinted chip (real --warning token),
-  // not buried muted text. Fresh data (or unknown) stays plain.
-  const isStale = daysSinceUpdate != null && daysSinceUpdate >= 30
   // Readable timeframe for the change delta — a bare "1M" reads as "1 million" next to
   // a big ฿ figure. At rest shows the window word; while scrubbing the chart shows the date.
   const windowLabel = t(
     displayLang,
     range === "7D" ? "window7D" : range === "1M" ? "window1M" : range === "3M" ? "window3M" : range === "1Y" ? "window1Y" : "windowAll",
   )
+
+  // Provenance line, built as an array so separators interleave cleanly (no orphan
+  // dots when a part is absent). Order: what-it-is (ask/sold pill) → reference source →
+  // (median, when ≥2 sources). Edition·grade is intentionally NOT shown here — it's
+  // already carried by the grade chips + chart header — so the line reads as plain words
+  // ("ราคาตั้งขาย · อ้างอิง Yuyu-tei"). Freshness ("อัปเดต …") is deliberately omitted (เบส).
+  const provenanceParts: ReactNode[] = []
+  if (!datum.value.isEst) {
+    // ONE pill template — ask & sold share EVERY class; only the hue changes (grey vs
+    // green), fed through the SAME bg+text formula, so the two are visually identical in
+    // size, shape and weight — different colour only. (เบส: "ใช้แบบเดียวกัน แค่เปลี่ยนสี".)
+    const kindColor = heroIsSold ? "var(--price-up)" : "var(--muted-foreground)"
+    provenanceParts.push(
+      <span
+        key="kind"
+        className="inline-flex items-center rounded-full px-2 py-0.5 text-micro font-semibold leading-none"
+        style={{ background: `color-mix(in srgb, ${kindColor} 16%, transparent)`, color: kindColor }}
+      >
+        {heroIsSold ? t(displayLang, "lastSold") : t(displayLang, "askPriceVerb")}
+      </span>,
+      <span key="src" className="inline-flex items-center gap-1 whitespace-nowrap font-medium text-foreground/80">
+        <span className="font-normal text-muted-foreground">{t(displayLang, "referenceBadge")}</span>
+        <SourceLogo source={heroSourceCode} size={13} /> {sourceLabel(heroSourceCode)}
+      </span>,
+    )
+  }
+  if (realSourceCount >= 2) {
+    provenanceParts.push(
+      <a key="median" href="#sources" className="inline-flex items-center gap-1 hover:text-foreground">
+        {t(displayLang, "medianSources")} <Info className="size-3.5" aria-hidden />
+      </a>,
+    )
+  }
+  // NOTE: freshness ("อัปเดต X ago") is intentionally NOT pushed here (เบส) — the page
+  // still passes daysSinceUpdate, so re-add a push if a "last updated" cue is wanted once
+  // daily data is live (a stale-amber .status-warn pill was the prior treatment).
+
   const TABS: { id: string; label: string }[] = [
     { id: "overview", label: t(displayLang, "overview") },
     { id: "sources", label: t(displayLang, "referenceSources") },
@@ -615,58 +570,36 @@ export function CardDetail({
           </div>
 
           <div key={`${selectedGrade}-${range}`} className="rise mt-3">
-            <div className="flex items-end gap-x-2">
+            {/* price + change on ONE line (CMC/Robinhood): big number, then the % move
+                and its timeframe sit at the baseline. Absolute ฿ change dropped per เบส —
+                the % alone reads cleaner right next to the headline figure. */}
+            <div className="flex flex-wrap items-end gap-x-2.5 gap-y-1">
               <span className="tnum text-display leading-none text-foreground">
                 {activeValue == null ? "—" : formatDisplayValue(activeValue, currency)}
               </span>
               {datum.hasData && datum.value.isEst && <EstMark lang={displayLang} className="pb-1.5" />}
+              {shownDelta != null && (
+                <span className="inline-flex items-baseline gap-x-1.5 pb-1">
+                  <Delta pct={shownDelta} lang={displayLang} size="lg" />
+                  <span className="text-meta">{shownDate ?? windowLabel}</span>
+                </span>
+              )}
             </div>
-            {shownDelta != null && (
-              <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                <Delta pct={shownDelta} abs={shownAbs != null ? formatDisplayValue(shownAbs, currency) : undefined} absFirst lang={displayLang} size="lg" />
-                <span className="text-meta text-muted-foreground/70">{shownDate ?? windowLabel}</span>
-              </div>
-            )}
           </div>
 
-          {/* provenance — ONE scannable line: what-it-is (ask/sold pill · source · grade)
-              then freshness at the tail. ask = outline pill, sold = green-filled (unmistakable). */}
-          <p className="text-meta mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
-            {datum.value.isEst ? (
-              <span>{editionLabel} · {gradeLabel}</span>
-            ) : (
-              <>
-                <span
-                  className={cn(
-                    "rounded-full px-1.5 py-0.5 text-micro font-semibold",
-                    !heroIsSold && "border border-foreground/20 text-muted-foreground",
-                  )}
-                  style={heroIsSold ? { background: "color-mix(in srgb, var(--price-up) 14%, transparent)", color: "var(--price-up)" } : undefined}
-                >
-                  {heroIsSold ? t(displayLang, "lastSold") : t(displayLang, "askPriceVerb")}
-                </span>
-                <span className="inline-flex items-center gap-1 font-medium text-foreground/80">
-                  <SourceLogo source={heroSourceCode} size={13} /> {sourceLabel(heroSourceCode)}
-                </span>
-                <span className="text-muted-foreground/40">·</span>
-                <span>{editionLabel} · {gradeLabel}</span>
-              </>
-            )}
-            {realSourceCount >= 2 && (
-              <>
-                <span className="text-muted-foreground/40">·</span>
-                <a href="#sources" className="inline-flex items-center gap-1 hover:text-foreground">
-                  {t(displayLang, "medianSources")} <Info className="size-3.5" aria-hidden />
-                </a>
-              </>
-            )}
-            <span className="text-muted-foreground/40">·</span>
-            {/* freshness inline — stale (≥30d) reads as light amber TEXT (honest, but not a
-                loud filled chip); fresh stays muted. */}
-            <span className={cn("tnum", !isStale && "text-muted-foreground/60")} style={isStale ? { color: "var(--warning)" } : undefined}>
-              {updatedLabel}
-            </span>
-          </p>
+          {/* provenance — ONE scannable line of plain words: ask/sold kind · reference
+              source · (median). Built from provenanceParts so dots never orphan; hidden
+              entirely when empty (e.g. an est tier with no real source). */}
+          {provenanceParts.length > 0 && (
+            <p className="text-meta mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5">
+              {provenanceParts.map((node, i) => (
+                <Fragment key={i}>
+                  {i > 0 && <span className="text-muted-foreground/55">·</span>}
+                  {node}
+                </Fragment>
+              ))}
+            </p>
+          )}
 
           {/* low / high position bar (CoinMarketCap-style) — REAL min/max over the bar's OWN
               period (the dropdown), DECOUPLED from the chart range; the marker shows where the
@@ -791,30 +724,11 @@ export function CardDetail({
 
       {/* ── price chart + side ad column ────────────────────────────────────── */}
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
-        {/* CHART — filter (Raw|Graded) + range + compare overlay */}
+        {/* CHART — range selector + single-grade line (grade is chosen via the chips above) */}
         <div className="min-w-0">
           <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-eyebrow">{t(displayLang, "priceHistory")} · {gradeLabel}</p>
             <div className="flex flex-wrap items-center gap-2">
-              <div className="inline-flex rounded-full bg-foreground/[0.045] p-0.5 ring-1 ring-[var(--p-hair)]" role="group" aria-label={t(displayLang, "chooseGrade")}>
-                {([["raw", t(displayLang, "gradeModeRaw")], ["graded", t(displayLang, "gradeModeGraded")]] as const).map(([mode, label]) => {
-                  const on = (mode === "raw") === (chartMode === "raw")
-                  return (
-                    <button
-                      key={mode}
-                      type="button"
-                      aria-pressed={on}
-                      onClick={() => switchFamily(mode === "graded")}
-                      className={cn(
-                        "ease-chrome rounded-full px-3 py-1.5 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
-                        on ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground",
-                      )}
-                    >
-                      {label}
-                    </button>
-                  )
-                })}
-              </div>
               <div className="inline-flex gap-0.5 rounded-full bg-foreground/[0.045] p-0.5 ring-1 ring-[var(--p-hair)]">
                 {RANGES.map((rg) => (
                   <button
@@ -837,98 +751,6 @@ export function CardDetail({
             </div>
           </div>
 
-          {/* compare row — same-family grade overlays + one cross-family anchor */}
-          {datum.hasData && (familyGrades.length > 1 || crossAvailable) && (
-            <div className="no-sb mb-2 flex items-center gap-1.5 overflow-x-auto">
-              <span className="text-meta shrink-0">{t(displayLang, "compareGrades")}</span>
-              {sameFamilyCompareKeys.map((k) => {
-                  const on = compareGrades.has(k)
-                  const atMax = !on && compareGrades.size >= 3
-                  return (
-                    <button
-                      key={k}
-                      type="button"
-                      aria-pressed={on}
-                      disabled={atMax}
-                      onClick={() => toggleCompare(k)}
-                      className={cn(
-                        "ease-chrome inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                        on ? "border-transparent bg-foreground/10 text-foreground" : "border-foreground/15 text-muted-foreground hover:border-foreground/30 hover:text-foreground",
-                        atMax && "cursor-not-allowed opacity-40",
-                      )}
-                    >
-                      {on ? (
-                        <span className="size-2 rounded-full" style={{ background: seriesColor.get(k) ?? compareHue(k) }} />
-                      ) : (
-                        <Plus className="size-3" aria-hidden />
-                      )}
-                      {gradeData[k].tier.label}
-                      {gradeData[k].value.isEst && <EstMark lang={displayLang} />}
-                    </button>
-                  )
-                })}
-              {/* divider — separates same-family chips from the cross-family anchor */}
-              {crossAvailable && sameFamilyCompareKeys.length > 0 && (
-                <span aria-hidden className="mx-0.5 h-5 w-px shrink-0 self-center bg-[var(--p-hair)]" />
-              )}
-              {/* cross-family anchor — overlays the OTHER family's real grade as an
-                  indexed-% line. Chart-only; never re-aims the table/hero/sales. */}
-              {crossAvailable && (
-                <button
-                  type="button"
-                  aria-pressed={vsOther}
-                  onClick={() => {
-                    setActiveIndex(null)
-                    setVsOther((v) => !v)
-                  }}
-                  className={cn(
-                    "ease-chrome inline-flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                    vsOther ? "border-transparent bg-foreground/10 text-foreground" : "border-foreground/15 text-muted-foreground hover:border-foreground/30 hover:text-foreground",
-                  )}
-                >
-                  {vsOther ? (
-                    <span className="size-2 shrink-0 rounded-full" style={{ background: seriesColor.get(crossKey) ?? compareHue(crossKey) }} />
-                  ) : (
-                    <Plus className="size-3 shrink-0" aria-hidden />
-                  )}
-                  <span className="font-medium text-muted-foreground/70">{t(displayLang, "compareVs")}</span>
-                  {crossIsGraded && <GradeLogo family={gradeData[crossKey].tier.family} size={12} />}
-                  {crossNum}
-                  {gradeData[crossKey].value.isEst && <EstMark lang={displayLang} />}
-                </button>
-              )}
-              {/* clear — one-tap exit from compare mode */}
-              {(vsOther || compareGrades.size > 0) && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveIndex(null)
-                    setCompareGrades(new Set())
-                    setVsOther(false)
-                  }}
-                  className="ease-chrome shrink-0 rounded-full px-2 py-1 text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  {t(displayLang, "clearAll")}
-                </button>
-              )}
-              {/* compare-sources — gated (no per-source time series yet): a dashed,
-                  non-interactive "coming soon" chip, never a fabricated source line */}
-              <span
-                aria-disabled="true"
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-dashed border-foreground/15 px-2.5 py-1 text-xs font-medium text-muted-foreground/55"
-              >
-                {t(displayLang, "compareSources")}
-                <span className="text-overlay rounded bg-foreground/[0.06] px-1 py-px uppercase">{t(displayLang, "comingSoon")}</span>
-              </span>
-            </div>
-          )}
-          {/* indexed-% explainer — only when 2+ lines share the % axis */}
-          {datum.hasData && seriesList.length > 1 && (
-            <p className="text-meta mb-3 flex items-center gap-1">
-              <Info className="size-3 shrink-0" aria-hidden /> {t(displayLang, "indexedPctNote")}
-            </p>
-          )}
-
           {!datum.hasData ? (
             <div className={cn("flex items-center justify-center rounded-xl bg-foreground/[0.025] p-5 text-center", chartHeights)}>
               <div>
@@ -937,19 +759,27 @@ export function CardDetail({
               </div>
             </div>
           ) : hydrated ? (
-            <ScrubChart
-              series={seriesList}
-              activeIndex={activeIndex}
-              onScrub={setActiveIndex}
-              onScrubEnd={() => setActiveIndex(null)}
-              lang={displayLang}
-              latestUpdatedAt={latestUpdatedAt}
-              range={range}
-              indexed={seriesList.length > 1}
-            />
+            // key remounts on grade/range change → the `.rise` fade-in plays (reduced-motion safe)
+            <div key={`${selectedGrade}-${range}`} className="rise">
+              <ScrubChart
+                series={seriesList}
+                activeIndex={activeIndex}
+                onScrub={setActiveIndex}
+                onScrubEnd={() => setActiveIndex(null)}
+                lang={displayLang}
+                latestUpdatedAt={latestUpdatedAt}
+                range={range}
+                indexed={false}
+              />
+            </div>
           ) : (
-            <div className={cn("rounded-xl bg-muted/10", chartHeights)} aria-hidden />
+            <Skeleton className={cn("rounded-xl", chartHeights)} />
           )}
+          {/* sr-only live region — announces the scrubbed/focused value for screen-reader +
+              keyboard users (the chart's data is otherwise pointer-only). */}
+          <div aria-live="polite" className="sr-only">
+            {activeIndex != null && activeValue != null ? `${shownDate ?? windowLabel} · ${formatDisplayValue(activeValue, currency)}` : ""}
+          </div>
 
           {/* touch-only scrub hint — desktop now inspects on hover, so the hint is
               redundant there and shows only on phones where the drag isn't obvious */}
@@ -959,60 +789,6 @@ export function CardDetail({
             </p>
           )}
 
-          {/* legend — only when overlaying multiple grades */}
-          {seriesList.length > 1 && (
-            <div className="no-sb mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
-              {seriesList.map((s) => {
-                const d = gradeData[s.key as GradeKey]?.delta30d
-                return (
-                  <span key={s.key} className="inline-flex items-center gap-1.5 text-xs">
-                    <span className="size-2.5 rounded-full" style={{ background: s.color }} />
-                    <span className="font-semibold text-foreground">{s.label}</span>
-                    <span className="tnum text-muted-foreground">{s.points.length ? formatDisplayValue(s.points[s.points.length - 1], currency) : "—"}</span>
-                    {d != null && <Delta pct={d.pct} lang={displayLang} />}
-                    {s.isEst && <EstMark lang={displayLang} />}
-                  </span>
-                )
-              })}
-            </div>
-          )}
-
-          {/* grade ladder — toggled grades whose modeled trajectory is identical to the
-              primary's are NOT drawn as overlapping lines (honest); they show here as a real,
-              distinct price LEVEL + premium/discount vs the selected grade. */}
-          {ladderKeys.length > 0 && (
-            <div className="mt-3 rounded-xl bg-foreground/[0.025] p-3">
-              <p className="text-eyebrow mb-2">{t(displayLang, "compareGrades")}</p>
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="size-2.5 shrink-0 rounded-full" style={{ background: seriesList[0]?.color ?? "var(--foreground)" }} />
-                  <span className="font-semibold text-foreground">{gradeLabel}</span>
-                  <span className="tnum ml-auto font-semibold text-foreground">
-                    {latest != null ? formatDisplayValue(latest, currency) : "—"}
-                  </span>
-                </div>
-                {ladderKeys.map((k) => {
-                  const v = statToDisplayValue(gradeData[k].value, currency)
-                  const ratio = v != null && latest != null && latest > 0 ? (v / latest) * 100 : null
-                  return (
-                    <div key={k} className="flex items-center gap-2 text-sm">
-                      <span className="size-2.5 shrink-0 rounded-full" style={{ background: compareHue(k) }} />
-                      <span className="font-medium text-foreground/85">{gradeData[k].tier.label}</span>
-                      {ratio != null && (
-                        <span className="text-meta">
-                          {ratio < 1 ? "<1" : Math.round(ratio)}% {t(displayLang, "ofGrade")} {gradeLabel}
-                        </span>
-                      )}
-                      <span className="tnum ml-auto inline-flex items-center gap-1 text-foreground/85">
-                        {v != null ? formatDisplayValue(v, currency) : "—"}
-                        {gradeData[k].value.isEst && <EstMark lang={displayLang} />}
-                      </span>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* side ad — beside the chart (เบส request). The `auto` grid track collapses

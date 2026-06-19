@@ -1,7 +1,96 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-18 — **เทียบเกรด: เส้นเดียว + ตาราง** (เบส: กราฟเทียบ "ดูยาก" → workflow ฟันธง honesty) + ก่อนหน้า: CMC chart, low/high bar, hero, standardize
+อัปเดตล่าสุด: 2026-06-18 — **hero 2 บรรทัด (delta+provenance) เกลาให้ "ดูง่าย"** (เบส: ภาพ hero · ห้ามแตะราคาใหญ่+แถบ → 3-lens review workflow) + ก่อนหน้า: เทียบเกรดเส้นเดียว, CMC chart, low/high bar, hero
+
+## ✅ เสร็จ session นี้ (2f) — hero delta+provenance polish (3-lens critique workflow → 7 fix ติดทั้งหมด)
+แก้ `card-detail.tsx` (บรรทัด ~625-672) + `i18n/th.ts` · tsc 0 · lint 0 err · test 45 · screenshot desktop+mobile + computed-style ยืนยัน
+- **scope:** เบสชี้ภาพ hero ถาม "ปรับให้ดูง่าย · อย่ายุ่งราคาตัวใหญ่ + แถบ low/high" → เหลือ 2 บรรทัด: delta (`▲ +185฿ · 146.7% ใน 1 เดือน`) + provenance (`ราคาตั้งขาย · Yuyu-tei · JP·Raw · 2 เดือนที่แล้ว`)
+- **#1 stale → ป้ายสีส้ม (.status-warn pill):** เดิม `2 เดือนที่แล้ว` เป็นแค่ตัวหนังสือ `var(--warning)` → **light mode contrast ~1.9:1 เกือบหาย** · เปลี่ยนเป็น pill (text+`--warning-soft` bg) เด่นทั้ง 2 โหมด · computed: `rgb(255,159,10)` บน bg 16% ✓ — **โบนัส:** ทำให้ "ข้อมูลเก่า 2 เดือน" เด่น = แก้ความงง "delta 1 เดือน แต่ข้อมูล 2 เดือน" ไปในตัว
+  - **⚠️ ย้อน decision 2b:** 2b เคยลด chip→text เพราะ "filled chip เด่นไป" · 2f เอา pill กลับด้วย**เหตุผลใหม่ (contrast light mode)** + tint อ่อน 12/16% (ไม่ solid) → dark mode ดูไม่ loud (screenshot ยืนยัน) · เบส approve รอบนี้ ("ทั้งหมด #1-7") แต่**ถ้ายังรู้สึกเด่นไป revert เป็น text ได้ บรรทัดเดียว**
+- **#2 จุดคั่น `·`:** เดิมจุดคั่นกลุ่มใหญ่ /40 จางกว่าจุดเล็กใน "JP·Raw" (กลับหัว) → bump /40→/55 (×3) + parent `gap-x-1.5→2.5` → แยก 4 ก้อนชัด
+- **#3 window word un-mute:** `ใน 1 เดือน` เดิม `.text-meta /70` (mute ซ้อน 2 ชั้น) → เหลือ `.text-meta` เปล่า
+- **#4 JP·Raw weight:** เดิม mute แบนกว่าชื่อร้าน → `font-medium text-foreground/70` (ทั้ง est + non-est branch)
+- **#5 i18n:** `median ของแหล่งอ้างอิง` → `ค่ากลางของแหล่งอ้างอิง` (เลิกคำอังกฤษโดดในประโยคไทย · โผล่เมื่อ ≥2 source)
+- **#6 mobile nowrap:** source span + (dot+freshness) group เป็น `whitespace-nowrap` → ไม่แตกกลางกลุ่มบน 390px
+- **#7 rhythm:** price→delta `mt-1→mt-1.5` (6/6 สม่ำเสมอ)
+- **review:** workflow 3 critic lens (hierarchy/clarity/visual) + synth ตรวจซ้ำ — ตัด finding ผิด ("isStale ไม่ firing" = FALSE, traced page.tsx:92→178, มันทำงาน · ปัญหาคือ contrast ไม่ใช่ logic)
+- **➕ follow-up (เบส สั่งต่อ):** provenance อ่านเป็น "data เปล่า" → ขอเป็น**คำ** · (1) **เอา `JP · Raw` ออก** (ซ้ำกับ grade chips + chart header) → ลบ `editionLabel` ด้วย (ไม่ถูกใช้แล้ว) (2) source เติม `อ้างอิง` (reuse i18n `referenceBadge` = อ้างอิง/reference/参照) (3) freshness เติม `อัปเดต` (reuse `updatedAgo` template = "อัปเดต {ago}"/"Updated {ago}"/"{ago}更新" · `.replace("{ago}",…)` ตาม pattern เดิม) → ป้ายสีส้ม = "อัปเดต 2 เดือนที่แล้ว"
+  - **refactor:** provenance เปลี่ยนเป็น `provenanceParts: ReactNode[]` + `.map` interleave จุดคั่น → **จุดไม่ orphan** เวลา part หาย · #4 เดิม (JP·Raw weight) = moot แล้ว
+- **➕ follow-up #2 (เบส สั่งต่อ — รอบ 2):**
+  - **delta ย้ายไปต่อราคาใหญ่ + เอาแต่ %:** price line เดียว `311฿ ▲ 146.7% ใน 1 เดือน` (flex items-end · delta+window ที่ baseline) · ตัด abs `+185฿` ออก (ลบ prop `abs/absFirst` ที่ call + ลบ memo `shownAbs`) · เก็บ window word ไว้ (ไม่งั้น % ไร้กรอบเวลา) — Delta component ไม่แตะ
+  - **เอา freshness "อัปเดต X" ออกทั้งหมด (เบส: ไม่บอก user):** ลบ fresh push ออกจาก provenanceParts · **dead-code cleanup:** ลบ `updatedLabel`/`isStale`/func `relativeDaysLabel` + เลิก destructure `daysSinceUpdate` (prop ยังอยู่ใน interface + page ยังส่ง → re-add push บล็อกเดียวพอ) · `<p>` provenance gate `length>0` (est ไม่มี source = ซ่อนทั้งบรรทัด)
+  - ⚠️ **honesty trade-off:** ตอนนี้ user มองไม่เห็นว่าราคาเก่าแค่ไหน · เหตุผลเบส = mock ค้าง 2 เดือนดูแย่ · **พอ scrape รายวันจริง ควรเปิด "อัปเดตวันนี้" กลับ** (เป็น trust signal) — comment ในโค้ดบอกวิธี re-add ไว้แล้ว
+  - verify รอบนี้: tsc 0 · lint 0 (card-detail) · test 45 · screenshot desktop+mobile ✓
+- **➕ follow-up #3 (เบส: badge ราคาตั้งขาย/ขายล่าสุด ไม่เท่ากัน):**
+  - **bug:** ask pill มี `border` แต่ sold pill ไม่มี (เป็น bg fill เฉยๆ) → วัดได้ ask h=**24.2px** vs sold h=**17.2px** (ต่าง 7px! border 2px + box คำนวณไม่นิ่งเพราะ span ไม่ได้ inline-flex)
+  - **fix รอบ 1 (height เท่า แต่ยังคนละสไตล์):** ทั้ง 2 มี border 1px เท่ากัน · ask outline / sold fill → ask=19.0 sold=19.2 · **เบส: "ก็ยังไม่เท่า"** (สไตล์ outline vs fill ต่างกัน ดูคนละแบบ)
+  - **fix รอบ 2 (เบส: "ใช้แบบเดียวกัน แค่เปลี่ยนสี"):** เอา outline ออก ทำพื้นอ่อนทั้งคู่ — **แต่ยังเผลอใช้คนละสูตร** (ask `bg-foreground/[0.08]`=8% + ตัว muted · sold เขียว 14% + เขียว) → ความเข้มต่างกัน · **เบส: "ก็ยังไม่เหมือน เขียนใหม่"** (ส่ง crop ซูมมา)
+  - **fix รอบ 3 (เขียนใหม่ · สูตรเดียว):** `const kindColor = heroIsSold ? "var(--price-up)" : "var(--muted-foreground)"` → span เดียว class เป๊ะเดียวกัน (`inline-flex items-center rounded-full px-2 py-0.5 text-micro font-semibold leading-none`) + `style={{ background: color-mix(${kindColor} 16%), color: kindColor }}` · **ต่างแค่ค่า hue ตัวเดียว** ทุกอย่างอื่น identical · วัด ask=sold=**17.2px · pad 2px 8px · radius full · bg 16%** เป๊ะ · crop ซูมยืนยันเป็น component เดียวกัน ต่างแค่สี (เทา/เขียว)
+  - verify: tsc 0 · lint 0 · test 45 · badge-probe วัด+crop 2 สถานะ
+
+## ✅ เสร็จ session นี้ (2k) — รื้อกราฟสู่ world-class: right-axis + fluid + finish (เบส: "รื้อให้เหมือนเว็บโลก" + 3 ภาพ Google/CoinGecko/CMC → research workflow 60+ แหล่ง → "Core+refactor")
+แก้ `card-chart.tsx` · tsc 0 · lint 0 · test 45 · screenshot rest/hover/graded/mobile ยืนยัน
+- **verdict:** กราฟเป็น world-class ~80% แล้ว · ช่องว่างจริง = **แกน Y อยู่ซ้าย** (ทั้ง 3 เว็บอยู่ขวา) → targeted rebuild ไม่ใช่เขียนใหม่
+- **#1 แกน Y + pill ราคา → ขวา** (⚠️ ย้อน 2d ที่ย้ายไปซ้าย) — `padRight` = wide gutter (sized maxYChars+pill) · `padLeft`=14 slim · y-label `x=width-padRight+8 textAnchor=start` · pill `translate(width-padRight+4)` · เหตุผล: จุดล่าสุดอยู่ขวา ตาอ่าน "now" ทันที (Google/CoinGecko/CMC)
+- **#2 fluid width (refactor · ⚠️ ย้อน fixed viewBox 1000×320):** `useRef`+`useState`+`ResizeObserver` วัด px จริง → viewBox=`0 0 ${size.w} ${size.h}` 1:1 · ฟอนต์ลดเป็น px จริง (TAG13/Y12/X12) เลิก hack 15-19u · x-tick group เดียว `maxXTicks=clamp(plotW/92,3..8)` แทน 2 CSS-toggled group · default 720×280 กัน SSR · hooks อยู่เหนือ early-return
+- **#3 dotted gridlines 2 แกน:** horizontal `dasharray "1 5"` α0.14 · vertical ที่ x-ticks α0.08 (graph-paper)
+- **#4 crosshair เส้นประ** (`dasharray "4 6"` α0.45 · คง fade) + **date-pill ติดแกนล่าง** (`dpX` clamp · แยก WHEN=แกน/WHAT=เส้น แบบ Google/CoinGecko)
+- **ตัดทิ้ง (honesty · research ฟันธง):** volume (ไม่มี data=ปั้นสภาพคล่อง) · candlestick/TradingView (ไม่มี OHLC) · 1H/1D (ไม่มี intraday) · faded-future (ไม่พยากรณ์) · per-segment สี (choppy บน data บาง) · **brush navigator** (data ~2y+mock จะว่างเปล่า · ~200 บรรทัดคุ้มน้อย)
+- **gate รอ data จริง/ทีหลัง:** Log scale (1Y/All) · event marker prop (วันออกชุดการ์ด) · glow ตอน scrub · stipple area
+- research workflow: 4 lens web search จริง (Robinhood/Google/CoinGecko/CMC/Highcharts/d3 docs · 60+ URL) → blueprint
+- **🐛 fix (เบส จับได้): % ไม่ตามช่วงที่เลือก** — เดิม hero % ตอนนิ่ง = `datum.delta30d` **ตายตัวทุก range** แต่ป้ายเปลี่ยนตาม range → เลือก 7D/1Y แต่ % ยัง 30d = ขัดกัน
+  - **fix:** (1) `shownDelta` derive จาก **เส้นที่แสดงเสมอ** `(activeValue−open)/open` (open=primaryPoints[0]=ต้นช่วง) → ตามช่วง + ตรงกับเส้น (2) `rangeDeltaPct = delta30d × √(windowDays/30)` ป้อน mock + `chartUp` → เส้นไต่ตามช่วง · สี/ลูกศร/% agree กัน (3) เลิก fallback delta30d
+  - ผล: 7D ▲14.5% · 1M ▲94.3% · 1Y ▲483.4% (monotonic damped · ตรงป้าย "ใน X") · ⚠️ 1M=real 30d · 7D/3M/1Y/All MODELED (รอ per-range history จริง)
+- **🐛 fix (เบส · 3 ข้อ จากภาพ Google):**
+  - (1) **% บอกช่วงวันที่:** ตอน scrub hero `shownDate` = `${dateAt(0)} – ${dateAt(active)}` (ต้นช่วง→จุดที่ชี้) แทนวันเดียว → "▲ 6.7% 29 มี.ค.–1 เม.ย." ชัดว่า % ครอบช่วงไหน · at rest = windowLabel เหมือนเดิม
+  - (2) **🐛 7D จุดลากไม่ตรงแกน x:** `scrubAt` ใช้ `rect.width` เต็ม (ไม่หัก gutter) → index เพี้ยน (หนักขึ้นเพราะแกนขวากว้าง) · fix: map cursor→plot `((clientX-left)/rect.width*width - padLeft)/plotW` → จุด/crosshair/date-pill ตรงแกน x ทุก range
+  - (3) แสดงจุดที่ชี้: crosshair + date-pill (มีอยู่) ตอนนี้ตรงตำแหน่งแล้ว (จาก fix #2)
+- **💅 fix (เบส: pill ราคา "ไม่สวย"):** เดิม pill `▲ 269K ฿` รก (ลูกศร+อ้วน+จุดติด) → **เอาลูกศรออก** (hero มี ▲% อยู่แล้ว · a11y ผ่าน aria-label/hero) · กระชับ (tagW ไม่เผื่อ glyph · h20→18 · rx6) · เว้นช่องจากจุด (+7 · padRight floor tagW+10) · จุดปลายเส้นเล็กลง (r5→4 · stroke3→2) · ลบตัวแปร `up` (ไม่ใช้แล้ว) → เหลือ "311 ฿" สะอาดแบบ CoinGecko/CMC
+- **➕ scrub focus (เบส: "กราฟควรจางข้างขวาตอนชี้" · Google Finance):** split เส้น+area ที่ cursor — `pathRange(a,b)`/`areaRange(a,b)` (slice ตาม original index) · ซ้าย(0→splitIdx)=สว่าง · ขวา(splitIdx→last)=`opacity 0.3` (เส้น) / `0.25` (area) · `hasDim` gate (rest=ไม่จาง) · honest: จาง real points ที่มีอยู่ ไม่ใช่ปั้นอนาคต
+- **🐛 fix (เบส): tooltip ตอน hover มองไม่ชัด + ไม่อยากได้ %** — tooltip+date-pill ใช้ `--p-s2` (โปร่ง 6%) เลยกลืนพื้นมืด · เปลี่ยนเป็น **`--popover` ทึบ (#1F1812) + drop-shadow filter (hover-only ไม่กระทบ scroll perf)** → เด่นชัด · **ลบแถว "% จากต้นช่วง" ออกจาก tooltip** (เหลือ วันที่ + ราคา) · hero % ด้านบนยังโชว์ตามเดิม · orphan i18n `fromWindowOpen`
+
+## ✅ เสร็จ session นี้ (2j) — ยกกราฟสู่ world-class: table-stakes + polish (เบส: "กราฟไม่ถึงมาตรฐานโลก" → audit workflow 4 lens → เลือก "มาตรฐาน+polish")
+แก้ `card-chart.tsx` + `card-detail.tsx` + `mock.ts` + `globals.css` + i18n ×3 · tsc 0 · lint 0 · test 45 · screenshot rest/hover/mobile ยืนยัน
+- **audit verdict:** กราฟดีอยู่แล้ว (snap จุดจริง/hit area/gutter/x-tick ปฏิทิน = world-class) · 2 ช่องว่างใหญ่ = **honesty (mock ละเอียดเกินจริง) + a11y (pointer-only)**
+- **#1 a11y:** svg `tabIndex=0` + focus ring + `onKeyDown` (←→/Home/End/Esc · reuse activeIndex เดิม) + `onFocus`→scrub latest + aria-label เป็นประโยค (open→last·low·high) + sr-only `aria-live` ใน card-detail (โชว์ค่า scrub)
+- **#2 mock→รายวัน:** `RANGE_POINTS` 7D 28→**8** · 1M 60→**31** (เลิก imply sub-daily · INTRADAY_ENABLED=false) · 3M/1Y/All ≤ รายวันอยู่แล้ว
+- **#3 baseline ต้นช่วง:** เส้นประจางที่ `y(open)` → ทำให้สีเขียว/แดง "ขึ้น/ลงจากตรงไหน" มีความหมาย
+- **#4 ▲/▼ บน pill:** ขึ้น/ลงไม่พึ่งสีอย่างเดียว (a11y/greyscale) · `up = last>=open` · tagW เผื่อ +2 char
+- **#5 single/flat states:** รับ series 1 จุด → single-dot state (i18n `singlePricePoint`) แยกจาก "ไม่มีข้อมูล" · gridline label dedup (กัน flat โชว์ "200฿/200฿") · ⚠️ ยัง trigger ไม่ได้บน mock (จุดเยอะเสมอ)
+- **#6 สีแดง dark:** `--price-down` #FF7A6B(salmon ซีด)→**#FF6155**(coral เข้ม) · ⚠️ **token กลาง — กระทบ down-indicator ทั้งแอปใน dark mode** (delta ทุกที่) ไม่ใช่แค่กราฟ
+- **polish:** crosshair เส้น**ทึบ**+fade (`ease-chrome`) + tooltip flip บน/ล่าง · ซ่อนจุด resting ตอน scrub · **% ใน tooltip** (จากต้นช่วง · i18n `fromWindowOpen`) · range-switch fade (`key + .rise` · reduced-motion safe) · loading **Skeleton** แทน blank
+- **⏭️ ข้าม:** error state (ไม่มี client fetch/error path · render จาก server · synth ว่า defensible) · delight (glow/depth/haptic/pill-notch — เบสเลือกแค่ "มาตรฐาน+polish")
+- **gate รอ data จริง:** plot vertex จุดจริง · hi/lo markers บนเส้น (mock = มาร์คจุดปลอม)
+
+## ✅ เสร็จ session นี้ (2i) — x-axis ถี่ขึ้น + ปี + polish กราฟ (เบส: "แกน x ไม่ถี่" → chart-review workflow → ทั้งหมด 7 ข้อ)
+แก้ `card-detail/card-chart.tsx` · tsc 0 · lint 0 · test 45 · screenshot 1M/1Y/All + mobile ยืนยัน
+- **บั๊กเดิม:** x-tick hard-code `[0,⅓,⅔,1]` = 4 จุดตายตัวทุกช่วง · ลงวันสุ่ม · ไม่มีปี (1Y/All กำกวม)
+- **#1+2 x-tick calendar-snap + mobile guard:** helper `xAxisTicks(refMs,range,lang)` (pure/SSR-safe · เดินปฏิทินจาก refMs) — 7D รายวัน · 1M รายสัปดาห์ · 3M ต้นเดือน · 1Y รายสองเดือน · All รายไตรมาส · force-include latest · de-dupe · `thinTicks(,8)` desktop / `(,4)` mobile · render 2 `<g>` (`hidden sm:block` ถี่ / `sm:hidden` capped) → ไม่มี JS width ก็กันชนได้ · ผล 1M=5, 1Y=7, All=8 ป้าย
+- **#3 ปีบนช่วงยาว:** `isLongRange` → axis `{month,year:2-digit}` (drop day), tooltip/`dateAtIndex` `{day,month,year}` · เห็นรอยต่อปี 68→69
+- **#4 ซ่อนเลขแกน Y ที่ชน tag:** hoist `lastVal`/`tagY` · `hideLabel = !indexed && |gy−tagY|<20` (data-space · กันชนทั้ง 2 โหมด) → แก้ "269K ทับ 250K"
+- **#5 font แยกบทบาท:** `AXIS_FONT 18` เดียว → `TAG_FONT 18 bold` / `Y_AXIS_FONT 17` / `X_AXIS_FONT 15` / `X_AXIS_FONT_MOBILE 19` · padLeft คิดจาก y-label + tag pill แยก
+- **#6 ป้าย x หายใจ:** `padBottom 28→34` · เลิก double-mute (เอา opacity 0.7/0.8 ออก ใช้ muted token ล้วน)
+- **#7 stub:** ขีดสั้น 5u ใต้ plot ที่ทุก tick (desktop) ผูกวันกับกราฟ
+- review: chart-review workflow (3 lens + synth) · ตัด finding ที่ปั้น data (per-day markers — mock ไม่มี daily จริง) · ยืนยัน y-ticks/line/area/scrub ดีอยู่แล้วไม่แตะ
+
+## ✅ เสร็จ session นี้ (2h) — fix Y-axis labels คลิปขอบซ้าย (เบส: "กราฟแกน y โดนทับ")
+แก้ `card-detail/card-chart.tsx` (ScrubChart) · tsc 0 · lint 0 · test 45 · screenshot raw+graded ยืนยัน
+- **บั๊กเดิม (ไม่ใช่ของ session นี้):** `padLeft=64` คงที่ + last-price `tagW=56` คงที่ → การ์ดราคาหลักแสน (graded "489K ฿"/"300K ฿" font 18 กว้าง ~67px) **ล้นเลย x=0 → คลิปเลขหลักแรก** · pill tag ก็แคบกว่าตัวเลข
+- **fix:** คำนวณ `padLeft` + `tagW` **ตามความกว้างป้ายจริง** — hoist `gridVals`/labels ขึ้นก่อน · `maxLabelChars = max(yLabels, lastLabel)` · `padLeft = max(64, ceil(chars × AXIS_FONT × 0.62) + 24)` (gutter เก็บทั้ง label ขวา-ชิด + pill tag) · `tagW = ceil(lastLabel × 0.62) + 16`
+- **ผล:** การ์ดถูก (RAW 311฿ → "150 ฿") gutter แคบเท่าเดิม · การ์ดแพง (PSA10 → "30K-69K ฿") gutter กว้างพอ ไม่คลิป · scale อัตโนมัติถึงหลักล้าน
+- verify: tsc 0 · lint 0 · test 45 (niceTicks ยังผ่าน) · screenshot 2 เคส (raw+graded) ยืนยันเลขเต็ม
+
+## ✅ เสร็จ session นี้ (2g) — ลบ "เทียบเกรด" ออกทั้งหมด (เบส: "จะได้คลีน" · ข้อมูลเทียบเป็น EST ล้วน)
+แก้ `card-detail.tsx` · tsc 0 · lint 0 · test 45 · screenshot chart ยืนยัน
+- **เหตุผล:** ข้อมูลเทียบเกรดทั้งหมดเป็น modeled/EST (ไม่มี per-grade history จริง) → เทียบปลอม รก · เบสเลือก "ออกหมดทั้งแถบ" (AskUserQuestion) · ราคาแต่ละเกรดยังเห็นที่ **grade selector chips ด้านบน**
+- **ลบ JSX:** compare row (chips PSA9/8/BGS + vs Raw + เทียบแหล่ง coming-soon + clear) · indexed-% explainer · legend · ladder table
+- **ลบ state/logic:** `compareGrades` `vsOther` `toggleCompare` `seriesColor` · cross-family vars (`crossKey/crossAvailable/crossLabel/crossIsGraded/crossNum`) · `familyKeys/familyGrades/sameFamilyCompareKeys` · constants `COMPARE_PALETTE/MAX_CHART_LINES/COMPARE_HUE_ORDER/compareHue`
+- **ย่อ `seriesList`:** จาก `{lines, ladderKeys}` multi-line memo → **เส้นเดียว** (selectedGrade) เสมอ · `indexed={false}` ตายตัว · ลบ import `Plus`
+- **เก็บไว้:** grade selector chips · Raw\|Graded toggle (`switchFamily` ยังใช้ RAW_KEYS/GRADED_KEYS) · range buttons · `mockGradeSeries` (เส้นเดียว + barPoints) · ScrubChart รองรับ multi/indexed อยู่ (เผื่ออนาคต)
+- ⚠️ orphan i18n (zero-risk · ยังไม่ลบ): `compareGrades/compareSources/comingSoon/compareVs/indexedPctNote/clearAll/ofGrade`
+- ⚠️ ถ้าจะเอา comps จริงกลับมาเทียบ → ต้องเขียน compare UI ใหม่ (ลบทิ้งแล้ว ไม่ได้ comment ค้าง)
+- **➕ follow-up (เบส: "ไม่ต้องมีเลือก raw grade บนกราฟ"):** ลบปุ่ม **Raw\|Graded toggle** บนหัวกราฟ (ซ้ำกับ grade selector chips ด้านบนที่กด Raw/PSA เปลี่ยนเกรดได้อยู่แล้ว) → ลบ `switchFamily` + constants `RAW_KEYS/GRADED_KEYS` (เหลือ dead หลังเอา toggle ออก) · หัวกราฟเหลือ eyebrow "ประวัติราคา · {grade}" + ปุ่มช่วงเวลา · การเปลี่ยน raw↔graded ทำผ่าน chips บนสุดแทน · orphan i18n เพิ่ม: `gradeModeRaw/gradeModeGraded`
 
 ## ✅ เสร็จ session นี้ (2e) — grade-compare → single line + ladder (เบสเลือก "ซื่อสัตย์")
 แก้ `card-detail.tsx` + i18n ×3 · tsc 0 · lint 0 err · test 45 · hydration สะอาด · screenshot ยืนยัน
@@ -60,6 +149,7 @@
 - **out of scope (เลื่อน):** x-axis calendar-snap ticks · tooltip enrich (delta คอลัมน์) · compare discoverability redesign · loading skeleton · a11y (keyboard scrub) — แยก task
 
 ## ▶ NEXT — งาน gate (รอ pipeline data จริง · เหมือนเดิม)
+- **⚠️ delta window vs วันข้อมูล (logic · จาก 2f):** delta "ใน 1 เดือน" คิดจาก **ช่วงกราฟ (range)** ส่วน freshness "X เดือนที่แล้ว" คิดจาก **daysSinceUpdate (วัน scrape ล่าสุด)** — คนละแหล่ง เลยขัดกันได้ **แม้มี data จริง** (ไม่ใช่แค่ mock) · 2f แก้ด้วยการทำ stale เด่น (อ่านแล้วหักลบเอง) แต่ราก = ควร gate/relabel ช่วง delta ให้อิงวันข้อมูลจริง (เช่น stale มากๆ ซ่อน %move หรือเตือน) · แตะ logic นอก 2 บรรทัด hero → งานแยก
 - **เทียบแหล่ง (compare sources):** per-source time series ไม่มีจริง (mock) · ทำเมื่อ comps pipeline พร้อม
 - **est → ข้อมูลจริง:** PSA 9/8/BGS + graded delta30d ยัง modeled (กราฟ cross 2 เส้นซ้อนกันเพราะ delta เท่ากัน = artifact ของ mock) · swap เมื่อมี Grade enum + Comp tables (PLAN:37)
 - **build:** ยังไม่รัน `npm run build` (gotcha: ห้าม build ระหว่าง dev) — tsc/lint/test เขียวครบ · ถ้าจะ build ต้อง stop dev ก่อน

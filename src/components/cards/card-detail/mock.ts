@@ -8,11 +8,11 @@
 
 import type { Stat } from "./grades"
 
-// Finer point counts so the line reads as real ticks, not a hand-drawn curve.
-// NOTE (honesty): "7D":28 = 4 pts/day for a smooth MOCK line only. Real 7D has ~7
-// daily points and should plot as ~7 points/step-dots, not 28 interpolated — swap
-// when the dated pipeline lands so we never imply sub-daily resolution we don't have.
-const RANGE_POINTS: Record<string, number> = { "7D": 28, "1M": 60, "3M": 90, "1Y": 180, All: 260 }
+// ~1 point/day (or sparser) — honest cadence: the real scrape yields one price/day, so
+// the mock must NOT imply sub-daily resolution (7D=28 read as 4 pts/day = fake intraday;
+// INTRADAY_ENABLED=false). Short windows = daily; long windows stay ≤ daily. Swap for real
+// dated points when the pipeline lands (then plot a node at each real observation).
+const RANGE_POINTS: Record<string, number> = { "7D": 8, "1M": 31, "3M": 91, "1Y": 180, All: 260 }
 
 // fract(sin(n)*k) — a cheap deterministic hash in [0,1). Pure: same n → same out.
 // (RNG + clock APIs throw in this runtime, so all "randomness" is seeded.)

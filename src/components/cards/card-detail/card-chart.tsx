@@ -1,6 +1,6 @@
 "use client"
 
-import { type PointerEvent } from "react"
+import { type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from "react"
 
 import { getLocale, t, type Language } from "@/lib/i18n"
 import { compactDisplayValue, formatDisplayValue } from "@/lib/utils/currency"
@@ -14,6 +14,10 @@ export const INTRADAY_ENABLED = false
 export const RANGES = ["7D", "1M", "3M", "1Y", "All"] as const
 export type ChartRange = (typeof RANGES)[number]
 const SPAN_DAYS: Record<ChartRange, number> = { "7D": 7, "1M": 30, "3M": 90, "1Y": 365, All: 730 }
+const DAY_MS = 86_400_000
+// Long ranges (1Y/All) span more than one calendar year, so a bare "5 เม.ย." is
+// ambiguous — add a 2-digit year there. Short ranges keep day+month.
+const isLongRange = (range: ChartRange) => range === "1Y" || range === "All"
 
 export function dateAtIndex({
   i,
@@ -31,10 +35,10 @@ export function dateAtIndex({
   const refTime = latestUpdatedAt ? new Date(latestUpdatedAt).getTime() : null
   if (refTime == null || Number.isNaN(refTime) || len < 2) return ""
   const days = (SPAN_DAYS[range] * (len - 1 - i)) / (len - 1)
-  return new Date(refTime - days * 86_400_000).toLocaleDateString(getLocale(lang), {
-    day: "numeric",
-    month: "short",
-  })
+  return new Date(refTime - days * DAY_MS).toLocaleDateString(
+    getLocale(lang),
+    isLongRange(range) ? { day: "numeric", month: "short", year: "2-digit" } : { day: "numeric", month: "short" },
+  )
 }
 
 export type ChartSeries = {
@@ -73,6 +77,69 @@ export function niceTicks(lo: number, hi: number, count = 5): number[] {
   return out.length ? out : [lo]
 }
 
+/** Axis-tick date label — drops the day and adds a 2-digit year on long ranges
+ *  (where day+month is ambiguous across years); day+month on short ranges. */
+function fmtAxisDate(ms: number, range: ChartRange, lang: Language): string {
+  return new Date(ms).toLocaleDateString(
+    getLocale(lang),
+    isLongRange(range) ? { month: "short", year: "2-digit" } : { day: "numeric", month: "short" },
+  )
+}
+
+/** Calendar-snapped x-axis ticks — denser than a fixed 4 and anchored to round
+ *  dates (day / week / 1st-of-month / quarter) per range, so the eye can trace a
+ *  date to the curve. Returns left→right {frac (0..1 across the window), label}.
+ *  Pure & SSR-safe: every date derives from refMs (no Date.now/random). */
+function xAxisTicks(refMs: number, range: ChartRange, lang: Language): { frac: number; label: string }[] {
+  const spanMs = SPAN_DAYS[range] * DAY_MS
+  const startMs = refMs - spanMs
+  const anchors: number[] = []
+  const pushMonthly = (stepMonths: number, quarter = false) => {
+    const d = new Date(startMs)
+    d.setHours(0, 0, 0, 0)
+    d.setDate(1)
+    while (d.getTime() < startMs || (quarter && d.getMonth() % 3 !== 0)) d.setMonth(d.getMonth() + 1)
+    for (; d.getTime() <= refMs; d.setMonth(d.getMonth() + stepMonths)) anchors.push(d.getTime())
+  }
+  if (range === "7D") {
+    const d = new Date(startMs)
+    d.setHours(0, 0, 0, 0)
+    for (let tms = d.getTime(); tms <= refMs; tms += DAY_MS) anchors.push(tms)
+  } else if (range === "1M") {
+    for (let tms = refMs; tms >= startMs; tms -= 7 * DAY_MS) anchors.push(tms)
+    anchors.reverse()
+  } else if (range === "3M") {
+    pushMonthly(1)
+  } else if (range === "1Y") {
+    pushMonthly(2)
+  } else {
+    pushMonthly(3, true)
+  }
+  // always anchor the latest point at the right edge so "today" is labelled
+  if (!anchors.length || refMs - anchors[anchors.length - 1] > DAY_MS / 2) anchors.push(refMs)
+  const out: { frac: number; label: string }[] = []
+  let prev = -1
+  for (const ms of anchors) {
+    const frac = (ms - startMs) / spanMs
+    if (frac < -1e-9 || frac > 1 + 1e-9) continue
+    const f = Math.min(1, Math.max(0, frac))
+    if (f - prev < 0.02) continue // drop near-duplicate positions
+    prev = f
+    out.push({ frac: f, label: fmtAxisDate(ms, range, lang) })
+  }
+  return out
+}
+
+/** Thin a tick list to at most `cap`, always keeping the first & last entry. */
+function thinTicks<T>(ticks: T[], cap: number): T[] {
+  if (ticks.length <= cap) return ticks
+  const out: T[] = []
+  const step = (ticks.length - 1) / (cap - 1)
+  for (let k = 0; k < cap; k++) out.push(ticks[Math.round(k * step)])
+  out[out.length - 1] = ticks[ticks.length - 1]
+  return out
+}
+
 export function ScrubChart({
   series,
   activeIndex,
@@ -94,7 +161,26 @@ export function ScrubChart({
   indexed?: boolean
 }) {
   const currency = useUIStore((s) => s.currency)
-  const rawDrawn = series.filter((s) => s.points.length >= 2)
+  // Fluid size — render at REAL pixels (1 unit = 1px) instead of a fixed 1000×320 viewBox
+  // CSS-stretched to fit (which forced oversized fonts + two hard-coded x-tick groups).
+  // Measured via ResizeObserver; the default covers first paint / SSR. Hooks stay above the
+  // early returns below so call order is stable.
+  const svgRef = useRef<SVGSVGElement>(null)
+  const [size, setSize] = useState({ w: 720, h: 280 })
+  useEffect(() => {
+    const el = svgRef.current
+    if (!el || typeof ResizeObserver === "undefined") return
+    const ro = new ResizeObserver((entries) => {
+      const r = entries[0]?.contentRect
+      if (r && r.width > 0 && r.height > 0) setSize({ w: Math.round(r.width), h: Math.round(r.height) })
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  // Keep series with >=1 point: an empty series → "no history"; a single real point →
+  // an honest single-dot state (below), not the same as "no data" (low-volume cards
+  // genuinely have one price). >=2 is required only for an actual line.
+  const rawDrawn = series.filter((s) => s.points.length >= 1)
   const drawn = indexed ? rawDrawn.map((s) => ({ ...s, points: rebaseToIndex(s.points) })) : rawDrawn
   const fmtIndex = (v: number) => `${v >= 100 ? "+" : "−"}${Math.abs(v - 100).toFixed(0)}%`
   const primary = drawn[0]
@@ -105,20 +191,30 @@ export function ScrubChart({
       </div>
     )
   }
+  // Single real observation — a distinct, honest state (one dot + value), NOT the empty
+  // message. Returns early so the line math below (which divides by len-1) never sees len<2.
+  if (primary.points.length < 2) {
+    return (
+      <div className="flex h-[210px] flex-col items-center justify-center gap-2 rounded-xl bg-foreground/[0.025] sm:h-[280px] lg:h-[320px]">
+        <span className="size-2.5 rounded-full" style={{ background: primary.color }} />
+        <span className="tnum text-lg font-bold text-foreground">{compactDisplayValue(primary.points[0], currency)}</span>
+        <span className="text-meta">{t(lang, "singlePricePoint")}</span>
+      </div>
+    )
+  }
 
-  const width = 1000
-  const height = 320
-  const padTop = 16
-  const padRight = 18
-  const padBottom = 28
-  const padLeft = 64
-  const plotW = width - padLeft - padRight
+  const width = size.w
+  const height = size.h
+  const padTop = 14
+  const padBottom = 30
   const plotH = height - padTop - padBottom
-  // Named font sizes (SVG <text> takes user-space units, not the .text-* px tokens) —
-  // axis labels + the last-price tag share AXIS_FONT so they read as one scale.
-  const AXIS_FONT = 18
-  const TOOLTIP_FONT = 15
-  const TOOLTIP_LABEL_FONT = 14
+  // Real-px font sizes now (1 unit = 1px). Role hierarchy: live-price TAG loudest, y-axis,
+  // x-axis smallest. One x-tick group (density = f(width)) replaces the old mobile/desktop split.
+  const TAG_FONT = 13
+  const Y_AXIS_FONT = 12
+  const X_AXIS_FONT = 12
+  const TOOLTIP_FONT = 13
+  const TOOLTIP_LABEL_FONT = 12
   const len = primary.points.length
   const allPoints = drawn.flatMap((s) => s.points)
   const min = Math.min(...allPoints)
@@ -127,35 +223,84 @@ export function ScrubChart({
   const yMin = min - span * 0.08
   const yMax = max + span * 0.08
 
+  // Y-axis ticks computed FIRST so the RIGHT gutter (padRight) can be sized to the widest
+  // label + the last-price pill. Axis + live value sit on the RIGHT (Google/CoinGecko/CMC
+  // convention: the newest point lands at the right edge, where the eye reads "now").
+  const gridVals = niceTicks(min, max, 5).filter((v) => v >= yMin && v <= yMax)
+  const yLabels = gridVals.map((v) => (indexed ? fmtIndex(v) : compactDisplayValue(v, currency)))
+  const lastLabel = indexed ? "" : compactDisplayValue(primary.points[len - 1], currency)
+  // <text> advance ≈ chars × fontSize × ~0.62. RIGHT gutter fits the widest y-label AND the
+  // last-price pill so a high-value card (฿489K) never clips. LEFT gutter is slim (no labels).
+  const tagW = Math.ceil(Math.max(1, lastLabel.length) * TAG_FONT * 0.62) + 12
+  const maxYChars = Math.max(4, ...yLabels.map((s) => s.length))
+  const padRight = Math.max(46, Math.ceil(maxYChars * Y_AXIS_FONT * 0.62) + 12, tagW + 10)
+  const padLeft = 14
+  const plotW = width - padLeft - padRight
+
   const x = (i: number) => padLeft + (plotW * i) / (len - 1)
   const y = (v: number) => padTop + ((yMax - v) / Math.max(1, yMax - yMin)) * plotH
   const pathOf = (pts: number[]) => pts.map((p, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(2)} ${y(p).toFixed(2)}`).join(" ")
-  // Round ticks from the REAL data domain (min/max) — already in index units when
-  // indexed (drawn is rebased above), so % labels fall out round too. Filter to the
-  // padded band so a tick never renders off-plot.
-  const gridVals = niceTicks(min, max, 5).filter((v) => v >= yMin && v <= yMax)
   const active = activeIndex != null ? Math.min(len - 1, Math.max(0, activeIndex)) : len - 1
   const latestIndex = len - 1
-  const primaryLine = pathOf(primary.points)
-  const primaryArea = `${primaryLine} L${x(latestIndex).toFixed(2)} ${height - padBottom} L${padLeft} ${height - padBottom} Z`
+  const bottomY = height - padBottom
+  // Scrub focus (Google Finance): split the line + area at the cursor — BRIGHT up to the
+  // hovered point, DIMMED after it — so the eye focuses on "start → here". Honest: it only
+  // de-emphasises real points already drawn (no fabricated future). At rest splitIdx = last
+  // ⇒ the whole line is the bright segment and nothing is dimmed.
+  const splitIdx = activeIndex != null ? active : latestIndex
+  const hasDim = activeIndex != null && splitIdx < latestIndex
+  const pathRange = (a: number, b: number) =>
+    primary.points.slice(a, b + 1).map((p, k) => `${k === 0 ? "M" : "L"}${x(a + k).toFixed(2)} ${y(p).toFixed(2)}`).join(" ")
+  const areaRange = (a: number, b: number) => `${pathRange(a, b)} L${x(b).toFixed(2)} ${bottomY} L${x(a).toFixed(2)} ${bottomY} Z`
+
+  // Last-price pill geometry — hoisted so the y-axis can suppress the gridline label it
+  // would collide with. Clamped to the plot so the pill never escapes top/bottom.
+  const lastVal = primary.points[latestIndex]
+  const open = primary.points[0]
+  const tagY = Math.min(height - padBottom - 10, Math.max(padTop + 10, y(lastVal)))
+
+  // Calendar-snapped date ticks — ONE density-based set sized to the real plot width
+  // (≈1 label / 92px) now that we measure width; replaces the old CSS-toggled two groups.
+  const refMs = latestUpdatedAt ? new Date(latestUpdatedAt).getTime() : null
+  const maxXTicks = Math.max(3, Math.min(8, Math.floor(plotW / 92)))
+  const xTicks = refMs != null && !Number.isNaN(refMs) ? thinTicks(xAxisTicks(refMs, range, lang), maxXTicks) : []
 
   const scrubAt = (event: PointerEvent<SVGSVGElement>) => {
     const rect = event.currentTarget.getBoundingClientRect()
-    const ratio = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width))
-    onScrub(Math.round(ratio * (len - 1)))
+    if (!rect.width) return
+    // Map the cursor into PLOT coordinates (subtract the gutters) — not the full element —
+    // so the snapped index/dot lands under the cursor and on the x-axis date. Without this
+    // the right axis gutter offsets every hit (worst on 7D, few points).
+    const vx = ((event.clientX - rect.left) / rect.width) * width
+    const frac = Math.min(1, Math.max(0, (vx - padLeft) / plotW))
+    onScrub(Math.round(frac * (len - 1)))
   }
 
   const ttW = 188
   const ttH = 24 + drawn.length * 19
   const ttX = Math.min(width - ttW - 16, Math.max(16, x(active) - ttW / 2))
-  const ttY = Math.max(16, y(primary.points[active]) - ttH - 14)
+  // Place the box ABOVE the point; if it would clip the top, flip it BELOW (Google Finance).
+  const ttAbove = y(primary.points[active]) - ttH - 14
+  const ttY = ttAbove >= padTop ? ttAbove : Math.min(height - padBottom - ttH, y(primary.points[active]) + 14)
+
+  // Crosshair date-pill on the time axis (Google/CoinGecko): WHEN on the axis, WHAT on the
+  // line. Clamped to the plot so it never escapes the gutters.
+  const dpLabel = activeIndex != null ? dateAtIndex({ i: active, len, range, latestUpdatedAt, lang }) : ""
+  const dpW = Math.ceil(Math.max(6, dpLabel.length) * X_AXIS_FONT * 0.62) + 14
+  const dpX = Math.min(width - padRight - dpW / 2, Math.max(padLeft + dpW / 2, x(active)))
 
   return (
     <svg
+      ref={svgRef}
       role="img"
-      aria-label={t(lang, "priceHistory")}
+      aria-label={
+        indexed
+          ? t(lang, "priceHistory")
+          : `${t(lang, "priceHistory")} — ${compactDisplayValue(open, currency)} → ${compactDisplayValue(lastVal, currency)} · ${t(lang, "low")} ${compactDisplayValue(min, currency)} · ${t(lang, "high")} ${compactDisplayValue(max, currency)}`
+      }
+      tabIndex={0}
       viewBox={`0 0 ${width} ${height}`}
-      className="block h-[210px] w-full touch-pan-y select-none sm:h-[280px] lg:h-[320px]"
+      className="block h-[210px] w-full touch-pan-y select-none rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-[280px] lg:h-[320px]"
       onPointerDown={(event) => {
         event.currentTarget.setPointerCapture(event.pointerId)
         scrubAt(event)
@@ -169,6 +314,18 @@ export function ScrubChart({
       onPointerUp={onScrubEnd}
       onPointerCancel={onScrubEnd}
       onPointerLeave={onScrubEnd}
+      // Keyboard scrub (a11y) — reuses the SAME activeIndex the pointer drives. Focus shows
+      // the crosshair at the latest point; arrows step, Home/End jump, Esc/blur clears.
+      onFocus={() => onScrub(latestIndex)}
+      onBlur={onScrubEnd}
+      onKeyDown={(event: KeyboardEvent<SVGSVGElement>) => {
+        const cur = activeIndex ?? latestIndex
+        if (event.key === "ArrowRight") { event.preventDefault(); onScrub(Math.min(len - 1, cur + 1)) }
+        else if (event.key === "ArrowLeft") { event.preventDefault(); onScrub(Math.max(0, cur - 1)) }
+        else if (event.key === "Home") { event.preventDefault(); onScrub(0) }
+        else if (event.key === "End") { event.preventDefault(); onScrub(len - 1) }
+        else if (event.key === "Escape") onScrubEnd()
+      }}
     >
       <defs>
         <linearGradient id="card-price-area" x1="0" x2="0" y1="0" y2="1">
@@ -176,41 +333,66 @@ export function ScrubChart({
           <stop offset="62%" stopColor={primary.color} stopOpacity="0.08" />
           <stop offset="100%" stopColor={primary.color} stopOpacity="0" />
         </linearGradient>
+        {/* tooltip elevation — drop shadow so the box reads clearly over the dark plot.
+            Hover-only (not page-scroll), so the filter's cost never hits scroll perf. */}
+        <filter id="tt-shadow" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="2" stdDeviation="5" floodColor="#000000" floodOpacity="0.45" />
+        </filter>
       </defs>
-      {/* dated x-ticks — a real time reference frame under the plot */}
-      {[0, 1 / 3, 2 / 3, 1].map((f, idx) => {
-        const i = Math.round(f * (len - 1))
-        const label = dateAtIndex({ i, len, range, latestUpdatedAt, lang })
-        if (!label) return null
-        return (
-          <text
-            key={`xtick-${idx}`}
-            x={padLeft + plotW * f}
-            y={height - padBottom + 20}
-            textAnchor={idx === 0 ? "start" : f === 1 ? "end" : "middle"}
-            fill="var(--muted-foreground)"
-            opacity="0.7"
-            fontSize={AXIS_FONT}
-          >
-            {label}
-          </text>
-        )
+      {/* dated x-ticks (labels) — calendar-snapped, density = f(real width), single group. */}
+      {xTicks.map((tk, idx) => (
+        <text
+          key={`xt-${idx}`}
+          x={padLeft + plotW * tk.frac}
+          y={height - padBottom + 16}
+          textAnchor={idx === 0 ? "start" : idx === xTicks.length - 1 ? "end" : "middle"}
+          fill="var(--muted-foreground)"
+          fontSize={X_AXIS_FONT}
+        >
+          {tk.label}
+        </text>
+      ))}
+      {/* area — BRIGHT up to the cursor, DIMMED after it (scrub focus). At rest = full bright. */}
+      <path d={areaRange(0, splitIdx)} fill="url(#card-price-area)" />
+      {hasDim && <path d={areaRange(splitIdx, latestIndex)} fill="url(#card-price-area)" opacity="0.25" />}
+      {/* faint dotted VERTICAL gridlines at the date ticks (graph-paper texture, both dark
+          refs) — over the area fill, under the data line. Horizontals are dotted below too. */}
+      {xTicks.map((tk, idx) => {
+        const tx = padLeft + plotW * tk.frac
+        return <line key={`vg-${idx}`} x1={tx} x2={tx} y1={padTop} y2={height - padBottom} stroke="var(--muted-foreground)" strokeOpacity="0.08" strokeWidth="1" strokeDasharray="1 5" />
       })}
-      <path d={primaryArea} fill="url(#card-price-area)" />
       {/* round-tick gridlines — drawn OVER the area fill (so the fill never dims them)
           but UNDER the data lines; muted-foreground at low alpha is traceable edge-to-
           edge in both themes (--border carries its own 0.12 alpha, too faint to scale). */}
-      {gridVals.map((v) => {
+      {gridVals.map((v, idx) => {
         const gy = y(v)
+        // Hide the y-label when it would (a) collide with the last-price pill (the pill owns
+        // that gutter slot, CMC/Robinhood-style), or (b) round to the SAME text as the tick
+        // above it — which happens on a near-flat series and would print "200฿ / 200฿".
+        const hideLabel = (!indexed && Math.abs(gy - tagY) < 20) || (idx > 0 && yLabels[idx] === yLabels[idx - 1])
         return (
           <g key={v}>
-            <line x1={padLeft} x2={width - padRight} y1={gy} y2={gy} stroke="var(--muted-foreground)" strokeOpacity="0.22" strokeWidth="1.25" shapeRendering="crispEdges" />
-            <text x={padLeft - 10} y={gy + 4} textAnchor="end" fill="var(--muted-foreground)" opacity="0.8" fontSize={AXIS_FONT}>
-              {indexed ? fmtIndex(v) : compactDisplayValue(v, currency)}
-            </text>
+            <line x1={padLeft} x2={width - padRight} y1={gy} y2={gy} stroke="var(--muted-foreground)" strokeOpacity="0.14" strokeWidth="1" strokeDasharray="1 5" />
+            {!hideLabel && (
+              <text x={width - padRight + 8} y={gy + 4} textAnchor="start" fill="var(--muted-foreground)" fontSize={Y_AXIS_FONT}>
+                {yLabels[idx]}
+              </text>
+            )}
           </g>
         )
       })}
+      {/* window-open baseline — a faint dashed reference at the period's first price, so the
+          green/up vs red/down colour has something to be "up/down FROM" (Robinhood/Google). */}
+      <line
+        x1={padLeft}
+        x2={width - padRight}
+        y1={y(open)}
+        y2={y(open)}
+        stroke="var(--muted-foreground)"
+        strokeOpacity="0.3"
+        strokeWidth="1"
+        strokeDasharray="4 6"
+      />
       {/* compare lines under, primary on top */}
       {drawn.slice(1).map((s) => (
         <path
@@ -229,7 +411,7 @@ export function ScrubChart({
           the trading-chart standard (Robinhood/CMC/Google). Per-segment up/down colouring
           is for candlesticks, not lines — looks off + choppy on a price line. */}
       <path
-        d={primaryLine}
+        d={pathRange(0, splitIdx)}
         fill="none"
         stroke={primary.color}
         strokeWidth="2.25"
@@ -237,50 +419,70 @@ export function ScrubChart({
         strokeLinejoin="round"
         strokeDasharray={primary.isEst ? "7 5" : undefined}
       />
+      {/* dimmed segment after the cursor — Google scrub focus */}
+      {hasDim && (
+        <path
+          d={pathRange(splitIdx, latestIndex)}
+          fill="none"
+          stroke={primary.color}
+          strokeWidth="2.25"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray={primary.isEst ? "7 5" : undefined}
+          opacity="0.3"
+        />
+      )}
+      {/* crosshair — a solid hairline that FADES in (ease-chrome, reduced-motion-safe),
+          not an instantly-toggled dashed wireframe. */}
       <line
+        className="ease-chrome"
         x1={x(active)}
         x2={x(active)}
         y1={padTop}
         y2={height - padBottom}
         stroke="var(--muted-foreground)"
-        strokeDasharray="3 5"
-        strokeOpacity={activeIndex == null ? "0" : "0.42"}
+        strokeWidth="1"
+        strokeDasharray="4 6"
+        strokeOpacity={activeIndex == null ? "0" : "0.45"}
       />
-      {drawn.map((s) => (
-        <circle
-          key={s.key}
-          cx={x(latestIndex)}
-          cy={y(s.points[latestIndex])}
-          r={s.key === primary.key ? 5 : 3.5}
-          fill={s.color}
-          stroke="var(--background)"
-          strokeWidth={s.key === primary.key ? 3 : 2}
-        />
-      ))}
+      {/* resting end-dots — hidden while scrubbing so there's exactly ONE focal point */}
+      {activeIndex == null &&
+        drawn.map((s) => (
+          <circle
+            key={s.key}
+            cx={x(latestIndex)}
+            cy={y(s.points[latestIndex])}
+            r={s.key === primary.key ? 4 : 3}
+            fill={s.color}
+            stroke="var(--background)"
+            strokeWidth={s.key === primary.key ? 2 : 1.5}
+          />
+        ))}
       {/* last-price tag — pins the current value to the axis at the latest point so
           it reads at rest (Google Finance / Robinhood). Solo ฿ only: in indexed mode
           the primary rebases to 100 → "+0%", which is meaningless. */}
-      {!indexed && (() => {
-        const lv = primary.points[latestIndex]
-        const tagW = 56
-        const tagY = Math.min(height - padBottom - 11, Math.max(padTop + 11, y(lv)))
-        // left gutter now (axis moved left) — CMC highlights the current price ON the axis.
-        return (
-          <g transform={`translate(${padLeft - tagW - 4} ${tagY})`}>
-            <rect x="0" y="-11" width={tagW} height="22" rx="6" fill={primary.color} opacity={primary.isEst ? 0.85 : 1} />
-            <text x={tagW / 2} y="5" textAnchor="middle" fill="var(--background)" fontSize={AXIS_FONT} fontWeight="700">
-              {compactDisplayValue(lv, currency)}
-            </text>
-          </g>
-        )
-      })()}
+      {!indexed && (
+        // RIGHT gutter — a compact solid pill of the live price (CoinGecko/CMC). No arrow
+        // (the hero's ▲/▼% already carries direction) → cleaner. Small gap from the end-dot.
+        <g transform={`translate(${width - padRight + 7} ${tagY})`}>
+          <rect x="0" y="-9" width={tagW} height="18" rx="6" fill={primary.color} opacity={primary.isEst ? 0.85 : 1} />
+          <text x={tagW / 2} y="4" textAnchor="middle" fill="var(--background)" fontSize={TAG_FONT} fontWeight="700">
+            {compactDisplayValue(lastVal, currency)}
+          </text>
+        </g>
+      )}
       {activeIndex != null && (
         <>
           {drawn.map((s) => (
             <circle key={s.key} cx={x(active)} cy={y(s.points[active])} r="5" fill={s.color} stroke="var(--background)" strokeWidth="2.5" />
           ))}
+          {/* date-pill pinned to the time axis at the crosshair */}
+          <g transform={`translate(${dpX} ${height - padBottom})`}>
+            <rect x={-dpW / 2} y="3" width={dpW} height="18" rx="5" fill="var(--popover)" stroke="var(--p-hair)" filter="url(#tt-shadow)" />
+            <text x="0" y="16" textAnchor="middle" fill="var(--popover-foreground)" fontSize={X_AXIS_FONT}>{dpLabel}</text>
+          </g>
           <g transform={`translate(${ttX} ${ttY})`}>
-            <rect width={ttW} height={ttH} rx="10" fill="var(--p-s2)" stroke="var(--p-hair)" />
+            <rect width={ttW} height={ttH} rx="10" fill="var(--popover)" stroke="var(--p-hair)" filter="url(#tt-shadow)" />
             <text x="12" y="17" fill="var(--muted-foreground)" fontSize={TOOLTIP_FONT}>
               {dateAtIndex({ i: active, len, range, latestUpdatedAt, lang })}
             </text>
@@ -288,7 +490,7 @@ export function ScrubChart({
               <g key={s.key} transform={`translate(12 ${32 + idx * 19})`}>
                 <circle cx="4" cy="-4" r="4" fill={s.color} />
                 <text x="15" y="0" fill="var(--muted-foreground)" fontSize={TOOLTIP_LABEL_FONT}>{s.label}</text>
-                <text x={ttW - 24} y="0" textAnchor="end" fill="var(--foreground)" fontSize={TOOLTIP_FONT} fontWeight="700">
+                <text x={ttW - 24} y="0" textAnchor="end" fill="var(--popover-foreground)" fontSize={TOOLTIP_FONT} fontWeight="700">
                   {indexed ? fmtIndex(s.points[active]) : formatDisplayValue(s.points[active], currency)}
                 </text>
               </g>
