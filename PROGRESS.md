@@ -1,7 +1,107 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-18 — **hero 2 บรรทัด (delta+provenance) เกลาให้ "ดูง่าย"** (เบส: ภาพ hero · ห้ามแตะราคาใหญ่+แถบ → 3-lens review workflow) + ก่อนหน้า: เทียบเกรดเส้นเดียว, CMC chart, low/high bar, hero
+อัปเดตล่าสุด: 2026-06-21 — **review + harden Cursor card-detail redesign** — เก็บโค้ดตาย · badge "ตัวอย่าง" (honesty) · a11y · ย่อ segment filter ~30% · tsc 0 · lint 0 · test 45 · build ✓
+
+## ✅ เสร็จ session นี้ (3i) — review + harden การ redesign card-detail จาก Cursor (4-lens review workflow + adversarial verify → 20 verified · ยืนยันด้วย Chrome headless screenshot)
+เบส: "ไปแก้ UI จาก cursor มา ช่วยตรวจสอบ หน้ารายละเอียดการ์ด" → review → เก็บกวาด → honesty → ย่อ filter · **ทั้งหมดยัง working tree → commit ขึ้น branch ใหม่**
+**Cursor ทำมา (uncommitted ตอนเริ่ม):** แตก market-feed primitives ใหม่ 3 ไฟล์ (`market-feed-shared` = SEGMENT tokens/ConditionFilter/Chip/PriceCell · `market-feed-scroll` = viewport+fade+hint · `market-table-layout` = layout consts) · ฟีด `RecentSales` (ประวัติซื้อขายหลายแหล่ง) + `MeecardAsksRail` ใช้ dialect เดียวกัน · ถอด `MarketsTable` ออกจากหน้า
+- **review (4 มุมขนาน → verify เชิงปฏิปักษ์ทุก finding):** correctness/hydration · honesty doctrine · UI conventions · dead code → 21 candidate · ยืนยัน 20 · ตีตก 1 (key index remount — premise จริงแต่ impact ไม่ reproduce)
+- **เก็บโค้ดตาย:** ลบไฟล์ `markets-table.tsx` (Cursor ถอด render แล้วแต่ยัง refactor +149/-100 ค้าง = orphaned) · **revert** การแต่งสไตล์ `tier-meta` (เปล่าประโยชน์ · เก็บไฟล์ไว้ re-add ภายหลัง) · ลบ `SEGMENT` alias (เกิดมาก็ @deprecated) · `MARKET_FEED_VISIBLE_ROWS` · `marketSort` แช่แข็ง+branch `=== "fresh"` ที่เข้าไม่ถึง · **i18n 22 key ตาย ×3 ภาษา** (เคลียร์ orphan สะสมจาก 3b-3h หมด: stat24h/7d/30d · allSources · sortBy/sortByPrice/sortByFresh · updatedCol · soldLegend/askLegend · barPeriod7d/1m/1y/All · lowHighPeriod · medianSources · referenceSources · asksTab/soldTab · noLatestListings · notEnoughDataYet · marketEvidenceDesc) — grep ยืนยัน dead ก่อนลบทุกตัว · **i18n parity 1608 key เท่ากันทั้ง en/jp/th**
+- **honesty (เบส ซีเรียส):** ฟีด Recent sales + ขายบน Meecard เป็น mock ทั้งคู่แต่**ไม่ติดป้าย** (คอมเมนต์ในโค้ดเขียนเองว่า "badged ตัวอย่าง" แต่ไม่ได้ render จริง) → สร้าง `SampleBadge` กลาง ติดหัวข้อทั้ง 2 ฟีดเมื่อ `isSample` + ซ่อน count ปลอม ("18 items") · ส่ง `isSample` จาก card-detail (RecentSales = sample เสมอจนกว่ามี data จริง)
+- **median link หลอก:** ลบ provenance "ค่ากลางของแหล่งอ้างอิง" (gate ด้วย realSourceCount **จริง** แต่ลิงก์ไป `#sources` ที่ตอนนี้เป็น **sample** feed) + ลบ `realSourceCount`/`Info` ที่ตายตาม
+- **a11y/UX:** tab `#sources` label `referenceSources`→`saleHistoryTitle` (ตรงหัวข้อ section + ลิงก์ buy box ด้วย) · เลิก `role=tablist/tab`+`aria-selected` (หลอก SR ว่าเป็น tab widget ทั้งที่แค่ scroll) → `<nav aria-label>` + `aria-current="page"` (i18n ใหม่ `cardSectionsNav`) · `MarketFeedScroll` ใช้ `revalidateKey={shown.length}` แทน `children` ใน deps (ResizeObserver ไม่ rebuild ทุก render + re-measure hint ตอนกรอง — เดิม children identity ใหม่ทุก render) · แถบ Low/High เพิ่ม sr-only summary (เดิม `aria-hidden` ทั้งบล็อก SR อ่านราคาไม่ได้)
+- **segment control (เบส: "ขนาดไม่สมมาตร" → หลายรอบ "ยังใหญ่"):** 2 ปัญหา — (1) ปุ่ม `rounded-md` ในกรอบ `rounded-full` ขอบไม่ซ้อนศูนย์ → `rounded-full` ซ้อนพอดี (เหมือน EditionToggle ที่ถูกอยู่แล้ว) (2) **ใหญ่เกินบทบาท** (min-h-8/32px + 13px + bold ≈ EditionToggle 36px ที่เป็น control หลัก) → ย่อเด็ดขาด ~30%: **`h-6 (24px)` + `text-[12px]` + weight 500** + track เบาลง · ลำดับขนาดถูก: grade chip > edition > filter/range · **บทเรียน:** งาน UI ต้อง **screenshot ดูจริง** (ต่อ Chrome headless `/Applications/Google Chrome.app` --headless=new → PIL crop/เทียบ) — ลดทีละ 4px จากโค้ดตาไม่เห็น เสียหลายรอบ
+- verify: tsc 0 · lint 0 err (84 warning เดิม unrelated) · test 45 · build ✓ · Chrome headless screenshot ยืนยันทุก control + badge "ตัวอย่าง" + ขนาด before/after
+- ⏭️ **NEXT:** ฟีด Recent sales + ขายบน Meecard ยังเป็น **mock** (ติดป้าย "ตัวอย่าง" แล้ว) — พอ pipeline data จริงมา สลับ `mockRecentSales`/`mockMeecardListings` เป็นจริง + `isSample`→false (RecentSales รับ prop แล้ว) · median link + per-source reference table re-add ได้เมื่อมี table จริงกลับมา
+
+## ✅ เสร็จ session นี้ (3h) — typography scale rebalance (เบส: "รู้สึกขนาดไม่สมส่วน")
+- **ปัญหา:** segment รอบก่อนใหญ่เกิน (min-h-9+text-sm+invert pill) แย่ง hierarchy จาก h3/ราคา · ตารางใช้ text-body-sm (15px) ใกล้ text-price เกินไป · chip 11px ติด 15px
+- **scale ใหม่:** filter/segment = `text-label min-h-8 rounded-md` + active `bg-foreground/10` (เดียวกับ edition/grade chip) · ตาราง primary = `text-label` · ราคา = `text-price` (15px mono) · condition chip = `text-label`
+- **dropdown filter:** h-8 + text-label ให้คู่กับ condition segment
+- verify: tsc 0
+
+## ✅ เสร็จ session นี้ (3e) — finance key-stats + sticky tabs fix (tsc 0 · lint 0 · test 45 · screenshot desktop/mobile/scrolled×3)
+เบส: "มีอะไรควรปรับอีก เนื้อหา/UI" → AskUserQuestion เลือกทำหมด #1-5
+แก้ `card-detail.tsx` + i18n ×3 (`stat24h/7d/30d`)
+- **#1+#4 key-stats row:** เพิ่มแถว `24ชม / 7วัน / 30วัน` ใต้ราคา (CMC/Coinbase) จาก `card.priceChange24h/7d/30d` (DB จริง) ใช้ `Delta` (guard null→"—") · ลำดับ price block: ราคา+%ช่วงกราฟ → stats row → provenance → low/high · honesty: เป็น asset/raw change (ไม่มี per-grade history)
+- **#2 ซ่อน tier sample:** เอา `<CardTierMeta>` + import ออก (ข้อมูลปั้นชิ้นสุดท้าย) เก็บไฟล์ไว้ re-add เมื่อมี deck/meta จริง · right rail เหลือ specs+effect
+- **#3 viewCount:** เติม `<Eye/> {viewCount}` ใน identity meta (reuse i18n `views`)
+- **#5 + bug fix sticky:** session ก่อนตั้งแท็บ `md:top-14`(56) ลืมนับ ticker `h-11`(44) → desktop chrome จริง = **100px** แท็บ overlap header · แก้เป็น `sticky top-14 md:top-[6.25rem]` (mobile ใต้ mobile header 56 · desktop ใต้ ticker+header 100) frost+เส้นล่างทั้งสอง · **scrollspy เขียนใหม่:** scroll listener + rAF + วัด `navRef.getBoundingClientRect().bottom` (แม่นทุก breakpoint แทนเลขคงที่) · scroll-mt `[6.5rem] md:[9rem]` · sticky rails `lg:top-[9rem]`
+- **⚠️ subtle fix:** #specs anchor เดิมอยู่บน aside ที่ sticky → rect.top ถูก pin ที่เส้น offset → scrollspy เพี้ยน (specs active ตลอด) · แก้: ย้าย sticky ไป inner div, aside `lg:self-stretch` (ให้ inner มีที่ stick) + id อยู่ aside (natural position) → scrollspy อ่านตำแหน่งจริง · verify scrolled: 820=แหล่งอ้างอิง, 1150=ขายบน Meecard active ถูกต้อง
+- verify: tsc 0 · lint 0 err · test 45 · screenshot ยืนยัน stats row + viewcount + ไม่มี tier + แท็บ sticky ไม่ overlap + scrollspy ตามคอลัมน์หลัก
+- **➕ follow-up (เบส: "ซ้ำซ้อนมั้ย ทำไม 7วันไม่ตรง"):** อินไลน์ % ข้างราคา (delta ตามช่วงกราฟ = modeled) ชนกับแถว stats 7วัน (DB จริง) — เช่น กราฟ 7D "▲22.4%" vs stats "7วัน ▼0.1%"
+- **➕ follow-up #2 (เบส: "เอา % 3 อันออก เอาไปต่อท้ายราคาเหมือนเดิม"):** ลบแถว stats 24ชม/7วัน/30วัน ทั้งหมด · คืนอินไลน์ % ข้างราคา (โชว์ตอนนิ่งตามเดิม `shownDelta != null`) = % ชุดเดียวตามช่วงกราฟ · viewCount (#3) ยังอยู่ · tsc 0 · lint 0 · screenshot ยืนยัน "311฿ ▲94.3% ใน 1เดือน" + ไม่มีแถว stats · ⚠️ orphan i18n เพิ่ม: `stat24h/7d/30d` (zero-risk)
+- **➕ follow-up #3 (เบส: "ส่วนล่างก็ดูยากอยู่" → AskUserQuestion = hierarchy + density):** แก้ markets-table + section heads
+  - **hierarchy:** ราคา ask เดิม `text-muted-foreground` (จาง) → `text-foreground font-semibold` — การ์ด Raw มีราคาเดียว เลขหลักเลยจางอ่านยาก · sold ยังมีจุด settled + font-semibold (แยกด้วยจุด+หัวคอลัมน์ ไม่พึ่งสี) · section title `text-h4`→`text-h3` (SectionHead + markets + asks-rail) ให้หัวข้อเด่นกว่าเนื้อหา (mb-3→mb-4)
+  - **density:** ตัด native ¥/$ บรรทัดสอง (secondary) ในทุก cell (desktop+mobile) → ราคาบรรทัดเดียว · ลบ legend block (หัวคอลัมน์+จุดสื่อแล้ว)
+  - ⚠️ orphan i18n เพิ่ม: `soldLegend`/`askLegend` (zero-risk) · tsc 0 · lint 0 · screenshot ส่วนล่างยืนยัน
+
+## ✅ เสร็จ session นี้ (3f) — "แหล่งอ้างอิง" → ฟีดประวัติการซื้อขายหลายแหล่ง (เบส: เปลี่ยนเป็นแบบคู่แข่ง SNKRDUNK แต่ดีกว่า = หลายแหล่ง · mock ไปก่อน)
+แก้ `mock.ts` · `recent-sales.tsx` (rewrite) · `card-detail.tsx` · i18n ×3 · tsc 0 · lint 0 · test 45 · screenshot desktop+mobile
+- **decision (AskUserQuestion):** เบสเลือก "หลายแหล่ง + mock data ไปก่อน" (prototype) — ไม่ทำ pipeline จริงตอนนี้ (เก็บ SNKRDUNK used-listings ลง DB = งานแยก ต้อง permission schema/scrape)
+- **data จริงที่มี:** `SnkrdunkMapping` เก็บแค่ค่ารวม (`lastSoldPsa10Usd`/`minPriceUsd`) · scraper (`snkrdunk.ts`) ดึง `used-listings` (price/condition/isSold) ได้แต่ทิ้งลิสต์ → real feed ทำได้ภายหลัง (เหลือ persist + วันที่ขายถ้า API มี)
+- **mock:** `mockRecentSales(baseJpy, nowIso, count)` ใน mock.ts — seeded ด้วย `hash()` (ไม่ใช้ Math.random/clock) · 4 แหล่ง (SNKRDUNK/Yuyutei/Mercari JP/eBay JP) · เกรดหลากหลาย (PSA10/9·BGS9.5·ARS10+·raw A/B/C/D) ราคา ×mult ตามเกรด · วันที่ derive จาก `latestUpdatedAt − whenDays` (SSR-pure)
+- **component:** rewrite `recent-sales.tsx` (เดิม unused) → header h3 "ประวัติการซื้อขายล่าสุด" + badge "ตัวอย่าง" + subtitle · source filter chips (ทั้งหมด/แต่ละแหล่ง · client state) · ตาราง ≥sm (แหล่ง·วันที่·สภาพ·ราคา) + list <sm · ราคา = ¥ native ตัวหนา + "≈ ฿" (omit ถ้า currency=JPY) · วันที่ format UTC (กัน hydration drift) · Sold/Listed tag (honesty) · condition chip (graded=boxed, raw=muted)
+- **wire:** แทน `<MarketsTable>` ใน `#sources` ด้วย `<RecentSales sales={saleHistory}>` · `saleHistory` memo = mockRecentSales · คง id=sources + tab/anchor · ลบ import MarketsTable (เก็บไฟล์ไว้) · `marketSort` drop setter (sort UI หายไปกับ MarketsTable · marketRows ยังใช้ buy-box latestSale + provenance)
+- **i18n ×3:** `saleHistoryTitle`/`saleHistoryDesc`/`saleDate`/`priceCol`/`allSources` · reuse `sampleLabel`/`priceTypeSold`/`priceTypeListed`/`sourceCol`/`condition`
+- ⚠️ honesty: ทั้งฟีด mock → badge "ตัวอย่าง" ชัด · ราคา sample เล็ก (seed จาก raw ~¥1,400 → PSA10 ~¥4,650) ไม่ใช่สเกลจริง (SP จริง PSA10 ¥300K+) — เป็น sample โครงสร้าง · comment swap real ไว้แล้ว
+- ⚠️ orphan: markets-table.tsx (dead, เก็บไว้) · i18n `marketEvidenceDesc`/`soldLegend`/`askLegend`/`sortBy`/`sortByPrice`/`sortByFresh`/`asksTab`/`soldTab`/`notEnoughDataYet`/`noLatestListings`/`updatedCol` (เลิกใช้กับ MarketsTable)
+- **➕ follow-up (เบส: "ราคาที่แสดงเอาตามสกุลที่ user ตั้งไว้"):** PriceCell สลับ — ตัวหลัก = `formatDisplayValue(jpyToDisplayValue(jpy, currency), currency)` (สกุล user) · ¥ native = บรรทัดรอง (ซ่อนเมื่อ currency=JPY) · tsc 0 · lint 0 · screenshot THB primary ยืนยัน (977฿/¥4,650)
+- **➕ follow-up #2 (เบส: "เพิ่มสภาพ raw grade เป็น filter"):** เพิ่ม filter ชุดที่ 2 "สภาพ" (ทั้งหมด/Raw/PSA/BGS/ARS — derive จาก family ในฟีด) ควบ filter "แหล่ง" (AND) · empty state เมื่อกรองแล้วว่าง (`noLatestSales`) · chip label "สภาพ"/"แหล่ง" reuse `condition`/`sourceCol`
+- **➕ follow-up #3 (เบส: "ไม่เอาราคาตั้งขาย + ส่วนที่เลื่อนตามจอ ไม่ต้องเลื่อน"):** (a) ตัด LISTED ออกจาก `mockRecentSales` (เหลือ SOLD ล้วน) + ลบ field `type` + ลบ `TypeTag` (แท็กซ้ำซ้อนเมื่อขายแล้วหมด) (b) เอา `lg:sticky` ออกจาก card-info rail (+ `lg:self-stretch`) และ side-ad → เลื่อนตามหน้าปกติ · **แท็บ section ยังคง sticky** (ไม่แตะ ตามที่เบสเคยขอ CMC feel) · tsc 0 · lint 0 · test 45 · screenshot ยืนยัน
+- ⚠️ orphan i18n สะสม (zero-risk): `barPeriod*`/`lowHighPeriod`, `details`, `viewSaleHistory` · tier-meta.tsx = dead component (เก็บไว้)
+
+## ✅ เสร็จ session นี้ (3d) — flat minimal finance redesign (tsc 0 · lint 0 · test 45 · screenshot desktop/mobile/scrolled 200)
+เบส: "คลีน minimal แบบ Coinbase/TradingView/CMC · hero+กราฟคงโครง · ปรับทั้งหน้าได้" → AskUserQuestion: **flat** (ถอดกล่อง) + **keep gold** (accent เฉพาะ CTA)
+แก้ `card-detail.tsx` · `markets-table.tsx` · `asks-rail.tsx` · `card-detail-related.tsx`
+- **A. sticky section tabs:** `<nav>` แท็บ → `md:sticky md:top-14 z-30 md:frost md:shadow-[inset_0_-1px_0_0_p-hair]` (ใต้ global header sticky h-14) · mobile non-sticky (border-t) · scrollspy offset 80→**104** + rootMargin `-104px 0px -68%` (เคลียร์ header+tabs) · section `scroll-mt-20 md:scroll-mt-28` · sticky rail `lg:top-20→top-28` · rhythm mt-10→**mt-12**
+- **B. ฝั่งซ้าย flat:** markets-table ถอด `surface-1 hairline rounded-2xl p-4` → `<div>` เปล่า, thead เอา `surface-2` ออก (โปร่ง+เส้นล่าง) · asks-rail ถอด panel + ลบ prop `embedded` (ไม่ใช้แล้ว) + ลบ `px-4` inset (flush), row hover `-mx-2 px-2 rounded-lg bg-foreground/[0.03]` · 2 ส่วนคั่นด้วย `hairline-t pt-10`
+- **C. ฝั่งขวา flat rail:** card-info ถอดกล่อง → `lg:border-l lg:pl-8` (เส้นแบ่ง rail เหมือน buy box) + sticky top-28 · specs single-col + effect accent bar + tier คั่น hairline
+- **D. accent sweep:** related ปุ่ม "ดูทั้งหมดในชุด" จากกล่อง surface → flat link `hairline-t` + icon ทอง→neutral · ทองเหลือเฉพาะ CTA (ดูประกาศขาย/ลงขาย/list) · ring การ์ดปัจจุบัน + effect accent bar คง subtle (ไม่เพิ่มทองใหม่)
+- **E. hero+chart:** คงโครง (flat อยู่แล้ว — image card, buy box border-l, low/high bar) ไม่แตะ
+- verify: tsc 0 · lint 0 err · test 45 · dev 200 · screenshot desktop(flat ครบ)+mobile(stack)+scrolled(sticky tabs ทำงาน) · "Page error {}" ใน log = artifact CDP headless emulation (fresh load สะอาด)
+- ⚠️ orphan i18n สะสม (zero-risk): `barPeriod*`/`lowHighPeriod` (3c) · `details`/`viewSaleHistory` (3b)
+
+## ✅ เสร็จ session นี้ (3c) — รื้อใต้กราฟเป็น 2-col redesign (tsc 0 · lint 0 · test 45 · screenshot desktop+mobile 200)
+แก้ `card-detail.tsx` · `markets-table.tsx` · `asks-rail.tsx` · `card-detail-specs.tsx` · เพิ่มใช้ `section-head.tsx` (SectionHead ที่มีอยู่แต่ยังไม่ถูกใช้)
+- **#1 รวมตัวกรองวันที่:** ลบ pill `barPeriod` แยก (state+`BAR_PERIODS`/`BarPeriod`/`BAR_PERIOD_RANGE`/`barPeriodLabel`) · `barPoints` memo ใช้ `range` ของกราฟตรงๆ → แถบ low/high กับกราฟใช้ตัวกรองเดียวกัน · i18n `barPeriod*`/`lowHighPeriod` orphan
+- **#2 แถบ low/high ขนาดเดิม:** เอา pill ออกแล้วยุบ wrapper ซ้อน → กลับเต็ม `max-w-sm`
+- **#3 รื้อใต้กราฟ → grid 2 คอลัมน์** (`lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start xl:_360px`):
+  - **LEFT (ราคาตลาด):** `แหล่งอ้างอิง` (#sources) + `ขายบน Meecard` (#market) — แต่ละอันเป็น **panel เดียว** (`surface-1 hairline rounded-2xl`) หัวข้อ `text-h4` ชุดเดียว · MarketsTable: ถอด `<section>`+id ออก ทำเป็น panel เอง, table flush (ลบ hairline ซ้อน, thead→surface-2), empty state plain · asks-rail: เพิ่ม header (h2 sellingNow + grade meta + live/badge) รวมจาก 2 branch เหลือ header เดียว, root เป็น panel (เลิกส่ง `embedded`)
+  - **RIGHT (ข้อมูลการ์ด #specs):** รวม specs+effect+tier เป็น **panel เดียว** `lg:sticky lg:top-20` (เรียงใต้ side-ad → right rail ต่อเนื่องทั้งหน้า) · SectionHead "ข้อมูลการ์ด" · specs เปลี่ยนเป็น **single-col** (ลบ `sm:grid-cols-2` ที่จะอัด 2 คอลัมน์ใน rail 320px) · effect = divider+accent bar, tier = divider (เลิก wrapper hairline ซ้อน)
+  - **full width:** เวอร์ชันอื่น (SectionHead) + การ์ดอื่นในชุด (header เดิม text-h4) อยู่ใต้ grid เต็มแถว
+- **scrollspy resolver fix:** เดิมเลือก "ตัวสุดท้ายใน array ที่ top≤80" → desktop #sources(ซ้าย)/#specs(ขวา) top เท่ากันเลยเลือก specs ผิด · เปลี่ยนเป็น **top มากสุดที่ ≤ offset · เสมอ→index แรก** (main column ชนะ sidebar) · tabs/anchor เดิม 4 อันคงไว้ (ลิงก์ภายใน #market/#sources ไม่พัง)
+- verify: tsc 0 · lint 0 err · test 45 · dev 200 · screenshot desktop(1280) 2-col + mobile(390) stacked ยืนยัน (HMR error ระหว่างแก้เป็น state ชั่วคราว — final สะอาด)
+
+## ✅ เสร็จ session นี้ (3b) — card detail UX polish (plan #1-5 · tsc 0 · lint 0 · test 45 · screenshot desktop+mobile 200)
+แก้ `card-detail.tsx` · `card-detail-related.tsx` · `card-detail-sibling-grid.tsx` · `card-detail-specs.tsx` · `tier-meta.tsx`
+- **#1 แท็บ scrollspy (bug):** เดิม active hard-code `i===0` → ขีดเส้นใต้ตัวแรกเสมอแม้เลื่อนลง · เพิ่ม `activeTab` state + `IntersectionObserver` (4 section: overview/sources/market/specs · rootMargin `-80px 0px -70%` · เลือก section ล่างสุดที่ top ผ่านใต้ header) → ขีดตามหัวข้อในจอ · click set ทันที + `aria-current`
+- **#2 ส่วนล่างเข้าชุด:** related + sibling-grid tile `panel`/`bg-muted` → `surface-1 hairline rounded-lg` + `ease-chrome` + `group-hover:ring-2 ring-primary/40` (เหมือน hero) · เลิก `hover:shadow-md active:scale-[0.99]` ยุคเก่า · ปุ่ม "ดูทั้งหมดในชุด" → surface-1 hairline เรียบ · set-code chip → surface-2
+- **#3 double-header:** ลบ sub-label "รายละเอียด" ใน specs (h2 "ข้อมูลการ์ด" ข้างนอกคุมแล้ว) + ลบ wrapper `hairline-t pt-4` (row borders เป็น divider แทน) · i18n `details` orphan
+- **#4 ลดน้ำหนัก section รอง:** ข้อมูลการ์ด/เวอร์ชันอื่น/การ์ดอื่นในชุด `text-h3`→`text-h4` (price story เด่นกว่า) · related เลิก wrapper `mt-6 border-t border-border/40 pt-8` → ให้ outer `mt-10` คุมระยะชุดเดียว
+- **#5 polish:** (a) low/high period native `<select>` → segmented pill (สไตล์เดียวกับ chart RANGES · `role=group`) (b) buy-box "ขายล่าสุด" เดิม list ทุกแหล่ง = ซ้ำกับคอลัมน์ "ขายไปแล้ว" ในตาราง → เหลือ **headline แถวเดียว (สดสุด)** ทั้งแถวเป็นลิงก์ `#sources` · `latestSale` = reduce updatedAt max (render-pure) · i18n `viewSaleHistory` orphan (c) tier "sample" badge `/40` จางอ่านไม่ออก → pill `surface-2 ring` อ่านออกแต่ยัง subordinate
+- verify: tsc 0 · lint 0 err (warnings เดิม unrelated) · test 45 · dev 200 · screenshot desktop(1280) + mobile(390) ยืนยันเข้าชุด/ไม่พัง
+
+## ✅ เสร็จ session นี้ (3a) — "แหล่งอ้างอิง" (MarketsTable) world-class redesign (design workflow → markets-pro + review workflow → 12 verified fix)
+เขียนใหม่ `card-detail/markets-table.tsx` + i18n ×3 (`sortBy`) · tsc 0 · lint 0 · test 45 · screenshot ครบทุก tier × dark/light × desktop/mobile (CDP script `/tmp/shoot.mjs`)
+- **ปัญหาเดิม:** prod จริง raw เหลือ Yuyutei แหล่งเดียว → ตาราง 4 คอลัมน์ 1 แถว "340฿" ลอยกลางช่องว่าง = ดูเหมือน spreadsheet เปล่า ไม่โปร · เคส 1 แหล่งคือเคสหลักที่ต้องสวยสุด
+- **design workflow (9 agents):** research markets/TCG/table-UX จริง (CoinGecko/CMC/TCGplayer/PriceCharting) → audit token → judge panel 3 ทิศ (clarity/markets-pro/adaptive) → ผู้ชนะ **markets-pro 89** + graft (zero-new-key + Tier-C fallback + self-contained row) → blueprint
+- **โครง: 1 tier branch ตาม rows.length** → 0 empty · 1 **Tier A quote card** (surface-2 · desktop=quote row [identity left + ask/sold grouped right] · mobile=masthead+divider+spread) · 2–3 **Tier B rich rows** · ≥4 **Tier C table+sort** · mobile(<sm)=stacked cards · helper `SourceIdentity`/`Freshness`/`StatPair(spread|grouped)` กัน drift ข้าม tier
+- **honesty:** ask≠sold = 5 cue (ขนาด+น้ำหนัก+ตำแหน่ง+ป้าย+settled-dot — ไม่พึ่งสี) · sold=headline foreground, ask=muted · stale >7วัน (`STALE_AFTER_DAYS` + `daysSince` lint-safe, หลัง `hydrated` guard) = amber `.status-warn` pill + Clock · 0 fabrication · `referenceBadge` chip humble · **`visibleRows` filter** กัน phantom source (ask+sold null ทั้งคู่ = ขัด marketEvidenceDesc)
+- **review workflow (18 agents → 12 verified → ติด 9 ปฏิเสธ 3):** #1 `<h2>`+aria-labelledby (a11y heading) · #2 visibleRows · #4 settled-dot ในตาราง · #5 `scope=col` · #6 sort `role=group`+`sortBy` key · #7 no-sale→`—` (กัน wrap/ragged) · #8 ลบ `font-medium` ซ้อน eyebrow · #10/11 ยกคอนทราสต์ secondary `/60`→muted
+  - **ปฏิเสธ:** #9 (เปลี่ยน stale pill→text จะ**ย้อน decision 2f** ที่เบส fix contrast light mode มาแล้ว) · #12 (empty surface-1 เบากว่า Tier A = subordinate by design) · #3 residual Tier B align (rich-rows ตั้งใจ · #7 ช่วยแล้ว)
+- **0 i18n key ใหม่** ยกเว้น `sortBy` (a11y group label · th/en/jp index ตรงกัน)
+- gate รอ data จริง: Tier B/C (2+ แหล่ง) ทดสอบผ่าน scratch page ชั่วคราว (ลบแล้ว) · prod ปกติ = แหล่งเดียว
+
+### ➕ follow-up (เบส รอบใหญ่): "card ดูยาก เอาตารางแบบเดิม + รื้อส่วนล่างตั้งแต่กราฟลงไปให้เข้าชุด ไม่รก มีโฟกัส"
+- **pivot: ทิ้ง tier-card → ตารางเดียว** (`markets-table.tsx` เขียนใหม่อีกรอบ) — desktop ตาราง 4 คอลัมน์ (แหล่ง·ประกาศขาย·ขายไปแล้ว·อัปเดต) · mobile list 2-col · ทุกจำนวนแหล่ง · เก็บ honesty (sold=foreground+settled-dot, ask=muted), stale amber, `scope=col`, `visibleRows` filter, `<h2>` heading · ลบ helper `SourceIdentity`/`StatPair`, chip "อ้างอิง"
+- **header เป็นชุดเดียว:** แหล่งอ้างอิง/ขายอยู่บน Meecard/ข้อมูลการ์ด = `<h2 text-h3>` เหมือนกันหมด · แหล่งอ้างอิง = title + เมตาบรรทัดเดียว ("{grade} · แสดงเฉพาะ...")
+- **ตัด sub-header ซ้ำ:** `asks-rail.tsx` เดิม render "ขายอยู่บน MEECARD · Raw" ซ้ำกับ `<h2>` ด้านนอก → เหลือแค่ grade ("RAW")
+- verify: tsc 0 · lint 0 · test 45 · screenshot ส่วนล่าง (sources+market+specs) ส่งเบสแล้ว
+- ⏭️ **NEXT (รอเบส):** ยืนยันทิศ + ลึกขึ้นเรื่อง "จุดโฟกัส" ส่วนล่าง (เช่น ลด weight section รอง specs/versions, ข้อมูลการ์ด+"รายละเอียด" ยัง double-header เล็กน้อย)
+
+## ก่อนหน้า — hero + chart sessions (เก็บประวัติไว้ด้านล่าง)
 
 ## ✅ เสร็จ session นี้ (2f) — hero delta+provenance polish (3-lens critique workflow → 7 fix ติดทั้งหมด)
 แก้ `card-detail.tsx` (บรรทัด ~625-672) + `i18n/th.ts` · tsc 0 · lint 0 err · test 45 · screenshot desktop+mobile + computed-style ยืนยัน

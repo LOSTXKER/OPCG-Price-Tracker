@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from "react"
-import { Bell, ChevronRight, Info, MoveHorizontal, Share2, ShoppingBag, Tag } from "lucide-react"
+import { Bell, ChevronRight, Eye, MoveHorizontal, Share2, ShoppingBag, Tag } from "lucide-react"
 
 import { Breadcrumb } from "@/components/shared/breadcrumb"
 import type { CardListing } from "@/components/cards/card-listings-section"
@@ -30,7 +30,9 @@ import { CardAddToPortfolio } from "@/components/cards/card-add-to-portfolio"
 import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog"
 
 import { ScrubChart, RANGES, dateAtIndex, type ChartRange, type ChartSeries } from "./card-detail/card-chart"
-import { mockGradeSeries } from "./card-detail/mock"
+import { mockGradeSeries, mockMeecardListings, mockRecentSales } from "./card-detail/mock"
+import { MARKET_FEED_MOCK_COUNT, MARKET_FEED_MOCK_LISTINGS_COUNT } from "./card-detail/market-table-layout"
+import { SEGMENT_ACTIVE, SEGMENT_BTN, SEGMENT_IDLE, SEGMENT_TRACK } from "./card-detail/market-feed-shared"
 import {
   buildGradeData,
   defaultGradeKey,
@@ -43,9 +45,9 @@ import { GradeLogo } from "./card-detail/grade-logo"
 import { Delta, EstMark } from "./card-detail/grade-value"
 import { EditionToggle, type Edition } from "./card-detail/edition-toggle"
 import { SourceLogo, sourceLabel } from "./card-detail/source-logo"
-import { MarketsTable } from "./card-detail/markets-table"
 import { MeecardAsksRail, listingMatchesGrade } from "./card-detail/asks-rail"
-import { CardTierMeta } from "./card-detail/tier-meta"
+import { RecentSales } from "./card-detail/recent-sales"
+import { SectionHead } from "./card-detail/section-head"
 import { SiblingGrid } from "./card-detail-sibling-grid"
 import { CardDetailRelated } from "./card-detail-related"
 import { CardDetailSpecs } from "./card-detail-specs"
@@ -130,6 +132,8 @@ export interface CardDetailProps {
   daysSinceUpdate?: number | null
   /** Active marketplace listings for this card (passed from server). */
   listings?: CardListing[]
+  /** Server-resolved marketplace flag — must match SSR for hydration-safe mock vs live. */
+  marketplaceEnabled?: boolean
 }
 
 function statToDisplayValue(stat: Stat, currency: Currency): number | null {
@@ -149,15 +153,6 @@ function firstSource(rows: SourcePriceRow[] | undefined, source: string) {
 }
 
 
-// Low/High bar period — INDEPENDENT of the chart range (CoinMarketCap pattern). No
-// "24h": one price/day makes a 24h low/high degenerate or fabricated, so the shortest
-// HONEST window is 7d. Each maps to a real RANGE_POINTS key so the mock never falls back.
-const BAR_PERIODS = ["7d", "1m", "1y", "all"] as const
-type BarPeriod = (typeof BAR_PERIODS)[number]
-const BAR_PERIOD_RANGE: Record<BarPeriod, ChartRange> = { "7d": "7D", "1m": "1M", "1y": "1Y", all: "All" }
-const barPeriodLabel = (p: BarPeriod) =>
-  p === "7d" ? "barPeriod7d" : p === "1m" ? "barPeriod1m" : p === "1y" ? "barPeriod1y" : "barPeriodAll"
-
 const COLOR_DOT: Record<string, string> = {
   red: "bg-red-500",
   green: "bg-green-500",
@@ -176,6 +171,7 @@ export function CardDetail({
   sourcePricesPsa10,
   latestUpdatedAt,
   listings,
+  marketplaceEnabled = false,
 }: CardDetailProps) {
   const lang = useUIStore((s) => s.language)
   const hydrated = useHydrated()
@@ -188,13 +184,16 @@ export function CardDetail({
 
   const [edition, setEdition] = useState<Edition>("JP")
   const [range, setRange] = useState<ChartRange>("1M")
-  const [barPeriod, setBarPeriod] = useState<BarPeriod>("1m")
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
-  const [marketSort, setMarketSort] = useState<"price" | "fresh">("price")
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [alertOpen, setAlertOpen] = useState(false)
   const [showStickyBuy, setShowStickyBuy] = useState(false)
+  const [activeTab, setActiveTab] = useState("overview")
   const stickySentinelRef = useRef<HTMLDivElement | null>(null)
+  const navRef = useRef<HTMLElement | null>(null)
+  const tabRefs = useRef<Record<string, HTMLAnchorElement | null>>({})
+  const [tabIndicator, setTabIndicator] = useState<{ left: number; width: number }>({ left: 0, width: 0 })
+  const gradeActiveRef = useRef<HTMLButtonElement | null>(null)
 
   const set = card.set
   const displayName = getCardName(displayLang, card)
@@ -303,22 +302,18 @@ export function CardDetail({
       ? `${dateAtIndex({ i: 0, len: primaryPoints.length, range, latestUpdatedAt, lang: displayLang })} – ${dateAtIndex({ i: activeIndex, len: primaryPoints.length, range, latestUpdatedAt, lang: displayLang })}`
       : null
 
-  // Modeled ±7% band — kept only to feed the asks-rail rangeHigh (a "sell a touch
-  // above market" hint). NOT shown to the user anymore (replaced by the real low/high bar).
-  const band = latest != null ? { lo: Math.round(latest * 0.93), hi: Math.round(latest * 1.06) } : null
-
-  // CoinMarketCap-style low/high bar — its OWN period (barPeriod), DECOUPLED from the
-  // chart range. min/max of a series generated for that period; marker = where the
-  // CURRENT price sits between them. Honest by construction: "low" agrees with the
-  // headline % move (a riser's low is its window-open price, not a fabricated −7%).
+  // CoinMarketCap-style low/high bar — min/max of the series over the SAME window
+  // as the chart (one date filter for both, per เบส). Marker = where the CURRENT
+  // price sits between them. Honest by construction: "low" agrees with the headline
+  // % move (a riser's low is its window-open price, not a fabricated −7%).
   const barPoints = useMemo(() => {
     if (!hydrated || !datum.hasData || latest == null || latest <= 0) return []
     const m = mockGradeSeries(
       [{ key: selectedGrade, base: latest, up, pct: datum.delta30d?.pct ?? null }],
-      BAR_PERIOD_RANGE[barPeriod],
+      range,
     )
     return m[selectedGrade] ?? []
-  }, [hydrated, datum.hasData, datum.delta30d?.pct, selectedGrade, latest, up, barPeriod])
+  }, [hydrated, datum.hasData, datum.delta30d?.pct, selectedGrade, latest, up, range])
   const priceLow = barPoints.length >= 2 ? Math.min(...barPoints) : null
   const priceHigh = barPoints.length >= 2 ? Math.max(...barPoints) : null
   const pricePos =
@@ -357,14 +352,10 @@ export function CardDetail({
       }
     }
     const priceOf = (r: SourcePriceRow) => r.askPriceUsd ?? r.askPriceThb ?? r.askPriceJpy ?? r.soldPriceUsd ?? r.soldPriceThb ?? r.soldPriceJpy ?? Infinity
-    return rows.sort((a, b) =>
-      marketSort === "fresh"
-        ? new Date(b.updatedAt ?? 0).getTime() - new Date(a.updatedAt ?? 0).getTime()
-        : priceOf(a) - priceOf(b),
-    )
-  }, [edition, chartMode, sourcePricesRaw, sourcePricesPsa10, rawYuyu, psaSnk, snkrdunkPrices, card.price?.priceJpy, card.price?.priceThb, card.latestPriceJpy, card.latestPriceThb, latestUpdatedAt, marketSort])
-
-  const realSourceCount = marketRows.length
+    // Order is fixed to cheapest-first — the old fresh/price toggle lived in MarketsTable,
+    // which was replaced by the sale-history feed.
+    return rows.sort((a, b) => priceOf(a) - priceOf(b))
+  }, [edition, chartMode, sourcePricesRaw, sourcePricesPsa10, rawYuyu, psaSnk, snkrdunkPrices, card.price?.priceJpy, card.price?.priceThb, card.latestPriceJpy, card.latestPriceThb, latestUpdatedAt])
 
   // Readable timeframe for the change delta — a bare "1M" reads as "1 million" next to
   // a big ฿ figure. At rest shows the window word; while scrubbing the chart shows the date.
@@ -398,23 +389,23 @@ export function CardDetail({
       </span>,
     )
   }
-  if (realSourceCount >= 2) {
-    provenanceParts.push(
-      <a key="median" href="#sources" className="inline-flex items-center gap-1 hover:text-foreground">
-        {t(displayLang, "medianSources")} <Info className="size-3.5" aria-hidden />
-      </a>,
-    )
-  }
+  // NOTE: the "median across sources" link was removed — the per-source reference table
+  // it pointed at (#sources) was replaced by the sample sale-history feed, so the claim
+  // had no real breakdown to land on. Re-add it when a real per-source table returns.
   // NOTE: freshness ("อัปเดต X ago") is intentionally NOT pushed here (เบส) — the page
   // still passes daysSinceUpdate, so re-add a push if a "last updated" cue is wanted once
   // daily data is live (a stale-amber .status-warn pill was the prior treatment).
 
   const TABS: { id: string; label: string }[] = [
     { id: "overview", label: t(displayLang, "overview") },
-    { id: "sources", label: t(displayLang, "referenceSources") },
+    { id: "sources", label: t(displayLang, "saleHistoryTitle") },
     { id: "market", label: t(displayLang, "sellingNow") },
-    { id: "specs", label: t(displayLang, "tabSpecs") },
   ]
+
+  const scrollToSection = (id: string) => {
+    setActiveTab(id)
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }
 
   useEffect(() => {
     const sentinel = stickySentinelRef.current
@@ -434,6 +425,64 @@ export function CardDetail({
       observer?.disconnect()
     }
   }, [])
+
+  // Scrollspy — the tabs are in-page anchors, so the active underline must follow
+  // the section currently under the sticky chrome. The threshold is measured from
+  // the sticky tab bar's own bottom edge, so it stays exact across breakpoints
+  // (mobile header 56 + tabs vs desktop ticker 44 + header 56 + tabs).
+  useEffect(() => {
+    const ids = ["overview", "sources", "market"]
+    const sections = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el != null)
+    if (sections.length === 0) return
+    let raf = 0
+    const sync = () => {
+      raf = 0
+      const offset = (navRef.current?.getBoundingClientRect().bottom ?? 100) + 4
+      // Active = the section most recently crossed under the tab bar (greatest top
+      // still ≤ offset). Ties (side-by-side columns on desktop, e.g. #sources left
+      // and #specs right share a top) break to the FIRST id → main column wins.
+      let current = sections[0].id
+      let bestTop = -Infinity
+      for (const el of sections) {
+        const top = el.getBoundingClientRect().top - offset
+        if (top <= 0 && top > bestTop) {
+          bestTop = top
+          current = el.id
+        }
+      }
+      setActiveTab(current)
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(sync)
+    }
+    sync()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    window.addEventListener("resize", onScroll)
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      window.removeEventListener("resize", onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  // Sliding underline — measure the active tab's box and animate a single
+  // indicator to it (re-measures on tab change + language/width changes).
+  useEffect(() => {
+    const measure = () => {
+      const el = tabRefs.current[activeTab]
+      if (el) setTabIndicator({ left: el.offsetLeft, width: el.offsetWidth })
+    }
+    measure()
+    window.addEventListener("resize", measure)
+    return () => window.removeEventListener("resize", measure)
+  }, [activeTab, displayLang])
+
+  // Keep the selected grade chip in view on narrow screens (the rail scrolls x).
+  useEffect(() => {
+    gradeActiveRef.current?.scrollIntoView({ block: "nearest", inline: "center" })
+  }, [selectedGrade])
 
   const colorDot = COLOR_DOT[(card.colorEn ?? card.color)?.toLowerCase() ?? ""]
   const chartHeights = "h-[210px] sm:h-[280px] lg:h-[320px]"
@@ -476,6 +525,36 @@ export function CardDetail({
         })),
     [marketRows, currency],
   )
+  // Buy-box shows only the single freshest settled sale (the full per-source
+  // sold list lives in the #sources table — repeating every row here was pure
+  // duplication on the same screen). new Date(string) is deterministic, so this
+  // stays render-pure (no Date.now()).
+  const latestSale = recentSales.length
+    ? recentSales.reduce((a, b) => (new Date(b.updatedAt ?? 0) > new Date(a.updatedAt ?? 0) ? b : a))
+    : null
+
+  // Multi-source recent-sale history feed for the #sources section — SAMPLE data
+  // for now (badged "ตัวอย่าง"), seeded by the raw price + anchored to the freshest
+  // scrape time. Swap for the real persisted SNKRDUNK/Yuyutei sales list later.
+  const saleHistory = useMemo(
+    () => mockRecentSales(card.price?.priceJpy ?? card.latestPriceJpy, latestUpdatedAt ?? null, MARKET_FEED_MOCK_COUNT),
+    [card.price?.priceJpy, card.latestPriceJpy, latestUpdatedAt],
+  )
+
+  // Meecard marketplace asks — real listings once marketplace is enabled; while
+  // flag-gated, always show deterministic mock (badged "ตัวอย่าง") so the rail
+  // reads full even if stray test rows exist in the DB.
+  const meecardListings = useMemo(() => {
+    const real = listings ?? []
+    if (marketplaceEnabled) {
+      if (real.length > 0) return { rows: real, isSample: false as const }
+      return { rows: [] as CardListing[], isSample: false as const }
+    }
+    return {
+      rows: mockMeecardListings(card.price?.priceJpy ?? card.latestPriceJpy, latestUpdatedAt ?? null, MARKET_FEED_MOCK_LISTINGS_COUNT),
+      isSample: true as const,
+    }
+  }, [listings, marketplaceEnabled, card.price?.priceJpy, card.latestPriceJpy, latestUpdatedAt])
 
   return (
     <div className="relative mx-auto max-w-7xl scroll-smooth pb-[calc(8.5rem+env(safe-area-inset-bottom))] md:pb-8">
@@ -497,13 +576,17 @@ export function CardDetail({
       </div>
 
       {/* ── 3-COL: hero card image (left) · identity+price+trade (center) · stats+actions (right) ── */}
-      <div className="mt-6 flex flex-col gap-y-6 lg:grid lg:grid-cols-[200px_minmax(0,1fr)_280px] lg:items-start lg:gap-x-8 lg:gap-y-0 xl:grid-cols-[240px_minmax(0,1fr)_320px] xl:gap-x-10">
+      <div className="mt-6 flex flex-col gap-y-6 lg:grid lg:grid-cols-[200px_minmax(0,1fr)_320px] lg:items-start lg:gap-x-8 lg:gap-y-0 xl:grid-cols-[240px_minmax(0,1fr)_360px] xl:gap-x-10">
         {/* COL 1 — the card is the hero: a large portrait (tap to zoom) */}
         <div className="order-1 lg:col-start-1 lg:row-start-1">
           <button
             type="button"
             onClick={() => card.imageUrl && setLightboxOpen(true)}
-            className="surface-1 ease-chrome relative mx-auto block aspect-[63/88] w-44 cursor-zoom-in overflow-hidden rounded-xl hairline hover:ring-2 hover:ring-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-52 lg:mx-0 lg:w-full"
+            disabled={!card.imageUrl}
+            className={cn(
+              "surface-1 ease-chrome relative mx-auto block aspect-[63/88] w-44 overflow-hidden rounded-xl hairline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-52 lg:mx-0 lg:w-full",
+              card.imageUrl ? "cursor-zoom-in hover:ring-2 hover:ring-primary/40" : "cursor-default",
+            )}
             aria-label={displayName}
           >
             {card.imageUrl ? (
@@ -515,11 +598,11 @@ export function CardDetail({
         </div>
 
         {/* COL 2 — identity + price instrument (mobile order 2 · desktop center) */}
-        <div id="overview" className="order-2 min-w-0 scroll-mt-20 lg:order-none lg:col-start-2 lg:row-start-1">
+        <div id="overview" className="order-2 min-w-0 scroll-mt-[7.75rem] md:scroll-mt-[10.5rem] lg:order-none lg:col-start-2 lg:row-start-1">
           {/* identity — name is now a proper title beside the hero image */}
           <div className="min-w-0">
             <div className="flex items-start gap-1.5">
-              <h1 className="text-h3 min-w-0 break-words text-foreground sm:text-h2">{displayName}</h1>
+              <h1 className="text-h2 min-w-0 break-words text-foreground sm:text-h1">{displayName}</h1>
               <WatchlistStar cardId={card.id} size="md" />
             </div>
             <div className="text-meta mt-1 flex flex-wrap items-center gap-1.5">
@@ -527,12 +610,19 @@ export function CardDetail({
               <span>· {card.baseCode ?? card.cardCode}</span>
               {colorDot && <span aria-hidden className={cn("size-2 rounded-full", colorDot)} />}
               {card.isParallel && <span>· {t(displayLang, "parallel")}</span>}
+              <span
+                className="inline-flex items-center gap-1 tnum"
+                title={t(displayLang, "views")}
+                aria-label={`${card.viewCount.toLocaleString()} ${t(displayLang, "views")}`}
+              >
+                · <Eye className="size-3" aria-hidden /> {card.viewCount.toLocaleString()}
+              </span>
             </div>
           </div>
           <div className="mt-4 space-y-2">
             <EditionToggle value={edition} onChange={setEdition} enAvailable={false} />
             {/* grade ladder — quick chips */}
-            <div role="group" aria-label={t(displayLang, "chooseGrade")} className="no-sb -mx-1 flex items-stretch gap-1 overflow-x-auto px-1">
+            <div role="group" aria-label={t(displayLang, "chooseGrade")} className="scroll-fade-x no-sb -mx-1 flex items-stretch gap-1 overflow-x-auto px-1">
               {GRADE_TIERS.map((tier, i) => {
                 const d = gradeData[tier.key]
                 const active = tier.key === selectedGrade
@@ -546,7 +636,9 @@ export function CardDetail({
                     {dividerBefore && <span aria-hidden className="mx-0.5 w-px shrink-0 self-stretch bg-[var(--p-hair)]" />}
                     <button
                       type="button"
+                      ref={active ? gradeActiveRef : undefined}
                       aria-pressed={active}
+                      aria-label={tier.label}
                       disabled={disabled}
                       onClick={() => setSelectedGrade(tier.key)}
                       className={cn(
@@ -555,11 +647,11 @@ export function CardDetail({
                         disabled && "cursor-not-allowed opacity-40",
                       )}
                     >
-                      <span className="flex items-center gap-1 text-xs font-semibold">
+                      <span className="text-label flex items-center gap-1 font-semibold">
                         {graded && <GradeLogo family={tier.family} size={12} />}
                         {num}
                       </span>
-                      <span className={cn("text-micro tnum", active ? "text-foreground/75" : "text-muted-foreground/80")}>
+                      <span className={cn("text-meta tnum", active ? "text-foreground/75" : "text-muted-foreground/80")}>
                         {hint != null ? compactDisplayValue(hint, currency) : "—"}
                       </span>
                     </button>
@@ -571,8 +663,8 @@ export function CardDetail({
 
           <div key={`${selectedGrade}-${range}`} className="rise mt-3">
             {/* price + change on ONE line (CMC/Robinhood): big number, then the % move
-                and its timeframe sit at the baseline. Absolute ฿ change dropped per เบส —
-                the % alone reads cleaner right next to the headline figure. */}
+                over the selected chart window — or the hovered date span while scrubbing.
+                Single % indicator (the 24h/7d/30d row was removed per เบส). */}
             <div className="flex flex-wrap items-end gap-x-2.5 gap-y-1">
               <span className="tnum text-display leading-none text-foreground">
                 {activeValue == null ? "—" : formatDisplayValue(activeValue, currency)}
@@ -601,46 +693,38 @@ export function CardDetail({
             </p>
           )}
 
-          {/* low / high position bar (CoinMarketCap-style) — REAL min/max over the bar's OWN
-              period (the dropdown), DECOUPLED from the chart range; the marker shows where the
+          {/* low / high position bar (CoinMarketCap-style) — REAL min/max over the SAME
+              window as the chart (one date filter for both); the marker shows where the
               current price sits between them. Client-only (needs the series) → no SSR mismatch. */}
           {hydrated && priceLow != null && priceHigh != null && priceHigh > priceLow && (
-            <div className="mt-3 flex max-w-sm flex-wrap items-center gap-x-2 gap-y-1">
-              <div className="flex flex-1 items-center gap-2">
-                <span className="text-overlay tnum shrink-0 text-muted-foreground/70">
-                  {t(displayLang, "low")} {compactDisplayValue(priceLow, currency)}
-                </span>
-                <div className="relative h-1.5 flex-1 rounded-full bg-foreground/10">
-                  <div className="absolute inset-y-0 left-0 rounded-full bg-foreground/30" style={{ width: `${pricePos}%` }} />
-                  <span
-                    className="absolute top-1/2 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-background bg-foreground"
-                    style={{ left: `${pricePos}%` }}
-                  />
-                </div>
-                <span className="text-overlay tnum inline-flex shrink-0 items-center gap-1 text-muted-foreground/70">
-                  {t(displayLang, "high")} {compactDisplayValue(priceHigh, currency)}
-                  {datum.value.isEst && <EstMark lang={displayLang} />}
-                </span>
+            <>
+            {/* sr-only summary — the visual bar below is aria-hidden (decorative), so the
+                low/high figures reach screen-reader users through this sentence instead. */}
+            <span className="sr-only">
+              {t(displayLang, "low")} {compactDisplayValue(priceLow, currency)}, {t(displayLang, "high")} {compactDisplayValue(priceHigh, currency)}
+            </span>
+            <div className="mt-3 flex max-w-sm items-center gap-2" aria-hidden>
+              <span className="text-overlay tnum shrink-0 text-muted-foreground/70">
+                {t(displayLang, "low")} {compactDisplayValue(priceLow, currency)}
+              </span>
+              <div className="relative h-1.5 flex-1 rounded-full bg-foreground/10">
+                <div className="absolute inset-y-0 left-0 rounded-full bg-foreground/30" style={{ width: `${pricePos}%` }} />
+                <span
+                  className="absolute top-1/2 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-background bg-foreground"
+                  style={{ left: `${pricePos}%` }}
+                />
               </div>
-              {/* period selector — the bar's own window (7d/1m/1y/all), not the chart's. */}
-              <select
-                value={barPeriod}
-                onChange={(e) => setBarPeriod(e.target.value as BarPeriod)}
-                aria-label={t(displayLang, "lowHighPeriod")}
-                className="ease-chrome text-micro tnum shrink-0 rounded-full bg-foreground/[0.045] px-2 py-0.5 text-muted-foreground ring-1 ring-[var(--p-hair)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                {BAR_PERIODS.map((p) => (
-                  <option key={p} value={p}>
-                    {t(displayLang, barPeriodLabel(p))}
-                  </option>
-                ))}
-              </select>
+              <span className="text-overlay tnum inline-flex shrink-0 items-center gap-1 text-muted-foreground/70">
+                {t(displayLang, "high")} {compactDisplayValue(priceHigh, currency)}
+                {datum.value.isEst && <EstMark lang={displayLang} />}
+              </span>
             </div>
+            </>
           )}
         </div>
 
         {/* COL 3 — BUY BOX rail (flat, no card border): transact + ขายล่าสุด feed */}
-        <div className="order-3 min-w-0 border-t border-[var(--p-hair)] pt-4 lg:order-none lg:col-start-3 lg:row-start-1 lg:border-l lg:border-t-0 lg:border-[var(--p-hair)] lg:pl-6 lg:pt-0">
+        <div className="order-3 min-w-0 border-t border-[var(--p-hair)] pt-4 lg:order-none lg:col-start-3 lg:row-start-1 lg:border-l lg:border-t-0 lg:border-[var(--p-hair)] lg:pl-8 lg:pt-0">
           {/* transact — gold "ดูประกาศขาย" is the page's one gold element */}
           <div className="space-y-2">
             <a
@@ -669,29 +753,26 @@ export function CardDetail({
             </div>
           </div>
 
-          {/* ขายล่าสุด — REAL settled sales (sold-only); empty state shown honestly */}
-          <div className="mt-4 border-t border-[var(--p-hair)] pt-3">
+          {/* ขายล่าสุด — ONE headline settled sale (freshest). The full per-source
+              sold breakdown lives in the #sources table, so the whole row is a
+              link there instead of repeating every source here. */}
+          <div className="hairline-t mt-4 pt-3">
             <p className="text-eyebrow mb-1">{t(displayLang, "lastSold")}</p>
-            {recentSales.length > 0 ? (
-              <>
-                <div>
-                  {recentSales.map((c, i) => (
-                    <div key={`${c.source}-${i}`} className="flex items-center gap-2 border-b border-[var(--p-hair)] py-2 last:border-b-0">
-                      <SourceLogo source={c.source} size={18} />
-                      <span className="min-w-0 flex-1 truncate text-xs font-medium text-foreground">{sourceLabel(c.source)}</span>
-                      <span className="tnum shrink-0 text-sm font-semibold text-foreground">{c.primary}</span>
-                      <span className="text-meta tnum shrink-0">{hydrated && c.updatedAt ? relativeTime(c.updatedAt, displayLang) : ""}</span>
-                    </div>
-                  ))}
-                </div>
-                <a href="#sources" className="ease-chrome mt-1 flex w-full items-center justify-center gap-1 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground">
-                  {t(displayLang, "viewSaleHistory")} <ChevronRight className="size-3" aria-hidden />
-                </a>
-              </>
+            {latestSale ? (
+              <a
+                href="#sources"
+                className="ease-chrome -mx-1 flex items-center gap-2 rounded-lg px-1 py-1.5 hover:bg-foreground/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <SourceLogo source={latestSale.source} size={18} />
+                <span className="text-label min-w-0 flex-1 truncate font-medium text-foreground">{sourceLabel(latestSale.source)}</span>
+                <span className="text-price tnum shrink-0 text-foreground">{latestSale.primary}</span>
+                <span className="text-meta tnum shrink-0">{hydrated && latestSale.updatedAt ? relativeTime(latestSale.updatedAt, displayLang) : ""}</span>
+                <ChevronRight className="size-3.5 shrink-0 text-muted-foreground/40" aria-hidden />
+              </a>
             ) : (
               <p className="text-meta py-2">
                 {t(displayLang, "noLatestSales")} ·{" "}
-                <a href="#sources" className="underline hover:text-foreground">{t(displayLang, "referenceSources")}</a>
+                <a href="#sources" className="underline hover:text-foreground">{t(displayLang, "saleHistoryTitle")}</a>
               </p>
             )}
           </div>
@@ -706,20 +787,46 @@ export function CardDetail({
         </div>
       </div>
 
-      {/* TABS */}
-      <nav className="no-sb mt-6 flex gap-5 overflow-x-auto border-t border-[var(--p-hair)]">
-        {TABS.map((tab, i) => (
-          <a
-            key={tab.id}
-            href={`#${tab.id}`}
-            className={cn(
-              "shrink-0 border-b-2 py-2.5 text-sm font-semibold",
-              i === 0 ? "border-foreground text-foreground" : "border-transparent text-muted-foreground hover:text-foreground",
-            )}
-          >
-            {tab.label}
-          </a>
-        ))}
+      {/* Sentinel — drives the mobile sticky-buy bar: once the hero buy box scrolls
+          off the top, this passes y<72 and the bar appears (shopping-journey CTA). */}
+      <div ref={stickySentinelRef} className="h-px" aria-hidden />
+
+      {/* TABS — sticky section nav under the global header. Underline tabs with a
+          single sliding indicator that animates between tabs on click/scrollspy.
+          Frosted bg + bottom hairline; sticks below the mobile header (top-14)
+          and below the desktop ticker + header (top-[6.25rem]). */}
+      <nav
+        ref={navRef}
+        aria-label={t(displayLang, "cardSectionsNav")}
+        className="frost ease-chrome sticky top-14 z-30 mt-6 shadow-[inset_0_-1px_0_0_var(--p-hair)] md:top-[6.25rem]"
+      >
+        <div className="no-sb relative flex gap-5 overflow-x-auto">
+          {TABS.map((tab) => (
+            <a
+              key={tab.id}
+              ref={(el) => {
+                tabRefs.current[tab.id] = el
+              }}
+              href={`#${tab.id}`}
+              aria-current={tab.id === activeTab ? "page" : undefined}
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection(tab.id)
+              }}
+              className={cn(
+                "ease-chrome shrink-0 py-2.5 text-sm font-semibold focus-visible:outline-none",
+                tab.id === activeTab ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              {tab.label}
+            </a>
+          ))}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute bottom-0 left-0 h-0.5 rounded-full bg-foreground transition-[transform,width] duration-300 ease-out"
+            style={{ transform: `translateX(${tabIndicator.left}px)`, width: tabIndicator.width }}
+          />
+        </div>
       </nav>
 
       {/* ── price chart + side ad column ────────────────────────────────────── */}
@@ -729,7 +836,7 @@ export function CardDetail({
           <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-eyebrow">{t(displayLang, "priceHistory")} · {gradeLabel}</p>
             <div className="flex flex-wrap items-center gap-2">
-              <div className="inline-flex gap-0.5 rounded-full bg-foreground/[0.045] p-0.5 ring-1 ring-[var(--p-hair)]">
+              <div role="group" aria-label={t(displayLang, "priceHistory")} className={SEGMENT_TRACK}>
                 {RANGES.map((rg) => (
                   <button
                     key={rg}
@@ -740,8 +847,9 @@ export function CardDetail({
                       setRange(rg)
                     }}
                     className={cn(
-                      "ease-chrome rounded-full px-2.5 py-1.5 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
-                      rg === range ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground",
+                      SEGMENT_BTN,
+                      "tnum",
+                      rg === range ? SEGMENT_ACTIVE : SEGMENT_IDLE,
                     )}
                   >
                     {rg}
@@ -754,7 +862,7 @@ export function CardDetail({
           {!datum.hasData ? (
             <div className={cn("flex items-center justify-center rounded-xl bg-foreground/[0.025] p-5 text-center", chartHeights)}>
               <div>
-                <p className="text-sm font-semibold text-foreground">{t(displayLang, "noEditionPrice")}</p>
+                <p className="text-h5 text-foreground">{t(displayLang, "noEditionPrice")}</p>
                 <p className="text-meta mt-1 max-w-sm">{t(displayLang, "noEditionPriceDesc")}</p>
               </div>
             </div>
@@ -795,71 +903,79 @@ export function CardDetail({
             when AdSlot renders null (PRO = ad-free), so no empty gap appears.
             NOTE: VISION §4.6 keeps the price surface ad-free for credibility. */}
         <aside className="order-last min-w-0 lg:order-none">
-          <AdSlot placement="card-detail-chart-side" className="min-h-[320px] w-full lg:sticky lg:top-20 lg:w-[300px] xl:w-[336px]" />
+          <AdSlot placement="card-detail-chart-side" className="min-h-[320px] w-full lg:w-[320px] xl:w-[360px]" />
         </aside>
       </div>
 
-      {/* ── แหล่งอ้างอิง — per-source ask|sold, full width below the chart ───── */}
-      <MarketsTable
-        rows={marketRows}
-        gradeLabel={gradeLabel}
-        currency={currency}
-        lang={displayLang}
-        hydrated={hydrated}
-        sort={marketSort}
-        onSortChange={setMarketSort}
-      />
+      {/* ── below the chart — two paired rows on lg:
+          ROW 1: ประวัติการซื้อขายล่าสุด (left) · ข้อมูลการ์ด (right)
+          ROW 2: ขายอยู่บน Meecard (left) · โฆษณา (right)
+          Right rail is 320–360px under the chart's side-ad for one continuous
+          right column. Not sticky — scrolls with the page. <lg stacks. ───────── */}
+      <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_360px]">
+        {/* ROW 1 LEFT — recent sales */}
+        <section id="sources" className="min-w-0 scroll-mt-[7.75rem] md:scroll-mt-[10.5rem]">
+          <RecentSales sales={saleHistory} isSample currency={currency} lang={displayLang} />
+        </section>
 
-      {/* ── ขายบน Meecard / selling on our marketplace ─────────────────────── */}
-      <section id="market" className="mt-10 scroll-mt-20">
-        <h2 className="text-h3 mb-3">{t(displayLang, "sellingNow")}</h2>
-        <MeecardAsksRail
-          cardId={card.id}
-          cardCode={card.cardCode}
-          cardName={displayName}
-          listings={listings ?? []}
-          currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
-          currency={currency}
-          selectedGradeLabel={gradeLabel}
-          rangeHigh={band?.hi ?? null}
-          embedded
-          lang={displayLang}
-        />
-      </section>
-
-      {/* ── ข้อมูลการ์ด / card info ─────────────────────────────────────────── */}
-      <section id="specs" className="mt-10 scroll-mt-20">
-        <h2 className="text-h3 mb-3">{t(displayLang, "cardInfo")}</h2>
-        <CardDetailSpecs card={card} lang={displayLang} />
-        {effectText?.trim() && (
-          <div className="mt-3" style={{ boxShadow: "inset 3px 0 0 0 color-mix(in srgb, var(--primary) 40%, transparent)" }}>
-            <div className="pl-4">
-              <p className="text-eyebrow mb-1.5">{t(displayLang, "effect")}</p>
-              <CardEffectText text={effectText} />
-            </div>
+        {/* ROW 1 RIGHT — card info (specs + effect) */}
+        <aside id="specs" className="min-w-0 scroll-mt-[7.75rem] md:scroll-mt-[10.5rem]">
+          <div className="lg:border-l lg:border-[var(--p-hair)] lg:pl-8">
+            <SectionHead title={t(displayLang, "cardInfo")} />
+            <CardDetailSpecs card={card} lang={displayLang} />
+            {effectText?.trim() && (
+              <div
+                className="mt-4 pt-4"
+                style={{ boxShadow: "inset 3px 0 0 0 color-mix(in srgb, var(--primary) 40%, transparent), inset 0 1px 0 0 var(--p-hair)" }}
+              >
+                <div className="pl-4">
+                  <p className="text-eyebrow mb-1.5">{t(displayLang, "effect")}</p>
+                  <CardEffectText text={effectText} />
+                </div>
+              </div>
+            )}
+            {/* CardTierMeta intentionally not rendered — sample-only Tier/meta share. */}
           </div>
-        )}
-        <div className="mt-6">
-          <CardTierMeta lang={displayLang} />
-        </div>
-      </section>
+        </aside>
+      </div>
 
-      {/* ── related / other versions ───────────────────────────────────────── */}
+      <div className="hairline-t mt-10 grid grid-cols-1 gap-x-8 gap-y-12 pt-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_360px]">
+        {/* ROW 2 LEFT — Meecard asks */}
+        <section id="market" className="min-w-0 scroll-mt-[7.75rem] md:scroll-mt-[10.5rem]">
+          <MeecardAsksRail
+            cardId={card.id}
+            cardCode={card.cardCode}
+            cardName={displayName}
+            listings={meecardListings.rows}
+            isSample={meecardListings.isSample}
+            currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
+            currency={currency}
+            lang={displayLang}
+          />
+        </section>
+
+        {/* ROW 2 RIGHT — ad column */}
+        <aside className="min-w-0">
+          <div className="lg:border-l lg:border-[var(--p-hair)] lg:pl-8">
+            <AdSlot placement="card-detail-info-below" className="min-h-[320px] w-full" />
+          </div>
+        </aside>
+      </div>
+
+      {/* ── full width: other versions + other cards in the set ─────────────── */}
       {siblings.length > 0 && (
-        <section className="mt-10">
-          <h2 className="text-h3 mb-3">{t(displayLang, "otherVersions")} ({siblings.length})</h2>
+        <section className="mt-12">
+          <SectionHead title={`${t(displayLang, "otherVersions")} (${siblings.length})`} />
           <SiblingGrid siblings={siblings} lang={displayLang} cols={3} smCols={6} mainCardCode={card.cardCode} />
         </section>
       )}
 
-      <div className="mt-10">
+      <div className="mt-12">
         <CardDetailRelated relatedCards={relatedCards ?? []} set={set} lang={displayLang} />
       </div>
 
       {/* in-feed ad — page tail only, never inside the price/data story */}
-      <AdSlot placement="card-detail-mid" className="mt-10 aspect-[6/1] w-full" />
-
-      <div ref={stickySentinelRef} className="h-px" aria-hidden />
+      <AdSlot placement="card-detail-mid" className="mt-12 aspect-[6/1] w-full" />
 
       {/* lightbox */}
       <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
@@ -877,7 +993,7 @@ export function CardDetail({
           <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2.5">
             <div className="min-w-0">
               <p className="text-overlay font-semibold uppercase text-muted-foreground">{gradeLabel} · Meecard</p>
-              <p className="tnum text-base font-extrabold leading-none text-foreground">
+              <p className="text-h4 tnum leading-none text-foreground">
                 {meecardLowest != null
                   ? formatByCurrency(meecardLowest.priceJpy, currency, meecardLowest.priceThb).primary
                   : latest == null

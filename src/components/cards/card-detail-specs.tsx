@@ -108,9 +108,8 @@ export function CardDetailSpecs({ card, lang }: CardDetailSpecsProps) {
   if (card.attribute) rows.push({ label: t(lang, "attribute"), icon: Crosshair, value: card.attribute })
 
   return (
-    <div className="hairline-t pt-4">
-      <p className="mb-1 text-meta">{t(lang, "details")}</p>
-      <dl className="sm:grid sm:grid-cols-2 sm:gap-x-8">
+    <div>
+      <dl>
         {rows.map((r) => {
           const Icon = r.icon
           return (
@@ -123,7 +122,7 @@ export function CardDetailSpecs({ card, lang }: CardDetailSpecsProps) {
                 className={cn(
                   "min-w-0 truncate text-right text-foreground",
                   r.numeric && "font-price tabular-nums",
-                  r.emphasis ? "text-base font-bold" : "text-sm font-semibold",
+                  r.emphasis ? "text-h5 font-bold" : "text-label font-semibold",
                 )}
               >
                 {r.value}

@@ -6,6 +6,8 @@
  * (VISION §6); only this file + grades.ts change.
  */
 
+import type { CardListing } from "@/components/cards/card-listings-section"
+
 import type { Stat } from "./grades"
 
 // ~1 point/day (or sparser) — honest cadence: the real scrape yields one price/day, so
@@ -128,4 +130,111 @@ export function mockComps(
 export function mockSales30d(base: number | null): number {
   const b = base && base > 0 ? base : 1200
   return 120 + (Math.abs(Math.round(b)) % 1400)
+}
+
+// ── Recent sale history (multi-source) ──────────────────────────────────────
+// Sample feed for the "ประวัติการซื้อขายล่าสุด" section — pooled settled sales /
+// listings across several Japanese + global markets (our edge over a single-source
+// competitor page). Deterministic (seeded by base + index, no RNG/clock in render).
+// SWAP for real data when the SNKRDUNK used-listings list is persisted to the DB
+// (scraper already fetches it; only this generator + the wiring change).
+const DAY_MS = 86_400_000
+
+export type MockSale = {
+  source: string
+  /** Condition / grade label, e.g. "PSA 10" · "BGS 9.5" · "A" · "Raw". */
+  condition: string
+  /** Grading family for the logo ("psa" | "bgs" | "cgc" | "ars"); null = ungraded. */
+  family: string | null
+  priceJpy: number
+  soldAtIso: string
+}
+
+// Grade pool with a price multiplier vs the raw base + which source tends to carry it.
+const SALE_GRADES: { condition: string; family: string | null; mult: number }[] = [
+  { condition: "PSA 10", family: "psa", mult: 3.1 },
+  { condition: "PSA 9", family: "psa", mult: 1.9 },
+  { condition: "BGS 9.5", family: "bgs", mult: 2.6 },
+  { condition: "ARS 10+", family: "ars", mult: 2.4 },
+  { condition: "A", family: null, mult: 1.12 },
+  { condition: "B", family: null, mult: 1.0 },
+  { condition: "C", family: null, mult: 0.9 },
+  { condition: "D", family: null, mult: 0.8 },
+]
+const SALE_SOURCES = ["SNKRDUNK", "Yuyutei", "Mercari JP", "eBay JP"]
+
+/**
+ * A deterministic SETTLED-sale feed (sold only — no active listings) seeded by
+ * `baseJpy` (the card's raw JPY price) and anchored to `nowIso` (the freshest
+ * scrape time, passed from the server so no `Date.now()` runs during render).
+ * Newest first.
+ */
+export function mockRecentSales(baseJpy: number | null, nowIso: string | null, count = 12): MockSale[] {
+  const b = baseJpy && baseJpy > 0 ? baseJpy : 1200
+  const seed = Math.abs(Math.round(b))
+  const nowMs = nowIso ? new Date(nowIso).getTime() : 0
+  return Array.from({ length: count }, (_, i) => {
+    const g = SALE_GRADES[(seed + i) % SALE_GRADES.length]
+    const jitter = 1 + (hash(i * 7.13 + seed * 0.137) - 0.5) * 0.12 // ±6% wobble
+    const whenDays = i === 0 ? 0 : i * 2 + (seed % 3)
+    return {
+      source: SALE_SOURCES[(seed + i * 3) % SALE_SOURCES.length],
+      condition: g.condition,
+      family: g.family,
+      priceJpy: Math.max(1, Math.round((b * g.mult * jitter) / 10) * 10),
+      soldAtIso: nowMs > 0 ? new Date(nowMs - whenDays * DAY_MS).toISOString() : "",
+    }
+  })
+}
+
+// ── Meecard marketplace asks (active listings) ───────────────────────────────
+// Sample feed for "ขายอยู่บน Meecard" when the DB has no real listings yet
+// (marketplace flag-gated). Deterministic, ascending by ask price. SWAP when
+// marketplace goes live and getListingsForCard returns real rows.
+
+const MOCK_SELLERS: { displayName: string; rating: number; reviews: number }[] = [
+  { displayName: "CardShop_BKK", rating: 4.8, reviews: 42 },
+  { displayName: "OPTCG_TH", rating: 4.6, reviews: 18 },
+  { displayName: "MintCollector", rating: 4.9, reviews: 67 },
+  { displayName: "DeckBuilder99", rating: 4.3, reviews: 9 },
+  { displayName: "RarePulls", rating: 4.7, reviews: 31 },
+  { displayName: "TCG_Hub", rating: 4.5, reviews: 24 },
+  { displayName: "BangkokCards", rating: 4.4, reviews: 15 },
+  { displayName: "OPKingdom", rating: 4.8, reviews: 55 },
+  { displayName: "CardVault_TH", rating: 4.6, reviews: 28 },
+  { displayName: "TreasureCruise", rating: 4.2, reviews: 11 },
+  { displayName: "GrandLineTCG", rating: 4.9, reviews: 73 },
+  { displayName: "PirateMarket", rating: 4.5, reviews: 19 },
+]
+
+/**
+ * Deterministic active-ask feed for the Meecard marketplace rail. Spreads several
+ * grades/conditions so the page's grade filter can narrow the table. Asks are
+ * priced slightly above the raw base (listings, not settled sales).
+ */
+export function mockMeecardListings(baseJpy: number | null, nowIso: string | null, count = 18): CardListing[] {
+  const b = baseJpy && baseJpy > 0 ? baseJpy : 1200
+  const seed = Math.abs(Math.round(b))
+  const nowMs = nowIso ? new Date(nowIso).getTime() : 0
+  const rows = Array.from({ length: count }, (_, i) => {
+    const g = SALE_GRADES[(seed + i * 2) % SALE_GRADES.length]
+    const askPremium = 1.02 + hash(i * 3.71 + seed * 0.091) * 0.1 // +2–12% vs settled
+    const jitter = 1 + (hash(i * 5.17 + seed * 0.213) - 0.5) * 0.08
+    const seller = MOCK_SELLERS[(seed + i) % MOCK_SELLERS.length]
+    const listedDays = i + (seed % 4)
+    return {
+      id: `mock-${seed}-${i}`,
+      priceJpy: Math.max(1, Math.round((b * g.mult * askPremium * jitter) / 10) * 10),
+      priceThb: null,
+      condition: g.condition,
+      listedAtIso: nowMs > 0 ? new Date(nowMs - listedDays * DAY_MS).toISOString() : "",
+      user: {
+        displayName: seller.displayName,
+        avatarUrl: null,
+        sellerRating: seller.rating,
+        sellerReviewCount: seller.reviews,
+      },
+    }
+  })
+  return rows.sort((a, b) => a.priceJpy - b.priceJpy)
 }

@@ -62,15 +62,15 @@ export function SiblingGrid({
             key={s.id}
             href={`/cards/${s.cardCode}`}
             className={cn(
-              "group flex flex-col gap-1.5 text-center transition-colors",
+              "group flex flex-col gap-1.5 text-center",
               isCurrent && "pointer-events-none",
             )}
             aria-current={isCurrent ? "page" : undefined}
           >
             <div
               className={cn(
-                "panel relative aspect-[63/88] w-full overflow-hidden",
-                isCurrent && "ring-2 ring-primary/70",
+                "surface-1 hairline ease-chrome relative aspect-[63/88] w-full overflow-hidden rounded-lg",
+                isCurrent ? "ring-2 ring-primary/70" : "group-hover:ring-2 group-hover:ring-primary/40",
               )}
             >
               {s.imageUrl ? (
@@ -87,7 +87,7 @@ export function SiblingGrid({
             </div>
             <div>
               <div className="flex items-center justify-center gap-1">
-                <span className="inline-block rounded bg-muted px-1 py-px font-price text-xs uppercase text-muted-foreground">
+                <span className="surface-2 inline-block rounded px-1 py-px font-price text-xs uppercase text-muted-foreground">
                   {s.set.code}
                   {suffix && (
                     <span className="ml-0.5 text-muted-foreground/70">
