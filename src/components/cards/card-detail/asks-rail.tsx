@@ -1,186 +1,296 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import Link from "next/link"
-import { BellPlus, ChevronRight, Store } from "lucide-react"
+import { BellPlus, ChevronRight } from "lucide-react"
 
 import type { CardListing } from "@/components/cards/card-listings-section"
 import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog"
-import { formatByCurrency, jpyToDisplayValue, type Currency } from "@/lib/utils/currency"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useHydrated } from "@/hooks/use-hydrated"
+import { type Currency } from "@/lib/utils/currency"
 import { t, type Language } from "@/lib/i18n"
-import { cn } from "@/lib/utils"
+
+import {
+  MARKET_TABLE_CLASS,
+  MarketTableColGroup,
+  marketFeedListScroll,
+  marketFeedStickyHead,
+  marketFeedTableScroll,
+  marketPrimaryCell,
+  marketTdLead,
+  marketTdPrice,
+  marketThLead,
+  marketThPrice,
+} from "./market-table-layout"
+import { MarketFeedScroll } from "./market-feed-scroll"
+import {
+  ConditionChip,
+  ConditionFilter,
+  FeedPriceCell,
+  SampleBadge,
+  formatFeedDate,
+  gradeFilterLabel,
+} from "./market-feed-shared"
 
 function compactGradeText(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]/g, "")
 }
 
+/** Used by card-detail's buy box to filter listings by the page-selected grade. */
 export function listingMatchesGrade(condition: string | null | undefined, gradeLabel: string | null | undefined) {
   if (!gradeLabel) return true
   const conditionKey = compactGradeText(condition ?? "")
   const gradeKey = compactGradeText(gradeLabel)
-  if (gradeKey.startsWith("raw")) return !/(psa|bgs|cgc)/.test(conditionKey)
+  if (gradeKey.startsWith("raw")) return !/(psa|bgs|cgc|ars)/.test(conditionKey)
   return conditionKey.includes(gradeKey)
 }
 
+function listingConditionFamily(condition: string): string | null {
+  const m = condition.match(/^(psa|bgs|cgc|ars)\b/i)
+  return m ? m[1].toLowerCase() : null
+}
+
+function listingMatchesConditionFilter(condition: string, activeGrade: string) {
+  if (activeGrade === "all") return true
+  if (activeGrade === "raw") return listingConditionFamily(condition) == null
+  return listingConditionFamily(condition) === activeGrade
+}
+
+function isGradedCondition(condition: string) {
+  return /^(psa|bgs|cgc|ars)\s/i.test(condition)
+}
+
+function sellerName(listing: CardListing, lang: Language) {
+  return listing.user?.displayName ?? t(lang, "anonymous")
+}
+
+function sellerInitial(name: string) {
+  return name.trim().charAt(0).toUpperCase() || "?"
+}
+
+function UserCell({ listing, lang }: { listing: CardListing; lang: Language }) {
+  const name = sellerName(listing, lang)
+  return (
+    <span className={marketPrimaryCell}>
+      <Avatar className="size-5 shrink-0 after:border-[var(--p-hair)]">
+        {listing.user?.avatarUrl ? <AvatarImage src={listing.user.avatarUrl} alt="" /> : null}
+        <AvatarFallback className="text-micro font-bold">{sellerInitial(name)}</AvatarFallback>
+      </Avatar>
+      <span className="truncate text-label font-medium text-foreground">{name}</span>
+    </span>
+  )
+}
+
+/** Skeleton matching ~5 feed rows — keeps loading parity with the recent-sales
+ *  section instead of a blank gap while the client hydrates. */
+function FeedSkeleton() {
+  return (
+    <div className="space-y-3 py-1" aria-hidden>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Skeleton className="size-5 rounded-full" />
+            <Skeleton className="h-3.5 w-28" />
+          </div>
+          <Skeleton className="h-3.5 w-16" />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 /**
- * "Selling on Meecard" — active asks for THIS card from our marketplace, the
- * present-tense complement to the center "recent sales" tab (settled past sales).
- * Fed by the real CardListing[] the page already loads. The marketplace is
- * flag-gated, so the EMPTY STATE is the common default — it's a real notify /
- * list-this-card surface, not a dead box. Neutral/outline only (no second gold).
+ * "Selling on Meecard" — active asks with condition filter + table mirroring
+ * RecentSales (seller · date · condition · price). Shares filter / chip / price /
+ * date primitives with RecentSales via market-feed-shared.
  */
 export function MeecardAsksRail({
   cardId,
   cardCode,
   cardName,
   listings,
+  isSample = false,
   currentPriceJpy,
   currency,
-  selectedGradeLabel,
-  rangeHigh,
-  embedded = false,
   lang,
 }: {
   cardId: number
   cardCode: string
   cardName: string
   listings: CardListing[]
+  isSample?: boolean
   currentPriceJpy: number | null
   currency: Currency
-  selectedGradeLabel?: string
-  rangeHigh?: number | null
-  embedded?: boolean
   lang: Language
 }) {
+  const hydrated = useHydrated()
   const [alertOpen, setAlertOpen] = useState(false)
+  const [activeGrade, setActiveGrade] = useState<string>("all")
   const marketHref = `/marketplace?cardCode=${encodeURIComponent(cardCode)}`
-  const sellHref = `/seller/listings/new?cardCode=${encodeURIComponent(cardCode)}`
 
-  const sorted = [...(listings ?? [])]
-    .filter((listing) => listingMatchesGrade(listing.condition, selectedGradeLabel))
-    .sort((a, b) => a.priceJpy - b.priceJpy)
-  const best = sorted[0]
-  const rows = sorted.slice(0, 3)
-  const extra = sorted.length - rows.length
-  const bestAboveMarket =
-    best != null && rangeHigh != null && jpyToDisplayValue(best.priceJpy, currency) > rangeHigh
+  const sorted = useMemo(
+    () => [...(listings ?? [])].sort((a, b) => a.priceJpy - b.priceJpy),
+    [listings],
+  )
+
+  const grades = useMemo(() => {
+    const fams = Array.from(
+      new Set(sorted.map((l) => listingConditionFamily(l.condition)).filter((f): f is string => f != null)),
+    )
+    return [...(sorted.some((l) => listingConditionFamily(l.condition) == null) ? ["raw"] : []), ...fams]
+  }, [sorted])
+
+  const shown = useMemo(
+    () => sorted.filter((l) => listingMatchesConditionFilter(l.condition, activeGrade)),
+    [sorted, activeGrade],
+  )
+
+  const rowClass =
+    "ease-chrome flex items-center justify-between gap-3 py-3 pl-0.5 pr-2 hover:bg-foreground/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+
+  const hasListings = sorted.length > 0
 
   return (
-    <div className={cn("overflow-hidden", embedded ? "" : "surface-1 hairline rounded-2xl")}>
-      {sorted.length === 0 ? (
-        <>
-          <div className="flex items-center justify-between gap-3 px-4 pt-4">
-            <p className="text-eyebrow">
-              {t(lang, "sellingNow")}
-              {selectedGradeLabel && <span className="text-meta normal-case"> · {selectedGradeLabel}</span>}
-            </p>
-            <span className="surface-2 rounded-full px-2 py-1 text-micro font-semibold text-muted-foreground">
-              {t(lang, "firstListingBadge")}
+    <div>
+      <div className="mb-4 min-w-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <h2 className="text-h3">{t(lang, "sellingNow")}</h2>
+          {isSample && <SampleBadge lang={lang} />}
+          {!isSample && hasListings && (
+            <span className="inline-flex items-center gap-1" role="status">
+              <span aria-hidden className="size-1.5 rounded-full" style={{ background: "var(--success)" }} />
+              <span className="text-meta">{t(lang, "liveLabel")}</span>
             </span>
+          )}
+          {!isSample && hydrated && hasListings && (
+            <span className="text-micro tnum rounded-full bg-foreground/[0.06] px-2 py-0.5 font-semibold text-muted-foreground ring-1 ring-[var(--p-hair)]">
+              {sorted.length.toLocaleString()} {t(lang, "items")}
+            </span>
+          )}
+        </div>
+        <p className="text-meta mt-0.5">{t(lang, "sellingNowDesc")}</p>
+      </div>
+
+      {!hasListings ? (
+        <div className="py-4 text-center">
+          <p className="text-h5 text-foreground">{t(lang, "noActiveListings")}</p>
+          <p className="text-meta mt-0.5">{t(lang, "noActiveListingsDesc")}</p>
+          <div className="mt-4 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setAlertOpen(true)}
+              className="ease-chrome inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-border px-4 text-sm font-semibold text-foreground hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <BellPlus className="size-4" aria-hidden /> {t(lang, "notifyWhenListed")}
+            </button>
           </div>
-          <div className="px-4 py-4">
-            <div className="surface-2 rounded-xl p-3 ring-1 ring-[var(--p-hair)]">
-              <div className="flex gap-3 text-left">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-background/55 text-muted-foreground">
-                  <Store className="size-4" aria-hidden />
-                </span>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-foreground">{t(lang, "noActiveListings")}</p>
-                  <p className="text-meta mt-0.5">{t(lang, "noActiveListingsDesc")}</p>
-                </div>
-              </div>
-              <div className="mt-3 grid gap-2">
-                <button
-                  type="button"
-                  onClick={() => setAlertOpen(true)}
-                  className="ease-chrome inline-flex h-10 items-center justify-center gap-1.5 rounded-xl border border-border bg-background/40 px-3 text-sm font-semibold text-foreground hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <BellPlus className="size-4" aria-hidden /> {t(lang, "notifyWhenListed")}
-                </button>
-                <Link
-                  href={sellHref}
-                  className="ease-chrome inline-flex h-10 items-center justify-center rounded-xl px-3 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
-                >
-                  {t(lang, "listThisCard")}
-                </Link>
-              </div>
-            </div>
-          </div>
-          {/*
-            Keep the empty-state actionable but quieter than the price story:
-            one message, two obvious recovery paths, no large dead vertical space.
-          */}
-        </>
+        </div>
+      ) : !hydrated ? (
+        /* Table + filters are client-only (interactive + currency/lang sync). */
+        <FeedSkeleton />
       ) : (
         <>
-          <div className="flex items-center justify-between px-4 pt-4">
-            <p className="text-eyebrow">
-              {t(lang, "sellingNow")}
-              {selectedGradeLabel && <span className="text-meta normal-case"> · {selectedGradeLabel}</span>}
-              <span className="text-meta tnum"> ({sorted.length})</span>
-            </p>
-            <span className="inline-flex items-center gap-1">
-              <span aria-hidden className="size-1.5 rounded-full" style={{ background: "var(--success)" }} />
-              <span className="text-micro text-muted-foreground">{t(lang, "liveLabel")}</span>
-            </span>
-          </div>
-
-          {/* Lowest-ask summary only earns its place when 2+ listings exist —
-              with a single listing it just restates that one row verbatim. */}
-          {sorted.length > 1 && (
-            <div className="hairline-t mt-3 flex items-center justify-between gap-2 px-4 py-3">
-              <span className="text-eyebrow">{t(lang, "lowestAsk")}</span>
-              <span className="flex min-w-0 flex-col items-end gap-1 text-right">
-                <span className="flex items-center gap-2">
-                  <span className="surface-2 rounded px-1.5 py-0.5 text-overlay text-muted-foreground">{best.condition}</span>
-                  <span className="text-h4 tnum text-foreground">
-                    {formatByCurrency(best.priceJpy, currency, best.priceThb).primary}
-                  </span>
-                </span>
-                {bestAboveMarket && (
-                  <span className="text-overlay text-muted-foreground">{t(lang, "askAboveMarketSingleSeller")}</span>
-                )}
-              </span>
+          {grades.length > 1 && (
+            <div className="mb-4">
+              <ConditionFilter
+                label={t(lang, "condition")}
+                grades={grades}
+                active={activeGrade}
+                onSelect={setActiveGrade}
+                render={(g) => (g === "all" ? t(lang, "filterAll") : gradeFilterLabel(lang, g))}
+              />
             </div>
           )}
 
-          {rows.map((l, i) => {
-            const seller = l.user?.displayName ?? t(lang, "anonymous")
-            const showRating = l.user?.sellerRating != null && l.user.sellerReviewCount > 0
-            return (
-              <Link
-                key={l.id}
-                href={`/marketplace/${l.id}`}
-                className={cn(
-                  "hairline-t ease-chrome flex items-center gap-3 px-4 py-3 hover:bg-muted/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
-                  // no summary row above when there's a single listing — give the
-                  // first (only) row the gap the summary would have provided.
-                  i === 0 && sorted.length <= 1 && "mt-3",
-                )}
-              >
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-semibold text-foreground">{seller}</span>
-                  <span className="text-meta inline-flex items-center gap-1">
-                    {l.condition}
-                    {showRating && <span>· ★ {l.user!.sellerRating!.toFixed(1)}</span>}
-                  </span>
-                </span>
-                <span className="tnum ml-auto shrink-0 text-right text-sm font-semibold text-foreground">
-                  {formatByCurrency(l.priceJpy, currency, l.priceThb).primary}
-                </span>
-                <ChevronRight className="size-3.5 shrink-0 text-muted-foreground/40" aria-hidden />
-              </Link>
-            )
-          })}
+          {shown.length === 0 ? (
+            <p className="text-meta py-6 text-center">{t(lang, "noMatchingFilter")}</p>
+          ) : (
+            <>
+              <MarketFeedScroll className="hidden sm:block" scrollClassName={marketFeedTableScroll} lang={lang} label={t(lang, "sellingNow")} revalidateKey={shown.length}>
+                <table className={MARKET_TABLE_CLASS}>
+                  <MarketTableColGroup />
+                  <thead className={marketFeedStickyHead}>
+                    <tr className="text-eyebrow border-b border-[var(--p-hair)]">
+                      <th scope="col" className={marketThLead}>{t(lang, "seller")}</th>
+                      <th scope="col" className={marketThLead}>{t(lang, "listedDate")}</th>
+                      <th scope="col" className={marketThLead}>{t(lang, "condition")}</th>
+                      <th scope="col" className={marketThPrice}>{t(lang, "priceCol")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {shown.map((l) => (
+                      <tr
+                        key={l.id}
+                        className="border-b border-[var(--p-hair)] last:border-b-0"
+                      >
+                        <td className={marketTdLead}>
+                          {isSample ? (
+                            <UserCell listing={l} lang={lang} />
+                          ) : (
+                            <Link
+                              href={`/marketplace/${l.id}`}
+                              className="ease-chrome block min-w-0 rounded hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            >
+                              <UserCell listing={l} lang={lang} />
+                            </Link>
+                          )}
+                        </td>
+                        <td className={marketTdLead}>
+                          <span className="text-meta tnum">{formatFeedDate(l.listedAtIso)}</span>
+                        </td>
+                        <td className={marketTdLead}>
+                          <ConditionChip condition={l.condition} graded={isGradedCondition(l.condition)} />
+                        </td>
+                        <td className={marketTdPrice}>
+                          <FeedPriceCell jpy={l.priceJpy} currency={currency} right />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </MarketFeedScroll>
 
-          <Link
-            href={marketHref}
-            className="hairline-t ease-chrome flex items-center justify-center gap-1 py-3 text-xs font-semibold text-muted-foreground hover:text-foreground"
-          >
-            {extra > 0 ? `+${extra} · ` : ""}
-            {t(lang, "viewAllListings")} <ChevronRight className="size-3" aria-hidden />
-          </Link>
+              <MarketFeedScroll className="sm:hidden" scrollClassName={marketFeedListScroll} lang={lang} label={t(lang, "sellingNow")} revalidateKey={shown.length}>
+                {shown.map((l) => {
+                  const inner = (
+                    <>
+                      <span className="min-w-0">
+                        <span className="flex items-center gap-2">
+                          <UserCell listing={l} lang={lang} />
+                          <ConditionChip condition={l.condition} graded={isGradedCondition(l.condition)} />
+                        </span>
+                        <span className="tnum mt-1 block text-meta">{formatFeedDate(l.listedAtIso)}</span>
+                      </span>
+                      <FeedPriceCell jpy={l.priceJpy} currency={currency} right />
+                    </>
+                  )
+                  if (isSample) {
+                    return (
+                      <div key={l.id} className={rowClass}>
+                        {inner}
+                      </div>
+                    )
+                  }
+                  return (
+                    <Link key={l.id} href={`/marketplace/${l.id}`} className={rowClass}>
+                      {inner}
+                    </Link>
+                  )
+                })}
+              </MarketFeedScroll>
+
+              <div className="hairline-t mt-4 flex justify-end pt-3">
+                <Link
+                  href={marketHref}
+                  className="ease-chrome text-label inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
+                >
+                  {t(lang, "viewAll")} <ChevronRight className="size-3.5" aria-hidden />
+                </Link>
+              </div>
+            </>
+          )}
         </>
       )}
 

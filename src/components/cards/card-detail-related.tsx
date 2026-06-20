@@ -4,6 +4,7 @@ import { ArrowRight, Layers } from "lucide-react"
 import { Price } from "@/components/shared/price-inline"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { t, getCardName, getSetName } from "@/lib/i18n"
+import { cn } from "@/lib/utils"
 import type { Language } from "@/stores/ui-store"
 import type { RelatedCard } from "./card-detail"
 
@@ -17,11 +18,11 @@ export function CardDetailRelated({ relatedCards, set, lang }: CardDetailRelated
   const setDisplayName = getSetName(lang, set)
 
   return (
-    <div className="mt-6 border-t border-border/40 pt-8">
+    <div>
       {relatedCards.length > 0 && (
         <>
-          <div className="mb-5 flex items-center justify-between gap-2">
-            <h2 className="min-w-0 break-words text-h3">
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <h2 className="min-w-0 break-words text-h4">
               {t(lang, "otherCardsFrom")} {setDisplayName}
             </h2>
             <Link
@@ -38,9 +39,9 @@ export function CardDetailRelated({ relatedCards, set, lang }: CardDetailRelated
                 <Link
                   key={rc.id}
                   href={`/cards/${rc.cardCode}`}
-                  className="group flex flex-col transition-colors"
+                  className="group flex flex-col"
                 >
-                  <div className="panel relative aspect-[63/88] w-full overflow-hidden">
+                  <div className="surface-1 hairline ease-chrome relative aspect-[63/88] w-full overflow-hidden rounded-lg group-hover:ring-2 group-hover:ring-primary/40">
                     {rc.imageUrl ? (
                       <Image
                         src={rc.imageUrl}
@@ -73,11 +74,14 @@ export function CardDetailRelated({ relatedCards, set, lang }: CardDetailRelated
 
       <Link
         href={`/sets/${set.code}`}
-        className={`panel flex items-center justify-center gap-2 px-6 py-4 text-sm font-medium transition-all hover:bg-muted/50 hover:shadow-md active:scale-[0.99] ${relatedCards.length > 0 ? "mt-6" : ""}`}
+        className={cn(
+          "ease-chrome hairline-t flex items-center justify-center gap-2 pt-4 text-sm font-medium text-muted-foreground hover:text-foreground",
+          relatedCards.length > 0 && "mt-6",
+        )}
       >
-        <Layers className="size-4 text-primary" />
+        <Layers className="size-4" />
         {t(lang, "viewAllCardsIn")} {set.code.toUpperCase()}
-        <ArrowRight className="size-4 text-muted-foreground" />
+        <ArrowRight className="size-4" />
       </Link>
     </div>
   )

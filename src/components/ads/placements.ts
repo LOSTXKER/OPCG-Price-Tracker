@@ -9,6 +9,7 @@ export type AdPlacement =
   | "browse-in-feed"
   | "card-detail-mid"
   | "card-detail-chart-side"
+  | "card-detail-info-below"
   | "decks-footer"
   | "content-in-feed"
   | "profile-below-hero";

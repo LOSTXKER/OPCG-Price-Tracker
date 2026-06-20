@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { getAdminConfig } from "@/lib/admin/config";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { CardDetail } from "@/components/cards/card-detail";
 import { JsonLd } from "@/lib/seo/json-ld-script";
@@ -69,11 +70,12 @@ export default async function CardDetailPage(props: {
     data: { viewCount: { increment: 1 } },
   });
 
-  const [communityPrice, siblings, relatedCards, listings] = await Promise.all([
+  const [communityPrice, siblings, relatedCards, listings, adminConfig] = await Promise.all([
     getCommunityPrice(card.id),
     getSiblingVariants(card.baseCode, card.id),
     getRelatedFromSameSet(card.setId, card.id),
     getListingsForCard(card.id),
+    getAdminConfig(),
   ]);
 
   const price = deriveLatestPrice(card);
@@ -181,6 +183,7 @@ export default async function CardDetailPage(props: {
         priceJpy: l.priceJpy,
         priceThb: l.priceThb,
         condition: l.condition,
+        listedAtIso: l.createdAt.toISOString(),
         user: l.user
           ? {
               displayName: l.user.displayName,
@@ -190,6 +193,7 @@ export default async function CardDetailPage(props: {
             }
           : null,
       }))}
+      marketplaceEnabled={adminConfig.marketplaceEnabled}
     />
     </>
   );
