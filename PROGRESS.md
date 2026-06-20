@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-21 — **review + harden Cursor card-detail redesign** — เก็บโค้ดตาย · badge "ตัวอย่าง" (honesty) · a11y · ย่อ segment filter ~30% · tsc 0 · lint 0 · test 45 · build ✓
+อัปเดตล่าสุด: 2026-06-21 — **review/harden card-detail + cn twMerge root fix** — chip/segment ย่อ · cn รู้จัก typography token (กัน size โดนกินทั้งแอป) · chart focus ring · tab เวอร์ชันอื่น · tsc 0 · lint 0 · test 45 · build ✓
 
 ## ✅ เสร็จ session นี้ (3i) — review + harden การ redesign card-detail จาก Cursor (4-lens review workflow + adversarial verify → 20 verified · ยืนยันด้วย Chrome headless screenshot)
 เบส: "ไปแก้ UI จาก cursor มา ช่วยตรวจสอบ หน้ารายละเอียดการ์ด" → review → เก็บกวาด → honesty → ย่อ filter · **ทั้งหมดยัง working tree → commit ขึ้น branch ใหม่**
@@ -14,6 +14,15 @@
 - **segment control (เบส: "ขนาดไม่สมมาตร" → หลายรอบ "ยังใหญ่"):** 2 ปัญหา — (1) ปุ่ม `rounded-md` ในกรอบ `rounded-full` ขอบไม่ซ้อนศูนย์ → `rounded-full` ซ้อนพอดี (เหมือน EditionToggle ที่ถูกอยู่แล้ว) (2) **ใหญ่เกินบทบาท** (min-h-8/32px + 13px + bold ≈ EditionToggle 36px ที่เป็น control หลัก) → ย่อเด็ดขาด ~30%: **`h-6 (24px)` + `text-[12px]` + weight 500** + track เบาลง · ลำดับขนาดถูก: grade chip > edition > filter/range · **บทเรียน:** งาน UI ต้อง **screenshot ดูจริง** (ต่อ Chrome headless `/Applications/Google Chrome.app` --headless=new → PIL crop/เทียบ) — ลดทีละ 4px จากโค้ดตาไม่เห็น เสียหลายรอบ
 - verify: tsc 0 · lint 0 err (84 warning เดิม unrelated) · test 45 · build ✓ · Chrome headless screenshot ยืนยันทุก control + badge "ตัวอย่าง" + ขนาด before/after
 - ⏭️ **NEXT:** ฟีด Recent sales + ขายบน Meecard ยังเป็น **mock** (ติดป้าย "ตัวอย่าง" แล้ว) — พอ pipeline data จริงมา สลับ `mockRecentSales`/`mockMeecardListings` เป็นจริง + `isSample`→false (RecentSales รับ prop แล้ว) · median link + per-source reference table re-add ได้เมื่อมี table จริงกลับมา
+
+### ➕ follow-up (หลัง merge PR #36 · เบสรีวิวต่อทีละจุดผ่าน screenshot — ฉันต่อ Chrome headless ดูเองได้)
+- **chip สภาพใหญ่เกิน → เจอ root bug ทั้งแอป:** `cn()` = `twMerge(clsx(...))` · twMerge ตัด custom font-size token (`text-micro`/`text-label`/...) ทิ้งเมื่ออยู่กับ `text-สี` (เหมารวมกลุ่ม text-color เดียวกัน เก็บตัวท้าย) → chip ไม่มี size ไป inherit จาก `<td>` ~18px (พิสูจน์ node test + DOM ที่ class ไม่มี text-* size)
+  - **root fix** `src/lib/utils.ts`: `extendTailwindMerge` ลงทะเบียน typography token 16 ตัว (display/h1-h5/body/body-sm/label/meta/eyebrow/micro/overlay/code/price/price-lg) เข้ากลุ่ม `font-size` → ขนาด+สี อยู่ด้วยกันได้ · size↔size ยัง resolve · stock tw/arbitrary ไม่พัง (node test ครบ) · **กัน landmine ทั้งแอป** (grade-rail/grade-value + อนาคต) · ConditionChip กลับมาใช้ cn + text-micro (11px) ได้แล้ว · verified production build (dev server stale ระหว่างทาง — ต้อง restart + `rm -rf .next`)
+- **segment filter ย่อ** (เบส: "ใหญ่ไม่สมส่วน" หลายรอบ): `h-6 (24px)` + `text-[12px]` + weight 500 (เดิม 32px/13px/bold ≈ EditionToggle 36px) · ลำดับขนาด: grade chip > edition > filter/range · ⚠️ `text-[12px]` arbitrary (รอด twMerge) — รอบแรกลด 4px ตาไม่เห็น
+- **chart focus ring** (เบส: ไม่อยากได้กรอบน้ำเงินตอนคลิกกราฟ): SVG `tabIndex=0` + Chromium จับ `:focus-visible` ตอนคลิก → `onPointerDown` กัน focus เฉพาะ mouse/pen (`pointerType!=="touch" → preventDefault`) · Tab คีย์บอร์ดยังได้กรอบ a11y · touch ไม่แตะ (กันพังการเลื่อน)
+- **tab "เวอร์ชันอื่น"** (เบส: เพิ่มในแถบ tab): เพิ่มเป็น tab ที่ 4 (spread เฉพาะ `siblings.length>0`) → section siblings ได้ `id="versions"` + scroll-mt · scrollspy ids เพิ่ม "versions"
+- verify: tsc 0 · lint 0 err · test 45 · production build ✓ · Chrome headless screenshot ยืนยันทุกจุด (chip เล็ก · filter ย่อ · 4 tab · home ไม่ regression จาก cn)
+- ⏭️ **ค้าง (เบสรีวิว design):** #1 เลข feed "ตัวอย่าง" ขัด grade ladder (PSA10 977฿ vs ladder 69K฿ · BGS9.5 802฿ vs 80K฿ — mock seed จาก raw×mult ไม่ใช่ graded anchor) → seed จาก graded anchor หรือให้ตัวอย่างโชว์เฉพาะ Raw · #2 รูปการ์ดลายน้ำ "SAMPLE" ทั้งหน้า (data pipeline หาแหล่งรูปสะอาด) · #3 grade ladder chip ไม่มี est marker บนค่า modeled
 
 ## ✅ เสร็จ session นี้ (3h) — typography scale rebalance (เบส: "รู้สึกขนาดไม่สมส่วน")
 - **ปัญหา:** segment รอบก่อนใหญ่เกิน (min-h-9+text-sm+invert pill) แย่ง hierarchy จาก h3/ราคา · ตารางใช้ text-body-sm (15px) ใกล้ text-price เกินไป · chip 11px ติด 15px

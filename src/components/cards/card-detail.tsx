@@ -400,6 +400,8 @@ export function CardDetail({
     { id: "overview", label: t(displayLang, "overview") },
     { id: "sources", label: t(displayLang, "saleHistoryTitle") },
     { id: "market", label: t(displayLang, "sellingNow") },
+    // "เวอร์ชันอื่น" only when the card actually has sibling variants to scroll to.
+    ...(siblings.length > 0 ? [{ id: "versions", label: t(displayLang, "otherVersions") }] : []),
   ]
 
   const scrollToSection = (id: string) => {
@@ -431,7 +433,7 @@ export function CardDetail({
   // the sticky tab bar's own bottom edge, so it stays exact across breakpoints
   // (mobile header 56 + tabs vs desktop ticker 44 + header 56 + tabs).
   useEffect(() => {
-    const ids = ["overview", "sources", "market"]
+    const ids = ["overview", "sources", "market", "versions"]
     const sections = ids
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el != null)
@@ -964,7 +966,7 @@ export function CardDetail({
 
       {/* ── full width: other versions + other cards in the set ─────────────── */}
       {siblings.length > 0 && (
-        <section className="mt-12">
+        <section id="versions" className="mt-12 scroll-mt-[7.75rem] md:scroll-mt-[10.5rem]">
           <SectionHead title={`${t(displayLang, "otherVersions")} (${siblings.length})`} />
           <SiblingGrid siblings={siblings} lang={displayLang} cols={3} smCols={6} mainCardCode={card.cardCode} />
         </section>
