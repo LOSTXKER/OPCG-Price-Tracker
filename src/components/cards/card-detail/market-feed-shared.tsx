@@ -80,12 +80,14 @@ export function formatFeedDate(iso: string | undefined): string {
   return `${d.getUTCFullYear()}/${m}/${day}`
 }
 
-/** Condition / grade chip — graded gets a boxed chip, raw conditions a quiet label. */
+/** Condition / grade chip — graded gets a boxed chip, raw conditions a quiet label.
+ *  text-micro (11px) per the design system: chips/badges are the one place that token is
+ *  for (text-label/13px read oversized next to the 13px source/date in the row). */
 export function ConditionChip({ condition, graded }: { condition: string; graded: boolean }) {
   return (
     <span
       className={cn(
-        "text-label inline-flex shrink-0 items-center rounded px-1.5 py-0.5 tnum font-medium",
+        "text-micro inline-flex shrink-0 items-center rounded px-1.5 py-0.5 tnum",
         graded ? "surface-2 text-foreground ring-1 ring-[var(--p-hair)]" : "text-muted-foreground",
       )}
     >

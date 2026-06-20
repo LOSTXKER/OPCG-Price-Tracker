@@ -302,6 +302,12 @@ export function ScrubChart({
       viewBox={`0 0 ${width} ${height}`}
       className="block h-[210px] w-full touch-pan-y select-none rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-[280px] lg:h-[320px]"
       onPointerDown={(event) => {
+        // A mouse/pen click must NOT focus the SVG — Chromium matches :focus-visible on a
+        // tabindex'd SVG even for a plain click, so the blue focus ring painted on every
+        // chart click. Suppressing the default focus-on-click for mouse/pen kills that ring
+        // while keyboard Tab still focuses (ring kept for a11y). Touch is left alone so a
+        // vertical swipe can still scroll the page (touch-pan-y).
+        if (event.pointerType !== "touch") event.preventDefault()
         event.currentTarget.setPointerCapture(event.pointerId)
         scrubAt(event)
       }}
