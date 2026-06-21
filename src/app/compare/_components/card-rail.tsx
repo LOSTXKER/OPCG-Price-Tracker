@@ -73,7 +73,7 @@ export function CardRail({
                       href={`/cards/${card.cardCode}`}
                       className="block h-full w-full"
                     >
-                      <div className="relative h-full w-full overflow-hidden rounded-xl border bg-muted shadow-sm transition-shadow hover:shadow-md">
+                      <div className="relative h-full w-full overflow-hidden rounded-xl border bg-muted">
                         {card.imageUrl ? (
                           <Image
                             src={card.imageUrl}
@@ -97,7 +97,7 @@ export function CardRail({
                     <button
                       type="button"
                       onClick={() => onRemove(card.cardCode)}
-                      className="absolute right-2 top-2 inline-flex size-9 items-center justify-center rounded-full bg-background text-muted-foreground shadow-md ring-1 ring-border transition-colors hover:bg-destructive hover:text-destructive-foreground hover:ring-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="absolute right-2 top-2 inline-flex size-9 items-center justify-center rounded-full bg-background text-muted-foreground ring-1 ring-[var(--p-hair)] ease-chrome transition-colors hover:bg-destructive hover:text-destructive-foreground hover:ring-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       aria-label={t(lang, "removeFromCompare")}
                     >
                       <X className="size-4" />
@@ -127,7 +127,7 @@ export function CardRail({
                 aria-label={label}
               >
                 <div className="relative aspect-[5/7] w-full max-w-[180px]">
-                  <div className="flex h-full w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-muted-foreground/30 bg-muted/10 text-muted-foreground transition-colors group-hover/add:border-primary/50 group-hover/add:bg-primary/5 group-hover/add:text-primary">
+                  <div className="flex h-full w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-muted-foreground/30 bg-muted/10 text-muted-foreground ease-chrome transition-colors group-hover/add:border-primary/50 group-hover/add:bg-primary/5 group-hover/add:text-primary">
                     <span className="flex size-10 items-center justify-center rounded-full border border-current/30 bg-background/60 transition-transform group-hover/add:scale-110">
                       {isUpgrade ? (
                         <Lock className="size-5" />
@@ -138,7 +138,7 @@ export function CardRail({
                   </div>
                 </div>
                 <div className="flex w-full flex-col items-center gap-1">
-                  <p className="line-clamp-2 max-w-full text-center text-sm font-semibold leading-snug text-muted-foreground transition-colors group-hover/add:text-primary sm:text-base">
+                  <p className="line-clamp-2 max-w-full text-center text-sm font-semibold leading-snug text-muted-foreground ease-chrome transition-colors group-hover/add:text-primary sm:text-base">
                     {label}
                   </p>
                 </div>

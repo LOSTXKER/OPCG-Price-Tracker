@@ -50,7 +50,7 @@ export function SectionExport() {
       <LockOverlay locked={locked} featureKey="csvExport">
         <div className="grid gap-3 sm:grid-cols-2">
           {exports.map(({ labelKey, descKey, href, icon: Icon, color }) => (
-            <div key={labelKey} className="flex flex-col justify-between rounded-xl border border-border/40 bg-card p-5">
+            <div key={labelKey} className="flex flex-col justify-between rounded-xl border border-[var(--p-hair)] bg-card p-5">
               <div className="flex items-start gap-3">
                 <div className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${color}`}>
                   <Icon className="size-5" />
@@ -68,7 +68,7 @@ export function SectionExport() {
                   href={locked ? undefined : href}
                   download={!locked}
                   aria-disabled={locked}
-                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-input bg-background px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground"
+                  className="ease-chrome inline-flex h-8 items-center gap-1.5 rounded-lg border border-input bg-background px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground"
                 >
                   <Download className="size-3.5" />
                   {t(lang, "download")}

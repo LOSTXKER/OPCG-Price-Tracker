@@ -213,7 +213,7 @@ function RecentWinnersStrip({
         </div>
         <Link
           href="/raffle/winners"
-          className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
+          className="inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-xs font-semibold text-primary ease-chrome transition-colors hover:bg-primary/10"
         >
           {t(lang, "winnersViewAll")}
           <ArrowRight className="size-3" />
@@ -289,7 +289,7 @@ function MachineCard({
   const isAnonymous = !machine.winner?.displayName?.trim();
 
   return (
-    <div className="panel relative flex h-full flex-col overflow-hidden transition-colors hover:bg-muted/20">
+    <div className="panel relative flex h-full flex-col overflow-hidden ease-chrome transition-colors hover:bg-foreground/[0.04]">
       <div className="aspect-[4/3] w-full overflow-hidden bg-muted/20">
         {machine.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -339,7 +339,7 @@ function MachineCard({
                 <button
                   type="button"
                   onClick={() => onViewImage({ src: prize.imageUrl!, alt: prize.name })}
-                  className="size-9 shrink-0 overflow-hidden rounded-md bg-muted transition-transform hover:scale-105"
+                  className="size-9 shrink-0 overflow-hidden rounded-lg bg-muted transition-transform hover:scale-105"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -349,7 +349,7 @@ function MachineCard({
                   />
                 </button>
               ) : (
-                <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-muted">
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted">
                   <Gift className="size-4 text-muted-foreground/40" />
                 </div>
               )}
@@ -373,12 +373,12 @@ function MachineCard({
                 <img
                   src={machine.winner.avatarUrl}
                   alt={winnerName}
-                  className="size-9 shrink-0 rounded-full border border-border/40 object-cover"
+                  className="size-9 shrink-0 rounded-full border border-[var(--p-hair)] object-cover"
                 />
               ) : (
                 <div
                   aria-hidden="true"
-                  className="flex size-9 shrink-0 items-center justify-center rounded-full border border-border/40 bg-muted text-xs font-semibold text-muted-foreground"
+                  className="flex size-9 shrink-0 items-center justify-center rounded-full border border-[var(--p-hair)] bg-muted text-xs font-semibold text-muted-foreground"
                 >
                   {isAnonymous ? "?" : winnerName.slice(0, 1).toUpperCase()}
                 </div>

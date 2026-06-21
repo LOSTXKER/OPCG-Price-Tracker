@@ -73,7 +73,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
         }
         actions={
           data.lastUpdatedAt ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-card px-3 py-1 text-meta">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] bg-card px-3 py-1 text-meta">
               <Clock className="size-3.5" aria-hidden="true" />
               {t(lang, "marketLastUpdated")} {formatRelativeAgo(data.lastUpdatedAt, lang)}
             </span>
@@ -138,7 +138,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
 
         {/* Top sets by value */}
         <Surface variant="panel" padding="none" className="overflow-hidden">
-          <div className="flex items-end justify-between gap-3 border-b border-border/40 px-5 py-3.5">
+          <div className="flex items-end justify-between gap-3 border-b border-[var(--p-hair)] px-5 py-3.5">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-1.5">
                 <h2 className="text-h4">{t(lang, "topSetsByValue")}</h2>
@@ -149,20 +149,20 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
             </div>
             <Link
               href="/sets"
-              className="inline-flex shrink-0 items-center gap-1 text-meta transition-colors hover:text-primary"
+              className="inline-flex shrink-0 items-center gap-1 text-meta transition-colors ease-chrome hover:text-primary"
             >
               {t(lang, "marketViewAllSets")}
               <ArrowRight className="size-3" aria-hidden="true" />
             </Link>
           </div>
-          <div className="divide-y divide-border/30">
+          <div className="divide-y divide-[var(--p-hair)]">
             {data.topSetsByValue.map((s, i) => {
               const barWidth = (s.totalValue / maxSetValue) * 100
               return (
                 <Link
                   key={s.code}
                   href={`/sets/${s.code.toLowerCase()}`}
-                  className="group flex items-center gap-3 px-5 py-3 transition-colors hover:bg-muted/30"
+                  className="group flex items-center gap-3 px-5 py-3 transition-colors ease-chrome hover:bg-foreground/[0.04]"
                 >
                   <span className="w-5 shrink-0 text-center font-price text-meta tabular-nums">
                     {i + 1}
@@ -243,7 +243,7 @@ function SectionHeader({
       </div>
       <Link
         href={href}
-        className="inline-flex shrink-0 items-center gap-1 text-meta transition-colors hover:text-primary"
+        className="inline-flex shrink-0 items-center gap-1 text-meta transition-colors ease-chrome hover:text-primary"
       >
         {ctaLabel}
         <ArrowRight className="size-3" aria-hidden="true" />
@@ -270,7 +270,7 @@ function TopCardTile({
   return (
     <Link
       href={`/cards/${card.cardCode}`}
-      className="group panel flex flex-col overflow-hidden transition-colors hover:bg-muted/20"
+      className="group panel flex flex-col overflow-hidden transition-colors ease-chrome hover:bg-foreground/[0.04]"
     >
       <div className="relative aspect-[63/88] w-full overflow-hidden bg-muted/30">
         {card.imageUrl ? (

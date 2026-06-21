@@ -101,7 +101,9 @@
   --chart-5: #FF3B30;
   --radius: 0.75rem;
 
-  --panel-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+  /* Unified with the warm primitive kit: inline cards are flat + hairline (no
+     drop shadow), matching card-detail. Migrates every .panel app-wide at once. */
+  --panel-shadow: var(--elev-flat);
 
   /* Warm primitive kit (VISION V1) — elevation by luminance + hairline borders.
      Light values: subtle warm-dark overlays so cards lift off the white canvas.
@@ -178,7 +180,7 @@
   --chart-4: #C49A70;
   --chart-5: #FF7A6B;
 
-  --panel-shadow: 0 0 0 1px rgba(246,239,230,0.08);
+  --panel-shadow: var(--elev-flat);
 
   /* Warm primitive kit (VISION V1) — dark = warm-white luminance overlays.
      Elevation comes from light, not dark shadow (espresso canvas stays warm). */

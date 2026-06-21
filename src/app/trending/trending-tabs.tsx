@@ -53,7 +53,7 @@ const MobileTrendingItem = memo(function MobileTrendingItem({
   return (
     <Link
       href={`/cards/${card.cardCode}`}
-      className="flex items-center gap-3 px-4 py-3 transition-colors active:bg-muted/40"
+      className="flex items-center gap-3 px-4 py-3 ease-chrome transition-colors active:bg-foreground/[0.04]"
     >
       <span className="w-5 shrink-0 text-center font-price text-xs text-muted-foreground">
         {rank}
@@ -108,7 +108,7 @@ const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }:
   return (
     <tr
       key={card.cardCode}
-      className="border-b border-border/40 transition-colors hover:bg-muted/30"
+      className="border-b border-[var(--p-hair)] ease-chrome transition-colors hover:bg-foreground/[0.04]"
     >
       <td className="px-4 py-2.5 text-center tabular-nums text-muted-foreground">
         {rank}
@@ -142,7 +142,7 @@ const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }:
       <td className="px-4 py-2.5">
         <Link
           href={`/sets/${card.setCode}`}
-          className="font-mono text-xs text-muted-foreground transition-colors hover:text-primary"
+          className="font-mono text-xs text-muted-foreground ease-chrome transition-colors hover:text-primary"
         >
           {card.setCode.toUpperCase()}
         </Link>
@@ -245,7 +245,7 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
         {cards.length === 0 ? (
           <p className="py-12 text-center text-sm text-muted-foreground">{t(lang, "noData")}</p>
         ) : (
-          <div className="divide-y divide-border/40">
+          <div className="divide-y divide-[var(--p-hair)]">
             {cards.map((card, i) => (
               <MobileTrendingItem
                 key={card.cardCode}
@@ -272,7 +272,7 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
               <col className="hidden w-24 sm:table-column" />
             </colgroup>
             <thead>
-              <tr className="border-b border-border text-eyebrow">
+              <tr className="border-b border-[var(--p-hair)] text-eyebrow">
                 <th className="px-4 py-3 text-left">#</th>
                 <th className="px-4 py-3 text-left">{t(lang, "card")}</th>
                 <th className="px-4 py-3 text-left">{t(lang, "set")}</th>

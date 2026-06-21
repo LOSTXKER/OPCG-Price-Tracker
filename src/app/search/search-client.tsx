@@ -115,13 +115,13 @@ function SearchContent({
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder={t(lang, "searchLong")}
-            className="h-12 w-full rounded-l-xl border border-r-0 border-border/60 bg-card pl-12 pr-11 text-base shadow-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-2 focus:ring-primary/20"
+            className="h-12 w-full rounded-l-xl border border-r-0 border-[var(--p-hair)] bg-card pl-12 pr-11 text-base outline-none ease-chrome transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-2 focus:ring-primary/20"
           />
           {inputValue && (
             <button
               type="button"
               onClick={clearInput}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground ease-chrome transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
             >
               <X className="size-4" />
             </button>
@@ -155,7 +155,7 @@ function SearchContent({
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 border-t border-border/40 bg-muted/20 px-4 py-2.5">
+          <div className="flex flex-wrap items-center gap-2 border-t border-[var(--p-hair)] bg-muted/20 px-4 py-2.5">
             {sets.length > 0 && (
               <div className="min-w-0 flex-1 sm:flex-none sm:w-[220px]">
                 <SetPicker
@@ -246,13 +246,13 @@ function SearchContent({
             ))}
           </CardGrid>
         ) : (
-          <Surface variant="panel" padding="none" className="divide-y divide-border/30">
-            <div className="divide-y divide-border/30 sm:hidden">
+          <Surface variant="panel" padding="none" className="divide-y divide-[var(--p-hair)]">
+            <div className="divide-y divide-[var(--p-hair)] sm:hidden">
               {Array.from({ length: 8 }).map((_, i) => (
                 <MobileCardSkeleton key={i} />
               ))}
             </div>
-            <div className="hidden divide-y divide-border/30 sm:block">
+            <div className="hidden divide-y divide-[var(--p-hair)] sm:block">
               {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="flex items-center gap-4 px-4 py-3">
                   <Skeleton className="size-12 shrink-0 rounded-lg" />
@@ -287,7 +287,7 @@ function SearchContent({
       {/* Results — Table view */}
       {!isPending && cards.length > 0 && viewMode === "table" && (
         <Surface variant="panel" padding="none" className="overflow-hidden">
-          <div className="divide-y divide-border/30 sm:hidden">
+          <div className="divide-y divide-[var(--p-hair)] sm:hidden">
             {cards.map((card, i) => (
               <MobileCardItem
                 key={card.cardCode}
@@ -299,7 +299,7 @@ function SearchContent({
           <div className="hidden sm:block">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border/40 text-meta">
+                <tr className="border-b border-[var(--p-hair)] text-meta">
                   <th className="w-8 py-2.5 pl-3 pr-0" />
                   <th className="w-8 py-2.5 pr-1 pl-1 text-left font-medium">#</th>
                   <th className="py-2.5 pr-3 pl-2 text-left font-medium">{t(lang, "card")}</th>

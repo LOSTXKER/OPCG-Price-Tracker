@@ -235,10 +235,10 @@ function DeckCalculatorContent() {
               key={d.id}
               type="button"
               onClick={() => setActiveDeck(d)}
-              className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
+              className={`ease-chrome rounded-lg border px-3 py-1.5 text-sm font-medium ${
                 activeDeck?.id === d.id
                   ? "border-primary bg-primary/10 text-primary"
-                  : "border-border hover:bg-muted"
+                  : "border-[var(--p-hair)] hover:bg-foreground/[0.06]"
               }`}
             >
               {d.name}
@@ -263,7 +263,7 @@ function DeckCalculatorContent() {
             </div>
           </div>
 
-          <div className="rounded-xl border bg-card p-4">
+          <div className="rounded-xl border border-[var(--p-hair)] bg-card p-4">
             <div className="flex items-center justify-between">
               <p className="text-muted-foreground text-sm font-medium">{t(lang, "totalValue")}</p>
               <PriceDisplay priceJpy={totalPrice} showChange={false} size="lg" />
@@ -286,7 +286,7 @@ function DeckCalculatorContent() {
               </Button>
             </div>
             {activeDeck.leader ? (
-              <div className="flex items-center gap-3 rounded-lg border p-2">
+              <div className="flex items-center gap-3 rounded-lg border border-[var(--p-hair)] p-2">
                 {activeDeck.leader.imageUrl && (
                   <Image
                     src={activeDeck.leader.imageUrl}
@@ -329,7 +329,7 @@ function DeckCalculatorContent() {
                 {activeDeck.cards.map((entry) => (
                   <div
                     key={entry.card.id}
-                    className="flex items-center gap-3 rounded-lg border p-2"
+                    className="flex items-center gap-3 rounded-lg border border-[var(--p-hair)] p-2"
                   >
                     {entry.card.imageUrl && (
                       <Image
@@ -366,7 +366,7 @@ function DeckCalculatorContent() {
           </div>
         </div>
       ) : decks.length === 0 ? (
-        <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed py-16 text-center">
+        <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-[var(--p-hair)] py-16 text-center">
           <p className="text-muted-foreground text-sm">{t(lang, "createFirstDeck")}</p>
         </div>
       ) : null}
@@ -385,7 +385,7 @@ function DeckCalculatorContent() {
             onChange={(e) => cardSearch.setQuery(e.target.value)}
             autoComplete="off"
           />
-          <div className="max-h-60 space-y-1 overflow-auto rounded-md border p-1">
+          <div className="max-h-60 space-y-1 overflow-auto rounded-lg border border-[var(--p-hair)] p-1">
             {cardSearch.query.trim().length < 2 ? (
               <p className="text-muted-foreground px-2 py-3 text-sm">{t(lang, "typeAtLeast2Chars")}</p>
             ) : cardSearch.results.length === 0 ? (
@@ -395,7 +395,7 @@ function DeckCalculatorContent() {
                 <button
                   key={c.id}
                   type="button"
-                  className="hover:bg-muted block w-full rounded-md px-3 py-2 text-left text-sm"
+                  className="ease-chrome block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-foreground/[0.04]"
                   onClick={() => void addCard(c)}
                 >
                   <span className="font-medium">{c.nameEn ?? c.nameJp}</span>
@@ -426,11 +426,11 @@ function DeckMockPreview({ lang }: { lang: Language }) {
 
       <div className="flex flex-wrap items-end gap-2">
         <div className="min-w-0 flex-1">
-          <div className="h-10 rounded-md border border-border bg-background px-3 py-2 text-sm text-muted-foreground">
+          <div className="h-10 rounded-lg border border-[var(--p-hair)] bg-background px-3 py-2 text-sm text-muted-foreground">
             {t(lang, "newDeckName")}
           </div>
         </div>
-        <div className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
+        <div className="inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
           {t(lang, "createDeck")}
         </div>
       </div>
@@ -441,7 +441,7 @@ function DeckMockPreview({ lang }: { lang: Language }) {
           <span className="text-muted-foreground text-sm">12/50 {t(lang, "cardsCount")}</span>
         </div>
 
-        <div className="rounded-xl border bg-card p-4">
+        <div className="rounded-xl border border-[var(--p-hair)] bg-card p-4">
           <div className="flex items-center justify-between">
             <p className="text-muted-foreground text-sm font-medium">{t(lang, "totalValue")}</p>
             <p className="font-price text-lg font-bold">¥23,400</p>
@@ -452,7 +452,7 @@ function DeckMockPreview({ lang }: { lang: Language }) {
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold">{t(lang, "leader")}</h3>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border p-2">
+          <div className="flex items-center gap-3 rounded-lg border border-[var(--p-hair)] p-2">
             <div className="size-10 rounded bg-muted" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">Monkey D. Luffy</p>
@@ -466,7 +466,7 @@ function DeckMockPreview({ lang }: { lang: Language }) {
           <h3 className="text-sm font-semibold">{t(lang, "cardsInDeck")} (12 {t(lang, "cardsCount")})</h3>
           <div className="space-y-1">
             {mockCards.map((c) => (
-              <div key={c.code} className="flex items-center gap-3 rounded-lg border p-2">
+              <div key={c.code} className="flex items-center gap-3 rounded-lg border border-[var(--p-hair)] p-2">
                 <div className="size-8 rounded bg-muted" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">{c.name}</p>

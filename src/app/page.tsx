@@ -2,9 +2,9 @@ import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import {
   HomeFeaturedCard,
   HomeMiniTable,
-  HomePreviewRow,
 } from "@/components/home/home-client-sections";
 import { HomeMarketOverview } from "@/components/home/home-market-overview";
+import { HomeSearchHero } from "@/components/home/home-search-hero";
 import { HomeSeoContent } from "@/components/home/home-seo-content";
 import { AdSlot } from "@/components/ads/ad-slot";
 import { getHomeData, mapCardToTrending } from "@/lib/data/home";
@@ -23,7 +23,6 @@ export default async function HomePage(props: {
     topLosers,
     highestPriced,
     totalCards,
-    totalValue,
     initialTableCards,
     initialTableTotal,
     initialTableTotalPages,
@@ -79,6 +78,9 @@ export default async function HomePage(props: {
 
   return (
     <>
+      {/* Universal search hero — the page's focal point (VISION §5 teleport) */}
+      <HomeSearchHero sets={setOptions} trending={gainers} />
+
       <HomeMarketOverview
         initialCards={tableCards}
         initialTotal={initialTableTotal}
@@ -87,13 +89,8 @@ export default async function HomePage(props: {
         sets={setOptions}
         initialSearch={initialSearch}
       >
-        {/* Portfolio · Honey · Market stats strip + slim Ad (desktop) */}
-        <HomePreviewRow totalValue={totalValue} totalCards={totalCards} />
-
-        {/* In-feed ad — mobile only (desktop ad lives in the preview row) */}
-        <AdSlot placement="home-in-feed" className="aspect-[6/1] md:hidden" />
-
-        {/* Highlights: Featured card · Top Gainers · Top Losers */}
+        {/* Highlights: Featured card · Top Gainers · Top Losers — lead discovery
+            directly under the search hero (the old KPI/preview strip was removed). */}
         <div className="panel grid divide-y divide-border/40 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-3">
           {featured && (
             <div className="p-4 sm:col-span-2 lg:col-span-1">
@@ -107,6 +104,9 @@ export default async function HomePage(props: {
             <HomeMiniTable cards={losers} type="losers" />
           </div>
         </div>
+
+        {/* In-feed ad — mobile only, after the highlights so discovery leads */}
+        <AdSlot placement="home-in-feed" className="aspect-[6/1] md:hidden" />
       </HomeMarketOverview>
 
       <HomeSeoContent />

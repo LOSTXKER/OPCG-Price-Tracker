@@ -61,7 +61,7 @@ export function ClaimAction({
     return (
       <NextLink
         href={ctaPath}
-        className="inline-flex h-8 items-center gap-1 rounded-lg border bg-background px-3 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
+        className="inline-flex h-8 items-center gap-1 rounded-lg border bg-background px-3 text-xs font-semibold text-foreground ease-chrome transition-colors hover:bg-foreground/[0.06]"
       >
         {t(lang, "missionGoLabel")}
         <ArrowRight className="size-3" />

@@ -86,11 +86,17 @@ function fmtAxisDate(ms: number, range: ChartRange, lang: Language): string {
   )
 }
 
-/** Calendar-snapped x-axis ticks — denser than a fixed 4 and anchored to round
- *  dates (day / week / 1st-of-month / quarter) per range, so the eye can trace a
- *  date to the curve. Returns left→right {frac (0..1 across the window), label}.
- *  Pure & SSR-safe: every date derives from refMs (no Date.now/random). */
-function xAxisTicks(refMs: number, range: ChartRange, lang: Language): { frac: number; label: string }[] {
+/** Calendar-snapped x-axis ticks — evenly spaced, anchored to round dates
+ *  (day / week / 1st-of-month / quarter) per range, thinned by an even stride to
+ *  fit the real plot width, with the latest point ("today") pinned at the right
+ *  edge without colliding into the last calendar label. Returns left→right
+ *  {frac (0..1 across the window), label}. Pure & SSR-safe (derives from refMs). */
+export function xAxisTicks(
+  refMs: number,
+  range: ChartRange,
+  lang: Language,
+  plotW: number,
+): { frac: number; label: string }[] {
   const spanMs = SPAN_DAYS[range] * DAY_MS
   const startMs = refMs - spanMs
   const anchors: number[] = []
@@ -115,29 +121,31 @@ function xAxisTicks(refMs: number, range: ChartRange, lang: Language): { frac: n
   } else {
     pushMonthly(3, true)
   }
-  // always anchor the latest point at the right edge so "today" is labelled
-  if (!anchors.length || refMs - anchors[anchors.length - 1] > DAY_MS / 2) anchors.push(refMs)
-  const out: { frac: number; label: string }[] = []
-  let prev = -1
-  for (const ms of anchors) {
-    const frac = (ms - startMs) / spanMs
-    if (frac < -1e-9 || frac > 1 + 1e-9) continue
-    const f = Math.min(1, Math.max(0, frac))
-    if (f - prev < 0.02) continue // drop near-duplicate positions
-    prev = f
-    out.push({ frac: f, label: fmtAxisDate(ms, range, lang) })
-  }
-  return out
-}
+  // → evenly-spaced {frac,label}, left→right, clamped to the window
+  let ticks = anchors
+    .map((ms) => ({ frac: (ms - startMs) / spanMs, label: fmtAxisDate(ms, range, lang) }))
+    .filter((t) => t.frac >= -1e-9 && t.frac <= 1 + 1e-9)
+    .map((t) => ({ frac: Math.min(1, Math.max(0, t.frac)), label: t.label }))
 
-/** Thin a tick list to at most `cap`, always keeping the first & last entry. */
-function thinTicks<T>(ticks: T[], cap: number): T[] {
-  if (ticks.length <= cap) return ticks
-  const out: T[] = []
-  const step = (ticks.length - 1) / (cap - 1)
-  for (let k = 0; k < cap; k++) out.push(ticks[Math.round(k * step)])
-  out[out.length - 1] = ticks[ticks.length - 1]
-  return out
+  // Thin to fit the plot (≈1 label / 92px) by an EVEN integer stride — uniform gaps.
+  // (Distributing N→cap with Math.round drops an interior tick unevenly, which read
+  // as a double-gap on 1M: 8·15·29·5 instead of 8·22·5.) Always keeps the first tick.
+  const maxTicks = Math.max(3, Math.min(8, Math.floor(plotW / 92)))
+  if (ticks.length > maxTicks) {
+    const stride = Math.ceil((ticks.length - 1) / (maxTicks - 1))
+    ticks = ticks.filter((_, i) => i % stride === 0)
+  }
+
+  // "Today" is the right edge (frac 1). Append it — but if the last calendar tick
+  // already hugs the edge (closer than ~one label width), REPLACE it so the two
+  // labels never overlap (the 1-Apr / 5-Apr collision seen on 3M).
+  const minGap = Math.min(0.5, 80 / Math.max(1, plotW))
+  const today = { frac: 1, label: fmtAxisDate(refMs, range, lang) }
+  const last = ticks[ticks.length - 1]
+  if (last && 1 - last.frac < minGap) ticks[ticks.length - 1] = today
+  else ticks.push(today)
+
+  return ticks
 }
 
 export function ScrubChart({
@@ -259,11 +267,10 @@ export function ScrubChart({
   const open = primary.points[0]
   const tagY = Math.min(height - padBottom - 10, Math.max(padTop + 10, y(lastVal)))
 
-  // Calendar-snapped date ticks — ONE density-based set sized to the real plot width
-  // (≈1 label / 92px) now that we measure width; replaces the old CSS-toggled two groups.
+  // Calendar-snapped date ticks — evenly spaced, sized to the real plot width, with
+  // "today" pinned at the right edge (see xAxisTicks). Replaces the old measure→thin split.
   const refMs = latestUpdatedAt ? new Date(latestUpdatedAt).getTime() : null
-  const maxXTicks = Math.max(3, Math.min(8, Math.floor(plotW / 92)))
-  const xTicks = refMs != null && !Number.isNaN(refMs) ? thinTicks(xAxisTicks(refMs, range, lang), maxXTicks) : []
+  const xTicks = refMs != null && !Number.isNaN(refMs) ? xAxisTicks(refMs, range, lang, plotW) : []
 
   const scrubAt = (event: PointerEvent<SVGSVGElement>) => {
     const rect = event.currentTarget.getBoundingClientRect()
@@ -295,8 +302,8 @@ export function ScrubChart({
       role="img"
       aria-label={
         indexed
-          ? t(lang, "priceHistory")
-          : `${t(lang, "priceHistory")} — ${compactDisplayValue(open, currency)} → ${compactDisplayValue(lastVal, currency)} · ${t(lang, "low")} ${compactDisplayValue(min, currency)} · ${t(lang, "high")} ${compactDisplayValue(max, currency)}`
+          ? `${t(lang, "priceHistory")} · ${t(lang, "chartKeyboardHint")}`
+          : `${t(lang, "priceHistory")} — ${compactDisplayValue(open, currency)} → ${compactDisplayValue(lastVal, currency)} · ${t(lang, "low")} ${compactDisplayValue(min, currency)} · ${t(lang, "high")} ${compactDisplayValue(max, currency)} · ${t(lang, "chartKeyboardHint")}`
       }
       tabIndex={0}
       viewBox={`0 0 ${width} ${height}`}

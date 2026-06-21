@@ -236,11 +236,11 @@ export function AccountCoverImage({
           onDragEnter={onDragOver}
           onDragLeave={onDragLeave}
           className={cn(
-            "group relative w-full overflow-hidden rounded-2xl border-2 border-dashed transition-colors",
+            "ease-chrome group relative w-full overflow-hidden rounded-2xl border-2 border-dashed transition-colors",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             dragActive
               ? "border-primary bg-primary/[0.06]"
-              : "border-border/60 hover:border-border",
+              : "border-[var(--p-hair)] hover:border-border",
             busy && "cursor-progress",
             !busy && "cursor-pointer",
           )}
@@ -274,10 +274,10 @@ export function AccountCoverImage({
               <>
                 <span
                   className={cn(
-                    "flex size-9 items-center justify-center rounded-full transition-colors",
+                    "ease-chrome flex size-9 items-center justify-center rounded-full transition-colors",
                     dragActive
                       ? "bg-primary text-primary-foreground"
-                      : "bg-background/90 text-foreground shadow-sm",
+                      : "bg-background/90 text-foreground",
                   )}
                 >
                   {hasCover ? (
@@ -317,7 +317,7 @@ export function AccountCoverImage({
               onClick={onPick}
               disabled={busy}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-background px-3 py-1.5 text-sm font-medium transition-colors hover:bg-accent",
+                "ease-chrome inline-flex items-center gap-1.5 rounded-lg border border-[var(--p-hair)] bg-background px-3 py-1.5 text-sm font-medium transition-colors hover:bg-accent",
                 "disabled:cursor-not-allowed disabled:opacity-50",
               )}
             >
@@ -334,7 +334,7 @@ export function AccountCoverImage({
                 onClick={() => void remove()}
                 disabled={busy}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-background px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-destructive/5 hover:text-destructive",
+                  "ease-chrome inline-flex items-center gap-1.5 rounded-lg border border-[var(--p-hair)] bg-background px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-destructive/5 hover:text-destructive",
                   "disabled:cursor-not-allowed disabled:opacity-50",
                 )}
               >
@@ -357,7 +357,7 @@ export function AccountCoverImage({
 
 function Card({ children }: { children: ReactNode }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-border/40 bg-card">
+    <div className="overflow-hidden rounded-xl border border-[var(--p-hair)] bg-card">
       {children}
     </div>
   );

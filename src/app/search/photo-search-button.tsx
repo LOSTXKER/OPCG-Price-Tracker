@@ -215,7 +215,7 @@ export function PhotoSearchButton({ className, trigger }: PhotoSearchButtonProps
               </Button>
             </div>
           ) : (
-            <div className="relative overflow-hidden rounded-xl border border-border/60 bg-muted/30">
+            <div className="relative overflow-hidden rounded-xl border border-[var(--p-hair)] bg-muted/30">
               <Image
                 src={previewUrl}
                 alt="preview"
@@ -227,7 +227,7 @@ export function PhotoSearchButton({ className, trigger }: PhotoSearchButtonProps
               <button
                 type="button"
                 onClick={reset}
-                className="absolute right-2 top-2 rounded-full bg-background/90 p-1.5 text-foreground shadow-sm hover:bg-background"
+                className="absolute right-2 top-2 rounded-full bg-background/90 p-1.5 text-foreground hover:bg-background"
                 aria-label={t(lang, "remove")}
               >
                 <X className="size-4" />
@@ -341,9 +341,9 @@ function ResultBlock({
               key={card.cardCode}
               href={`/cards/${card.cardCode}`}
               onClick={onClose}
-              className="flex items-center gap-3 rounded-xl border border-border/50 bg-card p-2 transition-colors hover:border-primary/40 hover:bg-muted/50"
+              className="flex items-center gap-3 rounded-xl border border-[var(--p-hair)] bg-card p-2 transition-colors ease-chrome hover:border-primary/40 hover:bg-foreground/[0.04]"
             >
-              <div className="relative size-14 shrink-0 overflow-hidden rounded-md bg-muted">
+              <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-muted">
                 {card.imageUrl ? (
                   <Image
                     src={card.imageUrl}

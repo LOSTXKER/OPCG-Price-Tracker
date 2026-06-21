@@ -78,7 +78,7 @@ function Hero({ lang }: { lang: Language }) {
         </span>
       }
       actions={
-        <div className="flex items-center gap-2 rounded-xl border border-border/40 bg-muted/30 px-3 py-2">
+        <div className="flex items-center gap-2 rounded-xl border border-[var(--p-hair)] bg-muted/30 px-3 py-2">
           <Trophy className="size-4 text-muted-foreground" />
           <p className="text-meta">{t(lang, "winnersUpdatedMonthly")}</p>
         </div>
@@ -152,7 +152,7 @@ function WinnerCard({
       id={`raffle-${raffle.id}`}
       variant="panel"
       padding="none"
-      className="relative flex h-full scroll-mt-24 flex-col overflow-hidden transition-colors hover:bg-muted/20"
+      className="ease-chrome relative flex h-full scroll-mt-24 flex-col overflow-hidden transition-colors hover:bg-foreground/[0.04]"
       style={accent ? { borderTop: `3px solid ${accent}` } : undefined}
     >
       <div className="aspect-[4/3] w-full overflow-hidden bg-muted/20">
@@ -169,7 +169,7 @@ function WinnerCard({
         )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 border-t border-border/30 p-4">
+      <div className="flex flex-1 flex-col gap-3 border-t border-[var(--p-hair)] p-4">
         <div>
           <p className="text-eyebrow">{t(lang, "monthlyRaffle")}</p>
           <h3
@@ -194,7 +194,7 @@ function WinnerCard({
           </div>
         )}
 
-        <div className="flex items-center gap-3 rounded-lg border border-border/40 bg-background px-3 py-2.5">
+        <div className="flex items-center gap-3 rounded-lg border border-[var(--p-hair)] bg-background px-3 py-2.5">
           <WinnerAvatar
             avatarUrl={raffle.winner.avatarUrl}
             name={winnerName}
@@ -213,7 +213,7 @@ function WinnerCard({
           </div>
         </div>
 
-        <div className="mt-auto grid grid-cols-2 gap-x-4 gap-y-1.5 border-t border-border/30 pt-3">
+        <div className="mt-auto grid grid-cols-2 gap-x-4 gap-y-1.5 border-t border-[var(--p-hair)] pt-3">
           <div>
             <p className="text-meta">{t(lang, "winnersDrawnOn")}</p>
             <p className="flex items-center gap-1 text-xs font-semibold">
@@ -248,14 +248,14 @@ function WinnerAvatar({
       <img
         src={avatarUrl}
         alt={name}
-        className="size-10 shrink-0 rounded-full border border-border/40 object-cover"
+        className="size-10 shrink-0 rounded-full border border-[var(--p-hair)] object-cover"
       />
     );
   }
   return (
     <div
       aria-hidden="true"
-      className="flex size-10 shrink-0 items-center justify-center rounded-full border border-border/40 bg-muted text-xs font-semibold text-muted-foreground"
+      className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[var(--p-hair)] bg-muted text-xs font-semibold text-muted-foreground"
     >
       {isAnonymous ? "?" : getInitials(name)}
     </div>

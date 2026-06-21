@@ -79,10 +79,10 @@ export function ImageGallery({ images, className }: ImageGalleryProps) {
               type="button"
               onClick={() => setSelected(i)}
               className={cn(
-                "relative size-16 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all",
+                "ease-chrome relative size-16 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all",
                 i === selected
                   ? "border-primary ring-primary/30 ring-2"
-                  : "border-border hover:border-muted-foreground/50"
+                  : "border-[var(--p-hair)] hover:border-muted-foreground/50"
               )}
             >
               <Image

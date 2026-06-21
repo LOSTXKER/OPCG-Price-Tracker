@@ -38,7 +38,7 @@ export function SearchResultsDropdown({
 }) {
   const lang = useUIStore((s) => s.language)
   return (
-    <div className="absolute top-full right-0 left-0 z-50 mt-1 overflow-hidden rounded-xl border border-border bg-popover shadow-lg">
+    <div className="absolute top-full right-0 left-0 z-50 mt-1 overflow-hidden rounded-xl border border-[var(--p-hair)] bg-popover shadow-lg">
       <div className="max-h-80 overflow-y-auto">
         {loading && results.length === 0 && (
           <div className="px-4 py-3 text-sm text-muted-foreground">
@@ -54,7 +54,7 @@ export function SearchResultsDropdown({
                 type="button"
                 onClick={() => onSelectCard(card.cardCode)}
                 className={cn(
-                  "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-accent",
+                  "ease-chrome flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-accent",
                   activeIdx === i && "bg-accent"
                 )}
               >
@@ -101,7 +101,7 @@ export function SearchResultsDropdown({
                 type="button"
                 onClick={() => onSelectRecent(item)}
                 className={cn(
-                  "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-accent",
+                  "ease-chrome flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-accent",
                   activeIdx === i && "bg-accent"
                 )}
               >

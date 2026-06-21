@@ -73,7 +73,7 @@ function ListingCardBase({
     <article
       data-listing-id={id}
       className={cn(
-        "panel flex flex-col overflow-hidden transition-colors hover:bg-muted/20",
+        "panel ease-chrome flex flex-col overflow-hidden transition-colors hover:bg-foreground/[0.04]",
         isFeatured && "border border-primary/30"
       )}
     >
@@ -104,7 +104,7 @@ function ListingCardBase({
           </span>
           <ConditionBadge condition={condition} />
         </div>
-        <Link href={listingHref} className="transition-colors hover:text-primary">
+        <Link href={listingHref} className="ease-chrome transition-colors hover:text-primary">
           <p className="line-clamp-1 text-xs text-muted-foreground">
             {card.nameEn ?? card.nameJp}
           </p>

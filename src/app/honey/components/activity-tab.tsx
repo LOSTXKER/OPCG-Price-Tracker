@@ -102,7 +102,7 @@ export function ActivityTab({
             </div>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="inline-flex items-center gap-1.5 rounded-md border bg-background px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
+              className="ease-chrome inline-flex items-center gap-1.5 rounded-lg border bg-background px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-foreground/[0.06]"
             >
               <ArrowUp className="size-3.5" />
               {t(lang, "activityGoToMissions")}
@@ -115,7 +115,7 @@ export function ActivityTab({
           </div>
         )
       ) : (
-        <div className="divide-y divide-border/40">
+        <div className="divide-y divide-[var(--p-hair)]">
           {filtered.map((tx) => (
             <TxRow key={tx.id} tx={tx} lang={lang} />
           ))}

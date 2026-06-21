@@ -3,13 +3,13 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
-const surfaceVariants = cva("transition-colors", {
+const surfaceVariants = cva("ease-chrome", {
   variants: {
     variant: {
       panel: "panel",
-      outline: "rounded-xl border border-border/50 bg-card",
+      outline: "rounded-xl border border-[var(--p-hair)] bg-card",
       subtle: "rounded-xl bg-muted/30",
-      hero: "panel panel-hero",
+      hero: "surface-1 hairline rounded-xl",
       ghost: "",
     },
     padding: {
@@ -20,7 +20,7 @@ const surfaceVariants = cva("transition-colors", {
       xl: "p-6",
     },
     interactive: {
-      true: "hover:bg-muted/30 hover:border-border focus-within:border-border/80",
+      true: "hover:bg-foreground/[0.04] hover:border-[var(--p-hair)] focus-within:border-[var(--p-hair)]",
       false: "",
     },
   },
@@ -80,9 +80,9 @@ export const Surface = forwardRef<HTMLDivElement, SurfaceProps>(function Surface
         className={cn(surfaceVariants({ variant, padding: "none", interactive }), className)}
         {...props}
       >
-        {header && <div className="border-b border-border/60 px-5 py-4">{header}</div>}
+        {header && <div className="border-b border-[var(--p-hair)] px-5 py-4">{header}</div>}
         <div className={cn(surfaceVariants({ padding }))}>{children}</div>
-        {footer && <div className="border-t border-border/60 px-5 py-3">{footer}</div>}
+        {footer && <div className="border-t border-[var(--p-hair)] px-5 py-3">{footer}</div>}
       </Component>
     );
   }

@@ -54,7 +54,7 @@ export function HeaderMarketTicker({
   const { resolvedTheme, setTheme } = useTheme();
 
   return (
-    <div className="border-b border-border/40 bg-background">
+    <div className="border-b border-[var(--p-hair)] bg-background">
       <div className="mx-auto flex h-11 max-w-7xl items-center gap-3 px-4 lg:px-6">
         {/* Left — market ticker chips (scrolls on narrow widths so the row doesn’t feel “exploded”) */}
         <div className="flex min-h-0 min-w-0 flex-1 items-center gap-2 overflow-x-auto overflow-y-hidden text-muted-foreground [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -68,7 +68,7 @@ export function HeaderMarketTicker({
           )}
 
           {stats.totalValue > 0 && (
-            <Link href="/market-overview" className="group flex shrink-0 items-center gap-1.5 rounded-full border border-green-500/20 bg-green-500/5 px-3 py-1.5 text-sm transition-colors hover:border-green-500/40 hover:bg-green-500/10">
+            <Link href="/market-overview" className="group ease-chrome flex shrink-0 items-center gap-1.5 rounded-full border border-green-500/20 bg-green-500/5 px-3 py-1.5 text-sm transition-colors hover:border-green-500/40 hover:bg-green-500/10">
               <span className="font-medium text-green-700 dark:text-green-300">{t(language, "totalValue")}</span>
               <span className="font-semibold tabular-nums text-green-600 dark:text-green-400">
                 <Price jpy={stats.totalValue} />
@@ -104,7 +104,7 @@ export function HeaderMarketTicker({
             <>
               <Link
                 href="/pricing"
-                className="hidden items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20 sm:flex"
+                className="ease-chrome hidden items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20 sm:flex"
               >
                 <Zap className="size-3" />
                 {language === "TH" ? "อัปเกรด" : language === "JP" ? "アップグレード" : "Upgrade"}
@@ -114,7 +114,7 @@ export function HeaderMarketTicker({
           )}
 
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-full border border-border/60 px-2.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:border-border hover:bg-muted/60 hover:text-foreground focus:outline-none">
+            <DropdownMenuTrigger className="ease-chrome flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] px-2.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:border-[var(--p-hair)] hover:bg-foreground/[0.06] hover:text-foreground focus:outline-none">
               <Globe className="size-3" />
               <span className="hidden sm:inline">{LANG_OPTIONS.find((l) => l.value === language)?.label ?? language}</span>
               <span className="sm:hidden">{language}</span>
@@ -131,7 +131,7 @@ export function HeaderMarketTicker({
           </DropdownMenu>
 
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-full border border-border/60 px-2.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:border-border hover:bg-muted/60 hover:text-foreground focus:outline-none">
+            <DropdownMenuTrigger className="ease-chrome flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] px-2.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:border-[var(--p-hair)] hover:bg-foreground/[0.06] hover:text-foreground focus:outline-none">
               <span>{CURRENCY_SYMBOL[currency]}</span>
               <span>{currency}</span>
             </DropdownMenuTrigger>
@@ -149,7 +149,7 @@ export function HeaderMarketTicker({
           <button
             type="button"
             onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-            className="flex items-center gap-1.5 rounded-full border border-border/60 px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:border-border hover:bg-muted/60 hover:text-foreground"
+            className="ease-chrome flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:border-[var(--p-hair)] hover:bg-foreground/[0.06] hover:text-foreground"
           >
             {mounted && resolvedTheme === "dark" ? <Sun className="size-3" /> : <Moon className="size-3" />}
             <span className="hidden font-medium lg:inline">{mounted && resolvedTheme === "dark" ? t(language, "lightMode") : t(language, "darkMode")}</span>

@@ -118,7 +118,7 @@ export function NotificationBell() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="relative flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+        className="relative flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors ease-chrome hover:bg-foreground/[0.06] hover:text-foreground"
         aria-label={t(lang, "notifications")}
       >
         <Bell className="size-4" />
@@ -130,7 +130,7 @@ export function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-[22rem] max-w-[calc(100vw-2rem)] rounded-xl border border-border/60 bg-popover shadow-lg">
+        <div className="absolute right-0 top-full z-50 mt-2 w-[22rem] max-w-[calc(100vw-2rem)] rounded-xl border border-[var(--p-hair)] bg-popover shadow-lg">
           {/* Header */}
           <div className="flex items-center justify-between border-b px-4 py-2.5">
             <span className="text-sm font-semibold">{t(lang, "notifications")}</span>
@@ -191,7 +191,7 @@ export function NotificationBell() {
                     <div
                       key={item.id}
                       className={cn(
-                        "flex items-start gap-3 border-b border-border/20 px-4 py-3 transition-colors hover:bg-muted/30",
+                        "flex items-start gap-3 border-b border-[var(--p-hair)] px-4 py-3 transition-colors ease-chrome hover:bg-foreground/[0.04]",
                         !item.read && "bg-primary/5",
                       )}
                     >
@@ -208,7 +208,7 @@ export function NotificationBell() {
                         <button
                           type="button"
                           onClick={() => void markAsRead(item.id)}
-                          className="mt-1 shrink-0 rounded p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                          className="mt-1 shrink-0 rounded p-1 text-muted-foreground transition-colors ease-chrome hover:bg-foreground/[0.06] hover:text-foreground"
                           title={t(lang, "markAsRead")}
                         >
                           <Check className="size-3.5" />
@@ -226,7 +226,7 @@ export function NotificationBell() {
                 {alertsLoading && alerts === null ? (
                   <div className="space-y-2 p-3">
                     {[0, 1, 2].map((i) => (
-                      <div key={i} className="h-14 animate-pulse rounded-md bg-muted/40" />
+                      <div key={i} className="h-14 animate-pulse rounded-lg bg-muted/40" />
                     ))}
                   </div>
                 ) : (alerts?.length ?? 0) === 0 ? (
@@ -261,7 +261,7 @@ export function NotificationBell() {
               </div>
 
               {/* Footer for price tab */}
-              <div className="flex items-center justify-between border-t border-border/40 px-4 py-2.5">
+              <div className="flex items-center justify-between border-t border-[var(--p-hair)] px-4 py-2.5">
                 <Link
                   href="/cards"
                   onClick={() => setOpen(false)}
@@ -338,11 +338,11 @@ function PriceAlertRow({
       href={`/cards/${alert.card.cardCode}`}
       onClick={onNavigate}
       className={cn(
-        "flex items-start gap-3 border-b border-border/20 px-4 py-2.5 transition-colors hover:bg-muted/30",
+        "flex items-start gap-3 border-b border-[var(--p-hair)] px-4 py-2.5 transition-colors ease-chrome hover:bg-foreground/[0.04]",
         isTriggered && "bg-success-soft/40",
       )}
     >
-      <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted">
+      <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-muted">
         {alert.card.imageUrl ? (
           <Image
             src={alert.card.imageUrl}

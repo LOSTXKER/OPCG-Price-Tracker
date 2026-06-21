@@ -112,12 +112,12 @@ function MobileStreakRankRow({
   return (
     <div className="grid grid-cols-2 gap-3 border-t px-5 py-3 sm:px-6">
       {/* Streak */}
-      <div className="rounded-xl border border-border/50 p-3">
+      <div className="rounded-xl border border-[var(--p-hair)] p-3">
         <StreakTierIndicator streak={streak} lang={lang} variant="expanded" />
       </div>
 
       {/* Rank */}
-      <div className="space-y-2 rounded-xl border border-border/50 p-3">
+      <div className="space-y-2 rounded-xl border border-[var(--p-hair)] p-3">
         <div className="flex items-center gap-1.5">
           {iconImage ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -252,7 +252,7 @@ export function DailyMissionsCard({
               onClick={onCheckin}
               disabled={checkinLoading}
               size="sm"
-              className="relative h-9 gap-1.5 bg-primary px-4 text-xs font-bold text-primary-foreground shadow-sm hover:bg-primary/90"
+              className="relative h-9 gap-1.5 bg-primary px-4 text-xs font-bold text-primary-foreground hover:bg-primary/90"
             >
               <span className="absolute -right-1 -top-1 flex size-3">
                 <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75" />
@@ -313,7 +313,7 @@ export function DailyMissionsCard({
                     ? "border-price-up/20 bg-price-up/[0.03]"
                     : canClaim
                       ? "border-primary/30 bg-primary/[0.03] ring-1 ring-primary/10"
-                      : "border-border/50 bg-card",
+                      : "border-[var(--p-hair)] bg-card",
                 )}
               >
                 <div className="flex items-center justify-between">
@@ -356,7 +356,7 @@ export function DailyMissionsCard({
                       size="sm"
                       disabled={isClaiming}
                       onClick={() => handleClaimTask(task.id)}
-                      className="h-9 w-full gap-1.5 rounded-xl bg-primary text-xs font-bold text-primary-foreground shadow-sm hover:bg-primary/90"
+                      className="h-9 w-full gap-1.5 rounded-xl bg-primary text-xs font-bold text-primary-foreground hover:bg-primary/90"
                     >
                       <Gift className="size-4" />
                       {isClaiming ? "..." : t(lang, "missionClaimReward")}
@@ -399,7 +399,7 @@ export function DailyMissionsCard({
               ? "border-price-up/20 bg-price-up/[0.03]"
               : allDone && allClaimed
                 ? "border-primary/30 bg-primary/[0.03] ring-1 ring-primary/10"
-                : "border-border/50 bg-card",
+                : "border-[var(--p-hair)] bg-card",
           )}>
             <div className={cn(
               "flex size-10 items-center justify-center rounded-xl",
@@ -432,7 +432,7 @@ export function DailyMissionsCard({
                   size="sm"
                   disabled={claimingBonus}
                   onClick={handleClaimBonus}
-                  className="h-9 w-full gap-1.5 rounded-xl bg-primary text-xs font-bold text-primary-foreground shadow-sm hover:bg-primary/90"
+                  className="h-9 w-full gap-1.5 rounded-xl bg-primary text-xs font-bold text-primary-foreground hover:bg-primary/90"
                 >
                   <Gift className="size-4" />
                   {claimingBonus ? "..." : t(lang, "missionClaimReward")}

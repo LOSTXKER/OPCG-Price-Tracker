@@ -26,7 +26,7 @@ export function SearchTableRow({ card, rank }: { card: CardRow; rank: number }) 
   const c30 = card.priceChange30d
 
   return (
-    <tr className="border-b border-border/30 transition-colors duration-150 even:bg-muted/20 hover:bg-muted/50">
+    <tr className="border-b border-[var(--p-hair)] ease-chrome transition-colors duration-150 even:bg-foreground/[0.02] hover:bg-foreground/[0.04]">
       <td className="py-3 pl-3 pr-0 align-middle">
         {card.id != null && (
           <span onClick={(e) => { e.preventDefault(); e.stopPropagation() }}>
@@ -39,7 +39,7 @@ export function SearchTableRow({ card, rank }: { card: CardRow; rank: number }) 
       </td>
       <td className="py-3 pr-3 pl-2 align-middle">
         <div className="flex items-center gap-3">
-          <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted">
+          <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-muted">
             {card.imageUrl ? (
               <Image
                 src={card.imageUrl}
@@ -69,7 +69,7 @@ export function SearchTableRow({ card, rank }: { card: CardRow; rank: number }) 
         {setCode && (
           <Link
             href={`/sets/${setCode}`}
-            className="underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid"
+            className="underline decoration-dotted underline-offset-2 ease-chrome transition-colors hover:text-primary hover:decoration-solid"
           >
             {setCode.toUpperCase()}
           </Link>

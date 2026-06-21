@@ -93,7 +93,7 @@ export function AccountProfileInfo({ user, lang, onUserUpdate }: AccountProfileI
   };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border/40 bg-card divide-y divide-border/30">
+    <div className="overflow-hidden rounded-xl border border-[var(--p-hair)] bg-card divide-y divide-[var(--p-hair)]">
       {/* Display name */}
       <FieldRow
         label={t(lang, "displayNamePlaceholder")}
@@ -152,7 +152,7 @@ export function AccountProfileInfo({ user, lang, onUserUpdate }: AccountProfileI
               placeholder={t(lang, "bioPlaceholder")}
               maxLength={500}
               rows={3}
-              className="w-full max-w-md resize-none rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="w-full max-w-md resize-none rounded-lg border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               autoFocus
             />
             <div className="flex items-center gap-2">
@@ -186,7 +186,7 @@ export function AccountProfileInfo({ user, lang, onUserUpdate }: AccountProfileI
         {isEditingHandle ? (
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <div className="flex max-w-xs flex-1 items-center gap-1 rounded-md border border-input bg-transparent px-3 ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+              <div className="flex max-w-xs flex-1 items-center gap-1 rounded-lg border border-input bg-transparent px-3 ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
                 <AtSign className="size-3.5 text-muted-foreground" />
                 <input
                   value={handleInput}
@@ -288,7 +288,7 @@ function FieldRow({
           type="button"
           onClick={onCancel}
           aria-label={cancelLabel}
-          className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="ease-chrome inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
         >
           <X className="size-4" />
         </button>
@@ -297,7 +297,7 @@ function FieldRow({
           type="button"
           onClick={onEdit}
           aria-label={editLabel}
-          className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="ease-chrome inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
         >
           <Pencil className="size-3.5" />
         </button>

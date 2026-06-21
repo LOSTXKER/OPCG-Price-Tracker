@@ -80,20 +80,20 @@ export function SelectStep({
 
   return (
     <>
-      <DialogHeader className="border-b border-border/40 px-5 pt-5 pb-4">
+      <DialogHeader className="border-b border-[var(--p-hair)] px-5 pt-5 pb-4">
         <DialogTitle>{t(lang, "addCardToPortfolio")}</DialogTitle>
         <DialogDescription>{t(lang, "addCardToPortfolioDesc")}</DialogDescription>
       </DialogHeader>
 
       {/* Search + filter controls */}
-      <div className="space-y-2 border-b border-border/30 px-4 pt-3 pb-3">
+      <div className="space-y-2 border-b border-[var(--p-hair)] px-4 pt-3 pb-3">
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/50" />
             <input
               type="search"
               placeholder={t(lang, "searchLong")}
-              className="h-9 w-full rounded-lg border border-border bg-muted/30 pl-9 pr-8 text-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:bg-background focus:ring-1 focus:ring-primary/20"
+              className="h-9 w-full rounded-lg border border-[var(--p-hair)] bg-muted/30 pl-9 pr-8 text-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:bg-background focus:ring-1 focus:ring-primary/20"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               autoComplete="off"
@@ -112,10 +112,10 @@ export function SelectStep({
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={cn(
-              "relative flex h-9 items-center gap-1.5 rounded-lg border px-3 text-sm transition-colors",
+              "ease-chrome relative flex h-9 items-center gap-1.5 rounded-lg border px-3 text-sm",
               showFilters || activeFilterCount > 0
                 ? "border-primary/40 bg-primary/5 text-primary"
-                : "border-border bg-muted/30 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                : "border-[var(--p-hair)] bg-muted/30 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
             )}
           >
             <Filter className="size-3.5" />
@@ -129,7 +129,7 @@ export function SelectStep({
         </div>
 
         {showFilters && (
-          <div className="space-y-3 rounded-lg border border-border/40 bg-muted/10 p-3">
+          <div className="space-y-3 rounded-lg border border-[var(--p-hair)] bg-muted/10 p-3">
             {/* Set filter */}
             <div>
               <div className="mb-1.5 flex items-center justify-between">
@@ -153,9 +153,9 @@ export function SelectStep({
                     key={r.code}
                     onClick={() => setActiveRarity(activeRarity === r.code ? null : r.code)}
                     className={cn(
-                      "rounded-md px-2.5 py-1 text-xs font-semibold transition-colors",
+                      "ease-chrome rounded-lg px-2.5 py-1 text-xs font-semibold",
                       activeRarity === r.code
-                        ? "text-white shadow-sm"
+                        ? "text-white"
                         : "bg-muted text-muted-foreground hover:text-foreground"
                     )}
                     style={activeRarity === r.code ? { backgroundColor: RARITY_HEX[r.code] ?? "#6B7280" } : undefined}
@@ -175,10 +175,10 @@ export function SelectStep({
                     key={c.code}
                     onClick={() => setActiveColor(activeColor === c.code ? null : c.code)}
                     className={cn(
-                      "flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors",
+                      "ease-chrome flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium",
                       activeColor === c.code
                         ? "border-primary/40 bg-primary/5 text-primary"
-                        : "border-border/50 bg-background text-muted-foreground hover:text-foreground"
+                        : "border-[var(--p-hair)] bg-background text-muted-foreground hover:text-foreground"
                     )}
                   >
                     <span className={cn("size-2.5 rounded-full", c.bg)} />
@@ -197,10 +197,10 @@ export function SelectStep({
                     key={t.code}
                     onClick={() => setActiveCardType(activeCardType === t.code ? null : t.code)}
                     className={cn(
-                      "rounded-md border px-2.5 py-1 text-xs font-medium transition-colors",
+                      "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium",
                       activeCardType === t.code
                         ? "border-primary/40 bg-primary/5 text-primary"
-                        : "border-border/50 bg-background text-muted-foreground hover:text-foreground"
+                        : "border-[var(--p-hair)] bg-background text-muted-foreground hover:text-foreground"
                     )}
                   >
                     {t.label}
@@ -290,7 +290,7 @@ export function SelectStep({
                 key={card.id}
                 type="button"
                 onClick={() => onSelectCard(card)}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-muted/60"
+                className="ease-chrome flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-foreground/[0.04]"
               >
                 <div className="relative aspect-[63/88] w-10 shrink-0 overflow-hidden rounded bg-muted/50">
                   {card.imageUrl ? (

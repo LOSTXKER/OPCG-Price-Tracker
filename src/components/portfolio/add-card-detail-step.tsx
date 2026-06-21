@@ -45,11 +45,11 @@ export function DetailStep({
 
   return (
     <>
-      <DialogHeader className="border-b border-border/40 px-5 pt-5 pb-4">
+      <DialogHeader className="border-b border-[var(--p-hair)] px-5 pt-5 pb-4">
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="ease-chrome flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
           >
             <ArrowLeft className="size-4" />
           </button>
@@ -61,7 +61,7 @@ export function DetailStep({
       </DialogHeader>
 
       <div className="flex-1 overflow-y-auto px-5 py-5">
-        <div className="flex items-center gap-3 rounded-xl border border-border/50 bg-muted/20 p-3">
+        <div className="flex items-center gap-3 rounded-xl border border-[var(--p-hair)] bg-muted/20 p-3">
           <div className="relative aspect-[63/88] w-14 shrink-0 overflow-hidden rounded-lg bg-muted/60">
             {card.imageUrl ? (
               <Image
@@ -101,7 +101,7 @@ export function DetailStep({
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="flex size-10 items-center justify-center rounded-lg border border-border bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                className="ease-chrome flex size-10 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-background text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
               >
                 <Minus className="size-4" />
               </button>
@@ -113,11 +113,11 @@ export function DetailStep({
                   const v = parseInt(e.target.value)
                   if (!isNaN(v) && v >= 1) setQuantity(v)
                 }}
-                className="h-10 w-20 rounded-lg border border-border bg-background text-center font-mono text-sm font-semibold tabular-nums outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
+                className="h-10 w-20 rounded-lg border border-[var(--p-hair)] bg-background text-center font-mono text-sm font-semibold tabular-nums outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
               />
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className="flex size-10 items-center justify-center rounded-lg border border-border bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                className="ease-chrome flex size-10 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-background text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
               >
                 <Plus className="size-4" />
               </button>
@@ -140,7 +140,7 @@ export function DetailStep({
                 }
                 value={purchasePrice}
                 onChange={(e) => setPurchasePrice(e.target.value)}
-                className="h-10 w-full rounded-lg border border-border bg-background pl-7 pr-4 text-sm tabular-nums outline-none placeholder:text-muted-foreground/35 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
+                className="h-10 w-full rounded-lg border border-[var(--p-hair)] bg-background pl-7 pr-4 text-sm tabular-nums outline-none placeholder:text-muted-foreground/35 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
               />
             </div>
             <p className="mt-1.5 text-meta text-muted-foreground/60">
@@ -149,7 +149,7 @@ export function DetailStep({
           </div>
 
           {(purchasePrice.trim() !== "" || card.latestPriceJpy != null) && (
-            <div className="rounded-xl border border-border/50 bg-muted/20 px-4 py-3">
+            <div className="rounded-xl border border-[var(--p-hair)] bg-muted/20 px-4 py-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">{t(lang, "totalValue")}</span>
                 <span className="font-price text-lg font-bold tabular-nums">
@@ -166,7 +166,7 @@ export function DetailStep({
         </div>
       </div>
 
-      <div className="border-t border-border/40 px-5 py-4">
+      <div className="border-t border-[var(--p-hair)] px-5 py-4">
         <Button
           className="w-full gap-2"
           size="lg"

@@ -249,7 +249,7 @@ export default function BuyerOrderDetailPage() {
                   {i < TIMELINE_STEPS.length - 1 && (
                     <div
                       className={`mt-1 h-6 w-px ${
-                        isCompleted ? "bg-green-500/30" : "bg-border"
+                        isCompleted ? "bg-green-500/30" : "bg-[var(--p-hair)]"
                       }`}
                     />
                   )}

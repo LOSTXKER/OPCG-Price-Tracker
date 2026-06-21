@@ -189,7 +189,7 @@ export function PortfolioTransactions({ transactions, onDelete, hideBalance = fa
                     )}
                   </header>
                 )}
-                <div className="divide-y divide-border/20">
+                <div className="divide-y divide-[var(--p-hair)]">
                   {group.items.map((tx) => (
                     <TxRow
                       key={tx.id}
@@ -309,11 +309,11 @@ function TxRow({
   return (
     <div
       className={cn(
-        "group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/30 sm:px-5 sm:py-3.5",
+        "group ease-chrome flex items-center gap-3 px-4 py-3 hover:bg-foreground/[0.04] sm:px-5 sm:py-3.5",
         isDeleting && "pointer-events-none opacity-40",
       )}
     >
-      <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-border/20">
+      <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-[var(--p-hair)]">
         {tx.card.imageUrl ? (
           <Image src={tx.card.imageUrl} alt={name} fill className="object-contain" sizes="40px" />
         ) : (
@@ -363,7 +363,7 @@ function TxRow({
       {onDelete && (
         <button
           onClick={onDelete}
-          className="shrink-0 rounded-md p-1.5 text-muted-foreground/70 transition-all hover:bg-destructive/10 hover:text-destructive sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+          className="ease-chrome shrink-0 rounded-lg p-1.5 text-muted-foreground/70 transition-all hover:bg-destructive/10 hover:text-destructive sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
           title={t(lang, "deleteFilter")}
           aria-label={t(lang, "deleteFilter")}
         >

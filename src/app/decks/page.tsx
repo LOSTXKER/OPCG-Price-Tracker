@@ -38,10 +38,10 @@ function ToolTile({ tool, label, comingSoon }: { tool: Tool; label: string; comi
   const inner = (
     <div
       className={cn(
-        "flex h-full flex-col gap-3 rounded-xl border border-border/60 bg-card p-4 transition-colors",
+        "ease-chrome flex h-full flex-col gap-3 rounded-xl border border-[var(--p-hair)] bg-card p-4",
         tool.disabled
           ? "opacity-60"
-          : "hover:border-primary/40 hover:bg-accent/40 active:scale-[0.98]"
+          : "hover:border-primary/40 hover:bg-foreground/[0.04] active:scale-[0.98]"
       )}
     >
       <div className="flex items-start justify-between">
@@ -80,7 +80,7 @@ export default function DecksHubPage() {
     <div>
       <div className="mb-6 flex items-center justify-between gap-3">
         <h1 className="text-h1">{t(lang, "decksAndTools")}</h1>
-        <span className="shrink-0 rounded-full border border-border/60 bg-secondary px-3 py-1 text-micro uppercase tracking-wide text-muted-foreground">
+        <span className="shrink-0 rounded-full border border-[var(--p-hair)] bg-secondary px-3 py-1 text-micro uppercase tracking-wide text-muted-foreground">
           {currentGame}
         </span>
       </div>
@@ -98,7 +98,7 @@ export default function DecksHubPage() {
 
       <section className="mt-8">
         <h2 className="mb-3 text-h3">{t(lang, "myDecks")}</h2>
-        <div className="rounded-xl border border-dashed border-border/60 p-8 text-center">
+        <div className="rounded-xl border border-dashed border-[var(--p-hair)] p-8 text-center">
           <p className="text-meta">{t(lang, "comingSoon")}</p>
         </div>
       </section>

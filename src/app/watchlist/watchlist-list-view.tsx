@@ -53,9 +53,9 @@ export function WatchlistListView({
   if (entries.length === 0) return null;
 
   return (
-    <div className="overflow-hidden rounded-lg border border-border/40">
+    <div className="overflow-hidden rounded-xl border border-[var(--p-hair)]">
       {entries.length > 1 && (
-        <div className="flex items-center gap-3 border-b border-border/40 bg-muted/20 px-3 py-2 text-meta">
+        <div className="flex items-center gap-3 border-b border-[var(--p-hair)] bg-muted/20 px-3 py-2 text-meta">
           <input
             type="checkbox"
             className="size-3.5 cursor-pointer accent-primary"
@@ -74,7 +74,7 @@ export function WatchlistListView({
         </div>
       )}
 
-      <div className="divide-y divide-border/30">
+      <div className="divide-y divide-[var(--p-hair)]">
         {entries.map((entry) => (
           <ListRow
             key={entry.id}
@@ -126,7 +126,7 @@ function ListRow({
   return (
     <div
       className={cn(
-        "group/row flex items-center gap-3 px-3 py-3 transition-colors hover:bg-muted/20",
+        "group/row ease-chrome flex items-center gap-3 px-3 py-3 transition-colors hover:bg-foreground/[0.04]",
         removing && "opacity-40"
       )}
     >
@@ -142,7 +142,7 @@ function ListRow({
         type="button"
         onClick={onTogglePin}
         className={cn(
-          "inline-flex size-7 shrink-0 items-center justify-center rounded-md transition-colors hover:bg-muted",
+          "inline-flex size-7 shrink-0 items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-foreground/[0.06]",
           pinned
             ? "text-primary"
             : "text-muted-foreground/40 hover:text-foreground"
@@ -170,7 +170,7 @@ function ListRow({
             priceChange7d: entry.card.priceChange7d,
             priceChange30d: entry.card.priceChange30d,
           }}
-          className="relative aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-md bg-muted ring-1 ring-border/40"
+          className="relative aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-[var(--p-hair)]"
         >
           <Image
             src={entry.card.imageUrl}
@@ -183,7 +183,7 @@ function ListRow({
           />
         </CardImageButton>
       ) : (
-        <div className="relative aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-md bg-muted ring-1 ring-border/40" />
+        <div className="relative aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-[var(--p-hair)]" />
       )}
 
       <Link
@@ -229,10 +229,10 @@ function ListRow({
           type="button"
           onClick={onSetAlert}
           className={cn(
-            "inline-flex size-8 items-center justify-center rounded-md transition-colors",
+            "inline-flex size-8 items-center justify-center rounded-lg ease-chrome transition-colors",
             entry.hasActiveAlert
               ? "text-amber-500 hover:bg-amber-500/10"
-              : "text-muted-foreground/40 hover:bg-muted hover:text-foreground"
+              : "text-muted-foreground/40 hover:bg-foreground/[0.06] hover:text-foreground"
           )}
           aria-label={
             entry.hasActiveAlert

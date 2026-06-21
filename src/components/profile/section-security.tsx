@@ -215,7 +215,7 @@ export function SectionSecurity() {
       <h2 className="text-h2">{t(lang, "security")}</h2>
 
       {/* Change password */}
-      <div className="rounded-xl border border-border/40 bg-card p-5 space-y-4">
+      <div className="rounded-xl border border-[var(--p-hair)] bg-card p-5 space-y-4">
         <div className="flex items-center gap-2">
           <Lock className="size-4 text-muted-foreground" />
           <h3 className="text-h5">{t(lang, "changePassword")}</h3>
@@ -240,7 +240,7 @@ export function SectionSecurity() {
                 type="button"
                 tabIndex={-1}
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                className="ease-chrome absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
               >
                 {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
               </button>
@@ -307,7 +307,7 @@ export function SectionSecurity() {
       </div>
 
       {/* Two-Factor Authentication */}
-      <div className="rounded-xl border border-border/40 bg-card p-5 space-y-4">
+      <div className="rounded-xl border border-[var(--p-hair)] bg-card p-5 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <KeyRound className="size-4 text-muted-foreground" />
@@ -354,7 +354,7 @@ export function SectionSecurity() {
         ) : mfaStep === "verifying" ? (
           <div className="space-y-4">
             {qrUri && (
-              <div className="flex flex-col items-center gap-3 rounded-lg border border-border/30 bg-white p-4">
+              <div className="flex flex-col items-center gap-3 rounded-lg border border-[var(--p-hair)] bg-white p-4">
                 <p className="text-xs font-medium text-neutral-600">{t(lang, "scanQR")}</p>
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUri)}`}
@@ -432,8 +432,8 @@ export function SectionSecurity() {
       </div>
 
       {/* Login history */}
-      <div className="rounded-xl border border-border/40 bg-card">
-        <div className="flex items-center gap-2 border-b border-border/40 px-5 py-3">
+      <div className="rounded-xl border border-[var(--p-hair)] bg-card">
+        <div className="flex items-center gap-2 border-b border-[var(--p-hair)] px-5 py-3">
           <History className="size-4 text-muted-foreground" />
           <h3 className="text-h5">{t(lang, "loginHistory")}</h3>
         </div>
@@ -447,7 +447,7 @@ export function SectionSecurity() {
             {t(lang, "noLoginHistory")}
           </div>
         ) : (
-          <div className="divide-y divide-border/30">
+          <div className="divide-y divide-[var(--p-hair)]">
             {sessions.map((s) => {
               const device = parseDevice(s.userAgent);
               return (

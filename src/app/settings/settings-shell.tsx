@@ -50,7 +50,7 @@ export function SettingsShell({ children }: { children: React.ReactNode }) {
       <AuthPreviewGate
         preview={
           <PageContainer width="reading" className="py-6">
-            <div className="rounded-xl border border-border/40 bg-card p-6 text-center">
+            <div className="rounded-xl border border-[var(--p-hair)] bg-card p-6 text-center">
               <p className="text-sm text-muted-foreground">Sign in to manage your settings</p>
             </div>
           </PageContainer>
@@ -122,7 +122,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
               href={`/profile/${user.id}`}
               aria-label={t(lang, "viewPublicProfile")}
               title={t(lang, "viewPublicProfile")}
-              className="group mb-6 flex items-center gap-3 rounded-lg border border-border/50 bg-card/40 px-3 py-2.5 transition-colors hover:border-border hover:bg-foreground/[0.04]"
+              className="group ease-chrome mb-6 flex items-center gap-3 rounded-lg border border-[var(--p-hair)] bg-card/40 px-3 py-2.5 transition-colors hover:border-[var(--p-hair)] hover:bg-foreground/[0.04]"
             >
               <Avatar className={cn("size-9 shrink-0 ring-2 ring-offset-2 ring-offset-background", tierCfg.ring)}>
                 {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
@@ -164,7 +164,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
                             href={href}
                             aria-current={active ? "page" : undefined}
                             className={cn(
-                              "relative flex w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-sm transition-colors",
+                              "ease-chrome relative flex w-full items-center gap-2.5 rounded-lg px-3 py-1.5 text-sm transition-colors",
                               active
                                 ? "font-medium text-foreground before:absolute before:inset-y-1 before:-left-0.5 before:w-0.5 before:rounded-full before:bg-primary"
                                 : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground",
@@ -203,7 +203,7 @@ function SettingsLoadingSkeleton() {
       {/* Mobile skeleton */}
       <div className="space-y-5 md:hidden">
         <Skeleton className="h-7 w-32" />
-        <div className="flex items-center gap-3 rounded-xl border border-border/40 bg-card p-4">
+        <div className="flex items-center gap-3 rounded-xl border border-[var(--p-hair)] bg-card p-4">
           <Skeleton className="size-12 rounded-full" />
           <div className="flex-1 space-y-1.5">
             <Skeleton className="h-4 w-28" />
@@ -213,13 +213,13 @@ function SettingsLoadingSkeleton() {
         {[7, 3].map((count, g) => (
           <div key={g} className="space-y-1.5">
             <Skeleton className="h-3 w-16" />
-            <div className="overflow-hidden rounded-xl border border-border/40 bg-card">
+            <div className="overflow-hidden rounded-xl border border-[var(--p-hair)] bg-card">
               {Array.from({ length: count }).map((_, i) => (
                 <div
                   key={i}
                   className={cn(
                     "flex items-center gap-3 px-4 py-3.5",
-                    i > 0 && "border-t border-border/30",
+                    i > 0 && "border-t border-[var(--p-hair)]",
                   )}
                 >
                   <Skeleton className="size-8 rounded-lg" />
@@ -243,7 +243,7 @@ function SettingsLoadingSkeleton() {
               <div key={g} className="space-y-1.5">
                 <Skeleton className="ml-3 h-3 w-12" />
                 {Array.from({ length: count }).map((_, i) => (
-                  <Skeleton key={i} className="h-8 rounded-md" />
+                  <Skeleton key={i} className="h-8 rounded-lg" />
                 ))}
               </div>
             ))}

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 
-import { niceTicks, rebaseToIndex } from "./card-chart"
+import { niceTicks, rebaseToIndex, xAxisTicks } from "./card-chart"
 
 describe("rebaseToIndex", () => {
   it("rebases the first point to 100", () => {
@@ -72,5 +72,37 @@ describe("niceTicks", () => {
         expect(v).toBeLessThanOrEqual(hi)
       }
     }
+  })
+})
+
+describe("xAxisTicks", () => {
+  const refMs = new Date("2026-04-05T00:00:00").getTime() // fixed "today" — function is pure
+  const PLOT_W = 400 // → maxTicks 4, minGap 0.2
+  const fracs = (range: Parameters<typeof xAxisTicks>[1]) =>
+    xAxisTicks(refMs, range, "EN", PLOT_W).map((t) => t.frac)
+  const gaps = (fs: number[]) => fs.slice(1).map((f, i) => f - fs[i])
+
+  for (const range of ["7D", "1M", "3M", "1Y", "All"] as const) {
+    it(`${range}: fracs are strictly increasing within [0,1] and pin "today" at the right edge`, () => {
+      const fs = fracs(range)
+      expect(fs.length).toBeGreaterThanOrEqual(2)
+      expect(fs[0]).toBeGreaterThanOrEqual(0)
+      expect(fs[fs.length - 1]).toBe(1) // today on the right edge
+      for (const g of gaps(fs)) expect(g).toBeGreaterThan(0)
+    })
+
+    it(`${range}: no two labels collide (every gap ≥ one label width)`, () => {
+      // minGap = 80 / plotW = 0.2 — the today-pin must drop a calendar tick that hugs
+      // the edge rather than overlap it (the old 1-Apr / 5-Apr collision on 3M).
+      for (const g of gaps(fracs(range))) expect(g).toBeGreaterThanOrEqual(0.2 - 1e-9)
+    })
+  }
+
+  it("1M is evenly spaced — no uneven double-gap (8·15·29·5 regression)", () => {
+    const g = gaps(fracs("1M"))
+    // every interior gap within 25% of the mean → uniform, not a 2× hole where a
+    // Math.round thin once dropped the middle tick.
+    const mean = g.reduce((a, b) => a + b, 0) / g.length
+    for (const x of g) expect(Math.abs(x - mean) / mean).toBeLessThan(0.25)
   })
 })

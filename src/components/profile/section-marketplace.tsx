@@ -56,7 +56,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
       {/* Seller stats */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {dashboardStats.map(({ icon: Icon, label, value, color }) => (
-          <div key={label} className="flex flex-col items-center gap-2 rounded-xl border border-border/40 bg-card p-4 text-center">
+          <div key={label} className="flex flex-col items-center gap-2 rounded-xl border border-[var(--p-hair)] bg-card p-4 text-center">
             <div className={cn("flex size-9 items-center justify-center rounded-lg", color)}>
               <Icon className="size-4.5" />
             </div>
@@ -67,12 +67,12 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
       </div>
 
       {/* Active listings */}
-      <div className="rounded-xl border border-border/40 bg-card">
-        <div className="flex items-center justify-between border-b border-border/40 px-5 py-3">
+      <div className="rounded-xl border border-[var(--p-hair)] bg-card">
+        <div className="flex items-center justify-between border-b border-[var(--p-hair)] px-5 py-3">
           <h3 className="text-h5">{t(lang, "myListings")}</h3>
           <Link
             href={`/profile/${userId}`}
-            className="flex items-center gap-1 text-meta transition-colors hover:text-foreground"
+            className="ease-chrome flex items-center gap-1 text-meta transition-colors hover:text-foreground"
           >
             {t(lang, "viewPublicProfile")}
             <ExternalLink className="size-3" />
@@ -98,7 +98,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
                 <Link
                   key={l.id}
                   href={`/marketplace/${l.id}`}
-                  className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border/30 px-4 py-3 text-sm transition-colors hover:bg-muted/30"
+                  className="ease-chrome flex flex-wrap items-center justify-between gap-2 rounded-lg border border-[var(--p-hair)] px-4 py-3 text-sm transition-colors hover:bg-foreground/[0.04]"
                 >
                   <div className="min-w-0 flex-1">
                     <span className="font-medium">
@@ -120,7 +120,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
       </div>
 
       {/* Reputation */}
-      <div className="rounded-xl border border-border/40 bg-card p-5">
+      <div className="rounded-xl border border-[var(--p-hair)] bg-card p-5">
           <div className="flex items-center gap-2">
             <div className="flex size-9 items-center justify-center rounded-lg bg-yellow-100 dark:bg-yellow-500/10">
               <ShieldCheck className="size-4.5 text-yellow-600 dark:text-yellow-400" />

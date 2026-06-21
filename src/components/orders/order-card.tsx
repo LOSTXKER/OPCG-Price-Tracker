@@ -63,7 +63,7 @@ export function OrderCard({
     order.listing.card.nameEn ?? order.listing.card.nameJp;
 
   return (
-    <div className="panel rounded-xl p-4 transition-colors hover:bg-muted/20">
+    <div className="panel rounded-xl p-4 ease-chrome transition-colors hover:bg-foreground/[0.04]">
       {/* Top row: counterparty + status */}
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm">
@@ -120,10 +120,10 @@ export function OrderCard({
 
       {/* Actions row */}
       {actions && (
-        <div className="mt-3 flex items-center justify-end gap-2 border-t border-border/50 pt-3">
+        <div className="mt-3 flex items-center justify-end gap-2 border-t border-[var(--p-hair)] pt-3">
           <Link
             href={`/messages/${order.listing.id}`}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground ease-chrome transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
           >
             <MessageCircle className="h-3.5 w-3.5" />
             แชท

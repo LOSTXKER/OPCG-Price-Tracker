@@ -232,13 +232,13 @@ export default function DropCalculatorClient() {
         <>
           {/* Mobile: tabs */}
           <div className="lg:hidden">
-            <div className="flex rounded-lg border border-border bg-muted/40 p-0.5">
+            <div className="flex rounded-lg border border-[var(--p-hair)] bg-muted/40 p-0.5">
               <button
                 onClick={() => setActiveTab("cards")}
                 className={cn(
-                  "flex h-10 flex-1 items-center justify-center gap-2 rounded-md text-label transition-all",
+                  "ease-chrome flex h-10 flex-1 items-center justify-center gap-2 rounded-lg text-label",
                   activeTab === "cards"
-                    ? "bg-background text-foreground shadow-sm"
+                    ? "bg-background text-foreground"
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -248,9 +248,9 @@ export default function DropCalculatorClient() {
               <button
                 onClick={() => setActiveTab("results")}
                 className={cn(
-                  "flex h-10 flex-1 items-center justify-center gap-2 rounded-md text-label transition-all",
+                  "ease-chrome flex h-10 flex-1 items-center justify-center gap-2 rounded-lg text-label",
                   activeTab === "results"
-                    ? "bg-background text-foreground shadow-sm"
+                    ? "bg-background text-foreground"
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -293,7 +293,7 @@ export default function DropCalculatorClient() {
                     onUnitChange={setUnit}
                     onQuantityChange={setQuantity}
                   />
-                  <div className="border-t border-border/40 pt-4">
+                  <div className="border-t border-[var(--p-hair)] pt-4">
                     <WantList
                       wantCards={wantCards}
                       wantResults={wantResults}
@@ -339,7 +339,7 @@ export default function DropCalculatorClient() {
                 onUnitChange={setUnit}
                 onQuantityChange={setQuantity}
               />
-              <div className="border-t border-border/40 pt-4">
+              <div className="border-t border-[var(--p-hair)] pt-4">
                 <WantList
                   wantCards={wantCards}
                   wantResults={wantResults}

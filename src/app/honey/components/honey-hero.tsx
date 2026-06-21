@@ -79,7 +79,7 @@ export function HoneyHero({
               onClick={onCheckin}
               disabled={checkinLoading}
               size="sm"
-              className="h-8 gap-1.5 border border-primary/20 bg-primary/10 px-3 text-xs font-semibold text-primary shadow-sm hover:bg-primary/15"
+              className="ease-chrome h-8 gap-1.5 border border-primary/20 bg-primary/10 px-3 text-xs font-semibold text-primary hover:bg-primary/15"
             >
               <Calendar className="size-3.5" />
               {t(lang, "dailyCheckin")}

@@ -318,7 +318,7 @@ export default function SellerEditListingPage() {
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
           placeholder="อธิบายรายละเอียดเพิ่มเติม เช่น สภาพจริง, ข้อดี-เสีย"
-          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          className="w-full rounded-lg border border-[var(--p-hair)] bg-background px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         />
       </div>
 
@@ -333,7 +333,7 @@ export default function SellerEditListingPage() {
                 alt={`Photo ${i + 1}`}
                 width={80}
                 height={80}
-                className="rounded-lg border border-border object-cover"
+                className="rounded-lg border border-[var(--p-hair)] object-cover"
               />
               <button
                 type="button"
@@ -345,7 +345,7 @@ export default function SellerEditListingPage() {
             </div>
           ))}
           {photos.length < 5 && (
-            <label className="flex h-[80px] w-[80px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary">
+            <label className="ease-chrome flex h-[80px] w-[80px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-[var(--p-hair)] text-muted-foreground transition-colors hover:border-primary hover:text-primary">
               {uploadingPhoto ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
@@ -397,7 +397,7 @@ export default function SellerEditListingPage() {
                       );
                     }
                   }}
-                  className="rounded border-border"
+                  className="rounded border-[var(--p-hair)]"
                 />
                 {opt}
               </label>

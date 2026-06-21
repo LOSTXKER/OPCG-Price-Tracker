@@ -123,7 +123,7 @@ export function DropRateDialog({
   return (
     <Dialog>
       <DialogTrigger
-        className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/50 px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--p-hair)] bg-muted/50 px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors ease-chrome hover:bg-foreground/[0.06] hover:text-foreground"
       >
         <BarChart3 className="size-3.5 text-primary" />
         {t(lang, "dropRate")}
@@ -152,9 +152,9 @@ export function DropRateDialog({
                   key={u}
                   onClick={() => setUnit(u)}
                   className={cn(
-                    "rounded-md px-3 py-1 text-xs font-medium transition-all",
+                    "rounded-lg px-3 py-1 text-xs font-medium transition-all ease-chrome",
                     unit === u
-                      ? "bg-background text-foreground shadow-sm"
+                      ? "bg-background text-foreground"
                       : "text-muted-foreground hover:text-foreground"
                   )}
                 >
@@ -170,7 +170,7 @@ export function DropRateDialog({
           </div>
 
           {/* <sm: list fallback (ตาราง 5 คอลัมน์อ่านไม่ออกบนจอแคบ) */}
-          <div className="divide-y divide-border/20 sm:hidden">
+          <div className="divide-y divide-[var(--p-hair)] sm:hidden">
             {rows.map((r) => (
               <div key={r.rarity} className="space-y-1.5 py-2.5">
                 <div className="flex items-center justify-between gap-2">
@@ -194,7 +194,7 @@ export function DropRateDialog({
           <div className="hidden overflow-x-auto sm:block">
             <table className="w-full border-collapse text-sm">
               <thead className="text-xs font-medium text-muted-foreground">
-                <tr className="border-b border-border/30">
+                <tr className="border-b border-[var(--p-hair)]">
                   <th className="py-1.5 text-left font-medium">{t(lang, "level")}</th>
                   <th className="py-1.5 text-left font-medium" />
                   <th className="whitespace-nowrap py-1.5 pl-4 text-right font-medium">{t(lang, "perUnit")}/{t(lang, UNIT_I18N_KEYS[unit])}</th>
@@ -202,7 +202,7 @@ export function DropRateDialog({
                   <th className="whitespace-nowrap py-1.5 pl-3 text-right font-medium">{t(lang, "chancePerCard")}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border/20">
+              <tbody className="divide-y divide-[var(--p-hair)]">
                 {rows.map((r) => (
                   <tr key={r.rarity}>
                     <td className="whitespace-nowrap py-2 pl-0"><RarityBadge rarity={r.rarity} size="sm" /></td>

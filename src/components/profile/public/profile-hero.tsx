@@ -97,7 +97,6 @@ export function ProfileHero({
           <Avatar
             className={cn(
               "-mt-12 size-24 shrink-0 ring-4 ring-background sm:-mt-14 sm:size-28 md:-mt-16 md:size-32",
-              "shadow-lg",
             )}
           >
             {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
@@ -114,7 +113,7 @@ export function ProfileHero({
           {isPaidTier && (
             <span
               className={cn(
-                "absolute -bottom-1 right-0 inline-flex items-center rounded-full px-2 py-0.5 text-overlay uppercase tracking-wider shadow-md ring-2 ring-background",
+                "absolute -bottom-1 right-0 inline-flex items-center rounded-full px-2 py-0.5 text-overlay uppercase tracking-wider ring-2 ring-background",
                 tierCfg.color,
               )}
               title={`${tierCfg.label} tier`}
@@ -138,7 +137,7 @@ export function ProfileHero({
               <span
                 title={t(lang, "sellerVerified")}
                 aria-label={t(lang, "sellerVerified")}
-                className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-sky-500 text-white shadow-sm"
+                className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-sky-500 text-white"
               >
                 <CheckCircle2 className="size-4" />
               </span>
@@ -257,7 +256,7 @@ function HandleRow({
         onClick={onCopy}
         aria-label={t(lang, "shareCopyLink")}
         title={copied ? t(lang, "shareLinkCopied") : t(lang, "shareCopyLink")}
-        className="inline-flex size-6 items-center justify-center rounded-md text-muted-foreground/70 transition-colors hover:bg-muted hover:text-foreground"
+        className="ease-chrome inline-flex size-6 items-center justify-center rounded-lg text-muted-foreground/70 transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
       >
         {copied ? (
           <Check className="size-3.5 text-emerald-500" />
@@ -332,7 +331,7 @@ function AchievementStrip({
           title={a.nameEn ?? a.name}
           className={cn(
             "group/ach flex shrink-0 items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/5 px-2 py-1",
-            "transition-colors hover:border-amber-400/60 hover:bg-amber-500/10",
+            "ease-chrome transition-colors hover:border-amber-400/60 hover:bg-amber-500/10",
           )}
         >
           <div className="relative flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-background">
@@ -355,7 +354,7 @@ function AchievementStrip({
         </div>
       ))}
       {remaining > 0 && (
-        <span className="shrink-0 rounded-full border border-dashed border-border/60 bg-background px-2 py-1 text-overlay font-medium text-muted-foreground">
+        <span className="shrink-0 rounded-full border border-dashed border-[var(--p-hair)] bg-background px-2 py-1 text-overlay font-medium text-muted-foreground">
           +{remaining}
         </span>
       )}

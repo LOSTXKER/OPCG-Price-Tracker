@@ -214,11 +214,11 @@ function PortfolioContent() {
           </div>
           <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
         </button>
-        <div aria-hidden className="h-8 w-px shrink-0 bg-border/40" />
+        <div aria-hidden className="h-8 w-px shrink-0 bg-[var(--p-hair)]" />
         <button
           onClick={() => setHideBalance(!hideBalance)}
           aria-label={hideBalance ? "Show balance" : "Hide balance"}
-          className="flex size-[52px] shrink-0 items-center justify-center text-muted-foreground transition-colors hover:bg-muted/30 hover:text-foreground active:bg-muted/40"
+          className="flex size-[52px] shrink-0 items-center justify-center text-muted-foreground ease-chrome transition-colors hover:bg-foreground/[0.06] hover:text-foreground active:bg-muted/40"
         >
           {hideBalance ? (
             <EyeOff className="size-4" />
@@ -290,7 +290,7 @@ function PortfolioContent() {
                 </p>
                 <button
                   onClick={() => setHideBalance(!hideBalance)}
-                  className="rounded-md p-1 text-muted-foreground/50 transition-colors hover:bg-muted hover:text-foreground"
+                  className="rounded-lg p-1 text-muted-foreground/50 ease-chrome transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
                 >
                   {hideBalance ? (
                     <EyeOff className="size-3.5" />
@@ -336,7 +336,7 @@ function PortfolioContent() {
             </div>
 
             {/* Portfolio list section */}
-            <div className="border-t border-border/20">
+            <div className="border-t border-[var(--p-hair)]">
               <div className="flex items-center justify-between px-4 py-2.5">
                 <p className="text-eyebrow text-muted-foreground/60">
                   {t(lang, "portfolio")}
@@ -411,7 +411,7 @@ function PortfolioContent() {
                       }
                     }}
                     className={cn(
-                      "inline-flex h-8 items-center gap-1.5 rounded-md border px-2.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:px-3",
+                      "inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold ease-chrome transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:px-3",
                       portfolioPublic
                         ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-400"
                         : "border-amber-500/30 bg-amber-500/10 text-amber-700 hover:bg-amber-500/15 dark:text-amber-400",

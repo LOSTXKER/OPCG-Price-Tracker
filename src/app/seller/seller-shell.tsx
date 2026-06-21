@@ -76,10 +76,10 @@ function NavContent({
               key={item.href}
               href={item.href}
               onClick={onNavigate}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ease-chrome ${
                 active
                   ? "bg-primary/10 font-medium text-primary"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
               }`}
             >
               <item.icon className="h-4 w-4" />
@@ -91,7 +91,7 @@ function NavContent({
 
       <Link
         href="/"
-        className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors ease-chrome hover:bg-foreground/[0.06] hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
         กลับหน้าหลัก
@@ -107,9 +107,9 @@ export function SellerShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-dvh bg-background">
       {/* Desktop Sidebar */}
-      <aside className="hidden w-56 shrink-0 flex-col border-r border-border/50 bg-muted/20 md:flex">
+      <aside className="hidden w-56 shrink-0 flex-col border-r border-[var(--p-hair)] bg-muted/20 md:flex">
         <div className="sticky top-0 flex h-dvh flex-col p-3">
-          <Link href="/" className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-meta transition-colors hover:bg-muted hover:text-foreground">
+          <Link href="/" className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-meta transition-colors ease-chrome hover:bg-foreground/[0.06] hover:text-foreground">
             <ArrowLeft className="h-3.5 w-3.5" />
             Back to site
           </Link>
@@ -124,7 +124,7 @@ export function SellerShell({ children }: { children: React.ReactNode }) {
       {/* Content */}
       <div className="flex flex-1 flex-col overflow-y-auto">
         {/* Mobile Header */}
-        <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-border/50 bg-background/95 px-4 py-3 backdrop-blur-sm md:hidden">
+        <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-[var(--p-hair)] bg-background/95 px-4 py-3 backdrop-blur-sm md:hidden">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger
               render={<Button variant="ghost" size="icon-sm" />}
@@ -133,7 +133,7 @@ export function SellerShell({ children }: { children: React.ReactNode }) {
             </SheetTrigger>
             <SheetContent side="left" className="w-64 p-3" showCloseButton={false}>
               <SheetTitle className="sr-only">Navigation</SheetTitle>
-              <Link href="/" className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-meta transition-colors hover:bg-muted hover:text-foreground" onClick={() => setMobileOpen(false)}>
+              <Link href="/" className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-meta transition-colors ease-chrome hover:bg-foreground/[0.06] hover:text-foreground" onClick={() => setMobileOpen(false)}>
                 <ArrowLeft className="h-3.5 w-3.5" />
                 Back to site
               </Link>

@@ -149,7 +149,7 @@ export function SectionAddresses() {
 
       {/* Add/Edit form */}
       {showForm && (
-        <div className="rounded-xl border border-border/40 bg-card p-5 space-y-4">
+        <div className="rounded-xl border border-[var(--p-hair)] bg-card p-5 space-y-4">
           <h3 className="text-h5">
             {editingId ? t(lang, "editAddress") : t(lang, "addAddress")}
           </h3>
@@ -172,7 +172,7 @@ export function SectionAddresses() {
               type="checkbox"
               checked={form.isDefault}
               onChange={(e) => setForm((prev) => ({ ...prev, isDefault: e.target.checked }))}
-              className="size-4 rounded border-border"
+              className="size-4 rounded border-[var(--p-hair)]"
             />
             {t(lang, "setDefault")}
           </label>
@@ -196,7 +196,7 @@ export function SectionAddresses() {
           <Loader2 className="size-5 animate-spin text-muted-foreground" />
         </div>
       ) : addresses.length === 0 && !showForm ? (
-        <div className="flex flex-col items-center gap-3 rounded-xl border border-border/40 bg-card py-10 text-center">
+        <div className="flex flex-col items-center gap-3 rounded-xl border border-[var(--p-hair)] bg-card py-10 text-center">
           <div className="flex size-12 items-center justify-center rounded-xl bg-muted">
             <MapPin className="size-6 text-muted-foreground/50" />
           </div>
@@ -214,7 +214,7 @@ export function SectionAddresses() {
       ) : (
         <div className="space-y-3">
           {addresses.map((addr) => (
-            <div key={addr.id} className="rounded-xl border border-border/40 bg-card p-4">
+            <div key={addr.id} className="rounded-xl border border-[var(--p-hair)] bg-card p-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">

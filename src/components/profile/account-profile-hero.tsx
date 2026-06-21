@@ -51,13 +51,13 @@ export function AccountProfileHero({ user, lang, onUserUpdate }: AccountProfileH
         disabled={uploadingAvatar}
         aria-label="Change avatar"
       >
-        <Avatar className="size-16 ring-2 ring-border/40 ring-offset-2 ring-offset-background sm:size-[72px]">
+        <Avatar className="size-16 ring-2 ring-[var(--p-hair)] ring-offset-2 ring-offset-background sm:size-[72px]">
           {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
           <AvatarFallback className="text-xl font-bold">
             {(user.displayName ?? user.email).slice(0, 1).toUpperCase()}
           </AvatarFallback>
         </Avatar>
-        <div className="absolute -bottom-0.5 -right-0.5 flex size-6 items-center justify-center rounded-full border-2 border-background bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-110">
+        <div className="ease-chrome absolute -bottom-0.5 -right-0.5 flex size-6 items-center justify-center rounded-full border-2 border-background bg-primary text-primary-foreground group-hover:scale-110">
           {uploadingAvatar ? (
             <Loader2 className="size-3 animate-spin" />
           ) : (

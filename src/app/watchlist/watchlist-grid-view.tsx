@@ -54,7 +54,7 @@ export function WatchlistGridView({
           >
             {pinned && (
               <div
-                className="pointer-events-none absolute right-2 top-2 z-10 inline-flex size-6 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm ring-1 ring-primary/20"
+                className="pointer-events-none absolute right-2 top-2 z-10 inline-flex size-6 items-center justify-center rounded-full bg-primary text-primary-foreground ring-1 ring-primary/20"
                 title={t(lang, "watchlistPinned")}
                 aria-hidden
               >
@@ -78,12 +78,12 @@ export function WatchlistGridView({
               setCode={entry.card.set.code}
               actionRow={
                 <div
-                  className="flex items-center justify-between gap-1 border-t border-border/60 px-2 py-1"
+                  className="flex items-center justify-between gap-1 border-t border-[var(--p-hair)] px-2 py-1"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="flex items-center gap-0.5">
                     <label
-                      className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-muted"
+                      className="inline-flex size-7 cursor-pointer items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-foreground/[0.06]"
                       title={t(lang, "selectAll")}
                     >
                       <input
@@ -111,7 +111,7 @@ export function WatchlistGridView({
                           : t(lang, "setPriceAlert")
                       }
                       className={cn(
-                        "inline-flex size-7 items-center justify-center rounded-md transition-colors hover:bg-muted",
+                        "inline-flex size-7 items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-foreground/[0.06]",
                         entry.hasActiveAlert
                           ? "text-amber-500"
                           : "text-muted-foreground hover:text-foreground"
@@ -137,7 +137,7 @@ export function WatchlistGridView({
                         pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")
                       }
                       className={cn(
-                        "inline-flex size-7 items-center justify-center rounded-md transition-colors hover:bg-muted",
+                        "inline-flex size-7 items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-foreground/[0.06]",
                         pinned
                           ? "text-primary"
                           : "text-muted-foreground hover:text-foreground"
@@ -161,7 +161,7 @@ export function WatchlistGridView({
                       onClick={(e) => e.stopPropagation()}
                       aria-label={t(lang, "viewDetails")}
                       title={t(lang, "viewDetails")}
-                      className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
+                      className="inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground ease-chrome transition-colors hover:bg-foreground/[0.06] hover:text-primary"
                     >
                       <ExternalLink className="size-3.5" />
                     </Link>

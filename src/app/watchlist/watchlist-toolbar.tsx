@@ -144,18 +144,18 @@ export function WatchlistToolbar({
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={t(lang, "watchlistSearchPlaceholder")}
-            className="h-9 w-full rounded-lg border border-border bg-card pl-8 pr-2.5 text-sm placeholder:text-muted-foreground/60 focus:border-ring focus:outline-none"
+            className="h-9 w-full rounded-lg border border-[var(--p-hair)] bg-card pl-8 pr-2.5 text-sm placeholder:text-muted-foreground/60 focus:border-ring focus:outline-none"
           />
         </div>
 
         <div className="ml-auto flex items-center gap-2">
           {/* View toggle */}
-          <div className="inline-flex h-9 shrink-0 items-center rounded-lg border border-border bg-card p-0.5">
+          <div className="inline-flex h-9 shrink-0 items-center rounded-lg border border-[var(--p-hair)] bg-card p-0.5">
             <button
               type="button"
               onClick={() => onViewChange("list")}
               className={cn(
-                "inline-flex h-8 items-center justify-center rounded-md px-2 text-xs font-medium transition-colors",
+                "ease-chrome inline-flex h-8 items-center justify-center rounded-lg px-2 text-xs font-medium",
                 view === "list"
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:text-foreground"
@@ -169,7 +169,7 @@ export function WatchlistToolbar({
               type="button"
               onClick={() => onViewChange("grid")}
               className={cn(
-                "inline-flex h-8 items-center justify-center rounded-md px-2 text-xs font-medium transition-colors",
+                "ease-chrome inline-flex h-8 items-center justify-center rounded-lg px-2 text-xs font-medium",
                 view === "grid"
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:text-foreground"
@@ -351,7 +351,7 @@ export function WatchlistToolbar({
                 <button
                   type="button"
                   onClick={() => onFiltersChange(DEFAULT_FILTERS)}
-                  className="flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  className="ease-chrome flex w-full items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
                 >
                   <RotateCcw className="size-3" />
                   {t(lang, "watchlistResetFilters")}
@@ -421,14 +421,14 @@ function SegButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "inline-flex h-8 items-center justify-center gap-1 rounded-md border px-2 text-xs font-medium transition-colors",
+        "ease-chrome inline-flex h-8 items-center justify-center gap-1 rounded-lg border px-2 text-xs font-medium",
         active
           ? tone === "up"
             ? "border-price-up/40 bg-price-up/10 text-price-up"
             : tone === "down"
               ? "border-price-down/40 bg-price-down/10 text-price-down"
               : "border-primary/40 bg-primary/10 text-primary"
-          : "border-transparent bg-muted/40 text-muted-foreground hover:bg-muted hover:text-foreground"
+          : "border-transparent bg-muted/40 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
       )}
     >
       {icon}

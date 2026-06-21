@@ -245,7 +245,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
 
       {/* Trial banner */}
       {isTrial && (
-        <div className="flex items-center justify-center gap-3 rounded-xl border border-border bg-muted/30 px-5 py-3">
+        <div className="flex items-center justify-center gap-3 rounded-xl border border-[var(--p-hair)] bg-muted/30 px-5 py-3">
           <Badge variant="secondary">{t(lang, "trialActive")}</Badge>
           <p className="text-sm text-muted-foreground">
             {t(lang, "trialEndsIn")} {trialDaysLeft} {t(lang, "days")}
@@ -286,7 +286,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
               )}
 
               {/* Key highlights */}
-              <div className="mt-4 flex-1 space-y-2 border-t border-border/50 pt-4">
+              <div className="mt-4 flex-1 space-y-2 border-t border-[var(--p-hair)] pt-4">
                 {PLAN_HIGHLIGHTS[plan.key]?.map((featureKey) => {
                   const row = findRow(featureKey);
                   if (!row) return null;
@@ -387,7 +387,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
       {stats && (
         <div className="rounded-xl bg-card p-5 space-y-1">
           <h3 className="text-h5 mb-3">{t(lang, "usageQuota")}</h3>
-          <div className="divide-y divide-border/15">
+          <div className="divide-y divide-[var(--p-hair)]">
             <UsageRow icon={Layers} label={t(lang, "portfolioCards")} desc={t(lang, "portfolioCardsDesc")} current={stats.portfolioCardCount} max={limits.portfolioCards} color="bg-primary" lang={lang} />
             <UsageRow icon={FolderOpen} label={t(lang, "portfolioCollections")} desc={t(lang, "portfolioCollectionsDesc")} current={stats.portfolioCount} max={limits.portfolioCount} color="bg-primary" lang={lang} />
             <UsageRow icon={Eye} label={t(lang, "watchlistCards")} desc={t(lang, "watchlistCardsDesc")} current={stats.watchlistCount} max={limits.watchlistCards} color="bg-amber-500" lang={lang} />
@@ -409,7 +409,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
               <div
                 key={plan.key}
                 className={cn(
-                  "rounded-xl border border-border/40 bg-card p-4 space-y-4",
+                  "rounded-xl border border-[var(--p-hair)] bg-card p-4 space-y-4",
                   isCurrent && "border-primary/40",
                 )}
               >
@@ -426,7 +426,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
                       <p className="text-eyebrow text-muted-foreground/60">
                         {t(lang, section.titleKey)}
                       </p>
-                      <div className="divide-y divide-border/20">
+                      <div className="divide-y divide-[var(--p-hair)]">
                         {section.rows.map((row) => (
                           <div
                             key={row.key}
@@ -478,7 +478,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
                     </td>
                   </tr>
                   {section.rows.map((row) => (
-                    <tr key={row.key} className="border-b border-border/20 last:border-b-0">
+                    <tr key={row.key} className="border-b border-[var(--p-hair)] last:border-b-0">
                       <td className="py-2.5 pr-4 text-muted-foreground">{t(lang, row.labelKey)}</td>
                       {PLANS.map((plan) => (
                         <td key={plan.key} className={cn(
@@ -509,8 +509,8 @@ export function SectionSubscription({ subscription, stats }: Props) {
           <div className="space-y-2 py-2">
             {CANCEL_REASONS.map((key) => (
               <label key={key} className={cn(
-                "flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 text-sm transition-colors",
-                cancelReason === key ? "border-primary bg-primary/5 font-medium" : "border-border/40 hover:bg-secondary/50",
+                "ease-chrome flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 text-sm transition-colors",
+                cancelReason === key ? "border-primary bg-primary/5 font-medium" : "border-[var(--p-hair)] hover:bg-foreground/[0.04]",
               )}>
                 <input type="radio" name="cancel-reason" value={key} checked={cancelReason === key} onChange={() => setCancelReason(key)} className="sr-only" />
                 <div className={cn("flex size-4 items-center justify-center rounded-full border-2 transition-colors", cancelReason === key ? "border-primary bg-primary" : "border-muted-foreground/30")}>
@@ -521,7 +521,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
             ))}
           </div>
           <textarea
-            className="w-full rounded-lg border border-border/40 bg-background px-3 py-2 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border border-[var(--p-hair)] bg-background px-3 py-2 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
             rows={3} placeholder={t(lang, "cancelReasonComment")} value={cancelComment} onChange={(e) => setCancelComment(e.target.value)}
           />
           <DialogFooter>

@@ -211,7 +211,7 @@ export default function SellerListingsPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={t(lang, "searchByCardCodeOrName")}
-          className="h-10 w-full rounded-lg border border-border bg-background pl-9 pr-4 text-sm transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          className="h-10 w-full rounded-lg border border-[var(--p-hair)] bg-background pl-9 pr-4 text-sm transition-colors ease-chrome placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         />
       </form>
 
@@ -248,7 +248,7 @@ export default function SellerListingsPage() {
               return (
                 <div
                   key={listing.id}
-                  className="panel flex items-center gap-4 rounded-xl p-3 transition-colors hover:bg-muted/20"
+                  className="panel flex items-center gap-4 rounded-xl p-3 transition-colors ease-chrome hover:bg-foreground/[0.04]"
                 >
                   {/* Card Image */}
                   {listing.card.imageUrl ? (

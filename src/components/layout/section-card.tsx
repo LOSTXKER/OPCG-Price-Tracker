@@ -57,12 +57,12 @@ export function SectionCard({
     <Surface
       variant={variant}
       padding="none"
-      className={cn(accent && "panel-accent", className)}
+      className={cn(accent && "", className)}
     >
       {showHeader && (
         <div
           className={cn(
-            "flex flex-wrap items-start justify-between gap-3 border-b border-border/60 px-5 py-4",
+            "flex flex-wrap items-start justify-between gap-3 border-b border-[var(--p-hair)] px-5 py-4",
             headerClassName,
           )}
         >

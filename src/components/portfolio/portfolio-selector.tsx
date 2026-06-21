@@ -89,15 +89,15 @@ export function PortfolioSidebar({
             >
               <input
                 autoFocus
-                className="flex-1 rounded-md border border-border bg-background px-2 py-1.5 text-sm outline-none ring-primary/30 transition-shadow focus:ring-2"
+                className="flex-1 rounded-lg border border-[var(--p-hair)] bg-background px-2 py-1.5 text-sm outline-none ring-primary/30 transition-shadow focus:ring-2"
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Escape") setEditingId(null) }}
               />
-              <button type="submit" className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              <button type="submit" className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground">
                 <Check className="size-3.5" />
               </button>
-              <button type="button" onClick={() => setEditingId(null)} className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              <button type="button" onClick={() => setEditingId(null)} className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground">
                 <X className="size-3.5" />
               </button>
             </form>
@@ -108,10 +108,10 @@ export function PortfolioSidebar({
           <div
             key={p.id}
             className={cn(
-              "group relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-all cursor-pointer",
+              "group ease-chrome relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-all cursor-pointer",
               isActive
                 ? "bg-primary/6"
-                : "hover:bg-muted/50"
+                : "hover:bg-foreground/[0.06]"
             )}
             onClick={() => onSelect(p.id)}
           >
@@ -160,7 +160,7 @@ export function PortfolioSidebar({
               <DropdownMenu>
                 <DropdownMenuTrigger
                   onClick={(e) => e.stopPropagation()}
-                  className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  className="ease-chrome shrink-0 rounded-lg p-1 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
                 >
                   <MoreHorizontal className="size-3.5" />
                 </DropdownMenuTrigger>
@@ -197,15 +197,15 @@ export function PortfolioSidebar({
           <input
             autoFocus
             placeholder={t(lang, "portfolioName")}
-            className="flex-1 rounded-md border border-border bg-background px-2 py-1.5 text-sm outline-none ring-primary/30 transition-shadow placeholder:text-muted-foreground/60 focus:ring-2"
+            className="flex-1 rounded-lg border border-[var(--p-hair)] bg-background px-2 py-1.5 text-sm outline-none ring-primary/30 transition-shadow placeholder:text-muted-foreground/60 focus:ring-2"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Escape") setCreating(false) }}
           />
-          <button type="submit" className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+          <button type="submit" className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground">
             <Check className="size-3.5" />
           </button>
-          <button type="button" onClick={() => setCreating(false)} className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+          <button type="button" onClick={() => setCreating(false)} className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground">
             <X className="size-3.5" />
           </button>
         </form>
@@ -217,9 +217,9 @@ export function PortfolioSidebar({
                 ? openUpgradeDialog({ featureKey: "portfolioCount" })
                 : setCreating(true)
             }
-            className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+            className="ease-chrome flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
           >
-            <div className="flex size-7 items-center justify-center rounded-lg border border-dashed border-border/60">
+            <div className="flex size-7 items-center justify-center rounded-lg border border-dashed border-[var(--p-hair)]">
               <Plus className="size-3.5" />
             </div>
             <span className="text-xs font-medium">{t(lang, "createPortfolio")}</span>

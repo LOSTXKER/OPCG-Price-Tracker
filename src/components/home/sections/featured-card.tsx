@@ -29,7 +29,7 @@ export function HomeFeaturedCard({
   return (
     <Link
       href={`/cards/${card.cardCode}`}
-      className="group flex flex-col gap-3 rounded-xl p-3 transition-colors hover:bg-muted/40 sm:flex-row sm:items-center sm:gap-5"
+      className="group ease-chrome flex flex-col gap-3 rounded-xl p-3 hover:bg-foreground/[0.04] sm:flex-row sm:items-center sm:gap-5"
     >
       <div className="relative aspect-[63/88] w-[100px] shrink-0 overflow-hidden rounded-lg bg-muted">
         {card.imageUrl && (

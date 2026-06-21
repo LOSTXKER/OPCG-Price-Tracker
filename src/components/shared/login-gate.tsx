@@ -44,7 +44,7 @@ export function AuthPreviewGate({ preview }: { preview: React.ReactNode }) {
       </div>
 
       <div className="absolute inset-0 flex items-center justify-center bg-background/40 backdrop-blur-[1px]">
-        <div className="mx-auto max-w-xs space-y-4 rounded-2xl border border-border bg-card p-8 text-center shadow-lg">
+        <div className="mx-auto max-w-xs space-y-4 rounded-2xl border border-[var(--p-hair)] bg-card p-8 text-center shadow-lg">
           <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-muted">
             <LogIn className="size-6 text-muted-foreground" />
           </div>

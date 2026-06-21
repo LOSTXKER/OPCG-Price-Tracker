@@ -9,7 +9,6 @@ import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Price } from "@/components/shared/price-inline";
-import { ListRow } from "@/components/ui/list-row";
 import { AdSlot } from "@/components/ads/ad-slot";
 import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -114,54 +113,18 @@ export function SetsListClient({
         </div>
       </div>
 
-      {/* Top 5 most valuable — minimal list */}
+      {/* Top 5 most valuable — visual featured rail (box art + rank badge) */}
       {showMostValuable && mostValuable.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex items-baseline justify-between">
-            <h2 className="text-eyebrow">{t(lang, "highestValueSet")}</h2>
-            <span className="text-meta">Top 5</span>
+        <section className="space-y-4">
+          <div className="flex items-baseline gap-3 border-b border-[var(--p-hair)] pb-2">
+            <h2 className="text-h2">{t(lang, "highestValueSet")}</h2>
+            <span className="text-meta tabular-nums">Top 5</span>
           </div>
-          <ol className="divide-y divide-border/30">
-            {mostValuable.map((s, i) => {
-              const thumb = s.boxImageUrl ?? s.topCard?.imageUrl;
-              return (
-                <li key={s.id}>
-                  <ListRow
-                    href={`/sets/${s.code}`}
-                    className="px-0"
-                    leading={
-                      <div className="flex items-center gap-3">
-                        <span className="w-6 text-right font-mono text-sm tabular-nums text-muted-foreground">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        {thumb ? (
-                          <div className="relative size-9 overflow-hidden rounded bg-muted/30">
-                            <Image src={thumb} alt="" fill className="object-contain" sizes="36px" />
-                          </div>
-                        ) : (
-                          <div className="size-9 rounded bg-muted/30" />
-                        )}
-                      </div>
-                    }
-                    title={s.nameEn ?? s.name}
-                    subtitle={
-                      <>
-                        <span className="font-mono">{s.code.toUpperCase()}</span>
-                        <span className="tabular-nums">
-                          {s.productCardCount} {t(lang, "cardsCount")}
-                        </span>
-                      </>
-                    }
-                    trailing={
-                      <span className="font-price text-sm font-semibold tabular-nums">
-                        <Price jpy={s.totalValue} />
-                      </span>
-                    }
-                  />
-                </li>
-              );
-            })}
-          </ol>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-5">
+            {mostValuable.map((s, i) => (
+              <SetTile key={s.id} set={s} rank={i + 1} />
+            ))}
+          </div>
         </section>
       )}
 
@@ -178,13 +141,13 @@ export function SetsListClient({
             if (list.length === 0) return null;
             return (
               <section key={type} className="space-y-4">
-                <div className="flex items-baseline gap-3 border-b border-border/40 pb-2">
+                <div className="flex items-baseline gap-3 border-b border-[var(--p-hair)] pb-2">
                   <h2 className="text-h2">{TYPE_LABEL[type]}</h2>
                   <span className="text-meta tabular-nums">{list.length}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                   {list.map((s) => (
-                    <SetCard key={s.id} set={s} />
+                    <SetTile key={s.id} set={s} />
                   ))}
                 </div>
               </section>
@@ -214,10 +177,10 @@ function FilterPill({
       type="button"
       onClick={onClick}
       className={cn(
-        "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+        "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium ease-chrome transition-colors",
         active
           ? "border-foreground bg-foreground text-background"
-          : "border-border/60 bg-transparent text-foreground hover:bg-muted/40"
+          : "border-[var(--p-hair)] bg-transparent text-foreground hover:bg-foreground/[0.06]"
       )}
     >
       {label}
@@ -233,18 +196,46 @@ function FilterPill({
   );
 }
 
-// ─── Flat SetCard ────────────────────────────────────────────────────
+// ─── Branded placeholder for image-less sets (no box art / top card) ──
+// A warm gradient + the set code so an imageless set reads as intentional,
+// not a broken grey box (older Starter Decks rarely ship box art).
 
-function SetCard({ set }: { set: SetWithCard }) {
+function SetPlaceholder({ code }: { code: string }) {
+  return (
+    <div className="flex aspect-[4/5] flex-col items-center justify-center gap-2 bg-gradient-to-br from-foreground/[0.08] via-foreground/[0.03] to-transparent">
+      <Package className="size-7 text-muted-foreground/25" />
+      <span className="text-eyebrow text-muted-foreground/55">{code.toUpperCase()}</span>
+    </div>
+  );
+}
+
+// ─── Shared SetTile ──────────────────────────────────────────────────
+// ONE tile for both the featured rail and the per-type grids (pass `rank`
+// to show a badge). Keep all set-card visuals here so every set surface
+// stays identical and easy to evolve.
+
+function SetTile({ set, rank }: { set: SetWithCard; rank?: number }) {
   const lang = useUIStore((s) => s.language);
   const imageUrl = set.boxImageUrl ?? set.topCard?.imageUrl;
 
   return (
     <Link
       href={`/sets/${set.code}`}
-      className="group block overflow-hidden rounded-xl border border-border/60 bg-card transition-colors hover:border-border hover:bg-muted/20"
+      className="group block overflow-hidden rounded-xl border border-[var(--p-hair)] bg-card ease-chrome transition-colors hover:bg-foreground/[0.04]"
     >
-      <div className="overflow-hidden border-b border-border/60 bg-muted/20">
+      <div className="relative overflow-hidden border-b border-[var(--p-hair)] bg-muted/20">
+        {rank != null && (
+          <span
+            className={cn(
+              "absolute left-2 top-2 z-10 flex size-6 items-center justify-center rounded-full text-xs font-bold tabular-nums",
+              rank === 1
+                ? "bg-primary text-primary-foreground"
+                : "bg-background/80 text-foreground ring-1 ring-[var(--p-hair)] backdrop-blur"
+            )}
+          >
+            {rank}
+          </span>
+        )}
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -255,15 +246,13 @@ function SetCard({ set }: { set: SetWithCard }) {
             className="block h-auto w-full"
           />
         ) : (
-          <div className="flex aspect-[4/5] items-center justify-center">
-            <Package className="size-8 text-muted-foreground/20" />
-          </div>
+          <SetPlaceholder code={set.code} />
         )}
       </div>
 
       <div className="space-y-1 p-3">
         <div className="text-meta font-mono">{set.code.toUpperCase()}</div>
-        <p className="text-sm font-medium leading-snug line-clamp-2 transition-colors group-hover:text-foreground">
+        <p className="text-sm font-medium leading-snug line-clamp-2 ease-chrome transition-colors group-hover:text-foreground">
           {set.nameEn ?? set.name}
         </p>
         <div className="flex items-center justify-between gap-2 pt-1 text-meta">

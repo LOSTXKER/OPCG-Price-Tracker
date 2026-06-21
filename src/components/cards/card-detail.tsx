@@ -493,10 +493,10 @@ export function CardDetail({
   // outlines that compete with Buy). border-0 + hover overrides neutralize
   // CompareButton's own border + primary-tinted variant.
   const utilityBtn =
-    "ease-chrome flex h-9 w-full items-center justify-center gap-1.5 rounded-lg border-0 bg-transparent text-sm font-medium text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
+    "ease-chrome flex h-10 w-full items-center justify-center gap-1.5 rounded-lg border-0 bg-transparent text-sm font-medium text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
   // Filled-neutral secondary CTA (ลงขาย / เพิ่มพอร์ต) — sits under the gold buy.
   const secondaryBtn =
-    "ease-chrome flex h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-foreground/[0.06] text-sm font-semibold text-foreground hover:bg-foreground/[0.1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
+    "ease-chrome flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-foreground/[0.06] text-sm font-semibold text-foreground hover:bg-foreground/[0.1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
 
   const handleShare = async () => {
     const url = typeof window !== "undefined" ? window.location.href : ""
@@ -706,7 +706,7 @@ export function CardDetail({
               {t(displayLang, "low")} {compactDisplayValue(priceLow, currency)}, {t(displayLang, "high")} {compactDisplayValue(priceHigh, currency)}
             </span>
             <div className="mt-3 flex max-w-sm items-center gap-2" aria-hidden>
-              <span className="text-overlay tnum shrink-0 text-muted-foreground/70">
+              <span className="text-meta tnum shrink-0 text-muted-foreground/70">
                 {t(displayLang, "low")} {compactDisplayValue(priceLow, currency)}
               </span>
               <div className="relative h-1.5 flex-1 rounded-full bg-foreground/10">
@@ -716,7 +716,7 @@ export function CardDetail({
                   style={{ left: `${pricePos}%` }}
                 />
               </div>
-              <span className="text-overlay tnum inline-flex shrink-0 items-center gap-1 text-muted-foreground/70">
+              <span className="text-meta tnum inline-flex shrink-0 items-center gap-1 text-muted-foreground/70">
                 {t(displayLang, "high")} {compactDisplayValue(priceHigh, currency)}
                 {datum.value.isEst && <EstMark lang={displayLang} />}
               </span>
@@ -816,7 +816,7 @@ export function CardDetail({
                 scrollToSection(tab.id)
               }}
               className={cn(
-                "ease-chrome shrink-0 py-2.5 text-sm font-semibold focus-visible:outline-none",
+                "ease-chrome inline-flex min-h-11 shrink-0 items-center py-2.5 text-sm font-semibold focus-visible:outline-none",
                 tab.id === activeTab ? "text-foreground" : "text-muted-foreground hover:text-foreground",
               )}
             >
@@ -901,10 +901,12 @@ export function CardDetail({
 
         </div>
 
-        {/* side ad — beside the chart (เบส request). The `auto` grid track collapses
-            when AdSlot renders null (PRO = ad-free), so no empty gap appears.
-            NOTE: VISION §4.6 keeps the price surface ad-free for credibility. */}
-        <aside className="order-last min-w-0 lg:order-none">
+        {/* side ad — beside the chart on desktop only. VISION §5.6 forbids ads in the
+            card-detail price/sold zone; on mobile this column collapses INTO that zone
+            (single-column, lands right after the chart), so it's hidden <lg and kept as
+            a desktop side rail where it sits beside — not inside — the price story.
+            The `auto` grid track also collapses when AdSlot renders null (PRO = ad-free). */}
+        <aside className="order-last hidden min-w-0 lg:order-none lg:block">
           <AdSlot placement="card-detail-chart-side" className="min-h-[320px] w-full lg:w-[320px] xl:w-[360px]" />
         </aside>
       </div>
@@ -956,10 +958,14 @@ export function CardDetail({
           />
         </section>
 
-        {/* ROW 2 RIGHT — ad column */}
+        {/* ROW 2 RIGHT — ad column. Desktop: side rail beside Meecard asks. Mobile:
+            stacks BELOW the asks (single column) — i.e. in the discovery transition
+            right before "other versions", which sits OUTSIDE the VISION §5.6 price/sold
+            zone, so it's the single ad mobile carries now that the page-tail banner is
+            gone. The chart-side ad stays hidden <lg (that one IS in the price zone). */}
         <aside className="min-w-0">
           <div className="lg:border-l lg:border-[var(--p-hair)] lg:pl-8">
-            <AdSlot placement="card-detail-info-below" className="min-h-[320px] w-full" />
+            <AdSlot placement="card-detail-info-below" className="min-h-[120px] w-full lg:min-h-[320px]" />
           </div>
         </aside>
       </div>
@@ -976,9 +982,6 @@ export function CardDetail({
         <CardDetailRelated relatedCards={relatedCards ?? []} set={set} lang={displayLang} />
       </div>
 
-      {/* in-feed ad — page tail only, never inside the price/data story */}
-      <AdSlot placement="card-detail-mid" className="mt-12 aspect-[6/1] w-full" />
-
       {/* lightbox */}
       <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
         <DialogContent className="max-w-[90vw] border-0 bg-transparent p-0 shadow-none ring-0 sm:max-w-[90vw] [&>[data-slot=dialog-close]]:text-white [&>[data-slot=dialog-close]]:hover:bg-white/20">
@@ -994,7 +997,7 @@ export function CardDetail({
         <div className="frost ease-chrome fixed inset-x-0 z-40 md:hidden" style={{ bottom: "calc(4rem + env(safe-area-inset-bottom))", boxShadow: "inset 0 1px 0 0 var(--p-hair)" }}>
           <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2.5">
             <div className="min-w-0">
-              <p className="text-overlay font-semibold uppercase text-muted-foreground">{gradeLabel} · Meecard</p>
+              <p className="text-eyebrow">{gradeLabel} · Meecard</p>
               <p className="text-h4 tnum leading-none text-foreground">
                 {meecardLowest != null
                   ? formatByCurrency(meecardLowest.priceJpy, currency, meecardLowest.priceThb).primary
@@ -1012,7 +1015,7 @@ export function CardDetail({
             />
             <a
               href="#market"
-              className="ease-chrome ml-auto flex max-w-[200px] flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="ease-chrome ml-auto flex min-h-11 max-w-[200px] flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
             >
               <ShoppingBag className="size-4" aria-hidden /> {t(displayLang, "viewAsksCta")}

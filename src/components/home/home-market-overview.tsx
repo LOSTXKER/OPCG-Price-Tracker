@@ -26,7 +26,6 @@ import { cn } from "@/lib/utils"
 import { getColorOptions } from "@/lib/constants/card-config"
 import { useMarketCards } from "@/hooks/use-market-cards"
 
-import { HeroSearchBar } from "./hero-search-bar"
 import { MarketRow, TableRowSkeleton } from "./market-row"
 import { GridCard, GridCardSkeleton } from "./grid-card"
 import { MobileCardItem, MobileCardSkeleton } from "./mobile-card-item"
@@ -107,9 +106,6 @@ export function HomeMarketOverview({
 
   return (
     <div className="space-y-4">
-      {/* Hero search */}
-      <HeroSearchBar />
-
       {children}
 
       {/* Main table panel */}

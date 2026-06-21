@@ -78,7 +78,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="border-t border-border/30 bg-gradient-to-b from-transparent via-muted/10 to-muted/20">
+    <footer className="border-t border-[var(--p-hair)] bg-gradient-to-b from-transparent via-muted/10 to-muted/20">
       {/* pb clears the fixed mobile bottom-nav (md+ has no bottom-nav). */}
       <div className="mx-auto max-w-7xl px-4 pt-10 pb-28 md:px-6 md:py-12 md:pb-12 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-12">
@@ -100,17 +100,17 @@ export function Footer() {
             </p>
 
             <div className="mt-5 flex flex-wrap items-center gap-1.5">
-              <span className="inline-flex items-center rounded-full border border-border/50 bg-background/60 px-2.5 py-1 text-micro text-muted-foreground">
+              <span className="inline-flex items-center rounded-full border border-[var(--p-hair)] bg-background/60 px-2.5 py-1 text-micro text-muted-foreground">
                 {t(lang, "footerLanguagesLine")}
               </span>
-              <span className="inline-flex items-center rounded-full border border-border/50 bg-background/60 px-2.5 py-1 text-micro text-muted-foreground">
+              <span className="inline-flex items-center rounded-full border border-[var(--p-hair)] bg-background/60 px-2.5 py-1 text-micro text-muted-foreground">
                 {t(lang, "footerCurrenciesLine")}
               </span>
             </div>
 
             <Link
               href="/pricing"
-              className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-meta font-medium text-primary transition-colors hover:bg-primary/15"
+              className="ease-chrome mt-5 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-meta font-medium text-primary transition-colors hover:bg-primary/15"
             >
               <Crown className="size-3.5" />
               {t(lang, "pricing")}
@@ -133,33 +133,33 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 flex flex-col gap-3 border-t border-border/30 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-3 border-t border-[var(--p-hair)] pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-meta text-muted-foreground/70">
             &copy; {year} Meecard
           </p>
           <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-meta text-muted-foreground/70">
             <Link
               href="/about"
-              className="inline-flex items-center gap-1 transition-colors hover:text-foreground"
+              className="ease-chrome inline-flex items-center gap-1 transition-colors hover:text-foreground"
             >
               <Info className="size-3.5" />
               {t(lang, "aboutUs")}
             </Link>
             <Link
               href="/guide"
-              className="transition-colors hover:text-foreground"
+              className="ease-chrome transition-colors hover:text-foreground"
             >
               {t(lang, "guide")}
             </Link>
             <Link
               href="/pricing"
-              className="transition-colors hover:text-foreground"
+              className="ease-chrome transition-colors hover:text-foreground"
             >
               {t(lang, "pricing")}
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-1 transition-colors hover:text-foreground"
+              className="ease-chrome inline-flex items-center gap-1 transition-colors hover:text-foreground"
             >
               <Mail className="size-3.5" />
               {t(lang, "contactUs")}
@@ -184,7 +184,7 @@ function FooterColumnView({ column }: { column: FooterColumn }) {
           <Link
             key={`${column.title}-${link.href}`}
             href={link.href}
-            className="text-meta transition-colors hover:text-foreground"
+            className="text-meta ease-chrome transition-colors hover:text-foreground"
           >
             {link.label}
           </Link>

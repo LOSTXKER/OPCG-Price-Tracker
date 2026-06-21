@@ -31,7 +31,7 @@ export function HomeMiniTable({
         </p>
         <Link
           href={linkHref}
-          className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-meta transition-colors hover:bg-muted hover:text-foreground"
+          className="ease-chrome flex items-center gap-1 rounded-md px-1.5 py-0.5 text-meta hover:bg-foreground/[0.06] hover:text-foreground"
         >
           {t(lang, "more")}
           <ArrowRight className="size-3" />
@@ -52,7 +52,7 @@ export function HomeMiniTable({
               <Link
                 key={card.cardCode}
                 href={`/cards/${card.cardCode}`}
-                className="flex min-h-11 flex-1 items-center gap-2.5 rounded-md px-1.5 py-2 transition-colors hover:bg-muted/40"
+                className="ease-chrome flex min-h-11 flex-1 items-center gap-2.5 rounded-lg px-1.5 py-2 hover:bg-foreground/[0.04]"
               >
                 <span className="w-4 shrink-0 text-center font-price text-sm tabular-nums text-muted-foreground/70">
                   {idx + 1}
