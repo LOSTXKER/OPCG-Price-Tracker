@@ -16,7 +16,10 @@
   - **เบสยืนยัน: ทำหมดทั้ง 3 mega**
   - **✅ mega 1 — card-detail split (`b675fe5`):** แยก useStickyBuy + useCardDetailTabs (1028→949) · pricing memos **คงไว้** (interwoven กับ JSX เกินจะแยกปลอดภัย) · ⚠️ build ผ่านแต่ยังไม่ render-verify scrollspy/sticky (logic เดิม copy-move น่าจะ ok — เบสเปิดดูได้)
   - **⬜ mega 2 — Surface rollout:** .panel(201)/ad-hoc bg-card+border(115)/shadcn Card(6) → Surface · เริ่ม guide/* + profile/section-* (static, เสี่ยงต่ำ) · ต้อง verify visual ไม่เพี้ยน · fresh turn
-  - **⬜ mega 3 — i18n sweep ~1,900 บรรทัด:** messages/marketplace-wizard/seller/hero · ใหญ่+ต้องแปล EN/JP · fresh turn (workflow คืน data แล้ว apply กลาง)
+  - **🔄 mega 3 — i18n sweep (ทำทีละ feature ด้วย workflow คืน data → apply กลาง · pattern ใช้ได้ดี):**
+    - ✅ **messages (`cb6fe41`)** — 70 strings · 8 ไฟล์ · th/en/jp · tsc/build/lint ผ่าน · interpolation {n} ครบ
+    - ⬜ marketplace wizard (~88) · seller (~83) · hero suggestions · long-tail (audit: ~1,900 รวม) — ทำซ้ำ pattern เดิม
+    - script apply: `/tmp/apply-i18n-messages.mjs` (ปรับ RESULT path ต่อ feature)
   - **เล็กค้าง:** missions.ts split 1,180 · 6 honey routes Zod · formatRelativeShort (fold เข้า i18n)
 - **domain = ไม่ใช่ปัญหา:** repo นี้ = prototype (memory `meecard-is-prototype`) ไม่เกี่ยวกับ meecardtcg.com (เว็บ launch คนละ codebase) · share-link→env ที่แก้ = good practice เฉยๆ ไม่ต้องตั้ง Vercel/เปลี่ยน default
 
