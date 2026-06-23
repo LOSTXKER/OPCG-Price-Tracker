@@ -4,6 +4,7 @@ import { adminApiHandler } from "@/lib/api/api-handler";
 import { parsePageLimit } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { Prisma } from "@/generated/prisma/client";
+import { UpdateAdminCardSchema } from "@/lib/admin/schemas";
 
 export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
   const sp = request.nextUrl.searchParams;
@@ -102,34 +103,13 @@ export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
 });
 
 export const PATCH = adminApiHandler(async (request: NextRequest, _admin) => {
-  const parsed = await parseJsonBody<{ id: number; [key: string]: unknown }>(request);
+  const parsed = await parseJsonBody(request, UpdateAdminCardSchema);
   if (!parsed.ok) return parsed.response;
 
-  const { id, ...updates } = parsed.body;
-
-  if (!id) {
-    return NextResponse.json({ error: "id is required" }, { status: 400 });
-  }
-
-  const allowedFields = [
-    "nameEn",
-    "nameTh",
-    "imageUrl",
-    "rarity",
-    "cardType",
-    "color",
-    "colorEn",
-  ];
-  const data: Record<string, unknown> = {};
-  for (const key of allowedFields) {
-    if (key in updates) {
-      data[key] = updates[key];
-    }
-  }
-
+  const { id, ...data } = parsed.body;
   const updated = await prisma.card.update({
     where: { id },
-    data,
+    data: data as Prisma.CardUpdateInput,
   });
 
   return NextResponse.json(updated);
