@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatCount } from "@/lib/utils/currency";
+import { buildPageRange } from "@/lib/utils/pagination";
 
 interface AdminPaginationProps {
   page: number;
@@ -99,7 +100,7 @@ export function AdminPagination({
             <ChevronLeft className="size-4" />
           </Button>
 
-          {generatePageNumbers(page, totalPages).map((p, i) =>
+          {buildPageRange(page, totalPages).map((p, i) =>
             p === "..." ? (
               <span
                 key={`dots-${i}`}
@@ -149,25 +150,3 @@ export function AdminPagination({
   );
 }
 
-function generatePageNumbers(
-  current: number,
-  total: number,
-): (number | "...")[] {
-  if (total <= 7) {
-    return Array.from({ length: total }, (_, i) => i + 1);
-  }
-
-  const pages: (number | "...")[] = [1];
-
-  if (current > 3) pages.push("...");
-
-  const start = Math.max(2, current - 1);
-  const end = Math.min(total - 1, current + 1);
-
-  for (let i = start; i <= end; i++) pages.push(i);
-
-  if (current < total - 2) pages.push("...");
-
-  pages.push(total);
-  return pages;
-}

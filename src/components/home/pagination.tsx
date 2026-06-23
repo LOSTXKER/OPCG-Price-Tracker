@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { formatCount } from "@/lib/utils/currency"
+import { buildPageRange } from "@/lib/utils/pagination"
 
 export function Pagination({
   page,
@@ -89,22 +90,4 @@ function PageNumbers({
       )}
     </>
   )
-}
-
-function buildPageRange(current: number, total: number): (number | "...")[] {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
-
-  const pages: (number | "...")[] = []
-
-  if (current <= 4) {
-    for (let i = 1; i <= 5; i++) pages.push(i)
-    pages.push("...", total)
-  } else if (current >= total - 3) {
-    pages.push(1, "...")
-    for (let i = total - 4; i <= total; i++) pages.push(i)
-  } else {
-    pages.push(1, "...", current - 1, current, current + 1, "...", total)
-  }
-
-  return pages
 }

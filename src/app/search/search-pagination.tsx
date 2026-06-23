@@ -4,19 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
-
-function generatePageNumbers(current: number, total: number): (number | "...")[] {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
-  const pages: (number | "...")[] = []
-  pages.push(1)
-  if (current > 3) pages.push("...")
-  const start = Math.max(2, current - 1)
-  const end = Math.min(total - 1, current + 1)
-  for (let i = start; i <= end; i++) pages.push(i)
-  if (current < total - 2) pages.push("...")
-  pages.push(total)
-  return pages
-}
+import { buildPageRange } from "@/lib/utils/pagination"
 
 export function SearchPagination({
   page,
@@ -45,7 +33,7 @@ export function SearchPagination({
         >
           <ChevronLeft className="size-4" />
         </button>
-        {generatePageNumbers(page, totalPages).map((p, i) =>
+        {buildPageRange(page, totalPages).map((p, i) =>
           p === "..." ? (
             <span key={`dots-${i}`} className="px-1 text-meta">...</span>
           ) : (
