@@ -6,8 +6,8 @@ import { ArrowRight, Clock, TrendingDown, TrendingUp } from "lucide-react"
 
 import type { TrendingCard } from "@/lib/data/home"
 import { getCardName, t } from "@/lib/i18n"
-import { formatPct } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
+import { ChangePill } from "@/components/market/change-pill"
 
 export function HomeMiniTable({
   cards,
@@ -47,7 +47,6 @@ export function HomeMiniTable({
           {cards.slice(0, 3).map((card, idx) => {
             const name = getCardName(lang, card)
             const change = card.priceChange24h
-            const isUp = change != null && change > 0
             return (
               <Link
                 key={card.cardCode}
@@ -71,19 +70,7 @@ export function HomeMiniTable({
                 <div className="min-w-0 flex-1">
                   <p className="line-clamp-1 text-sm font-medium leading-tight">{name}</p>
                 </div>
-                <span
-                  className={`shrink-0 font-price text-sm font-medium tabular-nums ${
-                    isUp
-                      ? "text-price-up"
-                      : type === "losers"
-                        ? "text-price-down"
-                        : "text-muted-foreground"
-                  }`}
-                >
-                  {change != null
-                    ? `${change > 0 ? "+" : ""}${formatPct(change)}%`
-                    : "—"}
-                </span>
+                <ChangePill value={change} className="shrink-0 text-sm" />
               </Link>
             )
           })}
