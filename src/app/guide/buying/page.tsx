@@ -6,6 +6,10 @@ import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { t, type Language } from "@/lib/i18n";
+import { getServerLanguage } from "@/lib/i18n/server";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Buying Guide — คู่มือ OPCG",
@@ -14,39 +18,47 @@ export const metadata: Metadata = {
   alternates: { canonical: "/guide/buying" },
 };
 
-const shops = [
-  {
-    name: "Yuyu-tei",
-    url: "https://yuyu-tei.jp",
-    type: "ออนไลน์ (ญี่ปุ่น)",
-    pros: "ราคาอ้างอิงหลัก สต็อกเยอะ ราคาเป็นกลาง",
-    cons: "ต้องส่งผ่าน Proxy/Forwarder มีค่าส่งเพิ่ม",
-  },
-  {
-    name: "ร้านการ์ดในไทย",
-    url: null,
-    type: "หน้าร้าน / ออนไลน์",
-    pros: "ซื้อง่าย ได้ของเลย ไม่ต้องรอส่ง",
-    cons: "ราคาอาจสูงกว่า Yuyu-tei 20-50%",
-  },
-  {
-    name: "Marketplace (เว็บเรา)",
-    url: "/marketplace",
-    type: "C2C ซื้อขายระหว่างผู้เล่น",
-    pros: "อาจได้ราคาดี เจรจาได้ เห็นราคาเทียบตลาด",
-    cons: "ต้องเช็คความน่าเชื่อถือของผู้ขาย",
-  },
-];
+function buildShops(lang: Language) {
+  return [
+    {
+      name: "Yuyu-tei",
+      url: "https://yuyu-tei.jp",
+      type: t(lang, "guideBuyShopYuyuteiType"),
+      pros: t(lang, "guideBuyShopYuyuteiPros"),
+      cons: t(lang, "guideBuyShopYuyuteiCons"),
+    },
+    {
+      name: t(lang, "guideBuyShopThaiName"),
+      url: null,
+      type: t(lang, "guideBuyShopThaiType"),
+      pros: t(lang, "guideBuyShopThaiPros"),
+      cons: t(lang, "guideBuyShopThaiCons"),
+    },
+    {
+      name: t(lang, "guideBuyShopMarketName"),
+      url: "/marketplace",
+      type: t(lang, "guideBuyShopMarketType"),
+      pros: t(lang, "guideBuyShopMarketPros"),
+      cons: t(lang, "guideBuyShopMarketCons"),
+    },
+  ];
+}
 
-const tips = [
-  "เช็คราคาตลาดก่อนซื้อเสมอ — ใช้เว็บเราเทียบราคา Yuyu-tei",
-  "การ์ด Parallel มักมีราคาสูงกว่า Normal Version มาก",
-  "อย่ารีบซื้อการ์ดใหม่สัปดาห์แรก ราคามักจะลดลงหลังออก 2-3 สัปดาห์",
-  "ถ้าเล่นเกม ให้ซื้อ Starter Deck ก่อน — ได้ Leader + การ์ดพร้อมเล่น",
-  "สำหรับนักสะสม ให้โฟกัสชุดใดชุดหนึ่งก่อน ไม่ต้องสะสมทุกชุดพร้อมกัน",
-];
+function buildTips(lang: Language) {
+  return [
+    t(lang, "guideBuyTip1"),
+    t(lang, "guideBuyTip2"),
+    t(lang, "guideBuyTip3"),
+    t(lang, "guideBuyTip4"),
+    t(lang, "guideBuyTip5"),
+  ];
+}
 
-export default function BuyingGuidePage() {
+export default async function BuyingGuidePage() {
+  const lang = await getServerLanguage();
+  const shops = buildShops(lang);
+  const tips = buildTips(lang);
+
   return (
     <div className="mx-auto max-w-3xl space-y-12">
       <JsonLd data={breadcrumbJsonLd([
@@ -64,13 +76,13 @@ export default function BuyingGuidePage() {
           Buying Guide
         </h1>
         <p className="text-muted-foreground text-lg">
-          ซื้อการ์ดที่ไหนดี? วิธีอ่านราคา เคล็ดลับประหยัด
+          {t(lang, "guideBuySubtitle")}
         </p>
       </div>
 
       <div className="space-y-4">
         <h2 className="font-sans text-xl font-semibold">
-          แหล่งซื้อการ์ด
+          {t(lang, "guideBuyShopsHeading")}
         </h2>
         {shops.map((shop) => (
           <Card key={shop.name}>
@@ -105,11 +117,11 @@ export default function BuyingGuidePage() {
               </div>
               <div className="grid gap-2 text-sm sm:grid-cols-2">
                 <div>
-                  <span className="text-price-up font-medium">✓ ข้อดี:</span>{" "}
+                  <span className="text-price-up font-medium">✓ {t(lang, "guideBuyProsLabel")}:</span>{" "}
                   <span className="text-muted-foreground">{shop.pros}</span>
                 </div>
                 <div>
-                  <span className="text-price-down font-medium">✗ ข้อเสีย:</span>{" "}
+                  <span className="text-price-down font-medium">✗ {t(lang, "guideBuyConsLabel")}:</span>{" "}
                   <span className="text-muted-foreground">{shop.cons}</span>
                 </div>
               </div>
@@ -120,7 +132,7 @@ export default function BuyingGuidePage() {
 
       <div className="space-y-4">
         <h2 className="font-sans text-xl font-semibold">
-          เคล็ดลับการซื้อ
+          {t(lang, "guideBuyTipsHeading")}
         </h2>
         <div className="space-y-2">
           {tips.map((tip, i) => (
@@ -139,28 +151,28 @@ export default function BuyingGuidePage() {
 
       <div className="rounded-xl border border-dashed border-primary/30 bg-primary/5 p-4">
         <h3 className="font-sans text-sm font-semibold text-primary">
-          📊 วิธีอ่านราคาบนเว็บเรา
+          📊 {t(lang, "guideBuyReadPriceHeading")}
         </h3>
         <ul className="text-muted-foreground mt-2 space-y-1 text-sm">
           <li>
-            <strong>ราคา ¥</strong> = ราคาจาก Yuyu-tei (เยน)
+            <strong>{t(lang, "guideBuyReadPriceYenLabel")}</strong> = {t(lang, "guideBuyReadPriceYenDesc")}
           </li>
           <li>
-            <strong>ราคา ฿</strong> = คำนวณจากอัตราแลกเปลี่ยนวันนั้น (โดยประมาณ)
+            <strong>{t(lang, "guideBuyReadPriceBahtLabel")}</strong> = {t(lang, "guideBuyReadPriceBahtDesc")}
           </li>
           <li>
-            <strong>% เปลี่ยนแปลง</strong> = เทียบกับราคาเมื่อวานหรือ 7 วันก่อน
+            <strong>{t(lang, "guideBuyReadPriceChangeLabel")}</strong> = {t(lang, "guideBuyReadPriceChangeDesc")}
           </li>
           <li>
-            <strong>Community Price</strong> = ราคาเฉลี่ยที่ผู้ใช้รายงาน (ตลาดไทย)
+            <strong>Community Price</strong> = {t(lang, "guideBuyReadPriceCommunityDesc")}
           </li>
         </ul>
       </div>
 
       <RelatedPages
         items={[
-          { href: "/marketplace", icon: Store, title: "Marketplace", description: "ซื้อขายการ์ดในตลาด Meecard" },
-          { href: "/guide/sets", icon: Layers, title: "คู่มือชุดการ์ด", description: "เรียนรู้เกี่ยวกับชุดการ์ดทั้งหมด" },
+          { href: "/marketplace", icon: Store, title: "Marketplace", description: t(lang, "guideBuyRelatedMarketDesc") },
+          { href: "/guide/sets", icon: Layers, title: t(lang, "guideBuyRelatedSetsTitle"), description: t(lang, "guideBuyRelatedSetsDesc") },
         ]}
       />
 
@@ -175,7 +187,7 @@ export default function BuyingGuidePage() {
           href="/"
           className="group inline-flex items-center gap-2 font-sans text-sm font-semibold text-primary hover:underline"
         >
-          เริ่มค้นหาการ์ดเลย!
+          {t(lang, "guideBuyCtaSearch")}
           <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
         </Link>
       </div>

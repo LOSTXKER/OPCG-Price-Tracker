@@ -20,6 +20,10 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Surface } from "@/components/ui/surface";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { t, type Language } from "@/lib/i18n";
+import { getServerLanguage } from "@/lib/i18n/server";
+
+export const dynamic = "force-dynamic";
 
 interface GuideItem {
   href: string;
@@ -29,80 +33,115 @@ interface GuideItem {
   featured?: boolean;
 }
 
-const guides: GuideItem[] = [
-  {
-    href: "/guide/getting-started",
-    icon: BookOpen,
-    title: "เริ่มต้น",
-    description:
-      "One Piece Card Game คืออะไร? กฎพื้นฐาน วิธีเล่น และสิ่งที่มือใหม่ควรรู้ทั้งหมด เริ่มต้นที่นี่",
-    featured: true,
-  },
-  {
-    href: "/guide/card-types",
-    icon: Swords,
-    title: "ประเภทการ์ด",
-    description: "Leader, Character, Event, Stage, DON!! — แต่ละประเภททำอะไร",
-  },
-  {
-    href: "/guide/rarities",
-    icon: Sparkles,
-    title: "ความหายาก",
-    description: "C, UC, R, SR, SEC, SP — ยิ่งหายากยิ่งแพง",
-  },
-  {
-    href: "/guide/colors",
-    icon: Palette,
-    title: "สี",
-    description: "Red, Blue, Green, Purple, Black, Yellow — สีบอกสไตล์การเล่น",
-  },
-  {
-    href: "/guide/sets",
-    icon: Layers,
-    title: "ชุดการ์ด",
-    description: "ชุดการ์ดทั้งหมดตั้งแต่ OP01 — Timeline ครบ",
-  },
-  {
-    href: "/guide/buying",
-    icon: ShoppingCart,
-    title: "คู่มือการซื้อ",
-    description: "ซื้อการ์ดที่ไหนดี? วิธีอ่านราคา ร้านค้าแนะนำ",
-  },
-];
+function buildGuides(lang: Language): GuideItem[] {
+  return [
+    {
+      href: "/guide/getting-started",
+      icon: BookOpen,
+      title: t(lang, "guideHomeGuideGettingStartedTitle"),
+      description: t(lang, "guideHomeGuideGettingStartedDesc"),
+      featured: true,
+    },
+    {
+      href: "/guide/card-types",
+      icon: Swords,
+      title: t(lang, "guideHomeGuideCardTypesTitle"),
+      description: t(lang, "guideHomeGuideCardTypesDesc"),
+    },
+    {
+      href: "/guide/rarities",
+      icon: Sparkles,
+      title: t(lang, "guideHomeGuideRaritiesTitle"),
+      description: t(lang, "guideHomeGuideRaritiesDesc"),
+    },
+    {
+      href: "/guide/colors",
+      icon: Palette,
+      title: t(lang, "guideHomeGuideColorsTitle"),
+      description: t(lang, "guideHomeGuideColorsDesc"),
+    },
+    {
+      href: "/guide/sets",
+      icon: Layers,
+      title: t(lang, "guideHomeGuideSetsTitle"),
+      description: t(lang, "guideHomeGuideSetsDesc"),
+    },
+    {
+      href: "/guide/buying",
+      icon: ShoppingCart,
+      title: t(lang, "guideHomeGuideBuyingTitle"),
+      description: t(lang, "guideHomeGuideBuyingDesc"),
+    },
+  ];
+}
 
-const tools: Array<{
+function buildTools(lang: Language): Array<{
   href: string;
   icon: LucideIcon;
   title: string;
   description: string;
-}> = [
-  {
-    href: "/drop-calculator",
-    icon: Calculator,
-    title: "Drop Calculator",
-    description: "คำนวณโอกาสดึงการ์ดจากกล่อง",
-  },
-  {
-    href: "/deck-calculator",
-    icon: Calculator,
-    title: "Deck Calculator",
-    description: "คำนวณราคารวมเด็คของคุณ",
-  },
-  {
-    href: "/compare",
-    icon: GitCompareArrows,
-    title: "เปรียบเทียบการ์ด",
-    description: "เทียบการ์ดหลายใบแบบ side-by-side",
-  },
-  {
-    href: "/marketplace",
-    icon: Store,
-    title: "Marketplace",
-    description: "ซื้อขายการ์ดในตลาด Meecard",
-  },
-];
+}> {
+  return [
+    {
+      href: "/drop-calculator",
+      icon: Calculator,
+      title: t(lang, "guideHomeToolDropTitle"),
+      description: t(lang, "guideHomeToolDropDesc"),
+    },
+    {
+      href: "/deck-calculator",
+      icon: Calculator,
+      title: t(lang, "guideHomeToolDeckTitle"),
+      description: t(lang, "guideHomeToolDeckDesc"),
+    },
+    {
+      href: "/compare",
+      icon: GitCompareArrows,
+      title: t(lang, "guideHomeToolCompareTitle"),
+      description: t(lang, "guideHomeToolCompareDesc"),
+    },
+    {
+      href: "/marketplace",
+      icon: Store,
+      title: t(lang, "guideHomeToolMarketplaceTitle"),
+      description: t(lang, "guideHomeToolMarketplaceDesc"),
+    },
+  ];
+}
 
-export default function GuideLandingPage() {
+function buildFaq(lang: Language): Array<{ question: string; answer: string }> {
+  return [
+    {
+      question: t(lang, "guideHomeFaqQ1"),
+      answer: t(lang, "guideHomeFaqA1"),
+    },
+    {
+      question: t(lang, "guideHomeFaqQ2"),
+      answer: t(lang, "guideHomeFaqA2"),
+    },
+    {
+      question: t(lang, "guideHomeFaqQ3"),
+      answer: t(lang, "guideHomeFaqA3"),
+    },
+    {
+      question: t(lang, "guideHomeFaqQ4"),
+      answer: t(lang, "guideHomeFaqA4"),
+    },
+    {
+      question: t(lang, "guideHomeFaqQ5"),
+      answer: t(lang, "guideHomeFaqA5"),
+    },
+    {
+      question: t(lang, "guideHomeFaqQ6"),
+      answer: t(lang, "guideHomeFaqA6"),
+    },
+  ];
+}
+
+export default async function GuideLandingPage() {
+  const lang = await getServerLanguage();
+  const guides = buildGuides(lang);
+  const tools = buildTools(lang);
   const featured = guides[0];
   const rest = guides.slice(1);
   const FeaturedIcon = featured.icon;
@@ -125,8 +164,8 @@ export default function GuideLandingPage() {
             ]}
           />
         }
-        title="เริ่มต้นกับ OPCG"
-        description="ไม่ว่าจะเป็นมือใหม่หรือเพิ่งเข้าวงการ เราจะพาคุณรู้จักทุกอย่างเกี่ยวกับ One Piece Card Game"
+        title={t(lang, "guideHomeTitle")}
+        description={t(lang, "guideHomeDescription")}
       />
 
       <section>
@@ -152,7 +191,7 @@ export default function GuideLandingPage() {
                 </p>
               </div>
               <div className="mt-6 flex items-center gap-2 text-sm font-medium text-primary">
-                เริ่มเลย
+                {t(lang, "guideHomeStartNow")}
                 <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
               </div>
             </Surface>
@@ -188,10 +227,10 @@ export default function GuideLandingPage() {
         <div>
           <div className="flex items-center gap-2">
             <Wrench className="size-5 text-muted-foreground" />
-            <h2 className="text-h3">เครื่องมือ</h2>
+            <h2 className="text-h3">{t(lang, "guideHomeToolsHeading")}</h2>
           </div>
           <p className="mt-1 page-subtitle">
-            เครื่องมือที่ช่วยให้คุณวิเคราะห์และวางแผนก่อนซื้อการ์ด
+            {t(lang, "guideHomeToolsSubtitle")}
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -214,7 +253,7 @@ export default function GuideLandingPage() {
                     <p className="mt-1 text-meta">{tool.description}</p>
                   </div>
                   <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors group-hover:text-primary">
-                    เปิดเครื่องมือ
+                    {t(lang, "guideHomeOpenTool")}
                     <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
                   </div>
                 </Surface>
@@ -226,46 +265,12 @@ export default function GuideLandingPage() {
 
       <section className="space-y-5">
         <div>
-          <h2 className="text-h3">คำถามที่พบบ่อย</h2>
+          <h2 className="text-h3">{t(lang, "guideHomeFaqHeading")}</h2>
           <p className="mt-1 page-subtitle">
-            คำตอบสำหรับคำถามยอดนิยมเกี่ยวกับ One Piece Card Game และ Meecard
+            {t(lang, "guideHomeFaqSubtitle")}
           </p>
         </div>
-        <FaqSection
-          title=""
-          items={[
-            {
-              question: "One Piece Card Game คืออะไร?",
-              answer:
-                "เกมการ์ดสะสมและแข่งขัน (TCG) จาก Bandai อิงจากมังงะ/อนิเมะ One Piece เปิดตัวในญี่ปุ่นปี 2022 ผู้เล่น 2 คนสู้กันโดยใช้เด็ค 50 ใบ + Leader 1 ใบ + DON!! 10 ใบ ปัจจุบันมีเวอร์ชันหลายภาษา รวมถึงไทย อ่านกฎเพิ่มเติมได้ในหน้า \"เริ่มต้น\"",
-            },
-            {
-              question: "เริ่มต้นเล่นต้องใช้อะไรบ้าง?",
-              answer:
-                "ใช้ Leader 1 ใบ, เด็ค 50 ใบที่ตรงสีกับ Leader, และ DON!! 10 ใบ ถ้ายังไม่รู้จะเอาอะไร ซื้อ Starter Deck ได้เลย — มีครบทุกอย่างพร้อมเล่นทันที ราคาไม่กี่ร้อยบาท",
-            },
-            {
-              question: "Meecard คืออะไร?",
-              answer:
-                "Meecard คือเว็บไซต์ติดตามราคาการ์ด OPCG ดึงราคาจาก Yuyu-tei และ SNKRDUNK อัปเดตทุกวัน แปลงเป็นเงินบาทอัตโนมัติ นอกจากนี้ยังมีเครื่องมือคำนวณเช่น Drop Calculator, Deck Calculator และ Marketplace ซื้อขายการ์ด",
-            },
-            {
-              question: "ซื้อการ์ดที่ไหนดี?",
-              answer:
-                "ในไทยมีหลายร้านทั้งออนไลน์และหน้าร้าน เช่น Shopee, Line OA ของร้านต่างๆ หรือตลาดนัดการ์ด ส่วนราคาอ้างอิงดูได้ที่ Meecard และรายละเอียดเพิ่มเติมในหน้า \"คู่มือการซื้อ\"",
-            },
-            {
-              question: "การ์ดหายากที่สุดคือ Rarity อะไร?",
-              answer:
-                "Treasure Rare (TR) หายากที่สุด ตามมาด้วย SP (Special) และ SEC (Secret Rare) โดยเฉพาะตัวละครยอดนิยมอย่าง Luffy, Shanks, Nami ราคาสูงถึงหลักแสนเยน อ่านรายละเอียดทุก Rarity ได้ในหน้า \"ความหายาก\"",
-            },
-            {
-              question: "ราคาการ์ดบน Meecard อ้างอิงจากไหน?",
-              answer:
-                "ราคาหลักมาจาก Yuyu-tei ร้านการ์ดออนไลน์ที่ใหญ่ที่สุดในญี่ปุ่น (ราคาเยน แปลงเป็นบาทอัตโนมัติ) และราคาเกรด PSA 10 จาก SNKRDUNK ราคาอัปเดตทุกวัน",
-            },
-          ]}
-        />
+        <FaqSection title="" items={buildFaq(lang)} />
       </section>
     </div>
   );
