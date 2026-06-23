@@ -1907,6 +1907,8 @@ export const en = {
   mktDetailOtherFromSeller: "More from {name}",
   mktDetailSimilarListings: "Similar listings",
   mktDetailSellerReviews: "Seller reviews ({n})",
+  mktReviewEmptyDesc: "This seller has no buyer reviews yet",
+  mktReviewTotalCount: "{n} reviews total",
   mktPriceConditionNM: "Near Mint — like new",
   mktPriceConditionLP: "Lightly Played — minor wear",
   mktPriceConditionMP: "Moderately Played — moderate wear",

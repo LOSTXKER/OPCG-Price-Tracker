@@ -481,6 +481,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
           reviews={reviews}
           averageRating={listing.user.sellerRating}
           totalCount={listing.user.sellerReviewCount}
+          lang={lang}
         />
       </section>
     </div>

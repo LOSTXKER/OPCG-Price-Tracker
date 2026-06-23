@@ -1880,6 +1880,8 @@ export const th = {
   mktDetailOtherFromSeller: "รายการอื่นจาก {name}",
   mktDetailSimilarListings: "รายการที่คล้ายกัน",
   mktDetailSellerReviews: "รีวิวผู้ขาย ({n})",
+  mktReviewEmptyDesc: "ผู้ขายรายนี้ยังไม่มีรีวิวจากผู้ซื้อ",
+  mktReviewTotalCount: "{n} รีวิวทั้งหมด",
   mktPriceConditionNM: "Near Mint — สภาพใหม่มาก",
   mktPriceConditionLP: "Lightly Played — มีรอยเล็กน้อย",
   mktPriceConditionMP: "Moderately Played — มีรอยปานกลาง",

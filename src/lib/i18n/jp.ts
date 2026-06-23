@@ -1880,6 +1880,8 @@ export const jp = {
   mktDetailOtherFromSeller: "{name}の他の出品",
   mktDetailSimilarListings: "類似の出品",
   mktDetailSellerReviews: "出品者レビュー（{n}）",
+  mktReviewEmptyDesc: "この出品者にはまだ購入者レビューがありません",
+  mktReviewTotalCount: "レビュー合計 {n} 件",
   mktPriceConditionNM: "ニアミント — ほぼ新品",
   mktPriceConditionLP: "ライトプレイ — わずかな傷",
   mktPriceConditionMP: "ムーンプレイ — 中程度の傷",
