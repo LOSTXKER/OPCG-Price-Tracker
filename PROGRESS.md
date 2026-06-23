@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-24 — **CMC table + minimal home + คืนความอุ่น hover ทั้งแอป → COMMITTED** · branch `redesign/market-table-cmc-warm` commit `32f28e9` (68 files) · lint 0 · tsc 0 · build ✓ · review workflow 4 โซน = clean · **ยังไม่ push/PR** (รอเบส) · prod live opcg-price-tracker.vercel.app (PR #38 `d73a25d`)
+อัปเดตล่าสุด: 2026-06-24 — **mega 3 (i18n sweep) ฝั่ง client = เสร็จ** · เพิ่ม seller + buyer-orders + order-card/confirm-dialog + chrome (header/menu) → t() · branch `redesign/market-table-cmc-warm` commit `bb1fa8d` · lint 0 errors/24 warn · tsc 0 · build ✓ · **ยังไม่ push/PR** (รอเบส) · prod live opcg-price-tracker.vercel.app (PR #38 `d73a25d`)
 
 ## 🧹 REFACTOR (audit 5 มิติ — เบสสั่ง "ทำหมด") — ทำเป็น batch
 > audit เต็มรันผ่าน workflow แล้ว · คะแนนเฉลี่ย ~7/10 (type-safety/API 8 · design-system 7 · reuse 6 · i18n 5)
@@ -16,13 +16,19 @@
   - **เบสยืนยัน: ทำหมดทั้ง 3 mega**
   - **✅ mega 1 — card-detail split (`b675fe5`):** แยก useStickyBuy + useCardDetailTabs (1028→949) · pricing memos **คงไว้** (interwoven กับ JSX เกินจะแยกปลอดภัย) · ⚠️ build ผ่านแต่ยังไม่ render-verify scrollspy/sticky (logic เดิม copy-move น่าจะ ok — เบสเปิดดูได้)
   - **⬜ mega 2 — Surface rollout:** .panel(201)/ad-hoc bg-card+border(115)/shadcn Card(6) → Surface · เริ่ม guide/* + profile/section-* (static, เสี่ยงต่ำ) · ต้อง verify visual ไม่เพี้ยน · fresh turn
-  - **🔄 mega 3 — i18n sweep (ทำทีละ feature ด้วย workflow คืน data → apply กลาง · pattern ใช้ได้ดี):**
+  - **✅ mega 3 — i18n sweep (ฝั่ง client เสร็จ) — pattern: workflow คืน data → apply กลาง / หรือแก้มือเมื่อชิ้นเล็ก:**
     - ✅ **messages (`cb6fe41`)** — 70 strings · 8 ไฟล์
-    - ✅ **marketplace (`ffaff54`)** — 12 client components · 89 keys · **3 server components deferred** (page.tsx, [listingId]/page.tsx, review-section.tsx — ไม่มี server-side lang resolver · keys เตรียมไว้แล้ว · ต้อง wrap client หรือทำ server-lang)
-    - ⬜ seller (~83) · hero suggestions · long-tail · **+ marketplace server components** (ต้องกลยุทธ์ server-i18n)
+    - ✅ **marketplace browse (`ffaff54`)** — 12 client components · 89 keys
+    - ✅ **seller (`44544e9`)** — 5 components · 69 keys (NAV_ITEMS typed; SHIPPING/TIMELINE → getXxx(lang) memo)
+    - ✅ **orders (`1b72e5a` + `bb1fa8d`)** — order-card + confirm-dialog (Thai-only เดิม → t()) · buyer order-detail page (+24 buyOrder* keys) · + `formatRelativeAgoShort` กลางใน relative-time.ts (relJustNow/relMinsAgo/relHoursAgo/relDaysAgo)
+    - ✅ **chrome (`b310a40`)** — header/header-user-menu/header-market-ticker/mobile-menu-sheet: inline `language===` ternary → t() (reuse keys + myAccount/upgrade ใหม่)
+    - ✅ **saved/page.tsx** — error-fallback อ่าน lang imperative (กัน exhaustive-deps re-fetch)
     - apply script: `/tmp/apply-i18n.mjs <result-path> <label>` (generic · ข้าม skipped)
-    - ⚠️ **architectural gap:** ไม่มี server-side language resolver (lang มาจาก useUIStore client เท่านั้น) → server components i18n ไม่ได้ตรงๆ · prototype Thai-market = default ไทย พอรับได้ชั่วคราว
-  - **เล็กค้าง:** missions.ts split 1,180 · 6 honey routes Zod · formatRelativeShort (fold เข้า i18n)
+    - **ที่เหลือ = ติด architectural gap หรือ low-ROI (ตั้งใจไม่ทำ):**
+      - ⚠️ **server components** (guide/* · home-seo-content · marketplace/[listingId] · marketplace review-section) — **ไม่มี server-side language resolver** (lang = useUIStore client เท่านั้น) → ทำ i18n ตรงๆ ไม่ได้ · ต้องตัดสินใจสถาปัตยกรรม (cookie/header server-lang หรือ wrap เป็น client) — keys marketplace เตรียมไว้บางส่วนแล้ว
+      - ⏸️ **step-shipping** (create-wizard) — province/shipping เป็น **stored values** (ไม่ใช่แค่ label) + marketplace flag ปิด + เป็น geo data → ข้าม (ถ้าทำต้อง split value+label ทั้ง wizard+detail)
+      - ⏸️ **admin/** ทั้งหมด — internal tooling ไทยล้วนโดยตั้งใจ (toggle ภาษาไว้ให้ผู้ใช้ทั่วไป ไม่ใช่แอดมิน) — ไม่ i18n
+  - **เล็กค้าง:** missions.ts split 1,180 · 6 honey routes Zod · `formatRelativeShort`/2 ตัว timeAgo ที่เหลือ (review-section, marketplace/[listingId]) = ยัง hardcode th-TH (อันหลังเป็น server comp)
 - **domain = ไม่ใช่ปัญหา:** repo นี้ = prototype (memory `meecard-is-prototype`) ไม่เกี่ยวกับ meecardtcg.com (เว็บ launch คนละ codebase) · share-link→env ที่แก้ = good practice เฉยๆ ไม่ต้องตั้ง Vercel/เปลี่ยน default
 
 ## 🎯 โปรเจคใหญ่ที่กำลังทำ (ข้ามหลาย session) — อ่าน memory `warmkit-redesign-rollout`
