@@ -19,6 +19,9 @@ import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { cn } from "@/lib/utils";
 import { formatPct } from "@/lib/utils/currency";
+import { formatRelativeAgoShort } from "@/lib/utils/relative-time";
+import { t } from "@/lib/i18n";
+import { getServerLanguage } from "@/lib/i18n/server";
 import { Price } from "@/components/shared/price-inline";
 import { ImageGallery, type GalleryImage } from "./image-gallery";
 import { ListingActionButtons } from "./listing-actions";
@@ -58,22 +61,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-function timeAgo(date: Date): string {
-  const diff = Date.now() - new Date(date).getTime();
-  const mins = Math.floor(diff / 60_000);
-  if (mins < 1) return "เมื่อสักครู่";
-  if (mins < 60) return `${mins} นาทีที่แล้ว`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours} ชั่วโมงที่แล้ว`;
-  const days = Math.floor(hours / 24);
-  if (days < 30) return `${days} วันที่แล้ว`;
-  const months = Math.floor(days / 30);
-  if (months < 12) return `${months} เดือนที่แล้ว`;
-  return `${Math.floor(months / 12)} ปีที่แล้ว`;
-}
-
 export default async function ListingDetailPage({ params }: PageProps) {
   await assertMarketplaceEnabled();
+  const lang = await getServerLanguage();
   const { listingId: idParam } = await params;
   const listingId = Number(idParam);
   if (!Number.isInteger(listingId) || listingId < 1) {
@@ -197,7 +187,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
 
   const setName =
     listing.card.set?.nameEn ?? listing.card.set?.name ?? listing.card.set?.code;
-  const sellerName = listing.user.displayName ?? "Seller";
+  const sellerName = listing.user.displayName ?? t(lang, "seller");
 
   const galleryImages: GalleryImage[] = [
     ...(listing.card.imageUrl
@@ -205,7 +195,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
       : []),
     ...listing.photos.map((url) => ({
       src: url,
-      alt: `${cardName} — ภาพสินค้าจริง`,
+      alt: t(lang, "mktDetailRealPhotoAlt").replace("{name}", cardName),
       isCard: false,
     })),
   ];
@@ -233,7 +223,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
                 "w-full text-xs"
               )}
             >
-              ดูข้อมูลการ์ดและราคาย้อนหลัง
+              {t(lang, "mktDetailViewCardHistory")}
             </Link>
           </div>
         </div>
@@ -268,12 +258,12 @@ export default async function ListingDetailPage({ params }: PageProps) {
             <div className="text-muted-foreground flex items-center gap-3 text-xs">
               <span className="inline-flex items-center gap-1">
                 <Clock className="size-3" />
-                ลงขาย{timeAgo(listing.createdAt)}
+                {t(lang, "mktDetailPostedAgo").replace("{ago}", formatRelativeAgoShort(listing.createdAt, lang))}
               </span>
               <span>·</span>
               <span className="inline-flex items-center gap-1">
                 <Eye className="size-3" />
-                {(listing.viewCount ?? 0).toLocaleString()} เข้าชม
+                {t(lang, "mktDetailViews").replace("{n}", (listing.viewCount ?? 0).toLocaleString())}
               </span>
             </div>
           </div>
@@ -290,7 +280,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
 
               {market != null && diffPct != null && (
                 <p className="text-muted-foreground text-sm">
-                  ราคาตลาด{" "}
+                  {t(lang, "mktDetailMarketPrice")}{" "}
                   <Price jpy={market} className="font-medium" />
                   <span
                     className={cn(
@@ -306,12 +296,12 @@ export default async function ListingDetailPage({ params }: PageProps) {
 
               {diffPct != null && diffPct <= -10 && (
                 <Badge className="bg-price-up/90 border-0 text-white">
-                  Best Deal — ถูกกว่าตลาด {Math.abs(Math.round(diffPct))}%
+                  {t(lang, "mktDetailBestDeal").replace("{n}", String(Math.abs(Math.round(diffPct))))}
                 </Badge>
               )}
               {diffPct != null && diffPct >= 15 && (
                 <Badge variant="destructive">
-                  Above Market — แพงกว่าตลาด {Math.round(diffPct)}%
+                  {t(lang, "mktDetailAboveMarket").replace("{n}", String(Math.round(diffPct)))}
                 </Badge>
               )}
             </div>
@@ -325,7 +315,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
                 )}
               >
                 <MessageCircle className="size-5" />
-                สนใจซื้อ / Chat
+                {t(lang, "mktDetailInterestedChat")}
               </Link>
               <div className="grid grid-cols-2 gap-3">
                 <ListingActionButtons
@@ -357,18 +347,18 @@ export default async function ListingDetailPage({ params }: PageProps) {
                 </Link>
                 <p className="text-muted-foreground mt-0.5 text-sm">
                   {listing.user.sellerRating != null
-                    ? `★ ${listing.user.sellerRating.toFixed(1)} (${listing.user.sellerReviewCount} รีวิว)`
-                    : "ยังไม่มีรีวิว"}
+                    ? `★ ${listing.user.sellerRating.toFixed(1)} ${t(lang, "mktDetailReviewCount").replace("{n}", String(listing.user.sellerReviewCount))}`
+                    : t(lang, "mktDetailNoReviews")}
                   {" · "}
-                  {sellerListingCount} รายการ
+                  {t(lang, "mktDetailListingCount").replace("{n}", String(sellerListingCount))}
                   {" · "}
-                  {completedOrderCount} ขายสำเร็จ
+                  {t(lang, "mktDetailSalesCount").replace("{n}", String(completedOrderCount))}
                 </p>
                 <Link
                   href={`/profile/${listing.user.id}`}
                   className="text-primary mt-1 inline-flex items-center gap-0.5 text-xs font-medium hover:underline"
                 >
-                  ดูโปรไฟล์
+                  {t(lang, "mktDetailViewProfile")}
                   <ChevronRight className="size-3" />
                 </Link>
               </div>
@@ -380,7 +370,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
                 <span>
                   {listing.shipping.length > 0
                     ? listing.shipping.join(" · ")
-                    : "ติดต่อผู้ขาย"}
+                    : t(lang, "mktDetailContactSeller")}
                 </span>
               </div>
               {listing.location && (
@@ -400,7 +390,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
       {/* Description */}
       {listing.description && (
         <section className="space-y-4">
-          <h2 className="text-h3">รายละเอียดจากผู้ขาย</h2>
+          <h2 className="text-h3">{t(lang, "mktDetailSellerDescription")}</h2>
           <div className="panel p-5">
             <p className="break-words whitespace-pre-wrap text-sm leading-relaxed">
               {listing.description}
@@ -413,7 +403,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
       {sellerListings.length > 0 && (
         <section className="space-y-4">
           <h2 className="text-h3">
-            รายการอื่นจาก {sellerName}
+            {t(lang, "mktDetailOtherFromSeller").replace("{name}", sellerName)}
           </h2>
           <div className="flex gap-4 overflow-x-auto pb-2">
             {sellerListings.map((l) => (
@@ -450,7 +440,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
       {/* Similar Listings */}
       {similar.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-h3">รายการที่คล้ายกัน</h2>
+          <h2 className="text-h3">{t(lang, "mktDetailSimilarListings")}</h2>
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {similar.map((l) => (
               <ListingCard
@@ -485,12 +475,13 @@ export default async function ListingDetailPage({ params }: PageProps) {
       {/* Reviews */}
       <section className="space-y-4">
         <h2 className="text-h3">
-          รีวิวผู้ขาย ({listing.user.sellerReviewCount})
+          {t(lang, "mktDetailSellerReviews").replace("{n}", String(listing.user.sellerReviewCount))}
         </h2>
         <ReviewSection
           reviews={reviews}
           averageRating={listing.user.sellerRating}
           totalCount={listing.user.sellerReviewCount}
+          lang={lang}
         />
       </section>
     </div>

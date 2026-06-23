@@ -49,7 +49,7 @@ export function formatRelativeAgoShort(input: Date | string, lang: Language): st
   if (hours < 24) return t(lang, "relHoursAgo").replace("{n}", String(hours));
   const days = Math.floor(hours / 24);
   if (days < 30) return t(lang, "relDaysAgo").replace("{n}", String(days));
-  return d.toLocaleDateString(DATE_LOCALE[lang]);
+  const months = Math.floor(days / 30);
+  if (months < 12) return t(lang, "relMonthsAgo").replace("{n}", String(months));
+  return t(lang, "relYearsAgo").replace("{n}", String(Math.floor(months / 12)));
 }
-
-const DATE_LOCALE: Record<Language, string> = { TH: "th-TH", EN: "en-US", JP: "ja-JP" };
