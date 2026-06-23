@@ -8,6 +8,7 @@ import { relativeTime } from "@/lib/utils/time"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { yuyuteiSearch, snkrdunkSearch } from "@/lib/constants/source-markets"
 
 type SourceMeta = {
   label: string
@@ -20,14 +21,12 @@ const SOURCE_META: Record<string, SourceMeta> = {
   YUYUTEI: {
     label: "Yuyu-tei",
     color: "bg-blue-500",
-    searchUrl: (code) =>
-      `https://yuyu-tei.jp/sell/opc/?word=${encodeURIComponent(code)}`,
+    searchUrl: yuyuteiSearch,
   },
   SNKRDUNK: {
     label: "SNKRDUNK",
     color: "bg-emerald-500",
-    searchUrl: (code) =>
-      `https://snkrdunk.com/search?keyword=${encodeURIComponent(code)}`,
+    searchUrl: snkrdunkSearch,
   },
   TCGPLAYER: { label: "TCGPlayer", color: "bg-orange-500" },
   CARDMARKET: { label: "Cardmarket", color: "bg-violet-500" },

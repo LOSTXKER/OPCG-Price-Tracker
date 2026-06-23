@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { formatByCurrency, formatUsdByCurrency } from "@/lib/utils/currency"
 import { relativeTime } from "@/lib/utils/time"
 import { useUIStore } from "@/stores/ui-store"
+import { yuyuteiSearch, snkrdunkSearch } from "@/lib/constants/source-markets"
 
 export type SourcePriceRow = {
   source: string
@@ -24,12 +25,12 @@ const SOURCE_META: Record<string, { label: string; color: string; searchUrl?: (c
   YUYUTEI: {
     label: "Yuyu-tei",
     color: "bg-blue-500",
-    searchUrl: (code) => `https://yuyu-tei.jp/sell/opc/?word=${encodeURIComponent(code)}`,
+    searchUrl: yuyuteiSearch,
   },
   SNKRDUNK: {
     label: "SNKRDUNK",
     color: "bg-emerald-500",
-    searchUrl: (code) => `https://snkrdunk.com/search?keyword=${encodeURIComponent(code)}`,
+    searchUrl: snkrdunkSearch,
   },
   TCGPLAYER: { label: "TCGPlayer", color: "bg-orange-500" },
   CARDMARKET: { label: "Cardmarket", color: "bg-violet-500" },
