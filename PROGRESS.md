@@ -10,8 +10,12 @@
 - **✅ %-change — committed `cbc7a3f`:** mini-table inline → ChangePill กลาง (price-display+DeltaText ปล่อยไว้ — token family เดียวกันอยู่แล้ว ไม่คุ้มเสี่ยง)
 - **เบสยืนยัน: ทำหมดจริงๆ รวมงานใหญ่** (prototype ก็เอา) → ลำดับทำต่อ:
 - **✅ A5 — committed `a5b23b1`:** ตัด inner try/catch→500 + log ใน 5 routes (cards · admin/cards · admin/drop-rates · admin/image-matching · admin/sets)
-- **⬜ B เหลือ:** brand.ts (hex) · guide import RARITIES · CONDITION_LABELS · SOURCE_MARKETS · `<ListRowSkeleton>` · Card→Surface (portfolio-summary) · **Surface rollout** (guide/* + profile/section-* + shadcn Card → Surface · งานใหญ่)
-- **⬜ C (big):** **i18n sweep ~1,900 บรรทัด** (messages · marketplace wizard · seller · hero suggestions) — ⚠️ parallel workflow แก้ th/en/jp.ts ชนกัน → ทำ sequential หรือ workflow คืน {key,th,en,jp} เป็น data แล้ว apply กลาง · แตก `card-detail.tsx` 1,028→hooks · split `missions.ts` 1,180 · `formatRelativeShort` respect lang · admin/cards+6 honey routes Zod · cron createMany/merge · requireAuthUser path เดียว · avatar/cover ไม่ leak error
+- **✅ B contained — committed:** `f42f5db` brand.ts · `e773f4e` SOURCE_MARKETS · (ข้าม guide RARITIES/ListRowSkeleton/CONDITION_LABELS = low-value churn สำหรับ prototype, โครงต่าง)
+- **✅ API/data — committed:** `a7bb557` auth path เดียว + cron createMany/merge + avatar/cover ไม่ leak · `62e5c36` admin/cards+sets Zod
+- **⬜ เหลือจริง (ทั้งหมดเป็น big/low-ROI-prototype):**
+  - **3 mega:** i18n sweep ~1,900 บรรทัด (messages/marketplace-wizard/seller) — real bug แต่ Thai-market prototype = edge · แตก card-detail 1,028→hooks — pure code-health, ZERO user value, เสี่ยงบน core page · Surface rollout — visible consistency, แตะ 100+ ไฟล์
+  - **เล็ก:** missions.ts split 1,180 · 6 honey/missions routes Zod · `formatRelativeShort` (fold เข้า i18n)
+  - **คำแนะนำตรงๆ:** งานที่คุ้ม **เสร็จหมดแล้ว** (10 commit) · 3 mega = effort สูง/ROI ต่ำสำหรับ prototype โดยเฉพาะ card-detail split (เสี่ยงล้วน ไม่มี user value) → รอเบสเลือกว่าจะดันต่ออันไหน หรือพอ
 - **domain = ไม่ใช่ปัญหา:** repo นี้ = prototype (memory `meecard-is-prototype`) ไม่เกี่ยวกับ meecardtcg.com (เว็บ launch คนละ codebase) · share-link→env ที่แก้ = good practice เฉยๆ ไม่ต้องตั้ง Vercel/เปลี่ยน default
 
 ## 🎯 โปรเจคใหญ่ที่กำลังทำ (ข้ามหลาย session) — อ่าน memory `warmkit-redesign-rollout`
