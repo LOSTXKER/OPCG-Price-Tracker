@@ -510,7 +510,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
             {CANCEL_REASONS.map((key) => (
               <label key={key} className={cn(
                 "ease-chrome flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 text-sm transition-colors",
-                cancelReason === key ? "border-primary bg-primary/5 font-medium" : "border-[var(--p-hair)] hover:bg-foreground/[0.04]",
+                cancelReason === key ? "border-primary bg-primary/5 font-medium" : "border-[var(--p-hair)] hover:bg-muted/70",
               )}>
                 <input type="radio" name="cancel-reason" value={key} checked={cancelReason === key} onChange={() => setCancelReason(key)} className="sr-only" />
                 <div className={cn("flex size-4 items-center justify-center rounded-full border-2 transition-colors", cancelReason === key ? "border-primary bg-primary" : "border-muted-foreground/30")}>

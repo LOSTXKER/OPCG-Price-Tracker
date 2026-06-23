@@ -126,7 +126,7 @@ function ListRow({
   return (
     <div
       className={cn(
-        "group/row ease-chrome flex items-center gap-3 px-3 py-3 transition-colors hover:bg-foreground/[0.04]",
+        "group/row ease-chrome flex items-center gap-3 px-3 py-3 transition-colors hover:bg-muted/70",
         removing && "opacity-40"
       )}
     >
@@ -142,7 +142,7 @@ function ListRow({
         type="button"
         onClick={onTogglePin}
         className={cn(
-          "inline-flex size-7 shrink-0 items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-foreground/[0.06]",
+          "inline-flex size-7 shrink-0 items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-muted",
           pinned
             ? "text-primary"
             : "text-muted-foreground/40 hover:text-foreground"
@@ -232,7 +232,7 @@ function ListRow({
             "inline-flex size-8 items-center justify-center rounded-lg ease-chrome transition-colors",
             entry.hasActiveAlert
               ? "text-amber-500 hover:bg-amber-500/10"
-              : "text-muted-foreground/40 hover:bg-foreground/[0.06] hover:text-foreground"
+              : "text-muted-foreground/40 hover:bg-muted hover:text-foreground"
           )}
           aria-label={
             entry.hasActiveAlert

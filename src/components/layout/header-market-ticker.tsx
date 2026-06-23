@@ -114,7 +114,7 @@ export function HeaderMarketTicker({
           )}
 
           <DropdownMenu>
-            <DropdownMenuTrigger className="ease-chrome flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] px-2.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:border-[var(--p-hair)] hover:bg-foreground/[0.06] hover:text-foreground focus:outline-none">
+            <DropdownMenuTrigger className="ease-chrome flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] px-2.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:border-[var(--p-hair)] hover:bg-muted hover:text-foreground focus:outline-none">
               <Globe className="size-3" />
               <span className="hidden sm:inline">{LANG_OPTIONS.find((l) => l.value === language)?.label ?? language}</span>
               <span className="sm:hidden">{language}</span>
@@ -131,7 +131,7 @@ export function HeaderMarketTicker({
           </DropdownMenu>
 
           <DropdownMenu>
-            <DropdownMenuTrigger className="ease-chrome flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] px-2.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:border-[var(--p-hair)] hover:bg-foreground/[0.06] hover:text-foreground focus:outline-none">
+            <DropdownMenuTrigger className="ease-chrome flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] px-2.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:border-[var(--p-hair)] hover:bg-muted hover:text-foreground focus:outline-none">
               <span>{CURRENCY_SYMBOL[currency]}</span>
               <span>{currency}</span>
             </DropdownMenuTrigger>
@@ -149,7 +149,7 @@ export function HeaderMarketTicker({
           <button
             type="button"
             onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-            className="ease-chrome flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:border-[var(--p-hair)] hover:bg-foreground/[0.06] hover:text-foreground"
+            className="ease-chrome flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:border-[var(--p-hair)] hover:bg-muted hover:text-foreground"
           >
             {mounted && resolvedTheme === "dark" ? <Sun className="size-3" /> : <Moon className="size-3" />}
             <span className="hidden font-medium lg:inline">{mounted && resolvedTheme === "dark" ? t(language, "lightMode") : t(language, "darkMode")}</span>

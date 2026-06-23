@@ -122,7 +122,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
               href={`/profile/${user.id}`}
               aria-label={t(lang, "viewPublicProfile")}
               title={t(lang, "viewPublicProfile")}
-              className="group ease-chrome mb-6 flex items-center gap-3 rounded-lg border border-[var(--p-hair)] bg-card/40 px-3 py-2.5 transition-colors hover:border-[var(--p-hair)] hover:bg-foreground/[0.04]"
+              className="group ease-chrome mb-6 flex items-center gap-3 rounded-lg border border-[var(--p-hair)] bg-card/40 px-3 py-2.5 transition-colors hover:border-[var(--p-hair)] hover:bg-muted/70"
             >
               <Avatar className={cn("size-9 shrink-0 ring-2 ring-offset-2 ring-offset-background", tierCfg.ring)}>
                 {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
@@ -167,7 +167,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
                               "ease-chrome relative flex w-full items-center gap-2.5 rounded-lg px-3 py-1.5 text-sm transition-colors",
                               active
                                 ? "font-medium text-foreground before:absolute before:inset-y-1 before:-left-0.5 before:w-0.5 before:rounded-full before:bg-primary"
-                                : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground",
+                                : "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
                             )}
                           >
                             <Icon

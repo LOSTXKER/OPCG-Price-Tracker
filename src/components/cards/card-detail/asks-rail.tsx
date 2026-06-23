@@ -148,7 +148,7 @@ export function MeecardAsksRail({
   )
 
   const rowClass =
-    "ease-chrome flex items-center justify-between gap-3 py-3 pl-0.5 pr-2 hover:bg-foreground/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+    "ease-chrome flex items-center justify-between gap-3 py-3 pl-0.5 pr-2 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
 
   const hasListings = sorted.length > 0
 

@@ -34,7 +34,7 @@ export const AssetRowComponent = memo(function AssetRowComponent({
   const viewLabel = t(lang, "viewDetails")
 
   return (
-    <tr className="group border-b border-[var(--p-hair)] ease-chrome transition-colors hover:bg-foreground/[0.04]">
+    <tr className="group border-b border-[var(--p-hair)] ease-chrome transition-colors hover:bg-muted/70">
       <td className="py-3.5 pl-5 pr-3 align-middle">
         <div className="flex items-start gap-3.5">
           <Link href={detailHref} className="shrink-0" aria-label={viewLabel}>

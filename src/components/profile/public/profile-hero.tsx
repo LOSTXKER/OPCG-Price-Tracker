@@ -256,7 +256,7 @@ function HandleRow({
         onClick={onCopy}
         aria-label={t(lang, "shareCopyLink")}
         title={copied ? t(lang, "shareLinkCopied") : t(lang, "shareCopyLink")}
-        className="ease-chrome inline-flex size-6 items-center justify-center rounded-lg text-muted-foreground/70 transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+        className="ease-chrome inline-flex size-6 items-center justify-center rounded-lg text-muted-foreground/70 transition-colors hover:bg-muted hover:text-foreground"
       >
         {copied ? (
           <Check className="size-3.5 text-emerald-500" />

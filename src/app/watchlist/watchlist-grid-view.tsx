@@ -83,7 +83,7 @@ export function WatchlistGridView({
                 >
                   <div className="flex items-center gap-0.5">
                     <label
-                      className="inline-flex size-7 cursor-pointer items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-foreground/[0.06]"
+                      className="inline-flex size-7 cursor-pointer items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-muted"
                       title={t(lang, "selectAll")}
                     >
                       <input
@@ -111,7 +111,7 @@ export function WatchlistGridView({
                           : t(lang, "setPriceAlert")
                       }
                       className={cn(
-                        "inline-flex size-7 items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-foreground/[0.06]",
+                        "inline-flex size-7 items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-muted",
                         entry.hasActiveAlert
                           ? "text-amber-500"
                           : "text-muted-foreground hover:text-foreground"
@@ -137,7 +137,7 @@ export function WatchlistGridView({
                         pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")
                       }
                       className={cn(
-                        "inline-flex size-7 items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-foreground/[0.06]",
+                        "inline-flex size-7 items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-muted",
                         pinned
                           ? "text-primary"
                           : "text-muted-foreground hover:text-foreground"
@@ -161,7 +161,7 @@ export function WatchlistGridView({
                       onClick={(e) => e.stopPropagation()}
                       aria-label={t(lang, "viewDetails")}
                       title={t(lang, "viewDetails")}
-                      className="inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground ease-chrome transition-colors hover:bg-foreground/[0.06] hover:text-primary"
+                      className="inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-primary"
                     >
                       <ExternalLink className="size-3.5" />
                     </Link>

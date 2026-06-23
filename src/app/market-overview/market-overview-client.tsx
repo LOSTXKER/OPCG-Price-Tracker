@@ -162,7 +162,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
                 <Link
                   key={s.code}
                   href={`/sets/${s.code.toLowerCase()}`}
-                  className="group flex items-center gap-3 px-5 py-3 transition-colors ease-chrome hover:bg-foreground/[0.04]"
+                  className="group flex items-center gap-3 px-5 py-3 transition-colors ease-chrome hover:bg-muted/70"
                 >
                   <span className="w-5 shrink-0 text-center font-price text-meta tabular-nums">
                     {i + 1}
@@ -270,7 +270,7 @@ function TopCardTile({
   return (
     <Link
       href={`/cards/${card.cardCode}`}
-      className="group panel flex flex-col overflow-hidden transition-colors ease-chrome hover:bg-foreground/[0.04]"
+      className="group panel flex flex-col overflow-hidden transition-colors ease-chrome hover:bg-muted/70"
     >
       <div className="relative aspect-[63/88] w-full overflow-hidden bg-muted/30">
         {card.imageUrl ? (

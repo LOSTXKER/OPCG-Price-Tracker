@@ -9,11 +9,12 @@ import {
   type ColumnId,
   type ViewMode,
   type ChangePeriod,
+  type CardRow,
   COLUMN_SORTS,
   parseSortColumn,
   PAGE_SIZE,
 } from "@/components/home/market-types"
-import type { CardRow } from "./search-table-row"
+import { useSparklines } from "@/hooks/use-sparklines"
 
 /**
  * Owns all of /search's query state and data fetching: the debounced URL-driven
@@ -30,6 +31,7 @@ export function useSearch() {
   const [sort, setSort] = useState<SortKey>("price_desc")
   const [page, setPage] = useState(1)
   const [cards, setCards] = useState<CardRow[]>([])
+  const sparklines = useSparklines(cards)
   const [total, setTotal] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [isPending, startTransition] = useTransition()
@@ -191,6 +193,7 @@ export function useSearch() {
     inputRef,
     sortCol,
     sortDir,
+    sparklines,
     activeFilterCount,
     handleSubmit,
     handleSortChange,

@@ -73,7 +73,7 @@ function ListingCardBase({
     <article
       data-listing-id={id}
       className={cn(
-        "panel ease-chrome flex flex-col overflow-hidden transition-colors hover:bg-foreground/[0.04]",
+        "panel ease-chrome flex flex-col overflow-hidden transition-colors hover:bg-muted/70",
         isFeatured && "border border-primary/30"
       )}
     >

@@ -98,7 +98,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
                 <Link
                   key={l.id}
                   href={`/marketplace/${l.id}`}
-                  className="ease-chrome flex flex-wrap items-center justify-between gap-2 rounded-lg border border-[var(--p-hair)] px-4 py-3 text-sm transition-colors hover:bg-foreground/[0.04]"
+                  className="ease-chrome flex flex-wrap items-center justify-between gap-2 rounded-lg border border-[var(--p-hair)] px-4 py-3 text-sm transition-colors hover:bg-muted/70"
                 >
                   <div className="min-w-0 flex-1">
                     <span className="font-medium">

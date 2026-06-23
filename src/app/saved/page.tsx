@@ -143,7 +143,7 @@ export default function SavedListingsPage() {
               return (
                 <div
                   key={item.id}
-                  className="panel group relative overflow-hidden rounded-xl ease-chrome transition-colors hover:bg-foreground/[0.04]"
+                  className="panel group relative overflow-hidden rounded-xl ease-chrome transition-colors hover:bg-muted/70"
                 >
                   <Link href={`/marketplace/${listing.id}`} className="block">
                     {/* Image — clean, no overlays. Sold/inactive listings desaturate. */}
@@ -208,7 +208,7 @@ export default function SavedListingsPage() {
                       onClick={() => handleRemove(listing.id)}
                       disabled={removing === listing.id}
                       aria-label={t(lang, "remove")}
-                      className="inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground ease-chrome transition-colors hover:bg-foreground/[0.06] hover:text-destructive disabled:opacity-50"
+                      className="inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-destructive disabled:opacity-50"
                     >
                       {removing === listing.id ? (
                         <Loader2 className="h-3.5 w-3.5 animate-spin" />

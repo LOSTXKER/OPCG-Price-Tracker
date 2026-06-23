@@ -53,7 +53,7 @@ const MobileTrendingItem = memo(function MobileTrendingItem({
   return (
     <Link
       href={`/cards/${card.cardCode}`}
-      className="flex items-center gap-3 px-4 py-3 ease-chrome transition-colors active:bg-foreground/[0.04]"
+      className="flex items-center gap-3 px-4 py-3 ease-chrome transition-colors active:bg-muted/70"
     >
       <span className="w-5 shrink-0 text-center font-price text-xs text-muted-foreground">
         {rank}
@@ -108,7 +108,7 @@ const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }:
   return (
     <tr
       key={card.cardCode}
-      className="border-b border-[var(--p-hair)] ease-chrome transition-colors hover:bg-foreground/[0.04]"
+      className="border-b border-[var(--p-hair)] ease-chrome transition-colors hover:bg-muted/70"
     >
       <td className="px-4 py-2.5 text-center tabular-nums text-muted-foreground">
         {rank}

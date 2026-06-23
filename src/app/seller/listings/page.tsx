@@ -248,7 +248,7 @@ export default function SellerListingsPage() {
               return (
                 <div
                   key={listing.id}
-                  className="panel flex items-center gap-4 rounded-xl p-3 transition-colors ease-chrome hover:bg-foreground/[0.04]"
+                  className="panel flex items-center gap-4 rounded-xl p-3 transition-colors ease-chrome hover:bg-muted/70"
                 >
                   {/* Card Image */}
                   {listing.card.imageUrl ? (

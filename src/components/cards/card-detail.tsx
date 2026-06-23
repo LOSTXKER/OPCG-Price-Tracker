@@ -493,10 +493,10 @@ export function CardDetail({
   // outlines that compete with Buy). border-0 + hover overrides neutralize
   // CompareButton's own border + primary-tinted variant.
   const utilityBtn =
-    "ease-chrome flex h-10 w-full items-center justify-center gap-1.5 rounded-lg border-0 bg-transparent text-sm font-medium text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
+    "ease-chrome flex h-10 w-full items-center justify-center gap-1.5 rounded-lg border-0 bg-transparent text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
   // Filled-neutral secondary CTA (ลงขาย / เพิ่มพอร์ต) — sits under the gold buy.
   const secondaryBtn =
-    "ease-chrome flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-foreground/[0.06] text-sm font-semibold text-foreground hover:bg-foreground/[0.1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
+    "ease-chrome flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-foreground/[0.06] text-sm font-semibold text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
 
   const handleShare = async () => {
     const url = typeof window !== "undefined" ? window.location.href : ""
@@ -645,7 +645,7 @@ export function CardDetail({
                       onClick={() => setSelectedGrade(tier.key)}
                       className={cn(
                         "ease-chrome flex shrink-0 flex-col items-start gap-0.5 rounded-lg px-2.5 py-1.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                        active ? "bg-foreground/10 text-foreground" : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground",
+                        active ? "bg-foreground/10 text-foreground" : "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
                         disabled && "cursor-not-allowed opacity-40",
                       )}
                     >
@@ -763,7 +763,7 @@ export function CardDetail({
             {latestSale ? (
               <a
                 href="#sources"
-                className="ease-chrome -mx-1 flex items-center gap-2 rounded-lg px-1 py-1.5 hover:bg-foreground/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="ease-chrome -mx-1 flex items-center gap-2 rounded-lg px-1 py-1.5 hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <SourceLogo source={latestSale.source} size={18} />
                 <span className="text-label min-w-0 flex-1 truncate font-medium text-foreground">{sourceLabel(latestSale.source)}</span>

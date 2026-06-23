@@ -120,7 +120,7 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
                   "group flex items-start gap-3 rounded-xl border px-4 py-3 text-left transition-all",
                   active
                     ? "border-primary/60 bg-primary/[0.06] ring-1 ring-primary/20"
-                    : "border-border/50 hover:border-border hover:bg-foreground/[0.02]",
+                    : "border-border/50 hover:border-border hover:bg-muted/40",
                 )}
               >
                 <span

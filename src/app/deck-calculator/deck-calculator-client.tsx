@@ -238,7 +238,7 @@ function DeckCalculatorContent() {
               className={`ease-chrome rounded-lg border px-3 py-1.5 text-sm font-medium ${
                 activeDeck?.id === d.id
                   ? "border-primary bg-primary/10 text-primary"
-                  : "border-[var(--p-hair)] hover:bg-foreground/[0.06]"
+                  : "border-[var(--p-hair)] hover:bg-muted"
               }`}
             >
               {d.name}
@@ -395,7 +395,7 @@ function DeckCalculatorContent() {
                 <button
                   key={c.id}
                   type="button"
-                  className="ease-chrome block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-foreground/[0.04]"
+                  className="ease-chrome block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-muted/70"
                   onClick={() => void addCard(c)}
                 >
                   <span className="font-medium">{c.nameEn ?? c.nameJp}</span>

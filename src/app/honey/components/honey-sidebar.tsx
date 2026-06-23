@@ -208,7 +208,7 @@ function HoneyStatCard({
         render={(triggerProps) => <button type="button" {...triggerProps} aria-label={ariaLabel} />}
         className={cn(
           "panel group relative flex h-full w-full flex-col p-4 text-left",
-          "cursor-pointer transition-colors hover:bg-foreground/[0.02]",
+          "cursor-pointer transition-colors hover:bg-muted/40",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         )}
       >

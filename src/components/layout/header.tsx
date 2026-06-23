@@ -136,7 +136,7 @@ export function Header() {
                 "ease-chrome flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
                 isActive(pathname, "/portfolio")
                   ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
-                  : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
               <Star className="size-3.5 fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400" />
@@ -149,7 +149,7 @@ export function Header() {
                 "ease-chrome flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
                 isActive(pathname, "/watchlist")
                   ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
-                  : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
               <Bookmark className="size-3.5 text-blue-500 dark:text-blue-400" />
@@ -162,7 +162,7 @@ export function Header() {
                 "ease-chrome relative flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
                 isActive(pathname, "/honey")
                   ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
-                  : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
               {honeyPendingActions && (
@@ -202,7 +202,7 @@ export function Header() {
               <div className="flex items-center gap-2">
                 <Link
                   href="/pricing"
-                  className="ease-chrome flex items-center gap-1 rounded-full px-2.5 py-1 text-sm font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+                  className="ease-chrome flex items-center gap-1 rounded-full px-2.5 py-1 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 >
                   <Crown className="size-3 text-amber-600 dark:text-amber-400" />
                   {language === "TH" ? "แพ็กเกจ" : language === "JP" ? "プラン" : "Plans"}

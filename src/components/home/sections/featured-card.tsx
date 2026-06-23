@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { Crown } from "lucide-react"
 
 import { Price } from "@/components/shared/price-inline"
 import { RarityBadge } from "@/components/shared/rarity-badge"
@@ -29,7 +30,7 @@ export function HomeFeaturedCard({
   return (
     <Link
       href={`/cards/${card.cardCode}`}
-      className="group ease-chrome flex flex-col gap-3 rounded-xl p-3 hover:bg-foreground/[0.04] sm:flex-row sm:items-center sm:gap-5"
+      className="group ease-chrome flex flex-col gap-3 rounded-xl p-3 hover:bg-muted/70 sm:flex-row sm:items-center sm:gap-5"
     >
       <div className="relative aspect-[63/88] w-[100px] shrink-0 overflow-hidden rounded-lg bg-muted">
         {card.imageUrl && (
@@ -45,7 +46,10 @@ export function HomeFeaturedCard({
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-eyebrow text-muted-foreground/60">{t(lang, "highestValue")}</p>
+        <p className="flex items-center gap-1.5 text-eyebrow">
+          <Crown className="size-3.5 text-primary" aria-hidden />
+          {t(lang, "highestValue")}
+        </p>
         <p className="mt-1.5 line-clamp-2 text-h4 sm:line-clamp-1">{name}</p>
         <div className="mt-1 flex items-center gap-1.5 text-meta">
           <span className="font-mono">{card.set.code.toUpperCase()}</span>
@@ -53,7 +57,7 @@ export function HomeFeaturedCard({
           <RarityBadge rarity={card.rarity} size="sm" />
         </div>
         <p className="mt-2 font-price text-xl font-bold tracking-tight">
-          ~<Price jpy={card.latestPriceJpy ?? 0} />
+          <Price jpy={card.latestPriceJpy ?? 0} />
         </p>
       </div>
     </Link>

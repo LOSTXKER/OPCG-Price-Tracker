@@ -123,7 +123,7 @@ export function DropRateDialog({
   return (
     <Dialog>
       <DialogTrigger
-        className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--p-hair)] bg-muted/50 px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors ease-chrome hover:bg-foreground/[0.06] hover:text-foreground"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--p-hair)] bg-muted/50 px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground"
       >
         <BarChart3 className="size-3.5 text-primary" />
         {t(lang, "dropRate")}

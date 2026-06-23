@@ -36,7 +36,7 @@ export const GridCard = memo(function GridCard({
     : card.priceChange7d
 
   return (
-    <div className="panel ease-chrome group/card relative flex flex-col overflow-hidden hover:bg-foreground/[0.04]">
+    <div className="panel ease-chrome group/card relative flex flex-col overflow-hidden hover:bg-muted/70">
       <Link
         href={`/cards/${card.cardCode}`}
         aria-label={name}

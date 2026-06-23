@@ -3,18 +3,15 @@
 import {
   LayoutGrid,
   List,
-  Search,
-  Shield,
   SlidersHorizontal,
   TrendingUpDown,
   X,
 } from "lucide-react"
 
-import { Fragment } from "react"
+import { useMemo } from "react"
 
 import { FilterChips, type FilterDefinition } from "@/components/shared/filter-chips"
 import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker"
-import { SortableHeader } from "@/components/shared/sortable-header"
 import { AdSlot } from "@/components/ads/ad-slot"
 import { Input } from "@/components/ui/input"
 import { SegmentedControl } from "@/components/ui/segmented-control"
@@ -26,9 +23,10 @@ import { cn } from "@/lib/utils"
 import { getColorOptions } from "@/lib/constants/card-config"
 import { useMarketCards } from "@/hooks/use-market-cards"
 
-import { MarketRow, TableRowSkeleton } from "./market-row"
+import { MarketTable } from "@/components/market/market-table"
+import { PriceModeControl } from "@/components/market/price-mode-control"
+import { buildMarketColumns } from "@/components/market/market-columns"
 import { GridCard, GridCardSkeleton } from "./grid-card"
-import { MobileCardItem, MobileCardSkeleton } from "./mobile-card-item"
 import { Pagination } from "./pagination"
 import {
   type Tab,
@@ -103,15 +101,17 @@ export function HomeMarketOverview({
   })
 
   const selectedSets = m.filters.set ?? []
+  const columns = useMemo(() => buildMarketColumns({ showViews: m.showViews }), [m.showViews])
 
   return (
     <div className="space-y-4">
       {children}
 
-      {/* Main table panel */}
-    <div className="panel overflow-hidden">
+      {/* Main table — flat, no panel box (minimal; floats on the page like the
+          highlights band above). The only structural line is the header underline. */}
+    <div>
       {/* Toolbar — single row on sm+, two rows on mobile */}
-      <div className="border-b border-[var(--p-hair)]">
+      <div>
         <div className="flex flex-wrap items-center gap-2 px-3 py-2 sm:flex-nowrap sm:gap-2.5 sm:px-4">
           {/* Tabs (underline-style) — neutral foreground underline, not gold, so
               the page keeps a single honey accent like card-detail. */}
@@ -132,56 +132,26 @@ export function HomeMarketOverview({
             ))}
           </div>
 
-          {/* Search — sm+ only here */}
-          <div className="relative hidden min-w-0 flex-1 sm:block">
-            <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground/50" />
-            <Input
-              type="text"
-              placeholder={t(lang, "searchLong")}
-              className="surface-1 h-9 border-[var(--p-hair)] pl-9 pr-8 placeholder:text-muted-foreground/40 focus-visible:border-primary/50 focus-visible:ring-0"
-              value={m.search}
-              onChange={(e) => {
-                m.setSearch(e.target.value)
-                if (e.target.value === "") m.setPage(1)
-              }}
-            />
-            {m.search && (
-              <button
-                type="button"
-                onClick={() => { m.setSearch(""); m.setPage(1) }}
-                className="ease-chrome absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
-              >
-                <X className="size-3.5" />
-              </button>
-            )}
-          </div>
+          {/* Set picker — the primary browse axis, given the prominent center slot
+              (replaces the old in-table search; the hero search above covers lookup). */}
+          {sets.length > 0 && (
+            <div className="hidden min-w-0 flex-1 sm:block sm:max-w-xs">
+              <SetPicker
+                sets={sets}
+                selectedCode={selectedSets[0] ?? null}
+                onSelect={(code) => m.handleFilterChange("set", code ? [code] : [])}
+                variant="inline"
+                nullable
+                prominent
+              />
+            </div>
+          )}
 
           {/* Right cluster — own full-width row on mobile (declutter), inline on sm+ */}
           <div className="flex w-full shrink-0 items-center justify-end gap-1.5 sm:w-auto">
-            {sets.length > 0 && (
-              <div className="hidden sm:block sm:w-[200px]">
-                <SetPicker
-                  sets={sets}
-                  selectedCode={selectedSets[0] ?? null}
-                  onSelect={(code) =>
-                    m.handleFilterChange("set", code ? [code] : [])
-                  }
-                  variant="inline"
-                  nullable
-                  align="right"
-                />
-              </div>
-            )}
-
-            <SegmentedControl
-              size="sm"
+            <PriceModeControl
               value={m.priceMode}
-              onChange={(value) => { m.setPriceMode(value); m.setPage(1) }}
-              options={[
-                { value: "raw", label: "Raw" },
-                { value: "psa10", label: "PSA 10", icon: Shield },
-              ]}
-              ariaLabel={t(lang, "price")}
+              onChange={(mode) => { m.setPriceMode(mode); m.setPage(1) }}
             />
 
             <button
@@ -191,7 +161,7 @@ export function HomeMarketOverview({
                 "ease-chrome flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium",
                 m.filterOpen || m.activeFilterCount > 0
                   ? "bg-foreground/[0.06] text-foreground"
-                  : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
               <SlidersHorizontal className="size-3.5" />
@@ -214,31 +184,19 @@ export function HomeMarketOverview({
           </div>
         </div>
 
-        {/* Mobile-only search row */}
-        <div className="border-t border-[var(--p-hair)] px-3 py-2 sm:hidden">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground/50" />
-            <Input
-              type="text"
-              placeholder={t(lang, "searchLong")}
-              className="surface-1 h-9 border-[var(--p-hair)] pl-9 pr-8 placeholder:text-muted-foreground/40 focus-visible:border-primary/50 focus-visible:ring-0"
-              value={m.search}
-              onChange={(e) => {
-                m.setSearch(e.target.value)
-                if (e.target.value === "") m.setPage(1)
-              }}
+        {/* Mobile-only set picker row */}
+        {sets.length > 0 && (
+          <div className="border-t border-[var(--p-hair)] px-3 py-2 sm:hidden">
+            <SetPicker
+              sets={sets}
+              selectedCode={selectedSets[0] ?? null}
+              onSelect={(code) => m.handleFilterChange("set", code ? [code] : [])}
+              variant="inline"
+              nullable
+              prominent
             />
-            {m.search && (
-              <button
-                type="button"
-                onClick={() => { m.setSearch(""); m.setPage(1) }}
-                className="ease-chrome absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
-              >
-                <X className="size-3.5" />
-              </button>
-            )}
           </div>
-        </div>
+        )}
       </div>
 
       {/* Advanced filters — bottom sheet (replaces the old inline horizontal-
@@ -262,7 +220,7 @@ export function HomeMarketOverview({
               <Input
                 type="number"
                 placeholder={t(lang, "min")}
-                className="surface-1 h-10 w-24 border-[var(--p-hair)] px-2 tabular-nums placeholder:text-muted-foreground/50 focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
+                className="surface-1 h-10 w-24 border-[var(--p-hair)] px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
                 value={m.minPrice}
                 onChange={(e) => { m.setMinPrice(e.target.value); m.setPage(1) }}
                 min={0}
@@ -271,7 +229,7 @@ export function HomeMarketOverview({
               <Input
                 type="number"
                 placeholder={t(lang, "max")}
-                className="surface-1 h-10 w-24 border-[var(--p-hair)] px-2 tabular-nums placeholder:text-muted-foreground/50 focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
+                className="surface-1 h-10 w-24 border-[var(--p-hair)] px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
                 value={m.maxPrice}
                 onChange={(e) => { m.setMaxPrice(e.target.value); m.setPage(1) }}
                 min={0}
@@ -282,7 +240,7 @@ export function HomeMarketOverview({
               {m.activeFilterCount > 0 ? (
                 <button
                   onClick={m.clearAllFilters}
-                  className="ease-chrome flex items-center gap-1 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
+                  className="ease-chrome flex items-center gap-1 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
                 >
                   <X className="size-3.5" />
                   {t(lang, "clearAll")}
@@ -303,89 +261,24 @@ export function HomeMarketOverview({
 
       {/* Content: Table or Grid */}
       {m.viewMode === "table" ? (
-        <>
-        <div className={cn("divide-y divide-[var(--p-hair)] sm:hidden", m.isPending && "opacity-50 transition-opacity")}>
-          {m.isPending && m.cards.length === 0
-            ? Array.from({ length: 6 }).map((_, i) => <MobileCardSkeleton key={i} />)
-            : m.cards.map((card, i) => (
-                <Fragment key={card.cardCode}>
-                  <MobileCardItem
-                    card={card}
-                    rank={(m.page - 1) * PAGE_SIZE + i + 1}
-                    priceMode={m.priceMode}
-                  />
-                  {/* In-feed ad mid-list (FREE users only; collapses otherwise) */}
-                  {i === 9 && m.cards.length > 12 && (
-                    <AdSlot placement="browse-in-feed" className="aspect-[6/1]" />
-                  )}
-                </Fragment>
-              ))}
-          {!m.isPending && m.cards.length === 0 && (
-            <p className="py-12 text-center text-sm text-muted-foreground">{t(lang, "noData")}</p>
-          )}
-        </div>
-        <div className="hidden overflow-x-auto sm:block">
-          <table className="w-full table-fixed text-left text-sm">
-            <colgroup>
-              <col className="w-8" />
-              <col className="w-10" />
-              <col />
-              <col className="hidden w-[72px] md:table-column" />
-              <col className="hidden w-[88px] sm:table-column" />
-              <col className="w-[100px]" />
-              <col className="w-[88px]" />
-              {m.showViews ? (
-                <col className="hidden w-[80px] md:table-column" />
-              ) : (
-                <>
-                  <col className="hidden w-[84px] md:table-column" />
-                  <col className="hidden w-[84px] lg:table-column" />
-                </>
-              )}
-            </colgroup>
-            <thead className="sticky top-0 z-10 bg-card">
-              <tr className="border-b border-[var(--p-hair)] text-eyebrow text-muted-foreground">
-                <th className="py-2.5 pl-3 pr-0 font-medium"></th>
-                <th className="py-2.5 pr-1 pl-1 font-medium">#</th>
-                <th className="py-2.5 pr-3 pl-2 font-medium">{t(lang, "card")}</th>
-                <th className="hidden py-2.5 pr-3 font-medium md:table-cell">{t(lang, "set")}</th>
-                <SortableHeader label={t(lang, "rarity")} column="rarity" activeCol={m.sortCol} dir={m.sortDir} onClick={m.handleColumnSort} className="hidden sm:table-cell" />
-                <SortableHeader label={t(lang, "price")} column="price" activeCol={m.sortCol} dir={m.sortDir} onClick={m.handleColumnSort} align="right" />
-                <SortableHeader label="24h" column="change24h" activeCol={m.sortCol} dir={m.sortDir} onClick={m.handleColumnSort} align="right" />
-                {m.showViews ? (
-                  <th className="hidden py-2.5 pr-3 text-right font-medium md:table-cell">
-                    {t(lang, "visits")}
-                  </th>
-                ) : (
-                  <>
-                    <SortableHeader label="7d" column="change7d" activeCol={m.sortCol} dir={m.sortDir} onClick={m.handleColumnSort} align="right" className="hidden md:table-cell" />
-                    <SortableHeader label="30d" column="change30d" activeCol={m.sortCol} dir={m.sortDir} onClick={m.handleColumnSort} align="right" className="hidden lg:table-cell" />
-                  </>
-                )}
-              </tr>
-            </thead>
-            <tbody className={cn(m.isPending && "opacity-50 transition-opacity")}>
-              {m.isPending && m.cards.length === 0
-                ? Array.from({ length: PAGE_SIZE }).map((_, i) => <TableRowSkeleton key={i} />)
-                : m.cards.map((card, i) => (
-                    <MarketRow
-                      key={card.cardCode}
-                      card={card}
-                      rank={(m.page - 1) * PAGE_SIZE + i + 1}
-                      showViews={m.showViews}
-                      priceMode={m.priceMode}
-                    />
-                  ))}
-            </tbody>
-          </table>
-
-          {!m.isPending && m.cards.length === 0 && (
-            <p className="hidden py-12 text-center text-sm text-muted-foreground sm:block">
-              {t(lang, "noData")}
-            </p>
-          )}
-        </div>
-        </>
+        <MarketTable
+          cards={m.cards}
+          rankOffset={(m.page - 1) * PAGE_SIZE}
+          columns={columns}
+          priceMode={m.priceMode}
+          sparklines={m.sparklines}
+          sortCol={m.sortCol}
+          sortDir={m.sortDir}
+          onColumnSort={m.handleColumnSort}
+          isPending={m.isPending}
+          skeletonRows={PAGE_SIZE}
+          emptyText={t(lang, "noData")}
+          inFeedAd={(i) =>
+            i === 9 && m.cards.length > 12 ? (
+              <AdSlot placement="browse-in-feed" className="aspect-[6/1]" />
+            ) : null
+          }
+        />
       ) : (
         <div className={cn("p-4", m.isPending && "opacity-50 transition-opacity")}>
           <div className="mb-3 flex justify-end">

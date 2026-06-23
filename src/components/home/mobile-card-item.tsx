@@ -11,18 +11,20 @@ import { PriceUsd } from "@/components/shared/price-usd"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getCardName } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
-import { cn } from "@/lib/utils"
-import { changeToneClass, formatSignedPct } from "@/lib/utils/currency"
 import type { CardRow, PriceMode } from "./market-types"
+import { Sparkline } from "@/components/shared/sparkline"
+import { ChangePill } from "@/components/market/change-pill"
 
 export const MobileCardItem = memo(function MobileCardItem({
   card,
   rank,
   priceMode = "raw",
+  sparkline,
 }: {
   card: CardRow
   rank: number
   priceMode?: PriceMode
+  sparkline?: number[]
 }) {
   const lang = useUIStore((s) => s.language)
   const name = getCardName(lang, card)
@@ -30,7 +32,7 @@ export const MobileCardItem = memo(function MobileCardItem({
   const isPsa = priceMode === "psa10"
 
   return (
-    <div className="ease-chrome flex items-center gap-3 px-4 py-3 active:bg-foreground/[0.06]">
+    <div className="ease-chrome flex items-center gap-3 px-4 py-3 active:bg-muted">
       <span className="w-5 shrink-0 text-center font-price text-xs text-muted-foreground">{rank}</span>
       {card.imageUrl ? (
         <CardImageButton
@@ -67,6 +69,9 @@ export const MobileCardItem = memo(function MobileCardItem({
             <RarityBadge rarity={card.rarity} size="sm" />
           </div>
         </div>
+        {!isPsa && sparkline && sparkline.length >= 2 && (
+          <Sparkline data={sparkline} width={48} height={20} className="shrink-0" />
+        )}
         <div className="shrink-0 text-right">
           <p className="font-price text-sm font-semibold">
             {isPsa ? (
@@ -75,11 +80,7 @@ export const MobileCardItem = memo(function MobileCardItem({
               card.latestPriceJpy != null ? <Price jpy={card.latestPriceJpy} /> : "—"
             )}
           </p>
-          {!isPsa && c24 != null && c24 !== 0 && (
-            <p className={cn("font-price text-xs font-medium", changeToneClass(c24))}>
-              {formatSignedPct(c24)}
-            </p>
-          )}
+          {!isPsa && c24 != null && <ChangePill value={c24} className="mt-0.5" />}
         </div>
       </Link>
     </div>

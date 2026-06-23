@@ -94,10 +94,10 @@ export function PortfolioSidebar({
                 onChange={(e) => setEditName(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Escape") setEditingId(null) }}
               />
-              <button type="submit" className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground">
+              <button type="submit" className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground">
                 <Check className="size-3.5" />
               </button>
-              <button type="button" onClick={() => setEditingId(null)} className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground">
+              <button type="button" onClick={() => setEditingId(null)} className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground">
                 <X className="size-3.5" />
               </button>
             </form>
@@ -111,7 +111,7 @@ export function PortfolioSidebar({
               "group ease-chrome relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-all cursor-pointer",
               isActive
                 ? "bg-primary/6"
-                : "hover:bg-foreground/[0.06]"
+                : "hover:bg-muted"
             )}
             onClick={() => onSelect(p.id)}
           >
@@ -160,7 +160,7 @@ export function PortfolioSidebar({
               <DropdownMenu>
                 <DropdownMenuTrigger
                   onClick={(e) => e.stopPropagation()}
-                  className="ease-chrome shrink-0 rounded-lg p-1 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
+                  className="ease-chrome shrink-0 rounded-lg p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
                 >
                   <MoreHorizontal className="size-3.5" />
                 </DropdownMenuTrigger>
@@ -202,10 +202,10 @@ export function PortfolioSidebar({
             onChange={(e) => setNewName(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Escape") setCreating(false) }}
           />
-          <button type="submit" className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground">
+          <button type="submit" className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground">
             <Check className="size-3.5" />
           </button>
-          <button type="button" onClick={() => setCreating(false)} className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground">
+          <button type="button" onClick={() => setCreating(false)} className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground">
             <X className="size-3.5" />
           </button>
         </form>
@@ -217,7 +217,7 @@ export function PortfolioSidebar({
                 ? openUpgradeDialog({ featureKey: "portfolioCount" })
                 : setCreating(true)
             }
-            className="ease-chrome flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
+            className="ease-chrome flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             <div className="flex size-7 items-center justify-center rounded-lg border border-dashed border-[var(--p-hair)]">
               <Plus className="size-3.5" />

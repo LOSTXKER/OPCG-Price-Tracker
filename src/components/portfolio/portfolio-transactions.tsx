@@ -309,7 +309,7 @@ function TxRow({
   return (
     <div
       className={cn(
-        "group ease-chrome flex items-center gap-3 px-4 py-3 hover:bg-foreground/[0.04] sm:px-5 sm:py-3.5",
+        "group ease-chrome flex items-center gap-3 px-4 py-3 hover:bg-muted/70 sm:px-5 sm:py-3.5",
         isDeleting && "pointer-events-none opacity-40",
       )}
     >

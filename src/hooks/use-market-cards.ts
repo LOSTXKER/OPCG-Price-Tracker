@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, useTransition } from "react"
 import { ApiError, apiGet } from "@/lib/api/client"
 import { buildCardsUrl } from "@/lib/api/fetch-cards"
+import { useSparklines } from "@/hooks/use-sparklines"
 import {
   type TabId,
   type Tab,
@@ -45,7 +46,7 @@ export function useMarketCards({
   const [viewMode, setViewMode] = useState<ViewMode>("table")
   const [minPrice, setMinPrice] = useState("")
   const [maxPrice, setMaxPrice] = useState("")
-  const [sparklines, setSparklines] = useState<Record<number, number[]>>({})
+  const sparklines = useSparklines(cards)
   const [changePeriod, setChangePeriod] = useState<ChangePeriod>("7d")
   const [priceMode, setPriceMode] = useState<PriceMode>("raw")
   const [filterOpen, setFilterOpen] = useState(false)
@@ -117,18 +118,6 @@ export function useMarketCards({
     }
     fetchCards(activeTab, sort, page, search, filters, minPrice, maxPrice, priceMode)
   }, [activeTab, sort, page, search, filters, minPrice, maxPrice, priceMode, fetchCards])
-
-  useEffect(() => {
-    const ids = cards.map((c) => c.id).filter((id): id is number => id != null)
-    if (ids.length === 0) return
-    const controller = new AbortController()
-    apiGet<{ sparklines?: Record<number, number[]> }>(`/api/cards/sparklines?ids=${ids.join(",")}`, controller.signal)
-      .then((data) => { if (data.sparklines) setSparklines(data.sparklines) })
-      .catch((err: unknown) => {
-        if (err instanceof Error && err.name !== "AbortError") console.error("Sparkline fetch failed:", err)
-      })
-    return () => controller.abort()
-  }, [cards])
 
   const handleTabChange = (tab: TabId) => {
     const tabDef = tabs.find((t) => t.id === tab) ?? tabs[0]
