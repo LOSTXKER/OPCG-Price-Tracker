@@ -36,7 +36,7 @@ export const GridCard = memo(function GridCard({
     : card.priceChange7d
 
   return (
-    <div className="panel group/card relative flex flex-col overflow-hidden transition-colors hover:bg-muted/20">
+    <div className="panel ease-chrome group/card relative flex flex-col overflow-hidden hover:bg-foreground/[0.04]">
       <Link
         href={`/cards/${card.cardCode}`}
         aria-label={name}
@@ -71,7 +71,7 @@ export const GridCard = memo(function GridCard({
                 e.stopPropagation()
                 router.push(`/sets/${setCode}`)
               }}
-              className="relative z-20 cursor-pointer font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid"
+              className="ease-chrome relative z-20 cursor-pointer font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground hover:decoration-solid"
             >
               {setCode.toUpperCase()}
             </span>
@@ -110,7 +110,7 @@ export const GridCard = memo(function GridCard({
           setCode,
         }}
         show={{ detail: true, watchlist: card.id != null, compare: true }}
-        className="relative z-20 border-t border-border/60 p-2"
+        className="relative z-20 border-t border-[var(--p-hair)] p-2"
       />
     </div>
   )

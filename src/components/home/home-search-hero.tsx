@@ -1,9 +1,8 @@
 "use client"
 
-import Link from "next/link"
-
-import { getCardName, t } from "@/lib/i18n"
+import { t, type Language } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
+import { TypewriterText } from "@/components/shared/typewriter-text"
 import { HeroSearchBar, type SetSuggestion } from "./hero-search-bar"
 
 export type HeroTrendingCard = {
@@ -13,48 +12,51 @@ export type HeroTrendingCard = {
   nameTh?: string | null
 }
 
+// Rotating headline subjects — the full sweep of what the PLATFORM does (not
+// individual cards), so the hero sells every tool we ship. One entry per live
+// feature: market price · history · trending · PSA 10 · portfolio · watchlist ·
+// alerts · compare · deck calc · drop calc. Kept short so none wrap to a second
+// line (which would jolt the layout). Per-language because these are value props.
+const ROTATING: Record<Language, string[]> = {
+  TH: ["ราคากลาง", "ราคาย้อนหลัง", "การ์ดมาแรง", "ราคา PSA 10", "พอร์ตการ์ด", "จับตาราคา", "แจ้งเตือนราคา", "เทียบราคา", "ราคาเด็ค", "คำนวณดรอป"],
+  EN: ["live prices", "price history", "trending cards", "PSA 10 prices", "your portfolio", "watchlists", "price alerts", "card compare", "deck pricing", "drop odds"],
+  JP: ["リアル相場", "価格履歴", "急上昇カード", "PSA 10 相場", "ポートフォリオ", "ウォッチリスト", "価格アラート", "価格比較", "デッキ価格", "ドロップ計算"],
+}
+
 /**
  * Home hero — universal search as the page's focal point (VISION §5 "Universal
- * search = teleport"). A calm headline sits above a single oversized smart bar
- * (cards · sets · shortcuts), with popular shortcuts as chips below. Kept
- * `z-30` + overflow-visible so the bar's results dropdown is never clipped by
- * the dense market data that follows.
+ * search = teleport"). A calm headline sits above a single oversized smart bar;
+ * popular searches now live INSIDE the bar's focus dropdown (Fastwork-style),
+ * not as chips below it. Kept `z-30` + overflow-visible so the dropdown is never
+ * clipped by the dense market data that follows.
  */
 export function HomeSearchHero({ sets, trending }: { sets: SetSuggestion[]; trending?: HeroTrendingCard[] }) {
   const lang = useUIStore((s) => s.language)
-  const chips = (trending ?? []).slice(0, 5).map((c) => ({ label: getCardName(lang, c), href: `/cards/${c.cardCode}` }))
 
   return (
     <section className="relative z-30">
-      {/* subtle focal glow behind the bar (decorative) */}
+      {/* warm honey pool behind the bar — the page's single gold moment, tuned to
+          actually read on the dark canvas (see .hero-search-glow in globals.css) */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-2 -z-10 mx-auto h-32 max-w-xl rounded-full bg-primary/10 blur-3xl"
+        className="hero-search-glow pointer-events-none absolute left-1/2 -top-16 -z-10 h-[30rem] w-screen -translate-x-1/2 blur-2xl"
       />
-      <div className="mx-auto max-w-2xl px-1 pb-2 pt-4 sm:pt-8">
+      <div className="mx-auto max-w-2xl px-1 pb-2 pt-6 sm:pt-10">
         <div className="text-center">
-          <h1 className="text-h2 sm:text-h1">{t(lang, "heroSearchTitle")}</h1>
-          <p className="text-meta mt-1.5">{t(lang, "heroSearchSubtitle")}</p>
+          {/* eyebrow teaser + the rotating gradient subject (Fastwork-style).
+              sr-only carries a stable heading; the animated line is aria-hidden. */}
+          <p className="text-meta">{t(lang, "heroTeaser")}</p>
+          <h1 className="mt-1.5 text-3xl font-extrabold leading-[1.12] tracking-tight text-foreground sm:text-5xl">
+            <span className="sr-only">{t(lang, "heroSearchTitle")}</span>
+            <span aria-hidden>
+              <TypewriterText words={ROTATING[lang]} className="text-foreground" />
+            </span>
+          </h1>
         </div>
 
-        <div className="mt-5">
-          <HeroSearchBar sets={sets} />
+        <div className="mt-6">
+          <HeroSearchBar sets={sets} trending={trending} />
         </div>
-
-        {chips && chips.length > 0 && (
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
-            <span className="text-meta mr-0.5">{t(lang, "popular")}</span>
-            {chips.map((c) => (
-              <Link
-                key={`${c.href}:${c.label}`}
-                href={c.href}
-                className="ease-chrome surface-1 rounded-full px-3 py-1 text-xs font-medium text-muted-foreground ring-1 ring-[var(--p-hair)] transition-colors hover:text-foreground hover:ring-primary/30"
-              >
-                {c.label}
-              </Link>
-            ))}
-          </div>
-        )}
       </div>
     </section>
   )

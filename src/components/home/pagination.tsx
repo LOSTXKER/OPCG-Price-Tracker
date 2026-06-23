@@ -26,7 +26,7 @@ export function Pagination({
   if (totalPages <= 1) return null
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border px-4 py-3">
+    <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--p-hair)] px-4 py-3">
       <p className="hidden text-meta sm:block">
         {t(lang, "showingOf")} {formatCount((page - 1) * pageSize + 1)}-{formatCount(Math.min(page * pageSize, total))} {t(lang, "from")} {formatCount(total)} {t(lang, "card")}
       </p>
@@ -34,7 +34,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(Math.max(1, page - 1))}
           disabled={page <= 1 || isPending}
-          className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+          className="ease-chrome flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
         >
           <ChevronLeft className="size-4" />
         </button>
@@ -42,7 +42,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(Math.min(totalPages, page + 1))}
           disabled={page >= totalPages || isPending}
-          className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+          className="ease-chrome flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
         >
           <ChevronRight className="size-4" />
         </button>
@@ -77,10 +77,10 @@ function PageNumbers({
             key={p}
             onClick={() => onChange(p as number)}
             className={cn(
-              "flex size-9 items-center justify-center rounded-md text-xs font-medium transition-colors",
+              "ease-chrome flex size-9 items-center justify-center rounded-md text-xs font-medium",
               current === p
-                ? "bg-muted text-foreground font-semibold"
-                : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                ? "bg-foreground/[0.08] text-foreground font-semibold"
+                : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
             )}
           >
             {p}

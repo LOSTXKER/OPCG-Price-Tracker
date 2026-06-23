@@ -15,6 +15,7 @@ import {
   RelatedPages,
   type RelatedPageItem,
 } from "@/components/shared/related-pages";
+import { SectionHead } from "@/components/shared/section-head";
 
 const features = [
   {
@@ -123,7 +124,7 @@ export function HomeSeoContent() {
       {/* Features */}
       <section className="space-y-5">
         <div>
-          <h2 className="section-heading text-h3">
+          <h2 className="text-h3">
             Meecard ช่วยคุณติดตามราคาการ์ด One Piece ได้ยังไงบ้าง?
           </h2>
           <p className="mt-1.5 text-sm text-muted-foreground">
@@ -135,13 +136,13 @@ export function HomeSeoContent() {
             <Link
               key={f.href}
               href={f.href}
-              className="group flex flex-col gap-4 rounded-xl border border-border/50 bg-card p-6 transition-all hover:bg-muted/40 hover:shadow-md"
+              className="surface-1 ease-chrome group flex flex-col gap-4 rounded-xl p-6 hairline hover:bg-foreground/[0.04]"
             >
-              <div className="flex size-11 items-center justify-center rounded-full bg-primary/10">
-                <f.icon className="size-5 text-primary" />
+              <div className="flex size-11 items-center justify-center rounded-full bg-foreground/[0.05] text-foreground">
+                <f.icon className="size-5" />
               </div>
               <div>
-                <p className="text-sm font-semibold transition-colors group-hover:text-primary">
+                <p className="ease-chrome text-sm font-semibold group-hover:text-foreground">
                   {f.title}
                 </p>
                 <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
@@ -154,10 +155,8 @@ export function HomeSeoContent() {
       </section>
 
       {/* Price explainer */}
-      <section className="rounded-xl border border-border/50 bg-card/50 p-6 space-y-4">
-        <h2 className="section-heading text-h3">
-          ราคาการ์ด OPCG (One Piece Card Game) กำหนดจากอะไร?
-        </h2>
+      <section className="surface-1 hairline space-y-4 rounded-xl p-6">
+        <SectionHead title="ราคาการ์ด OPCG (One Piece Card Game) กำหนดจากอะไร?" />
         <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
           <p>
             ราคาการ์ดวันพีซขึ้นอยู่กับหลายปัจจัย ทั้ง{" "}

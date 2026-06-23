@@ -71,7 +71,14 @@ function useQuickActions(lang: Parameters<typeof t>[0]): QuickAction[] {
   )
 }
 
-export function HeroSearchBar({ sets = [] }: { sets?: SetSuggestion[] }) {
+export type PopularCard = {
+  cardCode: string
+  nameJp: string
+  nameEn?: string | null
+  nameTh?: string | null
+}
+
+export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggestion[]; trending?: PopularCard[] }) {
   const router = useRouter()
   const lang = useUIStore((s) => s.language)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -138,6 +145,16 @@ export function HeroSearchBar({ sets = [] }: { sets?: SetSuggestion[] }) {
     })
   }, [])
 
+  const clearRecent = useCallback(() => {
+    setRecent([])
+    try { localStorage.removeItem(RECENT_KEY) } catch { /* */ }
+    inputRef.current?.focus()
+  }, [])
+
+  // Popular searches — the trending cards, shown as quick-pick pills in the
+  // empty-state dropdown (replaces the old chip row under the bar).
+  const popularCards = trending.slice(0, 8)
+
   const commitSearch = useCallback((q: string) => {
     const trimmed = q.trim()
     if (!trimmed) return
@@ -195,7 +212,7 @@ export function HeroSearchBar({ sets = [] }: { sets?: SetSuggestion[] }) {
 
   const hasContent =
     (searching && (results.length > 0 || setMatches.length > 0 || actionMatches.length > 0 || loading || (trimmed.length >= 2 && results.length === 0))) ||
-    (!searching && (filteredRecent.length > 0 || actionMatches.length > 0))
+    (!searching && (filteredRecent.length > 0 || popularCards.length > 0 || actionMatches.length > 0))
   const hasDropdown = open && hasContent
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -355,10 +372,19 @@ export function HeroSearchBar({ sets = [] }: { sets?: SetSuggestion[] }) {
               </>
             )}
 
-            {/* RECENT (empty query only) */}
+            {/* RECENT (empty query only) — header carries a clear-all action */}
             {!searching && filteredRecent.length > 0 && (
               <>
-                <p className={sectionLabel}>{t(lang, "recentSearches")}</p>
+                <div className="flex items-center justify-between px-3 pb-1 pt-2">
+                  <p className="text-eyebrow text-muted-foreground/60">{t(lang, "recentSearches")}</p>
+                  <button
+                    type="button"
+                    onClick={clearRecent}
+                    className="ease-chrome rounded-md px-1.5 py-0.5 text-meta hover:bg-foreground/[0.06] hover:text-foreground"
+                  >
+                    {t(lang, "clearAll")}
+                  </button>
+                </div>
                 {filteredRecent.map((item, i) => {
                   return (
                     <button
@@ -373,6 +399,26 @@ export function HeroSearchBar({ sets = [] }: { sets?: SetSuggestion[] }) {
                     </button>
                   )
                 })}
+              </>
+            )}
+
+            {/* POPULAR (empty query only) — quick-pick pills, Fastwork-style */}
+            {!searching && popularCards.length > 0 && (
+              <>
+                <p className={sectionLabel}>{t(lang, "popular")}</p>
+                <div className="flex flex-wrap gap-1.5 px-3 pb-2 pt-0.5">
+                  {popularCards.map((c) => (
+                    <button
+                      key={c.cardCode}
+                      type="button"
+                      onClick={() => go(`/cards/${c.cardCode}`)}
+                      className="ease-chrome inline-flex items-center gap-1.5 rounded-full bg-foreground/[0.05] px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-foreground/[0.09] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <TrendingUp className="size-3 text-primary/70" aria-hidden />
+                      {getCardName(lang, c)}
+                    </button>
+                  ))}
+                </div>
               </>
             )}
 

@@ -36,7 +36,7 @@ export const MarketRow = memo(function MarketRow({
   const isPsa = priceMode === "psa10"
 
   return (
-    <tr className="border-b border-border/30 transition-colors duration-150 even:bg-muted/20 hover:bg-muted/50">
+    <tr className="ease-chrome border-b border-[var(--p-hair)] hover:bg-foreground/[0.04]">
       <td className="py-3 pl-3 pr-0 align-middle">
         {card.id != null && <WatchlistStar cardId={card.id} size="sm" />}
       </td>
@@ -76,13 +76,13 @@ export const MarketRow = memo(function MarketRow({
             <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted" />
           )}
           <Link href={`/cards/${card.cardCode}`} className="min-w-0">
-            <p className="truncate text-sm font-medium leading-tight hover:text-primary hover:underline">
+            <p className="truncate text-sm font-medium leading-tight hover:underline">
               {name}
             </p>
             <p className="mt-0.5 font-mono text-xs text-muted-foreground">
               {card.baseCode ?? card.cardCode}
               {card.isParallel && (
-                <span className="ml-1 text-primary">P</span>
+                <span className="ml-1 text-muted-foreground/70">P</span>
               )}
             </p>
           </Link>
@@ -90,7 +90,7 @@ export const MarketRow = memo(function MarketRow({
       </td>
       <td className="hidden py-3 pr-3 align-middle font-mono text-xs text-muted-foreground md:table-cell">
         {setCode && (
-          <Link href={`/sets/${setCode}`} className="underline decoration-dotted underline-offset-2 transition-colors hover:text-primary hover:decoration-solid">
+          <Link href={`/sets/${setCode}`} className="ease-chrome underline decoration-dotted underline-offset-2 hover:text-foreground hover:decoration-solid">
             {setCode.toUpperCase()}
           </Link>
         )}
@@ -146,7 +146,7 @@ export function ChangeCell({ value }: { value?: number | null }) {
 
 export function TableRowSkeleton() {
   return (
-    <tr className="border-b border-border/40">
+    <tr className="border-b border-[var(--p-hair)]">
       <td className="py-2.5 pl-3 pr-0">
         <Skeleton className="size-3.5 rounded-full" />
       </td>
