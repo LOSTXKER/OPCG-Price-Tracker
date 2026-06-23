@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -152,7 +152,7 @@ export default function SellerListingsPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("เธ•เนเธญเธเธเธฒเธฃเธฅเธเธเธฃเธฐเธเธฒเธจเธเธตเนเธเธฃเธดเธเธซเธฃเธทเธญเนเธกเน?")) return;
+    if (!confirm(t(lang, "sellListDeleteConfirm"))) return;
     setActionLoading(id);
     try {
       const ok = await apiTry(apiDelete(`/api/listings/${id}`));
@@ -303,11 +303,11 @@ export default function SellerListingsPage() {
                   {/* Price */}
                   <div className="shrink-0 text-right">
                     <p className="text-sm font-bold">
-                      ยฅ{listing.priceJpy.toLocaleString()}
+                      ¥{listing.priceJpy.toLocaleString()}
                     </p>
                     {listing.priceThb != null && (
                       <p className="text-meta">
-                        เธฟ{listing.priceThb.toLocaleString()}
+                        ฿{listing.priceThb.toLocaleString()}
                       </p>
                     )}
                   </div>

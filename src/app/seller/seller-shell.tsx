@@ -22,6 +22,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { PageContainer, type PageWidth } from "@/components/layout/page-container";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { t, type Language, type TranslationKey } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
+
+type NavItem = {
+  href: string;
+  labelKey: TranslationKey;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+};
 
 /**
  * Narrow-detail seller routes use a single-column layout (forms + record
@@ -37,28 +46,32 @@ function resolveSellerWidth(pathname: string): PageWidth {
   return NARROW_SELLER_ROUTES.some((re) => re.test(pathname)) ? "narrow" : "default";
 }
 
-const NAV_ITEMS = [
-  { href: "/seller", label: "ภาพรวม", icon: LayoutDashboard, exact: true },
-  { href: "/seller/listings", label: "สินค้าของฉัน", icon: Package },
-  { href: "/seller/orders", label: "คำสั่งซื้อ", icon: ShoppingCart },
-  { href: "/seller/reviews", label: "รีวิว", icon: Star },
-  { href: "/seller/settings", label: "ตั้งค่าร้าน", icon: Settings },
+const NAV_ITEMS: readonly NavItem[] = [
+  { href: "/seller", labelKey: "sellShellOverview", icon: LayoutDashboard, exact: true },
+  { href: "/seller/listings", labelKey: "sellShellMyListings", icon: Package },
+  { href: "/seller/orders", labelKey: "sellShellOrders", icon: ShoppingCart },
+  { href: "/seller/reviews", labelKey: "sellShellReviews", icon: Star },
+  { href: "/seller/settings", labelKey: "sellShellShopSettings", icon: Settings },
 ];
 
-const BREADCRUMB_LABELS: Record<string, string> = {
-  seller: "ศูนย์ผู้ขาย",
-  listings: "สินค้าของฉัน",
-  orders: "คำสั่งซื้อ",
-  reviews: "รีวิว",
-  settings: "ตั้งค่าร้าน",
-  new: "ลงขายใหม่",
-};
+function buildBreadcrumbLabels(lang: Language): Record<string, string> {
+  return {
+    seller: t(lang, "sellShellSellerCenter"),
+    listings: t(lang, "sellShellMyListings"),
+    orders: t(lang, "sellShellOrders"),
+    reviews: t(lang, "sellShellReviews"),
+    settings: t(lang, "sellShellShopSettings"),
+    new: t(lang, "sellShellNewListing"),
+  };
+}
 
 function NavContent({
   pathname,
+  lang,
   onNavigate,
 }: {
   pathname: string;
+  lang: Language;
   onNavigate?: () => void;
 }) {
   function isActive(href: string, exact?: boolean) {
@@ -83,7 +96,7 @@ function NavContent({
               }`}
             >
               <item.icon className="h-4 w-4" />
-              {item.label}
+              {t(lang, item.labelKey)}
             </Link>
           );
         })}
@@ -94,7 +107,7 @@ function NavContent({
         className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
-        กลับหน้าหลัก
+        {t(lang, "sellShellBackToHome")}
       </Link>
     </>
   );
@@ -102,6 +115,7 @@ function NavContent({
 
 export function SellerShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const lang = useUIStore((s) => s.language);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -115,9 +129,9 @@ export function SellerShell({ children }: { children: React.ReactNode }) {
           </Link>
           <div className="mb-6 flex items-center gap-2 px-3 pt-1">
             <Store className="h-5 w-5 text-primary" />
-            <span className="text-sm font-bold">ศูนย์ผู้ขาย</span>
+            <span className="text-sm font-bold">{t(lang, "sellShellSellerCenter")}</span>
           </div>
-          <NavContent pathname={pathname} />
+          <NavContent pathname={pathname} lang={lang} />
         </div>
       </aside>
 
@@ -139,23 +153,24 @@ export function SellerShell({ children }: { children: React.ReactNode }) {
               </Link>
               <div className="mb-4 flex items-center gap-2 px-3 pt-1">
                 <Store className="h-5 w-5 text-primary" />
-                <span className="text-sm font-bold">ศูนย์ผู้ขาย</span>
+                <span className="text-sm font-bold">{t(lang, "sellShellSellerCenter")}</span>
               </div>
               <NavContent
                 pathname={pathname}
+                lang={lang}
                 onNavigate={() => setMobileOpen(false)}
               />
             </SheetContent>
           </Sheet>
           <div className="flex items-center gap-2">
             <Store className="h-4 w-4 text-primary" />
-            <span className="text-sm font-semibold">ศูนย์ผู้ขาย</span>
+            <span className="text-sm font-semibold">{t(lang, "sellShellSellerCenter")}</span>
           </div>
         </header>
 
         <main className="flex-1 px-4 py-4 md:px-6 md:py-6 lg:px-8">
           <PageContainer inShell width={resolveSellerWidth(pathname)}>
-            <Breadcrumb pathname={pathname} labelMap={BREADCRUMB_LABELS} />
+            <Breadcrumb pathname={pathname} labelMap={buildBreadcrumbLabels(lang)} />
             {children}
           </PageContainer>
         </main>

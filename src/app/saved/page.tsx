@@ -64,7 +64,9 @@ export default function SavedListingsPage() {
       setData(json);
     } catch (err) {
       setData(null);
-      setError(err instanceof ApiError ? err.message : t(lang, "failedToLoad"));
+      // read lang imperatively so this fetch callback doesn't re-run on every
+      // language toggle just for the error-fallback string
+      setError(err instanceof ApiError ? err.message : t(useUIStore.getState().language, "failedToLoad"));
     } finally {
       setLoading(false);
     }
