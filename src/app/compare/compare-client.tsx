@@ -19,6 +19,7 @@ import { useCompareStore } from "@/stores/compare-store";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { MAX_COMPARE } from "@/lib/constants/prices";
+import { BRAND_PRIMARY, BRAND_GOLD } from "@/lib/constants/brand";
 import { formatJpyAmount, type Currency } from "@/lib/utils/currency";
 import { useCompareData, type CompareCard } from "@/hooks/use-compare-data";
 import { useTierLimits } from "@/hooks/use-tier-limits";
@@ -33,8 +34,8 @@ const CompareChart = lazy(() =>
 );
 
 const FALLBACK_COLORS = [
-  "#73533E",
-  "#E0B865",
+  BRAND_PRIMARY,
+  BRAND_GOLD,
   "#A57E61",
   "#FA999B",
   "#ef4444",

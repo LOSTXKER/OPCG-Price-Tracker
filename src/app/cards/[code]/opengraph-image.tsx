@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { BRAND_GOLD, BRAND_GRADIENT } from "@/lib/constants/brand";
 import { prisma } from "@/lib/db";
 import { formatJpy } from "@/lib/utils/currency";
 
@@ -83,7 +84,7 @@ export default async function CardOG(props: {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: "#E0B865",
+                color: BRAND_GOLD,
                 fontSize: 80,
                 fontWeight: 800,
               }}
@@ -113,7 +114,7 @@ export default async function CardOG(props: {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                background: "linear-gradient(135deg, #73533E, #E0B865)",
+                background: BRAND_GRADIENT,
                 borderRadius: 8,
               }}
             >
@@ -129,7 +130,7 @@ export default async function CardOG(props: {
           </div>
 
           {/* Card code */}
-          <span style={{ fontSize: 24, color: "#E0B865", fontWeight: 600 }}>
+          <span style={{ fontSize: 24, color: BRAND_GOLD, fontWeight: 600 }}>
             {card.cardCode}
           </span>
 

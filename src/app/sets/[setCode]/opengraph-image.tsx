@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { BRAND_GOLD, BRAND_GRADIENT } from "@/lib/constants/brand";
 import { prisma } from "@/lib/db";
 
 export const alt = "Set Detail";
@@ -74,7 +75,7 @@ export default async function SetOG(props: {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: "linear-gradient(135deg, #73533E, #E0B865)",
+              background: BRAND_GRADIENT,
               borderRadius: 10,
             }}
           >
@@ -91,7 +92,7 @@ export default async function SetOG(props: {
         <span
           style={{
             fontSize: 36,
-            color: "#E0B865",
+            color: BRAND_GOLD,
             fontWeight: 700,
             letterSpacing: "0.05em",
           }}

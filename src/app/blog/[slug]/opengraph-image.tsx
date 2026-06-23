@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { BRAND_GRADIENT } from "@/lib/constants/brand";
 import { prisma } from "@/lib/db";
 
 export const alt = "Blog Post";
@@ -66,7 +67,7 @@ export default async function BlogOG(props: {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: "linear-gradient(135deg, #73533E, #E0B865)",
+              background: BRAND_GRADIENT,
               borderRadius: 10,
             }}
           >
