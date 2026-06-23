@@ -33,14 +33,9 @@ export const GET = cronHandler(async () => {
     const correct =
       (pred.direction === "UP" && wentUp) ||
       (pred.direction === "DOWN" && wentDown);
+    const willReward = correct && !pred.rewarded;
 
-    await prisma.pricePrediction.update({
-      where: { id: pred.id },
-      data: { resolved: true, correct },
-    });
-    resolved++;
-
-    if (correct && !pred.rewarded) {
+    if (willReward) {
       // Route through earnHoney so PRICE_PREDICTION picks up tier × seasonal
       // multipliers per the central policy. Returns null if the user hits
       // a daily/global cap, which is fine — we still mark `rewarded` so the
@@ -52,12 +47,16 @@ export const GET = cronHandler(async () => {
         { predictionId: pred.id, cardId: pred.cardId },
         getHoneyMultiplier(pred.user.tier, pred.user.tierExpiresAt),
       );
-      await prisma.pricePrediction.update({
-        where: { id: pred.id },
-        data: { rewarded: true },
-      });
       rewarded++;
     }
+
+    // One update per row — resolve, correctness, and reward flag together
+    // (was two sequential updates on the same record).
+    await prisma.pricePrediction.update({
+      where: { id: pred.id },
+      data: { resolved: true, correct, ...(willReward ? { rewarded: true } : {}) },
+    });
+    resolved++;
   }
 
   return { resolved, rewarded };

@@ -1,4 +1,4 @@
-import { requireAuthUser, getAuthUser } from "@/lib/auth";
+import { requireAuthUser, getAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";

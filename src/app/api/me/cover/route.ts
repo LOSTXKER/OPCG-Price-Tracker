@@ -80,7 +80,8 @@ export const POST = apiHandler(async (req: NextRequest) => {
     .upload(path, buffer, { contentType: file.type, upsert: true });
 
   if (uploadError) {
-    return NextResponse.json({ error: uploadError.message }, { status: 500 });
+    console.error("[me/cover] upload failed", uploadError);
+    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
   }
 
   const { data: publicUrlData } = supabase.storage.from(BUCKET).getPublicUrl(path);

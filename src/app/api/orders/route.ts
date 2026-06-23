@@ -1,5 +1,5 @@
 import { apiHandler } from "@/lib/api/api-handler";
-import { requireAuthUser } from "@/lib/auth";
+import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody, parsePageLimit } from "@/lib/api/request-body";
 import { CreateOrderSchema } from "@/lib/orders/schemas";
 import { createBuyNowOrder, listOrders } from "@/lib/orders/service";

@@ -1,4 +1,4 @@
-import { requireAuthUser } from "@/lib/auth";
+import { requireAuthUser } from "@/lib/api/auth";
 import { cardInclude } from "@/lib/api/query-fragments";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { apiHandler } from "@/lib/api/api-handler";

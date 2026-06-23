@@ -12,7 +12,7 @@ export const GET = cronHandler(async () => {
     },
   });
 
-  let snapshotCount = 0;
+  const snapshots = [];
   for (const portfolio of portfolios) {
     if (portfolio.items.length === 0) continue;
 
@@ -27,18 +27,20 @@ export const GET = cronHandler(async () => {
       totalCost += (item.purchasePrice ?? 0) * item.quantity;
     }
 
-    await prisma.portfolioSnapshot.create({
-      data: {
-        portfolioId: portfolio.id,
-        totalJpy,
-        totalThb,
-        totalCost,
-        pnl: totalJpy - totalCost,
-        cardCount: portfolio.items.length,
-      },
+    snapshots.push({
+      portfolioId: portfolio.id,
+      totalJpy,
+      totalThb,
+      totalCost,
+      pnl: totalJpy - totalCost,
+      cardCount: portfolio.items.length,
     });
-    snapshotCount++;
   }
 
-  return { snapshotCount };
+  // One batched insert instead of N per-portfolio creates.
+  if (snapshots.length > 0) {
+    await prisma.portfolioSnapshot.createMany({ data: snapshots });
+  }
+
+  return { snapshotCount: snapshots.length };
 });
