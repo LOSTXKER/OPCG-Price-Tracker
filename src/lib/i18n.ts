@@ -5,6 +5,17 @@ import { jp } from "./i18n/jp";
 export type Language = "TH" | "EN" | "JP";
 export type Currency = "THB" | "JPY" | "USD";
 
+/**
+ * Cookie that mirrors the client language preference so SERVER components can
+ * resolve the active language per request (the Zustand store is client-only).
+ * Written by the UI store on change/rehydrate; read by getServerLanguage().
+ */
+export const LANG_COOKIE = "kuma-lang";
+
+export function isLanguage(value: unknown): value is Language {
+  return value === "TH" || value === "EN" || value === "JP";
+}
+
 const LOCALE_MAP: Record<Language, string> = {
   TH: "th-TH",
   EN: "en-US",

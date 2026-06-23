@@ -1,9 +1,19 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Language, Currency } from "@/lib/i18n";
+import { LANG_COOKIE, type Language, type Currency } from "@/lib/i18n";
 
 export type { Language, Currency };
 type CardView = "grid" | "list";
+
+/**
+ * Mirror the language preference into a cookie so SERVER components can resolve
+ * it per request (getServerLanguage). Kept in sync on every change + on
+ * rehydrate so the server and client never disagree on language.
+ */
+function writeLangCookie(lang: Language) {
+  if (typeof document === "undefined") return;
+  document.cookie = `${LANG_COOKIE}=${lang}; path=/; max-age=31536000; samesite=lax`;
+}
 /** null = undecided (banner shows when ads are live); set on user choice. */
 export type AdConsent = "granted" | "denied" | null;
 
@@ -48,11 +58,15 @@ export const useUIStore = create<UIState>()(
       mobileMenuOpen: false,
       searchOpen: false,
       unreadMessages: 0,
-      setLanguage: (language) => set({ language }),
+      setLanguage: (language) => {
+        writeLangCookie(language);
+        set({ language });
+      },
       cycleLanguage: () =>
         set((state) => {
-          const idx = LANGUAGE_CYCLE.indexOf(state.language);
-          return { language: LANGUAGE_CYCLE[(idx + 1) % LANGUAGE_CYCLE.length] };
+          const next = LANGUAGE_CYCLE[(LANGUAGE_CYCLE.indexOf(state.language) + 1) % LANGUAGE_CYCLE.length]!;
+          writeLangCookie(next);
+          return { language: next };
         }),
       setCurrency: (currency) => set({ currency }),
       cycleCurrency: () =>
@@ -79,6 +93,11 @@ export const useUIStore = create<UIState>()(
         dismissedBanner: state.dismissedBanner,
         adConsent: state.adConsent,
       }),
+      // Backfill the lang cookie for users whose preference predates it, so
+      // server components match the client on the first load after this ships.
+      onRehydrateStorage: () => (state) => {
+        if (state) writeLangCookie(state.language);
+      },
     }
   )
 );
