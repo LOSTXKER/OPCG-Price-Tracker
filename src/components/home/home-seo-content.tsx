@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   Calculator,
@@ -16,119 +18,99 @@ import {
   type RelatedPageItem,
 } from "@/components/shared/related-pages";
 import { SectionHead } from "@/components/shared/section-head";
+import { t, type Language } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
-const features = [
-  {
-    icon: LineChart,
-    title: "ราคาการ์ดวันพีซอัปเดตทุกวัน",
-    description:
-      "ติดตามราคาการ์ด OPCG จาก Yuyu-tei แบบเรียลไทม์ พร้อมกราฟราคาย้อนหลังให้ดูแนวโน้มตลาด",
-    href: "/market-overview",
-  },
-  {
-    icon: Wallet,
-    title: "จัดการ Portfolio การ์ดของคุณ",
-    description:
-      "เพิ่มการ์ด One Piece ที่ถืออยู่ แล้วดูมูลค่าพอร์ตรวมเปลี่ยนแปลงแบบเรียลไทม์ พร้อมกราฟและสถิติ",
-    href: "/portfolio",
-  },
-  {
-    icon: Calculator,
-    title: "คำนวณ Drop Rate กล่องสุ่ม",
-    description:
-      "จำลองการเปิดกล่องสุ่มการ์ด OPCG คำนวณโอกาสได้การ์ดที่ต้องการจาก drop rate จริง ช่วยวางแผนก่อนซื้อ",
-    href: "/drop-calculator",
-  },
-];
+function buildFeatures(lang: Language) {
+  return [
+    {
+      icon: LineChart,
+      title: t(lang, "seoFeatPriceTitle"),
+      description: t(lang, "seoFeatPriceDesc"),
+      href: "/market-overview",
+    },
+    {
+      icon: Wallet,
+      title: t(lang, "seoFeatPortfolioTitle"),
+      description: t(lang, "seoFeatPortfolioDesc"),
+      href: "/portfolio",
+    },
+    {
+      icon: Calculator,
+      title: t(lang, "seoFeatDropTitle"),
+      description: t(lang, "seoFeatDropDesc"),
+      href: "/drop-calculator",
+    },
+  ];
+}
 
-const exploreItems: RelatedPageItem[] = [
-  {
-    icon: Layers,
-    href: "/sets",
-    title: "ชุดการ์ด OPCG ทั้งหมด",
-    description: "ดูทุกชุดการ์ดวันพีซพร้อมมูลค่าประเมินรวม",
-  },
-  {
-    icon: TrendingUp,
-    href: "/trending",
-    title: "การ์ดวันพีซมาแรงวันนี้",
-    description: "การ์ด OPCG ที่ราคาขยับมากที่สุดในวันนี้",
-  },
-  {
-    icon: Store,
-    href: "/marketplace",
-    title: "ตลาดซื้อขายการ์ด",
-    description: "ซื้อขายการ์ดวันพีซในตลาดของ Meecard ราคายุติธรรม",
-  },
-  {
-    icon: Sparkles,
-    href: "/guide",
-    title: "คู่มือ One Piece Card Game",
-    description: "เรียนรู้กฎ ระบบ rarity และเทคนิคเล่นเกม",
-  },
-  {
-    icon: GitCompareArrows,
-    href: "/compare",
-    title: "เปรียบเทียบราคาการ์ด",
-    description: "เทียบราคาและข้อมูลการ์ด OPCG หลายใบแบบ side-by-side",
-  },
-  {
-    icon: ShoppingCart,
-    href: "/deck-calculator",
-    title: "คำนวณราคาเด็ค",
-    description: "คำนวณราคารวมเด็คจากราคาตลาดปัจจุบัน",
-  },
-];
+function buildExploreItems(lang: Language): RelatedPageItem[] {
+  return [
+    {
+      icon: Layers,
+      href: "/sets",
+      title: t(lang, "seoExploreSetsTitle"),
+      description: t(lang, "seoExploreSetsDesc"),
+    },
+    {
+      icon: TrendingUp,
+      href: "/trending",
+      title: t(lang, "seoExploreTrendingTitle"),
+      description: t(lang, "seoExploreTrendingDesc"),
+    },
+    {
+      icon: Store,
+      href: "/marketplace",
+      title: t(lang, "seoExploreMarketTitle"),
+      description: t(lang, "seoExploreMarketDesc"),
+    },
+    {
+      icon: Sparkles,
+      href: "/guide",
+      title: t(lang, "seoExploreGuideTitle"),
+      description: t(lang, "seoExploreGuideDesc"),
+    },
+    {
+      icon: GitCompareArrows,
+      href: "/compare",
+      title: t(lang, "seoExploreCompareTitle"),
+      description: t(lang, "seoExploreCompareDesc"),
+    },
+    {
+      icon: ShoppingCart,
+      href: "/deck-calculator",
+      title: t(lang, "seoExploreDeckTitle"),
+      description: t(lang, "seoExploreDeckDesc"),
+    },
+  ];
+}
 
-const faqItems: FaqItem[] = [
-  {
-    question: "Meecard คืออะไร?",
-    answer:
-      "Meecard คือเว็บไซต์ติดตามราคาการ์ด One Piece Card Game (OPCG) ที่อัปเดตทุกวัน รวมฟีเจอร์ Portfolio, Drop Calculator, เปรียบเทียบราคา และ Marketplace ซื้อขายการ์ดไว้ในที่เดียว",
-  },
-  {
-    question: "ราคาการ์ด OPCG มาจากแหล่งไหน?",
-    answer:
-      "ราคาหลักอ้างอิงจาก Yuyu-tei ร้านการ์ดเกมที่ใหญ่ที่สุดในญี่ปุ่น แปลงเป็นเงินบาทและ USD อัตโนมัติ นอกจากนี้ยังมีราคาการ์ดเกรด PSA 10 จาก SNKRDUNK",
-  },
-  {
-    question: "อัปเดตราคาการ์ดวันพีซบ่อยแค่ไหน?",
-    answer:
-      "ราคาอัปเดตอย่างน้อยวันละ 1 ครั้ง พร้อมกราฟราคาย้อนหลังให้ดูแนวโน้มตลาดว่าการ์ดขึ้นหรือลง",
-  },
-  {
-    question: "Portfolio ใน Meecard ใช้ทำอะไร?",
-    answer:
-      "บันทึกการ์ดวันพีซที่คุณมี ดูมูลค่ารวมเปลี่ยนแปลงแบบเรียลไทม์ พร้อมกราฟย้อนหลัง สัดส่วนตาม rarity และผลตอบแทน (performance)",
-  },
-  {
-    question: "Drop Calculator คำนวณอะไรได้บ้าง?",
-    answer:
-      "คำนวณโอกาสที่จะได้การ์ดที่ต้องการจากการเปิดกล่อง OPCG ใส่จำนวนกล่องแล้วดูโอกาสได้ของแต่ละ rarity โดยใช้ drop rate จริง",
-  },
-  {
-    question: "Meecard ใช้ฟรีไหม?",
-    answer:
-      "ฟีเจอร์หลักอย่างราคาการ์ด กราฟย้อนหลัง ข้อมูลชุดการ์ด และ Drop Calculator ใช้ฟรีทั้งหมด สำหรับ Portfolio ขั้นสูง แจ้งเตือนราคา หรือ Export ข้อมูล สามารถอัปเกรดเป็น Pro ได้",
-  },
-  {
-    question: "Marketplace บน Meecard คืออะไร?",
-    answer:
-      "ตลาดซื้อขายการ์ด One Piece ที่ผู้ใช้สามารถลงขายหรือซื้อการ์ดจากคนอื่นได้โดยตรง มีราคาตลาดจริงให้เทียบเป็นข้อมูลอ้างอิง",
-  },
-];
+function buildFaqItems(lang: Language): FaqItem[] {
+  return [
+    { question: t(lang, "seoFaq1Q"), answer: t(lang, "seoFaq1A") },
+    { question: t(lang, "seoFaq2Q"), answer: t(lang, "seoFaq2A") },
+    { question: t(lang, "seoFaq3Q"), answer: t(lang, "seoFaq3A") },
+    { question: t(lang, "seoFaq4Q"), answer: t(lang, "seoFaq4A") },
+    { question: t(lang, "seoFaq5Q"), answer: t(lang, "seoFaq5A") },
+    { question: t(lang, "seoFaq6Q"), answer: t(lang, "seoFaq6A") },
+    { question: t(lang, "seoFaq7Q"), answer: t(lang, "seoFaq7A") },
+  ];
+}
 
 export function HomeSeoContent() {
+  const lang = useUIStore((s) => s.language);
+  const features = buildFeatures(lang);
+  const exploreItems = buildExploreItems(lang);
+  const faqItems = buildFaqItems(lang);
+
   return (
     <div className="space-y-16 pt-6">
       {/* Features */}
       <section className="space-y-5">
         <div>
-          <h2 className="text-h3">
-            Meecard ช่วยคุณติดตามราคาการ์ด One Piece ได้ยังไงบ้าง?
-          </h2>
+          <h2 className="text-h3">{t(lang, "seoFeaturesHeading")}</h2>
           <p className="mt-1.5 text-sm text-muted-foreground">
-            เครื่องมือครบชุดสำหรับนักสะสมและนักเทรดการ์ด OPCG
+            {t(lang, "seoFeaturesSub")}
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-3">
@@ -156,48 +138,43 @@ export function HomeSeoContent() {
 
       {/* Price explainer */}
       <section className="surface-1 hairline space-y-4 rounded-xl p-6">
-        <SectionHead title="ราคาการ์ด OPCG (One Piece Card Game) กำหนดจากอะไร?" />
+        <SectionHead title={t(lang, "seoPriceExplainTitle")} />
         <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
           <p>
-            ราคาการ์ดวันพีซขึ้นอยู่กับหลายปัจจัย ทั้ง{" "}
+            {t(lang, "seoPriceP1a")}{" "}
             <Link
               href="/guide/rarities"
               className="font-medium text-primary hover:underline"
             >
-              ความหายาก (rarity)
+              {t(lang, "seoPriceP1Link")}
             </Link>{" "}
-            อย่าง SEC, SP, SR ภาพอาร์ตเวิร์กพิเศษ ความแรงในเมตา
-            และอุปสงค์อุปทานในตลาด การ์ดระดับ SEC หรือ SP
-            ราคาอาจสูงหลักหมื่นถึงหลักแสน ในขณะที่การ์ด Common เริ่มต้นไม่ถึง
-            10 บาท
+            {t(lang, "seoPriceP1b")}
           </p>
           <p>
-            Meecard อ้างอิงราคาจาก <strong>Yuyu-tei</strong>{" "}
-            ร้านการ์ดเกมอันดับหนึ่งของญี่ปุ่น แปลงเป็นเงินบาทและ USD
-            ให้อัตโนมัติ พร้อมข้อมูลจาก SNKRDUNK สำหรับการ์ดที่ผ่านการเกรด PSA
-            10
+            {t(lang, "seoPriceP2a")} <strong>Yuyu-tei</strong>
+            {t(lang, "seoPriceP2b")}
           </p>
           <p>
-            เรียนรู้เพิ่มเติมเกี่ยวกับ{" "}
+            {t(lang, "seoPriceP3a")}{" "}
             <Link
               href="/guide/buying"
               className="font-medium text-primary hover:underline"
             >
-              วิธีซื้อการ์ดวันพีซและร้านค้าแนะนำ
+              {t(lang, "seoPriceP3Link1")}
             </Link>{" "}
-            หรือเริ่มต้นด้วย{" "}
+            {t(lang, "seoPriceP3mid")}{" "}
             <Link
               href="/guide/getting-started"
               className="font-medium text-primary hover:underline"
             >
-              คู่มือเล่น OPCG สำหรับมือใหม่
+              {t(lang, "seoPriceP3Link2")}
             </Link>
           </p>
         </div>
       </section>
 
       {/* Explore CTA grid */}
-      <RelatedPages title="สำรวจเพิ่มเติม" items={exploreItems} />
+      <RelatedPages title={t(lang, "seoExploreTitle")} items={exploreItems} />
 
       {/* FAQ */}
       <FaqSection items={faqItems} />
