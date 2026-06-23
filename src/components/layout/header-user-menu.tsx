@@ -239,15 +239,15 @@ export function HeaderUserMenu({
             <>
               <DropdownMenuItem onClick={() => router.push("/seller")}>
                 <Store className="size-4" />
-                {language === "TH" ? "ศูนย์ผู้ขาย" : language === "JP" ? "販売センター" : "Seller Center"}
+                {t(language, "sellShellSellerCenter")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => router.push("/orders")}>
                 <ShoppingBag className="size-4" />
-                {language === "TH" ? "คำสั่งซื้อของฉัน" : language === "JP" ? "購入履歴" : "My Orders"}
+                {t(language, "myOrders")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => router.push("/saved")}>
                 <Heart className="size-4" />
-                {language === "TH" ? "รายการที่บันทึก" : language === "JP" ? "保存済み" : "Saved Listings"}
+                {t(language, "savedListings")}
               </DropdownMenuItem>
             </>
           )}
@@ -271,7 +271,7 @@ export function HeaderUserMenu({
           {canUpgrade && (
             <DropdownMenuItem onClick={() => router.push("/pricing")} className="text-primary">
               <Zap className="size-4" />
-              {language === "TH" ? "อัปเกรดแพ็กเกจ" : language === "JP" ? "プランをアップグレード" : "Upgrade Plan"}
+              {t(language, "upgradePlan")}
             </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />

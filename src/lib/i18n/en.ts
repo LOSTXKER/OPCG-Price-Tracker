@@ -626,6 +626,7 @@ export const en = {
   memberSince: "Member since",
   editProfile: "Edit Profile",
   upgradePlan: "Upgrade Plan",
+  upgrade: "Upgrade",
   viewPlans: "View Plans",
   yourPlan: "Your Plan",
   trialDaysLeft: "days left",
@@ -1126,6 +1127,7 @@ export const en = {
 
   // Preferences
   preferences: "Preferences",
+  myAccount: "My Account",
   themeSystem: "System",
   cardViewGrid: "Grid",
   cardViewList: "List",

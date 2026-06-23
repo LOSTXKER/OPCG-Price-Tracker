@@ -625,6 +625,7 @@ export const jp = {
   memberSince: "登録日",
   editProfile: "プロフィール編集",
   upgradePlan: "プランをアップグレード",
+  upgrade: "アップグレード",
   viewPlans: "プランを見る",
   yourPlan: "現在のプラン",
   trialDaysLeft: "日残り",
@@ -1113,6 +1114,7 @@ export const jp = {
   edit: "編集",
 
   preferences: "環境設定",
+  myAccount: "マイアカウント",
   themeSystem: "システム",
   cardViewGrid: "グリッド",
   cardViewList: "リスト",

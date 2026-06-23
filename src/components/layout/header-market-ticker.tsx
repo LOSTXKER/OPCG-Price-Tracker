@@ -107,7 +107,7 @@ export function HeaderMarketTicker({
                 className="ease-chrome hidden items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20 sm:flex"
               >
                 <Zap className="size-3" />
-                {language === "TH" ? "อัปเกรด" : language === "JP" ? "アップグレード" : "Upgrade"}
+                {t(language, "upgrade")}
               </Link>
               <div className="mx-1 hidden h-5 w-px bg-border/60 sm:block" />
             </>

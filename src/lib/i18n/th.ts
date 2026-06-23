@@ -625,6 +625,7 @@ export const th = {
   memberSince: "สมาชิกตั้งแต่",
   editProfile: "แก้ไขโปรไฟล์",
   upgradePlan: "อัพเกรดแพ็กเกจ",
+  upgrade: "อัปเกรด",
   viewPlans: "ดูแพ็กเกจ",
   yourPlan: "จัดการแพ็กเกจและสิทธิประโยชน์ของคุณ",
   trialDaysLeft: "วันที่เหลือ",
@@ -1113,6 +1114,7 @@ export const th = {
   edit: "แก้ไข",
 
   preferences: "ตั้งค่าทั่วไป",
+  myAccount: "บัญชีของฉัน",
   themeSystem: "ระบบ",
   cardViewGrid: "ตาราง",
   cardViewList: "รายการ",
