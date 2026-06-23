@@ -77,11 +77,11 @@
 
 :root {
   --background: #FFFFFF;
-  --foreground: #1D1D1F;
+  --foreground: #292118;
   --card: #FFFFFF;
-  --card-foreground: #1D1D1F;
+  --card-foreground: #292118;
   --popover: #FFFFFF;
-  --popover-foreground: #1D1D1F;
+  --popover-foreground: #292118;
   --primary: #73533E;
   --primary-foreground: #FFFFFF;
   --secondary: #F5EDE6;
@@ -307,6 +307,35 @@
 /* honey glow — reserved for hero / premium moments only */
 .glow-honey {
   background: radial-gradient(130% 90% at 50% -10%, var(--p-honey-soft), transparent 62%);
+}
+
+/* blinking caret for the typewriter headline (its own solid colour, a small honey
+   accent beside the neutral headline) */
+@keyframes tw-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.tw-caret {
+  margin-left: 0.06em;
+  font-weight: 500;
+  color: var(--primary);
+  animation: tw-blink 1.05s steps(1, end) infinite;
+}
+@media (prefers-reduced-motion: reduce) { .tw-caret { animation: none; } }
+
+/* hero search backdrop — a deliberately VISIBLE warm pool behind the home search
+   bar (the page's single honey moment). Stronger than .glow-honey and mode-tuned:
+   a soft tan tint on the light canvas, a clear gold pool on dark (where a low %
+   over near-black would otherwise read as nothing). */
+.hero-search-glow {
+  /* Light mode: the brown light-mode --primary reads as a muddy smudge on the
+     white canvas, so the warm "light from above" uses a clean amber instead —
+     a soft sunlit wash that stays visible without dirtying the page. */
+  background:
+    radial-gradient(48% 58% at 50% 0%, color-mix(in srgb, #F4A63C 24%, transparent) 0%, transparent 66%),
+    linear-gradient(to bottom, color-mix(in srgb, #F4A63C 14%, transparent) 0%, transparent 72%);
+}
+.dark .hero-search-glow {
+  background:
+    radial-gradient(48% 58% at 50% 0%, color-mix(in srgb, var(--primary) 24%, transparent) 0%, transparent 66%),
+    linear-gradient(to bottom, color-mix(in srgb, var(--primary) 12%, transparent) 0%, transparent 72%);
 }
 
 /* frosted elevation — reserved for sticky bars / sheets (not inline cards) */

@@ -111,18 +111,19 @@ export function HomeMarketOverview({
       {/* Main table panel */}
     <div className="panel overflow-hidden">
       {/* Toolbar — single row on sm+, two rows on mobile */}
-      <div className="border-b border-border">
+      <div className="border-b border-[var(--p-hair)]">
         <div className="flex flex-wrap items-center gap-2 px-3 py-2 sm:flex-nowrap sm:gap-2.5 sm:px-4">
-          {/* Tabs (underline-style) */}
+          {/* Tabs (underline-style) — neutral foreground underline, not gold, so
+              the page keeps a single honey accent like card-detail. */}
           <div className="flex shrink-0 items-center gap-1 -mb-2">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => m.handleTabChange(tab.id)}
                 className={cn(
-                  "relative shrink-0 border-b-2 px-2.5 py-2 text-xs font-semibold transition-colors",
+                  "ease-chrome relative shrink-0 border-b-2 px-2.5 py-2 text-xs font-semibold",
                   m.activeTab === tab.id
-                    ? "border-primary text-foreground"
+                    ? "border-foreground text-foreground"
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -137,7 +138,7 @@ export function HomeMarketOverview({
             <Input
               type="text"
               placeholder={t(lang, "searchLong")}
-              className="h-9 border-border/60 bg-card pl-9 pr-8 placeholder:text-muted-foreground/40 focus-visible:border-primary/50 focus-visible:ring-0"
+              className="surface-1 h-9 border-[var(--p-hair)] pl-9 pr-8 placeholder:text-muted-foreground/40 focus-visible:border-primary/50 focus-visible:ring-0"
               value={m.search}
               onChange={(e) => {
                 m.setSearch(e.target.value)
@@ -148,7 +149,7 @@ export function HomeMarketOverview({
               <button
                 type="button"
                 onClick={() => { m.setSearch(""); m.setPage(1) }}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                className="ease-chrome absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
               >
                 <X className="size-3.5" />
               </button>
@@ -187,21 +188,16 @@ export function HomeMarketOverview({
               type="button"
               onClick={() => m.setFilterOpen((o) => !o)}
               className={cn(
-                "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors",
+                "ease-chrome flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium",
                 m.filterOpen || m.activeFilterCount > 0
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                  ? "bg-foreground/[0.06] text-foreground"
+                  : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
               )}
             >
               <SlidersHorizontal className="size-3.5" />
               <span className="hidden md:inline">{t(lang, "filter")}</span>
               {m.activeFilterCount > 0 && (
-                <span className={cn(
-                  "flex size-4.5 items-center justify-center rounded-full text-micro",
-                  m.filterOpen || m.activeFilterCount > 0
-                    ? "bg-primary-foreground/20 text-primary-foreground"
-                    : "bg-primary/10 text-primary"
-                )}>
+                <span className="flex size-4.5 items-center justify-center rounded-full bg-foreground/10 text-micro text-foreground">
                   {m.activeFilterCount}
                 </span>
               )}
@@ -219,13 +215,13 @@ export function HomeMarketOverview({
         </div>
 
         {/* Mobile-only search row */}
-        <div className="border-t border-border/40 px-3 py-2 sm:hidden">
+        <div className="border-t border-[var(--p-hair)] px-3 py-2 sm:hidden">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground/50" />
             <Input
               type="text"
               placeholder={t(lang, "searchLong")}
-              className="h-9 border-border/60 bg-card pl-9 pr-8 placeholder:text-muted-foreground/40 focus-visible:border-primary/50 focus-visible:ring-0"
+              className="surface-1 h-9 border-[var(--p-hair)] pl-9 pr-8 placeholder:text-muted-foreground/40 focus-visible:border-primary/50 focus-visible:ring-0"
               value={m.search}
               onChange={(e) => {
                 m.setSearch(e.target.value)
@@ -236,7 +232,7 @@ export function HomeMarketOverview({
               <button
                 type="button"
                 onClick={() => { m.setSearch(""); m.setPage(1) }}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                className="ease-chrome absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
               >
                 <X className="size-3.5" />
               </button>
@@ -266,7 +262,7 @@ export function HomeMarketOverview({
               <Input
                 type="number"
                 placeholder={t(lang, "min")}
-                className="h-10 w-24 border-border bg-card px-2 tabular-nums placeholder:text-muted-foreground/50 focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
+                className="surface-1 h-10 w-24 border-[var(--p-hair)] px-2 tabular-nums placeholder:text-muted-foreground/50 focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
                 value={m.minPrice}
                 onChange={(e) => { m.setMinPrice(e.target.value); m.setPage(1) }}
                 min={0}
@@ -275,18 +271,18 @@ export function HomeMarketOverview({
               <Input
                 type="number"
                 placeholder={t(lang, "max")}
-                className="h-10 w-24 border-border bg-card px-2 tabular-nums placeholder:text-muted-foreground/50 focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
+                className="surface-1 h-10 w-24 border-[var(--p-hair)] px-2 tabular-nums placeholder:text-muted-foreground/50 focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
                 value={m.maxPrice}
                 onChange={(e) => { m.setMaxPrice(e.target.value); m.setPage(1) }}
                 min={0}
               />
             </div>
 
-            <div className="flex items-center justify-between gap-2 border-t border-border/40 pt-3">
+            <div className="flex items-center justify-between gap-2 border-t border-[var(--p-hair)] pt-3">
               {m.activeFilterCount > 0 ? (
                 <button
                   onClick={m.clearAllFilters}
-                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  className="ease-chrome flex items-center gap-1 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
                 >
                   <X className="size-3.5" />
                   {t(lang, "clearAll")}
@@ -308,7 +304,7 @@ export function HomeMarketOverview({
       {/* Content: Table or Grid */}
       {m.viewMode === "table" ? (
         <>
-        <div className={cn("divide-y divide-border/40 sm:hidden", m.isPending && "opacity-50 transition-opacity")}>
+        <div className={cn("divide-y divide-[var(--p-hair)] sm:hidden", m.isPending && "opacity-50 transition-opacity")}>
           {m.isPending && m.cards.length === 0
             ? Array.from({ length: 6 }).map((_, i) => <MobileCardSkeleton key={i} />)
             : m.cards.map((card, i) => (
@@ -348,7 +344,7 @@ export function HomeMarketOverview({
               )}
             </colgroup>
             <thead className="sticky top-0 z-10 bg-card">
-              <tr className="border-b border-border text-eyebrow text-muted-foreground">
+              <tr className="border-b border-[var(--p-hair)] text-eyebrow text-muted-foreground">
                 <th className="py-2.5 pl-3 pr-0 font-medium"></th>
                 <th className="py-2.5 pr-1 pl-1 font-medium">#</th>
                 <th className="py-2.5 pr-3 pl-2 font-medium">{t(lang, "card")}</th>

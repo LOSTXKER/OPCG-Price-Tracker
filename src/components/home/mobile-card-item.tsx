@@ -30,7 +30,7 @@ export const MobileCardItem = memo(function MobileCardItem({
   const isPsa = priceMode === "psa10"
 
   return (
-    <div className="flex items-center gap-3 px-4 py-3 transition-colors active:bg-muted/40">
+    <div className="ease-chrome flex items-center gap-3 px-4 py-3 active:bg-foreground/[0.06]">
       <span className="w-5 shrink-0 text-center font-price text-xs text-muted-foreground">{rank}</span>
       {card.imageUrl ? (
         <CardImageButton
