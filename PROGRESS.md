@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-24 — **PR #39 merged เข้า master** (redesign+i18n client) · **กำลังทำ option ก = server-lang resolver** branch `i18n/server-lang-resolver` (resolver + marketplace detail + review-section + home-seo client-convert เสร็จ · เหลือ guide/* bulk) · lint 0 errors/24 warn · tsc 0 · build ✓ 146 pages · prod live opcg-price-tracker.vercel.app
+อัปเดตล่าสุด: 2026-06-24 — **option ก (server-lang i18n) เสร็จครบ · merged ทั้งหมด** · PR #39 (redesign+i18n client) · PR #40 (resolver + marketplace detail + review-section + home-seo) · PR #41 (guide/* 7 หน้า ~456 keys) → master `becf651` · lint 0 errors/24 warn · tsc 0 · build ✓ 144 pages · prod live opcg-price-tracker.vercel.app
 
 ## 🧹 REFACTOR (audit 5 มิติ — เบสสั่ง "ทำหมด") — ทำเป็น batch
 > audit เต็มรันผ่าน workflow แล้ว · คะแนนเฉลี่ย ~7/10 (type-safety/API 8 · design-system 7 · reuse 6 · i18n 5)
@@ -29,7 +29,7 @@
       - ✅ **marketplace/[listingId]** (force-dynamic อยู่แล้ว → ใช้ getServerLanguage) · ✅ **review-section** (server comp · รับ lang เป็น prop จาก parent) · ✅ **home-seo-content** (static/ISR → **client-convert** ไม่ใช่ resolver เพื่อคง static · 49 seo keys)
       - **2 pattern แยกกัน:** dynamic page → `getServerLanguage()` · static/ISR page → client-convert (`"use client"`+useUIStore) คง static + SEO เห็น TH + swap ให้ EN/JP
       - helper กลาง `formatRelativeAgoShort` (ขยาย months/years) แทน timeAgo ซ้ำ 3 ตัว (order-card, listing detail, review-section)
-    - ⬜ **guide/* (7 หน้า ~410 Thai prose)** — static SEO content → ใช้ client-convert pattern · **เป็น bulk translation ใหญ่** (getting-started 108 · rarities 102 · card-types 64 · colors 61 · sets 38 · index 37 · buying 30) → เหมาะกับ workflow (ต้องเบส opt-in) หรือทำทีละหน้า
+    - ✅ **guide/* 7 หน้า (PR #41 `becf651`)** — ~456 keys (th/en/jp) via workflow `i18n-guide-pages` (7 agent ขนาน → apply กลาง) · ใช้ getServerLanguage() (5/7 force-dynamic อยู่แล้ว · landing+buying เพิ่ม force-dynamic) · metadata คงเป็นไทย (SEO · crawler เห็น TH default) · data arrays → build*(lang) helpers
     - **ที่เหลือ = low-ROI (ตั้งใจไม่ทำ):**
       - ⏸️ **step-shipping** (create-wizard) — province/shipping เป็น **stored values** (ไม่ใช่แค่ label) + marketplace flag ปิด + เป็น geo data → ข้าม
       - ⏸️ **admin/** ทั้งหมด — internal tooling ไทยล้วนโดยตั้งใจ — ไม่ i18n
