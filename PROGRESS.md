@@ -9,7 +9,7 @@
 - **✅ Pagination — committed `70b6859`:** 4 algorithm → 1 util `src/lib/utils/pagination.ts buildPageRange()` · ลบ cards-pagination dead · (ข้าม border-normalize: --p-hair เข้มกว่า /40,50 จะขัด minimal)
 - **✅ %-change — committed `cbc7a3f`:** mini-table inline → ChangePill กลาง (price-display+DeltaText ปล่อยไว้ — token family เดียวกันอยู่แล้ว ไม่คุ้มเสี่ยง)
 - **เบสยืนยัน: ทำหมดจริงๆ รวมงานใหญ่** (prototype ก็เอา) → ลำดับทำต่อ:
-- **⬜ A5:** ตัด inner try/catch→500 ใน 5 routes (cards · admin/cards · admin/drop-rates · admin/image-matching · admin/sets) + ลบ `log` ที่ unused ตาม
+- **✅ A5 — committed `a5b23b1`:** ตัด inner try/catch→500 + log ใน 5 routes (cards · admin/cards · admin/drop-rates · admin/image-matching · admin/sets)
 - **⬜ B เหลือ:** brand.ts (hex) · guide import RARITIES · CONDITION_LABELS · SOURCE_MARKETS · `<ListRowSkeleton>` · Card→Surface (portfolio-summary) · **Surface rollout** (guide/* + profile/section-* + shadcn Card → Surface · งานใหญ่)
 - **⬜ C (big):** **i18n sweep ~1,900 บรรทัด** (messages · marketplace wizard · seller · hero suggestions) — ⚠️ parallel workflow แก้ th/en/jp.ts ชนกัน → ทำ sequential หรือ workflow คืน {key,th,en,jp} เป็น data แล้ว apply กลาง · แตก `card-detail.tsx` 1,028→hooks · split `missions.ts` 1,180 · `formatRelativeShort` respect lang · admin/cards+6 honey routes Zod · cron createMany/merge · requireAuthUser path เดียว · avatar/cover ไม่ leak error
 - **domain = ไม่ใช่ปัญหา:** repo นี้ = prototype (memory `meecard-is-prototype`) ไม่เกี่ยวกับ meecardtcg.com (เว็บ launch คนละ codebase) · share-link→env ที่แก้ = good practice เฉยๆ ไม่ต้องตั้ง Vercel/เปลี่ยน default
