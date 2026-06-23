@@ -3,6 +3,8 @@
 import { useState, useCallback, createContext, useContext, useRef } from "react";
 import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 import {
   Dialog,
   DialogContent,
@@ -41,6 +43,7 @@ export function ConfirmDialogProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const lang = useUIStore((s) => s.language);
   const [state, setState] = useState<ConfirmDialogState>({
     open: false,
     title: "",
@@ -91,7 +94,7 @@ export function ConfirmDialogProvider({
               size="sm"
               onClick={() => handleClose(false)}
             >
-              {state.cancelLabel ?? "ยกเลิก"}
+              {state.cancelLabel ?? t(lang, "cancel")}
             </Button>
             <Button
               variant={
@@ -100,7 +103,7 @@ export function ConfirmDialogProvider({
               size="sm"
               onClick={() => handleClose(true)}
             >
-              {state.confirmLabel ?? "ยืนยัน"}
+              {state.confirmLabel ?? t(lang, "confirm")}
             </Button>
           </DialogFooter>
         </DialogContent>

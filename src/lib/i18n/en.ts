@@ -480,6 +480,10 @@ export const en = {
   agoMinutes: "{n}m ago",
   agoJustNow: "just now",
   agoYesterday: "yesterday",
+  relJustNow: "just now",
+  relMinsAgo: "{n}m ago",
+  relHoursAgo: "{n}h ago",
+  relDaysAgo: "{n}d ago",
   listingPostedAgo: "Posted {ago}",
   listingQtyLeft: "{n} left",
   emptyProfileTitle: "Nothing here yet",
@@ -1037,6 +1041,7 @@ export const en = {
   deleteAccountButton: "Yes, delete my account",
   deleting: "Deleting...",
   cancel: "Cancel",
+  confirm: "Confirm",
 
   // Saved Filters
   savedFilters: "Saved filters",
@@ -1602,6 +1607,7 @@ export const en = {
   orderStatusShippedExt: "Shipped",
   buyer: "Buyer",
   user: "User",
+  chat: "Chat",
   sellerManageListings: "Manage listings",
   sellerManageListingsDesc: "View, edit or delete your listings ({n} total)",
   sellerNewListing: "New listing",

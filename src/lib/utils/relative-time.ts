@@ -34,3 +34,22 @@ export function formatRelativeAgo(input: Date | string, lang: Language): string 
 export function formatJoinedRelative(input: Date | string, lang: Language): string {
   return t(lang, "joinedRelative").replace("{ago}", formatRelativeAgo(input, lang));
 }
+
+/**
+ * Compact "x ago" for transactional lists (orders, etc). Unlike
+ * `formatRelativeAgo` this uses generic "just now / Xm ago" wording (not the
+ * profile-specific "just joined"), and falls back to a localized date past 30d.
+ */
+export function formatRelativeAgoShort(input: Date | string, lang: Language): string {
+  const d = input instanceof Date ? input : new Date(input);
+  const mins = Math.floor((Date.now() - d.getTime()) / 60000);
+  if (mins < 1) return t(lang, "relJustNow");
+  if (mins < 60) return t(lang, "relMinsAgo").replace("{n}", String(mins));
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return t(lang, "relHoursAgo").replace("{n}", String(hours));
+  const days = Math.floor(hours / 24);
+  if (days < 30) return t(lang, "relDaysAgo").replace("{n}", String(days));
+  return d.toLocaleDateString(DATE_LOCALE[lang]);
+}
+
+const DATE_LOCALE: Record<Language, string> = { TH: "th-TH", EN: "en-US", JP: "ja-JP" };
