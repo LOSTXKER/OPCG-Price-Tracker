@@ -2,10 +2,7 @@ import { apiHandler } from "@/lib/api/api-handler";
 import { parsePageLimit } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
-import { createLog } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
-
-const log = createLog("api:cards");
 
 export const GET = apiHandler(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
@@ -119,46 +116,41 @@ export const GET = apiHandler(async (request: NextRequest) => {
       orderBy.updatedAt = "desc";
   }
 
-  try {
-    const [rawCards, total, valueAgg] = await Promise.all([
-      prisma.card.findMany({
-        where,
-        orderBy,
-        skip,
-        take: limit,
-        include: {
-          set: { select: { code: true, name: true, nameEn: true, nameTh: true } },
-          prices: {
-            where: {
-              source: PRICE_SOURCE.SNKRDUNK,
-              gradeCondition: PRICE_SOURCE.PSA_10,
-              type: "SELL",
-            },
-            orderBy: { scrapedAt: "desc" },
-            take: 1,
-            select: { priceUsd: true },
+  const [rawCards, total, valueAgg] = await Promise.all([
+    prisma.card.findMany({
+      where,
+      orderBy,
+      skip,
+      take: limit,
+      include: {
+        set: { select: { code: true, name: true, nameEn: true, nameTh: true } },
+        prices: {
+          where: {
+            source: PRICE_SOURCE.SNKRDUNK,
+            gradeCondition: PRICE_SOURCE.PSA_10,
+            type: "SELL",
           },
+          orderBy: { scrapedAt: "desc" },
+          take: 1,
+          select: { priceUsd: true },
         },
-      }),
-      prisma.card.count({ where }),
-      prisma.card.aggregate({ _sum: { latestPriceJpy: true }, where: { latestPriceJpy: { gt: 0 } } }),
-    ]);
+      },
+    }),
+    prisma.card.count({ where }),
+    prisma.card.aggregate({ _sum: { latestPriceJpy: true }, where: { latestPriceJpy: { gt: 0 } } }),
+  ]);
 
-    const cards = rawCards.map(({ prices, ...rest }) => ({
-      ...rest,
-      psa10PriceUsd: prices?.[0]?.priceUsd ?? null,
-    }));
+  const cards = rawCards.map(({ prices, ...rest }) => ({
+    ...rest,
+    psa10PriceUsd: prices?.[0]?.priceUsd ?? null,
+  }));
 
-    return NextResponse.json({
-      cards,
-      total,
-      totalValue: valueAgg._sum.latestPriceJpy ?? 0,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
-    });
-  } catch (error) {
-    log.error("Error fetching cards", error);
-    return NextResponse.json({ error: "Failed to fetch cards" }, { status: 500 });
-  }
+  return NextResponse.json({
+    cards,
+    total,
+    totalValue: valueAgg._sum.latestPriceJpy ?? 0,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
+  });
 });

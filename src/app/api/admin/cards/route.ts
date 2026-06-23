@@ -3,10 +3,7 @@ import { parseJsonBody } from "@/lib/api/admin-helpers";
 import { adminApiHandler } from "@/lib/api/api-handler";
 import { parsePageLimit } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
-import { createLog } from "@/lib/logger";
 import { Prisma } from "@/generated/prisma/client";
-
-const log = createLog("admin:cards");
 
 export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
   const sp = request.nextUrl.searchParams;
@@ -108,37 +105,32 @@ export const PATCH = adminApiHandler(async (request: NextRequest, _admin) => {
   const parsed = await parseJsonBody<{ id: number; [key: string]: unknown }>(request);
   if (!parsed.ok) return parsed.response;
 
-  try {
-    const { id, ...updates } = parsed.body;
+  const { id, ...updates } = parsed.body;
 
-    if (!id) {
-      return NextResponse.json({ error: "id is required" }, { status: 400 });
-    }
-
-    const allowedFields = [
-      "nameEn",
-      "nameTh",
-      "imageUrl",
-      "rarity",
-      "cardType",
-      "color",
-      "colorEn",
-    ];
-    const data: Record<string, unknown> = {};
-    for (const key of allowedFields) {
-      if (key in updates) {
-        data[key] = updates[key];
-      }
-    }
-
-    const updated = await prisma.card.update({
-      where: { id },
-      data,
-    });
-
-    return NextResponse.json(updated);
-  } catch (error) {
-    log.error("PATCH /api/admin/cards", error);
-    return NextResponse.json({ error: "Failed to update card" }, { status: 500 });
+  if (!id) {
+    return NextResponse.json({ error: "id is required" }, { status: 400 });
   }
+
+  const allowedFields = [
+    "nameEn",
+    "nameTh",
+    "imageUrl",
+    "rarity",
+    "cardType",
+    "color",
+    "colorEn",
+  ];
+  const data: Record<string, unknown> = {};
+  for (const key of allowedFields) {
+    if (key in updates) {
+      data[key] = updates[key];
+    }
+  }
+
+  const updated = await prisma.card.update({
+    where: { id },
+    data,
+  });
+
+  return NextResponse.json(updated);
 });

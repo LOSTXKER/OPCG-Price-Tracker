@@ -6,9 +6,12 @@
 ## 🧹 REFACTOR (audit 5 มิติ — เบสสั่ง "ทำหมด") — ทำเป็น batch
 > audit เต็มรันผ่าน workflow แล้ว · คะแนนเฉลี่ย ~7/10 (type-safety/API 8 · design-system 7 · reuse 6 · i18n 5)
 - **✅ Batch A (quick wins) — committed `eb6cdec`:** eslint `_`-prefix (lint 84→26) · ลบ ~18 dead vars + `card-table.tsx` (191 บรรทัด dead) · chart trend สี→`var(--price-up/down)` · portfolio-summary eyebrow→`.text-eyebrow` · share links `meecard.com`→`clientEnv().NEXT_PUBLIC_APP_URL`
-- **⬜ A5 (ค้าง):** ตัด inner try/catch→500 ใน 5 routes (cards · admin/cards · admin/drop-rates · admin/image-matching · admin/sets) — re-indent ระวัง + ลบ `log` ที่ unused ตาม
-- **⬜ Batch B (medium):** รวม pagination 4→1 (`buildPageRange` util) · รวม %-change 5→1 (ChangePill + token family เดียว) · ดัน Surface ให้ทั่ว + normalize border (`border-border/40,50`→`--p-hair`) · `<ListRowSkeleton>` · brand.ts (hex `#73533E/#E0B865`) · guide pages import RARITIES · CONDITION_LABELS · SOURCE_MARKETS · Card→Surface ที่ portfolio-summary
-- **⬜ Batch C (big):** **i18n sweep ~1,900 บรรทัดไทย**ข้าม t() (messages · marketplace wizard · seller · hero suggestions) — กดเปลี่ยนภาษาไม่ติด · แตก `card-detail.tsx` 1,028 บรรทัด→hooks · split `missions.ts` 1,180 · `formatRelativeShort` TH-only→respect lang · admin/cards + 6 honey routes ใส่ Zod · cron createMany/merge updates · requireAuthUser path เดียว · avatar/cover upload ไม่ leak error
+- **✅ Pagination — committed `70b6859`:** 4 algorithm → 1 util `src/lib/utils/pagination.ts buildPageRange()` · ลบ cards-pagination dead · (ข้าม border-normalize: --p-hair เข้มกว่า /40,50 จะขัด minimal)
+- **✅ %-change — committed `cbc7a3f`:** mini-table inline → ChangePill กลาง (price-display+DeltaText ปล่อยไว้ — token family เดียวกันอยู่แล้ว ไม่คุ้มเสี่ยง)
+- **เบสยืนยัน: ทำหมดจริงๆ รวมงานใหญ่** (prototype ก็เอา) → ลำดับทำต่อ:
+- **⬜ A5:** ตัด inner try/catch→500 ใน 5 routes (cards · admin/cards · admin/drop-rates · admin/image-matching · admin/sets) + ลบ `log` ที่ unused ตาม
+- **⬜ B เหลือ:** brand.ts (hex) · guide import RARITIES · CONDITION_LABELS · SOURCE_MARKETS · `<ListRowSkeleton>` · Card→Surface (portfolio-summary) · **Surface rollout** (guide/* + profile/section-* + shadcn Card → Surface · งานใหญ่)
+- **⬜ C (big):** **i18n sweep ~1,900 บรรทัด** (messages · marketplace wizard · seller · hero suggestions) — ⚠️ parallel workflow แก้ th/en/jp.ts ชนกัน → ทำ sequential หรือ workflow คืน {key,th,en,jp} เป็น data แล้ว apply กลาง · แตก `card-detail.tsx` 1,028→hooks · split `missions.ts` 1,180 · `formatRelativeShort` respect lang · admin/cards+6 honey routes Zod · cron createMany/merge · requireAuthUser path เดียว · avatar/cover ไม่ leak error
 - **domain = ไม่ใช่ปัญหา:** repo นี้ = prototype (memory `meecard-is-prototype`) ไม่เกี่ยวกับ meecardtcg.com (เว็บ launch คนละ codebase) · share-link→env ที่แก้ = good practice เฉยๆ ไม่ต้องตั้ง Vercel/เปลี่ยน default
 
 ## 🎯 โปรเจคใหญ่ที่กำลังทำ (ข้ามหลาย session) — อ่าน memory `warmkit-redesign-rollout`
