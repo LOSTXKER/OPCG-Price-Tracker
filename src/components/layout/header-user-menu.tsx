@@ -58,14 +58,12 @@ interface UserMenuProps {
 
 export function HeaderUserMenu({
   authUser,
-  authLoaded,
   userTier,
   userName,
   userAvatar,
   userId,
   honeyPoints,
   honeyLifetime,
-  honeyPendingActions,
   unreadMessages,
   pathname,
   marketplaceEnabled,

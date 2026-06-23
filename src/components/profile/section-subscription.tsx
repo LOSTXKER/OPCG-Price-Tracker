@@ -27,10 +27,10 @@ import {
 } from "@/components/ui/dialog";
 import { apiGet, apiPost, apiTry } from "@/lib/api/client";
 import { useUIStore } from "@/stores/ui-store";
-import { t, getLocale } from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { Language } from "@/lib/i18n";
-import { getTierConfig, type ProfileStats, type SubscriptionData } from "./profile-types";
+import { type ProfileStats, type SubscriptionData } from "./profile-types";
 import {
   PLANS,
   PLAN_HIGHLIGHTS,
@@ -69,9 +69,6 @@ function getLimitsForTier(tier: string): TierLimits {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-function formatLocaleDate(dateStr: string, lang: Language) {
-  return new Date(dateStr).toLocaleDateString(getLocale(lang), { year: "numeric", month: "short", day: "numeric" });
-}
 
 function toEffectiveTier(tier: string): TierKey {
   // Treat both subscription and lifetime variants identically — display
@@ -176,7 +173,6 @@ function RenderHighlightValue({ val, lang }: { val: string | boolean; lang: Lang
 export function SectionSubscription({ subscription, stats }: Props) {
   const lang = useUIStore((s) => s.language);
   const limits = getLimitsForTier(subscription.tier);
-  const effectiveTier = toEffectiveTier(subscription.tier);
   const marketplaceFees = useMarketplaceFees();
   const featureSections = useMemo(
     () => buildFeatureSections({ marketplaceFees }),

@@ -11,12 +11,6 @@
  */
 import { prisma } from "./_db";
 
-const PRB_PREFIXES = ["prb"];
-
-function isPrbSet(code: string): boolean {
-  return PRB_PREFIXES.some((p) => code.toLowerCase().startsWith(p));
-}
-
 function getCleanBase(code: string): string {
   return code
     .replace(/_[Rr]\d+$/, "")

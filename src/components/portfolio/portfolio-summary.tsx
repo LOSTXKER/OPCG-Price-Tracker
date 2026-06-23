@@ -72,7 +72,7 @@ export function PortfolioSummary({
       <CardContent className="flex flex-col gap-6 pt-4">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+            <p className="text-eyebrow">
               {t(lang, "unrealizedPnl")}
             </p>
             <div
@@ -97,7 +97,7 @@ export function PortfolioSummary({
             </div>
           </div>
           <div className="text-right">
-            <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+            <p className="text-eyebrow">
               {t(lang, "cardsTracked")}
             </p>
             <p className="font-mono text-2xl font-semibold">{cardCount}</p>
@@ -106,7 +106,7 @@ export function PortfolioSummary({
 
         {chartData && (
           <div>
-            <p className="text-muted-foreground mb-2 text-xs font-medium tracking-wide uppercase">
+            <p className="text-eyebrow mb-2">
               {t(lang, "valueOverTime")}
             </p>
             <div className="text-muted-foreground h-40 w-full text-xs">

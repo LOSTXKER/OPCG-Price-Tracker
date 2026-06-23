@@ -371,7 +371,6 @@ export function HoneyStatusBar(props: StatusProps) {
   } = props;
   const { tiers } = useRankTiers();
   const {
-    currentLevel,
     nextThreshold, currentMin,
     currentLabel, nextLabel, nextBonus,
     iconName, accent, iconImage,

@@ -125,7 +125,6 @@ export function MobileMenuSheet({
   authLoaded,
   userName,
   userAvatar,
-  userId,
   userTier,
   honeyPoints,
   honeyPendingActions,

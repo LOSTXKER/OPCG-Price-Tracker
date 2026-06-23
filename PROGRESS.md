@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-24 — **ออกแบบตารางตลาดใหม่ CMC/Coinbase (sparkline + %-pills) เป็น shared kit ใช้ทั้ง home + /search → DONE (local)** · lint 0 · tsc 0 · build ผ่าน · **ยังไม่ commit · ยังไม่เปิดดูจริง (เบสรีเฟรชดูได้)** · prod live opcg-price-tracker.vercel.app (PR #38 `d73a25d`)
+อัปเดตล่าสุด: 2026-06-24 — **CMC table + minimal home + คืนความอุ่น hover ทั้งแอป → COMMITTED** · branch `redesign/market-table-cmc-warm` commit `32f28e9` (68 files) · lint 0 · tsc 0 · build ✓ · review workflow 4 โซน = clean · **ยังไม่ push/PR** (รอเบส) · prod live opcg-price-tracker.vercel.app (PR #38 `d73a25d`)
 
 ## 🎯 โปรเจคใหญ่ที่กำลังทำ (ข้ามหลาย session) — อ่าน memory `warmkit-redesign-rollout`
 ไล่ redesign **ทุกหน้า**ให้ใช้ภาษาดีไซน์เดียวกับ **card-detail** ("warm primitive kit": `.surface-1`+`.hairline` flat · `SectionHead` · honey accent จุดเดียว · `.tnum` · `.ease-chrome` · spacing โปร่ง) · ref: `src/components/cards/card-detail.tsx` · tokens: `src/app/globals.css`
@@ -43,7 +43,7 @@
 - **เจอเหตุ:** warm-kit migration (a5e0a30) เปลี่ยน `hover:bg-muted` (cream อุ่น) → `hover:bg-foreground/[0.04]` (เทากลาง) **ทั่วแอป** · live meecardtcg.com = เวอร์ชันเก่าก่อน warm-kit จึงยังอุ่น = สิ่งที่เบสคิดถึง
 - **แก้ (home + market, ใช้ร่วม /search):** `hover:bg-foreground/[0.04]`→`hover:bg-muted/70` · `/[0.06]`+`/[0.09]`→`hover:bg-muted` · `active:bg-foreground/[0.06]`→`active:bg-muted` · (sed across src/components/home + src/components/market)
 - **หลักสำคัญ:** hover = warm **muted/cream** (เหลืองน้ำตาลอ่อน) · honey (`--p-honey-soft`) สงวนเป็น **active/selection** เท่านั้น (set picker active, nav) — ไม่ปนกัน
-- **⚠️ ค้าง:** card-detail + หน้าอื่นยังเป็น hover เทากลาง (warm-kit ทั้งแอป) → ถ้าเบสอยาก consistent ต้องคืนความอุ่นทั้งแอป (รอเคาะ)
+- **✅ คืนความอุ่นทั้งแอปแล้ว** (เบสสั่ง): sed `(hover|active):bg-foreground/*` → `bg-muted*` ทั่ว src/ (47 ไฟล์ ~91 จุด) · review workflow 4 โซน = clean (active/honey อยู่คนละ branch ไม่ชน · ไม่มี cream บนพื้นเข้ม) · committed `32f28e9`
 
 ## ⛔ ตัดสินแล้ว (อย่าเสนอซ้ำ)
 1. ภาพ "SAMPLE" การ์ด featured → **เบส: ปล่อยไว้ ไม่ต้องสน**

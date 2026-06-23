@@ -110,7 +110,6 @@ export default function CompareClient() {
 
   const [pickerOpen, setPickerOpen] = useState(false);
   const { limits } = useTierLimits();
-  const tierMax = isFinite(limits.compareCards) ? limits.compareCards : MAX_COMPARE;
   const { openUpgradeDialog } = useUpgradeDialog();
 
   const codes = useMemo(
@@ -147,7 +146,6 @@ export default function CompareClient() {
   const handleAddClick = () => setPickerOpen(true);
   const handleUpgradeClick = () =>
     openUpgradeDialog({ featureKey: "comparePlus" });
-  const showAddSlot = codes.length < tierMax;
 
   const winners = useMemo(
     () => ({
