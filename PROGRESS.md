@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-24 — **mega 3 (i18n sweep) ฝั่ง client = เสร็จ** · เพิ่ม seller + buyer-orders + order-card/confirm-dialog + chrome (header/menu) → t() · branch `redesign/market-table-cmc-warm` commit `bb1fa8d` · lint 0 errors/24 warn · tsc 0 · build ✓ · **ยังไม่ push/PR** (รอเบส) · prod live opcg-price-tracker.vercel.app (PR #38 `d73a25d`)
+อัปเดตล่าสุด: 2026-06-24 — **PR #39 merged เข้า master** (redesign+i18n client) · **กำลังทำ option ก = server-lang resolver** branch `i18n/server-lang-resolver` (resolver + marketplace detail + review-section + home-seo client-convert เสร็จ · เหลือ guide/* bulk) · lint 0 errors/24 warn · tsc 0 · build ✓ 146 pages · prod live opcg-price-tracker.vercel.app
 
 ## 🧹 REFACTOR (audit 5 มิติ — เบสสั่ง "ทำหมด") — ทำเป็น batch
 > audit เต็มรันผ่าน workflow แล้ว · คะแนนเฉลี่ย ~7/10 (type-safety/API 8 · design-system 7 · reuse 6 · i18n 5)
@@ -24,11 +24,16 @@
     - ✅ **chrome (`b310a40`)** — header/header-user-menu/header-market-ticker/mobile-menu-sheet: inline `language===` ternary → t() (reuse keys + myAccount/upgrade ใหม่)
     - ✅ **saved/page.tsx** — error-fallback อ่าน lang imperative (กัน exhaustive-deps re-fetch)
     - apply script: `/tmp/apply-i18n.mjs <result-path> <label>` (generic · ข้าม skipped)
-    - **ที่เหลือ = ติด architectural gap หรือ low-ROI (ตั้งใจไม่ทำ):**
-      - ⚠️ **server components** (guide/* · home-seo-content · marketplace/[listingId] · marketplace review-section) — **ไม่มี server-side language resolver** (lang = useUIStore client เท่านั้น) → ทำ i18n ตรงๆ ไม่ได้ · ต้องตัดสินใจสถาปัตยกรรม (cookie/header server-lang หรือ wrap เป็น client) — keys marketplace เตรียมไว้บางส่วนแล้ว
-      - ⏸️ **step-shipping** (create-wizard) — province/shipping เป็น **stored values** (ไม่ใช่แค่ label) + marketplace flag ปิด + เป็น geo data → ข้าม (ถ้าทำต้อง split value+label ทั้ง wizard+detail)
-      - ⏸️ **admin/** ทั้งหมด — internal tooling ไทยล้วนโดยตั้งใจ (toggle ภาษาไว้ให้ผู้ใช้ทั่วไป ไม่ใช่แอดมิน) — ไม่ i18n
-  - **เล็กค้าง:** missions.ts split 1,180 · 6 honey routes Zod · `formatRelativeShort`/2 ตัว timeAgo ที่เหลือ (review-section, marketplace/[listingId]) = ยัง hardcode th-TH (อันหลังเป็น server comp)
+    - ✅ **server-lang resolver (option ก) — branch `i18n/server-lang-resolver`:** แก้ architectural gap แล้ว
+      - `LANG_COOKIE="kuma-lang"` + `isLanguage()` ใน i18n.ts (client-safe) · `getServerLanguage()` ใน `src/lib/i18n/server.ts` (อ่าน cookie via next/headers · default TH) · ui-store เขียน cookie ตอน setLanguage/cycle + backfill onRehydrate (server/client ไม่ขัดกัน → ไม่มี hydration mismatch)
+      - ✅ **marketplace/[listingId]** (force-dynamic อยู่แล้ว → ใช้ getServerLanguage) · ✅ **review-section** (server comp · รับ lang เป็น prop จาก parent) · ✅ **home-seo-content** (static/ISR → **client-convert** ไม่ใช่ resolver เพื่อคง static · 49 seo keys)
+      - **2 pattern แยกกัน:** dynamic page → `getServerLanguage()` · static/ISR page → client-convert (`"use client"`+useUIStore) คง static + SEO เห็น TH + swap ให้ EN/JP
+      - helper กลาง `formatRelativeAgoShort` (ขยาย months/years) แทน timeAgo ซ้ำ 3 ตัว (order-card, listing detail, review-section)
+    - ⬜ **guide/* (7 หน้า ~410 Thai prose)** — static SEO content → ใช้ client-convert pattern · **เป็น bulk translation ใหญ่** (getting-started 108 · rarities 102 · card-types 64 · colors 61 · sets 38 · index 37 · buying 30) → เหมาะกับ workflow (ต้องเบส opt-in) หรือทำทีละหน้า
+    - **ที่เหลือ = low-ROI (ตั้งใจไม่ทำ):**
+      - ⏸️ **step-shipping** (create-wizard) — province/shipping เป็น **stored values** (ไม่ใช่แค่ label) + marketplace flag ปิด + เป็น geo data → ข้าม
+      - ⏸️ **admin/** ทั้งหมด — internal tooling ไทยล้วนโดยตั้งใจ — ไม่ i18n
+  - **เล็กค้าง:** missions.ts split 1,180 · 6 honey routes Zod
 - **domain = ไม่ใช่ปัญหา:** repo นี้ = prototype (memory `meecard-is-prototype`) ไม่เกี่ยวกับ meecardtcg.com (เว็บ launch คนละ codebase) · share-link→env ที่แก้ = good practice เฉยๆ ไม่ต้องตั้ง Vercel/เปลี่ยน default
 
 ## 🎯 โปรเจคใหญ่ที่กำลังทำ (ข้ามหลาย session) — อ่าน memory `warmkit-redesign-rollout`
