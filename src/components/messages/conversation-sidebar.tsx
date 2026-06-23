@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 import { ConversationItem } from "./conversation-item";
 import type { Conversation } from "./types";
 
@@ -22,6 +24,7 @@ export function ConversationSidebar({
   activeListingId,
   className,
 }: ConversationSidebarProps) {
+  const lang = useUIStore((s) => s.language);
   const [tab, setTab] = useState<TabFilter>("all");
   const [search, setSearch] = useState("");
 
@@ -43,9 +46,9 @@ export function ConversationSidebar({
   }, [conversations, tab, search]);
 
   const tabs: { key: TabFilter; label: string }[] = [
-    { key: "all", label: "ทั้งหมด" },
-    { key: "buying", label: "ผู้ซื้อ" },
-    { key: "selling", label: "ผู้ขาย" },
+    { key: "all", label: t(lang, "msgConvTabAll") },
+    { key: "buying", label: t(lang, "msgConvTabBuying") },
+    { key: "selling", label: t(lang, "msgConvTabSelling") },
   ];
 
   return (
@@ -56,7 +59,7 @@ export function ConversationSidebar({
             <ArrowLeft className="size-4" />
           </Button>
         </Link>
-        <h1 className="text-h4">แชท</h1>
+        <h1 className="text-h4">{t(lang, "msgConvTitle")}</h1>
       </div>
 
       <div className="flex gap-1 border-b px-3 py-1.5">
@@ -82,7 +85,7 @@ export function ConversationSidebar({
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="ค้นหาแชท..."
+            placeholder={t(lang, "msgConvSearchPlaceholder")}
             className="h-8 pl-8 text-xs"
           />
         </div>
@@ -92,7 +95,7 @@ export function ConversationSidebar({
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <p className="text-sm text-muted-foreground">
-              {search ? "ไม่พบแชท" : "ยังไม่มีแชท"}
+              {search ? t(lang, "msgConvEmptyNoResults") : t(lang, "msgConvEmptyNoChats")}
             </p>
           </div>
         ) : (

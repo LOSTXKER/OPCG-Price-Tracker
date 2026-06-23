@@ -12,6 +12,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { formatThb } from "@/lib/utils/currency";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 interface MakeOfferDialogProps {
   open: boolean;
@@ -31,6 +33,7 @@ export function MakeOfferDialog({
   onSubmit,
   isCounter = false,
 }: MakeOfferDialogProps) {
+  const lang = useUIStore((s) => s.language);
   const [price, setPrice] = useState("");
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -53,15 +56,15 @@ export function MakeOfferDialog({
 
   const quickPrices = marketPrice
     ? [
-        { label: "-10%", value: Math.round(marketPrice * 0.9) },
-        { label: "ราคาตลาด", value: Math.round(marketPrice) },
-        { label: "-5%", value: Math.round(marketPrice * 0.95) },
+        { key: "-10%", label: "-10%", value: Math.round(marketPrice * 0.9) },
+        { key: "market", label: t(lang, "msgOfferQuickMarket"), value: Math.round(marketPrice) },
+        { key: "-5%", label: "-5%", value: Math.round(marketPrice * 0.95) },
       ]
     : listingPrice
       ? [
-          { label: "-10%", value: Math.round(listingPrice * 0.9) },
-          { label: "ราคาลง", value: Math.round(listingPrice) },
-          { label: "-5%", value: Math.round(listingPrice * 0.95) },
+          { key: "-10%", label: "-10%", value: Math.round(listingPrice * 0.9) },
+          { key: "listing", label: t(lang, "msgOfferQuickListing"), value: Math.round(listingPrice) },
+          { key: "-5%", label: "-5%", value: Math.round(listingPrice * 0.95) },
         ]
       : [];
 
@@ -70,14 +73,14 @@ export function MakeOfferDialog({
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>
-            {isCounter ? "เสนอราคากลับ" : "เสนอราคา"}
+            {isCounter ? t(lang, "msgOfferTitleCounter") : t(lang, "msgOfferTitle")}
           </DialogTitle>
           <DialogDescription>
             {listingPrice != null && (
-              <>ราคาลงขาย: {formatThb(listingPrice)}</>
+              <>{t(lang, "msgOfferListingPrice").replace("{n}", formatThb(listingPrice))}</>
             )}
             {marketPrice != null && (
-              <> · ราคาตลาด: {formatThb(marketPrice)}</>
+              <>{t(lang, "msgOfferMarketPrice").replace("{n}", formatThb(marketPrice))}</>
             )}
           </DialogDescription>
         </DialogHeader>
@@ -85,7 +88,7 @@ export function MakeOfferDialog({
         <div className="space-y-3">
           <div>
             <label className="mb-1 block text-xs font-medium">
-              ราคาที่ต้องการ (บาท)
+              {t(lang, "msgOfferPriceLabel")}
             </label>
             <Input
               type="number"
@@ -102,7 +105,7 @@ export function MakeOfferDialog({
             <div className="flex gap-1.5">
               {quickPrices.map((qp) => (
                 <Button
-                  key={qp.label}
+                  key={qp.key}
                   variant="outline"
                   size="xs"
                   onClick={() => setPrice(String(qp.value))}
@@ -115,19 +118,19 @@ export function MakeOfferDialog({
 
           <div>
             <label className="mb-1 block text-xs font-medium">
-              หมายเหตุ (ไม่บังคับ)
+              {t(lang, "msgOfferNoteLabel")}
             </label>
             <Input
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="เช่น สนใจซื้อ 2 ใบ ลดได้ไหม"
+              placeholder={t(lang, "msgOfferNotePlaceholder")}
             />
           </div>
         </div>
 
         <DialogFooter>
           <Button onClick={handleSubmit} disabled={!isValid || submitting}>
-            {submitting ? "กำลังส่ง..." : isCounter ? "เสนอราคากลับ" : "ส่งข้อเสนอ"}
+            {submitting ? t(lang, "msgOfferSubmitting") : isCounter ? t(lang, "msgOfferTitleCounter") : t(lang, "msgOfferSubmit")}
           </Button>
         </DialogFooter>
       </DialogContent>

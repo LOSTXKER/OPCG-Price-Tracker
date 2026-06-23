@@ -9,15 +9,17 @@ import type { Conversation } from "./types";
 import { CARD_BG } from "@/lib/constants/ui";
 import { formatThb } from "@/lib/utils/currency";
 import { formatRelativeShort } from "@/lib/utils/time";
+import { t, type TranslationKey } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
-const orderStatusLabel: Record<string, string> = {
-  AWAITING_PAYMENT: "รอชำระ",
-  PAID: "ชำระแล้ว",
-  SHIPPED: "กำลังส่ง",
-  DELIVERED: "ได้รับแล้ว",
-  COMPLETED: "เสร็จสิ้น",
-  CANCELLED: "ยกเลิก",
-  DISPUTED: "มีปัญหา",
+const orderStatusLabelKey: Record<string, TranslationKey> = {
+  AWAITING_PAYMENT: "msgConvStatusAwaitingPayment",
+  PAID: "msgConvStatusPaid",
+  SHIPPED: "msgConvStatusShipped",
+  DELIVERED: "msgConvStatusDelivered",
+  COMPLETED: "msgConvStatusCompleted",
+  CANCELLED: "msgConvStatusCancelled",
+  DISPUTED: "msgConvStatusDisputed",
 };
 
 interface ConversationItemProps {
@@ -29,6 +31,7 @@ export function ConversationItem({
   conversation: conv,
   isActive,
 }: ConversationItemProps) {
+  const lang = useUIStore((s) => s.language);
   const { listing, otherUser } = conv;
 
   return (
@@ -71,7 +74,7 @@ export function ConversationItem({
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
           <p className="truncate text-sm font-medium">
-            {otherUser.displayName ?? "User"}
+            {otherUser.displayName ?? t(lang, "msgConvUser")}
           </p>
           <span className="shrink-0 text-meta">
             {formatRelativeShort(conv.lastMessageAt)}
@@ -92,12 +95,17 @@ export function ConversationItem({
         </div>
         {conv.activeOrder && (
           <Badge variant="outline" className="mt-1 text-xs">
-            {orderStatusLabel[conv.activeOrder.status] ?? conv.activeOrder.status}
+            {orderStatusLabelKey[conv.activeOrder.status]
+              ? t(lang, orderStatusLabelKey[conv.activeOrder.status])
+              : conv.activeOrder.status}
           </Badge>
         )}
         {!conv.activeOrder && conv.pendingOffer && (
           <Badge variant="default" className="mt-1 text-xs">
-            ข้อเสนอ {formatThb(conv.pendingOffer.priceThb)}
+            {t(lang, "msgConvOffer").replace(
+              "{n}",
+              formatThb(conv.pendingOffer.priceThb)
+            )}
           </Badge>
         )}
       </div>

@@ -3,6 +3,8 @@
 import { useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 interface ChatInputProps {
   onSend: (content: string) => void;
@@ -13,8 +15,9 @@ interface ChatInputProps {
 export function ChatInput({
   onSend,
   disabled = false,
-  placeholder = "พิมพ์ข้อความ...",
+  placeholder,
 }: ChatInputProps) {
+  const lang = useUIStore((s) => s.language);
   const [value, setValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -53,14 +56,14 @@ export function ChatInput({
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
         onInput={handleInput}
-        placeholder={placeholder}
+        placeholder={placeholder ?? t(lang, "msgChatPlaceholder")}
         disabled={disabled}
         rows={1}
         className="flex-1 resize-none rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 disabled:opacity-50"
       />
       <Button
         size="icon"
-        aria-label="Send message"
+        aria-label={t(lang, "msgChatSend")}
         onClick={handleSend}
         disabled={disabled || !value.trim()}
         className="shrink-0"

@@ -9,6 +9,8 @@ import { ArrowLeft, PanelRight } from "lucide-react";
 import { ChatMessageBubble } from "./chat-message";
 import { ChatInput } from "./chat-input";
 import type { ChatMessage, ChatListing, ChatUser } from "./types";
+import { t, type TranslationKey } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 interface ChatPanelProps {
   messages: ChatMessage[];
@@ -25,12 +27,12 @@ interface ChatPanelProps {
   className?: string;
 }
 
-const listingStatusLabel: Record<string, string> = {
-  ACTIVE: "ขายอยู่",
-  RESERVED: "จอง",
-  SOLD: "ขายแล้ว",
-  EXPIRED: "หมดอายุ",
-  CANCELLED: "ยกเลิก",
+const listingStatusKey: Record<string, TranslationKey> = {
+  ACTIVE: "msgChatStatusActive",
+  RESERVED: "msgChatStatusReserved",
+  SOLD: "msgChatStatusSold",
+  EXPIRED: "msgChatStatusExpired",
+  CANCELLED: "msgChatStatusCancelled",
 };
 
 export function ChatPanel({
@@ -47,6 +49,7 @@ export function ChatPanel({
   sending = false,
   className,
 }: ChatPanelProps) {
+  const lang = useUIStore((s) => s.language);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = useCallback(() => {
@@ -61,7 +64,7 @@ export function ChatPanel({
   if (!listing || !otherUser) {
     return (
       <div className={cn("flex flex-1 flex-col items-center justify-center bg-muted/20", className)}>
-        <p className="text-muted-foreground">เลือกแชทเพื่อเริ่มสนทนา</p>
+        <p className="text-muted-foreground">{t(lang, "msgChatEmptyState")}</p>
       </div>
     );
   }
@@ -92,7 +95,7 @@ export function ChatPanel({
           </p>
         </div>
         <Badge variant="outline" className="shrink-0 text-xs">
-          {listingStatusLabel[listing.status] ?? listing.status}
+          {listingStatusKey[listing.status] ? t(lang, listingStatusKey[listing.status]) : listing.status}
         </Badge>
         {onTogglePanel && (
           <Button variant="ghost" size="icon-sm" aria-label="Toggle order panel" className="shrink-0 lg:hidden" onClick={onTogglePanel}>
