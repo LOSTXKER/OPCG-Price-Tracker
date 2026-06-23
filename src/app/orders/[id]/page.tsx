@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import {
   ArrowLeft,
   Loader2,
@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { OrderStatusBadge } from "@/components/orders/order-status-badge";
 import { PageHeader } from "@/components/layout/page-header";
 import { Surface } from "@/components/ui/surface";
-import { t, getLocale } from "@/lib/i18n";
+import { t, getLocale, type Language } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { ApiError, apiGet, apiPatch } from "@/lib/api/client";
 
@@ -57,13 +57,15 @@ type OrderDetail = {
   offer: { id: number; priceThb: number; note: string | null } | null;
 };
 
-const TIMELINE_STEPS = [
-  { key: "createdAt", label: "สั่งซื้อ", icon: Clock },
-  { key: "paidAt", label: "ชำระเงินแล้ว", icon: CreditCard },
-  { key: "shippedAt", label: "จัดส่งแล้ว", icon: Truck },
-  { key: "deliveredAt", label: "ได้รับสินค้า", icon: CheckCircle },
-  { key: "completedAt", label: "เสร็จสิ้น", icon: CheckCircle },
-] as const;
+function getTimelineSteps(lang: Language) {
+  return [
+    { key: "createdAt", label: t(lang, "buyOrderStepOrdered"), icon: Clock },
+    { key: "paidAt", label: t(lang, "buyOrderStepPaid"), icon: CreditCard },
+    { key: "shippedAt", label: t(lang, "buyOrderStepShipped"), icon: Truck },
+    { key: "deliveredAt", label: t(lang, "buyOrderStepDelivered"), icon: CheckCircle },
+    { key: "completedAt", label: t(lang, "buyOrderStepCompleted"), icon: CheckCircle },
+  ] as const;
+}
 
 export default function BuyerOrderDetailPage() {
   const params = useParams();
@@ -76,6 +78,8 @@ export default function BuyerOrderDetailPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
 
+  const timelineSteps = useMemo(() => getTimelineSteps(lang), [lang]);
+
   const fetchOrder = useCallback(async () => {
     try {
       const data = await apiGet<{ order: OrderDetail }>(
@@ -83,7 +87,8 @@ export default function BuyerOrderDetailPage() {
       );
       setOrder(data.order);
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "ไม่สามารถโหลดข้อมูลได้");
+      // read lang imperatively so this fetch callback isn't language-dependent
+      setError(e instanceof ApiError ? e.message : t(useUIStore.getState().language, "loadFailed"));
     } finally {
       setLoading(false);
     }
@@ -101,7 +106,7 @@ export default function BuyerOrderDetailPage() {
       await fetchOrder();
     } catch (err) {
       setActionError(
-        err instanceof ApiError ? err.message : "เกิดข้อผิดพลาด",
+        err instanceof ApiError ? err.message : t(lang, "buyOrderGenericError"),
       );
     } finally {
       setActionLoading(false);
@@ -121,11 +126,11 @@ export default function BuyerOrderDetailPage() {
       <div className="space-y-4">
         <Button variant="ghost" size="sm" render={<Link href="/orders" />}>
           <ArrowLeft className="mr-2 h-4 w-4" />
-          กลับ
+          {t(lang, "back")}
         </Button>
         <div className="flex flex-col items-center justify-center py-20 text-center text-muted-foreground">
           <Package className="mb-3 h-12 w-12 opacity-30" />
-          <p>{error ?? "ไม่พบคำสั่งซื้อ"}</p>
+          <p>{error ?? t(lang, "buyOrderNotFound")}</p>
         </div>
       </div>
     );
@@ -198,14 +203,14 @@ export default function BuyerOrderDetailPage() {
 
       {/* Seller info */}
       <div className="panel rounded-xl p-4">
-        <h2 className="mb-3 text-h3">ข้อมูลผู้ขาย</h2>
+        <h2 className="mb-3 text-h3">{t(lang, "buyOrderSellerInfo")}</h2>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-sm font-bold">
               {(order.seller.displayName ?? "S").charAt(0).toUpperCase()}
             </div>
             <p className="font-medium">
-              {order.seller.displayName ?? "ผู้ขาย"}
+              {order.seller.displayName ?? t(lang, "seller")}
             </p>
           </div>
           <Button
@@ -214,16 +219,16 @@ export default function BuyerOrderDetailPage() {
             render={<Link href={`/messages/${order.listing.id}`} />}
           >
             <MessageCircle className="mr-1.5 h-3.5 w-3.5" />
-            แชท
+            {t(lang, "chat")}
           </Button>
         </div>
       </div>
 
       {/* Status Timeline */}
       <div className="panel rounded-xl p-4">
-        <h2 className="mb-4 text-h3">สถานะคำสั่งซื้อ</h2>
+        <h2 className="mb-4 text-h3">{t(lang, "buyOrderStatusTitle")}</h2>
         <div className="space-y-4">
-          {TIMELINE_STEPS.map((step, i) => {
+          {timelineSteps.map((step, i) => {
             const dateVal = order[step.key as keyof OrderDetail] as
               | string
               | null;
@@ -246,7 +251,7 @@ export default function BuyerOrderDetailPage() {
                   >
                     <Icon className="h-4 w-4" />
                   </div>
-                  {i < TIMELINE_STEPS.length - 1 && (
+                  {i < timelineSteps.length - 1 && (
                     <div
                       className={`mt-1 h-6 w-px ${
                         isCompleted ? "bg-green-500/30" : "bg-[var(--p-hair)]"
@@ -264,7 +269,7 @@ export default function BuyerOrderDetailPage() {
                   </p>
                   {dateVal && (
                     <p className="text-meta">
-                      {new Date(dateVal).toLocaleString("th-TH")}
+                      {new Date(dateVal).toLocaleString(getLocale(lang))}
                     </p>
                   )}
                 </div>
@@ -278,16 +283,16 @@ export default function BuyerOrderDetailPage() {
               </div>
               <div className="pt-1">
                 <p className="text-sm font-medium text-red-700 dark:text-red-400">
-                  ยกเลิก
+                  {t(lang, "cancel")}
                 </p>
                 {order.cancelledAt && (
                   <p className="text-meta">
-                    {new Date(order.cancelledAt).toLocaleString("th-TH")}
+                    {new Date(order.cancelledAt).toLocaleString(getLocale(lang))}
                   </p>
                 )}
                 {order.cancelReason && (
                   <p className="text-meta">
-                    เหตุผล: {order.cancelReason}
+                    {t(lang, "buyOrderReasonLabel").replace("{reason}", order.cancelReason)}
                   </p>
                 )}
               </div>
@@ -299,16 +304,16 @@ export default function BuyerOrderDetailPage() {
       {/* Shipping info */}
       {order.trackingNumber && (
         <div className="panel rounded-xl p-4">
-          <h2 className="mb-3 text-h3">ข้อมูลจัดส่ง</h2>
+          <h2 className="mb-3 text-h3">{t(lang, "buyOrderShippingInfo")}</h2>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">วิธีจัดส่ง</span>
+              <span className="text-muted-foreground">{t(lang, "buyOrderShippingMethod")}</span>
               <span className="font-medium">
                 {order.shippingMethod ?? "—"}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">หมายเลขพัสดุ</span>
+              <span className="text-muted-foreground">{t(lang, "buyOrderTrackingNumber")}</span>
               <span className="font-mono font-medium">
                 {order.trackingNumber}
               </span>
@@ -320,9 +325,9 @@ export default function BuyerOrderDetailPage() {
       {/* Action panel */}
       {order.status === "SHIPPED" && (
         <div className="panel space-y-3 rounded-xl border-cyan-500/30 bg-cyan-500/5 p-4">
-          <p className="font-medium">สินค้ากำลังจัดส่ง</p>
+          <p className="font-medium">{t(lang, "buyOrderShippingTitle")}</p>
           <p className="text-sm text-muted-foreground">
-            เมื่อได้รับสินค้าแล้ว กรุณากด &quot;ยืนยันรับสินค้า&quot;
+            {t(lang, "buyOrderShippingPrompt")}
           </p>
           <Button
             onClick={() => handleStatusUpdate("DELIVERED")}
@@ -333,16 +338,16 @@ export default function BuyerOrderDetailPage() {
             ) : (
               <CheckCircle className="mr-2 h-4 w-4" />
             )}
-            ยืนยันรับสินค้า
+            {t(lang, "buyOrderConfirmReceipt")}
           </Button>
         </div>
       )}
 
       {order.status === "DELIVERED" && (
         <div className="panel space-y-3 rounded-xl border-green-500/30 bg-green-500/5 p-4">
-          <p className="font-medium">ได้รับสินค้าแล้ว</p>
+          <p className="font-medium">{t(lang, "buyOrderReceivedTitle")}</p>
           <p className="text-sm text-muted-foreground">
-            ยืนยันเสร็จสิ้นเพื่อปิดคำสั่งซื้อ
+            {t(lang, "buyOrderReceivedPrompt")}
           </p>
           <Button
             onClick={() => handleStatusUpdate("COMPLETED")}
@@ -353,7 +358,7 @@ export default function BuyerOrderDetailPage() {
             ) : (
               <CheckCircle className="mr-2 h-4 w-4" />
             )}
-            ยืนยันเสร็จสิ้น
+            {t(lang, "buyOrderConfirmComplete")}
           </Button>
         </div>
       )}
@@ -361,7 +366,7 @@ export default function BuyerOrderDetailPage() {
       {order.status === "AWAITING_PAYMENT" && (
         <div className="panel space-y-3 rounded-xl p-4">
           <p className="text-sm text-muted-foreground">
-            รอการชำระเงิน คุณสามารถยกเลิกคำสั่งซื้อได้
+            {t(lang, "buyOrderAwaitingPrompt")}
           </p>
           <div className="flex gap-2">
             <Button
@@ -371,14 +376,14 @@ export default function BuyerOrderDetailPage() {
               {actionLoading && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              แจ้งชำระเงิน
+              {t(lang, "buyOrderNotifyPayment")}
             </Button>
             <Button
               variant="outline"
               onClick={() => handleStatusUpdate("CANCELLED")}
               disabled={actionLoading}
             >
-              ยกเลิก
+              {t(lang, "cancel")}
             </Button>
           </div>
         </div>
@@ -392,9 +397,9 @@ export default function BuyerOrderDetailPage() {
               <Star className="h-5 w-5 text-amber-500" />
             </div>
             <div>
-              <p className="font-medium">ให้คะแนนผู้ขาย</p>
+              <p className="font-medium">{t(lang, "buyOrderRateSeller")}</p>
               <p className="text-sm text-muted-foreground">
-                แบ่งปันประสบการณ์การซื้อขาย
+                {t(lang, "buyOrderRateSellerDesc")}
               </p>
             </div>
           </div>
@@ -405,7 +410,7 @@ export default function BuyerOrderDetailPage() {
               <Link href={`/profile/${order.seller.id}?review=true`} />
             }
           >
-            รีวิว
+            {t(lang, "buyOrderReview")}
           </Button>
         </div>
       )}
