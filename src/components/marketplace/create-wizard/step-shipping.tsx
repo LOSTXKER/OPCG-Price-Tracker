@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ApiError, apiForm } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 import { ChevronLeft, ChevronRight, ImagePlus, X, Loader2 } from "lucide-react";
 
 const SHIPPING_OPTIONS = [
@@ -49,6 +51,7 @@ export function StepShipping({
   onBack,
   onNext,
 }: StepShippingProps) {
+  const lang = useUIStore((s) => s.language);
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -69,7 +72,9 @@ export function StepShipping({
 
     const remaining = MAX_PHOTOS - data.photos.length;
     if (remaining <= 0) {
-      setUploadError(`อัปโหลดได้สูงสุด ${MAX_PHOTOS} รูป`);
+      setUploadError(
+        t(lang, "mktShipMaxPhotosError").replace("{n}", String(MAX_PHOTOS))
+      );
       return;
     }
 
@@ -81,7 +86,7 @@ export function StepShipping({
       for (const file of toUpload) {
         if (!file.type.startsWith("image/")) continue;
         if (file.size > 5 * 1024 * 1024) {
-          setUploadError("ไฟล์ใหญ่เกิน 5MB");
+          setUploadError(t(lang, "mktShipFileTooLarge"));
           continue;
         }
 
@@ -92,7 +97,9 @@ export function StepShipping({
           const { url } = await apiForm<{ url: string }>("/api/listings/upload", form);
           urls.push(url);
         } catch (err) {
-          setUploadError(err instanceof ApiError ? err.message : "อัปโหลดไม่สำเร็จ");
+          setUploadError(
+            err instanceof ApiError ? err.message : t(lang, "mktShipUploadFailed")
+          );
           continue;
         }
       }
@@ -120,15 +127,15 @@ export function StepShipping({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-h3">การจัดส่งและรายละเอียด</h2>
+        <h2 className="text-h3">{t(lang, "mktShipTitle")}</h2>
         <p className="text-sm text-muted-foreground">
-          ระบุวิธีจัดส่ง พื้นที่ และภาพสินค้าจริง
+          {t(lang, "mktShipSubtitle")}
         </p>
       </div>
 
       {/* Shipping methods */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">วิธีจัดส่ง</label>
+        <label className="text-sm font-medium">{t(lang, "mktShipMethodLabel")}</label>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {SHIPPING_OPTIONS.map((opt) => (
             <button
@@ -150,7 +157,7 @@ export function StepShipping({
 
       {/* Location */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">พื้นที่</label>
+        <label className="text-sm font-medium">{t(lang, "mktShipLocationLabel")}</label>
         <div className="flex flex-wrap gap-1.5">
           {LOCATIONS.map((loc) => (
             <button
@@ -171,7 +178,7 @@ export function StepShipping({
         <Input
           value={data.location}
           onChange={(e) => update({ location: e.target.value })}
-          placeholder="กรุงเทพมหานคร"
+          placeholder={t(lang, "mktShipLocationPlaceholder")}
           className="mt-1"
         />
       </div>
@@ -179,9 +186,9 @@ export function StepShipping({
       {/* Photo upload */}
       <div className="space-y-2">
         <label className="text-sm font-medium">
-          ภาพสินค้าจริง
+          {t(lang, "mktShipPhotosLabel")}
           <span className="text-muted-foreground ml-1 font-normal">
-            (ไม่บังคับ · สูงสุด {MAX_PHOTOS} รูป)
+            {t(lang, "mktShipPhotosHint").replace("{n}", String(MAX_PHOTOS))}
           </span>
         </label>
 
@@ -231,10 +238,10 @@ export function StepShipping({
             )}
             <div>
               <p className="text-sm font-medium">
-                {uploading ? "กำลังอัปโหลด..." : "คลิกหรือลากไฟล์มาวาง"}
+                {uploading ? t(lang, "mktShipUploading") : t(lang, "mktShipDropzone")}
               </p>
               <p className="text-muted-foreground text-xs">
-                JPG, PNG, WebP · ไม่เกิน 5MB ต่อรูป
+                {t(lang, "mktShipFileTypes")}
               </p>
             </div>
           </div>
@@ -256,22 +263,22 @@ export function StepShipping({
 
       {/* Description */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">คำอธิบายเพิ่มเติม (ไม่บังคับ)</label>
+        <label className="text-sm font-medium">{t(lang, "mktShipDescriptionLabel")}</label>
         <Textarea
           value={data.description}
           onChange={(e) => update({ description: e.target.value })}
           rows={3}
-          placeholder="เช่น ซื้อมาจากร้าน... สภาพตามรูป..."
+          placeholder={t(lang, "mktShipDescriptionPlaceholder")}
         />
       </div>
 
       <div className="flex justify-between">
         <Button variant="outline" onClick={onBack} className="gap-1">
           <ChevronLeft className="size-4" />
-          กลับ
+          {t(lang, "mktShipBack")}
         </Button>
         <Button onClick={onNext} disabled={!isValid} className="gap-1">
-          ถัดไป
+          {t(lang, "mktShipNext")}
           <ChevronRight className="size-4" />
         </Button>
       </div>

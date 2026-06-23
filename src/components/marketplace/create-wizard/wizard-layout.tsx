@@ -2,13 +2,15 @@
 
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
+import { t, type TranslationKey } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 const STEPS = [
-  { key: "card", label: "เลือกการ์ด" },
-  { key: "pricing", label: "ราคาและสภาพ" },
-  { key: "shipping", label: "การจัดส่ง" },
-  { key: "preview", label: "ตรวจสอบ" },
-] as const;
+  { key: "card", labelKey: "mktWizardStepCard" },
+  { key: "pricing", labelKey: "mktWizardStepPricing" },
+  { key: "shipping", labelKey: "mktWizardStepShipping" },
+  { key: "preview", labelKey: "mktWizardStepPreview" },
+] as const satisfies ReadonlyArray<{ key: string; labelKey: TranslationKey }>;
 
 export type WizardStep = (typeof STEPS)[number]["key"];
 
@@ -25,6 +27,7 @@ export function WizardLayout({
   completedSteps,
   children,
 }: WizardLayoutProps) {
+  const lang = useUIStore((s) => s.language);
   const currentIdx = STEPS.findIndex((s) => s.key === currentStep);
 
   return (
@@ -63,7 +66,7 @@ export function WizardLayout({
                     i + 1
                   )}
                 </span>
-                <span className="hidden sm:inline">{step.label}</span>
+                <span className="hidden sm:inline">{t(lang, step.labelKey)}</span>
               </button>
               {i < STEPS.length - 1 && (
                 <div

@@ -6,6 +6,8 @@ import { apiPost, apiTry } from "@/lib/api/client";
 import { Button } from "@/components/ui/button";
 import { MakeOfferDialog } from "@/components/messages/make-offer-dialog";
 import { ShoppingCart, HandCoins } from "lucide-react";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 interface ListingActionButtonsProps {
   listingId: number;
@@ -19,6 +21,7 @@ export function ListingActionButtons({
   marketPriceThb,
 }: ListingActionButtonsProps) {
   const router = useRouter();
+  const lang = useUIStore((s) => s.language);
   const [offerOpen, setOfferOpen] = useState(false);
   const [buying, setBuying] = useState(false);
 
@@ -53,7 +56,7 @@ export function ListingActionButtons({
         disabled={buying}
       >
         <ShoppingCart className="size-4" />
-        {buying ? "กำลังสั่งซื้อ..." : "ซื้อตามราคา"}
+        {buying ? t(lang, "mktActionsBuying") : t(lang, "mktActionsBuyNow")}
       </Button>
       <Button
         variant="secondary"
@@ -62,7 +65,7 @@ export function ListingActionButtons({
         onClick={() => setOfferOpen(true)}
       >
         <HandCoins className="size-4" />
-        เสนอราคา
+        {t(lang, "mktActionsMakeOffer")}
       </Button>
       <MakeOfferDialog
         open={offerOpen}

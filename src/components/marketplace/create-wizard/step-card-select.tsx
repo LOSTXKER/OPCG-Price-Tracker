@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { useCardSearch } from "@/hooks/use-card-search";
 import { cn } from "@/lib/utils";
 import { CARD_BG } from "@/lib/constants/ui";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 import { Search, ChevronRight } from "lucide-react";
 
 export type SelectedCard = {
@@ -32,15 +34,16 @@ export function StepCardSelect({
   onSelect,
   onNext,
 }: StepCardSelectProps) {
+  const lang = useUIStore((s) => s.language);
   const { query, setQuery, results } = useCardSearch({ limit: 20, debounceMs: 300 });
   const [showResults, setShowResults] = useState(false);
 
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-h3">เลือกการ์ดที่จะขาย</h2>
+        <h2 className="text-h3">{t(lang, "mktSelectHeading")}</h2>
         <p className="text-sm text-muted-foreground">
-          ค้นหาด้วยชื่อหรือรหัสการ์ด
+          {t(lang, "mktSelectSubtitle")}
         </p>
       </div>
 
@@ -53,7 +56,7 @@ export function StepCardSelect({
             setShowResults(true);
           }}
           onFocus={() => setShowResults(true)}
-          placeholder="ค้นหา เช่น Luffy, OP01-001, ..."
+          placeholder={t(lang, "mktSelectSearchPlaceholder")}
           className="pl-9"
           autoComplete="off"
         />
@@ -63,7 +66,7 @@ export function StepCardSelect({
         <div className="max-h-80 overflow-auto rounded-lg border">
           {results.length === 0 ? (
             <p className="p-4 text-center text-sm text-muted-foreground">
-              ไม่พบการ์ด
+              {t(lang, "mktSelectNoResults")}
             </p>
           ) : (
             results.map((c) => (
@@ -153,7 +156,7 @@ export function StepCardSelect({
               </div>
               {selected.latestPriceJpy != null && (
                 <p className="text-sm">
-                  ราคาตลาด: <span className="font-semibold">¥{selected.latestPriceJpy.toLocaleString()}</span>
+                  {t(lang, "mktSelectMarketPrice")} <span className="font-semibold">¥{selected.latestPriceJpy.toLocaleString()}</span>
                   {selected.latestPriceThb != null && (
                     <span className="text-muted-foreground">
                       {" "}(~฿{selected.latestPriceThb.toLocaleString()})
@@ -168,7 +171,7 @@ export function StepCardSelect({
 
       <div className="flex justify-end">
         <Button onClick={onNext} disabled={!selected} className="gap-1">
-          ถัดไป
+          {t(lang, "mktSelectNext")}
           <ChevronRight className="size-4" />
         </Button>
       </div>

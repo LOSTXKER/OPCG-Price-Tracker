@@ -1,7 +1,9 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
+import { useUIStore } from "@/stores/ui-store"
 
 import { CONDITIONS, RARITIES } from "./types"
 
@@ -18,10 +20,11 @@ export function BrowseFiltersSheet({
   onToggleRarity: (value: string) => void
   onClear: () => void
 }) {
+  const lang = useUIStore((s) => s.language)
   return (
     <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
       <div>
-        <p className="mb-1.5 text-xs font-medium text-muted-foreground">สภาพการ์ด</p>
+        <p className="mb-1.5 text-xs font-medium text-muted-foreground">{t(lang, "mktFilterCondition")}</p>
         <div className="flex flex-wrap gap-1.5">
           {CONDITIONS.map((c) => (
             <button
@@ -40,7 +43,7 @@ export function BrowseFiltersSheet({
         </div>
       </div>
       <div>
-        <p className="mb-1.5 text-xs font-medium text-muted-foreground">ความหายาก</p>
+        <p className="mb-1.5 text-xs font-medium text-muted-foreground">{t(lang, "mktFilterRarity")}</p>
         <div className="flex flex-wrap gap-1.5">
           {RARITIES.map((r) => (
             <button
@@ -60,7 +63,7 @@ export function BrowseFiltersSheet({
       </div>
       {(conditions.length > 0 || rarities.length > 0) && (
         <Button variant="ghost" size="xs" onClick={onClear}>
-          ล้างตัวกรอง
+          {t(lang, "mktFilterClear")}
         </Button>
       )}
     </div>

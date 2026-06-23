@@ -74,7 +74,7 @@ export default function CreateListingClient() {
         (c) => c.cardCode.toUpperCase() === codeUp
       );
       if (!card) {
-        setError("ไม่พบการ์ดนี้ในระบบ");
+        setError(t(lang, "mktCreateCardNotFound"));
         setSubmitting(false);
         return;
       }
@@ -99,14 +99,14 @@ export default function CreateListingClient() {
       }
     } catch (err) {
       if (err instanceof ApiError) {
-        setError(err.message || "ลงประกาศไม่สำเร็จ");
+        setError(err.message || t(lang, "mktCreateSubmitFailed"));
       } else {
-        setError("เกิดข้อผิดพลาด กรุณาลองอีกครั้ง");
+        setError(t(lang, "mktCreateGenericError"));
       }
     } finally {
       setSubmitting(false);
     }
-  }, [selectedCard, pricing, shipping, router]);
+  }, [selectedCard, pricing, shipping, router, lang]);
 
   return (
     <div className="mx-auto max-w-lg space-y-6">
