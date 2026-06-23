@@ -17,9 +17,11 @@
   - **✅ mega 1 — card-detail split (`b675fe5`):** แยก useStickyBuy + useCardDetailTabs (1028→949) · pricing memos **คงไว้** (interwoven กับ JSX เกินจะแยกปลอดภัย) · ⚠️ build ผ่านแต่ยังไม่ render-verify scrollspy/sticky (logic เดิม copy-move น่าจะ ok — เบสเปิดดูได้)
   - **⬜ mega 2 — Surface rollout:** .panel(201)/ad-hoc bg-card+border(115)/shadcn Card(6) → Surface · เริ่ม guide/* + profile/section-* (static, เสี่ยงต่ำ) · ต้อง verify visual ไม่เพี้ยน · fresh turn
   - **🔄 mega 3 — i18n sweep (ทำทีละ feature ด้วย workflow คืน data → apply กลาง · pattern ใช้ได้ดี):**
-    - ✅ **messages (`cb6fe41`)** — 70 strings · 8 ไฟล์ · th/en/jp · tsc/build/lint ผ่าน · interpolation {n} ครบ
-    - ⬜ marketplace wizard (~88) · seller (~83) · hero suggestions · long-tail (audit: ~1,900 รวม) — ทำซ้ำ pattern เดิม
-    - script apply: `/tmp/apply-i18n-messages.mjs` (ปรับ RESULT path ต่อ feature)
+    - ✅ **messages (`cb6fe41`)** — 70 strings · 8 ไฟล์
+    - ✅ **marketplace (`ffaff54`)** — 12 client components · 89 keys · **3 server components deferred** (page.tsx, [listingId]/page.tsx, review-section.tsx — ไม่มี server-side lang resolver · keys เตรียมไว้แล้ว · ต้อง wrap client หรือทำ server-lang)
+    - ⬜ seller (~83) · hero suggestions · long-tail · **+ marketplace server components** (ต้องกลยุทธ์ server-i18n)
+    - apply script: `/tmp/apply-i18n.mjs <result-path> <label>` (generic · ข้าม skipped)
+    - ⚠️ **architectural gap:** ไม่มี server-side language resolver (lang มาจาก useUIStore client เท่านั้น) → server components i18n ไม่ได้ตรงๆ · prototype Thai-market = default ไทย พอรับได้ชั่วคราว
   - **เล็กค้าง:** missions.ts split 1,180 · 6 honey routes Zod · formatRelativeShort (fold เข้า i18n)
 - **domain = ไม่ใช่ปัญหา:** repo นี้ = prototype (memory `meecard-is-prototype`) ไม่เกี่ยวกับ meecardtcg.com (เว็บ launch คนละ codebase) · share-link→env ที่แก้ = good practice เฉยๆ ไม่ต้องตั้ง Vercel/เปลี่ยน default
 
