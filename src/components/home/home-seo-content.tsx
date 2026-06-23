@@ -136,7 +136,7 @@ export function HomeSeoContent() {
             <Link
               key={f.href}
               href={f.href}
-              className="surface-1 ease-chrome group flex flex-col gap-4 rounded-xl p-6 hairline hover:bg-foreground/[0.04]"
+              className="surface-1 ease-chrome group flex flex-col gap-4 rounded-xl p-6 hairline hover:bg-muted/70"
             >
               <div className="flex size-11 items-center justify-center rounded-full bg-foreground/[0.05] text-foreground">
                 <f.icon className="size-5" />

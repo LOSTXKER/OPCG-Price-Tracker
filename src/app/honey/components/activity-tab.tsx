@@ -102,7 +102,7 @@ export function ActivityTab({
             </div>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="ease-chrome inline-flex items-center gap-1.5 rounded-lg border bg-background px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-foreground/[0.06]"
+              className="ease-chrome inline-flex items-center gap-1.5 rounded-lg border bg-background px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
             >
               <ArrowUp className="size-3.5" />
               {t(lang, "activityGoToMissions")}

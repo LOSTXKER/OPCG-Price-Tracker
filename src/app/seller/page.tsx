@@ -167,7 +167,7 @@ export default function SellerDashboard() {
               sub={card.sub}
               icon={card.icon}
               tone={card.tone}
-              className="h-full transition-colors ease-chrome hover:bg-foreground/[0.04]"
+              className="h-full transition-colors ease-chrome hover:bg-muted/70"
             />
           );
           return card.href ? (
@@ -226,7 +226,7 @@ export default function SellerDashboard() {
             {stats.recentOrders.map((order) => (
               <div
                 key={order.id}
-                className="flex items-center gap-3 rounded-lg border border-[var(--p-hair)] p-3 transition-colors ease-chrome hover:bg-foreground/[0.04]"
+                className="flex items-center gap-3 rounded-lg border border-[var(--p-hair)] p-3 transition-colors ease-chrome hover:bg-muted/70"
               >
                 {order.listing.card.imageUrl && (
                   <Image
@@ -267,7 +267,7 @@ export default function SellerDashboard() {
       <div className="grid gap-4 sm:grid-cols-2">
         <Link
           href="/seller/listings"
-          className="panel flex items-center gap-4 rounded-xl p-4 transition-colors ease-chrome hover:bg-foreground/[0.04]"
+          className="panel flex items-center gap-4 rounded-xl p-4 transition-colors ease-chrome hover:bg-muted/70"
         >
           <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
             <Package className="h-6 w-6 text-primary" />
@@ -282,7 +282,7 @@ export default function SellerDashboard() {
         </Link>
         <Link
           href="/seller/listings/new"
-          className="panel flex items-center gap-4 rounded-xl p-4 transition-colors ease-chrome hover:bg-foreground/[0.04]"
+          className="panel flex items-center gap-4 rounded-xl p-4 transition-colors ease-chrome hover:bg-muted/70"
         >
           <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
             <Plus className="h-6 w-6 text-primary" />

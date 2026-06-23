@@ -5,6 +5,8 @@ import { Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiPost, apiTry } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 
 interface SaveButtonProps {
   listingId: number;
@@ -13,6 +15,7 @@ interface SaveButtonProps {
 }
 
 export function SaveButton({ listingId, initialSaved, className }: SaveButtonProps) {
+  const lang = useUIStore((s) => s.language);
   const [saved, setSaved] = useState(initialSaved);
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +36,7 @@ export function SaveButton({ listingId, initialSaved, className }: SaveButtonPro
       onClick={toggle}
       disabled={loading}
       className={cn("shrink-0", className)}
-      aria-label={saved ? "นำออกจากรายการบันทึก" : "บันทึกรายการนี้"}
+      aria-label={saved ? t(lang, "mktSaveRemoveAria") : t(lang, "mktSaveAddAria")}
     >
       <Bookmark
         className={cn(

@@ -41,7 +41,7 @@ function ToolTile({ tool, label, comingSoon }: { tool: Tool; label: string; comi
         "ease-chrome flex h-full flex-col gap-3 rounded-xl border border-[var(--p-hair)] bg-card p-4",
         tool.disabled
           ? "opacity-60"
-          : "hover:border-primary/40 hover:bg-foreground/[0.04] active:scale-[0.98]"
+          : "hover:border-primary/40 hover:bg-muted/70 active:scale-[0.98]"
       )}
     >
       <div className="flex items-start justify-between">

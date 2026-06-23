@@ -1,6 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { t, type TranslationKey } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 import {
   CreditCard,
   Package,
@@ -13,15 +15,15 @@ import type { OrderStatusType } from "./types";
 
 const STEPS: {
   key: OrderStatusType;
-  label: string;
-  shortLabel: string;
+  labelKey: TranslationKey;
+  shortLabelKey: TranslationKey;
   icon: React.ElementType;
 }[] = [
-  { key: "AWAITING_PAYMENT", label: "รอชำระเงิน", shortLabel: "รอจ่าย", icon: CreditCard },
-  { key: "PAID", label: "ชำระแล้ว", shortLabel: "จ่ายแล้ว", icon: CreditCard },
-  { key: "SHIPPED", label: "จัดส่งแล้ว", shortLabel: "ส่งแล้ว", icon: Truck },
-  { key: "DELIVERED", label: "ได้รับของ", shortLabel: "ได้รับ", icon: Package },
-  { key: "COMPLETED", label: "เสร็จสิ้น", shortLabel: "เสร็จ", icon: CheckCircle2 },
+  { key: "AWAITING_PAYMENT", labelKey: "msgOrderStatusAwaitingPayment", shortLabelKey: "msgOrderStatusAwaitingPaymentShort", icon: CreditCard },
+  { key: "PAID", labelKey: "msgOrderStatusPaid", shortLabelKey: "msgOrderStatusPaidShort", icon: CreditCard },
+  { key: "SHIPPED", labelKey: "msgOrderStatusShipped", shortLabelKey: "msgOrderStatusShippedShort", icon: Truck },
+  { key: "DELIVERED", labelKey: "msgOrderStatusDelivered", shortLabelKey: "msgOrderStatusDeliveredShort", icon: Package },
+  { key: "COMPLETED", labelKey: "msgOrderStatusCompleted", shortLabelKey: "msgOrderStatusCompletedShort", icon: CheckCircle2 },
 ];
 
 const STATUS_INDEX: Record<string, number> = {
@@ -41,11 +43,13 @@ export function OrderStatusTracker({
   trackingNumber?: string | null;
   shippingMethod?: string | null;
 }) {
+  const lang = useUIStore((s) => s.language);
+
   if (status === "CANCELLED") {
     return (
       <div className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/5 p-3">
         <XCircle className="size-5 text-destructive" />
-        <span className="text-sm font-medium text-destructive">ยกเลิกแล้ว</span>
+        <span className="text-sm font-medium text-destructive">{t(lang, "msgOrderCancelled")}</span>
       </div>
     );
   }
@@ -54,7 +58,7 @@ export function OrderStatusTracker({
       <div className="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3">
         <AlertTriangle className="size-5 text-amber-500" />
         <span className="text-sm font-medium text-amber-600 dark:text-amber-400">
-          มีปัญหา / ข้อพิพาท
+          {t(lang, "msgOrderDisputed")}
         </span>
       </div>
     );
@@ -88,8 +92,8 @@ export function OrderStatusTracker({
                     isActive ? "font-semibold text-foreground" : "text-muted-foreground"
                   )}
                 >
-                  <span className="hidden sm:inline">{step.label}</span>
-                  <span className="sm:hidden">{step.shortLabel}</span>
+                  <span className="hidden sm:inline">{t(lang, step.labelKey)}</span>
+                  <span className="sm:hidden">{t(lang, step.shortLabelKey)}</span>
                 </span>
               </div>
               {i < STEPS.length - 1 && (

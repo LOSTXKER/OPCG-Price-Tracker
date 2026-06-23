@@ -351,7 +351,7 @@ export function WatchlistToolbar({
                 <button
                   type="button"
                   onClick={() => onFiltersChange(DEFAULT_FILTERS)}
-                  className="ease-chrome flex w-full items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
+                  className="ease-chrome flex w-full items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
                 >
                   <RotateCcw className="size-3" />
                   {t(lang, "watchlistResetFilters")}
@@ -428,7 +428,7 @@ function SegButton({
             : tone === "down"
               ? "border-price-down/40 bg-price-down/10 text-price-down"
               : "border-primary/40 bg-primary/10 text-primary"
-          : "border-transparent bg-muted/40 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
+          : "border-transparent bg-muted/40 text-muted-foreground hover:bg-muted hover:text-foreground"
       )}
     >
       {icon}

@@ -180,7 +180,7 @@ function FilterPill({
         "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium ease-chrome transition-colors",
         active
           ? "border-foreground bg-foreground text-background"
-          : "border-[var(--p-hair)] bg-transparent text-foreground hover:bg-foreground/[0.06]"
+          : "border-[var(--p-hair)] bg-transparent text-foreground hover:bg-muted"
       )}
     >
       {label}
@@ -221,7 +221,7 @@ function SetTile({ set, rank }: { set: SetWithCard; rank?: number }) {
   return (
     <Link
       href={`/sets/${set.code}`}
-      className="group block overflow-hidden rounded-xl border border-[var(--p-hair)] bg-card ease-chrome transition-colors hover:bg-foreground/[0.04]"
+      className="group block overflow-hidden rounded-xl border border-[var(--p-hair)] bg-card ease-chrome transition-colors hover:bg-muted/70"
     >
       <div className="relative overflow-hidden border-b border-[var(--p-hair)] bg-muted/20">
         {rank != null && (

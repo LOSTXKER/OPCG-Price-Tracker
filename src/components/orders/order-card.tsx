@@ -4,6 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { Package, MessageCircle } from "lucide-react";
 import { formatThb, formatJpy } from "@/lib/utils/currency";
+import { formatRelativeAgoShort } from "@/lib/utils/relative-time";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 import { OrderStatusBadge } from "./order-status-badge";
 
 export type OrderListItem = {
@@ -33,18 +36,6 @@ export type OrderListItem = {
   seller: { id: string; displayName: string | null; avatarUrl: string | null };
 };
 
-function timeAgo(dateStr: string) {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "เมื่อสักครู่";
-  if (mins < 60) return `${mins} นาทีที่แล้ว`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours} ชม.ที่แล้ว`;
-  const days = Math.floor(hours / 24);
-  if (days < 30) return `${days} วันที่แล้ว`;
-  return new Date(dateStr).toLocaleDateString("th-TH");
-}
-
 export function OrderCard({
   order,
   viewAs,
@@ -54,6 +45,7 @@ export function OrderCard({
   viewAs: "buyer" | "seller";
   actions?: React.ReactNode;
 }) {
+  const lang = useUIStore((s) => s.language);
   const counterparty = viewAs === "buyer" ? order.seller : order.buyer;
   const detailHref =
     viewAs === "seller"
@@ -63,15 +55,15 @@ export function OrderCard({
     order.listing.card.nameEn ?? order.listing.card.nameJp;
 
   return (
-    <div className="panel rounded-xl p-4 ease-chrome transition-colors hover:bg-foreground/[0.04]">
+    <div className="panel rounded-xl p-4 ease-chrome transition-colors hover:bg-muted/70">
       {/* Top row: counterparty + status */}
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm">
           <span className="font-medium">
-            {viewAs === "buyer" ? "ผู้ขาย" : "ผู้ซื้อ"}:{" "}
+            {viewAs === "buyer" ? t(lang, "seller") : t(lang, "buyer")}:{" "}
           </span>
           <span className="text-muted-foreground">
-            {counterparty.displayName ?? "ผู้ใช้"}
+            {counterparty.displayName ?? t(lang, "user")}
           </span>
         </div>
         <OrderStatusBadge status={order.status} />
@@ -113,7 +105,7 @@ export function OrderCard({
             {formatJpy(order.listing.priceJpy)}
           </p>
           <p className="mt-1 text-meta">
-            {timeAgo(order.createdAt)}
+            {formatRelativeAgoShort(order.createdAt, lang)}
           </p>
         </div>
       </Link>
@@ -123,10 +115,10 @@ export function OrderCard({
         <div className="mt-3 flex items-center justify-end gap-2 border-t border-[var(--p-hair)] pt-3">
           <Link
             href={`/messages/${order.listing.id}`}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground ease-chrome transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground"
           >
             <MessageCircle className="h-3.5 w-3.5" />
-            แชท
+            {t(lang, "chat")}
           </Link>
           {actions}
         </div>

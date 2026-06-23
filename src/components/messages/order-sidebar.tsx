@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CARD_BG } from "@/lib/constants/ui";
 import { formatThb } from "@/lib/utils/currency";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 import { OrderStatusTracker } from "./order-status-tracker";
 import type { ChatListing, ChatUser } from "./types";
 import {
@@ -49,6 +51,7 @@ export function OrderSidebar({
   onUpdateOrder,
   className,
 }: OrderSidebarProps) {
+  const lang = useUIStore((s) => s.language);
   const { card } = listing;
   const marketPrice = card.latestPriceThb;
   const listingPrice = listing.priceThb;
@@ -94,14 +97,14 @@ export function OrderSidebar({
       {/* Pricing */}
       <div className="space-y-2 border-b p-4">
         <div className="flex items-center justify-between">
-          <span className="text-meta">ราคาลงขาย</span>
+          <span className="text-meta">{t(lang, "msgOrderListingPrice")}</span>
           <span className="text-sm font-bold tabular-nums">
             {formatThb(listingPrice ?? 0)}
           </span>
         </div>
         {marketPrice != null && (
           <div className="flex items-center justify-between">
-            <span className="text-meta">ราคาตลาด</span>
+            <span className="text-meta">{t(lang, "msgOrderMarketPrice")}</span>
             <span className="text-sm tabular-nums">
               {formatThb(marketPrice)}
             </span>
@@ -109,7 +112,7 @@ export function OrderSidebar({
         )}
         {diffPct != null && (
           <div className="flex items-center justify-between">
-            <span className="text-meta">ส่วนต่าง</span>
+            <span className="text-meta">{t(lang, "msgOrderPriceDiff")}</span>
             <Badge
               variant={diffPct <= -10 ? "default" : diffPct >= 15 ? "destructive" : "secondary"}
             >
@@ -124,7 +127,7 @@ export function OrderSidebar({
       {activeOrder && (
         <div className="space-y-3 border-b p-4">
           <h3 className="text-eyebrow">
-            สถานะคำสั่งซื้อ
+            {t(lang, "msgOrderStatusHeading")}
           </h3>
           <OrderStatusTracker
             status={activeOrder.status}
@@ -142,7 +145,7 @@ export function OrderSidebar({
             className="flex items-center justify-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             <ExternalLink className="size-3" />
-            ดูคำสั่งซื้อ
+            {t(lang, "msgOrderViewOrder")}
           </Link>
 
           {/* Action buttons based on status and role */}
@@ -153,7 +156,7 @@ export function OrderSidebar({
                 onClick={() => onUpdateOrder?.(activeOrder.id, "PAID")}
               >
                 <CreditCard className="size-4" />
-                แจ้งจ่ายเงินแล้ว
+                {t(lang, "msgOrderMarkPaid")}
               </Button>
             )}
             {activeOrder.status === "PAID" && isSeller && (
@@ -162,7 +165,7 @@ export function OrderSidebar({
                 onClick={() => onUpdateOrder?.(activeOrder.id, "SHIPPED")}
               >
                 <Truck className="size-4" />
-                ส่งของแล้ว
+                {t(lang, "msgOrderMarkShipped")}
               </Button>
             )}
             {activeOrder.status === "SHIPPED" && !isSeller && (
@@ -171,7 +174,7 @@ export function OrderSidebar({
                 onClick={() => onUpdateOrder?.(activeOrder.id, "DELIVERED")}
               >
                 <PackageCheck className="size-4" />
-                ได้รับของแล้ว
+                {t(lang, "msgOrderMarkDelivered")}
               </Button>
             )}
             {activeOrder.status === "DELIVERED" && (
@@ -180,7 +183,7 @@ export function OrderSidebar({
                 onClick={() => onUpdateOrder?.(activeOrder.id, "COMPLETED")}
               >
                 <Star className="size-4" />
-                ยืนยันเสร็จสิ้น
+                {t(lang, "msgOrderConfirmCompleted")}
               </Button>
             )}
           </div>
@@ -192,11 +195,11 @@ export function OrderSidebar({
         <div className="space-y-2 border-b p-4">
           <Button className="w-full gap-2" onClick={onBuyNow}>
             <ShoppingCart className="size-4" />
-            ซื้อตามราคา
+            {t(lang, "msgOrderBuyNow")}
           </Button>
           <Button variant="outline" className="w-full gap-2" onClick={onMakeOffer}>
             <HandCoins className="size-4" />
-            เสนอราคา
+            {t(lang, "msgOrderMakeOffer")}
           </Button>
         </div>
       )}
@@ -204,7 +207,7 @@ export function OrderSidebar({
       {/* Seller info */}
       <div className="p-4">
         <h3 className="mb-2 text-eyebrow">
-          {isSeller ? "ผู้ซื้อ" : "ผู้ขาย"}
+          {isSeller ? t(lang, "msgOrderBuyer") : t(lang, "msgOrderSeller")}
         </h3>
         <div className="flex items-center gap-2">
           <Avatar>

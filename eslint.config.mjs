@@ -19,6 +19,17 @@ const eslintConfig = defineConfig([
     // iCloud conflict copies ("foo 2.ts") — junk artifacts, never lint them.
     "**/* [0-9].*",
   ]),
+  // Honor the `_` prefix convention for intentionally-unused args/vars (e.g.
+  // `(request, _admin) =>` in adminApiHandler routes) so lint flags only real
+  // dead code.
+  {
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_", ignoreRestSiblings: true },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;

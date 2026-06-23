@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { CARD_BG } from "@/lib/constants/ui";
 import { ChevronLeft, Upload } from "lucide-react";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 import type { SelectedCard } from "./step-card-select";
 import type { PricingData } from "./step-pricing";
 import type { ShippingData } from "./step-shipping";
@@ -29,12 +31,13 @@ export function StepPreview({
   isSubmitting,
   onEditStep,
 }: StepPreviewProps) {
+  const lang = useUIStore((s) => s.language);
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-h3">ตรวจสอบก่อนลงขาย</h2>
+        <h2 className="text-h3">{t(lang, "mktPreviewTitle")}</h2>
         <p className="text-sm text-muted-foreground">
-          ตรวจสอบรายละเอียดทั้งหมดก่อนลงประกาศ
+          {t(lang, "mktPreviewSubtitle")}
         </p>
       </div>
 
@@ -52,7 +55,7 @@ export function StepPreview({
               />
             ) : (
               <span className="flex size-full items-center justify-center text-meta">
-                No image
+                {t(lang, "mktPreviewNoImage")}
               </span>
             )}
           </div>
@@ -69,7 +72,7 @@ export function StepPreview({
               onClick={() => onEditStep("card")}
               className="text-xs text-primary hover:underline"
             >
-              แก้ไข
+              {t(lang, "mktPreviewEdit")}
             </button>
           </div>
         </div>
@@ -77,46 +80,46 @@ export function StepPreview({
         {/* Pricing */}
         <div className="border-t p-4 space-y-1">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">ราคาขาย</span>
+            <span className="text-sm text-muted-foreground">{t(lang, "mktPreviewPrice")}</span>
             <span className="text-lg font-bold tabular-nums">
               ¥{pricing.priceJpy.toLocaleString()}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">สภาพ</span>
+            <span className="text-sm text-muted-foreground">{t(lang, "mktPreviewCondition")}</span>
             <Badge variant="outline">{pricing.condition}</Badge>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">จำนวน</span>
-            <span className="text-sm font-medium">{pricing.quantity} ใบ</span>
+            <span className="text-sm text-muted-foreground">{t(lang, "mktPreviewQuantity")}</span>
+            <span className="text-sm font-medium">{pricing.quantity} {t(lang, "mktPreviewQuantityUnit")}</span>
           </div>
           <button
             type="button"
             onClick={() => onEditStep("pricing")}
             className="text-xs text-primary hover:underline"
           >
-            แก้ไข
+            {t(lang, "mktPreviewEdit")}
           </button>
         </div>
 
         {/* Shipping & description */}
         <div className="border-t p-4 space-y-1">
           <div className="flex items-start justify-between gap-2">
-            <span className="text-sm text-muted-foreground">การจัดส่ง</span>
+            <span className="text-sm text-muted-foreground">{t(lang, "mktPreviewShipping")}</span>
             <span className="text-sm text-right">
               {shipping.shipping.length > 0
                 ? shipping.shipping.join(", ")
-                : "ไม่ระบุ"}
+                : t(lang, "mktPreviewNotSpecified")}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">พื้นที่</span>
+            <span className="text-sm text-muted-foreground">{t(lang, "mktPreviewLocation")}</span>
             <span className="text-sm">{shipping.location}</span>
           </div>
           {shipping.photos.length > 0 && (
             <div>
               <span className="text-sm text-muted-foreground">
-                ภาพสินค้าจริง ({shipping.photos.length} รูป)
+                {t(lang, "mktPreviewPhotos").replace("{n}", String(shipping.photos.length))}
               </span>
               <div className="mt-1.5 flex gap-2 overflow-x-auto">
                 {shipping.photos.map((url, i) => (
@@ -138,7 +141,7 @@ export function StepPreview({
           )}
           {shipping.description && (
             <div>
-              <span className="text-sm text-muted-foreground">คำอธิบาย</span>
+              <span className="text-sm text-muted-foreground">{t(lang, "mktPreviewDescription")}</span>
               <p className="mt-0.5 text-sm whitespace-pre-wrap">
                 {shipping.description}
               </p>
@@ -149,7 +152,7 @@ export function StepPreview({
             onClick={() => onEditStep("shipping")}
             className="text-xs text-primary hover:underline"
           >
-            แก้ไข
+            {t(lang, "mktPreviewEdit")}
           </button>
         </div>
       </div>
@@ -157,7 +160,7 @@ export function StepPreview({
       <div className="flex justify-between">
         <Button variant="outline" onClick={onBack} className="gap-1">
           <ChevronLeft className="size-4" />
-          กลับ
+          {t(lang, "mktPreviewBack")}
         </Button>
         <Button
           onClick={onSubmit}
@@ -165,7 +168,7 @@ export function StepPreview({
           className="gap-2"
         >
           <Upload className="size-4" />
-          {isSubmitting ? "กำลังลงขาย..." : "ลงประกาศ"}
+          {isSubmitting ? t(lang, "mktPreviewSubmitting") : t(lang, "mktPreviewSubmit")}
         </Button>
       </div>
     </div>

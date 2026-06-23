@@ -36,7 +36,7 @@ export default function SettingsIndexPage() {
         {/* Identity row — compact, single tap target */}
         <Link
           href={`/profile/${user.id}`}
-          className="-mx-2 flex items-center gap-3 rounded-lg px-2 py-2 transition-colors active:bg-foreground/[0.04]"
+          className="-mx-2 flex items-center gap-3 rounded-lg px-2 py-2 transition-colors active:bg-muted/70"
         >
           <Avatar className={cn("size-11 shrink-0 ring-2 ring-offset-2 ring-offset-background", tierCfg.ring)}>
             {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
@@ -73,7 +73,7 @@ export default function SettingsIndexPage() {
                     <Link
                       key={section.id}
                       href={section.href}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors active:bg-foreground/[0.04]"
+                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors active:bg-muted/70"
                     >
                       <Icon className="size-4 shrink-0 text-muted-foreground" />
                       <span className="flex-1 text-sm">{t(lang, section.labelKey)}</span>

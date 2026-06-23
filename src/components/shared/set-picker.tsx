@@ -42,6 +42,12 @@ interface SetPickerProps {
   nullable?: boolean
   /** Popover horizontal alignment relative to the trigger. */
   align?: "left" | "right"
+  /**
+   * Honey-accented trigger for the `inline` variant — used where set selection is
+   * the primary browse axis (e.g. the home market toolbar) and should stand out
+   * even before a set is picked.
+   */
+  prominent?: boolean
 }
 
 export function SetPicker({
@@ -52,6 +58,7 @@ export function SetPicker({
   variant = "pill",
   nullable = false,
   align,
+  prominent = false,
 }: SetPickerProps) {
   const lang = useUIStore((s) => s.language)
   const [open, setOpen] = useState(false)
@@ -139,8 +146,12 @@ export function SetPicker({
           ),
           isInline && cn(
             "h-9 w-full rounded-lg border bg-background px-2.5 text-sm",
-            selectedSet ? "border-primary/30 bg-primary/5" : "border-border hover:bg-muted/40",
-            open && (selectedSet ? "bg-primary/10" : "bg-muted/40"),
+            selectedSet
+              ? "border-primary/40 bg-primary/10"
+              : prominent
+                ? "border-primary/40 bg-[var(--p-honey-soft)] font-medium text-foreground hover:bg-primary/15"
+                : "border-border hover:bg-muted/40",
+            open && (selectedSet || prominent ? "bg-primary/15" : "bg-muted/40"),
           ),
         )}
       >

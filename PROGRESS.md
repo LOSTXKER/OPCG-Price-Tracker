@@ -1,56 +1,100 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-23 — **homepage warm-kit pass: ทำให้ "เข้ากับ card-detail + minimal"** (de-box + ลด gold เหลือจุดเดียว + calm ตาราง) · tsc 0 · lint 0 err · test 56 ✓ · render จริงผ่าน (home+search · desktop+mobile) · build ยังไม่รัน (กันทับ `.next` ของ dev server) · **ทั้งหมดยัง working tree ยังไม่ commit · รอเบส review สายตา**
+อัปเดตล่าสุด: 2026-06-24 — **mega 3 (i18n sweep) ฝั่ง client = เสร็จ** · เพิ่ม seller + buyer-orders + order-card/confirm-dialog + chrome (header/menu) → t() · branch `redesign/market-table-cmc-warm` commit `bb1fa8d` · lint 0 errors/24 warn · tsc 0 · build ✓ · **ยังไม่ push/PR** (รอเบส) · prod live opcg-price-tracker.vercel.app (PR #38 `d73a25d`)
+
+## 🧹 REFACTOR (audit 5 มิติ — เบสสั่ง "ทำหมด") — ทำเป็น batch
+> audit เต็มรันผ่าน workflow แล้ว · คะแนนเฉลี่ย ~7/10 (type-safety/API 8 · design-system 7 · reuse 6 · i18n 5)
+- **✅ Batch A (quick wins) — committed `eb6cdec`:** eslint `_`-prefix (lint 84→26) · ลบ ~18 dead vars + `card-table.tsx` (191 บรรทัด dead) · chart trend สี→`var(--price-up/down)` · portfolio-summary eyebrow→`.text-eyebrow` · share links `meecard.com`→`clientEnv().NEXT_PUBLIC_APP_URL`
+- **✅ Pagination — committed `70b6859`:** 4 algorithm → 1 util `src/lib/utils/pagination.ts buildPageRange()` · ลบ cards-pagination dead · (ข้าม border-normalize: --p-hair เข้มกว่า /40,50 จะขัด minimal)
+- **✅ %-change — committed `cbc7a3f`:** mini-table inline → ChangePill กลาง (price-display+DeltaText ปล่อยไว้ — token family เดียวกันอยู่แล้ว ไม่คุ้มเสี่ยง)
+- **เบสยืนยัน: ทำหมดจริงๆ รวมงานใหญ่** (prototype ก็เอา) → ลำดับทำต่อ:
+- **✅ A5 — committed `a5b23b1`:** ตัด inner try/catch→500 + log ใน 5 routes (cards · admin/cards · admin/drop-rates · admin/image-matching · admin/sets)
+- **✅ B contained — committed:** `f42f5db` brand.ts · `e773f4e` SOURCE_MARKETS · (ข้าม guide RARITIES/ListRowSkeleton/CONDITION_LABELS = low-value churn สำหรับ prototype, โครงต่าง)
+- **✅ API/data — committed:** `a7bb557` auth path เดียว + cron createMany/merge + avatar/cover ไม่ leak · `62e5c36` admin/cards+sets Zod
+- **⬜ เหลือจริง (ทั้งหมดเป็น big/low-ROI-prototype):**
+  - **เบสยืนยัน: ทำหมดทั้ง 3 mega**
+  - **✅ mega 1 — card-detail split (`b675fe5`):** แยก useStickyBuy + useCardDetailTabs (1028→949) · pricing memos **คงไว้** (interwoven กับ JSX เกินจะแยกปลอดภัย) · ⚠️ build ผ่านแต่ยังไม่ render-verify scrollspy/sticky (logic เดิม copy-move น่าจะ ok — เบสเปิดดูได้)
+  - **⬜ mega 2 — Surface rollout:** .panel(201)/ad-hoc bg-card+border(115)/shadcn Card(6) → Surface · เริ่ม guide/* + profile/section-* (static, เสี่ยงต่ำ) · ต้อง verify visual ไม่เพี้ยน · fresh turn
+  - **✅ mega 3 — i18n sweep (ฝั่ง client เสร็จ) — pattern: workflow คืน data → apply กลาง / หรือแก้มือเมื่อชิ้นเล็ก:**
+    - ✅ **messages (`cb6fe41`)** — 70 strings · 8 ไฟล์
+    - ✅ **marketplace browse (`ffaff54`)** — 12 client components · 89 keys
+    - ✅ **seller (`44544e9`)** — 5 components · 69 keys (NAV_ITEMS typed; SHIPPING/TIMELINE → getXxx(lang) memo)
+    - ✅ **orders (`1b72e5a` + `bb1fa8d`)** — order-card + confirm-dialog (Thai-only เดิม → t()) · buyer order-detail page (+24 buyOrder* keys) · + `formatRelativeAgoShort` กลางใน relative-time.ts (relJustNow/relMinsAgo/relHoursAgo/relDaysAgo)
+    - ✅ **chrome (`b310a40`)** — header/header-user-menu/header-market-ticker/mobile-menu-sheet: inline `language===` ternary → t() (reuse keys + myAccount/upgrade ใหม่)
+    - ✅ **saved/page.tsx** — error-fallback อ่าน lang imperative (กัน exhaustive-deps re-fetch)
+    - apply script: `/tmp/apply-i18n.mjs <result-path> <label>` (generic · ข้าม skipped)
+    - **ที่เหลือ = ติด architectural gap หรือ low-ROI (ตั้งใจไม่ทำ):**
+      - ⚠️ **server components** (guide/* · home-seo-content · marketplace/[listingId] · marketplace review-section) — **ไม่มี server-side language resolver** (lang = useUIStore client เท่านั้น) → ทำ i18n ตรงๆ ไม่ได้ · ต้องตัดสินใจสถาปัตยกรรม (cookie/header server-lang หรือ wrap เป็น client) — keys marketplace เตรียมไว้บางส่วนแล้ว
+      - ⏸️ **step-shipping** (create-wizard) — province/shipping เป็น **stored values** (ไม่ใช่แค่ label) + marketplace flag ปิด + เป็น geo data → ข้าม (ถ้าทำต้อง split value+label ทั้ง wizard+detail)
+      - ⏸️ **admin/** ทั้งหมด — internal tooling ไทยล้วนโดยตั้งใจ (toggle ภาษาไว้ให้ผู้ใช้ทั่วไป ไม่ใช่แอดมิน) — ไม่ i18n
+  - **เล็กค้าง:** missions.ts split 1,180 · 6 honey routes Zod · `formatRelativeShort`/2 ตัว timeAgo ที่เหลือ (review-section, marketplace/[listingId]) = ยัง hardcode th-TH (อันหลังเป็น server comp)
+- **domain = ไม่ใช่ปัญหา:** repo นี้ = prototype (memory `meecard-is-prototype`) ไม่เกี่ยวกับ meecardtcg.com (เว็บ launch คนละ codebase) · share-link→env ที่แก้ = good practice เฉยๆ ไม่ต้องตั้ง Vercel/เปลี่ยน default
 
 ## 🎯 โปรเจคใหญ่ที่กำลังทำ (ข้ามหลาย session) — อ่าน memory `warmkit-redesign-rollout`
 ไล่ redesign **ทุกหน้า**ให้ใช้ภาษาดีไซน์เดียวกับ **card-detail** ("warm primitive kit": `.surface-1`+`.hairline` flat · `SectionHead` · honey accent จุดเดียว · `.tnum` · `.ease-chrome` · spacing โปร่ง) · ref: `src/components/cards/card-detail.tsx` · tokens: `src/app/globals.css`
 **ข้อตกลงกับเบส:** ทำ **ทีละหน้า** · เบสนำว่าหน้าไหน + layout ยังไง · งานฉัน = **สร้าง component กลางที่ทุกหน้าใช้ร่วมกัน** (ไม่ inline ทิ้งๆ) โค้ดสะอาด ต่อยอดง่าย · layout ค่อยๆ ทำ
-**บทเรียนสำคัญ:** dark mode → ความต่าง kit เก่า/ใหม่ (hover/border/เงา/ease-chrome) **แทบมองไม่เห็น** (เบส: "ไม่เห็นความต่างเลย") → ของจริงที่ตาเห็นคือ **composition (ความแน่น)** card-detail แน่น หน้าอื่นโล่ง → **แก้ layout/composition ที่เห็นจริง ไม่ใช่สลับ token**
+**บทเรียนสำคัญ:** dark mode → ความต่าง kit เก่า/ใหม่ (hover/border/เงา) **แทบมองไม่เห็น** → ของจริงที่ตาเห็นคือ **composition (ความแน่น)** → แก้ layout/composition ที่เห็นจริง **ไม่ใช่สลับ token**
+**ยืนยันรอบนี้ (สำคัญ):** card-detail (north-star) ใช้ **active tab แบบ neutral** (`text-foreground` + underline สี foreground) **ไม่ใช่ honey** — honey สงวนไว้แค่ glow/focus/sort-icon/image-hover-ring → **ห้ามยัด honey เข้า active-state คิดว่าเป็น convention** (มันขัดความตั้งใจของ kit)
 
-## ✅ เสร็จ session นี้ (2026-06-23) — homepage "เข้ากับ card-detail + minimal"
-> โจทย์เบส: "หน้าแรกทำให้เข้ากับ /cards/… ให้มัน minimal" · ยึดบทเรียน = แก้ composition ที่ตาเห็น ไม่ใช่สลับ token เฉยๆ
-- **promote `SectionHead` → `src/components/shared/section-head.tsx`** (ชิ้น shared-kit ตัวที่ 2 ต่อจาก SetTile) · ไฟล์เดิม `card-detail/section-head.tsx` = re-export shim (card-detail ไม่ต้องแตะ) · ใช้จริงใน home-seo-content
-- **`page.tsx` recompose:** ยก highlights (featured/gainers/losers) **ออกจากกล่อง panel** → เป็น **band แบนลอยบนพื้น** (warm hairline บน-ล่าง + เส้นคั่นคอลัมน์) แบบ section ของ card-detail · จัดจังหวะแนวตั้งโปร่ง (`mt-7/9/12`) · ในฟีด ad คั่น band↔ตาราง
-- **calm market toolbar** (`home-market-overview.tsx`): tab underline ทอง→`border-foreground` · ปุ่ม filter ทอง+เงา→กลาง `bg-foreground/[0.06]` · border ทุกจุด→`var(--p-hair)` · search input→`surface-1`+hairline · `ease-chrome`
-- **calm ตาราง:** `market-row` ตัด **zebra** (`even:bg-muted/20`) + hover ทอง→`hover:bg-foreground/[0.04]` + "P"/set-link ทอง→กลาง · `mobile-card-item`/`grid-card`/`pagination` hover/border→warm (⚠️ `mobile-card-item`+`grid-card` ใช้ที่ **/search** ด้วย → verify แล้วไม่พัง)
-- **flatten SEO** (`home-seo-content.tsx`): feature card เอาเงา+วงกลมทองออก→`surface-1`+hairline flat · heading เส้นทอง `.section-heading`→`SectionHead`/`text-h3` · price box→flat
-- **gold เหลือจุดเดียวจริง:** เหลือ honey-glow หลัง search hero (hero moment) + ลิงก์ใน SEO prose (ลิงก์ใช้งาน) — decorative gold (ปุ่ม/tab/ไอคอนวงกลม/เส้น heading) ออกหมด
-- **glow หลัง search (เบสทัก 2 รอบ):** เดิม `bg-primary/10 blur-3xl` จางจนหาย → ทำ class กลาง **`.hero-search-glow`** mode-tuned · **รอบ 2 เบสว่า "แสงแปลก ๆ"** = gradient `58%×130%` สูงผอม เลยเป็นเสา/ลำแสง + ขอบแข็ง → แก้เป็น **bloom กว้าง-นุ่ม** `75%×85% at 50% 42%` → **รอบ 3-4 "ส่องจากบน + ทั้งจอ"** → full-bleed `w-screen left-1/2 -translate-x-1/2 -top-12 h-[24rem] blur-2xl` · **รอบ 5 "ไม่เห็นสาดลงมาเลย"** = `blur-3xl` กระจายจนจาง + radial เป็นก้อน → **linear-to-bottom (directional) + radial top** เข้มขึ้น (dark linear 30%/radial 34% · light 18/16%) ดันชิด header = แสงสาดลงมาจากบนเต็มจอ เห็นชัด (overflow-x:clip กัน h-scroll) · **รอบ 6 เบสให้ฉันตัดสินเอง** → settle = **radial focal core (กลางบน) + linear wash ลงล่าง** `-top-16 h-[30rem] w-screen blur-2xl` (dark radial 24%/linear 12% · light 13/8%) = premium เนียน มีโฟกัสที่ search ไม่ใช่หมอกแบน · **เบสเลือก v1** ✓ · **รอบ 7 light mode:** glow ใช้ `var(--primary)` ซึ่ง light = น้ำตาล `#73533E` หม่น → มองไม่เห็น/ขุ่นบนพื้นขาว → light mode เปลี่ยนเป็น **amber สะอาด `#F4A63C`** (radial 24%/linear 14%) = แสงอุ่นสาดจากบนเห็นชัดบนขาว · dark คง gold `var(--primary)` v1 · (render light mode ผ่าน Chrome CDP set localStorage theme — `/tmp/render-theme.mjs`)
-- **search dropdown แบบ Fastwork (เบสขอ + ภาพอ้างอิง):** (1) **เอา chips "ยอดนิยม" ใต้กล่องออก** จาก `home-search-hero` (ลบ chips + import Link/getCardName ที่ไม่ใช้) (2) ย้ายยอดนิยม**เข้าไปใน dropdown** ตอน focus: section "ยอดนิยม" = **chip pills** (มีไอคอน trending) จาก `trending` + recent header เพิ่ม **"ล้างทั้งหมด"** (`clearRecent`) · `HeroSearchBar` รับ prop `trending` · pills เป็น Tab-focusable (ไม่อยู่ใน arrow-nav) · render จริงผ่าน CDP focus (`/tmp/render-focus.mjs`) ทั้ง light/dark
-- **เบสทักสีตัวอักษร "ดำไปมั้ย":** light `--foreground` เดิม `#1D1D1F` = เกือบดำแต่**โทนเย็น** ตัดกับแบรนด์อุ่น เลยดูแข็ง → เปลี่ยน foreground/card-foreground/popover-foreground เป็น **warm soft-black `#292118`** (เอสเพรสโซ) = นุ่ม อุ่น พรีเมียม ยังผ่าน AA (~13:1) · **site-wide (light mode ทุกหน้า)** · ไม่แตะ `--warning-foreground` · dark fg `#F6EFE6` (warm off-white) ดีอยู่แล้ว · **ค้าง:** จะ warm `--background` เป็น off-white ด้วยไหม (เพิ่ม premium อีกขั้น)
-- **hero แบบ Fastwork (เบสขอ — มีอ้างอิงภาพ):** headline พิมพ์คำเปลี่ยนไปเรื่อย ๆ + cursor กระพริบ + gradient ทันสมัย
-  - สร้าง **`shared/typewriter-text.tsx`** (shared-kit ชิ้นที่ 3): type→hold→delete→คำถัดไป loop · **เคารพ reduced-motion** (โชว์คำเดียวนิ่ง) · SSR-safe (paint แรก = คำแรกเต็ม) · a11y = caller ใส่ `sr-only` heading คงที่ + animated span `aria-hidden`
-  - `home-search-hero`: eyebrow `heroTeaser` + h1 ใหญ่ `text-3xl sm:text-5xl font-extrabold` หมุนคำ · **`.tw-caret`** กระพริบ (reduced-motion = นิ่ง)
-  - **เบส feedback รอบ 2:** (1) headline ใหญ่ **เลิก gradient** → `text-foreground` ทึบ contrast สูง ไม่ถูกกลืน (gradient ทองโดน glow ทองกลืน) → ลบ `.text-gradient-honey` ทิ้ง (2) คำหมุน **เปลี่ยนเป็นฟีเจอร์แพลตฟอร์ม** ไม่ใช่ชื่อการ์ด
-  - **เบส feedback รอบ 3:** (1) **ลบ subtitle** `heroSearchSubtitle` (เอา key ออกทั้ง 3 ภาษา ใช้ที่เดียว) (2) eyebrow `heroTeaser` → tagline startup กลาง ๆ ใช้นำหน้าได้ทุกฟีเจอร์ (3) คำหมุน **ครบทุกฟีเจอร์ live 10 ตัว**: ราคากลาง·ราคาย้อนหลัง·การ์ดมาแรง·ราคา PSA 10·พอร์ตการ์ด·จับตาราคา·แจ้งเตือนราคา·เทียบราคา·ราคาเด็ค·คำนวณดรอป (TH·EN·JP) · search bar `mt-5`→`mt-6` หลังลบ subtitle
-  - **เบส feedback รอบ 4:** แพลตฟอร์ม **multi-game** (มี `model Game` · header มี game switcher) → ห้ามล็อกวันพีซ · `heroTeaser` + `heroSearchTitle` (sr-only) → game-agnostic: **"ทุกอย่างของการ์ดเกม ในที่เดียว"** + "เช็คราคาการ์ดเกม ทุกใบ ทุกเกรด" (EN "trading card" · JP "トレカ") · **ค้าง:** search placeholder `searchLong` ยังมีตัวอย่าง One Piece (Luffy/OP13-118/SEC) — รอเบสตัดสินว่าจะ generic/game-dynamic ไหม
-  - **⚠️ hydration error (เบสเจอ):** dev server ISR-cache (`revalidate=300`) เสิร์ฟ HTML เก่าชน client สด → **ไม่ใช่บั๊กโค้ด · prod ปกติ** · fix = **restart dev server** (ฉัน kill ไม่ได้ — permission)
+## ✅ เสร็จ session นี้ (2026-06-23 บ่าย) — รีวิวหน้าแรกระดับ world-class + แก้ contrast
+> โจทย์เบส: "UXUI ดีรึยัง ควรปรับอะไร ให้สวย ทันสมัย ระดับเว็บโลก + ใช้ impeccable skill"
+- **impeccable `critique`** (product register) — รัน 3 เลนส์อิสระบน screenshot จริง + detector (`detect.mjs` = สะอาด `[]`) → score **27/40** (Acceptable ขอบบน) · เห็นตรงกันทั้ง 3: ของดี (palette espresso+honey, hairline band, ตาราง CMC-grade) แต่ติด hero กินจอแรก + จุดทำลาย trust
+- **[Fix 2 — SHIPPED] contrast/WCAG fix** (กลาง สะอาด): placeholder `muted-foreground/40` (~2:1 ตก AA) → full `muted-foreground` (6.4:1) ที่ hero search + market search + min/max price · ตัด double-dim `.text-eyebrow + /60` (token มี muted color เองอยู่แล้ว) ที่ featured-card / hero dropdown labels / noData · ไฟล์: `hero-search-bar.tsx` `home-market-overview.tsx` `sections/featured-card.tsx` `sections/mini-table.tsx` · `Input` base มี `placeholder:text-muted-foreground` อยู่แล้ว (home แค่เลิก override)
 
-**A. card-detail mobile/chart (ต่อจาก session ก่อน):**
-- mobile touch target: `SEGMENT_BTN` (range/filter) 24px→40px `h-10 md:h-6` · tabs 44px · edition/utility/secondary/sticky-CTA ≥40-44px · low/high `.text-overlay`→`.text-meta` · sticky grade label → `.text-eyebrow` · a11y: aria-label กราฟ + i18n `chartKeyboardHint`
-- **chart แกน x bug → fix:** `xAxisTicks` (card-chart.tsx) เขียนใหม่ — thin แบบ even stride (เลิก `Math.round` ที่ตัดเบี้ยว 8·15·29·5) + ปัก "วันนี้" ขอบขวาแบบกันชน label (เลิก 1-Apr/5-Apr ทับ) · ลบ `thinTicks` · **+11 regression test** (chart-scale.test.ts) reproduce เคสพังจริง
-- ad โซนราคา: chart-side + info-below ซ่อนบนมือถือ (`hidden lg:block`) · **เบสสั่ง:** ลบ `card-detail-mid` (แบนเนอร์ล่างสุด) · มือถือเหลือ ad 1 จุด (info-below ใต้ Meecard asks · ความสูง 280→`min-h-[120px] lg:min-h-[320px]`)
+## ✅ เสร็จ รอบ 3 (เบสสั่ง: ออกแบบตารางใหม่ + ลบ chip กลับ dropdown + เผื่อเกรด) — lint 0 · tsc 0 · build ผ่าน
+> แผนเต็ม (เบส approve): `~/.claude/plans/concurrent-bubbling-rabin.md`
+- **ตารางตลาดใหม่ CMC/Coinbase = shared kit ใหม่ `src/components/market/`** ใช้**ทั้ง home + /search** (เลิกต่างคนต่างทำ):
+  - `change-pill.tsx` (ป้าย % สีเขียว/แดง + tint) · `sparkline` ต่อแถว (`lg:`) ใช้ `shared/sparkline.tsx` + data ที่ hook fetch อยู่แล้วแต่ไม่เคย render
+  - `market-table.tsx` + `market-table-row.tsx` (column-model-driven · mobile list + desktop table) · `market-columns.ts` (`buildMarketColumns({showViews})` + `MARKET_GRADE_TIERS`) · `price-mode-control.tsx`
+  - `use-sparklines.ts` (hook กลาง · สกัดจาก use-market-cards · เพิ่มให้ /search ด้วย)
+  - **ลบ:** `market-row.tsx` · `search/search-table-row.tsx` · `shared/set-chip-rail.tsx` (revert chip กลับ SetPicker dropdown)
+- **เกรด design-first:** ตารางโชว์ **Raw + PSA10 (ของจริงเท่านั้น)** · `MARKET_GRADE_TIERS` filter `real:true` · PSA9/8/BGS (ปั้น) ใส่ได้ทีหลังโดยติด est (gate = `real`) · PSA10 mode → pills+sparkline = `—` (กัน JPY trend หลอกบนราคา USD)
+- **30d:** เอาคอลัมน์ 30d เดี่ยวออก (lg เป็น sparkline) — เหลือ 24h+7d+กราฟ แบบ CMC (default ในแผนที่เบส approve)
+- mobile-card-item: ใช้ ChangePill + sparkline จิ๋ว · **grid-card ไม่แตะ** (ใช้ PriceDisplay shared — เลี่ยง blast radius)
+- **คงจากรอบก่อน (ไม่ revert):** contrast/WCAG fix · honey crown บน featured · ตัด `~` ราคา featured
+- **⚠️ ไม่ทำ (ตั้งใจ):** typewriter หัว (เบสขอเอง Fastwork) · ยุบ top-bar (header ทั้งแอป — เบสนำ)
 
-**B. homepage:**
-- เพิ่ม **smart search hero** (`home-search-hero.tsx` + ยกเครื่อง `hero-search-bar.tsx`): บาร์ hero ใหญ่ + ผลแบ่งหมวด การ์ด/เซ็ต/ทางลัด + ⌘K + photo + recent + chips ยอดนิยม · ผูกใน `page.tsx` ดันข้อมูลลงล่าง
-- **ลบ KPI strip** (`HomePreviewRow` — พอร์ต/honey/มูลค่าตลาด/ad) ออกจาก page.tsx (component ยังอยู่ ไม่ลบไฟล์)
+### ปรับตาม feedback เบส (รอบดูตารางจริง) — tsc 0 · lint 0 · build ผ่าน
+- **% เอาพื้นหลังออก** → ChangePill = ตัวเลขสีล้วน (ไม่มี tint/pill)
+- **เอาช่อง search ในตาราง home ออก** (desktop inline + mobile row) — hero search ด้านบนพอแล้ว
+- **SetPicker เด่นขึ้น** → เพิ่ม prop `prominent` (honey accent) + ย้ายมาช่องกลาง toolbar (แทน search) flex-1 max-w-xs + มี row เลือกชุดบนมือถือด้วย
+- **เพิ่มคอลัมน์ 30d** (lg) + **เก็บ sparkline 7d** (lg) — ตอนนี้ตาราง: price·24h·7d(md)·30d(lg)·กราฟ(lg)
+- **ตาราง minimal** → เอาเส้นคั่นแถว (border-b) ออก เหลือ header underline + hover (mobile คง divide-y)
 
-**C. warm-kit migration (ระวัง — ส่วนนี้ "มองไม่เห็น" ใน dark · ดูบทเรียนบน):**
-- foundation: `--panel-shadow`→`--elev-flat` (globals.css) = `.panel` ทั้งแอป flat+hairline
-- audit ขนาน 6 กลุ่ม → 71 ไฟล์ old-kit · migrate **58 ไฟล์ className-only** (workflow): `hover:bg-muted`→`foreground/[0.04|0.06]` · `border-border`→`var(--p-hair)` · ตัดเงา card · `ease-chrome` · rounded · ตัด accent class เก่า · **ไม่แตะ logic** · tsc/lint/build ผ่าน
+### รอบ "minimal ทั้งหน้า" (เบส: "Minimal กว่านี้ ทำให้มันทั้งหน้า") — tsc 0 · lint 0 · build ผ่าน
+- **band ไฮไลต์** (`page.tsx`): เอา `divide-x/divide-y/border-y` + per-cell padding ออก → ใช้ `gap` (ช่องว่าง) ล้วน ไม่มีเส้น/กล่อง
+- **ตาราง flat** (`home-market-overview`): เอา `.panel` (กรอบ/พื้น card) + `border-b` ใต้ toolbar ออก → ลอยบนหน้าเหมือน band · เหลือเส้นเดียว = underline ใต้หัวตาราง
+- /search ยังเก็บ Surface panel ของตัวเอง (เบสโฟกัส home · row ก็ minimal ตาม component กลาง)
 
-**D. /sets = หน้าแรกที่ยกเครื่อง layout (เบส approve ทิศ):**
-- Top-5 list บางๆ → **featured grid รูปกล่อง + rank badge (#1 honey)** · เซ็ตไม่มีรูป → `SetPlaceholder` (gradient+รหัส) แทนกล่องเทา
-- **refactor:** รวม card ซ้ำ → **`SetTile` ตัวเดียว** (rank optional) ใช้ทั้ง featured+grid (282→271 บรรทัด) = ชิ้นแรกของ "ชุดเครื่องมือกลาง"
+### รอบ "คืนความอุ่น hover" (เบส: หน้าแรกสีไม่เหมือนหน้าอื่น · ต้องมีเหลือง/น้ำตาลตอน hover แบบเดิม · เทียบ live meecardtcg.com)
+- **เจอเหตุ:** warm-kit migration (a5e0a30) เปลี่ยน `hover:bg-muted` (cream อุ่น) → `hover:bg-foreground/[0.04]` (เทากลาง) **ทั่วแอป** · live meecardtcg.com = เวอร์ชันเก่าก่อน warm-kit จึงยังอุ่น = สิ่งที่เบสคิดถึง
+- **แก้ (home + market, ใช้ร่วม /search):** `hover:bg-foreground/[0.04]`→`hover:bg-muted/70` · `/[0.06]`+`/[0.09]`→`hover:bg-muted` · `active:bg-foreground/[0.06]`→`active:bg-muted` · (sed across src/components/home + src/components/market)
+- **หลักสำคัญ:** hover = warm **muted/cream** (เหลืองน้ำตาลอ่อน) · honey (`--p-honey-soft`) สงวนเป็น **active/selection** เท่านั้น (set picker active, nav) — ไม่ปนกัน
+- **✅ คืนความอุ่นทั้งแอปแล้ว** (เบสสั่ง): sed `(hover|active):bg-foreground/*` → `bg-muted*` ทั่ว src/ (47 ไฟล์ ~91 จุด) · review workflow 4 โซน = clean (active/honey อยู่คนละ branch ไม่ชน · ไม่มี cream บนพื้นเข้ม) · committed `32f28e9`
 
-## ⚠️ gotchas (กันเสียเวลา session หน้า)
-- **dev server (:3000) cache SSR เก่า** ถ้า build เขียนทับ `.next` / มี `revalidate=300` → server-component change ไม่โผล่ · client component HMR ปกติ · **restart dev = วิธีแก้** (ฉัน kill เองไม่ได้ — permission กั้น · เบส restart ใน terminal) · เคยเปิด **prod :3001** ไว้ verify (อาจค้าง — ปิดได้)
-- เรนเดอร์จริง: Chrome headless ผ่าน CDP (`--remote-debugging-port` + WebSocket) ได้ full-page/scroll/click — client component โชว์โค้ดใหม่แม้ SSR stale
+## ⛔ ตัดสินแล้ว (อย่าเสนอซ้ำ)
+1. ภาพ "SAMPLE" การ์ด featured → **เบส: ปล่อยไว้ ไม่ต้องสน**
+2. SetChipRail (chip เลือกชุด) → **เบส: ไม่เอา ชุดเยอะ ใช้ dropdown** → ลบแล้ว กลับ SetPicker เดิม
+
+## 📋 critique backlog ที่เหลือ (ยังไม่ทำ — เบสพัก hero ไว้ก่อน)
+- **[P1] hero กินจอแรก ดันตาราง (ของจริง) ตกขอบ** — เบสเลือก **"คง hero ไว้ก่อน"** (จะกลับมาเรื่อง layout/data-first ทีหลัง)
+- [P1] search ซ้ำซ้อน 2-3 จุด (ticker pill + hero bar + table filter) → เลือก model เดียว + table search เปลี่ยน label เป็น "กรองรายการ"
+- [P1] value-prop ที่ชัด (`heroSearchTitle` "เช็คราคาการ์ดเกม ทุกใบ ทุกเกรด") เป็น `sr-only` คนตาดีไม่เห็น → เอามาโชว์จริง (หมายเหตุ: copy ไม่มี typo — "ของของ" คืออ่านภาพเบลอผิด)
+- [P2] top chrome ~14-16 เป้าก่อนเจอ content → ยุบ utility เข้า avatar menu (**= งาน header ทั้งแอป เบสนำ**)
+- ~~set browsing~~ → **เบสเลือก dropdown (SetPicker เดิม)** ปิดเรื่องนี้
+- [P2] ไม่มี identity One Piece/OPTCG นอกจากรูปการ์ด → ใส่เบาๆ ใน empty state/microcopy
+- [x] ~~number format `~268,800` vs `268,800`~~ → **ตัด `~` แล้ว (เสร็จ)**
+
+## ⚠️ gotchas
+- **dev server (:3000) cache SSR เก่า** ถ้ามี `revalidate=300` → server-component change ไม่โผล่ · restart dev = วิธีแก้ (ฉัน kill เองไม่ได้ — permission · เบส restart)
+- เรนเดอร์จริง: Chrome headless ผ่าน CDP ได้ full-page/scroll/click
+- **impeccable skill ผูกกับ repo bestos** (`/Users/lostxker/dev/Git/bestos/.claude/skills/impeccable`) — เปิด session ที่ meecard เลย invoke `/impeccable` ตรงๆ ไม่ได้ · ฉันอ่าน reference มาใช้วิธีเอง + รัน `detect.mjs` ได้
 
 ## ⏭️ NEXT (session หน้า)
-1. **เบส review หน้าแรกด้วยตา** (มี before/after ส่งให้แล้ว) → บอกว่า "minimal พอ/ไป layout ต่อ" หรืออยากดันต่อ (เช่น de-box ตารางทั้งก้อน · ปรับสัดส่วน featured/gainers/losers · ตัดคอลัมน์ตารางให้น้อยลง)
-2. **เบสเลือกหน้าถัดไป** (ค้าง: /portfolio /decks /honey /seller /settings /marketplace ฯลฯ) + บอกแนว layout
-3. ฉัน: ออกแบบ layout หน้านั้น → **ดึง component ซ้ำเป็นของกลาง** (shared-kit มีแล้ว: `SetTile` · `SectionHead` · ว่าที่ถัดไป: media/RankBadge/ImagePlaceholder/page-hero)
-4. **9 ไฟล์ low-priority** (audit) ยังไม่ migrate (cosmetic) · KPI-strip components (portfolio/honey/market-value preview) ยัง old-kit แต่ **ไม่ render บนหน้าแรกแล้ว**
-5. **commit:** ทั้ง session (homepage warm-kit + smart-search + warm-kit 58 + card-detail/chart + /sets) ยังไม่ commit → commit ขึ้น branch ใหม่ + PR เมื่อเบสสั่ง (ห้าม push master ตรง) · **build จริงตอน dev server ปิด**
+1. **เบสเปิดดูตารางใหม่จริง** (`/` + `/search`): sparkline ท้ายแถว (`lg:`) · ป้าย % สี · Raw↔PSA10 · มือถือไม่ h-scroll · เลือกชุด dropdown ยังกรองได้ → บอกปรับ/พอ · **ยังไม่ commit — รอเบส OK**
+2. **เบสเคาะ hero** เมื่อพร้อม → data-first (ยุบ hero ดันตาราง/movers ขึ้นเหนือ fold แบบ CMC) หรือคงไว้
+3. ถ้าเบสเอา: ยุบ top-bar header (งานทั้งแอป) · identity OPTCG ใน empty state/microcopy · grid-card ใช้ ChangePill (ต้องแก้ PriceDisplay shared)
+4. อนาคต: PSA9/8/BGS data จริง → เปิด tier ใน `MARKET_GRADE_TIERS` (real:true) + est marker
+4. เบสเลือกหน้าถัดไป redesign (ค้าง: /portfolio /decks /honey /seller /settings /marketplace) + แนว layout
+5. shared-kit มีแล้ว: `SetTile` · `SectionHead` · `TypewriterText` · ว่าที่ถัดไป: RankBadge/ImagePlaceholder/page-hero

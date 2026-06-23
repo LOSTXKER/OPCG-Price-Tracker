@@ -29,6 +29,8 @@ import { RarityBadge } from "@/components/shared/rarity-badge"
 import { CardAddToPortfolio } from "@/components/cards/card-add-to-portfolio"
 import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog"
 
+import { useStickyBuy } from "./card-detail/use-sticky-buy"
+import { useCardDetailTabs } from "./card-detail/use-card-detail-tabs"
 import { ScrubChart, RANGES, dateAtIndex, type ChartRange, type ChartSeries } from "./card-detail/card-chart"
 import { mockGradeSeries, mockMeecardListings, mockRecentSales } from "./card-detail/mock"
 import { MARKET_FEED_MOCK_COUNT, MARKET_FEED_MOCK_LISTINGS_COUNT } from "./card-detail/market-table-layout"
@@ -187,13 +189,9 @@ export function CardDetail({
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [alertOpen, setAlertOpen] = useState(false)
-  const [showStickyBuy, setShowStickyBuy] = useState(false)
-  const [activeTab, setActiveTab] = useState("overview")
-  const stickySentinelRef = useRef<HTMLDivElement | null>(null)
-  const navRef = useRef<HTMLElement | null>(null)
-  const tabRefs = useRef<Record<string, HTMLAnchorElement | null>>({})
-  const [tabIndicator, setTabIndicator] = useState<{ left: number; width: number }>({ left: 0, width: 0 })
   const gradeActiveRef = useRef<HTMLButtonElement | null>(null)
+  const { sentinelRef, showStickyBuy } = useStickyBuy()
+  const { navRef, tabRefs, activeTab, tabIndicator, scrollToSection } = useCardDetailTabs(displayLang)
 
   const set = card.set
   const displayName = getCardName(displayLang, card)
@@ -404,83 +402,6 @@ export function CardDetail({
     ...(siblings.length > 0 ? [{ id: "versions", label: t(displayLang, "otherVersions") }] : []),
   ]
 
-  const scrollToSection = (id: string) => {
-    setActiveTab(id)
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })
-  }
-
-  useEffect(() => {
-    const sentinel = stickySentinelRef.current
-    if (!sentinel) return
-    const updateStickyBuy = () => setShowStickyBuy(sentinel.getBoundingClientRect().top < 72)
-    updateStickyBuy()
-    window.addEventListener("scroll", updateStickyBuy, { passive: true })
-    window.addEventListener("resize", updateStickyBuy)
-    let observer: IntersectionObserver | null = null
-    if (typeof IntersectionObserver !== "undefined") {
-      observer = new IntersectionObserver(updateStickyBuy)
-      observer.observe(sentinel)
-    }
-    return () => {
-      window.removeEventListener("scroll", updateStickyBuy)
-      window.removeEventListener("resize", updateStickyBuy)
-      observer?.disconnect()
-    }
-  }, [])
-
-  // Scrollspy — the tabs are in-page anchors, so the active underline must follow
-  // the section currently under the sticky chrome. The threshold is measured from
-  // the sticky tab bar's own bottom edge, so it stays exact across breakpoints
-  // (mobile header 56 + tabs vs desktop ticker 44 + header 56 + tabs).
-  useEffect(() => {
-    const ids = ["overview", "sources", "market", "versions"]
-    const sections = ids
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el != null)
-    if (sections.length === 0) return
-    let raf = 0
-    const sync = () => {
-      raf = 0
-      const offset = (navRef.current?.getBoundingClientRect().bottom ?? 100) + 4
-      // Active = the section most recently crossed under the tab bar (greatest top
-      // still ≤ offset). Ties (side-by-side columns on desktop, e.g. #sources left
-      // and #specs right share a top) break to the FIRST id → main column wins.
-      let current = sections[0].id
-      let bestTop = -Infinity
-      for (const el of sections) {
-        const top = el.getBoundingClientRect().top - offset
-        if (top <= 0 && top > bestTop) {
-          bestTop = top
-          current = el.id
-        }
-      }
-      setActiveTab(current)
-    }
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(sync)
-    }
-    sync()
-    window.addEventListener("scroll", onScroll, { passive: true })
-    window.addEventListener("resize", onScroll)
-    return () => {
-      window.removeEventListener("scroll", onScroll)
-      window.removeEventListener("resize", onScroll)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [])
-
-  // Sliding underline — measure the active tab's box and animate a single
-  // indicator to it (re-measures on tab change + language/width changes).
-  useEffect(() => {
-    const measure = () => {
-      const el = tabRefs.current[activeTab]
-      if (el) setTabIndicator({ left: el.offsetLeft, width: el.offsetWidth })
-    }
-    measure()
-    window.addEventListener("resize", measure)
-    return () => window.removeEventListener("resize", measure)
-  }, [activeTab, displayLang])
-
   // Keep the selected grade chip in view on narrow screens (the rail scrolls x).
   useEffect(() => {
     gradeActiveRef.current?.scrollIntoView({ block: "nearest", inline: "center" })
@@ -493,10 +414,10 @@ export function CardDetail({
   // outlines that compete with Buy). border-0 + hover overrides neutralize
   // CompareButton's own border + primary-tinted variant.
   const utilityBtn =
-    "ease-chrome flex h-10 w-full items-center justify-center gap-1.5 rounded-lg border-0 bg-transparent text-sm font-medium text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
+    "ease-chrome flex h-10 w-full items-center justify-center gap-1.5 rounded-lg border-0 bg-transparent text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
   // Filled-neutral secondary CTA (ลงขาย / เพิ่มพอร์ต) — sits under the gold buy.
   const secondaryBtn =
-    "ease-chrome flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-foreground/[0.06] text-sm font-semibold text-foreground hover:bg-foreground/[0.1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
+    "ease-chrome flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-foreground/[0.06] text-sm font-semibold text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
 
   const handleShare = async () => {
     const url = typeof window !== "undefined" ? window.location.href : ""
@@ -645,7 +566,7 @@ export function CardDetail({
                       onClick={() => setSelectedGrade(tier.key)}
                       className={cn(
                         "ease-chrome flex shrink-0 flex-col items-start gap-0.5 rounded-lg px-2.5 py-1.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                        active ? "bg-foreground/10 text-foreground" : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground",
+                        active ? "bg-foreground/10 text-foreground" : "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
                         disabled && "cursor-not-allowed opacity-40",
                       )}
                     >
@@ -763,7 +684,7 @@ export function CardDetail({
             {latestSale ? (
               <a
                 href="#sources"
-                className="ease-chrome -mx-1 flex items-center gap-2 rounded-lg px-1 py-1.5 hover:bg-foreground/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="ease-chrome -mx-1 flex items-center gap-2 rounded-lg px-1 py-1.5 hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <SourceLogo source={latestSale.source} size={18} />
                 <span className="text-label min-w-0 flex-1 truncate font-medium text-foreground">{sourceLabel(latestSale.source)}</span>
@@ -791,7 +712,7 @@ export function CardDetail({
 
       {/* Sentinel — drives the mobile sticky-buy bar: once the hero buy box scrolls
           off the top, this passes y<72 and the bar appears (shopping-journey CTA). */}
-      <div ref={stickySentinelRef} className="h-px" aria-hidden />
+      <div ref={sentinelRef} className="h-px" aria-hidden />
 
       {/* TABS — sticky section nav under the global header. Underline tabs with a
           single sliding indicator that animates between tabs on click/scrollspy.

@@ -5,19 +5,42 @@ import { formatThb } from "@/lib/utils/currency";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, X, ArrowLeftRight } from "lucide-react";
+import { t, type Language } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 import type { ChatOffer } from "./types";
 
-const statusConfig: Record<
+const statusVariant: Record<
   string,
-  { label: string; variant: "default" | "secondary" | "destructive" | "outline" }
+  "default" | "secondary" | "destructive" | "outline"
 > = {
-  PENDING: { label: "รอตอบ", variant: "default" },
-  ACCEPTED: { label: "ยอมรับ", variant: "default" },
-  REJECTED: { label: "ปฏิเสธ", variant: "destructive" },
-  CANCELLED: { label: "ยกเลิก", variant: "secondary" },
-  COUNTERED: { label: "เสนอกลับ", variant: "outline" },
-  EXPIRED: { label: "หมดอายุ", variant: "secondary" },
+  PENDING: "default",
+  ACCEPTED: "default",
+  REJECTED: "destructive",
+  CANCELLED: "secondary",
+  COUNTERED: "outline",
+  EXPIRED: "secondary",
 };
+
+const statusLabelKey: Record<
+  string,
+  Parameters<typeof t>[1]
+> = {
+  PENDING: "msgOfferStatusPending",
+  ACCEPTED: "msgOfferStatusAccepted",
+  REJECTED: "msgOfferStatusRejected",
+  CANCELLED: "msgOfferStatusCancelled",
+  COUNTERED: "msgOfferStatusCountered",
+  EXPIRED: "msgOfferStatusExpired",
+};
+
+function getStatusConfig(
+  lang: Language,
+  status: string
+): { label: string; variant: "default" | "secondary" | "destructive" | "outline" } {
+  const variant = statusVariant[status] ?? statusVariant.PENDING;
+  const labelKey = statusLabelKey[status] ?? statusLabelKey.PENDING;
+  return { label: t(lang, labelKey), variant };
+}
 
 interface OfferCardProps {
   offer: ChatOffer;
@@ -34,10 +57,11 @@ export function OfferCard({
   onReject,
   onCounter,
 }: OfferCardProps) {
+  const lang = useUIStore((s) => s.language);
   const isSeller = offer.sellerId === currentUserId;
   const isBuyer = offer.buyerId === currentUserId;
   const isPending = offer.status === "PENDING";
-  const config = statusConfig[offer.status] || statusConfig.PENDING;
+  const config = getStatusConfig(lang, offer.status);
 
   return (
     <div
@@ -50,7 +74,7 @@ export function OfferCard({
     >
       <div className="flex items-center justify-between">
         <span className="text-meta">
-          {isBuyer ? "คุณเสนอราคา" : "ข้อเสนอราคา"}
+          {isBuyer ? t(lang, "msgOfferYouOffered") : t(lang, "msgOfferReceived")}
         </span>
         <Badge variant={config.variant}>{config.label}</Badge>
       </div>
@@ -71,7 +95,7 @@ export function OfferCard({
             onClick={() => onAccept?.(offer.id)}
           >
             <Check className="size-3.5" />
-            ยอมรับ
+            {t(lang, "msgOfferAccept")}
           </Button>
           <Button
             size="sm"
@@ -80,7 +104,7 @@ export function OfferCard({
             onClick={() => onCounter?.(offer.id)}
           >
             <ArrowLeftRight className="size-3.5" />
-            เสนอกลับ
+            {t(lang, "msgOfferCounter")}
           </Button>
           <Button
             size="sm"

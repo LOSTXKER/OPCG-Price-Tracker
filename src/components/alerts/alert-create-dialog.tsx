@@ -138,7 +138,7 @@ export function AlertCreateDialog({
                   setStep("pick");
                   setError(null);
                 }}
-                className="-ml-2 inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+                className="-ml-2 inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground"
               >
                 <ArrowLeft className="size-4" />
               </button>
@@ -215,7 +215,7 @@ export function AlertCreateDialog({
                         onClick={() => handlePickCard(c)}
                         className={cn(
                           "flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors",
-                          "hover:bg-foreground/[0.04]",
+                          "hover:bg-muted/70",
                         )}
                       >
                         <div className="relative aspect-[63/88] w-9 shrink-0 overflow-hidden rounded-md bg-muted">
@@ -272,7 +272,7 @@ export function AlertCreateDialog({
                   setStep("pick");
                   setError(null);
                 }}
-                className="-mx-2 flex w-[calc(100%+1rem)] items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-foreground/[0.04]"
+                className="-mx-2 flex w-[calc(100%+1rem)] items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-muted/70"
               >
                 <div className="relative aspect-[63/88] w-10 shrink-0 overflow-hidden rounded-md bg-muted">
                   {card.imageUrl ? (

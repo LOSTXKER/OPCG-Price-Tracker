@@ -22,8 +22,10 @@ const PERIOD_DAYS: Record<string, number> = {
   "1y": 365,
 }
 
-const TREND_UP = "#22C55E"
-const TREND_DOWN = "#EF4444"
+// Use the app's price tokens so the chart matches every other up/down indicator
+// and adapts to light/dark (SVG stroke/fill resolves CSS vars from :root/.dark).
+const TREND_UP = "var(--price-up)"
+const TREND_DOWN = "var(--price-down)"
 
 function getTrendColor(data: MergedChartRow[], dataKey: string): string {
   let first: number | undefined

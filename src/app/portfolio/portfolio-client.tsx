@@ -218,7 +218,7 @@ function PortfolioContent() {
         <button
           onClick={() => setHideBalance(!hideBalance)}
           aria-label={hideBalance ? "Show balance" : "Hide balance"}
-          className="flex size-[52px] shrink-0 items-center justify-center text-muted-foreground ease-chrome transition-colors hover:bg-foreground/[0.06] hover:text-foreground active:bg-muted/40"
+          className="flex size-[52px] shrink-0 items-center justify-center text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground active:bg-muted/40"
         >
           {hideBalance ? (
             <EyeOff className="size-4" />
@@ -290,7 +290,7 @@ function PortfolioContent() {
                 </p>
                 <button
                   onClick={() => setHideBalance(!hideBalance)}
-                  className="rounded-lg p-1 text-muted-foreground/50 ease-chrome transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+                  className="rounded-lg p-1 text-muted-foreground/50 ease-chrome transition-colors hover:bg-muted hover:text-foreground"
                 >
                   {hideBalance ? (
                     <EyeOff className="size-3.5" />

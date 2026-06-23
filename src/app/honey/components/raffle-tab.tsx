@@ -289,7 +289,7 @@ function MachineCard({
   const isAnonymous = !machine.winner?.displayName?.trim();
 
   return (
-    <div className="panel relative flex h-full flex-col overflow-hidden ease-chrome transition-colors hover:bg-foreground/[0.04]">
+    <div className="panel relative flex h-full flex-col overflow-hidden ease-chrome transition-colors hover:bg-muted/70">
       <div className="aspect-[4/3] w-full overflow-hidden bg-muted/20">
         {machine.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element

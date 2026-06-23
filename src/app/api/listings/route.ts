@@ -1,5 +1,5 @@
 import { apiHandler } from "@/lib/api/api-handler";
-import { requireAuthUser } from "@/lib/auth";
+import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { createListing, searchActiveListings } from "@/lib/marketplace/listings";
 import { CreateListingSchema } from "@/lib/marketplace/schemas";

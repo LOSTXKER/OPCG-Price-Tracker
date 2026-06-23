@@ -118,7 +118,7 @@ export function NotificationBell() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="relative flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors ease-chrome hover:bg-foreground/[0.06] hover:text-foreground"
+        className="relative flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground"
         aria-label={t(lang, "notifications")}
       >
         <Bell className="size-4" />
@@ -191,7 +191,7 @@ export function NotificationBell() {
                     <div
                       key={item.id}
                       className={cn(
-                        "flex items-start gap-3 border-b border-[var(--p-hair)] px-4 py-3 transition-colors ease-chrome hover:bg-foreground/[0.04]",
+                        "flex items-start gap-3 border-b border-[var(--p-hair)] px-4 py-3 transition-colors ease-chrome hover:bg-muted/70",
                         !item.read && "bg-primary/5",
                       )}
                     >
@@ -208,7 +208,7 @@ export function NotificationBell() {
                         <button
                           type="button"
                           onClick={() => void markAsRead(item.id)}
-                          className="mt-1 shrink-0 rounded p-1 text-muted-foreground transition-colors ease-chrome hover:bg-foreground/[0.06] hover:text-foreground"
+                          className="mt-1 shrink-0 rounded p-1 text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground"
                           title={t(lang, "markAsRead")}
                         >
                           <Check className="size-3.5" />
@@ -338,7 +338,7 @@ function PriceAlertRow({
       href={`/cards/${alert.card.cardCode}`}
       onClick={onNavigate}
       className={cn(
-        "flex items-start gap-3 border-b border-[var(--p-hair)] px-4 py-2.5 transition-colors ease-chrome hover:bg-foreground/[0.04]",
+        "flex items-start gap-3 border-b border-[var(--p-hair)] px-4 py-2.5 transition-colors ease-chrome hover:bg-muted/70",
         isTriggered && "bg-success-soft/40",
       )}
     >

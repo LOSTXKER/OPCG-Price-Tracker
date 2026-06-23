@@ -2,9 +2,6 @@
 import { parseJsonBody } from "@/lib/api/admin-helpers";
 import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
-import { createLog } from "@/lib/logger";
-
-const log = createLog("admin:drop-rates");
 
 export const GET = adminApiHandler(async (request: NextRequest, _admin) => {
   const setCode = request.nextUrl.searchParams.get("set");
@@ -66,51 +63,46 @@ export const PATCH = adminApiHandler(async (request: NextRequest, _admin) => {
   >(request);
   if (!parsed.ok) return parsed.response;
 
-  try {
-    if ("batch" in parsed.body && Array.isArray(parsed.body.batch)) {
-      const items = parsed.body.batch;
-      if (items.length === 0) {
-        return NextResponse.json({ error: "batch must not be empty" }, { status: 400 });
+  if ("batch" in parsed.body && Array.isArray(parsed.body.batch)) {
+    const items = parsed.body.batch;
+    if (items.length === 0) {
+      return NextResponse.json({ error: "batch must not be empty" }, { status: 400 });
+    }
+    for (const item of items) {
+      if (!item.setId || !item.rarity) {
+        return NextResponse.json({ error: "Each item requires setId and rarity" }, { status: 400 });
       }
-      for (const item of items) {
-        if (!item.setId || !item.rarity) {
-          return NextResponse.json({ error: "Each item requires setId and rarity" }, { status: 400 });
-        }
-      }
-
-      const results = await prisma.$transaction(
-        items.map((item) =>
-          prisma.setDropRate.upsert({
-            where: { setId_rarity: { setId: item.setId, rarity: item.rarity } },
-            update: { avgPerBox: item.avgPerBox, ratePerPack: item.ratePerPack },
-            create: { setId: item.setId, rarity: item.rarity, avgPerBox: item.avgPerBox, ratePerPack: item.ratePerPack },
-          }),
-        ),
-      );
-
-      return NextResponse.json({ count: results.length, results });
     }
 
-    const { setId, rarity, avgPerBox, ratePerPack } = parsed.body as {
-      setId: number;
-      rarity: string;
-      avgPerBox?: number | null;
-      ratePerPack?: number | null;
-    };
+    const results = await prisma.$transaction(
+      items.map((item) =>
+        prisma.setDropRate.upsert({
+          where: { setId_rarity: { setId: item.setId, rarity: item.rarity } },
+          update: { avgPerBox: item.avgPerBox, ratePerPack: item.ratePerPack },
+          create: { setId: item.setId, rarity: item.rarity, avgPerBox: item.avgPerBox, ratePerPack: item.ratePerPack },
+        }),
+      ),
+    );
 
-    if (!setId || !rarity) {
-      return NextResponse.json({ error: "setId and rarity are required" }, { status: 400 });
-    }
-
-    const result = await prisma.setDropRate.upsert({
-      where: { setId_rarity: { setId, rarity } },
-      update: { avgPerBox, ratePerPack },
-      create: { setId, rarity, avgPerBox, ratePerPack },
-    });
-
-    return NextResponse.json(result);
-  } catch (error) {
-    log.error("PATCH /api/admin/drop-rates", error);
-    return NextResponse.json({ error: "Failed to update drop rate" }, { status: 500 });
+    return NextResponse.json({ count: results.length, results });
   }
+
+  const { setId, rarity, avgPerBox, ratePerPack } = parsed.body as {
+    setId: number;
+    rarity: string;
+    avgPerBox?: number | null;
+    ratePerPack?: number | null;
+  };
+
+  if (!setId || !rarity) {
+    return NextResponse.json({ error: "setId and rarity are required" }, { status: 400 });
+  }
+
+  const result = await prisma.setDropRate.upsert({
+    where: { setId_rarity: { setId, rarity } },
+    update: { avgPerBox, ratePerPack },
+    create: { setId, rarity, avgPerBox, ratePerPack },
+  });
+
+  return NextResponse.json(result);
 });

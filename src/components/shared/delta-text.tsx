@@ -27,7 +27,6 @@ export interface DeltaTextProps {
  *
  * Replaces the bespoke `<span className="text-success">…</span>` and
  * `<span className="text-destructive">…</span>` patterns scattered across:
- *   - `card-table.tsx` `ChangeCell`
  *   - `trending-tabs.tsx` change column
  *   - `listing-card.tsx` vs-market line
  *

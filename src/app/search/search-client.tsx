@@ -9,7 +9,6 @@ import {
   X,
 } from "lucide-react"
 
-import { SortableHeader } from "@/components/shared/sortable-header"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { Surface } from "@/components/ui/surface"
@@ -23,7 +22,9 @@ import {
 } from "@/components/ui/select"
 import { SetPicker } from "@/components/shared/set-picker"
 import { GridCard, GridCardSkeleton } from "@/components/home/grid-card"
-import { MobileCardItem, MobileCardSkeleton } from "@/components/home/mobile-card-item"
+import { MobileCardSkeleton } from "@/components/home/mobile-card-item"
+import { MarketTable } from "@/components/market/market-table"
+import { buildMarketColumns } from "@/components/market/market-columns"
 import { CardGrid } from "@/components/cards/card-grid"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -32,12 +33,15 @@ import {
   CHANGE_PERIODS,
   PAGE_SIZE,
 } from "@/components/home/market-types"
-import { SearchTableRow } from "./search-table-row"
 import { SearchPagination } from "./search-pagination"
 import { PhotoSearchButton } from "./photo-search-button"
 import { useSearch } from "./use-search"
 
 const ALL_RARITIES = "__all_rarities__"
+
+// /search renders the shared market table with no "Views" column (views are a
+// home "popular" tab concept). Static — never changes — so build it once.
+const SEARCH_COLUMNS = buildMarketColumns({ showViews: false })
 
 type SetOption = {
   code: string
@@ -91,6 +95,7 @@ function SearchContent({
     inputRef,
     sortCol,
     sortDir,
+    sparklines,
     activeFilterCount,
     handleSubmit,
     handleSortChange,
@@ -121,7 +126,7 @@ function SearchContent({
             <button
               type="button"
               onClick={clearInput}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground ease-chrome transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground"
             >
               <X className="size-4" />
             </button>
@@ -284,44 +289,22 @@ function SearchContent({
         </CardGrid>
       )}
 
-      {/* Results — Table view */}
+      {/* Results — Table view (shared market table) */}
       {!isPending && cards.length > 0 && viewMode === "table" && (
         <Surface variant="panel" padding="none" className="overflow-hidden">
-          <div className="divide-y divide-[var(--p-hair)] sm:hidden">
-            {cards.map((card, i) => (
-              <MobileCardItem
-                key={card.cardCode}
-                card={card}
-                rank={(page - 1) * PAGE_SIZE + i + 1}
-              />
-            ))}
-          </div>
-          <div className="hidden sm:block">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-[var(--p-hair)] text-meta">
-                  <th className="w-8 py-2.5 pl-3 pr-0" />
-                  <th className="w-8 py-2.5 pr-1 pl-1 text-left font-medium">#</th>
-                  <th className="py-2.5 pr-3 pl-2 text-left font-medium">{t(lang, "card")}</th>
-                  <th className="hidden py-2.5 pr-3 text-left font-medium md:table-cell">{t(lang, "set")}</th>
-                  <th className="py-2.5 pr-3 text-left font-medium">{t(lang, "rarity")}</th>
-                  <SortableHeader label={t(lang, "price")} column="price" activeCol={sortCol} dir={sortDir} onClick={handleColumnSort} align="right" />
-                  <SortableHeader label="24h" column="change24h" activeCol={sortCol} dir={sortDir} onClick={handleColumnSort} align="right" />
-                  <SortableHeader label="7d" column="change7d" activeCol={sortCol} dir={sortDir} onClick={handleColumnSort} align="right" className="hidden md:table-cell" />
-                  <SortableHeader label="30d" column="change30d" activeCol={sortCol} dir={sortDir} onClick={handleColumnSort} align="right" className="hidden lg:table-cell" />
-                </tr>
-              </thead>
-              <tbody>
-                {cards.map((card, i) => (
-                  <SearchTableRow
-                    key={card.cardCode}
-                    card={card}
-                    rank={(page - 1) * PAGE_SIZE + i + 1}
-                  />
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <MarketTable
+            cards={cards}
+            rankOffset={(page - 1) * PAGE_SIZE}
+            columns={SEARCH_COLUMNS}
+            priceMode="raw"
+            sparklines={sparklines}
+            sortCol={sortCol}
+            sortDir={sortDir}
+            onColumnSort={handleColumnSort}
+            isPending={isPending}
+            skeletonRows={PAGE_SIZE}
+            emptyText={t(lang, "noData")}
+          />
         </Surface>
       )}
 

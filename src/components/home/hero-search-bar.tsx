@@ -230,7 +230,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
     commitSearch(query)
   }
 
-  const sectionLabel = "px-3 pb-1 pt-2 text-eyebrow text-muted-foreground/60"
+  const sectionLabel = "px-3 pb-1 pt-2 text-eyebrow"
   const rowBase = "flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors"
 
   return (
@@ -248,7 +248,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
             ref={inputRef}
             type="text"
             placeholder={t(lang, "searchLong")}
-            className="h-14 min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground/40"
+            className="h-14 min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
             value={query}
             onChange={(e) => { setQuery(e.target.value); setActiveIdx(-1); setOpen(true) }}
             onFocus={() => setOpen(true)}
@@ -261,7 +261,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
               type="button"
               aria-label="Clear search"
               onClick={() => { setQuery(""); setResults([]); inputRef.current?.focus() }}
-              className="ease-chrome rounded-full p-1.5 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
+              className="ease-chrome rounded-full p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
             >
               <X className="size-4" />
             </button>
@@ -273,7 +273,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
                 aria-label={t(lang, "photoSearchTitle")}
                 title={t(lang, "photoSearchTitle")}
                 onClick={() => setOpen(false)}
-                className="ease-chrome rounded-full p-2 text-muted-foreground hover:bg-foreground/[0.06] hover:text-primary"
+                className="ease-chrome rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-primary"
               >
                 <Camera className="size-5" />
               </button>
@@ -376,11 +376,11 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
             {!searching && filteredRecent.length > 0 && (
               <>
                 <div className="flex items-center justify-between px-3 pb-1 pt-2">
-                  <p className="text-eyebrow text-muted-foreground/60">{t(lang, "recentSearches")}</p>
+                  <p className="text-eyebrow">{t(lang, "recentSearches")}</p>
                   <button
                     type="button"
                     onClick={clearRecent}
-                    className="ease-chrome rounded-md px-1.5 py-0.5 text-meta hover:bg-foreground/[0.06] hover:text-foreground"
+                    className="ease-chrome rounded-md px-1.5 py-0.5 text-meta hover:bg-muted hover:text-foreground"
                   >
                     {t(lang, "clearAll")}
                   </button>
@@ -412,7 +412,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
                       key={c.cardCode}
                       type="button"
                       onClick={() => go(`/cards/${c.cardCode}`)}
-                      className="ease-chrome inline-flex items-center gap-1.5 rounded-full bg-foreground/[0.05] px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-foreground/[0.09] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="ease-chrome inline-flex items-center gap-1.5 rounded-full bg-foreground/[0.05] px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       <TrendingUp className="size-3 text-primary/70" aria-hidden />
                       {getCardName(lang, c)}

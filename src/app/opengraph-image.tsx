@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { BRAND_GOLD, BRAND_GRADIENT } from "@/lib/constants/brand";
 
 export const alt = "Meecard — OPCG Card Prices Updated Daily";
 export const size = { width: 1200, height: 630 };
@@ -34,7 +35,7 @@ export default function OGImage() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: "linear-gradient(135deg, #73533E, #E0B865)",
+              background: BRAND_GRADIENT,
               borderRadius: 20,
             }}
           >
@@ -56,7 +57,7 @@ export default function OGImage() {
         <p
           style={{
             fontSize: 28,
-            color: "#E0B865",
+            color: BRAND_GOLD,
             textAlign: "center",
             maxWidth: 700,
             lineHeight: 1.4,

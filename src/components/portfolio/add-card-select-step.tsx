@@ -115,7 +115,7 @@ export function SelectStep({
               "ease-chrome relative flex h-9 items-center gap-1.5 rounded-lg border px-3 text-sm",
               showFilters || activeFilterCount > 0
                 ? "border-primary/40 bg-primary/5 text-primary"
-                : "border-[var(--p-hair)] bg-muted/30 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
+                : "border-[var(--p-hair)] bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
             <Filter className="size-3.5" />
@@ -290,7 +290,7 @@ export function SelectStep({
                 key={card.id}
                 type="button"
                 onClick={() => onSelectCard(card)}
-                className="ease-chrome flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-foreground/[0.04]"
+                className="ease-chrome flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-muted/70"
               >
                 <div className="relative aspect-[63/88] w-10 shrink-0 overflow-hidden rounded bg-muted/50">
                   {card.imageUrl ? (

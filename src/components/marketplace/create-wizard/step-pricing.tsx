@@ -4,16 +4,18 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const CONDITIONS = ["NM", "LP", "MP", "HP", "DMG"] as const;
 
-const CONDITION_LABELS: Record<string, string> = {
-  NM: "Near Mint — สภาพใหม่มาก",
-  LP: "Lightly Played — มีรอยเล็กน้อย",
-  MP: "Moderately Played — มีรอยปานกลาง",
-  HP: "Heavily Played — มีรอยมาก",
-  DMG: "Damaged — เสียหาย",
+const CONDITION_LABEL_KEYS: Record<string, string> = {
+  NM: "mktPriceConditionNM",
+  LP: "mktPriceConditionLP",
+  MP: "mktPriceConditionMP",
+  HP: "mktPriceConditionHP",
+  DMG: "mktPriceConditionDMG",
 };
 
 export interface PricingData {
@@ -40,13 +42,14 @@ export function StepPricing({
   onBack,
   onNext,
 }: StepPricingProps) {
+  const lang = useUIStore((s) => s.language);
   const update = (partial: Partial<PricingData>) =>
     onChange({ ...data, ...partial });
 
   const quickPrices = marketPriceJpy
     ? [
         { label: "-10%", value: Math.round(marketPriceJpy * 0.9) },
-        { label: "ราคาตลาด", value: marketPriceJpy },
+        { label: t(lang, "mktPriceQuickMarket"), value: marketPriceJpy },
         { label: "+10%", value: Math.round(marketPriceJpy * 1.1) },
       ]
     : [];
@@ -61,15 +64,15 @@ export function StepPricing({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-h3">ราคาและสภาพ</h2>
+        <h2 className="text-h3">{t(lang, "mktPriceTitle")}</h2>
         <p className="text-sm text-muted-foreground">
-          ตั้งราคาขายและระบุสภาพการ์ด
+          {t(lang, "mktPriceSubtitle")}
         </p>
       </div>
 
       {/* Condition */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">สภาพการ์ด</label>
+        <label className="text-sm font-medium">{t(lang, "mktPriceConditionLabel")}</label>
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
           {CONDITIONS.map((c) => (
             <button
@@ -89,14 +92,14 @@ export function StepPricing({
         </div>
         {data.condition && (
           <p className="text-meta">
-            {CONDITION_LABELS[data.condition]}
+            {t(lang, CONDITION_LABEL_KEYS[data.condition] as Parameters<typeof t>[1])}
           </p>
         )}
       </div>
 
       {/* Price */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">ราคาขาย (JPY)</label>
+        <label className="text-sm font-medium">{t(lang, "mktPricePriceLabel")}</label>
         <Input
           type="number"
           min={1}
@@ -123,7 +126,7 @@ export function StepPricing({
         )}
         {marketPriceJpy != null && (
           <p className="text-meta">
-            ราคาตลาด: ¥{marketPriceJpy.toLocaleString()}
+            {t(lang, "mktPriceMarketPrice").replace("{n}", marketPriceJpy.toLocaleString())}
             {marketPriceThb != null && ` (~฿${marketPriceThb.toLocaleString()})`}
           </p>
         )}
@@ -138,14 +141,14 @@ export function StepPricing({
             }
           >
             {diffPct > 0 ? "+" : ""}
-            {diffPct.toFixed(0)}% {diffPct <= -10 ? "ถูกกว่าตลาด" : diffPct >= 15 ? "แพงกว่าตลาด" : "vs ตลาด"}
+            {diffPct.toFixed(0)}% {diffPct <= -10 ? t(lang, "mktPriceCheaperThanMarket") : diffPct >= 15 ? t(lang, "mktPricePricierThanMarket") : t(lang, "mktPriceVsMarket")}
           </Badge>
         )}
       </div>
 
       {/* Quantity */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">จำนวน</label>
+        <label className="text-sm font-medium">{t(lang, "mktPriceQuantityLabel")}</label>
         <Input
           type="number"
           min={1}
@@ -160,10 +163,10 @@ export function StepPricing({
       <div className="flex justify-between">
         <Button variant="outline" onClick={onBack} className="gap-1">
           <ChevronLeft className="size-4" />
-          กลับ
+          {t(lang, "mktPriceBack")}
         </Button>
         <Button onClick={onNext} disabled={!isValid} className="gap-1">
-          ถัดไป
+          {t(lang, "mktPriceNext")}
           <ChevronRight className="size-4" />
         </Button>
       </div>

@@ -6,7 +6,7 @@ import { ConversationSidebar } from "./conversation-sidebar";
 import { ChatPanel } from "./chat-panel";
 import { OrderSidebar } from "./order-sidebar";
 import { MakeOfferDialog } from "./make-offer-dialog";
-import type { Conversation, ChatMessage, ChatListing, ChatUser } from "./types";
+import type { Conversation, ChatMessage } from "./types";
 import { createClient } from "@/lib/supabase/client";
 import { apiGet, apiPatch, apiPost, apiTry } from "@/lib/api/client";
 import { cn } from "@/lib/utils";

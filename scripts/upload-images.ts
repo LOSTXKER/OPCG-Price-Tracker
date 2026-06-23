@@ -14,9 +14,8 @@
  *   npx tsx scripts/upload-images.ts --force        # re-upload even if already on R2
  */
 import "dotenv/config";
-import { S3Client, PutObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "./_db";
-import { SETS } from "./sets";
 
 const CONCURRENCY = 5;
 const DELAY_BETWEEN_BATCHES_MS = 200;

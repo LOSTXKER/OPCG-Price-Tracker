@@ -1,7 +1,6 @@
 "use client"
 
 import { TrendingDown, TrendingUp } from "lucide-react"
-import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { formatJpyAmount } from "@/lib/utils/currency"

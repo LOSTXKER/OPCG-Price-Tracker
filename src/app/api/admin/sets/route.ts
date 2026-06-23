@@ -2,9 +2,7 @@
 import { parseJsonBody } from "@/lib/api/admin-helpers";
 import { adminApiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
-import { createLog } from "@/lib/logger";
-
-const log = createLog("admin:sets");
+import { UpdateAdminSetSchema } from "@/lib/admin/schemas";
 
 export const GET = adminApiHandler(async (_request: NextRequest, _admin) => {
   const sets = await prisma.cardSet.findMany({
@@ -62,44 +60,14 @@ export const GET = adminApiHandler(async (_request: NextRequest, _admin) => {
 });
 
 export const PATCH = adminApiHandler(async (request: NextRequest, _admin) => {
-  const parsed = await parseJsonBody<{ id: number; [key: string]: unknown }>(request);
+  const parsed = await parseJsonBody(request, UpdateAdminSetSchema);
   if (!parsed.ok) return parsed.response;
 
-  try {
-    const { id, ...updates } = parsed.body;
+  const { id, ...data } = parsed.body;
+  const updated = await prisma.cardSet.update({
+    where: { id },
+    data,
+  });
 
-    if (!id) {
-      return NextResponse.json({ error: "id is required" }, { status: 400 });
-    }
-
-    const allowedFields = [
-      "nameEn",
-      "nameTh",
-      "releaseDate",
-      "packsPerBox",
-      "cardsPerPack",
-      "boxImageUrl",
-      "msrpJpy",
-    ];
-    const data: Record<string, unknown> = {};
-    for (const key of allowedFields) {
-      if (key in updates) {
-        if (key === "releaseDate" && updates[key]) {
-          data[key] = new Date(updates[key] as string);
-        } else {
-          data[key] = updates[key];
-        }
-      }
-    }
-
-    const updated = await prisma.cardSet.update({
-      where: { id },
-      data,
-    });
-
-    return NextResponse.json(updated);
-  } catch (error) {
-    log.error("PATCH /api/admin/sets", error);
-    return NextResponse.json({ error: "Failed to update set" }, { status: 500 });
-  }
+  return NextResponse.json(updated);
 });

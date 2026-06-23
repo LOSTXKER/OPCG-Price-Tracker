@@ -59,7 +59,7 @@ function CardEditCompact({
   }
 
   return (
-    <div className="group ease-chrome rounded-lg border border-transparent px-3 py-2.5 hover:border-[var(--p-hair)] hover:bg-foreground/[0.04]">
+    <div className="group ease-chrome rounded-lg border border-transparent px-3 py-2.5 hover:border-[var(--p-hair)] hover:bg-muted/70">
       <div className="flex items-center gap-3">
         <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-muted">
           {row.imageUrl ? (
@@ -112,7 +112,7 @@ function CardEditCompact({
         <div className="ml-auto">
           <button
             onClick={() => onFieldChange(row.itemId, "isPrivate", !isPrivate)}
-            className="ease-chrome flex items-center gap-1.5 rounded-lg px-1.5 py-0.5 hover:bg-foreground/[0.06]"
+            className="ease-chrome flex items-center gap-1.5 rounded-lg px-1.5 py-0.5 hover:bg-muted"
             title={isPrivate ? t(lang, "unmarkPrivate") : t(lang, "markAsPrivate")}
           >
             <span

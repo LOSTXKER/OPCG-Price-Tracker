@@ -101,7 +101,7 @@ export function RankingsTab({
               </thead>
               <tbody className="divide-y divide-[var(--p-hair)]">
                 {sorted.map((user, i) => (
-                  <tr key={user.id} className="ease-chrome hover:bg-foreground/[0.04]">
+                  <tr key={user.id} className="ease-chrome hover:bg-muted/70">
                     <td className="px-4 py-2.5">
                       <span
                         className={cn(

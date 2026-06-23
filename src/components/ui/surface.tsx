@@ -20,7 +20,7 @@ const surfaceVariants = cva("ease-chrome", {
       xl: "p-6",
     },
     interactive: {
-      true: "hover:bg-foreground/[0.04] hover:border-[var(--p-hair)] focus-within:border-[var(--p-hair)]",
+      true: "hover:bg-muted/70 hover:border-[var(--p-hair)] focus-within:border-[var(--p-hair)]",
       false: "",
     },
   },

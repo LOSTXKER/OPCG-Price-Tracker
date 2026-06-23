@@ -42,12 +42,12 @@ export function BrowseToolbar({
       search={search}
       onSearchChange={onSearchChange}
       onSubmit={onSubmit}
-      searchPlaceholder="ค้นหาการ์ด, code, ชื่อ..."
+      searchPlaceholder={t(lang, "mktToolbarSearchPlaceholder")}
       filters={{
         count: filterCount,
         active: showFilters,
         onToggle: onToggleFilters,
-        label: "ตัวกรอง",
+        label: t(lang, "mktToolbarFilters"),
       }}
       sort={{
         options: SORT_OPTIONS.map((o) => ({ key: o.value as SortKey, label: o.label })),

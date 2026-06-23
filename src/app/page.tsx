@@ -81,22 +81,17 @@ export default async function HomePage(props: {
       {/* Universal search hero — the page's focal point (VISION §5 teleport) */}
       <HomeSearchHero sets={setOptions} trending={gainers} />
 
-      {/* Highlights: Featured · Top Gainers · Top Losers. Rendered as a calm,
-          un-boxed band (full-width warm hairlines top/bottom, hairline column
-          dividers) instead of a panel card — matching card-detail's flat,
-          breathing sections rather than stacking another box under the hero. */}
-      <section className="mt-7 grid divide-y divide-[var(--p-hair)] border-y border-[var(--p-hair)] sm:mt-9 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-3">
+      {/* Highlights: Featured · Top Gainers · Top Losers. Minimal — no dividers,
+          no borders, no boxes; columns separated by whitespace alone so the page
+          reads calm and editorial rather than gridded. */}
+      <section className="mt-8 grid gap-x-10 gap-y-7 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3">
         {featured && (
-          <div className="p-4 sm:col-span-2 sm:p-5 lg:col-span-1">
+          <div className="sm:col-span-2 lg:col-span-1">
             <HomeFeaturedCard card={featured} />
           </div>
         )}
-        <div className="p-4 sm:p-5">
-          <HomeMiniTable cards={gainers} type="gainers" />
-        </div>
-        <div className="p-4 sm:p-5">
-          <HomeMiniTable cards={losers} type="losers" />
-        </div>
+        <HomeMiniTable cards={gainers} type="gainers" />
+        <HomeMiniTable cards={losers} type="losers" />
       </section>
 
       {/* In-feed ad — mobile only, between highlights and the market table */}

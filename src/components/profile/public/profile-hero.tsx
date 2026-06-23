@@ -16,6 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getTierConfig } from "@/components/profile/profile-types";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { clientEnv } from "@/lib/env";
 import { avatarGradient } from "@/lib/utils/avatar-gradient";
 import type {
   ProfileAchievement,
@@ -233,7 +234,7 @@ function HandleRow({
     const url =
       typeof window !== "undefined"
         ? `${window.location.origin}/@${handle}`
-        : `https://meecard.com/@${handle}`;
+        : `${clientEnv().NEXT_PUBLIC_APP_URL}/@${handle}`;
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -256,7 +257,7 @@ function HandleRow({
         onClick={onCopy}
         aria-label={t(lang, "shareCopyLink")}
         title={copied ? t(lang, "shareLinkCopied") : t(lang, "shareCopyLink")}
-        className="ease-chrome inline-flex size-6 items-center justify-center rounded-lg text-muted-foreground/70 transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+        className="ease-chrome inline-flex size-6 items-center justify-center rounded-lg text-muted-foreground/70 transition-colors hover:bg-muted hover:text-foreground"
       >
         {copied ? (
           <Check className="size-3.5 text-emerald-500" />

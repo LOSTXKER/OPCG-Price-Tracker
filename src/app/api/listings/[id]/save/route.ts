@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { apiHandler } from "@/lib/api/api-handler";
-import { requireAuthUser } from "@/lib/auth";
+import { requireAuthUser } from "@/lib/api/auth";
 import { prisma } from "@/lib/db";
 
 type Params = { params: Promise<{ id: string }> };

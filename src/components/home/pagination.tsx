@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { formatCount } from "@/lib/utils/currency"
+import { buildPageRange } from "@/lib/utils/pagination"
 
 export function Pagination({
   page,
@@ -34,7 +35,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(Math.max(1, page - 1))}
           disabled={page <= 1 || isPending}
-          className="ease-chrome flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+          className="ease-chrome flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
         >
           <ChevronLeft className="size-4" />
         </button>
@@ -42,7 +43,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(Math.min(totalPages, page + 1))}
           disabled={page >= totalPages || isPending}
-          className="ease-chrome flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+          className="ease-chrome flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
         >
           <ChevronRight className="size-4" />
         </button>
@@ -80,7 +81,7 @@ function PageNumbers({
               "ease-chrome flex size-9 items-center justify-center rounded-md text-xs font-medium",
               current === p
                 ? "bg-foreground/[0.08] text-foreground font-semibold"
-                : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
             {p}
@@ -89,22 +90,4 @@ function PageNumbers({
       )}
     </>
   )
-}
-
-function buildPageRange(current: number, total: number): (number | "...")[] {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
-
-  const pages: (number | "...")[] = []
-
-  if (current <= 4) {
-    for (let i = 1; i <= 5; i++) pages.push(i)
-    pages.push("...", total)
-  } else if (current >= total - 3) {
-    pages.push(1, "...")
-    for (let i = total - 4; i <= total; i++) pages.push(i)
-  } else {
-    pages.push(1, "...", current - 1, current, current + 1, "...", total)
-  }
-
-  return pages
 }

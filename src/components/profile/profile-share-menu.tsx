@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
+import { clientEnv } from "@/lib/env";
 
 /**
  * One-tap profile share. We deliberately keep this as a single button rather
@@ -39,8 +40,8 @@ export function ProfileShareMenu({
     typeof window !== "undefined"
       ? `${window.location.origin}${handle ? `/@${handle}` : `/profile/${userId}`}`
       : handle
-        ? `https://meecard.com/@${handle}`
-        : `https://meecard.com/profile/${userId}`;
+        ? `${clientEnv().NEXT_PUBLIC_APP_URL}/@${handle}`
+        : `${clientEnv().NEXT_PUBLIC_APP_URL}/profile/${userId}`;
 
   const shareText = `${displayName} on Meecard`;
 

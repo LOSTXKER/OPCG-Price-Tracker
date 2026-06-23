@@ -49,7 +49,7 @@ export function DetailStep({
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="ease-chrome flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+            className="ease-chrome flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             <ArrowLeft className="size-4" />
           </button>
@@ -101,7 +101,7 @@ export function DetailStep({
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="ease-chrome flex size-10 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-background text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+                className="ease-chrome flex size-10 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >
                 <Minus className="size-4" />
               </button>
@@ -117,7 +117,7 @@ export function DetailStep({
               />
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className="ease-chrome flex size-10 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-background text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+                className="ease-chrome flex size-10 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >
                 <Plus className="size-4" />
               </button>

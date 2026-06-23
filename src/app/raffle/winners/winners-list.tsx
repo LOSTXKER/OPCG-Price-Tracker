@@ -152,7 +152,7 @@ function WinnerCard({
       id={`raffle-${raffle.id}`}
       variant="panel"
       padding="none"
-      className="ease-chrome relative flex h-full scroll-mt-24 flex-col overflow-hidden transition-colors hover:bg-foreground/[0.04]"
+      className="ease-chrome relative flex h-full scroll-mt-24 flex-col overflow-hidden transition-colors hover:bg-muted/70"
       style={accent ? { borderTop: `3px solid ${accent}` } : undefined}
     >
       <div className="aspect-[4/3] w-full overflow-hidden bg-muted/20">

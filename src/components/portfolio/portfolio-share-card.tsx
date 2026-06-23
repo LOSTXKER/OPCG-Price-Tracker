@@ -3,6 +3,7 @@
 import { forwardRef, useMemo } from "react"
 
 import { getCardName, getLocale, t, type Language } from "@/lib/i18n"
+import { clientEnv } from "@/lib/env"
 import {
   formatJpyAmount,
   formatPct,
@@ -253,7 +254,7 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
                 {assets.length} {t(lang, "card")}
               </span>
               <span className="font-semibold tracking-wide">
-                meecard.com/portfolio
+                {clientEnv().NEXT_PUBLIC_APP_URL.replace(/^https?:\/\//, "")}/portfolio
               </span>
             </footer>
           </div>

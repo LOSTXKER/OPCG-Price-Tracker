@@ -136,8 +136,6 @@ export function SetDetailContent({
         .filter((g) => g.cards.length > 0)
     : baseGroups;
 
-  const filteredTotal = visibleGroups.reduce((sum, g) => sum + g.cards.length, 0);
-
   const pill = (active: boolean) =>
     cn(
       "shrink-0 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",

@@ -80,10 +80,10 @@ export function MarketplaceBrowse({
       try {
         return await apiGet<BrowseResponse>(`/api/listings?${params.toString()}`)
       } catch (err) {
-        throw new Error(err instanceof ApiError ? err.message : t(lang, "loadFailed"))
+        throw new Error(err instanceof ApiError ? err.message : t(useUIStore.getState().language, "loadFailed"))
       }
     },
-    [buildParams, lang],
+    [buildParams],
   )
 
   useEffect(() => {
@@ -99,7 +99,9 @@ export function MarketplaceBrowse({
           setError(null)
         })
         .catch((e: unknown) => {
-          setError(e instanceof Error ? e.message : t(lang, "loadFailed"))
+          // read lang imperatively so the fetch effect doesn't re-run (re-fetch)
+          // on every language toggle just for this fallback string
+          setError(e instanceof Error ? e.message : t(useUIStore.getState().language, "loadFailed"))
         })
     })
   }, [page, sort, conditions, rarities, fetchPage])
@@ -115,10 +117,12 @@ export function MarketplaceBrowse({
           setError(null)
         })
         .catch((e: unknown) => {
-          setError(e instanceof Error ? e.message : t(lang, "loadFailed"))
+          // read lang imperatively so the fetch effect doesn't re-run (re-fetch)
+          // on every language toggle just for this fallback string
+          setError(e instanceof Error ? e.message : t(useUIStore.getState().language, "loadFailed"))
         })
     })
-  }, [fetchPage, lang])
+  }, [fetchPage])
 
   return (
     <div className="space-y-4">
@@ -161,7 +165,7 @@ export function MarketplaceBrowse({
       )}
 
       <div className="flex items-center gap-2 text-meta">
-        <span>{formatCount(total)} รายการ</span>
+        <span>{t(lang, "mktBrowseItemCount").replace("{n}", formatCount(total))}</span>
         {conditions.length > 0 && (
           <>
             <span>·</span>

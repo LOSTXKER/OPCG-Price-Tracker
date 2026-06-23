@@ -53,11 +53,11 @@ const CONDITIONS = [
 ];
 
 const SHIPPING_OPTIONS = [
-  "ส่งทั่วไทย (Kerry/Flash)",
-  "EMS / ไปรษณีย์ลงทะเบียน",
-  "นัดรับ กรุงเทพฯ",
-  "นัดรับ ต่างจังหวัด",
-];
+  { value: "ส่งทั่วไทย (Kerry/Flash)", labelKey: "sellListingShippingNationwide" },
+  { value: "EMS / ไปรษณีย์ลงทะเบียน", labelKey: "sellListingShippingEms" },
+  { value: "นัดรับ กรุงเทพฯ", labelKey: "sellListingShippingPickupBkk" },
+  { value: "นัดรับ ต่างจังหวัด", labelKey: "sellListingShippingPickupUpcountry" },
+] as const;
 
 export default function SellerEditListingPage() {
   const params = useParams();
@@ -107,14 +107,14 @@ export default function SellerEditListingPage() {
             ? e.message
             : e instanceof Error
               ? e.message
-              : "ไม่สามารถโหลดข้อมูลได้"
+              : t(lang, "sellListingLoadError")
         );
       } finally {
         setLoading(false);
       }
     }
     loadListing();
-  }, [listingId]);
+  }, [listingId, lang]);
 
   const handlePhotoUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -167,13 +167,13 @@ export default function SellerEditListingPage() {
     } catch (err) {
       setError(
         err instanceof ApiError
-          ? (err.message ?? "บันทึกไม่สำเร็จ")
-          : "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง"
+          ? (err.message ?? t(lang, "sellListingSaveFailed"))
+          : t(lang, "sellListingGenericError")
       );
     } finally {
       setSaving(false);
     }
-  }, [priceJpy, priceThb, condition, quantity, description, location, shippingMethods, photos, listingId]);
+  }, [priceJpy, priceThb, condition, quantity, description, location, shippingMethods, photos, listingId, lang]);
 
   if (loading) {
     return <LoadingState variant="spinner" />;
@@ -184,7 +184,7 @@ export default function SellerEditListingPage() {
       <div className="space-y-4">
         <Button variant="ghost" size="sm" render={<Link href="/seller/listings" />}>
           <ArrowLeft className="mr-2 h-4 w-4" />
-          กลับ
+          {t(lang, "sellListingBack")}
         </Button>
         <EmptyState variant="error" icon={Package} title={error} />
       </div>
@@ -218,7 +218,7 @@ export default function SellerEditListingPage() {
 
       {error && <p className="text-sm text-destructive">{error}</p>}
       {success && (
-        <p className="text-sm text-success">บันทึกสำเร็จแล้ว</p>
+        <p className="text-sm text-success">{t(lang, "sellListingSaveSuccess")}</p>
       )}
 
       {/* Card info (readonly) */}
@@ -252,11 +252,11 @@ export default function SellerEditListingPage() {
 
       {/* Pricing */}
       <div className="panel space-y-4 rounded-xl p-4">
-        <h2 className="text-h3">ราคาและสภาพ</h2>
+        <h2 className="text-h3">{t(lang, "sellListingPriceConditionHeading")}</h2>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium">ราคา (JPY) *</label>
+            <label className="mb-1 block text-sm font-medium">{t(lang, "sellListingPriceJpyLabel")}</label>
             <Input
               type="number"
               min={1}
@@ -265,21 +265,21 @@ export default function SellerEditListingPage() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium">ราคา (THB)</label>
+            <label className="mb-1 block text-sm font-medium">{t(lang, "sellListingPriceThbLabel")}</label>
             <Input
               type="number"
               min={0}
               step="0.01"
               value={priceThb}
               onChange={(e) => setPriceThb(e.target.value)}
-              placeholder="ไม่บังคับ"
+              placeholder={t(lang, "sellListingOptional")}
             />
           </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium">สภาพการ์ด</label>
+            <label className="mb-1 block text-sm font-medium">{t(lang, "sellListingConditionLabel")}</label>
             <Select
               items={CONDITIONS}
               value={condition}
@@ -298,7 +298,7 @@ export default function SellerEditListingPage() {
             </Select>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium">จำนวน</label>
+            <label className="mb-1 block text-sm font-medium">{t(lang, "sellListingQuantityLabel")}</label>
             <Input
               type="number"
               min={1}
@@ -312,19 +312,19 @@ export default function SellerEditListingPage() {
 
       {/* Description */}
       <div className="panel space-y-4 rounded-xl p-4">
-        <h2 className="text-h3">รายละเอียด</h2>
+        <h2 className="text-h3">{t(lang, "sellListingDescriptionHeading")}</h2>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
-          placeholder="อธิบายรายละเอียดเพิ่มเติม เช่น สภาพจริง, ข้อดี-เสีย"
+          placeholder={t(lang, "sellListingDescriptionPlaceholder")}
           className="w-full rounded-lg border border-[var(--p-hair)] bg-background px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         />
       </div>
 
       {/* Photos */}
       <div className="panel space-y-4 rounded-xl p-4">
-        <h2 className="text-h3">ภาพสินค้าจริง</h2>
+        <h2 className="text-h3">{t(lang, "sellListingPhotosHeading")}</h2>
         <div className="flex flex-wrap gap-3">
           {photos.map((url, i) => (
             <div key={i} className="group relative">
@@ -363,43 +363,43 @@ export default function SellerEditListingPage() {
           )}
         </div>
         <p className="text-meta">
-          สูงสุด 5 รูป • รองรับ JPG, PNG, WebP
+          {t(lang, "sellListingPhotosHint")}
         </p>
       </div>
 
       {/* Shipping */}
       <div className="panel space-y-4 rounded-xl p-4">
-        <h2 className="text-h3">การจัดส่ง</h2>
+        <h2 className="text-h3">{t(lang, "sellListingShippingHeading")}</h2>
 
         <div>
-          <label className="mb-1 block text-sm font-medium">ที่อยู่ / พื้นที่</label>
+          <label className="mb-1 block text-sm font-medium">{t(lang, "sellListingLocationLabel")}</label>
           <Input
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            placeholder="เช่น กรุงเทพฯ, เชียงใหม่"
+            placeholder={t(lang, "sellListingLocationPlaceholder")}
           />
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">วิธีจัดส่ง</label>
+          <label className="mb-2 block text-sm font-medium">{t(lang, "sellListingShippingMethodLabel")}</label>
           <div className="space-y-2">
             {SHIPPING_OPTIONS.map((opt) => (
-              <label key={opt} className="flex items-center gap-2 text-sm">
+              <label key={opt.value} className="flex items-center gap-2 text-sm">
                 <input
                   type="checkbox"
-                  checked={shippingMethods.includes(opt)}
+                  checked={shippingMethods.includes(opt.value)}
                   onChange={(e) => {
                     if (e.target.checked) {
-                      setShippingMethods((prev) => [...prev, opt]);
+                      setShippingMethods((prev) => [...prev, opt.value]);
                     } else {
                       setShippingMethods((prev) =>
-                        prev.filter((m) => m !== opt)
+                        prev.filter((m) => m !== opt.value)
                       );
                     }
                   }}
                   className="rounded border-[var(--p-hair)]"
                 />
-                {opt}
+                {t(lang, opt.labelKey)}
               </label>
             ))}
           </div>
@@ -409,7 +409,7 @@ export default function SellerEditListingPage() {
       {/* Bottom save button */}
       <div className="flex justify-end gap-3 pb-8">
         <Button variant="outline" render={<Link href="/seller/listings" />}>
-          ยกเลิก
+          {t(lang, "sellListingCancel")}
         </Button>
         <Button onClick={handleSave} disabled={saving}>
           {saving ? (
@@ -417,7 +417,7 @@ export default function SellerEditListingPage() {
           ) : (
             <Save className="mr-2 h-4 w-4" />
           )}
-          บันทึกการเปลี่ยนแปลง
+          {t(lang, "sellListingSaveChanges")}
         </Button>
       </div>
     </div>

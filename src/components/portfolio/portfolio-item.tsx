@@ -32,7 +32,6 @@ function conditionBadgeVariant(condition: string) {
 
 export function PortfolioItem({
   cardCode,
-  baseCode,
   nameJp,
   nameEn,
   imageUrl,

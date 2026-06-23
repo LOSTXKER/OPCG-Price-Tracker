@@ -35,7 +35,6 @@ type AccountCoverImageProps = {
  */
 const MAX_INPUT_BYTES = 8 * 1024 * 1024;
 const TARGET_WIDTH = 1600;
-const TARGET_HEIGHT = 600;
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 /**

@@ -125,7 +125,6 @@ export function MobileMenuSheet({
   authLoaded,
   userName,
   userAvatar,
-  userId,
   userTier,
   honeyPoints,
   honeyPendingActions,
@@ -217,9 +216,9 @@ export function MobileMenuSheet({
         {/* Navigation sections */}
         <div className="p-3">
           {/* Browse */}
-          <SectionLabel>{language === "TH" ? "เรียกดู" : language === "JP" ? "ブラウズ" : "Browse"}</SectionLabel>
+          <SectionLabel>{t(language, "browse")}</SectionLabel>
           <MenuLink href="/sets" icon={Package} label={t(language, "sets")} pathname={pathname} onNav={close} />
-          <MenuLink href="/trending" icon={TrendingUp} label={language === "TH" ? "กำลังมา" : language === "JP" ? "トレンド" : "Trending"} pathname={pathname} onNav={close} />
+          <MenuLink href="/trending" icon={TrendingUp} label={t(language, "trendingShort")} pathname={pathname} onNav={close} />
           <MenuLink href="/watchlist" icon={Bookmark} label={t(language, "watchlistNav")} pathname={pathname} onNav={close} />
           <MenuLink href="/compare" icon={ArrowRightLeft} label={t(language, "compareCards")} pathname={pathname} onNav={close} />
 
@@ -230,12 +229,12 @@ export function MobileMenuSheet({
           {/* My Account — only when logged in */}
           {authLoaded && authUser && (
             <>
-              <SectionLabel>{language === "TH" ? "บัญชีของฉัน" : language === "JP" ? "マイアカウント" : "My Account"}</SectionLabel>
+              <SectionLabel>{t(language, "myAccount")}</SectionLabel>
               <MenuLink href="/portfolio" icon={Star} label={t(language, "portfolioNav")} pathname={pathname} onNav={close} />
               {marketplaceEnabled && (
                 <>
-                  <MenuLink href="/orders" icon={ShoppingBag} label={language === "TH" ? "คำสั่งซื้อ" : language === "JP" ? "購入履歴" : "My Orders"} pathname={pathname} onNav={close} />
-                  <MenuLink href="/saved" icon={Heart} label={language === "TH" ? "รายการที่บันทึก" : language === "JP" ? "保存済み" : "Saved"} pathname={pathname} onNav={close} />
+                  <MenuLink href="/orders" icon={ShoppingBag} label={t(language, "myOrders")} pathname={pathname} onNav={close} />
+                  <MenuLink href="/saved" icon={Heart} label={t(language, "savedListings")} pathname={pathname} onNav={close} />
                 </>
               )}
               <MenuLink href="/settings/alerts" icon={BellRing} label={t(language, "managePriceAlerts")} pathname={pathname} onNav={close} />
@@ -244,13 +243,13 @@ export function MobileMenuSheet({
               )}
               <MenuLink href="/honey" icon={Sparkles} label="Honey" pendingDot={honeyPendingActions} pathname={pathname} onNav={close} />
               {marketplaceEnabled && (
-                <MenuLink href="/seller" icon={Store} label={language === "TH" ? "ศูนย์ผู้ขาย" : language === "JP" ? "販売センター" : "Seller Center"} pathname={pathname} onNav={close} />
+                <MenuLink href="/seller" icon={Store} label={t(language, "sellShellSellerCenter")} pathname={pathname} onNav={close} />
               )}
             </>
           )}
 
           {/* Preferences */}
-          <SectionLabel>{language === "TH" ? "การตั้งค่า" : language === "JP" ? "設定" : "Preferences"}</SectionLabel>
+          <SectionLabel>{t(language, "preferences")}</SectionLabel>
           <div className="space-y-2 px-3 py-1">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{t(language, "languageLabel")}</span>
@@ -287,7 +286,7 @@ export function MobileMenuSheet({
               </Select>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{language === "TH" ? "ธีม" : language === "JP" ? "テーマ" : "Theme"}</span>
+              <span className="text-sm text-muted-foreground">{t(language, "themeLabel")}</span>
               <button
                 type="button"
                 onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
@@ -308,8 +307,8 @@ export function MobileMenuSheet({
             {authLoaded && authUser && (
               <MenuLink href="/settings" icon={Settings} label={t(language, "settingsTitle")} pathname={pathname} onNav={close} />
             )}
-            <MenuLink href="/pricing" icon={Crown} label={language === "TH" ? "แพ็กเกจ" : language === "JP" ? "プラン" : "Pricing"} pathname={pathname} onNav={close} />
-            <MenuLink href="/guide" icon={BookOpen} label={language === "TH" ? "คู่มือ" : language === "JP" ? "ガイド" : "Guide"} pathname={pathname} onNav={close} />
+            <MenuLink href="/pricing" icon={Crown} label={t(language, "pricing")} pathname={pathname} onNav={close} />
+            <MenuLink href="/guide" icon={BookOpen} label={t(language, "guide")} pathname={pathname} onNav={close} />
           </div>
 
           {/* Logout */}

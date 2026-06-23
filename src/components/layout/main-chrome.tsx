@@ -59,11 +59,6 @@ function useIsChromeless() {
   return matches(pathname, CHROMELESS_ROUTES);
 }
 
-function useIsFullWidthPage() {
-  const pathname = usePathname();
-  return matches(pathname, FULL_WIDTH_ROUTES);
-}
-
 export function MainChrome({ children }: { children: React.ReactNode }) {
   const chromeless = useIsChromeless();
   if (chromeless) return null;
