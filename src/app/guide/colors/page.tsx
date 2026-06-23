@@ -11,6 +11,8 @@ import { prisma } from "@/lib/db";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { t, type Language } from "@/lib/i18n";
+import { getServerLanguage } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -33,56 +35,52 @@ interface ColorInfo {
   description: string;
 }
 
-const COLORS: ColorInfo[] = [
-  {
-    name: "Red",
-    nameTh: "แดง",
-    hex: "#DC2626",
-    tagline: "Rush + Power — บุกเร็ว ตีแรง",
-    description:
-      "สีของการโจมตีรุนแรง เน้นคีย์เวิร์ด [Rush] ที่ทำให้การ์ดโจมตีได้ทันทีที่ลงสนาม เร่ง Power สูงลิ่ว เคลียร์สนามฝ่ายตรงข้ามอย่างรวดเร็ว เหมาะกับคนชอบเล่นเชิงรุก",
-  },
-  {
-    name: "Green",
-    nameTh: "เขียว",
-    hex: "#22C55E",
-    tagline: "DON!! Ramp + ตั้งรับแล้วบุก",
-    description:
-      "สีของการสร้างทรัพยากร เร่ง DON!! ให้มีมากกว่าฝ่ายตรงข้าม แล้ว Active (ตั้ง) Character ที่ Rest อยู่ให้พร้อมรบอีกครั้ง ค่อยๆ สร้าง Board แล้วบุกเด็ดขาด",
-  },
-  {
-    name: "Blue",
-    nameTh: "น้ำเงิน",
-    hex: "#3B82F6",
-    tagline: "ควบคุมมือ + ดึงเกมยาว",
-    description:
-      "สีของการควบคุม สลับการ์ดกลับมือ/กลับเด็คฝ่ายตรงข้าม ดึงเกมให้ยาวออก เน้นสร้างความได้เปรียบด้านจำนวนการ์ดในมือ แล้วจบในจังหวะที่พร้อม",
-  },
-  {
-    name: "Purple",
-    nameTh: "ม่วง",
-    hex: "#8B5CF6",
-    tagline: "Cost Reduction + DON!! manipulation",
-    description:
-      "สีของการลด Cost ลง Character ตัวใหญ่ได้เร็วกว่าปกติ มีความสามารถจัดการ DON!! พิเศษ เช่น คืน DON!! กลับเด็ค หรือเพิ่ม DON!! จาก trash area เพื่อ tempo ที่แข็งแกร่ง",
-  },
-  {
-    name: "Black",
-    nameTh: "ดำ",
-    hex: "#374151",
-    tagline: "Removal + ทำลายการ์ดฝ่ายตรงข้าม",
-    description:
-      "สีของการทำลายล้าง ลด Cost การ์ดฝ่ายตรงข้ามแล้ว KO ทิ้ง เน้นคุม Board ไม่ให้ฝ่ายตรงข้ามสะสมกำลังได้ ถือเป็นหนึ่งในสีที่แข็งแกร่งที่สุดในเมตาหลายยุค",
-  },
-  {
-    name: "Yellow",
-    nameTh: "เหลือง",
-    hex: "#EAB308",
-    tagline: "Life Manipulation + Trigger",
-    description:
-      "สีที่ซับซ้อนที่สุด ใช้ Life เป็นทรัพยากร กระตุ้น Trigger effect จาก Life area เพิ่ม/ลด Life ได้ เล่นยากแต่ถ้าเชี่ยวชาญจะควบคุมเกมได้ดีมาก เปิดตัวครั้งแรกในชุดที่ 3",
-  },
-];
+function buildColors(lang: Language): ColorInfo[] {
+  return [
+    {
+      name: "Red",
+      nameTh: t(lang, "guideColorRedNameTh"),
+      hex: "#DC2626",
+      tagline: t(lang, "guideColorRedTagline"),
+      description: t(lang, "guideColorRedDesc"),
+    },
+    {
+      name: "Green",
+      nameTh: t(lang, "guideColorGreenNameTh"),
+      hex: "#22C55E",
+      tagline: t(lang, "guideColorGreenTagline"),
+      description: t(lang, "guideColorGreenDesc"),
+    },
+    {
+      name: "Blue",
+      nameTh: t(lang, "guideColorBlueNameTh"),
+      hex: "#3B82F6",
+      tagline: t(lang, "guideColorBlueTagline"),
+      description: t(lang, "guideColorBlueDesc"),
+    },
+    {
+      name: "Purple",
+      nameTh: t(lang, "guideColorPurpleNameTh"),
+      hex: "#8B5CF6",
+      tagline: t(lang, "guideColorPurpleTagline"),
+      description: t(lang, "guideColorPurpleDesc"),
+    },
+    {
+      name: "Black",
+      nameTh: t(lang, "guideColorBlackNameTh"),
+      hex: "#374151",
+      tagline: t(lang, "guideColorBlackTagline"),
+      description: t(lang, "guideColorBlackDesc"),
+    },
+    {
+      name: "Yellow",
+      nameTh: t(lang, "guideColorYellowNameTh"),
+      hex: "#EAB308",
+      tagline: t(lang, "guideColorYellowTagline"),
+      description: t(lang, "guideColorYellowDesc"),
+    },
+  ];
+}
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
@@ -95,6 +93,46 @@ type LeaderCard = {
   imageUrl: string | null;
   colorEn: string | null;
 };
+
+function buildDeckSummary(lang: Language) {
+  return [
+    {
+      label: t(lang, "guideColorDeckSummaryLeaderLabel"),
+      value: t(lang, "guideColorDeckSummaryLeaderValue"),
+      note: t(lang, "guideColorDeckSummaryLeaderNote"),
+    },
+    {
+      label: t(lang, "guideColorDeckSummaryDeckLabel"),
+      value: t(lang, "guideColorDeckSummaryDeckValue"),
+      note: t(lang, "guideColorDeckSummaryDeckNote"),
+    },
+    {
+      label: "DON!!",
+      value: t(lang, "guideColorDeckSummaryDonValue"),
+      note: t(lang, "guideColorDeckSummaryDonNote"),
+    },
+    {
+      label: t(lang, "guideColorDeckSummaryDupLabel"),
+      value: t(lang, "guideColorDeckSummaryDupValue"),
+      note: t(lang, "guideColorDeckSummaryDupNote"),
+    },
+  ];
+}
+
+function buildSources(lang: Language) {
+  return [
+    {
+      label: "Official Rules",
+      desc: t(lang, "guideColorSourceRulesDesc"),
+      url: "https://en.onepiece-cardgame.com/rules/",
+    },
+    {
+      label: "Play Guide",
+      desc: t(lang, "guideColorSourcePlayGuideDesc"),
+      url: "https://en.onepiece-cardgame.com/play-guide/",
+    },
+  ];
+}
 
 async function getLeadersByColor(): Promise<Record<string, LeaderCard[]>> {
   try {
@@ -133,7 +171,11 @@ async function getLeadersByColor(): Promise<Record<string, LeaderCard[]>> {
 }
 
 export default async function ColorsPage() {
+  const lang = await getServerLanguage();
   const leadersByColor = await getLeadersByColor();
+  const colors = buildColors(lang);
+  const deckSummary = buildDeckSummary(lang);
+  const sources = buildSources(lang);
 
   return (
     <div className="mx-auto max-w-3xl space-y-12">
@@ -151,22 +193,26 @@ export default async function ColorsPage() {
           items={[
             { label: "Home", href: "/" },
             { label: "Guide", href: "/guide" },
-            { label: "สี" },
+            { label: t(lang, "guideColorTitle") },
           ]}
         />
-        <h1 className="text-h1">สี (Colors)</h1>
+        <h1 className="text-h1">{t(lang, "guideColorTitle")}</h1>
         <p className="text-lg leading-relaxed text-muted-foreground">
-          ใน OPCG การ์ด <strong className="text-foreground">Leader</strong>{" "}
-          กำหนดสีของเด็ค — แต่ละสีมี playstyle ที่ต่างกัน
-          ตั้งแต่บุกเร็วไปจนถึงควบคุมเกม
+          {t(lang, "guideColorIntroP1a")}
+          <strong className="text-foreground">
+            {t(lang, "guideColorIntroLeader")}
+          </strong>
+          {t(lang, "guideColorIntroP1b")}
         </p>
       </div>
 
       {/* ── 2. Six Colors ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">6 สีในเกม</h2>
+        <h2 className="text-xl font-semibold">
+          {t(lang, "guideColorSixColorsHeading")}
+        </h2>
         <div className="space-y-5">
-          {COLORS.map((color) => {
+          {colors.map((color) => {
             const leaders = leadersByColor[color.name] ?? [];
             return (
               <div
@@ -208,7 +254,7 @@ export default async function ColorsPage() {
                     {leaders.length > 0 && (
                       <div className="mt-4">
                         <p className="mb-2 text-xs font-medium text-muted-foreground">
-                          ตัวอย่าง Leader
+                          {t(lang, "guideColorLeaderExampleLabel")}
                         </p>
                         <div className="flex gap-2 overflow-x-auto pb-1">
                           {leaders.map((leader) => (
@@ -246,26 +292,32 @@ export default async function ColorsPage() {
 
       {/* ── 3. Multicolor ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">Multicolor (การ์ด 2 สี)</h2>
+        <h2 className="text-xl font-semibold">
+          {t(lang, "guideColorMulticolorHeading")}
+        </h2>
         <p className="text-sm leading-relaxed text-muted-foreground">
-          Leader บางตัวมี{" "}
-          <strong className="text-foreground">2 สี</strong> เช่น Red/Green —
-          ทำให้สามารถใส่การ์ดจากทั้งสองสีในเด็คเดียวกันได้ แลกกับ Life ที่น้อยลง
+          {t(lang, "guideColorMulticolorIntroP1a")}
+          <strong className="text-foreground">
+            {t(lang, "guideColorMulticolorIntro2Colors")}
+          </strong>
+          {t(lang, "guideColorMulticolorIntroP1b")}
         </p>
 
         <div className="overflow-hidden rounded-xl border border-border/50 bg-card">
           <div className="border-b border-border/40 px-4 py-2 text-xs font-medium text-muted-foreground">
-            เปรียบเทียบ Leader สีเดียว vs 2 สี
+            {t(lang, "guideColorCompareCaption")}
           </div>
           <div className="grid grid-cols-2 divide-x divide-border/40">
             <div className="p-5 text-center">
               <div className="mx-auto flex size-10 items-center justify-center rounded-full bg-red-500">
                 <span className="text-sm font-bold text-white">R</span>
               </div>
-              <p className="mt-2 text-sm font-semibold">Leader สีเดียว</p>
+              <p className="mt-2 text-sm font-semibold">
+                {t(lang, "guideColorSingleColorLeader")}
+              </p>
               <p className="mt-1 text-2xl font-bold">5 Life</p>
               <p className="mt-0.5 text-meta">
-                ใช้การ์ดได้แค่สีเดียว
+                {t(lang, "guideColorSingleColorNote")}
               </p>
             </div>
             <div className="p-5 text-center">
@@ -273,21 +325,27 @@ export default async function ColorsPage() {
                 <span className="inline-block h-full w-1/2 bg-red-500" />
                 <span className="inline-block h-full w-1/2 bg-green-500" />
               </div>
-              <p className="mt-2 text-sm font-semibold">Leader 2 สี</p>
+              <p className="mt-2 text-sm font-semibold">
+                {t(lang, "guideColorTwoColorLeader")}
+              </p>
               <p className="mt-1 text-2xl font-bold">4 Life</p>
               <p className="mt-0.5 text-meta">
-                ใช้การ์ดจากทั้ง 2 สีได้
+                {t(lang, "guideColorTwoColorNote")}
               </p>
             </div>
           </div>
         </div>
 
         <div className="rounded-xl border border-border/50 bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
-          <p className="font-semibold text-foreground">ตัวอย่าง</p>
+          <p className="font-semibold text-foreground">
+            {t(lang, "guideColorExampleHeading")}
+          </p>
           <p className="mt-2">
-            ถ้าใช้ Leader{" "}
-            <strong className="text-foreground">Red/Green</strong>{" "}
-            จะใส่การ์ดในเด็คได้ 3 แบบ:
+            {t(lang, "guideColorExampleP1a")}
+            <strong className="text-foreground">
+              {t(lang, "guideColorExampleRedGreen")}
+            </strong>
+            {t(lang, "guideColorExampleP1b")}
           </p>
           <div className="mt-3 space-y-1.5">
             <div className="flex items-center gap-2">
@@ -295,21 +353,21 @@ export default async function ColorsPage() {
                 className="size-3 rounded-full"
                 style={{ backgroundColor: "#DC2626" }}
               />
-              <span>การ์ดสี Red</span>
+              <span>{t(lang, "guideColorExampleRedCard")}</span>
             </div>
             <div className="flex items-center gap-2">
               <span
                 className="size-3 rounded-full"
                 style={{ backgroundColor: "#22C55E" }}
               />
-              <span>การ์ดสี Green</span>
+              <span>{t(lang, "guideColorExampleGreenCard")}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="flex size-3 overflow-hidden rounded-full">
                 <span className="w-1/2 bg-red-500" />
                 <span className="w-1/2 bg-green-500" />
               </div>
-              <span>การ์ด Red/Green (multicolor)</span>
+              <span>{t(lang, "guideColorExampleMulticolorCard")}</span>
             </div>
           </div>
         </div>
@@ -317,41 +375,41 @@ export default async function ColorsPage() {
 
       {/* ── 4. Deck Building Rule ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">สีกับการสร้างเด็ค</h2>
+        <h2 className="text-xl font-semibold">
+          {t(lang, "guideColorDeckBuildingHeading")}
+        </h2>
         <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
           <p>
-            <strong className="text-foreground">Leader กำหนดทุกอย่าง</strong> —
-            การ์ดทุกใบในเด็ค 50 ใบต้องตรงกับสีของ Leader ถ้า Leader เป็นสีแดง
-            ก็ใส่ได้เฉพาะการ์ดสีแดง
+            <strong className="text-foreground">
+              {t(lang, "guideColorDeckRuleP1Strong")}
+            </strong>
+            {t(lang, "guideColorDeckRuleP1b")}
           </p>
           <p>
-            นอกจากนี้ ใส่การ์ดที่มี card number เดียวกันได้{" "}
-            <strong className="text-foreground">สูงสุด 4 ใบ</strong> ต่อเด็ค
+            {t(lang, "guideColorDeckRuleP2a")}
+            <strong className="text-foreground">
+              {t(lang, "guideColorDeckRuleP2Strong")}
+            </strong>
+            {t(lang, "guideColorDeckRuleP2b")}
           </p>
         </div>
 
         <div className="flex items-start gap-2.5 rounded-lg border border-red-500/20 bg-red-500/5 px-4 py-3">
           <Info className="mt-0.5 size-4 shrink-0 text-red-500" />
           <p className="text-sm text-muted-foreground">
-            <strong className="text-foreground">ใส่ผิดสีไม่ได้</strong> — ถ้า
-            Leader เป็นสีแดง จะเอาการ์ดสีน้ำเงินมาใส่ในเด็คไม่ได้
-            ยกเว้นจะใช้ Leader 2 สีที่มีน้ำเงินรวมอยู่ด้วย
+            <strong className="text-foreground">
+              {t(lang, "guideColorWrongColorStrong")}
+            </strong>
+            {t(lang, "guideColorWrongColorBody")}
           </p>
         </div>
 
         <div className="rounded-xl border border-border/50 bg-card p-5">
-          <p className="text-sm font-semibold">สรุปองค์ประกอบเด็ค</p>
+          <p className="text-sm font-semibold">
+            {t(lang, "guideColorDeckSummaryHeading")}
+          </p>
           <div className="mt-3 space-y-2">
-            {[
-              { label: "Leader", value: "1 ใบ", note: "กำหนดสีเด็ค" },
-              {
-                label: "การ์ดในเด็ค",
-                value: "50 ใบ",
-                note: "ต้องตรงสี Leader",
-              },
-              { label: "DON!!", value: "10 ใบ", note: "แยกกองต่างหาก" },
-              { label: "การ์ดซ้ำ", value: "สูงสุด 4", note: "ต่อ card number" },
-            ].map((item) => (
+            {deckSummary.map((item) => (
               <div key={item.label} className="flex items-center gap-3">
                 <span className="w-24 shrink-0 text-sm font-medium">
                   {item.label}
@@ -368,20 +426,11 @@ export default async function ColorsPage() {
 
       {/* ── 5. Sources ── */}
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold">แหล่งอ้างอิง</h2>
+        <h2 className="text-xl font-semibold">
+          {t(lang, "guideColorSourcesHeading")}
+        </h2>
         <div className="divide-y divide-border/50 rounded-xl border border-border/50 bg-card text-sm">
-          {[
-            {
-              label: "Official Rules",
-              desc: "กฎเกมอย่างเป็นทางการจาก Bandai",
-              url: "https://en.onepiece-cardgame.com/rules/",
-            },
-            {
-              label: "Play Guide",
-              desc: "คู่มือการเล่นเบื้องต้นจาก Bandai",
-              url: "https://en.onepiece-cardgame.com/play-guide/",
-            },
-          ].map((src) => (
+          {sources.map((src) => (
             <a
               key={src.url}
               href={src.url}
@@ -406,13 +455,13 @@ export default async function ColorsPage() {
           className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
-          ความหายาก
+          {t(lang, "guideColorNavPrev")}
         </Link>
         <Link
           href="/guide/sets"
           className="group inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
         >
-          บทต่อไป: ชุดการ์ด
+          {t(lang, "guideColorNavNext")}
           <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
         </Link>
       </div>

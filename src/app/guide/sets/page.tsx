@@ -16,6 +16,8 @@ import { prisma } from "@/lib/db";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { t, type Language } from "@/lib/i18n";
+import { getServerLanguage } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -30,47 +32,112 @@ export const metadata: Metadata = {
 /*  Set type config                                                    */
 /* ------------------------------------------------------------------ */
 
-const SET_TYPE_INFO: Record<
+function buildSetTypeInfo(
+  lang: Language
+): Record<
   string,
   { label: string; icon: typeof Layers; color: string; description: string }
-> = {
-  BOOSTER: {
-    label: "Booster Pack (OP-xx)",
-    icon: Package,
-    color: "#3B82F6",
-    description:
-      "ชุดหลักของเกม ออกทุก 2-3 เดือน มีประมาณ 119 ใบ + Parallel ซองสุ่มการ์ด ขายเป็นซอง กล่อง หรือลัง",
-  },
-  STARTER: {
-    label: "Starter Deck (ST-xx)",
-    icon: Star,
-    color: "#22C55E",
-    description:
-      "เด็คสำเร็จรูปพร้อมเล่น มีประมาณ 17 แบบ (รวม Leader + DON!!) การ์ด fixed ไม่สุ่ม เหมาะมือใหม่",
-  },
-  EXTRA_BOOSTER: {
-    label: "Extra Booster (EB-xx)",
-    icon: Trophy,
-    color: "#F59E0B",
-    description:
-      "ชุดพิเศษที่ออกเป็นครั้งคราว จำนวนใบแตกต่างกัน มักมีธีมเฉพาะ เช่น Memorial Collection",
-  },
-  PROMO: {
-    label: "Promo / Premium (PRB-xx)",
-    icon: Layers,
-    color: "#8B5CF6",
-    description:
-      "ชุด reprint compilation หรือการ์ดโปรโมชันพิเศษ มักแจกในงานอีเวนต์หรือมาพร้อมสินค้า",
-  },
-  OTHER: {
-    label: "อื่นๆ",
-    icon: Box,
-    color: "#6B7280",
-    description: "ชุดอื่นๆ ที่ไม่จัดอยู่ในหมวดข้างต้น",
-  },
-};
+> {
+  return {
+    BOOSTER: {
+      label: t(lang, "guideSetTypeBoosterLabel"),
+      icon: Package,
+      color: "#3B82F6",
+      description: t(lang, "guideSetTypeBoosterDesc"),
+    },
+    STARTER: {
+      label: t(lang, "guideSetTypeStarterLabel"),
+      icon: Star,
+      color: "#22C55E",
+      description: t(lang, "guideSetTypeStarterDesc"),
+    },
+    EXTRA_BOOSTER: {
+      label: t(lang, "guideSetTypeExtraLabel"),
+      icon: Trophy,
+      color: "#F59E0B",
+      description: t(lang, "guideSetTypeExtraDesc"),
+    },
+    PROMO: {
+      label: t(lang, "guideSetTypePromoLabel"),
+      icon: Layers,
+      color: "#8B5CF6",
+      description: t(lang, "guideSetTypePromoDesc"),
+    },
+    OTHER: {
+      label: t(lang, "guideSetTypeOtherLabel"),
+      icon: Box,
+      color: "#6B7280",
+      description: t(lang, "guideSetTypeOtherDesc"),
+    },
+  };
+}
 
 const TYPE_ORDER = ["BOOSTER", "STARTER", "EXTRA_BOOSTER", "PROMO", "OTHER"];
+
+/* ------------------------------------------------------------------ */
+/*  Pack structure + card code config                                  */
+/* ------------------------------------------------------------------ */
+
+function buildPackSizes(lang: Language) {
+  return [
+    {
+      label: t(lang, "guideSetPackPackLabel"),
+      value: t(lang, "guideSetPackPackValue"),
+      color: "#3B82F6",
+    },
+    {
+      label: t(lang, "guideSetPackBoxLabel"),
+      value: t(lang, "guideSetPackBoxValue"),
+      color: "#8B5CF6",
+    },
+    {
+      label: t(lang, "guideSetPackCaseLabel"),
+      value: t(lang, "guideSetPackCaseValue"),
+      color: "#F59E0B",
+    },
+  ];
+}
+
+function buildCardCodes(lang: Language) {
+  return [
+    {
+      code: "OP09-001",
+      desc: t(lang, "guideSetCodeBoosterDesc"),
+      color: "#3B82F6",
+    },
+    {
+      code: "OP09-001_p1",
+      desc: t(lang, "guideSetCodeParallelDesc"),
+      color: "#8B5CF6",
+    },
+    {
+      code: "ST01-001",
+      desc: t(lang, "guideSetCodeStarterDesc"),
+      color: "#22C55E",
+    },
+    {
+      code: "EB01-001",
+      desc: t(lang, "guideSetCodeExtraDesc"),
+      color: "#F59E0B",
+    },
+  ];
+}
+
+function buildSources(lang: Language) {
+  return [
+    {
+      label: t(lang, "guideSetSourceOfficialLabel"),
+      desc: t(lang, "guideSetSourceOfficialDesc"),
+      url: "https://en.onepiece-cardgame.com/products/",
+    },
+    {
+      label: t(lang, "guideSetSourceMeecardLabel"),
+      desc: t(lang, "guideSetSourceMeecardDesc"),
+      url: "/sets",
+      internal: true,
+    },
+  ];
+}
 
 /* ------------------------------------------------------------------ */
 /*  DB query                                                           */
@@ -118,7 +185,12 @@ async function getSetsGrouped(): Promise<Record<string, SetRow[]>> {
 /* ------------------------------------------------------------------ */
 
 export default async function GuideSetsPage() {
+  const lang = await getServerLanguage();
   const grouped = await getSetsGrouped();
+  const setTypeInfo = buildSetTypeInfo(lang);
+  const packSizes = buildPackSizes(lang);
+  const cardCodes = buildCardCodes(lang);
+  const sources = buildSources(lang);
 
   return (
     <div className="mx-auto max-w-3xl space-y-12">
@@ -134,26 +206,25 @@ export default async function GuideSetsPage() {
       <div className="space-y-3">
         <Breadcrumb
           items={[
-            { label: "Home", href: "/" },
-            { label: "Guide", href: "/guide" },
-            { label: "ชุดการ์ด" },
+            { label: t(lang, "guideSetBreadcrumbHome"), href: "/" },
+            { label: t(lang, "guideSetBreadcrumbGuide"), href: "/guide" },
+            { label: t(lang, "guideSetBreadcrumbSets") },
           ]}
         />
         <h1 className="text-h1">
-          ชุดการ์ด (Sets)
+          {t(lang, "guideSetTitle")}
         </h1>
         <p className="text-lg leading-relaxed text-muted-foreground">
-          OPCG ออกชุดใหม่ทุก 2-3 เดือน มีหลายประเภทตั้งแต่ Booster Pack
-          สำหรับสะสม ไปจนถึง Starter Deck สำหรับมือใหม่
+          {t(lang, "guideSetIntro")}
         </p>
       </div>
 
       {/* ── 2. Set Types ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">ประเภทชุดการ์ด</h2>
+        <h2 className="text-xl font-semibold">{t(lang, "guideSetTypesHeading")}</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {["BOOSTER", "STARTER", "EXTRA_BOOSTER", "PROMO"].map((type) => {
-            const info = SET_TYPE_INFO[type];
+            const info = setTypeInfo[type];
             if (!info) return null;
             const Icon = info.icon;
             return (
@@ -183,17 +254,13 @@ export default async function GuideSetsPage() {
       {/* ── 3. Pack Structure ── */}
       <section className="space-y-4">
         <h2 className="text-xl font-semibold">
-          โครงสร้าง Booster (เวอร์ชัน JP)
+          {t(lang, "guideSetPackHeading")}
         </h2>
         <p className="text-sm text-muted-foreground">
-          Booster Pack ญี่ปุ่นแบ่งเป็น 3 ขนาด:
+          {t(lang, "guideSetPackIntro")}
         </p>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {[
-            { label: "1 ซอง", value: "6 ใบ", color: "#3B82F6" },
-            { label: "1 กล่อง", value: "24 ซอง", color: "#8B5CF6" },
-            { label: "1 ลัง", value: "12 กล่อง", color: "#F59E0B" },
-          ].map((item) => (
+          {packSizes.map((item) => (
             <div
               key={item.label}
               className="rounded-xl border border-border/50 bg-card p-4 text-center"
@@ -213,42 +280,21 @@ export default async function GuideSetsPage() {
         <div className="flex items-start gap-2.5 rounded-lg border border-blue-500/20 bg-blue-500/5 px-4 py-3">
           <Info className="mt-0.5 size-4 shrink-0 text-blue-500" />
           <p className="text-sm text-muted-foreground">
-            เวอร์ชัน EN (ภาษาอังกฤษ) มี{" "}
-            <strong className="text-foreground">12 ใบต่อซอง</strong>{" "}
-            แทนที่จะเป็น 6 ใบแบบ JP โครงสร้างกล่อง/ลังเหมือนกัน
+            {t(lang, "guideSetPackEnNoteA")}
+            <strong className="text-foreground">{t(lang, "guideSetPackEnNoteStrong")}</strong>
+            {t(lang, "guideSetPackEnNoteB")}
           </p>
         </div>
       </section>
 
       {/* ── 4. Card Code Format ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">รูปแบบ Card Code</h2>
+        <h2 className="text-xl font-semibold">{t(lang, "guideSetCodeHeading")}</h2>
         <p className="text-sm text-muted-foreground">
-          การ์ดทุกใบมี code เฉพาะตัวที่บอกว่ามาจากชุดไหน ใบที่เท่าไหร่
+          {t(lang, "guideSetCodeIntro")}
         </p>
         <div className="space-y-2">
-          {[
-            {
-              code: "OP09-001",
-              desc: "Booster ชุดที่ 9, ใบที่ 001",
-              color: "#3B82F6",
-            },
-            {
-              code: "OP09-001_p1",
-              desc: "Parallel (ภาพพิเศษ) ลำดับที่ 1",
-              color: "#8B5CF6",
-            },
-            {
-              code: "ST01-001",
-              desc: "Starter Deck ชุดที่ 1, ใบที่ 001",
-              color: "#22C55E",
-            },
-            {
-              code: "EB01-001",
-              desc: "Extra Booster ชุดที่ 1, ใบที่ 001",
-              color: "#F59E0B",
-            },
-          ].map((item) => (
+          {cardCodes.map((item) => (
             <div
               key={item.code}
               className="flex items-center gap-3 rounded-lg border border-border/50 bg-card px-4 py-3"
@@ -271,22 +317,23 @@ export default async function GuideSetsPage() {
       {/* ── 5. Set List from DB ── */}
       <section className="space-y-6">
         <div>
-          <h2 className="text-xl font-semibold">รายชื่อชุดทั้งหมด</h2>
+          <h2 className="text-xl font-semibold">{t(lang, "guideSetListHeading")}</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            ดูราคาและข้อมูลเพิ่มเติมได้ที่{" "}
+            {t(lang, "guideSetListIntroA")}
             <Link
               href="/sets"
               className="font-medium text-primary hover:underline"
             >
-              หน้าชุดการ์ด
+              {t(lang, "guideSetListIntroLink")}
             </Link>
+            {t(lang, "guideSetListIntroB")}
           </p>
         </div>
 
         {TYPE_ORDER.map((type) => {
           const sets = grouped[type];
           if (!sets || sets.length === 0) return null;
-          const info = SET_TYPE_INFO[type] ?? SET_TYPE_INFO.OTHER!;
+          const info = setTypeInfo[type] ?? setTypeInfo.OTHER!;
 
           return (
             <div key={type} className="space-y-2">
@@ -339,7 +386,10 @@ export default async function GuideSetsPage() {
                       </p>
                     </div>
                     <span className="shrink-0 font-mono text-xs text-muted-foreground">
-                      {set.cardCount} ใบ
+                      {t(lang, "guideSetCardCount").replace(
+                        "{n}",
+                        String(set.cardCount)
+                      )}
                     </span>
                   </Link>
                 ))}
@@ -351,7 +401,7 @@ export default async function GuideSetsPage() {
         {Object.keys(grouped).length === 0 && (
           <div className="rounded-xl border border-dashed py-12 text-center">
             <p className="text-sm text-muted-foreground">
-              ยังไม่มีข้อมูลชุดในระบบ
+              {t(lang, "guideSetEmpty")}
             </p>
           </div>
         )}
@@ -359,21 +409,9 @@ export default async function GuideSetsPage() {
 
       {/* ── 6. Sources ── */}
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold">แหล่งอ้างอิง</h2>
+        <h2 className="text-xl font-semibold">{t(lang, "guideSetSourcesHeading")}</h2>
         <div className="divide-y divide-border/50 rounded-xl border border-border/50 bg-card text-sm">
-          {[
-            {
-              label: "Official Products",
-              desc: "รายชื่อชุดการ์ดทั้งหมดจาก Bandai",
-              url: "https://en.onepiece-cardgame.com/products/",
-            },
-            {
-              label: "ดูราคาชุดการ์ด",
-              desc: "ราคาและข้อมูล real-time บน Meecard",
-              url: "/sets",
-              internal: true,
-            },
-          ].map((src) =>
+          {sources.map((src) =>
             "internal" in src && src.internal ? (
               <Link
                 key={src.url}
@@ -412,13 +450,13 @@ export default async function GuideSetsPage() {
           className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
-          สี
+          {t(lang, "guideSetNavPrev")}
         </Link>
         <Link
           href="/guide/buying"
           className="group inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
         >
-          บทต่อไป: ซื้อการ์ด
+          {t(lang, "guideSetNavNext")}
           <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
         </Link>
       </div>
