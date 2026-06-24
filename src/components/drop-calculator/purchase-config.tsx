@@ -150,7 +150,7 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
           <p className="mb-1 text-eyebrow">
             {t(lang, "ifYouBuy")} {quantity} {t(lang, UNIT_I18N_KEYS[unit])} {t(lang, "estimatedYield")}
           </p>
-          <ul className="divide-y divide-border/40">
+          <ul className="divide-y divide-[var(--p-hair)]">
             {meaningful.map((dr) => {
               const count =
                 unit === "pack"

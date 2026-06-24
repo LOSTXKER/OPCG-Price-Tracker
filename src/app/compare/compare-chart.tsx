@@ -79,7 +79,7 @@ function CompareTooltip({
   if (entries.length === 0) return null;
 
   return (
-    <div className="min-w-[200px] rounded-xl border border-border/50 bg-popover/95 px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
+    <div className="min-w-[200px] rounded-xl border border-[var(--p-hair)] bg-popover/95 px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
       <p className="text-meta">{formatTooltipDate(label, locale)}</p>
       <div className="mt-1.5 space-y-1">
         {entries.map(({ card, color, value }) => (

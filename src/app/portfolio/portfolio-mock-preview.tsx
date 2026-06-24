@@ -31,7 +31,7 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
               ¥15,800
             </p>
           </div>
-          <div className="border-t border-border/30">
+          <div className="border-t border-[var(--p-hair)]">
             <div className="px-4 py-2.5">
               <p className="text-xs font-medium text-muted-foreground">
                 {t(lang, "portfolio")} (2)
@@ -122,7 +122,7 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
 
         {/* Assets mock */}
         <Surface variant="panel" className="overflow-hidden ring-1 ring-border/10">
-          <div className="flex items-center justify-between border-b border-border/30 px-5 py-3 sm:px-6">
+          <div className="flex items-center justify-between border-b border-[var(--p-hair)] px-5 py-3 sm:px-6">
             <div className="flex items-center gap-2.5">
               <p className="text-sm font-bold">{t(lang, "assets")}</p>
               <span className="rounded-full bg-primary/8 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-primary/80">
@@ -130,7 +130,7 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
               </span>
             </div>
           </div>
-          <div className="divide-y divide-border/10">
+          <div className="divide-y divide-[var(--p-hair)]">
             {[
               { code: "OP09-001", name: "Monkey D. Luffy", price: "¥3,200" },
               { code: "OP09-019", name: "Roronoa Zoro", price: "¥2,800" },

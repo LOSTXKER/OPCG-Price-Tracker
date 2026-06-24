@@ -53,7 +53,7 @@ export function CardGrid({ cards, loading }: { cards: CardRow[]; loading: boolea
             )}
             {/* Always-visible info row — admins should see code/rarity/price
                 without hovering. Data-quality flag rides alongside the meta. */}
-            <div className="flex flex-col gap-0.5 border-t border-border/30 px-2 py-1.5">
+            <div className="flex flex-col gap-0.5 border-t border-[var(--p-hair)] px-2 py-1.5">
               <div className="flex items-center gap-1">
                 <p className="truncate text-xs font-bold">{card.baseCode}</p>
                 {flagged && (

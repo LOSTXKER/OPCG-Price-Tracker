@@ -239,7 +239,7 @@ export function AlertsManagerClient() {
 function ActiveEmpty({ onCreate }: { onCreate: () => void }) {
   const lang = useUIStore((s) => s.language);
   return (
-    <div className="rounded-xl border border-dashed border-border/40 bg-card/50 px-6 py-10">
+    <div className="rounded-xl border border-dashed border-[var(--p-hair)] bg-card/50 px-6 py-10">
       <KumaEmptyState
         variant="minimal"
         icon={Bell}

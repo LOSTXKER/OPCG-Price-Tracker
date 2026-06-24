@@ -115,7 +115,7 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
 
       {isEditing ? (
         <>
-          <div className="grid grid-cols-1 gap-3 border-t border-border/30 p-5 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 border-t border-[var(--p-hair)] p-5 sm:grid-cols-2">
             {SOCIAL_FIELDS.map((f) => (
               <div key={f.key}>
                 <label className="text-eyebrow" htmlFor={`social-${f.key}`}>
@@ -132,7 +132,7 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
               </div>
             ))}
           </div>
-          <div className="flex items-center justify-end gap-2 border-t border-border/30 px-5 py-2.5">
+          <div className="flex items-center justify-end gap-2 border-t border-[var(--p-hair)] px-5 py-2.5">
             <Button size="sm" onClick={() => void save()} disabled={saving || !dirty}>
               {saving && <Loader2 className="mr-1.5 size-3 animate-spin" />}
               {t(lang, "save")}
@@ -141,7 +141,7 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
         </>
       ) : (
         hasAnyValue && (
-          <div className="divide-y divide-border/30 border-t border-border/30">
+          <div className="divide-y divide-[var(--p-hair)] border-t border-[var(--p-hair)]">
             {SOCIAL_FIELDS.filter((f) => (user[f.key] as string | null)?.trim()).map((f) => (
               <div key={f.key} className="flex items-center gap-3 px-5 py-3">
                 <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-secondary/60 text-overlay text-muted-foreground">

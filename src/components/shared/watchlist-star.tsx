@@ -70,7 +70,7 @@ export function WatchlistStar({
       className={cn(
         "inline-flex shrink-0 items-center justify-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
         variant === "chip"
-          ? "h-9 w-9 rounded-md border border-border/60 bg-muted/30 hover:border-amber-400/60 hover:bg-amber-400/10"
+          ? "h-9 w-9 rounded-md border border-[var(--p-hair)] bg-muted/30 hover:border-amber-400/60 hover:bg-amber-400/10"
           : "rounded-sm",
         loaded
           ? variant === "chip"

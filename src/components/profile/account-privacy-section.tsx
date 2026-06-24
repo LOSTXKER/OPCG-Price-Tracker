@@ -92,7 +92,7 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
 
   return (
     <div id="privacy" className="space-y-5 scroll-mt-24">
-      <div className="flex items-start gap-2 rounded-lg border border-border/40 bg-muted/30 px-3.5 py-2.5 text-meta">
+      <div className="flex items-start gap-2 rounded-lg border border-[var(--p-hair)] bg-muted/30 px-3.5 py-2.5 text-meta">
         <Info className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/70" />
         <p>{t(lang, "privacyAppliesAllPortfolios")}</p>
       </div>
@@ -121,7 +121,7 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
                   "group flex items-start gap-3 rounded-xl border px-4 py-3 text-left transition-all",
                   active
                     ? "border-primary/60 bg-primary/[0.06] ring-1 ring-primary/20"
-                    : "border-border/50 hover:border-border hover:bg-muted/40",
+                    : "border-[var(--p-hair)] hover:border-border hover:bg-muted/40",
                 )}
               >
                 <span
@@ -141,7 +141,7 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
           })}
         </div>
         {activeVisibility ? (
-          <div className="border-t border-border/30 bg-secondary/20 px-5 py-2.5 text-meta">
+          <div className="border-t border-[var(--p-hair)] bg-secondary/20 px-5 py-2.5 text-meta">
             {t(lang, activeVisibility.descKey)}
           </div>
         ) : null}
@@ -154,7 +154,7 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
           title={t(lang, "privacySectionsTitle")}
           subtitle={t(lang, "privacySectionsSubtitle")}
         />
-        <div className="divide-y divide-border/30 border-t border-border/30">
+        <div className="divide-y divide-[var(--p-hair)] border-t border-[var(--p-hair)]">
           {SECTION_TOGGLES.map(({ field, labelKey, descKey, icon: Icon }) => (
             <PrivacyRow
               key={field}

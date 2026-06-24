@@ -63,7 +63,7 @@ export function TableSkeleton({
   className?: string;
 }) {
   return (
-    <div className={cn("panel divide-y divide-border/40", className)}>
+    <div className={cn("panel divide-y divide-[var(--p-hair)]", className)}>
       <div className="grid items-center gap-3 p-3" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
         {Array.from({ length: columns }).map((_, i) => (
           <Skeleton key={i} className="h-3.5 w-20" />

@@ -58,7 +58,7 @@ export function HintTile({
 
   const wrapperClass = cn(
     "group/hint relative overflow-hidden rounded-xl border border-dashed",
-    "border-border/60 bg-transparent transition-colors duration-200",
+    "border-[var(--p-hair)] bg-transparent transition-colors duration-200",
     isCollection ? "aspect-[63/88] flex" : "flex h-full flex-col",
     isInteractive && "hover:border-primary/50 hover:bg-card/40",
     className,

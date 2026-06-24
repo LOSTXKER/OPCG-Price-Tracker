@@ -95,7 +95,7 @@ export function PortfolioAssetsTable({
         <EmptyState variant="plain" title={t(lang, "noResults")} />
       ) : (
         <>
-          <div className="divide-y divide-border/10 sm:hidden">
+          <div className="divide-y divide-[var(--p-hair)] sm:hidden">
             {filteredAssets.map((row) => (
               <MobileAssetCard
                 key={row.itemId}

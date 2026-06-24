@@ -106,7 +106,7 @@ export function PortfolioInsights({ history, allocation }: PortfolioInsightsProp
               <p className="mb-2 text-eyebrow lg:mt-0">
                 {t(lang, "holdingsBreakdown")}
               </p>
-              <div className="divide-y divide-border/20">
+              <div className="divide-y divide-[var(--p-hair)]">
                 {allocation.map((item, i) => (
                   <Link
                     key={`${item.name}-${i}`}

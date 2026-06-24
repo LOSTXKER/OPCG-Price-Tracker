@@ -20,7 +20,7 @@ export function DesktopAssetsTable({
     <div className="hidden overflow-x-auto sm:block">
       <table className="w-full text-left text-sm">
         <thead className="sticky top-0 z-10 bg-card/95 backdrop-blur">
-          <tr className="border-b border-border/20 text-eyebrow text-muted-foreground/60">
+          <tr className="border-b border-[var(--p-hair)] text-eyebrow text-muted-foreground/60">
             <th className="py-3 pl-5 pr-3">{t(lang, "card")}</th>
             <th className="py-3 pr-3 text-right">{t(lang, "value")}</th>
             <th className="py-3 pr-3 text-right">{t(lang, "costBasis")}</th>

@@ -44,7 +44,7 @@ export function RankPreview({ tiers }: { tiers: RankTier[] }) {
               </p>
             </div>
           </div>
-          <dl className="grid grid-cols-2 gap-2 border-t border-border/40 pt-3 text-sm">
+          <dl className="grid grid-cols-2 gap-2 border-t border-[var(--p-hair)] pt-3 text-sm">
             <div>
               <dt className="text-eyebrow">คะแนนขั้นต่ำ</dt>
               <dd className="mt-0.5 font-semibold tabular-nums">

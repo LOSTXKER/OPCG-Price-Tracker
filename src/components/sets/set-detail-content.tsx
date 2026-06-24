@@ -148,7 +148,7 @@ export function SetDetailContent({
     <div className="space-y-4">
       {/* ── Single merged toolbar — sticky ── */}
       <div className="sticky top-0 z-30 -mx-4 bg-background/95 px-4 backdrop-blur-md md:top-[86px] md:-mx-6 md:px-6">
-        <div className="flex flex-col gap-1.5 border-b border-border/40 py-2 sm:flex-row sm:items-center sm:gap-2">
+        <div className="flex flex-col gap-1.5 border-b border-[var(--p-hair)] py-2 sm:flex-row sm:items-center sm:gap-2">
           {/* Left: rarity pills — scrollable */}
           <div className="-mx-1 flex min-w-0 flex-1 items-center gap-1 overflow-x-auto px-1 scrollbar-none">
             <button onClick={() => setActiveRarity("all")} className={pill(activeRarity === "all")}>
@@ -178,7 +178,7 @@ export function SetDetailContent({
           {/* Right: controls — sit on row 2 on mobile, inline on sm+ */}
           <div className="flex shrink-0 items-center justify-end gap-1.5 sm:pl-2">
             {/* Period toggle */}
-            <div className="flex items-center gap-0.5 rounded-full border border-border/50 p-0.5">
+            <div className="flex items-center gap-0.5 rounded-full border border-[var(--p-hair)] p-0.5">
               <TrendingUpDown className="mx-1.5 size-3.5 text-muted-foreground/50" />
               {CHANGE_PERIODS.map((p) => (
                 <button

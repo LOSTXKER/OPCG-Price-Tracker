@@ -68,7 +68,7 @@ export function SetRow({
         "overflow-hidden transition-shadow",
         expanded
           ? "border-border shadow-sm"
-          : "border-border/50 hover:border-border/80",
+          : "border-[var(--p-hair)] hover:border-[var(--p-hair)]",
       )}
     >
       {/* Collapsed Header */}
@@ -122,7 +122,7 @@ export function SetRow({
       >
         <div className="overflow-hidden">
           {expanded && (
-            <div className="border-t border-border/30 px-5 py-4">
+            <div className="border-t border-[var(--p-hair)] px-5 py-4">
               {/* Info bar */}
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -169,10 +169,10 @@ export function SetRow({
               </div>
 
               {/* Table */}
-              <div className="overflow-x-auto rounded-lg border border-border/40">
+              <div className="overflow-x-auto rounded-lg border border-[var(--p-hair)]">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-border/40 bg-muted/30">
+                    <tr className="border-b border-[var(--p-hair)] bg-muted/30">
                       <th className="w-20 px-4 py-2.5 text-left text-eyebrow text-muted-foreground/70">
                         ระดับ
                       </th>
@@ -212,7 +212,7 @@ export function SetRow({
                         <tr
                           key={dr.rarity}
                           className={cn(
-                            "group border-b border-border/10 transition-colors hover:bg-muted/10",
+                            "group border-b border-[var(--p-hair)] transition-colors hover:bg-muted/10",
                             idx % 2 === 1 && "bg-muted/5",
                             dirty && "bg-info-soft",
                             showSeparator &&

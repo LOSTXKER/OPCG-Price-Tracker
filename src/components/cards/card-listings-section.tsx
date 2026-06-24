@@ -94,7 +94,7 @@ export function CardListingsSection({
         </Link>
       </div>
 
-      <div className="divide-y divide-border/30">
+      <div className="divide-y divide-[var(--p-hair)]">
         {preview.map((l, i) => {
           const price = formatByCurrency(l.priceJpy, currency, l.priceThb).primary
           const sellerName = l.user?.displayName ?? t(lang, "anonymous")
@@ -135,7 +135,7 @@ export function CardListingsSection({
       </div>
 
       {hasMore && (
-        <div className="border-t border-border/30 px-4 py-2.5 text-center">
+        <div className="border-t border-[var(--p-hair)] px-4 py-2.5 text-center">
           <Link
             href={`/marketplace?cardCode=${encodeURIComponent(cardCode)}`}
             className="text-xs font-medium text-primary hover:underline"

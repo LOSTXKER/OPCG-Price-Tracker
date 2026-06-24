@@ -355,7 +355,7 @@ function WatchlistContent() {
           />
 
           {filteredEntries.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-border/60 py-10 text-center text-sm text-muted-foreground">
+            <div className="rounded-lg border border-dashed border-[var(--p-hair)] py-10 text-center text-sm text-muted-foreground">
               {t(lang, "noCardsFoundDesc")}
             </div>
           ) : view === "list" ? (

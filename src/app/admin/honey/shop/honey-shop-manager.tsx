@@ -110,10 +110,10 @@ export function HoneyShopManager({ initialItems }: { initialItems: ShopItem[] })
           }
         />
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-border/50">
+        <div className="overflow-x-auto rounded-xl border border-[var(--p-hair)]">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border/50 bg-muted/30">
+              <tr className="border-b border-[var(--p-hair)] bg-muted/30">
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">สินค้า</th>
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">ประเภท</th>
                 <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">ราคา</th>
@@ -128,7 +128,7 @@ export function HoneyShopManager({ initialItems }: { initialItems: ShopItem[] })
                 return (
                   <tr
                     key={item.id}
-                    className="border-b border-border/20 transition-colors hover:bg-muted/20"
+                    className="border-b border-[var(--p-hair)] transition-colors hover:bg-muted/20"
                   >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">

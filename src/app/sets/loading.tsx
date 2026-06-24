@@ -18,13 +18,13 @@ export default function SetsLoading() {
 
       {/* Top valuable skeleton */}
       <Surface variant="panel" className="overflow-hidden">
-        <div className="border-b border-border/60 px-5 py-3.5">
+        <div className="border-b border-[var(--p-hair)] px-5 py-3.5">
           <Skeleton className="h-4 w-40" />
         </div>
         {Array.from({ length: 5 }).map((_, i) => (
           <div
             key={i}
-            className="flex items-center gap-4 border-b border-border/40 px-5 py-3 last:border-0"
+            className="flex items-center gap-4 border-b border-[var(--p-hair)] px-5 py-3 last:border-0"
           >
             <Skeleton className="size-6 rounded-full" />
             <Skeleton className="h-4 w-16" />

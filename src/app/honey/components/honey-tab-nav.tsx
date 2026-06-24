@@ -88,7 +88,7 @@ function DesktopSidebarNav({
           aria-label={t(lang, group.labelKey)}
           className={cn(
             "space-y-0.5 py-2",
-            gi > 0 && "border-t border-border/40",
+            gi > 0 && "border-t border-[var(--p-hair)]",
           )}
         >
           {group.items.map((item) => {

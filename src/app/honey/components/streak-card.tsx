@@ -109,7 +109,7 @@ export function StreakCard({
         }
       />
 
-      <div className="overflow-hidden rounded-xl border bg-card divide-y divide-border/40">
+      <div className="overflow-hidden rounded-xl border bg-card divide-y divide-[var(--p-hair)]">
         <CheckinRow
           lang={lang}
           streak={streak}

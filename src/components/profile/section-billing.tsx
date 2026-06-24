@@ -46,7 +46,7 @@ export function SectionBilling() {
         ) : (
           <>
             {/* Mobile list */}
-            <div className="divide-y divide-border/20 sm:hidden">
+            <div className="divide-y divide-[var(--p-hair)] sm:hidden">
               {invoices.map((inv) => (
                 <div key={inv.id} className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
                   <div className="min-w-0 flex-1 space-y-1">
@@ -108,7 +108,7 @@ export function SectionBilling() {
             <div className="hidden sm:block">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border/20">
+                <tr className="border-b border-[var(--p-hair)]">
                   <th className="py-2 pr-3 text-left text-eyebrow">
                     {t(lang, "invoiceDate")}
                   </th>
@@ -123,7 +123,7 @@ export function SectionBilling() {
               </thead>
               <tbody>
                 {invoices.map((inv) => (
-                  <tr key={inv.id} className="border-b border-border/10 last:border-0">
+                  <tr key={inv.id} className="border-b border-[var(--p-hair)] last:border-0">
                     <td className="py-2.5 pr-3 text-meta">
                       {new Date(inv.created * 1000).toLocaleDateString(getLocale(lang), {
                         year: "numeric",

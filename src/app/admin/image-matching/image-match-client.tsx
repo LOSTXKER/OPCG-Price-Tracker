@@ -187,7 +187,7 @@ export function ImageMatchClient() {
           {Array.from({ length: 3 }).map((_, i) => (
             <div
               key={i}
-              className="h-40 animate-pulse rounded-lg border border-border/30 bg-muted/20"
+              className="h-40 animate-pulse rounded-lg border border-[var(--p-hair)] bg-muted/20"
             />
           ))}
         </div>
@@ -211,7 +211,7 @@ export function ImageMatchClient() {
                 "p-4 transition-colors",
                 saving === card.id
                   ? "border-primary/40 bg-primary/5"
-                  : "border-border/30 bg-card",
+                  : "border-[var(--p-hair)] bg-card",
               )}
             >
               {/* Card header */}

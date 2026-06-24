@@ -306,10 +306,10 @@ export default async function ColorsPage() {
         </p>
 
         <Surface variant="outline" className="overflow-hidden">
-          <div className="border-b border-border/40 px-4 py-2 text-xs font-medium text-muted-foreground">
+          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-xs font-medium text-muted-foreground">
             {t(lang, "guideColorCompareCaption")}
           </div>
-          <div className="grid grid-cols-2 divide-x divide-border/40">
+          <div className="grid grid-cols-2 divide-x divide-[var(--p-hair)]">
             <div className="p-5 text-center">
               <div className="mx-auto flex size-10 items-center justify-center rounded-full bg-red-500">
                 <span className="text-sm font-bold text-white">R</span>
@@ -338,7 +338,7 @@ export default async function ColorsPage() {
           </div>
         </Surface>
 
-        <div className="rounded-xl border border-border/50 bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
+        <div className="rounded-xl border border-[var(--p-hair)] bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
           <p className="font-semibold text-foreground">
             {t(lang, "guideColorExampleHeading")}
           </p>
@@ -431,7 +431,7 @@ export default async function ColorsPage() {
         <h2 className="text-xl font-semibold">
           {t(lang, "guideColorSourcesHeading")}
         </h2>
-        <Surface variant="outline" className="divide-y divide-border/50 text-sm">
+        <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
           {sources.map((src) => (
             <a
               key={src.url}

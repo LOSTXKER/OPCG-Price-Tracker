@@ -103,12 +103,12 @@ export function SourceMarketsTable({
           aria-hidden
         />
       </summary>
-      <div className="border-t border-border/30 px-4 pb-4 pt-3">
+      <div className="border-t border-[var(--p-hair)] px-4 pb-4 pt-3">
         <p className="mb-3 text-meta text-muted-foreground/60">
           {t(lang, "referenceMarketsHint").replace("{n}", String(rows.length))}
         </p>
         {/* Mobile list */}
-        <div className="divide-y divide-border/10 sm:hidden">
+        <div className="divide-y divide-[var(--p-hair)] sm:hidden">
           {rows.map((row, i) => {
             const meta = SOURCE_META[row.source] ?? {
               label: row.source,
@@ -197,7 +197,7 @@ export function SourceMarketsTable({
         <div className="hidden sm:block">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-border/30 text-eyebrow text-muted-foreground/60">
+              <tr className="border-b border-[var(--p-hair)] text-eyebrow text-muted-foreground/60">
                 <th className="pb-2 pr-3 font-medium">#</th>
                 <th className="pb-2 pr-3 font-medium">{t(lang, "sourceRef")}</th>
                 <th className="pb-2 pr-3 text-right font-medium">{t(lang, "marketPrice")}</th>
@@ -219,7 +219,7 @@ export function SourceMarketsTable({
                 return (
                   <tr
                     key={row.source}
-                    className="border-b border-border/10 last:border-0"
+                    className="border-b border-[var(--p-hair)] last:border-0"
                   >
                     <td className="py-2.5 pr-3 font-price text-xs text-muted-foreground/50">
                       {i + 1}

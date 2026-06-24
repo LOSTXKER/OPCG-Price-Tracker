@@ -25,7 +25,7 @@ export function CompareSection({
 }) {
   return (
     <section id={id} className="scroll-mt-24">
-      <header className="mb-2 flex items-end justify-between gap-3 border-b border-border/40 pb-3 sm:pb-4">
+      <header className="mb-2 flex items-end justify-between gap-3 border-b border-[var(--p-hair)] pb-3 sm:pb-4">
         <h2 className="text-h2 sm:text-h1">{title}</h2>
         {action}
       </header>

@@ -157,7 +157,7 @@ export function MobileMenuSheet({
         <SheetTitle className="sr-only">Menu</SheetTitle>
 
         {/* User block */}
-        <div className="border-b border-border/40 p-4">
+        <div className="border-b border-[var(--p-hair)] p-4">
           {authLoaded && authUser ? (
             <div className="flex items-start gap-3">
               <div className="size-10 shrink-0 overflow-hidden rounded-full bg-muted">
@@ -196,7 +196,7 @@ export function MobileMenuSheet({
               <Link
                 href="/login"
                 onClick={close}
-                className="flex-1 rounded-lg border border-border/60 py-2.5 text-center text-sm font-medium transition-colors hover:bg-muted/60"
+                className="flex-1 rounded-lg border border-[var(--p-hair)] py-2.5 text-center text-sm font-medium transition-colors hover:bg-muted/60"
               >
                 {t(language, "login")}
               </Link>
@@ -290,7 +290,7 @@ export function MobileMenuSheet({
               <button
                 type="button"
                 onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-                className="flex items-center gap-1.5 rounded-md border border-border/50 bg-card px-2.5 py-1 text-xs font-medium transition-colors hover:bg-muted/60"
+                className="flex items-center gap-1.5 rounded-md border border-[var(--p-hair)] bg-card px-2.5 py-1 text-xs font-medium transition-colors hover:bg-muted/60"
                 aria-label="Toggle theme"
               >
                 {mounted && resolvedTheme === "dark" ? (
@@ -303,7 +303,7 @@ export function MobileMenuSheet({
           </div>
 
           {/* Footer links */}
-          <div className="mt-3 border-t border-border/40 pt-3">
+          <div className="mt-3 border-t border-[var(--p-hair)] pt-3">
             {authLoaded && authUser && (
               <MenuLink href="/settings" icon={Settings} label={t(language, "settingsTitle")} pathname={pathname} onNav={close} />
             )}
@@ -313,7 +313,7 @@ export function MobileMenuSheet({
 
           {/* Logout */}
           {authLoaded && authUser && (
-            <div className="mt-2 border-t border-border/40 pt-2">
+            <div className="mt-2 border-t border-[var(--p-hair)] pt-2">
               <button
                 type="button"
                 onClick={() => { close(); void onLogout(); }}

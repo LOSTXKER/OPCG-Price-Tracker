@@ -37,7 +37,7 @@ export default function HoneyLayout({
 
   return (
     <div className="space-y-6">
-      <nav className="flex flex-wrap gap-1 rounded-xl border border-border/50 bg-muted/20 p-1.5">
+      <nav className="flex flex-wrap gap-1 rounded-xl border border-[var(--p-hair)] bg-muted/20 p-1.5">
         {HONEY_TABS.map((tab) => {
           const active = isActive(tab.href, tab.exact);
           return (

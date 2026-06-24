@@ -78,11 +78,11 @@ export function CommandSearchTrigger({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="flex h-8 w-52 items-center gap-2 rounded-lg border border-border/50 bg-muted/40 px-2.5 text-sm text-muted-foreground/60 transition-colors hover:bg-muted/60 hover:text-muted-foreground lg:w-60"
+      className="flex h-8 w-52 items-center gap-2 rounded-lg border border-[var(--p-hair)] bg-muted/40 px-2.5 text-sm text-muted-foreground/60 transition-colors hover:bg-muted/60 hover:text-muted-foreground lg:w-60"
     >
       <Search className="size-3.5 shrink-0" />
       <span className="flex-1 text-left">{t(lang, "searchCardsDots")}</span>
-      <kbd className="hidden rounded-md border border-border/60 bg-background px-1.5 py-0.5 font-mono text-micro text-muted-foreground/60 sm:inline">/</kbd>
+      <kbd className="hidden rounded-md border border-[var(--p-hair)] bg-background px-1.5 py-0.5 font-mono text-micro text-muted-foreground/60 sm:inline">/</kbd>
     </button>
   )
 }
@@ -244,7 +244,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
       <div className="relative mx-auto mt-[15vh] w-full max-w-lg px-4 animate-in fade-in-0 slide-in-from-top-2 duration-150">
         <div className="overflow-hidden rounded-2xl bg-popover shadow-2xl ring-1 ring-border/50">
           {/* Search input */}
-          <div className="flex items-center gap-3 border-b border-border/60 px-4">
+          <div className="flex items-center gap-3 border-b border-[var(--p-hair)] px-4">
             <Search className="size-4 shrink-0 text-muted-foreground" />
             <input
               ref={inputRef}
@@ -284,7 +284,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md border border-border/60 bg-muted/40 px-1.5 py-0.5 font-mono text-micro text-muted-foreground"
+              className="rounded-md border border-[var(--p-hair)] bg-muted/40 px-1.5 py-0.5 font-mono text-micro text-muted-foreground"
             >
               ESC
             </button>
