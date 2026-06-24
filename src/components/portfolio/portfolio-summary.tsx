@@ -3,12 +3,12 @@
 import { useId } from "react"
 
 import {
-  Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Surface } from "@/components/ui/surface"
 import { PriceDisplay } from "@/components/shared/price-display"
 import { cn } from "@/lib/utils"
 import { TrendingDown, TrendingUp } from "lucide-react"
@@ -51,7 +51,7 @@ export function PortfolioSummary({
   const chartData = hasHistory ? history : undefined
 
   return (
-    <Card>
+    <Surface variant="outline" className="flex flex-col gap-6 overflow-hidden p-6 text-sm text-card-foreground">
       <CardHeader className="border-b pb-4">
         <CardDescription>{t(lang, "portfolioValue")}</CardDescription>
         <CardTitle className="font-mono text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -152,6 +152,6 @@ export function PortfolioSummary({
           </div>
         )}
       </CardContent>
-    </Card>
+    </Surface>
   )
 }

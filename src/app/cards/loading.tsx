@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 
 export default function CardsLoading() {
   return (
@@ -8,7 +9,7 @@ export default function CardsLoading() {
         <Skeleton className="mt-1 h-4 w-48" />
       </div>
       <Skeleton className="h-12 w-full max-w-xl rounded-xl" />
-      <div className="panel overflow-hidden p-4">
+      <Surface variant="panel" padding="md" className="overflow-hidden">
         {Array.from({ length: 10 }).map((_, i) => (
           <div key={i} className="flex items-center gap-4 border-b border-border/40 py-3 last:border-0">
             <Skeleton className="size-9 rounded" />
@@ -20,7 +21,7 @@ export default function CardsLoading() {
             <Skeleton className="h-3.5 w-12" />
           </div>
         ))}
-      </div>
+      </Surface>
     </div>
   );
 }

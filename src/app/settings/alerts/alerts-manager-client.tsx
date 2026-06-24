@@ -6,6 +6,7 @@ import { Bell, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { AlertEditDialog } from "@/components/alerts/alert-edit-dialog";
 import { AlertCreateDialog } from "@/components/alerts/alert-create-dialog";
@@ -142,12 +143,12 @@ export function AlertsManagerClient() {
 
   if (error) {
     return (
-      <div className="rounded-xl border border-border/40 bg-card p-6 text-center">
+      <Surface variant="outline" className="p-6 text-center">
         <p className="text-sm text-muted-foreground">{error}</p>
         <Button size="sm" variant="outline" className="mt-3" onClick={() => void fetchAlerts()}>
           {t(lang, "retry")}
         </Button>
-      </div>
+      </Surface>
     );
   }
 

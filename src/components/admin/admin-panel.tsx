@@ -1,6 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
+import { Surface } from "@/components/ui/surface";
 import { cn } from "@/lib/utils";
 
 interface AdminPanelProps {
@@ -43,9 +44,11 @@ export function AdminPanel({
 }: AdminPanelProps) {
   const hasHeader = title || description || actions || Icon;
   return (
-    <section
+    <Surface
+      variant="outline"
+      as="section"
       className={cn(
-        "overflow-hidden rounded-xl border border-border/60 bg-card",
+        "overflow-hidden",
         tone === "primary" && "panel-accent",
         tone === "muted" && "bg-muted/20",
         className,
@@ -79,6 +82,6 @@ export function AdminPanel({
           {footer}
         </footer>
       )}
-    </section>
+    </Surface>
   );
 }

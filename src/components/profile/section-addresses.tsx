@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Surface } from "@/components/ui/surface";
 import { ApiError, apiDelete, apiGet, apiPatch, apiPost, apiTry } from "@/lib/api/client";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
@@ -149,7 +150,7 @@ export function SectionAddresses() {
 
       {/* Add/Edit form */}
       {showForm && (
-        <div className="rounded-xl border border-[var(--p-hair)] bg-card p-5 space-y-4">
+        <Surface variant="outline" padding="lg" className="space-y-4">
           <h3 className="text-h5">
             {editingId ? t(lang, "editAddress") : t(lang, "addAddress")}
           </h3>
@@ -187,7 +188,7 @@ export function SectionAddresses() {
               {t(lang, "cancel")}
             </Button>
           </div>
-        </div>
+        </Surface>
       )}
 
       {/* Address list */}
@@ -196,7 +197,7 @@ export function SectionAddresses() {
           <Loader2 className="size-5 animate-spin text-muted-foreground" />
         </div>
       ) : addresses.length === 0 && !showForm ? (
-        <div className="flex flex-col items-center gap-3 rounded-xl border border-[var(--p-hair)] bg-card py-10 text-center">
+        <Surface variant="outline" className="flex flex-col items-center gap-3 py-10 text-center">
           <div className="flex size-12 items-center justify-center rounded-xl bg-muted">
             <MapPin className="size-6 text-muted-foreground/50" />
           </div>
@@ -210,11 +211,11 @@ export function SectionAddresses() {
             <Plus className="size-3.5" />
             {t(lang, "addAddress")}
           </Button>
-        </div>
+        </Surface>
       ) : (
         <div className="space-y-3">
           {addresses.map((addr) => (
-            <div key={addr.id} className="rounded-xl border border-[var(--p-hair)] bg-card p-4">
+            <Surface key={addr.id} variant="outline" padding="md">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
@@ -265,7 +266,7 @@ export function SectionAddresses() {
                   </Button>
                 </div>
               </div>
-            </div>
+            </Surface>
           ))}
         </div>
       )}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ExternalLink, Package, Plus, ShieldCheck, Star, Store } from "lucide-react";
 import { PriceDisplay } from "@/components/shared/price-display";
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -56,18 +57,18 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
       {/* Seller stats */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {dashboardStats.map(({ icon: Icon, label, value, color }) => (
-          <div key={label} className="flex flex-col items-center gap-2 rounded-xl border border-[var(--p-hair)] bg-card p-4 text-center">
+          <Surface key={label} variant="outline" padding="md" className="flex flex-col items-center gap-2 text-center">
             <div className={cn("flex size-9 items-center justify-center rounded-lg", color)}>
               <Icon className="size-4.5" />
             </div>
             <span className="text-xl font-bold leading-none tabular-nums">{value}</span>
             <span className="text-xs leading-tight text-muted-foreground">{label}</span>
-          </div>
+          </Surface>
         ))}
       </div>
 
       {/* Active listings */}
-      <div className="rounded-xl border border-[var(--p-hair)] bg-card">
+      <Surface variant="outline">
         <div className="flex items-center justify-between border-b border-[var(--p-hair)] px-5 py-3">
           <h3 className="text-h5">{t(lang, "myListings")}</h3>
           <Link
@@ -117,10 +118,10 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
             </div>
           )}
         </div>
-      </div>
+      </Surface>
 
       {/* Reputation */}
-      <div className="rounded-xl border border-[var(--p-hair)] bg-card p-5">
+      <Surface variant="outline" padding="lg">
           <div className="flex items-center gap-2">
             <div className="flex size-9 items-center justify-center rounded-lg bg-yellow-100 dark:bg-yellow-500/10">
               <ShieldCheck className="size-4.5 text-yellow-600 dark:text-yellow-400" />
@@ -155,7 +156,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
             {t(lang, "viewPublicProfile")}
             <ExternalLink className="size-3" />
           </Link>
-        </div>
+        </Surface>
     </div>
   );
 }

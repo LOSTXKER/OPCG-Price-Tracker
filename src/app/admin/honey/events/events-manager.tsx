@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Surface } from "@/components/ui/surface";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { adminFetch } from "@/lib/admin/admin-fetch";
 
@@ -68,8 +68,8 @@ export function EventsManager({ initialEvents }: { initialEvents: SeasonalEvent[
           const isLive = ev.isActive && start <= now && end >= now;
 
           return (
-            <Card key={ev.id} size="sm">
-              <CardContent className="flex items-center gap-3">
+            <Surface key={ev.id} variant="outline" className="overflow-hidden p-4">
+              <div className="flex items-center gap-3">
                 <div
                   className={`shrink-0 rounded-lg p-2 ${
                     isLive ? "bg-success-soft" : "bg-muted"
@@ -110,8 +110,8 @@ export function EventsManager({ initialEvents }: { initialEvents: SeasonalEvent[
                     {ev.isActive ? "ปิดใช้งาน" : "เปิดใช้งาน"}
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </Surface>
           );
         })}
         {events.length === 0 && (

@@ -6,6 +6,7 @@ import { Calendar, Eye } from "lucide-react";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
+import { Surface } from "@/components/ui/surface";
 import { BlogEmptyState } from "./blog-empty-state";
 import { BlogPageHeader } from "./blog-page-header";
 
@@ -72,10 +73,13 @@ export default async function BlogPage() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (
-              <Link
+              <Surface
                 key={post.id}
+                as={Link}
+                variant="outline"
+                interactive
                 href={`/blog/${post.slug}`}
-                className="group overflow-hidden rounded-xl border border-border/50 bg-card transition-colors hover:border-border hover:bg-muted/30"
+                className="group overflow-hidden transition-colors"
               >
                 {post.coverImage && (
                   <div className="relative aspect-[16/9] overflow-hidden">
@@ -117,7 +121,7 @@ export default async function BlogPage() {
                     </span>
                   </div>
                 </div>
-              </Link>
+              </Surface>
             ))}
           </div>
         )}

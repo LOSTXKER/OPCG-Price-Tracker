@@ -5,6 +5,7 @@ import { CircleCheck, Loader2, Pencil, X } from "lucide-react";
 import { apiPatch, apiTry } from "@/lib/api/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Surface } from "@/components/ui/surface";
 import { t } from "@/lib/i18n";
 import type { Language } from "@/lib/i18n";
 import type { DbUser } from "./profile-types";
@@ -76,7 +77,7 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
   }, [saving, socials, onUserUpdate]);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border/40 bg-card">
+    <Surface variant="outline" className="overflow-hidden">
       <div className="flex items-start justify-between gap-4 px-5 py-4">
         <div className="min-w-0">
           <h3 className="text-h5">{t(lang, "socialSectionTitle")}</h3>
@@ -155,6 +156,6 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
           </div>
         )
       )}
-    </div>
+    </Surface>
   );
 }

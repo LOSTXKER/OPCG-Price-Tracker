@@ -13,6 +13,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { prisma } from "@/lib/db";
+import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
@@ -228,9 +229,10 @@ export default async function GuideSetsPage() {
             if (!info) return null;
             const Icon = info.icon;
             return (
-              <div
+              <Surface
                 key={type}
-                className="rounded-xl border border-border/50 bg-card p-4"
+                variant="outline"
+                className="p-4"
               >
                 <div
                   className="flex size-9 items-center justify-center rounded-lg"
@@ -245,7 +247,7 @@ export default async function GuideSetsPage() {
                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                   {info.description}
                 </p>
-              </div>
+              </Surface>
             );
           })}
         </div>
@@ -261,9 +263,10 @@ export default async function GuideSetsPage() {
         </p>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {packSizes.map((item) => (
-            <div
+            <Surface
               key={item.label}
-              className="rounded-xl border border-border/50 bg-card p-4 text-center"
+              variant="outline"
+              className="p-4 text-center"
             >
               <p
                 className="text-xl font-bold"
@@ -274,7 +277,7 @@ export default async function GuideSetsPage() {
               <p className="mt-1 text-meta">
                 {item.label}
               </p>
-            </div>
+            </Surface>
           ))}
         </div>
         <div className="flex items-start gap-2.5 rounded-lg border border-blue-500/20 bg-blue-500/5 px-4 py-3">
@@ -295,9 +298,10 @@ export default async function GuideSetsPage() {
         </p>
         <div className="space-y-2">
           {cardCodes.map((item) => (
-            <div
+            <Surface
               key={item.code}
-              className="flex items-center gap-3 rounded-lg border border-border/50 bg-card px-4 py-3"
+              variant="outline"
+              className="flex items-center gap-3 px-4 py-3"
             >
               <code
                 className="shrink-0 rounded-md px-2 py-1 font-mono text-sm font-bold"
@@ -309,7 +313,7 @@ export default async function GuideSetsPage() {
                 {item.code}
               </code>
               <p className="text-sm text-muted-foreground">{item.desc}</p>
-            </div>
+            </Surface>
           ))}
         </div>
       </section>
@@ -343,7 +347,7 @@ export default async function GuideSetsPage() {
               >
                 {info.label} ({sets.length})
               </h3>
-              <div className="divide-y divide-border/30 rounded-xl border border-border/50 bg-card">
+              <Surface variant="outline" className="divide-y divide-border/30">
                 {sets.map((set) => (
                   <Link
                     key={set.code}
@@ -393,7 +397,7 @@ export default async function GuideSetsPage() {
                     </span>
                   </Link>
                 ))}
-              </div>
+              </Surface>
             </div>
           );
         })}
@@ -410,7 +414,7 @@ export default async function GuideSetsPage() {
       {/* ── 6. Sources ── */}
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">{t(lang, "guideSetSourcesHeading")}</h2>
-        <div className="divide-y divide-border/50 rounded-xl border border-border/50 bg-card text-sm">
+        <Surface variant="outline" className="divide-y divide-border/50 text-sm">
           {sources.map((src) =>
             "internal" in src && src.internal ? (
               <Link
@@ -440,7 +444,7 @@ export default async function GuideSetsPage() {
               </a>
             )
           )}
-        </div>
+        </Surface>
       </section>
 
       {/* ── Navigation ── */}

@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 
 export default function HomeLoading() {
   return (
@@ -6,21 +7,21 @@ export default function HomeLoading() {
       {/* Stat widgets */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="panel p-4">
+          <Surface key={i} variant="panel" padding="md">
             <Skeleton className="mb-2 h-3 w-20" />
             <Skeleton className="h-8 w-24" />
-          </div>
+          </Surface>
         ))}
       </div>
 
       {/* Featured + Gainers */}
       <div className="grid gap-4 lg:grid-cols-12">
-        <div className="panel p-5 lg:col-span-5">
+        <Surface variant="panel" padding="lg" className="lg:col-span-5">
           <Skeleton className="mb-3 h-4 w-28" />
           <Skeleton className="mx-auto aspect-[63/88] w-full max-w-[200px] rounded-lg" />
           <Skeleton className="mx-auto mt-3 h-4 w-32" />
-        </div>
-        <div className="panel p-5 lg:col-span-7">
+        </Surface>
+        <Surface variant="panel" padding="lg" className="lg:col-span-7">
           <Skeleton className="mb-3 h-4 w-28" />
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="flex items-center gap-3 py-2.5">
@@ -33,13 +34,13 @@ export default function HomeLoading() {
               <Skeleton className="h-4 w-16" />
             </div>
           ))}
-        </div>
+        </Surface>
       </div>
 
       {/* Losers + Viewed */}
       <div className="grid gap-4 lg:grid-cols-2">
         {[0, 1].map((i) => (
-          <div key={i} className="panel p-5">
+          <Surface key={i} variant="panel" padding="lg">
             <Skeleton className="mb-3 h-4 w-28" />
             {Array.from({ length: 5 }).map((_, j) => (
               <div key={j} className="flex items-center gap-3 py-2.5">
@@ -49,7 +50,7 @@ export default function HomeLoading() {
                 <Skeleton className="h-4 w-16" />
               </div>
             ))}
-          </div>
+          </Surface>
         ))}
       </div>
     </div>

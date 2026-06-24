@@ -8,6 +8,7 @@ import {
   Inbox,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 import { cn } from "@/lib/utils";
 
 /* ── Types ── */
@@ -155,9 +156,9 @@ export function AdminDataTable<T>({
   const mobileTableHidden = showMobileFallback ? "hidden sm:table" : "table";
 
   return (
-    <div
+    <Surface
+      variant="outline"
       className={cn(
-        "rounded-xl border border-border/50 bg-card",
         showMobileFallback ? "sm:overflow-x-auto" : "overflow-x-auto",
       )}
     >
@@ -341,7 +342,7 @@ export function AdminDataTable<T>({
           )}
         </div>
       )}
-    </div>
+    </Surface>
   );
 }
 
@@ -523,4 +524,3 @@ function DataTableRow<T>({
     </>
   );
 }
-

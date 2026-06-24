@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 
 export default function Loading() {
   return (
@@ -10,11 +11,11 @@ export default function Loading() {
       </div>
       <Skeleton className="h-8 w-44" />
       <div className="grid gap-4 lg:grid-cols-2">
-        <div className="panel space-y-3 p-4">
+        <Surface variant="panel" className="space-y-3 p-4">
           <Skeleton className="h-10 w-full" />
           <Skeleton className="h-32 w-full" />
           <Skeleton className="h-10 w-full" />
-        </div>
+        </Surface>
         <Skeleton className="panel h-[200px]" />
       </div>
     </div>

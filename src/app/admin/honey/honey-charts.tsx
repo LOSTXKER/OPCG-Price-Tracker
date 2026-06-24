@@ -15,6 +15,7 @@ import {
   Legend,
 } from "recharts";
 import { cn } from "@/lib/utils";
+import { Surface } from "@/components/ui/surface";
 import { getTypeInfo } from "./honey-type-labels";
 
 interface DailyData {
@@ -55,7 +56,7 @@ export function HoneyCharts({ dailyData, typeCounts }: HoneyChartsProps) {
 
   return (
     <div className="grid gap-4 lg:grid-cols-5">
-      <div className="rounded-xl border border-border/50 bg-card p-5 lg:col-span-3">
+      <Surface variant="outline" padding="lg" className="lg:col-span-3">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold text-foreground">เทรนด์ Honey รายวัน</h3>
           <div className="flex gap-1 rounded-lg bg-muted/50 p-0.5">
@@ -150,9 +151,9 @@ export function HoneyCharts({ dailyData, typeCounts }: HoneyChartsProps) {
             </AreaChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </Surface>
 
-      <div className="rounded-xl border border-border/50 bg-card p-5 lg:col-span-2">
+      <Surface variant="outline" padding="lg" className="lg:col-span-2">
         <h3 className="text-sm font-semibold text-foreground">ธุรกรรมตามประเภท</h3>
         <div className="mt-4 h-56">
           <ResponsiveContainer width="100%" height="100%">
@@ -203,7 +204,7 @@ export function HoneyCharts({ dailyData, typeCounts }: HoneyChartsProps) {
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </Surface>
     </div>
   );
 }

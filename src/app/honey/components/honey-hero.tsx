@@ -2,6 +2,7 @@
 
 import { Calendar, CheckCircle2, Flame, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { HoneyLevel, ActiveEvent } from "../types";
@@ -30,7 +31,7 @@ export function HoneyHero({
     : 100;
 
   return (
-    <div className="panel overflow-hidden">
+    <Surface variant="panel" className="overflow-hidden">
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3 px-5 py-4 sm:px-6">
         {/* Balance */}
         <div className="flex items-center gap-2.5">
@@ -102,6 +103,6 @@ export function HoneyHero({
           />
         </div>
       )}
-    </div>
+    </Surface>
   );
 }

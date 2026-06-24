@@ -179,7 +179,7 @@ function PortfolioContent() {
   return (
     <div className="flex flex-col gap-5 md:flex-row md:gap-6">
       {/* ──── Mobile portfolio picker ──── */}
-      <div className="panel flex items-center overflow-hidden rounded-xl md:hidden">
+      <Surface variant="panel" className="flex items-center overflow-hidden md:hidden">
         <button
           onClick={() => setSidebarSheetOpen(true)}
           className="flex min-w-0 flex-1 items-center gap-3 px-3.5 py-3 transition-colors active:bg-muted/40"
@@ -226,7 +226,7 @@ function PortfolioContent() {
             <Eye className="size-4" />
           )}
         </button>
-      </div>
+      </Surface>
 
       {/* ──── Mobile sidebar sheet ──── */}
       <Sheet open={sidebarSheetOpen} onOpenChange={setSidebarSheetOpen}>
@@ -281,7 +281,7 @@ function PortfolioContent() {
       {/* ──── Desktop sidebar (consolidated single panel) ──── */}
       <aside className="hidden w-52 shrink-0 lg:block xl:w-56">
         <div className="lg:sticky lg:top-20">
-          <div className="panel overflow-hidden rounded-xl">
+          <Surface variant="panel" className="overflow-hidden">
             {/* Overview section */}
             <div className="p-4 pb-3">
               <div className="flex items-center justify-between">
@@ -359,7 +359,7 @@ function PortfolioContent() {
               />
             </div>
 
-          </div>
+          </Surface>
         </div>
       </aside>
 

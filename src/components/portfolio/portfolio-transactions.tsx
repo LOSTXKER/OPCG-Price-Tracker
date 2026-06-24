@@ -269,7 +269,7 @@ function SummaryCard({
   valueClass?: string
 }) {
   return (
-    <div className="panel flex items-center gap-3 rounded-xl px-4 py-3">
+    <Surface variant="panel" className="flex items-center gap-3 px-4 py-3">
       <div className={cn("flex size-8 shrink-0 items-center justify-center rounded-lg", accent)}>
         {icon}
       </div>
@@ -277,7 +277,7 @@ function SummaryCard({
         <p className="text-label text-muted-foreground">{label}</p>
         <p className={cn("font-price text-sm font-semibold tabular-nums", valueClass)}>{value}</p>
       </div>
-    </div>
+    </Surface>
   )
 }
 

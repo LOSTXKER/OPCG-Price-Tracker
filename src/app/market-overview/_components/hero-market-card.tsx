@@ -4,6 +4,7 @@ import { ArrowDown, ArrowRight, ArrowUp, Layers, Package, TrendingUp } from "luc
 import type { LucideIcon } from "lucide-react"
 
 import { Price } from "@/components/shared/price-inline"
+import { Surface } from "@/components/ui/surface"
 import { cn } from "@/lib/utils"
 import { t, type Language } from "@/lib/i18n"
 import { formatCount } from "@/lib/utils/currency"
@@ -36,7 +37,7 @@ export function MarketSnapshot({
   const flatPct = Math.max(0, 100 - upPct - downPct)
 
   return (
-    <div className="panel overflow-hidden">
+    <Surface variant="panel" className="overflow-hidden">
       {/* Top: hero metric + sentiment gauge */}
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10">
         {/* Headline value */}
@@ -163,7 +164,7 @@ export function MarketSnapshot({
           value={formatCount(setCount)}
         />
       </div>
-    </div>
+    </Surface>
   )
 }
 

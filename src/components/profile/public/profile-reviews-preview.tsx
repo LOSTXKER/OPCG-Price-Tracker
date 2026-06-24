@@ -3,6 +3,7 @@
 import { ChevronRight, Star } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Surface } from "@/components/ui/surface";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { formatRelativeAgo } from "@/lib/utils/relative-time";
@@ -92,7 +93,7 @@ export function ProfileReviewsPreview({
 
 function ReviewCard({ review, lang }: { review: SerializedReview; lang: Language }) {
   return (
-    <article className="rounded-xl border border-border/50 bg-card/40 p-3.5 transition-colors hover:border-border">
+    <Surface variant="outline" as="article" className="p-3.5 transition-colors hover:border-border">
       <header className="flex items-center gap-2">
         <Avatar className="size-7 shrink-0">
           {review.reviewer.avatarUrl ? (
@@ -129,6 +130,6 @@ function ReviewCard({ review, lang }: { review: SerializedReview; lang: Language
           {review.comment}
         </p>
       )}
-    </article>
+    </Surface>
   );
 }

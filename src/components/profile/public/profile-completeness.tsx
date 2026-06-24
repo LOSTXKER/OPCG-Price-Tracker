@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { ProfileSocialLinks } from "@/lib/profile/load-public-profile";
@@ -150,12 +151,14 @@ export function ProfileCompleteness({
   };
 
   return (
-    <section
+    <Surface
+      as="section"
+      variant="outline"
       className={cn(
         // Quiet container — subtle border + plain card surface. The progress
         // ring already provides all the colour this block needs; piling a
         // gradient + heavier border on top just makes the page feel busier.
-        "mt-6 overflow-hidden rounded-2xl border border-border/60 bg-card/40",
+        "mt-6 overflow-hidden rounded-2xl bg-card/40",
       )}
       aria-label={t(lang, "completenessTitle")}
     >
@@ -235,7 +238,7 @@ export function ProfileCompleteness({
           </div>
         </div>
       </div>
-    </section>
+    </Surface>
   );
 }
 

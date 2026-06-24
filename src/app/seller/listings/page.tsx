@@ -29,6 +29,7 @@ import {
 import { PageHeader } from "@/components/layout/page-header";
 import { LoadingState } from "@/components/shared/loading-state";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import { Surface } from "@/components/ui/surface";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { t, type TranslationKey } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
@@ -246,9 +247,12 @@ export default function SellerListingsPage() {
               const isLoading = actionLoading === listing.id;
 
               return (
-                <div
+                <Surface
                   key={listing.id}
-                  className="panel flex items-center gap-4 rounded-xl p-3 transition-colors ease-chrome hover:bg-muted/70"
+                  variant="panel"
+                  padding="sm"
+                  interactive
+                  className="flex items-center gap-4 transition-colors ease-chrome"
                 >
                   {/* Card Image */}
                   {listing.card.imageUrl ? (
@@ -367,7 +371,7 @@ export default function SellerListingsPage() {
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                </div>
+                </Surface>
               );
             })}
           </div>

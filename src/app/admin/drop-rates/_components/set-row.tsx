@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Surface } from "@/components/ui/surface";
 import { cn } from "@/lib/utils";
 import type { SetData } from "./types";
 import type { DropRatesEditor } from "./use-drop-rates-editor";
@@ -61,9 +62,10 @@ export function SetRow({
     rarityCounts[`${setId}-${rarity}-${isParallel}`] ?? 0;
 
   return (
-    <div
+    <Surface
+      variant="outline"
       className={cn(
-        "overflow-hidden rounded-xl border bg-card transition-shadow",
+        "overflow-hidden transition-shadow",
         expanded
           ? "border-border shadow-sm"
           : "border-border/50 hover:border-border/80",
@@ -322,6 +324,6 @@ export function SetRow({
           )}
         </div>
       </div>
-    </div>
+    </Surface>
   );
 }

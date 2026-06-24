@@ -194,7 +194,7 @@ export default function SellerOrderDetailPage() {
       )}
 
       {/* Product info */}
-      <div className="panel flex items-center gap-4 rounded-xl p-4">
+      <Surface variant="panel" padding="md" className="flex items-center gap-4">
         {order.listing.card.imageUrl ? (
           <Image
             src={order.listing.card.imageUrl}
@@ -223,10 +223,10 @@ export default function SellerOrderDetailPage() {
             </span>
           </div>
         </div>
-      </div>
+      </Surface>
 
       {/* Buyer info */}
-      <div className="panel rounded-xl p-4">
+      <Surface variant="panel" padding="md">
         <h2 className="mb-3 text-h3">{t(lang, "sellOrderBuyerInfo")}</h2>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -253,10 +253,10 @@ export default function SellerOrderDetailPage() {
             {t(lang, "sellOrderChat")}
           </Button>
         </div>
-      </div>
+      </Surface>
 
       {/* Status Timeline */}
-      <div className="panel rounded-xl p-4">
+      <Surface variant="panel" padding="md">
         <h2 className="mb-4 text-h3">{t(lang, "sellOrderStatusTitle")}</h2>
         <div className="space-y-4">
           {timelineSteps.map((step, i) => {
@@ -330,11 +330,11 @@ export default function SellerOrderDetailPage() {
             </div>
           )}
         </div>
-      </div>
+      </Surface>
 
       {/* Shipping info (if shipped) */}
       {order.trackingNumber && (
-        <div className="panel rounded-xl p-4">
+        <Surface variant="panel" padding="md">
           <h2 className="mb-3 text-h3">{t(lang, "sellOrderShippingInfo")}</h2>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
@@ -350,12 +350,12 @@ export default function SellerOrderDetailPage() {
               </span>
             </div>
           </div>
-        </div>
+        </Surface>
       )}
 
       {/* Action Panel */}
       {order.status === "PAID" && (
-        <div className="panel space-y-4 rounded-xl p-4">
+        <Surface variant="panel" padding="md" className="space-y-4">
           <h2 className="text-h3">{t(lang, "sellOrderShipTitle")}</h2>
           <p className="text-sm text-muted-foreground">
             {t(lang, "sellOrderPaidPrompt")}
@@ -397,11 +397,11 @@ export default function SellerOrderDetailPage() {
             )}
             {t(lang, "sellOrderMarkShipped")}
           </Button>
-        </div>
+        </Surface>
       )}
 
       {order.status === "AWAITING_PAYMENT" && (
-        <div className="panel space-y-3 rounded-xl p-4">
+        <Surface variant="panel" padding="md" className="space-y-3">
           <p className="text-sm text-muted-foreground">
             {t(lang, "sellOrderAwaitingPaymentPrompt")}
           </p>
@@ -415,19 +415,19 @@ export default function SellerOrderDetailPage() {
             )}
             {t(lang, "sellOrderCancelOrder")}
           </Button>
-        </div>
+        </Surface>
       )}
 
       {order.status === "SHIPPED" && (
-        <div className="panel rounded-xl p-4">
+        <Surface variant="panel" padding="md">
           <p className="text-sm text-muted-foreground">
             {t(lang, "sellOrderShippedPrompt")}
           </p>
-        </div>
+        </Surface>
       )}
 
       {order.status === "DELIVERED" && (
-        <div className="panel rounded-xl p-4">
+        <Surface variant="panel" padding="md">
           <p className="text-sm text-muted-foreground">
             {t(lang, "sellOrderDeliveredPrompt")}
           </p>
@@ -441,7 +441,7 @@ export default function SellerOrderDetailPage() {
             )}
             {t(lang, "sellOrderConfirmComplete")}
           </Button>
-        </div>
+        </Surface>
       )}
     </div>
   );

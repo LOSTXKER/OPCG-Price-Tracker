@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Crown, Gift, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { ShopItem } from "../types";
@@ -36,7 +37,7 @@ export function ShopTab({
   };
 
   return (
-    <div className="panel overflow-hidden">
+    <Surface variant="panel" className="overflow-hidden">
       <div className="flex items-center justify-between border-b px-4 py-3.5">
         <h2 className="text-h3">{t(lang, "honeyShop")}</h2>
         <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold tabular-nums text-primary">
@@ -66,7 +67,7 @@ export function ShopTab({
             const imageUrl = typeof item.value?.imageUrl === "string" ? item.value.imageUrl : null;
 
             return (
-              <div key={item.id} className="flex flex-col rounded-xl border p-4">
+              <Surface key={item.id} variant="outline" padding="md" className="flex flex-col">
                 <div className="mb-3 flex items-center gap-3">
                   {imageUrl ? (
                     <img
@@ -109,11 +110,11 @@ export function ShopTab({
                     {t(lang, "redeemItem")}
                   </Button>
                 </div>
-              </div>
+              </Surface>
             );
           })}
         </div>
       )}
-    </div>
+    </Surface>
   );
 }

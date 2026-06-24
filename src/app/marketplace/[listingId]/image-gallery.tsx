@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Surface } from "@/components/ui/surface";
 import { cn } from "@/lib/utils";
 
 export interface GalleryImage {
@@ -28,14 +29,15 @@ export function ImageGallery({ images, className }: ImageGalleryProps) {
 
   if (images.length === 0) {
     return (
-      <div
+      <Surface
+        variant="panel"
         className={cn(
-          "panel bg-muted flex aspect-[63/88] items-center justify-center",
+          "bg-muted flex aspect-[63/88] items-center justify-center",
           className
         )}
       >
         <span className="text-muted-foreground text-sm">No image</span>
-      </div>
+      </Surface>
     );
   }
 

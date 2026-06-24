@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 
 export default function Loading() {
   return (
@@ -14,7 +15,7 @@ export default function Loading() {
         <Skeleton className="h-7 w-36 rounded-full" />
       </div>
 
-      <div className="panel overflow-hidden">
+      <Surface variant="panel" className="overflow-hidden">
         <div className="grid gap-6 p-6 lg:grid-cols-2">
           <div className="space-y-2">
             <Skeleton className="h-3 w-20" />
@@ -35,7 +36,7 @@ export default function Loading() {
             </div>
           ))}
         </div>
-      </div>
+      </Surface>
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
@@ -44,14 +45,14 @@ export default function Loading() {
         </div>
         <div className="grid grid-cols-3 gap-2 lg:grid-cols-6">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="panel overflow-hidden">
+            <Surface key={i} variant="panel" className="overflow-hidden">
               <Skeleton className="aspect-[63/88] w-full rounded-none" />
               <div className="space-y-2 p-2">
                 <Skeleton className="h-3 w-20" />
                 <Skeleton className="h-3 w-16" />
                 <Skeleton className="h-3 w-14" />
               </div>
-            </div>
+            </Surface>
           ))}
         </div>
       </div>

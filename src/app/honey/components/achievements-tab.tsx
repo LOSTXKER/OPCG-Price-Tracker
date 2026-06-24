@@ -6,6 +6,7 @@ import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { AchievementItem } from "../types";
 import { localizedName } from "../types";
+import { Surface } from "@/components/ui/surface";
 import { EmptyState } from "./empty-state";
 import { FilterTabs } from "./_shared/filter-tabs";
 
@@ -39,7 +40,7 @@ export function AchievementsTab({
   const earnedCount = achievements.filter((a) => a.earned).length;
 
   return (
-    <div className="panel overflow-hidden">
+    <Surface variant="panel" className="overflow-hidden">
       <div className="flex items-center justify-between border-b px-4 py-3.5">
         <h2 className="text-h3">{t(lang, "achievements")}</h2>
         <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold tabular-nums text-primary">
@@ -133,6 +134,6 @@ export function AchievementsTab({
           })}
         </div>
       )}
-    </div>
+    </Surface>
   );
 }

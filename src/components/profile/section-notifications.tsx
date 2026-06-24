@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
 import { apiPatch, apiTry } from "@/lib/api/client";
 import { useUIStore } from "@/stores/ui-store";
 import { clientEnv } from "@/lib/env";
@@ -250,7 +251,7 @@ export function SectionNotifications({ settings, onReload }: Props) {
       )}
 
       {settings.lineConnected && (
-        <div className="flex items-center justify-between rounded-xl border border-border/40 bg-card px-5 py-3">
+        <Surface variant="outline" className="flex items-center justify-between px-5 py-3">
           <div className="flex items-center gap-3">
             <MessageCircle className="size-4 text-green-600 dark:text-green-400" />
             <Badge variant="secondary" className="text-xs text-green-600 dark:text-green-400">
@@ -260,7 +261,7 @@ export function SectionNotifications({ settings, onReload }: Props) {
           <Button size="sm" variant="ghost" className="h-7 text-meta hover:text-destructive" onClick={() => void handleDisconnectLine()}>
             {t(lang, "disconnectLine")}
           </Button>
-        </div>
+        </Surface>
       )}
 
       {/* Notification type cards */}

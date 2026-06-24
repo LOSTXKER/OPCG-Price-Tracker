@@ -5,6 +5,7 @@ import { Trash2 } from "lucide-react"
 import { PriceDisplay } from "@/components/shared/price-display"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Surface } from "@/components/ui/surface"
 import { cn } from "@/lib/utils"
 import { formatPct } from "@/lib/utils/currency"
 
@@ -53,7 +54,7 @@ export function PortfolioItem({
   const detailHref = `/cards/${encodeURIComponent(cardCode)}`
 
   return (
-    <div className="panel flex gap-3 p-3">
+    <Surface variant="panel" padding="sm" className="flex gap-3">
       <Link
         href={detailHref}
         className="bg-muted relative h-[4.5rem] w-12 shrink-0 overflow-hidden rounded-md"
@@ -154,6 +155,6 @@ export function PortfolioItem({
           <p className="text-muted-foreground mt-2 text-xs">P&amp;L unavailable</p>
         )}
       </div>
-    </div>
+    </Surface>
   )
 }

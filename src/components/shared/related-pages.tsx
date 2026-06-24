@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ChevronRight, type LucideIcon } from "lucide-react";
 
+import { Surface } from "@/components/ui/surface";
+
 export interface RelatedPageItem {
   href: string;
   icon: LucideIcon;
@@ -20,10 +22,13 @@ export function RelatedPages({
       <h2 className="text-h2">{title}</h2>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => (
-          <Link
+          <Surface
+            as={Link}
+            variant="outline"
+            interactive
             key={item.href}
             href={item.href}
-            className="group ease-chrome flex items-start gap-3 rounded-xl border border-[var(--p-hair)] bg-card p-4 transition-all hover:border-primary/30 hover:bg-muted/70"
+            className="group ease-chrome flex items-start gap-3 p-4 transition-all hover:border-primary/30"
           >
             <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
               <item.icon className="size-[18px] text-primary" />
@@ -37,7 +42,7 @@ export function RelatedPages({
               </p>
             </div>
             <ChevronRight className="mt-1 size-4 shrink-0 text-muted-foreground/40 transition-transform group-hover:translate-x-0.5" />
-          </Link>
+          </Surface>
         ))}
       </div>
     </section>

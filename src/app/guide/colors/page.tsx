@@ -8,6 +8,7 @@ import {
   Info,
 } from "lucide-react";
 import { prisma } from "@/lib/db";
+import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
@@ -215,9 +216,10 @@ export default async function ColorsPage() {
           {colors.map((color) => {
             const leaders = leadersByColor[color.name] ?? [];
             return (
-              <div
+              <Surface
                 key={color.name}
-                className="overflow-hidden rounded-xl border bg-card"
+                variant="outline"
+                className="overflow-hidden"
                 style={{ borderColor: `${color.hex}25` }}
               >
                 <div className="flex">
@@ -284,7 +286,7 @@ export default async function ColorsPage() {
                     )}
                   </div>
                 </div>
-              </div>
+              </Surface>
             );
           })}
         </div>
@@ -303,7 +305,7 @@ export default async function ColorsPage() {
           {t(lang, "guideColorMulticolorIntroP1b")}
         </p>
 
-        <div className="overflow-hidden rounded-xl border border-border/50 bg-card">
+        <Surface variant="outline" className="overflow-hidden">
           <div className="border-b border-border/40 px-4 py-2 text-xs font-medium text-muted-foreground">
             {t(lang, "guideColorCompareCaption")}
           </div>
@@ -334,7 +336,7 @@ export default async function ColorsPage() {
               </p>
             </div>
           </div>
-        </div>
+        </Surface>
 
         <div className="rounded-xl border border-border/50 bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
           <p className="font-semibold text-foreground">
@@ -404,7 +406,7 @@ export default async function ColorsPage() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-border/50 bg-card p-5">
+        <Surface variant="outline" className="p-5">
           <p className="text-sm font-semibold">
             {t(lang, "guideColorDeckSummaryHeading")}
           </p>
@@ -421,7 +423,7 @@ export default async function ColorsPage() {
               </div>
             ))}
           </div>
-        </div>
+        </Surface>
       </section>
 
       {/* ── 5. Sources ── */}
@@ -429,7 +431,7 @@ export default async function ColorsPage() {
         <h2 className="text-xl font-semibold">
           {t(lang, "guideColorSourcesHeading")}
         </h2>
-        <div className="divide-y divide-border/50 rounded-xl border border-border/50 bg-card text-sm">
+        <Surface variant="outline" className="divide-y divide-border/50 text-sm">
           {sources.map((src) => (
             <a
               key={src.url}
@@ -445,7 +447,7 @@ export default async function ColorsPage() {
               <ExternalLink className="size-4 shrink-0 text-muted-foreground/40" />
             </a>
           ))}
-        </div>
+        </Surface>
       </section>
 
       {/* ── Navigation ── */}

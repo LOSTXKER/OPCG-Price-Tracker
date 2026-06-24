@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 
+import { Surface } from "@/components/ui/surface";
 import { cn } from "@/lib/utils";
 
 /**
@@ -46,14 +47,16 @@ export function TabSection({
   const hasHeader = title != null || meta != null || trailing != null;
 
   return (
-    <section
+    <Surface
+      as="section"
+      variant="outline"
       className={cn(
         // The tab nav directly above already labels this section, so the
         // tab body intentionally drops the `panel-accent` orange stripe
         // and the `section-heading` left bar — both repeat what the active
         // tab is already shouting. We keep a soft card surface so the
         // grid sits on a defined ground without competing with the tabs.
-        "rounded-2xl border border-border/50 bg-card/40 p-4 md:p-5",
+        "p-4 md:p-5",
         className,
       )}
     >
@@ -92,6 +95,6 @@ export function TabSection({
       >
         {children}
       </div>
-    </section>
+    </Surface>
   );
 }

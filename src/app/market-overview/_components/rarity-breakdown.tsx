@@ -5,6 +5,7 @@ import { ChevronDown } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
+import { Surface } from "@/components/ui/surface"
 import { cn } from "@/lib/utils"
 import { RARITY_BAR_COLOR } from "@/lib/constants/rarities"
 import { t, type Language } from "@/lib/i18n"
@@ -43,7 +44,7 @@ export function RarityBreakdown({
   const maxValue = Math.max(...rows.map((r) => r.totalValue), 1)
 
   return (
-    <div className="panel overflow-hidden">
+    <Surface variant="panel" className="overflow-hidden">
       <div className="flex items-end justify-between gap-3 border-b border-border/40 px-5 py-3.5">
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
@@ -131,6 +132,6 @@ export function RarityBreakdown({
           />
         </button>
       )}
-    </div>
+    </Surface>
   )
 }

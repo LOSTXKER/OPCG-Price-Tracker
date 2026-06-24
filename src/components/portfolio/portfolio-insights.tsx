@@ -4,6 +4,7 @@ import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
 import { Layers, TrendingUp, Calculator, Target } from "lucide-react"
+import { Surface } from "@/components/ui/surface"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
@@ -68,7 +69,7 @@ export function PortfolioInsights({ history, allocation }: PortfolioInsightsProp
       {/* KPI cards — minimal, matches hero language */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {KPI_CONFIG.map(({ key, icon: Icon }, i) => (
-          <div key={key} className="panel rounded-xl p-4 ring-1 ring-border/30">
+          <Surface key={key} variant="panel" className="p-4 ring-1 ring-border/30">
             <div className="flex items-center gap-1.5">
               <Icon className="size-3.5 text-muted-foreground/60" />
               <p className="text-eyebrow">{t(lang, key)}</p>
@@ -76,20 +77,20 @@ export function PortfolioInsights({ history, allocation }: PortfolioInsightsProp
             <p className={`mt-1.5 text-xl font-bold tabular-nums sm:text-2xl ${kpiIsPrice[i] ? "font-price" : ""}`}>
               {kpiValues[i]}
             </p>
-          </div>
+          </Surface>
         ))}
       </div>
 
       {/* History chart */}
-      <div className="panel rounded-xl p-4 sm:p-5">
+      <Surface variant="panel" className="p-4 sm:p-5">
         <p className="mb-4 text-eyebrow">
           {t(lang, "history")}
         </p>
         <PortfolioHistoryChart data={history} />
-      </div>
+      </Surface>
 
       {/* Allocation + Holdings merged panel */}
-      <div className="panel rounded-xl p-4 sm:p-5">
+      <Surface variant="panel" className="p-4 sm:p-5">
         <p className="mb-4 text-eyebrow">
           {t(lang, "allocation")}
         </p>
@@ -158,7 +159,7 @@ export function PortfolioInsights({ history, allocation }: PortfolioInsightsProp
             </div>
           )}
         </div>
-      </div>
+      </Surface>
     </div>
   )
 }

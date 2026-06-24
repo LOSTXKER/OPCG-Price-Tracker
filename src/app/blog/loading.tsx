@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 
 export default function BlogLoading() {
   return (
@@ -7,14 +8,14 @@ export default function BlogLoading() {
       <Skeleton className="h-4 w-64" />
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="panel overflow-hidden">
+          <Surface key={i} variant="panel" className="overflow-hidden">
             <Skeleton className="h-40 w-full" />
             <div className="space-y-2 p-4">
               <Skeleton className="h-5 w-3/4" />
               <Skeleton className="h-3 w-full" />
               <Skeleton className="h-3 w-2/3" />
             </div>
-          </div>
+          </Surface>
         ))}
       </div>
     </div>

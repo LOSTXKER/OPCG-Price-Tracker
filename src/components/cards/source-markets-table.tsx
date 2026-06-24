@@ -8,6 +8,7 @@ import { relativeTime } from "@/lib/utils/time"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Surface } from "@/components/ui/surface"
 import { yuyuteiSearch, snkrdunkSearch } from "@/lib/constants/source-markets"
 
 type SourceMeta = {
@@ -87,7 +88,7 @@ export function SourceMarketsTable({
   if (rows.length === 0) return null
 
   return (
-    <details className="group panel overflow-hidden">
+    <Surface as="details" variant="panel" className="group overflow-hidden">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 hover:bg-muted/30">
         <div className="min-w-0 flex items-center gap-2">
           <span className="text-eyebrow text-muted-foreground/70">
@@ -311,6 +312,6 @@ export function SourceMarketsTable({
           </table>
         </div>
       </div>
-    </details>
+    </Surface>
   )
 }

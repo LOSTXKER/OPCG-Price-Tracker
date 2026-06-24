@@ -265,9 +265,13 @@ export default function SellerDashboard() {
 
       {/* Quick Actions */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <Link
+        <Surface
+          as={Link}
+          variant="panel"
+          padding="md"
+          interactive
           href="/seller/listings"
-          className="panel flex items-center gap-4 rounded-xl p-4 transition-colors ease-chrome hover:bg-muted/70"
+          className="flex items-center gap-4 transition-colors ease-chrome"
         >
           <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
             <Package className="h-6 w-6 text-primary" />
@@ -279,10 +283,14 @@ export default function SellerDashboard() {
             </p>
           </div>
           <ArrowRight className="ml-auto h-5 w-5 text-muted-foreground" />
-        </Link>
-        <Link
+        </Surface>
+        <Surface
+          as={Link}
+          variant="panel"
+          padding="md"
+          interactive
           href="/seller/listings/new"
-          className="panel flex items-center gap-4 rounded-xl p-4 transition-colors ease-chrome hover:bg-muted/70"
+          className="flex items-center gap-4 transition-colors ease-chrome"
         >
           <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
             <Plus className="h-6 w-6 text-primary" />
@@ -294,7 +302,7 @@ export default function SellerDashboard() {
             </p>
           </div>
           <ArrowRight className="ml-auto h-5 w-5 text-muted-foreground" />
-        </Link>
+        </Surface>
       </div>
     </div>
   );

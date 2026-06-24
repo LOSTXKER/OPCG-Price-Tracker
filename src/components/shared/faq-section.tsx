@@ -1,5 +1,6 @@
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { faqJsonLd } from "@/lib/seo/json-ld";
+import { Surface } from "@/components/ui/surface";
 
 export interface FaqItem {
   question: string;
@@ -17,7 +18,7 @@ export function FaqSection({
     <section className={title ? "mt-12 space-y-4" : "space-y-4"}>
       <JsonLd data={faqJsonLd(items)} />
       {title && <h2 className="text-h2">{title}</h2>}
-      <div className="divide-y divide-border/50 rounded-xl border border-border/50 bg-card">
+      <Surface variant="outline" className="divide-y divide-border/50">
         {items.map((item, i) => (
           <details key={i} className="group">
             <summary className="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 text-sm font-medium transition-colors hover:bg-primary/5 [&::-webkit-details-marker]:hidden">
@@ -31,7 +32,7 @@ export function FaqSection({
             </div>
           </details>
         ))}
-      </div>
+      </Surface>
     </section>
   );
 }

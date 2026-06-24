@@ -39,6 +39,7 @@ import {
   type TierLimits,
 } from "@/lib/billing";
 import { useMarketplaceFees } from "@/hooks/use-marketplace-fees";
+import { Surface } from "@/components/ui/surface";
 import type { UserTier } from "@/generated/prisma/client";
 
 // ---------------------------------------------------------------------------
@@ -241,12 +242,12 @@ export function SectionSubscription({ subscription, stats }: Props) {
 
       {/* Trial banner */}
       {isTrial && (
-        <div className="flex items-center justify-center gap-3 rounded-xl border border-[var(--p-hair)] bg-muted/30 px-5 py-3">
+        <Surface variant="subtle" className="flex items-center justify-center gap-3 border border-[var(--p-hair)] px-5 py-3">
           <Badge variant="secondary">{t(lang, "trialActive")}</Badge>
           <p className="text-sm text-muted-foreground">
             {t(lang, "trialEndsIn")} {trialDaysLeft} {t(lang, "days")}
           </p>
-        </div>
+        </Surface>
       )}
 
       {/* ─── Plan Cards (3-column grid, same as /pricing) ─── */}
@@ -402,10 +403,11 @@ export function SectionSubscription({ subscription, stats }: Props) {
           {PLANS.map((plan) => {
             const isCurrent = isCurrentPlan(plan.key, subscription.tier);
             return (
-              <div
+              <Surface
                 key={plan.key}
+                variant="outline"
                 className={cn(
-                  "rounded-xl border border-[var(--p-hair)] bg-card p-4 space-y-4",
+                  "p-4 space-y-4",
                   isCurrent && "border-primary/40",
                 )}
               >
@@ -440,7 +442,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
                     </div>
                   ))}
                 </div>
-              </div>
+              </Surface>
             );
           })}
         </div>

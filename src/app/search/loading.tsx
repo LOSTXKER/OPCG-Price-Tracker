@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 
 export default function SearchLoading() {
   return (
@@ -7,7 +8,7 @@ export default function SearchLoading() {
       <Skeleton className="h-12 w-full rounded-xl" />
 
       {/* Controls panel */}
-      <div className="panel overflow-hidden">
+      <Surface variant="panel" className="overflow-hidden">
         <div className="flex items-center gap-3 px-4 py-3">
           <Skeleton className="h-4 w-48" />
         </div>
@@ -16,10 +17,10 @@ export default function SearchLoading() {
           <Skeleton className="h-8 w-28 rounded-lg" />
           <Skeleton className="ml-auto h-8 w-16 rounded-lg" />
         </div>
-      </div>
+      </Surface>
 
       {/* Results table */}
-      <div className="panel divide-y divide-border/30 overflow-hidden">
+      <Surface variant="panel" className="divide-y divide-border/30 overflow-hidden">
         {Array.from({ length: 8 }).map((_, i) => (
           <div key={i} className="flex items-center gap-4 px-4 py-3">
             <Skeleton className="size-10 shrink-0 rounded-md" />
@@ -32,7 +33,7 @@ export default function SearchLoading() {
             <Skeleton className="hidden h-3.5 w-12 md:block" />
           </div>
         ))}
-      </div>
+      </Surface>
     </div>
   );
 }

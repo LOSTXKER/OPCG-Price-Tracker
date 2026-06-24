@@ -10,6 +10,7 @@ import { RarityBadge } from "@/components/shared/rarity-badge"
 import { PriceDisplay } from "@/components/shared/price-display"
 import { PriceUsd } from "@/components/shared/price-usd"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Surface } from "@/components/ui/surface"
 import { getCardName } from "@/lib/i18n"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { useUIStore } from "@/stores/ui-store"
@@ -36,7 +37,7 @@ export const GridCard = memo(function GridCard({
     : card.priceChange7d
 
   return (
-    <div className="panel ease-chrome group/card relative flex flex-col overflow-hidden hover:bg-muted/70">
+    <Surface variant="panel" interactive className="group/card relative flex flex-col overflow-hidden">
       <Link
         href={`/cards/${card.cardCode}`}
         aria-label={name}
@@ -112,19 +113,19 @@ export const GridCard = memo(function GridCard({
         show={{ detail: true, watchlist: card.id != null, compare: true }}
         className="relative z-20 border-t border-[var(--p-hair)] p-2"
       />
-    </div>
+    </Surface>
   )
 })
 
 export function GridCardSkeleton() {
   return (
-    <div className="panel overflow-hidden">
+    <Surface variant="panel" className="overflow-hidden">
       <Skeleton className="aspect-[63/88] w-full" />
       <div className="space-y-2 p-2.5">
         <Skeleton className="h-4 w-12" />
         <Skeleton className="h-3.5 w-24" />
         <Skeleton className="h-4 w-16" />
       </div>
-    </div>
+    </Surface>
   )
 }

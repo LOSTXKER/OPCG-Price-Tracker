@@ -13,6 +13,7 @@ import { ApiError, apiDelete, apiForm } from "@/lib/api/client";
 import { t } from "@/lib/i18n";
 import type { Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { Surface } from "@/components/ui/surface";
 import { ProfileCover } from "./public/profile-cover";
 import type { DbUser } from "./profile-types";
 
@@ -356,9 +357,9 @@ export function AccountCoverImage({
 
 function Card({ children }: { children: ReactNode }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-[var(--p-hair)] bg-card">
+    <Surface variant="outline" className="overflow-hidden">
       {children}
-    </div>
+    </Surface>
   );
 }
 

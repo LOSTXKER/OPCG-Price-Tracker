@@ -14,6 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { t, type TranslationKey } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { Surface } from "@/components/ui/surface";
 
 type Tool = {
   href: string;
@@ -36,9 +37,10 @@ const TOOLS: Tool[] = [
 function ToolTile({ tool, label, comingSoon }: { tool: Tool; label: string; comingSoon: string }) {
   const Icon = tool.icon;
   const inner = (
-    <div
+    <Surface
+      variant="outline"
       className={cn(
-        "ease-chrome flex h-full flex-col gap-3 rounded-xl border border-[var(--p-hair)] bg-card p-4",
+        "flex h-full flex-col gap-3 p-4",
         tool.disabled
           ? "opacity-60"
           : "hover:border-primary/40 hover:bg-muted/70 active:scale-[0.98]"
@@ -55,7 +57,7 @@ function ToolTile({ tool, label, comingSoon }: { tool: Tool; label: string; comi
         )}
       </div>
       <span className="text-h5">{label}</span>
-    </div>
+    </Surface>
   );
 
   if (tool.disabled) {

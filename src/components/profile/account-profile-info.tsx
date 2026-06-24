@@ -5,6 +5,7 @@ import { AtSign, Loader2, Lock, Mail, Pencil, X } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Surface } from "@/components/ui/surface";
 import { t } from "@/lib/i18n";
 import type { Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -93,7 +94,7 @@ export function AccountProfileInfo({ user, lang, onUserUpdate }: AccountProfileI
   };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-[var(--p-hair)] bg-card divide-y divide-[var(--p-hair)]">
+    <Surface variant="outline" className="overflow-hidden divide-y divide-[var(--p-hair)]">
       {/* Display name */}
       <FieldRow
         label={t(lang, "displayNamePlaceholder")}
@@ -249,7 +250,7 @@ export function AccountProfileInfo({ user, lang, onUserUpdate }: AccountProfileI
           {t(lang, "emailReadonly")}
         </span>
       </div>
-    </div>
+    </Surface>
   );
 }
 

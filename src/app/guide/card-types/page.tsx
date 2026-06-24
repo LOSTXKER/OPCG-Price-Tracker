@@ -20,6 +20,7 @@ import {
 import { prisma } from "@/lib/db";
 import { t, type Language } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
+import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
@@ -260,7 +261,7 @@ export default async function CardTypesPage() {
           const dbKey = CARD_TYPE_DB_MAP[featured.name];
           const examples = dbKey ? cardExamples[dbKey] ?? [] : [];
           return (
-            <div className={`overflow-hidden rounded-2xl border ${featured.borderColor} bg-card`}>
+            <Surface variant="outline" className="overflow-hidden rounded-2xl">
               <div className="flex items-start gap-4 p-6">
                 <div className={`flex size-12 shrink-0 items-center justify-center rounded-xl ${featured.iconBg}`}>
                   <featured.icon className={`size-6 ${featured.iconColor}`} />
@@ -304,7 +305,7 @@ export default async function CardTypesPage() {
                   </div>
                 </div>
               )}
-            </div>
+            </Surface>
           );
         })()}
 
@@ -314,7 +315,7 @@ export default async function CardTypesPage() {
             const dbKey = CARD_TYPE_DB_MAP[type.name];
             const examples = dbKey ? cardExamples[dbKey] ?? [] : [];
             return (
-              <div key={type.name} className={`overflow-hidden rounded-2xl border ${type.borderColor} bg-card`}>
+              <Surface key={type.name} variant="outline" className="overflow-hidden rounded-2xl">
                 <div className="p-5">
                   <div className="flex items-start gap-3">
                     <div className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${type.iconBg}`}>
@@ -360,7 +361,7 @@ export default async function CardTypesPage() {
                     </div>
                   </div>
                 )}
-              </div>
+              </Surface>
             );
           })}
         </div>
@@ -372,7 +373,7 @@ export default async function CardTypesPage() {
         <p className="text-sm text-muted-foreground">
           {t(lang, "guideTypeAnatomyDesc")}
         </p>
-        <div className="overflow-hidden rounded-xl border border-border/50 bg-card">
+        <Surface variant="outline" className="overflow-hidden">
           <div className="border-b border-border/40 px-4 py-2 text-xs font-medium text-muted-foreground">
             {t(lang, "guideTypeAnatomyCaption")}
           </div>
@@ -438,7 +439,7 @@ export default async function CardTypesPage() {
               <span className="rounded bg-muted px-2 py-0.5">{t(lang, "guideTypeAnatomyLegendAttr")}</span>
             </div>
           </div>
-        </div>
+        </Surface>
       </section>
 
       {/* ── 4. Stats Reference ── */}
@@ -449,7 +450,7 @@ export default async function CardTypesPage() {
         </p>
         <div className="grid gap-2 sm:grid-cols-2">
           {stats.map((stat) => (
-            <div key={stat.name} className="flex items-start gap-3 rounded-xl border border-border/50 bg-card px-4 py-3">
+            <Surface key={stat.name} variant="outline" className="flex items-start gap-3 px-4 py-3">
               <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted">
                 <stat.icon className="size-4 text-muted-foreground" />
               </div>
@@ -460,7 +461,7 @@ export default async function CardTypesPage() {
                   {stat.types}
                 </p>
               </div>
-            </div>
+            </Surface>
           ))}
         </div>
       </section>
@@ -473,14 +474,14 @@ export default async function CardTypesPage() {
         </p>
         <div className="grid gap-2 sm:grid-cols-2">
           {keywords.map((kw) => (
-            <div key={kw.keyword} className="flex items-start gap-3 rounded-xl border border-border/50 bg-card px-4 py-3">
+            <Surface key={kw.keyword} variant="outline" className="flex items-start gap-3 px-4 py-3">
               <span className={`shrink-0 rounded-md px-2 py-1 text-xs font-bold ${kw.color}`}>
                 {kw.keyword}
               </span>
               <p className="text-xs leading-relaxed text-muted-foreground">
                 {kw.desc}
               </p>
-            </div>
+            </Surface>
           ))}
         </div>
       </section>
@@ -503,7 +504,7 @@ export default async function CardTypesPage() {
       {/* ── 7. Sources ── */}
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">{t(lang, "guideTypeSourcesHeading")}</h2>
-        <div className="divide-y divide-border/50 rounded-xl border border-border/50 bg-card text-sm">
+        <Surface variant="outline" className="divide-y divide-border/50 text-sm">
           {[
             {
               label: "Official Rules",
@@ -530,7 +531,7 @@ export default async function CardTypesPage() {
               <ExternalLink className="size-4 shrink-0 text-muted-foreground/40" />
             </a>
           ))}
-        </div>
+        </Surface>
       </section>
 
       {/* ── Navigation ── */}

@@ -8,6 +8,7 @@ import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
 import { Badge } from "@/components/ui/badge";
+import { Surface } from "@/components/ui/surface";
 
 export const dynamic = "force-dynamic";
 
@@ -102,7 +103,7 @@ export default async function AdminBlogPage() {
           }
         />
       ) : (
-        <div className="rounded-xl border border-border/50 bg-card sm:overflow-x-auto">
+        <Surface variant="outline" className="sm:overflow-x-auto">
           {/* Desktop table */}
           <table className="hidden w-full text-sm sm:table">
             <thead>
@@ -201,7 +202,7 @@ export default async function AdminBlogPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </Surface>
       )}
     </AdminPage>
   );

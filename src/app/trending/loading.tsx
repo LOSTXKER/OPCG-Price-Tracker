@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 
 export default function TrendingLoading() {
   return (
@@ -16,7 +17,7 @@ export default function TrendingLoading() {
       </div>
 
       {/* Card list */}
-      <div className="panel overflow-hidden p-4">
+      <Surface variant="panel" padding="md" className="overflow-hidden">
         {Array.from({ length: 10 }).map((_, i) => (
           <div key={i} className="flex items-center gap-4 border-b border-border/40 py-3 last:border-0">
             <Skeleton className="size-6 rounded-full" />
@@ -29,7 +30,7 @@ export default function TrendingLoading() {
             <Skeleton className="h-3.5 w-12" />
           </div>
         ))}
-      </div>
+      </Surface>
     </div>
   );
 }

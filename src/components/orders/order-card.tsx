@@ -7,6 +7,7 @@ import { formatThb, formatJpy } from "@/lib/utils/currency";
 import { formatRelativeAgoShort } from "@/lib/utils/relative-time";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { Surface } from "@/components/ui/surface";
 import { OrderStatusBadge } from "./order-status-badge";
 
 export type OrderListItem = {
@@ -55,7 +56,7 @@ export function OrderCard({
     order.listing.card.nameEn ?? order.listing.card.nameJp;
 
   return (
-    <div className="panel rounded-xl p-4 ease-chrome transition-colors hover:bg-muted/70">
+    <Surface variant="panel" interactive className="p-4 transition-colors">
       {/* Top row: counterparty + status */}
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm">
@@ -123,6 +124,6 @@ export function OrderCard({
           {actions}
         </div>
       )}
-    </div>
+    </Surface>
   );
 }

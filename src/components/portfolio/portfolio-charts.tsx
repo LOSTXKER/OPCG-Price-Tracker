@@ -1,6 +1,7 @@
 "use client"
 
 import dynamic from "next/dynamic"
+import { Surface } from "@/components/ui/surface"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 
@@ -23,11 +24,11 @@ export function PortfolioCharts({ history }: PortfolioChartsProps) {
   const lang = useUIStore((s) => s.language)
 
   return (
-    <div className="panel rounded-xl p-4 sm:p-5">
+    <Surface variant="panel" className="p-4 sm:p-5">
       <p className="mb-4 text-eyebrow">
         {t(lang, "history")}
       </p>
       <PortfolioHistoryChart data={history} />
-    </div>
+    </Surface>
   )
 }

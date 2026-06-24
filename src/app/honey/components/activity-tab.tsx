@@ -6,6 +6,7 @@ import { t, type Language, type TranslationKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { HoneyTx } from "../types";
 import { formatTxReason, getTxStyle } from "../types";
+import { Surface } from "@/components/ui/surface";
 import { FilterTabs } from "./_shared/filter-tabs";
 
 type FilterKey = "ALL" | "CHECKIN" | "DAILY_MISSION" | "ACHIEVEMENT" | "REFERRAL" | "MARKETPLACE" | "RAFFLE" | "REDEEM" | "OTHER";
@@ -71,7 +72,7 @@ export function ActivityTab({
   );
 
   return (
-    <div className="panel overflow-hidden">
+    <Surface variant="panel" className="overflow-hidden">
       <div className="border-b px-4 py-3.5">
         <h2 className="text-h3">{t(lang, "honeyHistory")}</h2>
       </div>
@@ -121,7 +122,7 @@ export function ActivityTab({
           ))}
         </div>
       )}
-    </div>
+    </Surface>
   );
 }
 

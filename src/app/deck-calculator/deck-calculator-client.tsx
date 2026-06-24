@@ -7,6 +7,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 import {
   Dialog,
   DialogContent,
@@ -263,12 +264,12 @@ function DeckCalculatorContent() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-[var(--p-hair)] bg-card p-4">
+          <Surface variant="outline" padding="md">
             <div className="flex items-center justify-between">
               <p className="text-muted-foreground text-sm font-medium">{t(lang, "totalValue")}</p>
               <PriceDisplay priceJpy={totalPrice} showChange={false} size="lg" />
             </div>
-          </div>
+          </Surface>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -441,12 +442,12 @@ function DeckMockPreview({ lang }: { lang: Language }) {
           <span className="text-muted-foreground text-sm">12/50 {t(lang, "cardsCount")}</span>
         </div>
 
-        <div className="rounded-xl border border-[var(--p-hair)] bg-card p-4">
+        <Surface variant="outline" padding="md">
           <div className="flex items-center justify-between">
             <p className="text-muted-foreground text-sm font-medium">{t(lang, "totalValue")}</p>
             <p className="font-price text-lg font-bold">¥23,400</p>
           </div>
-        </div>
+        </Surface>
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">

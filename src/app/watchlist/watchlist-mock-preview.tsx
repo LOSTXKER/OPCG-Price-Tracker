@@ -1,4 +1,5 @@
 import { PageHeader } from "@/components/layout/page-header";
+import { Surface } from "@/components/ui/surface";
 import { t, type Language } from "@/lib/i18n";
 
 export function WatchlistMockPreview({ lang }: { lang: Language }) {
@@ -19,9 +20,10 @@ export function WatchlistMockPreview({ lang }: { lang: Language }) {
       />
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {cards.map((c) => (
-          <div
+          <Surface
             key={c.code}
-            className="rounded-xl border border-border/40 bg-card overflow-hidden"
+            variant="outline"
+            className="overflow-hidden"
           >
             <div className="aspect-[3/4] bg-muted" />
             <div className="p-3 space-y-1">
@@ -38,7 +40,7 @@ export function WatchlistMockPreview({ lang }: { lang: Language }) {
                 </span>
               </div>
             </div>
-          </div>
+          </Surface>
         ))}
       </div>
     </div>

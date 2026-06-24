@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react"
 import { ChevronDown } from "lucide-react"
 
 import { Price } from "@/components/shared/price-inline"
+import { Surface } from "@/components/ui/surface"
 import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
@@ -50,7 +51,7 @@ export function PortfolioHero({
     : "var(--color-primary)"
 
   return (
-    <div className="panel relative isolate overflow-hidden rounded-xl ring-1 ring-border/30">
+    <Surface variant="panel" className="relative isolate overflow-hidden ring-1 ring-border/30">
       {/* Ambient PnL-tinted glow, subtle */}
       <div
         aria-hidden
@@ -185,7 +186,7 @@ export function PortfolioHero({
           </>
         )}
       </div>
-    </div>
+    </Surface>
   )
 }
 
