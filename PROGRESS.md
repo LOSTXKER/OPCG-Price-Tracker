@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-24 — **option ก (server-lang i18n) เสร็จครบ · merged ทั้งหมด** · PR #39 (redesign+i18n client) · PR #40 (resolver + marketplace detail + review-section + home-seo) · PR #41 (guide/* 7 หน้า ~456 keys) → master `becf651` · lint 0 errors/24 warn · tsc 0 · build ✓ 144 pages · prod live opcg-price-tracker.vercel.app
+อัปเดตล่าสุด: 2026-06-24 — **ครบ 3 mega แล้ว · merged ทั้งหมด** · i18n (PR #39-41) + **mega 2 Surface rollout (PR #43, 114 ไฟล์)** → master `3c4c605` · lint 0 errors/24 warn · tsc 0 · build ✓ 144 pages · verify 6 หน้า (home/mktov/sets/portfolio/honey/settings) สะอาด · prod live opcg-price-tracker.vercel.app
 
 ## 🧹 REFACTOR (audit 5 มิติ — เบสสั่ง "ทำหมด") — ทำเป็น batch
 > audit เต็มรันผ่าน workflow แล้ว · คะแนนเฉลี่ย ~7/10 (type-safety/API 8 · design-system 7 · reuse 6 · i18n 5)
@@ -15,7 +15,7 @@
 - **⬜ เหลือจริง (ทั้งหมดเป็น big/low-ROI-prototype):**
   - **เบสยืนยัน: ทำหมดทั้ง 3 mega**
   - **✅ mega 1 — card-detail split (`b675fe5`):** แยก useStickyBuy + useCardDetailTabs (1028→949) · pricing memos **คงไว้** (interwoven กับ JSX เกินจะแยกปลอดภัย) · ⚠️ build ผ่านแต่ยังไม่ render-verify scrollspy/sticky (logic เดิม copy-move น่าจะ ok — เบสเปิดดูได้)
-  - **⬜ mega 2 — Surface rollout:** .panel(201)/ad-hoc bg-card+border(115)/shadcn Card(6) → Surface · เริ่ม guide/* + profile/section-* (static, เสี่ยงต่ำ) · ต้อง verify visual ไม่เพี้ยน · fresh turn
+  - **✅ mega 2 — Surface rollout (PR #43 `3c4c605`):** 113 ไฟล์ · .panel→`<Surface variant="panel">` · ad-hoc bg-card+border→`outline` (normalize surface border → p-hair) · shadcn Card→Surface · hover→interactive prop · **ไม่แตะ dividers** (127 จุด · out of scope) · exclude ui primitive defs · Surface typing รับ anchor passthrough (href) เพื่อ `as={Link}` · ทำผ่าน workflow 42 agent → apply กลาง · verify screenshot 6 หน้า (public+auth ผ่าน bypass) สะอาด
   - **✅ mega 3 — i18n sweep (ฝั่ง client เสร็จ) — pattern: workflow คืน data → apply กลาง / หรือแก้มือเมื่อชิ้นเล็ก:**
     - ✅ **messages (`cb6fe41`)** — 70 strings · 8 ไฟล์
     - ✅ **marketplace browse (`ffaff54`)** — 12 client components · 89 keys
