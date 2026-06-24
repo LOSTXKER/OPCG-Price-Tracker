@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { Star, MessageSquare } from "lucide-react";
@@ -189,9 +189,10 @@ export default function SellerReviewsPage() {
         <>
           <div className="space-y-3">
             {data.reviews.map((review) => (
-              <div
+              <Surface
                 key={review.id}
-                className="panel rounded-xl p-4"
+                variant="panel"
+                padding="md"
               >
                 <div className="flex items-center gap-3">
                   <Avatar className="h-9 w-9">
@@ -224,7 +225,7 @@ export default function SellerReviewsPage() {
                     {review.comment}
                   </p>
                 )}
-              </div>
+              </Surface>
             ))}
           </div>
 

@@ -12,6 +12,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
 import { t } from "@/lib/i18n";
 import type { Language } from "@/stores/ui-store";
 import { SectionHeader } from "./_shared/section-header";
@@ -95,7 +96,7 @@ export function ReferralTab({
         description={t(lang, "referralSectionDescription")}
       />
 
-      <div className="panel p-4">
+      <Surface variant="panel" padding="md">
         <div className="flex items-center gap-2">
           <div className="min-w-0 flex-1 truncate rounded-lg bg-muted/60 px-3 py-2.5 font-mono text-xs text-muted-foreground">
             {referralUrl || "..."}
@@ -112,10 +113,10 @@ export function ReferralTab({
               : t(lang, "referralCopyLabel")}
           </Button>
         </div>
-      </div>
+      </Surface>
 
       {/* Stats strip — single panel divided into cells, like the status bar above */}
-      <div className="panel grid grid-cols-2 divide-x divide-y divide-border/40 sm:grid-cols-4 sm:divide-y-0">
+      <Surface variant="panel" className="grid grid-cols-2 divide-x divide-y divide-border/40 sm:grid-cols-4 sm:divide-y-0">
         {stats.map((s, i) => {
           const Icon = s.icon;
           return (
@@ -131,10 +132,10 @@ export function ReferralTab({
             </div>
           );
         })}
-      </div>
+      </Surface>
 
       {/* How it works */}
-      <div className="panel overflow-hidden">
+      <Surface variant="panel" className="overflow-hidden">
         <div className="border-b px-4 py-3.5">
           <h2 className="text-h3">
             {t(lang, "referralHowItWorksTitle")}
@@ -155,7 +156,7 @@ export function ReferralTab({
             </div>
           ))}
         </div>
-      </div>
+      </Surface>
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { getCardName } from "@/lib/i18n"
 import { RarityBadge } from "@/components/shared/rarity-badge"
+import { Surface } from "@/components/ui/surface"
 import { useUIStore } from "@/stores/ui-store"
 
 export type ChangePeriod = "24h" | "7d" | "30d"
@@ -94,7 +95,7 @@ function CardItemBase({
   }
 
   return (
-    <div className="panel group/card relative flex h-full flex-col overflow-hidden border border-transparent transition-colors hover:border-border">
+    <Surface variant="panel" className="group/card relative flex h-full flex-col overflow-hidden border border-transparent transition-colors hover:border-border">
       <Link
         href={`/cards/${cardCode}`}
         aria-label={displayName}
@@ -157,7 +158,7 @@ function CardItemBase({
       ) : actionRow === null ? null : (
         actionRow
       )}
-    </div>
+    </Surface>
   )
 }
 

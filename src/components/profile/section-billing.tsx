@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Download, ExternalLink, Loader2, Receipt } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
 import { apiGet, apiTry } from "@/lib/api/client";
 import { t, getLocale } from "@/lib/i18n";
@@ -28,7 +29,7 @@ export function SectionBilling() {
         <p className="page-subtitle">{t(lang, "billingSubtitle")}</p>
       </div>
 
-      <div className="rounded-xl border border-border/40 bg-card p-5">
+      <Surface variant="outline" padding="lg">
         {loading ? (
           <div className="flex justify-center py-8">
             <Loader2 className="size-5 animate-spin text-muted-foreground" />
@@ -181,7 +182,7 @@ export function SectionBilling() {
             </div>
           </>
         )}
-      </div>
+      </Surface>
     </div>
   );
 }

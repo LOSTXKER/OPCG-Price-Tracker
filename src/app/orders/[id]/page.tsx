@@ -165,7 +165,7 @@ export default function BuyerOrderDetailPage() {
       )}
 
       {/* Product info */}
-      <div className="panel flex items-center gap-4 rounded-xl p-4">
+      <Surface variant="panel" className="flex items-center gap-4 p-4">
         {order.listing.card.imageUrl ? (
           <Image
             src={order.listing.card.imageUrl}
@@ -199,10 +199,10 @@ export default function BuyerOrderDetailPage() {
             </span>
           </div>
         </div>
-      </div>
+      </Surface>
 
       {/* Seller info */}
-      <div className="panel rounded-xl p-4">
+      <Surface variant="panel" className="p-4">
         <h2 className="mb-3 text-h3">{t(lang, "buyOrderSellerInfo")}</h2>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -222,10 +222,10 @@ export default function BuyerOrderDetailPage() {
             {t(lang, "chat")}
           </Button>
         </div>
-      </div>
+      </Surface>
 
       {/* Status Timeline */}
-      <div className="panel rounded-xl p-4">
+      <Surface variant="panel" className="p-4">
         <h2 className="mb-4 text-h3">{t(lang, "buyOrderStatusTitle")}</h2>
         <div className="space-y-4">
           {timelineSteps.map((step, i) => {
@@ -299,11 +299,11 @@ export default function BuyerOrderDetailPage() {
             </div>
           )}
         </div>
-      </div>
+      </Surface>
 
       {/* Shipping info */}
       {order.trackingNumber && (
-        <div className="panel rounded-xl p-4">
+        <Surface variant="panel" className="p-4">
           <h2 className="mb-3 text-h3">{t(lang, "buyOrderShippingInfo")}</h2>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
@@ -319,12 +319,12 @@ export default function BuyerOrderDetailPage() {
               </span>
             </div>
           </div>
-        </div>
+        </Surface>
       )}
 
       {/* Action panel */}
       {order.status === "SHIPPED" && (
-        <div className="panel space-y-3 rounded-xl border-cyan-500/30 bg-cyan-500/5 p-4">
+        <Surface variant="panel" className="space-y-3 border-cyan-500/30 bg-cyan-500/5 p-4">
           <p className="font-medium">{t(lang, "buyOrderShippingTitle")}</p>
           <p className="text-sm text-muted-foreground">
             {t(lang, "buyOrderShippingPrompt")}
@@ -340,11 +340,11 @@ export default function BuyerOrderDetailPage() {
             )}
             {t(lang, "buyOrderConfirmReceipt")}
           </Button>
-        </div>
+        </Surface>
       )}
 
       {order.status === "DELIVERED" && (
-        <div className="panel space-y-3 rounded-xl border-green-500/30 bg-green-500/5 p-4">
+        <Surface variant="panel" className="space-y-3 border-green-500/30 bg-green-500/5 p-4">
           <p className="font-medium">{t(lang, "buyOrderReceivedTitle")}</p>
           <p className="text-sm text-muted-foreground">
             {t(lang, "buyOrderReceivedPrompt")}
@@ -360,11 +360,11 @@ export default function BuyerOrderDetailPage() {
             )}
             {t(lang, "buyOrderConfirmComplete")}
           </Button>
-        </div>
+        </Surface>
       )}
 
       {order.status === "AWAITING_PAYMENT" && (
-        <div className="panel space-y-3 rounded-xl p-4">
+        <Surface variant="panel" className="space-y-3 p-4">
           <p className="text-sm text-muted-foreground">
             {t(lang, "buyOrderAwaitingPrompt")}
           </p>
@@ -386,12 +386,12 @@ export default function BuyerOrderDetailPage() {
               {t(lang, "cancel")}
             </Button>
           </div>
-        </div>
+        </Surface>
       )}
 
       {/* Review link */}
       {canReview && (
-        <div className="panel flex items-center justify-between rounded-xl p-4">
+        <Surface variant="panel" className="flex items-center justify-between p-4">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/10">
               <Star className="h-5 w-5 text-amber-500" />
@@ -412,7 +412,7 @@ export default function BuyerOrderDetailPage() {
           >
             {t(lang, "buyOrderReview")}
           </Button>
-        </div>
+        </Surface>
       )}
     </div>
   );

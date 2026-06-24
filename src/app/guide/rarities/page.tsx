@@ -14,6 +14,7 @@ import {
   Users,
 } from "lucide-react";
 import { prisma } from "@/lib/db";
+import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
@@ -374,9 +375,10 @@ export default async function RaritiesPage() {
         {/* Regular tiers */}
         <div className="grid gap-2 sm:grid-cols-2">
           {regular.map((rarity) => (
-            <div
+            <Surface
               key={rarity.code}
-              className="flex items-start gap-3 rounded-xl border border-border/50 bg-card p-4"
+              variant="outline"
+              className="flex items-start gap-3 p-4"
             >
               <div
                 className="flex size-10 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white"
@@ -396,7 +398,7 @@ export default async function RaritiesPage() {
                   {rarity.priceJpy}
                 </p>
               </div>
-            </div>
+            </Surface>
           ))}
         </div>
       </section>
@@ -413,7 +415,7 @@ export default async function RaritiesPage() {
         </p>
 
         {/* Price comparison example */}
-        <div className="overflow-hidden rounded-xl border border-border/50 bg-card">
+        <Surface variant="outline" className="overflow-hidden">
           <div className="border-b border-border/40 px-4 py-2 text-xs font-medium text-muted-foreground">
             {t(lang, "guideRarityCompareTitle")}
           </div>
@@ -428,7 +430,7 @@ export default async function RaritiesPage() {
               </div>
             ))}
           </div>
-        </div>
+        </Surface>
 
         {/* Parallel tiers list */}
         <div className="flex flex-wrap gap-2">
@@ -505,7 +507,7 @@ export default async function RaritiesPage() {
         </div>
 
         {/* ทุกกล่องได้ */}
-        <div className="rounded-xl border border-border/50 bg-card p-5">
+        <Surface variant="outline" className="p-5">
           <p className="text-sm font-semibold">{t(lang, "guideRarityBoxEveryHeading")}</p>
           <div className="mt-3 space-y-2">
             <div className="flex items-center gap-3">
@@ -533,7 +535,7 @@ export default async function RaritiesPage() {
               </p>
             </div>
           </div>
-        </div>
+        </Surface>
 
         {/* อธิบาย SEC vs Parallel */}
         <div className="rounded-xl border border-border/50 bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
@@ -619,7 +621,7 @@ export default async function RaritiesPage() {
         </p>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {buildPriceFactors(lang).map((factor) => (
-            <div key={factor.title} className="rounded-xl border border-border/50 bg-card p-4">
+            <Surface key={factor.title} variant="outline" className="p-4">
               <div className={`flex size-9 items-center justify-center rounded-lg ${factor.iconBg}`}>
                 <factor.icon className={`size-4.5 ${factor.iconColor}`} />
               </div>
@@ -627,7 +629,7 @@ export default async function RaritiesPage() {
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                 {factor.desc}
               </p>
-            </div>
+            </Surface>
           ))}
         </div>
       </section>
@@ -635,7 +637,7 @@ export default async function RaritiesPage() {
       {/* ── 7. Sources ── */}
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">{t(lang, "guideRaritySourcesHeading")}</h2>
-        <div className="divide-y divide-border/50 rounded-xl border border-border/50 bg-card text-sm">
+        <Surface variant="outline" className="divide-y divide-border/50 text-sm">
           {buildSources(lang).map((src) => (
             <a
               key={src.url}
@@ -651,7 +653,7 @@ export default async function RaritiesPage() {
               <ExternalLink className="size-4 shrink-0 text-muted-foreground/40" />
             </a>
           ))}
-        </div>
+        </Surface>
       </section>
 
       {/* ── Navigation ── */}

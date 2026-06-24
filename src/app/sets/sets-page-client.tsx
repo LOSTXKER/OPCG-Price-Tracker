@@ -9,6 +9,7 @@ import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Price } from "@/components/shared/price-inline";
+import { Surface } from "@/components/ui/surface";
 import { AdSlot } from "@/components/ads/ad-slot";
 import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -219,9 +220,12 @@ function SetTile({ set, rank }: { set: SetWithCard; rank?: number }) {
   const imageUrl = set.boxImageUrl ?? set.topCard?.imageUrl;
 
   return (
-    <Link
+    <Surface
+      as={Link}
+      variant="outline"
+      interactive
       href={`/sets/${set.code}`}
-      className="group block overflow-hidden rounded-xl border border-[var(--p-hair)] bg-card ease-chrome transition-colors hover:bg-muted/70"
+      className="group block overflow-hidden ease-chrome transition-colors"
     >
       <div className="relative overflow-hidden border-b border-[var(--p-hair)] bg-muted/20">
         {rank != null && (
@@ -266,6 +270,6 @@ function SetTile({ set, rank }: { set: SetWithCard; rank?: number }) {
           )}
         </div>
       </div>
-    </Link>
+    </Surface>
   );
 }

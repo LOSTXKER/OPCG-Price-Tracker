@@ -16,6 +16,7 @@ import { t } from "@/lib/i18n";
 import type { Language } from "@/lib/i18n";
 import { apiPatch, apiTry } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
+import { Surface } from "@/components/ui/surface";
 import type { DbUser } from "./profile-types";
 
 const VISIBILITY_OPTIONS = [
@@ -208,9 +209,9 @@ function PrivacyFeedback({
 
 function Card({ children }: { children: ReactNode }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-border/40 bg-card">
+    <Surface variant="outline" className="overflow-hidden">
       {children}
-    </div>
+    </Surface>
   );
 }
 

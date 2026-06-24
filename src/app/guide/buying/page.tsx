@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight, Layers, Store } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { JsonLd } from "@/lib/seo/json-ld-script";
@@ -85,48 +85,46 @@ export default async function BuyingGuidePage() {
           {t(lang, "guideBuyShopsHeading")}
         </h2>
         {shops.map((shop) => (
-          <Card key={shop.name}>
-            <CardContent className="space-y-2 p-5">
-              <div className="flex items-center gap-2">
-                <h3 className="font-sans text-h4">
-                  {shop.url ? (
-                    shop.url.startsWith("/") ? (
-                      <Link
-                        href={shop.url}
-                        className="text-primary hover:underline"
-                      >
-                        {shop.name}
-                      </Link>
-                    ) : (
-                      <a
-                        href={shop.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:underline"
-                      >
-                        {shop.name}
-                      </a>
-                    )
+          <Surface key={shop.name} variant="panel" className="space-y-2 p-5">
+            <div className="flex items-center gap-2">
+              <h3 className="font-sans text-h4">
+                {shop.url ? (
+                  shop.url.startsWith("/") ? (
+                    <Link
+                      href={shop.url}
+                      className="text-primary hover:underline"
+                    >
+                      {shop.name}
+                    </Link>
                   ) : (
-                    shop.name
-                  )}
-                </h3>
-                <span className="text-muted-foreground text-xs">
-                  {shop.type}
-                </span>
+                    <a
+                      href={shop.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      {shop.name}
+                    </a>
+                  )
+                ) : (
+                  shop.name
+                )}
+              </h3>
+              <span className="text-muted-foreground text-xs">
+                {shop.type}
+              </span>
+            </div>
+            <div className="grid gap-2 text-sm sm:grid-cols-2">
+              <div>
+                <span className="text-price-up font-medium">✓ {t(lang, "guideBuyProsLabel")}:</span>{" "}
+                <span className="text-muted-foreground">{shop.pros}</span>
               </div>
-              <div className="grid gap-2 text-sm sm:grid-cols-2">
-                <div>
-                  <span className="text-price-up font-medium">✓ {t(lang, "guideBuyProsLabel")}:</span>{" "}
-                  <span className="text-muted-foreground">{shop.pros}</span>
-                </div>
-                <div>
-                  <span className="text-price-down font-medium">✗ {t(lang, "guideBuyConsLabel")}:</span>{" "}
-                  <span className="text-muted-foreground">{shop.cons}</span>
-                </div>
+              <div>
+                <span className="text-price-down font-medium">✗ {t(lang, "guideBuyConsLabel")}:</span>{" "}
+                <span className="text-muted-foreground">{shop.cons}</span>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </Surface>
         ))}
       </div>
 
@@ -136,15 +134,16 @@ export default async function BuyingGuidePage() {
         </h2>
         <div className="space-y-2">
           {tips.map((tip, i) => (
-            <div
+            <Surface
               key={i}
-              className="panel flex items-start gap-3 p-3"
+              variant="panel"
+              className="flex items-start gap-3 p-3"
             >
               <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted/10 font-sans text-xs font-bold text-foreground">
                 {i + 1}
               </span>
               <p className="text-sm leading-relaxed">{tip}</p>
-            </div>
+            </Surface>
           ))}
         </div>
       </div>

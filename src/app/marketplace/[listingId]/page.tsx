@@ -11,6 +11,7 @@ import { RarityBadge } from "@/components/shared/rarity-badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button-variants";
+import { Surface } from "@/components/ui/surface";
 import { ListingStatus, OrderStatus } from "@/generated/prisma/client";
 import { getAuthUser } from "@/lib/api/auth";
 import { prisma } from "@/lib/db";
@@ -269,7 +270,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
           </div>
 
           {/* ── Block B: Price + Actions ── */}
-          <div className="panel space-y-5 p-6">
+          <Surface variant="panel" padding="xl" className="space-y-5">
             <div className="space-y-3">
               <PriceDisplay
                 priceJpy={listing.priceJpy}
@@ -325,10 +326,10 @@ export default async function ListingDetailPage({ params }: PageProps) {
                 />
               </div>
             </div>
-          </div>
+          </Surface>
 
           {/* ── Block C: Seller + Shipping ── */}
-          <div className="panel overflow-hidden">
+          <Surface variant="panel" className="overflow-hidden">
             <div className="flex items-center gap-4 p-5">
               <Avatar className="size-14 border">
                 {listing.user.avatarUrl ? (
@@ -380,7 +381,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
                 </div>
               )}
             </div>
-          </div>
+          </Surface>
 
         </div>
       </div>
@@ -391,11 +392,11 @@ export default async function ListingDetailPage({ params }: PageProps) {
       {listing.description && (
         <section className="space-y-4">
           <h2 className="text-h3">{t(lang, "mktDetailSellerDescription")}</h2>
-          <div className="panel p-5">
+          <Surface variant="panel" padding="lg">
             <p className="break-words whitespace-pre-wrap text-sm leading-relaxed">
               {listing.description}
             </p>
-          </div>
+          </Surface>
         </section>
       )}
 

@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -75,7 +76,7 @@ export function ProfileSellerCard({ stats }: { stats: SellerStats }) {
       </div>
 
       {stats.topReview?.comment && (
-        <div className="rounded-xl border border-border/50 bg-card/40 px-4 py-3 sm:px-5">
+        <Surface variant="outline" className="bg-card/40 px-4 py-3 sm:px-5">
           <div className="flex items-center gap-2">
             <MessageSquareQuote className="size-3.5 text-muted-foreground" />
             <p className="text-eyebrow">{t(lang, "sellerTopReview")}</p>
@@ -110,7 +111,7 @@ export function ProfileSellerCard({ stats }: { stats: SellerStats }) {
               </p>
             </div>
           </div>
-        </div>
+        </Surface>
       )}
     </div>
   );

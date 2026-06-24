@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 
 export default function WatchlistLoading() {
   return (
@@ -12,11 +13,11 @@ export default function WatchlistLoading() {
       {/* Summary KPIs */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="panel space-y-2 p-3">
+          <Surface key={i} variant="panel" padding="sm" className="space-y-2">
             <Skeleton className="h-3 w-20" />
             <Skeleton className="h-6 w-24" />
             <Skeleton className="h-3 w-12" />
-          </div>
+          </Surface>
         ))}
       </div>
 
@@ -29,7 +30,7 @@ export default function WatchlistLoading() {
       </div>
 
       {/* List skeleton */}
-      <div className="panel overflow-hidden">
+      <Surface variant="panel" className="overflow-hidden">
         {Array.from({ length: 8 }).map((_, i) => (
           <div
             key={i}
@@ -47,7 +48,7 @@ export default function WatchlistLoading() {
             <Skeleton className="size-8 shrink-0 rounded-md" />
           </div>
         ))}
-      </div>
+      </Surface>
     </div>
   );
 }

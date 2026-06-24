@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Surface } from "@/components/ui/surface";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { adminFetch } from "@/lib/admin/admin-fetch";
 import { useAdminCrud } from "@/lib/admin/use-admin-crud";
@@ -78,8 +78,8 @@ export function AchievementsManager({
     >
       <div className="space-y-2">
         {achievements.map((ach) => (
-          <Card key={ach.id} size="sm">
-            <CardContent className="flex items-center gap-3">
+          <Surface key={ach.id} variant="outline" className="overflow-hidden p-4">
+            <div className="flex items-center gap-3">
               {ach.badgeImageUrl ? (
                 <img
                   src={ach.badgeImageUrl}
@@ -132,8 +132,8 @@ export function AchievementsManager({
                   <Trash2 className="h-3.5 w-3.5" />
                 </Button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </Surface>
         ))}
         {achievements.length === 0 && (
           <AdminEmptyState

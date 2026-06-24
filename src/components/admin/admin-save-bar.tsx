@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Loader2, Save, RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
 import { cn } from "@/lib/utils";
 
 interface AdminSaveBarProps {
@@ -51,9 +52,10 @@ export function AdminSaveBar({
         className,
       )}
     >
-      <div
+      <Surface
+        variant="outline"
         className={cn(
-          "pointer-events-auto flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/60 bg-card/95 px-4 py-3 shadow-lg backdrop-blur",
+          "pointer-events-auto flex flex-wrap items-center justify-between gap-3 bg-card/95 px-4 py-3 shadow-lg backdrop-blur",
           dirty ? "panel-accent" : "",
         )}
       >
@@ -90,7 +92,7 @@ export function AdminSaveBar({
             {saveLabel}
           </Button>
         </div>
-      </div>
+      </Surface>
     </div>
   );
 }

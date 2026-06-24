@@ -27,6 +27,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
 import { t, type Language, type TranslationKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useCountdown } from "../hooks/use-countdown";
@@ -218,7 +219,7 @@ export function DailyMissionsCard({
   const progressPct = totalReward > 0 ? Math.round((earnedReward / totalReward) * 100) : 0;
 
   return (
-    <div className="panel overflow-hidden">
+    <Surface variant="panel" className="overflow-hidden">
       {/* Row 1: Honey balance + check-in */}
       <div className="flex items-center gap-x-4 px-5 py-4 sm:px-6">
         <div className="flex items-center gap-2.5">
@@ -446,6 +447,6 @@ export function DailyMissionsCard({
           </div>
         </div>
       )}
-    </div>
+    </Surface>
   );
 }

@@ -19,6 +19,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 import { ProfileDataProvider, useProfileData } from "@/components/profile/profile-data-context";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
 import { PageContainer } from "@/components/layout/page-container";
@@ -50,9 +51,9 @@ export function SettingsShell({ children }: { children: React.ReactNode }) {
       <AuthPreviewGate
         preview={
           <PageContainer width="reading" className="py-6">
-            <div className="rounded-xl border border-[var(--p-hair)] bg-card p-6 text-center">
+            <Surface variant="outline" padding="xl" className="text-center">
               <p className="text-sm text-muted-foreground">Sign in to manage your settings</p>
-            </div>
+            </Surface>
           </PageContainer>
         }
       />
@@ -203,17 +204,17 @@ function SettingsLoadingSkeleton() {
       {/* Mobile skeleton */}
       <div className="space-y-5 md:hidden">
         <Skeleton className="h-7 w-32" />
-        <div className="flex items-center gap-3 rounded-xl border border-[var(--p-hair)] bg-card p-4">
+        <Surface variant="outline" padding="md" className="flex items-center gap-3">
           <Skeleton className="size-12 rounded-full" />
           <div className="flex-1 space-y-1.5">
             <Skeleton className="h-4 w-28" />
             <Skeleton className="h-3 w-20" />
           </div>
-        </div>
+        </Surface>
         {[7, 3].map((count, g) => (
           <div key={g} className="space-y-1.5">
             <Skeleton className="h-3 w-16" />
-            <div className="overflow-hidden rounded-xl border border-[var(--p-hair)] bg-card">
+            <Surface variant="outline" className="overflow-hidden">
               {Array.from({ length: count }).map((_, i) => (
                 <div
                   key={i}
@@ -226,7 +227,7 @@ function SettingsLoadingSkeleton() {
                   <Skeleton className="h-4 w-24" />
                 </div>
               ))}
-            </div>
+            </Surface>
           </div>
         ))}
       </div>

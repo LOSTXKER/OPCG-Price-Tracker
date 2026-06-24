@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -55,7 +56,7 @@ export function ProfileAchievements({
   const remaining = total - previewAchievements.length - previewBadges.length;
 
   return (
-    <div className="rounded-2xl border border-border/40 bg-card p-5">
+    <Surface variant="outline" className="rounded-2xl p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm font-semibold">
           <Trophy className="size-4 text-amber-500" />
@@ -133,7 +134,7 @@ export function ProfileAchievements({
           </button>
         )}
       </div>
-    </div>
+    </Surface>
   );
 }
 
@@ -194,7 +195,7 @@ function AchievementRow({
   isBadge?: boolean;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-border/40 bg-card/50 p-3">
+    <Surface variant="outline" className="flex items-start gap-3 bg-card/50 p-3">
       <div className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-muted">
         {item.badgeImageUrl ? (
           <Image src={item.badgeImageUrl} alt="" fill className="object-cover" sizes="40px" />
@@ -213,6 +214,6 @@ function AchievementRow({
           {formatDate(lang, item.earnedAt)}
         </p>
       </div>
-    </div>
+    </Surface>
   );
 }

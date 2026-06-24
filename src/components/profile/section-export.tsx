@@ -6,6 +6,7 @@ import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { useTierLimits } from "@/hooks/use-tier-limits";
 import { LockOverlay } from "@/components/shared/upgrade-badge";
+import { Surface } from "@/components/ui/surface";
 
 export function SectionExport() {
   const lang = useUIStore((s) => s.language);
@@ -50,7 +51,7 @@ export function SectionExport() {
       <LockOverlay locked={locked} featureKey="csvExport">
         <div className="grid gap-3 sm:grid-cols-2">
           {exports.map(({ labelKey, descKey, href, icon: Icon, color }) => (
-            <div key={labelKey} className="flex flex-col justify-between rounded-xl border border-[var(--p-hair)] bg-card p-5">
+            <Surface key={labelKey} variant="outline" padding="lg" className="flex flex-col justify-between">
               <div className="flex items-start gap-3">
                 <div className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${color}`}>
                   <Icon className="size-5" />
@@ -74,7 +75,7 @@ export function SectionExport() {
                   {t(lang, "download")}
                 </a>
               </div>
-            </div>
+            </Surface>
           ))}
         </div>
       </LockOverlay>

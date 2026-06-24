@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { formatJpy } from "@/lib/utils/currency";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 import type { CardRow } from "./types";
 
 export function CardGrid({ cards, loading }: { cards: CardRow[]; loading: boolean }) {
@@ -29,10 +30,12 @@ export function CardGrid({ cards, loading }: { cards: CardRow[]; loading: boolea
       {cards.map((card) => {
         const flagged = !card.nameEn || !card.imageUrl;
         return (
-          <Link
+          <Surface
+            as={Link}
+            variant="outline"
             key={card.id}
             href={`/admin/cards/${card.id}`}
-            className="group flex flex-col overflow-hidden rounded-lg border border-border/30 bg-card transition-all hover:border-primary/30 hover:shadow-md"
+            className="group flex flex-col overflow-hidden rounded-lg transition-all hover:border-primary/30 hover:shadow-md"
           >
             {card.imageUrl ? (
               <Image
@@ -66,7 +69,7 @@ export function CardGrid({ cards, loading }: { cards: CardRow[]; loading: boolea
                 {card.rarity} · {card.latestPriceJpy != null ? formatJpy(card.latestPriceJpy) : "—"}
               </p>
             </div>
-          </Link>
+          </Surface>
         );
       })}
     </div>

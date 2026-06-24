@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
 import { ImageUploader } from "@/components/admin/image-uploader";
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -27,9 +28,10 @@ export function PrizeEditor({ prizes, onUpdate, onAdd, onRemove }: PrizeEditorPr
     <>
       <div className="space-y-3">
         {prizes.map((prize, i) => (
-          <div
+          <Surface
             key={i}
-            className={cn("rounded-xl border p-3", RANK_COLORS[i] ?? "border-border bg-card")}
+            variant="outline"
+            className={cn("p-3", RANK_COLORS[i] ?? "border-border bg-card")}
           >
             <div className="mb-2 flex items-center justify-between">
               <span className="text-eyebrow">
@@ -66,7 +68,7 @@ export function PrizeEditor({ prizes, onUpdate, onAdd, onRemove }: PrizeEditorPr
                 height="h-20"
               />
             </div>
-          </div>
+          </Surface>
         ))}
       </div>
       <Button size="sm" variant="outline" onClick={onAdd} className="mt-2 w-full gap-1.5 border-dashed">

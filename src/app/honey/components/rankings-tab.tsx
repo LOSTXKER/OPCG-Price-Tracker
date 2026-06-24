@@ -5,6 +5,7 @@ import { Flame, Trophy } from "lucide-react";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { LeaderboardUser } from "../types";
+import { Surface } from "@/components/ui/surface";
 import { EmptyState } from "./empty-state";
 import { FilterTabs } from "./_shared/filter-tabs";
 
@@ -31,7 +32,7 @@ export function RankingsTab({
   }, [leaderboard, sort]);
 
   return (
-    <div className="panel overflow-hidden">
+    <Surface variant="panel" className="overflow-hidden">
       <div className="border-b border-[var(--p-hair)] px-4 py-3.5">
         <h2 className="text-h3">{t(lang, "honeyLeaderboard")}</h2>
       </div>
@@ -139,6 +140,6 @@ export function RankingsTab({
           </div>
         </>
       )}
-    </div>
+    </Surface>
   );
 }

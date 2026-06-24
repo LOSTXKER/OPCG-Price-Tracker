@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 
 export default function DeckCalculatorLoading() {
   return (
@@ -10,7 +11,7 @@ export default function DeckCalculatorLoading() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Deck list */}
-        <div className="panel p-5 space-y-3">
+        <Surface variant="panel" padding="lg" className="space-y-3">
           <Skeleton className="h-5 w-28" />
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="flex items-center gap-3">
@@ -19,14 +20,14 @@ export default function DeckCalculatorLoading() {
               <Skeleton className="h-4 w-12" />
             </div>
           ))}
-        </div>
+        </Surface>
 
         {/* Summary */}
-        <div className="panel p-5 space-y-3">
+        <Surface variant="panel" padding="lg" className="space-y-3">
           <Skeleton className="h-5 w-28" />
           <Skeleton className="h-32 w-full rounded-lg" />
           <Skeleton className="h-8 w-32" />
-        </div>
+        </Surface>
       </div>
     </div>
   );

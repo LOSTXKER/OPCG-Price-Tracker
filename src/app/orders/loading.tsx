@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 
 export default function OrdersLoading() {
   return (
@@ -14,7 +15,7 @@ export default function OrdersLoading() {
 
       <div className="space-y-3">
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="panel p-4">
+          <Surface key={i} variant="panel" padding="md">
             <div className="flex items-center gap-4">
               <Skeleton className="size-12 rounded-lg" />
               <div className="flex-1 space-y-2">
@@ -23,7 +24,7 @@ export default function OrdersLoading() {
               </div>
               <Skeleton className="h-8 w-24 rounded-lg" />
             </div>
-          </div>
+          </Surface>
         ))}
       </div>
     </div>

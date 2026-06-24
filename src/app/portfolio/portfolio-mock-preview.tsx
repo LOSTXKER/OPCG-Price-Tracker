@@ -1,5 +1,6 @@
 import { ChevronDown, Plus, Wallet } from "lucide-react"
 
+import { Surface } from "@/components/ui/surface"
 import { t, type Language } from "@/lib/i18n"
 
 /** Static, data-free preview shown behind the auth gate on /portfolio. */
@@ -7,7 +8,7 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
   return (
     <div className="flex flex-col gap-5 md:flex-row md:gap-6">
       {/* Mobile compact picker mock */}
-      <div className="panel flex items-center gap-3 rounded-xl px-3.5 py-3 md:hidden">
+      <Surface variant="panel" className="flex items-center gap-3 px-3.5 py-3 md:hidden">
         <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
           <Wallet className="size-5" />
         </div>
@@ -18,10 +19,10 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
           </p>
         </div>
         <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
-      </div>
+      </Surface>
 
       <aside className="hidden w-52 shrink-0 lg:block xl:w-56">
-        <div className="panel overflow-hidden rounded-xl">
+        <Surface variant="panel" className="overflow-hidden">
           <div className="p-4">
             <p className="text-xs font-medium text-muted-foreground">
               {t(lang, "overview")}
@@ -57,7 +58,7 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
               </div>
             </div>
           </div>
-        </div>
+        </Surface>
       </aside>
 
       <main className="min-w-0 flex-1 space-y-4 sm:space-y-5">
@@ -81,7 +82,7 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
         </div>
 
         {/* Hero mock */}
-        <div className="panel relative isolate overflow-hidden rounded-xl ring-1 ring-border/30">
+        <Surface variant="panel" className="relative isolate overflow-hidden ring-1 ring-border/30">
           <div
             aria-hidden
             className="pointer-events-none absolute -right-16 -top-20 size-48 rounded-full opacity-[0.14] blur-3xl sm:-right-24 sm:-top-24 sm:size-72 sm:opacity-[0.18]"
@@ -117,10 +118,10 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
               </div>
             </div>
           </div>
-        </div>
+        </Surface>
 
         {/* Assets mock */}
-        <div className="panel overflow-hidden rounded-xl ring-1 ring-border/10">
+        <Surface variant="panel" className="overflow-hidden ring-1 ring-border/10">
           <div className="flex items-center justify-between border-b border-border/30 px-5 py-3 sm:px-6">
             <div className="flex items-center gap-2.5">
               <p className="text-sm font-bold">{t(lang, "assets")}</p>
@@ -150,7 +151,7 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
               </div>
             ))}
           </div>
-        </div>
+        </Surface>
       </main>
     </div>
   )

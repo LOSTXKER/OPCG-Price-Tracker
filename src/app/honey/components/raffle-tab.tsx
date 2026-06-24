@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
 import { t, getLocale, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { RaffleData, RaffleWinner } from "../types";
@@ -112,11 +113,11 @@ export function RaffleTab({
 
   if (machines.length === 0) {
     return (
-      <div className="panel flex flex-col items-center gap-2 py-14 text-center">
+      <Surface variant="panel" className="flex flex-col items-center gap-2 py-14 text-center">
         <Ticket className="size-7 text-muted-foreground/30" />
         <p className="text-sm font-medium">{t(lang, "raffleNone")}</p>
         <p className="text-meta">{t(lang, "raffleCheckBack")}</p>
-      </div>
+      </Surface>
     );
   }
 
@@ -143,7 +144,7 @@ export function RaffleTab({
       <RecentWinnersStrip lang={lang} winners={lastWinners} />
 
       {canClaimFree && (
-        <div className="flex items-center gap-3 rounded-xl border bg-card p-3.5">
+        <Surface variant="outline" className="flex items-center gap-3 p-3.5">
           <Gift className="size-4 shrink-0 text-primary" />
           <p className="min-w-0 flex-1 text-xs font-semibold">
             {t(lang, "raffleFreeAvailable")}
@@ -155,7 +156,7 @@ export function RaffleTab({
           >
             <Gift className="size-3.5" /> {t(lang, "raffleClaimFreeTicket")}
           </Button>
-        </div>
+        </Surface>
       )}
 
       {/* Machine card grid */}
@@ -202,9 +203,11 @@ function RecentWinnersStrip({
   winners: RaffleWinner[];
 }) {
   return (
-    <section
+    <Surface
+      as="section"
+      variant="panel"
       aria-label={t(lang, "raffleWinner")}
-      className="panel overflow-hidden"
+      className="overflow-hidden"
     >
       <header className="flex items-center justify-between gap-2 border-b px-4 py-2.5">
         <div className="flex items-center gap-2">
@@ -223,9 +226,11 @@ function RecentWinnersStrip({
       {winners.length > 0 ? (
         <div className="flex gap-2 overflow-x-auto scrollbar-none px-3 py-2.5">
           {winners.slice(0, 8).map((w, i) => (
-            <article
+            <Surface
+              as="article"
+              variant="outline"
               key={i}
-              className="flex min-w-[180px] max-w-[220px] shrink-0 flex-col gap-0.5 rounded-lg border bg-card px-3 py-2"
+              className="flex min-w-[180px] max-w-[220px] shrink-0 flex-col gap-0.5 px-3 py-2"
             >
               <p className="truncate text-xs font-semibold leading-tight">
                 {w.prizeName}
@@ -235,13 +240,13 @@ function RecentWinnersStrip({
                 <span className="mx-1.5 text-border">·</span>
                 <span className="tabular-nums">{w.month}</span>
               </p>
-            </article>
+            </Surface>
           ))}
         </div>
       ) : (
         <p className="px-4 py-3.5 text-meta">{t(lang, "winnersEmpty")}</p>
       )}
-    </section>
+    </Surface>
   );
 }
 
@@ -289,7 +294,7 @@ function MachineCard({
   const isAnonymous = !machine.winner?.displayName?.trim();
 
   return (
-    <div className="panel relative flex h-full flex-col overflow-hidden ease-chrome transition-colors hover:bg-muted/70">
+    <Surface variant="panel" interactive className="relative flex h-full flex-col overflow-hidden ease-chrome transition-colors">
       <div className="aspect-[4/3] w-full overflow-hidden bg-muted/20">
         {machine.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -428,7 +433,7 @@ function MachineCard({
 
             <div className="mt-auto">
               {confirming ? (
-                <div className="space-y-2 rounded-lg border bg-card p-2.5">
+                <Surface variant="outline" className="space-y-2 p-2.5">
                   <p className="text-xs font-semibold">
                     {t(lang, "raffleUseConfirm")}
                   </p>
@@ -454,7 +459,7 @@ function MachineCard({
                       {t(lang, "raffleCancel")}
                     </Button>
                   </div>
-                </div>
+                </Surface>
               ) : (
                 <Button
                   size="sm"
@@ -482,6 +487,6 @@ function MachineCard({
           </>
         )}
       </div>
-    </div>
+    </Surface>
   );
 }

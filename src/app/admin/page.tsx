@@ -24,6 +24,7 @@ import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminPanel } from "@/components/admin/admin-panel";
 import { StatCard } from "@/components/shared/stat-card";
+import { Surface } from "@/components/ui/surface";
 import { DashboardCharts } from "./dashboard-charts";
 
 export const dynamic = "force-dynamic";
@@ -396,10 +397,12 @@ export default async function AdminDashboard() {
         <div className={s.recentLogs.length > 0 ? "lg:col-span-3" : "lg:col-span-5"}>
           <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
             {QUICK_ACTIONS.map((action) => (
-              <Link
+              <Surface
                 key={action.href}
+                as={Link}
+                variant="outline"
                 href={action.href}
-                className="group flex h-full items-start gap-3 rounded-xl border border-border/60 bg-card p-4 transition-colors hover:bg-muted/20 sm:p-5"
+                className="group flex h-full items-start gap-3 p-4 transition-colors hover:bg-muted/20 sm:p-5"
               >
                 <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                   <action.icon className="size-[18px] text-primary" />
@@ -413,7 +416,7 @@ export default async function AdminDashboard() {
                   </p>
                 </div>
                 <ExternalLink className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/0 transition-colors group-hover:text-muted-foreground/60" />
-              </Link>
+              </Surface>
             ))}
           </div>
         </div>

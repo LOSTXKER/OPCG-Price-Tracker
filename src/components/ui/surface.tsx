@@ -1,4 +1,10 @@
-import { forwardRef, type ElementType, type HTMLAttributes, type ReactNode } from "react";
+import {
+  forwardRef,
+  type AnchorHTMLAttributes,
+  type ElementType,
+  type HTMLAttributes,
+  type ReactNode,
+} from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
@@ -33,9 +39,11 @@ const surfaceVariants = cva("ease-chrome", {
 
 export interface SurfaceProps
   extends Omit<HTMLAttributes<HTMLDivElement>, "title">,
+    Pick<AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "target" | "rel" | "download">,
     VariantProps<typeof surfaceVariants> {
   /**
-   * Render a different element (e.g. `as="article"`, `as="section"`).
+   * Render a different element (e.g. `as="article"`, `as="section"`, `as={Link}`).
+   * When `as` is a link, anchor props like `href`/`target` are forwarded.
    */
   as?: ElementType;
   /**

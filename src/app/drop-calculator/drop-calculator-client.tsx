@@ -5,6 +5,7 @@ import { AlertTriangle, Calculator, ListChecks, Package, LayoutGrid } from "luci
 
 import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Surface } from "@/components/ui/surface"
 import { PageHeader } from "@/components/layout/page-header"
 import { SetPicker } from "@/components/shared/set-picker"
 import { PurchaseConfig } from "@/components/drop-calculator/purchase-config"
@@ -203,7 +204,7 @@ export default function DropCalculatorClient() {
       />
 
       {showEmpty && (
-        <div className="panel flex flex-col items-center justify-center gap-4 px-6 py-12 text-center sm:py-16">
+        <Surface variant="panel" className="flex flex-col items-center justify-center gap-4 px-6 py-12 text-center sm:py-16">
           <div className="flex size-14 items-center justify-center rounded-full bg-primary/10">
             <Package className="size-6 text-primary" />
           </div>
@@ -218,7 +219,7 @@ export default function DropCalculatorClient() {
             onSelect={(code) => void loadSet(code ?? "")}
             variant="cta"
           />
-        </div>
+        </Surface>
       )}
 
       {showLoading && (
@@ -285,7 +286,7 @@ export default function DropCalculatorClient() {
                 </>
               )}
               {activeTab === "results" && (
-                <div className="panel space-y-4 p-4">
+                <Surface variant="panel" className="space-y-4 p-4">
                   <PurchaseConfig
                     unit={unit}
                     quantity={quantity}
@@ -306,7 +307,7 @@ export default function DropCalculatorClient() {
                       onClearAll={() => setWantList(new Set())}
                     />
                   </div>
-                </div>
+                </Surface>
               )}
             </div>
           </div>
@@ -331,7 +332,7 @@ export default function DropCalculatorClient() {
               </p>
             </div>
 
-            <aside className="panel space-y-4 p-4">
+            <Surface as="aside" variant="panel" className="space-y-4 p-4">
               <PurchaseConfig
                 unit={unit}
                 quantity={quantity}
@@ -352,7 +353,7 @@ export default function DropCalculatorClient() {
                   onClearAll={() => setWantList(new Set())}
                 />
               </div>
-            </aside>
+            </Surface>
           </div>
         </>
       )}

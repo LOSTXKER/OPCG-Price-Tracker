@@ -1,6 +1,7 @@
 "use client"
 
 import { TrendingDown, TrendingUp } from "lucide-react"
+import { Surface } from "@/components/ui/surface"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { formatJpyAmount } from "@/lib/utils/currency"
@@ -26,7 +27,7 @@ export function PortfolioStatsStrip({
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       {/* Best performer */}
-      <div className="panel flex items-center gap-3 rounded-xl px-4 py-3">
+      <Surface variant="panel" className="flex items-center gap-3 px-4 py-3">
         <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-price-up/10 text-price-up">
           <TrendingUp className="size-4" />
         </div>
@@ -43,10 +44,10 @@ export function PortfolioStatsStrip({
             <p className="text-sm text-muted-foreground">—</p>
           )}
         </div>
-      </div>
+      </Surface>
 
       {/* Worst performer */}
-      <div className="panel flex items-center gap-3 rounded-xl px-4 py-3">
+      <Surface variant="panel" className="flex items-center gap-3 px-4 py-3">
         <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-price-down/10 text-price-down">
           <TrendingDown className="size-4" />
         </div>
@@ -63,7 +64,7 @@ export function PortfolioStatsStrip({
             <p className="text-sm text-muted-foreground">—</p>
           )}
         </div>
-      </div>
+      </Surface>
     </div>
   )
 }

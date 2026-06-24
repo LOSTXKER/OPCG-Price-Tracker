@@ -1,10 +1,11 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 
 export default function Loading() {
   return (
     <div className="space-y-6">
       <Skeleton className="h-8 w-48" />
-      <div className="panel overflow-hidden">
+      <Surface variant="panel" className="overflow-hidden">
         <div className="flex flex-wrap gap-2 border-b border-border/60 p-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <Skeleton key={i} className="h-8 w-20 rounded-full" />
@@ -26,7 +27,7 @@ export default function Loading() {
             </div>
           ))}
         </div>
-      </div>
+      </Surface>
     </div>
   );
 }

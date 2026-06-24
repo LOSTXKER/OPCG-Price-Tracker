@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -10,6 +10,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { EmptyState } from "@/components/shared/empty-state";
 import { LoadingState } from "@/components/shared/loading-state";
+import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
 import { ApiError, apiGet, apiPost, apiTry } from "@/lib/api/client";
 import { formatJpy, formatThb } from "@/lib/utils/currency";
@@ -143,9 +144,11 @@ export default function SavedListingsPage() {
               const isActive = listing.status === "ACTIVE";
 
               return (
-                <div
+                <Surface
+                  variant="panel"
+                  interactive
                   key={item.id}
-                  className="panel group relative overflow-hidden rounded-xl ease-chrome transition-colors hover:bg-muted/70"
+                  className="group relative overflow-hidden ease-chrome transition-colors"
                 >
                   <Link href={`/marketplace/${listing.id}`} className="block">
                     {/* Image — clean, no overlays. Sold/inactive listings desaturate. */}
@@ -219,7 +222,7 @@ export default function SavedListingsPage() {
                       )}
                     </button>
                   </div>
-                </div>
+                </Surface>
               );
             })}
           </div>

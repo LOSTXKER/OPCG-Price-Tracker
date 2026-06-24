@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ArrowRight, Plus, Store } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { Surface } from "@/components/ui/surface"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { formatByCurrency } from "@/lib/utils/currency"
@@ -40,7 +41,7 @@ export function CardListingsSection({
 
   if (!listings || listings.length === 0) {
     return (
-      <div className="panel flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <Surface variant="panel" padding="md" className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted">
             <Store className="size-4 text-muted-foreground" />
@@ -65,7 +66,7 @@ export function CardListingsSection({
           <Plus className="size-3.5" />
           {t(lang, "listThisCard")}
         </Button>
-      </div>
+      </Surface>
     )
   }
 
@@ -73,7 +74,7 @@ export function CardListingsSection({
   const hasMore = listings.length > PREVIEW_LIMIT
 
   return (
-    <div className="panel overflow-hidden">
+    <Surface variant="panel" className="overflow-hidden">
       <div className="flex items-center justify-between px-4 pt-3.5 pb-2">
         <div className="flex items-center gap-2">
           <Store className="size-3.5 text-muted-foreground" />
@@ -145,6 +146,6 @@ export function CardListingsSection({
       )}
 
       <span className="sr-only">{cardName}</span>
-    </div>
+    </Surface>
   )
 }

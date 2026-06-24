@@ -16,6 +16,7 @@ import {
   Zap,
 } from "lucide-react";
 import { prisma } from "@/lib/db";
+import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { JsonLd } from "@/lib/seo/json-ld-script";
@@ -204,7 +205,7 @@ export default async function GettingStartedPage() {
         </div>
         {/* Leader & DON!! card examples */}
         {(leader || don) && (
-          <div className="flex items-center gap-6 rounded-xl border border-border/50 bg-card px-5 py-4">
+          <Surface variant="outline" className="flex items-center gap-6 px-5 py-4">
             {leader?.imageUrl && (
               <Link href={`/cards/${leader.cardCode}`} className="group shrink-0">
                 <p className="mb-1.5 text-center text-xs font-medium text-muted-foreground">Leader</p>
@@ -231,7 +232,7 @@ export default async function GettingStartedPage() {
               {t(lang, "guideStartCardExampleA")}<strong className="text-foreground">Leader</strong>{t(lang, "guideStartCardExampleB")}
               <strong className="text-foreground">DON!!</strong>{t(lang, "guideStartCardExampleC")}
             </p>
-          </div>
+          </Surface>
         )}
 
         <div className="flex items-start gap-2.5 rounded-lg border border-blue-500/20 bg-blue-500/5 px-4 py-3">
@@ -267,7 +268,7 @@ export default async function GettingStartedPage() {
         </ol>
 
         {/* Game board diagram */}
-        <div className="overflow-hidden rounded-xl border border-border/50 bg-card">
+        <Surface variant="outline" className="overflow-hidden">
           <div className="border-b border-border/40 px-4 py-2 text-xs font-medium text-muted-foreground">
             {t(lang, "guideStartBoardCaption")}
           </div>
@@ -321,7 +322,7 @@ export default async function GettingStartedPage() {
               <span className="text-muted-foreground">{t(lang, "guideStartBoardHand")}</span>
             </div>
           </div>
-        </div>
+        </Surface>
       </section>
 
       {/* ── 4. เทิร์นการเล่น (Turn Phases) ── */}
@@ -372,7 +373,7 @@ export default async function GettingStartedPage() {
           {t(lang, "guideStartDonSystemIntro")}
         </p>
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-xl border border-border/50 bg-card p-5">
+          <Surface variant="outline" className="p-5">
             <div className="flex size-9 items-center justify-center rounded-lg bg-amber-500/10">
               <Zap className="size-5 text-amber-500" />
             </div>
@@ -380,8 +381,8 @@ export default async function GettingStartedPage() {
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
               {t(lang, "guideStartDonPayCostDesc")}
             </p>
-          </div>
-          <div className="rounded-xl border border-border/50 bg-card p-5">
+          </Surface>
+          <Surface variant="outline" className="p-5">
             <div className="flex size-9 items-center justify-center rounded-lg bg-rose-500/10">
               <Swords className="size-5 text-rose-500" />
             </div>
@@ -389,7 +390,7 @@ export default async function GettingStartedPage() {
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
               {t(lang, "guideStartDonPowerA")}<strong className="text-foreground">{t(lang, "guideStartDonPowerStrong")}</strong>{t(lang, "guideStartDonPowerB")}
             </p>
-          </div>
+          </Surface>
         </div>
       </section>
 
@@ -434,7 +435,7 @@ export default async function GettingStartedPage() {
       <section className="space-y-4">
         <h2 className="text-xl font-semibold">{t(lang, "guideStartWinTitle")}</h2>
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-xl border border-border/50 bg-card p-5">
+          <Surface variant="outline" className="p-5">
             <div className="flex items-center gap-2">
               <Swords className="size-5 text-rose-500" />
               <h3 className="text-sm font-semibold">{t(lang, "guideStartWinAttackTitle")}</h3>
@@ -442,8 +443,8 @@ export default async function GettingStartedPage() {
             <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
               {t(lang, "guideStartWinAttackA")}<strong className="text-foreground">{t(lang, "guideStartWinYouWin")}</strong>
             </p>
-          </div>
-          <div className="rounded-xl border border-border/50 bg-card p-5">
+          </Surface>
+          <Surface variant="outline" className="p-5">
             <div className="flex items-center gap-2">
               <Layers className="size-5 text-blue-500" />
               <h3 className="text-sm font-semibold">{t(lang, "guideStartWinDeckOutTitle")}</h3>
@@ -451,7 +452,7 @@ export default async function GettingStartedPage() {
             <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
               {t(lang, "guideStartWinDeckOutA")}<strong className="text-foreground">{t(lang, "guideStartWinYouWin")}</strong>{t(lang, "guideStartWinDeckOutB")}
             </p>
-          </div>
+          </Surface>
         </div>
       </section>
 
@@ -481,7 +482,7 @@ export default async function GettingStartedPage() {
       {/* ── 9. แหล่งอ้างอิง ── */}
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">{t(lang, "guideStartSourcesTitle")}</h2>
-        <div className="divide-y divide-border/50 rounded-xl border border-border/50 bg-card text-sm">
+        <Surface variant="outline" className="divide-y divide-border/50 text-sm">
           {[
             {
               label: "Official Rules",
@@ -513,7 +514,7 @@ export default async function GettingStartedPage() {
               <ExternalLink className="size-4 shrink-0 text-muted-foreground/40" />
             </a>
           ))}
-        </div>
+        </Surface>
       </section>
 
       {/* ── Related pages ── */}

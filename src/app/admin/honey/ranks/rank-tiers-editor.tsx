@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import { adminFetch } from "@/lib/admin/admin-fetch";
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
 import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminSaveBar } from "@/components/admin/admin-save-bar";
@@ -244,7 +245,7 @@ export function RankTiersEditor({ initialTiers }: { initialTiers: RankTier[] }) 
       )}
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <div className="overflow-hidden rounded-xl border border-border/60 bg-card">
+        <Surface variant="outline" className="overflow-hidden">
           {sortedForDisplay.map((tier, idx) => (
             <TierRow
               key={tier._key}
@@ -262,7 +263,7 @@ export function RankTiersEditor({ initialTiers }: { initialTiers: RankTier[] }) 
               onMoveDown={() => moveTier(tier._key, 1)}
             />
           ))}
-        </div>
+        </Surface>
 
         <aside className="lg:sticky lg:top-4 lg:self-start">
           <RankPreview tiers={stripKeys(sortedForDisplay)} />

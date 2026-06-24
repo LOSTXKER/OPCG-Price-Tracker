@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Surface } from "@/components/ui/surface"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { buildPageRange } from "@/lib/utils/pagination"
@@ -20,7 +21,7 @@ export function SearchPagination({
   if (totalPages <= 1) return null
 
   return (
-    <div className="panel flex items-center justify-between px-4 py-3">
+    <Surface variant="panel" className="flex items-center justify-between px-4 py-3">
       <p className="text-xs tabular-nums text-muted-foreground">
         {t(lang, "pageOf")} {page} / {totalPages}
       </p>
@@ -61,6 +62,6 @@ export function SearchPagination({
           <ChevronRight className="size-4" />
         </button>
       </div>
-    </div>
+    </Surface>
   )
 }

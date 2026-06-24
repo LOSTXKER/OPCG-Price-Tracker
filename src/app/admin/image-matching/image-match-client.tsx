@@ -20,6 +20,7 @@ import {
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { Lightbox } from "@/components/admin/matching-ui";
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
 import { toast } from "sonner";
 
 interface CardEntry {
@@ -203,10 +204,11 @@ export function ImageMatchClient() {
       ) : (
         <div className="space-y-3">
           {data?.cards?.map((card) => (
-            <div
+            <Surface
               key={card.id}
+              variant="outline"
               className={cn(
-                "rounded-xl border p-4 transition-colors",
+                "p-4 transition-colors",
                 saving === card.id
                   ? "border-primary/40 bg-primary/5"
                   : "border-border/30 bg-card",
@@ -344,7 +346,7 @@ export function ImageMatchClient() {
                   })}
                 </div>
               </div>
-            </div>
+            </Surface>
           ))}
         </div>
       )}

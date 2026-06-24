@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Surface } from "@/components/ui/surface";
 import { cn } from "@/lib/utils";
 import { Star, MessageSquare } from "lucide-react";
 import { t, type Language } from "@/lib/i18n";
@@ -59,7 +60,7 @@ export function ReviewSection({
 }: ReviewSectionProps) {
   if (totalCount === 0) {
     return (
-      <div className={cn("panel flex flex-col items-center gap-3 p-8 text-center", className)}>
+      <Surface variant="panel" className={cn("flex flex-col items-center gap-3 p-8 text-center", className)}>
         <MessageSquare className="text-muted-foreground size-10" />
         <div>
           <p className="font-medium">{t(lang, "mktDetailNoReviews")}</p>
@@ -67,13 +68,13 @@ export function ReviewSection({
             {t(lang, "mktReviewEmptyDesc")}
           </p>
         </div>
-      </div>
+      </Surface>
     );
   }
 
   return (
     <div className={cn("space-y-5", className)}>
-      <div className="panel flex items-center gap-5 p-5">
+      <Surface variant="panel" className="flex items-center gap-5 p-5">
         <div className="text-center">
           <p className="text-4xl font-bold tracking-tight">
             {(averageRating ?? 0).toFixed(1)}
@@ -83,13 +84,13 @@ export function ReviewSection({
         <div className="text-muted-foreground text-sm">
           <p>{t(lang, "mktReviewTotalCount").replace("{n}", String(totalCount))}</p>
         </div>
-      </div>
+      </Surface>
 
       <div className="space-y-3">
         {reviews.map((review) => {
           const name = review.reviewer.displayName ?? t(lang, "buyer");
           return (
-            <div key={review.id} className="panel space-y-2 p-4">
+            <Surface key={review.id} variant="panel" className="space-y-2 p-4">
               <div className="flex items-center gap-3">
                 <Avatar className="size-8">
                   {review.reviewer.avatarUrl ? (
@@ -112,7 +113,7 @@ export function ReviewSection({
               {review.comment && (
                 <p className="text-sm leading-relaxed">{review.comment}</p>
               )}
-            </div>
+            </Surface>
           );
         })}
       </div>

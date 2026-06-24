@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { Surface } from "@/components/ui/surface";
 
 export default function PortfolioLoading() {
   return (
@@ -39,7 +40,7 @@ export default function PortfolioLoading() {
         <Skeleton className="h-52 rounded-xl" />
 
         {/* Table */}
-        <div className="panel overflow-hidden rounded-xl">
+        <Surface variant="panel" className="overflow-hidden">
           <div className="border-b border-border/30 px-4 py-3">
             <Skeleton className="h-4 w-20" />
           </div>
@@ -54,7 +55,7 @@ export default function PortfolioLoading() {
               <Skeleton className="h-3.5 w-12" />
             </div>
           ))}
-        </div>
+        </Surface>
       </div>
     </div>
   );

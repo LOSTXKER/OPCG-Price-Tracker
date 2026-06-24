@@ -18,6 +18,7 @@ import {
 import { EmptyState } from "@/components/shared/empty-state";
 import { LoadingState } from "@/components/shared/loading-state";
 import { PageHeader } from "@/components/layout/page-header";
+import { Surface } from "@/components/ui/surface";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { ApiError, apiForm, apiGet, apiPatch, apiTry } from "@/lib/api/client";
@@ -222,7 +223,7 @@ export default function SellerEditListingPage() {
       )}
 
       {/* Card info (readonly) */}
-      <div className="panel flex items-center gap-4 rounded-xl p-4">
+      <Surface variant="panel" padding="md" className="flex items-center gap-4">
         {listing.card.imageUrl ? (
           <Image
             src={listing.card.imageUrl}
@@ -248,10 +249,10 @@ export default function SellerEditListingPage() {
             <Badge variant="secondary">{listing.card.set.name}</Badge>
           </div>
         </div>
-      </div>
+      </Surface>
 
       {/* Pricing */}
-      <div className="panel space-y-4 rounded-xl p-4">
+      <Surface variant="panel" padding="md" className="space-y-4">
         <h2 className="text-h3">{t(lang, "sellListingPriceConditionHeading")}</h2>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -308,10 +309,10 @@ export default function SellerEditListingPage() {
             />
           </div>
         </div>
-      </div>
+      </Surface>
 
       {/* Description */}
-      <div className="panel space-y-4 rounded-xl p-4">
+      <Surface variant="panel" padding="md" className="space-y-4">
         <h2 className="text-h3">{t(lang, "sellListingDescriptionHeading")}</h2>
         <textarea
           value={description}
@@ -320,10 +321,10 @@ export default function SellerEditListingPage() {
           placeholder={t(lang, "sellListingDescriptionPlaceholder")}
           className="w-full rounded-lg border border-[var(--p-hair)] bg-background px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         />
-      </div>
+      </Surface>
 
       {/* Photos */}
-      <div className="panel space-y-4 rounded-xl p-4">
+      <Surface variant="panel" padding="md" className="space-y-4">
         <h2 className="text-h3">{t(lang, "sellListingPhotosHeading")}</h2>
         <div className="flex flex-wrap gap-3">
           {photos.map((url, i) => (
@@ -365,10 +366,10 @@ export default function SellerEditListingPage() {
         <p className="text-meta">
           {t(lang, "sellListingPhotosHint")}
         </p>
-      </div>
+      </Surface>
 
       {/* Shipping */}
-      <div className="panel space-y-4 rounded-xl p-4">
+      <Surface variant="panel" padding="md" className="space-y-4">
         <h2 className="text-h3">{t(lang, "sellListingShippingHeading")}</h2>
 
         <div>
@@ -404,7 +405,7 @@ export default function SellerEditListingPage() {
             ))}
           </div>
         </div>
-      </div>
+      </Surface>
 
       {/* Bottom save button */}
       <div className="flex justify-end gap-3 pb-8">

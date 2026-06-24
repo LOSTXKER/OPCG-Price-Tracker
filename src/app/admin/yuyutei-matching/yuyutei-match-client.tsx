@@ -24,6 +24,7 @@ import {
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { Lightbox } from "@/components/admin/matching-ui";
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
 import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
 import { SetPicker } from "@/components/shared/set-picker";
 import { useAdminList } from "@/lib/admin/use-admin-list";
@@ -412,7 +413,7 @@ export function YuyuteiMatchClient() {
       />
 
       {/* ── Table ── */}
-      <div className="rounded-xl border border-border/50 overflow-hidden bg-card">
+      <Surface variant="outline" className="overflow-hidden">
         {/* Status tabs */}
         <div className="flex items-center justify-between border-b border-border/30 bg-muted/20 px-3 py-2">
           <div className="flex items-center gap-0.5 rounded-lg bg-muted/60 p-0.5">
@@ -560,7 +561,7 @@ export function YuyuteiMatchClient() {
             />
           </div>
         )}
-      </div>
+      </Surface>
 
       {/* ── Floating bulk bar ── */}
       {someChecked && (

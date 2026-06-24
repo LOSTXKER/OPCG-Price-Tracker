@@ -268,9 +268,12 @@ function TopCardTile({
   const name = getCardName(lang, card)
 
   return (
-    <Link
+    <Surface
+      as={Link}
+      variant="panel"
+      interactive
       href={`/cards/${card.cardCode}`}
-      className="group panel flex flex-col overflow-hidden transition-colors ease-chrome hover:bg-muted/70"
+      className="group flex flex-col overflow-hidden transition-colors ease-chrome"
     >
       <div className="relative aspect-[63/88] w-full overflow-hidden bg-muted/30">
         {card.imageUrl ? (
@@ -307,6 +310,6 @@ function TopCardTile({
           )}
         </div>
       </div>
-    </Link>
+    </Surface>
   )
 }

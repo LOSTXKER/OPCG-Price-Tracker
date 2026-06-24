@@ -10,6 +10,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { Surface } from "@/components/ui/surface";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { formatRelativeAgo } from "@/lib/utils/relative-time";
@@ -67,12 +68,14 @@ export function ProfileTrustBlock({
   }
 
   return (
-    <section
+    <Surface
+      variant="outline"
+      as="section"
       aria-label={t(lang, "trustBlockTitle")}
       className={cn(
-        // Quiet container — soft border + card surface so the chips group
-        // visually without competing with the hero or reviews block.
-        "mt-6 overflow-hidden rounded-2xl border border-border/50 bg-card/40",
+        // Quiet container — card surface so the chips group visually
+        // without competing with the hero or reviews block.
+        "mt-6 overflow-hidden",
         "px-4 py-4 sm:px-5",
       )}
     >
@@ -118,7 +121,7 @@ export function ProfileTrustBlock({
           <span>{t(lang, "newSellerNotice")}</span>
         </div>
       )}
-    </section>
+    </Surface>
   );
 }
 

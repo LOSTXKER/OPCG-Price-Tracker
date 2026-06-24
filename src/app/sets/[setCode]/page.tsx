@@ -14,6 +14,7 @@ import { RarityBadge } from "@/components/shared/rarity-badge";
 import { RARITIES, raritySort } from "@/lib/constants/rarities";
 import { prisma } from "@/lib/db";
 import { Price } from "@/components/shared/price-inline";
+import { Surface } from "@/components/ui/surface";
 import { FormattedDate } from "@/components/shared/formatted-date";
 import { SetPageStats, SetPageTopCardLabel, DropRateDialog } from "./set-page-client";
 import { pullChance, PACKS_PER_BOX } from "@/lib/utils/pull-rate";
@@ -223,7 +224,7 @@ export default async function SetDetailPage(props: {
           href={`/cards/${topCard.cardCode}`}
           className="group block"
         >
-          <div className="panel grid grid-cols-[auto_1fr_auto] items-center gap-3 p-3 transition-colors hover:bg-muted/20 sm:gap-4 sm:p-4">
+          <Surface variant="panel" className="grid grid-cols-[auto_1fr_auto] items-center gap-3 p-3 transition-colors hover:bg-muted/20 sm:gap-4 sm:p-4">
             <div className="relative aspect-[63/88] w-12 shrink-0 overflow-hidden rounded-md bg-muted sm:w-[60px]">
               {topCard.imageUrl ? (
                 <Image
@@ -260,7 +261,7 @@ export default async function SetDetailPage(props: {
               </p>
               <ArrowRight className="hidden size-4 text-muted-foreground/40 transition-transform group-hover:translate-x-0.5 group-hover:text-muted-foreground sm:block" />
             </div>
-          </div>
+          </Surface>
         </Link>
       )}
 

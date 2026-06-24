@@ -18,6 +18,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Surface } from "@/components/ui/surface";
 import { ApiError, apiFetch, apiGet, apiTry } from "@/lib/api/client";
 import { createClient } from "@/lib/supabase/client";
 import { useUIStore } from "@/stores/ui-store";
@@ -215,7 +216,7 @@ export function SectionSecurity() {
       <h2 className="text-h2">{t(lang, "security")}</h2>
 
       {/* Change password */}
-      <div className="rounded-xl border border-[var(--p-hair)] bg-card p-5 space-y-4">
+      <Surface variant="outline" padding="lg" className="space-y-4">
         <div className="flex items-center gap-2">
           <Lock className="size-4 text-muted-foreground" />
           <h3 className="text-h5">{t(lang, "changePassword")}</h3>
@@ -304,10 +305,10 @@ export function SectionSecurity() {
             )}
           </Button>
         </form>
-      </div>
+      </Surface>
 
       {/* Two-Factor Authentication */}
-      <div className="rounded-xl border border-[var(--p-hair)] bg-card p-5 space-y-4">
+      <Surface variant="outline" padding="lg" className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <KeyRound className="size-4 text-muted-foreground" />
@@ -429,10 +430,10 @@ export function SectionSecurity() {
             {mfaError}
           </div>
         )}
-      </div>
+      </Surface>
 
       {/* Login history */}
-      <div className="rounded-xl border border-[var(--p-hair)] bg-card">
+      <Surface variant="outline">
         <div className="flex items-center gap-2 border-b border-[var(--p-hair)] px-5 py-3">
           <History className="size-4 text-muted-foreground" />
           <h3 className="text-h5">{t(lang, "loginHistory")}</h3>
@@ -481,7 +482,7 @@ export function SectionSecurity() {
             })}
           </div>
         )}
-      </div>
+      </Surface>
     </div>
   );
 }

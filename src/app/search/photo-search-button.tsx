@@ -337,11 +337,13 @@ function ResultBlock({
       ) : (
         <div className="max-h-[40vh] space-y-2 overflow-y-auto pr-1">
           {cards.map((card) => (
-            <Link
+            <Surface
+              as={Link}
+              variant="outline"
               key={card.cardCode}
               href={`/cards/${card.cardCode}`}
               onClick={onClose}
-              className="flex items-center gap-3 rounded-xl border border-[var(--p-hair)] bg-card p-2 transition-colors ease-chrome hover:border-primary/40 hover:bg-muted/70"
+              className="flex items-center gap-3 p-2 transition-colors ease-chrome hover:border-primary/40 hover:bg-muted/70"
             >
               <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-muted">
                 {card.imageUrl ? (
@@ -377,7 +379,7 @@ function ResultBlock({
                   showChange={false}
                 />
               </div>
-            </Link>
+            </Surface>
           ))}
         </div>
       )}

@@ -27,6 +27,7 @@ import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
 import { AdminFormField } from "@/components/admin/admin-form-field";
 import { Badge } from "@/components/ui/badge";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { Surface } from "@/components/ui/surface";
 import { adminFetch } from "@/lib/admin/admin-fetch";
 import { cn } from "@/lib/utils";
 
@@ -245,9 +246,10 @@ function SetCard({
   const editLoading = loading[`edit-${set.id}`];
 
   return (
-    <div
+    <Surface
+      variant="outline"
       className={cn(
-        "overflow-hidden rounded-xl border border-border/40 bg-card transition-all",
+        "overflow-hidden transition-all",
         expanded && "border-border/60 shadow-sm",
       )}
     >
@@ -455,7 +457,7 @@ function SetCard({
           )}
         </div>
       )}
-    </div>
+    </Surface>
   );
 }
 

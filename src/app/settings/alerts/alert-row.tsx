@@ -18,6 +18,7 @@ import type { LucideIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
 import type { PriceAlertItem } from "@/components/alerts/alert-types";
 import { useUIStore } from "@/stores/ui-store";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";
@@ -68,10 +69,11 @@ export function AlertRow({
   });
 
   return (
-    <div
+    <Surface
+      variant="outline"
       className={cn(
-        "rounded-xl border bg-card p-4 transition-colors",
-        alert.isActive ? "border-border/40" : "border-border/30 bg-muted/20",
+        "p-4 transition-colors",
+        alert.isActive ? "" : "bg-muted/20",
       )}
     >
       <div className="flex gap-3 sm:gap-4">
@@ -204,7 +206,7 @@ export function AlertRow({
           </div>
         </div>
       </div>
-    </div>
+    </Surface>
   );
 }
 
