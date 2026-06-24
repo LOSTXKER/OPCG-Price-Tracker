@@ -53,7 +53,7 @@ export function YuyuteiMatchRow({
   return (
     <tr
       className={cn(
-        "border-b border-border/10 transition-colors group",
+        "border-b border-[var(--p-hair)] transition-colors group",
         "hover:bg-muted/30",
         isChecked && "!bg-primary/[0.06]",
         !isChecked && m.status === "suggested" && "bg-blue-500/[0.02]",

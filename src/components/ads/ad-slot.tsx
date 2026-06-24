@@ -46,7 +46,7 @@ export function AdSlot({
       href="/pricing"
       data-ad-placement={placement}
       className={cn(
-        "group relative flex flex-col justify-center gap-1 overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-secondary to-accent p-4 transition-colors hover:border-primary/40",
+        "group relative flex flex-col justify-center gap-1 overflow-hidden rounded-lg border border-[var(--p-hair)] bg-gradient-to-br from-secondary to-accent p-4 transition-colors hover:border-primary/40",
         className
       )}
     >

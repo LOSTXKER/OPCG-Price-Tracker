@@ -295,7 +295,7 @@ export default async function AdminDashboard() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="group flex items-start gap-3 rounded-lg border border-border/30 p-3 transition-colors hover:bg-muted/30"
+                className="group flex items-start gap-3 rounded-lg border border-[var(--p-hair)] p-3 transition-colors hover:bg-muted/30"
               >
                 <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                   <QIcon className="size-4 text-primary" />
@@ -337,7 +337,7 @@ export default async function AdminDashboard() {
             <Link
               key={r.rarity}
               href={`/admin/cards?rarity=${r.rarity}&parallel=false`}
-              className="flex items-center gap-2 rounded-lg border border-border/30 px-3 py-1.5 text-sm transition-colors hover:bg-muted/40"
+              className="flex items-center gap-2 rounded-lg border border-[var(--p-hair)] px-3 py-1.5 text-sm transition-colors hover:bg-muted/40"
             >
               <div className={`size-2.5 rounded-full ${rarityDot(i)}`} />
               <span className="font-mono text-xs font-bold">{r.rarity}</span>

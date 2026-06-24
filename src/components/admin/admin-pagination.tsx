@@ -63,7 +63,7 @@ export function AdminPagination({
             <select
               value={perPage}
               onChange={(e) => onPerPageChange(Number(e.target.value))}
-              className="h-8 rounded-md border border-border/50 bg-transparent px-2 text-xs"
+              className="h-8 rounded-md border border-[var(--p-hair)] bg-transparent px-2 text-xs"
               aria-label="จำนวนต่อหน้า"
             >
               {perPageOptions.map((n) => (

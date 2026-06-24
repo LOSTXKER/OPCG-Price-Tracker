@@ -67,10 +67,10 @@ export function LoadingState({
   if (variant === "skeleton-table") {
     return (
       <div role="status" aria-label={label} className={cn("panel overflow-hidden", className)}>
-        <div className="border-b border-border/60 bg-muted/40 px-4 py-3">
+        <div className="border-b border-[var(--p-hair)] bg-muted/40 px-4 py-3">
           <Skeleton className="h-4 w-32" />
         </div>
-        <div className="divide-y divide-border/60">
+        <div className="divide-y divide-[var(--p-hair)]">
           {Array.from({ length: count }).map((_, i) => (
             <div key={i} className="flex items-center gap-4 px-4 py-3">
               <Skeleton className="size-10 shrink-0 rounded-md" />

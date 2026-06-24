@@ -10,7 +10,7 @@ export default function SellerListingsLoading() {
       </div>
       <Surface variant="panel" className="overflow-hidden">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-4 border-b border-border/40 px-4 py-3 last:border-0">
+          <div key={i} className="flex items-center gap-4 border-b border-[var(--p-hair)] px-4 py-3 last:border-0">
             <Skeleton className="size-12 rounded-lg" />
             <div className="flex-1 space-y-1.5">
               <Skeleton className="h-4 w-40" />

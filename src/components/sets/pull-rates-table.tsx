@@ -80,7 +80,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
       </div>
 
       {/* Rows */}
-      <div className="divide-y divide-border/40">
+      <div className="divide-y divide-[var(--p-hair)]">
         {rows.map((row) => {
           const count = countForUnit(row);
           const chance = pullChance(rateForUnit(row), row.cardCount);
@@ -127,7 +127,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
 
       {/* Footer */}
       {packsPerBox && cardsPerPack && (
-        <div className="mt-3 border-t border-border/40 pt-3 text-meta">
+        <div className="mt-3 border-t border-[var(--p-hair)] pt-3 text-meta">
           {packsPerBox} {t(lang, "perUnit")}/{t(lang, "packUnit")} · {cardsPerPack} {t(lang, "cardsCount")}/{t(lang, "packUnit")} · {BOXES_PER_CARTON} {t(lang, "boxUnit")}/{t(lang, "cartonUnit")}
         </div>
       )}

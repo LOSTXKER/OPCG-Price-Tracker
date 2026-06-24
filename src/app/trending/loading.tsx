@@ -19,7 +19,7 @@ export default function TrendingLoading() {
       {/* Card list */}
       <Surface variant="panel" padding="md" className="overflow-hidden">
         {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-4 border-b border-border/40 py-3 last:border-0">
+          <div key={i} className="flex items-center gap-4 border-b border-[var(--p-hair)] py-3 last:border-0">
             <Skeleton className="size-6 rounded-full" />
             <Skeleton className="size-10 rounded" />
             <div className="flex-1">

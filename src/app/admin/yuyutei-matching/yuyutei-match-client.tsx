@@ -415,7 +415,7 @@ export function YuyuteiMatchClient() {
       {/* ── Table ── */}
       <Surface variant="outline" className="overflow-hidden">
         {/* Status tabs */}
-        <div className="flex items-center justify-between border-b border-border/30 bg-muted/20 px-3 py-2">
+        <div className="flex items-center justify-between border-b border-[var(--p-hair)] bg-muted/20 px-3 py-2">
           <div className="flex items-center gap-0.5 rounded-lg bg-muted/60 p-0.5">
             {STATUS_TABS.map((tab) => {
               const count =
@@ -470,7 +470,7 @@ export function YuyuteiMatchClient() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border/30 bg-muted/40 text-meta">
+                <tr className="border-b border-[var(--p-hair)] bg-muted/40 text-meta">
                   <th className="px-3 py-2.5 w-10" />
                   {showStatusCol && <th className="px-3 py-2.5 text-left w-20">สถานะ</th>}
                   <th className="px-3 py-2.5 text-left">รายการ Yuyutei</th>
@@ -500,7 +500,7 @@ export function YuyuteiMatchClient() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="sticky top-0 z-10">
-                <tr className="border-b border-border/30 bg-muted/40 text-meta">
+                <tr className="border-b border-[var(--p-hair)] bg-muted/40 text-meta">
                   <th className="px-3 py-2.5 w-10 bg-muted/40">
                     <input
                       type="checkbox"
@@ -549,7 +549,7 @@ export function YuyuteiMatchClient() {
 
         {/* Pagination */}
         {data && data.total > 0 && (
-          <div className="border-t border-border/30 px-3 py-2">
+          <div className="border-t border-[var(--p-hair)] px-3 py-2">
             <AdminPagination
               page={page}
               totalPages={data.totalPages}

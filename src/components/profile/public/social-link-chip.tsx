@@ -6,7 +6,7 @@ import { t, type Language } from "@/lib/i18n";
 import type { SocialLinkDescriptor } from "./hero-builders";
 
 const CHIP_CLASS =
-  "inline-flex items-center gap-1.5 rounded-full border border-border/40 bg-transparent px-2.5 py-1 text-micro text-muted-foreground transition hover:border-border hover:bg-muted/40 hover:text-foreground";
+  "inline-flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] bg-transparent px-2.5 py-1 text-micro text-muted-foreground transition hover:border-border hover:bg-muted/40 hover:text-foreground";
 
 /**
  * Renders a single social/contact chip in the profile hero. Has two modes:

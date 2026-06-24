@@ -269,7 +269,7 @@ export default async function GettingStartedPage() {
 
         {/* Game board diagram */}
         <Surface variant="outline" className="overflow-hidden">
-          <div className="border-b border-border/40 px-4 py-2 text-xs font-medium text-muted-foreground">
+          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-xs font-medium text-muted-foreground">
             {t(lang, "guideStartBoardCaption")}
           </div>
           <div className="grid grid-cols-3 gap-2 p-4 text-center text-xs sm:grid-cols-5">
@@ -482,7 +482,7 @@ export default async function GettingStartedPage() {
       {/* ── 9. แหล่งอ้างอิง ── */}
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">{t(lang, "guideStartSourcesTitle")}</h2>
-        <Surface variant="outline" className="divide-y divide-border/50 text-sm">
+        <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
           {[
             {
               label: "Official Rules",

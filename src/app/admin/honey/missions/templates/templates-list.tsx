@@ -92,10 +92,10 @@ export function TemplatesList({ initialTemplates }: { initialTemplates: Template
           }
         />
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-border/50">
+        <div className="overflow-x-auto rounded-xl border border-[var(--p-hair)]">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border/50 bg-muted/30">
+              <tr className="border-b border-[var(--p-hair)] bg-muted/30">
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">ชื่อ</th>
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">หมวดหมู่</th>
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">ประเภท</th>
@@ -114,7 +114,7 @@ export function TemplatesList({ initialTemplates }: { initialTemplates: Template
                 return (
                   <tr
                     key={t.id}
-                    className="border-b border-border/20 transition-colors hover:bg-muted/20"
+                    className="border-b border-[var(--p-hair)] transition-colors hover:bg-muted/20"
                   >
                     <td className="px-4 py-3">{t.nameTh ?? t.name}</td>
                     <td className="px-4 py-3">

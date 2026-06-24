@@ -82,7 +82,7 @@ export function PriceHubSources({
 
   return (
     <>
-      <div className="border-t border-border/30" />
+      <div className="border-t border-[var(--p-hair)]" />
       <div className="px-5 pb-4 pt-5">
         <div className="mb-4 flex items-center gap-3">
           <span className="text-eyebrow text-muted-foreground/70">
@@ -94,7 +94,7 @@ export function PriceHubSources({
         </div>
 
         {/* Mobile list */}
-        <div className="divide-y divide-border/10 sm:hidden">
+        <div className="divide-y divide-[var(--p-hair)] sm:hidden">
           {rows.map((row, i) => {
             const meta =
               SOURCE_META[row.source] ?? {
@@ -195,7 +195,7 @@ export function PriceHubSources({
         <div className="hidden sm:block">
           <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-border/30 text-eyebrow text-muted-foreground/60">
+                <tr className="border-b border-[var(--p-hair)] text-eyebrow text-muted-foreground/60">
                   <th className="pb-2 pr-3 font-medium">{t(lang, "sourceRef")}</th>
                   <th className="pb-2 pr-3 text-right font-medium">{t(lang, "marketPrice")}</th>
                   <th className="pb-2 pr-3 text-right font-medium">{t(lang, "lastSold")}</th>
@@ -228,7 +228,7 @@ export function PriceHubSources({
                   return (
                     <tr
                       key={row.source}
-                      className="border-b border-border/10 last:border-0"
+                      className="border-b border-[var(--p-hair)] last:border-0"
                     >
                       <td className="py-2.5 pr-3">
                         {meta.searchUrl ? (

@@ -56,7 +56,7 @@ export function MarketSnapshot({
         </div>
 
         {/* Movers gauge: stacked bar with inline % + 3-column legend below */}
-        <div className="min-w-0 lg:border-l lg:border-border/40 lg:pl-10">
+        <div className="min-w-0 lg:border-l lg:border-[var(--p-hair)] lg:pl-10">
           <div className="flex items-center gap-1.5">
             <p className="text-eyebrow">{t(lang, "marketMoversTitle")}</p>
             <PeriodChip lang={lang} />
@@ -146,7 +146,7 @@ export function MarketSnapshot({
       </div>
 
       {/* Divider + secondary stats row */}
-      <div className="grid grid-cols-3 divide-x divide-border/40 border-t border-border/40">
+      <div className="grid grid-cols-3 divide-x divide-[var(--p-hair)] border-t border-[var(--p-hair)]">
         <SecondaryStat
           icon={TrendingUp}
           label={t(lang, "avgPrice")}

@@ -79,7 +79,7 @@ export function CardMobileRow({
         </div>
       </div>
       {editing && (
-        <div className="rounded-lg border border-border/50 bg-muted/20 p-3">
+        <div className="rounded-lg border border-[var(--p-hair)] bg-muted/20 p-3">
           <CardEditForm
             card={card}
             editData={editData}

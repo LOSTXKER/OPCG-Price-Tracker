@@ -45,7 +45,7 @@ export function TierRow({
   onMoveDown: () => void;
 }) {
   return (
-    <div className={cn("border-border/50", position > 0 && "border-t")}>
+    <div className={cn("border-[var(--p-hair)]", position > 0 && "border-t")}>
       <div
         className={cn(
           "flex items-center gap-3 px-4 transition-colors hover:bg-muted/30",
@@ -117,7 +117,7 @@ export function TierRow({
       </div>
 
       {expanded && (
-        <div className="space-y-5 border-t border-border/40 bg-muted/10 px-4 py-5 sm:px-5">
+        <div className="space-y-5 border-t border-[var(--p-hair)] bg-muted/10 px-4 py-5 sm:px-5">
           <div className="grid gap-4 sm:grid-cols-3">
             <NumberField
               label="ระดับ"
@@ -180,7 +180,7 @@ export function TierRow({
                         "flex size-9 items-center justify-center rounded-lg border transition-colors",
                         active
                           ? "border-primary bg-primary/10 text-primary"
-                          : "border-border/60 text-muted-foreground hover:bg-muted",
+                          : "border-[var(--p-hair)] text-muted-foreground hover:bg-muted",
                       )}
                     >
                       <RankTierIcon name={name} className="size-4" />
@@ -196,7 +196,7 @@ export function TierRow({
                   type="color"
                   value={tier.color ?? "#888888"}
                   onChange={(e) => onChange({ color: e.target.value })}
-                  className="size-9 cursor-pointer rounded-lg border border-border/60 bg-transparent"
+                  className="size-9 cursor-pointer rounded-lg border border-[var(--p-hair)] bg-transparent"
                   aria-label="เลือกสี"
                 />
                 <Input

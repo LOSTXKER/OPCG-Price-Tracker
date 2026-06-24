@@ -72,7 +72,7 @@ export function AssetsToolbar({
               variant="outline"
               size="xs"
               onClick={onBulkEdit}
-              className="border-border/30 bg-muted/20 text-foreground/80 hover:bg-muted/50"
+              className="border-[var(--p-hair)] bg-muted/20 text-foreground/80 hover:bg-muted/50"
             >
               <Edit2 className="size-3 text-muted-foreground/60" />
               {t(lang, "bulkEdit")}

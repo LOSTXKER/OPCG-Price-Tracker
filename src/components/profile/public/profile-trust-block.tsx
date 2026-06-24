@@ -91,7 +91,7 @@ export function ProfileTrustBlock({
         <div
           className={cn(
             "grid gap-3 sm:grid-cols-2 sm:gap-x-6",
-            verifiedFacts.length > 0 && "mt-4 border-t border-border/40 pt-3",
+            verifiedFacts.length > 0 && "mt-4 border-t border-[var(--p-hair)] pt-3",
           )}
         >
           <CommerceRow
@@ -114,7 +114,7 @@ export function ProfileTrustBlock({
           className={cn(
             "flex flex-wrap items-center gap-x-3 gap-y-1 text-meta",
             (verifiedFacts.length > 0 || hasCommerceContent) &&
-              "mt-3 border-t border-border/40 pt-3",
+              "mt-3 border-t border-[var(--p-hair)] pt-3",
           )}
         >
           <Info className="size-3.5 text-muted-foreground/70" aria-hidden />

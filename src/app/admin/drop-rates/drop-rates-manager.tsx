@@ -97,7 +97,7 @@ export function DropRatesManager({
       <div className="sticky top-0 z-20">
         <AdminToolbar
           actions={
-            <div className="flex items-center gap-1 rounded-lg border border-border/50 bg-muted/30 p-1">
+            <div className="flex items-center gap-1 rounded-lg border border-[var(--p-hair)] bg-muted/30 p-1">
               {(
                 [
                   { key: "all", label: "ทั้งหมด", count: sets.length },

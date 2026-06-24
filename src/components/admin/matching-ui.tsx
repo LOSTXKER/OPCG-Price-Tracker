@@ -42,7 +42,7 @@ export function CardThumb({
   return (
     <div
       className={cn(
-        "relative aspect-[63/88] overflow-hidden rounded border border-border/40 bg-muted/30 shrink-0",
+        "relative aspect-[63/88] overflow-hidden rounded border border-[var(--p-hair)] bg-muted/30 shrink-0",
         w,
         cls
       )}

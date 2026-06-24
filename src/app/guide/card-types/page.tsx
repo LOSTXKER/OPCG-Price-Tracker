@@ -374,7 +374,7 @@ export default async function CardTypesPage() {
           {t(lang, "guideTypeAnatomyDesc")}
         </p>
         <Surface variant="outline" className="overflow-hidden">
-          <div className="border-b border-border/40 px-4 py-2 text-xs font-medium text-muted-foreground">
+          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-xs font-medium text-muted-foreground">
             {t(lang, "guideTypeAnatomyCaption")}
           </div>
           <div className="relative mx-auto max-w-[280px] p-6">
@@ -504,7 +504,7 @@ export default async function CardTypesPage() {
       {/* ── 7. Sources ── */}
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">{t(lang, "guideTypeSourcesHeading")}</h2>
-        <Surface variant="outline" className="divide-y divide-border/50 text-sm">
+        <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
           {[
             {
               label: "Official Rules",

@@ -10,7 +10,7 @@ import { t, type Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
 const ACTION_BTN =
-  "ease-chrome inline-flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-xl border border-border/55 bg-transparent px-3 text-sm font-semibold text-muted-foreground hover:border-border hover:bg-muted/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+  "ease-chrome inline-flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-xl border border-[var(--p-hair)] bg-transparent px-3 text-sm font-semibold text-muted-foreground hover:border-border hover:bg-muted/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 
 /**
  * Card-detail header actions — one compact row of utilities:

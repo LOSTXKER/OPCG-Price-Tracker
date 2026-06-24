@@ -112,7 +112,7 @@ function MultiSeriesTooltip(props: {
     const entry = payload.find((p) => p.dataKey === s.dataKey)
     if (!entry?.value) return null
     return (
-      <div className="rounded-xl border border-border/50 bg-popover/95 px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
+      <div className="rounded-xl border border-[var(--p-hair)] bg-popover/95 px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
         <p className="text-meta">
           {formatTooltipDate(label, locale, period)}
         </p>
@@ -124,7 +124,7 @@ function MultiSeriesTooltip(props: {
   }
 
   return (
-    <div className="rounded-xl border border-border/50 bg-popover/95 px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
+    <div className="rounded-xl border border-[var(--p-hair)] bg-popover/95 px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
       <p className="text-meta">
         {formatTooltipDate(label, locale, period)}
       </p>
@@ -335,13 +335,13 @@ export function PriceChart({
 
       {/* Stats summary (under the chart) */}
       {stats && (
-        <div className="rounded-xl border border-border/40 bg-muted/20 px-4 py-3">
+        <div className="rounded-xl border border-[var(--p-hair)] bg-muted/20 px-4 py-3">
           {periodLabel && (
             <p className="mb-2.5 text-eyebrow text-muted-foreground/70">
               {t(lang, "statsScope").replace("{period}", periodLabel)}
             </p>
           )}
-          <div className="grid grid-cols-2 gap-y-3 sm:grid-cols-4 sm:gap-y-0 sm:divide-x sm:divide-border/40">
+          <div className="grid grid-cols-2 gap-y-3 sm:grid-cols-4 sm:gap-y-0 sm:divide-x sm:divide-[var(--p-hair)]">
             <div className="flex flex-col gap-0.5 px-1 sm:px-4 sm:first:pl-0">
               <span className="text-meta">{t(lang, "statsHigh")}</span>
               <span className="font-price text-base font-semibold tabular-nums text-price-up">

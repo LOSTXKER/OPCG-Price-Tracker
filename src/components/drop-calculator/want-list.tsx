@@ -99,7 +99,7 @@ export function WantList({
             })}
           </ul>
 
-          <div className="space-y-2.5 border-t border-border/40 pt-3">
+          <div className="space-y-2.5 border-t border-[var(--p-hair)] pt-3">
             <div>
               <div className="flex items-baseline justify-between gap-3">
                 <span className="text-eyebrow">{t(lang, "chanceToGetAll")}</span>

@@ -347,7 +347,7 @@ export default async function GuideSetsPage() {
               >
                 {info.label} ({sets.length})
               </h3>
-              <Surface variant="outline" className="divide-y divide-border/30">
+              <Surface variant="outline" className="divide-y divide-[var(--p-hair)]">
                 {sets.map((set) => (
                   <Link
                     key={set.code}
@@ -414,7 +414,7 @@ export default async function GuideSetsPage() {
       {/* ── 6. Sources ── */}
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">{t(lang, "guideSetSourcesHeading")}</h2>
-        <Surface variant="outline" className="divide-y divide-border/50 text-sm">
+        <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
           {sources.map((src) =>
             "internal" in src && src.internal ? (
               <Link

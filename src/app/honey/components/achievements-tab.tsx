@@ -63,7 +63,7 @@ export function AchievementsTab({
       {filtered.length === 0 ? (
         <EmptyState icon={Medal} label={t(lang, "achievements")} />
       ) : (
-        <div className="divide-y divide-border/40">
+        <div className="divide-y divide-[var(--p-hair)]">
           {filtered.map((ach) => {
             const showBar = !ach.earned && ach.target > 1;
             const pct = ach.target > 0
@@ -74,7 +74,7 @@ export function AchievementsTab({
                 {ach.badgeImageUrl ? (
                   <div
                     className={cn(
-                      "relative size-9 shrink-0 overflow-hidden rounded-full border border-border/40",
+                      "relative size-9 shrink-0 overflow-hidden rounded-full border border-[var(--p-hair)]",
                       !ach.earned && "opacity-40 grayscale",
                     )}
                   >

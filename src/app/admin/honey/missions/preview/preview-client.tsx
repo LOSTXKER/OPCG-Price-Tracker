@@ -63,10 +63,10 @@ export function PreviewClient() {
       </AdminPanel>
 
       {missions.length > 0 ? (
-        <div className="overflow-x-auto rounded-xl border border-border/50">
+        <div className="overflow-x-auto rounded-xl border border-[var(--p-hair)]">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border/50 bg-muted/30">
+              <tr className="border-b border-[var(--p-hair)] bg-muted/30">
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">#</th>
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">ชื่อ</th>
                 <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">เป้าหมาย</th>
@@ -77,7 +77,7 @@ export function PreviewClient() {
               {missions.map((m, i) => (
                 <tr
                   key={m.code}
-                  className="border-b border-border/20 transition-colors hover:bg-muted/20"
+                  className="border-b border-[var(--p-hair)] transition-colors hover:bg-muted/20"
                 >
                   <td className="px-4 py-3 text-muted-foreground">{i + 1}</td>
                   <td className="px-4 py-3">{m.name}</td>

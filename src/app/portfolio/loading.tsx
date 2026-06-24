@@ -41,11 +41,11 @@ export default function PortfolioLoading() {
 
         {/* Table */}
         <Surface variant="panel" className="overflow-hidden">
-          <div className="border-b border-border/30 px-4 py-3">
+          <div className="border-b border-[var(--p-hair)] px-4 py-3">
             <Skeleton className="h-4 w-20" />
           </div>
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-3 border-b border-border/20 px-4 py-3 last:border-0">
+            <div key={i} className="flex items-center gap-3 border-b border-[var(--p-hair)] px-4 py-3 last:border-0">
               <Skeleton className="size-10 rounded-lg" />
               <div className="flex-1">
                 <Skeleton className="h-3.5 w-32" />

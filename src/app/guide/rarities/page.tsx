@@ -416,10 +416,10 @@ export default async function RaritiesPage() {
 
         {/* Price comparison example */}
         <Surface variant="outline" className="overflow-hidden">
-          <div className="border-b border-border/40 px-4 py-2 text-xs font-medium text-muted-foreground">
+          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-xs font-medium text-muted-foreground">
             {t(lang, "guideRarityCompareTitle")}
           </div>
-          <div className="grid grid-cols-1 divide-y divide-border/40 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          <div className="grid grid-cols-1 divide-y divide-[var(--p-hair)] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {buildParallelComparison(lang).map((item) => (
               <div key={item.label} className="p-4 text-center">
                 <p className="text-xs font-medium text-muted-foreground">{item.label}</p>
@@ -437,7 +437,7 @@ export default async function RaritiesPage() {
           {buildParallelTiers(lang).map((p) => (
             <div
               key={p.code}
-              className="flex items-center gap-2 rounded-lg border border-border/50 bg-card px-3 py-1.5"
+              className="flex items-center gap-2 rounded-lg border border-[var(--p-hair)] bg-card px-3 py-1.5"
             >
               <span
                 className="size-2.5 rounded-full"
@@ -538,7 +538,7 @@ export default async function RaritiesPage() {
         </Surface>
 
         {/* อธิบาย SEC vs Parallel */}
-        <div className="rounded-xl border border-border/50 bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
+        <div className="rounded-xl border border-[var(--p-hair)] bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
           <p className="font-semibold text-foreground">{t(lang, "guideRarityBoxSecVsParallelHeading")}</p>
           <p className="mt-2">
             {t(lang, "guideRarityBoxSecVsParallelP1a")}{" "}
@@ -637,7 +637,7 @@ export default async function RaritiesPage() {
       {/* ── 7. Sources ── */}
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">{t(lang, "guideRaritySourcesHeading")}</h2>
-        <Surface variant="outline" className="divide-y divide-border/50 text-sm">
+        <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
           {buildSources(lang).map((src) => (
             <a
               key={src.url}

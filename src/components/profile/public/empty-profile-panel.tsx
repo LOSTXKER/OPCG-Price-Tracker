@@ -27,7 +27,7 @@ export function EmptyProfilePanel({
 }) {
   const name = user.handle ? `@${user.handle}` : user.displayName ?? "User";
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-dashed border-border/60 bg-gradient-to-br from-primary/[0.04] via-background to-background px-6 py-12 text-center">
+    <div className="relative overflow-hidden rounded-2xl border border-dashed border-[var(--p-hair)] bg-gradient-to-br from-primary/[0.04] via-background to-background px-6 py-12 text-center">
       {/* Soft sparkle backdrop — purely decorative. */}
       <div
         aria-hidden

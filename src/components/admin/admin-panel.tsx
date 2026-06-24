@@ -55,7 +55,7 @@ export function AdminPanel({
       )}
     >
       {hasHeader && (
-        <header className="flex flex-wrap items-start justify-between gap-3 border-b border-border/50 px-4 py-3 sm:px-5">
+        <header className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--p-hair)] px-4 py-3 sm:px-5">
           <div className="flex min-w-0 items-start gap-3">
             {Icon && (
               <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -78,7 +78,7 @@ export function AdminPanel({
         <div className={cn(padding ?? "p-4 sm:p-5", bodyClassName)}>{children}</div>
       )}
       {footer && (
-        <footer className="border-t border-border/50 px-4 py-3 sm:px-5">
+        <footer className="border-t border-[var(--p-hair)] px-4 py-3 sm:px-5">
           {footer}
         </footer>
       )}
