@@ -18,9 +18,9 @@ export type HeroTrendingCard = {
 // alerts · compare · deck calc · drop calc. Kept short so none wrap to a second
 // line (which would jolt the layout). Per-language because these are value props.
 const ROTATING: Record<Language, string[]> = {
-  TH: ["ราคากลาง", "ราคาย้อนหลัง", "การ์ดมาแรง", "ราคา PSA 10", "พอร์ตการ์ด", "จับตาราคา", "แจ้งเตือนราคา", "เทียบราคา", "ราคาเด็ค", "คำนวณดรอป"],
-  EN: ["live prices", "price history", "trending cards", "PSA 10 prices", "your portfolio", "watchlists", "price alerts", "card compare", "deck pricing", "drop odds"],
-  JP: ["リアル相場", "価格履歴", "急上昇カード", "PSA 10 相場", "ポートフォリオ", "ウォッチリスト", "価格アラート", "価格比較", "デッキ価格", "ドロップ計算"],
+  TH: ["ราคากลาง", "การ์ดมาแรง", "ราคา PSA 10", "พอร์ตการ์ด"],
+  EN: ["live prices", "trending cards", "PSA 10 prices", "your portfolio"],
+  JP: ["リアル相場", "急上昇カード", "PSA 10 相場", "ポートフォリオ"],
 }
 
 /**
@@ -41,7 +41,7 @@ export function HomeSearchHero({ sets, trending }: { sets: SetSuggestion[]; tren
         aria-hidden
         className="hero-search-glow pointer-events-none absolute left-1/2 -top-16 -z-10 h-[30rem] w-screen -translate-x-1/2 blur-2xl"
       />
-      <div className="mx-auto max-w-2xl px-1 pb-2 pt-6 sm:pt-10">
+      <div className="mx-auto max-w-2xl px-1 pb-6 pt-4 sm:pb-8 sm:pt-8">
         <div className="text-center">
           {/* eyebrow teaser + the rotating gradient subject (Fastwork-style).
               sr-only carries a stable heading; the animated line is aria-hidden. */}
@@ -49,7 +49,7 @@ export function HomeSearchHero({ sets, trending }: { sets: SetSuggestion[]; tren
           <h1 className="mt-1.5 text-3xl font-extrabold leading-[1.12] tracking-tight text-foreground sm:text-5xl">
             <span className="sr-only">{t(lang, "heroSearchTitle")}</span>
             <span aria-hidden>
-              <TypewriterText words={ROTATING[lang]} className="text-foreground" />
+              <TypewriterText words={ROTATING[lang]} holdMs={2600} className="text-foreground" />
             </span>
           </h1>
         </div>

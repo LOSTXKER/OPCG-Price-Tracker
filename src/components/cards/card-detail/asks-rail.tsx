@@ -70,7 +70,7 @@ function sellerInitial(name: string) {
   return name.trim().charAt(0).toUpperCase() || "?"
 }
 
-function UserCell({ listing, lang }: { listing: CardListing; lang: Language }) {
+function UserCell({ listing, lang, withArrow = false }: { listing: CardListing; lang: Language; withArrow?: boolean }) {
   const name = sellerName(listing, lang)
   return (
     <span className={marketPrimaryCell}>
@@ -79,6 +79,7 @@ function UserCell({ listing, lang }: { listing: CardListing; lang: Language }) {
         <AvatarFallback className="text-micro font-bold">{sellerInitial(name)}</AvatarFallback>
       </Avatar>
       <span className="truncate text-label font-medium text-foreground">{name}</span>
+      {withArrow && <ChevronRight className="size-3.5 shrink-0 text-muted-foreground/50" aria-hidden />}
     </span>
   )
 }
@@ -226,16 +227,12 @@ export function MeecardAsksRail({
                         className="border-b border-[var(--p-hair)] last:border-b-0"
                       >
                         <td className={marketTdLead}>
-                          {isSample ? (
-                            <UserCell listing={l} lang={lang} />
-                          ) : (
-                            <Link
-                              href={`/marketplace/${l.id}`}
-                              className="ease-chrome block min-w-0 rounded hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            >
-                              <UserCell listing={l} lang={lang} />
-                            </Link>
-                          )}
+                          <Link
+                            href={isSample ? marketHref : `/marketplace/${l.id}`}
+                            className="ease-chrome block min-w-0 rounded hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          >
+                            <UserCell listing={l} lang={lang} withArrow />
+                          </Link>
                         </td>
                         <td className={marketTdLead}>
                           <span className="text-meta tnum">{formatFeedDate(l.listedAtIso)}</span>
@@ -253,32 +250,22 @@ export function MeecardAsksRail({
               </MarketFeedScroll>
 
               <MarketFeedScroll className="sm:hidden" scrollClassName={marketFeedListScroll} lang={lang} label={t(lang, "sellingNow")} revalidateKey={shown.length}>
-                {shown.map((l) => {
-                  const inner = (
-                    <>
-                      <span className="min-w-0">
-                        <span className="flex items-center gap-2">
-                          <UserCell listing={l} lang={lang} />
-                          <ConditionChip condition={l.condition} graded={isGradedCondition(l.condition)} />
-                        </span>
-                        <span className="tnum mt-1 block text-meta">{formatFeedDate(l.listedAtIso)}</span>
+                {shown.map((l) => (
+                  <Link
+                    key={l.id}
+                    href={isSample ? marketHref : `/marketplace/${l.id}`}
+                    className={rowClass}
+                  >
+                    <span className="min-w-0">
+                      <span className="flex items-center gap-2">
+                        <UserCell listing={l} lang={lang} withArrow />
+                        <ConditionChip condition={l.condition} graded={isGradedCondition(l.condition)} />
                       </span>
-                      <FeedPriceCell jpy={l.priceJpy} currency={currency} right />
-                    </>
-                  )
-                  if (isSample) {
-                    return (
-                      <div key={l.id} className={rowClass}>
-                        {inner}
-                      </div>
-                    )
-                  }
-                  return (
-                    <Link key={l.id} href={`/marketplace/${l.id}`} className={rowClass}>
-                      {inner}
-                    </Link>
-                  )
-                })}
+                      <span className="tnum mt-1 block text-meta">{formatFeedDate(l.listedAtIso)}</span>
+                    </span>
+                    <FeedPriceCell jpy={l.priceJpy} currency={currency} right />
+                  </Link>
+                ))}
               </MarketFeedScroll>
 
               <div className="hairline-t mt-4 flex justify-end pt-3">

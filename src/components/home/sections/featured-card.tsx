@@ -30,9 +30,9 @@ export function HomeFeaturedCard({
   return (
     <Link
       href={`/cards/${card.cardCode}`}
-      className="group ease-chrome flex flex-col gap-3 rounded-xl p-3 hover:bg-muted/70 sm:flex-row sm:items-center sm:gap-5"
+      className="group ease-chrome flex flex-col gap-3 rounded-xl p-3 hover:bg-muted/70 sm:flex-row sm:items-center sm:gap-4"
     >
-      <div className="relative aspect-[63/88] w-[100px] shrink-0 overflow-hidden rounded-lg bg-muted">
+      <div className="relative aspect-[63/88] w-[100px] shrink-0 overflow-hidden rounded-lg bg-muted sm:w-[112px] lg:w-[100px]">
         {card.imageUrl && (
           <Image
             src={card.imageUrl}

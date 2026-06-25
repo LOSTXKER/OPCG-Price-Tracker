@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { ArrowRight, Camera, Clock, Layers, Search, Star, TrendingUp, Wallet, Boxes, X, type LucideIcon } from "lucide-react"
+import { Camera, Clock, Search, TrendingUp, Boxes, X } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
@@ -17,7 +17,6 @@ import { fetchCards } from "@/lib/api/fetch-cards"
 const RECENT_KEY = "meecard-recent-searches"
 const MAX_RECENT = 6
 const MAX_SETS = 4
-const MAX_ACTIONS = 4
 
 function readRecent(): string[] {
   if (typeof window === "undefined") return []
@@ -53,24 +52,6 @@ export type SetSuggestion = {
   imageUrl?: string | null
 }
 
-type QuickAction = { key: string; label: string; href: string; icon: LucideIcon; keywords: string }
-
-/** Internal navigation targets — the "teleport" half of universal search (VISION §5
- *  "ค้นการ์ด/เซ็ต/เด็ค/ฟีเจอร์/action"). Matched by label or latin keywords so both
- *  TH and EN typing resolve them. */
-function useQuickActions(lang: Parameters<typeof t>[0]): QuickAction[] {
-  return useMemo(
-    () => [
-      { key: "portfolio", label: t(lang, "portfolio"), href: "/portfolio", icon: Wallet, keywords: "portfolio port พอร์ต" },
-      { key: "decks", label: t(lang, "decks"), href: "/decks", icon: Layers, keywords: "deck เด็ค" },
-      { key: "sets", label: t(lang, "sets"), href: "/sets", icon: Boxes, keywords: "set sets เซ็ต ชุด" },
-      { key: "trending", label: t(lang, "trendingShort"), href: "/trending", icon: TrendingUp, keywords: "trending มาแรง gainers" },
-      { key: "watchlist", label: t(lang, "watchlist"), href: "/watchlist", icon: Star, keywords: "watchlist จับตา ติดตาม" },
-    ],
-    [lang],
-  )
-}
-
 export type PopularCard = {
   cardCode: string
   nameJp: string
@@ -83,7 +64,6 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
   const lang = useUIStore((s) => s.language)
   const inputRef = useRef<HTMLInputElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const quickActions = useQuickActions(lang)
 
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<SuggestionCard[]>([])
@@ -155,6 +135,14 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
   // empty-state dropdown (replaces the old chip row under the bar).
   const popularCards = trending.slice(0, 8)
 
+  const removeRecent = useCallback((item: string) => {
+    setRecent((prev) => {
+      const next = prev.filter((x) => x !== item)
+      writeRecent(next)
+      return next
+    })
+  }, [])
+
   const commitSearch = useCallback((q: string) => {
     const trimmed = q.trim()
     if (!trimmed) return
@@ -184,13 +172,6 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
       .slice(0, MAX_SETS)
   }, [sets, q, searching])
 
-  const actionMatches = useMemo(() => {
-    if (!searching) return quickActions
-    return quickActions
-      .filter((a) => a.label.toLowerCase().includes(q) || a.keywords.toLowerCase().includes(q))
-      .slice(0, MAX_ACTIONS)
-  }, [quickActions, q, searching])
-
   const filteredRecent = searching
     ? recent.filter((r) => r.toLowerCase().includes(q))
     : recent
@@ -201,18 +182,13 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
   if (searching) {
     for (const c of results) nav.push({ run: () => go(`/cards/${c.cardCode}`) })
     for (const s of setMatches) nav.push({ run: () => go(`/sets/${s.code}`) })
-    for (const a of actionMatches) nav.push({ run: () => go(a.href) })
   } else {
     for (const r of filteredRecent) nav.push({ run: () => commitSearch(r) })
-    for (const a of actionMatches) nav.push({ run: () => go(a.href) })
   }
-  // Per-section index offsets into `nav` (render order) — so each row knows its
-  // keyboard position without mutating a counter during render.
-  const actionOffset = searching ? results.length + setMatches.length : filteredRecent.length
 
   const hasContent =
-    (searching && (results.length > 0 || setMatches.length > 0 || actionMatches.length > 0 || loading || (trimmed.length >= 2 && results.length === 0))) ||
-    (!searching && (filteredRecent.length > 0 || popularCards.length > 0 || actionMatches.length > 0))
+    (searching && (results.length > 0 || setMatches.length > 0 || loading || (trimmed.length >= 2 && results.length === 0))) ||
+    (!searching && (filteredRecent.length > 0 || popularCards.length > 0))
   const hasDropdown = open && hasContent
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -230,8 +206,8 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
     commitSearch(query)
   }
 
-  const sectionLabel = "px-3 pb-1 pt-2 text-eyebrow"
-  const rowBase = "flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors"
+  const sectionLabel = "px-3 pb-1.5 pt-3 text-eyebrow"
+  const rowBase = "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors"
 
   return (
     <div ref={wrapperRef} className="relative">
@@ -239,8 +215,9 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
         <div
           className={cn(
             "ease-chrome surface-1 relative flex items-center gap-2 rounded-2xl pl-4 pr-2 ring-1 ring-[var(--p-hair)] transition-[box-shadow,border-color]",
-            "focus-within:ring-2 focus-within:ring-primary/40",
-            hasDropdown ? "rounded-b-none shadow-lg" : "shadow-sm",
+            hasDropdown
+              ? "z-[51] rounded-b-none shadow-lg"
+              : "shadow-sm focus-within:ring-2 focus-within:ring-primary/40",
           )}
         >
           <Search className="size-5 shrink-0 text-muted-foreground/60" aria-hidden />
@@ -288,7 +265,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
 
       {hasDropdown && (
         <div className="absolute inset-x-0 top-full z-50 overflow-hidden rounded-b-2xl bg-popover shadow-xl ring-1 ring-[var(--p-hair)]">
-          <div className="max-h-[60vh] overflow-y-auto p-1.5">
+          <div className="max-h-[60vh] overflow-y-auto px-2 pb-3 pt-1">
             {/* CARDS */}
             {searching && loading && results.length === 0 && (
               <div className="space-y-1 p-1">
@@ -372,10 +349,10 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
               </>
             )}
 
-            {/* RECENT (empty query only) — header carries a clear-all action */}
+            {/* RECENT (empty query only) — header with clear-all + individual × per row */}
             {!searching && filteredRecent.length > 0 && (
               <>
-                <div className="flex items-center justify-between px-3 pb-1 pt-2">
+                <div className="flex items-center justify-between px-3 pb-1.5 pt-3">
                   <p className="text-eyebrow">{t(lang, "recentSearches")}</p>
                   <button
                     type="button"
@@ -385,66 +362,54 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
                     {t(lang, "clearAll")}
                   </button>
                 </div>
-                {filteredRecent.map((item, i) => {
-                  return (
+                {filteredRecent.map((item, i) => (
+                  <div
+                    key={item}
+                    className={cn(
+                      "group flex items-center rounded-xl transition-colors",
+                      activeIdx === i ? "bg-accent" : "hover:bg-accent/60",
+                    )}
+                    onMouseEnter={() => setActiveIdx(i)}
+                  >
                     <button
-                      key={item}
                       type="button"
-                      onMouseEnter={() => setActiveIdx(i)}
                       onClick={() => commitSearch(item)}
-                      className={cn(rowBase, "text-sm", activeIdx === i ? "bg-accent" : "hover:bg-accent/60")}
+                      className="flex min-w-0 flex-1 items-center gap-3 px-3 py-2.5 text-sm text-left"
                     >
                       <Clock className="size-4 shrink-0 text-muted-foreground/60" />
                       <span className="truncate">{item}</span>
                     </button>
-                  )
-                })}
+                    <button
+                      type="button"
+                      tabIndex={-1}
+                      onClick={(e) => { e.stopPropagation(); removeRecent(item) }}
+                      className="ease-chrome mr-2 shrink-0 rounded-md p-1.5 text-muted-foreground/30 opacity-0 transition-opacity hover:bg-muted hover:text-muted-foreground group-hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none"
+                      aria-label="Remove"
+                    >
+                      <X className="size-3.5" />
+                    </button>
+                  </div>
+                ))}
               </>
             )}
 
-            {/* POPULAR (empty query only) — quick-pick pills, Fastwork-style */}
+            {/* POPULAR (empty query only) — quick-pick pills */}
             {!searching && popularCards.length > 0 && (
               <>
                 <p className={sectionLabel}>{t(lang, "popular")}</p>
-                <div className="flex flex-wrap gap-1.5 px-3 pb-2 pt-0.5">
+                <div className="flex flex-wrap gap-2 px-3 pb-3 pt-1">
                   {popularCards.map((c) => (
                     <button
                       key={c.cardCode}
                       type="button"
                       onClick={() => go(`/cards/${c.cardCode}`)}
-                      className="ease-chrome inline-flex items-center gap-1.5 rounded-full bg-foreground/[0.05] px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="ease-chrome inline-flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] bg-transparent px-3.5 py-1.5 text-sm font-medium text-muted-foreground hover:border-primary/30 hover:bg-primary/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
-                      <TrendingUp className="size-3 text-primary/70" aria-hidden />
+                      <TrendingUp className="size-3 text-primary/50" aria-hidden />
                       {getCardName(lang, c)}
                     </button>
                   ))}
                 </div>
-              </>
-            )}
-
-            {/* SHORTCUTS / ACTIONS */}
-            {actionMatches.length > 0 && (
-              <>
-                <p className={sectionLabel}>{t(lang, "searchShortcuts")}</p>
-                {actionMatches.map((a, j) => {
-                  const i = actionOffset + j
-                  const Icon = a.icon
-                  return (
-                    <button
-                      key={a.key}
-                      type="button"
-                      onMouseEnter={() => setActiveIdx(i)}
-                      onClick={() => go(a.href)}
-                      className={cn(rowBase, "text-sm", activeIdx === i ? "bg-accent" : "hover:bg-accent/60")}
-                    >
-                      <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-foreground/[0.05] text-muted-foreground">
-                        <Icon className="size-4" />
-                      </span>
-                      <span className="min-w-0 flex-1 truncate font-medium">{a.label}</span>
-                      <ArrowRight className="size-3.5 shrink-0 text-muted-foreground/40" aria-hidden />
-                    </button>
-                  )
-                })}
               </>
             )}
 
@@ -461,7 +426,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
             )}
 
             {/* EMPTY */}
-            {searching && !loading && trimmed.length >= 2 && results.length === 0 && setMatches.length === 0 && actionMatches.length === 0 && (
+            {searching && !loading && trimmed.length >= 2 && results.length === 0 && setMatches.length === 0 && (
               <div className="px-4 py-6 text-center text-sm text-muted-foreground">
                 {t(lang, "noResultsFor")} &ldquo;{trimmed}&rdquo;
               </div>

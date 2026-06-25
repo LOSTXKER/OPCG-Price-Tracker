@@ -32,6 +32,23 @@ export function sourceLabel(source: string): string {
   return s === "YUYUTEI" ? "Yuyu-tei" : s === "SNKRDUNK" ? "SNKRDUNK" : source
 }
 
+/**
+ * Outbound reference URL for a price source — the marketplace homepage where a
+ * shopper can verify/browse comparable listings. Matched loosely against the
+ * many label variants (e.g. "Yuyu-tei", "eBay JP", "Mercari JP"). Returns null
+ * for unmapped sources so callers render a plain (non-link) cell.
+ */
+export function sourceUrl(source: string): string | null {
+  const s = source.toUpperCase()
+  if (s.includes("SNKRDUNK")) return "https://snkrdunk.com"
+  if (s.includes("YUYU")) return "https://yuyu-tei.jp"
+  if (s.includes("MERCARI")) return "https://jp.mercari.com"
+  if (s.includes("EBAY")) return "https://www.ebay.com"
+  if (s.includes("TCG")) return "https://www.tcgplayer.com"
+  if (s.includes("CARDMARKET")) return "https://www.cardmarket.com"
+  return null
+}
+
 export function SourceLogo({
   source,
   size = 18,

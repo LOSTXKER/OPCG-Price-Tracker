@@ -32,6 +32,7 @@ export function MarketTable({
   skeletonRows,
   emptyText,
   inFeedAd,
+  surface = "card",
 }: {
   cards: CardRow[]
   rankOffset: number
@@ -46,6 +47,12 @@ export function MarketTable({
   emptyText: string
   /** Optional slot rendered after row `index` in the mobile list (home in-feed ad). */
   inFeedAd?: (index: number) => ReactNode
+  /**
+   * Surface the table sits on, so the sticky header blends with it.
+   * `card` (default) — inside a `<Surface panel>` (e.g. /search).
+   * `canvas` — floating directly on the page background (e.g. home market).
+   */
+  surface?: "card" | "canvas"
 }) {
   const lang = useUIStore((s) => s.language)
   const showSkeleton = isPending && cards.length === 0
@@ -81,7 +88,7 @@ export function MarketTable({
               <col key={col.key} className={col.col || undefined} />
             ))}
           </colgroup>
-          <thead className="sticky top-0 z-10 bg-card">
+          <thead className={cn("sticky top-0 z-10", surface === "canvas" ? "bg-background" : "bg-card")}>
             <tr className="border-b border-[var(--p-hair)] text-eyebrow text-muted-foreground">
               {columns.map((col) => {
                 if (col.sort) {

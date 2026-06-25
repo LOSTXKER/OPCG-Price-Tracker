@@ -8,7 +8,7 @@ import {
   X,
 } from "lucide-react"
 
-import { useMemo } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 
 import { FilterChips, type FilterDefinition } from "@/components/shared/filter-chips"
 import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker"
@@ -103,6 +103,92 @@ export function HomeMarketOverview({
   const selectedSets = m.filters.set ?? []
   const columns = useMemo(() => buildMarketColumns({ showViews: m.showViews }), [m.showViews])
 
+  // Filter surface is breakpoint-aware: a bottom sheet on mobile (thumb-reachable),
+  // an anchored popover on desktop (md+). `filterOpen` drives both; only the one
+  // matching the current breakpoint renders, so they never open together.
+  const [isDesktop, setIsDesktop] = useState(false)
+  const filterAnchorRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)")
+    const update = () => setIsDesktop(mq.matches)
+    update()
+    mq.addEventListener("change", update)
+    return () => mq.removeEventListener("change", update)
+  }, [])
+
+  // Desktop popover: close on outside click / Escape.
+  useEffect(() => {
+    if (!isDesktop || !m.filterOpen) return
+    function onPointerDown(e: MouseEvent) {
+      if (filterAnchorRef.current && !filterAnchorRef.current.contains(e.target as Node)) {
+        m.setFilterOpen(false)
+      }
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") m.setFilterOpen(false)
+    }
+    document.addEventListener("mousedown", onPointerDown)
+    document.addEventListener("keydown", onKeyDown)
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown)
+      document.removeEventListener("keydown", onKeyDown)
+    }
+  }, [isDesktop, m])
+
+  const filterBody = (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <FilterChips
+          filters={allFilterDefs}
+          selected={m.filters}
+          onChange={m.handleFilterChange}
+        />
+      </div>
+
+      <div className="flex items-center gap-1.5">
+        <span className="text-meta shrink-0">{t(lang, "priceLabel")}</span>
+        <Input
+          type="number"
+          placeholder={t(lang, "min")}
+          className="surface-1 h-10 w-24 border-[var(--p-hair)] px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
+          value={m.minPrice}
+          onChange={(e) => { m.setMinPrice(e.target.value); m.setPage(1) }}
+          min={0}
+        />
+        <span className="text-meta">–</span>
+        <Input
+          type="number"
+          placeholder={t(lang, "max")}
+          className="surface-1 h-10 w-24 border-[var(--p-hair)] px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
+          value={m.maxPrice}
+          onChange={(e) => { m.setMaxPrice(e.target.value); m.setPage(1) }}
+          min={0}
+        />
+      </div>
+
+      <div className="flex items-center justify-between gap-2 border-t border-[var(--p-hair)] pt-3">
+        {m.activeFilterCount > 0 ? (
+          <button
+            onClick={m.clearAllFilters}
+            className="ease-chrome flex items-center gap-1 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <X className="size-3.5" />
+            {t(lang, "clearAll")}
+          </button>
+        ) : (
+          <span />
+        )}
+        <button
+          onClick={() => m.setFilterOpen(false)}
+          className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+        >
+          {t(lang, "applyFilters")}
+        </button>
+      </div>
+    </div>
+  )
+
   return (
     <div className="space-y-4">
       {children}
@@ -110,68 +196,84 @@ export function HomeMarketOverview({
       {/* Main table — flat, no panel box (minimal; floats on the page like the
           highlights band above). The only structural line is the header underline. */}
     <div>
-      {/* Toolbar — single row on sm+, two rows on mobile */}
+      {/* Toolbar — 2 rows: scope (tabs) on top, browse + display controls below */}
       <div>
-        <div className="flex flex-wrap items-center gap-2 px-3 py-2 sm:flex-nowrap sm:gap-2.5 sm:px-4">
-          {/* Tabs (underline-style) — neutral foreground underline, not gold, so
-              the page keeps a single honey accent like card-detail. */}
-          <div className="flex shrink-0 items-center gap-1 -mb-2">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => m.handleTabChange(tab.id)}
-                className={cn(
-                  "ease-chrome relative shrink-0 border-b-2 px-2.5 py-2 text-xs font-semibold",
-                  m.activeTab === tab.id
-                    ? "border-foreground text-foreground"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+        {/* Row 1: tab bar — sits on a hairline baseline. Active tab's border-b-2
+            uses -mb-px to overlap (cover) the hairline so it reads as one edge. */}
+        <div className="flex items-center gap-1 border-b border-[var(--p-hair)] px-3 sm:px-4">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => m.handleTabChange(tab.id)}
+              className={cn(
+                "ease-chrome relative -mb-px shrink-0 border-b-2 px-2.5 py-2.5 text-xs font-semibold",
+                m.activeTab === tab.id
+                  ? "border-foreground text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-          {/* Set picker — the primary browse axis, given the prominent center slot
-              (replaces the old in-table search; the hero search above covers lookup). */}
+        {/* Row 2: set picker (left) + display controls (right) — one line on
+            every breakpoint (set picker flexes, controls keep natural width) */}
+        <div className="flex items-center gap-2 px-3 py-2 sm:px-4">
+          {/* Set picker — flexes to fill on mobile, fixed 200px on sm+ */}
           {sets.length > 0 && (
-            <div className="hidden min-w-0 flex-1 sm:block sm:max-w-xs">
+            <div className="min-w-0 flex-1 sm:flex-none sm:w-[200px]">
               <SetPicker
                 sets={sets}
                 selectedCode={selectedSets[0] ?? null}
                 onSelect={(code) => m.handleFilterChange("set", code ? [code] : [])}
                 variant="inline"
                 nullable
-                prominent
               />
             </div>
           )}
 
-          {/* Right cluster — own full-width row on mobile (declutter), inline on sm+ */}
-          <div className="flex w-full shrink-0 items-center justify-end gap-1.5 sm:w-auto">
+          {/* Display controls: price lens · divider · filter · view */}
+          <div className="flex shrink-0 items-center justify-end gap-1.5 sm:ml-auto">
             <PriceModeControl
               value={m.priceMode}
               onChange={(mode) => { m.setPriceMode(mode); m.setPage(1) }}
             />
 
-            <button
-              type="button"
-              onClick={() => m.setFilterOpen((o) => !o)}
-              className={cn(
-                "ease-chrome flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium",
-                m.filterOpen || m.activeFilterCount > 0
-                  ? "bg-foreground/[0.06] text-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+            <div className="hidden h-5 w-px bg-border/40 sm:block" />
+
+            <div ref={filterAnchorRef} className="relative">
+              <button
+                type="button"
+                onClick={() => m.setFilterOpen((o) => !o)}
+                className={cn(
+                  "ease-chrome flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium",
+                  m.filterOpen || m.activeFilterCount > 0
+                    ? "bg-foreground/[0.06] text-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                <SlidersHorizontal className="size-3.5" />
+                <span className="hidden md:inline">{t(lang, "filter")}</span>
+                {m.activeFilterCount > 0 && (
+                  <span className="flex size-4.5 items-center justify-center rounded-full bg-foreground/10 text-micro text-foreground">
+                    {m.activeFilterCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Desktop (md+): anchored popover under the button */}
+              {isDesktop && m.filterOpen && (
+                <div
+                  role="dialog"
+                  aria-label={t(lang, "filter")}
+                  className="ease-chrome absolute right-0 top-full z-40 mt-2 w-[min(520px,calc(100vw-2rem))] origin-top-right rounded-xl border border-[var(--p-hair)] bg-popover p-4 shadow-xl"
+                >
+                  <p className="text-h5 mb-3">{t(lang, "filter")}</p>
+                  {filterBody}
+                </div>
               )}
-            >
-              <SlidersHorizontal className="size-3.5" />
-              <span className="hidden md:inline">{t(lang, "filter")}</span>
-              {m.activeFilterCount > 0 && (
-                <span className="flex size-4.5 items-center justify-center rounded-full bg-foreground/10 text-micro text-foreground">
-                  {m.activeFilterCount}
-                </span>
-              )}
-            </button>
+            </div>
 
             <ViewToggle
               modes={[
@@ -183,85 +285,22 @@ export function HomeMarketOverview({
             />
           </div>
         </div>
-
-        {/* Mobile-only set picker row */}
-        {sets.length > 0 && (
-          <div className="border-t border-[var(--p-hair)] px-3 py-2 sm:hidden">
-            <SetPicker
-              sets={sets}
-              selectedCode={selectedSets[0] ?? null}
-              onSelect={(code) => m.handleFilterChange("set", code ? [code] : [])}
-              variant="inline"
-              nullable
-              prominent
-            />
-          </div>
-        )}
       </div>
 
-      {/* Advanced filters — bottom sheet (replaces the old inline horizontal-
-          scroll bar, which ate mobile width). Same control on every breakpoint
-          so behaviour is predictable; chips wrap instead of side-scrolling. */}
-      <Sheet open={m.filterOpen} onOpenChange={m.setFilterOpen}>
+      {/* Advanced filters — bottom sheet on mobile only (thumb-reachable). On md+
+          the same controls render in the anchored popover above, so the sheet is
+          gated to `!isDesktop` to avoid both opening at once. */}
+      <Sheet open={m.filterOpen && !isDesktop} onOpenChange={m.setFilterOpen}>
         <SheetContent side="bottom" className="max-h-[80vh] overflow-y-auto p-4">
           <SheetTitle className="text-h4">{t(lang, "filter")}</SheetTitle>
-
-          <div className="mt-4 space-y-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <FilterChips
-                filters={allFilterDefs}
-                selected={m.filters}
-                onChange={m.handleFilterChange}
-              />
-            </div>
-
-            <div className="flex items-center gap-1.5">
-              <span className="text-meta shrink-0">{t(lang, "priceLabel")}</span>
-              <Input
-                type="number"
-                placeholder={t(lang, "min")}
-                className="surface-1 h-10 w-24 border-[var(--p-hair)] px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
-                value={m.minPrice}
-                onChange={(e) => { m.setMinPrice(e.target.value); m.setPage(1) }}
-                min={0}
-              />
-              <span className="text-meta">–</span>
-              <Input
-                type="number"
-                placeholder={t(lang, "max")}
-                className="surface-1 h-10 w-24 border-[var(--p-hair)] px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
-                value={m.maxPrice}
-                onChange={(e) => { m.setMaxPrice(e.target.value); m.setPage(1) }}
-                min={0}
-              />
-            </div>
-
-            <div className="flex items-center justify-between gap-2 border-t border-[var(--p-hair)] pt-3">
-              {m.activeFilterCount > 0 ? (
-                <button
-                  onClick={m.clearAllFilters}
-                  className="ease-chrome flex items-center gap-1 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-                >
-                  <X className="size-3.5" />
-                  {t(lang, "clearAll")}
-                </button>
-              ) : (
-                <span />
-              )}
-              <button
-                onClick={() => m.setFilterOpen(false)}
-                className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-              >
-                {t(lang, "applyFilters")}
-              </button>
-            </div>
-          </div>
+          <div className="mt-4">{filterBody}</div>
         </SheetContent>
       </Sheet>
 
       {/* Content: Table or Grid */}
       {m.viewMode === "table" ? (
         <MarketTable
+          surface="canvas"
           cards={m.cards}
           rankOffset={(m.page - 1) * PAGE_SIZE}
           columns={columns}
