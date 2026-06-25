@@ -139,7 +139,14 @@ export function Header() {
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
-              <Star className="size-3.5 fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400" />
+              <Star
+                className={cn(
+                  "size-3.5",
+                  isActive(pathname, "/portfolio")
+                    ? "fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400"
+                    : "fill-none text-muted-foreground/60"
+                )}
+              />
               {t(language, "portfolioNav")}
             </Link>
 

@@ -8,6 +8,7 @@ import { Breadcrumb } from "@/components/shared/breadcrumb"
 import type { CardListing } from "@/components/cards/card-listings-section"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { AdSlot } from "@/components/ads/ad-slot"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { t, getCardName, getSetName, getCardEffect, type Currency, type Language } from "@/lib/i18n"
@@ -154,15 +155,6 @@ function firstSource(rows: SourcePriceRow[] | undefined, source: string) {
   return rows?.find((row) => sameSource(row, source))
 }
 
-
-const COLOR_DOT: Record<string, string> = {
-  red: "bg-red-500",
-  green: "bg-green-500",
-  blue: "bg-blue-500",
-  purple: "bg-purple-500",
-  black: "bg-zinc-700",
-  yellow: "bg-yellow-400",
-}
 
 export function CardDetail({
   card,
@@ -407,17 +399,20 @@ export function CardDetail({
     gradeActiveRef.current?.scrollIntoView({ block: "nearest", inline: "center" })
   }, [selectedGrade])
 
-  const colorDot = COLOR_DOT[(card.colorEn ?? card.color)?.toLowerCase() ?? ""]
   const chartHeights = "h-[210px] sm:h-[280px] lg:h-[320px]"
-  // Quiet utility action — niche features (portfolio/alert/compare/share) sit in
-  // the buy box BELOW the transact CTAs, so they're borderless muted ghosts (not
-  // outlines that compete with Buy). border-0 + hover overrides neutralize
-  // CompareButton's own border + primary-tinted variant.
-  const utilityBtn =
-    "ease-chrome flex h-10 w-full items-center justify-center gap-1.5 rounded-lg border-0 bg-transparent text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
-  // Filled-neutral secondary CTA (ลงขาย / เพิ่มพอร์ต) — sits under the gold buy.
+  // Quiet utility action — niche features (portfolio/compare) sit in the buy box
+  // BELOW the transact CTAs, so they're borderless muted ghosts (not outlines that
+  // compete with Buy). border-0 + hover overrides neutralize CompareButton's own
+  // border + primary-tinted variant.
+  // Header icon actions (watchlist · alert · share) — matched size-9 ghost buttons
+  // beside the title: no resting border/fill, surface only appears on hover. All
+  // three rest at muted/40 so the cluster reads as one symmetric group.
+  const headerIconBtn =
+    "ease-chrome flex size-9 shrink-0 items-center justify-center rounded-md border-0 bg-transparent text-muted-foreground/40 transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
+  // Ghost + hairline secondary CTA (ลงขาย / เพิ่มพอร์ต) — lighter than the gold
+  // buy so the one gold element stays dominant.
   const secondaryBtn =
-    "ease-chrome flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-foreground/[0.06] text-sm font-semibold text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
+    "ease-chrome ring-inset flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-transparent text-sm font-semibold text-foreground ring-1 ring-[var(--p-hair)] hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
 
   const handleShare = async () => {
     const url = typeof window !== "undefined" ? window.location.href : ""
@@ -524,15 +519,51 @@ export function CardDetail({
         <div id="overview" className="order-2 min-w-0 scroll-mt-[7.75rem] md:scroll-mt-[10.5rem] lg:order-none lg:col-start-2 lg:row-start-1">
           {/* identity — name is now a proper title beside the hero image */}
           <div className="min-w-0">
-            <div className="flex items-start gap-1.5">
+            <div className="flex items-center gap-3">
               <h1 className="text-h2 min-w-0 break-words text-foreground sm:text-h1">{displayName}</h1>
-              <WatchlistStar cardId={card.id} size="md" />
+              <div className="flex shrink-0 items-center gap-1">
+                <WatchlistStar
+                  cardId={card.id}
+                  size="md"
+                  className="size-9 rounded-md transition-colors hover:bg-muted [&_svg]:size-4"
+                />
+                <TooltipProvider delay={200}>
+                  <Tooltip>
+                    <TooltipTrigger
+                      render={
+                        <button
+                          type="button"
+                          onClick={() => setAlertOpen(true)}
+                          className={headerIconBtn}
+                          aria-label={t(displayLang, "setPriceAlertShort")}
+                        >
+                          <Bell aria-hidden />
+                        </button>
+                      }
+                    />
+                    <TooltipContent>{t(displayLang, "setPriceAlertShort")}</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger
+                      render={
+                        <button
+                          type="button"
+                          onClick={() => void handleShare()}
+                          className={headerIconBtn}
+                          aria-label={t(displayLang, "shareButton")}
+                        >
+                          <Share2 aria-hidden />
+                        </button>
+                      }
+                    />
+                    <TooltipContent>{t(displayLang, "shareButton")}</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
             </div>
             <div className="text-meta mt-1 flex flex-wrap items-center gap-1.5">
               <RarityBadge rarity={card.rarity} size="sm" />
               <span>· {card.baseCode ?? card.cardCode}</span>
-              {colorDot && <span aria-hidden className={cn("size-2 rounded-full", colorDot)} />}
-              {card.isParallel && <span>· {t(displayLang, "parallel")}</span>}
               <span
                 className="inline-flex items-center gap-1 tnum"
                 title={t(displayLang, "views")}
@@ -646,8 +677,8 @@ export function CardDetail({
           )}
         </div>
 
-        {/* COL 3 — BUY BOX rail (flat, no card border): transact + ขายล่าสุด feed */}
-        <div className="order-3 min-w-0 border-t border-[var(--p-hair)] pt-4 lg:order-none lg:col-start-3 lg:row-start-1 lg:border-l lg:border-t-0 lg:border-[var(--p-hair)] lg:pl-8 lg:pt-0">
+        {/* COL 3 — BUY BOX rail (flat, no borders): separated by whitespace alone */}
+        <div className="order-3 min-w-0 pt-4 lg:order-none lg:col-start-3 lg:row-start-1 lg:pl-8 lg:pt-0">
           {/* transact — gold "ดูประกาศขาย" is the page's one gold element */}
           <div className="space-y-2">
             <a
@@ -666,20 +697,12 @@ export function CardDetail({
               </a>
               <CardAddToPortfolio cardId={card.id} cardName={displayName} variant="ghost" className={secondaryBtn} />
             </div>
-            <div className="grid grid-cols-2 gap-1">
-              <button type="button" onClick={() => setAlertOpen(true)} className={utilityBtn}>
-                <Bell className="size-4" aria-hidden /> {t(displayLang, "setPriceAlertShort")}
-              </button>
-              <button type="button" onClick={() => void handleShare()} className={utilityBtn}>
-                <Share2 className="size-4" aria-hidden /> {t(displayLang, "shareButton")}
-              </button>
-            </div>
           </div>
 
           {/* ขายล่าสุด — ONE headline settled sale (freshest). The full per-source
               sold breakdown lives in the #sources table, so the whole row is a
               link there instead of repeating every source here. */}
-          <div className="hairline-t mt-4 pt-3">
+          <div className="mt-5 pt-1">
             <p className="text-eyebrow mb-1">{t(displayLang, "lastSold")}</p>
             {latestSale ? (
               <a
@@ -845,7 +868,7 @@ export function CardDetail({
 
         {/* ROW 1 RIGHT — card info (specs + effect) */}
         <aside id="specs" className="min-w-0 scroll-mt-[7.75rem] md:scroll-mt-[10.5rem]">
-          <div className="lg:border-l lg:border-[var(--p-hair)] lg:pl-8">
+          <div className="lg:pl-8">
             <SectionHead title={t(displayLang, "cardInfo")} />
             <CardDetailSpecs card={card} lang={displayLang} />
             {effectText?.trim() && (
@@ -864,7 +887,7 @@ export function CardDetail({
         </aside>
       </div>
 
-      <div className="hairline-t mt-10 grid grid-cols-1 gap-x-8 gap-y-12 pt-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="mt-14 grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_360px]">
         {/* ROW 2 LEFT — Meecard asks */}
         <section id="market" className="min-w-0 scroll-mt-[7.75rem] md:scroll-mt-[10.5rem]">
           <MeecardAsksRail
@@ -885,7 +908,7 @@ export function CardDetail({
             zone, so it's the single ad mobile carries now that the page-tail banner is
             gone. The chart-side ad stays hidden <lg (that one IS in the price zone). */}
         <aside className="min-w-0">
-          <div className="lg:border-l lg:border-[var(--p-hair)] lg:pl-8">
+          <div className="lg:pl-8">
             <AdSlot placement="card-detail-info-below" className="min-h-[120px] w-full lg:min-h-[320px]" />
           </div>
         </aside>

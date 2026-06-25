@@ -85,6 +85,12 @@ export const useUIStore = create<UIState>()(
     }),
     {
       name: "kuma-ui-preferences",
+      // Static/ISR pages prerender with the default state (TH/THB). Auto-rehydrating
+      // synchronously would make the first client render use the persisted prefs and
+      // mismatch that HTML (hydration error for anyone who switched language/currency).
+      // Instead we skip auto-hydration and rehydrate once after mount via <StoreHydrator/>,
+      // so the first paint matches the server and prefs swap in cleanly afterwards.
+      skipHydration: true,
       partialize: (state) => ({
         language: state.language,
         currency: state.currency,

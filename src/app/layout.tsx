@@ -11,6 +11,7 @@ import { MissionTracker } from "@/components/honey/mission-tracker";
 import { CardMiniPreviewDialog } from "@/components/shared/card-mini-preview-dialog";
 
 import { ThemeProvider } from "@/providers/theme-provider";
+import { StoreHydrator } from "@/components/providers/store-hydrator";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { ConfirmDialogProvider } from "@/components/shared/confirm-dialog";
@@ -90,6 +91,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <StoreHydrator />
           <TooltipProvider>
             <ConfirmDialogProvider>
               <UpgradeDialogProvider>

@@ -84,7 +84,7 @@ export default async function HomePage(props: {
       {/* Highlights: Featured · Top Gainers · Top Losers. Minimal — no dividers,
           no borders, no boxes; columns separated by whitespace alone so the page
           reads calm and editorial rather than gridded. */}
-      <section className="mt-8 grid gap-x-10 gap-y-7 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3">
+      <section className="mt-3 grid gap-x-8 gap-y-6 sm:mt-4 sm:grid-cols-2 lg:grid-cols-3">
         {featured && (
           <div className="sm:col-span-2 lg:col-span-1">
             <HomeFeaturedCard card={featured} />
@@ -94,8 +94,10 @@ export default async function HomePage(props: {
         <HomeMiniTable cards={losers} type="losers" />
       </section>
 
-      {/* In-feed ad — mobile only, between highlights and the market table */}
-      <AdSlot placement="home-in-feed" className="mt-6 aspect-[6/1] md:hidden" />
+      {/* In-feed ad — mobile only, between highlights and the market table.
+          House ad (first-party) sizes to its compact content; no forced aspect
+          ratio so it stays a slim single nudge rather than a tall block. */}
+      <AdSlot placement="home-in-feed" className="mt-5 py-2.5 md:hidden" />
 
       {/* The market — core browse tool. Generous air above so it reads as its
           own document section, the way card-detail separates its blocks. */}

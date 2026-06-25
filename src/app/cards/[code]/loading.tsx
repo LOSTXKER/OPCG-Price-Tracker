@@ -1,42 +1,75 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { Surface } from "@/components/ui/surface";
 
 export default function CardDetailLoading() {
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-7xl">
+      {/* breadcrumb */}
       <Skeleton className="h-4 w-48" />
-      <div className="grid gap-6 lg:grid-cols-12">
-        <div className="lg:col-span-5">
-          <Skeleton className="mx-auto aspect-[63/88] w-full max-w-[360px] rounded-xl lg:max-w-none" />
-        </div>
-        <div className="space-y-4 lg:col-span-7">
-          <div>
-            <Skeleton className="h-5 w-32" />
-            <Skeleton className="mt-2 h-8 w-64" />
-            <Skeleton className="mt-2 h-4 w-48" />
-          </div>
-          <Surface variant="panel" padding="lg">
-            <Skeleton className="h-3 w-12 mb-3" />
-            <Skeleton className="h-9 w-32" />
-            <Skeleton className="mt-3 h-9 w-40 rounded-lg" />
-          </Surface>
-          <Surface variant="panel" padding="lg">
-            <Skeleton className="h-3 w-12 mb-3" />
-            <div className="grid grid-cols-3 gap-4 sm:grid-cols-6">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i}>
-                  <Skeleton className="h-2.5 w-10" />
-                  <Skeleton className="mt-1 h-5 w-12" />
-                </div>
-              ))}
+
+      {/* 3-col hero: image · identity+price+grade rail · buy box (flat, no panels) */}
+      <div className="mt-6 flex flex-col gap-y-6 lg:grid lg:grid-cols-[200px_minmax(0,1fr)_320px] lg:items-start lg:gap-x-8 lg:gap-y-0 xl:grid-cols-[240px_minmax(0,1fr)_360px] xl:gap-x-10">
+        {/* COL 1 — image */}
+        <Skeleton className="mx-auto aspect-[63/88] w-44 rounded-xl sm:w-52 lg:mx-0 lg:w-full" />
+
+        {/* COL 2 — identity + grade rail + hero price */}
+        <div className="min-w-0 space-y-4">
+          <div className="space-y-2">
+            <div className="flex items-start gap-3">
+              <Skeleton className="h-8 min-w-0 flex-1" />
+              <div className="flex shrink-0 items-center gap-1">
+                <Skeleton className="size-9 rounded-md" />
+                <Skeleton className="size-9 rounded-md" />
+                <Skeleton className="size-9 rounded-md" />
+              </div>
             </div>
-          </Surface>
-          <Surface variant="panel" padding="lg">
-            <Skeleton className="h-3 w-20 mb-3" />
-            <Skeleton className="h-48 w-full rounded-lg" />
-          </Surface>
+            <Skeleton className="h-4 w-40" />
+          </div>
+
+          {/* edition toggle + grade rail chips */}
+          <Skeleton className="h-8 w-28 rounded-lg" />
+          <div className="flex gap-2">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-14 w-20 shrink-0 rounded-lg" />
+            ))}
+          </div>
+
+          {/* hero price + delta */}
+          <div className="space-y-2 pt-1">
+            <Skeleton className="h-10 w-48" />
+            <Skeleton className="h-4 w-36" />
+          </div>
+
+          {/* low/high range bar */}
+          <Skeleton className="h-1.5 w-full max-w-sm rounded-full" />
+        </div>
+
+        {/* COL 3 — buy box */}
+        <div className="space-y-2 pt-4 lg:pl-8 lg:pt-0">
+          <Skeleton className="h-11 w-full rounded-xl" />
+          <div className="grid grid-cols-2 gap-2">
+            <Skeleton className="h-11 rounded-xl" />
+            <Skeleton className="h-11 rounded-xl" />
+          </div>
+          <div className="flex gap-1 pt-0.5">
+            <Skeleton className="size-9 rounded-lg" />
+            <Skeleton className="size-9 rounded-lg" />
+          </div>
+          <div className="mt-5 space-y-2">
+            <Skeleton className="h-3 w-16" />
+            <Skeleton className="h-9 w-full rounded-lg" />
+          </div>
         </div>
       </div>
+
+      {/* tabs */}
+      <div className="mt-6 flex gap-5">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-5 w-20" />
+        ))}
+      </div>
+
+      {/* chart */}
+      <Skeleton className="mt-6 h-72 w-full rounded-xl" />
     </div>
   );
 }

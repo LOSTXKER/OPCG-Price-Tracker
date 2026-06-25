@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { Check, ChevronDown } from "lucide-react"
+import { Check, ChevronDown, ExternalLink } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -14,7 +14,7 @@ import { type Currency } from "@/lib/utils/currency"
 import { t, type Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
-import { SourceLogo, sourceLabel } from "./source-logo"
+import { SourceLogo, sourceLabel, sourceUrl } from "./source-logo"
 import type { MockSale } from "./mock"
 import {
   MARKET_TABLE_CLASS,
@@ -37,6 +37,39 @@ import {
   formatFeedDate,
   gradeFilterLabel,
 } from "./market-feed-shared"
+
+/**
+ * Source identity cell — logo + label, with a trailing external-link icon and an
+ * outbound link to the source marketplace when a reference URL is known. Settled
+ * sales have no stable deep-link, so we point at the source homepage so shoppers
+ * can verify/browse comparable listings. Unmapped sources render a plain cell.
+ */
+function SourceRef({ source }: { source: string }) {
+  const href = sourceUrl(source)
+  const label = sourceLabel(source)
+  const inner = (
+    <>
+      <SourceLogo source={source} size={18} />
+      <span className="truncate text-label font-medium text-foreground">{label}</span>
+      {href && <ExternalLink className="size-3 shrink-0 text-muted-foreground/50" aria-hidden />}
+    </>
+  )
+  if (!href) return <span className={marketPrimaryCell}>{inner}</span>
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      className={cn(
+        marketPrimaryCell,
+        "ease-chrome rounded hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+      )}
+    >
+      {inner}
+    </a>
+  )
+}
 
 /** Source facet — compact dropdown (logos in menu; trigger shows current pick). */
 function SourceDropdown({
@@ -183,10 +216,7 @@ export function RecentSales({
                 {shown.map((s, i) => (
                   <tr key={`${s.source}-${i}`} className="border-b border-[var(--p-hair)] last:border-b-0">
                     <td className={marketTdLead}>
-                      <span className={marketPrimaryCell}>
-                        <SourceLogo source={s.source} size={18} />
-                        <span className="truncate text-label font-medium text-foreground">{sourceLabel(s.source)}</span>
-                      </span>
+                      <SourceRef source={s.source} />
                     </td>
                     <td className={marketTdLead}>
                       <span className="text-meta tnum">{formatFeedDate(s.soldAtIso)}</span>
@@ -205,8 +235,7 @@ export function RecentSales({
               <div key={`${s.source}-${i}`} className="flex items-center justify-between gap-3 py-3 pl-0.5 pr-2">
                 <span className="min-w-0">
                   <span className="flex items-center gap-2">
-                    <SourceLogo source={s.source} size={18} />
-                    <span className="truncate text-label font-medium text-foreground">{sourceLabel(s.source)}</span>
+                    <SourceRef source={s.source} />
                     <ConditionChip condition={s.condition} graded={s.family != null} />
                   </span>
                   <span className="tnum mt-1 block text-meta">{formatFeedDate(s.soldAtIso)}</span>
