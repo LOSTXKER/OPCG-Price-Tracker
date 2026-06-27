@@ -90,7 +90,7 @@ export function Header() {
         onSearchOpen={openSearch}
       />
 
-      <header className="frost" style={{ boxShadow: "inset 0 -1px 0 0 var(--p-hair)" }}>
+      <header className="bg-background" style={{ boxShadow: "inset 0 -1px 0 0 var(--p-hair)" }}>
         <div className="mx-auto flex h-14 max-w-7xl items-center px-6 lg:px-8">
           <Link href="/" className="mr-3 flex shrink-0 items-center gap-2.5">
             <Image

@@ -15,7 +15,7 @@ export function HeaderMobile({ isAuthenticated }: { isAuthenticated: boolean }) 
   const openSearch = useUIStore((s) => s.setSearchOpen);
 
   return (
-    <div className="frost sticky top-0 z-50 md:hidden" style={{ boxShadow: "inset 0 -1px 0 0 var(--p-hair)" }}>
+    <div className="bg-background sticky top-0 z-50 md:hidden" style={{ boxShadow: "inset 0 -1px 0 0 var(--p-hair)" }}>
       <div className="flex h-14 items-center gap-1 px-4">
         <Link href="/" className="flex shrink-0 items-center gap-2">
           <Image

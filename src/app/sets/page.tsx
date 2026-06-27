@@ -8,6 +8,8 @@ import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
+import { t } from "@/lib/i18n";
+import { getServerLanguage } from "@/lib/i18n/server";
 import {
   SetsPageHeader,
   SetsListClient,
@@ -19,11 +21,12 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Card Sets — Booster Boxes & Decks",
   description:
-    "Browse all OPCG card sets, booster boxes and starter decks. Check estimated set values, card counts and release dates.",
+    "Browse all OPCG card sets, booster boxes and starter decks. Card counts and release dates.",
   alternates: { canonical: "/sets" },
 };
 
 export default async function SetsIndexPage() {
+  const lang = await getServerLanguage();
   let setsRaw: SetWithCard[] = [];
   let dbError = false;
 
@@ -32,47 +35,29 @@ export default async function SetsIndexPage() {
       orderBy: [{ type: "asc" }, { code: "asc" }],
     });
 
-    const [products, topCards, valueSums] = await Promise.all([
+    const setIds = sets.map((s) => s.id);
+    const [products, topCards] = await Promise.all([
       prisma.product.findMany({
         select: { code: true, _count: { select: { cards: true } } },
       }),
       prisma.card.findMany({
         where: {
-          setId: { in: sets.map((s) => s.id) },
+          setId: { in: setIds },
           imageUrl: { not: null },
         },
         orderBy: { cardCode: "asc" },
-        select: { setId: true, imageUrl: true, latestPriceJpy: true },
-      }),
-      prisma.card.groupBy({
-        by: ["setId"],
-        where: {
-          setId: { in: sets.map((s) => s.id) },
-          latestPriceJpy: { gt: 0 },
-        },
-        _sum: { latestPriceJpy: true },
+        select: { setId: true, imageUrl: true },
       }),
     ]);
 
     const productCountMap = new Map(
       products.map((p) => [p.code, p._count.cards])
     );
-    const topCardMap = new Map<
-      number,
-      { imageUrl: string | null; latestPriceJpy: number | null }
-    >();
+    const topCardMap = new Map<number, { imageUrl: string | null }>();
     for (const tc of topCards) {
       if (!topCardMap.has(tc.setId))
-        topCardMap.set(tc.setId, {
-          imageUrl: tc.imageUrl,
-          latestPriceJpy: tc.latestPriceJpy,
-        });
+        topCardMap.set(tc.setId, { imageUrl: tc.imageUrl });
     }
-    const valueMap = new Map<number, number>();
-    for (const vs of valueSums) {
-      valueMap.set(vs.setId, vs._sum.latestPriceJpy ?? 0);
-    }
-
     setsRaw = sets.map((s) => ({
       id: s.id,
       code: s.code,
@@ -84,27 +69,28 @@ export default async function SetsIndexPage() {
       releaseDate: s.releaseDate?.toISOString() ?? null,
       boxImageUrl: s.boxImageUrl,
       topCard: topCardMap.get(s.id) ?? null,
-      totalValue: valueMap.get(s.id) ?? 0,
+      // Sealed-box SNKRDUNK price — wired in Phase B (scraper + schema).
+      boxPriceJpy: null,
     }));
   } catch (error) {
     console.error("Failed to fetch sets:", error);
     dbError = true;
   }
 
-  const mostValuable = [...setsRaw]
-    .filter((s) => s.totalValue > 0)
-    .sort((a, b) => b.totalValue - a.totalValue)
-    .slice(0, 5);
-
   return (
     <>
       <JsonLd
         data={breadcrumbJsonLd([
-          { name: "Home", href: "/" },
-          { name: "Sets", href: "/sets" },
+          { name: t(lang, "home"), href: "/" },
+          { name: t(lang, "sets"), href: "/sets" },
         ])}
       />
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Sets" }]} />
+      <Breadcrumb
+        items={[
+          { label: t(lang, "home"), href: "/" },
+          { label: t(lang, "sets") },
+        ]}
+      />
       <div className="space-y-8">
         <SetsPageHeader />
 
@@ -113,7 +99,7 @@ export default async function SetsIndexPage() {
         ) : setsRaw.length === 0 ? (
           <KumaEmptyState title="No card sets yet" />
         ) : (
-          <SetsListClient sets={setsRaw} mostValuable={mostValuable} />
+          <SetsListClient sets={setsRaw} />
         )}
       </div>
       <RelatedPages
