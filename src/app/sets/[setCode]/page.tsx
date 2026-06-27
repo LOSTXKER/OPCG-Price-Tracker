@@ -14,9 +14,14 @@ import { RarityBadge } from "@/components/shared/rarity-badge";
 import { RARITIES, raritySort } from "@/lib/constants/rarities";
 import { prisma } from "@/lib/db";
 import { Price } from "@/components/shared/price-inline";
-import { Surface } from "@/components/ui/surface";
 import { FormattedDate } from "@/components/shared/formatted-date";
-import { SetPageStats, SetPageTopCardLabel, DropRateDialog } from "./set-page-client";
+import { t } from "@/lib/i18n";
+import { getServerLanguage } from "@/lib/i18n/server";
+import {
+  SetPageStats,
+  SetPageTopCardLabel,
+  DropRateDialog,
+} from "./set-page-client";
 import { pullChance, PACKS_PER_BOX } from "@/lib/utils/pull-rate";
 import { formatCount } from "@/lib/utils/currency";
 import {
@@ -93,20 +98,18 @@ export default async function SetDetailPage(props: {
   const set = await getSet(setCode);
   if (!set) notFound();
 
+  const lang = await getServerLanguage();
   const { cards } = set;
   const withPrice = cards.filter(
-    (c) => c.latestPriceJpy != null && c.latestPriceJpy > 0
+    (c) => c.latestPriceJpy != null && c.latestPriceJpy > 0,
   );
-  const totalValue = withPrice.reduce(
-    (s, c) => s + (c.latestPriceJpy ?? 0),
-    0
-  );
+  const totalValue = withPrice.reduce((s, c) => s + (c.latestPriceJpy ?? 0), 0);
   const avgPrice =
     withPrice.length > 0 ? Math.round(totalValue / withPrice.length) : 0;
   const topCard =
     withPrice.length > 0
       ? withPrice.reduce((a, b) =>
-          (a.latestPriceJpy ?? 0) > (b.latestPriceJpy ?? 0) ? a : b
+          (a.latestPriceJpy ?? 0) > (b.latestPriceJpy ?? 0) ? a : b,
         )
       : null;
 
@@ -117,8 +120,8 @@ export default async function SetDetailPage(props: {
     if (!groupsMap.has(c.rarity)) groupsMap.set(c.rarity, []);
     groupsMap.get(c.rarity)!.push(c);
   }
-  const sortedEntries = [...groupsMap.entries()].sort(
-    (a, b) => raritySort(a[0], b[0])
+  const sortedEntries = [...groupsMap.entries()].sort((a, b) =>
+    raritySort(a[0], b[0]),
   );
 
   const rarityGroups: RarityGroup[] = sortedEntries.map(
@@ -158,12 +161,12 @@ export default async function SetDetailPage(props: {
             psa10PriceUsd: c.prices?.[0]?.priceUsd ?? null,
             cardType: c.cardType,
             color: c.color,
-          })
+          }),
         ),
         pullRate,
         pullChancePerBox: perBox,
       };
-    }
+    },
   );
 
   const setName = set.nameEn ?? set.name;
@@ -172,60 +175,66 @@ export default async function SetDetailPage(props: {
     <>
       <JsonLd
         data={breadcrumbJsonLd([
-          { name: "Home", href: "/" },
-          { name: "Sets", href: "/sets" },
-          { name: `${set.code.toUpperCase()} — ${setName}`, href: `/sets/${set.code}` },
+          { name: t(lang, "home"), href: "/" },
+          { name: t(lang, "sets"), href: "/sets" },
+          {
+            name: `${set.code.toUpperCase()} — ${setName}`,
+            href: `/sets/${set.code}`,
+          },
         ])}
       />
       <div className="space-y-6">
         <Breadcrumb
           items={[
-            { label: "Home", href: "/" },
-            { label: "Sets", href: "/sets" },
+            { label: t(lang, "home"), href: "/" },
+            { label: t(lang, "sets"), href: "/sets" },
             { label: set.code.toUpperCase() },
           ]}
         />
 
-      {/* Hero */}
-      <div>
-        <div className="mb-1.5 flex flex-wrap items-center gap-2">
-          <span className="rounded-md bg-primary/10 px-2 py-0.5 font-mono text-xs font-bold text-primary">
-            {set.code.toUpperCase()}
-          </span>
-          <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+        {/* Hero — quiet 3-line editorial header (eyebrow · title · stat line) */}
+        <header className="space-y-2">
+          <p className="text-eyebrow">
+            <span className="font-mono">{set.code.toUpperCase()}</span>
+            {" · "}
             {set.type.replaceAll("_", " ")}
-          </span>
-          {set.releaseDate && (
-            <FormattedDate
-              date={set.releaseDate}
-              options={{ year: "numeric", month: "long" }}
-              className="text-meta"
+            {set.releaseDate && (
+              <>
+                {" · "}
+                <FormattedDate
+                  date={set.releaseDate}
+                  options={{ year: "numeric", month: "short" }}
+                />
+              </>
+            )}
+          </p>
+          <h1 className="text-h1 break-words">{set.nameEn ?? set.name}</h1>
+          <div className="text-body-sm flex flex-wrap items-center gap-x-2 gap-y-1 text-muted-foreground">
+            <SetPageStats
+              cardCount={cards.length}
+              totalValue={totalValue}
+              avgPrice={avgPrice}
             />
-          )}
-        </div>
-        <h1 className="text-h1 break-words">
-          {set.nameEn ?? set.name}
-        </h1>
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-          <SetPageStats cardCount={cards.length} totalValue={totalValue} avgPrice={avgPrice} />
-          {set.dropRates.length > 0 && (
-            <DropRateDialog
-              groups={rarityGroups}
-              packsPerBox={set.packsPerBox}
-              cardsPerPack={set.cardsPerPack}
-            />
-          )}
-        </div>
-      </div>
+            {set.dropRates.length > 0 && (
+              <>
+                <span aria-hidden>·</span>
+                <DropRateDialog
+                  groups={rarityGroups}
+                  packsPerBox={set.packsPerBox}
+                  cardsPerPack={set.cardsPerPack}
+                />
+              </>
+            )}
+          </div>
+        </header>
 
-      {/* Top card spotlight */}
-      {topCard && (
-        <Link
-          href={`/cards/${topCard.cardCode}`}
-          className="group block"
-        >
-          <Surface variant="panel" className="grid grid-cols-[auto_1fr_auto] items-center gap-3 p-3 transition-colors hover:bg-muted/20 sm:gap-4 sm:p-4">
-            <div className="relative aspect-[63/88] w-12 shrink-0 overflow-hidden rounded-md bg-muted sm:w-[60px]">
+        {/* Top card spotlight */}
+        {topCard && (
+          <Link
+            href={`/cards/${topCard.cardCode}`}
+            className="group -mx-2 grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-lg px-2 py-2.5 transition-colors hover:bg-muted/40 sm:gap-4"
+          >
+            <div className="surface-1 hairline relative aspect-[63/88] w-12 shrink-0 overflow-hidden rounded-md sm:w-[60px]">
               {topCard.imageUrl ? (
                 <Image
                   src={topCard.imageUrl}
@@ -261,16 +270,12 @@ export default async function SetDetailPage(props: {
               </p>
               <ArrowRight className="hidden size-4 text-muted-foreground/40 transition-transform group-hover:translate-x-0.5 group-hover:text-muted-foreground sm:block" />
             </div>
-          </Surface>
-        </Link>
-      )}
+          </Link>
+        )}
 
-      {/* Interactive content */}
-      <SetDetailContent
-        groups={rarityGroups}
-        totalCards={cards.length}
-      />
-    </div>
+        {/* Interactive content */}
+        <SetDetailContent groups={rarityGroups} totalCards={cards.length} />
+      </div>
     </>
   );
 }

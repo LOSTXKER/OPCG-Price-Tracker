@@ -23,7 +23,10 @@ import {
 } from "@/lib/utils/pull-rate";
 import { RARITY_BAR_COLOR } from "@/lib/constants/rarities";
 import { UNIT_I18N_KEYS, PULL_UNITS, type Unit } from "@/lib/constants/ui";
-import type { PullRateData, RarityGroup } from "@/components/sets/set-detail-content";
+import type {
+  PullRateData,
+  RarityGroup,
+} from "@/components/sets/set-detail-content";
 
 export function SetPageStats({
   cardCount,
@@ -36,19 +39,21 @@ export function SetPageStats({
 }) {
   const lang = useUIStore((s) => s.language);
   return (
-    <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
-      <Stat label={t(lang, "card")} value={<span className="tabular-nums">{cardCount}</span>} />
+    <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5">
+      <Stat label={t(lang, "card")} value={cardCount} />
+      <span aria-hidden>·</span>
       <Stat label={t(lang, "totalValue")} value={<Price jpy={totalValue} />} />
+      <span aria-hidden>·</span>
       <Stat label={t(lang, "avgPrice")} value={<Price jpy={avgPrice} />} />
-    </div>
+    </span>
   );
 }
 
 function Stat({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <span className="inline-flex items-baseline gap-1.5">
-      <span className="text-meta">{label}</span>
-      <span className="font-mono text-sm font-semibold tabular-nums text-foreground">{value}</span>
+    <span className="inline-flex items-baseline gap-1">
+      <span>{label}</span>
+      <span className="font-medium tabular-nums text-foreground">{value}</span>
     </span>
   );
 }
@@ -60,11 +65,6 @@ export function SetPageTopCardLabel() {
       {t(lang, "highestValue")}
     </span>
   );
-}
-
-export function SetPageBreadcrumbLabels() {
-  const lang = useUIStore((s) => s.language);
-  return { home: t(lang, "home"), sets: t(lang, "sets") };
 }
 
 /* ------------------------------------------------------------------ */
@@ -122,9 +122,7 @@ export function DropRateDialog({
 
   return (
     <Dialog>
-      <DialogTrigger
-        className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--p-hair)] bg-muted/50 px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground"
-      >
+      <DialogTrigger className="ease-chrome inline-flex items-center gap-1 underline-offset-2 transition-colors hover:text-foreground hover:underline">
         <BarChart3 className="size-3.5 text-primary" />
         {t(lang, "dropRate")}
       </DialogTrigger>
@@ -155,7 +153,7 @@ export function DropRateDialog({
                     "rounded-lg px-3 py-1 text-xs font-medium transition-all ease-chrome",
                     unit === u
                       ? "bg-background text-foreground"
-                      : "text-muted-foreground hover:text-foreground"
+                      : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   {t(lang, UNIT_I18N_KEYS[u])}
@@ -164,7 +162,8 @@ export function DropRateDialog({
             </div>
             {packsPerBox && cardsPerPack && (
               <span className="text-meta">
-                {packsPerBox} {t(lang, "perUnit")}/{t(lang, "packUnit")} · {cardsPerPack} {t(lang, "cardsCount")}/{t(lang, "packUnit")}
+                {packsPerBox} {t(lang, "perUnit")}/{t(lang, "packUnit")} ·{" "}
+                {cardsPerPack} {t(lang, "cardsCount")}/{t(lang, "packUnit")}
               </span>
             )}
           </div>
@@ -177,15 +176,24 @@ export function DropRateDialog({
                   <RarityBadge rarity={r.rarity} size="sm" />
                   <span className="font-mono text-sm font-bold tabular-nums">
                     {fmtCount(r.count)}
-                    <span className="ml-1 text-xs font-medium text-muted-foreground">/{t(lang, UNIT_I18N_KEYS[unit])}</span>
+                    <span className="ml-1 text-xs font-medium text-muted-foreground">
+                      /{t(lang, UNIT_I18N_KEYS[unit])}
+                    </span>
                   </span>
                 </div>
                 <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-                  <div className={cn("h-full rounded-full", r.barColor)} style={{ width: `${r.barWidth}%` }} />
+                  <div
+                    className={cn("h-full rounded-full", r.barColor)}
+                    style={{ width: `${r.barWidth}%` }}
+                  />
                 </div>
                 <div className="flex items-center justify-between text-xs tabular-nums text-muted-foreground">
-                  <span>{r.cardCount} {t(lang, "cardsCount")}</span>
-                  <span className="font-mono font-semibold text-primary">{formatPullPct(r.chance)}</span>
+                  <span>
+                    {r.cardCount} {t(lang, "cardsCount")}
+                  </span>
+                  <span className="font-mono font-semibold text-primary">
+                    {formatPullPct(r.chance)}
+                  </span>
                 </div>
               </div>
             ))}
@@ -195,25 +203,44 @@ export function DropRateDialog({
             <table className="w-full border-collapse text-sm">
               <thead className="text-xs font-medium text-muted-foreground">
                 <tr className="border-b border-[var(--p-hair)]">
-                  <th className="py-1.5 text-left font-medium">{t(lang, "level")}</th>
+                  <th className="py-1.5 text-left font-medium">
+                    {t(lang, "level")}
+                  </th>
                   <th className="py-1.5 text-left font-medium" />
-                  <th className="whitespace-nowrap py-1.5 pl-4 text-right font-medium">{t(lang, "perUnit")}/{t(lang, UNIT_I18N_KEYS[unit])}</th>
-                  <th className="whitespace-nowrap py-1.5 pl-3 text-right font-medium">{t(lang, "cardsCount")}</th>
-                  <th className="whitespace-nowrap py-1.5 pl-3 text-right font-medium">{t(lang, "chancePerCard")}</th>
+                  <th className="whitespace-nowrap py-1.5 pl-4 text-right font-medium">
+                    {t(lang, "perUnit")}/{t(lang, UNIT_I18N_KEYS[unit])}
+                  </th>
+                  <th className="whitespace-nowrap py-1.5 pl-3 text-right font-medium">
+                    {t(lang, "cardsCount")}
+                  </th>
+                  <th className="whitespace-nowrap py-1.5 pl-3 text-right font-medium">
+                    {t(lang, "chancePerCard")}
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--p-hair)]">
                 {rows.map((r) => (
                   <tr key={r.rarity}>
-                    <td className="whitespace-nowrap py-2 pl-0"><RarityBadge rarity={r.rarity} size="sm" /></td>
+                    <td className="whitespace-nowrap py-2 pl-0">
+                      <RarityBadge rarity={r.rarity} size="sm" />
+                    </td>
                     <td className="w-full px-3 py-2">
                       <div className="h-1.5 min-w-12 overflow-hidden rounded-full bg-muted">
-                        <div className={cn("h-full rounded-full", r.barColor)} style={{ width: `${r.barWidth}%` }} />
+                        <div
+                          className={cn("h-full rounded-full", r.barColor)}
+                          style={{ width: `${r.barWidth}%` }}
+                        />
                       </div>
                     </td>
-                    <td className="whitespace-nowrap py-2 pl-4 text-right font-mono text-sm font-bold tabular-nums">{fmtCount(r.count)}</td>
-                    <td className="whitespace-nowrap py-2 pl-3 text-right text-xs tabular-nums text-muted-foreground">{r.cardCount}</td>
-                    <td className="whitespace-nowrap py-2 pl-3 text-right font-mono text-xs font-semibold tabular-nums text-primary">{formatPullPct(r.chance)}</td>
+                    <td className="whitespace-nowrap py-2 pl-4 text-right font-mono text-sm font-bold tabular-nums">
+                      {fmtCount(r.count)}
+                    </td>
+                    <td className="whitespace-nowrap py-2 pl-3 text-right text-xs tabular-nums text-muted-foreground">
+                      {r.cardCount}
+                    </td>
+                    <td className="whitespace-nowrap py-2 pl-3 text-right font-mono text-xs font-semibold tabular-nums text-primary">
+                      {formatPullPct(r.chance)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
