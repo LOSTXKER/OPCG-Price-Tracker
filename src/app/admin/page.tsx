@@ -295,7 +295,7 @@ export default async function AdminDashboard() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="group flex items-start gap-3 rounded-lg border border-[var(--p-hair)] p-3 transition-colors hover:bg-muted/30"
+                className="group flex items-start gap-3 rounded-lg border border-[var(--p-hair)] p-3 motion-base hover:bg-muted/70"
               >
                 <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                   <QIcon className="size-4 text-primary" />
@@ -307,7 +307,7 @@ export default async function AdminDashboard() {
                   </div>
                   <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-muted/60">
                     <div
-                      className="h-full rounded-full bg-primary/70 transition-all"
+                      className="h-full rounded-full bg-primary/70 motion-base"
                       style={{ width: `${Math.min(pctValue, 100)}%` }}
                     />
                   </div>
@@ -337,7 +337,7 @@ export default async function AdminDashboard() {
             <Link
               key={r.rarity}
               href={`/admin/cards?rarity=${r.rarity}&parallel=false`}
-              className="flex items-center gap-2 rounded-lg border border-[var(--p-hair)] px-3 py-1.5 text-sm transition-colors hover:bg-muted/40"
+              className="flex items-center gap-2 rounded-lg border border-[var(--p-hair)] px-3 py-1.5 text-sm motion-base hover:bg-muted/70"
             >
               <div className={`size-2.5 rounded-full ${rarityDot(i)}`} />
               <span className="font-mono text-xs font-bold">{r.rarity}</span>
@@ -358,7 +358,7 @@ export default async function AdminDashboard() {
             actions={
               <Link
                 href="/admin/logs"
-                className="flex items-center gap-1 text-meta transition-colors hover:text-primary"
+                className="flex items-center gap-1 text-meta motion-base hover:text-primary"
               >
                 ดูทั้งหมด
                 <ArrowRight className="size-3" />
@@ -369,7 +369,7 @@ export default async function AdminDashboard() {
               {s.recentLogs.map((log) => (
                 <div
                   key={log.id}
-                  className="flex items-start gap-2.5 rounded-md px-1 py-1.5 transition-colors hover:bg-muted/30"
+                  className="flex items-start gap-2.5 rounded-md px-1 py-1.5 motion-base hover:bg-muted/70"
                 >
                   <div className={`mt-1.5 size-1.5 shrink-0 rounded-full ${actionDotColor(log.action)}`} />
                   <div className="min-w-0 flex-1">
@@ -402,20 +402,20 @@ export default async function AdminDashboard() {
                 as={Link}
                 variant="outline"
                 href={action.href}
-                className="group flex h-full items-start gap-3 p-4 transition-colors hover:bg-muted/20 sm:p-5"
+                className="group flex h-full items-start gap-3 p-4 motion-base hover:bg-muted/70 sm:p-5"
               >
                 <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                   <action.icon className="size-[18px] text-primary" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h4 className="text-sm font-semibold transition-colors group-hover:text-primary">
+                  <h4 className="text-sm font-semibold motion-base group-hover:text-primary">
                     {action.title}
                   </h4>
                   <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
                     {action.description}
                   </p>
                 </div>
-                <ExternalLink className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/0 transition-colors group-hover:text-muted-foreground/60" />
+                <ExternalLink className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/0 motion-base group-hover:text-muted-foreground/60" />
               </Surface>
             ))}
           </div>

@@ -133,7 +133,7 @@ export function SetPicker({
         type="button"
         onClick={() => { setOpen(!open); setQuery("") }}
         className={cn(
-          "flex items-center gap-2 transition-colors",
+          "flex items-center gap-2 motion-base",
           isCta && cn(
             "h-12 w-full rounded-xl border-2 border-dashed border-primary/40 bg-primary/5 px-3 text-base text-foreground",
             "hover:border-primary/60 hover:bg-primary/10",
@@ -141,8 +141,8 @@ export function SetPicker({
           ),
           isPill && cn(
             "h-9 max-w-[18rem] rounded-full border border-border bg-background pl-1 pr-3 text-sm",
-            "hover:bg-muted/50",
-            open && "bg-muted/50",
+            "hover:bg-muted/70",
+            open && "bg-muted/70",
           ),
           isInline && cn(
             "h-9 w-full rounded-lg border bg-background px-2.5 text-sm",
@@ -150,8 +150,8 @@ export function SetPicker({
               ? "border-primary/40 bg-primary/10"
               : prominent
                 ? "border-primary/40 bg-[var(--p-honey-soft)] font-medium text-foreground hover:bg-primary/15"
-                : "border-border hover:bg-muted/40",
-            open && (selectedSet || prominent ? "bg-primary/15" : "bg-muted/40"),
+                : "border-border hover:bg-muted/70",
+            open && (selectedSet || prominent ? "bg-primary/15" : "bg-muted/70"),
           ),
         )}
       >
@@ -249,7 +249,7 @@ export function SetPicker({
                 type="button"
                 onClick={() => { onSelect(null); setOpen(false); setQuery("") }}
                 className={cn(
-                  "flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors hover:bg-muted/60",
+                  "flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm motion-base hover:bg-muted/70",
                   !selectedCode && "bg-primary/5 font-medium",
                 )}
               >
@@ -277,7 +277,7 @@ export function SetPicker({
                     type="button"
                     onClick={() => { onSelect(s.code); setOpen(false); setQuery("") }}
                     className={cn(
-                      "flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors hover:bg-muted/60",
+                      "flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm motion-base hover:bg-muted/70",
                       s.code === selectedCode && "bg-primary/5 font-medium",
                     )}
                   >

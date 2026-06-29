@@ -181,7 +181,7 @@ export function HomeMarketOverview({
         )}
         <button
           onClick={() => m.setFilterOpen(false)}
-          className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+          className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground motion-base hover:opacity-90"
         >
           {t(lang, "applyFilters")}
         </button>
@@ -208,7 +208,7 @@ export function HomeMarketOverview({
               className={cn(
                 "ease-chrome relative -mb-px shrink-0 border-b-2 px-2.5 py-2.5 text-xs font-semibold",
                 m.activeTab === tab.id
-                  ? "border-foreground text-foreground"
+                  ? "border-primary text-primary"
                   : "border-transparent text-muted-foreground hover:text-foreground"
               )}
             >
@@ -249,14 +249,14 @@ export function HomeMarketOverview({
                 className={cn(
                   "ease-chrome flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium",
                   m.filterOpen || m.activeFilterCount > 0
-                    ? "bg-foreground/[0.06] text-foreground"
+                    ? "bg-primary/15 text-primary"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
                 <SlidersHorizontal className="size-3.5" />
                 <span className="hidden md:inline">{t(lang, "filter")}</span>
                 {m.activeFilterCount > 0 && (
-                  <span className="flex size-4.5 items-center justify-center rounded-full bg-foreground/10 text-micro text-foreground">
+                  <span className="flex size-4.5 items-center justify-center rounded-full bg-primary/15 text-micro text-primary">
                     {m.activeFilterCount}
                   </span>
                 )}
@@ -319,7 +319,7 @@ export function HomeMarketOverview({
           }
         />
       ) : (
-        <div className={cn("p-4", m.isPending && "opacity-50 transition-opacity")}>
+        <div className={cn("p-4", m.isPending && "opacity-50 motion-base")}>
           <div className="mb-3 flex justify-end">
             <SegmentedControl
               size="sm"

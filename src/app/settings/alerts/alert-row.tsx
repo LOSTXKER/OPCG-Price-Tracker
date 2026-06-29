@@ -72,7 +72,7 @@ export function AlertRow({
     <Surface
       variant="outline"
       className={cn(
-        "p-4 transition-colors",
+        "p-4 motion-base",
         alert.isActive ? "" : "bg-muted/20",
       )}
     >
@@ -173,7 +173,7 @@ export function AlertRow({
             <span className="text-eyebrow shrink-0 text-muted-foreground">
               {t(lang, "alertTargetLabel")}
             </span>
-            <span className={cn("text-base font-semibold tabular-nums leading-none", directionTone)}>
+            <span className="text-base font-semibold tabular-nums leading-none text-foreground">
               {operator} {target}
             </span>
           </div>

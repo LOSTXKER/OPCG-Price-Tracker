@@ -225,7 +225,7 @@ function CheckinRow({
             aria-valuemax={targetDays}
           >
             <div
-              className="h-full rounded-full bg-primary transition-all"
+              className="h-full rounded-full bg-primary motion-base"
               style={{ width: `${pct}%` }}
             />
           </div>

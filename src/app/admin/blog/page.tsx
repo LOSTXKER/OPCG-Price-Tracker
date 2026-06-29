@@ -130,7 +130,7 @@ export default async function AdminBlogPage() {
               {posts.map((post) => (
                 <tr
                   key={post.id}
-                  className="border-b border-[var(--p-hair)] transition-colors hover:bg-muted/20"
+                  className="border-b border-[var(--p-hair)] motion-base hover:bg-muted/70"
                 >
                   <td className="px-4 py-3">
                     <div>
@@ -175,7 +175,7 @@ export default async function AdminBlogPage() {
               <li key={post.id}>
                 <Link
                   href={`/admin/blog/${post.id}`}
-                  className="flex flex-col gap-2 px-4 py-3 transition-colors active:bg-muted/40"
+                  className="flex flex-col gap-2 px-4 py-3 motion-base active:bg-muted/70"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">

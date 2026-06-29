@@ -111,7 +111,7 @@ export function HoneyTransactionList({
               return (
                 <tr
                   key={tx.id}
-                  className="transition-colors hover:bg-muted/30"
+                  className="motion-base hover:bg-muted/70"
                 >
                   <td className="px-3 py-2">
                     <div className="flex items-center gap-1.5">
@@ -174,7 +174,7 @@ export function HoneyTransactionList({
         <button
           onClick={handleLoadMore}
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--p-hair)] bg-muted/20 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted/20 py-2 text-xs font-medium text-muted-foreground motion-base hover:bg-muted/70 hover:text-foreground disabled:opacity-50"
         >
           {loading ? (
             <Loader2 className="size-3.5 animate-spin" />

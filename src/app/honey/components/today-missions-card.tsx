@@ -115,7 +115,7 @@ export function MissionsCard({
                   task.trackType === "manual" && !task.claimed && !task.done ? (
                     <button
                       onClick={() => onShare(task.id)}
-                      className="inline-flex h-8 items-center gap-1 rounded-lg border bg-background px-3 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
+                      className="inline-flex h-8 items-center gap-1 rounded-lg border bg-background px-3 text-xs font-semibold text-foreground motion-base hover:bg-muted"
                     >
                       <Share2 className="size-3" />
                       {t(lang, "missionShareLabel")}

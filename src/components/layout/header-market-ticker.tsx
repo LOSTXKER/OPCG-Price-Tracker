@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Price } from "@/components/shared/price-inline";
 import { useUIStore, type Language, type Currency } from "@/stores/ui-store";
+import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
 import { formatCount } from "@/lib/utils/currency";
 import {
@@ -36,6 +37,8 @@ interface MarketTickerProps {
   canUpgrade: boolean;
   mounted: boolean;
   onSearchOpen: () => void;
+  /** True once the page is scrolled — chrome goes opaque; at the top it's transparent. */
+  scrolled: boolean;
 }
 
 export function HeaderMarketTicker({
@@ -45,6 +48,7 @@ export function HeaderMarketTicker({
   canUpgrade,
   mounted,
   onSearchOpen,
+  scrolled,
 }: MarketTickerProps) {
   const language = useUIStore((s) => s.language);
   const setLanguage = useUIStore((s) => s.setLanguage);
@@ -53,8 +57,13 @@ export function HeaderMarketTicker({
   const { resolvedTheme, setTheme } = useTheme();
 
   return (
-    <div className="border-b border-[var(--p-hair)] bg-background">
-      <div className="mx-auto flex h-11 max-w-7xl items-center gap-3 px-4 lg:px-6">
+    <div
+      className={cn(
+        "ease-chrome border-b transition-colors",
+        scrolled ? "border-[var(--p-hair)]" : "border-transparent",
+      )}
+    >
+      <div className="flex h-11 items-center gap-3 px-4 lg:px-6">
         {/* Left — market ticker chips (scrolls on narrow widths) */}
         <div className="flex min-h-0 min-w-0 flex-1 items-center gap-2 overflow-x-auto overflow-y-hidden text-muted-foreground [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {stats.totalCards > 0 && (

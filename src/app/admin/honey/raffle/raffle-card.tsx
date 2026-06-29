@@ -34,7 +34,7 @@ export function RaffleCard({
 }: RaffleCardProps) {
   return (
     <div
-      className="rounded-xl border p-4 transition-colors hover:bg-muted/20"
+      className="rounded-xl border p-4 motion-base hover:bg-muted/70"
       style={r.color ? { borderLeftWidth: 4, borderLeftColor: r.color } : undefined}
     >
       <div className="flex gap-4">

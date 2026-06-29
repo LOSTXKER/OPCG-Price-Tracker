@@ -92,7 +92,7 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
 
   return (
     <div id="privacy" className="space-y-5 scroll-mt-24">
-      <div className="flex items-start gap-2 rounded-lg border border-[var(--p-hair)] bg-muted/30 px-3.5 py-2.5 text-meta">
+      <div className="flex items-start gap-2 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted/30 px-3.5 py-2.5 text-meta">
         <Info className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/70" />
         <p>{t(lang, "privacyAppliesAllPortfolios")}</p>
       </div>

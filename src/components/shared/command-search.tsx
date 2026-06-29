@@ -78,7 +78,7 @@ export function CommandSearchTrigger({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="flex h-8 w-52 items-center gap-2 rounded-lg border border-[var(--p-hair)] bg-muted/40 px-2.5 text-sm text-muted-foreground/60 transition-colors hover:bg-muted/60 hover:text-muted-foreground lg:w-60"
+      className="flex h-8 w-52 items-center gap-2 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted/40 px-2.5 text-sm text-muted-foreground/60 motion-base hover:bg-muted/70 hover:text-muted-foreground lg:w-60"
     >
       <Search className="size-3.5 shrink-0" />
       <span className="flex-1 text-left">{t(lang, "searchCardsDots")}</span>
@@ -277,14 +277,14 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
               type="button"
               onClick={() => commitSearch(query)}
               disabled={!query.trim()}
-              className="shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-30"
+              className="shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground motion-base hover:bg-primary/90 disabled:opacity-30"
             >
               {t(lang, "search")}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md border border-[var(--p-hair)] bg-muted/40 px-1.5 py-0.5 font-mono text-micro text-muted-foreground"
+              className="rounded-md border border-transparent dark:border-[var(--p-hair)] bg-muted/40 px-1.5 py-0.5 font-mono text-micro text-muted-foreground"
             >
               ESC
             </button>
@@ -318,7 +318,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                     type="button"
                     onClick={() => goToCard(card.cardCode)}
                     className={cn(
-                      "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors",
+                      "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left motion-base",
                       activeIdx === i ? "bg-accent" : "hover:bg-accent/60"
                     )}
                   >
@@ -346,7 +346,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                 <button
                   type="button"
                   onClick={() => commitSearch(query)}
-                  className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-meta transition-colors hover:bg-accent/60 hover:text-foreground"
+                  className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-meta motion-base hover:bg-accent/60 hover:text-foreground"
                 >
                   <Search className="size-3" />
                   {t(lang, "viewAllResults")} &ldquo;{query.trim()}&rdquo;
@@ -368,7 +368,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                       type="button"
                       onClick={() => goToPage(action.href)}
                       className={cn(
-                        "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm transition-colors",
+                        "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm motion-base",
                         activeIdx === navBase + i ? "bg-accent" : "hover:bg-accent/60"
                       )}
                     >
@@ -397,7 +397,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                     type="button"
                     onClick={() => commitSearch(item)}
                     className={cn(
-                      "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm transition-colors",
+                      "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm motion-base",
                       activeIdx === recentBase + i ? "bg-accent" : "hover:bg-accent/60"
                     )}
                   >

@@ -240,7 +240,7 @@ export function PriceChart({
       {/* Chart area */}
       <div
         className={cn(
-          "min-h-[300px] w-full transition-opacity duration-300",
+          "min-h-[300px] w-full motion-slow",
           loading && "pointer-events-none opacity-40",
         )}
       >
@@ -335,7 +335,7 @@ export function PriceChart({
 
       {/* Stats summary (under the chart) */}
       {stats && (
-        <div className="rounded-xl border border-[var(--p-hair)] bg-muted/20 px-4 py-3">
+        <div className="rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-muted/20 px-4 py-3">
           {periodLabel && (
             <p className="mb-2.5 text-eyebrow text-muted-foreground/70">
               {t(lang, "statsScope").replace("{period}", periodLabel)}
@@ -344,13 +344,13 @@ export function PriceChart({
           <div className="grid grid-cols-2 gap-y-3 sm:grid-cols-4 sm:gap-y-0 sm:divide-x sm:divide-[var(--p-hair)]">
             <div className="flex flex-col gap-0.5 px-1 sm:px-4 sm:first:pl-0">
               <span className="text-meta">{t(lang, "statsHigh")}</span>
-              <span className="font-price text-base font-semibold tabular-nums text-price-up">
+              <span className="font-price text-base font-semibold tabular-nums text-foreground">
                 {fmtPrice(stats.high)}
               </span>
             </div>
             <div className="flex flex-col gap-0.5 px-1 sm:px-4">
               <span className="text-meta">{t(lang, "statsLow")}</span>
-              <span className="font-price text-base font-semibold tabular-nums text-price-down">
+              <span className="font-price text-base font-semibold tabular-nums text-foreground">
                 {fmtPrice(stats.low)}
               </span>
             </div>

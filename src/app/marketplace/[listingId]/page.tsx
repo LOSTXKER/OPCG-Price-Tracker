@@ -289,8 +289,8 @@ export default async function ListingDetailPage({ params }: PageProps) {
                       diffPct < 0 ? "text-price-up" : "text-price-down"
                     )}
                   >
-                    {diffPct > 0 ? "+" : ""}
-                    {formatPct(diffPct, 0)}%
+                    {diffPct > 0 ? "▲" : "▼"}
+                    {formatPct(Math.abs(diffPct), 0)}%
                   </span>
                 </p>
               )}

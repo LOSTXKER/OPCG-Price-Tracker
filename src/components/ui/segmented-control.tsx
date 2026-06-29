@@ -39,7 +39,7 @@ export interface SegmentedControlProps<T extends string = string> {
    * Visual style:
    * - `default` — rounded-lg pill on a `bg-muted/50` track. Used for tab-like
    *   segmented controls (home tabs, trending tabs, view toggle, etc.).
-   * - `pill` — rounded-full pill on a transparent bordered track. Used as the
+   * - `pill` — rounded-full pill on a frameless `bg-muted/50` track. Used as the
    *   canonical style for time-period / chart-range filters across the site
    *   (24h / 7d / 30d, chart ranges, portfolio history, etc.).
    */
@@ -92,7 +92,7 @@ export function SegmentedControl<T extends string = string>({
       className={cn(
         "inline-flex items-center",
         isPill
-          ? "gap-0.5 rounded-full border border-border/50 p-0.5"
+          ? "gap-0.5 rounded-full bg-muted/50 p-0.5"
           : "gap-0.5 rounded-lg bg-muted/50 p-1",
         fullWidth && "w-full",
         className,
@@ -131,7 +131,7 @@ export function SegmentedControl<T extends string = string>({
             disabled={option.disabled}
             onClick={handleClick}
             className={cn(
-              "inline-flex items-center justify-center gap-1.5 font-medium transition-colors",
+              "inline-flex items-center justify-center gap-1.5 font-medium motion-base",
               "disabled:cursor-not-allowed disabled:opacity-50",
               isPill ? "rounded-full" : "rounded-md",
               size === "sm"
@@ -144,9 +144,7 @@ export function SegmentedControl<T extends string = string>({
               locked
                 ? "cursor-pointer text-muted-foreground/60 hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-400"
                 : active
-                  ? isPill
-                    ? "bg-background text-foreground shadow-sm"
-                    : "bg-card text-foreground shadow-sm"
+                  ? "bg-primary/15 text-primary"
                   : "text-muted-foreground hover:text-foreground",
               fullWidth && "flex-1",
             )}

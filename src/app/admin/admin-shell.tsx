@@ -136,16 +136,16 @@ function NavContent({
                     onClick={onNavigate}
                     title={collapsed ? item.label : undefined}
                     className={cn(
-                      "group flex items-center gap-3 rounded-lg text-sm transition-all",
+                      "group flex items-center gap-3 rounded-lg text-sm motion-base",
                       collapsed ? "justify-center px-2 py-2.5" : "px-3 py-2",
                       active
-                        ? "bg-primary/10 font-medium text-primary"
-                        : "text-muted-foreground hover:bg-muted/80 hover:text-foreground",
+                        ? "bg-primary/15 font-medium text-primary"
+                        : "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
                     )}
                   >
                     <item.icon
                       className={cn(
-                        "shrink-0 transition-colors",
+                        "shrink-0 motion-base",
                         collapsed ? "size-5" : "size-4",
                         active ? "text-primary" : "text-muted-foreground group-hover:text-foreground",
                       )}
@@ -166,7 +166,7 @@ function NavContent({
           onClick={onLogout}
           title={collapsed ? "ออกจากระบบ" : undefined}
           className={cn(
-            "flex items-center rounded-lg text-sm text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive",
+            "flex items-center rounded-lg text-sm text-muted-foreground motion-base hover:bg-destructive/10 hover:text-destructive",
             collapsed ? "justify-center p-2.5" : "w-full gap-3 px-3 py-2",
           )}
         >
@@ -195,7 +195,7 @@ function ThemeToggle({ collapsed }: { collapsed: boolean }) {
       onClick={() => setTheme(isDark ? "light" : "dark")}
       title={collapsed ? label : undefined}
       className={cn(
-        "flex items-center gap-3 rounded-lg text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+        "flex items-center gap-3 rounded-lg text-sm text-muted-foreground motion-base hover:bg-muted hover:text-foreground",
         collapsed ? "justify-center p-2.5" : "w-full px-3 py-2",
       )}
     >
@@ -257,7 +257,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             href="/"
             title={collapsed ? "กลับไปหน้าเว็บไซต์" : undefined}
             className={cn(
-              "mb-1 flex items-center rounded-lg text-muted-foreground/60 transition-colors hover:bg-muted hover:text-foreground",
+              "mb-1 flex items-center rounded-lg text-muted-foreground/60 motion-base hover:bg-muted hover:text-foreground",
               collapsed ? "justify-center p-2" : "gap-2 px-3 py-1.5 text-xs",
             )}
           >
@@ -297,7 +297,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               onClick={toggleCollapsed}
               title={collapsed ? "ขยายเมนู" : undefined}
               className={cn(
-                "flex items-center rounded-lg text-sm text-muted-foreground/60 transition-colors hover:bg-muted hover:text-foreground",
+                "flex items-center rounded-lg text-sm text-muted-foreground/60 motion-base hover:bg-muted hover:text-foreground",
                 collapsed ? "justify-center p-2.5" : "w-full gap-3 px-3 py-2",
               )}
             >
@@ -326,7 +326,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               <SheetTitle className="sr-only">เมนูนำทาง</SheetTitle>
               <Link
                 href="/"
-                className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-meta transition-colors hover:bg-muted hover:text-foreground"
+                className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-meta motion-base hover:bg-muted hover:text-foreground"
                 onClick={() => setMobileOpen(false)}
               >
                 <ArrowLeft className="size-3.5" />

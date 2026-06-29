@@ -40,7 +40,7 @@ export function SaveButton({ listingId, initialSaved, className }: SaveButtonPro
     >
       <Bookmark
         className={cn(
-          "size-5 transition-colors",
+          "size-5 motion-base",
           saved ? "fill-primary text-primary" : "text-muted-foreground"
         )}
       />

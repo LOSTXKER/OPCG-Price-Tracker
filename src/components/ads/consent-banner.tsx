@@ -29,14 +29,14 @@ export function ConsentBanner() {
           <button
             type="button"
             onClick={() => setConsent("denied")}
-            className="rounded-lg border border-[var(--p-hair)] px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/60"
+            className="rounded-lg border border-[var(--p-hair)] px-4 py-2 text-sm font-medium motion-base hover:bg-muted/70"
           >
             {t(lang, "consentDecline")}
           </button>
           <button
             type="button"
             onClick={() => setConsent("granted")}
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground motion-base hover:opacity-90"
           >
             {t(lang, "consentAccept")}
           </button>

@@ -102,7 +102,7 @@ export function SetsListClient({ sets }: { sets: SetWithCard[] }) {
     <>
       {/* Type filter — horizontal scrollable tab bar. Static (not sticky): it
           scrolls away with the page instead of floating over the grid. */}
-      <div className="-mx-4 flex items-center gap-1 overflow-x-auto border-b border-[var(--p-hair)] px-4 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
+      <div className="no-sb -mx-4 flex items-center gap-1 overflow-x-auto border-b border-[var(--p-hair)] px-4 sm:mx-0 sm:px-0">
         {filterOptions.map((opt) => {
           const active = activeType === opt.value;
           return (
@@ -114,7 +114,7 @@ export function SetsListClient({ sets }: { sets: SetWithCard[] }) {
               className={cn(
                 "ease-chrome relative -mb-px shrink-0 border-b-2 px-2.5 py-2.5 text-xs font-semibold transition-colors",
                 active
-                  ? "border-foreground text-foreground"
+                  ? "border-primary text-primary"
                   : "border-transparent text-muted-foreground hover:text-foreground"
               )}
             >
@@ -122,7 +122,7 @@ export function SetsListClient({ sets }: { sets: SetWithCard[] }) {
               <span
                 className={cn(
                   "ml-1.5 tabular-nums",
-                  active ? "text-foreground/50" : "text-muted-foreground/60"
+                  active ? "text-primary/60" : "text-muted-foreground/60"
                 )}
               >
                 {opt.count}
@@ -135,7 +135,7 @@ export function SetsListClient({ sets }: { sets: SetWithCard[] }) {
       {visibleTypes.length === 0 ? (
         <EmptyState variant="plain" title={t(lang, "noCardsFound")} />
       ) : (
-        <div className="space-y-10">
+        <div className="space-y-8">
           {visibleTypes.map((type, idx) => {
             const list = grouped.get(type) ?? [];
             return (
@@ -151,7 +151,7 @@ export function SetsListClient({ sets }: { sets: SetWithCard[] }) {
                   />
                 )}
 
-                <div className="grid grid-cols-3 gap-x-3 gap-y-4 sm:grid-cols-4 lg:grid-cols-5">
+                <div className="grid grid-cols-3 gap-x-3 gap-y-4 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
                   {list.map((s) => (
                     <SetCard key={s.id} set={s} />
                   ))}
@@ -182,7 +182,7 @@ function SetCard({ set }: { set: SetWithCard }) {
       aria-label={displayName}
       className="group flex flex-col gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <div className="surface-1 hairline ease-chrome relative aspect-[3/4] w-full overflow-hidden rounded-lg group-hover:ring-2 group-hover:ring-primary/40">
+      <div className="surface-1 ease-chrome relative aspect-[3/4] w-full overflow-hidden rounded-lg group-hover:ring-2 group-hover:ring-primary/40">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -199,16 +199,17 @@ function SetCard({ set }: { set: SetWithCard }) {
       </div>
 
       <div className="min-w-0">
-        <p className="truncate text-sm font-medium leading-snug text-foreground">
-          {displayName}
-        </p>
-        <p className="text-meta mt-0.5 flex flex-wrap items-center gap-x-1 gap-y-0">
-          <span className="font-mono">{set.code.toUpperCase()}</span>
-          <span aria-hidden>·</span>
-          <span className="tabular-nums">
+        {/* set code is the hero (เบส — collectors browse by OP/ST code first);
+            the set name supports it underneath. */}
+        <div className="flex items-baseline justify-between gap-1.5">
+          <span className="text-h5 truncate text-foreground">
+            {set.code.toUpperCase()}
+          </span>
+          <span className="text-meta shrink-0 tabular-nums">
             {set.productCardCount} {t(lang, "cardsCount")}
           </span>
-        </p>
+        </div>
+        <p className="text-meta truncate">{displayName}</p>
       </div>
     </Link>
   );

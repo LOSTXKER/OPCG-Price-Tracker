@@ -41,11 +41,11 @@ import { API, METHOD_INFO, yuyuHd } from "./yuyutei-types";
 /* ── Status tab config ── */
 
 const STATUS_TABS = [
-  { key: "", label: "ทั้งหมด", dotColor: "bg-foreground/40", textColor: "text-foreground", activeBg: "bg-background shadow-sm" },
-  { key: "suggested", label: "มีคำแนะนำ", dotColor: "bg-info", textColor: "text-info", activeBg: "bg-background shadow-sm" },
-  { key: "pending", label: "รอดำเนินการ", dotColor: "bg-warning", textColor: "text-warning", activeBg: "bg-background shadow-sm" },
-  { key: "matched", label: "จับคู่แล้ว", dotColor: "bg-success", textColor: "text-success", activeBg: "bg-background shadow-sm" },
-  { key: "rejected", label: "ปฏิเสธแล้ว", dotColor: "bg-danger", textColor: "text-danger", activeBg: "bg-background shadow-sm" },
+  { key: "", label: "ทั้งหมด", dotColor: "bg-foreground/40", textColor: "text-foreground", activeBg: "bg-primary/15" },
+  { key: "suggested", label: "มีคำแนะนำ", dotColor: "bg-info", textColor: "text-info", activeBg: "bg-primary/15" },
+  { key: "pending", label: "รอดำเนินการ", dotColor: "bg-warning", textColor: "text-warning", activeBg: "bg-primary/15" },
+  { key: "matched", label: "จับคู่แล้ว", dotColor: "bg-success", textColor: "text-success", activeBg: "bg-primary/15" },
+  { key: "rejected", label: "ปฏิเสธแล้ว", dotColor: "bg-danger", textColor: "text-danger", activeBg: "bg-primary/15" },
 ] as const;
 
 /* ══════════ MAIN ══════════ */
@@ -428,7 +428,7 @@ export function YuyuteiMatchClient() {
                   key={tab.key}
                   onClick={() => patch({ status: tab.key, page: 1 })}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs transition-all",
+                    "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs motion-base",
                     isActive
                       ? `${tab.activeBg} ${tab.textColor} font-semibold`
                       : "text-muted-foreground hover:text-foreground",
@@ -454,7 +454,7 @@ export function YuyuteiMatchClient() {
             <div className="flex items-center gap-2 text-meta">
               <div className="h-1.5 w-24 rounded-full bg-muted overflow-hidden">
                 <div
-                  className="h-full bg-success rounded-full transition-all"
+                  className="h-full bg-success rounded-full motion-base"
                   style={{ width: `${Math.round((data.counts.matched / totalAll) * 100)}%` }}
                 />
               </div>

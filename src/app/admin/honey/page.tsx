@@ -208,7 +208,7 @@ export default async function AdminHoneyDashboard() {
               <Link
                 key={u.id}
                 href={`/admin/users?search=${encodeURIComponent(u.email)}`}
-                className="flex items-center gap-2 rounded-lg px-2 py-2 transition-colors hover:bg-muted"
+                className="flex items-center gap-2 rounded-lg px-2 py-2 motion-base hover:bg-muted"
               >
                 <span className="flex size-6 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
                   {i + 1}

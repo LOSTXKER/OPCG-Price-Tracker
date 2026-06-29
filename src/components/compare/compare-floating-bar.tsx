@@ -87,7 +87,7 @@ export function CompareFloatingBar() {
             href="/compare"
             aria-disabled={!ready}
             className={cn(
-              "inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors",
+              "inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground motion-base",
               "hover:bg-primary/90",
               !ready && "pointer-events-none opacity-50",
             )}
@@ -103,7 +103,7 @@ export function CompareFloatingBar() {
             type="button"
             onClick={clear}
             aria-label={t(lang, "clearAll")}
-            className="flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="flex size-8 items-center justify-center rounded-full text-muted-foreground motion-base hover:bg-muted hover:text-foreground"
           >
             <X className="size-4" />
           </button>

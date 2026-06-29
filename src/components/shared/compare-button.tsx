@@ -60,7 +60,7 @@ export function CompareButton({
           handleToggle()
         }}
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-md px-2 text-xs font-medium transition-colors",
+          "inline-flex items-center gap-1.5 rounded-md px-2 text-xs font-medium motion-base",
           selected
             ? "text-primary hover:bg-primary/10"
             : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -90,12 +90,12 @@ export function CompareButton({
           handleToggle()
         }}
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all duration-200 active:scale-95",
+          "inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium motion-base active:scale-95",
           selected
             ? "border-primary/40 bg-primary/10 text-primary"
             : showCount
               ? "border-primary/40 bg-primary/5 text-primary"
-              : "border-border text-muted-foreground hover:border-primary/40 hover:bg-primary/5 hover:text-primary",
+              : "border-border text-muted-foreground hover:border-[var(--p-hair)] hover:bg-muted/70 hover:text-primary",
           className,
         )}
       >
@@ -116,9 +116,9 @@ export function CompareButton({
         handleToggle()
       }}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
+        "inline-flex shrink-0 items-center justify-center motion-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
         variant === "chip"
-          ? "h-9 w-9 rounded-md border border-[var(--p-hair)] bg-muted/30 hover:border-primary/50 hover:bg-primary/10"
+          ? "h-9 w-9 rounded-md border border-transparent dark:border-[var(--p-hair)] bg-muted/30 hover:border-[var(--p-hair)] hover:bg-muted/70"
           : "rounded-sm",
         selected
           ? variant === "chip"

@@ -63,7 +63,7 @@ export function MarketTable({
   return (
     <>
       {/* Mobile list fallback (<sm) */}
-      <div className={cn("divide-y divide-[var(--p-hair)] sm:hidden", isPending && "opacity-50 transition-opacity")}>
+      <div className={cn("divide-y divide-[var(--p-hair)] sm:hidden", isPending && "opacity-50 motion-base")}>
         {showSkeleton
           ? Array.from({ length: 6 }).map((_, i) => <MobileCardSkeleton key={i} />)
           : cards.map((card, i) => (
@@ -132,7 +132,7 @@ export function MarketTable({
               })}
             </tr>
           </thead>
-          <tbody className={cn(isPending && "opacity-50 transition-opacity")}>
+          <tbody className={cn(isPending && "opacity-50 motion-base")}>
             {showSkeleton
               ? Array.from({ length: skeletonRows }).map((_, i) => (
                   <MarketTableRowSkeleton key={i} columns={columns} />

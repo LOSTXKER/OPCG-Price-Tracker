@@ -38,9 +38,9 @@ export function FilterTabs<T extends string>({
             aria-selected={active}
             onClick={() => onChange(opt.key)}
             className={cn(
-              "shrink-0 rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+              "shrink-0 rounded-md px-3 py-1.5 text-xs font-medium motion-base",
               active
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-primary/15 text-primary"
                 : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
             )}
           >

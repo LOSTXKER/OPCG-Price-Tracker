@@ -78,7 +78,11 @@
 :root {
   --background: #FFFFFF;
   --foreground: #292118;
-  --card: #FFFFFF;
+  /* Frameless content cards (เบส): light-mode page is pure white, so cards lift
+     by a warm FILL instead of a hairline border — no "กรอบ", iOS-grouped feel.
+     Tuned a touch deeper so cards read clearly on white while staying lighter than
+     --muted (nested muted insets still recess). (dark keeps its luminance edge.) */
+  --card: #F7F1E8;
   --card-foreground: #292118;
   --popover: #FFFFFF;
   --popover-foreground: #292118;
@@ -101,9 +105,9 @@
   --chart-5: #FF3B30;
   --radius: 0.75rem;
 
-  /* Unified with the warm primitive kit: inline cards are flat + hairline (no
-     drop shadow), matching card-detail. Migrates every .panel app-wide at once. */
-  --panel-shadow: var(--elev-flat);
+  /* Frameless in light: .panel lifts by the warm --card fill alone (no hairline).
+     Dark keeps --elev-flat (luminance edge) since there card≠bg is subtle. */
+  --panel-shadow: none;
 
   /* Warm primitive kit (VISION V1) — elevation by luminance + hairline borders.
      Light values: subtle warm-dark overlays so cards lift off the white canvas.
@@ -347,6 +351,23 @@
 
 /* one calm motion curve for chrome */
 .ease-chrome { transition: all var(--dur-base) var(--ease-chrome); }
+
+/* controlled motion utilities — the app's ONE motion vocabulary (VISION §4).
+   Prefer these over bare Tailwind `transition-* duration-200 ease-out`: they only
+   animate the properties that should move and run on the --dur/--ease tokens.
+   .motion-base = standard chrome (200ms) · .motion-slow = larger moves (300ms). */
+.motion-base,
+.motion-slow {
+  transition-property: color, background-color, border-color, text-decoration-color,
+    fill, stroke, box-shadow, opacity, transform, filter, backdrop-filter;
+  transition-timing-function: var(--ease-chrome);
+}
+.motion-base { transition-duration: var(--dur-base); }
+.motion-slow { transition-duration: var(--dur-slow); }
+@media (prefers-reduced-motion: reduce) {
+  .motion-base,
+  .motion-slow { transition: none; }
+}
 
 /* hide scrollbars on chip rails */
 .no-sb { scrollbar-width: none; -ms-overflow-style: none; }

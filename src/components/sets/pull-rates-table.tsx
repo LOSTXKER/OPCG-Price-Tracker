@@ -86,7 +86,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
           const chance = pullChance(rateForUnit(row), row.cardCount);
           const maxBar = 6;
           const barWidth = Math.min((row.avgPerBox / maxBar) * 100, 100);
-          const accent = RARITY_BAR_COLOR[row.rarity] ?? "bg-neutral-400";
+          const accent = RARITY_BAR_COLOR[row.rarity] ?? "bg-muted-foreground/40";
 
           return (
             <div key={row.rarity} className="flex flex-col gap-1.5 px-3 py-3 transition-colors hover:bg-muted/20 sm:flex-row sm:items-center sm:gap-0">

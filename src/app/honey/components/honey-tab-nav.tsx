@@ -103,10 +103,10 @@ function DesktopSidebarNav({
                 id={`honey-tab-${item.key}`}
                 onClick={() => onTabChange(item.key)}
                 className={cn(
-                  "flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-sm font-medium transition-colors",
+                  "flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-sm font-medium motion-base",
                   active
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                    ? "bg-primary/15 text-primary"
+                    : "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
                 )}
               >
                 <Icon className={cn("size-4 shrink-0", active && "text-primary")} />
@@ -149,9 +149,9 @@ function MobileTabBar({
             onClick={() => onTabChange(item.key)}
             title={t(lang, item.labelKey)}
             className={cn(
-              "flex shrink-0 items-center gap-2 rounded-md px-3 py-3 text-xs font-medium transition-all sm:px-4",
+              "flex shrink-0 items-center gap-2 rounded-md px-3 py-3 text-xs font-medium motion-base sm:px-4",
               active
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-primary/15 text-primary"
                 : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
             )}
           >

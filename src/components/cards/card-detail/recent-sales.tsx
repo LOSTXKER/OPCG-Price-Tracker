@@ -93,7 +93,7 @@ function SourceDropdown({
       <DropdownMenu>
         <DropdownMenuTrigger
           aria-label={label}
-          className="ease-chrome surface-1 hairline inline-flex h-10 min-w-[9rem] items-center gap-1.5 rounded-full px-2.5 text-label font-semibold text-foreground hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-8"
+          className="ease-chrome surface-1 hairline inline-flex h-10 min-w-[9rem] items-center gap-1.5 rounded-full px-2.5 text-label font-semibold text-foreground hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-8"
         >
           {active !== "all" && <SourceLogo source={active} size={16} />}
           <span className="truncate">{picked}</span>

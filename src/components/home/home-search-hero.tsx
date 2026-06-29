@@ -35,12 +35,8 @@ export function HomeSearchHero({ sets, trending }: { sets: SetSuggestion[]; tren
 
   return (
     <section className="relative z-30">
-      {/* warm honey pool behind the bar — the page's single gold moment, tuned to
-          actually read on the dark canvas (see .hero-search-glow in globals.css) */}
-      <div
-        aria-hidden
-        className="hero-search-glow pointer-events-none absolute left-1/2 -top-16 -z-10 h-[30rem] w-screen -translate-x-1/2 blur-2xl"
-      />
+      {/* (warm overhead glow now lives once in the layout — PageContent — so the
+          ambient is identical on every page; no per-hero glow here anymore) */}
       <div className="mx-auto max-w-2xl px-1 pb-6 pt-4 sm:pb-8 sm:pt-8">
         <div className="text-center">
           {/* eyebrow teaser + the rotating gradient subject (Fastwork-style).

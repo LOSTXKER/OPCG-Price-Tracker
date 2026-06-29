@@ -215,7 +215,7 @@ export function PhotoSearchButton({ className, trigger }: PhotoSearchButtonProps
               </Button>
             </div>
           ) : (
-            <div className="relative overflow-hidden rounded-xl border border-[var(--p-hair)] bg-muted/30">
+            <div className="relative overflow-hidden rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-muted/30">
               <Image
                 src={previewUrl}
                 alt="preview"
@@ -343,7 +343,7 @@ function ResultBlock({
               key={card.cardCode}
               href={`/cards/${card.cardCode}`}
               onClick={onClose}
-              className="flex items-center gap-3 p-2 transition-colors ease-chrome hover:border-primary/40 hover:bg-muted/70"
+              className="flex items-center gap-3 p-2 ease-chrome hover:bg-muted/70"
             >
               <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-muted">
                 {card.imageUrl ? (

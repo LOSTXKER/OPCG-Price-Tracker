@@ -338,7 +338,7 @@ export default async function ColorsPage() {
           </div>
         </Surface>
 
-        <div className="rounded-xl border border-[var(--p-hair)] bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
+        <div className="rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
           <p className="font-semibold text-foreground">
             {t(lang, "guideColorExampleHeading")}
           </p>
@@ -438,7 +438,7 @@ export default async function ColorsPage() {
               href={src.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/30"
+              className="flex items-center gap-3 px-4 py-3 motion-base hover:bg-muted/70"
             >
               <div className="min-w-0 flex-1">
                 <p className="font-medium">{src.label}</p>
@@ -454,7 +454,7 @@ export default async function ColorsPage() {
       <div className="flex items-center justify-between border-t border-border pt-6">
         <Link
           href="/guide/rarities"
-          className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          className="group inline-flex items-center gap-2 text-sm text-muted-foreground motion-base hover:text-foreground"
         >
           <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
           {t(lang, "guideColorNavPrev")}

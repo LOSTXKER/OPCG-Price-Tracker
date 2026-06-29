@@ -129,7 +129,7 @@ function StreakInfoPopover({ lang }: { lang: Language }) {
   return (
     <Popover.Root>
       <Popover.Trigger
-        className="inline-flex size-5 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        className="inline-flex size-5 items-center justify-center rounded-full text-muted-foreground motion-base hover:bg-muted hover:text-foreground"
       >
         <HelpCircle className="size-3.5" />
       </Popover.Trigger>

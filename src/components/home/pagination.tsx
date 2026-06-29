@@ -80,7 +80,7 @@ function PageNumbers({
             className={cn(
               "ease-chrome flex size-9 items-center justify-center rounded-md text-xs font-medium",
               current === p
-                ? "bg-foreground/[0.08] text-foreground font-semibold"
+                ? "bg-primary/15 text-primary font-semibold"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >

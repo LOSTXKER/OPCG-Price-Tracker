@@ -249,8 +249,8 @@ function SetCard({
     <Surface
       variant="outline"
       className={cn(
-        "overflow-hidden transition-all",
-        expanded && "border-[var(--p-hair)] shadow-sm",
+        "overflow-hidden motion-base",
+        expanded && "border-[var(--p-hair)]",
       )}
     >
       {/* Main row */}
@@ -264,7 +264,7 @@ function SetCard({
             onToggle();
           }
         }}
-        className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/30"
+        className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left motion-base hover:bg-muted/70"
       >
         {/* Code badge */}
         <span className="inline-flex min-w-[4rem] items-center justify-center rounded-md bg-primary/8 px-2 py-0.5 font-mono text-eyebrow text-primary">
@@ -294,7 +294,7 @@ function SetCard({
           <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted/60">
             <div
               className={cn(
-                "h-full rounded-full transition-all",
+                "h-full rounded-full motion-base",
                 set.completeness >= 90
                   ? "bg-success/70"
                   : set.completeness >= 50

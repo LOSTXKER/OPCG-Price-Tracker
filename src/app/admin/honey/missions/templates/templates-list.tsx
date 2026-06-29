@@ -114,7 +114,7 @@ export function TemplatesList({ initialTemplates }: { initialTemplates: Template
                 return (
                   <tr
                     key={t.id}
-                    className="border-b border-[var(--p-hair)] transition-colors hover:bg-muted/20"
+                    className="border-b border-[var(--p-hair)] motion-base hover:bg-muted/70"
                   >
                     <td className="px-4 py-3">{t.nameTh ?? t.name}</td>
                     <td className="px-4 py-3">

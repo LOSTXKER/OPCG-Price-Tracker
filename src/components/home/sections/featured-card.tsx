@@ -38,7 +38,7 @@ export function HomeFeaturedCard({
             src={card.imageUrl}
             alt={name}
             fill
-            className="object-contain transition-transform duration-300 group-hover:scale-105"
+            className="object-contain motion-slow group-hover:scale-105"
             sizes="100px"
             placeholder="blur"
             blurDataURL={BLUR_DATA_URL}

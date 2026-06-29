@@ -120,7 +120,7 @@ export function CardAddToPortfolio({
 
           {done ? (
             <div className="flex flex-col items-center gap-2 py-4">
-              <Check className="size-8 text-price-up" />
+              <Check className="size-8 text-foreground" />
               <p className="text-sm font-medium">{t(lang, "added")}</p>
             </div>
           ) : (

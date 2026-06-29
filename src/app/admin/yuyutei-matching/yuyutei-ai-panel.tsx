@@ -38,14 +38,14 @@ export function YuyuteiAiPanel({
         {running ? (
           <button
             onClick={onCancel}
-            className="flex items-center gap-1 rounded-md bg-red-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-red-700 transition-colors"
+            className="flex items-center gap-1 rounded-md bg-red-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-red-700 motion-base"
           >
             <Square className="size-3" /> ยกเลิก
           </button>
         ) : (
           <button
             onClick={onClear}
-            className="text-xs text-violet-600/50 hover:text-violet-600 transition-colors"
+            className="text-xs text-violet-600/50 hover:text-violet-600 motion-base"
           >
             ล้าง
           </button>
@@ -55,7 +55,7 @@ export function YuyuteiAiPanel({
       {progress && (
         <div className="h-1 bg-violet-500/10">
           <div
-            className="h-full bg-violet-500 transition-all duration-300"
+            className="h-full bg-violet-500 motion-slow"
             style={{ width: `${(progress.current / progress.total) * 100}%` }}
           />
         </div>

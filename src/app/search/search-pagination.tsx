@@ -30,7 +30,7 @@ export function SearchPagination({
           type="button"
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
-          className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted disabled:opacity-30"
+          className="flex size-8 items-center justify-center rounded-lg text-muted-foreground motion-base hover:bg-muted disabled:opacity-30"
         >
           <ChevronLeft className="size-4" />
         </button>
@@ -43,9 +43,9 @@ export function SearchPagination({
               type="button"
               onClick={() => onPageChange(p as number)}
               className={cn(
-                "flex size-8 items-center justify-center rounded-lg text-xs font-medium tabular-nums transition-colors",
+                "flex size-8 items-center justify-center rounded-lg text-xs font-medium tabular-nums motion-base",
                 page === p
-                  ? "bg-primary text-primary-foreground shadow-sm"
+                  ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
@@ -57,7 +57,7 @@ export function SearchPagination({
           type="button"
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
-          className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted disabled:opacity-30"
+          className="flex size-8 items-center justify-center rounded-lg text-muted-foreground motion-base hover:bg-muted disabled:opacity-30"
         >
           <ChevronRight className="size-4" />
         </button>

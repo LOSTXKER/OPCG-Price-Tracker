@@ -71,7 +71,7 @@ export function CardMobileRow({
           </Button>
           <Link
             href={`/admin/cards/${card.id}`}
-            className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground motion-base hover:bg-muted hover:text-foreground"
             title="แก้ไขฉบับเต็ม"
           >
             <ExternalLink className="size-3.5" />
@@ -79,7 +79,7 @@ export function CardMobileRow({
         </div>
       </div>
       {editing && (
-        <div className="rounded-lg border border-[var(--p-hair)] bg-muted/20 p-3">
+        <div className="rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted/20 p-3">
           <CardEditForm
             card={card}
             editData={editData}

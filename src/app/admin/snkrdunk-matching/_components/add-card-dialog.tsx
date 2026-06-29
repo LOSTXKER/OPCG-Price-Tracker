@@ -138,7 +138,7 @@ export function AddCardDialog({
         {error && <p className="text-xs text-danger">{error}</p>}
 
         {preview && (
-          <div className="rounded-xl border border-[var(--p-hair)] bg-muted/20 p-4">
+          <div className="rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-muted/20 p-4">
             <div className="flex gap-3">
               <CardThumb src={preview.thumbnailUrl} size="md" />
               <div className="min-w-0 flex-1">

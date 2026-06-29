@@ -150,7 +150,7 @@ export default function SellerReviewsPage() {
                     </span>
                     <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
                       <div
-                        className="h-full rounded-full bg-primary transition-all"
+                        className="h-full rounded-full bg-primary motion-base"
                         style={{ width: `${pct}%` }}
                       />
                     </div>

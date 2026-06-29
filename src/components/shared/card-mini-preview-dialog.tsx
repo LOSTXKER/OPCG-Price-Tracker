@@ -65,7 +65,7 @@ function LightboxBody({ onClose }: { onClose: () => void }) {
         type="button"
         onClick={onClose}
         aria-label="Close"
-        className="absolute -top-3 -right-3 inline-flex size-9 items-center justify-center rounded-full bg-background text-foreground shadow-lg ring-1 ring-border transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:-top-4 sm:-right-4 sm:size-10"
+        className="absolute -top-3 -right-3 inline-flex size-9 items-center justify-center rounded-full bg-background text-foreground shadow-lg ring-1 ring-border motion-base hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:-top-4 sm:-right-4 sm:size-10"
       >
         <X className="size-4 sm:size-5" />
       </button>

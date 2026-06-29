@@ -97,7 +97,7 @@ export function DropRatesManager({
       <div className="sticky top-0 z-20">
         <AdminToolbar
           actions={
-            <div className="flex items-center gap-1 rounded-lg border border-[var(--p-hair)] bg-muted/30 p-1">
+            <div className="flex items-center gap-1 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted/30 p-1">
               {(
                 [
                   { key: "all", label: "ทั้งหมด", count: sets.length },
@@ -117,9 +117,9 @@ export function DropRatesManager({
                   key={f.key}
                   onClick={() => setFilterMode(f.key)}
                   className={cn(
-                    "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+                    "rounded-md px-3 py-1.5 text-xs font-medium motion-base",
                     filterMode === f.key
-                      ? "bg-background text-foreground shadow-sm"
+                      ? "bg-primary/15 text-primary"
                       : "text-muted-foreground hover:text-foreground",
                   )}
                 >

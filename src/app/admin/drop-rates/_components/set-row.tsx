@@ -65,16 +65,16 @@ export function SetRow({
     <Surface
       variant="outline"
       className={cn(
-        "overflow-hidden transition-shadow",
+        "overflow-hidden motion-base",
         expanded
-          ? "border-border shadow-sm"
+          ? "border-[var(--p-hair)]"
           : "border-[var(--p-hair)] hover:border-[var(--p-hair)]",
       )}
     >
       {/* Collapsed Header */}
       <button
         onClick={onToggle}
-        className="flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-muted/20"
+        className="flex w-full items-center gap-3 px-5 py-3.5 text-left motion-base hover:bg-muted/70"
       >
         <span className="min-w-[4rem] font-mono text-sm font-bold uppercase tracking-wide">
           {set.code}
@@ -212,7 +212,7 @@ export function SetRow({
                         <tr
                           key={dr.rarity}
                           className={cn(
-                            "group border-b border-[var(--p-hair)] transition-colors hover:bg-muted/10",
+                            "group border-b border-[var(--p-hair)] motion-base hover:bg-muted/70",
                             idx % 2 === 1 && "bg-muted/5",
                             dirty && "bg-info-soft",
                             showSeparator &&

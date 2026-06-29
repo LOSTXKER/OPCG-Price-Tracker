@@ -27,7 +27,7 @@ export function CardDetailRelated({ relatedCards, set, lang }: CardDetailRelated
             </h2>
             <Link
               href={`/sets/${set.code}`}
-              className="text-meta transition-colors hover:text-foreground"
+              className="text-meta motion-base hover:text-foreground"
             >
               {t(lang, "viewAll")} →
             </Link>

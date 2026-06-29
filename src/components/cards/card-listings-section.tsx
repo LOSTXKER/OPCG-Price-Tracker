@@ -103,7 +103,7 @@ export function CardListingsSection({
             <Link
               key={l.id}
               href={`/marketplace/${l.id}`}
-              className="flex items-center gap-3 px-4 py-2.5 hover:bg-muted/40"
+              className="flex items-center gap-3 px-4 py-2.5 hover:bg-muted/70"
             >
               <span
                 className={cn(
@@ -121,12 +121,7 @@ export function CardListingsSection({
                   )}
                 </p>
               </div>
-              <span
-                className={cn(
-                  "font-price text-sm font-semibold tabular-nums",
-                  isBest ? "text-price-up" : "text-foreground",
-                )}
-              >
+              <span className="font-price text-sm font-semibold tabular-nums text-foreground">
                 {price}
               </span>
             </Link>

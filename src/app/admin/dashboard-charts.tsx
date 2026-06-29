@@ -88,7 +88,7 @@ export function DashboardCharts({ data }: { data: ChartData }) {
                   </div>
                   <div className="h-1.5 overflow-hidden rounded-full bg-muted/60">
                     <div
-                      className="h-full rounded-full bg-primary/70 transition-all"
+                      className="h-full rounded-full bg-primary/70 motion-base"
                       style={{ width: `${Math.min(pctVal, 100)}%` }}
                     />
                   </div>

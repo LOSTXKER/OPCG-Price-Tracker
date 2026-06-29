@@ -63,7 +63,7 @@ export function BonusRow({
         {!claimed && (
           <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-muted">
             <div
-              className="h-full rounded-full bg-primary/80 transition-all"
+              className="h-full rounded-full bg-primary/80 motion-base"
               style={{ width: `${pct}%` }}
             />
           </div>

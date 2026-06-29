@@ -264,7 +264,7 @@ export function CardsBrowser({
           <Link
             href={`/admin/cards/${card.id}`}
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground motion-base hover:bg-muted hover:text-foreground"
             title="แก้ไขฉบับเต็ม"
           >
             <ExternalLink className="size-3.5" />
@@ -292,9 +292,9 @@ export function CardsBrowser({
                 type="button"
                 onClick={() => setViewMode("table")}
                 className={cn(
-                  "rounded-md p-1.5 transition-colors",
+                  "rounded-md p-1.5 motion-base",
                   viewMode === "table"
-                    ? "bg-muted text-foreground"
+                    ? "bg-primary/15 text-primary"
                     : "text-muted-foreground hover:text-foreground",
                 )}
                 aria-label="มุมมองตาราง"
@@ -306,9 +306,9 @@ export function CardsBrowser({
                 type="button"
                 onClick={() => setViewMode("grid")}
                 className={cn(
-                  "rounded-md p-1.5 transition-colors",
+                  "rounded-md p-1.5 motion-base",
                   viewMode === "grid"
-                    ? "bg-muted text-foreground"
+                    ? "bg-primary/15 text-primary"
                     : "text-muted-foreground hover:text-foreground",
                 )}
                 aria-label="มุมมองกริด"

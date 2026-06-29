@@ -13,7 +13,7 @@ const surfaceVariants = cva("ease-chrome", {
   variants: {
     variant: {
       panel: "panel",
-      outline: "rounded-xl border border-[var(--p-hair)] bg-card",
+      outline: "rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-card",
       subtle: "rounded-xl bg-muted/30",
       hero: "surface-1 hairline rounded-xl",
       ghost: "",

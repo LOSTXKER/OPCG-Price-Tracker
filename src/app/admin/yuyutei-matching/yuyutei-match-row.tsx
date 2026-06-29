@@ -53,8 +53,8 @@ export function YuyuteiMatchRow({
   return (
     <tr
       className={cn(
-        "border-b border-[var(--p-hair)] transition-colors group",
-        "hover:bg-muted/30",
+        "border-b border-[var(--p-hair)] motion-base group",
+        "hover:bg-muted/70",
         isChecked && "!bg-primary/[0.06]",
         !isChecked && m.status === "suggested" && "bg-blue-500/[0.02]",
         !isChecked && m.status === "pending" && "bg-amber-500/[0.02]",
@@ -105,7 +105,7 @@ export function YuyuteiMatchRow({
                     : suggestedCard ?? undefined,
                 );
             }}
-            className="cursor-zoom-in hover:opacity-80 transition-opacity"
+            className="cursor-zoom-in hover:opacity-80 motion-base"
             title="คลิกเพื่อขยายรูปภาพ"
           >
             <CardThumb src={yuyuHd(m.scrapedImage)} size="md" />
@@ -148,7 +148,7 @@ export function YuyuteiMatchRow({
               onKeyDown={(e) => {
                 if (e.key === "Enter") onLightbox(m, m.matchedCard!);
               }}
-              className="cursor-zoom-in hover:opacity-80 ring-2 ring-green-500/50 rounded transition-opacity"
+              className="cursor-zoom-in hover:opacity-80 ring-2 ring-green-500/50 rounded motion-base"
               title="คลิกเพื่อขยายรูปภาพ"
             >
               <CardThumb src={m.matchedCard!.imageUrl} size="md" />
@@ -246,7 +246,7 @@ export function YuyuteiMatchRow({
           ) : isMatched ? (
             <button
               onClick={() => onUnmatch(m.id)}
-              className="flex items-center gap-1 rounded-lg border border-amber-500/30 px-2 py-1 text-xs text-amber-600 hover:bg-amber-500/10 transition-colors"
+              className="flex items-center gap-1 rounded-lg border border-amber-500/30 px-2 py-1 text-xs text-amber-600 hover:bg-amber-500/10 motion-base"
               title="ยกเลิกการจับคู่"
             >
               <Undo2 className="size-3" /> ยกเลิกจับคู่
@@ -257,7 +257,7 @@ export function YuyuteiMatchRow({
                 <button
                   onClick={() => onAiSuggest(m.id)}
                   disabled={isAiProcessing}
-                  className="flex items-center gap-1 rounded-lg bg-violet-600 px-2 py-1 text-xs font-semibold text-white hover:bg-violet-700 disabled:opacity-30 transition-colors"
+                  className="flex items-center gap-1 rounded-lg bg-violet-600 px-2 py-1 text-xs font-semibold text-white hover:bg-violet-700 disabled:opacity-30 motion-base"
                   title="ให้ AI ช่วยจับคู่"
                 >
                   <Sparkles className="size-3" /> AI
@@ -268,14 +268,14 @@ export function YuyuteiMatchRow({
                   if (effectiveCardId) onApprove(m.id, effectiveCardId);
                 }}
                 disabled={!effectiveCardId}
-                className="flex items-center gap-1 rounded-lg bg-green-600 px-2 py-1 text-xs font-semibold text-white hover:bg-green-700 disabled:opacity-30 transition-colors"
+                className="flex items-center gap-1 rounded-lg bg-green-600 px-2 py-1 text-xs font-semibold text-white hover:bg-green-700 disabled:opacity-30 motion-base"
                 title="อนุมัติการจับคู่"
               >
                 <Check className="size-3" /> อนุมัติ
               </button>
               <button
                 onClick={() => onReject(m.id)}
-                className="flex items-center gap-1 rounded-lg border border-red-500/30 px-2 py-1 text-xs text-red-500 hover:bg-red-500/10 transition-colors"
+                className="flex items-center gap-1 rounded-lg border border-red-500/30 px-2 py-1 text-xs text-red-500 hover:bg-red-500/10 motion-base"
                 title="ปฏิเสธ"
               >
                 <X className="size-3" /> ปฏิเสธ

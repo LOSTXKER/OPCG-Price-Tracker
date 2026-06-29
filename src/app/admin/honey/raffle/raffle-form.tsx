@@ -361,9 +361,9 @@ export function RaffleForm({
                     type="button"
                     onClick={() => setForm({ ...form, color: c })}
                     className={cn(
-                      "size-7 rounded-lg border-2 transition-all",
+                      "size-7 rounded-lg border-2 motion-base",
                       form.color === c
-                        ? "scale-110 border-foreground shadow-sm"
+                        ? "scale-110 border-primary"
                         : "border-transparent",
                     )}
                     style={{ backgroundColor: c }}
@@ -511,7 +511,7 @@ function MonthPicker({
           setOpen(!open);
           setViewYear(selectedYear);
         }}
-        className="mt-1 flex w-full items-center gap-2 rounded-lg border bg-background px-3 py-2 text-sm transition-colors hover:bg-muted/30"
+        className="mt-1 flex w-full items-center gap-2 rounded-lg border bg-background px-3 py-2 text-sm motion-base hover:bg-muted/70"
       >
         <Calendar className="size-4 text-muted-foreground" />
         <span className={parsed ? "font-medium" : "text-muted-foreground"}>{display}</span>
@@ -550,11 +550,11 @@ function MonthPicker({
                     type="button"
                     onClick={() => handleSelect(idx)}
                     className={cn(
-                      "rounded-lg px-2 py-1.5 text-xs font-medium transition-colors",
+                      "rounded-lg px-2 py-1.5 text-xs font-medium motion-base",
                       isSelected
                         ? "bg-primary text-primary-foreground"
                         : isCurrent
-                          ? "bg-primary/10 text-primary hover:bg-primary/20"
+                          ? "bg-primary/15 text-primary hover:bg-primary/20"
                           : "hover:bg-muted",
                     )}
                   >

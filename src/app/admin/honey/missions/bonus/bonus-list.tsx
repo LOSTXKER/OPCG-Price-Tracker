@@ -107,7 +107,7 @@ export function BonusList({ initialRules }: { initialRules: BonusRule[] }) {
               {rules.map((r) => (
                 <tr
                   key={r.id}
-                  className="border-b border-[var(--p-hair)] transition-colors hover:bg-muted/20"
+                  className="border-b border-[var(--p-hair)] motion-base hover:bg-muted/70"
                 >
                   <td className="px-4 py-3">{r.nameTh ?? r.name}</td>
                   <td className="px-4 py-3">

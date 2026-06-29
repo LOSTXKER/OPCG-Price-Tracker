@@ -437,7 +437,7 @@ export default async function RaritiesPage() {
           {buildParallelTiers(lang).map((p) => (
             <div
               key={p.code}
-              className="flex items-center gap-2 rounded-lg border border-[var(--p-hair)] bg-card px-3 py-1.5"
+              className="flex items-center gap-2 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-card px-3 py-1.5"
             >
               <span
                 className="size-2.5 rounded-full"
@@ -538,7 +538,7 @@ export default async function RaritiesPage() {
         </Surface>
 
         {/* อธิบาย SEC vs Parallel */}
-        <div className="rounded-xl border border-[var(--p-hair)] bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
+        <div className="rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
           <p className="font-semibold text-foreground">{t(lang, "guideRarityBoxSecVsParallelHeading")}</p>
           <p className="mt-2">
             {t(lang, "guideRarityBoxSecVsParallelP1a")}{" "}
@@ -644,7 +644,7 @@ export default async function RaritiesPage() {
               href={src.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/30"
+              className="flex items-center gap-3 px-4 py-3 motion-base hover:bg-muted/70"
             >
               <div className="min-w-0 flex-1">
                 <p className="font-medium">{src.label}</p>
@@ -660,7 +660,7 @@ export default async function RaritiesPage() {
       <div className="flex items-center justify-between border-t border-border pt-6">
         <Link
           href="/guide/card-types"
-          className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          className="group inline-flex items-center gap-2 text-sm text-muted-foreground motion-base hover:text-foreground"
         >
           <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
           {t(lang, "guideRarityNavPrev")}

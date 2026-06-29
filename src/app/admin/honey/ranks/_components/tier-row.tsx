@@ -48,7 +48,7 @@ export function TierRow({
     <div className={cn("border-[var(--p-hair)]", position > 0 && "border-t")}>
       <div
         className={cn(
-          "flex items-center gap-3 px-4 transition-colors hover:bg-muted/30",
+          "flex items-center gap-3 px-4 motion-base hover:bg-muted/70",
           expanded && "bg-muted/20",
         )}
       >
@@ -104,7 +104,7 @@ export function TierRow({
             type="button"
             onClick={onToggle}
             aria-label={expanded ? "ย่อ" : "ขยาย"}
-            className="flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted"
+            className="flex size-7 items-center justify-center rounded-md text-muted-foreground motion-base hover:bg-muted"
           >
             <ChevronDown
               className={cn(
@@ -177,9 +177,9 @@ export function TierRow({
                       onClick={() => onChange({ iconName: name })}
                       title={name}
                       className={cn(
-                        "flex size-9 items-center justify-center rounded-lg border transition-colors",
+                        "flex size-9 items-center justify-center rounded-lg border motion-base",
                         active
-                          ? "border-primary bg-primary/10 text-primary"
+                          ? "border-primary bg-primary/15 text-primary"
                           : "border-[var(--p-hair)] text-muted-foreground hover:bg-muted",
                       )}
                     >

@@ -54,7 +54,7 @@ function summarizePortfolios(portfolios: { items: PortfolioItem[] }[]): Portfoli
 }
 
 const METRIC_CLASS =
-  "panel group flex flex-1 flex-col justify-between gap-1.5 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md hover:[&_.metric-arrow]:translate-x-0.5 hover:[&_.metric-arrow]:text-primary hover:[&_.metric-value]:text-primary"
+  "panel group flex flex-1 flex-col justify-between gap-1.5 p-4 motion-base hover:-translate-y-0.5 hover:[&_.metric-arrow]:translate-x-0.5 hover:[&_.metric-arrow]:text-primary hover:[&_.metric-value]:text-primary"
 
 function MetricHeader({ children }: { children: React.ReactNode }) {
   return (
@@ -65,7 +65,7 @@ function MetricHeader({ children }: { children: React.ReactNode }) {
       </span>
       <ChevronRight
         aria-hidden
-        className="metric-arrow size-4 shrink-0 text-muted-foreground/60 transition-all"
+        className="metric-arrow size-4 shrink-0 text-muted-foreground/60 motion-base"
       />
     </span>
   )
@@ -150,7 +150,7 @@ export function HomePortfolioPreview() {
               data.unrealizedPnl >= 0 ? "text-price-up" : "text-price-down",
             )}
           >
-            {data.unrealizedPnl >= 0 ? "+" : ""}
+            {data.unrealizedPnl >= 0 ? "▲+" : "▼"}
             {formatPct(data.unrealizedPnlPct)}%
           </span>
         )}

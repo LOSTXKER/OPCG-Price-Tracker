@@ -103,7 +103,7 @@ export function StreakInfoPopover({ lang }: { lang: Language }) {
         onClick={() => setOpen((v) => !v)}
         aria-label={title}
         aria-expanded={open}
-        className="inline-flex size-5 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        className="inline-flex size-5 items-center justify-center rounded-full text-muted-foreground motion-base hover:bg-muted hover:text-foreground"
       >
         <Info className="size-3.5" />
       </button>

@@ -73,12 +73,12 @@ export function RarityBreakdown({
           const isOthers = r.rarity === "OTHERS"
           const pct = (r.totalValue / denom) * 100
           const barWidth = (r.totalValue / maxValue) * 100
-          const barColor = isOthers ? "bg-muted-foreground/30" : RARITY_BAR_COLOR[r.rarity] ?? "bg-neutral-400"
+          const barColor = isOthers ? "bg-muted-foreground/30" : RARITY_BAR_COLOR[r.rarity] ?? "bg-muted-foreground/40"
 
           return (
             <div
               key={r.rarity}
-              className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-muted/30"
+              className="flex items-center gap-3 px-5 py-3 motion-base hover:bg-muted/70"
             >
               <div className="w-16 shrink-0">
                 {isOthers ? (
@@ -92,7 +92,7 @@ export function RarityBreakdown({
               <div className="min-w-0 flex-1">
                 <div className="h-[3px] overflow-hidden rounded-full bg-muted">
                   <div
-                    className={cn("h-full rounded-full opacity-80 transition-all", barColor)}
+                    className={cn("h-full rounded-full opacity-80 motion-base", barColor)}
                     style={{ width: `${barWidth}%` }}
                   />
                 </div>
@@ -120,7 +120,7 @@ export function RarityBreakdown({
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="flex w-full items-center justify-center gap-1 border-t border-[var(--p-hair)] px-5 py-2.5 text-meta transition-colors hover:bg-muted/30 hover:text-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          className="flex w-full items-center justify-center gap-1 border-t border-[var(--p-hair)] px-5 py-2.5 text-meta motion-base hover:bg-muted/70 hover:text-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         >
           {expanded ? t(lang, "marketShowLess") : t(lang, "marketShowAll")}
           <ChevronDown

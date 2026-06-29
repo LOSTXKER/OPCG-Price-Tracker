@@ -208,7 +208,7 @@ function HoneyStatCard({
         render={(triggerProps) => <button type="button" {...triggerProps} aria-label={ariaLabel} />}
         className={cn(
           "panel group relative flex h-full w-full flex-col p-4 text-left",
-          "cursor-pointer transition-colors hover:bg-muted/40",
+          "cursor-pointer motion-base hover:bg-muted/70",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         )}
       >
@@ -339,7 +339,7 @@ function RankProgress({
       <div className="flex items-center gap-2">
         <div className="h-1 flex-1 overflow-hidden rounded-full bg-muted">
           <div
-            className="h-full rounded-full bg-primary transition-all"
+            className="h-full rounded-full bg-primary motion-base"
             style={{
               width: `${pct}%`,
               backgroundColor: accent ?? undefined,

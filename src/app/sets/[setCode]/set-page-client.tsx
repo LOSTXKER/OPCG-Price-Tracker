@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { BarChart3, AlertTriangle } from "lucide-react";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
-import { Price } from "@/components/shared/price-inline";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import {
   Dialog,
@@ -27,45 +26,6 @@ import type {
   PullRateData,
   RarityGroup,
 } from "@/components/sets/set-detail-content";
-
-export function SetPageStats({
-  cardCount,
-  totalValue,
-  avgPrice,
-}: {
-  cardCount: number;
-  totalValue: number;
-  avgPrice: number;
-}) {
-  const lang = useUIStore((s) => s.language);
-  return (
-    <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5">
-      <Stat label={t(lang, "card")} value={cardCount} />
-      <span aria-hidden>·</span>
-      <Stat label={t(lang, "totalValue")} value={<Price jpy={totalValue} />} />
-      <span aria-hidden>·</span>
-      <Stat label={t(lang, "avgPrice")} value={<Price jpy={avgPrice} />} />
-    </span>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: ReactNode }) {
-  return (
-    <span className="inline-flex items-baseline gap-1">
-      <span>{label}</span>
-      <span className="font-medium tabular-nums text-foreground">{value}</span>
-    </span>
-  );
-}
-
-export function SetPageTopCardLabel() {
-  const lang = useUIStore((s) => s.language);
-  return (
-    <span className="text-xs font-medium text-muted-foreground">
-      {t(lang, "highestValue")}
-    </span>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /*  Drop-rate dialog                                                   */
@@ -116,15 +76,16 @@ export function DropRateDialog({
       count: countForUnit(pr),
       chance: pullChance(rateForUnit(pr), g.cards.length),
       barWidth: Math.min((pr.avgPerBox / 6) * 100, 100),
-      barColor: RARITY_BAR_COLOR[g.rarity] ?? "bg-neutral-400",
+      barColor: RARITY_BAR_COLOR[g.rarity] ?? "bg-muted-foreground/40",
     };
   });
 
   return (
     <Dialog>
-      <DialogTrigger className="ease-chrome inline-flex items-center gap-1 underline-offset-2 transition-colors hover:text-foreground hover:underline">
+      <DialogTrigger className="ease-chrome inline-flex items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
         <BarChart3 className="size-3.5 text-primary" />
         {t(lang, "dropRate")}
+        <span className="tnum text-muted-foreground/60">{pullRateGroups.length}</span>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md">

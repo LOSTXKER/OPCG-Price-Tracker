@@ -122,7 +122,7 @@ export default function PricingClient() {
 
       {/* Billing Toggle */}
       <div className="flex justify-center">
-        <div className="inline-flex items-center gap-1 rounded-full border border-[var(--p-hair)] bg-muted/50 p-1">
+        <div className="inline-flex items-center gap-1 rounded-full border border-transparent dark:border-[var(--p-hair)] bg-muted/50 p-1">
           <button
             onClick={() => setBilling("monthly")}
             className={`ease-chrome rounded-full px-5 py-1.5 text-sm font-medium ${
@@ -153,7 +153,7 @@ export default function PricingClient() {
       {settings?.trialStartedAt &&
         settings.tier !== "FREE" &&
         !settings.stripeSubscriptionId && (
-          <div className="mx-auto flex max-w-lg items-center justify-center gap-3 rounded-xl border border-[var(--p-hair)] bg-muted/30 px-5 py-3">
+          <div className="mx-auto flex max-w-lg items-center justify-center gap-3 rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-muted/30 px-5 py-3">
             <Badge variant="secondary">
               {t(lang, "trialActive")}
             </Badge>

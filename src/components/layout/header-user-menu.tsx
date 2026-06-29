@@ -102,10 +102,10 @@ export function HeaderUserMenu({
           href="/messages"
           aria-label={t(language, "messagesTitle")}
           className={cn(
-            "relative flex size-9 items-center justify-center rounded-lg transition-colors",
+            "relative flex size-9 items-center justify-center rounded-lg motion-base",
             isMessagesActive
-              ? "bg-muted text-foreground"
-              : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+              ? "bg-primary/15 text-primary"
+              : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
           )}
         >
           <MessageCircle className="size-4" />
@@ -120,8 +120,8 @@ export function HeaderUserMenu({
       <DropdownMenu>
         <DropdownMenuTrigger
           className={cn(
-            "flex max-w-[12rem] items-center gap-2.5 rounded-full py-1.5 pl-1.5 pr-3.5 transition-colors",
-            "hover:bg-muted/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/35"
+            "flex max-w-[12rem] items-center gap-2.5 rounded-full py-1.5 pl-1.5 pr-3.5 motion-base",
+            "hover:bg-muted/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/35"
           )}
         >
           <Avatar
@@ -203,7 +203,7 @@ export function HeaderUserMenu({
                 </div>
                 <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
                   <div
-                    className="h-full rounded-full bg-primary transition-all"
+                    className="h-full rounded-full bg-primary motion-base"
                     style={{
                       width: `${expProgress}%`,
                       backgroundColor: accent ?? undefined,

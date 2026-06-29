@@ -89,9 +89,9 @@ function MenuLink({
       href={href}
       onClick={onNav}
       className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm motion-base",
         active
-          ? "bg-primary/10 font-medium text-primary"
+          ? "bg-primary/15 font-medium text-primary"
           : "text-muted-foreground hover:bg-muted hover:text-foreground"
       )}
     >
@@ -196,14 +196,14 @@ export function MobileMenuSheet({
               <Link
                 href="/login"
                 onClick={close}
-                className="flex-1 rounded-lg border border-[var(--p-hair)] py-2.5 text-center text-sm font-medium transition-colors hover:bg-muted/60"
+                className="flex-1 rounded-lg border border-[var(--p-hair)] py-2.5 text-center text-sm font-medium motion-base hover:bg-muted/70"
               >
                 {t(language, "login")}
               </Link>
               <Link
                 href="/register"
                 onClick={close}
-                className="flex-1 rounded-lg bg-primary py-2.5 text-center text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                className="flex-1 rounded-lg bg-primary py-2.5 text-center text-sm font-semibold text-primary-foreground motion-base hover:opacity-90"
               >
                 {t(language, "register")}
               </Link>
@@ -290,7 +290,7 @@ export function MobileMenuSheet({
               <button
                 type="button"
                 onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-                className="flex items-center gap-1.5 rounded-md border border-[var(--p-hair)] bg-card px-2.5 py-1 text-xs font-medium transition-colors hover:bg-muted/60"
+                className="flex items-center gap-1.5 rounded-md border border-transparent dark:border-[var(--p-hair)] bg-card px-2.5 py-1 text-xs font-medium motion-base hover:bg-muted/70"
                 aria-label="Toggle theme"
               >
                 {mounted && resolvedTheme === "dark" ? (
@@ -317,7 +317,7 @@ export function MobileMenuSheet({
               <button
                 type="button"
                 onClick={() => { close(); void onLogout(); }}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-destructive transition-colors hover:bg-destructive/10"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-destructive motion-base hover:bg-destructive/10"
               >
                 <LogOut className="size-[18px]" />
                 {t(language, "logout")}

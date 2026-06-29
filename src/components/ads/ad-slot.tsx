@@ -46,7 +46,7 @@ export function AdSlot({
       href="/pricing"
       data-ad-placement={placement}
       className={cn(
-        "group relative flex flex-col justify-center gap-1 overflow-hidden rounded-lg border border-[var(--p-hair)] bg-gradient-to-br from-secondary to-accent p-4 transition-colors hover:border-primary/40",
+        "group relative flex flex-col justify-center gap-1 overflow-hidden rounded-lg border border-[var(--p-hair)] bg-gradient-to-br from-secondary to-accent p-4 motion-base",
         className
       )}
     >
@@ -59,7 +59,7 @@ export function AdSlot({
       </span>
       <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
         {t(lang, "upgradePlan")}
-        <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden />
+        <ArrowRight className="size-3.5 motion-base group-hover:translate-x-0.5" aria-hidden />
       </span>
     </Link>
   );

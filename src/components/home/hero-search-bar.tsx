@@ -207,7 +207,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
   }
 
   const sectionLabel = "px-3 pb-1.5 pt-3 text-eyebrow"
-  const rowBase = "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors"
+  const rowBase = "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left motion-base"
 
   return (
     <div ref={wrapperRef} className="relative">
@@ -217,7 +217,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
             "ease-chrome surface-1 relative flex items-center gap-2 rounded-2xl pl-4 pr-2 ring-1 ring-[var(--p-hair)] transition-[box-shadow,border-color]",
             hasDropdown
               ? "z-[51] rounded-b-none shadow-lg"
-              : "shadow-sm focus-within:ring-2 focus-within:ring-primary/40",
+              : "focus-within:ring-2 focus-within:ring-primary/40",
           )}
         >
           <Search className="size-5 shrink-0 text-muted-foreground/60" aria-hidden />
@@ -366,7 +366,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
                   <div
                     key={item}
                     className={cn(
-                      "group flex items-center rounded-xl transition-colors",
+                      "group flex items-center rounded-xl motion-base",
                       activeIdx === i ? "bg-accent" : "hover:bg-accent/60",
                     )}
                     onMouseEnter={() => setActiveIdx(i)}
@@ -403,7 +403,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
                       key={c.cardCode}
                       type="button"
                       onClick={() => go(`/cards/${c.cardCode}`)}
-                      className="ease-chrome inline-flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] bg-transparent px-3.5 py-1.5 text-sm font-medium text-muted-foreground hover:border-primary/30 hover:bg-primary/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="ease-chrome inline-flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] bg-transparent px-3.5 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       <TrendingUp className="size-3 text-primary/50" aria-hidden />
                       {getCardName(lang, c)}
@@ -418,7 +418,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
               <button
                 type="button"
                 onClick={() => commitSearch(query)}
-                className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-meta transition-colors hover:bg-accent/60 hover:text-foreground"
+                className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-meta motion-base hover:bg-accent/60 hover:text-foreground"
               >
                 <Search className="size-3" />
                 {t(lang, "viewAllResults")} &ldquo;{trimmed}&rdquo;

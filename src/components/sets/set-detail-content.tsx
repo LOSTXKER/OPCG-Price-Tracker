@@ -1,14 +1,21 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { SlidersHorizontal, X } from "lucide-react";
+import { useState, useMemo, type ReactNode } from "react";
+import { TrendingUpDown } from "lucide-react";
 
-import { CardGrid } from "@/components/cards/card-grid";
-import { CardItem, type ChangePeriod } from "@/components/cards/card-item";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
+import { RarityBadge } from "@/components/shared/rarity-badge";
+import { type ChangePeriod } from "@/components/cards/card-item";
+import { SetCardTile } from "./set-card-tile";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { CHANGE_PERIODS } from "@/components/home/market-types";
 import { cn } from "@/lib/utils";
-import { RARITY_HEX } from "@/lib/constants/rarities";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import {
@@ -60,6 +67,52 @@ interface SetDetailContentProps {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Facet dropdown                                                     */
+/* ------------------------------------------------------------------ */
+
+type FilterOption = { value: string; label: ReactNode };
+
+/** Compact facet dropdown for the toolbar — reads "<label> <selected>" and opens
+ *  a small menu. Replaces the old full-width chip rows (เบส — chips felt cluttered). */
+function FilterSelect({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: FilterOption[];
+}) {
+  // Render the selected option's label ourselves — base-ui SelectValue shows the
+  // raw value ("all") rather than the option label, so map it here.
+  const current = options.find((o) => o.value === value)?.label ?? label;
+  return (
+    <Select value={value} onValueChange={(v) => onChange(v ?? "all")}>
+      <SelectTrigger
+        size="sm"
+        className="shrink-0 gap-1.5 text-xs font-medium"
+      >
+        <span className="text-muted-foreground">{label}</span>
+        <span className="text-foreground">{current}</span>
+      </SelectTrigger>
+      <SelectContent className="min-w-48 p-1">
+        {options.map((o) => (
+          <SelectItem
+            key={o.value}
+            value={o.value}
+            className="py-1.5 pr-8 pl-2.5 text-sm"
+          >
+            {o.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /*  Main component                                                     */
 /* ------------------------------------------------------------------ */
 
@@ -67,10 +120,10 @@ export function SetDetailContent({
   groups,
   totalCards,
 }: SetDetailContentProps) {
+  const [activeRarity, setActiveRarity] = useState<string>("all");
   const [activeType, setActiveType] = useState<string>("all");
   const [activeColor, setActiveColor] = useState<string>("all");
   const [changePeriod, setChangePeriod] = useState<ChangePeriod>("7d");
-  const [filterOpen, setFilterOpen] = useState(false);
   const lang = useUIStore((s) => s.language);
 
   const allCards = useMemo(() => groups.flatMap((g) => g.cards), [groups]);
@@ -91,225 +144,165 @@ export function SetDetailContent({
     return CARD_COLORS.filter((cc) => present.has(cc.value));
   }, [allCards]);
 
+  // type/color narrow which cards (and therefore which rarities) are available.
+  const visibleGroups = useMemo(() => {
+    if (activeType === "all" && activeColor === "all") return groups;
+    return groups
+      .map((g) => ({
+        ...g,
+        cards: g.cards.filter(
+          (c) =>
+            (activeType === "all" || c.cardType === activeType) &&
+            (activeColor === "all" || c.color.includes(activeColor)),
+        ),
+      }))
+      .filter((g) => g.cards.length > 0);
+  }, [groups, activeType, activeColor]);
+
   if (totalCards === 0) {
     return <KumaEmptyState title={t(lang, "noCardsInSet")} />;
   }
 
-  const advFilterCount =
-    (activeType !== "all" ? 1 : 0) + (activeColor !== "all" ? 1 : 0);
-  const hasActiveFilters = advFilterCount > 0;
-  const hasFilterControls =
-    availableTypes.length > 1 || availableColors.length > 1;
+  // Rarity is now a FILTER (เบส): "all" shows every rarity stacked, otherwise
+  // only the chosen rarity renders. Falls back to "all" if the chosen rarity is
+  // filtered out by type/color (so the view never goes blank unexpectedly).
+  const effectiveRarity =
+    activeRarity !== "all" &&
+    visibleGroups.some((g) => g.rarity === activeRarity)
+      ? activeRarity
+      : "all";
+  const displayGroups =
+    effectiveRarity === "all"
+      ? visibleGroups
+      : visibleGroups.filter((g) => g.rarity === effectiveRarity);
+  const totalVisible = visibleGroups.reduce((s, g) => s + g.cards.length, 0);
 
-  const filterCard = (c: CardData) => {
-    if (activeType !== "all" && c.cardType !== activeType) return false;
-    if (activeColor !== "all" && !c.color.includes(activeColor)) return false;
-    return true;
-  };
+  // Filters are compact dropdowns (เบส — chips read as clutter): one option list
+  // per facet, "all" first as the reset.
+  const typeOptions: FilterOption[] = [
+    { value: "all", label: t(lang, "allTab") },
+    ...availableTypes.map((ct) => ({
+      value: ct.value,
+      label: getCardTypeLabel(ct.value, lang),
+    })),
+  ];
+  const colorOptions: FilterOption[] = [
+    { value: "all", label: t(lang, "allTab") },
+    ...availableColors.map((cc) => ({
+      value: cc.value,
+      label: (
+        <span className="flex items-center gap-1.5">
+          <span className={cn("size-2 rounded-full", cc.dotClass)} />
+          {cc.label[lang]}
+        </span>
+      ),
+    })),
+  ];
 
-  const clearAdvFilters = () => {
-    setActiveType("all");
-    setActiveColor("all");
-  };
-
-  // Rarity is the page's STRUCTURE (one section per rarity + a text jump index),
-  // not a hide-filter — only type/color narrow the rendered sections.
-  const visibleGroups = hasActiveFilters
-    ? groups
-        .map((g) => ({ ...g, cards: g.cards.filter(filterCard) }))
-        .filter((g) => g.cards.length > 0)
-    : groups;
-
-  const pill = (active: boolean) =>
-    cn(
-      "shrink-0 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
-      active
-        ? "border-border bg-muted text-foreground"
-        : "border-transparent text-muted-foreground hover:bg-muted/60 hover:text-foreground",
-    );
+  const rarityTabs = [
+    { value: "all", label: t(lang, "allTab"), count: totalVisible },
+    ...visibleGroups.map((g) => ({
+      value: g.rarity,
+      label: g.rarity,
+      count: g.cards.length,
+    })),
+  ];
 
   return (
     <div className="space-y-6">
-      {/* Controls — static (not sticky, no frosted overlay). Jump-to-rarity
-          index on the left, period + filters on the right; one hairline base. */}
-      <div className="-mx-4 px-4 md:-mx-6 md:px-6">
-        <div className="flex flex-col gap-2 border-b border-[var(--p-hair)] pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-          {/* Jump-to-rarity — plain text links to each section (no pills) */}
-          <nav className="text-meta -mx-1 flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1 px-1">
-            {visibleGroups.map((g) => (
-              <a
-                key={g.rarity}
-                href={`#r-${g.rarity}`}
-                className="ease-chrome shrink-0 font-medium transition-colors hover:text-foreground"
+      {/* Static toolbar (NOT sticky — เบส: no floating chrome). Row 1: rarity
+          jump-rail on a hairline baseline + sliding underline. Row 2: facet
+          dropdowns (left) + period (right). */}
+      <nav aria-label={t(lang, "rarity")} className="space-y-3">
+        {/* rarity FILTER — tab bar (sets-index style); honey = active. Click a
+            rarity to show only it; "all" stacks every rarity. */}
+        <div className="no-sb flex items-center gap-1 overflow-x-auto border-b border-[var(--p-hair)]">
+          {rarityTabs.map((rt) => {
+            const active = effectiveRarity === rt.value;
+            return (
+              <button
+                key={rt.value}
+                type="button"
+                onClick={() => setActiveRarity(rt.value)}
+                aria-pressed={active}
+                className={cn(
+                  "ease-chrome -mb-px shrink-0 border-b-2 px-2.5 py-2.5 text-xs font-semibold transition-colors",
+                  active
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground",
+                )}
               >
-                {g.rarity}
-              </a>
-            ))}
-          </nav>
-
-          {/* Right: period (plain text) + filters toggle */}
-          <div className="flex shrink-0 items-center gap-4">
-            <div className="flex items-center gap-2">
-              {CHANGE_PERIODS.map((p) => (
-                <button
-                  key={p}
-                  onClick={() => setChangePeriod(p)}
+                {rt.label}
+                <span
                   className={cn(
-                    "text-xs tabular-nums transition-colors",
-                    changePeriod === p
-                      ? "font-semibold text-foreground"
-                      : "text-muted-foreground hover:text-foreground",
+                    "ml-1.5 tabular-nums",
+                    active ? "text-primary/60" : "text-muted-foreground/60",
                   )}
                 >
-                  {p}
-                </button>
-              ))}
-            </div>
-
-            {hasFilterControls && (
-              <button
-                onClick={() => setFilterOpen((o) => !o)}
-                className={cn(
-                  "flex items-center gap-1 text-xs font-medium transition-colors",
-                  filterOpen || advFilterCount > 0
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                <SlidersHorizontal className="size-3.5" />
-                {t(lang, "filter")}
-                {advFilterCount > 0 && (
-                  <span className="tabular-nums text-muted-foreground/70">
-                    ({advFilterCount})
-                  </span>
-                )}
+                  {rt.count}
+                </span>
               </button>
-            )}
-          </div>
+            );
+          })}
         </div>
 
-        {/* In-flow filter disclosure — pushes content down, never floats/overlays */}
-        {filterOpen && hasFilterControls && (
-          <div className="space-y-3 border-b border-[var(--p-hair)] py-3">
+        {/* controls — facet dropdowns (left) + period (right) */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-2">
             {availableTypes.length > 1 && (
-              <div>
-                <span className="text-meta mb-1.5 block">
-                  {t(lang, "type")}
-                </span>
-                <div className="flex flex-wrap gap-1">
-                  <button
-                    onClick={() => setActiveType("all")}
-                    className={pill(activeType === "all")}
-                  >
-                    {t(lang, "allTab")}
-                  </button>
-                  {availableTypes.map((ct) => (
-                    <button
-                      key={ct.value}
-                      onClick={() => setActiveType(ct.value)}
-                      className={pill(activeType === ct.value)}
-                    >
-                      {getCardTypeLabel(ct.value, lang)}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <FilterSelect
+                label={t(lang, "type")}
+                value={activeType}
+                onChange={setActiveType}
+                options={typeOptions}
+              />
             )}
-
             {availableColors.length > 1 && (
-              <div>
-                <span className="text-meta mb-1.5 block">
-                  {t(lang, "color")}
-                </span>
-                <div className="flex flex-wrap gap-1">
-                  <button
-                    onClick={() => setActiveColor("all")}
-                    className={pill(activeColor === "all")}
-                  >
-                    {t(lang, "allTab")}
-                  </button>
-                  {availableColors.map((cc) => (
-                    <button
-                      key={cc.value}
-                      onClick={() => setActiveColor(cc.value)}
-                      className={cn(
-                        pill(activeColor === cc.value),
-                        "flex items-center gap-1.5",
-                      )}
-                    >
-                      <span
-                        className={cn("size-2 rounded-full", cc.dotClass)}
-                      />
-                      {cc.label[lang]}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {advFilterCount > 0 && (
-              <button
-                onClick={clearAdvFilters}
-                className="text-meta flex items-center gap-1 hover:text-foreground"
-              >
-                <X className="size-3" />
-                {t(lang, "clearAll")}
-              </button>
+              <FilterSelect
+                label={t(lang, "color")}
+                value={activeColor}
+                onChange={setActiveColor}
+                options={colorOptions}
+              />
             )}
           </div>
-        )}
-      </div>
+          <SegmentedControl
+            size="sm"
+            variant="pill"
+            leadingIcon={TrendingUpDown}
+            options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
+            value={changePeriod}
+            onChange={setChangePeriod}
+            ariaLabel={t(lang, "change")}
+          />
+        </div>
+      </nav>
 
-      {/* ── Card sections — rarity IS the structure ── */}
-      <div className="space-y-16">
-        {visibleGroups.map((g) => (
-          <section
-            key={g.rarity}
-            id={`r-${g.rarity}`}
-            className="scroll-mt-20 md:scroll-mt-28"
-          >
-            <div className="mb-5 flex items-end justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-2.5">
-                <span
-                  aria-hidden
-                  className="h-5 w-1 shrink-0 rounded-full"
-                  style={{
-                    backgroundColor: RARITY_HEX[g.rarity] ?? "var(--border)",
-                  }}
-                />
-                <h2 className="min-w-0 truncate text-h3">{g.name}</h2>
+      {/* ── Card sections — dense compact grid; "all" stacks every rarity, else
+          just the chosen one. ── */}
+      <div className="space-y-8">
+        {displayGroups.map((g) => (
+          <section key={g.rarity}>
+            {/* centered section heading — name + shared RarityBadge (the site's
+                one rarity-colour component) + count, flanked by hairlines. */}
+            <div className="mb-5 flex items-center gap-3 sm:gap-4">
+              <span aria-hidden className="h-px flex-1 bg-[var(--p-hair)]" />
+              <div className="flex shrink-0 items-center gap-2">
+                <h2 className="text-h4">{g.name}</h2>
+                <RarityBadge rarity={g.rarity} size="sm" />
+                <span className="text-meta tabular-nums">{g.cards.length}</span>
               </div>
-              <span className="text-meta shrink-0 tabular-nums">
-                {g.cards.length}
-              </span>
+              <span aria-hidden className="h-px flex-1 bg-[var(--p-hair)]" />
             </div>
-            <CardGrid>
+            <div className="grid grid-cols-3 gap-x-2.5 gap-y-4 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
               {g.cards.map((c) => (
-                <CardItem
-                  key={c.id}
-                  cardCode={c.cardCode}
-                  cardId={c.id}
-                  nameJp={c.nameJp}
-                  nameEn={c.nameEn}
-                  rarity={c.rarity}
-                  isParallel={c.isParallel}
-                  imageUrl={c.imageUrl}
-                  priceJpy={c.latestPriceJpy ?? undefined}
-                  priceThb={c.latestPriceThb ?? undefined}
-                  priceChange24h={c.priceChange24h}
-                  priceChange7d={c.priceChange7d}
-                  priceChange30d={c.priceChange30d}
-                  changePeriod={changePeriod}
-                  setCode={c.setCode}
-                  pullChancePerBox={g.pullChancePerBox}
-                  psa10PriceUsd={c.psa10PriceUsd}
-                />
+                <SetCardTile key={c.id} card={c} changePeriod={changePeriod} />
               ))}
-            </CardGrid>
+            </div>
           </section>
         ))}
 
-        {visibleGroups.length === 0 && (
+        {displayGroups.length === 0 && (
           <div className="py-16 text-center text-sm text-muted-foreground">
             {t(lang, "noData")}
           </div>

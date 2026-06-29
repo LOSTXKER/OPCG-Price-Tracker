@@ -116,11 +116,11 @@ export default async function BuyingGuidePage() {
             </div>
             <div className="grid gap-2 text-sm sm:grid-cols-2">
               <div>
-                <span className="text-price-up font-medium">✓ {t(lang, "guideBuyProsLabel")}:</span>{" "}
+                <span className="text-foreground font-medium">✓ {t(lang, "guideBuyProsLabel")}:</span>{" "}
                 <span className="text-muted-foreground">{shop.pros}</span>
               </div>
               <div>
-                <span className="text-price-down font-medium">✗ {t(lang, "guideBuyConsLabel")}:</span>{" "}
+                <span className="text-foreground font-medium">✗ {t(lang, "guideBuyConsLabel")}:</span>{" "}
                 <span className="text-muted-foreground">{shop.cons}</span>
               </div>
             </div>

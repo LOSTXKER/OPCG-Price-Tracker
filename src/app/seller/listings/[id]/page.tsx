@@ -319,7 +319,7 @@ export default function SellerEditListingPage() {
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
           placeholder={t(lang, "sellListingDescriptionPlaceholder")}
-          className="w-full rounded-lg border border-[var(--p-hair)] bg-background px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          className="w-full rounded-lg border border-[var(--p-hair)] bg-background px-3 py-2 text-sm motion-base placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         />
       </Surface>
 
@@ -339,14 +339,14 @@ export default function SellerEditListingPage() {
               <button
                 type="button"
                 onClick={() => setPhotos((prev) => prev.filter((_, j) => j !== i))}
-                className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs font-bold text-white opacity-0 transition-opacity group-hover:opacity-100"
+                className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs font-bold text-white opacity-0 motion-base group-hover:opacity-100"
               >
                 ✕
               </button>
             </div>
           ))}
           {photos.length < 5 && (
-            <label className="ease-chrome flex h-[80px] w-[80px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-[var(--p-hair)] text-muted-foreground transition-colors hover:border-primary hover:text-primary">
+            <label className="ease-chrome flex h-[80px] w-[80px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-[var(--p-hair)] text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground">
               {uploadingPhoto ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (

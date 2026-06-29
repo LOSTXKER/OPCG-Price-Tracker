@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Bookmark,
   Crown,
@@ -46,6 +46,18 @@ export function Header() {
     handleLogout,
   } = useHeaderData();
 
+  // Transparent at the very top (lets the page's hero/overhead glow flow through
+  // the chrome uninterrupted), opaque once scrolled (so nav text stays legible
+  // over content). Apple/Vercel pattern. SSR + first client render = false (top),
+  // so no hydration mismatch.
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const { config: publicConfig } = usePublicConfig();
   // Hubs are stable; Marketplace is appended (never swaps a hub) when enabled.
   const navLinks = publicConfig.marketplaceEnabled
@@ -80,7 +92,12 @@ export function Header() {
 
   return (
     <>
-    <div className="sticky top-0 z-50 hidden md:block">
+    <div
+      className={cn(
+        "ease-chrome sticky top-0 z-50 hidden transition-colors md:block",
+        scrolled ? "bg-background" : "bg-transparent",
+      )}
+    >
       <HeaderMarketTicker
         stats={stats}
         authLoaded={authLoaded}
@@ -88,10 +105,15 @@ export function Header() {
         canUpgrade={canUpgrade}
         mounted={mounted}
         onSearchOpen={openSearch}
+        scrolled={scrolled}
       />
 
-      <header className="bg-background" style={{ boxShadow: "inset 0 -1px 0 0 var(--p-hair)" }}>
-        <div className="mx-auto flex h-14 max-w-7xl items-center px-6 lg:px-8">
+      <header
+        style={{
+          boxShadow: scrolled ? "inset 0 -1px 0 0 var(--p-hair)" : "none",
+        }}
+      >
+        <div className="flex h-14 items-center px-6 lg:px-8">
           <Link href="/" className="mr-3 flex shrink-0 items-center gap-2.5">
             <Image
               src="/meecard.png"
@@ -216,7 +238,7 @@ export function Header() {
                 </Link>
                 <Link
                   href="/login"
-                  className="ease-chrome rounded-full border border-[var(--p-hair)] px-3.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:border-[var(--p-hair)] hover:text-foreground"
+                  className="ease-chrome rounded-full px-3.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 >
                   {t(language, "login")}
                 </Link>

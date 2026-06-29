@@ -77,7 +77,7 @@ export function PreviewClient() {
               {missions.map((m, i) => (
                 <tr
                   key={m.code}
-                  className="border-b border-[var(--p-hair)] transition-colors hover:bg-muted/20"
+                  className="border-b border-[var(--p-hair)] motion-base hover:bg-muted/70"
                 >
                   <td className="px-4 py-3 text-muted-foreground">{i + 1}</td>
                   <td className="px-4 py-3">{m.name}</td>

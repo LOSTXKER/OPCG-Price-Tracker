@@ -98,7 +98,7 @@ export function HoneyHero({
       {level?.nextThreshold && (
         <div className="h-1 w-full bg-muted">
           <div
-            className="h-full bg-primary transition-all"
+            className="h-full bg-primary motion-base"
             style={{ width: `${levelProgress}%` }}
           />
         </div>

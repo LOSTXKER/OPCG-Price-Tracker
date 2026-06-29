@@ -73,7 +73,7 @@ function PrizeImageViewer({
     >
       <button
         onClick={onClose}
-        className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20"
+        className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white motion-base hover:bg-white/20"
       >
         <X className="size-5" />
       </button>
@@ -216,7 +216,7 @@ function RecentWinnersStrip({
         </div>
         <Link
           href="/raffle/winners"
-          className="inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-xs font-semibold text-primary ease-chrome transition-colors hover:bg-primary/10"
+          className="inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-xs font-semibold text-primary ease-chrome hover:bg-muted/70"
         >
           {t(lang, "winnersViewAll")}
           <ArrowRight className="size-3" />
@@ -383,7 +383,7 @@ function MachineCard({
               ) : (
                 <div
                   aria-hidden="true"
-                  className="flex size-9 shrink-0 items-center justify-center rounded-full border border-[var(--p-hair)] bg-muted text-xs font-semibold text-muted-foreground"
+                  className="flex size-9 shrink-0 items-center justify-center rounded-full border border-transparent dark:border-[var(--p-hair)] bg-muted text-xs font-semibold text-muted-foreground"
                 >
                   {isAnonymous ? "?" : winnerName.slice(0, 1).toUpperCase()}
                 </div>

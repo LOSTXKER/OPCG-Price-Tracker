@@ -43,7 +43,7 @@ function ToolTile({ tool, label, comingSoon }: { tool: Tool; label: string; comi
         "flex h-full flex-col gap-3 p-4",
         tool.disabled
           ? "opacity-60"
-          : "hover:border-primary/40 hover:bg-muted/70 active:scale-[0.98]"
+          : "hover:bg-muted/70 active:scale-[0.98]"
       )}
     >
       <div className="flex items-start justify-between">
@@ -82,7 +82,7 @@ export default function DecksHubPage() {
     <div>
       <div className="mb-6 flex items-center justify-between gap-3">
         <h1 className="text-h1">{t(lang, "decksAndTools")}</h1>
-        <span className="shrink-0 rounded-full border border-[var(--p-hair)] bg-secondary px-3 py-1 text-micro uppercase tracking-wide text-muted-foreground">
+        <span className="shrink-0 rounded-full border border-transparent dark:border-[var(--p-hair)] bg-secondary px-3 py-1 text-micro uppercase tracking-wide text-muted-foreground">
           {currentGame}
         </span>
       </div>

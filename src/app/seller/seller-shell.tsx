@@ -91,7 +91,7 @@ function NavContent({
               onClick={onNavigate}
               className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ease-chrome ${
                 active
-                  ? "bg-primary/10 font-medium text-primary"
+                  ? "bg-primary/15 font-medium text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
             >

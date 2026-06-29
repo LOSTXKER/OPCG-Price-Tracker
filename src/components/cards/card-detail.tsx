@@ -525,7 +525,7 @@ export function CardDetail({
                 <WatchlistStar
                   cardId={card.id}
                   size="md"
-                  className="size-9 rounded-md transition-colors hover:bg-muted [&_svg]:size-4"
+                  className="size-9 rounded-md motion-base hover:bg-muted [&_svg]:size-4"
                 />
                 <TooltipProvider delay={200}>
                   <Tooltip>

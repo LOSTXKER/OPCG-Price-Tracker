@@ -220,7 +220,7 @@ export function CardEditor({ card }: { card: CardData }) {
       <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
         {/* Image Preview */}
         <div className="space-y-4">
-          <div className="overflow-hidden rounded-xl border border-[var(--p-hair)] bg-muted/20">
+          <div className="overflow-hidden rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-muted/20">
             {currentImage ? (
               <Image
                 src={currentImage}
@@ -246,7 +246,7 @@ export function CardEditor({ card }: { card: CardData }) {
                     key={c.pIndex}
                     onClick={() => selectCandidate(c.pIndex, c.url)}
                     className={cn(
-                      "overflow-hidden rounded border transition-all",
+                      "overflow-hidden rounded border motion-base",
                       currentImage === c.url
                         ? "border-primary ring-2 ring-primary/30"
                         : "border-[var(--p-hair)] hover:border-primary/50",
@@ -318,7 +318,7 @@ export function CardEditor({ card }: { card: CardData }) {
                     rows={3}
                     value={String(form[f.key] ?? "")}
                     onChange={(e) => handleChange(f.key, e.target.value)}
-                    className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 dark:bg-input/30"
+                    className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none motion-base focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 dark:bg-input/30"
                   />
                 </AdminFormField>
               ))}

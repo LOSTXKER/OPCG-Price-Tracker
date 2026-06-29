@@ -73,7 +73,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
         }
         actions={
           data.lastUpdatedAt ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] bg-card px-3 py-1 text-meta">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-transparent dark:border-[var(--p-hair)] bg-card px-3 py-1 text-meta">
               <Clock className="size-3.5" aria-hidden="true" />
               {t(lang, "marketLastUpdated")} {formatRelativeAgo(data.lastUpdatedAt, lang)}
             </span>
@@ -190,7 +190,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
                     <div className="mt-1.5 flex items-center gap-2">
                       <div className="h-[3px] flex-1 overflow-hidden rounded-full bg-muted">
                         <div
-                          className="h-full rounded-full bg-primary/50 transition-all"
+                          className="h-full rounded-full bg-primary/50 motion-base"
                           style={{ width: `${barWidth}%` }}
                         />
                       </div>

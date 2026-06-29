@@ -177,13 +177,13 @@ export default async function GuideLandingPage() {
             <Surface
               variant="panel"
               padding="none"
-              className="flex h-full flex-col justify-between p-6 transition-colors group-hover:border-primary/30 sm:p-7"
+              className="flex h-full flex-col justify-between p-6 motion-base sm:p-7"
             >
               <div>
                 <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10">
                   <FeaturedIcon className="size-6 text-primary" />
                 </div>
-                <h2 className="mt-4 text-h3 transition-colors group-hover:text-primary">
+                <h2 className="mt-4 text-h3 motion-base group-hover:text-primary">
                   {featured.title}
                 </h2>
                 <p className="mt-2 text-body-sm text-muted-foreground">
@@ -204,13 +204,13 @@ export default async function GuideLandingPage() {
                 <Surface
                   variant="outline"
                   padding="none"
-                  className="flex h-full items-start gap-4 p-5 transition-colors group-hover:bg-muted/40"
+                  className="flex h-full items-start gap-4 p-5 motion-base group-hover:bg-muted/70"
                 >
                   <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
                     <Icon className="size-5 text-muted-foreground" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h2 className="text-h4 transition-colors group-hover:text-primary">
+                    <h2 className="text-h4 motion-base group-hover:text-primary">
                       {guide.title}
                     </h2>
                     <p className="mt-1 text-meta">{guide.description}</p>
@@ -241,18 +241,18 @@ export default async function GuideLandingPage() {
                 <Surface
                   variant="outline"
                   padding="none"
-                  className="flex h-full flex-col gap-3 p-5 transition-colors group-hover:bg-muted/40"
+                  className="flex h-full flex-col gap-3 p-5 motion-base group-hover:bg-muted/70"
                 >
                   <div className="flex size-10 items-center justify-center rounded-lg bg-muted">
                     <Icon className="size-5 text-muted-foreground" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-h5 transition-colors group-hover:text-primary">
+                    <h3 className="text-h5 motion-base group-hover:text-primary">
                       {tool.title}
                     </h3>
                     <p className="mt-1 text-meta">{tool.description}</p>
                   </div>
-                  <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors group-hover:text-primary">
+                  <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground motion-base group-hover:text-primary">
                     {t(lang, "guideHomeOpenTool")}
                     <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
                   </div>

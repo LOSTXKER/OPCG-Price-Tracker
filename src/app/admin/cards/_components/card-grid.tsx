@@ -35,7 +35,7 @@ export function CardGrid({ cards, loading }: { cards: CardRow[]; loading: boolea
             variant="outline"
             key={card.id}
             href={`/admin/cards/${card.id}`}
-            className="group flex flex-col overflow-hidden rounded-lg transition-all hover:border-primary/30 hover:shadow-md"
+            className="group flex flex-col overflow-hidden rounded-lg motion-base hover:bg-muted/70"
           >
             {card.imageUrl ? (
               <Image

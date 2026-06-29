@@ -45,7 +45,7 @@ export function WatchlistRowActions({
         title={t(lang, "removeFromWatchlist")}
         aria-label={t(lang, "removeFromWatchlist")}
         className={cn(
-          "inline-flex items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive",
+          "inline-flex items-center justify-center rounded-md text-muted-foreground motion-base hover:bg-destructive/10 hover:text-destructive",
           sizeClass,
           buttonClassName
         )}

@@ -50,7 +50,7 @@ export function ImageGallery({ images, className }: ImageGalleryProps) {
       <button
         type="button"
         onClick={() => setLightboxOpen(true)}
-        className="panel group/main relative w-full cursor-zoom-in overflow-hidden p-0"
+        className="group/main relative w-full cursor-zoom-in overflow-hidden rounded-xl bg-popover p-0"
       >
         <div
           className={cn(
@@ -67,8 +67,8 @@ export function ImageGallery({ images, className }: ImageGalleryProps) {
             priority={selected === 0}
           />
         </div>
-        <span className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover/main:bg-black/30">
-          <Maximize2 className="size-5 text-white opacity-0 drop-shadow-md transition-opacity group-hover/main:opacity-100" />
+        <span className="absolute inset-0 flex items-center justify-center bg-black/0 motion-base group-hover/main:bg-black/30">
+          <Maximize2 className="size-5 text-white opacity-0 drop-shadow-md motion-base group-hover/main:opacity-100" />
         </span>
       </button>
 
@@ -125,7 +125,7 @@ export function ImageGallery({ images, className }: ImageGalleryProps) {
           <button
             type="button"
             onClick={() => setLightboxOpen(false)}
-            className="absolute -top-10 right-0 rounded-full bg-black/60 p-1.5 text-white/80 transition-colors hover:bg-black/80 hover:text-white"
+            className="absolute -top-10 right-0 rounded-full bg-black/60 p-1.5 text-white/80 motion-base hover:bg-black/80 hover:text-white"
           >
             <XIcon className="size-5" />
           </button>

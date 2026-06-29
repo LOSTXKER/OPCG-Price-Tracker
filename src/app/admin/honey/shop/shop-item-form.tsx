@@ -276,7 +276,7 @@ export function ShopItemForm({ initial }: { initial?: ShopItemInitial }) {
 
         <AdminPanel title="Value (JSON)" description="ข้อมูลเพิ่มเติมแบบ JSON เช่น duration, badgeId">
           <textarea
-            className="w-full rounded-lg border border-input bg-transparent px-3 py-2 font-mono text-xs outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 dark:bg-input/30"
+            className="w-full rounded-lg border border-input bg-transparent px-3 py-2 font-mono text-xs outline-none motion-base focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 dark:bg-input/30"
             rows={4}
             value={form.value}
             onChange={(e) => setForm((f) => ({ ...f, value: e.target.value }))}

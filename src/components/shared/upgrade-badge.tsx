@@ -60,7 +60,7 @@ export function UpgradeBadge({
         });
       }}
       className={cn(
-        "inline-flex cursor-pointer items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/20",
+        "inline-flex cursor-pointer items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary motion-base hover:bg-primary/20",
         className,
       )}
     >
@@ -104,7 +104,7 @@ export function LockOverlay({
               requiredTier: tier,
             });
           }}
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-background/90 px-3 py-1.5 text-xs font-semibold text-primary shadow-sm ring-1 ring-border/50 backdrop-blur-sm transition-colors hover:bg-background"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-background/90 px-3 py-1.5 text-xs font-semibold text-primary shadow-sm ring-1 ring-border/50 backdrop-blur-sm motion-base hover:bg-background"
         >
           <Lock className="size-3" />
           <TierIcon tier={tier} className="size-3" />
@@ -142,7 +142,7 @@ export function LockChip({
         });
       }}
       className={cn(
-        "inline-flex cursor-pointer items-center gap-1 rounded-md bg-amber-500/10 px-1.5 py-0.5 text-xs font-semibold text-amber-700 transition-colors hover:bg-amber-500/20 dark:text-amber-400",
+        "inline-flex cursor-pointer items-center gap-1 rounded-md bg-amber-500/10 px-1.5 py-0.5 text-xs font-semibold text-amber-700 motion-base hover:bg-amber-500/20 dark:text-amber-400",
         tier === "PRO_PLUS" &&
           "bg-primary/10 text-primary hover:bg-primary/20",
         className,
@@ -182,7 +182,7 @@ export function LockTab({
         });
       }}
       className={cn(
-        "inline-flex cursor-pointer items-center gap-0.5 rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums text-muted-foreground/60 transition-all hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-400",
+        "inline-flex cursor-pointer items-center gap-0.5 rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums text-muted-foreground/60 motion-base hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-400",
         className,
       )}
     >

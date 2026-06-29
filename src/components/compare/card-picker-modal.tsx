@@ -318,10 +318,10 @@ export function CardPickerModal({
                     type="button"
                     onClick={() => handleAdd(card)}
                     className={cn(
-                      "group/pick relative rounded-xl border p-1.5 text-left transition-all",
+                      "group/pick relative rounded-xl border p-1.5 text-left motion-base",
                       isSelected
                         ? "border-primary bg-primary/5 ring-2 ring-primary"
-                        : "border-border hover:border-primary/50 hover:shadow-sm",
+                        : "border-[var(--p-hair)] hover:bg-muted/70",
                     )}
                   >
                     {/* Image — clean, no overlays. Selection state lives on the tile border. */}
@@ -413,7 +413,7 @@ export function CardPickerModal({
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground motion-base hover:bg-primary/90"
           >
             {t(lang, "compareNow")}
           </button>

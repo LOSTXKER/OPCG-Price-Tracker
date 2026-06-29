@@ -187,7 +187,7 @@ export function ImageMatchClient() {
           {Array.from({ length: 3 }).map((_, i) => (
             <div
               key={i}
-              className="h-40 animate-pulse rounded-lg border border-[var(--p-hair)] bg-muted/20"
+              className="h-40 animate-pulse rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted/20"
             />
           ))}
         </div>
@@ -208,7 +208,7 @@ export function ImageMatchClient() {
               key={card.id}
               variant="outline"
               className={cn(
-                "p-4 transition-colors",
+                "p-4 motion-base",
                 saving === card.id
                   ? "border-primary/40 bg-primary/5"
                   : "border-[var(--p-hair)] bg-card",
@@ -263,7 +263,7 @@ export function ImageMatchClient() {
                           sizes="112px"
                           unoptimized
                         />
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/20 group-hover:opacity-100">
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 motion-base group-hover:bg-black/20 group-hover:opacity-100">
                           <ZoomIn className="size-5 text-white drop-shadow" />
                         </div>
                       </>
@@ -299,12 +299,12 @@ export function ImageMatchClient() {
                           }}
                           disabled={saving === card.id || isFailed}
                           className={cn(
-                            "group/card relative rounded-lg p-1.5 transition-all",
+                            "group/card relative rounded-lg p-1.5 motion-base",
                             isActive
-                              ? "bg-primary/10 ring-2 ring-primary shadow-sm"
+                              ? "bg-primary/15 ring-2 ring-primary"
                               : isFailed
                                 ? "opacity-30 cursor-not-allowed ring-1 ring-border/20"
-                                : "hover:bg-muted/60 hover:ring-primary/30 ring-1 ring-border/30",
+                                : "hover:bg-muted/70 ring-1 ring-border/30",
                           )}
                         >
                           <p className="mb-1 text-center font-mono text-micro">
@@ -330,7 +330,7 @@ export function ImageMatchClient() {
                             )}
                             {!isFailed && !isActive && (
                               <div
-                                className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover/card:bg-black/10 group-hover/card:opacity-100"
+                                className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 motion-base group-hover/card:bg-black/10 group-hover/card:opacity-100"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   openLightbox(card, c);

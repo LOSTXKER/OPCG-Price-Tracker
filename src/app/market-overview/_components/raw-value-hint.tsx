@@ -30,7 +30,7 @@ export function RawValueHint({
         <TooltipTrigger
           aria-label={t(lang, "rawValueHint")}
           className={cn(
-            "inline-flex shrink-0 items-center justify-center rounded-full text-muted-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+            "inline-flex shrink-0 items-center justify-center rounded-full text-muted-foreground/70 motion-base hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
             className,
           )}
         >

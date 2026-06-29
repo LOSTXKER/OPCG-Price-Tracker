@@ -203,7 +203,7 @@ export default function CompareClient() {
       <button
         type="button"
         onClick={clearStore}
-        className="text-meta transition-colors hover:text-foreground"
+        className="text-meta motion-base hover:text-foreground"
       >
         {t(lang, "clearAll")}
       </button>
@@ -308,7 +308,7 @@ export default function CompareClient() {
             <button
               type="button"
               onClick={() => openUpgradeDialog({ featureKey: "comparePlus" })}
-              className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground motion-base hover:bg-primary/90"
             >
               {t(lang, "subscribe")}
             </button>

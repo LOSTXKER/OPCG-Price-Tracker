@@ -77,7 +77,14 @@ export function PageContent({ children }: { children: React.ReactNode }) {
   const width = resolveWidth(pathname);
 
   return (
-    <main className="flex-1 pt-8 pb-32 md:pt-10 md:pb-24">
+    <main className="relative flex-1 pt-8 pb-32 md:pt-10 md:pb-24">
+      {/* ONE warm overhead light for every page (consistent) — spills from the
+          top of the screen, BEHIND the transparent nav, and fades down. Replaces
+          the old per-page glows so the ambient is identical app-wide. */}
+      <div
+        aria-hidden
+        className="hero-search-glow pointer-events-none absolute left-1/2 -top-28 -z-10 h-[34rem] w-screen -translate-x-1/2 blur-2xl"
+      />
       <PageContainer width={width}>{children}</PageContainer>
     </main>
   );

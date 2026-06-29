@@ -92,7 +92,7 @@ export function SortableHeader({
         else onSort(ascKey);
       }}
       className={cn(
-        "inline-flex items-center gap-1 font-medium hover:text-foreground transition-colors",
+        "inline-flex items-center gap-1 font-medium hover:text-foreground motion-base",
         (isAsc || isDesc) && "text-foreground",
         className
       )}
@@ -124,10 +124,10 @@ export function StatsBar({
       <button
         onClick={() => onFilter("")}
         className={cn(
-          "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+          "rounded-full px-3 py-1 text-xs font-medium motion-base",
           activeFilter === ""
-            ? "bg-foreground text-background"
-            : "bg-muted text-muted-foreground hover:bg-muted/80"
+            ? "bg-primary text-primary-foreground"
+            : "bg-muted text-muted-foreground hover:bg-muted/70"
         )}
       >
         ทั้งหมด {totalAll}
@@ -137,7 +137,7 @@ export function StatsBar({
           key={s.key}
           onClick={() => onFilter(activeFilter === s.key ? "" : s.key)}
           className={cn(
-            "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+            "rounded-full px-3 py-1 text-xs font-medium motion-base",
             activeFilter === s.key
               ? "ring-2 ring-offset-1 ring-offset-background ring-current"
               : "",

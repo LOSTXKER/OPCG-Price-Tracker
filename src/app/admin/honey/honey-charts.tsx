@@ -65,9 +65,9 @@ export function HoneyCharts({ dailyData, typeCounts }: HoneyChartsProps) {
                 key={opt.days}
                 onClick={() => setPeriod(opt.days)}
                 className={cn(
-                  "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
+                  "rounded-md px-2.5 py-1 text-xs font-medium motion-base",
                   period === opt.days
-                    ? "bg-background text-foreground shadow-sm"
+                    ? "bg-primary/15 text-primary"
                     : "text-muted-foreground hover:text-foreground",
                 )}
               >

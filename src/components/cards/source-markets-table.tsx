@@ -89,7 +89,7 @@ export function SourceMarketsTable({
 
   return (
     <Surface as="details" variant="panel" className="group overflow-hidden">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 hover:bg-muted/30">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 hover:bg-muted/70">
         <div className="min-w-0 flex items-center gap-2">
           <span className="text-eyebrow text-muted-foreground/70">
             {t(lang, "referenceMarkets")}
@@ -174,7 +174,7 @@ export function SourceMarketsTable({
                         outlier
                           ? "text-amber-600 dark:text-amber-400"
                           : isBestAsk
-                            ? "text-price-up"
+                            ? "text-foreground"
                             : "text-foreground",
                         askStr === "—" && "text-muted-foreground/30",
                       )}
@@ -281,7 +281,7 @@ export function SourceMarketsTable({
                             outlier
                               ? "text-amber-600 dark:text-amber-400"
                               : isBestAsk
-                                ? "text-price-up"
+                                ? "text-foreground"
                                 : "text-foreground",
                             askStr === "—" && "text-muted-foreground/30",
                           )}

@@ -116,7 +116,7 @@ export default function AdminLogsPage() {
         return (
           <button
             onClick={() => setExpandedId(isExpanded ? null : log.id)}
-            className="flex items-center gap-1 text-meta transition-colors hover:text-foreground"
+            className="flex items-center gap-1 text-meta motion-base hover:text-foreground"
           >
             <span className="truncate max-w-[200px]">
               {JSON.stringify(log.details).slice(0, 80)}

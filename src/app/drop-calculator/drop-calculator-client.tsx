@@ -233,7 +233,7 @@ export default function DropCalculatorClient() {
         <>
           {/* Mobile: tabs */}
           <div className="lg:hidden">
-            <div className="flex rounded-lg border border-[var(--p-hair)] bg-muted/40 p-0.5">
+            <div className="flex rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted/40 p-0.5">
               <button
                 onClick={() => setActiveTab("cards")}
                 className={cn(

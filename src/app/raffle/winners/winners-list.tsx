@@ -78,7 +78,7 @@ function Hero({ lang }: { lang: Language }) {
         </span>
       }
       actions={
-        <div className="flex items-center gap-2 rounded-xl border border-[var(--p-hair)] bg-muted/30 px-3 py-2">
+        <div className="flex items-center gap-2 rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-muted/30 px-3 py-2">
           <Trophy className="size-4 text-muted-foreground" />
           <p className="text-meta">{t(lang, "winnersUpdatedMonthly")}</p>
         </div>
@@ -255,7 +255,7 @@ function WinnerAvatar({
   return (
     <div
       aria-hidden="true"
-      className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[var(--p-hair)] bg-muted text-xs font-semibold text-muted-foreground"
+      className="flex size-10 shrink-0 items-center justify-center rounded-full border border-transparent dark:border-[var(--p-hair)] bg-muted text-xs font-semibold text-muted-foreground"
     >
       {isAnonymous ? "?" : getInitials(name)}
     </div>

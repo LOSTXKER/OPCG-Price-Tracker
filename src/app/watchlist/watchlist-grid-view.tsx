@@ -48,7 +48,7 @@ export function WatchlistGridView({
           <div
             key={entry.id}
             className={cn(
-              "group/wishitem relative transition-all",
+              "group/wishitem relative motion-base",
               isRemoving && "opacity-40"
             )}
           >

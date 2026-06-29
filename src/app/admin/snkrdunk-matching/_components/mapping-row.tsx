@@ -42,12 +42,12 @@ export function MappingRow({
     <tr
       data-row-idx={idx}
       className={cn(
-        "transition-colors",
+        "motion-base",
         isSaving && "opacity-50",
         idx % 2 === 1 && "bg-muted/10",
         isFocused && "ring-2 ring-inset ring-primary/40 bg-primary/5",
         isSelected && !isFocused && "bg-primary/5",
-        !isFocused && "hover:bg-muted/20"
+        !isFocused && "hover:bg-muted/70"
       )}
       onClick={onFocus}
     >

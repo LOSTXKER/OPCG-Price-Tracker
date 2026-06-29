@@ -142,7 +142,7 @@ function MobileStreakRankRow({
           <div className="space-y-0.5">
             <div className="h-1.5 overflow-hidden rounded-full bg-muted">
               <div
-                className="h-full rounded-full bg-primary transition-all"
+                className="h-full rounded-full bg-primary motion-base"
                 style={{ width: `${progress}%`, backgroundColor: accent ?? undefined }}
               />
             </div>
@@ -282,7 +282,7 @@ export function DailyMissionsCard({
         <h2 className="shrink-0 text-h3">{t(lang, "dailyMissions")}</h2>
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
           <div
-            className={cn("h-full rounded-full transition-all", allClaimed && bonusClaimed ? "bg-price-up" : "bg-primary")}
+            className={cn("h-full rounded-full motion-base", allClaimed && bonusClaimed ? "bg-price-up" : "bg-primary")}
             style={{ width: `${progressPct}%` }}
           />
         </div>
@@ -309,7 +309,7 @@ export function DailyMissionsCard({
               <div
                 key={task.id}
                 className={cn(
-                  "flex w-48 shrink-0 flex-col rounded-2xl border p-4 transition-all sm:w-52",
+                  "flex w-48 shrink-0 flex-col rounded-2xl border p-4 motion-base sm:w-52",
                   task.claimed
                     ? "border-price-up/20 bg-price-up/[0.03]"
                     : canClaim
@@ -395,7 +395,7 @@ export function DailyMissionsCard({
 
           {/* Perfect Day bonus card */}
           <div className={cn(
-            "flex w-48 shrink-0 flex-col rounded-2xl border border-dashed p-4 transition-all sm:w-52",
+            "flex w-48 shrink-0 flex-col rounded-2xl border border-dashed p-4 motion-base sm:w-52",
             bonusClaimed
               ? "border-price-up/20 bg-price-up/[0.03]"
               : allDone && allClaimed

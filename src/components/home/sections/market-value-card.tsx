@@ -9,7 +9,7 @@ import { formatCount } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
 const METRIC_CLASS =
-  "panel group flex flex-1 flex-col justify-between gap-1.5 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md hover:[&_.metric-arrow]:translate-x-0.5 hover:[&_.metric-arrow]:text-primary hover:[&_.metric-value]:text-primary"
+  "panel group flex flex-1 flex-col justify-between gap-1.5 p-4 motion-base hover:-translate-y-0.5 hover:[&_.metric-arrow]:translate-x-0.5 hover:[&_.metric-arrow]:text-primary hover:[&_.metric-value]:text-primary"
 
 export function HomeMarketValueCard({
   totalValue,
@@ -29,7 +29,7 @@ export function HomeMarketValueCard({
         </span>
         <ChevronRight
           aria-hidden
-          className="metric-arrow size-4 shrink-0 text-muted-foreground/60 transition-all"
+          className="metric-arrow size-4 shrink-0 text-muted-foreground/60 motion-base"
         />
       </span>
       <span className="metric-value font-price text-xl font-bold leading-none tabular-nums">

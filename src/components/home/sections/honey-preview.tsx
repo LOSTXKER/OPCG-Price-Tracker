@@ -20,7 +20,7 @@ type HoneyData = {
 }
 
 const METRIC_CLASS =
-  "panel group flex flex-1 flex-col justify-between gap-1.5 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md hover:[&_.metric-arrow]:translate-x-0.5 hover:[&_.metric-arrow]:text-primary hover:[&_.metric-value]:text-primary"
+  "panel group flex flex-1 flex-col justify-between gap-1.5 p-4 motion-base hover:-translate-y-0.5 hover:[&_.metric-arrow]:translate-x-0.5 hover:[&_.metric-arrow]:text-primary hover:[&_.metric-value]:text-primary"
 
 function MetricHeader({ children }: { children: React.ReactNode }) {
   return (
@@ -31,7 +31,7 @@ function MetricHeader({ children }: { children: React.ReactNode }) {
       </span>
       <ChevronRight
         aria-hidden
-        className="metric-arrow size-4 shrink-0 text-muted-foreground/60 transition-all"
+        className="metric-arrow size-4 shrink-0 text-muted-foreground/60 motion-base"
       />
     </span>
   )
@@ -138,12 +138,12 @@ export function HomeHoneyPreview() {
               doCheckin()
             }}
             disabled={checking}
-            className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+            className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground motion-base hover:bg-primary/90 disabled:opacity-50"
           >
             {checking ? "..." : `${t(lang, "dailyCheckin")} +${checkinReward} 🍯`}
           </button>
         ) : (
-          <span className="text-price-up">✓ {t(lang, "checkinDone")}</span>
+          <span className="text-foreground">✓ {t(lang, "checkinDone")}</span>
         )}
       </span>
     </Link>

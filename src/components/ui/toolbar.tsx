@@ -83,7 +83,7 @@ export function ToolbarSearch({
       <button
         type="button"
         onClick={() => onOpenChange?.(true)}
-        className="rounded-lg p-2 text-muted-foreground/60 transition-colors hover:bg-muted/50 hover:text-foreground"
+        className="rounded-lg p-2 text-muted-foreground/60 motion-base hover:bg-muted/70 hover:text-foreground"
         aria-label={placeholder ?? "Search"}
       >
         <Search className="size-4" />
@@ -94,7 +94,7 @@ export function ToolbarSearch({
   return (
     <div
       className={cn(
-        "flex items-center gap-1.5 rounded-lg border border-border/40 bg-muted/30 transition-all",
+        "flex items-center gap-1.5 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted/30 motion-base",
         size === "sm" ? "px-3 py-1.5" : "px-3 py-2",
         containerClassName,
       )}
@@ -127,7 +127,7 @@ export function ToolbarSearch({
             onValueChange("");
             if (collapsible) onOpenChange?.(false);
           }}
-          className="rounded p-0.5 text-muted-foreground/60 transition-colors hover:text-foreground"
+          className="rounded p-0.5 text-muted-foreground/60 motion-base hover:text-foreground"
           aria-label="Clear"
         >
           <X className="size-3" />
@@ -168,7 +168,7 @@ export function ToolbarSortDropdown<TKey extends string = string>({
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          "flex items-center gap-1.5 rounded-lg border border-border/30 bg-muted/20 px-3 py-1.5 text-xs font-medium text-foreground/80 transition-colors hover:bg-muted/50",
+          "flex items-center gap-1.5 rounded-lg border border-border/30 bg-muted/20 px-3 py-1.5 text-xs font-medium text-foreground/80 motion-base hover:bg-muted/70",
           className,
         )}
       >
@@ -245,10 +245,10 @@ export function ViewToggle<T extends string = string>({
             aria-label={mode.ariaLabel ?? (typeof mode.label === "string" ? mode.label : undefined)}
             onClick={() => onChange(mode.value)}
             className={cn(
-              "flex items-center gap-1.5 rounded-md transition-colors",
+              "flex items-center gap-1.5 rounded-md motion-base",
               size === "sm" ? "p-1.5 text-xs" : "px-2 py-1.5 text-sm",
               active
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-primary/15 text-primary"
                 : "text-muted-foreground hover:text-foreground",
             )}
           >
@@ -279,10 +279,10 @@ export const FilterButton = forwardRef<HTMLButtonElement, FilterButtonProps>(
         ref={ref}
         type="button"
         className={cn(
-          "flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors",
+          "flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium motion-base",
           active
             ? "border-primary/40 bg-primary/10 text-primary hover:bg-primary/15"
-            : "border-border/30 bg-muted/20 text-foreground/80 hover:bg-muted/50",
+            : "border-border/30 bg-muted/20 text-foreground/80 hover:bg-muted/70",
           className,
         )}
         {...rest}

@@ -149,7 +149,7 @@ export function MeecardAsksRail({
   )
 
   const rowClass =
-    "ease-chrome flex items-center justify-between gap-3 py-3 pl-0.5 pr-2 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+    "ease-chrome flex items-center justify-between gap-3 py-3 pl-0.5 pr-2 hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
 
   const hasListings = sorted.length > 0
 
@@ -182,7 +182,7 @@ export function MeecardAsksRail({
             <button
               type="button"
               onClick={() => setAlertOpen(true)}
-              className="ease-chrome inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-border px-4 text-sm font-semibold text-foreground hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="ease-chrome inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-border px-4 text-sm font-semibold text-foreground hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <BellPlus className="size-4" aria-hidden /> {t(lang, "notifyWhenListed")}
             </button>

@@ -106,7 +106,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
         <div className="mb-4 md:hidden">
           <Link
             href="/settings"
-            className="inline-flex items-center gap-1 text-sm font-medium text-primary transition-colors active:text-primary/70"
+            className="inline-flex items-center gap-1 text-sm font-medium text-primary motion-base active:text-primary/70"
           >
             <ChevronLeft className="size-4" />
             {activeSectionMeta ? t(lang, activeSectionMeta.labelKey) : t(lang, "profileSettings")}
@@ -123,7 +123,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
               href={`/profile/${user.id}`}
               aria-label={t(lang, "viewPublicProfile")}
               title={t(lang, "viewPublicProfile")}
-              className="group ease-chrome mb-6 flex items-center gap-3 rounded-lg border border-[var(--p-hair)] bg-card/40 px-3 py-2.5 transition-colors hover:border-[var(--p-hair)] hover:bg-muted/70"
+              className="group ease-chrome mb-6 flex items-center gap-3 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-card/40 px-3 py-2.5 transition-colors hover:border-[var(--p-hair)] hover:bg-muted/70"
             >
               <Avatar className={cn("size-9 shrink-0 ring-2 ring-offset-2 ring-offset-background", tierCfg.ring)}>
                 {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
@@ -138,7 +138,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
                     {tierCfg.label}
                   </Badge>
                 </div>
-                <p className="text-meta inline-flex items-center gap-1 transition-colors group-hover:text-foreground">
+                <p className="text-meta inline-flex items-center gap-1 motion-base group-hover:text-foreground">
                   {t(lang, "viewPublicProfile")}
                   <ExternalLink className="size-3" />
                 </p>
@@ -165,15 +165,15 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
                             href={href}
                             aria-current={active ? "page" : undefined}
                             className={cn(
-                              "ease-chrome relative flex w-full items-center gap-2.5 rounded-lg px-3 py-1.5 text-sm transition-colors",
+                              "ease-chrome relative flex w-full items-center gap-2.5 rounded-lg px-3 py-1.5 text-sm",
                               active
-                                ? "font-medium text-foreground before:absolute before:inset-y-1 before:-left-0.5 before:w-0.5 before:rounded-full before:bg-primary"
+                                ? "font-medium text-primary before:absolute before:inset-y-1 before:-left-0.5 before:w-0.5 before:rounded-full before:bg-primary"
                                 : "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
                             )}
                           >
                             <Icon
                               className={cn(
-                                "size-4 shrink-0 transition-colors",
+                                "size-4 shrink-0 motion-base",
                                 active && "text-primary",
                               )}
                             />
