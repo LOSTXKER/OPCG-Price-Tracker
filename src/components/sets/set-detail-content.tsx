@@ -80,12 +80,16 @@ function FilterSelect({
   onChange,
   options,
   fullWidth,
+  hideLabel,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   options: FilterOption[];
   fullWidth?: boolean;
+  // When the label is shown as a header above the control, the trigger only
+  // needs the selected value.
+  hideLabel?: boolean;
 }) {
   // Render the selected option's label ourselves — base-ui SelectValue shows the
   // raw value ("all") rather than the option label, so map it here.
@@ -99,7 +103,7 @@ function FilterSelect({
           fullWidth ? "w-full" : "shrink-0",
         )}
       >
-        <span className="text-muted-foreground">{label}</span>
+        {!hideLabel && <span className="text-muted-foreground">{label}</span>}
         <span className="text-foreground">{current}</span>
       </SelectTrigger>
       <SelectContent
@@ -279,48 +283,48 @@ export function SetDetailContent({
           + period + the rarity jump-nav. Sticky so it follows the card wall;
           the right column is then pure cards. ── */}
       <aside className="hidden w-52 shrink-0 lg:block">
-        <div className="no-sb sticky top-32 max-h-[calc(100vh-9rem)] space-y-6 overflow-y-auto pr-0.5">
-          {/* Filters group */}
-          {(availableTypes.length > 1 || availableColors.length > 1) && (
-            <section className="space-y-2">
-              <p className="text-eyebrow px-0.5">{t(lang, "filter")}</p>
-              {availableTypes.length > 1 && (
-                <FilterSelect
-                  fullWidth
-                  label={t(lang, "type")}
-                  value={activeType}
-                  onChange={setActiveType}
-                  options={typeOptions}
-                />
-              )}
-              {availableColors.length > 1 && (
-                <FilterSelect
-                  fullWidth
-                  label={t(lang, "color")}
-                  value={activeColor}
-                  onChange={setActiveColor}
-                  options={colorOptions}
-                />
-              )}
-            </section>
+        <div className="no-sb sticky top-32 max-h-[calc(100vh-9rem)] space-y-4 overflow-y-auto pr-0.5">
+          {/* Each control carries its own label header above it. */}
+          {availableTypes.length > 1 && (
+            <div className="space-y-1.5">
+              <p className="text-eyebrow px-0.5">{t(lang, "type")}</p>
+              <FilterSelect
+                fullWidth
+                hideLabel
+                label={t(lang, "type")}
+                value={activeType}
+                onChange={setActiveType}
+                options={typeOptions}
+              />
+            </div>
+          )}
+          {availableColors.length > 1 && (
+            <div className="space-y-1.5">
+              <p className="text-eyebrow px-0.5">{t(lang, "color")}</p>
+              <FilterSelect
+                fullWidth
+                hideLabel
+                label={t(lang, "color")}
+                value={activeColor}
+                onChange={setActiveColor}
+                options={colorOptions}
+              />
+            </div>
           )}
 
-          {/* Period (%-change window) group */}
-          <section className="space-y-2">
-            <p className="text-eyebrow px-0.5">{t(lang, "change")}</p>
-            <SegmentedControl
-              size="sm"
-              variant="pill"
-              fullWidth
-              options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
-              value={changePeriod}
-              onChange={setChangePeriod}
-              ariaLabel={t(lang, "change")}
-            />
-          </section>
+          {/* Period (%-change window) — bare segmented */}
+          <SegmentedControl
+            size="sm"
+            variant="pill"
+            fullWidth
+            options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
+            value={changePeriod}
+            onChange={setChangePeriod}
+            ariaLabel={t(lang, "change")}
+          />
 
           {/* Rarity jump-nav group (scrollspy highlights the section in view) */}
-          <nav aria-label={t(lang, "rarity")} className="space-y-1.5">
+          <nav aria-label={t(lang, "rarity")} className="space-y-1.5 pt-1">
             <p className="text-eyebrow flex items-center justify-between px-0.5">
               <span>{t(lang, "rarity")}</span>
               <span className="tabular-nums text-muted-foreground/40">{totalVisible}</span>
