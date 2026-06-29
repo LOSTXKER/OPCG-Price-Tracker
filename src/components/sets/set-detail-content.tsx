@@ -336,12 +336,19 @@ export function SetDetailContent({
           </div>
 
           <div className="space-y-8">
-            {displayGroups.map((g) => (
+            {displayGroups.map((g, idx) => (
               <section
                 key={g.rarity}
                 id={`rar-${g.rarity}`}
                 data-rarity={g.rarity}
-                className="scroll-mt-32"
+                className={cn(
+                  "scroll-mt-32",
+                  // The last section needs room below it so clicking it can
+                  // scroll its heading to the top (otherwise the page bottom
+                  // blocks the jump on tall screens).
+                  idx === displayGroups.length - 1 &&
+                    "min-h-[calc(100dvh-18rem)]",
+                )}
               >
                 {/* centered section heading (เบส) — name + RarityBadge + count,
                     flanked by hairlines on both sides. */}
