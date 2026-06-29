@@ -274,7 +274,7 @@ export function SetDetailContent({
         {/* LEFT rail (desktop) — a table of contents: click a rarity to scroll to
             its section; scrollspy highlights whichever section you're viewing. */}
         <aside aria-label={t(lang, "rarity")} className="hidden w-44 shrink-0 lg:block">
-          <nav className="no-sb sticky top-24 max-h-[calc(100vh-7rem)] space-y-0.5 overflow-y-auto">
+          <nav className="no-sb sticky top-32 max-h-[calc(100vh-9rem)] space-y-0.5 overflow-y-auto">
             <p className="text-eyebrow mb-2 flex items-center justify-between px-2">
               <span>{t(lang, "rarity")}</span>
               <span className="tabular-nums text-muted-foreground/50">{totalVisible}</span>
