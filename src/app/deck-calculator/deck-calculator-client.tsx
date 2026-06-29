@@ -46,7 +46,7 @@ export default function DeckCalculatorClient() {
     return (
       <div className="space-y-6">
         <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-64 rounded-xl" />
+        <Skeleton className="h-64 rounded-xl shadow-[var(--panel-shadow)]" />
       </div>
     );
   }
@@ -179,7 +179,7 @@ function DeckCalculatorContent() {
           <Skeleton className="h-10 flex-1" />
           <Skeleton className="h-10 w-28" />
         </div>
-        <Skeleton className="h-64 rounded-xl" />
+        <Skeleton className="h-64 rounded-xl shadow-[var(--panel-shadow)]" />
       </div>
     );
   }

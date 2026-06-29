@@ -44,7 +44,7 @@ export default function WatchlistClient() {
     return (
       <div className="space-y-6">
         <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-64 rounded-xl" />
+        <Skeleton className="h-64 rounded-xl shadow-[var(--panel-shadow)]" />
       </div>
     );
   }
@@ -311,7 +311,7 @@ function WatchlistContent() {
           ))}
         </div>
         <Skeleton className="h-12 rounded-lg" />
-        <Skeleton className="h-96 rounded-xl" />
+        <Skeleton className="h-96 rounded-xl shadow-[var(--panel-shadow)]" />
       </div>
     );
   }

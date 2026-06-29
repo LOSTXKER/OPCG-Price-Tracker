@@ -225,7 +225,7 @@ export default function DropCalculatorClient() {
       {showLoading && (
         <div className="space-y-3">
           <Skeleton className="h-14 w-full rounded-lg" />
-          <Skeleton className="h-64 w-full rounded-lg" />
+          <Skeleton className="h-64 w-full rounded-lg shadow-[var(--panel-shadow)]" />
         </div>
       )}
 

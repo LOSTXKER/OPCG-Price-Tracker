@@ -42,9 +42,9 @@ export default function HoneyClient() {
         {header}
         <div className="space-y-6">
           <Skeleton className="h-14 rounded-xl" />
-          <Skeleton className="h-48 rounded-xl" />
+          <Skeleton className="h-48 rounded-xl shadow-[var(--panel-shadow)]" />
           <Skeleton className="h-10 rounded-lg" />
-          <Skeleton className="h-64 rounded-xl" />
+          <Skeleton className="h-64 rounded-xl shadow-[var(--panel-shadow)]" />
         </div>
       </>
     );
@@ -116,9 +116,9 @@ function HoneyContent() {
     return (
       <div className="space-y-6">
         <Skeleton className="h-14 rounded-xl" />
-        <Skeleton className="h-48 rounded-xl" />
+        <Skeleton className="h-48 rounded-xl shadow-[var(--panel-shadow)]" />
         <Skeleton className="h-10 rounded-lg" />
-        <Skeleton className="h-64 rounded-xl" />
+        <Skeleton className="h-64 rounded-xl shadow-[var(--panel-shadow)]" />
       </div>
     );
   }
