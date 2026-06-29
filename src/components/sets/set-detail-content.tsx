@@ -280,26 +280,34 @@ export function SetDetailContent({
           the right column is then pure cards. ── */}
       <aside className="hidden w-52 shrink-0 lg:block">
         <div className="no-sb sticky top-32 max-h-[calc(100vh-9rem)] space-y-6 overflow-y-auto pr-0.5">
-          {/* facet filters + period (stacked, full-width) */}
-          <div className="space-y-2">
-            {availableTypes.length > 1 && (
-              <FilterSelect
-                fullWidth
-                label={t(lang, "type")}
-                value={activeType}
-                onChange={setActiveType}
-                options={typeOptions}
-              />
-            )}
-            {availableColors.length > 1 && (
-              <FilterSelect
-                fullWidth
-                label={t(lang, "color")}
-                value={activeColor}
-                onChange={setActiveColor}
-                options={colorOptions}
-              />
-            )}
+          {/* Filters group */}
+          {(availableTypes.length > 1 || availableColors.length > 1) && (
+            <section className="space-y-2">
+              <p className="text-eyebrow px-0.5">{t(lang, "filter")}</p>
+              {availableTypes.length > 1 && (
+                <FilterSelect
+                  fullWidth
+                  label={t(lang, "type")}
+                  value={activeType}
+                  onChange={setActiveType}
+                  options={typeOptions}
+                />
+              )}
+              {availableColors.length > 1 && (
+                <FilterSelect
+                  fullWidth
+                  label={t(lang, "color")}
+                  value={activeColor}
+                  onChange={setActiveColor}
+                  options={colorOptions}
+                />
+              )}
+            </section>
+          )}
+
+          {/* Period (%-change window) group */}
+          <section className="space-y-2">
+            <p className="text-eyebrow px-0.5">{t(lang, "change")}</p>
             <SegmentedControl
               size="sm"
               variant="pill"
@@ -309,15 +317,17 @@ export function SetDetailContent({
               onChange={setChangePeriod}
               ariaLabel={t(lang, "change")}
             />
-          </div>
+          </section>
 
-          {/* rarity jump-nav (scrollspy highlights the section in view) */}
-          <nav aria-label={t(lang, "rarity")} className="space-y-0.5">
-            <p className="text-eyebrow mb-2 flex items-center justify-between px-2">
+          {/* Rarity jump-nav group (scrollspy highlights the section in view) */}
+          <nav aria-label={t(lang, "rarity")} className="space-y-1.5">
+            <p className="text-eyebrow flex items-center justify-between px-0.5">
               <span>{t(lang, "rarity")}</span>
-              <span className="tabular-nums text-muted-foreground/50">{totalVisible}</span>
+              <span className="tabular-nums text-muted-foreground/40">{totalVisible}</span>
             </p>
-            {rarityNav.map((rt) => rarityButton(rt, "rail"))}
+            <div className="space-y-0.5">
+              {rarityNav.map((rt) => rarityButton(rt, "rail"))}
+            </div>
           </nav>
         </div>
       </aside>
