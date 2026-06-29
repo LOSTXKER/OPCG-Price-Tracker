@@ -6,7 +6,16 @@ import { Select as SelectPrimitive } from "@base-ui/react/select"
 import { cn } from "@/lib/utils"
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react"
 
-const Select = SelectPrimitive.Root
+// Default to non-modal: base-ui's modal mode scroll-locks `<html>` (overflow:hidden)
+// while open, which yanks the scrollbar and makes the sticky transparent navbar
+// flicker/bleed over scrolled content. Filter/picker selects don't need a scroll
+// lock or focus trap; callers can still pass `modal` to opt back in. Generic is
+// preserved so `onValueChange`'s value stays typed.
+function Select<Value, Multiple extends boolean | undefined = false>(
+  props: SelectPrimitive.Root.Props<Value, Multiple>,
+) {
+  return <SelectPrimitive.Root modal={false} {...props} />
+}
 
 function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
   return (
