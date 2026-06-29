@@ -46,17 +46,19 @@ export function SetHero({
   hasDropRates: boolean;
 }) {
   return (
-    <header className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-7 lg:gap-10">
-      {/* box art — the one saturated element (lit by the page's overhead glow) */}
-      <div className="relative shrink-0 self-start sm:self-center">
-        <div className="surface-1 relative aspect-[3/4] w-32 overflow-hidden rounded-xl sm:w-44 lg:w-56">
+    <header className="relative flex flex-row items-center gap-4 sm:gap-7 lg:gap-10">
+      {/* box art — the one saturated element (lit by the page's overhead glow).
+          Row layout (card left, identity right) at every width — เบส wants it
+          side-by-side on phones too, so the card stays compact on narrow. */}
+      <div className="relative shrink-0">
+        <div className="surface-1 relative aspect-[3/4] w-28 overflow-hidden rounded-xl sm:w-44 lg:w-56">
           {boxImage ? (
             <Image
               src={boxImage}
               alt={name}
               fill
               className="object-cover object-top"
-              sizes="(min-width: 1024px) 224px, (min-width: 640px) 176px, 128px"
+              sizes="(min-width: 1024px) 224px, (min-width: 640px) 176px, 112px"
               priority
             />
           ) : (
