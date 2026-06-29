@@ -53,7 +53,7 @@ export function WatchlistListView({
   if (entries.length === 0) return null;
 
   return (
-    <div className="overflow-hidden rounded-xl border border-[var(--p-hair)]">
+    <div className="panel overflow-hidden">
       {entries.length > 1 && (
         <div className="flex items-center gap-3 border-b border-[var(--p-hair)] bg-muted/20 px-3 py-2 text-meta">
           <input

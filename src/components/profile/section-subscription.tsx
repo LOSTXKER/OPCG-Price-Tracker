@@ -258,7 +258,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
             <div
               key={plan.key}
               className={cn(
-                "relative flex flex-col rounded-2xl border p-5",
+                "relative flex flex-col rounded-2xl p-5",
                 plan.cardClass,
                 isCurrent && "ring-2 ring-primary/40",
               )}

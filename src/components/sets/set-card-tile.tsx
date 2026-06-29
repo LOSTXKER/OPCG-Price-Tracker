@@ -42,7 +42,7 @@ function SetCardTileBase({
       aria-label={name}
       className="group ease-chrome flex flex-col gap-1.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <div className="surface-1 ease-chrome relative aspect-[63/88] w-full overflow-hidden rounded-lg group-hover:ring-2 group-hover:ring-primary/40">
+      <div className="surface-1 ease-chrome relative aspect-[63/88] w-full overflow-hidden rounded-lg shadow-[var(--panel-shadow)] group-hover:ring-2 group-hover:ring-primary/40">
         {card.imageUrl ? (
           <Image
             src={card.imageUrl}

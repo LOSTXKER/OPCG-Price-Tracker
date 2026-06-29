@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-29 — **frameless redesign ทั้งเว็บ + sets/set-detail + การ์ดขาว+เงานุ่ม** → **pushed `master`** (เบส override กฎ ⛔ direct-push เอง · ไม่ผ่าน PR) → Vercel auto-deploy · build ✓ ~140 routes · test 56/56 · lint 0 err · console สะอาด · 2 รอบ regression audit (workflow) แก้ครบ · **ไม่แตะ `src/{components,app}/portfolio` (งานอีกทีม · 25 ไฟล์ค้าง uncommitted)**
+อัปเดตล่าสุด: 2026-06-29 — **frameless redesign ทั้งเว็บ + sets/set-detail + การ์ดขาว+เงานุ่ม** → **pushed `master`** (เบส override กฎ ⛔ direct-push เอง · ไม่ผ่าน PR) → Vercel auto-deploy · build ✓ ~140 routes · test 56/56 · lint 0 err · console สะอาด · 3 รอบ audit (workflow): frameless + white-shadow + **full-site QA 60 หน้า incl hover** → แก้ครบ (subscription/watchlist frameless · card tiles +shadow) · **ไม่แตะ `src/{components,app}/portfolio` (งานอีกทีม · 25 ไฟล์ค้าง uncommitted)**
 
 ## ✅ เสร็จ session นี้ (frameless + sets redesign) — commit `c8d597c`
 - **Sets index + set-detail redesign:** identity-led hero (OP/ST code เป็นพระเอก · เอามูลค่า/กราฟออก) · compact rarity-**filter** grid · section heading กลางจอ · shared `RarityBadge` + `SegmentedControl` · data layer กลาง `src/lib/data/set-detail.ts` · component ใหม่ `set-hero.tsx` `set-card-tile.tsx`
