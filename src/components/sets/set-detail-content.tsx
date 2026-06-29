@@ -312,16 +312,19 @@ export function SetDetailContent({
             </div>
           )}
 
-          {/* Period (%-change window) — bare segmented */}
-          <SegmentedControl
-            size="sm"
-            variant="pill"
-            fullWidth
-            options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
-            value={changePeriod}
-            onChange={setChangePeriod}
-            ariaLabel={t(lang, "change")}
-          />
+          {/* Period (%-change window) */}
+          <div className="space-y-1.5">
+            <p className="text-eyebrow px-0.5">{t(lang, "pricePeriod")}</p>
+            <SegmentedControl
+              size="sm"
+              variant="pill"
+              fullWidth
+              options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
+              value={changePeriod}
+              onChange={setChangePeriod}
+              ariaLabel={t(lang, "pricePeriod")}
+            />
+          </div>
 
           {/* Rarity jump-nav group (scrollspy highlights the section in view) */}
           <nav aria-label={t(lang, "rarity")} className="space-y-1.5 pt-1">
