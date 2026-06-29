@@ -91,7 +91,7 @@ export function TabToolbar<F extends string, S extends string>({
         <DropdownMenu>
           <DropdownMenuTrigger
             className={cn(
-              "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-transparent dark:border-[var(--p-hair)] bg-card/40 px-3 py-1.5 text-xs font-medium text-foreground/80 transition-colors hover:border-border hover:text-foreground",
+              "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-transparent dark:border-[var(--p-hair)] bg-muted/40 px-3 py-1.5 text-xs font-medium text-foreground/80 transition-colors hover:border-border hover:text-foreground",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             )}
           >

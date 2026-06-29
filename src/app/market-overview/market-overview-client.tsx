@@ -73,7 +73,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
         }
         actions={
           data.lastUpdatedAt ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-transparent dark:border-[var(--p-hair)] bg-card px-3 py-1 text-meta">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-transparent dark:border-[var(--p-hair)] bg-muted px-3 py-1 text-meta">
               <Clock className="size-3.5" aria-hidden="true" />
               {t(lang, "marketLastUpdated")} {formatRelativeAgo(data.lastUpdatedAt, lang)}
             </span>

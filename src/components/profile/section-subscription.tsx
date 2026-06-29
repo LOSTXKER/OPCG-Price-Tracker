@@ -351,7 +351,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
 
       {/* ─── Payment method ─── */}
       {subscription.hasStripeSubscription && (
-        <div className="rounded-xl bg-card p-5">
+        <div className="rounded-xl bg-card p-5 shadow-[var(--panel-shadow)]">
           <div className="flex items-center gap-2 mb-3">
             <Wallet className="size-4 text-muted-foreground" />
             <h3 className="text-h5">{t(lang, "paymentMethod")}</h3>
@@ -382,7 +382,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
 
       {/* ─── Usage & Quota ─── */}
       {stats && (
-        <div className="rounded-xl bg-card p-5 space-y-1">
+        <div className="rounded-xl bg-card p-5 space-y-1 shadow-[var(--panel-shadow)]">
           <h3 className="text-h5 mb-3">{t(lang, "usageQuota")}</h3>
           <div className="divide-y divide-[var(--p-hair)]">
             <UsageRow icon={Layers} label={t(lang, "portfolioCards")} desc={t(lang, "portfolioCardsDesc")} current={stats.portfolioCardCount} max={limits.portfolioCards} color="bg-primary" lang={lang} />

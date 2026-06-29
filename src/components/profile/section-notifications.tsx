@@ -290,7 +290,7 @@ export function SectionNotifications({ settings, onReload }: Props) {
                   : undefined
               }
               className={cn(
-                "rounded-xl bg-card p-5",
+                "rounded-xl bg-card p-5 shadow-[var(--panel-shadow)]",
                 cardLocked &&
                   "cursor-pointer ring-1 ring-amber-500/20 hover:ring-amber-500/40",
               )}

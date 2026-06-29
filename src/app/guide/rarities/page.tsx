@@ -437,7 +437,7 @@ export default async function RaritiesPage() {
           {buildParallelTiers(lang).map((p) => (
             <div
               key={p.code}
-              className="flex items-center gap-2 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-card px-3 py-1.5"
+              className="flex items-center gap-2 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted px-3 py-1.5"
             >
               <span
                 className="size-2.5 rounded-full"

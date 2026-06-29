@@ -123,7 +123,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
               href={`/profile/${user.id}`}
               aria-label={t(lang, "viewPublicProfile")}
               title={t(lang, "viewPublicProfile")}
-              className="group ease-chrome mb-6 flex items-center gap-3 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-card/40 px-3 py-2.5 transition-colors hover:border-[var(--p-hair)] hover:bg-muted/70"
+              className="group ease-chrome mb-6 flex items-center gap-3 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted/40 px-3 py-2.5 transition-colors hover:border-[var(--p-hair)] hover:bg-muted/70"
             >
               <Avatar className={cn("size-9 shrink-0 ring-2 ring-offset-2 ring-offset-background", tierCfg.ring)}>
                 {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}

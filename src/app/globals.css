@@ -82,7 +82,7 @@
      by a warm FILL instead of a hairline border — no "กรอบ", iOS-grouped feel.
      Tuned a touch deeper so cards read clearly on white while staying lighter than
      --muted (nested muted insets still recess). (dark keeps its luminance edge.) */
-  --card: #F7F1E8;
+  --card: #FFFFFF;
   --card-foreground: #292118;
   --popover: #FFFFFF;
   --popover-foreground: #292118;
@@ -107,7 +107,7 @@
 
   /* Frameless in light: .panel lifts by the warm --card fill alone (no hairline).
      Dark keeps --elev-flat (luminance edge) since there card≠bg is subtle. */
-  --panel-shadow: none;
+  --panel-shadow: 0 1px 2px rgba(28, 20, 12, 0.05), 0 8px 20px -6px rgba(28, 20, 12, 0.10);
 
   /* Warm primitive kit (VISION V1) — elevation by luminance + hairline borders.
      Light values: subtle warm-dark overlays so cards lift off the white canvas.

@@ -290,7 +290,7 @@ export function MobileMenuSheet({
               <button
                 type="button"
                 onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-                className="flex items-center gap-1.5 rounded-md border border-transparent dark:border-[var(--p-hair)] bg-card px-2.5 py-1 text-xs font-medium motion-base hover:bg-muted/70"
+                className="flex items-center gap-1.5 rounded-md border border-transparent dark:border-[var(--p-hair)] bg-muted px-2.5 py-1 text-xs font-medium motion-base hover:bg-muted/70"
                 aria-label="Toggle theme"
               >
                 {mounted && resolvedTheme === "dark" ? (

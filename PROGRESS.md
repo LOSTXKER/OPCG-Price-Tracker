@@ -1,13 +1,14 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-29 — **frameless redesign ทั้งเว็บ + sets/set-detail redesign** → **pushed `master` `25dedb9`** (เบส override กฎ ⛔ direct-push เอง · ไม่ผ่าน PR) → Vercel auto-deploy · build ✓ ~140 routes · test 56/56 · lint 0 err · console สะอาด · **ไม่แตะ `src/{components,app}/portfolio` (งานอีกทีม · 25 ไฟล์ค้าง uncommitted ในงานนั้น)**
+อัปเดตล่าสุด: 2026-06-29 — **frameless redesign ทั้งเว็บ + sets/set-detail + การ์ดขาว+เงานุ่ม** → **pushed `master`** (เบส override กฎ ⛔ direct-push เอง · ไม่ผ่าน PR) → Vercel auto-deploy · build ✓ ~140 routes · test 56/56 · lint 0 err · console สะอาด · 2 รอบ regression audit (workflow) แก้ครบ · **ไม่แตะ `src/{components,app}/portfolio` (งานอีกทีม · 25 ไฟล์ค้าง uncommitted)**
 
 ## ✅ เสร็จ session นี้ (frameless + sets redesign) — commit `c8d597c`
 - **Sets index + set-detail redesign:** identity-led hero (OP/ST code เป็นพระเอก · เอามูลค่า/กราฟออก) · compact rarity-**filter** grid · section heading กลางจอ · shared `RarityBadge` + `SegmentedControl` · data layer กลาง `src/lib/data/set-detail.ts` · component ใหม่ `set-hero.tsx` `set-card-tile.tsx`
 - **Navbar:** เต็มจอ · โปร่งตอนบน → ทึบตอน scroll (Apple/Vercel pattern) · **glow เดียวกลางบนจอ** ย้ายมาอยู่ที่ layout (`main-chrome` PageContent) ใช้ทุกหน้า
-- **Frameless ทั้งเว็บ (เบส "ไม่อยากให้มีกรอบ"):** light-mode `--card` #FFF→**`#F7F1E8`** (ครีมอุ่น) → การ์ดเด่นด้วย **fill** ไม่ใช่ border · `--panel-shadow: none` (light) · `Card`/`Surface outline` = `border-transparent` light / hairline dark · `Select`/`SegmentedControl pill`/ปุ่ม `outline` = filled ไม่มีเส้น · card-art tiles เอากรอบออก
-  - **กฎสำคัญ:** light-mode `--card == --background == #FFF` ตอนแรก → hairline เป็นตัวแยกการ์ดตัวเดียว → ห้ามลบ border แบบ blind (ลบแล้วการ์ดจมหายในสว่าง) → จึง **tint card-bg** แทน
+- **Frameless ทั้งเว็บ (เบส "ไม่อยากให้มีกรอบ"):** light-mode การ์ด = **ขาว `--card:#FFF` + เงานุ่ม** (`--panel-shadow` soft drop shadow) → เด่นด้วยเงา ไม่ใช่กรอบ/เบจ · `.panel`/`Card`/`Surface outline` ใช้ `shadow-[var(--panel-shadow)]` (light เงา · dark = inset hairline จาก token เดียวกัน) · `Select`/`SegmentedControl pill`/ปุ่ม `outline` = filled ไม่มีเส้น · card-art tiles เอากรอบออก
+  - **ประวัติการลอง:** flat+border → tint ครีม `#F7F1E8` (เบสว่าเบจขุ่น) → **ขาว+เงา (เบสเลือก)** = สะอาด/พรีเมียม
+  - **กฎสำคัญ:** light `--card == --background == #FFF` → ต้องมี **เงา** (หรือ fill อื่น) แยกการ์ด · `bg-card` เดี่ยวๆ (ไม่ใช่ .panel/Card/Surface) = ขาวบนขาวจมหาย → ใส่ `shadow-[var(--panel-shadow)]` หรือเปลี่ยนเป็น `bg-muted` · container ที่อุ้มการ์ด (เช่น TabSection) = flat `shadow-none` กัน double-shadow
 - **Regression audit (workflow 23 agents · adversarial verify) → เจอ 14 แก้หมด:**
   - **บั๊ก sweep ตัวเอง:** heuristic จับ `hover:bg-muted` เป็นพื้นถาวร → ถอดเส้น 11 element ที่โปร่งตอนพัก → **คืนเส้นให้ 11 จุด** (ตัวมีพื้นจริง 37 จุดคง frameless)
   - search toolbar `bg-muted/20`→`bg-popover` (ปุ่ม filled เด้งชัด) · profile card nesting → container `bg-card/40` (โปร่ง · การ์ดเด่นกว่า) · marketplace product image `.panel`→`bg-popover` (รูปต้องพื้นขาว)

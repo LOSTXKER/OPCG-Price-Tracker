@@ -56,10 +56,10 @@ export function TabSection({
         // and the `section-heading` left bar — both repeat what the active
         // tab is already shouting. We keep a soft card surface so the
         // grid sits on a defined ground without competing with the tabs.
-        // bg-card/40 (translucent) sits one step BEHIND the full-bg-card inner
-        // cards so they read as the hero — without it, frameless cream-on-cream
-        // erases the container/content separation in light mode.
-        "bg-card/40 p-4 md:p-5",
+        // Flat grouping ground (no shadow) with a faint warm tint so the inner
+        // white + soft-shadow cards float ON it — a shadowed container holding
+        // shadowed cards would double-stack and read muddy.
+        "bg-muted/30 shadow-none p-4 md:p-5",
         className,
       )}
     >
