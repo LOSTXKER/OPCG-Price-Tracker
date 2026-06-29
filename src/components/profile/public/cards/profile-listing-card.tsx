@@ -48,8 +48,8 @@ export function ProfileListingCard({
     >
       <div
         className={cn(
-          "panel relative flex h-full flex-col overflow-hidden border border-transparent transition-colors hover:border-border",
-          listing.isFeatured && "border-primary/30",
+          "panel hover-lift relative flex h-full flex-col overflow-hidden",
+          listing.isFeatured && "ring-1 ring-primary/30",
         )}
       >
         <div className={cn("relative aspect-[63/88] w-full", CARD_BG)}>

@@ -95,7 +95,7 @@ function CardItemBase({
   }
 
   return (
-    <Surface variant="panel" className="group/card relative flex h-full flex-col overflow-hidden border border-transparent motion-base hover:border-border">
+    <Surface variant="panel" className="group/card hover-lift relative flex h-full flex-col overflow-hidden">
       <Link
         href={`/cards/${cardCode}`}
         aria-label={displayName}

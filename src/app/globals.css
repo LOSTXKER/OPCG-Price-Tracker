@@ -373,6 +373,41 @@
 .no-sb { scrollbar-width: none; -ms-overflow-style: none; }
 .no-sb::-webkit-scrollbar { display: none; }
 
+/* Card hover (เบส 2026-06-29) — replaces the old ring/border outline. The card
+   rises toward the cursor and casts a deeper shadow (light: warm · dark: black so
+   it reads on espresso). Two flavors, tuned in ONE place for the whole site:
+     .group-lift — card IMAGE lifts + zooms when its `.group` / `.group/card`
+                   wrapper is hovered (image tiles in a link/card)
+     .hover-lift — a full card lifts on its OWN hover (no zoom, keeps text crisp) */
+.group-lift,
+.hover-lift {
+  position: relative;
+  transition-property: transform, box-shadow;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-chrome);
+}
+.group:hover .group-lift,
+.group\/card:hover .group-lift {
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 14px 30px -8px rgba(28, 20, 12, 0.22);
+  z-index: 10;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px -8px rgba(28, 20, 12, 0.18);
+  z-index: 10;
+}
+.dark .group:hover .group-lift,
+.dark .group\/card:hover .group-lift,
+.dark .hover-lift:hover {
+  box-shadow: 0 16px 34px -10px rgba(0, 0, 0, 0.6);
+}
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .group-lift,
+  .group\/card:hover .group-lift,
+  .hover-lift:hover { transform: none; }
+}
+
 /* count-up / fade for live hero numbers */
 @keyframes warm-rise {
   from { opacity: 0; transform: translateY(4px); }

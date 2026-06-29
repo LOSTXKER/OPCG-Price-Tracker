@@ -37,7 +37,7 @@ export const GridCard = memo(function GridCard({
     : card.priceChange7d
 
   return (
-    <Surface variant="panel" interactive className="group/card relative flex flex-col overflow-hidden">
+    <Surface variant="panel" className="group/card hover-lift relative flex flex-col overflow-hidden">
       <Link
         href={`/cards/${card.cardCode}`}
         aria-label={name}

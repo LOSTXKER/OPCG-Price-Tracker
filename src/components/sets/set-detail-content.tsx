@@ -214,14 +214,51 @@ export function SetDetailContent({
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Static toolbar (NOT sticky — เบส: no floating chrome). Row 1: rarity
-          jump-rail on a hairline baseline + sliding underline. Row 2: facet
-          dropdowns (left) + period (right). */}
-      <nav aria-label={t(lang, "rarity")} className="space-y-3">
-        {/* rarity FILTER — tab bar (sets-index style); honey = active. Click a
-            rarity to show only it; "all" stacks every rarity. */}
-        <div className="no-sb flex items-center gap-1 overflow-x-auto border-b border-[var(--p-hair)]">
+    <div className="lg:flex lg:gap-8">
+      {/* ── LEFT rail — rarity selector, desktop only, sticky so it follows the
+          screen as you scroll the card wall (เบส). Mobile/tablet use the
+          horizontal tab bar inside the right column instead. ── */}
+      <aside
+        aria-label={t(lang, "rarity")}
+        className="hidden w-44 shrink-0 lg:block"
+      >
+        <div className="no-sb sticky top-24 max-h-[calc(100vh-7rem)] space-y-0.5 overflow-y-auto">
+          <p className="text-eyebrow mb-2 px-3">{t(lang, "rarity")}</p>
+          {rarityTabs.map((rt) => {
+            const active = effectiveRarity === rt.value;
+            return (
+              <button
+                key={rt.value}
+                type="button"
+                onClick={() => setActiveRarity(rt.value)}
+                aria-pressed={active}
+                className={cn(
+                  "ease-chrome flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors",
+                  active
+                    ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                )}
+              >
+                <span className="truncate">{rt.label}</span>
+                <span
+                  className={cn(
+                    "shrink-0 text-xs tabular-nums",
+                    active ? "text-primary/60" : "text-muted-foreground/50",
+                  )}
+                >
+                  {rt.count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </aside>
+
+      {/* ── RIGHT — mobile rarity tabs + facet controls + the card wall ── */}
+      <div className="min-w-0 flex-1 space-y-6">
+        {/* rarity FILTER (mobile/tablet) — horizontal tab bar; desktop hides this
+            in favour of the sticky left rail. honey = active. */}
+        <div className="no-sb flex items-center gap-1 overflow-x-auto border-b border-[var(--p-hair)] lg:hidden">
           {rarityTabs.map((rt) => {
             const active = effectiveRarity === rt.value;
             return (
@@ -281,37 +318,38 @@ export function SetDetailContent({
             ariaLabel={t(lang, "change")}
           />
         </div>
-      </nav>
 
-      {/* ── Card sections — dense compact grid; "all" stacks every rarity, else
-          just the chosen one. ── */}
-      <div className="space-y-8">
-        {displayGroups.map((g) => (
-          <section key={g.rarity}>
-            {/* centered section heading — name + shared RarityBadge (the site's
-                one rarity-colour component) + count, flanked by hairlines. */}
-            <div className="mb-5 flex items-center gap-3 sm:gap-4">
-              <span aria-hidden className="h-px flex-1 bg-[var(--p-hair)]" />
-              <div className="flex shrink-0 items-center gap-2">
-                <h2 className="text-h4">{g.name}</h2>
-                <RarityBadge rarity={g.rarity} size="sm" />
-                <span className="text-meta tabular-nums">{g.cards.length}</span>
+        {/* ── Card sections — dense compact grid; "all" stacks every rarity, else
+            just the chosen one. Grid drops one column at lg/xl to make room for
+            the left rail. ── */}
+        <div className="space-y-8">
+          {displayGroups.map((g) => (
+            <section key={g.rarity}>
+              {/* centered section heading — name + shared RarityBadge (the site's
+                  one rarity-colour component) + count, flanked by hairlines. */}
+              <div className="mb-5 flex items-center gap-3 sm:gap-4">
+                <span aria-hidden className="h-px flex-1 bg-[var(--p-hair)]" />
+                <div className="flex shrink-0 items-center gap-2">
+                  <h2 className="text-h4">{g.name}</h2>
+                  <RarityBadge rarity={g.rarity} size="sm" />
+                  <span className="text-meta tabular-nums">{g.cards.length}</span>
+                </div>
+                <span aria-hidden className="h-px flex-1 bg-[var(--p-hair)]" />
               </div>
-              <span aria-hidden className="h-px flex-1 bg-[var(--p-hair)]" />
-            </div>
-            <div className="grid grid-cols-3 gap-x-2.5 gap-y-4 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
-              {g.cards.map((c) => (
-                <SetCardTile key={c.id} card={c} changePeriod={changePeriod} />
-              ))}
-            </div>
-          </section>
-        ))}
+              <div className="grid grid-cols-3 gap-x-2.5 gap-y-4 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+                {g.cards.map((c) => (
+                  <SetCardTile key={c.id} card={c} changePeriod={changePeriod} />
+                ))}
+              </div>
+            </section>
+          ))}
 
-        {displayGroups.length === 0 && (
-          <div className="py-16 text-center text-sm text-muted-foreground">
-            {t(lang, "noData")}
-          </div>
-        )}
+          {displayGroups.length === 0 && (
+            <div className="py-16 text-center text-sm text-muted-foreground">
+              {t(lang, "noData")}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

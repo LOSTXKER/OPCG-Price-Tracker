@@ -41,7 +41,7 @@ export function CardDetailRelated({ relatedCards, set, lang }: CardDetailRelated
                   href={`/cards/${rc.cardCode}`}
                   className="group flex flex-col"
                 >
-                  <div className="surface-1 hairline ease-chrome relative aspect-[63/88] w-full overflow-hidden rounded-lg group-hover:ring-2 group-hover:ring-primary/40">
+                  <div className="surface-1 hairline ease-chrome relative aspect-[63/88] w-full overflow-hidden rounded-lg group-lift">
                     {rc.imageUrl ? (
                       <Image
                         src={rc.imageUrl}

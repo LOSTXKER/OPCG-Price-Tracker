@@ -182,7 +182,7 @@ function SetCard({ set }: { set: SetWithCard }) {
       aria-label={displayName}
       className="group flex flex-col gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <div className="surface-1 ease-chrome relative aspect-[3/4] w-full overflow-hidden rounded-lg shadow-[var(--panel-shadow)] group-hover:ring-2 group-hover:ring-primary/40">
+      <div className="surface-1 ease-chrome relative aspect-[3/4] w-full overflow-hidden rounded-lg shadow-[var(--panel-shadow)] group-lift">
         {imageUrl ? (
           <Image
             src={imageUrl}

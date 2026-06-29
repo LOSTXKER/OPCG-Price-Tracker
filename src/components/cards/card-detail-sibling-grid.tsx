@@ -70,7 +70,7 @@ export function SiblingGrid({
             <div
               className={cn(
                 "surface-1 hairline ease-chrome relative aspect-[63/88] w-full overflow-hidden rounded-lg",
-                isCurrent ? "ring-2 ring-primary/70" : "group-hover:ring-2 group-hover:ring-primary/40",
+                isCurrent ? "ring-2 ring-primary/70" : "group-lift",
               )}
             >
               {s.imageUrl ? (
