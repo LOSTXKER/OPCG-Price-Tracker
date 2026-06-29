@@ -79,11 +79,13 @@ function FilterSelect({
   value,
   onChange,
   options,
+  fullWidth,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   options: FilterOption[];
+  fullWidth?: boolean;
 }) {
   // Render the selected option's label ourselves — base-ui SelectValue shows the
   // raw value ("all") rather than the option label, so map it here.
@@ -92,7 +94,10 @@ function FilterSelect({
     <Select value={value} onValueChange={(v) => onChange(v ?? "all")}>
       <SelectTrigger
         size="sm"
-        className="shrink-0 gap-1.5 text-xs font-medium"
+        className={cn(
+          "gap-1.5 text-xs font-medium",
+          fullWidth ? "w-full" : "shrink-0",
+        )}
       >
         <span className="text-muted-foreground">{label}</span>
         <span className="text-foreground">{current}</span>
@@ -234,108 +239,129 @@ export function SetDetailContent({
     count: g.cards.length,
   }));
 
-  return (
-    <div className="space-y-6">
-      {/* ── Toolbar (full width) — type/colour FILTERS (left) + period (right).
-          Kept separate from the rarity nav so "filter" and "browse" read as two
-          distinct jobs. ── */}
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-2">
-          {availableTypes.length > 1 && (
-            <FilterSelect
-              label={t(lang, "type")}
-              value={activeType}
-              onChange={setActiveType}
-              options={typeOptions}
-            />
+  const rarityButton = (rt: { value: string; count: number }, variant: "rail" | "chip") => {
+    const active = activeRarity === rt.value;
+    return (
+      <button
+        key={rt.value}
+        type="button"
+        onClick={() => scrollToRarity(rt.value)}
+        aria-current={active ? "true" : undefined}
+        className={cn(
+          "ease-chrome flex items-center gap-1.5 transition-colors",
+          variant === "rail"
+            ? cn(
+                "w-full justify-between gap-2 rounded-lg px-2 py-1.5",
+                active ? "bg-[var(--p-honey-soft)]" : "hover:bg-muted",
+              )
+            : cn(
+                "shrink-0 rounded-full px-2.5 py-1.5",
+                active ? "bg-[var(--p-honey-soft)]" : "bg-muted/60",
+              ),
+        )}
+      >
+        <RarityBadge rarity={rt.value} size="sm" />
+        <span
+          className={cn(
+            "shrink-0 text-xs tabular-nums",
+            active ? "text-primary" : "text-muted-foreground/50",
           )}
-          {availableColors.length > 1 && (
-            <FilterSelect
-              label={t(lang, "color")}
-              value={activeColor}
-              onChange={setActiveColor}
-              options={colorOptions}
-            />
-          )}
-        </div>
-        <SegmentedControl
-          size="sm"
-          variant="pill"
-          leadingIcon={TrendingUpDown}
-          options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
-          value={changePeriod}
-          onChange={setChangePeriod}
-          ariaLabel={t(lang, "change")}
-        />
-      </div>
+        >
+          {rt.count}
+        </span>
+      </button>
+    );
+  };
 
-      {/* ── 2-column: rarity JUMP-NAV (left, sticky) + the card wall (right). ── */}
-      <div className="lg:flex lg:gap-8">
-        {/* LEFT rail (desktop) — a table of contents: click a rarity to scroll to
-            its section; scrollspy highlights whichever section you're viewing. */}
-        <aside aria-label={t(lang, "rarity")} className="hidden w-44 shrink-0 lg:block">
-          <nav className="no-sb sticky top-32 max-h-[calc(100vh-9rem)] space-y-0.5 overflow-y-auto">
+  return (
+    <div className="lg:flex lg:gap-8">
+      {/* ── LEFT sidebar (desktop) — ALL controls live here (เบส): facet filters
+          + period + the rarity jump-nav. Sticky so it follows the card wall;
+          the right column is then pure cards. ── */}
+      <aside className="hidden w-52 shrink-0 lg:block">
+        <div className="no-sb sticky top-32 max-h-[calc(100vh-9rem)] space-y-6 overflow-y-auto pr-0.5">
+          {/* facet filters + period (stacked, full-width) */}
+          <div className="space-y-2">
+            {availableTypes.length > 1 && (
+              <FilterSelect
+                fullWidth
+                label={t(lang, "type")}
+                value={activeType}
+                onChange={setActiveType}
+                options={typeOptions}
+              />
+            )}
+            {availableColors.length > 1 && (
+              <FilterSelect
+                fullWidth
+                label={t(lang, "color")}
+                value={activeColor}
+                onChange={setActiveColor}
+                options={colorOptions}
+              />
+            )}
+            <SegmentedControl
+              size="sm"
+              variant="pill"
+              fullWidth
+              options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
+              value={changePeriod}
+              onChange={setChangePeriod}
+              ariaLabel={t(lang, "change")}
+            />
+          </div>
+
+          {/* rarity jump-nav (scrollspy highlights the section in view) */}
+          <nav aria-label={t(lang, "rarity")} className="space-y-0.5">
             <p className="text-eyebrow mb-2 flex items-center justify-between px-2">
               <span>{t(lang, "rarity")}</span>
               <span className="tabular-nums text-muted-foreground/50">{totalVisible}</span>
             </p>
-            {rarityNav.map((rt) => {
-              const active = activeRarity === rt.value;
-              return (
-                <button
-                  key={rt.value}
-                  type="button"
-                  onClick={() => scrollToRarity(rt.value)}
-                  aria-current={active ? "true" : undefined}
-                  className={cn(
-                    "ease-chrome flex w-full items-center justify-between gap-2 rounded-lg px-2 py-1.5 transition-colors",
-                    active
-                      ? "bg-[var(--p-honey-soft)]"
-                      : "hover:bg-muted",
-                  )}
-                >
-                  <RarityBadge rarity={rt.value} size="sm" />
-                  <span
-                    className={cn(
-                      "shrink-0 text-xs tabular-nums",
-                      active ? "text-primary" : "text-muted-foreground/50",
-                    )}
-                  >
-                    {rt.count}
-                  </span>
-                </button>
-              );
-            })}
+            {rarityNav.map((rt) => rarityButton(rt, "rail"))}
           </nav>
-        </aside>
+        </div>
+      </aside>
 
-        {/* RIGHT — mobile rarity jump-chips + the card sections (anchors). */}
-        <div ref={sectionsRef} className="min-w-0 flex-1">
-          {/* mobile/tablet jump-chips (desktop uses the left rail). */}
-          <div className="no-sb -mt-1 mb-6 flex items-center gap-1.5 overflow-x-auto lg:hidden">
-            {rarityNav.map((rt) => {
-              const active = activeRarity === rt.value;
-              return (
-                <button
-                  key={rt.value}
-                  type="button"
-                  onClick={() => scrollToRarity(rt.value)}
-                  aria-current={active ? "true" : undefined}
-                  className={cn(
-                    "ease-chrome flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1.5 transition-colors",
-                    active ? "bg-[var(--p-honey-soft)]" : "bg-muted/60",
-                  )}
-                >
-                  <RarityBadge rarity={rt.value} size="sm" />
-                  <span className="text-xs tabular-nums text-muted-foreground/60">
-                    {rt.count}
-                  </span>
-                </button>
-              );
-            })}
+      {/* ── RIGHT (desktop) / full width (mobile) ── */}
+      <div ref={sectionsRef} className="min-w-0 flex-1">
+        {/* MOBILE/TABLET controls (desktop uses the sidebar): filter toolbar +
+            period, then rarity jump-chips. */}
+        <div className="mb-6 space-y-3 lg:hidden">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-2">
+              {availableTypes.length > 1 && (
+                <FilterSelect
+                  label={t(lang, "type")}
+                  value={activeType}
+                  onChange={setActiveType}
+                  options={typeOptions}
+                />
+              )}
+              {availableColors.length > 1 && (
+                <FilterSelect
+                  label={t(lang, "color")}
+                  value={activeColor}
+                  onChange={setActiveColor}
+                  options={colorOptions}
+                />
+              )}
+            </div>
+            <SegmentedControl
+              size="sm"
+              variant="pill"
+              leadingIcon={TrendingUpDown}
+              options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
+              value={changePeriod}
+              onChange={setChangePeriod}
+              ariaLabel={t(lang, "change")}
+            />
           </div>
+          <div className="no-sb flex items-center gap-1.5 overflow-x-auto">
+            {rarityNav.map((rt) => rarityButton(rt, "chip"))}
+          </div>
+        </div>
 
-          <div className="space-y-8">
+        <div className="space-y-8">
             {displayGroups.map((g, idx) => (
               <section
                 key={g.rarity}
@@ -374,7 +400,6 @@ export function SetDetailContent({
                 {t(lang, "noData")}
               </div>
             )}
-          </div>
         </div>
       </div>
     </div>
