@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef, type ReactNode } from "react";
-import { TrendingUpDown } from "lucide-react";
 
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import {
@@ -341,39 +340,36 @@ export function SetDetailContent({
 
       {/* ── RIGHT (desktop) / full width (mobile) ── */}
       <div ref={sectionsRef} className="min-w-0 flex-1">
-        {/* MOBILE/TABLET controls (desktop uses the sidebar): filter toolbar +
-            period, then rarity jump-chips. */}
+        {/* MOBILE/TABLET controls (desktop uses the sidebar): filters + period
+            on one wrapping row, then the rarity jump-chips. */}
         <div className="mb-6 space-y-3 lg:hidden">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex min-w-0 items-center gap-2">
-              {availableTypes.length > 1 && (
-                <FilterSelect
-                  label={t(lang, "type")}
-                  value={activeType}
-                  onChange={setActiveType}
-                  options={typeOptions}
-                />
-              )}
-              {availableColors.length > 1 && (
-                <FilterSelect
-                  label={t(lang, "color")}
-                  value={activeColor}
-                  onChange={setActiveColor}
-                  options={colorOptions}
-                />
-              )}
-            </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {availableTypes.length > 1 && (
+              <FilterSelect
+                label={t(lang, "type")}
+                value={activeType}
+                onChange={setActiveType}
+                options={typeOptions}
+              />
+            )}
+            {availableColors.length > 1 && (
+              <FilterSelect
+                label={t(lang, "color")}
+                value={activeColor}
+                onChange={setActiveColor}
+                options={colorOptions}
+              />
+            )}
             <SegmentedControl
               size="sm"
               variant="pill"
-              leadingIcon={TrendingUpDown}
               options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
               value={changePeriod}
               onChange={setChangePeriod}
-              ariaLabel={t(lang, "change")}
+              ariaLabel={t(lang, "pricePeriod")}
             />
           </div>
-          <div className="no-sb flex items-center gap-1.5 overflow-x-auto">
+          <div className="no-sb -mx-4 flex items-center gap-1.5 overflow-x-auto px-4">
             {rarityNav.map((rt) => rarityButton(rt, "chip"))}
           </div>
         </div>
