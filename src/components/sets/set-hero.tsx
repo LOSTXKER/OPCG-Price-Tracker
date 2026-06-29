@@ -23,7 +23,6 @@ export function SetHero({
   type,
   releaseDate,
   boxImage,
-  avgPrice,
   cardCount,
   topCard,
   rarityGroups,
@@ -37,7 +36,6 @@ export function SetHero({
   type: string;
   releaseDate: Date | null;
   boxImage: string | null;
-  avgPrice: number;
   cardCount: number;
   topCard: SetDetailTopCard | null;
   rarityGroups: RarityGroup[];
@@ -90,14 +88,10 @@ export function SetHero({
           {name}
         </p>
 
-        {/* calm stat line — count · avg · top card */}
-        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2.5">
+        {/* calm stat line — count · top card (เบส: avg price dropped) */}
+        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2.5">
           <Stat label={t(lang, "card")}>
             <span className="tnum">{cardCount.toLocaleString()}</span>
-          </Stat>
-          <span aria-hidden className="h-4 w-px bg-[var(--p-hair)]" />
-          <Stat label={t(lang, "avgPrice")}>
-            <Price jpy={avgPrice} className="tnum" />
           </Stat>
 
           {topCard && (
@@ -138,7 +132,7 @@ export function SetHero({
         </div>
 
         {hasDropRates && (
-          <div className="mt-5">
+          <div className="mt-4">
             <DropRateDialog
               groups={rarityGroups}
               packsPerBox={packsPerBox}

@@ -71,7 +71,6 @@ export default async function SetDetailPage(props: {
             type={data.setType}
             releaseDate={set.releaseDate}
             boxImage={data.boxImage}
-            avgPrice={data.avgPrice}
             cardCount={data.cardCount}
             topCard={data.topCard}
             rarityGroups={data.rarityGroups}
