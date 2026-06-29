@@ -182,7 +182,7 @@ export default function BuyerOrderDetailPage() {
         <div className="flex-1">
           <Link
             href={`/marketplace/${order.listing.id}`}
-            className="font-semibold hover:underline"
+            className="text-h4 hover:underline"
           >
             {cardName}
           </Link>
@@ -191,7 +191,7 @@ export default function BuyerOrderDetailPage() {
             {order.listing.condition}
           </p>
           <div className="mt-2">
-            <span className="text-xl font-bold">
+            <span className="text-lg font-bold">
               ฿{order.priceThb.toLocaleString()}
             </span>
             <span className="ml-2 text-sm text-muted-foreground">

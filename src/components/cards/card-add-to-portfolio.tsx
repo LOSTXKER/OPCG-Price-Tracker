@@ -127,11 +127,11 @@ export function CardAddToPortfolio({
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="mb-1 block text-meta">{t(lang, "quantity")}</label>
+                  <label className="mb-1 block text-label">{t(lang, "quantity")}</label>
                   <Input type="number" min={1} value={quantity} onChange={(e) => setQuantity(e.target.value)} />
                 </div>
                 <div>
-                  <label className="mb-1 block text-meta">{t(lang, "purchasePrice")}</label>
+                  <label className="mb-1 block text-label">{t(lang, "purchasePrice")}</label>
                   <Input type="number" min={0} placeholder={t(lang, "unspecified")} value={price} onChange={(e) => setPrice(e.target.value)} />
                 </div>
               </div>

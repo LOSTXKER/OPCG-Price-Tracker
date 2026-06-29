@@ -335,7 +335,7 @@ export default async function CardTypesPage() {
                       </div>
                     </div>
                   </div>
-                  <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{type.role}</p>
+                  <p className="mt-3 text-body-sm leading-relaxed text-muted-foreground">{type.role}</p>
                   <ul className="mt-2.5 space-y-1">
                     {type.rules.map((rule, i) => (
                       <li key={i} className="flex items-start gap-2 text-meta">
@@ -369,12 +369,12 @@ export default async function CardTypesPage() {
 
       {/* ── 3. Card Anatomy Diagram ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideTypeAnatomyHeading")}</h2>
+        <h2 className="text-h2">{t(lang, "guideTypeAnatomyHeading")}</h2>
         <p className="text-sm text-muted-foreground">
           {t(lang, "guideTypeAnatomyDesc")}
         </p>
         <Surface variant="outline" className="overflow-hidden">
-          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-xs font-medium text-muted-foreground">
+          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-eyebrow">
             {t(lang, "guideTypeAnatomyCaption")}
           </div>
           <div className="relative mx-auto max-w-[280px] p-6">
@@ -444,7 +444,7 @@ export default async function CardTypesPage() {
 
       {/* ── 4. Stats Reference ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideTypeStatsHeading")}</h2>
+        <h2 className="text-h2">{t(lang, "guideTypeStatsHeading")}</h2>
         <p className="text-sm text-muted-foreground">
           {t(lang, "guideTypeStatsDesc")}
         </p>
@@ -456,7 +456,7 @@ export default async function CardTypesPage() {
               </div>
               <div className="min-w-0">
                 <p className="text-sm font-semibold">{stat.name}</p>
-                <p className="text-xs leading-relaxed text-muted-foreground">{stat.desc}</p>
+                <p className="text-body-sm leading-relaxed text-muted-foreground">{stat.desc}</p>
                 <p className="mt-0.5 text-meta text-muted-foreground/60">
                   {stat.types}
                 </p>
@@ -468,7 +468,7 @@ export default async function CardTypesPage() {
 
       {/* ── 5. Common Keywords ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideTypeKeywordsHeading")}</h2>
+        <h2 className="text-h2">{t(lang, "guideTypeKeywordsHeading")}</h2>
         <p className="text-sm text-muted-foreground">
           {t(lang, "guideTypeKeywordsDesc")}
         </p>
@@ -478,7 +478,7 @@ export default async function CardTypesPage() {
               <span className={`shrink-0 rounded-md px-2 py-1 text-xs font-bold ${kw.color}`}>
                 {kw.keyword}
               </span>
-              <p className="text-xs leading-relaxed text-muted-foreground">
+              <p className="text-body-sm leading-relaxed text-muted-foreground">
                 {kw.desc}
               </p>
             </Surface>
@@ -503,7 +503,7 @@ export default async function CardTypesPage() {
 
       {/* ── 7. Sources ── */}
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold">{t(lang, "guideTypeSourcesHeading")}</h2>
+        <h2 className="text-h2">{t(lang, "guideTypeSourcesHeading")}</h2>
         <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
           {[
             {

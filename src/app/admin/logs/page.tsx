@@ -175,7 +175,7 @@ export default function AdminLogsPage() {
         renderExpandedRow={(log) => {
           if (!log.details) return null;
           return (
-            <pre className="max-h-60 overflow-auto rounded-lg bg-muted/30 p-3 text-xs">
+            <pre className="max-h-60 overflow-auto rounded-lg bg-muted/30 p-3 text-code">
               {JSON.stringify(log.details, null, 2)}
             </pre>
           );

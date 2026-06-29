@@ -269,7 +269,7 @@ export function HomeMarketOverview({
                   aria-label={t(lang, "filter")}
                   className="ease-chrome absolute right-0 top-full z-40 mt-2 w-[min(520px,calc(100vw-2rem))] origin-top-right rounded-xl border border-[var(--p-hair)] bg-popover p-4 shadow-xl"
                 >
-                  <p className="text-h5 mb-3">{t(lang, "filter")}</p>
+                  <p className="text-h4 mb-3">{t(lang, "filter")}</p>
                   {filterBody}
                 </div>
               )}

@@ -739,12 +739,12 @@ export function CardDetail({
 
       {/* TABS — sticky section nav under the global header. Underline tabs with a
           single sliding indicator that animates between tabs on click/scrollspy.
-          Frosted bg + bottom hairline; sticks below the mobile header (top-14)
+          Solid bg + bottom hairline; sticks below the mobile header (top-14)
           and below the desktop ticker + header (top-[6.25rem]). */}
       <nav
         ref={navRef}
         aria-label={t(displayLang, "cardSectionsNav")}
-        className="frost ease-chrome sticky top-14 z-30 mt-6 shadow-[inset_0_-1px_0_0_var(--p-hair)] md:top-[6.25rem]"
+        className="ease-chrome sticky top-14 z-30 mt-6 bg-background shadow-[inset_0_-1px_0_0_var(--p-hair)] md:top-[6.25rem]"
       >
         <div className="no-sb relative flex gap-5 overflow-x-auto">
           {TABS.map((tab) => (

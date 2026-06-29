@@ -171,7 +171,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         )}
 
         <div
-          className="prose prose-sm prose-neutral dark:prose-invert max-w-none overflow-x-auto break-words [overflow-wrap:anywhere] [&_img]:max-w-full [&_table]:block [&_table]:overflow-x-auto [&_pre]:overflow-x-auto"
+          className="prose prose-neutral dark:prose-invert max-w-none overflow-x-auto break-words [overflow-wrap:anywhere] [&_img]:max-w-full [&_table]:block [&_table]:overflow-x-auto [&_pre]:overflow-x-auto"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </article>

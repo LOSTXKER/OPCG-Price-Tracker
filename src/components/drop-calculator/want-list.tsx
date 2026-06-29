@@ -79,7 +79,7 @@ export function WantList({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-xs font-medium leading-tight">{name}</p>
+                    <p className="truncate text-body-sm leading-tight">{name}</p>
                     <span className="text-meta">
                       {card.rarity}
                       {card.latestPriceJpy != null && card.latestPriceJpy > 0 && <> · <Price jpy={card.latestPriceJpy} /></>}
@@ -122,12 +122,12 @@ export function WantList({
             </div>
             <dl className="space-y-1 text-xs">
               <div className="flex items-center justify-between">
-                <dt className="text-muted-foreground">{t(lang, "totalSelectedValue")}</dt>
+                <dt className="text-meta">{t(lang, "totalSelectedValue")}</dt>
                 <dd className="font-price font-bold tabular-nums"><Price jpy={totalWantValue} /></dd>
               </div>
               {purchaseCost != null && (
                 <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">{t(lang, "purchaseCost")} ({quantity} {t(lang, UNIT_I18N_KEYS[unit])})</dt>
+                  <dt className="text-meta">{t(lang, "purchaseCost")} ({quantity} {t(lang, UNIT_I18N_KEYS[unit])})</dt>
                   <dd className="font-price font-bold tabular-nums"><Price jpy={purchaseCost} /></dd>
                 </div>
               )}

@@ -66,7 +66,7 @@ export function RaffleCard({
                   <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-bold text-muted-foreground">ปิดใช้งาน</span>
                 )}
               </div>
-              <h3 className="mt-1 text-sm font-semibold">{r.title}</h3>
+              <h3 className="mt-1 text-h4">{r.title}</h3>
               {r.description && <p className="text-meta">{r.description}</p>}
             </div>
             <div className="shrink-0 text-right">

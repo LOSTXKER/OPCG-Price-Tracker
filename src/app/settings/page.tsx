@@ -31,7 +31,7 @@ export default function SettingsIndexPage() {
     <>
       {/* ── Mobile menu ── */}
       <div className="space-y-7 md:hidden">
-        <h1 className="text-h2">{t(lang, "profileSettings")}</h1>
+        <h1 className="text-h1">{t(lang, "profileSettings")}</h1>
 
         {/* Identity row — compact, single tap target */}
         <Link

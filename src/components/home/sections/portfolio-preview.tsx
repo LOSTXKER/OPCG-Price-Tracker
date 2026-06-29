@@ -150,7 +150,7 @@ export function HomePortfolioPreview() {
               data.unrealizedPnl >= 0 ? "text-price-up" : "text-price-down",
             )}
           >
-            {data.unrealizedPnl >= 0 ? "▲+" : "▼"}
+            {data.unrealizedPnl >= 0 ? "+" : ""}
             {formatPct(data.unrealizedPnlPct)}%
           </span>
         )}

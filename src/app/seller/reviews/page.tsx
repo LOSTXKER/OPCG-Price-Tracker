@@ -132,7 +132,7 @@ export default function SellerReviewsPage() {
               <div className="mt-1 flex justify-center">
                 <Stars count={Math.round(data.avgRating ?? 0)} />
               </div>
-              <p className="mt-1 text-meta text-muted-foreground">
+              <p className="mt-1 text-meta">
                 {t(lang, "reviewsCount").replace("{n}", String(data.totalReviews))}
               </p>
             </div>

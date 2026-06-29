@@ -58,7 +58,7 @@ export function HoneyCharts({ dailyData, typeCounts }: HoneyChartsProps) {
     <div className="grid gap-4 lg:grid-cols-5">
       <Surface variant="outline" padding="lg" className="lg:col-span-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-foreground">เทรนด์ Honey รายวัน</h3>
+          <h3 className="text-h4">เทรนด์ Honey รายวัน</h3>
           <div className="flex gap-1 rounded-lg bg-muted/50 p-0.5">
             {PERIOD_OPTIONS.map((opt) => (
               <button
@@ -154,7 +154,7 @@ export function HoneyCharts({ dailyData, typeCounts }: HoneyChartsProps) {
       </Surface>
 
       <Surface variant="outline" padding="lg" className="lg:col-span-2">
-        <h3 className="text-sm font-semibold text-foreground">ธุรกรรมตามประเภท</h3>
+        <h3 className="text-h4">ธุรกรรมตามประเภท</h3>
         <div className="mt-4 h-56">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart

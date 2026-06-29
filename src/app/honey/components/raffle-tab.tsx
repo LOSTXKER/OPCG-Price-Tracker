@@ -313,7 +313,7 @@ function MachineCard({
       <div className="flex flex-1 flex-col gap-3 p-4">
         <div>
           <h3
-            className="text-sm font-semibold leading-snug"
+            className="text-h5 leading-snug"
             style={accent ? { color: accent } : undefined}
           >
             {localizedTitle(machine, lang)}

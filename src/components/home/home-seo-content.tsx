@@ -124,10 +124,10 @@ export function HomeSeoContent() {
                 <f.icon className="size-5" />
               </div>
               <div>
-                <p className="ease-chrome text-sm font-semibold group-hover:text-foreground">
+                <p className="ease-chrome text-h5 group-hover:text-foreground">
                   {f.title}
                 </p>
-                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+                <p className="mt-1.5 text-meta leading-relaxed">
                   {f.description}
                 </p>
               </div>
@@ -139,7 +139,7 @@ export function HomeSeoContent() {
       {/* Price explainer */}
       <section className="surface-1 hairline space-y-4 rounded-xl p-6">
         <SectionHead title={t(lang, "seoPriceExplainTitle")} />
-        <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+        <div className="space-y-3 text-body-sm leading-relaxed text-muted-foreground">
           <p>
             {t(lang, "seoPriceP1a")}{" "}
             <Link

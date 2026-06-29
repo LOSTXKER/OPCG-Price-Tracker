@@ -114,7 +114,7 @@ export function CardEffectText({
   return (
     <div
       className={cn(
-        "break-words text-sm leading-relaxed",
+        "break-words text-body-sm leading-relaxed",
         className,
       )}
     >

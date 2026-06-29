@@ -330,7 +330,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">{getCardName(lang, card)}</p>
+                      <p className="truncate text-h5">{getCardName(lang, card)}</p>
                       <div className="flex items-center gap-1.5 text-meta">
                         {card.set?.code && <span className="font-mono">{card.set.code}</span>}
                         <RarityBadge rarity={card.rarity} size="sm" />

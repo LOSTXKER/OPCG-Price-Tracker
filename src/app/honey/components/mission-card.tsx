@@ -174,7 +174,7 @@ export function MissionCard({
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className={cn("text-xs font-semibold", claimed && "text-muted-foreground line-through")}>
+        <p className={cn("text-h5", claimed && "text-muted-foreground line-through")}>
           {labelText}
         </p>
         <p className="mt-0.5 text-meta line-clamp-2">

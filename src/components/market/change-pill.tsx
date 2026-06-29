@@ -14,10 +14,8 @@ export function ChangePill({
   value?: number | null
   className?: string
 }) {
-  const arrow = value != null && value !== 0 ? (value > 0 ? "▲" : "▼") : ""
   return (
     <span className={cn("font-price text-xs font-medium tabular-nums", changeToneClass(value), className)}>
-      {arrow && <span aria-hidden>{arrow}</span>}
       {formatSignedPct(value)}
     </span>
   )

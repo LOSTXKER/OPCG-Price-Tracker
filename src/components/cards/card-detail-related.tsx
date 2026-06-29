@@ -22,7 +22,7 @@ export function CardDetailRelated({ relatedCards, set, lang }: CardDetailRelated
       {relatedCards.length > 0 && (
         <>
           <div className="mb-3 flex items-center justify-between gap-2">
-            <h2 className="min-w-0 break-words text-h4">
+            <h2 className="min-w-0 break-words text-h3">
               {t(lang, "otherCardsFrom")} {setDisplayName}
             </h2>
             <Link

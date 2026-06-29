@@ -313,7 +313,7 @@ export default async function RaritiesPage() {
 
       {/* ── 2. Rarity Tiers ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideRarityTiersHeading")}</h2>
+        <h2 className="text-h2">{t(lang, "guideRarityTiersHeading")}</h2>
         <p className="text-sm text-muted-foreground">
           {t(lang, "guideRarityTiersIntro")}
         </p>
@@ -337,7 +337,7 @@ export default async function RaritiesPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-baseline gap-2">
-                      <h3 className="text-base font-bold">{rarity.name}</h3>
+                      <h3 className="text-h4">{rarity.name}</h3>
                       <span className="text-meta">{rarity.perSet}</span>
                     </div>
                     <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
@@ -353,7 +353,7 @@ export default async function RaritiesPage() {
                 </div>
                 {examples.length > 0 && (
                   <div className="border-t px-5 py-3" style={{ borderColor: `${rarity.color}15` }}>
-                    <p className="mb-2 text-xs font-medium text-muted-foreground">{t(lang, "guideRarityExampleCards")}</p>
+                    <p className="mb-2 text-eyebrow">{t(lang, "guideRarityExampleCards")}</p>
                     <div className="flex gap-2">
                       {examples.map((card) => (
                         <Link key={card.cardCode} href={`/cards/${card.cardCode}`} className="group shrink-0">
@@ -388,10 +388,10 @@ export default async function RaritiesPage() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline gap-1.5">
-                  <h3 className="text-sm font-semibold">{rarity.name}</h3>
+                  <h3 className="text-h4">{rarity.name}</h3>
                   <span className="text-meta">{rarity.perSet}</span>
                 </div>
-                <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+                <p className="mt-0.5 text-body-sm leading-relaxed text-muted-foreground">
                   {rarity.description}
                 </p>
                 <p className="mt-1 font-mono text-xs font-medium" style={{ color: rarity.color }}>
@@ -405,7 +405,7 @@ export default async function RaritiesPage() {
 
       {/* ── 3. Parallel Art ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideRarityParallelHeading")}</h2>
+        <h2 className="text-h2">{t(lang, "guideRarityParallelHeading")}</h2>
         <p className="text-sm leading-relaxed text-muted-foreground">
           {t(lang, "guideRarityParallelP1a")}{" "}
           <strong className="text-foreground">Parallel</strong>
@@ -416,13 +416,13 @@ export default async function RaritiesPage() {
 
         {/* Price comparison example */}
         <Surface variant="outline" className="overflow-hidden">
-          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-xs font-medium text-muted-foreground">
+          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-eyebrow">
             {t(lang, "guideRarityCompareTitle")}
           </div>
           <div className="grid grid-cols-1 divide-y divide-[var(--p-hair)] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {buildParallelComparison(lang).map((item) => (
               <div key={item.label} className="p-4 text-center">
-                <p className="text-xs font-medium text-muted-foreground">{item.label}</p>
+                <p className="text-eyebrow">{item.label}</p>
                 <p className="mt-1 font-mono text-lg font-bold" style={{ color: item.color }}>
                   {item.price}
                 </p>
@@ -452,7 +452,7 @@ export default async function RaritiesPage() {
         {/* Parallel example cards */}
         {parallels.length > 0 && (
           <div>
-            <p className="mb-2 text-xs font-medium text-muted-foreground">{t(lang, "guideRarityParallelExamples")}</p>
+            <p className="mb-2 text-eyebrow">{t(lang, "guideRarityParallelExamples")}</p>
             <div className="flex gap-2 overflow-x-auto pb-1">
               {parallels.map((card) => (
                 <Link key={card.cardCode} href={`/cards/${card.cardCode}`} className="group shrink-0">
@@ -473,7 +473,7 @@ export default async function RaritiesPage() {
 
       {/* ── 4. SP Reprint ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideRaritySpReprintHeading")}</h2>
+        <h2 className="text-h2">{t(lang, "guideRaritySpReprintHeading")}</h2>
         <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
           <p>
             <strong className="text-foreground">SP (Special)</strong>
@@ -615,7 +615,7 @@ export default async function RaritiesPage() {
 
       {/* ── 6. Price Factors ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideRarityFactorsHeading")}</h2>
+        <h2 className="text-h2">{t(lang, "guideRarityFactorsHeading")}</h2>
         <p className="text-sm text-muted-foreground">
           {t(lang, "guideRarityFactorsIntro")}
         </p>
@@ -626,7 +626,7 @@ export default async function RaritiesPage() {
                 <factor.icon className={`size-4.5 ${factor.iconColor}`} />
               </div>
               <h3 className="mt-3 text-sm font-semibold">{factor.title}</h3>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              <p className="mt-1 text-body-sm leading-relaxed text-muted-foreground">
                 {factor.desc}
               </p>
             </Surface>
@@ -636,7 +636,7 @@ export default async function RaritiesPage() {
 
       {/* ── 7. Sources ── */}
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold">{t(lang, "guideRaritySourcesHeading")}</h2>
+        <h2 className="text-h2">{t(lang, "guideRaritySourcesHeading")}</h2>
         <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
           {buildSources(lang).map((src) => (
             <a

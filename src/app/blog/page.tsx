@@ -101,10 +101,10 @@ export default async function BlogPage() {
                   <h2 className="break-words text-h3 leading-snug transition-colors group-hover:text-primary">
                     {post.title}
                   </h2>
-                  <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+                  <p className="line-clamp-2 text-body-sm leading-relaxed text-muted-foreground">
                     {post.excerpt}
                   </p>
-                  <div className="flex items-center gap-3 pt-1 text-meta text-muted-foreground/60">
+                  <div className="flex items-center gap-3 pt-1 text-meta">
                     {post.publishedAt && (
                       <span className="inline-flex items-center gap-1">
                         <Calendar className="size-3" />

@@ -164,7 +164,7 @@ export function SellerShell({ children }: { children: React.ReactNode }) {
           </Sheet>
           <div className="flex items-center gap-2">
             <Store className="h-4 w-4 text-primary" />
-            <span className="text-sm font-semibold">{t(lang, "sellShellSellerCenter")}</span>
+            <span className="text-sm font-bold">{t(lang, "sellShellSellerCenter")}</span>
           </div>
         </header>
 

@@ -349,13 +349,13 @@ function AchievementStrip({
               <Award className="size-3.5 text-amber-500" />
             )}
           </div>
-          <span className="max-w-[9rem] truncate text-overlay font-semibold text-foreground/85">
+          <span className="max-w-[9rem] truncate text-micro text-foreground/85">
             {a.nameEn ?? a.name}
           </span>
         </div>
       ))}
       {remaining > 0 && (
-        <span className="shrink-0 rounded-full border border-dashed border-[var(--p-hair)] bg-background px-2 py-1 text-overlay font-medium text-muted-foreground">
+        <span className="shrink-0 rounded-full border border-dashed border-[var(--p-hair)] bg-background px-2 py-1 text-micro text-muted-foreground">
           +{remaining}
         </span>
       )}

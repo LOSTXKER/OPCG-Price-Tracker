@@ -278,7 +278,7 @@ export default function SellerListingsPage() {
                       >
                         {listing.card.nameEn ?? listing.card.nameJp}
                       </Link>
-                      <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ${badgeClass}`}>
+                      <span className={`shrink-0 rounded-full px-2 py-0.5 text-micro ${badgeClass}`}>
                         {badgeLabel}
                       </span>
                     </div>
@@ -306,7 +306,7 @@ export default function SellerListingsPage() {
 
                   {/* Price */}
                   <div className="shrink-0 text-right">
-                    <p className="text-sm font-bold">
+                    <p className="text-sm font-semibold font-price">
                       ¥{listing.priceJpy.toLocaleString()}
                     </p>
                     {listing.priceThb != null && (

@@ -86,8 +86,8 @@ export function StatValue({
   return <Amount jpy={stat.jpy} usd={stat.usd} size={size} className={className} />
 }
 
-/** Signed % delta with a ▲/▼ glyph — arrow carries meaning, color reinforces (a11y).
- *  Rounds-to-0.0% renders neutral (no arrow, muted) — never a false up/down. */
+/** Signed % delta — the +/− sign carries direction, color reinforces (a11y).
+ *  Rounds-to-0.0% renders neutral (muted, no sign) — never a false up/down. */
 export function Delta({
   pct,
   lang,
@@ -120,7 +120,6 @@ export function Delta({
       )}
       style={{ color }}
     >
-      {!flat && <span aria-hidden>{up ? "▲" : "▼"}</span>}
       <span className="sr-only">{flat ? "" : up ? t(lang, "deltaUp") : t(lang, "deltaDown")}</span>
       {absFirst && abs && !flat ? (
         <>
@@ -130,7 +129,7 @@ export function Delta({
         </>
       ) : (
         <>
-          {formatPct(Math.abs(pct))}%
+          {!flat && (up ? "+" : "−")}{formatPct(Math.abs(pct))}%
           {abs && !flat && <span className="font-medium opacity-75"> · {up ? "+" : "−"}{abs}</span>}
         </>
       )}

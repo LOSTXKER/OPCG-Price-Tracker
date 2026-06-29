@@ -67,10 +67,10 @@ export function PreviewClient() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--p-hair)] bg-muted/30">
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">#</th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">ชื่อ</th>
-                <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">เป้าหมาย</th>
-                <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">รางวัล</th>
+                <th className="px-4 py-2.5 text-left text-eyebrow">#</th>
+                <th className="px-4 py-2.5 text-left text-eyebrow">ชื่อ</th>
+                <th className="px-4 py-2.5 text-right text-eyebrow">เป้าหมาย</th>
+                <th className="px-4 py-2.5 text-right text-eyebrow">รางวัล</th>
               </tr>
             </thead>
             <tbody>

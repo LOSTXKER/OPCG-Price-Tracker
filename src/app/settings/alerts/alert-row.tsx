@@ -215,7 +215,7 @@ function FeedbackPill({ feedback }: { feedback: FeedbackKind | null }) {
   if (!feedback) return null;
   if (feedback === "error") {
     return (
-      <span className="inline-flex animate-in fade-in zoom-in-95 items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive">
+      <span className="inline-flex animate-in fade-in zoom-in-95 items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-micro text-destructive">
         <CircleAlert className="size-3" />
         {t(lang, "saveFailed")}
       </span>
@@ -226,7 +226,7 @@ function FeedbackPill({ feedback }: { feedback: FeedbackKind | null }) {
       ? t(lang, "alertReactivated")
       : t(lang, "alertUpdated");
   return (
-    <span className="inline-flex animate-in fade-in zoom-in-95 items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+    <span className="inline-flex animate-in fade-in zoom-in-95 items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-micro text-emerald-600 dark:text-emerald-400">
       <CircleCheck className="size-3" />
       {label}
     </span>

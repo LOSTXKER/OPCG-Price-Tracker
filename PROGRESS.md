@@ -1,52 +1,35 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-29 — **frameless ทั้งเว็บ (การ์ดขาว+เงา) + sets/set-detail รื้อใหญ่ + card hover ใหม่** → ทุกอย่าง **pushed ตรง `master`** (เบส override กฎ ⛔ direct-push เอง · ไม่ผ่าน PR) → Vercel auto-deploy · master tip `7956f7f` · build ✓ ~140 routes · test 56/56 · lint 0 err · **ไม่แตะ `src/{components,app}/portfolio` (งานอีกทีม · ค้าง uncommitted)**
+อัปเดตล่าสุด: 2026-06-29 — **Typography full sweep ทั้งเว็บ** (workflow audit 15 โซน → แก้ครบ 91/91 findings · 205 จุด/92 ไฟล์) → branch `ui/sets-redesign` · **verify ครบ: lint 0 err · test 56/56 · build ✓ ~140 routes** · **ยังไม่ commit** (รอเบสเคาะ + กัน portfolio WIP อีกทีม) · ก่อนหน้า: frameless+sets/set-detail รื้อใหญ่ live บน `master` แล้ว (`7956f7f`)
 
-## ✅ เสร็จ session นี้ (ทั้งหมด live บน master)
-**Frameless + elevation ทั้งเว็บ:** light-mode การ์ด = **ขาว `--card:#FFF` + เงานุ่ม** (`--panel-shadow` soft drop shadow) · `.panel`/`Card`/`Surface outline` ใช้ `shadow-[var(--panel-shadow)]` (light เงา · dark = inset hairline token เดียวกัน) · `Select`/`SegmentedControl pill`/ปุ่ม `outline` = filled ไม่มีเส้น · ลองมาแล้ว: flat+border → ครีม `#F7F1E8` (เบจขุ่น) → **ขาว+เงา (เบสเลือก)**
-- **กฎ:** `bg-card` เดี่ยวๆ (ไม่ใช่ kit) = ขาวบนขาวจมหาย → ใส่ `shadow-[var(--panel-shadow)]` หรือ `bg-muted` · container ที่อุ้มการ์ด = `shadow-none` กัน double-shadow · 3 รอบ audit (workflow): frameless + white-shadow + full-site QA 60 หน้า incl hover → แก้ครบ
+## ✅ เสร็จ session นี้ — Typography sweep (ยังไม่ commit)
+ตรวจขนาดฟอนต์ทั้งเว็บด้วย workflow (15 auditor → 91 findings: high 3 · med 43 · low 45) → เบสสั่ง "ทำหมด" → workflow แก้ 15 area พร้อมกัน (agent `dev`, ต่อ area แตะเฉพาะไฟล์ตัวเอง ไม่ race):
+- **3 จุดแดง (อ่านออก/ลำดับชั้น):** marketplace `listing-card:108` ชื่อการ์ดจางกว่าคนขาย → `.text-h5` · blog `[slug]:174` `prose-sm`→`prose` (บทความ 14→16px) · profile `reviews-preview` prose 13→15px + วันที่ `.text-overlay`10→`.text-meta`13px
+- **systemic (role ซ้ำ → token เดียว):** form label → `.text-label` (auth/seller/marketplace/admin/alert ~20 จุด) · item title → `.text-h5` (honey mission/achievement แถวแบน + admin) · badge/pill → `.text-micro` (11px) · section heading → `.text-h3` · guide section `text-xl`→`.text-h2` (6 หน้า ~30 จุด) · price → `.text-price` · column header → `.text-eyebrow` · honey balance `text-2xl`→`.text-h1`
+- **primitives (ลามทั้งเว็บ):** Card/Dialog/Sheet title → `.text-h4` (unify weight 600) · button `text-[0.8rem]`→`text-sm` (arbitrary ตัวเดียวในเว็บ + แก้ inversion) · input → `text-base md:text-sm` (กัน iOS focus-zoom)
+- **4 judgement-call เบสเคาะ "แก้หมดให้จบ" → แก้แล้ว:** `badge.tsx` ป้ายทั้งเว็บ→`.text-micro` (11px) · faq/related หัวข้อ section h2→`.text-h3` (เท่า SectionHead กลาง) · profile reviews heading h5→`.text-h4` (เท่าแท็บเต็ม) · settings ชื่อหน้า h2→`.text-h1` (เท่าหน้าอื่น) — **แก้ครบ 91/91**
 
-**Card hover ใหม่ (เลิก ring/border) — utility กลางใน globals.css:**
-- `.group-lift` — **รูปการ์ดในกริดยกลอย+ซูม 1.04x+เงา** ตอน hover wrapper (`.group`/`.group/card`)
-- `.hover-lift` — การ์ดเต็มใบยกลอย+เงา ตอน hover ตัวเอง · เงา light=อุ่น dark=ดำ · respect reduced-motion
-- ใช้แล้ว: set tiles, sets index, card-detail grids, card-item, grid-card, profile listing
-
-**Navbar:** เต็มจอ · โปร่งตอนบน→ทึบตอน scroll · **glow เดียวกลางบนจอ** (อยู่ที่ `main-chrome` PageContent ทุกหน้า)
-
-**Set-detail (`/sets/[code]`) รื้อใหญ่ (เบส iterate เยอะมาก):**
-- **2 คอลัมน์ (desktop lg+):** ซ้าย = **sidebar sticky** (`top-32`) รวม control ทุกตัว มี label หัวข้อแต่ละอัน: ประเภท / สี (dropdown โชว์แค่ค่า, hideLabel) · ช่วงเปลี่ยนแปลง (24h/7d/30d) · **ความหายาก = jump-nav** · ขวา = การ์ดล้วน
-- **rarity = JUMP-NAV ไม่ใช่ filter** (เบสเปลี่ยนใจ): กด → smooth-scroll ไป section นั้น + **scrollspy** ไฮไลต์ section ที่กำลังดู · type/สี = filter จริง · `scrollToRarity` offset `-132` (พ้น navbar ~101px)
-- **sidebar minimal:** rarity rail = **จุดสีเล็ก + โค้ดตัวอักษร** (ไม่ใช่ RarityBadge pill เต็มสี) — เบาตา
-- **มือถือ:** sidebar ซ่อน · filter toolbar (flex-wrap แพ็คซ้าย) + rarity jump-chips อยู่บน · การ์ดเต็มกว้าง
-- **section heading กลางจอ** (ชื่อ+RarityBadge+count ขนาบเส้น) · **เส้น toolbar เอาออก** (กันเส้นซ้อน)
-- **Hero = แนวนอนทุกจอ** (รูปซ้าย/ข้อมูลขวา) · มือถือการ์ด **self-stretch** (fixed width + object-cover) สูงคลุมถึง drop-rate · sm+ = poster aspect-3/4 จัดกลาง · **เอา "ราคาเฉลี่ย" ออก** (เหลือ การ์ด + มูลค่าสูงสุด)
-- **"ชุดอื่นๆ" rail ล่างสุด** (`OtherSets` + `getOtherSets`, fallback รูปการ์ดถ้าไม่มี box art)
-
-**อื่นๆ:** FAQ (shared `faq-section`) hover bg โค้งตามมุม (overflow-hidden) + เพิ่มระยะ Q/A · **AdSlot** = house-ad (upgrade Pro) → **placeholder "พื้นที่โฆษณา"** (key `adSpace`) · `Select` default `modal={false}` (กัน dropdown scroll-lock navbar) · filter dropdown เปิดใต้ปุ่ม content-width (align=start)
+**0 arbitrary `text-[Xpx]` เหลือในเว็บแล้ว** (button ตัวสุดท้ายแก้แล้ว) · token system adopt เพิ่มอีก ~200 จุด
 
 ## 🎯 โปรเจคใหญ่ (ข้ามหลาย session) — memory `warmkit-redesign-rollout`
-ไล่ redesign **ทุกหน้า** ภาษาดีไซน์เดียวกับ card-detail (warm kit + white+shadow frameless + card hover lift) · ref: `card-detail.tsx` · tokens: `globals.css`
-- **ข้อตกลง:** ทำ **ทีละหน้า** · เบสนำหน้า+layout · งานฉัน = สร้าง **component กลาง** ใช้ร่วม · prefer layout/composition ที่ตาเห็น
-- **card-detail (north-star):** active tab = neutral (`text-foreground`+underline foreground) **ไม่ใช่ honey** · honey สงวนแค่ glow/focus/sort-icon/image-ring
-- **redesign เสร็จ:** home · card-detail · sets index · **set-detail (รื้อหนักรอบนี้)** · chrome (navbar+glow) · card hover (ทั้งเว็บ)
+redesign ทุกหน้าภาษาเดียวกับ card-detail (warm + white+shadow frameless + card hover lift) · ทำทีละหน้า · เบสนำ layout · งานฉัน = component กลาง
+- **redesign เสร็จ (บน master):** home · card-detail · sets index · set-detail · chrome · card hover · **+ typography sweep ทั้งเว็บ (รอ commit)**
 
 ## ⛔ ตัดสินแล้ว (อย่าเสนอซ้ำ)
-1. ภาพ "SAMPLE" การ์ด → ปล่อยไว้ · SetChipRail → ไม่เอา ใช้ dropdown
-2. navbar โปร่งเต็มตอนบน (ไม่มี backdrop) → ทึบตอน scroll
-3. **set-detail: rarity = jump-nav** (กดเลื่อนไป section) ไม่ใช่ filter · type/สี = filter
-4. **hero แนวนอนบนมือถือด้วย** (การ์ดซ้าย) · การ์ด cover ถึง drop-rate
-5. **sidebar minimal** = dot+code ไม่ใช่ pill เต็มสี
-6. frameless เก็บเส้นไว้ที่: overlay (เงาแยก) · `bg-background`/no-fill · input · divider · ตาราง · dark hairline
+1. set-detail: rarity = jump-nav (ไม่ใช่ filter) · sidebar minimal dot+code · hero แนวนอนทุกจอ
+2. navbar โปร่งบนสุด→ทึบตอน scroll · glow เดียวกลางบน
+3. frameless: light=ขาว+เงา · เก็บเส้นไว้แค่ overlay/input/divider/table/dark-hairline
+4. **typography: ป้าย badge ทั้งเว็บ = 11px** (`.text-micro`) · หัวข้อ section ใน-content = 19px (`.text-h3`) ระดับเดียว · ชื่อหน้า = `.text-h1` ทุกหน้า
 
 ## ⚠️ gotchas
-- **dev `.next` cache ค้างบ่อยมาก** (รอบนี้เจอหลายครั้ง): HMR เสิร์ฟโค้ดเก่า → ดู render/วัด layout ผิด · แก้: kill dev → **`mv .next /tmp/...`** (rm ถูก block) → build → restart · **ถ้า layout แปลก ให้ restart clean ก่อนสงสัยโค้ด**
-- **screenshot:** Chrome headless CDP — `/tmp/shot-*.mjs` (light/full/hover/dialog/scrollto/scrollcap) · `qa-shot.mjs` (port param) · `console-check.mjs` · วัด element = `main header` (navbar ก็เป็น `<header>`)
-- **portfolio off-limits:** `src/{components,app}/portfolio/` ห้ามแตะ/commit · (ไฟล์ชื่อ portfolio นอก 2 dir นี้ = ของเรา แก้ได้) · stage ทุกครั้งเช็ก `grep -E "^src/(components|app)/portfolio/"` = 0
-- **push:** เบส override ให้ push ตรง master ได้ (รอบนี้) · จบ commit ด้วย `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`
+- **portfolio off-limits:** `src/{components,app}/portfolio/` ห้ามแตะ/commit (งานอีกทีม uncommitted) · ไฟล์ชื่อ portfolio นอก 2 dir นี้ (เช่น `cards/card-add-to-portfolio`) = ของเรา แก้ได้ · **stage ทุกครั้งเช็ก `git status --short | grep -E "(src/(components|app)/portfolio/)"` แล้วอย่า add path พวกนั้น**
+- **commit typography sweep:** ต้อง stage เฉพาะ 88 ไฟล์ที่แก้ (ห้ามรวม portfolio M ของอีกทีม) — `git add` ทีละ path หรือ pathspec exclude portfolio
+- **dev `.next` cache ค้างบ่อย:** layout แปลก → kill dev → `mv .next /tmp/...` → build → restart ก่อนสงสัยโค้ด
+- **token spec:** `.text-price`=15px/600/mono/tabular (canonical price) · `.font-price`=แค่ tabular utility · heading h1-h5/display ไม่ ship color (เก็บ text-primary/destructive util ไว้) · `.text-meta`/`.text-eyebrow` ship muted เอง
+- workflow output ของ audit+fix: `/tmp/font-fix/*.json` (findings ราย area) · task output ใน `/private/tmp/.../tasks/{wt19gfxbg,wlmov6d0s}.output`
 
 ## ⏭️ NEXT (session หน้า)
-1. เบสเปิด prod (opcg-price-tracker.vercel.app) เช็กรอบสุดท้าย — set-detail / hero มือถือ / sidebar minimal / ชุดอื่นๆ / FAQ / พื้นที่โฆษณา
-2. **เบสเลือกหน้าถัดไป redesign** (ค้าง: /decks /trending /compare /honey /seller /settings /marketplace /drop-calculator) — ใช้ภาษาเดียวกัน (warm + white+shadow + frameless + card hover lift)
-3. ปรับได้ค่าเดียว: โทน/เงาการ์ด (globals.css `--card` / `--panel-shadow`) · ความซูม hover (`.group-lift`)
-4. อนาคต: PSA9/8/BGS data จริง → เปิด tier ใน `MARKET_GRADE_TIERS` (real:true)
+1. **เบสเคาะ commit:** จะ commit typography sweep (88 ไฟล์) เข้า branch นี้ / push master เลยมั้ย — ฉัน stage แบบกัน portfolio ออกให้
+2. **เบสเปิด prod เช็ก visual** จุดที่ขนาดเปลี่ยนจริง: honey balance (ใหญ่ขึ้น 24→30px) · marketplace listing-card · guide headings · blog article (ใหญ่ขึ้น) · form labels (เล็กลง 15→13px) · ป้าย badge (เล็กลง 13→11px) · settings ชื่อหน้า (ใหญ่ขึ้น) — ถ้าจุดไหนไม่ชอบ ปรับ token เดียวจบ
+3. เลือกหน้าถัดไป redesign (ค้าง: /trending /compare /honey /seller /settings /marketplace /drop-calculator)

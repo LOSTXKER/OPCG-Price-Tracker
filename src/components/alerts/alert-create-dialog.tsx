@@ -144,7 +144,7 @@ export function AlertCreateDialog({
               </button>
             )}
             <div className="min-w-0 flex-1">
-              <DialogTitle className="text-h5">{t(lang, "createAlert")}</DialogTitle>
+              <DialogTitle className="text-h4">{t(lang, "createAlert")}</DialogTitle>
               <DialogDescription className="mt-0.5 truncate text-meta">
                 {step === "pick"
                   ? t(lang, "browseCardsToAlert")

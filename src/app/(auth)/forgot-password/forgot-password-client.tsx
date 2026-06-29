@@ -44,7 +44,7 @@ export function ForgotPasswordClient() {
 
         <div className="space-y-2 text-center">
           <h1 className="text-h1">{t(lang, "forgotPasswordTitle")}</h1>
-          <p className="text-sm text-muted-foreground">{t(lang, "forgotPasswordDesc")}</p>
+          <p className="text-body-sm text-muted-foreground">{t(lang, "forgotPasswordDesc")}</p>
         </div>
 
         {sent ? (
@@ -63,7 +63,7 @@ export function ForgotPasswordClient() {
         ) : (
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label htmlFor="reset-email" className="text-sm font-medium">
+              <label htmlFor="reset-email" className="text-label">
                 {t(lang, "emailLabel")}
               </label>
               <div className="relative">

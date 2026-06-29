@@ -239,7 +239,7 @@ export function CardEditor({ card }: { card: CardData }) {
 
           {card.isParallel && card.candidates.length > 0 && (
             <div>
-              <h3 className="mb-2 text-sm font-semibold">รูปพาราเลล</h3>
+              <h3 className="mb-2 text-h5">รูปพาราเลล</h3>
               <div className="grid grid-cols-4 gap-1">
                 {card.candidates.map((c) => (
                   <button

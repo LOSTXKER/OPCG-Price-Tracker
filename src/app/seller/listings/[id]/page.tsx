@@ -257,7 +257,7 @@ export default function SellerEditListingPage() {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium">{t(lang, "sellListingPriceJpyLabel")}</label>
+            <label className="mb-1 block text-label">{t(lang, "sellListingPriceJpyLabel")}</label>
             <Input
               type="number"
               min={1}
@@ -266,7 +266,7 @@ export default function SellerEditListingPage() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium">{t(lang, "sellListingPriceThbLabel")}</label>
+            <label className="mb-1 block text-label">{t(lang, "sellListingPriceThbLabel")}</label>
             <Input
               type="number"
               min={0}
@@ -280,7 +280,7 @@ export default function SellerEditListingPage() {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium">{t(lang, "sellListingConditionLabel")}</label>
+            <label className="mb-1 block text-label">{t(lang, "sellListingConditionLabel")}</label>
             <Select
               items={CONDITIONS}
               value={condition}
@@ -299,7 +299,7 @@ export default function SellerEditListingPage() {
             </Select>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium">{t(lang, "sellListingQuantityLabel")}</label>
+            <label className="mb-1 block text-label">{t(lang, "sellListingQuantityLabel")}</label>
             <Input
               type="number"
               min={1}
@@ -373,7 +373,7 @@ export default function SellerEditListingPage() {
         <h2 className="text-h3">{t(lang, "sellListingShippingHeading")}</h2>
 
         <div>
-          <label className="mb-1 block text-sm font-medium">{t(lang, "sellListingLocationLabel")}</label>
+          <label className="mb-1 block text-label">{t(lang, "sellListingLocationLabel")}</label>
           <Input
             value={location}
             onChange={(e) => setLocation(e.target.value)}
@@ -382,7 +382,7 @@ export default function SellerEditListingPage() {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">{t(lang, "sellListingShippingMethodLabel")}</label>
+          <label className="mb-2 block text-label">{t(lang, "sellListingShippingMethodLabel")}</label>
           <div className="space-y-2">
             {SHIPPING_OPTIONS.map((opt) => (
               <label key={opt.value} className="flex items-center gap-2 text-sm">

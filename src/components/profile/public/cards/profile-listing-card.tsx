@@ -70,7 +70,7 @@ export function ProfileListingCard({
 
         <div className="flex flex-1 flex-col p-2.5">
           <p
-            className="truncate text-sm font-semibold leading-snug"
+            className="truncate text-h5 leading-snug"
             title={cardName}
           >
             {cardName}

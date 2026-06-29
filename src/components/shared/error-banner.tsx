@@ -16,7 +16,7 @@ export function ErrorBanner({
       )}
     >
       <AlertTriangle className="size-8 text-destructive" />
-      <p className="text-sm font-medium text-destructive">{message}</p>
+      <p className="text-h4 text-destructive">{message}</p>
     </div>
   )
 }

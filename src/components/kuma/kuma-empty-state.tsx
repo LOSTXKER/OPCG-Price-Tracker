@@ -77,7 +77,7 @@ export function KumaEmptyState({
         )}
       >
         {Icon && <Icon className="mb-3 h-12 w-12 opacity-30" />}
-        <p className="text-lg font-medium text-foreground">{displayTitle}</p>
+        <p className="text-h3 text-foreground">{displayTitle}</p>
         {displayDesc && (
           <p className="mb-4 mt-1 text-sm text-muted-foreground">{displayDesc}</p>
         )}

@@ -120,7 +120,7 @@ export default function AboutClient() {
         <Surface variant="outline" padding="none" className="p-6 sm:p-7">
           <div className="flex items-center gap-2">
             <Database className="size-5 text-muted-foreground" />
-            <h2 className="text-h4">{t(lang, "aboutSourcesTitle")}</h2>
+            <h2 className="text-h3">{t(lang, "aboutSourcesTitle")}</h2>
           </div>
           <p className="mt-3 max-w-3xl text-body-sm text-muted-foreground">
             {t(lang, "aboutSourcesBody")}

@@ -81,7 +81,7 @@ export function ShopTab({
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
-                    <h3 className="truncate text-sm font-semibold">
+                    <h3 className="truncate text-h5">
                       {isTrial
                         ? `${t(lang, "shopPackagePrefix")} ${localizedName(item, lang)}`
                         : localizedName(item, lang)}

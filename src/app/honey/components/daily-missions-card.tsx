@@ -228,7 +228,7 @@ export function DailyMissionsCard({
           </div>
           <div>
             <p className="text-eyebrow">Honey</p>
-            <p className="text-2xl font-extrabold tabular-nums leading-tight text-primary">
+            <p className="text-h1 tabular-nums leading-tight text-primary">
               🍯 {points.toLocaleString()}
             </p>
           </div>
@@ -337,12 +337,12 @@ export function DailyMissionsCard({
                 </div>
 
                 <p className={cn(
-                  "mt-3 text-sm font-semibold leading-tight",
+                  "mt-3 text-h5 leading-tight",
                   task.claimed && "text-muted-foreground line-through",
                 )}>
                   {getMissionLabel(lang, task)}
                 </p>
-                <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+                <p className="mt-1 line-clamp-2 text-meta leading-relaxed">
                   {getMissionHint(lang, task)}
                 </p>
 
@@ -414,12 +414,12 @@ export function DailyMissionsCard({
             </div>
 
             <p className={cn(
-              "mt-3 text-sm font-semibold leading-tight",
+              "mt-3 text-h5 leading-tight",
               bonusClaimed && "text-muted-foreground line-through",
             )}>
               Perfect Day!
             </p>
-            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+            <p className="mt-1 text-meta leading-relaxed">
               {t(lang, "missionPerfectDayDesc")}
             </p>
 

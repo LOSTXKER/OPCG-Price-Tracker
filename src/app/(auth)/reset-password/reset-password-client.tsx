@@ -68,7 +68,7 @@ export function ResetPasswordClient() {
 
         <div className="space-y-2 text-center">
           <h1 className="text-h1">{t(lang, "resetPasswordTitle")}</h1>
-          <p className="text-sm text-muted-foreground">{t(lang, "resetPasswordDesc")}</p>
+          <p className="text-body-sm text-muted-foreground">{t(lang, "resetPasswordDesc")}</p>
         </div>
 
         {success ? (
@@ -84,7 +84,7 @@ export function ResetPasswordClient() {
         ) : (
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label htmlFor="new-password" className="text-sm font-medium">
+              <label htmlFor="new-password" className="text-label">
                 {t(lang, "newPasswordLabel")}
               </label>
               <div className="relative">
@@ -129,7 +129,7 @@ export function ResetPasswordClient() {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="confirm-password" className="text-sm font-medium">
+              <label htmlFor="confirm-password" className="text-label">
                 {t(lang, "confirmNewPasswordLabel")}
               </label>
               <div className="relative">

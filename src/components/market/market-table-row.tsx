@@ -106,7 +106,7 @@ export const MarketTableRow = memo(function MarketTableRow({
         return <RarityBadge rarity={card.rarity} size="sm" />
       case "price":
         return (
-          <span className="font-price text-sm font-semibold">
+          <span className="text-price">
             {isPsa ? (
               card.psa10PriceUsd != null ? <PriceUsd usd={card.psa10PriceUsd} /> : <Dash />
             ) : card.latestPriceJpy != null ? (

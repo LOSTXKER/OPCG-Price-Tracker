@@ -92,7 +92,7 @@ export function AchievementsManager({
                 </div>
               )}
               <div className="min-w-0 flex-1">
-                <p className="font-semibold">
+                <p className="text-h4">
                   {ach.nameTh ?? ach.name}
                   {!ach.isActive && (
                     <AdminStatusBadge tone="neutral" className="ml-2">

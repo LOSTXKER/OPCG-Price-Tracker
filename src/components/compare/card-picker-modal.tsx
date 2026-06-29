@@ -355,13 +355,13 @@ export function CardPickerModal({
                         )}
                       </div>
                       <p
-                        className="truncate text-xs font-medium leading-tight"
+                        className="truncate text-meta leading-tight"
                         title={getCardName(lang, card)}
                       >
                         {getCardName(lang, card)}
                       </p>
                       {card.latestPriceJpy != null && (
-                        <p className="font-mono text-xs font-semibold">
+                        <p className="text-price">
                           <Price jpy={Math.round(card.latestPriceJpy)} />
                         </p>
                       )}

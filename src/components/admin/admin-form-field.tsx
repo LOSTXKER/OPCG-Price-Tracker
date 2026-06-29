@@ -45,7 +45,7 @@ export function AdminFormField({
   return (
     <div className={cn("space-y-1.5", SPAN_CLASSES[span], className)}>
       {label !== undefined && (
-        <label className="text-xs font-medium text-muted-foreground">
+        <label className="text-label">
           {label}
           {required && <span className="ml-0.5 text-destructive">*</span>}
         </label>

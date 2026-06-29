@@ -87,7 +87,7 @@ export function MakeOfferDialog({
 
         <div className="space-y-3">
           <div>
-            <label className="mb-1 block text-xs font-medium">
+            <label className="mb-1 block text-label">
               {t(lang, "msgOfferPriceLabel")}
             </label>
             <Input
@@ -117,7 +117,7 @@ export function MakeOfferDialog({
           )}
 
           <div>
-            <label className="mb-1 block text-xs font-medium">
+            <label className="mb-1 block text-label">
               {t(lang, "msgOfferNoteLabel")}
             </label>
             <Input

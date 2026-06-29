@@ -127,7 +127,7 @@ function CardItemBase({
             </span>
           )}
         </div>
-        <p className="truncate text-xs leading-snug text-muted-foreground" title={displayName}>
+        <p className="truncate text-body-sm" title={displayName}>
           {displayName}
         </p>
         <div className="mt-auto pt-1.5">

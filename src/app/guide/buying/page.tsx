@@ -81,7 +81,7 @@ export default async function BuyingGuidePage() {
       </div>
 
       <div className="space-y-4">
-        <h2 className="font-sans text-xl font-semibold">
+        <h2 className="font-sans text-h2">
           {t(lang, "guideBuyShopsHeading")}
         </h2>
         {shops.map((shop) => (
@@ -129,7 +129,7 @@ export default async function BuyingGuidePage() {
       </div>
 
       <div className="space-y-4">
-        <h2 className="font-sans text-xl font-semibold">
+        <h2 className="font-sans text-h2">
           {t(lang, "guideBuyTipsHeading")}
         </h2>
         <div className="space-y-2">

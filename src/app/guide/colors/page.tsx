@@ -209,7 +209,7 @@ export default async function ColorsPage() {
 
       {/* ── 2. Six Colors ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">
+        <h2 className="text-h2">
           {t(lang, "guideColorSixColorsHeading")}
         </h2>
         <div className="space-y-5">
@@ -235,7 +235,7 @@ export default async function ColorsPage() {
                       >
                         {color.name.charAt(0)}
                       </div>
-                      <h3 className="text-base font-bold">
+                      <h3 className="text-h4">
                         {color.name}{" "}
                         <span className="font-normal text-muted-foreground">
                           ({color.nameTh})
@@ -255,7 +255,7 @@ export default async function ColorsPage() {
                     {/* Leader card images */}
                     {leaders.length > 0 && (
                       <div className="mt-4">
-                        <p className="mb-2 text-xs font-medium text-muted-foreground">
+                        <p className="mb-2 text-eyebrow">
                           {t(lang, "guideColorLeaderExampleLabel")}
                         </p>
                         <div className="flex gap-2 overflow-x-auto pb-1">
@@ -294,7 +294,7 @@ export default async function ColorsPage() {
 
       {/* ── 3. Multicolor ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">
+        <h2 className="text-h2">
           {t(lang, "guideColorMulticolorHeading")}
         </h2>
         <p className="text-sm leading-relaxed text-muted-foreground">
@@ -306,7 +306,7 @@ export default async function ColorsPage() {
         </p>
 
         <Surface variant="outline" className="overflow-hidden">
-          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-xs font-medium text-muted-foreground">
+          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-eyebrow">
             {t(lang, "guideColorCompareCaption")}
           </div>
           <div className="grid grid-cols-2 divide-x divide-[var(--p-hair)]">
@@ -377,7 +377,7 @@ export default async function ColorsPage() {
 
       {/* ── 4. Deck Building Rule ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">
+        <h2 className="text-h2">
           {t(lang, "guideColorDeckBuildingHeading")}
         </h2>
         <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
@@ -428,7 +428,7 @@ export default async function ColorsPage() {
 
       {/* ── 5. Sources ── */}
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold">
+        <h2 className="text-h2">
           {t(lang, "guideColorSourcesHeading")}
         </h2>
         <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">

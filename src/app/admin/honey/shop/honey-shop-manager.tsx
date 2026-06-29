@@ -114,12 +114,12 @@ export function HoneyShopManager({ initialItems }: { initialItems: ShopItem[] })
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--p-hair)] bg-muted/30">
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">สินค้า</th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">ประเภท</th>
-                <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">ราคา</th>
-                <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">สต็อก</th>
-                <th className="px-4 py-2.5 text-center text-xs font-medium text-muted-foreground">สถานะ</th>
-                <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">จัดการ</th>
+                <th className="px-4 py-2.5 text-left text-eyebrow">สินค้า</th>
+                <th className="px-4 py-2.5 text-left text-eyebrow">ประเภท</th>
+                <th className="px-4 py-2.5 text-right text-eyebrow">ราคา</th>
+                <th className="px-4 py-2.5 text-right text-eyebrow">สต็อก</th>
+                <th className="px-4 py-2.5 text-center text-eyebrow">สถานะ</th>
+                <th className="px-4 py-2.5 text-right text-eyebrow">จัดการ</th>
               </tr>
             </thead>
             <tbody>

@@ -71,7 +71,7 @@ export function PullRatesTable({ rows, packsPerBox, cardsPerPack }: PullRatesTab
       </div>
 
       {/* Table header */}
-      <div className="mb-1 hidden items-center px-3 text-xs font-medium text-muted-foreground sm:flex">
+      <div className="mb-1 hidden items-center px-3 text-eyebrow sm:flex">
         <span className="w-20">Rarity</span>
         <span className="flex-1" />
         <span className="w-28 text-right">{t(lang, "perUnit")}/{t(lang, UNIT_I18N_KEYS[unit])}</span>

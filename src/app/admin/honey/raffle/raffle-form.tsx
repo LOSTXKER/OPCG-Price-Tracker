@@ -443,7 +443,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="text-xs font-medium text-muted-foreground">{label}</label>
+      <label className="text-label">{label}</label>
       {hint && <span className="ml-1.5 text-meta text-muted-foreground/60">({hint})</span>}
       {children}
     </div>

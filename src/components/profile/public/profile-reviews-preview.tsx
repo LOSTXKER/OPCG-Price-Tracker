@@ -61,7 +61,7 @@ export function ProfileReviewsPreview({
     <section className="mt-8" aria-label={t(lang, "tabReviews")}>
       <div className="mb-3 flex items-baseline justify-between gap-3">
         <div className="inline-flex items-baseline gap-2">
-          <h2 className="text-h5">{t(lang, "tabReviews")}</h2>
+          <h2 className="text-h4">{t(lang, "tabReviews")}</h2>
           <span className="inline-flex items-center gap-1 text-meta">
             <Star className="size-3 fill-amber-400 text-amber-400" />
             <span className="font-semibold tabular-nums text-foreground/80">
@@ -104,10 +104,10 @@ function ReviewCard({ review, lang }: { review: SerializedReview; lang: Language
           </AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-semibold">
+          <p className="truncate text-body-sm font-semibold">
             {review.reviewer.displayName ?? "User"}
           </p>
-          <p className="text-overlay text-muted-foreground">
+          <p className="text-meta">
             {formatRelativeAgo(review.createdAt, lang)}
           </p>
         </div>
@@ -126,7 +126,7 @@ function ReviewCard({ review, lang }: { review: SerializedReview; lang: Language
         </div>
       </header>
       {review.comment && (
-        <p className="mt-2 line-clamp-3 text-xs text-foreground/80">
+        <p className="mt-2 line-clamp-3 text-body-sm text-foreground/80">
           {review.comment}
         </p>
       )}

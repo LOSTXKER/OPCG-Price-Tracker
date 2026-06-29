@@ -176,7 +176,7 @@ export default function SavedListingsPage() {
                     <div className="p-3">
                       <div className="flex flex-wrap items-center gap-1.5">
                         {!isActive && (
-                          <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-semibold text-muted-foreground">
+                          <span className="rounded-full bg-muted px-2 py-0.5 text-micro text-muted-foreground">
                             {listing.status === "SOLD"
                               ? t(lang, "listingSold")
                               : t(lang, "listingNotAvailable")}
@@ -190,7 +190,7 @@ export default function SavedListingsPage() {
                         {listing.card.cardCode} • {listing.card.rarity}
                       </p>
                       <div className="mt-2 flex items-baseline justify-between">
-                        <span className="font-bold">
+                        <span className="font-bold font-price">
                           {formatJpy(listing.priceJpy)}
                         </span>
                         {listing.priceThb != null && (

@@ -173,7 +173,7 @@ function WinnerCard({
         <div>
           <p className="text-eyebrow">{t(lang, "monthlyRaffle")}</p>
           <h3
-            className="mt-0.5 text-sm font-semibold leading-snug"
+            className="mt-0.5 text-h5 leading-snug"
             style={accent ? { color: accent } : undefined}
           >
             {localizedTitle(raffle, lang)}

@@ -90,7 +90,7 @@ export function AlertFormBody({
   return (
     <div className="space-y-3">
       <div>
-        <p className="mb-1.5 text-meta">{t(lang, "whenPriceGoes")}</p>
+        <p className="mb-1.5 text-label">{t(lang, "whenPriceGoes")}</p>
         <div className="grid grid-cols-2 gap-1.5">
           <DirectionPill
             active={value.direction === "BELOW"}
@@ -108,7 +108,7 @@ export function AlertFormBody({
       </div>
 
       <div>
-        <label className="mb-1.5 block text-meta">{t(lang, "targetPrice")}</label>
+        <label className="mb-1.5 block text-label">{t(lang, "targetPrice")}</label>
         <div className="relative">
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
             {symbol}
@@ -132,7 +132,7 @@ export function AlertFormBody({
 
       <div>
         <div className="mb-1.5 flex items-baseline justify-between gap-2">
-          <p className="text-meta">{t(lang, "notifyVia")}</p>
+          <p className="text-label">{t(lang, "notifyVia")}</p>
           <span className="text-meta text-muted-foreground/70">
             {t(lang, "selectMultiple")}
           </span>

@@ -41,7 +41,7 @@ export function EmptyProfilePanel({
       <div className="relative mx-auto flex size-16 items-center justify-center rounded-2xl bg-background shadow-sm ring-1 ring-border/40">
         <Sparkles className="size-7 text-primary/70" />
       </div>
-      <h3 className="relative mt-4 text-base font-bold tracking-tight">
+      <h3 className="relative mt-4 text-h4">
         {t(lang, "emptyProfileTitle")}
       </h3>
       <p className="relative mx-auto mt-1 max-w-md text-sm text-muted-foreground">

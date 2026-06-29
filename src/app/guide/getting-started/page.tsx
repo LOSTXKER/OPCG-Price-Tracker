@@ -185,7 +185,7 @@ export default async function GettingStartedPage() {
 
       {/* ── 2. สิ่งที่ต้องมี ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideStartNeedsTitle")}</h2>
+        <h2 className="text-h2">{t(lang, "guideStartNeedsTitle")}</h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[
             { label: "Leader", count: t(lang, "guideStartNeedsLeaderCount"), desc: t(lang, "guideStartNeedsLeaderDesc"), color: "border-orange-500/30 bg-orange-500/5" },
@@ -208,7 +208,7 @@ export default async function GettingStartedPage() {
           <Surface variant="outline" className="flex items-center gap-6 px-5 py-4">
             {leader?.imageUrl && (
               <Link href={`/cards/${leader.cardCode}`} className="group shrink-0">
-                <p className="mb-1.5 text-center text-xs font-medium text-muted-foreground">Leader</p>
+                <p className="mb-1.5 text-center text-eyebrow">Leader</p>
                 <div className="relative aspect-[63/88] w-20 overflow-hidden rounded-lg bg-muted">
                   <Image src={leader.imageUrl} alt={leader.nameEn ?? leader.nameJp} fill className="object-contain" sizes="80px" />
                 </div>
@@ -219,7 +219,7 @@ export default async function GettingStartedPage() {
             )}
             {don?.imageUrl && (
               <Link href={`/cards/${don.cardCode}`} className="group shrink-0">
-                <p className="mb-1.5 text-center text-xs font-medium text-muted-foreground">DON!!</p>
+                <p className="mb-1.5 text-center text-eyebrow">DON!!</p>
                 <div className="relative aspect-[63/88] w-20 overflow-hidden rounded-lg bg-muted">
                   <Image src={don.imageUrl} alt={don.nameEn ?? don.nameJp} fill className="object-contain" sizes="80px" />
                 </div>
@@ -245,7 +245,7 @@ export default async function GettingStartedPage() {
 
       {/* ── 3. เซ็ตอัพ (Game Setup) ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideStartSetupTitle")}</h2>
+        <h2 className="text-h2">{t(lang, "guideStartSetupTitle")}</h2>
         <ol className="space-y-3">
           {[
             { step: t(lang, "guideStartSetupStep1"), detail: t(lang, "guideStartSetupStep1Detail") },
@@ -269,7 +269,7 @@ export default async function GettingStartedPage() {
 
         {/* Game board diagram */}
         <Surface variant="outline" className="overflow-hidden">
-          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-xs font-medium text-muted-foreground">
+          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-eyebrow">
             {t(lang, "guideStartBoardCaption")}
           </div>
           <div className="grid grid-cols-3 gap-2 p-4 text-center text-xs sm:grid-cols-5">
@@ -327,7 +327,7 @@ export default async function GettingStartedPage() {
 
       {/* ── 4. เทิร์นการเล่น (Turn Phases) ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideStartTurnTitle")}</h2>
+        <h2 className="text-h2">{t(lang, "guideStartTurnTitle")}</h2>
         <p className="text-sm text-muted-foreground">
           {t(lang, "guideStartTurnIntro")}
         </p>
@@ -346,7 +346,7 @@ export default async function GettingStartedPage() {
               {/* Content */}
               <div className={`${i < turnPhases.length - 1 ? "pb-6" : ""}`}>
                 <div className="flex items-baseline gap-2">
-                  <h3 className="text-sm font-semibold">{phase.name}</h3>
+                  <h3 className="text-h4">{phase.name}</h3>
                   <span className="text-meta">
                     {phase.nameTh}
                   </span>
@@ -368,7 +368,7 @@ export default async function GettingStartedPage() {
 
       {/* ── 5. ระบบ DON!! ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideStartDonSystemTitle")}</h2>
+        <h2 className="text-h2">{t(lang, "guideStartDonSystemTitle")}</h2>
         <p className="text-sm leading-relaxed text-muted-foreground">
           {t(lang, "guideStartDonSystemIntro")}
         </p>
@@ -378,7 +378,7 @@ export default async function GettingStartedPage() {
               <Zap className="size-5 text-amber-500" />
             </div>
             <h3 className="mt-3 text-sm font-semibold">{t(lang, "guideStartDonPayCostTitle")}</h3>
-            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+            <p className="mt-1 text-body-sm leading-relaxed text-muted-foreground">
               {t(lang, "guideStartDonPayCostDesc")}
             </p>
           </Surface>
@@ -387,7 +387,7 @@ export default async function GettingStartedPage() {
               <Swords className="size-5 text-rose-500" />
             </div>
             <h3 className="mt-3 text-sm font-semibold">{t(lang, "guideStartDonPowerTitle")}</h3>
-            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+            <p className="mt-1 text-body-sm leading-relaxed text-muted-foreground">
               {t(lang, "guideStartDonPowerA")}<strong className="text-foreground">{t(lang, "guideStartDonPowerStrong")}</strong>{t(lang, "guideStartDonPowerB")}
             </p>
           </Surface>
@@ -396,7 +396,7 @@ export default async function GettingStartedPage() {
 
       {/* ── 6. การโจมตีและป้องกัน (Combat) ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideStartCombatTitle")}</h2>
+        <h2 className="text-h2">{t(lang, "guideStartCombatTitle")}</h2>
         <p className="text-sm text-muted-foreground">
           {t(lang, "guideStartCombatIntro")}
         </p>
@@ -412,7 +412,7 @@ export default async function GettingStartedPage() {
                 </span>
                 <h3 className="text-sm font-semibold">{step.name}</h3>
               </div>
-              <p className="mt-2 text-xs leading-relaxed opacity-80">
+              <p className="mt-2 text-body-sm leading-relaxed opacity-80">
                 {step.description}
               </p>
             </div>
@@ -440,7 +440,7 @@ export default async function GettingStartedPage() {
               <Swords className="size-5 text-rose-500" />
               <h3 className="text-sm font-semibold">{t(lang, "guideStartWinAttackTitle")}</h3>
             </div>
-            <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+            <p className="mt-2 text-body-sm leading-relaxed text-muted-foreground">
               {t(lang, "guideStartWinAttackA")}<strong className="text-foreground">{t(lang, "guideStartWinYouWin")}</strong>
             </p>
           </Surface>
@@ -449,7 +449,7 @@ export default async function GettingStartedPage() {
               <Layers className="size-5 text-blue-500" />
               <h3 className="text-sm font-semibold">{t(lang, "guideStartWinDeckOutTitle")}</h3>
             </div>
-            <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+            <p className="mt-2 text-body-sm leading-relaxed text-muted-foreground">
               {t(lang, "guideStartWinDeckOutA")}<strong className="text-foreground">{t(lang, "guideStartWinYouWin")}</strong>{t(lang, "guideStartWinDeckOutB")}
             </p>
           </Surface>
@@ -458,7 +458,7 @@ export default async function GettingStartedPage() {
 
       {/* ── 8. ราคาการ์ดทำงานยังไง ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideStartPricingTitle")}</h2>
+        <h2 className="text-h2">{t(lang, "guideStartPricingTitle")}</h2>
         <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
           <p>
             {t(lang, "guideStartPricingP1a")}
@@ -481,7 +481,7 @@ export default async function GettingStartedPage() {
 
       {/* ── 9. แหล่งอ้างอิง ── */}
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold">{t(lang, "guideStartSourcesTitle")}</h2>
+        <h2 className="text-h2">{t(lang, "guideStartSourcesTitle")}</h2>
         <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
           {[
             {

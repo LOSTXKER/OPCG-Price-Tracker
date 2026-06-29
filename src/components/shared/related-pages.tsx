@@ -19,7 +19,7 @@ export function RelatedPages({
 }) {
   return (
     <section className="mt-12 space-y-4">
-      <h2 className="text-h2">{title}</h2>
+      <h2 className="text-h3">{title}</h2>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => (
           <Surface
@@ -34,10 +34,10 @@ export function RelatedPages({
               <item.icon className="size-[18px] text-primary" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold motion-base group-hover:text-primary">
+              <p className="text-h5 motion-base group-hover:text-primary">
                 {item.title}
               </p>
-              <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+              <p className="mt-0.5 text-meta leading-relaxed">
                 {item.description}
               </p>
             </div>

@@ -105,7 +105,7 @@ function ListingCardBase({
           <ConditionBadge condition={condition} />
         </div>
         <Link href={listingHref} className="ease-chrome transition-colors hover:text-primary">
-          <p className="line-clamp-1 text-xs text-muted-foreground">
+          <p className="line-clamp-1 text-h5">
             {card.nameEn ?? card.nameJp}
           </p>
         </Link>

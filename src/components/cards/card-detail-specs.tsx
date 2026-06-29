@@ -137,7 +137,7 @@ export function CardDetailSpecs({ card, lang }: CardDetailSpecsProps) {
             <Fingerprint className="size-3.5" />
             {t(lang, "trait")}
           </p>
-          <p className="text-sm leading-relaxed text-foreground">{card.trait}</p>
+          <p className="text-body-sm leading-relaxed text-foreground">{card.trait}</p>
         </div>
       )}
     </div>

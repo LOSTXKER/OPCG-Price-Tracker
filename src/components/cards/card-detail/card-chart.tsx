@@ -476,7 +476,7 @@ export function ScrubChart({
           the primary rebases to 100 → "+0%", which is meaningless. */}
       {!indexed && (
         // RIGHT gutter — a compact solid pill of the live price (CoinGecko/CMC). No arrow
-        // (the hero's ▲/▼% already carries direction) → cleaner. Small gap from the end-dot.
+        // (the hero's +/−% already carries direction) → cleaner. Small gap from the end-dot.
         <g transform={`translate(${width - padRight + 7} ${tagY})`}>
           <rect x="0" y="-9" width={tagW} height="18" rx="6" fill={primary.color} opacity={primary.isEst ? 0.85 : 1} />
           <text x={tagW / 2} y="4" textAnchor="middle" fill="var(--background)" fontSize={TAG_FONT} fontWeight="700">

@@ -408,7 +408,7 @@ export default async function AdminDashboard() {
                   <action.icon className="size-[18px] text-primary" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h4 className="text-sm font-semibold motion-base group-hover:text-primary">
+                  <h4 className="text-h5 motion-base group-hover:text-primary">
                     {action.title}
                   </h4>
                   <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">

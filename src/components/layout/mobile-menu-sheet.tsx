@@ -98,7 +98,7 @@ function MenuLink({
       <Icon className="size-[18px] shrink-0" />
       <span className="flex-1">{label}</span>
       {typeof badge === "number" && badge > 0 && (
-        <span className="flex min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-xs font-bold leading-4 text-white">
+        <span className="flex min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-micro text-white">
           {badge > 99 ? "99+" : badge}
         </span>
       )}
@@ -177,7 +177,7 @@ export function MobileMenuSheet({
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold">{userName}</p>
-                <p className="truncate text-xs text-muted-foreground">{authUser.email}</p>
+                <p className="truncate text-meta">{authUser.email}</p>
                 <div className="mt-1.5 flex items-center gap-2">
                   <span className={cn("rounded-full px-2 py-0.5 text-micro", tier.color)}>
                     {tier.label}

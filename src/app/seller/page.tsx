@@ -188,7 +188,7 @@ export default function SellerDashboard() {
               </div>
               <div>
                 <p className="font-medium">{t(lang, "sellerPendingOrdersTitle")}</p>
-                <p className="text-meta text-muted-foreground">
+                <p className="text-meta">
                   {t(lang, "sellerPendingOrdersDesc").replace("{n}", String(stats.pendingOrders))}
                 </p>
               </div>
@@ -246,11 +246,11 @@ export default function SellerDashboard() {
                   </p>
                 </div>
                 <div className="flex flex-col items-end gap-1">
-                  <span className="text-sm font-semibold">
+                  <span className="text-sm font-semibold font-price">
                     ฿{order.priceThb.toLocaleString()}
                   </span>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+                    className={`rounded-full px-2 py-0.5 text-micro ${
                       STATUS_COLOR[order.status] ?? "bg-muted text-muted-foreground"
                     }`}
                   >

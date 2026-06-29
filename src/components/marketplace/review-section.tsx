@@ -76,7 +76,7 @@ export function ReviewSection({
     <div className={cn("space-y-5", className)}>
       <Surface variant="panel" className="flex items-center gap-5 p-5">
         <div className="text-center">
-          <p className="text-4xl font-bold tracking-tight">
+          <p className="text-display">
             {(averageRating ?? 0).toFixed(1)}
           </p>
           <StarRow rating={averageRating ?? 0} size="md" />

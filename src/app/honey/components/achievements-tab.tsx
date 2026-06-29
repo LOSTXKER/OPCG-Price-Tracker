@@ -91,7 +91,7 @@ export function AchievementsTab({
                   </div>
                 )}
                 <div className="min-w-0 flex-1">
-                  <p className={cn("text-xs font-semibold", !ach.earned && "text-muted-foreground")}>
+                  <p className={cn("text-h5", !ach.earned && "text-muted-foreground")}>
                     {localizedName(ach, lang)}
                   </p>
                   {ach.description && <p className="text-meta">{ach.description}</p>}

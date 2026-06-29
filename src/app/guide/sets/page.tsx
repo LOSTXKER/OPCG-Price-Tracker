@@ -222,7 +222,7 @@ export default async function GuideSetsPage() {
 
       {/* ── 2. Set Types ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideSetTypesHeading")}</h2>
+        <h2 className="text-h2">{t(lang, "guideSetTypesHeading")}</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {["BOOSTER", "STARTER", "EXTRA_BOOSTER", "PROMO"].map((type) => {
             const info = setTypeInfo[type];
@@ -243,8 +243,8 @@ export default async function GuideSetsPage() {
                     style={{ color: info.color }}
                   />
                 </div>
-                <h3 className="mt-3 text-sm font-semibold">{info.label}</h3>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                <h3 className="mt-3 text-h4">{info.label}</h3>
+                <p className="mt-1 text-body-sm leading-relaxed text-muted-foreground">
                   {info.description}
                 </p>
               </Surface>
@@ -255,7 +255,7 @@ export default async function GuideSetsPage() {
 
       {/* ── 3. Pack Structure ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">
+        <h2 className="text-h2">
           {t(lang, "guideSetPackHeading")}
         </h2>
         <p className="text-sm text-muted-foreground">
@@ -292,7 +292,7 @@ export default async function GuideSetsPage() {
 
       {/* ── 4. Card Code Format ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideSetCodeHeading")}</h2>
+        <h2 className="text-h2">{t(lang, "guideSetCodeHeading")}</h2>
         <p className="text-sm text-muted-foreground">
           {t(lang, "guideSetCodeIntro")}
         </p>
@@ -413,7 +413,7 @@ export default async function GuideSetsPage() {
 
       {/* ── 6. Sources ── */}
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold">{t(lang, "guideSetSourcesHeading")}</h2>
+        <h2 className="text-h2">{t(lang, "guideSetSourcesHeading")}</h2>
         <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
           {sources.map((src) =>
             "internal" in src && src.internal ? (

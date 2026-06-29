@@ -17,7 +17,7 @@ export function FaqSection({
   return (
     <section className={title ? "mt-12 space-y-4" : "space-y-4"}>
       <JsonLd data={faqJsonLd(items)} />
-      {title && <h2 className="text-h2">{title}</h2>}
+      {title && <h2 className="text-h3">{title}</h2>}
       <Surface variant="outline" className="divide-y divide-[var(--p-hair)] overflow-hidden">
         {items.map((item, i) => (
           <details key={i} className="group">

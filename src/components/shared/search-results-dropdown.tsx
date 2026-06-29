@@ -72,7 +72,7 @@ export function SearchResultsDropdown({
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{getCardName(lang, card)}</p>
+                  <p className="truncate text-h5">{getCardName(lang, card)}</p>
                   <div className="flex items-center gap-1.5 text-meta">
                     {card.set?.code && (
                       <span className="font-mono">{card.set.code}</span>
@@ -92,7 +92,7 @@ export function SearchResultsDropdown({
 
         {results.length === 0 && !loading && filteredRecent.length > 0 && (
           <div className="p-1">
-            <p className="px-3 py-1.5 text-xs font-medium text-muted-foreground">
+            <p className="px-3 py-1.5 text-eyebrow">
               {t(lang, "recentSearches")}
             </p>
             {filteredRecent.map((item, i) => (

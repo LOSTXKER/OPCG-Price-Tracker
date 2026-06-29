@@ -120,7 +120,7 @@ export default function ContactClient() {
               <BookOpen className="size-5 text-primary" />
             </div>
             <div className="min-w-0">
-              <h2 className="text-h4">{t(lang, "contactHelpTitle")}</h2>
+              <h2 className="text-h3">{t(lang, "contactHelpTitle")}</h2>
               <p className="mt-2 max-w-xl text-body-sm text-muted-foreground">
                 {t(lang, "contactHelpDesc")}
               </p>

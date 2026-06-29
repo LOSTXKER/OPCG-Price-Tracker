@@ -110,7 +110,7 @@ export function Footer() {
 
             <Link
               href="/pricing"
-              className="ease-chrome mt-5 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-meta font-medium text-primary transition-colors hover:bg-primary/15"
+              className="ease-chrome mt-5 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/15"
             >
               <Crown className="size-3.5" />
               {t(lang, "pricing")}

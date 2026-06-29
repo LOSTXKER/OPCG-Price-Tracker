@@ -84,12 +84,12 @@ export function ScheduleList({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--p-hair)] bg-muted/30">
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">เทมเพลต</th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">ประเภทช่อง</th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">การตั้งค่า</th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">ช่วงเวลา</th>
-                <th className="px-4 py-2.5 text-center text-xs font-medium text-muted-foreground">สถานะ</th>
-                <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">จัดการ</th>
+                <th className="px-4 py-2.5 text-left text-eyebrow">เทมเพลต</th>
+                <th className="px-4 py-2.5 text-left text-eyebrow">ประเภทช่อง</th>
+                <th className="px-4 py-2.5 text-left text-eyebrow">การตั้งค่า</th>
+                <th className="px-4 py-2.5 text-left text-eyebrow">ช่วงเวลา</th>
+                <th className="px-4 py-2.5 text-center text-eyebrow">สถานะ</th>
+                <th className="px-4 py-2.5 text-right text-eyebrow">จัดการ</th>
               </tr>
             </thead>
             <tbody>

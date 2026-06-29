@@ -156,7 +156,7 @@ export function HeaderUserMenu({
           <DropdownMenuGroup>
             <DropdownMenuLabel className="font-normal">
               <p className="truncate text-sm font-medium text-foreground">{userName}</p>
-              <p className="truncate text-xs text-muted-foreground">{authUser.email}</p>
+              <p className="truncate text-meta">{authUser.email}</p>
 
               <div className="mt-2 flex items-center gap-1.5">
                 <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-micro", tierInfo.color)}>
@@ -211,7 +211,7 @@ export function HeaderUserMenu({
                   />
                 </div>
                 {honeyLevel.nextThreshold && nextRankLabel && (
-                  <p className="mt-0.5 text-xs text-muted-foreground">
+                  <p className="mt-0.5 text-meta">
                     {formatCount(honeyLevel.nextThreshold - honeyLifetime)} to {nextRankLabel}
                   </p>
                 )}
@@ -219,7 +219,7 @@ export function HeaderUserMenu({
 
               <div className="mt-2 flex items-center gap-1.5 rounded-md bg-muted/60 px-2 py-1.5">
                 <span className="text-sm leading-none">🍯</span>
-                <span className="text-xs font-medium text-muted-foreground">Honey</span>
+                <span className="text-meta">Honey</span>
                 <span className="ml-auto text-xs font-bold tabular-nums text-foreground">
                   {formatCount(honeyPoints)}
                 </span>

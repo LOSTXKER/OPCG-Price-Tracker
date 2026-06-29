@@ -135,7 +135,7 @@ export function StepShipping({
 
       {/* Shipping methods */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">{t(lang, "mktShipMethodLabel")}</label>
+        <label className="text-label">{t(lang, "mktShipMethodLabel")}</label>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {SHIPPING_OPTIONS.map((opt) => (
             <button
@@ -157,7 +157,7 @@ export function StepShipping({
 
       {/* Location */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">{t(lang, "mktShipLocationLabel")}</label>
+        <label className="text-label">{t(lang, "mktShipLocationLabel")}</label>
         <div className="flex flex-wrap gap-1.5">
           {LOCATIONS.map((loc) => (
             <button
@@ -185,7 +185,7 @@ export function StepShipping({
 
       {/* Photo upload */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">
+        <label className="text-label">
           {t(lang, "mktShipPhotosLabel")}
           <span className="text-muted-foreground ml-1 font-normal">
             {t(lang, "mktShipPhotosHint").replace("{n}", String(MAX_PHOTOS))}
@@ -263,7 +263,7 @@ export function StepShipping({
 
       {/* Description */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">{t(lang, "mktShipDescriptionLabel")}</label>
+        <label className="text-label">{t(lang, "mktShipDescriptionLabel")}</label>
         <Textarea
           value={data.description}
           onChange={(e) => update({ description: e.target.value })}

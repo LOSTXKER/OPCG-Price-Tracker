@@ -56,7 +56,7 @@ function ToolTile({ tool, label, comingSoon }: { tool: Tool; label: string; comi
           </span>
         )}
       </div>
-      <span className="text-h5">{label}</span>
+      <span className="text-h4">{label}</span>
     </Surface>
   );
 

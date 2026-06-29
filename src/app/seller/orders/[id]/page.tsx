@@ -362,7 +362,7 @@ export default function SellerOrderDetailPage() {
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium">
+              <label className="mb-1 block text-label">
                 {t(lang, "sellOrderShippingMethod")}
               </label>
               <Select value={shippingMethod} onValueChange={(value) => setShippingMethod(value ?? "")}>
@@ -379,7 +379,7 @@ export default function SellerOrderDetailPage() {
               </Select>
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium">
+              <label className="mb-1 block text-label">
                 {t(lang, "sellOrderTrackingNumberRequired")}
               </label>
               <Input

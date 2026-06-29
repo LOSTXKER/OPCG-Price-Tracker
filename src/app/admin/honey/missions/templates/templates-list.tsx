@@ -96,13 +96,13 @@ export function TemplatesList({ initialTemplates }: { initialTemplates: Template
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--p-hair)] bg-muted/30">
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">ชื่อ</th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">หมวดหมู่</th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">ประเภท</th>
-                <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">รางวัล</th>
-                <th className="px-4 py-2.5 text-center text-xs font-medium text-muted-foreground">กฎ</th>
-                <th className="px-4 py-2.5 text-center text-xs font-medium text-muted-foreground">สถานะ</th>
-                <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">จัดการ</th>
+                <th className="px-4 py-2.5 text-left text-eyebrow">ชื่อ</th>
+                <th className="px-4 py-2.5 text-left text-eyebrow">หมวดหมู่</th>
+                <th className="px-4 py-2.5 text-left text-eyebrow">ประเภท</th>
+                <th className="px-4 py-2.5 text-right text-eyebrow">รางวัล</th>
+                <th className="px-4 py-2.5 text-center text-eyebrow">กฎ</th>
+                <th className="px-4 py-2.5 text-center text-eyebrow">สถานะ</th>
+                <th className="px-4 py-2.5 text-right text-eyebrow">จัดการ</th>
               </tr>
             </thead>
             <tbody>

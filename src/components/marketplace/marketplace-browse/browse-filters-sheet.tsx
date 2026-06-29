@@ -24,7 +24,7 @@ export function BrowseFiltersSheet({
   return (
     <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
       <div>
-        <p className="mb-1.5 text-xs font-medium text-muted-foreground">{t(lang, "mktFilterCondition")}</p>
+        <p className="mb-1.5 text-label">{t(lang, "mktFilterCondition")}</p>
         <div className="flex flex-wrap gap-1.5">
           {CONDITIONS.map((c) => (
             <button
@@ -43,7 +43,7 @@ export function BrowseFiltersSheet({
         </div>
       </div>
       <div>
-        <p className="mb-1.5 text-xs font-medium text-muted-foreground">{t(lang, "mktFilterRarity")}</p>
+        <p className="mb-1.5 text-label">{t(lang, "mktFilterRarity")}</p>
         <div className="flex flex-wrap gap-1.5">
           {RARITIES.map((r) => (
             <button

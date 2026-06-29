@@ -60,7 +60,7 @@ function SetCardTileBase({
       <div className="min-w-0 px-0.5">
         {/* price gets its own full line — it's the value collectors scan, so it
             must never truncate; name + %-move share the line below */}
-        <p className="tnum font-price text-sm font-bold text-foreground">
+        <p className="text-price text-foreground">
           {card.latestPriceJpy != null ? (
             <Price jpy={card.latestPriceJpy} thb={card.latestPriceThb} />
           ) : (

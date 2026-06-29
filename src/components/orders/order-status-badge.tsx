@@ -43,7 +43,7 @@ export function OrderStatusBadge({ status }: { status: string }) {
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold",
+        "inline-flex shrink-0 rounded-full px-2.5 py-0.5 text-micro",
         config.className
       )}
     >

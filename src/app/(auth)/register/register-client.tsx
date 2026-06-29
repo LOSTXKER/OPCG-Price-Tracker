@@ -186,7 +186,7 @@ export function RegisterClient() {
             {/* Email form */}
             <form onSubmit={onSubmit} className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="register-email" className="text-sm font-medium">
+                <label htmlFor="register-email" className="text-label">
                   {t(lang, "emailLabel")}
                 </label>
                 <div className="relative">
@@ -205,7 +205,7 @@ export function RegisterClient() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="register-password" className="text-sm font-medium">
+                <label htmlFor="register-password" className="text-label">
                   {t(lang, "passwordLabel")}
                 </label>
                 <div className="relative">
@@ -251,7 +251,7 @@ export function RegisterClient() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="register-confirm" className="text-sm font-medium">
+                <label htmlFor="register-confirm" className="text-label">
                   {t(lang, "confirmPasswordLabel")}
                 </label>
                 <div className="relative">

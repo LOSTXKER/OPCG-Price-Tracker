@@ -72,7 +72,7 @@ export function StepPricing({
 
       {/* Condition */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">{t(lang, "mktPriceConditionLabel")}</label>
+        <label className="text-label">{t(lang, "mktPriceConditionLabel")}</label>
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
           {CONDITIONS.map((c) => (
             <button
@@ -99,7 +99,7 @@ export function StepPricing({
 
       {/* Price */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">{t(lang, "mktPricePriceLabel")}</label>
+        <label className="text-label">{t(lang, "mktPricePriceLabel")}</label>
         <Input
           type="number"
           min={1}
@@ -148,7 +148,7 @@ export function StepPricing({
 
       {/* Quantity */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">{t(lang, "mktPriceQuantityLabel")}</label>
+        <label className="text-label">{t(lang, "mktPriceQuantityLabel")}</label>
         <Input
           type="number"
           min={1}

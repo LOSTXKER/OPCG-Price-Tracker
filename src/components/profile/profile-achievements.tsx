@@ -58,7 +58,7 @@ export function ProfileAchievements({
   return (
     <Surface variant="outline" className="rounded-2xl p-5">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm font-semibold">
+        <div className="flex items-center gap-2 text-h5">
           <Trophy className="size-4 text-amber-500" />
           {t(lang, "achievementsTitle")}
           <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-micro text-amber-700 dark:text-amber-400">

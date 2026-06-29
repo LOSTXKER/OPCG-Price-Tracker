@@ -87,7 +87,7 @@ export function OrderCard({
         )}
 
         <div className="min-w-0 flex-1">
-          <p className="truncate font-medium">{cardName}</p>
+          <p className="truncate text-h4">{cardName}</p>
           <p className="text-sm text-muted-foreground">
             {order.listing.card.cardCode} • {order.listing.card.rarity}
           </p>

@@ -114,7 +114,7 @@ export function CardPicker({
                 )}
               </div>
               <div className="px-2 py-1.5">
-                <p className="truncate text-xs font-medium leading-tight">{name}</p>
+                <p className="truncate text-body-sm leading-tight">{name}</p>
                 <div className="mt-1 flex items-center justify-between gap-1">
                   <RarityBadge rarity={card.rarity} size="sm" />
                   {card.latestPriceJpy != null && card.latestPriceJpy > 0 && (
@@ -127,7 +127,7 @@ export function CardPicker({
         })}
       </div>
       {cards.length === 0 && (
-        <p className="py-8 text-center text-sm text-muted-foreground">{t(lang, "noCardsResult")}</p>
+        <p className="py-8 text-center text-meta">{t(lang, "noCardsResult")}</p>
       )}
     </section>
   )
