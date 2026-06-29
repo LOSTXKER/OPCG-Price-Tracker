@@ -46,25 +46,25 @@ export function SetHero({
   return (
     <header className="relative flex flex-row items-center gap-4 sm:gap-7 lg:gap-10">
       {/* box art — the one saturated element (lit by the page's overhead glow).
-          Row layout (card left, identity right) at every width — เบส wants it
-          side-by-side on phones too, so the card stays compact on narrow. */}
-      <div className="relative shrink-0">
-        <div className="surface-1 relative aspect-[3/4] w-28 overflow-hidden rounded-xl sm:w-44 lg:w-56">
-          {boxImage ? (
-            <Image
-              src={boxImage}
-              alt={name}
-              fill
-              className="object-cover object-top"
-              sizes="(min-width: 1024px) 224px, (min-width: 640px) 176px, 112px"
-              priority
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center">
-              <Package className="size-8 text-muted-foreground/30" />
-            </div>
-          )}
-        </div>
+          Row layout (card left, identity right) at every width. Sized tall enough
+          that the art reaches down past the stat line to the drop-rate (เบส). */}
+      {/* On phones the card self-stretches to the identity column's height so the
+          art reaches the drop-rate (เบส); on sm+ it's the fixed-aspect poster. */}
+      <div className="surface-1 relative w-40 shrink-0 self-stretch overflow-hidden rounded-xl sm:aspect-[3/4] sm:w-52 sm:self-center lg:w-60">
+        {boxImage ? (
+          <Image
+            src={boxImage}
+            alt={name}
+            fill
+            className="object-cover object-top"
+            sizes="(min-width: 1024px) 240px, (min-width: 640px) 208px, 160px"
+            priority
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <Package className="size-8 text-muted-foreground/30" />
+          </div>
+        )}
       </div>
 
       {/* identity — OP code is the hero */}
