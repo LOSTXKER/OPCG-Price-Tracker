@@ -97,12 +97,17 @@ function FilterSelect({
         <span className="text-muted-foreground">{label}</span>
         <span className="text-foreground">{current}</span>
       </SelectTrigger>
-      <SelectContent className="min-w-48 p-1">
+      <SelectContent
+        align="start"
+        alignItemWithTrigger={false}
+        sideOffset={6}
+        className="w-auto min-w-(--anchor-width) p-1"
+      >
         {options.map((o) => (
           <SelectItem
             key={o.value}
             value={o.value}
-            className="py-1.5 pr-8 pl-2.5 text-sm"
+            className="py-1.5 pr-7 pl-2.5 text-sm"
           >
             {o.label}
           </SelectItem>
