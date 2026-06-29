@@ -176,7 +176,7 @@ export function SetDetailContent({
       const sections = root.querySelectorAll<HTMLElement>("[data-rarity]");
       let current = "";
       for (const s of sections) {
-        if (s.getBoundingClientRect().top <= 120) current = s.dataset.rarity ?? "";
+        if (s.getBoundingClientRect().top <= 150) current = s.dataset.rarity ?? "";
         else break;
       }
       if (!current && sections.length) current = sections[0].dataset.rarity ?? "";
@@ -196,12 +196,13 @@ export function SetDetailContent({
   const displayGroups = visibleGroups;
   const totalVisible = visibleGroups.reduce((s, g) => s + g.cards.length, 0);
 
-  // Click a rarity → smooth-scroll its section under the sticky header.
+  // Click a rarity → smooth-scroll its section to sit comfortably below the
+  // sticky navbar (offset = navbar height + breathing room).
   const scrollToRarity = (rarity: string) => {
     const el = document.getElementById(`rar-${rarity}`);
     if (!el) return;
     window.scrollTo({
-      top: el.getBoundingClientRect().top + window.scrollY - 100,
+      top: el.getBoundingClientRect().top + window.scrollY - 132,
       behavior: "smooth",
     });
   };
@@ -340,14 +341,17 @@ export function SetDetailContent({
                 key={g.rarity}
                 id={`rar-${g.rarity}`}
                 data-rarity={g.rarity}
-                className="scroll-mt-24"
+                className="scroll-mt-32"
               >
-                {/* section heading — left-aligned anchor: name + RarityBadge +
-                    count, a hairline runs out to the right. */}
-                <div className="mb-5 flex items-center gap-2.5">
-                  <h2 className="text-h4 shrink-0">{g.name}</h2>
-                  <RarityBadge rarity={g.rarity} size="sm" />
-                  <span className="text-meta shrink-0 tabular-nums">{g.cards.length}</span>
+                {/* centered section heading (เบส) — name + RarityBadge + count,
+                    flanked by hairlines on both sides. */}
+                <div className="mb-5 flex items-center gap-3 sm:gap-4">
+                  <span aria-hidden className="h-px flex-1 bg-[var(--p-hair)]" />
+                  <div className="flex shrink-0 items-center gap-2">
+                    <h2 className="text-h4">{g.name}</h2>
+                    <RarityBadge rarity={g.rarity} size="sm" />
+                    <span className="text-meta tabular-nums">{g.cards.length}</span>
+                  </div>
                   <span aria-hidden className="h-px flex-1 bg-[var(--p-hair)]" />
                 </div>
                 <div className="grid grid-cols-3 gap-x-2.5 gap-y-4 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
