@@ -102,6 +102,8 @@ export const jp = {
   totalValue: "総額",
   marketValueTotal: "市場総額",
   adLabel: "広告",
+  adSpace: "広告スペース",
+  otherSets: "他のセット",
   ctaPortfolio: "コレクション管理",
   ctaHoney: "ポイントを貯める",
   priceUp: "値上がり",

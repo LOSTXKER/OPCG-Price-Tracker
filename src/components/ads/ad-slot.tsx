@@ -1,8 +1,6 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight, Crown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
@@ -41,26 +39,17 @@ export function AdSlot({
   const canServeNetworkAds = Boolean(ADSENSE_CLIENT) && consent === "granted";
   void canServeNetworkAds; // network slot wiring lands when ADSENSE_CLIENT is set
 
+  // House ad replaced by a neutral ad-space placeholder (เบส) — represents where
+  // a network ad renders; the AdSense path lights up once ADSENSE_CLIENT is set.
   return (
-    <Link
-      href="/pricing"
+    <div
       data-ad-placement={placement}
       className={cn(
-        "group relative flex flex-col justify-center gap-1 overflow-hidden rounded-lg border border-[var(--p-hair)] bg-gradient-to-br from-secondary to-accent p-4 motion-base",
+        "flex items-center justify-center overflow-hidden rounded-lg border border-dashed border-[var(--p-hair)] bg-muted/20 p-4 text-center",
         className
       )}
     >
-      <span className="absolute right-2 top-1.5 text-eyebrow text-muted-foreground/60">
-        {t(lang, "adLabel")}
-      </span>
-      <span className="flex items-center gap-1.5 text-h5 text-foreground">
-        <Crown className="size-4 text-primary" aria-hidden />
-        {t(lang, "adUpgradeTitle")}
-      </span>
-      <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
-        {t(lang, "upgradePlan")}
-        <ArrowRight className="size-3.5 motion-base group-hover:translate-x-0.5" aria-hidden />
-      </span>
-    </Link>
+      <span className="text-meta">{t(lang, "adSpace")}</span>
+    </div>
   );
 }

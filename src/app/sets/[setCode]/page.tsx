@@ -7,9 +7,10 @@ import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { t } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
 import { formatCount } from "@/lib/utils/currency";
-import { getSet, getSetDetailData } from "@/lib/data/set-detail";
+import { getSet, getSetDetailData, getOtherSets } from "@/lib/data/set-detail";
 import { SetHero } from "@/components/sets/set-hero";
 import { SetDetailContent } from "@/components/sets/set-detail-content";
+import { OtherSets } from "@/components/sets/other-sets";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +42,7 @@ export default async function SetDetailPage(props: {
 
   const lang = await getServerLanguage();
   const { set } = data;
+  const otherSets = await getOtherSets(set.code);
 
   return (
     <>
@@ -81,6 +83,12 @@ export default async function SetDetailPage(props: {
         </div>
 
         <SetDetailContent groups={data.rarityGroups} totalCards={data.cardCount} />
+
+        <OtherSets
+          sets={otherSets}
+          title={t(lang, "otherSets")}
+          viewAllLabel={t(lang, "viewAll")}
+        />
       </div>
     </>
   );

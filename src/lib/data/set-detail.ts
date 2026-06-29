@@ -45,6 +45,47 @@ export const getSet = cache(async (setCode: string) => {
   return { ...cardSet, cards, productCardCount: cards.length };
 });
 
+export type OtherSet = {
+  id: number;
+  code: string;
+  name: string;
+  nameEn: string | null;
+  boxImageUrl: string | null;
+};
+
+/** A handful of other sets to browse from the bottom of a set-detail page.
+ *  Falls back to a representative card image when a set has no box art (mirrors
+ *  the sets-index tiles). */
+export const getOtherSets = cache(
+  async (excludeCode: string, take = 14): Promise<OtherSet[]> => {
+    const code = decodeURIComponent(excludeCode);
+    const sets = await prisma.cardSet.findMany({
+      where: { code: { not: code } },
+      orderBy: [{ releaseDate: "desc" }, { code: "asc" }],
+      take,
+      select: { id: true, code: true, name: true, nameEn: true, boxImageUrl: true },
+    });
+
+    const fallbackNeeded = sets.filter((s) => !s.boxImageUrl).map((s) => s.id);
+    const imgMap = new Map<number, string>();
+    if (fallbackNeeded.length) {
+      const cards = await prisma.card.findMany({
+        where: { setId: { in: fallbackNeeded }, imageUrl: { not: null } },
+        orderBy: { cardCode: "asc" },
+        select: { setId: true, imageUrl: true },
+      });
+      for (const c of cards) {
+        if (c.imageUrl && !imgMap.has(c.setId)) imgMap.set(c.setId, c.imageUrl);
+      }
+    }
+
+    return sets.map((s) => ({
+      ...s,
+      boxImageUrl: s.boxImageUrl ?? imgMap.get(s.id) ?? null,
+    }));
+  },
+);
+
 export type SetDetailTopCard = {
   cardCode: string;
   nameJp: string;

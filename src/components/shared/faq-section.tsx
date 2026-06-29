@@ -18,7 +18,7 @@ export function FaqSection({
     <section className={title ? "mt-12 space-y-4" : "space-y-4"}>
       <JsonLd data={faqJsonLd(items)} />
       {title && <h2 className="text-h2">{title}</h2>}
-      <Surface variant="outline" className="divide-y divide-[var(--p-hair)]">
+      <Surface variant="outline" className="divide-y divide-[var(--p-hair)] overflow-hidden">
         {items.map((item, i) => (
           <details key={i} className="group">
             <summary className="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 text-sm font-medium motion-base hover:bg-muted/70 [&::-webkit-details-marker]:hidden">
@@ -27,7 +27,7 @@ export function FaqSection({
                 +
               </span>
             </summary>
-            <div className="px-5 pb-4 text-sm leading-relaxed text-muted-foreground">
+            <div className="px-5 pb-5 pt-1.5 text-sm leading-relaxed text-muted-foreground">
               {item.answer}
             </div>
           </details>

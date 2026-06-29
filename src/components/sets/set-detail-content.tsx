@@ -10,6 +10,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { RarityBadge } from "@/components/shared/rarity-badge";
+import { RARITY_BAR_COLOR } from "@/lib/constants/rarities";
 import { type ChangePeriod } from "@/components/cards/card-item";
 import { SetCardTile } from "./set-card-tile";
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
@@ -263,11 +264,32 @@ export function SetDetailContent({
               ),
         )}
       >
-        <RarityBadge rarity={rt.value} size="sm" />
+        {variant === "rail" ? (
+          // Minimal rail row: a small rarity-colour dot + plain code (no pill).
+          <span className="flex min-w-0 items-center gap-2">
+            <span
+              aria-hidden
+              className={cn(
+                "size-2 shrink-0 rounded-full",
+                RARITY_BAR_COLOR[rt.value] ?? "bg-muted-foreground/40",
+              )}
+            />
+            <span
+              className={cn(
+                "truncate text-xs font-medium",
+                active ? "text-primary" : "text-foreground/80",
+              )}
+            >
+              {rt.value}
+            </span>
+          </span>
+        ) : (
+          <RarityBadge rarity={rt.value} size="sm" />
+        )}
         <span
           className={cn(
             "shrink-0 text-xs tabular-nums",
-            active ? "text-primary" : "text-muted-foreground/50",
+            active ? "text-primary/70" : "text-muted-foreground/40",
           )}
         >
           {rt.count}
@@ -375,19 +397,12 @@ export function SetDetailContent({
         </div>
 
         <div className="space-y-8">
-            {displayGroups.map((g, idx) => (
+            {displayGroups.map((g) => (
               <section
                 key={g.rarity}
                 id={`rar-${g.rarity}`}
                 data-rarity={g.rarity}
-                className={cn(
-                  "scroll-mt-32",
-                  // The last section needs room below it so clicking it can
-                  // scroll its heading to the top (otherwise the page bottom
-                  // blocks the jump on tall screens).
-                  idx === displayGroups.length - 1 &&
-                    "min-h-[calc(100dvh-18rem)]",
-                )}
+                className="scroll-mt-32"
               >
                 {/* centered section heading (เบส) — name + RarityBadge + count,
                     flanked by hairlines on both sides. */}

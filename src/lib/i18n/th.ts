@@ -102,6 +102,8 @@ export const th = {
   totalValue: "มูลค่ารวม",
   marketValueTotal: "มูลค่ารวมตลาด",
   adLabel: "โฆษณา",
+  adSpace: "พื้นที่โฆษณา",
+  otherSets: "ชุดอื่นๆ",
   ctaPortfolio: "จัดการคอลเลกชัน",
   ctaHoney: "สะสมแต้ม",
   priceUp: "ราคาขึ้น",

@@ -102,6 +102,8 @@ export const en = {
   totalValue: "Total Value",
   marketValueTotal: "Market Value",
   adLabel: "Ad",
+  adSpace: "Ad space",
+  otherSets: "Other sets",
   ctaPortfolio: "Manage collection",
   ctaHoney: "Earn rewards",
   priceUp: "Price Up",
