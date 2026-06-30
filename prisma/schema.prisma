@@ -22,7 +22,6 @@ model Game {
   // Game-scoping back-relations (P4 multi-game). All nullable on the owning
   // side + onDelete: SetNull, so deleting a Game never cascades user data.
   cards            Card[]
-  portfolios       Portfolio[]
   decks            Deck[]
   listings         Listing[]
   yuyuteiMappings  YuyuteiMapping[]
@@ -766,8 +765,6 @@ model Portfolio {
   user         User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   name         String                 @default("Default")
   isPublic     Boolean                @default(true)
-  gameId       Int?
-  game         Game?                  @relation(fields: [gameId], references: [id], onDelete: SetNull)
   items        PortfolioItem[]
   snapshots    PortfolioSnapshot[]
   transactions PortfolioTransaction[]
@@ -776,7 +773,6 @@ model Portfolio {
 
   @@index([userId])
   @@index([userId, isPublic])
-  @@index([userId, gameId])
 }
 
 model PortfolioSnapshot {
