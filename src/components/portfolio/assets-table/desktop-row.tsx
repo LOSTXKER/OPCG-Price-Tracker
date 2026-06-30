@@ -34,8 +34,8 @@ export const AssetRowComponent = memo(function AssetRowComponent({
   const viewLabel = t(lang, "viewDetails")
 
   return (
-    <tr className="group border-b border-[var(--p-hair)] ease-chrome transition-colors hover:bg-muted/70">
-      <td className="py-3.5 pl-5 pr-3 align-middle">
+    <tr className="group ease-chrome transition-colors hover:bg-muted/70">
+      <td className="py-3.5 pr-3 align-middle">
         <div className="flex items-start gap-3.5">
           <Link href={detailHref} className="shrink-0" aria-label={viewLabel}>
             <div className="relative size-11 overflow-hidden rounded-lg bg-muted/60 ring-1 ring-[var(--p-hair)] transition-transform group-hover:scale-[1.02]">
@@ -148,7 +148,7 @@ export const AssetRowComponent = memo(function AssetRowComponent({
           <span className="font-price text-xs text-muted-foreground/40">—</span>
         )}
       </td>
-      <td className="py-3.5 pr-5 text-right align-middle">
+      <td className="py-3.5 text-right align-middle">
         <div className="flex items-center justify-end">
           <AssetEditButton lang={lang} onEdit={onEdit} showLabel />
         </div>

@@ -7,12 +7,14 @@ import { getCardName, t } from "@/lib/i18n"
 import type { AssetRow } from "@/lib/types/portfolio"
 import { useUIStore } from "@/stores/ui-store"
 
+import { PortfolioCollectionGrid } from "@/components/portfolio/portfolio-collection-grid"
+import { PortfolioHoldingSheet } from "@/components/portfolio/portfolio-holding-sheet"
 import { AssetsToolbar } from "./assets-toolbar"
 import { BulkEditDialog } from "./bulk-edit-dialog"
 import { DesktopAssetsTable } from "./desktop-table"
 import { MobileAssetCard } from "./mobile-card"
 import { SingleEditDialog } from "./single-edit-dialog"
-import { sortAssets, type SortDir, type SortKey } from "./utils"
+import { sortAssets, type HoldingsView, type SortDir, type SortKey } from "./utils"
 
 export type { AssetRow } from "@/lib/types/portfolio"
 
@@ -40,8 +42,10 @@ export function PortfolioAssetsTable({
   const [searchOpen, setSearchOpen] = useState(false)
   const [sortKey, setSortKey] = useState<SortKey>("value")
   const [sortDir, setSortDir] = useState<SortDir>("desc")
+  const [view, setView] = useState<HoldingsView>("grid")
   const [editOpen, setEditOpen] = useState(false)
   const [editFocusId, setEditFocusId] = useState<number | null>(null)
+  const [detailId, setDetailId] = useState<number | null>(null)
 
   const filteredAssets = useMemo(() => {
     let result = assets
@@ -89,10 +93,22 @@ export function PortfolioAssetsTable({
         onSortSelect={handleSortSelect}
         onBulkEdit={openBulkEdit}
         hasAssets={assets.length > 0}
+        view={view}
+        onViewChange={setView}
       />
 
       {filteredAssets.length === 0 ? (
         <EmptyState variant="plain" title={t(lang, "noResults")} />
+      ) : view === "grid" ? (
+        <div className="pt-4">
+          <PortfolioCollectionGrid
+            assets={filteredAssets}
+            lang={lang}
+            onEdit={openEdit}
+            onSelect={(row) => setDetailId(row.itemId)}
+            hideBalance={hideBalance}
+          />
+        </div>
       ) : (
         <>
           <div className="divide-y divide-[var(--p-hair)] sm:hidden">
@@ -115,6 +131,14 @@ export function PortfolioAssetsTable({
           />
         </>
       )}
+
+      <PortfolioHoldingSheet
+        asset={assets.find((a) => a.itemId === detailId) ?? null}
+        open={detailId != null}
+        onOpenChange={(v) => {
+          if (!v) setDetailId(null)
+        }}
+      />
 
       {editFocusId != null ? (
         <SingleEditDialog

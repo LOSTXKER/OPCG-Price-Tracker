@@ -1,17 +1,18 @@
 "use client"
 
-import { Edit2 } from "lucide-react"
+import { Edit2, LayoutGrid, List } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
   Toolbar,
   ToolbarSearch,
   ToolbarSortDropdown,
+  ViewToggle,
   type ToolbarSortOption,
 } from "@/components/ui/toolbar"
 import { t, type Language } from "@/lib/i18n"
 
-import type { SortDir, SortKey } from "./utils"
+import type { HoldingsView, SortDir, SortKey } from "./utils"
 
 export function AssetsToolbar({
   lang,
@@ -25,6 +26,8 @@ export function AssetsToolbar({
   onSortSelect,
   onBulkEdit,
   hasAssets,
+  view,
+  onViewChange,
 }: {
   lang: Language
   count: number
@@ -37,6 +40,8 @@ export function AssetsToolbar({
   onSortSelect: (key: SortKey) => void
   onBulkEdit: () => void
   hasAssets: boolean
+  view: HoldingsView
+  onViewChange: (v: HoldingsView) => void
 }) {
   const sortOptions: ToolbarSortOption<SortKey>[] = [
     { key: "value", label: t(lang, "value") },
@@ -48,6 +53,8 @@ export function AssetsToolbar({
 
   return (
     <Toolbar
+      variant="bare"
+      className="border-b border-[var(--p-hair)] pb-3"
       right={
         <>
           <ToolbarSearch
@@ -66,6 +73,14 @@ export function AssetsToolbar({
             onChange={onSortSelect}
             fallbackLabel={t(lang, "toolbarSort")}
           />
+          <ViewToggle<HoldingsView>
+            modes={[
+              { value: "grid", icon: LayoutGrid, ariaLabel: t(lang, "watchlistViewGrid") },
+              { value: "list", icon: List, ariaLabel: t(lang, "watchlistViewList") },
+            ]}
+            value={view}
+            onChange={onViewChange}
+          />
           {hasAssets && (
             <Button
               type="button"
@@ -81,7 +96,7 @@ export function AssetsToolbar({
         </>
       }
     >
-      <p className="text-sm font-bold">{t(lang, "assets")}</p>
+      <p className="text-h5">{t(lang, "assets")}</p>
       <span className="rounded-full bg-primary/8 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-primary/80">
         {count} {t(lang, "card")}
       </span>

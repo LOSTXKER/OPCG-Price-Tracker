@@ -37,9 +37,13 @@
 - [x] **multi-source pricing + เทียบกราฟข้ามตระกูล (chunk A–C)** ✅: ตารางแหล่งราคาเต็มกว้าง (ask/sold native ¥/$ · sort · raw=Yuyutei-only) · hero verb ซื่อสัตย์ (ขายล่าสุด/ราคาตั้งขาย + source) · recent-sales = sold จริงเท่านั้น · กราฟ indexed % (`rebaseToIndex`+test) · **cross-family pill "เทียบกับ PSA 10 ⇄ Raw A"** (chart-only · ไม่แตะ table/hero · stable per-grade color · ปุ่มล้าง · caption %) · verify tsc 0/lint 0/test 40/hydration 0 + CDP screenshot desktop+mobile ทั้ง 2 branch
 - [ ] **เปลี่ยน est → ข้อมูลจริง** เมื่อมี schema: Grade enum (Raw A/B/C·PSA 9/8) + edition JP/EN column + `Comp`/population tables (⚠️ เบสอนุมัติ migrate) — โครง UI พร้อม swap แล้ว
 
-### Portfolio — honesty + Robinhood hero
-- [ ] ⚠️ fix snapshot: `netInvested` → P/L money-weighted (เลิกเส้นกระโดดตอน add card) [schema]
-- [ ] hero + finger-scrub + inflow notch · KPI quartet · movers (เรียง THB swing) · holding detail sheet (raw/graded toggle)
+### Portfolio — honesty + Robinhood hero ✅ (รื้อใหม่ตาม VISION §5.3 · เบสสั่ง 2026-06-30 · workflow build 7 agent)
+- [x] ⚠️ **netInvested** → `PortfolioSnapshot.netInvestedJpy Int?` (additive nullable · apply prod ด้วย `db execute` IF NOT EXISTS + `migrate resolve --applied` ตาม precedent P4.2 · ไม่แตะ drift M5) · cron เขียนไปข้างหน้า · snapshot เก่า null → UI fallback `totalCost`
+- [x] hero (`HeroNumber` atom count-up + scrub-bind) + finger-scrub chart (pointer-events, range 1D·1W·1M·3M·1Y·ALL honey-active) + **inflow notch** (honey dot จาก isInflow) · KPI quartet 2×2 hairline · movers (เรียง abs THB swing) · holding detail sheet (tap tile บน collection grid)
+- [x] **game-aware** (namespace-ready, ยังไม่แยก URL): API `card.set.game` · `gameBreakdown` ใน hook · `PortfolioGameBreakdown` (collapse เหลือ 1 เกมตอนนี้ → null · ติดเมื่อมีเกม 2) · = โครงหน้ารวม `/all/portfolio` พร้อมเสียบ
+- [x] verify: tsc 0 · lint 0 err · test 56/56 · build ✓ · อ่าน component ทุกตัว fix 2 bug (scrub ไม่มี XAxis/YAxis → notch/cursor เพี้ยน + เส้นแบน · KPI ROI leak ทิศตอน hideBalance)
+- [ ] ⏭️ **แยก URL `/[game]/portfolio` + `/all/portfolio` aggregate** = milestone ถัดไป (อยู่ §Multi-game + P4.3 ด้านล่าง · ทำตอน Pokémon data มา · component ชุดนี้เสียบเข้าได้เลย)
+- [ ] 🧹 orphan: `portfolio-allocation-chart.tsx` (donut เก่า ไม่มี importer แล้วหลัง allocation rewrite เป็น bar) · `portfolio-item.tsx`/`portfolio-summary.tsx` ฯลฯ ที่ลบไปแล้ว — ⚠️ เบสยืนยันก่อนลบ allocation-chart
 
 ### Marketplace + escrow (effort สูงสุด · หลังเปิด backend flag)
 - [ ] order book ต่อ SKU + 2 CTA (buy now/place bid) · `CustodyTimeline` + held hero · buyer protection · seller behavior badge · dispute flow [schema: MarketSku/Bid/escrow/SellerStats]
@@ -172,7 +176,11 @@
 - [~] **defer ไป P4.3** (ลด prod risk): `CardType` enum ขยาย (ALTER TYPE รันใน tx ไม่ได้) · backfill gameId · NOT NULL + `@@unique([gameId,cardCode])` — ทำหลัง Pokémon data
 - [x] **deployed เข้า Supabase prod แล้ว** (2026-06-14) — apply ผ่าน `prisma db execute` + `migrate resolve --applied` (option 1: ไม่แตะ drift) · verify gameId มีครบ 6 ตาราง
 
-**P4.3+ (build later)** — game-scoped queries server-side · `/[game]/` route group + redirect · backfill gameId (จาก set.game) + NOT NULL + `@@unique([gameId,cardCode])` · ขยาย CardType enum · Pokémon sets/rarities/pull-rate + scraper stack (ต้องหาแหล่งข้อมูล Pokémon ก่อน)
+**P4.3 — `/[game]/` URL namespace (เบสสั่ง 2026-06-30 "URL แยกเกมทั้งแอป · ทำ UI ก่อน")**
+- [x] **routing core (Phase 1)** ✅ — กลยุทธ์ middleware-rewrite + cookie/header resolver (mirror `getServerLanguage` · ไม่ย้าย 102 route จริง · ไม่แก้ 180 ลิงก์): `src/lib/game/{constants,server}.ts` (GAME_COOKIE/HEADER · GAME_SCOPED_SEGMENTS allowlist · `getServerGame()`) · middleware: `/opcg/x` rewrite→flat `/x` + inject `x-game` + cookie · legacy `/x` redirect→`/{currentGame}/x` (ลิงก์เก่าใช้ได้หมด · namespace ทั้งแอปทันที) · `updateSession` refactor backward-compat รองรับ rewrite (auth ไม่พัง) · GameSwitcher นำทาง swap segment
+- [x] **verify (Phase 1)** ✅ — build ✓ · live curl matrix 2 รอบ (bypass on/off): `/portfolio`→307→`/opcg/portfolio` · `/opcg/portfolio`→200 · `/all/portfolio`→200 · `/sets`→307→`/opcg/sets` · `/messages`→302→login (auth ไม่พัง) · `/settings`/`/honey`/`/api`/`/` flat ไม่แตะ · ไม่มี loop · `kuma-game` cookie set ถูก
+- [~] **Phase 2 (per-page scoping)** — **portfolio ✅**: `useGameScope()` อ่าน game จาก URL · `usePortfolioApi(scope)` filter assets/stats/allocation ตามเกม (gameBreakdown คง cross-game) · `/all/portfolio`=รวมทุกเกม+breakdown · `/opcg`=scope เกมเดียว · `/pokemon`=empty state · verify lint0/tsc/test56/build + curl 4 route 200 · **เหลือ:** sets/cards/search/trending/compare/watchlist/decks อ่าน `getServerGame()` (server) · sitemap/canonical → prefixed · 307→308 ตอน stable · rename `middleware.ts`→`proxy.ts` (Next16)
+- [ ] **DEFER (data)** — backfill `Card.gameId` (จาก set.game) + NOT NULL + `@@unique([gameId,cardCode])` · ขยาย CardType enum · Pokémon sets/rarities/pull-rate + scraper (ต้องหาแหล่งข้อมูล Pokémon ก่อน)
 
 ## 🧹 Declutter audit (screenshot ทุกหน้า mobile+desktop ผ่าน 2 workflows) — เบสเลือก B (live pages ก่อน, marketplace=P3 ทีหลัง)
 > ผล: 10 high + 48 med · card-detail/drop-calc สะอาด (5/5) · home รกสุด (2/5) · JSON: /tmp/{mobile,desktop}-findings.json

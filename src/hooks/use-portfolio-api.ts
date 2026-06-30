@@ -7,8 +7,9 @@ import { getCardName, getLocale, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { invalidateSettings } from "@/hooks/use-settings"
 import { DEFAULT_CARD_CONDITION } from "@/lib/constants/ui"
-import type { PortfolioStats, AllocationSlice, AssetRow, PortfolioMeta, TransactionRow } from "@/lib/types/portfolio"
+import type { PortfolioStats, AllocationSlice, AssetRow, PortfolioMeta, TransactionRow, GameRef, HistoryPoint, GameBreakdown } from "@/lib/types/portfolio"
 import type { CartItem } from "@/components/portfolio/add-card-types"
+import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants"
 
 type CardData = {
   id: number
@@ -19,8 +20,10 @@ type CardData = {
   imageUrl: string | null
   rarity: string
   latestPriceJpy: number | null
+  latestPriceThb: number | null
   priceChange24h: number | null
   priceChange7d: number | null
+  set?: { game: GameRef | null } | null
 }
 
 type ItemRow = {
@@ -40,9 +43,17 @@ type PortfolioRow = {
   items: ItemRow[]
 }
 
-type HistoryPoint = { label: string; value: number }
+type SnapshotRow = {
+  totalJpy: number
+  totalThb: number | null
+  totalCost: number
+  netInvestedJpy: number | null
+  pnl: number
+  cardCount: number
+  snapshotAt: string
+}
 
-export function usePortfolioApi() {
+export function usePortfolioApi(gameScope: string = ALL_GAMES) {
   const lang = useUIStore((s) => s.language)
   const [portfolios, setPortfolios] = useState<PortfolioRow[]>([])
   const [history, setHistory] = useState<HistoryPoint[]>([])
@@ -58,28 +69,12 @@ export function usePortfolioApi() {
 
   const load = useCallback(async () => {
     try {
-      const [data, hData] = await Promise.all([
-        apiGet<{ portfolios: PortfolioRow[] }>("/api/portfolio"),
-        apiTry(apiGet<{ snapshots: { totalJpy: number; snapshotAt: string }[] }>("/api/portfolio/history")),
-      ])
+      const data = await apiGet<{ portfolios: PortfolioRow[] }>("/api/portfolio")
       setError(null)
       setPortfolios(data.portfolios ?? [])
 
       if (!activeIdRef.current && data.portfolios?.length) {
         setActiveId(data.portfolios[0].id)
-      }
-
-      if (hData) {
-        const locale = getLocale(lang)
-        setHistory(
-          (hData.snapshots ?? []).map((s) => ({
-            label: new Date(s.snapshotAt).toLocaleDateString(locale, {
-              month: "short",
-              day: "numeric",
-            }),
-            value: s.totalJpy,
-          }))
-        )
       }
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
@@ -91,6 +86,36 @@ export function usePortfolioApi() {
     }
     setLoading(false)
   }, [lang])
+
+  // History is scoped to the active portfolio so the hero + scrub reflect exactly
+  // that book. Inflow notches mark snapshots where the invested baseline stepped
+  // up (cards added) — so adding a card never reads as a gain (VISION §5.3).
+  const loadHistory = useCallback(
+    async (portfolioId: number) => {
+      const hData = await apiTry(
+        apiGet<{ snapshots: SnapshotRow[] }>(`/api/portfolio/history?portfolioId=${portfolioId}`),
+      )
+      if (!hData) return
+      const locale = getLocale(lang)
+      let prevInvested: number | null = null
+      const points: HistoryPoint[] = (hData.snapshots ?? []).map((s) => {
+        const netInvested = s.netInvestedJpy ?? s.totalCost
+        const isInflow = prevInvested != null && netInvested > prevInvested
+        prevInvested = netInvested
+        return {
+          label: new Date(s.snapshotAt).toLocaleDateString(locale, { month: "short", day: "numeric" }),
+          date: s.snapshotAt,
+          value: s.totalJpy,
+          cost: s.totalCost,
+          netInvested,
+          cardCount: s.cardCount,
+          isInflow,
+        }
+      })
+      setHistory(points)
+    },
+    [lang],
+  )
 
   const loadTransactions = useCallback(async () => {
     if (!activeId) return
@@ -112,6 +137,14 @@ export function usePortfolioApi() {
     return () => clearTimeout(t)
   }, [load])
 
+  useEffect(() => {
+    const tm = setTimeout(() => {
+      if (activeId) void loadHistory(activeId)
+      else setHistory([])
+    }, 0)
+    return () => clearTimeout(tm)
+  }, [activeId, loadHistory])
+
   const activePortfolio = useMemo(
     () => portfolios.find((p) => p.id === activeId) ?? null,
     [portfolios, activeId]
@@ -119,13 +152,22 @@ export function usePortfolioApi() {
 
   const items = useMemo(() => activePortfolio?.items ?? [], [activePortfolio])
 
+  // Holdings narrowed to the active game scope (a slug, or ALL_GAMES for the
+  // cross-game aggregate). Cards resolve their game via set.game; a null game
+  // falls back to the default game. Drives the scoped value/KPIs/holdings —
+  // gameBreakdown below stays cross-game so the breakdown still sums all games.
+  const scopedItems = useMemo(() => {
+    if (gameScope === ALL_GAMES) return items
+    return items.filter((it) => (it.card.set?.game?.slug ?? DEFAULT_GAME) === gameScope)
+  }, [items, gameScope])
+
   const stats = useMemo((): PortfolioStats => {
     let totalValueJpy = 0
     let totalCostJpy = 0
     let best: { name: string; pnl: number; pnlPercent: number } | null = null
     let worst: { name: string; pnl: number; pnlPercent: number } | null = null
 
-    for (const it of items) {
+    for (const it of scopedItems) {
       const px = it.card.latestPriceJpy ?? 0
       const cost = (it.purchasePrice ?? 0) * it.quantity
       const value = px * it.quantity
@@ -152,11 +194,11 @@ export function usePortfolioApi() {
       bestPerformer: best,
       worstPerformer: worst,
     }
-  }, [items, lang])
+  }, [scopedItems, lang])
 
   const allocation = useMemo((): AllocationSlice[] => {
     if (stats.totalValueJpy === 0) return []
-    const sorted = [...items]
+    const sorted = [...scopedItems]
       .map((it) => ({
         name: getCardName(lang, it.card),
         value: (it.card.latestPriceJpy ?? 0) * it.quantity,
@@ -176,10 +218,10 @@ export function usePortfolioApi() {
       result.push({ name: t(lang, "other"), value: otherValue, percent: (otherValue / stats.totalValueJpy) * 100, imageUrl: null, cardCode: "" })
     }
     return result
-  }, [items, stats.totalValueJpy, lang])
+  }, [scopedItems, stats.totalValueJpy, lang])
 
   const assets = useMemo((): AssetRow[] =>
-    items.map((it) => ({
+    scopedItems.map((it) => ({
       itemId: it.id,
       cardId: it.card.id,
       cardCode: it.card.cardCode,
@@ -191,14 +233,42 @@ export function usePortfolioApi() {
       quantity: it.quantity,
       purchasePrice: it.purchasePrice,
       currentPrice: it.card.latestPriceJpy,
+      currentPriceThb: it.card.latestPriceThb ?? null,
       priceChange24h: it.card.priceChange24h,
       priceChange7d: it.card.priceChange7d,
       condition: it.condition,
       isPrivate: it.isPrivate ?? false,
       notes: it.notes ?? null,
+      game: it.card.set?.game ?? null,
     })),
-    [items]
+    [scopedItems]
   )
+
+  // Per-game roll-up. One group today (OPCG); the UI collapses to an implicit
+  // single game and lights up the breakdown / aggregate only when a 2nd game has
+  // holdings (VISION §5.7 — "All games" aggregate for portfolio).
+  const gameBreakdown = useMemo((): GameBreakdown[] => {
+    const map = new Map<string, GameBreakdown>()
+    for (const it of items) {
+      const game = it.card.set?.game ?? null
+      const key = game?.slug ?? "__none__"
+      let entry = map.get(key)
+      if (!entry) {
+        entry = { game, valueJpy: 0, costJpy: 0, pnl: 0, pnlPercent: 0, count: 0 }
+        map.set(key, entry)
+      }
+      entry.valueJpy += (it.card.latestPriceJpy ?? 0) * it.quantity
+      entry.costJpy += (it.purchasePrice ?? 0) * it.quantity
+      entry.count += it.quantity
+    }
+    return [...map.values()]
+      .map((e) => ({
+        ...e,
+        pnl: e.valueJpy - e.costJpy,
+        pnlPercent: e.costJpy > 0 ? ((e.valueJpy - e.costJpy) / e.costJpy) * 100 : 0,
+      }))
+      .sort((a, b) => b.valueJpy - a.valueJpy)
+  }, [items])
 
   const portfolioMetas = useMemo((): PortfolioMeta[] =>
     portfolios.map((p) => ({
@@ -327,6 +397,7 @@ export function usePortfolioApi() {
     stats,
     allocation,
     assets,
+    gameBreakdown,
     portfolioMetas,
     totalAllPortfolios,
     createPortfolio,

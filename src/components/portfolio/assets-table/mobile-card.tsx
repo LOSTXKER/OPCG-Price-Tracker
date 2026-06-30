@@ -32,7 +32,7 @@ export const MobileAssetCard = memo(function MobileAssetCard({
   const pnlResult = pnlCalc(row)
 
   return (
-    <div className="px-4 py-3.5">
+    <div className="py-3.5">
       <div className="flex gap-3">
         <Link href={`/cards/${row.cardCode}`} className="shrink-0">
           <div className="relative size-14 overflow-hidden rounded-lg bg-muted">
