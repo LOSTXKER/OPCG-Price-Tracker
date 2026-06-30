@@ -301,6 +301,7 @@ export const jp = {
   roi: "ROI",
   marketValue: "時価評価額",
   allGames: "すべてのゲーム",
+  filterByGame: "ゲームで絞り込み",
   invested: "投資額",
   avgCost: "平均取得単価",
   cardsAdded: "カード追加",

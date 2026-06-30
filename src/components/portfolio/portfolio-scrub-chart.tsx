@@ -15,6 +15,7 @@ import { SegmentedControl, type SegmentedOption } from "@/components/ui/segmente
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { jpyToDisplayValue, formatDisplayValue } from "@/lib/utils/currency"
+import { MASKED } from "@/lib/constants/ui"
 import type { HistoryPoint } from "@/lib/types/portfolio"
 
 // ─── Range config ───────────────────────────────────────────────────────────
@@ -141,7 +142,7 @@ export function PortfolioScrubChart({
   const scrubValue =
     activeDisplayValue != null
       ? hideBalance
-        ? "●●●"
+        ? MASKED
         : formatDisplayValue(activeDisplayValue, currency)
       : null
 

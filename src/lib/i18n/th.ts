@@ -301,6 +301,7 @@ export const th = {
   roi: "ROI",
   marketValue: "มูลค่าตลาด",
   allGames: "ทุกเกม",
+  filterByGame: "กรองตามเกม",
   invested: "เงินลงทุน",
   avgCost: "ต้นทุนเฉลี่ย",
   cardsAdded: "เพิ่มการ์ด",

@@ -44,7 +44,7 @@ export function PortfolioAllocationPanel({ allocation }: { allocation: Allocatio
                   aria-hidden="true"
                   className={cn(
                     "h-full rounded-full motion-safe:transition-all motion-safe:duration-300",
-                    isTop ? "bg-primary/40" : "bg-foreground/20",
+                    isTop ? "bg-foreground/40" : "bg-foreground/20",
                   )}
                   style={{ width: barWidth }}
                 />

@@ -13,6 +13,7 @@ import {
   formatDisplayValue,
   formatPct,
 } from "@/lib/utils/currency"
+import { MASKED } from "@/lib/constants/ui"
 import type { AssetRow } from "@/lib/types/portfolio"
 
 type Mover = {
@@ -101,7 +102,7 @@ export function PortfolioMovers({
                     )}
                   >
                     {hideBalance
-                      ? "•••"
+                      ? MASKED
                       : `${up ? "+" : "-"}${absSwingDisplay}`}
                   </p>
                   <span

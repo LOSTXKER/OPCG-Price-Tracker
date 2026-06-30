@@ -15,8 +15,9 @@ import { useUIStore } from "@/stores/ui-store";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
 import { ApiError, apiDelete, apiGet, apiPatch } from "@/lib/api/client";
 import { t } from "@/lib/i18n";
-import { GameFilterChips } from "@/components/shared/game-filter-chips";
+import { GameFilterChips, type GameChip } from "@/components/shared/game-filter-chips";
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants";
+import { getGameConfig } from "@/lib/game-config";
 import { AlertRow, type FeedbackKind } from "./alert-row";
 
 type Feedback = {
@@ -94,6 +95,21 @@ export function AlertsManagerClient() {
     }
     return { count, logo };
   }, [alerts]);
+
+  // Chips for games the user actually has alerts in. The rail self-hides below
+  // two games.
+  const gameChips = useMemo<GameChip[]>(
+    () =>
+      [...gameMeta.count.entries()]
+        .filter(([, c]) => c > 0)
+        .map(([slug, c]) => ({
+          slug,
+          label: getGameConfig(slug)?.shortName ?? slug.toUpperCase(),
+          value: String(c),
+          logoUrl: gameMeta.logo.get(slug) ?? null,
+        })),
+    [gameMeta],
+  );
 
   const onEdit = (alert: PriceAlertItem) => {
     setEditing(alert);
@@ -178,7 +194,7 @@ export function AlertsManagerClient() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5 sm:space-y-6">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-h2">{t(lang, "managePriceAlerts")}</h2>
@@ -194,19 +210,11 @@ export function AlertsManagerClient() {
         </Button>
       </div>
 
-      {alerts.length > 0 && (
-        <GameFilterChips
-          activeGame={gameFilter}
-          onSelect={setGameFilter}
-          allValue={String(alerts.length)}
-          valueFor={(slug) => String(gameMeta.count.get(slug) ?? 0)}
-          logoFor={(slug) => gameMeta.logo.get(slug) ?? null}
-        />
-      )}
+      <GameFilterChips games={gameChips} activeGame={gameFilter} onSelect={setGameFilter} />
 
       <section className="space-y-3">
         <div className="flex items-baseline justify-between">
-          <h3 className="text-h5">{t(lang, "activeAlerts")}</h3>
+          <h3 className="text-eyebrow">{t(lang, "activeAlerts")}</h3>
           <span className="text-meta text-muted-foreground">
             {active.length}
           </span>
@@ -232,7 +240,7 @@ export function AlertsManagerClient() {
       {history.length > 0 && (
         <section className="space-y-3">
           <div className="flex items-baseline justify-between">
-            <h3 className="text-h5">{t(lang, "alertHistory")}</h3>
+            <h3 className="text-eyebrow">{t(lang, "alertHistory")}</h3>
             <span className="text-meta text-muted-foreground">
               {history.length}
             </span>

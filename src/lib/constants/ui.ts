@@ -3,6 +3,10 @@ export const BLUR_DATA_URL =
 
 export const CARD_BG = "bg-muted"
 
+/** Single source for the "balance hidden" mask — one glyph, one width, so a
+ *  masked value never changes character or length between stacked components. */
+export const MASKED = "••••"
+
 export const PAGE_SIZE_DEFAULT = 24
 export const PAGE_SIZES = [24, 48, 96] as const
 
