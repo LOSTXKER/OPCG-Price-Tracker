@@ -786,6 +786,12 @@ model PortfolioSnapshot {
   totalJpy    Int
   totalThb    Float?
   totalCost   Int
+  // Cumulative net cash deployed into the portfolio (BUY cost − removals), in JPY.
+  // Lets the value line be plotted against an "invested" baseline so adding a card
+  // (inflow) never reads as gain. Nullable: backfill-free — pre-existing snapshots
+  // stay null and the UI falls back to `totalCost`. Written going forward by the
+  // snapshot cron. See VISION §5.3 (portfolio honesty) / §6.
+  netInvestedJpy Int?
   pnl         Int
   cardCount   Int
   snapshotAt  DateTime @default(now())

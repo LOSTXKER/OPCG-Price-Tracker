@@ -1,7 +1,8 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
-import { ChevronDown, Eye, EyeOff, Globe, Lock, Plus, Share2, Wallet } from "lucide-react"
+import dynamic from "next/dynamic"
+import { Eye, EyeOff, Globe, Lock, Plus, Receipt, Share2 } from "lucide-react"
 import { toast } from "sonner"
 
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
@@ -9,30 +10,42 @@ import { AuthPreviewGate } from "@/components/shared/login-gate"
 import { Breadcrumb } from "@/components/shared/breadcrumb"
 import { PageHeader } from "@/components/layout/page-header"
 import { useAuthState } from "@/hooks/use-auth-state"
-import { PortfolioSidebar } from "@/components/portfolio/portfolio-selector"
-import { PortfolioHero, MiniSparkline } from "@/components/portfolio/portfolio-hero"
-import { PortfolioInsights } from "@/components/portfolio/portfolio-insights"
+import { PortfolioSwitcher } from "@/components/portfolio/portfolio-switcher"
+import { PortfolioHero } from "@/components/portfolio/portfolio-hero"
+import { PortfolioKpi } from "@/components/portfolio/portfolio-kpi"
+import { PortfolioMovers } from "@/components/portfolio/portfolio-movers"
+import { PortfolioGameBreakdown } from "@/components/portfolio/portfolio-game-breakdown"
+import { PortfolioAllocationPanel } from "@/components/portfolio/portfolio-allocation-panel"
 import { PortfolioAssetsTable } from "@/components/portfolio/portfolio-assets-table"
 import { PortfolioTransactions } from "@/components/portfolio/portfolio-transactions"
 import { PortfolioShareDialog } from "@/components/portfolio/portfolio-share-dialog"
 import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
-import { Price } from "@/components/shared/price-inline"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { SegmentedControl, type SegmentedOption } from "@/components/ui/segmented-control"
 import { Surface } from "@/components/ui/surface"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { PortfolioMockPreview } from "./portfolio-mock-preview"
 import { usePortfolioApi } from "@/hooks/use-portfolio-api"
+import { useGameScope } from "@/hooks/use-game-scope"
+import { ALL_GAMES } from "@/lib/game/constants"
 import { useTierLimits } from "@/hooks/use-tier-limits"
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
 import { cn } from "@/lib/utils"
-import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
 import type { CartItem } from "@/components/portfolio/add-card-types"
+import type { HistoryPoint } from "@/lib/types/portfolio"
 
-type TabId = "overview" | "insights" | "transactions"
+const PortfolioScrubChart = dynamic(
+  () =>
+    import("@/components/portfolio/portfolio-scrub-chart").then(
+      (m) => m.PortfolioScrubChart,
+    ),
+  {
+    ssr: false,
+    loading: () => <div className="h-44 animate-pulse rounded-xl bg-muted sm:h-56" />,
+  },
+)
 
 export default function PortfolioClient() {
   const { authed } = useAuthState()
@@ -77,40 +90,23 @@ export default function PortfolioClient() {
   )
 }
 
-const VALID_TABS: TabId[] = ["overview", "insights", "transactions"]
-
-function getTabFromHash(): TabId {
-  if (typeof window === "undefined") return "overview"
-  const hash = window.location.hash.slice(1)
-  return VALID_TABS.includes(hash as TabId) ? (hash as TabId) : "overview"
-}
-
 function PortfolioContent() {
   const lang = useUIStore((s) => s.language)
-  const currency = useUIStore((s) => s.currency)
-  const [tab, setTabState] = useState<TabId>(getTabFromHash)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [hideBalance, setHideBalance] = useState(false)
-  const [sidebarSheetOpen, setSidebarSheetOpen] = useState(false)
+  const [txOpen, setTxOpen] = useState(false)
+  // The point under the finger while scrubbing the value chart; null when idle.
+  const [scrub, setScrub] = useState<HistoryPoint | null>(null)
   const { limits } = useTierLimits()
+  // Game scope from the /[game] URL prefix — scopes the value/KPIs/holdings.
+  const gameScope = useGameScope()
 
-  const setTab = useCallback((id: TabId) => {
-    setTabState(id)
-    window.history.replaceState(null, "", id === "overview" ? window.location.pathname : `#${id}`)
-  }, [])
-
-  useEffect(() => {
-    const onHashChange = () => setTabState(getTabFromHash())
-    window.addEventListener("hashchange", onHashChange)
-    return () => window.removeEventListener("hashchange", onHashChange)
-  }, [])
-
-  const p = usePortfolioApi()
+  const p = usePortfolioApi(gameScope)
 
   useEffect(() => {
-    if (tab === "transactions") void p.loadTransactions()
-  }, [tab, p.loadTransactions])
+    if (txOpen) void p.loadTransactions()
+  }, [txOpen, p.loadTransactions])
 
   const {
     history,
@@ -123,6 +119,7 @@ function PortfolioContent() {
     stats,
     allocation,
     assets,
+    gameBreakdown,
     portfolioMetas,
     totalAllPortfolios,
     createPortfolio,
@@ -137,7 +134,7 @@ function PortfolioContent() {
 
   const { openUpgradeDialog } = useUpgradeDialog()
 
-  const totalCostAllPortfolios = portfolioMetas.reduce((s, p) => s + p.totalCost, 0)
+  const totalCostAllPortfolios = portfolioMetas.reduce((s, m) => s + m.totalCost, 0)
   const totalPnlPctAll =
     totalCostAllPortfolios > 0
       ? ((totalAllPortfolios - totalCostAllPortfolios) / totalCostAllPortfolios) * 100
@@ -157,338 +154,191 @@ function PortfolioContent() {
 
   const items = activePortfolio?.items ?? []
 
+  // Scrub-bound hero. While dragging, show the historical market value and the
+  // unrealized P/L *at that point* (value − money invested then) — honest, never
+  // counting an inflow as a gain. Idle: the live total + live P/L.
+  const heroValueJpy = scrub ? scrub.value : stats.totalValueJpy
+  const heroDeltaJpy = scrub ? scrub.value - scrub.netInvested : stats.unrealizedPnl
+  const heroHasPnl = scrub ? scrub.netInvested > 0 : stats.totalCostJpy > 0
+  const heroDeltaPct = scrub
+    ? scrub.netInvested > 0
+      ? ((scrub.value - scrub.netInvested) / scrub.netInvested) * 100
+      : 0
+    : stats.unrealizedPnlPercent
+
   if (loading) {
     return (
-      <div className="flex gap-6">
-        <div className="hidden w-52 shrink-0 space-y-3 lg:block xl:w-56">
-          <Skeleton className="h-64 rounded-xl" />
+      <div className="space-y-5 sm:space-y-6">
+        <div className="flex items-center justify-between gap-3">
+          <Skeleton className="h-12 w-56 rounded-xl" />
+          <Skeleton className="h-9 w-28 rounded-lg" />
         </div>
-        <div className="min-w-0 flex-1 space-y-4">
-          <Skeleton className="h-10 rounded-lg" />
-          <Skeleton className="h-48 rounded-xl" />
-          <div className="grid gap-3 lg:grid-cols-12">
-            <Skeleton className="h-52 rounded-xl lg:col-span-7" />
-            <Skeleton className="h-52 rounded-xl lg:col-span-5" />
-          </div>
-          <Skeleton className="h-48 rounded-xl" />
+        <div className="space-y-3">
+          <Skeleton className="h-3 w-24" />
+          <Skeleton className="h-10 w-56" />
+          <Skeleton className="h-44 w-full rounded-xl sm:h-56" />
+        </div>
+        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl sm:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="space-y-2 p-4">
+              <Skeleton className="h-3 w-14" />
+              <Skeleton className="h-5 w-20" />
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-2 gap-3 pt-1 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i}>
+              <Skeleton className="aspect-[63/88] w-full rounded-xl" />
+              <Skeleton className="mt-2 h-3.5 w-3/4" />
+              <Skeleton className="mt-1.5 h-3 w-1/2" />
+            </div>
+          ))}
         </div>
       </div>
     )
   }
 
-  return (
-    <div className="flex flex-col gap-5 md:flex-row md:gap-6">
-      {/* ──── Mobile portfolio picker ──── */}
-      <Surface variant="panel" className="flex items-center overflow-hidden md:hidden">
-        <button
-          onClick={() => setSidebarSheetOpen(true)}
-          className="flex min-w-0 flex-1 items-center gap-3 px-3.5 py-3 transition-colors active:bg-muted/40"
-        >
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <Wallet className="size-5" />
-          </div>
-          <div className="min-w-0 flex-1 text-left">
-            <p className="truncate text-sm font-semibold">
-              {activePortfolio?.name ?? t(lang, "portfolio")}
-            </p>
-            <p className="font-price text-xs tabular-nums text-muted-foreground">
-              {hideBalance ? (
-                <>
-                  ••••
-                  {hasOverallPnl && (
-                    <span
-                      className={cn(
-                        "ml-1.5 font-semibold",
-                        totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
-                      )}
-                    >
-                      {totalPnlPctAll >= 0 ? "+" : ""}
-                      {formatPct(totalPnlPctAll, 1)}%
-                    </span>
-                  )}
-                </>
-              ) : (
-                formatJpyAmount(totalAllPortfolios, currency)
-              )}
-            </p>
-          </div>
-          <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
-        </button>
-        <div aria-hidden className="h-8 w-px shrink-0 bg-[var(--p-hair)]" />
-        <button
-          onClick={() => setHideBalance(!hideBalance)}
-          aria-label={hideBalance ? "Show balance" : "Hide balance"}
-          className="flex size-[52px] shrink-0 items-center justify-center text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground active:bg-muted/40"
-        >
-          {hideBalance ? (
-            <EyeOff className="size-4" />
-          ) : (
-            <Eye className="size-4" />
-          )}
-        </button>
-      </Surface>
+  const portfolioPublic = activePortfolio?.isPublic ?? true
 
-      {/* ──── Mobile sidebar sheet ──── */}
-      <Sheet open={sidebarSheetOpen} onOpenChange={setSidebarSheetOpen}>
-        <SheetContent
-          side="bottom"
-          className="max-h-[75vh] overflow-y-auto rounded-t-2xl pb-10"
-        >
-          <SheetHeader className="pb-2">
-            <SheetTitle>{t(lang, "portfolio")}</SheetTitle>
-            {portfolioMetas.length > 1 && (
-              <SheetDescription className="font-price tabular-nums">
-                {t(lang, "overview")}{" "}
-                {hideBalance ? (
-                  <>
-                    <span className="font-semibold text-foreground">••••••</span>
-                    {hasOverallPnl && (
-                      <span
-                        className={cn(
-                          "ml-1.5 font-semibold",
-                          totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
-                        )}
-                      >
-                        {totalPnlPctAll >= 0 ? "+" : ""}
-                        {formatPct(totalPnlPctAll, 1)}%
-                      </span>
-                    )}
-                  </>
-                ) : (
-                  <span className="font-semibold text-foreground">
-                    <Price jpy={totalAllPortfolios} />
-                  </span>
-                )}
-              </SheetDescription>
-            )}
-          </SheetHeader>
-          <PortfolioSidebar
+  return (
+    <div className="space-y-5 sm:space-y-6">
+      {/* Top bar: portfolio switcher + actions */}
+      <div className="flex items-center gap-2">
+        <div className="min-w-0 flex-1">
+          <PortfolioSwitcher
             portfolios={portfolioMetas}
             activeId={activeId}
-            onSelect={(id) => {
-              setActiveId(id)
-              setSidebarSheetOpen(false)
-            }}
+            activeName={activePortfolio?.name ?? t(lang, "portfolio")}
+            onSelect={setActiveId}
             onCreate={createPortfolio}
             onRename={renamePortfolio}
             onDelete={deletePortfolio}
+            totalAllPortfolios={totalAllPortfolios}
+            totalPnlPctAll={totalPnlPctAll}
+            hasOverallPnl={hasOverallPnl}
             hideBalance={hideBalance}
             maxPortfolios={limits.portfolioCount}
           />
-        </SheetContent>
-      </Sheet>
+        </div>
 
-      {/* ──── Desktop sidebar (consolidated single panel) ──── */}
-      <aside className="hidden w-52 shrink-0 lg:block xl:w-56">
-        <div className="lg:sticky lg:top-20">
-          <Surface variant="panel" className="overflow-hidden">
-            {/* Overview section */}
-            <div className="p-4 pb-3">
-              <div className="flex items-center justify-between">
-                <p className="text-eyebrow text-muted-foreground/60">
-                  {t(lang, "overview")}
-                </p>
-                <button
-                  onClick={() => setHideBalance(!hideBalance)}
-                  className="rounded-lg p-1 text-muted-foreground/50 ease-chrome transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  {hideBalance ? (
-                    <EyeOff className="size-3.5" />
-                  ) : (
-                    <Eye className="size-3.5" />
-                  )}
-                </button>
-              </div>
-              <div className="mt-2 flex items-baseline gap-2">
-                {hideBalance ? (
-                  <>
-                    <p className="font-price text-xl font-extrabold tabular-nums tracking-tight">
-                      ••••••
-                    </p>
-                    {hasOverallPnl && (
-                      <span
-                        className={cn(
-                          "font-price text-sm font-bold tabular-nums",
-                          totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
-                        )}
-                      >
-                        {totalPnlPctAll >= 0 ? "+" : ""}
-                        {formatPct(totalPnlPctAll, 1)}%
-                      </span>
-                    )}
-                  </>
-                ) : (
-                  <p className="font-price text-xl font-extrabold tabular-nums tracking-tight">
-                    <Price jpy={totalAllPortfolios} />
-                  </p>
-                )}
-              </div>
-              {history.length >= 2 && (
-                <div className="mt-2.5 h-7 w-full">
-                  <MiniSparkline
-                    data={history.slice(-14).map((d) => d.value)}
-                    width={180}
-                    height={28}
-                    className="h-full w-full opacity-70"
-                  />
-                </div>
+        <div className="flex shrink-0 items-center gap-1.5">
+          <IconButton
+            onClick={() => setHideBalance((v) => !v)}
+            label={hideBalance ? t(lang, "showBalance") : t(lang, "hideBalance")}
+          >
+            {hideBalance ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+          </IconButton>
+
+          <IconButton
+            onClick={() => setShareOpen(true)}
+            label={t(lang, "sharePortfolio")}
+            disabled={items.length === 0}
+          >
+            <Share2 className="size-4" />
+          </IconButton>
+
+          {activePortfolio && (
+            <button
+              type="button"
+              onClick={async () => {
+                const next = !portfolioPublic
+                const ok = await setPortfolioVisibility(activePortfolio.id, next)
+                if (ok) {
+                  toast.success(
+                    t(lang, next ? "madePortfolioPublic" : "madePortfolioPrivate"),
+                    { description: activePortfolio.name },
+                  )
+                } else {
+                  toast.error(t(lang, "loadFailed"))
+                }
+              }}
+              className={cn(
+                "inline-flex size-9 items-center justify-center rounded-lg border ease-chrome transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                portfolioPublic
+                  ? "border-[var(--p-hair)] bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
+                  : "border-amber-500/30 bg-amber-500/10 text-amber-700 hover:bg-amber-500/15 dark:text-amber-400",
               )}
-            </div>
+              aria-label={t(lang, portfolioPublic ? "portfolioPublic" : "portfolioPrivate")}
+              title={t(lang, "perPortfolioVisibility")}
+            >
+              {portfolioPublic ? <Globe className="size-4" /> : <Lock className="size-4" />}
+            </button>
+          )}
 
-            {/* Portfolio list section */}
-            <div className="border-t border-[var(--p-hair)]">
-              <div className="flex items-center justify-between px-4 py-2.5">
-                <p className="text-eyebrow text-muted-foreground/60">
-                  {t(lang, "portfolio")}
-                </p>
-                {isFinite(limits.portfolioCount) && (
-                  <span className="text-overlay tabular-nums text-muted-foreground/40">
-                    {portfolioMetas.length}/{limits.portfolioCount}
-                  </span>
-                )}
-              </div>
-              <PortfolioSidebar
-                portfolios={portfolioMetas}
-                activeId={activeId}
-                onSelect={setActiveId}
-                onCreate={createPortfolio}
-                onRename={renamePortfolio}
-                onDelete={deletePortfolio}
-                hideBalance={hideBalance}
-                maxPortfolios={limits.portfolioCount}
-              />
-            </div>
-
-          </Surface>
+          <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-1.5">
+            <Plus className="size-4" />
+            <span className="hidden sm:inline">{t(lang, "addCard")}</span>
+          </Button>
         </div>
-      </aside>
+      </div>
 
-      {/* ──── Main content ──── */}
-      <main className="min-w-0 flex-1 space-y-5 sm:space-y-6">
-        {/* Top bar: tabs + add card */}
-        <div className="flex items-center justify-between gap-3">
-          <SegmentedControl<TabId>
-            ariaLabel={t(lang, "portfolio")}
-            options={VALID_TABS.map<SegmentedOption<TabId>>((tabId) => ({
-              value: tabId,
-              label: t(
-                lang,
-                `${tabId}Tab` as "overviewTab" | "insightsTab" | "transactionsTab",
-              ),
-            }))}
-            value={tab}
-            onChange={setTab}
-          />
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShareOpen(true)}
-              disabled={items.length === 0}
-              className="gap-1.5"
-              aria-label={t(lang, "sharePortfolio")}
-              title={t(lang, "sharePortfolio")}
-            >
-              <Share2 className="size-4" />
-              <span className="hidden sm:inline">{t(lang, "sharePortfolio")}</span>
-            </Button>
-            {activePortfolio ? (
-              (() => {
-                const portfolioPublic = activePortfolio.isPublic ?? true
-                return (
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      const next = !portfolioPublic
-                      const ok = await setPortfolioVisibility(activePortfolio.id, next)
-                      if (ok) {
-                        toast.success(
-                          t(lang, next ? "madePortfolioPublic" : "madePortfolioPrivate"),
-                          { description: activePortfolio.name },
-                        )
-                      } else {
-                        toast.error(t(lang, "loadFailed"))
-                      }
-                    }}
-                    className={cn(
-                      "inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold ease-chrome transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:px-3",
-                      portfolioPublic
-                        ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-400"
-                        : "border-amber-500/30 bg-amber-500/10 text-amber-700 hover:bg-amber-500/15 dark:text-amber-400",
-                    )}
-                    aria-label={t(lang, portfolioPublic ? "portfolioPublic" : "portfolioPrivate")}
-                    title={t(lang, "perPortfolioVisibility")}
-                  >
-                    {portfolioPublic ? (
-                      <Globe className="size-3.5" />
-                    ) : (
-                      <Lock className="size-3.5" />
-                    )}
-                    <span className="hidden sm:inline">
-                      {t(lang, portfolioPublic ? "portfolioPublic" : "portfolioPrivate")}
-                    </span>
-                  </button>
-                )
-              })()
-            ) : null}
-            <Button
-              onClick={() => setDialogOpen(true)}
-              size="sm"
-              className="gap-1.5"
-            >
+      {error && <p className="text-sm text-destructive">{error}</p>}
+
+      {assets.length === 0 ? (
+        <KumaEmptyState
+          preset="empty-portfolio"
+          action={
+            <Button onClick={() => setDialogOpen(true)} className="gap-1.5">
               <Plus className="size-4" />
-              <span className="hidden sm:inline">{t(lang, "addCard")}</span>
+              {t(lang, "addCard")}
             </Button>
-          </div>
-        </div>
-
-        {error && <p className="text-sm text-destructive">{error}</p>}
-
-        {items.length === 0 && tab === "overview" ? (
-          <KumaEmptyState
-            preset="empty-portfolio"
-            action={
-              <Button
-                onClick={() => setDialogOpen(true)}
-                className="gap-1.5"
-              >
-                <Plus className="size-4" />
-                {t(lang, "addCard")}
-              </Button>
-            }
-          />
-        ) : tab === "overview" ? (
-          <>
+          }
+        />
+      ) : (
+        <>
+          {/* Hero number + full-bleed scrub chart (drag updates the hero live) */}
+          <section className="space-y-3">
             <PortfolioHero
-              totalValueJpy={stats.totalValueJpy}
-              totalCostJpy={stats.totalCostJpy}
-              unrealizedPnl={stats.unrealizedPnl}
-              unrealizedPnlPercent={stats.unrealizedPnlPercent}
+              valueJpy={heroValueJpy}
+              deltaJpy={heroDeltaJpy}
+              deltaPct={heroDeltaPct}
+              hasPnl={heroHasPnl}
+              live={!!scrub}
               hideBalance={hideBalance}
-              history={history}
-              bestPerformer={stats.bestPerformer}
-              worstPerformer={stats.worstPerformer}
             />
+            <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
+          </section>
 
-            <Surface variant="panel" padding="none" className="overflow-hidden">
-              <PortfolioAssetsTable
-                assets={assets}
-                onUpdate={updateItem}
-                onRemove={removeItem}
-                hideBalance={hideBalance}
-              />
-            </Surface>
-          </>
-        ) : tab === "insights" ? (
-          <PortfolioInsights history={history} allocation={allocation} />
-        ) : (
-          <PortfolioTransactions
-            transactions={transactions}
-            onDelete={deleteTransaction}
+          {/* KPI quartet — Market Value · Cost Basis · P/L · ROI */}
+          <PortfolioKpi stats={stats} hideBalance={hideBalance} />
+
+          {/* Per-game breakdown — only on the cross-game aggregate (/all);
+              auto-hides anyway until a 2nd game has holdings */}
+          {gameScope === ALL_GAMES && (
+            <PortfolioGameBreakdown
+              breakdown={gameBreakdown}
+              totalValueJpy={stats.totalValueJpy}
+              hideBalance={hideBalance}
+            />
+          )}
+
+          {/* Today's movers — ranked by absolute swing */}
+          <Surface variant="panel" className="p-4 sm:p-5">
+            <PortfolioMovers assets={assets} hideBalance={hideBalance} />
+          </Surface>
+
+          {/* Holdings — the collection */}
+          <PortfolioAssetsTable
+            assets={assets}
+            onUpdate={updateItem}
+            onRemove={removeItem}
             hideBalance={hideBalance}
           />
-        )}
-      </main>
+
+          {/* Allocation — top holdings share */}
+          <PortfolioAllocationPanel allocation={allocation} />
+
+          <button
+            type="button"
+            onClick={() => setTxOpen(true)}
+            className="ease-chrome flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--p-hair)] py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+          >
+            <Receipt className="size-4" />
+            {t(lang, "transactionHistory")}
+          </button>
+        </>
+      )}
 
       <AddCardDialog
         open={dialogOpen}
@@ -504,6 +354,44 @@ function PortfolioContent() {
         history={history}
         assets={assets}
       />
+
+      <Sheet open={txOpen} onOpenChange={setTxOpen}>
+        <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl pb-10">
+          <SheetHeader className="pb-2">
+            <SheetTitle>{t(lang, "transactionHistory")}</SheetTitle>
+          </SheetHeader>
+          <PortfolioTransactions
+            transactions={transactions}
+            onDelete={deleteTransaction}
+            hideBalance={hideBalance}
+          />
+        </SheetContent>
+      </Sheet>
     </div>
+  )
+}
+
+function IconButton({
+  onClick,
+  label,
+  disabled,
+  children,
+}: {
+  onClick: () => void
+  label: string
+  disabled?: boolean
+  children: React.ReactNode
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={label}
+      title={label}
+      className="inline-flex size-9 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-card text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
+    >
+      {children}
+    </button>
   )
 }

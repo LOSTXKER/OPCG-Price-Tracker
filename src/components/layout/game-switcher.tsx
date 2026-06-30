@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname, useRouter } from "next/navigation";
 import { Check, ChevronDown } from "lucide-react";
 
 import {
@@ -9,11 +10,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getAllGameConfigs } from "@/lib/game-config";
+import {
+  GAME_COOKIE,
+  GAME_COOKIE_MAX_AGE,
+  isGamePrefix,
+  isGameScopedSegment,
+} from "@/lib/game/constants";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const GAMES = getAllGameConfigs();
+
+/** Persist the chosen game client-side so middleware redirects un-prefixed URLs
+ *  to it. Module-scoped so the cookie write isn't inside component/hook code. */
+function persistGameCookie(slug: string) {
+  document.cookie = `${GAME_COOKIE}=${slug}; path=/; max-age=${GAME_COOKIE_MAX_AGE}; samesite=lax`;
+}
 
 /**
  * Game-switcher pill (REDESIGN.md §3.3). Shows the active game; opens a menu of
@@ -26,6 +39,24 @@ export function GameSwitcher({ className }: { className?: string }) {
   const currentGame = useUIStore((s) => s.currentGame);
   const setCurrentGame = useUIStore((s) => s.setCurrentGame);
   const active = GAMES.find((g) => g.slug === currentGame) ?? GAMES[0];
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Switch game = stay on the same feature, swap the `/[game]` segment. Persist
+  // the cookie so middleware redirects un-prefixed URLs to the chosen game too.
+  const switchGame = (slug: string) => {
+    setCurrentGame(slug);
+    persistGameCookie(slug);
+    const segs = pathname.split("/").filter(Boolean);
+    if (isGamePrefix(segs[0])) {
+      segs[0] = slug;
+      router.push("/" + segs.join("/"));
+    } else if (isGameScopedSegment(segs[0])) {
+      router.push(`/${slug}${pathname}`);
+    }
+    // On a non-namespaced page (settings, profile, …) just persist the choice;
+    // the next browse navigation picks it up.
+  };
 
   // Single registered game → nothing to switch; render a static badge.
   if (GAMES.length < 2) {
@@ -67,7 +98,7 @@ export function GameSwitcher({ className }: { className?: string }) {
               key={g.slug}
               disabled={disabled}
               onClick={() => {
-                if (!disabled) setCurrentGame(g.slug);
+                if (!disabled) switchGame(g.slug);
               }}
               className={cn("flex items-center gap-2", isActive && "font-semibold text-foreground")}
             >

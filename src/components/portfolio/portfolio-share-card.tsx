@@ -115,19 +115,37 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
           style={{ padding: PAD }}
         >
           <header className="flex items-start justify-between">
-            <div>
-              <p
-                className="font-semibold uppercase tracking-[0.2em] text-muted-foreground"
-                style={{ fontSize: 18, letterSpacing: 4 }}
+            <div className="flex items-start" style={{ gap: 22 }}>
+              <div
+                aria-hidden
+                className="flex shrink-0 items-center justify-center font-extrabold"
+                style={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: 20,
+                  fontSize: 34,
+                  color: "#2a1b08",
+                  background:
+                    "linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 55%, #ffffff))",
+                  boxShadow: "0 8px 24px color-mix(in srgb, var(--color-primary) 35%, transparent)",
+                }}
               >
-                {brand} · Portfolio
-              </p>
-              <p
-                className="mt-3 font-extrabold tracking-tight"
-                style={{ fontSize: 56, lineHeight: 1.05 }}
-              >
-                {portfolioName}
-              </p>
+                M
+              </div>
+              <div>
+                <p
+                  className="font-semibold uppercase tracking-[0.2em] text-muted-foreground"
+                  style={{ fontSize: 18, letterSpacing: 4 }}
+                >
+                  {brand} · Portfolio
+                </p>
+                <p
+                  className="mt-3 font-extrabold tracking-tight"
+                  style={{ fontSize: 56, lineHeight: 1.05 }}
+                >
+                  {portfolioName}
+                </p>
+              </div>
             </div>
             <div className="text-right">
               <p
@@ -165,6 +183,7 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
                     : "var(--color-price-down)",
                 }}
               >
+                {isUp ? "▲ " : "▼ "}
                 {isUp ? "+" : ""}
                 {formatPct(unrealizedPnlPercent, 2)}%
               </span>
@@ -188,6 +207,7 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
                       : "var(--color-price-down)",
                   }}
                 >
+                  {isUp ? "▲ " : "▼ "}
                   {isUp ? "+" : ""}
                   {formatJpyAmount(unrealizedPnl, currency)}
                 </span>

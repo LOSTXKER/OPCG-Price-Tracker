@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Bell, Pin } from "lucide-react";
 
 import { CardImageButton } from "@/components/shared/card-image-button";
-import { MiniSparkline } from "@/components/portfolio/portfolio-hero";
+import { MiniSparkline } from "@/components/ui/mini-sparkline";
 import { PriceDisplay } from "@/components/shared/price-display";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";

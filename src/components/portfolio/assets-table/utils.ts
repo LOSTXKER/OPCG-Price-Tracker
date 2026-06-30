@@ -2,6 +2,7 @@ import type { AssetRow } from "@/lib/types/portfolio"
 
 export type SortKey = "value" | "pnl" | "change24h" | "cost" | "qty"
 export type SortDir = "desc" | "asc"
+export type HoldingsView = "grid" | "list"
 
 export function pnlCalc(row: AssetRow): { pnl: number; pct: number } | null {
   if (row.purchasePrice == null || row.currentPrice == null) return null
