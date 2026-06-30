@@ -1,3 +1,5 @@
+import type { GameRef } from "@/lib/types/portfolio";
+
 export type WatchCard = {
   id: number;
   cardCode: string;
@@ -12,7 +14,8 @@ export type WatchCard = {
   priceChange24h: number | null;
   priceChange7d: number | null;
   priceChange30d: number | null;
-  set: { code: string };
+  /** `game` (via set) drives the in-view game chips on the unified watchlist. */
+  set: { code: string; game: GameRef | null };
 };
 
 export type WatchlistEntry = {

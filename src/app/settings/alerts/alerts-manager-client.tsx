@@ -15,6 +15,8 @@ import { useUIStore } from "@/stores/ui-store";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
 import { ApiError, apiDelete, apiGet, apiPatch } from "@/lib/api/client";
 import { t } from "@/lib/i18n";
+import { GameFilterChips } from "@/components/shared/game-filter-chips";
+import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants";
 import { AlertRow, type FeedbackKind } from "./alert-row";
 
 type Feedback = {
@@ -32,6 +34,8 @@ export function AlertsManagerClient() {
   const [createOpen, setCreateOpen] = useState(false);
   const [busyId, setBusyId] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
+  // One unified alerts list across every game; chips filter the view in-place.
+  const [gameFilter, setGameFilter] = useState<string>(ALL_GAMES);
   const { openUpgradeDialog } = useUpgradeDialog();
 
   const fetchAlerts = useCallback(async () => {
@@ -60,14 +64,35 @@ export function AlertsManagerClient() {
     return () => clearTimeout(timer);
   }, [feedback]);
 
+  const scopedAlerts = useMemo(
+    () =>
+      gameFilter === ALL_GAMES
+        ? alerts
+        : alerts.filter((a) => (a.card.set?.game?.slug ?? DEFAULT_GAME) === gameFilter),
+    [alerts, gameFilter],
+  );
+
   const { active, history } = useMemo(() => {
     const a: PriceAlertItem[] = [];
     const h: PriceAlertItem[] = [];
-    for (const alert of alerts) {
+    for (const alert of scopedAlerts) {
       if (alert.isActive) a.push(alert);
       else h.push(alert);
     }
     return { active: a, history: h };
+  }, [scopedAlerts]);
+
+  // Per-game counts + logos for the chip rail (cross-game, from all alerts).
+  const gameMeta = useMemo(() => {
+    const count = new Map<string, number>();
+    const logo = new Map<string, string | null>();
+    for (const a of alerts) {
+      const g = a.card.set?.game ?? null;
+      const slug = g?.slug ?? DEFAULT_GAME;
+      count.set(slug, (count.get(slug) ?? 0) + 1);
+      if (g?.logoUrl && !logo.has(slug)) logo.set(slug, g.logoUrl);
+    }
+    return { count, logo };
   }, [alerts]);
 
   const onEdit = (alert: PriceAlertItem) => {
@@ -168,6 +193,16 @@ export function AlertsManagerClient() {
           {t(lang, "createAlert")}
         </Button>
       </div>
+
+      {alerts.length > 0 && (
+        <GameFilterChips
+          activeGame={gameFilter}
+          onSelect={setGameFilter}
+          allValue={String(alerts.length)}
+          valueFor={(slug) => String(gameMeta.count.get(slug) ?? 0)}
+          logoFor={(slug) => gameMeta.logo.get(slug) ?? null}
+        />
+      )}
 
       <section className="space-y-3">
         <div className="flex items-baseline justify-between">

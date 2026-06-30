@@ -14,7 +14,7 @@ import { PortfolioSwitcher } from "@/components/portfolio/portfolio-switcher"
 import { PortfolioHero } from "@/components/portfolio/portfolio-hero"
 import { PortfolioKpi } from "@/components/portfolio/portfolio-kpi"
 import { PortfolioMovers } from "@/components/portfolio/portfolio-movers"
-import { PortfolioGameBreakdown } from "@/components/portfolio/portfolio-game-breakdown"
+import { PortfolioGameChips } from "@/components/portfolio/portfolio-game-chips"
 import { PortfolioAllocationPanel } from "@/components/portfolio/portfolio-allocation-panel"
 import { PortfolioAssetsTable } from "@/components/portfolio/portfolio-assets-table"
 import { PortfolioTransactions } from "@/components/portfolio/portfolio-transactions"
@@ -28,7 +28,6 @@ import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { PortfolioMockPreview } from "./portfolio-mock-preview"
 import { usePortfolioApi } from "@/hooks/use-portfolio-api"
-import { useGameScope } from "@/hooks/use-game-scope"
 import { ALL_GAMES } from "@/lib/game/constants"
 import { useTierLimits } from "@/hooks/use-tier-limits"
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
@@ -99,10 +98,11 @@ function PortfolioContent() {
   // The point under the finger while scrubbing the value chart; null when idle.
   const [scrub, setScrub] = useState<HistoryPoint | null>(null)
   const { limits } = useTierLimits()
-  // Game scope from the /[game] URL prefix — scopes the value/KPIs/holdings.
-  const gameScope = useGameScope()
+  // One unified portfolio across every game; the chips filter the view in-place
+  // (default = all games). Never split into per-game books.
+  const [gameFilter, setGameFilter] = useState<string>(ALL_GAMES)
 
-  const p = usePortfolioApi(gameScope)
+  const p = usePortfolioApi(gameFilter)
 
   useEffect(() => {
     if (txOpen) void p.loadTransactions()
@@ -275,7 +275,7 @@ function PortfolioContent() {
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 
-      {assets.length === 0 ? (
+      {items.length === 0 ? (
         <KumaEmptyState
           preset="empty-portfolio"
           action={
@@ -287,7 +287,7 @@ function PortfolioContent() {
         />
       ) : (
         <>
-          {/* Hero number + full-bleed scrub chart (drag updates the hero live) */}
+          {/* Hero number → "every game" chips → full-bleed scrub chart */}
           <section className="space-y-3">
             <PortfolioHero
               valueJpy={heroValueJpy}
@@ -297,21 +297,17 @@ function PortfolioContent() {
               live={!!scrub}
               hideBalance={hideBalance}
             />
+            <PortfolioGameChips
+              breakdown={gameBreakdown}
+              activeGame={gameFilter}
+              onSelect={setGameFilter}
+              hideBalance={hideBalance}
+            />
             <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
           </section>
 
           {/* KPI quartet — Market Value · Cost Basis · P/L · ROI */}
           <PortfolioKpi stats={stats} hideBalance={hideBalance} />
-
-          {/* Per-game breakdown — only on the cross-game aggregate (/all);
-              auto-hides anyway until a 2nd game has holdings */}
-          {gameScope === ALL_GAMES && (
-            <PortfolioGameBreakdown
-              breakdown={gameBreakdown}
-              totalValueJpy={stats.totalValueJpy}
-              hideBalance={hideBalance}
-            />
-          )}
 
           {/* Today's movers — ranked by absolute swing */}
           <Surface variant="panel" className="p-4 sm:p-5">

@@ -20,23 +20,37 @@ export const ALL_GAMES = "all"
 export const GAME_COOKIE_MAX_AGE = 60 * 60 * 24 * 365
 
 /**
- * First path segments that live under a game namespace (`/[game]/<seg>/...`).
- * Browse / data / collection features only — account, system, content and chat
- * routes (settings, profile, honey, admin, auth, blog, …) stay flat with no
- * game prefix. Keep this the single source of truth for what gets namespaced.
+ * "GAME'S" features — a game's catalog / market / tools. These live under a game
+ * namespace (`/[game]/<seg>/...`) and the GameSwitcher reroutes between games.
+ * A set belongs to one game; deck rules / pull-rates differ per TCG; search keeps
+ * its namespace but honours the `/all/...` aggregate prefix (VISION §5.7).
+ * Account / system / content routes (settings, profile, honey, admin, auth,
+ * blog, …) are flat by construction and never appear here.
  */
 export const GAME_SCOPED_SEGMENTS: ReadonlySet<string> = new Set([
-  "portfolio",
   "cards",
   "sets",
   "market-overview",
   "search",
   "trending",
   "compare",
-  "watchlist",
   "decks",
   "drop-calculator",
   "deck-calculator",
+])
+
+/**
+ * "MINE" features — the user's own collections. One unified list PER USER across
+ * every game, filtered in-view by game chips (never split per game). A
+ * `/[game]/<feature>` request for one of these is redirected back to the flat
+ * `/<feature>`, so `my stuff` always lives at one canonical URL. Game is derived
+ * per item via `card.set.game`. (Owner-approved 2026-06-30 "ของฉันรวมทุกเกม";
+ * amends VISION §5.7, which previously named only Portfolio + Search.)
+ */
+export const GAME_AGNOSTIC_FEATURES: ReadonlySet<string> = new Set([
+  "portfolio",
+  "watchlist",
+  "saved",
 ])
 
 const VALID_PREFIXES: ReadonlySet<string> = new Set([...getGameSlugs(), ALL_GAMES])

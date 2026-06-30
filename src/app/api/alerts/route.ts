@@ -1,5 +1,5 @@
 import { requireAuthUser } from "@/lib/api/auth";
-import { cardInclude } from "@/lib/api/query-fragments";
+import { gameCardInclude } from "@/lib/api/query-fragments";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
@@ -14,7 +14,7 @@ export const GET = apiHandler(async () => {
   const alerts = await prisma.priceAlert.findMany({
     where: { userId: auth.user.id },
     orderBy: { createdAt: "desc" },
-    include: { card: { include: cardInclude } },
+    include: { card: { include: gameCardInclude } },
   });
 
   return NextResponse.json({ alerts });
