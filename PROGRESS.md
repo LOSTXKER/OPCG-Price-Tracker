@@ -5,7 +5,14 @@
 > ✅ **prod deploy live + routing verified** (curl จริง): `/portfolio`→307→`/opcg/portfolio` · `/opcg|/all/portfolio`,`/opcg/sets`→200 · `/sets`→307→prefixed · `/settings`,`/`→flat · ไม่มี 5xx/loop
 > ⚠️ **เหลืออย่างเดียว — login จริง:** verify ได้แค่ anon serve 200 · เบสต้องลอง **login บน prod `/opcg/portfolio`** ว่า session ยังติด · ถ้าพัง = Vercel instant rollback (promote deployment ก่อนหน้า) หรือ `git revert -m 1 ace29f2`
 
-## ✅ เสร็จ session นี้ (4) — ดีไซน์ "ของฉัน vs ของเกม" + unify MINE family (workflow audit+design 10 agent → เบสเคาะ) — **ยังไม่ commit**
+## ✅ เสร็จ session นี้ (5) — World-class craft pass (เบสติ "UXUI ไม่ใส่ใจ" → workflow design-critique 6 agent → แก้ punch-list) — **ยังไม่ commit**
+**verdict critique:** ตัวการคือ chips = "filter ที่กรองอะไรไม่ได้" (driven จาก registry ไม่ใช่ data ผู้ใช้ → เกมเดียวโชว์ All=OPCG ค่าซ้ำ + chip Pokémon ตาย + ยอดรวมพิมพ์ 4 ครั้งใน viewport)
+- **chips rewrite (P0):** data-driven (รับ `games[]` จาก holdings จริง) + **self-hide เมื่อ <2 เกม** → เกมเดียว = ไม่โชว์ chips เลย (รก/ซ้ำหายหมด) · pill vocab เท่า SegmentedControl (frameless bg-muted/50, active bg-primary/15 ไม่มี border/dot) · min-h-11 touch · radiogroup a11y · **multi-TCG signal ย้ายไป game-switcher บน header (ที่ถูกต้อง) ไม่ใช่ chip ตายบนหน้า MINE**
+- **polish:** ยอดรวมพิมพ์ครั้งเดียว (one hero number) · amber-500 → neutral (เลิก gold ที่ 2) · mask glyph ●●●/•••/•••••• → `MASKED` ตัวเดียว · KPI ใส่ Surface panel + skeleton match (กัน CLS) · rhythm watchlist/alerts = space-y-5 sm:6 เท่า portfolio · allocation bars เป็น neutral (honey budget) · alerts section header → text-eyebrow · delta icon → Arrow ทั้งหมด
+- verify: lint 0 err · tsc · build ✓ · test 56/56
+- ⏭️ skip (note): P2 soft-tint tokens (globals hygiene) · alerts→PageHeader (เสี่ยงใน settings shell)
+
+## ✅ เสร็จ session นี้ (4) — ดีไซน์ "ของฉัน vs ของเกม" + unify MINE family (workflow audit+design 10 agent → เบสเคาะ) — **MERGED → master `8dc4b7e` (PR #50) · Vercel deploy prod**
 **กฎเดียวคุมทั้งแอป (amends VISION §5.7 · เบสอนุมัติ "เอาทางที่เว็บระดับโลกทำ"):**
 - **MINE** (ของผู้ใช้ — รวมทุกเกม + chips กรอง · flat URL): portfolio · **watchlist** · price alerts · saved
 - **GAME'S** (catalog/tools — แยกเกม `/[game]/`): cards · sets · market-overview · trending · compare · decks · drop/deck-calc

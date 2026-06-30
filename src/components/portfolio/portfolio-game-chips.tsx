@@ -1,13 +1,16 @@
 "use client"
 
-import { GameFilterChips } from "@/components/shared/game-filter-chips"
+import { GameFilterChips, type GameChip } from "@/components/shared/game-filter-chips"
+import { getGameConfig } from "@/lib/game-config"
 import { useUIStore } from "@/stores/ui-store"
 import { formatDisplayValue, jpyToDisplayValue } from "@/lib/utils/currency"
+import { MASKED } from "@/lib/constants/ui"
 import type { GameBreakdown } from "@/lib/types/portfolio"
 
 /**
- * Portfolio's "every game" chip rail — formats per-game holdings VALUE and hands
- * it to the shared <GameFilterChips>. One unified portfolio, filtered in-view.
+ * Portfolio's game filter — builds one chip per game the user actually holds
+ * (value > 0), formatted as money, and hands it to the shared rail. The rail
+ * self-hides below two games, so a single-game portfolio shows no chips at all.
  */
 export function PortfolioGameChips({
   breakdown,
@@ -21,19 +24,17 @@ export function PortfolioGameChips({
   hideBalance?: boolean
 }) {
   const currency = useUIStore((s) => s.currency)
-
-  const bySlug = new Map(breakdown.filter((b) => b.game).map((b) => [b.game!.slug, b]))
-  const allTotal = breakdown.reduce((s, b) => s + b.valueJpy, 0)
   const money = (jpy: number) =>
-    hideBalance ? "••••" : formatDisplayValue(jpyToDisplayValue(jpy, currency), currency)
+    hideBalance ? MASKED : formatDisplayValue(jpyToDisplayValue(jpy, currency), currency)
 
-  return (
-    <GameFilterChips
-      activeGame={activeGame}
-      onSelect={onSelect}
-      allValue={money(allTotal)}
-      valueFor={(slug) => money(bySlug.get(slug)?.valueJpy ?? 0)}
-      logoFor={(slug) => bySlug.get(slug)?.game?.logoUrl ?? null}
-    />
-  )
+  const games: GameChip[] = breakdown
+    .filter((b) => b.game && b.valueJpy > 0)
+    .map((b) => ({
+      slug: b.game!.slug,
+      label: getGameConfig(b.game!.slug)?.shortName ?? b.game!.nameEn ?? b.game!.slug.toUpperCase(),
+      value: money(b.valueJpy),
+      logoUrl: b.game!.logoUrl,
+    }))
+
+  return <GameFilterChips games={games} activeGame={activeGame} onSelect={onSelect} />
 }

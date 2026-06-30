@@ -16,8 +16,9 @@ import { invalidateSettings } from "@/hooks/use-settings";
 import { createClient } from "@/lib/supabase/client";
 import { getCardName, t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
-import { GameFilterChips } from "@/components/shared/game-filter-chips";
+import { GameFilterChips, type GameChip } from "@/components/shared/game-filter-chips";
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants";
+import { getGameConfig } from "@/lib/game-config";
 
 import { WatchlistEmpty } from "./watchlist-empty";
 import { WatchlistGridView } from "./watchlist-grid-view";
@@ -182,6 +183,21 @@ function WatchlistContent() {
     return { count, logo };
   }, [items]);
 
+  // Chips for games the user actually watches cards in (count > 0). The rail
+  // self-hides below two games.
+  const gameChips = useMemo<GameChip[]>(
+    () =>
+      [...gameMeta.count.entries()]
+        .filter(([, c]) => c > 0)
+        .map(([slug, c]) => ({
+          slug,
+          label: getGameConfig(slug)?.shortName ?? slug.toUpperCase(),
+          value: `${c} ${t(lang, "card")}`,
+          logoUrl: gameMeta.logo.get(slug) ?? null,
+        })),
+    [gameMeta, lang],
+  );
+
   const toggleSelect = (cardId: number) => {
     setSelected((prev) => {
       const next = new Set(prev);
@@ -339,7 +355,7 @@ function WatchlistContent() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5 sm:space-y-6">
       <PageHeader
         title={t(lang, "watchlistNav")}
         description={items.length === 0 ? t(lang, "emptyWatchlistDesc") : undefined}
@@ -357,13 +373,7 @@ function WatchlistContent() {
         <WatchlistEmpty />
       ) : (
         <>
-          <GameFilterChips
-            activeGame={gameFilter}
-            onSelect={setGameFilter}
-            allValue={String(items.length)}
-            valueFor={(slug) => String(gameMeta.count.get(slug) ?? 0)}
-            logoFor={(slug) => gameMeta.logo.get(slug) ?? null}
-          />
+          <GameFilterChips games={gameChips} activeGame={gameFilter} onSelect={setGameFilter} />
 
           <WatchlistToolbar
             view={view}

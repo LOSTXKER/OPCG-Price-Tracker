@@ -1,6 +1,6 @@
 "use client";
 
-import { TrendingDown, TrendingUp } from "lucide-react";
+import { ArrowDown, ArrowUp } from "lucide-react";
 import { Fragment, useMemo } from "react";
 
 import { t } from "@/lib/i18n";
@@ -139,7 +139,7 @@ function MovementChip({
   label: string;
   change: number;
 }) {
-  const Icon = tone === "up" ? TrendingUp : TrendingDown;
+  const Icon = tone === "up" ? ArrowUp : ArrowDown;
   return (
     <span
       className={cn(

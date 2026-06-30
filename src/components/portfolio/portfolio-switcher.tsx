@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
+import { MASKED } from "@/lib/constants/ui"
 import { PortfolioSidebar } from "./portfolio-selector"
 import type { PortfolioMeta } from "@/lib/types/portfolio"
 
@@ -174,7 +175,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
               <SheetDescription className="font-price tabular-nums">
                 {t(lang, "allPortfolios")}{" "}
                 <span className="font-semibold text-foreground">
-                  {hideBalance ? "••••••" : formatJpyAmount(totalAllPortfolios, currency)}
+                  {hideBalance ? MASKED : formatJpyAmount(totalAllPortfolios, currency)}
                 </span>
                 {hasOverallPnl && !hideBalance && (
                   <span

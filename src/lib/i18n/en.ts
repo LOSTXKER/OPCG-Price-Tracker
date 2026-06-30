@@ -301,6 +301,7 @@ export const en = {
   roi: "ROI",
   marketValue: "Market Value",
   allGames: "All Games",
+  filterByGame: "Filter by game",
   invested: "Invested",
   avgCost: "Avg Cost",
   cardsAdded: "Cards added",

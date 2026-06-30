@@ -3,6 +3,7 @@
 import { ArrowDown, ArrowUp } from "lucide-react"
 
 import { HeroNumber } from "@/components/ui/hero-number"
+import { MASKED } from "@/lib/constants/ui"
 import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
@@ -75,7 +76,7 @@ export function PortfolioHero({
             )}
 
             {hideBalance ? (
-              <span aria-label="balance hidden">•••</span>
+              <span aria-label="balance hidden">{MASKED}</span>
             ) : (
               <>
                 <span>

@@ -31,7 +31,6 @@ import { usePortfolioApi } from "@/hooks/use-portfolio-api"
 import { ALL_GAMES } from "@/lib/game/constants"
 import { useTierLimits } from "@/hooks/use-tier-limits"
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
-import { cn } from "@/lib/utils"
 import type { CartItem } from "@/components/portfolio/add-card-types"
 import type { HistoryPoint } from "@/lib/types/portfolio"
 
@@ -178,14 +177,14 @@ function PortfolioContent() {
           <Skeleton className="h-10 w-56" />
           <Skeleton className="h-44 w-full rounded-xl sm:h-56" />
         </div>
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl sm:grid-cols-4">
+        <Surface variant="panel" className="grid grid-cols-2 overflow-hidden sm:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="space-y-2 p-4">
               <Skeleton className="h-3 w-14" />
               <Skeleton className="h-5 w-20" />
             </div>
           ))}
-        </div>
+        </Surface>
         <div className="grid grid-cols-2 gap-3 pt-1 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
           {Array.from({ length: 10 }).map((_, i) => (
             <div key={i}>
@@ -253,12 +252,7 @@ function PortfolioContent() {
                   toast.error(t(lang, "loadFailed"))
                 }
               }}
-              className={cn(
-                "inline-flex size-9 items-center justify-center rounded-lg border ease-chrome transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                portfolioPublic
-                  ? "border-[var(--p-hair)] bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
-                  : "border-amber-500/30 bg-amber-500/10 text-amber-700 hover:bg-amber-500/15 dark:text-amber-400",
-              )}
+              className="inline-flex size-9 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-card text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               aria-label={t(lang, portfolioPublic ? "portfolioPublic" : "portfolioPrivate")}
               title={t(lang, "perPortfolioVisibility")}
             >
