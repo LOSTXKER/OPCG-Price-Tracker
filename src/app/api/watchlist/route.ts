@@ -1,6 +1,6 @@
 import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
-import { cardInclude } from "@/lib/api/query-fragments";
+import { gameCardInclude } from "@/lib/api/query-fragments";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { triggerAchievementCheck } from "@/lib/honey";
@@ -18,7 +18,7 @@ export const GET = apiHandler(async () => {
       { pinnedAt: { sort: "desc", nulls: "last" } },
       { addedAt: "desc" },
     ],
-    include: { card: { include: cardInclude } },
+    include: { card: { include: gameCardInclude } },
   });
 
   const cardIds = items.map((i) => i.cardId);
@@ -83,7 +83,7 @@ export const POST = apiHandler(async (request: NextRequest) => {
       cardId,
     },
     update: {},
-    include: { card: { include: cardInclude } },
+    include: { card: { include: gameCardInclude } },
   });
 
   triggerAchievementCheck(auth.user.id);

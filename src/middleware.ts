@@ -3,6 +3,7 @@ import { updateSession } from "@/lib/supabase/middleware";
 import { isAuthBypassed } from "@/lib/env";
 import {
   DEFAULT_GAME,
+  GAME_AGNOSTIC_FEATURES,
   GAME_COOKIE,
   GAME_COOKIE_MAX_AGE,
   GAME_HEADER,
@@ -39,6 +40,12 @@ export async function middleware(request: NextRequest) {
     const game = seg1;
     const url = request.nextUrl.clone();
     url.pathname = "/" + segments.slice(1).join("/"); // "/" when path is just "/opcg"
+
+    // Unified cross-game features (portfolio) are canonical at their flat path —
+    // strip the game prefix so /opcg/portfolio (or /all/portfolio) → /portfolio.
+    if (segments[1] && GAME_AGNOSTIC_FEATURES.has(segments[1])) {
+      return NextResponse.redirect(url);
+    }
 
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set(GAME_HEADER, game);

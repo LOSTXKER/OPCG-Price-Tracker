@@ -16,6 +16,8 @@ import { invalidateSettings } from "@/hooks/use-settings";
 import { createClient } from "@/lib/supabase/client";
 import { getCardName, t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { GameFilterChips } from "@/components/shared/game-filter-chips";
+import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants";
 
 import { WatchlistEmpty } from "./watchlist-empty";
 import { WatchlistGridView } from "./watchlist-grid-view";
@@ -72,6 +74,8 @@ function WatchlistContent() {
   const [sortKey, setSortKey] = useState<SortKey>("default");
   const [filters, setFilters] = useState<WatchlistFilters>(DEFAULT_FILTERS);
   const [search, setSearch] = useState("");
+  // One unified watchlist across every game; the chips filter the view in-place.
+  const [gameFilter, setGameFilter] = useState<string>(ALL_GAMES);
 
   const [alertTarget, setAlertTarget] = useState<WatchlistEntry | null>(null);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -137,6 +141,11 @@ function WatchlistContent() {
   const filteredEntries = useMemo(() => {
     const q = search.trim().toLowerCase();
     let out = items.filter((entry) => {
+      if (
+        gameFilter !== ALL_GAMES &&
+        (entry.card.set.game?.slug ?? DEFAULT_GAME) !== gameFilter
+      )
+        return false;
       if (filters.pinnedOnly && entry.pinnedAt == null) return false;
       if (filters.hasAlert && !entry.hasActiveAlert) return false;
       if (filters.setCodes.length > 0 && !filters.setCodes.includes(entry.card.set.code)) {
@@ -158,7 +167,20 @@ function WatchlistContent() {
 
     out = sortEntries(out, sortKey, period);
     return out;
-  }, [items, search, filters, sortKey, period]);
+  }, [items, search, filters, sortKey, period, gameFilter]);
+
+  // Per-game counts + logos for the chip rail (cross-game, from all items).
+  const gameMeta = useMemo(() => {
+    const count = new Map<string, number>();
+    const logo = new Map<string, string | null>();
+    for (const e of items) {
+      const g = e.card.set.game;
+      const slug = g?.slug ?? DEFAULT_GAME;
+      count.set(slug, (count.get(slug) ?? 0) + 1);
+      if (g?.logoUrl && !logo.has(slug)) logo.set(slug, g.logoUrl);
+    }
+    return { count, logo };
+  }, [items]);
 
   const toggleSelect = (cardId: number) => {
     setSelected((prev) => {
@@ -335,6 +357,14 @@ function WatchlistContent() {
         <WatchlistEmpty />
       ) : (
         <>
+          <GameFilterChips
+            activeGame={gameFilter}
+            onSelect={setGameFilter}
+            allValue={String(items.length)}
+            valueFor={(slug) => String(gameMeta.count.get(slug) ?? 0)}
+            logoFor={(slug) => gameMeta.logo.get(slug) ?? null}
+          />
+
           <WatchlistToolbar
             view={view}
             onViewChange={setView}

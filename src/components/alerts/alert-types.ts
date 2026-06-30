@@ -1,3 +1,5 @@
+import type { GameRef } from "@/lib/types/portfolio";
+
 export type AlertCardSummary = {
   id: number;
   cardCode: string;
@@ -9,7 +11,8 @@ export type AlertCardSummary = {
   imageUrl: string | null;
   latestPriceJpy: number | null;
   latestPriceThb: number | null;
-  set?: { code: string; name: string; nameEn: string | null; nameTh: string | null } | null;
+  /** `game` (via set) drives the in-view game chips on the unified alerts list. */
+  set?: { code: string; name: string; nameEn: string | null; nameTh: string | null; game: GameRef | null } | null;
 };
 
 export type AlertChannelValue = "EMAIL" | "LINE" | "PUSH";

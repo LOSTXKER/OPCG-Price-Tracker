@@ -1,7 +1,31 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-06-30 — **(1) รื้อ Portfolio ใหม่ตาม VISION §5.3** + **(2) multi-game `/[game]/` URL namespace — routing core (Phase 1) เสร็จ+verify** → **ยังไม่ commit** (รอเบสรีวิว) · branch `ui/sets-redesign` · verify: tsc 0 · lint 0 err · test 56/56 · build ✓
+อัปเดตล่าสุด: 2026-06-30 — **(1) รื้อ Portfolio ตาม VISION §5.3** + **(2) multi-game `/[game]/` namespace (Phase 1 routing + Phase 2 portfolio scoping)** → **MERGED → master `ace29f2` (PR #49) · Vercel deploy prod** · verify: tsc 0 · lint 0 err · test 56/56 · build ✓ · curl matrix
+> ✅ **prod deploy live + routing verified** (curl จริง): `/portfolio`→307→`/opcg/portfolio` · `/opcg|/all/portfolio`,`/opcg/sets`→200 · `/sets`→307→prefixed · `/settings`,`/`→flat · ไม่มี 5xx/loop
+> ⚠️ **เหลืออย่างเดียว — login จริง:** verify ได้แค่ anon serve 200 · เบสต้องลอง **login บน prod `/opcg/portfolio`** ว่า session ยังติด · ถ้าพัง = Vercel instant rollback (promote deployment ก่อนหน้า) หรือ `git revert -m 1 ace29f2`
+
+## ✅ เสร็จ session นี้ (4) — ดีไซน์ "ของฉัน vs ของเกม" + unify MINE family (workflow audit+design 10 agent → เบสเคาะ) — **ยังไม่ commit**
+**กฎเดียวคุมทั้งแอป (amends VISION §5.7 · เบสอนุมัติ "เอาทางที่เว็บระดับโลกทำ"):**
+- **MINE** (ของผู้ใช้ — รวมทุกเกม + chips กรอง · flat URL): portfolio · **watchlist** · price alerts · saved
+- **GAME'S** (catalog/tools — แยกเกม `/[game]/`): cards · sets · market-overview · trending · compare · decks · drop/deck-calc
+- **search** = พิเศษ (per-game URL + `/all/` toggle เดิม)
+- **ลิมิต Pro = นับรวมทุกเกม** (เบสเคาะ · ไม่ต้องแก้โค้ด · count where userId เดิม)
+**เจอบั๊ก + แก้:** watchlist "split-brain" (URL แยกเกม `/opcg/watchlist` แต่ data รวมทุกเกม — ไม่มี gameId, API กรองแค่ user, ดาว⭐ ไม่รู้เกม) = middleware รอบก่อนดันผิดฝั่ง · `wishlist` ไม่มีในโค้ด (= watchlist)
+**Phase 0 (routing) + Phase 1 (watchlist chips) เสร็จ:**
+- constants: ถอด watchlist จาก SCOPED · เพิ่ม watchlist+saved เข้า AGNOSTIC · broaden doc → "MINE family" · ไม่แตะ middleware
+- shared `GameFilterChips` (`components/shared/`) — generalize จาก portfolio chips · `PortfolioGameChips` = wrapper บางๆ delegate ไป (1 source ไม่ drift)
+- watchlist: API GET ใช้ `gameCardInclude` (rename จาก portfolioCardInclude · +set.game) · `WatchCard.set`+game · client `gameFilter` state + filter ตามเกม + นับต่อเกม + render chips (value=count) ใต้ header
+- verify: lint 0/tsc/test 56/build ✓ · curl: `/watchlist`,`/saved`→200 unified · `/opcg/watchlist`→307→`/watchlist` · portfolio/browse คงเดิม
+- **Phase 2 alerts chips ✅:** `/api/alerts` GET ใช้ `gameCardInclude` · `AlertCardSummary.set`+game · alerts-manager `gameFilter` + filter active/history ตามเกม + นับต่อเกม + render GameFilterChips · verify lint0/tsc/build/test56
+- ⏭️ **เหลือ:** Phase 3 saved chips (รอ marketplace flag) · Phase 4 drop dead `Portfolio.gameId` column (⚠️ ask) · Phase 5 (Pokémon มา) denormalize gameId เพื่อ indexable filter
+
+## ✅ เสร็จ session นี้ (3) — Portfolio UX redo: พอร์ตเดียวรวมทุกเกม (เบสสั่ง "ไม่แยกพอร์ต · ทำให้รู้ว่ารองรับทุกการ์ดเกม" · เลือก Option A chips-rail) — **ยังไม่ commit (ทับงานที่ merge ไป master แล้ว)**
+- **กลับลำ portfolio = unified:** ถอด `portfolio` ออกจาก GAME_SCOPED_SEGMENTS + เพิ่ม `GAME_AGNOSTIC_FEATURES={portfolio}` · middleware redirect `/{game}/portfolio`→`/portfolio` (canonical เดียว) · browse อื่น (sets/cards) คง `/[game]/` เดิม
+- **`PortfolioGameChips`** (ใหม่) — rail ใต้ hero: ชิป All + ชิปต่อเกม (โลโก้/dot + มูลค่า) + เกม coming-soon (disabled "soon") → โชว์ span ทุกเกมในบรรทัดเดียว · แตะชิป = กรอง (client state, ไม่แตะ URL) · active=honey
+- **portfolio-client:** client `gameFilter` state (default ALL) → `usePortfolioApi(gameFilter)` · chips ใต้ hero · ลบ panel `PortfolioGameBreakdown` (chips แทน) · empty gate กลับเป็น items.length (chips/hero โชว์เสมอเมื่อมีของ)
+- verify: lint 0/tsc/test 56/build ✓ · curl: `/portfolio`→200 unified · `/opcg|/all/portfolio`→307→`/portfolio` · `/sets`→307→`/opcg/sets` (browse คงเดิม)
+- orphan (ไม่ลบ เผื่อใช้): `use-game-scope.ts` (เก็บไว้ใช้หน้า browse Phase 2) · `portfolio-game-breakdown.tsx` (chips แทนแล้ว)
 
 ## ✅ เสร็จ session นี้ (2) — Multi-game `/[game]/` URL (เบสสั่ง "URL แยกเกมทั้งแอป · ทำ UI ก่อน")
 เลือกกลยุทธ์ **middleware-rewrite + cookie/header resolver** (mirror `getServerLanguage` · ปลอดภัย incremental · **ไม่ย้าย 102 route จริง · ไม่แก้ 180 ลิงก์**):

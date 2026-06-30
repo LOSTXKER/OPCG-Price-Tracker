@@ -5,13 +5,13 @@ export const cardInclude = {
 } as const;
 
 /**
- * Portfolio-scoped card include — adds the owning game (via the card's set) so
- * holdings can be grouped / aggregated per game and the page is namespace-ready
- * for `/[game]/portfolio` (VISION §5.7). Card.gameId is still nullable, so game
- * is resolved through `set.game` (sets are backfilled to a game). Kept separate
- * from the shared `cardInclude` so the other 12 consumers don't pay for the join.
+ * Game-aware card include — adds the owning game (via the card's set) so the
+ * "MINE" collections (portfolio, watchlist, …) can group / filter holdings by
+ * game with the in-view game chips. Card.gameId is still nullable, so game is
+ * resolved through `set.game` (sets are backfilled to a game). Kept separate
+ * from the shared `cardInclude` so the other consumers don't pay for the join.
  */
-export const portfolioCardInclude = {
+export const gameCardInclude = {
   set: {
     select: {
       code: true,

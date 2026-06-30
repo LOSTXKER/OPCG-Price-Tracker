@@ -1,6 +1,6 @@
 import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
-import { cardInclude, portfolioCardInclude } from "@/lib/api/query-fragments";
+import { cardInclude, gameCardInclude } from "@/lib/api/query-fragments";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { effectiveTier, getLimits } from "@/lib/billing";
@@ -17,7 +17,7 @@ export const GET = apiHandler(async () => {
     include: {
       items: {
         orderBy: { addedAt: "desc" },
-        include: { card: { include: portfolioCardInclude } },
+        include: { card: { include: gameCardInclude } },
       },
     },
   });
