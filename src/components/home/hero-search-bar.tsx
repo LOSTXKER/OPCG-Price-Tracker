@@ -102,18 +102,9 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
     return () => document.removeEventListener("mousedown", onClickOutside)
   }, [])
 
-  // ⌘K / Ctrl+K focuses the hero search from anywhere on the page (Linear teleport).
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault()
-        inputRef.current?.focus()
-        setOpen(true)
-      }
-    }
-    document.addEventListener("keydown", onKey)
-    return () => document.removeEventListener("keydown", onKey)
-  }, [])
+  // NOTE: ⌘K is owned globally by the header command palette (header.tsx) so the
+  // shortcut behaves identically on every page. The hero bar deliberately does
+  // NOT bind ⌘K — two listeners on the home page double-opened and flickered.
 
   const pushRecent = useCallback((q: string) => {
     const trimmed = q.trim()
@@ -256,10 +247,6 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
               </button>
             }
           />
-          {/* ⌘K hint — desktop only (no physical key on mobile) */}
-          <kbd className="text-micro ml-0.5 hidden shrink-0 items-center gap-0.5 rounded-md bg-foreground/[0.06] px-1.5 py-1 font-sans text-muted-foreground/70 ring-1 ring-[var(--p-hair)] sm:inline-flex">
-            ⌘K
-          </kbd>
         </div>
       </form>
 

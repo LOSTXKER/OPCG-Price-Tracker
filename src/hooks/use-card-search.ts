@@ -9,8 +9,9 @@ export type CardSearchResult = {
   baseCode?: string | null
   nameJp: string
   nameEn?: string | null
-  rarity?: string
+  rarity: string
   imageUrl: string | null
+  set?: { code: string; name?: string }
   latestPriceJpy: number | null
   latestPriceThb?: number | null
   cardType?: string
@@ -20,10 +21,13 @@ export function useCardSearch({
   debounceMs = 300,
   limit = 20,
   typeFilter,
+  game,
 }: {
   debounceMs?: number
   limit?: number
   typeFilter?: string
+  /** Scope results to a game slug; omit (or "all") for every game. */
+  game?: string
 } = {}) {
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<CardSearchResult[]>([])
@@ -40,7 +44,7 @@ export function useCardSearch({
         return
       }
       setLoading(true)
-      void fetchCards({ search: q, limit, type: typeFilter })
+      void fetchCards({ search: q, limit, type: typeFilter, game })
         .then((data) => setResults((data.cards ?? []) as CardSearchResult[]))
         .catch((err: unknown) => {
           if (err instanceof Error && err.name !== "AbortError") console.error("Card search failed:", err)
@@ -50,7 +54,7 @@ export function useCardSearch({
     }, q.length < 2 ? 0 : debounceMs)
 
     return () => window.clearTimeout(t)
-  }, [query, debounceMs, limit, typeFilter])
+  }, [query, debounceMs, limit, typeFilter, game])
 
   const reset = useCallback(() => {
     setQuery("")

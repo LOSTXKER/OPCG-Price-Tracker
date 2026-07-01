@@ -28,7 +28,6 @@ import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { PortfolioMockPreview } from "./portfolio-mock-preview"
 import { usePortfolioApi } from "@/hooks/use-portfolio-api"
-import { ALL_GAMES } from "@/lib/game/constants"
 import { useTierLimits } from "@/hooks/use-tier-limits"
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
 import type { CartItem } from "@/components/portfolio/add-card-types"
@@ -97,9 +96,11 @@ function PortfolioContent() {
   // The point under the finger while scrubbing the value chart; null when idle.
   const [scrub, setScrub] = useState<HistoryPoint | null>(null)
   const { limits } = useTierLimits()
-  // One unified portfolio across every game; the chips filter the view in-place
+  // One unified portfolio across every game; the in-view filter is shared via
+  // ui-store so BOTH the in-page chips and the header game-switcher drive it
   // (default = all games). Never split into per-game books.
-  const [gameFilter, setGameFilter] = useState<string>(ALL_GAMES)
+  const gameFilter = useUIStore((s) => s.mineGameFilter)
+  const setGameFilter = useUIStore((s) => s.setMineGameFilter)
 
   const p = usePortfolioApi(gameFilter)
 

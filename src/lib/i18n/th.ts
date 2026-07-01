@@ -9,6 +9,7 @@ export const th = {
   dropCalculator: "คำนวณดรอป",
   deckCalculatorNav: "สร้างเด็ค",
   tools: "เครื่องมือ",
+  trackGroup: "ของฉัน",
   portfolioNav: "พอร์ตโฟลิโอ",
   watchlistNav: "รายการโปรด",
   myOrders: "คำสั่งซื้อ",

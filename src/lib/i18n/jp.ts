@@ -9,6 +9,7 @@ export const jp = {
   dropCalculator: "ドロップ率計算",
   deckCalculatorNav: "デッキ計算",
   tools: "ツール",
+  trackGroup: "マイデータ",
   portfolioNav: "ポートフォリオ",
   watchlistNav: "ウォッチリスト",
   myOrders: "注文",
