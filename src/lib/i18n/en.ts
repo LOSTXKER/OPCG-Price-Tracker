@@ -306,6 +306,7 @@ export const en = {
   marketValue: "Market Value",
   allGames: "All Games",
   filterByGame: "Filter by game",
+  chartAllGamesOnly: "History chart shows the all-games view only",
   invested: "Invested",
   avgCost: "Avg Cost",
   cardsAdded: "Cards added",

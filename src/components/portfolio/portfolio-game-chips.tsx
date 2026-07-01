@@ -2,6 +2,7 @@
 
 import { GameFilterChips, type GameChip } from "@/components/shared/game-filter-chips"
 import { getGameConfig } from "@/lib/game-config"
+import { DEFAULT_GAME } from "@/lib/game/constants"
 import { useUIStore } from "@/stores/ui-store"
 import { formatDisplayValue, jpyToDisplayValue } from "@/lib/utils/currency"
 import { MASKED } from "@/lib/constants/ui"
@@ -28,13 +29,19 @@ export function PortfolioGameChips({
     hideBalance ? MASKED : formatDisplayValue(jpyToDisplayValue(jpy, currency), currency)
 
   const games: GameChip[] = breakdown
-    .filter((b) => b.game && b.valueJpy > 0)
-    .map((b) => ({
-      slug: b.game!.slug,
-      label: getGameConfig(b.game!.slug)?.shortName ?? b.game!.nameEn ?? b.game!.slug.toUpperCase(),
-      value: money(b.valueJpy),
-      logoUrl: b.game!.logoUrl,
-    }))
+    .filter((b) => b.valueJpy > 0)
+    .map((b) => {
+      // Fall back to the default game when a holding's set has no game link yet
+      // (not every set is backfilled) — mirrors watchlist/alerts so OPCG still
+      // produces a chip instead of vanishing behind a strict `b.game` check.
+      const slug = b.game?.slug ?? DEFAULT_GAME
+      return {
+        slug,
+        label: getGameConfig(slug)?.shortName ?? b.game?.nameEn ?? slug.toUpperCase(),
+        value: money(b.valueJpy),
+        logoUrl: b.game?.logoUrl ?? null,
+      }
+    })
 
   return <GameFilterChips games={games} activeGame={activeGame} onSelect={onSelect} />
 }

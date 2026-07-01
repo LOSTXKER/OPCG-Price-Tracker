@@ -20,6 +20,9 @@ export interface PortfolioHeroProps {
   hasPnl: boolean
   live?: boolean
   hideBalance?: boolean
+  /** When a single game is filtered, the game's short name — appended to the
+   *  eyebrow so the scoped total never reads as the whole-portfolio value. */
+  scopeLabel?: string | null
 }
 
 /**
@@ -36,6 +39,7 @@ export function PortfolioHero({
   hasPnl,
   live = false,
   hideBalance = false,
+  scopeLabel = null,
 }: PortfolioHeroProps) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
@@ -49,7 +53,10 @@ export function PortfolioHero({
 
   return (
     <section className="w-full">
-      <p className="text-eyebrow">{t(lang, "portfolioValue")}</p>
+      <p className="text-eyebrow">
+        {t(lang, "portfolioValue")}
+        {scopeLabel ? <span className="text-primary"> · {scopeLabel}</span> : null}
+      </p>
 
       <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-2">
         <HeroNumber

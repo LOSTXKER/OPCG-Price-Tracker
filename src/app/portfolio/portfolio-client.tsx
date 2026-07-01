@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import dynamic from "next/dynamic"
 import { Eye, EyeOff, Globe, Lock, Plus, Receipt, Share2 } from "lucide-react"
 import { toast } from "sonner"
@@ -26,6 +26,9 @@ import { Surface } from "@/components/ui/surface"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
+import { useGameFilterReset } from "@/hooks/use-game-filter"
+import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants"
+import { getGameConfig } from "@/lib/game-config"
 import { PortfolioMockPreview } from "./portfolio-mock-preview"
 import { usePortfolioApi } from "@/hooks/use-portfolio-api"
 import { useTierLimits } from "@/hooks/use-tier-limits"
@@ -96,11 +99,10 @@ function PortfolioContent() {
   // The point under the finger while scrubbing the value chart; null when idle.
   const [scrub, setScrub] = useState<HistoryPoint | null>(null)
   const { limits } = useTierLimits()
-  // One unified portfolio across every game; the in-view filter is shared via
-  // ui-store so BOTH the in-page chips and the header game-switcher drive it
-  // (default = all games). Never split into per-game books.
-  const gameFilter = useUIStore((s) => s.mineGameFilter)
-  const setGameFilter = useUIStore((s) => s.setMineGameFilter)
+  // One unified portfolio across every game, filtered in-view by game. The filter
+  // is PER-PAGE (local, session-only) — never shared with watchlist/alerts, so a
+  // filter here can't strand the user on an empty list elsewhere.
+  const [gameFilter, setGameFilter] = useState<string>(ALL_GAMES)
 
   const p = usePortfolioApi(gameFilter)
 
@@ -132,6 +134,23 @@ function PortfolioContent() {
     deleteTransaction,
   } = p
 
+  // Games the user actually holds (value > 0) — the chip rail is built from these,
+  // so the filter resets to "all" whenever the active game leaves the set.
+  const availableGames = useMemo(
+    () => gameBreakdown.filter((b) => b.valueJpy > 0).map((b) => b.game?.slug ?? DEFAULT_GAME),
+    [gameBreakdown],
+  )
+  useGameFilterReset(gameFilter, availableGames, setGameFilter)
+
+  // Short name of the filtered game (null in the all-games view) — labels the
+  // hero so a scoped total never reads as the whole-portfolio value.
+  const scopeGameName =
+    gameFilter === ALL_GAMES
+      ? null
+      : getGameConfig(gameFilter)?.shortName ??
+        gameBreakdown.find((b) => b.game?.slug === gameFilter)?.game?.nameEn ??
+        gameFilter
+
   const { openUpgradeDialog } = useUpgradeDialog()
 
   const totalCostAllPortfolios = portfolioMetas.reduce((s, m) => s + m.totalCost, 0)
@@ -157,12 +176,16 @@ function PortfolioContent() {
   // Scrub-bound hero. While dragging, show the historical market value and the
   // unrealized P/L *at that point* (value − money invested then) — honest, never
   // counting an inflow as a gain. Idle: the live total + live P/L.
-  const heroValueJpy = scrub ? scrub.value : stats.totalValueJpy
-  const heroDeltaJpy = scrub ? scrub.value - scrub.netInvested : stats.unrealizedPnl
-  const heroHasPnl = scrub ? scrub.netInvested > 0 : stats.totalCostJpy > 0
-  const heroDeltaPct = scrub
-    ? scrub.netInvested > 0
-      ? ((scrub.value - scrub.netInvested) / scrub.netInvested) * 100
+  // The chart (and thus scrubbing) only shows in the all-games view — snapshots
+  // aren't per-game yet. Ignore any lingering scrub once a game is filtered so
+  // the hero reflects the scoped live total, not a stale chart point.
+  const activeScrub = gameFilter === ALL_GAMES ? scrub : null
+  const heroValueJpy = activeScrub ? activeScrub.value : stats.totalValueJpy
+  const heroDeltaJpy = activeScrub ? activeScrub.value - activeScrub.netInvested : stats.unrealizedPnl
+  const heroHasPnl = activeScrub ? activeScrub.netInvested > 0 : stats.totalCostJpy > 0
+  const heroDeltaPct = activeScrub
+    ? activeScrub.netInvested > 0
+      ? ((activeScrub.value - activeScrub.netInvested) / activeScrub.netInvested) * 100
       : 0
     : stats.unrealizedPnlPercent
 
@@ -289,8 +312,9 @@ function PortfolioContent() {
               deltaJpy={heroDeltaJpy}
               deltaPct={heroDeltaPct}
               hasPnl={heroHasPnl}
-              live={!!scrub}
+              live={!!activeScrub}
               hideBalance={hideBalance}
+              scopeLabel={scopeGameName}
             />
             <PortfolioGameChips
               breakdown={gameBreakdown}
@@ -298,7 +322,13 @@ function PortfolioContent() {
               onSelect={setGameFilter}
               hideBalance={hideBalance}
             />
-            <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
+            {gameFilter === ALL_GAMES ? (
+              <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
+            ) : (
+              <p className="py-6 text-center text-meta text-muted-foreground/70">
+                {t(lang, "chartAllGamesOnly")}
+              </p>
+            )}
           </section>
 
           {/* KPI quartet — Market Value · Cost Basis · P/L · ROI */}
@@ -315,6 +345,7 @@ function PortfolioContent() {
             onUpdate={updateItem}
             onRemove={removeItem}
             hideBalance={hideBalance}
+            showGameBadge={availableGames.length >= 2}
           />
 
           {/* Allocation — top holdings share */}

@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
+import { GameBadge } from "@/components/shared/game-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Surface } from "@/components/ui/surface";
@@ -35,6 +36,7 @@ export function AlertRow({
   onEdit,
   onDelete,
   onReactivate,
+  showGameBadge = false,
 }: {
   alert: PriceAlertItem;
   feedback: FeedbackKind | null;
@@ -42,6 +44,7 @@ export function AlertRow({
   onEdit?: () => void;
   onDelete: () => void;
   onReactivate?: () => void;
+  showGameBadge?: boolean;
 }) {
   const lang = useUIStore((s) => s.language);
   const currency = useUIStore((s) => s.currency);
@@ -107,6 +110,7 @@ export function AlertRow({
               </Link>
               <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-muted-foreground/70">
                 <span>{alert.card.cardCode}</span>
+                {showGameBadge && <GameBadge game={alert.card.set?.game ?? null} />}
                 {!alert.isActive && (
                   <Badge variant="secondary" className="h-4 px-1.5 text-micro">
                     {t(lang, "alertTriggered")}

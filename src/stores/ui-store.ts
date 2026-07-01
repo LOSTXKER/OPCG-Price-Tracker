@@ -25,10 +25,6 @@ interface UIState {
   currency: Currency;
   /** Active card game slug (e.g. "opcg"). Scopes browse/search/decks. Game switcher UI lands in P4. */
   currentGame: string;
-  /** In-view game filter for the unified "MINE" pages (portfolio/watchlist/alerts).
-   *  "all" = every game. Driven by BOTH the in-page chips AND the header switcher
-   *  so one control means one thing. Session-only (not persisted). */
-  mineGameFilter: string;
   cardView: CardView;
   dismissedBanner: boolean;
   /** Ad/cookie consent for ad networks (AdSense). House ads don't need it. */
@@ -41,7 +37,6 @@ interface UIState {
   setCurrency: (currency: Currency) => void;
   cycleCurrency: () => void;
   setCurrentGame: (slug: string) => void;
-  setMineGameFilter: (game: string) => void;
   setAdConsent: (consent: AdConsent) => void;
   setCardView: (view: CardView) => void;
   dismissBanner: () => void;
@@ -57,7 +52,6 @@ export const useUIStore = create<UIState>()(
       language: "TH",
       currency: "THB",
       currentGame: "opcg",
-      mineGameFilter: "all",
       cardView: "grid",
       dismissedBanner: false,
       adConsent: null,
@@ -81,7 +75,6 @@ export const useUIStore = create<UIState>()(
           return { currency: CURRENCY_CYCLE[(idx + 1) % CURRENCY_CYCLE.length] };
         }),
       setCurrentGame: (currentGame) => set({ currentGame }),
-      setMineGameFilter: (mineGameFilter) => set({ mineGameFilter }),
       setAdConsent: (adConsent) => set({ adConsent }),
       setCardView: (cardView) => set({ cardView }),
       dismissBanner: () => set({ dismissedBanner: true }),

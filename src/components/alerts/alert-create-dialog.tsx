@@ -140,7 +140,9 @@ export function AlertCreateDialog({
 
         {step === "pick" ? (
           <div className="min-h-[240px] px-5 py-4">
-            <CardSearch mode="pick" onSelect={handlePickCard} autoFocus />
+            {/* MINE add flow: search EVERY game — the picked card carries its
+                own game, so we never lock the search to the current game. */}
+            <CardSearch mode="pick" game="all" onSelect={handlePickCard} autoFocus />
           </div>
         ) : (
           card && (

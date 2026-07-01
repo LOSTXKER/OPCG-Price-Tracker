@@ -18,6 +18,8 @@ import { invalidateSettings } from "@/hooks/use-settings";
 import { createClient } from "@/lib/supabase/client";
 import { getCardName, t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { useGameFilterReset } from "@/hooks/use-game-filter";
+import { useMultigameDemo, MOCK_POKEMON_WATCHLIST } from "@/lib/mock/multigame-demo";
 import { GameFilterChips, type GameChip } from "@/components/shared/game-filter-chips";
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants";
 import { getGameConfig } from "@/lib/game-config";
@@ -78,10 +80,15 @@ function WatchlistContent() {
   const [sortKey, setSortKey] = useState<SortKey>("default");
   const [filters, setFilters] = useState<WatchlistFilters>(DEFAULT_FILTERS);
   const [search, setSearch] = useState("");
-  // One unified watchlist across every game; the filter is shared via ui-store so
-  // both the in-page chips and the header game-switcher drive it.
-  const gameFilter = useUIStore((s) => s.mineGameFilter);
-  const setGameFilter = useUIStore((s) => s.setMineGameFilter);
+  // One unified watchlist across every game, filtered in-view by game. The filter
+  // is PER-PAGE (local, session-only) — never shared with portfolio/alerts.
+  const [gameFilter, setGameFilter] = useState<string>(ALL_GAMES);
+  const demo = useMultigameDemo();
+  const availableGames = useMemo(
+    () => [...new Set(items.map((e) => e.card.set.game?.slug ?? DEFAULT_GAME))],
+    [items],
+  );
+  useGameFilterReset(gameFilter, availableGames, setGameFilter);
   const [addOpen, setAddOpen] = useState(false);
 
   const [alertTarget, setAlertTarget] = useState<WatchlistEntry | null>(null);
@@ -94,7 +101,8 @@ function WatchlistContent() {
     setError(null);
     try {
       const data = await apiGet<{ items: WatchlistEntry[] }>("/api/watchlist");
-      setItems(data.items ?? []);
+      // Demo-only: append mock Pokémon entries so the multi-game UI is visible.
+      setItems([...(data.items ?? []), ...(demo ? MOCK_POKEMON_WATCHLIST : [])]);
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
         invalidateSettings();
@@ -107,7 +115,7 @@ function WatchlistContent() {
     } finally {
       setLoading(false);
     }
-  }, [lang]);
+  }, [lang, demo]);
 
   useEffect(() => {
     void load();
@@ -423,6 +431,7 @@ function WatchlistContent() {
               onSetAlert={openSetAlert}
               onRemove={(e) => void removeSingle(e)}
               removingIds={removingIds}
+              showGameBadge={availableGames.length >= 2}
             />
           ) : (
             <WatchlistGridView

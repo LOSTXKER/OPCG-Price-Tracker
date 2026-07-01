@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronRight, StickyNote } from "lucide-react"
 
+import { GameBadge } from "@/components/shared/game-badge"
 import { Price } from "@/components/shared/price-inline"
 import { getCardName, t, type Language } from "@/lib/i18n"
 import type { AssetRow } from "@/lib/types/portfolio"
@@ -20,11 +21,13 @@ export const MobileAssetCard = memo(function MobileAssetCard({
   lang,
   onEdit,
   hideBalance = false,
+  showGameBadge = false,
 }: {
   row: AssetRow
   lang: Language
   onEdit: () => void
   hideBalance?: boolean
+  showGameBadge?: boolean
 }) {
   const currency = useUIStore((s) => s.currency)
   const name = getCardName(lang as "TH" | "EN" | "JP", row)
@@ -66,6 +69,7 @@ export const MobileAssetCard = memo(function MobileAssetCard({
               <p className="mt-0.5 font-mono text-xs text-muted-foreground">
                 {row.baseCode ?? row.cardCode}
                 <span className="ml-1.5 text-foreground/60">×{row.quantity}</span>
+                {showGameBadge && <GameBadge game={row.game} className="ml-1.5 align-middle" />}
               </p>
             </Link>
             <div className="flex shrink-0 items-center">

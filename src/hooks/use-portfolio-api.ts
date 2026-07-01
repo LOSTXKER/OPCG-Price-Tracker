@@ -10,6 +10,7 @@ import { DEFAULT_CARD_CONDITION } from "@/lib/constants/ui"
 import type { PortfolioStats, AllocationSlice, AssetRow, PortfolioMeta, TransactionRow, GameRef, HistoryPoint, GameBreakdown } from "@/lib/types/portfolio"
 import type { CartItem } from "@/components/portfolio/add-card-types"
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants"
+import { useMultigameDemo, MOCK_POKEMON_PORTFOLIO_ITEMS } from "@/lib/mock/multigame-demo"
 
 type CardData = {
   id: number
@@ -26,7 +27,7 @@ type CardData = {
   set?: { game: GameRef | null } | null
 }
 
-type ItemRow = {
+export type ItemRow = {
   id: number
   quantity: number
   purchasePrice: number | null
@@ -150,7 +151,13 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES) {
     [portfolios, activeId]
   )
 
-  const items = useMemo(() => activePortfolio?.items ?? [], [activePortfolio])
+  // Demo-only: splice mock Pokémon holdings in so the multi-game UI is visible
+  // before real Pokémon data exists (see multigame-demo.ts).
+  const demo = useMultigameDemo()
+  const items = useMemo(
+    () => [...(activePortfolio?.items ?? []), ...(demo ? MOCK_POKEMON_PORTFOLIO_ITEMS : [])],
+    [activePortfolio, demo],
+  )
 
   // Holdings narrowed to the active game scope (a slug, or ALL_GAMES for the
   // cross-game aggregate). Cards resolve their game via set.game; a null game
@@ -251,11 +258,18 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES) {
     const map = new Map<string, GameBreakdown>()
     for (const it of items) {
       const game = it.card.set?.game ?? null
-      const key = game?.slug ?? "__none__"
+      // Cards with no game fold into the default game — matching `scopedItems`
+      // above (which treats null-game as DEFAULT_GAME) — so a per-game chip total
+      // reconciles with the scoped hero instead of quietly dropping value.
+      const key = game?.slug ?? DEFAULT_GAME
       let entry = map.get(key)
       if (!entry) {
         entry = { game, valueJpy: 0, costJpy: 0, pnl: 0, pnlPercent: 0, count: 0 }
         map.set(key, entry)
+      } else if (!entry.game && game) {
+        // A real game ref arrived after a null-game card seeded this key — adopt it
+        // so the chip can render its label/logo.
+        entry.game = game
       }
       entry.valueJpy += (it.card.latestPriceJpy ?? 0) * it.quantity
       entry.costJpy += (it.purchasePrice ?? 0) * it.quantity

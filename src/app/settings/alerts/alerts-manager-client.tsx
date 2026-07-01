@@ -12,6 +12,8 @@ import { AlertEditDialog } from "@/components/alerts/alert-edit-dialog";
 import { AlertCreateDialog } from "@/components/alerts/alert-create-dialog";
 import type { PriceAlertItem } from "@/components/alerts/alert-types";
 import { useUIStore } from "@/stores/ui-store";
+import { useGameFilterReset } from "@/hooks/use-game-filter";
+import { useMultigameDemo, MOCK_POKEMON_ALERTS } from "@/lib/mock/multigame-demo";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
 import { ApiError, apiDelete, apiGet, apiPatch } from "@/lib/api/client";
 import { t } from "@/lib/i18n";
@@ -35,17 +37,23 @@ export function AlertsManagerClient() {
   const [createOpen, setCreateOpen] = useState(false);
   const [busyId, setBusyId] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
-  // One unified alerts list across every game; the filter is shared via ui-store
-  // so both the in-page chips and the header game-switcher drive it.
-  const gameFilter = useUIStore((s) => s.mineGameFilter);
-  const setGameFilter = useUIStore((s) => s.setMineGameFilter);
+  // One unified alerts list across every game, filtered in-view by game. The
+  // filter is PER-PAGE (local, session-only) — never shared with portfolio/watchlist.
+  const [gameFilter, setGameFilter] = useState<string>(ALL_GAMES);
+  const demo = useMultigameDemo();
+  const availableGames = useMemo(
+    () => [...new Set(alerts.map((a) => a.card.set?.game?.slug ?? DEFAULT_GAME))],
+    [alerts],
+  );
+  useGameFilterReset(gameFilter, availableGames, setGameFilter);
   const { openUpgradeDialog } = useUpgradeDialog();
 
   const fetchAlerts = useCallback(async () => {
     try {
       setError(null);
       const data = await apiGet<{ alerts: PriceAlertItem[] }>("/api/alerts");
-      setAlerts(data.alerts ?? []);
+      // Demo-only: append mock Pokémon alerts so the multi-game UI is visible.
+      setAlerts([...(data.alerts ?? []), ...(demo ? MOCK_POKEMON_ALERTS : [])]);
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
         setAlerts([]);
@@ -55,7 +63,7 @@ export function AlertsManagerClient() {
     } finally {
       setLoading(false);
     }
-  }, [lang]);
+  }, [lang, demo]);
 
   useEffect(() => {
     void fetchAlerts();
@@ -233,6 +241,7 @@ export function AlertsManagerClient() {
                 busy={busyId === alert.id}
                 onEdit={() => onEdit(alert)}
                 onDelete={() => void onDelete(alert)}
+                showGameBadge={availableGames.length >= 2}
               />
             ))}
           </div>
@@ -256,6 +265,7 @@ export function AlertsManagerClient() {
                 busy={busyId === alert.id}
                 onReactivate={() => void onReactivate(alert)}
                 onDelete={() => void onDelete(alert)}
+                showGameBadge={availableGames.length >= 2}
               />
             ))}
           </div>

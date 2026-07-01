@@ -306,6 +306,7 @@ export const jp = {
   marketValue: "時価評価額",
   allGames: "すべてのゲーム",
   filterByGame: "ゲームで絞り込み",
+  chartAllGamesOnly: "履歴グラフは全ゲーム表示のみ",
   invested: "投資額",
   avgCost: "平均取得単価",
   cardsAdded: "カード追加",

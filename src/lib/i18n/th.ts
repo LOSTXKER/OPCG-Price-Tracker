@@ -306,6 +306,7 @@ export const th = {
   marketValue: "มูลค่าตลาด",
   allGames: "ทุกเกม",
   filterByGame: "กรองตามเกม",
+  chartAllGamesOnly: "กราฟย้อนหลังแสดงเฉพาะมุมมองทุกเกม",
   invested: "เงินลงทุน",
   avgCost: "ต้นทุนเฉลี่ย",
   cardsAdded: "เพิ่มการ์ด",
