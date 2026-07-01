@@ -16,6 +16,13 @@
 - i18n: เพิ่ม key `trackGroup` (th ของฉัน · en Mine · jp マイデータ)
 - **verify:** tsc 0 · lint 0 err (25 warn เดิมทั้งหมด) · test 56/56 · build ✓ compiled
 
+### follow-up — ปุ่มสลับเกม "กดไม่ได้" (เบสแจ้ง หลัง deploy)
+สาเหตุ = ไม่ใช่บั๊ก · Pokémon เป็น `comingSoon: true` → เมนู disable → ไม่มีอะไรให้สลับ (มีเกมเดียวจริง). เบสเคาะ: **กด Pokémon ได้ → หน้า "กำลังมา"**
+- หน้าใหม่ `src/app/coming-soon/page.tsx` (server · อ่าน `?game=` + getServerLanguage · noindex · teaser ชื่อเกม + "กำลังมาเร็วๆ นี้บน Meecard" + ปุ่มกลับหน้าแรก)
+- game-switcher: เกม comingSoon เลิก `disabled` → กดได้ → `router.push('/coming-soon?game=slug')` · **ไม่เซ็ต currentGame/cookie** (แอปที่เหลือคงอยู่เกม live · หน้าอื่นไม่พัง) · คงป้าย "เร็วๆ นี้" เป็น hint
+- i18n: `comingSoonSubtitle` · `comingSoonBody` · `comingSoonBack` (th/en/jp)
+- verify: tsc 0 · lint 0 err · build ✓ · `/coming-soon` = ƒ dynamic route
+
 ## ⏭️ DEFER โดยตั้งใจ (อย่าเผลอทำใน push ที่ไม่รีวิว)
 - **P5 toolbar convergence** — รวม toolbar ของ Watchlist/Portfolio/Alerts/search เป็น `FilterToolbar` ตัวเดียว = refactor ใหญ่/เสี่ยงเกินกว่าจะยัดใน batch นี้ · แยก PR รอบหน้า
 - **browse-picker unification** — compare/portfolio-add/deck-calc/hero-bar คง browse grid เดิม (รวยกว่า CardSearch) ไม่ยุบ
