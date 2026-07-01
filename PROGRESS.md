@@ -29,12 +29,17 @@ i18n ใหม่: showAllGames · alertsUnit · byGame · browseCatalog · swit
 - alerts: **กลุ่มเกมพับได้** + crest · chip "N แจ้งเตือน"
 - switcher (ทุกหน้า): dot สีตามเกม · บนหน้า MINE มี ⓘ hint
 
+## 🔁 รีวิวแผนรอบ 2026-07-02 (เบสสั่ง re-review หลังเปลี่ยน model) — เบสเคาะแล้ว
+**จุดที่แผนเดิมเรียงผิด:** เรียงตาม "แตะ/ไม่แตะ DB" แต่ไม่ได้เรียงตาม "user เห็นผลเมื่อไหร่" — UI multi-game ทั้งหมด+Phase G มองไม่เห็นจนกว่ามีเกม 2 จริง · **คอขวดจริง = Pokémon data pipeline** (หาแหล่ง+scraper+seed · ไม่ใช่ UI/schema) · Phase F desktop กลับเป็นงานเดียวที่เห็นผลทุก user วันนี้
+**ลำดับใหม่ (เบสเคาะ):** (1) ปิดงวด → PR ✅ (2) Phase F desktop 2-rail (3) สำรวจ Pokémon data (4) Phase G migrations มัดรวมทีเดียวตอน data พร้อม
+**mock `?demo=multigame`:** เบสเคาะ **ปล่อยไว้ใน prod** (discoverability ต่ำ · display-only)
+
 ## ⏭️ DEFER (ตั้งใจ · บอกเบสแล้ว)
-- **Phase F desktop 2-rail** (portfolio/watchlist/alerts lg: side-rail) — layout refactor ใหญ่ · verify ภาพไม่ได้ (ต้อง login) · เสี่ยง regress mobile ที่ polished แล้ว → ทำตอน iterate ภาพได้
-- **switcher per-row data** ("128 ใบ · ฿42,300") — ต้อง endpoint summary + fetch ใน header (perf) → ทำพร้อม data จริง
+- **Phase F desktop 2-rail** → เลื่อนขึ้นเป็นงานถัดไปหลัง PR (ทำแบบ iterate กับเบสบน preview)
+- **switcher per-row data** ("128 ใบ · ฿42,300") — ต้อง endpoint summary → ทำพร้อม data จริง
 - **pinning เกม** — low value ตอนมี 2 เกม
-- **notify-me form + `/api/notify/[game]`** — ฟอร์มเก็บอีเมลต้องมี `GameNotifySignup` table (durable) ไม่งั้นหลอกผู้ใช้ → ไป Phase G
-- **movers/holdings tint ring · alert set-subheader** — polish รอง
+- **notify-me form + `/api/notify/[game]`** — ต้องมี `GameNotifySignup` table ไม่งั้นหลอกผู้ใช้ → ไป Phase G
+- **ตัดถาวร (ตัดสิน 2026-07-02):** tint ring บนรูป movers/holdings (แถวมี GameBadge แล้ว ring = noise ขัด "ไม่รก") · alert set-subheader (AlertRow โชว์ set ต่อใบแล้ว กลุ่มระดับเกมพอ)
 
 ## ⛔ SCHEMA-GATED (Phase G · เบสอนุมัติก่อน migrate — VISION §6)
 1. **per-game `PortfolioSnapshot`** (gameId + netInvestedJpy) → กราฟพอร์ตแยกเกมจริง (แทน honesty strip)
@@ -50,6 +55,7 @@ i18n ใหม่: showAllGames · alertsUnit · byGame · browseCatalog · swit
 5. mock demo = client-only · ลบเมื่อ data จริงมา
 
 ## ⏭️ NEXT
-1. **เบส login + `?demo=multigame` เช็ก visual 3 หน้า + switcher hint** (มือถือ+desktop) → บอกปรับตรงไหน
-2. เบสตัดสิน SCHEMA-GATED (Phase G) — จะแตะ DB ทำ per-game chart / real 2-game data / notify / named watchlist ไหม
-3. (ถ้าเอา) Phase F desktop 2-rail — ทำตอน iterate ภาพได้
+1. **เบสเช็ก visual บน Vercel preview ของ PR** — 3 หน้า MINE + `?demo=multigame` (มือถือ+desktop) + switcher ⓘ hint → คอมเมนต์ใน PR หรือบอกในแชท
+2. แก้ feedback → merge PR
+3. **Phase F desktop 2-rail** (portfolio ก่อน · iterate กับเบสบน preview)
+4. สำรวจแหล่งข้อมูล Pokémon (ปลดคอขวด multi-game จริง) → แล้วค่อย Phase G migrations มัดรวม

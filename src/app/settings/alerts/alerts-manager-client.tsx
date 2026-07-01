@@ -198,7 +198,7 @@ export function AlertsManagerClient() {
     return (
       <div className="space-y-3">
         {groupAlertsByGame(list).map((g) => (
-          <AlertGameGroup key={g.slug} group={g} lang={lang} defaultOpen={mode === "active"}>
+          <AlertGameGroup key={g.slug} group={g} defaultOpen={mode === "active"}>
             {g.alerts.map(rowOf)}
           </AlertGameGroup>
         ))}

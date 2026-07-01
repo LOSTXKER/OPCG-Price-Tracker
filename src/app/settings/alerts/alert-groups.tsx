@@ -7,7 +7,6 @@ import type { PriceAlertItem } from "@/components/alerts/alert-types";
 import { GameCrest } from "@/components/shared/game-crest";
 import { getGameConfig } from "@/lib/game-config";
 import { DEFAULT_GAME } from "@/lib/game/constants";
-import { type Language } from "@/lib/i18n";
 import type { GameRef } from "@/lib/types/portfolio";
 import { cn } from "@/lib/utils";
 
@@ -35,19 +34,16 @@ export function groupAlertsByGame(alerts: PriceAlertItem[]): AlertGroup[] {
 
 export function AlertGameGroup({
   group,
-  lang,
   defaultOpen = true,
   children,
 }: {
   group: AlertGroup;
-  lang: Language;
   defaultOpen?: boolean;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const name =
     getGameConfig(group.slug)?.shortName ?? group.game?.nameEn ?? group.slug.toUpperCase();
-  void lang;
   return (
     <div className="space-y-2">
       <button
