@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown, Info } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -9,8 +9,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getAllGameConfigs } from "@/lib/game-config";
+import { getAllGameConfigs, getGameAccentTint } from "@/lib/game-config";
 import {
+  GAME_AGNOSTIC_FEATURES,
   GAME_COOKIE,
   GAME_COOKIE_MAX_AGE,
   isGamePrefix,
@@ -41,6 +42,13 @@ export function GameSwitcher({ className }: { className?: string }) {
   const active = GAMES.find((g) => g.slug === currentGame) ?? GAMES[0];
   const router = useRouter();
   const pathname = usePathname();
+  const dismissedHint = useUIStore((s) => s.dismissedSwitcherHint);
+  const dismissHint = useUIStore((s) => s.dismissSwitcherHint);
+  const activeTint = getGameAccentTint(active.slug);
+  // On a MINE route the pill does nothing to the list — surface a one-time hint
+  // pointing users at the in-page filter chips instead.
+  const seg0 = pathname.split("/").filter(Boolean)[0] ?? "";
+  const isMineRoute = GAME_AGNOSTIC_FEATURES.has(seg0) || pathname.startsWith("/settings/alerts");
 
   // Switch game = stay on the same feature, swap the `/[game]` segment. Persist
   // the cookie so middleware redirects un-prefixed URLs to the chosen game too.
@@ -79,7 +87,7 @@ export function GameSwitcher({ className }: { className?: string }) {
           className,
         )}
       >
-        <span className="size-2 rounded-full" style={{ background: "var(--primary)" }} aria-hidden />
+        <span className="size-2 rounded-full" style={{ background: activeTint }} aria-hidden />
         {active.shortName ?? active.slug.toUpperCase()}
       </span>
     );
@@ -94,13 +102,15 @@ export function GameSwitcher({ className }: { className?: string }) {
           className,
         )}
       >
-        <span className="size-2 rounded-full" style={{ background: "var(--primary)" }} aria-hidden />
+        <span className="size-2 rounded-full" style={{ background: activeTint }} aria-hidden />
         {active.shortName ?? active.slug.toUpperCase()}
         <ChevronDown className="size-3 text-muted-foreground" aria-hidden />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" sideOffset={8} className="min-w-[220px]">
+        {/* Navigate-framed eyebrow — this control browses the catalog; it never
+            filters the MINE lists (that's the in-page chips). */}
         <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/70">
-          {t(lang, "chooseGame")}
+          {t(lang, "browseCatalog")}
         </p>
         {GAMES.map((g) => {
           const isActive = g.slug === currentGame;
@@ -111,6 +121,11 @@ export function GameSwitcher({ className }: { className?: string }) {
               onClick={() => (comingSoon ? goComingSoon(g.slug) : switchGame(g.slug))}
               className={cn("flex items-center gap-2", isActive && "font-semibold text-foreground")}
             >
+              <span
+                aria-hidden
+                className="size-2 shrink-0 rounded-full"
+                style={{ background: `color-mix(in srgb, ${getGameAccentTint(g.slug)} 70%, transparent)` }}
+              />
               <span className="flex-1">{g.nameEn}</span>
               {isActive && <Check className="size-4 text-primary" aria-hidden />}
               {comingSoon && (
@@ -119,6 +134,16 @@ export function GameSwitcher({ className }: { className?: string }) {
             </DropdownMenuItem>
           );
         })}
+        {isMineRoute && !dismissedHint && (
+          <button
+            type="button"
+            onClick={dismissHint}
+            className="mt-1 flex w-full items-center gap-1.5 border-t border-[var(--p-hair)] px-2 pb-1 pt-2 text-left text-micro text-muted-foreground/80 ease-chrome transition-colors hover:text-foreground"
+          >
+            <Info className="size-3 shrink-0" aria-hidden />
+            {t(lang, "switcherMineHint")}
+          </button>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

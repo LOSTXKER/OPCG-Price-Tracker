@@ -12,13 +12,16 @@ import { AlertEditDialog } from "@/components/alerts/alert-edit-dialog";
 import { AlertCreateDialog } from "@/components/alerts/alert-create-dialog";
 import type { PriceAlertItem } from "@/components/alerts/alert-types";
 import { useUIStore } from "@/stores/ui-store";
+import { useGameFilterReset } from "@/hooks/use-game-filter";
+import { useMultigameDemo, MOCK_POKEMON_ALERTS } from "@/lib/mock/multigame-demo";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
 import { ApiError, apiDelete, apiGet, apiPatch } from "@/lib/api/client";
-import { t } from "@/lib/i18n";
+import { t, type Language } from "@/lib/i18n";
 import { GameFilterChips, type GameChip } from "@/components/shared/game-filter-chips";
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants";
 import { getGameConfig } from "@/lib/game-config";
 import { AlertRow, type FeedbackKind } from "./alert-row";
+import { groupAlertsByGame, AlertGameGroup } from "./alert-groups";
 
 type Feedback = {
   alertId: number;
@@ -35,17 +38,23 @@ export function AlertsManagerClient() {
   const [createOpen, setCreateOpen] = useState(false);
   const [busyId, setBusyId] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
-  // One unified alerts list across every game; the filter is shared via ui-store
-  // so both the in-page chips and the header game-switcher drive it.
-  const gameFilter = useUIStore((s) => s.mineGameFilter);
-  const setGameFilter = useUIStore((s) => s.setMineGameFilter);
+  // One unified alerts list across every game, filtered in-view by game. The
+  // filter is PER-PAGE (local, session-only) — never shared with portfolio/watchlist.
+  const [gameFilter, setGameFilter] = useState<string>(ALL_GAMES);
+  const demo = useMultigameDemo();
+  const availableGames = useMemo(
+    () => [...new Set(alerts.map((a) => a.card.set?.game?.slug ?? DEFAULT_GAME))],
+    [alerts],
+  );
+  useGameFilterReset(gameFilter, availableGames, setGameFilter);
   const { openUpgradeDialog } = useUpgradeDialog();
 
   const fetchAlerts = useCallback(async () => {
     try {
       setError(null);
       const data = await apiGet<{ alerts: PriceAlertItem[] }>("/api/alerts");
-      setAlerts(data.alerts ?? []);
+      // Demo-only: append mock Pokémon alerts so the multi-game UI is visible.
+      setAlerts([...(data.alerts ?? []), ...(demo ? MOCK_POKEMON_ALERTS : [])]);
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
         setAlerts([]);
@@ -55,7 +64,7 @@ export function AlertsManagerClient() {
     } finally {
       setLoading(false);
     }
-  }, [lang]);
+  }, [lang, demo]);
 
   useEffect(() => {
     void fetchAlerts();
@@ -107,10 +116,10 @@ export function AlertsManagerClient() {
         .map(([slug, c]) => ({
           slug,
           label: getGameConfig(slug)?.shortName ?? slug.toUpperCase(),
-          value: String(c),
+          value: `${c} ${t(lang, "alertsUnit")}`,
           logoUrl: gameMeta.logo.get(slug) ?? null,
         })),
-    [gameMeta],
+    [gameMeta, lang],
   );
 
   const onEdit = (alert: PriceAlertItem) => {
@@ -168,6 +177,35 @@ export function AlertsManagerClient() {
     }
   };
 
+  // Grouped by game (crest + count, collapsible) only when the list spans ≥2
+  // games with no game filter active — otherwise flat. Row badges stay off:
+  // grouped mode carries the game in the header, flat mode is single-game/scoped.
+  const grouped = gameFilter === ALL_GAMES && availableGames.length >= 2;
+  const renderAlertList = (list: PriceAlertItem[], mode: "active" | "history") => {
+    const rowOf = (alert: PriceAlertItem) => (
+      <AlertRow
+        key={alert.id}
+        alert={alert}
+        feedback={feedback?.alertId === alert.id ? feedback.kind : null}
+        busy={busyId === alert.id}
+        onEdit={mode === "active" ? () => onEdit(alert) : undefined}
+        onReactivate={mode === "history" ? () => void onReactivate(alert) : undefined}
+        onDelete={() => void onDelete(alert)}
+        showGameBadge={false}
+      />
+    );
+    if (!grouped) return <div className="space-y-2">{list.map(rowOf)}</div>;
+    return (
+      <div className="space-y-3">
+        {groupAlertsByGame(list).map((g) => (
+          <AlertGameGroup key={g.slug} group={g} defaultOpen={mode === "active"}>
+            {g.alerts.map(rowOf)}
+          </AlertGameGroup>
+        ))}
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div className="space-y-8">
@@ -212,7 +250,12 @@ export function AlertsManagerClient() {
         </Button>
       </div>
 
-      <GameFilterChips games={gameChips} activeGame={gameFilter} onSelect={setGameFilter} />
+      <GameFilterChips
+        games={gameChips}
+        activeGame={gameFilter}
+        onSelect={setGameFilter}
+        allValue={`${alerts.length} ${t(lang, "alertsUnit")}`}
+      />
 
       <section className="space-y-3">
         <div className="flex items-baseline justify-between">
@@ -222,20 +265,13 @@ export function AlertsManagerClient() {
           </span>
         </div>
         {active.length === 0 ? (
-          <ActiveEmpty onCreate={() => setCreateOpen(true)} />
+          gameFilter !== ALL_GAMES ? (
+            <FilteredEmpty lang={lang} onShowAll={() => setGameFilter(ALL_GAMES)} onCreate={() => setCreateOpen(true)} />
+          ) : (
+            <ActiveEmpty onCreate={() => setCreateOpen(true)} />
+          )
         ) : (
-          <div className="space-y-2">
-            {active.map((alert) => (
-              <AlertRow
-                key={alert.id}
-                alert={alert}
-                feedback={feedback?.alertId === alert.id ? feedback.kind : null}
-                busy={busyId === alert.id}
-                onEdit={() => onEdit(alert)}
-                onDelete={() => void onDelete(alert)}
-              />
-            ))}
-          </div>
+          renderAlertList(active, "active")
         )}
       </section>
 
@@ -247,18 +283,7 @@ export function AlertsManagerClient() {
               {history.length}
             </span>
           </div>
-          <div className="space-y-2">
-            {history.map((alert) => (
-              <AlertRow
-                key={alert.id}
-                alert={alert}
-                feedback={feedback?.alertId === alert.id ? feedback.kind : null}
-                busy={busyId === alert.id}
-                onReactivate={() => void onReactivate(alert)}
-                onDelete={() => void onDelete(alert)}
-              />
-            ))}
-          </div>
+          {renderAlertList(history, "history")}
         </section>
       )}
 
@@ -277,6 +302,31 @@ export function AlertsManagerClient() {
         onOpenChange={setCreateOpen}
         onCreated={onCreated}
       />
+    </div>
+  );
+}
+
+function FilteredEmpty({
+  lang,
+  onShowAll,
+  onCreate,
+}: {
+  lang: Language;
+  onShowAll: () => void;
+  onCreate: () => void;
+}) {
+  return (
+    <div className="rounded-xl border border-dashed border-[var(--p-hair)] bg-card/50 px-6 py-10 text-center">
+      <p className="text-sm text-muted-foreground">{t(lang, "noActiveAlerts")}</p>
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+        <Button size="sm" onClick={onShowAll} className="rounded-full">
+          {t(lang, "showAllGames")}
+        </Button>
+        <Button variant="ghost" size="sm" onClick={onCreate} className="gap-1.5 text-muted-foreground">
+          <Plus className="size-3.5" />
+          {t(lang, "createAlert")}
+        </Button>
+      </div>
     </div>
   );
 }

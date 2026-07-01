@@ -6,6 +6,7 @@ import { Bell, ExternalLink, Pin } from "lucide-react";
 import { CardItem } from "@/components/cards/card-item";
 import { CardGrid } from "@/components/cards/card-grid";
 import { CompareButton } from "@/components/shared/compare-button";
+import { GameBadge } from "@/components/shared/game-badge";
 import { getCardName, t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ export function WatchlistGridView({
   onSetAlert,
   onRemove,
   removingIds,
+  showGameBadge = false,
 }: {
   entries: WatchlistEntry[];
   period: ChangePeriod;
@@ -31,6 +33,7 @@ export function WatchlistGridView({
   onSetAlert: (entry: WatchlistEntry) => void;
   onRemove: (entry: WatchlistEntry) => void;
   removingIds: Set<number>;
+  showGameBadge?: boolean;
 }) {
   const lang = useUIStore((s) => s.language);
 
@@ -59,6 +62,11 @@ export function WatchlistGridView({
                 aria-hidden
               >
                 <Pin className="size-3 fill-current" />
+              </div>
+            )}
+            {showGameBadge && (
+              <div className="pointer-events-none absolute left-2 top-2 z-10">
+                <GameBadge game={entry.card.set.game} />
               </div>
             )}
             <CardItem
@@ -113,7 +121,7 @@ export function WatchlistGridView({
                       className={cn(
                         "inline-flex size-7 items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-muted",
                         entry.hasActiveAlert
-                          ? "text-amber-500"
+                          ? "text-primary"
                           : "text-muted-foreground hover:text-foreground"
                       )}
                     >

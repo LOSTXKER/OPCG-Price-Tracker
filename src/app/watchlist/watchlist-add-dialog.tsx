@@ -58,7 +58,9 @@ export function WatchlistAddDialog({
         <DialogHeader>
           <DialogTitle>{t(lang, "addCard")}</DialogTitle>
         </DialogHeader>
-        <CardSearch mode="pick" onSelect={add} autoFocus />
+        {/* MINE add flow: search EVERY game — the picked card carries its own
+            game, so we never lock the search to the header's current game. */}
+        <CardSearch mode="pick" game="all" onSelect={add} autoFocus />
       </DialogContent>
     </Dialog>
   );

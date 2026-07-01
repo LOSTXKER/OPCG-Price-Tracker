@@ -52,6 +52,10 @@ export interface GameConfig {
   shortName?: string;
   /** Registered but not yet browsable — switcher shows it disabled. */
   comingSoon?: boolean;
+  /** Thin per-game tint layered OVER the honey baseline (crest dot / top-glow /
+   *  card-frame only — never a repaint of fills/CTA/focus). Omit for the baseline
+   *  game so it falls back to `--primary` and reads as no skin. */
+  accentTint?: string;
   sets: SetInfo[];
   baseRarities: RarityInfo[];
   parallelRarities: RarityInfo[];

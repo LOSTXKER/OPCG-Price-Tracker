@@ -1,45 +1,61 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-01 — **Unified card-search + MINE-family IA convergence** (เบส: "search ควรเป็นอันเดียวทั้งเว็บ · 3 หน้า personal ใช้งานง่ายเหมือนกัน" → workflow usability audit 5 agent → เบสเคาะ 4 ข้อ → build P1–P7)
+อัปเดตล่าสุด: 2026-07-01 — **MINE multi-game VISION redesign (Phase A–E build)** (เบส: "ทำให้ครบจบเสร็จ · รื้อ UX/UI ใหม่ได้ · ดูตาม VISION · /workflow" → design workflow 6-agent ออก spec → build [NO-SCHEMA] Phase A–E)
 
-## ✅ เสร็จ session นี้ — P1–P7 (task #11,12,13)
-**โจทย์:** audit เจอ 3 หน้า personal = "3 แอปคนละคนทำ" · watchlist ไม่มีปุ่มเพิ่มการ์ด · badge แท็บพอร์ตนับข้อความ (ไม่เกี่ยว) · ปุ่มสลับเกมบนหน้า personal กดแล้วตาย · card search ~10 แบบทั้งเว็บ ไม่แชร์โค้ด
-**เบสเคาะ:** (1) IA รวม 3 หน้าเป็นกลุ่ม **TRACK ในเมนู More** · (2) สลับเกมบนหน้า personal = **กรอง collection หน้านั้น** · (3) คงชื่อ "รายการโปรด" · (4) placeholder = **"ค้นหาชื่อหรือรหัส..."** ทั้งเว็บ
+## แหล่งอ้างอิง
+- **spec เต็ม:** `doc/mine-multigame-spec.md` (จาก design workflow · แยก [NO-SCHEMA] vs [SCHEMA-GATED])
+- **VISION:** §1 identity · §2 IA/TRACK · §4 discipline · §5.3 portfolio · §5.7 multi-game · §6 schema (⚠️ gated)
 
-- **P1 trust fix ✅** — ย้าย unread-badge ออกจากแท็บพอร์ต → ปุ่ม More (bottom-nav) · watchlist ได้ปุ่ม **"เพิ่มการ์ด"** (header + empty state) → `WatchlistAddDialog` (CardSearch pick) เพิ่มในที่ ไม่เด้งออก /cards
-- **P2 `CardSearch` กลาง ✅** (`src/components/shared/card-search.tsx`) — navigate+pick mode · game scope (default currentGame · ผ่าน useCardSearch + fetch-cards `game=`) · keyboard ↑↓↵Esc · recent searches · **ชุบ `SearchResultsDropdown` ที่ตาย** กลับมาใช้ · placeholder `searchByNameOrCode`
-- **P3 double Cmd-K ✅** — ถอด Cmd-K binding + ป้าย ⌘K ออกจาก hero-search-bar (header palette เป็นเจ้าของ Cmd-K ที่เดียว) · **ไม่ downgrade hero bar เป็น CardSearch** (hero รวยกว่า: Sets+Popular+กล้อง)
-- **P4 alert-create-dialog → CardSearch ✅** (pick step) · **nuance:** compare-picker / hero-bar / deck-calc / portfolio-add = **browse grid รวย** (set filter + sort + infinite scroll) → **ห้ามยุบเป็น CardSearch** (ของหาย) · CardSearch เหมาะแค่ search-select จริง = watchlist-add ✓ · alert ✓
-- **P6 IA + switcher scope ✅** — game-switcher `switchGame` เซ็ต `mineGameFilter` ด้วย (สลับเกมบนหน้า MINE = กรอง collection ทันที ไม่ใช่ dead control) · portfolio/watchlist/alerts อ่าน `gameFilter` จาก `useUIStore(mineGameFilter)` ตัวเดียว (one control = one thing · session-only, ไม่ persist) · **mobile-menu กลุ่ม TRACK ใหม่** (Portfolio + Watchlist + Alerts รวมใต้ header เดียว · watchlist ออกจาก Browse · portfolio/alerts ออกจาก My Account)
-- **P7 placeholder เดียว ✅** — `searchByNameOrCode` = "ค้นหาชื่อหรือรหัส..." ทั้งเว็บ
-- i18n: เพิ่ม key `trackGroup` (th ของฉัน · en Mine · jp マイデータ)
-- **verify:** tsc 0 · lint 0 err (25 warn เดิมทั้งหมด) · test 56/56 · build ✓ compiled
+## ✅ เสร็จ session นี้ (3 commit)
+**หลักการ:** MINE = กองเดียวรวมทุกเกม flat URL · 2 ปุ่มเกมไม่ทับกัน (header pill = นำทาง catalog เท่านั้น · in-page chips = กรอง list) · honey <5% · per-game tint = ชั้นบางทับ honey (crest/glow/frame · จาก `GameConfig.accentTint` · pokemon=เหลืองบาง opcg=baseline) · green/red = P/L เท่านั้น
 
-### follow-up — ปุ่มสลับเกม "กดไม่ได้" (เบสแจ้ง หลัง deploy)
-สาเหตุ = ไม่ใช่บั๊ก · Pokémon เป็น `comingSoon: true` → เมนู disable → ไม่มีอะไรให้สลับ (มีเกมเดียวจริง). เบสเคาะ: **กด Pokémon ได้ → หน้า "กำลังมา"**
-- หน้าใหม่ `src/app/coming-soon/page.tsx` (server · อ่าน `?game=` + getServerLanguage · noindex · teaser ชื่อเกม + "กำลังมาเร็วๆ นี้บน Meecard" + ปุ่มกลับหน้าแรก)
-- game-switcher: เกม comingSoon เลิก `disabled` → กดได้ → `router.push('/coming-soon?game=slug')` · **ไม่เซ็ต currentGame/cookie** (แอปที่เหลือคงอยู่เกม live · หน้าอื่นไม่พัง) · คงป้าย "เร็วๆ นี้" เป็น hint
-- i18n: `comingSoonSubtitle` · `comingSoonBody` · `comingSoonBack` (th/en/jp)
-- verify: tsc 0 · lint 0 err · build ✓ · `/coming-soon` = ƒ dynamic route
+- **commit ก่อนหน้า `a8ae7fa`** — multi-game พื้นฐาน (per-page filter · teaser · badge · scope label · add-card ข้ามเกม · null-game · mock `?demo=multigame`)
+- **commit `5f76687` (Phase A–C):**
+  - **A identity:** `GameConfig.accentTint` + `getGameAccentTint()` · `GameBadge` tint dot + size · `GameFilterChips` allValue
+  - **B watchlist/alerts:** summary scope ตามเกม (เลิก OPCG leak) · grid badge · bell amber→honey · alert chip unit + all-count · **alert จัดกลุ่มตามเกมพับได้** (`alert-groups.tsx`) · filtered-empty "ดูทุกเกม"
+  - **C portfolio:** `GameCrest` atom · wire `PortfolioGameBreakdown` เดิม (all-games only) + deep-link กดแถว→scope + tint share bar · scoped hero tint glow · `PortfolioScopedHonestyStrip` แทน note กราฟ (Cost vs Market + P/L · ไม่ปลอมกราฟ)
+- **commit นี้ (Phase D–E):**
+  - **D switcher:** eyebrow "เลือกแคตตาล็อกเกม" (navigate-framed) · crest dot tint ต่อเกม · **MINE-route ⓘ hint** "ตัวกรองเกมอยู่ในหน้านี้ →" (dismiss-once · ui-store) — แก้ความสับสน 2 ปุ่มเกม
+  - **E coming-soon:** per-game tint (glow + badge + "เร็วๆ นี้" chip) บน `/coming-soon`
 
-## ⏭️ DEFER โดยตั้งใจ (อย่าเผลอทำใน push ที่ไม่รีวิว)
-- **P5 toolbar convergence** — รวม toolbar ของ Watchlist/Portfolio/Alerts/search เป็น `FilterToolbar` ตัวเดียว = refactor ใหญ่/เสี่ยงเกินกว่าจะยัดใน batch นี้ · แยก PR รอบหน้า
-- **browse-picker unification** — compare/portfolio-add/deck-calc/hero-bar คง browse grid เดิม (รวยกว่า CardSearch) ไม่ยุบ
-- P4 marketplace-select — รอ marketplace flag เปิด
-- Phase 3 saved chips — รอ marketplace flag
+i18n ใหม่: showAllGames · alertsUnit · byGame · browseCatalog · switcherMineHint (th/en/jp)
+**verify ทุก commit:** tsc 0 · lint 0 err (1 warning เดิม) · test 56/56 · build ✓
+
+## ⚠️ verify ภาพจริง — เบสต้อง login + `?demo=multigame`
+เห็นได้เมื่อมี 2 เกม (OPCG จริง + Pokémon mock · ต้อง login) · เปิด `/portfolio` `/watchlist` `/settings/alerts` + `?demo=multigame`:
+- portfolio: chip [ทุกเกม ฿รวม][OPCG][Pokémon] · **breakdown block กดแถว→scope** · กด Pokémon → hero glow เหลือง + honesty strip แทนกราฟ
+- watchlist: summary ตามเกม · badge grid+list · bell honey
+- alerts: **กลุ่มเกมพับได้** + crest · chip "N แจ้งเตือน"
+- switcher (ทุกหน้า): dot สีตามเกม · บนหน้า MINE มี ⓘ hint
+
+## 🔁 รีวิวแผนรอบ 2026-07-02 (เบสสั่ง re-review หลังเปลี่ยน model) — เบสเคาะแล้ว
+**จุดที่แผนเดิมเรียงผิด:** เรียงตาม "แตะ/ไม่แตะ DB" แต่ไม่ได้เรียงตาม "user เห็นผลเมื่อไหร่" — UI multi-game ทั้งหมด+Phase G มองไม่เห็นจนกว่ามีเกม 2 จริง · **คอขวดจริง = Pokémon data pipeline** (หาแหล่ง+scraper+seed · ไม่ใช่ UI/schema) · Phase F desktop กลับเป็นงานเดียวที่เห็นผลทุก user วันนี้
+**ลำดับใหม่ (เบสเคาะ):** (1) ปิดงวด → PR ✅ (2) Phase F desktop 2-rail (3) สำรวจ Pokémon data (4) Phase G migrations มัดรวมทีเดียวตอน data พร้อม
+**mock `?demo=multigame`:** เบสเคาะ **ปล่อยไว้ใน prod** (discoverability ต่ำ · display-only)
+
+## ⏭️ DEFER (ตั้งใจ · บอกเบสแล้ว)
+- **Phase F desktop 2-rail** → เลื่อนขึ้นเป็นงานถัดไปหลัง PR (ทำแบบ iterate กับเบสบน preview)
+- **switcher per-row data** ("128 ใบ · ฿42,300") — ต้อง endpoint summary → ทำพร้อม data จริง
+- **pinning เกม** — low value ตอนมี 2 เกม
+- **notify-me form + `/api/notify/[game]`** — ต้องมี `GameNotifySignup` table ไม่งั้นหลอกผู้ใช้ → ไป Phase G
+- **ตัดถาวร (ตัดสิน 2026-07-02):** tint ring บนรูป movers/holdings (แถวมี GameBadge แล้ว ring = noise ขัด "ไม่รก") · alert set-subheader (AlertRow โชว์ set ต่อใบแล้ว กลุ่มระดับเกมพอ)
+
+## ⛔ SCHEMA-GATED (Phase G · เบสอนุมัติก่อน migrate — VISION §6)
+1. **per-game `PortfolioSnapshot`** (gameId + netInvestedJpy) → กราฟพอร์ตแยกเกมจริง (แทน honesty strip)
+2. **`Card.gameId` NOT NULL + `@@unique` + gameMeta** → 2 เกมจริง (เลิกพึ่ง `?demo=multigame`)
+3. **`GameNotifySignup` table** → notify-me durable
+4. **named watchlists** · Game.accentTint/sortOrder/isComingSoon columns · TransactionType+SELL + indexPriceJpy
 
 ## ⛔ ตัดสินแล้ว (อย่าเสนอซ้ำ)
-1. MINE (portfolio/watchlist/alerts/saved) = **unified cross-game** flat URL + game-chips กรอง in-view · GAME'S (cards/sets/market/trending/compare/decks/calc) = แยก `/[game]/`
-2. `mineGameFilter` = session-only store (ไม่ persist) · driven จากทั้ง in-page chips และ header switcher (one control)
-3. CardSearch เฉพาะ search-select จริง (watchlist-add · alert) · browse tool รวยห้ามยุบ
-4. chips self-hide เมื่อ <2 เกม (เกมเดียว = ไม่โชว์เลย)
-
-## ⚠️ gotchas
-- **runtime visual ยังไม่เปิดดูจริง** — verify แค่ compile/test/build · เบสควร login preview เช็ก: TRACK group ในเมนู More · watchlist "เพิ่มการ์ด" flow · สลับเกม header → chips หน้า MINE กรองตาม · alert create pick
-- branch `ui/sets-redesign` = commit ก่อนหน้า (portfolio redesign + multi-game) merge เข้า master แล้ว (PR #49–52) · batch นี้ = commit ใหม่บนยอด
+1. MINE = unified cross-game · flat URL · in-page chips (owner amendment) — ไม่แยก /[game]/ silo
+2. filter = local state ต่อหน้า · header pill = catalog เท่านั้น (revert 1f07ff9)
+3. per-game tint = crest/glow/frame เท่านั้น · **ห้าม `--game-tint`/tint บน fill/CTA/ring** (opcg ดูปกติแต่ pokemon พัง) · ต่อ element inline
+4. portfolio breakdown = all-games view เท่านั้น · unmount ตอน scoped (one-hero rule)
+5. mock demo = client-only · ลบเมื่อ data จริงมา
 
 ## ⏭️ NEXT
-1. เบสเปิด preview เช็ก visual MINE surfaces (มือถือ) — TRACK menu · watchlist add · switcher→chips filter
-2. P5 FilterToolbar convergence (แยก PR · refactor ใหญ่)
-3. multi-game Phase 2 — หน้า browse อ่าน `getServerGame()` scope server-side + sitemap prefixed + `middleware.ts`→`proxy.ts`
+1. **เบสเช็ก visual บน Vercel preview ของ PR** — 3 หน้า MINE + `?demo=multigame` (มือถือ+desktop) + switcher ⓘ hint → คอมเมนต์ใน PR หรือบอกในแชท
+2. แก้ feedback → merge PR
+3. **Phase F desktop 2-rail** (portfolio ก่อน · iterate กับเบสบน preview)
+4. สำรวจแหล่งข้อมูล Pokémon (ปลดคอขวด multi-game จริง) → แล้วค่อย Phase G migrations มัดรวม

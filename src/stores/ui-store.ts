@@ -25,10 +25,6 @@ interface UIState {
   currency: Currency;
   /** Active card game slug (e.g. "opcg"). Scopes browse/search/decks. Game switcher UI lands in P4. */
   currentGame: string;
-  /** In-view game filter for the unified "MINE" pages (portfolio/watchlist/alerts).
-   *  "all" = every game. Driven by BOTH the in-page chips AND the header switcher
-   *  so one control means one thing. Session-only (not persisted). */
-  mineGameFilter: string;
   cardView: CardView;
   dismissedBanner: boolean;
   /** Ad/cookie consent for ad networks (AdSense). House ads don't need it. */
@@ -36,12 +32,14 @@ interface UIState {
   mobileMenuOpen: boolean;
   searchOpen: boolean;
   unreadMessages: number;
+  /** Dismiss-once hint clarifying that the header game pill navigates the
+   *  catalog and the in-page chips filter MINE lists (shown on MINE routes). */
+  dismissedSwitcherHint: boolean;
   setLanguage: (language: Language) => void;
   cycleLanguage: () => void;
   setCurrency: (currency: Currency) => void;
   cycleCurrency: () => void;
   setCurrentGame: (slug: string) => void;
-  setMineGameFilter: (game: string) => void;
   setAdConsent: (consent: AdConsent) => void;
   setCardView: (view: CardView) => void;
   dismissBanner: () => void;
@@ -49,6 +47,7 @@ interface UIState {
   toggleMobileMenu: () => void;
   setSearchOpen: (open: boolean) => void;
   setUnreadMessages: (count: number) => void;
+  dismissSwitcherHint: () => void;
 }
 
 export const useUIStore = create<UIState>()(
@@ -57,13 +56,13 @@ export const useUIStore = create<UIState>()(
       language: "TH",
       currency: "THB",
       currentGame: "opcg",
-      mineGameFilter: "all",
       cardView: "grid",
       dismissedBanner: false,
       adConsent: null,
       mobileMenuOpen: false,
       searchOpen: false,
       unreadMessages: 0,
+      dismissedSwitcherHint: false,
       setLanguage: (language) => {
         writeLangCookie(language);
         set({ language });
@@ -81,7 +80,6 @@ export const useUIStore = create<UIState>()(
           return { currency: CURRENCY_CYCLE[(idx + 1) % CURRENCY_CYCLE.length] };
         }),
       setCurrentGame: (currentGame) => set({ currentGame }),
-      setMineGameFilter: (mineGameFilter) => set({ mineGameFilter }),
       setAdConsent: (adConsent) => set({ adConsent }),
       setCardView: (cardView) => set({ cardView }),
       dismissBanner: () => set({ dismissedBanner: true }),
@@ -89,6 +87,7 @@ export const useUIStore = create<UIState>()(
       toggleMobileMenu: () => set((s) => ({ mobileMenuOpen: !s.mobileMenuOpen })),
       setSearchOpen: (open) => set({ searchOpen: open }),
       setUnreadMessages: (count) => set({ unreadMessages: count }),
+      dismissSwitcherHint: () => set({ dismissedSwitcherHint: true }),
     }),
     {
       name: "kuma-ui-preferences",
@@ -105,6 +104,7 @@ export const useUIStore = create<UIState>()(
         cardView: state.cardView,
         dismissedBanner: state.dismissedBanner,
         adConsent: state.adConsent,
+        dismissedSwitcherHint: state.dismissedSwitcherHint,
       }),
       // Backfill the lang cookie for users whose preference predates it, so
       // server components match the client on the first load after this ships.

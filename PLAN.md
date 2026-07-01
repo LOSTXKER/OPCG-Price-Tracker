@@ -45,6 +45,18 @@
 - [ ] ⏭️ **แยก URL `/[game]/portfolio` + `/all/portfolio` aggregate** = milestone ถัดไป (อยู่ §Multi-game + P4.3 ด้านล่าง · ทำตอน Pokémon data มา · component ชุดนี้เสียบเข้าได้เลย)
 - [ ] 🧹 orphan: `portfolio-allocation-chart.tsx` (donut เก่า ไม่มี importer แล้วหลัง allocation rewrite เป็น bar) · `portfolio-item.tsx`/`portfolio-summary.tsx` ฯลฯ ที่ลบไปแล้ว — ⚠️ เบสยืนยันก่อนลบ allocation-chart
 
+### MINE multi-game UX (พอร์ต/แจ้งเตือน/รายการโปรด รองรับหลายเกม · workflow 7-agent + เว็บระดับโลก 2026-07-01 · เบสเคาะ "เริ่มเลย")
+> หลักการเดียว: "ของฉัน" = กองเดียวรวมทุกเกมเป็น default · เกม = ป้าย+ตัวกรองในหน้า ไม่ใช่โหมด (Robinhood/Coinbase/Collectr) · header pill = แคตตาล็อกเท่านั้น ห้ามกรอง MINE เงียบๆ (NN/g "devastating")
+- [x] **เฟส 1 — trust fixes โครงสร้าง (verify: tsc0/lint0err/test56/build✓)**: chip filter **แยกต่อหน้า** (local `useState` แทน shared `mineGameFilter` ใน ui-store — ลบทิ้ง + comment โกหกที่ว่า "header switcher ก็ขับ") · `useGameFilterReset` hook reset→"ทุกเกม" เมื่อเกม active หลุด data (กัน stale filter หลัง chip ซ่อน / cross-page dead-end) · **coming-soon teaser** ในราง chip (เกม comingSoon → ป้าย "เร็วๆ นี้" กดไป `/coming-soon` · เบสสั่ง)
+- [x] **เฟส 1.5 — safe correctness subset (verify: tsc0/lint0/test56/build✓)**: **add-card/alert ค้นข้ามทุกเกม** (`<CardSearch game="all">` ใน watchlist-add-dialog + alert-create-dialog — เลิกล็อก currentGame เงียบๆ · เกมมาจากการ์ดที่เลือก) · **null-game fold** ใน `gameBreakdown` (การ์ดไม่มีเกม → fold เข้า DEFAULT_GAME เหมือน `scopedItems` → ยอด chip ตรงกับ hero)
+- [x] **เฟส 2 — mock Pokémon + multi-game UI ที่เห็นได้จริง (verify: tsc0/lint0err/test56/build✓)** — เบสสั่ง "ทำต่อ + ขอ mockdata ก่อน":
+  - **mock client-only** `src/lib/mock/multigame-demo.ts` — `?demo=multigame` inject Pokémon เข้า portfolio/watchlist/alerts (useSyncExternalStore · ไม่แตะ DB/schema · ลบง่ายตอนมี data จริง) · **inject เข้าผลลัพธ์ fetch ที่สำเร็จ → ต้อง login ถึงเห็น 2 เกม**
+  - **badge เกมทุกแถว** (`GameBadge` กลาง · โชว์เมื่อ ≥2 เกม): portfolio list (desktop-row + mobile-card) · watchlist list · alert-row (grid = ใช้ chip rail แทน)
+  - **ป้าย scope บน hero eyebrow** ("· Pokémon") + **ซ่อนกราฟตอนกรองเกม** + note `chartAllGamesOnly` (กราฟ = whole-portfolio history · scope per-game ยังไม่ได้ถ้าไม่แตะ DB — ซ่อนแทนโชว์ผิด) · derive `activeScrub` กัน stale
+  - **teaser exclusion** — Pokémon เป็น chip จริงตอน demo → ไม่โชว์ teaser ซ้ำ
+- [ ] **⛔ GATED — แตะ schema DB (เบสอนุมัติก่อน)**: (1) กราฟพอร์ต **per-game history จริง** — `PortfolioSnapshot` ไม่มี per-game (ตอนนี้ซ่อนกราฟตอนกรองแทน) · (2) หลาย named watchlist (watchlist ตอนนี้ list เดียว/user)
+- [ ] **⏭️ เฟสถัดไป (ไม่เร่ง)**: จัดกลุ่ม alert เกม→set พับได้ · สร้าง alert จากกระดิ่งบนการ์ด (alert สร้างได้อยู่แล้ว) · ยอด sticky scroll (Coinbase) · ตัวเลขกำกับ chip · badge บน grid views · **ลบ mock demo เมื่อ Pokémon data จริงมา**
+
 ### Marketplace + escrow (effort สูงสุด · หลังเปิด backend flag)
 - [ ] order book ต่อ SKU + 2 CTA (buy now/place bid) · `CustodyTimeline` + held hero · buyer protection · seller behavior badge · dispute flow [schema: MarketSku/Bid/escrow/SellerStats]
 

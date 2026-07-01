@@ -10,11 +10,13 @@ export function DesktopAssetsTable({
   lang,
   onEdit,
   hideBalance = false,
+  showGameBadge = false,
 }: {
   rows: AssetRow[]
   lang: Language
   onEdit: (row: AssetRow) => void
   hideBalance?: boolean
+  showGameBadge?: boolean
 }) {
   return (
     <div className="hidden overflow-x-auto sm:block">
@@ -36,6 +38,7 @@ export function DesktopAssetsTable({
               lang={lang}
               onEdit={() => onEdit(row)}
               hideBalance={hideBalance}
+              showGameBadge={showGameBadge}
             />
           ))}
         </tbody>

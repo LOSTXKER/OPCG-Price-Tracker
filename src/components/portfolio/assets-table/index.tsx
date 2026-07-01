@@ -23,6 +23,7 @@ export function PortfolioAssetsTable({
   onUpdate,
   onRemove,
   hideBalance = false,
+  showGameBadge = false,
 }: {
   assets: AssetRow[]
   onUpdate: (
@@ -36,6 +37,8 @@ export function PortfolioAssetsTable({
   ) => void
   onRemove: (itemId: number) => void
   hideBalance?: boolean
+  /** Show a per-row game tag — pass true only when holdings span ≥2 games. */
+  showGameBadge?: boolean
 }) {
   const lang = useUIStore((s) => s.language)
   const [searchQuery, setSearchQuery] = useState("")
@@ -119,6 +122,7 @@ export function PortfolioAssetsTable({
                 lang={lang}
                 onEdit={() => openEdit(row)}
                 hideBalance={hideBalance}
+                showGameBadge={showGameBadge}
               />
             ))}
           </div>
@@ -128,6 +132,7 @@ export function PortfolioAssetsTable({
             lang={lang}
             onEdit={openEdit}
             hideBalance={hideBalance}
+            showGameBadge={showGameBadge}
           />
         </>
       )}

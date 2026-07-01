@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Bell, Pin } from "lucide-react";
 
 import { CardImageButton } from "@/components/shared/card-image-button";
+import { GameBadge } from "@/components/shared/game-badge";
 import { MiniSparkline } from "@/components/ui/mini-sparkline";
 import { PriceDisplay } from "@/components/shared/price-display";
 import { RarityBadge } from "@/components/shared/rarity-badge";
@@ -33,6 +34,7 @@ export function WatchlistListView({
   onSetAlert,
   onRemove,
   removingIds,
+  showGameBadge = false,
 }: {
   entries: WatchlistEntry[];
   period: ChangePeriod;
@@ -45,6 +47,7 @@ export function WatchlistListView({
   onSetAlert: (entry: WatchlistEntry) => void;
   onRemove: (entry: WatchlistEntry) => void;
   removingIds: Set<number>;
+  showGameBadge?: boolean;
 }) {
   const lang = useUIStore((s) => s.language);
   const allSelected = entries.length > 0 && entries.every((e) => selected.has(e.cardId));
@@ -88,6 +91,7 @@ export function WatchlistListView({
             onSetAlert={() => onSetAlert(entry)}
             onRemove={() => onRemove(entry)}
             removing={removingIds.has(entry.cardId)}
+            showGameBadge={showGameBadge}
           />
         ))}
       </div>
@@ -106,6 +110,7 @@ function ListRow({
   onSetAlert,
   onRemove,
   removing,
+  showGameBadge,
 }: {
   entry: WatchlistEntry;
   period: ChangePeriod;
@@ -117,6 +122,7 @@ function ListRow({
   onSetAlert: () => void;
   onRemove: () => void;
   removing: boolean;
+  showGameBadge: boolean;
 }) {
   const lang = useUIStore((s) => s.language);
   const change = getEntryChange(entry, period);
@@ -199,6 +205,7 @@ function ListRow({
             <span className="truncate font-mono text-muted-foreground">
               {entry.card.cardCode}
             </span>
+            {showGameBadge && <GameBadge game={entry.card.set.game} />}
           </div>
         </div>
       </Link>
@@ -231,7 +238,7 @@ function ListRow({
           className={cn(
             "inline-flex size-8 items-center justify-center rounded-lg ease-chrome transition-colors",
             entry.hasActiveAlert
-              ? "text-amber-500 hover:bg-amber-500/10"
+              ? "text-primary hover:bg-primary/10"
               : "text-muted-foreground/40 hover:bg-muted hover:text-foreground"
           )}
           aria-label={
