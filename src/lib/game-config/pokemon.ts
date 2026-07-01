@@ -14,6 +14,7 @@ export const pokemonConfig: GameConfig = {
   nameEn: "Pokémon TCG",
   shortName: "Pokémon",
   comingSoon: true,
+  accentTint: "#F2C744", // thin yellow skin over honey (whisper, not repaint)
 
   sets: [],
   baseRarities: [],

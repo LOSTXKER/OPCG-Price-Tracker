@@ -89,6 +89,15 @@ function WatchlistContent() {
     [items],
   );
   useGameFilterReset(gameFilter, availableGames, setGameFilter);
+  // Summary strip must reflect the GAME scope only (not search/set/direction) —
+  // otherwise filtering to Pokémon still shows OPCG totals.
+  const scopedByGame = useMemo(
+    () =>
+      gameFilter === ALL_GAMES
+        ? items
+        : items.filter((e) => (e.card.set.game?.slug ?? DEFAULT_GAME) === gameFilter),
+    [items, gameFilter],
+  );
   const [addOpen, setAddOpen] = useState(false);
 
   const [alertTarget, setAlertTarget] = useState<WatchlistEntry | null>(null);
@@ -382,7 +391,7 @@ function WatchlistContent() {
       >
         {items.length > 0 && (
           <div className="mt-1.5">
-            <WatchlistSummary entries={items} period={period} />
+            <WatchlistSummary entries={scopedByGame} period={period} />
           </div>
         )}
       </PageHeader>
@@ -393,7 +402,12 @@ function WatchlistContent() {
         <WatchlistEmpty onAdd={() => setAddOpen(true)} />
       ) : (
         <>
-          <GameFilterChips games={gameChips} activeGame={gameFilter} onSelect={setGameFilter} />
+          <GameFilterChips
+            games={gameChips}
+            activeGame={gameFilter}
+            onSelect={setGameFilter}
+            allValue={`${items.length} ${t(lang, "card")}`}
+          />
 
           <WatchlistToolbar
             view={view}
@@ -416,7 +430,16 @@ function WatchlistContent() {
 
           {filteredEntries.length === 0 ? (
             <div className="rounded-lg border border-dashed border-[var(--p-hair)] py-10 text-center text-sm text-muted-foreground">
-              {t(lang, "noCardsFoundDesc")}
+              <p>{t(lang, "noCardsFoundDesc")}</p>
+              {gameFilter !== ALL_GAMES && (
+                <button
+                  type="button"
+                  onClick={() => setGameFilter(ALL_GAMES)}
+                  className="mt-2 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  {t(lang, "showAllGames")}
+                </button>
+              )}
             </div>
           ) : view === "list" ? (
             <WatchlistListView
@@ -443,6 +466,7 @@ function WatchlistContent() {
               onSetAlert={openSetAlert}
               onRemove={(e) => void removeSingle(e)}
               removingIds={removingIds}
+              showGameBadge={availableGames.length >= 2}
             />
           )}
         </>

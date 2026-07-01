@@ -15,6 +15,8 @@ import { PortfolioHero } from "@/components/portfolio/portfolio-hero"
 import { PortfolioKpi } from "@/components/portfolio/portfolio-kpi"
 import { PortfolioMovers } from "@/components/portfolio/portfolio-movers"
 import { PortfolioGameChips } from "@/components/portfolio/portfolio-game-chips"
+import { PortfolioGameBreakdown } from "@/components/portfolio/portfolio-game-breakdown"
+import { PortfolioScopedHonestyStrip } from "@/components/portfolio/portfolio-scoped-honesty-strip"
 import { PortfolioAllocationPanel } from "@/components/portfolio/portfolio-allocation-panel"
 import { PortfolioAssetsTable } from "@/components/portfolio/portfolio-assets-table"
 import { PortfolioTransactions } from "@/components/portfolio/portfolio-transactions"
@@ -28,7 +30,7 @@ import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { useGameFilterReset } from "@/hooks/use-game-filter"
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants"
-import { getGameConfig } from "@/lib/game-config"
+import { getGameConfig, getGameAccentTint } from "@/lib/game-config"
 import { PortfolioMockPreview } from "./portfolio-mock-preview"
 import { usePortfolioApi } from "@/hooks/use-portfolio-api"
 import { useTierLimits } from "@/hooks/use-tier-limits"
@@ -315,6 +317,7 @@ function PortfolioContent() {
               live={!!activeScrub}
               hideBalance={hideBalance}
               scopeLabel={scopeGameName}
+              scopeTint={gameFilter === ALL_GAMES ? null : getGameAccentTint(gameFilter)}
             />
             <PortfolioGameChips
               breakdown={gameBreakdown}
@@ -325,11 +328,24 @@ function PortfolioContent() {
             {gameFilter === ALL_GAMES ? (
               <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
             ) : (
-              <p className="py-6 text-center text-meta text-muted-foreground/70">
-                {t(lang, "chartAllGamesOnly")}
-              </p>
+              <PortfolioScopedHonestyStrip
+                marketValueJpy={stats.totalValueJpy}
+                costJpy={stats.totalCostJpy}
+                hasPnl={stats.totalCostJpy > 0}
+                hideBalance={hideBalance}
+              />
             )}
           </section>
+
+          {/* Per-game breakdown — all-games view only (deep-links into a game) */}
+          {gameFilter === ALL_GAMES && (
+            <PortfolioGameBreakdown
+              breakdown={gameBreakdown}
+              totalValueJpy={stats.totalValueJpy}
+              onSelect={setGameFilter}
+              hideBalance={hideBalance}
+            />
+          )}
 
           {/* KPI quartet — Market Value · Cost Basis · P/L · ROI */}
           <PortfolioKpi stats={stats} hideBalance={hideBalance} />

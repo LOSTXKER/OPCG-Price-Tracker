@@ -43,5 +43,9 @@ export function PortfolioGameChips({
       }
     })
 
-  return <GameFilterChips games={games} activeGame={activeGame} onSelect={onSelect} />
+  const allValue = money(breakdown.reduce((s, b) => (b.valueJpy > 0 ? s + b.valueJpy : s), 0))
+
+  return (
+    <GameFilterChips games={games} activeGame={activeGame} onSelect={onSelect} allValue={allValue} />
+  )
 }

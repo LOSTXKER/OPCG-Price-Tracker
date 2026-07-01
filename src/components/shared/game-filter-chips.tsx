@@ -39,10 +39,13 @@ export function GameFilterChips({
   games,
   activeGame,
   onSelect,
+  allValue,
 }: {
   games: GameChip[]
   activeGame: string
   onSelect: (game: string) => void
+  /** Aggregate value shown on the "All games" chip (e.g. the cross-game total). */
+  allValue?: string
 }) {
   const lang = useUIStore((s) => s.language)
 
@@ -57,7 +60,7 @@ export function GameFilterChips({
     <div className="no-sb -mx-0.5 flex items-center gap-0.5 overflow-x-auto rounded-full bg-muted/50 p-0.5">
       {showFilter && (
         <div role="radiogroup" aria-label={t(lang, "filterByGame")} className="contents">
-          <Seg active={activeGame === ALL_GAMES} onClick={() => onSelect(ALL_GAMES)} label={t(lang, "allGames")} />
+          <Seg active={activeGame === ALL_GAMES} onClick={() => onSelect(ALL_GAMES)} label={t(lang, "allGames")} value={allValue} />
           {games.map((g) => (
             <Seg
               key={g.slug}

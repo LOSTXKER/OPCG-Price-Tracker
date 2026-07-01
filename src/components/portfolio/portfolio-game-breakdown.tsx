@@ -4,6 +4,8 @@ import Image from "next/image"
 import { ArrowDown, ArrowUp } from "lucide-react"
 
 import { Surface } from "@/components/ui/surface"
+import { getGameAccentTint } from "@/lib/game-config"
+import { DEFAULT_GAME } from "@/lib/game/constants"
 import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
@@ -25,10 +27,13 @@ import type { GameBreakdown } from "@/lib/types/portfolio"
 export function PortfolioGameBreakdown({
   breakdown,
   totalValueJpy,
+  onSelect,
   hideBalance = false,
 }: {
   breakdown: GameBreakdown[]
   totalValueJpy: number
+  /** Deep-link a row into that game's scope by setting the in-page filter. */
+  onSelect: (game: string) => void
   hideBalance?: boolean
 }) {
   const lang = useUIStore((s) => s.language)
@@ -49,8 +54,7 @@ export function PortfolioGameBreakdown({
 
       {/* One row per game */}
       <div className="divide-y divide-[var(--p-hair)]">
-        {sorted.map((b, i) => {
-          const isTop = i === 0
+        {sorted.map((b) => {
           const hasCost = b.costJpy > 0
           const isUp = b.pnlPercent >= 0
           // Clamp share to [0, 100] in case of rounding drift.
@@ -61,11 +65,14 @@ export function PortfolioGameBreakdown({
 
           const gameName = b.game?.name ?? t(lang, "other")
           const firstLetter = gameName.charAt(0).toUpperCase()
+          const slug = b.game?.slug ?? DEFAULT_GAME
 
           return (
-            <div
-              key={b.game?.slug ?? "__other__"}
-              className="ease-chrome cursor-pointer px-4 py-3 sm:px-5"
+            <button
+              key={slug}
+              type="button"
+              onClick={() => onSelect(slug)}
+              className="ease-chrome block w-full cursor-pointer px-4 py-3 text-left transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:px-5"
             >
               {/* Top row: logo · name+count · value+delta */}
               <div className="flex items-center gap-3">
@@ -120,20 +127,20 @@ export function PortfolioGameBreakdown({
                 </div>
               </div>
 
-              {/* Share bar — neutral fill; top game gets a subtle honey tint */}
+              {/* Share bar — each game carries its own thin tint over honey */}
               <div
                 className="mt-2 h-1 overflow-hidden rounded-full bg-muted/60"
                 role="presentation"
               >
                 <div
-                  className={cn(
-                    "h-full rounded-full",
-                    isTop ? "bg-primary/50" : "bg-muted-foreground/30",
-                  )}
-                  style={{ width: `${sharePct}%` }}
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${sharePct}%`,
+                    background: `color-mix(in srgb, ${getGameAccentTint(slug)} 55%, transparent)`,
+                  }}
                 />
               </div>
-            </div>
+            </button>
           )
         })}
       </div>

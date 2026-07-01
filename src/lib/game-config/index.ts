@@ -34,4 +34,12 @@ export function getGameSlugs(): string[] {
   return Object.keys(GAME_CONFIGS);
 }
 
+/** Per-game tint color for crest/glow/frame accents. Falls back to the honey
+ *  baseline (`--primary`) for games without a skin, so OPCG shows zero tint
+ *  delta. Safe to drop into inline `background`/`color-mix` — never onto a
+ *  fill/CTA/focus ring (that would only look right for the baseline game). */
+export function getGameAccentTint(slug: string): string {
+  return getGameConfig(slug)?.accentTint ?? "var(--primary)";
+}
+
 export { opcgConfig, pokemonConfig };

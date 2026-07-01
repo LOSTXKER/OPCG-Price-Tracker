@@ -238,7 +238,7 @@ function ListRow({
           className={cn(
             "inline-flex size-8 items-center justify-center rounded-lg ease-chrome transition-colors",
             entry.hasActiveAlert
-              ? "text-amber-500 hover:bg-amber-500/10"
+              ? "text-primary hover:bg-primary/10"
               : "text-muted-foreground/40 hover:bg-muted hover:text-foreground"
           )}
           aria-label={
