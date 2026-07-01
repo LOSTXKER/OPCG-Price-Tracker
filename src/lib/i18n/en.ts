@@ -9,6 +9,7 @@ export const en = {
   dropCalculator: "Drop Calculator",
   deckCalculatorNav: "Deck Calculator",
   tools: "Tools",
+  trackGroup: "Mine",
   portfolioNav: "Portfolio",
   watchlistNav: "Watchlist",
   myOrders: "My Orders",

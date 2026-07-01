@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
+import { Plus } from "lucide-react";
 
 import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
 import { PageHeader } from "@/components/layout/page-header";
@@ -20,6 +22,7 @@ import { GameFilterChips, type GameChip } from "@/components/shared/game-filter-
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants";
 import { getGameConfig } from "@/lib/game-config";
 
+import { WatchlistAddDialog } from "./watchlist-add-dialog";
 import { WatchlistEmpty } from "./watchlist-empty";
 import { WatchlistGridView } from "./watchlist-grid-view";
 import { WatchlistListView } from "./watchlist-list-view";
@@ -75,8 +78,11 @@ function WatchlistContent() {
   const [sortKey, setSortKey] = useState<SortKey>("default");
   const [filters, setFilters] = useState<WatchlistFilters>(DEFAULT_FILTERS);
   const [search, setSearch] = useState("");
-  // One unified watchlist across every game; the chips filter the view in-place.
-  const [gameFilter, setGameFilter] = useState<string>(ALL_GAMES);
+  // One unified watchlist across every game; the filter is shared via ui-store so
+  // both the in-page chips and the header game-switcher drive it.
+  const gameFilter = useUIStore((s) => s.mineGameFilter);
+  const setGameFilter = useUIStore((s) => s.setMineGameFilter);
+  const [addOpen, setAddOpen] = useState(false);
 
   const [alertTarget, setAlertTarget] = useState<WatchlistEntry | null>(null);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -359,6 +365,12 @@ function WatchlistContent() {
       <PageHeader
         title={t(lang, "watchlistNav")}
         description={items.length === 0 ? t(lang, "emptyWatchlistDesc") : undefined}
+        actions={
+          <Button size="sm" onClick={() => setAddOpen(true)} className="gap-1.5">
+            <Plus className="size-4" />
+            {t(lang, "addCard")}
+          </Button>
+        }
       >
         {items.length > 0 && (
           <div className="mt-1.5">
@@ -370,7 +382,7 @@ function WatchlistContent() {
       {error && <p className="text-sm text-destructive">{error}</p>}
 
       {items.length === 0 ? (
-        <WatchlistEmpty />
+        <WatchlistEmpty onAdd={() => setAddOpen(true)} />
       ) : (
         <>
           <GameFilterChips games={gameChips} activeGame={gameFilter} onSelect={setGameFilter} />
@@ -441,6 +453,12 @@ function WatchlistContent() {
           hideTrigger
         />
       )}
+
+      <WatchlistAddDialog
+        open={addOpen}
+        onOpenChange={setAddOpen}
+        onAdded={() => void load()}
+      />
     </div>
   );
 }

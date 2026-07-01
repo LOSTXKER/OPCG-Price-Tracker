@@ -219,25 +219,34 @@ export function MobileMenuSheet({
           <SectionLabel>{t(language, "browse")}</SectionLabel>
           <MenuLink href="/sets" icon={Package} label={t(language, "sets")} pathname={pathname} onNav={close} />
           <MenuLink href="/trending" icon={TrendingUp} label={t(language, "trendingShort")} pathname={pathname} onNav={close} />
-          <MenuLink href="/watchlist" icon={Bookmark} label={t(language, "watchlistNav")} pathname={pathname} onNav={close} />
           <MenuLink href="/compare" icon={ArrowRightLeft} label={t(language, "compareCards")} pathname={pathname} onNav={close} />
 
           {/* Decks & Tools — hub holds deck/drop calculators, compare, and future meta/tier */}
           <SectionLabel>{t(language, "tools")}</SectionLabel>
           <MenuLink href="/decks" icon={Swords} label={t(language, "decksAndTools")} pathname={pathname} onNav={close} />
 
+          {/* TRACK — the unified "MINE" collection surfaces (cross-game, filtered
+              in-view by the game chips). Grouped together so the personal pages
+              live under one roof instead of scattered across Browse/My Account. */}
+          {authLoaded && authUser && (
+            <>
+              <SectionLabel>{t(language, "trackGroup")}</SectionLabel>
+              <MenuLink href="/portfolio" icon={Star} label={t(language, "portfolioNav")} pathname={pathname} onNav={close} />
+              <MenuLink href="/watchlist" icon={Bookmark} label={t(language, "watchlistNav")} pathname={pathname} onNav={close} />
+              <MenuLink href="/settings/alerts" icon={BellRing} label={t(language, "managePriceAlerts")} pathname={pathname} onNav={close} />
+            </>
+          )}
+
           {/* My Account — only when logged in */}
           {authLoaded && authUser && (
             <>
               <SectionLabel>{t(language, "myAccount")}</SectionLabel>
-              <MenuLink href="/portfolio" icon={Star} label={t(language, "portfolioNav")} pathname={pathname} onNav={close} />
               {marketplaceEnabled && (
                 <>
                   <MenuLink href="/orders" icon={ShoppingBag} label={t(language, "myOrders")} pathname={pathname} onNav={close} />
                   <MenuLink href="/saved" icon={Heart} label={t(language, "savedListings")} pathname={pathname} onNav={close} />
                 </>
               )}
-              <MenuLink href="/settings/alerts" icon={BellRing} label={t(language, "managePriceAlerts")} pathname={pathname} onNav={close} />
               {marketplaceEnabled && (
                 <MenuLink href="/messages" icon={MessageCircle} label={t(language, "messagesTitle")} badge={unreadMessages} pathname={pathname} onNav={close} />
               )}

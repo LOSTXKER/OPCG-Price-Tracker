@@ -35,8 +35,10 @@ export function AlertsManagerClient() {
   const [createOpen, setCreateOpen] = useState(false);
   const [busyId, setBusyId] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
-  // One unified alerts list across every game; chips filter the view in-place.
-  const [gameFilter, setGameFilter] = useState<string>(ALL_GAMES);
+  // One unified alerts list across every game; the filter is shared via ui-store
+  // so both the in-page chips and the header game-switcher drive it.
+  const gameFilter = useUIStore((s) => s.mineGameFilter);
+  const setGameFilter = useUIStore((s) => s.setMineGameFilter);
   const { openUpgradeDialog } = useUpgradeDialog();
 
   const fetchAlerts = useCallback(async () => {

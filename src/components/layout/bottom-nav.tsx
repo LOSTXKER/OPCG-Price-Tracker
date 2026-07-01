@@ -75,7 +75,7 @@ export function BottomNav({ className }: { className?: string }) {
         <TabLink href="/" label={t(lang, "market")} icon={LineChart} pathname={pathname} />
         <TabLink href="/sets" label={t(lang, "browse")} icon={LayoutGrid} pathname={pathname} />
         <TabLink href="/decks" label={t(lang, "decks")} icon={Swords} pathname={pathname} />
-        <TabLink href="/portfolio" label={t(lang, "portfolioNav")} icon={Wallet} badge={unread} pathname={pathname} />
+        <TabLink href="/portfolio" label={t(lang, "portfolioNav")} icon={Wallet} pathname={pathname} />
 
         {/* More (opens sheet drawer) */}
         <li className="min-w-0 flex-1">
@@ -88,11 +88,18 @@ export function BottomNav({ className }: { className?: string }) {
             )}
             aria-label={t(lang, "more")}
           >
-            {menuOpen ? (
-              <X className="size-5 stroke-[2.5]" aria-hidden />
-            ) : (
-              <Menu className="size-5" aria-hidden />
-            )}
+            <span className="relative">
+              {menuOpen ? (
+                <X className="size-5 stroke-[2.5]" aria-hidden />
+              ) : (
+                <Menu className="size-5" aria-hidden />
+              )}
+              {unread > 0 && (
+                <span className="absolute -right-2.5 -top-1.5 flex min-w-[16px] items-center justify-center rounded-full bg-danger px-1 text-overlay leading-[14px] text-danger-foreground">
+                  {unread > 99 ? "99+" : unread}
+                </span>
+              )}
+            </span>
             <span>{t(lang, "more")}</span>
             <span className={cn("h-1 w-1 rounded-full bg-primary transition-opacity", menuOpen ? "opacity-100" : "opacity-0")} />
           </button>
