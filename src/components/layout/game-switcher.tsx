@@ -38,18 +38,19 @@ export function GameSwitcher({ className }: { className?: string }) {
   const lang = useUIStore((s) => s.language);
   const currentGame = useUIStore((s) => s.currentGame);
   const setCurrentGame = useUIStore((s) => s.setCurrentGame);
-  const setMineGameFilter = useUIStore((s) => s.setMineGameFilter);
   const active = GAMES.find((g) => g.slug === currentGame) ?? GAMES[0];
   const router = useRouter();
   const pathname = usePathname();
 
   // Switch game = stay on the same feature, swap the `/[game]` segment. Persist
   // the cookie so middleware redirects un-prefixed URLs to the chosen game too.
-  // Also drive the MINE-page filter so the switcher is never a dead control on
-  // the unified personal pages (portfolio/watchlist/alerts).
+  // This control has ONE job — pick which game's catalog you're browsing. It
+  // does NOT touch the MINE pages (portfolio/watchlist/alerts): those are one
+  // unified list and filter themselves via their own in-page chips, so the
+  // header pill never silently means "filter" on one page and "navigate" on
+  // another.
   const switchGame = (slug: string) => {
     setCurrentGame(slug);
-    setMineGameFilter(slug);
     persistGameCookie(slug);
     const segs = pathname.split("/").filter(Boolean);
     if (isGamePrefix(segs[0])) {
