@@ -62,6 +62,13 @@ export function GameSwitcher({ className }: { className?: string }) {
     // the next browse navigation picks it up.
   };
 
+  // A `comingSoon` game has no catalog yet — send the user to a teaser instead
+  // of a broken empty page, and DON'T change the active game (no cookie/store
+  // write), so browsing elsewhere stays on the live game.
+  const goComingSoon = (slug: string) => {
+    router.push(`/coming-soon?game=${slug}`);
+  };
+
   // Single registered game → nothing to switch; render a static badge.
   if (GAMES.length < 2) {
     return (
@@ -96,19 +103,16 @@ export function GameSwitcher({ className }: { className?: string }) {
         </p>
         {GAMES.map((g) => {
           const isActive = g.slug === currentGame;
-          const disabled = Boolean(g.comingSoon);
+          const comingSoon = Boolean(g.comingSoon);
           return (
             <DropdownMenuItem
               key={g.slug}
-              disabled={disabled}
-              onClick={() => {
-                if (!disabled) switchGame(g.slug);
-              }}
+              onClick={() => (comingSoon ? goComingSoon(g.slug) : switchGame(g.slug))}
               className={cn("flex items-center gap-2", isActive && "font-semibold text-foreground")}
             >
               <span className="flex-1">{g.nameEn}</span>
               {isActive && <Check className="size-4 text-primary" aria-hidden />}
-              {disabled && (
+              {comingSoon && (
                 <span className="text-micro text-muted-foreground">{t(lang, "comingSoon")}</span>
               )}
             </DropdownMenuItem>

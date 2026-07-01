@@ -1,0 +1,49 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowLeft, Sparkles } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { getGameConfig } from "@/lib/game-config";
+import { getServerLanguage } from "@/lib/i18n/server";
+import { t } from "@/lib/i18n";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Coming Soon",
+  robots: { index: false, follow: false },
+};
+
+/**
+ * Teaser landing for a registered-but-not-live game (`comingSoon` in the config,
+ * e.g. Pokémon). The game-switcher routes here with `?game=<slug>` instead of
+ * navigating into that game's empty catalog — so the switch actually *does*
+ * something. Deliberately does NOT change the active game (no cookie/store
+ * write), so the rest of the app stays on the live game and nothing breaks.
+ */
+export default async function ComingSoonPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ game?: string }>;
+}) {
+  const [{ game }, lang] = await Promise.all([searchParams, getServerLanguage()]);
+  const config = game ? getGameConfig(game) : undefined;
+  const name = config?.nameEn ?? config?.name ?? "Meecard";
+
+  return (
+    <div className="mx-auto flex min-h-[55vh] max-w-md flex-col items-center justify-center text-center">
+      <span className="mb-6 inline-flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary ring-1 ring-[var(--p-hair)]">
+        <Sparkles className="size-8" aria-hidden />
+      </span>
+      <h1 className="text-h1">{name}</h1>
+      <p className="mt-2 text-lg text-muted-foreground">{t(lang, "comingSoonSubtitle")}</p>
+      <p className="mt-4 text-body text-muted-foreground">{t(lang, "comingSoonBody")}</p>
+      <Link href="/" className="mt-8">
+        <Button size="lg" className="gap-2 rounded-full">
+          <ArrowLeft className="size-4" aria-hidden />
+          {t(lang, "comingSoonBack")}
+        </Button>
+      </Link>
+    </div>
+  );
+}
