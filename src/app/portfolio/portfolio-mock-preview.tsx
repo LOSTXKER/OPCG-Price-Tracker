@@ -9,7 +9,6 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
     { code: "OP09-001", name: "Monkey D. Luffy", value: "¥3,200", chg: "+4.1%" },
     { code: "OP09-019", name: "Roronoa Zoro", value: "¥2,800", chg: "+2.4%" },
     { code: "OP09-044", name: "Boa Hancock", value: "¥1,900", chg: "-1.2%" },
-    { code: "SV1a-113", name: "Charizard ex", value: "¥2,400", chg: "+5.2%" },
     { code: "OP02-013", name: "Portgas D. Ace", value: "¥1,500", chg: "+0.8%" },
     { code: "OP01-120", name: "Shanks", value: "¥1,480", chg: "+3.1%" },
   ]
@@ -68,14 +67,6 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
         </div>
       </section>
 
-      {/* Game filter — how the ONE unified portfolio partitions once you own
-          more than one game (default = every game). Static in the preview. */}
-      <div className="no-sb -mx-0.5 flex items-center gap-0.5 overflow-x-auto rounded-full bg-muted/50 p-0.5">
-        <MockSeg active label={t(lang, "allGames")} />
-        <MockSeg label="OPCG" value="¥12,600" />
-        <MockSeg label="Pokémon" value="¥3,200" />
-      </div>
-
       {/* Holdings toolbar */}
       <div className="flex items-center gap-2.5 border-b border-[var(--p-hair)] pb-3">
         <p className="text-h5">{t(lang, "assets")}</p>
@@ -120,22 +111,6 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
         ))}
       </div>
     </div>
-  )
-}
-
-/** Static twin of the real GameFilterChips <Seg> (frameless pill, honey active). */
-function MockSeg({ active, label, value }: { active?: boolean; label: string; value?: string }) {
-  return (
-    <span
-      className={`inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full px-3 py-2 ${active ? "bg-primary/15 text-primary" : "text-muted-foreground"}`}
-    >
-      <span
-        aria-hidden
-        className={`size-2 shrink-0 rounded-full ${active ? "bg-primary" : "bg-muted-foreground/40"}`}
-      />
-      <span className="whitespace-nowrap text-body-sm font-medium">{label}</span>
-      {value && <span className="whitespace-nowrap text-price">{value}</span>}
-    </span>
   )
 }
 
