@@ -32,6 +32,9 @@ interface UIState {
   mobileMenuOpen: boolean;
   searchOpen: boolean;
   unreadMessages: number;
+  /** Dismiss-once hint clarifying that the header game pill navigates the
+   *  catalog and the in-page chips filter MINE lists (shown on MINE routes). */
+  dismissedSwitcherHint: boolean;
   setLanguage: (language: Language) => void;
   cycleLanguage: () => void;
   setCurrency: (currency: Currency) => void;
@@ -44,6 +47,7 @@ interface UIState {
   toggleMobileMenu: () => void;
   setSearchOpen: (open: boolean) => void;
   setUnreadMessages: (count: number) => void;
+  dismissSwitcherHint: () => void;
 }
 
 export const useUIStore = create<UIState>()(
@@ -58,6 +62,7 @@ export const useUIStore = create<UIState>()(
       mobileMenuOpen: false,
       searchOpen: false,
       unreadMessages: 0,
+      dismissedSwitcherHint: false,
       setLanguage: (language) => {
         writeLangCookie(language);
         set({ language });
@@ -82,6 +87,7 @@ export const useUIStore = create<UIState>()(
       toggleMobileMenu: () => set((s) => ({ mobileMenuOpen: !s.mobileMenuOpen })),
       setSearchOpen: (open) => set({ searchOpen: open }),
       setUnreadMessages: (count) => set({ unreadMessages: count }),
+      dismissSwitcherHint: () => set({ dismissedSwitcherHint: true }),
     }),
     {
       name: "kuma-ui-preferences",
@@ -98,6 +104,7 @@ export const useUIStore = create<UIState>()(
         cardView: state.cardView,
         dismissedBanner: state.dismissedBanner,
         adConsent: state.adConsent,
+        dismissedSwitcherHint: state.dismissedSwitcherHint,
       }),
       // Backfill the lang cookie for users whose preference predates it, so
       // server components match the client on the first load after this ships.

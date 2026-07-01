@@ -310,6 +310,8 @@ export const en = {
   showAllGames: "Show all games",
   alertsUnit: "alerts",
   byGame: "By game",
+  browseCatalog: "Browse catalog",
+  switcherMineHint: "Filters live inside the page →",
   invested: "Invested",
   avgCost: "Avg Cost",
   cardsAdded: "Cards added",

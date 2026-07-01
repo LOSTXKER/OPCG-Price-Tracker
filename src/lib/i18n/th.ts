@@ -310,6 +310,8 @@ export const th = {
   showAllGames: "ดูทุกเกม",
   alertsUnit: "แจ้งเตือน",
   byGame: "แยกตามเกม",
+  browseCatalog: "เลือกแคตตาล็อกเกม",
+  switcherMineHint: "ตัวกรองเกมอยู่ในหน้านี้ →",
   invested: "เงินลงทุน",
   avgCost: "ต้นทุนเฉลี่ย",
   cardsAdded: "เพิ่มการ์ด",

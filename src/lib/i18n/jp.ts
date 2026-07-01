@@ -310,6 +310,8 @@ export const jp = {
   showAllGames: "すべてのゲームを表示",
   alertsUnit: "アラート",
   byGame: "ゲーム別",
+  browseCatalog: "カタログを選択",
+  switcherMineHint: "フィルターはページ内にあります →",
   invested: "投資額",
   avgCost: "平均取得単価",
   cardsAdded: "カード追加",
