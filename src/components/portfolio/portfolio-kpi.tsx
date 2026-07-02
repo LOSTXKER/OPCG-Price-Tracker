@@ -16,9 +16,12 @@ import type { PortfolioStats } from "@/lib/types/portfolio"
 export function PortfolioKpi({
   stats,
   hideBalance = false,
+  compact = false,
 }: {
   stats: PortfolioStats
   hideBalance?: boolean
+  /** Force the 2×2 layout at every breakpoint — for narrow context rails. */
+  compact?: boolean
 }) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
@@ -32,7 +35,10 @@ export function PortfolioKpi({
   }
 
   return (
-    <Surface variant="panel" className="grid grid-cols-2 overflow-hidden sm:grid-cols-4">
+    <Surface
+      variant="panel"
+      className={cn("grid grid-cols-2 overflow-hidden", !compact && "sm:grid-cols-4")}
+    >
       {/* 1 — Market Value */}
       <div className="p-4">
         <p className="text-eyebrow">{t(lang, "marketValue")}</p>
@@ -53,7 +59,7 @@ export function PortfolioKpi({
       <div
         className={cn(
           "border-t border-[var(--p-hair)] p-4",
-          "sm:border-t-0 sm:border-l sm:p-4",
+          !compact && "sm:border-t-0 sm:border-l sm:p-4",
         )}
       >
         <p className="text-eyebrow">{t(lang, "pnl")}</p>
@@ -89,7 +95,7 @@ export function PortfolioKpi({
       <div
         className={cn(
           "border-t border-l border-[var(--p-hair)] p-4",
-          "sm:border-t-0 sm:p-4",
+          !compact && "sm:border-t-0 sm:p-4",
         )}
       >
         <p className="text-eyebrow">{t(lang, "roi")}</p>

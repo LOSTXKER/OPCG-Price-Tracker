@@ -54,8 +54,15 @@ i18n ใหม่: showAllGames · alertsUnit · byGame · browseCatalog · swit
 4. portfolio breakdown = all-games view เท่านั้น · unmount ตอน scoped (one-hero rule)
 5. mock demo = client-only · ลบเมื่อ data จริงมา
 
+## 🎨 Visual pass หน้าพอร์ต (2026-07-02 · เบส: "UXUI ยังไม่สวย" → screenshot-driven ผ่าน Chrome จริง)
+PR #55 merged แล้ว · จากนั้นเบสให้ feedback ความสวย → ทำ visual pass บน branch (commit `4f3e5a6`):
+- **Pass 1 declutter**: ตัด breadcrumb+h1 block (เงินขึ้นก่อน · sr-only h1) · chip ชื่อล้วน+w-fit (เงินต่อเกมอยู่ที่ panel "แยกตามเกม" ที่เดียว) · ลบ ScopedHonestyStrip (ซ้ำ KPI เป๊ะ → note บรรทัดเดียว) · "อื่นๆ"→OPCG + หน่วยการ์ด · pill ซ่อนยอดตอน scoped (totalVisible) · empty chart กระชับ+dashed · **GameBadge fold null→OPCG** (การ์ดที่ set ไม่ผูกเกมได้ป้ายถูก) + badge overlay บน grid tiles
+- **Pass 2 desktop 2-rail**: `lg:grid-cols-[1fr_340px]` ซ้าย=hero→chips→chart→KPI→movers · ขวา sticky=แยกตามเกม→สัดส่วน · การ์ดเต็มกว้างล่าง · mobile คอลัมน์เดิม
+- **workflow ที่ใช้ได้ผล**: dev server localhost:3000 มี session "Test" login ค้าง → ฉันเปิด Chrome เห็นภาพจริง iterate เองได้ (ไม่ต้องรอ deploy/เบสเช็กทุกรอบ) — ใช้ pattern นี้กับ watchlist/alerts ต่อ
+- verify: tsc0 · lint 0 err · test 56/56 · build ✓ · screenshot ยืนยัน all-games/scoped/grid-badge
+
 ## ⏭️ NEXT
-1. **เบสเช็ก visual บน Vercel preview ของ PR** — 3 หน้า MINE + `?demo=multigame` (มือถือ+desktop) + switcher ⓘ hint → คอมเมนต์ใน PR หรือบอกในแชท
-2. แก้ feedback → merge PR
-3. **Phase F desktop 2-rail** (portfolio ก่อน · iterate กับเบสบน preview)
-4. สำรวจแหล่งข้อมูล Pokémon (ปลดคอขวด multi-game จริง) → แล้วค่อย Phase G migrations มัดรวม
+1. เบสดู `localhost:3000/portfolio?demo=multigame` (หรือรอ merge) → feedback → ปรับต่อ
+2. **visual pass watchlist + alerts** (pattern เดียวกัน: ดูจริงผ่าน Chrome → declutter → lg: rail)
+3. mobile pass (Chrome resize ไม่ติด — ลอง device toolbar หรือเช็กบนมือถือจริง)
+4. PR รอบใหม่ → merge → แล้วค่อย Pokémon data survey + Phase G migrations มัดรวม

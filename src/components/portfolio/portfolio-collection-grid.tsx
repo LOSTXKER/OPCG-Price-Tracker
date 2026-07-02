@@ -31,7 +31,9 @@ export function PortfolioCollectionGrid({
   showGameBadge?: boolean
 }) {
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+    // 2→3→4 columns: the grid sits beside a 360px context rail on lg:, so
+    // fewer, LARGER tiles — the card art is the hero of this page.
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 xl:grid-cols-4">
       {assets.map((row) => (
         <CollectionTile
           key={row.itemId}

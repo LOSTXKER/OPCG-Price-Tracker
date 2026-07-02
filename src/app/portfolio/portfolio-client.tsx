@@ -251,6 +251,10 @@ function PortfolioContent() {
         </div>
 
         <div className="flex shrink-0 items-center gap-1.5">
+          <IconButton onClick={() => setTxOpen(true)} label={t(lang, "transactionHistory")}>
+            <Receipt className="size-4" />
+          </IconButton>
+
           <IconButton
             onClick={() => setHideBalance((v) => !v)}
             label={hideBalance ? t(lang, "showBalance") : t(lang, "hideBalance")}
@@ -310,13 +314,13 @@ function PortfolioContent() {
         />
       ) : (
         <>
-          {/* Desktop (lg:) = real two-zone layout, not a stretched phone column:
-              left = the money story (hero → chips → chart → KPI → movers),
-              right = sticky context rail (by-game breakdown → allocation).
-              Mobile keeps a single column in DOM order. */}
-          <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-6">
-            <div className="min-w-0 space-y-5 sm:space-y-6">
-              {/* Hero number → "every game" chips → full-bleed scrub chart */}
+          {/* The collection is the hero of this page. Desktop (lg:) = two real
+              zones: LEFT = total + game chips + the assets themselves (visible
+              without scrolling), RIGHT = context rail (history chart → KPI →
+              by-game → movers → allocation). Mobile follows DOM order, so the
+              assets come right after the hero there too. */}
+          <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-6">
+            <div className="min-w-0 space-y-4 sm:space-y-5">
               <section className="space-y-3">
                 <PortfolioHero
                   valueJpy={heroValueJpy}
@@ -333,26 +337,33 @@ function PortfolioContent() {
                   activeGame={gameFilter}
                   onSelect={setGameFilter}
                 />
-                {gameFilter === ALL_GAMES ? (
-                  <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
-                ) : (
-                  // No per-game history yet (snapshots are whole-portfolio) — one
-                  // honest line instead of a faked curve. The KPI quartet below
-                  // already carries the scoped numbers; don't repeat them here.
-                  <p className="text-meta text-muted-foreground/70">{t(lang, "chartAllGamesOnly")}</p>
-                )}
               </section>
 
-              {/* KPI quartet — Market Value · Cost Basis · P/L · ROI */}
-              <PortfolioKpi stats={stats} hideBalance={hideBalance} />
-
-              {/* Today's movers — ranked by absolute swing */}
-              <Surface variant="panel" className="p-4 sm:p-5">
-                <PortfolioMovers assets={assets} hideBalance={hideBalance} />
-              </Surface>
+              {/* Holdings — the collection, first-class */}
+              <PortfolioAssetsTable
+                assets={assets}
+                onUpdate={updateItem}
+                onRemove={removeItem}
+                hideBalance={hideBalance}
+                showGameBadge={availableGames.length >= 2}
+              />
             </div>
 
-            <aside className="mt-5 min-w-0 space-y-5 sm:mt-6 lg:sticky lg:top-24 lg:mt-0">
+            <aside className="mt-5 min-w-0 space-y-4 sm:mt-6 lg:mt-0 lg:space-y-5">
+              {/* Value history — scrub still drives the hero */}
+              {gameFilter === ALL_GAMES ? (
+                <Surface variant="panel" className="p-4">
+                  <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
+                </Surface>
+              ) : (
+                // No per-game history yet (snapshots are whole-portfolio) — one
+                // honest line instead of a faked curve.
+                <p className="text-meta text-muted-foreground/70">{t(lang, "chartAllGamesOnly")}</p>
+              )}
+
+              {/* KPI quartet — Market Value · Cost Basis · P/L · ROI */}
+              <PortfolioKpi stats={stats} hideBalance={hideBalance} compact />
+
               {/* Per-game breakdown — all-games view only (deep-links into a game) */}
               {gameFilter === ALL_GAMES && (
                 <PortfolioGameBreakdown
@@ -363,28 +374,15 @@ function PortfolioContent() {
                 />
               )}
 
+              {/* Today's movers — ranked by absolute swing */}
+              <Surface variant="panel" className="p-4 sm:p-5">
+                <PortfolioMovers assets={assets} hideBalance={hideBalance} />
+              </Surface>
+
               {/* Allocation — top holdings share */}
               <PortfolioAllocationPanel allocation={allocation} />
             </aside>
           </div>
-
-          {/* Holdings — the collection (full width below both rails) */}
-          <PortfolioAssetsTable
-            assets={assets}
-            onUpdate={updateItem}
-            onRemove={removeItem}
-            hideBalance={hideBalance}
-            showGameBadge={availableGames.length >= 2}
-          />
-
-          <button
-            type="button"
-            onClick={() => setTxOpen(true)}
-            className="ease-chrome flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--p-hair)] py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
-          >
-            <Receipt className="size-4" />
-            {t(lang, "transactionHistory")}
-          </button>
         </>
       )}
 
