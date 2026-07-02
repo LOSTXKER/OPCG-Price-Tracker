@@ -48,6 +48,7 @@ i18n ใหม่: showAllGames · alertsUnit · byGame · browseCatalog · swit
 4. **named watchlists** · Game.accentTint/sortOrder/isComingSoon columns · TransactionType+SELL + indexPriceJpy
 
 ## ⛔ ตัดสินแล้ว (อย่าเสนอซ้ำ)
+0. **ห้าม bottom-sheet ทั้งเว็บ** (เบส veto 2026-07-02) — modal ทุกตัว = Dialog กลางจอ · กวาดแล้ว 3 จุด (portfolio manage · tx history · home filter) + ลบ holding-sheet orphan · drawer ซ้าย/ขวาของเมนู + micro-animation 8-16px = คนละ pattern ไม่แตะ · **ของใหม่ห้ามใช้ `side="bottom"`**
 1. MINE = unified cross-game · flat URL · in-page chips (owner amendment) — ไม่แยก /[game]/ silo
 2. filter = local state ต่อหน้า · header pill = catalog เท่านั้น (revert 1f07ff9)
 3. per-game tint = crest/glow/frame เท่านั้น · **ห้าม `--game-tint`/tint บน fill/CTA/ring** (opcg ดูปกติแต่ pokemon พัง) · ต่อ element inline

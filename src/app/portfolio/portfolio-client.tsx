@@ -1,8 +1,8 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import dynamic from "next/dynamic"
-import { Eye, EyeOff, Globe, Lock, Plus, Receipt, Share2 } from "lucide-react"
+import { Eye, EyeOff, Globe, Lock, Plus, Share2 } from "lucide-react"
 import { toast } from "sonner"
 
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
@@ -13,13 +13,15 @@ import { useAuthState } from "@/hooks/use-auth-state"
 import { PortfolioSwitcher } from "@/components/portfolio/portfolio-switcher"
 import { PortfolioHero } from "@/components/portfolio/portfolio-hero"
 import { PortfolioAssetsTable } from "@/components/portfolio/portfolio-assets-table"
-import { PortfolioTransactions } from "@/components/portfolio/portfolio-transactions"
+import { PortfolioGameBreakdown } from "@/components/portfolio/portfolio-game-breakdown"
+import { PortfolioMovers } from "@/components/portfolio/portfolio-movers"
+import { PortfolioAllocationPanel } from "@/components/portfolio/portfolio-allocation-panel"
 import { PortfolioShareDialog } from "@/components/portfolio/portfolio-share-dialog"
 import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
 import { Button } from "@/components/ui/button"
+import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Surface } from "@/components/ui/surface"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { t } from "@/lib/i18n"
 import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
 import { MASKED } from "@/lib/constants/ui"
@@ -98,7 +100,9 @@ function PortfolioContent() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [hideBalance, setHideBalance] = useState(false)
-  const [txOpen, setTxOpen] = useState(false)
+  // ภาพรวม = value + the collection · ข้อมูลเชิงลึก = chart / by-game / movers /
+  // allocation. Splitting analytics into its own tab keeps the overview calm.
+  const [tab, setTab] = useState<"overview" | "insights">("overview")
   // The point under the finger while scrubbing the value chart; null when idle.
   const [scrub, setScrub] = useState<HistoryPoint | null>(null)
   const { limits } = useTierLimits()
@@ -109,19 +113,15 @@ function PortfolioContent() {
 
   const p = usePortfolioApi(gameFilter)
 
-  useEffect(() => {
-    if (txOpen) void p.loadTransactions()
-  }, [txOpen, p.loadTransactions])
-
   const {
     history,
-    transactions,
     loading,
     error,
     activeId,
     setActiveId,
     activePortfolio,
     stats,
+    allocation,
     assets,
     gameBreakdown,
     portfolioMetas,
@@ -133,7 +133,6 @@ function PortfolioContent() {
     addCardsBatch,
     updateItem,
     removeItem,
-    deleteTransaction,
   } = p
 
   // Games the user actually holds (value > 0) — the chip rail is built from these,
@@ -237,20 +236,20 @@ function PortfolioContent() {
             slug,
             label: getGameConfig(slug)?.shortName ?? slug.toUpperCase(),
           })),
-        ].map((tab) => (
+        ].map((gt) => (
           <button
-            key={tab.slug}
+            key={gt.slug}
             type="button"
-            onClick={() => setGameFilter(tab.slug)}
+            onClick={() => setGameFilter(gt.slug)}
             className={cn(
               "relative pb-1 text-body-sm transition-colors",
-              gameFilter === tab.slug
+              gameFilter === gt.slug
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground",
             )}
           >
-            {tab.label}
-            {gameFilter === tab.slug && (
+            {gt.label}
+            {gameFilter === gt.slug && (
               <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-primary" />
             )}
           </button>
@@ -284,10 +283,6 @@ function PortfolioContent() {
         </div>
 
         <div className="flex shrink-0 items-center gap-1.5">
-          <IconButton onClick={() => setTxOpen(true)} label={t(lang, "transactionHistory")}>
-            <Receipt className="size-4" />
-          </IconButton>
-
           <IconButton
             onClick={() => setHideBalance((v) => !v)}
             label={hideBalance ? t(lang, "showBalance") : t(lang, "hideBalance")}
@@ -347,77 +342,119 @@ function PortfolioContent() {
         />
       ) : (
         <>
-          {/* Money band — ONE instrument: number + embedded stats on the left,
-              the scrub chart paired on the right (Robinhood desktop). Mobile
-              stacks: number → chart → table. */}
-          <div className="gap-10 lg:grid lg:grid-cols-[minmax(300px,5fr)_7fr] lg:items-end">
-            <div>
-              <PortfolioHero
-                valueJpy={heroValueJpy}
-                deltaJpy={heroDeltaJpy}
-                deltaPct={heroDeltaPct}
-                hasPnl={heroHasPnl}
-                live={!!activeScrub}
-                hideBalance={hideBalance}
-                scopeLabel={scopeGameName}
-                scopeTint={gameFilter === ALL_GAMES ? null : getGameAccentTint(gameFilter)}
-              />
-              {/* Stats live WITH the number — not a separate slab */}
-              <dl className="mt-5 space-y-2 border-t border-[var(--p-hair)] pt-4 text-sm">
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">{t(lang, "costBasis")}</dt>
-                  <dd className="font-price tabular-nums">
-                    {hideBalance ? MASKED : formatJpyAmount(stats.totalCostJpy, currency)}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">{t(lang, "roi")}</dt>
-                  <dd
-                    className={cn(
-                      "font-price tabular-nums",
-                      stats.totalCostJpy > 0
-                        ? stats.unrealizedPnlPercent >= 0
-                          ? "text-price-up"
-                          : "text-price-down"
-                        : "text-muted-foreground",
-                    )}
-                  >
-                    {stats.totalCostJpy > 0
-                      ? `${stats.unrealizedPnlPercent >= 0 ? "+" : ""}${formatPct(stats.unrealizedPnlPercent, 1)}%`
-                      : "—"}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">{t(lang, "quantity")}</dt>
-                  <dd className="font-price tabular-nums">
-                    {assets.reduce((s, a) => s + a.quantity, 0)} {t(lang, "card")}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-
-            <div className="mt-6 lg:mt-0">
-              {gameFilter === ALL_GAMES ? (
-                <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
-              ) : (
-                // No per-game history yet (snapshots are whole-portfolio) — one
-                // honest line instead of a faked curve.
-                <p className="text-meta text-muted-foreground/70">
-                  {t(lang, "chartAllGamesOnly")}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* The collection — game tabs live in the table toolbar */}
-          <PortfolioAssetsTable
-            assets={assets}
-            onUpdate={updateItem}
-            onRemove={removeItem}
-            hideBalance={hideBalance}
-            showGameBadge={availableGames.length >= 2}
-            leading={gameTabs}
+          {/* ภาพรวม | ข้อมูลเชิงลึก — analytics live in their own tab so the
+              overview stays calm (the launched site's IA). */}
+          <SegmentedControl<"overview" | "insights">
+            options={[
+              { value: "overview", label: t(lang, "overviewTab") },
+              { value: "insights", label: t(lang, "insightsTab") },
+            ]}
+            value={tab}
+            onChange={setTab}
+            size="sm"
+            ariaLabel={t(lang, "portfolio")}
           />
+
+          {tab === "overview" ? (
+            <>
+              {/* Value strip — the number + quiet inline stats on one line;
+                  the deep chart lives in ข้อมูลเชิงลึก. */}
+              <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+                <PortfolioHero
+                  valueJpy={stats.totalValueJpy}
+                  deltaJpy={stats.unrealizedPnl}
+                  deltaPct={stats.unrealizedPnlPercent}
+                  hasPnl={stats.totalCostJpy > 0}
+                  hideBalance={hideBalance}
+                  scopeLabel={scopeGameName}
+                  scopeTint={gameFilter === ALL_GAMES ? null : getGameAccentTint(gameFilter)}
+                />
+                <dl className="flex shrink-0 items-end gap-8 pb-1 text-sm">
+                  <div>
+                    <dt className="text-eyebrow">{t(lang, "costBasis")}</dt>
+                    <dd className="mt-1 font-price tabular-nums">
+                      {hideBalance ? MASKED : formatJpyAmount(stats.totalCostJpy, currency)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-eyebrow">{t(lang, "roi")}</dt>
+                    <dd
+                      className={cn(
+                        "mt-1 font-price tabular-nums",
+                        stats.totalCostJpy > 0
+                          ? stats.unrealizedPnlPercent >= 0
+                            ? "text-price-up"
+                            : "text-price-down"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      {stats.totalCostJpy > 0
+                        ? `${stats.unrealizedPnlPercent >= 0 ? "+" : ""}${formatPct(stats.unrealizedPnlPercent, 1)}%`
+                        : "—"}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-eyebrow">{t(lang, "quantity")}</dt>
+                    <dd className="mt-1 font-price tabular-nums">
+                      {assets.reduce((s, a) => s + a.quantity, 0)} {t(lang, "card")}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+
+              {/* The collection — game tabs live in the table toolbar */}
+              <PortfolioAssetsTable
+                assets={assets}
+                onUpdate={updateItem}
+                onRemove={removeItem}
+                hideBalance={hideBalance}
+                showGameBadge={availableGames.length >= 2}
+                leading={gameTabs}
+              />
+            </>
+          ) : (
+            <>
+              {/* ข้อมูลเชิงลึก — scrub-bound value + history chart */}
+              <div className="space-y-3">
+                <PortfolioHero
+                  valueJpy={heroValueJpy}
+                  deltaJpy={heroDeltaJpy}
+                  deltaPct={heroDeltaPct}
+                  hasPnl={heroHasPnl}
+                  live={!!activeScrub}
+                  hideBalance={hideBalance}
+                  scopeLabel={scopeGameName}
+                />
+                {gameFilter === ALL_GAMES ? (
+                  <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
+                ) : (
+                  // No per-game history yet (snapshots are whole-portfolio) — one
+                  // honest line instead of a faked curve.
+                  <p className="text-meta text-muted-foreground/70">
+                    {t(lang, "chartAllGamesOnly")}
+                  </p>
+                )}
+              </div>
+
+              {/* By-game breakdown — deep-links into a game's scope */}
+              {gameFilter === ALL_GAMES && (
+                <PortfolioGameBreakdown
+                  breakdown={gameBreakdown}
+                  totalValueJpy={stats.totalValueJpy}
+                  onSelect={setGameFilter}
+                  hideBalance={hideBalance}
+                />
+              )}
+
+              {/* Today's movers — ranked by absolute swing */}
+              <Surface variant="panel" className="p-4 sm:p-5">
+                <PortfolioMovers assets={assets} hideBalance={hideBalance} />
+              </Surface>
+
+              {/* Allocation — top holdings share */}
+              <PortfolioAllocationPanel allocation={allocation} />
+            </>
+          )}
         </>
       )}
 
@@ -436,19 +473,6 @@ function PortfolioContent() {
         assets={assets}
       />
 
-      {/* Centered modal — the owner vetoed bottom sheets app-wide. */}
-      <Dialog open={txOpen} onOpenChange={setTxOpen}>
-        <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
-          <DialogHeader className="pb-2">
-            <DialogTitle>{t(lang, "transactionHistory")}</DialogTitle>
-          </DialogHeader>
-          <PortfolioTransactions
-            transactions={transactions}
-            onDelete={deleteTransaction}
-            hideBalance={hideBalance}
-          />
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }
