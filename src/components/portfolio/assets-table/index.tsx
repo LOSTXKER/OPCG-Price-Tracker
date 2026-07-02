@@ -110,6 +110,7 @@ export function PortfolioAssetsTable({
             onEdit={openEdit}
             onSelect={(row) => setDetailId(row.itemId)}
             hideBalance={hideBalance}
+            showGameBadge={showGameBadge}
           />
         </div>
       ) : (

@@ -16,7 +16,6 @@ import { PortfolioKpi } from "@/components/portfolio/portfolio-kpi"
 import { PortfolioMovers } from "@/components/portfolio/portfolio-movers"
 import { PortfolioGameChips } from "@/components/portfolio/portfolio-game-chips"
 import { PortfolioGameBreakdown } from "@/components/portfolio/portfolio-game-breakdown"
-import { PortfolioScopedHonestyStrip } from "@/components/portfolio/portfolio-scoped-honesty-strip"
 import { PortfolioAllocationPanel } from "@/components/portfolio/portfolio-allocation-panel"
 import { PortfolioAssetsTable } from "@/components/portfolio/portfolio-assets-table"
 import { PortfolioTransactions } from "@/components/portfolio/portfolio-transactions"
@@ -84,9 +83,12 @@ export default function PortfolioClient() {
     )
   }
 
+  // Signed-in: skip the big page header (breadcrumb + title + blurb) — the nav
+  // already marks Portfolio active, and the money should be the first thing on
+  // screen (VISION §5.3 zone order). Keep an sr-only h1 for a11y.
   return (
     <>
-      {header}
+      <h1 className="sr-only">{t(lang, "portfolioNav")}</h1>
       <PortfolioContent />
     </>
   )
@@ -243,6 +245,7 @@ function PortfolioContent() {
             totalPnlPctAll={totalPnlPctAll}
             hasOverallPnl={hasOverallPnl}
             hideBalance={hideBalance}
+            totalVisible={gameFilter === ALL_GAMES}
             maxPortfolios={limits.portfolioCount}
           />
         </div>
@@ -307,55 +310,65 @@ function PortfolioContent() {
         />
       ) : (
         <>
-          {/* Hero number → "every game" chips → full-bleed scrub chart */}
-          <section className="space-y-3">
-            <PortfolioHero
-              valueJpy={heroValueJpy}
-              deltaJpy={heroDeltaJpy}
-              deltaPct={heroDeltaPct}
-              hasPnl={heroHasPnl}
-              live={!!activeScrub}
-              hideBalance={hideBalance}
-              scopeLabel={scopeGameName}
-              scopeTint={gameFilter === ALL_GAMES ? null : getGameAccentTint(gameFilter)}
-            />
-            <PortfolioGameChips
-              breakdown={gameBreakdown}
-              activeGame={gameFilter}
-              onSelect={setGameFilter}
-              hideBalance={hideBalance}
-            />
-            {gameFilter === ALL_GAMES ? (
-              <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
-            ) : (
-              <PortfolioScopedHonestyStrip
-                marketValueJpy={stats.totalValueJpy}
-                costJpy={stats.totalCostJpy}
-                hasPnl={stats.totalCostJpy > 0}
-                hideBalance={hideBalance}
-              />
-            )}
-          </section>
+          {/* Desktop (lg:) = real two-zone layout, not a stretched phone column:
+              left = the money story (hero → chips → chart → KPI → movers),
+              right = sticky context rail (by-game breakdown → allocation).
+              Mobile keeps a single column in DOM order. */}
+          <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-6">
+            <div className="min-w-0 space-y-5 sm:space-y-6">
+              {/* Hero number → "every game" chips → full-bleed scrub chart */}
+              <section className="space-y-3">
+                <PortfolioHero
+                  valueJpy={heroValueJpy}
+                  deltaJpy={heroDeltaJpy}
+                  deltaPct={heroDeltaPct}
+                  hasPnl={heroHasPnl}
+                  live={!!activeScrub}
+                  hideBalance={hideBalance}
+                  scopeLabel={scopeGameName}
+                  scopeTint={gameFilter === ALL_GAMES ? null : getGameAccentTint(gameFilter)}
+                />
+                <PortfolioGameChips
+                  breakdown={gameBreakdown}
+                  activeGame={gameFilter}
+                  onSelect={setGameFilter}
+                />
+                {gameFilter === ALL_GAMES ? (
+                  <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
+                ) : (
+                  // No per-game history yet (snapshots are whole-portfolio) — one
+                  // honest line instead of a faked curve. The KPI quartet below
+                  // already carries the scoped numbers; don't repeat them here.
+                  <p className="text-meta text-muted-foreground/70">{t(lang, "chartAllGamesOnly")}</p>
+                )}
+              </section>
 
-          {/* Per-game breakdown — all-games view only (deep-links into a game) */}
-          {gameFilter === ALL_GAMES && (
-            <PortfolioGameBreakdown
-              breakdown={gameBreakdown}
-              totalValueJpy={stats.totalValueJpy}
-              onSelect={setGameFilter}
-              hideBalance={hideBalance}
-            />
-          )}
+              {/* KPI quartet — Market Value · Cost Basis · P/L · ROI */}
+              <PortfolioKpi stats={stats} hideBalance={hideBalance} />
 
-          {/* KPI quartet — Market Value · Cost Basis · P/L · ROI */}
-          <PortfolioKpi stats={stats} hideBalance={hideBalance} />
+              {/* Today's movers — ranked by absolute swing */}
+              <Surface variant="panel" className="p-4 sm:p-5">
+                <PortfolioMovers assets={assets} hideBalance={hideBalance} />
+              </Surface>
+            </div>
 
-          {/* Today's movers — ranked by absolute swing */}
-          <Surface variant="panel" className="p-4 sm:p-5">
-            <PortfolioMovers assets={assets} hideBalance={hideBalance} />
-          </Surface>
+            <aside className="mt-5 min-w-0 space-y-5 sm:mt-6 lg:sticky lg:top-24 lg:mt-0">
+              {/* Per-game breakdown — all-games view only (deep-links into a game) */}
+              {gameFilter === ALL_GAMES && (
+                <PortfolioGameBreakdown
+                  breakdown={gameBreakdown}
+                  totalValueJpy={stats.totalValueJpy}
+                  onSelect={setGameFilter}
+                  hideBalance={hideBalance}
+                />
+              )}
 
-          {/* Holdings — the collection */}
+              {/* Allocation — top holdings share */}
+              <PortfolioAllocationPanel allocation={allocation} />
+            </aside>
+          </div>
+
+          {/* Holdings — the collection (full width below both rails) */}
           <PortfolioAssetsTable
             assets={assets}
             onUpdate={updateItem}
@@ -363,9 +376,6 @@ function PortfolioContent() {
             hideBalance={hideBalance}
             showGameBadge={availableGames.length >= 2}
           />
-
-          {/* Allocation — top holdings share */}
-          <PortfolioAllocationPanel allocation={allocation} />
 
           <button
             type="button"

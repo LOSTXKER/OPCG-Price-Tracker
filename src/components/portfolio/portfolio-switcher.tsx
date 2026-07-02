@@ -38,6 +38,9 @@ interface PortfolioSwitcherProps {
   totalPnlPctAll: number
   hasOverallPnl: boolean
   hideBalance?: boolean
+  /** Hide the pill's total while the page is scoped to one game — the pill's
+   *  number is the ALL-GAMES book total and would contradict the scoped hero. */
+  totalVisible?: boolean
   maxPortfolios?: number
 }
 
@@ -51,6 +54,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
     totalPnlPctAll,
     hasOverallPnl,
     hideBalance,
+    totalVisible = true,
   } = props
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
@@ -66,20 +70,22 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
         <span className="block max-w-[9rem] truncate text-sm font-semibold leading-tight sm:max-w-[12rem]">
           {activeName}
         </span>
-        <span className="block font-price text-meta tabular-nums leading-tight">
-          {hideBalance ? "••••" : formatJpyAmount(totalAllPortfolios, currency)}
-          {multi && hasOverallPnl && !hideBalance && (
-            <span
-              className={cn(
-                "ml-1.5 font-semibold",
-                totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
-              )}
-            >
-              {totalPnlPctAll >= 0 ? "+" : ""}
-              {formatPct(totalPnlPctAll, 1)}%
-            </span>
-          )}
-        </span>
+        {totalVisible && (
+          <span className="block font-price text-meta tabular-nums leading-tight">
+            {hideBalance ? "••••" : formatJpyAmount(totalAllPortfolios, currency)}
+            {multi && hasOverallPnl && !hideBalance && (
+              <span
+                className={cn(
+                  "ml-1.5 font-semibold",
+                  totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
+                )}
+              >
+                {totalPnlPctAll >= 0 ? "+" : ""}
+                {formatPct(totalPnlPctAll, 1)}%
+              </span>
+            )}
+          </span>
+        )}
       </span>
       <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
     </span>

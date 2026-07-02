@@ -4,6 +4,7 @@ import { memo } from "react"
 import Image from "next/image"
 import { Pencil } from "lucide-react"
 
+import { GameBadge } from "@/components/shared/game-badge"
 import { Price } from "@/components/shared/price-inline"
 import { getCardName, t, type Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
@@ -18,6 +19,7 @@ export function PortfolioCollectionGrid({
   onEdit,
   onSelect,
   hideBalance = false,
+  showGameBadge = false,
 }: {
   assets: AssetRow[]
   lang: Language
@@ -25,6 +27,8 @@ export function PortfolioCollectionGrid({
   /** Tap a tile → open the holding detail sheet (VISION §5.3). */
   onSelect: (row: AssetRow) => void
   hideBalance?: boolean
+  /** Overlay a game tag on each tile — pass true only when holdings span ≥2 games. */
+  showGameBadge?: boolean
 }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
@@ -36,6 +40,7 @@ export function PortfolioCollectionGrid({
           onEdit={() => onEdit(row)}
           onSelect={() => onSelect(row)}
           hideBalance={hideBalance}
+          showGameBadge={showGameBadge}
         />
       ))}
     </div>
@@ -48,12 +53,14 @@ const CollectionTile = memo(function CollectionTile({
   onEdit,
   onSelect,
   hideBalance,
+  showGameBadge = false,
 }: {
   row: AssetRow
   lang: Language
   onEdit: () => void
   onSelect: () => void
   hideBalance: boolean
+  showGameBadge?: boolean
 }) {
   const name = getCardName(lang as "TH" | "EN" | "JP", row)
   const code = row.baseCode ?? row.cardCode
@@ -89,6 +96,12 @@ const CollectionTile = memo(function CollectionTile({
           <span className="absolute right-1.5 top-1.5 rounded-md bg-black/55 px-1.5 py-0.5 font-price text-overlay font-semibold tabular-nums text-white backdrop-blur-sm">
             ×{row.quantity}
           </span>
+          {showGameBadge && (
+            <GameBadge
+              game={row.game}
+              className="absolute bottom-1.5 left-1.5 z-10 bg-black/55 text-white backdrop-blur-sm"
+            />
+          )}
         </div>
 
         <div className="mt-2 min-w-0">

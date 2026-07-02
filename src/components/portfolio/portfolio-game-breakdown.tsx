@@ -4,7 +4,7 @@ import Image from "next/image"
 import { ArrowDown, ArrowUp } from "lucide-react"
 
 import { Surface } from "@/components/ui/surface"
-import { getGameAccentTint } from "@/lib/game-config"
+import { getGameAccentTint, getGameConfig } from "@/lib/game-config"
 import { DEFAULT_GAME } from "@/lib/game/constants"
 import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
@@ -47,9 +47,9 @@ export function PortfolioGameBreakdown({
 
   return (
     <Surface variant="panel" className="overflow-hidden">
-      {/* Panel heading */}
+      {/* Panel heading — "by game", NOT "all games" (that's the chip above) */}
       <div className="px-4 pb-2 pt-4 sm:px-5 sm:pt-5">
-        <p className="text-h5">{t(lang, "allGames")}</p>
+        <p className="text-h5">{t(lang, "byGame")}</p>
       </div>
 
       {/* One row per game */}
@@ -63,9 +63,12 @@ export function PortfolioGameBreakdown({
               ? Math.min(100, (b.valueJpy / totalValueJpy) * 100)
               : 0
 
-          const gameName = b.game?.name ?? t(lang, "other")
-          const firstLetter = gameName.charAt(0).toUpperCase()
+          // Null-game holdings fold into the default game upstream — resolve the
+          // display name from the config so they read as "OPCG", never "other".
           const slug = b.game?.slug ?? DEFAULT_GAME
+          const gameName =
+            getGameConfig(slug)?.shortName ?? b.game?.name ?? slug.toUpperCase()
+          const firstLetter = gameName.charAt(0).toUpperCase()
 
           return (
             <button
@@ -96,7 +99,9 @@ export function PortfolioGameBreakdown({
                 {/* Name + card count */}
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold">{gameName}</p>
-                  <p className="text-meta tabular-nums">{b.count}</p>
+                  <p className="text-meta tabular-nums">
+                    {b.count} {t(lang, "card")}
+                  </p>
                 </div>
 
                 {/* Value + P/L delta */}
