@@ -76,14 +76,14 @@ export function PortfolioHero({
           hidden={hideBalance}
         />
 
+        {/* Plain-text delta — no filled pill. The color + arrow carry the
+            meaning (Robinhood restraint); a colored box is chrome we don't need. */}
         {hasPnl && (
           <span
             className={cn(
-              "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 tabular-nums",
+              "inline-flex items-center gap-1 font-price tabular-nums",
               "text-body-sm font-medium",
-              isUp
-                ? "bg-[color-mix(in_srgb,var(--price-up)_14%,transparent)] text-price-up"
-                : "bg-[color-mix(in_srgb,var(--price-down)_14%,transparent)] text-price-down",
+              isUp ? "text-price-up" : "text-price-down",
             )}
           >
             {isUp ? (

@@ -256,7 +256,9 @@ function PortfolioContent() {
     <div className="lg:grid lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start lg:gap-6">
       {/* Desktop sidebar — all-portfolios overview + the portfolio list/manager
           (the live site's layout). Mobile keeps the switcher pill instead. */}
-      <aside className="hidden lg:sticky lg:top-24 lg:block lg:space-y-4">
+      <aside className="hidden lg:sticky lg:top-24 lg:block">
+        {/* One quiet block — total on top, hairline, then the portfolio list.
+            Two stacked boxes read as chrome; one reads as a sidebar. */}
         <Surface variant="panel" className="p-4">
           <p className="text-eyebrow">{t(lang, "allPortfolios")}</p>
           <p className="mt-1.5 font-price text-xl font-bold tabular-nums">
@@ -273,22 +275,22 @@ function PortfolioContent() {
               {formatPct(totalPnlPctAll, 1)}%
             </p>
           )}
-        </Surface>
-        <Surface variant="panel" className="p-3">
-          <PortfolioSidebar
-            portfolios={portfolioMetas}
-            activeId={activeId}
-            onSelect={setActiveId}
-            onCreate={createPortfolio}
-            onRename={renamePortfolio}
-            onDelete={deletePortfolio}
-            hideBalance={hideBalance}
-            maxPortfolios={limits.portfolioCount}
-          />
+          <div className="mt-4 border-t border-[var(--p-hair)] pt-3">
+            <PortfolioSidebar
+              portfolios={portfolioMetas}
+              activeId={activeId}
+              onSelect={setActiveId}
+              onCreate={createPortfolio}
+              onRename={renamePortfolio}
+              onDelete={deletePortfolio}
+              hideBalance={hideBalance}
+              maxPortfolios={limits.portfolioCount}
+            />
+          </div>
         </Surface>
       </aside>
 
-      <div className="min-w-0 space-y-4 sm:space-y-5">
+      <div className="min-w-0 space-y-5 sm:space-y-6">
       {/* Top bar: (mobile) switcher pill · (desktop) tabs · actions */}
       <div className="flex items-center gap-2">
         <div className="min-w-0 flex-1 lg:hidden">

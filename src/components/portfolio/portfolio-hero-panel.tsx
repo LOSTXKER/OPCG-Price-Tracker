@@ -44,7 +44,7 @@ export function PortfolioHeroPanel({
   const glow = scopeTint ?? (isUp ? "var(--price-up)" : "var(--price-down)")
 
   return (
-    <Surface variant="panel" className="relative overflow-hidden p-4 sm:p-5">
+    <Surface variant="panel" className="relative overflow-hidden p-5 sm:p-6">
       <div
         aria-hidden
         className="pointer-events-none absolute -right-12 -top-20 h-64 w-80 rounded-full blur-3xl"

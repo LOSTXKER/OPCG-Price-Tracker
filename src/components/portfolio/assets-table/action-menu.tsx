@@ -9,23 +9,22 @@ import { formatPct } from "@/lib/utils/currency"
 export function AssetEditButton({
   lang,
   onEdit,
-  showLabel = false,
 }: {
   lang: Language
   onEdit: () => void
-  showLabel?: boolean
 }) {
   const label = t(lang, "edit")
+  // Ghost icon — no border chrome on every row (minimal pass); aria-label +
+  // title carry the name, hover/focus reveal the affordance.
   return (
     <button
       type="button"
       onClick={onEdit}
       aria-label={label}
       title={label}
-      className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-[var(--p-hair)] bg-background/40 px-2 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+      className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground/50 transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
     >
       <Pencil className="size-3.5" />
-      {showLabel ? <span>{label}</span> : null}
     </button>
   )
 }

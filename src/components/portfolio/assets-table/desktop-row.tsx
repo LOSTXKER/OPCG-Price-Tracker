@@ -154,7 +154,7 @@ export const AssetRowComponent = memo(function AssetRowComponent({
       </td>
       <td className="py-3.5 text-right align-middle">
         <div className="flex items-center justify-end">
-          <AssetEditButton lang={lang} onEdit={onEdit} showLabel />
+          <AssetEditButton lang={lang} onEdit={onEdit} />
         </div>
       </td>
     </tr>
