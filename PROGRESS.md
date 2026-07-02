@@ -61,8 +61,14 @@ PR #55 merged แล้ว · จากนั้นเบสให้ feedback �
 - **workflow ที่ใช้ได้ผล**: dev server localhost:3000 มี session "Test" login ค้าง → ฉันเปิด Chrome เห็นภาพจริง iterate เองได้ (ไม่ต้องรอ deploy/เบสเช็กทุกรอบ) — ใช้ pattern นี้กับ watchlist/alerts ต่อ
 - verify: tsc0 · lint 0 err · test 56/56 · build ✓ · screenshot ยืนยัน all-games/scoped/grid-badge
 
+## 🎨 Portfolio iterate ต่อ (2026-07-02 บ่าย · เบส feedback 3 รอบ · commit 4310888→09ae7e5→bcbd3eb)
+- **รอบ "ขวาซ้ำซ้อน + list ไม่เอา grid"**: ตัด grid+toggle ทิ้ง (list เดียว · thumbnail aspect การ์ดจริง 63:88) · KPI 4→2 · ตัด allocation
+- **รอบ "เอา UXUI เว็บเดิม (meecardtcg live) แต่ดีกว่าตาม vision"** — เบสส่ง screenshot เว็บ live: รื้อกลับเป็นโครงเดิม = **sidebar ซ้าย** (ทุกพอร์ต+ลิสต์+สร้างใหม่ · lg: only, มือถือใช้ pill) + **แท็บ ภาพรวม|ข้อมูลเชิงลึก** (SegmentedControl · key เดิมมีอยู่แล้ว) + **PortfolioHeroPanel ใหม่** (มูลค่า+delta+แถว 4 สถิติ กำไร/ต้นทุน/ดีสุด/แย่สุด + glow ≤12% ตาม P/L หรือสีเกมตอน scoped) → chips → **สินทรัพย์ list ทันที** · เชิงลึก = hero scrub+กราฟ / แยกตามเกม / มูฟเวอร์ / สัดส่วน (allocation คืนที่นี่) · **ลบ portfolio-kpi.tsx** (แทนด้วย stat row)
+- **รอบ "minimal ทันสมัย"**: delta pill พื้นสี → ข้อความเปล่า▲ · sidebar 2 กล่อง→1 · ปุ่มแก้ไขมีขอบ→ghost icon (ถอด showLabel) · เพิ่มอากาศ p-5/6
+- ปุ่มประวัติธุรกรรม → Receipt icon บนหัว (เบสสั่งเอาปุ่มใหญ่ออก)
+- ทุกรอบ verify: tsc0 · lint 0 err · test 56/56 · build ✓ + Chrome screenshot (1512 + 500px มือถือ · device-mode DevTools เปิดผ่าน key ไม่ได้ ใช้ resize 500 แทน · resize ต้องระวัง window ชิดขอบจอ = bounds error)
+
 ## ⏭️ NEXT
-1. เบสดู `localhost:3000/portfolio?demo=multigame` (หรือรอ merge) → feedback → ปรับต่อ
-2. **visual pass watchlist + alerts** (pattern เดียวกัน: ดูจริงผ่าน Chrome → declutter → lg: rail)
-3. mobile pass (Chrome resize ไม่ติด — ลอง device toolbar หรือเช็กบนมือถือจริง)
-4. PR รอบใหม่ → merge → แล้วค่อย Pokémon data survey + Phase G migrations มัดรวม
+1. เบสดู `localhost:3000/portfolio?demo=multigame` ทั้ง 2 แท็บ → feedback ("minimal ทันสมัย" ผ่านยัง?)
+2. เก็บ mobile fine-tune + **visual pass watchlist + alerts ให้เข้าชุดโครงเดียวกัน** (แท็บ/hero panel language)
+3. PR รอบใหม่ → merge → Pokémon data survey → Phase G migrations มัดรวม

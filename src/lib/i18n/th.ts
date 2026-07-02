@@ -311,6 +311,8 @@ export const th = {
   alertsUnit: "แจ้งเตือน",
   byGame: "แยกตามเกม",
   browseCatalog: "เลือกแคตตาล็อกเกม",
+  game: "เกม",
+  trend7d: "แนวโน้ม 7วัน",
   switcherMineHint: "ตัวกรองเกมอยู่ในหน้านี้ →",
   invested: "เงินลงทุน",
   avgCost: "ต้นทุนเฉลี่ย",

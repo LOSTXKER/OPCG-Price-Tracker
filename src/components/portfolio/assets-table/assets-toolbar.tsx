@@ -25,6 +25,7 @@ export function AssetsToolbar({
   onSortSelect,
   onBulkEdit,
   hasAssets,
+  leading,
 }: {
   lang: Language
   count: number
@@ -37,6 +38,8 @@ export function AssetsToolbar({
   onSortSelect: (key: SortKey) => void
   onBulkEdit: () => void
   hasAssets: boolean
+  /** Replaces the default "สินทรัพย์ · count" heading — e.g. the game tabs. */
+  leading?: React.ReactNode
 }) {
   const sortOptions: ToolbarSortOption<SortKey>[] = [
     { key: "value", label: t(lang, "value") },
@@ -83,10 +86,14 @@ export function AssetsToolbar({
         </>
       }
     >
-      <p className="text-h5">{t(lang, "assets")}</p>
-      <span className="rounded-full bg-primary/8 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-primary/80">
-        {count} {t(lang, "card")}
-      </span>
+      {leading ?? (
+        <>
+          <p className="text-h5">{t(lang, "assets")}</p>
+          <span className="rounded-full bg-primary/8 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-primary/80">
+            {count} {t(lang, "card")}
+          </span>
+        </>
+      )}
     </Toolbar>
   )
 }

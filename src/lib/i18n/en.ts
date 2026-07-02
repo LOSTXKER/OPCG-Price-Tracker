@@ -311,6 +311,8 @@ export const en = {
   alertsUnit: "alerts",
   byGame: "By game",
   browseCatalog: "Browse catalog",
+  game: "Game",
+  trend7d: "7d trend",
   switcherMineHint: "Filters live inside the page →",
   invested: "Invested",
   avgCost: "Avg Cost",

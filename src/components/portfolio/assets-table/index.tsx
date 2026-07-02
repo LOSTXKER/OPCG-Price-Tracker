@@ -1,8 +1,9 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 
 import { EmptyState } from "@/components/shared/empty-state"
+import { apiGet, apiTry } from "@/lib/api/client"
 import { getCardName, t } from "@/lib/i18n"
 import type { AssetRow } from "@/lib/types/portfolio"
 import { useUIStore } from "@/stores/ui-store"
@@ -22,6 +23,7 @@ export function PortfolioAssetsTable({
   onRemove,
   hideBalance = false,
   showGameBadge = false,
+  leading,
 }: {
   assets: AssetRow[]
   onUpdate: (
@@ -37,6 +39,8 @@ export function PortfolioAssetsTable({
   hideBalance?: boolean
   /** Show a per-row game tag — pass true only when holdings span ≥2 games. */
   showGameBadge?: boolean
+  /** Replaces the toolbar's default heading (e.g. the page's game tabs). */
+  leading?: React.ReactNode
 }) {
   const lang = useUIStore((s) => s.language)
   const [searchQuery, setSearchQuery] = useState("")
@@ -45,6 +49,25 @@ export function PortfolioAssetsTable({
   const [sortDir, setSortDir] = useState<SortDir>("desc")
   const [editOpen, setEditOpen] = useState(false)
   const [editFocusId, setEditFocusId] = useState<number | null>(null)
+
+  // Real 7-day sparklines per card (same endpoint the watchlist uses) —
+  // fetched once per card id, optional eye-candy so failures are ignored.
+  const [sparklines, setSparklines] = useState<Record<number, number[]>>({})
+  const sparklineFetchedRef = useRef<Set<number>>(new Set())
+  useEffect(() => {
+    const ids = assets
+      .map((a) => a.cardId)
+      .filter((id) => id > 0 && !sparklineFetchedRef.current.has(id))
+    if (ids.length === 0) return
+    ids.forEach((id) => sparklineFetchedRef.current.add(id))
+    void apiTry(
+      apiGet<{ sparklines?: Record<number, number[]> }>(
+        `/api/cards/sparklines?ids=${ids.slice(0, 50).join(",")}`,
+      ),
+    ).then((data) => {
+      if (data?.sparklines) setSparklines((prev) => ({ ...prev, ...data.sparklines }))
+    })
+  }, [assets])
 
   const filteredAssets = useMemo(() => {
     let result = assets
@@ -92,6 +115,7 @@ export function PortfolioAssetsTable({
         onSortSelect={handleSortSelect}
         onBulkEdit={openBulkEdit}
         hasAssets={assets.length > 0}
+        leading={leading}
       />
 
       {filteredAssets.length === 0 ? (
@@ -117,6 +141,7 @@ export function PortfolioAssetsTable({
             onEdit={openEdit}
             hideBalance={hideBalance}
             showGameBadge={showGameBadge}
+            sparklines={sparklines}
           />
         </>
       )}

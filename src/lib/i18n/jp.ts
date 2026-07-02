@@ -311,6 +311,8 @@ export const jp = {
   alertsUnit: "アラート",
   byGame: "ゲーム別",
   browseCatalog: "カタログを選択",
+  game: "ゲーム",
+  trend7d: "7日トレンド",
   switcherMineHint: "フィルターはページ内にあります →",
   invested: "投資額",
   avgCost: "平均取得単価",
