@@ -11,8 +11,10 @@ import { Breadcrumb } from "@/components/shared/breadcrumb"
 import { PageHeader } from "@/components/layout/page-header"
 import { useAuthState } from "@/hooks/use-auth-state"
 import { PortfolioSwitcher } from "@/components/portfolio/portfolio-switcher"
+import { PortfolioSidebar } from "@/components/portfolio/portfolio-selector"
 import { PortfolioHero } from "@/components/portfolio/portfolio-hero"
-import { PortfolioKpi } from "@/components/portfolio/portfolio-kpi"
+import { PortfolioHeroPanel } from "@/components/portfolio/portfolio-hero-panel"
+import { PortfolioAllocationPanel } from "@/components/portfolio/portfolio-allocation-panel"
 import { PortfolioMovers } from "@/components/portfolio/portfolio-movers"
 import { PortfolioGameChips } from "@/components/portfolio/portfolio-game-chips"
 import { PortfolioGameBreakdown } from "@/components/portfolio/portfolio-game-breakdown"
@@ -21,10 +23,14 @@ import { PortfolioTransactions } from "@/components/portfolio/portfolio-transact
 import { PortfolioShareDialog } from "@/components/portfolio/portfolio-share-dialog"
 import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
 import { Button } from "@/components/ui/button"
+import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Surface } from "@/components/ui/surface"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { t } from "@/lib/i18n"
+import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
+import { MASKED } from "@/lib/constants/ui"
+import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
 import { useGameFilterReset } from "@/hooks/use-game-filter"
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants"
@@ -93,12 +99,18 @@ export default function PortfolioClient() {
   )
 }
 
+type PortfolioTab = "overview" | "insights"
+
 function PortfolioContent() {
   const lang = useUIStore((s) => s.language)
+  const currency = useUIStore((s) => s.currency)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [hideBalance, setHideBalance] = useState(false)
   const [txOpen, setTxOpen] = useState(false)
+  // Overview = value + the collection · Insights = chart/by-game/movers/allocation.
+  // Splitting analytics into its own tab is what keeps the overview un-cluttered.
+  const [tab, setTab] = useState<PortfolioTab>("overview")
   // The point under the finger while scrubbing the value chart; null when idle.
   const [scrub, setScrub] = useState<HistoryPoint | null>(null)
   const { limits } = useTierLimits()
@@ -122,6 +134,7 @@ function PortfolioContent() {
     setActiveId,
     activePortfolio,
     stats,
+    allocation,
     assets,
     gameBreakdown,
     portfolioMetas,
@@ -226,11 +239,59 @@ function PortfolioContent() {
 
   const portfolioPublic = activePortfolio?.isPublic ?? true
 
+  const tabControl = (
+    <SegmentedControl<PortfolioTab>
+      options={[
+        { value: "overview", label: t(lang, "overviewTab") },
+        { value: "insights", label: t(lang, "insightsTab") },
+      ]}
+      value={tab}
+      onChange={setTab}
+      size="sm"
+      ariaLabel={t(lang, "portfolio")}
+    />
+  )
+
   return (
-    <div className="space-y-5 sm:space-y-6">
-      {/* Top bar: portfolio switcher + actions */}
+    <div className="lg:grid lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start lg:gap-6">
+      {/* Desktop sidebar — all-portfolios overview + the portfolio list/manager
+          (the live site's layout). Mobile keeps the switcher pill instead. */}
+      <aside className="hidden lg:sticky lg:top-24 lg:block lg:space-y-4">
+        <Surface variant="panel" className="p-4">
+          <p className="text-eyebrow">{t(lang, "allPortfolios")}</p>
+          <p className="mt-1.5 font-price text-xl font-bold tabular-nums">
+            {hideBalance ? MASKED : formatJpyAmount(totalAllPortfolios, currency)}
+          </p>
+          {hasOverallPnl && !hideBalance && (
+            <p
+              className={cn(
+                "mt-0.5 font-price text-meta tabular-nums",
+                totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
+              )}
+            >
+              {totalPnlPctAll >= 0 ? "+" : ""}
+              {formatPct(totalPnlPctAll, 1)}%
+            </p>
+          )}
+        </Surface>
+        <Surface variant="panel" className="p-3">
+          <PortfolioSidebar
+            portfolios={portfolioMetas}
+            activeId={activeId}
+            onSelect={setActiveId}
+            onCreate={createPortfolio}
+            onRename={renamePortfolio}
+            onDelete={deletePortfolio}
+            hideBalance={hideBalance}
+            maxPortfolios={limits.portfolioCount}
+          />
+        </Surface>
+      </aside>
+
+      <div className="min-w-0 space-y-4 sm:space-y-5">
+      {/* Top bar: (mobile) switcher pill · (desktop) tabs · actions */}
       <div className="flex items-center gap-2">
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 lg:hidden">
           <PortfolioSwitcher
             portfolios={portfolioMetas}
             activeId={activeId}
@@ -247,6 +308,8 @@ function PortfolioContent() {
             maxPortfolios={limits.portfolioCount}
           />
         </div>
+        {items.length > 0 && <div className="hidden min-w-0 lg:block">{tabControl}</div>}
+        <div className="hidden flex-1 lg:block" />
 
         <div className="flex shrink-0 items-center gap-1.5">
           <IconButton onClick={() => setTxOpen(true)} label={t(lang, "transactionHistory")}>
@@ -298,6 +361,9 @@ function PortfolioContent() {
         </div>
       </div>
 
+      {/* Mobile tabs — full-width under the top bar */}
+      {items.length > 0 && <div className="lg:hidden">{tabControl}</div>}
+
       {error && <p className="text-sm text-destructive">{error}</p>}
 
       {items.length === 0 ? (
@@ -310,74 +376,65 @@ function PortfolioContent() {
             </Button>
           }
         />
+      ) : tab === "overview" ? (
+        <>
+          {/* OVERVIEW — one hero card (value + P/L · Cost · Best · Worst),
+              game chips, then the collection immediately. */}
+          <PortfolioHeroPanel
+            stats={stats}
+            hideBalance={hideBalance}
+            scopeLabel={scopeGameName}
+            scopeTint={gameFilter === ALL_GAMES ? null : getGameAccentTint(gameFilter)}
+          />
+          <PortfolioGameChips
+            breakdown={gameBreakdown}
+            activeGame={gameFilter}
+            onSelect={setGameFilter}
+          />
+          <PortfolioAssetsTable
+            assets={assets}
+            onUpdate={updateItem}
+            onRemove={removeItem}
+            hideBalance={hideBalance}
+            showGameBadge={availableGames.length >= 2}
+          />
+        </>
       ) : (
         <>
-          {/* The collection is the hero of this page. Desktop (lg:) = two real
-              zones: LEFT = total + game chips + the assets themselves (visible
-              without scrolling), RIGHT = context rail (history chart → KPI →
-              by-game → movers). Mobile follows DOM order, so the
-              assets come right after the hero there too. */}
-          <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-6">
-            <div className="min-w-0 space-y-4 sm:space-y-5">
-              <section className="space-y-3">
-                <PortfolioHero
-                  valueJpy={heroValueJpy}
-                  deltaJpy={heroDeltaJpy}
-                  deltaPct={heroDeltaPct}
-                  hasPnl={heroHasPnl}
-                  live={!!activeScrub}
-                  hideBalance={hideBalance}
-                  scopeLabel={scopeGameName}
-                  scopeTint={gameFilter === ALL_GAMES ? null : getGameAccentTint(gameFilter)}
-                />
-                <PortfolioGameChips
-                  breakdown={gameBreakdown}
-                  activeGame={gameFilter}
-                  onSelect={setGameFilter}
-                />
-              </section>
+          {/* INSIGHTS — history (scrub-bound value) → by-game → movers → allocation */}
+          <Surface variant="panel" className="space-y-3 p-4 sm:p-5">
+            <PortfolioHero
+              valueJpy={heroValueJpy}
+              deltaJpy={heroDeltaJpy}
+              deltaPct={heroDeltaPct}
+              hasPnl={heroHasPnl}
+              live={!!activeScrub}
+              hideBalance={hideBalance}
+              scopeLabel={scopeGameName}
+            />
+            {gameFilter === ALL_GAMES ? (
+              <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
+            ) : (
+              // No per-game history yet (snapshots are whole-portfolio) — one
+              // honest line instead of a faked curve.
+              <p className="text-meta text-muted-foreground/70">{t(lang, "chartAllGamesOnly")}</p>
+            )}
+          </Surface>
 
-              {/* Holdings — the collection, first-class */}
-              <PortfolioAssetsTable
-                assets={assets}
-                onUpdate={updateItem}
-                onRemove={removeItem}
-                hideBalance={hideBalance}
-                showGameBadge={availableGames.length >= 2}
-              />
-            </div>
+          {gameFilter === ALL_GAMES && (
+            <PortfolioGameBreakdown
+              breakdown={gameBreakdown}
+              totalValueJpy={stats.totalValueJpy}
+              onSelect={setGameFilter}
+              hideBalance={hideBalance}
+            />
+          )}
 
-            <aside className="mt-5 min-w-0 space-y-4 sm:mt-6 lg:mt-0 lg:space-y-5">
-              {/* Value history — scrub still drives the hero */}
-              {gameFilter === ALL_GAMES ? (
-                <Surface variant="panel" className="p-4">
-                  <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
-                </Surface>
-              ) : (
-                // No per-game history yet (snapshots are whole-portfolio) — one
-                // honest line instead of a faked curve.
-                <p className="text-meta text-muted-foreground/70">{t(lang, "chartAllGamesOnly")}</p>
-              )}
+          <Surface variant="panel" className="p-4 sm:p-5">
+            <PortfolioMovers assets={assets} hideBalance={hideBalance} />
+          </Surface>
 
-              {/* Cost basis · P/L (+ROI inline) — no repeat of the hero value */}
-              <PortfolioKpi stats={stats} hideBalance={hideBalance} />
-
-              {/* Per-game breakdown — all-games view only (deep-links into a game) */}
-              {gameFilter === ALL_GAMES && (
-                <PortfolioGameBreakdown
-                  breakdown={gameBreakdown}
-                  totalValueJpy={stats.totalValueJpy}
-                  onSelect={setGameFilter}
-                  hideBalance={hideBalance}
-                />
-              )}
-
-              {/* Today's movers — ranked by absolute swing */}
-              <Surface variant="panel" className="p-4 sm:p-5">
-                <PortfolioMovers assets={assets} hideBalance={hideBalance} />
-              </Surface>
-            </aside>
-          </div>
+          <PortfolioAllocationPanel allocation={allocation} />
         </>
       )}
 
@@ -408,6 +465,7 @@ function PortfolioContent() {
           />
         </SheetContent>
       </Sheet>
+      </div>
     </div>
   )
 }
