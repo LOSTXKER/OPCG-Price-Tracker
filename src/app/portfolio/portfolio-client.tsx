@@ -19,7 +19,7 @@ import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Surface } from "@/components/ui/surface"
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { t } from "@/lib/i18n"
 import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
 import { MASKED } from "@/lib/constants/ui"
@@ -436,18 +436,19 @@ function PortfolioContent() {
         assets={assets}
       />
 
-      <Sheet open={txOpen} onOpenChange={setTxOpen}>
-        <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl pb-10">
-          <SheetHeader className="pb-2">
-            <SheetTitle>{t(lang, "transactionHistory")}</SheetTitle>
-          </SheetHeader>
+      {/* Centered modal — the owner vetoed bottom sheets app-wide. */}
+      <Dialog open={txOpen} onOpenChange={setTxOpen}>
+        <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader className="pb-2">
+            <DialogTitle>{t(lang, "transactionHistory")}</DialogTitle>
+          </DialogHeader>
           <PortfolioTransactions
             transactions={transactions}
             onDelete={deleteTransaction}
             hideBalance={hideBalance}
           />
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

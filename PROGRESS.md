@@ -68,7 +68,19 @@ PR #55 merged แล้ว · จากนั้นเบสให้ feedback �
 - ปุ่มประวัติธุรกรรม → Receipt icon บนหัว (เบสสั่งเอาปุ่มใหญ่ออก)
 - ทุกรอบ verify: tsc0 · lint 0 err · test 56/56 · build ✓ + Chrome screenshot (1512 + 500px มือถือ · device-mode DevTools เปิดผ่าน key ไม่ได้ ใช้ resize 500 แทน · resize ต้องระวัง window ชิดขอบจอ = bounds error)
 
+## 🎯 Proto-first rebuild (2026-07-02 เย็น · เบส: "ยังไม่ถูกใจ รื้อใหม่ ทำ proto ให้ดูก่อน")
+เปลี่ยนวิธีจาก iterate หน้าจริง → **proto ให้เลือกก่อน** (วิธีเดียวกับ card-detail สำเร็จ):
+- สร้าง `/proto/portfolio/{a,b,c}` (3 agents ขนาน · mock กลาง `proto-data.ts` การ์ดจริง+รูป R2/pokemontcg.io · เปิดดูไม่ต้อง login): A=Robinhood minimal · B=Collectr gallery · C=StockX terminal
+- เบสเลือก **A+C** → proto D v1 (ต่อท่อน) → เบสติ "รวมโง่ๆ + ฟีเจอร์ไม่ครบ" → **D v2** = เครื่องมือเดียว (money band ซ้ายเลข+สถิติฝัง | ขวากราฟ · context band · ตาราง terminal ฟีเจอร์ครบกดได้จริง)
+- เบสเคาะ D v2 + **ตัดมูฟเวอร์วันนี้ + แยกตามเกม band** → **พอร์ตเข้า /portfolio จริงแล้ว** (commit `a3169ff`):
+  - money band: PortfolioHero จริง (scrub-bind · scope label/tint) + dl ต้นทุน/ROI/จำนวน (scoped ตาม assets) | กราฟ scrub จริงขวา (scoped → note บรรทัดเดียว)
+  - game filter = **text tabs ใน toolbar ตาราง** (`leading` slot ใหม่ใน assets-table/toolbar · <2 เกมซ่อน)
+  - ตารางคอลัมน์ใหม่: การ์ด(63:88)/เกม(dot·ซ่อนเกมเดียว)/ต้นทุน/ราคา/24h/**sparkline 7 วันจริง** (fetch `/api/cards/sparklines` แบบ watchlist · dev DB ไม่มี history → "—" ปกติ)/กำไร/มูลค่า/แก้ไข ghost
+  - ตัดจากหน้า: แท็บ overview-insights · sidebar · **ลบไฟล์ portfolio-hero-panel.tsx** · breakdown/movers/allocation ถอด import (ไฟล์คงอยู่)
+- verify ทุกขั้น: tsc0 · lint 0 err · test 56/56 · build ✓ · Chrome เทียบ proto
+
 ## ⏭️ NEXT
-1. เบสดู `localhost:3000/portfolio?demo=multigame` ทั้ง 2 แท็บ → feedback ("minimal ทันสมัย" ผ่านยัง?)
-2. เก็บ mobile fine-tune + **visual pass watchlist + alerts ให้เข้าชุดโครงเดียวกัน** (แท็บ/hero panel language)
-3. PR รอบใหม่ → merge → Pokémon data survey → Phase G migrations มัดรวม
+1. เบสเปิด `localhost:3000/portfolio?demo=multigame` เทียบ proto D → เคาะ/สั่งปรับ
+2. มือถือ fine-tune (mobile list ใช้ MobileAssetCard เดิม — ยังไม่ได้ปรับตาม proto)
+3. watchlist + alerts ปรับเข้าภาษาเดียวกับโครงใหม่ → PR
+4. ลบ /proto/portfolio หลังพอใจ (หรือเก็บเป็น reference) · Pokémon data survey · Phase G

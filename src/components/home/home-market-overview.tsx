@@ -15,7 +15,7 @@ import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker"
 import { AdSlot } from "@/components/ads/ad-slot"
 import { Input } from "@/components/ui/input"
 import { SegmentedControl } from "@/components/ui/segmented-control"
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { ViewToggle } from "@/components/ui/toolbar"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -287,15 +287,15 @@ export function HomeMarketOverview({
         </div>
       </div>
 
-      {/* Advanced filters — bottom sheet on mobile only (thumb-reachable). On md+
-          the same controls render in the anchored popover above, so the sheet is
-          gated to `!isDesktop` to avoid both opening at once. */}
-      <Sheet open={m.filterOpen && !isDesktop} onOpenChange={m.setFilterOpen}>
-        <SheetContent side="bottom" className="max-h-[80vh] overflow-y-auto p-4">
-          <SheetTitle className="text-h4">{t(lang, "filter")}</SheetTitle>
-          <div className="mt-4">{filterBody}</div>
-        </SheetContent>
-      </Sheet>
+      {/* Advanced filters — centered dialog on mobile (owner vetoed bottom
+          sheets app-wide). On md+ the same controls render in the anchored
+          popover above, so the dialog is gated to `!isDesktop`. */}
+      <Dialog open={m.filterOpen && !isDesktop} onOpenChange={m.setFilterOpen}>
+        <DialogContent className="max-h-[80vh] overflow-y-auto p-4">
+          <DialogTitle className="text-h4">{t(lang, "filter")}</DialogTitle>
+          <div className="mt-2">{filterBody}</div>
+        </DialogContent>
+      </Dialog>
 
       {/* Content: Table or Grid */}
       {m.viewMode === "table" ? (

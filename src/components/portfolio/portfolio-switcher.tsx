@@ -12,12 +12,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -172,13 +172,14 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
         </DropdownMenu>
       </div>
 
-      {/* Shared management sheet (create / rename / delete / select) */}
-      <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent side="bottom" className="max-h-[78vh] overflow-y-auto rounded-t-2xl pb-10">
-          <SheetHeader className="pb-2">
-            <SheetTitle>{t(lang, "portfolio")}</SheetTitle>
+      {/* Shared management dialog (create / rename / delete / select) —
+          centered modal; the owner vetoed bottom sheets app-wide. */}
+      <Dialog open={sheetOpen} onOpenChange={setSheetOpen}>
+        <DialogContent className="max-h-[78vh] overflow-y-auto sm:max-w-md">
+          <DialogHeader className="pb-2">
+            <DialogTitle>{t(lang, "portfolio")}</DialogTitle>
             {multi && (
-              <SheetDescription className="font-price tabular-nums">
+              <DialogDescription className="font-price tabular-nums">
                 {t(lang, "allPortfolios")}{" "}
                 <span className="font-semibold text-foreground">
                   {hideBalance ? MASKED : formatJpyAmount(totalAllPortfolios, currency)}
@@ -194,9 +195,9 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
                     {formatPct(totalPnlPctAll, 1)}%
                   </span>
                 )}
-              </SheetDescription>
+              </DialogDescription>
             )}
-          </SheetHeader>
+          </DialogHeader>
           <PortfolioSidebar
             portfolios={portfolios}
             activeId={activeId}
@@ -210,8 +211,8 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
             hideBalance={hideBalance}
             maxPortfolios={props.maxPortfolios}
           />
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
