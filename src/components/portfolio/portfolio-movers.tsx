@@ -97,7 +97,7 @@ export function PortfolioMovers({
                 <div className="shrink-0 text-right">
                   <p
                     className={cn(
-                      "font-price text-body-sm font-semibold tabular-nums",
+                      "tabular-nums text-body-sm font-semibold",
                       up ? "text-price-up" : "text-price-down",
                     )}
                   >
@@ -107,7 +107,7 @@ export function PortfolioMovers({
                   </p>
                   <span
                     className={cn(
-                      "inline-flex items-center gap-0.5 font-price text-micro tabular-nums",
+                      "inline-flex items-center gap-0.5 tabular-nums text-micro",
                       up ? "text-price-up" : "text-price-down",
                     )}
                   >

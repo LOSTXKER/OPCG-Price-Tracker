@@ -263,9 +263,6 @@ function PortfolioContent() {
             )}
           </button>
         ))}
-        <span className="text-meta tabular-nums">
-          {assets.length} {t(lang, "card")}
-        </span>
       </div>
     ) : undefined
 
@@ -381,7 +378,7 @@ function PortfolioContent() {
                 <dl className="flex shrink-0 items-end gap-8 pb-1 text-sm">
                   <div>
                     <dt className="text-eyebrow">{t(lang, "costBasis")}</dt>
-                    <dd className="mt-1 font-price tabular-nums">
+                    <dd className="mt-1 tabular-nums">
                       {hideBalance ? MASKED : formatJpyAmount(stats.totalCostJpy, currency)}
                     </dd>
                   </div>
@@ -389,7 +386,7 @@ function PortfolioContent() {
                     <dt className="text-eyebrow">{t(lang, "roi")}</dt>
                     <dd
                       className={cn(
-                        "mt-1 font-price tabular-nums",
+                        "mt-1 tabular-nums",
                         stats.totalCostJpy > 0
                           ? stats.unrealizedPnlPercent >= 0
                             ? "text-price-up"
@@ -404,7 +401,7 @@ function PortfolioContent() {
                   </div>
                   <div>
                     <dt className="text-eyebrow">{t(lang, "quantity")}</dt>
-                    <dd className="mt-1 font-price tabular-nums">
+                    <dd className="mt-1 tabular-nums">
                       {assets.reduce((s, a) => s + a.quantity, 0)} {t(lang, "card")}
                     </dd>
                   </div>

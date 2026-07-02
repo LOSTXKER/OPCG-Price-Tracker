@@ -74,12 +74,12 @@ export function AssetsToolbar({
           {hasAssets && (
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               size="xs"
               onClick={onBulkEdit}
-              className="border-[var(--p-hair)] bg-muted/20 text-foreground/80 hover:bg-muted/50"
+              className="text-muted-foreground hover:text-foreground"
             >
-              <Edit2 className="size-3 text-muted-foreground/60" />
+              <Edit2 className="size-3" />
               {t(lang, "bulkEdit")}
             </Button>
           )}

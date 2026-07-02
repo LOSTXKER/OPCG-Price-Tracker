@@ -106,7 +106,7 @@ export function PortfolioGameBreakdown({
 
                 {/* Value + P/L delta */}
                 <div className="shrink-0 text-right">
-                  <p className="font-price text-sm font-bold tabular-nums">
+                  <p className="tabular-nums text-sm font-bold">
                     {hideBalance
                       ? "••••"
                       : formatDisplayValue(
@@ -117,7 +117,7 @@ export function PortfolioGameBreakdown({
                   {hasCost && (
                     <span
                       className={cn(
-                        "inline-flex items-center gap-0.5 font-price text-micro font-semibold tabular-nums",
+                        "inline-flex items-center gap-0.5 tabular-nums text-micro font-semibold",
                         isUp ? "text-price-up" : "text-price-down",
                       )}
                     >

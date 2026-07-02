@@ -78,11 +78,11 @@ export const MobileAssetCard = memo(function MobileAssetCard({
           </div>
           <div className="mt-2 flex items-end justify-between gap-2">
             <div className="min-w-0 leading-tight">
-              <p className="font-price text-sm font-bold tabular-nums">
+              <p className="tabular-nums text-sm font-bold">
                 {hideBalance ? "••••" : <Price jpy={value} />}
               </p>
               {hideBalance ? (
-                <p className="mt-0.5 font-price text-micro tabular-nums text-muted-foreground/40">
+                <p className="mt-0.5 tabular-nums text-micro text-muted-foreground/40">
                   ••
                 </p>
               ) : (
@@ -96,7 +96,7 @@ export const MobileAssetCard = memo(function MobileAssetCard({
             {pnlResult ? (
               <div className="text-right leading-tight">
                 {hideBalance ? (
-                  <p className="font-price text-sm tabular-nums">
+                  <p className="tabular-nums text-sm">
                     <span className="text-muted-foreground/40">••••</span>
                     <span
                       className={cn(
@@ -112,7 +112,7 @@ export const MobileAssetCard = memo(function MobileAssetCard({
                   <>
                     <p
                       className={cn(
-                        "font-price text-sm font-semibold tabular-nums",
+                        "tabular-nums text-sm font-semibold",
                         pnlResult.pnl >= 0 ? "text-price-up" : "text-price-down",
                       )}
                     >
@@ -120,7 +120,7 @@ export const MobileAssetCard = memo(function MobileAssetCard({
                       {formatJpyAmount(pnlResult.pnl, currency)}
                       <span
                         className={cn(
-                          "ml-1 font-price text-micro font-normal tabular-nums",
+                          "ml-1 tabular-nums text-micro font-normal",
                           pnlResult.pct >= 0 ? "text-price-up/70" : "text-price-down/70",
                         )}
                       >
@@ -129,7 +129,7 @@ export const MobileAssetCard = memo(function MobileAssetCard({
                       </span>
                     </p>
                     {row.purchasePrice != null && (
-                      <p className="mt-0.5 font-price text-micro tabular-nums text-muted-foreground/60">
+                      <p className="mt-0.5 tabular-nums text-micro text-muted-foreground/60">
                         <span className="font-sans">{t(lang, "costBasis")}</span>{" "}
                         {formatJpyAmount(row.purchasePrice * row.quantity, currency)}
                       </p>

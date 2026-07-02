@@ -88,7 +88,7 @@ export function DetailStep({
               {card.rarity && <RarityBadge rarity={card.rarity} size="sm" />}
             </div>
             {card.latestPriceJpy != null && (
-              <p className="mt-1 font-price text-sm font-semibold tabular-nums text-primary">
+              <p className="mt-1 tabular-nums text-sm font-semibold text-primary">
                 {formatJpyAmount(card.latestPriceJpy, currency)}
               </p>
             )}
@@ -152,7 +152,7 @@ export function DetailStep({
             <div className="rounded-xl border border-[var(--p-hair)] bg-muted/20 px-4 py-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">{t(lang, "totalValue")}</span>
-                <span className="font-price text-lg font-bold tabular-nums">
+                <span className="tabular-nums text-lg font-bold">
                   {formatDisplayValue(
                     (purchasePrice.trim() !== ""
                       ? parseInt(purchasePrice) || 0

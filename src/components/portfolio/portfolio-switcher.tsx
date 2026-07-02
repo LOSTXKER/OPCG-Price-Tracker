@@ -71,7 +71,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
           {activeName}
         </span>
         {totalVisible && (
-          <span className="block font-price text-meta tabular-nums leading-tight">
+          <span className="block tabular-nums text-meta leading-tight">
             {hideBalance ? "••••" : formatJpyAmount(totalAllPortfolios, currency)}
             {multi && hasOverallPnl && !hideBalance && (
               <span
@@ -117,7 +117,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
               <>
                 <DropdownMenuLabel className="flex items-center justify-between">
                   <span>{t(lang, "allPortfolios")}</span>
-                  <span className="font-price tabular-nums text-foreground">
+                  <span className="tabular-nums text-foreground">
                     {hideBalance ? "••••" : formatJpyAmount(totalAllPortfolios, currency)}
                   </span>
                 </DropdownMenuLabel>
@@ -144,13 +144,13 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
                   </span>
                   <span className="min-w-0 flex-1 truncate text-sm">{p.name}</span>
                   <span className="shrink-0 text-right">
-                    <span className="block font-price text-xs tabular-nums">
+                    <span className="block tabular-nums text-xs">
                       {hideBalance ? "••••" : formatJpyAmount(p.totalValue, currency)}
                     </span>
                     {pnlPct != null && !hideBalance && (
                       <span
                         className={cn(
-                          "block font-price text-micro tabular-nums",
+                          "block tabular-nums text-micro",
                           pnlPct >= 0 ? "text-price-up/80" : "text-price-down/80",
                         )}
                       >
@@ -179,7 +179,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
           <DialogHeader className="pb-2">
             <DialogTitle>{t(lang, "portfolio")}</DialogTitle>
             {multi && (
-              <DialogDescription className="font-price tabular-nums">
+              <DialogDescription className="tabular-nums">
                 {t(lang, "allPortfolios")}{" "}
                 <span className="font-semibold text-foreground">
                   {hideBalance ? MASKED : formatJpyAmount(totalAllPortfolios, currency)}

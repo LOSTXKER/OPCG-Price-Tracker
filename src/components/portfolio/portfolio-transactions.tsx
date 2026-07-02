@@ -177,7 +177,7 @@ export function PortfolioTransactions({ transactions, onDelete, hideBalance = fa
                     {group.dayNet !== 0 && (
                       <span
                         className={cn(
-                          "font-price text-meta tabular-nums",
+                          "tabular-nums text-meta",
                           group.dayNet > 0 && "text-price-up",
                           group.dayNet < 0 && "text-price-down",
                         )}
@@ -275,7 +275,7 @@ function SummaryCard({
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-label text-muted-foreground">{label}</p>
-        <p className={cn("font-price text-sm font-semibold tabular-nums", valueClass)}>{value}</p>
+        <p className={cn("tabular-nums text-sm font-semibold", valueClass)}>{value}</p>
       </div>
     </Surface>
   )
@@ -332,7 +332,7 @@ function TxRow({
           >
             {t(lang, meta.labelKey)}
           </span>
-          <span className="truncate font-price tabular-nums">
+          <span className="truncate tabular-nums">
             ×{tx.quantity}
             {tx.pricePerUnit != null && (
               <>
@@ -347,13 +347,13 @@ function TxRow({
 
       <div className="shrink-0 text-right">
         {total != null ? (
-          <p className={cn("font-price text-sm font-semibold tabular-nums", meta.amountClass)}>
+          <p className={cn("tabular-nums text-sm font-semibold", meta.amountClass)}>
             {hideBalance
               ? "••••"
               : `${meta.sign}${formatJpyAmount(total, currency)}`}
           </p>
         ) : (
-          <p className="font-price text-sm font-semibold tabular-nums text-muted-foreground">—</p>
+          <p className="tabular-nums text-sm font-semibold text-muted-foreground">—</p>
         )}
         <p className="text-meta tabular-nums">
           {date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}

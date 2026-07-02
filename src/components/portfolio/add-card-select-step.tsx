@@ -322,7 +322,7 @@ export function SelectStep({
 
                 <div className="shrink-0 text-right">
                   {card.latestPriceJpy != null && (
-                    <p className="font-price text-sm font-semibold tabular-nums text-primary">
+                    <p className="tabular-nums text-sm font-semibold text-primary">
                       {formatJpyAmount(card.latestPriceJpy, currency)}
                     </p>
                   )}

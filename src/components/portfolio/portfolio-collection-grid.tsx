@@ -95,7 +95,7 @@ const CollectionTile = memo(function CollectionTile({
             </div>
           )}
           {/* qty badge */}
-          <span className="absolute right-1.5 top-1.5 rounded-md bg-black/55 px-1.5 py-0.5 font-price text-overlay font-semibold tabular-nums text-white backdrop-blur-sm">
+          <span className="absolute right-1.5 top-1.5 rounded-md bg-black/55 px-1.5 py-0.5 tabular-nums text-overlay font-semibold text-white backdrop-blur-sm">
             ×{row.quantity}
           </span>
           {showGameBadge && (
@@ -110,15 +110,15 @@ const CollectionTile = memo(function CollectionTile({
           <p className="truncate text-sm font-semibold leading-tight transition-colors group-hover:text-primary">
             {name}
           </p>
-          <p className="mt-0.5 truncate font-price text-meta text-muted-foreground/60">{code}</p>
+          <p className="mt-0.5 truncate tabular-nums text-meta text-muted-foreground/60">{code}</p>
           <div className="mt-1 flex items-baseline justify-between gap-1.5">
-            <span className="font-price text-sm font-bold tabular-nums">
+            <span className="tabular-nums text-sm font-bold">
               {hideBalance ? "••••" : <Price jpy={value} />}
             </span>
             {hasDelta && !hideBalance && (
               <span
                 className={cn(
-                  "font-price text-micro font-semibold tabular-nums",
+                  "tabular-nums text-micro font-semibold",
                   deltaPct >= 0 ? "text-price-up" : "text-price-down",
                 )}
               >

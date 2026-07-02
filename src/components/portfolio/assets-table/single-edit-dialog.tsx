@@ -86,13 +86,13 @@ function CardEditFull({
           </p>
           {row.currentPrice != null && (
             <div className="mt-3 flex items-center gap-2">
-              <span className="font-price text-lg font-bold tabular-nums leading-none">
+              <span className="tabular-nums text-lg font-bold leading-none">
                 <Price jpy={row.currentPrice} />
               </span>
               {pnlResult && (
                 <span
                   className={cn(
-                    "rounded-full px-2 py-0.5 font-price text-micro tabular-nums",
+                    "rounded-full px-2 py-0.5 tabular-nums text-micro",
                     pnlResult.pnl >= 0
                       ? "bg-price-up/10 text-price-up"
                       : "bg-price-down/10 text-price-down",

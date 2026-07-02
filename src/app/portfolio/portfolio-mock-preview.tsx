@@ -25,7 +25,7 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
             <span className="block truncate text-sm font-semibold leading-tight">
               Main Collection
             </span>
-            <span className="block font-price text-meta tabular-nums leading-tight">
+            <span className="block tabular-nums text-meta leading-tight">
               ¥15,800 <span className="font-semibold text-price-up">+10.8%</span>
             </span>
           </span>
@@ -50,7 +50,7 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
         <div>
           <p className="text-eyebrow text-muted-foreground/70">{t(lang, "portfolioValue")}</p>
           <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3">
-            <span className="font-price text-2xl font-bold tabular-nums tracking-tight sm:text-3xl">
+            <span className="tabular-nums text-2xl font-bold tracking-tight sm:text-3xl">
               ¥15,800
             </span>
             <span className="inline-flex items-center gap-1 text-sm font-bold tabular-nums text-price-up">
@@ -91,17 +91,17 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
         {tiles.map((tile) => (
           <div key={tile.code}>
             <div className="surface-1 hairline relative aspect-[63/88] overflow-hidden rounded-xl bg-muted/40">
-              <span className="absolute right-1.5 top-1.5 rounded-md bg-black/55 px-1.5 py-0.5 font-price text-overlay font-semibold text-white">
+              <span className="absolute right-1.5 top-1.5 rounded-md bg-black/55 px-1.5 py-0.5 tabular-nums text-overlay font-semibold text-white">
                 ×1
               </span>
             </div>
             <div className="mt-2">
               <p className="truncate text-sm font-semibold leading-tight">{tile.name}</p>
-              <p className="mt-0.5 font-price text-meta text-muted-foreground/60">{tile.code}</p>
+              <p className="mt-0.5 tabular-nums text-meta text-muted-foreground/60">{tile.code}</p>
               <div className="mt-1 flex items-baseline justify-between gap-1.5">
-                <span className="font-price text-sm font-bold tabular-nums">{tile.value}</span>
+                <span className="tabular-nums text-sm font-bold">{tile.value}</span>
                 <span
-                  className={`font-price text-micro font-semibold tabular-nums ${tile.chg.startsWith("-") ? "text-price-down" : "text-price-up"}`}
+                  className={`tabular-nums text-micro font-semibold ${tile.chg.startsWith("-") ? "text-price-down" : "text-price-up"}`}
                 >
                   {tile.chg}
                 </span>
@@ -119,7 +119,7 @@ function MockKpi({ label, value, up, muted }: { label: string; value: string; up
     <div>
       <p className="text-eyebrow">{label}</p>
       <p
-        className={`mt-0.5 font-price text-sm font-bold tabular-nums sm:text-base ${up ? "text-price-up" : muted ? "text-foreground/85" : ""}`}
+        className={`mt-0.5 tabular-nums text-sm font-bold sm:text-base ${up ? "text-price-up" : muted ? "text-foreground/85" : ""}`}
       >
         {value}
       </p>

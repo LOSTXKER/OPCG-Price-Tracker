@@ -85,7 +85,7 @@ export function PortfolioAllocationChart({
             <p className="text-meta">{t(lang, "noData")}</p>
           ) : (
             <>
-              <p className="font-price text-sm font-bold tabular-nums sm:text-base">
+              <p className="tabular-nums text-sm font-bold sm:text-base">
                 {formatJpyAmount(displayTotal, currency)}
               </p>
               <p className="text-overlay text-muted-foreground">
@@ -112,7 +112,7 @@ export function PortfolioAllocationChart({
                 <span className="min-w-0 flex-1 truncate text-muted-foreground" title={d.name}>
                   {d.name}
                 </span>
-                <span className="shrink-0 font-price tabular-nums">
+                <span className="shrink-0 tabular-nums">
                   {formatPct(d.percent)}%
                 </span>
               </div>

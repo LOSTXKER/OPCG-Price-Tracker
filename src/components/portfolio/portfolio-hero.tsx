@@ -83,7 +83,7 @@ export function PortfolioHero({
         {hasPnl && (
           <span
             className={cn(
-              "inline-flex items-center gap-1 font-price tabular-nums",
+              "inline-flex items-center gap-1 tabular-nums",
               "text-body-sm font-medium",
               isUp ? "text-price-up" : "text-price-down",
             )}

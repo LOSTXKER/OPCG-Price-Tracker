@@ -5,7 +5,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronRight, StickyNote } from "lucide-react"
 
-import { MiniSparkline } from "@/components/ui/mini-sparkline"
 import { Price } from "@/components/shared/price-inline"
 import { getGameConfig, getGameAccentTint } from "@/lib/game-config"
 import { DEFAULT_GAME } from "@/lib/game/constants"
@@ -24,15 +23,12 @@ export const AssetRowComponent = memo(function AssetRowComponent({
   onEdit,
   hideBalance = false,
   showGameBadge = false,
-  sparkline,
 }: {
   row: AssetRow
   lang: Language
   onEdit: () => void
   hideBalance?: boolean
   showGameBadge?: boolean
-  /** Real 7-day price series for this card (optional). */
-  sparkline?: number[]
 }) {
   const currency = useUIStore((s) => s.currency)
   const name = getCardName(lang as "TH" | "EN" | "JP", row)
@@ -44,11 +40,10 @@ export const AssetRowComponent = memo(function AssetRowComponent({
   const gameSlug = row.game?.slug ?? DEFAULT_GAME
   const gameShort =
     getGameConfig(gameSlug)?.shortName ?? row.game?.nameEn ?? gameSlug.toUpperCase()
-  const sparkUp = (row.priceChange7d ?? 0) >= 0
 
   return (
     <tr className="group ease-chrome transition-colors hover:bg-muted/40">
-      {/* การ์ด — art + name + code ×qty (+notes on hover) */}
+      {/* การ์ด — art + name · code ×qty · game dot (no separate columns) */}
       <td className="py-2.5 pr-3 align-middle">
         <div className="flex items-center gap-2.5">
           <Link href={detailHref} className="shrink-0" aria-label={viewLabel}>
@@ -74,14 +69,23 @@ export const AssetRowComponent = memo(function AssetRowComponent({
                 className="size-3 shrink-0 text-muted-foreground/30 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100"
               />
             </Link>
-            <p className="font-mono text-meta text-muted-foreground/60">
+            <p className="flex items-center gap-1.5 font-mono text-meta text-muted-foreground/60">
               {row.baseCode ?? row.cardCode}
-              <span className="ml-1.5 font-sans text-foreground/40">×{row.quantity}</span>
+              <span className="font-sans text-foreground/40">×{row.quantity}</span>
+              {showGameBadge && (
+                <span className="inline-flex items-center gap-1 font-sans">
+                  <span
+                    aria-hidden
+                    className="size-1.5 shrink-0 rounded-full"
+                    style={{
+                      background: `color-mix(in srgb, ${getGameAccentTint(gameSlug)} 70%, transparent)`,
+                    }}
+                  />
+                  {gameShort}
+                </span>
+              )}
               {row.notes && (
-                <span
-                  className="ml-1.5 inline-flex items-center gap-0.5 text-muted-foreground/50"
-                  title={row.notes}
-                >
+                <span className="inline-flex items-center text-muted-foreground/50" title={row.notes}>
                   <StickyNote className="size-3" />
                 </span>
               )}
@@ -90,43 +94,14 @@ export const AssetRowComponent = memo(function AssetRowComponent({
         </div>
       </td>
 
-      {/* เกม — tint dot + short name (hidden when only one game) */}
-      {showGameBadge && (
-        <td className="py-2.5 pr-3 align-middle">
-          <div className="flex items-center gap-1.5">
-            <span
-              aria-hidden
-              className="size-1.5 shrink-0 rounded-full"
-              style={{
-                background: `color-mix(in srgb, ${getGameAccentTint(gameSlug)} 70%, transparent)`,
-              }}
-            />
-            <span className="text-body-sm text-muted-foreground">{gameShort}</span>
-          </div>
-        </td>
-      )}
-
-      {/* ต้นทุน */}
-      <td className="py-2.5 pr-3 text-right align-middle">
-        {hideBalance ? (
-          <span className="font-price text-xs text-muted-foreground/40">••••</span>
-        ) : row.purchasePrice != null ? (
-          <span className="font-price text-body-sm tabular-nums text-muted-foreground">
-            {formatJpyAmount(row.purchasePrice * row.quantity, currency)}
-          </span>
-        ) : (
-          <span className="font-price text-xs text-muted-foreground/40">—</span>
-        )}
-      </td>
-
-      {/* ราคา (ตลาด ต่อใบ — ไม่ mask, เป็นข้อมูลสาธารณะ) */}
+      {/* ราคา (ตลาด ต่อใบ) */}
       <td className="py-2.5 pr-3 text-right align-middle">
         {row.currentPrice != null ? (
-          <span className="font-price text-body-sm tabular-nums">
+          <span className="text-body-sm tabular-nums">
             <Price jpy={row.currentPrice} />
           </span>
         ) : (
-          <span className="font-price text-xs text-muted-foreground/40">—</span>
+          <span className="text-xs text-muted-foreground/40">—</span>
         )}
       </td>
 
@@ -135,31 +110,15 @@ export const AssetRowComponent = memo(function AssetRowComponent({
         <ChangeCell value={row.priceChange24h} />
       </td>
 
-      {/* แนวโน้ม 7 วัน — เส้นจริงจาก API (lg only) */}
-      <td className="hidden py-2.5 pr-3 text-right align-middle lg:table-cell">
-        {sparkline && sparkline.length >= 2 ? (
-          <MiniSparkline
-            data={sparkline}
-            width={60}
-            height={20}
-            className={cn("ml-auto", sparkUp ? "text-price-up" : "text-price-down")}
-          />
-        ) : (
-          <span className="text-xs text-muted-foreground/30">—</span>
-        )}
-      </td>
-
-      {/* กำไร/ขาดทุน */}
+      {/* กำไร/ขาดทุน — one figure + quiet % */}
       <td className="py-2.5 pr-3 text-right align-middle">
         {pnlResult ? (
           hideBalance ? (
-            <span className="font-price text-body-sm tabular-nums text-muted-foreground/40">
-              ••••
-            </span>
+            <span className="text-body-sm tabular-nums text-muted-foreground/40">••••</span>
           ) : (
             <span
               className={cn(
-                "font-price text-body-sm font-medium tabular-nums",
+                "text-body-sm font-medium tabular-nums",
                 pnlResult.pnl >= 0 ? "text-price-up" : "text-price-down",
               )}
             >
@@ -172,13 +131,13 @@ export const AssetRowComponent = memo(function AssetRowComponent({
             </span>
           )
         ) : (
-          <span className="font-price text-xs text-muted-foreground/40">—</span>
+          <span className="text-xs text-muted-foreground/40">—</span>
         )}
       </td>
 
       {/* มูลค่า */}
       <td className="py-2.5 pr-3 text-right align-middle">
-        <span className="font-price text-body-sm font-semibold tabular-nums">
+        <span className="text-body-sm font-semibold tabular-nums">
           {hideBalance ? "••••" : <Price jpy={value} />}
         </span>
       </td>

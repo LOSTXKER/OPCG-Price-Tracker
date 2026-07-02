@@ -38,16 +38,16 @@ export function ChangeCell({
 }) {
   if (value == null)
     return label ? (
-      <span className="font-price text-meta text-muted-foreground/60">
+      <span className="tabular-nums text-meta text-muted-foreground/60">
         {label} —
       </span>
     ) : (
-      <span className="font-price text-xs text-muted-foreground">—</span>
+      <span className="tabular-nums text-xs text-muted-foreground">—</span>
     )
   return (
     <span
       className={cn(
-        "font-price text-micro tabular-nums",
+        "tabular-nums text-micro",
         value > 0
           ? "text-price-up"
           : value < 0

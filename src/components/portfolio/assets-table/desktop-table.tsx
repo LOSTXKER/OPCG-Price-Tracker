@@ -5,22 +5,24 @@ import type { AssetRow } from "@/lib/types/portfolio"
 
 import { AssetRowComponent } from "./desktop-row"
 
+/**
+ * Five quiet columns (owner: "ตารางรก ซ้ำซ้อน"): card · price · 24h · P/L ·
+ * value. Cost basis lives in the edit dialog and Insights; the game reads as a
+ * tint dot on the card's code line, not its own column.
+ */
 export function DesktopAssetsTable({
   rows,
   lang,
   onEdit,
   hideBalance = false,
   showGameBadge = false,
-  sparklines = {},
 }: {
   rows: AssetRow[]
   lang: Language
   onEdit: (row: AssetRow) => void
   hideBalance?: boolean
-  /** ≥2 games → show the game column; single game hides it (no dead column). */
+  /** ≥2 games → tint dot + short name on each row's code line. */
   showGameBadge?: boolean
-  /** Real 7-day series per cardId (optional eye-candy). */
-  sparklines?: Record<number, number[]>
 }) {
   return (
     <div className="hidden sm:block">
@@ -28,13 +30,8 @@ export function DesktopAssetsTable({
         <thead className="sticky top-0 z-10 bg-background/95 backdrop-blur">
           <tr className="border-b border-[var(--p-hair)] text-eyebrow text-muted-foreground/60">
             <th className="py-3 pr-3 font-medium">{t(lang, "card")}</th>
-            {showGameBadge && <th className="py-3 pr-3 font-medium">{t(lang, "game")}</th>}
-            <th className="py-3 pr-3 text-right font-medium">{t(lang, "costBasis")}</th>
             <th className="py-3 pr-3 text-right font-medium">{t(lang, "price")}</th>
             <th className="py-3 pr-3 text-right font-medium">24h</th>
-            <th className="hidden py-3 pr-3 text-right font-medium lg:table-cell">
-              {t(lang, "trend7d")}
-            </th>
             <th className="py-3 pr-3 text-right font-medium">{t(lang, "pnl")}</th>
             <th className="py-3 pr-3 text-right font-medium">{t(lang, "value")}</th>
             <th className="w-10 py-3 pl-1" />
@@ -49,7 +46,6 @@ export function DesktopAssetsTable({
               onEdit={() => onEdit(row)}
               hideBalance={hideBalance}
               showGameBadge={showGameBadge}
-              sparkline={sparklines[row.cardId]}
             />
           ))}
         </tbody>
