@@ -54,8 +54,10 @@ export function PortfolioHero({
   )
   const absPct = Math.abs(deltaPct)
 
+  // No w-full: as a block it already fills alone, and inside a flex row (the
+  // overview value strip) it must size to content so the stats sit beside it.
   return (
-    <section className="relative w-full">
+    <section className="relative min-w-0">
       {scopeTint && (
         <div
           aria-hidden
