@@ -16,7 +16,6 @@ import { PortfolioKpi } from "@/components/portfolio/portfolio-kpi"
 import { PortfolioMovers } from "@/components/portfolio/portfolio-movers"
 import { PortfolioGameChips } from "@/components/portfolio/portfolio-game-chips"
 import { PortfolioGameBreakdown } from "@/components/portfolio/portfolio-game-breakdown"
-import { PortfolioAllocationPanel } from "@/components/portfolio/portfolio-allocation-panel"
 import { PortfolioAssetsTable } from "@/components/portfolio/portfolio-assets-table"
 import { PortfolioTransactions } from "@/components/portfolio/portfolio-transactions"
 import { PortfolioShareDialog } from "@/components/portfolio/portfolio-share-dialog"
@@ -123,7 +122,6 @@ function PortfolioContent() {
     setActiveId,
     activePortfolio,
     stats,
-    allocation,
     assets,
     gameBreakdown,
     portfolioMetas,
@@ -317,7 +315,7 @@ function PortfolioContent() {
           {/* The collection is the hero of this page. Desktop (lg:) = two real
               zones: LEFT = total + game chips + the assets themselves (visible
               without scrolling), RIGHT = context rail (history chart → KPI →
-              by-game → movers → allocation). Mobile follows DOM order, so the
+              by-game → movers). Mobile follows DOM order, so the
               assets come right after the hero there too. */}
           <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-6">
             <div className="min-w-0 space-y-4 sm:space-y-5">
@@ -361,8 +359,8 @@ function PortfolioContent() {
                 <p className="text-meta text-muted-foreground/70">{t(lang, "chartAllGamesOnly")}</p>
               )}
 
-              {/* KPI quartet — Market Value · Cost Basis · P/L · ROI */}
-              <PortfolioKpi stats={stats} hideBalance={hideBalance} compact />
+              {/* Cost basis · P/L (+ROI inline) — no repeat of the hero value */}
+              <PortfolioKpi stats={stats} hideBalance={hideBalance} />
 
               {/* Per-game breakdown — all-games view only (deep-links into a game) */}
               {gameFilter === ALL_GAMES && (
@@ -378,9 +376,6 @@ function PortfolioContent() {
               <Surface variant="panel" className="p-4 sm:p-5">
                 <PortfolioMovers assets={assets} hideBalance={hideBalance} />
               </Surface>
-
-              {/* Allocation — top holdings share */}
-              <PortfolioAllocationPanel allocation={allocation} />
             </aside>
           </div>
         </>

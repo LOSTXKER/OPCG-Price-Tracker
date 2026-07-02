@@ -1,18 +1,17 @@
 "use client"
 
-import { Edit2, LayoutGrid, List } from "lucide-react"
+import { Edit2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
   Toolbar,
   ToolbarSearch,
   ToolbarSortDropdown,
-  ViewToggle,
   type ToolbarSortOption,
 } from "@/components/ui/toolbar"
 import { t, type Language } from "@/lib/i18n"
 
-import type { HoldingsView, SortDir, SortKey } from "./utils"
+import type { SortDir, SortKey } from "./utils"
 
 export function AssetsToolbar({
   lang,
@@ -26,8 +25,6 @@ export function AssetsToolbar({
   onSortSelect,
   onBulkEdit,
   hasAssets,
-  view,
-  onViewChange,
 }: {
   lang: Language
   count: number
@@ -40,8 +37,6 @@ export function AssetsToolbar({
   onSortSelect: (key: SortKey) => void
   onBulkEdit: () => void
   hasAssets: boolean
-  view: HoldingsView
-  onViewChange: (v: HoldingsView) => void
 }) {
   const sortOptions: ToolbarSortOption<SortKey>[] = [
     { key: "value", label: t(lang, "value") },
@@ -72,14 +67,6 @@ export function AssetsToolbar({
             activeDir={sortDir}
             onChange={onSortSelect}
             fallbackLabel={t(lang, "toolbarSort")}
-          />
-          <ViewToggle<HoldingsView>
-            modes={[
-              { value: "grid", icon: LayoutGrid, ariaLabel: t(lang, "watchlistViewGrid") },
-              { value: "list", icon: List, ariaLabel: t(lang, "watchlistViewList") },
-            ]}
-            value={view}
-            onChange={onViewChange}
           />
           {hasAssets && (
             <Button
