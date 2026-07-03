@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react"
 import dynamic from "next/dynamic"
-import { Eye, EyeOff, Globe, Lock, Plus, Share2 } from "lucide-react"
+import { ArrowDown, ArrowUp, Eye, EyeOff, Globe, Lock, Plus, Share2 } from "lucide-react"
 import { toast } from "sonner"
 
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
@@ -19,9 +19,7 @@ import { PortfolioAllocationPanel } from "@/components/portfolio/portfolio-alloc
 import { PortfolioShareDialog } from "@/components/portfolio/portfolio-share-dialog"
 import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
 import { Button } from "@/components/ui/button"
-import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Surface } from "@/components/ui/surface"
 import { t } from "@/lib/i18n"
 import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
 import { MASKED } from "@/lib/constants/ui"
@@ -100,8 +98,8 @@ function PortfolioContent() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [hideBalance, setHideBalance] = useState(false)
-  // ภาพรวม = value + the collection · ข้อมูลเชิงลึก = chart / by-game / movers /
-  // allocation. Splitting analytics into its own tab keeps the overview calm.
+  // ภาพรวม = เงิน + ของสะสม (hero สด + KPI + holdings) · ข้อมูลเชิงลึก = analytics
+  // (scrub chart + by-game + movers + allocation) — แยกให้ภาพรวมนิ่ง อ่านเร็ว
   const [tab, setTab] = useState<"overview" | "insights">("overview")
   // The point under the finger while scrubbing the value chart; null when idle.
   const [scrub, setScrub] = useState<HistoryPoint | null>(null)
@@ -191,29 +189,28 @@ function PortfolioContent() {
     : stats.unrealizedPnlPercent
 
   if (loading) {
-    // Mirrors the loaded layout (action row → tabs → value strip → table rows)
-    // so nothing jumps when data lands.
+    // Mirrors the loaded overview tab (action row → underline tabs → hero
+    // line → stat strip → holdings rows) so nothing jumps when data lands.
     return (
       <div className="space-y-5 sm:space-y-6">
         <div className="flex items-center justify-between gap-3">
           <Skeleton className="h-12 w-56 rounded-xl" />
           <Skeleton className="h-9 w-28 rounded-lg" />
         </div>
-        <Skeleton className="h-8 w-48 rounded-full" />
-        <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
-          <div className="space-y-2">
-            <Skeleton className="h-3 w-24" />
-            <Skeleton className="h-10 w-56" />
-            <Skeleton className="h-4 w-40" />
-          </div>
-          <div className="flex items-end gap-8 pb-1">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="space-y-2">
-                <Skeleton className="h-3 w-14" />
-                <Skeleton className="h-4 w-16" />
-              </div>
-            ))}
-          </div>
+        <div className="border-b border-[var(--p-hair)] pb-2.5">
+          <Skeleton className="h-4 w-44" />
+        </div>
+        <div className="space-y-2">
+          <Skeleton className="h-3 w-24" />
+          <Skeleton className="h-11 w-64" />
+        </div>
+        <div className="flex gap-10 border-t border-[var(--p-hair)] pt-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="space-y-2">
+              <Skeleton className="h-3 w-14" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+          ))}
         </div>
         <div className="space-y-3 border-t border-[var(--p-hair)] pt-4">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -233,38 +230,53 @@ function PortfolioContent() {
   }
 
   const portfolioPublic = activePortfolio?.isPublic ?? true
+  const multiGame = availableGames.length >= 2
 
-  // Game filter as quiet text tabs (the proto-D language). With one live game
-  // the tabs collapse to the plain heading + a coming-soon teaser link.
-  const gameTabs =
-    availableGames.length >= 2 ? (
-      <div className="flex items-center gap-4">
-        {[
-          { slug: ALL_GAMES, label: t(lang, "allGames") },
-          ...availableGames.map((slug) => ({
-            slug,
-            label: getGameConfig(slug)?.shortName ?? slug.toUpperCase(),
-          })),
-        ].map((gt) => (
+  // Game filter as quiet text tabs (same grammar as the home market tab bar) —
+  // lives in the holdings toolbar's leading slot. Single game = no tabs.
+  const gameTabs = multiGame ? (
+    <div className="flex items-center gap-4">
+      {[
+        { slug: ALL_GAMES, label: t(lang, "allGames"), tint: null as string | null },
+        ...availableGames.map((slug) => ({
+          slug,
+          label: getGameConfig(slug)?.shortName ?? slug.toUpperCase(),
+          tint: getGameAccentTint(slug),
+        })),
+      ].map((gt) => {
+        const active = gameFilter === gt.slug
+        return (
           <button
             key={gt.slug}
             type="button"
             onClick={() => setGameFilter(gt.slug)}
             className={cn(
-              "relative pb-1 text-body-sm transition-colors",
-              gameFilter === gt.slug
-                ? "text-foreground"
-                : "text-muted-foreground hover:text-foreground",
+              "ease-chrome relative flex items-center gap-1.5 pb-1 text-body-sm",
+              active ? "text-foreground" : "text-muted-foreground hover:text-foreground",
             )}
           >
+            {gt.tint && (
+              <span
+                aria-hidden
+                className="size-1.5 shrink-0 rounded-full"
+                style={{ backgroundColor: gt.tint }}
+              />
+            )}
             {gt.label}
-            {gameFilter === gt.slug && (
+            {active && (
               <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-primary" />
             )}
           </button>
-        ))}
-      </div>
-    ) : undefined
+        )
+      })}
+    </div>
+  ) : undefined
+
+  // Stats light up once there's a cost basis to compare against; otherwise
+  // P/L and ROI read "—" instead of a fake 0%.
+  const hasCost = stats.totalCostJpy > 0
+  const pnlUp = stats.unrealizedPnl >= 0
+  const totalQty = assets.reduce((s, a) => s + a.quantity, 0)
 
   return (
     <div className="space-y-5 sm:space-y-6">
@@ -319,7 +331,7 @@ function PortfolioContent() {
                   toast.error(t(lang, "loadFailed"))
                 }
               }}
-              className="inline-flex size-9 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-card text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label={t(lang, portfolioPublic ? "portfolioPublic" : "portfolioPrivate")}
               title={t(lang, "perPortfolioVisibility")}
             >
@@ -348,80 +360,157 @@ function PortfolioContent() {
         />
       ) : (
         <>
-          {/* ภาพรวม | ข้อมูลเชิงลึก — analytics live in their own tab so the
-              overview stays calm (the launched site's IA). */}
-          <SegmentedControl<"overview" | "insights">
-            options={[
-              { value: "overview", label: t(lang, "overviewTab") },
-              { value: "insights", label: t(lang, "insightsTab") },
-            ]}
-            value={tab}
-            onChange={setTab}
-            size="sm"
-            ariaLabel={t(lang, "portfolio")}
-          />
+          {/* ═ Tabs — underline on a hairline baseline (same grammar as the
+              home market tab bar; active border covers the hairline). ═ */}
+          <div
+            role="tablist"
+            aria-label={t(lang, "portfolio")}
+            className="flex items-center gap-1 border-b border-[var(--p-hair)]"
+          >
+            {(
+              [
+                { id: "overview" as const, label: t(lang, "overviewTab") },
+                { id: "insights" as const, label: t(lang, "insightsTab") },
+              ]
+            ).map((tb) => (
+              <button
+                key={tb.id}
+                type="button"
+                role="tab"
+                aria-selected={tab === tb.id}
+                onClick={() => setTab(tb.id)}
+                className={cn(
+                  "ease-chrome relative -mb-px shrink-0 border-b-2 px-2.5 py-2.5 text-xs font-semibold",
+                  tab === tb.id
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {tb.label}
+              </button>
+            ))}
+          </div>
 
           {tab === "overview" ? (
             <>
-              {/* Value strip — the number + quiet inline stats on one line;
-                  the deep chart lives in ข้อมูลเชิงลึก. */}
-              <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
-                <PortfolioHero
-                  valueJpy={stats.totalValueJpy}
-                  deltaJpy={stats.unrealizedPnl}
-                  deltaPct={stats.unrealizedPnlPercent}
-                  hasPnl={stats.totalCostJpy > 0}
-                  hideBalance={hideBalance}
-                  scopeLabel={scopeGameName}
-                  scopeTint={gameFilter === ALL_GAMES ? null : getGameAccentTint(gameFilter)}
-                />
-                <dl className="flex shrink-0 items-end gap-8 pb-1 text-sm">
-                  <div>
-                    <dt className="text-eyebrow">{t(lang, "costBasis")}</dt>
-                    <dd className="mt-1 tabular-nums">
-                      {hideBalance ? MASKED : formatJpyAmount(stats.totalCostJpy, currency)}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-eyebrow">{t(lang, "roi")}</dt>
-                    <dd
+              {/* ═ Hero — one line on the bare canvas (card-detail grammar):
+                  eyebrow → display number + delta + quiet meta. ═ */}
+              <div className="relative">
+                {gameFilter !== ALL_GAMES && (
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute -left-4 -top-6 -z-10 h-24 w-56 rounded-full blur-2xl"
+                    style={{
+                      background: `color-mix(in srgb, ${getGameAccentTint(gameFilter)} 18%, transparent)`,
+                    }}
+                  />
+                )}
+                <p className="text-eyebrow">
+                  {t(lang, "portfolioValue")}
+                  {scopeGameName ? <span className="text-primary"> · {scopeGameName}</span> : null}
+                </p>
+                <div className="mt-2 flex flex-wrap items-end gap-x-2.5 gap-y-1">
+                  <span className="tabular-nums text-display leading-none">
+                    {hideBalance ? MASKED : formatJpyAmount(stats.totalValueJpy, currency)}
+                  </span>
+                  {hasCost && (
+                    <span
                       className={cn(
-                        "mt-1 tabular-nums",
-                        stats.totalCostJpy > 0
-                          ? stats.unrealizedPnlPercent >= 0
-                            ? "text-price-up"
-                            : "text-price-down"
-                          : "text-muted-foreground",
+                        "inline-flex items-center gap-1 pb-0.5 text-sm font-semibold tabular-nums",
+                        pnlUp ? "text-price-up" : "text-price-down",
                       )}
                     >
-                      {stats.totalCostJpy > 0
-                        ? `${stats.unrealizedPnlPercent >= 0 ? "+" : ""}${formatPct(stats.unrealizedPnlPercent, 1)}%`
-                        : "—"}
-                    </dd>
+                      {pnlUp ? (
+                        <ArrowUp className="size-3.5 shrink-0" aria-hidden />
+                      ) : (
+                        <ArrowDown className="size-3.5 shrink-0" aria-hidden />
+                      )}
+                      {hideBalance
+                        ? MASKED
+                        : `${pnlUp ? "+" : "-"}${formatJpyAmount(Math.abs(stats.unrealizedPnl), currency)}`}
+                      <span className="font-normal opacity-70">
+                        ({pnlUp ? "+" : ""}
+                        {formatPct(stats.unrealizedPnlPercent, 1)}%)
+                      </span>
+                    </span>
+                  )}
+                  <span className="pb-0.5 text-meta">
+                    {totalQty} {t(lang, "card")}
+                  </span>
+                </div>
+
+                {/* Stat strip — flat labeled figures on one quiet line (buy-box
+                    grammar), not a boxed KPI grid. */}
+                <div className="mt-5 flex flex-wrap gap-x-10 gap-y-3 border-t border-[var(--p-hair)] pt-4">
+                  <div>
+                    <p className="text-eyebrow">{t(lang, "costBasis")}</p>
+                    <p className="text-price tnum mt-1">
+                      {hideBalance ? MASKED : formatJpyAmount(stats.totalCostJpy, currency)}
+                    </p>
                   </div>
                   <div>
-                    <dt className="text-eyebrow">{t(lang, "quantity")}</dt>
-                    <dd className="mt-1 tabular-nums">
-                      {assets.reduce((s, a) => s + a.quantity, 0)} {t(lang, "card")}
-                    </dd>
+                    <p className="text-eyebrow">{t(lang, "pnl")}</p>
+                    <p
+                      className={cn(
+                        "text-price tnum mt-1 inline-flex items-center gap-1",
+                        hasCost ? (pnlUp ? "text-price-up" : "text-price-down") : "text-muted-foreground",
+                      )}
+                    >
+                      {hasCost &&
+                        (pnlUp ? (
+                          <ArrowUp className="size-3 shrink-0" aria-hidden />
+                        ) : (
+                          <ArrowDown className="size-3 shrink-0" aria-hidden />
+                        ))}
+                      {!hasCost
+                        ? "—"
+                        : hideBalance
+                          ? MASKED
+                          : `${pnlUp ? "+" : "-"}${formatJpyAmount(Math.abs(stats.unrealizedPnl), currency)}`}
+                    </p>
                   </div>
-                </dl>
+                  <div>
+                    <p className="text-eyebrow">{t(lang, "roi")}</p>
+                    <p
+                      className={cn(
+                        "text-price tnum mt-1 inline-flex items-center gap-1",
+                        hasCost ? (pnlUp ? "text-price-up" : "text-price-down") : "text-muted-foreground",
+                      )}
+                    >
+                      {hasCost &&
+                        (pnlUp ? (
+                          <ArrowUp className="size-3 shrink-0" aria-hidden />
+                        ) : (
+                          <ArrowDown className="size-3 shrink-0" aria-hidden />
+                        ))}
+                      {hasCost
+                        ? `${pnlUp ? "+" : ""}${formatPct(stats.unrealizedPnlPercent, 1)}%`
+                        : "—"}
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              {/* The collection — game tabs live in the table toolbar */}
+              {/* ═ Movers — quiet inline text rail (no chips, no rings) ═ */}
+              {gameFilter === ALL_GAMES && (
+                <PortfolioMovers assets={assets} hideBalance={hideBalance} variant="inline" />
+              )}
+
+              {/* ═ Holdings — game tabs live in the toolbar's leading slot ═ */}
               <PortfolioAssetsTable
                 assets={assets}
                 onUpdate={updateItem}
                 onRemove={removeItem}
                 hideBalance={hideBalance}
-                showGameBadge={availableGames.length >= 2}
+                showGameBadge={multiGame}
                 leading={gameTabs}
               />
             </>
           ) : (
             <>
-              {/* ข้อมูลเชิงลึก — scrub-bound value + history chart */}
-              <div className="space-y-3">
+              {/* ═ Money band — scrub-bound hero paired with the chart (one
+                  instrument, Robinhood-desktop). Stacks on mobile. ═ */}
+              <div className="gap-8 lg:grid lg:grid-cols-[minmax(280px,5fr)_7fr] lg:items-end">
                 <PortfolioHero
                   valueJpy={heroValueJpy}
                   deltaJpy={heroDeltaJpy}
@@ -430,19 +519,22 @@ function PortfolioContent() {
                   live={!!activeScrub}
                   hideBalance={hideBalance}
                   scopeLabel={scopeGameName}
+                  scopeTint={gameFilter === ALL_GAMES ? null : getGameAccentTint(gameFilter)}
                 />
-                {gameFilter === ALL_GAMES ? (
-                  <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
-                ) : (
-                  // No per-game history yet (snapshots are whole-portfolio) — one
-                  // honest line instead of a faked curve.
-                  <p className="text-meta text-muted-foreground/70">
-                    {t(lang, "chartAllGamesOnly")}
-                  </p>
-                )}
+                <div className="mt-5 lg:mt-0">
+                  {gameFilter === ALL_GAMES ? (
+                    <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
+                  ) : (
+                    // No per-game history yet (snapshots are whole-portfolio) — one
+                    // honest line instead of a faked curve.
+                    <p className="flex h-44 items-center justify-center text-meta text-muted-foreground/70 sm:h-56">
+                      {t(lang, "chartAllGamesOnly")}
+                    </p>
+                  )}
+                </div>
               </div>
 
-              {/* By-game breakdown — deep-links into a game's scope */}
+              {/* ═ By-game breakdown — deep-links into a game's scope ═ */}
               {gameFilter === ALL_GAMES && (
                 <PortfolioGameBreakdown
                   breakdown={gameBreakdown}
@@ -452,12 +544,12 @@ function PortfolioContent() {
                 />
               )}
 
-              {/* Today's movers — ranked by absolute swing */}
-              <Surface variant="panel" className="p-4 sm:p-5">
+              {/* ═ Today's movers — flat section, whitespace-separated ═ */}
+              <div className="border-t border-[var(--p-hair)] pt-5">
                 <PortfolioMovers assets={assets} hideBalance={hideBalance} />
-              </Surface>
+              </div>
 
-              {/* Allocation — top holdings share */}
+              {/* ═ Allocation — top holdings share ═ */}
               <PortfolioAllocationPanel allocation={allocation} />
             </>
           )}
@@ -501,7 +593,7 @@ function IconButton({
       disabled={disabled}
       aria-label={label}
       title={label}
-      className="inline-flex size-9 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-card text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
+      className="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-40"
     >
       {children}
     </button>

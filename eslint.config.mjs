@@ -16,6 +16,9 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "src/generated/**",
+    // Impeccable design-skill payload (third-party scripts) — not our code.
+    ".cursor/**",
+    ".impeccable/**",
     // iCloud conflict copies ("foo 2.ts") — junk artifacts, never lint them.
     "**/* [0-9].*",
   ]),

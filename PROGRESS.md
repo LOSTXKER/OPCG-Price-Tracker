@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-01 — **MINE multi-game VISION redesign (Phase A–E build)** (เบส: "ทำให้ครบจบเสร็จ · รื้อ UX/UI ใหม่ได้ · ดูตาม VISION · /workflow" → design workflow 6-agent ออก spec → build [NO-SCHEMA] Phase A–E)
+อัปเดตล่าสุด: 2026-07-02 — **Portfolio Minimal Editorial** (เบส: "ไม่ดีเลย ใช้ impeccable + รื้อใหม่หมด minimal ทันสมัย เข้ากับหน้าแรก/card detail แบบ CMC·Coinbase·TCGplayer·Collectr")
 
 ## แหล่งอ้างอิง
 - **spec เต็ม:** `doc/mine-multigame-spec.md` (จาก design workflow · แยก [NO-SCHEMA] vs [SCHEMA-GATED])
@@ -80,8 +80,45 @@ PR #55 merged แล้ว · จากนั้นเบสให้ feedback �
   - ตัดจากหน้า: แท็บ overview-insights · sidebar · **ลบไฟล์ portfolio-hero-panel.tsx** · breakdown/movers/allocation ถอด import (ไฟล์คงอยู่)
 - verify ทุกขั้น: tsc0 · lint 0 err · test 56/56 · build ✓ · Chrome เทียบ proto
 
+## 🖥️ Single-screen redesign หน้าพอร์ต (2026-07-02 · เบส: "รื้อ UXUI ให้สวย ใช้ง่าย ดูโปร · ออกแบบใหม่ไม่ต้องอิงอะไร")
+เลิกโครงแท็บ **ภาพรวม|ข้อมูลเชิงลึก** → **หน้าจอเดียวไหลต่อกัน** (money band → KPI → context → holdings → insights):
+- **Money band** (`lg:grid-cols-[minmax(280px,5fr)_7fr]`): PortfolioHero scrub-bind ซ้าย + scrub chart ขวา (mobile stack) · scoped game = honest note แทนกราฟ (เหมือนเดิม)
+- **KPI quartet** 2×2/4-col hairline grid: มูลค่าตลาด · ต้นทุน · P/L · ROI (P/L มาจาก `stats.unrealizedPnl` · "—" ตอนไม่มี cost)
+- **Context band** (border-y thin): มูฟเวอร์ chips รูปเล็ก+delta (variant `chips` ใหม่ใน `portfolio-movers.tsx`) + game-filter chips tint-dot (ย้ายจาก text tabs ใน toolbar มาที่นี่ · ≥2 เกมเท่านั้น)
+- **Holdings**: table sm+ / list <sm เดิม · toolbar คืน heading "สินทรัพย์ · N" (ไม่มี leading game tabs แล้ว)
+- **Insights**: `PortfolioGameBreakdown` + allocation — 2 คอลัมน์เมื่อมีทั้งคู่ · panel เดี่ยว = เต็มกว้าง (ไม่บีบครึ่งจอ)
+- **mobile-card.tsx**: ลดจาก 3 บรรทัด+notes+24h/7d → **2 บรรทัดสะอาด** (ชื่อ+code×qty | มูลค่า+P/L%) · notes/24h/7d ย้ายไป edit dialog
+- **loading.tsx + portfolio-mock-preview.tsx**: เขียนใหม่ mirror layout ใหม่ (เลิก grid เก่า · ไม่มี layout jump ตอนโหลด)
+- ไม่แตะ API/hook/Prisma · Dialog เดิม (ไม่มี bottom sheet) · per-game chart ยัง gated
+- verify: tsc0 · lint 0 err · test 56/56 · build ✓ · Chrome จริง (desktop + mobile 390px · all-games + `?demo=multigame` scoped)
+- **หมายเหตุ**: dev overlay โชว์ hydration warning ที่ `portfolio-client.tsx:89` (`<h1>{t(lang,...)}</h1>` · persisted lang store) = pre-existing app-wide ไม่ได้เกิดจาก redesign นี้
+
+## 🔀 คืนแท็บ + multi-portfolio discoverable (2026-07-02 เย็น · เบสสั่งหลัง single-screen)
+เบสขอ 2 อย่าง: (1) แยกแท็บ ภาพรวม|ข้อมูลเชิงลึก กลับมา (2) ให้ผู้ใช้รู้ว่าเพิ่มพอร์ตได้และชนลิมิตต้องซื้อแผน:
+- **แท็บกลับมา แต่คงของใหม่ทั้งหมด**: ภาพรวม = hero สด (ไม่ scrub) + KPI quartet 2×2 + context band (movers chips + game chips) + holdings · เชิงลึก = money band (hero scrub + กราฟ `[5fr_7fr]`) + แยกตามเกม + movers list เต็ม + สัดส่วน · skeleton (inline + `loading.tsx`) + mock preview ปรับตามแท็บภาพรวม (ตัดก้อนกราฟ + เพิ่ม tab pill)
+- **switcher** (`portfolio-switcher.tsx`): dropdown มี item "**+ สร้างพอร์ตใหม่**" ตรงๆ (ปกติ = เปิด manage dialog โหมดสร้างทันทีผ่าน prop `initialCreating` ใหม่ · ชนลิมิต = Lock + badge PRO → upgrade dialog) + header โชว์ตัวนับ **"N/max พอร์ต"** ทุก tier (PRO+ = "N พอร์ต") ทั้ง dropdown label และ DialogDescription
+- **selector** (`portfolio-selector.tsx`): ปุ่มสร้างตอนชนลิมิตเปลี่ยนเป็น upsell block ชัดเจน (Lock + "แผนของคุณสร้างได้สูงสุด N พอร์ต · อัปเกรดเพื่อเพิ่มพอร์ต →" พื้น primary/6) — พฤติกรรม `openUpgradeDialog({featureKey:"portfolioCount"})` เดิม
+- i18n ใหม่ th/en/jp: `portfolioCountOf` ("{n}/{max} พอร์ต") · `portfolioCountOnly` · `portfolioLimitUpTo` · `upgradeForMorePortfolios` (⚠️ `portfolioLimitReached` มีอยู่แล้วท้ายไฟล์ — เลยตั้งชื่อใหม่ `portfolioLimitUpTo` กัน dup key)
+- **บั๊กที่เจอระหว่างทำ**: Base UI Menu บังคับ `GroupLabel` ต้องอยู่ใน `Group` — ใส่ label เปล่าแล้วหน้า crash "MenuGroupRootContext is missing" → ครอบ `DropdownMenuGroup` แก้แล้ว
+- verify: tsc0 · lint 0 err · test 56/56 · build ✓ · Chrome จริง: สลับแท็บ ✓ · dropdown เห็น "สร้างพอร์ตใหม่ [PRO]" + "1/1 พอร์ต" ✓ · คลิกชนลิมิต → upgrade dialog "จำนวนพอร์ต" ✓ · manage dialog (มือถือ 390px) เห็น "1/1 พอร์ต" + upsell block ✓
+
+## 🧹 Minimal Editorial rebuild (2026-07-02 ค่ำ · เบสปัด wow pass "ไม่ดีเลย" → "impeccable + minimal เข้ากับหน้าแรก/card detail · CMC/Coinbase/TCGplayer/Collectr")
+**Wow pass (การ์ดพัด+glow+stagger) ถูกรื้อทิ้งทั้งหมด** — เบสไม่เอา decorative chrome · ทิศใหม่ = ภาษาเดียวกับหน้าแรก+card detail (frameless editorial):
+- **ติดตั้ง Impeccable** (`npx impeccable install --providers=cursor --scope=project` → `.cursor/skills/impeccable/` + pre-edit hook) · เขียน `PRODUCT.md` (สังเคราะห์จาก VISION — จำเป็นสำหรับ skill) · `npx … detect.mjs` บน portfolio = **0 findings** ทั้งก่อน/หลัง · **eslint ignore `.cursor/**` + `.impeccable/**`** (สคริปต์ third-party เคยโดนสแกน 130 warnings ปลอม)
+- **ลบไฟล์ `portfolio-hero-showcase.tsx`** (การ์ดพัด) · ถอด `.rise` stagger, KPI quartet กล่อง, `Surface` ทุกจุดในหน้า
+- **แท็บ = underline บน hairline** (pattern `home-market-overview` เป๊ะ: `-mb-px border-b-2` active=primary) แทน SegmentedControl pill
+- **Hero บรรทัดเดียว** (pattern `card-detail.tsx` L622): eyebrow → `text-display leading-none` + delta ▲/▼ สีเปล่า + meta "N การ์ด" — บน canvas ตรงๆ · scoped glow game tint คงไว้ (18%)
+- **Stat strip แบน** แทน KPI กล่อง: ต้นทุน · กำไร/ขาดทุน · ROI เป็น eyebrow + `text-price tnum` แถวเดียวคั่น hairline บน (Coinbase asset stats)
+- **มูฟเวอร์ = inline text rail** (variant `chips`→`inline` ใน portfolio-movers): ชื่อ muted + delta% — ไม่มี ring/รูป/pill
+- **Game filter กลับเป็น text underline tabs ใน toolbar** (`leading` slot) + tint dot · toolbar heading `.text-h5`+pill → `.text-eyebrow` + count เงียบ
+- **ตาราง CMC**: เพิ่มคอลัมน์ **7d sparkline** (lg+) — `useSparklines` hook เดิม + `Sparkline` shared (pattern market-table-row/watchlist) · dev DB ไม่มี history → "—" ปกติ
+- **Action row icons = ghost** (เลิก border+bg-card)
+- **แท็บเชิงลึก flat**: movers + allocation ถอด Surface → section คั่น `border-t` + pt-5 (breakdown คง panel เดิม — เป็น clickable group)
+- skeleton ×2 + mock preview ตามโครงใหม่ (tabs → hero line → stat strip → list)
+- verify: impeccable detect [] · tsc0 · lint 0 err (34 warnings เดิม) · test 56/56 · build ✓ · Chrome light+dark + mobile 390px + แท็บเชิงลึก + `?demo=multigame`
+
 ## ⏭️ NEXT
-1. เบสเปิด `localhost:3000/portfolio?demo=multigame` เทียบ proto D → เคาะ/สั่งปรับ
-2. มือถือ fine-tune (mobile list ใช้ MobileAssetCard เดิม — ยังไม่ได้ปรับตาม proto)
-3. watchlist + alerts ปรับเข้าภาษาเดียวกับโครงใหม่ → PR
-4. ลบ /proto/portfolio หลังพอใจ (หรือเก็บเป็น reference) · Pokémon data survey · Phase G
+1. เบสเปิด `localhost:3000/portfolio` + `?demo=multigame` (desktop+มือถือ) เคาะความสวย / สั่งปรับ
+2. watchlist + alerts ปรับเข้าภาษาเดียวกับโครงใหม่ → PR
+3. ลบ /proto/portfolio หลังพอใจ (หรือเก็บเป็น reference) · Pokémon data survey · Phase G
+4. (ถ้าอยากเก็บ) แก้ hydration warning จาก persisted lang/currency store แบบ app-wide

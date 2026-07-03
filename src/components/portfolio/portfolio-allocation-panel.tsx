@@ -3,7 +3,6 @@
 import Link from "next/link"
 
 import { cn } from "@/lib/utils"
-import { Surface } from "@/components/ui/surface"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { jpyToDisplayValue, formatDisplayValue, formatPct } from "@/lib/utils/currency"
@@ -15,8 +14,10 @@ export function PortfolioAllocationPanel({ allocation }: { allocation: Allocatio
 
   if (allocation.length === 0) return null
 
+  // Flat section — whitespace + hairline separation, no panel box (matches the
+  // home/card-detail editorial grammar).
   return (
-    <Surface variant="panel" className="p-4 sm:p-5">
+    <div className="border-t border-[var(--p-hair)] pt-5">
       <p className="text-eyebrow mb-3">{t(lang, "allocation")}</p>
       <div className="divide-y divide-[var(--p-hair)]">
         {allocation.map((slice, i) => {
@@ -67,6 +68,6 @@ export function PortfolioAllocationPanel({ allocation }: { allocation: Allocatio
           )
         })}
       </div>
-    </Surface>
+    </div>
   )
 }

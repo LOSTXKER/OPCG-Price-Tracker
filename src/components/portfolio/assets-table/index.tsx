@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 
 import { EmptyState } from "@/components/shared/empty-state"
 import { getCardName, t } from "@/lib/i18n"
+import { useSparklines } from "@/hooks/use-sparklines"
 import type { AssetRow } from "@/lib/types/portfolio"
 import { useUIStore } from "@/stores/ui-store"
 
@@ -48,6 +49,11 @@ export function PortfolioAssetsTable({
   const [sortDir, setSortDir] = useState<SortDir>("desc")
   const [editOpen, setEditOpen] = useState(false)
   const [editFocusId, setEditFocusId] = useState<number | null>(null)
+
+  // 7-day trend column (CMC-style) — same endpoint/pattern as the home market
+  // table and watchlist. Optional eye-candy; rows render "—" until data lands.
+  const sparkCards = useMemo(() => assets.map((a) => ({ id: a.cardId })), [assets])
+  const sparklines = useSparklines(sparkCards)
 
   const filteredAssets = useMemo(() => {
     let result = assets
@@ -121,6 +127,7 @@ export function PortfolioAssetsTable({
             onEdit={openEdit}
             hideBalance={hideBalance}
             showGameBadge={showGameBadge}
+            sparklines={sparklines}
           />
         </>
       )}

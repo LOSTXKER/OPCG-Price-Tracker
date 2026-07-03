@@ -87,12 +87,10 @@ export function AssetsToolbar({
       }
     >
       {leading ?? (
-        <>
-          <p className="text-h5">{t(lang, "assets")}</p>
-          <span className="rounded-full bg-primary/8 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-primary/80">
-            {count} {t(lang, "card")}
-          </span>
-        </>
+        <p className="text-eyebrow">
+          {t(lang, "assets")}
+          <span className="ml-2 tabular-nums text-muted-foreground/70">{count}</span>
+        </p>
       )}
     </Toolbar>
   )

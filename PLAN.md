@@ -44,6 +44,10 @@
 - [x] verify: tsc 0 · lint 0 err · test 56/56 · build ✓ · อ่าน component ทุกตัว fix 2 bug (scrub ไม่มี XAxis/YAxis → notch/cursor เพี้ยน + เส้นแบน · KPI ROI leak ทิศตอน hideBalance)
 - [ ] ⏭️ **แยก URL `/[game]/portfolio` + `/all/portfolio` aggregate** = milestone ถัดไป (อยู่ §Multi-game + P4.3 ด้านล่าง · ทำตอน Pokémon data มา · component ชุดนี้เสียบเข้าได้เลย)
 - [ ] 🧹 orphan: `portfolio-allocation-chart.tsx` (donut เก่า ไม่มี importer แล้วหลัง allocation rewrite เป็น bar) · `portfolio-item.tsx`/`portfolio-summary.tsx` ฯลฯ ที่ลบไปแล้ว — ⚠️ เบสยืนยันก่อนลบ allocation-chart
+- [x] **Single-screen redesign** (2026-07-02 · เบส: "สวย ใช้ง่าย ดูโปร") — เลิกแท็บ ภาพรวม|ข้อมูลเชิงลึก → หน้าจอเดียว: money band (hero scrub + chart) → KPI quartet 2×2 (มูลค่า·ต้นทุน·P/L·ROI) → context band (movers chips + game-filter chips) → holdings → insights grid (breakdown+allocation) · `mobile-card` เหลือ 2 บรรทัด · `loading.tsx`+`portfolio-mock-preview` เขียนใหม่ mirror layout · movers เพิ่ม variant `chips` · verify tsc0/lint0/test56/build✓ + Chrome desktop+390px · ไม่แตะ API/schema
+- [x] **คืนแท็บ + multi-portfolio discoverable** (2026-07-02 เย็น · เบสสั่งต่อ) — แท็บ ภาพรวม|เชิงลึก กลับมาโดยคงของใหม่ (ภาพรวม = hero สด+KPI+chips+holdings · เชิงลึก = money band scrub+breakdown+movers+allocation) · switcher dropdown เพิ่ม "+ สร้างพอร์ตใหม่" (ชนลิมิต = Lock+PRO badge → upgrade dialog) + ตัวนับ "N/max พอร์ต" · selector ชนลิมิต = upsell block ชัดเจน · i18n ×4 key ใหม่ · verify ครบ + Chrome ทดสอบ upsell flow จริง (FREE 1/1)
+- [x] ~~Wow pass — hero showcase~~ (2026-07-02 ค่ำ) — การ์ดพัด+glow+stagger · **เบสปัดตก "ไม่ดีเลย" → รื้อทิ้งหมดในรอบถัดไป**
+- [x] **Minimal Editorial rebuild** (2026-07-02 ค่ำ · เบส: "impeccable + minimal เข้ากับหน้าแรก/card detail") — ติดตั้ง Impeccable (`.cursor/skills/impeccable` + PRODUCT.md + eslint ignore) · ลบ hero-showcase · underline tabs (pattern home) · hero บรรทัดเดียว + stat strip แบน (pattern card-detail) · movers inline text · game tabs กลับ toolbar · ตาราง +7d sparkline (CMC) · action icons ghost · insights flat (ถอด Surface movers/allocation) · skeleton+preview ตาม · verify: detect [] + tsc0/lint0/test56/build✓ + Chrome ครบ viewport
 
 ### MINE multi-game UX (พอร์ต/แจ้งเตือน/รายการโปรด รองรับหลายเกม · workflow 7-agent + เว็บระดับโลก 2026-07-01 · เบสเคาะ "เริ่มเลย")
 > หลักการเดียว: "ของฉัน" = กองเดียวรวมทุกเกมเป็น default · เกม = ป้าย+ตัวกรองในหน้า ไม่ใช่โหมด (Robinhood/Coinbase/Collectr) · header pill = แคตตาล็อกเท่านั้น ห้ามกรอง MINE เงียบๆ (NN/g "devastating")
@@ -167,7 +171,7 @@
 
 ### P2 — Portfolio & tools (doc/archive/REDESIGN.md §7)
 **P2.1 — portfolio** ✅ verified (branch `redesign/p2-portfolio`)
-- หมายเหตุ: portfolio อยู่ในสภาพดีอยู่แล้ว — มี tabs (overview/insights/transactions) แยก analytics, mobile picker bar, mobile asset cards
+- หมายเหตุ: portfolio ผ่าน single-screen redesign แล้ว (2026-07-02 · เลิกแท็บ → หน้าจอเดียว money band → KPI → context → holdings → insights · ดู §Portfolio ด้านบน)
 - [x] PortfolioHero stat row (PnL/cost/best/worst) **ยุบ default บนมือถือ** + ปุ่ม "ดูรายละเอียด" · value+PnL pill โชว์เสมอ · desktop กางเต็ม (holdings เร็วขึ้นตาม audit)
 **P2.2 — tools tap targets** ✅ verified (branch `redesign/p2-tools`)
 - หมายเหตุ: drop-calc มี mobile tabs (cards/results) + lg grid อยู่แล้ว, deck-calc ใช้ list — mobile-structured พอควร (audit "form-heavy table" ไม่ตรงโค้ดจริง)
