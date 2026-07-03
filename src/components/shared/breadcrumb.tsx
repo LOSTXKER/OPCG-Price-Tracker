@@ -60,8 +60,10 @@ export function Breadcrumb(props: BreadcrumbProps) {
             // iOS-style back button: icon-only circle, identical on every deep
             // page (owner call — no parent label text). The parent name stays
             // available to screen readers/long-press via aria-label/title.
+            // Card-white surface + hairline border + soft shadow so it floats
+            // off the warm page background (bg-muted blended in too much).
             // -ml-1 optically aligns the chevron with the content edge.
-            "mb-4 -ml-1 inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-muted motion-base active:bg-muted/70 md:hidden",
+            "mb-4 -ml-1 inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-[var(--p-hair)] bg-card shadow-sm motion-base active:bg-muted md:hidden",
             props.className,
           )}
         >

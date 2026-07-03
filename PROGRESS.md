@@ -5,7 +5,8 @@
 
 ## ✅ เสร็จล่าสุด (ต่อ) — ปุ่มย้อนมือถือ = ไอคอนวงกลมล้วน (เบสเคาะขั้นสุดท้าย)
 วิวัฒนาการ 3 ขั้นตามที่เบสเคาะทีละรอบ: text link → pill มีชื่อหน้าแม่ → **ไอคอนล้วน** ("ใช้เป็นปุ่มย้อนให้หมดเลยเหมือนกัน แล้วไม่ต้องมีคำอะไร"):
-- ปุ่มสุดท้าย: วงกลม `size-9 rounded-full bg-muted` + chevron สี honey ไม่มีข้อความ — **หน้าตาเหมือนกันทุกหน้าลูกลึก** (portfolio detail → `/portfolio`, card detail → หน้า set, set detail → `/sets`, blog post → `/blog` ฯลฯ derive อัตโนมัติจาก breadcrumb items)
+- ปุ่มสุดท้าย: วงกลม `size-9 rounded-full` + chevron สี honey ไม่มีข้อความ — **หน้าตาเหมือนกันทุกหน้าลูกลึก** (portfolio detail → `/portfolio`, card detail → หน้า set, set detail → `/sets`, blog post → `/blog` ฯลฯ derive อัตโนมัติจาก breadcrumb items) · รอบสุดท้ายเบสบอก "กลืนพื้นหลัง" → ยกขึ้นเป็น `bg-card` + hairline border + `shadow-sm` (ลอยจากพื้นครีมแบบเดียวกับ icon button อื่นในแอป)
+- ⚠️ ระหว่างทางเจอ **dev server เก่า (เปิดค้างตั้งแต่ 20 มิ.ย.) watcher ตาย ไม่ compile ไฟล์ที่แก้** — เบสเห็นปุ่มเวอร์ชันเก่าทั้งที่โค้ดใหม่แล้ว · แก้โดย restart dev server + `rm -rf .next/dev` (server ใหม่รันเป็น background job แล้ว)
 - ชื่อหน้าแม่ยังอยู่ใน `aria-label`+`title` (screen reader + long-press ยังรู้ว่าย้อนไปไหน)
 - card detail: ถอด mobile meta `OP01 · OP01-001 · L` ที่ซ้ำกับ identity chips ใต้ชื่อการ์ดทิ้งไปแล้วในรอบก่อน
 - desktop ไม่เปลี่ยนทุกรอบ — trail เต็มเหมือนเดิม
