@@ -3,18 +3,20 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { ChevronLeft, LineChart, ListChecks, Menu, Wallet } from "lucide-react"
+import { ChevronLeft, LineChart, ListChecks, Menu, Search, Wallet } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
 /**
- * iOS shell for the /proto/ios/* showcase — one file owning the two chrome
- * pieces every screen shares:
- *   - a frosted nav bar that starts fully transparent over the Large Title
- *     and fades in (title + hairline) once the user scrolls past it, exactly
- *     like iOS's collapsing large-title navigation bar
- *   - a bottom tab bar on mobile / a left side-rail on desktop (VISION §2:
- *     "desktop = side-rail nav ... not a mobile column stretched")
+ * iOS shell for the /proto/ios/* showcase — one file owning the chrome every
+ * screen shares:
+ *   - Desktop (`md:`+): a top header that mirrors the REAL app's
+ *     `src/components/layout/header.tsx` structure (logo · nav links ·
+ *     search · avatar, sticky, transparent→frosted on scroll) — the owner
+ *     asked for "web should be good too" using the CURRENT web layout as the
+ *     base, not an iPad-style side rail.
+ *   - Mobile (`<md`): the collapsing frosted large-title nav bar + bottom tab
+ *     bar, unchanged from the mobile-first pass.
  *
  * Scoped entirely to /proto/ios — does not touch the real app's Header/
  * BottomNav/MainChrome.
@@ -63,73 +65,95 @@ export function IosShell({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <div className="min-h-dvh bg-background text-foreground md:flex">
-      {/* Desktop side rail */}
-      <aside className="hidden md:sticky md:top-0 md:flex md:h-dvh md:w-60 md:shrink-0 md:flex-col md:border-r md:border-[var(--p-hair)] md:p-4">
-        <Link href="/proto/ios" className="flex items-center gap-2 px-2 py-3">
-          <span className="text-lg">🐻</span>
-          <span className="text-h5">Meecard</span>
-        </Link>
-        <nav className="mt-4 flex flex-col gap-1">
-          {TABS.map((tab) => {
-            const active = isTabActive(pathname, tab.href)
-            return (
-              <Link
-                key={tab.href}
-                href={tab.href}
-                className={cn(
-                  "ease-chrome flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                  active ? "bg-primary/12 text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                )}
-              >
-                <tab.icon className={cn("size-4.5", active && "stroke-[2.5]")} />
-                {tab.label}
-              </Link>
-            )
-          })}
-        </nav>
-      </aside>
+    <div className="min-h-dvh bg-background text-foreground">
+      {/* ── Desktop top header — same grammar as the real app's header.tsx,
+          re-skinned: frosted on scroll instead of a flat solid fill, honey
+          pill for the active link (matches the mobile tab bar's language). ── */}
+      <header
+        className={cn(
+          "ease-chrome sticky top-0 z-40 hidden transition-colors md:block",
+          scrolled ? "frost hairline-b" : "bg-transparent",
+        )}
+      >
+        <div className="mx-auto flex h-14 max-w-6xl items-center gap-1 px-6 lg:px-8">
+          <Link href="/proto/ios" className="mr-4 flex shrink-0 items-center gap-2">
+            <span className="text-lg leading-none">🐻</span>
+            <span className="text-base font-bold tracking-tight">Meecard</span>
+          </Link>
 
-      <div className="min-w-0 flex-1">
-        {/* Collapsing frosted nav bar — transparent over the Large Title,
-            fades to frost+hairline+compact-title once scrolled. */}
-        <header className="pt-safe sticky top-0 z-40">
-          <div
-            aria-hidden
-            className={cn(
-              "motion-base pointer-events-none absolute inset-0",
-              scrolled ? "frost hairline-b opacity-100" : "opacity-0",
-            )}
-          />
-          <div className="relative flex h-11 items-center justify-between px-2">
-            <div className="flex w-24 items-center">
-              {nav.showBack && (
-                <button
-                  type="button"
-                  onClick={() => (nav.backHref ? router.push(nav.backHref) : router.back())}
-                  className="ease-chrome -ml-1 inline-flex items-center gap-0.5 rounded-lg px-2 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-muted"
+          <nav className="flex items-center gap-1">
+            {TABS.map((tab) => {
+              const active = isTabActive(pathname, tab.href)
+              return (
+                <Link
+                  key={tab.href}
+                  href={tab.href}
+                  className={cn(
+                    "ease-chrome flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium transition-colors",
+                    active ? "bg-primary/12 text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                  )}
                 >
-                  <ChevronLeft className="size-5" />
-                  กลับ
-                </button>
-              )}
-            </div>
-            <p
-              className={cn(
-                "motion-base text-h4 truncate",
-                scrolled ? "opacity-100" : "pointer-events-none opacity-0",
-              )}
-            >
-              {nav.title}
-            </p>
-            <div className="w-24" />
+                  <tab.icon className={cn("size-4", active && "stroke-[2.5]")} />
+                  {tab.label}
+                </Link>
+              )
+            })}
+          </nav>
+
+          <div className="flex-1" />
+
+          <button
+            type="button"
+            className="ease-chrome flex items-center gap-2 rounded-full bg-muted px-3.5 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <Search className="size-4" />
+            ค้นหาการ์ด, เซ็ต...
+          </button>
+
+          <div className="ml-2 flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
+            บ
           </div>
-        </header>
+        </div>
+      </header>
 
-        <main className="pb-24 md:pb-10">{children}</main>
-      </div>
+      {/* ── Mobile collapsing frosted nav bar — transparent over the Large
+          Title, fades to frost+hairline+compact-title once scrolled. ── */}
+      <header className="pt-safe sticky top-0 z-40 md:hidden">
+        <div
+          aria-hidden
+          className={cn(
+            "motion-base pointer-events-none absolute inset-0",
+            scrolled ? "frost hairline-b opacity-100" : "opacity-0",
+          )}
+        />
+        <div className="relative flex h-11 items-center justify-between px-2">
+          <div className="flex w-24 items-center">
+            {nav.showBack && (
+              <button
+                type="button"
+                onClick={() => (nav.backHref ? router.push(nav.backHref) : router.back())}
+                className="ease-chrome -ml-1 inline-flex items-center gap-0.5 rounded-lg px-2 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-muted"
+              >
+                <ChevronLeft className="size-5" />
+                กลับ
+              </button>
+            )}
+          </div>
+          <p
+            className={cn(
+              "motion-base text-h4 truncate",
+              scrolled ? "opacity-100" : "pointer-events-none opacity-0",
+            )}
+          >
+            {nav.title}
+          </p>
+          <div className="w-24" />
+        </div>
+      </header>
 
-      {/* Mobile bottom tab bar */}
+      <main className="pb-24 md:pb-10">{children}</main>
+
+      {/* ── Mobile bottom tab bar ── */}
       <nav className="frost hairline-t pb-safe fixed inset-x-0 bottom-0 z-40 md:hidden">
         <ul className="flex">
           {TABS.map((tab) => {

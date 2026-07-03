@@ -77,7 +77,7 @@ export default function CardDetailPage() {
        * Page scroll container — extra bottom padding so the sticky buy bar
        * never covers the last piece of content (related cards + 80px clearance).
        */}
-      <div className="pb-36 md:pb-10">
+      <div className="pb-36 md:pb-10 md:mx-auto md:max-w-6xl">
         {/*
          * Desktop two-column grid: sticky card identity rail (left) + content (right).
          * On mobile everything stacks in a single column.

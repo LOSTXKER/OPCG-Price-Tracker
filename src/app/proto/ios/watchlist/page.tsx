@@ -35,7 +35,7 @@ export default function WatchlistScreen() {
   const pinnedCount = WATCHLIST.filter((w) => w.pinned).length
 
   return (
-    <div className="pb-6">
+    <div className="pb-6 md:mx-auto md:max-w-5xl">
       <LargeTitle
         title="รายการโปรด"
         subtitle={`${WATCHLIST.length} การ์ดที่ติดตาม`}
@@ -121,6 +121,12 @@ export default function WatchlistScreen() {
                     )}
                   </div>
                   <p className="truncate font-mono text-meta">{card.code}</p>
+                </div>
+
+                {/* 7d column — desktop only, matches the market screen's density */}
+                <div className="hidden w-16 shrink-0 text-right lg:block">
+                  <p className="text-eyebrow">7d</p>
+                  <Delta value={card.d7} />
                 </div>
 
                 {/* Price + 24 h delta — right-aligned, tabular mono */}

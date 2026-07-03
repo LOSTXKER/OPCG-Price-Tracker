@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { useParams } from "next/navigation"
-import { ArrowDown, ArrowUp, Eye, EyeOff, Share2 } from "lucide-react"
+import { ArrowDown, ArrowUp, Eye, EyeOff, Plus, Share2 } from "lucide-react"
 
 import { SegmentedControl } from "@/components/ui/segmented-control"
 
@@ -75,7 +75,7 @@ export default function PortfolioDetailPage() {
   const [balanceHidden, setBalanceHidden] = useState(false)
 
   return (
-    <div className="pb-8">
+    <div className="pb-8 md:mx-auto md:max-w-5xl">
       {/* ── Page identity ───────────────────────────── */}
       <LargeTitle
         title={portfolio.name}
@@ -100,6 +100,15 @@ export default function PortfolioDetailPage() {
               className="ease-chrome flex size-9 items-center justify-center rounded-full bg-muted text-foreground transition-colors hover:bg-muted/70"
             >
               <Share2 className="size-4.5" />
+            </button>
+            {/* Desktop has no bottom sticky bar (mobile-only below), so the
+                add-card action lives inline here instead. */}
+            <button
+              type="button"
+              className="ease-chrome hidden items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 md:inline-flex"
+            >
+              <Plus className="size-4" />
+              เพิ่มการ์ด
             </button>
           </>
         }
@@ -174,9 +183,9 @@ export default function PortfolioDetailPage() {
         </GroupedSection>
       )}
 
-      {/* ── Insights tab ─────────────────────────────── */}
+      {/* ── Insights tab — stacked on mobile, side-by-side on desktop ── */}
       {tab === "insights" && (
-        <div className="space-y-4 px-4 sm:px-6">
+        <div className="grid gap-4 px-4 sm:px-6 lg:grid-cols-2 lg:items-start">
           {/* 30-day sparkline */}
           <div className="hairline rounded-2xl bg-card p-4">
             <p className="text-eyebrow mb-3">มูลค่าย้อนหลัง 30 วัน</p>
@@ -189,7 +198,7 @@ export default function PortfolioDetailPage() {
 
           {/* Stat strip */}
           <div className="hairline overflow-hidden rounded-2xl bg-card">
-            <div className="hairline-t flex divide-x divide-[var(--p-hair)]">
+            <div className="flex divide-x divide-[var(--p-hair)] lg:h-full">
               <div className="flex-1 px-4 py-3">
                 <p className="text-eyebrow mb-1">ต้นทุน</p>
                 <p className="text-price tabular-nums">

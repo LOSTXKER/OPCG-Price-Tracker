@@ -42,7 +42,7 @@ export default function IosHomeScreen() {
   )
 
   return (
-    <div className="pb-6">
+    <div className="pb-6 md:mx-auto md:max-w-6xl">
       <LargeTitle
         title="ตลาด"
         subtitle="ราคาการ์ด One Piece · Pokémon อัปเดตวันนี้"
@@ -98,18 +98,20 @@ export default function IosHomeScreen() {
         </button>
       </div>
 
-      {/* Movers — horizontal rail, big tappable card tiles (VISION: การ์ด=พระเอก) */}
+      {/* Movers — horizontal rail on mobile/tablet, a real 6-col grid on
+          desktop (VISION: การ์ด=พระเอก — let the tiles breathe on a wide screen
+          instead of scrolling a mobile rail sideways). */}
       <div className="mt-5">
         <p className="mb-2 px-4 text-eyebrow sm:px-6">มูฟเวอร์วันนี้</p>
-        <div className="no-sb flex gap-3 overflow-x-auto px-4 pb-1 sm:px-6">
+        <div className="no-sb flex gap-3 overflow-x-auto px-4 pb-1 sm:px-6 lg:grid lg:grid-cols-6 lg:gap-4 lg:overflow-visible">
           {movers.map((c) => (
             <Link
               key={c.code}
               href={`/proto/ios/cards/${c.code}`}
-              className="ease-chrome w-28 shrink-0 transition-transform active:scale-[0.97]"
+              className="ease-chrome w-28 shrink-0 transition-transform active:scale-[0.97] lg:w-full"
             >
-              <div className="hairline relative aspect-[63/88] w-28 overflow-hidden rounded-xl bg-muted">
-                <Image src={c.img} alt={c.name} fill sizes="112px" className="object-contain" />
+              <div className="hairline relative aspect-[63/88] w-28 overflow-hidden rounded-xl bg-muted lg:w-full">
+                <Image src={c.img} alt={c.name} fill sizes="(min-width: 1024px) 15vw, 112px" className="object-contain" />
               </div>
               <p className="mt-1.5 truncate text-body-sm font-medium">{c.name}</p>
               <div className="flex items-center justify-between">
@@ -137,6 +139,11 @@ export default function IosHomeScreen() {
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-body-sm font-medium">{c.name}</p>
                   <p className="truncate text-meta font-mono">{c.code}</p>
+                </div>
+                {/* 7d column — desktop only, CMC-style extra column density */}
+                <div className="hidden w-16 shrink-0 text-right lg:block">
+                  <p className="text-eyebrow">7d</p>
+                  <Delta value={c.d7} />
                 </div>
                 <div className="shrink-0 text-right">
                   <p className="text-price tabular-nums">{fmt(c.priceThb)}</p>

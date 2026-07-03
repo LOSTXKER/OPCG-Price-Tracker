@@ -37,7 +37,7 @@ export default function IosPortfolioHubScreen() {
   }, 0)
 
   return (
-    <div className="pb-6">
+    <div className="pb-6 md:mx-auto md:max-w-6xl">
       <LargeTitle
         title="พอร์ตโฟลิโอ"
         subtitle="เลือกพอร์ตเพื่อดูรายละเอียด"
@@ -71,7 +71,7 @@ export default function IosPortfolioHubScreen() {
       {/* Portfolio grid */}
       <div className="mt-5">
         <p className="mb-2 px-4 text-eyebrow sm:px-6">พอร์ตของฉัน</p>
-        <div className="grid grid-cols-1 gap-3 px-4 sm:grid-cols-2 sm:px-6">
+        <div className="grid grid-cols-1 gap-3 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-3">
           {PORTFOLIOS.map((p) => {
             const stats = PORTFOLIO_STATS.get(p.id)!
             const thumbs = p.holdings.slice(0, 3)
