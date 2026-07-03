@@ -46,6 +46,7 @@
   - ยังไม่ครอบคลุม: settings sub อีก 7 หน้า, `/profile`+`/u/[handle]`, `/register`, `/market-overview`, `/about`, `/contact`, `/coming-soon`, `/raffle/winners`, honey sub-tabs — รายละเอียดเต็มใน PROGRESS.md
 - [x] **Breadcrumb มือถือ → iOS back link (2026-07-03)** — เบสถาม "มือถือควรมี breadcrumb มั้ย" → ตามหลัก iOS HIG/NN:g ไม่ควร → แก้ที่ `breadcrumb.tsx` ที่เดียว: desktop trail เต็มเหมือนเดิม (`hidden md:flex`) · มือถือหน้าลูกลึก (items ≥3) ได้ปุ่ม `< หน้าแม่` แบบ settings sub-pages (derive อัตโนมัติจาก items ไม่ต้องแก้ per-page) · หน้าแท็บหลักไม่ render อะไรบนมือถือ · SEO ไม่กระทบ (JSON-LD แยก) · verify tsc0/lint0/test56/build✓/detect[] + browser จริง 4 กรณี (มือถือ deep/top-level/card-detail + desktop)
 - [x] **ปุ่มย้อน → iOS pill + card detail ได้ด้วย (2026-07-03 ต่อ)** — pill `rounded-full bg-muted` ≥36px chevron honey กดเข้มขึ้น truncate ได้ · card detail ถอด mobile meta ที่ซ้ำกับ identity chips ทิ้ง เปลี่ยนเป็น pill `< [ชื่อชุด]` กลับหน้า set · verify ครบ + screenshot ทั้ง 2 หน้า
+- [x] **ปุ่มย้อนขั้นสุดท้าย: ไอคอนวงกลมล้วน (2026-07-03 เบสเคาะ)** — "ไม่ต้องมีคำอะไร" → วงกลม `size-9` chevron honey เหมือนกันทุกหน้าลูกลึก · ชื่อหน้าแม่ยังอยู่ใน `aria-label`/`title` · verify ครบ + browser จริง
 - [ ] ต่อ audit หน้าที่เหลือ (list ใน PROGRESS.md) + ตัดสินใจเรื่อง `@base-ui/react/menu` hydration bug (เช็คอัปเดตเวอร์ชันก่อน) + เปิด PR รวม branch `ui/sets-redesign` เข้า master เมื่อเบสพร้อม
 
 ### Card detail — trust core ✅ (proto visionary layout · เต็มภาพ · est-labeled fill)

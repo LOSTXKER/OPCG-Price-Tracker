@@ -54,15 +54,18 @@ export function Breadcrumb(props: BreadcrumbProps) {
       {parent?.href && (
         <Link
           href={parent.href}
+          aria-label={parent.label}
+          title={parent.label}
           className={cn(
-            // iOS-style back pill: min 36px tall, quiet muted chip that darkens
-            // on press. -ml-1 optically aligns the chevron with the content edge.
-            "mb-4 -ml-1 inline-flex min-h-9 max-w-full items-center gap-0.5 rounded-full bg-muted py-1.5 pl-2 pr-3.5 text-sm font-medium motion-base active:bg-muted/70 md:hidden",
+            // iOS-style back button: icon-only circle, identical on every deep
+            // page (owner call — no parent label text). The parent name stays
+            // available to screen readers/long-press via aria-label/title.
+            // -ml-1 optically aligns the chevron with the content edge.
+            "mb-4 -ml-1 inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-muted motion-base active:bg-muted/70 md:hidden",
             props.className,
           )}
         >
-          <ChevronLeft className="size-4 shrink-0 text-primary" />
-          <span className="truncate">{parent.label}</span>
+          <ChevronLeft className="size-5 text-primary" />
         </Link>
       )}
 
