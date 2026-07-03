@@ -1,12 +1,23 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-03 — **Mobile iOS rollout: Batch 4 — "เพิ่มเติม" เปลี่ยนจาก sheet เป็นหน้าเต็ม `/more`** (เบสถาม "หน้าเต็มดีกว่ามั้ยตามหลัก" → ตอบ: ใช่ ตาม iOS HIG แท็บต้องเป็น destination → ดำเนินการ)
+อัปเดตล่าสุด: 2026-07-03 — **`/more` desktop polish: 2 คอลัมน์** (เบสเปิดจอกว้างแล้วเห็นคอลัมน์เดียวยืดๆ ถามว่าตามหลักโอเคมั้ย → คุยจบว่าเก็บหน้าไว้ตามหลัก responsive แต่จัด layout desktop ให้ดูตั้งใจ)
 
 ## แหล่งอ้างอิง
 - **spec เต็ม:** `doc/mine-multigame-spec.md` · **VISION:** identity §1 (ห้ามเปลี่ยน) + IA §2
 
-## ✅ เสร็จ session นี้ — Batch 4: "เพิ่มเติม" = หน้าเต็ม `/more` (แทน sheet)
+## ✅ เสร็จ session นี้ — `/more` บน desktop (≥768px) เป็น 2 คอลัมน์
+
+เบสเห็นหน้า `/more` (Batch 4) ตอนขยายจอกว้างแล้วเป็นคอลัมน์เดียวยืดยาว ถามว่าควรทำเป็นหน้าเลยดีมั้ยตามหลัก (คุยจบว่า: ใช่ ต้องเป็นหน้าเดียวกันทุกจอตามหลัก responsive — ห้าม redirect ตามขนาดจอ/อุปกรณ์ เพราะเป็น anti-pattern ที่ Google เตือนเรื่อง SEO ด้วย — จุดอ่อนจริงคือ "หน้าตา" ไม่ใช่ "การมีหน้า") แก้ไฟล์เดียว `src/app/more/more-client.tsx`:
+- Container `max-w-2xl` → `max-w-2xl md:max-w-4xl`
+- User card ด้านบนคงเต็มความกว้างทุกจอ (อยู่นอก grid)
+- Section ที่เหลือ (Browse/Track/บัญชีของฉัน/Preferences/footer/sign-out) ห่อด้วย `flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start md:gap-x-6` — ใช้ `gap` แทน `space-y` เดิมเพราะ margin-based spacing ตีกับ grid, มือถือ (`<md`) ยังเป็น `flex flex-col` คอลัมน์เดียวเป๊ะเหมือนเดิม
+- Sign-out card เพิ่ม `md:col-span-2` ให้กินเต็มแถวท้ายสุดบน desktop (ไม่ไปเบียดข้าง section อื่น)
+- ทุก class ใหม่ gate ด้วย `md:` เท่านั้น — ตรวจแล้วมือถือไม่เปลี่ยนแม้พิกเซลเดียว
+
+**verify:** tsc 0 · eslint ไฟล์ที่แตะ 0 · test 56/56 · build ✓ (route `/more` ขึ้น static) · impeccable detect [] · curl `/more` 200 + grep เจอ `md:grid-cols-2`/`md:max-w-4xl` ใน HTML จริง · `/`,`/settings`,`/portfolio` 200
+
+## เสร็จรอบก่อน — Batch 4: "เพิ่มเติม" = หน้าเต็ม `/more` (แทน sheet)
 
 ตามหลัก iOS HIG แท็บใน tab bar ต้องเป็น "ที่หมาย" ที่กดแล้วนำทาง ไม่ใช่ปุ่มเปิด overlay — เดิมมีแค่แท็บ "เพิ่มเติม" ตัวเดียวที่เปิด drawer ขวา (มรดก hamburger menu ของเว็บ) ตอนนี้แก้ให้สอดคล้อง:
 - **สร้าง `/more`** (`src/app/more/page.tsx` + `more-client.tsx`) — เนื้อหาเดียวกับ sheet ที่เพิ่งทำใน Batch 3 (user card → Browse → Track → บัญชีของฉัน → Preferences → footer → sign out ด้วย `GroupedSection`/`GroupedRow`) แต่เป็นหน้าเต็ม: มี URL จริง (back/refresh/แชร์ได้), large title จาก `PageHeader`, พื้นที่เต็ม 390px, `max-w-2xl` บน desktop · ใช้ `useHeaderData`+`usePublicConfig` ชุดเดียวกับ header เดิม (ไม่มี data path ใหม่) · ตัด prop `active` ทิ้ง (อยู่หน้า `/more` ไม่มีปลายทางอื่น active ได้)
@@ -67,7 +78,7 @@
 
 ## ⏭️ NEXT
 1. **สำคัญที่สุด**: เบสเปิดเว็บจริงเช็ค:
-   - **มือถือ (390px)**: กดแท็บ "เพิ่มเติม" → ต้อง**นำทางไปหน้า `/more`** (ไม่ใช่ drawer เด้งจากขวาแล้ว) เห็น large title + grouped card list · `/settings` เห็น grouped list · `/`,`/watchlist`,`/portfolio` เห็น large-title + frost header
-   - **Desktop (≥1024px)** ต้องเหมือนเดิมทุกจุด (bottom-nav เป็น `md:hidden` — desktop ใช้ header menu เดิม · `/more` เปิดบน desktop ได้เป็นคอลัมน์แคบกลางจอ ไม่มีลิงก์ชี้ไปจาก desktop)
-2. **มือถือ iOS rollout ครบทุก surface ที่มี gap จริงแล้ว** (chrome + home + Settings + `/more` page) — Watchlist/Portfolio/Card-detail สำรวจแล้วไม่ต้องแตะ (เหตุผลด้านล่าง) เว้นแต่เบสเห็นจุดเฉพาะหลังเปิดดูจริง
+   - **มือถือ (390px)**: กดแท็บ "เพิ่มเติม" → นำทางไปหน้า `/more` คอลัมน์เดียวเหมือนเดิมทุกประการ (ต้องไม่เปลี่ยนจากก่อนหน้านี้เลย)
+   - **Desktop กว้าง (≥768px)**: เปิด `/more` ตรงๆ → section ควรเรียง **2 คอลัมน์** แล้ว (ไม่ใช่คอลัมน์เดียวยืดยาวแบบที่เบสเห็นรอบก่อน) · sign-out card กว้างเต็มแถวท้ายสุด
+2. **มือถือ iOS rollout ครบทุก surface ที่มี gap จริงแล้ว** (chrome + home + Settings + `/more` page + desktop polish) — Watchlist/Portfolio/Card-detail สำรวจแล้วไม่ต้องแตะ (เหตุผลด้านล่าง) เว้นแต่เบสเห็นจุดเฉพาะหลังเปิดดูจริง
 3. `/proto/ios/*` ยังเก็บไว้เป็น reference (ยังไม่ลบ — ⚠️ ลบต้องถามเบสก่อน)

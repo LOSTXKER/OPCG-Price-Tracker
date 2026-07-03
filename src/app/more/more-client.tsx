@@ -115,11 +115,11 @@ export default function MoreClient() {
   const marketplaceEnabled = publicConfig.marketplaceEnabled;
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-2xl md:max-w-4xl">
       <PageHeader title={t(language, "more")} />
 
       <div className="mt-4 space-y-6">
-        {/* ── User block — its own grouped card ─────────────────────── */}
+        {/* ── User block — its own grouped card, full width on every breakpoint ── */}
         <GroupedSection className={SECTION_INSET}>
           {authed ? (
             <Link
@@ -182,199 +182,205 @@ export default function MoreClient() {
           )}
         </GroupedSection>
 
-        {/* ── Browse ────────────────────────────────────────────────── */}
-        <GroupedSection className={SECTION_INSET} label={t(language, "browse")}>
-          <GroupedRow
-            icon={Package}
-            iconClassName="bg-info-soft text-info"
-            title={t(language, "sets")}
-            href="/sets"
-          />
-          <GroupedRow
-            icon={TrendingUp}
-            iconClassName="bg-success-soft text-success"
-            title={t(language, "trendingShort")}
-            href="/trending"
-          />
-          <GroupedRow
-            icon={ArrowRightLeft}
-            iconClassName="bg-warning-soft text-warning"
-            title={t(language, "compareCards")}
-            href="/compare"
-          />
-          <GroupedRow
-            icon={Swords}
-            iconClassName="bg-primary/12 text-primary"
-            title={t(language, "decksAndTools")}
-            href="/decks"
-          />
-        </GroupedSection>
-
-        {/* ── Track — unified MINE surfaces (signed-in only) ─────────── */}
-        {authed && (
-          <GroupedSection className={SECTION_INSET} label={t(language, "trackGroup")}>
+        {/* ── Remaining sections — single column on mobile, 2-up on desktop
+            (a deliberate directory layout instead of one long stretched
+            column when /more is opened on a wide screen). `gap` instead of
+            `space-y` so the same wrapper works for both flex and grid. */}
+        <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start md:gap-x-6">
+          {/* ── Browse ──────────────────────────────────────────────── */}
+          <GroupedSection className={SECTION_INSET} label={t(language, "browse")}>
             <GroupedRow
-              icon={Star}
-              iconClassName="bg-primary/12 text-primary"
-              title={t(language, "portfolioNav")}
-              href="/portfolio"
-            />
-            <GroupedRow
-              icon={Bookmark}
+              icon={Package}
               iconClassName="bg-info-soft text-info"
-              title={t(language, "watchlistNav")}
-              href="/watchlist"
+              title={t(language, "sets")}
+              href="/sets"
             />
             <GroupedRow
-              icon={BellRing}
+              icon={TrendingUp}
+              iconClassName="bg-success-soft text-success"
+              title={t(language, "trendingShort")}
+              href="/trending"
+            />
+            <GroupedRow
+              icon={ArrowRightLeft}
               iconClassName="bg-warning-soft text-warning"
-              title={t(language, "managePriceAlerts")}
-              href="/settings/alerts"
+              title={t(language, "compareCards")}
+              href="/compare"
+            />
+            <GroupedRow
+              icon={Swords}
+              iconClassName="bg-primary/12 text-primary"
+              title={t(language, "decksAndTools")}
+              href="/decks"
             />
           </GroupedSection>
-        )}
 
-        {/* ── My Account (signed-in only) ────────────────────────────── */}
-        {authed && (
-          <GroupedSection className={SECTION_INSET} label={t(language, "myAccount")}>
-            {marketplaceEnabled && (
-              <>
-                <GroupedRow
-                  icon={ShoppingBag}
-                  iconClassName="bg-info-soft text-info"
-                  title={t(language, "myOrders")}
-                  href="/orders"
-                />
-                <GroupedRow
-                  icon={Heart}
-                  iconClassName="bg-destructive/10 text-destructive"
-                  title={t(language, "savedListings")}
-                  href="/saved"
-                />
-                <GroupedRow
-                  icon={MessageCircle}
-                  iconClassName="bg-success-soft text-success"
-                  title={t(language, "messagesTitle")}
-                  href="/messages"
-                  trailing={<CountBadge count={unreadMessages} />}
-                />
-              </>
-            )}
-            <GroupedRow
-              icon={Sparkles}
-              iconClassName="bg-primary/12 text-primary"
-              title="Honey"
-              href="/honey"
-              trailing={honeyPendingActions ? <PendingDot /> : undefined}
-            />
-            {marketplaceEnabled && (
+          {/* ── Track — unified MINE surfaces (signed-in only) ─────────── */}
+          {authed && (
+            <GroupedSection className={SECTION_INSET} label={t(language, "trackGroup")}>
               <GroupedRow
-                icon={Store}
+                icon={Star}
+                iconClassName="bg-primary/12 text-primary"
+                title={t(language, "portfolioNav")}
+                href="/portfolio"
+              />
+              <GroupedRow
+                icon={Bookmark}
+                iconClassName="bg-info-soft text-info"
+                title={t(language, "watchlistNav")}
+                href="/watchlist"
+              />
+              <GroupedRow
+                icon={BellRing}
                 iconClassName="bg-warning-soft text-warning"
-                title={t(language, "sellShellSellerCenter")}
-                href="/seller"
+                title={t(language, "managePriceAlerts")}
+                href="/settings/alerts"
+              />
+            </GroupedSection>
+          )}
+
+          {/* ── My Account (signed-in only) ────────────────────────────── */}
+          {authed && (
+            <GroupedSection className={SECTION_INSET} label={t(language, "myAccount")}>
+              {marketplaceEnabled && (
+                <>
+                  <GroupedRow
+                    icon={ShoppingBag}
+                    iconClassName="bg-info-soft text-info"
+                    title={t(language, "myOrders")}
+                    href="/orders"
+                  />
+                  <GroupedRow
+                    icon={Heart}
+                    iconClassName="bg-destructive/10 text-destructive"
+                    title={t(language, "savedListings")}
+                    href="/saved"
+                  />
+                  <GroupedRow
+                    icon={MessageCircle}
+                    iconClassName="bg-success-soft text-success"
+                    title={t(language, "messagesTitle")}
+                    href="/messages"
+                    trailing={<CountBadge count={unreadMessages} />}
+                  />
+                </>
+              )}
+              <GroupedRow
+                icon={Sparkles}
+                iconClassName="bg-primary/12 text-primary"
+                title="Honey"
+                href="/honey"
+                trailing={honeyPendingActions ? <PendingDot /> : undefined}
+              />
+              {marketplaceEnabled && (
+                <GroupedRow
+                  icon={Store}
+                  iconClassName="bg-warning-soft text-warning"
+                  title={t(language, "sellShellSellerCenter")}
+                  href="/seller"
+                />
+              )}
+            </GroupedSection>
+          )}
+
+          {/* ── Preferences — value rows with inline controls ──────────── */}
+          <GroupedSection className={SECTION_INSET} label={t(language, "preferences")}>
+            <GroupedRow
+              icon={Globe}
+              iconClassName="bg-info-soft text-info"
+              title={t(language, "languageLabel")}
+              chevron={false}
+              trailing={
+                <Select
+                  items={LANG_OPTIONS}
+                  value={language}
+                  onValueChange={(value) => setLanguage(value as Language)}
+                >
+                  <SelectTrigger size="sm" aria-label="Language" className="text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {LANG_OPTIONS.map((l) => (
+                      <SelectItem key={l.value} value={l.value}>{l.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              }
+            />
+            <GroupedRow
+              icon={Wallet}
+              iconClassName="bg-success-soft text-success"
+              title={t(language, "currencyLabel")}
+              chevron={false}
+              trailing={
+                <Select
+                  items={CURRENCY_OPTIONS}
+                  value={currency}
+                  onValueChange={(value) => setCurrency(value as Currency)}
+                >
+                  <SelectTrigger size="sm" aria-label="Currency" className="text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CURRENCY_OPTIONS.map((c) => (
+                      <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              }
+            />
+            <GroupedRow
+              icon={mounted && resolvedTheme === "dark" ? Moon : Sun}
+              iconClassName="bg-muted text-muted-foreground"
+              title={t(language, "themeLabel")}
+              chevron={false}
+              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+              trailing={
+                <span className="text-meta">
+                  {mounted && resolvedTheme === "dark" ? "Dark" : "Light"}
+                </span>
+              }
+            />
+          </GroupedSection>
+
+          {/* ── Footer links ───────────────────────────────────────────── */}
+          <GroupedSection className={SECTION_INSET}>
+            {authed && (
+              <GroupedRow
+                icon={Settings}
+                iconClassName="bg-muted text-muted-foreground"
+                title={t(language, "settingsTitle")}
+                href="/settings"
               />
             )}
+            <GroupedRow
+              icon={Crown}
+              iconClassName="bg-primary/12 text-primary"
+              title={t(language, "pricing")}
+              href="/pricing"
+            />
+            <GroupedRow
+              icon={BookOpen}
+              iconClassName="bg-info-soft text-info"
+              title={t(language, "guide")}
+              href="/guide"
+            />
           </GroupedSection>
-        )}
 
-        {/* ── Preferences — value rows with inline controls ──────────── */}
-        <GroupedSection className={SECTION_INSET} label={t(language, "preferences")}>
-          <GroupedRow
-            icon={Globe}
-            iconClassName="bg-info-soft text-info"
-            title={t(language, "languageLabel")}
-            chevron={false}
-            trailing={
-              <Select
-                items={LANG_OPTIONS}
-                value={language}
-                onValueChange={(value) => setLanguage(value as Language)}
-              >
-                <SelectTrigger size="sm" aria-label="Language" className="text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {LANG_OPTIONS.map((l) => (
-                    <SelectItem key={l.value} value={l.value}>{l.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            }
-          />
-          <GroupedRow
-            icon={Wallet}
-            iconClassName="bg-success-soft text-success"
-            title={t(language, "currencyLabel")}
-            chevron={false}
-            trailing={
-              <Select
-                items={CURRENCY_OPTIONS}
-                value={currency}
-                onValueChange={(value) => setCurrency(value as Currency)}
-              >
-                <SelectTrigger size="sm" aria-label="Currency" className="text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {CURRENCY_OPTIONS.map((c) => (
-                    <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            }
-          />
-          <GroupedRow
-            icon={mounted && resolvedTheme === "dark" ? Moon : Sun}
-            iconClassName="bg-muted text-muted-foreground"
-            title={t(language, "themeLabel")}
-            chevron={false}
-            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-            trailing={
-              <span className="text-meta">
-                {mounted && resolvedTheme === "dark" ? "Dark" : "Light"}
-              </span>
-            }
-          />
-        </GroupedSection>
-
-        {/* ── Footer links ───────────────────────────────────────────── */}
-        <GroupedSection className={SECTION_INSET}>
+          {/* ── Sign out (destructive, own card) — spans both columns on desktop ── */}
           {authed && (
-            <GroupedRow
-              icon={Settings}
-              iconClassName="bg-muted text-muted-foreground"
-              title={t(language, "settingsTitle")}
-              href="/settings"
-            />
+            <GroupedSection className={cn(SECTION_INSET, "md:col-span-2")}>
+              <GroupedRow
+                icon={LogOut}
+                iconClassName="bg-destructive/10 text-destructive"
+                title={t(language, "logout")}
+                destructive
+                chevron={false}
+                onClick={() => void doLogout()}
+              />
+            </GroupedSection>
           )}
-          <GroupedRow
-            icon={Crown}
-            iconClassName="bg-primary/12 text-primary"
-            title={t(language, "pricing")}
-            href="/pricing"
-          />
-          <GroupedRow
-            icon={BookOpen}
-            iconClassName="bg-info-soft text-info"
-            title={t(language, "guide")}
-            href="/guide"
-          />
-        </GroupedSection>
-
-        {/* ── Sign out (destructive, own card) ───────────────────────── */}
-        {authed && (
-          <GroupedSection className={SECTION_INSET}>
-            <GroupedRow
-              icon={LogOut}
-              iconClassName="bg-destructive/10 text-destructive"
-              title={t(language, "logout")}
-              destructive
-              chevron={false}
-              onClick={() => void doLogout()}
-            />
-          </GroupedSection>
-        )}
+        </div>
       </div>
     </div>
   );
