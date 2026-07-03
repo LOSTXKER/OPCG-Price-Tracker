@@ -123,10 +123,16 @@ export default function WatchlistScreen() {
                   <p className="truncate font-mono text-meta">{card.code}</p>
                 </div>
 
-                {/* 7d column — desktop only, matches the market screen's density */}
-                <div className="hidden w-16 shrink-0 text-right lg:block">
+                {/* 7d column — sm+ only, matches the market screen's progressive density */}
+                <div className="hidden w-16 shrink-0 text-right sm:block">
                   <p className="text-eyebrow">7d</p>
                   <Delta value={card.d7} />
+                </div>
+
+                {/* 30d column — lg+ only (extra density on wider screens) */}
+                <div className="hidden w-16 shrink-0 text-right lg:block">
+                  <p className="text-eyebrow">30d</p>
+                  <Delta value={card.d30} />
                 </div>
 
                 {/* Price + 24 h delta — right-aligned, tabular mono */}

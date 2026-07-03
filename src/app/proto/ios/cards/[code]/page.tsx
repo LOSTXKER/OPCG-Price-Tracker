@@ -11,8 +11,12 @@ import { CARD_DETAIL, fmt, fmtPct } from "../../_data"
 
 /**
  * Card Detail — the most information-dense screen in the iOS showcase.
- * Always renders CARD_DETAIL (Roronoa Zoro OP01-001) regardless of [code] param;
- * this is a one-card-deep demo of the iOS grammar × Meecard warm-premium skin.
+ * Always renders CARD_DETAIL (Roronoa Zoro OP01-001_p1) regardless of [code]
+ * param; this is a one-card-deep demo of the iOS grammar × Meecard warm-premium
+ * skin.
+ *
+ * Desktop: sticky two-column rail (lg:grid-cols-[300px_1fr]).
+ * Mobile: single column with a fixed frost buy bar.
  */
 
 function Delta({ value }: { value: number }) {
@@ -34,7 +38,6 @@ export default function CardDetailPage() {
   // regardless of which card code was navigated to (see file doc comment).
   const _params = useParams<{ code: string }>()
 
-  // Always render the fully-detailed demo card
   const card = CARD_DETAIL
 
   const [selectedGradeKey, setSelectedGradeKey] = useState("raw")
@@ -71,6 +74,12 @@ export default function CardDetailPage() {
     `Z`,
   ].join(" ")
 
+  // CARD_DETAIL.counter is typed as literal `null` (the demo card is a LEADER
+  // with no counter value). Widen to number|null so the null-guard below
+  // compiles without TypeScript narrowing the truthy branch to `never`.
+  const counterVal: number | null = card.counter as number | null
+  const counterDisplay = counterVal !== null ? counterVal.toLocaleString("th-TH") : "—"
+
   return (
     <>
       {/*
@@ -105,7 +114,7 @@ export default function CardDetailPage() {
               <div className="mt-2 flex flex-wrap items-center justify-center gap-1.5 lg:justify-start">
                 <span className="rounded-full bg-muted px-2 py-0.5 text-meta">{card.rarity}</span>
                 <span className="rounded-full bg-muted px-2 py-0.5 text-meta">{card.setName}</span>
-                <span className="rounded-full bg-muted px-2 py-0.5 font-mono text-meta">{card.setCode}</span>
+                <span className="rounded-full bg-muted px-2 py-0.5 font-mono text-meta uppercase">{card.setCode}</span>
               </div>
               <p className="mt-1.5 font-mono text-meta">{card.code}</p>
             </div>
@@ -120,7 +129,11 @@ export default function CardDetailPage() {
                 <Delta value={card.d24} />
               </div>
               <p className="mt-1 text-meta">
-                ราคากลาง · {selectedGrade.label} · อัปเดตวันนี้
+                ราคากลาง · {selectedGrade.label}
+                {selectedGrade.modeled && (
+                  <span className="ml-1 rounded bg-muted px-1 py-px text-micro text-muted-foreground">est</span>
+                )}
+                {" · "}อัปเดตวันนี้
               </p>
             </div>
 
@@ -133,12 +146,18 @@ export default function CardDetailPage() {
                     key={g.key}
                     type="button"
                     onClick={() => setSelectedGradeKey(g.key)}
-                    className={`ease-chrome flex shrink-0 flex-col items-center rounded-2xl px-4 py-2.5 transition-colors ${
+                    className={`ease-chrome relative flex shrink-0 flex-col items-center rounded-2xl px-4 py-2.5 transition-colors ${
                       selectedGradeKey === g.key
                         ? "bg-primary/12 text-primary"
                         : "bg-muted text-foreground hover:bg-muted/70"
                     }`}
                   >
+                    {/* "est" badge — top-right corner, only for modeled grades */}
+                    {g.modeled && (
+                      <span className="absolute -right-0.5 -top-0.5 rounded-full bg-muted px-1 py-px text-micro text-muted-foreground ring-1 ring-card">
+                        est
+                      </span>
+                    )}
                     <span className="text-body-sm font-semibold">{g.label}</span>
                     <span className="mt-0.5 text-meta tabular-nums">{fmt(g.priceThb)}</span>
                     <span className="mt-0.5 text-micro text-muted-foreground">{g.source}</span>
@@ -150,7 +169,7 @@ export default function CardDetailPage() {
             {/* ─── 3. 30-day range bar ────────────────────────────────────── */}
             <div className="mt-5 px-4 sm:px-6 lg:px-0">
               <p className="mb-2.5 text-eyebrow">ช่วงราคา 30 วัน</p>
-              <div className="relative h-5 flex items-center">
+              <div className="relative flex h-5 items-center">
                 <div className="absolute inset-x-0 h-1.5 rounded-full bg-muted" />
                 {/* price-up tint for the portion below current price */}
                 <div
@@ -163,7 +182,7 @@ export default function CardDetailPage() {
                 />
                 {/* marker dot */}
                 <div
-                  className="absolute size-3.5 rounded-full bg-foreground ring-2 ring-card shadow"
+                  className="absolute size-3.5 rounded-full bg-foreground shadow ring-2 ring-card"
                   style={{ left: `calc(${rangePos}% - 7px)` }}
                 />
               </div>
@@ -228,13 +247,11 @@ export default function CardDetailPage() {
                     subtitle={`${sale.grade} · ${sale.when}`}
                     chevron={false}
                     trailing={
-                      <div className="flex flex-col items-end gap-0.5 shrink-0">
+                      <div className="flex shrink-0 flex-col items-end gap-0.5">
                         <span className="text-price tabular-nums">{fmt(sale.priceThb)}</span>
                         <span
                           className={`text-micro ${
-                            sale.type === "sold"
-                              ? "text-muted-foreground"
-                              : "text-primary"
+                            sale.type === "sold" ? "text-muted-foreground" : "text-primary"
                           }`}
                         >
                           {sale.type === "sold" ? "ขายแล้ว" : "ตั้งขาย"}
@@ -272,7 +289,7 @@ export default function CardDetailPage() {
                   chevron={false}
                   trailing={
                     <span className="text-body-sm text-muted-foreground tabular-nums">
-                      {card.counter.toLocaleString("th-TH")}
+                      {counterDisplay}
                     </span>
                   }
                 />
@@ -329,7 +346,7 @@ export default function CardDetailPage() {
                     </div>
                     <p className="mt-1.5 truncate text-body-sm font-medium">{c.name}</p>
                     <div className="flex items-center justify-between gap-1">
-                      <span className="text-meta tabular-nums truncate">{fmt(c.priceThb)}</span>
+                      <span className="truncate text-meta tabular-nums">{fmt(c.priceThb)}</span>
                       <Delta value={c.d24} />
                     </div>
                   </Link>
@@ -343,7 +360,12 @@ export default function CardDetailPage() {
       {/* ── Sticky mobile buy bar (THE one gold moment on this screen) ─────── */}
       <div className="frost hairline-t fixed inset-x-0 bottom-16 z-30 flex items-center justify-between px-4 py-3 pb-safe md:hidden">
         <div>
-          <p className="text-meta">{selectedGrade.label}</p>
+          <p className="text-meta">
+            {selectedGrade.label}
+            {selectedGrade.modeled && (
+              <span className="ml-1 rounded bg-muted px-1 py-px text-micro text-muted-foreground">est</span>
+            )}
+          </p>
           <p className="text-price tabular-nums">{fmt(displayPrice)}</p>
         </div>
         <button

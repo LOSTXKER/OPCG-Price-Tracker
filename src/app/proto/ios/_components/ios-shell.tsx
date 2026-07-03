@@ -8,15 +8,19 @@ import { ChevronLeft, LineChart, ListChecks, Menu, Search, Wallet } from "lucide
 import { cn } from "@/lib/utils"
 
 /**
- * iOS shell for the /proto/ios/* showcase — one file owning the chrome every
- * screen shares:
- *   - Desktop (`md:`+): a top header that mirrors the REAL app's
- *     `src/components/layout/header.tsx` structure (logo · nav links ·
- *     search · avatar, sticky, transparent→frosted on scroll) — the owner
- *     asked for "web should be good too" using the CURRENT web layout as the
- *     base, not an iPad-style side rail.
+ * iOS shell for the /proto/ios/* showcase (v3) — "Meecard as one app that
+ * scales up," not "a phone app plus a separate desktop website." Every
+ * screen size gets the SAME grammar (large title collapsing into a compact
+ * toolbar title on scroll, frosted chrome, the same tab identity) — only the
+ * chrome's shape and the content's column count change per breakpoint,
+ * exactly like an Apple app scaling from iPhone to iPad to Mac (Notes/Music
+ * collapse their big title into the toolbar identically on every size).
+ *   - Desktop (`md:`+): a top app bar (logo · nav links · search · avatar)
+ *     instead of a bottom tab bar — the owner's own reasoning: "the web has
+ *     more room, not a different app." Same frost-on-scroll + honey-active
+ *     treatment as mobile, and the SAME collapsing-title behavior.
  *   - Mobile (`<md`): the collapsing frosted large-title nav bar + bottom tab
- *     bar, unchanged from the mobile-first pass.
+ *     bar.
  *
  * Scoped entirely to /proto/ios — does not touch the real app's Header/
  * BottomNav/MainChrome.
@@ -99,6 +103,18 @@ export function IosShell({ children }: { children: React.ReactNode }) {
               )
             })}
           </nav>
+
+          {/* Same "large title collapses into the toolbar on scroll" grammar
+              as the mobile nav bar — one app, one behavior, every screen size
+              (macOS/iPadOS toolbars do exactly this, e.g. Notes/Music). */}
+          <p
+            className={cn(
+              "motion-base text-h4 ml-4 truncate",
+              scrolled ? "opacity-100" : "pointer-events-none opacity-0",
+            )}
+          >
+            {nav.title}
+          </p>
 
           <div className="flex-1" />
 

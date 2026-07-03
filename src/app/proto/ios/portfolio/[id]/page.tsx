@@ -6,9 +6,9 @@ import { useParams } from "next/navigation"
 import { ArrowDown, ArrowUp, Eye, EyeOff, Plus, Share2 } from "lucide-react"
 
 import { SegmentedControl } from "@/components/ui/segmented-control"
+import { GroupedSection } from "@/components/ui/grouped-list"
 
 import { LargeTitle } from "../../_components/large-title"
-import { GroupedSection } from "@/components/ui/grouped-list"
 import { fmt, fmtPct, HISTORY, portfolioById, PORTFOLIO_STATS } from "../../_data"
 
 type Tab = "overview" | "insights"
@@ -74,6 +74,16 @@ export default function PortfolioDetailPage() {
   const [tab, setTab] = useState<Tab>("overview")
   const [balanceHidden, setBalanceHidden] = useState(false)
 
+  // Per-unit gain% for best/worst — ranked by (priceThb - costThb) in _data.ts
+  const bestPct =
+    stats.best.costThb > 0
+      ? ((stats.best.card.priceThb - stats.best.costThb) / stats.best.costThb) * 100
+      : 0
+  const worstPct =
+    stats.worst.costThb > 0
+      ? ((stats.worst.card.priceThb - stats.worst.costThb) / stats.worst.costThb) * 100
+      : 0
+
   return (
     <div className="pb-8 md:mx-auto md:max-w-5xl">
       {/* ── Page identity ───────────────────────────── */}
@@ -101,8 +111,7 @@ export default function PortfolioDetailPage() {
             >
               <Share2 className="size-4.5" />
             </button>
-            {/* Desktop has no bottom sticky bar (mobile-only below), so the
-                add-card action lives inline here instead. */}
+            {/* Desktop inline add-card — no bottom sticky bar on desktop */}
             <button
               type="button"
               className="ease-chrome hidden items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 md:inline-flex"
@@ -183,7 +192,7 @@ export default function PortfolioDetailPage() {
         </GroupedSection>
       )}
 
-      {/* ── Insights tab — stacked on mobile, side-by-side on desktop ── */}
+      {/* ── Insights tab — stacked mobile, side-by-side desktop ── */}
       {tab === "insights" && (
         <div className="grid gap-4 px-4 sm:px-6 lg:grid-cols-2 lg:items-start">
           {/* 30-day sparkline */}
@@ -196,16 +205,21 @@ export default function PortfolioDetailPage() {
             </div>
           </div>
 
-          {/* Stat strip */}
+          {/* Stat strip — 5 cells in a responsive grid.
+              gap-px + bg-[var(--p-hair)] on the grid creates 1px hairline
+              separators between cells; overflow-hidden clips outer edges. */}
           <div className="hairline overflow-hidden rounded-2xl bg-card">
-            <div className="flex divide-x divide-[var(--p-hair)] lg:h-full">
-              <div className="flex-1 px-4 py-3">
+            <div className="grid grid-cols-2 gap-px bg-[var(--p-hair)] sm:grid-cols-3 lg:grid-cols-5">
+              {/* 1 — ต้นทุน */}
+              <div className="bg-card px-4 py-3">
                 <p className="text-eyebrow mb-1">ต้นทุน</p>
                 <p className="text-price tabular-nums">
                   {balanceHidden ? "•••" : fmt(stats.cost)}
                 </p>
               </div>
-              <div className="flex-1 px-4 py-3">
+
+              {/* 2 — กำไร / ขาดทุน */}
+              <div className="bg-card px-4 py-3">
                 <p className="text-eyebrow mb-1">กำไร / ขาดทุน</p>
                 <p
                   className={`text-price tabular-nums ${
@@ -217,7 +231,9 @@ export default function PortfolioDetailPage() {
                     : `${stats.pnl >= 0 ? "+" : ""}${fmt(stats.pnl)}`}
                 </p>
               </div>
-              <div className="flex-1 px-4 py-3">
+
+              {/* 3 — ROI */}
+              <div className="bg-card px-4 py-3">
                 <p className="text-eyebrow mb-1">ROI</p>
                 <p
                   className={`text-price tabular-nums ${
@@ -225,6 +241,36 @@ export default function PortfolioDetailPage() {
                   }`}
                 >
                   {fmtPct(stats.pnlPct)}
+                </p>
+              </div>
+
+              {/* 4 — ผลงานดีที่สุด */}
+              <div className="bg-card px-4 py-3">
+                <p className="text-eyebrow mb-1">ดีที่สุด</p>
+                <p className="truncate text-micro text-muted-foreground">
+                  {stats.best.card.name}
+                </p>
+                <p
+                  className={`text-price tabular-nums ${
+                    bestPct >= 0 ? "text-price-up" : "text-price-down"
+                  }`}
+                >
+                  {fmtPct(bestPct)}
+                </p>
+              </div>
+
+              {/* 5 — ผลงานแย่ที่สุด — spans 2 cols when alone on mobile row */}
+              <div className="col-span-2 bg-card px-4 py-3 sm:col-span-1">
+                <p className="text-eyebrow mb-1">แย่ที่สุด</p>
+                <p className="truncate text-micro text-muted-foreground">
+                  {stats.worst.card.name}
+                </p>
+                <p
+                  className={`text-price tabular-nums ${
+                    worstPct >= 0 ? "text-price-up" : "text-price-down"
+                  }`}
+                >
+                  {fmtPct(worstPct)}
                 </p>
               </div>
             </div>
