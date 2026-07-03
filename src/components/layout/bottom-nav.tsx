@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, LineChart, Menu, Swords, Wallet } from "lucide-react";
+import { LayoutGrid, LineChart, Menu, Search, Wallet } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
@@ -52,12 +52,38 @@ function TabLink({
 }
 
 /**
+ * Center action slot — not a route, so it never gets the active/label
+ * treatment of a `TabLink`. A raised primary-filled circle that pops above
+ * the bar (camera-button pattern) opens the same command-search overlay as
+ * the header's search icon.
+ */
+function SearchButton() {
+  const lang = useUIStore((s) => s.language);
+  const openSearch = useUIStore((s) => s.setSearchOpen);
+
+  return (
+    <li className="flex min-w-0 flex-1 items-center justify-center">
+      <button
+        type="button"
+        onClick={() => openSearch(true)}
+        aria-label={t(lang, "search")}
+        className="ease-chrome -mt-6 flex size-14 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-4 ring-background transition-transform active:scale-95"
+      >
+        <Search className="size-6" aria-hidden />
+      </button>
+    </li>
+  );
+}
+
+/**
  * Mobile bottom-nav — 5 FIXED tabs. Tab identity never changes (no feature-flag
- * swapping); flag-gated features (marketplace, messages) live inside Browse /
- * Portfolio / More, not as tabs. Search moved to the header. See REDESIGN.md §3.
+ * swapping); flag-gated features (marketplace, messages) live inside ชุดการ์ด /
+ * Portfolio / More, not as tabs.
  *
  * Every tab is a real destination (iOS HIG) — "More" navigates to /more like
- * the rest, it no longer opens a drawer.
+ * the rest, it no longer opens a drawer. The center slot is the one
+ * exception: it's an action (open search), not a page, styled as a raised
+ * button so it reads as distinct from the 4 navigating tabs either side.
  */
 export function BottomNav({ className }: { className?: string }) {
   const pathname = usePathname() ?? "/";
@@ -73,9 +99,9 @@ export function BottomNav({ className }: { className?: string }) {
       aria-label="Navigation"
     >
       <ul className="mx-auto flex max-w-lg items-stretch justify-around">
-        <TabLink href="/" label={t(lang, "market")} icon={LineChart} pathname={pathname} />
-        <TabLink href="/sets" label={t(lang, "browse")} icon={LayoutGrid} pathname={pathname} />
-        <TabLink href="/decks" label={t(lang, "decks")} icon={Swords} pathname={pathname} />
+        <TabLink href="/" label={t(lang, "home")} icon={LineChart} pathname={pathname} />
+        <TabLink href="/sets" label={t(lang, "sets")} icon={LayoutGrid} pathname={pathname} />
+        <SearchButton />
         <TabLink href="/portfolio" label={t(lang, "portfolioNav")} icon={Wallet} pathname={pathname} />
         <TabLink href="/more" label={t(lang, "more")} icon={Menu} badge={unread} pathname={pathname} />
       </ul>
