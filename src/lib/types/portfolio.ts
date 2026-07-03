@@ -45,6 +45,14 @@ export type AssetRow = {
   game: GameRef | null
 }
 
+/** Minimal card info for the hub's per-portfolio thumbnail strip. */
+export type PortfolioPreviewItem = {
+  cardCode: string
+  imageUrl: string | null
+  nameJp: string
+  nameEn: string | null
+}
+
 export type PortfolioMeta = {
   id: number
   name: string
@@ -52,6 +60,9 @@ export type PortfolioMeta = {
   totalValue: number
   totalCost: number
   itemCount: number
+  /** Top holdings by value (desc), capped small — thumbnails on the hub's
+   *  portfolio card, not a full listing. */
+  previewItems: PortfolioPreviewItem[]
 }
 
 export type TransactionRow = {

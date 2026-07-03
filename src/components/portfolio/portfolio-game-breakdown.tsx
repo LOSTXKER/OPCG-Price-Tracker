@@ -32,8 +32,10 @@ export function PortfolioGameBreakdown({
 }: {
   breakdown: GameBreakdown[]
   totalValueJpy: number
-  /** Deep-link a row into that game's scope by setting the in-page filter. */
-  onSelect: (game: string) => void
+  /** Deep-link a row into that game's scope by setting the in-page filter.
+   *  Omit to render read-only rows (e.g. the hub's cross-portfolio summary,
+   *  which has no single game-scoped view to jump to). */
+  onSelect?: (game: string) => void
   hideBalance?: boolean
 }) {
   const lang = useUIStore((s) => s.language)
@@ -70,13 +72,14 @@ export function PortfolioGameBreakdown({
             getGameConfig(slug)?.shortName ?? b.game?.name ?? slug.toUpperCase()
           const firstLetter = gameName.charAt(0).toUpperCase()
 
-          return (
-            <button
-              key={slug}
-              type="button"
-              onClick={() => onSelect(slug)}
-              className="ease-chrome block w-full cursor-pointer px-4 py-3 text-left transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:px-5"
-            >
+          const rowClassName = cn(
+            "block w-full px-4 py-3 text-left sm:px-5",
+            onSelect &&
+              "ease-chrome cursor-pointer transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          )
+
+          const row = (
+            <>
               {/* Top row: logo · name+count · value+delta */}
               <div className="flex items-center gap-3">
                 {/* Logo chip — image or letter fallback */}
@@ -145,7 +148,17 @@ export function PortfolioGameBreakdown({
                   }}
                 />
               </div>
+            </>
+          )
+
+          return onSelect ? (
+            <button key={slug} type="button" onClick={() => onSelect(slug)} className={rowClassName}>
+              {row}
             </button>
+          ) : (
+            <div key={slug} className={rowClassName}>
+              {row}
+            </div>
           )
         })}
       </div>

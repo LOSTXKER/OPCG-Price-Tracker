@@ -57,6 +57,13 @@
   - `loading.tsx` + `portfolio-mock-preview.tsx` เขียนใหม่ mirror sidebar+panel (กัน layout jump ทั้ง route-level suspense และ logged-out preview)
   - ไม่แตะ API/hook/Prisma · ไม่มี bottom sheet ใหม่
   - verify: impeccable detect [] · tsc0 · lint 0 err (34 warning เดิม) · test 56/56 · build ✓ · Chrome จริง desktop 1512 (dark+light) + มือถือ 390px (ภาพรวม+เชิงลึก) เทียบ screenshot เว็บ live ตรงกัน
+- [x] **Hub + Detail split** (2026-07-03 · เบส: "หน้าแรกเป็นหน้าเลือกพอร์ต+dashboard กดเข้าไปดูเต็ม") — panel-layout รอบก่อนถูกแทนด้วยโครง 2 ชั้นจริง:
+  - `use-portfolio-api.ts`: param `activePortfolioId` (sync แบบ render-time adjust กัน lint set-state-in-effect) แทน auto-select-พอร์ตแรก · `toAssetRow`/`buildGameBreakdown` แยกเป็นฟังก์ชันกลาง → ต่อยอด `allAssets`/`allGameBreakdown` (cross-portfolio) · `portfolioMetas` +`previewItems` (thumbnail top 4)
+  - `/portfolio` = hub ใหม่ทั้งหมด: dashboard hero (รวมทุกพอร์ต, glow ตาม P/L จริง) → grid การ์ดพอร์ต (`PortfolioHubCard` stretched-link pattern) → แยกตามเกม/มูฟเวอร์ข้ามพอร์ต (read-only — `PortfolioGameBreakdown.onSelect` เป็น optional แล้ว)
+  - `/portfolio/[id]` ใหม่ (page + client): breadcrumb+switcher (`router.push` แทน setState) + แท็บเดิมครบ (hero panel/game chips/ตาราง/scrub chart/allocation) · ลบพอร์ตที่ดูอยู่ → เด้ง `/portfolio` · id ผิด → soft not-found + ปุ่มกลับ
+  - loading.tsx ×2 + mock-preview ใหม่ตามโครง hub · i18n +4 key ×3
+  - **การตัดสินใจเบี่ยงแผน**: ตัดปุ่ม "+เพิ่มการ์ด" ออกจาก hub hero ยกเว้นตอน 0 พอร์ต (กำกวมว่าจะเพิ่มเข้าพอร์ตไหนถ้ามีหลายพอร์ต) — เพิ่มการ์ดทำในหน้า detail แทน
+  - verify: tsc0 · lint0 (เจอ+แก้ 1 error `set-state-in-effect`) · test56 · build✓ (route `/portfolio/[id]` ขึ้นจริง) · impeccable detect [] · curl smoke 4 route 200 · **⚠️ ยังไม่ได้เปิด Chrome จริงดู** (browser tool ไม่พร้อม session นี้ — เบสต้องเช็คเอง ดู PROGRESS.md)
 
 ### MINE multi-game UX (พอร์ต/แจ้งเตือน/รายการโปรด รองรับหลายเกม · workflow 7-agent + เว็บระดับโลก 2026-07-01 · เบสเคาะ "เริ่มเลย")
 > หลักการเดียว: "ของฉัน" = กองเดียวรวมทุกเกมเป็น default · เกม = ป้าย+ตัวกรองในหน้า ไม่ใช่โหมด (Robinhood/Coinbase/Collectr) · header pill = แคตตาล็อกเท่านั้น ห้ามกรอง MINE เงียบๆ (NN/g "devastating")
