@@ -55,12 +55,14 @@ export function Breadcrumb(props: BreadcrumbProps) {
         <Link
           href={parent.href}
           className={cn(
-            "mb-4 inline-flex items-center gap-1 py-1 text-sm font-medium text-primary motion-base active:text-primary/70 md:hidden",
+            // iOS-style back pill: min 36px tall, quiet muted chip that darkens
+            // on press. -ml-1 optically aligns the chevron with the content edge.
+            "mb-4 -ml-1 inline-flex min-h-9 max-w-full items-center gap-0.5 rounded-full bg-muted py-1.5 pl-2 pr-3.5 text-sm font-medium motion-base active:bg-muted/70 md:hidden",
             props.className,
           )}
         >
-          <ChevronLeft className="size-4" />
-          {parent.label}
+          <ChevronLeft className="size-4 shrink-0 text-primary" />
+          <span className="truncate">{parent.label}</span>
         </Link>
       )}
 

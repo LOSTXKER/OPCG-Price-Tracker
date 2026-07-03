@@ -476,25 +476,19 @@ export function CardDetail({
 
   return (
     <div className="relative mx-auto max-w-7xl scroll-smooth pb-[calc(8.5rem+env(safe-area-inset-bottom))] md:pb-8">
-      {/* breadcrumb row — md+ gets the full trail (Breadcrumb hides itself
-          below md); mobile keeps this page's compact identity meta instead of
-          the generic "< back" link because set/code/rarity is more useful
-          context on a trade screen. Boundary moved sm→md to match the
-          breadcrumb's own chrome boundary (AGENTS.md breakpoints). */}
+      {/* breadcrumb row — Breadcrumb self-adapts: full trail on md+, an
+          iOS-style "< [set name]" back pill on mobile. The old mobile-only
+          compact meta line (set · code · rarity) was dropped — it duplicated
+          the identity chips right under the card name. */}
       <div className="min-w-0">
-        <div className="hidden min-w-0 md:block">
-          <Breadcrumb
-            items={[
-              { label: t(displayLang, "home"), href: "/" },
-              { label: t(displayLang, "sets"), href: "/sets" },
-              { label: setName, href: `/sets/${set.code}` },
-              { label: card.baseCode ?? card.cardCode },
-            ]}
-          />
-        </div>
-        <p className="text-meta min-w-0 truncate md:hidden">
-          {set.code.toUpperCase()} · {card.baseCode ?? card.cardCode} · {card.rarity}
-        </p>
+        <Breadcrumb
+          items={[
+            { label: t(displayLang, "home"), href: "/" },
+            { label: t(displayLang, "sets"), href: "/sets" },
+            { label: setName, href: `/sets/${set.code}` },
+            { label: card.baseCode ?? card.cardCode },
+          ]}
+        />
       </div>
 
       {/* ── 3-COL: hero card image (left) · identity+price+trade (center) · stats+actions (right) ── */}

@@ -3,7 +3,11 @@
 
 อัปเดตล่าสุด: 2026-07-03 — **Breadcrumb มือถือ → iOS back link** (เบสถาม "มือถือควรมี breadcrumb มั้ย" → ไม่ควรตามหลัก iOS/NN:g → เบสสั่ง "ทำเลย และควรมีปุ่มย้อนด้วย") ต่อจาก Mobile UX full audit ที่เจอ+แก้บั๊กจริง 5 ตัว
 
-## ✅ เสร็จล่าสุด — Breadcrumb: ซ่อนบนมือถือ + ปุ่มย้อนแบบ iOS สำหรับหน้าลูกลึก
+## ✅ เสร็จล่าสุด (ต่อ) — ปุ่มย้อนเป็น pill สวย + card detail ได้ปุ่มย้อนด้วย
+เบสขอ 2 อย่างต่อ: (1) ปุ่มย้อนจาก text link ธรรมดา → **iOS-style pill** (`rounded-full bg-muted` สูง ≥36px, chevron สี honey, กดแล้วเข้มขึ้น, truncate ได้ถ้าชื่อหน้าแม่ยาว) — แก้ที่ `breadcrumb.tsx` ที่เดียว (2) **card detail ได้ปุ่มย้อนด้วยแล้ว**: ถอด meta `OP01 · OP01-001 · L` ที่หัวจอมือถือทิ้ง (ซ้ำกับ identity chips ใต้ชื่อการ์ดที่มี `L · OP01-001` อยู่แล้ว) → มือถือเห็น pill `< Romance Dawn` (ชื่อชุด) พากลับหน้า set · desktop คง trail เต็มผ่าน `md:flex` ของ component เอง (ตัด wrapper `hidden md:block` ที่ไม่จำเป็นออก)
+**verify:** tsc0/lint0/detect[]/test56/build✓ + browser จริง: มือถือ card detail เห็น pill "< Romance Dawn" + `/portfolio/1` เห็น pill "< พอร์ตโฟลิโอ" (screenshot ทั้งคู่) · desktop trail เต็ม+pill ซ่อน ยืนยันด้วย computed style
+
+## ✅ เสร็จก่อนหน้า — Breadcrumb: ซ่อนบนมือถือ + ปุ่มย้อนแบบ iOS สำหรับหน้าลูกลึก
 
 แก้ที่ `src/components/shared/breadcrumb.tsx` ที่เดียว (ทุกหน้าที่ใช้ ~30 จุดได้ผลพร้อมกัน):
 - **Desktop (≥md)**: เส้นทางเต็ม Home > Section > Current เหมือนเดิมเป๊ะ
