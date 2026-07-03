@@ -5,7 +5,7 @@ import Image from "next/image"
 import { ArrowDown, ArrowUp, Bell, SlidersHorizontal, Star } from "lucide-react"
 
 import { LargeTitle } from "../_components/large-title"
-import { GroupedSection } from "../_components/grouped-list"
+import { GroupedSection } from "@/components/ui/grouped-list"
 import { WATCHLIST, fmt, fmtPct } from "../_data"
 
 type Filter = "all" | "pinned"

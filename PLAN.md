@@ -22,8 +22,14 @@
 - [x] verify: tsc0 · lint0 (34 warning เดิม) · test56 · build✓ (6 route ขึ้นจริง) · impeccable detect [] · curl smoke 200 ทุก route
 - [x] **⚠️ เบสเคาะทิศ iOS โอเค แต่สั่งต่อ**: "อยากได้เว็บก็ดี มือถือก็ดี เอา UI ปัจจุบันมาปรับ" → "ทำ proto ก่อนนะ" (ยังไม่ให้ rollout หน้าจริง)
 - [x] **Proto v2 — desktop จริง** (2026-07-03) — `IosShell` ตัด side rail (จำลอง iPad) ออก เปลี่ยนเป็น **top header แบบเว็บจริง** (จำลองโครง `header.tsx` จริง: logo·nav links·search·avatar, frost ตอน scroll, active=honey pill) · เพิ่ม desktop composition ต่อจอ (มือถือไม่แตะเลย): ตลาด `lg:grid-cols-6` movers + 7d column · portfolio hub `lg:grid-cols-3` · portfolio detail insights `lg:grid-cols-2` + ปุ่มเพิ่มการ์ดย้ายเข้า header trailing · card detail ห่อ `max-w-6xl` ให้ตรง header (sticky rail offset พอดีกับ header 56px โดยบังเอิญ) · watchlist +7d column · more คงเดิม (max-w-2xl ถูกอยู่แล้ว) · verify: tsc0/lint0/test56/build✓/detect[]/curl smoke ครบ
-- [ ] **⚠️ ยังไม่ได้เปิด browser จริงดู desktop** (tool ไม่พร้อม session นี้) — เบสต้องเช็คของจริงก่อนเคาะ (ดู PROGRESS.md NEXT)
-- [ ] เบสเคาะ → เขียนแผน rollout จริงเป็น batch แยก (atoms เข้า production → chrome จริง → Settings/More → MONEY → PLAY → ที่เหลือ) — ยังไม่เริ่ม, 30+ surface ต้องทยอย verify ทีละ batch ไม่กวาดทีเดียว
+- [x] **⚠️ เบสถาม-ยืนยันทิศสุดท้าย**: "อยากได้ desktop เดิม แต่มือถือเป็น iOS ทำไม่ได้หรอ" → ยืนยันทำได้ (responsive ปกติ, desktop/มือถือมี markup แยกกันอยู่แล้วหลายจุด) → เบสสั่ง "เริ่มเลย"
+- [x] **Rollout หน้าจริง — Batch 0+1 (2026-07-03)**: **desktop คงเดิมเป๊ะทุกจุด · มือถือ (<md) เท่านั้นที่เปลี่ยน**
+  - Batch 0: ย้าย `GroupedSection`/`GroupedRow` จาก proto → `src/components/ui/grouped-list.tsx` — `GroupedRow` delegate ไปที่ `ListRow` เดิม (ไม่ duplicate row primitive)
+  - Batch 1a chrome มือถือ: `header-mobile.tsx` transparent→frost ตอน scroll (pattern เดียวกับ desktop header) · `page-header.tsx` ใช้ `.text-large-title` (token มี media query ในตัว 34px มือถือ→32px ที่ ≥768px ตรงกับ `.text-h1` เดิมเป๊ะ = desktop ไม่เปลี่ยน) · `bottom-nav.tsx` ใช้ `.pb-safe` แทน arbitrary value
+  - Batch 1b home มือถือ: `mobile-card-item.tsx` thumbnail square→portrait `aspect-[63/88]` (ตรง VISION การ์ด=พระเอก) + `min-h-[52px]` — ฟีเจอร์เดิมครบ (rank/sparkline/ราคา/delta) · ตั้งใจข้าม toolbar/tabs ใน `home-market-overview.tsx` (class ใช้ร่วม mobile/desktop ไม่แยกชัด เสี่ยงกระทบ desktop)
+  - verify: tsc0/lint0/test56/build✓/detect[]/curl smoke ครบทั้งหน้าจริงและ proto
+- [ ] **⚠️ ยังไม่ได้เปิด browser จริงดู** (tool ไม่พร้อม session นี้) — เบสต้องเช็ค desktop (ต้องเหมือนเดิม) + มือถือ (ต้องเป็น iOS) ก่อนไป batch ถัดไป
+- [ ] เบสเคาะ → batch ถัดไป (card detail → portfolio pages → watchlist → Settings/More ด้วย `GroupedSection`/`GroupedRow`) — 30+ surface ต้องทยอย verify ทีละ batch ไม่กวาดทีเดียว
 
 ### Card detail — trust core ✅ (proto visionary layout · เต็มภาพ · est-labeled fill)
 - [x] **rework layout ตรง proto visionary** (เบสเลือก): grid `340px/1fr` · ซ้าย sticky = รูป+identity+EditionToggle+CTA · ขวา = hero + **3-stat box** (Last Sale·Lowest Listing·Sales 30d) + grade chips **outline-selected** + chart card + **tabs** (Comps/Listings/Population/Specs)

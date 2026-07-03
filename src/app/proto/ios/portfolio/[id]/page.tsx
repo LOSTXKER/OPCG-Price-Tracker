@@ -8,7 +8,7 @@ import { ArrowDown, ArrowUp, Eye, EyeOff, Plus, Share2 } from "lucide-react"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 
 import { LargeTitle } from "../../_components/large-title"
-import { GroupedSection } from "../../_components/grouped-list"
+import { GroupedSection } from "@/components/ui/grouped-list"
 import { fmt, fmtPct, HISTORY, portfolioById, PORTFOLIO_STATS } from "../../_data"
 
 type Tab = "overview" | "insights"

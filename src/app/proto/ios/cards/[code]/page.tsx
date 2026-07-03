@@ -6,7 +6,7 @@ import Link from "next/link"
 import { useParams } from "next/navigation"
 import { ArrowDown, ArrowUp, Star } from "lucide-react"
 
-import { GroupedSection, GroupedRow } from "../../_components/grouped-list"
+import { GroupedSection, GroupedRow } from "@/components/ui/grouped-list"
 import { CARD_DETAIL, fmt, fmtPct } from "../../_data"
 
 /**

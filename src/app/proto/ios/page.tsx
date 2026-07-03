@@ -6,7 +6,7 @@ import Link from "next/link"
 import { ArrowDown, ArrowUp, Search, SlidersHorizontal } from "lucide-react"
 
 import { LargeTitle } from "./_components/large-title"
-import { GroupedSection } from "./_components/grouped-list"
+import { GroupedSection } from "@/components/ui/grouped-list"
 import { CATALOG, fmt, fmtPct } from "./_data"
 
 /**

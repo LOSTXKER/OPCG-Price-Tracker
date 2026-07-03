@@ -466,10 +466,19 @@
    elsewhere in the app) and .text-display (hero KPI numbers): this one is
    specifically the collapsing-nav pattern's expanded state. */
 .text-large-title {
-  font-size: 2.125rem;           /* 34px — iOS large-title size */
+  font-size: 2.125rem;           /* 34px — iOS large-title size (mobile) */
   line-height: 1.15;
   font-weight: 700;
   letter-spacing: -0.02em;
+}
+@media (min-width: 768px) {
+  /* Desktop keeps the existing page-title scale (matches .text-h1) — the
+     iOS large-title treatment is a mobile-only affordance (PageHeader). */
+  .text-large-title {
+    font-size: 2rem;             /* 32px */
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+  }
 }
 
 /* Page titles */

@@ -32,7 +32,7 @@ export const MobileCardItem = memo(function MobileCardItem({
   const isPsa = priceMode === "psa10"
 
   return (
-    <div className="ease-chrome flex items-center gap-3 px-4 py-3 active:bg-muted">
+    <div className="ease-chrome flex min-h-[52px] items-center gap-3 px-4 py-2.5 active:bg-muted">
       <span className="w-5 shrink-0 text-center font-price text-xs text-muted-foreground">{rank}</span>
       {card.imageUrl ? (
         <CardImageButton
@@ -51,12 +51,12 @@ export const MobileCardItem = memo(function MobileCardItem({
             priceChange30d: card.priceChange30d ?? null,
             psa10PriceUsd: card.psa10PriceUsd ?? null,
           }}
-          className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-muted"
+          className="hairline relative aspect-[63/88] w-11 shrink-0 overflow-hidden rounded-md bg-muted"
         >
           <Image src={card.imageUrl} alt={name} fill className="object-contain" sizes="44px" />
         </CardImageButton>
       ) : (
-        <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-muted" />
+        <div className="hairline relative aspect-[63/88] w-11 shrink-0 overflow-hidden rounded-md bg-muted" />
       )}
       <Link
         href={`/cards/${card.cardCode}`}
@@ -89,9 +89,9 @@ export const MobileCardItem = memo(function MobileCardItem({
 
 export function MobileCardSkeleton() {
   return (
-    <div className="flex items-center gap-3 px-4 py-3">
+    <div className="flex min-h-[52px] items-center gap-3 px-4 py-2.5">
       <Skeleton className="h-4 w-5" />
-      <Skeleton className="size-11 rounded-lg" />
+      <Skeleton className="aspect-[63/88] w-11 rounded-md" />
       <div className="flex-1 space-y-1.5">
         <Skeleton className="h-3.5 w-28" />
         <Skeleton className="h-2.5 w-16" />

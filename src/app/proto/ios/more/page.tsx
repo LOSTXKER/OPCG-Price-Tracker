@@ -21,7 +21,7 @@ import {
 } from "lucide-react"
 
 import { LargeTitle } from "../_components/large-title"
-import { GroupedSection, GroupedRow } from "../_components/grouped-list"
+import { GroupedSection, GroupedRow } from "@/components/ui/grouped-list"
 import { USER } from "../_data"
 
 /**

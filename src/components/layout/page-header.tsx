@@ -41,7 +41,11 @@ export function PageHeader({
   align = "start",
   size = "default",
 }: PageHeaderProps) {
-  const titleClass = size === "sm" ? "text-h2" : "text-h1";
+  // `.text-large-title` is the mobile iOS large-title size (34px) and
+  // automatically steps back down to the existing `.text-h1` desktop size
+  // (32px, ≥768px) via its own media query — desktop is untouched, mobile
+  // gets the bigger, bolder page-identity treatment.
+  const titleClass = size === "sm" ? "text-h2" : "text-large-title";
 
   return (
     <div className={cn("mb-6", className)}>
