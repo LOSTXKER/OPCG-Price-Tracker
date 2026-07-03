@@ -1,7 +1,19 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-03 — **Bottom-nav: ปุ่มค้นหา → รายการโปรดธรรมดา · หน้า `/more` ตัด header+footer ออก** (เบสสั่งแก้ต่อจากรอบก่อน) ต่อจาก relabel+ตัดเด็คก่อนหน้า
+อัปเดตล่าสุด: 2026-07-03 — **`/more` ตัดหัวข้อ "เพิ่มเติม" ออก + ขยับ gutter มือถือทั้งเว็บ 16px→20px** (เบสบอกเนื้อหาติดขอบจอ)
+
+## ✅ เสร็จล่าสุด — ตัดหัวข้อหน้า `/more` + เพิ่ม gutter มือถือทั้งเว็บ (16px → 20px)
+เบสสั่ง 2 อย่าง: "(1) ดูเพิ่มเติมเอาหัวข้อคำว่าเพิ่มเติมออก (2) ทุกหน้าในมุมมือถือรู้สึกว่าควรขยับความกว้างเข้ามาหน่อย มันติดขอบจอไป"
+
+1. **`/more` ตัดหัวข้อ H1 "เพิ่มเติม" ทิ้ง** (`more-client.tsx`) — ลบ `<PageHeader title=.../>` (import ด้วย) แทนที่ด้วย `pt-safe` เฉยๆ (การ์ดแรกเริ่มใกล้ status bar มากขึ้นแต่ยังมี `pt-8` จาก `PageContent` เดิมรองรับอยู่แล้ว ไม่ชนขอบจริง) เหตุผล: หน้านี้ไม่มี site header คลุมอยู่ด้านบนแล้ว (ตัดไปรอบก่อน) หัวข้อซ้ำจึงเป็น noise ไม่ใช่ identity ที่มีประโยชน์
+2. **Gutter มือถือทั้งเว็บ 16px (`px-4`) → 20px (`px-5`)** — แก้ที่ต้นทาง `page-container.tsx` (`PageContainer` ตัวเดียวที่ทุกหน้าพึ่งพา) เปลี่ยน `px-4 md:px-6 lg:px-8` → `px-5 md:px-6 lg:px-8` (**เฉพาะมือถือ** md/lg เดิมไม่แตะ) — ตามด้วยจุดที่ hardcode `-mx-4`/`px-4` แบบ "cancel-then-reapply" (breakout pattern สำหรับแถวเลื่อนแนวนอน/full-bleed) ต้องอัปเดตให้ตรงกับฐานใหม่ ไม่งั้นจะเบี้ยว:
+   - `grouped-list.tsx` (`GroupedSection`): default `px-4 sm:px-6` → `px-5 sm:px-6` (settings ใช้ pattern นี้)
+   - `header-mobile.tsx`: `px-4` → `px-5` (ให้โลโก้/ไอคอน header ชิดกับขอบเนื้อหาด้านล่างพอดี ไม่งั้นจะเยื้องกัน 4px)
+   - `settings/page.tsx`: `-mx-4`/`px-4` (h1) → `-mx-5`/`px-5`
+   - `trending-tabs.tsx`, `sets-page-client.tsx`, `set-detail-content.tsx`, `market-overview-client.tsx`: แถวเลื่อนแนวนอน (type pills/rarity chips/top-cards) → `-mx-4`/`px-4` → `-mx-5`/`px-5`
+   - หน้าโปรไฟล์สาธารณะ (`public-profile-client.tsx` + `profile-tabs-nav.tsx`) มี container อิสระของตัวเอง (ไม่ผ่าน `PageContainer` เพราะเป็น full-width route) ต้องแก้แยกให้ตรงกันด้วย
+**verify:** tsc0/lint0(34 warning เดิม)/detect[]/test56/build✓ + browser จริงวัด gutter ตรงๆ ด้วย `getBoundingClientRect()` (ยืนยัน 20px ซ้าย-ขวาบน `/more`, header กับ content เท่ากันที่ 20px) + overflow-check บนหน้าที่มีแถวเลื่อนแนวนอน (`/opcg/trending`, `/opcg/sets`) ยัง `scrollWidth === clientWidth` (ไม่ล้น) + screenshot ยืนยันภาพหลาย ๆ หน้า (`/more`, `/settings`) + curl smoke ทุก route ที่แก้ 200
 
 ## ✅ เสร็จล่าสุด — ปรับ bottom-nav กลับเป็นแท็บธรรมดา + `/more` ไม่มี header/footer
 เบสสั่ง: "เอาค้นหาออกดีกว่าเปลี่ยนเป็นปุ่มรายการโปรดธรรมดา ส่วนดูเพิ่มเติมเอา header ออก และ footer ออก" — 2 จุด:

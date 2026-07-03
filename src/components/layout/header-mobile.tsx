@@ -45,7 +45,7 @@ export function HeaderMobile({ isAuthenticated }: { isAuthenticated: boolean }) 
         scrolled ? "frost hairline-b" : "bg-transparent",
       )}
     >
-      <div className="flex h-14 items-center gap-1 px-4">
+      <div className="flex h-14 items-center gap-1 px-5">
         <Link href="/" className="flex shrink-0 items-center gap-2">
           <Image
             src="/meecard.png"

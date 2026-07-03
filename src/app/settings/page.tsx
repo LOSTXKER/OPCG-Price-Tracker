@@ -31,8 +31,8 @@ export default function SettingsIndexPage() {
   return (
     <>
       {/* ── Mobile menu — iOS grouped-inset table view (desktop untouched below) ── */}
-      <div className="-mx-4 space-y-6 md:hidden">
-        <h1 className="text-large-title px-4">{t(lang, "profileSettings")}</h1>
+      <div className="-mx-5 space-y-6 md:hidden">
+        <h1 className="text-large-title px-5">{t(lang, "profileSettings")}</h1>
 
         {/* Identity row — bigger avatar, own grouped card like /proto/ios/more */}
         <GroupedSection>

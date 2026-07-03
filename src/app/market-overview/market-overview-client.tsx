@@ -108,8 +108,8 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
             }
           />
           {/* Mobile: horizontal scroller. Desktop: grid */}
-          <div className="-mx-4 sm:mx-0">
-            <div className="scroll-fade-x flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-1 sm:hidden">
+          <div className="-mx-5 sm:mx-0">
+            <div className="scroll-fade-x flex snap-x snap-mandatory gap-2 overflow-x-auto px-5 pb-1 sm:hidden">
               {data.topCards.map((card, i) => (
                 <div
                   key={card.cardCode}

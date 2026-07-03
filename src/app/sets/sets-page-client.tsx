@@ -102,7 +102,7 @@ export function SetsListClient({ sets }: { sets: SetWithCard[] }) {
     <>
       {/* Type filter — horizontal scrollable tab bar. Static (not sticky): it
           scrolls away with the page instead of floating over the grid. */}
-      <div className="no-sb -mx-4 flex items-center gap-1 overflow-x-auto border-b border-[var(--p-hair)] px-4 sm:mx-0 sm:px-0">
+      <div className="no-sb -mx-5 flex items-center gap-1 overflow-x-auto border-b border-[var(--p-hair)] px-5 sm:mx-0 sm:px-0">
         {filterOptions.map((opt) => {
           const active = activeType === opt.value;
           return (

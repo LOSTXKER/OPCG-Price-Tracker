@@ -25,12 +25,12 @@ export function GroupedSection({
   label?: string
   footer?: string
   children: React.ReactNode
-  /** Overrides the default page-level inset (`px-4 sm:px-6`) — e.g. a fixed
+  /** Overrides the default page-level inset (`px-5 sm:px-6`) — e.g. a fixed
    *  `px-4` inside a narrow sheet where the sm: bump would waste width. */
   className?: string
 }) {
   return (
-    <div className={cn("px-4 sm:px-6", className)}>
+    <div className={cn("px-5 sm:px-6", className)}>
       {label && <p className="mb-2 px-1 text-eyebrow">{label}</p>}
       <div className="hairline overflow-hidden rounded-2xl bg-card">
         <div className="divide-y divide-[var(--p-hair)]">{children}</div>

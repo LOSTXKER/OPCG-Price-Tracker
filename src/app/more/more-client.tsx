@@ -30,7 +30,6 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 
-import { PageHeader } from "@/components/layout/page-header";
 import {
   Select,
   SelectContent,
@@ -116,9 +115,12 @@ export default function MoreClient() {
 
   return (
     <div className="mx-auto max-w-2xl md:max-w-4xl">
-      <PageHeader title={t(language, "more")} />
-
-      <div className="mt-4 space-y-6">
+      {/* No page title here on purpose — the page no longer has a site Header
+          above it (see main-chrome.tsx's NO_HEADER_FOOTER_ROUTES), so a bare
+          "เพิ่มเติม" heading right at the safe-area top read as redundant
+          noise rather than useful identity. `pt-safe` keeps the first card
+          clear of the status bar/notch instead. */}
+      <div className="pt-safe space-y-6">
         {/* ── User block — its own grouped card, full width on every breakpoint ── */}
         <GroupedSection className={SECTION_INSET}>
           {authed ? (

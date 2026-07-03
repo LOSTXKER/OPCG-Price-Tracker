@@ -237,7 +237,7 @@ function PublicProfileLayout({
 
   return (
     <div className={cn("pb-24 md:pb-16")}>
-      <div className="relative mx-auto w-full max-w-5xl px-4 pt-6 md:px-6 md:pt-8 lg:px-8">
+      <div className="relative mx-auto w-full max-w-5xl px-5 pt-6 md:px-6 md:pt-8 lg:px-8">
         {/* Brand-warm cover banner (rounded card, not full-bleed) — gives
             the page colour without overwhelming the rest of the layout. */}
         <ProfileCover userId={user.id} coverImageUrl={user.coverImageUrl} />
