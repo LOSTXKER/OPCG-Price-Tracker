@@ -44,6 +44,7 @@
   - เจอแต่ไม่แก้: `DropdownMenuTrigger` hydration error จาก third-party `@base-ui/react/menu` เอง (เช็คเวอร์ชันใหม่ก่อนแตะ) · hardcoded "Home" breadcrumb ~17 ไฟล์ (อยู่ใน R3 backlog แล้ว) · portfolio best=worst เมื่อมี asset เดียวที่มีต้นทุน (ถูกตาม logic เป็น product call ไม่ใช่บั๊ก)
   - verify: tsc0/lint0/test56/build✓/impeccable detect[]/curl smoke ครบ + **verify ด้วย browser จริงทุกจุด** (screenshot ก่อน/หลัง + คลิกทดสอบยืนยัน fix การ์ดพอร์ต)
   - ยังไม่ครอบคลุม: settings sub อีก 7 หน้า, `/profile`+`/u/[handle]`, `/register`, `/market-overview`, `/about`, `/contact`, `/coming-soon`, `/raffle/winners`, honey sub-tabs — รายละเอียดเต็มใน PROGRESS.md
+- [x] **Breadcrumb มือถือ → iOS back link (2026-07-03)** — เบสถาม "มือถือควรมี breadcrumb มั้ย" → ตามหลัก iOS HIG/NN:g ไม่ควร → แก้ที่ `breadcrumb.tsx` ที่เดียว: desktop trail เต็มเหมือนเดิม (`hidden md:flex`) · มือถือหน้าลูกลึก (items ≥3) ได้ปุ่ม `< หน้าแม่` แบบ settings sub-pages (derive อัตโนมัติจาก items ไม่ต้องแก้ per-page) · หน้าแท็บหลักไม่ render อะไรบนมือถือ · `card-detail.tsx` ขยับ boundary meta ของตัวเอง sm→md ให้ตรง · SEO ไม่กระทบ (JSON-LD แยก) · verify tsc0/lint0/test56/build✓/detect[] + browser จริง 4 กรณี (มือถือ deep/top-level/card-detail + desktop)
 - [ ] ต่อ audit หน้าที่เหลือ (list ใน PROGRESS.md) + ตัดสินใจเรื่อง `@base-ui/react/menu` hydration bug (เช็คอัปเดตเวอร์ชันก่อน) + เปิด PR รวม branch `ui/sets-redesign` เข้า master เมื่อเบสพร้อม
 
 ### Card detail — trust core ✅ (proto visionary layout · เต็มภาพ · est-labeled fill)

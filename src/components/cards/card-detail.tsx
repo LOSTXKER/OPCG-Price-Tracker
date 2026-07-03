@@ -476,9 +476,13 @@ export function CardDetail({
 
   return (
     <div className="relative mx-auto max-w-7xl scroll-smooth pb-[calc(8.5rem+env(safe-area-inset-bottom))] md:pb-8">
-      {/* breadcrumb row */}
+      {/* breadcrumb row — md+ gets the full trail (Breadcrumb hides itself
+          below md); mobile keeps this page's compact identity meta instead of
+          the generic "< back" link because set/code/rarity is more useful
+          context on a trade screen. Boundary moved sm→md to match the
+          breadcrumb's own chrome boundary (AGENTS.md breakpoints). */}
       <div className="min-w-0">
-        <div className="hidden min-w-0 sm:block">
+        <div className="hidden min-w-0 md:block">
           <Breadcrumb
             items={[
               { label: t(displayLang, "home"), href: "/" },
@@ -488,7 +492,7 @@ export function CardDetail({
             ]}
           />
         </div>
-        <p className="text-meta min-w-0 truncate sm:hidden">
+        <p className="text-meta min-w-0 truncate md:hidden">
           {set.code.toUpperCase()} · {card.baseCode ?? card.cardCode} · {card.rarity}
         </p>
       </div>

@@ -1,7 +1,19 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-03 — **Mobile UX full audit ครั้งแรกด้วย browser จริง** (เบสสั่ง "ไปตรวจสอบให้ครบทุกหน้าทุกส่วนว่ามันรองรับมือถือหมดรึยัง รวมถึงประสบการณ์การใช้ UX จริงด้วย") — เจอบั๊กจริง 5 ตัว แก้แล้วครบ + เจอ 1 ตัวที่เป็น third-party library (ยังไม่แก้)
+อัปเดตล่าสุด: 2026-07-03 — **Breadcrumb มือถือ → iOS back link** (เบสถาม "มือถือควรมี breadcrumb มั้ย" → ไม่ควรตามหลัก iOS/NN:g → เบสสั่ง "ทำเลย และควรมีปุ่มย้อนด้วย") ต่อจาก Mobile UX full audit ที่เจอ+แก้บั๊กจริง 5 ตัว
+
+## ✅ เสร็จล่าสุด — Breadcrumb: ซ่อนบนมือถือ + ปุ่มย้อนแบบ iOS สำหรับหน้าลูกลึก
+
+แก้ที่ `src/components/shared/breadcrumb.tsx` ที่เดียว (ทุกหน้าที่ใช้ ~30 จุดได้ผลพร้อมกัน):
+- **Desktop (≥md)**: เส้นทางเต็ม Home > Section > Current เหมือนเดิมเป๊ะ
+- **มือถือ (<md)**: ไม่มีเส้นทางอีกต่อไป (iOS ไม่มี breadcrumb · NN/g ชี้ว่าเปลืองพื้นที่แนวตั้งบนจอเล็ก · bottom-nav บอก section อยู่แล้ว) — หน้าลูกลึก (≥3 ชั้น เช่น `/portfolio/[id]`, `/sets/[code]`, blog post) ได้ **ปุ่มย้อน `< หน้าแม่`** ตัวเดียวแบบเดียวกับที่ settings sub-pages ใช้อยู่แล้ว · หน้าแท็บหลัก (Home > X แค่ 2 ชั้น) ไม่ render อะไรเลยบนมือถือ
+- ตัดสินใจเรื่องปุ่มย้อน: **มีเฉพาะหน้าลูกลึก** — derive อัตโนมัติจาก items (≥3 → ลิงก์ไป items[len-2]) ไม่ต้องแก้ per-page · settings sub-pages มี back ของตัวเองอยู่แล้ว (breadcrumb ของมันมี 2 ชั้น เลยไม่ซ้ำ)
+- `card-detail.tsx`: ขยับ boundary ของ breadcrumb/meta ตัวเอง `sm:`→`md:` ให้ตรงกับ chrome boundary ของ Breadcrumb ใหม่ (มือถือคงโชว์ compact meta `OP01 · OP01-001 · L` ที่มีประโยชน์กว่า back link บนหน้าเทรด)
+- ห่อทั้งคู่ใน `<div>` เดียว (ไม่ใช่ fragment) กัน `space-y-*` ของ parent เห็น 2 children แล้ว margin เบิ้ล
+- SEO ไม่กระทบ — rich result ใช้ `BreadcrumbList` JSON-LD ที่ฉีดแยก ไม่ผูกกับ markup ที่มองเห็น
+
+**verify:** tsc 0 · eslint 0 · impeccable detect [] · test 56/56 · build ✓ · **browser จริงครบ 4 กรณี**: มือถือ `/portfolio/1` เห็นปุ่ม `< พอร์ตโฟลิโอ` (screenshot ยืนยัน) · มือถือ `/watchlist` ไม่มีทั้ง trail และ back (ถูกต้อง — เป็นแท็บหลัก) · มือถือ card detail คงเห็น compact meta · desktop `/watchlist` เห็น trail เต็มเหมือนเดิม
 
 ## แหล่งอ้างอิง
 - **spec เต็ม:** `doc/mine-multigame-spec.md` · **VISION:** identity §1 (ห้ามเปลี่ยน) + IA §2
