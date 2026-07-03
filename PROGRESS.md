@@ -1,12 +1,26 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-03 — **Mobile iOS rollout: Batch 2 (Settings/More) + สำรวจ batch ถัดไปแล้วสรุปว่าไม่ต้องแตะเพิ่ม** (เบสถาม "desktop/มือถือควรแยกดีไซน์กันมั้ย" → ยืนยัน desktop=เว็บเดิม, มือถือ=iOS native, สั่ง "ไปต่อ batch ถัดไป")
+อัปเดตล่าสุด: 2026-07-03 — **Mobile iOS rollout: Batch 3 (More sheet → grouped-inset) เสร็จ** ต่อจาก Batch 2 (Settings) — เบสเคาะ "โอเคนะ ทำต่อเลย"
 
 ## แหล่งอ้างอิง
 - **spec เต็ม:** `doc/mine-multigame-spec.md` · **VISION:** identity §1 (ห้ามเปลี่ยน) + IA §2
 
-## ✅ เสร็จ session นี้ — Batch 2: Settings/More มือถือ → grouped-inset list
+## ✅ เสร็จ session นี้ — Batch 3: "More" sheet (bottom-nav) → grouped-inset
+
+`mobile-menu-sheet.tsx` (drawer ที่เปิดจากแท็บ "เพิ่มเติม" ใน bottom-nav — surface มือถือแท้ๆ ตัวสุดท้ายที่ยังเป็น flat list) เขียนใหม่เป็น **grouped-inset table view** เต็มรูปแบบตาม `/proto/ios/more`:
+- User block เป็นการ์ดของตัวเอง (avatar 44px + email + tier + honey) กดแล้วไป `/settings` · ปุ่ม login/register (logged-out) คงเดิม
+- ทุก section (Browse · Track · My Account · Preferences · footer · sign out) → `GroupedSection`/`GroupedRow` พร้อม icon-in-circle สี semantic (`bg-info-soft text-info` ฯลฯ ชุดเดียวกับ proto)
+- **พฤติกรรมเดิมครบทุกอย่าง**: auth-gated sections · marketplace flag gating · badge จำนวนข้อความ (ย้ายเข้า trailing slot) · honey pending dot · Select ภาษา/สกุลเงินเดิม · theme toggle (เปลี่ยนจากปุ่มเป็นแถวกดได้ทั้งแถว) · close-on-navigate + close-on-route-change
+- ปรับ primitive 3 จุดเล็กๆ ระหว่างทาง (backward-compatible ทั้งหมด):
+  - `ListRow`: `href`+`onClick` ใช้ร่วมกันได้แล้ว (Link ที่มี click handler — จำเป็นสำหรับปิด sheet ตอน navigate; เดิม onClick ถูกเมินเงียบๆ ถ้ามี href)
+  - `GroupedRow`: เพิ่ม prop `active` (highlight หน้าปัจจุบันใน nav menu — honey tint title+icon)
+  - `GroupedSection`: เพิ่ม `className` override (sheet กว้าง 320px ต้องใช้ `px-4` คงที่ ไม่เอา `sm:px-6` bump)
+- Sheet พื้นหลังเปลี่ยนเป็น `bg-muted/30` (light) ให้การ์ดขาวลอยแบบ iOS Settings จริง · กว้างขึ้น 300→320px รับ icon circles
+
+**verify:** tsc 0 · eslint 3 ไฟล์ที่แตะ = 0 · test 56/56 · build ✓ · impeccable detect [] · curl smoke `/`,`/settings`,`/watchlist`,`/portfolio` 200 + `/sets`→307→`/opcg/sets` 200 (redirect ปกติของ game namespace)
+
+## เสร็จก่อนหน้าใน session — Batch 2: Settings/More มือถือ → grouped-inset list
 
 `src/app/settings/page.tsx` มือถือ (`md:hidden` เท่านั้น — desktop sidebar+content ไม่แตะเลย): เดิมเป็น flat link list (ไอคอนเทา + ข้อความ) → เปลี่ยนเป็น **grouped-inset table view** จริงตาม `/proto/ios/more` ที่พิสูจน์แล้ว — ใช้ `GroupedSection`/`GroupedRow` ที่ย้ายเข้า production ตั้งแต่ Batch 0:
 - Identity row (avatar+ชื่อ+tier badge) ห่อด้วย `GroupedSection` เป็นการ์ดของตัวเอง (เดิมเป็น plain link แถวเดียว)
@@ -42,8 +56,8 @@
 เครื่องมือเปิด browser จริงไม่พร้อมใช้งาน session นี้เหมือนรอบก่อนๆ — verify จำกัดแค่ build/lint/test/curl **ยังไม่เห็นภาพจริงทั้งมือถือและเดสก์ท็อป**
 
 ## ⏭️ NEXT
-1. **สำคัญที่สุด**: เบสเปิดเว็บจริงเช็ค 2 อย่าง:
-   - **Desktop (≥1024px)** ต้องเหมือนเดิมทุกจุด ทั้ง `/settings` (sidebar+content เดิม) และหน้าอื่นๆ ที่แตะใน Batch 0+1
-   - **มือถือ (390px)** `/settings` ต้องเห็น grouped-inset card list ใหม่ (การ์ดโค้งมน มี icon วงกลมสี, chevron) แทน flat list เดิม — ที่เหลือ (`/`, `/watchlist`, `/portfolio`) เห็น large-title + frost header จาก Batch 1
-2. **ยังไม่มีงานค้างจาก "แผน 4 batch" เดิม** — สำรวจแล้วสรุปว่า Watchlist/Portfolio/Card-detail ไม่ต้องแตะเพิ่ม (เหตุผลเต็มด้านบน) เว้นแต่เบสเห็นจุดเฉพาะที่อยากปรับหลังเปิดดูจริง
-3. `/proto/ios/*` ยังเก็บไว้เป็น reference (ยังไม่ลบ)
+1. **สำคัญที่สุด**: เบสเปิดเว็บจริงเช็ค:
+   - **มือถือ (390px)**: กดแท็บ "เพิ่มเติม" ใน bottom-nav → sheet ต้องเป็นการ์ดโค้งมนมี icon วงกลมสี (ไม่ใช่ flat list เดิม) · `/settings` เห็น grouped list ใหม่ · `/`,`/watchlist`,`/portfolio` เห็น large-title + frost header
+   - **Desktop (≥1024px)** ต้องเหมือนเดิมทุกจุด (sheet เป็น `md:hidden` chrome — ไม่กระทบ desktop เลย)
+2. **มือถือ iOS rollout ครบทุก surface ที่มี gap จริงแล้ว** (chrome + home + Settings + More sheet) — Watchlist/Portfolio/Card-detail สำรวจแล้วไม่ต้องแตะ (เหตุผลด้านล่าง) เว้นแต่เบสเห็นจุดเฉพาะหลังเปิดดูจริง
+3. `/proto/ios/*` ยังเก็บไว้เป็น reference (ยังไม่ลบ — ⚠️ ลบต้องถามเบสก่อน)

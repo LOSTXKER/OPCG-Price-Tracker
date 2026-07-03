@@ -20,13 +20,17 @@ export function GroupedSection({
   label,
   footer,
   children,
+  className,
 }: {
   label?: string
   footer?: string
   children: React.ReactNode
+  /** Overrides the default page-level inset (`px-4 sm:px-6`) — e.g. a fixed
+   *  `px-4` inside a narrow sheet where the sm: bump would waste width. */
+  className?: string
 }) {
   return (
-    <div className="px-4 sm:px-6">
+    <div className={cn("px-4 sm:px-6", className)}>
       {label && <p className="mb-2 px-1 text-eyebrow">{label}</p>}
       <div className="hairline overflow-hidden rounded-2xl bg-card">
         <div className="divide-y divide-[var(--p-hair)]">{children}</div>
@@ -46,6 +50,7 @@ export function GroupedRow({
   onClick,
   chevron = true,
   destructive,
+  active,
 }: {
   icon?: LucideIcon
   /** Background/text classes for the icon's circle — defaults to a quiet honey wash. */
@@ -58,6 +63,8 @@ export function GroupedRow({
   /** Show the trailing chevron. Auto-true when `href`/`onClick` is set. */
   chevron?: boolean
   destructive?: boolean
+  /** Current-route highlight (nav menus) — honey-tints the title + icon circle. */
+  active?: boolean
 }) {
   const navigable = !!(href || onClick)
 
@@ -71,14 +78,18 @@ export function GroupedRow({
           <span
             className={cn(
               "flex size-7 items-center justify-center rounded-lg",
-              iconClassName ?? "bg-primary/12 text-primary",
+              active ? "bg-primary/15 text-primary" : (iconClassName ?? "bg-primary/12 text-primary"),
             )}
           >
             <Icon className="size-4" />
           </span>
         ) : undefined
       }
-      title={<span className={cn(destructive && "text-destructive")}>{title}</span>}
+      title={
+        <span className={cn(destructive && "text-destructive", active && "font-semibold text-primary")}>
+          {title}
+        </span>
+      }
       subtitle={subtitle}
       trailing={trailing}
       chevron={navigable && chevron}

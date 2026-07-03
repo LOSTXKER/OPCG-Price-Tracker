@@ -8,6 +8,8 @@ import {
   ArrowRightLeft,
   BellRing,
   Bookmark,
+  ChevronRight,
+  Globe,
   Heart,
   LogOut,
   MessageCircle,
@@ -22,6 +24,7 @@ import {
   Swords,
   TrendingUp,
   User,
+  Wallet,
   Crown,
   BookOpen,
 } from "lucide-react";
@@ -39,6 +42,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { GroupedSection, GroupedRow } from "@/components/ui/grouped-list";
 import { useUIStore, type Language, type Currency } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 import { formatCount } from "@/lib/utils/currency";
@@ -66,60 +70,33 @@ interface MobileMenuSheetProps {
   onLogout: () => Promise<void>;
 }
 
-function MenuLink({
-  href,
-  icon: Icon,
-  label,
-  badge,
-  pendingDot,
-  pathname,
-  onNav,
-}: {
-  href: string;
-  icon: typeof User;
-  label: string;
-  badge?: number;
-  pendingDot?: boolean;
-  pathname: string;
-  onNav: () => void;
-}) {
-  const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+/** Red count badge for the trailing slot (messages). */
+function CountBadge({ count }: { count: number }) {
+  if (count <= 0) return null;
   return (
-    <Link
-      href={href}
-      onClick={onNav}
-      className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm motion-base",
-        active
-          ? "bg-primary/15 font-medium text-primary"
-          : "text-muted-foreground hover:bg-muted hover:text-foreground"
-      )}
-    >
-      <Icon className="size-[18px] shrink-0" />
-      <span className="flex-1">{label}</span>
-      {typeof badge === "number" && badge > 0 && (
-        <span className="flex min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-micro text-white">
-          {badge > 99 ? "99+" : badge}
-        </span>
-      )}
-      {pendingDot && (
-        <span className="relative flex size-2">
-          <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75" />
-          <span className="relative inline-flex size-2 rounded-full bg-red-500" />
-        </span>
-      )}
-    </Link>
+    <span className="flex min-w-[20px] items-center justify-center rounded-full bg-danger px-1.5 text-micro text-danger-foreground">
+      {count > 99 ? "99+" : count}
+    </span>
   );
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
+/** Pulsing dot for the trailing slot (honey pending actions). */
+function PendingDot() {
   return (
-    <p className="mb-1 mt-4 px-3 text-eyebrow text-muted-foreground/70 first:mt-0">
-      {children}
-    </p>
+    <span className="relative flex size-2">
+      <span className="absolute inline-flex size-full animate-ping rounded-full bg-danger opacity-75" />
+      <span className="relative inline-flex size-2 rounded-full bg-danger" />
+    </span>
   );
 }
 
+/**
+ * The "More" tab's drawer — iOS grouped-inset table view grammar (same
+ * `GroupedSection`/`GroupedRow` kit as /settings mobile), scoped to a right
+ * sheet. All prior behavior is preserved: auth-gated sections, message badge,
+ * honey pending dot, marketplace flag gating, language/currency/theme
+ * preferences, and close-on-navigate.
+ */
 export function MobileMenuSheet({
   authUser,
   authLoaded,
@@ -148,190 +125,309 @@ export function MobileMenuSheet({
   }, [pathname]);
 
   const close = () => setOpen(false);
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   const tier = TIER_DISPLAY[userTier];
+  const authed = authLoaded && !!authUser;
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent side="right" className="w-[300px] overflow-y-auto p-0 sm:max-w-[300px]">
+      <SheetContent
+        side="right"
+        className="w-[320px] overflow-y-auto bg-muted/30 p-0 sm:max-w-[320px] dark:bg-background"
+      >
         <SheetTitle className="sr-only">Menu</SheetTitle>
 
-        {/* User block */}
-        <div className="border-b border-[var(--p-hair)] p-4">
-          {authLoaded && authUser ? (
-            <div className="flex items-start gap-3">
-              <div className="size-10 shrink-0 overflow-hidden rounded-full bg-muted">
-                {userAvatar ? (
-                  <Image
-                    src={userAvatar}
-                    alt={userName}
-                    width={40}
-                    height={40}
-                    className="size-full object-cover"
-                  />
-                ) : (
-                  <div className="flex size-full items-center justify-center">
-                    <User className="size-5 text-muted-foreground" />
+        <div className="space-y-5 py-4 pb-8">
+          {/* ── User block — its own grouped card ─────────────────────── */}
+          <GroupedSection className="px-4 sm:px-4">
+            {authed ? (
+              <Link
+                href={`/settings`}
+                onClick={close}
+                className="ease-chrome block transition-colors active:bg-muted/60"
+              >
+                <div className="flex min-h-[68px] items-center gap-3 px-4 py-3">
+                  <div className="size-11 shrink-0 overflow-hidden rounded-full bg-muted">
+                    {userAvatar ? (
+                      <Image
+                        src={userAvatar}
+                        alt={userName}
+                        width={44}
+                        height={44}
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex size-full items-center justify-center">
+                        <User className="size-5 text-muted-foreground" />
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold">{userName}</p>
-                <p className="truncate text-meta">{authUser.email}</p>
-                <div className="mt-1.5 flex items-center gap-2">
-                  <span className={cn("rounded-full px-2 py-0.5 text-micro", tier.color)}>
-                    {tier.label}
-                  </span>
-                  {honeyPoints > 0 && (
-                    <span className="flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400">
-                      <span>🍯</span>
-                      {formatCount(honeyPoints)}
-                    </span>
-                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-body-sm font-semibold">{userName}</p>
+                    <p className="truncate text-meta">{authUser?.email}</p>
+                    <div className="mt-1 flex items-center gap-2">
+                      <span className={cn("rounded-full px-2 py-0.5 text-micro", tier.color)}>
+                        {tier.label}
+                      </span>
+                      {honeyPoints > 0 && (
+                        <span className="flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400">
+                          <span>🍯</span>
+                          {formatCount(honeyPoints)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <ChevronRight className="size-4 shrink-0 text-muted-foreground/50" />
                 </div>
+              </Link>
+            ) : authLoaded ? (
+              <div className="flex gap-2 p-4">
+                <Link
+                  href="/login"
+                  onClick={close}
+                  className="flex-1 rounded-lg border border-[var(--p-hair)] py-2.5 text-center text-sm font-medium motion-base hover:bg-muted/70"
+                >
+                  {t(language, "login")}
+                </Link>
+                <Link
+                  href="/register"
+                  onClick={close}
+                  className="flex-1 rounded-lg bg-primary py-2.5 text-center text-sm font-semibold text-primary-foreground motion-base hover:opacity-90"
+                >
+                  {t(language, "register")}
+                </Link>
               </div>
-            </div>
-          ) : authLoaded ? (
-            <div className="flex gap-2">
-              <Link
-                href="/login"
+            ) : (
+              <div className="p-4">
+                <div className="h-11 animate-pulse rounded-lg bg-muted" />
+              </div>
+            )}
+          </GroupedSection>
+
+          {/* ── Browse ────────────────────────────────────────────────── */}
+          <GroupedSection className="px-4 sm:px-4" label={t(language, "browse")}>
+            <GroupedRow
+              icon={Package}
+              iconClassName="bg-info-soft text-info"
+              title={t(language, "sets")}
+              href="/sets"
+              onClick={close}
+              active={isActive("/sets")}
+            />
+            <GroupedRow
+              icon={TrendingUp}
+              iconClassName="bg-success-soft text-success"
+              title={t(language, "trendingShort")}
+              href="/trending"
+              onClick={close}
+              active={isActive("/trending")}
+            />
+            <GroupedRow
+              icon={ArrowRightLeft}
+              iconClassName="bg-warning-soft text-warning"
+              title={t(language, "compareCards")}
+              href="/compare"
+              onClick={close}
+              active={isActive("/compare")}
+            />
+            <GroupedRow
+              icon={Swords}
+              iconClassName="bg-primary/12 text-primary"
+              title={t(language, "decksAndTools")}
+              href="/decks"
+              onClick={close}
+              active={isActive("/decks")}
+            />
+          </GroupedSection>
+
+          {/* ── Track — unified MINE surfaces (signed-in only) ─────────── */}
+          {authed && (
+            <GroupedSection className="px-4 sm:px-4" label={t(language, "trackGroup")}>
+              <GroupedRow
+                icon={Star}
+                iconClassName="bg-primary/12 text-primary"
+                title={t(language, "portfolioNav")}
+                href="/portfolio"
                 onClick={close}
-                className="flex-1 rounded-lg border border-[var(--p-hair)] py-2.5 text-center text-sm font-medium motion-base hover:bg-muted/70"
-              >
-                {t(language, "login")}
-              </Link>
-              <Link
-                href="/register"
+                active={isActive("/portfolio")}
+              />
+              <GroupedRow
+                icon={Bookmark}
+                iconClassName="bg-info-soft text-info"
+                title={t(language, "watchlistNav")}
+                href="/watchlist"
                 onClick={close}
-                className="flex-1 rounded-lg bg-primary py-2.5 text-center text-sm font-semibold text-primary-foreground motion-base hover:opacity-90"
-              >
-                {t(language, "register")}
-              </Link>
-            </div>
-          ) : (
-            <div className="h-10 animate-pulse rounded-lg bg-muted" />
-          )}
-        </div>
-
-        {/* Navigation sections */}
-        <div className="p-3">
-          {/* Browse */}
-          <SectionLabel>{t(language, "browse")}</SectionLabel>
-          <MenuLink href="/sets" icon={Package} label={t(language, "sets")} pathname={pathname} onNav={close} />
-          <MenuLink href="/trending" icon={TrendingUp} label={t(language, "trendingShort")} pathname={pathname} onNav={close} />
-          <MenuLink href="/compare" icon={ArrowRightLeft} label={t(language, "compareCards")} pathname={pathname} onNav={close} />
-
-          {/* Decks & Tools — hub holds deck/drop calculators, compare, and future meta/tier */}
-          <SectionLabel>{t(language, "tools")}</SectionLabel>
-          <MenuLink href="/decks" icon={Swords} label={t(language, "decksAndTools")} pathname={pathname} onNav={close} />
-
-          {/* TRACK — the unified "MINE" collection surfaces (cross-game, filtered
-              in-view by the game chips). Grouped together so the personal pages
-              live under one roof instead of scattered across Browse/My Account. */}
-          {authLoaded && authUser && (
-            <>
-              <SectionLabel>{t(language, "trackGroup")}</SectionLabel>
-              <MenuLink href="/portfolio" icon={Star} label={t(language, "portfolioNav")} pathname={pathname} onNav={close} />
-              <MenuLink href="/watchlist" icon={Bookmark} label={t(language, "watchlistNav")} pathname={pathname} onNav={close} />
-              <MenuLink href="/settings/alerts" icon={BellRing} label={t(language, "managePriceAlerts")} pathname={pathname} onNav={close} />
-            </>
+                active={isActive("/watchlist")}
+              />
+              <GroupedRow
+                icon={BellRing}
+                iconClassName="bg-warning-soft text-warning"
+                title={t(language, "managePriceAlerts")}
+                href="/settings/alerts"
+                onClick={close}
+                active={isActive("/settings/alerts")}
+              />
+            </GroupedSection>
           )}
 
-          {/* My Account — only when logged in */}
-          {authLoaded && authUser && (
-            <>
-              <SectionLabel>{t(language, "myAccount")}</SectionLabel>
+          {/* ── My Account (signed-in only) ────────────────────────────── */}
+          {authed && (
+            <GroupedSection className="px-4 sm:px-4" label={t(language, "myAccount")}>
               {marketplaceEnabled && (
                 <>
-                  <MenuLink href="/orders" icon={ShoppingBag} label={t(language, "myOrders")} pathname={pathname} onNav={close} />
-                  <MenuLink href="/saved" icon={Heart} label={t(language, "savedListings")} pathname={pathname} onNav={close} />
+                  <GroupedRow
+                    icon={ShoppingBag}
+                    iconClassName="bg-info-soft text-info"
+                    title={t(language, "myOrders")}
+                    href="/orders"
+                    onClick={close}
+                    active={isActive("/orders")}
+                  />
+                  <GroupedRow
+                    icon={Heart}
+                    iconClassName="bg-destructive/10 text-destructive"
+                    title={t(language, "savedListings")}
+                    href="/saved"
+                    onClick={close}
+                    active={isActive("/saved")}
+                  />
+                  <GroupedRow
+                    icon={MessageCircle}
+                    iconClassName="bg-success-soft text-success"
+                    title={t(language, "messagesTitle")}
+                    href="/messages"
+                    onClick={close}
+                    active={isActive("/messages")}
+                    trailing={<CountBadge count={unreadMessages} />}
+                  />
                 </>
               )}
+              <GroupedRow
+                icon={Sparkles}
+                iconClassName="bg-primary/12 text-primary"
+                title="Honey"
+                href="/honey"
+                onClick={close}
+                active={isActive("/honey")}
+                trailing={honeyPendingActions ? <PendingDot /> : undefined}
+              />
               {marketplaceEnabled && (
-                <MenuLink href="/messages" icon={MessageCircle} label={t(language, "messagesTitle")} badge={unreadMessages} pathname={pathname} onNav={close} />
+                <GroupedRow
+                  icon={Store}
+                  iconClassName="bg-warning-soft text-warning"
+                  title={t(language, "sellShellSellerCenter")}
+                  href="/seller"
+                  onClick={close}
+                  active={isActive("/seller")}
+                />
               )}
-              <MenuLink href="/honey" icon={Sparkles} label="Honey" pendingDot={honeyPendingActions} pathname={pathname} onNav={close} />
-              {marketplaceEnabled && (
-                <MenuLink href="/seller" icon={Store} label={t(language, "sellShellSellerCenter")} pathname={pathname} onNav={close} />
-              )}
-            </>
+            </GroupedSection>
           )}
 
-          {/* Preferences */}
-          <SectionLabel>{t(language, "preferences")}</SectionLabel>
-          <div className="space-y-2 px-3 py-1">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{t(language, "languageLabel")}</span>
-              <Select
-                items={LANG_OPTIONS}
-                value={language}
-                onValueChange={(value) => setLanguage(value as Language)}
-              >
-                <SelectTrigger size="sm" aria-label="Language" className="text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {LANG_OPTIONS.map((l) => (
-                    <SelectItem key={l.value} value={l.value}>{l.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{t(language, "currencyLabel")}</span>
-              <Select
-                items={CURRENCY_OPTIONS}
-                value={currency}
-                onValueChange={(value) => setCurrency(value as Currency)}
-              >
-                <SelectTrigger size="sm" aria-label="Currency" className="text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {CURRENCY_OPTIONS.map((c) => (
-                    <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{t(language, "themeLabel")}</span>
-              <button
-                type="button"
-                onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-                className="flex items-center gap-1.5 rounded-md border border-transparent dark:border-[var(--p-hair)] bg-muted px-2.5 py-1 text-xs font-medium motion-base hover:bg-muted/70"
-                aria-label="Toggle theme"
-              >
-                {mounted && resolvedTheme === "dark" ? (
-                  <><Sun className="size-3.5" /> Light</>
-                ) : (
-                  <><Moon className="size-3.5" /> Dark</>
-                )}
-              </button>
-            </div>
-          </div>
+          {/* ── Preferences — value rows with inline controls ──────────── */}
+          <GroupedSection className="px-4 sm:px-4" label={t(language, "preferences")}>
+            <GroupedRow
+              icon={Globe}
+              iconClassName="bg-info-soft text-info"
+              title={t(language, "languageLabel")}
+              chevron={false}
+              trailing={
+                <Select
+                  items={LANG_OPTIONS}
+                  value={language}
+                  onValueChange={(value) => setLanguage(value as Language)}
+                >
+                  <SelectTrigger size="sm" aria-label="Language" className="text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {LANG_OPTIONS.map((l) => (
+                      <SelectItem key={l.value} value={l.value}>{l.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              }
+            />
+            <GroupedRow
+              icon={Wallet}
+              iconClassName="bg-success-soft text-success"
+              title={t(language, "currencyLabel")}
+              chevron={false}
+              trailing={
+                <Select
+                  items={CURRENCY_OPTIONS}
+                  value={currency}
+                  onValueChange={(value) => setCurrency(value as Currency)}
+                >
+                  <SelectTrigger size="sm" aria-label="Currency" className="text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CURRENCY_OPTIONS.map((c) => (
+                      <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              }
+            />
+            <GroupedRow
+              icon={mounted && resolvedTheme === "dark" ? Moon : Sun}
+              iconClassName="bg-muted text-muted-foreground"
+              title={t(language, "themeLabel")}
+              chevron={false}
+              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+              trailing={
+                <span className="text-meta">
+                  {mounted && resolvedTheme === "dark" ? "Dark" : "Light"}
+                </span>
+              }
+            />
+          </GroupedSection>
 
-          {/* Footer links */}
-          <div className="mt-3 border-t border-[var(--p-hair)] pt-3">
-            {authLoaded && authUser && (
-              <MenuLink href="/settings" icon={Settings} label={t(language, "settingsTitle")} pathname={pathname} onNav={close} />
+          {/* ── Footer links ───────────────────────────────────────────── */}
+          <GroupedSection className="px-4 sm:px-4">
+            {authed && (
+              <GroupedRow
+                icon={Settings}
+                iconClassName="bg-muted text-muted-foreground"
+                title={t(language, "settingsTitle")}
+                href="/settings"
+                onClick={close}
+                active={isActive("/settings") && !isActive("/settings/alerts")}
+              />
             )}
-            <MenuLink href="/pricing" icon={Crown} label={t(language, "pricing")} pathname={pathname} onNav={close} />
-            <MenuLink href="/guide" icon={BookOpen} label={t(language, "guide")} pathname={pathname} onNav={close} />
-          </div>
+            <GroupedRow
+              icon={Crown}
+              iconClassName="bg-primary/12 text-primary"
+              title={t(language, "pricing")}
+              href="/pricing"
+              onClick={close}
+              active={isActive("/pricing")}
+            />
+            <GroupedRow
+              icon={BookOpen}
+              iconClassName="bg-info-soft text-info"
+              title={t(language, "guide")}
+              href="/guide"
+              onClick={close}
+              active={isActive("/guide")}
+            />
+          </GroupedSection>
 
-          {/* Logout */}
-          {authLoaded && authUser && (
-            <div className="mt-2 border-t border-[var(--p-hair)] pt-2">
-              <button
-                type="button"
+          {/* ── Sign out (destructive, own card) ───────────────────────── */}
+          {authed && (
+            <GroupedSection className="px-4 sm:px-4">
+              <GroupedRow
+                icon={LogOut}
+                iconClassName="bg-destructive/10 text-destructive"
+                title={t(language, "logout")}
+                destructive
+                chevron={false}
                 onClick={() => { close(); void onLogout(); }}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-destructive motion-base hover:bg-destructive/10"
-              >
-                <LogOut className="size-[18px]" />
-                {t(language, "logout")}
-              </button>
-            </div>
+              />
+            </GroupedSection>
           )}
         </div>
       </SheetContent>

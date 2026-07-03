@@ -15,6 +15,8 @@ import { cn } from "@/lib/utils"
  */
 export type ListRowProps = {
   href?: string
+  /** With `href`: extra click handler on the Link (e.g. close a parent sheet).
+   *  Without `href`: makes the row a button. */
   onClick?: () => void
   /** Leading visual — image/avatar (caller sizes it). */
   leading?: ReactNode
@@ -61,7 +63,7 @@ export function ListRow({
 
   if (href) {
     return (
-      <Link href={href} className={cn(ROW, className)} aria-label={ariaLabel}>
+      <Link href={href} onClick={onClick} className={cn(ROW, className)} aria-label={ariaLabel}>
         {body}
       </Link>
     )
