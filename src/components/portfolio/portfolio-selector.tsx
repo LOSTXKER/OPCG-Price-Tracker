@@ -28,6 +28,7 @@ export function PortfolioSidebar({
   onDelete,
   hideBalance,
   maxPortfolios,
+  initialCreating = false,
 }: {
   portfolios: PortfolioMeta[]
   activeId: number | null
@@ -37,8 +38,10 @@ export function PortfolioSidebar({
   onDelete: (id: number) => void
   hideBalance?: boolean
   maxPortfolios?: number
+  /** Open straight into the create form (e.g. "+ สร้างพอร์ต" in the switcher). */
+  initialCreating?: boolean
 }) {
-  const [creating, setCreating] = useState(false)
+  const [creating, setCreating] = useState(initialCreating)
   const [newName, setNewName] = useState("")
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editName, setEditName] = useState("")
@@ -209,14 +212,31 @@ export function PortfolioSidebar({
             <X className="size-3.5" />
           </button>
         </form>
+      ) : atLimit ? (
+        /* At the plan limit — say so plainly and sell the upgrade, instead of a
+           plus button that silently bounces to a dialog. */
+        <div className="mt-0.5 px-1">
+          <button
+            onClick={() => openUpgradeDialog({ featureKey: "portfolioCount" })}
+            className="ease-chrome flex w-full items-center gap-2.5 rounded-lg bg-primary/6 px-2 py-2 text-left transition-colors hover:bg-primary/10"
+          >
+            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary/12 text-primary">
+              <Lock className="size-3.5" />
+            </div>
+            <span className="min-w-0 flex-1">
+              <span className="block text-xs font-medium leading-tight">
+                {t(lang, "portfolioLimitUpTo").replace("{max}", String(maxPortfolios))}
+              </span>
+              <span className="block text-micro font-semibold text-primary">
+                {t(lang, "upgradeForMorePortfolios")} →
+              </span>
+            </span>
+          </button>
+        </div>
       ) : (
         <div className="mt-0.5 px-1">
           <button
-            onClick={() =>
-              atLimit
-                ? openUpgradeDialog({ featureKey: "portfolioCount" })
-                : setCreating(true)
-            }
+            onClick={() => setCreating(true)}
             className="ease-chrome flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             <div className="flex size-7 items-center justify-center rounded-lg border border-dashed border-[var(--p-hair)]">

@@ -4,17 +4,16 @@ import { useMemo, useState } from "react"
 
 import { EmptyState } from "@/components/shared/empty-state"
 import { getCardName, t } from "@/lib/i18n"
+import { useSparklines } from "@/hooks/use-sparklines"
 import type { AssetRow } from "@/lib/types/portfolio"
 import { useUIStore } from "@/stores/ui-store"
 
-import { PortfolioCollectionGrid } from "@/components/portfolio/portfolio-collection-grid"
-import { PortfolioHoldingSheet } from "@/components/portfolio/portfolio-holding-sheet"
 import { AssetsToolbar } from "./assets-toolbar"
 import { BulkEditDialog } from "./bulk-edit-dialog"
 import { DesktopAssetsTable } from "./desktop-table"
 import { MobileAssetCard } from "./mobile-card"
 import { SingleEditDialog } from "./single-edit-dialog"
-import { sortAssets, type HoldingsView, type SortDir, type SortKey } from "./utils"
+import { sortAssets, type SortDir, type SortKey } from "./utils"
 
 export type { AssetRow } from "@/lib/types/portfolio"
 
@@ -24,6 +23,7 @@ export function PortfolioAssetsTable({
   onRemove,
   hideBalance = false,
   showGameBadge = false,
+  leading,
 }: {
   assets: AssetRow[]
   onUpdate: (
@@ -39,16 +39,21 @@ export function PortfolioAssetsTable({
   hideBalance?: boolean
   /** Show a per-row game tag — pass true only when holdings span ≥2 games. */
   showGameBadge?: boolean
+  /** Replaces the toolbar's default heading (e.g. the page's game tabs). */
+  leading?: React.ReactNode
 }) {
   const lang = useUIStore((s) => s.language)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchOpen, setSearchOpen] = useState(false)
   const [sortKey, setSortKey] = useState<SortKey>("value")
   const [sortDir, setSortDir] = useState<SortDir>("desc")
-  const [view, setView] = useState<HoldingsView>("grid")
   const [editOpen, setEditOpen] = useState(false)
   const [editFocusId, setEditFocusId] = useState<number | null>(null)
-  const [detailId, setDetailId] = useState<number | null>(null)
+
+  // 7-day trend column (CMC-style) — same endpoint/pattern as the home market
+  // table and watchlist. Optional eye-candy; rows render "—" until data lands.
+  const sparkCards = useMemo(() => assets.map((a) => ({ id: a.cardId })), [assets])
+  const sparklines = useSparklines(sparkCards)
 
   const filteredAssets = useMemo(() => {
     let result = assets
@@ -96,22 +101,11 @@ export function PortfolioAssetsTable({
         onSortSelect={handleSortSelect}
         onBulkEdit={openBulkEdit}
         hasAssets={assets.length > 0}
-        view={view}
-        onViewChange={setView}
+        leading={leading}
       />
 
       {filteredAssets.length === 0 ? (
         <EmptyState variant="plain" title={t(lang, "noResults")} />
-      ) : view === "grid" ? (
-        <div className="pt-4">
-          <PortfolioCollectionGrid
-            assets={filteredAssets}
-            lang={lang}
-            onEdit={openEdit}
-            onSelect={(row) => setDetailId(row.itemId)}
-            hideBalance={hideBalance}
-          />
-        </div>
       ) : (
         <>
           <div className="divide-y divide-[var(--p-hair)] sm:hidden">
@@ -133,17 +127,10 @@ export function PortfolioAssetsTable({
             onEdit={openEdit}
             hideBalance={hideBalance}
             showGameBadge={showGameBadge}
+            sparklines={sparklines}
           />
         </>
       )}
-
-      <PortfolioHoldingSheet
-        asset={assets.find((a) => a.itemId === detailId) ?? null}
-        open={detailId != null}
-        onOpenChange={(v) => {
-          if (!v) setDetailId(null)
-        }}
-      />
 
       {editFocusId != null ? (
         <SingleEditDialog

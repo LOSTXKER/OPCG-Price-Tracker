@@ -5,15 +5,17 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronRight, StickyNote } from "lucide-react"
 
-import { GameBadge } from "@/components/shared/game-badge"
 import { Price } from "@/components/shared/price-inline"
+import { Sparkline } from "@/components/shared/sparkline"
+import { getGameConfig, getGameAccentTint } from "@/lib/game-config"
+import { DEFAULT_GAME } from "@/lib/game/constants"
 import { getCardName, t, type Language } from "@/lib/i18n"
 import type { AssetRow } from "@/lib/types/portfolio"
 import { cn } from "@/lib/utils"
 import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
-import { AssetEditButton } from "./action-menu"
+import { AssetEditButton, ChangeCell } from "./action-menu"
 import { holdingValue, pnlCalc } from "./utils"
 
 export const AssetRowComponent = memo(function AssetRowComponent({
@@ -22,12 +24,15 @@ export const AssetRowComponent = memo(function AssetRowComponent({
   onEdit,
   hideBalance = false,
   showGameBadge = false,
+  sparkline,
 }: {
   row: AssetRow
   lang: Language
   onEdit: () => void
   hideBalance?: boolean
   showGameBadge?: boolean
+  /** 7-day price series for the trend column (lg+). */
+  sparkline?: number[]
 }) {
   const currency = useUIStore((s) => s.currency)
   const name = getCardName(lang as "TH" | "EN" | "JP", row)
@@ -36,126 +41,123 @@ export const AssetRowComponent = memo(function AssetRowComponent({
   const detailHref = `/cards/${row.cardCode}`
   const viewLabel = t(lang, "viewDetails")
 
+  const gameSlug = row.game?.slug ?? DEFAULT_GAME
+  const gameShort =
+    getGameConfig(gameSlug)?.shortName ?? row.game?.nameEn ?? gameSlug.toUpperCase()
+
   return (
-    <tr className="group ease-chrome transition-colors hover:bg-muted/70">
-      <td className="py-3.5 pr-3 align-middle">
-        <div className="flex items-start gap-3.5">
+    <tr className="group ease-chrome transition-colors hover:bg-muted/40">
+      {/* การ์ด — art + name · code ×qty · game dot (no separate columns) */}
+      <td className="py-2.5 pr-3 align-middle">
+        <div className="flex items-center gap-2.5">
           <Link href={detailHref} className="shrink-0" aria-label={viewLabel}>
-            <div className="relative size-11 overflow-hidden rounded-lg bg-muted/60 ring-1 ring-[var(--p-hair)] transition-transform group-hover:scale-[1.02]">
+            <div className="relative aspect-[63/88] w-8 overflow-hidden rounded bg-muted/60 ring-1 ring-[var(--p-hair)] transition-transform group-hover:scale-[1.03]">
               {row.imageUrl ? (
-                <Image
-                  src={row.imageUrl}
-                  alt={name}
-                  fill
-                  className="object-contain"
-                  sizes="44px"
-                />
+                <Image src={row.imageUrl} alt={name} fill className="object-cover" sizes="32px" />
               ) : (
-                <div className="flex size-full items-center justify-center text-overlay text-muted-foreground/40">
-                  {row.baseCode ?? row.cardCode}
-                </div>
+                <div className="flex size-full items-center justify-center text-overlay text-muted-foreground/40" />
               )}
             </div>
           </Link>
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0">
             <Link
               href={detailHref}
               className="group/link inline-flex max-w-full items-center gap-1"
               title={viewLabel}
             >
-              <p className="truncate text-sm font-semibold leading-tight transition-colors group-hover/link:text-primary">
+              <span className="truncate text-body-sm font-medium transition-colors group-hover/link:text-primary">
                 {name}
-              </p>
+              </span>
               <ChevronRight
                 aria-hidden
-                className="size-3.5 shrink-0 text-muted-foreground/30 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100"
+                className="size-3 shrink-0 text-muted-foreground/30 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100"
               />
             </Link>
-            <p className="mt-0.5 font-mono text-meta text-muted-foreground/60">
+            <p className="flex items-center gap-1.5 font-mono text-meta text-muted-foreground/60">
               {row.baseCode ?? row.cardCode}
-              <span className="ml-1.5 font-sans text-foreground/40">×{row.quantity}</span>
-              {showGameBadge && <GameBadge game={row.game} className="ml-1.5 align-middle" />}
+              <span className="font-sans text-foreground/40">×{row.quantity}</span>
+              {showGameBadge && (
+                <span className="inline-flex items-center gap-1 font-sans">
+                  <span
+                    aria-hidden
+                    className="size-1.5 shrink-0 rounded-full"
+                    style={{
+                      background: `color-mix(in srgb, ${getGameAccentTint(gameSlug)} 70%, transparent)`,
+                    }}
+                  />
+                  {gameShort}
+                </span>
+              )}
+              {row.notes && (
+                <span className="inline-flex items-center text-muted-foreground/50" title={row.notes}>
+                  <StickyNote className="size-3" />
+                </span>
+              )}
             </p>
-            {row.notes ? (
-              <p
-                className="mt-1 flex items-start gap-1 text-meta italic text-muted-foreground/70"
-                title={row.notes}
-              >
-                <StickyNote className="mt-0.5 size-3 shrink-0 text-muted-foreground/40" />
-                <span className="line-clamp-1">{row.notes}</span>
-              </p>
-            ) : (
-              <button
-                type="button"
-                onClick={onEdit}
-                className="mt-1 flex items-center gap-1 text-meta text-muted-foreground/40 opacity-0 transition-opacity hover:text-foreground/70 group-hover:opacity-100 focus-visible:opacity-100"
-              >
-                <StickyNote className="size-3 shrink-0" />
-                <span>{t(lang, "watchlistAddNote")}</span>
-              </button>
-            )}
           </div>
         </div>
       </td>
-      <td className="py-3.5 pr-3 text-right align-middle">
-        <span className="font-price text-sm font-bold tabular-nums">
-          {hideBalance ? "••••" : <Price jpy={value} />}
-        </span>
-      </td>
-      <td className="py-3.5 pr-3 text-right align-middle">
-        {hideBalance ? (
-          <span className="font-price text-xs text-muted-foreground/40">••••</span>
-        ) : row.purchasePrice != null ? (
-          <span className="font-price text-sm tabular-nums text-muted-foreground">
-            {formatJpyAmount(row.purchasePrice * row.quantity, currency)}
+
+      {/* ราคา (ตลาด ต่อใบ) */}
+      <td className="py-2.5 pr-3 text-right align-middle">
+        {row.currentPrice != null ? (
+          <span className="text-body-sm tabular-nums">
+            <Price jpy={row.currentPrice} />
           </span>
         ) : (
-          <span className="font-price text-xs text-muted-foreground/40">—</span>
+          <span className="text-xs text-muted-foreground/40">—</span>
         )}
       </td>
-      <td className="py-3.5 pr-3 text-right align-middle">
+
+      {/* 24h */}
+      <td className="py-2.5 pr-3 text-right align-middle">
+        <ChangeCell value={row.priceChange24h} />
+      </td>
+
+      {/* 7d trend — CMC-style micro line (lg+) */}
+      <td className="hidden py-2.5 pr-3 text-right align-middle lg:table-cell">
+        {sparkline && sparkline.length >= 2 ? (
+          <Sparkline data={sparkline} width={64} height={22} className="ml-auto" />
+        ) : (
+          <span className="text-xs text-muted-foreground/40">—</span>
+        )}
+      </td>
+
+      {/* กำไร/ขาดทุน — one figure + quiet % */}
+      <td className="py-2.5 pr-3 text-right align-middle">
         {pnlResult ? (
           hideBalance ? (
-            <p className="font-price text-sm leading-tight tabular-nums">
-              <span className="text-muted-foreground/40">••••</span>
-              <span
-                className={cn(
-                  "ml-1.5 font-bold",
-                  pnlResult.pct >= 0 ? "text-price-up" : "text-price-down",
-                )}
-              >
-                {pnlResult.pct >= 0 ? "+" : ""}
-                {formatPct(pnlResult.pct)}%
-              </span>
-            </p>
+            <span className="text-body-sm tabular-nums text-muted-foreground/40">••••</span>
           ) : (
-            <p
+            <span
               className={cn(
-                "font-price text-sm font-bold leading-tight tabular-nums",
+                "text-body-sm font-medium tabular-nums",
                 pnlResult.pnl >= 0 ? "text-price-up" : "text-price-down",
               )}
             >
               {pnlResult.pnl >= 0 ? "+" : ""}
               {formatJpyAmount(pnlResult.pnl, currency)}
-              <span
-                className={cn(
-                  "ml-1 font-price text-micro font-normal tabular-nums",
-                  pnlResult.pct >= 0 ? "text-price-up/60" : "text-price-down/60",
-                )}
-              >
+              <span className="ml-1 text-micro font-normal opacity-70">
                 ({pnlResult.pct >= 0 ? "+" : ""}
                 {formatPct(pnlResult.pct)}%)
               </span>
-            </p>
+            </span>
           )
         ) : (
-          <span className="font-price text-xs text-muted-foreground/40">—</span>
+          <span className="text-xs text-muted-foreground/40">—</span>
         )}
       </td>
-      <td className="py-3.5 text-right align-middle">
-        <div className="flex items-center justify-end">
-          <AssetEditButton lang={lang} onEdit={onEdit} showLabel />
-        </div>
+
+      {/* มูลค่า */}
+      <td className="py-2.5 pr-3 text-right align-middle">
+        <span className="text-body-sm font-semibold tabular-nums">
+          {hideBalance ? "••••" : <Price jpy={value} />}
+        </span>
+      </td>
+
+      {/* แก้ไข — ghost */}
+      <td className="py-2.5 pl-1 text-right align-middle">
+        <AssetEditButton lang={lang} onEdit={onEdit} />
       </td>
     </tr>
   )

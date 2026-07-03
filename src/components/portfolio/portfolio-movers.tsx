@@ -25,9 +25,12 @@ type Mover = {
 export function PortfolioMovers({
   assets,
   hideBalance = false,
+  variant = "list",
 }: {
   assets: AssetRow[]
   hideBalance?: boolean
+  /** "list" = full rows (money + pct) · "inline" = quiet one-line text rail. */
+  variant?: "list" | "inline"
 }) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
@@ -48,6 +51,44 @@ export function PortfolioMovers({
       .sort((a, b) => Math.abs(b.swingJpy) - Math.abs(a.swingJpy))
       .slice(0, 5)
   }, [assets])
+
+  // Quiet one-line rail — plain words on the canvas (no chips, no rings, no
+  // avatars); the ticker-tape read. Hidden entirely when nothing moved.
+  if (variant === "inline") {
+    if (movers.length === 0) return null
+    return (
+      <div className="flex min-w-0 items-baseline gap-4">
+        <span className="text-eyebrow shrink-0">{t(lang, "todaysMovers")}</span>
+        <div className="no-sb flex min-w-0 items-baseline gap-x-5 overflow-x-auto">
+          {movers.map(({ row, pct }) => {
+            const up = pct > 0
+            const name = getCardName(lang, row)
+            const code = row.baseCode ?? row.cardCode
+            return (
+              <Link
+                key={row.itemId}
+                href={code ? `/cards/${code}` : "#"}
+                className="ease-chrome flex shrink-0 items-baseline gap-1.5 transition-colors hover:text-foreground"
+              >
+                <span className="max-w-32 truncate text-body-sm text-muted-foreground">
+                  {name}
+                </span>
+                <span
+                  className={cn(
+                    "inline-flex items-center gap-0.5 tabular-nums text-micro font-semibold",
+                    up ? "text-price-up" : "text-price-down",
+                  )}
+                >
+                  {up ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />}
+                  {formatPct(Math.abs(pct), 1)}%
+                </span>
+              </Link>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -97,7 +138,7 @@ export function PortfolioMovers({
                 <div className="shrink-0 text-right">
                   <p
                     className={cn(
-                      "font-price text-body-sm font-semibold tabular-nums",
+                      "tabular-nums text-body-sm font-semibold",
                       up ? "text-price-up" : "text-price-down",
                     )}
                   >
@@ -107,7 +148,7 @@ export function PortfolioMovers({
                   </p>
                   <span
                     className={cn(
-                      "inline-flex items-center gap-0.5 font-price text-micro tabular-nums",
+                      "inline-flex items-center gap-0.5 tabular-nums text-micro",
                       up ? "text-price-up" : "text-price-down",
                     )}
                   >

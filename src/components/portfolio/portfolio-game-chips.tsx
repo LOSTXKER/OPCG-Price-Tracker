@@ -3,31 +3,23 @@
 import { GameFilterChips, type GameChip } from "@/components/shared/game-filter-chips"
 import { getGameConfig } from "@/lib/game-config"
 import { DEFAULT_GAME } from "@/lib/game/constants"
-import { useUIStore } from "@/stores/ui-store"
-import { formatDisplayValue, jpyToDisplayValue } from "@/lib/utils/currency"
-import { MASKED } from "@/lib/constants/ui"
 import type { GameBreakdown } from "@/lib/types/portfolio"
 
 /**
- * Portfolio's game filter — builds one chip per game the user actually holds
- * (value > 0), formatted as money, and hands it to the shared rail. The rail
- * self-hides below two games, so a single-game portfolio shows no chips at all.
+ * Portfolio's game filter — one chip per game the user actually holds
+ * (value > 0). Chips are NAME-ONLY: the per-game money lives in exactly one
+ * place (the "by game" breakdown panel), so the rail stays a clean control
+ * instead of a second stats row. The rail self-hides below two games.
  */
 export function PortfolioGameChips({
   breakdown,
   activeGame,
   onSelect,
-  hideBalance = false,
 }: {
   breakdown: GameBreakdown[]
   activeGame: string
   onSelect: (game: string) => void
-  hideBalance?: boolean
 }) {
-  const currency = useUIStore((s) => s.currency)
-  const money = (jpy: number) =>
-    hideBalance ? MASKED : formatDisplayValue(jpyToDisplayValue(jpy, currency), currency)
-
   const games: GameChip[] = breakdown
     .filter((b) => b.valueJpy > 0)
     .map((b) => {
@@ -38,14 +30,9 @@ export function PortfolioGameChips({
       return {
         slug,
         label: getGameConfig(slug)?.shortName ?? b.game?.nameEn ?? slug.toUpperCase(),
-        value: money(b.valueJpy),
         logoUrl: b.game?.logoUrl ?? null,
       }
     })
 
-  const allValue = money(breakdown.reduce((s, b) => (b.valueJpy > 0 ? s + b.valueJpy : s), 0))
-
-  return (
-    <GameFilterChips games={games} activeGame={activeGame} onSelect={onSelect} allValue={allValue} />
-  )
+  return <GameFilterChips games={games} activeGame={activeGame} onSelect={onSelect} />
 }

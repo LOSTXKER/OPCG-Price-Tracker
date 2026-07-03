@@ -1,28 +1,30 @@
 "use client"
 
 import { useState } from "react"
-import { Check, ChevronDown, Settings2, Wallet } from "lucide-react"
+import { Check, ChevronDown, Lock, Plus, Settings2, Wallet } from "lucide-react"
 
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
 import { MASKED } from "@/lib/constants/ui"
+import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
 import { PortfolioSidebar } from "./portfolio-selector"
 import type { PortfolioMeta } from "@/lib/types/portfolio"
 
@@ -38,6 +40,9 @@ interface PortfolioSwitcherProps {
   totalPnlPctAll: number
   hasOverallPnl: boolean
   hideBalance?: boolean
+  /** Hide the pill's total while the page is scoped to one game — the pill's
+   *  number is the ALL-GAMES book total and would contradict the scoped hero. */
+  totalVisible?: boolean
   maxPortfolios?: number
 }
 
@@ -51,11 +56,39 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
     totalPnlPctAll,
     hasOverallPnl,
     hideBalance,
+    totalVisible = true,
   } = props
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
   const [sheetOpen, setSheetOpen] = useState(false)
+  // When true, the manage dialog opens straight into the create form.
+  const [createOnOpen, setCreateOnOpen] = useState(false)
   const multi = portfolios.length > 1
+  const { openUpgradeDialog } = useUpgradeDialog()
+
+  const maxPortfolios = props.maxPortfolios
+  const hasLimit = maxPortfolios != null && isFinite(maxPortfolios)
+  const atLimit = hasLimit && portfolios.length >= maxPortfolios
+  // "N/5 พอร์ต" for capped tiers, "N พอร์ต" for unlimited — the counter is the
+  // quiet signal that more portfolios exist behind the plan.
+  const countLabel = hasLimit
+    ? t(lang, "portfolioCountOf")
+        .replace("{n}", String(portfolios.length))
+        .replace("{max}", String(maxPortfolios))
+    : t(lang, "portfolioCountOnly").replace("{n}", String(portfolios.length))
+
+  const openManage = (create: boolean) => {
+    setCreateOnOpen(create)
+    setSheetOpen(true)
+  }
+
+  const handleCreateClick = () => {
+    if (atLimit) {
+      openUpgradeDialog({ featureKey: "portfolioCount" })
+    } else {
+      openManage(true)
+    }
+  }
 
   const pill = (
     <span className="flex min-w-0 items-center gap-2.5 rounded-xl border border-[var(--p-hair)] bg-card px-3 py-2 text-left ease-chrome transition-colors hover:bg-muted/70">
@@ -66,20 +99,22 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
         <span className="block max-w-[9rem] truncate text-sm font-semibold leading-tight sm:max-w-[12rem]">
           {activeName}
         </span>
-        <span className="block font-price text-meta tabular-nums leading-tight">
-          {hideBalance ? "••••" : formatJpyAmount(totalAllPortfolios, currency)}
-          {multi && hasOverallPnl && !hideBalance && (
-            <span
-              className={cn(
-                "ml-1.5 font-semibold",
-                totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
-              )}
-            >
-              {totalPnlPctAll >= 0 ? "+" : ""}
-              {formatPct(totalPnlPctAll, 1)}%
-            </span>
-          )}
-        </span>
+        {totalVisible && (
+          <span className="block tabular-nums text-meta leading-tight">
+            {hideBalance ? "••••" : formatJpyAmount(totalAllPortfolios, currency)}
+            {multi && hasOverallPnl && !hideBalance && (
+              <span
+                className={cn(
+                  "ml-1.5 font-semibold",
+                  totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
+                )}
+              >
+                {totalPnlPctAll >= 0 ? "+" : ""}
+                {formatPct(totalPnlPctAll, 1)}%
+              </span>
+            )}
+          </span>
+        )}
       </span>
       <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
     </span>
@@ -91,7 +126,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
       <button
         type="button"
         className="min-w-0 md:hidden"
-        onClick={() => setSheetOpen(true)}
+        onClick={() => openManage(false)}
         aria-label={t(lang, "switchPortfolio")}
       >
         {pill}
@@ -107,17 +142,24 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
             {pill}
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-72">
-            {multi && (
-              <>
-                <DropdownMenuLabel className="flex items-center justify-between">
-                  <span>{t(lang, "allPortfolios")}</span>
-                  <span className="font-price tabular-nums text-foreground">
-                    {hideBalance ? "••••" : formatJpyAmount(totalAllPortfolios, currency)}
+            {/* Header — count vs plan limit (always) + all-portfolio total (multi).
+                Base UI requires GroupLabel to live inside a Group. */}
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="flex items-center justify-between">
+                <span>{multi ? t(lang, "allPortfolios") : t(lang, "portfolio")}</span>
+                <span className="flex items-center gap-2">
+                  {multi && (
+                    <span className="tabular-nums text-foreground">
+                      {hideBalance ? "••••" : formatJpyAmount(totalAllPortfolios, currency)}
+                    </span>
+                  )}
+                  <span className="tabular-nums font-normal text-muted-foreground">
+                    {countLabel}
                   </span>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-              </>
-            )}
+                </span>
+              </DropdownMenuLabel>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
             {portfolios.map((p) => {
               const active = p.id === activeId
               const pnlPct =
@@ -138,13 +180,13 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
                   </span>
                   <span className="min-w-0 flex-1 truncate text-sm">{p.name}</span>
                   <span className="shrink-0 text-right">
-                    <span className="block font-price text-xs tabular-nums">
+                    <span className="block tabular-nums text-xs">
                       {hideBalance ? "••••" : formatJpyAmount(p.totalValue, currency)}
                     </span>
                     {pnlPct != null && !hideBalance && (
                       <span
                         className={cn(
-                          "block font-price text-micro tabular-nums",
+                          "block tabular-nums text-micro",
                           pnlPct >= 0 ? "text-price-up/80" : "text-price-down/80",
                         )}
                       >
@@ -158,7 +200,22 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
               )
             })}
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setSheetOpen(true)} className="gap-2.5">
+            {/* Create — always visible so users learn more portfolios exist.
+                At the plan limit it routes to the upgrade dialog instead. */}
+            <DropdownMenuItem onClick={handleCreateClick} className="gap-2.5">
+              {atLimit ? (
+                <Lock className="size-4 text-muted-foreground" />
+              ) : (
+                <Plus className="size-4 text-muted-foreground" />
+              )}
+              <span className="flex-1">{t(lang, "createPortfolio")}</span>
+              {atLimit && (
+                <span className="rounded-full bg-primary/12 px-2 py-0.5 text-micro font-semibold text-primary">
+                  PRO
+                </span>
+              )}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => openManage(false)} className="gap-2.5">
               <Settings2 className="size-4 text-muted-foreground" />
               {t(lang, "managePortfolios")}
             </DropdownMenuItem>
@@ -166,31 +223,44 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
         </DropdownMenu>
       </div>
 
-      {/* Shared management sheet (create / rename / delete / select) */}
-      <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent side="bottom" className="max-h-[78vh] overflow-y-auto rounded-t-2xl pb-10">
-          <SheetHeader className="pb-2">
-            <SheetTitle>{t(lang, "portfolio")}</SheetTitle>
-            {multi && (
-              <SheetDescription className="font-price tabular-nums">
-                {t(lang, "allPortfolios")}{" "}
-                <span className="font-semibold text-foreground">
-                  {hideBalance ? MASKED : formatJpyAmount(totalAllPortfolios, currency)}
-                </span>
-                {hasOverallPnl && !hideBalance && (
-                  <span
-                    className={cn(
-                      "ml-1.5 font-semibold",
-                      totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
-                    )}
-                  >
-                    {totalPnlPctAll >= 0 ? "+" : ""}
-                    {formatPct(totalPnlPctAll, 1)}%
+      {/* Shared management dialog (create / rename / delete / select) —
+          centered modal; the owner vetoed bottom sheets app-wide. */}
+      <Dialog
+        open={sheetOpen}
+        onOpenChange={(open) => {
+          setSheetOpen(open)
+          if (!open) setCreateOnOpen(false)
+        }}
+      >
+        <DialogContent className="max-h-[78vh] overflow-y-auto sm:max-w-md">
+          <DialogHeader className="pb-2">
+            <DialogTitle>{t(lang, "portfolio")}</DialogTitle>
+            <DialogDescription className="tabular-nums">
+              {multi && (
+                <>
+                  {t(lang, "allPortfolios")}{" "}
+                  <span className="font-semibold text-foreground">
+                    {hideBalance ? MASKED : formatJpyAmount(totalAllPortfolios, currency)}
                   </span>
-                )}
-              </SheetDescription>
-            )}
-          </SheetHeader>
+                  {hasOverallPnl && !hideBalance && (
+                    <span
+                      className={cn(
+                        "ml-1.5 font-semibold",
+                        totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
+                      )}
+                    >
+                      {totalPnlPctAll >= 0 ? "+" : ""}
+                      {formatPct(totalPnlPctAll, 1)}%
+                    </span>
+                  )}
+                  <span aria-hidden className="mx-1.5 text-muted-foreground/40">
+                    ·
+                  </span>
+                </>
+              )}
+              {countLabel}
+            </DialogDescription>
+          </DialogHeader>
           <PortfolioSidebar
             portfolios={portfolios}
             activeId={activeId}
@@ -203,9 +273,10 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
             onDelete={props.onDelete}
             hideBalance={hideBalance}
             maxPortfolios={props.maxPortfolios}
+            initialCreating={createOnOpen}
           />
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

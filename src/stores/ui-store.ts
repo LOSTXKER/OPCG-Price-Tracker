@@ -29,7 +29,6 @@ interface UIState {
   dismissedBanner: boolean;
   /** Ad/cookie consent for ad networks (AdSense). House ads don't need it. */
   adConsent: AdConsent;
-  mobileMenuOpen: boolean;
   searchOpen: boolean;
   unreadMessages: number;
   /** Dismiss-once hint clarifying that the header game pill navigates the
@@ -43,8 +42,6 @@ interface UIState {
   setAdConsent: (consent: AdConsent) => void;
   setCardView: (view: CardView) => void;
   dismissBanner: () => void;
-  setMobileMenuOpen: (open: boolean) => void;
-  toggleMobileMenu: () => void;
   setSearchOpen: (open: boolean) => void;
   setUnreadMessages: (count: number) => void;
   dismissSwitcherHint: () => void;
@@ -59,7 +56,6 @@ export const useUIStore = create<UIState>()(
       cardView: "grid",
       dismissedBanner: false,
       adConsent: null,
-      mobileMenuOpen: false,
       searchOpen: false,
       unreadMessages: 0,
       dismissedSwitcherHint: false,
@@ -83,8 +79,6 @@ export const useUIStore = create<UIState>()(
       setAdConsent: (adConsent) => set({ adConsent }),
       setCardView: (cardView) => set({ cardView }),
       dismissBanner: () => set({ dismissedBanner: true }),
-      setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
-      toggleMobileMenu: () => set((s) => ({ mobileMenuOpen: !s.mobileMenuOpen })),
       setSearchOpen: (open) => set({ searchOpen: open }),
       setUnreadMessages: (count) => set({ unreadMessages: count }),
       dismissSwitcherHint: () => set({ dismissedSwitcherHint: true }),

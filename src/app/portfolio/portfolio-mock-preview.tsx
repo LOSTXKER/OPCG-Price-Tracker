@@ -1,128 +1,78 @@
-import { ArrowUp, ChevronDown, Eye, LayoutGrid, List, Plus, Search, Share2, Wallet } from "lucide-react"
+import { ArrowUp, Eye, MoreHorizontal } from "lucide-react"
 
+import { Surface } from "@/components/ui/surface"
 import { t, type Language } from "@/lib/i18n"
 
-/** Static, data-free preview shown behind the auth gate on /portfolio. Mirrors
- *  the live "collection-forward" layout. */
+/** Static, data-free preview shown behind the auth gate on /portfolio (and any
+ *  /portfolio/[id] a logged-out visitor lands on). Mirrors the hub: dashboard
+ *  hero → portfolio picker grid — no data, no interactivity, just the shape. */
 export function PortfolioMockPreview({ lang }: { lang: Language }) {
-  const tiles = [
-    { code: "OP09-001", name: "Monkey D. Luffy", value: "¥3,200", chg: "+4.1%" },
-    { code: "OP09-019", name: "Roronoa Zoro", value: "¥2,800", chg: "+2.4%" },
-    { code: "OP09-044", name: "Boa Hancock", value: "¥1,900", chg: "-1.2%" },
-    { code: "OP02-013", name: "Portgas D. Ace", value: "¥1,500", chg: "+0.8%" },
-    { code: "OP01-120", name: "Shanks", value: "¥1,480", chg: "+3.1%" },
+  const portfolios = [
+    { name: "Main Collection", value: "¥15,580", chg: "+9.3%", count: 7 },
+    { name: "Grading Pile", value: "¥42,900", chg: "+2.1%", count: 12 },
   ]
 
   return (
-    <div className="space-y-4 sm:space-y-5">
-      {/* Top bar */}
-      <div className="flex items-center gap-2">
-        <div className="flex min-w-0 flex-1 items-center gap-2.5 rounded-xl border border-[var(--p-hair)] bg-card px-3 py-2">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <Wallet className="size-4" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block truncate text-sm font-semibold leading-tight">
-              Main Collection
-            </span>
-            <span className="block font-price text-meta tabular-nums leading-tight">
-              ¥15,800 <span className="font-semibold text-price-up">+10.8%</span>
-            </span>
-          </span>
-          <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
-        </div>
-        <div className="flex shrink-0 items-center gap-1.5">
-          <span className="inline-flex size-9 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-card text-muted-foreground">
-            <Eye className="size-4" />
-          </span>
-          <span className="inline-flex size-9 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-card text-muted-foreground">
-            <Share2 className="size-4" />
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground">
-            <Plus className="size-4" />
-            <span className="hidden sm:inline">{t(lang, "addCard")}</span>
-          </span>
-        </div>
-      </div>
-
-      {/* Summary */}
-      <section className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
-        <div>
-          <p className="text-eyebrow text-muted-foreground/70">{t(lang, "portfolioValue")}</p>
-          <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3">
-            <span className="font-price text-2xl font-bold tabular-nums tracking-tight sm:text-3xl">
-              ¥15,800
-            </span>
-            <span className="inline-flex items-center gap-1 text-sm font-bold tabular-nums text-price-up">
-              <ArrowUp className="size-3.5" />
-              +10.8%
-            </span>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4 sm:gap-x-8">
-          <MockKpi label={t(lang, "marketValue")} value="¥15,800" />
-          <MockKpi label={t(lang, "costBasis")} value="¥14,260" muted />
-          <MockKpi label={t(lang, "pnl")} value="+¥1,540" up />
-          <MockKpi label={t(lang, "roi")} value="+10.8%" up />
-        </div>
-      </section>
-
-      {/* Holdings toolbar */}
-      <div className="flex items-center gap-2.5 border-b border-[var(--p-hair)] pb-3">
-        <p className="text-h5">{t(lang, "assets")}</p>
-        <span className="rounded-full bg-primary/8 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-primary/80">
-          8 {t(lang, "card")}
-        </span>
-        <div className="ml-auto flex items-center gap-2 text-muted-foreground/60">
-          <Search className="size-4" />
-          <span className="flex items-center gap-0.5 rounded-lg bg-muted/50 p-0.5">
-            <span className="rounded-md bg-background p-1.5 text-foreground shadow-sm">
-              <LayoutGrid className="size-3.5" />
-            </span>
-            <span className="p-1.5">
-              <List className="size-3.5" />
-            </span>
-          </span>
-        </div>
-      </div>
-
-      {/* Collection grid */}
-      <div className="grid grid-cols-2 gap-3 pt-1 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
-        {tiles.map((tile) => (
-          <div key={tile.code}>
-            <div className="surface-1 hairline relative aspect-[63/88] overflow-hidden rounded-xl bg-muted/40">
-              <span className="absolute right-1.5 top-1.5 rounded-md bg-black/55 px-1.5 py-0.5 font-price text-overlay font-semibold text-white">
-                ×1
+    <div className="space-y-5 sm:space-y-6">
+      {/* Dashboard hero */}
+      <Surface variant="panel" className="relative overflow-hidden p-4 sm:p-5">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-12 -top-20 h-64 w-80 rounded-full blur-3xl"
+          style={{ background: "color-mix(in srgb, var(--price-up) 12%, transparent)" }}
+        />
+        <div className="relative flex items-start justify-between gap-3">
+          <div>
+            <p className="text-eyebrow">{t(lang, "allPortfolios")}</p>
+            <div className="mt-2 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+              <span className="tabular-nums text-display leading-none">¥58,480</span>
+              <span className="inline-flex items-center gap-1 pb-0.5 text-sm font-semibold tabular-nums text-price-up">
+                <ArrowUp className="size-3.5" />
+                +6.8%
               </span>
             </div>
-            <div className="mt-2">
-              <p className="truncate text-sm font-semibold leading-tight">{tile.name}</p>
-              <p className="mt-0.5 font-price text-meta text-muted-foreground/60">{tile.code}</p>
-              <div className="mt-1 flex items-baseline justify-between gap-1.5">
-                <span className="font-price text-sm font-bold tabular-nums">{tile.value}</span>
-                <span
-                  className={`font-price text-micro font-semibold tabular-nums ${tile.chg.startsWith("-") ? "text-price-down" : "text-price-up"}`}
-                >
-                  {tile.chg}
+            <p className="mt-1.5 text-meta">2 {t(lang, "portfolio")} · 19 {t(lang, "card")}</p>
+          </div>
+          <span className="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground">
+            <Eye className="size-4" />
+          </span>
+        </div>
+      </Surface>
+
+      {/* Portfolio picker grid */}
+      <div>
+        <p className="mb-3 text-eyebrow">{t(lang, "selectPortfolio")}</p>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {portfolios.map((p) => (
+            <Surface key={p.name} variant="panel" className="p-4">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold">{p.name}</p>
+                  <p className="mt-1.5 text-price-lg tabular-nums">{p.value}</p>
+                  <span className="inline-flex items-center gap-0.5 text-micro font-semibold tabular-nums text-price-up">
+                    <ArrowUp className="size-3" />
+                    {p.chg}
+                  </span>
+                </div>
+                <span className="text-muted-foreground">
+                  <MoreHorizontal className="size-4" />
                 </span>
               </div>
-            </div>
-          </div>
-        ))}
+              <div className="mt-3 flex items-center gap-1.5">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="aspect-[63/88] w-7 shrink-0 rounded bg-muted ring-1 ring-[var(--p-hair)]"
+                  />
+                ))}
+                <span className="ml-auto text-meta tabular-nums">
+                  {p.count} {t(lang, "card")}
+                </span>
+              </div>
+            </Surface>
+          ))}
+        </div>
       </div>
-    </div>
-  )
-}
-
-function MockKpi({ label, value, up, muted }: { label: string; value: string; up?: boolean; muted?: boolean }) {
-  return (
-    <div>
-      <p className="text-eyebrow">{label}</p>
-      <p
-        className={`mt-0.5 font-price text-sm font-bold tabular-nums sm:text-base ${up ? "text-price-up" : muted ? "text-foreground/85" : ""}`}
-      >
-        {value}
-      </p>
     </div>
   )
 }

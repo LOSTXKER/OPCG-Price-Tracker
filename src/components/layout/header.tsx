@@ -21,7 +21,6 @@ import { NAV_LINKS, MARKETPLACE_LINK, isActive } from "./header-constants";
 import { HeaderMarketTicker } from "./header-market-ticker";
 import { HeaderUserMenu } from "./header-user-menu";
 import { HeaderMobile } from "./header-mobile";
-import { MobileMenuSheet } from "./mobile-menu-sheet";
 
 export function Header() {
   const router = useRouter();
@@ -256,21 +255,6 @@ export function Header() {
     </div>
 
     <HeaderMobile isAuthenticated={authLoaded && Boolean(authUser)} />
-
-    <MobileMenuSheet
-      authUser={authUser}
-      authLoaded={authLoaded}
-      userName={userName}
-      userAvatar={userAvatar}
-      userId={userId}
-      userTier={userTier}
-      honeyPoints={honeyPoints}
-      honeyPendingActions={honeyPendingActions}
-      unreadMessages={unreadMessages}
-      mounted={mounted}
-      marketplaceEnabled={publicConfig.marketplaceEnabled}
-      onLogout={doLogout}
-    />
 
     <CommandSearchModal open={searchOpen} onClose={closeSearch} />
     </>

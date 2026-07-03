@@ -4,7 +4,7 @@ import Image from "next/image"
 import { ArrowDown, ArrowUp } from "lucide-react"
 
 import { Surface } from "@/components/ui/surface"
-import { getGameAccentTint } from "@/lib/game-config"
+import { getGameAccentTint, getGameConfig } from "@/lib/game-config"
 import { DEFAULT_GAME } from "@/lib/game/constants"
 import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
@@ -32,8 +32,10 @@ export function PortfolioGameBreakdown({
 }: {
   breakdown: GameBreakdown[]
   totalValueJpy: number
-  /** Deep-link a row into that game's scope by setting the in-page filter. */
-  onSelect: (game: string) => void
+  /** Deep-link a row into that game's scope by setting the in-page filter.
+   *  Omit to render read-only rows (e.g. the hub's cross-portfolio summary,
+   *  which has no single game-scoped view to jump to). */
+  onSelect?: (game: string) => void
   hideBalance?: boolean
 }) {
   const lang = useUIStore((s) => s.language)
@@ -47,9 +49,9 @@ export function PortfolioGameBreakdown({
 
   return (
     <Surface variant="panel" className="overflow-hidden">
-      {/* Panel heading */}
+      {/* Panel heading — "by game", NOT "all games" (that's the chip above) */}
       <div className="px-4 pb-2 pt-4 sm:px-5 sm:pt-5">
-        <p className="text-h5">{t(lang, "allGames")}</p>
+        <p className="text-h5">{t(lang, "byGame")}</p>
       </div>
 
       {/* One row per game */}
@@ -63,17 +65,21 @@ export function PortfolioGameBreakdown({
               ? Math.min(100, (b.valueJpy / totalValueJpy) * 100)
               : 0
 
-          const gameName = b.game?.name ?? t(lang, "other")
-          const firstLetter = gameName.charAt(0).toUpperCase()
+          // Null-game holdings fold into the default game upstream — resolve the
+          // display name from the config so they read as "OPCG", never "other".
           const slug = b.game?.slug ?? DEFAULT_GAME
+          const gameName =
+            getGameConfig(slug)?.shortName ?? b.game?.name ?? slug.toUpperCase()
+          const firstLetter = gameName.charAt(0).toUpperCase()
 
-          return (
-            <button
-              key={slug}
-              type="button"
-              onClick={() => onSelect(slug)}
-              className="ease-chrome block w-full cursor-pointer px-4 py-3 text-left transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:px-5"
-            >
+          const rowClassName = cn(
+            "block w-full px-4 py-3 text-left sm:px-5",
+            onSelect &&
+              "ease-chrome cursor-pointer transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          )
+
+          const row = (
+            <>
               {/* Top row: logo · name+count · value+delta */}
               <div className="flex items-center gap-3">
                 {/* Logo chip — image or letter fallback */}
@@ -96,12 +102,14 @@ export function PortfolioGameBreakdown({
                 {/* Name + card count */}
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold">{gameName}</p>
-                  <p className="text-meta tabular-nums">{b.count}</p>
+                  <p className="text-meta tabular-nums">
+                    {b.count} {t(lang, "card")}
+                  </p>
                 </div>
 
                 {/* Value + P/L delta */}
                 <div className="shrink-0 text-right">
-                  <p className="font-price text-sm font-bold tabular-nums">
+                  <p className="tabular-nums text-sm font-bold">
                     {hideBalance
                       ? "••••"
                       : formatDisplayValue(
@@ -112,7 +120,7 @@ export function PortfolioGameBreakdown({
                   {hasCost && (
                     <span
                       className={cn(
-                        "inline-flex items-center gap-0.5 font-price text-micro font-semibold tabular-nums",
+                        "inline-flex items-center gap-0.5 tabular-nums text-micro font-semibold",
                         isUp ? "text-price-up" : "text-price-down",
                       )}
                     >
@@ -140,7 +148,17 @@ export function PortfolioGameBreakdown({
                   }}
                 />
               </div>
+            </>
+          )
+
+          return onSelect ? (
+            <button key={slug} type="button" onClick={() => onSelect(slug)} className={rowClassName}>
+              {row}
             </button>
+          ) : (
+            <div key={slug} className={rowClassName}>
+              {row}
+            </div>
           )
         })}
       </div>

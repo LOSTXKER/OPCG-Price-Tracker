@@ -41,7 +41,12 @@ export function PageContainer({
       className={cn(
         "mx-auto w-full",
         WIDTH_CLASS[width],
-        !inShell && "px-4 md:px-6 lg:px-8",
+        // Mobile gutter bumped 16px -> 20px (px-4 -> px-5) — 16px read as
+        // content hugging the screen edge. md/lg unchanged. Anything that
+        // breaks out full-bleed via `-mx-4` to cancel this padding needs the
+        // matching `-mx-5` (see trending-tabs, settings, sets, set-detail,
+        // market-overview).
+        !inShell && "px-5 md:px-6 lg:px-8",
         className,
       )}
     >

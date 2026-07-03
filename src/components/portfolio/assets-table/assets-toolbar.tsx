@@ -1,18 +1,17 @@
 "use client"
 
-import { Edit2, LayoutGrid, List } from "lucide-react"
+import { Edit2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
   Toolbar,
   ToolbarSearch,
   ToolbarSortDropdown,
-  ViewToggle,
   type ToolbarSortOption,
 } from "@/components/ui/toolbar"
 import { t, type Language } from "@/lib/i18n"
 
-import type { HoldingsView, SortDir, SortKey } from "./utils"
+import type { SortDir, SortKey } from "./utils"
 
 export function AssetsToolbar({
   lang,
@@ -26,8 +25,7 @@ export function AssetsToolbar({
   onSortSelect,
   onBulkEdit,
   hasAssets,
-  view,
-  onViewChange,
+  leading,
 }: {
   lang: Language
   count: number
@@ -40,8 +38,8 @@ export function AssetsToolbar({
   onSortSelect: (key: SortKey) => void
   onBulkEdit: () => void
   hasAssets: boolean
-  view: HoldingsView
-  onViewChange: (v: HoldingsView) => void
+  /** Replaces the default "สินทรัพย์ · count" heading — e.g. the game tabs. */
+  leading?: React.ReactNode
 }) {
   const sortOptions: ToolbarSortOption<SortKey>[] = [
     { key: "value", label: t(lang, "value") },
@@ -73,33 +71,27 @@ export function AssetsToolbar({
             onChange={onSortSelect}
             fallbackLabel={t(lang, "toolbarSort")}
           />
-          <ViewToggle<HoldingsView>
-            modes={[
-              { value: "grid", icon: LayoutGrid, ariaLabel: t(lang, "watchlistViewGrid") },
-              { value: "list", icon: List, ariaLabel: t(lang, "watchlistViewList") },
-            ]}
-            value={view}
-            onChange={onViewChange}
-          />
           {hasAssets && (
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               size="xs"
               onClick={onBulkEdit}
-              className="border-[var(--p-hair)] bg-muted/20 text-foreground/80 hover:bg-muted/50"
+              className="text-muted-foreground hover:text-foreground"
             >
-              <Edit2 className="size-3 text-muted-foreground/60" />
+              <Edit2 className="size-3" />
               {t(lang, "bulkEdit")}
             </Button>
           )}
         </>
       }
     >
-      <p className="text-h5">{t(lang, "assets")}</p>
-      <span className="rounded-full bg-primary/8 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-primary/80">
-        {count} {t(lang, "card")}
-      </span>
+      {leading ?? (
+        <p className="text-eyebrow">
+          {t(lang, "assets")}
+          <span className="ml-2 tabular-nums text-muted-foreground/70">{count}</span>
+        </p>
+      )}
     </Toolbar>
   )
 }

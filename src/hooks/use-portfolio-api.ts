@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { ApiError, apiDelete, apiGet, apiPatch, apiPost, apiTry } from "@/lib/api/client"
 import { getCardName, getLocale, t } from "@/lib/i18n"
@@ -44,6 +44,60 @@ type PortfolioRow = {
   items: ItemRow[]
 }
 
+function toAssetRow(it: ItemRow): AssetRow {
+  return {
+    itemId: it.id,
+    cardId: it.card.id,
+    cardCode: it.card.cardCode,
+    baseCode: it.card.baseCode,
+    nameJp: it.card.nameJp,
+    nameEn: it.card.nameEn,
+    rarity: it.card.rarity,
+    imageUrl: it.card.imageUrl,
+    quantity: it.quantity,
+    purchasePrice: it.purchasePrice,
+    currentPrice: it.card.latestPriceJpy,
+    currentPriceThb: it.card.latestPriceThb ?? null,
+    priceChange24h: it.card.priceChange24h,
+    priceChange7d: it.card.priceChange7d,
+    condition: it.condition,
+    isPrivate: it.isPrivate ?? false,
+    notes: it.notes ?? null,
+    game: it.card.set?.game ?? null,
+  }
+}
+
+/** Per-game roll-up shared by the active-portfolio breakdown (detail page) and
+ *  the cross-portfolio breakdown (hub). Null-game holdings fold into the
+ *  default game so a chip total reconciles with the scoped hero instead of
+ *  quietly dropping value (VISION §5.7). */
+function buildGameBreakdown(items: ItemRow[]): GameBreakdown[] {
+  const map = new Map<string, GameBreakdown>()
+  for (const it of items) {
+    const game = it.card.set?.game ?? null
+    const key = game?.slug ?? DEFAULT_GAME
+    let entry = map.get(key)
+    if (!entry) {
+      entry = { game, valueJpy: 0, costJpy: 0, pnl: 0, pnlPercent: 0, count: 0 }
+      map.set(key, entry)
+    } else if (!entry.game && game) {
+      // A real game ref arrived after a null-game card seeded this key — adopt it
+      // so the chip can render its label/logo.
+      entry.game = game
+    }
+    entry.valueJpy += (it.card.latestPriceJpy ?? 0) * it.quantity
+    entry.costJpy += (it.purchasePrice ?? 0) * it.quantity
+    entry.count += it.quantity
+  }
+  return [...map.values()]
+    .map((e) => ({
+      ...e,
+      pnl: e.valueJpy - e.costJpy,
+      pnlPercent: e.costJpy > 0 ? ((e.valueJpy - e.costJpy) / e.costJpy) * 100 : 0,
+    }))
+    .sort((a, b) => b.valueJpy - a.valueJpy)
+}
+
 type SnapshotRow = {
   totalJpy: number
   totalThb: number | null
@@ -54,29 +108,39 @@ type SnapshotRow = {
   snapshotAt: string
 }
 
-export function usePortfolioApi(gameScope: string = ALL_GAMES) {
+/**
+ * @param gameScope Game filter applied to the ACTIVE portfolio's holdings
+ *   (detail page). Ignored by the hub, which never scopes by game.
+ * @param activePortfolioId The portfolio to treat as "active" — pass the id
+ *   from the `/portfolio/[id]` route param for the detail page. Omit entirely
+ *   for the hub (`/portfolio`), which has no single active portfolio: no
+ *   auto-select, no history fetch, just the cross-portfolio aggregates below.
+ *   Kept in sync via effect (not just an initial value) so switching between
+ *   two detail pages client-side (same route, different id) updates in place.
+ */
+export function usePortfolioApi(gameScope: string = ALL_GAMES, activePortfolioId?: number) {
   const lang = useUIStore((s) => s.language)
   const [portfolios, setPortfolios] = useState<PortfolioRow[]>([])
   const [history, setHistory] = useState<HistoryPoint[]>([])
   const [transactions, setTransactions] = useState<TransactionRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [activeId, setActiveId] = useState<number | null>(null)
-
-  const activeIdRef = useRef(activeId)
-  useEffect(() => {
-    activeIdRef.current = activeId
-  }, [activeId])
+  const [activeId, setActiveId] = useState<number | null>(activePortfolioId ?? null)
+  // Sync activeId when the caller's `activePortfolioId` prop changes (e.g.
+  // navigating client-side between two `/portfolio/[id]` routes reuses this
+  // component instance) — adjusted during render per React's "derive state
+  // from props" pattern, not in an effect, so it can't cascade an extra commit.
+  const [syncedPropId, setSyncedPropId] = useState(activePortfolioId)
+  if (activePortfolioId !== undefined && activePortfolioId !== syncedPropId) {
+    setSyncedPropId(activePortfolioId)
+    setActiveId(activePortfolioId)
+  }
 
   const load = useCallback(async () => {
     try {
       const data = await apiGet<{ portfolios: PortfolioRow[] }>("/api/portfolio")
       setError(null)
       setPortfolios(data.portfolios ?? [])
-
-      if (!activeIdRef.current && data.portfolios?.length) {
-        setActiveId(data.portfolios[0].id)
-      }
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
         invalidateSettings()
@@ -227,72 +291,44 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES) {
     return result
   }, [scopedItems, stats.totalValueJpy, lang])
 
-  const assets = useMemo((): AssetRow[] =>
-    scopedItems.map((it) => ({
-      itemId: it.id,
-      cardId: it.card.id,
-      cardCode: it.card.cardCode,
-      baseCode: it.card.baseCode,
-      nameJp: it.card.nameJp,
-      nameEn: it.card.nameEn,
-      rarity: it.card.rarity,
-      imageUrl: it.card.imageUrl,
-      quantity: it.quantity,
-      purchasePrice: it.purchasePrice,
-      currentPrice: it.card.latestPriceJpy,
-      currentPriceThb: it.card.latestPriceThb ?? null,
-      priceChange24h: it.card.priceChange24h,
-      priceChange7d: it.card.priceChange7d,
-      condition: it.condition,
-      isPrivate: it.isPrivate ?? false,
-      notes: it.notes ?? null,
-      game: it.card.set?.game ?? null,
-    })),
-    [scopedItems]
-  )
+  const assets = useMemo((): AssetRow[] => scopedItems.map(toAssetRow), [scopedItems])
 
-  // Per-game roll-up. One group today (OPCG); the UI collapses to an implicit
-  // single game and lights up the breakdown / aggregate only when a 2nd game has
-  // holdings (VISION §5.7 — "All games" aggregate for portfolio).
-  const gameBreakdown = useMemo((): GameBreakdown[] => {
-    const map = new Map<string, GameBreakdown>()
-    for (const it of items) {
-      const game = it.card.set?.game ?? null
-      // Cards with no game fold into the default game — matching `scopedItems`
-      // above (which treats null-game as DEFAULT_GAME) — so a per-game chip total
-      // reconciles with the scoped hero instead of quietly dropping value.
-      const key = game?.slug ?? DEFAULT_GAME
-      let entry = map.get(key)
-      if (!entry) {
-        entry = { game, valueJpy: 0, costJpy: 0, pnl: 0, pnlPercent: 0, count: 0 }
-        map.set(key, entry)
-      } else if (!entry.game && game) {
-        // A real game ref arrived after a null-game card seeded this key — adopt it
-        // so the chip can render its label/logo.
-        entry.game = game
-      }
-      entry.valueJpy += (it.card.latestPriceJpy ?? 0) * it.quantity
-      entry.costJpy += (it.purchasePrice ?? 0) * it.quantity
-      entry.count += it.quantity
-    }
-    return [...map.values()]
-      .map((e) => ({
-        ...e,
-        pnl: e.valueJpy - e.costJpy,
-        pnlPercent: e.costJpy > 0 ? ((e.valueJpy - e.costJpy) / e.costJpy) * 100 : 0,
-      }))
-      .sort((a, b) => b.valueJpy - a.valueJpy)
-  }, [items])
+  // Per-game roll-up of the ACTIVE portfolio. One group today (OPCG); the UI
+  // collapses to an implicit single game and lights up the breakdown /
+  // aggregate only when a 2nd game has holdings (VISION §5.7).
+  const gameBreakdown = useMemo(() => buildGameBreakdown(items), [items])
+
+  // Every portfolio's items flattened — the hub's cross-portfolio aggregates.
+  // Demo Pokémon holdings are intentionally NOT spliced in here (the mock is
+  // keyed to a single "active" portfolio and has no natural home across many).
+  const allItems = useMemo(() => portfolios.flatMap((p) => p.items), [portfolios])
+  const allAssets = useMemo((): AssetRow[] => allItems.map(toAssetRow), [allItems])
+  const allGameBreakdown = useMemo(() => buildGameBreakdown(allItems), [allItems])
 
   const portfolioMetas = useMemo((): PortfolioMeta[] =>
-    portfolios.map((p) => ({
-      id: p.id,
-      name: p.name,
-      isPublic: p.isPublic ?? true,
-      totalValue: p.items.reduce((s, it) => s + (it.card.latestPriceJpy ?? 0) * it.quantity, 0),
-      totalCost: p.items.reduce((s, it) => s + (it.purchasePrice ?? 0) * it.quantity, 0),
-      itemCount: p.items.length,
-    })),
+    portfolios.map((p) => {
+      const previewItems = [...p.items]
+        .sort(
+          (a, b) =>
+            (b.card.latestPriceJpy ?? 0) * b.quantity - (a.card.latestPriceJpy ?? 0) * a.quantity,
+        )
+        .slice(0, 4)
+        .map((it) => ({
+          cardCode: it.card.cardCode,
+          imageUrl: it.card.imageUrl,
+          nameJp: it.card.nameJp,
+          nameEn: it.card.nameEn,
+        }))
+      return {
+        id: p.id,
+        name: p.name,
+        isPublic: p.isPublic ?? true,
+        totalValue: p.items.reduce((s, it) => s + (it.card.latestPriceJpy ?? 0) * it.quantity, 0),
+        totalCost: p.items.reduce((s, it) => s + (it.purchasePrice ?? 0) * it.quantity, 0),
+        itemCount: p.items.length,
+        previewItems,
+      }
+    }),
     [portfolios]
   )
 
@@ -412,6 +448,8 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES) {
     allocation,
     assets,
     gameBreakdown,
+    allAssets,
+    allGameBreakdown,
     portfolioMetas,
     totalAllPortfolios,
     createPortfolio,

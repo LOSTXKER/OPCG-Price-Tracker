@@ -70,7 +70,7 @@ export function ProfileTabsNav({
         // padding. We deliberately omit a bottom border here — the tab
         // section panel below docks against the nav and provides its own
         // visual edge, so a border-b would just create a double divider.
-        "sticky z-30 -mx-4 mt-8 bg-background/85 px-4 backdrop-blur",
+        "sticky z-30 -mx-5 mt-8 bg-background/85 px-5 backdrop-blur",
         "supports-[backdrop-filter]:bg-background/70",
         "top-14 md:top-[86px] md:-mx-6 md:px-6 lg:-mx-8 lg:px-8",
       )}
