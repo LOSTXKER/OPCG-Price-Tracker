@@ -21,6 +21,15 @@ const CHROMELESS_ROUTES: ReadonlyArray<string | RegExp> = [
 ];
 
 /**
+ * Routes that keep the mobile BottomNav (still a real tab destination) but
+ * drop the persistent site Header and the marketing Footer. `/more` already
+ * lists every nav destination itself (Browse/Track/Account/…) and its own
+ * `PageHeader` large-title, so the global chrome above/below it is pure
+ * duplication — owner call (2026-07-03).
+ */
+const NO_HEADER_FOOTER_ROUTES: ReadonlyArray<string | RegExp> = ["/more"];
+
+/**
  * Routes that should NOT be wrapped in the default `<main>` container — they
  * render their own full-bleed layout (e.g. public profile cover image).
  */
@@ -59,9 +68,25 @@ function useIsChromeless() {
   return matches(pathname, CHROMELESS_ROUTES);
 }
 
+/**
+ * Wraps the mobile BottomNav — hidden only on fully chromeless routes (it's
+ * still a real tab destination everywhere else, including `/more`).
+ */
 export function MainChrome({ children }: { children: React.ReactNode }) {
   const chromeless = useIsChromeless();
   if (chromeless) return null;
+  return <>{children}</>;
+}
+
+/**
+ * Wraps the site Header / Footer — hidden on chromeless routes AND on
+ * `NO_HEADER_FOOTER_ROUTES` (see above). Kept separate from `MainChrome` so
+ * the BottomNav can stay visible on routes that drop the rest of the chrome.
+ */
+export function SiteChrome({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const hidden = matches(pathname, CHROMELESS_ROUTES) || matches(pathname, NO_HEADER_FOOTER_ROUTES);
+  if (hidden) return null;
   return <>{children}</>;
 }
 

@@ -1,16 +1,18 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-03 — **Bottom-nav มือถือ: relabel + เอาเด็คออก + เพิ่มปุ่มค้นหาเด่นตรงกลาง** (เบสสั่งตรงๆ) ต่อจาก breadcrumb→back-button work ก่อนหน้า
+อัปเดตล่าสุด: 2026-07-03 — **Bottom-nav: ปุ่มค้นหา → รายการโปรดธรรมดา · หน้า `/more` ตัด header+footer ออก** (เบสสั่งแก้ต่อจากรอบก่อน) ต่อจาก relabel+ตัดเด็คก่อนหน้า
 
-## ✅ เสร็จล่าสุด — Bottom-nav มือถือ: ปรับ label + ตัดแท็บเด็ค + ปุ่มค้นหาเด่นตรงกลาง
-เบสสั่ง: "ตลาดเปลี่ยนเป็นหน้าแรก · เรียกดูเปลี่ยนเป็นชุดการ์ด · เอาเด็คออก · เพิ่มปุ่มค้นหาแทนตรงกลางเด่นๆ" — แก้ที่ `src/components/layout/bottom-nav.tsx` ไฟล์เดียว:
-- แท็บ 1 (`/`): label `t(lang,"market")`="ตลาด" → `t(lang,"home")`="หน้าแรก" (ใช้ i18n key ที่มีอยู่แล้ว ไม่เพิ่ม key ใหม่)
-- แท็บ 2 (`/sets`): label `t(lang,"browse")`="เรียกดู" → `t(lang,"sets")`="ชุดการ์ด" (key มีอยู่แล้ว ใช้ตรงกับ header desktop nav)
-- **ตัดแท็บ "เด็ค" (`/decks`) ออกจาก bottom-nav** — ⚠️ นี่คือการแก้ไข IA ที่เคย "freeze 5 tab" ไว้ตอน P0a (2026-06-13) เบสสั่งเปลี่ยนตรงๆ รอบนี้ · หน้า `/decks` เองยังอยู่ปกติ เข้าถึงได้ผ่าน command search/header เหมือนเดิม แค่ไม่ใช่ bottom-nav tab อีกต่อไป
-- **เพิ่มปุ่มค้นหาตรงกลาง** แทนที่ตำแหน่งเดิมของเด็ค — ไม่ใช่ `TabLink` (ไม่ใช่หน้า เป็น action) แต่เป็นวงกลม `size-14 bg-primary` ลอยเหนือแถบด้วย `-mt-6` + `shadow-lg` + `ring-4 ring-background` (ตัด edge ให้ดูลอยจริงจากแถบด้านหลัง ไม่ใช่แค่วงกลมแบนอยู่ในแถว) กดแล้วเรียก `setSearchOpen(true)` — ใช้ `CommandSearchModal` ตัวเดียวกับ header (mount ที่ root layout อยู่แล้ว เปิดจากที่ไหนก็ได้ผลเหมือนกัน ไม่มี state/data path ใหม่)
-- ลำดับใหม่: หน้าแรก · ชุดการ์ด · **(ค้นหา)** · พอร์ตโฟลิโอ · เพิ่มเติม — ยังคง 5 slot เท่าเดิม (ไม่กระทบ layout width)
-**verify:** tsc0/lint0/detect[]/test56/build✓ + browser จริง: screenshot ยืนยันปุ่มค้นหาลอยเด่นสีทองกลางแถบ + คลิกทดสอบจริงเปิด command search สำเร็จ + curl `/opcg/decks` ยังเข้าได้ปกติ (200)
+## ✅ เสร็จล่าสุด — ปรับ bottom-nav กลับเป็นแท็บธรรมดา + `/more` ไม่มี header/footer
+เบสสั่ง: "เอาค้นหาออกดีกว่าเปลี่ยนเป็นปุ่มรายการโปรดธรรมดา ส่วนดูเพิ่มเติมเอา header ออก และ footer ออก" — 2 จุด:
+1. **`bottom-nav.tsx`**: ถอดปุ่มค้นหาลอยเด่น (`SearchButton`) ที่เพิ่งทำไปทิ้ง แทนที่ด้วย `TabLink` ปกติ href `/watchlist` label `t(lang,"watchlistNav")`="รายการโปรด" icon `Bookmark` — หน้าตา/พฤติกรรมเหมือนแท็บอื่นทุกอย่าง (active state, ขนาดเท่ากัน ไม่มีการลอย) ลำดับใหม่: หน้าแรก · ชุดการ์ด · รายการโปรด · พอร์ตโฟลิโอ · เพิ่มเติม
+2. **`/more` ตัด header+footer ทิ้ง** (คง bottom-nav ไว้ เพราะยังเป็นปลายทางของแท็บ) — refactor `main-chrome.tsx`: เดิม `MainChrome` เป็นตัวเดียวคุมทั้ง Header/Footer/BottomNav (all-or-nothing ตาม `CHROMELESS_ROUTES`) ต้องแยกออก:
+   - เพิ่ม `SiteChrome` (component ใหม่) — ซ่อนเมื่อ `CHROMELESS_ROUTES` **หรือ** `NO_HEADER_FOOTER_ROUTES` (list ใหม่ = `["/more"]`) → ใช้ห่อ `<Header />` และ `<Footer />` ใน `layout.tsx`
+   - `MainChrome` เดิมเหลือห่อแค่ `<BottomNav />` — ซ่อนเฉพาะ `CHROMELESS_ROUTES` เท่านั้น (ไม่โดน `/more` เพราะยังต้องโชว์)
+   - เหตุผล: `/more` มีลิงก์ไปทุกที่อยู่แล้วในตัวมันเอง (Browse/Track/บัญชี ฯลฯ) + มี `PageHeader` title ของตัวเองอยู่แล้ว → header/footer ของเว็บซ้ำซ้อนจริง
+   - หน้าอื่นทั้งหมดไม่กระทบ (ยังมี header+footer+bottomnav ครบเหมือนเดิม)
+- ⚠️ **เจอปัญหา dev server cache อีกรอบ** (ครั้งที่ 3 ใน session นี้) — แก้โค้ดแล้ว curl/browser ยังเห็นของเก่า ทั้งที่ compile log บอกว่า compile ผ่าน สงสัยว่า root `layout.tsx`/shared chrome ไฟล์ HMR ไม่ reliable เท่าไฟล์ระดับ page → แก้โดย **`rm -rf .next` (ทั้งโฟลเดอร์ ไม่ใช่แค่ `.next/dev`) + restart dev server ใหม่ทั้งหมด** ถึงจะเห็นผลถูกต้อง — ถ้าเจอ pattern นี้อีกให้ทำตามนี้ทันที ไม่ต้องเสียเวลาสืบโค้ด
+**verify:** tsc0/lint0(34 warning เดิม)/detect[]/test56/build✓ (`/more` prerender static) + browser จริงหลัง restart สะอาด: `/more` มือถือ**ไม่มี**หัวเว็บ/ท้ายเว็บเลย (screenshot ยืนยัน) มีแค่ bottom-nav + เนื้อหาของหน้า · `/more` desktop เหมือนกัน (ไม่มี header/footer แต่ bottom-nav ก็ไม่โชว์เพราะเป็น `md:hidden` เดิม — desktop ไม่มีทางเข้า `/more` อยู่แล้วไม่กระทบใคร) · หน้าแรก `/` มือถือ+desktop ยังมี header/footer/bottom-nav ครบเหมือนเดิม (ไม่ regression) · curl smoke ทุก route ที่แก้ 200
 
 ## ✅ เสร็จล่าสุด (ต่อ) — ปุ่มย้อนมือถือ = ไอคอนวงกลมล้วน (เบสเคาะขั้นสุดท้าย)
 วิวัฒนาการ 3 ขั้นตามที่เบสเคาะทีละรอบ: text link → pill มีชื่อหน้าแม่ → **ไอคอนล้วน** ("ใช้เป็นปุ่มย้อนให้หมดเลยเหมือนกัน แล้วไม่ต้องมีคำอะไร"):

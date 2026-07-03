@@ -3,7 +3,7 @@ import { Kanit, JetBrains_Mono } from "next/font/google";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { MainChrome, PageContent } from "@/components/layout/main-chrome";
+import { MainChrome, SiteChrome, PageContent } from "@/components/layout/main-chrome";
 import { CompareFloatingBar } from "@/components/compare/compare-floating-bar";
 import { ConsentBanner } from "@/components/ads/consent-banner";
 import { ScrollToTop } from "@/components/shared/scroll-to-top";
@@ -95,12 +95,14 @@ export default function RootLayout({
           <TooltipProvider>
             <ConfirmDialogProvider>
               <UpgradeDialogProvider>
-                <MainChrome>
+                <SiteChrome>
                   <Header />
-                </MainChrome>
+                </SiteChrome>
                 <PageContent>{children}</PageContent>
-                <MainChrome>
+                <SiteChrome>
                   <Footer />
+                </SiteChrome>
+                <MainChrome>
                   <BottomNav />
                 </MainChrome>
                 <CompareFloatingBar />
