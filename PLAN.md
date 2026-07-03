@@ -11,6 +11,17 @@
 - [x] token motion/elevation: `--dur-fast/base/slow` + `--ease-chrome/spring` + `--elev-flat/raised/overlay` (light+dark) · wire `.ease-chrome`/`.rise` → token · refactor button base → `duration-[var(--dur-base)] ease-[var(--ease-chrome)]` · verify ✓ (เหลือ: ทยอย migrate 20 ไฟล์ที่ยัง hardcode `duration-*` ตอนแตะหน้านั้นๆ)
 - [ ] atom kit (สร้าง/รวม): `PriceTag` · `HeroNumber` · `GradeChip`/`GradeRail` · `EditionToggle` · `SourceBadge` · `SellerChip` · `PriceLadder` · `CustodyTimeline` · `EventCard` *(มีแล้ว: ListRow · Surface · AdSlot · Skeleton)*
 - [ ] state system: skeleton รูปร่างตาม content ทุก async + `EmptyState`+CTA · ศูนย์ spinner
+- [x] **iOS design language tokens** (2026-07-03 · ส่วนหนึ่งของ showcase ด้านล่าง): `.hairline-b` (คู่ `.hairline-t` เดิม) · safe-area utilities (`.pt/pb/pl/pr-safe`) · `.text-large-title` (34px collapsing-nav large title) · `.frost` มีอยู่แล้วนำมาต่อยอด — ไม่แตะของเดิม
+
+### 🍎 iOS Design Language — Showcase ✅ (2026-07-03 · เบส: "ทำ UXUI ทั้งเว็บทันสมัย มือถือแบบ Apple iOS ลองทำตัวอย่างมาดู")
+> ทิศ = "iOS grammar × Meecard skin" — เอาไวยากรณ์ iOS (large title collapse, frosted chrome, grouped-inset list, safe-area, tap≥44px) มาทับตัวตน espresso+honey เดิม (VISION §1 ห้ามเปลี่ยน) · scope ใหญ่เกินกวาดทั้งเว็บรอบเดียว → proto-first ที่ `/proto/ios/*` ก่อน (เปิดดูไม่ต้อง login)
+- [x] token additions ใน `globals.css` (ดูด้านบน) — ผ่าน Impeccable hook หลัง suppress 2 finding เดิม (`--ease-spring` bounce ที่ VISION.md ตั้งใจ + `.section-heading` side-tab เดิมนอก scope) ด้วย reason ที่บันทึกใน `.impeccable/config.json`
+- [x] shell กลาง `src/app/proto/ios/` — `IosShell` (frosted collapsing nav + back-button อัตโนมัติ + bottom tab bar มือถือ/side rail desktop ตรง VISION §2) · atoms `LargeTitle`/`GroupedSection`/`GroupedRow` · mock data กลาง `_data.ts` (การ์ดจริงจาก R2/pokemontcg.io)
+- [x] 6 หน้า showcase: ตลาด (home) · portfolio hub · portfolio detail (`SegmentedControl`+sparkline) · card detail (grade chips กดสลับราคา+chart+sticky buy bar เดียวที่ใช้ทอง) · watchlist (pin/alert micro icons) · more/settings (grouped-inset เต็มรูปแบบ) — home เขียนเองเป็น reference แล้ว delegate 5 หน้าที่เหลือให้ subagent ขนาน (ส่ง shell+atoms+mock ที่ล็อกแล้วกันดริฟต์)
+- [x] แก้บั๊กที่เจอตอน verify: `react-hooks/set-state-in-effect` ใน shell (lazy initializer แทน setState ใน effect) · RSC serialization error ใน more/page (Server Component ส่ง icon component เข้า client `GroupedRow` ไม่ได้ → เปลี่ยนเป็น `"use client"`) · `next/image` domain ของ `images.pokemontcg.io` ขาดใน `next.config.ts` (เพิ่ม 1 entry) · unify hide-balance เป็น dot `••••` ทั้งหมด (ตรง `MASKED` convention จริง)
+- [x] verify: tsc0 · lint0 (34 warning เดิม) · test56 · build✓ (6 route ขึ้นจริง) · impeccable detect [] · curl smoke 200 ทุก route
+- [ ] **⚠️ ยังไม่ได้เปิด browser จริงดู** (tool ไม่พร้อม session นี้) — เบสต้องเช็คของจริงก่อนเคาะ (ดู PROGRESS.md NEXT)
+- [ ] เบสเคาะ → เขียนแผน rollout จริงเป็น batch แยก (chrome ก่อน → MONEY → PLAY → ที่เหลือ) — ยังไม่เริ่ม, 30+ surface ต้องทยอย verify ทีละ batch ไม่กวาดทีเดียว
 
 ### Card detail — trust core ✅ (proto visionary layout · เต็มภาพ · est-labeled fill)
 - [x] **rework layout ตรง proto visionary** (เบสเลือก): grid `340px/1fr` · ซ้าย sticky = รูป+identity+EditionToggle+CTA · ขวา = hero + **3-stat box** (Last Sale·Lowest Listing·Sales 30d) + grade chips **outline-selected** + chart card + **tabs** (Comps/Listings/Population/Specs)

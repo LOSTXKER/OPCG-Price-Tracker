@@ -88,6 +88,12 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "en-assets.snkrdunk.com",
       },
+      {
+        // Pokémon TCG card art — used by the /proto/ios multi-game mock data
+        // today; will be needed again once real Pokémon data lands (PLAN.md).
+        protocol: "https",
+        hostname: "images.pokemontcg.io",
+      },
     ],
   },
 };
