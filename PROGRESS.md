@@ -1,12 +1,22 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-03 — **Mobile iOS rollout: Batch 3 (More sheet → grouped-inset) เสร็จ** ต่อจาก Batch 2 (Settings) — เบสเคาะ "โอเคนะ ทำต่อเลย"
+อัปเดตล่าสุด: 2026-07-03 — **Mobile iOS rollout: Batch 4 — "เพิ่มเติม" เปลี่ยนจาก sheet เป็นหน้าเต็ม `/more`** (เบสถาม "หน้าเต็มดีกว่ามั้ยตามหลัก" → ตอบ: ใช่ ตาม iOS HIG แท็บต้องเป็น destination → ดำเนินการ)
 
 ## แหล่งอ้างอิง
 - **spec เต็ม:** `doc/mine-multigame-spec.md` · **VISION:** identity §1 (ห้ามเปลี่ยน) + IA §2
 
-## ✅ เสร็จ session นี้ — Batch 3: "More" sheet (bottom-nav) → grouped-inset
+## ✅ เสร็จ session นี้ — Batch 4: "เพิ่มเติม" = หน้าเต็ม `/more` (แทน sheet)
+
+ตามหลัก iOS HIG แท็บใน tab bar ต้องเป็น "ที่หมาย" ที่กดแล้วนำทาง ไม่ใช่ปุ่มเปิด overlay — เดิมมีแค่แท็บ "เพิ่มเติม" ตัวเดียวที่เปิด drawer ขวา (มรดก hamburger menu ของเว็บ) ตอนนี้แก้ให้สอดคล้อง:
+- **สร้าง `/more`** (`src/app/more/page.tsx` + `more-client.tsx`) — เนื้อหาเดียวกับ sheet ที่เพิ่งทำใน Batch 3 (user card → Browse → Track → บัญชีของฉัน → Preferences → footer → sign out ด้วย `GroupedSection`/`GroupedRow`) แต่เป็นหน้าเต็ม: มี URL จริง (back/refresh/แชร์ได้), large title จาก `PageHeader`, พื้นที่เต็ม 390px, `max-w-2xl` บน desktop · ใช้ `useHeaderData`+`usePublicConfig` ชุดเดียวกับ header เดิม (ไม่มี data path ใหม่) · ตัด prop `active` ทิ้ง (อยู่หน้า `/more` ไม่มีปลายทางอื่น active ได้)
+- **`bottom-nav.tsx`**: แท็บ "เพิ่มเติม" เปลี่ยนจาก `<button toggleMenu>` (มี X ตอนเปิด) → `TabLink href="/more"` เหมือนแท็บอื่นทุกประการ (badge ข้อความยังอยู่)
+- **ลบ `mobile-menu-sheet.tsx`** (superseded — git history เก็บไว้ที่ commit `ea4b02d`) + ถอด `MobileMenuSheet` ออกจาก `header.tsx` + ลบ `mobileMenuOpen`/`toggleMobileMenu`/`setMobileMenuOpen` ที่ตายแล้วออกจาก ui-store
+- `/more` เป็น flat route (ไม่อยู่ใน `GAME_SCOPED_SEGMENTS`) → ไม่โดน middleware redirect · ได้ chrome เต็ม (header/bottom-nav/bottom padding) จาก `PageContent` ปกติ
+
+**verify:** tsc 0 · eslint ไฟล์ที่แตะ 0 · test 56/56 · build ✓ (route `/more` ขึ้น static) · impeccable detect [] · curl `/more` 200 + render "เพิ่มเติม" จริง · `/`,`/portfolio`,`/settings` 200
+
+## เสร็จก่อนหน้าใน session — Batch 3: "More" sheet (bottom-nav) → grouped-inset (ถูกแทนด้วย Batch 4 แล้ว)
 
 `mobile-menu-sheet.tsx` (drawer ที่เปิดจากแท็บ "เพิ่มเติม" ใน bottom-nav — surface มือถือแท้ๆ ตัวสุดท้ายที่ยังเป็น flat list) เขียนใหม่เป็น **grouped-inset table view** เต็มรูปแบบตาม `/proto/ios/more`:
 - User block เป็นการ์ดของตัวเอง (avatar 44px + email + tier + honey) กดแล้วไป `/settings` · ปุ่ม login/register (logged-out) คงเดิม
@@ -57,7 +67,7 @@
 
 ## ⏭️ NEXT
 1. **สำคัญที่สุด**: เบสเปิดเว็บจริงเช็ค:
-   - **มือถือ (390px)**: กดแท็บ "เพิ่มเติม" ใน bottom-nav → sheet ต้องเป็นการ์ดโค้งมนมี icon วงกลมสี (ไม่ใช่ flat list เดิม) · `/settings` เห็น grouped list ใหม่ · `/`,`/watchlist`,`/portfolio` เห็น large-title + frost header
-   - **Desktop (≥1024px)** ต้องเหมือนเดิมทุกจุด (sheet เป็น `md:hidden` chrome — ไม่กระทบ desktop เลย)
-2. **มือถือ iOS rollout ครบทุก surface ที่มี gap จริงแล้ว** (chrome + home + Settings + More sheet) — Watchlist/Portfolio/Card-detail สำรวจแล้วไม่ต้องแตะ (เหตุผลด้านล่าง) เว้นแต่เบสเห็นจุดเฉพาะหลังเปิดดูจริง
+   - **มือถือ (390px)**: กดแท็บ "เพิ่มเติม" → ต้อง**นำทางไปหน้า `/more`** (ไม่ใช่ drawer เด้งจากขวาแล้ว) เห็น large title + grouped card list · `/settings` เห็น grouped list · `/`,`/watchlist`,`/portfolio` เห็น large-title + frost header
+   - **Desktop (≥1024px)** ต้องเหมือนเดิมทุกจุด (bottom-nav เป็น `md:hidden` — desktop ใช้ header menu เดิม · `/more` เปิดบน desktop ได้เป็นคอลัมน์แคบกลางจอ ไม่มีลิงก์ชี้ไปจาก desktop)
+2. **มือถือ iOS rollout ครบทุก surface ที่มี gap จริงแล้ว** (chrome + home + Settings + `/more` page) — Watchlist/Portfolio/Card-detail สำรวจแล้วไม่ต้องแตะ (เหตุผลด้านล่าง) เว้นแต่เบสเห็นจุดเฉพาะหลังเปิดดูจริง
 3. `/proto/ios/*` ยังเก็บไว้เป็น reference (ยังไม่ลบ — ⚠️ ลบต้องถามเบสก่อน)
