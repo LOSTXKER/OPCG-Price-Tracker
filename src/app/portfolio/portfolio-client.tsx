@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react"
 import dynamic from "next/dynamic"
-import { ArrowDown, ArrowUp, Eye, EyeOff, Globe, Lock, Plus, Share2 } from "lucide-react"
+import { Eye, EyeOff, Globe, Lock, Plus, Share2 } from "lucide-react"
 import { toast } from "sonner"
 
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
@@ -11,15 +11,20 @@ import { Breadcrumb } from "@/components/shared/breadcrumb"
 import { PageHeader } from "@/components/layout/page-header"
 import { useAuthState } from "@/hooks/use-auth-state"
 import { PortfolioSwitcher } from "@/components/portfolio/portfolio-switcher"
+import { PortfolioSidebar } from "@/components/portfolio/portfolio-selector"
 import { PortfolioHero } from "@/components/portfolio/portfolio-hero"
-import { PortfolioAssetsTable } from "@/components/portfolio/portfolio-assets-table"
-import { PortfolioGameBreakdown } from "@/components/portfolio/portfolio-game-breakdown"
-import { PortfolioMovers } from "@/components/portfolio/portfolio-movers"
+import { PortfolioHeroPanel } from "@/components/portfolio/portfolio-hero-panel"
 import { PortfolioAllocationPanel } from "@/components/portfolio/portfolio-allocation-panel"
+import { PortfolioMovers } from "@/components/portfolio/portfolio-movers"
+import { PortfolioGameChips } from "@/components/portfolio/portfolio-game-chips"
+import { PortfolioGameBreakdown } from "@/components/portfolio/portfolio-game-breakdown"
+import { PortfolioAssetsTable } from "@/components/portfolio/portfolio-assets-table"
 import { PortfolioShareDialog } from "@/components/portfolio/portfolio-share-dialog"
 import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
 import { Button } from "@/components/ui/button"
+import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Surface } from "@/components/ui/surface"
 import { t } from "@/lib/i18n"
 import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
 import { MASKED } from "@/lib/constants/ui"
@@ -81,16 +86,15 @@ export default function PortfolioClient() {
     )
   }
 
-  // Signed-in: skip the big page header (breadcrumb + title + blurb) — the nav
-  // already marks Portfolio active, and the money should be the first thing on
-  // screen (VISION §5.3 zone order). Keep an sr-only h1 for a11y.
   return (
     <>
-      <h1 className="sr-only">{t(lang, "portfolioNav")}</h1>
+      {header}
       <PortfolioContent />
     </>
   )
 }
+
+type PortfolioTab = "overview" | "insights"
 
 function PortfolioContent() {
   const lang = useUIStore((s) => s.language)
@@ -98,9 +102,9 @@ function PortfolioContent() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [hideBalance, setHideBalance] = useState(false)
-  // ภาพรวม = เงิน + ของสะสม (hero สด + KPI + holdings) · ข้อมูลเชิงลึก = analytics
-  // (scrub chart + by-game + movers + allocation) — แยกให้ภาพรวมนิ่ง อ่านเร็ว
-  const [tab, setTab] = useState<"overview" | "insights">("overview")
+  // Overview = value + the collection · Insights = chart/by-game/movers/allocation.
+  // Splitting analytics into its own tab is what keeps the overview un-cluttered.
+  const [tab, setTab] = useState<PortfolioTab>("overview")
   // The point under the finger while scrubbing the value chart; null when idle.
   const [scrub, setScrub] = useState<HistoryPoint | null>(null)
   const { limits } = useTierLimits()
@@ -189,388 +193,276 @@ function PortfolioContent() {
     : stats.unrealizedPnlPercent
 
   if (loading) {
-    // Mirrors the loaded overview tab (action row → underline tabs → hero
-    // line → stat strip → holdings rows) so nothing jumps when data lands.
     return (
-      <div className="space-y-5 sm:space-y-6">
-        <div className="flex items-center justify-between gap-3">
-          <Skeleton className="h-12 w-56 rounded-xl" />
-          <Skeleton className="h-9 w-28 rounded-lg" />
-        </div>
-        <div className="border-b border-[var(--p-hair)] pb-2.5">
-          <Skeleton className="h-4 w-44" />
-        </div>
-        <div className="space-y-2">
-          <Skeleton className="h-3 w-24" />
-          <Skeleton className="h-11 w-64" />
-        </div>
-        <div className="flex gap-10 border-t border-[var(--p-hair)] pt-4">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="space-y-2">
-              <Skeleton className="h-3 w-14" />
-              <Skeleton className="h-4 w-20" />
+      <div className="lg:grid lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start lg:gap-6">
+        <aside className="hidden lg:block lg:space-y-4">
+          <Surface variant="panel" className="space-y-1.5 p-4">
+            <Skeleton className="h-3 w-24" />
+            <Skeleton className="h-6 w-32" />
+          </Surface>
+          <Surface variant="panel" className="space-y-2 p-3">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <Skeleton key={i} className="h-11 w-full rounded-lg" />
+            ))}
+          </Surface>
+        </aside>
+        <div className="mt-5 space-y-5 sm:space-y-6 lg:mt-0">
+          <div className="flex items-center justify-between gap-3">
+            <Skeleton className="h-9 w-48 rounded-xl lg:hidden" />
+            <Skeleton className="hidden h-8 w-40 rounded-lg lg:block" />
+            <div className="flex items-center gap-1.5">
+              <Skeleton className="size-9 rounded-lg" />
+              <Skeleton className="size-9 rounded-lg" />
+              <Skeleton className="h-9 w-24 rounded-lg" />
             </div>
-          ))}
-        </div>
-        <div className="space-y-3 border-t border-[var(--p-hair)] pt-4">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <Skeleton className="aspect-[63/88] w-8 rounded" />
-              <div className="flex-1 space-y-1.5">
-                <Skeleton className="h-3.5 w-40" />
-                <Skeleton className="h-3 w-24" />
+          </div>
+          <Surface variant="panel" className="space-y-4 p-4 sm:p-5">
+            <div className="space-y-2">
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-10 w-56" />
+            </div>
+            <div className="grid grid-cols-2 gap-4 border-t border-[var(--p-hair)] pt-4 sm:grid-cols-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <Skeleton className="h-3 w-14" />
+                  <Skeleton className="h-4 w-20" />
+                </div>
+              ))}
+            </div>
+          </Surface>
+          <div className="space-y-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <Skeleton className="aspect-[63/88] w-11 rounded-md" />
+                <div className="flex-1 space-y-1.5">
+                  <Skeleton className="h-3.5 w-40" />
+                  <Skeleton className="h-3 w-24" />
+                </div>
+                <div className="space-y-1.5 text-right">
+                  <Skeleton className="ml-auto h-4 w-20" />
+                  <Skeleton className="ml-auto h-3 w-12" />
+                </div>
               </div>
-              <Skeleton className="h-4 w-20" />
-              <Skeleton className="hidden h-4 w-16 sm:block" />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     )
   }
 
   const portfolioPublic = activePortfolio?.isPublic ?? true
-  const multiGame = availableGames.length >= 2
 
-  // Game filter as quiet text tabs (same grammar as the home market tab bar) —
-  // lives in the holdings toolbar's leading slot. Single game = no tabs.
-  const gameTabs = multiGame ? (
-    <div className="flex items-center gap-4">
-      {[
-        { slug: ALL_GAMES, label: t(lang, "allGames"), tint: null as string | null },
-        ...availableGames.map((slug) => ({
-          slug,
-          label: getGameConfig(slug)?.shortName ?? slug.toUpperCase(),
-          tint: getGameAccentTint(slug),
-        })),
-      ].map((gt) => {
-        const active = gameFilter === gt.slug
-        return (
-          <button
-            key={gt.slug}
-            type="button"
-            onClick={() => setGameFilter(gt.slug)}
-            className={cn(
-              "ease-chrome relative flex items-center gap-1.5 pb-1 text-body-sm",
-              active ? "text-foreground" : "text-muted-foreground hover:text-foreground",
-            )}
-          >
-            {gt.tint && (
-              <span
-                aria-hidden
-                className="size-1.5 shrink-0 rounded-full"
-                style={{ backgroundColor: gt.tint }}
-              />
-            )}
-            {gt.label}
-            {active && (
-              <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-primary" />
-            )}
-          </button>
-        )
-      })}
-    </div>
-  ) : undefined
-
-  // Stats light up once there's a cost basis to compare against; otherwise
-  // P/L and ROI read "—" instead of a fake 0%.
-  const hasCost = stats.totalCostJpy > 0
-  const pnlUp = stats.unrealizedPnl >= 0
-  const totalQty = assets.reduce((s, a) => s + a.quantity, 0)
+  const tabControl = (
+    <SegmentedControl<PortfolioTab>
+      options={[
+        { value: "overview", label: t(lang, "overviewTab") },
+        { value: "insights", label: t(lang, "insightsTab") },
+      ]}
+      value={tab}
+      onChange={setTab}
+      size="sm"
+      ariaLabel={t(lang, "portfolio")}
+    />
+  )
 
   return (
-    <div className="space-y-5 sm:space-y-6">
-      {/* Action row: portfolio switcher · view actions · add card */}
-      <div className="flex items-center gap-2">
-        <div className="min-w-0 flex-1">
-          <PortfolioSwitcher
+    <div className="lg:grid lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start lg:gap-6">
+      {/* Desktop sidebar — all-portfolios overview + the portfolio list/manager
+          (the live site's layout, rebuilt on the warm token system). Mobile
+          keeps the switcher pill instead. */}
+      <aside className="hidden lg:sticky lg:top-24 lg:block lg:space-y-4">
+        <Surface variant="panel" className="p-4">
+          <p className="text-eyebrow">{t(lang, "allPortfolios")}</p>
+          <p className="mt-1.5 font-price text-xl font-bold tabular-nums">
+            {hideBalance ? MASKED : formatJpyAmount(totalAllPortfolios, currency)}
+          </p>
+          {hasOverallPnl && !hideBalance && (
+            <p
+              className={cn(
+                "mt-0.5 font-price text-meta tabular-nums",
+                totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
+              )}
+            >
+              {totalPnlPctAll >= 0 ? "+" : ""}
+              {formatPct(totalPnlPctAll, 1)}%
+            </p>
+          )}
+        </Surface>
+        <Surface variant="panel" className="p-3">
+          <PortfolioSidebar
             portfolios={portfolioMetas}
             activeId={activeId}
-            activeName={activePortfolio?.name ?? t(lang, "portfolio")}
             onSelect={setActiveId}
             onCreate={createPortfolio}
             onRename={renamePortfolio}
             onDelete={deletePortfolio}
-            totalAllPortfolios={totalAllPortfolios}
-            totalPnlPctAll={totalPnlPctAll}
-            hasOverallPnl={hasOverallPnl}
             hideBalance={hideBalance}
-            totalVisible={gameFilter === ALL_GAMES}
             maxPortfolios={limits.portfolioCount}
           />
-        </div>
+        </Surface>
+      </aside>
 
-        <div className="flex shrink-0 items-center gap-1.5">
-          <IconButton
-            onClick={() => setHideBalance((v) => !v)}
-            label={hideBalance ? t(lang, "showBalance") : t(lang, "hideBalance")}
-          >
-            {hideBalance ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-          </IconButton>
-
-          <IconButton
-            onClick={() => setShareOpen(true)}
-            label={t(lang, "sharePortfolio")}
-            disabled={items.length === 0}
-          >
-            <Share2 className="size-4" />
-          </IconButton>
-
-          {activePortfolio && (
-            <button
-              type="button"
-              onClick={async () => {
-                const next = !portfolioPublic
-                const ok = await setPortfolioVisibility(activePortfolio.id, next)
-                if (ok) {
-                  toast.success(
-                    t(lang, next ? "madePortfolioPublic" : "madePortfolioPrivate"),
-                    { description: activePortfolio.name },
-                  )
-                } else {
-                  toast.error(t(lang, "loadFailed"))
-                }
-              }}
-              className="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              aria-label={t(lang, portfolioPublic ? "portfolioPublic" : "portfolioPrivate")}
-              title={t(lang, "perPortfolioVisibility")}
-            >
-              {portfolioPublic ? <Globe className="size-4" /> : <Lock className="size-4" />}
-            </button>
-          )}
-
-          <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-1.5">
-            <Plus className="size-4" />
-            <span className="hidden sm:inline">{t(lang, "addCard")}</span>
-          </Button>
-        </div>
-      </div>
-
-      {error && <p className="text-sm text-destructive">{error}</p>}
-
-      {items.length === 0 ? (
-        <KumaEmptyState
-          preset="empty-portfolio"
-          action={
-            <Button onClick={() => setDialogOpen(true)} className="gap-1.5">
-              <Plus className="size-4" />
-              {t(lang, "addCard")}
-            </Button>
-          }
-        />
-      ) : (
-        <>
-          {/* ═ Tabs — underline on a hairline baseline (same grammar as the
-              home market tab bar; active border covers the hairline). ═ */}
-          <div
-            role="tablist"
-            aria-label={t(lang, "portfolio")}
-            className="flex items-center gap-1 border-b border-[var(--p-hair)]"
-          >
-            {(
-              [
-                { id: "overview" as const, label: t(lang, "overviewTab") },
-                { id: "insights" as const, label: t(lang, "insightsTab") },
-              ]
-            ).map((tb) => (
-              <button
-                key={tb.id}
-                type="button"
-                role="tab"
-                aria-selected={tab === tb.id}
-                onClick={() => setTab(tb.id)}
-                className={cn(
-                  "ease-chrome relative -mb-px shrink-0 border-b-2 px-2.5 py-2.5 text-xs font-semibold",
-                  tab === tb.id
-                    ? "border-primary text-primary"
-                    : "border-transparent text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {tb.label}
-              </button>
-            ))}
+      <div className="mt-5 min-w-0 space-y-4 sm:space-y-5 lg:mt-0">
+        {/* Top bar: (mobile) switcher pill · (desktop) tabs · actions */}
+        <div className="flex items-center gap-2">
+          <div className="min-w-0 flex-1 lg:hidden">
+            <PortfolioSwitcher
+              portfolios={portfolioMetas}
+              activeId={activeId}
+              activeName={activePortfolio?.name ?? t(lang, "portfolio")}
+              onSelect={setActiveId}
+              onCreate={createPortfolio}
+              onRename={renamePortfolio}
+              onDelete={deletePortfolio}
+              totalAllPortfolios={totalAllPortfolios}
+              totalPnlPctAll={totalPnlPctAll}
+              hasOverallPnl={hasOverallPnl}
+              hideBalance={hideBalance}
+              totalVisible={gameFilter === ALL_GAMES}
+              maxPortfolios={limits.portfolioCount}
+            />
           </div>
+          {items.length > 0 && <div className="hidden min-w-0 lg:block">{tabControl}</div>}
+          <div className="hidden flex-1 lg:block" />
 
-          {tab === "overview" ? (
-            <>
-              {/* ═ Hero — one line on the bare canvas (card-detail grammar):
-                  eyebrow → display number + delta + quiet meta. ═ */}
-              <div className="relative">
-                {gameFilter !== ALL_GAMES && (
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute -left-4 -top-6 -z-10 h-24 w-56 rounded-full blur-2xl"
-                    style={{
-                      background: `color-mix(in srgb, ${getGameAccentTint(gameFilter)} 18%, transparent)`,
-                    }}
-                  />
-                )}
-                <p className="text-eyebrow">
-                  {t(lang, "portfolioValue")}
-                  {scopeGameName ? <span className="text-primary"> · {scopeGameName}</span> : null}
-                </p>
-                <div className="mt-2 flex flex-wrap items-end gap-x-2.5 gap-y-1">
-                  <span className="tabular-nums text-display leading-none">
-                    {hideBalance ? MASKED : formatJpyAmount(stats.totalValueJpy, currency)}
-                  </span>
-                  {hasCost && (
-                    <span
-                      className={cn(
-                        "inline-flex items-center gap-1 pb-0.5 text-sm font-semibold tabular-nums",
-                        pnlUp ? "text-price-up" : "text-price-down",
-                      )}
-                    >
-                      {pnlUp ? (
-                        <ArrowUp className="size-3.5 shrink-0" aria-hidden />
-                      ) : (
-                        <ArrowDown className="size-3.5 shrink-0" aria-hidden />
-                      )}
-                      {hideBalance
-                        ? MASKED
-                        : `${pnlUp ? "+" : "-"}${formatJpyAmount(Math.abs(stats.unrealizedPnl), currency)}`}
-                      <span className="font-normal opacity-70">
-                        ({pnlUp ? "+" : ""}
-                        {formatPct(stats.unrealizedPnlPercent, 1)}%)
-                      </span>
-                    </span>
-                  )}
-                  <span className="pb-0.5 text-meta">
-                    {totalQty} {t(lang, "card")}
-                  </span>
-                </div>
+          <div className="flex shrink-0 items-center gap-1.5">
+            <IconButton
+              onClick={() => setHideBalance((v) => !v)}
+              label={hideBalance ? t(lang, "showBalance") : t(lang, "hideBalance")}
+            >
+              {hideBalance ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+            </IconButton>
 
-                {/* Stat strip — flat labeled figures on one quiet line (buy-box
-                    grammar), not a boxed KPI grid. */}
-                <div className="mt-5 flex flex-wrap gap-x-10 gap-y-3 border-t border-[var(--p-hair)] pt-4">
-                  <div>
-                    <p className="text-eyebrow">{t(lang, "costBasis")}</p>
-                    <p className="text-price tnum mt-1">
-                      {hideBalance ? MASKED : formatJpyAmount(stats.totalCostJpy, currency)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-eyebrow">{t(lang, "pnl")}</p>
-                    <p
-                      className={cn(
-                        "text-price tnum mt-1 inline-flex items-center gap-1",
-                        hasCost ? (pnlUp ? "text-price-up" : "text-price-down") : "text-muted-foreground",
-                      )}
-                    >
-                      {hasCost &&
-                        (pnlUp ? (
-                          <ArrowUp className="size-3 shrink-0" aria-hidden />
-                        ) : (
-                          <ArrowDown className="size-3 shrink-0" aria-hidden />
-                        ))}
-                      {!hasCost
-                        ? "—"
-                        : hideBalance
-                          ? MASKED
-                          : `${pnlUp ? "+" : "-"}${formatJpyAmount(Math.abs(stats.unrealizedPnl), currency)}`}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-eyebrow">{t(lang, "roi")}</p>
-                    <p
-                      className={cn(
-                        "text-price tnum mt-1 inline-flex items-center gap-1",
-                        hasCost ? (pnlUp ? "text-price-up" : "text-price-down") : "text-muted-foreground",
-                      )}
-                    >
-                      {hasCost &&
-                        (pnlUp ? (
-                          <ArrowUp className="size-3 shrink-0" aria-hidden />
-                        ) : (
-                          <ArrowDown className="size-3 shrink-0" aria-hidden />
-                        ))}
-                      {hasCost
-                        ? `${pnlUp ? "+" : ""}${formatPct(stats.unrealizedPnlPercent, 1)}%`
-                        : "—"}
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <IconButton
+              onClick={() => setShareOpen(true)}
+              label={t(lang, "sharePortfolio")}
+              disabled={items.length === 0}
+            >
+              <Share2 className="size-4" />
+            </IconButton>
 
-              {/* ═ Movers — quiet inline text rail (no chips, no rings) ═ */}
-              {gameFilter === ALL_GAMES && (
-                <PortfolioMovers assets={assets} hideBalance={hideBalance} variant="inline" />
-              )}
+            {activePortfolio && (
+              <button
+                type="button"
+                onClick={async () => {
+                  const next = !portfolioPublic
+                  const ok = await setPortfolioVisibility(activePortfolio.id, next)
+                  if (ok) {
+                    toast.success(
+                      t(lang, next ? "madePortfolioPublic" : "madePortfolioPrivate"),
+                      { description: activePortfolio.name },
+                    )
+                  } else {
+                    toast.error(t(lang, "loadFailed"))
+                  }
+                }}
+                className="inline-flex size-9 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-card text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                aria-label={t(lang, portfolioPublic ? "portfolioPublic" : "portfolioPrivate")}
+                title={t(lang, "perPortfolioVisibility")}
+              >
+                {portfolioPublic ? <Globe className="size-4" /> : <Lock className="size-4" />}
+              </button>
+            )}
 
-              {/* ═ Holdings — game tabs live in the toolbar's leading slot ═ */}
-              <PortfolioAssetsTable
-                assets={assets}
-                onUpdate={updateItem}
-                onRemove={removeItem}
+            <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-1.5">
+              <Plus className="size-4" />
+              <span className="hidden sm:inline">{t(lang, "addCard")}</span>
+            </Button>
+          </div>
+        </div>
+
+        {/* Mobile tabs — full-width under the top bar */}
+        {items.length > 0 && <div className="lg:hidden">{tabControl}</div>}
+
+        {error && <p className="text-sm text-destructive">{error}</p>}
+
+        {items.length === 0 ? (
+          <KumaEmptyState
+            preset="empty-portfolio"
+            action={
+              <Button onClick={() => setDialogOpen(true)} className="gap-1.5">
+                <Plus className="size-4" />
+                {t(lang, "addCard")}
+              </Button>
+            }
+          />
+        ) : tab === "overview" ? (
+          <>
+            {/* OVERVIEW — one hero card (value + P/L · Cost · Best · Worst),
+                game chips, then the collection immediately. */}
+            <PortfolioHeroPanel
+              stats={stats}
+              hideBalance={hideBalance}
+              scopeLabel={scopeGameName}
+              scopeTint={gameFilter === ALL_GAMES ? null : getGameAccentTint(gameFilter)}
+            />
+            <PortfolioGameChips
+              breakdown={gameBreakdown}
+              activeGame={gameFilter}
+              onSelect={setGameFilter}
+            />
+            <PortfolioAssetsTable
+              assets={assets}
+              onUpdate={updateItem}
+              onRemove={removeItem}
+              hideBalance={hideBalance}
+              showGameBadge={availableGames.length >= 2}
+            />
+          </>
+        ) : (
+          <>
+            {/* INSIGHTS — history (scrub-bound value) → by-game → movers → allocation */}
+            <Surface variant="panel" className="space-y-3 p-4 sm:p-5">
+              <PortfolioHero
+                valueJpy={heroValueJpy}
+                deltaJpy={heroDeltaJpy}
+                deltaPct={heroDeltaPct}
+                hasPnl={heroHasPnl}
+                live={!!activeScrub}
                 hideBalance={hideBalance}
-                showGameBadge={multiGame}
-                leading={gameTabs}
+                scopeLabel={scopeGameName}
               />
-            </>
-          ) : (
-            <>
-              {/* ═ Money band — scrub-bound hero paired with the chart (one
-                  instrument, Robinhood-desktop). Stacks on mobile. ═ */}
-              <div className="gap-8 lg:grid lg:grid-cols-[minmax(280px,5fr)_7fr] lg:items-end">
-                <PortfolioHero
-                  valueJpy={heroValueJpy}
-                  deltaJpy={heroDeltaJpy}
-                  deltaPct={heroDeltaPct}
-                  hasPnl={heroHasPnl}
-                  live={!!activeScrub}
-                  hideBalance={hideBalance}
-                  scopeLabel={scopeGameName}
-                  scopeTint={gameFilter === ALL_GAMES ? null : getGameAccentTint(gameFilter)}
-                />
-                <div className="mt-5 lg:mt-0">
-                  {gameFilter === ALL_GAMES ? (
-                    <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
-                  ) : (
-                    // No per-game history yet (snapshots are whole-portfolio) — one
-                    // honest line instead of a faked curve.
-                    <p className="flex h-44 items-center justify-center text-meta text-muted-foreground/70 sm:h-56">
-                      {t(lang, "chartAllGamesOnly")}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* ═ By-game breakdown — deep-links into a game's scope ═ */}
-              {gameFilter === ALL_GAMES && (
-                <PortfolioGameBreakdown
-                  breakdown={gameBreakdown}
-                  totalValueJpy={stats.totalValueJpy}
-                  onSelect={setGameFilter}
-                  hideBalance={hideBalance}
-                />
+              {gameFilter === ALL_GAMES ? (
+                <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
+              ) : (
+                // No per-game history yet (snapshots are whole-portfolio) — one
+                // honest line instead of a faked curve.
+                <p className="text-meta text-muted-foreground/70">{t(lang, "chartAllGamesOnly")}</p>
               )}
+            </Surface>
 
-              {/* ═ Today's movers — flat section, whitespace-separated ═ */}
-              <div className="border-t border-[var(--p-hair)] pt-5">
-                <PortfolioMovers assets={assets} hideBalance={hideBalance} />
-              </div>
+            {gameFilter === ALL_GAMES && (
+              <PortfolioGameBreakdown
+                breakdown={gameBreakdown}
+                totalValueJpy={stats.totalValueJpy}
+                onSelect={setGameFilter}
+                hideBalance={hideBalance}
+              />
+            )}
 
-              {/* ═ Allocation — top holdings share ═ */}
-              <PortfolioAllocationPanel allocation={allocation} />
-            </>
-          )}
-        </>
-      )}
+            <Surface variant="panel" className="p-4 sm:p-5">
+              <PortfolioMovers assets={assets} hideBalance={hideBalance} />
+            </Surface>
 
-      <AddCardDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        onAddBatch={addCardsBatchWithGate}
-      />
+            <PortfolioAllocationPanel allocation={allocation} />
+          </>
+        )}
 
-      <PortfolioShareDialog
-        open={shareOpen}
-        onOpenChange={setShareOpen}
-        portfolioName={activePortfolio?.name ?? t(lang, "portfolio")}
-        stats={stats}
-        history={history}
-        assets={assets}
-      />
+        <AddCardDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          onAddBatch={addCardsBatchWithGate}
+        />
 
+        <PortfolioShareDialog
+          open={shareOpen}
+          onOpenChange={setShareOpen}
+          portfolioName={activePortfolio?.name ?? t(lang, "portfolio")}
+          stats={stats}
+          history={history}
+          assets={assets}
+        />
+      </div>
     </div>
   )
 }
@@ -593,7 +485,7 @@ function IconButton({
       disabled={disabled}
       aria-label={label}
       title={label}
-      className="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-40"
+      className="inline-flex size-9 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-card text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
     >
       {children}
     </button>

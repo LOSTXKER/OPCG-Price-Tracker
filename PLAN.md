@@ -48,6 +48,15 @@
 - [x] **คืนแท็บ + multi-portfolio discoverable** (2026-07-02 เย็น · เบสสั่งต่อ) — แท็บ ภาพรวม|เชิงลึก กลับมาโดยคงของใหม่ (ภาพรวม = hero สด+KPI+chips+holdings · เชิงลึก = money band scrub+breakdown+movers+allocation) · switcher dropdown เพิ่ม "+ สร้างพอร์ตใหม่" (ชนลิมิต = Lock+PRO badge → upgrade dialog) + ตัวนับ "N/max พอร์ต" · selector ชนลิมิต = upsell block ชัดเจน · i18n ×4 key ใหม่ · verify ครบ + Chrome ทดสอบ upsell flow จริง (FREE 1/1)
 - [x] ~~Wow pass — hero showcase~~ (2026-07-02 ค่ำ) — การ์ดพัด+glow+stagger · **เบสปัดตก "ไม่ดีเลย" → รื้อทิ้งหมดในรอบถัดไป**
 - [x] **Minimal Editorial rebuild** (2026-07-02 ค่ำ · เบส: "impeccable + minimal เข้ากับหน้าแรก/card detail") — ติดตั้ง Impeccable (`.cursor/skills/impeccable` + PRODUCT.md + eslint ignore) · ลบ hero-showcase · underline tabs (pattern home) · hero บรรทัดเดียว + stat strip แบน (pattern card-detail) · movers inline text · game tabs กลับ toolbar · ตาราง +7d sparkline (CMC) · action icons ghost · insights flat (ถอด Surface movers/allocation) · skeleton+preview ตาม · verify: detect [] + tsc0/lint0/test56/build✓ + Chrome ครบ viewport
+- [x] **Panel Layout restore** (2026-07-03 · เบสส่ง screenshot เว็บ live เดิม: "เอาแบบนี้ดีกว่าแบบเดิม แต่ทำให้ดีกว่าเดิม") — Minimal Editorial ถูกปัด กลับไปกู้โครง sidebar+panel จาก commit `09ae7e5` (ก่อนหน้านั้นถูกรื้อไปหลายรอบ) แล้วเสียบฟีเจอร์ใหม่ทั้งหมดเข้าที่เดิม:
+  - **checkpoint commit** `6a15bbc` เก็บ Minimal Editorial ไว้เป็นประวัติก่อนรื้อ (กันงานหาย)
+  - **โครงกลับมา**: header เต็ม (breadcrumb+h1+desc) · sidebar ซ้าย sticky 280px (panel "ทุกพอร์ต" + panel `PortfolioSidebar`) บน `lg:` · มือถือใช้ `PortfolioSwitcher` pill · แท็บ `SegmentedControl` ภาพรวม/เชิงลึก (กู้จาก `Surface`+`SegmentedControl` เดิม ไม่ใช่ underline)
+  - **`portfolio-hero-panel.tsx` กู้คืน** (ไฟล์เคยลบไปตอน Minimal Editorial) — panel เดียว value+delta+4-stat (P/L·ต้นทุน·ดีที่สุด·แย่ที่สุด) · glow มุมยึดหลัก honest money เดิมอยู่แล้ว (ตามทิศ P/L จริง ไม่ใช่สีเกม) — คอมเมนต์เพิ่มอธิบายกฎให้ชัดกันมือถัดไปพลาด
+  - **ภาพรวม tab**: hero panel → `PortfolioGameChips` (ย้ายออกจาก toolbar) → `PortfolioAssetsTable` (คงของใหม่ทั้งหมด: sparkline 7d, search/sort/bulk edit, mobile list 2 บรรทัด)
+  - **เชิงลึก tab**: money band panel (hero scrub+chart) → แยกตามเกม → มูฟเวอร์ → สัดส่วน (คงเหมือนเดิม ครอบด้วย `Surface` panel)
+  - `loading.tsx` + `portfolio-mock-preview.tsx` เขียนใหม่ mirror sidebar+panel (กัน layout jump ทั้ง route-level suspense และ logged-out preview)
+  - ไม่แตะ API/hook/Prisma · ไม่มี bottom sheet ใหม่
+  - verify: impeccable detect [] · tsc0 · lint 0 err (34 warning เดิม) · test 56/56 · build ✓ · Chrome จริง desktop 1512 (dark+light) + มือถือ 390px (ภาพรวม+เชิงลึก) เทียบ screenshot เว็บ live ตรงกัน
 
 ### MINE multi-game UX (พอร์ต/แจ้งเตือน/รายการโปรด รองรับหลายเกม · workflow 7-agent + เว็บระดับโลก 2026-07-01 · เบสเคาะ "เริ่มเลย")
 > หลักการเดียว: "ของฉัน" = กองเดียวรวมทุกเกมเป็น default · เกม = ป้าย+ตัวกรองในหน้า ไม่ใช่โหมด (Robinhood/Coinbase/Collectr) · header pill = แคตตาล็อกเท่านั้น ห้ามกรอง MINE เงียบๆ (NN/g "devastating")
