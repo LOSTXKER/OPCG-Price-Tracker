@@ -120,7 +120,11 @@ export function PortfolioHubCard({
         aria-label={`${t(lang, "viewDetails")} ${meta.name}`}
       />
 
-      <div className="relative z-10 flex items-start justify-between gap-2">
+      {/* No `relative`/`z-*` here — this is plain text, not an interactive
+          island. Giving it a stacking context (like the old `relative z-10`)
+          paints it ABOVE the stretched link and swallows taps meant to
+          navigate; only the "..." menu below needs its own z-20 island. */}
+      <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
           <p className="flex items-center gap-1.5 truncate text-sm font-semibold">
             <span className="truncate">{meta.name}</span>
@@ -177,8 +181,9 @@ export function PortfolioHubCard({
         </div>
       </div>
 
-      {/* Thumbnail strip — top holdings by value, real card art. */}
-      <div className="relative z-10 mt-3 flex items-center gap-1.5">
+      {/* Thumbnail strip — top holdings by value, real card art. Same reasoning
+          as above: no z-index here so taps fall through to the stretched link. */}
+      <div className="mt-3 flex items-center gap-1.5">
         {meta.previewItems.length > 0 ? (
           meta.previewItems.map((it) => (
             <div

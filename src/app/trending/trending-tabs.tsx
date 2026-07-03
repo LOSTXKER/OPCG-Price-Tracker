@@ -218,12 +218,18 @@ export function TrendingTabs({ data, initialTab }: { data: TrendingData; initial
     <div className="space-y-4">
       {/* Tabs */}
       <div className="flex flex-wrap items-center gap-2">
-        <SegmentedControl
-          options={tabOptions}
-          value={activeTab}
-          onChange={setActiveTab}
-          ariaLabel={t(lang, "trendingTitle")}
-        />
+        {/* The Thai labels ("การ์ดที่มีคนดูมากสุด" etc.) don't fit a 3-way
+            segmented control at 390px — contained horizontal scroll (same
+            pattern as the card-detail section tabs / set type pills) instead
+            of letting it overflow the whole page. */}
+        <div className="no-sb -mx-4 overflow-x-auto px-4 sm:mx-0 sm:overflow-visible sm:px-0">
+          <SegmentedControl
+            options={tabOptions}
+            value={activeTab}
+            onChange={setActiveTab}
+            ariaLabel={t(lang, "trendingTitle")}
+          />
+        </div>
 
         {activeTab !== "mostViewed" && (
           <div className="ml-auto">

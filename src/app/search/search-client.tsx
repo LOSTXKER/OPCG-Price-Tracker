@@ -162,7 +162,7 @@ function SearchContent({
 
           <div className="flex flex-wrap items-center gap-2 border-t border-[var(--p-hair)] bg-popover px-4 py-2.5">
             {sets.length > 0 && (
-              <div className="min-w-0 flex-1 sm:flex-none sm:w-[220px]">
+              <div className="min-w-0 basis-full sm:basis-auto sm:w-[220px]">
                 <SetPicker
                   sets={sets}
                   selectedCode={selectedSet || null}
