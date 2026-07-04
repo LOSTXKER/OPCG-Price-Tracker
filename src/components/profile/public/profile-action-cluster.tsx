@@ -34,9 +34,8 @@ import type { ProfileUser } from "./types";
  *   Visitor: Message  [Save]  [Share]  [⋯ Report / Block]
  *   Owner:   [Share]  [Edit profile]  [⚙ Privacy / Notifications / …]
  *
- * Block / Report are stubbed to a toast for now — actual moderation flow is
- * tracked separately. We intentionally surface them so the affordance is
- * obviously available even before backend support lands.
+ * Block / Report have no backend yet, so they honestly say "coming soon"
+ * rather than confirming an action that never happened.
  */
 export function ProfileActionCluster({
   user,
@@ -44,6 +43,7 @@ export function ProfileActionCluster({
   isOwner,
   viewerSavedSeller,
   viewerIsSignedIn,
+  onViewListings,
   lang,
 }: {
   user: ProfileUser;
@@ -51,6 +51,8 @@ export function ProfileActionCluster({
   isOwner: boolean;
   viewerSavedSeller: boolean;
   viewerIsSignedIn: boolean;
+  /** Jump the profile to its listings tab (owned by the parent's tab state). */
+  onViewListings?: () => void;
   lang: Language;
 }) {
   return (
@@ -76,7 +78,7 @@ export function ProfileActionCluster({
       {isOwner ? (
         <OwnerActions lang={lang} />
       ) : (
-        <VisitorOverflowMenu lang={lang} />
+        <VisitorOverflowMenu lang={lang} onViewListings={onViewListings} />
       )}
     </>
   );
@@ -135,17 +137,18 @@ function OwnerActions({ lang }: { lang: Language }) {
   );
 }
 
-function VisitorOverflowMenu({ lang }: { lang: Language }) {
+function VisitorOverflowMenu({
+  lang,
+  onViewListings,
+}: {
+  lang: Language;
+  onViewListings?: () => void;
+}) {
   const onReport = () => {
-    toast.info(t(lang, "profileReportSent"));
+    toast.info(t(lang, "profileReportSoon"));
   };
   const onBlock = () => {
     toast.info(t(lang, "profileBlockedSoon"));
-  };
-  const onViewListings = () => {
-    // Placeholder secondary action: visitors can already pick a tab so this
-    // exists purely to make the overflow menu feel populated. Wire this to
-    // marketplace filter once we have a "by seller" view.
   };
 
   return (
@@ -163,10 +166,12 @@ function VisitorOverflowMenu({ lang }: { lang: Language }) {
         }
       />
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={onViewListings}>
-          <Eye className="size-3.5" />
-          {t(lang, "profileViewListingsMenu")}
-        </DropdownMenuItem>
+        {onViewListings && (
+          <DropdownMenuItem onClick={onViewListings}>
+            <Eye className="size-3.5" />
+            {t(lang, "profileViewListingsMenu")}
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={onReport}>
           <Flag className="size-3.5" />
           {t(lang, "profileReport")}

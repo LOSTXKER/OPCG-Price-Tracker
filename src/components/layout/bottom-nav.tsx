@@ -2,51 +2,101 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bookmark, LayoutGrid, LineChart, Menu, Wallet } from "lucide-react";
+import { useState } from "react";
+import { Briefcase, Heart, LayoutGrid, LineChart, Menu } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
+import { isNavActive } from "@/lib/game/constants";
 import { useUIStore } from "@/stores/ui-store";
+import { MoreSheet } from "@/components/layout/more-sheet";
 
-function isTabActive(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
+// The 4 real-destination tabs. "More" is not here — it's the fallback tab that
+// lights up on any deep route none of these own (settings/honey/decks/messages…),
+// so the user never loses their sense of place (iOS tab grammar). `owns` lists
+// tab-less catalog routes that keep ชุดการ์ด lit while browsing.
+const TABS = [
+  { href: "/", key: "home", icon: LineChart, owns: [] as readonly string[] },
+  { href: "/sets", key: "sets", icon: LayoutGrid, owns: ["/cards", "/search", "/trending", "/market-overview"] as readonly string[] },
+  { href: "/watchlist", key: "watchlistNav", icon: Heart, owns: [] as readonly string[] },
+  { href: "/portfolio", key: "portfolioNav", icon: Briefcase, owns: [] as readonly string[] },
+] as const;
+
+function TabInner({
+  icon: Icon,
+  label,
+  badge,
+  active,
+}: {
+  icon: typeof LineChart;
+  label: string;
+  badge?: number;
+  active: boolean;
+}) {
+  return (
+    <>
+      <span className="relative">
+        <Icon className={cn("size-5", active && "stroke-[2.5]")} aria-hidden />
+        {typeof badge === "number" && badge > 0 && (
+          <span className="absolute -right-2.5 -top-1.5 flex min-w-[16px] items-center justify-center rounded-full bg-danger px-1 text-overlay leading-[14px] text-danger-foreground">
+            {badge > 99 ? "99+" : badge}
+          </span>
+        )}
+      </span>
+      <span>{label}</span>
+      <span className={cn("h-1 w-1 rounded-full bg-primary transition-opacity", active ? "opacity-100" : "opacity-0")} />
+    </>
+  );
 }
+
+const TAB_CLASS =
+  "flex w-full flex-col items-center gap-0.5 py-2 text-xs font-medium transition-all active:scale-95";
 
 function TabLink({
   href,
   label,
-  icon: Icon,
+  icon,
   badge,
-  pathname,
+  active,
 }: {
   href: string;
   label: string;
   icon: typeof LineChart;
   badge?: number;
-  pathname: string;
+  active: boolean;
 }) {
-  const active = isTabActive(pathname, href);
   return (
     <li className="min-w-0 flex-1">
-      <Link
-        href={href}
-        className={cn(
-          "flex flex-col items-center gap-0.5 py-2 text-xs font-medium transition-all active:scale-95",
-          active ? "text-primary" : "text-muted-foreground"
-        )}
-      >
-        <span className="relative">
-          <Icon className={cn("size-5", active && "stroke-[2.5]")} aria-hidden />
-          {typeof badge === "number" && badge > 0 && (
-            <span className="absolute -right-2.5 -top-1.5 flex min-w-[16px] items-center justify-center rounded-full bg-danger px-1 text-overlay leading-[14px] text-danger-foreground">
-              {badge > 99 ? "99+" : badge}
-            </span>
-          )}
-        </span>
-        <span>{label}</span>
-        <span className={cn("h-1 w-1 rounded-full bg-primary transition-opacity", active ? "opacity-100" : "opacity-0")} />
+      <Link href={href} className={cn(TAB_CLASS, active ? "text-primary" : "text-muted-foreground")}>
+        <TabInner icon={icon} label={label} badge={badge} active={active} />
       </Link>
+    </li>
+  );
+}
+
+function TabButton({
+  label,
+  icon,
+  badge,
+  active,
+  onClick,
+}: {
+  label: string;
+  icon: typeof LineChart;
+  badge?: number;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <li className="min-w-0 flex-1">
+      <button
+        type="button"
+        onClick={onClick}
+        aria-haspopup="dialog"
+        className={cn(TAB_CLASS, active ? "text-primary" : "text-muted-foreground")}
+      >
+        <TabInner icon={icon} label={label} badge={badge} active={active} />
+      </button>
     </li>
   );
 }
@@ -56,13 +106,21 @@ function TabLink({
  * swapping); flag-gated features (marketplace, messages) live inside ชุดการ์ด /
  * Portfolio / More, not as tabs.
  *
- * Every tab is a real destination (iOS HIG) — "More" navigates to /more like
- * the rest, it no longer opens a drawer.
+ * The 4 leading tabs navigate. "More" opens a bottom-sheet quick-launcher
+ * (<MoreSheet>) over the current page — a curated grid of the important
+ * destinations that otherwise felt buried one page deep — with a link to the
+ * full /more menu for everything else.
  */
 export function BottomNav({ className }: { className?: string }) {
   const pathname = usePathname() ?? "/";
   const lang = useUIStore((s) => s.language);
   const unread = useUIStore((s) => s.unreadMessages);
+  const [moreOpen, setMoreOpen] = useState(false);
+
+  const tabActive = TABS.map((tab) => isNavActive(pathname, tab.href, tab.owns));
+  // "More" owns everything the 4 tabs don't — it's highlighted whenever none of
+  // them are (or while its sheet is open).
+  const moreActive = moreOpen || !tabActive.some(Boolean);
 
   return (
     <nav
@@ -73,12 +131,24 @@ export function BottomNav({ className }: { className?: string }) {
       aria-label="Navigation"
     >
       <ul className="mx-auto flex max-w-lg items-stretch justify-around">
-        <TabLink href="/" label={t(lang, "home")} icon={LineChart} pathname={pathname} />
-        <TabLink href="/sets" label={t(lang, "sets")} icon={LayoutGrid} pathname={pathname} />
-        <TabLink href="/watchlist" label={t(lang, "watchlistNav")} icon={Bookmark} pathname={pathname} />
-        <TabLink href="/portfolio" label={t(lang, "portfolioNav")} icon={Wallet} pathname={pathname} />
-        <TabLink href="/more" label={t(lang, "more")} icon={Menu} badge={unread} pathname={pathname} />
+        {TABS.map((tab, i) => (
+          <TabLink
+            key={tab.href}
+            href={tab.href}
+            label={t(lang, tab.key)}
+            icon={tab.icon}
+            active={tabActive[i]}
+          />
+        ))}
+        <TabButton
+          label={t(lang, "more")}
+          icon={Menu}
+          badge={unread}
+          active={moreActive}
+          onClick={() => setMoreOpen(true)}
+        />
       </ul>
+      <MoreSheet open={moreOpen} onOpenChange={setMoreOpen} />
     </nav>
   );
 }

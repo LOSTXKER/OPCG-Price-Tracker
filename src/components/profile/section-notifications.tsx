@@ -230,8 +230,8 @@ export function SectionNotifications({ settings, onReload }: Props) {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div>
+      {/* Header — hidden on mobile; SettingsShell renders the title + back button. */}
+      <div className="hidden md:block">
         <h2 className="text-h2">{t(lang, "notifications")}</h2>
         <p className="page-subtitle">{t(lang, "notificationsSubtitle")}</p>
       </div>
@@ -362,7 +362,7 @@ export function SectionNotifications({ settings, onReload }: Props) {
 
                   {nt.id === "price" && !cardLocked && (
                     <Link
-                      href="/settings/alerts"
+                      href="/watchlist?tab=alerts"
                       className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                     >
                       {t(lang, "manageYourAlerts")}

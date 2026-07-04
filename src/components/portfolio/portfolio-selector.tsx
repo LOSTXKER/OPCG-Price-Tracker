@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Check, Edit2, Lock, MoreHorizontal, Plus, Trash2, X, Wallet } from "lucide-react"
+import { Briefcase, Check, Edit2, Lock, MoreHorizontal, Plus, Trash2, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
@@ -125,7 +125,7 @@ export function PortfolioSidebar({
               "flex size-7 shrink-0 items-center justify-center rounded-lg transition-colors",
               isActive ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
             )}>
-              <Wallet className="size-3.5" />
+              <Briefcase className="size-3.5" />
             </div>
             <div className="min-w-0 flex-1">
               <p

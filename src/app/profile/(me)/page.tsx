@@ -29,7 +29,7 @@ export default function ProfileRedirectPage() {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) {
-        router.replace("/login?redirect=/settings");
+        router.replace("/login?redirect=/profile");
         return;
       }
       fetchProfile();

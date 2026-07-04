@@ -251,7 +251,7 @@ export function HeaderUserMenu({
               </DropdownMenuItem>
             </>
           )}
-          <DropdownMenuItem onClick={() => router.push("/settings/alerts")}>
+          <DropdownMenuItem onClick={() => router.push("/watchlist?tab=alerts")}>
             <BellRing className="size-4" />
             {t(language, "managePriceAlerts")}
           </DropdownMenuItem>

@@ -135,7 +135,7 @@ export function SectionAddresses() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-h2">{t(lang, "addresses")}</h2>
+        <h2 className="text-h2 hidden md:block">{t(lang, "addresses")}</h2>
         {!showForm && (
           <Button
             size="sm"

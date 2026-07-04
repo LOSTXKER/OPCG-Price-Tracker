@@ -18,7 +18,7 @@ import {
 import { getCardName, t, type Language } from "@/lib/i18n"
 import type { AssetRow } from "@/lib/types/portfolio"
 import { cn } from "@/lib/utils"
-import { formatPct } from "@/lib/utils/currency"
+import { currencySymbol, displayValueToJpy, formatPct, jpyToDisplayValue } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
 import { parseCostValue, pnlCalc } from "./utils"
@@ -32,6 +32,7 @@ function CardEditFull({
   onQtyChange,
   cost,
   onCostChange,
+  costSymbol,
   notes,
   onNotesChange,
   isPrivate,
@@ -44,6 +45,7 @@ function CardEditFull({
   onQtyChange: (v: string) => void
   cost: string
   onCostChange: (v: string) => void
+  costSymbol: string
   notes: string
   onNotesChange: (v: string) => void
   isPrivate: boolean
@@ -124,15 +126,20 @@ function CardEditFull({
           <label className="mb-1.5 block text-eyebrow text-muted-foreground/60">
             {t(lang, "costBasis")}
           </label>
-          <input
-            className="w-full rounded-lg border border-[var(--p-hair)] bg-muted/20 px-3 py-2.5 text-sm tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
-            value={cost}
-            onChange={(e) => onCostChange(e.target.value)}
-            type="number"
-            step="1"
-            min={0}
-            placeholder="—"
-          />
+          <div className="relative">
+            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground/50">
+              {costSymbol}
+            </span>
+            <input
+              className="w-full rounded-lg border border-[var(--p-hair)] bg-muted/20 py-2.5 pl-7 pr-3 text-sm tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
+              value={cost}
+              onChange={(e) => onCostChange(e.target.value)}
+              type="number"
+              step="1"
+              min={0}
+              placeholder="—"
+            />
+          </div>
         </div>
       </div>
 
@@ -217,6 +224,7 @@ export function SingleEditDialog({
   onRemove: (itemId: number) => void
 }) {
   const lang = useUIStore((s) => s.language)
+  const currency = useUIStore((s) => s.currency)
   const row = assets.find((a) => a.itemId === focusItemId)
   const [qty, setQty] = useState("")
   const [cost, setCost] = useState("")
@@ -224,9 +232,17 @@ export function SingleEditDialog({
   const [isPrivate, setIsPrivate] = useState(false)
   const [initialized, setInitialized] = useState<number | null>(null)
 
+  // Cost is stored in JPY but edited in the user's display currency, matching the
+  // add-card flow. Compare against the initial *display* string (not a re-derived
+  // JPY value) so a THB→JPY→THB round-trip's ±1 rounding never reads as "dirty".
+  const initialCost =
+    row?.purchasePrice != null
+      ? String(Math.round(jpyToDisplayValue(row.purchasePrice, currency)))
+      : ""
+
   if (row && initialized !== row.itemId) {
     setQty(String(row.quantity))
-    setCost(row.purchasePrice != null ? String(row.purchasePrice) : "")
+    setCost(initialCost)
     setNotes(row.notes ?? "")
     setIsPrivate(row.isPrivate ?? false)
     setInitialized(row.itemId)
@@ -236,14 +252,13 @@ export function SingleEditDialog({
     if (!row) return false
     const parsedQty = parseInt(qty)
     const qtyChanged = Number.isInteger(parsedQty) && parsedQty >= 1 && parsedQty !== row.quantity
-    const costVal = parseCostValue(cost)
-    const costChanged = costVal !== undefined && costVal !== row.purchasePrice
+    const costChanged = cost !== initialCost && parseCostValue(cost) !== undefined
     const privacyChanged = isPrivate !== row.isPrivate
     const trimmedNotes = notes.trim()
     const nextNotes = trimmedNotes.length === 0 ? null : trimmedNotes
     const notesChanged = nextNotes !== (row.notes ?? null)
     return qtyChanged || costChanged || privacyChanged || notesChanged
-  }, [qty, cost, notes, isPrivate, row])
+  }, [qty, cost, initialCost, notes, isPrivate, row])
 
   const handleSave = () => {
     if (!row) return
@@ -255,8 +270,12 @@ export function SingleEditDialog({
     } = {}
     const q = parseInt(qty)
     if (Number.isInteger(q) && q >= 1 && q !== row.quantity) data.quantity = q
-    const costVal = parseCostValue(cost)
-    if (costVal !== undefined && costVal !== row.purchasePrice) data.purchasePrice = costVal
+    if (cost !== initialCost) {
+      const costVal = parseCostValue(cost)
+      if (costVal !== undefined) {
+        data.purchasePrice = costVal === null ? null : displayValueToJpy(costVal, currency)
+      }
+    }
     if (isPrivate !== row.isPrivate) data.isPrivate = isPrivate
     const trimmedNotes = notes.trim()
     const nextNotes = trimmedNotes.length === 0 ? null : trimmedNotes
@@ -281,6 +300,7 @@ export function SingleEditDialog({
           onQtyChange={setQty}
           cost={cost}
           onCostChange={setCost}
+          costSymbol={currencySymbol(currency)}
           notes={notes}
           onNotesChange={setNotes}
           isPrivate={isPrivate}

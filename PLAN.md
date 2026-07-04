@@ -2,6 +2,19 @@
 > งานใหญ่แตกเป็น task ติ๊กได้ · ทำทีละอัน · ติ๊กเมื่อ **verify แล้ว** (ไม่ใช่แค่เขียนเสร็จ)
 > ลำดับ milestone = ข้อเสนอ — เบสสลับได้ · แผนธุรกิจ/north star อยู่ `doc/archive/detailed-plan-2026-04-28.md` (archived snapshot) ไม่ใช่ไฟล์นี้
 
+## 🧭 UX/UI Refactor Master Plan (2026-07-04 — แผนคุมงาน UI ทั้งหมดต่อจากนี้)
+> จาก audit ทั้งเว็บ (workflow 86 agents · 19 auditors + adversarial verify) ได้ 230 findings — **checklist รายข้อ + กติกา: [doc/uxui-refactor-plan.md](doc/uxui-refactor-plan.md)** · หลักฐานราย finding: [doc/uxui-audit-findings-2026-07-04.md](doc/uxui-audit-findings-2026-07-04.md) · ที่นี่ติ๊กระดับ phase เท่านั้น
+> แผนนี้ดูดซับงานค้างเดิม: R1 empty-state → Phase 4 · แตก client ยักษ์ → Phase 2/5 · Declutter Batch 5–6 → Phase 5 (honey/desktop balance)
+
+- [x] **Phase 0** แก้ของพัง/เสี่ยงจริง — **17/17 เสร็จ + verify (tsc0/lint0/test56/build✓ prerender static)** · `SETTINGS-03` แก้แล้ว (เบสอนุมัติ lib qrcode) · `SETS-05`/`CONTENT-03` ย้ายไป Phase 5 (query risk) · branch `fix/uxui-phase-0` รอ merge
+- [ ] **Phase 1** ลบของตาย ~3,000+ บรรทัด / orphan 18+ ไฟล์ (⚠️ เบสอนุมัติรายการลบก่อน)
+- [ ] **Phase 2** ประกาศ kit ทางการใน AGENTS.md + ยุบของซ้ำ (PriceTag เดียว · search engine เดียวจาก 3 ชุด · auth kit · Switch/QtyStepper/TabBar · AdminDataTable 8 หน้า)
+- [ ] **Phase 3** token sweep (hairline เดียว · elevation adoption · radius มาตรฐาน · status 660 จุด · วินัยเขียว/แดง)
+- [ ] **Phase 4** states (หน้า 404 · ศูนย์ spinner · loading.tsx ราย segment · empty ทุกจุดมี CTA)
+- [ ] **Phase 5** mobile pass ราย surface — เบสเลือกลำดับหน้า (เริ่ม 5.0: tap ≥44px + a11y ที่ atom กลาง)
+- [ ] **Phase 6** IA/naming polish (ชื่อ/ไอคอนปลายทางเดียว · palette ครบ destination)
+- [ ] **Phase 7** commerce + admin เก็บกวาด (**ก่อนเปิด marketplace flag**)
+
 ## 🎨 Redesign (in-place · ทิศเต็มใน [VISION.md](VISION.md) · **ไม่มีเวอร์ชัน v1/v2**)
 > แก้ของเดิมทีละ surface ตาม spine VISION §7 · ทุก surface = adopt atom kit + verify (tsc/lint/build/test) + เปิดดูจริง · ⚠️ ข้อที่แตะ schema = เบสอนุมัติก่อน
 > 📌 กฎ design-system: การ์ดใหญ่ = `.panel` · `surface-*`/`hairline` = chip/control/nested · `.hairline` เป็น unlayered → อย่าผสมกับ ring/shadow บน element เดียว

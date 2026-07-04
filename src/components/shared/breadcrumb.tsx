@@ -1,7 +1,8 @@
 import Link from "next/link"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { BackButton } from "./back-button"
 
 export interface BreadcrumbItem {
   label: string
@@ -9,8 +10,8 @@ export interface BreadcrumbItem {
 }
 
 type BreadcrumbProps =
-  | { items: BreadcrumbItem[]; pathname?: never; labelMap?: never; className?: string }
-  | { items?: never; pathname: string; labelMap: Record<string, string>; className?: string }
+  | { items: BreadcrumbItem[]; pathname?: never; labelMap?: never; className?: string; hideMobileBack?: boolean }
+  | { items?: never; pathname: string; labelMap: Record<string, string>; className?: string; hideMobileBack?: boolean }
 
 function buildItemsFromPathname(pathname: string, labelMap: Record<string, string>): BreadcrumbItem[] {
   const segments = pathname.split("/").filter(Boolean)
@@ -51,24 +52,15 @@ export function Breadcrumb(props: BreadcrumbProps) {
   // margins on the visible one.
   return (
     <div className="min-w-0">
-      {parent?.href && (
-        <Link
+      {!props.hideMobileBack && parent?.href && (
+        // Shared prominent honey back button (BackButton). -ml-1 optically aligns
+        // the circle with the content edge. Pages that render their OWN inline
+        // back button (beside the title) pass `hideMobileBack` to avoid a second.
+        <BackButton
           href={parent.href}
-          aria-label={parent.label}
-          title={parent.label}
-          className={cn(
-            // iOS-style back button: icon-only circle, identical on every deep
-            // page (owner call — no parent label text). The parent name stays
-            // available to screen readers/long-press via aria-label/title.
-            // Card-white surface + hairline border + soft shadow so it floats
-            // off the warm page background (bg-muted blended in too much).
-            // -ml-1 optically aligns the chevron with the content edge.
-            "mb-4 -ml-1 inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-[var(--p-hair)] bg-card shadow-sm motion-base active:bg-muted md:hidden",
-            props.className,
-          )}
-        >
-          <ChevronLeft className="size-5 text-primary" />
-        </Link>
+          label={parent.label}
+          className={cn("mb-4 -ml-1 md:hidden", props.className)}
+        />
       )}
 
       <nav

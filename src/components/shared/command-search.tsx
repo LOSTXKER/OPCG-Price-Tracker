@@ -12,8 +12,9 @@ import {
 } from "react"
 import {
   ArrowRightLeft,
-  Bookmark,
+  Briefcase,
   Clock,
+  Heart,
   LayoutGrid,
   LineChart,
   Search,
@@ -21,7 +22,6 @@ import {
   Sparkles,
   Swords,
   TrendingUp,
-  Wallet,
   XIcon,
   type LucideIcon,
 } from "lucide-react"
@@ -43,8 +43,8 @@ const NAV_ACTIONS: { href: string; labelKey: TranslationKey; icon: LucideIcon }[
   { href: "/", labelKey: "market", icon: LineChart },
   { href: "/sets", labelKey: "browse", icon: LayoutGrid },
   { href: "/decks", labelKey: "decksAndTools", icon: Swords },
-  { href: "/portfolio", labelKey: "portfolioNav", icon: Wallet },
-  { href: "/watchlist", labelKey: "watchlistNav", icon: Bookmark },
+  { href: "/portfolio", labelKey: "portfolioNav", icon: Briefcase },
+  { href: "/watchlist", labelKey: "watchlistNav", icon: Heart },
   { href: "/trending", labelKey: "footerTrending", icon: TrendingUp },
   { href: "/compare", labelKey: "compareCards", icon: ArrowRightLeft },
   { href: "/honey", labelKey: "honeyPageTitle", icon: Sparkles },

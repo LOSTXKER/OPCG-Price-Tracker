@@ -45,7 +45,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-h2">{t(lang, "sellerDashboard")}</h2>
+        <h2 className="text-h2 hidden md:block">{t(lang, "sellerDashboard")}</h2>
         <Link href="/marketplace/create">
           <Button size="sm" className="gap-1.5 rounded-full">
             <Plus className="size-3.5" />

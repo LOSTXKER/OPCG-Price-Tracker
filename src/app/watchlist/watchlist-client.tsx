@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
 
@@ -66,6 +67,7 @@ export default function WatchlistClient() {
 
 function WatchlistContent() {
   const lang = useUIStore((s) => s.language);
+  const router = useRouter();
   const { limits } = useTierLimits();
   const confirm = useConfirm();
 
@@ -343,6 +345,13 @@ function WatchlistContent() {
   };
 
   const openSetAlert = (entry: WatchlistEntry) => {
+    // This card already has an alert — send the user to manage (edit/delete) it
+    // instead of silently creating a duplicate (the create API has no unique
+    // guard, so re-tapping the bell would stack identical alerts).
+    if (entry.hasActiveAlert) {
+      router.push("/watchlist?tab=alerts");
+      return;
+    }
     setAlertTarget(entry);
     setAlertOpen(true);
   };

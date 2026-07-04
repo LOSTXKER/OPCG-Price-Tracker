@@ -9,6 +9,10 @@ import { SaveSellerButton } from "./save-seller-button";
  * Mobile sticky CTA bar (visitor only). Stays visible while scrolling so
  * buyers can always reach the seller without scrolling back up. Hidden on
  * `md:` and above where the hero already has a Message button.
+ *
+ * Sits ABOVE the global BottomNav (z-50, 4rem tall) — this route is not
+ * chromeless so the nav renders; without the offset the nav would cover the
+ * CTA entirely. Same lift pattern as the card-detail sticky buy bar.
  */
 export function ProfileMobileCtaBar({
   sellerId,
@@ -24,7 +28,10 @@ export function ProfileMobileCtaBar({
   lang: Language;
 }) {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 px-3 py-2 shadow-[0_-4px_16px_-8px_rgba(0,0,0,0.18)] backdrop-blur supports-[backdrop-filter]:bg-background/80 md:hidden">
+    <div
+      className="fixed inset-x-0 z-40 border-t border-border bg-background/95 px-3 py-2 shadow-[0_-4px_16px_-8px_rgba(0,0,0,0.18)] backdrop-blur supports-[backdrop-filter]:bg-background/80 md:hidden"
+      style={{ bottom: "calc(4rem + env(safe-area-inset-bottom))" }}
+    >
       <div className="flex items-center gap-2">
         <MessageSellerButton href={messageHref} lang={lang} fullWidth />
         <SaveSellerButton

@@ -235,7 +235,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
   return (
     <div className="space-y-8">
       {/* Page header */}
-      <div>
+      <div className="hidden md:block">
         <h2 className="text-h2">{t(lang, "subscription")}</h2>
         <p className="page-subtitle">{t(lang, "yourPlan")}</p>
       </div>

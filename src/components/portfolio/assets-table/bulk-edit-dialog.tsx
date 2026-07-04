@@ -17,17 +17,33 @@ import {
 import { getCardName, t, type Language } from "@/lib/i18n"
 import type { AssetRow } from "@/lib/types/portfolio"
 import { cn } from "@/lib/utils"
+import {
+  currencySymbol,
+  displayValueToJpy,
+  jpyToDisplayValue,
+  type Currency,
+} from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
 import { parseCostValue } from "./utils"
 
 type RowEditState = { qty: string; cost: string; isPrivate: boolean }
 
+/** The row's stored JPY cost rendered in the user's display currency — the
+ *  value the input shows and edits (cost is persisted in JPY, edited in display
+ *  currency, matching the add-card flow). */
+function displayCostStr(row: AssetRow, currency: Currency): string {
+  return row.purchasePrice != null
+    ? String(Math.round(jpyToDisplayValue(row.purchasePrice, currency)))
+    : ""
+}
+
 function CardEditCompact({
   row,
   lang,
   qty,
   cost,
+  costSymbol,
   isPrivate,
   onFieldChange,
   onRemove,
@@ -36,6 +52,7 @@ function CardEditCompact({
   lang: Language
   qty: string
   cost: string
+  costSymbol: string
   isPrivate: boolean
   onFieldChange: (
     itemId: number,
@@ -99,15 +116,20 @@ function CardEditCompact({
         </div>
         <div className="flex items-center gap-1.5">
           <span className="text-overlay text-muted-foreground/60">{t(lang, "costBasis")}</span>
-          <input
-            className="w-20 shrink-0 rounded-lg border border-[var(--p-hair)] bg-muted/30 px-2 py-1 text-center text-xs tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
-            value={cost}
-            onChange={(e) => onFieldChange(row.itemId, "cost", e.target.value)}
-            type="number"
-            step="1"
-            min={0}
-            placeholder="—"
-          />
+          <div className="relative">
+            <span className="pointer-events-none absolute left-1.5 top-1/2 -translate-y-1/2 text-overlay text-muted-foreground/50">
+              {costSymbol}
+            </span>
+            <input
+              className="w-20 shrink-0 rounded-lg border border-[var(--p-hair)] bg-muted/30 py-1 pl-5 pr-2 text-left text-xs tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
+              value={cost}
+              onChange={(e) => onFieldChange(row.itemId, "cost", e.target.value)}
+              type="number"
+              step="1"
+              min={0}
+              placeholder="—"
+            />
+          </div>
         </div>
         <div className="ml-auto">
           <button
@@ -165,6 +187,7 @@ export function BulkEditDialog({
   onRemove: (itemId: number) => void
 }) {
   const lang = useUIStore((s) => s.language)
+  const currency = useUIStore((s) => s.currency)
   const [bulkSearch, setBulkSearch] = useState("")
   const [edits, setEdits] = useState<Record<number, RowEditState>>({})
 
@@ -173,11 +196,11 @@ export function BulkEditDialog({
       if (edits[row.itemId]) return edits[row.itemId]
       return {
         qty: String(row.quantity),
-        cost: row.purchasePrice != null ? String(row.purchasePrice) : "",
+        cost: displayCostStr(row, currency),
         isPrivate: row.isPrivate ?? false,
       }
     },
-    [edits],
+    [edits, currency],
   )
 
   const handleFieldChange = useCallback(
@@ -192,13 +215,13 @@ export function BulkEditDialog({
         const current =
           prev[itemId] ?? {
             qty: String(row.quantity),
-            cost: row.purchasePrice != null ? String(row.purchasePrice) : "",
+            cost: displayCostStr(row, currency),
             isPrivate: row.isPrivate,
           }
         return { ...prev, [itemId]: { ...current, [field]: value } }
       })
     },
-    [assets],
+    [assets, currency],
   )
 
   const dirty = useMemo(() => {
@@ -208,12 +231,14 @@ export function BulkEditDialog({
       const parsedQty = parseInt(local.qty)
       const qtyChanged =
         Number.isInteger(parsedQty) && parsedQty >= 1 && parsedQty !== row.quantity
-      const costVal = parseCostValue(local.cost)
-      const costChanged = costVal !== undefined && costVal !== row.purchasePrice
+      // Compare against the initial display string (not a re-derived JPY) so a
+      // currency round-trip's ±1 rounding never reads as an edit.
+      const costChanged =
+        local.cost !== displayCostStr(row, currency) && parseCostValue(local.cost) !== undefined
       const privacyChanged = local.isPrivate !== row.isPrivate
       return qtyChanged || costChanged || privacyChanged
     })
-  }, [edits, assets])
+  }, [edits, assets, currency])
 
   const handleSave = () => {
     for (const row of assets) {
@@ -222,8 +247,12 @@ export function BulkEditDialog({
       const data: { quantity?: number; purchasePrice?: number | null; isPrivate?: boolean } = {}
       const q = parseInt(local.qty)
       if (Number.isInteger(q) && q >= 1 && q !== row.quantity) data.quantity = q
-      const costVal = parseCostValue(local.cost)
-      if (costVal !== undefined && costVal !== row.purchasePrice) data.purchasePrice = costVal
+      if (local.cost !== displayCostStr(row, currency)) {
+        const costVal = parseCostValue(local.cost)
+        if (costVal !== undefined) {
+          data.purchasePrice = costVal === null ? null : displayValueToJpy(costVal, currency)
+        }
+      }
       if (local.isPrivate !== row.isPrivate) data.isPrivate = local.isPrivate
       if (Object.keys(data).length > 0) onUpdate(row.itemId, data)
     }
@@ -300,6 +329,7 @@ export function BulkEditDialog({
                     lang={lang}
                     qty={state.qty}
                     cost={state.cost}
+                    costSymbol={currencySymbol(currency)}
                     isPrivate={state.isPrivate}
                     onFieldChange={handleFieldChange}
                     onRemove={onRemove}

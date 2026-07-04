@@ -7,8 +7,8 @@ import { useCallback } from "react";
 import {
   ArrowRightLeft,
   BellRing,
-  Bookmark,
   BookOpen,
+  Briefcase,
   ChevronRight,
   Crown,
   Globe,
@@ -20,7 +20,6 @@ import {
   Settings,
   ShoppingBag,
   Sparkles,
-  Star,
   Store,
   Sun,
   Swords,
@@ -221,13 +220,13 @@ export default function MoreClient() {
           {authed && (
             <GroupedSection className={SECTION_INSET} label={t(language, "trackGroup")}>
               <GroupedRow
-                icon={Star}
+                icon={Briefcase}
                 iconClassName="bg-primary/12 text-primary"
                 title={t(language, "portfolioNav")}
                 href="/portfolio"
               />
               <GroupedRow
-                icon={Bookmark}
+                icon={Heart}
                 iconClassName="bg-info-soft text-info"
                 title={t(language, "watchlistNav")}
                 href="/watchlist"
@@ -236,7 +235,7 @@ export default function MoreClient() {
                 icon={BellRing}
                 iconClassName="bg-warning-soft text-warning"
                 title={t(language, "managePriceAlerts")}
-                href="/settings/alerts"
+                href="/watchlist?tab=alerts"
               />
             </GroupedSection>
           )}

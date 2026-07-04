@@ -1,89 +1,69 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-03 — **`/more` ตัดหัวข้อ "เพิ่มเติม" ออก + ขยับ gutter มือถือทั้งเว็บ 16px→20px** (เบสบอกเนื้อหาติดขอบจอ)
+อัปเดตล่าสุด: 2026-07-04 — **Phase 0 + ปุ่มย้อน + Sheet ทางลัด + ไอคอนทั้งเว็บ + รวม watchlist↔alerts 2 แท็บ · branch `fix/uxui-phase-0` (ยังไม่ merge)**
 
-## ✅ เสร็จล่าสุด — ตัดหัวข้อหน้า `/more` + เพิ่ม gutter มือถือทั้งเว็บ (16px → 20px)
-เบสสั่ง 2 อย่าง: "(1) ดูเพิ่มเติมเอาหัวข้อคำว่าเพิ่มเติมออก (2) ทุกหน้าในมุมมือถือรู้สึกว่าควรขยับความกว้างเข้ามาหน่อย มันติดขอบจอไป"
+## ✅ เสร็จล่าสุด (session นี้) — รวม "รายการโปรด" + "แจ้งเตือนราคา" เป็นหน้าเดียว 2 แท็บ (เบสสั่ง · Phase 5 surface)
+เบส: 2 หน้านี้คล้ายกัน แยกแล้วงง → ให้ความเห็น + เสนอ 3 ทาง เบสเลือก **A. หน้าเดียว 2 แท็บ** (ไม่ยัดเป็นลิสต์เดียว เพราะ alert = card+ราคาเป้า+ทิศทาง, หลายเตือน/การ์ด + ประวัติ + LINE/tier ≠ 1 การ์ด/แถว)
+- **`watchlist-tabs.tsx` (ใหม่)** — host `/watchlist` แสดง 2 แท็บ underline: ♥ การ์ดที่ติดตาม (`WatchlistClient`) / 🔔 แจ้งเตือนราคา (`AlertsManagerClient` reuse ตรงๆ) · tab state ผ่าน `?tab=alerts` (mirror honey Suspense+useSearchParams) · unauthed → เด้ง WatchlistClient เดิม (skeleton/preview) ไม่มี tab chrome
+- **`/settings/alerts` → redirect** ไป `/watchlist?tab=alerts` (กัน bookmark เก่า 404) · **ถอด entry alerts ออกจาก settings sidebar** (settings-shell + ลบ BellRing import) — ย้ายออกจาก settings แล้ว
+- **repoint 6 ลิงก์** → `/watchlist?tab=alerts`: more-sheet · /more menu · header-user-menu · notification-bell · section-notifications · watchlist row-bell (การ์ดที่มี alert เด้งไปแท็บ) · **game-switcher** ตัด special-case `/settings/alerts` (อยู่ใต้ /watchlist agnostic แล้ว)
+- i18n +2 key (`watchlistTabCards`/`watchlistTabAlerts`) ×3 ภาษา
+- **verify:** tsc0/lint0/build✓ · **browser จริง (:3100 มือถือ)**: /watchlist เห็น 2 แท็บ · กดแท็บ→URL+เนื้อหาสลับถูก (alerts manager เต็ม: สร้างเตือน/game chips/alert Luffy) · deep-link `?tab=alerts` ลงแท็บถูก · `/settings/alerts` redirect ลงถูก · console ไม่มี error
+- ⚠️ **decisions ที่ฉันเคาะเอง (เบส veto ได้):** (1) ถอด alerts ออกจาก settings sidebar เลย (ไม่เก็บซ้ำ) (2) /settings/alerts เป็น redirect (ไม่ลบ route) — มี skeleton แว่บสั้นๆ ตอนเข้าลิงก์เก่าตรงๆ (settings layout สตรีมก่อน redirect) · live nav ทุกทางชี้ตรง /watchlist?tab=alerts ไม่แว่บ · ถ้าอยากไร้แว่บ 100% ต้องเพิ่ม rule ใน middleware (แตะ config = ขออนุมัติ)
+- ⚠️ ยังไม่ commit
 
-1. **`/more` ตัดหัวข้อ H1 "เพิ่มเติม" ทิ้ง** (`more-client.tsx`) — ลบ `<PageHeader title=.../>` (import ด้วย) แทนที่ด้วย `pt-safe` เฉยๆ (การ์ดแรกเริ่มใกล้ status bar มากขึ้นแต่ยังมี `pt-8` จาก `PageContent` เดิมรองรับอยู่แล้ว ไม่ชนขอบจริง) เหตุผล: หน้านี้ไม่มี site header คลุมอยู่ด้านบนแล้ว (ตัดไปรอบก่อน) หัวข้อซ้ำจึงเป็น noise ไม่ใช่ identity ที่มีประโยชน์
-2. **Gutter มือถือทั้งเว็บ 16px (`px-4`) → 20px (`px-5`)** — แก้ที่ต้นทาง `page-container.tsx` (`PageContainer` ตัวเดียวที่ทุกหน้าพึ่งพา) เปลี่ยน `px-4 md:px-6 lg:px-8` → `px-5 md:px-6 lg:px-8` (**เฉพาะมือถือ** md/lg เดิมไม่แตะ) — ตามด้วยจุดที่ hardcode `-mx-4`/`px-4` แบบ "cancel-then-reapply" (breakout pattern สำหรับแถวเลื่อนแนวนอน/full-bleed) ต้องอัปเดตให้ตรงกับฐานใหม่ ไม่งั้นจะเบี้ยว:
-   - `grouped-list.tsx` (`GroupedSection`): default `px-4 sm:px-6` → `px-5 sm:px-6` (settings ใช้ pattern นี้)
-   - `header-mobile.tsx`: `px-4` → `px-5` (ให้โลโก้/ไอคอน header ชิดกับขอบเนื้อหาด้านล่างพอดี ไม่งั้นจะเยื้องกัน 4px)
-   - `settings/page.tsx`: `-mx-4`/`px-4` (h1) → `-mx-5`/`px-5`
-   - `trending-tabs.tsx`, `sets-page-client.tsx`, `set-detail-content.tsx`, `market-overview-client.tsx`: แถวเลื่อนแนวนอน (type pills/rarity chips/top-cards) → `-mx-4`/`px-4` → `-mx-5`/`px-5`
-   - หน้าโปรไฟล์สาธารณะ (`public-profile-client.tsx` + `profile-tabs-nav.tsx`) มี container อิสระของตัวเอง (ไม่ผ่าน `PageContainer` เพราะเป็น full-width route) ต้องแก้แยกให้ตรงกันด้วย
-**verify:** tsc0/lint0(34 warning เดิม)/detect[]/test56/build✓ + browser จริงวัด gutter ตรงๆ ด้วย `getBoundingClientRect()` (ยืนยัน 20px ซ้าย-ขวาบน `/more`, header กับ content เท่ากันที่ 20px) + overflow-check บนหน้าที่มีแถวเลื่อนแนวนอน (`/opcg/trending`, `/opcg/sets`) ยัง `scrollWidth === clientWidth` (ไม่ล้น) + screenshot ยืนยันภาพหลาย ๆ หน้า (`/more`, `/settings`) + curl smoke ทุก route ที่แก้ 200
+## ✅ เสร็จล่าสุด (session นี้) — ปุ่ม "ดูเพิ่มเติม" มือถือ = Sheet ทางลัด (เบสสั่ง)
+เบส feedback: หน้าสำคัญบางหน้าถูกฝังลึกใต้แท็บ "ดูเพิ่มเติม" (เดิมกด→เด้งไปหน้า `/more` เต็มจอ). เบสเลือกทาง **A. Sheet ทางลัด** (จาก 4 ตัวเลือกที่เสนอ: A sheet / B ดันขึ้นแท็บ / C จัดบนสุด /more / คงเดิม).
+- **`more-sheet.tsx` (ใหม่)** — กด "ดูเพิ่มเติม" → Sheet เลื่อนขึ้นจากล่างจอ **ทับหน้าเดิม** (context อยู่ข้างหลัง): มือจับ + หัวข้อ "ลิงก์ด่วน" + กริด 6 ทางลัดที่คัดมา + แถว "ดูเมนูทั้งหมด" → `/more` (หน้าเต็มยังอยู่ครบ)
+- ทางลัด: ล็อกอิน = Honey(จุดแดง)/เด็ค/แจ้งเตือน/มาแรง/คู่มือ/ตั้งค่า · guest = เด็ค/มาแรง/เทียบ/คู่มือ/แพ็กเกจ (แก้ list ง่ายใน `MoreSheetBody`)
+- **`bottom-nav.tsx`** — แท็บ More: `<Link>`→`<TabButton>` เปิด sheet (state `moreOpen`), `moreActive = moreOpen || fallback` · i18n +`viewAllMenu` ×3 · reuse `quickLinks`/`claimReward` เดิม (ไม่ทำ key ซ้ำ)
+- **verify:** tsc0/lint0/build✓(×2) + **production :3100 ผ่าน browser จริง (มือถือ 390px)**: home/trending/portfolio กด More→sheet เด้ง · กดทางลัด→ไป+ปิด sheet+แท็บ active ถูก · "ดูเมนูทั้งหมด"→/more · console ไม่มี error
+- **adversarial review (7 agents)**: 3 finding = LOW ทั้งหมด **แก้ครบแล้ว** — (1) กัน guest-tile flash ตอน auth ยังไม่ resolve = skeleton จน `authLoaded` (2) ลบ SheetDescription ซ้ำ Title (3) +sr-only `claimReward` ที่จุดแดง honey · perf assumption ยืนยันถูก (useHeaderData วิ่งเฉพาะตอนเปิด sheet, base-ui unmount ตอนปิด) · 1 finding (double-active tab) = refuted (masked/benign)
+- ⚠️ ยังไม่ commit — รอเบส review. skeleton เห็นเฉพาะ prod จริง (dev-bypass `authLoaded` เริ่ม true เลยข้าม)
 
-## ✅ เสร็จล่าสุด — ปรับ bottom-nav กลับเป็นแท็บธรรมดา + `/more` ไม่มี header/footer
-เบสสั่ง: "เอาค้นหาออกดีกว่าเปลี่ยนเป็นปุ่มรายการโปรดธรรมดา ส่วนดูเพิ่มเติมเอา header ออก และ footer ออก" — 2 จุด:
-1. **`bottom-nav.tsx`**: ถอดปุ่มค้นหาลอยเด่น (`SearchButton`) ที่เพิ่งทำไปทิ้ง แทนที่ด้วย `TabLink` ปกติ href `/watchlist` label `t(lang,"watchlistNav")`="รายการโปรด" icon `Bookmark` — หน้าตา/พฤติกรรมเหมือนแท็บอื่นทุกอย่าง (active state, ขนาดเท่ากัน ไม่มีการลอย) ลำดับใหม่: หน้าแรก · ชุดการ์ด · รายการโปรด · พอร์ตโฟลิโอ · เพิ่มเติม
-2. **`/more` ตัด header+footer ทิ้ง** (คง bottom-nav ไว้ เพราะยังเป็นปลายทางของแท็บ) — refactor `main-chrome.tsx`: เดิม `MainChrome` เป็นตัวเดียวคุมทั้ง Header/Footer/BottomNav (all-or-nothing ตาม `CHROMELESS_ROUTES`) ต้องแยกออก:
-   - เพิ่ม `SiteChrome` (component ใหม่) — ซ่อนเมื่อ `CHROMELESS_ROUTES` **หรือ** `NO_HEADER_FOOTER_ROUTES` (list ใหม่ = `["/more"]`) → ใช้ห่อ `<Header />` และ `<Footer />` ใน `layout.tsx`
-   - `MainChrome` เดิมเหลือห่อแค่ `<BottomNav />` — ซ่อนเฉพาะ `CHROMELESS_ROUTES` เท่านั้น (ไม่โดน `/more` เพราะยังต้องโชว์)
-   - เหตุผล: `/more` มีลิงก์ไปทุกที่อยู่แล้วในตัวมันเอง (Browse/Track/บัญชี ฯลฯ) + มี `PageHeader` title ของตัวเองอยู่แล้ว → header/footer ของเว็บซ้ำซ้อนจริง
-   - หน้าอื่นทั้งหมดไม่กระทบ (ยังมี header+footer+bottomnav ครบเหมือนเดิม)
-- ⚠️ **เจอปัญหา dev server cache อีกรอบ** (ครั้งที่ 3 ใน session นี้) — แก้โค้ดแล้ว curl/browser ยังเห็นของเก่า ทั้งที่ compile log บอกว่า compile ผ่าน สงสัยว่า root `layout.tsx`/shared chrome ไฟล์ HMR ไม่ reliable เท่าไฟล์ระดับ page → แก้โดย **`rm -rf .next` (ทั้งโฟลเดอร์ ไม่ใช่แค่ `.next/dev`) + restart dev server ใหม่ทั้งหมด** ถึงจะเห็นผลถูกต้อง — ถ้าเจอ pattern นี้อีกให้ทำตามนี้ทันที ไม่ต้องเสียเวลาสืบโค้ด
-**verify:** tsc0/lint0(34 warning เดิม)/detect[]/test56/build✓ (`/more` prerender static) + browser จริงหลัง restart สะอาด: `/more` มือถือ**ไม่มี**หัวเว็บ/ท้ายเว็บเลย (screenshot ยืนยัน) มีแค่ bottom-nav + เนื้อหาของหน้า · `/more` desktop เหมือนกัน (ไม่มี header/footer แต่ bottom-nav ก็ไม่โชว์เพราะเป็น `md:hidden` เดิม — desktop ไม่มีทางเข้า `/more` อยู่แล้วไม่กระทบใคร) · หน้าแรก `/` มือถือ+desktop ยังมี header/footer/bottom-nav ครบเหมือนเดิม (ไม่ regression) · curl smoke ทุก route ที่แก้ 200
+### เพิ่มเติมรอบ 2 (เบส feedback หลังรีวิว sheet): เปลี่ยนคำ + ไอคอนทั้งเว็บให้ตรงกัน
+เบส: (1) ไม่ชอบคำ "ลิงก์ด่วน" (2) ไอคอน watchlist/portfolio ทั้งเว็บไปคนละทาง → **audit ด้วย Explore agent เจอ 14 จุดจริง** (แยก UNRELATED ออกชัด: Heart=Life stat, Wallet=สกุลเงิน/บิล, Bookmark=saved listing, Star=รีวิวร้าน — ไม่แตะ)
+- **หัวข้อ Sheet:** "ลิงก์ด่วน" → **"ทางลัด"** (แก้ค่า key `quickLinks` ที่ใช้ที่เดียว ×3 ภาษา)
+- **รายการโปรด (watchlist) → `Heart` ทุกจุด** (เดิม `Bookmark`): bottom-nav · header (rose) · command-search · /more
+- **พอร์ต (portfolio) → `Briefcase` ทุกจุด** (เดิมปน `Wallet`/`Star`/`Briefcase`): bottom-nav · header (amber active, ตัด fill) · command-search · /more · home-seo tile · portfolio-switcher ×2 · portfolio-selector · (home portfolio-preview + card-add-to-portfolio เป็น Briefcase อยู่แล้ว)
+- **verify:** tsc0/lint0(warn เดิม 1 ที่ command-search:249 ไม่เกี่ยว)/build✓ · **browser มือถือยืนยัน ♥+💼+"ทางลัด"** · desktop header/command-palette ยืนยันด้วย compile (viewport ext ล็อกมือถือ เช็คตาไม่ได้ แต่ icon swap ตรงไปตรงมา)
+- **heads-up:** `savedListings` (ตลาด, flag ปิด) ใช้ `Heart` ที่ header-user-menu + /more อยู่ → ถ้าเปิด marketplace วันหน้าจะชนกับ watchlist=Heart · ตอนนี้ไม่เห็นเพราะ flag ปิด · proto/ ข้าม (playground) — ทั้งคู่ค่อยจัดถ้าเบสอยาก
 
-## ✅ เสร็จล่าสุด (ต่อ) — ปุ่มย้อนมือถือ = ไอคอนวงกลมล้วน (เบสเคาะขั้นสุดท้าย)
-วิวัฒนาการ 3 ขั้นตามที่เบสเคาะทีละรอบ: text link → pill มีชื่อหน้าแม่ → **ไอคอนล้วน** ("ใช้เป็นปุ่มย้อนให้หมดเลยเหมือนกัน แล้วไม่ต้องมีคำอะไร"):
-- ปุ่มสุดท้าย: วงกลม `size-9 rounded-full` + chevron สี honey ไม่มีข้อความ — **หน้าตาเหมือนกันทุกหน้าลูกลึก** (portfolio detail → `/portfolio`, card detail → หน้า set, set detail → `/sets`, blog post → `/blog` ฯลฯ derive อัตโนมัติจาก breadcrumb items) · รอบสุดท้ายเบสบอก "กลืนพื้นหลัง" → ยกขึ้นเป็น `bg-card` + hairline border + `shadow-sm` (ลอยจากพื้นครีมแบบเดียวกับ icon button อื่นในแอป)
-- ⚠️ ระหว่างทางเจอ **dev server เก่า (เปิดค้างตั้งแต่ 20 มิ.ย.) watcher ตาย ไม่ compile ไฟล์ที่แก้** — เบสเห็นปุ่มเวอร์ชันเก่าทั้งที่โค้ดใหม่แล้ว · แก้โดย restart dev server + `rm -rf .next/dev` (server ใหม่รันเป็น background job แล้ว)
-- ชื่อหน้าแม่ยังอยู่ใน `aria-label`+`title` (screen reader + long-press ยังรู้ว่าย้อนไปไหน)
-- card detail: ถอด mobile meta `OP01 · OP01-001 · L` ที่ซ้ำกับ identity chips ใต้ชื่อการ์ดทิ้งไปแล้วในรอบก่อน
-- desktop ไม่เปลี่ยนทุกรอบ — trail เต็มเหมือนเดิม
-**verify:** tsc0/lint0/detect[]/test56/build✓ + browser จริง: screenshot card detail เห็นวงกลม chevron สะอาด · portfolio detail ยืนยัน DOM (36×36, ไม่มี text, aria-label ถูก, href ถูก) · desktop trail เต็ม
+## ✅ เสร็จ session นี้ — Phase 0 (แก้ของพัง/เสี่ยงจริง) ตามแผน doc/uxui-refactor-plan.md
+เบสสั่ง "เริ่ม Phase 0 ได้" — แก้ 16 ข้อ (branch `fix/uxui-phase-0`, ยังไม่ merge). แผนแม่บท + หลักฐาน 230 findings อยู่ `doc/uxui-refactor-plan.md` + `doc/uxui-audit-findings-2026-07-04.md` (ทำ session ก่อน).
 
-## ✅ เสร็จก่อนหน้า — Breadcrumb: ซ่อนบนมือถือ + ปุ่มย้อนแบบ iOS สำหรับหน้าลูกลึก
+**แก้แล้ว (16):**
+1. `IA-NAV-01/07`+`CHROME-06` — แท็บ active ไม่ติดใต้ `/opcg/` → `isNavActive` helper เดียวใน `lib/game/constants.ts` (strip game prefix + owner-aware), header + bottom-nav ใช้ร่วม, More = fallback tab, ลบ `TOOL_LINKS` ตาย
+2. `PORTFOLIO-03` — edit dialog ราคาทุนหน่วยเงินเพี้ยน (โชว์ JPY ดิบ) → แปลง display↔JPY + symbol prefix + string-compare กัน round-trip drift (`single-edit-dialog` + `bulk-edit-dialog`)
+3. `CHROME-01`/`IDENTITY-02` — CTA "ทักผู้ขาย" ถูก bottom-nav ทับ → ยกขึ้น `bottom:calc(4rem+safe)` + pb เนื้อหาพ้น 2 แถบ
+4. `COMMERCE-03` — chat order panel ทับจอมือถือปิดไม่ได้ → default ปิด <lg + backdrop แตะปิด (desktop lg:static คงเดิม)
+5. `PLAY-01` — deck-calc qty ล็อก 1 → stepper ต่อแถว (1-4) + addCard bump แทน reset + คง dialog เปิด · `PLAY-02` ลบเด็คมี confirm แล้ว
+6. `TRACK-01` — กระดิ่งการ์ดที่มี alert → route ไป `/settings/alerts` แทนสร้างซ้ำ (inline sheet = Phase 5, entry มีแค่ boolean)
+7. `HONEY-04` — `/honey` sync `?tab=` กับ URL (Suspense) — deep-link จาก pricing + back ทำงาน
+8. `IDENTITY-05` redirect `/profile` (ไม่ใช่ /settings) · `IDENTITY-08` wire "ดูรายการขาย"→tab จริง + Report = "กำลังมา" (honest)
+9. `SETTINGS-01` — gate marketplace section ด้วย flag (sidebar + mobile index) · `CHROME-02` settings gutter ซ้อน → `inShell` (20px มือถือ) · `CHROME-03`/`IDENTITY-04` `/u/` + `/@` เข้า FULL_WIDTH_ROUTES
+10. `CONTENT-01` — blog `.prose` เขียนเองใน globals.css map token (ไม่เพิ่ม dependency) · `STATES-02` `not-found.tsx` หมีหลงทาง + ปุ่มกลับ
+11. `HOME-01`+`DISCOVERY-11` **perf** — home ตัด searchParams + market-overview/trending ตัด force-dynamic → **build ยืนยัน `/` `/market-overview` `/trending` = static prerendered** · `/cards?search=`→/search · trending tab อ่าน client-side
 
-แก้ที่ `src/components/shared/breadcrumb.tsx` ที่เดียว (ทุกหน้าที่ใช้ ~30 จุดได้ผลพร้อมกัน):
-- **Desktop (≥md)**: เส้นทางเต็ม Home > Section > Current เหมือนเดิมเป๊ะ
-- **มือถือ (<md)**: ไม่มีเส้นทางอีกต่อไป (iOS ไม่มี breadcrumb · NN/g ชี้ว่าเปลืองพื้นที่แนวตั้งบนจอเล็ก · bottom-nav บอก section อยู่แล้ว) — หน้าลูกลึก (≥3 ชั้น เช่น `/portfolio/[id]`, `/sets/[code]`, blog post) ได้ **ปุ่มย้อน `< หน้าแม่`** ตัวเดียวแบบเดียวกับที่ settings sub-pages ใช้อยู่แล้ว · หน้าแท็บหลัก (Home > X แค่ 2 ชั้น) ไม่ render อะไรเลยบนมือถือ
-- ตัดสินใจเรื่องปุ่มย้อน: **มีเฉพาะหน้าลูกลึก** — derive อัตโนมัติจาก items (≥3 → ลิงก์ไป items[len-2]) ไม่ต้องแก้ per-page · settings sub-pages มี back ของตัวเองอยู่แล้ว (breadcrumb ของมันมี 2 ชั้น เลยไม่ซ้ำ)
-- `card-detail.tsx`: ขยับ boundary ของ breadcrumb/meta ตัวเอง `sm:`→`md:` ให้ตรงกับ chrome boundary ของ Breadcrumb ใหม่ (มือถือคงโชว์ compact meta `OP01 · OP01-001 · L` ที่มีประโยชน์กว่า back link บนหน้าเทรด)
-- ห่อทั้งคู่ใน `<div>` เดียว (ไม่ใช่ fragment) กัน `space-y-*` ของ parent เห็น 2 children แล้ว margin เบิ้ล
-- SEO ไม่กระทบ — rich result ใช้ `BreadcrumbList` JSON-LD ที่ฉีดแยก ไม่ผูกกับ markup ที่มองเห็น
+**verify:** tsc 0 · lint 0 error (34 warning เดิม) · test 56/56 · **build ✓** (ยืนยัน index.html + market-overview.html prerendered, trending `○ 5m`) · i18n +5 key ×3 (confirmDeleteDeck/decrease/increase + rename profileReportSent→profileReportSoon) parity ครบ · **ยังไม่ได้เปิด browser จริงดู** (เบสช่วยเช็คได้)
 
-**verify:** tsc 0 · eslint 0 · impeccable detect [] · test 56/56 · build ✓ · **browser จริงครบ 4 กรณี**: มือถือ `/portfolio/1` เห็นปุ่ม `< พอร์ตโฟลิโอ` (screenshot ยืนยัน) · มือถือ `/watchlist` ไม่มีทั้ง trail และ back (ถูกต้อง — เป็นแท็บหลัก) · มือถือ card detail คงเห็น compact meta · desktop `/watchlist` เห็น trail เต็มเหมือนเดิม
-
-## แหล่งอ้างอิง
-- **spec เต็ม:** `doc/mine-multigame-spec.md` · **VISION:** identity §1 (ห้ามเปลี่ยน) + IA §2
-
-## ✅ เสร็จ session นี้ — Mobile UX audit ด้วย browser จริง (390×844) + แก้บั๊กที่เจอ
-
-Session ก่อนๆ ทำ iOS chrome rollout (Batch 0–4, ดูสรุปด้านล่าง) โดยไม่มี browser tool เลย — รอบนี้ browser กลับมาใช้ได้ เลยเปิดจริงไล่ตรวจทุกหน้า user-facing (~30 หน้า) ที่ viewport มือถือจริง ผสมการอ่าน DOM ด้วย script (หา horizontal-overflow + จับ hydration error ที่ Next dev overlay เตือน) กับ screenshot สายตา + กด UX flow จริง (สลับแท็บพอร์ต, เปิด add-card dialog, คลิกการ์ดพอร์ต, ทดสอบตัวกรอง trending/search)
-
-**บั๊กจริงที่เจอ + แก้แล้ว (5 ตัว):**
-1. **`ScrollToTop` hydration error จริง** (`src/components/shared/scroll-to-top.tsx`) — regex เดิม `/^\/cards\//` เขียนไว้ก่อนมี URL namespace `/[game]/` เลยไม่ match `/opcg/cards/x` อีกต่อไป (ฟีเจอร์ "ซ่อนปุ่มบนมือถือหน้า card detail" เงียบๆ ใช้ไม่ได้มานาน) — ที่ร้ายกว่าคือ middleware **rewrite** (ไม่ใช่ redirect) ทำให้ server เห็น pathname ปลายทางที่ไม่มี prefix ในขณะที่ client เห็น URL จริงที่มี prefix → hydration mismatch จริง แก้โดย derive จาก `isGamePrefix()` ที่มีอยู่แล้ว + gate ด้วย `useHydrated()` ให้ first render ตรงกับ server เป๊ะก่อน แล้วค่อยแก้ไขหลัง mount
-2. **`HeaderMobile` hydration error จริง** (`src/components/layout/header-mobile.tsx`) — lazy initializer เดิมอ่าน `window.scrollY` ตรงๆ ตอน render แรกดูปลอดภัยแต่ไม่ใช่: ถ้า browser scroll position เหลือ >8px ตอน mount (back/forward, scroll restoration) client กับ server จะได้คนละค่า — แก้ด้วย `useHydrated()` gate เดียวกัน
-3. **Portfolio hub card มี "จุดตายที่แตะไม่ได้"** (`src/components/portfolio/portfolio-hub-card.tsx`) — การ์ดทั้งใบควรเป็น stretched-link แต่ div ที่ห่อชื่อ/ราคา และแถวรูปย่อ มี `relative z-10` ทำให้มันลอยทับ link ที่แท้จริง (`absolute z-0`) — **แตะตรงชื่อ/ราคาแล้วไม่ไปไหนเลย** ยืนยันจริงด้วยคลิกอัตโนมัติ (ครั้งแรก "Click target intercepted" หลังแก้นำทางสำเร็จ) — ถอด `relative z-10` ออกจาก div ธรรมดา (เหลือแค่เมนู "..." ที่ยังต้อง z-20 island เดิม)
-4. **`/trending` มือถือ หน้าล้นแนวนอนจริง** — segmented control 3 ปุ่ม (label ยาว "การ์ดที่มีคนดูมากสุด") ไม่พอดี 390px และ **ทั้งหน้าเลื่อนแนวนอนได้จริง** (แย่กว่า scroll แบบมีขอบเขต) — ห่อด้วย `overflow-x-auto` แบบเดียวกับ pattern "tab-scroll" ที่มีอยู่แล้ว (card-detail section tabs, sets type-pills)
-5. **`/search` มือถือ ตัวกรอง "ทุกชุด" บีบจนตัวหนังสือตัดบรรทัดซ้อนทับ** — `SetPicker` ใช้ `flex-1 min-w-0` ในแถว `flex-wrap` ร่วมกับตัวกรองอื่น พอพื้นที่ไม่พอมันไม่ยอม wrap ทั้งก้อน กลับถูกบีบจนแคบ — แก้ด้วย `basis-full sm:basis-auto` บังคับเอาทั้งแถวบนมือถือ
-
-**เจอแต่ไม่แก้ (นอกขอบเขต/ต้องตัดสินใจเพิ่ม):**
-- `DropdownMenuTrigger` hydration error จาก **third-party library** `@base-ui/react/menu` เอง (ไม่ใช่โค้ดเรา) — ขึ้นตอนเปิด `/portfolio` (เมนู "..." บนการ์ด) แนะนำเช็คเวอร์ชันใหม่ของแพ็กเกจก่อนลงมือ ไม่แตะ dependency รอบนี้
-- Hardcoded breadcrumb "Home" ภาษาอังกฤษ (เจอซ้ำใน watchlist, trending, และอีก ~15 ไฟล์) — ส่วนหนึ่งของ backlog `R3 — i18n hardening` ที่มีอยู่แล้วใน PLAN.md ไม่ใช่บั๊กใหม่
-- Portfolio "ผลงานดีที่สุด/แย่ที่สุด" โชว์การ์ดเดียวกันตอนมีแค่ 1 ใบที่มีต้นทุน (ถูกต้องตาม logic แต่อ่านแปลก — product call ว่าจะซ่อน "แย่ที่สุด" เมื่อ best===worst ดีมั้ย) ไม่ใช่บั๊กคำนวณผิด
-
-**หน้าที่ตรวจแล้วสะอาด:** `/`, card detail, portfolio hub+detail (ครบ tab+dialog), `/watchlist`, `/sets`+`[code]`, `/settings`+account/billing, `/more` (มือถือ+desktop), `/honey`, `/decks`, `/drop-calculator`, `/deck-calculator`, `/compare`, `/pricing`, `/guide`, `/blog`
-**หน้าที่ยังไม่ครอบคลุม (รอบหน้าไล่ต่อ):** settings sub อีก ~7 หน้า, `/register`, `/profile` (me+public), `/u/[handle]`, `/market-overview`, `/about`, `/contact`, `/coming-soon`, `/raffle/winners`, honey sub-tabs — `/login` เช็คแล้วพบว่า redirect ผู้ใช้ที่ login อยู่แล้วกลับ `/` ถูกต้องตามที่ตั้งใจ (ไม่ใช่บั๊ก)
-
-**verify:** tsc 0 · lint 0 error (34 warning เดิม) · test 56/56 · build ✓ · impeccable detect [] (5 ไฟล์ที่แตะ) · curl smoke ทุก route ที่แก้ 200 · **verify ด้วย browser จริง** — screenshot ยืนยันภาพก่อน/หลังทุกจุด + คลิกทดสอบจริงยืนยัน fix การ์ดพอร์ต
-
-## 📚 สรุปย่อ session ก่อนๆ (Mobile iOS rollout, Batch 0–4)
-เบสยืนยันทิศ: **desktop คงของเดิมเป๊ะ · มือถือ (`<md`) เป็น iOS grammar** (large-title, frosted header, grouped-inset list, tab เป็น destination เสมอ) — rollout ตามลำดับ:
-- **Batch 0**: ย้าย `GroupedSection`/`GroupedRow` เข้า production (`src/components/ui/grouped-list.tsx`, delegate ไปที่ `ListRow` เดิม)
-- **Batch 1**: chrome มือถือ (`header-mobile.tsx` frost-on-scroll, `page-header.tsx` large-title, `bottom-nav.tsx` safe-area) + home/market thumbnail เป็น portrait
-- **Batch 2**: `/settings` มือถือ flat-list → grouped-inset
-- **Batch 3→4**: "เพิ่มเติม" จาก right-sheet drawer → **หน้าเต็ม `/more`** (ตามหลัก iOS HIG: tab ต้องนำทาง ไม่เปิด overlay) + จัด layout desktop กว้างเป็น 2 คอลัมน์
-- **สำรวจแล้วไม่แตะ**: Watchlist/Portfolio/Card-detail ผ่าน mobile-first redesign มาก่อนหน้านี้แล้ว (P1–P2), ไม่ใช่ gap แบบ Settings — บังคับเข้า grouped-inset จะตัดฟีเจอร์ (checkbox/pin/multi-action) ทิ้งโดยไม่จำเป็น
-
-รายละเอียดเต็มของแต่ละ batch อยู่ใน git log (commits `195f227`..`7b25b0e` บน branch `ui/sets-redesign`)
+## ✅ เสร็จต่อ (session นี้) — ปุ่มย้อนมือถือ redesign ทั้งแอป (เบสสั่งระหว่างรีวิว)
+เบส feedback: ปุ่มย้อน (1) กลืนพื้นหลัง (2) ลอยเหนือหัวข้อไม่สมมาตร (3) อยากอยู่ข้างหัวข้อแบบแอปอื่น (4) /settings ต้องมีด้วย → เบสเคาะสี honey ทึบ + "ทำ inline ให้ครบทุกหน้า"
+- **`BackButton` component ใหม่** (`src/components/shared/back-button.tsx`) — วงกลม honey ทึบ (`bg-primary`) เด่นทุกพื้นหลัง
+- **inline ข้างหัวข้อ (มือถือ)**: settings (index→/more, sub→/settings, ซ่อน section h2 มือถือ) · portfolio/[id] · guide ×6 · blog/[slug] (ลบลิงก์ "บทความทั้งหมด" เก่า)
+- **Breadcrumb** +prop `hideMobileBack` (หน้าที่มี inline เองปิดปุ่ม block กันซ้ำ) · **PageHeader** +prop `back`
+- **hero pages** (set/card detail) คงปุ่มเด่นบนซ้าย (block) — layout การ์ดเป็นพระเอก ไม่เหมาะดัน inline กลางหน้า · **commerce** (orders/seller/marketplace ปิด flag) → Phase 7
+- **verify:** tsc0/lint0/build✓ + **ยืนยันด้วย production server (`next start` :3100) ผ่าน browser extension: guide page ปุ่มย้อน 1 อันเดียว inline ข้างหัวข้อ honey เด่น (dark mode ทองสว่างมาก)**
+- ⚠️ **dev server (:3000) ของเบส HMR shared component (Breadcrumb) ค้าง** — เห็นปุ่ม 2 อัน (stale) · โค้ดถูก 100% (build ผ่าน + production ยืนยัน) · **เบสต้อง restart dev: `rm -rf .next && npm run dev`** ถึงเห็นถูก (+ ผมรัน build หลายรอบ อาจกวน .next dev ด้วย)
 
 ## ⏭️ NEXT
-1. **ต่อ audit ให้ครบ**: หน้าที่ยังไม่ได้ตรวจ (list ด้านบน) — โดยเฉพาะ settings sub อีก 7 หน้า + `/profile` (custom layout เยอะ เสี่ยง overflow) + honey sub-tabs
-2. **third-party hydration bug** (`@base-ui/react/menu` → `DropdownMenuTrigger`) — เช็คเวอร์ชันใหม่ก่อนจะลงมือ patch เอง
-3. **เบสเปิดเว็บจริงช่วยยืนยัน**: มือถือ `/opcg/trending` (segmented control เลื่อนในกรอบตัวเอง) · `/opcg/search?q=...` (ตัวกรอง "ทุกชุด" เต็มแถว) · การ์ดในหน้า `/portfolio` แตะตรงชื่อ/ราคาได้จริง
-4. `/proto/ios/*` ยังเก็บไว้เป็น reference (ยังไม่ลบ — ⚠️ ลบต้องถามเบสก่อน)
-5. งานทั้งหมดอยู่บน branch `ui/sets-redesign` ยังไม่ merge เข้า master — ถ้าเบสดูแล้วโอเค ควรเปิด PR
+0. **เบส review "ดูเพิ่มเติม" Sheet ทางลัด** — เปิดมือถือจริง (ไม่ใช่ dev-bypass) เช็ค: guest set ตอนไม่ล็อกอิน · skeleton ตอนโหลด · ทางลัด 6 อันถูกใจมั้ย/อยากปรับรายการ → ถ้าโอเคบอกให้ commit
+1. `SETTINGS-03` เสร็จแล้ว — เพิ่ม lib `qrcode` (เบสอนุมัติ) สร้าง QR ฝั่ง client, secret ไม่ออกนอกเครื่อง (commit แยก)
+2. เบสเปิด browser จริงเช็ค Phase 0 (โดยเฉพาะ: แท็บ active ติดถูกทุกหน้าใต้ /opcg/ · portfolio edit ราคาทุนหน่วยถูก · deck qty stepper · chat มือถือ · profile CTA ไม่ถูกทับ · 2FA QR ยังสแกนได้) → ถ้าโอเคเปิด PR `fix/uxui-phase-0`
+3. `SETS-05` + `CONTENT-03` (query trim) ย้ายไป Phase 5 surface work (correctness risk ต้องมี context เต็ม)
+4. **Phase 1 (ลบของตาย ~3,000 บรรทัด)** — ⚠️ ต้องเบสอนุมัติรายการลบก่อน (list ใน แผน §Phase 1)
+5. งานทั้งหมดบน branch `fix/uxui-phase-0` แยกจาก master · ห้าม push master ตรง
+
+## แหล่งอ้างอิง
+- **แผนแม่บท:** `doc/uxui-refactor-plan.md` (8 phases) · **หลักฐาน:** `doc/uxui-audit-findings-2026-07-04.md` (230 findings, อ้างด้วย ID)

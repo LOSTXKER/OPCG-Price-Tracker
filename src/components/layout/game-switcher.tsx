@@ -48,7 +48,7 @@ export function GameSwitcher({ className }: { className?: string }) {
   // On a MINE route the pill does nothing to the list — surface a one-time hint
   // pointing users at the in-page filter chips instead.
   const seg0 = pathname.split("/").filter(Boolean)[0] ?? "";
-  const isMineRoute = GAME_AGNOSTIC_FEATURES.has(seg0) || pathname.startsWith("/settings/alerts");
+  const isMineRoute = GAME_AGNOSTIC_FEATURES.has(seg0);
 
   // Switch game = stay on the same feature, swap the `/[game]` segment. Persist
   // the cookie so middleware redirects un-prefixed URLs to the chosen game too.

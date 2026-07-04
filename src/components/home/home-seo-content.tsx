@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import {
+  Briefcase,
   Calculator,
   GitCompareArrows,
   Layers,
@@ -10,7 +11,6 @@ import {
   Sparkles,
   Store,
   TrendingUp,
-  Wallet,
 } from "lucide-react";
 import { FaqSection, type FaqItem } from "@/components/shared/faq-section";
 import {
@@ -30,7 +30,7 @@ function buildFeatures(lang: Language) {
       href: "/market-overview",
     },
     {
-      icon: Wallet,
+      icon: Briefcase,
       title: t(lang, "seoFeatPortfolioTitle"),
       description: t(lang, "seoFeatPortfolioDesc"),
       href: "/portfolio",

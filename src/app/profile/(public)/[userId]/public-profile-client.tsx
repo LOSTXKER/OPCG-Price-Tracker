@@ -236,7 +236,7 @@ function PublicProfileLayout({
     stats.reviewCount === 0;
 
   return (
-    <div className={cn("pb-24 md:pb-16")}>
+    <div className={cn("pb-[calc(8.5rem+env(safe-area-inset-bottom))] md:pb-16")}>
       <div className="relative mx-auto w-full max-w-5xl px-5 pt-6 md:px-6 md:pt-8 lg:px-8">
         {/* Brand-warm cover banner (rounded card, not full-bleed) — gives
             the page colour without overwhelming the rest of the layout. */}
@@ -258,6 +258,7 @@ function PublicProfileLayout({
                 isOwner={isOwner}
                 viewerSavedSeller={viewerSavedSeller}
                 viewerIsSignedIn={viewerIsSignedIn}
+                onViewListings={allowedTabs.has("listings") ? () => setActiveTab("listings") : undefined}
                 lang={lang}
               />
             }

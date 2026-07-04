@@ -5,9 +5,9 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import {
-  Bookmark,
+  Briefcase,
   Crown,
-  Star,
+  Heart,
 } from "lucide-react";
 import { CommandSearchModal } from "@/components/shared/command-search";
 import { GameSwitcher } from "@/components/layout/game-switcher";
@@ -17,7 +17,8 @@ import { formatCount } from "@/lib/utils/currency";
 import { t } from "@/lib/i18n";
 import { useHeaderData } from "@/hooks/use-header-data";
 import { usePublicConfig } from "@/hooks/use-public-config";
-import { NAV_LINKS, MARKETPLACE_LINK, isActive } from "./header-constants";
+import { isNavActive } from "@/lib/game/constants";
+import { NAV_LINKS, MARKETPLACE_LINK } from "./header-constants";
 import { HeaderMarketTicker } from "./header-market-ticker";
 import { HeaderUserMenu } from "./header-user-menu";
 import { HeaderMobile } from "./header-mobile";
@@ -130,7 +131,7 @@ export function Header() {
 
           <nav className="flex items-center">
             {navLinks.map((link) => {
-              const active = isActive(pathname, link.href);
+              const active = isNavActive(pathname, link.href, link.owns);
               return (
                 <Link
                   key={link.href}
@@ -155,17 +156,17 @@ export function Header() {
               href="/portfolio"
               className={cn(
                 "ease-chrome flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
-                isActive(pathname, "/portfolio")
+                isNavActive(pathname, "/portfolio")
                   ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
-              <Star
+              <Briefcase
                 className={cn(
                   "size-3.5",
-                  isActive(pathname, "/portfolio")
-                    ? "fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400"
-                    : "fill-none text-muted-foreground/60"
+                  isNavActive(pathname, "/portfolio")
+                    ? "text-amber-500 dark:text-amber-400"
+                    : "text-muted-foreground/60"
                 )}
               />
               {t(language, "portfolioNav")}
@@ -175,12 +176,12 @@ export function Header() {
               href="/watchlist"
               className={cn(
                 "ease-chrome flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
-                isActive(pathname, "/watchlist")
+                isNavActive(pathname, "/watchlist")
                   ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
-              <Bookmark className="size-3.5 text-blue-500 dark:text-blue-400" />
+              <Heart className="size-3.5 text-rose-500 dark:text-rose-400" />
               {t(language, "watchlistNav")}
             </Link>
 
@@ -188,7 +189,7 @@ export function Header() {
               href="/honey"
               className={cn(
                 "ease-chrome relative flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
-                isActive(pathname, "/honey")
+                isNavActive(pathname, "/honey")
                   ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}

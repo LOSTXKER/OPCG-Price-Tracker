@@ -15,6 +15,7 @@ import {
 import { prisma } from "@/lib/db";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { BackButton } from "@/components/shared/back-button";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { t, type Language } from "@/lib/i18n";
@@ -211,10 +212,14 @@ export default async function GuideSetsPage() {
             { label: t(lang, "guideSetBreadcrumbGuide"), href: "/guide" },
             { label: t(lang, "guideSetBreadcrumbSets") },
           ]}
+          hideMobileBack
         />
-        <h1 className="text-h1">
-          {t(lang, "guideSetTitle")}
-        </h1>
+        <div className="flex items-center gap-3">
+          <BackButton href="/guide" label="Guide" className="md:hidden" />
+          <h1 className="text-h1">
+            {t(lang, "guideSetTitle")}
+          </h1>
+        </div>
         <p className="text-lg leading-relaxed text-muted-foreground">
           {t(lang, "guideSetIntro")}
         </p>

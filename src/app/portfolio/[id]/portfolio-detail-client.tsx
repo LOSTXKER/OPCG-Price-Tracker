@@ -10,6 +10,7 @@ import { toast } from "sonner"
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
 import { AuthPreviewGate } from "@/components/shared/login-gate"
 import { Breadcrumb } from "@/components/shared/breadcrumb"
+import { BackButton } from "@/components/shared/back-button"
 import { useAuthState } from "@/hooks/use-auth-state"
 import { PortfolioSwitcher } from "@/components/portfolio/portfolio-switcher"
 import { PortfolioHero } from "@/components/portfolio/portfolio-hero"
@@ -244,12 +245,14 @@ function PortfolioDetailContent({ portfolioId }: { portfolioId: number }) {
           { label: activePortfolio.name },
         ]}
         className="mb-0"
+        hideMobileBack
       />
 
-      {/* Top bar: switcher (navigates between portfolios) · tabs · actions.
-          PortfolioSwitcher is one component that already renders the mobile
-          pill (opens a manage dialog) and desktop dropdown internally. */}
+      {/* Top bar: back (mobile) · switcher (navigates between portfolios) · tabs
+          · actions. PortfolioSwitcher renders the mobile pill / desktop dropdown
+          internally. */}
       <div className="flex items-center gap-2">
+        <BackButton href="/portfolio" label={t(lang, "portfolioNav")} className="md:hidden" />
         <div className="min-w-0 flex-1">
           <PortfolioSwitcher
             portfolios={portfolioMetas}

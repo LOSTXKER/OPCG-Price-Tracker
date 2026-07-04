@@ -9,6 +9,7 @@ import { useProfileData } from "@/components/profile/profile-data-context";
 import { SectionAccount } from "@/components/profile/section-account";
 import { getTierConfig } from "@/components/profile/profile-types";
 import { useUIStore } from "@/stores/ui-store";
+import { usePublicConfig } from "@/hooks/use-public-config";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { SETTINGS_SECTIONS } from "./settings-shell";
@@ -16,6 +17,7 @@ import { SETTINGS_SECTIONS } from "./settings-shell";
 export default function SettingsIndexPage() {
   const lang = useUIStore((s) => s.language);
   const { data, settings, handleUserUpdate } = useProfileData();
+  const { config: publicConfig } = usePublicConfig();
 
   if (!data) return null;
 
@@ -23,17 +25,18 @@ export default function SettingsIndexPage() {
   const tierCfg = getTierConfig(subscription.tier);
 
   const visibleSections = SETTINGS_SECTIONS.filter(
-    (s) => !(s.id === "notifications" && !settings),
+    (s) =>
+      !(s.id === "notifications" && !settings) &&
+      !(s.id === "marketplace" && !publicConfig.marketplaceEnabled),
   );
   const generalSections = visibleSections.filter((s) => s.group === "general");
   const moreSections = visibleSections.filter((s) => s.group === "more");
 
   return (
     <>
-      {/* ── Mobile menu — iOS grouped-inset table view (desktop untouched below) ── */}
+      {/* ── Mobile menu — iOS grouped-inset table view (desktop untouched below) ──
+          Title + back button come from SettingsShell's mobile header. */}
       <div className="-mx-5 space-y-6 md:hidden">
-        <h1 className="text-large-title px-5">{t(lang, "profileSettings")}</h1>
-
         {/* Identity row — bigger avatar, own grouped card like /proto/ios/more */}
         <GroupedSection>
           <Link href={`/profile/${user.id}`} className="ease-chrome block transition-colors active:bg-muted/60">

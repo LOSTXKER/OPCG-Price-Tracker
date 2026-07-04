@@ -32,9 +32,16 @@ const NO_HEADER_FOOTER_ROUTES: ReadonlyArray<string | RegExp> = ["/more"];
 /**
  * Routes that should NOT be wrapped in the default `<main>` container — they
  * render their own full-bleed layout (e.g. public profile cover image).
+ * Public profile is reachable three ways that all resolve to the SAME client:
+ *   `/profile/<id>`, `/u/<handle>`, and `/@<handle>` (the canonical URL the
+ * Share menu hands out). middleware rewrites `/@handle` → `/u/handle` but the
+ * browser URL (what `usePathname()` sees) keeps the original, so all three
+ * patterns must be listed or the scaffold double-wraps (gutter + pt/pb + glow).
  */
 const FULL_WIDTH_ROUTES: ReadonlyArray<RegExp> = [
   /^\/profile\/.+/,
+  /^\/u\/.+/,
+  /^\/@.+/,
 ];
 
 /**

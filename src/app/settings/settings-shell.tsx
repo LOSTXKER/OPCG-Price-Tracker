@@ -4,8 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Bell,
-  BellRing,
-  ChevronLeft,
   CreditCard,
   Download,
   ExternalLink,
@@ -20,11 +18,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Surface } from "@/components/ui/surface";
+import { Breadcrumb, type BreadcrumbItem } from "@/components/shared/breadcrumb";
+import { BackButton } from "@/components/shared/back-button";
 import { ProfileDataProvider, useProfileData } from "@/components/profile/profile-data-context";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
 import { PageContainer } from "@/components/layout/page-container";
 import { getTierConfig } from "@/components/profile/profile-types";
 import { useAuthState } from "@/hooks/use-auth-state";
+import { usePublicConfig } from "@/hooks/use-public-config";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -36,7 +37,6 @@ export const SETTINGS_SECTIONS = [
   { id: "billing", href: "/settings/billing", icon: Receipt, labelKey: "billingHistory" as const, group: "general" as const },
   { id: "security", href: "/settings/security", icon: Shield, labelKey: "security" as const, group: "general" as const },
   { id: "notifications", href: "/settings/notifications", icon: Bell, labelKey: "notifications" as const, group: "general" as const },
-  { id: "alerts", href: "/settings/alerts", icon: BellRing, labelKey: "managePriceAlerts" as const, group: "general" as const },
   { id: "marketplace", href: "/settings/marketplace", icon: Store, labelKey: "marketplace" as const, group: "more" as const },
   { id: "addresses", href: "/settings/addresses", icon: MapPin, labelKey: "addresses" as const, group: "more" as const },
   { id: "export", href: "/settings/export", icon: Download, labelKey: "goToExport" as const, group: "more" as const },
@@ -50,7 +50,7 @@ export function SettingsShell({ children }: { children: React.ReactNode }) {
     return (
       <AuthPreviewGate
         preview={
-          <PageContainer width="reading" className="py-6">
+          <PageContainer inShell width="reading" className="py-6">
             <Surface variant="outline" padding="xl" className="text-center">
               <p className="text-sm text-muted-foreground">Sign in to manage your settings</p>
             </Surface>
@@ -72,19 +72,24 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
   const lang = useUIStore((s) => s.language);
   const { data, settings, loading, error } = useProfileData();
 
+  const { config: publicConfig } = usePublicConfig();
   const sectionSlug = pathname.split("/")[2];
   const isIndex = !sectionSlug;
   const activeSectionMeta = SETTINGS_SECTIONS.find((s) => s.id === sectionSlug);
 
+  // Hide marketplace settings while the marketplace flag is off — SPEC §4 says
+  // every marketplace surface must be invisible then (this was the last leak).
   const visibleSections = SETTINGS_SECTIONS.filter(
-    (s) => !(s.id === "notifications" && !settings),
+    (s) =>
+      !(s.id === "notifications" && !settings) &&
+      !(s.id === "marketplace" && !publicConfig.marketplaceEnabled),
   );
 
   if (loading) return <SettingsLoadingSkeleton />;
 
   if (!data) {
     return (
-      <PageContainer className="flex flex-col items-center gap-4 py-16 text-center">
+      <PageContainer inShell className="flex flex-col items-center gap-4 py-16 text-center">
         <p className="text-sm text-muted-foreground">{error ?? "User not found"}</p>
         <Link
           href="/login"
@@ -99,20 +104,38 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
   const { user, subscription } = data;
   const tierCfg = getTierConfig(subscription.tier);
 
+  // Same Breadcrumb component as the rest of the app — sub-pages get the shared
+  // circular back button on mobile (pointing to /settings) and the full trail on
+  // desktop, instead of a bespoke text link labelled with the current page.
+  const crumbs: BreadcrumbItem[] = isIndex
+    ? [{ label: "Home", href: "/" }, { label: t(lang, "profileSettings") }]
+    : [
+        { label: "Home", href: "/" },
+        { label: t(lang, "profileSettings"), href: "/settings" },
+        { label: activeSectionMeta ? t(lang, activeSectionMeta.labelKey) : t(lang, "profileSettings") },
+      ];
+  const mobileTitle = isIndex
+    ? t(lang, "profileSettings")
+    : activeSectionMeta
+      ? t(lang, activeSectionMeta.labelKey)
+      : t(lang, "profileSettings");
+
   return (
-    <PageContainer className="py-2 md:py-6">
-      {/* Mobile: back button on sub-routes */}
-      {!isIndex && (
-        <div className="mb-4 md:hidden">
-          <Link
-            href="/settings"
-            className="inline-flex items-center gap-1 text-sm font-medium text-primary motion-base active:text-primary/70"
-          >
-            <ChevronLeft className="size-4" />
-            {activeSectionMeta ? t(lang, activeSectionMeta.labelKey) : t(lang, "profileSettings")}
-          </Link>
-        </div>
-      )}
+    <PageContainer inShell className="py-2 md:py-6">
+      {/* Desktop: full breadcrumb trail */}
+      <div className="hidden md:block">
+        <Breadcrumb items={crumbs} />
+      </div>
+      {/* Mobile: prominent back button beside the page title (the section pages
+          hide their own h2 on mobile so this is the single title). Index →
+          /more (its parent hub), sub-pages → /settings. */}
+      <div className="mb-5 flex items-center gap-3 md:hidden">
+        <BackButton
+          href={isIndex ? "/more" : "/settings"}
+          label={isIndex ? t(lang, "more") : t(lang, "profileSettings")}
+        />
+        <h1 className="text-large-title">{mobileTitle}</h1>
+      </div>
 
       <div className="flex gap-10">
         {/* Desktop sidebar */}
@@ -200,7 +223,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
 
 function SettingsLoadingSkeleton() {
   return (
-    <PageContainer className="py-6">
+    <PageContainer inShell className="py-6">
       {/* Mobile skeleton */}
       <div className="space-y-5 md:hidden">
         <Skeleton className="h-7 w-32" />

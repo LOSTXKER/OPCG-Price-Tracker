@@ -13,11 +13,10 @@ import type { FilterDefinition } from "@/components/shared/filter-chips";
 
 export const revalidate = 300;
 
-export default async function HomePage(props: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  const sp = await props.searchParams;
-  const initialSearch = typeof sp.search === "string" ? sp.search : "";
+// No searchParams read here on purpose — reading them opts the page out of ISR
+// (forces per-request rendering). Search lives at /search; the home page stays
+// statically rendered and revalidates every 5 min.
+export default async function HomePage() {
   const {
     topGainers,
     topLosers,
@@ -108,7 +107,6 @@ export default async function HomePage(props: {
           initialTotalPages={initialTableTotalPages}
           filterDefinitions={filterDefinitions}
           sets={setOptions}
-          initialSearch={initialSearch}
         />
       </div>
 

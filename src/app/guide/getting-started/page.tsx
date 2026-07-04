@@ -18,6 +18,7 @@ import {
 import { prisma } from "@/lib/db";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { BackButton } from "@/components/shared/back-button";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
@@ -171,10 +172,14 @@ export default async function GettingStartedPage() {
             { label: "Guide", href: "/guide" },
             { label: t(lang, "guideStartBreadcrumb") },
           ]}
+          hideMobileBack
         />
-        <h1 className="text-h1">
-          {t(lang, "guideStartHeroTitle")}
-        </h1>
+        <div className="flex items-center gap-3">
+          <BackButton href="/guide" label="Guide" className="md:hidden" />
+          <h1 className="text-h1">
+            {t(lang, "guideStartHeroTitle")}
+          </h1>
+        </div>
         <p className="text-lg leading-relaxed text-muted-foreground">
           <strong className="text-foreground">One Piece Card Game (OPCG)</strong>
           {t(lang, "guideStartHeroP1a")}

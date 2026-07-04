@@ -236,7 +236,7 @@ export function AlertsManagerClient() {
   return (
     <div className="space-y-5 sm:space-y-6">
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
+        <div className="min-w-0 hidden md:block">
           <h2 className="text-h2">{t(lang, "managePriceAlerts")}</h2>
           <p className="page-subtitle">{t(lang, "managePriceAlertsSubtitle")}</p>
         </div>

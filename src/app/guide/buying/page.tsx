@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { ArrowRight, Layers, Store } from "lucide-react";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { BackButton } from "@/components/shared/back-button";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
@@ -71,10 +72,13 @@ export default async function BuyingGuidePage() {
           { label: "Home", href: "/" },
           { label: "Guide", href: "/guide" },
           { label: "Buying Guide" },
-        ]} />
-        <h1 className="font-sans text-h1">
-          Buying Guide
-        </h1>
+        ]} hideMobileBack />
+        <div className="flex items-center gap-3">
+          <BackButton href="/guide" label="Guide" className="md:hidden" />
+          <h1 className="font-sans text-h1">
+            Buying Guide
+          </h1>
+        </div>
         <p className="text-muted-foreground text-lg">
           {t(lang, "guideBuySubtitle")}
         </p>

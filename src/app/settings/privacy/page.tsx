@@ -13,7 +13,7 @@ export default function SettingsPrivacyPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <h2 className="text-h2">{t(lang, "privacy")}</h2>
+        <h2 className="text-h2 hidden md:block">{t(lang, "privacy")}</h2>
         <p className="text-meta">{t(lang, "privacySubtitle")}</p>
       </header>
 

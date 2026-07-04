@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
+import { BackButton } from "@/components/shared/back-button";
 
 export interface PageHeaderProps {
   title: ReactNode;
@@ -10,6 +11,11 @@ export interface PageHeaderProps {
   badge?: ReactNode;
   actions?: ReactNode;
   breadcrumb?: ReactNode;
+  /**
+   * Mobile back affordance. When set, a prominent honey back button renders
+   * inline-left of the title (mobile only — desktop uses the breadcrumb trail).
+   */
+  back?: { href: string; label: string };
   /**
    * Additional content rendered below the description (e.g. metadata row,
    * "X items · last updated 5m ago", filter chips). Rendered inside the title
@@ -36,6 +42,7 @@ export function PageHeader({
   badge,
   actions,
   breadcrumb,
+  back,
   children,
   className,
   align = "start",
@@ -74,6 +81,9 @@ export function PageHeader({
           )}
           <div className={cn("min-w-0", align === "center" && "text-center")}>
             <div className="flex flex-wrap items-center gap-2">
+              {back && (
+                <BackButton href={back.href} label={back.label} className="md:hidden" />
+              )}
               <h1 className={titleClass}>{title}</h1>
               {badge}
             </div>
