@@ -53,8 +53,8 @@ const BIO_OVERFLOW_LINES = 4;
  *     [LINE] [IG] [X] [FB]
  *     🏆 🏆 🏆  +2 more
  *
- * Quantitative stats (listings count, rating numbers) live in the dedicated
- * `ProfileStatTiles` strip below so this section can stay calm and readable.
+ * Quantitative stats (listings count, rating numbers) are intentionally left
+ * out of this section so it can stay calm and readable.
  */
 export function ProfileHero({
   user,
@@ -86,8 +86,8 @@ export function ProfileHero({
 
   const heroAchievements = achievements.slice(0, HERO_ACHIEVEMENT_LIMIT);
 
-  // Pull just the activity signal out of the meta parts. Listings / rating /
-  // reviews / joined now live in the dedicated stat tile strip below the hero.
+  // Pull just the activity signal out of the meta parts — this hero only
+  // ever renders the activity line.
   const activityItem = metaParts.find((m) => m.kind === "activity");
 
   return (

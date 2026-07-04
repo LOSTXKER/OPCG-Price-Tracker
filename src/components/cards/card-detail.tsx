@@ -5,7 +5,7 @@ import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from "
 import { Bell, ChevronRight, Eye, MoveHorizontal, Share2, ShoppingBag, Tag } from "lucide-react"
 
 import { Breadcrumb } from "@/components/shared/breadcrumb"
-import type { CardListing } from "@/components/cards/card-listings-section"
+import type { CardListing } from "@/components/cards/card-detail/types"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
