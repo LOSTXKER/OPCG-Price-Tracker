@@ -10,8 +10,8 @@ export interface BreadcrumbItem {
 }
 
 type BreadcrumbProps =
-  | { items: BreadcrumbItem[]; pathname?: never; labelMap?: never; className?: string }
-  | { items?: never; pathname: string; labelMap: Record<string, string>; className?: string }
+  | { items: BreadcrumbItem[]; pathname?: never; labelMap?: never; className?: string; hideMobileBack?: boolean }
+  | { items?: never; pathname: string; labelMap: Record<string, string>; className?: string; hideMobileBack?: boolean }
 
 function buildItemsFromPathname(pathname: string, labelMap: Record<string, string>): BreadcrumbItem[] {
   const segments = pathname.split("/").filter(Boolean)
@@ -52,9 +52,10 @@ export function Breadcrumb(props: BreadcrumbProps) {
   // margins on the visible one.
   return (
     <div className="min-w-0">
-      {parent?.href && (
+      {!props.hideMobileBack && parent?.href && (
         // Shared prominent honey back button (BackButton). -ml-1 optically aligns
-        // the circle with the content edge.
+        // the circle with the content edge. Pages that render their OWN inline
+        // back button (beside the title) pass `hideMobileBack` to avoid a second.
         <BackButton
           href={parent.href}
           label={parent.label}

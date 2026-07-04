@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Calendar, Eye, Tag } from "lucide-react";
+import { Calendar, Eye, Tag } from "lucide-react";
 import { cache } from "react";
 
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { BackButton } from "@/components/shared/back-button";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd, blogPostingJsonLd } from "@/lib/seo/json-ld";
 import { RelatedPages } from "@/components/shared/related-pages";
@@ -106,21 +106,17 @@ export default async function BlogPostPage({ params }: PageProps) {
           { label: "Blog", href: "/blog" },
           { label: post.title },
         ]}
+        hideMobileBack
       />
 
       <article className="mx-auto max-w-3xl space-y-8">
         <header className="space-y-4">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ArrowLeft className="size-4" />
-            บทความทั้งหมด
-          </Link>
-
-          <h1 className="text-h1 break-words leading-tight">
-            {post.title}
-          </h1>
+          <div className="flex items-start gap-3">
+            <BackButton href="/blog" label="Blog" className="mt-1 shrink-0 md:hidden" />
+            <h1 className="text-h1 break-words leading-tight">
+              {post.title}
+            </h1>
+          </div>
 
           <div className="flex flex-wrap items-center gap-3 text-meta">
             {post.author && (

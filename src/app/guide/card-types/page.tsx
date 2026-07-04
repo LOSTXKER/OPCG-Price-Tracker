@@ -22,6 +22,7 @@ import { t, type Language } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { BackButton } from "@/components/shared/back-button";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 
@@ -243,10 +244,14 @@ export default async function CardTypesPage() {
             { label: "Guide", href: "/guide" },
             { label: t(lang, "guideTypeBreadcrumb") },
           ]}
+          hideMobileBack
         />
-        <h1 className="text-h1">
-          {t(lang, "guideTypeTitle")}
-        </h1>
+        <div className="flex items-center gap-3">
+          <BackButton href="/guide" label="Guide" className="md:hidden" />
+          <h1 className="text-h1">
+            {t(lang, "guideTypeTitle")}
+          </h1>
+        </div>
         <p className="text-lg leading-relaxed text-muted-foreground">
           {t(lang, "guideTypeIntroP1a")}
           <strong className="text-foreground">{t(lang, "guideTypeIntroP1Strong")}</strong>
