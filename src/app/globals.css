@@ -446,7 +446,6 @@
 .status-danger  { color: var(--danger);  background-color: var(--danger-soft); }
 .status-info    { color: var(--info);    background-color: var(--info-soft); }
 .status-neutral { color: var(--muted-foreground); background-color: var(--muted); }
-.status-warn    { color: var(--warning); background-color: var(--warning-soft); }
 
 /* ------------------------------------------------------------------ */
 /* Typography tokens                                                   */

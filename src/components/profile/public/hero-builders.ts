@@ -86,50 +86,6 @@ export function buildHeroMeta({
   return out;
 }
 
-/* ── Trust chips ────────────────────────────────────────────────────────── */
-
-export type TrustChip = {
-  id: "response" | "deals";
-  iconKind: "zap" | "check";
-  label: string;
-  tone: string;
-};
-
-export function buildTrustChips(
-  sellerStats: SellerStats,
-  lang: Language,
-): TrustChip[] {
-  const out: TrustChip[] = [];
-
-  if (sellerStats.responseHours != null && sellerStats.responseHours <= 48) {
-    const h = Math.max(1, Math.round(sellerStats.responseHours));
-    const label =
-      sellerStats.responseHours <= 1
-        ? t(lang, "trustResponseFast")
-        : t(lang, "trustResponseHours").replace("{h}", String(h));
-    out.push({
-      id: "response",
-      iconKind: "zap",
-      label,
-      tone: "bg-amber-500/10 text-amber-700 dark:text-amber-300",
-    });
-  }
-
-  if (sellerStats.completedDeals > 0) {
-    out.push({
-      id: "deals",
-      iconKind: "check",
-      label: t(lang, "trustCompletedDeals").replace(
-        "{n}",
-        String(sellerStats.completedDeals),
-      ),
-      tone: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-    });
-  }
-
-  return out;
-}
-
 /* ── Social links ───────────────────────────────────────────────────────── */
 
 export type SocialLinkDescriptor = {

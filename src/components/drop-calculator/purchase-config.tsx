@@ -17,10 +17,9 @@ interface PurchaseConfigProps {
   dropRates: DropRate[]
   onUnitChange: (unit: Unit) => void
   onQuantityChange: (quantity: number) => void
-  compact?: boolean
 }
 
-export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuantityChange, compact }: PurchaseConfigProps) {
+export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuantityChange }: PurchaseConfigProps) {
   const lang = useUIStore((s) => s.language)
 
   const packs =
@@ -28,59 +27,6 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
       : unit === "box" ? PACKS_PER_BOX * quantity
         : PACKS_PER_BOX * BOXES_PER_CARTON * quantity
   const cards = packs * CARDS_PER_PACK_JP
-
-  if (compact) {
-    return (
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="flex rounded-lg border border-border bg-muted/40 p-0.5">
-          {PULL_UNITS.map((u) => (
-            <button
-              key={u}
-              onClick={() => onUnitChange(u)}
-              className={cn(
-                "rounded-md px-3 py-1 text-xs font-medium transition-all",
-                unit === u
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {t(lang, UNIT_I18N_KEYS[u])}
-            </button>
-          ))}
-        </div>
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
-            className="flex size-9 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted active:scale-95"
-          >
-            <Minus className="size-3" />
-          </button>
-          <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            value={quantity}
-            onChange={(e) => {
-              const v = e.target.value.replace(/\D/g, "")
-              onQuantityChange(Math.max(1, Math.min(99, Number(v) || 1)))
-            }}
-            className="h-9 w-12 rounded-md border border-border bg-background text-center font-mono text-sm font-semibold tabular-nums outline-none"
-          />
-          <button
-            onClick={() => onQuantityChange(Math.min(99, quantity + 1))}
-            className="flex size-9 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted active:scale-95"
-          >
-            <Plus className="size-3" />
-          </button>
-        </div>
-        <p className="text-meta">
-          {unit === "box" && `${quantity} ${t(lang, "boxUnit")} = ${packs} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
-          {unit === "pack" && `${quantity} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}
-          {unit === "carton" && `${quantity} ${t(lang, "cartonUnit")} = ${BOXES_PER_CARTON * quantity} ${t(lang, "boxUnit")} · ${cards} ${t(lang, "cardsCount")}`}
-        </p>
-      </div>
-    )
-  }
 
   const meaningful = dropRates
     .filter((dr) => {
