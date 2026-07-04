@@ -30,6 +30,27 @@ const CHROMELESS_ROUTES: ReadonlyArray<string | RegExp> = [
 const NO_HEADER_FOOTER_ROUTES: ReadonlyArray<string | RegExp> = ["/more"];
 
 /**
+ * App / utility routes where the marketing Footer is redundant on MOBILE — the
+ * BottomNav + "More" menu already cover navigation, so a full marketing footer
+ * stacked above a fixed bottom bar is just heavy chrome. The footer stays on
+ * `md+` (desktop has no bottom-nav) and on content/marketing routes at every
+ * width (home, sets, cards, guide, blog, pricing, market pages…) where it
+ * carries discovery links + SEO (mobile-first indexing reads the mobile DOM).
+ */
+const NO_MOBILE_FOOTER_ROUTES: ReadonlyArray<string | RegExp> = [
+  "/portfolio",
+  /^\/watchlist(\/|$)/,
+  /^\/honey(\/|$)/,
+  /^\/decks(\/|$)/,
+  "/drop-calculator",
+  "/compare",
+  "/search",
+  /^\/settings(\/|$)/,
+  /^\/orders(\/|$)/,
+  "/saved",
+];
+
+/**
  * Routes that should NOT be wrapped in the default `<main>` container — they
  * render their own full-bleed layout (e.g. public profile cover image).
  * Public profile is reachable three ways that all resolve to the SAME client:
@@ -94,6 +115,23 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const hidden = matches(pathname, CHROMELESS_ROUTES) || matches(pathname, NO_HEADER_FOOTER_ROUTES);
   if (hidden) return null;
+  return <>{children}</>;
+}
+
+/**
+ * Wraps the marketing Footer. Same hide rules as `SiteChrome`, plus: on
+ * app/utility routes the footer is dropped on mobile (`<md`) and only shown on
+ * desktop — see `NO_MOBILE_FOOTER_ROUTES`. Content/marketing routes keep it at
+ * every width.
+ */
+export function FooterChrome({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  if (matches(pathname, CHROMELESS_ROUTES) || matches(pathname, NO_HEADER_FOOTER_ROUTES)) {
+    return null;
+  }
+  if (matches(pathname, NO_MOBILE_FOOTER_ROUTES)) {
+    return <div className="hidden md:block">{children}</div>;
+  }
   return <>{children}</>;
 }
 

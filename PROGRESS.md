@@ -1,7 +1,14 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-04 — **Phase 0 + ปุ่มย้อน + Sheet ทางลัด + ไอคอนทั้งเว็บ + รวม watchlist↔alerts 2 แท็บ · branch `fix/uxui-phase-0` (ยังไม่ merge)**
+อัปเดตล่าสุด: 2026-07-04 — **PR #57 (Phase 0 + ปุ่มย้อน + Sheet + ไอคอน + รวม watchlist↔alerts) MERGED เข้า master แล้ว · ตอนนี้ทำ footer มือถือบน branch `fix/mobile-footer`**
+
+## ✅ เสร็จล่าสุด — ซ่อน marketing footer บนมือถือเฉพาะหน้าแอป (เบสสั่ง · branch `fix/mobile-footer`)
+footer การตลาดเต็มตัวเคยโผล่ทุกหน้าบนมือถือ ทับ bottom-nav = chrome ซ้ำซ้อน. เบสเลือก "ซ่อนเฉพาะหน้าแอป" (ไม่ใช่ทั้งหมด — กันเสียลิงก์/SEO บนหน้าคอนเทนต์)
+- **`FooterChrome` + `NO_MOBILE_FOOTER_ROUTES`** ใน `main-chrome.tsx` · layout.tsx ห่อ `<Footer>` ด้วย FooterChrome (แทน SiteChrome)
+- หน้าแอป/เครื่องมือ (พอร์ต·รายการโปรด·honey·ตั้งค่า·เด็ค·compare·search·orders·saved) → footer `hidden md:block` (ซ่อน <md) · **desktop + หน้าคอนเทนต์** (แรก·เซ็ต·การ์ด·คู่มือ·บล็อก·pricing·market/trending) → คงไว้ครบ (discovery+SEO)
+- **verify:** tsc0/lint0/build✓ · **DOM ยืนยัน**: /watchlist footer wrapper=`hidden md:block`, / (home) ไม่ห่อ (โผล่ทุก width)
+- ⚠️ PR pending (branch นี้แยกจาก master · ห้าม push master ตรง)
 
 ## ✅ เสร็จล่าสุด (session นี้) — รวม "รายการโปรด" + "แจ้งเตือนราคา" เป็นหน้าเดียว 2 แท็บ (เบสสั่ง · Phase 5 surface)
 เบส: 2 หน้านี้คล้ายกัน แยกแล้วงง → ให้ความเห็น + เสนอ 3 ทาง เบสเลือก **A. หน้าเดียว 2 แท็บ** (ไม่ยัดเป็นลิสต์เดียว เพราะ alert = card+ราคาเป้า+ทิศทาง, หลายเตือน/การ์ด + ประวัติ + LINE/tier ≠ 1 การ์ด/แถว)
