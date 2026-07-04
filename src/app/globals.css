@@ -2,6 +2,11 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* Docs are prose, not templates — don't let Tailwind auto-scan them for class
+   candidates. Findings/plan .md files quote class-like tokens (e.g.
+   `pb-[env(...)]`) that would generate broken utilities. */
+@source not "../../doc";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

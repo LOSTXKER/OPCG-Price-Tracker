@@ -2169,7 +2169,7 @@
 
 **ปัญหา:** utility .pb-safe ถูกสร้างมาแทน pattern env() แล้ว แต่ยังมีจุดหลงเหลือ 3-4 จุดที่เขียนแบบเดิม รวมถึงระยะ bottom-nav (4rem) ที่ฝังเป็น calc ซ้ำหลายที่
 
-**หลักฐาน:** globals.css:314-320 มี .pb-safe พร้อม comment บอกให้เลิก pb-[env(...)] แต่ consent-banner.tsx:25 และ honey-toast.tsx:50 ยังใช้ env() arbitrary · card-detail.tsx:939 ใช้ inline style bottom:calc(4rem+env(...))
+**หลักฐาน:** globals.css:314-320 มี .pb-safe พร้อม comment บอกให้เลิก pb-[env(safe-area-inset-bottom)] แต่ consent-banner.tsx:25 และ honey-toast.tsx:50 ยังใช้ env() arbitrary · card-detail.tsx:939 ใช้ inline style bottom:calc(4rem+env(safe-area-inset-bottom))
 
 **วิธีแก้ที่เสนอ:** กวาดที่เหลือมาใช้ .pb-safe และพิจารณาเพิ่ม token ความสูง bottom-nav (--bottom-nav-h) ให้ calc ทุกจุดอ่านจากตัวเดียว
 
