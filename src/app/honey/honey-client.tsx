@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PageHeader } from "@/components/layout/page-header";
@@ -21,6 +22,20 @@ import { RankingsTab } from "./components/rankings-tab";
 import { ReferralTab } from "./components/referral-tab";
 import { HoneyMockPreview } from "./components/honey-mock-preview";
 import { type TabKey } from "./types";
+
+const TAB_KEYS: readonly TabKey[] = [
+  "missions",
+  "activity",
+  "achievements",
+  "shop",
+  "raffle",
+  "rankings",
+  "referral",
+];
+
+function isTabKey(value: string | null): value is TabKey {
+  return value !== null && (TAB_KEYS as readonly string[]).includes(value);
+}
 
 export default function HoneyClient() {
   const { authed } = useAuthState();
@@ -62,13 +77,26 @@ export default function HoneyClient() {
   return (
     <>
       {header}
-      <HoneyContent />
+      <Suspense fallback={<Skeleton className="h-64 rounded-xl shadow-[var(--panel-shadow)]" />}>
+        <HoneyContent />
+      </Suspense>
     </>
   );
 }
 
 function HoneyContent() {
-  const [tab, setTab] = useState<TabKey>("missions");
+  // Tab lives in the URL (`?tab=`) so deep-links (e.g. /honey?tab=shop from the
+  // pricing page) land on the right tab and the back button steps between tabs.
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const tabParam = searchParams.get("tab");
+  const tab: TabKey = isTabKey(tabParam) ? tabParam : "missions";
+  const setTab = (next: TabKey) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", next);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
   const [checkinLoading, setCheckinLoading] = useState(false);
   const [claimFreeLoading, setClaimFreeLoading] = useState(false);
 

@@ -1,8 +1,5 @@
 import {
-  ArrowRightLeft,
   Crown,
-  Dices,
-  LayoutGrid,
   Sparkles,
   Star,
   User,
@@ -12,25 +9,16 @@ import type { Language, Currency } from "@/stores/ui-store";
 
 // Primary hubs (stable IA — mirrors the mobile bottom-nav). Marketplace is a
 // flag-gated card inside Browse, not a top-level hub — see MARKETPLACE_LINK.
+// `owns` = flat route prefixes with no nav item of their own; they keep this hub
+// lit while the user is inside them (see isNavActive in @/lib/game/constants).
 export const NAV_LINKS = [
-  { href: "/" as const, key: "market" as const },
-  { href: "/sets" as const, key: "browse" as const },
-  { href: "/decks" as const, key: "decks" as const },
+  { href: "/" as const, key: "market" as const, owns: [] as readonly string[] },
+  { href: "/sets" as const, key: "browse" as const, owns: ["/cards", "/search", "/trending", "/market-overview"] as readonly string[] },
+  { href: "/decks" as const, key: "decks" as const, owns: ["/compare", "/drop-calculator", "/deck-calculator"] as readonly string[] },
 ];
 
 // Appended to the desktop nav only when marketplaceEnabled (never swaps a hub).
-export const MARKETPLACE_LINK = { href: "/marketplace" as const, key: "marketplace" as const };
-
-export const TOOL_LINKS = [
-  { href: "/drop-calculator" as const, key: "dropCalculator" as const, icon: Dices },
-  { href: "/deck-calculator" as const, key: "deckCalculatorNav" as const, icon: LayoutGrid },
-  { href: "/compare" as const, key: "compareCards" as const, icon: ArrowRightLeft },
-];
-
-export function isActive(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
+export const MARKETPLACE_LINK = { href: "/marketplace" as const, key: "marketplace" as const, owns: [] as readonly string[] };
 
 export type AuthUser = {
   email?: string;

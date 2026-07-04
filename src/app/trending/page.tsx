@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { BarChart3, GitCompareArrows, Layers } from "lucide-react";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
@@ -8,8 +9,8 @@ import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
 import { TrendingTabs, TrendingPageHeader } from "./trending-tabs";
 
-export const dynamic = "force-dynamic";
-
+// ISR — trending data changes with the daily cron, not per request. The active
+// tab reads from `?tab=` client-side (in TrendingTabs) so the page stays static.
 export const revalidate = 300;
 
 export const metadata: Metadata = {
@@ -92,11 +93,7 @@ async function getTrendingData() {
 
 export type TrendingCardRow = Awaited<ReturnType<typeof getTrendingData>>["gainers24h"][number];
 
-export default async function TrendingPage(props: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  const sp = await props.searchParams;
-  const initialTab = typeof sp.tab === "string" ? sp.tab : "gainers";
+export default async function TrendingPage() {
   const data = await getTrendingData();
 
   return (
@@ -105,7 +102,9 @@ export default async function TrendingPage(props: {
       <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Trending" }]} />
       <div className="space-y-6">
         <TrendingPageHeader />
-        <TrendingTabs data={data} initialTab={initialTab} />
+        <Suspense>
+          <TrendingTabs data={data} />
+        </Suspense>
       </div>
       <RelatedPages
         items={[

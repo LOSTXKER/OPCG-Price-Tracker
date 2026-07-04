@@ -25,7 +25,10 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
   const [sending, setSending] = useState(false);
   const [offerDialogOpen, setOfferDialogOpen] = useState(false);
   const [counterOfferId, setCounterOfferId] = useState<number | null>(null);
-  const [showOrderPanel, setShowOrderPanel] = useState(true);
+  // Closed by default below lg — otherwise the absolute 320px order panel covers
+  // the whole chat AND its own toggle button on phones/tablets (unclosable). On
+  // lg+ the panel is `lg:static` and always visible regardless of this flag.
+  const [showOrderPanel, setShowOrderPanel] = useState(false);
   const [mobileView, setMobileView] = useState<"list" | "chat">(
     activeListingId ? "chat" : "list"
   );
@@ -298,6 +301,15 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
         {/* Order sidebar - toggle on tablet, always on desktop */}
         {listing && otherUser && (
           <>
+            {/* Tap-away backdrop below lg so the overlay panel is always closable. */}
+            {showOrderPanel && (
+              <button
+                type="button"
+                aria-label="Close order panel"
+                onClick={() => setShowOrderPanel(false)}
+                className="absolute inset-0 z-10 bg-foreground/20 lg:hidden"
+              />
+            )}
             <OrderSidebar
               listing={listing}
               otherUser={otherUser}

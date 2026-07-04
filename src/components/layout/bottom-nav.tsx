@@ -6,27 +6,33 @@ import { Bookmark, LayoutGrid, LineChart, Menu, Wallet } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
+import { isNavActive } from "@/lib/game/constants";
 import { useUIStore } from "@/stores/ui-store";
 
-function isTabActive(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
+// The 4 real-destination tabs. "More" is not here — it's the fallback tab that
+// lights up on any deep route none of these own (settings/honey/decks/messages…),
+// so the user never loses their sense of place (iOS tab grammar). `owns` lists
+// tab-less catalog routes that keep ชุดการ์ด lit while browsing.
+const TABS = [
+  { href: "/", key: "home", icon: LineChart, owns: [] as readonly string[] },
+  { href: "/sets", key: "sets", icon: LayoutGrid, owns: ["/cards", "/search", "/trending", "/market-overview"] as readonly string[] },
+  { href: "/watchlist", key: "watchlistNav", icon: Bookmark, owns: [] as readonly string[] },
+  { href: "/portfolio", key: "portfolioNav", icon: Wallet, owns: [] as readonly string[] },
+] as const;
 
 function TabLink({
   href,
   label,
   icon: Icon,
   badge,
-  pathname,
+  active,
 }: {
   href: string;
   label: string;
   icon: typeof LineChart;
   badge?: number;
-  pathname: string;
+  active: boolean;
 }) {
-  const active = isTabActive(pathname, href);
   return (
     <li className="min-w-0 flex-1">
       <Link
@@ -64,6 +70,10 @@ export function BottomNav({ className }: { className?: string }) {
   const lang = useUIStore((s) => s.language);
   const unread = useUIStore((s) => s.unreadMessages);
 
+  const tabActive = TABS.map((tab) => isNavActive(pathname, tab.href, tab.owns));
+  // "More" owns everything the 4 tabs don't — it's active whenever none of them are.
+  const moreActive = !tabActive.some(Boolean);
+
   return (
     <nav
       className={cn(
@@ -73,11 +83,16 @@ export function BottomNav({ className }: { className?: string }) {
       aria-label="Navigation"
     >
       <ul className="mx-auto flex max-w-lg items-stretch justify-around">
-        <TabLink href="/" label={t(lang, "home")} icon={LineChart} pathname={pathname} />
-        <TabLink href="/sets" label={t(lang, "sets")} icon={LayoutGrid} pathname={pathname} />
-        <TabLink href="/watchlist" label={t(lang, "watchlistNav")} icon={Bookmark} pathname={pathname} />
-        <TabLink href="/portfolio" label={t(lang, "portfolioNav")} icon={Wallet} pathname={pathname} />
-        <TabLink href="/more" label={t(lang, "more")} icon={Menu} badge={unread} pathname={pathname} />
+        {TABS.map((tab, i) => (
+          <TabLink
+            key={tab.href}
+            href={tab.href}
+            label={t(lang, tab.key)}
+            icon={tab.icon}
+            active={tabActive[i]}
+          />
+        ))}
+        <TabLink href="/more" label={t(lang, "more")} icon={Menu} badge={unread} active={moreActive} />
       </ul>
     </nav>
   );

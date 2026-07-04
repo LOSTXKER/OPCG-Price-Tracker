@@ -3,6 +3,7 @@
 import { memo, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { TrendingUp, TrendingDown, TrendingUpDown, Eye } from "lucide-react"
 
 import { PageHeader } from "@/components/layout/page-header"
@@ -194,12 +195,23 @@ function getChangeValue(card: TrendingCardRow, period: Period): number | null {
   return card.priceChange30d
 }
 
-export function TrendingTabs({ data, initialTab }: { data: TrendingData; initialTab: string }) {
-  const [activeTab, setActiveTab] = useState<TabId>(
-    (["gainers", "losers", "mostViewed"] as TabId[]).includes(initialTab as TabId)
-      ? (initialTab as TabId)
-      : "gainers"
+export function TrendingTabs({ data }: { data: TrendingData }) {
+  // Tab lives in `?tab=` so the page can stay statically rendered (ISR) and the
+  // tab is deep-linkable / back-button friendly.
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
+  const tabParam = searchParams.get("tab")
+  const activeTab: TabId = (["gainers", "losers", "mostViewed"] as TabId[]).includes(
+    tabParam as TabId,
   )
+    ? (tabParam as TabId)
+    : "gainers"
+  const setActiveTab = (next: TabId) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("tab", next)
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+  }
   const [period, setPeriod] = useState<Period>("24h")
   const lang = useUIStore((s) => s.language)
   const cards = getCards(data, activeTab, period)

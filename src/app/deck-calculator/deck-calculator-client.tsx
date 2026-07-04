@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { Plus, Trash2 } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
 
 import { AuthPreviewGate } from "@/components/shared/login-gate";
+import { useConfirm } from "@/components/shared/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Surface } from "@/components/ui/surface";
@@ -58,8 +59,12 @@ export default function DeckCalculatorClient() {
   return <DeckCalculatorContent />;
 }
 
+/** OPTCG allows up to 4 copies of a card by name. */
+const MAX_COPIES = 4;
+
 function DeckCalculatorContent() {
   const lang = useUIStore((s) => s.language);
+  const confirm = useConfirm();
   const [decks, setDecks] = useState<DeckRow[]>([]);
   const [activeDeck, setActiveDeck] = useState<DeckRow | null>(null);
   const [loading, setLoading] = useState(true);
@@ -115,20 +120,43 @@ function DeckCalculatorContent() {
 
   const addCard = async (card: CardSearchResult) => {
     if (!activeDeck) return;
+    // Adding a card that's already in the deck bumps its copy count (up to 4)
+    // instead of resetting it to 1 — and we keep the dialog open in card mode so
+    // several distinct cards can be added in one sitting (VISION §5.4).
+    const existingQty =
+      activeDeck.cards.find((e) => e.card.id === card.id)?.quantity ?? 0;
+    const body =
+      searchType === "leader"
+        ? { leaderId: card.id }
+        : { addCards: [{ cardId: card.id, quantity: Math.min(MAX_COPIES, existingQty + 1) }] };
     try {
-      const data = await apiPatch<{ deck: DeckRow }>(
-        `/api/decks/${activeDeck.id}`,
-        searchType === "leader"
-          ? { leaderId: card.id }
-          : { addCards: [{ cardId: card.id, quantity: 1 }] }
-      );
+      const data = await apiPatch<{ deck: DeckRow }>(`/api/decks/${activeDeck.id}`, body);
       setActiveDeck(data.deck);
       setDecks((prev) => prev.map((d) => (d.id === data.deck.id ? data.deck : d)));
     } catch (err) {
       setError(err instanceof ApiError ? err.message : t(lang, "addFailed"));
     }
-    setDialogOpen(false);
-    cardSearch.reset();
+    if (searchType === "leader") {
+      setDialogOpen(false);
+      cardSearch.reset();
+    }
+  };
+
+  const setCardQuantity = async (cardId: number, quantity: number) => {
+    if (!activeDeck) return;
+    if (quantity < 1) {
+      void removeCard(cardId);
+      return;
+    }
+    try {
+      const data = await apiPatch<{ deck: DeckRow }>(`/api/decks/${activeDeck.id}`, {
+        addCards: [{ cardId, quantity: Math.min(MAX_COPIES, quantity) }],
+      });
+      setActiveDeck(data.deck);
+      setDecks((prev) => prev.map((d) => (d.id === data.deck.id ? data.deck : d)));
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : t(lang, "addFailed"));
+    }
   };
 
   const removeCard = async (cardId: number) => {
@@ -152,6 +180,17 @@ function DeckCalculatorContent() {
     } catch (err) {
       setError(err instanceof ApiError ? err.message : t(lang, "addFailed"));
     }
+  };
+
+  const confirmDeleteDeck = async (deck: DeckRow) => {
+    const ok = await confirm({
+      title: `${t(lang, "deleteDeck")} · ${deck.name}`,
+      description: t(lang, "confirmDeleteDeck"),
+      confirmLabel: t(lang, "deleteDeck"),
+      cancelLabel: t(lang, "cancel"),
+      variant: "destructive",
+    });
+    if (ok) void deleteDeck(deck.id);
   };
 
   const totalPrice = useMemo(() => {
@@ -257,7 +296,7 @@ function DeckCalculatorContent() {
               <Button
                 variant="destructive"
                 size="sm"
-                onClick={() => void deleteDeck(activeDeck.id)}
+                onClick={() => void confirmDeleteDeck(activeDeck)}
               >
                 {t(lang, "deleteDeck")}
               </Button>
@@ -344,8 +383,30 @@ function DeckCalculatorContent() {
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{entry.card.nameEn ?? entry.card.nameJp}</p>
                       <p className="text-muted-foreground font-mono text-xs">
-                        {entry.card.cardCode} x{entry.quantity}
+                        {entry.card.cardCode}
                       </p>
+                    </div>
+                    <div className="flex items-center rounded-lg border border-[var(--p-hair)]">
+                      <button
+                        type="button"
+                        aria-label={t(lang, "decrease")}
+                        onClick={() => void setCardQuantity(entry.card.id, entry.quantity - 1)}
+                        className="ease-chrome flex size-9 items-center justify-center rounded-l-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+                      >
+                        <Minus className="size-3.5" />
+                      </button>
+                      <span className="w-6 text-center text-sm font-semibold tabular-nums">
+                        {entry.quantity}
+                      </span>
+                      <button
+                        type="button"
+                        aria-label={t(lang, "increase")}
+                        disabled={entry.quantity >= MAX_COPIES}
+                        onClick={() => void setCardQuantity(entry.card.id, entry.quantity + 1)}
+                        className="ease-chrome flex size-9 items-center justify-center rounded-r-lg text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent"
+                      >
+                        <Plus className="size-3.5" />
+                      </button>
                     </div>
                     <PriceDisplay
                       priceJpy={(entry.card.latestPriceJpy ?? 0) * entry.quantity}
@@ -355,7 +416,7 @@ function DeckCalculatorContent() {
                     <Button
                       variant="ghost"
                       size="icon-sm"
-                      aria-label="Remove card"
+                      aria-label={t(lang, "remove")}
                       onClick={() => void removeCard(entry.card.id)}
                     >
                       <Trash2 className="size-3.5 text-destructive" />

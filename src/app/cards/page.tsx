@@ -1,16 +1,15 @@
 import { redirect } from "next/navigation";
 
+/**
+ * Legacy `/cards` → the market lives on the home page now. A `?search=` from an
+ * old link goes to /search (the home page no longer reads searchParams so it can
+ * stay statically rendered); everything else just lands on home.
+ */
 export default async function CardsRedirect(props: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const sp = await props.searchParams;
-  const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(sp)) {
-    if (value != null) {
-      const v = Array.isArray(value) ? value[0] : value;
-      if (v) params.set(key, v);
-    }
-  }
-  const qs = params.toString();
-  redirect(qs ? `/?${qs}` : "/");
+  const rawSearch = sp.search;
+  const search = Array.isArray(rawSearch) ? rawSearch[0] : rawSearch;
+  redirect(search ? `/search?q=${encodeURIComponent(search)}` : "/");
 }

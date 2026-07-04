@@ -25,6 +25,7 @@ import { AuthPreviewGate } from "@/components/shared/login-gate";
 import { PageContainer } from "@/components/layout/page-container";
 import { getTierConfig } from "@/components/profile/profile-types";
 import { useAuthState } from "@/hooks/use-auth-state";
+import { usePublicConfig } from "@/hooks/use-public-config";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -50,7 +51,7 @@ export function SettingsShell({ children }: { children: React.ReactNode }) {
     return (
       <AuthPreviewGate
         preview={
-          <PageContainer width="reading" className="py-6">
+          <PageContainer inShell width="reading" className="py-6">
             <Surface variant="outline" padding="xl" className="text-center">
               <p className="text-sm text-muted-foreground">Sign in to manage your settings</p>
             </Surface>
@@ -72,19 +73,24 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
   const lang = useUIStore((s) => s.language);
   const { data, settings, loading, error } = useProfileData();
 
+  const { config: publicConfig } = usePublicConfig();
   const sectionSlug = pathname.split("/")[2];
   const isIndex = !sectionSlug;
   const activeSectionMeta = SETTINGS_SECTIONS.find((s) => s.id === sectionSlug);
 
+  // Hide marketplace settings while the marketplace flag is off — SPEC §4 says
+  // every marketplace surface must be invisible then (this was the last leak).
   const visibleSections = SETTINGS_SECTIONS.filter(
-    (s) => !(s.id === "notifications" && !settings),
+    (s) =>
+      !(s.id === "notifications" && !settings) &&
+      !(s.id === "marketplace" && !publicConfig.marketplaceEnabled),
   );
 
   if (loading) return <SettingsLoadingSkeleton />;
 
   if (!data) {
     return (
-      <PageContainer className="flex flex-col items-center gap-4 py-16 text-center">
+      <PageContainer inShell className="flex flex-col items-center gap-4 py-16 text-center">
         <p className="text-sm text-muted-foreground">{error ?? "User not found"}</p>
         <Link
           href="/login"
@@ -100,7 +106,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
   const tierCfg = getTierConfig(subscription.tier);
 
   return (
-    <PageContainer className="py-2 md:py-6">
+    <PageContainer inShell className="py-2 md:py-6">
       {/* Mobile: back button on sub-routes */}
       {!isIndex && (
         <div className="mb-4 md:hidden">
@@ -200,7 +206,7 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
 
 function SettingsLoadingSkeleton() {
   return (
-    <PageContainer className="py-6">
+    <PageContainer inShell className="py-6">
       {/* Mobile skeleton */}
       <div className="space-y-5 md:hidden">
         <Skeleton className="h-7 w-32" />

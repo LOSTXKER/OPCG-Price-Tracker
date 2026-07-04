@@ -64,3 +64,35 @@ export function isGamePrefix(seg: string | undefined | null): seg is string {
 export function isGameScopedSegment(seg: string | undefined | null): seg is string {
   return seg != null && GAME_SCOPED_SEGMENTS.has(seg)
 }
+
+/**
+ * Strip a leading game/aggregate prefix (`/opcg/…`, `/all/…`) from a pathname so
+ * a game-namespaced URL can be compared to flat nav hrefs. The client's
+ * `usePathname()` sees the prefixed URL (middleware rewrites keep the prefix in
+ * the browser), so nav highlighting must normalise it first.
+ */
+export function stripGamePrefix(pathname: string): string {
+  const segments = pathname.split("/")
+  if (isGamePrefix(segments[1])) {
+    const rest = segments.slice(2).join("/")
+    return rest ? `/${rest}` : "/"
+  }
+  return pathname
+}
+
+/**
+ * Whether `href` should read as the active nav item for `pathname`. Prefix-aware
+ * (normalises `/opcg` · `/all`) and owner-aware: `owns` lists route prefixes that
+ * have no tab of their own and should light up THIS hub while the user is deep in
+ * its stack (iOS tab grammar — the owning tab stays lit).
+ */
+export function isNavActive(
+  pathname: string,
+  href: string,
+  owns: readonly string[] = [],
+): boolean {
+  const path = stripGamePrefix(pathname)
+  const hit = (target: string) =>
+    target === "/" ? path === "/" : path === target || path.startsWith(`${target}/`)
+  return hit(href) || owns.some(hit)
+}

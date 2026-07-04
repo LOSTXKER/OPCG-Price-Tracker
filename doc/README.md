@@ -9,6 +9,8 @@
 | [honey-economy-rebalance.md](honey-economy-rebalance.md) | gamification economy: earn / spend / multipliers / anti-abuse + เหตุผลออกแบบ | PLAN.md M1 |
 | [honey-action-type-migration.md](honey-action-type-migration.md) | runbook ย้าย `HoneyActionType` enum เก่า (วันนี้ freeze-only) | PLAN.md M2 |
 | [MARKETPLACE_OVERHAUL.md](MARKETPLACE_OVERHAUL.md) | สเปก marketplace / seller-center — BUILT vs PENDING | PLAN.md M3 |
+| [uxui-refactor-plan.md](uxui-refactor-plan.md) | **แผนแม่บท UX/UI refactor ทั้งเว็บ** (8 phases · checklist ติ๊กได้ · กติกา) | PLAN.md §🧭 |
+| [uxui-audit-findings-2026-07-04.md](uxui-audit-findings-2026-07-04.md) | หลักฐาน audit 230 findings (generate จาก workflow — ห้ามแก้มือ) | uxui-refactor-plan.md |
 
 ### archive/ — snapshot ประวัติ (ไม่อัปเดต)
 - `REDESIGN.md` — แผน redesign เฟสแรก (P0–P2, mobile-first IA) · เสร็จ+merge แล้ว · ทิศปัจจุบันอยู่ `VISION.md` ที่ root
