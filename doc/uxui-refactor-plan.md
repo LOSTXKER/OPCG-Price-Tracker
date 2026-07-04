@@ -64,7 +64,7 @@
 ### Phase 0 — แก้ของพัง/เสี่ยงจริง ตอนนี้เลย (17 ข้อ · เกือบทั้งหมด effort S)
 > เกณฑ์คัดเข้า phase นี้: ผู้ใช้กดแล้วไม่ทำงาน / ข้อมูลเสี่ยงเพี้ยน / ความปลอดภัย / perf ที่แก้ 1 บรรทัด — ทุกข้อผ่าน verify แล้ว
 
-- [ ] `SETTINGS-03` 🔴 **2FA QR ส่ง TOTP secret ให้ api.qrserver.com** → สร้าง QR ฝั่ง client เอง — ⏸️ **รอเบสเคาะ: เพิ่ม lib `qrcode` มั้ย** (เขียน QR encoder เองไม่คุ้ม/เสี่ยง)
+- [x] `SETTINGS-03` 🔴 **2FA QR ส่ง TOTP secret ให้ api.qrserver.com** → เบสอนุมัติเพิ่ม lib `qrcode` · สร้าง QR ฝั่ง client (`QRCode.toDataURL`) — secret ไม่ออกนอกเครื่องแล้ว
 - [x] `PORTFOLIO-03` แก้ราคาทุนใน edit dialog แล้วหน่วยเงินเพี้ยน → แปลงสกุลไป-กลับเหมือน add flow + symbol prefix + string-compare กัน round-trip drift (single + bulk dialog)
 - [x] `IA-NAV-01` + `IA-NAV-07` + `CHROME-06` แท็บ active ไม่ติดทั้งแอปเมื่ออยู่ใต้ `/opcg/` → `isNavActive` helper เดียวใน lib/game (strip prefix + owner-aware), More = fallback, ลบ TOOL_LINKS
 - [x] `CHROME-01` (= `IDENTITY-02`) แถบ CTA "ทักผู้ขาย" หน้าโปรไฟล์ถูก bottom-nav ทับ → ยกขึ้น `calc(4rem+safe)` + เพิ่ม pb ให้เนื้อหาพ้น 2 แถบ

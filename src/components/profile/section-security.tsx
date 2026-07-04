@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import QRCode from "qrcode";
 import {
   CheckCircle2,
   Eye,
@@ -74,7 +75,28 @@ export function SectionSecurity() {
   const [loadingMfa, setLoadingMfa] = useState(true);
   const [mfaStep, setMfaStep] = useState<"idle" | "enrolling" | "verifying" | "disabling">("idle");
   const [qrUri, setQrUri] = useState<string | null>(null);
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [totpSecret, setTotpSecret] = useState<string | null>(null);
+
+  // Render the TOTP QR locally so the 2FA secret never leaves the browser
+  // (it used to be sent to a third-party QR image service — a real leak).
+  useEffect(() => {
+    if (!qrUri) {
+      setQrDataUrl(null);
+      return;
+    }
+    let cancelled = false;
+    QRCode.toDataURL(qrUri, { width: 200, margin: 1 })
+      .then((url) => {
+        if (!cancelled) setQrDataUrl(url);
+      })
+      .catch(() => {
+        if (!cancelled) setQrDataUrl(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [qrUri]);
   const [enrollFactorId, setEnrollFactorId] = useState<string | null>(null);
   const [totpCode, setTotpCode] = useState("");
   const [mfaError, setMfaError] = useState<string | null>(null);
@@ -354,11 +376,12 @@ export function SectionSecurity() {
           )
         ) : mfaStep === "verifying" ? (
           <div className="space-y-4">
-            {qrUri && (
+            {qrDataUrl && (
               <div className="flex flex-col items-center gap-3 rounded-lg border border-[var(--p-hair)] bg-white p-4">
                 <p className="text-xs font-medium text-neutral-600">{t(lang, "scanQR")}</p>
+                {/* eslint-disable-next-line @next/next/no-img-element -- data: URI, no network/optimization involved */}
                 <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUri)}`}
+                  src={qrDataUrl}
                   alt="2FA QR Code"
                   className="size-48"
                 />

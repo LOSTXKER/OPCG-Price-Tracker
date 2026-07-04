@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-04 — **UX/UI Refactor Phase 0 เสร็จ 16/17 (verify ครบ) · branch `fix/uxui-phase-0`**
+อัปเดตล่าสุด: 2026-07-04 — **UX/UI Refactor Phase 0 เสร็จครบ 17/17 (verify ครบ) · branch `fix/uxui-phase-0`**
 
 ## ✅ เสร็จ session นี้ — Phase 0 (แก้ของพัง/เสี่ยงจริง) ตามแผน doc/uxui-refactor-plan.md
 เบสสั่ง "เริ่ม Phase 0 ได้" — แก้ 16 ข้อ (branch `fix/uxui-phase-0`, ยังไม่ merge). แผนแม่บท + หลักฐาน 230 findings อยู่ `doc/uxui-refactor-plan.md` + `doc/uxui-audit-findings-2026-07-04.md` (ทำ session ก่อน).
@@ -22,8 +22,8 @@
 **verify:** tsc 0 · lint 0 error (34 warning เดิม) · test 56/56 · **build ✓** (ยืนยัน index.html + market-overview.html prerendered, trending `○ 5m`) · i18n +5 key ×3 (confirmDeleteDeck/decrease/increase + rename profileReportSent→profileReportSoon) parity ครบ · **ยังไม่ได้เปิด browser จริงดู** (เบสช่วยเช็คได้)
 
 ## ⏭️ NEXT
-1. **⏸️ `SETTINGS-03` (2FA QR รั่วให้ api.qrserver.com) — รอเบสเคาะ:** จะเพิ่ม lib `qrcode` (สร้าง QR ฝั่ง client) มั้ย? เขียน QR encoder เองไม่คุ้ม/เสี่ยง — นี่คือข้อ security ที่ severity สูงสุดใน Phase 0 ควรจบก่อน
-2. เบสเปิด browser จริงเช็ค Phase 0 (โดยเฉพาะ: แท็บ active ติดถูกทุกหน้าใต้ /opcg/ · portfolio edit ราคาทุนหน่วยถูก · deck qty stepper · chat มือถือ · profile CTA ไม่ถูกทับ) → ถ้าโอเคเปิด PR `fix/uxui-phase-0`
+1. `SETTINGS-03` เสร็จแล้ว — เพิ่ม lib `qrcode` (เบสอนุมัติ) สร้าง QR ฝั่ง client, secret ไม่ออกนอกเครื่อง (commit แยก)
+2. เบสเปิด browser จริงเช็ค Phase 0 (โดยเฉพาะ: แท็บ active ติดถูกทุกหน้าใต้ /opcg/ · portfolio edit ราคาทุนหน่วยถูก · deck qty stepper · chat มือถือ · profile CTA ไม่ถูกทับ · 2FA QR ยังสแกนได้) → ถ้าโอเคเปิด PR `fix/uxui-phase-0`
 3. `SETS-05` + `CONTENT-03` (query trim) ย้ายไป Phase 5 surface work (correctness risk ต้องมี context เต็ม)
 4. **Phase 1 (ลบของตาย ~3,000 บรรทัด)** — ⚠️ ต้องเบสอนุมัติรายการลบก่อน (list ใน แผน §Phase 1)
 5. งานทั้งหมดบน branch `fix/uxui-phase-0` แยกจาก master · ห้าม push master ตรง

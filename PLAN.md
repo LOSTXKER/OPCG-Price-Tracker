@@ -6,7 +6,7 @@
 > จาก audit ทั้งเว็บ (workflow 86 agents · 19 auditors + adversarial verify) ได้ 230 findings — **checklist รายข้อ + กติกา: [doc/uxui-refactor-plan.md](doc/uxui-refactor-plan.md)** · หลักฐานราย finding: [doc/uxui-audit-findings-2026-07-04.md](doc/uxui-audit-findings-2026-07-04.md) · ที่นี่ติ๊กระดับ phase เท่านั้น
 > แผนนี้ดูดซับงานค้างเดิม: R1 empty-state → Phase 4 · แตก client ยักษ์ → Phase 2/5 · Declutter Batch 5–6 → Phase 5 (honey/desktop balance)
 
-- [~] **Phase 0** แก้ของพัง/เสี่ยงจริง — **16/17 เสร็จ + verify (tsc0/lint0/test56/build✓ prerender static)** · เหลือ `SETTINGS-03` (2FA QR) รอเบสเคาะเพิ่ม lib qrcode · `SETS-05`/`CONTENT-03` ย้ายไป Phase 5 (query risk)
+- [x] **Phase 0** แก้ของพัง/เสี่ยงจริง — **17/17 เสร็จ + verify (tsc0/lint0/test56/build✓ prerender static)** · `SETTINGS-03` แก้แล้ว (เบสอนุมัติ lib qrcode) · `SETS-05`/`CONTENT-03` ย้ายไป Phase 5 (query risk) · branch `fix/uxui-phase-0` รอ merge
 - [ ] **Phase 1** ลบของตาย ~3,000+ บรรทัด / orphan 18+ ไฟล์ (⚠️ เบสอนุมัติรายการลบก่อน)
 - [ ] **Phase 2** ประกาศ kit ทางการใน AGENTS.md + ยุบของซ้ำ (PriceTag เดียว · search engine เดียวจาก 3 ชุด · auth kit · Switch/QtyStepper/TabBar · AdminDataTable 8 หน้า)
 - [ ] **Phase 3** token sweep (hairline เดียว · elevation adoption · radius มาตรฐาน · status 660 จุด · วินัยเขียว/แดง)
