@@ -21,6 +21,15 @@
 
 **verify:** tsc 0 · lint 0 error (34 warning เดิม) · test 56/56 · **build ✓** (ยืนยัน index.html + market-overview.html prerendered, trending `○ 5m`) · i18n +5 key ×3 (confirmDeleteDeck/decrease/increase + rename profileReportSent→profileReportSoon) parity ครบ · **ยังไม่ได้เปิด browser จริงดู** (เบสช่วยเช็คได้)
 
+## ✅ เสร็จต่อ (session นี้) — ปุ่มย้อนมือถือ redesign ทั้งแอป (เบสสั่งระหว่างรีวิว)
+เบส feedback: ปุ่มย้อน (1) กลืนพื้นหลัง (2) ลอยเหนือหัวข้อไม่สมมาตร (3) อยากอยู่ข้างหัวข้อแบบแอปอื่น (4) /settings ต้องมีด้วย → เบสเคาะสี honey ทึบ + "ทำ inline ให้ครบทุกหน้า"
+- **`BackButton` component ใหม่** (`src/components/shared/back-button.tsx`) — วงกลม honey ทึบ (`bg-primary`) เด่นทุกพื้นหลัง
+- **inline ข้างหัวข้อ (มือถือ)**: settings (index→/more, sub→/settings, ซ่อน section h2 มือถือ) · portfolio/[id] · guide ×6 · blog/[slug] (ลบลิงก์ "บทความทั้งหมด" เก่า)
+- **Breadcrumb** +prop `hideMobileBack` (หน้าที่มี inline เองปิดปุ่ม block กันซ้ำ) · **PageHeader** +prop `back`
+- **hero pages** (set/card detail) คงปุ่มเด่นบนซ้าย (block) — layout การ์ดเป็นพระเอก ไม่เหมาะดัน inline กลางหน้า · **commerce** (orders/seller/marketplace ปิด flag) → Phase 7
+- **verify:** tsc0/lint0/build✓ + **ยืนยันด้วย production server (`next start` :3100) ผ่าน browser extension: guide page ปุ่มย้อน 1 อันเดียว inline ข้างหัวข้อ honey เด่น (dark mode ทองสว่างมาก)**
+- ⚠️ **dev server (:3000) ของเบส HMR shared component (Breadcrumb) ค้าง** — เห็นปุ่ม 2 อัน (stale) · โค้ดถูก 100% (build ผ่าน + production ยืนยัน) · **เบสต้อง restart dev: `rm -rf .next && npm run dev`** ถึงเห็นถูก (+ ผมรัน build หลายรอบ อาจกวน .next dev ด้วย)
+
 ## ⏭️ NEXT
 1. `SETTINGS-03` เสร็จแล้ว — เพิ่ม lib `qrcode` (เบสอนุมัติ) สร้าง QR ฝั่ง client, secret ไม่ออกนอกเครื่อง (commit แยก)
 2. เบสเปิด browser จริงเช็ค Phase 0 (โดยเฉพาะ: แท็บ active ติดถูกทุกหน้าใต้ /opcg/ · portfolio edit ราคาทุนหน่วยถูก · deck qty stepper · chat มือถือ · profile CTA ไม่ถูกทับ · 2FA QR ยังสแกนได้) → ถ้าโอเคเปิด PR `fix/uxui-phase-0`
