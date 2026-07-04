@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { SettingsShell } from "./settings-shell";
 
 export const metadata: Metadata = {
@@ -15,12 +14,11 @@ export default function SettingsLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Breadcrumb (incl. the mobile back button) lives in SettingsShell now — it
+  // knows the active sub-section, so it can render the shared 3-level trail.
   return (
-    <>
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Settings" }]} />
-      <Suspense>
-        <SettingsShell>{children}</SettingsShell>
-      </Suspense>
-    </>
+    <Suspense>
+      <SettingsShell>{children}</SettingsShell>
+    </Suspense>
   );
 }
