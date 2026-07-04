@@ -115,7 +115,6 @@ export interface CardDetailProps {
     chartData: { scrapedAt: string; priceJpy: number | null; priceThb: number | null; priceUsd: number | null; source?: string; gradeCondition?: string | null; type?: string | null }[]
   }
   siblings: SiblingCard[]
-  communityPrice?: { avgThb: number | null; reportCount: number } | null
   relatedCards?: RelatedCard[]
   snkrdunkPrices?: {
     minPriceUsd: number | null
@@ -123,7 +122,6 @@ export interface CardDetailProps {
     psa10SoldUsd: number | null
     lastSoldUsd: number | null
   } | null
-  availableSources?: { id: string; label: string; source?: string; grade?: string; currency: "JPY" | "USD" }[]
   sourcePricesRaw?: { source: string; askPriceJpy: number | null; askPriceThb: number | null; askPriceUsd: number | null; soldPriceJpy: number | null; soldPriceThb: number | null; soldPriceUsd: number | null; updatedAt: string | null }[]
   sourcePricesPsa10?: { source: string; askPriceJpy: number | null; askPriceThb: number | null; askPriceUsd: number | null; soldPriceJpy: number | null; soldPriceThb: number | null; soldPriceUsd: number | null; updatedAt: string | null }[]
   /** ISO timestamp of the most recent price observation across all sources. */
@@ -624,7 +622,7 @@ export function CardDetail({
               {datum.hasData && datum.value.isEst && <EstMark lang={displayLang} className="pb-1.5" />}
               {shownDelta != null && (
                 <span className="inline-flex items-baseline gap-x-1.5 pb-1">
-                  <Delta pct={shownDelta} lang={displayLang} size="lg" />
+                  <Delta pct={shownDelta} lang={displayLang} />
                   <span className="text-meta">{shownDate ?? windowLabel}</span>
                 </span>
               )}
@@ -821,7 +819,6 @@ export function CardDetail({
                 lang={displayLang}
                 latestUpdatedAt={latestUpdatedAt}
                 range={range}
-                indexed={false}
               />
             </div>
           ) : (

@@ -8,8 +8,6 @@
 
 import type { CardListing } from "@/components/cards/card-listings-section"
 
-import type { Stat } from "./grades"
-
 // ~1 point/day (or sparser) — honest cadence: the real scrape yields one price/day, so
 // the mock must NOT imply sub-daily resolution (7D=28 read as 4 pts/day = fake intraday;
 // INTRADAY_ENABLED=false). Short windows = daily; long windows stay ≤ daily. Swap for real
@@ -76,60 +74,6 @@ export function mockGradeSeries(
   const out: Record<string, number[]> = {}
   for (const g of grades) out[g.key] = mockSeries(g.base, g.up, range, g.pct)
   return out
-}
-
-export type MockComp = {
-  source: string
-  grade: string
-  price: number
-  priceJpy?: number | null
-  priceUsd?: number | null
-  whenDays: number
-}
-
-type MockCompOptions = {
-  /** Forces the newest receipt row to match the hero/triad "last sale". */
-  firstSale?: Stat | null
-}
-
-const SOURCES = ["SNKRDUNK", "eBay", "Yuyutei", "TCGplayer", "Cardmarket"]
-
-/** A clean recent-sales list (proto-style) seeded by `base`. */
-export function mockComps(
-  base: number | null,
-  gradeLabel: string,
-  count = 7,
-  options: MockCompOptions = {},
-): MockComp[] {
-  const b = base && base > 0 ? base : 1200
-  const sourceSeed = Math.abs(Math.round(b)) % SOURCES.length
-  return Array.from({ length: count }, (_, i) => ({
-    source: SOURCES[(i + sourceSeed) % SOURCES.length],
-    grade: gradeLabel,
-    ...(() => {
-      if (i === 0 && options.firstSale && (options.firstSale.jpy != null || options.firstSale.usd != null)) {
-        return {
-          source: "SNKRDUNK",
-          price: Math.round(options.firstSale.jpy ?? options.firstSale.usd ?? b),
-          priceJpy: options.firstSale.jpy,
-          priceUsd: options.firstSale.usd,
-          whenDays: 0,
-        }
-      }
-      return {
-        price: Math.round(b * (1 + 0.05 * Math.sin(i + (b % 7)) - (0.015 * i) / count)),
-        priceJpy: null,
-        priceUsd: null,
-        whenDays: i === 0 ? 1 : i * 2 + (Math.round(b) % 3),
-      }
-    })(),
-  })).sort((a, b) => a.whenDays - b.whenDays)
-}
-
-/** A plausible 30-day sales count seeded by `base`. */
-export function mockSales30d(base: number | null): number {
-  const b = base && base > 0 ? base : 1200
-  return 120 + (Math.abs(Math.round(b)) % 1400)
 }
 
 // ── Recent sale history (multi-source) ──────────────────────────────────────

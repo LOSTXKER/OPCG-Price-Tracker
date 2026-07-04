@@ -3,8 +3,6 @@ import type { Prisma } from "@/generated/prisma/client"
 import { prisma } from "@/lib/db"
 import { PRICE_SOURCE } from "@/lib/constants/prices"
 
-const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000
-
 /**
  * Resolve a card by code with the standard fallback chain:
  *   1. exact `cardCode` match (URL-decoded)
@@ -144,21 +142,6 @@ export const getRelatedFromSameSet = cache(async (setId: number, excludeId: numb
   return [...withPrice, ...rest]
 })
 
-export const getCommunityPrice = cache(async (cardId: number) => {
-  const result = await prisma.communityPrice.aggregate({
-    where: {
-      cardId,
-      createdAt: { gte: new Date(Date.now() - THIRTY_DAYS_MS) },
-    },
-    _avg: { priceThb: true },
-    _count: true,
-  })
-  return {
-    avgThb: result._avg.priceThb ? Math.round(result._avg.priceThb) : null,
-    reportCount: result._count,
-  }
-})
-
 export const getListingsForCard = cache(async (cardId: number) => {
   return prisma.listing.findMany({
     where: { cardId, status: "ACTIVE" },
@@ -235,38 +218,6 @@ export function deriveSnkrdunkPrices(
     psa10SoldUsd: soldPsa10?.priceUsd ?? null,
     lastSoldUsd: soldAny?.priceUsd ?? null,
   }
-}
-
-export type ChartSourceOption = {
-  id: string
-  label: string
-  source?: string
-  grade?: string
-  currency: "JPY" | "USD"
-}
-
-export function getChartSources(
-  prices: { source: string; gradeCondition: string | null; priceUsd: number | null }[]
-): ChartSourceOption[] {
-  const sources: ChartSourceOption[] = [
-    { id: PRICE_SOURCE.YUYUTEI, label: "Yuyu-tei", source: PRICE_SOURCE.YUYUTEI, currency: "JPY" },
-  ]
-
-  const hasSnkrRaw = prices.some(
-    (p) => p.source === PRICE_SOURCE.SNKRDUNK && !p.gradeCondition && p.priceUsd != null,
-  )
-  const hasSnkrPsa10 = prices.some(
-    (p) => p.source === PRICE_SOURCE.SNKRDUNK && p.gradeCondition === PRICE_SOURCE.PSA_10 && p.priceUsd != null,
-  )
-
-  if (hasSnkrRaw) {
-    sources.push({ id: "SNKRDUNK_RAW", label: PRICE_SOURCE.SNKRDUNK, source: PRICE_SOURCE.SNKRDUNK, grade: "raw", currency: "USD" })
-  }
-  if (hasSnkrPsa10) {
-    sources.push({ id: "SNKRDUNK_PSA10", label: PRICE_SOURCE.PSA_10, source: PRICE_SOURCE.SNKRDUNK, grade: PRICE_SOURCE.PSA_10, currency: "USD" })
-  }
-
-  return sources
 }
 
 export type SourcePriceRow = {

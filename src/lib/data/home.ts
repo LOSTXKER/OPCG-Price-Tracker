@@ -46,22 +46,13 @@ export async function getHomeData() {
     ])
 
     const [
-      newestSet,
       totalCards,
-      totalValueAgg,
       initialTableCards,
       initialTableTotal,
       sets,
       rarityRows,
     ] = await Promise.all([
-      prisma.cardSet.findFirst({
-        orderBy: [{ releaseDate: "desc" }, { createdAt: "desc" }],
-      }),
       prisma.card.count(),
-      prisma.card.aggregate({
-        _sum: { latestPriceJpy: true },
-        where: { latestPriceJpy: { gt: 0 } },
-      }),
       prisma.card.findMany({
         orderBy: { latestPriceJpy: { sort: "desc", nulls: "last" } },
         take: TABLE_PAGE_SIZE,
@@ -99,15 +90,11 @@ export async function getHomeData() {
       }),
     ])
 
-    const totalValue = totalValueAgg._sum.latestPriceJpy ?? 0
-
     return {
       topGainers,
       topLosers,
       highestPriced,
-      newestSet,
       totalCards,
-      totalValue,
       initialTableCards,
       initialTableTotal,
       initialTableTotalPages: Math.ceil(initialTableTotal / TABLE_PAGE_SIZE),

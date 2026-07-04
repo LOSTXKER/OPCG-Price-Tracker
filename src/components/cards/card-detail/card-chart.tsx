@@ -156,7 +156,6 @@ export function ScrubChart({
   lang,
   latestUpdatedAt,
   range,
-  indexed,
 }: {
   series: ChartSeries[]
   activeIndex: number | null
@@ -165,8 +164,6 @@ export function ScrubChart({
   lang: Language
   latestUpdatedAt?: string | null
   range: (typeof RANGES)[number]
-  /** Index every series to 100 at window start (% axis) — for cross-magnitude compare. */
-  indexed?: boolean
 }) {
   const currency = useUIStore((s) => s.currency)
   // Fluid size — render at REAL pixels (1 unit = 1px) instead of a fixed 1000×320 viewBox
@@ -189,8 +186,7 @@ export function ScrubChart({
   // an honest single-dot state (below), not the same as "no data" (low-volume cards
   // genuinely have one price). >=2 is required only for an actual line.
   const rawDrawn = series.filter((s) => s.points.length >= 1)
-  const drawn = indexed ? rawDrawn.map((s) => ({ ...s, points: rebaseToIndex(s.points) })) : rawDrawn
-  const fmtIndex = (v: number) => `${v >= 100 ? "+" : "−"}${Math.abs(v - 100).toFixed(0)}%`
+  const drawn = rawDrawn
   const primary = drawn[0]
   if (!primary) {
     return (
@@ -235,8 +231,8 @@ export function ScrubChart({
   // label + the last-price pill. Axis + live value sit on the RIGHT (Google/CoinGecko/CMC
   // convention: the newest point lands at the right edge, where the eye reads "now").
   const gridVals = niceTicks(min, max, 5).filter((v) => v >= yMin && v <= yMax)
-  const yLabels = gridVals.map((v) => (indexed ? fmtIndex(v) : compactDisplayValue(v, currency)))
-  const lastLabel = indexed ? "" : compactDisplayValue(primary.points[len - 1], currency)
+  const yLabels = gridVals.map((v) => compactDisplayValue(v, currency))
+  const lastLabel = compactDisplayValue(primary.points[len - 1], currency)
   // <text> advance ≈ chars × fontSize × ~0.62. RIGHT gutter fits the widest y-label AND the
   // last-price pill so a high-value card (฿489K) never clips. LEFT gutter is slim (no labels).
   const tagW = Math.ceil(Math.max(1, lastLabel.length) * TAG_FONT * 0.62) + 12
@@ -247,7 +243,6 @@ export function ScrubChart({
 
   const x = (i: number) => padLeft + (plotW * i) / (len - 1)
   const y = (v: number) => padTop + ((yMax - v) / Math.max(1, yMax - yMin)) * plotH
-  const pathOf = (pts: number[]) => pts.map((p, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(2)} ${y(p).toFixed(2)}`).join(" ")
   const active = activeIndex != null ? Math.min(len - 1, Math.max(0, activeIndex)) : len - 1
   const latestIndex = len - 1
   const bottomY = height - padBottom
@@ -300,11 +295,7 @@ export function ScrubChart({
     <svg
       ref={svgRef}
       role="img"
-      aria-label={
-        indexed
-          ? `${t(lang, "priceHistory")} · ${t(lang, "chartKeyboardHint")}`
-          : `${t(lang, "priceHistory")} — ${compactDisplayValue(open, currency)} → ${compactDisplayValue(lastVal, currency)} · ${t(lang, "low")} ${compactDisplayValue(min, currency)} · ${t(lang, "high")} ${compactDisplayValue(max, currency)} · ${t(lang, "chartKeyboardHint")}`
-      }
+      aria-label={`${t(lang, "priceHistory")} — ${compactDisplayValue(open, currency)} → ${compactDisplayValue(lastVal, currency)} · ${t(lang, "low")} ${compactDisplayValue(min, currency)} · ${t(lang, "high")} ${compactDisplayValue(max, currency)} · ${t(lang, "chartKeyboardHint")}`}
       tabIndex={0}
       viewBox={`0 0 ${width} ${height}`}
       className="block h-[210px] w-full touch-pan-y select-none rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-[280px] lg:h-[320px]"
@@ -382,7 +373,7 @@ export function ScrubChart({
         // Hide the y-label when it would (a) collide with the last-price pill (the pill owns
         // that gutter slot, CMC/Robinhood-style), or (b) round to the SAME text as the tick
         // above it — which happens on a near-flat series and would print "200฿ / 200฿".
-        const hideLabel = (!indexed && Math.abs(gy - tagY) < 20) || (idx > 0 && yLabels[idx] === yLabels[idx - 1])
+        const hideLabel = Math.abs(gy - tagY) < 20 || (idx > 0 && yLabels[idx] === yLabels[idx - 1])
         return (
           <g key={v}>
             <line x1={padLeft} x2={width - padRight} y1={gy} y2={gy} stroke="var(--muted-foreground)" strokeOpacity="0.14" strokeWidth="1" strokeDasharray="1 5" />
@@ -406,20 +397,6 @@ export function ScrubChart({
         strokeWidth="1"
         strokeDasharray="4 6"
       />
-      {/* compare lines under, primary on top */}
-      {drawn.slice(1).map((s) => (
-        <path
-          key={s.key}
-          d={pathOf(s.points)}
-          fill="none"
-          stroke={s.color}
-          strokeWidth="1.75"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeDasharray={s.isEst ? "6 5" : undefined}
-          opacity="0.9"
-        />
-      ))}
       {/* primary line — ONE colour by the period's overall direction (price-up/down),
           the trading-chart standard (Robinhood/CMC/Google). Per-segment up/down colouring
           is for candlesticks, not lines — looks off + choppy on a price line. */}
@@ -472,18 +449,15 @@ export function ScrubChart({
           />
         ))}
       {/* last-price tag — pins the current value to the axis at the latest point so
-          it reads at rest (Google Finance / Robinhood). Solo ฿ only: in indexed mode
-          the primary rebases to 100 → "+0%", which is meaningless. */}
-      {!indexed && (
-        // RIGHT gutter — a compact solid pill of the live price (CoinGecko/CMC). No arrow
-        // (the hero's +/−% already carries direction) → cleaner. Small gap from the end-dot.
-        <g transform={`translate(${width - padRight + 7} ${tagY})`}>
-          <rect x="0" y="-9" width={tagW} height="18" rx="6" fill={primary.color} opacity={primary.isEst ? 0.85 : 1} />
-          <text x={tagW / 2} y="4" textAnchor="middle" fill="var(--background)" fontSize={TAG_FONT} fontWeight="700">
-            {compactDisplayValue(lastVal, currency)}
-          </text>
-        </g>
-      )}
+          it reads at rest (Google Finance / Robinhood). RIGHT gutter — a compact solid
+          pill of the live price (CoinGecko/CMC). No arrow (the hero's +/−% already
+          carries direction) → cleaner. Small gap from the end-dot. */}
+      <g transform={`translate(${width - padRight + 7} ${tagY})`}>
+        <rect x="0" y="-9" width={tagW} height="18" rx="6" fill={primary.color} opacity={primary.isEst ? 0.85 : 1} />
+        <text x={tagW / 2} y="4" textAnchor="middle" fill="var(--background)" fontSize={TAG_FONT} fontWeight="700">
+          {compactDisplayValue(lastVal, currency)}
+        </text>
+      </g>
       {activeIndex != null && (
         <>
           {drawn.map((s) => (
@@ -504,7 +478,7 @@ export function ScrubChart({
                 <circle cx="4" cy="-4" r="4" fill={s.color} />
                 <text x="15" y="0" fill="var(--muted-foreground)" fontSize={TOOLTIP_LABEL_FONT}>{s.label}</text>
                 <text x={ttW - 24} y="0" textAnchor="end" fill="var(--popover-foreground)" fontSize={TOOLTIP_FONT} fontWeight="700">
-                  {indexed ? fmtIndex(s.points[active]) : formatDisplayValue(s.points[active], currency)}
+                  {formatDisplayValue(s.points[active], currency)}
                 </text>
               </g>
             ))}

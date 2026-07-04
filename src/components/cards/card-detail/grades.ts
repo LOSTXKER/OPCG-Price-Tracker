@@ -63,9 +63,6 @@ export interface GradeDatum {
   lastSaleSource: string | null
   /** 30-day % change + whether modeled. null = not shown. */
   delta30d: { pct: number; isEst: boolean } | null
-  /** Sales in the last 30 days (sample for now — always est). */
-  sales30d: number | null
-  isReal: boolean
   isEst: boolean
   hasData: boolean
 }
@@ -85,8 +82,6 @@ export interface GradeInput {
 }
 
 const r = (n: number) => Math.round(n)
-/** deterministic sample sales count (no RNG — RNG throws in this runtime). */
-const sampleSales = (v: number | null) => (v != null ? 80 + (Math.abs(r(v)) % 740) : null)
 
 export function buildGradeData(input: GradeInput): Record<GradeKey, GradeDatum> {
   const { rawAnchorJpy, psa10AskUsd, psa10SoldUsd, rawLastSoldUsd, rawDelta30d } = input
@@ -108,8 +103,6 @@ export function buildGradeData(input: GradeInput): Record<GradeKey, GradeDatum> 
       lowestAsk: { jpy: v, usd: null, isEst: false },
       lastSaleSource: realSale ? "SNKRDUNK" : null,
       delta30d: rawDelta30d != null ? { pct: rawDelta30d, isEst: false } : null,
-      sales30d: sampleSales(v),
-      isReal: has,
       isEst: false,
       hasData: has,
     }
@@ -134,8 +127,6 @@ export function buildGradeData(input: GradeInput): Record<GradeKey, GradeDatum> 
       // no real graded 30d series yet — use the raw card's 30d move as a flagged
       // estimate across all graded tiers (swapped for a real series when comps land)
       delta30d: rawDelta30d != null ? { pct: rawDelta30d, isEst: true } : null,
-      sales30d: sampleSales(v),
-      isReal: real && has,
       isEst: !real && has,
       hasData: has,
     }
@@ -156,8 +147,6 @@ export function buildGradeData(input: GradeInput): Record<GradeKey, GradeDatum> 
       lowestAsk: { jpy: null, usd: bgsV != null ? r(bgsV * EST_LOWEST_ASK) : null, isEst: true },
       lastSaleSource: null,
       delta30d: bgsV != null && input.rawDelta30d != null ? { pct: input.rawDelta30d, isEst: true } : null,
-      sales30d: sampleSales(bgsV),
-      isReal: false,
       isEst: bgsV != null,
       hasData: bgsV != null,
     },

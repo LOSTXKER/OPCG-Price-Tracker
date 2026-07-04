@@ -7,7 +7,7 @@ import { getCardName, getLocale, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { invalidateSettings } from "@/hooks/use-settings"
 import { DEFAULT_CARD_CONDITION } from "@/lib/constants/ui"
-import type { PortfolioStats, AllocationSlice, AssetRow, PortfolioMeta, TransactionRow, GameRef, HistoryPoint, GameBreakdown } from "@/lib/types/portfolio"
+import type { PortfolioStats, AllocationSlice, AssetRow, PortfolioMeta, GameRef, HistoryPoint, GameBreakdown } from "@/lib/types/portfolio"
 import type { CartItem } from "@/components/portfolio/add-card-types"
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants"
 import { useMultigameDemo, MOCK_POKEMON_PORTFOLIO_ITEMS } from "@/lib/mock/multigame-demo"
@@ -122,7 +122,6 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES, activePortfolioId
   const lang = useUIStore((s) => s.language)
   const [portfolios, setPortfolios] = useState<PortfolioRow[]>([])
   const [history, setHistory] = useState<HistoryPoint[]>([])
-  const [transactions, setTransactions] = useState<TransactionRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [activeId, setActiveId] = useState<number | null>(activePortfolioId ?? null)
@@ -181,19 +180,6 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES, activePortfolioId
     },
     [lang],
   )
-
-  const loadTransactions = useCallback(async () => {
-    if (!activeId) return
-    const data = await apiTry(
-      apiGet<{ transactions: TransactionRow[] }>(`/api/portfolio/transactions?portfolioId=${activeId}`)
-    )
-    setTransactions(data?.transactions ?? [])
-  }, [activeId])
-
-  const deleteTransaction = useCallback(async (txId: number) => {
-    await apiDelete(`/api/portfolio/transactions?id=${txId}`)
-    setTransactions((prev) => prev.filter((tx) => tx.id !== txId))
-  }, [])
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -438,7 +424,6 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES, activePortfolioId
   return {
     portfolios,
     history,
-    transactions,
     loading,
     error,
     activeId,
@@ -459,7 +444,5 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES, activePortfolioId
     addCardsBatch,
     updateItem,
     removeItem,
-    loadTransactions,
-    deleteTransaction,
   }
 }

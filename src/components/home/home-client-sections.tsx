@@ -1,5 +1,2 @@
 export { HomeFeaturedCard } from "./sections/featured-card"
-export { HomeHoneyPreview } from "./sections/honey-preview"
 export { HomeMiniTable } from "./sections/mini-table"
-export { HomePortfolioPreview } from "./sections/portfolio-preview"
-export { HomePreviewRow } from "./sections/preview-row"

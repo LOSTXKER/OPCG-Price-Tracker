@@ -12,8 +12,6 @@ import {
   deriveSnkrdunkPrices,
   deriveSourcePrices,
   getCardByCode,
-  getChartSources,
-  getCommunityPrice,
   getListingsForCard,
   getRelatedFromSameSet,
   getSiblingVariants,
@@ -70,8 +68,7 @@ export default async function CardDetailPage(props: {
     data: { viewCount: { increment: 1 } },
   });
 
-  const [communityPrice, siblings, relatedCards, listings, adminConfig] = await Promise.all([
-    getCommunityPrice(card.id),
+  const [siblings, relatedCards, listings, adminConfig] = await Promise.all([
     getSiblingVariants(card.baseCode, card.id),
     getRelatedFromSameSet(card.setId, card.id),
     getListingsForCard(card.id),
@@ -83,7 +80,6 @@ export default async function CardDetailPage(props: {
   const sourcePricesRaw = deriveSourcePrices(card.prices, "raw");
   const sourcePricesPsa10 = deriveSourcePrices(card.prices, "psa10");
   let chartData = buildChartData(card.prices);
-  const chartSources = getChartSources(card.prices);
 
   // Latest update timestamp from the freshest known price for this card.
   // Compute "days since" on the server so the client component renders purely
@@ -170,10 +166,8 @@ export default async function CardDetailPage(props: {
         chartData,
       }}
       siblings={siblings}
-      communityPrice={communityPrice}
       relatedCards={relatedCards}
       snkrdunkPrices={snkrdunkPrices}
-      availableSources={chartSources}
       sourcePricesRaw={sourcePricesRaw}
       sourcePricesPsa10={sourcePricesPsa10}
       latestUpdatedAt={latestUpdatedAt}
