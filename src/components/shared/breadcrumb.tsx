@@ -1,7 +1,8 @@
 import Link from "next/link"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { BackButton } from "./back-button"
 
 export interface BreadcrumbItem {
   label: string
@@ -52,23 +53,13 @@ export function Breadcrumb(props: BreadcrumbProps) {
   return (
     <div className="min-w-0">
       {parent?.href && (
-        <Link
+        // Shared prominent honey back button (BackButton). -ml-1 optically aligns
+        // the circle with the content edge.
+        <BackButton
           href={parent.href}
-          aria-label={parent.label}
-          title={parent.label}
-          className={cn(
-            // iOS-style back button: icon-only circle, identical on every deep
-            // page (owner call — no parent label text). The parent name stays
-            // available to screen readers/long-press via aria-label/title.
-            // Card-white surface + hairline border + soft shadow so it floats
-            // off the warm page background (bg-muted blended in too much).
-            // -ml-1 optically aligns the chevron with the content edge.
-            "mb-4 -ml-1 inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-[var(--p-hair)] bg-card shadow-sm motion-base active:bg-muted md:hidden",
-            props.className,
-          )}
-        >
-          <ChevronLeft className="size-5 text-primary" />
-        </Link>
+          label={parent.label}
+          className={cn("mb-4 -ml-1 md:hidden", props.className)}
+        />
       )}
 
       <nav

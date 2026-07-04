@@ -34,10 +34,9 @@ export default function SettingsIndexPage() {
 
   return (
     <>
-      {/* ── Mobile menu — iOS grouped-inset table view (desktop untouched below) ── */}
+      {/* ── Mobile menu — iOS grouped-inset table view (desktop untouched below) ──
+          Title + back button come from SettingsShell's mobile header. */}
       <div className="-mx-5 space-y-6 md:hidden">
-        <h1 className="text-large-title px-5">{t(lang, "profileSettings")}</h1>
-
         {/* Identity row — bigger avatar, own grouped card like /proto/ios/more */}
         <GroupedSection>
           <Link href={`/profile/${user.id}`} className="ease-chrome block transition-colors active:bg-muted/60">

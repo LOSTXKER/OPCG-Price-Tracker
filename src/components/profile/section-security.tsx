@@ -235,7 +235,7 @@ export function SectionSecurity() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-h2">{t(lang, "security")}</h2>
+      <h2 className="text-h2 hidden md:block">{t(lang, "security")}</h2>
 
       {/* Change password */}
       <Surface variant="outline" padding="lg" className="space-y-4">

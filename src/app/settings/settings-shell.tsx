@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb, type BreadcrumbItem } from "@/components/shared/breadcrumb";
+import { BackButton } from "@/components/shared/back-button";
 import { ProfileDataProvider, useProfileData } from "@/components/profile/profile-data-context";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
 import { PageContainer } from "@/components/layout/page-container";
@@ -115,10 +116,28 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
         { label: t(lang, "profileSettings"), href: "/settings" },
         { label: activeSectionMeta ? t(lang, activeSectionMeta.labelKey) : t(lang, "profileSettings") },
       ];
+  const mobileTitle = isIndex
+    ? t(lang, "profileSettings")
+    : activeSectionMeta
+      ? t(lang, activeSectionMeta.labelKey)
+      : t(lang, "profileSettings");
 
   return (
     <PageContainer inShell className="py-2 md:py-6">
-      <Breadcrumb items={crumbs} />
+      {/* Desktop: full breadcrumb trail */}
+      <div className="hidden md:block">
+        <Breadcrumb items={crumbs} />
+      </div>
+      {/* Mobile: prominent back button beside the page title (the section pages
+          hide their own h2 on mobile so this is the single title). Index →
+          /more (its parent hub), sub-pages → /settings. */}
+      <div className="mb-5 flex items-center gap-3 md:hidden">
+        <BackButton
+          href={isIndex ? "/more" : "/settings"}
+          label={isIndex ? t(lang, "more") : t(lang, "profileSettings")}
+        />
+        <h1 className="text-large-title">{mobileTitle}</h1>
+      </div>
 
       <div className="flex gap-10">
         {/* Desktop sidebar */}

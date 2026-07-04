@@ -18,7 +18,7 @@ export function SectionAccount({ user, onUserUpdate }: Props) {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-h2">{t(lang, "profileTabAccount")}</h2>
+      <h2 className="text-h2 hidden md:block">{t(lang, "profileTabAccount")}</h2>
 
       <AccountProfileHero user={user} lang={lang} onUserUpdate={onUserUpdate} />
       <AccountCoverImage user={user} lang={lang} onUserUpdate={onUserUpdate} />

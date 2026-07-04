@@ -24,7 +24,7 @@ export function SectionBilling() {
 
   return (
     <div className="space-y-6">
-      <div>
+      <div className="hidden md:block">
         <h2 className="text-h2">{t(lang, "billingHistory")}</h2>
         <p className="page-subtitle">{t(lang, "billingSubtitle")}</p>
       </div>

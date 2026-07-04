@@ -46,7 +46,7 @@ export function SectionExport() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-h2">{t(lang, "goToExport")}</h2>
+      <h2 className="text-h2 hidden md:block">{t(lang, "goToExport")}</h2>
 
       <LockOverlay locked={locked} featureKey="csvExport">
         <div className="grid gap-3 sm:grid-cols-2">
