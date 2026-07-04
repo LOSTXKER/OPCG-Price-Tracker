@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Bell,
-  BellRing,
   CreditCard,
   Download,
   ExternalLink,
@@ -38,7 +37,6 @@ export const SETTINGS_SECTIONS = [
   { id: "billing", href: "/settings/billing", icon: Receipt, labelKey: "billingHistory" as const, group: "general" as const },
   { id: "security", href: "/settings/security", icon: Shield, labelKey: "security" as const, group: "general" as const },
   { id: "notifications", href: "/settings/notifications", icon: Bell, labelKey: "notifications" as const, group: "general" as const },
-  { id: "alerts", href: "/settings/alerts", icon: BellRing, labelKey: "managePriceAlerts" as const, group: "general" as const },
   { id: "marketplace", href: "/settings/marketplace", icon: Store, labelKey: "marketplace" as const, group: "more" as const },
   { id: "addresses", href: "/settings/addresses", icon: MapPin, labelKey: "addresses" as const, group: "more" as const },
   { id: "export", href: "/settings/export", icon: Download, labelKey: "goToExport" as const, group: "more" as const },

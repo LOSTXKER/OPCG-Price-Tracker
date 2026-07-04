@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
-import WatchlistClient from "./watchlist-client";
+import WatchlistTabs from "./watchlist-tabs";
 
 export const metadata: Metadata = {
   title: "Watchlist",
@@ -14,7 +15,9 @@ export default function WatchlistPage() {
   return (
     <>
       <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Watchlist" }]} />
-      <WatchlistClient />
+      <Suspense fallback={null}>
+        <WatchlistTabs />
+      </Suspense>
     </>
   );
 }

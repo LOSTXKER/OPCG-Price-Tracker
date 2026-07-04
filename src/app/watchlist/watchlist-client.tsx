@@ -349,7 +349,7 @@ function WatchlistContent() {
     // instead of silently creating a duplicate (the create API has no unique
     // guard, so re-tapping the bell would stack identical alerts).
     if (entry.hasActiveAlert) {
-      router.push("/settings/alerts");
+      router.push("/watchlist?tab=alerts");
       return;
     }
     setAlertTarget(entry);

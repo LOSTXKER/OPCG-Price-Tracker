@@ -270,7 +270,7 @@ export function NotificationBell() {
                   {t(lang, "setNewAlert")}
                 </Link>
                 <Link
-                  href="/settings/alerts"
+                  href="/watchlist?tab=alerts"
                   onClick={() => setOpen(false)}
                   className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                 >

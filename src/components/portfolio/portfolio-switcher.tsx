@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Check, ChevronDown, Lock, Plus, Settings2, Wallet } from "lucide-react"
+import { Briefcase, Check, ChevronDown, Lock, Plus, Settings2 } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -93,7 +93,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
   const pill = (
     <span className="flex min-w-0 items-center gap-2.5 rounded-xl border border-[var(--p-hair)] bg-card px-3 py-2 text-left ease-chrome transition-colors hover:bg-muted/70">
       <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-        <Wallet className="size-4" />
+        <Briefcase className="size-4" />
       </span>
       <span className="min-w-0 flex-1">
         <span className="block max-w-[9rem] truncate text-sm font-semibold leading-tight sm:max-w-[12rem]">
@@ -176,7 +176,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
                       active ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground",
                     )}
                   >
-                    <Wallet className="size-3.5" />
+                    <Briefcase className="size-3.5" />
                   </span>
                   <span className="min-w-0 flex-1 truncate text-sm">{p.name}</span>
                   <span className="shrink-0 text-right">

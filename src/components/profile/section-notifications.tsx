@@ -362,7 +362,7 @@ export function SectionNotifications({ settings, onReload }: Props) {
 
                   {nt.id === "price" && !cardLocked && (
                     <Link
-                      href="/settings/alerts"
+                      href="/watchlist?tab=alerts"
                       className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                     >
                       {t(lang, "manageYourAlerts")}

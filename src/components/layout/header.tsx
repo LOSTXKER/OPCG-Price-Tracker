@@ -5,9 +5,9 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import {
-  Bookmark,
+  Briefcase,
   Crown,
-  Star,
+  Heart,
 } from "lucide-react";
 import { CommandSearchModal } from "@/components/shared/command-search";
 import { GameSwitcher } from "@/components/layout/game-switcher";
@@ -161,12 +161,12 @@ export function Header() {
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
-              <Star
+              <Briefcase
                 className={cn(
                   "size-3.5",
                   isNavActive(pathname, "/portfolio")
-                    ? "fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400"
-                    : "fill-none text-muted-foreground/60"
+                    ? "text-amber-500 dark:text-amber-400"
+                    : "text-muted-foreground/60"
                 )}
               />
               {t(language, "portfolioNav")}
@@ -181,7 +181,7 @@ export function Header() {
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
-              <Bookmark className="size-3.5 text-blue-500 dark:text-blue-400" />
+              <Heart className="size-3.5 text-rose-500 dark:text-rose-400" />
               {t(language, "watchlistNav")}
             </Link>
 
