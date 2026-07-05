@@ -9,7 +9,7 @@ import { RarityBadge } from "@/components/shared/rarity-badge"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import { Price } from "@/components/shared/price-inline"
 import { PriceUsd } from "@/components/shared/price-usd"
-import { Sparkline } from "@/components/shared/sparkline"
+import { MiniSparkline } from "@/components/ui/mini-sparkline"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getCardName } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -126,7 +126,7 @@ export const MarketTableRow = memo(function MarketTableRow({
         return <span className="font-price text-xs text-muted-foreground">{formatCount(card.viewCount ?? 0)}</span>
       case "sparkline":
         return !isPsa && sparkline && sparkline.length >= 2 ? (
-          <Sparkline data={sparkline} width={88} height={28} className="inline-block align-middle" />
+          <MiniSparkline data={sparkline} width={88} height={28} className="inline-block align-middle" />
         ) : null
       default:
         return null

@@ -6,7 +6,7 @@ import Link from "next/link"
 import { ChevronRight, StickyNote } from "lucide-react"
 
 import { Price } from "@/components/shared/price-inline"
-import { Sparkline } from "@/components/shared/sparkline"
+import { MiniSparkline } from "@/components/ui/mini-sparkline"
 import { getGameConfig, getGameAccentTint } from "@/lib/game-config"
 import { DEFAULT_GAME } from "@/lib/game/constants"
 import { getCardName, t, type Language } from "@/lib/i18n"
@@ -117,7 +117,7 @@ export const AssetRowComponent = memo(function AssetRowComponent({
       {/* 7d trend — CMC-style micro line (lg+) */}
       <td className="hidden py-2.5 pr-3 text-right align-middle lg:table-cell">
         {sparkline && sparkline.length >= 2 ? (
-          <Sparkline data={sparkline} width={64} height={22} className="ml-auto" />
+          <MiniSparkline data={sparkline} width={64} height={22} className="ml-auto" />
         ) : (
           <span className="text-xs text-muted-foreground/40">—</span>
         )}

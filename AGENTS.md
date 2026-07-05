@@ -83,7 +83,6 @@ Concrete consequences:
 | เดิม (อย่าใช้) | → ใช้แทน | finding |
 | --- | --- | --- |
 | `Delta` (`cards/card-detail/grade-value.tsx`) · `DirectionPill` (`alerts/alert-form.tsx`, local) | คงไว้ — ไม่ map เข้า `PriceTag` ตรงๆ (`Delta` มี abs+pct combo mode, `DirectionPill` เป็นปุ่ม toggle ไม่ใช่ตัวโชว์ค่า) — 2.2 migrate `DeltaText`/`ChangePill`/chip ใน `PriceDisplay` เสร็จแล้ว, ลบไฟล์เดิมทิ้งแล้ว | KIT-02 |
-| `shared/sparkline.tsx` (`Sparkline`) | `ui/mini-sparkline.tsx` (`MiniSparkline`) | KIT-08 |
 | toggle เขียนมือใน settings (×2) | `ui/switch.tsx` (สร้าง 2.3) | SETTINGS-09 |
 | pill "เลือก 1 จาก N" ที่เขียนเอง (~5 จุด) | `SegmentedControl` | KIT-10 |
 

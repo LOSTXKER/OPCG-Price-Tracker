@@ -1,30 +1,43 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-05 — **Phase 0 + 1 + 2.1 + 2.2 เสร็จ ขึ้น master หมด (PR #57–#63 merged) · master สะอาด · ต่อที่ Phase 2.2 (sparkline) → 2.3**
+อัปเดตล่าสุด: 2026-07-05 — **Phase 2.2 ปิดจบ (KIT-08 sparkline + KIT-05 hero) บน branch `feat/phase2.2-sparkline-hero` (เปิด PR แล้ว รอ merge) · ต่อที่ Phase 2.3 control atoms**
 
-## ✅ เสร็จแล้ว ขึ้น master (session ล่าสุด — ทุกอย่างผ่าน branch+PR ไม่ push master ตรง)
-- **#57** Sheet ทางลัด "ดูเพิ่มเติม" มือถือ · ไอคอนทั้งเว็บ (รายการโปรด=Heart, พอร์ต=Briefcase) · รวม /watchlist 2 แท็บ (การ์ด/แจ้งเตือน, `?tab=alerts`)
-- **#58** footer มือถือ ซ่อนเฉพาะหน้าแอป (`FooterChrome` + `NO_MOBILE_FOOTER_ROUTES`)
-- **#59 + #60** Phase 1 ลบ dead code **~3,360 บรรทัด** (delete-only + extract-then-delete · verify reference ก่อนเสมอ)
-- **#62** Phase 2.1 — **ประกาศ Component Kit canon ใน `AGENTS.md`** ← ตารางนี้ = source of truth ของ kit (เช็คก่อนสร้าง component ใหม่)
-- **#63** Phase 2.2 — สร้าง **`PriceTag`** (`ui/price-tag.tsx`, อะตอมเดียว 2 โหมด) → ยุบ `PriceDisplay`+`ChangePill`+`DeltaText` (19 จุด, ลบ 3 ไฟล์) · verify ราคา/สีด้วย browser แล้ว
+## ✅ เสร็จรอบนี้ (branch `feat/phase2.2-sparkline-hero` — ยังไม่ merge)
+- **KIT-08** — รวม sparkline 2 ตัว → เหลือ **`ui/mini-sparkline.tsx`** ตัวเดียว
+  - `MiniSparkline` ใหม่: gradient เป็น prop `fill?` (default **line-only**) · ใส่ `width/height` SVG attr คงที่ (pixel-stable) · `aria-hidden` · token `--color-price-up/down`
+  - migrate 5 จุด: trending · home/mobile-card-item · market/market-table-row · portfolio/assets-table/desktop-row (เดิม `<Sparkline>`) + watchlist (ใช้ `MiniSparkline` อยู่แล้ว)
+  - **watchlist เปลี่ยนเป็น line-only** ให้ตรงกับ market/portfolio (= แก้ตรงที่ finding บ่นว่า "หน้าตาต่างโดยไม่มีเหตุผล") · **ลบ `shared/sparkline.tsx`**
+- **KIT-05 (บางส่วน)** — card-detail hero `<span text-display>` ดิบ → **`HeroNumber`** ตัวเดียวกับ portfolio (count-up ตอน mount/สลับเกรด · `live={activeIndex != null}` ให้ mirror ค่าเป๊ะตอน scrub กราฟไม่กระตุก · null-guard คงแสดง "—")
 
-## ⏭️ NEXT — Phase 2 ที่เหลือ (ตาม doc/uxui-refactor-plan.md §Phase 2 · ทำเป็นชุดย่อย verify จบในตัว)
-1. **2.2 ต่อ:** `KIT-08` รวม sparkline 2 ตัว (`shared/sparkline.tsx` + `ui/mini-sparkline.tsx`) → เหลือ `ui/mini-sparkline.tsx` ตัวเดียว · `KIT-05` ยก EditionToggle/SourceBadge/grades ขึ้น kit + card-detail hero ใช้ HeroNumber
-2. **2.3 Control atoms:** สร้าง `ui/switch.tsx` (SETTINGS-09) · `QtyStepper` (PLAY-07, ≥44px, drop-calc+deck-calc ใช้ร่วม) · `IconButton` (PORTFOLIO-06) · `RatingStars` honey ตัวเดียว (COMMERCE-13) · ยุบ pill 5 จุด → `SegmentedControl` (KIT-10)
-3. **2.4** ยุบระบบค้นหา 3 ชุด → engine เดียว (`useCardSearch`) · **2.5** flow copy-paste (auth kit, guide kit, useAlertSubmit, AdminDataTable ฯลฯ) · **2.6** จัดโฟลเดอร์ 3 ชั้น (ui/shared/feature)
-4. หลัง Phase 2: Phase 3 (token) · 4 (states) · 5 (ราย surface — เบสเลือกหน้า) · 6-7
+## ⚠️ ตัดสินใจเลื่อน (จดเหตุผล กันเข้าใจผิดว่าลืม)
+- **ยัง ไม่ ยก `edition-toggle`/`source-logo`/`grades.ts` จาก card-detail ขึ้น kit** (KIT-05 ครึ่งหลัง) — เพราะ (1) ทั้ง 3 ยังถูกใช้แค่ใน feature `cards` ตัวเดียว **ไม่มี consumer ข้าม feature** (marketplace/comps ยังไม่สร้าง) → ย้ายตอนนี้ = churn เปล่า + เสี่ยงฟรี (2) `grades.ts` เป็น **domain logic** ควรไป `lib/cards/` ไม่ใช่ `ui/` (3) `edition-toggle` ทับ **KIT-10** (recompose จาก `SegmentedControl`) → ทำทีเดียวใน 2.3 ดีกว่า double-move · **ยกจริงเมื่อมี consumer ข้าม feature — `SourceLogo` เป็นตัวแรกที่ควรยก**
+
+## ✅ verify รอบนี้
+- tsc **0** · lint **0 err** (32 warning เดิม, ไม่มีในไฟล์ที่แก้) · test **56/56** · build **✓** (route ครบ, /trending ยัง static)
+- card hero SSR render `26,880 ฿` ใน markup `HeroNumber` ถูกเป๊ะ · fresh curl card/home/trending = 200 ทั้งหมด **0 error ใหม่**
+- **review workflow 4 มิติ + adversarial verify** → **0 confirmed code defect** (เหลือแต่ doc-sync ที่ทำครบแล้ว + 1 latent nit gradient-id ที่ dormant/safe → ใส่ comment เตือนไว้)
+- ⚠️ **ยังไม่ได้ eyeball sparkline สดด้วย browser** — **Chrome extension ไม่ได้เชื่อมต่อ session นี้** (เหมือนหลาย session ก่อน) · `MiniSparkline` เป็น superset ของ `Sparkline` เดิม + review ยืนยันแล้ว แต่ **เบสควรเปิดดูจริง**: sparkline ใน market/portfolio/watchlist (เส้น trend เขียว/แดง line-only) + card hero count-up ตอนโหลด + ลากกราฟแล้วเลขบนวิ่งตาม
+
+## ⏭️ NEXT — Phase 2.3 Control atoms (ตาม doc/uxui-refactor-plan.md §2.3)
+1. **`ui/switch.tsx`** (SETTINGS-09) — toggle เขียนมือใน settings ×2 → atom เดียว (hit ≥44px แต่แรก)
+2. **`QtyStepper`** (PLAY-07, ≥44px) — drop-calc + deck-calc ใช้ร่วม (VISION §5.4 ระบุเป็น atom)
+3. **`IconButton`** (PORTFOLIO-06) — ตอนนี้ประกาศซ้ำ 2 ไฟล์ + inline 1 · **`RatingStars`** honey ตัวเดียว (COMMERCE-13, ตอนนี้ 3 ตัว 3 สี)
+4. **`KIT-10`** ยุบ pill "เลือก 1 จาก N" 5 จุด → `SegmentedControl` เดียว + **ยก `EditionToggle` ขึ้น kit ให้ประกอบจาก SegmentedControl** (ทำคู่กับ KIT-05 ที่เลื่อนไว้)
+5. `RESPONSIVE-04` ฟอร์ม inline ชื่อพอร์ต ก๊อป 4 ชุด/3 ไฟล์ → ตัวเดียว
+- แล้วต่อ **2.4** search engine เดียว · **2.5** flow copy-paste · **2.6** จัดโฟลเดอร์ 3 ชั้น
+- **จุดเช็คอินเบส:** จบ 2.2+2.3 = เบสดู atom ใหม่บนหน้าจริง (plan §4)
 
 ## ⚠️ ค้าง/ข้อควรรู้ (สำคัญสำหรับ session หน้า)
-- **อย่าพยายาม migrate `Delta` (card-detail/grade-value) + `DirectionPill` (alert-form) เข้า PriceTag** — verify แล้วว่าคนละ role (Delta มีโหมด abs "+380k฿·350%", DirectionPill เป็น toggle ปุ่ม) · จดใน AGENTS.md ⛔ table แล้ว
-- `lastSale`/`lowestAsk` fields (grades.ts) = จงใจเก็บไว้ (earmark stat โซน 3) — อย่าลบ
-- **KIT-13** (dead slot ของ Surface) ยังไม่ verify — เก็บทำตอน 2.x
-- branch merged ที่ยังไม่ลบ: #59-#63 (feat/phase2-*, fix/phase1*, docs/*) — ลบได้ถ้าอยาก (บอกก่อน)
+- **dev log มี error เก่าค้าง** (`PriceDisplay` ReferenceError · `home/sections/honey-preview|portfolio-preview|preview-row` module-not-found) = **stale residue จาก session ก่อน Phase 1/2.2 ลบไฟล์** — ยืนยันแล้วว่าไม่ใช่ bug ปัจจุบัน (grep src ไม่มี ref จริง · fresh curl 200 0 error) · ถ้าเจออีกให้ `rm -rf .next` แล้ว restart
+- **อย่า migrate `Delta`/`DirectionPill` เข้า PriceTag** (คนละ role — จดใน AGENTS.md ⛔ table)
+- `lastSale`/`lowestAsk` (grades.ts) = จงใจเก็บ (earmark stat) — อย่าลบ
+- branch merged เก่ายังไม่ลบ (#59-#63) — ลบได้ถ้าอยาก (บอกก่อน)
 
 ## กฎเหล็ก session นี้ (ยึดต่อ)
 - **ห้าม push master ตรง** — branch + PR + merge เท่านั้น (⛔ AGENTS.md)
-- ลบ dead code = verify reference จริงก่อน + delete-only PR · migrate atom = **verify ด้วยตา** (โดยเฉพาะราคา) ไม่ใช่แค่ tsc ผ่าน · เช็ค AGENTS.md canon ก่อนสร้าง component
+- migrate atom = **verify ด้วยตา** (โดยเฉพาะราคา) ไม่ใช่แค่ tsc ผ่าน · เช็ค AGENTS.md canon ก่อนสร้าง component ใหม่
+- deviate จากแผน = จดเหตุผลใน PROGRESS/PR (เช่นการเลื่อน KIT-05 ครึ่งหลังรอบนี้)
 
 ## แหล่งอ้างอิง
 - **แผนแม่บท:** `doc/uxui-refactor-plan.md` (8 phases) · **หลักฐาน:** `doc/uxui-audit-findings-2026-07-04.md` (230 findings) · **kit canon:** `AGENTS.md` §Component Kit
