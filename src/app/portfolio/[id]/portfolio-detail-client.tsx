@@ -23,6 +23,7 @@ import { PortfolioAssetsTable } from "@/components/portfolio/portfolio-assets-ta
 import { PortfolioShareDialog } from "@/components/portfolio/portfolio-share-dialog"
 import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
 import { Button } from "@/components/ui/button"
+import { IconButton } from "@/components/ui/icon-button"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Surface } from "@/components/ui/surface"
@@ -275,22 +276,24 @@ function PortfolioDetailContent({ portfolioId }: { portfolioId: number }) {
 
         <div className="flex shrink-0 items-center gap-1.5">
           <IconButton
+            variant="solid"
             onClick={() => setHideBalance((v) => !v)}
-            label={hideBalance ? t(lang, "showBalance") : t(lang, "hideBalance")}
+            aria-label={hideBalance ? t(lang, "showBalance") : t(lang, "hideBalance")}
           >
             {hideBalance ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </IconButton>
 
           <IconButton
+            variant="solid"
             onClick={() => setShareOpen(true)}
-            label={t(lang, "sharePortfolio")}
+            aria-label={t(lang, "sharePortfolio")}
             disabled={items.length === 0}
           >
             <Share2 className="size-4" />
           </IconButton>
 
-          <button
-            type="button"
+          <IconButton
+            variant="solid"
             onClick={async () => {
               const next = !portfolioPublic
               const ok = await setPortfolioVisibility(activePortfolio.id, next)
@@ -303,12 +306,11 @@ function PortfolioDetailContent({ portfolioId }: { portfolioId: number }) {
                 toast.error(t(lang, "loadFailed"))
               }
             }}
-            className="inline-flex size-9 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-card text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             aria-label={t(lang, portfolioPublic ? "portfolioPublic" : "portfolioPrivate")}
             title={t(lang, "perPortfolioVisibility")}
           >
             {portfolioPublic ? <Globe className="size-4" /> : <Lock className="size-4" />}
-          </button>
+          </IconButton>
 
           <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-1.5">
             <Plus className="size-4" />
@@ -412,27 +414,3 @@ function PortfolioDetailContent({ portfolioId }: { portfolioId: number }) {
   )
 }
 
-function IconButton({
-  onClick,
-  label,
-  disabled,
-  children,
-}: {
-  onClick: () => void
-  label: string
-  disabled?: boolean
-  children: React.ReactNode
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-      title={label}
-      className="inline-flex size-9 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-card text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
-    >
-      {children}
-    </button>
-  )
-}

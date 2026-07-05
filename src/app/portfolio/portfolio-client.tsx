@@ -13,6 +13,7 @@ import { PortfolioGameBreakdown } from "@/components/portfolio/portfolio-game-br
 import { PortfolioMovers } from "@/components/portfolio/portfolio-movers"
 import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
 import { Button } from "@/components/ui/button"
+import { IconButton } from "@/components/ui/icon-button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Surface } from "@/components/ui/surface"
 import { t } from "@/lib/i18n"
@@ -205,7 +206,7 @@ function PortfolioHubContent() {
 
           <IconButton
             onClick={() => setHideBalance((v) => !v)}
-            label={hideBalance ? t(lang, "showBalance") : t(lang, "hideBalance")}
+            aria-label={hideBalance ? t(lang, "showBalance") : t(lang, "hideBalance")}
           >
             {hideBalance ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </IconButton>
@@ -328,27 +329,3 @@ function CreatePortfolioCard({ onCreate }: { onCreate: (name: string) => void })
   )
 }
 
-function IconButton({
-  onClick,
-  label,
-  disabled,
-  children,
-}: {
-  onClick: () => void
-  label: string
-  disabled?: boolean
-  children: React.ReactNode
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-      title={label}
-      className="ease-chrome inline-flex size-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-40"
-    >
-      {children}
-    </button>
-  )
-}

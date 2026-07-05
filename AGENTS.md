@@ -73,10 +73,12 @@ Concrete consequences:
 | ปุ่มย้อน (มือถือ) | `BackButton` · `Breadcrumb` | `shared/back-button.tsx` · `shared/breadcrumb.tsx` | ปุ่มย้อน honey inline ข้างหัวข้อ |
 | Badge | `Badge` · `RarityBadge` · `ConditionBadge` · `GameBadge` | `ui/badge.tsx` · `shared/*-badge.tsx` | ป้ายสถานะ / rarity / สภาพ / เกม |
 | Money | `PriceTag` | `ui/price-tag.tsx` | ราคา + %change (▲/▼) ทุกที่ |
+| Toggle เปิด/ปิด | `Switch` | `ui/switch.tsx` | สวิตช์ on/off (settings) · hit ≥44px แต่แรก |
+| ปุ่มไอคอนล้วน | `IconButton` | `ui/icon-button.tsx` | ปุ่ม icon-only (`ghost`/`solid`) · บังคับ `aria-label` |
 
 ### 🚧 ต้องสร้าง (Phase 2.x — ยังไม่มี)
 
-- **`ui/switch.tsx`** · **`QtyStepper`** (≥44px) · **`IconButton`** · **`RatingStars`** (สี honey ตัวเดียว) — 2.3
+- **`QtyStepper`** (≥44px, drop-calc+deck-calc+add-card ใช้ร่วม) · **`RatingStars`** (สี honey ตัวเดียว, ยุบ 6 จุด) — 2.3
 
 ### ⛔ Deprecated / กำลังยุบ (อย่าใช้ในของใหม่ · ยุบตาม Phase 2)
 
@@ -84,8 +86,9 @@ Concrete consequences:
 | --- | --- | --- |
 | `Delta` (`cards/card-detail/grade-value.tsx`) · `DirectionPill` (`alerts/alert-form.tsx`, local) | คงไว้ — ไม่ map เข้า `PriceTag` ตรงๆ (`Delta` มี abs+pct combo mode, `DirectionPill` เป็นปุ่ม toggle ไม่ใช่ตัวโชว์ค่า) — 2.2 migrate `DeltaText`/`ChangePill`/chip ใน `PriceDisplay` เสร็จแล้ว, ลบไฟล์เดิมทิ้งแล้ว | KIT-02 |
 | `shared/sparkline.tsx` (`Sparkline`) | `ui/mini-sparkline.tsx` (`MiniSparkline`) | KIT-08 |
-| toggle เขียนมือใน settings (×2) | `ui/switch.tsx` (สร้าง 2.3) | SETTINGS-09 |
 | pill "เลือก 1 จาก N" ที่เขียนเอง (~5 จุด) | `SegmentedControl` | KIT-10 |
+| toggle เขียนมือใน settings (×2) | `ui/switch.tsx` (`Switch`) — ยุบเสร็จแล้ว, ลบ local ทิ้ง (privacy toggle เดิม h-5 w-9 → ทรงมาตรฐาน) | SETTINGS-09 |
+| IconButton เขียนเองใน 2 ไฟล์ portfolio + inline | `ui/icon-button.tsx` (`IconButton`) — ยุบเสร็จแล้ว, ลบ local ทิ้ง | PORTFOLIO-06 |
 
 > รายละเอียดการยุบทั้งหมด: `doc/uxui-refactor-plan.md` §Phase 2 · หลักฐานราย ID: `doc/uxui-audit-findings-2026-07-04.md`
 

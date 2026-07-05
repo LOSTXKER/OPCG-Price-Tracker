@@ -110,9 +110,9 @@
 
 **2.3 Control atoms**
 - [ ] `KIT-10` ยุบตระกูล "pill เลือก 1 จาก N" 5 implementation → SegmentedControl เดียว + `SETS-03` TabBar ขีดเส้นใต้กลาง (ใช้ 4 ที่)
-- [ ] `SETTINGS-09` + `SETTINGS-10` สร้าง ui/switch.tsx + SavedPill กลาง (hit ≥44px แต่แรก) — ตอนนี้ toggle เขียนมือ 2 ตัว feedback pill ก๊อป 3 ที่
-- [ ] `PLAY-07` QtyStepper กลาง ≥44px (drop-calc + deck-calc ใช้ร่วม — VISION §5.4 ระบุเป็น atom อยู่แล้ว)
-- [ ] `PORTFOLIO-06` IconButton กลาง (ตอนนี้ประกาศซ้ำ 2 ไฟล์ + inline อีก 1) · `COMMERCE-13` RatingStars ตัวเดียวสี honey (ตอนนี้ 3 ตัว 3 สี)
+- [~] `SETTINGS-09` **`ui/switch.tsx` เสร็จ** (ยุบ toggle เขียนมือ 2 ตัว, hit ≥44px แต่แรก · PR 2.3-part1) · `SETTINGS-10` **SavedPill ยังไม่ทำ** (5 จุด feedback pill — scout map แล้ว, presentational)
+- [ ] `PLAY-07` QtyStepper กลาง ≥44px (drop-calc + deck-calc + add-card ใช้ร่วม — 3 จุด scout map แล้ว)
+- [~] `PORTFOLIO-06` **`ui/icon-button.tsx` เสร็จ** (ghost/solid, ยุบ local 2 ไฟล์ + inline 1 · PR 2.3-part1) · `COMMERCE-13` **RatingStars ยังไม่ทำ** (6 จุด, ยุบ 4 สี→amber = เปลี่ยนสีจริง ต้อง browser)
 - [ ] `RESPONSIVE-04` (= `PORTFOLIO-05` บางส่วน) ฟอร์ม inline ชื่อพอร์ต ก๊อป 4 ชุดใน 3 ไฟล์ → ตัวเดียว + แก้ a11y/tap ในตัว
 
 **2.4 ระบบค้นหา — ยุบ 3 ชุดเหลือ engine เดียว (`DISCOVERY-04` = `HOME-05` = `KIT-07`)**

@@ -16,6 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Surface } from "@/components/ui/surface";
+import { Switch } from "@/components/ui/switch";
 import { apiPatch, apiTry } from "@/lib/api/client";
 import { useUIStore } from "@/stores/ui-store";
 import { clientEnv } from "@/lib/env";
@@ -26,41 +27,6 @@ import { UpgradeBadge } from "@/components/shared/upgrade-badge";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
 import type { TranslationKey } from "@/lib/i18n";
 import type { SettingsData } from "./profile-types";
-
-// ---------------------------------------------------------------------------
-// Toggle switch
-// ---------------------------------------------------------------------------
-function Toggle({
-  checked,
-  onChange,
-  disabled,
-}: {
-  checked: boolean;
-  onChange: (v: boolean) => void;
-  disabled?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      disabled={disabled}
-      onClick={() => onChange(!checked)}
-      className={cn(
-        "relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors",
-        checked ? "bg-primary" : "bg-muted",
-        disabled && "cursor-not-allowed opacity-40",
-      )}
-    >
-      <span
-        className={cn(
-          "pointer-events-none block size-5 rounded-full bg-background shadow ring-1 ring-border/10 transition-transform",
-          checked ? "translate-x-5" : "translate-x-0",
-        )}
-      />
-    </button>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Channel toggle row (icon + label + toggle)
@@ -82,7 +48,7 @@ function ChannelToggle({
     <div className="flex items-center gap-2">
       <Icon className={cn("size-3.5", checked ? "text-foreground" : "text-muted-foreground/50")} />
       <span className={cn("text-xs", checked ? "text-foreground" : "text-muted-foreground/50")}>{label}</span>
-      <Toggle checked={checked} onChange={onChange} disabled={disabled} />
+      <Switch checked={checked} onCheckedChange={onChange} disabled={disabled} ariaLabel={label} />
     </div>
   );
 }

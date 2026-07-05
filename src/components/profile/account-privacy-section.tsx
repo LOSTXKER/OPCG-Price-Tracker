@@ -17,6 +17,7 @@ import type { Language } from "@/lib/i18n";
 import { apiPatch, apiTry } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/ui/surface";
+import { Switch } from "@/components/ui/switch";
 import type { DbUser } from "./profile-types";
 
 const VISIBILITY_OPTIONS = [
@@ -238,38 +239,6 @@ function CardHeader({
   );
 }
 
-function Toggle({
-  checked,
-  onChange,
-  disabled,
-}: {
-  checked: boolean;
-  onChange: (v: boolean) => void;
-  disabled?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      disabled={disabled}
-      onClick={() => onChange(!checked)}
-      className={cn(
-        "relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-        checked ? "bg-primary" : "bg-input",
-        disabled && "cursor-not-allowed opacity-50",
-      )}
-    >
-      <span
-        className={cn(
-          "pointer-events-none block size-4 rounded-full bg-background shadow-sm ring-0 transition-transform",
-          checked ? "translate-x-[18px]" : "translate-x-[2px]",
-        )}
-      />
-    </button>
-  );
-}
-
 function PrivacyRow({
   Icon,
   label,
@@ -299,7 +268,7 @@ function PrivacyRow({
           <p className="text-meta">{desc}</p>
         </div>
       </div>
-      <Toggle checked={checked} onChange={onChange} />
+      <Switch checked={checked} onCheckedChange={onChange} ariaLabel={label} />
     </div>
   );
 }
