@@ -1,11 +1,13 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-05 — **2 PR รอ merge (แตกจาก master, รอเบสดู preview): #65 = Phase 2.2 (sparkline+hero) · #66 = Phase 2.3 (control atoms — 4 ตัวเสร็จ, 3 เลื่อนรอ browser) · Browser ไม่พร้อม session นี้ → เบส eyeball preview**
+อัปเดตล่าสุด: 2026-07-05 — **3 PR รอ merge (stacked): #65 Phase 2.2 · #66 Phase 2.3 · #67 Phase 2.4+2.5 (useRecentSearches + useAlertSubmit) · Browser ไม่พร้อมทั้ง session → เบส eyeball preview · ⚠️ stack 3 ชั้น — ควร merge #65+#66 แล้วให้ฉัน rebase #67**
 
-## 🔀 ลำดับ merge (2 branch แตกจาก master เดียวกัน)
-1. merge **#65** (`feat/phase2.2-sparkline-hero`) ก่อน
-2. merge **#66** (`feat/phase2.3-control-atoms`) ทีหลัง → conflict **trivial** ที่ `AGENTS.md` (คนละ row) · `PROGRESS.md` (เอาเวอร์ชันนี้) · `doc/uxui-refactor-plan.md` (คนละบรรทัด) — resolve เอาของทั้งสอง
+## 🔀 ลำดับ merge (stacked — merge ตามลำดับ)
+1. **#65** (`feat/phase2.2-sparkline-hero`, base master)
+2. **#66** (`feat/phase2.3-control-atoms`, base master) — conflict trivial ที่ `AGENTS.md`/`PROGRESS.md`/`doc/uxui-refactor-plan.md` (เอาของทั้งสอง)
+3. **#67** (`feat/phase2.4-search-recent`, **base = branch 2.3** ไม่ใช่ master) — merge หลัง #66 · ถ้า retarget เป็น master จะเห็น 2.3+2.4 → **base ไว้ที่ branch 2.3 จะเห็นแค่ diff 2.4** · หลัง #66 เข้า master แล้ว retarget #67 → master ได้เลย (ไม่มี conflict code, เหลือแค่ docs superset)
+> **แนะนำ: merge #65+#66 ก่อนแล้วบอกฉัน rebase #67 → master** จะสะอาดสุด (stack 3 ชั้นเริ่มยุ่ง)
 
 ## ✅ PR #65 — Phase 2.2 (รอ merge)
 - KIT-08 รวม sparkline → `ui/mini-sparkline.tsx` เดียว (`fill?`, line-only, ลบ `shared/sparkline.tsx`) · KIT-05(บางส่วน) card-detail hero → `HeroNumber`
@@ -27,11 +29,25 @@
   - **market view toggle (grid/table)** = SegmentedControl แล้ว (ปุ่มขนาดต่างจาก ViewToggle เดิมนิดหน่อย h-7 vs p-1.5)
   - notifications toggle · icon button · saved pill · name form · add-card stepper ควร**เหมือนเดิม**
 
-## ⏭️ NEXT — Phase 2.3 เหลือ **จุดเดียว** (⏸️ EditionToggle — ทำคู่ Phase 5 + KIT-05)
-- **`EditionToggle`** (`card-detail/edition-toggle.tsx`) → SegmentedControl (KIT-10 ที่เหลือ) — **ยังไม่ยุบ เพราะ:** migrate = **tap target หด 40→28px = regression จริง** + active `bg-foreground/10`≠`bg-primary/15` (เปลี่ยนสี) + ทับ **KIT-05 lift** (ยกขึ้น kit) → คุ้มกว่าทำทีเดียวกับ **Phase 5.0 tap-target** (ที่จะเพิ่ม size ≥44px ให้ SegmentedControl) + KIT-05
-- **2.3 ถือว่าจบสาระสำคัญแล้ว** (7 atom · เหลือ EditionToggle จุดเดียวที่ผูกกับ phase อื่น)
-- แล้วต่อ **2.4** search engine เดียว · **2.5** flow copy-paste · **2.6** โฟลเดอร์ 3 ชั้น
-- **จุดเช็คอินเบส:** จบ 2.2+2.3 = เบสดู atom ใหม่บนหน้าจริง (plan §4) — **ถึงจุดนี้แล้ว**
+## ✅ PR #67 — Phase 2.4+2.5 hook extraction (รอ merge · branch `feat/phase2.4-search-recent` base 2.3)
+> 2 hook dedup บน branch เดียว (ทั้งคู่ = แยก shared hook, ยุบ 3 ไฟล์)
+**KIT-07 — `hooks/use-recent-searches.ts`**
+- hook กลาง recent-search (localStorage + push/remove/clear/refresh) · dedup case-insensitive · read on mount + `refresh()` สำหรับ modal
+- migrate 3 ไฟล์: `card-search` · `command-search` (Cmd-K, `refresh()` ตอนเปิด) · `hero-search-bar`
+- **เหลือ (เลื่อน browser):** SearchResultRow + command/hero ใช้ useCardSearch แทน fetch ซ้ำ + keyboard-nav
+
+**TRACK-04 (HIGH) — `hooks/use-alert-submit.ts`**
+- hook เดียว owns submit alert (validate + convert JPY + 401 redirect + 403 upgrade + error)
+- migrate 3 dialog: `card-set-alert-dialog` · `alert-create-dialog` · `alert-edit-dialog` ผ่าน `submit({target, request, onSuccess, onGated})`
+- **คงพฤติกรรมต่าง dialog** (card-set=เช็ค+prefill+1300ms · create/edit=ปิดทันที) — unify success behavior (drift, VISION §106 prefill) = งาน UX แยก ทำตอน browser
+- verify: tsc0/lint0/test56/build✓ + review workflow ×2 (recent + alert) adversarial verify
+- ⚠️ **เบส eyeball**: recent ยังทำงาน (พิมพ์→enter→เห็น·Cmd-K เปิดใหม่เห็น·hero ลบ/ล้าง) · **alert สร้าง/แก้/set-alert ทำงาน + จับ limit (403→upgrade) + login (401)**
+
+## ⏭️ NEXT — Phase 2 ที่เหลือ
+- **`EditionToggle`** (KIT-10 ที่เหลือ) — ⏸️ ทำคู่ **Phase 5.0 tap-target** + **KIT-05 lift** (migrate เดี่ยว = tap 40→28px regression + เปลี่ยนสี active)
+- **2.4 ที่เหลือ** (SearchResultRow + useCardSearch ใน command/hero + keyboard-nav) — ⏸️ browser (core interaction)
+- **2.5** flow copy-paste (auth kit · guide kit · useAlertSubmit · AdminDataTable 8 หน้า · commerce dedup) · **2.6** โฟลเดอร์ 3 ชั้น (KIT-09 mechanical)
+- **จุดเช็คอินเบส:** จบ 2.2+2.3 = เบสดู atom ใหม่บนหน้าจริง (plan §4) — **ถึงแล้ว + เริ่ม 2.4**
 
 ## ⚠️ ค้าง/ข้อควรรู้
 - **dev log error เก่าค้าง** (`PriceDisplay`·`home/sections/*`) = stale จาก session ก่อน ไม่ใช่ bug ปัจจุบัน (`rm -rf .next`+restart ถ้าเจอ)

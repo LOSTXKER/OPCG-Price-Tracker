@@ -13,24 +13,9 @@ import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { fetchCards } from "@/lib/api/fetch-cards"
+import { useRecentSearches } from "@/hooks/use-recent-searches"
 
-const RECENT_KEY = "meecard-recent-searches"
-const MAX_RECENT = 6
 const MAX_SETS = 4
-
-function readRecent(): string[] {
-  if (typeof window === "undefined") return []
-  try {
-    const raw = localStorage.getItem(RECENT_KEY)
-    if (!raw) return []
-    const parsed = JSON.parse(raw) as unknown
-    return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === "string").slice(0, MAX_RECENT) : []
-  } catch { return [] }
-}
-
-function writeRecent(items: string[]) {
-  try { localStorage.setItem(RECENT_KEY, JSON.stringify(items.slice(0, MAX_RECENT))) } catch { /* */ }
-}
 
 type SuggestionCard = {
   cardCode: string
@@ -68,14 +53,9 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<SuggestionCard[]>([])
   const [loading, setLoading] = useState(false)
-  const [recent, setRecent] = useState<string[]>([])
+  const { recent, push: pushRecent, remove: removeRecent, clear: clearRecentBase } = useRecentSearches()
   const [open, setOpen] = useState(false)
   const [activeIdx, setActiveIdx] = useState(-1)
-
-  useEffect(() => {
-    const id = setTimeout(() => setRecent(readRecent()), 0)
-    return () => clearTimeout(id)
-  }, [])
 
   useEffect(() => {
     const trimmed = query.trim()
@@ -106,33 +86,14 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
   // shortcut behaves identically on every page. The hero bar deliberately does
   // NOT bind ⌘K — two listeners on the home page double-opened and flickered.
 
-  const pushRecent = useCallback((q: string) => {
-    const trimmed = q.trim()
-    if (!trimmed) return
-    setRecent((prev) => {
-      const next = [trimmed, ...prev.filter((x) => x.toLowerCase() !== trimmed.toLowerCase())].slice(0, MAX_RECENT)
-      writeRecent(next)
-      return next
-    })
-  }, [])
-
   const clearRecent = useCallback(() => {
-    setRecent([])
-    try { localStorage.removeItem(RECENT_KEY) } catch { /* */ }
+    clearRecentBase()
     inputRef.current?.focus()
-  }, [])
+  }, [clearRecentBase])
 
   // Popular searches — the trending cards, shown as quick-pick pills in the
   // empty-state dropdown (replaces the old chip row under the bar).
   const popularCards = trending.slice(0, 8)
-
-  const removeRecent = useCallback((item: string) => {
-    setRecent((prev) => {
-      const next = prev.filter((x) => x !== item)
-      writeRecent(next)
-      return next
-    })
-  }, [])
 
   const commitSearch = useCallback((q: string) => {
     const trimmed = q.trim()

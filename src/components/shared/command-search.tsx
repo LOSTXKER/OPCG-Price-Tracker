@@ -34,9 +34,7 @@ import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
 import { fetchCards } from "@/lib/api/fetch-cards"
 import type { SearchResult } from "@/components/shared/search-results-dropdown"
-
-const STORAGE_KEY = "meecard-recent-searches"
-const MAX_RECENT = 6
+import { useRecentSearches } from "@/hooks/use-recent-searches"
 
 /** Navigation shortcuts surfaced in the palette (cards + "go to" pages). */
 const NAV_ACTIONS: { href: string; labelKey: TranslationKey; icon: LucideIcon }[] = [
@@ -50,27 +48,6 @@ const NAV_ACTIONS: { href: string; labelKey: TranslationKey; icon: LucideIcon }[
   { href: "/honey", labelKey: "honeyPageTitle", icon: Sparkles },
   { href: "/settings", labelKey: "settingsTitle", icon: Settings },
 ]
-
-function readRecent(): string[] {
-  if (typeof window === "undefined") return []
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return []
-    const parsed = JSON.parse(raw) as unknown
-    if (!Array.isArray(parsed)) return []
-    return parsed
-      .filter((x): x is string => typeof x === "string")
-      .slice(0, MAX_RECENT)
-  } catch {
-    return []
-  }
-}
-
-function writeRecent(items: string[]) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items.slice(0, MAX_RECENT)))
-  } catch { /* ignore */ }
-}
 
 export function CommandSearchTrigger({ onClick }: { onClick: () => void }) {
   const lang = useUIStore((s) => s.language);
@@ -97,7 +74,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
   const [results, setResults] = useState<SearchResult[]>([])
   const [loading, setLoading] = useState(false)
   const [searchError, setSearchError] = useState<string | null>(null)
-  const [recent, setRecent] = useState<string[]>([])
+  const { recent, push: pushRecent, refresh: refreshRecent } = useRecentSearches()
   const [activeIdx, setActiveIdx] = useState(-1)
 
   useEffect(() => {
@@ -105,14 +82,14 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
     // Async tick keeps the reset out of the synchronous effect body; the
     // modal opens on the same frame either way.
     const t = setTimeout(() => {
-      setRecent(readRecent())
+      refreshRecent()
       setQuery("")
       setResults([])
       setSearchError(null)
       setActiveIdx(-1)
     }, 0)
     return () => clearTimeout(t)
-  }, [open])
+  }, [open, refreshRecent])
 
   useLayoutEffect(() => {
     if (!open) return
@@ -155,16 +132,6 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
       controller.abort()
     }
   }, [query])
-
-  const pushRecent = useCallback((q: string) => {
-    const trimmed = q.trim()
-    if (!trimmed) return
-    setRecent((prev) => {
-      const next = [trimmed, ...prev.filter((x) => x.toLowerCase() !== trimmed.toLowerCase())].slice(0, MAX_RECENT)
-      writeRecent(next)
-      return next
-    })
-  }, [])
 
   const goToCard = useCallback((code: string) => {
     onClose()
