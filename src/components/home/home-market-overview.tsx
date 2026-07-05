@@ -16,7 +16,6 @@ import { AdSlot } from "@/components/ads/ad-slot"
 import { Input } from "@/components/ui/input"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
-import { ViewToggle } from "@/components/ui/toolbar"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
@@ -275,10 +274,12 @@ export function HomeMarketOverview({
               )}
             </div>
 
-            <ViewToggle
-              modes={[
-                { value: "table", icon: List, ariaLabel: "Table view" },
-                { value: "grid", icon: LayoutGrid, ariaLabel: "Grid view" },
+            <SegmentedControl
+              size="sm"
+              ariaLabel="View mode"
+              options={[
+                { value: "table", label: <List className="size-3.5" />, ariaLabel: "Table view" },
+                { value: "grid", label: <LayoutGrid className="size-3.5" />, ariaLabel: "Grid view" },
               ]}
               value={m.viewMode}
               onChange={m.setViewMode}

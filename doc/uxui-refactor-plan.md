@@ -109,9 +109,9 @@
 - [ ] `KIT-05` ยก EditionToggle / SourceBadge(source-logo) / grades จาก card-detail/ ขึ้น kit + hero ราคา card-detail ใช้ HeroNumber ตัวเดียวกับ portfolio
 
 **2.3 Control atoms**
-- [ ] ⏸️ **เลื่อน (ต้อง browser)** `KIT-10` ยุบ pill 5 จุด → SegmentedControl — verify แล้วว่า **ไม่ byte-identical**: ViewToggle (container p-0.5 vs SegmentedControl p-1, button p-1.5 vs h-7) + EditionToggle (active `bg-foreground/10` ≠ `bg-primary/15`, ต้อง variant ใหม่) เปลี่ยน layout/สี → ต้องดูจริง · GameFilterChips = canonical อยู่แล้ว (ไม่ใช่ target) · FilterTabs = SKIP (คนละ pattern)
+- [~] `KIT-10` ยุบ pill → SegmentedControl — **ViewToggle เสร็จ** (ลบ ViewToggle, migrate home-market + filter-toolbar · icon = `label` slot · blast radius contained ไม่มี caller ส่ง custom modes) · **`EditionToggle` เหลือ** (migrate = tap 40→28px regression + active สีต่าง + ทับ KIT-05 → ทำคู่ Phase 5 tap + KIT-05) · GameFilterChips = canonical แล้ว · FilterTabs = SKIP
 - [x] `SETTINGS-09` `ui/switch.tsx` (ยุบ toggle 2 ตัว, hit ≥44px) · [x] `SETTINGS-10` `shared/saved-pill.tsx` (ยุบ feedback pill 5 จุด, presentational, คงสี emerald/red)
-- [~] `PLAY-07` **`ui/qty-stepper.tsx` เสร็จ + ยุบ drop-calc + add-card** (2/3 · unified split + input, size sm/md) · **deck ⏸️ เลื่อน** (ปุ่มติดกัน joined + behavior Minus→0=ลบการ์ด + dense row → ต้อง browser verify)
+- [x] `PLAY-07` `ui/qty-stepper.tsx` — ยุบ stepper **ครบ 3/3** (drop + add-card = `split` · deck = `variant="joined"` + `min={0}` เก็บ behavior Minus ที่ qty 1 → ลบการ์ด)
 - [x] `PORTFOLIO-06` `ui/icon-button.tsx` (ghost/solid, ยุบ local 2 + inline 1) · [x] `COMMERCE-13` `ui/rating-stars.tsx` (ยุบ 6 จุด → amber เดียว)
 - [x] `RESPONSIVE-04` `portfolio/portfolio-name-form.tsx` — ยุบฟอร์ม inline ชื่อพอร์ต 4 จุด (sm/md variant, +aria-label ผ่าน i18n save/cancel)
 

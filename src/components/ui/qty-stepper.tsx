@@ -10,9 +10,11 @@ const FIELD = { sm: "h-9 w-16", md: "h-10 w-20" } as const
 
 /**
  * The one quantity stepper (PLAY-07) — Minus / value / Plus, clamped to
- * [min, max]. `showInput` swaps the read-only count for an editable numeric
- * field. Buttons + field share the hairline border + hover treatment so every
- * stepper reads the same. Controlled: the parent owns `value`.
+ * [min, max]. Two layouts: `split` (separate hairline buttons + gap — drop / add
+ * flows) and `joined` (buttons share one bordered pill — deck rows). `showInput`
+ * swaps the read-only count for an editable numeric field. Controlled: the parent
+ * owns `value`. Minus is disabled at `min`, so pass `min={0}` when reaching 0 has
+ * a meaning (e.g. the deck removes the card).
  */
 export function QtyStepper({
   value,
@@ -20,6 +22,7 @@ export function QtyStepper({
   min = 1,
   max,
   size = "md",
+  variant = "split",
   showInput = true,
   disabled,
   decreaseLabel = "Decrease",
@@ -31,6 +34,7 @@ export function QtyStepper({
   min?: number
   max?: number
   size?: "sm" | "md"
+  variant?: "split" | "joined"
   showInput?: boolean
   disabled?: boolean
   decreaseLabel?: string
@@ -38,16 +42,24 @@ export function QtyStepper({
   className?: string
 }) {
   const clamp = (n: number) => Math.max(min, max != null ? Math.min(max, n) : n)
-  const btn =
-    "ease-chrome flex shrink-0 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-muted-foreground"
+  const joined = variant === "joined"
+  const btnBase =
+    "ease-chrome flex shrink-0 items-center justify-center text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-muted-foreground"
+  const btnChrome = joined ? "" : "rounded-lg border border-[var(--p-hair)] bg-background"
   return (
-    <div className={cn("inline-flex items-center gap-2.5", className)}>
+    <div
+      className={cn(
+        "inline-flex items-center",
+        joined ? "rounded-lg border border-[var(--p-hair)]" : "gap-2.5",
+        className,
+      )}
+    >
       <button
         type="button"
         aria-label={decreaseLabel}
         disabled={disabled || value <= min}
         onClick={() => onChange(clamp(value - 1))}
-        className={cn(btn, BTN[size])}
+        className={cn(btnBase, btnChrome, BTN[size], joined && "rounded-l-lg")}
       >
         <Minus className={ICON[size]} />
       </button>
@@ -68,14 +80,14 @@ export function QtyStepper({
           )}
         />
       ) : (
-        <span className="w-8 text-center text-sm font-semibold tabular-nums">{value}</span>
+        <span className={cn("text-center text-sm font-semibold tabular-nums", joined ? "w-6" : "w-8")}>{value}</span>
       )}
       <button
         type="button"
         aria-label={increaseLabel}
         disabled={disabled || (max != null && value >= max)}
         onClick={() => onChange(clamp(value + 1))}
-        className={cn(btn, BTN[size])}
+        className={cn(btnBase, btnChrome, BTN[size], joined && "rounded-r-lg")}
       >
         <Plus className={ICON[size]} />
       </button>
