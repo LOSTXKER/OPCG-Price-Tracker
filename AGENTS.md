@@ -89,7 +89,6 @@ Concrete consequences:
 | เดิม (อย่าใช้) | → ใช้แทน | finding |
 | --- | --- | --- |
 | `Delta` (`cards/card-detail/grade-value.tsx`) · `DirectionPill` (`alerts/alert-form.tsx`, local) | คงไว้ — ไม่ map เข้า `PriceTag` ตรงๆ (`Delta` มี abs+pct combo mode, `DirectionPill` เป็นปุ่ม toggle ไม่ใช่ตัวโชว์ค่า) — 2.2 migrate `DeltaText`/`ChangePill`/chip ใน `PriceDisplay` เสร็จแล้ว, ลบไฟล์เดิมทิ้งแล้ว | KIT-02 |
-| `shared/sparkline.tsx` (`Sparkline`) | `ui/mini-sparkline.tsx` (`MiniSparkline`) | KIT-08 |
 | `ViewToggle` (`ui/toolbar.tsx`) | `SegmentedControl` — ยุบเสร็จแล้ว, ลบ ViewToggle ทิ้ง (icon = `label` slot) · `EditionToggle` เหลือ (tap regression) | KIT-10 |
 | toggle เขียนมือใน settings (×2) | `ui/switch.tsx` (`Switch`) — ยุบเสร็จแล้ว, ลบ local ทิ้ง (privacy toggle เดิม h-5 w-9 → ทรงมาตรฐาน) | SETTINGS-09 |
 | IconButton เขียนเองใน 2 ไฟล์ portfolio + inline | `ui/icon-button.tsx` (`IconButton`) — ยุบเสร็จแล้ว, ลบ local ทิ้ง | PORTFOLIO-06 |
