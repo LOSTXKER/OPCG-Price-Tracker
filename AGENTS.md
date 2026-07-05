@@ -79,6 +79,7 @@ Concrete consequences:
 | Pill บันทึกแล้ว/ผิดพลาด | `SavedPill` | `shared/saved-pill.tsx` | feedback pill success/error (parent คุม timing) |
 | Stepper จำนวน | `QtyStepper` | `ui/qty-stepper.tsx` | +/- จำนวน (`variant` split/joined · min/max · `showInput`) — drop/add-card/deck |
 | ฟอร์มชื่อพอร์ต inline | `PortfolioNameForm` | `portfolio/portfolio-name-form.tsx` | create/rename พอร์ต inline (`sm`/`md`) |
+| ระบบค้นหาการ์ด | `useCardSearch` · `useSearchKeyboardNav` · `SearchResultRow` | `hooks/use-card-search.ts` · `hooks/use-search-keyboard-nav.ts` · `shared/search-result-row.tsx` | engine ค้นหากลาง: fetch+debounce+abort (`useCardSearch`) · ↑↓/Enter/Esc (`useSearchKeyboardNav`, `arrowUpFloor`) · เนื้อในแถวผลลัพธ์ (`SearchResultRow`, props คุมหน้าตาต่อ surface) — hero/palette/inline ใช้ชุดนี้หมด |
 
 ### 🚧 ยุบต่อ (Phase 2.x — เหลือจุดเดียว)
 

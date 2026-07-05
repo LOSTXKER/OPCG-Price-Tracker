@@ -1,12 +1,13 @@
 "use client"
 
-import { useEffect, useRef, useState, type KeyboardEvent } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Search, X } from "lucide-react"
 
 import { SearchResultsDropdown, type SearchResult } from "@/components/shared/search-results-dropdown"
 import { useCardSearch, type CardSearchResult } from "@/hooks/use-card-search"
 import { useRecentSearches } from "@/hooks/use-recent-searches"
+import { useSearchKeyboardNav } from "@/hooks/use-search-keyboard-nav"
 import { ALL_GAMES } from "@/lib/game/constants"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -21,8 +22,8 @@ import { cn } from "@/lib/utils"
  * - mode="pick": pick a card → onSelect(card) callback (every add dialog).
  *
  * Game-scoped: defaults to the current game (header switcher); pass game="all"
- * for every game. Keyboard: ↑↓ move, Enter select, Esc clear. Recent searches +
- * one placeholder shared everywhere.
+ * for every game. Keyboard (shared useSearchKeyboardNav): ↑↓ move, Enter select,
+ * Esc clear. Recent searches + one placeholder shared everywhere.
  */
 export function CardSearch({
   mode,
@@ -51,7 +52,6 @@ export function CardSearch({
   })
 
   const [open, setOpen] = useState(false)
-  const [activeIdx, setActiveIdx] = useState(-1)
   const { recent, push: pushRecent } = useRecentSearches()
   const inputRef = useRef<HTMLInputElement>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
@@ -90,27 +90,32 @@ export function CardSearch({
     inputRef.current?.focus()
   }
 
-  const onKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "ArrowDown") {
-      e.preventDefault()
-      setOpen(true)
-      setActiveIdx((i) => Math.min(i + 1, navLen - 1))
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault()
-      setActiveIdx((i) => Math.max(i - 1, 0))
-    } else if (e.key === "Enter") {
-      if (activeIdx >= 0 && activeIdx < navLen) {
-        if (results.length > 0) selectCard(results[activeIdx].cardCode)
-        else selectRecent(filteredRecent[activeIdx])
-      } else if (mode === "navigate" && q) {
-        pushRecent(q)
-        setOpen(false)
-        router.push(`/search?q=${encodeURIComponent(q)}`)
-      }
-    } else if (e.key === "Escape") {
+  const { activeIdx, setActiveIdx, onKeyDown: navKeyDown } = useSearchKeyboardNav({
+    length: navLen,
+    onSelect: (i) =>
+      results.length > 0 ? selectCard(results[i].cardCode) : selectRecent(filteredRecent[i]),
+    // navigate mode: Enter with nothing highlighted → full-text search page.
+    // pick mode has no such fallback (undefined = Enter does nothing).
+    onCommit:
+      mode === "navigate"
+        ? () => {
+            if (!q) return
+            pushRecent(q)
+            setOpen(false)
+            router.push(`/search?q=${encodeURIComponent(q)}`)
+          }
+        : undefined,
+    onEscape: () => {
       setOpen(false)
       if (query) reset()
-    }
+    },
+    arrowUpFloor: 0,
+  })
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    // ArrowDown also opens the dropdown here (surface-specific glue).
+    if (e.key === "ArrowDown") setOpen(true)
+    navKeyDown(e)
   }
 
   const showDropdown = open && (q.length >= 2 || filteredRecent.length > 0)

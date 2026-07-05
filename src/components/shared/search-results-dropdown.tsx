@@ -1,25 +1,13 @@
 "use client"
 
-import Image from "next/image"
 import { Clock } from "lucide-react"
 
-import { RarityBadge } from "@/components/shared/rarity-badge"
-import { getCardName, t } from "@/lib/i18n"
+import { SearchResultRow, type SearchResult } from "@/components/shared/search-result-row"
+import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
-import { Price } from "@/components/shared/price-inline"
 import { useUIStore } from "@/stores/ui-store"
 
-export type SearchResult = {
-  cardCode: string
-  baseCode?: string | null
-  nameJp: string
-  nameEn?: string | null
-  nameTh?: string | null
-  rarity: string
-  imageUrl?: string | null
-  latestPriceJpy?: number | null
-  set?: { code: string; name?: string }
-}
+export type { SearchResult }
 
 export function SearchResultsDropdown({
   results,
@@ -58,33 +46,7 @@ export function SearchResultsDropdown({
                   activeIdx === i && "bg-accent"
                 )}
               >
-                <div className="relative size-10 shrink-0 overflow-hidden rounded bg-muted">
-                  {card.imageUrl ? (
-                    <Image
-                      src={card.imageUrl}
-                      alt=""
-                      fill
-                      className="object-cover"
-                      sizes="40px"
-                    />
-                  ) : (
-                    <div className="size-full bg-muted" />
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-h5">{getCardName(lang, card)}</p>
-                  <div className="flex items-center gap-1.5 text-meta">
-                    {card.set?.code && (
-                      <span className="font-mono">{card.set.code}</span>
-                    )}
-                    <RarityBadge rarity={card.rarity} size="sm" />
-                  </div>
-                </div>
-                {card.latestPriceJpy != null && (
-                  <span className="shrink-0 font-mono text-sm font-semibold">
-                    <Price jpy={Math.round(card.latestPriceJpy)} />
-                  </span>
-                )}
+                <SearchResultRow card={card} lang={lang} />
               </button>
             ))}
           </div>

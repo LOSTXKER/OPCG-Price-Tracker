@@ -5,28 +5,17 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { Camera, Clock, Search, TrendingUp, Boxes, X } from "lucide-react"
 
-import { RarityBadge } from "@/components/shared/rarity-badge"
-import { Price } from "@/components/shared/price-inline"
+import { SearchResultRow } from "@/components/shared/search-result-row"
 import { PhotoSearchButton } from "@/app/search/photo-search-button"
 import { getCardName, getSetName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
-import { fetchCards } from "@/lib/api/fetch-cards"
+import { useCardSearch } from "@/hooks/use-card-search"
 import { useRecentSearches } from "@/hooks/use-recent-searches"
+import { useSearchKeyboardNav } from "@/hooks/use-search-keyboard-nav"
 
 const MAX_SETS = 4
-
-type SuggestionCard = {
-  cardCode: string
-  nameJp: string
-  nameEn?: string | null
-  nameTh?: string | null
-  rarity: string
-  imageUrl?: string | null
-  latestPriceJpy?: number | null
-  set?: { code: string; name?: string; nameEn?: string | null }
-}
 
 export type SetSuggestion = {
   code: string
@@ -50,29 +39,15 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
   const inputRef = useRef<HTMLInputElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
 
-  const [query, setQuery] = useState("")
-  const [results, setResults] = useState<SuggestionCard[]>([])
-  const [loading, setLoading] = useState(false)
+  // Shared engine: 6-result cap, zero debounce (instant feel), and keep prior
+  // results on a transient error so the list doesn't blank out mid-typing.
+  const { query, setQuery, results, loading, reset } = useCardSearch({
+    limit: 6,
+    debounceMs: 0,
+    keepPreviousOnError: true,
+  })
   const { recent, push: pushRecent, remove: removeRecent, clear: clearRecentBase } = useRecentSearches()
   const [open, setOpen] = useState(false)
-  const [activeIdx, setActiveIdx] = useState(-1)
-
-  useEffect(() => {
-    const trimmed = query.trim()
-    const controller = new AbortController()
-    const id = setTimeout(() => {
-      if (trimmed.length < 2) { setResults([]); return }
-      setLoading(true)
-      fetchCards({ search: trimmed, limit: 6 }, { signal: controller.signal })
-        .then((data) => { setResults(data.cards ?? []); setActiveIdx(-1) })
-        .catch((err: unknown) => { if (err instanceof Error && err.name !== "AbortError") console.error(err) })
-        .finally(() => setLoading(false))
-    }, 0)
-    return () => {
-      clearTimeout(id)
-      controller.abort()
-    }
-  }, [query])
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
@@ -138,20 +113,26 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
     for (const r of filteredRecent) nav.push({ run: () => commitSearch(r) })
   }
 
+  const { activeIdx, setActiveIdx, onKeyDown: handleKeyDown } = useSearchKeyboardNav({
+    length: nav.length,
+    onSelect: (i) => nav[i].run(),
+    onCommit: () => commitSearch(query),
+    onEscape: () => setOpen(false),
+    arrowUpFloor: -1,
+  })
+
+  // A fresh result batch drops any stale keyboard highlight so an in-flight
+  // ArrowDown can't retarget a different row (debounceMs:0 race). setTimeout
+  // keeps the setState out of the effect body per the repo lint rule.
+  useEffect(() => {
+    const tm = setTimeout(() => setActiveIdx(-1), 0)
+    return () => clearTimeout(tm)
+  }, [results, setActiveIdx])
+
   const hasContent =
     (searching && (results.length > 0 || setMatches.length > 0 || loading || (trimmed.length >= 2 && results.length === 0))) ||
     (!searching && (filteredRecent.length > 0 || popularCards.length > 0))
   const hasDropdown = open && hasContent
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowDown") { e.preventDefault(); setActiveIdx((i) => Math.min(i + 1, nav.length - 1)) }
-    else if (e.key === "ArrowUp") { e.preventDefault(); setActiveIdx((i) => Math.max(i - 1, -1)) }
-    else if (e.key === "Enter") {
-      e.preventDefault()
-      if (activeIdx >= 0 && activeIdx < nav.length) nav[activeIdx].run()
-      else commitSearch(query)
-    } else if (e.key === "Escape") { setOpen(false) }
-  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -189,7 +170,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
             <button
               type="button"
               aria-label="Clear search"
-              onClick={() => { setQuery(""); setResults([]); inputRef.current?.focus() }}
+              onClick={() => { reset(); inputRef.current?.focus() }}
               className="ease-chrome rounded-full p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
             >
               <X className="size-4" />
@@ -232,37 +213,28 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
             {searching && results.length > 0 && (
               <>
                 <p className={sectionLabel}>{t(lang, "card")}</p>
-                {results.map((card, i) => {
-                  return (
-                    <button
-                      key={card.cardCode}
-                      type="button"
-                      onMouseEnter={() => setActiveIdx(i)}
-                      onClick={() => go(`/cards/${card.cardCode}`)}
-                      className={cn(rowBase, activeIdx === i ? "bg-accent" : "hover:bg-accent/60")}
-                    >
-                      <div className="relative size-9 shrink-0 overflow-hidden rounded-md bg-muted">
-                        {card.imageUrl ? (
-                          <Image src={card.imageUrl} alt={getCardName(lang, card)} fill className="object-contain" sizes="36px" placeholder="blur" blurDataURL={BLUR_DATA_URL} />
-                        ) : (
-                          <div className="size-full bg-muted" />
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium">{getCardName(lang, card)}</p>
-                        <div className="flex items-center gap-1.5 text-meta">
-                          {card.set?.code && <span className="font-mono">{card.set.code.toUpperCase()}</span>}
-                          <RarityBadge rarity={card.rarity} size="sm" />
-                        </div>
-                      </div>
-                      {card.latestPriceJpy != null && (
-                        <span className="shrink-0 font-price text-sm font-semibold">
-                          <Price jpy={Math.round(card.latestPriceJpy)} />
-                        </span>
-                      )}
-                    </button>
-                  )
-                })}
+                {results.map((card, i) => (
+                  <button
+                    key={card.cardCode}
+                    type="button"
+                    onMouseEnter={() => setActiveIdx(i)}
+                    onClick={() => go(`/cards/${card.cardCode}`)}
+                    className={cn(rowBase, activeIdx === i ? "bg-accent" : "hover:bg-accent/60")}
+                  >
+                    <SearchResultRow
+                      card={card}
+                      lang={lang}
+                      size="sm"
+                      thumbFit="contain"
+                      thumbClassName="rounded-md"
+                      blur
+                      nameClassName="text-sm font-medium"
+                      uppercaseSetCode
+                      priceClassName="font-price text-sm font-semibold"
+                      alt={getCardName(lang, card)}
+                    />
+                  </button>
+                ))}
               </>
             )}
 
