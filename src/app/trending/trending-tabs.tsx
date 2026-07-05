@@ -7,7 +7,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { TrendingUp, TrendingDown, TrendingUpDown, Eye } from "lucide-react"
 
 import { PageHeader } from "@/components/layout/page-header"
-import { DeltaText } from "@/components/shared/delta-text"
+import { PriceTag } from "@/components/ui/price-tag"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
 import { Sparkline } from "@/components/shared/sparkline"
@@ -93,7 +93,7 @@ const MobileTrendingItem = memo(function MobileTrendingItem({
           </p>
         ) : (
           <div className="font-price text-xs">
-            <DeltaText value={change} suffix="%" />
+            <PriceTag change={change} changeOnly changeStyle="plain" decimals={2} size="md" />
           </div>
         )}
       </div>
@@ -157,7 +157,7 @@ const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }:
         </td>
       ) : (
         <td className="px-4 py-2.5 text-right">
-          <DeltaText value={change} suffix="%" />
+          <PriceTag change={change} changeOnly changeStyle="plain" decimals={2} size="md" />
         </td>
       )}
       <td className="hidden px-4 py-2.5 sm:table-cell">

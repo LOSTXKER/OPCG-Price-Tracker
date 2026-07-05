@@ -7,7 +7,7 @@ import { ArrowRight, Clock, TrendingDown, TrendingUp } from "lucide-react"
 import type { TrendingCard } from "@/lib/data/home"
 import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
-import { ChangePill } from "@/components/market/change-pill"
+import { PriceTag } from "@/components/ui/price-tag"
 
 export function HomeMiniTable({
   cards,
@@ -70,7 +70,7 @@ export function HomeMiniTable({
                 <div className="min-w-0 flex-1">
                   <p className="line-clamp-1 text-sm font-medium leading-tight">{name}</p>
                 </div>
-                <ChangePill value={change} className="shrink-0 text-sm" />
+                <PriceTag change={change} changeOnly changeStyle="plain" showArrow={false} size="sm" className="shrink-0 text-sm" />
               </Link>
             )
           })}

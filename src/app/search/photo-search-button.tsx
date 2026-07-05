@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { EmptyState } from "@/components/shared/empty-state"
 import { RarityBadge } from "@/components/shared/rarity-badge"
-import { PriceDisplay } from "@/components/shared/price-display"
+import { PriceTag } from "@/components/ui/price-tag"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Surface } from "@/components/ui/surface"
 import { ApiError, apiForm } from "@/lib/api/client"
@@ -372,9 +372,9 @@ function ResultBlock({
                 </div>
               </div>
               <div className="text-right">
-                <PriceDisplay
-                  priceJpy={card.latestPriceJpy}
-                  priceThb={card.latestPriceThb}
+                <PriceTag
+                  jpy={card.latestPriceJpy}
+                  thb={card.latestPriceThb}
                   size="sm"
                   showChange={false}
                 />

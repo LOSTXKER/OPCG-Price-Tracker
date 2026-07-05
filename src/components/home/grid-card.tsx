@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 
 import { CardActionRow } from "@/components/shared/card-action-row"
 import { RarityBadge } from "@/components/shared/rarity-badge"
-import { PriceDisplay } from "@/components/shared/price-display"
+import { PriceTag } from "@/components/ui/price-tag"
 import { PriceUsd } from "@/components/shared/price-usd"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Surface } from "@/components/ui/surface"
@@ -89,8 +89,8 @@ export const GridCard = memo(function GridCard({
               <span className="font-price text-lg font-semibold text-muted-foreground/50">—</span>
             )
           ) : (
-            <PriceDisplay
-              priceJpy={card.latestPriceJpy}
+            <PriceTag
+              jpy={card.latestPriceJpy}
               change={activeChange}
               size="card"
               className="gap-x-1.5"

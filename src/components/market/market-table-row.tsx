@@ -18,7 +18,7 @@ import { formatCount } from "@/lib/utils/currency"
 import type { CardRow, PriceMode } from "@/components/home/market-types"
 
 import type { MarketColumn } from "./market-columns"
-import { ChangePill } from "./change-pill"
+import { PriceTag } from "@/components/ui/price-tag"
 
 function cellClass(col: MarketColumn) {
   return cn(
@@ -117,11 +117,11 @@ export const MarketTableRow = memo(function MarketTableRow({
           </span>
         )
       case "change24h":
-        return isPsa ? <Dash /> : <ChangePill value={card.priceChange24h} />
+        return isPsa ? <Dash /> : <PriceTag change={card.priceChange24h} changeOnly changeStyle="plain" showArrow={false} size="sm" />
       case "change7d":
-        return isPsa ? <Dash /> : <ChangePill value={card.priceChange7d} />
+        return isPsa ? <Dash /> : <PriceTag change={card.priceChange7d} changeOnly changeStyle="plain" showArrow={false} size="sm" />
       case "change30d":
-        return isPsa ? <Dash /> : <ChangePill value={card.priceChange30d} />
+        return isPsa ? <Dash /> : <PriceTag change={card.priceChange30d} changeOnly changeStyle="plain" showArrow={false} size="sm" />
       case "views":
         return <span className="font-price text-xs text-muted-foreground">{formatCount(card.viewCount ?? 0)}</span>
       case "sparkline":

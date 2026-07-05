@@ -17,7 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { PriceDisplay } from "@/components/shared/price-display";
+import { PriceTag } from "@/components/ui/price-tag";
 import { ApiError, apiDelete, apiGet, apiPatch, apiPost } from "@/lib/api/client";
 import { createClient } from "@/lib/supabase/client";
 import { useAuthState } from "@/hooks/use-auth-state";
@@ -306,7 +306,7 @@ function DeckCalculatorContent() {
           <Surface variant="outline" padding="md">
             <div className="flex items-center justify-between">
               <p className="text-muted-foreground text-sm font-medium">{t(lang, "totalValue")}</p>
-              <PriceDisplay priceJpy={totalPrice} showChange={false} size="lg" />
+              <PriceTag jpy={totalPrice} showChange={false} size="lg" />
             </div>
           </Surface>
 
@@ -340,7 +340,7 @@ function DeckCalculatorContent() {
                   <p className="truncate text-sm font-medium">{activeDeck.leader.nameEn ?? activeDeck.leader.nameJp}</p>
                   <p className="text-muted-foreground font-mono text-xs">{activeDeck.leader.cardCode}</p>
                 </div>
-                <PriceDisplay priceJpy={activeDeck.leader.latestPriceJpy} showChange={false} size="sm" />
+                <PriceTag jpy={activeDeck.leader.latestPriceJpy} showChange={false} size="sm" />
               </div>
             ) : (
               <p className="text-muted-foreground text-sm">{t(lang, "noLeaderSelected")}</p>
@@ -408,8 +408,8 @@ function DeckCalculatorContent() {
                         <Plus className="size-3.5" />
                       </button>
                     </div>
-                    <PriceDisplay
-                      priceJpy={(entry.card.latestPriceJpy ?? 0) * entry.quantity}
+                    <PriceTag
+                      jpy={(entry.card.latestPriceJpy ?? 0) * entry.quantity}
                       showChange={false}
                       size="sm"
                     />

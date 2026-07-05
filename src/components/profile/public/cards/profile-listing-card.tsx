@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { ConditionBadge } from "@/components/shared/condition-badge";
-import { DeltaText } from "@/components/shared/delta-text";
+import { PriceTag } from "@/components/ui/price-tag";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import { Price } from "@/components/shared/price-inline";
 import { CARD_BG } from "@/lib/constants/ui";
@@ -88,8 +88,10 @@ export function ProfileListingCard({
               <Price jpy={listing.priceJpy} thb={listing.priceThb} />
             </p>
             {meaningfulGap ? (
-              <DeltaText
-                value={diffPct}
+              <PriceTag
+                change={diffPct}
+                changeOnly
+                changeStyle="plain"
                 decimals={0}
                 size="sm"
                 invert
