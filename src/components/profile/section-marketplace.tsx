@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ExternalLink, Package, Plus, ShieldCheck, Star, Store } from "lucide-react";
 import { PriceTag } from "@/components/ui/price-tag";
+import { RatingStars } from "@/components/ui/rating-stars";
 import { Button } from "@/components/ui/button";
 import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
@@ -134,17 +135,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
             </div>
           </div>
           <div className="mt-4 flex items-center gap-1">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star
-                key={i}
-                className={cn(
-                  "size-5",
-                  sellerRating != null && i < Math.round(sellerRating)
-                    ? "fill-yellow-400 text-yellow-400"
-                    : "text-muted-foreground/20",
-                )}
-              />
-            ))}
+            <RatingStars value={sellerRating ?? 0} size="lg" className="gap-1" />
             {sellerRating != null && (
               <span className="ml-2 text-sm font-semibold">{sellerRating.toFixed(1)}</span>
             )}

@@ -1,7 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { Briefcase, Check, Edit2, Lock, MoreHorizontal, Plus, Trash2, X } from "lucide-react"
+import { Briefcase, Edit2, Lock, MoreHorizontal, Plus, Trash2 } from "lucide-react"
+
+import { PortfolioNameForm } from "./portfolio-name-form"
 import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
@@ -79,31 +81,19 @@ export function PortfolioSidebar({
 
         if (editingId === p.id) {
           return (
-            <form
+            <PortfolioNameForm
               key={p.id}
-              className="flex items-center gap-1 px-2 py-1.5"
-              onSubmit={(e) => {
-                e.preventDefault()
-                if (editName.trim()) {
-                  onRename(p.id, editName.trim())
-                  setEditingId(null)
-                }
+              size="sm"
+              className="px-2 py-1.5"
+              lang={lang}
+              value={editName}
+              onChange={setEditName}
+              onSubmit={(name) => {
+                onRename(p.id, name)
+                setEditingId(null)
               }}
-            >
-              <input
-                autoFocus
-                className="flex-1 rounded-lg border border-[var(--p-hair)] bg-background px-2 py-1.5 text-sm outline-none ring-primary/30 transition-shadow focus:ring-2"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Escape") setEditingId(null) }}
-              />
-              <button type="submit" className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground">
-                <Check className="size-3.5" />
-              </button>
-              <button type="button" onClick={() => setEditingId(null)} className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground">
-                <X className="size-3.5" />
-              </button>
-            </form>
+              onCancel={() => setEditingId(null)}
+            />
           )
         }
 
@@ -186,32 +176,20 @@ export function PortfolioSidebar({
 
       {/* Add portfolio */}
       {creating ? (
-        <form
-          className="flex items-center gap-1 px-2 py-1.5"
-          onSubmit={(e) => {
-            e.preventDefault()
-            if (newName.trim()) {
-              onCreate(newName.trim())
-              setNewName("")
-              setCreating(false)
-            }
+        <PortfolioNameForm
+          size="sm"
+          className="px-2 py-1.5"
+          lang={lang}
+          placeholder={t(lang, "portfolioName")}
+          value={newName}
+          onChange={setNewName}
+          onSubmit={(name) => {
+            onCreate(name)
+            setNewName("")
+            setCreating(false)
           }}
-        >
-          <input
-            autoFocus
-            placeholder={t(lang, "portfolioName")}
-            className="flex-1 rounded-lg border border-[var(--p-hair)] bg-background px-2 py-1.5 text-sm outline-none ring-primary/30 transition-shadow placeholder:text-muted-foreground/60 focus:ring-2"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Escape") setCreating(false) }}
-          />
-          <button type="submit" className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground">
-            <Check className="size-3.5" />
-          </button>
-          <button type="button" onClick={() => setCreating(false)} className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground">
-            <X className="size-3.5" />
-          </button>
-        </form>
+          onCancel={() => setCreating(false)}
+        />
       ) : atLimit ? (
         /* At the plan limit — say so plainly and sell the upgrade, instead of a
            plus button that silently bounces to a dialog. */

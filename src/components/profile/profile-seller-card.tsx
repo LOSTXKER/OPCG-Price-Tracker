@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { RatingStars } from "@/components/ui/rating-stars";
 import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
 import { t, type Language } from "@/lib/i18n";
@@ -92,19 +93,7 @@ export function ProfileSellerCard({ stats }: { stats: SellerStats }) {
                 <span className="text-body-sm font-medium">
                   {stats.topReview.reviewerName ?? "User"}
                 </span>
-                <div className="flex items-center gap-0.5">
-                  {Array.from({ length: 5 }, (_, i) => (
-                    <Star
-                      key={i}
-                      className={cn(
-                        "size-3",
-                        i < stats.topReview!.rating
-                          ? "fill-amber-400 text-amber-400"
-                          : "text-muted-foreground/20",
-                      )}
-                    />
-                  ))}
-                </div>
+                <RatingStars value={stats.topReview!.rating} size="sm" />
               </div>
               <p className="mt-1 line-clamp-3 text-body-sm text-foreground/80">
                 {stats.topReview.comment}

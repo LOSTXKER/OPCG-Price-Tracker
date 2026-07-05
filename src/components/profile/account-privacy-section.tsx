@@ -2,8 +2,6 @@
 
 import { useCallback, useRef, useState, type ComponentType, type ReactNode } from "react";
 import {
-  CircleAlert,
-  CircleCheck,
   Globe,
   Info,
   Layers,
@@ -17,6 +15,8 @@ import type { Language } from "@/lib/i18n";
 import { apiPatch, apiTry } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/ui/surface";
+import { Switch } from "@/components/ui/switch";
+import { SavedPill } from "@/components/shared/saved-pill";
 import type { DbUser } from "./profile-types";
 
 const VISIBILITY_OPTIONS = [
@@ -188,22 +188,8 @@ function PrivacyFeedback({
   savedField: string | null;
   lang: Language;
 }) {
-  if (errorField === field) {
-    return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in zoom-in-95">
-        <CircleAlert className="size-3" />
-        {t(lang, "saveFailed")}
-      </span>
-    );
-  }
-  if (savedField === field) {
-    return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 animate-in fade-in zoom-in-95">
-        <CircleCheck className="size-3" />
-        {t(lang, "saved")}
-      </span>
-    );
-  }
+  if (errorField === field) return <SavedPill kind="error">{t(lang, "saveFailed")}</SavedPill>;
+  if (savedField === field) return <SavedPill kind="success">{t(lang, "saved")}</SavedPill>;
   return null;
 }
 
@@ -238,38 +224,6 @@ function CardHeader({
   );
 }
 
-function Toggle({
-  checked,
-  onChange,
-  disabled,
-}: {
-  checked: boolean;
-  onChange: (v: boolean) => void;
-  disabled?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      disabled={disabled}
-      onClick={() => onChange(!checked)}
-      className={cn(
-        "relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-        checked ? "bg-primary" : "bg-input",
-        disabled && "cursor-not-allowed opacity-50",
-      )}
-    >
-      <span
-        className={cn(
-          "pointer-events-none block size-4 rounded-full bg-background shadow-sm ring-0 transition-transform",
-          checked ? "translate-x-[18px]" : "translate-x-[2px]",
-        )}
-      />
-    </button>
-  );
-}
-
 function PrivacyRow({
   Icon,
   label,
@@ -299,7 +253,7 @@ function PrivacyRow({
           <p className="text-meta">{desc}</p>
         </div>
       </div>
-      <Toggle checked={checked} onChange={onChange} />
+      <Switch checked={checked} onCheckedChange={onChange} ariaLabel={label} />
     </div>
   );
 }

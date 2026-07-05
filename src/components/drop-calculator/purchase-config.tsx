@@ -1,6 +1,6 @@
 "use client"
 
-import { Minus, Plus } from "lucide-react"
+import { QtyStepper } from "@/components/ui/qty-stepper"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { t } from "@/lib/i18n"
@@ -60,30 +60,16 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
             </button>
           ))}
         </div>
-        <div className="flex items-center justify-center gap-2.5">
-          <button
-            onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
-            className="flex size-9 items-center justify-center rounded-lg border border-border transition-colors hover:bg-muted active:scale-95"
-          >
-            <Minus className="size-4" />
-          </button>
-          <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
+        <div className="flex justify-center">
+          <QtyStepper
             value={quantity}
-            onChange={(e) => {
-              const v = e.target.value.replace(/\D/g, "")
-              onQuantityChange(Math.max(1, Math.min(99, Number(v) || 1)))
-            }}
-            className="h-9 w-16 rounded-lg border border-border bg-background px-2 text-center font-mono text-sm font-semibold tabular-nums outline-none"
+            onChange={onQuantityChange}
+            min={1}
+            max={99}
+            size="sm"
+            decreaseLabel={t(lang, "decrease")}
+            increaseLabel={t(lang, "increase")}
           />
-          <button
-            onClick={() => onQuantityChange(Math.min(99, quantity + 1))}
-            className="flex size-9 items-center justify-center rounded-lg border border-border transition-colors hover:bg-muted active:scale-95"
-          >
-            <Plus className="size-4" />
-          </button>
         </div>
         <p className="text-center text-meta">
           {unit === "pack" && `${quantity} ${t(lang, "packUnit")} · ${cards} ${t(lang, "cardsCount")}`}

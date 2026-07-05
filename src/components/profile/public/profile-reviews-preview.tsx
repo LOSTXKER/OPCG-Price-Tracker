@@ -3,9 +3,9 @@
 import { ChevronRight, Star } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { RatingStars } from "@/components/ui/rating-stars";
 import { Surface } from "@/components/ui/surface";
 import { t, type Language } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
 import { formatRelativeAgo } from "@/lib/utils/relative-time";
 
 import type { ProfileTab, SerializedReview } from "./types";
@@ -111,19 +111,7 @@ function ReviewCard({ review, lang }: { review: SerializedReview; lang: Language
             {formatRelativeAgo(review.createdAt, lang)}
           </p>
         </div>
-        <div className="flex shrink-0 items-center gap-0.5">
-          {Array.from({ length: 5 }, (_, i) => (
-            <Star
-              key={i}
-              className={cn(
-                "size-3",
-                i < review.rating
-                  ? "fill-amber-400 text-amber-400"
-                  : "text-muted-foreground/20",
-              )}
-            />
-          ))}
-        </div>
+        <RatingStars value={review.rating} size="sm" className="shrink-0" />
       </header>
       {review.comment && (
         <p className="mt-2 line-clamp-3 text-body-sm text-foreground/80">

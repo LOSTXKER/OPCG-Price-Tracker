@@ -1,43 +1,47 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-05 — **Phase 2.2 ปิดจบ (KIT-08 sparkline + KIT-05 hero) บน branch `feat/phase2.2-sparkline-hero` (เปิด PR แล้ว รอ merge) · ต่อที่ Phase 2.3 control atoms**
+อัปเดตล่าสุด: 2026-07-05 — **2 PR รอ merge (แตกจาก master, รอเบสดู preview): #65 = Phase 2.2 (sparkline+hero) · #66 = Phase 2.3 (control atoms — 4 ตัวเสร็จ, 3 เลื่อนรอ browser) · Browser ไม่พร้อม session นี้ → เบส eyeball preview**
 
-## ✅ เสร็จรอบนี้ (branch `feat/phase2.2-sparkline-hero` — ยังไม่ merge)
-- **KIT-08** — รวม sparkline 2 ตัว → เหลือ **`ui/mini-sparkline.tsx`** ตัวเดียว
-  - `MiniSparkline` ใหม่: gradient เป็น prop `fill?` (default **line-only**) · ใส่ `width/height` SVG attr คงที่ (pixel-stable) · `aria-hidden` · token `--color-price-up/down`
-  - migrate 5 จุด: trending · home/mobile-card-item · market/market-table-row · portfolio/assets-table/desktop-row (เดิม `<Sparkline>`) + watchlist (ใช้ `MiniSparkline` อยู่แล้ว)
-  - **watchlist เปลี่ยนเป็น line-only** ให้ตรงกับ market/portfolio (= แก้ตรงที่ finding บ่นว่า "หน้าตาต่างโดยไม่มีเหตุผล") · **ลบ `shared/sparkline.tsx`**
-- **KIT-05 (บางส่วน)** — card-detail hero `<span text-display>` ดิบ → **`HeroNumber`** ตัวเดียวกับ portfolio (count-up ตอน mount/สลับเกรด · `live={activeIndex != null}` ให้ mirror ค่าเป๊ะตอน scrub กราฟไม่กระตุก · null-guard คงแสดง "—")
+## 🔀 ลำดับ merge (2 branch แตกจาก master เดียวกัน)
+1. merge **#65** (`feat/phase2.2-sparkline-hero`) ก่อน
+2. merge **#66** (`feat/phase2.3-control-atoms`) ทีหลัง → conflict **trivial** ที่ `AGENTS.md` (คนละ row) · `PROGRESS.md` (เอาเวอร์ชันนี้) · `doc/uxui-refactor-plan.md` (คนละบรรทัด) — resolve เอาของทั้งสอง
 
-## ⚠️ ตัดสินใจเลื่อน (จดเหตุผล กันเข้าใจผิดว่าลืม)
-- **ยัง ไม่ ยก `edition-toggle`/`source-logo`/`grades.ts` จาก card-detail ขึ้น kit** (KIT-05 ครึ่งหลัง) — เพราะ (1) ทั้ง 3 ยังถูกใช้แค่ใน feature `cards` ตัวเดียว **ไม่มี consumer ข้าม feature** (marketplace/comps ยังไม่สร้าง) → ย้ายตอนนี้ = churn เปล่า + เสี่ยงฟรี (2) `grades.ts` เป็น **domain logic** ควรไป `lib/cards/` ไม่ใช่ `ui/` (3) `edition-toggle` ทับ **KIT-10** (recompose จาก `SegmentedControl`) → ทำทีเดียวใน 2.3 ดีกว่า double-move · **ยกจริงเมื่อมี consumer ข้าม feature — `SourceLogo` เป็นตัวแรกที่ควรยก**
+## ✅ PR #65 — Phase 2.2 (รอ merge)
+- KIT-08 รวม sparkline → `ui/mini-sparkline.tsx` เดียว (`fill?`, line-only, ลบ `shared/sparkline.tsx`) · KIT-05(บางส่วน) card-detail hero → `HeroNumber`
+- verify: tsc0/lint0/test56/build✓ + review 4 มิติ 0 defect
 
-## ✅ verify รอบนี้
-- tsc **0** · lint **0 err** (32 warning เดิม, ไม่มีในไฟล์ที่แก้) · test **56/56** · build **✓** (route ครบ, /trending ยัง static)
-- card hero SSR render `26,880 ฿` ใน markup `HeroNumber` ถูกเป๊ะ · fresh curl card/home/trending = 200 ทั้งหมด **0 error ใหม่**
-- **review workflow 4 มิติ + adversarial verify** → **0 confirmed code defect** (เหลือแต่ doc-sync ที่ทำครบแล้ว + 1 latent nit gradient-id ที่ dormant/safe → ใส่ comment เตือนไว้)
-- ⚠️ **ยังไม่ได้ eyeball sparkline สดด้วย browser** — **Chrome extension ไม่ได้เชื่อมต่อ session นี้** (เหมือนหลาย session ก่อน) · `MiniSparkline` เป็น superset ของ `Sparkline` เดิม + review ยืนยันแล้ว แต่ **เบสควรเปิดดูจริง**: sparkline ใน market/portfolio/watchlist (เส้น trend เขียว/แดง line-only) + card hero count-up ตอนโหลด + ลากกราฟแล้วเลขบนวิ่งตาม
+## ✅ PR #66 — Phase 2.3 control atoms (รอ merge · branch `feat/phase2.3-control-atoms`)
+**7 atom + 8 การยุบ เสร็จ (verify: tsc0/lint0/test56/build✓ + review workflow 5 ชุด adversarial verify 0 confirmed defect):**
+- **`ui/switch.tsx`** (SETTINGS-09) — ยุบ toggle เขียนมือ 2 ตัว · hit ≥44px · +ariaLabel
+- **`ui/icon-button.tsx`** (PORTFOLIO-06) — ghost/solid, ยุบ local 2 + inline 1
+- **`ui/rating-stars.tsx`** (COMMERCE-13) — ยุบดาว 6 จุด (4 สี→**amber เดียว**) · **เปลี่ยนสีตั้งใจ**
+- **`shared/saved-pill.tsx`** (SETTINGS-10) — ยุบ feedback pill 5 จุด (คงสี emerald/red)
+- **`portfolio/portfolio-name-form.tsx`** (RESPONSIVE-04) — ยุบฟอร์มชื่อพอร์ต 4 จุด (sm/md, +aria-label)
+- **`ui/qty-stepper.tsx`** (PLAY-07) — ยุบ stepper **ครบ 3/3** (drop+add=split · **deck=joined variant + min=0 เก็บ behavior Minus→ลบการ์ด**)
+- **KIT-10 ViewToggle → SegmentedControl** — ลบ `ViewToggle` ทิ้ง, migrate home-market + filter-toolbar (icon = `label` slot · blast radius contained)
+- ⚠️ **เบส eyeball preview #66** (browser ไม่พร้อม + login-gated curl ไม่ได้):
+  - **privacy toggle** โต h-5→h-6 + off เบจอ่อนกว่า (ยุบเป็น Switch เดียว)
+  - **ดาวเรตติ้ง = amber ทั้งเว็บ** (เดิม 4 สี) · ดาวว่าง 2 จุด เทาทึบ→outline จาง `/20`
+  - **drop-calc stepper** เปลี่ยนเล็กน้อย (border/active/icon) · **deck stepper** ยุบเป็น QtyStepper (ทรง joined เดิม — ยืนยัน Minus ยังลบการ์ดได้)
+  - **market view toggle (grid/table)** = SegmentedControl แล้ว (ปุ่มขนาดต่างจาก ViewToggle เดิมนิดหน่อย h-7 vs p-1.5)
+  - notifications toggle · icon button · saved pill · name form · add-card stepper ควร**เหมือนเดิม**
 
-## ⏭️ NEXT — Phase 2.3 Control atoms (ตาม doc/uxui-refactor-plan.md §2.3)
-1. **`ui/switch.tsx`** (SETTINGS-09) — toggle เขียนมือใน settings ×2 → atom เดียว (hit ≥44px แต่แรก)
-2. **`QtyStepper`** (PLAY-07, ≥44px) — drop-calc + deck-calc ใช้ร่วม (VISION §5.4 ระบุเป็น atom)
-3. **`IconButton`** (PORTFOLIO-06) — ตอนนี้ประกาศซ้ำ 2 ไฟล์ + inline 1 · **`RatingStars`** honey ตัวเดียว (COMMERCE-13, ตอนนี้ 3 ตัว 3 สี)
-4. **`KIT-10`** ยุบ pill "เลือก 1 จาก N" 5 จุด → `SegmentedControl` เดียว + **ยก `EditionToggle` ขึ้น kit ให้ประกอบจาก SegmentedControl** (ทำคู่กับ KIT-05 ที่เลื่อนไว้)
-5. `RESPONSIVE-04` ฟอร์ม inline ชื่อพอร์ต ก๊อป 4 ชุด/3 ไฟล์ → ตัวเดียว
-- แล้วต่อ **2.4** search engine เดียว · **2.5** flow copy-paste · **2.6** จัดโฟลเดอร์ 3 ชั้น
-- **จุดเช็คอินเบส:** จบ 2.2+2.3 = เบสดู atom ใหม่บนหน้าจริง (plan §4)
+## ⏭️ NEXT — Phase 2.3 เหลือ **จุดเดียว** (⏸️ EditionToggle — ทำคู่ Phase 5 + KIT-05)
+- **`EditionToggle`** (`card-detail/edition-toggle.tsx`) → SegmentedControl (KIT-10 ที่เหลือ) — **ยังไม่ยุบ เพราะ:** migrate = **tap target หด 40→28px = regression จริง** + active `bg-foreground/10`≠`bg-primary/15` (เปลี่ยนสี) + ทับ **KIT-05 lift** (ยกขึ้น kit) → คุ้มกว่าทำทีเดียวกับ **Phase 5.0 tap-target** (ที่จะเพิ่ม size ≥44px ให้ SegmentedControl) + KIT-05
+- **2.3 ถือว่าจบสาระสำคัญแล้ว** (7 atom · เหลือ EditionToggle จุดเดียวที่ผูกกับ phase อื่น)
+- แล้วต่อ **2.4** search engine เดียว · **2.5** flow copy-paste · **2.6** โฟลเดอร์ 3 ชั้น
+- **จุดเช็คอินเบส:** จบ 2.2+2.3 = เบสดู atom ใหม่บนหน้าจริง (plan §4) — **ถึงจุดนี้แล้ว**
 
-## ⚠️ ค้าง/ข้อควรรู้ (สำคัญสำหรับ session หน้า)
-- **dev log มี error เก่าค้าง** (`PriceDisplay` ReferenceError · `home/sections/honey-preview|portfolio-preview|preview-row` module-not-found) = **stale residue จาก session ก่อน Phase 1/2.2 ลบไฟล์** — ยืนยันแล้วว่าไม่ใช่ bug ปัจจุบัน (grep src ไม่มี ref จริง · fresh curl 200 0 error) · ถ้าเจออีกให้ `rm -rf .next` แล้ว restart
-- **อย่า migrate `Delta`/`DirectionPill` เข้า PriceTag** (คนละ role — จดใน AGENTS.md ⛔ table)
-- `lastSale`/`lowestAsk` (grades.ts) = จงใจเก็บ (earmark stat) — อย่าลบ
-- branch merged เก่ายังไม่ลบ (#59-#63) — ลบได้ถ้าอยาก (บอกก่อน)
+## ⚠️ ค้าง/ข้อควรรู้
+- **dev log error เก่าค้าง** (`PriceDisplay`·`home/sections/*`) = stale จาก session ก่อน ไม่ใช่ bug ปัจจุบัน (`rm -rf .next`+restart ถ้าเจอ)
+- scout เชียร์ bump tap →44px หลายจุด แต่ **= Phase 5.0 ไม่ใช่ 2.3** (2.3 = ยุบของซ้ำ คงหน้าตาเดิม)
+- **อย่า migrate `Delta`/`DirectionPill` เข้า PriceTag** · `lastSale`/`lowestAsk` (grades.ts) จงใจเก็บ
 
-## กฎเหล็ก session นี้ (ยึดต่อ)
-- **ห้าม push master ตรง** — branch + PR + merge เท่านั้น (⛔ AGENTS.md)
-- migrate atom = **verify ด้วยตา** (โดยเฉพาะราคา) ไม่ใช่แค่ tsc ผ่าน · เช็ค AGENTS.md canon ก่อนสร้าง component ใหม่
-- deviate จากแผน = จดเหตุผลใน PROGRESS/PR (เช่นการเลื่อน KIT-05 ครึ่งหลังรอบนี้)
+## กฎเหล็ก session นี้
+- **ห้าม push master ตรง** — branch + PR + merge เท่านั้น
+- migrate atom = คงหน้าตาเดิมเป๊ะเมื่อ browser ดูไม่ได้ (ยกเว้นที่ finding สั่งเปลี่ยนสี เช่น RatingStars) · deviate = จดเหตุผล
+- เช็ค AGENTS.md canon ก่อนสร้าง component ใหม่
 
 ## แหล่งอ้างอิง
-- **แผนแม่บท:** `doc/uxui-refactor-plan.md` (8 phases) · **หลักฐาน:** `doc/uxui-audit-findings-2026-07-04.md` (230 findings) · **kit canon:** `AGENTS.md` §Component Kit
+- **แผนแม่บท:** `doc/uxui-refactor-plan.md` · **หลักฐาน:** `doc/uxui-audit-findings-2026-07-04.md` · **kit canon:** `AGENTS.md` §Component Kit

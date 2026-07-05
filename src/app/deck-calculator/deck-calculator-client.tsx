@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
+import { QtyStepper } from "@/components/ui/qty-stepper";
 
 import { AuthPreviewGate } from "@/components/shared/login-gate";
 import { useConfirm } from "@/components/shared/confirm-dialog";
@@ -386,28 +387,17 @@ function DeckCalculatorContent() {
                         {entry.card.cardCode}
                       </p>
                     </div>
-                    <div className="flex items-center rounded-lg border border-[var(--p-hair)]">
-                      <button
-                        type="button"
-                        aria-label={t(lang, "decrease")}
-                        onClick={() => void setCardQuantity(entry.card.id, entry.quantity - 1)}
-                        className="ease-chrome flex size-9 items-center justify-center rounded-l-lg text-muted-foreground hover:bg-muted hover:text-foreground"
-                      >
-                        <Minus className="size-3.5" />
-                      </button>
-                      <span className="w-6 text-center text-sm font-semibold tabular-nums">
-                        {entry.quantity}
-                      </span>
-                      <button
-                        type="button"
-                        aria-label={t(lang, "increase")}
-                        disabled={entry.quantity >= MAX_COPIES}
-                        onClick={() => void setCardQuantity(entry.card.id, entry.quantity + 1)}
-                        className="ease-chrome flex size-9 items-center justify-center rounded-r-lg text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent"
-                      >
-                        <Plus className="size-3.5" />
-                      </button>
-                    </div>
+                    <QtyStepper
+                      variant="joined"
+                      size="sm"
+                      showInput={false}
+                      value={entry.quantity}
+                      onChange={(q) => void setCardQuantity(entry.card.id, q)}
+                      min={0}
+                      max={MAX_COPIES}
+                      decreaseLabel={t(lang, "decrease")}
+                      increaseLabel={t(lang, "increase")}
+                    />
                     <PriceTag
                       jpy={(entry.card.latestPriceJpy ?? 0) * entry.quantity}
                       showChange={false}

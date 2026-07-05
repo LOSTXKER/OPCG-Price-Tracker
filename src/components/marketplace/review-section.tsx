@@ -1,7 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Surface } from "@/components/ui/surface";
 import { cn } from "@/lib/utils";
-import { Star, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
+import { RatingStars } from "@/components/ui/rating-stars";
 import { t, type Language } from "@/lib/i18n";
 import { formatRelativeAgoShort } from "@/lib/utils/relative-time";
 
@@ -22,33 +23,6 @@ interface ReviewSectionProps {
   totalCount: number;
   lang: Language;
   className?: string;
-}
-
-function StarRow({
-  rating,
-  max = 5,
-  size = "sm",
-}: {
-  rating: number;
-  max?: number;
-  size?: "sm" | "md";
-}) {
-  const s = size === "md" ? "size-5" : "size-3.5";
-  return (
-    <span className="inline-flex gap-0.5">
-      {Array.from({ length: max }, (_, i) => (
-        <Star
-          key={i}
-          className={cn(
-            s,
-            i < Math.round(rating)
-              ? "fill-yellow-400 text-yellow-400"
-              : "fill-muted text-muted"
-          )}
-        />
-      ))}
-    </span>
-  );
 }
 
 export function ReviewSection({
@@ -79,7 +53,7 @@ export function ReviewSection({
           <p className="text-display">
             {(averageRating ?? 0).toFixed(1)}
           </p>
-          <StarRow rating={averageRating ?? 0} size="md" />
+          <RatingStars value={averageRating ?? 0} size="lg" />
         </div>
         <div className="text-muted-foreground text-sm">
           <p>{t(lang, "mktReviewTotalCount").replace("{n}", String(totalCount))}</p>
@@ -103,7 +77,7 @@ export function ReviewSection({
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">{name}</p>
                   <div className="flex items-center gap-2">
-                    <StarRow rating={review.rating} />
+                    <RatingStars value={review.rating} size="md" />
                     <span className="text-muted-foreground text-xs">
                       {formatRelativeAgoShort(review.createdAt, lang)}
                     </span>

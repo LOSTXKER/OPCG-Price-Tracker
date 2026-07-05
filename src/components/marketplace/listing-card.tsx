@@ -1,7 +1,8 @@
 import { memo } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { MessageCircle, Star } from "lucide-react"
+import { MessageCircle } from "lucide-react"
+import { RatingStars } from "@/components/ui/rating-stars"
 
 import { ConditionBadge } from "@/components/shared/condition-badge"
 import { PriceTag } from "@/components/ui/price-tag"
@@ -35,23 +36,6 @@ export interface ListingCardProps {
   shipping: string[]
   location?: string | null
   isFeatured: boolean
-}
-
-function StarRow({ rating }: { rating: number }) {
-  const full = Math.round(rating)
-  return (
-    <span className="inline-flex items-center gap-0.5" aria-label={`${rating}/5`}>
-      {Array.from({ length: 5 }, (_, i) => (
-        <Star
-          key={i}
-          className={cn(
-            "size-3",
-            i < full ? "fill-foreground/80 text-foreground/80" : "text-muted-foreground/40"
-          )}
-        />
-      ))}
-    </span>
-  )
 }
 
 function ListingCardBase({
@@ -147,7 +131,7 @@ function ListingCardBase({
               {seller.displayName ?? "Seller"}
             </p>
             {seller.sellerRating != null && (
-              <StarRow rating={seller.sellerRating} />
+              <RatingStars value={seller.sellerRating} size="sm" />
             )}
           </div>
           <Link href={`/messages/${id}`}>

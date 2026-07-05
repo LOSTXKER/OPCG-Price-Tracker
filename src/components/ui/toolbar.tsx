@@ -201,67 +201,6 @@ export function ToolbarSortDropdown<TKey extends string = string>({
   );
 }
 
-/* ── View toggle ──────────────────────────────────────────────────────── */
-
-export interface ViewToggleMode<T extends string = string> {
-  value: T;
-  label?: ReactNode;
-  icon?: React.ComponentType<{ className?: string }>;
-  ariaLabel?: string;
-}
-
-export interface ViewToggleProps<T extends string = string> {
-  modes: ReadonlyArray<ViewToggleMode<T>>;
-  value: T;
-  onChange: (value: T) => void;
-  size?: "sm" | "md";
-  className?: string;
-}
-
-export function ViewToggle<T extends string = string>({
-  modes,
-  value,
-  onChange,
-  size = "sm",
-  className,
-}: ViewToggleProps<T>) {
-  return (
-    <div
-      className={cn(
-        "flex items-center gap-0.5 rounded-lg bg-muted/50 p-0.5",
-        className,
-      )}
-      role="tablist"
-    >
-      {modes.map((mode) => {
-        const active = mode.value === value;
-        const Icon = mode.icon;
-        return (
-          <button
-            key={mode.value}
-            type="button"
-            role="tab"
-            aria-selected={active}
-            aria-label={mode.ariaLabel ?? (typeof mode.label === "string" ? mode.label : undefined)}
-            onClick={() => onChange(mode.value)}
-            className={cn(
-              "flex items-center gap-1.5 rounded-md motion-base",
-              size === "sm" ? "p-1.5 text-xs" : "px-2 py-1.5 text-sm",
-              active
-                ? "bg-primary/15 text-primary"
-                : "text-muted-foreground hover:text-foreground",
-            )}
-          >
-            {Icon && <Icon className={size === "sm" ? "size-3.5" : "size-4"} />}
-            {mode.label && typeof mode.label !== "string" ? mode.label : null}
-            {typeof mode.label === "string" && !mode.ariaLabel ? mode.label : null}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 /* ── Filter button ────────────────────────────────────────────────────── */
 
 export interface FilterButtonProps

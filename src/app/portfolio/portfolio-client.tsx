@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useState } from "react"
-import { ArrowDown, ArrowUp, Check, Eye, EyeOff, Lock, Plus, X } from "lucide-react"
+import { ArrowDown, ArrowUp, Eye, EyeOff, Lock, Plus } from "lucide-react"
 
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
 import { AuthPreviewGate } from "@/components/shared/login-gate"
@@ -13,6 +13,8 @@ import { PortfolioGameBreakdown } from "@/components/portfolio/portfolio-game-br
 import { PortfolioMovers } from "@/components/portfolio/portfolio-movers"
 import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
 import { Button } from "@/components/ui/button"
+import { IconButton } from "@/components/ui/icon-button"
+import { PortfolioNameForm } from "@/components/portfolio/portfolio-name-form"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Surface } from "@/components/ui/surface"
 import { t } from "@/lib/i18n"
@@ -205,7 +207,7 @@ function PortfolioHubContent() {
 
           <IconButton
             onClick={() => setHideBalance((v) => !v)}
-            label={hideBalance ? t(lang, "showBalance") : t(lang, "hideBalance")}
+            aria-label={hideBalance ? t(lang, "showBalance") : t(lang, "hideBalance")}
           >
             {hideBalance ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </IconButton>
@@ -277,41 +279,19 @@ function CreatePortfolioCard({ onCreate }: { onCreate: (name: string) => void })
   if (creating) {
     return (
       <Surface variant="panel" className="p-4">
-        <form
-          className="flex items-center gap-1.5"
-          onSubmit={(e) => {
-            e.preventDefault()
-            if (name.trim()) {
-              onCreate(name.trim())
-              setName("")
-              setCreating(false)
-            }
+        <PortfolioNameForm
+          size="md"
+          lang={lang}
+          placeholder={t(lang, "portfolioName")}
+          value={name}
+          onChange={setName}
+          onSubmit={(n) => {
+            onCreate(n)
+            setName("")
+            setCreating(false)
           }}
-        >
-          <input
-            autoFocus
-            placeholder={t(lang, "portfolioName")}
-            className="min-w-0 flex-1 rounded-lg border border-[var(--p-hair)] bg-background px-2.5 py-1.5 text-sm outline-none ring-primary/30 transition-shadow placeholder:text-muted-foreground/60 focus:ring-2"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") setCreating(false)
-            }}
-          />
-          <button
-            type="submit"
-            className="ease-chrome shrink-0 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
-            <Check className="size-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setCreating(false)}
-            className="ease-chrome shrink-0 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
-            <X className="size-4" />
-          </button>
-        </form>
+          onCancel={() => setCreating(false)}
+        />
       </Surface>
     )
   }
@@ -328,27 +308,3 @@ function CreatePortfolioCard({ onCreate }: { onCreate: (name: string) => void })
   )
 }
 
-function IconButton({
-  onClick,
-  label,
-  disabled,
-  children,
-}: {
-  onClick: () => void
-  label: string
-  disabled?: boolean
-  children: React.ReactNode
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-      title={label}
-      className="ease-chrome inline-flex size-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-40"
-    >
-      {children}
-    </button>
-  )
-}

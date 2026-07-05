@@ -109,11 +109,11 @@
 - [~] `KIT-05` **hero ราคา card-detail ใช้ `HeroNumber` แล้ว** (count-up + `live` ตอน scrub + null-guard "—") · **เลื่อนการยก EditionToggle/SourceLogo/grades ขึ้น kit** — เหตุผล: ทั้ง 3 ยังถูกใช้แค่ใน feature `cards` ตัวเดียว ไม่มี consumer ข้าม feature (marketplace/comps ยังไม่สร้าง) → ย้ายตอนนี้ = churn เปล่า · `grades.ts` เป็น domain logic ควรไป `lib/` ไม่ใช่ `ui/` · `edition-toggle` ทับ KIT-10 (recompose จาก SegmentedControl) ทำทีเดียวใน 2.3 · ยกจริงเมื่อมี consumer ข้าม feature (SourceLogo = ตัวแรก)
 
 **2.3 Control atoms**
-- [ ] `KIT-10` ยุบตระกูล "pill เลือก 1 จาก N" 5 implementation → SegmentedControl เดียว + `SETS-03` TabBar ขีดเส้นใต้กลาง (ใช้ 4 ที่)
-- [ ] `SETTINGS-09` + `SETTINGS-10` สร้าง ui/switch.tsx + SavedPill กลาง (hit ≥44px แต่แรก) — ตอนนี้ toggle เขียนมือ 2 ตัว feedback pill ก๊อป 3 ที่
-- [ ] `PLAY-07` QtyStepper กลาง ≥44px (drop-calc + deck-calc ใช้ร่วม — VISION §5.4 ระบุเป็น atom อยู่แล้ว)
-- [ ] `PORTFOLIO-06` IconButton กลาง (ตอนนี้ประกาศซ้ำ 2 ไฟล์ + inline อีก 1) · `COMMERCE-13` RatingStars ตัวเดียวสี honey (ตอนนี้ 3 ตัว 3 สี)
-- [ ] `RESPONSIVE-04` (= `PORTFOLIO-05` บางส่วน) ฟอร์ม inline ชื่อพอร์ต ก๊อป 4 ชุดใน 3 ไฟล์ → ตัวเดียว + แก้ a11y/tap ในตัว
+- [~] `KIT-10` ยุบ pill → SegmentedControl — **ViewToggle เสร็จ** (ลบ ViewToggle, migrate home-market + filter-toolbar · icon = `label` slot · blast radius contained ไม่มี caller ส่ง custom modes) · **`EditionToggle` เหลือ** (migrate = tap 40→28px regression + active สีต่าง + ทับ KIT-05 → ทำคู่ Phase 5 tap + KIT-05) · GameFilterChips = canonical แล้ว · FilterTabs = SKIP
+- [x] `SETTINGS-09` `ui/switch.tsx` (ยุบ toggle 2 ตัว, hit ≥44px) · [x] `SETTINGS-10` `shared/saved-pill.tsx` (ยุบ feedback pill 5 จุด, presentational, คงสี emerald/red)
+- [x] `PLAY-07` `ui/qty-stepper.tsx` — ยุบ stepper **ครบ 3/3** (drop + add-card = `split` · deck = `variant="joined"` + `min={0}` เก็บ behavior Minus ที่ qty 1 → ลบการ์ด)
+- [x] `PORTFOLIO-06` `ui/icon-button.tsx` (ghost/solid, ยุบ local 2 + inline 1) · [x] `COMMERCE-13` `ui/rating-stars.tsx` (ยุบ 6 จุด → amber เดียว)
+- [x] `RESPONSIVE-04` `portfolio/portfolio-name-form.tsx` — ยุบฟอร์ม inline ชื่อพอร์ต 4 จุด (sm/md variant, +aria-label ผ่าน i18n save/cancel)
 
 **2.4 ระบบค้นหา — ยุบ 3 ชุดเหลือ engine เดียว (`DISCOVERY-04` = `HOME-05` = `KIT-07`)**
 - [ ] แตก useRecentSearches + SearchResultRow กลาง แล้วให้ HeroSearchBar / CommandSearchModal / CardSearch ประกอบจาก useCardSearch เดียวกัน (เหลือแต่เปลือก)

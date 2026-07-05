@@ -8,11 +8,10 @@ import {
   Toolbar,
   ToolbarSearch,
   ToolbarSortDropdown,
-  ViewToggle,
   type ToolbarSortOption,
   type ToolbarSearchProps,
-  type ViewToggleMode,
 } from "@/components/ui/toolbar";
+import { SegmentedControl, type SegmentedOption } from "@/components/ui/segmented-control";
 import { cn } from "@/lib/utils";
 
 export interface FilterToolbarProps<TSortKey extends string = string, TView extends string = string> {
@@ -37,7 +36,7 @@ export interface FilterToolbarProps<TSortKey extends string = string, TView exte
   };
   /** View-mode toggle (grid/list/etc) — omit to hide. */
   view?: {
-    modes?: ReadonlyArray<ViewToggleMode<TView>>;
+    modes?: ReadonlyArray<SegmentedOption<TView>>;
     value: TView;
     onChange: (value: TView) => void;
   };
@@ -50,9 +49,9 @@ export interface FilterToolbarProps<TSortKey extends string = string, TView exte
   bare?: boolean;
 }
 
-const DEFAULT_VIEW_MODES: ReadonlyArray<ViewToggleMode<"grid" | "list">> = [
-  { value: "grid", icon: Grid3x3, ariaLabel: "Grid view" },
-  { value: "list", icon: ListIcon, ariaLabel: "List view" },
+const DEFAULT_VIEW_MODES: ReadonlyArray<SegmentedOption<"grid" | "list">> = [
+  { value: "grid", label: <Grid3x3 className="size-3.5" />, ariaLabel: "Grid view" },
+  { value: "list", label: <ListIcon className="size-3.5" />, ariaLabel: "List view" },
 ];
 
 /**
@@ -66,7 +65,7 @@ const DEFAULT_VIEW_MODES: ReadonlyArray<ViewToggleMode<"grid" | "list">> = [
  *   - `search-client.tsx` top controls
  *
  * Internally composes the existing `Toolbar` primitives (`ToolbarSearch`,
- * `ToolbarSortDropdown`, `FilterButton`, `ViewToggle`) so visual chrome stays
+ * `ToolbarSortDropdown`, `FilterButton`, `SegmentedControl`) so visual chrome stays
  * consistent across pages.
  */
 export function FilterToolbar<TSortKey extends string = string, TView extends string = string>({
@@ -119,8 +118,10 @@ export function FilterToolbar<TSortKey extends string = string, TView extends st
           />
         )}
         {view && (
-          <ViewToggle
-            modes={(view.modes ?? DEFAULT_VIEW_MODES) as ReadonlyArray<ViewToggleMode<TView>>}
+          <SegmentedControl
+            size="sm"
+            ariaLabel="View mode"
+            options={(view.modes ?? DEFAULT_VIEW_MODES) as ReadonlyArray<SegmentedOption<TView>>}
             value={view.value}
             onChange={view.onChange}
           />

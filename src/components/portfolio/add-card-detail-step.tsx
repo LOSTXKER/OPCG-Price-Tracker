@@ -4,10 +4,10 @@ import Image from "next/image"
 import {
   ArrowLeft,
   Loader2,
-  Minus,
   Package,
-  Plus,
 } from "lucide-react"
+
+import { QtyStepper } from "@/components/ui/qty-stepper"
 
 import {
   DialogHeader,
@@ -98,30 +98,15 @@ export function DetailStep({
         <div className="mt-6 space-y-5">
           <div>
             <label className="mb-2 block text-sm font-medium">{t(lang, "quantity")}</label>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="ease-chrome flex size-10 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              >
-                <Minus className="size-4" />
-              </button>
-              <input
-                type="number"
-                min={1}
-                value={quantity}
-                onChange={(e) => {
-                  const v = parseInt(e.target.value)
-                  if (!isNaN(v) && v >= 1) setQuantity(v)
-                }}
-                className="h-10 w-20 rounded-lg border border-[var(--p-hair)] bg-background text-center font-mono text-sm font-semibold tabular-nums outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
-              />
-              <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="ease-chrome flex size-10 items-center justify-center rounded-lg border border-[var(--p-hair)] bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              >
-                <Plus className="size-4" />
-              </button>
-            </div>
+            <QtyStepper
+              value={quantity}
+              onChange={setQuantity}
+              min={1}
+              size="md"
+              decreaseLabel={t(lang, "decrease")}
+              increaseLabel={t(lang, "increase")}
+              className="gap-3"
+            />
           </div>
 
           <div>
