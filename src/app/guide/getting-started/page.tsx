@@ -1,13 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
 import {
-  ArrowLeft,
-  ArrowRight,
   Crown,
-  ExternalLink,
   Heart,
-  Info,
   Layers,
   LineChart,
   RefreshCw,
@@ -18,8 +13,12 @@ import {
 import { prisma } from "@/lib/db";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
-import { BackButton } from "@/components/shared/back-button";
+import { PageHeader } from "@/components/layout/page-header";
 import { RelatedPages } from "@/components/shared/related-pages";
+import { GuideSourceList } from "@/components/guide/guide-source-list";
+import { GuideCallout } from "@/components/guide/guide-callout";
+import { GuidePrevNext } from "@/components/guide/guide-prev-next";
+import { CardThumbStrip, type ThumbCard } from "@/components/guide/card-thumb-strip";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { t, type Language } from "@/lib/i18n";
@@ -154,6 +153,14 @@ export default async function GettingStartedPage() {
   const { leader, don } = await getSetupCards();
   const turnPhases = buildTurnPhases(lang);
   const combatSteps = buildCombatSteps(lang);
+  const exampleCards: ThumbCard[] = [
+    ...(leader?.imageUrl
+      ? [{ cardCode: leader.cardCode, name: leader.nameEn ?? leader.nameJp, imageUrl: leader.imageUrl, label: "Leader" }]
+      : []),
+    ...(don?.imageUrl
+      ? [{ cardCode: don.cardCode, name: don.nameEn ?? don.nameJp, imageUrl: don.imageUrl, label: "DON!!" }]
+      : []),
+  ];
   return (
     <div className="mx-auto max-w-3xl space-y-12">
       <JsonLd
@@ -165,28 +172,28 @@ export default async function GettingStartedPage() {
       />
 
       {/* ── 1. Hero + Intro ── */}
-      <div className="space-y-3">
-        <Breadcrumb
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Guide", href: "/guide" },
-            { label: t(lang, "guideStartBreadcrumb") },
-          ]}
-          hideMobileBack
-        />
-        <div className="flex items-center gap-3">
-          <BackButton href="/guide" label="Guide" className="md:hidden" />
-          <h1 className="text-h1">
-            {t(lang, "guideStartHeroTitle")}
-          </h1>
-        </div>
-        <p className="text-lg leading-relaxed text-muted-foreground">
-          <strong className="text-foreground">One Piece Card Game (OPCG)</strong>
-          {t(lang, "guideStartHeroP1a")}
-          <strong className="text-foreground">Bandai</strong>
-          {t(lang, "guideStartHeroP1b")}
-        </p>
-      </div>
+      <PageHeader
+        breadcrumb={
+          <Breadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Guide", href: "/guide" },
+              { label: t(lang, "guideStartBreadcrumb") },
+            ]}
+            hideMobileBack
+          />
+        }
+        back={{ href: "/guide", label: "Guide" }}
+        title={t(lang, "guideStartHeroTitle")}
+        description={
+          <>
+            <strong className="text-foreground">One Piece Card Game (OPCG)</strong>
+            {t(lang, "guideStartHeroP1a")}
+            <strong className="text-foreground">Bandai</strong>
+            {t(lang, "guideStartHeroP1b")}
+          </>
+        }
+      />
 
       {/* ── 2. สิ่งที่ต้องมี ── */}
       <section className="space-y-4">
@@ -211,28 +218,7 @@ export default async function GettingStartedPage() {
         {/* Leader & DON!! card examples */}
         {(leader || don) && (
           <Surface variant="outline" className="flex items-center gap-6 px-5 py-4">
-            {leader?.imageUrl && (
-              <Link href={`/cards/${leader.cardCode}`} className="group shrink-0">
-                <p className="mb-1.5 text-center text-eyebrow">Leader</p>
-                <div className="relative aspect-[63/88] w-20 overflow-hidden rounded-lg bg-muted">
-                  <Image src={leader.imageUrl} alt={leader.nameEn ?? leader.nameJp} fill className="object-contain" sizes="80px" />
-                </div>
-                <p className="mt-1 max-w-20 truncate text-center text-meta">
-                  {leader.nameEn ?? leader.nameJp}
-                </p>
-              </Link>
-            )}
-            {don?.imageUrl && (
-              <Link href={`/cards/${don.cardCode}`} className="group shrink-0">
-                <p className="mb-1.5 text-center text-eyebrow">DON!!</p>
-                <div className="relative aspect-[63/88] w-20 overflow-hidden rounded-lg bg-muted">
-                  <Image src={don.imageUrl} alt={don.nameEn ?? don.nameJp} fill className="object-contain" sizes="80px" />
-                </div>
-                <p className="mt-1 max-w-20 truncate text-center text-meta">
-                  {don.nameEn ?? don.nameJp}
-                </p>
-              </Link>
-            )}
+            <CardThumbStrip cards={exampleCards} size="xl" showCaption className="gap-6" />
             <p className="text-xs leading-relaxed text-muted-foreground">
               {t(lang, "guideStartCardExampleA")}<strong className="text-foreground">Leader</strong>{t(lang, "guideStartCardExampleB")}
               <strong className="text-foreground">DON!!</strong>{t(lang, "guideStartCardExampleC")}
@@ -240,12 +226,11 @@ export default async function GettingStartedPage() {
           </Surface>
         )}
 
-        <div className="flex items-start gap-2.5 rounded-lg border border-blue-500/20 bg-blue-500/5 px-4 py-3">
-          <Info className="mt-0.5 size-4 shrink-0 text-blue-500" />
+        <GuideCallout tone="blue">
           <p className="text-sm text-muted-foreground">
             <strong className="text-foreground">Tip:</strong>{t(lang, "guideStartTipA")}<strong>Starter Deck</strong>{t(lang, "guideStartTipB")}
           </p>
-        </div>
+        </GuideCallout>
       </section>
 
       {/* ── 3. เซ็ตอัพ (Game Setup) ── */}
@@ -363,12 +348,11 @@ export default async function GettingStartedPage() {
             </div>
           ))}
         </div>
-        <div className="flex items-start gap-2.5 rounded-lg border border-amber-500/20 bg-amber-500/5 px-4 py-3">
-          <Info className="mt-0.5 size-4 shrink-0 text-amber-500" />
+        <GuideCallout tone="amber">
           <p className="text-sm text-muted-foreground">
             <strong className="text-foreground">{t(lang, "guideStartFirstPlayerLabel")}</strong>{t(lang, "guideStartFirstPlayerDesc")}
           </p>
-        </div>
+        </GuideCallout>
       </section>
 
       {/* ── 5. ระบบ DON!! ── */}
@@ -423,8 +407,7 @@ export default async function GettingStartedPage() {
             </div>
           ))}
         </div>
-        <div className="flex items-start gap-2.5 rounded-lg border border-rose-500/20 bg-rose-500/5 px-4 py-3">
-          <Info className="mt-0.5 size-4 shrink-0 text-rose-500" />
+        <GuideCallout tone="rose">
           <div className="space-y-1 text-sm text-muted-foreground">
             <p>
               <strong className="text-foreground">Life:</strong>{t(lang, "guideStartCombatLifeA")}<strong>Trigger</strong>{t(lang, "guideStartCombatLifeB")}
@@ -433,12 +416,12 @@ export default async function GettingStartedPage() {
               <strong className="text-foreground">Character:</strong>{t(lang, "guideStartCombatCharacter")}
             </p>
           </div>
-        </div>
+        </GuideCallout>
       </section>
 
       {/* ── 7. เงื่อนไขชนะ ── */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{t(lang, "guideStartWinTitle")}</h2>
+        <h2 className="text-h2">{t(lang, "guideStartWinTitle")}</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <Surface variant="outline" className="p-5">
             <div className="flex items-center gap-2">
@@ -485,42 +468,26 @@ export default async function GettingStartedPage() {
       </section>
 
       {/* ── 9. แหล่งอ้างอิง ── */}
-      <section className="space-y-3">
-        <h2 className="text-h2">{t(lang, "guideStartSourcesTitle")}</h2>
-        <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
-          {[
-            {
-              label: "Official Rules",
-              desc: t(lang, "guideStartSourceOfficialDesc"),
-              url: "https://en.onepiece-cardgame.com/rules/",
-            },
-            {
-              label: "Play Guide",
-              desc: t(lang, "guideStartSourcePlayGuideDesc"),
-              url: "https://en.onepiece-cardgame.com/play-guide/",
-            },
-            {
-              label: "Comprehensive Rules (PDF)",
-              desc: t(lang, "guideStartSourceComprehensiveDesc"),
-              url: "https://en.onepiece-cardgame.com/pdf/rule_comprehensive.pdf",
-            },
-          ].map((src) => (
-            <a
-              key={src.url}
-              href={src.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 px-4 py-3 motion-base hover:bg-muted/70"
-            >
-              <div className="min-w-0 flex-1">
-                <p className="font-medium">{src.label}</p>
-                <p className="text-meta">{src.desc}</p>
-              </div>
-              <ExternalLink className="size-4 shrink-0 text-muted-foreground/40" />
-            </a>
-          ))}
-        </Surface>
-      </section>
+      <GuideSourceList
+        heading={t(lang, "guideStartSourcesTitle")}
+        sources={[
+          {
+            label: "Official Rules",
+            desc: t(lang, "guideStartSourceOfficialDesc"),
+            url: "https://en.onepiece-cardgame.com/rules/",
+          },
+          {
+            label: "Play Guide",
+            desc: t(lang, "guideStartSourcePlayGuideDesc"),
+            url: "https://en.onepiece-cardgame.com/play-guide/",
+          },
+          {
+            label: "Comprehensive Rules (PDF)",
+            desc: t(lang, "guideStartSourceComprehensiveDesc"),
+            url: "https://en.onepiece-cardgame.com/pdf/rule_comprehensive.pdf",
+          },
+        ]}
+      />
 
       {/* ── Related pages ── */}
       <RelatedPages
@@ -541,22 +508,10 @@ export default async function GettingStartedPage() {
       />
 
       {/* ── 10. Navigation ── */}
-      <div className="flex items-center justify-between border-t border-border pt-6">
-        <Link
-          href="/guide"
-          className="group inline-flex items-center gap-2 text-sm text-muted-foreground motion-base hover:text-foreground"
-        >
-          <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
-          {t(lang, "guideStartNavAllGuides")}
-        </Link>
-        <Link
-          href="/guide/card-types"
-          className="group inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-        >
-          {t(lang, "guideStartNavNext")}
-          <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-        </Link>
-      </div>
+      <GuidePrevNext
+        prev={{ href: "/guide", label: t(lang, "guideStartNavAllGuides") }}
+        next={{ href: "/guide/card-types", label: t(lang, "guideStartNavNext") }}
+      />
     </div>
   );
 }

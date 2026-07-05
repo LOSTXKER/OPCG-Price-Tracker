@@ -1,16 +1,12 @@
-import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
-import {
-  ArrowLeft,
-  ArrowRight,
-  ExternalLink,
-  Info,
-} from "lucide-react";
 import { prisma } from "@/lib/db";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
-import { BackButton } from "@/components/shared/back-button";
+import { PageHeader } from "@/components/layout/page-header";
+import { GuideSourceList } from "@/components/guide/guide-source-list";
+import { GuideCallout } from "@/components/guide/guide-callout";
+import { GuidePrevNext } from "@/components/guide/guide-prev-next";
+import { CardThumbStrip } from "@/components/guide/card-thumb-strip";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { t, type Language } from "@/lib/i18n";
@@ -190,27 +186,29 @@ export default async function ColorsPage() {
       />
 
       {/* ── 1. Hero + Intro ── */}
-      <div className="space-y-3">
-        <Breadcrumb
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Guide", href: "/guide" },
-            { label: t(lang, "guideColorTitle") },
-          ]}
-          hideMobileBack
-        />
-        <div className="flex items-center gap-3">
-          <BackButton href="/guide" label="Guide" className="md:hidden" />
-          <h1 className="text-h1">{t(lang, "guideColorTitle")}</h1>
-        </div>
-        <p className="text-lg leading-relaxed text-muted-foreground">
-          {t(lang, "guideColorIntroP1a")}
-          <strong className="text-foreground">
-            {t(lang, "guideColorIntroLeader")}
-          </strong>
-          {t(lang, "guideColorIntroP1b")}
-        </p>
-      </div>
+      <PageHeader
+        breadcrumb={
+          <Breadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Guide", href: "/guide" },
+              { label: t(lang, "guideColorTitle") },
+            ]}
+            hideMobileBack
+          />
+        }
+        back={{ href: "/guide", label: "Guide" }}
+        title={t(lang, "guideColorTitle")}
+        description={
+          <>
+            {t(lang, "guideColorIntroP1a")}
+            <strong className="text-foreground">
+              {t(lang, "guideColorIntroLeader")}
+            </strong>
+            {t(lang, "guideColorIntroP1b")}
+          </>
+        }
+      />
 
       {/* ── 2. Six Colors ── */}
       <section className="space-y-4">
@@ -263,30 +261,16 @@ export default async function ColorsPage() {
                         <p className="mb-2 text-eyebrow">
                           {t(lang, "guideColorLeaderExampleLabel")}
                         </p>
-                        <div className="flex gap-2 overflow-x-auto pb-1">
-                          {leaders.map((leader) => (
-                            <Link
-                              key={leader.cardCode}
-                              href={`/cards/${leader.cardCode}`}
-                              className="group shrink-0"
-                            >
-                              <div className="relative aspect-[63/88] w-16 overflow-hidden rounded-lg bg-muted">
-                                {leader.imageUrl && (
-                                  <Image
-                                    src={leader.imageUrl}
-                                    alt={leader.nameEn ?? leader.nameJp}
-                                    fill
-                                    className="object-contain"
-                                    sizes="64px"
-                                  />
-                                )}
-                              </div>
-                              <p className="mt-1 max-w-16 truncate text-center text-meta">
-                                {leader.nameEn ?? leader.nameJp}
-                              </p>
-                            </Link>
-                          ))}
-                        </div>
+                        <CardThumbStrip
+                          size="lg"
+                          showCaption
+                          scroll
+                          cards={leaders.map((leader) => ({
+                            cardCode: leader.cardCode,
+                            name: leader.nameEn ?? leader.nameJp,
+                            imageUrl: leader.imageUrl,
+                          }))}
+                        />
                       </div>
                     )}
                   </div>
@@ -401,15 +385,14 @@ export default async function ColorsPage() {
           </p>
         </div>
 
-        <div className="flex items-start gap-2.5 rounded-lg border border-red-500/20 bg-red-500/5 px-4 py-3">
-          <Info className="mt-0.5 size-4 shrink-0 text-red-500" />
+        <GuideCallout tone="red">
           <p className="text-sm text-muted-foreground">
             <strong className="text-foreground">
               {t(lang, "guideColorWrongColorStrong")}
             </strong>
             {t(lang, "guideColorWrongColorBody")}
           </p>
-        </div>
+        </GuideCallout>
 
         <Surface variant="outline" className="p-5">
           <p className="text-sm font-semibold">
@@ -432,46 +415,13 @@ export default async function ColorsPage() {
       </section>
 
       {/* ── 5. Sources ── */}
-      <section className="space-y-3">
-        <h2 className="text-h2">
-          {t(lang, "guideColorSourcesHeading")}
-        </h2>
-        <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
-          {sources.map((src) => (
-            <a
-              key={src.url}
-              href={src.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 px-4 py-3 motion-base hover:bg-muted/70"
-            >
-              <div className="min-w-0 flex-1">
-                <p className="font-medium">{src.label}</p>
-                <p className="text-meta">{src.desc}</p>
-              </div>
-              <ExternalLink className="size-4 shrink-0 text-muted-foreground/40" />
-            </a>
-          ))}
-        </Surface>
-      </section>
+      <GuideSourceList heading={t(lang, "guideColorSourcesHeading")} sources={sources} />
 
       {/* ── Navigation ── */}
-      <div className="flex items-center justify-between border-t border-border pt-6">
-        <Link
-          href="/guide/rarities"
-          className="group inline-flex items-center gap-2 text-sm text-muted-foreground motion-base hover:text-foreground"
-        >
-          <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
-          {t(lang, "guideColorNavPrev")}
-        </Link>
-        <Link
-          href="/guide/sets"
-          className="group inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-        >
-          {t(lang, "guideColorNavNext")}
-          <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-        </Link>
-      </div>
+      <GuidePrevNext
+        prev={{ href: "/guide/rarities", label: t(lang, "guideColorNavPrev") }}
+        next={{ href: "/guide/sets", label: t(lang, "guideColorNavNext") }}
+      />
     </div>
   );
 }

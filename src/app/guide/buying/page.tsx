@@ -1,9 +1,11 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, Layers, Store } from "lucide-react";
+import { Check, Info, Layers, Store, X } from "lucide-react";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
-import { BackButton } from "@/components/shared/back-button";
+import { PageHeader } from "@/components/layout/page-header";
+import { GuideCallout } from "@/components/guide/guide-callout";
+import { GuidePrevNext } from "@/components/guide/guide-prev-next";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
@@ -67,22 +69,21 @@ export default async function BuyingGuidePage() {
         { name: "Guide", href: "/guide" },
         { name: "Buying Guide", href: "/guide/buying" },
       ])} />
-      <div className="space-y-3">
-        <Breadcrumb items={[
-          { label: "Home", href: "/" },
-          { label: "Guide", href: "/guide" },
-          { label: "Buying Guide" },
-        ]} hideMobileBack />
-        <div className="flex items-center gap-3">
-          <BackButton href="/guide" label="Guide" className="md:hidden" />
-          <h1 className="font-sans text-h1">
-            Buying Guide
-          </h1>
-        </div>
-        <p className="text-muted-foreground text-lg">
-          {t(lang, "guideBuySubtitle")}
-        </p>
-      </div>
+      <PageHeader
+        breadcrumb={
+          <Breadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Guide", href: "/guide" },
+              { label: "Buying Guide" },
+            ]}
+            hideMobileBack
+          />
+        }
+        back={{ href: "/guide", label: "Guide" }}
+        title={t(lang, "guideHomeGuideBuyingTitle")}
+        description={t(lang, "guideBuySubtitle")}
+      />
 
       <div className="space-y-4">
         <h2 className="font-sans text-h2">
@@ -119,13 +120,19 @@ export default async function BuyingGuidePage() {
               </span>
             </div>
             <div className="grid gap-2 text-sm sm:grid-cols-2">
-              <div>
-                <span className="text-foreground font-medium">✓ {t(lang, "guideBuyProsLabel")}:</span>{" "}
-                <span className="text-muted-foreground">{shop.pros}</span>
+              <div className="flex items-start gap-1.5">
+                <Check className="mt-0.5 size-4 shrink-0 text-emerald-500" />
+                <span>
+                  <span className="text-foreground font-medium">{t(lang, "guideBuyProsLabel")}:</span>{" "}
+                  <span className="text-muted-foreground">{shop.pros}</span>
+                </span>
               </div>
-              <div>
-                <span className="text-foreground font-medium">✗ {t(lang, "guideBuyConsLabel")}:</span>{" "}
-                <span className="text-muted-foreground">{shop.cons}</span>
+              <div className="flex items-start gap-1.5">
+                <X className="mt-0.5 size-4 shrink-0 text-red-500" />
+                <span>
+                  <span className="text-foreground font-medium">{t(lang, "guideBuyConsLabel")}:</span>{" "}
+                  <span className="text-muted-foreground">{shop.cons}</span>
+                </span>
               </div>
             </div>
           </Surface>
@@ -143,7 +150,7 @@ export default async function BuyingGuidePage() {
               variant="panel"
               className="flex items-start gap-3 p-3"
             >
-              <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted/10 font-sans text-xs font-bold text-foreground">
+              <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 font-sans text-xs font-bold text-primary">
                 {i + 1}
               </span>
               <p className="text-sm leading-relaxed">{tip}</p>
@@ -152,25 +159,27 @@ export default async function BuyingGuidePage() {
         </div>
       </div>
 
-      <div className="rounded-xl border border-dashed border-primary/30 bg-primary/5 p-4">
-        <h3 className="font-sans text-sm font-semibold text-primary">
-          📊 {t(lang, "guideBuyReadPriceHeading")}
-        </h3>
-        <ul className="text-muted-foreground mt-2 space-y-1 text-sm">
-          <li>
-            <strong>{t(lang, "guideBuyReadPriceYenLabel")}</strong> = {t(lang, "guideBuyReadPriceYenDesc")}
-          </li>
-          <li>
-            <strong>{t(lang, "guideBuyReadPriceBahtLabel")}</strong> = {t(lang, "guideBuyReadPriceBahtDesc")}
-          </li>
-          <li>
-            <strong>{t(lang, "guideBuyReadPriceChangeLabel")}</strong> = {t(lang, "guideBuyReadPriceChangeDesc")}
-          </li>
-          <li>
-            <strong>Community Price</strong> = {t(lang, "guideBuyReadPriceCommunityDesc")}
-          </li>
-        </ul>
-      </div>
+      <GuideCallout tone="blue" icon={Info}>
+        <div>
+          <h3 className="font-sans text-sm font-semibold text-primary">
+            {t(lang, "guideBuyReadPriceHeading")}
+          </h3>
+          <ul className="text-muted-foreground mt-2 space-y-1 text-sm">
+            <li>
+              <strong>{t(lang, "guideBuyReadPriceYenLabel")}</strong> = {t(lang, "guideBuyReadPriceYenDesc")}
+            </li>
+            <li>
+              <strong>{t(lang, "guideBuyReadPriceBahtLabel")}</strong> = {t(lang, "guideBuyReadPriceBahtDesc")}
+            </li>
+            <li>
+              <strong>{t(lang, "guideBuyReadPriceChangeLabel")}</strong> = {t(lang, "guideBuyReadPriceChangeDesc")}
+            </li>
+            <li>
+              <strong>Community Price</strong> = {t(lang, "guideBuyReadPriceCommunityDesc")}
+            </li>
+          </ul>
+        </div>
+      </GuideCallout>
 
       <RelatedPages
         items={[
@@ -179,21 +188,10 @@ export default async function BuyingGuidePage() {
         ]}
       />
 
-      <div className="flex items-center justify-between border-t border-border pt-6">
-        <Link
-          href="/guide/sets"
-          className="text-muted-foreground text-sm hover:text-foreground"
-        >
-          ← Sets
-        </Link>
-        <Link
-          href="/"
-          className="group inline-flex items-center gap-2 font-sans text-sm font-semibold text-primary hover:underline"
-        >
-          {t(lang, "guideBuyCtaSearch")}
-          <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-        </Link>
-      </div>
+      <GuidePrevNext
+        prev={{ href: "/guide/sets", label: "Sets" }}
+        next={{ href: "/guide", label: t(lang, "guideStartNavAllGuides") }}
+      />
     </div>
   );
 }

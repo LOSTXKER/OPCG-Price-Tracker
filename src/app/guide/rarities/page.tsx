@@ -1,12 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
 import {
-  ArrowLeft,
-  ArrowRight,
-  ExternalLink,
   ImageIcon,
-  Info,
   Package,
   Printer,
   Sparkles,
@@ -16,7 +11,11 @@ import {
 import { prisma } from "@/lib/db";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
-import { BackButton } from "@/components/shared/back-button";
+import { PageHeader } from "@/components/layout/page-header";
+import { GuideSourceList } from "@/components/guide/guide-source-list";
+import { GuideCallout } from "@/components/guide/guide-callout";
+import { GuidePrevNext } from "@/components/guide/guide-prev-next";
+import { CardThumbStrip } from "@/components/guide/card-thumb-strip";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { t, type Language } from "@/lib/i18n";
@@ -292,29 +291,29 @@ export default async function RaritiesPage() {
       />
 
       {/* ── 1. Hero + Intro ── */}
-      <div className="space-y-3">
-        <Breadcrumb
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Guide", href: "/guide" },
-            { label: t(lang, "guideRarityBreadcrumb") },
-          ]}
-          hideMobileBack
-        />
-        <div className="flex items-center gap-3">
-          <BackButton href="/guide" label="Guide" className="md:hidden" />
-          <h1 className="text-h1">
-            {t(lang, "guideRarityTitle")}
-          </h1>
-        </div>
-        <p className="text-lg leading-relaxed text-muted-foreground">
-          {t(lang, "guideRarityIntroA")}
-          <strong className="text-foreground">Common</strong>
-          {t(lang, "guideRarityIntroB")}{" "}
-          <strong className="text-foreground">Treasure Rare</strong>
-          {t(lang, "guideRarityIntroC")}
-        </p>
-      </div>
+      <PageHeader
+        breadcrumb={
+          <Breadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Guide", href: "/guide" },
+              { label: t(lang, "guideRarityBreadcrumb") },
+            ]}
+            hideMobileBack
+          />
+        }
+        back={{ href: "/guide", label: "Guide" }}
+        title={t(lang, "guideRarityTitle")}
+        description={
+          <>
+            {t(lang, "guideRarityIntroA")}
+            <strong className="text-foreground">Common</strong>
+            {t(lang, "guideRarityIntroB")}{" "}
+            <strong className="text-foreground">Treasure Rare</strong>
+            {t(lang, "guideRarityIntroC")}
+          </>
+        }
+      />
 
       {/* ── 2. Rarity Tiers ── */}
       <section className="space-y-4">
@@ -359,17 +358,14 @@ export default async function RaritiesPage() {
                 {examples.length > 0 && (
                   <div className="border-t px-5 py-3" style={{ borderColor: `${rarity.color}15` }}>
                     <p className="mb-2 text-eyebrow">{t(lang, "guideRarityExampleCards")}</p>
-                    <div className="flex gap-2">
-                      {examples.map((card) => (
-                        <Link key={card.cardCode} href={`/cards/${card.cardCode}`} className="group shrink-0">
-                          <div className="relative aspect-[63/88] w-14 overflow-hidden rounded-lg bg-muted">
-                            {card.imageUrl && (
-                              <Image src={card.imageUrl} alt={card.nameEn ?? card.nameJp} fill className="object-contain" sizes="56px" />
-                            )}
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
+                    <CardThumbStrip
+                      size="md"
+                      cards={examples.map((card) => ({
+                        cardCode: card.cardCode,
+                        name: card.nameEn ?? card.nameJp,
+                        imageUrl: card.imageUrl,
+                      }))}
+                    />
                   </div>
                 )}
               </div>
@@ -458,20 +454,16 @@ export default async function RaritiesPage() {
         {parallels.length > 0 && (
           <div>
             <p className="mb-2 text-eyebrow">{t(lang, "guideRarityParallelExamples")}</p>
-            <div className="flex gap-2 overflow-x-auto pb-1">
-              {parallels.map((card) => (
-                <Link key={card.cardCode} href={`/cards/${card.cardCode}`} className="group shrink-0">
-                  <div className="relative aspect-[63/88] w-16 overflow-hidden rounded-lg bg-muted">
-                    {card.imageUrl && (
-                      <Image src={card.imageUrl} alt={card.nameEn ?? card.nameJp} fill className="object-contain" sizes="64px" />
-                    )}
-                  </div>
-                  <p className="mt-1 max-w-16 truncate text-center text-meta">
-                    {card.nameEn ?? card.nameJp}
-                  </p>
-                </Link>
-              ))}
-            </div>
+            <CardThumbStrip
+              size="lg"
+              showCaption
+              scroll
+              cards={parallels.map((card) => ({
+                cardCode: card.cardCode,
+                name: card.nameEn ?? card.nameJp,
+                imageUrl: card.imageUrl,
+              }))}
+            />
           </div>
         )}
       </section>
@@ -493,19 +485,18 @@ export default async function RaritiesPage() {
           </p>
         </div>
 
-        <div className="flex items-start gap-2.5 rounded-lg border border-pink-500/20 bg-pink-500/5 px-4 py-3">
-          <Info className="mt-0.5 size-4 shrink-0 text-pink-500" />
+        <GuideCallout tone="pink">
           <p className="text-sm text-muted-foreground">
             <strong className="text-foreground">{t(lang, "guideRaritySpReprintCardCodeLabel")}</strong>{" "}
             {t(lang, "guideRaritySpReprintCardCodeBody")}
           </p>
-        </div>
+        </GuideCallout>
       </section>
 
       {/* ── 5. Box Pattern ── */}
       <section className="space-y-6">
         <div>
-          <h2 className="text-xl font-semibold">{t(lang, "guideRarityBoxHeading")}</h2>
+          <h2 className="text-h2">{t(lang, "guideRarityBoxHeading")}</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             {t(lang, "guideRarityBoxIntro")}
           </p>
@@ -605,8 +596,7 @@ export default async function RaritiesPage() {
         </div>
 
         {/* SP */}
-        <div className="flex items-start gap-2.5 rounded-lg border border-pink-500/20 bg-pink-500/5 px-4 py-3">
-          <Info className="mt-0.5 size-4 shrink-0 text-pink-500" />
+        <GuideCallout tone="pink">
           <p className="text-sm text-muted-foreground">
             <strong className="text-foreground">{t(lang, "guideRarityBoxSpLabel")}</strong>{" "}
             {t(lang, "guideRarityBoxSpBodyA")}{" "}
@@ -615,7 +605,7 @@ export default async function RaritiesPage() {
             </Link>
             {t(lang, "guideRarityBoxSpBodyB")}
           </p>
-        </div>
+        </GuideCallout>
       </section>
 
       {/* ── 6. Price Factors ── */}
@@ -640,44 +630,13 @@ export default async function RaritiesPage() {
       </section>
 
       {/* ── 7. Sources ── */}
-      <section className="space-y-3">
-        <h2 className="text-h2">{t(lang, "guideRaritySourcesHeading")}</h2>
-        <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
-          {buildSources(lang).map((src) => (
-            <a
-              key={src.url}
-              href={src.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 px-4 py-3 motion-base hover:bg-muted/70"
-            >
-              <div className="min-w-0 flex-1">
-                <p className="font-medium">{src.label}</p>
-                <p className="text-meta">{src.desc}</p>
-              </div>
-              <ExternalLink className="size-4 shrink-0 text-muted-foreground/40" />
-            </a>
-          ))}
-        </Surface>
-      </section>
+      <GuideSourceList heading={t(lang, "guideRaritySourcesHeading")} sources={buildSources(lang)} />
 
       {/* ── Navigation ── */}
-      <div className="flex items-center justify-between border-t border-border pt-6">
-        <Link
-          href="/guide/card-types"
-          className="group inline-flex items-center gap-2 text-sm text-muted-foreground motion-base hover:text-foreground"
-        >
-          <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
-          {t(lang, "guideRarityNavPrev")}
-        </Link>
-        <Link
-          href="/guide/colors"
-          className="group inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-        >
-          {t(lang, "guideRarityNavNext")}
-          <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-        </Link>
-      </div>
+      <GuidePrevNext
+        prev={{ href: "/guide/card-types", label: t(lang, "guideRarityNavPrev") }}
+        next={{ href: "/guide/colors", label: t(lang, "guideRarityNavNext") }}
+      />
     </div>
   );
 }

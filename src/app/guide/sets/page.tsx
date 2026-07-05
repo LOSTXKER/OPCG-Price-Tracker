@@ -1,21 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Box,
-  ExternalLink,
-  Info,
-  Layers,
-  Package,
-  Star,
-  Trophy,
-} from "lucide-react";
+import { Box, Layers, Package, Star, Trophy } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
-import { BackButton } from "@/components/shared/back-button";
+import { PageHeader } from "@/components/layout/page-header";
+import { GuideSourceList } from "@/components/guide/guide-source-list";
+import { GuideCallout } from "@/components/guide/guide-callout";
+import { GuidePrevNext } from "@/components/guide/guide-prev-next";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { t, type Language } from "@/lib/i18n";
@@ -205,25 +198,21 @@ export default async function GuideSetsPage() {
       />
 
       {/* ── 1. Hero + Intro ── */}
-      <div className="space-y-3">
-        <Breadcrumb
-          items={[
-            { label: t(lang, "guideSetBreadcrumbHome"), href: "/" },
-            { label: t(lang, "guideSetBreadcrumbGuide"), href: "/guide" },
-            { label: t(lang, "guideSetBreadcrumbSets") },
-          ]}
-          hideMobileBack
-        />
-        <div className="flex items-center gap-3">
-          <BackButton href="/guide" label="Guide" className="md:hidden" />
-          <h1 className="text-h1">
-            {t(lang, "guideSetTitle")}
-          </h1>
-        </div>
-        <p className="text-lg leading-relaxed text-muted-foreground">
-          {t(lang, "guideSetIntro")}
-        </p>
-      </div>
+      <PageHeader
+        breadcrumb={
+          <Breadcrumb
+            items={[
+              { label: t(lang, "guideSetBreadcrumbHome"), href: "/" },
+              { label: t(lang, "guideSetBreadcrumbGuide"), href: "/guide" },
+              { label: t(lang, "guideSetBreadcrumbSets") },
+            ]}
+            hideMobileBack
+          />
+        }
+        back={{ href: "/guide", label: "Guide" }}
+        title={t(lang, "guideSetTitle")}
+        description={t(lang, "guideSetIntro")}
+      />
 
       {/* ── 2. Set Types ── */}
       <section className="space-y-4">
@@ -285,14 +274,13 @@ export default async function GuideSetsPage() {
             </Surface>
           ))}
         </div>
-        <div className="flex items-start gap-2.5 rounded-lg border border-blue-500/20 bg-blue-500/5 px-4 py-3">
-          <Info className="mt-0.5 size-4 shrink-0 text-blue-500" />
+        <GuideCallout tone="blue">
           <p className="text-sm text-muted-foreground">
             {t(lang, "guideSetPackEnNoteA")}
             <strong className="text-foreground">{t(lang, "guideSetPackEnNoteStrong")}</strong>
             {t(lang, "guideSetPackEnNoteB")}
           </p>
-        </div>
+        </GuideCallout>
       </section>
 
       {/* ── 4. Card Code Format ── */}
@@ -326,7 +314,7 @@ export default async function GuideSetsPage() {
       {/* ── 5. Set List from DB ── */}
       <section className="space-y-6">
         <div>
-          <h2 className="text-xl font-semibold">{t(lang, "guideSetListHeading")}</h2>
+          <h2 className="text-h2">{t(lang, "guideSetListHeading")}</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             {t(lang, "guideSetListIntroA")}
             <Link
@@ -417,58 +405,13 @@ export default async function GuideSetsPage() {
       </section>
 
       {/* ── 6. Sources ── */}
-      <section className="space-y-3">
-        <h2 className="text-h2">{t(lang, "guideSetSourcesHeading")}</h2>
-        <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
-          {sources.map((src) =>
-            "internal" in src && src.internal ? (
-              <Link
-                key={src.url}
-                href={src.url}
-                className="flex items-center gap-3 px-4 py-3 motion-base hover:bg-muted/70"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="font-medium">{src.label}</p>
-                  <p className="text-meta">{src.desc}</p>
-                </div>
-                <ArrowRight className="size-4 shrink-0 text-muted-foreground/40" />
-              </Link>
-            ) : (
-              <a
-                key={src.url}
-                href={src.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 px-4 py-3 motion-base hover:bg-muted/70"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="font-medium">{src.label}</p>
-                  <p className="text-meta">{src.desc}</p>
-                </div>
-                <ExternalLink className="size-4 shrink-0 text-muted-foreground/40" />
-              </a>
-            )
-          )}
-        </Surface>
-      </section>
+      <GuideSourceList heading={t(lang, "guideSetSourcesHeading")} sources={sources} />
 
       {/* ── Navigation ── */}
-      <div className="flex items-center justify-between border-t border-border pt-6">
-        <Link
-          href="/guide/colors"
-          className="group inline-flex items-center gap-2 text-sm text-muted-foreground motion-base hover:text-foreground"
-        >
-          <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
-          {t(lang, "guideSetNavPrev")}
-        </Link>
-        <Link
-          href="/guide/buying"
-          className="group inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-        >
-          {t(lang, "guideSetNavNext")}
-          <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-        </Link>
-      </div>
+      <GuidePrevNext
+        prev={{ href: "/guide/colors", label: t(lang, "guideSetNavPrev") }}
+        next={{ href: "/guide/buying", label: t(lang, "guideSetNavNext") }}
+      />
     </div>
   );
 }
