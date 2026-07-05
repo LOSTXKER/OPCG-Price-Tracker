@@ -1,15 +1,14 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-05 — **Phase 2.4 (search engine) + 2.5 guide kit เสร็จทั้งคู่** · 2 PR รอ merge (stacked: guide บน 2.4) · **browser ใช้ได้แล้ว** verify ของจริงได้
+อัปเดตล่าสุด: 2026-07-05 — **Phase 2.4 (search engine) + 2.5 guide kit merged เข้า master แล้ว (PR #69 #70)** · master verify: **tsc0 · lint0err · test56/56 · build✓** · **browser ใช้ได้แล้ว** verify ของจริงได้
 
-## ✅ 2 งานเสร็จ (verify แข็ง static + live + adversarial review) — รอเบส merge
-### PR #69 — Phase 2.4 ระบบค้นหา engine เดียว (`feat/phase2.4-search-engine`, base master)
+## ✅ เข้า master แล้ว (session ล่าสุด — 2 PR ผ่าน static + live browser + adversarial review)
+### #69 — Phase 2.4 ระบบค้นหา engine เดียว
 `useSearchKeyboardNav` + `SearchResultRow` + `useCardSearch`(+abort/error/keepPrev) · command-search+hero เลิก fetch เอง → engine กลาง · คงหน้าตา+พฤติกรรมเป๊ะทุก surface · review 5 มิติ (2 confirmed low = per-fetch reset ตกหล่น → แก้แล้ว)
 
-### PR (จะเปิด) — Phase 2.5 guide kit (`feat/phase2.5-guide-kit`, **base = 2.4 branch, stacked**)
-4 component `components/guide/`: `GuideSourceList`·`GuideCallout`·`GuidePrevNext`·`CardThumbStrip` · migrate 6 หน้าลูก guide · **พ่วง visible ที่เบสอนุมัติ**: CONTENT-07 PageHeader large-title ทุกหน้า + CONTENT-08 หน้า buying restyle เข้าชุด (Check/X, callout, badge, footer) · review 6 หน้า **0 confirmed** (5 canonical preserving · buying 2 nit คงเดิม)
-> **stacked**: merge #69 ก่อน แล้ว retarget guide PR → master (หรือ merge ตามลำดับ)
+### #70 — Phase 2.5 guide kit (+CONTENT-07/08 visible ที่เบสอนุมัติ)
+4 component `components/guide/`: `GuideSourceList`·`GuideCallout`·`GuidePrevNext`·`CardThumbStrip` · migrate 6 หน้าลูก guide · CONTENT-07 PageHeader large-title ทุกหน้า + CONTENT-08 หน้า buying restyle เข้าชุด (Check/X, callout, badge, footer) · review 6 หน้า **0 confirmed** (5 canonical preserving · buying 2 nit คงเดิม)
 
 ## ⚠️ เบสต้อง eyeball / ตัดสิน
 - **guide buying** 2 จุด (ฉันคงเดิมไว้ให้ตัดสิน): (1) callout "วิธีอ่านราคา" heading เป็น amber ในกล่องฟ้า — อยากให้ neutral (`text-foreground`) ไหม · (2) ปุ่มย้อน "Sets" ยังเป็นอังกฤษ (ก๊อปจากเดิม) — อยาก i18n ไหม
