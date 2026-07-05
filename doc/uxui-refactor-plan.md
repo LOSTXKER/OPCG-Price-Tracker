@@ -116,7 +116,7 @@
 - [x] `RESPONSIVE-04` `portfolio/portfolio-name-form.tsx` — ยุบฟอร์ม inline ชื่อพอร์ต 4 จุด (sm/md variant, +aria-label ผ่าน i18n save/cancel)
 
 **2.4 ระบบค้นหา — ยุบ 3 ชุดเหลือ engine เดียว (`DISCOVERY-04` = `HOME-05` = `KIT-07`)**
-- [ ] แตก useRecentSearches + SearchResultRow กลาง แล้วให้ HeroSearchBar / CommandSearchModal / CardSearch ประกอบจาก useCardSearch เดียวกัน (เหลือแต่เปลือก)
+- [~] แตก **`useRecentSearches` เสร็จ** (`hooks/use-recent-searches.ts` · recent localStorage+state+push/remove/clear/refresh) → migrate ทั้ง 3 (card-search·command-search·hero-search) ยุบ readRecent/writeRecent/pushRecent ซ้ำ · dedup unify เป็น case-insensitive · **เหลือ:** `SearchResultRow` กลาง (command/hero ยัง render row เอง ไม่ผ่าน `SearchResultsDropdown`) + ให้ command/hero ใช้ `useCardSearch` แทน fetch ซ้ำ + keyboard-nav — **entangled + core interaction → เลื่อน browser** (card-search ใช้ useCardSearch+SearchResultsDropdown อยู่แล้ว = reference)
 - [ ] ระหว่างทางเก็บด้วย: `HOME-09`/`DISCOVERY-08` debounce จริง 250-300ms · `HOME-08` ARIA combobox · `DISCOVERY-09` ผลลัพธ์ 3 ทางเข้าเป็นชุดเดียว (การ์ด+เซ็ต+หน้า+ค้นรูป)
 
 **2.5 Flow ที่ copy-paste กันเป็นคู่/สาม**

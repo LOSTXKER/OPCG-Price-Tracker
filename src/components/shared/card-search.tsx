@@ -6,31 +6,11 @@ import { Search, X } from "lucide-react"
 
 import { SearchResultsDropdown, type SearchResult } from "@/components/shared/search-results-dropdown"
 import { useCardSearch, type CardSearchResult } from "@/hooks/use-card-search"
+import { useRecentSearches } from "@/hooks/use-recent-searches"
 import { ALL_GAMES } from "@/lib/game/constants"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
-
-const RECENT_KEY = "meecard-recent-searches"
-const RECENT_MAX = 6
-
-function readRecent(): string[] {
-  if (typeof window === "undefined") return []
-  try {
-    const raw = window.localStorage.getItem(RECENT_KEY)
-    const parsed = raw ? (JSON.parse(raw) as unknown) : []
-    return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === "string") : []
-  } catch {
-    return []
-  }
-}
-function writeRecent(next: string[]) {
-  try {
-    window.localStorage.setItem(RECENT_KEY, JSON.stringify(next.slice(0, RECENT_MAX)))
-  } catch {
-    /* storage may be unavailable (private mode) — recent is best-effort */
-  }
-}
 
 /**
  * The ONE card search for the whole app. Composes the shared useCardSearch engine
@@ -72,16 +52,9 @@ export function CardSearch({
 
   const [open, setOpen] = useState(false)
   const [activeIdx, setActiveIdx] = useState(-1)
-  const [recent, setRecent] = useState<string[]>([])
+  const { recent, push: pushRecent } = useRecentSearches()
   const inputRef = useRef<HTMLInputElement>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    // Read localStorage after mount (not during render) to avoid hydration drift;
-    // the setTimeout keeps the setState out of the effect body per repo lint rule.
-    const tm = setTimeout(() => setRecent(readRecent()), 0)
-    return () => clearTimeout(tm)
-  }, [])
 
   useEffect(() => {
     if (!open) return
@@ -98,14 +71,6 @@ export function CardSearch({
     : recent
   // The keyboard navigates results when querying, else recent searches.
   const navLen = results.length > 0 ? results.length : filteredRecent.length
-
-  const pushRecent = (value: string) => {
-    const v = value.trim()
-    if (!v) return
-    const next = [v, ...recent.filter((r) => r !== v)]
-    setRecent(next)
-    writeRecent(next)
-  }
 
   const selectCard = (code: string) => {
     const card = results.find((c) => c.cardCode === code)

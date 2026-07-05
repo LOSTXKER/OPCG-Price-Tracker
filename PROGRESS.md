@@ -1,11 +1,13 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-05 — **2 PR รอ merge (แตกจาก master, รอเบสดู preview): #65 = Phase 2.2 (sparkline+hero) · #66 = Phase 2.3 (control atoms — 4 ตัวเสร็จ, 3 เลื่อนรอ browser) · Browser ไม่พร้อม session นี้ → เบส eyeball preview**
+อัปเดตล่าสุด: 2026-07-05 — **3 PR รอ merge (stacked): #65 Phase 2.2 · #66 Phase 2.3 · #67 Phase 2.4 (KIT-07 useRecentSearches) · Browser ไม่พร้อมทั้ง session → เบส eyeball preview**
 
-## 🔀 ลำดับ merge (2 branch แตกจาก master เดียวกัน)
-1. merge **#65** (`feat/phase2.2-sparkline-hero`) ก่อน
-2. merge **#66** (`feat/phase2.3-control-atoms`) ทีหลัง → conflict **trivial** ที่ `AGENTS.md` (คนละ row) · `PROGRESS.md` (เอาเวอร์ชันนี้) · `doc/uxui-refactor-plan.md` (คนละบรรทัด) — resolve เอาของทั้งสอง
+## 🔀 ลำดับ merge (stacked — merge ตามลำดับ)
+1. **#65** (`feat/phase2.2-sparkline-hero`, base master)
+2. **#66** (`feat/phase2.3-control-atoms`, base master) — conflict trivial ที่ `AGENTS.md`/`PROGRESS.md`/`doc/uxui-refactor-plan.md` (เอาของทั้งสอง)
+3. **#67** (`feat/phase2.4-search-recent`, **base = branch 2.3** ไม่ใช่ master) — merge หลัง #66 · ถ้า retarget เป็น master จะเห็น 2.3+2.4 → **base ไว้ที่ branch 2.3 จะเห็นแค่ diff 2.4** · หลัง #66 เข้า master แล้ว retarget #67 → master ได้เลย (ไม่มี conflict code, เหลือแค่ docs superset)
+> **แนะนำ: merge #65+#66 ก่อนแล้วบอกฉัน rebase #67 → master** จะสะอาดสุด (stack 3 ชั้นเริ่มยุ่ง)
 
 ## ✅ PR #65 — Phase 2.2 (รอ merge)
 - KIT-08 รวม sparkline → `ui/mini-sparkline.tsx` เดียว (`fill?`, line-only, ลบ `shared/sparkline.tsx`) · KIT-05(บางส่วน) card-detail hero → `HeroNumber`
@@ -27,11 +29,18 @@
   - **market view toggle (grid/table)** = SegmentedControl แล้ว (ปุ่มขนาดต่างจาก ViewToggle เดิมนิดหน่อย h-7 vs p-1.5)
   - notifications toggle · icon button · saved pill · name form · add-card stepper ควร**เหมือนเดิม**
 
-## ⏭️ NEXT — Phase 2.3 เหลือ **จุดเดียว** (⏸️ EditionToggle — ทำคู่ Phase 5 + KIT-05)
-- **`EditionToggle`** (`card-detail/edition-toggle.tsx`) → SegmentedControl (KIT-10 ที่เหลือ) — **ยังไม่ยุบ เพราะ:** migrate = **tap target หด 40→28px = regression จริง** + active `bg-foreground/10`≠`bg-primary/15` (เปลี่ยนสี) + ทับ **KIT-05 lift** (ยกขึ้น kit) → คุ้มกว่าทำทีเดียวกับ **Phase 5.0 tap-target** (ที่จะเพิ่ม size ≥44px ให้ SegmentedControl) + KIT-05
-- **2.3 ถือว่าจบสาระสำคัญแล้ว** (7 atom · เหลือ EditionToggle จุดเดียวที่ผูกกับ phase อื่น)
-- แล้วต่อ **2.4** search engine เดียว · **2.5** flow copy-paste · **2.6** โฟลเดอร์ 3 ชั้น
-- **จุดเช็คอินเบส:** จบ 2.2+2.3 = เบสดู atom ใหม่บนหน้าจริง (plan §4) — **ถึงจุดนี้แล้ว**
+## ✅ PR #67 — Phase 2.4 KIT-07 (รอ merge · branch `feat/phase2.4-search-recent` base 2.3)
+- **`hooks/use-recent-searches.ts`** — hook กลาง recent-search (localStorage + state + push/remove/clear/refresh) · dedup case-insensitive · read on mount + `refresh()` สำหรับ modal ที่เปิดซ้ำ
+- migrate **3 ไฟล์** ยุบ readRecent/writeRecent/pushRecent ซ้ำ byte-identical: `card-search.tsx` · `command-search.tsx` (Cmd-K, ใช้ `refresh()` ตอนเปิด) · `hero-search-bar.tsx` (push/remove/clear)
+- verify: tsc0/lint0/test56/build✓ + review workflow 3 มิติ adversarial verify
+- ⚠️ **เบส eyeball**: recent searches ยังทำงาน (พิมพ์ค้น→enter→เห็นใน recent ทุก surface · Cmd-K เปิดใหม่เห็น recent ที่เพิ่งเพิ่ม · hero กากบาทลบ/ล้างได้) · dedup unify case-insensitive (Luffy=luffy ไม่ซ้ำ)
+- **เหลือ (เลื่อน browser):** SearchResultRow กลาง + command/hero ใช้ useCardSearch แทน fetch ซ้ำ + keyboard-nav — entangled + core interaction
+
+## ⏭️ NEXT — Phase 2 ที่เหลือ
+- **`EditionToggle`** (KIT-10 ที่เหลือ) — ⏸️ ทำคู่ **Phase 5.0 tap-target** + **KIT-05 lift** (migrate เดี่ยว = tap 40→28px regression + เปลี่ยนสี active)
+- **2.4 ที่เหลือ** (SearchResultRow + useCardSearch ใน command/hero + keyboard-nav) — ⏸️ browser (core interaction)
+- **2.5** flow copy-paste (auth kit · guide kit · useAlertSubmit · AdminDataTable 8 หน้า · commerce dedup) · **2.6** โฟลเดอร์ 3 ชั้น (KIT-09 mechanical)
+- **จุดเช็คอินเบส:** จบ 2.2+2.3 = เบสดู atom ใหม่บนหน้าจริง (plan §4) — **ถึงแล้ว + เริ่ม 2.4**
 
 ## ⚠️ ค้าง/ข้อควรรู้
 - **dev log error เก่าค้าง** (`PriceDisplay`·`home/sections/*`) = stale จาก session ก่อน ไม่ใช่ bug ปัจจุบัน (`rm -rf .next`+restart ถ้าเจอ)
