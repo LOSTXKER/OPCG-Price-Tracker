@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import { useRouter } from "next/navigation"
 import {
   useCallback,
@@ -8,7 +7,6 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
-  useState,
 } from "react"
 import {
   ArrowRightLeft,
@@ -27,14 +25,13 @@ import {
 } from "lucide-react"
 
 import { Skeleton } from "@/components/ui/skeleton"
-import { RarityBadge } from "@/components/shared/rarity-badge"
-import { Price } from "@/components/shared/price-inline"
+import { SearchResultRow } from "@/components/shared/search-result-row"
 import { getCardName, t, type TranslationKey } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
-import { fetchCards } from "@/lib/api/fetch-cards"
-import type { SearchResult } from "@/components/shared/search-results-dropdown"
+import { useCardSearch } from "@/hooks/use-card-search"
 import { useRecentSearches } from "@/hooks/use-recent-searches"
+import { useSearchKeyboardNav } from "@/hooks/use-search-keyboard-nav"
 
 /** Navigation shortcuts surfaced in the palette (cards + "go to" pages). */
 const NAV_ACTIONS: { href: string; labelKey: TranslationKey; icon: LucideIcon }[] = [
@@ -70,68 +67,12 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
   const inputRef = useRef<HTMLInputElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
 
-  const [query, setQuery] = useState("")
-  const [results, setResults] = useState<SearchResult[]>([])
-  const [loading, setLoading] = useState(false)
-  const [searchError, setSearchError] = useState<string | null>(null)
+  // Shared engine: 8-result cap + zero debounce keep the palette's snappy feel.
+  const { query, setQuery, results, loading, error, reset } = useCardSearch({
+    limit: 8,
+    debounceMs: 0,
+  })
   const { recent, push: pushRecent, refresh: refreshRecent } = useRecentSearches()
-  const [activeIdx, setActiveIdx] = useState(-1)
-
-  useEffect(() => {
-    if (!open) return
-    // Async tick keeps the reset out of the synchronous effect body; the
-    // modal opens on the same frame either way.
-    const t = setTimeout(() => {
-      refreshRecent()
-      setQuery("")
-      setResults([])
-      setSearchError(null)
-      setActiveIdx(-1)
-    }, 0)
-    return () => clearTimeout(t)
-  }, [open, refreshRecent])
-
-  useLayoutEffect(() => {
-    if (!open) return
-    const active = document.activeElement
-    previousFocusRef.current = active instanceof HTMLElement ? active : null
-    inputRef.current?.focus()
-    return () => {
-      previousFocusRef.current?.focus({ preventScroll: true })
-      previousFocusRef.current = null
-    }
-  }, [open])
-
-  useEffect(() => {
-    const trimmed = query.trim()
-    const controller = new AbortController()
-    const t = setTimeout(() => {
-      if (trimmed.length < 2) {
-        setResults([])
-        setSearchError(null)
-        return
-      }
-      setLoading(true)
-      setSearchError(null)
-      fetchCards({ search: trimmed, limit: 8 }, { signal: controller.signal })
-        .then((data) => {
-          setResults(data.cards ?? [])
-          setSearchError(null)
-          setActiveIdx(-1)
-        })
-        .catch((err: unknown) => {
-          if (err instanceof Error && err.name === "AbortError") return
-          console.error("Command search failed:", err)
-          setResults([])
-          setSearchError("Search failed. Please try again.")
-        })
-        .finally(() => setLoading(false))
-    }, 0)
-    return () => {
-      clearTimeout(t)
-      controller.abort()
-    }
-  }, [query])
 
   const goToCard = useCallback((code: string) => {
     onClose()
@@ -152,9 +93,9 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
   }, [onClose, pushRecent, router])
 
   const filteredRecent = useMemo(() => {
-    const t = query.trim().toLowerCase()
-    if (!t) return recent
-    return recent.filter((r) => r.toLowerCase().includes(t))
+    const tq = query.trim().toLowerCase()
+    if (!tq) return recent
+    return recent.filter((r) => r.toLowerCase().includes(tq))
   }, [recent, query])
 
   // Nav shortcuts: all of them when the box is empty (quick links), otherwise
@@ -176,21 +117,50 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
   const navBase = results.length
   const recentBase = results.length + matchedNav.length
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowDown") { e.preventDefault(); setActiveIdx((i) => Math.min(i + 1, allItems.length - 1)) }
-    else if (e.key === "ArrowUp") { e.preventDefault(); setActiveIdx((i) => Math.max(i - 1, -1)) }
-    else if (e.key === "Enter") {
-      if (activeIdx >= 0 && activeIdx < allItems.length) {
-        e.preventDefault()
-        const item = allItems[activeIdx]
-        if (item.type === "result") goToCard(item.key)
-        else if (item.type === "nav") goToPage(item.key)
-        else commitSearch(item.key)
-      } else {
-        commitSearch(query)
-      }
-    } else if (e.key === "Escape") onClose()
-  }
+  const { activeIdx, setActiveIdx, onKeyDown: handleKeyDown } = useSearchKeyboardNav({
+    length: allItems.length,
+    onSelect: (i) => {
+      const item = allItems[i]
+      if (item.type === "result") goToCard(item.key)
+      else if (item.type === "nav") goToPage(item.key)
+      else commitSearch(item.key)
+    },
+    onCommit: () => commitSearch(query),
+    onEscape: onClose,
+    arrowUpFloor: -1,
+  })
+
+  // A fresh result batch drops any stale keyboard highlight (debounceMs:0 means
+  // an in-flight ArrowDown could otherwise retarget onto a different card and
+  // mis-fire on Enter). setTimeout keeps the setState out of the effect body.
+  useEffect(() => {
+    const tm = setTimeout(() => setActiveIdx(-1), 0)
+    return () => clearTimeout(tm)
+  }, [results, setActiveIdx])
+
+  useEffect(() => {
+    if (!open) return
+    // Async tick keeps the reset out of the synchronous effect body; the
+    // modal opens on the same frame either way. refresh picks up recents added
+    // by other surfaces while this always-mounted modal was closed.
+    const tm = setTimeout(() => {
+      refreshRecent()
+      reset()
+      setActiveIdx(-1)
+    }, 0)
+    return () => clearTimeout(tm)
+  }, [open, refreshRecent, reset, setActiveIdx])
+
+  useLayoutEffect(() => {
+    if (!open) return
+    const active = document.activeElement
+    previousFocusRef.current = active instanceof HTMLElement ? active : null
+    inputRef.current?.focus()
+    return () => {
+      previousFocusRef.current?.focus({ preventScroll: true })
+      previousFocusRef.current = null
+    }
+  }, [open])
 
   if (!open) return null
 
@@ -230,11 +200,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
               <button
                 type="button"
                 aria-label="Clear search"
-                onClick={() => {
-                  setQuery("")
-                  setResults([])
-                  setSearchError(null)
-                }}
+                onClick={() => reset()}
                 className="flex size-6 items-center justify-center rounded-md text-muted-foreground hover:text-foreground"
               >
                 <XIcon className="size-3.5" />
@@ -289,25 +255,13 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                       activeIdx === i ? "bg-accent" : "hover:bg-accent/60"
                     )}
                   >
-                    <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-muted">
-                      {card.imageUrl ? (
-                        <Image src={card.imageUrl} alt={getCardName(lang, card)} fill className="object-contain" sizes="40px" />
-                      ) : (
-                        <div className="size-full bg-muted" />
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-h5">{getCardName(lang, card)}</p>
-                      <div className="flex items-center gap-1.5 text-meta">
-                        {card.set?.code && <span className="font-mono">{card.set.code}</span>}
-                        <RarityBadge rarity={card.rarity} size="sm" />
-                      </div>
-                    </div>
-                    {card.latestPriceJpy != null && (
-                      <span className="shrink-0 font-mono text-sm font-semibold">
-                        <Price jpy={Math.round(card.latestPriceJpy)} />
-                      </span>
-                    )}
+                    <SearchResultRow
+                      card={card}
+                      lang={lang}
+                      thumbFit="contain"
+                      thumbClassName="rounded-lg"
+                      alt={getCardName(lang, card)}
+                    />
                   </button>
                 ))}
                 <button
@@ -347,9 +301,9 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
               </div>
             )}
 
-            {searchError && query.trim().length >= 2 && !loading && (
+            {error && query.trim().length >= 2 && !loading && (
               <div className="border-b border-destructive/10 px-4 py-3 text-center text-sm text-destructive">
-                {searchError}
+                Search failed. Please try again.
               </div>
             )}
 
@@ -378,7 +332,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
             {!loading &&
               query.trim().length >= 2 &&
               results.length === 0 &&
-              !searchError && (
+              !error && (
               <div className="px-4 py-8 text-center text-sm text-muted-foreground">
                 {t(lang, "noResultsFor")} &ldquo;{query.trim()}&rdquo;
               </div>

@@ -1,37 +1,40 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-05 — **Phase 2.2 + 2.3 + 2.4/2.5(บางส่วน) merged เข้า master หมดแล้ว (PR #65 #66 #67)** · master verify: tsc0/lint0err/test56/build✓ · **⚠️ ยังไม่มีใคร eyeball preview เลย (browser ล่มทั้ง session ที่ทำ) → เบสควรเปิดของจริงเช็คจุดที่เปลี่ยนตั้งใจ**
+อัปเดตล่าสุด: 2026-07-05 — **Phase 2.4 เสร็จครบ: ยุบระบบค้นหา 3 surface เหลือ engine เดียว** (branch `feat/phase2.4-search-engine` · รอ PR merge) · **browser กลับมาใช้ได้แล้ว** → verify ของจริงได้ (session ก่อนล่ม)
 
-## ✅ เข้า master แล้ว (session ล่าสุด — 3 PR ผ่าน adversarial review workflow 7 ชุด 0 confirmed defect)
-- **#65 Phase 2.2** — `KIT-08` รวม sparkline → `ui/mini-sparkline.tsx` เดียว (ลบ `shared/sparkline.tsx`) · `KIT-05`(บางส่วน) card-detail hero → `HeroNumber`
-- **#66 Phase 2.3** — atom กลาง 7 ตัว: `ui/switch.tsx` · `ui/icon-button.tsx` · `ui/rating-stars.tsx` · `shared/saved-pill.tsx` · `portfolio/portfolio-name-form.tsx` · `ui/qty-stepper.tsx` (3/3 split+joined) · **KIT-10 ViewToggle→SegmentedControl** (ลบ ViewToggle)
-- **#67 Phase 2.4+2.5** — `hooks/use-recent-searches.ts` (KIT-07, ยุบ recent ซ้ำ 3 surface) · `hooks/use-alert-submit.ts` (TRACK-04, ยุบ submit ซ้ำ 3 dialog)
+## ✅ Phase 2.4 — ระบบค้นหา engine เดียว (เสร็จ, verify แข็ง, รอ merge)
+3 ชิ้นกลางใหม่ + migrate 3 surface (คงหน้าตา+พฤติกรรมเดิมเป๊ะ):
+- **`hooks/use-search-keyboard-nav.ts`** — activeIdx + ↑↓/Enter/Esc ที่เดิมเขียนซ้ำ 3 ที่ (`arrowUpFloor`: 0=card-search / -1=palette+hero · Enter preventDefault กัน hero form double-submit)
+- **`shared/search-result-row.tsx`** — เนื้อในแถวผลค้นหา (thumb+ชื่อ+set+rarity+ราคา) ที่ก๊อป 3 จุด → ตัวเดียว · props คุม divergence, default=หน้าตา dropdown เดิม (hero ส่ง `size=sm/blur/uppercase/font-price`, palette ส่ง `contain/rounded-lg`, dropdown = default)
+- **`useCardSearch`** +AbortController +`error` boolean +`keepPreviousOnError` (additive — deck-calc/marketplace ไม่กระทบ)
+- **command-search (Cmd+K) + hero (หน้าแรก)** เลิก fetch เอง → `useCardSearch` · **card-search** ใช้ keyboard hook · `SearchResultsDropdown` ใช้ `SearchResultRow` ภายใน
+- verify: **tsc0 · lint0err · test56/56 · build✓** + **live browser 3 surface** (hero blur/UPPERCASE/font-price · palette pages+ค้นการ์ด set ตัวเล็ก · add-dialog dropdown · arrow-nav+Down→Enter dispatch ถูกใบ · 0 console error) + **adversarial review 5 มิติ** (2 confirmed low = per-fetch `setActiveIdx(-1)` reset ตกหล่น → **แก้แล้ว** effect reset-on-results ทั้ง palette+hero · 5 refuted ถูกต้อง)
 
-## ⚠️ เบสต้อง eyeball ของจริงบน master/preview (จุดที่ "เปลี่ยนตั้งใจ" ไม่ใช่ byte-identical)
-- **card**: sparkline เส้นล้วนเขียว/แดง · ราคาใหญ่ count-up ตอนโหลด + ลากกราฟเลขวิ่งตาม
-- **ดาวเรตติ้ง = amber ทั้งเว็บ** (marketplace/seller/profile) — เดิม 4 สี · ดาวว่าง 2 จุด outline จาง (`/20`)
-- **settings**: privacy toggle โต h-5→h-6 + off เบจอ่อนกว่า
-- **market view toggle** (grid/table) = SegmentedControl (ปุ่มต่างเดิมนิด) · **deck stepper** ยุบเป็น QtyStepper (ยืนยัน Minus ยังลบการ์ด) · **drop stepper** เปลี่ยนเล็กน้อย
-- **search recent + alert สร้าง/แก้** ควรทำงานเหมือนเดิม (dedup recent เป็น case-insensitive)
-> ถ้าเจออะไรเพี้ยน: ดาวจาง→แก้ `rating-stars.tsx` ที่เดียว · view toggle→ปรับ SegmentedControl size · อื่นๆ บอกได้
+## ⚠️ เบสต้อง eyeball ของจริง (เหลือน้อยลง — ฉัน live-test แล้วส่วนใหญ่)
+- Phase 2.4 นี้ = ฉันเทสต์ browser จริงครบ 3 surface แล้ว **ควรไม่มีอะไรเพี้ยน** — แต่ scrub ราคา/count-up ตอนโหลดยังควรเห็นด้วยตา
+- **atom เก่า #65/#66/#67** (ยังไม่มีใคร eyeball): ดาว amber ทั้งเว็บ · sparkline เส้นล้วน · market view toggle SegmentedControl · deck/drop stepper · settings privacy toggle โต → เปิด opcg-price-tracker.vercel.app หรือ localhost เช็คได้
+> ถ้าเจออะไรเพี้ยน: search row → แก้ `search-result-row.tsx` ที่เดียว · ดาว → `rating-stars.tsx` · view toggle → SegmentedControl size
 
-## ⏭️ NEXT — Phase 2 ที่เหลือ (ทำบน master สะอาดได้เลย ไม่ต้อง stack แล้ว)
-1. **`EditionToggle`** → SegmentedControl (KIT-10 ที่เหลือ) — ⏸️ **ทำคู่ Phase 5.0 tap-target** (migrate เดี่ยว = tap 40→28px regression + active สีต่าง `bg-foreground/10`≠`bg-primary/15` + ทับ KIT-05 lift)
-2. **2.4 ที่เหลือ** (`KIT-07`/`DISCOVERY-04`/`HOME-05`) — `SearchResultRow` กลาง + ให้ command-search/hero-search ใช้ `useCardSearch` แทน fetch ซ้ำ + keyboard-nav — ⏸️ **core interaction ต้อง browser** (card-search ใช้ useCardSearch+SearchResultsDropdown อยู่แล้ว = reference)
-3. **2.5 ที่เหลือ** — `IDENTITY-01/10` auth kit · `CONTENT-02` guide kit (6 หน้า, public → curl verify ได้) · `SETS-04`/`DISCOVERY-10` · `HONEY-03/07` · `ADMIN-02/06` AdminDataTable 8 หน้า · `COMMERCE-02/04/05/06`
-4. **2.6** `KIT-09` จัดโฟลเดอร์ 3 ชั้น (ui/shared/feature) — mechanical move · `IDENTITY-11` แยก settings · `KIT-04/06`
-- แล้ว **Phase 3** token sweep · **4** states · **5** mobile ราย surface (เบสเลือกหน้า) · 6-7
+## ⏭️ NEXT — Phase 2 ที่เหลือ (ทำบน master สะอาดได้เลย · browser พร้อมแล้ว)
+1. **2.5 flow copy-paste** (เลือกทำได้เลย — ส่วนใหญ่ dedup คงหน้าตา, browser ช่วย verify):
+   - `CONTENT-02` guide kit (6 หน้า public → curl/browser verify ง่าย · GuideCallout/GuideSourceList/GuidePrevNext/CardThumbStrip) — **finding แนะนำทำพ่วง visible touch** (CONTENT-07/08/09) ถ้าอยากเห็นผลด้วยตา
+   - `IDENTITY-01/10` auth kit (AuthShell/OAuthButtons/PasswordInput/PasswordRules/FormError, 4 หน้า)
+   - `HONEY-03/07` (STREAK_TIERS single source · login-gate preview ใช้ component จริง) · `SETS-04`/`DISCOVERY-10` · `ADMIN-02/06` AdminDataTable 8 หน้า · `COMMERCE-02/04/05/06`
+2. **2.6** `KIT-09` จัดโฟลเดอร์ 3 ชั้น (mechanical) · `IDENTITY-11` แยก settings · `KIT-04/06`
+3. **EditionToggle → SegmentedControl** (KIT-10 ที่เหลือ) — ⏸️ ทำคู่ Phase 5.0 tap-target
+- แล้ว **Phase 3** token sweep · **4** states · **5** mobile ราย surface (เบสเลือกหน้า · browser พร้อมช่วยแล้ว) · 6-7
 
 ## ⚠️ ค้าง/ข้อควรรู้
-- **dev log error เก่าค้าง** (`PriceDisplay`·`home/sections/*`) = stale จาก session ก่อน ไม่ใช่ bug (`rm -rf .next`+restart ถ้าเจอ)
-- scout เชียร์ bump tap →44px หลายจุด = **Phase 5.0 ไม่ใช่ 2.x** (2.x = ยุบของซ้ำ คงหน้าตาเดิม)
+- **ARIA combobox บน search** = เลื่อน Phase 5.0/`RESPONSIVE-01` (2.x = dedup ล้วน · `SearchResultRow`+dropdown ทำให้เติม role=option ที่เดียวจบทีหลัง) · lint warning `aria-expanded on textbox` = pre-existing เดิม จะหายตอนนั้น
+- **debounce command/hero = 0ms** จงใจคง behavior เดิม (HOME-09 "debounce จริง 250-300ms" เป็นงานเปลี่ยน behavior แยก)
+- scout เชียร์ bump tap →44px / a11y = **Phase 5.0 ไม่ใช่ 2.x**
 - **อย่า migrate `Delta`/`DirectionPill` เข้า PriceTag** · `lastSale`/`lowestAsk` (grades.ts) จงใจเก็บ
-- branch merged ที่ยังไม่ลบ: `feat/phase2.2-sparkline-hero` · `feat/phase2.3-control-atoms` · `feat/phase2.4-search-recent` (+ เก่า #59-#63) — ลบได้ถ้าอยาก
+- branch merged เก่ายังไม่ลบ: `feat/phase2.2-sparkline-hero`·`2.3-control-atoms`·`2.4-search-recent` (+#59-#63) — ลบได้
 
 ## กฎเหล็ก
 - **ห้าม push master ตรง** — branch + PR + merge เท่านั้น
-- migrate atom = คงหน้าตาเดิมเป๊ะเมื่อ browser ดูไม่ได้ (ยกเว้นที่ finding สั่งเปลี่ยนสี) · verify ด้วยตาถ้า browser พร้อม · adversarial review workflow ก่อน PR
+- migrate atom = คงหน้าตาเดิมเป๊ะ (ยกเว้นที่ finding สั่งเปลี่ยนสี) · verify ด้วยตา (browser พร้อมแล้ว) · adversarial review workflow ก่อน PR
 - เช็ค `AGENTS.md` §Component Kit canon ก่อนสร้าง component ใหม่
 
 ## แหล่งอ้างอิง
