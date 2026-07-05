@@ -13,11 +13,7 @@ import type { ProfileStats, ProfileUser } from "./types";
  * ────────────────────────────────────────────────────────────────────────── */
 
 export type HeroMetaItem =
-  | { kind: "listings"; count: number }
-  | { kind: "rating"; rating: number; reviewCount: number }
-  | { kind: "reviews"; count: number }
-  | { kind: "activity"; label: string; tone: "online" | "recent" | "stale" | "inactive" }
-  | { kind: "joined"; label: string };
+  | { kind: "activity"; label: string; tone: "online" | "recent" | "stale" | "inactive" };
 
 export type HeroMetaInput = {
   user: ProfileUser;
@@ -28,33 +24,19 @@ export type HeroMetaInput = {
 };
 
 /**
- * Build the "X listings · 4.9★ (12) · Active 2h ago" meta row that sits
- * under the hero. Joined date is intentionally omitted — the hero's
- * `HeroFactsRow` (joined · response · deals) owns that fact now so the
- * lower meta line stays focused on activity signals.
+ * Build the "Active 2h ago" meta row that sits under the hero. Listings /
+ * rating / reviews / joined are intentionally not built here — the hero's
+ * `HeroFactsRow` (joined · response · deals) owns those facts now so this
+ * meta line stays focused on the activity signal.
  */
 export function buildHeroMeta({
-  user,
-  stats,
+  user: _user,
+  stats: _stats,
   sellerStats,
   isOwner,
   lang,
 }: HeroMetaInput): HeroMetaItem[] {
   const out: HeroMetaItem[] = [];
-
-  if (stats.listingCount > 0) {
-    out.push({ kind: "listings", count: stats.listingCount });
-  }
-
-  if (user.sellerRating != null) {
-    out.push({
-      kind: "rating",
-      rating: user.sellerRating,
-      reviewCount: stats.reviewCount,
-    });
-  } else if (stats.reviewCount > 0) {
-    out.push({ kind: "reviews", count: stats.reviewCount });
-  }
 
   // Activity heat indicator. Skipped for owners (they already know) and for
   // brand-new accounts with no signal so they don't look "abandoned" before

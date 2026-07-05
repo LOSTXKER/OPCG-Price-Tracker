@@ -11,7 +11,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { CalendarRange, LineChart as LineChartIcon, Lock, Scale } from "lucide-react";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { CHART_PERIODS } from "@/components/cards/price-chart";
+import { CHART_PERIODS } from "@/lib/constants/chart-periods";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PageHeader } from "@/components/layout/page-header";
 import { CardPickerModal } from "@/components/compare/card-picker-modal";

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react"
 import Link from "next/link"
 import { BellPlus, ChevronRight } from "lucide-react"
 
-import type { CardListing } from "@/components/cards/card-listings-section"
+import type { CardListing } from "@/components/cards/card-detail/types"
 import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"

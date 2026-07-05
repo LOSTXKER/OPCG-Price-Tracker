@@ -6,7 +6,7 @@
  * (VISION §6); only this file + grades.ts change.
  */
 
-import type { CardListing } from "@/components/cards/card-listings-section"
+import type { CardListing } from "@/components/cards/card-detail/types"
 
 // ~1 point/day (or sparser) — honest cadence: the real scrape yields one price/day, so
 // the mock must NOT imply sub-daily resolution (7D=28 read as 4 pts/day = fake intraday;
