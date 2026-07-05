@@ -105,8 +105,8 @@
 
 **2.2 Money atoms (ทุกหน้าใช้ — คุ้มสุด)**
 - [ ] `KIT-02` + `HOME-07` สร้าง **PriceTag** ตัวเดียว (ราคา + ลูกศร ▲/▼ + delta, ใช้ --price-up/down เท่านั้น) → ยุบ DeltaText / ChangePill / DeltaPill / ชิปใน PriceDisplay
-- [ ] `KIT-08` รวม sparkline 2 ตัว (shared/sparkline vs ui/mini-sparkline) เหลือตัวเดียวใน ui/
-- [ ] `KIT-05` ยก EditionToggle / SourceBadge(source-logo) / grades จาก card-detail/ ขึ้น kit + hero ราคา card-detail ใช้ HeroNumber ตัวเดียวกับ portfolio
+- [x] `KIT-08` รวม sparkline 2 ตัว → เหลือ `ui/mini-sparkline.tsx` ตัวเดียว (gradient เป็น prop `fill?`, default line-only · migrate 5 จุด · ลบ `shared/sparkline.tsx`) · watchlist เปลี่ยนเป็น line-only ให้ตรง market/portfolio (แก้ตรงที่ finding บ่น) · verify tsc0/lint0/test56/build✓ + review workflow 4 มิติ 0 confirmed defect
+- [~] `KIT-05` **hero ราคา card-detail ใช้ `HeroNumber` แล้ว** (count-up + `live` ตอน scrub + null-guard "—") · **เลื่อนการยก EditionToggle/SourceLogo/grades ขึ้น kit** — เหตุผล: ทั้ง 3 ยังถูกใช้แค่ใน feature `cards` ตัวเดียว ไม่มี consumer ข้าม feature (marketplace/comps ยังไม่สร้าง) → ย้ายตอนนี้ = churn เปล่า · `grades.ts` เป็น domain logic ควรไป `lib/` ไม่ใช่ `ui/` · `edition-toggle` ทับ KIT-10 (recompose จาก SegmentedControl) ทำทีเดียวใน 2.3 · ยกจริงเมื่อมี consumer ข้าม feature (SourceLogo = ตัวแรก)
 
 **2.3 Control atoms**
 - [ ] `KIT-10` ยุบตระกูล "pill เลือก 1 จาก N" 5 implementation → SegmentedControl เดียว + `SETS-03` TabBar ขีดเส้นใต้กลาง (ใช้ 4 ที่)
