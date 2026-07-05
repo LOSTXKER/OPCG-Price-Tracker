@@ -1,15 +1,9 @@
-import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
 import type { LucideIcon } from "lucide-react";
 import {
-  ArrowLeft,
-  ArrowRight,
   Crown,
-  ExternalLink,
   Hash,
   Heart,
-  Info,
   Map,
   Shield,
   Sparkles,
@@ -22,7 +16,11 @@ import { t, type Language } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
-import { BackButton } from "@/components/shared/back-button";
+import { PageHeader } from "@/components/layout/page-header";
+import { CardThumbStrip } from "@/components/guide/card-thumb-strip";
+import { GuideCallout } from "@/components/guide/guide-callout";
+import { GuideSourceList } from "@/components/guide/guide-source-list";
+import { GuidePrevNext } from "@/components/guide/guide-prev-next";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 
@@ -237,27 +235,27 @@ export default async function CardTypesPage() {
       />
 
       {/* ── 1. Hero + Intro ── */}
-      <div className="space-y-3">
-        <Breadcrumb
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Guide", href: "/guide" },
-            { label: t(lang, "guideTypeBreadcrumb") },
-          ]}
-          hideMobileBack
-        />
-        <div className="flex items-center gap-3">
-          <BackButton href="/guide" label="Guide" className="md:hidden" />
-          <h1 className="text-h1">
-            {t(lang, "guideTypeTitle")}
-          </h1>
-        </div>
-        <p className="text-lg leading-relaxed text-muted-foreground">
-          {t(lang, "guideTypeIntroP1a")}
-          <strong className="text-foreground">{t(lang, "guideTypeIntroP1Strong")}</strong>
-          {t(lang, "guideTypeIntroP1b")}
-        </p>
-      </div>
+      <PageHeader
+        breadcrumb={
+          <Breadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Guide", href: "/guide" },
+              { label: t(lang, "guideTypeBreadcrumb") },
+            ]}
+            hideMobileBack
+          />
+        }
+        back={{ href: "/guide", label: "Guide" }}
+        title={t(lang, "guideTypeTitle")}
+        description={
+          <>
+            {t(lang, "guideTypeIntroP1a")}
+            <strong className="text-foreground">{t(lang, "guideTypeIntroP1Strong")}</strong>
+            {t(lang, "guideTypeIntroP1b")}
+          </>
+        }
+      />
 
       {/* ── 2. Card Types ── */}
       <section className="space-y-4">
@@ -297,17 +295,14 @@ export default async function CardTypesPage() {
               {examples.length > 0 && (
                 <div className="border-t border-orange-500/10 px-6 py-3">
                   <p className="mb-2 text-xs font-medium text-muted-foreground">{t(lang, "guideTypeExamplesLeader")}</p>
-                  <div className="flex gap-2">
-                    {examples.map((card) => (
-                      <Link key={card.cardCode} href={`/cards/${card.cardCode}`} className="group shrink-0">
-                        <div className="relative aspect-[63/88] w-14 overflow-hidden rounded-lg bg-muted">
-                          {card.imageUrl && (
-                            <Image src={card.imageUrl} alt={card.nameEn ?? card.nameJp} fill className="object-contain" sizes="56px" />
-                          )}
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
+                  <CardThumbStrip
+                    cards={examples.map((card) => ({
+                      cardCode: card.cardCode,
+                      name: card.nameEn ?? card.nameJp,
+                      imageUrl: card.imageUrl,
+                    }))}
+                    size="md"
+                  />
                 </div>
               )}
             </Surface>
@@ -353,17 +348,14 @@ export default async function CardTypesPage() {
                 {examples.length > 0 && (
                   <div className={`border-t px-5 py-3 ${type.borderColor}`}>
                     <p className="mb-2 text-xs font-medium text-muted-foreground">{t(lang, "guideTypeExamples")}</p>
-                    <div className="flex gap-2">
-                      {examples.map((card) => (
-                        <Link key={card.cardCode} href={`/cards/${card.cardCode}`} className="group shrink-0">
-                          <div className="relative aspect-[63/88] w-12 overflow-hidden rounded-lg bg-muted">
-                            {card.imageUrl && (
-                              <Image src={card.imageUrl} alt={card.nameEn ?? card.nameJp} fill className="object-contain" sizes="48px" />
-                            )}
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
+                    <CardThumbStrip
+                      cards={examples.map((card) => ({
+                        cardCode: card.cardCode,
+                        name: card.nameEn ?? card.nameJp,
+                        imageUrl: card.imageUrl,
+                      }))}
+                      size="sm"
+                    />
                   </div>
                 )}
               </Surface>
@@ -492,8 +484,7 @@ export default async function CardTypesPage() {
       </section>
 
       {/* ── 6. Trigger Callout ── */}
-      <div className="flex items-start gap-2.5 rounded-lg border border-amber-500/20 bg-amber-500/5 px-4 py-3">
-        <Info className="mt-0.5 size-4 shrink-0 text-amber-500" />
+      <GuideCallout tone="amber">
         <div className="text-sm text-muted-foreground">
           <p>
             <strong className="text-foreground">Trigger:</strong>{" "}
@@ -504,58 +495,30 @@ export default async function CardTypesPage() {
             {t(lang, "guideTypeCalloutDon")}
           </p>
         </div>
-      </div>
+      </GuideCallout>
 
       {/* ── 7. Sources ── */}
-      <section className="space-y-3">
-        <h2 className="text-h2">{t(lang, "guideTypeSourcesHeading")}</h2>
-        <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
-          {[
-            {
-              label: "Official Rules",
-              desc: t(lang, "guideTypeSourceRulesDesc"),
-              url: "https://en.onepiece-cardgame.com/rules/",
-            },
-            {
-              label: "Play Guide",
-              desc: t(lang, "guideTypeSourcePlayGuideDesc"),
-              url: "https://en.onepiece-cardgame.com/play-guide/",
-            },
-          ].map((src) => (
-            <a
-              key={src.url}
-              href={src.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 px-4 py-3 motion-base hover:bg-muted/70"
-            >
-              <div className="min-w-0 flex-1">
-                <p className="font-medium">{src.label}</p>
-                <p className="text-meta">{src.desc}</p>
-              </div>
-              <ExternalLink className="size-4 shrink-0 text-muted-foreground/40" />
-            </a>
-          ))}
-        </Surface>
-      </section>
+      <GuideSourceList
+        heading={t(lang, "guideTypeSourcesHeading")}
+        sources={[
+          {
+            label: "Official Rules",
+            desc: t(lang, "guideTypeSourceRulesDesc"),
+            url: "https://en.onepiece-cardgame.com/rules/",
+          },
+          {
+            label: "Play Guide",
+            desc: t(lang, "guideTypeSourcePlayGuideDesc"),
+            url: "https://en.onepiece-cardgame.com/play-guide/",
+          },
+        ]}
+      />
 
       {/* ── Navigation ── */}
-      <div className="flex items-center justify-between border-t border-border pt-6">
-        <Link
-          href="/guide/getting-started"
-          className="group inline-flex items-center gap-2 text-sm text-muted-foreground motion-base hover:text-foreground"
-        >
-          <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
-          {t(lang, "guideTypeNavPrev")}
-        </Link>
-        <Link
-          href="/guide/rarities"
-          className="group inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-        >
-          {t(lang, "guideTypeNavNext")}
-          <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-        </Link>
-      </div>
+      <GuidePrevNext
+        prev={{ href: "/guide/getting-started", label: t(lang, "guideTypeNavPrev") }}
+        next={{ href: "/guide/rarities", label: t(lang, "guideTypeNavNext") }}
+      />
     </div>
   );
 }
