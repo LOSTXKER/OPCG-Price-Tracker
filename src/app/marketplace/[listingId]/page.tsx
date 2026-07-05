@@ -6,7 +6,7 @@ import { MapPin, Truck, MessageCircle, Eye, Clock, ChevronRight } from "lucide-r
 import { ListingCard } from "@/components/marketplace/listing-card";
 import { ReviewSection } from "@/components/marketplace/review-section";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
-import { PriceDisplay } from "@/components/shared/price-display";
+import { PriceTag } from "@/components/ui/price-tag";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -272,9 +272,9 @@ export default async function ListingDetailPage({ params }: PageProps) {
           {/* ── Block B: Price + Actions ── */}
           <Surface variant="panel" padding="xl" className="space-y-5">
             <div className="space-y-3">
-              <PriceDisplay
-                priceJpy={listing.priceJpy}
-                priceThb={listing.priceThb ?? undefined}
+              <PriceTag
+                jpy={listing.priceJpy}
+                thb={listing.priceThb ?? undefined}
                 showChange={false}
                 size="lg"
               />

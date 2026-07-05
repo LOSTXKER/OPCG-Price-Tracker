@@ -4,8 +4,7 @@ import Link from "next/link"
 import { MessageCircle, Star } from "lucide-react"
 
 import { ConditionBadge } from "@/components/shared/condition-badge"
-import { DeltaText } from "@/components/shared/delta-text"
-import { PriceDisplay } from "@/components/shared/price-display"
+import { PriceTag } from "@/components/ui/price-tag"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -111,21 +110,23 @@ function ListingCardBase({
         </Link>
 
         <div className="space-y-0.5 pt-0.5">
-          <PriceDisplay
-            priceJpy={priceJpy}
-            priceThb={priceThb ?? undefined}
+          <PriceTag
+            jpy={priceJpy}
+            thb={priceThb ?? undefined}
             showChange={false}
             size="card"
           />
           {market != null && diffPct != null && (
             <p className="text-meta text-muted-foreground">
               vs <Price jpy={market} />{" "}
-              <DeltaText
-                value={diffPct}
+              <PriceTag
+                change={diffPct}
+                changeOnly
+                changeStyle="plain"
                 decimals={0}
                 showArrow={false}
-                size="sm"
                 invert
+                size="sm"
                 className="ml-0.5"
               />
             </p>

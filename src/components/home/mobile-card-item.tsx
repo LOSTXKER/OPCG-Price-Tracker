@@ -13,7 +13,7 @@ import { getCardName } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import type { CardRow, PriceMode } from "./market-types"
 import { Sparkline } from "@/components/shared/sparkline"
-import { ChangePill } from "@/components/market/change-pill"
+import { PriceTag } from "@/components/ui/price-tag"
 
 export const MobileCardItem = memo(function MobileCardItem({
   card,
@@ -80,7 +80,7 @@ export const MobileCardItem = memo(function MobileCardItem({
               card.latestPriceJpy != null ? <Price jpy={card.latestPriceJpy} /> : "—"
             )}
           </p>
-          {!isPsa && c24 != null && <ChangePill value={c24} className="mt-0.5" />}
+          {!isPsa && c24 != null && <PriceTag change={c24} changeOnly changeStyle="plain" showArrow={false} size="sm" className="mt-0.5" />}
         </div>
       </Link>
     </div>

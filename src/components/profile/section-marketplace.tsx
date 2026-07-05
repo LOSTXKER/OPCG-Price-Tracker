@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ExternalLink, Package, Plus, ShieldCheck, Star, Store } from "lucide-react";
-import { PriceDisplay } from "@/components/shared/price-display";
+import { PriceTag } from "@/components/ui/price-tag";
 import { Button } from "@/components/ui/button";
 import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
@@ -107,9 +107,9 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
                     </span>
                     <span className="ml-2 text-meta">{l.card.cardCode}</span>
                   </div>
-                  <PriceDisplay
-                    priceJpy={l.priceJpy}
-                    priceThb={l.priceThb ?? undefined}
+                  <PriceTag
+                    jpy={l.priceJpy}
+                    thb={l.priceThb ?? undefined}
                     showChange={false}
                     size="sm"
                   />

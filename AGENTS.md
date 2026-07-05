@@ -72,17 +72,17 @@ Concrete consequences:
 | Page shell | `PageContainer` · `PageHeader` | `layout/page-container.tsx` · `layout/page-header.tsx` | max-width + หัวหน้า (+ bottom-nav padding) |
 | ปุ่มย้อน (มือถือ) | `BackButton` · `Breadcrumb` | `shared/back-button.tsx` · `shared/breadcrumb.tsx` | ปุ่มย้อน honey inline ข้างหัวข้อ |
 | Badge | `Badge` · `RarityBadge` · `ConditionBadge` · `GameBadge` | `ui/badge.tsx` · `shared/*-badge.tsx` | ป้ายสถานะ / rarity / สภาพ / เกม |
+| Money | `PriceTag` | `ui/price-tag.tsx` | ราคา + %change (▲/▼) ทุกที่ |
 
 ### 🚧 ต้องสร้าง (Phase 2.x — ยังไม่มี)
 
-- **`PriceTag`** (2.2) — ราคา + ลูกศร ▲/▼ + delta ตัวเดียว (ใช้ token `--price-up`/`--price-down`)
 - **`ui/switch.tsx`** · **`QtyStepper`** (≥44px) · **`IconButton`** · **`RatingStars`** (สี honey ตัวเดียว) — 2.3
 
 ### ⛔ Deprecated / กำลังยุบ (อย่าใช้ในของใหม่ · ยุบตาม Phase 2)
 
 | เดิม (อย่าใช้) | → ใช้แทน | finding |
 | --- | --- | --- |
-| `DeltaText` · `ChangePill` · `Delta` (grade-value) · `DirectionPill` · chip ใน `PriceDisplay` | `PriceTag` (สร้าง 2.2) | KIT-02 |
+| `Delta` (`cards/card-detail/grade-value.tsx`) · `DirectionPill` (`alerts/alert-form.tsx`, local) | คงไว้ — ไม่ map เข้า `PriceTag` ตรงๆ (`Delta` มี abs+pct combo mode, `DirectionPill` เป็นปุ่ม toggle ไม่ใช่ตัวโชว์ค่า) — 2.2 migrate `DeltaText`/`ChangePill`/chip ใน `PriceDisplay` เสร็จแล้ว, ลบไฟล์เดิมทิ้งแล้ว | KIT-02 |
 | `shared/sparkline.tsx` (`Sparkline`) | `ui/mini-sparkline.tsx` (`MiniSparkline`) | KIT-08 |
 | toggle เขียนมือใน settings (×2) | `ui/switch.tsx` (สร้าง 2.3) | SETTINGS-09 |
 | pill "เลือก 1 จาก N" ที่เขียนเอง (~5 จุด) | `SegmentedControl` | KIT-10 |

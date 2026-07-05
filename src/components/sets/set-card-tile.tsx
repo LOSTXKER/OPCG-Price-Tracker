@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Price } from "@/components/shared/price-inline";
-import { ChangePill } from "@/components/market/change-pill";
+import { PriceTag } from "@/components/ui/price-tag";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";
 import { getCardName } from "@/lib/i18n";
@@ -74,7 +74,7 @@ function SetCardTileBase({
           >
             {name}
           </span>
-          <ChangePill value={change} className="text-micro shrink-0" />
+          <PriceTag change={change} changeOnly changeStyle="plain" showArrow={false} size="sm" className="text-micro shrink-0" />
         </div>
       </div>
     </Link>

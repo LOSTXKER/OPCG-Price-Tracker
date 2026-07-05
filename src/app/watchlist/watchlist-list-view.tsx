@@ -7,7 +7,7 @@ import { Bell, Pin } from "lucide-react";
 import { CardImageButton } from "@/components/shared/card-image-button";
 import { GameBadge } from "@/components/shared/game-badge";
 import { MiniSparkline } from "@/components/ui/mini-sparkline";
-import { PriceDisplay } from "@/components/shared/price-display";
+import { PriceTag } from "@/components/ui/price-tag";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";
 import { getCardName, t } from "@/lib/i18n";
@@ -219,9 +219,9 @@ function ListRow({
       )}
 
       <div className="flex shrink-0 flex-col items-end gap-0.5 text-right leading-tight tabular-nums">
-        <PriceDisplay
-          priceJpy={entry.card.latestPriceJpy}
-          priceThb={entry.card.latestPriceThb}
+        <PriceTag
+          jpy={entry.card.latestPriceJpy}
+          thb={entry.card.latestPriceThb}
           size="sm"
           showChange={false}
           className="flex-nowrap whitespace-nowrap"

@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 import { CardActionRow } from "@/components/shared/card-action-row"
-import { PriceDisplay } from "@/components/shared/price-display"
+import { PriceTag } from "@/components/ui/price-tag"
 import { PriceUsd } from "@/components/shared/price-usd"
 import { Skeleton } from "@/components/ui/skeleton"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
@@ -131,9 +131,9 @@ function CardItemBase({
           {displayName}
         </p>
         <div className="mt-auto pt-1.5">
-          <PriceDisplay
-            priceJpy={priceJpy}
-            priceThb={priceThb ?? undefined}
+          <PriceTag
+            jpy={priceJpy}
+            thb={priceThb ?? undefined}
             change={activeChange ?? undefined}
             size="card"
             className="gap-x-1.5"
