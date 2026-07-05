@@ -10,7 +10,7 @@ import { PageHeader } from "@/components/layout/page-header"
 import { PriceTag } from "@/components/ui/price-tag"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
-import { Sparkline } from "@/components/shared/sparkline"
+import { MiniSparkline } from "@/components/ui/mini-sparkline"
 import { Surface } from "@/components/ui/surface"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
@@ -163,7 +163,7 @@ const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }:
       <td className="hidden px-4 py-2.5 sm:table-cell">
         <div className="flex justify-end">
           {card.sparkline.length >= 2 ? (
-            <Sparkline data={card.sparkline} width={80} height={28} />
+            <MiniSparkline data={card.sparkline} width={80} height={28} />
           ) : (
             <span className="text-meta text-muted-foreground/30">—</span>
           )}

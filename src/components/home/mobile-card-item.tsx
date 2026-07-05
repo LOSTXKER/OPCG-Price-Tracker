@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { getCardName } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import type { CardRow, PriceMode } from "./market-types"
-import { Sparkline } from "@/components/shared/sparkline"
+import { MiniSparkline } from "@/components/ui/mini-sparkline"
 import { PriceTag } from "@/components/ui/price-tag"
 
 export const MobileCardItem = memo(function MobileCardItem({
@@ -70,7 +70,7 @@ export const MobileCardItem = memo(function MobileCardItem({
           </div>
         </div>
         {!isPsa && sparkline && sparkline.length >= 2 && (
-          <Sparkline data={sparkline} width={48} height={20} className="shrink-0" />
+          <MiniSparkline data={sparkline} width={48} height={20} className="shrink-0" />
         )}
         <div className="shrink-0 text-right">
           <p className="font-price text-sm font-semibold">

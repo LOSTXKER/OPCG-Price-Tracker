@@ -7,6 +7,7 @@ import { Bell, ChevronRight, Eye, MoveHorizontal, Share2, ShoppingBag, Tag } fro
 import { Breadcrumb } from "@/components/shared/breadcrumb"
 import type { CardListing } from "@/components/cards/card-detail/types"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
+import { HeroNumber } from "@/components/ui/hero-number"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { AdSlot } from "@/components/ads/ad-slot"
@@ -616,9 +617,19 @@ export function CardDetail({
                 over the selected chart window — or the hovered date span while scrubbing.
                 Single % indicator (the 24h/7d/30d row was removed per เบส). */}
             <div className="flex flex-wrap items-end gap-x-2.5 gap-y-1">
-              <span className="tnum text-display leading-none text-foreground">
-                {activeValue == null ? "—" : formatDisplayValue(activeValue, currency)}
-              </span>
+              {activeValue == null ? (
+                <span className="tnum text-display leading-none text-foreground">—</span>
+              ) : (
+                // Same hero atom as portfolio (KIT-05): count-up on mount/grade
+                // switch, and mirror the value instantly while scrubbing the chart
+                // (live) so it never tweens per-pixel.
+                <HeroNumber
+                  value={activeValue}
+                  format={(n) => formatDisplayValue(n, currency)}
+                  live={activeIndex != null}
+                  className="leading-none text-foreground"
+                />
+              )}
               {datum.hasData && datum.value.isEst && <EstMark lang={displayLang} className="pb-1.5" />}
               {shownDelta != null && (
                 <span className="inline-flex items-baseline gap-x-1.5 pb-1">
