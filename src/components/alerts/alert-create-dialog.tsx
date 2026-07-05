@@ -14,15 +14,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { CardSearch } from "@/components/shared/card-search";
 import { useUIStore } from "@/stores/ui-store";
-import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
+import { useAlertSubmit } from "@/hooks/use-alert-submit";
 import { type CardSearchResult } from "@/hooks/use-card-search";
 import { t, getCardName } from "@/lib/i18n";
 import {
   AlertFormBody,
   type AlertFormValue,
 } from "@/components/alerts/alert-form";
-import { displayValueToJpy, formatJpy } from "@/lib/utils/currency";
-import { ApiError, apiPost } from "@/lib/api/client";
+import { formatJpy } from "@/lib/utils/currency";
+import { apiPost } from "@/lib/api/client";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";
 import type { PriceAlertItem } from "./alert-types";
 
@@ -38,8 +38,7 @@ export function AlertCreateDialog({
   onCreated?: (next: PriceAlertItem) => void;
 }) {
   const lang = useUIStore((s) => s.language);
-  const currency = useUIStore((s) => s.currency);
-  const { openUpgradeDialog } = useUpgradeDialog();
+  const { submit, submitting, error, setError } = useAlertSubmit();
 
   const [step, setStep] = useState<Step>("pick");
   const [card, setCard] = useState<CardSearchResult | null>(null);
@@ -48,16 +47,13 @@ export function AlertCreateDialog({
     channels: ["EMAIL"],
     target: "",
   });
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     if (!open) return;
     setStep("pick");
     setCard(null);
     setValue({ direction: "BELOW", channels: ["EMAIL"], target: "" });
     setError(null);
-    setSubmitting(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- setError is a stable useState setter from useAlertSubmit
   }, [open]);
 
   const handlePickCard = (c: CardSearchResult) => {
@@ -66,45 +62,24 @@ export function AlertCreateDialog({
     setError(null);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!card) return;
-    setError(null);
-    const raw = value.target.trim() ? Number(value.target) : NaN;
-    if (!Number.isFinite(raw) || raw <= 0) {
-      setError(t(lang, "targetPrice"));
-      return;
-    }
-    const targetJpy = Math.round(displayValueToJpy(raw, currency));
-
-    setSubmitting(true);
-    try {
-      const json = await apiPost<{ alert: PriceAlertItem }>("/api/alerts", {
-        cardId: card.id,
-        targetPrice: targetJpy,
-        direction: value.direction,
-        channels: value.channels,
-      });
-
-      onCreated?.(json.alert);
-      onOpenChange(false);
-    } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
-        window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`;
-        return;
-      }
-      if (err instanceof ApiError && err.status === 403) {
-        if (err.message.toLowerCase().includes("line")) {
-          openUpgradeDialog({ featureKey: "lineAlerts" });
-        } else {
-          openUpgradeDialog({ featureKey: "priceAlerts" });
-        }
+    const picked = card;
+    submit({
+      target: value.target,
+      request: (targetJpy) =>
+        apiPost<{ alert: PriceAlertItem }>("/api/alerts", {
+          cardId: picked.id,
+          targetPrice: targetJpy,
+          direction: value.direction,
+          channels: value.channels,
+        }),
+      onSuccess: (json) => {
+        onCreated?.(json.alert);
         onOpenChange(false);
-        return;
-      }
-      setError(err instanceof ApiError ? err.message : t(lang, "priceAlertFailed"));
-    } finally {
-      setSubmitting(false);
-    }
+      },
+      onGated: () => onOpenChange(false),
+    });
   };
 
   const cardName = card ? getCardName(lang, card) : "";

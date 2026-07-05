@@ -13,17 +13,14 @@ import {
 import { Button } from "@/components/ui/button"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
-import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
-import { ApiError, apiPost } from "@/lib/api/client"
+import { apiPost } from "@/lib/api/client"
+import { useAlertSubmit } from "@/hooks/use-alert-submit"
 import {
   AlertFormBody,
   type AlertFormValue,
   type AlertDirection,
 } from "@/components/alerts/alert-form"
-import {
-  displayValueToJpy,
-  jpyToDisplayValue,
-} from "@/lib/utils/currency"
+import { jpyToDisplayValue } from "@/lib/utils/currency"
 
 export function CardSetAlertDialog({
   cardId,
@@ -45,7 +42,6 @@ export function CardSetAlertDialog({
 }) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
-  const { openUpgradeDialog } = useUpgradeDialog()
 
   const isControlled = controlledOpen !== undefined
   const [internalOpen, setInternalOpen] = useState(false)
@@ -67,9 +63,8 @@ export function CardSetAlertDialog({
     channels: ["EMAIL"],
     target: initialTarget,
   })
-  const [submitting, setSubmitting] = useState(false)
+  const { submit, submitting, error, setError } = useAlertSubmit()
   const [done, setDone] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const reset = () => {
     setValue({
@@ -80,55 +75,30 @@ export function CardSetAlertDialog({
           ? Math.round(jpyToDisplayValue(currentPriceJpy, currency)).toString()
           : "",
     })
-    setSubmitting(false)
     setDone(false)
     setError(null)
   }
 
-  const handleSubmit = async () => {
-    setError(null)
-    const raw = value.target.trim() ? Number(value.target) : NaN
-    if (!Number.isFinite(raw) || raw <= 0) {
-      setError(t(lang, "targetPrice"))
-      return
-    }
-    const targetJpy = Math.round(displayValueToJpy(raw, currency))
-
-    setSubmitting(true)
-    try {
-      await apiPost("/api/alerts", {
-        cardId,
-        targetPrice: targetJpy,
-        direction: value.direction,
-        channels: value.channels,
-      })
-
-      setDone(true)
-      onCreated?.()
-      setTimeout(() => {
-        setDone(false)
-        setOpen(false)
-      }, 1300)
-    } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
-        window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`
-        return
-      }
-      if (err instanceof ApiError && err.status === 403) {
-        const msg = err.message.toLowerCase()
-        if (msg.includes("line")) {
-          openUpgradeDialog({ featureKey: "lineAlerts" })
-        } else {
-          openUpgradeDialog({ featureKey: "priceAlerts" })
-        }
-        setOpen(false)
-        return
-      }
-      setError(err instanceof ApiError ? err.message : t(lang, "priceAlertFailed"))
-    } finally {
-      setSubmitting(false)
-    }
-  }
+  const handleSubmit = () =>
+    submit({
+      target: value.target,
+      request: (targetJpy) =>
+        apiPost("/api/alerts", {
+          cardId,
+          targetPrice: targetJpy,
+          direction: value.direction,
+          channels: value.channels,
+        }),
+      onSuccess: () => {
+        setDone(true)
+        onCreated?.()
+        setTimeout(() => {
+          setDone(false)
+          setOpen(false)
+        }, 1300)
+      },
+      onGated: () => setOpen(false),
+    })
 
   const showTrigger = !hideTrigger && !isControlled
 

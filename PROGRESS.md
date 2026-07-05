@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-05 — **3 PR รอ merge (stacked): #65 Phase 2.2 · #66 Phase 2.3 · #67 Phase 2.4 (KIT-07 useRecentSearches) · Browser ไม่พร้อมทั้ง session → เบส eyeball preview**
+อัปเดตล่าสุด: 2026-07-05 — **3 PR รอ merge (stacked): #65 Phase 2.2 · #66 Phase 2.3 · #67 Phase 2.4+2.5 (useRecentSearches + useAlertSubmit) · Browser ไม่พร้อมทั้ง session → เบส eyeball preview · ⚠️ stack 3 ชั้น — ควร merge #65+#66 แล้วให้ฉัน rebase #67**
 
 ## 🔀 ลำดับ merge (stacked — merge ตามลำดับ)
 1. **#65** (`feat/phase2.2-sparkline-hero`, base master)
@@ -29,12 +29,19 @@
   - **market view toggle (grid/table)** = SegmentedControl แล้ว (ปุ่มขนาดต่างจาก ViewToggle เดิมนิดหน่อย h-7 vs p-1.5)
   - notifications toggle · icon button · saved pill · name form · add-card stepper ควร**เหมือนเดิม**
 
-## ✅ PR #67 — Phase 2.4 KIT-07 (รอ merge · branch `feat/phase2.4-search-recent` base 2.3)
-- **`hooks/use-recent-searches.ts`** — hook กลาง recent-search (localStorage + state + push/remove/clear/refresh) · dedup case-insensitive · read on mount + `refresh()` สำหรับ modal ที่เปิดซ้ำ
-- migrate **3 ไฟล์** ยุบ readRecent/writeRecent/pushRecent ซ้ำ byte-identical: `card-search.tsx` · `command-search.tsx` (Cmd-K, ใช้ `refresh()` ตอนเปิด) · `hero-search-bar.tsx` (push/remove/clear)
-- verify: tsc0/lint0/test56/build✓ + review workflow 3 มิติ adversarial verify
-- ⚠️ **เบส eyeball**: recent searches ยังทำงาน (พิมพ์ค้น→enter→เห็นใน recent ทุก surface · Cmd-K เปิดใหม่เห็น recent ที่เพิ่งเพิ่ม · hero กากบาทลบ/ล้างได้) · dedup unify case-insensitive (Luffy=luffy ไม่ซ้ำ)
-- **เหลือ (เลื่อน browser):** SearchResultRow กลาง + command/hero ใช้ useCardSearch แทน fetch ซ้ำ + keyboard-nav — entangled + core interaction
+## ✅ PR #67 — Phase 2.4+2.5 hook extraction (รอ merge · branch `feat/phase2.4-search-recent` base 2.3)
+> 2 hook dedup บน branch เดียว (ทั้งคู่ = แยก shared hook, ยุบ 3 ไฟล์)
+**KIT-07 — `hooks/use-recent-searches.ts`**
+- hook กลาง recent-search (localStorage + push/remove/clear/refresh) · dedup case-insensitive · read on mount + `refresh()` สำหรับ modal
+- migrate 3 ไฟล์: `card-search` · `command-search` (Cmd-K, `refresh()` ตอนเปิด) · `hero-search-bar`
+- **เหลือ (เลื่อน browser):** SearchResultRow + command/hero ใช้ useCardSearch แทน fetch ซ้ำ + keyboard-nav
+
+**TRACK-04 (HIGH) — `hooks/use-alert-submit.ts`**
+- hook เดียว owns submit alert (validate + convert JPY + 401 redirect + 403 upgrade + error)
+- migrate 3 dialog: `card-set-alert-dialog` · `alert-create-dialog` · `alert-edit-dialog` ผ่าน `submit({target, request, onSuccess, onGated})`
+- **คงพฤติกรรมต่าง dialog** (card-set=เช็ค+prefill+1300ms · create/edit=ปิดทันที) — unify success behavior (drift, VISION §106 prefill) = งาน UX แยก ทำตอน browser
+- verify: tsc0/lint0/test56/build✓ + review workflow ×2 (recent + alert) adversarial verify
+- ⚠️ **เบส eyeball**: recent ยังทำงาน (พิมพ์→enter→เห็น·Cmd-K เปิดใหม่เห็น·hero ลบ/ล้าง) · **alert สร้าง/แก้/set-alert ทำงาน + จับ limit (403→upgrade) + login (401)**
 
 ## ⏭️ NEXT — Phase 2 ที่เหลือ
 - **`EditionToggle`** (KIT-10 ที่เหลือ) — ⏸️ ทำคู่ **Phase 5.0 tap-target** + **KIT-05 lift** (migrate เดี่ยว = tap 40→28px regression + เปลี่ยนสี active)

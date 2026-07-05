@@ -120,7 +120,7 @@
 - [ ] ระหว่างทางเก็บด้วย: `HOME-09`/`DISCOVERY-08` debounce จริง 250-300ms · `HOME-08` ARIA combobox · `DISCOVERY-09` ผลลัพธ์ 3 ทางเข้าเป็นชุดเดียว (การ์ด+เซ็ต+หน้า+ค้นรูป)
 
 **2.5 Flow ที่ copy-paste กันเป็นคู่/สาม**
-- [ ] `TRACK-04` useAlertSubmit เดียว (ตอนนี้ก๊อป 3 ไฟล์ เริ่ม drift)
+- [x] `TRACK-04` **`hooks/use-alert-submit.ts` เสร็จ** — hook เดียว owns validate+convert JPY+401/403+error · migrate 3 dialog (card-set·create·edit) ผ่าน `submit({target, request, onSuccess, onGated})` · **คงพฤติกรรมต่าง dialog ไว้** (card-set = เช็ค+prefill+1300ms · create/edit = ปิดทันที) — การ unify success behavior (drift) = งาน UX แยก (VISION §106 อยากให้ prefill) ทำตอน browser
 - [ ] `IDENTITY-01` + `IDENTITY-10` auth kit: AuthShell / OAuthButtons / PasswordInput (แก้ a11y ปุ่มตาในตัว) / PasswordRules / FormError — 4 หน้า auth ใช้ชุดเดียว
 - [ ] `CONTENT-02` guide kit: GuideCallout / GuideSourceList / GuidePrevNext / CardThumbStrip (ตอนนี้ก๊อป 6 หน้า)
 - [ ] `SETS-04` SetPosterTile เดียว (index + other-sets) · `DISCOVERY-10` trending ใช้ MarketTable กลางแทนตารางเขียนเอง
