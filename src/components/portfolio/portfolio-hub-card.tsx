@@ -3,7 +3,9 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowDown, ArrowUp, Check, Edit2, Globe, Lock, MoreHorizontal, Trash2, X } from "lucide-react"
+import { ArrowDown, ArrowUp, Edit2, Globe, Lock, MoreHorizontal, Trash2 } from "lucide-react"
+
+import { PortfolioNameForm } from "./portfolio-name-form"
 
 import {
   DropdownMenu,
@@ -75,39 +77,17 @@ export function PortfolioHubCard({
   if (editing) {
     return (
       <Surface variant="panel" className="p-4">
-        <form
-          className="flex items-center gap-1.5"
-          onSubmit={(e) => {
-            e.preventDefault()
-            if (editName.trim()) {
-              onRename(meta.id, editName.trim())
-              setEditing(false)
-            }
+        <PortfolioNameForm
+          size="md"
+          lang={lang}
+          value={editName}
+          onChange={setEditName}
+          onSubmit={(name) => {
+            onRename(meta.id, name)
+            setEditing(false)
           }}
-        >
-          <input
-            autoFocus
-            className="min-w-0 flex-1 rounded-lg border border-[var(--p-hair)] bg-background px-2.5 py-1.5 text-sm outline-none ring-primary/30 transition-shadow focus:ring-2"
-            value={editName}
-            onChange={(e) => setEditName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") setEditing(false)
-            }}
-          />
-          <button
-            type="submit"
-            className="ease-chrome shrink-0 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
-            <Check className="size-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setEditing(false)}
-            className="ease-chrome shrink-0 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
-            <X className="size-4" />
-          </button>
-        </form>
+          onCancel={() => setEditing(false)}
+        />
       </Surface>
     )
   }

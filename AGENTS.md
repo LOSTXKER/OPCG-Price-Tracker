@@ -77,10 +77,12 @@ Concrete consequences:
 | ปุ่มไอคอนล้วน | `IconButton` | `ui/icon-button.tsx` | ปุ่ม icon-only (`ghost`/`solid`) · บังคับ `aria-label` |
 | ดาวเรตติ้ง | `RatingStars` | `ui/rating-stars.tsx` | ดาว read-only สี amber (honey) เดียว ทุกที่ |
 | Pill บันทึกแล้ว/ผิดพลาด | `SavedPill` | `shared/saved-pill.tsx` | feedback pill success/error (parent คุม timing) |
+| Stepper จำนวน | `QtyStepper` | `ui/qty-stepper.tsx` | +/- จำนวน (min/max · `showInput`) — drop/add-card (deck ยังไม่ยุบ) |
+| ฟอร์มชื่อพอร์ต inline | `PortfolioNameForm` | `portfolio/portfolio-name-form.tsx` | create/rename พอร์ต inline (`sm`/`md`) |
 
-### 🚧 ต้องสร้าง (Phase 2.x — ยังไม่มี)
+### 🚧 ต้องสร้าง / ยุบต่อ (Phase 2.x)
 
-- **`QtyStepper`** (≥44px, drop-calc+deck-calc+add-card ใช้ร่วม — ⏸️ เลื่อน: 3 จุด layout ต่างกัน ต้อง browser verify) — 2.3
+- **`KIT-10`** ยุบ pill "เลือก 1 จาก N" → `SegmentedControl` (⏸️ เลื่อน: ViewToggle/EditionToggle **ไม่ byte-identical** + ต้องแก้ canonical SegmentedControl → ต้อง browser verify) · **QtyStepper deck** + **EditionToggle** เหลืออีก 2 จุด — 2.3
 
 ### ⛔ Deprecated / กำลังยุบ (อย่าใช้ในของใหม่ · ยุบตาม Phase 2)
 
@@ -93,6 +95,8 @@ Concrete consequences:
 | IconButton เขียนเองใน 2 ไฟล์ portfolio + inline | `ui/icon-button.tsx` (`IconButton`) — ยุบเสร็จแล้ว, ลบ local ทิ้ง | PORTFOLIO-06 |
 | ดาวเรตติ้งเขียนเอง 6 จุด (4 สี) | `ui/rating-stars.tsx` (`RatingStars`) — ยุบเสร็จแล้ว, เป็น amber เดียว | COMMERCE-13 |
 | feedback pill ก๊อป 5 จุด | `shared/saved-pill.tsx` (`SavedPill`) — ยุบเสร็จแล้ว | SETTINGS-10 |
+| stepper จำนวนเขียนเอง (drop/add-card) | `ui/qty-stepper.tsx` (`QtyStepper`) — ยุบ 2/3 · deck (ปุ่มติดกัน + behavior ลบที่ 0) ⏸️ เลื่อน browser | PLAY-07 |
+| ฟอร์มชื่อพอร์ต inline ก๊อป 4 จุด | `portfolio/portfolio-name-form.tsx` (`PortfolioNameForm`) — ยุบเสร็จแล้ว, ลบ form ซ้ำทิ้ง | RESPONSIVE-04 |
 
 > รายละเอียดการยุบทั้งหมด: `doc/uxui-refactor-plan.md` §Phase 2 · หลักฐานราย ID: `doc/uxui-audit-findings-2026-07-04.md`
 

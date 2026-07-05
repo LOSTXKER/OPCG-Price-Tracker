@@ -12,23 +12,25 @@
 - verify: tsc0/lint0/test56/build✓ + review 4 มิติ 0 defect
 
 ## ✅ PR #66 — Phase 2.3 control atoms (รอ merge · branch `feat/phase2.3-control-atoms`)
-**4 atom เสร็จ (verify: tsc0/lint0/test56/build✓ + review workflow 3 ชุด 0 confirmed defect):**
-- **`ui/switch.tsx`** (SETTINGS-09) — ยุบ toggle เขียนมือ 2 ตัว · hit ≥44px แต่แรก (invisible expander) · +ariaLabel
+**6 atom เสร็จ (verify: tsc0/lint0/test56/build✓ + review workflow 4 ชุด adversarial verify 0 confirmed defect):**
+- **`ui/switch.tsx`** (SETTINGS-09) — ยุบ toggle เขียนมือ 2 ตัว · hit ≥44px แต่แรก · +ariaLabel
 - **`ui/icon-button.tsx`** (PORTFOLIO-06) — ghost/solid, ยุบ local 2 ไฟล์ + inline 1
 - **`ui/rating-stars.tsx`** (COMMERCE-13) — ยุบดาว 6 จุด (4 สี→**amber เดียว**) · **เปลี่ยนสีจริง = ตั้งใจ**
-- **`shared/saved-pill.tsx`** (SETTINGS-10) — ยุบ feedback pill 5 จุด (คงสี emerald/red, presentational)
+- **`shared/saved-pill.tsx`** (SETTINGS-10) — ยุบ feedback pill 5 จุด (คงสี emerald/red)
+- **`portfolio/portfolio-name-form.tsx`** (RESPONSIVE-04) — ยุบฟอร์มชื่อพอร์ต inline 4 จุด (sm/md, +aria-label)
+- **`ui/qty-stepper.tsx`** (PLAY-07) — ยุบ stepper **2/3**: drop-calc + add-card (deck ⏸️ เลื่อน)
 - ⚠️ **เบส eyeball preview #66** (browser ไม่พร้อม + settings/portfolio login-gated curl ไม่ได้):
   - **privacy toggle** โต h-5→h-6 + off-สีเบจอ่อนกว่า (ยุบเป็น Switch เดียว, ตั้งใจ)
-  - **ดาวเรตติ้งทุกที่เป็น amber** (marketplace listing/review · seller dashboard · profile seller card/reviews · section-marketplace) — เดิม 4 สี ตอนนี้ทองเดียว · ดาวว่างที่ review-section + seller/reviews เปลี่ยนจากเทาทึบ → outline จาง (`/20`) ให้ตรงกับอีก 4 จุด (ถ้าจางไปแก้ที่ `rating-stars.tsx` ที่เดียวได้ทั้ง 6)
-  - notifications toggle · icon button · saved pill ควร**เหมือนเดิม**
+  - **ดาวเรตติ้งทุกที่เป็น amber** (marketplace · seller · profile) — เดิม 4 สี · ดาวว่าง 2 จุด (review-section/seller/reviews) เทาทึบ→outline จาง `/20` (แก้ที่ `rating-stars.tsx` ที่เดียวได้ทั้ง 6 ถ้าจางไป)
+  - **drop-calculator stepper** เปลี่ยนเล็กน้อย (border-border→hairline, ตัด active:scale, icon size-4→3.5, +focus ring) — ยุบเป็น QtyStepper เดียว · add-card stepper ~เหมือนเดิม
+  - notifications toggle · icon button · saved pill · name form ควร**เหมือนเดิม**
 
-## ⏭️ NEXT — Phase 2.3 ที่เลื่อน (3 ตัว — ต้อง browser verify · scout map ครบใน transcript)
-> **เหตุผลเลื่อน: ทั้ง 3 เปลี่ยน layout/สี ที่ verify ตาไม่ได้ตอน browser ล่ม** (ต่างจาก 4 ตัวที่ทำ = byte-identical หรือแค่สี)
-1. **`QtyStepper`** (PLAY-07) — 3 จุด **layout ต่างกันจริง**: deck-calc (ปุ่มติดกัน+display span, ไม่มี input, max=4) · drop-calc/purchase-config (ปุ่มแยก+input h-9 w-16, 1-99) · add-card-detail-step (ปุ่ม size-10+input h-10 w-20, 1-∞) → ยุบ = เปลี่ยน layout 3 บริบทรวม deck rows หนาแน่น
-2. **`KIT-10`** ยุบ pill → SegmentedControl — **verify แล้วไม่ byte-identical**: ViewToggle (`toolbar.tsx:221`, container p-0.5 vs p-1, button p-1.5 vs h-7 · ฝังใน FilterToolbar canonical, ใช้ home-market-overview+filter-toolbar) · EditionToggle (`card-detail/edition-toggle.tsx`, active `bg-foreground/10`≠`bg-primary/15` ต้อง variant ใหม่ + คู่กับ KIT-05 ที่เลื่อน) · **GameFilterChips = canonical แล้ว ไม่ใช่ target** · **FilterTabs = SKIP (คนละ pattern)**
-3. **`RESPONSIVE-04`** ฟอร์ม inline ชื่อพอร์ต 4 จุด (portfolio-selector ×2, portfolio-hub-card, portfolio-client CreatePortfolioCard) → byte-identical ได้ (2 size variant: selector px-2/size-3.5 · hub/client px-2.5/size-4) แต่ login-gated verify ไม่ได้ + i18n aria-label — **bundle กับ Phase 5 portfolio mobile pass** (แตะไฟล์เดียวกัน)
+## ⏭️ NEXT — Phase 2.3 เหลือ 2 จุด (⏸️ เลื่อน — ต้อง browser verify)
+> **เหตุผล: ทั้ง 2 เปลี่ยน layout/แก้ canonical ที่ verify ตาไม่ได้ตอน browser ล่ม** (6 ตัวที่ทำแล้ว = byte-identical / แค่สี / ปลอดภัย)
+1. **`QtyStepper` deck** (PLAY-07 เหลือ 1/3) — `deck-calculator-client.tsx:389` ปุ่ม**ติดกัน** (joined, rounded-l/r ใน border เดียว) + display span + **behavior พิเศษ: Minus ที่ qty 1 → 0 = ลบการ์ด** + dense row → migrate = เสี่ยง reflow + ต้องยืนยัน behavior · atom `QtyStepper` มี `showInput={false}` รองรับแล้ว แต่ deck ต้อง joined variant + min=0-remove logic → ทำตอน browser
+2. **`KIT-10`** ยุบ pill → SegmentedControl — **verify แล้วไม่ byte-identical**: ViewToggle (`toolbar.tsx:221`, container p-0.5 vs p-1, button p-1.5 vs h-7 · ฝังใน FilterToolbar canonical) · EditionToggle (`card-detail/edition-toggle.tsx`, active `bg-foreground/10`≠`bg-primary/15` ต้อง variant ใหม่บน canonical · คู่กับ KIT-05 lift) · GameFilterChips = canonical แล้ว · FilterTabs = SKIP · **แก้ canonical SegmentedControl (ใช้ 16 ที่) = ต้องดูตา**
 - แล้วต่อ **2.4** search engine เดียว · **2.5** flow copy-paste · **2.6** โฟลเดอร์ 3 ชั้น
-- **จุดเช็คอินเบส:** จบ 2.2+2.3 = เบสดู atom ใหม่บนหน้าจริง (plan §4) — ตอนนี้ถึงจุดนี้แล้ว
+- **จุดเช็คอินเบส:** จบ 2.2+2.3 = เบสดู atom ใหม่บนหน้าจริง (plan §4) — **เกือบจบ 2.3 (เหลือ 2 จุด browser)**
 
 ## ⚠️ ค้าง/ข้อควรรู้
 - **dev log error เก่าค้าง** (`PriceDisplay`·`home/sections/*`) = stale จาก session ก่อน ไม่ใช่ bug ปัจจุบัน (`rm -rf .next`+restart ถ้าเจอ)

@@ -111,9 +111,9 @@
 **2.3 Control atoms**
 - [ ] ⏸️ **เลื่อน (ต้อง browser)** `KIT-10` ยุบ pill 5 จุด → SegmentedControl — verify แล้วว่า **ไม่ byte-identical**: ViewToggle (container p-0.5 vs SegmentedControl p-1, button p-1.5 vs h-7) + EditionToggle (active `bg-foreground/10` ≠ `bg-primary/15`, ต้อง variant ใหม่) เปลี่ยน layout/สี → ต้องดูจริง · GameFilterChips = canonical อยู่แล้ว (ไม่ใช่ target) · FilterTabs = SKIP (คนละ pattern)
 - [x] `SETTINGS-09` `ui/switch.tsx` (ยุบ toggle 2 ตัว, hit ≥44px) · [x] `SETTINGS-10` `shared/saved-pill.tsx` (ยุบ feedback pill 5 จุด, presentational, คงสี emerald/red)
-- [ ] ⏸️ **เลื่อน (ต้อง browser)** `PLAY-07` QtyStepper — 3 จุด layout ต่างกันจริง (deck ปุ่มติดกัน+display · drop/add ปุ่มแยก+input คนละ size) ยุบ = เปลี่ยน layout 3 บริบทรวม deck rows หนาแน่น → ต้องดูจริง
+- [~] `PLAY-07` **`ui/qty-stepper.tsx` เสร็จ + ยุบ drop-calc + add-card** (2/3 · unified split + input, size sm/md) · **deck ⏸️ เลื่อน** (ปุ่มติดกัน joined + behavior Minus→0=ลบการ์ด + dense row → ต้อง browser verify)
 - [x] `PORTFOLIO-06` `ui/icon-button.tsx` (ghost/solid, ยุบ local 2 + inline 1) · [x] `COMMERCE-13` `ui/rating-stars.tsx` (ยุบ 6 จุด → amber เดียว)
-- [ ] ⏸️ **เลื่อน** `RESPONSIVE-04` ฟอร์ม inline ชื่อพอร์ต 4 จุด → ตัวเดียว (byte-identical ได้ แต่ 2 size variant + i18n aria-label + login-gated verify ไม่ได้ · bundle กับ Phase 5 portfolio)
+- [x] `RESPONSIVE-04` `portfolio/portfolio-name-form.tsx` — ยุบฟอร์ม inline ชื่อพอร์ต 4 จุด (sm/md variant, +aria-label ผ่าน i18n save/cancel)
 
 **2.4 ระบบค้นหา — ยุบ 3 ชุดเหลือ engine เดียว (`DISCOVERY-04` = `HOME-05` = `KIT-07`)**
 - [ ] แตก useRecentSearches + SearchResultRow กลาง แล้วให้ HeroSearchBar / CommandSearchModal / CardSearch ประกอบจาก useCardSearch เดียวกัน (เหลือแต่เปลือก)
