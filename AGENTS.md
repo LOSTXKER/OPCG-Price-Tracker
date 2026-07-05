@@ -52,6 +52,43 @@ Concrete consequences:
 - **Chromeless shells** (admin, seller, messages, auth): own their own `<main>` padding. They don't have a bottom-nav so they don't need bottom-nav padding either. Use `<PageContainer inShell>` to inherit max-width without re-applying `px-*`.
 - **Mobile-first**: write the mobile rule with no prefix, then layer in `sm:` / `md:` / `lg:`. Don't write desktop-first with `max-md:` / `max-sm:` overrides — it inverts the mental model and makes diffs harder to read.
 
+## Component Kit (canon — เช็คตารางนี้ก่อนสร้าง component ใหม่)
+
+**กฎเหล็ก:** ก่อนสร้าง component ใหม่ **ต้องเช็คตารางนี้ก่อน** — ถ้ามี canonical แล้วให้ใช้/ต่อยอดอันนั้น ห้ามสร้างซ้ำ. จะ deprecate ของเดิมหรือเพิ่ม canonical ใหม่ = อัปเดตตารางนี้ในคอมมิตเดียวกัน. เป้าหมาย: ตอบได้ใน 10 วิว่า "kit ทางการมีอะไร" และของซ้ำทุกคู่เหลือตัวเดียว.
+
+### ✅ Canonical — ใช้อันนี้
+
+| หมวด | Component | ไฟล์ | ใช้เมื่อ |
+| --- | --- | --- | --- |
+| Surface / panel | `Surface` | `ui/surface.tsx` | กล่อง/พาเนลทุกใบ (variant + padding) |
+| Section heading | `SectionHead` | `shared/section-head.tsx` | หัวข้อ section + action ขวา |
+| Segmented / tab เลือก 1 จาก N | `SegmentedControl` · `Tabs` | `ui/segmented-control.tsx` · `ui/tabs.tsx` | pill/แท็บเลือกหนึ่งจากหลายตัว |
+| List row (มือถือ) | `GroupedList`/`GroupedRow` · `ListRow` | `ui/grouped-list.tsx` · `ui/list-row.tsx` | แถวรายการ iOS-style |
+| Empty state | `EmptyState` (หมี Kuma) | `shared/empty-state.tsx` | หน้า/ลิสต์ว่าง |
+| ตัวเลขใหญ่ (KPI / ราคา hero) | `HeroNumber` | `ui/hero-number.tsx` | พอร์ตรวม / ราคา hero |
+| Sparkline | `MiniSparkline` | `ui/mini-sparkline.tsx` | กราฟจิ๋วในแถว/การ์ด |
+| Loading (ศูนย์ spinner) | `Skeleton` · `LoadingState` · `PageSkeleton` | `ui/skeleton.tsx` · `shared/loading-state.tsx` · `shared/page-skeleton.tsx` | โครงโหลด |
+| Filter / toolbar | `FilterToolbar` · `GameFilterChips` | `shared/filter-toolbar.tsx` · `shared/game-filter-chips.tsx` | แถบกรอง/สลับมุมมอง |
+| Page shell | `PageContainer` · `PageHeader` | `layout/page-container.tsx` · `layout/page-header.tsx` | max-width + หัวหน้า (+ bottom-nav padding) |
+| ปุ่มย้อน (มือถือ) | `BackButton` · `Breadcrumb` | `shared/back-button.tsx` · `shared/breadcrumb.tsx` | ปุ่มย้อน honey inline ข้างหัวข้อ |
+| Badge | `Badge` · `RarityBadge` · `ConditionBadge` · `GameBadge` | `ui/badge.tsx` · `shared/*-badge.tsx` | ป้ายสถานะ / rarity / สภาพ / เกม |
+
+### 🚧 ต้องสร้าง (Phase 2.x — ยังไม่มี)
+
+- **`PriceTag`** (2.2) — ราคา + ลูกศร ▲/▼ + delta ตัวเดียว (ใช้ token `--price-up`/`--price-down`)
+- **`ui/switch.tsx`** · **`QtyStepper`** (≥44px) · **`IconButton`** · **`RatingStars`** (สี honey ตัวเดียว) — 2.3
+
+### ⛔ Deprecated / กำลังยุบ (อย่าใช้ในของใหม่ · ยุบตาม Phase 2)
+
+| เดิม (อย่าใช้) | → ใช้แทน | finding |
+| --- | --- | --- |
+| `DeltaText` · `ChangePill` · `Delta` (grade-value) · `DirectionPill` · chip ใน `PriceDisplay` | `PriceTag` (สร้าง 2.2) | KIT-02 |
+| `shared/sparkline.tsx` (`Sparkline`) | `ui/mini-sparkline.tsx` (`MiniSparkline`) | KIT-08 |
+| toggle เขียนมือใน settings (×2) | `ui/switch.tsx` (สร้าง 2.3) | SETTINGS-09 |
+| pill "เลือก 1 จาก N" ที่เขียนเอง (~5 จุด) | `SegmentedControl` | KIT-10 |
+
+> รายละเอียดการยุบทั้งหมด: `doc/uxui-refactor-plan.md` §Phase 2 · หลักฐานราย ID: `doc/uxui-audit-findings-2026-07-04.md`
+
 ## API Routes
 
 ### Use `apiHandler` wrappers — don't reinvent error handling
