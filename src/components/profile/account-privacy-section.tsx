@@ -2,8 +2,6 @@
 
 import { useCallback, useRef, useState, type ComponentType, type ReactNode } from "react";
 import {
-  CircleAlert,
-  CircleCheck,
   Globe,
   Info,
   Layers,
@@ -18,6 +16,7 @@ import { apiPatch, apiTry } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/ui/surface";
 import { Switch } from "@/components/ui/switch";
+import { SavedPill } from "@/components/shared/saved-pill";
 import type { DbUser } from "./profile-types";
 
 const VISIBILITY_OPTIONS = [
@@ -189,22 +188,8 @@ function PrivacyFeedback({
   savedField: string | null;
   lang: Language;
 }) {
-  if (errorField === field) {
-    return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in zoom-in-95">
-        <CircleAlert className="size-3" />
-        {t(lang, "saveFailed")}
-      </span>
-    );
-  }
-  if (savedField === field) {
-    return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 animate-in fade-in zoom-in-95">
-        <CircleCheck className="size-3" />
-        {t(lang, "saved")}
-      </span>
-    );
-  }
+  if (errorField === field) return <SavedPill kind="error">{t(lang, "saveFailed")}</SavedPill>;
+  if (savedField === field) return <SavedPill kind="success">{t(lang, "saved")}</SavedPill>;
   return null;
 }
 

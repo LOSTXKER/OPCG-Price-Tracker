@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { CircleCheck, Loader2, Pencil, X } from "lucide-react";
+import { Loader2, Pencil, X } from "lucide-react";
+import { SavedPill } from "@/components/shared/saved-pill";
 import { apiPatch, apiTry } from "@/lib/api/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -85,10 +86,7 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
         </div>
         <div className="flex items-center gap-2">
           {savedAt && Date.now() - savedAt < 2500 && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 animate-in fade-in zoom-in-95">
-              <CircleCheck className="size-3" />
-              {t(lang, "saved")}
-            </span>
+            <SavedPill kind="success">{t(lang, "saved")}</SavedPill>
           )}
           {!isEditing ? (
             <button

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Star, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
+import { RatingStars } from "@/components/ui/rating-stars";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -44,23 +45,6 @@ const RATING_FILTERS: ReadonlyArray<{ key: number | null }> = [
   { key: 2 },
   { key: 1 },
 ];
-
-function Stars({ count }: { count: number }) {
-  return (
-    <div className="flex gap-0.5">
-      {Array.from({ length: 5 }, (_, i) => (
-        <Star
-          key={i}
-          className={`h-3.5 w-3.5 ${
-            i < count
-              ? "fill-primary text-primary"
-              : "fill-muted text-muted"
-          }`}
-        />
-      ))}
-    </div>
-  );
-}
 
 export default function SellerReviewsPage() {
   const lang = useUIStore((s) => s.language);
@@ -130,7 +114,7 @@ export default function SellerReviewsPage() {
                 {data.avgRating != null ? data.avgRating.toFixed(1) : "—"}
               </p>
               <div className="mt-1 flex justify-center">
-                <Stars count={Math.round(data.avgRating ?? 0)} />
+                <RatingStars value={data.avgRating ?? 0} size="md" />
               </div>
               <p className="mt-1 text-meta">
                 {t(lang, "reviewsCount").replace("{n}", String(data.totalReviews))}
@@ -213,7 +197,7 @@ export default function SellerReviewsPage() {
                       {review.reviewer.displayName ?? t(lang, "user")}
                     </p>
                     <div className="flex items-center gap-2">
-                      <Stars count={review.rating} />
+                      <RatingStars value={review.rating} size="md" />
                       <span className="text-meta">
                         {new Date(review.createdAt).toLocaleDateString(getLocale(lang))}
                       </span>

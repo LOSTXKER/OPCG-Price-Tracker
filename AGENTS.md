@@ -75,10 +75,12 @@ Concrete consequences:
 | Money | `PriceTag` | `ui/price-tag.tsx` | ราคา + %change (▲/▼) ทุกที่ |
 | Toggle เปิด/ปิด | `Switch` | `ui/switch.tsx` | สวิตช์ on/off (settings) · hit ≥44px แต่แรก |
 | ปุ่มไอคอนล้วน | `IconButton` | `ui/icon-button.tsx` | ปุ่ม icon-only (`ghost`/`solid`) · บังคับ `aria-label` |
+| ดาวเรตติ้ง | `RatingStars` | `ui/rating-stars.tsx` | ดาว read-only สี amber (honey) เดียว ทุกที่ |
+| Pill บันทึกแล้ว/ผิดพลาด | `SavedPill` | `shared/saved-pill.tsx` | feedback pill success/error (parent คุม timing) |
 
 ### 🚧 ต้องสร้าง (Phase 2.x — ยังไม่มี)
 
-- **`QtyStepper`** (≥44px, drop-calc+deck-calc+add-card ใช้ร่วม) · **`RatingStars`** (สี honey ตัวเดียว, ยุบ 6 จุด) — 2.3
+- **`QtyStepper`** (≥44px, drop-calc+deck-calc+add-card ใช้ร่วม — ⏸️ เลื่อน: 3 จุด layout ต่างกัน ต้อง browser verify) — 2.3
 
 ### ⛔ Deprecated / กำลังยุบ (อย่าใช้ในของใหม่ · ยุบตาม Phase 2)
 
@@ -89,6 +91,8 @@ Concrete consequences:
 | pill "เลือก 1 จาก N" ที่เขียนเอง (~5 จุด) | `SegmentedControl` | KIT-10 |
 | toggle เขียนมือใน settings (×2) | `ui/switch.tsx` (`Switch`) — ยุบเสร็จแล้ว, ลบ local ทิ้ง (privacy toggle เดิม h-5 w-9 → ทรงมาตรฐาน) | SETTINGS-09 |
 | IconButton เขียนเองใน 2 ไฟล์ portfolio + inline | `ui/icon-button.tsx` (`IconButton`) — ยุบเสร็จแล้ว, ลบ local ทิ้ง | PORTFOLIO-06 |
+| ดาวเรตติ้งเขียนเอง 6 จุด (4 สี) | `ui/rating-stars.tsx` (`RatingStars`) — ยุบเสร็จแล้ว, เป็น amber เดียว | COMMERCE-13 |
+| feedback pill ก๊อป 5 จุด | `shared/saved-pill.tsx` (`SavedPill`) — ยุบเสร็จแล้ว | SETTINGS-10 |
 
 > รายละเอียดการยุบทั้งหมด: `doc/uxui-refactor-plan.md` §Phase 2 · หลักฐานราย ID: `doc/uxui-audit-findings-2026-07-04.md`
 

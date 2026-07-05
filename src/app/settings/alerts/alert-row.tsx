@@ -5,8 +5,6 @@ import Link from "next/link";
 import {
   ArrowDown,
   ArrowUp,
-  CircleAlert,
-  CircleCheck,
   Globe,
   Mail,
   MessageCircle,
@@ -14,6 +12,7 @@ import {
   RotateCcw,
   Trash2,
 } from "lucide-react";
+import { SavedPill } from "@/components/shared/saved-pill";
 import type { LucideIcon } from "lucide-react";
 
 import { GameBadge } from "@/components/shared/game-badge";
@@ -217,24 +216,12 @@ export function AlertRow({
 function FeedbackPill({ feedback }: { feedback: FeedbackKind | null }) {
   const lang = useUIStore((s) => s.language);
   if (!feedback) return null;
-  if (feedback === "error") {
-    return (
-      <span className="inline-flex animate-in fade-in zoom-in-95 items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-micro text-destructive">
-        <CircleAlert className="size-3" />
-        {t(lang, "saveFailed")}
-      </span>
-    );
-  }
+  if (feedback === "error") return <SavedPill kind="error" size="micro">{t(lang, "saveFailed")}</SavedPill>;
   const label =
     feedback === "reactivated"
       ? t(lang, "alertReactivated")
       : t(lang, "alertUpdated");
-  return (
-    <span className="inline-flex animate-in fade-in zoom-in-95 items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-micro text-emerald-600 dark:text-emerald-400">
-      <CircleCheck className="size-3" />
-      {label}
-    </span>
-  );
+  return <SavedPill kind="success" size="micro">{label}</SavedPill>;
 }
 
 function formatTriggeredAt(iso: string, lang: Language): string {

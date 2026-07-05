@@ -109,11 +109,11 @@
 - [ ] `KIT-05` ยก EditionToggle / SourceBadge(source-logo) / grades จาก card-detail/ ขึ้น kit + hero ราคา card-detail ใช้ HeroNumber ตัวเดียวกับ portfolio
 
 **2.3 Control atoms**
-- [ ] `KIT-10` ยุบตระกูล "pill เลือก 1 จาก N" 5 implementation → SegmentedControl เดียว + `SETS-03` TabBar ขีดเส้นใต้กลาง (ใช้ 4 ที่)
-- [~] `SETTINGS-09` **`ui/switch.tsx` เสร็จ** (ยุบ toggle เขียนมือ 2 ตัว, hit ≥44px แต่แรก · PR 2.3-part1) · `SETTINGS-10` **SavedPill ยังไม่ทำ** (5 จุด feedback pill — scout map แล้ว, presentational)
-- [ ] `PLAY-07` QtyStepper กลาง ≥44px (drop-calc + deck-calc + add-card ใช้ร่วม — 3 จุด scout map แล้ว)
-- [~] `PORTFOLIO-06` **`ui/icon-button.tsx` เสร็จ** (ghost/solid, ยุบ local 2 ไฟล์ + inline 1 · PR 2.3-part1) · `COMMERCE-13` **RatingStars ยังไม่ทำ** (6 จุด, ยุบ 4 สี→amber = เปลี่ยนสีจริง ต้อง browser)
-- [ ] `RESPONSIVE-04` (= `PORTFOLIO-05` บางส่วน) ฟอร์ม inline ชื่อพอร์ต ก๊อป 4 ชุดใน 3 ไฟล์ → ตัวเดียว + แก้ a11y/tap ในตัว
+- [ ] ⏸️ **เลื่อน (ต้อง browser)** `KIT-10` ยุบ pill 5 จุด → SegmentedControl — verify แล้วว่า **ไม่ byte-identical**: ViewToggle (container p-0.5 vs SegmentedControl p-1, button p-1.5 vs h-7) + EditionToggle (active `bg-foreground/10` ≠ `bg-primary/15`, ต้อง variant ใหม่) เปลี่ยน layout/สี → ต้องดูจริง · GameFilterChips = canonical อยู่แล้ว (ไม่ใช่ target) · FilterTabs = SKIP (คนละ pattern)
+- [x] `SETTINGS-09` `ui/switch.tsx` (ยุบ toggle 2 ตัว, hit ≥44px) · [x] `SETTINGS-10` `shared/saved-pill.tsx` (ยุบ feedback pill 5 จุด, presentational, คงสี emerald/red)
+- [ ] ⏸️ **เลื่อน (ต้อง browser)** `PLAY-07` QtyStepper — 3 จุด layout ต่างกันจริง (deck ปุ่มติดกัน+display · drop/add ปุ่มแยก+input คนละ size) ยุบ = เปลี่ยน layout 3 บริบทรวม deck rows หนาแน่น → ต้องดูจริง
+- [x] `PORTFOLIO-06` `ui/icon-button.tsx` (ghost/solid, ยุบ local 2 + inline 1) · [x] `COMMERCE-13` `ui/rating-stars.tsx` (ยุบ 6 จุด → amber เดียว)
+- [ ] ⏸️ **เลื่อน** `RESPONSIVE-04` ฟอร์ม inline ชื่อพอร์ต 4 จุด → ตัวเดียว (byte-identical ได้ แต่ 2 size variant + i18n aria-label + login-gated verify ไม่ได้ · bundle กับ Phase 5 portfolio)
 
 **2.4 ระบบค้นหา — ยุบ 3 ชุดเหลือ engine เดียว (`DISCOVERY-04` = `HOME-05` = `KIT-07`)**
 - [ ] แตก useRecentSearches + SearchResultRow กลาง แล้วให้ HeroSearchBar / CommandSearchModal / CardSearch ประกอบจาก useCardSearch เดียวกัน (เหลือแต่เปลือก)
