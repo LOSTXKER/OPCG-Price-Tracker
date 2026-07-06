@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,7 @@ import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminPanel } from "@/components/admin/admin-panel";
 import { AdminSaveBar } from "@/components/admin/admin-save-bar";
 import { AdminFormField, AdminCheckboxField } from "@/components/admin/admin-form-field";
+import { useAdminForm } from "@/lib/admin/use-admin-form";
 import { cn } from "@/lib/utils";
 
 const BLOG_CATEGORY_LABELS: Record<string, string> = {
@@ -51,7 +52,9 @@ function slugify(text: string) {
 
 export function BlogForm({ initial }: { initial?: PostData }) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [showPreview, setShowPreview] = useState(false);
+
+  const isEdit = initial?.id != null;
   const initialState: PostData =
     initial ?? {
       title: "",
@@ -63,12 +66,26 @@ export function BlogForm({ initial }: { initial?: PostData }) {
       tags: "",
       published: false,
     };
-  const [form, setForm] = useState<PostData>(initialState);
-  const [error, setError] = useState("");
-  const [showPreview, setShowPreview] = useState(false);
 
-  const isEdit = initial?.id != null;
-  const dirty = JSON.stringify(form) !== JSON.stringify(initialState);
+  const { form, setForm, error, saving, saveBarActive, handleSubmit, submitFromBar } =
+    useAdminForm<PostData>({
+      initialState,
+      isEdit,
+      formId: FORM_ID,
+      toBody: (f) => ({
+        ...f,
+        tags: f.tags
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean),
+      }),
+      createEndpoint: "/api/admin/blog",
+      editEndpoint: `/api/admin/blog/${initial?.id}`,
+      updateMethod: "PUT",
+      errorToast: false,
+      fallbackError: "เกิดข้อผิดพลาด",
+      redirectTo: "/admin/blog",
+    });
 
   function handleTitleChange(title: string) {
     setForm((f) => ({
@@ -76,40 +93,6 @@ export function BlogForm({ initial }: { initial?: PostData }) {
       title,
       slug: isEdit ? f.slug : slugify(title),
     }));
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-
-    const body = {
-      ...form,
-      tags: form.tags
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean),
-    };
-
-    startTransition(async () => {
-      try {
-        const url = isEdit
-          ? `/api/admin/blog/${initial!.id}`
-          : "/api/admin/blog";
-        const res = await fetch(url, {
-          method: isEdit ? "PUT" : "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-        if (!res.ok) {
-          const data = await res.json().catch(() => ({}));
-          throw new Error(data.error ?? "บันทึกไม่สำเร็จ");
-        }
-        router.push("/admin/blog");
-        router.refresh();
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "เกิดข้อผิดพลาด");
-      }
-    });
   }
 
   return (
@@ -150,14 +133,9 @@ export function BlogForm({ initial }: { initial?: PostData }) {
       }
       footer={
         <AdminSaveBar
-          dirty={dirty || !isEdit}
-          saving={isPending}
-          onSave={() => {
-            const formEl = document.getElementById(
-              FORM_ID,
-            ) as HTMLFormElement | null;
-            formEl?.requestSubmit();
-          }}
+          dirty={saveBarActive}
+          saving={saving}
+          onSave={submitFromBar}
           saveLabel={isEdit ? "อัปเดต" : "สร้าง"}
           description={
             error ? (

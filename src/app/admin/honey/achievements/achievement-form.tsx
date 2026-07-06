@@ -1,9 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
 import { ArrowLeft, Trophy } from "lucide-react";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +15,7 @@ import {
 } from "@/components/admin/admin-form-field";
 import { AdminNativeSelect } from "@/components/admin/admin-native-select";
 import { ImageUploader } from "@/components/admin/image-uploader";
-import { adminFetch } from "@/lib/admin/admin-fetch";
+import { useAdminForm } from "@/lib/admin/use-admin-form";
 
 // Keep in sync with `AchievementCriteriaSchema` in `src/lib/honey/schemas.ts`
 const CRITERIA_OPTIONS: { value: string; label: string }[] = [
@@ -69,8 +67,8 @@ const FORM_ID = "admin-achievement-form";
 
 export function AchievementForm({ initial }: { initial?: AchievementInitial }) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
 
+  const isEdit = initial?.id != null;
   const initialState: FormData = initial
     ? {
         code: initial.code,
@@ -95,64 +93,32 @@ export function AchievementForm({ initial }: { initial?: AchievementInitial }) {
         isActive: true,
       };
 
-  const [form, setForm] = useState<FormData>(initialState);
-  const [error, setError] = useState("");
-
-  const isEdit = initial?.id != null;
-  const dirty = JSON.stringify(form) !== JSON.stringify(initialState);
-
-  function validate(): string | null {
-    if (!form.name) return "กรุณากรอกชื่อ";
-    if (!isEdit && !form.code) return "กรุณากรอกโค้ด";
-    return null;
-  }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-
-    const v = validate();
-    if (v) {
-      setError(v);
-      return;
-    }
-
-    startTransition(async () => {
-      try {
-        const body = {
-          code: form.code,
-          name: form.name,
-          nameEn: form.nameEn || null,
-          nameTh: form.name,
-          description: form.description || null,
-          criteria: { type: form.criteriaType, target: form.criteriaTarget },
-          honeyReward: form.honeyReward,
-          badgeImageUrl: form.badgeImageUrl || null,
-          isActive: form.isActive,
-        };
-
-        if (isEdit) {
-          await adminFetch(`/api/admin/honey/achievements/${initial!.id}`, {
-            method: "PATCH",
-            body,
-          });
-          toast.success("อัปเดตความสำเร็จแล้ว");
-        } else {
-          await adminFetch("/api/admin/honey/achievements", {
-            method: "POST",
-            body,
-          });
-          toast.success("สร้างความสำเร็จแล้ว");
-        }
-        router.push("/admin/honey/achievements");
-        router.refresh();
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "บันทึกไม่สำเร็จ";
-        setError(message);
-        toast.error(message);
-      }
+  const { form, setForm, error, saving, saveBarActive, handleSubmit, submitFromBar } =
+    useAdminForm<FormData>({
+      initialState,
+      isEdit,
+      formId: FORM_ID,
+      validate: (f, edit) => {
+        if (!f.name) return "กรุณากรอกชื่อ";
+        if (!edit && !f.code) return "กรุณากรอกโค้ด";
+        return null;
+      },
+      toBody: (f) => ({
+        code: f.code,
+        name: f.name,
+        nameEn: f.nameEn || null,
+        nameTh: f.name,
+        description: f.description || null,
+        criteria: { type: f.criteriaType, target: f.criteriaTarget },
+        honeyReward: f.honeyReward,
+        badgeImageUrl: f.badgeImageUrl || null,
+        isActive: f.isActive,
+      }),
+      createEndpoint: "/api/admin/honey/achievements",
+      editEndpoint: `/api/admin/honey/achievements/${initial?.id}`,
+      successMessage: { create: "สร้างความสำเร็จแล้ว", edit: "อัปเดตความสำเร็จแล้ว" },
+      redirectTo: "/admin/honey/achievements",
     });
-  }
 
   return (
     <AdminPage
@@ -175,12 +141,9 @@ export function AchievementForm({ initial }: { initial?: AchievementInitial }) {
       }
       footer={
         <AdminSaveBar
-          dirty={dirty || !isEdit}
-          saving={isPending}
-          onSave={() => {
-            const formEl = document.getElementById(FORM_ID) as HTMLFormElement | null;
-            formEl?.requestSubmit();
-          }}
+          dirty={saveBarActive}
+          saving={saving}
+          onSave={submitFromBar}
           saveLabel={isEdit ? "อัปเดต" : "สร้าง"}
           description={error ? <span className="text-danger">{error}</span> : undefined}
         />

@@ -1,9 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
 import { ArrowLeft, CalendarDays } from "lucide-react";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,7 +13,7 @@ import {
   AdminCheckboxField,
   AdminFormField,
 } from "@/components/admin/admin-form-field";
-import { adminFetch } from "@/lib/admin/admin-fetch";
+import { useAdminForm } from "@/lib/admin/use-admin-form";
 
 type EventData = {
   id?: number;
@@ -54,8 +52,8 @@ export function EventForm({
   };
 }) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
 
+  const isEdit = initial?.id != null;
   const initialState: EventData = initial
     ? {
         id: initial.id,
@@ -77,63 +75,42 @@ export function EventForm({
         isActive: true,
       };
 
-  const [form, setForm] = useState<EventData>(initialState);
-  const [error, setError] = useState("");
-
-  const isEdit = initial?.id != null;
-  const dirty = JSON.stringify(form) !== JSON.stringify(initialState);
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-
-    if (!form.name || !form.startDate || !form.endDate) {
-      setError("กรุณากรอกชื่อ วันเริ่ม และวันสิ้นสุด");
-      return;
-    }
-
-    startTransition(async () => {
-      try {
-        if (isEdit) {
-          await adminFetch("/api/admin/honey/events", {
-            method: "PATCH",
-            body: {
+  const { form, setForm, error, saving, saveBarActive, handleSubmit, submitFromBar } =
+    useAdminForm<EventData>({
+      initialState,
+      isEdit,
+      formId: FORM_ID,
+      validate: (f) =>
+        !f.name || !f.startDate || !f.endDate
+          ? "กรุณากรอกชื่อ วันเริ่ม และวันสิ้นสุด"
+          : null,
+      toBody: (f, edit) =>
+        edit
+          ? {
               id: initial!.id,
-              name: form.name,
-              nameEn: form.nameEn || null,
-              nameTh: form.name,
-              description: form.description || null,
-              startDate: form.startDate,
-              endDate: form.endDate,
-              honeyMultiplier: form.honeyMultiplier,
-              isActive: form.isActive,
+              name: f.name,
+              nameEn: f.nameEn || null,
+              nameTh: f.name,
+              description: f.description || null,
+              startDate: f.startDate,
+              endDate: f.endDate,
+              honeyMultiplier: f.honeyMultiplier,
+              isActive: f.isActive,
+            }
+          : {
+              name: f.name,
+              nameEn: f.nameEn || undefined,
+              nameTh: f.name,
+              description: f.description || undefined,
+              startDate: f.startDate,
+              endDate: f.endDate,
+              honeyMultiplier: f.honeyMultiplier,
             },
-          });
-          toast.success("อัปเดตอีเวนต์แล้ว");
-        } else {
-          await adminFetch("/api/admin/honey/events", {
-            method: "POST",
-            body: {
-              name: form.name,
-              nameEn: form.nameEn || undefined,
-              nameTh: form.name,
-              description: form.description || undefined,
-              startDate: form.startDate,
-              endDate: form.endDate,
-              honeyMultiplier: form.honeyMultiplier,
-            },
-          });
-          toast.success("สร้างอีเวนต์แล้ว");
-        }
-        router.push("/admin/honey/events");
-        router.refresh();
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "บันทึกไม่สำเร็จ";
-        setError(message);
-        toast.error(message);
-      }
+      createEndpoint: "/api/admin/honey/events",
+      editEndpoint: "/api/admin/honey/events",
+      successMessage: { create: "สร้างอีเวนต์แล้ว", edit: "อัปเดตอีเวนต์แล้ว" },
+      redirectTo: "/admin/honey/events",
     });
-  }
 
   return (
     <AdminPage
@@ -156,12 +133,9 @@ export function EventForm({
       }
       footer={
         <AdminSaveBar
-          dirty={dirty || !isEdit}
-          saving={isPending}
-          onSave={() => {
-            const formEl = document.getElementById(FORM_ID) as HTMLFormElement | null;
-            formEl?.requestSubmit();
-          }}
+          dirty={saveBarActive}
+          saving={saving}
+          onSave={submitFromBar}
           saveLabel={isEdit ? "อัปเดต" : "สร้าง"}
           description={error ? <span className="text-danger">{error}</span> : undefined}
         />

@@ -1,9 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
 import { ArrowLeft, Gift } from "lucide-react";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +14,7 @@ import {
   AdminFormField,
 } from "@/components/admin/admin-form-field";
 import { AdminNativeSelect } from "@/components/admin/admin-native-select";
-import { adminFetch } from "@/lib/admin/admin-fetch";
+import { useAdminForm } from "@/lib/admin/use-admin-form";
 
 import {
   BONUS_REQUIREMENTS,
@@ -69,64 +67,39 @@ function ruleToForm(r: BonusRule): FormData {
 
 export function BonusForm({ initial }: { initial?: BonusRule }) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-
-  const initialState: FormData = initial ? ruleToForm(initial) : emptyForm;
-
-  const [form, setForm] = useState<FormData>(initialState);
-  const [error, setError] = useState("");
 
   const isEdit = initial?.id != null;
-  const dirty = JSON.stringify(form) !== JSON.stringify(initialState);
+  const initialState: FormData = initial ? ruleToForm(initial) : emptyForm;
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-
-    if (!form.name) {
-      setError("กรุณากรอกชื่อ");
-      return;
-    }
-
-    const body = {
-      name: form.name,
-      nameEn: form.nameEn || null,
-      nameTh: form.name,
-      category: form.category,
-      requirement: form.requirement,
-      requirementValue: Number(form.requirementValue),
-      rewards: {
-        honey: Number(form.rewardHoney),
-        tickets: Number(form.rewardTickets),
+  const { form, setForm, error, saving, saveBarActive, handleSubmit, submitFromBar } =
+    useAdminForm<FormData>({
+      initialState,
+      isEdit,
+      formId: FORM_ID,
+      validate: (f) => {
+        if (!f.name) return "กรุณากรอกชื่อ";
+        return null;
       },
-      sortOrder: Number(form.sortOrder),
-      isActive: form.isActive,
-    };
-
-    startTransition(async () => {
-      try {
-        if (isEdit) {
-          await adminFetch(`/api/admin/honey/missions/bonus/${initial!.id}`, {
-            method: "PUT",
-            body,
-          });
-          toast.success("อัปเดตกฎโบนัสแล้ว");
-        } else {
-          await adminFetch("/api/admin/honey/missions/bonus", {
-            method: "POST",
-            body,
-          });
-          toast.success("สร้างกฎโบนัสแล้ว");
-        }
-        router.push("/admin/honey/missions/bonus");
-        router.refresh();
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "บันทึกไม่สำเร็จ";
-        setError(message);
-        toast.error(message);
-      }
+      toBody: (f) => ({
+        name: f.name,
+        nameEn: f.nameEn || null,
+        nameTh: f.name,
+        category: f.category,
+        requirement: f.requirement,
+        requirementValue: Number(f.requirementValue),
+        rewards: {
+          honey: Number(f.rewardHoney),
+          tickets: Number(f.rewardTickets),
+        },
+        sortOrder: Number(f.sortOrder),
+        isActive: f.isActive,
+      }),
+      createEndpoint: "/api/admin/honey/missions/bonus",
+      editEndpoint: `/api/admin/honey/missions/bonus/${initial?.id}`,
+      updateMethod: "PUT",
+      successMessage: { create: "สร้างกฎโบนัสแล้ว", edit: "อัปเดตกฎโบนัสแล้ว" },
+      redirectTo: "/admin/honey/missions/bonus",
     });
-  }
 
   return (
     <AdminPage
@@ -149,12 +122,9 @@ export function BonusForm({ initial }: { initial?: BonusRule }) {
       }
       footer={
         <AdminSaveBar
-          dirty={dirty || !isEdit}
-          saving={isPending}
-          onSave={() => {
-            const formEl = document.getElementById(FORM_ID) as HTMLFormElement | null;
-            formEl?.requestSubmit();
-          }}
+          dirty={saveBarActive}
+          saving={saving}
+          onSave={submitFromBar}
           saveLabel={isEdit ? "อัปเดต" : "สร้าง"}
           description={error ? <span className="text-danger">{error}</span> : undefined}
         />

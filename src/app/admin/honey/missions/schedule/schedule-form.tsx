@@ -1,9 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
 import { ArrowLeft, Calendar } from "lucide-react";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +14,7 @@ import {
   AdminFormField,
 } from "@/components/admin/admin-form-field";
 import { AdminNativeSelect } from "@/components/admin/admin-native-select";
-import { adminFetch } from "@/lib/admin/admin-fetch";
+import { useAdminForm } from "@/lib/admin/use-admin-form";
 
 import {
   DAY_NAMES,
@@ -77,72 +75,47 @@ export function ScheduleForm({
   templates: Template[];
 }) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-
-  const initialState: FormData = initial ? ruleToForm(initial) : emptyForm;
-
-  const [form, setForm] = useState<FormData>(initialState);
-  const [error, setError] = useState("");
 
   const isEdit = initial?.id != null;
-  const dirty = JSON.stringify(form) !== JSON.stringify(initialState);
+  const initialState: FormData = initial ? ruleToForm(initial) : emptyForm;
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-
-    if (!form.templateId) {
-      setError("กรุณาเลือกเทมเพลต");
-      return;
-    }
-
-    const body = {
-      templateId: Number(form.templateId),
-      slotType: form.slotType,
-      dayOfWeek:
-        form.slotType === "DAY_OF_WEEK" ? Number(form.dayOfWeek) : null,
-      specificDates:
-        form.slotType === "FIXED_DATE"
-          ? form.specificDates
-              .split(",")
-              .map((s) => s.trim())
-              .filter(Boolean)
+  const { form, setForm, error, saving, saveBarActive, handleSubmit, submitFromBar } =
+    useAdminForm<FormData>({
+      initialState,
+      isEdit,
+      formId: FORM_ID,
+      validate: (f) => {
+        if (!f.templateId) return "กรุณาเลือกเทมเพลต";
+        return null;
+      },
+      toBody: (f) => ({
+        templateId: Number(f.templateId),
+        slotType: f.slotType,
+        dayOfWeek:
+          f.slotType === "DAY_OF_WEEK" ? Number(f.dayOfWeek) : null,
+        specificDates:
+          f.slotType === "FIXED_DATE"
+            ? f.specificDates
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean)
+            : null,
+        poolGroup: ["RANDOM_POOL", "SEQUENTIAL"].includes(f.slotType)
+          ? f.poolGroup || null
           : null,
-      poolGroup: ["RANDOM_POOL", "SEQUENTIAL"].includes(form.slotType)
-        ? form.poolGroup || null
-        : null,
-      poolPickCount:
-        form.slotType === "RANDOM_POOL" ? Number(form.poolPickCount) : null,
-      startDate: form.startDate || null,
-      endDate: form.endDate || null,
-      sortOrder: Number(form.sortOrder),
-      isActive: form.isActive,
-    };
-
-    startTransition(async () => {
-      try {
-        if (isEdit) {
-          await adminFetch(
-            `/api/admin/honey/missions/schedule/${initial!.id}`,
-            { method: "PUT", body },
-          );
-          toast.success("อัปเดตกฎแล้ว");
-        } else {
-          await adminFetch("/api/admin/honey/missions/schedule", {
-            method: "POST",
-            body,
-          });
-          toast.success("สร้างกฎแล้ว");
-        }
-        router.push("/admin/honey/missions/schedule");
-        router.refresh();
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "บันทึกไม่สำเร็จ";
-        setError(message);
-        toast.error(message);
-      }
+        poolPickCount:
+          f.slotType === "RANDOM_POOL" ? Number(f.poolPickCount) : null,
+        startDate: f.startDate || null,
+        endDate: f.endDate || null,
+        sortOrder: Number(f.sortOrder),
+        isActive: f.isActive,
+      }),
+      createEndpoint: "/api/admin/honey/missions/schedule",
+      editEndpoint: `/api/admin/honey/missions/schedule/${initial?.id}`,
+      updateMethod: "PUT",
+      successMessage: { create: "สร้างกฎแล้ว", edit: "อัปเดตกฎแล้ว" },
+      redirectTo: "/admin/honey/missions/schedule",
     });
-  }
 
   return (
     <AdminPage
@@ -165,12 +138,9 @@ export function ScheduleForm({
       }
       footer={
         <AdminSaveBar
-          dirty={dirty || !isEdit}
-          saving={isPending}
-          onSave={() => {
-            const formEl = document.getElementById(FORM_ID) as HTMLFormElement | null;
-            formEl?.requestSubmit();
-          }}
+          dirty={saveBarActive}
+          saving={saving}
+          onSave={submitFromBar}
           saveLabel={isEdit ? "อัปเดต" : "สร้าง"}
           description={error ? <span className="text-danger">{error}</span> : undefined}
         />
