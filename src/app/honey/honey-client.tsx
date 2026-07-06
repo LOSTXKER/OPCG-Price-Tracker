@@ -10,7 +10,7 @@ import { useAuthState } from "@/hooks/use-auth-state";
 import { useUIStore } from "@/stores/ui-store";
 import { useHoneyData } from "@/hooks/use-honey-data";
 import { t } from "@/lib/i18n";
-import { HoneyStatusBar } from "./components/honey-sidebar";
+import { HoneyStatusBar } from "./components/honey-status-bar";
 import { HoneyTabNav } from "./components/honey-tab-nav";
 import { HoneyToast } from "./components/honey-toast";
 import { MissionsTab } from "./components/missions-tab";
