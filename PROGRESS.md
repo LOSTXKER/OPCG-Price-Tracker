@@ -1,7 +1,8 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-06 — **#69/#70/#72 (2.4 search · 2.5 guide · 2.5 auth) merged เข้า master · 2.5 SETS-04 SetPosterTile เสร็จรอ PR** (branch `feat/phase2.5-sets-trending`) · verify: **tsc0 · lint0err · test56/56 · build✓** · browser ใช้ได้ · **DISCOVERY-10 defer** (behavior-preserving ไม่ได้)
+อัปเดตล่าสุด: 2026-07-06 — **#69/#70/#72/#73 merged (search·guide·auth·sets) · 2.5 HONEY-03 (แก้ live bug เลข streak reward 10/20/30→5/10/15 + single source `lib/honey/streak.ts`) เสร็จรอ PR** (branch `feat/phase2.5-honey`) · verify: **tsc0 · lint0err · test56/56 · build✓** · **defer**: DISCOVERY-10 (redesign), HONEY-07 (mock rewrite), honey popover 3→1 structural merge
+> ⚠️ PROGRESS section ด้านล่างบางส่วน stale (SETS "รอ PR" = merged แล้ว) — ควร sync รอบหน้า (ดู git log เป็นหลัก)
 
 ## ✅ เข้า master แล้ว (3 feature PR ผ่าน static + live browser + adversarial review)
 ### #69 — Phase 2.4 ระบบค้นหา engine เดียว

@@ -21,6 +21,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { t, type Language, type TranslationKey } from "@/lib/i18n";
+import { STREAK_TIERS } from "@/lib/honey/streak";
 import { cn } from "@/lib/utils";
 
 const MOCK_NAV_GROUPS: { id: string; labelKey: TranslationKey; items: { key: string; icon: typeof Trophy; labelKey: TranslationKey }[] }[] = [
@@ -108,7 +109,7 @@ function MockHero({ lang }: { lang: Language }) {
           </p>
         </div>
         <div className="mt-auto flex items-center gap-2">
-          <span className="text-meta tabular-nums">+20 🍯{t(lang, "streakPerDaySuffix")}</span>
+          <span className="text-meta tabular-nums">+{STREAK_TIERS[1].reward} 🍯{t(lang, "streakPerDaySuffix")}</span>
           <span className="rounded bg-amber-500/15 px-1.5 py-px text-xs font-bold tabular-nums text-amber-600 dark:text-amber-400">2x</span>
         </div>
         <span aria-hidden className={MOCK_GUIDE_HINT_CLASS}>
@@ -265,7 +266,7 @@ export function HoneyMockPreview({ lang }: { lang: Language }) {
         <div className="inline-flex h-9 items-center gap-1.5 rounded-md bg-primary px-4 text-xs font-bold text-primary-foreground shadow-sm">
           <Calendar className="size-3.5" />
           {t(lang, "dailyCheckin")}
-          <span className="rounded bg-white/20 px-1.5 py-px text-xs font-bold tabular-nums">+20 🍯</span>
+          <span className="rounded bg-white/20 px-1.5 py-px text-xs font-bold tabular-nums">+{STREAK_TIERS[1].reward} 🍯</span>
         </div>
       </div>
 

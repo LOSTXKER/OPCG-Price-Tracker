@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { Info } from "lucide-react";
 
 import { type Language, t } from "@/lib/i18n";
+import { STREAK_TIERS } from "@/lib/honey/streak";
 import { useHydrated } from "@/hooks/use-hydrated";
 
 type StreakNote = { icon: string; text: string };
@@ -20,9 +21,9 @@ type StreakTier = { range: string; reward: string };
 
 function streakInfoTiers(lang: Language): StreakTier[] {
   return [
-    { range: t(lang, "streakInfoTierRangeDays1to6"), reward: "+10" },
-    { range: t(lang, "streakInfoTierRangeDays7to29"), reward: "+20" },
-    { range: t(lang, "streakInfoTierRangeDay30Plus"), reward: "+30" },
+    { range: t(lang, "streakInfoTierRangeDays1to6"), reward: `+${STREAK_TIERS[0].reward}` },
+    { range: t(lang, "streakInfoTierRangeDays7to29"), reward: `+${STREAK_TIERS[1].reward}` },
+    { range: t(lang, "streakInfoTierRangeDay30Plus"), reward: `+${STREAK_TIERS[2].reward}` },
   ];
 }
 

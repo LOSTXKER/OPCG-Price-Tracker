@@ -17,21 +17,10 @@ import {
 } from "@/lib/honey/rank-tiers";
 import { RankTierIcon } from "@/components/shared/rank-icon";
 import { useRankTiers } from "@/hooks/use-rank-tiers";
+import { STREAK_TIERS, getStreakReward } from "@/lib/honey/streak";
 import type { HoneyLevel, ActiveEvent, ShopItem } from "../types";
 import { RankGuideContent } from "./rank-info-popover";
 import { HowToEarnGuideContent } from "./how-to-earn-popover";
-
-const STREAK_TIERS = [
-  { min: 1, max: 6, mult: 1, pts: 10 },
-  { min: 7, max: 29, mult: 2, pts: 20 },
-  { min: 30, max: Infinity, mult: 3, pts: 30 },
-] as const;
-
-function getStreakReward(streak: number) {
-  if (streak >= 30) return 30;
-  if (streak >= 7) return 20;
-  return 10;
-}
 
 function streakDayText(lang: Language, n: number) {
   if (lang === "TH") return `${n} วัน`;
@@ -162,7 +151,7 @@ function StreakGuideContent({ lang }: { lang: Language }) {
               {i === 0 ? t(lang, "streakInfoStart") : `${dayLabel(lang, tier.min)}+`}
             </span>
             <span className="font-semibold tabular-nums text-foreground">
-              +{tier.pts} 🍯
+              +{tier.reward} 🍯
             </span>
           </div>
         ))}
