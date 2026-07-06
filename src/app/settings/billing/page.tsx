@@ -1,4 +1,4 @@
-import { SectionBilling } from "@/components/profile/section-billing";
+import { SectionBilling } from "@/components/settings/section-billing";
 
 export default function SettingsBillingPage() {
   return <SectionBilling />;

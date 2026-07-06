@@ -1,7 +1,7 @@
 "use client";
 
 import { useProfileData } from "@/components/profile/profile-data-context";
-import { SectionSubscription } from "@/components/profile/section-subscription";
+import { SectionSubscription } from "@/components/settings/section-subscription";
 
 export default function SettingsSubscriptionPage() {
   const { data } = useProfileData();

@@ -7,7 +7,7 @@ import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
 import { apiGet, apiTry } from "@/lib/api/client";
 import { t, getLocale } from "@/lib/i18n";
-import type { InvoiceItem } from "./profile-types";
+import type { InvoiceItem } from "@/components/profile/profile-types";
 
 export function SectionBilling() {
   const lang = useUIStore((s) => s.language);

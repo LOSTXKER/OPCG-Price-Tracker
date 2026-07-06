@@ -13,8 +13,8 @@ import type { Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/ui/surface";
 import { SavedPill } from "@/components/shared/saved-pill";
-import { ProfileCover } from "./public/profile-cover";
-import type { DbUser } from "./profile-types";
+import { ProfileCover } from "@/components/profile/public/profile-cover";
+import type { DbUser } from "@/components/profile/profile-types";
 
 type AccountCoverImageProps = {
   user: DbUser;

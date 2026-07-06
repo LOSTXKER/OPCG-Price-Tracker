@@ -1,7 +1,7 @@
 "use client";
 
 import { useProfileData } from "@/components/profile/profile-data-context";
-import { SectionNotifications } from "@/components/profile/section-notifications";
+import { SectionNotifications } from "@/components/settings/section-notifications";
 
 export default function SettingsNotificationsPage() {
   const { data, settings, reload } = useProfileData();

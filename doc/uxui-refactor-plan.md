@@ -133,7 +133,7 @@
 
 **2.6 จัดบ้านโครงโฟลเดอร์**
 - [ ] `KIT-09` จัด 3 ชั้น: ui/ = primitive · shared/ = composite ข้ามฟีเจอร์ · ของผูกฟีเจอร์เดียว (notification-bell, streak-*, upgrade-*) ย้ายเข้าโฟลเดอร์ feature
-- [ ] `IDENTITY-11` แยก 12 ไฟล์ settings ออกจาก components/profile → components/settings
+- [x] `IDENTITY-11` **เสร็จ (branch `feat/phase2.6-settings-folder`)** — ย้าย **13 ไฟล์ settings** (8 `section-*` + 5 `account-*`) จาก `components/profile` → `components/settings/` (ใหม่) ด้วย `git mv` (history preserved) · shared/public อยู่ต่อใน profile: `public/`(25) + `profile-{types,data-context,seller-card,share-menu,achievements}` · rewrite import: `./profile-types`→`@/components/profile/profile-types`, `./public/profile-cover`→absolute (10+1 จุด) · sibling `./account-*` คงrelative (ย้ายพร้อมกัน) · update 10 settings pages importers · verify tsc0/lint0/test56/build✓ (pure structural move, static-verified = no eyeball)
 - [ ] `KIT-04` เคาะชะตา ui/ListRow: migrate mobile rows เข้า หรือ rename local ListRow ของ watchlist กันชื่อชน · `KIT-06` มาตรฐาน size prop เดียว (sm|md|lg) · `HONEY-05` rename honey-sidebar → honey-status-bar + แตกไฟล์
 
 ### Phase 3 — Token discipline sweep (ความสม่ำเสมอ + สวยงามระดับระบบ)
