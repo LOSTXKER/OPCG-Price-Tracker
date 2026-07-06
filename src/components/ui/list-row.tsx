@@ -7,11 +7,18 @@ import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
 /**
- * Canonical interactive list row (REDESIGN.md §4.3). The single mobile
- * table-fallback / list primitive: guaranteed 56px tap target (`min-h-14`),
- * focus-visible ring, and leading / title / subtitle / trailing slots. Renders
- * as a Link (href), button (onClick), or div. Use this instead of hand-rolling
- * `flex items-center gap-3 px-4 py-3` rows so density + a11y stay consistent.
+ * Canonical single-line list row for **grouped / settings-style lists** — its
+ * real consumers are `ui/grouped-list.tsx` (GroupedRow) and iOS-style navigation
+ * lists. Guarantees a 56px tap target (`min-h-14`), focus-visible ring, and
+ * leading / title / subtitle / trailing slots, rendering as a Link (href),
+ * button (onClick), or div. Use it instead of hand-rolling
+ * `flex items-center gap-3 px-4 py-3` navigation rows so density + a11y stay
+ * consistent.
+ *
+ * NOT a general table→list fallback for data-dense rows: it wraps the whole row
+ * as one Link/button, so rows with multiple interactive controls (checkbox +
+ * pin + alert + edit menu, e.g. watchlist / portfolio assets) stay bespoke —
+ * nesting interactives inside a single row-link is invalid HTML/a11y (KIT-04).
  */
 export type ListRowProps = {
   href?: string

@@ -47,7 +47,7 @@ We pin two breakpoints to specific responsibilities so layouts stay predictable 
 
 Concrete consequences:
 
-- **Tables**: hide the `<table>` on `<sm` and ship a list fallback (`<div className="divide-y sm:hidden">`). Don't rely on `overflow-x-auto` alone — horizontal scroll on phones is a UX regression. See [src/components/cards/card-table.tsx](src/components/cards/card-table.tsx) and [src/components/portfolio/assets-table/](src/components/portfolio/assets-table/) for the pattern.
+- **Tables**: hide the `<table>` on `<sm` and ship a list fallback (`<div className="divide-y sm:hidden">`). Don't rely on `overflow-x-auto` alone — horizontal scroll on phones is a UX regression. See [src/components/admin/admin-data-table.tsx](src/components/admin/admin-data-table.tsx) (built-in list fallback) and [src/components/portfolio/assets-table/](src/components/portfolio/assets-table/) for the pattern.
 - **Bottom nav padding**: routes that render in the global chrome (anything not in `CHROMELESS_ROUTES` in [src/components/layout/main-chrome.tsx](src/components/layout/main-chrome.tsx)) already get bottom padding from `<PageContent>` for the bottom-nav. Don't double-pad in the page itself.
 - **Chromeless shells** (admin, seller, messages, auth): own their own `<main>` padding. They don't have a bottom-nav so they don't need bottom-nav padding either. Use `<PageContainer inShell>` to inherit max-width without re-applying `px-*`.
 - **Mobile-first**: write the mobile rule with no prefix, then layer in `sm:` / `md:` / `lg:`. Don't write desktop-first with `max-md:` / `max-sm:` overrides — it inverts the mental model and makes diffs harder to read.
