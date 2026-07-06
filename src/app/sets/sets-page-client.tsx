@@ -1,9 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { Package } from "lucide-react";
 
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
@@ -12,6 +9,7 @@ import { AdSlot } from "@/components/ads/ad-slot";
 import { PageHeader } from "@/components/layout/page-header";
 import { SectionHead } from "@/components/shared/section-head";
 import { EmptyState } from "@/components/shared/empty-state";
+import { SetPosterTile } from "@/components/sets/set-poster-tile";
 
 export type SetWithCard = {
   id: number;
@@ -173,44 +171,14 @@ export function SetsListClient({ sets }: { sets: SetWithCard[] }) {
 
 function SetCard({ set }: { set: SetWithCard }) {
   const lang = useUIStore((s) => s.language);
-  const imageUrl = set.boxImageUrl ?? set.topCard?.imageUrl;
-  const displayName = set.nameEn ?? set.name;
-
   return (
-    <Link
-      href={`/sets/${set.code}`}
-      aria-label={displayName}
-      className="group flex flex-col gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-    >
-      <div className="surface-1 ease-chrome relative aspect-[3/4] w-full overflow-hidden rounded-lg shadow-[var(--panel-shadow)] group-lift">
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={displayName}
-            fill
-            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 22vw"
-            className="object-cover object-top"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <Package className="size-8 text-muted-foreground/30" />
-          </div>
-        )}
-      </div>
-
-      <div className="min-w-0">
-        {/* set code is the hero (เบส — collectors browse by OP/ST code first);
-            the set name supports it underneath. */}
-        <div className="flex items-baseline justify-between gap-1.5">
-          <span className="text-h5 truncate text-foreground">
-            {set.code.toUpperCase()}
-          </span>
-          <span className="text-meta shrink-0 tabular-nums">
-            {set.productCardCount} {t(lang, "cardsCount")}
-          </span>
-        </div>
-        <p className="text-meta truncate">{displayName}</p>
-      </div>
-    </Link>
+    <SetPosterTile
+      code={set.code}
+      displayName={set.nameEn ?? set.name}
+      imageUrl={set.boxImageUrl ?? set.topCard?.imageUrl}
+      showCount
+      count={set.productCardCount}
+      countLabel={t(lang, "cardsCount")}
+    />
   );
 }
