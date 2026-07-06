@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 
-import { CompareButton } from "@/components/shared/compare-button"
+import { CompareButton } from "@/components/compare/compare-button"
 import { WatchlistStar } from "@/components/shared/watchlist-star"
 import type { CardPreviewData } from "@/stores/card-preview-store"
 import { useUIStore } from "@/stores/ui-store"

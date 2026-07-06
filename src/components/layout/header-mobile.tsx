@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { NotificationBell } from "@/components/shared/notification-bell";
+import { NotificationBell } from "@/components/layout/notification-bell";
 import { Button } from "@/components/ui/button";
 import { GameSwitcher } from "@/components/layout/game-switcher";
 import { useHydrated } from "@/hooks/use-hydrated";

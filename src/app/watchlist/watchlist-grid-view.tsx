@@ -5,7 +5,7 @@ import { Bell, ExternalLink, Pin } from "lucide-react";
 
 import { CardItem } from "@/components/cards/card-item";
 import { CardGrid } from "@/components/cards/card-grid";
-import { CompareButton } from "@/components/shared/compare-button";
+import { CompareButton } from "@/components/compare/compare-button";
 import { GameBadge } from "@/components/shared/game-badge";
 import { getCardName, t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";

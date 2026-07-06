@@ -26,7 +26,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { NotificationBell } from "@/components/shared/notification-bell";
+import { NotificationBell } from "@/components/layout/notification-bell";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 import { formatCount } from "@/lib/utils/currency";
