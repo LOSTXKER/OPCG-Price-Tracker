@@ -79,7 +79,7 @@ export function WatchlistListView({
 
       <div className="divide-y divide-[var(--p-hair)]">
         {entries.map((entry) => (
-          <ListRow
+          <WatchlistRow
             key={entry.id}
             entry={entry}
             period={period}
@@ -99,7 +99,11 @@ export function WatchlistListView({
   );
 }
 
-function ListRow({
+// Local, bespoke row — NOT the `ui/list-row` primitive. Watchlist rows carry
+// multiple interactive controls per row (checkbox, pin, alert, remove,
+// sparkline) which the single-Link/button `ListRow` primitive can't nest, so
+// this stays hand-rolled (KIT-04). Renamed to avoid the confusing name clash.
+function WatchlistRow({
   entry,
   period,
   selected,
