@@ -81,6 +81,7 @@ Concrete consequences:
 | ฟอร์มชื่อพอร์ต inline | `PortfolioNameForm` | `portfolio/portfolio-name-form.tsx` | create/rename พอร์ต inline (`sm`/`md`) |
 | ระบบค้นหาการ์ด | `useCardSearch` · `useSearchKeyboardNav` · `SearchResultRow` | `hooks/use-card-search.ts` · `hooks/use-search-keyboard-nav.ts` · `shared/search-result-row.tsx` | engine ค้นหากลาง: fetch+debounce+abort (`useCardSearch`) · ↑↓/Enter/Esc (`useSearchKeyboardNav`, `arrowUpFloor`) · เนื้อในแถวผลลัพธ์ (`SearchResultRow`, props คุมหน้าตาต่อ surface) — hero/palette/inline ใช้ชุดนี้หมด |
 | Guide kit (หน้าคู่มือ) | `GuideSourceList` · `GuideCallout` · `GuidePrevNext` · `CardThumbStrip` | `components/guide/*.tsx` | บล็อกซ้ำใน `/guide/*` 6 หน้า: แหล่งอ้างอิง (`internal` prop) · callout (`tone`, body=children) · prev/next footer · แถบรูปการ์ด aspect-[63/88] (`size` sm/md/lg/xl) |
+| Auth kit (หน้า auth) | `AuthShell` · `OAuthButtons` · `PasswordInput` · `PasswordRules` · `FormError` | `components/auth/*.tsx` · `lib/auth/password-rules.ts` | ยุบโครง login/register + rules ซ้ำ: `AuthShell` (hero slot 2-col/1-col) · `OAuthButtons` (Google/FB, owns signInOAuth) · `PasswordInput` (ตา a11y-fixed, `leftIcon`/`showToggle`/`hint`) · `PasswordRules` (+`getPasswordRules` single source) · `FormError` |
 
 ### 🚧 ยุบต่อ (Phase 2.x — เหลือจุดเดียว)
 
