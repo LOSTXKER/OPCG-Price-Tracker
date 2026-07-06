@@ -98,7 +98,7 @@ export function SetHero({
             <>
               <span
                 aria-hidden
-                className="hidden h-4 w-px bg-[var(--p-hair)] sm:block"
+                className="hidden h-4 w-px bg-hair sm:block"
               />
               <Link
                 href={`/cards/${topCard.cardCode}`}

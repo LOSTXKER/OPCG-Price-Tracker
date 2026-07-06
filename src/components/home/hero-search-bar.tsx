@@ -147,7 +147,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
       <form onSubmit={handleSubmit}>
         <div
           className={cn(
-            "ease-chrome surface-1 relative flex items-center gap-2 rounded-2xl pl-4 pr-2 ring-1 ring-[var(--p-hair)] transition-[box-shadow,border-color]",
+            "ease-chrome surface-1 relative flex items-center gap-2 rounded-2xl pl-4 pr-2 ring-1 ring-hair transition-[box-shadow,border-color]",
             hasDropdown
               ? "z-[51] rounded-b-none shadow-lg"
               : "focus-within:ring-2 focus-within:ring-primary/40",
@@ -193,7 +193,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
       </form>
 
       {hasDropdown && (
-        <div className="absolute inset-x-0 top-full z-50 overflow-hidden rounded-b-2xl bg-popover shadow-xl ring-1 ring-[var(--p-hair)]">
+        <div className="absolute inset-x-0 top-full z-50 overflow-hidden rounded-b-2xl bg-popover shadow-xl ring-1 ring-hair">
           <div className="max-h-[60vh] overflow-y-auto px-2 pb-3 pt-1">
             {/* CARDS */}
             {searching && loading && results.length === 0 && (
@@ -323,7 +323,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
                       key={c.cardCode}
                       type="button"
                       onClick={() => go(`/cards/${c.cardCode}`)}
-                      className="ease-chrome inline-flex items-center gap-1.5 rounded-full border border-[var(--p-hair)] bg-transparent px-3.5 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="ease-chrome inline-flex items-center gap-1.5 rounded-full border border-hair bg-transparent px-3.5 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       <TrendingUp className="size-3 text-primary/50" aria-hidden />
                       {getCardName(lang, c)}

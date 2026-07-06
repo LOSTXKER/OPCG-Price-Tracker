@@ -34,7 +34,7 @@ export default function WatchlistLoading() {
         {Array.from({ length: 8 }).map((_, i) => (
           <div
             key={i}
-            className="flex items-center gap-3 border-b border-[var(--p-hair)] px-4 py-3 last:border-0"
+            className="flex items-center gap-3 border-b border-hair px-4 py-3 last:border-0"
           >
             <Skeleton className="size-3.5 shrink-0 rounded" />
             <Skeleton className="size-10 shrink-0 rounded" />

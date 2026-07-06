@@ -173,7 +173,7 @@ export function SectionAddresses() {
               type="checkbox"
               checked={form.isDefault}
               onChange={(e) => setForm((prev) => ({ ...prev, isDefault: e.target.checked }))}
-              className="size-4 rounded border-[var(--p-hair)]"
+              className="size-4 rounded border-hair"
             />
             {t(lang, "setDefault")}
           </label>

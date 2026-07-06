@@ -130,7 +130,7 @@ export function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-[22rem] max-w-[calc(100vw-2rem)] rounded-xl border border-[var(--p-hair)] bg-popover shadow-lg">
+        <div className="absolute right-0 top-full z-50 mt-2 w-[22rem] max-w-[calc(100vw-2rem)] rounded-xl border border-hair bg-popover shadow-lg">
           {/* Header */}
           <div className="flex items-center justify-between border-b px-4 py-2.5">
             <span className="text-sm font-semibold">{t(lang, "notifications")}</span>
@@ -191,7 +191,7 @@ export function NotificationBell() {
                     <div
                       key={item.id}
                       className={cn(
-                        "flex items-start gap-3 border-b border-[var(--p-hair)] px-4 py-3 transition-colors ease-chrome hover:bg-muted/70",
+                        "flex items-start gap-3 border-b border-hair px-4 py-3 transition-colors ease-chrome hover:bg-muted/70",
                         !item.read && "bg-primary/5",
                       )}
                     >
@@ -261,7 +261,7 @@ export function NotificationBell() {
               </div>
 
               {/* Footer for price tab */}
-              <div className="flex items-center justify-between border-t border-[var(--p-hair)] px-4 py-2.5">
+              <div className="flex items-center justify-between border-t border-hair px-4 py-2.5">
                 <Link
                   href="/cards"
                   onClick={() => setOpen(false)}
@@ -338,7 +338,7 @@ function PriceAlertRow({
       href={`/cards/${alert.card.cardCode}`}
       onClick={onNavigate}
       className={cn(
-        "flex items-start gap-3 border-b border-[var(--p-hair)] px-4 py-2.5 transition-colors ease-chrome hover:bg-muted/70",
+        "flex items-start gap-3 border-b border-hair px-4 py-2.5 transition-colors ease-chrome hover:bg-muted/70",
         isTriggered && "bg-success-soft/40",
       )}
     >

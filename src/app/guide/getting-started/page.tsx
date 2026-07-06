@@ -259,7 +259,7 @@ export default async function GettingStartedPage() {
 
         {/* Game board diagram */}
         <Surface variant="outline" className="overflow-hidden">
-          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-eyebrow">
+          <div className="border-b border-hair px-4 py-2 text-eyebrow">
             {t(lang, "guideStartBoardCaption")}
           </div>
           <div className="grid grid-cols-3 gap-2 p-4 text-center text-xs sm:grid-cols-5">

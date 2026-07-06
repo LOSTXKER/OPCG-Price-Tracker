@@ -235,7 +235,7 @@ function PortfolioHubContent() {
             <button
               type="button"
               onClick={() => openUpgradeDialog({ featureKey: "portfolioCount" })}
-              className="ease-chrome flex min-h-[6.5rem] flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-[var(--p-hair)] p-4 text-center transition-colors hover:bg-muted/40"
+              className="ease-chrome flex min-h-[6.5rem] flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-hair p-4 text-center transition-colors hover:bg-muted/40"
             >
               <Lock className="size-5 text-muted-foreground" />
               <span className="text-body-sm font-medium">
@@ -300,7 +300,7 @@ function CreatePortfolioCard({ onCreate }: { onCreate: (name: string) => void })
     <button
       type="button"
       onClick={() => setCreating(true)}
-      className="ease-chrome flex min-h-[6.5rem] flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-[var(--p-hair)] text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground"
+      className="ease-chrome flex min-h-[6.5rem] flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-hair text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground"
     >
       <Plus className="size-5" />
       <span className="text-body-sm font-medium">{t(lang, "createPortfolio")}</span>

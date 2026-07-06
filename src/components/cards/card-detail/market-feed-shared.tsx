@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
  *  24px pill is too small to tap reliably. rounded-full pills sit concentric in a
  *  rounded-full track; short chip labels (7D / Raw / PSA), not reading copy. */
 export const SEGMENT_TRACK =
-  "inline-flex max-w-full flex-wrap items-center gap-0.5 rounded-full bg-foreground/5 p-0.5 ring-1 ring-[var(--p-hair)]"
+  "inline-flex max-w-full flex-wrap items-center gap-0.5 rounded-full bg-foreground/5 p-0.5 ring-1 ring-hair"
 export const SEGMENT_BTN =
   "ease-chrome inline-flex h-10 shrink-0 items-center justify-center rounded-full px-2.5 text-xs font-medium leading-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset md:h-6"
 export const SEGMENT_ACTIVE = "bg-foreground/10 text-foreground"
@@ -28,7 +28,7 @@ export function gradeFilterLabel(lang: Language, g: string): string {
  *  scraped / marketplace records). Honesty doctrine: fabricated data is always labelled. */
 export function SampleBadge({ lang }: { lang: Language }) {
   return (
-    <span className="text-micro rounded-full bg-foreground/[0.06] px-2 py-0.5 font-semibold uppercase text-muted-foreground ring-1 ring-[var(--p-hair)]">
+    <span className="text-micro rounded-full bg-foreground/[0.06] px-2 py-0.5 font-semibold uppercase text-muted-foreground ring-1 ring-hair">
       {t(lang, "sampleLabel")}
     </span>
   )
@@ -88,7 +88,7 @@ export function ConditionChip({ condition, graded }: { condition: string; graded
     <span
       className={cn(
         "text-micro inline-flex shrink-0 items-center rounded px-1.5 py-0.5 tnum",
-        graded ? "surface-2 text-foreground ring-1 ring-[var(--p-hair)]" : "text-muted-foreground",
+        graded ? "surface-2 text-foreground ring-1 ring-hair" : "text-muted-foreground",
       )}
     >
       {condition}

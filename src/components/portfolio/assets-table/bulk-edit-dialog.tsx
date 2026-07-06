@@ -76,7 +76,7 @@ function CardEditCompact({
   }
 
   return (
-    <div className="group ease-chrome rounded-lg border border-transparent px-3 py-2.5 hover:border-[var(--p-hair)] hover:bg-muted/70">
+    <div className="group ease-chrome rounded-lg border border-transparent px-3 py-2.5 hover:border-hair hover:bg-muted/70">
       <div className="flex items-center gap-3">
         <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-muted">
           {row.imageUrl ? (
@@ -107,7 +107,7 @@ function CardEditCompact({
         <div className="flex items-center gap-1.5">
           <span className="text-overlay text-muted-foreground/60">{t(lang, "quantity")}</span>
           <input
-            className="w-14 shrink-0 rounded-lg border border-[var(--p-hair)] bg-muted/30 px-2 py-1 text-center text-xs tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
+            className="w-14 shrink-0 rounded-lg border border-hair bg-muted/30 px-2 py-1 text-center text-xs tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
             value={qty}
             onChange={(e) => onFieldChange(row.itemId, "qty", e.target.value)}
             type="number"
@@ -121,7 +121,7 @@ function CardEditCompact({
               {costSymbol}
             </span>
             <input
-              className="w-20 shrink-0 rounded-lg border border-[var(--p-hair)] bg-muted/30 py-1 pl-5 pr-2 text-left text-xs tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
+              className="w-20 shrink-0 rounded-lg border border-hair bg-muted/30 py-1 pl-5 pr-2 text-left text-xs tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
               value={cost}
               onChange={(e) => onFieldChange(row.itemId, "cost", e.target.value)}
               type="number"
@@ -294,7 +294,7 @@ export function BulkEditDialog({
         </DialogHeader>
 
         {assets.length > 5 && (
-          <div className="flex items-center gap-2 rounded-lg border border-[var(--p-hair)] bg-muted/20 px-3 py-2">
+          <div className="flex items-center gap-2 rounded-lg border border-hair bg-muted/20 px-3 py-2">
             <Search className="size-3.5 shrink-0 text-muted-foreground/50" />
             <input
               className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground/40"

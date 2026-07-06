@@ -140,7 +140,7 @@ export function CardSearch({
           onKeyDown={onKeyDown}
           autoFocus={autoFocus}
           placeholder={placeholder ?? t(lang, "searchByNameOrCode")}
-          className="h-11 w-full rounded-xl border border-[var(--p-hair)] bg-card px-9 text-base outline-none focus-visible:ring-2 focus-visible:ring-ring md:text-sm"
+          className="h-11 w-full rounded-xl border border-hair bg-card px-9 text-base outline-none focus-visible:ring-2 focus-visible:ring-ring md:text-sm"
           aria-label={t(lang, "searchByNameOrCode")}
         />
         {query && (

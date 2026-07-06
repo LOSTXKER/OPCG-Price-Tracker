@@ -51,7 +51,7 @@ export const AssetRowComponent = memo(function AssetRowComponent({
       <td className="py-2.5 pr-3 align-middle">
         <div className="flex items-center gap-2.5">
           <Link href={detailHref} className="shrink-0" aria-label={viewLabel}>
-            <div className="relative aspect-[63/88] w-8 overflow-hidden rounded bg-muted/60 ring-1 ring-[var(--p-hair)] transition-transform group-hover:scale-[1.03]">
+            <div className="relative aspect-[63/88] w-8 overflow-hidden rounded bg-muted/60 ring-1 ring-hair transition-transform group-hover:scale-[1.03]">
               {row.imageUrl ? (
                 <Image src={row.imageUrl} alt={name} fill className="object-cover" sizes="32px" />
               ) : (

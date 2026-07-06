@@ -150,7 +150,7 @@ export function HomeMarketOverview({
         <Input
           type="number"
           placeholder={t(lang, "min")}
-          className="surface-1 h-10 w-24 border-[var(--p-hair)] px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
+          className="surface-1 h-10 w-24 border-hair px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
           value={m.minPrice}
           onChange={(e) => { m.setMinPrice(e.target.value); m.setPage(1) }}
           min={0}
@@ -159,14 +159,14 @@ export function HomeMarketOverview({
         <Input
           type="number"
           placeholder={t(lang, "max")}
-          className="surface-1 h-10 w-24 border-[var(--p-hair)] px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
+          className="surface-1 h-10 w-24 border-hair px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
           value={m.maxPrice}
           onChange={(e) => { m.setMaxPrice(e.target.value); m.setPage(1) }}
           min={0}
         />
       </div>
 
-      <div className="flex items-center justify-between gap-2 border-t border-[var(--p-hair)] pt-3">
+      <div className="flex items-center justify-between gap-2 border-t border-hair pt-3">
         {m.activeFilterCount > 0 ? (
           <button
             onClick={m.clearAllFilters}
@@ -199,7 +199,7 @@ export function HomeMarketOverview({
       <div>
         {/* Row 1: tab bar — sits on a hairline baseline. Active tab's border-b-2
             uses -mb-px to overlap (cover) the hairline so it reads as one edge. */}
-        <div className="flex items-center gap-1 border-b border-[var(--p-hair)] px-3 sm:px-4">
+        <div className="flex items-center gap-1 border-b border-hair px-3 sm:px-4">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -266,7 +266,7 @@ export function HomeMarketOverview({
                 <div
                   role="dialog"
                   aria-label={t(lang, "filter")}
-                  className="ease-chrome absolute right-0 top-full z-40 mt-2 w-[min(520px,calc(100vw-2rem))] origin-top-right rounded-xl border border-[var(--p-hair)] bg-popover p-4 shadow-xl"
+                  className="ease-chrome absolute right-0 top-full z-40 mt-2 w-[min(520px,calc(100vw-2rem))] origin-top-right rounded-xl border border-hair bg-popover p-4 shadow-xl"
                 >
                   <p className="text-h4 mb-3">{t(lang, "filter")}</p>
                   {filterBody}

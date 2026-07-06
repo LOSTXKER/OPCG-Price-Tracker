@@ -217,7 +217,7 @@ export function PortfolioSidebar({
             onClick={() => setCreating(true)}
             className="ease-chrome flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
           >
-            <div className="flex size-7 items-center justify-center rounded-lg border border-dashed border-[var(--p-hair)]">
+            <div className="flex size-7 items-center justify-center rounded-lg border border-dashed border-hair">
               <Plus className="size-3.5" />
             </div>
             <span className="text-xs font-medium">{t(lang, "createPortfolio")}</span>

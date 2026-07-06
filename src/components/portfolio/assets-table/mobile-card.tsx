@@ -39,7 +39,7 @@ export const MobileAssetCard = memo(function MobileAssetCard({
   return (
     <div className="flex items-center gap-3 py-3">
       <Link href={`/cards/${row.cardCode}`} className="shrink-0">
-        <div className="relative aspect-[63/88] w-11 overflow-hidden rounded-md bg-muted ring-1 ring-[var(--p-hair)]">
+        <div className="relative aspect-[63/88] w-11 overflow-hidden rounded-md bg-muted ring-1 ring-hair">
           {row.imageUrl ? (
             <Image src={row.imageUrl} alt={name} fill className="object-cover" sizes="44px" />
           ) : (

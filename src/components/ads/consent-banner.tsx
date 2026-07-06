@@ -22,14 +22,14 @@ export function ConsentBanner() {
   if (!hydrated || !ADSENSE_CLIENT || consent !== null) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-[var(--p-hair)] bg-background/95 backdrop-blur-xl pb-[env(safe-area-inset-bottom)] md:bottom-0">
+    <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-hair bg-background/95 backdrop-blur-xl pb-[env(safe-area-inset-bottom)] md:bottom-0">
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-3 px-4 py-3 sm:flex-row sm:justify-between">
         <p className="text-body-sm text-muted-foreground">{t(lang, "consentMessage")}</p>
         <div className="flex shrink-0 gap-2">
           <button
             type="button"
             onClick={() => setConsent("denied")}
-            className="rounded-lg border border-[var(--p-hair)] px-4 py-2 text-sm font-medium motion-base hover:bg-muted/70"
+            className="rounded-lg border border-hair px-4 py-2 text-sm font-medium motion-base hover:bg-muted/70"
           >
             {t(lang, "consentDecline")}
           </button>

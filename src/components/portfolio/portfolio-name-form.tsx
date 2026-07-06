@@ -54,7 +54,7 @@ export function PortfolioNameForm({
           if (e.key === "Escape") onCancel()
         }}
         className={cn(
-          "min-w-0 flex-1 rounded-lg border border-[var(--p-hair)] bg-background py-1.5 text-sm outline-none ring-primary/30 transition-shadow focus:ring-2",
+          "min-w-0 flex-1 rounded-lg border border-hair bg-background py-1.5 text-sm outline-none ring-primary/30 transition-shadow focus:ring-2",
           size === "sm" ? "px-2" : "px-2.5",
           placeholder && "placeholder:text-muted-foreground/60",
         )}

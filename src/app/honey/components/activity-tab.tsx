@@ -116,7 +116,7 @@ export function ActivityTab({
           </div>
         )
       ) : (
-        <div className="divide-y divide-[var(--p-hair)]">
+        <div className="divide-y divide-hair">
           {filtered.map((tx) => (
             <TxRow key={tx.id} tx={tx} lang={lang} />
           ))}

@@ -67,8 +67,8 @@ export function SetRow({
       className={cn(
         "overflow-hidden motion-base",
         expanded
-          ? "border-[var(--p-hair)]"
-          : "border-[var(--p-hair)] hover:border-[var(--p-hair)]",
+          ? "border-hair"
+          : "border-hair hover:border-hair",
       )}
     >
       {/* Collapsed Header */}
@@ -122,7 +122,7 @@ export function SetRow({
       >
         <div className="overflow-hidden">
           {expanded && (
-            <div className="border-t border-[var(--p-hair)] px-5 py-4">
+            <div className="border-t border-hair px-5 py-4">
               {/* Info bar */}
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -169,10 +169,10 @@ export function SetRow({
               </div>
 
               {/* Table */}
-              <div className="overflow-x-auto rounded-lg border border-[var(--p-hair)]">
+              <div className="overflow-x-auto rounded-lg border border-hair">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-[var(--p-hair)] bg-muted/30">
+                    <tr className="border-b border-hair bg-muted/30">
                       <th className="w-20 px-4 py-2.5 text-left text-eyebrow text-muted-foreground/70">
                         ระดับ
                       </th>
@@ -212,7 +212,7 @@ export function SetRow({
                         <tr
                           key={dr.rarity}
                           className={cn(
-                            "group border-b border-[var(--p-hair)] motion-base hover:bg-muted/70",
+                            "group border-b border-hair motion-base hover:bg-muted/70",
                             idx % 2 === 1 && "bg-muted/5",
                             dirty && "bg-info-soft",
                             showSeparator &&

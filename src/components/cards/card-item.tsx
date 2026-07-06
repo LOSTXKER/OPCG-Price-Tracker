@@ -153,7 +153,7 @@ function CardItemBase({
         <CardActionRow
           card={previewCard}
           show={{ detail: true, watchlist: cardId != null, compare: true }}
-          className="relative z-20 border-t border-[var(--p-hair)] p-2"
+          className="relative z-20 border-t border-hair p-2"
         />
       ) : actionRow === null ? null : (
         actionRow

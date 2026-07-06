@@ -70,7 +70,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
 
       {/* Active listings */}
       <Surface variant="outline">
-        <div className="flex items-center justify-between border-b border-[var(--p-hair)] px-5 py-3">
+        <div className="flex items-center justify-between border-b border-hair px-5 py-3">
           <h3 className="text-h5">{t(lang, "myListings")}</h3>
           <Link
             href={`/profile/${userId}`}
@@ -100,7 +100,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
                 <Link
                   key={l.id}
                   href={`/marketplace/${l.id}`}
-                  className="ease-chrome flex flex-wrap items-center justify-between gap-2 rounded-lg border border-[var(--p-hair)] px-4 py-3 text-sm transition-colors hover:bg-muted/70"
+                  className="ease-chrome flex flex-wrap items-center justify-between gap-2 rounded-lg border border-hair px-4 py-3 text-sm transition-colors hover:bg-muted/70"
                 >
                   <div className="min-w-0 flex-1">
                     <span className="font-medium">

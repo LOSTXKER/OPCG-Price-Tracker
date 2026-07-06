@@ -161,7 +161,7 @@ export function PortfolioScrubChart({
             ariaLabel={t(lang, "filter")}
           />
         </div>
-        <div className="flex h-24 w-full items-center justify-center rounded-xl border border-dashed border-[var(--p-hair)] sm:h-28">
+        <div className="flex h-24 w-full items-center justify-center rounded-xl border border-dashed border-hair sm:h-28">
           <p className="max-w-xs text-center text-meta">{t(lang, "noPortfolioDataDesc")}</p>
         </div>
       </div>
@@ -186,7 +186,7 @@ export function PortfolioScrubChart({
             ariaLabel={t(lang, "filter")}
           />
         </div>
-        <div className="flex h-24 w-full items-center justify-center rounded-xl border border-dashed border-[var(--p-hair)] sm:h-28">
+        <div className="flex h-24 w-full items-center justify-center rounded-xl border border-dashed border-hair sm:h-28">
           <p className="max-w-xs text-center text-meta">{t(lang, "noPortfolioDataDesc")}</p>
         </div>
       </div>

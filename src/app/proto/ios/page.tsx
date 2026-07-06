@@ -40,7 +40,7 @@ function MoverColumn({
   return (
     <div className="hairline min-w-0 flex-1 overflow-hidden rounded-2xl bg-card">
       <p className="px-4 pt-3.5 text-eyebrow">{title}</p>
-      <div className="divide-y divide-[var(--p-hair)]">
+      <div className="divide-y divide-hair">
         {cards.map((c, i) => (
           <Link
             key={c.code}

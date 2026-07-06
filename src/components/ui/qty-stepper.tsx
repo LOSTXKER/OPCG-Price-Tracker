@@ -45,12 +45,12 @@ export function QtyStepper({
   const joined = variant === "joined"
   const btnBase =
     "ease-chrome flex shrink-0 items-center justify-center text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-muted-foreground"
-  const btnChrome = joined ? "" : "rounded-lg border border-[var(--p-hair)] bg-background"
+  const btnChrome = joined ? "" : "rounded-lg border border-hair bg-background"
   return (
     <div
       className={cn(
         "inline-flex items-center",
-        joined ? "rounded-lg border border-[var(--p-hair)]" : "gap-2.5",
+        joined ? "rounded-lg border border-hair" : "gap-2.5",
         className,
       )}
     >
@@ -75,7 +75,7 @@ export function QtyStepper({
             onChange(clamp(Number(v) || min))
           }}
           className={cn(
-            "rounded-lg border border-[var(--p-hair)] bg-background px-2 text-center font-mono text-sm font-semibold tabular-nums outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20",
+            "rounded-lg border border-hair bg-background px-2 text-center font-mono text-sm font-semibold tabular-nums outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20",
             FIELD[size],
           )}
         />

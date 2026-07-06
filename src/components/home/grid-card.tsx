@@ -111,7 +111,7 @@ export const GridCard = memo(function GridCard({
           setCode,
         }}
         show={{ detail: true, watchlist: card.id != null, compare: true }}
-        className="relative z-20 border-t border-[var(--p-hair)] p-2"
+        className="relative z-20 border-t border-hair p-2"
       />
     </Surface>
   )

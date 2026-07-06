@@ -279,7 +279,7 @@ function DeckCalculatorContent() {
               className={`ease-chrome rounded-lg border px-3 py-1.5 text-sm font-medium ${
                 activeDeck?.id === d.id
                   ? "border-primary bg-primary/10 text-primary"
-                  : "border-[var(--p-hair)] hover:bg-muted"
+                  : "border-hair hover:bg-muted"
               }`}
             >
               {d.name}
@@ -327,7 +327,7 @@ function DeckCalculatorContent() {
               </Button>
             </div>
             {activeDeck.leader ? (
-              <div className="flex items-center gap-3 rounded-lg border border-[var(--p-hair)] p-2">
+              <div className="flex items-center gap-3 rounded-lg border border-hair p-2">
                 {activeDeck.leader.imageUrl && (
                   <Image
                     src={activeDeck.leader.imageUrl}
@@ -370,7 +370,7 @@ function DeckCalculatorContent() {
                 {activeDeck.cards.map((entry) => (
                   <div
                     key={entry.card.id}
-                    className="flex items-center gap-3 rounded-lg border border-[var(--p-hair)] p-2"
+                    className="flex items-center gap-3 rounded-lg border border-hair p-2"
                   >
                     {entry.card.imageUrl && (
                       <Image
@@ -418,7 +418,7 @@ function DeckCalculatorContent() {
           </div>
         </div>
       ) : decks.length === 0 ? (
-        <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-[var(--p-hair)] py-16 text-center">
+        <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-hair py-16 text-center">
           <p className="text-muted-foreground text-sm">{t(lang, "createFirstDeck")}</p>
         </div>
       ) : null}
@@ -437,7 +437,7 @@ function DeckCalculatorContent() {
             onChange={(e) => cardSearch.setQuery(e.target.value)}
             autoComplete="off"
           />
-          <div className="max-h-60 space-y-1 overflow-auto rounded-lg border border-[var(--p-hair)] p-1">
+          <div className="max-h-60 space-y-1 overflow-auto rounded-lg border border-hair p-1">
             {cardSearch.query.trim().length < 2 ? (
               <p className="text-muted-foreground px-2 py-3 text-sm">{t(lang, "typeAtLeast2Chars")}</p>
             ) : cardSearch.results.length === 0 ? (
@@ -478,7 +478,7 @@ function DeckMockPreview({ lang }: { lang: Language }) {
 
       <div className="flex flex-wrap items-end gap-2">
         <div className="min-w-0 flex-1">
-          <div className="h-10 rounded-lg border border-[var(--p-hair)] bg-background px-3 py-2 text-sm text-muted-foreground">
+          <div className="h-10 rounded-lg border border-hair bg-background px-3 py-2 text-sm text-muted-foreground">
             {t(lang, "newDeckName")}
           </div>
         </div>
@@ -504,7 +504,7 @@ function DeckMockPreview({ lang }: { lang: Language }) {
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold">{t(lang, "leader")}</h3>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border border-[var(--p-hair)] p-2">
+          <div className="flex items-center gap-3 rounded-lg border border-hair p-2">
             <div className="size-10 rounded bg-muted" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">Monkey D. Luffy</p>
@@ -518,7 +518,7 @@ function DeckMockPreview({ lang }: { lang: Language }) {
           <h3 className="text-sm font-semibold">{t(lang, "cardsInDeck")} (12 {t(lang, "cardsCount")})</h3>
           <div className="space-y-1">
             {mockCards.map((c) => (
-              <div key={c.code} className="flex items-center gap-3 rounded-lg border border-[var(--p-hair)] p-2">
+              <div key={c.code} className="flex items-center gap-3 rounded-lg border border-hair p-2">
                 <div className="size-8 rounded bg-muted" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">{c.name}</p>

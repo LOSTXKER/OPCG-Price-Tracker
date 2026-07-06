@@ -63,7 +63,7 @@ export function MarketTable({
   return (
     <>
       {/* Mobile list fallback (<sm) */}
-      <div className={cn("divide-y divide-[var(--p-hair)] sm:hidden", isPending && "opacity-50 motion-base")}>
+      <div className={cn("divide-y divide-hair sm:hidden", isPending && "opacity-50 motion-base")}>
         {showSkeleton
           ? Array.from({ length: 6 }).map((_, i) => <MobileCardSkeleton key={i} />)
           : cards.map((card, i) => (
@@ -89,7 +89,7 @@ export function MarketTable({
             ))}
           </colgroup>
           <thead className={cn("sticky top-0 z-10", surface === "canvas" ? "bg-background" : "bg-card")}>
-            <tr className="border-b border-[var(--p-hair)] text-eyebrow text-muted-foreground">
+            <tr className="border-b border-hair text-eyebrow text-muted-foreground">
               {columns.map((col) => {
                 if (col.sort) {
                   const label =

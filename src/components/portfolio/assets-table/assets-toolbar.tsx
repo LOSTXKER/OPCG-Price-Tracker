@@ -52,7 +52,7 @@ export function AssetsToolbar({
   return (
     <Toolbar
       variant="bare"
-      className="border-b border-[var(--p-hair)] pb-3"
+      className="border-b border-hair pb-3"
       right={
         <>
           <ToolbarSearch

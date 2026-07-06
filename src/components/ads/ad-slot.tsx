@@ -45,7 +45,7 @@ export function AdSlot({
     <div
       data-ad-placement={placement}
       className={cn(
-        "flex items-center justify-center overflow-hidden rounded-lg border border-dashed border-[var(--p-hair)] bg-muted/20 p-4 text-center",
+        "flex items-center justify-center overflow-hidden rounded-lg border border-dashed border-hair bg-muted/20 p-4 text-center",
         className
       )}
     >

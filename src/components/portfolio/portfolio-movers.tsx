@@ -97,7 +97,7 @@ export function PortfolioMovers({
       {movers.length === 0 ? (
         <p className="text-meta py-2">{t(lang, "noData24h")}</p>
       ) : (
-        <div className="divide-y divide-[var(--p-hair)]">
+        <div className="divide-y divide-hair">
           {movers.map(({ row, swingJpy, pct }) => {
             const up = pct > 0
             const name = getCardName(lang, row)
@@ -114,7 +114,7 @@ export function PortfolioMovers({
                 className="ease-chrome flex min-h-11 items-center gap-3 py-2 transition-colors hover:bg-muted/40"
               >
                 {/* Card thumbnail */}
-                <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted ring-1 ring-[var(--p-hair)]">
+                <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted ring-1 ring-hair">
                   {row.imageUrl ? (
                     <Image
                       src={row.imageUrl}

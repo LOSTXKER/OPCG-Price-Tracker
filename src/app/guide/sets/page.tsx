@@ -340,7 +340,7 @@ export default async function GuideSetsPage() {
               >
                 {info.label} ({sets.length})
               </h3>
-              <Surface variant="outline" className="divide-y divide-[var(--p-hair)]">
+              <Surface variant="outline" className="divide-y divide-hair">
                 {sets.map((set) => (
                   <Link
                     key={set.code}

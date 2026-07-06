@@ -379,7 +379,7 @@ export function SnkrdunkMatchClient() {
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--p-hair)]">
+          <tbody className="divide-y divide-hair">
             {loading && mappings.length === 0 ? (
               <tr>
                 <td colSpan={6} className="py-12 text-center">

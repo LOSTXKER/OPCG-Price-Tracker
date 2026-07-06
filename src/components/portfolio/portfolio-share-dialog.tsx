@@ -159,7 +159,7 @@ export function PortfolioShareDialog({
         </DialogHeader>
 
         {/* Preview frame — scales the 1080x1350 card to fit the dialog */}
-        <div className="relative mx-auto w-full overflow-hidden rounded-xl border border-[var(--p-hair)] bg-muted/20">
+        <div className="relative mx-auto w-full overflow-hidden rounded-xl border border-hair bg-muted/20">
           <PreviewScaler width={CARD_WIDTH} height={CARD_HEIGHT}>
             <PortfolioShareCard
               ref={cardRef}

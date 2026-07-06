@@ -55,7 +55,7 @@ export function PortfolioGameBreakdown({
       </div>
 
       {/* One row per game */}
-      <div className="divide-y divide-[var(--p-hair)]">
+      <div className="divide-y divide-hair">
         {sorted.map((b) => {
           const hasCost = b.costJpy > 0
           const isUp = b.pnlPercent >= 0
@@ -83,7 +83,7 @@ export function PortfolioGameBreakdown({
               {/* Top row: logo · name+count · value+delta */}
               <div className="flex items-center gap-3">
                 {/* Logo chip — image or letter fallback */}
-                <div className="relative size-8 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-[var(--p-hair)]">
+                <div className="relative size-8 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-hair">
                   {b.game?.logoUrl ? (
                     <Image
                       src={b.game.logoUrl}

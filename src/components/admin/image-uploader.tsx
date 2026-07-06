@@ -127,7 +127,7 @@ export function ImageUploader({
           height,
           dragOver
             ? "border-primary bg-primary/5"
-            : "border-[var(--p-hair)] hover:border-primary/40 hover:bg-muted/30",
+            : "border-hair hover:border-primary/40 hover:bg-muted/30",
           uploading && "pointer-events-none opacity-60",
         )}
       >

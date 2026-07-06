@@ -226,7 +226,7 @@ export default function SellerDashboard() {
             {stats.recentOrders.map((order) => (
               <div
                 key={order.id}
-                className="flex items-center gap-3 rounded-lg border border-[var(--p-hair)] p-3 transition-colors ease-chrome hover:bg-muted/70"
+                className="flex items-center gap-3 rounded-lg border border-hair p-3 transition-colors ease-chrome hover:bg-muted/70"
               >
                 {order.listing.card.imageUrl && (
                   <Image

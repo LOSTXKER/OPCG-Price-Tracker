@@ -207,7 +207,7 @@ export default function SavedListingsPage() {
                   </Link>
 
                   {/* Action row — sits below the tile, never overlays the art */}
-                  <div className="flex items-center justify-end gap-1 border-t border-[var(--p-hair)] px-2 py-1">
+                  <div className="flex items-center justify-end gap-1 border-t border-hair px-2 py-1">
                     <button
                       type="button"
                       onClick={() => handleRemove(listing.id)}

@@ -168,7 +168,7 @@ export function PortfolioHubCard({
           meta.previewItems.map((it) => (
             <div
               key={it.cardCode}
-              className="aspect-[63/88] w-7 shrink-0 overflow-hidden rounded bg-muted ring-1 ring-[var(--p-hair)]"
+              className="aspect-[63/88] w-7 shrink-0 overflow-hidden rounded bg-muted ring-1 ring-hair"
             >
               {it.imageUrl && (
                 <Image

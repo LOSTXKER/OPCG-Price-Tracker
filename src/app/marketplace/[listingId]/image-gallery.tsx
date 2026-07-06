@@ -84,7 +84,7 @@ export function ImageGallery({ images, className }: ImageGalleryProps) {
                 "ease-chrome relative size-16 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all",
                 i === selected
                   ? "border-primary ring-primary/30 ring-2"
-                  : "border-[var(--p-hair)] hover:border-muted-foreground/50"
+                  : "border-hair hover:border-muted-foreground/50"
               )}
             >
               <Image

@@ -44,7 +44,7 @@ export function AdminSubNav({
     return (
       <nav
         className={cn(
-          "flex flex-wrap gap-1 border-b border-[var(--p-hair)]",
+          "flex flex-wrap gap-1 border-b border-hair",
           className,
         )}
         aria-label="Section navigation"
@@ -75,7 +75,7 @@ export function AdminSubNav({
   return (
     <nav
       className={cn(
-        "flex flex-wrap gap-1 rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-muted/20 p-1.5",
+        "flex flex-wrap gap-1 rounded-xl border border-transparent dark:border-hair bg-muted/20 p-1.5",
         className,
       )}
       aria-label="Section navigation"

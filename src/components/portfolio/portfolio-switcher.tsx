@@ -91,7 +91,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
   }
 
   const pill = (
-    <span className="flex min-w-0 items-center gap-2.5 rounded-xl border border-[var(--p-hair)] bg-card px-3 py-2 text-left ease-chrome transition-colors hover:bg-muted/70">
+    <span className="flex min-w-0 items-center gap-2.5 rounded-xl border border-hair bg-card px-3 py-2 text-left ease-chrome transition-colors hover:bg-muted/70">
       <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
         <Briefcase className="size-4" />
       </span>

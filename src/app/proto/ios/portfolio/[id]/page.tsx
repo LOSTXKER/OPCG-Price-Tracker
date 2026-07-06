@@ -206,10 +206,10 @@ export default function PortfolioDetailPage() {
           </div>
 
           {/* Stat strip — 5 cells in a responsive grid.
-              gap-px + bg-[var(--p-hair)] on the grid creates 1px hairline
+              gap-px + bg-hair on the grid creates 1px hairline
               separators between cells; overflow-hidden clips outer edges. */}
           <div className="hairline overflow-hidden rounded-2xl bg-card">
-            <div className="grid grid-cols-2 gap-px bg-[var(--p-hair)] sm:grid-cols-3 lg:grid-cols-5">
+            <div className="grid grid-cols-2 gap-px bg-hair sm:grid-cols-3 lg:grid-cols-5">
               {/* 1 — ต้นทุน */}
               <div className="bg-card px-4 py-3">
                 <p className="text-eyebrow mb-1">ต้นทุน</p>

@@ -166,7 +166,7 @@ export function AdminDataTable<T>({
         <thead>
           <tr
             className={cn(
-              "border-b border-[var(--p-hair)] bg-muted/30",
+              "border-b border-hair bg-muted/30",
               stickyHeader && "sticky top-0 z-10 bg-muted/80 backdrop-blur-sm",
             )}
           >
@@ -221,7 +221,7 @@ export function AdminDataTable<T>({
         <tbody>
           {loading ? (
             Array.from({ length: loadingRows }).map((_, i) => (
-              <tr key={i} className="border-b border-[var(--p-hair)]">
+              <tr key={i} className="border-b border-hair">
                 {selectable && (
                   <td className="px-3 py-3">
                     <Skeleton className="size-3.5 rounded" />
@@ -281,7 +281,7 @@ export function AdminDataTable<T>({
         </tbody>
       </table>
       {showMobileFallback && (
-        <div className="divide-y divide-[var(--p-hair)] sm:hidden">
+        <div className="divide-y divide-hair sm:hidden">
           {loading ? (
             Array.from({ length: loadingRows }).map((_, i) => (
               <div key={i} className="flex items-center gap-3 px-4 py-3">
@@ -440,7 +440,7 @@ function MobileDefaultRow<T>({
         </div>
       </div>
       {expanded && renderExpandedRow && (
-        <div className="border-t border-[var(--p-hair)] bg-muted/10 px-4 py-3">
+        <div className="border-t border-hair bg-muted/10 px-4 py-3">
           {renderExpandedRow(row)}
         </div>
       )}
@@ -478,7 +478,7 @@ function DataTableRow<T>({
     <>
       <tr
         className={cn(
-          "border-b border-[var(--p-hair)] transition-colors",
+          "border-b border-hair transition-colors",
           onRowClick && "cursor-pointer",
           isSelected
             ? "bg-primary/[0.06]"
@@ -512,7 +512,7 @@ function DataTableRow<T>({
         ))}
       </tr>
       {isExpanded && renderExpandedRow && (
-        <tr className="border-b border-[var(--p-hair)] bg-muted/5">
+        <tr className="border-b border-hair bg-muted/5">
           <td
             colSpan={columns.length + (selectable ? 1 : 0)}
             className="px-4 py-4"

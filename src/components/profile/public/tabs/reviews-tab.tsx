@@ -120,7 +120,7 @@ export function ReviewsTabContent({
       meta={metaLine}
       headerExtra={
         showcase ? (
-          <div className="flex flex-col gap-4 rounded-xl border border-[var(--p-hair)] bg-background/60 p-4 sm:flex-row sm:items-center">
+          <div className="flex flex-col gap-4 rounded-xl border border-hair bg-background/60 p-4 sm:flex-row sm:items-center">
             <div className="flex shrink-0 flex-col items-center gap-1 sm:w-32">
               <p className="text-4xl font-bold tabular-nums leading-none">
                 {avg.toFixed(1)}

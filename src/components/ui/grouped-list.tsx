@@ -33,7 +33,7 @@ export function GroupedSection({
     <div className={cn("px-5 sm:px-6", className)}>
       {label && <p className="mb-2 px-1 text-eyebrow">{label}</p>}
       <div className="hairline overflow-hidden rounded-2xl bg-card">
-        <div className="divide-y divide-[var(--p-hair)]">{children}</div>
+        <div className="divide-y divide-hair">{children}</div>
       </div>
       {footer && <p className="mt-2 px-1 text-meta">{footer}</p>}
     </div>

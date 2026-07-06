@@ -62,7 +62,7 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
                 {Array.from({ length: 4 }).map((_, i) => (
                   <div
                     key={i}
-                    className="aspect-[63/88] w-7 shrink-0 rounded bg-muted ring-1 ring-[var(--p-hair)]"
+                    className="aspect-[63/88] w-7 shrink-0 rounded bg-muted ring-1 ring-hair"
                   />
                 ))}
                 <span className="ml-auto text-meta tabular-nums">

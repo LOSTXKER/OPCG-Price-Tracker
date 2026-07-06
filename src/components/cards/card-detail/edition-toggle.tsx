@@ -19,7 +19,7 @@ export function EditionToggle({
   enAvailable?: boolean
 }) {
   return (
-    <div className="surface-2 inline-flex rounded-full p-0.5 text-sm font-semibold ring-1 ring-[var(--p-hair)]">
+    <div className="surface-2 inline-flex rounded-full p-0.5 text-sm font-semibold ring-1 ring-hair">
       <button
         type="button"
         onClick={() => onChange("JP")}

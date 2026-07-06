@@ -95,7 +95,7 @@ export function CompareButton({
             ? "border-primary/40 bg-primary/10 text-primary"
             : showCount
               ? "border-primary/40 bg-primary/5 text-primary"
-              : "border-border text-muted-foreground hover:border-[var(--p-hair)] hover:bg-muted/70 hover:text-primary",
+              : "border-border text-muted-foreground hover:border-hair hover:bg-muted/70 hover:text-primary",
           className,
         )}
       >
@@ -118,7 +118,7 @@ export function CompareButton({
       className={cn(
         "inline-flex shrink-0 items-center justify-center motion-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
         variant === "chip"
-          ? "h-9 w-9 rounded-md border border-transparent dark:border-[var(--p-hair)] bg-muted/30 hover:border-[var(--p-hair)] hover:bg-muted/70"
+          ? "h-9 w-9 rounded-md border border-transparent dark:border-hair bg-muted/30 hover:border-hair hover:bg-muted/70"
           : "rounded-sm",
         selected
           ? variant === "chip"

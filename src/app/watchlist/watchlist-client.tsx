@@ -438,7 +438,7 @@ function WatchlistContent() {
           />
 
           {filteredEntries.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-[var(--p-hair)] py-10 text-center text-sm text-muted-foreground">
+            <div className="rounded-lg border border-dashed border-hair py-10 text-center text-sm text-muted-foreground">
               <p>{t(lang, "noCardsFoundDesc")}</p>
               {gameFilter !== ALL_GAMES && (
                 <button

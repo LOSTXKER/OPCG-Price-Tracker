@@ -335,7 +335,7 @@ export function SectionSecurity() {
         ) : mfaStep === "verifying" ? (
           <div className="space-y-4">
             {qrDataUrl && (
-              <div className="flex flex-col items-center gap-3 rounded-lg border border-[var(--p-hair)] bg-white p-4">
+              <div className="flex flex-col items-center gap-3 rounded-lg border border-hair bg-white p-4">
                 <p className="text-xs font-medium text-neutral-600">{t(lang, "scanQR")}</p>
                 {/* eslint-disable-next-line @next/next/no-img-element -- data: URI, no network/optimization involved */}
                 <img
@@ -411,7 +411,7 @@ export function SectionSecurity() {
 
       {/* Login history */}
       <Surface variant="outline">
-        <div className="flex items-center gap-2 border-b border-[var(--p-hair)] px-5 py-3">
+        <div className="flex items-center gap-2 border-b border-hair px-5 py-3">
           <History className="size-4 text-muted-foreground" />
           <h3 className="text-h5">{t(lang, "loginHistory")}</h3>
         </div>
@@ -425,7 +425,7 @@ export function SectionSecurity() {
             {t(lang, "noLoginHistory")}
           </div>
         ) : (
-          <div className="divide-y divide-[var(--p-hair)]">
+          <div className="divide-y divide-hair">
             {sessions.map((s) => {
               const device = parseDevice(s.userAgent);
               return (

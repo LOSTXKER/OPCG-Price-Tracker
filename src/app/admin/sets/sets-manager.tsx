@@ -250,7 +250,7 @@ function SetCard({
       variant="outline"
       className={cn(
         "overflow-hidden motion-base",
-        expanded && "border-[var(--p-hair)]",
+        expanded && "border-hair",
       )}
     >
       {/* Main row */}
@@ -328,7 +328,7 @@ function SetCard({
             size="xs"
             onClick={onScrape}
             disabled={scrapeLoading}
-            className="border-[var(--p-hair)]"
+            className="border-hair"
           >
             {scrapeLoading ? (
               <Loader2 className="size-3 animate-spin" />
@@ -350,7 +350,7 @@ function SetCard({
 
       {/* Expanded content */}
       {expanded && (
-        <div className="border-t border-[var(--p-hair)] bg-muted/5 px-4 py-4">
+        <div className="border-t border-hair bg-muted/5 px-4 py-4">
           {editing ? (
             <div className="space-y-4">
               <div className="grid gap-3 sm:grid-cols-2">

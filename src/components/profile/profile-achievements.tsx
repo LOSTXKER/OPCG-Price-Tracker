@@ -128,7 +128,7 @@ export function ProfileAchievements({
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="flex h-9 min-w-[2.5rem] items-center justify-center rounded-full border border-dashed border-[var(--p-hair)] px-3 text-xs font-medium text-muted-foreground hover:border-border hover:text-foreground"
+            className="flex h-9 min-w-[2.5rem] items-center justify-center rounded-full border border-dashed border-hair px-3 text-xs font-medium text-muted-foreground hover:border-border hover:text-foreground"
           >
             +{remaining}
           </button>

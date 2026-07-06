@@ -73,7 +73,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
         }
         actions={
           data.lastUpdatedAt ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-transparent dark:border-[var(--p-hair)] bg-muted px-3 py-1 text-meta">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-transparent dark:border-hair bg-muted px-3 py-1 text-meta">
               <Clock className="size-3.5" aria-hidden="true" />
               {t(lang, "marketLastUpdated")} {formatRelativeAgo(data.lastUpdatedAt, lang)}
             </span>
@@ -138,7 +138,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
 
         {/* Top sets by value */}
         <Surface variant="panel" padding="none" className="overflow-hidden">
-          <div className="flex items-end justify-between gap-3 border-b border-[var(--p-hair)] px-5 py-3.5">
+          <div className="flex items-end justify-between gap-3 border-b border-hair px-5 py-3.5">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-1.5">
                 <h2 className="text-h4">{t(lang, "topSetsByValue")}</h2>
@@ -155,7 +155,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
               <ArrowRight className="size-3" aria-hidden="true" />
             </Link>
           </div>
-          <div className="divide-y divide-[var(--p-hair)]">
+          <div className="divide-y divide-hair">
             {data.topSetsByValue.map((s, i) => {
               const barWidth = (s.totalValue / maxSetValue) * 100
               return (

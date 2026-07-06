@@ -94,10 +94,10 @@ export function HoneyTransactionList({
         </AdminNativeSelect>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-[var(--p-hair)]">
+      <div className="overflow-hidden rounded-lg border border-hair">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-[var(--p-hair)] bg-muted/30 text-meta">
+            <tr className="border-b border-hair bg-muted/30 text-meta">
               <th className="px-3 py-2 text-left font-medium">ผู้ใช้</th>
               <th className="px-3 py-2 text-left font-medium">ประเภท</th>
               <th className="hidden px-3 py-2 text-left font-medium sm:table-cell">รายละเอียด</th>
@@ -105,7 +105,7 @@ export function HoneyTransactionList({
               <th className="px-3 py-2 text-right font-medium">วันที่</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--p-hair)]">
+          <tbody className="divide-y divide-hair">
             {transactions.map((tx) => {
               const typeInfo = getTypeInfo(tx.type);
               return (
@@ -174,7 +174,7 @@ export function HoneyTransactionList({
         <button
           onClick={handleLoadMore}
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted/20 py-2 text-xs font-medium text-muted-foreground motion-base hover:bg-muted/70 hover:text-foreground disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-transparent dark:border-hair bg-muted/20 py-2 text-xs font-medium text-muted-foreground motion-base hover:bg-muted/70 hover:text-foreground disabled:opacity-50"
         >
           {loading ? (
             <Loader2 className="size-3.5 animate-spin" />

@@ -74,7 +74,7 @@ function UserCell({ listing, lang, withArrow = false }: { listing: CardListing; 
   const name = sellerName(listing, lang)
   return (
     <span className={marketPrimaryCell}>
-      <Avatar className="size-5 shrink-0 after:border-[var(--p-hair)]">
+      <Avatar className="size-5 shrink-0 after:border-hair">
         {listing.user?.avatarUrl ? <AvatarImage src={listing.user.avatarUrl} alt="" /> : null}
         <AvatarFallback className="text-micro font-bold">{sellerInitial(name)}</AvatarFallback>
       </Avatar>
@@ -166,7 +166,7 @@ export function MeecardAsksRail({
             </span>
           )}
           {!isSample && hydrated && hasListings && (
-            <span className="text-micro tnum rounded-full bg-foreground/[0.06] px-2 py-0.5 font-semibold text-muted-foreground ring-1 ring-[var(--p-hair)]">
+            <span className="text-micro tnum rounded-full bg-foreground/[0.06] px-2 py-0.5 font-semibold text-muted-foreground ring-1 ring-hair">
               {sorted.length.toLocaleString()} {t(lang, "items")}
             </span>
           )}
@@ -213,7 +213,7 @@ export function MeecardAsksRail({
                 <table className={MARKET_TABLE_CLASS}>
                   <MarketTableColGroup />
                   <thead className={marketFeedStickyHead}>
-                    <tr className="text-eyebrow border-b border-[var(--p-hair)]">
+                    <tr className="text-eyebrow border-b border-hair">
                       <th scope="col" className={marketThLead}>{t(lang, "seller")}</th>
                       <th scope="col" className={marketThLead}>{t(lang, "listedDate")}</th>
                       <th scope="col" className={marketThLead}>{t(lang, "condition")}</th>
@@ -224,7 +224,7 @@ export function MeecardAsksRail({
                     {shown.map((l) => (
                       <tr
                         key={l.id}
-                        className="border-b border-[var(--p-hair)] last:border-b-0"
+                        className="border-b border-hair last:border-b-0"
                       >
                         <td className={marketTdLead}>
                           <Link

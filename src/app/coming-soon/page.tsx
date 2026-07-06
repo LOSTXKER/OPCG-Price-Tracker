@@ -40,7 +40,7 @@ export default async function ComingSoonPage({
         style={{ background: `color-mix(in srgb, ${tint} 14%, transparent)` }}
       />
       <span
-        className="mb-6 inline-flex size-16 items-center justify-center rounded-2xl ring-1 ring-[var(--p-hair)]"
+        className="mb-6 inline-flex size-16 items-center justify-center rounded-2xl ring-1 ring-hair"
         style={{ background: `color-mix(in srgb, ${tint} 14%, transparent)`, color: tint }}
       >
         <Sparkles className="size-8" aria-hidden />

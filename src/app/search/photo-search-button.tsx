@@ -215,7 +215,7 @@ export function PhotoSearchButton({ className, trigger }: PhotoSearchButtonProps
               </Button>
             </div>
           ) : (
-            <div className="relative overflow-hidden rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-muted/30">
+            <div className="relative overflow-hidden rounded-xl border border-transparent dark:border-hair bg-muted/30">
               <Image
                 src={previewUrl}
                 alt="preview"

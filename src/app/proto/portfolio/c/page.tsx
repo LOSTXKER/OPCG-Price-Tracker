@@ -75,7 +75,7 @@ export default function PortfolioProtoC() {
         </div>
 
         {/* Stat strip — the one hero number */}
-        <div className="grid grid-cols-2 divide-x divide-y divide-[var(--p-hair)] border-y border-[var(--p-hair)] sm:grid-cols-5 sm:divide-y-0">
+        <div className="grid grid-cols-2 divide-x divide-y divide-hair border-y border-hair sm:grid-cols-5 sm:divide-y-0">
           <div className="px-4 py-3 sm:col-span-1">
             <div className="text-eyebrow">มูลค่าพอร์ต</div>
             <div className="mt-1 font-price text-2xl tabular-nums">{fmt(TOTALS.value)}</div>
@@ -145,7 +145,7 @@ export default function PortfolioProtoC() {
         <div className="mt-4 hidden sm:block">
           <table className="w-full border-collapse">
             <thead className="sticky top-0 z-10 bg-background">
-              <tr className="border-b border-[var(--p-hair)]">
+              <tr className="border-b border-hair">
                 <th className="py-2.5 pr-3 text-left text-eyebrow">การ์ด</th>
                 <th className="py-2.5 pr-3 text-left text-eyebrow">เกม</th>
                 <th className="py-2.5 pr-3 text-right text-eyebrow">จำนวน</th>
@@ -164,7 +164,7 @@ export default function PortfolioProtoC() {
                 const cost = h.costThb * h.qty
                 const pnlPct = ((value - cost) / cost) * 100
                 return (
-                  <tr key={h.code} className="border-b border-[var(--p-hair)] hover:bg-muted/40">
+                  <tr key={h.code} className="border-b border-hair hover:bg-muted/40">
                     <td className="py-2.5 pr-3">
                       <div className="flex items-center gap-2.5">
                         <img
@@ -233,7 +233,7 @@ export default function PortfolioProtoC() {
         </div>
 
         {/* Hairline list (<sm) */}
-        <div className="mt-4 divide-y divide-[var(--p-hair)] border-t border-[var(--p-hair)] sm:hidden">
+        <div className="mt-4 divide-y divide-hair border-t border-hair sm:hidden">
           {rows.map((h) => {
             const value = h.priceThb * h.qty
             return (
@@ -263,7 +263,7 @@ export default function PortfolioProtoC() {
         </div>
 
         {/* Footer strip */}
-        <div className="mt-6 flex flex-col gap-4 border-t border-[var(--p-hair)] pt-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-6 flex flex-col gap-4 border-t border-hair pt-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <span className="text-eyebrow">แยกตามเกม</span>
             <div className="flex items-center gap-3">
