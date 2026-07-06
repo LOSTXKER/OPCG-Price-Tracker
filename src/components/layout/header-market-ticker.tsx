@@ -63,7 +63,7 @@ export function HeaderMarketTicker({
         scrolled ? "border-hair" : "border-transparent",
       )}
     >
-      <div className="flex h-11 items-center gap-3 px-4 lg:px-6">
+      <div className="flex h-11 items-center gap-3 px-6 lg:px-8">
         {/* Left — market ticker chips (scrolls on narrow widths) */}
         <div className="flex min-h-0 min-w-0 flex-1 items-center gap-2 overflow-x-auto overflow-y-hidden text-muted-foreground [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {stats.totalCards > 0 && (
