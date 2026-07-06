@@ -1047,6 +1047,8 @@ export const en = {
   orUseEmail: "or use email",
   emailLabel: "Email",
   passwordLabel: "Password",
+  showPassword: "Show password",
+  hidePassword: "Hide password",
   signingIn: "Signing in...",
   noAccount: "Don't have an account?",
   tryDemo: "Try Demo",

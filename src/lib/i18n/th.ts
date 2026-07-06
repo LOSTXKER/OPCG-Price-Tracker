@@ -1046,6 +1046,8 @@ export const th = {
   orUseEmail: "หรือใช้อีเมล",
   emailLabel: "อีเมล",
   passwordLabel: "รหัสผ่าน",
+  showPassword: "แสดงรหัสผ่าน",
+  hidePassword: "ซ่อนรหัสผ่าน",
   signingIn: "กำลังเข้าสู่ระบบ...",
   noAccount: "ยังไม่มีบัญชี?",
   tryDemo: "ทดลองใช้งาน",

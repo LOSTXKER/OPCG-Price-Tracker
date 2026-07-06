@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import QRCode from "qrcode";
 import {
   CheckCircle2,
-  Eye,
-  EyeOff,
   History,
   KeyRound,
   Loader2,
@@ -24,7 +22,9 @@ import { ApiError, apiFetch, apiGet, apiTry } from "@/lib/api/client";
 import { createClient } from "@/lib/supabase/client";
 import { useUIStore } from "@/stores/ui-store";
 import { t, getLocale } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
+import { PasswordInput } from "@/components/auth/password-input";
+import { PasswordRules } from "@/components/auth/password-rules";
+import { FormError } from "@/components/auth/form-error";
 
 const passwordSchema = z
   .object({
@@ -61,7 +61,6 @@ export function SectionSecurity() {
 
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [saving, setSaving] = useState(false);
   const [pwError, setPwError] = useState<string | null>(null);
   const [pwSuccess, setPwSuccess] = useState(false);
@@ -101,12 +100,6 @@ export function SectionSecurity() {
   const [totpCode, setTotpCode] = useState("");
   const [mfaError, setMfaError] = useState<string | null>(null);
   const [mfaSaving, setMfaSaving] = useState(false);
-
-  const PASSWORD_RULES = [
-    { test: (v: string) => v.length >= 8, label: t(lang, "pwRuleLength") },
-    { test: (v: string) => /[A-Z]/.test(v), label: t(lang, "pwRuleUppercase") },
-    { test: (v: string) => /\d/.test(v), label: t(lang, "pwRuleNumber") },
-  ];
 
   useEffect(() => {
     void (async () => {
@@ -245,69 +238,34 @@ export function SectionSecurity() {
         </div>
 
         <form onSubmit={(e) => void handleChangePassword(e)} className="max-w-sm space-y-3">
-          <div className="space-y-1.5">
-            <label htmlFor="new-pw" className="text-eyebrow">
-              {t(lang, "newPasswordLabel")}
-            </label>
-            <div className="relative">
-              <Input
-                id="new-pw"
-                type={showPassword ? "text" : "password"}
-                autoComplete="new-password"
-                value={password}
-                onChange={(e) => { setPassword(e.target.value); setPwSuccess(false); }}
-                disabled={saving}
-                className="pr-10"
-              />
-              <button
-                type="button"
-                tabIndex={-1}
-                onClick={() => setShowPassword(!showPassword)}
-                className="ease-chrome absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-              </button>
-            </div>
-            {password.length > 0 && (
-              <div className="flex flex-wrap gap-x-3 gap-y-1 pt-1">
-                {PASSWORD_RULES.map((rule) => {
-                  const pass = rule.test(password);
-                  return (
-                    <span
-                      key={rule.label}
-                      className={cn(
-                        "flex items-center gap-1 text-xs transition-colors",
-                        pass ? "text-emerald-500" : "text-muted-foreground",
-                      )}
-                    >
-                      <CheckCircle2 className={cn("size-3", pass ? "opacity-100" : "opacity-40")} />
-                      {rule.label}
-                    </span>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+          <PasswordInput
+            id="new-pw"
+            label={t(lang, "newPasswordLabel")}
+            value={password}
+            onChange={(e) => { setPassword(e.target.value); setPwSuccess(false); }}
+            disabled={saving}
+            lang={lang}
+            autoComplete="new-password"
+            leftIcon={false}
+            labelClassName="text-eyebrow"
+            showToggle
+            hint={<PasswordRules value={password} lang={lang} />}
+          />
 
-          <div className="space-y-1.5">
-            <label htmlFor="confirm-pw" className="text-eyebrow">
-              {t(lang, "confirmNewPasswordLabel")}
-            </label>
-            <Input
-              id="confirm-pw"
-              type="password"
-              autoComplete="new-password"
-              value={confirm}
-              onChange={(e) => { setConfirm(e.target.value); setPwSuccess(false); }}
-              disabled={saving}
-            />
-          </div>
+          <PasswordInput
+            id="confirm-pw"
+            label={t(lang, "confirmNewPasswordLabel")}
+            value={confirm}
+            onChange={(e) => { setConfirm(e.target.value); setPwSuccess(false); }}
+            disabled={saving}
+            lang={lang}
+            autoComplete="new-password"
+            leftIcon={false}
+            labelClassName="text-eyebrow"
+            showToggle={false}
+          />
 
-          {pwError && (
-            <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-              {pwError}
-            </div>
-          )}
+          <FormError message={pwError} />
 
           {pwSuccess && (
             <div className="flex items-center gap-2 rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-600 dark:text-emerald-400">
@@ -448,11 +406,7 @@ export function SectionSecurity() {
           </div>
         ) : null}
 
-        {mfaError && (
-          <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-            {mfaError}
-          </div>
-        )}
+        <FormError message={mfaError} />
       </Surface>
 
       {/* Login history */}

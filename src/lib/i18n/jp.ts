@@ -1046,6 +1046,8 @@ export const jp = {
   orUseEmail: "またはメールで",
   emailLabel: "メール",
   passwordLabel: "パスワード",
+  showPassword: "パスワードを表示",
+  hidePassword: "パスワードを非表示",
   signingIn: "サインイン中...",
   noAccount: "アカウントをお持ちでないですか？",
   tryDemo: "デモを試す",
