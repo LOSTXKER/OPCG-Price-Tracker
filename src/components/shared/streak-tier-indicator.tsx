@@ -4,20 +4,9 @@ import { Flame, HelpCircle, Ticket } from "lucide-react"
 import { Popover } from "@base-ui/react/popover"
 import { cn } from "@/lib/utils"
 import { t, type Language } from "@/lib/i18n"
-
-const STREAK_TIERS = [
-  { min: 1, max: 6, mult: 1, pts: 10 },
-  { min: 7, max: 29, mult: 2, pts: 20 },
-  { min: 30, max: Infinity, mult: 3, pts: 30 },
-] as const
+import { STREAK_TIERS, getStreakTier } from "@/lib/honey/streak"
 
 const FREE_TICKET_THRESHOLD = 7
-
-function getStreakTier(streak: number) {
-  if (streak >= 30) return 2
-  if (streak >= 7) return 1
-  return 0
-}
 
 function dayLabel(lang: Language, n: number) {
   if (lang === "TH") return `${n} วัน`
@@ -61,7 +50,7 @@ function CompactStreak({
       ? `${streak}日`
       : streak === 1 ? `${streak} day` : `${streak} days`
 
-  const rewardText = `+${currentTier.pts} 🍯${t(lang, "streakPerDaySuffix")}`
+  const rewardText = `+${currentTier.reward} 🍯${t(lang, "streakPerDaySuffix")}`
 
   return (
     <div className={cn("flex items-center gap-1.5", className)}>
@@ -102,7 +91,7 @@ function ExpandedStreak({
           : tierIdx >= 1 ? "bg-primary/10 text-primary"
           : "bg-muted text-muted-foreground",
       )}>
-        <span className="hidden sm:inline">{t(lang, "streakEarningPrefix")} </span>+{currentTier.pts} 🍯{t(lang, "streakPerDaySuffix")}
+        <span className="hidden sm:inline">{t(lang, "streakEarningPrefix")} </span>+{currentTier.reward} 🍯{t(lang, "streakPerDaySuffix")}
       </span>
       <StreakInfoPopover lang={lang} />
     </div>
@@ -152,7 +141,7 @@ function StreakInfoPopover({ lang }: { lang: Language }) {
                       : `${dayLabel(lang, tier.min)}+`}
                   </span>
                   <span className="font-semibold tabular-nums text-foreground">
-                    +{tier.pts} 🍯
+                    +{tier.reward} 🍯
                   </span>
                 </div>
               ))}

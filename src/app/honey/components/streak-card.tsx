@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { CheckCircle2, Flame, Gift, Loader2, Trophy } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { getStreakReward, STREAK_TIERS } from "@/lib/honey/streak";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { HeaderPill, SectionHeader } from "./_shared/section-header";
@@ -11,12 +12,6 @@ import { StreakInfoPopover } from "./streak-info-popover";
 
 const FREE_TICKET_THRESHOLD = 7;
 const STREAK_MILESTONE = 30;
-
-function getStreakReward(streak: number): number {
-  if (streak >= 30) return 30;
-  if (streak >= 7) return 20;
-  return 10;
-}
 
 type StreakGoal = {
   target: number;
@@ -38,7 +33,7 @@ function getStreakGoal(lang: Language, streak: number): StreakGoal | null {
       target: FREE_TICKET_THRESHOLD,
       label: (
         <>
-          <span className="font-bold tabular-nums">+20</span>
+          <span className="font-bold tabular-nums">+{STREAK_TIERS[1].reward}</span>
           <span aria-hidden>🍯</span>
           <span className="text-meta">{t(lang, "streakPerDaySuffix")}</span>
           <span className="text-meta">+</span>
@@ -55,7 +50,7 @@ function getStreakGoal(lang: Language, streak: number): StreakGoal | null {
     target: STREAK_MILESTONE,
     label: (
       <>
-        <span className="font-bold tabular-nums">+30</span>
+        <span className="font-bold tabular-nums">+{STREAK_TIERS[2].reward}</span>
         <span aria-hidden>🍯</span>
         <span className="text-meta">{t(lang, "streakPerDaySuffix")}</span>
       </>
