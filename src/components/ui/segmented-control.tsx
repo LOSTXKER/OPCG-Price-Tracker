@@ -32,7 +32,7 @@ export interface SegmentedControlProps<T extends string = string> {
   /** ARIA label for the radiogroup. */
   ariaLabel?: string;
   className?: string;
-  size?: "default" | "sm";
+  size?: "sm" | "md";
   /** Stretch each segment to fill the row equally. */
   fullWidth?: boolean;
   /**
@@ -78,7 +78,7 @@ export function SegmentedControl<T extends string = string>({
   onLocked,
   ariaLabel,
   className,
-  size = "default",
+  size = "md",
   fullWidth = false,
   variant = "default",
   leadingIcon: LeadingIcon,
