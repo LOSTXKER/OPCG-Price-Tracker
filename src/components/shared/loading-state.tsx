@@ -13,7 +13,7 @@ export interface LoadingStateProps {
   /** Optional ARIA label, defaults to "Loading…". */
   label?: string;
   /** Render a smaller footprint. */
-  size?: "default" | "sm";
+  size?: "sm" | "md";
 }
 
 /**
@@ -34,7 +34,7 @@ export function LoadingState({
   className,
   count = 6,
   label = "Loading…",
-  size = "default",
+  size = "md",
 }: LoadingStateProps) {
   if (variant === "skeleton-grid") {
     return (

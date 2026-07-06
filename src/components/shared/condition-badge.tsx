@@ -7,7 +7,7 @@ export interface ConditionBadgeProps {
   condition: CardCondition;
   className?: string;
   /** Render a compact pill (smaller height, denser padding). */
-  size?: "default" | "sm";
+  size?: "sm" | "md";
 }
 
 /**
@@ -23,7 +23,7 @@ export interface ConditionBadgeProps {
  * orange-/rose-500`) in `listing-card.tsx`, `profile-listing-card.tsx`, and
  * marketplace listings — all routes now derive color from the theme tokens.
  */
-export function ConditionBadge({ condition, className, size = "default" }: ConditionBadgeProps) {
+export function ConditionBadge({ condition, className, size = "md" }: ConditionBadgeProps) {
   const c = condition.toUpperCase();
   const variant = mapCondition(c);
 

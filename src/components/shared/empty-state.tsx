@@ -23,7 +23,7 @@ export interface EmptyStateProps {
    */
   variant?: EmptyStateVariant;
   /** Use a smaller vertical footprint (e.g. inline empty-table). */
-  size?: "default" | "sm";
+  size?: "sm" | "md";
 }
 
 /**
@@ -48,7 +48,7 @@ export function EmptyState({
   action,
   className,
   variant = "panel",
-  size = "default",
+  size = "md",
 }: EmptyStateProps) {
   const isError = variant === "error";
 
