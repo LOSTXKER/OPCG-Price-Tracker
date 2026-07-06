@@ -1,7 +1,7 @@
 "use client";
 
 import { useProfileData } from "@/components/profile/profile-data-context";
-import { SectionMarketplace } from "@/components/profile/section-marketplace";
+import { SectionMarketplace } from "@/components/settings/section-marketplace";
 
 export default function SettingsMarketplacePage() {
   const { data } = useProfileData();

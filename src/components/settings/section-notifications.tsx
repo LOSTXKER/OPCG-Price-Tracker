@@ -25,7 +25,7 @@ import { useTierLimits } from "@/hooks/use-tier-limits";
 import { UpgradeBadge } from "@/components/shared/upgrade-badge";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
 import type { TranslationKey } from "@/lib/i18n";
-import type { SettingsData } from "./profile-types";
+import type { SettingsData } from "@/components/profile/profile-types";
 
 // ---------------------------------------------------------------------------
 // Channel toggle row (icon + label + toggle)

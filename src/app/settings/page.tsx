@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { GroupedSection, GroupedRow } from "@/components/ui/grouped-list";
 import { useProfileData } from "@/components/profile/profile-data-context";
-import { SectionAccount } from "@/components/profile/section-account";
+import { SectionAccount } from "@/components/settings/section-account";
 import { getTierConfig } from "@/components/profile/profile-types";
 import { useUIStore } from "@/stores/ui-store";
 import { usePublicConfig } from "@/hooks/use-public-config";

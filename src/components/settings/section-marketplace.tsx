@@ -9,7 +9,7 @@ import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-import type { ListingBrief } from "./profile-types";
+import type { ListingBrief } from "@/components/profile/profile-types";
 
 type Props = {
   listings: ListingBrief[];

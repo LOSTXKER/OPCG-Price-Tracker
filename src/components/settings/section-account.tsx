@@ -2,7 +2,7 @@
 
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
-import type { DbUser } from "./profile-types";
+import type { DbUser } from "@/components/profile/profile-types";
 import { AccountProfileHero } from "./account-profile-hero";
 import { AccountProfileInfo } from "./account-profile-info";
 import { AccountSocialLinks } from "./account-social-links";

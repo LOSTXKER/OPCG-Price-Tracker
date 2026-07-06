@@ -10,7 +10,7 @@ import { t } from "@/lib/i18n";
 import type { Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { ApiError, apiPatch } from "@/lib/api/client";
-import type { DbUser } from "./profile-types";
+import type { DbUser } from "@/components/profile/profile-types";
 
 const nameSchema = z.string().trim().min(1, "Name is required").max(120);
 const HANDLE_REGEX = /^[a-z0-9_]{3,24}$/;

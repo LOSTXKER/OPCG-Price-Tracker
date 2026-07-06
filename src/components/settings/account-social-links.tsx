@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Surface } from "@/components/ui/surface";
 import { t } from "@/lib/i18n";
 import type { Language } from "@/lib/i18n";
-import type { DbUser } from "./profile-types";
+import type { DbUser } from "@/components/profile/profile-types";
 
 const SOCIAL_FIELDS = [
   { key: "socialLine", label: "socialLineLabel", placeholder: "socialPlaceholderLine", icon: "LINE" },

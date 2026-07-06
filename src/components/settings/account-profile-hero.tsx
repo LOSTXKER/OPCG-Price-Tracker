@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ApiError, apiForm } from "@/lib/api/client";
 import { t, getLocale } from "@/lib/i18n";
 import type { Language } from "@/lib/i18n";
-import type { DbUser } from "./profile-types";
+import type { DbUser } from "@/components/profile/profile-types";
 
 type AccountProfileHeroProps = {
   user: DbUser;

@@ -30,7 +30,7 @@ import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { Language } from "@/lib/i18n";
-import { type ProfileStats, type SubscriptionData } from "./profile-types";
+import { type ProfileStats, type SubscriptionData } from "@/components/profile/profile-types";
 import {
   PLANS,
   PLAN_HIGHLIGHTS,

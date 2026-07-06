@@ -1,6 +1,6 @@
 "use client";
 
-import { AccountPrivacySection } from "@/components/profile/account-privacy-section";
+import { AccountPrivacySection } from "@/components/settings/account-privacy-section";
 import { useProfileData } from "@/components/profile/profile-data-context";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";

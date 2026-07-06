@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { Surface } from "@/components/ui/surface";
 import { Switch } from "@/components/ui/switch";
 import { SavedPill } from "@/components/shared/saved-pill";
-import type { DbUser } from "./profile-types";
+import type { DbUser } from "@/components/profile/profile-types";
 
 const VISIBILITY_OPTIONS = [
   { value: "public", labelKey: "visibilityPublic" as const, descKey: "visibilityPublicDesc" as const, icon: Globe },
