@@ -111,6 +111,11 @@
   --chart-5: #FF3B30;
   --radius: 0.75rem;
 
+  /* Top-chrome height — mobile = header (h-14 = 56px); desktop override below
+     = ticker (h-11 = 44px) + header (h-14 = 56px) = 100px. Sticky offsets and
+     scroll-margins read from this single var (TOKENS-04) instead of magic numbers. */
+  --chrome-h: 3.5rem;
+
   /* Frameless in light: .panel lifts by the warm --card fill alone (no hairline).
      Dark keeps --elev-flat (luminance edge) since there card≠bg is subtle. */
   --panel-shadow: 0 1px 2px rgba(28, 20, 12, 0.05), 0 8px 20px -6px rgba(28, 20, 12, 0.10);
@@ -477,6 +482,11 @@
   letter-spacing: -0.02em;
 }
 @media (min-width: 768px) {
+  /* Desktop top chrome = ticker (44px) + header (56px). See --chrome-h above. */
+  :root {
+    --chrome-h: 6.25rem;
+  }
+
   /* Desktop keeps the existing page-title scale (matches .text-h1) — the
      iOS large-title treatment is a mobile-only affordance (PageHeader). */
   .text-large-title {
