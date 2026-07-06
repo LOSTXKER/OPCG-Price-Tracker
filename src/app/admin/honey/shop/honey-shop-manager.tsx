@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
+import { AdminDataTable, type Column } from "@/components/admin/admin-data-table";
 import { adminFetch } from "@/lib/admin/admin-fetch";
 import { useAdminCrud } from "@/lib/admin/use-admin-crud";
 import { localizedName, localizedShopDesc, localizedShopType } from "@/app/honey/types";
@@ -83,6 +84,112 @@ export function HoneyShopManager({ initialItems }: { initialItems: ShopItem[] })
     }
   };
 
+  const columns: Column<ShopItem>[] = [
+    {
+      key: "product",
+      header: "สินค้า",
+      render: (item) => {
+        const itemImage = readImageUrl(item.value);
+        return (
+          <div className="flex items-center gap-3">
+            {itemImage ? (
+              <img
+                src={itemImage}
+                alt=""
+                className="size-10 shrink-0 rounded-lg object-cover"
+              />
+            ) : (
+              <div className="size-10 shrink-0 rounded-lg bg-muted/50" />
+            )}
+            <div className="min-w-0">
+              <p className="truncate font-medium">
+                {localizedName(item, "TH")}
+              </p>
+              {item.description && (
+                <p className="mt-0.5 truncate text-meta">
+                  {localizedShopDesc(item.description, "TH")}
+                </p>
+              )}
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      key: "type",
+      header: "ประเภท",
+      render: (item) => (
+        <span
+          className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
+            TYPE_COLORS[item.type] ?? "bg-muted"
+          }`}
+        >
+          {localizedShopType(item.type, "TH")}
+        </span>
+      ),
+    },
+    {
+      key: "cost",
+      header: "ราคา",
+      headerClassName: "text-right",
+      className: "text-right",
+      render: (item) => (
+        <span className="font-bold tabular-nums text-warning">{item.cost}</span>
+      ),
+    },
+    {
+      key: "stock",
+      header: "สต็อก",
+      headerClassName: "text-right",
+      className: "text-right text-muted-foreground",
+      render: (item) => item.stock ?? "∞",
+    },
+    {
+      key: "status",
+      header: "สถานะ",
+      headerClassName: "text-center",
+      className: "text-center",
+      render: (item) => (
+        <button
+          onClick={() => void handleToggleActive(item)}
+          title={item.isActive ? "เปิดใช้งาน" : "ปิดใช้งาน"}
+        >
+          {item.isActive ? (
+            <ToggleRight className="mx-auto h-5 w-5 text-success" />
+          ) : (
+            <ToggleLeft className="mx-auto h-5 w-5 text-muted-foreground" />
+          )}
+        </button>
+      ),
+    },
+    {
+      key: "actions",
+      header: "จัดการ",
+      headerClassName: "text-right",
+      className: "text-right",
+      render: (item) => (
+        <div className="flex justify-end gap-1">
+          <Button
+            render={<Link href={`/admin/honey/shop/${item.id}`} title="แก้ไข" />}
+            variant="ghost"
+            size="icon-xs"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={() => void crud.remove(item.id)}
+            disabled={crud.deleting === item.id}
+            className="text-destructive hover:text-destructive"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <AdminPage
       header={
@@ -110,102 +217,7 @@ export function HoneyShopManager({ initialItems }: { initialItems: ShopItem[] })
           }
         />
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-[var(--p-hair)]">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[var(--p-hair)] bg-muted/30">
-                <th className="px-4 py-2.5 text-left text-eyebrow">สินค้า</th>
-                <th className="px-4 py-2.5 text-left text-eyebrow">ประเภท</th>
-                <th className="px-4 py-2.5 text-right text-eyebrow">ราคา</th>
-                <th className="px-4 py-2.5 text-right text-eyebrow">สต็อก</th>
-                <th className="px-4 py-2.5 text-center text-eyebrow">สถานะ</th>
-                <th className="px-4 py-2.5 text-right text-eyebrow">จัดการ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => {
-                const itemImage = readImageUrl(item.value);
-                return (
-                  <tr
-                    key={item.id}
-                    className="border-b border-[var(--p-hair)] motion-base hover:bg-muted/70"
-                  >
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        {itemImage ? (
-                          <img
-                            src={itemImage}
-                            alt=""
-                            className="size-10 shrink-0 rounded-lg object-cover"
-                          />
-                        ) : (
-                          <div className="size-10 shrink-0 rounded-lg bg-muted/50" />
-                        )}
-                        <div className="min-w-0">
-                          <p className="truncate font-medium">
-                            {localizedName(item, "TH")}
-                          </p>
-                          {item.description && (
-                            <p className="mt-0.5 truncate text-meta">
-                              {localizedShopDesc(item.description, "TH")}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-                          TYPE_COLORS[item.type] ?? "bg-muted"
-                        }`}
-                      >
-                        {localizedShopType(item.type, "TH")}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <span className="font-bold tabular-nums text-warning">{item.cost}</span>
-                    </td>
-                    <td className="px-4 py-3 text-right text-muted-foreground">
-                      {item.stock ?? "∞"}
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <button
-                        onClick={() => void handleToggleActive(item)}
-                        title={item.isActive ? "เปิดใช้งาน" : "ปิดใช้งาน"}
-                      >
-                        {item.isActive ? (
-                          <ToggleRight className="mx-auto h-5 w-5 text-success" />
-                        ) : (
-                          <ToggleLeft className="mx-auto h-5 w-5 text-muted-foreground" />
-                        )}
-                      </button>
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex justify-end gap-1">
-                        <Button
-                          render={<Link href={`/admin/honey/shop/${item.id}`} title="แก้ไข" />}
-                          variant="ghost"
-                          size="icon-xs"
-                        >
-                          <Pencil className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon-xs"
-                          onClick={() => void crud.remove(item.id)}
-                          disabled={crud.deleting === item.id}
-                          className="text-destructive hover:text-destructive"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <AdminDataTable columns={columns} data={items} rowKey={(item) => item.id} />
       )}
     </AdminPage>
   );

@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
+import { AdminDataTable, type Column } from "@/components/admin/admin-data-table";
 import { useConfirm } from "@/components/admin/confirm-dialog";
 import { adminFetch } from "@/lib/admin/admin-fetch";
 
@@ -64,6 +65,108 @@ export function TemplatesList({ initialTemplates }: { initialTemplates: Template
     }
   };
 
+  const columns: Column<Template>[] = [
+    {
+      key: "name",
+      header: "ชื่อ",
+      render: (t) => t.nameTh ?? t.name,
+    },
+    {
+      key: "category",
+      header: "หมวดหมู่",
+      render: (t) => <Badge variant="secondary">{t.category}</Badge>,
+    },
+    {
+      key: "trackType",
+      header: "ประเภท",
+      className: "text-meta",
+      render: (t) => TRACK_TYPE_LABELS[t.trackType],
+    },
+    {
+      key: "reward",
+      header: "รางวัล",
+      headerClassName: "text-right",
+      render: (t) => {
+        const imageUrl = (t.rewards as Record<string, unknown>).imageUrl as
+          | string
+          | undefined;
+        const honey = (t.rewards as Record<string, number>).honey ?? 0;
+        return (
+          <div className="flex items-center justify-end gap-2">
+            {imageUrl && (
+              <img
+                src={imageUrl}
+                alt=""
+                className="size-7 rounded object-cover"
+              />
+            )}
+            <span className="font-bold tabular-nums text-warning">{honey}</span>
+          </div>
+        );
+      },
+    },
+    {
+      key: "rules",
+      header: "กฎ",
+      headerClassName: "text-center",
+      className: "text-center text-muted-foreground",
+      render: (t) => t.scheduleRules.length,
+    },
+    {
+      key: "status",
+      header: "สถานะ",
+      headerClassName: "text-center",
+      className: "text-center",
+      render: (t) => (
+        <button
+          onClick={() => toggleActive(t)}
+          title={t.isActive ? "เปิดใช้งาน" : "ปิดใช้งาน"}
+        >
+          {t.isActive ? (
+            <ToggleRight className="mx-auto h-5 w-5 text-success" />
+          ) : (
+            <ToggleLeft className="mx-auto h-5 w-5 text-muted-foreground" />
+          )}
+        </button>
+      ),
+    },
+    {
+      key: "actions",
+      header: "จัดการ",
+      headerClassName: "text-right",
+      className: "text-right",
+      render: (t) => (
+        <div className="flex justify-end gap-1">
+          <Button
+            render={
+              <Link href={`/admin/honey/missions/templates/new?clone=${t.id}`} />
+            }
+            variant="ghost"
+            size="icon-xs"
+            title="คัดลอก"
+          >
+            <Copy className="h-3.5 w-3.5" />
+          </Button>
+          <Button
+            render={<Link href={`/admin/honey/missions/templates/${t.id}`} />}
+            variant="ghost"
+            size="icon-xs"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={() => void handleDelete(t)}
+            className="text-destructive hover:text-destructive"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <AdminPage
       header={
@@ -92,105 +195,7 @@ export function TemplatesList({ initialTemplates }: { initialTemplates: Template
           }
         />
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-[var(--p-hair)]">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[var(--p-hair)] bg-muted/30">
-                <th className="px-4 py-2.5 text-left text-eyebrow">ชื่อ</th>
-                <th className="px-4 py-2.5 text-left text-eyebrow">หมวดหมู่</th>
-                <th className="px-4 py-2.5 text-left text-eyebrow">ประเภท</th>
-                <th className="px-4 py-2.5 text-right text-eyebrow">รางวัล</th>
-                <th className="px-4 py-2.5 text-center text-eyebrow">กฎ</th>
-                <th className="px-4 py-2.5 text-center text-eyebrow">สถานะ</th>
-                <th className="px-4 py-2.5 text-right text-eyebrow">จัดการ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {templates.map((t) => {
-                const imageUrl = (t.rewards as Record<string, unknown>).imageUrl as
-                  | string
-                  | undefined;
-                const honey = (t.rewards as Record<string, number>).honey ?? 0;
-                return (
-                  <tr
-                    key={t.id}
-                    className="border-b border-[var(--p-hair)] motion-base hover:bg-muted/70"
-                  >
-                    <td className="px-4 py-3">{t.nameTh ?? t.name}</td>
-                    <td className="px-4 py-3">
-                      <Badge variant="secondary">{t.category}</Badge>
-                    </td>
-                    <td className="px-4 py-3 text-meta">
-                      {TRACK_TYPE_LABELS[t.trackType]}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-2">
-                        {imageUrl && (
-                          <img
-                            src={imageUrl}
-                            alt=""
-                            className="size-7 rounded object-cover"
-                          />
-                        )}
-                        <span className="font-bold tabular-nums text-warning">
-                          {honey}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-center text-muted-foreground">
-                      {t.scheduleRules.length}
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <button
-                        onClick={() => toggleActive(t)}
-                        title={t.isActive ? "เปิดใช้งาน" : "ปิดใช้งาน"}
-                      >
-                        {t.isActive ? (
-                          <ToggleRight className="mx-auto h-5 w-5 text-success" />
-                        ) : (
-                          <ToggleLeft className="mx-auto h-5 w-5 text-muted-foreground" />
-                        )}
-                      </button>
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex justify-end gap-1">
-                        <Button
-                          render={
-                            <Link
-                              href={`/admin/honey/missions/templates/new?clone=${t.id}`}
-                            />
-                          }
-                          variant="ghost"
-                          size="icon-xs"
-                          title="คัดลอก"
-                        >
-                          <Copy className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button
-                          render={
-                            <Link href={`/admin/honey/missions/templates/${t.id}`} />
-                          }
-                          variant="ghost"
-                          size="icon-xs"
-                        >
-                          <Pencil className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon-xs"
-                          onClick={() => void handleDelete(t)}
-                          className="text-destructive hover:text-destructive"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <AdminDataTable columns={columns} data={templates} rowKey={(t) => t.id} />
       )}
     </AdminPage>
   );
