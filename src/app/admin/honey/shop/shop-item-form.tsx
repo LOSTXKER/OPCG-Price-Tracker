@@ -1,9 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
 import { ArrowLeft, ShoppingBag } from "lucide-react";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +15,7 @@ import {
 } from "@/components/admin/admin-form-field";
 import { AdminNativeSelect } from "@/components/admin/admin-native-select";
 import { ImageUploader } from "@/components/admin/image-uploader";
-import { adminFetch } from "@/lib/admin/admin-fetch";
+import { useAdminForm } from "@/lib/admin/use-admin-form";
 
 const ITEM_TYPES = ["TRIAL_PRO", "TRIAL_PRO_PLUS", "BADGE", "CUSTOM"] as const;
 
@@ -79,8 +77,8 @@ function emptyForm(): FormData {
 
 export function ShopItemForm({ initial }: { initial?: ShopItemInitial }) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
 
+  const isEdit = initial?.id != null;
   const initialState: FormData = (() => {
     if (!initial) return emptyForm();
     const valueObj = (
@@ -100,71 +98,46 @@ export function ShopItemForm({ initial }: { initial?: ShopItemInitial }) {
     };
   })();
 
-  const [form, setForm] = useState<FormData>(initialState);
-  const [error, setError] = useState("");
-
-  const isEdit = initial?.id != null;
-  const dirty = JSON.stringify(form) !== JSON.stringify(initialState);
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-
-    if (!form.name) {
-      setError("กรุณากรอกชื่อสินค้า");
-      return;
-    }
-    if (!form.cost || Number(form.cost) < 1) {
-      setError("กรุณากำหนดราคา (Honey)");
-      return;
-    }
-
-    let parsedValue: Record<string, unknown> | null;
-    try {
-      parsedValue = form.value.trim() ? JSON.parse(form.value) : null;
-    } catch {
-      setError("รูปแบบ JSON ในช่อง value ไม่ถูกต้อง");
-      return;
-    }
-
-    // Merge dedicated image uploader on top of raw JSON.
-    const mergedValue: Record<string, unknown> = { ...(parsedValue ?? {}) };
-    if (form.imageUrl) mergedValue.imageUrl = form.imageUrl;
-    else delete mergedValue.imageUrl;
-
-    const body = {
-      name: form.name,
-      nameEn: form.nameEn || null,
-      nameTh: form.name,
-      description: form.description || null,
-      cost: Number(form.cost),
-      type: form.type,
-      value: Object.keys(mergedValue).length ? mergedValue : null,
-      isActive: form.isActive,
-      stock: form.stock ? Number(form.stock) : null,
-    };
-
-    startTransition(async () => {
-      try {
-        if (isEdit) {
-          await adminFetch(`/api/admin/honey/shop/${initial!.id}`, {
-            method: "PATCH",
-            body,
-          });
-          toast.success("อัปเดตสินค้าแล้ว");
-        } else {
-          await adminFetch("/api/admin/honey/shop", { method: "POST", body });
-          toast.success("สร้างสินค้าแล้ว");
+  const { form, setForm, error, saving, saveBarActive, handleSubmit, submitFromBar } =
+    useAdminForm<FormData>({
+      initialState,
+      isEdit,
+      formId: FORM_ID,
+      validate: (f) => {
+        if (!f.name) return "กรุณากรอกชื่อสินค้า";
+        if (!f.cost || Number(f.cost) < 1) return "กรุณากำหนดราคา (Honey)";
+        try {
+          if (f.value.trim()) JSON.parse(f.value);
+        } catch {
+          return "รูปแบบ JSON ในช่อง value ไม่ถูกต้อง";
         }
-        router.push("/admin/honey/shop");
-        router.refresh();
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "บันทึกไม่สำเร็จ";
-        setError(message);
-        toast.error(message);
-      }
+        return null;
+      },
+      toBody: (f) => {
+        const parsedValue: Record<string, unknown> | null = f.value.trim()
+          ? JSON.parse(f.value)
+          : null;
+        // Merge dedicated image uploader on top of raw JSON.
+        const mergedValue: Record<string, unknown> = { ...(parsedValue ?? {}) };
+        if (f.imageUrl) mergedValue.imageUrl = f.imageUrl;
+        else delete mergedValue.imageUrl;
+        return {
+          name: f.name,
+          nameEn: f.nameEn || null,
+          nameTh: f.name,
+          description: f.description || null,
+          cost: Number(f.cost),
+          type: f.type,
+          value: Object.keys(mergedValue).length ? mergedValue : null,
+          isActive: f.isActive,
+          stock: f.stock ? Number(f.stock) : null,
+        };
+      },
+      createEndpoint: "/api/admin/honey/shop",
+      editEndpoint: `/api/admin/honey/shop/${initial?.id}`,
+      successMessage: { create: "สร้างสินค้าแล้ว", edit: "อัปเดตสินค้าแล้ว" },
+      redirectTo: "/admin/honey/shop",
     });
-  }
 
   return (
     <AdminPage
@@ -187,12 +160,9 @@ export function ShopItemForm({ initial }: { initial?: ShopItemInitial }) {
       }
       footer={
         <AdminSaveBar
-          dirty={dirty || !isEdit}
-          saving={isPending}
-          onSave={() => {
-            const formEl = document.getElementById(FORM_ID) as HTMLFormElement | null;
-            formEl?.requestSubmit();
-          }}
+          dirty={saveBarActive}
+          saving={saving}
+          onSave={submitFromBar}
           saveLabel={isEdit ? "อัปเดต" : "สร้าง"}
           description={error ? <span className="text-danger">{error}</span> : undefined}
         />

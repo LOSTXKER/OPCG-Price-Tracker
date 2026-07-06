@@ -1,9 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
 import { ArrowLeft, Target } from "lucide-react";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +15,7 @@ import {
 } from "@/components/admin/admin-form-field";
 import { AdminNativeSelect } from "@/components/admin/admin-native-select";
 import { ImageUploader } from "@/components/admin/image-uploader";
-import { adminFetch } from "@/lib/admin/admin-fetch";
+import { useAdminForm } from "@/lib/admin/use-admin-form";
 
 import {
   CATEGORIES,
@@ -127,73 +125,45 @@ export function TemplateForm({
   cloneFrom?: Template;
 }) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
 
+  const isEdit = initial?.id != null;
   const initialState: FormData = initial
     ? templateToForm(initial)
     : cloneFrom
       ? templateToForm(cloneFrom, { cloneCode: true })
       : emptyForm;
 
-  const [form, setForm] = useState<FormData>(initialState);
-  const [error, setError] = useState("");
-
-  const isEdit = initial?.id != null;
-  const dirty = JSON.stringify(form) !== JSON.stringify(initialState);
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-
-    if (!form.code || !form.name) {
-      setError("กรุณากรอกโค้ดและชื่อ");
-      return;
-    }
-
-    const body = {
-      code: form.code,
-      name: form.name,
-      nameEn: form.nameEn || null,
-      nameTh: form.name,
-      description: form.description || null,
-      icon: form.icon,
-      category: form.category,
-      trackType: form.trackType,
-      conditions: buildConditions(form),
-      rewards: {
-        honey: Number(form.rewardHoney),
-        tickets: Number(form.rewardTickets),
-        imageUrl: form.rewardImageUrl || null,
-      },
-      target: Number(form.target),
-      isActive: form.isActive,
-      sortOrder: Number(form.sortOrder),
-    };
-
-    startTransition(async () => {
-      try {
-        if (isEdit) {
-          await adminFetch(
-            `/api/admin/honey/missions/templates/${initial!.id}`,
-            { method: "PUT", body },
-          );
-          toast.success("อัปเดตเทมเพลตแล้ว");
-        } else {
-          await adminFetch("/api/admin/honey/missions/templates", {
-            method: "POST",
-            body,
-          });
-          toast.success("สร้างเทมเพลตแล้ว");
-        }
-        router.push("/admin/honey/missions/templates");
-        router.refresh();
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "บันทึกไม่สำเร็จ";
-        setError(message);
-        toast.error(message);
-      }
+  const { form, setForm, error, saving, saveBarActive, handleSubmit, submitFromBar } =
+    useAdminForm<FormData>({
+      initialState,
+      isEdit,
+      formId: FORM_ID,
+      validate: (f) => (!f.code || !f.name ? "กรุณากรอกโค้ดและชื่อ" : null),
+      toBody: (f) => ({
+        code: f.code,
+        name: f.name,
+        nameEn: f.nameEn || null,
+        nameTh: f.name,
+        description: f.description || null,
+        icon: f.icon,
+        category: f.category,
+        trackType: f.trackType,
+        conditions: buildConditions(f),
+        rewards: {
+          honey: Number(f.rewardHoney),
+          tickets: Number(f.rewardTickets),
+          imageUrl: f.rewardImageUrl || null,
+        },
+        target: Number(f.target),
+        isActive: f.isActive,
+        sortOrder: Number(f.sortOrder),
+      }),
+      createEndpoint: "/api/admin/honey/missions/templates",
+      editEndpoint: `/api/admin/honey/missions/templates/${initial?.id}`,
+      updateMethod: "PUT",
+      successMessage: { create: "สร้างเทมเพลตแล้ว", edit: "อัปเดตเทมเพลตแล้ว" },
+      redirectTo: "/admin/honey/missions/templates",
     });
-  }
 
   return (
     <AdminPage
@@ -222,12 +192,9 @@ export function TemplateForm({
       }
       footer={
         <AdminSaveBar
-          dirty={dirty || !isEdit}
-          saving={isPending}
-          onSave={() => {
-            const formEl = document.getElementById(FORM_ID) as HTMLFormElement | null;
-            formEl?.requestSubmit();
-          }}
+          dirty={saveBarActive}
+          saving={saving}
+          onSave={submitFromBar}
           saveLabel={isEdit ? "อัปเดต" : "สร้าง"}
           description={error ? <span className="text-danger">{error}</span> : undefined}
         />
