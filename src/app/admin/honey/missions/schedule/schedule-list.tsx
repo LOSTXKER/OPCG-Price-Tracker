@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { AdminPage } from "@/components/admin/admin-page";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
+import { AdminDataTable, type Column } from "@/components/admin/admin-data-table";
 import { useConfirm } from "@/components/admin/confirm-dialog";
 import { adminFetch } from "@/lib/admin/admin-fetch";
 
@@ -52,6 +53,91 @@ export function ScheduleList({
     }
   };
 
+  const columns: Column<ScheduleRule>[] = [
+    {
+      key: "template",
+      header: "เทมเพลต",
+      render: (r) => r.template?.name ?? `#${r.templateId}`,
+    },
+    {
+      key: "slotType",
+      header: "ประเภทช่อง",
+      render: (r) => (
+        <Badge variant="secondary">
+          {SLOT_TYPE_LABELS[r.slotType] ?? r.slotType}
+        </Badge>
+      ),
+    },
+    {
+      key: "config",
+      header: "การตั้งค่า",
+      className: "text-meta",
+      render: (r) => (
+        <>
+          {r.slotType === "DAY_OF_WEEK" &&
+            r.dayOfWeek != null &&
+            DAY_NAMES[r.dayOfWeek]}
+          {r.slotType === "FIXED_DATE" &&
+            r.specificDates &&
+            (r.specificDates as string[]).join(", ")}
+          {r.slotType === "RANDOM_POOL" &&
+            `pool: ${r.poolGroup ?? "default"} (เลือก ${r.poolPickCount ?? 1})`}
+          {r.slotType === "SEQUENTIAL" &&
+            `pool: ${r.poolGroup ?? "default"}`}
+          {r.slotType === "CORE" && "ตลอดเวลา"}
+        </>
+      ),
+    },
+    {
+      key: "dateRange",
+      header: "ช่วงเวลา",
+      className: "text-meta",
+      render: (r) =>
+        r.startDate || r.endDate
+          ? `${r.startDate?.slice(0, 10) ?? "∞"} → ${r.endDate?.slice(0, 10) ?? "∞"}`
+          : "ตลอดเวลา",
+    },
+    {
+      key: "status",
+      header: "สถานะ",
+      headerClassName: "text-center",
+      className: "text-center",
+      render: (r) =>
+        r.isActive ? (
+          <ToggleRight className="mx-auto h-5 w-5 text-success" />
+        ) : (
+          <ToggleLeft className="mx-auto h-5 w-5 text-muted-foreground" />
+        ),
+    },
+    {
+      key: "actions",
+      header: "จัดการ",
+      headerClassName: "text-right",
+      className: "text-right",
+      render: (r) => (
+        <div className="flex justify-end gap-1">
+          <Button
+            render={
+              <Link href={`/admin/honey/missions/schedule/${r.id}`} />
+            }
+            variant="ghost"
+            size="icon-xs"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={() => void handleDelete(r.id)}
+            className="text-destructive hover:text-destructive"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <AdminPage
       header={
@@ -80,83 +166,7 @@ export function ScheduleList({
           }
         />
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-[var(--p-hair)]">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[var(--p-hair)] bg-muted/30">
-                <th className="px-4 py-2.5 text-left text-eyebrow">เทมเพลต</th>
-                <th className="px-4 py-2.5 text-left text-eyebrow">ประเภทช่อง</th>
-                <th className="px-4 py-2.5 text-left text-eyebrow">การตั้งค่า</th>
-                <th className="px-4 py-2.5 text-left text-eyebrow">ช่วงเวลา</th>
-                <th className="px-4 py-2.5 text-center text-eyebrow">สถานะ</th>
-                <th className="px-4 py-2.5 text-right text-eyebrow">จัดการ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rules.map((r) => (
-                <tr
-                  key={r.id}
-                  className="border-b border-[var(--p-hair)] motion-base hover:bg-muted/70"
-                >
-                  <td className="px-4 py-3">
-                    {r.template?.name ?? `#${r.templateId}`}
-                  </td>
-                  <td className="px-4 py-3">
-                    <Badge variant="secondary">
-                      {SLOT_TYPE_LABELS[r.slotType] ?? r.slotType}
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3 text-meta">
-                    {r.slotType === "DAY_OF_WEEK" &&
-                      r.dayOfWeek != null &&
-                      DAY_NAMES[r.dayOfWeek]}
-                    {r.slotType === "FIXED_DATE" &&
-                      r.specificDates &&
-                      (r.specificDates as string[]).join(", ")}
-                    {r.slotType === "RANDOM_POOL" &&
-                      `pool: ${r.poolGroup ?? "default"} (เลือก ${r.poolPickCount ?? 1})`}
-                    {r.slotType === "SEQUENTIAL" &&
-                      `pool: ${r.poolGroup ?? "default"}`}
-                    {r.slotType === "CORE" && "ตลอดเวลา"}
-                  </td>
-                  <td className="px-4 py-3 text-meta">
-                    {r.startDate || r.endDate
-                      ? `${r.startDate?.slice(0, 10) ?? "∞"} → ${r.endDate?.slice(0, 10) ?? "∞"}`
-                      : "ตลอดเวลา"}
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    {r.isActive ? (
-                      <ToggleRight className="mx-auto h-5 w-5 text-success" />
-                    ) : (
-                      <ToggleLeft className="mx-auto h-5 w-5 text-muted-foreground" />
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex justify-end gap-1">
-                      <Button
-                        render={
-                          <Link href={`/admin/honey/missions/schedule/${r.id}`} />
-                        }
-                        variant="ghost"
-                        size="icon-xs"
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon-xs"
-                        onClick={() => void handleDelete(r.id)}
-                        className="text-destructive hover:text-destructive"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <AdminDataTable columns={columns} data={rules} rowKey={(r) => r.id} />
       )}
     </AdminPage>
   );

@@ -11,9 +11,12 @@ import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminPanel } from "@/components/admin/admin-panel";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminFormField } from "@/components/admin/admin-form-field";
+import { AdminDataTable, type Column } from "@/components/admin/admin-data-table";
 import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
 
 import type { PreviewMission } from "../types";
+
+type PreviewRow = PreviewMission & { _index: number };
 
 export function PreviewClient() {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
@@ -35,6 +38,36 @@ export function PreviewClient() {
       setLoading(false);
     }
   };
+
+  const rows: PreviewRow[] = missions.map((m, i) => ({ ...m, _index: i + 1 }));
+
+  const columns: Column<PreviewRow>[] = [
+    {
+      key: "index",
+      header: "#",
+      className: "text-muted-foreground",
+      render: (m) => m._index,
+    },
+    {
+      key: "name",
+      header: "ชื่อ",
+      render: (m) => m.name,
+    },
+    {
+      key: "target",
+      header: "เป้าหมาย",
+      headerClassName: "text-right",
+      className: "text-right tabular-nums",
+      render: (m) => m.target,
+    },
+    {
+      key: "reward",
+      header: "รางวัล",
+      headerClassName: "text-right",
+      className: "text-right font-bold tabular-nums text-warning",
+      render: (m) => m.rewards?.honey ?? 0,
+    },
+  ];
 
   return (
     <AdminPage
@@ -63,33 +96,7 @@ export function PreviewClient() {
       </AdminPanel>
 
       {missions.length > 0 ? (
-        <div className="overflow-x-auto rounded-xl border border-[var(--p-hair)]">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[var(--p-hair)] bg-muted/30">
-                <th className="px-4 py-2.5 text-left text-eyebrow">#</th>
-                <th className="px-4 py-2.5 text-left text-eyebrow">ชื่อ</th>
-                <th className="px-4 py-2.5 text-right text-eyebrow">เป้าหมาย</th>
-                <th className="px-4 py-2.5 text-right text-eyebrow">รางวัล</th>
-              </tr>
-            </thead>
-            <tbody>
-              {missions.map((m, i) => (
-                <tr
-                  key={m.code}
-                  className="border-b border-[var(--p-hair)] motion-base hover:bg-muted/70"
-                >
-                  <td className="px-4 py-3 text-muted-foreground">{i + 1}</td>
-                  <td className="px-4 py-3">{m.name}</td>
-                  <td className="px-4 py-3 text-right tabular-nums">{m.target}</td>
-                  <td className="px-4 py-3 text-right font-bold tabular-nums text-warning">
-                    {m.rewards?.honey ?? 0}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <AdminDataTable columns={columns} data={rows} rowKey={(m) => m.code} />
       ) : loaded && !loading ? (
         <AdminEmptyState
           icon={Eye}
