@@ -56,6 +56,7 @@ const NAV_ITEMS: readonly NavItem[] = [
 
 function buildBreadcrumbLabels(lang: Language): Record<string, string> {
   return {
+    home: t(lang, "home"),
     seller: t(lang, "sellShellSellerCenter"),
     listings: t(lang, "sellShellMyListings"),
     orders: t(lang, "sellShellOrders"),

@@ -190,7 +190,7 @@ export default async function ColorsPage() {
         breadcrumb={
           <Breadcrumb
             items={[
-              { label: "Home", href: "/" },
+              { label: t(lang, "home"), href: "/" },
               { label: "Guide", href: "/guide" },
               { label: t(lang, "guideColorTitle") },
             ]}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { getDrawnRaffles, groupRafflesByMonth } from "@/lib/honey/raffle-winners";
@@ -32,8 +32,8 @@ export default async function RaffleWinnersPage() {
           { name: "Prize Winners", href: "/raffle/winners" },
         ])}
       />
-      <Breadcrumb
-        items={[{ label: "Home", href: "/" }, { label: "Prize Winners" }]}
+      <LocalizedBreadcrumb
+        items={[{ labelKey: "home", href: "/" }, { labelKey: "winnersPageTitle" }]}
       />
       <WinnersList groups={grouped} />
     </>

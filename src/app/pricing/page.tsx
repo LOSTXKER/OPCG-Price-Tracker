@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { FaqSection } from "@/components/shared/faq-section";
@@ -16,7 +16,7 @@ export default function PricingPage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Pricing", href: "/pricing" }])} />
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Pricing" }]} />
+      <LocalizedBreadcrumb items={[{ labelKey: "home", href: "/" }, { labelKey: "pricing" }]} />
       <PricingClient />
       <FaqSection items={[
         { question: "แพลน Pro ได้อะไรเพิ่ม?", answer: "ได้ Price Alerts, Portfolio ไม่จำกัด, กราฟขั้นสูง, Export ข้อมูล แล้วก็ Priority Support" },

@@ -46,7 +46,7 @@ export default function HoneyClient() {
       title={t(lang, "honeyPageTitle")}
       description={t(lang, "honeySubtitle")}
       breadcrumb={
-        <Breadcrumb items={[{ label: "Home", href: "/" }, { label: t(lang, "honeyPageTitle") }]} />
+        <Breadcrumb items={[{ label: t(lang, "home"), href: "/" }, { label: t(lang, "honeyPageTitle") }]} />
       }
     />
   );

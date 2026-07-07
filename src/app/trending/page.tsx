@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { BarChart3, GitCompareArrows, Layers } from "lucide-react";
-import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
@@ -99,7 +99,7 @@ export default async function TrendingPage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Trending", href: "/trending" }])} />
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Trending" }]} />
+      <LocalizedBreadcrumb items={[{ labelKey: "home", href: "/" }, { labelKey: "trendingTitle" }]} />
       <div className="space-y-6">
         <TrendingPageHeader />
         <Suspense>
