@@ -1,8 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Download, ExternalLink, Loader2, Receipt } from "lucide-react";
+import { Download, ExternalLink, Loader2, MoreHorizontal, Receipt } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
 import { apiGet, apiTry } from "@/lib/api/client";
@@ -76,30 +82,49 @@ export function SectionBilling() {
                       </Badge>
                     </div>
                   </div>
-                  <div className="flex shrink-0 items-center gap-1">
-                    {inv.pdfUrl && (
-                      <a
-                        href={inv.pdfUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                        title={t(lang, "downloadInvoice")}
+                  {/* Mobile (<sm): fold the download / view icon actions into a
+                      single 44px overflow menu so the two sub-40px targets don't
+                      crowd the row. Links stay external (Stripe PDF / hosted). */}
+                  {(inv.pdfUrl || inv.hostedUrl) && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger
+                        aria-label={t(lang, "moreActions")}
+                        className="inline-flex size-11 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                       >
-                        <Download className="size-4" />
-                      </a>
-                    )}
-                    {inv.hostedUrl && (
-                      <a
-                        href={inv.hostedUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                        title={t(lang, "viewInvoice")}
-                      >
-                        <ExternalLink className="size-4" />
-                      </a>
-                    )}
-                  </div>
+                        <MoreHorizontal className="size-5" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        {inv.pdfUrl && (
+                          <DropdownMenuItem
+                            render={
+                              <a
+                                href={inv.pdfUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              />
+                            }
+                          >
+                            <Download className="size-4" />
+                            {t(lang, "downloadInvoice")}
+                          </DropdownMenuItem>
+                        )}
+                        {inv.hostedUrl && (
+                          <DropdownMenuItem
+                            render={
+                              <a
+                                href={inv.hostedUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              />
+                            }
+                          >
+                            <ExternalLink className="size-4" />
+                            {t(lang, "viewInvoice")}
+                          </DropdownMenuItem>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
               ))}
             </div>
