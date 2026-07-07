@@ -27,7 +27,7 @@ export function BackButton({
       aria-label={label}
       title={label}
       className={cn(
-        "inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm motion-base hover:opacity-90 active:scale-95",
+        "tap-safe inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm motion-base hover:opacity-90 active:scale-95",
         className,
       )}
     >

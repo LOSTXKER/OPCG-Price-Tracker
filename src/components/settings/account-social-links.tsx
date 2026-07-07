@@ -93,7 +93,7 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
               type="button"
               onClick={() => setIsEditing(true)}
               aria-label={t(lang, "edit")}
-              className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="tap-safe inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               <Pencil className="size-3.5" />
             </button>
@@ -103,7 +103,7 @@ export function AccountSocialLinks({ user, lang, onUserUpdate }: AccountSocialLi
               onClick={cancel}
               aria-label={t(lang, "cancel")}
               disabled={saving}
-              className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
+              className="tap-safe inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
             >
               <X className="size-4" />
             </button>

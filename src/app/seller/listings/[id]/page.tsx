@@ -339,7 +339,7 @@ export default function SellerEditListingPage() {
               <button
                 type="button"
                 onClick={() => setPhotos((prev) => prev.filter((_, j) => j !== i))}
-                className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs font-bold text-white opacity-0 motion-base group-hover:opacity-100"
+                className="tap-safe absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs font-bold text-white opacity-0 motion-base group-hover:opacity-100"
               >
                 ✕
               </button>

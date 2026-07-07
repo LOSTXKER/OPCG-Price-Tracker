@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef, type ReactNode } from "react";
+import { TrendingUpDown } from "lucide-react";
 
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import {
@@ -340,6 +341,7 @@ export function SetDetailContent({
               size="sm"
               variant="pill"
               fullWidth
+              leadingIcon={TrendingUpDown}
               options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
               value={changePeriod}
               onChange={setChangePeriod}
@@ -385,6 +387,7 @@ export function SetDetailContent({
             <SegmentedControl
               size="sm"
               variant="pill"
+              leadingIcon={TrendingUpDown}
               options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
               value={changePeriod}
               onChange={setChangePeriod}

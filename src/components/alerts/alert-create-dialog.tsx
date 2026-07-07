@@ -97,7 +97,7 @@ export function AlertCreateDialog({
                   setStep("pick");
                   setError(null);
                 }}
-                className="-ml-2 inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground"
+                className="tap-safe -ml-2 inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground"
               >
                 <ArrowLeft className="size-4" />
               </button>

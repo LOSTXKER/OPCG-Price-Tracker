@@ -38,7 +38,7 @@ export function ScrollToTop() {
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label="Scroll to top"
       className={cn(
-        "fixed bottom-20 right-4 z-40 flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[var(--elev-raised)] backdrop-blur-sm motion-base hover:bg-primary/90 md:bottom-8",
+        "tap-safe fixed bottom-20 right-4 z-40 flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[var(--elev-raised)] backdrop-blur-sm motion-base hover:bg-primary/90 md:bottom-8",
         hideOnMobileCardDetail && "hidden md:flex",
         visible
           ? "translate-y-0 opacity-100"

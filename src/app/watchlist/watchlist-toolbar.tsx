@@ -12,6 +12,7 @@ import {
   Search,
   TrendingDown,
   TrendingUp,
+  TrendingUpDown,
   X,
 } from "lucide-react";
 import { useMemo } from "react";
@@ -191,6 +192,7 @@ export function WatchlistToolbar({
           onChange={onPeriodChange}
           size="sm"
           variant="pill"
+          leadingIcon={TrendingUpDown}
           ariaLabel={t(lang, "change")}
         />
 

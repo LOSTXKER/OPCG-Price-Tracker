@@ -134,7 +134,7 @@ export function PortfolioHubCard({
         {/* Menu — its own pointer-events island above the stretched link. */}
         <div className="pointer-events-auto relative z-20 shrink-0">
           <DropdownMenu>
-            <DropdownMenuTrigger className="ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground">
+            <DropdownMenuTrigger className="tap-safe ease-chrome rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground">
               <MoreHorizontal className="size-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

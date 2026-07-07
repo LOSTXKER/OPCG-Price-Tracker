@@ -1,6 +1,7 @@
 "use client"
 
 import { useId, useMemo, useRef, useState } from "react"
+import { CalendarRange } from "lucide-react"
 import {
   Area,
   AreaChart,
@@ -158,6 +159,7 @@ export function PortfolioScrubChart({
             onChange={() => {}}
             size="sm"
             variant="pill"
+            leadingIcon={CalendarRange}
             ariaLabel={t(lang, "filter")}
           />
         </div>
@@ -183,6 +185,7 @@ export function PortfolioScrubChart({
             }}
             size="sm"
             variant="pill"
+            leadingIcon={CalendarRange}
             ariaLabel={t(lang, "filter")}
           />
         </div>
@@ -208,6 +211,7 @@ export function PortfolioScrubChart({
           }}
           size="sm"
           variant="pill"
+          leadingIcon={CalendarRange}
           ariaLabel={t(lang, "filter")}
         />
       </div>

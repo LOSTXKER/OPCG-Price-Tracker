@@ -57,7 +57,7 @@ export function HoneyToast({
       </span>
       <button
         onClick={onDismiss}
-        className="shrink-0 text-muted-foreground hover:text-foreground"
+        className="tap-safe shrink-0 text-muted-foreground hover:text-foreground"
       >
         <X className="size-3.5" />
       </button>
