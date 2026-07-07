@@ -8,6 +8,7 @@ import {
   Globe,
   Mail,
   MessageCircle,
+  MoreHorizontal,
   Pencil,
   RotateCcw,
   Trash2,
@@ -15,6 +16,13 @@ import {
 import { SavedPill } from "@/components/shared/saved-pill";
 import type { LucideIcon } from "lucide-react";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { GameBadge } from "@/components/shared/game-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -121,43 +129,77 @@ export function AlertRow({
 
             {/* Actions */}
             <div className="-mr-1 -mt-1 flex shrink-0 items-center">
-              {onEdit && (
+              {/* Desktop (≥sm): inline icon buttons — the row has room. */}
+              <div className="hidden items-center sm:flex">
+                {onEdit && (
+                  <Button
+                    size="icon-sm"
+                    variant="ghost"
+                    className="text-muted-foreground hover:text-foreground"
+                    disabled={busy}
+                    onClick={onEdit}
+                    title={t(lang, "edit")}
+                    aria-label={t(lang, "edit")}
+                  >
+                    <Pencil className="size-3.5" />
+                  </Button>
+                )}
+                {onReactivate && (
+                  <Button
+                    size="icon-sm"
+                    variant="ghost"
+                    className="text-muted-foreground hover:text-foreground"
+                    disabled={busy}
+                    onClick={onReactivate}
+                    title={t(lang, "reactivate")}
+                    aria-label={t(lang, "reactivate")}
+                  >
+                    <RotateCcw className="size-3.5" />
+                  </Button>
+                )}
                 <Button
                   size="icon-sm"
                   variant="ghost"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-muted-foreground hover:text-destructive"
                   disabled={busy}
-                  onClick={onEdit}
-                  title={t(lang, "edit")}
-                  aria-label={t(lang, "edit")}
+                  onClick={onDelete}
+                  title={t(lang, "delete")}
+                  aria-label={t(lang, "delete")}
                 >
-                  <Pencil className="size-3.5" />
+                  <Trash2 className="size-3.5" />
                 </Button>
-              )}
-              {onReactivate && (
-                <Button
-                  size="icon-sm"
-                  variant="ghost"
-                  className="text-muted-foreground hover:text-foreground"
+              </div>
+
+              {/* Mobile (<sm): fold edit / reactivate / delete into one 44px
+                  overflow menu so the dense cluster isn't easy to mis-tap. */}
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  aria-label={t(lang, "moreActions")}
                   disabled={busy}
-                  onClick={onReactivate}
-                  title={t(lang, "reactivate")}
-                  aria-label={t(lang, "reactivate")}
+                  className="inline-flex size-11 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted sm:hidden"
                 >
-                  <RotateCcw className="size-3.5" />
-                </Button>
-              )}
-              <Button
-                size="icon-sm"
-                variant="ghost"
-                className="text-muted-foreground hover:text-destructive"
-                disabled={busy}
-                onClick={onDelete}
-                title={t(lang, "delete")}
-                aria-label={t(lang, "delete")}
-              >
-                <Trash2 className="size-3.5" />
-              </Button>
+                  <MoreHorizontal className="size-5" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {onEdit && (
+                    <DropdownMenuItem onClick={onEdit}>
+                      <Pencil className="size-4" />
+                      {t(lang, "edit")}
+                    </DropdownMenuItem>
+                  )}
+                  {onReactivate && (
+                    <DropdownMenuItem onClick={onReactivate}>
+                      <RotateCcw className="size-4" />
+                      {t(lang, "reactivate")}
+                    </DropdownMenuItem>
+                  )}
+                  {(onEdit || onReactivate) && <DropdownMenuSeparator />}
+                  <DropdownMenuItem variant="destructive" onClick={onDelete}>
+                    <Trash2 className="size-4" />
+                    {t(lang, "delete")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 

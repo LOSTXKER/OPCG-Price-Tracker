@@ -5,6 +5,7 @@ import {
   Check,
   Loader2,
   MapPin,
+  MoreHorizontal,
   Pencil,
   Plus,
   Star,
@@ -13,6 +14,13 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Surface } from "@/components/ui/surface";
 import { ApiError, apiDelete, apiGet, apiPatch, apiPost, apiTry } from "@/lib/api/client";
@@ -236,34 +244,68 @@ export function SectionAddresses() {
                     {`, ${addr.province} ${addr.postalCode}`}
                   </p>
                 </div>
-                <div className="flex shrink-0 gap-1">
-                  {!addr.isDefault && (
+                <div className="flex shrink-0 items-center gap-0.5">
+                  {/* Desktop (≥sm): inline icon actions เดิม — มีที่ว่าง */}
+                  <div className="hidden shrink-0 items-center gap-1 sm:flex">
+                    {!addr.isDefault && (
+                      <Button
+                        size="icon-sm"
+                        variant="ghost"
+                        onClick={() => void handleSetDefault(addr.id)}
+                        title={t(lang, "setDefault")}
+                      >
+                        <Star className="size-3.5" />
+                      </Button>
+                    )}
                     <Button
                       size="icon-sm"
                       variant="ghost"
-                      onClick={() => void handleSetDefault(addr.id)}
-                      title={t(lang, "setDefault")}
+                      onClick={() => startEdit(addr)}
+                      title={t(lang, "editAddress")}
                     >
-                      <Star className="size-3.5" />
+                      <Pencil className="size-3.5" />
                     </Button>
-                  )}
-                  <Button
-                    size="icon-sm"
-                    variant="ghost"
-                    onClick={() => startEdit(addr)}
-                    title={t(lang, "editAddress")}
-                  >
-                    <Pencil className="size-3.5" />
-                  </Button>
-                  <Button
-                    size="icon-sm"
-                    variant="ghost"
-                    onClick={() => void handleDelete(addr.id)}
-                    className="text-destructive hover:text-destructive"
-                    title={t(lang, "deleteAddress")}
-                  >
-                    <Trash2 className="size-3.5" />
-                  </Button>
+                    <Button
+                      size="icon-sm"
+                      variant="ghost"
+                      onClick={() => void handleDelete(addr.id)}
+                      className="text-destructive hover:text-destructive"
+                      title={t(lang, "deleteAddress")}
+                    >
+                      <Trash2 className="size-3.5" />
+                    </Button>
+                  </div>
+
+                  {/* Mobile (<sm): fold setDefault / edit / delete into one 44px
+                      overflow menu so targets aren't cramped side-by-side. */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      aria-label={t(lang, "moreActions")}
+                      className="inline-flex size-11 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted sm:hidden"
+                    >
+                      <MoreHorizontal className="size-5" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {!addr.isDefault && (
+                        <DropdownMenuItem onClick={() => void handleSetDefault(addr.id)}>
+                          <Star className="size-4" />
+                          {t(lang, "setDefault")}
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuItem onClick={() => startEdit(addr)}>
+                        <Pencil className="size-4" />
+                        {t(lang, "editAddress")}
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        variant="destructive"
+                        onClick={() => void handleDelete(addr.id)}
+                      >
+                        <Trash2 className="size-4" />
+                        {t(lang, "deleteAddress")}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
             </Surface>
