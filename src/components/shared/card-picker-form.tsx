@@ -19,10 +19,11 @@ export type { CardWithSet };
  * value-sorted default list + fetch; the host page just supplies `onSelect`.
  *
  * Started life as the portfolio add-card SelectStep; extracted here so watchlist,
- * alerts, marketplace, drop-calc, compare… all get the identical picker instead
- * of each rolling its own. Render it inside a Dialog/Sheet (the header uses
- * DialogTitle for a11y). Multi-pick surfaces pass `selectedIds` + `onSelect`
- * that toggles (the form highlights selected rows and stays open).
+ * alerts, marketplace, and compare all get the identical picker instead of each
+ * rolling its own. Render it inside a Dialog/Sheet (the header uses DialogTitle
+ * for a11y). Multi-pick surfaces pass an `isSelected` predicate + an `onSelect`
+ * that toggles (the form highlights selected rows with a check and stays open).
+ * (drop-calc stays bespoke — its picker is set-scoped for the per-set drop calc.)
  */
 export function CardPickerForm({
   onSelect,
@@ -89,7 +90,6 @@ export function CardPickerForm({
       return;
     }
 
-     
     setLoading(true);
 
     const timer = window.setTimeout(
