@@ -27,10 +27,13 @@ export type { CardWithSet };
 export function CardPickerForm({
   onSelect,
   selectedIds,
+  showHeader = true,
 }: {
   onSelect: (card: CardWithSet) => void;
   /** Multi-pick mode: ids already chosen — rows render selected + onSelect toggles. */
   selectedIds?: ReadonlySet<number>;
+  /** Hide the built-in "เลือกการ์ด" header when the host has its own (alerts). */
+  showHeader?: boolean;
 }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<CardWithSet[]>([]);
@@ -146,6 +149,7 @@ export function CardPickerForm({
       clearAllFilters={clearAllFilters}
       onSelectCard={onSelect}
       selectedIds={selectedIds}
+      showHeader={showHeader}
     />
   );
 }

@@ -1,16 +1,17 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useCardSearch } from "@/hooks/use-card-search";
+import {
+  CardPickerForm,
+  type CardWithSet,
+} from "@/components/shared/card-picker-form";
 import { cn } from "@/lib/utils";
 import { CARD_BG } from "@/lib/constants/ui";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
-import { Search, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 export type SelectedCard = {
   id?: number;
@@ -35,8 +36,18 @@ export function StepCardSelect({
   onNext,
 }: StepCardSelectProps) {
   const lang = useUIStore((s) => s.language);
-  const { query, setQuery, results } = useCardSearch({ limit: 20, debounceMs: 300 });
-  const [showResults, setShowResults] = useState(false);
+
+  const handlePick = (c: CardWithSet) => {
+    onSelect({
+      cardCode: c.cardCode,
+      nameJp: c.nameJp,
+      nameEn: c.nameEn ?? null,
+      rarity: c.rarity ?? "",
+      imageUrl: c.imageUrl ?? null,
+      latestPriceJpy: c.latestPriceJpy ?? null,
+      latestPriceThb: c.latestPriceThb ?? null,
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -47,83 +58,17 @@ export function StepCardSelect({
         </p>
       </div>
 
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setShowResults(true);
-          }}
-          onFocus={() => setShowResults(true)}
-          placeholder={t(lang, "mktSelectSearchPlaceholder")}
-          className="pl-9"
-          autoComplete="off"
-        />
+      {/* Central card picker (owns its own search + filter + list). Inline wizard
+          step → showHeader={false} (the step already has its own heading above,
+          and DialogTitle can't render outside a Dialog). Bounded-height flex-col
+          so the list's flex-1 overflow-y-auto scrolls internally instead of
+          pushing the Next button off-screen. */}
+      <div
+        className="flex flex-col overflow-hidden rounded-lg border border-hair"
+        style={{ height: "min(28rem, 60dvh)" }}
+      >
+        <CardPickerForm onSelect={handlePick} showHeader={false} />
       </div>
-
-      {showResults && query.trim().length >= 2 && (
-        <div className="max-h-80 overflow-auto rounded-lg border">
-          {results.length === 0 ? (
-            <p className="p-4 text-center text-sm text-muted-foreground">
-              {t(lang, "mktSelectNoResults")}
-            </p>
-          ) : (
-            results.map((c) => (
-              <button
-                key={c.cardCode}
-                type="button"
-                onClick={() => {
-                  onSelect({
-                    cardCode: c.cardCode,
-                    nameJp: c.nameJp,
-                    nameEn: c.nameEn ?? null,
-                    rarity: c.rarity ?? "",
-                    imageUrl: c.imageUrl ?? null,
-                    latestPriceJpy: c.latestPriceJpy ?? null,
-                    latestPriceThb: c.latestPriceThb ?? null,
-                  });
-                  setShowResults(false);
-                }}
-                className={cn(
-                  "flex w-full items-center gap-3 px-3 py-2 text-left transition-colors hover:bg-muted",
-                  selected?.cardCode === c.cardCode && "bg-primary/5"
-                )}
-              >
-                <div className={cn("size-10 shrink-0 overflow-hidden rounded-sm", CARD_BG)}>
-                  {c.imageUrl ? (
-                    <Image
-                      src={c.imageUrl}
-                      alt=""
-                      width={40}
-                      height={40}
-                      className="size-full object-contain"
-                    />
-                  ) : (
-                    <span className="flex size-full items-center justify-center text-overlay text-muted-foreground">
-                      N/A
-                    </span>
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">
-                    {c.nameEn ?? c.nameJp}
-                  </p>
-                  <p className="text-meta">
-                    {c.cardCode}
-                    {c.rarity && ` · ${c.rarity}`}
-                  </p>
-                </div>
-                {c.latestPriceJpy != null && (
-                  <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
-                    ¥{c.latestPriceJpy.toLocaleString()}
-                  </span>
-                )}
-              </button>
-            ))
-          )}
-        </div>
-      )}
 
       {selected && (
         <div className="rounded-lg border bg-muted/30 p-4">

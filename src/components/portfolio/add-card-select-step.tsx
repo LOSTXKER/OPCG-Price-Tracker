@@ -53,6 +53,7 @@ export function SelectStep({
   clearAllFilters,
   onSelectCard,
   selectedIds,
+  showHeader = true,
 }: {
   query: string
   setQuery: (q: string) => void
@@ -76,6 +77,8 @@ export function SelectStep({
   onSelectCard: (card: CardWithSet) => void
   /** Multi-pick mode: chosen ids → rows render selected (Check + highlight). */
   selectedIds?: ReadonlySet<number>
+  /** Hide the built-in DialogHeader when the host supplies its own (alerts). */
+  showHeader?: boolean
 }) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
@@ -84,10 +87,12 @@ export function SelectStep({
 
   return (
     <>
-      <DialogHeader className="border-b border-hair px-5 pt-5 pb-4">
-        <DialogTitle>{t(lang, "addCardToPortfolio")}</DialogTitle>
-        <DialogDescription>{t(lang, "addCardToPortfolioDesc")}</DialogDescription>
-      </DialogHeader>
+      {showHeader && (
+        <DialogHeader className="border-b border-hair px-5 pt-5 pb-4">
+          <DialogTitle>{t(lang, "addCardToPortfolio")}</DialogTitle>
+          <DialogDescription>{t(lang, "addCardToPortfolioDesc")}</DialogDescription>
+        </DialogHeader>
+      )}
 
       {/* Search + filter controls */}
       <div className="space-y-2 border-b border-hair px-4 pt-3 pb-3">
