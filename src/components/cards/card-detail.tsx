@@ -513,7 +513,7 @@ export function CardDetail({
         </div>
 
         {/* COL 2 — identity + price instrument (mobile order 2 · desktop center) */}
-        <div id="overview" className="order-2 min-w-0 scroll-mt-[7.75rem] md:scroll-mt-[10.5rem] lg:order-none lg:col-start-2 lg:row-start-1">
+        <div id="overview" className="order-2 min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)] lg:order-none lg:col-start-2 lg:row-start-1">
           {/* identity — name is now a proper title beside the hero image */}
           <div className="min-w-0">
             <div className="flex items-center gap-3">
@@ -751,7 +751,7 @@ export function CardDetail({
       <nav
         ref={navRef}
         aria-label={t(displayLang, "cardSectionsNav")}
-        className="ease-chrome sticky top-14 z-30 mt-6 bg-background shadow-[inset_0_-1px_0_0_var(--p-hair)] md:top-[6.25rem]"
+        className="ease-chrome sticky top-[var(--chrome-h)] z-30 mt-6 bg-background shadow-[inset_0_-1px_0_0_var(--p-hair)]"
       >
         <div className="no-sb relative flex gap-5 overflow-x-auto">
           {TABS.map((tab) => (
@@ -868,12 +868,12 @@ export function CardDetail({
           right column. Not sticky — scrolls with the page. <lg stacks. ───────── */}
       <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_360px]">
         {/* ROW 1 LEFT — recent sales */}
-        <section id="sources" className="min-w-0 scroll-mt-[7.75rem] md:scroll-mt-[10.5rem]">
+        <section id="sources" className="min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)]">
           <RecentSales sales={saleHistory} isSample currency={currency} lang={displayLang} />
         </section>
 
         {/* ROW 1 RIGHT — card info (specs + effect) */}
-        <aside id="specs" className="min-w-0 scroll-mt-[7.75rem] md:scroll-mt-[10.5rem]">
+        <aside id="specs" className="min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)]">
           <div className="lg:pl-8">
             <SectionHead title={t(displayLang, "cardInfo")} />
             <CardDetailSpecs card={card} lang={displayLang} />
@@ -895,7 +895,7 @@ export function CardDetail({
 
       <div className="mt-14 grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_360px]">
         {/* ROW 2 LEFT — Meecard asks */}
-        <section id="market" className="min-w-0 scroll-mt-[7.75rem] md:scroll-mt-[10.5rem]">
+        <section id="market" className="min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)]">
           <MeecardAsksRail
             cardId={card.id}
             cardCode={card.cardCode}
@@ -922,7 +922,7 @@ export function CardDetail({
 
       {/* ── full width: other versions + other cards in the set ─────────────── */}
       {siblings.length > 0 && (
-        <section id="versions" className="mt-12 scroll-mt-[7.75rem] md:scroll-mt-[10.5rem]">
+        <section id="versions" className="mt-12 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)]">
           <SectionHead title={`${t(displayLang, "otherVersions")} (${siblings.length})`} />
           <SiblingGrid siblings={siblings} lang={displayLang} cols={3} smCols={6} mainCardCode={card.cardCode} />
         </section>
