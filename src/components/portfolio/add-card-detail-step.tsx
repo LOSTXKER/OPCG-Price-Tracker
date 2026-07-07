@@ -45,7 +45,7 @@ export function DetailStep({
 
   return (
     <>
-      <DialogHeader className="border-b border-[var(--p-hair)] px-5 pt-5 pb-4">
+      <DialogHeader className="border-b border-hair px-5 pt-5 pb-4">
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
@@ -61,7 +61,7 @@ export function DetailStep({
       </DialogHeader>
 
       <div className="flex-1 overflow-y-auto px-5 py-5">
-        <div className="flex items-center gap-3 rounded-xl border border-[var(--p-hair)] bg-muted/20 p-3">
+        <div className="flex items-center gap-3 rounded-xl border border-hair bg-muted/20 p-3">
           <div className="relative aspect-[63/88] w-14 shrink-0 overflow-hidden rounded-lg bg-muted/60">
             {card.imageUrl ? (
               <Image
@@ -125,7 +125,7 @@ export function DetailStep({
                 }
                 value={purchasePrice}
                 onChange={(e) => setPurchasePrice(e.target.value)}
-                className="h-10 w-full rounded-lg border border-[var(--p-hair)] bg-background pl-7 pr-4 text-sm tabular-nums outline-none placeholder:text-muted-foreground/35 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
+                className="h-10 w-full rounded-lg border border-hair bg-background pl-7 pr-4 text-sm tabular-nums outline-none placeholder:text-muted-foreground/35 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
               />
             </div>
             <p className="mt-1.5 text-meta text-muted-foreground/60">
@@ -134,7 +134,7 @@ export function DetailStep({
           </div>
 
           {(purchasePrice.trim() !== "" || card.latestPriceJpy != null) && (
-            <div className="rounded-xl border border-[var(--p-hair)] bg-muted/20 px-4 py-3">
+            <div className="rounded-xl border border-hair bg-muted/20 px-4 py-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">{t(lang, "totalValue")}</span>
                 <span className="tabular-nums text-lg font-bold">
@@ -151,7 +151,7 @@ export function DetailStep({
         </div>
       </div>
 
-      <div className="border-t border-[var(--p-hair)] px-5 py-4">
+      <div className="border-t border-hair px-5 py-4">
         <Button
           className="w-full gap-2"
           size="lg"

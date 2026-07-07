@@ -113,7 +113,7 @@ export function OrderCard({
 
       {/* Actions row */}
       {actions && (
-        <div className="mt-3 flex items-center justify-end gap-2 border-t border-[var(--p-hair)] pt-3">
+        <div className="mt-3 flex items-center justify-end gap-2 border-t border-hair pt-3">
           <Link
             href={`/messages/${order.listing.id}`}
             className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground"

@@ -355,7 +355,7 @@ function AchievementStrip({
         </div>
       ))}
       {remaining > 0 && (
-        <span className="shrink-0 rounded-full border border-dashed border-[var(--p-hair)] bg-background px-2 py-1 text-micro text-muted-foreground">
+        <span className="shrink-0 rounded-full border border-dashed border-hair bg-background px-2 py-1 text-micro text-muted-foreground">
           +{remaining}
         </span>
       )}

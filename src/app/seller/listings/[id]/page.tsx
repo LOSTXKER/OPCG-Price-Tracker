@@ -319,7 +319,7 @@ export default function SellerEditListingPage() {
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
           placeholder={t(lang, "sellListingDescriptionPlaceholder")}
-          className="w-full rounded-lg border border-[var(--p-hair)] bg-background px-3 py-2 text-sm motion-base placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          className="w-full rounded-lg border border-hair bg-background px-3 py-2 text-sm motion-base placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         />
       </Surface>
 
@@ -334,7 +334,7 @@ export default function SellerEditListingPage() {
                 alt={`Photo ${i + 1}`}
                 width={80}
                 height={80}
-                className="rounded-lg border border-[var(--p-hair)] object-cover"
+                className="rounded-lg border border-hair object-cover"
               />
               <button
                 type="button"
@@ -346,7 +346,7 @@ export default function SellerEditListingPage() {
             </div>
           ))}
           {photos.length < 5 && (
-            <label className="ease-chrome flex h-[80px] w-[80px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-[var(--p-hair)] text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground">
+            <label className="ease-chrome flex h-[80px] w-[80px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-hair text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground">
               {uploadingPhoto ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
@@ -398,7 +398,7 @@ export default function SellerEditListingPage() {
                       );
                     }
                   }}
-                  className="rounded border-[var(--p-hair)]"
+                  className="rounded border-hair"
                 />
                 {t(lang, opt.labelKey)}
               </label>

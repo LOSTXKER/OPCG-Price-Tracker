@@ -365,7 +365,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="border-[var(--p-hair)] text-muted-foreground space-y-2 border-t px-5 py-4 text-sm">
+            <div className="border-hair text-muted-foreground space-y-2 border-t px-5 py-4 text-sm">
               <div className="flex items-start gap-2">
                 <Truck className="mt-0.5 size-4 flex-shrink-0" />
                 <span>

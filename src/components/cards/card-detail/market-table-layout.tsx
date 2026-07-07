@@ -13,7 +13,7 @@ export const marketFeedTableScroll =
 
 /** Mobile list viewport — ~5 taller rows; hint overlay instead of scrollbar. */
 export const marketFeedListScroll =
-  "no-sb max-h-[24rem] overflow-y-auto overscroll-y-contain divide-y divide-[var(--p-hair)] px-1"
+  "no-sb max-h-[24rem] overflow-y-auto overscroll-y-contain divide-y divide-hair px-1"
 
 export const marketFeedStickyHead =
   "sticky top-0 z-[1] bg-background shadow-[inset_0_-1px_0_0_var(--p-hair)]"

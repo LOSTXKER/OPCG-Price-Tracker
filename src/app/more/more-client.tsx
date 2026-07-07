@@ -165,7 +165,7 @@ export default function MoreClient() {
             <div className="flex gap-2 p-4">
               <Link
                 href="/login"
-                className="flex-1 rounded-lg border border-[var(--p-hair)] py-2.5 text-center text-sm font-medium motion-base hover:bg-muted/70"
+                className="flex-1 rounded-lg border border-hair py-2.5 text-center text-sm font-medium motion-base hover:bg-muted/70"
               >
                 {t(language, "login")}
               </Link>

@@ -33,7 +33,7 @@ export function RankingsTab({
 
   return (
     <Surface variant="panel" className="overflow-hidden">
-      <div className="border-b border-[var(--p-hair)] px-4 py-3.5">
+      <div className="border-b border-hair px-4 py-3.5">
         <h2 className="text-h3">{t(lang, "honeyLeaderboard")}</h2>
       </div>
       {leaderboard.length === 0 ? (
@@ -50,7 +50,7 @@ export function RankingsTab({
             ariaLabel={t(lang, "honeyLeaderboard")}
           />
           {/* Mobile list */}
-          <div className="divide-y divide-[var(--p-hair)] sm:hidden">
+          <div className="divide-y divide-hair sm:hidden">
             {sorted.map((user, i) => (
               <div key={user.id} className="flex items-center gap-3 px-4 py-3">
                 <span
@@ -92,7 +92,7 @@ export function RankingsTab({
           {/* Desktop table */}
           <div className="hidden sm:block">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-[var(--p-hair)] bg-muted/30">
+              <thead className="border-b border-hair bg-muted/30">
                 <tr className="text-eyebrow text-muted-foreground/70">
                   <th className="w-12 px-4 py-2.5">#</th>
                   <th className="px-4 py-2.5">{t(lang, "anonymous")}</th>
@@ -100,7 +100,7 @@ export function RankingsTab({
                   <th className="hidden px-4 py-2.5 text-right sm:table-cell">{t(lang, "days")}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--p-hair)]">
+              <tbody className="divide-y divide-hair">
                 {sorted.map((user, i) => (
                   <tr key={user.id} className="ease-chrome hover:bg-muted/70">
                     <td className="px-4 py-2.5">

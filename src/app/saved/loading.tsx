@@ -9,7 +9,7 @@ export default function SavedLoading() {
 
       <Surface variant="panel" className="overflow-hidden">
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-4 border-b border-[var(--p-hair)] px-4 py-3 last:border-0">
+          <div key={i} className="flex items-center gap-4 border-b border-hair px-4 py-3 last:border-0">
             <Skeleton className="size-10 rounded" />
             <div className="flex-1 space-y-1.5">
               <Skeleton className="h-4 w-36" />

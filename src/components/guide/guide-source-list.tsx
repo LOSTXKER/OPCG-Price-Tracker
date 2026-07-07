@@ -21,7 +21,7 @@ export function GuideSourceList({ heading, sources }: { heading: string; sources
   return (
     <section className="space-y-3">
       <h2 className="text-h2">{heading}</h2>
-      <Surface variant="outline" className="divide-y divide-[var(--p-hair)] text-sm">
+      <Surface variant="outline" className="divide-y divide-hair text-sm">
         {sources.map((src) => {
           const inner = (
             <>

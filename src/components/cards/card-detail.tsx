@@ -411,7 +411,7 @@ export function CardDetail({
   // Ghost + hairline secondary CTA (ลงขาย / เพิ่มพอร์ต) — lighter than the gold
   // buy so the one gold element stays dominant.
   const secondaryBtn =
-    "ease-chrome ring-inset flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-transparent text-sm font-semibold text-foreground ring-1 ring-[var(--p-hair)] hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
+    "ease-chrome ring-inset flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-transparent text-sm font-semibold text-foreground ring-1 ring-hair hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
 
   const handleShare = async () => {
     const url = typeof window !== "undefined" ? window.location.href : ""
@@ -584,7 +584,7 @@ export function CardDetail({
                 const hint = statToDisplayValue(d.value, currency)
                 return (
                   <Fragment key={tier.key}>
-                    {dividerBefore && <span aria-hidden className="mx-0.5 w-px shrink-0 self-stretch bg-[var(--p-hair)]" />}
+                    {dividerBefore && <span aria-hidden className="mx-0.5 w-px shrink-0 self-stretch bg-hair" />}
                     <button
                       type="button"
                       ref={active ? gradeActiveRef : undefined}
@@ -961,7 +961,7 @@ export function CardDetail({
               cardName={displayName}
               variant="outline"
               iconOnly
-              className="surface-1 ring-inset flex size-11 shrink-0 items-center justify-center rounded-xl ring-1 ring-[var(--p-hair)] text-muted-foreground [&_svg]:size-5"
+              className="surface-1 ring-inset flex size-11 shrink-0 items-center justify-center rounded-xl ring-1 ring-hair text-muted-foreground [&_svg]:size-5"
             />
             <a
               href="#market"

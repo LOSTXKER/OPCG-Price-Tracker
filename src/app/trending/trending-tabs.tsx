@@ -109,7 +109,7 @@ const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }:
   return (
     <tr
       key={card.cardCode}
-      className="border-b border-[var(--p-hair)] ease-chrome transition-colors hover:bg-muted/70"
+      className="border-b border-hair ease-chrome transition-colors hover:bg-muted/70"
     >
       <td className="px-4 py-2.5 text-center tabular-nums text-muted-foreground">
         {rank}
@@ -263,7 +263,7 @@ export function TrendingTabs({ data }: { data: TrendingData }) {
         {cards.length === 0 ? (
           <p className="py-12 text-center text-sm text-muted-foreground">{t(lang, "noData")}</p>
         ) : (
-          <div className="divide-y divide-[var(--p-hair)]">
+          <div className="divide-y divide-hair">
             {cards.map((card, i) => (
               <MobileTrendingItem
                 key={card.cardCode}
@@ -290,7 +290,7 @@ export function TrendingTabs({ data }: { data: TrendingData }) {
               <col className="hidden w-24 sm:table-column" />
             </colgroup>
             <thead>
-              <tr className="border-b border-[var(--p-hair)] text-eyebrow">
+              <tr className="border-b border-hair text-eyebrow">
                 <th className="px-4 py-3 text-left">#</th>
                 <th className="px-4 py-3 text-left">{t(lang, "card")}</th>
                 <th className="px-4 py-3 text-left">{t(lang, "set")}</th>

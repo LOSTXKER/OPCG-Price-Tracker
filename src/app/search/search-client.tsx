@@ -120,7 +120,7 @@ function SearchContent({
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder={t(lang, "searchLong")}
-            className="h-12 w-full rounded-l-xl border border-r-0 border-[var(--p-hair)] bg-card pl-12 pr-11 text-base outline-none ease-chrome transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-2 focus:ring-primary/20"
+            className="h-12 w-full rounded-l-xl border border-r-0 border-hair bg-card pl-12 pr-11 text-base outline-none ease-chrome transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-2 focus:ring-primary/20"
           />
           {inputValue && (
             <button
@@ -160,7 +160,7 @@ function SearchContent({
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 border-t border-[var(--p-hair)] bg-popover px-4 py-2.5">
+          <div className="flex flex-wrap items-center gap-2 border-t border-hair bg-popover px-4 py-2.5">
             {sets.length > 0 && (
               <div className="min-w-0 basis-full sm:basis-auto sm:w-[220px]">
                 <SetPicker
@@ -251,13 +251,13 @@ function SearchContent({
             ))}
           </CardGrid>
         ) : (
-          <Surface variant="panel" padding="none" className="divide-y divide-[var(--p-hair)]">
-            <div className="divide-y divide-[var(--p-hair)] sm:hidden">
+          <Surface variant="panel" padding="none" className="divide-y divide-hair">
+            <div className="divide-y divide-hair sm:hidden">
               {Array.from({ length: 8 }).map((_, i) => (
                 <MobileCardSkeleton key={i} />
               ))}
             </div>
-            <div className="hidden divide-y divide-[var(--p-hair)] sm:block">
+            <div className="hidden divide-y divide-hair sm:block">
               {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="flex items-center gap-4 px-4 py-3">
                   <Skeleton className="size-12 shrink-0 rounded-lg" />

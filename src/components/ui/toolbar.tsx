@@ -94,7 +94,7 @@ export function ToolbarSearch({
   return (
     <div
       className={cn(
-        "flex items-center gap-1.5 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted/30 motion-base",
+        "flex items-center gap-1.5 rounded-lg border border-transparent dark:border-hair bg-muted/30 motion-base",
         size === "sm" ? "px-3 py-1.5" : "px-3 py-2",
         containerClassName,
       )}

@@ -27,7 +27,7 @@ export function Pagination({
   if (totalPages <= 1) return null
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--p-hair)] px-4 py-3">
+    <div className="flex flex-wrap items-center justify-between gap-2 border-t border-hair px-4 py-3">
       <p className="hidden text-meta sm:block">
         {t(lang, "showingOf")} {formatCount((page - 1) * pageSize + 1)}-{formatCount(Math.min(page * pageSize, total))} {t(lang, "from")} {formatCount(total)} {t(lang, "card")}
       </p>

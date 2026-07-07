@@ -287,7 +287,7 @@ export function CardsBrowser({
             </Badge>
           }
           actions={
-            <div className="flex items-center gap-1 rounded-lg border border-[var(--p-hair)] p-0.5">
+            <div className="flex items-center gap-1 rounded-lg border border-hair p-0.5">
               <button
                 type="button"
                 onClick={() => setViewMode("table")}

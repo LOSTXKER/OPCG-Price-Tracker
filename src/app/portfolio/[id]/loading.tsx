@@ -20,7 +20,7 @@ export default function PortfolioDetailLoading() {
           <Skeleton className="h-3 w-24" />
           <Skeleton className="h-10 w-56" />
         </div>
-        <div className="grid grid-cols-2 gap-4 border-t border-[var(--p-hair)] pt-4 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 border-t border-hair pt-4 sm:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="space-y-2">
               <Skeleton className="h-3 w-14" />

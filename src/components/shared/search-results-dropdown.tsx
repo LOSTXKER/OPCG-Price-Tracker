@@ -26,7 +26,7 @@ export function SearchResultsDropdown({
 }) {
   const lang = useUIStore((s) => s.language)
   return (
-    <div className="absolute top-full right-0 left-0 z-50 mt-1 overflow-hidden rounded-xl border border-[var(--p-hair)] bg-popover shadow-lg">
+    <div className="absolute top-full right-0 left-0 z-50 mt-1 overflow-hidden rounded-xl border border-hair bg-popover shadow-lg">
       <div className="max-h-80 overflow-y-auto">
         {loading && results.length === 0 && (
           <div className="px-4 py-3 text-sm text-muted-foreground">

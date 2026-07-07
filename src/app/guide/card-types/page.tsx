@@ -371,7 +371,7 @@ export default async function CardTypesPage() {
           {t(lang, "guideTypeAnatomyDesc")}
         </p>
         <Surface variant="outline" className="overflow-hidden">
-          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-eyebrow">
+          <div className="border-b border-hair px-4 py-2 text-eyebrow">
             {t(lang, "guideTypeAnatomyCaption")}
           </div>
           <div className="relative mx-auto max-w-[280px] p-6">

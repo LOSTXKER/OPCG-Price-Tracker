@@ -17,9 +17,9 @@ export function PortfolioAllocationPanel({ allocation }: { allocation: Allocatio
   // Flat section — whitespace + hairline separation, no panel box (matches the
   // home/card-detail editorial grammar).
   return (
-    <div className="border-t border-[var(--p-hair)] pt-5">
+    <div className="border-t border-hair pt-5">
       <p className="text-eyebrow mb-3">{t(lang, "allocation")}</p>
-      <div className="divide-y divide-[var(--p-hair)]">
+      <div className="divide-y divide-hair">
         {allocation.map((slice, i) => {
           const displayValue = formatDisplayValue(
             jpyToDisplayValue(slice.value, currency),

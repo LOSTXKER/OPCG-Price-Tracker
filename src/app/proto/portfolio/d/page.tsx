@@ -201,7 +201,7 @@ export default function PortfolioProtoD() {
             </p>
 
             {/* stats live WITH the number — not a separate slab */}
-            <dl className="mt-6 space-y-2 border-t border-[var(--p-hair)] pt-4 text-sm">
+            <dl className="mt-6 space-y-2 border-t border-hair pt-4 text-sm">
               <div className="flex items-center justify-between">
                 <dt className="text-muted-foreground">ต้นทุน</dt>
                 <dd className="font-price tabular-nums">{money(TOTALS.cost)}</dd>
@@ -263,14 +263,14 @@ export default function PortfolioProtoD() {
         </div>
 
         {/* ═ Context band — movers + by-game (thin, one line) ══════════ */}
-        <div className="mt-8 flex flex-col gap-4 border-y border-[var(--p-hair)] py-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="mt-8 flex flex-col gap-4 border-y border-hair py-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex min-w-0 items-center gap-3">
             <span className="text-eyebrow shrink-0">มูฟเวอร์วันนี้</span>
             <div className="no-sb flex min-w-0 items-center gap-2 overflow-x-auto">
               {movers.map(({ h }) => (
                 <span
                   key={h.code}
-                  className="flex shrink-0 items-center gap-2 rounded-full py-1 pl-1 pr-3 ring-1 ring-[var(--p-hair)]"
+                  className="flex shrink-0 items-center gap-2 rounded-full py-1 pl-1 pr-3 ring-1 ring-hair"
                 >
                   <img
                     src={h.img}
@@ -296,7 +296,7 @@ export default function PortfolioProtoD() {
                   className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs transition-colors ${
                     active
                       ? "bg-primary/15 text-primary"
-                      : "text-muted-foreground ring-1 ring-[var(--p-hair)] hover:text-foreground"
+                      : "text-muted-foreground ring-1 ring-hair hover:text-foreground"
                   }`}
                 >
                   <span
@@ -376,7 +376,7 @@ export default function PortfolioProtoD() {
         <div className="mt-3 hidden sm:block">
           <table className="w-full border-collapse">
             <thead className="sticky top-0 z-10 bg-background">
-              <tr className="border-b border-[var(--p-hair)]">
+              <tr className="border-b border-hair">
                 <th className="py-2.5 pr-3 text-left text-eyebrow">การ์ด</th>
                 <th className="py-2.5 pr-3 text-left text-eyebrow">เกม</th>
                 <th className="py-2.5 pr-3 text-right text-eyebrow">ต้นทุน</th>
@@ -398,7 +398,7 @@ export default function PortfolioProtoD() {
                 return (
                   <tr
                     key={h.code}
-                    className="group border-b border-[var(--p-hair)] hover:bg-muted/40"
+                    className="group border-b border-hair hover:bg-muted/40"
                   >
                     <td className="py-2.5 pr-3">
                       <div className="flex items-center gap-2.5">
@@ -480,7 +480,7 @@ export default function PortfolioProtoD() {
         </div>
 
         {/* mobile list (<sm) */}
-        <div className="mt-3 divide-y divide-[var(--p-hair)] border-t border-[var(--p-hair)] sm:hidden">
+        <div className="mt-3 divide-y divide-hair border-t border-hair sm:hidden">
           {rows.map((h) => {
             const value = h.priceThb * h.qty
             return (

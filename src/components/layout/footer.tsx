@@ -78,7 +78,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="border-t border-[var(--p-hair)] bg-gradient-to-b from-transparent via-muted/10 to-muted/20">
+    <footer className="border-t border-hair bg-gradient-to-b from-transparent via-muted/10 to-muted/20">
       {/* pb clears the fixed mobile bottom-nav (md+ has no bottom-nav). */}
       <div className="mx-auto max-w-7xl px-4 pt-10 pb-28 md:px-6 md:py-12 md:pb-12 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-12">
@@ -100,10 +100,10 @@ export function Footer() {
             </p>
 
             <div className="mt-5 flex flex-wrap items-center gap-1.5">
-              <span className="inline-flex items-center rounded-full border border-[var(--p-hair)] bg-background/60 px-2.5 py-1 text-micro text-muted-foreground">
+              <span className="inline-flex items-center rounded-full border border-hair bg-background/60 px-2.5 py-1 text-micro text-muted-foreground">
                 {t(lang, "footerLanguagesLine")}
               </span>
-              <span className="inline-flex items-center rounded-full border border-[var(--p-hair)] bg-background/60 px-2.5 py-1 text-micro text-muted-foreground">
+              <span className="inline-flex items-center rounded-full border border-hair bg-background/60 px-2.5 py-1 text-micro text-muted-foreground">
                 {t(lang, "footerCurrenciesLine")}
               </span>
             </div>
@@ -133,7 +133,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 flex flex-col gap-3 border-t border-[var(--p-hair)] pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-3 border-t border-hair pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-meta text-muted-foreground/70">
             &copy; {year} Meecard
           </p>

@@ -8,7 +8,7 @@ const SIZES = { sm: "size-9", md: "size-10", lg: "size-11" } as const
 const VARIANTS = {
   ghost: "text-muted-foreground hover:bg-muted hover:text-foreground",
   solid:
-    "border border-[var(--p-hair)] bg-card text-muted-foreground hover:bg-muted hover:text-foreground",
+    "border border-hair bg-card text-muted-foreground hover:bg-muted hover:text-foreground",
 } as const
 
 /**

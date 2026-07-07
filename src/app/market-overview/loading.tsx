@@ -28,7 +28,7 @@ export default function Loading() {
             <Skeleton className="h-3 w-full" />
           </div>
         </div>
-        <div className="grid grid-cols-3 divide-x divide-[var(--p-hair)] border-t border-[var(--p-hair)]">
+        <div className="grid grid-cols-3 divide-x divide-hair border-t border-hair">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="space-y-2 px-5 py-4">
               <Skeleton className="h-3 w-16" />

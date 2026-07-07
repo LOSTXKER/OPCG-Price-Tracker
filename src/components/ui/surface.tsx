@@ -26,7 +26,7 @@ const surfaceVariants = cva("ease-chrome", {
       xl: "p-6",
     },
     interactive: {
-      true: "hover:bg-muted/70 hover:border-[var(--p-hair)] focus-within:border-[var(--p-hair)]",
+      true: "hover:bg-muted/70 hover:border-hair focus-within:border-hair",
       false: "",
     },
   },
@@ -88,9 +88,9 @@ export const Surface = forwardRef<HTMLDivElement, SurfaceProps>(function Surface
         className={cn(surfaceVariants({ variant, padding: "none", interactive }), className)}
         {...props}
       >
-        {header && <div className="border-b border-[var(--p-hair)] px-5 py-4">{header}</div>}
+        {header && <div className="border-b border-hair px-5 py-4">{header}</div>}
         <div className={cn(surfaceVariants({ padding }))}>{children}</div>
-        {footer && <div className="border-t border-[var(--p-hair)] px-5 py-3">{footer}</div>}
+        {footer && <div className="border-t border-hair px-5 py-3">{footer}</div>}
       </Component>
     );
   }

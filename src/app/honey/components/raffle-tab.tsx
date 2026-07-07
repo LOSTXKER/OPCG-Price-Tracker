@@ -378,12 +378,12 @@ function MachineCard({
                 <img
                   src={machine.winner.avatarUrl}
                   alt={winnerName}
-                  className="size-9 shrink-0 rounded-full border border-[var(--p-hair)] object-cover"
+                  className="size-9 shrink-0 rounded-full border border-hair object-cover"
                 />
               ) : (
                 <div
                   aria-hidden="true"
-                  className="flex size-9 shrink-0 items-center justify-center rounded-full border border-transparent dark:border-[var(--p-hair)] bg-muted text-xs font-semibold text-muted-foreground"
+                  className="flex size-9 shrink-0 items-center justify-center rounded-full border border-transparent dark:border-hair bg-muted text-xs font-semibold text-muted-foreground"
                 >
                   {isAnonymous ? "?" : winnerName.slice(0, 1).toUpperCase()}
                 </div>

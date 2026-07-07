@@ -73,7 +73,7 @@ export function TabToolbar<F extends string, S extends string>({
                   "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
                   active
                     ? "border-primary/30 bg-primary/10 text-primary"
-                    : "border-[var(--p-hair)] bg-card/40 text-muted-foreground hover:border-border hover:text-foreground",
+                    : "border-hair bg-card/40 text-muted-foreground hover:border-border hover:text-foreground",
                 )}
               >
                 {Icon && <Icon className="mr-1 inline-block size-3" />}
@@ -91,7 +91,7 @@ export function TabToolbar<F extends string, S extends string>({
         <DropdownMenu>
           <DropdownMenuTrigger
             className={cn(
-              "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-transparent dark:border-[var(--p-hair)] bg-muted/40 px-3 py-1.5 text-xs font-medium text-foreground/80 transition-colors hover:border-border hover:text-foreground",
+              "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-transparent dark:border-hair bg-muted/40 px-3 py-1.5 text-xs font-medium text-foreground/80 transition-colors hover:border-border hover:text-foreground",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             )}
           >

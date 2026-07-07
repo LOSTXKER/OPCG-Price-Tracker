@@ -31,7 +31,7 @@ export function DesktopAssetsTable({
     <div className="hidden sm:block">
       <table className="w-full border-collapse text-left text-sm">
         <thead className="sticky top-0 z-10 bg-background/95 backdrop-blur">
-          <tr className="border-b border-[var(--p-hair)] text-eyebrow text-muted-foreground/60">
+          <tr className="border-b border-hair text-eyebrow text-muted-foreground/60">
             <th className="py-3 pr-3 font-medium">{t(lang, "card")}</th>
             <th className="py-3 pr-3 text-right font-medium">{t(lang, "price")}</th>
             <th className="py-3 pr-3 text-right font-medium">24h</th>

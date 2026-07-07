@@ -160,7 +160,7 @@ function NavContent({
       </nav>
 
       {/* Bottom actions */}
-      <div className={cn("space-y-1 border-t border-[var(--p-hair)] pt-3", collapsed && "flex flex-col items-center")}>
+      <div className={cn("space-y-1 border-t border-hair pt-3", collapsed && "flex flex-col items-center")}>
         <button
           type="button"
           onClick={onLogout}
@@ -247,7 +247,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          "hidden shrink-0 flex-col border-r border-[var(--p-hair)] bg-muted/10 transition-[width] duration-200 md:flex",
+          "hidden shrink-0 flex-col border-r border-hair bg-muted/10 transition-[width] duration-200 md:flex",
           collapsed ? "w-[60px]" : "w-56",
         )}
       >
@@ -289,7 +289,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           />
 
           {/* Theme + Collapse */}
-          <div className={cn("space-y-1 border-t border-[var(--p-hair)] pt-2", collapsed && "flex flex-col items-center")}>
+          <div className={cn("space-y-1 border-t border-hair pt-2", collapsed && "flex flex-col items-center")}>
             <ThemeToggle collapsed={collapsed} />
 
             <button
@@ -317,7 +317,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       {/* Content */}
       <div className="flex flex-1 flex-col overflow-y-auto">
         {/* Mobile Header */}
-        <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-[var(--p-hair)] bg-background/95 px-4 py-3 backdrop-blur-sm md:hidden">
+        <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-hair bg-background/95 px-4 py-3 backdrop-blur-sm md:hidden">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger render={<Button variant="ghost" size="icon-sm" />}>
               <Menu className="size-5" />

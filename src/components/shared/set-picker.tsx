@@ -267,7 +267,7 @@ export function SetPicker({
 
             {groupedSets.map((group) => (
               <div key={group.label}>
-                <div className="border-b border-[var(--p-hair)] bg-muted/40 px-3 py-1.5 text-eyebrow">
+                <div className="border-b border-hair bg-muted/40 px-3 py-1.5 text-eyebrow">
                   {group.label}
                   <span className="ml-1.5 text-muted-foreground/60">({group.items.length})</span>
                 </div>

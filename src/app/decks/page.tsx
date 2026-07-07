@@ -82,7 +82,7 @@ export default function DecksHubPage() {
     <div>
       <div className="mb-6 flex items-center justify-between gap-3">
         <h1 className="text-h1">{t(lang, "decksAndTools")}</h1>
-        <span className="shrink-0 rounded-full border border-transparent dark:border-[var(--p-hair)] bg-secondary px-3 py-1 text-micro uppercase tracking-wide text-muted-foreground">
+        <span className="shrink-0 rounded-full border border-transparent dark:border-hair bg-secondary px-3 py-1 text-micro uppercase tracking-wide text-muted-foreground">
           {currentGame}
         </span>
       </div>
@@ -100,7 +100,7 @@ export default function DecksHubPage() {
 
       <section className="mt-8">
         <h2 className="mb-3 text-h3">{t(lang, "myDecks")}</h2>
-        <div className="rounded-xl border border-dashed border-[var(--p-hair)] p-8 text-center">
+        <div className="rounded-xl border border-dashed border-hair p-8 text-center">
           <p className="text-meta">{t(lang, "comingSoon")}</p>
         </div>
       </section>

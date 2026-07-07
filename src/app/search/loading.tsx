@@ -12,7 +12,7 @@ export default function SearchLoading() {
         <div className="flex items-center gap-3 px-4 py-3">
           <Skeleton className="h-4 w-48" />
         </div>
-        <div className="flex items-center gap-2 border-t border-[var(--p-hair)] bg-muted/20 px-4 py-2.5">
+        <div className="flex items-center gap-2 border-t border-hair bg-muted/20 px-4 py-2.5">
           <Skeleton className="h-8 w-40 rounded-lg" />
           <Skeleton className="h-8 w-28 rounded-lg" />
           <Skeleton className="ml-auto h-8 w-16 rounded-lg" />
@@ -20,7 +20,7 @@ export default function SearchLoading() {
       </Surface>
 
       {/* Results table */}
-      <Surface variant="panel" className="divide-y divide-[var(--p-hair)] overflow-hidden">
+      <Surface variant="panel" className="divide-y divide-hair overflow-hidden">
         {Array.from({ length: 8 }).map((_, i) => (
           <div key={i} className="flex items-center gap-4 px-4 py-3">
             <Skeleton className="size-10 shrink-0 rounded-md" />

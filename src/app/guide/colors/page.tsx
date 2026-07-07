@@ -295,10 +295,10 @@ export default async function ColorsPage() {
         </p>
 
         <Surface variant="outline" className="overflow-hidden">
-          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-eyebrow">
+          <div className="border-b border-hair px-4 py-2 text-eyebrow">
             {t(lang, "guideColorCompareCaption")}
           </div>
-          <div className="grid grid-cols-2 divide-x divide-[var(--p-hair)]">
+          <div className="grid grid-cols-2 divide-x divide-hair">
             <div className="p-5 text-center">
               <div className="mx-auto flex size-10 items-center justify-center rounded-full bg-red-500">
                 <span className="text-sm font-bold text-white">R</span>
@@ -327,7 +327,7 @@ export default async function ColorsPage() {
           </div>
         </Surface>
 
-        <div className="rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
+        <div className="rounded-xl border border-transparent dark:border-hair bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
           <p className="font-semibold text-foreground">
             {t(lang, "guideColorExampleHeading")}
           </p>

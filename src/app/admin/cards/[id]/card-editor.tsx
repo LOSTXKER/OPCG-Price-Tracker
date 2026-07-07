@@ -220,7 +220,7 @@ export function CardEditor({ card }: { card: CardData }) {
       <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
         {/* Image Preview */}
         <div className="space-y-4">
-          <div className="overflow-hidden rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-muted/20">
+          <div className="overflow-hidden rounded-xl border border-transparent dark:border-hair bg-muted/20">
             {currentImage ? (
               <Image
                 src={currentImage}
@@ -249,7 +249,7 @@ export function CardEditor({ card }: { card: CardData }) {
                       "overflow-hidden rounded border motion-base",
                       currentImage === c.url
                         ? "border-primary ring-2 ring-primary/30"
-                        : "border-[var(--p-hair)] hover:border-primary/50",
+                        : "border-hair hover:border-primary/50",
                     )}
                     title={`_p${c.pIndex}`}
                   >
@@ -343,7 +343,7 @@ export function CardEditor({ card }: { card: CardData }) {
                     {card.prices.map((p) => (
                       <tr
                         key={p.id}
-                        className="border-b border-[var(--p-hair)]"
+                        className="border-b border-hair"
                       >
                         <td className="py-1">
                           {new Date(p.scrapedAt).toLocaleDateString(

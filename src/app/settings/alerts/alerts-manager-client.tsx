@@ -316,7 +316,7 @@ function FilteredEmpty({
   onCreate: () => void;
 }) {
   return (
-    <div className="rounded-xl border border-dashed border-[var(--p-hair)] bg-card/50 px-6 py-10 text-center">
+    <div className="rounded-xl border border-dashed border-hair bg-card/50 px-6 py-10 text-center">
       <p className="text-sm text-muted-foreground">{t(lang, "noActiveAlerts")}</p>
       <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
         <Button size="sm" onClick={onShowAll} className="rounded-full">
@@ -334,7 +334,7 @@ function FilteredEmpty({
 function ActiveEmpty({ onCreate }: { onCreate: () => void }) {
   const lang = useUIStore((s) => s.language);
   return (
-    <div className="rounded-xl border border-dashed border-[var(--p-hair)] bg-card/50 px-6 py-10">
+    <div className="rounded-xl border border-dashed border-hair bg-card/50 px-6 py-10">
       <KumaEmptyState
         variant="minimal"
         icon={Bell}

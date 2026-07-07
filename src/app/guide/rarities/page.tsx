@@ -417,10 +417,10 @@ export default async function RaritiesPage() {
 
         {/* Price comparison example */}
         <Surface variant="outline" className="overflow-hidden">
-          <div className="border-b border-[var(--p-hair)] px-4 py-2 text-eyebrow">
+          <div className="border-b border-hair px-4 py-2 text-eyebrow">
             {t(lang, "guideRarityCompareTitle")}
           </div>
-          <div className="grid grid-cols-1 divide-y divide-[var(--p-hair)] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          <div className="grid grid-cols-1 divide-y divide-hair sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {buildParallelComparison(lang).map((item) => (
               <div key={item.label} className="p-4 text-center">
                 <p className="text-eyebrow">{item.label}</p>
@@ -438,7 +438,7 @@ export default async function RaritiesPage() {
           {buildParallelTiers(lang).map((p) => (
             <div
               key={p.code}
-              className="flex items-center gap-2 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted px-3 py-1.5"
+              className="flex items-center gap-2 rounded-lg border border-transparent dark:border-hair bg-muted px-3 py-1.5"
             >
               <span
                 className="size-2.5 rounded-full"
@@ -534,7 +534,7 @@ export default async function RaritiesPage() {
         </Surface>
 
         {/* อธิบาย SEC vs Parallel */}
-        <div className="rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
+        <div className="rounded-xl border border-transparent dark:border-hair bg-muted/20 p-5 text-sm leading-relaxed text-muted-foreground">
           <p className="font-semibold text-foreground">{t(lang, "guideRarityBoxSecVsParallelHeading")}</p>
           <p className="mt-2">
             {t(lang, "guideRarityBoxSecVsParallelP1a")}{" "}

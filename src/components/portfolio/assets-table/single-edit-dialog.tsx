@@ -115,7 +115,7 @@ function CardEditFull({
             {t(lang, "quantity")}
           </label>
           <input
-            className="w-full rounded-lg border border-[var(--p-hair)] bg-muted/20 px-3 py-2.5 text-sm tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border border-hair bg-muted/20 px-3 py-2.5 text-sm tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
             value={qty}
             onChange={(e) => onQtyChange(e.target.value)}
             type="number"
@@ -131,7 +131,7 @@ function CardEditFull({
               {costSymbol}
             </span>
             <input
-              className="w-full rounded-lg border border-[var(--p-hair)] bg-muted/20 py-2.5 pl-7 pr-3 text-sm tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-lg border border-hair bg-muted/20 py-2.5 pl-7 pr-3 text-sm tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
               value={cost}
               onChange={(e) => onCostChange(e.target.value)}
               type="number"
@@ -151,7 +151,7 @@ function CardEditFull({
           </span>
         </label>
         <textarea
-          className="w-full resize-none rounded-lg border border-[var(--p-hair)] bg-muted/20 px-3 py-2.5 text-sm outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
+          className="w-full resize-none rounded-lg border border-hair bg-muted/20 px-3 py-2.5 text-sm outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
           value={notes}
           onChange={(e) => onNotesChange(e.target.value.slice(0, NOTES_MAX))}
           rows={3}
@@ -162,7 +162,7 @@ function CardEditFull({
       <div className="flex items-center gap-2">
         <button
           onClick={() => onPrivateChange(!isPrivate)}
-          className="flex flex-1 items-center justify-between rounded-lg border border-[var(--p-hair)] px-3 py-2.5 transition-colors hover:bg-muted/30"
+          className="flex flex-1 items-center justify-between rounded-lg border border-hair px-3 py-2.5 transition-colors hover:bg-muted/30"
         >
           <div className="flex items-center gap-2">
             {isPrivate ? (

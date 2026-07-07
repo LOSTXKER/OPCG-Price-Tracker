@@ -107,7 +107,7 @@ export default async function AdminBlogPage() {
           {/* Desktop table */}
           <table className="hidden w-full text-sm sm:table">
             <thead>
-              <tr className="border-b border-[var(--p-hair)] bg-muted/30">
+              <tr className="border-b border-hair bg-muted/30">
                 <th className="px-4 py-2.5 text-left text-eyebrow text-muted-foreground/70">
                   ชื่อเรื่อง
                 </th>
@@ -130,7 +130,7 @@ export default async function AdminBlogPage() {
               {posts.map((post) => (
                 <tr
                   key={post.id}
-                  className="border-b border-[var(--p-hair)] motion-base hover:bg-muted/70"
+                  className="border-b border-hair motion-base hover:bg-muted/70"
                 >
                   <td className="px-4 py-3">
                     <div>
@@ -170,7 +170,7 @@ export default async function AdminBlogPage() {
           </table>
 
           {/* Mobile list fallback */}
-          <ul className="divide-y divide-[var(--p-hair)] sm:hidden">
+          <ul className="divide-y divide-hair sm:hidden">
             {posts.map((post) => (
               <li key={post.id}>
                 <Link

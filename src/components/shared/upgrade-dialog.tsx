@@ -168,7 +168,7 @@ export function UpgradeDialogProvider({
           </DialogHeader>
 
           {state.benefitKeys.length > 0 && (
-            <ul className="space-y-1.5 rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted/30 p-3">
+            <ul className="space-y-1.5 rounded-lg border border-transparent dark:border-hair bg-muted/30 p-3">
               {state.benefitKeys.map((bKey) => (
                 <li
                   key={bKey}

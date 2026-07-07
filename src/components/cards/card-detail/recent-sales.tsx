@@ -205,7 +205,7 @@ export function RecentSales({
             <table className={MARKET_TABLE_CLASS}>
               <MarketTableColGroup />
               <thead className={marketFeedStickyHead}>
-                <tr className="text-eyebrow border-b border-[var(--p-hair)]">
+                <tr className="text-eyebrow border-b border-hair">
                   <th scope="col" className={marketThLead}>{t(lang, "sourceCol")}</th>
                   <th scope="col" className={marketThLead}>{t(lang, "saleDate")}</th>
                   <th scope="col" className={marketThLead}>{t(lang, "condition")}</th>
@@ -214,7 +214,7 @@ export function RecentSales({
               </thead>
               <tbody>
                 {shown.map((s, i) => (
-                  <tr key={`${s.source}-${i}`} className="border-b border-[var(--p-hair)] last:border-b-0">
+                  <tr key={`${s.source}-${i}`} className="border-b border-hair last:border-b-0">
                     <td className={marketTdLead}>
                       <SourceRef source={s.source} />
                     </td>

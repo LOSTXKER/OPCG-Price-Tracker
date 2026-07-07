@@ -233,7 +233,7 @@ export default function DropCalculatorClient() {
         <>
           {/* Mobile: tabs */}
           <div className="lg:hidden">
-            <div className="flex rounded-lg border border-transparent dark:border-[var(--p-hair)] bg-muted/40 p-0.5">
+            <div className="flex rounded-lg border border-transparent dark:border-hair bg-muted/40 p-0.5">
               <button
                 onClick={() => setActiveTab("cards")}
                 className={cn(
@@ -294,7 +294,7 @@ export default function DropCalculatorClient() {
                     onUnitChange={setUnit}
                     onQuantityChange={setQuantity}
                   />
-                  <div className="border-t border-[var(--p-hair)] pt-4">
+                  <div className="border-t border-hair pt-4">
                     <WantList
                       wantCards={wantCards}
                       wantResults={wantResults}
@@ -340,7 +340,7 @@ export default function DropCalculatorClient() {
                 onUnitChange={setUnit}
                 onQuantityChange={setQuantity}
               />
-              <div className="border-t border-[var(--p-hair)] pt-4">
+              <div className="border-t border-hair pt-4">
                 <WantList
                   wantCards={wantCards}
                   wantResults={wantResults}

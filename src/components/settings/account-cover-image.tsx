@@ -239,7 +239,7 @@ export function AccountCoverImage({
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             dragActive
               ? "border-primary bg-primary/[0.06]"
-              : "border-[var(--p-hair)] hover:border-border",
+              : "border-hair hover:border-border",
             busy && "cursor-progress",
             !busy && "cursor-pointer",
           )}
@@ -316,7 +316,7 @@ export function AccountCoverImage({
               onClick={onPick}
               disabled={busy}
               className={cn(
-                "ease-chrome inline-flex items-center gap-1.5 rounded-lg border border-[var(--p-hair)] bg-background px-3 py-1.5 text-sm font-medium transition-colors hover:bg-accent",
+                "ease-chrome inline-flex items-center gap-1.5 rounded-lg border border-hair bg-background px-3 py-1.5 text-sm font-medium transition-colors hover:bg-accent",
                 "disabled:cursor-not-allowed disabled:opacity-50",
               )}
             >
@@ -333,7 +333,7 @@ export function AccountCoverImage({
                 onClick={() => void remove()}
                 disabled={busy}
                 className={cn(
-                  "ease-chrome inline-flex items-center gap-1.5 rounded-lg border border-[var(--p-hair)] bg-background px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-destructive/5 hover:text-destructive",
+                  "ease-chrome inline-flex items-center gap-1.5 rounded-lg border border-hair bg-background px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-destructive/5 hover:text-destructive",
                   "disabled:cursor-not-allowed disabled:opacity-50",
                 )}
               >

@@ -86,7 +86,7 @@ export function WatchlistGridView({
               setCode={entry.card.set.code}
               actionRow={
                 <div
-                  className="flex items-center justify-between gap-1 border-t border-[var(--p-hair)] px-2 py-1"
+                  className="flex items-center justify-between gap-1 border-t border-hair px-2 py-1"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="flex items-center gap-0.5">

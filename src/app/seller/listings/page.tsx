@@ -212,7 +212,7 @@ export default function SellerListingsPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={t(lang, "searchByCardCodeOrName")}
-          className="h-10 w-full rounded-lg border border-[var(--p-hair)] bg-background pl-9 pr-4 text-sm transition-colors ease-chrome placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          className="h-10 w-full rounded-lg border border-hair bg-background pl-9 pr-4 text-sm transition-colors ease-chrome placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         />
       </form>
 

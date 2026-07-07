@@ -122,7 +122,7 @@ export default function PricingClient() {
 
       {/* Billing Toggle */}
       <div className="flex justify-center">
-        <div className="inline-flex items-center gap-1 rounded-full border border-transparent dark:border-[var(--p-hair)] bg-muted/50 p-1">
+        <div className="inline-flex items-center gap-1 rounded-full border border-transparent dark:border-hair bg-muted/50 p-1">
           <button
             onClick={() => setBilling("monthly")}
             className={`ease-chrome rounded-full px-5 py-1.5 text-sm font-medium ${
@@ -153,7 +153,7 @@ export default function PricingClient() {
       {settings?.trialStartedAt &&
         settings.tier !== "FREE" &&
         !settings.stripeSubscriptionId && (
-          <div className="mx-auto flex max-w-lg items-center justify-center gap-3 rounded-xl border border-transparent dark:border-[var(--p-hair)] bg-muted/30 px-5 py-3">
+          <div className="mx-auto flex max-w-lg items-center justify-center gap-3 rounded-xl border border-transparent dark:border-hair bg-muted/30 px-5 py-3">
             <Badge variant="secondary">
               {t(lang, "trialActive")}
             </Badge>
@@ -233,7 +233,7 @@ export default function PricingClient() {
             )}
 
             {/* Key highlights */}
-            <div className="mt-5 flex-1 space-y-2.5 border-t border-[var(--p-hair)] pt-5">
+            <div className="mt-5 flex-1 space-y-2.5 border-t border-hair pt-5">
               {PLAN_HIGHLIGHTS[plan.key]?.map((featureKey) => {
                 const row = findRow(featureKey);
                 if (!row) return null;
@@ -368,7 +368,7 @@ export default function PricingClient() {
                     <p className="text-eyebrow text-muted-foreground/60">
                       {t(lang, section.titleKey)}
                     </p>
-                    <div className="divide-y divide-[var(--p-hair)]">
+                    <div className="divide-y divide-hair">
                       {section.rows.map((row) => (
                         <div
                           key={row.key}
@@ -427,7 +427,7 @@ export default function PricingClient() {
                   {section.rows.map((row) => (
                     <tr
                       key={row.key}
-                      className="border-b border-[var(--p-hair)] last:border-b-0"
+                      className="border-b border-hair last:border-b-0"
                     >
                       <td className="py-2.5 pr-4 text-muted-foreground">
                         {t(lang, row.labelKey)}

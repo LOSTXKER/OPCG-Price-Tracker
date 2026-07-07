@@ -130,7 +130,7 @@ export function DropRateDialog({
           </div>
 
           {/* <sm: list fallback (ตาราง 5 คอลัมน์อ่านไม่ออกบนจอแคบ) */}
-          <div className="divide-y divide-[var(--p-hair)] sm:hidden">
+          <div className="divide-y divide-hair sm:hidden">
             {rows.map((r) => (
               <div key={r.rarity} className="space-y-1.5 py-2.5">
                 <div className="flex items-center justify-between gap-2">
@@ -163,7 +163,7 @@ export function DropRateDialog({
           <div className="hidden overflow-x-auto sm:block">
             <table className="w-full border-collapse text-sm">
               <thead className="text-xs font-medium text-muted-foreground">
-                <tr className="border-b border-[var(--p-hair)]">
+                <tr className="border-b border-hair">
                   <th className="py-1.5 text-left font-medium">
                     {t(lang, "level")}
                   </th>
@@ -179,7 +179,7 @@ export function DropRateDialog({
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--p-hair)]">
+              <tbody className="divide-y divide-hair">
                 {rows.map((r) => (
                   <tr key={r.rarity}>
                     <td className="whitespace-nowrap py-2 pl-0">

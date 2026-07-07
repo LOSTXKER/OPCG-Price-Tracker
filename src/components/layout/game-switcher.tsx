@@ -98,7 +98,7 @@ export function GameSwitcher({ className }: { className?: string }) {
       <DropdownMenuTrigger
         aria-label={t(lang, "chooseGame")}
         className={cn(
-          "ease-chrome surface-2 ring-inset inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-foreground ring-1 ring-[var(--p-hair)] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+          "ease-chrome surface-2 ring-inset inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-foreground ring-1 ring-hair focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
           className,
         )}
       >
@@ -138,7 +138,7 @@ export function GameSwitcher({ className }: { className?: string }) {
           <button
             type="button"
             onClick={dismissHint}
-            className="mt-1 flex w-full items-center gap-1.5 border-t border-[var(--p-hair)] px-2 pb-1 pt-2 text-left text-micro text-muted-foreground/80 ease-chrome transition-colors hover:text-foreground"
+            className="mt-1 flex w-full items-center gap-1.5 border-t border-hair px-2 pb-1 pt-2 text-left text-micro text-muted-foreground/80 ease-chrome transition-colors hover:text-foreground"
           >
             <Info className="size-3 shrink-0" aria-hidden />
             {t(lang, "switcherMineHint")}

@@ -90,7 +90,7 @@ function MoreSheetBody({ onNavigate }: { onNavigate: () => void }) {
           ? Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="flex flex-col items-center gap-2 rounded-xl border border-[var(--p-hair)] bg-card p-3"
+                className="flex flex-col items-center gap-2 rounded-xl border border-hair bg-card p-3"
                 aria-hidden
               >
                 <span className="size-11 animate-pulse rounded-full bg-muted" />
@@ -102,7 +102,7 @@ function MoreSheetBody({ onNavigate }: { onNavigate: () => void }) {
                 key={tile.href}
                 href={tile.href}
                 onClick={onNavigate}
-                className="flex flex-col items-center gap-2 rounded-xl border border-[var(--p-hair)] bg-card p-3 text-center motion-base active:scale-95 active:bg-muted/50"
+                className="flex flex-col items-center gap-2 rounded-xl border border-hair bg-card p-3 text-center motion-base active:scale-95 active:bg-muted/50"
               >
                 <span className={cn("relative flex size-11 items-center justify-center rounded-full", tile.iconClassName)}>
                   <tile.icon className="size-5" aria-hidden />
@@ -122,7 +122,7 @@ function MoreSheetBody({ onNavigate }: { onNavigate: () => void }) {
         <Link
           href="/more"
           onClick={onNavigate}
-          className="flex items-center justify-between rounded-xl border border-[var(--p-hair)] bg-card px-4 py-3 motion-base active:bg-muted/50"
+          className="flex items-center justify-between rounded-xl border border-hair bg-card px-4 py-3 motion-base active:bg-muted/50"
         >
           <span className="flex items-center gap-3">
             <span className="flex size-9 items-center justify-center rounded-full bg-muted text-muted-foreground">

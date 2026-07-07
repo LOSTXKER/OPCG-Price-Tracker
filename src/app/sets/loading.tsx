@@ -10,7 +10,7 @@ export default function SetsLoading() {
       </div>
 
       {/* Type filter — scrollable tab bar */}
-      <div className="flex gap-1 border-b border-[var(--p-hair)] pb-2.5">
+      <div className="flex gap-1 border-b border-hair pb-2.5">
         {[12, 20, 22, 18, 12].map((w, i) => (
           <Skeleton key={i} className="h-4" style={{ width: `${w * 4}px` }} />
         ))}

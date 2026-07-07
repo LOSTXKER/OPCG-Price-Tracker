@@ -143,9 +143,9 @@ export default function PortfolioProtoB() {
                         <img
                           src={h.img}
                           alt={h.name}
-                          className="aspect-[63/88] w-full rounded-xl object-cover ring-1 ring-[var(--p-hair)]"
+                          className="aspect-[63/88] w-full rounded-xl object-cover ring-1 ring-hair"
                         />
-                        <span className="text-overlay font-price absolute left-1.5 top-1.5 rounded bg-background/85 px-1.5 py-0.5 ring-1 ring-[var(--p-hair)] backdrop-blur-sm">
+                        <span className="text-overlay font-price absolute left-1.5 top-1.5 rounded bg-background/85 px-1.5 py-0.5 ring-1 ring-hair backdrop-blur-sm">
                           {i + 1}/{showcase.length}
                         </span>
                       </div>
@@ -185,7 +185,7 @@ export default function PortfolioProtoB() {
                   return (
                     <div
                       key={g.slug}
-                      className="rounded-xl border border-[var(--p-hair)] bg-card p-4"
+                      className="rounded-xl border border-hair bg-card p-4"
                     >
                       <div className="flex items-center gap-3">
                         <div className="flex -space-x-3">
@@ -216,7 +216,7 @@ export default function PortfolioProtoB() {
                           {fmtPct(g.pnlPct)}
                         </span>
                       </div>
-                      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-[var(--p-hair)]">
+                      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-hair">
                         <div
                           className="h-full rounded-full"
                           style={{ width: `${g.share * 100}%`, backgroundColor: g.tint, opacity: 0.6 }}
@@ -232,7 +232,7 @@ export default function PortfolioProtoB() {
           {/* The rest of the collection — a tight, quiet list */}
           <div>
             <p className="text-eyebrow mb-2">การ์ดที่เหลือ</p>
-            <div className="divide-y divide-[var(--p-hair)]">
+            <div className="divide-y divide-hair">
               {rest.map((h) => {
                 const up = h.d24 >= 0
                 return (
@@ -240,7 +240,7 @@ export default function PortfolioProtoB() {
                     <img
                       src={h.img}
                       alt={h.name}
-                      className="aspect-[63/88] w-10 shrink-0 rounded ring-1 ring-[var(--p-hair)] object-cover"
+                      className="aspect-[63/88] w-10 shrink-0 rounded ring-1 ring-hair object-cover"
                     />
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{h.name}</p>
@@ -266,7 +266,7 @@ export default function PortfolioProtoB() {
             </div>
 
             {/* Value history — intentionally demoted to a single quiet row */}
-            <div className="mt-1 flex items-center justify-between gap-4 border-t border-[var(--p-hair)] pt-3">
+            <div className="mt-1 flex items-center justify-between gap-4 border-t border-hair pt-3">
               <span className="text-meta">ดูประวัติมูลค่า</span>
               <svg
                 width="120"

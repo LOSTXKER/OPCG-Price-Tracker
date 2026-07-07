@@ -5,7 +5,7 @@ export function SkeletonRows({ count = 5, showStatus = true }: { count?: number;
   return (
     <>
       {Array.from({ length: count }).map((_, i) => (
-        <tr key={i} className="border-b border-[var(--p-hair)]">
+        <tr key={i} className="border-b border-hair">
           <td className="px-3 py-4"><Skeleton className="size-3.5 rounded" /></td>
           {showStatus && <td className="px-3 py-4"><Skeleton className="h-5 w-16 rounded-full" /></td>}
           <td className="px-3 py-4">

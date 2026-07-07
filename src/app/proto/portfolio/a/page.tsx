@@ -128,7 +128,7 @@ export default function PortfolioProtoA() {
           </div>
 
           {/* Holdings */}
-          <div className="divide-y divide-[var(--p-hair)]">
+          <div className="divide-y divide-hair">
             {holdings.map((h) => {
               const up = h.d24 >= 0
               return (
@@ -136,7 +136,7 @@ export default function PortfolioProtoA() {
                   <img
                     src={h.img}
                     alt={h.name}
-                    className="aspect-[63/88] w-9 shrink-0 rounded ring-1 ring-[var(--p-hair)] object-cover"
+                    className="aspect-[63/88] w-9 shrink-0 rounded ring-1 ring-hair object-cover"
                   />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{h.name}</p>
@@ -190,7 +190,7 @@ export default function PortfolioProtoA() {
           {/* Split by game */}
           <div>
             <p className="text-eyebrow mb-2">แยกตามเกม</p>
-            <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-[var(--p-hair)]">
+            <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-hair">
               {GAMES.map((g) => (
                 <div
                   key={g.slug}

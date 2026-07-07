@@ -50,7 +50,7 @@ export default function WatchlistTabs() {
       <div
         role="tablist"
         aria-label={t(lang, "watchlistNav")}
-        className="flex gap-1 border-b border-[var(--p-hair)]"
+        className="flex gap-1 border-b border-hair"
       >
         {TABS.map(({ key, labelKey, icon: Icon }) => {
           const active = tab === key;

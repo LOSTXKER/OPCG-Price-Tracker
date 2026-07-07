@@ -116,7 +116,7 @@ export function ReferralTab({
       </Surface>
 
       {/* Stats strip — single panel divided into cells, like the status bar above */}
-      <Surface variant="panel" className="grid grid-cols-2 divide-x divide-y divide-[var(--p-hair)] sm:grid-cols-4 sm:divide-y-0">
+      <Surface variant="panel" className="grid grid-cols-2 divide-x divide-y divide-hair sm:grid-cols-4 sm:divide-y-0">
         {stats.map((s, i) => {
           const Icon = s.icon;
           return (
@@ -141,7 +141,7 @@ export function ReferralTab({
             {t(lang, "referralHowItWorksTitle")}
           </h2>
         </div>
-        <div className="divide-y divide-[var(--p-hair)]">
+        <div className="divide-y divide-hair">
           {steps.map((step, i) => (
             <div key={i} className="flex items-start gap-4 px-4 py-4">
               <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold tabular-nums text-primary">

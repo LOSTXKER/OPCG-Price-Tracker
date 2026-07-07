@@ -193,7 +193,7 @@ function DirectionPill({
         "h-8 rounded-md border px-2 text-xs font-medium transition-all",
         active
           ? activeCls
-          : "border-border text-muted-foreground hover:border-[var(--p-hair)]",
+          : "border-border text-muted-foreground hover:border-hair",
       )}
     >
       {label}
@@ -226,7 +226,7 @@ function ChannelPill({
         "relative inline-flex h-8 items-center justify-center gap-1 rounded-md border px-2 text-xs font-medium transition-all",
         active
           ? "border-primary/40 bg-primary/10 text-primary"
-          : "border-border text-muted-foreground hover:border-[var(--p-hair)]",
+          : "border-border text-muted-foreground hover:border-hair",
         locked && !active && "border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10",
       )}
     >

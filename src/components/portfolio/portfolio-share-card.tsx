@@ -267,7 +267,7 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
             )}
 
             <footer
-              className="mt-9 flex items-center justify-between border-t border-[var(--p-hair)] pt-5 text-muted-foreground/70"
+              className="mt-9 flex items-center justify-between border-t border-hair pt-5 text-muted-foreground/70"
               style={{ fontSize: 18 }}
             >
               <span>

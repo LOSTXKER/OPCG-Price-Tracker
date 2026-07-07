@@ -58,7 +58,7 @@ export function WatchlistListView({
   return (
     <div className="panel overflow-hidden">
       {entries.length > 1 && (
-        <div className="flex items-center gap-3 border-b border-[var(--p-hair)] bg-muted/20 px-3 py-2 text-meta">
+        <div className="flex items-center gap-3 border-b border-hair bg-muted/20 px-3 py-2 text-meta">
           <input
             type="checkbox"
             className="size-3.5 cursor-pointer accent-primary"
@@ -77,7 +77,7 @@ export function WatchlistListView({
         </div>
       )}
 
-      <div className="divide-y divide-[var(--p-hair)]">
+      <div className="divide-y divide-hair">
         {entries.map((entry) => (
           <WatchlistRow
             key={entry.id}
@@ -180,7 +180,7 @@ function WatchlistRow({
             priceChange7d: entry.card.priceChange7d,
             priceChange30d: entry.card.priceChange30d,
           }}
-          className="relative aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-[var(--p-hair)]"
+          className="relative aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-hair"
         >
           <Image
             src={entry.card.imageUrl}
@@ -193,7 +193,7 @@ function WatchlistRow({
           />
         </CardImageButton>
       ) : (
-        <div className="relative aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-[var(--p-hair)]" />
+        <div className="relative aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-hair" />
       )}
 
       <Link

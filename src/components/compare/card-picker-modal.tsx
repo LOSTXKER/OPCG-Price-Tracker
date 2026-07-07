@@ -321,7 +321,7 @@ export function CardPickerModal({
                       "group/pick relative rounded-xl border p-1.5 text-left motion-base",
                       isSelected
                         ? "border-primary bg-primary/5 ring-2 ring-primary"
-                        : "border-[var(--p-hair)] hover:bg-muted/70",
+                        : "border-hair hover:bg-muted/70",
                     )}
                   >
                     {/* Image — clean, no overlays. Selection state lives on the tile border. */}

@@ -67,7 +67,7 @@ export function PortfolioHeroPanel({
       />
 
       {/* Stat row — P/L · Cost Basis · Best · Worst (no market-value repeat) */}
-      <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-[var(--p-hair)] pt-4 sm:grid-cols-4">
+      <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-hair pt-4 sm:grid-cols-4">
         <div>
           <p className="text-eyebrow">{t(lang, "pnl")}</p>
           <p className="mt-1">

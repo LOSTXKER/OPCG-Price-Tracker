@@ -94,7 +94,7 @@ export function AccountProfileInfo({ user, lang, onUserUpdate }: AccountProfileI
   };
 
   return (
-    <Surface variant="outline" className="overflow-hidden divide-y divide-[var(--p-hair)]">
+    <Surface variant="outline" className="overflow-hidden divide-y divide-hair">
       {/* Display name */}
       <FieldRow
         label={t(lang, "displayNamePlaceholder")}

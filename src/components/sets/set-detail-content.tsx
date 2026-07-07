@@ -407,13 +407,13 @@ export function SetDetailContent({
                 {/* centered section heading (เบส) — name + RarityBadge + count,
                     flanked by hairlines on both sides. */}
                 <div className="mb-5 flex items-center gap-3 sm:gap-4">
-                  <span aria-hidden className="h-px flex-1 bg-[var(--p-hair)]" />
+                  <span aria-hidden className="h-px flex-1 bg-hair" />
                   <div className="flex shrink-0 items-center gap-2">
                     <h2 className="text-h4">{g.name}</h2>
                     <RarityBadge rarity={g.rarity} size="sm" />
                     <span className="text-meta tabular-nums">{g.cards.length}</span>
                   </div>
-                  <span aria-hidden className="h-px flex-1 bg-[var(--p-hair)]" />
+                  <span aria-hidden className="h-px flex-1 bg-hair" />
                 </div>
                 <div className="grid grid-cols-3 gap-x-2.5 gap-y-4 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                   {g.cards.map((c) => (

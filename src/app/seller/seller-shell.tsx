@@ -121,7 +121,7 @@ export function SellerShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-dvh bg-background">
       {/* Desktop Sidebar */}
-      <aside className="hidden w-56 shrink-0 flex-col border-r border-[var(--p-hair)] bg-muted/20 md:flex">
+      <aside className="hidden w-56 shrink-0 flex-col border-r border-hair bg-muted/20 md:flex">
         <div className="sticky top-0 flex h-dvh flex-col p-3">
           <Link href="/" className="mb-1 flex items-center gap-2 rounded-lg px-3 py-1.5 text-meta transition-colors ease-chrome hover:bg-muted hover:text-foreground">
             <ArrowLeft className="h-3.5 w-3.5" />
@@ -138,7 +138,7 @@ export function SellerShell({ children }: { children: React.ReactNode }) {
       {/* Content */}
       <div className="flex flex-1 flex-col overflow-y-auto">
         {/* Mobile Header */}
-        <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-[var(--p-hair)] bg-background/95 px-4 py-3 backdrop-blur-sm md:hidden">
+        <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-hair bg-background/95 px-4 py-3 backdrop-blur-sm md:hidden">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger
               render={<Button variant="ghost" size="icon-sm" />}
