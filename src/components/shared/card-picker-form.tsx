@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { fetchCards } from "@/lib/api/fetch-cards";
 import { apiGet, apiTry } from "@/lib/api/client";
+import { useUIStore } from "@/stores/ui-store";
 
 import { SelectStep } from "@/components/portfolio/add-card-select-step";
 import {
@@ -36,6 +37,7 @@ export function CardPickerForm({
   /** Hide the built-in "เลือกการ์ด" header when the host has its own (alerts). */
   showHeader?: boolean;
 }) {
+  const currentGame = useUIStore((s) => s.currentGame);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<CardWithSet[]>([]);
   const [loading, setLoading] = useState(false);
@@ -58,7 +60,7 @@ export function CardPickerForm({
   // Value-sorted default list (shown before any search/filter) — loaded once.
   useEffect(() => {
     let cancelled = false;
-    void fetchCards({ sort: "price_desc", limit: 30 })
+    void fetchCards({ sort: "price_desc", limit: 30, game: currentGame })
       .then((data) => {
         if (!cancelled) setInitialCards((data.cards ?? []) as CardWithSet[]);
       })
@@ -66,7 +68,7 @@ export function CardPickerForm({
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [currentGame]);
 
   const hasAnyFilter =
     activeSet != null ||
@@ -96,6 +98,7 @@ export function CardPickerForm({
       () => {
         void fetchCards({
           limit: 40,
+          game: currentGame,
           search: hasSearch ? q : undefined,
           set: activeSet ?? undefined,
           rarity: activeRarity ?? undefined,
@@ -113,7 +116,7 @@ export function CardPickerForm({
       window.clearTimeout(timer);
       setLoading(false);
     };
-  }, [query, activeSet, activeRarity, activeColor, activeCardType, hasAnyFilter]);
+  }, [query, activeSet, activeRarity, activeColor, activeCardType, hasAnyFilter, currentGame]);
 
   const clearAllFilters = () => {
     setActiveSet(null);
