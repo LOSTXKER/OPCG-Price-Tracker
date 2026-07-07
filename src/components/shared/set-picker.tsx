@@ -219,7 +219,7 @@ export function SetPicker({
 
       {open && (
         <div className={cn(
-          "absolute z-30 mt-2 overflow-hidden rounded-xl border border-border bg-popover shadow-xl",
+          "absolute z-30 mt-2 overflow-hidden rounded-xl border border-border bg-popover shadow-[var(--elev-overlay)]",
           isCta && "left-0 right-0 w-full",
           isInline && cn(
             "min-w-full w-[min(22rem,calc(100vw-2rem))]",

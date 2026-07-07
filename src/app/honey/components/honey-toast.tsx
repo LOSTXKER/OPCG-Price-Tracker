@@ -47,7 +47,7 @@ export function HoneyToast({
   return (
     <div
       className={cn(
-        "fixed inset-x-0 bottom-[env(safe-area-inset-bottom,1rem)] z-50 mx-auto mb-4 flex w-fit max-w-[90vw] animate-in fade-in slide-in-from-bottom-2 items-center gap-2.5 rounded-xl border px-4 py-3 shadow-lg backdrop-blur-sm duration-200 sm:max-w-md",
+        "fixed inset-x-0 bottom-[env(safe-area-inset-bottom,1rem)] z-50 mx-auto mb-4 flex w-fit max-w-[90vw] animate-in fade-in slide-in-from-bottom-2 items-center gap-2.5 rounded-xl border px-4 py-3 shadow-[var(--elev-raised)] backdrop-blur-sm duration-200 sm:max-w-md",
         accent,
       )}
     >

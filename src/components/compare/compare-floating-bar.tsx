@@ -48,7 +48,7 @@ export function CompareFloatingBar() {
       >
         <div
           className={cn(
-            "pointer-events-auto inline-flex items-center gap-3 rounded-full border bg-background/80 py-1.5 pl-2 pr-1.5 shadow-lg backdrop-blur-xl",
+            "pointer-events-auto inline-flex items-center gap-3 rounded-full border bg-background/80 py-1.5 pl-2 pr-1.5 shadow-[var(--elev-raised)] backdrop-blur-xl",
             "ring-1 ring-black/5",
           )}
         >

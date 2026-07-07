@@ -114,7 +114,7 @@ export function StreakInfoPopover({ lang }: { lang: Language }) {
               ref={popoverRef}
               role="dialog"
               aria-label={title}
-              className="fixed z-50 w-[280px] -translate-x-1/2 rounded-xl border bg-card p-4 shadow-lg"
+              className="fixed z-50 w-[280px] -translate-x-1/2 rounded-xl border bg-card p-4 shadow-[var(--elev-overlay)]"
               style={{ left: pos.left, top: pos.top }}
             >
               <p className="text-sm font-bold">{title}</p>

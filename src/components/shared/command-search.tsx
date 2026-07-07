@@ -179,7 +179,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
 
       {/* Modal */}
       <div className="relative mx-auto mt-[15vh] w-full max-w-lg px-4 animate-in fade-in-0 slide-in-from-top-2 duration-150">
-        <div className="overflow-hidden rounded-2xl bg-popover shadow-2xl ring-1 ring-border/50">
+        <div className="overflow-hidden rounded-2xl bg-popover shadow-[var(--elev-overlay)] ring-1 ring-border/50">
           {/* Search input */}
           <div className="flex items-center gap-3 border-b border-hair px-4">
             <Search className="size-4 shrink-0 text-muted-foreground" />

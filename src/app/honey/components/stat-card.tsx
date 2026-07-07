@@ -7,7 +7,7 @@ import { t, type Language } from "@/lib/i18n";
 
 /* Shared popover styles */
 const POPOVER_POPUP_CLASS =
-  "w-56 rounded-lg bg-popover p-3 shadow-xl ring-1 ring-border/40 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95";
+  "w-56 rounded-lg bg-popover p-3 shadow-[var(--elev-overlay)] ring-1 ring-border/40 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95";
 
 const POPOVER_ARROW_CLASS =
   "size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px] bg-popover ring-1 ring-border/40 data-[side=bottom]:top-1 data-[side=top]:-bottom-2.5";
