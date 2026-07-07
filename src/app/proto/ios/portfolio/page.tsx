@@ -147,7 +147,7 @@ export default function IosPortfolioHubScreen() {
                       <span className="text-micro text-muted-foreground">···</span>
                     </div>
                   ) : (
-                    <div className="hairline relative aspect-[63/88] w-5 shrink-0 overflow-hidden rounded bg-muted">
+                    <div className="hairline relative aspect-[63/88] w-5 shrink-0 overflow-hidden rounded-sm bg-muted">
                       <Image src={row.img} alt={row.name} fill sizes="20px" className="object-contain" />
                     </div>
                   )}

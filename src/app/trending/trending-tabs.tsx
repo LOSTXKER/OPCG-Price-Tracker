@@ -119,7 +119,7 @@ const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }:
           href={`/cards/${card.cardCode}`}
           className="flex items-center gap-3 hover:underline"
         >
-          <div className="relative size-9 shrink-0 overflow-hidden rounded bg-muted">
+          <div className="relative size-9 shrink-0 overflow-hidden rounded-sm bg-muted">
             {card.imageUrl && (
               <Image
                 src={card.imageUrl}

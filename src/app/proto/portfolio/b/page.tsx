@@ -145,7 +145,7 @@ export default function PortfolioProtoB() {
                           alt={h.name}
                           className="aspect-[63/88] w-full rounded-xl object-cover ring-1 ring-hair"
                         />
-                        <span className="text-overlay font-price absolute left-1.5 top-1.5 rounded bg-background/85 px-1.5 py-0.5 ring-1 ring-hair backdrop-blur-sm">
+                        <span className="text-overlay font-price absolute left-1.5 top-1.5 rounded-sm bg-background/85 px-1.5 py-0.5 ring-1 ring-hair backdrop-blur-sm">
                           {i + 1}/{showcase.length}
                         </span>
                       </div>
@@ -194,7 +194,7 @@ export default function PortfolioProtoB() {
                               key={h.code}
                               src={h.img}
                               alt=""
-                              className="aspect-[63/88] w-8 rounded ring-2 ring-background object-cover"
+                              className="aspect-[63/88] w-8 rounded-sm ring-2 ring-background object-cover"
                             />
                           ))}
                         </div>
@@ -240,7 +240,7 @@ export default function PortfolioProtoB() {
                     <img
                       src={h.img}
                       alt={h.name}
-                      className="aspect-[63/88] w-10 shrink-0 rounded ring-1 ring-hair object-cover"
+                      className="aspect-[63/88] w-10 shrink-0 rounded-sm ring-1 ring-hair object-cover"
                     />
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{h.name}</p>

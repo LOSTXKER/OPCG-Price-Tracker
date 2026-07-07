@@ -104,7 +104,7 @@ export function SetHero({
                 href={`/cards/${topCard.cardCode}`}
                 className="group ease-chrome -mx-1.5 flex items-center gap-2 rounded-lg px-1.5 py-1 transition-colors hover:bg-muted/60"
               >
-                <span className="surface-1 relative aspect-[63/88] w-7 shrink-0 overflow-hidden rounded">
+                <span className="surface-1 relative aspect-[63/88] w-7 shrink-0 overflow-hidden rounded-sm">
                   {topCard.imageUrl ? (
                     <Image
                       src={topCard.imageUrl}

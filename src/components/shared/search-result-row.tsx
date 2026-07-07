@@ -33,7 +33,7 @@ export function SearchResultRow({
   lang,
   size = "md",
   thumbFit = "cover",
-  thumbClassName = "rounded",
+  thumbClassName = "rounded-sm",
   blur = false,
   nameClassName = "text-h5",
   priceClassName = "font-mono text-sm font-semibold",

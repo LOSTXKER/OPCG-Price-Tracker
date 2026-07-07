@@ -148,7 +148,7 @@ export function YuyuteiMatchRow({
               onKeyDown={(e) => {
                 if (e.key === "Enter") onLightbox(m, m.matchedCard!);
               }}
-              className="cursor-zoom-in hover:opacity-80 ring-2 ring-success/50 rounded motion-base"
+              className="cursor-zoom-in hover:opacity-80 ring-2 ring-success/50 rounded-sm motion-base"
               title="คลิกเพื่อขยายรูปภาพ"
             >
               <CardThumb src={m.matchedCard!.imageUrl} size="md" />
@@ -183,7 +183,7 @@ export function YuyuteiMatchRow({
         {m.matchMethod ? (
           <div className="flex flex-col gap-0.5">
             <span
-              className="inline-block cursor-help rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground"
+              className="inline-block cursor-help rounded-sm bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground"
               title={
                 METHOD_INFO.find((x) => x.key === m.matchMethod)?.desc ??
                 m.matchMethod
@@ -194,7 +194,7 @@ export function YuyuteiMatchRow({
             {m.geminiScore != null && (
               <span
                 className={cn(
-                  "inline-block rounded px-1.5 py-0.5 text-xs font-bold w-fit",
+                  "inline-block rounded-sm px-1.5 py-0.5 text-xs font-bold w-fit",
                   m.geminiScore >= 0.8 && "bg-success/15 text-success",
                   m.geminiScore >= 0.5 &&
                     m.geminiScore < 0.8 &&

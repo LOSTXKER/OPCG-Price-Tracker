@@ -168,7 +168,7 @@ export function HoneyStatusBar(props: StatusProps) {
           icon={
             iconImage ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={iconImage} alt="" className="size-5 rounded object-contain" />
+              <img src={iconImage} alt="" className="size-5 rounded-sm object-contain" />
             ) : (
               <RankTierIcon
                 name={iconName}

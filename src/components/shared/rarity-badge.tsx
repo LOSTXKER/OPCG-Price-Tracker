@@ -13,7 +13,7 @@ export function RarityBadge({ rarity, size = "md", className }: RarityBadgeProps
   return (
     <span
       className={cn(
-        "inline-flex items-center whitespace-nowrap rounded",
+        "inline-flex items-center whitespace-nowrap rounded-sm",
         accent ? `${accent.text} ${accent.bg}` : "bg-muted text-foreground",
         size === "sm" && "px-1.5 py-0.5 text-micro",
         size === "md" && "px-2 py-0.5 text-micro",

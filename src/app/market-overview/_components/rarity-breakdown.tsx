@@ -82,7 +82,7 @@ export function RarityBreakdown({
             >
               <div className="w-16 shrink-0">
                 {isOthers ? (
-                  <span className="inline-flex items-center whitespace-nowrap rounded bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
+                  <span className="inline-flex items-center whitespace-nowrap rounded-sm bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
                     +{rest.length}
                   </span>
                 ) : (

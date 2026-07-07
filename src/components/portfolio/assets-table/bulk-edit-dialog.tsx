@@ -305,7 +305,7 @@ export function BulkEditDialog({
             {bulkSearch && (
               <button
                 onClick={() => setBulkSearch("")}
-                className="rounded p-0.5 text-muted-foreground hover:text-foreground"
+                className="rounded-sm p-0.5 text-muted-foreground hover:text-foreground"
               >
                 <X className="size-3" />
               </button>

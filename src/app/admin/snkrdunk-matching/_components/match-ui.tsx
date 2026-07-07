@@ -163,7 +163,7 @@ export function ShortcutLegend({ visible }: { visible: boolean }) {
     <div className="flex items-center gap-4 rounded-lg border border-border bg-muted/40 px-3 py-1.5">
       {keys.map((k) => (
         <span key={k.key} className="inline-flex items-center gap-1.5 text-meta">
-          <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-overlay text-foreground shadow-sm">
+          <kbd className="rounded-sm border border-border bg-background px-1.5 py-0.5 font-mono text-overlay text-foreground shadow-sm">
             {k.key}
           </kbd>
           {k.desc}

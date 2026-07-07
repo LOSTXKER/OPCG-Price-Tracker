@@ -78,10 +78,10 @@ export function OrderCard({
             alt={cardName}
             width={56}
             height={78}
-            className="shrink-0 rounded object-cover"
+            className="shrink-0 rounded-sm object-cover"
           />
         ) : (
-          <div className="flex h-[78px] w-[56px] shrink-0 items-center justify-center rounded bg-muted">
+          <div className="flex h-[78px] w-[56px] shrink-0 items-center justify-center rounded-sm bg-muted">
             <Package className="h-5 w-5 text-muted-foreground" />
           </div>
         )}

@@ -246,7 +246,7 @@ export function CardEditor({ card }: { card: CardData }) {
                     key={c.pIndex}
                     onClick={() => selectCandidate(c.pIndex, c.url)}
                     className={cn(
-                      "overflow-hidden rounded border motion-base",
+                      "overflow-hidden rounded-sm border motion-base",
                       currentImage === c.url
                         ? "border-primary ring-2 ring-primary/30"
                         : "border-hair hover:border-primary/50",

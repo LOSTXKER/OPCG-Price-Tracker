@@ -110,7 +110,7 @@ function MockHero({ lang }: { lang: Language }) {
         </div>
         <div className="mt-auto flex items-center gap-2">
           <span className="text-meta tabular-nums">+{STREAK_TIERS[1].reward} 🍯{t(lang, "streakPerDaySuffix")}</span>
-          <span className="rounded bg-amber-500/15 px-1.5 py-px text-xs font-bold tabular-nums text-amber-600 dark:text-amber-400">2x</span>
+          <span className="rounded-sm bg-amber-500/15 px-1.5 py-px text-xs font-bold tabular-nums text-amber-600 dark:text-amber-400">2x</span>
         </div>
         <span aria-hidden className={MOCK_GUIDE_HINT_CLASS}>
           <HelpCircle className="size-3.5" />
@@ -266,7 +266,7 @@ export function HoneyMockPreview({ lang }: { lang: Language }) {
         <div className="inline-flex h-9 items-center gap-1.5 rounded-md bg-primary px-4 text-xs font-bold text-primary-foreground shadow-sm">
           <Calendar className="size-3.5" />
           {t(lang, "dailyCheckin")}
-          <span className="rounded bg-white/20 px-1.5 py-px text-xs font-bold tabular-nums">+{STREAK_TIERS[1].reward} 🍯</span>
+          <span className="rounded-sm bg-white/20 px-1.5 py-px text-xs font-bold tabular-nums">+{STREAK_TIERS[1].reward} 🍯</span>
         </div>
       </div>
 

@@ -90,7 +90,7 @@ export function StepCardSelect({
                   selected?.cardCode === c.cardCode && "bg-primary/5"
                 )}
               >
-                <div className={cn("size-10 shrink-0 overflow-hidden rounded", CARD_BG)}>
+                <div className={cn("size-10 shrink-0 overflow-hidden rounded-sm", CARD_BG)}>
                   {c.imageUrl ? (
                     <Image
                       src={c.imageUrl}

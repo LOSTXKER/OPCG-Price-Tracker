@@ -254,7 +254,7 @@ export function UsersManager() {
             e.stopPropagation();
             setGrantUser(u);
           }}
-          className="rounded p-1.5 text-warning motion-base hover:bg-warning-soft"
+          className="rounded-sm p-1.5 text-warning motion-base hover:bg-warning-soft"
           title="ให้ Honey"
         >
           <Gift className="size-3.5" />
@@ -494,7 +494,7 @@ export function UsersManager() {
                     {selectedUser.transactions.map((tx) => (
                       <div
                         key={tx.id}
-                        className="flex items-center gap-2 rounded px-2 py-1.5 text-xs hover:bg-muted/70"
+                        className="flex items-center gap-2 rounded-sm px-2 py-1.5 text-xs hover:bg-muted/70"
                       >
                         <Zap
                           className={cn(

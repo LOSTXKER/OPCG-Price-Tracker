@@ -103,8 +103,8 @@ export function AddCardDialog({
       description={
         <>
           ใส่ SNKRDUNK ID (เลขตอนท้าย URL เช่น{" "}
-          <code className="rounded bg-muted px-1">94915</code> จาก{" "}
-          <code className="rounded bg-muted px-1">
+          <code className="rounded-sm bg-muted px-1">94915</code> จาก{" "}
+          <code className="rounded-sm bg-muted px-1">
             snkrdunk.com/en/trading-cards/94915
           </code>
           )

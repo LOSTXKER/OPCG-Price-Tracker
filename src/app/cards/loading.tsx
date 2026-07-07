@@ -12,7 +12,7 @@ export default function CardsLoading() {
       <Surface variant="panel" padding="md" className="overflow-hidden">
         {Array.from({ length: 10 }).map((_, i) => (
           <div key={i} className="flex items-center gap-4 border-b border-hair py-3 last:border-0">
-            <Skeleton className="size-9 rounded" />
+            <Skeleton className="size-9 rounded-sm" />
             <div className="flex-1">
               <Skeleton className="h-3.5 w-40" />
               <Skeleton className="mt-1 h-3 w-20" />

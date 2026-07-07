@@ -170,7 +170,7 @@ export default function PortfolioProtoC() {
                         <img
                           src={h.img}
                           alt={h.name}
-                          className="hairline aspect-[63/88] w-8 rounded object-cover"
+                          className="hairline aspect-[63/88] w-8 rounded-sm object-cover"
                         />
                         <div className="min-w-0">
                           <div className="truncate text-body-sm">{h.name}</div>
@@ -241,7 +241,7 @@ export default function PortfolioProtoC() {
                 <img
                   src={h.img}
                   alt={h.name}
-                  className="hairline aspect-[63/88] w-9 shrink-0 rounded object-cover"
+                  className="hairline aspect-[63/88] w-9 shrink-0 rounded-sm object-cover"
                 />
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-body-sm">{h.name}</div>

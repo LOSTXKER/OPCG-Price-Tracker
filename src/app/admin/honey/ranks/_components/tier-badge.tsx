@@ -16,7 +16,7 @@ export function TierBadge({ tier }: { tier: RankTier }) {
         <img
           src={tier.imageUrl}
           alt=""
-          className="size-7 rounded object-contain"
+          className="size-7 rounded-sm object-contain"
         />
       ) : (
         <RankTierIcon name={tier.iconName} className="size-5" />

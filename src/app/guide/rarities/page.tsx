@@ -157,43 +157,43 @@ function buildPriceFactors(lang: Language) {
       icon: Sparkles,
       title: t(lang, "guideRarityFactorRarityTitle"),
       desc: t(lang, "guideRarityFactorRarityDesc"),
-      iconBg: "bg-amber-500/10",
-      iconColor: "text-amber-500",
+      iconBg: "bg-muted",
+      iconColor: "text-muted-foreground",
     },
     {
       icon: Users,
       title: t(lang, "guideRarityFactorPopularTitle"),
       desc: t(lang, "guideRarityFactorPopularDesc"),
-      iconBg: "bg-rose-500/10",
-      iconColor: "text-rose-500",
+      iconBg: "bg-muted",
+      iconColor: "text-muted-foreground",
     },
     {
       icon: Swords,
       title: t(lang, "guideRarityFactorMetaTitle"),
       desc: t(lang, "guideRarityFactorMetaDesc"),
-      iconBg: "bg-blue-500/10",
-      iconColor: "text-blue-500",
+      iconBg: "bg-muted",
+      iconColor: "text-muted-foreground",
     },
     {
       icon: ImageIcon,
       title: t(lang, "guideRarityFactorArtTitle"),
       desc: t(lang, "guideRarityFactorArtDesc"),
-      iconBg: "bg-pink-500/10",
-      iconColor: "text-pink-500",
+      iconBg: "bg-muted",
+      iconColor: "text-muted-foreground",
     },
     {
       icon: Package,
       title: t(lang, "guideRarityFactorSupplyTitle"),
       desc: t(lang, "guideRarityFactorSupplyDesc"),
-      iconBg: "bg-purple-500/10",
-      iconColor: "text-purple-500",
+      iconBg: "bg-muted",
+      iconColor: "text-muted-foreground",
     },
     {
       icon: Printer,
       title: t(lang, "guideRarityFactorOopTitle"),
       desc: t(lang, "guideRarityFactorOopDesc"),
-      iconBg: "bg-emerald-500/10",
-      iconColor: "text-emerald-500",
+      iconBg: "bg-muted",
+      iconColor: "text-muted-foreground",
     },
   ];
 }
@@ -548,15 +548,15 @@ export default async function RaritiesPage() {
           </p>
           <div className="mt-3 space-y-1.5">
             <div className="flex items-center gap-2">
-              <span className="flex size-6 items-center justify-center rounded bg-amber-500 text-xs font-bold text-white">1</span>
+              <span className="flex size-6 items-center justify-center rounded-sm bg-amber-500 text-xs font-bold text-white">1</span>
               <span>{t(lang, "guideRarityBox3Box1a")}<strong className="text-foreground">SEC</strong>{t(lang, "guideRarityBox3Box1b")}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="flex size-6 items-center justify-center rounded bg-purple-500 text-xs font-bold text-white">2</span>
+              <span className="flex size-6 items-center justify-center rounded-sm bg-purple-500 text-xs font-bold text-white">2</span>
               <span>{t(lang, "guideRarityBox3Box2a")}<strong className="text-foreground">Parallel</strong>{t(lang, "guideRarityBox3Box2b")}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="flex size-6 items-center justify-center rounded bg-blue-500 text-xs font-bold text-white">3</span>
+              <span className="flex size-6 items-center justify-center rounded-sm bg-blue-500 text-xs font-bold text-white">3</span>
               <span>{t(lang, "guideRarityBox3Box3a")}<strong className="text-foreground">Parallel</strong>{t(lang, "guideRarityBox3Box3b")}</span>
             </div>
           </div>

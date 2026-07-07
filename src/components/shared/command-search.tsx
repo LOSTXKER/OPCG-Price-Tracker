@@ -231,10 +231,10 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                   <div key={i} className="flex items-center gap-3 rounded-xl px-3 py-2.5">
                     <Skeleton className="size-10 shrink-0 rounded-lg" />
                     <div className="min-w-0 flex-1 space-y-1.5">
-                      <Skeleton className="h-3.5 w-32 rounded" />
-                      <Skeleton className="h-3 w-20 rounded" />
+                      <Skeleton className="h-3.5 w-32 rounded-sm" />
+                      <Skeleton className="h-3 w-20 rounded-sm" />
                     </div>
-                    <Skeleton className="h-4 w-16 shrink-0 rounded" />
+                    <Skeleton className="h-4 w-16 shrink-0 rounded-sm" />
                   </div>
                 ))}
               </div>

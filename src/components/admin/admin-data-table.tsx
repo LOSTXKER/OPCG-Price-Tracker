@@ -179,7 +179,7 @@ export function AdminDataTable<T>({
                     if (el) el.indeterminate = !!someSelected;
                   }}
                   onChange={toggleAll}
-                  className="accent-primary size-3.5 cursor-pointer rounded"
+                  className="accent-primary size-3.5 cursor-pointer rounded-sm"
                   aria-label="เลือกทั้งหมด"
                 />
               </th>
@@ -224,7 +224,7 @@ export function AdminDataTable<T>({
               <tr key={i} className="border-b border-hair">
                 {selectable && (
                   <td className="px-3 py-3">
-                    <Skeleton className="size-3.5 rounded" />
+                    <Skeleton className="size-3.5 rounded-sm" />
                   </td>
                 )}
                 {columns.map((col) => (
@@ -374,7 +374,7 @@ function MobileRowWrapper({
           checked={isSelected}
           onChange={onToggle}
           onClick={(e) => e.stopPropagation()}
-          className="accent-primary mt-1 size-3.5 cursor-pointer rounded"
+          className="accent-primary mt-1 size-3.5 cursor-pointer rounded-sm"
         />
       )}
       <div className="min-w-0 flex-1">{children}</div>
@@ -418,7 +418,7 @@ function MobileDefaultRow<T>({
             checked={isSelected}
             onChange={onToggle}
             onClick={(e) => e.stopPropagation()}
-            className="accent-primary mt-1 size-3.5 cursor-pointer rounded"
+            className="accent-primary mt-1 size-3.5 cursor-pointer rounded-sm"
           />
         )}
         <div className="min-w-0 flex-1 space-y-1.5">
@@ -492,7 +492,7 @@ function DataTableRow<T>({
               type="checkbox"
               checked={isSelected}
               onChange={() => onToggle(rowId)}
-              className="accent-primary size-3.5 cursor-pointer rounded"
+              className="accent-primary size-3.5 cursor-pointer rounded-sm"
             />
           </td>
         )}

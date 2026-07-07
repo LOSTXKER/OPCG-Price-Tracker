@@ -261,10 +261,10 @@ export default function SellerListingsPage() {
                       alt={listing.card.nameEn ?? listing.card.nameJp}
                       width={48}
                       height={67}
-                      className="shrink-0 rounded object-cover"
+                      className="shrink-0 rounded-sm object-cover"
                     />
                   ) : (
-                    <div className="flex h-[67px] w-[48px] shrink-0 items-center justify-center rounded bg-muted">
+                    <div className="flex h-[67px] w-[48px] shrink-0 items-center justify-center rounded-sm bg-muted">
                       <Package className="h-5 w-5 text-muted-foreground" />
                     </div>
                   )}

@@ -59,7 +59,7 @@ export function CardGrid({ cards, loading }: { cards: CardRow[]; loading: boolea
                 {flagged && (
                   <span
                     title="Missing translation or image"
-                    className="ml-auto inline-flex size-4 items-center justify-center rounded bg-warning text-overlay leading-none text-warning-foreground"
+                    className="ml-auto inline-flex size-4 items-center justify-center rounded-sm bg-warning text-overlay leading-none text-warning-foreground"
                   >
                     !
                   </span>

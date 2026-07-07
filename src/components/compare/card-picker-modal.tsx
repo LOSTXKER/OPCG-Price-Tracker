@@ -301,8 +301,8 @@ export function CardPickerModal({
               {Array.from({ length: 12 }).map((_, i) => (
                 <div key={i} className="space-y-1.5">
                   <Skeleton className="aspect-[63/88] w-full rounded-lg" />
-                  <Skeleton className="h-3 w-3/4 rounded" />
-                  <Skeleton className="h-3 w-1/2 rounded" />
+                  <Skeleton className="h-3 w-3/4 rounded-sm" />
+                  <Skeleton className="h-3 w-1/2 rounded-sm" />
                 </div>
               ))}
             </div>

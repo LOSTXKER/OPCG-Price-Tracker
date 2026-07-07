@@ -202,8 +202,8 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
                   <div key={i} className="flex items-center gap-3 rounded-xl px-3 py-2">
                     <div className="size-9 shrink-0 animate-pulse rounded-md bg-muted" />
                     <div className="flex-1 space-y-1.5">
-                      <div className="h-3.5 w-32 animate-pulse rounded bg-muted" />
-                      <div className="h-3 w-20 animate-pulse rounded bg-muted" />
+                      <div className="h-3.5 w-32 animate-pulse rounded-sm bg-muted" />
+                      <div className="h-3 w-20 animate-pulse rounded-sm bg-muted" />
                     </div>
                   </div>
                 ))}

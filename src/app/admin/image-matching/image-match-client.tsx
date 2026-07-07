@@ -223,7 +223,7 @@ export function ImageMatchClient() {
                   {card.nameEn ?? card.nameJp}
                 </span>
                 <RarityBadge rarity={card.rarity} size="sm" />
-                <span className="rounded bg-muted/50 px-1.5 py-0.5 text-overlay font-mono text-muted-foreground">
+                <span className="rounded-sm bg-muted/50 px-1.5 py-0.5 text-overlay font-mono text-muted-foreground">
                   {card.set.code}
                 </span>
                 {card.latestPriceJpy != null && (
@@ -313,7 +313,7 @@ export function ImageMatchClient() {
                               <Check className="ml-0.5 inline size-3 text-primary" />
                             )}
                           </p>
-                          <div className="relative aspect-[63/88] w-[72px] overflow-hidden rounded bg-muted/20">
+                          <div className="relative aspect-[63/88] w-[72px] overflow-hidden rounded-sm bg-muted/20">
                             {isFailed ? (
                               <div className="flex h-full items-center justify-center text-overlay text-muted-foreground/60">
                                 N/A

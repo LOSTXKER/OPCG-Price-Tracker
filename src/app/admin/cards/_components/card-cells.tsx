@@ -28,7 +28,7 @@ export function StatusBadges({ card }: { card: CardRow }) {
       {missing.map((m) => (
         <span
           key={m.key}
-          className="status-warning rounded px-1 py-px text-overlay leading-tight"
+          className="status-warning rounded-sm px-1 py-px text-overlay leading-tight"
         >
           {m.label}
         </span>
@@ -42,7 +42,7 @@ export function ImageCell({ card }: { card: CardRow }) {
   if (!card.imageUrl) {
     return (
       <div
-        className="flex items-center justify-center rounded bg-muted text-meta"
+        className="flex items-center justify-center rounded-sm bg-muted text-meta"
         style={{ width: 40, height: 56 }}
       >
         ?
@@ -58,7 +58,7 @@ export function ImageCell({ card }: { card: CardRow }) {
           alt={card.nameEn ?? card.nameJp}
           width={40}
           height={56}
-          className="rounded"
+          className="rounded-sm"
           unoptimized
         />
       </TooltipTrigger>

@@ -6,7 +6,7 @@ const SIZES = { sm: "size-3", md: "size-3.5", lg: "size-5" } as const
 
 /**
  * The one read-only star rating (COMMERCE-13) — honey/amber filled, muted empty,
- * value rounded for display. Replaces the per-file star renderers that each
+ * value rounded-sm for display. Replaces the per-file star renderers that each
  * picked a different colour (foreground / yellow / amber / primary). For an
  * INTERACTIVE rating input build a separate RatingInput atom (none exists yet).
  */

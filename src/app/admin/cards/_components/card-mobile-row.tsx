@@ -41,7 +41,7 @@ export function CardMobileRow({
               {card.baseCode}
             </Link>
             {card.isParallel && (
-              <span className="rounded bg-warning-soft px-1 text-xs font-medium text-warning">
+              <span className="rounded-sm bg-warning-soft px-1 text-xs font-medium text-warning">
                 {card.rarity.startsWith("P-") ? card.rarity : "PA"}
               </span>
             )}

@@ -15,7 +15,7 @@ export default function DeckCalculatorLoading() {
           <Skeleton className="h-5 w-28" />
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="flex items-center gap-3">
-              <Skeleton className="size-8 rounded" />
+              <Skeleton className="size-8 rounded-sm" />
               <Skeleton className="h-3.5 w-32 flex-1" />
               <Skeleton className="h-4 w-12" />
             </div>

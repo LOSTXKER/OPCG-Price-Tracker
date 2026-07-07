@@ -75,7 +75,7 @@ export function Breadcrumb(props: BreadcrumbProps) {
               {item.href && !isLast ? (
                 <Link
                   href={item.href}
-                  className="rounded px-1 py-0.5 motion-base hover:text-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+                  className="rounded-sm px-1 py-0.5 motion-base hover:text-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
                 >
                   {item.label}
                 </Link>

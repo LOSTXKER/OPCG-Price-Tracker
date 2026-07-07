@@ -168,7 +168,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
                     {i + 1}
                   </span>
                   {s.boxImageUrl ? (
-                    <div className="relative size-11 shrink-0 overflow-hidden rounded bg-muted">
+                    <div className="relative size-11 shrink-0 overflow-hidden rounded-sm bg-muted">
                       <Image
                         src={s.boxImageUrl}
                         alt={s.name}
@@ -178,7 +178,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
                       />
                     </div>
                   ) : (
-                    <div className="flex size-11 shrink-0 items-center justify-center rounded bg-muted text-muted-foreground/40">
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-sm bg-muted text-muted-foreground/40">
                       <Package className="size-4" aria-hidden="true" />
                     </div>
                   )}

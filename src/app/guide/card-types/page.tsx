@@ -398,31 +398,31 @@ export default async function CardTypesPage() {
               {/* Type + Name + Trait */}
               <div className="mt-2 space-y-0.5">
                 <div className="flex items-center gap-1.5">
-                  <span className="rounded border border-dashed border-purple-500/40 bg-purple-500/10 px-1.5 py-0.5 text-overlay text-purple-500">
+                  <span className="rounded-sm border border-dashed border-purple-500/40 bg-purple-500/10 px-1.5 py-0.5 text-overlay text-purple-500">
                     Type
                   </span>
-                  <span className="rounded border border-dashed border-primary/30 bg-primary/5 px-1.5 py-0.5 text-overlay text-primary">
+                  <span className="rounded-sm border border-dashed border-primary/30 bg-primary/5 px-1.5 py-0.5 text-overlay text-primary">
                     Color
                   </span>
                 </div>
-                <div className="rounded border border-dashed border-foreground/20 bg-foreground/5 px-1.5 py-0.5 text-xs font-semibold text-foreground/70">
+                <div className="rounded-sm border border-dashed border-foreground/20 bg-foreground/5 px-1.5 py-0.5 text-xs font-semibold text-foreground/70">
                   Name
                 </div>
-                <div className="rounded border border-dashed border-emerald-500/40 bg-emerald-500/10 px-1.5 py-0.5 text-overlay text-emerald-500">
+                <div className="rounded-sm border border-dashed border-emerald-500/40 bg-emerald-500/10 px-1.5 py-0.5 text-overlay text-emerald-500">
                   {t(lang, "guideTypeAnatomyTrait")}
                 </div>
               </div>
 
               {/* Bottom row: Effect area + Rarity/Block */}
               <div className="mt-1.5 flex items-end justify-between">
-                <div className="flex-1 rounded border border-dashed border-orange-500/40 bg-orange-500/5 px-1.5 py-1 text-overlay leading-tight text-orange-500">
+                <div className="flex-1 rounded-sm border border-dashed border-orange-500/40 bg-orange-500/5 px-1.5 py-1 text-overlay leading-tight text-orange-500">
                   Effect / Trigger
                 </div>
                 <div className="ml-1.5 flex items-center gap-1">
-                  <span className="rounded border border-dashed border-amber-500/40 bg-amber-500/10 px-1 py-0.5 text-overlay text-amber-500">
+                  <span className="rounded-sm border border-dashed border-amber-500/40 bg-amber-500/10 px-1 py-0.5 text-overlay text-amber-500">
                     R
                   </span>
-                  <span className="flex size-5 items-center justify-center rounded border border-dashed border-muted-foreground/30 bg-muted/30 text-overlay text-muted-foreground">
+                  <span className="flex size-5 items-center justify-center rounded-sm border border-dashed border-muted-foreground/30 bg-muted/30 text-overlay text-muted-foreground">
                     2
                   </span>
                 </div>
@@ -431,9 +431,9 @@ export default async function CardTypesPage() {
 
             {/* Labels outside */}
             <div className="mt-3 flex flex-wrap justify-center gap-2 text-meta">
-              <span className="rounded bg-muted px-2 py-0.5">{t(lang, "guideTypeAnatomyLegendRarity")}</span>
-              <span className="rounded bg-muted px-2 py-0.5">{t(lang, "guideTypeAnatomyLegendBlock")}</span>
-              <span className="rounded bg-muted px-2 py-0.5">{t(lang, "guideTypeAnatomyLegendAttr")}</span>
+              <span className="rounded-sm bg-muted px-2 py-0.5">{t(lang, "guideTypeAnatomyLegendRarity")}</span>
+              <span className="rounded-sm bg-muted px-2 py-0.5">{t(lang, "guideTypeAnatomyLegendBlock")}</span>
+              <span className="rounded-sm bg-muted px-2 py-0.5">{t(lang, "guideTypeAnatomyLegendAttr")}</span>
             </div>
           </div>
         </Surface>

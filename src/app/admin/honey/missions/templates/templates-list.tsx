@@ -97,7 +97,7 @@ export function TemplatesList({ initialTemplates }: { initialTemplates: Template
               <img
                 src={imageUrl}
                 alt=""
-                className="size-7 rounded object-cover"
+                className="size-7 rounded-sm object-cover"
               />
             )}
             <span className="font-bold tabular-nums text-warning">{honey}</span>

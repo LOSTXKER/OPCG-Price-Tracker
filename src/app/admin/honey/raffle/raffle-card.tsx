@@ -53,7 +53,7 @@ export function RaffleCard({
           <div className="flex items-start justify-between gap-2">
             <div>
               <div className="flex items-center gap-2">
-                <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground">
+                <span className="rounded-sm bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground">
                   {r.slug}
                 </span>
                 {r.isActive && !r.drawnAt && (
@@ -87,7 +87,7 @@ export function RaffleCard({
               {r.prizes.map((p) => (
                 <div key={p.rank} className="flex items-center gap-1.5 rounded-lg bg-muted/50 px-2 py-1">
                   {p.imageUrl ? (
-                    <img src={p.imageUrl} alt={p.name} className="size-5 rounded object-contain" />
+                    <img src={p.imageUrl} alt={p.name} className="size-5 rounded-sm object-contain" />
                   ) : (
                     <Gift className="size-3.5 text-amber-500" />
                   )}

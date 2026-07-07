@@ -60,7 +60,7 @@ export const MobileCardItem = memo(function MobileCardItem({
       )}
       <Link
         href={`/cards/${card.cardCode}`}
-        className="flex min-w-0 flex-1 items-center gap-3 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex min-w-0 flex-1 items-center gap-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium leading-tight">{name}</p>

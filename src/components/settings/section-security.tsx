@@ -344,7 +344,7 @@ export function SectionSecurity() {
                   className="size-48"
                 />
                 {totpSecret && (
-                  <code className="select-all rounded bg-neutral-100 px-2 py-1 text-xs text-neutral-700">
+                  <code className="select-all rounded-sm bg-neutral-100 px-2 py-1 text-xs text-neutral-700">
                     {totpSecret}
                   </code>
                 )}

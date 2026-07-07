@@ -198,7 +198,7 @@ function WatchlistRow({
 
       <Link
         href={`/cards/${entry.card.cardCode}`}
-        className="flex min-w-0 flex-1 items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex min-w-0 flex-1 items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium" title={displayName}>

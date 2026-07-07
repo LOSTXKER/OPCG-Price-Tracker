@@ -262,12 +262,12 @@ function SearchContent({
                 <div key={i} className="flex items-center gap-4 px-4 py-3">
                   <Skeleton className="size-12 shrink-0 rounded-lg" />
                   <div className="flex-1 space-y-2">
-                    <Skeleton className="h-4 w-40 rounded" />
-                    <Skeleton className="h-3 w-24 rounded" />
+                    <Skeleton className="h-4 w-40 rounded-sm" />
+                    <Skeleton className="h-3 w-24 rounded-sm" />
                   </div>
-                  <Skeleton className="h-4 w-20 rounded" />
-                  <Skeleton className="h-3.5 w-12 rounded" />
-                  <Skeleton className="hidden h-3.5 w-12 rounded md:block" />
+                  <Skeleton className="h-4 w-20 rounded-sm" />
+                  <Skeleton className="h-3.5 w-12 rounded-sm" />
+                  <Skeleton className="hidden h-3.5 w-12 rounded-sm md:block" />
                 </div>
               ))}
             </div>

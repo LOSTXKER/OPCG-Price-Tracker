@@ -105,7 +105,7 @@ export function HeaderMarketTicker({
           >
             <Search className="size-3.5 shrink-0 text-muted-foreground/60" />
             <span className="min-w-0 flex-1 truncate text-left text-muted-foreground/70">{t(language, "searchPlaceholder")}</span>
-            <kbd className="shrink-0 rounded bg-muted px-1 py-px font-mono text-micro leading-none text-muted-foreground/60">/</kbd>
+            <kbd className="shrink-0 rounded-sm bg-muted px-1 py-px font-mono text-micro leading-none text-muted-foreground/60">/</kbd>
           </button>
 
           <div className="mx-1 hidden h-5 w-px bg-border/60 sm:block" />

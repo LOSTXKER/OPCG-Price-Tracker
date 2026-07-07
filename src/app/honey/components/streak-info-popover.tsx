@@ -39,7 +39,7 @@ function streakInfoTiers(lang: Language): StreakTier[] {
  *
  * The popover is portaled to `document.body` because the parent streak
  * card uses `overflow-hidden` (so the inner divider doesn't bleed past
- * the rounded corners). Without the portal, the popover gets clipped by
+ * the rounded-sm corners). Without the portal, the popover gets clipped by
  * the card's bounds. We measure the trigger's viewport rect on open and
  * keep it synced via scroll/resize listeners.
  */

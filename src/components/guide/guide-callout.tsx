@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 
 import { cn } from "@/lib/utils"
 
-export type GuideCalloutTone = "blue" | "amber" | "rose" | "pink" | "red"
+export type GuideCalloutTone = "blue" | "amber" | "rose" | "pink" | "red" | "info" | "warning"
 
 // Static class map — Tailwind can't see interpolated `{tone}-500/20` classes.
 const TONE: Record<GuideCalloutTone, { border: string; bg: string; icon: string }> = {
@@ -12,6 +12,9 @@ const TONE: Record<GuideCalloutTone, { border: string; bg: string; icon: string 
   rose: { border: "border-rose-500/20", bg: "bg-rose-500/5", icon: "text-rose-500" },
   pink: { border: "border-pink-500/20", bg: "bg-pink-500/5", icon: "text-pink-500" },
   red: { border: "border-red-500/20", bg: "bg-red-500/5", icon: "text-red-500" },
+  // Semantic tones (espresso identity) — prefer these; the decorative hues above are legacy.
+  info: { border: "border-info/20", bg: "bg-info/10", icon: "text-info" },
+  warning: { border: "border-warning/20", bg: "bg-warning/10", icon: "text-warning" },
 }
 
 /**

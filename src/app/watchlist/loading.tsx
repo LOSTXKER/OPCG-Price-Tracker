@@ -36,8 +36,8 @@ export default function WatchlistLoading() {
             key={i}
             className="flex items-center gap-3 border-b border-hair px-4 py-3 last:border-0"
           >
-            <Skeleton className="size-3.5 shrink-0 rounded" />
-            <Skeleton className="size-10 shrink-0 rounded" />
+            <Skeleton className="size-3.5 shrink-0 rounded-sm" />
+            <Skeleton className="size-10 shrink-0 rounded-sm" />
             <div className="flex-1 space-y-1.5">
               <Skeleton className="h-3.5 w-40" />
               <Skeleton className="h-3 w-24" />
