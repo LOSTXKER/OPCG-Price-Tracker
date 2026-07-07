@@ -57,10 +57,10 @@ export function RaffleCard({
                   {r.slug}
                 </span>
                 {r.isActive && !r.drawnAt && (
-                  <span className="rounded-full bg-price-up/10 px-2 py-0.5 text-xs font-bold text-price-up">เปิดใช้งาน</span>
+                  <span className="rounded-full bg-success/10 px-2 py-0.5 text-xs font-bold text-success">เปิดใช้งาน</span>
                 )}
                 {r.drawnAt && (
-                  <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-bold text-amber-500">สุ่มแล้ว</span>
+                  <span className="rounded-full bg-warning/10 px-2 py-0.5 text-xs font-bold text-warning">สุ่มแล้ว</span>
                 )}
                 {!r.isActive && !r.drawnAt && (
                   <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-bold text-muted-foreground">ปิดใช้งาน</span>

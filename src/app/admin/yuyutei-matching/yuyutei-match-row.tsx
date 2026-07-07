@@ -56,9 +56,9 @@ export function YuyuteiMatchRow({
         "border-b border-hair motion-base group",
         "hover:bg-muted/70",
         isChecked && "!bg-primary/[0.06]",
-        !isChecked && m.status === "suggested" && "bg-blue-500/[0.02]",
-        !isChecked && m.status === "pending" && "bg-amber-500/[0.02]",
-        !isChecked && m.status === "matched" && "bg-green-500/[0.02]",
+        !isChecked && m.status === "suggested" && "bg-info/[0.02]",
+        !isChecked && m.status === "pending" && "bg-warning/[0.02]",
+        !isChecked && m.status === "matched" && "bg-success/[0.02]",
         m.status === "rejected" && "opacity-40",
       )}
     >
@@ -148,13 +148,13 @@ export function YuyuteiMatchRow({
               onKeyDown={(e) => {
                 if (e.key === "Enter") onLightbox(m, m.matchedCard!);
               }}
-              className="cursor-zoom-in hover:opacity-80 ring-2 ring-green-500/50 rounded motion-base"
+              className="cursor-zoom-in hover:opacity-80 ring-2 ring-success/50 rounded motion-base"
               title="คลิกเพื่อขยายรูปภาพ"
             >
               <CardThumb src={m.matchedCard!.imageUrl} size="md" />
             </div>
             <div className="min-w-0">
-              <p className="font-mono text-xs font-bold text-green-600">
+              <p className="font-mono text-xs font-bold text-success">
                 {m.matchedCard!.cardCode}
               </p>
               <RarityBadge rarity={m.matchedCard!.rarity} size="sm" />
@@ -195,11 +195,11 @@ export function YuyuteiMatchRow({
               <span
                 className={cn(
                   "inline-block rounded px-1.5 py-0.5 text-xs font-bold w-fit",
-                  m.geminiScore >= 0.8 && "bg-green-500/15 text-green-600",
+                  m.geminiScore >= 0.8 && "bg-success/15 text-success",
                   m.geminiScore >= 0.5 &&
                     m.geminiScore < 0.8 &&
-                    "bg-amber-500/15 text-amber-600",
-                  m.geminiScore < 0.5 && "bg-red-500/15 text-red-500",
+                    "bg-warning/15 text-warning",
+                  m.geminiScore < 0.5 && "bg-danger/15 text-danger",
                 )}
               >
                 {Math.round(m.geminiScore * 100)}%
@@ -246,7 +246,7 @@ export function YuyuteiMatchRow({
           ) : isMatched ? (
             <button
               onClick={() => onUnmatch(m.id)}
-              className="flex items-center gap-1 rounded-lg border border-amber-500/30 px-2 py-1 text-xs text-amber-600 hover:bg-amber-500/10 motion-base"
+              className="flex items-center gap-1 rounded-lg border border-warning/30 px-2 py-1 text-xs text-warning hover:bg-warning/10 motion-base"
               title="ยกเลิกการจับคู่"
             >
               <Undo2 className="size-3" /> ยกเลิกจับคู่
@@ -268,14 +268,14 @@ export function YuyuteiMatchRow({
                   if (effectiveCardId) onApprove(m.id, effectiveCardId);
                 }}
                 disabled={!effectiveCardId}
-                className="flex items-center gap-1 rounded-lg bg-green-600 px-2 py-1 text-xs font-semibold text-white hover:bg-green-700 disabled:opacity-30 motion-base"
+                className="flex items-center gap-1 rounded-lg bg-success px-2 py-1 text-xs font-semibold text-success-foreground hover:bg-success/90 disabled:opacity-30 motion-base"
                 title="อนุมัติการจับคู่"
               >
                 <Check className="size-3" /> อนุมัติ
               </button>
               <button
                 onClick={() => onReject(m.id)}
-                className="flex items-center gap-1 rounded-lg border border-red-500/30 px-2 py-1 text-xs text-red-500 hover:bg-red-500/10 motion-base"
+                className="flex items-center gap-1 rounded-lg border border-danger/30 px-2 py-1 text-xs text-danger hover:bg-danger/10 motion-base"
                 title="ปฏิเสธ"
               >
                 <X className="size-3" /> ปฏิเสธ
