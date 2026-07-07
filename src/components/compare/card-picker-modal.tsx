@@ -226,7 +226,7 @@ export function CardPickerModal({
         onClick={onClose}
       />
 
-      <div className="relative mx-auto mt-[5vh] flex h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-popover shadow-2xl ring-1 ring-border/50 animate-in fade-in-0 slide-in-from-bottom-4 duration-200 md:mt-[8vh] md:h-[80vh]">
+      <div className="relative mx-auto mt-[5vh] flex h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-popover shadow-[var(--elev-overlay)] ring-1 ring-border/50 animate-in fade-in-0 slide-in-from-bottom-4 duration-200 md:mt-[8vh] md:h-[80vh]">
         {/* Header */}
         <div className="flex items-center justify-between border-b px-4 py-3">
           <h2 id={titleId} className="text-h3">

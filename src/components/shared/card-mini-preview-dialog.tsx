@@ -43,7 +43,7 @@ function LightboxBody({ onClose }: { onClose: () => void }) {
   return (
     <>
       <DialogTitle className="sr-only">{displayName}</DialogTitle>
-      <div className="relative aspect-[63/88] w-full overflow-hidden rounded-2xl bg-muted shadow-2xl">
+      <div className="relative aspect-[63/88] w-full overflow-hidden rounded-2xl bg-muted shadow-[var(--elev-overlay)]">
         {card.imageUrl ? (
           <Image
             src={card.imageUrl}

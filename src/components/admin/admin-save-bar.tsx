@@ -55,7 +55,7 @@ export function AdminSaveBar({
       <Surface
         variant="outline"
         className={cn(
-          "pointer-events-auto flex flex-wrap items-center justify-between gap-3 bg-card/95 px-4 py-3 shadow-lg backdrop-blur",
+          "pointer-events-auto flex flex-wrap items-center justify-between gap-3 bg-card/95 px-4 py-3 shadow-[var(--elev-raised)] backdrop-blur",
           dirty ? "panel-accent" : "",
         )}
       >
