@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import {
+  Check,
   ChevronDown,
   Filter,
   Loader2,
@@ -51,6 +52,7 @@ export function SelectStep({
   activeFilterCount,
   clearAllFilters,
   onSelectCard,
+  selectedIds,
 }: {
   query: string
   setQuery: (q: string) => void
@@ -72,6 +74,8 @@ export function SelectStep({
   activeFilterCount: number
   clearAllFilters: () => void
   onSelectCard: (card: CardWithSet) => void
+  /** Multi-pick mode: chosen ids → rows render selected (Check + highlight). */
+  selectedIds?: ReadonlySet<number>
 }) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
@@ -290,7 +294,10 @@ export function SelectStep({
                 key={card.id}
                 type="button"
                 onClick={() => onSelectCard(card)}
-                className="ease-chrome flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-muted/70"
+                className={cn(
+                  "ease-chrome flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-muted/70",
+                  selectedIds?.has(card.id) && "bg-primary/5"
+                )}
               >
                 <div className="relative aspect-[63/88] w-10 shrink-0 overflow-hidden rounded-sm bg-muted/50">
                   {card.imageUrl ? (
@@ -328,7 +335,11 @@ export function SelectStep({
                   )}
                 </div>
 
-                <ChevronDown className="size-4 shrink-0 -rotate-90 text-muted-foreground/30" />
+                {selectedIds?.has(card.id) ? (
+                  <Check className="size-4 shrink-0 text-primary" />
+                ) : (
+                  <ChevronDown className="size-4 shrink-0 -rotate-90 text-muted-foreground/30" />
+                )}
               </button>
             ))}
           </div>
