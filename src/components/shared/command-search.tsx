@@ -10,6 +10,8 @@ import {
 } from "react"
 import {
   ArrowRightLeft,
+  BarChart3,
+  BookOpen,
   Briefcase,
   Clock,
   Heart,
@@ -19,6 +21,7 @@ import {
   Settings,
   Sparkles,
   Swords,
+  Tag,
   TrendingUp,
   XIcon,
   type LucideIcon,
@@ -35,14 +38,20 @@ import { useSearchKeyboardNav } from "@/hooks/use-search-keyboard-nav"
 
 /** Navigation shortcuts surfaced in the palette (cards + "go to" pages). */
 const NAV_ACTIONS: { href: string; labelKey: TranslationKey; icon: LucideIcon }[] = [
-  { href: "/", labelKey: "market", icon: LineChart },
-  { href: "/sets", labelKey: "browse", icon: LayoutGrid },
+  // IA-NAV-06: labels match the canonical destination names used by the header
+  // nav + bottom-nav ("หน้าแรก"/"ชุดการ์ด") so a place has one name everywhere.
+  { href: "/", labelKey: "home", icon: LineChart },
+  { href: "/sets", labelKey: "sets", icon: LayoutGrid },
+  { href: "/market-overview", labelKey: "marketOverview", icon: BarChart3 },
   { href: "/decks", labelKey: "decksAndTools", icon: Swords },
   { href: "/portfolio", labelKey: "portfolioNav", icon: Briefcase },
   { href: "/watchlist", labelKey: "watchlistNav", icon: Heart },
   { href: "/trending", labelKey: "footerTrending", icon: TrendingUp },
   { href: "/compare", labelKey: "compareCards", icon: ArrowRightLeft },
   { href: "/honey", labelKey: "honeyPageTitle", icon: Sparkles },
+  // IA-NAV-04: complete the palette — every top destination is reachable.
+  { href: "/guide", labelKey: "guide", icon: BookOpen },
+  { href: "/pricing", labelKey: "pricing", icon: Tag },
   { href: "/settings", labelKey: "settingsTitle", icon: Settings },
 ]
 
