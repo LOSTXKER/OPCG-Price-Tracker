@@ -2,8 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Bell, Pin } from "lucide-react";
+import { Bell, MoreHorizontal, Pin, Trash2 } from "lucide-react";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { CardImageButton } from "@/components/shared/card-image-button";
 import { GameBadge } from "@/components/shared/game-badge";
 import { MiniSparkline } from "@/components/ui/mini-sparkline";
@@ -152,7 +159,9 @@ function WatchlistRow({
         type="button"
         onClick={onTogglePin}
         className={cn(
-          "inline-flex size-7 shrink-0 items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-muted",
+          // Desktop only — on mobile pin moves into the "…" overflow menu so the
+          // row isn't cramped (name gets real width).
+          "hidden size-7 shrink-0 items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-muted sm:inline-flex",
           pinned
             ? "text-primary"
             : "text-muted-foreground/40 hover:text-foreground"
@@ -201,7 +210,10 @@ function WatchlistRow({
         className="flex min-w-0 flex-1 items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium" title={displayName}>
+          <p
+            className="line-clamp-2 break-words text-sm font-medium sm:truncate"
+            title={displayName}
+          >
             {displayName}
           </p>
           <div className="mt-0.5 flex items-center gap-1.5 text-meta">
@@ -236,31 +248,69 @@ function WatchlistRow({
       </div>
 
       <div className="flex shrink-0 items-center gap-0.5">
-        <button
-          type="button"
-          onClick={onSetAlert}
-          className={cn(
-            "inline-flex size-8 items-center justify-center rounded-lg ease-chrome transition-colors",
-            entry.hasActiveAlert
-              ? "text-primary hover:bg-primary/10"
-              : "text-muted-foreground/40 hover:bg-muted hover:text-foreground"
-          )}
-          aria-label={
-            entry.hasActiveAlert
-              ? t(lang, "watchlistHasAlert")
-              : t(lang, "setPriceAlert")
-          }
-          title={
-            entry.hasActiveAlert
-              ? t(lang, "watchlistHasAlert")
-              : t(lang, "setPriceAlert")
-          }
-        >
-          <Bell
-            className={cn("size-4", entry.hasActiveAlert && "fill-current")}
-          />
-        </button>
-        <WatchlistRowActions entry={entry} onRemove={onRemove} />
+        {/* Desktop (≥sm): inline alert + remove (the row has room). */}
+        <div className="hidden items-center gap-0.5 sm:flex">
+          <button
+            type="button"
+            onClick={onSetAlert}
+            className={cn(
+              "inline-flex size-8 items-center justify-center rounded-lg ease-chrome transition-colors",
+              entry.hasActiveAlert
+                ? "text-primary hover:bg-primary/10"
+                : "text-muted-foreground/40 hover:bg-muted hover:text-foreground"
+            )}
+            aria-label={
+              entry.hasActiveAlert
+                ? t(lang, "watchlistHasAlert")
+                : t(lang, "setPriceAlert")
+            }
+            title={
+              entry.hasActiveAlert
+                ? t(lang, "watchlistHasAlert")
+                : t(lang, "setPriceAlert")
+            }
+          >
+            <Bell
+              className={cn("size-4", entry.hasActiveAlert && "fill-current")}
+            />
+          </button>
+          <WatchlistRowActions entry={entry} onRemove={onRemove} />
+        </div>
+
+        {/* Mobile (<sm): fold pin / alert / remove into one 44px overflow menu
+            so the row stays readable — this was 5 sub-44px targets per row. */}
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            aria-label={t(lang, "moreActions")}
+            className="inline-flex size-11 items-center justify-center rounded-lg text-muted-foreground ease-chrome transition-colors hover:bg-muted sm:hidden"
+          >
+            <MoreHorizontal className="size-5" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={onTogglePin}>
+              <Pin
+                className={cn("size-4", pinned && "fill-current text-primary")}
+              />
+              {pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onSetAlert}>
+              <Bell
+                className={cn(
+                  "size-4",
+                  entry.hasActiveAlert && "fill-current text-primary"
+                )}
+              />
+              {entry.hasActiveAlert
+                ? t(lang, "watchlistHasAlert")
+                : t(lang, "setPriceAlert")}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem variant="destructive" onClick={onRemove}>
+              <Trash2 className="size-4" />
+              {t(lang, "removeFromWatchlist")}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

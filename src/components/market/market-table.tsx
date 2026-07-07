@@ -1,6 +1,7 @@
 "use client"
 
 import { Fragment, type ReactNode } from "react"
+import { ArrowDown, ArrowUp, ChevronDown } from "lucide-react"
 
 import { SortableHeader } from "@/components/shared/sortable-header"
 import { MobileCardItem, MobileCardSkeleton } from "@/components/home/mobile-card-item"
@@ -60,8 +61,66 @@ export function MarketTable({
 
   const sparkFor = (card: CardRow) => (card.id != null ? sparklines[card.id] : undefined)
 
+  // Shared header label — literal spans for the change columns, i18n otherwise.
+  // Reused by the desktop <th> and the mobile sort <select> so they never drift.
+  const columnLabel = (col: MarketColumn) =>
+    col.key === "change24h"
+      ? "24h"
+      : col.key === "change7d"
+        ? "7d"
+        : col.key === "change30d"
+          ? "30d"
+          : col.labelKey
+            ? t(lang, col.labelKey)
+            : col.key
+
+  // Sortable columns exposed to the mobile list (the <th> sort headers are
+  // table-only, so <sm has no other way to re-sort). Same COLUMN_SORTS ids.
+  const sortableCols = columns.filter((c) => c.sort)
+
   return (
     <>
+      {/* Mobile sort control (<sm) — the sortable <th> headers live in the
+          desktop table only; on mobile expose sort via a select + dir toggle. */}
+      {sortableCols.length > 0 && !isEmpty && (
+        <div className="flex items-center gap-2 pb-2 sm:hidden">
+          <span className="text-meta shrink-0">{t(lang, "sortBy")}</span>
+          <div className="relative flex-1">
+            <select
+              value={sortCol ?? ""}
+              onChange={(e) => {
+                if (e.target.value) onColumnSort(e.target.value as ColumnId)
+              }}
+              aria-label={t(lang, "sortBy")}
+              className="min-h-11 w-full appearance-none rounded-lg border border-hair bg-card pl-3 pr-9 text-sm font-medium text-foreground"
+            >
+              {sortableCols.map((c) => (
+                <option key={c.key} value={c.sort}>
+                  {columnLabel(c)}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              aria-hidden
+              className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => sortCol && onColumnSort(sortCol)}
+            disabled={!sortCol}
+            aria-label={sortDir === "desc" ? t(lang, "sortDesc") : t(lang, "sortAsc")}
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-hair bg-card text-foreground disabled:opacity-40"
+          >
+            {sortDir === "desc" ? (
+              <ArrowDown className="size-4" />
+            ) : (
+              <ArrowUp className="size-4" />
+            )}
+          </button>
+        </div>
+      )}
+
       {/* Mobile list fallback (<sm) */}
       <div className={cn("divide-y divide-hair sm:hidden", isPending && "opacity-50 motion-base")}>
         {showSkeleton
@@ -92,16 +151,7 @@ export function MarketTable({
             <tr className="border-b border-hair text-eyebrow text-muted-foreground">
               {columns.map((col) => {
                 if (col.sort) {
-                  const label =
-                    col.key === "change24h"
-                      ? "24h"
-                      : col.key === "change7d"
-                        ? "7d"
-                        : col.key === "change30d"
-                          ? "30d"
-                          : col.labelKey
-                            ? t(lang, col.labelKey)
-                            : ""
+                  const label = columnLabel(col)
                   return (
                     <SortableHeader
                       key={col.key}
