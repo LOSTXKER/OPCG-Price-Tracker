@@ -138,7 +138,7 @@ export function ProfileHero({
               <span
                 title={t(lang, "sellerVerified")}
                 aria-label={t(lang, "sellerVerified")}
-                className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-sky-500 text-white"
+                className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-info text-info-foreground"
               >
                 <CheckCircle2 className="size-4" />
               </span>
@@ -260,7 +260,7 @@ function HandleRow({
         className="ease-chrome inline-flex size-6 items-center justify-center rounded-lg text-muted-foreground/70 transition-colors hover:bg-muted hover:text-foreground"
       >
         {copied ? (
-          <Check className="size-3.5 text-emerald-500" />
+          <Check className="size-3.5 text-success" />
         ) : (
           <Copy className="size-3.5" />
         )}
@@ -278,11 +278,11 @@ function ActivityPill({
 }) {
   const dotClass =
     tone === "online"
-      ? "bg-emerald-500"
+      ? "bg-success"
       : tone === "recent"
-        ? "bg-emerald-500/70"
+        ? "bg-success/70"
         : tone === "stale"
-          ? "bg-amber-500"
+          ? "bg-warning"
           : "bg-muted-foreground/40";
   return (
     <span className="inline-flex items-center gap-1.5 text-meta">

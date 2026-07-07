@@ -268,7 +268,7 @@ export function SectionSecurity() {
           <FormError message={pwError} />
 
           {pwSuccess && (
-            <div className="flex items-center gap-2 rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-600 dark:text-emerald-400">
+            <div className="flex items-center gap-2 rounded-lg border border-success/20 bg-success/5 px-3 py-2 text-sm text-success">
               <CheckCircle2 className="size-4" />
               {t(lang, "passwordChanged")}
             </div>
@@ -297,7 +297,7 @@ export function SectionSecurity() {
           {!loadingMfa && (
             <Badge
               variant={mfaEnabled ? "secondary" : "outline"}
-              className={mfaEnabled ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"}
+              className={mfaEnabled ? "text-success" : "text-muted-foreground"}
             >
               {mfaEnabled ? t(lang, "twoFactorEnabled") : t(lang, "twoFactorDisabled")}
             </Badge>
@@ -312,7 +312,7 @@ export function SectionSecurity() {
         ) : mfaStep === "idle" ? (
           mfaEnabled ? (
             <div className="space-y-3">
-              <div className="flex items-center gap-2 rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-600 dark:text-emerald-400">
+              <div className="flex items-center gap-2 rounded-lg border border-success/20 bg-success/5 px-3 py-2 text-sm text-success">
                 <ShieldCheck className="size-4" />
                 {t(lang, "twoFactorEnabled")}
               </div>

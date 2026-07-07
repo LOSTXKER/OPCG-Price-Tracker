@@ -32,13 +32,13 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
       icon: Star,
       label: t(lang, "profileSellerRating"),
       value: sellerRating != null ? `★ ${sellerRating.toFixed(1)}` : "—",
-      color: "bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400",
+      color: "bg-warning/10 text-warning",
     },
     {
       icon: ShieldCheck,
       label: t(lang, "reviewsReceived"),
       value: sellerReviewCount,
-      color: "bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+      color: "bg-success/10 text-success",
     },
   ];
 
@@ -124,8 +124,8 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
       {/* Reputation */}
       <Surface variant="outline" padding="lg">
           <div className="flex items-center gap-2">
-            <div className="flex size-9 items-center justify-center rounded-lg bg-yellow-100 dark:bg-yellow-500/10">
-              <ShieldCheck className="size-4.5 text-yellow-600 dark:text-yellow-400" />
+            <div className="flex size-9 items-center justify-center rounded-lg bg-warning/10">
+              <ShieldCheck className="size-4.5 text-warning" />
             </div>
             <div>
               <h3 className="text-h5">{t(lang, "reputationTitle")}</h3>

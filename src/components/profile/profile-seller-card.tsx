@@ -69,7 +69,7 @@ export function ProfileSellerCard({ stats }: { stats: SellerStats }) {
           label={t(lang, "sellerResponseTime")}
         />
         {stats.isVerified && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2 py-0.5 text-micro text-blue-600 dark:text-blue-400">
+          <span className="inline-flex items-center gap-1 rounded-full bg-info/10 px-2 py-0.5 text-micro text-info">
             <BadgeCheck className="size-3" />
             {t(lang, "sellerVerified")}
           </span>

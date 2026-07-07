@@ -204,9 +204,9 @@ function FactItem({
 }) {
   const iconClass =
     tone === "verified"
-      ? "text-sky-500"
+      ? "text-info"
       : tone === "deals"
-        ? "text-emerald-500"
+        ? "text-success"
         : tone === "response"
           ? "text-amber-500"
           : "text-muted-foreground/80";

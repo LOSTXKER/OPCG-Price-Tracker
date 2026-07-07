@@ -196,8 +196,8 @@ export function Header() {
             >
               {honeyPendingActions && (
                 <span className="absolute -right-1 -top-1 flex size-2">
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75" />
-                  <span className="relative inline-flex size-2 rounded-full bg-red-500" />
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-danger opacity-75" />
+                  <span className="relative inline-flex size-2 rounded-full bg-danger" />
                 </span>
               )}
               <span className="text-sm leading-none">🍯</span>

@@ -113,7 +113,7 @@ export function ProfileShareMenu({
       title={copied ? t(lang, "shareLinkCopied") : t(lang, "shareCopyLink")}
     >
       {copied ? (
-        <Check className="size-4 text-green-500" />
+        <Check className="size-4 text-success" />
       ) : (
         <Share2 className="size-4" />
       )}

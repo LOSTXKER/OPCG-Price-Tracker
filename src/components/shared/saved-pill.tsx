@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 const TEXT = { xs: "text-xs font-medium", micro: "text-micro" } as const
 
 /**
- * Transient save-feedback pill (SETTINGS-10) — success (emerald) or error (red),
+ * Transient save-feedback pill (SETTINGS-10) — success (green) or error (red),
  * an icon + a short localized message, fading/zooming in. PRESENTATIONAL ONLY:
  * the parent decides when it mounts/unmounts (the auto-hide timing varies 2–3s
  * per surface). Replaces the per-file Feedback / PrivacyFeedback / FeedbackPill
@@ -33,7 +33,7 @@ export function SavedPill({
         TEXT[size],
         kind === "error"
           ? "bg-destructive/10 text-destructive"
-          : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+          : "bg-success/10 text-success",
         className,
       )}
     >

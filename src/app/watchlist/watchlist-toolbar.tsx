@@ -369,7 +369,7 @@ export function WatchlistToolbar({
               isFull
                 ? "border border-destructive/30 bg-destructive/5"
                 : isHigh
-                  ? "border border-amber-500/30 bg-amber-500/5"
+                  ? "border border-warning/30 bg-warning/5"
                   : ""
             )}
             title={`${itemCount}/${limit}`}
@@ -379,7 +379,7 @@ export function WatchlistToolbar({
                 <div
                   className={cn(
                     "h-full rounded-full motion-base",
-                    isFull ? "bg-destructive" : "bg-amber-500"
+                    isFull ? "bg-destructive" : "bg-warning"
                   )}
                   style={{ width: `${usagePct}%` }}
                 />
@@ -390,7 +390,7 @@ export function WatchlistToolbar({
                 "text-meta tabular-nums",
                 !isFull && !isHigh && "text-muted-foreground",
                 isFull && "text-destructive",
-                isHigh && !isFull && "text-amber-600 dark:text-amber-400"
+                isHigh && !isFull && "text-warning"
               )}
             >
               {itemCount}/{limit}

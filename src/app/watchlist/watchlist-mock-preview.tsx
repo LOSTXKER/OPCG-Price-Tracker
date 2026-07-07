@@ -33,7 +33,7 @@ export function WatchlistMockPreview({ lang }: { lang: Language }) {
                 <p className="font-price text-sm font-semibold">{c.price}</p>
                 <span
                   className={`text-xs font-medium ${
-                    c.change.startsWith("+") ? "text-green-500" : "text-red-500"
+                    c.change.startsWith("+") ? "text-price-up" : "text-price-down"
                   }`}
                 >
                   {c.change}
