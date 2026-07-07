@@ -198,7 +198,7 @@ export function ProfileCompleteness({
                     className={cn(
                       "inline-flex size-4 shrink-0 items-center justify-center rounded-full",
                       s.done
-                        ? "text-emerald-600 dark:text-emerald-400"
+                        ? "text-success"
                         : "text-primary/70",
                     )}
                   >

@@ -274,7 +274,7 @@ export default function SellerOrderDetailPage() {
                   <div
                     className={`flex h-8 w-8 items-center justify-center rounded-full ${
                       isCompleted
-                        ? "bg-green-500/15 text-green-600 dark:text-green-400"
+                        ? "bg-success/15 text-success"
                         : isCancelledOrder
                           ? "bg-muted text-muted-foreground/40"
                           : "bg-muted text-muted-foreground"
@@ -285,7 +285,7 @@ export default function SellerOrderDetailPage() {
                   {i < timelineSteps.length - 1 && (
                     <div
                       className={`mt-1 h-6 w-px ${
-                        isCompleted ? "bg-green-500/30" : "bg-border"
+                        isCompleted ? "bg-success/30" : "bg-border"
                       }`}
                     />
                   )}
@@ -309,11 +309,11 @@ export default function SellerOrderDetailPage() {
           })}
           {isCancelled && (
             <div className="flex items-start gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-500/15 text-red-600 dark:text-red-400">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-danger/15 text-danger">
                 <XCircle className="h-4 w-4" />
               </div>
               <div className="pt-1">
-                <p className="text-sm font-medium text-red-700 dark:text-red-400">
+                <p className="text-sm font-medium text-danger">
                   {t(lang, "sellOrderCancelled")}
                 </p>
                 {order.cancelledAt && (

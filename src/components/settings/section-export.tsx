@@ -19,14 +19,14 @@ export function SectionExport() {
       descKey: "exportPortfolioDesc" as const,
       href: "/api/analytics/export?type=portfolio",
       icon: FileSpreadsheet,
-      color: "bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+      color: "bg-success/10 text-success",
     },
     {
       labelKey: "exportWatchlist" as const,
       descKey: "exportWatchlistDesc" as const,
       href: "/api/analytics/export?type=watchlist",
       icon: FileSpreadsheet,
-      color: "bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+      color: "bg-success/10 text-success",
     },
     {
       labelKey: "exportListings" as const,

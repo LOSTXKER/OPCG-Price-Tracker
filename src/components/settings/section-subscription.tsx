@@ -121,14 +121,14 @@ function UsageRow({ icon: Icon, label, desc, current, max, color, lang }: {
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
             {isFull && <span className="rounded-sm bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">{t(lang, "usageFull")}</span>}
-            <span className={cn("text-xs font-medium tabular-nums", isFull ? "text-muted-foreground" : isHigh ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground")}>
+            <span className={cn("text-xs font-medium tabular-nums", isFull ? "text-muted-foreground" : isHigh ? "text-warning" : "text-muted-foreground")}>
               {current}/{isUnlimited ? "∞" : max}
             </span>
           </div>
         </div>
         <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary/80">
           <div
-            className={cn("h-full rounded-full transition-all duration-500", isUnlimited ? "w-0" : isFull ? "bg-muted-foreground/30" : isHigh ? "bg-amber-500" : color)}
+            className={cn("h-full rounded-full transition-all duration-500", isUnlimited ? "w-0" : isFull ? "bg-muted-foreground/30" : isHigh ? "bg-warning" : color)}
             style={isUnlimited ? undefined : { width: `${pct}%` }}
           />
         </div>
@@ -143,7 +143,7 @@ function UsageRow({ icon: Icon, label, desc, current, max, color, lang }: {
 function RenderValue({ val, planKey, lang }: { val: string | boolean; planKey: string; lang: Language }) {
   if (typeof val === "boolean") {
     return val
-      ? <Check className="mx-auto h-4 w-4 text-green-500 dark:text-green-400" />
+      ? <Check className="mx-auto h-4 w-4 text-success" />
       : <X className="mx-auto h-4 w-4 text-muted-foreground/30" />;
   }
   const isUnlimited = val === "∞";
@@ -158,7 +158,7 @@ function RenderValue({ val, planKey, lang }: { val: string | boolean; planKey: s
 function RenderHighlightValue({ val, lang }: { val: string | boolean; lang: Language }) {
   if (typeof val === "boolean") {
     return val
-      ? <Check className="h-3.5 w-3.5 text-green-500 dark:text-green-400" />
+      ? <Check className="h-3.5 w-3.5 text-success" />
       : <X className="h-3.5 w-3.5 text-muted-foreground/30" />;
   }
   return (

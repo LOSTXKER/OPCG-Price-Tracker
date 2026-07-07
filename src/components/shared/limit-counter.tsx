@@ -21,7 +21,7 @@ export function LimitCounter({
         isFull
           ? "bg-destructive/10 text-destructive"
           : isHigh
-            ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+            ? "bg-warning/10 text-warning"
             : "bg-muted text-muted-foreground",
         className,
       )}

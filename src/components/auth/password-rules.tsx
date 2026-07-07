@@ -20,7 +20,7 @@ export function PasswordRules({ value, lang }: { value: string; lang: Language }
             key={rule.label}
             className={cn(
               "flex items-center gap-1 text-xs transition-colors",
-              pass ? "text-emerald-500" : "text-muted-foreground"
+              pass ? "text-success" : "text-muted-foreground"
             )}
           >
             <CheckCircle2 className={cn("size-3", pass ? "opacity-100" : "opacity-40")} />

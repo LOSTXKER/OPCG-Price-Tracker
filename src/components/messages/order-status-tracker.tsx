@@ -55,9 +55,9 @@ export function OrderStatusTracker({
   }
   if (status === "DISPUTED") {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3">
-        <AlertTriangle className="size-5 text-amber-500" />
-        <span className="text-sm font-medium text-amber-600 dark:text-amber-400">
+      <div className="flex items-center gap-2 rounded-lg border border-warning/30 bg-warning/5 p-3">
+        <AlertTriangle className="size-5 text-warning" />
+        <span className="text-sm font-medium text-warning">
           {t(lang, "msgOrderDisputed")}
         </span>
       </div>
@@ -79,7 +79,7 @@ export function OrderStatusTracker({
                 <div
                   className={cn(
                     "flex size-7 items-center justify-center rounded-full border-2 transition-colors",
-                    isPast && "border-emerald-500 bg-emerald-500 text-white",
+                    isPast && "border-success bg-success text-success-foreground",
                     isActive && "border-primary bg-primary text-primary-foreground",
                     !isPast && !isActive && "border-muted-foreground/30 text-muted-foreground/50"
                   )}
@@ -100,7 +100,7 @@ export function OrderStatusTracker({
                 <div
                   className={cn(
                     "mx-0.5 h-0.5 flex-1 rounded-full",
-                    isPast ? "bg-emerald-500" : "bg-muted-foreground/20"
+                    isPast ? "bg-success" : "bg-muted-foreground/20"
                   )}
                 />
               )}

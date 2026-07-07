@@ -110,7 +110,7 @@ export function HeaderUserMenu({
         >
           <MessageCircle className="size-4" />
           {unreadMessages > 0 && (
-            <span className="absolute -right-0.5 -top-0.5 flex min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-micro leading-4 text-white">
+            <span className="absolute -right-0.5 -top-0.5 flex min-w-[16px] items-center justify-center rounded-full bg-danger px-1 text-micro leading-4 text-danger-foreground">
               {unreadMessages > 99 ? "99+" : unreadMessages}
             </span>
           )}

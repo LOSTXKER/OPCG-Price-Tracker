@@ -61,8 +61,8 @@ export function ResetPasswordClient() {
     >
       {success ? (
         <div className="space-y-4">
-          <div className="flex flex-col items-center gap-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-6 text-center">
-            <CheckCircle2 className="size-8 text-emerald-500" />
+          <div className="flex flex-col items-center gap-3 rounded-lg border border-success/20 bg-success/5 p-6 text-center">
+            <CheckCircle2 className="size-8 text-success" />
             <p className="text-sm">{t(lang, "passwordResetSuccess")}</p>
           </div>
           <Link href="/login" className="block">

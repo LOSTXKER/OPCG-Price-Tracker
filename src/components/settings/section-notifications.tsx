@@ -89,8 +89,8 @@ const NOTIF_TYPES: NotifType[] = [
     labelKey: "notifyMarketplace",
     descKey: "notifyMarketplaceDesc",
     icon: ShoppingBag,
-    iconColor: "text-emerald-600 dark:text-emerald-400",
-    iconBg: "bg-emerald-500/10",
+    iconColor: "text-success",
+    iconBg: "bg-success/10",
     emailField: "notifyMarketEmail",
     webField: "notifyMarketWeb",
     lineField: "notifyMarketLine",
@@ -189,9 +189,9 @@ export function SectionNotifications({ settings, onReload }: Props) {
 
       {/* LINE connection banner */}
       {!settings.lineConnected && (
-        <div className="flex items-center justify-between rounded-xl border border-green-500/20 bg-green-500/5 px-5 py-3">
+        <div className="flex items-center justify-between rounded-xl border border-success/20 bg-success/5 px-5 py-3">
           <div className="flex items-center gap-3">
-            <MessageCircle className="size-4 text-green-600 dark:text-green-400" />
+            <MessageCircle className="size-4 text-success" />
             <span className="text-sm text-muted-foreground">{t(lang, "lineNotConnected")}</span>
           </div>
           <Button size="sm" variant="outline" onClick={handleConnectLine} className="gap-1.5 shrink-0">
@@ -204,8 +204,8 @@ export function SectionNotifications({ settings, onReload }: Props) {
       {settings.lineConnected && (
         <Surface variant="outline" className="flex items-center justify-between px-5 py-3">
           <div className="flex items-center gap-3">
-            <MessageCircle className="size-4 text-green-600 dark:text-green-400" />
-            <Badge variant="secondary" className="text-xs text-green-600 dark:text-green-400">
+            <MessageCircle className="size-4 text-success" />
+            <Badge variant="secondary" className="text-xs text-success">
               {t(lang, "lineConnected")}
             </Badge>
           </div>
