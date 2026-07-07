@@ -390,6 +390,7 @@ export const jp = {
   marketplaceDesc: "コミュニティとカードを売買",
   addToWatchlist: "ウォッチリストに追加",
   removeFromWatchlist: "ウォッチリストから削除",
+  moreActions: "その他の操作",
   watchlistPin: "上部に固定",
   watchlistUnpin: "固定解除",
   watchlistPinned: "固定済み",

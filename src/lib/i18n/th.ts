@@ -390,6 +390,7 @@ export const th = {
   marketplaceDesc: "ซื้อขายการ์ดกับคอมมูนิตี้",
   addToWatchlist: "เพิ่มในรายการโปรด",
   removeFromWatchlist: "ลบออกจากรายการโปรด",
+  moreActions: "ตัวเลือกเพิ่มเติม",
   watchlistPin: "ปักหมุด",
   watchlistUnpin: "เลิกปักหมุด",
   watchlistPinned: "ปักหมุดแล้ว",

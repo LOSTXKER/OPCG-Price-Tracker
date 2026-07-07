@@ -390,6 +390,7 @@ export const en = {
   marketplaceDesc: "Buy and sell cards with the community",
   addToWatchlist: "Add to watchlist",
   removeFromWatchlist: "Remove from watchlist",
+  moreActions: "More actions",
   watchlistPin: "Pin to top",
   watchlistUnpin: "Unpin",
   watchlistPinned: "Pinned",
