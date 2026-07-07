@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 
 export default function RootError({
   error,
@@ -33,10 +34,9 @@ export default function RootError({
           <path d="M12 17h.01" />
         </svg>
       </div>
-      <h2 className="text-h3">Something went wrong</h2>
+      <h2 className="text-h3">เกิดข้อผิดพลาด</h2>
       <p className="max-w-md text-sm text-muted-foreground">
-        An unexpected error occurred while loading this page. Please try again
-        or come back later.
+        มีบางอย่างผิดพลาดขณะโหลดหน้านี้ ลองใหม่อีกครั้ง หรือกลับไปหน้าแรก
       </p>
       {isDev && error.message && (
         <pre className="max-w-lg overflow-auto rounded-lg bg-muted p-3 text-left text-meta">
@@ -48,12 +48,20 @@ export default function RootError({
           Error ID: {error.digest}
         </p>
       )}
-      <button
-        onClick={reset}
-        className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-      >
-        Try again
-      </button>
+      <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
+        <button
+          onClick={reset}
+          className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          ลองใหม่
+        </button>
+        <Link
+          href="/"
+          className="rounded-md border border-hair px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+        >
+          กลับหน้าแรก
+        </Link>
+      </div>
     </div>
   );
 }
