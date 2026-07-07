@@ -80,7 +80,7 @@ export function Footer() {
   return (
     <footer className="border-t border-hair bg-gradient-to-b from-transparent via-muted/10 to-muted/20">
       {/* pb clears the fixed mobile bottom-nav (md+ has no bottom-nav). */}
-      <div className="mx-auto max-w-7xl px-4 pt-10 pb-28 md:px-6 md:py-12 md:pb-12 lg:px-8">
+      <div className="mx-auto max-w-7xl px-5 pt-10 pb-28 md:px-6 md:py-12 md:pb-12 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-12">
           {/* Brand block */}
           <div className="lg:col-span-4">
