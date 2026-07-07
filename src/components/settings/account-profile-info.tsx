@@ -289,7 +289,7 @@ function FieldRow({
           type="button"
           onClick={onCancel}
           aria-label={cancelLabel}
-          className="ease-chrome inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="tap-safe ease-chrome inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
           <X className="size-4" />
         </button>
@@ -298,7 +298,7 @@ function FieldRow({
           type="button"
           onClick={onEdit}
           aria-label={editLabel}
-          className="ease-chrome inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="tap-safe ease-chrome inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
           <Pencil className="size-3.5" />
         </button>

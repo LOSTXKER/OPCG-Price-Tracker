@@ -97,7 +97,7 @@ function CardEditCompact({
 
         <button
           onClick={() => void handleRemove()}
-          className="shrink-0 rounded-lg p-1 text-muted-foreground/25 opacity-0 transition-all group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive"
+          className="tap-safe shrink-0 rounded-lg p-1 text-muted-foreground/25 opacity-0 transition-all group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive"
         >
           <Trash2 className="size-3.5" />
         </button>
@@ -305,7 +305,7 @@ export function BulkEditDialog({
             {bulkSearch && (
               <button
                 onClick={() => setBulkSearch("")}
-                className="rounded-sm p-0.5 text-muted-foreground hover:text-foreground"
+                className="tap-safe rounded-sm p-0.5 text-muted-foreground hover:text-foreground"
               >
                 <X className="size-3" />
               </button>

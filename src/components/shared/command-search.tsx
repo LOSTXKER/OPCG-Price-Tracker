@@ -201,7 +201,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                 type="button"
                 aria-label="Clear search"
                 onClick={() => reset()}
-                className="flex size-6 items-center justify-center rounded-md text-muted-foreground hover:text-foreground"
+                className="tap-safe flex size-6 items-center justify-center rounded-md text-muted-foreground hover:text-foreground"
               >
                 <XIcon className="size-3.5" />
               </button>

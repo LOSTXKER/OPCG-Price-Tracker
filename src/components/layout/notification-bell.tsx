@@ -137,7 +137,7 @@ export function NotificationBell() {
             <Link
               href="/settings/notifications"
               onClick={() => setOpen(false)}
-              className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
+              className="tap-safe inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
               title={t(lang, "notifications")}
             >
               <SettingsIcon className="size-3.5" />
@@ -208,7 +208,7 @@ export function NotificationBell() {
                         <button
                           type="button"
                           onClick={() => void markAsRead(item.id)}
-                          className="mt-1 shrink-0 rounded-sm p-1 text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground"
+                          className="tap-safe mt-1 shrink-0 rounded-sm p-1 text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground"
                           title={t(lang, "markAsRead")}
                         >
                           <Check className="size-3.5" />

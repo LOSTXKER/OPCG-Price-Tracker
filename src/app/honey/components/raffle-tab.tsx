@@ -73,7 +73,7 @@ function PrizeImageViewer({
     >
       <button
         onClick={onClose}
-        className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white motion-base hover:bg-white/20"
+        className="tap-safe absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white motion-base hover:bg-white/20"
       >
         <X className="size-5" />
       </button>

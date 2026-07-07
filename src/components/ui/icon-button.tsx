@@ -38,7 +38,9 @@ export function IconButton({
       aria-label={ariaLabel}
       title={title ?? ariaLabel}
       className={cn(
-        "ease-chrome inline-flex shrink-0 items-center justify-center rounded-lg transition-colors",
+        // `tap-safe` guarantees a ≥44px touch target even for the sm/md visual
+        // sizes (36/40px) so every icon button is reachable on mobile.
+        "tap-safe ease-chrome inline-flex shrink-0 items-center justify-center rounded-lg transition-colors",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         "disabled:cursor-not-allowed disabled:opacity-40",
         SIZES[size],

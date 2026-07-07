@@ -176,7 +176,7 @@ export function ProfileCompleteness({
               type="button"
               onClick={onDismiss}
               aria-label={t(lang, "completenessDismiss")}
-              className="-mr-1 -mt-1 inline-flex size-7 shrink-0 items-center justify-center rounded-full text-muted-foreground/70 transition-colors hover:bg-muted hover:text-foreground"
+              className="tap-safe -mr-1 -mt-1 inline-flex size-7 shrink-0 items-center justify-center rounded-full text-muted-foreground/70 transition-colors hover:bg-muted hover:text-foreground"
             >
               <X className="size-4" />
             </button>

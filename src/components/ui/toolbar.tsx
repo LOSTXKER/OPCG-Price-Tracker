@@ -83,7 +83,7 @@ export function ToolbarSearch({
       <button
         type="button"
         onClick={() => onOpenChange?.(true)}
-        className="rounded-lg p-2 text-muted-foreground/60 motion-base hover:bg-muted/70 hover:text-foreground"
+        className="tap-safe rounded-lg p-2 text-muted-foreground/60 motion-base hover:bg-muted/70 hover:text-foreground"
         aria-label={placeholder ?? "Search"}
       >
         <Search className="size-4" />
@@ -127,7 +127,7 @@ export function ToolbarSearch({
             onValueChange("");
             if (collapsible) onOpenChange?.(false);
           }}
-          className="rounded-sm p-0.5 text-muted-foreground/60 motion-base hover:text-foreground"
+          className="tap-safe rounded-sm p-0.5 text-muted-foreground/60 motion-base hover:text-foreground"
           aria-label="Clear"
         >
           <X className="size-3" />

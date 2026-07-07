@@ -190,7 +190,7 @@ function CardEditFull({
         </button>
         <button
           onClick={() => void handleRemove()}
-          className="shrink-0 rounded-lg border border-destructive/15 p-2.5 text-destructive/50 transition-colors hover:border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
+          className="tap-safe shrink-0 rounded-lg border border-destructive/15 p-2.5 text-destructive/50 transition-colors hover:border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
           title={t(lang, "remove")}
         >
           <Trash2 className="size-4" />

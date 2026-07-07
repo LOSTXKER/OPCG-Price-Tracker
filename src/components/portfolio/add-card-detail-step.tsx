@@ -49,7 +49,7 @@ export function DetailStep({
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="ease-chrome flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="tap-safe ease-chrome flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             <ArrowLeft className="size-4" />
           </button>
