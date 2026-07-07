@@ -52,7 +52,7 @@ export function SelectStep({
   activeFilterCount,
   clearAllFilters,
   onSelectCard,
-  selectedIds,
+  isSelected,
   showHeader = true,
 }: {
   query: string
@@ -75,8 +75,8 @@ export function SelectStep({
   activeFilterCount: number
   clearAllFilters: () => void
   onSelectCard: (card: CardWithSet) => void
-  /** Multi-pick mode: chosen ids → rows render selected (Check + highlight). */
-  selectedIds?: ReadonlySet<number>
+  /** Multi-pick mode: predicate → matching rows render selected (Check + highlight). */
+  isSelected?: (card: CardWithSet) => boolean
   /** Hide the built-in DialogHeader when the host supplies its own (alerts). */
   showHeader?: boolean
 }) {
@@ -301,7 +301,7 @@ export function SelectStep({
                 onClick={() => onSelectCard(card)}
                 className={cn(
                   "ease-chrome flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-muted/70",
-                  selectedIds?.has(card.id) && "bg-primary/5"
+                  isSelected?.(card) && "bg-primary/5"
                 )}
               >
                 <div className="relative aspect-[63/88] w-10 shrink-0 overflow-hidden rounded-sm bg-muted/50">
@@ -340,7 +340,7 @@ export function SelectStep({
                   )}
                 </div>
 
-                {selectedIds?.has(card.id) ? (
+                {isSelected?.(card) ? (
                   <Check className="size-4 shrink-0 text-primary" />
                 ) : (
                   <ChevronDown className="size-4 shrink-0 -rotate-90 text-muted-foreground/30" />

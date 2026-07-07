@@ -26,12 +26,12 @@ export type { CardWithSet };
  */
 export function CardPickerForm({
   onSelect,
-  selectedIds,
+  isSelected,
   showHeader = true,
 }: {
   onSelect: (card: CardWithSet) => void;
-  /** Multi-pick mode: ids already chosen — rows render selected + onSelect toggles. */
-  selectedIds?: ReadonlySet<number>;
+  /** Multi-pick mode: predicate → matching rows render selected + onSelect toggles. */
+  isSelected?: (card: CardWithSet) => boolean;
   /** Hide the built-in "เลือกการ์ด" header when the host has its own (alerts). */
   showHeader?: boolean;
 }) {
@@ -89,7 +89,7 @@ export function CardPickerForm({
       return;
     }
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- show the spinner immediately, before the debounced fetch
+     
     setLoading(true);
 
     const timer = window.setTimeout(
@@ -148,7 +148,7 @@ export function CardPickerForm({
       activeFilterCount={activeFilterCount}
       clearAllFilters={clearAllFilters}
       onSelectCard={onSelect}
-      selectedIds={selectedIds}
+      isSelected={isSelected}
       showHeader={showHeader}
     />
   );
