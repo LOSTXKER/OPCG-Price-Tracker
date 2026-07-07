@@ -14,7 +14,6 @@ import {
 import {
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { SetPicker } from "@/components/shared/set-picker"
@@ -88,9 +87,8 @@ export function SelectStep({
   return (
     <>
       {showHeader && (
-        <DialogHeader className="border-b border-hair px-5 pt-5 pb-4">
+        <DialogHeader className="border-b border-hair px-5 pt-4 pb-3">
           <DialogTitle>{t(lang, "addCardToPortfolio")}</DialogTitle>
-          <DialogDescription>{t(lang, "addCardToPortfolioDesc")}</DialogDescription>
         </DialogHeader>
       )}
 
@@ -138,7 +136,7 @@ export function SelectStep({
         </div>
 
         {showFilters && (
-          <div className="space-y-3 rounded-lg border border-hair bg-muted/10 p-3">
+          <div className="max-h-[40vh] space-y-2.5 overflow-y-auto rounded-lg border border-hair bg-muted/10 p-3">
             {/* Set filter */}
             <div>
               <div className="mb-1.5 flex items-center justify-between">
@@ -270,7 +268,7 @@ export function SelectStep({
       <div className="min-h-0 flex-1 overflow-y-auto">
         {!isFiltered && (
           <p className="px-4 pt-2 pb-1 text-meta text-muted-foreground/60">
-            {t(lang, "highestValue")} — {t(lang, "addCardToPortfolioDesc")}
+            {t(lang, "highestValue")}
           </p>
         )}
 
