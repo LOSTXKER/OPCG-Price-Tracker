@@ -295,8 +295,14 @@
    Do NOT use inside very dense clusters (rows of adjacent icon buttons) where
    the expanded zones would overlap and steal each other's taps — fold those
    into an overflow menu instead. */
-.tap-safe {
-  position: relative;
+/* In the utilities layer at zero specificity (`:where`) so an explicit position
+   utility — `absolute` on a dialog/sheet close, `fixed` on scroll-to-top — still
+   wins. tap-safe only supplies a positioning context when the host sets none of
+   its own; either way the ::after has a positioned ancestor to anchor to. */
+@layer utilities {
+  :where(.tap-safe) {
+    position: relative;
+  }
 }
 .tap-safe::after {
   content: "";
