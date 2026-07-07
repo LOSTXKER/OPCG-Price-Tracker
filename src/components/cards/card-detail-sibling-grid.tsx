@@ -87,7 +87,7 @@ export function SiblingGrid({
             </div>
             <div>
               <div className="flex items-center justify-center gap-1">
-                <span className="surface-2 inline-block rounded px-1 py-px font-price text-xs uppercase text-muted-foreground">
+                <span className="surface-2 inline-block rounded-sm px-1 py-px font-price text-xs uppercase text-muted-foreground">
                   {s.set.code}
                   {suffix && (
                     <span className="ml-0.5 text-muted-foreground/70">

@@ -87,7 +87,7 @@ export function ConditionChip({ condition, graded }: { condition: string; graded
   return (
     <span
       className={cn(
-        "text-micro inline-flex shrink-0 items-center rounded px-1.5 py-0.5 tnum",
+        "text-micro inline-flex shrink-0 items-center rounded-sm px-1.5 py-0.5 tnum",
         graded ? "surface-2 text-foreground ring-1 ring-hair" : "text-muted-foreground",
       )}
     >

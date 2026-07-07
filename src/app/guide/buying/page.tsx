@@ -159,7 +159,7 @@ export default async function BuyingGuidePage() {
         </div>
       </div>
 
-      <GuideCallout tone="blue" icon={Info}>
+      <GuideCallout tone="info" icon={Info}>
         <div>
           <h3 className="font-sans text-sm font-semibold text-primary">
             {t(lang, "guideBuyReadPriceHeading")}

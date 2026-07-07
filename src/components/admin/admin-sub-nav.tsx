@@ -19,7 +19,7 @@ export interface AdminSubNavItem {
 interface AdminSubNavProps {
   items: AdminSubNavItem[];
   className?: string;
-  /** Visual density. `pill` = rounded background tabs (default), `underline` = underlined row. */
+  /** Visual density. `pill` = rounded-sm background tabs (default), `underline` = underlined row. */
   variant?: "pill" | "underline";
 }
 

@@ -334,7 +334,7 @@ function DeckCalculatorContent() {
                     alt={activeDeck.leader.nameEn ?? activeDeck.leader.nameJp}
                     width={40}
                     height={56}
-                    className="rounded"
+                    className="rounded-sm"
                   />
                 )}
                 <div className="min-w-0 flex-1">
@@ -378,7 +378,7 @@ function DeckCalculatorContent() {
                         alt={entry.card.nameEn ?? entry.card.nameJp}
                         width={32}
                         height={45}
-                        className="rounded"
+                        className="rounded-sm"
                       />
                     )}
                     <div className="min-w-0 flex-1">
@@ -505,7 +505,7 @@ function DeckMockPreview({ lang }: { lang: Language }) {
             <h3 className="text-sm font-semibold">{t(lang, "leader")}</h3>
           </div>
           <div className="flex items-center gap-3 rounded-lg border border-hair p-2">
-            <div className="size-10 rounded bg-muted" />
+            <div className="size-10 rounded-sm bg-muted" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">Monkey D. Luffy</p>
               <p className="text-muted-foreground font-mono text-xs">OP09-001</p>
@@ -519,7 +519,7 @@ function DeckMockPreview({ lang }: { lang: Language }) {
           <div className="space-y-1">
             {mockCards.map((c) => (
               <div key={c.code} className="flex items-center gap-3 rounded-lg border border-hair p-2">
-                <div className="size-8 rounded bg-muted" />
+                <div className="size-8 rounded-sm bg-muted" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">{c.name}</p>
                   <p className="text-muted-foreground font-mono text-xs">{c.code} x{c.qty}</p>

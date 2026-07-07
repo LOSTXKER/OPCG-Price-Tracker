@@ -56,7 +56,7 @@ export function HomeMiniTable({
                 <span className="w-4 shrink-0 text-center font-price text-sm tabular-nums text-muted-foreground/70">
                   {idx + 1}
                 </span>
-                <div className="relative size-7 shrink-0 overflow-hidden rounded bg-muted">
+                <div className="relative size-7 shrink-0 overflow-hidden rounded-sm bg-muted">
                   {card.imageUrl && (
                     <Image
                       src={card.imageUrl}

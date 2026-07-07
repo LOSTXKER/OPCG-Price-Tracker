@@ -33,7 +33,7 @@ interface SetPickerProps {
   loading?: boolean
   onSelect: (code: string | null) => void
   /**
-   * pill   — compact rounded pill (used in page header, e.g. Drop Calculator)
+   * pill   — compact rounded-sm pill (used in page header, e.g. Drop Calculator)
    * cta    — large dashed-border CTA (used in empty states)
    * inline — full-width square trigger (used inside filter panels / forms)
    */
@@ -160,7 +160,7 @@ export function SetPicker({
             {selectedSet.imageUrl ? (
               <span className={cn(
                 "relative shrink-0 overflow-hidden bg-muted",
-                isCta ? "size-9 rounded-full" : isInline ? "size-6 rounded" : "size-7 rounded-full",
+                isCta ? "size-9 rounded-full" : isInline ? "size-6 rounded-sm" : "size-7 rounded-full",
               )}>
                 <Image
                   src={selectedSet.imageUrl}
@@ -173,7 +173,7 @@ export function SetPicker({
             ) : (
               <span className={cn(
                 "flex shrink-0 items-center justify-center bg-muted",
-                isCta ? "size-9 rounded-full" : isInline ? "size-6 rounded" : "size-7 rounded-full",
+                isCta ? "size-9 rounded-full" : isInline ? "size-6 rounded-sm" : "size-7 rounded-full",
               )}>
                 <Package className={cn(
                   isCta ? "size-4" : "size-3.5",
@@ -192,7 +192,7 @@ export function SetPicker({
           <>
             <span className={cn(
               "flex shrink-0 items-center justify-center",
-              isCta ? "size-9 rounded-full bg-primary/10" : isInline ? "size-6 rounded bg-muted" : "size-7 rounded-full bg-primary/10",
+              isCta ? "size-9 rounded-full bg-primary/10" : isInline ? "size-6 rounded-sm bg-muted" : "size-7 rounded-full bg-primary/10",
             )}>
               {isInline ? (
                 <LayoutGrid className="size-3.5 text-muted-foreground/60" />
@@ -253,7 +253,7 @@ export function SetPicker({
                   !selectedCode && "bg-primary/5 font-medium",
                 )}
               >
-                <span className="flex size-8 shrink-0 items-center justify-center rounded bg-muted">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-sm bg-muted">
                   <LayoutGrid className="size-3.5 text-muted-foreground/60" />
                 </span>
                 <span className="min-w-0 flex-1 truncate">{t(lang, "allSets")}</span>
@@ -282,11 +282,11 @@ export function SetPicker({
                     )}
                   >
                     {s.imageUrl ? (
-                      <span className="relative size-8 shrink-0 overflow-hidden rounded bg-muted">
+                      <span className="relative size-8 shrink-0 overflow-hidden rounded-sm bg-muted">
                         <Image src={s.imageUrl} alt={s.code} fill className="object-contain" sizes="32px" />
                       </span>
                     ) : (
-                      <span className="flex size-8 shrink-0 items-center justify-center rounded bg-muted">
+                      <span className="flex size-8 shrink-0 items-center justify-center rounded-sm bg-muted">
                         <Package className="size-3.5 text-muted-foreground/40" />
                       </span>
                     )}

@@ -21,7 +21,7 @@ export default function PortfolioLoading() {
               <Skeleton className="h-6 w-32" />
               <div className="flex gap-1.5">
                 {Array.from({ length: 4 }).map((_, j) => (
-                  <Skeleton key={j} className="aspect-[63/88] w-7 rounded" />
+                  <Skeleton key={j} className="aspect-[63/88] w-7 rounded-sm" />
                 ))}
               </div>
             </Surface>

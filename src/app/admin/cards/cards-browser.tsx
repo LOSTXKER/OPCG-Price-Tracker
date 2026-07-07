@@ -190,7 +190,7 @@ export function CardsBrowser({
             {card.baseCode}
           </Link>
           {card.isParallel && (
-            <span className="ml-1 rounded bg-warning-soft px-1 text-xs font-medium text-warning">
+            <span className="ml-1 rounded-sm bg-warning-soft px-1 text-xs font-medium text-warning">
               {card.rarity.startsWith("P-") ? card.rarity : "PA"}
             </span>
           )}

@@ -375,7 +375,7 @@ export function RaffleForm({
                   type="color"
                   value={form.color}
                   onChange={(e) => setForm({ ...form, color: e.target.value })}
-                  className="size-8 cursor-pointer rounded border bg-transparent"
+                  className="size-8 cursor-pointer rounded-sm border bg-transparent"
                 />
                 <input
                   value={form.color}

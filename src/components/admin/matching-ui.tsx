@@ -8,10 +8,10 @@ export { relativeTime } from "@/lib/utils/time";
 /* ── StatusBadge ── */
 
 const STATUS_STYLES: Record<string, string> = {
-  matched: "bg-green-500/15 text-green-600",
-  suggested: "bg-blue-500/15 text-blue-600",
-  pending: "bg-amber-500/15 text-amber-600",
-  rejected: "bg-red-500/15 text-red-500",
+  matched: "bg-success/15 text-success",
+  suggested: "bg-info/15 text-info",
+  pending: "bg-warning/15 text-warning",
+  rejected: "bg-danger/15 text-danger",
 };
 
 export function StatusBadge({ status }: { status: string }) {
@@ -42,7 +42,7 @@ export function CardThumb({
   return (
     <div
       className={cn(
-        "relative aspect-[63/88] overflow-hidden rounded border border-transparent dark:border-hair bg-muted/30 shrink-0",
+        "relative aspect-[63/88] overflow-hidden rounded-sm border border-transparent dark:border-hair bg-muted/30 shrink-0",
         w,
         cls
       )}
@@ -143,7 +143,7 @@ export function CandidatePicker({
           className={cn(
             "flex items-center gap-2 rounded-lg px-2 py-1 cursor-pointer transition-colors",
             c.id === currentId
-              ? "bg-blue-500/10 ring-1 ring-blue-500/40"
+              ? "bg-info/10 ring-1 ring-info/40"
               : "hover:bg-muted/50"
           )}
         >
@@ -152,7 +152,7 @@ export function CandidatePicker({
             name="candidate"
             checked={c.id === currentId}
             onChange={() => onPick(c.id)}
-            className="accent-blue-500"
+            className="accent-info"
           />
           {onZoom ? (
             <div

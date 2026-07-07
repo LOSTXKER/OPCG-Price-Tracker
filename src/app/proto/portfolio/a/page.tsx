@@ -136,7 +136,7 @@ export default function PortfolioProtoA() {
                   <img
                     src={h.img}
                     alt={h.name}
-                    className="aspect-[63/88] w-9 shrink-0 rounded ring-1 ring-hair object-cover"
+                    className="aspect-[63/88] w-9 shrink-0 rounded-sm ring-1 ring-hair object-cover"
                   />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{h.name}</p>

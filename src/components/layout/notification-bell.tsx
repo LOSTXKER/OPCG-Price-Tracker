@@ -208,7 +208,7 @@ export function NotificationBell() {
                         <button
                           type="button"
                           onClick={() => void markAsRead(item.id)}
-                          className="mt-1 shrink-0 rounded p-1 text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground"
+                          className="mt-1 shrink-0 rounded-sm p-1 text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground"
                           title={t(lang, "markAsRead")}
                         >
                           <Check className="size-3.5" />

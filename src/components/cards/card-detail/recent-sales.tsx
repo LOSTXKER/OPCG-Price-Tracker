@@ -63,7 +63,7 @@ function SourceRef({ source }: { source: string }) {
       aria-label={label}
       className={cn(
         marketPrimaryCell,
-        "ease-chrome rounded hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "ease-chrome rounded-sm hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
       )}
     >
       {inner}

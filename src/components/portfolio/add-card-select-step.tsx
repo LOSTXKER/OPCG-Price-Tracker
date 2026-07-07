@@ -269,7 +269,7 @@ export function SelectStep({
           <div className="space-y-0.5 px-2 pt-1">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="flex items-center gap-3 rounded-lg px-3 py-2.5">
-                <Skeleton className="size-10 shrink-0 rounded" />
+                <Skeleton className="size-10 shrink-0 rounded-sm" />
                 <div className="flex-1 space-y-1.5">
                   <Skeleton className="h-3.5 w-3/4" />
                   <Skeleton className="h-3 w-1/3" />
@@ -292,7 +292,7 @@ export function SelectStep({
                 onClick={() => onSelectCard(card)}
                 className="ease-chrome flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-muted/70"
               >
-                <div className="relative aspect-[63/88] w-10 shrink-0 overflow-hidden rounded bg-muted/50">
+                <div className="relative aspect-[63/88] w-10 shrink-0 overflow-hidden rounded-sm bg-muted/50">
                   {card.imageUrl ? (
                     <Image
                       src={card.imageUrl}

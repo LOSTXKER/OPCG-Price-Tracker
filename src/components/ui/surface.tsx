@@ -13,9 +13,9 @@ const surfaceVariants = cva("ease-chrome", {
   variants: {
     variant: {
       panel: "panel",
-      outline: "rounded-xl bg-card shadow-[var(--panel-shadow)]",
-      subtle: "rounded-xl bg-muted/30",
-      hero: "surface-1 hairline rounded-xl",
+      outline: "rounded-lg bg-card shadow-[var(--panel-shadow)]",
+      subtle: "rounded-lg bg-muted/30",
+      hero: "surface-1 hairline rounded-lg",
       ghost: "",
     },
     padding: {
@@ -60,7 +60,7 @@ export interface SurfaceProps
 /**
  * Unified surface primitive (card / panel / banner).
  *
- * Replaces ad-hoc `rounded-xl border border-border/40 bg-card` blocks, raw
+ * Replaces ad-hoc `rounded-lg border border-border/40 bg-card` blocks, raw
  * `<div className="panel">` usage, and one-off shadcn `<Card>` wrappers so that
  * radius, shadow, border, and hover states only live in one place.
  *

@@ -118,7 +118,7 @@ export function HoneyTransactionList({
                       <Zap
                         className={cn(
                           "size-3 shrink-0",
-                          tx.amount > 0 ? "text-green-500" : "text-red-500",
+                          tx.amount > 0 ? "text-success" : "text-danger",
                         )}
                       />
                       <span className="max-w-[120px] truncate text-sm">
@@ -144,7 +144,7 @@ export function HoneyTransactionList({
                     <span
                       className={cn(
                         "text-sm font-bold tabular-nums",
-                        tx.amount > 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400",
+                        tx.amount > 0 ? "text-success" : "text-danger",
                       )}
                     >
                       {tx.amount > 0 ? "+" : ""}

@@ -47,7 +47,7 @@ export default function PortfolioClient() {
       <>
         {header}
         <div className="space-y-6">
-          <div className="h-8 w-48 animate-pulse rounded bg-muted" />
+          <div className="h-8 w-48 animate-pulse rounded-sm bg-muted" />
           <div className="h-64 animate-pulse rounded-xl bg-muted" />
         </div>
       </>
@@ -135,7 +135,7 @@ function PortfolioHubContent() {
               <Skeleton className="h-6 w-32" />
               <div className="flex gap-1.5">
                 {Array.from({ length: 4 }).map((_, j) => (
-                  <Skeleton key={j} className="aspect-[63/88] w-7 rounded" />
+                  <Skeleton key={j} className="aspect-[63/88] w-7 rounded-sm" />
                 ))}
               </div>
             </Surface>

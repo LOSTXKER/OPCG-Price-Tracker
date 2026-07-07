@@ -172,10 +172,10 @@ export default function BuyerOrderDetailPage() {
             alt={cardName}
             width={64}
             height={90}
-            className="shrink-0 rounded object-cover"
+            className="shrink-0 rounded-sm object-cover"
           />
         ) : (
-          <div className="flex h-[90px] w-[64px] shrink-0 items-center justify-center rounded bg-muted">
+          <div className="flex h-[90px] w-[64px] shrink-0 items-center justify-center rounded-sm bg-muted">
             <Package className="h-6 w-6 text-muted-foreground" />
           </div>
         )}

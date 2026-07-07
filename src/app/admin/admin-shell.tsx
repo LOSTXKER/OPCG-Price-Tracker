@@ -247,7 +247,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          "hidden shrink-0 flex-col border-r border-hair bg-muted/10 transition-[width] duration-200 md:flex",
+          "hidden shrink-0 flex-col border-r border-hair bg-muted/10 transition-[width] duration-[var(--dur-base)] md:flex",
           collapsed ? "w-[60px]" : "w-56",
         )}
       >

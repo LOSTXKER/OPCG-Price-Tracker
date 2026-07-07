@@ -146,8 +146,18 @@ export function PageContent({ children }: { children: React.ReactNode }) {
 
   const width = resolveWidth(pathname);
 
+  // CHROME-09: clear the fixed mobile bottom-nav in ONE place. When this route
+  // shows a mobile footer, the footer's own bottom padding clears the nav — so
+  // <main> only needs normal breathing room (pb-12), killing the ~128px dead
+  // scroll gap. Routes with no mobile footer keep pb-32 so content still clears.
+  const hasMobileFooter =
+    !matches(pathname, NO_MOBILE_FOOTER_ROUTES) &&
+    !matches(pathname, NO_HEADER_FOOTER_ROUTES);
+
   return (
-    <main className="relative flex-1 pt-8 pb-32 md:pt-10 md:pb-24">
+    <main
+      className={`relative flex-1 pt-8 md:pt-10 md:pb-24 ${hasMobileFooter ? "pb-12" : "pb-32"}`}
+    >
       {/* ONE warm overhead light for every page (consistent) — spills from the
           top of the screen, BEHIND the transparent nav, and fades down. Replaces
           the old per-page glows so the ambient is identical app-wide. */}

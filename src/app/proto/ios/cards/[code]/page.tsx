@@ -131,7 +131,7 @@ export default function CardDetailPage() {
               <p className="mt-1 text-meta">
                 ราคากลาง · {selectedGrade.label}
                 {selectedGrade.modeled && (
-                  <span className="ml-1 rounded bg-muted px-1 py-px text-micro text-muted-foreground">est</span>
+                  <span className="ml-1 rounded-sm bg-muted px-1 py-px text-micro text-muted-foreground">est</span>
                 )}
                 {" · "}อัปเดตวันนี้
               </p>
@@ -363,7 +363,7 @@ export default function CardDetailPage() {
           <p className="text-meta">
             {selectedGrade.label}
             {selectedGrade.modeled && (
-              <span className="ml-1 rounded bg-muted px-1 py-px text-micro text-muted-foreground">est</span>
+              <span className="ml-1 rounded-sm bg-muted px-1 py-px text-micro text-muted-foreground">est</span>
             )}
           </p>
           <p className="text-price tabular-nums">{fmt(displayPrice)}</p>

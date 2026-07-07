@@ -53,14 +53,14 @@ export function RaffleCard({
           <div className="flex items-start justify-between gap-2">
             <div>
               <div className="flex items-center gap-2">
-                <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground">
+                <span className="rounded-sm bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground">
                   {r.slug}
                 </span>
                 {r.isActive && !r.drawnAt && (
-                  <span className="rounded-full bg-price-up/10 px-2 py-0.5 text-xs font-bold text-price-up">เปิดใช้งาน</span>
+                  <span className="rounded-full bg-success/10 px-2 py-0.5 text-xs font-bold text-success">เปิดใช้งาน</span>
                 )}
                 {r.drawnAt && (
-                  <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-bold text-amber-500">สุ่มแล้ว</span>
+                  <span className="rounded-full bg-warning/10 px-2 py-0.5 text-xs font-bold text-warning">สุ่มแล้ว</span>
                 )}
                 {!r.isActive && !r.drawnAt && (
                   <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-bold text-muted-foreground">ปิดใช้งาน</span>
@@ -87,7 +87,7 @@ export function RaffleCard({
               {r.prizes.map((p) => (
                 <div key={p.rank} className="flex items-center gap-1.5 rounded-lg bg-muted/50 px-2 py-1">
                   {p.imageUrl ? (
-                    <img src={p.imageUrl} alt={p.name} className="size-5 rounded object-contain" />
+                    <img src={p.imageUrl} alt={p.name} className="size-5 rounded-sm object-contain" />
                   ) : (
                     <Gift className="size-3.5 text-amber-500" />
                   )}

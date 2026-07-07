@@ -45,7 +45,7 @@ export function AdminSaveBar({
     <div
       aria-hidden={!dirty}
       className={cn(
-        "pointer-events-none sticky inset-x-0 bottom-0 z-30 mt-6 transition-all duration-200",
+        "pointer-events-none sticky inset-x-0 bottom-0 z-30 mt-6 transition-all duration-[var(--dur-base)]",
         dirty
           ? "translate-y-0 opacity-100"
           : "translate-y-4 opacity-0",

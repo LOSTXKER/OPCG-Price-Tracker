@@ -41,7 +41,7 @@ export function AdminBulkBar({
   return (
     <div
       className={cn(
-        "fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-3 rounded-xl border border-border bg-popover px-5 py-3 shadow-2xl animate-in slide-in-from-bottom-4 fade-in duration-200",
+        "fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-3 rounded-xl border border-border bg-popover px-5 py-3 shadow-2xl animate-in slide-in-from-bottom-4 fade-in duration-[var(--dur-base)]",
         className,
       )}
     >
@@ -82,11 +82,11 @@ const VARIANT_CLASS: Record<AdminBulkActionVariant, string> = {
     "bg-violet-600 text-white hover:bg-violet-700",
   "violet-outline":
     "border border-violet-500/40 text-violet-600 hover:bg-violet-500/10",
-  success: "bg-green-600 text-white hover:bg-green-700",
+  success: "bg-success text-success-foreground hover:bg-success/90",
   danger:
-    "border border-red-500/30 text-red-500 hover:bg-red-500/10",
+    "border border-danger/30 text-danger hover:bg-danger/10",
   "danger-outline":
-    "border border-red-500/30 text-red-500 hover:bg-red-500/10",
+    "border border-danger/30 text-danger hover:bg-danger/10",
 };
 
 export interface AdminBulkActionProps

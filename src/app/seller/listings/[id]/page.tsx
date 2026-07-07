@@ -230,10 +230,10 @@ export default function SellerEditListingPage() {
             alt={listing.card.nameEn ?? listing.card.nameJp}
             width={60}
             height={84}
-            className="rounded object-cover"
+            className="rounded-sm object-cover"
           />
         ) : (
-          <div className="flex h-[84px] w-[60px] items-center justify-center rounded bg-muted">
+          <div className="flex h-[84px] w-[60px] items-center justify-center rounded-sm bg-muted">
             <Package className="h-6 w-6 text-muted-foreground" />
           </div>
         )}
@@ -398,7 +398,7 @@ export default function SellerEditListingPage() {
                       );
                     }
                   }}
-                  className="rounded border-hair"
+                  className="rounded-sm border-hair"
                 />
                 {t(lang, opt.labelKey)}
               </label>

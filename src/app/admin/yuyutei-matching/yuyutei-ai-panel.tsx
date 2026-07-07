@@ -38,7 +38,7 @@ export function YuyuteiAiPanel({
         {running ? (
           <button
             onClick={onCancel}
-            className="flex items-center gap-1 rounded-md bg-red-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-red-700 motion-base"
+            className="flex items-center gap-1 rounded-md bg-danger px-2.5 py-1 text-xs font-semibold text-danger-foreground hover:bg-danger/90 motion-base"
           >
             <Square className="size-3" /> ยกเลิก
           </button>
@@ -67,17 +67,17 @@ export function YuyuteiAiPanel({
             {entry.result === "processing" ? (
               <Loader2 className="size-3 animate-spin text-violet-500 shrink-0" />
             ) : entry.result === "ok" ? (
-              <span className="text-green-500 shrink-0">&#10003;</span>
+              <span className="text-success shrink-0">&#10003;</span>
             ) : entry.result === "skip" ? (
               <span className="text-muted-foreground shrink-0">&#8212;</span>
             ) : (
-              <span className="text-red-500 shrink-0">&#10007;</span>
+              <span className="text-danger shrink-0">&#10007;</span>
             )}
             <span
               className={cn(
                 "font-bold min-w-[80px]",
-                entry.result === "ok" && "text-green-600",
-                entry.result === "fail" && "text-red-500",
+                entry.result === "ok" && "text-success",
+                entry.result === "fail" && "text-danger",
                 entry.result === "processing" && "text-violet-600",
                 entry.result === "skip" && "text-muted-foreground",
               )}

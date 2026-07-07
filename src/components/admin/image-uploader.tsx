@@ -94,7 +94,7 @@ export function ImageUploader({
           <button
             type="button"
             onClick={() => onChange("")}
-            className="rounded-lg bg-red-500/30 p-2 text-white backdrop-blur-sm transition-colors hover:bg-red-500/50"
+            className="rounded-lg bg-danger/30 p-2 text-white backdrop-blur-sm transition-colors hover:bg-danger/50"
           >
             <Trash2 className="size-4" />
           </button>

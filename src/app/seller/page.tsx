@@ -234,7 +234,7 @@ export default function SellerDashboard() {
                     alt={order.listing.card.nameEn ?? order.listing.card.nameJp}
                     width={40}
                     height={56}
-                    className="rounded object-cover"
+                    className="rounded-sm object-cover"
                   />
                 )}
                 <div className="min-w-0 flex-1">

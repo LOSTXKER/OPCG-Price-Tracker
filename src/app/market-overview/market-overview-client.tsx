@@ -168,7 +168,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
                     {i + 1}
                   </span>
                   {s.boxImageUrl ? (
-                    <div className="relative size-11 shrink-0 overflow-hidden rounded bg-muted">
+                    <div className="relative size-11 shrink-0 overflow-hidden rounded-sm bg-muted">
                       <Image
                         src={s.boxImageUrl}
                         alt={s.name}
@@ -178,7 +178,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
                       />
                     </div>
                   ) : (
-                    <div className="flex size-11 shrink-0 items-center justify-center rounded bg-muted text-muted-foreground/40">
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-sm bg-muted text-muted-foreground/40">
                       <Package className="size-4" aria-hidden="true" />
                     </div>
                   )}
@@ -281,7 +281,7 @@ function TopCardTile({
             src={card.imageUrl}
             alt={name}
             fill
-            className="object-contain transition-transform duration-300 group-hover:scale-105"
+            className="object-contain transition-transform duration-[var(--dur-slow)] group-hover:scale-105"
             sizes="(min-width: 1024px) 16vw, (min-width: 640px) 33vw, 50vw"
             placeholder="blur"
             blurDataURL={BLUR_DATA_URL}

@@ -31,37 +31,32 @@ function buildSetTypeInfo(
   lang: Language
 ): Record<
   string,
-  { label: string; icon: typeof Layers; color: string; description: string }
+  { label: string; icon: typeof Layers; description: string }
 > {
   return {
     BOOSTER: {
       label: t(lang, "guideSetTypeBoosterLabel"),
       icon: Package,
-      color: "#3B82F6",
       description: t(lang, "guideSetTypeBoosterDesc"),
     },
     STARTER: {
       label: t(lang, "guideSetTypeStarterLabel"),
       icon: Star,
-      color: "#22C55E",
       description: t(lang, "guideSetTypeStarterDesc"),
     },
     EXTRA_BOOSTER: {
       label: t(lang, "guideSetTypeExtraLabel"),
       icon: Trophy,
-      color: "#F59E0B",
       description: t(lang, "guideSetTypeExtraDesc"),
     },
     PROMO: {
       label: t(lang, "guideSetTypePromoLabel"),
       icon: Layers,
-      color: "#8B5CF6",
       description: t(lang, "guideSetTypePromoDesc"),
     },
     OTHER: {
       label: t(lang, "guideSetTypeOtherLabel"),
       icon: Box,
-      color: "#6B7280",
       description: t(lang, "guideSetTypeOtherDesc"),
     },
   };
@@ -78,17 +73,14 @@ function buildPackSizes(lang: Language) {
     {
       label: t(lang, "guideSetPackPackLabel"),
       value: t(lang, "guideSetPackPackValue"),
-      color: "#3B82F6",
     },
     {
       label: t(lang, "guideSetPackBoxLabel"),
       value: t(lang, "guideSetPackBoxValue"),
-      color: "#8B5CF6",
     },
     {
       label: t(lang, "guideSetPackCaseLabel"),
       value: t(lang, "guideSetPackCaseValue"),
-      color: "#F59E0B",
     },
   ];
 }
@@ -98,22 +90,18 @@ function buildCardCodes(lang: Language) {
     {
       code: "OP09-001",
       desc: t(lang, "guideSetCodeBoosterDesc"),
-      color: "#3B82F6",
     },
     {
       code: "OP09-001_p1",
       desc: t(lang, "guideSetCodeParallelDesc"),
-      color: "#8B5CF6",
     },
     {
       code: "ST01-001",
       desc: t(lang, "guideSetCodeStarterDesc"),
-      color: "#22C55E",
     },
     {
       code: "EB01-001",
       desc: t(lang, "guideSetCodeExtraDesc"),
-      color: "#F59E0B",
     },
   ];
 }
@@ -228,14 +216,8 @@ export default async function GuideSetsPage() {
                 variant="outline"
                 className="p-4"
               >
-                <div
-                  className="flex size-9 items-center justify-center rounded-lg"
-                  style={{ backgroundColor: `${info.color}15` }}
-                >
-                  <Icon
-                    className="size-4.5"
-                    style={{ color: info.color }}
-                  />
+                <div className="flex size-9 items-center justify-center rounded-lg bg-muted">
+                  <Icon className="size-4.5 text-muted-foreground" />
                 </div>
                 <h3 className="mt-3 text-h4">{info.label}</h3>
                 <p className="mt-1 text-body-sm leading-relaxed text-muted-foreground">
@@ -262,10 +244,7 @@ export default async function GuideSetsPage() {
               variant="outline"
               className="p-4 text-center"
             >
-              <p
-                className="text-xl font-bold"
-                style={{ color: item.color }}
-              >
+              <p className="text-xl font-bold text-foreground">
                 {item.value}
               </p>
               <p className="mt-1 text-meta">
@@ -296,13 +275,7 @@ export default async function GuideSetsPage() {
               variant="outline"
               className="flex items-center gap-3 px-4 py-3"
             >
-              <code
-                className="shrink-0 rounded-md px-2 py-1 font-mono text-sm font-bold"
-                style={{
-                  color: item.color,
-                  backgroundColor: `${item.color}10`,
-                }}
-              >
+              <code className="shrink-0 rounded-md bg-muted px-2 py-1 font-mono text-sm font-bold text-foreground">
                 {item.code}
               </code>
               <p className="text-sm text-muted-foreground">{item.desc}</p>
@@ -334,10 +307,7 @@ export default async function GuideSetsPage() {
 
           return (
             <div key={type} className="space-y-2">
-              <h3
-                className="text-sm font-semibold"
-                style={{ color: info.color }}
-              >
+              <h3 className="text-sm font-semibold text-foreground">
                 {info.label} ({sets.length})
               </h3>
               <Surface variant="outline" className="divide-y divide-hair">
@@ -358,10 +328,7 @@ export default async function GuideSetsPage() {
                         />
                       </div>
                     ) : (
-                      <div
-                        className="flex size-10 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white"
-                        style={{ backgroundColor: info.color }}
-                      >
+                      <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-xs font-bold text-muted-foreground">
                         {set.code.split("-")[0]}
                       </div>
                     )}

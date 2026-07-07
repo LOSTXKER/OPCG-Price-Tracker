@@ -107,7 +107,7 @@ export function SetRow({
         </Badge>
         <ChevronDown
           className={cn(
-            "size-4 text-muted-foreground transition-transform duration-200",
+            "size-4 text-muted-foreground transition-transform duration-[var(--dur-base)]",
             expanded && "rotate-180",
           )}
         />
@@ -116,7 +116,7 @@ export function SetRow({
       {/* Expanded Content */}
       <div
         className={cn(
-          "grid transition-[grid-template-rows] duration-200 ease-in-out",
+          "grid transition-[grid-template-rows] duration-[var(--dur-base)] ease-in-out",
           expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
         )}
       >

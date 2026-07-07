@@ -176,7 +176,7 @@ export function HeaderUserMenu({
                 >
                   {rankImage ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={rankImage} alt="" className="size-2.5 rounded object-contain" />
+                    <img src={rankImage} alt="" className="size-2.5 rounded-sm object-contain" />
                   ) : (
                     <RankTierIcon name={currentTier.iconName} className="size-2.5" />
                   )}

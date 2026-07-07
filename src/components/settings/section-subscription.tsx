@@ -120,7 +120,7 @@ function UsageRow({ icon: Icon, label, desc, current, max, color, lang }: {
             {desc && <p className="text-meta text-muted-foreground/60 leading-tight">{desc}</p>}
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
-            {isFull && <span className="rounded bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">{t(lang, "usageFull")}</span>}
+            {isFull && <span className="rounded-sm bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">{t(lang, "usageFull")}</span>}
             <span className={cn("text-xs font-medium tabular-nums", isFull ? "text-muted-foreground" : isHigh ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground")}>
               {current}/{isUnlimited ? "∞" : max}
             </span>

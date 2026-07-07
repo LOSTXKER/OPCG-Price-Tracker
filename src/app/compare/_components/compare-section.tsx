@@ -140,7 +140,7 @@ export function PriceCell({
     <span
       className={cn(
         "block text-2xl font-semibold tabular-nums tracking-tight sm:text-3xl md:text-4xl",
-        winner && "text-price-up",
+        winner && "text-primary",
       )}
     >
       {formatter(value)}
@@ -165,7 +165,7 @@ export function NumericCell({
     <span
       className={cn(
         "block text-3xl font-semibold tabular-nums tracking-tight sm:text-4xl",
-        winner && "text-price-up",
+        winner && "text-primary",
       )}
     >
       {format ? formatInteger(value) : value}
@@ -189,7 +189,7 @@ export function ChangeValue({
     <span
       className={cn(
         "inline-flex items-center gap-1 text-2xl font-semibold tabular-nums tracking-tight sm:text-3xl",
-        up ? "text-price-up" : "text-destructive",
+        up ? "text-price-up" : "text-price-down",
       )}
     >
       {up ? (

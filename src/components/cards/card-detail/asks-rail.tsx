@@ -229,7 +229,7 @@ export function MeecardAsksRail({
                         <td className={marketTdLead}>
                           <Link
                             href={isSample ? marketHref : `/marketplace/${l.id}`}
-                            className="ease-chrome block min-w-0 rounded hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            className="ease-chrome block min-w-0 rounded-sm hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                           >
                             <UserCell listing={l} lang={lang} withArrow />
                           </Link>

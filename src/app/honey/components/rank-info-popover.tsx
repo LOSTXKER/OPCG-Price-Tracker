@@ -79,7 +79,7 @@ function TierRow({
         <img
           src={tier.imageUrl}
           alt=""
-          className="size-3.5 shrink-0 rounded object-contain"
+          className="size-3.5 shrink-0 rounded-sm object-contain"
         />
       ) : (
         <RankTierIcon

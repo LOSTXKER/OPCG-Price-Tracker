@@ -6,7 +6,7 @@ import Link from "next/link"
 
 import { CardImageButton } from "@/components/shared/card-image-button"
 import { RarityBadge } from "@/components/shared/rarity-badge"
-import { WatchlistStar } from "@/components/shared/watchlist-star"
+import { WatchlistHeart } from "@/components/shared/watchlist-heart"
 import { Price } from "@/components/shared/price-inline"
 import { PriceUsd } from "@/components/shared/price-usd"
 import { MiniSparkline } from "@/components/ui/mini-sparkline"
@@ -54,7 +54,7 @@ export const MarketTableRow = memo(function MarketTableRow({
   function renderCell(col: MarketColumn) {
     switch (col.key) {
       case "star":
-        return card.id != null ? <WatchlistStar cardId={card.id} size="sm" /> : null
+        return card.id != null ? <WatchlistHeart cardId={card.id} size="sm" /> : null
       case "rank":
         return <span className="font-price text-xs text-muted-foreground">{rank}</span>
       case "card":
@@ -151,7 +151,7 @@ export function MarketTableRowSkeleton({ columns }: { columns: MarketColumn[] })
         <td key={col.key} className={cellClass(col)}>
           {col.key === "card" ? (
             <div className="flex items-center gap-3">
-              <Skeleton className="size-9 rounded" />
+              <Skeleton className="size-9 rounded-sm" />
               <div className="space-y-1.5">
                 <Skeleton className="h-3.5 w-28" />
                 <Skeleton className="h-2.5 w-16" />

@@ -21,7 +21,7 @@ export default function TrendingLoading() {
         {Array.from({ length: 10 }).map((_, i) => (
           <div key={i} className="flex items-center gap-4 border-b border-hair py-3 last:border-0">
             <Skeleton className="size-6 rounded-full" />
-            <Skeleton className="size-10 rounded" />
+            <Skeleton className="size-10 rounded-sm" />
             <div className="flex-1">
               <Skeleton className="h-3.5 w-36" />
               <Skeleton className="mt-1 h-3 w-20" />

@@ -127,7 +127,7 @@ export function ToolbarSearch({
             onValueChange("");
             if (collapsible) onOpenChange?.(false);
           }}
-          className="rounded p-0.5 text-muted-foreground/60 motion-base hover:text-foreground"
+          className="rounded-sm p-0.5 text-muted-foreground/60 motion-base hover:text-foreground"
           aria-label="Clear"
         >
           <X className="size-3" />

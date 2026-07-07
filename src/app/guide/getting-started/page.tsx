@@ -43,35 +43,35 @@ function buildTurnPhases(lang: Language) {
       name: "Refresh Phase",
       nameTh: t(lang, "guideStartPhaseRefreshLabel"),
       description: t(lang, "guideStartPhaseRefreshDesc"),
-      color: "bg-emerald-500",
+      color: "bg-muted text-muted-foreground",
       icon: RefreshCw,
     },
     {
       name: "Draw Phase",
       nameTh: t(lang, "guideStartPhaseDrawLabel"),
       description: t(lang, "guideStartPhaseDrawDesc"),
-      color: "bg-blue-500",
+      color: "bg-muted text-muted-foreground",
       icon: Layers,
     },
     {
       name: "DON!! Phase",
       nameTh: t(lang, "guideStartPhaseDonLabel"),
       description: t(lang, "guideStartPhaseDonDesc"),
-      color: "bg-amber-500",
+      color: "bg-muted text-muted-foreground",
       icon: Zap,
     },
     {
       name: "Main Phase",
       nameTh: t(lang, "guideStartPhaseMainLabel"),
       description: t(lang, "guideStartPhaseMainDesc"),
-      color: "bg-rose-500",
+      color: "bg-muted text-muted-foreground",
       icon: Swords,
     },
     {
       name: "End Phase",
       nameTh: t(lang, "guideStartPhaseEndLabel"),
       description: t(lang, "guideStartPhaseEndDesc"),
-      color: "bg-purple-500",
+      color: "bg-muted text-muted-foreground",
       icon: Sparkles,
     },
   ];
@@ -87,25 +87,25 @@ function buildCombatSteps(lang: Language) {
       step: 1,
       name: t(lang, "guideStartCombatStep1Name"),
       description: t(lang, "guideStartCombatStep1Desc"),
-      color: "bg-rose-500/10 text-rose-500 border-rose-500/20",
+      color: "border-border bg-muted/40 text-foreground",
     },
     {
       step: 2,
       name: "Block",
       description: t(lang, "guideStartCombatStep2Desc"),
-      color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+      color: "border-border bg-muted/40 text-foreground",
     },
     {
       step: 3,
       name: "Counter",
       description: t(lang, "guideStartCombatStep3Desc"),
-      color: "bg-amber-500/10 text-amber-500 border-amber-500/20",
+      color: "border-border bg-muted/40 text-foreground",
     },
     {
       step: 4,
       name: t(lang, "guideStartCombatStep4Name"),
       description: t(lang, "guideStartCombatStep4Desc"),
-      color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+      color: "border-border bg-muted/40 text-foreground",
     },
   ];
 }
@@ -226,7 +226,7 @@ export default async function GettingStartedPage() {
           </Surface>
         )}
 
-        <GuideCallout tone="blue">
+        <GuideCallout tone="info">
           <p className="text-sm text-muted-foreground">
             <strong className="text-foreground">Tip:</strong>{t(lang, "guideStartTipA")}<strong>Starter Deck</strong>{t(lang, "guideStartTipB")}
           </p>
@@ -326,7 +326,7 @@ export default async function GettingStartedPage() {
             <div key={phase.name} className="flex gap-4">
               {/* Timeline connector */}
               <div className="flex flex-col items-center">
-                <div className={`flex size-8 shrink-0 items-center justify-center rounded-full ${phase.color} text-white`}>
+                <div className={`flex size-8 shrink-0 items-center justify-center rounded-full ${phase.color}`}>
                   <phase.icon className="size-4" />
                 </div>
                 {i < turnPhases.length - 1 && (
@@ -348,7 +348,7 @@ export default async function GettingStartedPage() {
             </div>
           ))}
         </div>
-        <GuideCallout tone="amber">
+        <GuideCallout tone="warning">
           <p className="text-sm text-muted-foreground">
             <strong className="text-foreground">{t(lang, "guideStartFirstPlayerLabel")}</strong>{t(lang, "guideStartFirstPlayerDesc")}
           </p>
@@ -407,7 +407,7 @@ export default async function GettingStartedPage() {
             </div>
           ))}
         </div>
-        <GuideCallout tone="rose">
+        <GuideCallout tone="info">
           <div className="space-y-1 text-sm text-muted-foreground">
             <p>
               <strong className="text-foreground">Life:</strong>{t(lang, "guideStartCombatLifeA")}<strong>Trigger</strong>{t(lang, "guideStartCombatLifeB")}

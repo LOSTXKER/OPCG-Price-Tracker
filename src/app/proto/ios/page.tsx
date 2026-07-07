@@ -48,7 +48,7 @@ function MoverColumn({
             className="ease-chrome flex items-center gap-2.5 px-4 py-2.5 transition-colors active:bg-muted/60"
           >
             <span className="w-3.5 shrink-0 text-center text-meta tabular-nums">{i + 1}</span>
-            <div className="hairline relative aspect-[63/88] w-7 shrink-0 overflow-hidden rounded bg-muted">
+            <div className="hairline relative aspect-[63/88] w-7 shrink-0 overflow-hidden rounded-sm bg-muted">
               <Image src={c.img} alt={c.name} fill sizes="28px" className="object-contain" />
             </div>
             <span className="min-w-0 flex-1 truncate text-body-sm font-medium">{c.name}</span>

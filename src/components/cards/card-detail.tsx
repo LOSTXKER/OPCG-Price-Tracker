@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils"
 import { useHydrated } from "@/hooks/use-hydrated"
 import { useUIStore } from "@/stores/ui-store"
 
-import { WatchlistStar } from "@/components/shared/watchlist-star"
+import { WatchlistHeart } from "@/components/shared/watchlist-heart"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { CardAddToPortfolio } from "@/components/cards/card-add-to-portfolio"
 import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog"
@@ -519,7 +519,7 @@ export function CardDetail({
             <div className="flex items-center gap-3">
               <h1 className="text-h2 min-w-0 break-words text-foreground sm:text-h1">{displayName}</h1>
               <div className="flex shrink-0 items-center gap-1">
-                <WatchlistStar
+                <WatchlistHeart
                   cardId={card.id}
                   size="md"
                   className="size-9 rounded-md motion-base hover:bg-muted [&_svg]:size-4"
@@ -776,7 +776,7 @@ export function CardDetail({
           ))}
           <span
             aria-hidden
-            className="pointer-events-none absolute bottom-0 left-0 h-0.5 rounded-full bg-foreground transition-[transform,width] duration-300 ease-out"
+            className="pointer-events-none absolute bottom-0 left-0 h-0.5 rounded-full bg-foreground transition-[transform,width] duration-[var(--dur-slow)] ease-out"
             style={{ transform: `translateX(${tabIndicator.left}px)`, width: tabIndicator.width }}
           />
         </div>

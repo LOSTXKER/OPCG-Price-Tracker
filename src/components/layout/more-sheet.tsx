@@ -94,7 +94,7 @@ function MoreSheetBody({ onNavigate }: { onNavigate: () => void }) {
                 aria-hidden
               >
                 <span className="size-11 animate-pulse rounded-full bg-muted" />
-                <span className="h-3 w-14 animate-pulse rounded bg-muted" />
+                <span className="h-3 w-14 animate-pulse rounded-sm bg-muted" />
               </div>
             ))
           : tiles.map((tile) => (

@@ -58,7 +58,7 @@ export function HintTile({
 
   const wrapperClass = cn(
     "group/hint relative overflow-hidden rounded-xl border border-dashed",
-    "border-hair bg-transparent transition-colors duration-200",
+    "border-hair bg-transparent transition-colors duration-[var(--dur-base)]",
     isCollection ? "aspect-[63/88] flex" : "flex h-full flex-col",
     isInteractive && "hover:border-primary/50 hover:bg-card/40",
     className,
@@ -68,7 +68,7 @@ export function HintTile({
     <div className="flex flex-1 flex-col items-center justify-center gap-2.5 p-3 text-center">
       <div
         className={cn(
-          "flex size-12 items-center justify-center rounded-full bg-muted/40 text-muted-foreground transition-colors duration-200",
+          "flex size-12 items-center justify-center rounded-full bg-muted/40 text-muted-foreground transition-colors duration-[var(--dur-base)]",
           isInteractive && "group-hover/hint:bg-primary/10 group-hover/hint:text-primary",
         )}
       >
@@ -101,7 +101,7 @@ export function HintTile({
         <div className="absolute inset-0 flex items-center justify-center">
           <div
             className={cn(
-              "flex size-12 items-center justify-center rounded-full bg-muted/40 text-muted-foreground transition-colors duration-200",
+              "flex size-12 items-center justify-center rounded-full bg-muted/40 text-muted-foreground transition-colors duration-[var(--dur-base)]",
               isInteractive && "group-hover/hint:bg-primary/10 group-hover/hint:text-primary",
             )}
           >
