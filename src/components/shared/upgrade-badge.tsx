@@ -142,7 +142,7 @@ export function LockChip({
         });
       }}
       className={cn(
-        "inline-flex cursor-pointer items-center gap-1 rounded-md bg-amber-500/10 px-1.5 py-0.5 text-xs font-semibold text-amber-700 motion-base hover:bg-amber-500/20 dark:text-amber-400",
+        "inline-flex cursor-pointer items-center gap-1 rounded-md bg-primary/10 px-1.5 py-0.5 text-xs font-semibold text-primary motion-base hover:bg-primary/20",
         tier === "PRO_PLUS" &&
           "bg-primary/10 text-primary hover:bg-primary/20",
         className,
@@ -182,7 +182,7 @@ export function LockTab({
         });
       }}
       className={cn(
-        "inline-flex cursor-pointer items-center gap-0.5 rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums text-muted-foreground/60 motion-base hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-400",
+        "inline-flex cursor-pointer items-center gap-0.5 rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums text-muted-foreground/60 motion-base hover:bg-primary/10 hover:text-primary",
         className,
       )}
     >

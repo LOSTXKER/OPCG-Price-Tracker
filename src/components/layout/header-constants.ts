@@ -29,10 +29,10 @@ export type UserTierValue = "FREE" | "PRO" | "PRO_PLUS" | "LIFETIME_PRO" | "LIFE
 
 export const TIER_DISPLAY: Record<UserTierValue, { label: string; color: string; icon: typeof Star }> = {
   FREE: { label: "Free", color: "bg-muted text-muted-foreground", icon: User },
-  PRO: { label: "Pro", color: "bg-[#A57E61]/15 text-[#73533E] dark:text-[#C49A70]", icon: Zap },
-  PRO_PLUS: { label: "Pro+", color: "bg-amber-500/15 text-amber-600 dark:text-amber-400", icon: Crown },
+  PRO: { label: "Pro", color: "bg-primary/15 text-primary", icon: Zap },
+  PRO_PLUS: { label: "Pro+", color: "bg-primary/15 text-primary", icon: Crown },
   LIFETIME_PRO: { label: "Pro ∞", color: "bg-[#73533E]/15 text-[#73533E] dark:text-[#E0B865]", icon: Sparkles },
-  LIFETIME_PRO_PLUS: { label: "Pro+ ∞", color: "bg-amber-500/15 text-amber-600 dark:text-amber-400", icon: Crown },
+  LIFETIME_PRO_PLUS: { label: "Pro+ ∞", color: "bg-primary/15 text-primary", icon: Crown },
 };
 
 export type MarketStats = {

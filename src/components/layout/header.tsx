@@ -233,7 +233,7 @@ export function Header() {
                   href="/pricing"
                   className="ease-chrome flex items-center gap-1 rounded-full px-2.5 py-1 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 >
-                  <Crown className="size-3 text-amber-600 dark:text-amber-400" />
+                  <Crown className="size-3 text-primary" />
                   {t(language, "pricing")}
                 </Link>
                 <Link

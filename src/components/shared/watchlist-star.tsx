@@ -70,17 +70,17 @@ export function WatchlistStar({
       className={cn(
         "inline-flex shrink-0 items-center justify-center motion-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-90",
         variant === "chip"
-          ? "h-9 w-9 rounded-md border border-transparent dark:border-hair bg-muted/30 hover:border-amber-400/60 hover:bg-amber-400/10"
+          ? "h-9 w-9 rounded-md border border-transparent dark:border-hair bg-muted/30 hover:border-primary/60 hover:bg-primary/10"
           : "rounded-sm",
         loaded
           ? variant === "chip"
-            ? "text-muted-foreground hover:text-amber-500"
-            : "text-muted-foreground/40 hover:text-amber-400"
+            ? "text-muted-foreground hover:text-primary"
+            : "text-muted-foreground/40 hover:text-primary"
           : "pointer-events-none text-muted-foreground/20",
         watched &&
           (variant === "chip"
-            ? "border-amber-400/60 bg-amber-400/10 text-amber-500 hover:bg-amber-400/15"
-            : "text-amber-400 hover:text-amber-500"),
+            ? "border-primary/60 bg-primary/10 text-primary hover:bg-primary/15"
+            : "text-primary hover:text-primary"),
         limitHit && !watched && "animate-pulse text-destructive",
         className
       )}

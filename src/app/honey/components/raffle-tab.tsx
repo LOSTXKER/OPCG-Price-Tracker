@@ -301,7 +301,7 @@ function MachineCard({
           <img
             src={machine.imageUrl}
             alt={localizedTitle(machine, lang)}
-            className="size-full object-contain p-4 transition-transform duration-300 hover:scale-105"
+            className="size-full object-contain p-4 transition-transform duration-[var(--dur-slow)] hover:scale-105"
           />
         ) : (
           <div className="flex h-full items-center justify-center">

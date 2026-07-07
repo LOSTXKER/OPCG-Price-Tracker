@@ -281,7 +281,7 @@ function TopCardTile({
             src={card.imageUrl}
             alt={name}
             fill
-            className="object-contain transition-transform duration-300 group-hover:scale-105"
+            className="object-contain transition-transform duration-[var(--dur-slow)] group-hover:scale-105"
             sizes="(min-width: 1024px) 16vw, (min-width: 640px) 33vw, 50vw"
             placeholder="blur"
             blurDataURL={BLUR_DATA_URL}

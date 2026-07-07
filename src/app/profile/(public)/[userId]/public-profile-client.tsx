@@ -315,7 +315,7 @@ function PublicProfileLayout({
             )}
             {/* `key={activeTab}` triggers an enter animation on every switch
                 so the tab change feels intentional, not jarring. */}
-            <div key={activeTab} className="animate-in fade-in-0 duration-200">
+            <div key={activeTab} className="animate-in fade-in-0 duration-[var(--dur-base)]">
               {activeTab === "achievements" && (
                 <AchievementsTabContent achievements={achievements} badges={badges} />
               )}

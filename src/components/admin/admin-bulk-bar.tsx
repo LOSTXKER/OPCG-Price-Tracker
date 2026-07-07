@@ -41,7 +41,7 @@ export function AdminBulkBar({
   return (
     <div
       className={cn(
-        "fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-3 rounded-xl border border-border bg-popover px-5 py-3 shadow-2xl animate-in slide-in-from-bottom-4 fade-in duration-200",
+        "fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-3 rounded-xl border border-border bg-popover px-5 py-3 shadow-2xl animate-in slide-in-from-bottom-4 fade-in duration-[var(--dur-base)]",
         className,
       )}
     >

@@ -342,7 +342,7 @@ function SetCard({
         {/* Expand indicator */}
         <ChevronDown
           className={cn(
-            "size-4 shrink-0 text-muted-foreground/50 transition-transform duration-200",
+            "size-4 shrink-0 text-muted-foreground/50 transition-transform duration-[var(--dur-base)]",
             expanded && "rotate-180",
           )}
         />

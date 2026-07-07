@@ -62,7 +62,7 @@ export function ImageGallery({ images, className }: ImageGalleryProps) {
             src={current.src}
             alt={current.alt}
             fill
-            className="object-contain transition-transform duration-200 group-hover/main:scale-[1.02]"
+            className="object-contain transition-transform duration-[var(--dur-base)] group-hover/main:scale-[1.02]"
             sizes="(max-width: 1024px) 100vw, 400px"
             priority={selected === 0}
           />
