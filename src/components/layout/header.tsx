@@ -181,7 +181,7 @@ export function Header() {
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
-              <Heart className="size-3.5 text-rose-500 dark:text-rose-400" />
+              <Heart className="size-3.5 text-primary" />
               {t(language, "watchlistNav")}
             </Link>
 

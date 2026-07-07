@@ -4,7 +4,7 @@ import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 
 import { CompareButton } from "@/components/compare/compare-button"
-import { WatchlistStar } from "@/components/shared/watchlist-star"
+import { WatchlistHeart } from "@/components/shared/watchlist-heart"
 import type { CardPreviewData } from "@/stores/card-preview-store"
 import { useUIStore } from "@/stores/ui-store"
 import { getCardName, t } from "@/lib/i18n"
@@ -35,7 +35,7 @@ export function CardActionRow({
       onClick={(e) => e.stopPropagation()}
     >
       {show.watchlist && card.cardId != null && (
-        <WatchlistStar cardId={card.cardId} size="sm" variant="chip" />
+        <WatchlistHeart cardId={card.cardId} size="sm" variant="chip" />
       )}
       {show.compare && (
         <CompareButton

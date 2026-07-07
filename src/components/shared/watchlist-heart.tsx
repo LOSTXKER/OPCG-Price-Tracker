@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { Star } from "lucide-react"
+import { Heart } from "lucide-react"
 import { useWatchlistStore } from "@/stores/watchlist-store"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
@@ -19,7 +19,7 @@ const SIZE = {
   md: "size-5",
 } as const
 
-export function WatchlistStar({
+export function WatchlistHeart({
   cardId,
   size = "sm",
   variant = "icon",
@@ -86,7 +86,7 @@ export function WatchlistStar({
       )}
       aria-label={tooltipText}
     >
-      <Star
+      <Heart
         className={cn(SIZE[size], watched && "fill-current")}
       />
     </button>
