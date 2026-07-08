@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState, useTransition } from "react"
 
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
 import { PageHeader } from "@/components/layout/page-header"
-import { FilterChips, type FilterDefinition } from "@/components/shared/filter-chips"
 import { Button } from "@/components/ui/button"
 import { ApiError, apiGet } from "@/lib/api/client"
 import { t } from "@/lib/i18n"
@@ -16,7 +15,6 @@ import { BrowseGrid } from "./browse-grid"
 import { BrowseList } from "./browse-list"
 import { BrowseToolbar } from "./browse-toolbar"
 import { SellerLockBanner } from "./seller-lock-banner"
-import { CONDITIONS, RARITIES } from "./types"
 import type {
   BrowseResponse,
   LockedSeller,
@@ -54,23 +52,11 @@ export function MarketplaceBrowse({
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize))
 
-  // Multi-select filter pills. Note: the /api/listings `condition` param is
-  // single-value (see parseCondition), so — matching prior behavior — we only
-  // send `condition` when exactly one is selected; `rarity` is comma-joined
-  // and handled as `{ in: [...] }` server-side.
-  const filterDefs: FilterDefinition[] = [
-    {
-      key: "condition",
-      label: t(lang, "mktFilterCondition"),
-      options: CONDITIONS.map((c) => ({ value: c, label: c })),
-    },
-    {
-      key: "rarity",
-      label: t(lang, "mktFilterRarity"),
-      options: RARITIES.map((r) => ({ value: r, label: r })),
-    },
-  ]
-
+  // Multi-select facet filters (in the FilterModal, opened from BrowseToolbar).
+  // Note: the /api/listings `condition` param is single-value (see
+  // parseCondition), so — matching prior behavior — we only send `condition`
+  // when exactly one is selected; `rarity` is comma-joined and handled as
+  // `{ in: [...] }` server-side.
   const buildParams = useCallback(
     (pageNum: number) => {
       const params = new URLSearchParams()
@@ -153,14 +139,14 @@ export function MarketplaceBrowse({
         }}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
-      />
-
-      <FilterChips
-        filters={filterDefs}
-        selected={{ condition: conditions, rarity: rarities }}
-        onChange={(key, values) => {
-          if (key === "condition") setConditions(values)
-          else if (key === "rarity") setRarities(values)
+        conditions={conditions}
+        onConditionsChange={(v) => {
+          setConditions(v)
+          setPage(1)
+        }}
+        rarities={rarities}
+        onRaritiesChange={(v) => {
+          setRarities(v)
           setPage(1)
         }}
       />

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef, type ReactNode } from "react";
-import { TrendingUpDown } from "lucide-react";
+import { TrendingUpDown, Filter } from "lucide-react";
 
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import { FilterModal } from "@/components/shared/filter-modal";
 import {
   Select,
   SelectContent,
@@ -137,6 +138,7 @@ export function SetDetailContent({
 }: SetDetailContentProps) {
   const [activeType, setActiveType] = useState<string>("all");
   const [activeColor, setActiveColor] = useState<string>("all");
+  const [showFilters, setShowFilters] = useState(false);
   const [changePeriod, setChangePeriod] = useState<ChangePeriod>("7d");
   // activeRarity = the section currently in view (scrollspy), NOT a filter —
   // the rarity rail is a jump-nav (เบส): click scrolls to that section.
@@ -244,6 +246,78 @@ export function SetDetailContent({
     count: g.cards.length,
   }));
 
+  // Modal facets = type + colour only (rarity rail is jump-nav, not a filter).
+  // "all" is the unset value for each, so count the ones that aren't "all".
+  const hasTypeFilter = availableTypes.length > 1;
+  const hasColorFilter = availableColors.length > 1;
+  const modalFilterCount =
+    (hasTypeFilter && activeType !== "all" ? 1 : 0) +
+    (hasColorFilter && activeColor !== "all" ? 1 : 0);
+  const hasFacetFilters = hasTypeFilter || hasColorFilter;
+
+  // The "ตัวกรอง" button that opens the FilterModal (mirrors add-card-select-step).
+  const filterButton = (
+    <button
+      type="button"
+      onClick={() => setShowFilters(true)}
+      className={cn(
+        "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm",
+        showFilters || modalFilterCount > 0
+          ? "border-primary/40 bg-primary/5 text-primary"
+          : "border-hair bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground",
+      )}
+    >
+      <Filter className="size-3.5" />
+      <span>{t(lang, "filter")}</span>
+      {modalFilterCount > 0 && (
+        <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
+          {modalFilterCount}
+        </span>
+      )}
+    </button>
+  );
+
+  // The type + colour selects that live INSIDE the FilterModal, each under an
+  // eyebrow label. Same FilterSelect controls, same "all"-reset behaviour.
+  const filterModal = hasFacetFilters ? (
+    <FilterModal
+      open={showFilters}
+      onOpenChange={setShowFilters}
+      onReset={() => {
+        setActiveType("all");
+        setActiveColor("all");
+      }}
+      resetDisabled={modalFilterCount === 0}
+    >
+      {hasTypeFilter && (
+        <div className="space-y-1.5">
+          <span className="text-eyebrow block">{t(lang, "type")}</span>
+          <FilterSelect
+            fullWidth
+            hideLabel
+            label={t(lang, "type")}
+            value={activeType}
+            onChange={setActiveType}
+            options={typeOptions}
+          />
+        </div>
+      )}
+      {hasColorFilter && (
+        <div className="space-y-1.5">
+          <span className="text-eyebrow block">{t(lang, "color")}</span>
+          <FilterSelect
+            fullWidth
+            hideLabel
+            label={t(lang, "color")}
+            value={activeColor}
+            onChange={setActiveColor}
+            options={colorOptions}
+          />
+        </div>
+      )}
+    </FilterModal>
+  ) : null;
+
   const rarityButton = (rt: { value: string; count: number }, variant: "rail" | "chip") => {
     const active = activeRarity === rt.value;
     return (
@@ -306,33 +380,8 @@ export function SetDetailContent({
           the right column is then pure cards. ── */}
       <aside className="hidden w-52 shrink-0 lg:block">
         <div className="no-sb sticky top-32 max-h-[calc(100vh-9rem)] space-y-4 overflow-y-auto pr-0.5">
-          {/* Each control carries its own label header above it. */}
-          {availableTypes.length > 1 && (
-            <div className="space-y-1.5">
-              <p className="text-eyebrow px-0.5">{t(lang, "type")}</p>
-              <FilterSelect
-                fullWidth
-                hideLabel
-                label={t(lang, "type")}
-                value={activeType}
-                onChange={setActiveType}
-                options={typeOptions}
-              />
-            </div>
-          )}
-          {availableColors.length > 1 && (
-            <div className="space-y-1.5">
-              <p className="text-eyebrow px-0.5">{t(lang, "color")}</p>
-              <FilterSelect
-                fullWidth
-                hideLabel
-                label={t(lang, "color")}
-                value={activeColor}
-                onChange={setActiveColor}
-                options={colorOptions}
-              />
-            </div>
-          )}
+          {/* Facet filters (type + colour) open in the FilterModal. */}
+          {hasFacetFilters && <div>{filterButton}</div>}
 
           {/* Period (%-change window) */}
           <div className="space-y-1.5">
@@ -368,22 +417,7 @@ export function SetDetailContent({
             on one wrapping row, then the rarity jump-chips. */}
         <div className="mb-6 space-y-3 lg:hidden">
           <div className="flex flex-wrap items-center gap-2">
-            {availableTypes.length > 1 && (
-              <FilterSelect
-                label={t(lang, "type")}
-                value={activeType}
-                onChange={setActiveType}
-                options={typeOptions}
-              />
-            )}
-            {availableColors.length > 1 && (
-              <FilterSelect
-                label={t(lang, "color")}
-                value={activeColor}
-                onChange={setActiveColor}
-                options={colorOptions}
-              />
-            )}
+            {hasFacetFilters && filterButton}
             <SegmentedControl
               size="sm"
               variant="pill"
@@ -433,6 +467,8 @@ export function SetDetailContent({
             )}
         </div>
       </div>
+
+      {filterModal}
     </div>
   );
 }
