@@ -98,7 +98,9 @@ export function CardPickerForm({
           limit: 40,
           search: hasSearch ? q : undefined,
           set: activeSet ?? undefined,
-          rarity: activeRarity ?? undefined,
+          // Selecting a base rarity also pulls its parallel (P-) alt-arts — เบส:
+          // กด SEC ให้เจอ P-SEC ด้วย. The route matches the comma list with `in`.
+          rarity: activeRarity ? `${activeRarity},P-${activeRarity}` : undefined,
           color: activeColor ?? undefined,
           type: activeCardType ?? undefined,
         })

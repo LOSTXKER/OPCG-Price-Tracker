@@ -389,6 +389,7 @@ export const th = {
   noListingsYet: "ยังไม่มีรายการในตลาด หรือลองเปลี่ยนตัวกรอง",
   marketplaceDesc: "ซื้อขายการ์ดกับคอมมูนิตี้",
   addToWatchlist: "เพิ่มในรายการโปรด",
+  selectCardsToAdd: "เลือกการ์ดที่จะเพิ่ม",
   removeFromWatchlist: "ลบออกจากรายการโปรด",
   moreActions: "ตัวเลือกเพิ่มเติม",
   watchlistPin: "ปักหมุด",

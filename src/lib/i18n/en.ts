@@ -389,6 +389,7 @@ export const en = {
   noListingsYet: "No listings yet — try changing the filters",
   marketplaceDesc: "Buy and sell cards with the community",
   addToWatchlist: "Add to watchlist",
+  selectCardsToAdd: "Select cards to add",
   removeFromWatchlist: "Remove from watchlist",
   moreActions: "More actions",
   watchlistPin: "Pin to top",

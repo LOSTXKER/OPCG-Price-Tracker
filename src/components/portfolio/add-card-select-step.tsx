@@ -23,7 +23,6 @@ import { RARITY_HEX } from "@/lib/constants/rarities"
 import { getGameConfig } from "@/lib/game-config"
 import { useUIStore } from "@/stores/ui-store"
 import { t, type Language } from "@/lib/i18n"
-import { formatJpyAmount } from "@/lib/utils/currency"
 import { type CardWithSet, type SetInfo } from "./add-card-types"
 
 type RarityOpt = { code: string; label: string }
@@ -219,7 +218,6 @@ export function SelectStep({
   showHeader?: boolean
 }) {
   const lang = useUIStore((s) => s.language)
-  const currency = useUIStore((s) => s.currency)
   const currentGame = useUIStore((s) => s.currentGame)
 
   // Filters follow the current game — no OPCG hardcode. Empty sections vanish.
@@ -312,16 +310,21 @@ export function SelectStep({
                 </div>
               </div>
 
-              <div className="shrink-0 text-right">
-                {card.latestPriceJpy != null && (
-                  <p className="tabular-nums text-sm font-semibold text-primary">
-                    {formatJpyAmount(card.latestPriceJpy, currency)}
-                  </p>
-                )}
-              </div>
-
-              {isSelected?.(card) ? (
-                <Check className="size-4 shrink-0 text-primary" />
+              {/* Trailing affordance tells you what a tap does: a checkbox on
+                  select-then-confirm surfaces (isSelected passed), a chevron on
+                  surfaces that advance to a next step (portfolio/alerts). No price
+                  here — picking a card is about identity, not value. */}
+              {isSelected ? (
+                <span
+                  className={cn(
+                    "ease-chrome flex size-5 shrink-0 items-center justify-center rounded-full border",
+                    isSelected(card)
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border"
+                  )}
+                >
+                  {isSelected(card) && <Check className="size-3" strokeWidth={3} />}
+                </span>
               ) : (
                 <ChevronDown className="size-4 shrink-0 -rotate-90 text-muted-foreground/30" />
               )}
@@ -370,11 +373,11 @@ export function SelectStep({
             )}
           </div>
 
-          {/* Mobile only — desktop shows the rail instead */}
+          {/* Opens the filter overlay — the same control on every size */}
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={cn(
-              "ease-chrome relative flex h-9 items-center gap-1.5 rounded-lg border px-3 text-sm md:hidden",
+              "ease-chrome relative flex h-9 items-center gap-1.5 rounded-lg border px-3 text-sm",
               showFilters || activeFilterCount > 0
                 ? "border-primary/40 bg-primary/5 text-primary"
                 : "border-hair bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -391,26 +394,17 @@ export function SelectStep({
         </div>
       </div>
 
-      {/* Body — one column on mobile, two panes (rail | results) on desktop */}
-      <div className="flex min-h-0 flex-1 flex-col md:flex-row">
-        {/* Desktop: persistent left rail */}
-        <aside className="hidden md:block md:w-64 md:shrink-0 md:overflow-y-auto md:border-r md:border-hair md:p-4">
-          <FilterControls {...filterProps} />
-        </aside>
+      {/* Results — single column on every size. Filters live in the overlay
+          below (เบส: ใช้ popup filter อันเดียวทั้ง desktop + มือถือ). */}
+      <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>
 
-        {/* Results */}
-        <div className="flex min-h-0 flex-1 flex-col">
-          <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>
-        </div>
-      </div>
-
-      {/* Mobile filters — a full-cover overlay INSIDE the picker (absolute, not a
-          portal) so it lives in the host's own stacking context (works in a
-          Dialog and the z-100 compare modal alike) and covers the card search too,
-          giving filters a clean full-height space instead of cramming a second
-          search under the first. Desktop uses the left rail above instead. */}
+      {/* Filters — a full-cover overlay INSIDE the picker (absolute, not a portal)
+          so it lives in the host's own stacking context (works in a Dialog and the
+          z-100 compare modal alike) and covers the card search too, so filters get
+          a clean full-height space with no second search stacked under the first.
+          Same overlay on desktop + mobile (เบส: ใช้ popup filter อันเดียว). */}
       {showFilters && (
-        <div className="absolute inset-0 z-20 flex flex-col bg-background animate-in fade-in-0 slide-in-from-bottom-3 duration-[var(--dur-base)] md:hidden">
+        <div className="absolute inset-0 z-20 flex flex-col bg-background animate-in fade-in-0 slide-in-from-bottom-3 duration-[var(--dur-base)]">
           <div className="flex items-center justify-between border-b border-hair px-4 py-3">
             <span className="text-h4">{t(lang, "filter")}</span>
             <button

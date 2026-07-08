@@ -389,6 +389,7 @@ export const jp = {
   noListingsYet: "出品がありません — フィルターを変更してみてください",
   marketplaceDesc: "コミュニティとカードを売買",
   addToWatchlist: "ウォッチリストに追加",
+  selectCardsToAdd: "追加するカードを選択",
   removeFromWatchlist: "ウォッチリストから削除",
   moreActions: "その他の操作",
   watchlistPin: "上部に固定",
