@@ -8,6 +8,7 @@ import {
   Filter,
   Loader2,
   Package,
+  RotateCcw,
   Search,
   X,
 } from "lucide-react"
@@ -197,7 +198,6 @@ export function SelectStep({
   isSelected,
   showHeader = true,
   footer,
-  railExtra,
 }: {
   query: string
   setQuery: (q: string) => void
@@ -386,12 +386,12 @@ export function SelectStep({
             )}
           </div>
 
-          {/* Filter toggle — mobile only; desktop shows the left rail instead. */}
+          {/* Opens the filter modal (centered on desktop, full-screen on mobile). */}
           <button
             type="button"
             onClick={() => setShowFilters(!showFilters)}
             className={cn(
-              "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm md:hidden",
+              "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm",
               showFilters || activeFilterCount > 0
                 ? "border-primary/40 bg-primary/5 text-primary"
                 : "border-hair bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -408,50 +408,59 @@ export function SelectStep({
         </div>
       </div>
 
-      {/* Body — single column on mobile; two panes (filter rail | results) on
-          desktop (เบส: desktop เอา 2 ฝั่ง). The rail is always visible so filtering
-          never covers the cards. */}
-      <div className="flex min-h-0 flex-1 flex-col md:flex-row">
-        <aside className="hidden md:flex md:w-80 md:shrink-0 md:flex-col md:overflow-visible md:border-r md:border-hair md:p-4">
-          <FilterControls {...filterProps} />
-          {railExtra}
-        </aside>
-        <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>
-      </div>
+      {/* Results — single column; filters open in the modal below. */}
+      <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>
 
-      {/* Commit bar spans below both panes; the mobile sheet covers it. */}
       {footer}
 
-      {/* Mobile — a full-screen filter sheet inside the picker (absolute, not a
-          portal, so it works in a Dialog and the z-100 compare modal alike). It
-          covers the card search + footer, so no second search/button stacks up.
-          Desktop uses the floating popover above instead. */}
+      {/* Filters — a CoinMarketCap-style modal: full-screen on mobile, a centered
+          card on desktop (เบส). Rendered INSIDE the picker (absolute, not a portal)
+          so it works in a Dialog / the z-100 compare modal without nesting portals. */}
       {showFilters && (
-        <div className="absolute inset-0 z-20 flex flex-col bg-background animate-in fade-in-0 slide-in-from-bottom-3 duration-[var(--dur-base)] md:hidden">
-          <div className="flex items-center justify-between border-b border-hair px-4 py-3">
-            <span className="text-h4">{t(lang, "filter")}</span>
-            <button
-              type="button"
-              onClick={() => setShowFilters(false)}
-              aria-label={t(lang, "close")}
-              className="tap-safe -mr-1 flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
-            >
-              <X className="size-4" />
-            </button>
+        <>
+          {/* desktop backdrop (mobile panel is full-screen) */}
+          <button
+            type="button"
+            aria-label={t(lang, "close")}
+            onClick={() => setShowFilters(false)}
+            className="absolute inset-0 z-20 hidden bg-foreground/30 animate-in fade-in-0 md:block"
+          />
+          <div className="absolute inset-0 z-30 flex flex-col bg-background animate-in fade-in-0 slide-in-from-bottom-3 duration-[var(--dur-base)] md:inset-auto md:left-1/2 md:top-1/2 md:max-h-[85%] md:w-[26rem] md:max-w-[calc(100%-2rem)] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-2xl md:border md:border-hair md:shadow-[var(--elev-overlay)]">
+            <div className="flex items-center justify-between border-b border-hair px-4 py-3">
+              <span className="text-h4">{t(lang, "filter")}</span>
+              <button
+                type="button"
+                onClick={() => setShowFilters(false)}
+                aria-label={t(lang, "close")}
+                className="tap-safe -mr-1 flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+              <FilterControls {...filterProps} />
+            </div>
+            {/* Reset (left) + Apply (right) — CoinMarketCap footer */}
+            <div className="flex items-center gap-3 border-t border-hair p-3">
+              <button
+                type="button"
+                onClick={clearAllFilters}
+                disabled={activeFilterCount === 0}
+                className="ease-chrome flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium text-primary hover:bg-primary/5 disabled:opacity-40"
+              >
+                <RotateCcw className="size-3.5" />
+                {t(lang, "reset")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowFilters(false)}
+                className="ease-chrome h-11 flex-1 rounded-xl bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+              >
+                {t(lang, "apply")}
+              </button>
+            </div>
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
-            <FilterControls {...filterProps} />
-          </div>
-          <div className="border-t border-hair p-3">
-            <button
-              type="button"
-              onClick={() => setShowFilters(false)}
-              className="ease-chrome h-11 w-full rounded-xl bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90"
-            >
-              {t(lang, "viewResults")}
-            </button>
-          </div>
-        </div>
+        </>
       )}
     </div>
   )

@@ -337,6 +337,8 @@ export const jp = {
   addCardToPortfolio: "カードを選択",
   addCardToPortfolioDesc: "検索またはフィルターを使用してカードを選択",
   clearAllFilters: "全フィルターをクリア",
+  reset: "リセット",
+  apply: "フィルター適用",
   noCardsFound: "カードが見つかりません",
   noCardsFoundDesc: "検索条件またはフィルターを変更してみてください",
   noMoreResults: "これ以上ありません",

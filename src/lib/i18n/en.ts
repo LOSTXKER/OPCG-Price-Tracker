@@ -337,6 +337,8 @@ export const en = {
   addCardToPortfolio: "Select card",
   addCardToPortfolioDesc: "Search or use filters to select a card",
   clearAllFilters: "Clear all filters",
+  reset: "Reset",
+  apply: "Apply filters",
   noCardsFound: "No cards found",
   noCardsFoundDesc: "Try changing your search or filters",
   noMoreResults: "No more results",

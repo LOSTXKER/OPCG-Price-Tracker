@@ -337,6 +337,8 @@ export const th = {
   addCardToPortfolio: "เลือกการ์ด",
   addCardToPortfolioDesc: "ค้นหาหรือใช้ตัวกรองเพื่อเลือกการ์ด",
   clearAllFilters: "ล้างตัวกรองทั้งหมด",
+  reset: "รีเซ็ต",
+  apply: "ใช้ตัวกรอง",
   noCardsFound: "ไม่พบการ์ดที่ค้นหา",
   noCardsFoundDesc: "ลองเปลี่ยนคำค้นหาหรือตัวกรอง",
   noMoreResults: "ไม่มีผลลัพธ์เพิ่มเติม",
