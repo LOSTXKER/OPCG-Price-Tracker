@@ -48,6 +48,10 @@ interface SetPickerProps {
    * even before a set is picked.
    */
   prominent?: boolean
+  /** Render the dropdown in normal flow (pushes the following controls down)
+   *  instead of an absolute popover — for tight containers like a filter sheet
+   *  where a floating popover would clip or cover neighbouring controls. */
+  flow?: boolean
 }
 
 export function SetPicker({
@@ -59,6 +63,7 @@ export function SetPicker({
   nullable = false,
   align,
   prominent = false,
+  flow = false,
 }: SetPickerProps) {
   const lang = useUIStore((s) => s.language)
   const [open, setOpen] = useState(false)
@@ -219,12 +224,15 @@ export function SetPicker({
 
       {open && (
         <div className={cn(
-          "absolute z-30 mt-2 overflow-hidden rounded-xl border border-border bg-popover shadow-[var(--elev-overlay)]",
-          isCta && "left-0 right-0 w-full",
+          "z-30 overflow-hidden rounded-xl border border-border bg-popover",
+          // flow: sits in normal flow (pushes siblings down) so it can't clip or
+          // cover neighbours in a tight sheet; otherwise an absolute popover.
+          flow ? "mt-1.5" : "absolute mt-2 shadow-[var(--elev-overlay)]",
+          !flow && isCta && "left-0 right-0 w-full",
           // inline lives inside a filter panel / narrow rail — match the trigger
           // width so the popup never overflows its container.
-          isInline && "left-0 right-0 w-full",
-          isPill && (popoverAlign === "right"
+          !flow && isInline && "left-0 right-0 w-full",
+          !flow && isPill && (popoverAlign === "right"
             ? "right-0 w-[min(22rem,calc(100vw-2rem))]"
             : "left-0 w-[min(22rem,calc(100vw-2rem))]"),
         )}>
