@@ -3,13 +3,8 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { CardSearch } from "@/components/shared/card-search";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { CardPickerForm } from "@/components/shared/card-picker-form";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
 import { ApiError, apiPost } from "@/lib/api/client";
 import { getCardName, t } from "@/lib/i18n";
@@ -54,13 +49,13 @@ export function WatchlistAddDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t(lang, "addCard")}</DialogTitle>
-        </DialogHeader>
-        {/* MINE add flow: search EVERY game — the picked card carries its own
-            game, so we never lock the search to the header's current game. */}
-        <CardSearch mode="pick" game="all" onSelect={add} autoFocus />
+      <DialogContent
+        className="flex flex-col gap-0 overflow-hidden p-0"
+        style={{ maxWidth: "min(46rem, calc(100% - 2rem))", maxHeight: "85dvh" }}
+      >
+        {/* The one shared card picker (search + filters + value list). Adding
+            is an upsert + stays open, so you can add several in a row. */}
+        <CardPickerForm onSelect={add} />
       </DialogContent>
     </Dialog>
   );

@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CardSearch } from "@/components/shared/card-search";
+import { CardPickerForm } from "@/components/shared/card-picker-form";
 import { useUIStore } from "@/stores/ui-store";
 import { useAlertSubmit } from "@/hooks/use-alert-submit";
 import { type CardSearchResult } from "@/hooks/use-card-search";
@@ -86,7 +86,10 @@ export function AlertCreateDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="gap-0 p-0 sm:max-w-md">
+      <DialogContent
+        className="flex flex-col gap-0 overflow-hidden p-0"
+        style={{ maxWidth: "min(46rem, calc(100% - 2rem))", maxHeight: "85dvh" }}
+      >
         <DialogHeader className="border-b px-5 py-3.5">
           <div className="flex items-center gap-2">
             {step === "form" && (
@@ -114,11 +117,10 @@ export function AlertCreateDialog({
         </DialogHeader>
 
         {step === "pick" ? (
-          <div className="min-h-[240px] px-5 py-4">
-            {/* MINE add flow: search EVERY game — the picked card carries its
-                own game, so we never lock the search to the current game. */}
-            <CardSearch mode="pick" game="all" onSelect={handlePickCard} autoFocus />
-          </div>
+          /* The one shared card picker (search + filters + value list). Its
+             fragment expands into this flex column, so the list fills the
+             remaining height. Host owns the header, so showHeader={false}. */
+          <CardPickerForm onSelect={handlePickCard} showHeader={false} />
         ) : (
           card && (
             <div className="space-y-4 px-5 pb-5 pt-4">
