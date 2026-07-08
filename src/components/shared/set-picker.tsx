@@ -52,6 +52,8 @@ interface SetPickerProps {
    *  instead of an absolute popover — for tight containers like a filter sheet
    *  where a floating popover would clip or cover neighbouring controls. */
   flow?: boolean
+  /** Hide the in-dropdown search box (just scroll the list). Default true. */
+  searchable?: boolean
 }
 
 export function SetPicker({
@@ -64,6 +66,7 @@ export function SetPicker({
   align,
   prominent = false,
   flow = false,
+  searchable = true,
 }: SetPickerProps) {
   const lang = useUIStore((s) => s.language)
   const [open, setOpen] = useState(false)
@@ -236,19 +239,21 @@ export function SetPicker({
             ? "right-0 w-[min(22rem,calc(100vw-2rem))]"
             : "left-0 w-[min(22rem,calc(100vw-2rem))]"),
         )}>
-          <div className="sticky top-0 z-10 border-b border-border bg-popover p-2">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={t(lang, "searchSet")}
-                className="h-8 w-full rounded-md border border-border bg-muted/30 pl-8 pr-3 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
-                autoFocus
-              />
+          {searchable && (
+            <div className="sticky top-0 z-10 border-b border-border bg-popover p-2">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder={t(lang, "searchSet")}
+                  className="h-8 w-full rounded-md border border-border bg-muted/30 pl-8 pr-3 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
+                  autoFocus
+                />
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="max-h-72 overflow-y-auto py-1">
             {nullable && query.trim().length === 0 && (

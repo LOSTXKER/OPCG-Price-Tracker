@@ -72,7 +72,7 @@ export function AddCardDialog({
     <Dialog open={open} onOpenChange={(v) => { onOpenChange(v); if (!v) reset() }}>
       <DialogContent
         className="flex flex-col gap-0 overflow-hidden p-0"
-        style={{ maxWidth: "min(34rem, calc(100% - 2rem))", maxHeight: "85dvh" }}
+        style={{ maxWidth: "min(48rem, calc(100% - 2rem))", maxHeight: "85dvh" }}
       >
         {step === "select" ? (
           <CardPickerForm onSelect={goToDetail} />

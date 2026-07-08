@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, type ReactNode } from "react"
+import { type ReactNode } from "react"
 import Image from "next/image"
 import {
   Check,
@@ -85,6 +85,7 @@ function FilterControls({
           variant="inline"
           nullable
           flow
+          searchable={false}
         />
       </div>
 
@@ -169,10 +170,10 @@ function FilterControls({
 }
 
 /**
- * "Search / filter → pick a card" body. Search-hero, single column on every size.
- * Filters open as a floating popover on desktop (anchored to the filter button;
- * the results stay visible and update live behind it) and a full-screen sheet on
- * mobile. An optional `footer` (commit bar) renders inside the picker so the mobile
+ * "Search / filter → pick a card" body. Search-hero. On desktop the filters live
+ * in an always-visible left rail (two panes: rail | results) so filtering never
+ * covers the cards; on mobile they open in a full-screen sheet behind the filter
+ * toggle. An optional `footer` (commit bar) renders inside the picker so the mobile
  * sheet covers it — no button clash.
  */
 export function SelectStep({
@@ -230,25 +231,6 @@ export function SelectStep({
 }) {
   const lang = useUIStore((s) => s.language)
   const currentGame = useUIStore((s) => s.currentGame)
-
-  // Desktop only: dismiss the floating filter popover on an outside click (mobile
-  // uses a full-screen sheet with its own close). Kept off mobile so the sheet
-  // isn't torn down by taps that belong to it.
-  const filterRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    if (!showFilters) return
-    function onPointerDown(e: MouseEvent) {
-      if (
-        window.matchMedia("(min-width: 768px)").matches &&
-        filterRef.current &&
-        !filterRef.current.contains(e.target as Node)
-      ) {
-        setShowFilters(false)
-      }
-    }
-    document.addEventListener("mousedown", onPointerDown)
-    return () => document.removeEventListener("mousedown", onPointerDown)
-  }, [showFilters, setShowFilters])
 
   // Filters follow the current game — no OPCG hardcode. Empty sections vanish.
   const gameCfg = getGameConfig(currentGame)
@@ -403,44 +385,39 @@ export function SelectStep({
             )}
           </div>
 
-          {/* Filter — a floating popover on desktop (anchored here; the results
-              stay visible and update live behind it), a full-screen sheet on
-              mobile (rendered after the results). */}
-          <div ref={filterRef} className="relative shrink-0">
-            <button
-              type="button"
-              onClick={() => setShowFilters(!showFilters)}
-              className={cn(
-                "ease-chrome relative flex h-9 items-center gap-1.5 rounded-lg border px-3 text-sm",
-                showFilters || activeFilterCount > 0
-                  ? "border-primary/40 bg-primary/5 text-primary"
-                  : "border-hair bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
-            >
-              <Filter className="size-3.5" />
-              <span className="hidden sm:inline">{t(lang, "filter")}</span>
-              {activeFilterCount > 0 && (
-                <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
-                  {activeFilterCount}
-                </span>
-              )}
-            </button>
-
-            {/* Desktop popover — content-height, floats over the (live) results. */}
-            {showFilters && (
-              <div className="absolute right-0 top-full z-30 mt-2 hidden max-h-[min(70vh,30rem)] w-[21rem] max-w-[calc(100vw-2rem)] flex-col overflow-y-auto overscroll-contain rounded-xl border border-hair bg-popover p-4 shadow-[var(--elev-overlay)] animate-in fade-in-0 zoom-in-95 duration-[var(--dur-fast)] md:flex">
-                <FilterControls {...filterProps} />
-              </div>
+          {/* Filter toggle — mobile only; desktop shows the left rail instead. */}
+          <button
+            type="button"
+            onClick={() => setShowFilters(!showFilters)}
+            className={cn(
+              "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm md:hidden",
+              showFilters || activeFilterCount > 0
+                ? "border-primary/40 bg-primary/5 text-primary"
+                : "border-hair bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
-          </div>
+          >
+            <Filter className="size-3.5" />
+            <span className="hidden sm:inline">{t(lang, "filter")}</span>
+            {activeFilterCount > 0 && (
+              <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Results — single column on every size. */}
-      <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>
+      {/* Body — single column on mobile; two panes (filter rail | results) on
+          desktop (เบส: desktop เอา 2 ฝั่ง). The rail is always visible so filtering
+          never covers the cards. */}
+      <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+        <aside className="hidden md:block md:w-64 md:shrink-0 md:overflow-y-auto md:border-r md:border-hair md:p-4">
+          <FilterControls {...filterProps} />
+        </aside>
+        <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>
+      </div>
 
-      {/* Commit bar lives INSIDE the picker so the filter overlay covers it — the
-          host never stacks a second button under the overlay's own. */}
+      {/* Commit bar spans below both panes; the mobile sheet covers it. */}
       {footer}
 
       {/* Mobile — a full-screen filter sheet inside the picker (absolute, not a
