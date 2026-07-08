@@ -152,6 +152,8 @@ export function SetPicker({
                 ? "border-primary/40 bg-[var(--p-honey-soft)] font-medium text-foreground hover:bg-primary/15"
                 : "border-border hover:bg-muted/70",
             open && (selectedSet || prominent ? "bg-primary/15" : "bg-muted/70"),
+            // square off the bottom so the dropdown reads as one attached unit
+            open && "rounded-b-none",
           ),
         )}
       >
@@ -219,14 +221,14 @@ export function SetPicker({
 
       {open && (
         <div className={cn(
-          "absolute z-30 mt-2 overflow-hidden rounded-xl border border-border bg-popover shadow-[var(--elev-overlay)]",
-          isCta && "left-0 right-0 w-full",
-          // inline lives inside a filter panel / narrow rail — match the trigger
-          // width so the popup never overflows its container.
-          isInline && "left-0 right-0 w-full",
+          "absolute z-30 overflow-hidden border border-border bg-popover shadow-[var(--elev-overlay)]",
+          isCta && "mt-2 left-0 right-0 w-full rounded-xl",
+          // inline: attach directly under the trigger (overlap its border by 1px,
+          // square top, match width) so trigger + list read as one unit — เบส.
+          isInline && "-mt-px left-0 right-0 w-full rounded-b-xl rounded-t-none",
           isPill && (popoverAlign === "right"
-            ? "right-0 w-[min(22rem,calc(100vw-2rem))]"
-            : "left-0 w-[min(22rem,calc(100vw-2rem))]"),
+            ? "mt-2 right-0 w-[min(22rem,calc(100vw-2rem))] rounded-xl"
+            : "mt-2 left-0 w-[min(22rem,calc(100vw-2rem))] rounded-xl"),
         )}>
           <div className="sticky top-0 z-10 border-b border-border bg-popover p-2">
             <div className="relative">
