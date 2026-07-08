@@ -212,8 +212,9 @@ export function SetPicker({
           "absolute z-30 overflow-hidden border border-border bg-popover shadow-[var(--elev-overlay)]",
           isCta && "mt-2 left-0 right-0 w-full rounded-xl",
           // inline: attach directly under the trigger (overlap its border by 1px,
-          // square top, match width) so trigger + list read as one unit — เบส.
-          isInline && "-mt-px left-0 right-0 w-full rounded-b-xl rounded-t-none",
+          // square top) so they read as one unit; left-aligned + a comfortable
+          // ~19rem width so set names never truncate under a narrow trigger — เบส.
+          isInline && "-mt-px left-0 w-[min(19rem,calc(100vw-2rem))] min-w-full rounded-b-xl rounded-t-none",
           isPill && (popoverAlign === "right"
             ? "mt-2 right-0 w-[min(22rem,calc(100vw-2rem))] rounded-xl"
             : "mt-2 left-0 w-[min(22rem,calc(100vw-2rem))] rounded-xl"),
