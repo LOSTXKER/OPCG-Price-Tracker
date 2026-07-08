@@ -3,13 +3,15 @@
 import {
   ArrowDownUp,
   Bell,
+  Check,
   ChevronDown,
-  Filter,
   LayoutGrid,
   List,
+  Pencil,
   Pin,
   RotateCcw,
   Search,
+  SlidersHorizontal,
   TrendingDown,
   TrendingUp,
   TrendingUpDown,
@@ -58,6 +60,8 @@ export function WatchlistToolbar({
   setOptions,
   itemCount,
   limit,
+  editMode,
+  onToggleEditMode,
   selectedCount,
   onClearSelection,
   onBulkRemove,
@@ -75,6 +79,8 @@ export function WatchlistToolbar({
   setOptions: { code: string; label: string }[];
   itemCount: number;
   limit: number;
+  editMode: boolean;
+  onToggleEditMode: () => void;
   selectedCount: number;
   onClearSelection: () => void;
   onBulkRemove: () => void;
@@ -94,8 +100,6 @@ export function WatchlistToolbar({
     [lang]
   );
 
-  const activeSortLabel = sortOptions.find((o) => o.key === sortKey)?.label ?? sortOptions[0].label;
-
   const isFinite = Number.isFinite(limit);
   const usagePct = isFinite ? Math.min(100, Math.round((itemCount / limit) * 100)) : 0;
   const isFull = isFinite && itemCount >= limit;
@@ -109,8 +113,8 @@ export function WatchlistToolbar({
 
   return (
     <div className="space-y-3">
-      {/* Bulk action bar (only visible when something is selected) */}
-      {selectedCount > 0 && (
+      {/* Bulk action bar — only in edit mode with a selection */}
+      {editMode && selectedCount > 0 && (
         <div className="flex items-center gap-2 rounded-full border border-primary/40 bg-primary/15 px-3 py-1.5">
           <span className="text-meta tabular-nums text-primary">
             {selectedCount} {t(lang, "watchlistSelected")}
@@ -119,7 +123,7 @@ export function WatchlistToolbar({
             type="button"
             size="sm"
             variant="destructive"
-            className="h-7 px-2.5 gap-1"
+            className="h-7 gap-1 px-2.5"
             onClick={onBulkRemove}
           >
             <X className="size-3" />
@@ -135,23 +139,192 @@ export function WatchlistToolbar({
         </div>
       )}
 
-      {/* Row 1 — primary: search left, view toggle right */}
+      {/* Single control row — search left, controls right (wraps on mobile) */}
       <div className="flex flex-wrap items-center gap-2">
-        {/* Search */}
-        <div className="relative w-full sm:w-72">
+        <div className="relative w-full sm:w-64">
           <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={t(lang, "watchlistSearchPlaceholder")}
-            className="h-9 w-full rounded-lg border border-transparent dark:border-hair bg-muted pl-8 pr-2.5 text-sm placeholder:text-muted-foreground/60 focus:border-ring focus:outline-none"
+            className="h-9 w-full rounded-lg border border-transparent bg-muted pl-8 pr-2.5 text-sm placeholder:text-muted-foreground/60 focus:border-ring focus:outline-none dark:border-hair"
           />
         </div>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="flex flex-1 flex-wrap items-center gap-2 sm:justify-end">
+          {/* Period */}
+          <SegmentedControl<ChangePeriod>
+            options={PERIODS.map((p) => ({ value: p, label: p }))}
+            value={period}
+            onChange={onPeriodChange}
+            size="sm"
+            variant="pill"
+            leadingIcon={TrendingUpDown}
+            ariaLabel={t(lang, "change")}
+          />
+
+          {/* Unified sort + filter — "ปรับ" */}
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "sm" }),
+                "h-9 gap-1.5 px-2.5",
+                activeFilterCount > 0
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <SlidersHorizontal className="size-3.5 opacity-70" />
+              <span>{t(lang, "watchlistRefine")}</span>
+              {activeFilterCount > 0 && (
+                <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary/15 px-1 text-overlay tabular-nums text-primary ring-1 ring-primary/30">
+                  {activeFilterCount}
+                </span>
+              )}
+              <ChevronDown className="size-3 opacity-70" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              sideOffset={4}
+              className="max-h-[28rem] w-64 overflow-y-auto p-2"
+            >
+              {/* Sort */}
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="text-eyebrow flex items-center gap-1.5 px-1 pb-1">
+                  <ArrowDownUp className="size-3 opacity-70" />
+                  {t(lang, "watchlistSortBy")}
+                </DropdownMenuLabel>
+                {sortOptions.map((opt) => (
+                  <DropdownMenuItem
+                    key={opt.key}
+                    onClick={() => onSortChange(opt.key)}
+                    className={cn(
+                      "justify-between",
+                      sortKey === opt.key && "font-semibold text-primary"
+                    )}
+                  >
+                    {opt.label}
+                    {sortKey === opt.key && <Check className="size-3.5" />}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuGroup>
+
+              <DropdownMenuSeparator />
+
+              {/* Movement */}
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="text-eyebrow px-1 pb-1">
+                  {t(lang, "watchlistFilterMovement")}
+                </DropdownMenuLabel>
+                <div className="grid grid-cols-3 gap-1 p-1">
+                  <SegButton
+                    active={filters.direction === null}
+                    onClick={() => onFiltersChange({ ...filters, direction: null })}
+                    label={t(lang, "watchlistFilterMovementAll")}
+                  />
+                  <SegButton
+                    active={filters.direction === "up"}
+                    onClick={() => onFiltersChange({ ...filters, direction: "up" })}
+                    label={t(lang, "watchlistFilterMovementUp")}
+                    icon={<TrendingUp className="size-3" />}
+                    tone="up"
+                  />
+                  <SegButton
+                    active={filters.direction === "down"}
+                    onClick={() => onFiltersChange({ ...filters, direction: "down" })}
+                    label={t(lang, "watchlistFilterMovementDown")}
+                    icon={<TrendingDown className="size-3" />}
+                    tone="down"
+                  />
+                </div>
+              </DropdownMenuGroup>
+
+              <DropdownMenuSeparator />
+
+              {/* Status */}
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="text-eyebrow px-1 pb-0">
+                  {t(lang, "watchlistFilterStatus")}
+                </DropdownMenuLabel>
+                <DropdownMenuCheckboxItem
+                  checked={filters.hasAlert}
+                  onCheckedChange={(next) =>
+                    onFiltersChange({ ...filters, hasAlert: !!next })
+                  }
+                >
+                  <Bell className="mr-2 size-3 text-muted-foreground" />
+                  {t(lang, "watchlistFilterAlerts")}
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={filters.pinnedOnly}
+                  onCheckedChange={(next) =>
+                    onFiltersChange({ ...filters, pinnedOnly: !!next })
+                  }
+                >
+                  <Pin className="mr-2 size-3 text-muted-foreground" />
+                  {t(lang, "watchlistFilterPinned")}
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuGroup>
+
+              {/* Set */}
+              {setOptions.length > 0 && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel className="text-eyebrow px-1 pb-0">
+                      {t(lang, "set")}
+                    </DropdownMenuLabel>
+                    <div className="max-h-40 overflow-y-auto">
+                      {setOptions.map((opt) => {
+                        const checked = filters.setCodes.includes(opt.code);
+                        return (
+                          <DropdownMenuCheckboxItem
+                            key={opt.code}
+                            checked={checked}
+                            onCheckedChange={(next) => {
+                              if (next) {
+                                onFiltersChange({
+                                  ...filters,
+                                  setCodes: [...filters.setCodes, opt.code],
+                                });
+                              } else {
+                                onFiltersChange({
+                                  ...filters,
+                                  setCodes: filters.setCodes.filter(
+                                    (c) => c !== opt.code
+                                  ),
+                                });
+                              }
+                            }}
+                          >
+                            {opt.label}
+                          </DropdownMenuCheckboxItem>
+                        );
+                      })}
+                    </div>
+                  </DropdownMenuGroup>
+                </>
+              )}
+
+              {activeFilterCount > 0 && (
+                <>
+                  <DropdownMenuSeparator />
+                  <button
+                    type="button"
+                    onClick={() => onFiltersChange(DEFAULT_FILTERS)}
+                    className="ease-chrome flex w-full items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+                  >
+                    <RotateCcw className="size-3" />
+                    {t(lang, "watchlistResetFilters")}
+                  </button>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           {/* View toggle */}
-          <div className="inline-flex h-9 shrink-0 items-center rounded-lg border border-transparent dark:border-hair bg-muted p-0.5">
+          <div className="inline-flex h-9 shrink-0 items-center rounded-lg border border-transparent bg-muted p-0.5 dark:border-hair">
             <button
               type="button"
               onClick={() => onViewChange("list")}
@@ -181,226 +354,57 @@ export function WatchlistToolbar({
               <LayoutGrid className="size-4" />
             </button>
           </div>
-        </div>
-      </div>
 
-      {/* Row 2 — contextual: period + sort + filter left, limit pill right */}
-      <div className="flex flex-wrap items-center gap-2">
-        <SegmentedControl<ChangePeriod>
-          options={PERIODS.map((p) => ({ value: p, label: p }))}
-          value={period}
-          onChange={onPeriodChange}
-          size="sm"
-          variant="pill"
-          leadingIcon={TrendingUpDown}
-          ariaLabel={t(lang, "change")}
-        />
-
-        {/* Sort dropdown — borderless ghost trigger reads as a label */}
-        <DropdownMenu>
-          <DropdownMenuTrigger
+          {/* Edit toggle — enters/exits multi-select mode */}
+          <button
+            type="button"
+            onClick={onToggleEditMode}
+            aria-pressed={editMode}
             className={cn(
               buttonVariants({ variant: "ghost", size: "sm" }),
-              "h-8 gap-1 px-2 text-muted-foreground hover:text-foreground"
-            )}
-          >
-            <ArrowDownUp className="size-3 opacity-70" />
-            <span className="hidden sm:inline">{t(lang, "watchlistSortBy")}:</span>
-            <span className="font-medium text-foreground">{activeSortLabel}</span>
-            <ChevronDown className="size-3 opacity-70" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" sideOffset={4}>
-            {sortOptions.map((opt) => (
-              <DropdownMenuItem
-                key={opt.key}
-                onClick={() => onSortChange(opt.key)}
-                className={cn(sortKey === opt.key && "font-semibold text-primary")}
-              >
-                {opt.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        {/* Unified filter dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className={cn(
-              buttonVariants({ variant: "ghost", size: "sm" }),
-              "h-8 gap-1 px-2",
-              activeFilterCount > 0
-                ? "text-foreground"
+              "h-9 gap-1.5 px-2.5",
+              editMode
+                ? "bg-primary/15 text-primary hover:bg-primary/20"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
-            <Filter className="size-3 opacity-70" />
-            <span>{t(lang, "watchlistFiltersButton")}</span>
-            {activeFilterCount > 0 && (
-              <span
-                className={cn(
-                  "inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-overlay tabular-nums",
-                  "bg-primary/15 text-primary ring-1 ring-primary/30"
-                )}
-              >
-                {activeFilterCount}
-              </span>
-            )}
-            <ChevronDown className="size-3 opacity-70" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="start"
-            sideOffset={4}
-            className="w-64 max-h-[28rem] overflow-y-auto p-2"
-          >
-            {/* Movement segmented */}
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-eyebrow px-1 pb-1">
-                {t(lang, "watchlistFilterMovement")}
-              </DropdownMenuLabel>
-              <div className="grid grid-cols-3 gap-1 p-1">
-                <SegButton
-                  active={filters.direction === null}
-                  onClick={() => onFiltersChange({ ...filters, direction: null })}
-                  label={t(lang, "watchlistFilterMovementAll")}
-                />
-                <SegButton
-                  active={filters.direction === "up"}
-                  onClick={() => onFiltersChange({ ...filters, direction: "up" })}
-                  label={t(lang, "watchlistFilterMovementUp")}
-                  icon={<TrendingUp className="size-3" />}
-                  tone="up"
-                />
-                <SegButton
-                  active={filters.direction === "down"}
-                  onClick={() => onFiltersChange({ ...filters, direction: "down" })}
-                  label={t(lang, "watchlistFilterMovementDown")}
-                  icon={<TrendingDown className="size-3" />}
-                  tone="down"
-                />
-              </div>
-            </DropdownMenuGroup>
+            {editMode ? <Check className="size-3.5" /> : <Pencil className="size-3.5" />}
+            {editMode ? t(lang, "watchlistEditDone") : t(lang, "watchlistEditMode")}
+          </button>
+        </div>
+      </div>
 
-            <DropdownMenuSeparator />
-
-            {/* Status checkboxes */}
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-eyebrow px-1 pb-0">
-                {t(lang, "watchlistFilterStatus")}
-              </DropdownMenuLabel>
-              <DropdownMenuCheckboxItem
-                checked={filters.hasAlert}
-                onCheckedChange={(next) =>
-                  onFiltersChange({ ...filters, hasAlert: !!next })
-                }
-              >
-                <Bell className="size-3 mr-2 text-muted-foreground" />
-                {t(lang, "watchlistFilterAlerts")}
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem
-                checked={filters.pinnedOnly}
-                onCheckedChange={(next) =>
-                  onFiltersChange({ ...filters, pinnedOnly: !!next })
-                }
-              >
-                <Pin className="size-3 mr-2 text-muted-foreground" />
-                {t(lang, "watchlistFilterPinned")}
-              </DropdownMenuCheckboxItem>
-            </DropdownMenuGroup>
-
-            {/* Set list (if any) */}
-            {setOptions.length > 0 && (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel className="text-eyebrow px-1 pb-0">
-                    {t(lang, "set")}
-                  </DropdownMenuLabel>
-                  <div className="max-h-40 overflow-y-auto">
-                    {setOptions.map((opt) => {
-                      const checked = filters.setCodes.includes(opt.code);
-                      return (
-                        <DropdownMenuCheckboxItem
-                          key={opt.code}
-                          checked={checked}
-                          onCheckedChange={(next) => {
-                            if (next) {
-                              onFiltersChange({
-                                ...filters,
-                                setCodes: [...filters.setCodes, opt.code],
-                              });
-                            } else {
-                              onFiltersChange({
-                                ...filters,
-                                setCodes: filters.setCodes.filter(
-                                  (c) => c !== opt.code
-                                ),
-                              });
-                            }
-                          }}
-                        >
-                          {opt.label}
-                        </DropdownMenuCheckboxItem>
-                      );
-                    })}
-                  </div>
-                </DropdownMenuGroup>
-              </>
-            )}
-
-            {activeFilterCount > 0 && (
-              <>
-                <DropdownMenuSeparator />
-                <button
-                  type="button"
-                  onClick={() => onFiltersChange(DEFAULT_FILTERS)}
-                  className="ease-chrome flex w-full items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-                >
-                  <RotateCcw className="size-3" />
-                  {t(lang, "watchlistResetFilters")}
-                </button>
-              </>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        {/* Limit pill — quiet meta on the right of row 2, only highlights near/at cap */}
-        {isFinite && (
+      {/* Limit pill — only surfaces near/at cap (no redundant count otherwise) */}
+      {isFinite && (isFull || isHigh) && (
+        <div className="flex justify-end">
           <div
             className={cn(
-              "ml-auto flex items-center gap-1.5 rounded-md px-2 py-1",
-              isFull
-                ? "border border-destructive/30 bg-destructive/5"
-                : isHigh
-                  ? "border border-warning/30 bg-warning/5"
-                  : ""
+              "flex items-center gap-1.5 rounded-md border px-2 py-1",
+              isFull ? "border-destructive/30 bg-destructive/5" : "border-warning/30 bg-warning/5"
             )}
             title={`${itemCount}/${limit}`}
           >
-            {(isFull || isHigh) && (
-              <div className="hidden sm:flex h-1 w-10 overflow-hidden rounded-full bg-muted">
-                <div
-                  className={cn(
-                    "h-full rounded-full motion-base",
-                    isFull ? "bg-destructive" : "bg-warning"
-                  )}
-                  style={{ width: `${usagePct}%` }}
-                />
-              </div>
-            )}
+            <div className="hidden h-1 w-10 overflow-hidden rounded-full bg-muted sm:flex">
+              <div
+                className={cn(
+                  "h-full rounded-full motion-base",
+                  isFull ? "bg-destructive" : "bg-warning"
+                )}
+                style={{ width: `${usagePct}%` }}
+              />
+            </div>
             <span
               className={cn(
                 "text-meta tabular-nums",
-                !isFull && !isHigh && "text-muted-foreground",
-                isFull && "text-destructive",
-                isHigh && !isFull && "text-warning"
+                isFull ? "text-destructive" : "text-warning"
               )}
             >
               {itemCount}/{limit}
             </span>
-            {(isFull || isHigh) && <UpgradeBadge featureKey="watchlistCards" />}
+            <UpgradeBadge featureKey="watchlistCards" />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -438,4 +442,3 @@ function SegButton({
     </button>
   );
 }
-
