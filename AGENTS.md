@@ -68,7 +68,8 @@ Concrete consequences:
 | ตัวเลขใหญ่ (KPI / ราคา hero) | `HeroNumber` | `ui/hero-number.tsx` | พอร์ตรวม / ราคา hero |
 | Sparkline | `MiniSparkline` | `ui/mini-sparkline.tsx` | กราฟจิ๋วในแถว/การ์ด |
 | Loading (ศูนย์ spinner) | `Skeleton` · `LoadingState` · `PageSkeleton` | `ui/skeleton.tsx` · `shared/loading-state.tsx` · `shared/page-skeleton.tsx` | โครงโหลด |
-| Filter / toolbar | `FilterToolbar` · `GameFilterChips` | `shared/filter-toolbar.tsx` · `shared/game-filter-chips.tsx` | แถบกรอง/สลับมุมมอง |
+| **Filter surface (canonical)** | `FilterModal` | `shared/filter-modal.tsx` | **ตัวกรองทุกหน้า** — popup กลางจอ (desktop) / เต็มจอ (มือถือ) แบบ CoinMarketCap · header + body (facet rows) + Reset/Apply footer + backdrop เบลอ. เปิดจากปุ่ม "ตัวกรอง". **set/search/sort อยู่นอก modal** (set = control เด่น, ผู้ใช้เลือกชุดก่อน) — ใส่แค่ facet (rarity/สี/type/condition) ข้างใน |
+| Filter / toolbar | `FilterToolbar` · `GameFilterChips` | `shared/filter-toolbar.tsx` · `shared/game-filter-chips.tsx` | แถบกรอง/สลับมุมมอง (search/sort/view) — คู่กับ `FilterModal` |
 | Page shell | `PageContainer` · `PageHeader` | `layout/page-container.tsx` · `layout/page-header.tsx` | max-width + หัวหน้า (+ bottom-nav padding) |
 | ปุ่มย้อน (มือถือ) | `BackButton` · `Breadcrumb` | `shared/back-button.tsx` · `shared/breadcrumb.tsx` | ปุ่มย้อน honey inline ข้างหัวข้อ |
 | Badge | `Badge` · `RarityBadge` · `ConditionBadge` · `GameBadge` | `ui/badge.tsx` · `shared/*-badge.tsx` | ป้ายสถานะ / rarity / สภาพ / เกม |

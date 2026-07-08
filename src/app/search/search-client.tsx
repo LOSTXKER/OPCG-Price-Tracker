@@ -1,7 +1,8 @@
 "use client"
 
-import { Suspense } from "react"
+import { Suspense, useState } from "react"
 import {
+  Filter,
   LayoutGrid,
   List,
   Search,
@@ -14,12 +15,9 @@ import { Button } from "@/components/ui/button"
 import { Surface } from "@/components/ui/surface"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { EmptyState } from "@/components/shared/empty-state"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select"
+import { FilterModal } from "@/components/shared/filter-modal"
+import { cn } from "@/lib/utils"
+import { ToolbarSortDropdown } from "@/components/ui/toolbar"
 import { SetPicker } from "@/components/shared/set-picker"
 import { GridCard, GridCardSkeleton } from "@/components/home/grid-card"
 import { MobileCardSkeleton } from "@/components/home/mobile-card-item"
@@ -36,8 +34,6 @@ import {
 import { SearchPagination } from "./search-pagination"
 import { PhotoSearchButton } from "./photo-search-button"
 import { useSearch } from "./use-search"
-
-const ALL_RARITIES = "__all_rarities__"
 
 // /search renders the shared market table with no "Views" column (views are a
 // home "popular" tab concept). Static — never changes — so build it once.
@@ -72,7 +68,8 @@ function SearchContent({
   rarities: string[]
 }) {
   const lang = useUIStore((s) => s.language)
-  const SORT_OPTIONS = SORT_KEYS.map((o) => ({ value: o.value, label: t(lang, o.key) }))
+  const SORT_OPTIONS = SORT_KEYS.map((o) => ({ key: o.value, label: t(lang, o.key) }))
+  const [showFilters, setShowFilters] = useState(false)
 
   const {
     query,
@@ -107,6 +104,17 @@ function SearchContent({
     clearFilters,
     clearInput,
   } = useSearch()
+
+  // Rarity is the only modal facet. Selection is a comma-joined string in the
+  // hook; toggle in/out of the array and re-join to preserve the multi query.
+  const rarityValues = selectedRarity ? selectedRarity.split(",") : []
+  const rarityCount = rarityValues.length
+  const toggleRarity = (value: string) => {
+    const next = rarityValues.includes(value)
+      ? rarityValues.filter((r) => r !== value)
+      : [...rarityValues, value]
+    handleRarityChange(next.join(","))
+  }
 
   return (
     <div className="space-y-4">
@@ -174,43 +182,35 @@ function SearchContent({
             )}
 
             {rarities.length > 0 && (
-              <Select
-                value={selectedRarity || ALL_RARITIES}
-                onValueChange={(v) => handleRarityChange(v === ALL_RARITIES ? "" : v ?? "")}
+              <button
+                type="button"
+                onClick={() => setShowFilters(true)}
+                className={cn(
+                  "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm transition-colors",
+                  rarityCount > 0
+                    ? "border-primary/40 bg-primary/5 text-primary"
+                    : "border-hair bg-background text-muted-foreground hover:bg-muted hover:text-foreground",
+                )}
               >
-                <SelectTrigger size="sm" className="h-9 min-w-0 sm:min-w-[120px]">
-                  <span data-slot="select-value" className="flex flex-1 items-center gap-1.5 truncate text-left">
-                    {selectedRarity || t(lang, "allRarities")}
+                <Filter className="size-3.5" />
+                {t(lang, "filter")}
+                {rarityCount > 0 && (
+                  <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
+                    {rarityCount}
                   </span>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={ALL_RARITIES}>{t(lang, "allRarities")}</SelectItem>
-                  {rarities.map((r) => (
-                    <SelectItem key={r} value={r}>
-                      {r}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                )}
+              </button>
             )}
 
-            <Select
-              value={sort}
-              onValueChange={(v) => v && handleSortChange(v as SortKey)}
-            >
-              <SelectTrigger size="sm" className="hidden h-9 sm:flex sm:min-w-[140px]">
-                <span data-slot="select-value" className="flex flex-1 items-center gap-1.5 truncate text-left">
-                  {SORT_OPTIONS.find((o) => o.value === sort)?.label ?? sort}
-                </span>
-              </SelectTrigger>
-              <SelectContent>
-                {SORT_OPTIONS.map((o) => (
-                  <SelectItem key={o.value} value={o.value}>
-                    {o.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="hidden sm:block">
+              <ToolbarSortDropdown
+                options={SORT_OPTIONS}
+                activeKey={sort}
+                activeDir={sortDir}
+                onChange={(key) => handleSortChange(key as SortKey)}
+                align="start"
+              />
+            </div>
 
             <div className="ml-auto flex items-center gap-1.5">
               {viewMode === "grid" && (
@@ -240,6 +240,38 @@ function SearchContent({
             </div>
           </div>
         </Surface>
+      )}
+
+      {/* Rarity filter — opens in the canonical FilterModal. Set + sort stay as
+          their own controls above; only the secondary facet lives here. */}
+      {rarities.length > 0 && (
+        <FilterModal
+          open={showFilters}
+          onOpenChange={setShowFilters}
+          onReset={() => handleRarityChange("")}
+          resetDisabled={rarityCount === 0}
+        >
+          <div>
+            <span className="mb-1.5 block text-eyebrow">{t(lang, "rarity")}</span>
+            <div className="flex flex-wrap gap-1.5">
+              {rarities.map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => toggleRarity(r)}
+                  className={cn(
+                    "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors",
+                    rarityValues.includes(r)
+                      ? "border-primary/40 bg-primary/5 text-primary"
+                      : "border-hair bg-background text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
+          </div>
+        </FilterModal>
       )}
 
       {/* Loading */}

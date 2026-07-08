@@ -1,23 +1,22 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
-import {
-  Dialog,
-  DialogContent,
-} from "@/components/ui/dialog"
-import { useUIStore } from "@/stores/ui-store"
-import { displayValueToJpy } from "@/lib/utils/currency"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { CardPickerForm } from "@/components/shared/card-picker-form"
+import { t } from "@/lib/i18n"
+import { useUIStore } from "@/stores/ui-store"
 
-import { DetailStep } from "./add-card-detail-step"
-import {
-  type CardWithSet,
-  type CartItem,
-} from "./add-card-types"
+import { type CardWithSet, type CartItem } from "./add-card-types"
 
 export type { CartItem }
 
+/**
+ * Add cards to a portfolio. Multi-pick (เบส: เลือกการ์ดแบบหลายใบ) — tapping a card
+ * toggles it into a pending selection you can see in the preview strip, then the
+ * footer commits the whole batch at qty 1 (edit qty / purchase price afterwards in
+ * the holdings table). Mirrors the watchlist add-dialog.
+ */
 export function AddCardDialog({
   open,
   onOpenChange,
@@ -27,41 +26,31 @@ export function AddCardDialog({
   onOpenChange: (open: boolean) => void
   onAddBatch: (items: CartItem[]) => Promise<unknown>
 }) {
-  const [step, setStep] = useState<"select" | "detail">("select")
-  const [selectedCard, setSelectedCard] = useState<CardWithSet | null>(null)
-
-  const [quantity, setQuantity] = useState(1)
-  const [purchasePrice, setPurchasePrice] = useState("")
+  const lang = useUIStore((s) => s.language)
+  const [pending, setPending] = useState<CardWithSet[]>([])
   const [submitting, setSubmitting] = useState(false)
-  const currency = useUIStore((s) => s.currency)
 
-  const reset = () => {
-    setStep("select")
-    setSelectedCard(null)
-    setQuantity(1)
-    setPurchasePrice("")
+  // Drop the pending picks whenever the dialog closes.
+  useEffect(() => {
+    if (!open) setPending([])
+  }, [open])
+
+  const toggle = (card: CardWithSet) => {
+    setPending((prev) =>
+      prev.some((c) => c.id === card.id)
+        ? prev.filter((c) => c.id !== card.id)
+        : [...prev, card],
+    )
   }
 
-  const goToDetail = (card: CardWithSet) => {
-    setSelectedCard(card)
-    setQuantity(1)
-    setPurchasePrice("")
-    setStep("detail")
-  }
-
-  const goBackToSelect = () => {
-    setStep("select")
-    setSelectedCard(null)
-  }
-
-  const handleSubmit = async () => {
-    if (!selectedCard) return
+  const commit = async () => {
+    if (submitting || pending.length === 0) return
     setSubmitting(true)
     try {
-      const raw = purchasePrice.trim() === "" ? null : parseInt(purchasePrice)
-      const priceJpy = raw != null ? Math.round(displayValueToJpy(raw, currency)) : null
-      await onAddBatch([{ card: selectedCard, quantity, purchasePrice: priceJpy }])
-      reset()
+      await onAddBatch(
+        pending.map((card) => ({ card, quantity: 1, purchasePrice: null })),
+      )
+      setPending([])
       onOpenChange(false)
     } finally {
       setSubmitting(false)
@@ -69,25 +58,29 @@ export function AddCardDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { onOpenChange(v); if (!v) reset() }}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="flex flex-col gap-0 overflow-hidden p-0"
-        style={{ maxWidth: "min(46rem, calc(100% - 2rem))", maxHeight: "85dvh" }}
+        className="flex flex-col gap-0 overflow-hidden p-0 max-md:!inset-0 max-md:!max-h-none max-md:!max-w-none max-md:!translate-x-0 max-md:!translate-y-0 max-md:!rounded-none md:h-auto md:max-h-[85dvh] md:w-full md:max-w-[34rem]"
       >
-        {step === "select" ? (
-          <CardPickerForm onSelect={goToDetail} />
-        ) : selectedCard ? (
-          <DetailStep
-            card={selectedCard}
-            quantity={quantity}
-            setQuantity={setQuantity}
-            purchasePrice={purchasePrice}
-            setPurchasePrice={setPurchasePrice}
-            submitting={submitting}
-            onBack={goBackToSelect}
-            onSubmit={() => void handleSubmit()}
-          />
-        ) : null}
+        <CardPickerForm
+          onSelect={toggle}
+          isSelected={(c) => pending.some((p) => p.id === c.id)}
+          selected={pending}
+          footer={
+            <div className="border-t border-hair p-3">
+              <button
+                type="button"
+                onClick={() => void commit()}
+                disabled={pending.length === 0 || submitting}
+                className="ease-chrome h-11 w-full rounded-xl bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {pending.length === 0
+                  ? t(lang, "selectCardsToAdd")
+                  : `${t(lang, "addToPortfolio")} (${pending.length})`}
+              </button>
+            </div>
+          }
+        />
       </DialogContent>
     </Dialog>
   )

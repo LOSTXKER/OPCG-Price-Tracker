@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils"
 import { formatCount } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
-import { BrowseFiltersSheet } from "./browse-filters-sheet"
 import { BrowseGrid } from "./browse-grid"
 import { BrowseList } from "./browse-list"
 import { BrowseToolbar } from "./browse-toolbar"
@@ -50,13 +49,14 @@ export function MarketplaceBrowse({
   const [rarities, setRarities] = useState<string[]>([])
   const [sort, setSort] = useState("newest")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [showFilters, setShowFilters] = useState(false)
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize))
 
-  const toggleFilter = (arr: string[], val: string) =>
-    arr.includes(val) ? arr.filter((v) => v !== val) : [...arr, val]
-
+  // Multi-select facet filters (in the FilterModal, opened from BrowseToolbar).
+  // Note: the /api/listings `condition` param is single-value (see
+  // parseCondition), so — matching prior behavior — we only send `condition`
+  // when exactly one is selected; `rarity` is comma-joined and handled as
+  // `{ in: [...] }` server-side.
   const buildParams = useCallback(
     (pageNum: number) => {
       const params = new URLSearchParams()
@@ -132,9 +132,6 @@ export function MarketplaceBrowse({
         search={search}
         onSearchChange={setSearch}
         onSubmit={handleSearch}
-        filterCount={conditions.length + rarities.length}
-        showFilters={showFilters}
-        onToggleFilters={() => setShowFilters((v) => !v)}
         sort={sort}
         onSortChange={(v) => {
           setSort(v)
@@ -142,27 +139,17 @@ export function MarketplaceBrowse({
         }}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
+        conditions={conditions}
+        onConditionsChange={(v) => {
+          setConditions(v)
+          setPage(1)
+        }}
+        rarities={rarities}
+        onRaritiesChange={(v) => {
+          setRarities(v)
+          setPage(1)
+        }}
       />
-
-      {showFilters && (
-        <BrowseFiltersSheet
-          conditions={conditions}
-          rarities={rarities}
-          onToggleCondition={(c) => {
-            setConditions((prev) => toggleFilter(prev, c))
-            setPage(1)
-          }}
-          onToggleRarity={(r) => {
-            setRarities((prev) => toggleFilter(prev, r))
-            setPage(1)
-          }}
-          onClear={() => {
-            setConditions([])
-            setRarities([])
-            setPage(1)
-          }}
-        />
-      )}
 
       <div className="flex items-center gap-2 text-meta">
         <span>{t(lang, "mktBrowseItemCount").replace("{n}", formatCount(total))}</span>

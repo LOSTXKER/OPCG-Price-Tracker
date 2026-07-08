@@ -87,8 +87,7 @@ export function AlertCreateDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="flex flex-col gap-0 overflow-hidden p-0"
-        style={{ maxWidth: "min(46rem, calc(100% - 2rem))", maxHeight: "85dvh" }}
+        className="flex flex-col gap-0 overflow-hidden p-0 max-md:!inset-0 max-md:!max-h-none max-md:!max-w-none max-md:!translate-x-0 max-md:!translate-y-0 max-md:!rounded-none md:h-auto md:max-h-[85dvh] md:w-full md:max-w-[34rem]"
       >
         <DialogHeader className="border-b px-5 py-3.5">
           <div className="flex items-center gap-2">

@@ -1,9 +1,11 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
-import { Search } from "lucide-react"
+import { Filter, Search } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
+import { FilterModal } from "@/components/shared/filter-modal"
 import { Price } from "@/components/shared/price-inline"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { getCardName, t } from "@/lib/i18n"
@@ -17,10 +19,10 @@ interface CardPickerProps {
   wantSet: Set<number>
   wantCount: number
   cardSearch: string
-  rarityFilter: string
+  rarityFilter: string[]
   onToggleWant: (cardId: number) => void
   onSearchChange: (value: string) => void
-  onRarityChange: (value: string) => void
+  onRarityChange: (values: string[]) => void
 }
 
 export function CardPicker({
@@ -35,6 +37,15 @@ export function CardPicker({
   onRarityChange,
 }: CardPickerProps) {
   const lang = useUIStore((s) => s.language)
+  const [showFilters, setShowFilters] = useState(false)
+
+  const toggleRarity = (value: string) => {
+    onRarityChange(
+      rarityFilter.includes(value)
+        ? rarityFilter.filter((r) => r !== value)
+        : [...rarityFilter, value]
+    )
+  }
 
   return (
     <section className="min-w-0 space-y-4">
@@ -45,8 +56,10 @@ export function CardPicker({
         )}
       </div>
 
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <div className="relative sm:w-72">
+      {/* Search stays outside; only rarity (a secondary facet) moves into the
+          FilterModal opened by the "ตัวกรอง" button. */}
+      <div className="flex items-center gap-2">
+        <div className="relative flex-1 sm:max-w-72">
           <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
@@ -56,36 +69,55 @@ export function CardPicker({
             className="h-9 w-full rounded-full border border-border bg-background pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
           />
         </div>
-        <div className="flex min-w-0 flex-1 gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
-          <button
-            type="button"
-            onClick={() => onRarityChange("all")}
-            className={cn(
-              "shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors",
-              rarityFilter === "all"
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:bg-muted/80"
-            )}
-          >
-            {t(lang, "allRarity")}
-          </button>
-          {uniqueRarities.map((r) => (
-            <button
-              key={r}
-              type="button"
-              onClick={() => onRarityChange(r)}
-              className={cn(
-                "shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors",
-                rarityFilter === r
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              )}
-            >
-              {r}
-            </button>
-          ))}
-        </div>
+        <button
+          type="button"
+          onClick={() => setShowFilters(true)}
+          className={cn(
+            "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-sm",
+            rarityFilter.length > 0
+              ? "border-primary/40 bg-primary/5 text-primary"
+              : "border-border bg-background text-muted-foreground hover:text-foreground"
+          )}
+        >
+          <Filter className="size-3.5" />
+          <span className="hidden sm:inline">{t(lang, "filter")}</span>
+          {rarityFilter.length > 0 && (
+            <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
+              {rarityFilter.length}
+            </span>
+          )}
+        </button>
       </div>
+
+      <FilterModal
+        open={showFilters}
+        onOpenChange={setShowFilters}
+        onReset={() => onRarityChange([])}
+        resetDisabled={rarityFilter.length === 0}
+      >
+        {uniqueRarities.length > 0 && (
+          <div>
+            <span className="mb-1.5 block text-eyebrow">{t(lang, "rarityFilter")}</span>
+            <div className="flex flex-wrap gap-1.5">
+              {uniqueRarities.map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => toggleRarity(r)}
+                  className={cn(
+                    "ease-chrome rounded-lg px-2.5 py-1 text-xs font-semibold",
+                    rarityFilter.includes(r)
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </FilterModal>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         {cards.map((card) => {

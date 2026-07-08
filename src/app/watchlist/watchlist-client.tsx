@@ -76,6 +76,16 @@ function WatchlistContent() {
   const [error, setError] = useState<string | null>(null);
   const [removingIds, setRemovingIds] = useState<Set<number>>(new Set());
   const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [editMode, setEditMode] = useState(false);
+
+  // Multi-select is off by default so rows stay clean (tap = open card). The
+  // "แก้ไข" toggle reveals checkboxes; leaving edit mode drops any selection.
+  const toggleEditMode = () => {
+    setEditMode((prev) => {
+      if (prev) setSelected(new Set());
+      return !prev;
+    });
+  };
 
   const [view, setView] = useLocalStorage<WatchView>(VIEW_STORAGE_KEY, "list");
   const [period, setPeriod] = useState<ChangePeriod>("7d");
@@ -432,6 +442,8 @@ function WatchlistContent() {
             setOptions={setOptions}
             itemCount={items.length}
             limit={limits.watchlistCards}
+            editMode={editMode}
+            onToggleEditMode={toggleEditMode}
             selectedCount={selected.size}
             onClearSelection={() => setSelected(new Set())}
             onBulkRemove={() => void removeBulk()}
@@ -454,6 +466,7 @@ function WatchlistContent() {
             <WatchlistListView
               entries={filteredEntries}
               period={period}
+              editMode={editMode}
               selected={selected}
               onToggleSelect={toggleSelect}
               onToggleAll={toggleSelectAll}
@@ -469,6 +482,7 @@ function WatchlistContent() {
             <WatchlistGridView
               entries={filteredEntries}
               period={period}
+              editMode={editMode}
               selected={selected}
               onToggleSelect={toggleSelect}
               onTogglePin={(e) => void togglePin(e)}

@@ -5,17 +5,16 @@ import {
   List,
   SlidersHorizontal,
   TrendingUpDown,
-  X,
 } from "lucide-react"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useMemo } from "react"
 
-import { FilterChips, type FilterDefinition } from "@/components/shared/filter-chips"
+import { type FilterDefinition } from "@/components/shared/filter-chips"
+import { FilterModal } from "@/components/shared/filter-modal"
 import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker"
 import { AdSlot } from "@/components/ads/ad-slot"
 import { Input } from "@/components/ui/input"
 import { SegmentedControl } from "@/components/ui/segmented-control"
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
@@ -102,91 +101,16 @@ export function HomeMarketOverview({
   const selectedSets = m.filters.set ?? []
   const columns = useMemo(() => buildMarketColumns({ showViews: m.showViews }), [m.showViews])
 
-  // Filter surface is breakpoint-aware: a bottom sheet on mobile (thumb-reachable),
-  // an anchored popover on desktop (md+). `filterOpen` drives both; only the one
-  // matching the current breakpoint renders, so they never open together.
-  const [isDesktop, setIsDesktop] = useState(false)
-  const filterAnchorRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)")
-    const update = () => setIsDesktop(mq.matches)
-    update()
-    mq.addEventListener("change", update)
-    return () => mq.removeEventListener("change", update)
-  }, [])
-
-  // Desktop popover: close on outside click / Escape.
-  useEffect(() => {
-    if (!isDesktop || !m.filterOpen) return
-    function onPointerDown(e: MouseEvent) {
-      if (filterAnchorRef.current && !filterAnchorRef.current.contains(e.target as Node)) {
-        m.setFilterOpen(false)
-      }
+  // Reset clears only the modal's own facets (rarity/type/color/variant) + price
+  // range — NOT the set (its own control up top) and NOT search (outside the modal).
+  const resetModalFilters = () => {
+    for (const def of allFilterDefs) {
+      if ((m.filters[def.key]?.length ?? 0) > 0) m.handleFilterChange(def.key, [])
     }
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") m.setFilterOpen(false)
-    }
-    document.addEventListener("mousedown", onPointerDown)
-    document.addEventListener("keydown", onKeyDown)
-    return () => {
-      document.removeEventListener("mousedown", onPointerDown)
-      document.removeEventListener("keydown", onKeyDown)
-    }
-  }, [isDesktop, m])
-
-  const filterBody = (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <FilterChips
-          filters={allFilterDefs}
-          selected={m.filters}
-          onChange={m.handleFilterChange}
-        />
-      </div>
-
-      <div className="flex items-center gap-1.5">
-        <span className="text-meta shrink-0">{t(lang, "priceLabel")}</span>
-        <Input
-          type="number"
-          placeholder={t(lang, "min")}
-          className="surface-1 h-10 w-24 border-hair px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
-          value={m.minPrice}
-          onChange={(e) => { m.setMinPrice(e.target.value); m.setPage(1) }}
-          min={0}
-        />
-        <span className="text-meta">–</span>
-        <Input
-          type="number"
-          placeholder={t(lang, "max")}
-          className="surface-1 h-10 w-24 border-hair px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
-          value={m.maxPrice}
-          onChange={(e) => { m.setMaxPrice(e.target.value); m.setPage(1) }}
-          min={0}
-        />
-      </div>
-
-      <div className="flex items-center justify-between gap-2 border-t border-hair pt-3">
-        {m.activeFilterCount > 0 ? (
-          <button
-            onClick={m.clearAllFilters}
-            className="ease-chrome flex items-center gap-1 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
-            <X className="size-3.5" />
-            {t(lang, "clearAll")}
-          </button>
-        ) : (
-          <span />
-        )}
-        <button
-          onClick={() => m.setFilterOpen(false)}
-          className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground motion-base hover:opacity-90"
-        >
-          {t(lang, "applyFilters")}
-        </button>
-      </div>
-    </div>
-  )
+    m.setMinPrice("")
+    m.setMaxPrice("")
+    m.setPage(1)
+  }
 
   return (
     <div className="space-y-4">
@@ -219,9 +143,10 @@ export function HomeMarketOverview({
         {/* Row 2: set picker (left) + display controls (right) — one line on
             every breakpoint (set picker flexes, controls keep natural width) */}
         <div className="flex items-center gap-2 px-3 py-2 sm:px-4">
-          {/* Set picker — flexes to fill on mobile, fixed 200px on sm+ */}
+          {/* Set picker — flexes to fill on mobile, fixed 19rem on sm+ so its
+              dropdown (matches the trigger width) fits full set names */}
           {sets.length > 0 && (
-            <div className="min-w-0 flex-1 sm:flex-none sm:w-[200px]">
+            <div className="min-w-0 flex-1 sm:flex-none sm:w-[19rem]">
               <SetPicker
                 sets={sets}
                 selectedCode={selectedSets[0] ?? null}
@@ -241,38 +166,27 @@ export function HomeMarketOverview({
 
             <div className="hidden h-5 w-px bg-border/40 sm:block" />
 
-            <div ref={filterAnchorRef} className="relative">
-              <button
-                type="button"
-                onClick={() => m.setFilterOpen((o) => !o)}
-                className={cn(
-                  "ease-chrome flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium",
-                  m.filterOpen || m.activeFilterCount > 0
-                    ? "bg-primary/15 text-primary"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                )}
-              >
-                <SlidersHorizontal className="size-3.5" />
-                <span className="hidden md:inline">{t(lang, "filter")}</span>
-                {m.activeFilterCount > 0 && (
-                  <span className="flex size-4.5 items-center justify-center rounded-full bg-primary/15 text-micro text-primary">
-                    {m.activeFilterCount}
-                  </span>
-                )}
-              </button>
-
-              {/* Desktop (md+): anchored popover under the button */}
-              {isDesktop && m.filterOpen && (
-                <div
-                  role="dialog"
-                  aria-label={t(lang, "filter")}
-                  className="ease-chrome absolute right-0 top-full z-40 mt-2 w-[min(520px,calc(100vw-2rem))] origin-top-right rounded-xl border border-hair bg-popover p-4 shadow-xl"
-                >
-                  <p className="text-h4 mb-3">{t(lang, "filter")}</p>
-                  {filterBody}
-                </div>
+            {/* Opens the canonical FilterModal (centered on desktop, full-screen
+                on mobile). Badge counts only the modal's facets + price range —
+                set has its own control up top. */}
+            <button
+              type="button"
+              onClick={() => m.setFilterOpen(true)}
+              className={cn(
+                "ease-chrome flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium",
+                m.filterOpen || m.activeFilterCount > 0
+                  ? "bg-primary/15 text-primary"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
-            </div>
+            >
+              <SlidersHorizontal className="size-3.5" />
+              <span className="hidden md:inline">{t(lang, "filter")}</span>
+              {m.activeFilterCount > 0 && (
+                <span className="flex size-4.5 items-center justify-center rounded-full bg-primary/15 text-micro text-primary">
+                  {m.activeFilterCount}
+                </span>
+              )}
+            </button>
 
             <SegmentedControl
               size="sm"
@@ -288,15 +202,77 @@ export function HomeMarketOverview({
         </div>
       </div>
 
-      {/* Advanced filters — centered dialog on mobile (owner vetoed bottom
-          sheets app-wide). On md+ the same controls render in the anchored
-          popover above, so the dialog is gated to `!isDesktop`. */}
-      <Dialog open={m.filterOpen && !isDesktop} onOpenChange={m.setFilterOpen}>
-        <DialogContent className="max-h-[80vh] overflow-y-auto p-4">
-          <DialogTitle className="text-h4">{t(lang, "filter")}</DialogTitle>
-          <div className="mt-2">{filterBody}</div>
-        </DialogContent>
-      </Dialog>
+      {/* Advanced facet filters — the one canonical FilterModal (centered card on
+          desktop, full-screen on mobile, dark-blur backdrop). Only secondary
+          facets (rarity/type/color/variant) + price range live here; set / price-lens
+          / view / search stay as their own controls outside. */}
+      <FilterModal
+        open={m.filterOpen}
+        onOpenChange={m.setFilterOpen}
+        onReset={resetModalFilters}
+        resetDisabled={m.activeFilterCount === 0}
+      >
+        <div className="space-y-3.5">
+          {allFilterDefs.map((def) => {
+            const values = m.filters[def.key] ?? []
+            return (
+              <div key={def.key}>
+                <span className="mb-1.5 block text-eyebrow">{def.label}</span>
+                <div className="flex flex-wrap gap-1.5">
+                  {def.options.map((opt) => {
+                    const active = values.includes(opt.value)
+                    return (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() =>
+                          m.handleFilterChange(
+                            def.key,
+                            active
+                              ? values.filter((v) => v !== opt.value)
+                              : [...values, opt.value]
+                          )
+                        }
+                        className={cn(
+                          "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium",
+                          active
+                            ? "border-primary/40 bg-primary/5 text-primary"
+                            : "border-hair bg-background text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        {opt.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        <div>
+          <span className="mb-1.5 block text-eyebrow">{t(lang, "priceLabel")}</span>
+          <div className="flex items-center gap-1.5">
+            <Input
+              type="number"
+              placeholder={t(lang, "min")}
+              className="surface-1 h-10 w-24 border-hair px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
+              value={m.minPrice}
+              onChange={(e) => { m.setMinPrice(e.target.value); m.setPage(1) }}
+              min={0}
+            />
+            <span className="text-meta">–</span>
+            <Input
+              type="number"
+              placeholder={t(lang, "max")}
+              className="surface-1 h-10 w-24 border-hair px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
+              value={m.maxPrice}
+              onChange={(e) => { m.setMaxPrice(e.target.value); m.setPage(1) }}
+              min={0}
+            />
+          </div>
+        </div>
+      </FilterModal>
 
       {/* Content: Table or Grid */}
       {m.viewMode === "table" ? (

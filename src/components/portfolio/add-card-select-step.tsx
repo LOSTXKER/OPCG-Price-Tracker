@@ -1,5 +1,6 @@
 "use client"
 
+import { type ReactNode } from "react"
 import Image from "next/image"
 import {
   Check,
@@ -7,6 +8,7 @@ import {
   Filter,
   Loader2,
   Package,
+  RotateCcw,
   Search,
   X,
 } from "lucide-react"
@@ -23,7 +25,6 @@ import { RARITY_HEX } from "@/lib/constants/rarities"
 import { getGameConfig } from "@/lib/game-config"
 import { useUIStore } from "@/stores/ui-store"
 import { t, type Language } from "@/lib/i18n"
-import { formatJpyAmount } from "@/lib/utils/currency"
 import { type CardWithSet, type SetInfo } from "./add-card-types"
 
 type RarityOpt = { code: string; label: string }
@@ -39,9 +40,6 @@ type TypeOpt = { code: string; label: string }
  */
 function FilterControls({
   lang,
-  sets,
-  activeSet,
-  selectSetCode,
   activeRarity,
   setActiveRarity,
   activeColor,
@@ -55,9 +53,6 @@ function FilterControls({
   clearAllFilters,
 }: {
   lang: Language
-  sets: SetInfo[]
-  activeSet: string | null
-  selectSetCode: (code: string | null) => void
   activeRarity: string | null
   setActiveRarity: (r: string | null) => void
   activeColor: string | null
@@ -72,18 +67,8 @@ function FilterControls({
 }) {
   return (
     <div className="space-y-3.5">
-      {/* Set — every game has sets */}
-      <div>
-        <span className="mb-1.5 block text-eyebrow">{t(lang, "set")}</span>
-        <SetPicker
-          sets={sets.map((s) => ({ ...s, cardCount: s._count.cards }))}
-          selectedCode={activeSet}
-          onSelect={(code) => selectSetCode(code)}
-          variant="inline"
-          nullable
-        />
-      </div>
-
+      {/* Set is NOT here — it lives as a prominent control up in the search row
+          (เบส: ผู้ใช้เลือกชุดก่อน). The modal holds only rarity / colour / type. */}
       {rarityOptions.length > 0 && (
         <div>
           <span className="mb-1.5 block text-eyebrow">{t(lang, "rarity")}</span>
@@ -165,9 +150,11 @@ function FilterControls({
 }
 
 /**
- * "Search / filter → pick a card" body. Search-hero + responsive: one column on
- * mobile (filters behind a toggle, bounded so they never bury the list); a
- * two-pane split on desktop (filters as a persistent left rail, results right).
+ * "Search / filter → pick a card" body. Search-hero. On desktop the filters live
+ * in an always-visible left rail (two panes: rail | results) so filtering never
+ * covers the cards; on mobile they open in a full-screen sheet behind the filter
+ * toggle. An optional `footer` (commit bar) renders inside the picker so the mobile
+ * sheet covers it — no button clash.
  */
 export function SelectStep({
   query,
@@ -192,6 +179,8 @@ export function SelectStep({
   onSelectCard,
   isSelected,
   showHeader = true,
+  footer,
+  selected,
 }: {
   query: string
   setQuery: (q: string) => void
@@ -217,9 +206,15 @@ export function SelectStep({
   isSelected?: (card: CardWithSet) => boolean
   /** Hide the built-in DialogHeader when the host supplies its own (alerts). */
   showHeader?: boolean
+  /** Commit bar (e.g. watchlist "add N") rendered inside the picker so the filter
+   *  overlay covers it — keeps the host from stacking a second button under it. */
+  footer?: ReactNode
+  /** Multi-pick: the cards picked so far. When non-empty, a horizontal preview
+   *  strip (thumbnail + remove) renders above the footer. Remove toggles through
+   *  onSelectCard (tapping a selected card again deselects it). */
+  selected?: CardWithSet[]
 }) {
   const lang = useUIStore((s) => s.language)
-  const currency = useUIStore((s) => s.currency)
   const currentGame = useUIStore((s) => s.currentGame)
 
   // Filters follow the current game — no OPCG hardcode. Empty sections vanish.
@@ -228,11 +223,13 @@ export function SelectStep({
   const colorOptions = (gameCfg?.colors ?? []) as ColorOpt[]
   const typeOptions = (gameCfg?.cardTypes ?? []) as TypeOpt[]
 
+  // Count only the modal's own facets (set has its own control up top now).
+  const modalFilterCount = [activeRarity, activeColor, activeCardType].filter(
+    Boolean,
+  ).length
+
   const filterProps = {
     lang,
-    sets,
-    activeSet,
-    selectSetCode,
     activeRarity,
     setActiveRarity,
     activeColor,
@@ -312,16 +309,21 @@ export function SelectStep({
                 </div>
               </div>
 
-              <div className="shrink-0 text-right">
-                {card.latestPriceJpy != null && (
-                  <p className="tabular-nums text-sm font-semibold text-primary">
-                    {formatJpyAmount(card.latestPriceJpy, currency)}
-                  </p>
-                )}
-              </div>
-
-              {isSelected?.(card) ? (
-                <Check className="size-4 shrink-0 text-primary" />
+              {/* Trailing affordance tells you what a tap does: a checkbox on
+                  select-then-confirm surfaces (isSelected passed), a chevron on
+                  surfaces that advance to a next step (portfolio/alerts). No price
+                  here — picking a card is about identity, not value. */}
+              {isSelected ? (
+                <span
+                  className={cn(
+                    "ease-chrome flex size-5 shrink-0 items-center justify-center rounded-full border",
+                    isSelected(card)
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border"
+                  )}
+                >
+                  {isSelected(card) && <Check className="size-3" strokeWidth={3} />}
+                </span>
               ) : (
                 <ChevronDown className="size-4 shrink-0 -rotate-90 text-muted-foreground/30" />
               )}
@@ -339,15 +341,24 @@ export function SelectStep({
   )
 
   return (
-    <>
+    <div className="relative flex min-h-0 flex-1 flex-col">
       {showHeader && (
         <DialogHeader className="border-b border-hair px-5 pt-4 pb-3">
           <DialogTitle>{t(lang, "addCardToPortfolio")}</DialogTitle>
         </DialogHeader>
       )}
 
-      {/* Search bar (full width) + mobile-only filter toggle */}
-      <div className="border-b border-hair px-4 pt-3 pb-3">
+      {/* Set (the primary browse axis — เบส: ผู้ใช้เลือกชุดก่อน) sits prominently
+          above the search + filter row. Rarity/colour/type live in the filter modal. */}
+      <div className="space-y-2 border-b border-hair px-4 pt-3 pb-3">
+        <SetPicker
+          sets={sets.map((s) => ({ ...s, cardCount: s._count.cards }))}
+          selectedCode={activeSet}
+          onSelect={selectSetCode}
+          variant="inline"
+          nullable
+          prominent
+        />
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/50" />
@@ -370,44 +381,129 @@ export function SelectStep({
             )}
           </div>
 
-          {/* Mobile only — desktop shows the rail instead */}
+          {/* Opens the filter modal (centered on desktop, full-screen on mobile).
+              Badge counts only the modal's facets — set has its own control above. */}
           <button
+            type="button"
             onClick={() => setShowFilters(!showFilters)}
             className={cn(
-              "ease-chrome relative flex h-9 items-center gap-1.5 rounded-lg border px-3 text-sm md:hidden",
-              showFilters || activeFilterCount > 0
+              "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm",
+              showFilters || modalFilterCount > 0
                 ? "border-primary/40 bg-primary/5 text-primary"
                 : "border-hair bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
             <Filter className="size-3.5" />
             <span className="hidden sm:inline">{t(lang, "filter")}</span>
-            {activeFilterCount > 0 && (
+            {modalFilterCount > 0 && (
               <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
-                {activeFilterCount}
+                {modalFilterCount}
               </span>
             )}
           </button>
         </div>
       </div>
 
-      {/* Body — one column on mobile, two panes (rail | results) on desktop */}
-      <div className="flex min-h-0 flex-1 flex-col md:flex-row">
-        {/* Desktop: persistent left rail */}
-        <aside className="hidden md:block md:w-64 md:shrink-0 md:overflow-y-auto md:border-r md:border-hair md:p-4">
-          <FilterControls {...filterProps} />
-        </aside>
+      {/* Results — single column; filters open in the modal below. */}
+      <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>
 
-        {/* Results (+ mobile collapsible filter panel above it) */}
-        <div className="flex min-h-0 flex-1 flex-col">
-          {showFilters && (
-            <div className="max-h-[40vh] overflow-y-auto border-b border-hair px-4 py-3 md:hidden">
+      {/* Picked-so-far preview — a horizontal thumbnail strip above the commit bar
+          (เบส: หน้าที่เลือกหลายใบ ให้เห็นการ์ดที่เลือก). Remove taps toggle the card
+          back off via onSelectCard. Only shows in multi-pick surfaces. */}
+      {selected && selected.length > 0 && (
+        <div className="shrink-0 border-t border-hair px-3 pb-2.5 pt-2">
+          <span className="mb-1.5 block text-eyebrow">
+            {t(lang, "selectedCards")} ({selected.length})
+          </span>
+          <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+            {selected.map((c) => (
+              <div key={c.id} className="relative shrink-0">
+                <div className="relative aspect-[63/88] w-12 overflow-hidden rounded-md border border-hair bg-muted/50">
+                  {c.imageUrl ? (
+                    <Image
+                      src={c.imageUrl}
+                      alt={c.nameEn ?? c.nameJp}
+                      fill
+                      className="object-contain"
+                      sizes="48px"
+                    />
+                  ) : (
+                    <div className="flex size-full items-center justify-center">
+                      <Package className="size-4 text-muted-foreground/30" />
+                    </div>
+                  )}
+                </div>
+                {/* X sits INSIDE the top-right corner — poking it outside gets
+                    clipped by the strip's overflow-x-auto (เบส: กากบาทโดนทับ). */}
+                <button
+                  type="button"
+                  onClick={() => onSelectCard(c)}
+                  aria-label={t(lang, "remove")}
+                  className="absolute right-0.5 top-0.5 flex size-5 items-center justify-center rounded-full bg-foreground/85 text-background shadow-[var(--elev-raised)] hover:bg-danger"
+                >
+                  <X className="size-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {footer}
+
+      {/* Filters — a CoinMarketCap-style modal: full-screen on mobile, a centered
+          card on desktop (เบส). Rendered INSIDE the picker (absolute, not a portal)
+          so it works in a Dialog / the z-100 compare modal without nesting portals. */}
+      {showFilters && (
+        <>
+          {/* desktop backdrop — dark blur (mobile panel is full-screen) */}
+          <button
+            type="button"
+            aria-label={t(lang, "close")}
+            onClick={() => setShowFilters(false)}
+            className="absolute inset-0 z-20 hidden bg-black/40 animate-in fade-in-0 supports-backdrop-filter:backdrop-blur-sm md:block"
+          />
+          <div className="absolute inset-0 z-30 flex flex-col bg-background animate-in fade-in-0 slide-in-from-bottom-3 duration-[var(--dur-base)] md:inset-auto md:left-1/2 md:top-1/2 md:max-h-[85%] md:w-[26rem] md:max-w-[calc(100%-2rem)] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-2xl md:border md:border-hair md:shadow-[var(--elev-overlay)]">
+            <div className="flex items-center justify-between border-b border-hair px-4 py-3">
+              <span className="text-h4">{t(lang, "filter")}</span>
+              <button
+                type="button"
+                onClick={() => setShowFilters(false)}
+                aria-label={t(lang, "close")}
+                className="tap-safe -mr-1 flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
               <FilterControls {...filterProps} />
             </div>
-          )}
-          <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>
-        </div>
-      </div>
-    </>
+            {/* Reset (left) + Apply (right) — CoinMarketCap footer */}
+            <div className="flex items-center gap-3 border-t border-hair p-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveRarity(null)
+                  setActiveColor(null)
+                  setActiveCardType(null)
+                }}
+                disabled={modalFilterCount === 0}
+                className="ease-chrome flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium text-primary hover:bg-primary/5 disabled:opacity-40"
+              >
+                <RotateCcw className="size-3.5" />
+                {t(lang, "reset")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowFilters(false)}
+                className="ease-chrome h-11 flex-1 rounded-xl bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+              >
+                {t(lang, "apply")}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
   )
 }

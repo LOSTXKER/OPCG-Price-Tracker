@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import { fetchCards } from "@/lib/api/fetch-cards";
 import { apiGet, apiTry } from "@/lib/api/client";
@@ -29,12 +29,20 @@ export function CardPickerForm({
   onSelect,
   isSelected,
   showHeader = true,
+  footer,
+  selected,
 }: {
   onSelect: (card: CardWithSet) => void;
   /** Multi-pick mode: predicate → matching rows render selected + onSelect toggles. */
   isSelected?: (card: CardWithSet) => boolean;
   /** Hide the built-in "เลือกการ์ด" header when the host has its own (alerts). */
   showHeader?: boolean;
+  /** Commit bar rendered inside the picker (below the list) so the filter overlay
+   *  covers it — pass the host's "confirm" button here instead of as a sibling. */
+  footer?: ReactNode;
+  /** Multi-pick: cards picked so far → a preview strip above the footer (remove
+   *  toggles back off via onSelect). */
+  selected?: CardWithSet[];
 }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<CardWithSet[]>([]);
@@ -98,7 +106,9 @@ export function CardPickerForm({
           limit: 40,
           search: hasSearch ? q : undefined,
           set: activeSet ?? undefined,
-          rarity: activeRarity ?? undefined,
+          // Selecting a base rarity also pulls its parallel (P-) alt-arts — เบส:
+          // กด SEC ให้เจอ P-SEC ด้วย. The route matches the comma list with `in`.
+          rarity: activeRarity ? `${activeRarity},P-${activeRarity}` : undefined,
           color: activeColor ?? undefined,
           type: activeCardType ?? undefined,
         })
@@ -150,6 +160,8 @@ export function CardPickerForm({
       onSelectCard={onSelect}
       isSelected={isSelected}
       showHeader={showHeader}
+      footer={footer}
+      selected={selected}
     />
   );
 }

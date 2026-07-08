@@ -38,7 +38,7 @@ export default function DropCalculatorClient() {
   const [wantList, setWantList] = useState<Set<number>>(new Set())
 
   const [cardSearch, setCardSearch] = useState("")
-  const [rarityFilter, setRarityFilter] = useState<string>("all")
+  const [rarityFilter, setRarityFilter] = useState<string[]>([])
   const [activeTab, setActiveTab] = useState<"cards" | "results">("cards")
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function DropCalculatorClient() {
     setSelectedCode(code)
     setWantList(new Set())
     setCardSearch("")
-    setRarityFilter("all")
+    setRarityFilter([])
     setActiveTab("cards")
     if (!code) { setDetail(null); return }
     setLoading(true)
@@ -97,8 +97,8 @@ export default function DropCalculatorClient() {
   const filteredCards = useMemo(() => {
     if (!detail) return []
     let list = detail.cards
-    if (rarityFilter !== "all") {
-      list = list.filter((c) => c.rarity === rarityFilter)
+    if (rarityFilter.length > 0) {
+      list = list.filter((c) => rarityFilter.includes(c.rarity))
     }
     if (cardSearch.trim()) {
       const q = cardSearch.trim().toLowerCase()

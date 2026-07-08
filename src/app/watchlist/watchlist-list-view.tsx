@@ -22,7 +22,6 @@ import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 import { changeToneClass, formatSignedPct } from "@/lib/utils/currency";
 
-import { WatchlistRowActions } from "./watchlist-row-actions";
 import {
   type ChangePeriod,
   type WatchlistEntry,
@@ -32,6 +31,7 @@ import {
 export function WatchlistListView({
   entries,
   period,
+  editMode,
   selected,
   onToggleSelect,
   onToggleAll,
@@ -45,6 +45,7 @@ export function WatchlistListView({
 }: {
   entries: WatchlistEntry[];
   period: ChangePeriod;
+  editMode: boolean;
   selected: Set<number>;
   onToggleSelect: (cardId: number) => void;
   onToggleAll: () => void;
@@ -64,7 +65,8 @@ export function WatchlistListView({
 
   return (
     <div className="panel overflow-hidden">
-      {entries.length > 1 && (
+      {/* Select-all header — only in edit mode */}
+      {editMode && entries.length > 1 && (
         <div className="flex items-center gap-3 border-b border-hair bg-muted/20 px-3 py-2 text-meta">
           <input
             type="checkbox"
@@ -79,7 +81,7 @@ export function WatchlistListView({
           <span className="text-muted-foreground">
             {allSelected || someSelected
               ? `${selected.size} / ${entries.length}`
-              : `${entries.length} ${t(lang, "watchlistSummaryCards").toLowerCase()}`}
+              : t(lang, "watchlistSelectAll")}
           </span>
         </div>
       )}
@@ -90,6 +92,7 @@ export function WatchlistListView({
             key={entry.id}
             entry={entry}
             period={period}
+            editMode={editMode}
             selected={selected.has(entry.cardId)}
             onToggleSelect={() => onToggleSelect(entry.cardId)}
             sparklineData={sparklines[entry.cardId]}
@@ -107,12 +110,12 @@ export function WatchlistListView({
 }
 
 // Local, bespoke row — NOT the `ui/list-row` primitive. Watchlist rows carry
-// multiple interactive controls per row (checkbox, pin, alert, remove,
-// sparkline) which the single-Link/button `ListRow` primitive can't nest, so
-// this stays hand-rolled (KIT-04). Renamed to avoid the confusing name clash.
+// per-row state indicators (pin, alert) + an overflow menu, plus an edit-mode
+// select affordance the single-Link `ListRow` primitive can't express.
 function WatchlistRow({
   entry,
   period,
+  editMode,
   selected,
   onToggleSelect,
   sparklineData,
@@ -125,6 +128,7 @@ function WatchlistRow({
 }: {
   entry: WatchlistEntry;
   period: ChangePeriod;
+  editMode: boolean;
   selected: boolean;
   onToggleSelect: () => void;
   sparklineData?: number[];
@@ -140,94 +144,124 @@ function WatchlistRow({
   const displayName = getCardName(lang, entry.card);
   const pinned = entry.pinnedAt != null;
 
+  const imageEl = entry.card.imageUrl ? (
+    <Image
+      src={entry.card.imageUrl}
+      alt={displayName}
+      fill
+      sizes="46px"
+      className="object-cover"
+      placeholder="blur"
+      blurDataURL={BLUR_DATA_URL}
+    />
+  ) : null;
+
+  const thumbClass =
+    "relative block aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-hair";
+
+  const nameBlock = (
+    <div className="min-w-0 flex-1">
+      <p
+        className="line-clamp-2 break-words text-sm font-medium sm:truncate"
+        title={displayName}
+      >
+        {displayName}
+      </p>
+      <div className="mt-0.5 flex items-center gap-1.5 text-meta">
+        <RarityBadge rarity={entry.card.rarity} size="sm" />
+        <span className="truncate font-mono text-muted-foreground">
+          {entry.card.cardCode}
+        </span>
+        {showGameBadge && <GameBadge game={entry.card.set.game} />}
+      </div>
+    </div>
+  );
+
   return (
     <div
       className={cn(
-        "group/row ease-chrome flex items-center gap-3 px-3 py-3 transition-colors hover:bg-muted/70",
-        removing && "opacity-40"
+        "group/row ease-chrome flex items-center gap-3 px-3 py-3 transition-colors",
+        removing && "opacity-40",
+        editMode
+          ? cn("cursor-pointer select-none", selected ? "bg-primary/10" : "hover:bg-muted/60")
+          : "hover:bg-muted/70"
       )}
+      onClick={editMode ? onToggleSelect : undefined}
     >
-      <input
-        type="checkbox"
-        className="size-3.5 shrink-0 cursor-pointer accent-primary"
-        checked={selected}
-        onChange={onToggleSelect}
-        aria-label={displayName}
-      />
-
-      <button
-        type="button"
-        onClick={onTogglePin}
-        className={cn(
-          // Desktop only — on mobile pin moves into the "…" overflow menu so the
-          // row isn't cramped (name gets real width).
-          "hidden size-7 shrink-0 items-center justify-center rounded-lg ease-chrome transition-colors hover:bg-muted sm:inline-flex",
-          pinned
-            ? "text-primary"
-            : "text-muted-foreground/40 hover:text-foreground"
-        )}
-        aria-label={pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")}
-        title={pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")}
-      >
-        <Pin className={cn("size-3.5", pinned && "fill-current")} />
-      </button>
-
-      {entry.card.imageUrl ? (
-        <CardImageButton
-          card={{
-            cardCode: entry.card.cardCode,
-            cardId: entry.cardId,
-            nameJp: entry.card.nameJp,
-            nameEn: entry.card.nameEn,
-            nameTh: entry.card.nameTh,
-            rarity: entry.card.rarity,
-            imageUrl: entry.card.imageUrl,
-            setCode: entry.card.set.code,
-            priceJpy: entry.card.latestPriceJpy,
-            priceThb: entry.card.latestPriceThb,
-            priceChange24h: entry.card.priceChange24h,
-            priceChange7d: entry.card.priceChange7d,
-            priceChange30d: entry.card.priceChange30d,
-          }}
-          className="relative aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-hair"
-        >
-          <Image
-            src={entry.card.imageUrl}
-            alt={displayName}
-            fill
-            sizes="46px"
-            className="object-cover"
-            placeholder="blur"
-            blurDataURL={BLUR_DATA_URL}
-          />
-        </CardImageButton>
-      ) : (
-        <div className="relative aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-hair" />
+      {editMode && (
+        <input
+          type="checkbox"
+          className="size-4 shrink-0 cursor-pointer accent-primary"
+          checked={selected}
+          onChange={onToggleSelect}
+          onClick={(e) => e.stopPropagation()}
+          aria-label={displayName}
+        />
       )}
 
-      <Link
-        href={`/cards/${entry.card.cardCode}`}
-        className="flex min-w-0 flex-1 items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        <div className="min-w-0 flex-1">
-          <p
-            className="line-clamp-2 break-words text-sm font-medium sm:truncate"
-            title={displayName}
+      {/* Thumbnail + quiet state indicators (pin top-left, alert top-right) */}
+      <div className="relative shrink-0">
+        {editMode ? (
+          <div className={thumbClass}>{imageEl}</div>
+        ) : entry.card.imageUrl ? (
+          <CardImageButton
+            card={{
+              cardCode: entry.card.cardCode,
+              cardId: entry.cardId,
+              nameJp: entry.card.nameJp,
+              nameEn: entry.card.nameEn,
+              nameTh: entry.card.nameTh,
+              rarity: entry.card.rarity,
+              imageUrl: entry.card.imageUrl,
+              setCode: entry.card.set.code,
+              priceJpy: entry.card.latestPriceJpy,
+              priceThb: entry.card.latestPriceThb,
+              priceChange24h: entry.card.priceChange24h,
+              priceChange7d: entry.card.priceChange7d,
+              priceChange30d: entry.card.priceChange30d,
+            }}
+            className={thumbClass}
           >
-            {displayName}
-          </p>
-          <div className="mt-0.5 flex items-center gap-1.5 text-meta">
-            <RarityBadge rarity={entry.card.rarity} size="sm" />
-            <span className="truncate font-mono text-muted-foreground">
-              {entry.card.cardCode}
-            </span>
-            {showGameBadge && <GameBadge game={entry.card.set.game} />}
-          </div>
-        </div>
-      </Link>
+            {imageEl}
+          </CardImageButton>
+        ) : (
+          <div className={thumbClass} />
+        )}
+
+        {pinned && (
+          <span
+            className="pointer-events-none absolute left-0.5 top-0.5 z-10 inline-flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background"
+            title={t(lang, "watchlistPinned")}
+            aria-hidden
+          >
+            <Pin className="size-2.5 fill-current" />
+          </span>
+        )}
+        {entry.hasActiveAlert && (
+          <span
+            className="pointer-events-none absolute right-0.5 top-0.5 z-10 inline-flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background"
+            title={t(lang, "watchlistHasAlert")}
+            aria-hidden
+          >
+            <Bell className="size-2.5 fill-current" />
+          </span>
+        )}
+      </div>
+
+      {/* Name — links to detail in normal mode, plain in edit mode */}
+      {editMode ? (
+        nameBlock
+      ) : (
+        <Link
+          href={`/cards/${entry.card.cardCode}`}
+          className="flex min-w-0 flex-1 items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {nameBlock}
+        </Link>
+      )}
 
       {showSparklineSlot && (
-        <div className="hidden w-[120px] shrink-0 xl:block">
+        <div className="hidden w-[120px] shrink-0 lg:block">
           {sparklineData && sparklineData.length >= 2 ? (
             <MiniSparkline data={sparklineData} width={120} height={28} />
           ) : null}
@@ -247,50 +281,18 @@ function WatchlistRow({
         </span>
       </div>
 
-      <div className="flex shrink-0 items-center gap-0.5">
-        {/* Desktop (≥sm): inline alert + remove (the row has room). */}
-        <div className="hidden items-center gap-0.5 sm:flex">
-          <button
-            type="button"
-            onClick={onSetAlert}
-            className={cn(
-              "inline-flex size-8 items-center justify-center rounded-lg ease-chrome transition-colors",
-              entry.hasActiveAlert
-                ? "text-primary hover:bg-primary/10"
-                : "text-muted-foreground/40 hover:bg-muted hover:text-foreground"
-            )}
-            aria-label={
-              entry.hasActiveAlert
-                ? t(lang, "watchlistHasAlert")
-                : t(lang, "setPriceAlert")
-            }
-            title={
-              entry.hasActiveAlert
-                ? t(lang, "watchlistHasAlert")
-                : t(lang, "setPriceAlert")
-            }
-          >
-            <Bell
-              className={cn("size-4", entry.hasActiveAlert && "fill-current")}
-            />
-          </button>
-          <WatchlistRowActions entry={entry} onRemove={onRemove} />
-        </div>
-
-        {/* Mobile (<sm): fold pin / alert / remove into one 44px overflow menu
-            so the row stays readable — this was 5 sub-44px targets per row. */}
+      {/* Single overflow menu — pin / alert / remove (normal mode only) */}
+      {!editMode && (
         <DropdownMenu>
           <DropdownMenuTrigger
             aria-label={t(lang, "moreActions")}
-            className="inline-flex size-11 items-center justify-center rounded-lg text-muted-foreground ease-chrome transition-colors hover:bg-muted sm:hidden"
+            className="ease-chrome inline-flex size-11 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:size-9"
           >
-            <MoreHorizontal className="size-5" />
+            <MoreHorizontal className="size-5 sm:size-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={onTogglePin}>
-              <Pin
-                className={cn("size-4", pinned && "fill-current text-primary")}
-              />
+              <Pin className={cn("size-4", pinned && "fill-current text-primary")} />
               {pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={onSetAlert}>
@@ -311,7 +313,7 @@ function WatchlistRow({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      )}
     </div>
   );
 }
