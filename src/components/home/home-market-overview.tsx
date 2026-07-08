@@ -9,7 +9,7 @@ import {
 
 import { useMemo } from "react"
 
-import { FilterChips, type FilterDefinition } from "@/components/shared/filter-chips"
+import { type FilterDefinition } from "@/components/shared/filter-chips"
 import { FilterModal } from "@/components/shared/filter-modal"
 import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker"
 import { AdSlot } from "@/components/ads/ad-slot"
@@ -212,12 +212,42 @@ export function HomeMarketOverview({
         onReset={resetModalFilters}
         resetDisabled={m.activeFilterCount === 0}
       >
-        <div className="flex flex-wrap items-center gap-2">
-          <FilterChips
-            filters={allFilterDefs}
-            selected={m.filters}
-            onChange={m.handleFilterChange}
-          />
+        <div className="space-y-3.5">
+          {allFilterDefs.map((def) => {
+            const values = m.filters[def.key] ?? []
+            return (
+              <div key={def.key}>
+                <span className="mb-1.5 block text-eyebrow">{def.label}</span>
+                <div className="flex flex-wrap gap-1.5">
+                  {def.options.map((opt) => {
+                    const active = values.includes(opt.value)
+                    return (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() =>
+                          m.handleFilterChange(
+                            def.key,
+                            active
+                              ? values.filter((v) => v !== opt.value)
+                              : [...values, opt.value]
+                          )
+                        }
+                        className={cn(
+                          "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium",
+                          active
+                            ? "border-primary/40 bg-primary/5 text-primary"
+                            : "border-hair bg-background text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        {opt.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })}
         </div>
 
         <div>
