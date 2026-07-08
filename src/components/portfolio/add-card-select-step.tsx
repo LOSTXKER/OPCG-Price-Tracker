@@ -180,6 +180,7 @@ export function SelectStep({
   isSelected,
   showHeader = true,
   footer,
+  selected,
 }: {
   query: string
   setQuery: (q: string) => void
@@ -208,9 +209,10 @@ export function SelectStep({
   /** Commit bar (e.g. watchlist "add N") rendered inside the picker so the filter
    *  overlay covers it — keeps the host from stacking a second button under it. */
   footer?: ReactNode
-  /** Desktop-only content for the space below the filters in the rail (e.g. the
-   *  cards selected so far) so the sidebar isn't left half-empty. */
-  railExtra?: ReactNode
+  /** Multi-pick: the cards picked so far. When non-empty, a horizontal preview
+   *  strip (thumbnail + remove) renders above the footer. Remove toggles through
+   *  onSelectCard (tapping a selected card again deselects it). */
+  selected?: CardWithSet[]
 }) {
   const lang = useUIStore((s) => s.language)
   const currentGame = useUIStore((s) => s.currentGame)
@@ -404,6 +406,46 @@ export function SelectStep({
 
       {/* Results — single column; filters open in the modal below. */}
       <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>
+
+      {/* Picked-so-far preview — a horizontal thumbnail strip above the commit bar
+          (เบส: หน้าที่เลือกหลายใบ ให้เห็นการ์ดที่เลือก). Remove taps toggle the card
+          back off via onSelectCard. Only shows in multi-pick surfaces. */}
+      {selected && selected.length > 0 && (
+        <div className="shrink-0 border-t border-hair px-3 pb-2.5 pt-2">
+          <span className="mb-1.5 block text-eyebrow">
+            {t(lang, "selectedCards")} ({selected.length})
+          </span>
+          <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+            {selected.map((c) => (
+              <div key={c.id} className="relative shrink-0">
+                <div className="relative aspect-[63/88] w-12 overflow-hidden rounded-md border border-hair bg-muted/50">
+                  {c.imageUrl ? (
+                    <Image
+                      src={c.imageUrl}
+                      alt={c.nameEn ?? c.nameJp}
+                      fill
+                      className="object-contain"
+                      sizes="48px"
+                    />
+                  ) : (
+                    <div className="flex size-full items-center justify-center">
+                      <Package className="size-4 text-muted-foreground/30" />
+                    </div>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onSelectCard(c)}
+                  aria-label={t(lang, "remove")}
+                  className="tap-safe absolute -right-1.5 -top-1.5 flex size-5 items-center justify-center rounded-full bg-foreground text-background shadow-[var(--elev-raised)] hover:bg-danger"
+                >
+                  <X className="size-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {footer}
 
