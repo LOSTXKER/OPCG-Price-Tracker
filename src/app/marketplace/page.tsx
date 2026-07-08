@@ -4,7 +4,7 @@ import { FaqSection } from "@/components/shared/faq-section";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { ListingStatus, type Prisma } from "@/generated/prisma/client";
 import { MarketplaceBrowse, MarketplacePageHeader } from "@/components/marketplace/marketplace-browse";
-import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
@@ -121,7 +121,7 @@ export default async function MarketplacePage({
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Marketplace", href: "/marketplace" }])} />
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Marketplace" }]} />
+      <LocalizedBreadcrumb items={[{ labelKey: "home", href: "/" }, { labelKey: "marketplace" }]} />
       <div className="space-y-8">
         <MarketplacePageHeader />
         {dbError ? (

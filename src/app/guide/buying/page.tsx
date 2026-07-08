@@ -73,7 +73,7 @@ export default async function BuyingGuidePage() {
         breadcrumb={
           <Breadcrumb
             items={[
-              { label: "Home", href: "/" },
+              { label: t(lang, "home"), href: "/" },
               { label: "Guide", href: "/guide" },
               { label: "Buying Guide" },
             ]}

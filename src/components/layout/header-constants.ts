@@ -12,9 +12,12 @@ import type { Language, Currency } from "@/stores/ui-store";
 // `owns` = flat route prefixes with no nav item of their own; they keep this hub
 // lit while the user is inside them (see isNavActive in @/lib/game/constants).
 export const NAV_LINKS = [
-  { href: "/" as const, key: "market" as const, owns: [] as readonly string[] },
-  { href: "/sets" as const, key: "browse" as const, owns: ["/cards", "/search", "/trending", "/market-overview"] as readonly string[] },
-  { href: "/decks" as const, key: "decks" as const, owns: ["/compare", "/drop-calculator", "/deck-calculator"] as readonly string[] },
+  // IA-NAV-06: one destination name everywhere — these keys match the mobile
+  // bottom-nav + command palette ("หน้าแรก"/"ชุดการ์ด") so a place reads the same
+  // on every surface. (Route matching uses href + owns, not the label key.)
+  { href: "/" as const, key: "home" as const, owns: [] as readonly string[] },
+  { href: "/sets" as const, key: "sets" as const, owns: ["/cards", "/search", "/trending", "/market-overview"] as readonly string[] },
+  { href: "/decks" as const, key: "decksAndTools" as const, owns: ["/compare", "/drop-calculator", "/deck-calculator"] as readonly string[] },
 ];
 
 // Appended to the desktop nav only when marketplaceEnabled (never swaps a hub).

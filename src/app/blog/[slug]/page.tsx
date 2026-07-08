@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Calendar, Eye, Tag } from "lucide-react";
 import { cache } from "react";
 
-import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { BackButton } from "@/components/shared/back-button";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd, blogPostingJsonLd } from "@/lib/seo/json-ld";
@@ -100,10 +100,10 @@ export default async function BlogPostPage({ params }: PageProps) {
           authorName: post.author?.displayName ?? null,
         })}
       />
-      <Breadcrumb
+      <LocalizedBreadcrumb
         items={[
-          { label: "Home", href: "/" },
-          { label: "Blog", href: "/blog" },
+          { labelKey: "home", href: "/" },
+          { labelKey: "blogPageTitle", href: "/blog" },
           { label: post.title },
         ]}
         hideMobileBack

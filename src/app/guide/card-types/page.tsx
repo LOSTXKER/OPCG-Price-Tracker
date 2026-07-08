@@ -239,7 +239,7 @@ export default async function CardTypesPage() {
         breadcrumb={
           <Breadcrumb
             items={[
-              { label: "Home", href: "/" },
+              { label: t(lang, "home"), href: "/" },
               { label: "Guide", href: "/guide" },
               { label: t(lang, "guideTypeBreadcrumb") },
             ]}

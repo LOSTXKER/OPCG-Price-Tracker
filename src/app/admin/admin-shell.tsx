@@ -75,6 +75,7 @@ const NAV_SECTIONS = [
 ];
 
 const BREADCRUMB_LABELS: Record<string, string> = {
+  home: "หน้าแรก",
   admin: "แอดมิน",
   sets: "ชุดการ์ด",
   cards: "การ์ด",

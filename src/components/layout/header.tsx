@@ -3,7 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
+
+import { useScrolled } from "@/hooks/use-scrolled";
 import {
   Briefcase,
   Crown,
@@ -48,15 +50,8 @@ export function Header() {
 
   // Transparent at the very top (lets the page's hero/overhead glow flow through
   // the chrome uninterrupted), opaque once scrolled (so nav text stays legible
-  // over content). Apple/Vercel pattern. SSR + first client render = false (top),
-  // so no hydration mismatch.
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  // over content). Apple/Vercel pattern. Shared with the mobile header + ticker.
+  const scrolled = useScrolled();
 
   const { config: publicConfig } = usePublicConfig();
   // Hubs are stable; Marketplace is appended (never swaps a hub) when enabled.

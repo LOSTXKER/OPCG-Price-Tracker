@@ -108,9 +108,9 @@ function SettingsShellInner({ children }: { children: React.ReactNode }) {
   // circular back button on mobile (pointing to /settings) and the full trail on
   // desktop, instead of a bespoke text link labelled with the current page.
   const crumbs: BreadcrumbItem[] = isIndex
-    ? [{ label: "Home", href: "/" }, { label: t(lang, "profileSettings") }]
+    ? [{ label: t(lang, "home"), href: "/" }, { label: t(lang, "profileSettings") }]
     : [
-        { label: "Home", href: "/" },
+        { label: t(lang, "home"), href: "/" },
         { label: t(lang, "profileSettings"), href: "/settings" },
         { label: activeSectionMeta ? t(lang, activeSectionMeta.labelKey) : t(lang, "profileSettings") },
       ];

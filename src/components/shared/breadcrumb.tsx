@@ -18,7 +18,9 @@ function buildItemsFromPathname(pathname: string, labelMap: Record<string, strin
   if (segments.length <= 1) return []
 
   return [
-    { label: "Home", href: "/" },
+    // Localized via labelMap.home when the caller provides it (pathname mode);
+    // falls back to "Home" only if omitted.
+    { label: labelMap.home ?? "Home", href: "/" },
     ...segments.slice(1).map((seg, i) => {
       const href = "/" + segments.slice(0, i + 2).join("/")
       const label = labelMap[seg] ?? seg

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Layers, TrendingUp, GitCompareArrows } from "lucide-react";
-import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
@@ -57,7 +57,7 @@ export default async function SearchPage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Search", href: "/search" }])} />
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Search" }]} />
+      <LocalizedBreadcrumb items={[{ labelKey: "home", href: "/" }, { labelKey: "search" }]} />
       <Suspense>
         <SearchClient sets={sets} rarities={rarities} />
       </Suspense>
