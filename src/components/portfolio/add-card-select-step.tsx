@@ -433,11 +433,13 @@ export function SelectStep({
                     </div>
                   )}
                 </div>
+                {/* X sits INSIDE the top-right corner — poking it outside gets
+                    clipped by the strip's overflow-x-auto (เบส: กากบาทโดนทับ). */}
                 <button
                   type="button"
                   onClick={() => onSelectCard(c)}
                   aria-label={t(lang, "remove")}
-                  className="tap-safe absolute -right-1.5 -top-1.5 flex size-5 items-center justify-center rounded-full bg-foreground text-background shadow-[var(--elev-raised)] hover:bg-danger"
+                  className="absolute right-0.5 top-0.5 flex size-5 items-center justify-center rounded-full bg-foreground/85 text-background shadow-[var(--elev-raised)] hover:bg-danger"
                 >
                   <X className="size-3" />
                 </button>
