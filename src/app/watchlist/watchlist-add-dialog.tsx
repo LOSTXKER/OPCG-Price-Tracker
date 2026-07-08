@@ -51,7 +51,7 @@ export function WatchlistAddDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="flex flex-col gap-0 overflow-hidden p-0"
-        style={{ maxWidth: "min(36rem, calc(100% - 2rem))", maxHeight: "85dvh" }}
+        style={{ maxWidth: "min(46rem, calc(100% - 2rem))", maxHeight: "85dvh" }}
       >
         {/* The one shared card picker (search + filters + value list). Adding
             is an upsert + stays open, so you can add several in a row. */}

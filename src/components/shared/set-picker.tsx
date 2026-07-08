@@ -221,10 +221,9 @@ export function SetPicker({
         <div className={cn(
           "absolute z-30 mt-2 overflow-hidden rounded-xl border border-border bg-popover shadow-[var(--elev-overlay)]",
           isCta && "left-0 right-0 w-full",
-          isInline && cn(
-            "min-w-full w-[min(22rem,calc(100vw-2rem))]",
-            popoverAlign === "right" ? "right-0" : "left-0",
-          ),
+          // inline lives inside a filter panel / narrow rail — match the trigger
+          // width so the popup never overflows its container.
+          isInline && "left-0 right-0 w-full",
           isPill && (popoverAlign === "right"
             ? "right-0 w-[min(22rem,calc(100vw-2rem))]"
             : "left-0 w-[min(22rem,calc(100vw-2rem))]"),

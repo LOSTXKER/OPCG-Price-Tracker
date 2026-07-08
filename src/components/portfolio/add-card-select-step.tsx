@@ -394,7 +394,7 @@ export function SelectStep({
       {/* Body — one column on mobile, two panes (rail | results) on desktop */}
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         {/* Desktop: persistent left rail */}
-        <aside className="hidden md:block md:w-60 md:shrink-0 md:overflow-y-auto md:border-r md:border-hair md:p-4">
+        <aside className="hidden md:block md:w-64 md:shrink-0 md:overflow-y-auto md:border-r md:border-hair md:p-4">
           <FilterControls {...filterProps} />
         </aside>
 
