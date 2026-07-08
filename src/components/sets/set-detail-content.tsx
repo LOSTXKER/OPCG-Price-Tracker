@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, type ReactNode } from "react";
 import { TrendingUpDown } from "lucide-react";
 
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import {
-  FilterChips,
-  type FilterDefinition,
-} from "@/components/shared/filter-chips";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import { RARITY_BAR_COLOR } from "@/lib/constants/rarities";
 import { type ChangePeriod } from "@/components/cards/card-item";
@@ -66,6 +68,66 @@ interface SetDetailContentProps {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Facet dropdown                                                     */
+/* ------------------------------------------------------------------ */
+
+type FilterOption = { value: string; label: ReactNode };
+
+/** Compact facet dropdown for the toolbar — reads "<label> <selected>" and opens
+ *  a small menu. Replaces the old full-width chip rows (เบส — chips felt cluttered). */
+function FilterSelect({
+  label,
+  value,
+  onChange,
+  options,
+  fullWidth,
+  hideLabel,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: FilterOption[];
+  fullWidth?: boolean;
+  // When the label is shown as a header above the control, the trigger only
+  // needs the selected value.
+  hideLabel?: boolean;
+}) {
+  // Render the selected option's label ourselves — base-ui SelectValue shows the
+  // raw value ("all") rather than the option label, so map it here.
+  const current = options.find((o) => o.value === value)?.label ?? label;
+  return (
+    <Select value={value} onValueChange={(v) => onChange(v ?? "all")}>
+      <SelectTrigger
+        size="sm"
+        className={cn(
+          "gap-1.5 text-xs font-medium",
+          fullWidth ? "w-full" : "shrink-0",
+        )}
+      >
+        {!hideLabel && <span className="text-muted-foreground">{label}</span>}
+        <span className="text-foreground">{current}</span>
+      </SelectTrigger>
+      <SelectContent
+        align="start"
+        alignItemWithTrigger={false}
+        sideOffset={6}
+        className="w-auto min-w-(--anchor-width) p-1"
+      >
+        {options.map((o) => (
+          <SelectItem
+            key={o.value}
+            value={o.value}
+            className="py-1.5 pr-7 pl-2.5 text-sm"
+          >
+            {o.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /*  Main component                                                     */
 /* ------------------------------------------------------------------ */
 
@@ -73,15 +135,8 @@ export function SetDetailContent({
   groups,
   totalCards,
 }: SetDetailContentProps) {
-  // type/color are MULTI-select (FilterChips). Empty array = no filter (= all).
-  const [facets, setFacets] = useState<Record<string, string[]>>({
-    type: [],
-    color: [],
-  });
-  const activeType = useMemo(() => facets.type ?? [], [facets.type]);
-  const activeColor = useMemo(() => facets.color ?? [], [facets.color]);
-  const handleFilterChange = (key: string, values: string[]) =>
-    setFacets((prev) => ({ ...prev, [key]: values }));
+  const [activeType, setActiveType] = useState<string>("all");
+  const [activeColor, setActiveColor] = useState<string>("all");
   const [changePeriod, setChangePeriod] = useState<ChangePeriod>("7d");
   // activeRarity = the section currently in view (scrollspy), NOT a filter —
   // the rarity rail is a jump-nav (เบส): click scrolls to that section.
@@ -108,18 +163,15 @@ export function SetDetailContent({
   }, [allCards]);
 
   // type/color narrow which cards (and therefore which rarities) are available.
-  // Empty facet array = no constraint; a card matches if it satisfies ALL active
-  // facets (AND across facets, OR within a facet's selected values).
   const visibleGroups = useMemo(() => {
-    if (activeType.length === 0 && activeColor.length === 0) return groups;
+    if (activeType === "all" && activeColor === "all") return groups;
     return groups
       .map((g) => ({
         ...g,
         cards: g.cards.filter(
           (c) =>
-            (activeType.length === 0 || activeType.includes(c.cardType)) &&
-            (activeColor.length === 0 ||
-              activeColor.some((col) => c.color.includes(col))),
+            (activeType === "all" || c.cardType === activeType) &&
+            (activeColor === "all" || c.color.includes(activeColor)),
         ),
       }))
       .filter((g) => g.cards.length > 0);
@@ -165,34 +217,26 @@ export function SetDetailContent({
     });
   };
 
-  // FilterChips multi-select facets. Empty selection = all (no explicit "all"
-  // option; the kit's Clear-all handles reset). Only render a facet when it has
-  // >1 choice, matching the previous show/hide behavior.
-  const filterDefs: FilterDefinition[] = [
-    ...(availableTypes.length > 1
-      ? [
-          {
-            key: "type",
-            label: t(lang, "type"),
-            options: availableTypes.map((ct) => ({
-              value: ct.value,
-              label: getCardTypeLabel(ct.value, lang),
-            })),
-          },
-        ]
-      : []),
-    ...(availableColors.length > 1
-      ? [
-          {
-            key: "color",
-            label: t(lang, "color"),
-            options: availableColors.map((cc) => ({
-              value: cc.value,
-              label: cc.label[lang],
-            })),
-          },
-        ]
-      : []),
+  // Filters are compact dropdowns (เบส — chips read as clutter): one option list
+  // per facet, "all" first as the reset.
+  const typeOptions: FilterOption[] = [
+    { value: "all", label: t(lang, "allTab") },
+    ...availableTypes.map((ct) => ({
+      value: ct.value,
+      label: getCardTypeLabel(ct.value, lang),
+    })),
+  ];
+  const colorOptions: FilterOption[] = [
+    { value: "all", label: t(lang, "allTab") },
+    ...availableColors.map((cc) => ({
+      value: cc.value,
+      label: (
+        <span className="flex items-center gap-1.5">
+          <span className={cn("size-2 rounded-full", cc.dotClass)} />
+          {cc.label[lang]}
+        </span>
+      ),
+    })),
   ];
 
   const rarityNav = visibleGroups.map((g) => ({
@@ -262,14 +306,32 @@ export function SetDetailContent({
           the right column is then pure cards. ── */}
       <aside className="hidden w-52 shrink-0 lg:block">
         <div className="no-sb sticky top-32 max-h-[calc(100vh-9rem)] space-y-4 overflow-y-auto pr-0.5">
-          {/* type/color facet chips (multi-select) */}
-          {filterDefs.length > 0 && (
-            <FilterChips
-              filters={filterDefs}
-              selected={facets}
-              onChange={handleFilterChange}
-              className="flex-wrap overflow-visible pb-0"
-            />
+          {/* Each control carries its own label header above it. */}
+          {availableTypes.length > 1 && (
+            <div className="space-y-1.5">
+              <p className="text-eyebrow px-0.5">{t(lang, "type")}</p>
+              <FilterSelect
+                fullWidth
+                hideLabel
+                label={t(lang, "type")}
+                value={activeType}
+                onChange={setActiveType}
+                options={typeOptions}
+              />
+            </div>
+          )}
+          {availableColors.length > 1 && (
+            <div className="space-y-1.5">
+              <p className="text-eyebrow px-0.5">{t(lang, "color")}</p>
+              <FilterSelect
+                fullWidth
+                hideLabel
+                label={t(lang, "color")}
+                value={activeColor}
+                onChange={setActiveColor}
+                options={colorOptions}
+              />
+            </div>
           )}
 
           {/* Period (%-change window) */}
@@ -306,12 +368,20 @@ export function SetDetailContent({
             on one wrapping row, then the rarity jump-chips. */}
         <div className="mb-6 space-y-3 lg:hidden">
           <div className="flex flex-wrap items-center gap-2">
-            {filterDefs.length > 0 && (
-              <FilterChips
-                filters={filterDefs}
-                selected={facets}
-                onChange={handleFilterChange}
-                className="w-auto flex-1 flex-wrap overflow-visible pb-0"
+            {availableTypes.length > 1 && (
+              <FilterSelect
+                label={t(lang, "type")}
+                value={activeType}
+                onChange={setActiveType}
+                options={typeOptions}
+              />
+            )}
+            {availableColors.length > 1 && (
+              <FilterSelect
+                label={t(lang, "color")}
+                value={activeColor}
+                onChange={setActiveColor}
+                options={colorOptions}
               />
             )}
             <SegmentedControl
