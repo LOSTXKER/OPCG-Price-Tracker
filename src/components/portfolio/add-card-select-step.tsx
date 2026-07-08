@@ -434,7 +434,7 @@ export function SelectStep({
                 <X className="size-4" />
               </button>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 md:flex-none">
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 md:flex-none md:overflow-visible">
               <FilterControls {...filterProps} />
             </div>
             <div className="border-t border-hair p-3">
