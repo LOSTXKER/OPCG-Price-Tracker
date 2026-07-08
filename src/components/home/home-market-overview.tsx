@@ -219,9 +219,10 @@ export function HomeMarketOverview({
         {/* Row 2: set picker (left) + display controls (right) — one line on
             every breakpoint (set picker flexes, controls keep natural width) */}
         <div className="flex items-center gap-2 px-3 py-2 sm:px-4">
-          {/* Set picker — flexes to fill on mobile, fixed 200px on sm+ */}
+          {/* Set picker — flexes to fill on mobile, fixed 19rem on sm+ so its
+              dropdown (matches the trigger width) fits full set names */}
           {sets.length > 0 && (
-            <div className="min-w-0 flex-1 sm:flex-none sm:w-[200px]">
+            <div className="min-w-0 flex-1 sm:flex-none sm:w-[19rem]">
               <SetPicker
                 sets={sets}
                 selectedCode={selectedSets[0] ?? null}
