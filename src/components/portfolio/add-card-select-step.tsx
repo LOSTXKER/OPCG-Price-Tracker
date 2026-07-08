@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode } from "react"
+import { useEffect, useRef, type ReactNode } from "react"
 import Image from "next/image"
 import {
   Check,
@@ -169,10 +169,11 @@ function FilterControls({
 }
 
 /**
- * "Search / filter → pick a card" body. Search-hero, single column on every size;
- * filters open in a full-cover overlay on mobile and a content-height bottom sheet
- * on desktop (เบส: ใช้ popup filter อันเดียว). An optional `footer` (commit bar)
- * renders inside the picker so the filter overlay covers it — no button clash.
+ * "Search / filter → pick a card" body. Search-hero, single column on every size.
+ * Filters open as a floating popover on desktop (anchored to the filter button;
+ * the results stay visible and update live behind it) and a full-screen sheet on
+ * mobile. An optional `footer` (commit bar) renders inside the picker so the mobile
+ * sheet covers it — no button clash.
  */
 export function SelectStep({
   query,
@@ -229,6 +230,25 @@ export function SelectStep({
 }) {
   const lang = useUIStore((s) => s.language)
   const currentGame = useUIStore((s) => s.currentGame)
+
+  // Desktop only: dismiss the floating filter popover on an outside click (mobile
+  // uses a full-screen sheet with its own close). Kept off mobile so the sheet
+  // isn't torn down by taps that belong to it.
+  const filterRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!showFilters) return
+    function onPointerDown(e: MouseEvent) {
+      if (
+        window.matchMedia("(min-width: 768px)").matches &&
+        filterRef.current &&
+        !filterRef.current.contains(e.target as Node)
+      ) {
+        setShowFilters(false)
+      }
+    }
+    document.addEventListener("mousedown", onPointerDown)
+    return () => document.removeEventListener("mousedown", onPointerDown)
+  }, [showFilters, setShowFilters])
 
   // Filters follow the current game — no OPCG hardcode. Empty sections vanish.
   const gameCfg = getGameConfig(currentGame)
@@ -383,24 +403,36 @@ export function SelectStep({
             )}
           </div>
 
-          {/* Opens the filter overlay — the same control on every size */}
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className={cn(
-              "ease-chrome relative flex h-9 items-center gap-1.5 rounded-lg border px-3 text-sm",
-              showFilters || activeFilterCount > 0
-                ? "border-primary/40 bg-primary/5 text-primary"
-                : "border-hair bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground"
+          {/* Filter — a floating popover on desktop (anchored here; the results
+              stay visible and update live behind it), a full-screen sheet on
+              mobile (rendered after the results). */}
+          <div ref={filterRef} className="relative shrink-0">
+            <button
+              type="button"
+              onClick={() => setShowFilters(!showFilters)}
+              className={cn(
+                "ease-chrome relative flex h-9 items-center gap-1.5 rounded-lg border px-3 text-sm",
+                showFilters || activeFilterCount > 0
+                  ? "border-primary/40 bg-primary/5 text-primary"
+                  : "border-hair bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              <Filter className="size-3.5" />
+              <span className="hidden sm:inline">{t(lang, "filter")}</span>
+              {activeFilterCount > 0 && (
+                <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
+
+            {/* Desktop popover — content-height, floats over the (live) results. */}
+            {showFilters && (
+              <div className="absolute right-0 top-full z-30 mt-2 hidden max-h-[min(70vh,30rem)] w-[21rem] max-w-[calc(100vw-2rem)] flex-col overflow-y-auto overscroll-contain rounded-xl border border-hair bg-popover p-4 shadow-[var(--elev-overlay)] animate-in fade-in-0 zoom-in-95 duration-[var(--dur-fast)] md:flex">
+                <FilterControls {...filterProps} />
+              </div>
             )}
-          >
-            <Filter className="size-3.5" />
-            <span className="hidden sm:inline">{t(lang, "filter")}</span>
-            {activeFilterCount > 0 && (
-              <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
-                {activeFilterCount}
-              </span>
-            )}
-          </button>
+          </div>
         </div>
       </div>
 
@@ -411,47 +443,36 @@ export function SelectStep({
           host never stacks a second button under the overlay's own. */}
       {footer}
 
-      {/* Filters overlay — INSIDE the picker (absolute, not a portal) so it lives
-          in the host's own stacking context (Dialog + z-100 compare modal alike)
-          and covers the card search AND the footer: no second search, no second
-          button. Full-cover on mobile; a content-height bottom sheet on desktop so
-          a tall dialog doesn't leave a bare gap (เบส: โล่ง + ปุ่มซ้อน). */}
+      {/* Mobile — a full-screen filter sheet inside the picker (absolute, not a
+          portal, so it works in a Dialog and the z-100 compare modal alike). It
+          covers the card search + footer, so no second search/button stacks up.
+          Desktop uses the floating popover above instead. */}
       {showFilters && (
-        <>
-          {/* Desktop only — dims the picker behind the sheet + taps to close.
-              Mobile needs none: the sheet covers the whole picker. */}
-          <button
-            type="button"
-            aria-label={t(lang, "close")}
-            onClick={() => setShowFilters(false)}
-            className="absolute inset-0 z-10 hidden bg-foreground/20 animate-in fade-in-0 md:block"
-          />
-          <div className="absolute inset-x-0 top-0 bottom-0 z-20 flex flex-col bg-background animate-in fade-in-0 slide-in-from-bottom-3 duration-[var(--dur-base)] md:top-auto md:max-h-[85%] md:rounded-t-2xl md:border md:border-hair md:shadow-[var(--elev-overlay)]">
-            <div className="flex items-center justify-between border-b border-hair px-4 py-3">
-              <span className="text-h4">{t(lang, "filter")}</span>
-              <button
-                type="button"
-                onClick={() => setShowFilters(false)}
-                aria-label={t(lang, "close")}
-                className="tap-safe -mr-1 flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
-              >
-                <X className="size-4" />
-              </button>
-            </div>
-            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 md:flex-none md:max-h-[60vh]">
-              <FilterControls {...filterProps} />
-            </div>
-            <div className="border-t border-hair p-3">
-              <button
-                type="button"
-                onClick={() => setShowFilters(false)}
-                className="ease-chrome h-11 w-full rounded-xl bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90"
-              >
-                {t(lang, "viewResults")}
-              </button>
-            </div>
+        <div className="absolute inset-0 z-20 flex flex-col bg-background animate-in fade-in-0 slide-in-from-bottom-3 duration-[var(--dur-base)] md:hidden">
+          <div className="flex items-center justify-between border-b border-hair px-4 py-3">
+            <span className="text-h4">{t(lang, "filter")}</span>
+            <button
+              type="button"
+              onClick={() => setShowFilters(false)}
+              aria-label={t(lang, "close")}
+              className="tap-safe -mr-1 flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              <X className="size-4" />
+            </button>
           </div>
-        </>
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+            <FilterControls {...filterProps} />
+          </div>
+          <div className="border-t border-hair p-3">
+            <button
+              type="button"
+              onClick={() => setShowFilters(false)}
+              className="ease-chrome h-11 w-full rounded-xl bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+            >
+              {t(lang, "viewResults")}
+            </button>
+          </div>
+        </div>
       )}
     </div>
   )
