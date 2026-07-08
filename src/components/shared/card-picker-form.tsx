@@ -30,6 +30,7 @@ export function CardPickerForm({
   isSelected,
   showHeader = true,
   footer,
+  railExtra,
 }: {
   onSelect: (card: CardWithSet) => void;
   /** Multi-pick mode: predicate → matching rows render selected + onSelect toggles. */
@@ -39,6 +40,8 @@ export function CardPickerForm({
   /** Commit bar rendered inside the picker (below the list) so the filter overlay
    *  covers it — pass the host's "confirm" button here instead of as a sibling. */
   footer?: ReactNode;
+  /** Desktop rail content below the filters (e.g. the picked-so-far cards). */
+  railExtra?: ReactNode;
 }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<CardWithSet[]>([]);
@@ -157,6 +160,7 @@ export function CardPickerForm({
       isSelected={isSelected}
       showHeader={showHeader}
       footer={footer}
+      railExtra={railExtra}
     />
   );
 }
