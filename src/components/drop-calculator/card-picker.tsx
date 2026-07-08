@@ -4,6 +4,7 @@ import Image from "next/image"
 import { Search } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
+import { FilterChips } from "@/components/shared/filter-chips"
 import { Price } from "@/components/shared/price-inline"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { getCardName, t } from "@/lib/i18n"
@@ -17,10 +18,10 @@ interface CardPickerProps {
   wantSet: Set<number>
   wantCount: number
   cardSearch: string
-  rarityFilter: string
+  rarityFilter: string[]
   onToggleWant: (cardId: number) => void
   onSearchChange: (value: string) => void
-  onRarityChange: (value: string) => void
+  onRarityChange: (values: string[]) => void
 }
 
 export function CardPicker({
@@ -56,35 +57,18 @@ export function CardPicker({
             className="h-9 w-full rounded-full border border-border bg-background pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
           />
         </div>
-        <div className="flex min-w-0 flex-1 gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
-          <button
-            type="button"
-            onClick={() => onRarityChange("all")}
-            className={cn(
-              "shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors",
-              rarityFilter === "all"
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:bg-muted/80"
-            )}
-          >
-            {t(lang, "allRarity")}
-          </button>
-          {uniqueRarities.map((r) => (
-            <button
-              key={r}
-              type="button"
-              onClick={() => onRarityChange(r)}
-              className={cn(
-                "shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors",
-                rarityFilter === r
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              )}
-            >
-              {r}
-            </button>
-          ))}
-        </div>
+        <FilterChips
+          className="min-w-0 flex-1"
+          filters={[
+            {
+              key: "rarity",
+              label: t(lang, "rarityFilter"),
+              options: uniqueRarities.map((r) => ({ value: r, label: r })),
+            },
+          ]}
+          selected={{ rarity: rarityFilter }}
+          onChange={(_key, values) => onRarityChange(values)}
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">

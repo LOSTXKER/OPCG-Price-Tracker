@@ -14,12 +14,8 @@ import { Button } from "@/components/ui/button"
 import { Surface } from "@/components/ui/surface"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { EmptyState } from "@/components/shared/empty-state"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select"
+import { FilterChips } from "@/components/shared/filter-chips"
+import { ToolbarSortDropdown } from "@/components/ui/toolbar"
 import { SetPicker } from "@/components/shared/set-picker"
 import { GridCard, GridCardSkeleton } from "@/components/home/grid-card"
 import { MobileCardSkeleton } from "@/components/home/mobile-card-item"
@@ -36,8 +32,6 @@ import {
 import { SearchPagination } from "./search-pagination"
 import { PhotoSearchButton } from "./photo-search-button"
 import { useSearch } from "./use-search"
-
-const ALL_RARITIES = "__all_rarities__"
 
 // /search renders the shared market table with no "Views" column (views are a
 // home "popular" tab concept). Static — never changes — so build it once.
@@ -72,7 +66,7 @@ function SearchContent({
   rarities: string[]
 }) {
   const lang = useUIStore((s) => s.language)
-  const SORT_OPTIONS = SORT_KEYS.map((o) => ({ value: o.value, label: t(lang, o.key) }))
+  const SORT_OPTIONS = SORT_KEYS.map((o) => ({ key: o.value, label: t(lang, o.key) }))
 
   const {
     query,
@@ -174,43 +168,31 @@ function SearchContent({
             )}
 
             {rarities.length > 0 && (
-              <Select
-                value={selectedRarity || ALL_RARITIES}
-                onValueChange={(v) => handleRarityChange(v === ALL_RARITIES ? "" : v ?? "")}
-              >
-                <SelectTrigger size="sm" className="h-9 min-w-0 sm:min-w-[120px]">
-                  <span data-slot="select-value" className="flex flex-1 items-center gap-1.5 truncate text-left">
-                    {selectedRarity || t(lang, "allRarities")}
-                  </span>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={ALL_RARITIES}>{t(lang, "allRarities")}</SelectItem>
-                  {rarities.map((r) => (
-                    <SelectItem key={r} value={r}>
-                      {r}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <FilterChips
+                className="w-auto min-w-0 basis-full pb-0 sm:basis-auto"
+                filters={[
+                  {
+                    key: "rarity",
+                    label: t(lang, "allRarities"),
+                    options: rarities.map((r) => ({ value: r, label: r })),
+                  },
+                ]}
+                selected={{
+                  rarity: selectedRarity ? selectedRarity.split(",") : [],
+                }}
+                onChange={(_key, values) => handleRarityChange(values.join(","))}
+              />
             )}
 
-            <Select
-              value={sort}
-              onValueChange={(v) => v && handleSortChange(v as SortKey)}
-            >
-              <SelectTrigger size="sm" className="hidden h-9 sm:flex sm:min-w-[140px]">
-                <span data-slot="select-value" className="flex flex-1 items-center gap-1.5 truncate text-left">
-                  {SORT_OPTIONS.find((o) => o.value === sort)?.label ?? sort}
-                </span>
-              </SelectTrigger>
-              <SelectContent>
-                {SORT_OPTIONS.map((o) => (
-                  <SelectItem key={o.value} value={o.value}>
-                    {o.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="hidden sm:block">
+              <ToolbarSortDropdown
+                options={SORT_OPTIONS}
+                activeKey={sort}
+                activeDir={sortDir}
+                onChange={(key) => handleSortChange(key as SortKey)}
+                align="start"
+              />
+            </div>
 
             <div className="ml-auto flex items-center gap-1.5">
               {viewMode === "grid" && (

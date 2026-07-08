@@ -16,9 +16,6 @@ export function BrowseToolbar({
   search,
   onSearchChange,
   onSubmit,
-  filterCount,
-  showFilters,
-  onToggleFilters,
   sort,
   onSortChange,
   viewMode,
@@ -27,9 +24,6 @@ export function BrowseToolbar({
   search: string
   onSearchChange: (v: string) => void
   onSubmit: () => void
-  filterCount: number
-  showFilters: boolean
-  onToggleFilters: () => void
   sort: string
   onSortChange: (v: string) => void
   viewMode: "grid" | "list"
@@ -43,12 +37,6 @@ export function BrowseToolbar({
       onSearchChange={onSearchChange}
       onSubmit={onSubmit}
       searchPlaceholder={t(lang, "mktToolbarSearchPlaceholder")}
-      filters={{
-        count: filterCount,
-        active: showFilters,
-        onToggle: onToggleFilters,
-        label: t(lang, "mktToolbarFilters"),
-      }}
       sort={{
         options: SORT_OPTIONS.map((o) => ({ key: o.value as SortKey, label: o.label })),
         activeKey: sort as SortKey,

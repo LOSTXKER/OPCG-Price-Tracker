@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, useTransition } from "react"
 
 import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
 import { PageHeader } from "@/components/layout/page-header"
+import { FilterChips, type FilterDefinition } from "@/components/shared/filter-chips"
 import { Button } from "@/components/ui/button"
 import { ApiError, apiGet } from "@/lib/api/client"
 import { t } from "@/lib/i18n"
@@ -11,11 +12,11 @@ import { cn } from "@/lib/utils"
 import { formatCount } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
-import { BrowseFiltersSheet } from "./browse-filters-sheet"
 import { BrowseGrid } from "./browse-grid"
 import { BrowseList } from "./browse-list"
 import { BrowseToolbar } from "./browse-toolbar"
 import { SellerLockBanner } from "./seller-lock-banner"
+import { CONDITIONS, RARITIES } from "./types"
 import type {
   BrowseResponse,
   LockedSeller,
@@ -50,12 +51,25 @@ export function MarketplaceBrowse({
   const [rarities, setRarities] = useState<string[]>([])
   const [sort, setSort] = useState("newest")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [showFilters, setShowFilters] = useState(false)
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize))
 
-  const toggleFilter = (arr: string[], val: string) =>
-    arr.includes(val) ? arr.filter((v) => v !== val) : [...arr, val]
+  // Multi-select filter pills. Note: the /api/listings `condition` param is
+  // single-value (see parseCondition), so — matching prior behavior — we only
+  // send `condition` when exactly one is selected; `rarity` is comma-joined
+  // and handled as `{ in: [...] }` server-side.
+  const filterDefs: FilterDefinition[] = [
+    {
+      key: "condition",
+      label: t(lang, "mktFilterCondition"),
+      options: CONDITIONS.map((c) => ({ value: c, label: c })),
+    },
+    {
+      key: "rarity",
+      label: t(lang, "mktFilterRarity"),
+      options: RARITIES.map((r) => ({ value: r, label: r })),
+    },
+  ]
 
   const buildParams = useCallback(
     (pageNum: number) => {
@@ -132,9 +146,6 @@ export function MarketplaceBrowse({
         search={search}
         onSearchChange={setSearch}
         onSubmit={handleSearch}
-        filterCount={conditions.length + rarities.length}
-        showFilters={showFilters}
-        onToggleFilters={() => setShowFilters((v) => !v)}
         sort={sort}
         onSortChange={(v) => {
           setSort(v)
@@ -144,25 +155,15 @@ export function MarketplaceBrowse({
         onViewModeChange={setViewMode}
       />
 
-      {showFilters && (
-        <BrowseFiltersSheet
-          conditions={conditions}
-          rarities={rarities}
-          onToggleCondition={(c) => {
-            setConditions((prev) => toggleFilter(prev, c))
-            setPage(1)
-          }}
-          onToggleRarity={(r) => {
-            setRarities((prev) => toggleFilter(prev, r))
-            setPage(1)
-          }}
-          onClear={() => {
-            setConditions([])
-            setRarities([])
-            setPage(1)
-          }}
-        />
-      )}
+      <FilterChips
+        filters={filterDefs}
+        selected={{ condition: conditions, rarity: rarities }}
+        onChange={(key, values) => {
+          if (key === "condition") setConditions(values)
+          else if (key === "rarity") setRarities(values)
+          setPage(1)
+        }}
+      />
 
       <div className="flex items-center gap-2 text-meta">
         <span>{t(lang, "mktBrowseItemCount").replace("{n}", formatCount(total))}</span>
