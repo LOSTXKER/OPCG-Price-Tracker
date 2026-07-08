@@ -339,7 +339,7 @@ export function SelectStep({
   )
 
   return (
-    <>
+    <div className="relative flex min-h-0 flex-1 flex-col">
       {showHeader && (
         <DialogHeader className="border-b border-hair px-5 pt-4 pb-3">
           <DialogTitle>{t(lang, "addCardToPortfolio")}</DialogTitle>
@@ -398,16 +398,44 @@ export function SelectStep({
           <FilterControls {...filterProps} />
         </aside>
 
-        {/* Results (+ mobile collapsible filter panel above it) */}
+        {/* Results */}
         <div className="flex min-h-0 flex-1 flex-col">
-          {showFilters && (
-            <div className="max-h-[40vh] overflow-y-auto border-b border-hair px-4 py-3 md:hidden">
-              <FilterControls {...filterProps} />
-            </div>
-          )}
           <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>
         </div>
       </div>
-    </>
+
+      {/* Mobile filters — a full-cover overlay INSIDE the picker (absolute, not a
+          portal) so it lives in the host's own stacking context (works in a
+          Dialog and the z-100 compare modal alike) and covers the card search too,
+          giving filters a clean full-height space instead of cramming a second
+          search under the first. Desktop uses the left rail above instead. */}
+      {showFilters && (
+        <div className="absolute inset-0 z-20 flex flex-col bg-background animate-in fade-in-0 slide-in-from-bottom-3 duration-[var(--dur-base)] md:hidden">
+          <div className="flex items-center justify-between border-b border-hair px-4 py-3">
+            <span className="text-h4">{t(lang, "filter")}</span>
+            <button
+              type="button"
+              onClick={() => setShowFilters(false)}
+              aria-label={t(lang, "close")}
+              className="tap-safe -mr-1 flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+            <FilterControls {...filterProps} />
+          </div>
+          <div className="border-t border-hair p-3">
+            <button
+              type="button"
+              onClick={() => setShowFilters(false)}
+              className="ease-chrome h-11 w-full rounded-xl bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+            >
+              {t(lang, "viewResults")}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
