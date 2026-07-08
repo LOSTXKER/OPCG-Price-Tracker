@@ -40,9 +40,6 @@ type TypeOpt = { code: string; label: string }
  */
 function FilterControls({
   lang,
-  sets,
-  activeSet,
-  selectSetCode,
   activeRarity,
   setActiveRarity,
   activeColor,
@@ -56,9 +53,6 @@ function FilterControls({
   clearAllFilters,
 }: {
   lang: Language
-  sets: SetInfo[]
-  activeSet: string | null
-  selectSetCode: (code: string | null) => void
   activeRarity: string | null
   setActiveRarity: (r: string | null) => void
   activeColor: string | null
@@ -73,20 +67,8 @@ function FilterControls({
 }) {
   return (
     <div className="space-y-3.5">
-      {/* Set — the canonical SetPicker, exactly like everywhere else (home toolbar,
-          search, drop-calc): an absolute floating dropdown connected to the trigger,
-          with search. The rail is `overflow-visible` so it isn't clipped. */}
-      <div>
-        <span className="mb-1.5 block text-eyebrow">{t(lang, "set")}</span>
-        <SetPicker
-          sets={sets.map((s) => ({ ...s, cardCount: s._count.cards }))}
-          selectedCode={activeSet}
-          onSelect={selectSetCode}
-          variant="inline"
-          nullable
-        />
-      </div>
-
+      {/* Set is NOT here — it lives as a prominent control up in the search row
+          (เบส: ผู้ใช้เลือกชุดก่อน). The modal holds only rarity / colour / type. */}
       {rarityOptions.length > 0 && (
         <div>
           <span className="mb-1.5 block text-eyebrow">{t(lang, "rarity")}</span>
@@ -239,11 +221,13 @@ export function SelectStep({
   const colorOptions = (gameCfg?.colors ?? []) as ColorOpt[]
   const typeOptions = (gameCfg?.cardTypes ?? []) as TypeOpt[]
 
+  // Count only the modal's own facets (set has its own control up top now).
+  const modalFilterCount = [activeRarity, activeColor, activeCardType].filter(
+    Boolean,
+  ).length
+
   const filterProps = {
     lang,
-    sets,
-    activeSet,
-    selectSetCode,
     activeRarity,
     setActiveRarity,
     activeColor,
@@ -362,8 +346,17 @@ export function SelectStep({
         </DialogHeader>
       )}
 
-      {/* Search bar (full width) + mobile-only filter toggle */}
-      <div className="border-b border-hair px-4 pt-3 pb-3">
+      {/* Set (the primary browse axis — เบส: ผู้ใช้เลือกชุดก่อน) sits prominently
+          above the search + filter row. Rarity/colour/type live in the filter modal. */}
+      <div className="space-y-2 border-b border-hair px-4 pt-3 pb-3">
+        <SetPicker
+          sets={sets.map((s) => ({ ...s, cardCount: s._count.cards }))}
+          selectedCode={activeSet}
+          onSelect={selectSetCode}
+          variant="inline"
+          nullable
+          prominent
+        />
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/50" />
@@ -386,22 +379,23 @@ export function SelectStep({
             )}
           </div>
 
-          {/* Opens the filter modal (centered on desktop, full-screen on mobile). */}
+          {/* Opens the filter modal (centered on desktop, full-screen on mobile).
+              Badge counts only the modal's facets — set has its own control above. */}
           <button
             type="button"
             onClick={() => setShowFilters(!showFilters)}
             className={cn(
               "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm",
-              showFilters || activeFilterCount > 0
+              showFilters || modalFilterCount > 0
                 ? "border-primary/40 bg-primary/5 text-primary"
                 : "border-hair bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
             <Filter className="size-3.5" />
             <span className="hidden sm:inline">{t(lang, "filter")}</span>
-            {activeFilterCount > 0 && (
+            {modalFilterCount > 0 && (
               <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
-                {activeFilterCount}
+                {modalFilterCount}
               </span>
             )}
           </button>
@@ -418,12 +412,12 @@ export function SelectStep({
           so it works in a Dialog / the z-100 compare modal without nesting portals. */}
       {showFilters && (
         <>
-          {/* desktop backdrop (mobile panel is full-screen) */}
+          {/* desktop backdrop — dark blur (mobile panel is full-screen) */}
           <button
             type="button"
             aria-label={t(lang, "close")}
             onClick={() => setShowFilters(false)}
-            className="absolute inset-0 z-20 hidden bg-foreground/30 animate-in fade-in-0 md:block"
+            className="absolute inset-0 z-20 hidden bg-black/40 animate-in fade-in-0 supports-backdrop-filter:backdrop-blur-sm md:block"
           />
           <div className="absolute inset-0 z-30 flex flex-col bg-background animate-in fade-in-0 slide-in-from-bottom-3 duration-[var(--dur-base)] md:inset-auto md:left-1/2 md:top-1/2 md:max-h-[85%] md:w-[26rem] md:max-w-[calc(100%-2rem)] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-2xl md:border md:border-hair md:shadow-[var(--elev-overlay)]">
             <div className="flex items-center justify-between border-b border-hair px-4 py-3">
@@ -444,8 +438,12 @@ export function SelectStep({
             <div className="flex items-center gap-3 border-t border-hair p-3">
               <button
                 type="button"
-                onClick={clearAllFilters}
-                disabled={activeFilterCount === 0}
+                onClick={() => {
+                  setActiveRarity(null)
+                  setActiveColor(null)
+                  setActiveCardType(null)
+                }}
+                disabled={modalFilterCount === 0}
                 className="ease-chrome flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium text-primary hover:bg-primary/5 disabled:opacity-40"
               >
                 <RotateCcw className="size-3.5" />
