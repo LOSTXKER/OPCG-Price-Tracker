@@ -69,6 +69,7 @@ function FilterControls({
   activeFilterCount: number
   clearAllFilters: () => void
 }) {
+  const [setOpen, setSetOpen] = useState(false)
   const [setQuery, setSetQuery] = useState("")
   const q = setQuery.trim().toLowerCase()
   const filteredSets = q
@@ -79,66 +80,97 @@ function FilterControls({
           (s.nameEn?.toLowerCase().includes(q) ?? false),
       )
     : sets
+  const activeSetInfo = sets.find((s) => s.code === activeSet)
+
+  const pickSet = (code: string | null) => {
+    selectSetCode(code)
+    setSetOpen(false)
+    setSetQuery("")
+  }
 
   return (
     <div className="space-y-3.5">
-      {/* Set — an inline searchable list (not a dropdown), so nothing overflows or
-          covers the filter sheet on desktop (เบส). The list scrolls inside itself. */}
+      {/* Set — a collapsible dropdown: a compact trigger that opens an inline
+          searchable list (in normal flow, so it scrolls with the sheet instead of
+          floating out to clip/cover it). Closed by default (เบส: กดแล้วค่อยกาง). */}
       <div>
         <span className="mb-1.5 block text-eyebrow">{t(lang, "set")}</span>
-        <div className="relative mb-1.5">
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground/50" />
-          <input
-            type="search"
-            value={setQuery}
-            onChange={(e) => setSetQuery(e.target.value)}
-            placeholder={t(lang, "searchSet")}
-            autoComplete="off"
-            className="h-8 w-full rounded-lg border border-hair bg-muted/30 pl-8 pr-2 text-sm outline-none placeholder:text-muted-foreground/40 focus:border-primary/40 focus:bg-background"
-          />
-        </div>
-        <div className="max-h-40 space-y-0.5 overflow-y-auto rounded-lg border border-hair bg-muted/10 p-1">
-          <button
-            type="button"
-            onClick={() => selectSetCode(null)}
+        <button
+          type="button"
+          onClick={() => setSetOpen((o) => !o)}
+          className="ease-chrome flex h-9 w-full items-center justify-between gap-2 rounded-lg border border-hair bg-muted/30 px-3 text-sm hover:bg-muted"
+        >
+          <span className="min-w-0 truncate text-left">
+            {activeSetInfo
+              ? `${activeSetInfo.code.toUpperCase()} · ${activeSetInfo.name}`
+              : t(lang, "allSets")}
+          </span>
+          <ChevronDown
             className={cn(
-              "ease-chrome flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-left text-sm",
-              activeSet === null
-                ? "bg-primary/10 font-medium text-primary"
-                : "hover:bg-muted/70",
+              "ease-chrome size-4 shrink-0 text-muted-foreground",
+              setOpen && "rotate-180",
             )}
-          >
-            <span>{t(lang, "allSets")}</span>
-            {activeSet === null && <Check className="size-3.5 shrink-0" />}
-          </button>
-          {filteredSets.length === 0 ? (
-            <p className="px-2.5 py-3 text-center text-meta text-muted-foreground/60">
-              {t(lang, "noSetsFound")}
-            </p>
-          ) : (
-            filteredSets.map((s) => (
+          />
+        </button>
+
+        {setOpen && (
+          <div className="mt-1.5 rounded-lg border border-hair bg-muted/10 p-1.5">
+            <div className="relative mb-1.5">
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground/50" />
+              <input
+                type="search"
+                value={setQuery}
+                onChange={(e) => setSetQuery(e.target.value)}
+                placeholder={t(lang, "searchSet")}
+                autoComplete="off"
+                autoFocus
+                className="h-8 w-full rounded-md border border-hair bg-background pl-8 pr-2 text-sm outline-none placeholder:text-muted-foreground/40 focus:border-primary/40"
+              />
+            </div>
+            <div className="max-h-44 space-y-0.5 overflow-y-auto">
               <button
-                key={s.code}
                 type="button"
-                onClick={() => selectSetCode(s.code)}
+                onClick={() => pickSet(null)}
                 className={cn(
-                  "ease-chrome flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-sm",
-                  activeSet === s.code
+                  "ease-chrome flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-left text-sm",
+                  activeSet === null
                     ? "bg-primary/10 font-medium text-primary"
                     : "hover:bg-muted/70",
                 )}
               >
-                <span className="shrink-0 font-mono text-xs uppercase text-muted-foreground">
-                  {s.code}
-                </span>
-                <span className="min-w-0 flex-1 truncate">{s.name}</span>
-                <span className="shrink-0 text-xs tabular-nums text-muted-foreground/50">
-                  {s._count.cards}
-                </span>
+                <span>{t(lang, "allSets")}</span>
+                {activeSet === null && <Check className="size-3.5 shrink-0" />}
               </button>
-            ))
-          )}
-        </div>
+              {filteredSets.length === 0 ? (
+                <p className="px-2.5 py-3 text-center text-meta text-muted-foreground/60">
+                  {t(lang, "noSetsFound")}
+                </p>
+              ) : (
+                filteredSets.map((s) => (
+                  <button
+                    key={s.code}
+                    type="button"
+                    onClick={() => pickSet(s.code)}
+                    className={cn(
+                      "ease-chrome flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-sm",
+                      activeSet === s.code
+                        ? "bg-primary/10 font-medium text-primary"
+                        : "hover:bg-muted/70",
+                    )}
+                  >
+                    <span className="shrink-0 font-mono text-xs uppercase text-muted-foreground">
+                      {s.code}
+                    </span>
+                    <span className="min-w-0 flex-1 truncate">{s.name}</span>
+                    <span className="shrink-0 text-xs tabular-nums text-muted-foreground/50">
+                      {s._count.cards}
+                    </span>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {rarityOptions.length > 0 && (
@@ -491,7 +523,7 @@ export function SelectStep({
                 <X className="size-4" />
               </button>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 md:flex-none">
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 md:flex-none md:max-h-[60vh]">
               <FilterControls {...filterProps} />
             </div>
             <div className="border-t border-hair p-3">
