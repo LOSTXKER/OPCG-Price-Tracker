@@ -82,30 +82,31 @@ export function CardPickerModal({
           </button>
         </div>
 
-        {/* The one shared card picker — multi-pick (selected rows show a Check). */}
+        {/* The one shared card picker — multi-pick (selected rows show a Check).
+            The count/commit footer is passed in so the filter overlay covers it. */}
         <CardPickerForm
           onSelect={handleToggle}
           isSelected={(c) => selectedCodes.has(c.cardCode)}
           showHeader={false}
+          footer={
+            <div className="flex items-center justify-between border-t border-hair px-4 py-2.5">
+              <div className="flex items-center gap-2">
+                <p className="text-meta">
+                  {storeItems.length}/{tierMax} {t(lang, "card")}
+                </p>
+                {atLimit && isFinite(limits.compareCards) && (
+                  <UpgradeBadge featureKey="comparePlus" />
+                )}
+              </div>
+              <button
+                onClick={onClose}
+                className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground motion-base hover:bg-primary/90"
+              >
+                {t(lang, "compareNow")}
+              </button>
+            </div>
+          }
         />
-
-        {/* Footer with count */}
-        <div className="flex items-center justify-between border-t border-hair px-4 py-2.5">
-          <div className="flex items-center gap-2">
-            <p className="text-meta">
-              {storeItems.length}/{tierMax} {t(lang, "card")}
-            </p>
-            {atLimit && isFinite(limits.compareCards) && (
-              <UpgradeBadge featureKey="comparePlus" />
-            )}
-          </div>
-          <button
-            onClick={onClose}
-            className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground motion-base hover:bg-primary/90"
-          >
-            {t(lang, "compareNow")}
-          </button>
-        </div>
       </div>
     </div>
   )

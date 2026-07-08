@@ -1,5 +1,6 @@
 "use client"
 
+import { type ReactNode } from "react"
 import Image from "next/image"
 import {
   Check,
@@ -164,9 +165,10 @@ function FilterControls({
 }
 
 /**
- * "Search / filter → pick a card" body. Search-hero + responsive: one column on
- * mobile (filters behind a toggle, bounded so they never bury the list); a
- * two-pane split on desktop (filters as a persistent left rail, results right).
+ * "Search / filter → pick a card" body. Search-hero, single column on every size;
+ * filters open in a full-cover overlay on mobile and a content-height bottom sheet
+ * on desktop (เบส: ใช้ popup filter อันเดียว). An optional `footer` (commit bar)
+ * renders inside the picker so the filter overlay covers it — no button clash.
  */
 export function SelectStep({
   query,
@@ -191,6 +193,7 @@ export function SelectStep({
   onSelectCard,
   isSelected,
   showHeader = true,
+  footer,
 }: {
   query: string
   setQuery: (q: string) => void
@@ -216,6 +219,9 @@ export function SelectStep({
   isSelected?: (card: CardWithSet) => boolean
   /** Hide the built-in DialogHeader when the host supplies its own (alerts). */
   showHeader?: boolean
+  /** Commit bar (e.g. watchlist "add N") rendered inside the picker so the filter
+   *  overlay covers it — keeps the host from stacking a second button under it. */
+  footer?: ReactNode
 }) {
   const lang = useUIStore((s) => s.language)
   const currentGame = useUIStore((s) => s.currentGame)
@@ -394,41 +400,54 @@ export function SelectStep({
         </div>
       </div>
 
-      {/* Results — single column on every size. Filters live in the overlay
-          below (เบส: ใช้ popup filter อันเดียวทั้ง desktop + มือถือ). */}
+      {/* Results — single column on every size. */}
       <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>
 
-      {/* Filters — a full-cover overlay INSIDE the picker (absolute, not a portal)
-          so it lives in the host's own stacking context (works in a Dialog and the
-          z-100 compare modal alike) and covers the card search too, so filters get
-          a clean full-height space with no second search stacked under the first.
-          Same overlay on desktop + mobile (เบส: ใช้ popup filter อันเดียว). */}
+      {/* Commit bar lives INSIDE the picker so the filter overlay covers it — the
+          host never stacks a second button under the overlay's own. */}
+      {footer}
+
+      {/* Filters overlay — INSIDE the picker (absolute, not a portal) so it lives
+          in the host's own stacking context (Dialog + z-100 compare modal alike)
+          and covers the card search AND the footer: no second search, no second
+          button. Full-cover on mobile; a content-height bottom sheet on desktop so
+          a tall dialog doesn't leave a bare gap (เบส: โล่ง + ปุ่มซ้อน). */}
       {showFilters && (
-        <div className="absolute inset-0 z-20 flex flex-col bg-background animate-in fade-in-0 slide-in-from-bottom-3 duration-[var(--dur-base)]">
-          <div className="flex items-center justify-between border-b border-hair px-4 py-3">
-            <span className="text-h4">{t(lang, "filter")}</span>
-            <button
-              type="button"
-              onClick={() => setShowFilters(false)}
-              aria-label={t(lang, "close")}
-              className="tap-safe -mr-1 flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
-            >
-              <X className="size-4" />
-            </button>
+        <>
+          {/* Desktop only — dims the picker behind the sheet + taps to close.
+              Mobile needs none: the sheet covers the whole picker. */}
+          <button
+            type="button"
+            aria-label={t(lang, "close")}
+            onClick={() => setShowFilters(false)}
+            className="absolute inset-0 z-10 hidden bg-foreground/20 animate-in fade-in-0 md:block"
+          />
+          <div className="absolute inset-x-0 top-0 bottom-0 z-20 flex flex-col bg-background animate-in fade-in-0 slide-in-from-bottom-3 duration-[var(--dur-base)] md:top-auto md:max-h-[85%] md:rounded-t-2xl md:border md:border-hair md:shadow-[var(--elev-overlay)]">
+            <div className="flex items-center justify-between border-b border-hair px-4 py-3">
+              <span className="text-h4">{t(lang, "filter")}</span>
+              <button
+                type="button"
+                onClick={() => setShowFilters(false)}
+                aria-label={t(lang, "close")}
+                className="tap-safe -mr-1 flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 md:flex-none">
+              <FilterControls {...filterProps} />
+            </div>
+            <div className="border-t border-hair p-3">
+              <button
+                type="button"
+                onClick={() => setShowFilters(false)}
+                className="ease-chrome h-11 w-full rounded-xl bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+              >
+                {t(lang, "viewResults")}
+              </button>
+            </div>
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
-            <FilterControls {...filterProps} />
-          </div>
-          <div className="border-t border-hair p-3">
-            <button
-              type="button"
-              onClick={() => setShowFilters(false)}
-              className="ease-chrome h-11 w-full rounded-xl bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90"
-            >
-              {t(lang, "viewResults")}
-            </button>
-          </div>
-        </div>
+        </>
       )}
     </div>
   )

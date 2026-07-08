@@ -73,24 +73,26 @@ export function WatchlistAddDialog({
         className="flex flex-col gap-0 overflow-hidden p-0"
         style={{ maxWidth: "min(34rem, calc(100% - 2rem))", maxHeight: "85dvh" }}
       >
-        {/* Tap toggles selection (multi-pick) — the footer commits the batch. */}
+        {/* Tap toggles selection (multi-pick); the footer commits the batch. The
+            footer is passed INTO the picker so the filter overlay covers it. */}
         <CardPickerForm
           onSelect={toggle}
           isSelected={(c) => pending.some((p) => p.id === c.id)}
+          footer={
+            <div className="border-t border-hair p-3">
+              <button
+                type="button"
+                onClick={() => void commit()}
+                disabled={pending.length === 0 || busy}
+                className="ease-chrome h-11 w-full rounded-xl bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {pending.length === 0
+                  ? t(lang, "selectCardsToAdd")
+                  : `${t(lang, "addToWatchlist")} (${pending.length})`}
+              </button>
+            </div>
+          }
         />
-
-        <div className="border-t border-hair p-3">
-          <button
-            type="button"
-            onClick={() => void commit()}
-            disabled={pending.length === 0 || busy}
-            className="ease-chrome h-11 w-full rounded-xl bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {pending.length === 0
-              ? t(lang, "selectCardsToAdd")
-              : `${t(lang, "addToWatchlist")} (${pending.length})`}
-          </button>
-        </div>
       </DialogContent>
     </Dialog>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import { fetchCards } from "@/lib/api/fetch-cards";
 import { apiGet, apiTry } from "@/lib/api/client";
@@ -29,12 +29,16 @@ export function CardPickerForm({
   onSelect,
   isSelected,
   showHeader = true,
+  footer,
 }: {
   onSelect: (card: CardWithSet) => void;
   /** Multi-pick mode: predicate → matching rows render selected + onSelect toggles. */
   isSelected?: (card: CardWithSet) => boolean;
   /** Hide the built-in "เลือกการ์ด" header when the host has its own (alerts). */
   showHeader?: boolean;
+  /** Commit bar rendered inside the picker (below the list) so the filter overlay
+   *  covers it — pass the host's "confirm" button here instead of as a sibling. */
+  footer?: ReactNode;
 }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<CardWithSet[]>([]);
@@ -152,6 +156,7 @@ export function CardPickerForm({
       onSelectCard={onSelect}
       isSelected={isSelected}
       showHeader={showHeader}
+      footer={footer}
     />
   );
 }
