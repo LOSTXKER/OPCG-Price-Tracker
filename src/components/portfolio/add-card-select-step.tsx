@@ -72,10 +72,9 @@ function FilterControls({
 }) {
   return (
     <div className="space-y-3.5">
-      {/* Set — the canonical SetPicker in `flow` mode: same click-to-open dropdown
-          as everywhere else, but its list opens in normal flow (pushes the filters
-          below down + scrolls with the sheet) instead of an absolute popover that
-          would clip/cover in the tight filter sheet. */}
+      {/* Set — the canonical SetPicker, exactly like everywhere else (home toolbar,
+          search, drop-calc): an absolute floating dropdown connected to the trigger,
+          with search. The rail is `overflow-visible` so it isn't clipped. */}
       <div>
         <span className="mb-1.5 block text-eyebrow">{t(lang, "set")}</span>
         <SetPicker
@@ -84,8 +83,6 @@ function FilterControls({
           onSelect={selectSetCode}
           variant="inline"
           nullable
-          flow
-          searchable={false}
         />
       </div>
 
@@ -411,7 +408,7 @@ export function SelectStep({
           desktop (เบส: desktop เอา 2 ฝั่ง). The rail is always visible so filtering
           never covers the cards. */}
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
-        <aside className="hidden md:block md:w-80 md:shrink-0 md:overflow-y-auto md:border-r md:border-hair md:p-4">
+        <aside className="hidden md:block md:w-80 md:shrink-0 md:overflow-visible md:border-r md:border-hair md:p-4">
           <FilterControls {...filterProps} />
         </aside>
         <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>

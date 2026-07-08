@@ -48,12 +48,6 @@ interface SetPickerProps {
    * even before a set is picked.
    */
   prominent?: boolean
-  /** Render the dropdown in normal flow (pushes the following controls down)
-   *  instead of an absolute popover — for tight containers like a filter sheet
-   *  where a floating popover would clip or cover neighbouring controls. */
-  flow?: boolean
-  /** Hide the in-dropdown search box (just scroll the list). Default true. */
-  searchable?: boolean
 }
 
 export function SetPicker({
@@ -65,8 +59,6 @@ export function SetPicker({
   nullable = false,
   align,
   prominent = false,
-  flow = false,
-  searchable = true,
 }: SetPickerProps) {
   const lang = useUIStore((s) => s.language)
   const [open, setOpen] = useState(false)
@@ -227,33 +219,28 @@ export function SetPicker({
 
       {open && (
         <div className={cn(
-          "z-30 overflow-hidden rounded-xl border border-border bg-popover",
-          // flow: sits in normal flow (pushes siblings down) so it can't clip or
-          // cover neighbours in a tight sheet; otherwise an absolute popover.
-          flow ? "mt-1.5" : "absolute mt-2 shadow-[var(--elev-overlay)]",
-          !flow && isCta && "left-0 right-0 w-full",
+          "absolute z-30 mt-2 overflow-hidden rounded-xl border border-border bg-popover shadow-[var(--elev-overlay)]",
+          isCta && "left-0 right-0 w-full",
           // inline lives inside a filter panel / narrow rail — match the trigger
           // width so the popup never overflows its container.
-          !flow && isInline && "left-0 right-0 w-full",
-          !flow && isPill && (popoverAlign === "right"
+          isInline && "left-0 right-0 w-full",
+          isPill && (popoverAlign === "right"
             ? "right-0 w-[min(22rem,calc(100vw-2rem))]"
             : "left-0 w-[min(22rem,calc(100vw-2rem))]"),
         )}>
-          {searchable && (
-            <div className="sticky top-0 z-10 border-b border-border bg-popover p-2">
-              <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder={t(lang, "searchSet")}
-                  className="h-8 w-full rounded-md border border-border bg-muted/30 pl-8 pr-3 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
-                  autoFocus
-                />
-              </div>
+          <div className="sticky top-0 z-10 border-b border-border bg-popover p-2">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t(lang, "searchSet")}
+                className="h-8 w-full rounded-md border border-border bg-muted/30 pl-8 pr-3 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
+                autoFocus
+              />
             </div>
-          )}
+          </div>
 
           <div className="max-h-72 overflow-y-auto py-1">
             {nullable && query.trim().length === 0 && (
