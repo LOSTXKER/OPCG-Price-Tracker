@@ -71,7 +71,7 @@ export function WatchlistAddDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="flex flex-col gap-0 overflow-hidden p-0"
-        style={{ maxWidth: "min(48rem, calc(100% - 2rem))", maxHeight: "85dvh" }}
+        style={{ maxWidth: "min(52rem, calc(100% - 2rem))", maxHeight: "85dvh" }}
       >
         {/* Tap toggles selection (multi-pick); the footer commits the batch. The
             footer is passed INTO the picker so the filter overlay covers it. */}

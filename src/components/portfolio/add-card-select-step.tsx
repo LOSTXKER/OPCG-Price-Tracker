@@ -411,7 +411,7 @@ export function SelectStep({
           desktop (เบส: desktop เอา 2 ฝั่ง). The rail is always visible so filtering
           never covers the cards. */}
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
-        <aside className="hidden md:block md:w-64 md:shrink-0 md:overflow-y-auto md:border-r md:border-hair md:p-4">
+        <aside className="hidden md:block md:w-80 md:shrink-0 md:overflow-y-auto md:border-r md:border-hair md:p-4">
           <FilterControls {...filterProps} />
         </aside>
         <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>
