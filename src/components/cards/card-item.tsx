@@ -172,14 +172,12 @@ function CardItemBase({
                 size="card"
                 className="gap-x-1.5"
               />
-              {priceMode === undefined && (
+              {/* PSA10 secondary line — only when there's a real graded price, so
+                  cards without PSA data don't show an empty "PSA 10 —" (เบส). */}
+              {priceMode === undefined && psa10PriceUsd != null && (
                 <div className="mt-1 flex items-baseline gap-1.5 text-meta">
                   <span className="font-medium text-amber-500">PSA 10</span>
-                  {psa10PriceUsd != null ? (
-                    <PriceUsd usd={psa10PriceUsd} className="text-foreground/70" />
-                  ) : (
-                    <span className="font-price text-muted-foreground/60">—</span>
-                  )}
+                  <PriceUsd usd={psa10PriceUsd} className="text-foreground/70" />
                 </div>
               )}
             </>
