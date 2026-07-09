@@ -17,9 +17,10 @@ import {
   TrendingUpDown,
   X,
 } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
+import { FilterModal } from "@/components/shared/filter-modal";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import {
   DropdownMenu,
@@ -32,7 +33,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UpgradeBadge } from "@/components/shared/upgrade-badge";
-import { t } from "@/lib/i18n";
+import { t, type Language } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 
@@ -86,6 +87,7 @@ export function WatchlistToolbar({
   onBulkRemove: () => void;
 }) {
   const lang = useUIStore((s) => s.language);
+  const [refineOpen, setRefineOpen] = useState(false);
 
   const sortOptions: { key: SortKey; label: string }[] = useMemo(
     () => [
@@ -164,7 +166,9 @@ export function WatchlistToolbar({
             ariaLabel={t(lang, "change")}
           />
 
-          {/* Unified sort + filter — "ปรับ" */}
+          {/* Unified sort + filter — "ปรับ": dropdown on desktop, full-screen
+              modal on mobile (เบส: anchored dropdown UX ไม่ดีบนมือถือ). */}
+          <div className="hidden md:block">
           <DropdownMenu>
             <DropdownMenuTrigger
               className={cn(
@@ -322,6 +326,46 @@ export function WatchlistToolbar({
               )}
             </DropdownMenuContent>
           </DropdownMenu>
+          </div>
+
+          {/* Mobile: same "ปรับ" as a full-screen FilterModal */}
+          <button
+            type="button"
+            onClick={() => setRefineOpen(true)}
+            className={cn(
+              buttonVariants({ variant: "ghost", size: "sm" }),
+              "h-9 gap-1.5 px-2.5 md:hidden",
+              activeFilterCount > 0
+                ? "text-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <SlidersHorizontal className="size-3.5 opacity-70" />
+            <span>{t(lang, "watchlistRefine")}</span>
+            {activeFilterCount > 0 && (
+              <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary/15 px-1 text-overlay tabular-nums text-primary ring-1 ring-primary/30">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+          <FilterModal
+            open={refineOpen}
+            onOpenChange={setRefineOpen}
+            title={t(lang, "watchlistRefine")}
+            onReset={() => onFiltersChange(DEFAULT_FILTERS)}
+            resetDisabled={activeFilterCount === 0}
+            applyLabel={t(lang, "viewResults")}
+          >
+            <RefinePanel
+              lang={lang}
+              sortOptions={sortOptions}
+              sortKey={sortKey}
+              onSortChange={onSortChange}
+              filters={filters}
+              onFiltersChange={onFiltersChange}
+              setOptions={setOptions}
+            />
+          </FilterModal>
 
           {/* View toggle */}
           <div className="inline-flex h-9 shrink-0 items-center rounded-lg border border-transparent bg-muted p-0.5 dark:border-hair">
@@ -439,6 +483,164 @@ function SegButton({
     >
       {icon}
       {label}
+    </button>
+  );
+}
+
+/** The "ปรับ" content (sort + movement + status + set) as plain elements, so it
+ *  renders inside the mobile full-screen FilterModal (the desktop DropdownMenu keeps
+ *  its own primitives). Sort/filters apply on tap; the modal's ใช้ button closes it. */
+function RefinePanel({
+  lang,
+  sortOptions,
+  sortKey,
+  onSortChange,
+  filters,
+  onFiltersChange,
+  setOptions,
+}: {
+  lang: Language;
+  sortOptions: { key: SortKey; label: string }[];
+  sortKey: SortKey;
+  onSortChange: (k: SortKey) => void;
+  filters: WatchlistFilters;
+  onFiltersChange: (next: WatchlistFilters) => void;
+  setOptions: { code: string; label: string }[];
+}) {
+  return (
+    <>
+      <div>
+        <span className="text-eyebrow mb-2 flex items-center gap-1.5">
+          <ArrowDownUp className="size-3 opacity-70" />
+          {t(lang, "watchlistSortBy")}
+        </span>
+        <div className="space-y-0.5">
+          {sortOptions.map((opt) => (
+            <button
+              key={opt.key}
+              type="button"
+              onClick={() => onSortChange(opt.key)}
+              className={cn(
+                "ease-chrome flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm",
+                sortKey === opt.key
+                  ? "bg-primary/10 font-semibold text-primary"
+                  : "text-foreground hover:bg-muted"
+              )}
+            >
+              {opt.label}
+              {sortKey === opt.key && <Check className="size-4" />}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <span className="text-eyebrow mb-2 block">
+          {t(lang, "watchlistFilterMovement")}
+        </span>
+        <div className="grid grid-cols-3 gap-1.5">
+          <SegButton
+            active={filters.direction === null}
+            onClick={() => onFiltersChange({ ...filters, direction: null })}
+            label={t(lang, "watchlistFilterMovementAll")}
+          />
+          <SegButton
+            active={filters.direction === "up"}
+            onClick={() => onFiltersChange({ ...filters, direction: "up" })}
+            label={t(lang, "watchlistFilterMovementUp")}
+            icon={<TrendingUp className="size-3" />}
+            tone="up"
+          />
+          <SegButton
+            active={filters.direction === "down"}
+            onClick={() => onFiltersChange({ ...filters, direction: "down" })}
+            label={t(lang, "watchlistFilterMovementDown")}
+            icon={<TrendingDown className="size-3" />}
+            tone="down"
+          />
+        </div>
+      </div>
+
+      <div>
+        <span className="text-eyebrow mb-2 block">
+          {t(lang, "watchlistFilterStatus")}
+        </span>
+        <div className="space-y-0.5">
+          <ToggleRow
+            icon={<Bell className="size-4" />}
+            label={t(lang, "watchlistFilterAlerts")}
+            checked={filters.hasAlert}
+            onToggle={() =>
+              onFiltersChange({ ...filters, hasAlert: !filters.hasAlert })
+            }
+          />
+          <ToggleRow
+            icon={<Pin className="size-4" />}
+            label={t(lang, "watchlistFilterPinned")}
+            checked={filters.pinnedOnly}
+            onToggle={() =>
+              onFiltersChange({ ...filters, pinnedOnly: !filters.pinnedOnly })
+            }
+          />
+        </div>
+      </div>
+
+      {setOptions.length > 0 && (
+        <div>
+          <span className="text-eyebrow mb-2 block">{t(lang, "set")}</span>
+          <div className="max-h-56 space-y-0.5 overflow-y-auto">
+            {setOptions.map((opt) => {
+              const checked = filters.setCodes.includes(opt.code);
+              return (
+                <ToggleRow
+                  key={opt.code}
+                  label={opt.label}
+                  checked={checked}
+                  onToggle={() =>
+                    onFiltersChange({
+                      ...filters,
+                      setCodes: checked
+                        ? filters.setCodes.filter((c) => c !== opt.code)
+                        : [...filters.setCodes, opt.code],
+                    })
+                  }
+                />
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function ToggleRow({
+  icon,
+  label,
+  checked,
+  onToggle,
+}: {
+  icon?: React.ReactNode;
+  label: string;
+  checked: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className={cn(
+        "ease-chrome flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm",
+        checked ? "bg-primary/10 text-primary" : "text-foreground hover:bg-muted"
+      )}
+    >
+      {icon && (
+        <span className={checked ? "text-primary" : "text-muted-foreground"}>
+          {icon}
+        </span>
+      )}
+      <span className="flex-1 text-left">{label}</span>
+      {checked && <Check className="size-4" />}
     </button>
   );
 }
