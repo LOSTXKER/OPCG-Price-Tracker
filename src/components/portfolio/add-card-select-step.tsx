@@ -530,8 +530,12 @@ export function SelectStep({
                 <X className="size-4" />
               </button>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
-              <FilterControls {...filterProps} />
+            {/* Centre the facets on the full-screen mobile panel so there's no
+                empty void below (เบส); desktop card stays top-aligned. */}
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <div className="flex min-h-full flex-col justify-center px-4 py-5 md:block md:py-4">
+                <FilterControls {...filterProps} />
+              </div>
             </div>
             {/* Reset (left) + Apply (right) — CoinMarketCap footer */}
             <div className="flex items-center gap-3 border-t border-hair p-3">
