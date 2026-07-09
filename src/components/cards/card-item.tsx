@@ -3,6 +3,7 @@
 import { memo } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 import { CardActionRow } from "@/components/shared/card-action-row"
 import { PriceTag } from "@/components/ui/price-tag"
@@ -40,6 +41,12 @@ export interface CardItemProps {
    */
   pullChancePerBox?: number
   psa10PriceUsd?: number | null
+  /** Price display. `undefined` = raw price + a secondary PSA10 line (default for
+   *  pages with no price toggle: watchlist, drop-calc…). `"raw"` = raw only.
+   *  `"psa10"` = PSA10 price as the main price (pages with a Raw/PSA toggle). */
+  priceMode?: "raw" | "psa10"
+  /** Make the set code a link to /sets/[code] (home/search). Default: plain text. */
+  linkSet?: boolean
   /**
    * Override the bottom action row.
    * - `undefined` (default): render the standard star/compare/detail row
@@ -66,9 +73,12 @@ function CardItemBase({
   changePeriod = "7d",
   setCode,
   psa10PriceUsd,
+  priceMode,
+  linkSet,
   actionRow,
 }: CardItemProps) {
   const lang = useUIStore((s) => s.language)
+  const router = useRouter()
   const displayName = getCardName(lang, { nameEn, nameJp, nameTh })
   const activeChange =
     changePeriod === "24h"
@@ -121,31 +131,59 @@ function CardItemBase({
       <div className="flex flex-1 flex-col p-2.5">
         <div className="mb-0.5 flex items-center gap-1.5">
           <RarityBadge rarity={rarity} size="sm" />
-          {setCode && (
-            <span className="font-mono text-xs text-muted-foreground">
-              {setCode.toUpperCase()}
-            </span>
-          )}
+          {setCode &&
+            (linkSet ? (
+              <span
+                role="link"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  router.push(`/sets/${setCode}`)
+                }}
+                className="ease-chrome relative z-20 cursor-pointer font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground hover:decoration-solid"
+              >
+                {setCode.toUpperCase()}
+              </span>
+            ) : (
+              <span className="font-mono text-xs text-muted-foreground">
+                {setCode.toUpperCase()}
+              </span>
+            ))}
         </div>
         <p className="truncate text-body-sm" title={displayName}>
           {displayName}
         </p>
         <div className="mt-auto pt-1.5">
-          <PriceTag
-            jpy={priceJpy}
-            thb={priceThb ?? undefined}
-            change={activeChange ?? undefined}
-            size="card"
-            className="gap-x-1.5"
-          />
-          <div className="mt-1 flex items-baseline gap-1.5 text-meta">
-            <span className="font-medium text-amber-500">PSA 10</span>
-            {psa10PriceUsd != null ? (
-              <PriceUsd usd={psa10PriceUsd} className="text-foreground/70" />
+          {priceMode === "psa10" ? (
+            psa10PriceUsd != null ? (
+              <PriceUsd usd={psa10PriceUsd} className="text-lg font-semibold" />
             ) : (
-              <span className="font-price text-muted-foreground/60">—</span>
-            )}
-          </div>
+              <span className="font-price text-lg font-semibold text-muted-foreground/50">
+                —
+              </span>
+            )
+          ) : (
+            <>
+              <PriceTag
+                jpy={priceJpy}
+                thb={priceThb ?? undefined}
+                change={activeChange ?? undefined}
+                size="card"
+                className="gap-x-1.5"
+              />
+              {priceMode === undefined && (
+                <div className="mt-1 flex items-baseline gap-1.5 text-meta">
+                  <span className="font-medium text-amber-500">PSA 10</span>
+                  {psa10PriceUsd != null ? (
+                    <PriceUsd usd={psa10PriceUsd} className="text-foreground/70" />
+                  ) : (
+                    <span className="font-price text-muted-foreground/60">—</span>
+                  )}
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
 
@@ -163,3 +201,17 @@ function CardItemBase({
 }
 
 export const CardItem = memo(CardItemBase)
+
+/** Loading placeholder matching CardItem's shape — for card grids. */
+export function CardItemSkeleton() {
+  return (
+    <Surface variant="panel" className="overflow-hidden">
+      <Skeleton className="aspect-[63/88] w-full" />
+      <div className="space-y-2 p-2.5">
+        <Skeleton className="h-4 w-12" />
+        <Skeleton className="h-3.5 w-24" />
+        <Skeleton className="h-4 w-16" />
+      </div>
+    </Surface>
+  )
+}
