@@ -59,14 +59,8 @@ export function FilterModal({
           </button>
         </div>
 
-        {/* On mobile the panel is full-screen, so a short cluster of facets would
-            leave an awkward void below (เบส). Centre the content vertically when it
-            is shorter than the screen; on desktop (content-height card) it stays
-            top-aligned. Taller-than-screen content still scrolls from the top. */}
-        <div className="min-h-0 flex-1 overflow-y-auto">
-          <div className="flex min-h-full flex-col justify-center gap-5 px-4 py-5 md:justify-start md:gap-4 md:py-4">
-            {children}
-          </div>
+        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4">
+          {children}
         </div>
 
         <div className="flex items-center gap-3 border-t border-hair p-3">
