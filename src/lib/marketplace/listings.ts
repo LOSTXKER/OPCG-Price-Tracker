@@ -75,12 +75,25 @@ export async function searchActiveListings(searchParams: URLSearchParams): Promi
     cardFilter.set = { game: { slug: gameSlug } };
   }
   if (rarityParam) {
-    const rarities = rarityParam.split(",").map((r) => r.trim()).filter(Boolean);
-    if (rarities.length === 1) {
-      cardFilter.rarity = rarities[0];
-    } else if (rarities.length > 1) {
-      cardFilter.rarity = { in: rarities };
+    // A base rarity also matches its parallel (SEC → SEC + P-SEC), mirroring /api/cards.
+    const rarities = [
+      ...new Set(
+        rarityParam
+          .split(",")
+          .map((r) => r.trim())
+          .filter(Boolean)
+          .flatMap((r) => (r.startsWith("P-") ? [r] : [r, `P-${r}`])),
+      ),
+    ];
+    if (rarities.length) {
+      cardFilter.rarity = rarities.length === 1 ? rarities[0] : { in: rarities };
     }
+  }
+  const variantParam = searchParams.get("variant") || "";
+  if (variantParam === "parallel") {
+    cardFilter.isParallel = true;
+  } else if (variantParam === "regular") {
+    cardFilter.isParallel = false;
   }
   if (searchQuery) {
     const q = searchQuery.trim();
