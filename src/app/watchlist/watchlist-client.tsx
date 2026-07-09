@@ -22,6 +22,7 @@ import { useUIStore } from "@/stores/ui-store";
 import { useGameFilterReset } from "@/hooks/use-game-filter";
 import { useMultigameDemo, MOCK_POKEMON_WATCHLIST } from "@/lib/mock/multigame-demo";
 import { GameFilterChips, type GameChip } from "@/components/shared/game-filter-chips";
+import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants";
 import { getGameConfig } from "@/lib/game-config";
 
@@ -450,18 +451,20 @@ function WatchlistContent() {
           />
 
           {filteredEntries.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-hair py-10 text-center text-sm text-muted-foreground">
-              <p>{t(lang, "noCardsFoundDesc")}</p>
-              {gameFilter !== ALL_GAMES && (
-                <button
-                  type="button"
-                  onClick={() => setGameFilter(ALL_GAMES)}
-                  className="mt-2 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                >
-                  {t(lang, "showAllGames")}
-                </button>
-              )}
-            </div>
+            <KumaEmptyState
+              preset="no-results"
+              action={
+                gameFilter !== ALL_GAMES ? (
+                  <button
+                    type="button"
+                    onClick={() => setGameFilter(ALL_GAMES)}
+                    className="text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  >
+                    {t(lang, "showAllGames")}
+                  </button>
+                ) : undefined
+              }
+            />
           ) : view === "list" ? (
             <WatchlistListView
               entries={filteredEntries}

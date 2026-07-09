@@ -427,9 +427,7 @@ export function SetDetailContent({
             ))}
 
             {displayGroups.length === 0 && (
-              <div className="py-16 text-center text-sm text-muted-foreground">
-                {t(lang, "noData")}
-              </div>
+              <KumaEmptyState preset="no-results" />
             )}
         </div>
       </div>

@@ -13,6 +13,7 @@ import { type FilterDefinition } from "@/components/shared/filter-chips"
 import { FilterModal } from "@/components/shared/filter-modal"
 import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker"
 import { AdSlot } from "@/components/ads/ad-slot"
+import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
 import { Input } from "@/components/ui/input"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { t } from "@/lib/i18n"
@@ -321,7 +322,7 @@ export function HomeMarketOverview({
               {Array.from({ length: PAGE_SIZE }).map((_, i) => <GridCardSkeleton key={i} />)}
             </div>
           ) : m.cards.length === 0 ? (
-            <p className="py-12 text-center text-sm text-muted-foreground">{t(lang, "noData")}</p>
+            <KumaEmptyState preset="no-results" />
           ) : (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {m.cards.map((card) => (
