@@ -74,6 +74,7 @@ Concrete consequences:
 | ปุ่มย้อน (มือถือ) | `BackButton` · `Breadcrumb` | `shared/back-button.tsx` · `shared/breadcrumb.tsx` | ปุ่มย้อน honey inline ข้างหัวข้อ |
 | Badge | `Badge` · `RarityBadge` · `ConditionBadge` · `GameBadge` | `ui/badge.tsx` · `shared/*-badge.tsx` | ป้ายสถานะ / rarity / สภาพ / เกม |
 | Money | `PriceTag` | `ui/price-tag.tsx` | ราคา + %change (▲/▼) ทุกที่ |
+| การ์ด grid tile (canonical) | `CardItem` | `cards/card-item.tsx` | **การ์ดในมุมมอง grid ทุกหน้า** (หน้าแรก · ค้นหา · watchlist · drop-calc · ตาราง) — รูป + rarity + ชื่อ + ราคา + `actionRow` (default = star/compare/detail, ส่ง node เองได้/`null` ซ่อน) · `priceMode` (undefined = ราคา+บรรทัด PSA10 / `raw` / `psa10`) · `linkSet` (โค้ดชุด→/sets). **ตั้งใจให้ต่าง — อย่ายุบเข้า CardItem:** `SetCardTile` (หน้าชุด — price-wall กะทัดรัด ไม่มี badge/ปุ่ม เพราะ section = rarity เดียว) · `TopCardTile` (dashboard มีอันดับ #) · related/sibling strip (รูปเล็ก) |
 | Toggle เปิด/ปิด | `Switch` | `ui/switch.tsx` | สวิตช์ on/off (settings) · hit ≥44px แต่แรก |
 | ปุ่มไอคอนล้วน | `IconButton` | `ui/icon-button.tsx` | ปุ่ม icon-only (`ghost`/`solid`) · บังคับ `aria-label` |
 | ดาวเรตติ้ง | `RatingStars` | `ui/rating-stars.tsx` | ดาว read-only สี amber (honey) เดียว ทุกที่ |
