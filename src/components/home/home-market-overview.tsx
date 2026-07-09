@@ -239,12 +239,15 @@ export function HomeMarketOverview({
                           )
                         }
                         className={cn(
-                          "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium",
+                          "ease-chrome flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium",
                           active
                             ? "border-primary/40 bg-primary/5 text-primary"
                             : "border-hair bg-background text-muted-foreground hover:text-foreground"
                         )}
                       >
+                        {opt.dot && (
+                          <span className={cn("size-2.5 rounded-full", opt.dot)} />
+                        )}
                         {opt.label}
                       </button>
                     )
