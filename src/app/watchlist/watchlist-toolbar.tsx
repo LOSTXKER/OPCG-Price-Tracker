@@ -5,11 +5,11 @@ import {
   Bell,
   Check,
   ChevronDown,
+  Layers,
   LayoutGrid,
   List,
   Pencil,
   Pin,
-  RotateCcw,
   Search,
   SlidersHorizontal,
   TrendingDown,
@@ -24,15 +24,12 @@ import { FilterModal } from "@/components/shared/filter-modal";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UpgradeBadge } from "@/components/shared/upgrade-badge";
+import { OPCG_SETS } from "@/lib/constants/sets";
 import { t, type Language } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
@@ -46,6 +43,8 @@ import {
 } from "./watchlist-types";
 
 const PERIODS: ChangePeriod[] = ["24h", "7d", "30d"];
+
+const setNameByCode = new Map(OPCG_SETS.map((s) => [s.code, s.nameEn]));
 
 export function WatchlistToolbar({
   view,
@@ -87,7 +86,7 @@ export function WatchlistToolbar({
   onBulkRemove: () => void;
 }) {
   const lang = useUIStore((s) => s.language);
-  const [refineOpen, setRefineOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const sortOptions: { key: SortKey; label: string }[] = useMemo(
     () => [
@@ -166,182 +165,49 @@ export function WatchlistToolbar({
             ariaLabel={t(lang, "change")}
           />
 
-          {/* Unified sort + filter — "ปรับ": dropdown on desktop, full-screen
-              modal on mobile (เบส: anchored dropdown UX ไม่ดีบนมือถือ). */}
-          <div className="hidden md:block">
+          {/* Sort */}
           <DropdownMenu>
             <DropdownMenuTrigger
               className={cn(
                 buttonVariants({ variant: "ghost", size: "sm" }),
-                "h-9 gap-1.5 px-2.5",
-                activeFilterCount > 0
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                "h-9 gap-1.5 px-2.5 text-muted-foreground hover:text-foreground"
               )}
             >
-              <SlidersHorizontal className="size-3.5 opacity-70" />
-              <span>{t(lang, "watchlistRefine")}</span>
-              {activeFilterCount > 0 && (
-                <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary/15 px-1 text-overlay tabular-nums text-primary ring-1 ring-primary/30">
-                  {activeFilterCount}
-                </span>
-              )}
+              <ArrowDownUp className="size-3.5 opacity-70" />
+              <span>{t(lang, "watchlistSortBy")}</span>
               <ChevronDown className="size-3 opacity-70" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              sideOffset={4}
-              className="max-h-[28rem] w-64 overflow-y-auto p-2"
-            >
-              {/* Sort */}
-              <DropdownMenuGroup>
-                <DropdownMenuLabel className="text-eyebrow flex items-center gap-1.5 px-1 pb-1">
-                  <ArrowDownUp className="size-3 opacity-70" />
-                  {t(lang, "watchlistSortBy")}
-                </DropdownMenuLabel>
-                {sortOptions.map((opt) => (
-                  <DropdownMenuItem
-                    key={opt.key}
-                    onClick={() => onSortChange(opt.key)}
-                    className={cn(
-                      "justify-between",
-                      sortKey === opt.key && "font-semibold text-primary"
-                    )}
-                  >
-                    {opt.label}
-                    {sortKey === opt.key && <Check className="size-3.5" />}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuGroup>
-
-              <DropdownMenuSeparator />
-
-              {/* Movement */}
-              <DropdownMenuGroup>
-                <DropdownMenuLabel className="text-eyebrow px-1 pb-1">
-                  {t(lang, "watchlistFilterMovement")}
-                </DropdownMenuLabel>
-                <div className="grid grid-cols-3 gap-1 p-1">
-                  <SegButton
-                    active={filters.direction === null}
-                    onClick={() => onFiltersChange({ ...filters, direction: null })}
-                    label={t(lang, "watchlistFilterMovementAll")}
-                  />
-                  <SegButton
-                    active={filters.direction === "up"}
-                    onClick={() => onFiltersChange({ ...filters, direction: "up" })}
-                    label={t(lang, "watchlistFilterMovementUp")}
-                    icon={<TrendingUp className="size-3" />}
-                    tone="up"
-                  />
-                  <SegButton
-                    active={filters.direction === "down"}
-                    onClick={() => onFiltersChange({ ...filters, direction: "down" })}
-                    label={t(lang, "watchlistFilterMovementDown")}
-                    icon={<TrendingDown className="size-3" />}
-                    tone="down"
-                  />
-                </div>
-              </DropdownMenuGroup>
-
-              <DropdownMenuSeparator />
-
-              {/* Status */}
-              <DropdownMenuGroup>
-                <DropdownMenuLabel className="text-eyebrow px-1 pb-0">
-                  {t(lang, "watchlistFilterStatus")}
-                </DropdownMenuLabel>
-                <DropdownMenuCheckboxItem
-                  checked={filters.hasAlert}
-                  onCheckedChange={(next) =>
-                    onFiltersChange({ ...filters, hasAlert: !!next })
-                  }
+            <DropdownMenuContent align="end" sideOffset={4} className="w-56">
+              {sortOptions.map((opt) => (
+                <DropdownMenuItem
+                  key={opt.key}
+                  onClick={() => onSortChange(opt.key)}
+                  className={cn(
+                    "justify-between",
+                    sortKey === opt.key && "font-semibold text-primary"
+                  )}
                 >
-                  <Bell className="mr-2 size-3 text-muted-foreground" />
-                  {t(lang, "watchlistFilterAlerts")}
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={filters.pinnedOnly}
-                  onCheckedChange={(next) =>
-                    onFiltersChange({ ...filters, pinnedOnly: !!next })
-                  }
-                >
-                  <Pin className="mr-2 size-3 text-muted-foreground" />
-                  {t(lang, "watchlistFilterPinned")}
-                </DropdownMenuCheckboxItem>
-              </DropdownMenuGroup>
-
-              {/* Set */}
-              {setOptions.length > 0 && (
-                <>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel className="text-eyebrow px-1 pb-0">
-                      {t(lang, "set")}
-                    </DropdownMenuLabel>
-                    <div className="max-h-40 overflow-y-auto">
-                      {setOptions.map((opt) => {
-                        const checked = filters.setCodes.includes(opt.code);
-                        return (
-                          <DropdownMenuCheckboxItem
-                            key={opt.code}
-                            checked={checked}
-                            onCheckedChange={(next) => {
-                              if (next) {
-                                onFiltersChange({
-                                  ...filters,
-                                  setCodes: [...filters.setCodes, opt.code],
-                                });
-                              } else {
-                                onFiltersChange({
-                                  ...filters,
-                                  setCodes: filters.setCodes.filter(
-                                    (c) => c !== opt.code
-                                  ),
-                                });
-                              }
-                            }}
-                          >
-                            {opt.label}
-                          </DropdownMenuCheckboxItem>
-                        );
-                      })}
-                    </div>
-                  </DropdownMenuGroup>
-                </>
-              )}
-
-              {activeFilterCount > 0 && (
-                <>
-                  <DropdownMenuSeparator />
-                  <button
-                    type="button"
-                    onClick={() => onFiltersChange(DEFAULT_FILTERS)}
-                    className="ease-chrome flex w-full items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-                  >
-                    <RotateCcw className="size-3" />
-                    {t(lang, "watchlistResetFilters")}
-                  </button>
-                </>
-              )}
+                  {opt.label}
+                  {sortKey === opt.key && <Check className="size-3.5" />}
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          </div>
 
-          {/* Mobile: same "ปรับ" as a full-screen FilterModal */}
+          {/* Filter */}
           <button
             type="button"
-            onClick={() => setRefineOpen(true)}
+            onClick={() => setFilterOpen(true)}
             className={cn(
               buttonVariants({ variant: "ghost", size: "sm" }),
-              "h-9 gap-1.5 px-2.5 md:hidden",
+              "h-9 gap-1.5 px-2.5",
               activeFilterCount > 0
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
             <SlidersHorizontal className="size-3.5 opacity-70" />
-            <span>{t(lang, "watchlistRefine")}</span>
+            <span>{t(lang, "filter")}</span>
             {activeFilterCount > 0 && (
               <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary/15 px-1 text-overlay tabular-nums text-primary ring-1 ring-primary/30">
                 {activeFilterCount}
@@ -349,18 +215,13 @@ export function WatchlistToolbar({
             )}
           </button>
           <FilterModal
-            open={refineOpen}
-            onOpenChange={setRefineOpen}
-            title={t(lang, "watchlistRefine")}
+            open={filterOpen}
+            onOpenChange={setFilterOpen}
             onReset={() => onFiltersChange(DEFAULT_FILTERS)}
             resetDisabled={activeFilterCount === 0}
-            applyLabel={t(lang, "viewResults")}
           >
-            <RefinePanel
+            <FilterPanel
               lang={lang}
-              sortOptions={sortOptions}
-              sortKey={sortKey}
-              onSortChange={onSortChange}
               filters={filters}
               onFiltersChange={onFiltersChange}
               setOptions={setOptions}
@@ -487,53 +348,21 @@ function SegButton({
   );
 }
 
-/** The "ปรับ" content (sort + movement + status + set) as plain elements, so it
- *  renders inside the mobile full-screen FilterModal (the desktop DropdownMenu keeps
- *  its own primitives). Sort/filters apply on tap; the modal's ใช้ button closes it. */
-function RefinePanel({
+/** The filter-only content (movement + status + set) as plain elements, rendered
+ *  inside the FilterModal. Filters apply on tap; the modal's Reset button clears them. */
+function FilterPanel({
   lang,
-  sortOptions,
-  sortKey,
-  onSortChange,
   filters,
   onFiltersChange,
   setOptions,
 }: {
   lang: Language;
-  sortOptions: { key: SortKey; label: string }[];
-  sortKey: SortKey;
-  onSortChange: (k: SortKey) => void;
   filters: WatchlistFilters;
   onFiltersChange: (next: WatchlistFilters) => void;
   setOptions: { code: string; label: string }[];
 }) {
   return (
     <>
-      <div>
-        <span className="text-eyebrow mb-2 flex items-center gap-1.5">
-          <ArrowDownUp className="size-3 opacity-70" />
-          {t(lang, "watchlistSortBy")}
-        </span>
-        <div className="space-y-0.5">
-          {sortOptions.map((opt) => (
-            <button
-              key={opt.key}
-              type="button"
-              onClick={() => onSortChange(opt.key)}
-              className={cn(
-                "ease-chrome flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm",
-                sortKey === opt.key
-                  ? "bg-primary/10 font-semibold text-primary"
-                  : "text-foreground hover:bg-muted"
-              )}
-            >
-              {opt.label}
-              {sortKey === opt.key && <Check className="size-4" />}
-            </button>
-          ))}
-        </div>
-      </div>
-
       <div>
         <span className="text-eyebrow mb-2 block">
           {t(lang, "watchlistFilterMovement")}
@@ -591,10 +420,15 @@ function RefinePanel({
           <div className="max-h-56 space-y-0.5 overflow-y-auto">
             {setOptions.map((opt) => {
               const checked = filters.setCodes.includes(opt.code);
+              const setName = setNameByCode.get(opt.code.toLowerCase()) ?? "";
+              const label = `${opt.code.toUpperCase()} · ${setName}`
+                .trim()
+                .replace(/ ·\s*$/, "");
               return (
                 <ToggleRow
                   key={opt.code}
-                  label={opt.label}
+                  icon={<Layers className="size-4" />}
+                  label={label}
                   checked={checked}
                   onToggle={() =>
                     onFiltersChange({
