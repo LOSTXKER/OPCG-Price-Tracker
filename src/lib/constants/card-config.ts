@@ -39,3 +39,10 @@ export function getCardTypeLabel(code: string, lang: Language): string {
 export function getColorOptions(lang: Language): { value: string; label: string }[] {
   return CARD_COLORS.map((cc) => ({ value: cc.value, label: cc.label[lang] }));
 }
+
+/** Card-type filter options in the user's language (Leader → ลีดเดอร์ / リーダー). */
+export function getCardTypeOptions(
+  lang: Language,
+): { value: string; label: string }[] {
+  return CARD_TYPES.map((ct) => ({ value: ct.code, label: ct.label[lang] }));
+}
