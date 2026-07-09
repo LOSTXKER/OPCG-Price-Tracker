@@ -9,6 +9,7 @@ import { HomeSeoContent } from "@/components/home/home-seo-content";
 import { AdSlot } from "@/components/ads/ad-slot";
 import { getHomeData, mapCardToTrending } from "@/lib/data/home";
 import { CARD_TYPES } from "@/lib/constants/card-config";
+import { getGameConfig } from "@/lib/game-config";
 import type { FilterDefinition } from "@/components/shared/filter-chips";
 
 export const revalidate = 300;
@@ -26,7 +27,6 @@ export default async function HomePage() {
     initialTableTotal,
     initialTableTotalPages,
     sets,
-    rarityRows,
   } = await getHomeData();
 
   if (totalCards === 0) {
@@ -49,11 +49,19 @@ export default async function HomePage() {
     psa10PriceUsd: prices?.[0]?.priceUsd ?? null,
   }));
 
+  // Rarity options = BASE rarities only (SEC/SR/R/UC/C/L/SP/TR/DON — no P- variants).
+  // The server expands a base rarity to its P- family, and the "version" facet in
+  // HomeMarketOverview narrows regular/parallel — so we never list P-SEC etc. here.
+  // (Type option labels are relabeled to the user's language client-side in
+  // HomeMarketOverview, since this page is ISR with no request-time language.)
   const filterDefinitions: FilterDefinition[] = [
     {
       key: "rarity",
       label: "rarity",
-      options: rarityRows.map((r) => ({ value: r.rarity, label: r.rarity })),
+      options: (getGameConfig("opcg")?.rarityFilterOptions ?? []).map((r) => ({
+        value: r.code,
+        label: r.label,
+      })),
     },
     {
       key: "type",

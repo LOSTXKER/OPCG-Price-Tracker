@@ -20,9 +20,11 @@ interface CardPickerProps {
   wantCount: number
   cardSearch: string
   rarityFilter: string[]
+  variantFilter: string | null
   onToggleWant: (cardId: number) => void
   onSearchChange: (value: string) => void
   onRarityChange: (values: string[]) => void
+  onVariantChange: (value: string | null) => void
 }
 
 export function CardPicker({
@@ -32,9 +34,11 @@ export function CardPicker({
   wantCount,
   cardSearch,
   rarityFilter,
+  variantFilter,
   onToggleWant,
   onSearchChange,
   onRarityChange,
+  onVariantChange,
 }: CardPickerProps) {
   const lang = useUIStore((s) => s.language)
   const [showFilters, setShowFilters] = useState(false)
@@ -46,6 +50,14 @@ export function CardPicker({
         : [...rarityFilter, value]
     )
   }
+
+  // ปกติ / พาราเลล — reuse the shared variant i18n keys (regular/parallel).
+  const variantOptions = [
+    { code: "regular", label: t(lang, "regular") },
+    { code: "parallel", label: t(lang, "parallel") },
+  ]
+
+  const activeFilterCount = rarityFilter.length + (variantFilter ? 1 : 0)
 
   return (
     <section className="min-w-0 space-y-4">
@@ -74,16 +86,16 @@ export function CardPicker({
           onClick={() => setShowFilters(true)}
           className={cn(
             "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-sm",
-            rarityFilter.length > 0
+            activeFilterCount > 0
               ? "border-primary/40 bg-primary/5 text-primary"
               : "border-border bg-background text-muted-foreground hover:text-foreground"
           )}
         >
           <Filter className="size-3.5" />
           <span className="hidden sm:inline">{t(lang, "filter")}</span>
-          {rarityFilter.length > 0 && (
+          {activeFilterCount > 0 && (
             <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
-              {rarityFilter.length}
+              {activeFilterCount}
             </span>
           )}
         </button>
@@ -92,8 +104,11 @@ export function CardPicker({
       <FilterModal
         open={showFilters}
         onOpenChange={setShowFilters}
-        onReset={() => onRarityChange([])}
-        resetDisabled={rarityFilter.length === 0}
+        onReset={() => {
+          onRarityChange([])
+          onVariantChange(null)
+        }}
+        resetDisabled={activeFilterCount === 0}
       >
         {uniqueRarities.length > 0 && (
           <div>
@@ -117,6 +132,31 @@ export function CardPicker({
             </div>
           </div>
         )}
+
+        {/* Version — ปกติ / พาราเลล. Filters the display by isParallel; the drop
+            math reads the full set so this is display-only (set-scoped math intact). */}
+        <div>
+          <span className="mb-1.5 block text-eyebrow">{t(lang, "variant")}</span>
+          <div className="flex flex-wrap gap-1.5">
+            {variantOptions.map((v) => (
+              <button
+                key={v.code}
+                type="button"
+                onClick={() =>
+                  onVariantChange(variantFilter === v.code ? null : v.code)
+                }
+                className={cn(
+                  "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium",
+                  variantFilter === v.code
+                    ? "border-primary/40 bg-primary/5 text-primary"
+                    : "border-hair bg-background text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {v.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </FilterModal>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">

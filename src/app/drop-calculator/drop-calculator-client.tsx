@@ -13,6 +13,7 @@ import { WantList } from "@/components/drop-calculator/want-list"
 import { CardPicker } from "@/components/drop-calculator/card-picker"
 import type { SetListItem, SetDetail, DropRate, CardItem, Unit } from "@/components/drop-calculator/types"
 import { raritySort } from "@/lib/constants/rarities"
+import { getGameConfig } from "@/lib/game-config"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { apiGet, apiTry } from "@/lib/api/client"
@@ -39,6 +40,7 @@ export default function DropCalculatorClient() {
 
   const [cardSearch, setCardSearch] = useState("")
   const [rarityFilter, setRarityFilter] = useState<string[]>([])
+  const [variantFilter, setVariantFilter] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<"cards" | "results">("cards")
 
   useEffect(() => {
@@ -54,6 +56,7 @@ export default function DropCalculatorClient() {
     setWantList(new Set())
     setCardSearch("")
     setRarityFilter([])
+    setVariantFilter(null)
     setActiveTab("cards")
     if (!code) { setDetail(null); return }
     setLoading(true)
@@ -98,7 +101,18 @@ export default function DropCalculatorClient() {
     if (!detail) return []
     let list = detail.cards
     if (rarityFilter.length > 0) {
-      list = list.filter((c) => rarityFilter.includes(c.rarity))
+      // Chips are BASE rarities (SEC, SR…). A parallel card's rarity is stored
+      // "P-SEC" (except SP/TR which stay base), so a base chip matches its whole
+      // family — done client-side here (drop-calc has its own API, no server expand).
+      list = list.filter(
+        (c) =>
+          rarityFilter.includes(c.rarity) ||
+          (c.rarity.startsWith("P-") && rarityFilter.includes(c.rarity.slice(2)))
+      )
+    }
+    if (variantFilter) {
+      const wantParallel = variantFilter === "parallel"
+      list = list.filter((c) => c.isParallel === wantParallel)
     }
     if (cardSearch.trim()) {
       const q = cardSearch.trim().toLowerCase()
@@ -111,12 +125,18 @@ export default function DropCalculatorClient() {
       )
     }
     return [...list].sort((a, b) => raritySort(a.rarity, b.rarity))
-  }, [detail, rarityFilter, cardSearch])
+  }, [detail, rarityFilter, variantFilter, cardSearch])
 
+  // Rarity chips = BASE options only (no P- variants) — the P- family is reached
+  // via the base chip's client-side family match above. Show only bases actually
+  // present in this set (collapse P-SEC → SEC etc.) so no dead facet renders.
   const uniqueRarities = useMemo(() => {
     if (!detail) return []
-    const set = new Set(detail.cards.map((c) => c.rarity))
-    return Array.from(set).sort(raritySort)
+    const baseOrder = (getGameConfig("opcg")?.rarityFilterOptions ?? []).map((o) => o.code)
+    const present = new Set(
+      detail.cards.map((c) => (c.rarity.startsWith("P-") ? c.rarity.slice(2) : c.rarity))
+    )
+    return baseOrder.filter((code) => present.has(code))
   }, [detail])
 
   const getCardChance = useCallback(
@@ -275,9 +295,11 @@ export default function DropCalculatorClient() {
                     wantCount={wantCards.length}
                     cardSearch={cardSearch}
                     rarityFilter={rarityFilter}
+                    variantFilter={variantFilter}
                     onToggleWant={toggleWant}
                     onSearchChange={setCardSearch}
                     onRarityChange={setRarityFilter}
+                    onVariantChange={setVariantFilter}
                   />
                   <p className="mt-3 flex items-center gap-1.5 text-meta text-muted-foreground/60">
                     <AlertTriangle className="size-3 shrink-0" />
@@ -322,9 +344,11 @@ export default function DropCalculatorClient() {
                 wantCount={wantCards.length}
                 cardSearch={cardSearch}
                 rarityFilter={rarityFilter}
+                variantFilter={variantFilter}
                 onToggleWant={toggleWant}
                 onSearchChange={setCardSearch}
                 onRarityChange={setRarityFilter}
+                onVariantChange={setVariantFilter}
               />
               <p className="mt-3 flex items-center gap-1.5 text-meta text-muted-foreground/60">
                 <AlertTriangle className="size-3 shrink-0" />

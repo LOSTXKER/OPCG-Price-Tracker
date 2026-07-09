@@ -18,25 +18,20 @@ export const metadata: Metadata = {
 };
 
 async function getSearchMeta() {
-  const [sets, rarityRows] = await Promise.all([
-    prisma.cardSet.findMany({
-      select: {
-        code: true,
-        name: true,
-        nameEn: true,
-        nameTh: true,
-        type: true,
-        boxImageUrl: true,
-        releaseDate: true,
-      },
-      orderBy: { code: "asc" },
-    }),
-    prisma.card.findMany({
-      distinct: ["rarity"],
-      select: { rarity: true },
-      orderBy: { rarity: "asc" },
-    }),
-  ]);
+  // Rarity options come from the game config (BASE only) in the client, so we no
+  // longer query distinct DB rarities (which include "P-SEC" etc.). Sets only.
+  const sets = await prisma.cardSet.findMany({
+    select: {
+      code: true,
+      name: true,
+      nameEn: true,
+      nameTh: true,
+      type: true,
+      boxImageUrl: true,
+      releaseDate: true,
+    },
+    orderBy: { code: "asc" },
+  });
   return {
     sets: sets.map((s) => ({
       code: s.code,
@@ -47,19 +42,18 @@ async function getSearchMeta() {
       imageUrl: s.boxImageUrl,
       releaseDate: s.releaseDate ? s.releaseDate.toISOString() : null,
     })),
-    rarities: rarityRows.map((r) => r.rarity),
   };
 }
 
 export default async function SearchPage() {
-  const { sets, rarities } = await getSearchMeta();
+  const { sets } = await getSearchMeta();
 
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Search", href: "/search" }])} />
       <LocalizedBreadcrumb items={[{ labelKey: "home", href: "/" }, { labelKey: "search" }]} />
       <Suspense>
-        <SearchClient sets={sets} rarities={rarities} />
+        <SearchClient sets={sets} />
       </Suspense>
       <RelatedPages items={[
         { href: "/sets", icon: Layers, title: "ชุดการ์ด", description: "ดูทุกชุดการ์ดพร้อมมูลค่า" },

@@ -41,19 +41,32 @@ export function useSearch() {
   const [changePeriod, setChangePeriod] = useState<ChangePeriod>("7d")
   const [selectedSet, setSelectedSet] = useState("")
   const [selectedRarity, setSelectedRarity] = useState("")
+  // Version facet — "regular" | "parallel" | "" (both). Passed as `variant` to
+  // /api/cards; the server picks the isParallel side. Base rarity (e.g. SEC)
+  // already expands to its P- family server-side, so no client expansion here.
+  const [selectedVariant, setSelectedVariant] = useState("")
   const inputRef = useRef<HTMLInputElement>(null)
   const fetchAbortRef = useRef<AbortController | null>(null)
   const sortRef = useRef(sort)
   const setRef = useRef(selectedSet)
   const rarityRef = useRef(selectedRarity)
+  const variantRef = useRef(selectedVariant)
   useEffect(() => {
     sortRef.current = sort
     setRef.current = selectedSet
     rarityRef.current = selectedRarity
-  }, [sort, selectedSet, selectedRarity])
+    variantRef.current = selectedVariant
+  }, [sort, selectedSet, selectedRarity, selectedVariant])
 
   const fetchResults = useCallback(
-    (q: string, sortKey: SortKey, pg: number, filterSet?: string, filterRarity?: string) => {
+    (
+      q: string,
+      sortKey: SortKey,
+      pg: number,
+      filterSet?: string,
+      filterRarity?: string,
+      filterVariant?: string,
+    ) => {
       if (!q.trim()) {
         setCards([])
         setTotal(0)
@@ -75,6 +88,7 @@ export function useSearch() {
               limit: PAGE_SIZE,
               set: filterSet || undefined,
               rarity: filterRarity || undefined,
+              variant: filterVariant || undefined,
             },
             { signal: controller.signal },
           )
@@ -98,7 +112,15 @@ export function useSearch() {
       setQuery(q)
       setInputValue(q)
       setPage(1)
-      if (q.trim()) fetchResults(q, sortRef.current, 1, setRef.current, rarityRef.current)
+      if (q.trim())
+        fetchResults(
+          q,
+          sortRef.current,
+          1,
+          setRef.current,
+          rarityRef.current,
+          variantRef.current,
+        )
     }, 0)
     return () => clearTimeout(timer)
   }, [searchParams, fetchResults])
@@ -108,14 +130,21 @@ export function useSearch() {
   }, [])
 
   const refetch = useCallback(
-    (overrides?: { sort?: SortKey; page?: number; set?: string; rarity?: string }) => {
+    (overrides?: {
+      sort?: SortKey
+      page?: number
+      set?: string
+      rarity?: string
+      variant?: string
+    }) => {
       const s = overrides?.sort ?? sort
       const p = overrides?.page ?? 1
       const st = overrides?.set ?? selectedSet
       const r = overrides?.rarity ?? selectedRarity
-      fetchResults(query, s, p, st, r)
+      const v = overrides?.variant ?? selectedVariant
+      fetchResults(query, s, p, st, r, v)
     },
-    [query, sort, selectedSet, selectedRarity, fetchResults],
+    [query, sort, selectedSet, selectedRarity, selectedVariant, fetchResults],
   )
 
   const handleSubmit = (e: FormEvent) => {
@@ -141,7 +170,7 @@ export function useSearch() {
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage)
-    fetchResults(query, sort, newPage, selectedSet, selectedRarity)
+    fetchResults(query, sort, newPage, selectedSet, selectedRarity, selectedVariant)
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
@@ -157,11 +186,18 @@ export function useSearch() {
     refetch({ rarity: v, page: 1 })
   }
 
+  const handleVariantChange = (v: string) => {
+    setSelectedVariant(v)
+    setPage(1)
+    refetch({ variant: v, page: 1 })
+  }
+
   const clearFilters = () => {
     setSelectedSet("")
     setSelectedRarity("")
+    setSelectedVariant("")
     setPage(1)
-    refetch({ set: "", rarity: "", page: 1 })
+    refetch({ set: "", rarity: "", variant: "", page: 1 })
   }
 
   const clearInput = () => {
@@ -170,7 +206,8 @@ export function useSearch() {
   }
 
   const { col: sortCol, dir: sortDir } = parseSortColumn(sort)
-  const activeFilterCount = (selectedSet ? 1 : 0) + (selectedRarity ? 1 : 0)
+  const activeFilterCount =
+    (selectedSet ? 1 : 0) + (selectedRarity ? 1 : 0) + (selectedVariant ? 1 : 0)
 
   return {
     query,
@@ -190,6 +227,7 @@ export function useSearch() {
     setChangePeriod,
     selectedSet,
     selectedRarity,
+    selectedVariant,
     inputRef,
     sortCol,
     sortDir,
@@ -201,6 +239,7 @@ export function useSearch() {
     handlePageChange,
     handleSetChange,
     handleRarityChange,
+    handleVariantChange,
     refetch,
     clearFilters,
     clearInput,

@@ -18,7 +18,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
-import { getColorOptions } from "@/lib/constants/card-config"
+import { getCardTypeLabel, getColorOptions } from "@/lib/constants/card-config"
 import { useMarketCards } from "@/hooks/use-market-cards"
 
 import { MarketTable } from "@/components/market/market-table"
@@ -69,6 +69,11 @@ export function HomeMarketOverview({
         label: f.key === "rarity" ? t(lang, "rarity")
           : f.key === "type" ? t(lang, "type")
           : f.label,
+        // Type option labels arrive baked English from page.tsx (ISR, no request
+        // language) — relabel to the user's language. Rarity codes (SEC) stay as-is.
+        options: f.key === "type"
+          ? f.options.map((o) => ({ ...o, label: getCardTypeLabel(o.value, lang) }))
+          : f.options,
       })),
     {
       key: "color",
