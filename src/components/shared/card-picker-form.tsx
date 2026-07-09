@@ -54,6 +54,7 @@ export function CardPickerForm({
   const [activeRarity, setActiveRarity] = useState<string | null>(null);
   const [activeColor, setActiveColor] = useState<string | null>(null);
   const [activeCardType, setActiveCardType] = useState<string | null>(null);
+  const [activeVariant, setActiveVariant] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
 
   // Sets for the filter — load once when the form mounts.
@@ -80,12 +81,14 @@ export function CardPickerForm({
     activeSet != null ||
     activeRarity != null ||
     activeColor != null ||
-    activeCardType != null;
+    activeCardType != null ||
+    activeVariant != null;
   const activeFilterCount = [
     activeSet,
     activeRarity,
     activeColor,
     activeCardType,
+    activeVariant,
   ].filter(Boolean).length;
 
   useEffect(() => {
@@ -106,11 +109,12 @@ export function CardPickerForm({
           limit: 40,
           search: hasSearch ? q : undefined,
           set: activeSet ?? undefined,
-          // Selecting a base rarity also pulls its parallel (P-) alt-arts — เบส:
-          // กด SEC ให้เจอ P-SEC ด้วย. The route matches the comma list with `in`.
-          rarity: activeRarity ? `${activeRarity},P-${activeRarity}` : undefined,
+          // Base rarity now expands to its P- family server-side (กด SEC เจอ P-SEC ด้วย);
+          // the `variant` facet narrows regular/parallel.
+          rarity: activeRarity ?? undefined,
           color: activeColor ?? undefined,
           type: activeCardType ?? undefined,
+          variant: activeVariant ?? undefined,
         })
           .then((data) => setResults((data.cards ?? []) as CardWithSet[]))
           .catch(() => setResults([]))
@@ -123,13 +127,22 @@ export function CardPickerForm({
       window.clearTimeout(timer);
       setLoading(false);
     };
-  }, [query, activeSet, activeRarity, activeColor, activeCardType, hasAnyFilter]);
+  }, [
+    query,
+    activeSet,
+    activeRarity,
+    activeColor,
+    activeCardType,
+    activeVariant,
+    hasAnyFilter,
+  ]);
 
   const clearAllFilters = () => {
     setActiveSet(null);
     setActiveRarity(null);
     setActiveColor(null);
     setActiveCardType(null);
+    setActiveVariant(null);
   };
 
   const isFiltered = query.trim().length >= 2 || hasAnyFilter;
@@ -153,6 +166,8 @@ export function CardPickerForm({
       setActiveColor={setActiveColor}
       activeCardType={activeCardType}
       setActiveCardType={setActiveCardType}
+      activeVariant={activeVariant}
+      setActiveVariant={setActiveVariant}
       showFilters={showFilters}
       setShowFilters={setShowFilters}
       activeFilterCount={activeFilterCount}

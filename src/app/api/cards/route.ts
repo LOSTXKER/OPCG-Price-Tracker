@@ -38,7 +38,12 @@ export const GET = apiHandler(async (request: NextRequest) => {
     ];
   }
   if (rarity) {
-    where.rarity = { in: rarity.split(",") };
+    // A base rarity also matches its parallel (SEC → SEC + P-SEC) so the filter
+    // shows the whole family; the `variant` param below narrows regular/parallel.
+    const rarityCodes = rarity
+      .split(",")
+      .flatMap((r) => (r.startsWith("P-") ? [r] : [r, `P-${r}`]));
+    where.rarity = { in: [...new Set(rarityCodes)] };
   }
   if (type) {
     where.cardType = type;

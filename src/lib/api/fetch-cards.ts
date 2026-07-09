@@ -5,6 +5,8 @@ export interface FetchCardsParams {
   rarity?: string;
   color?: string;
   type?: string;
+  /** "regular" | "parallel" — filters by isParallel; omit for both. */
+  variant?: string;
   page?: number;
   limit?: number;
   minPrice?: number;

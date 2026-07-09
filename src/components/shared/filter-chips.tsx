@@ -20,7 +20,7 @@ import { useUIStore } from "@/stores/ui-store";
 export type FilterDefinition = {
   key: string;
   label: string;
-  options: { value: string; label: string }[];
+  options: { value: string; label: string; dot?: string }[];
 };
 
 export type FilterChipsProps = {

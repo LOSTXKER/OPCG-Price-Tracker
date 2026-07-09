@@ -37,7 +37,10 @@ export type LockedSeller = {
 } | null
 
 export const CONDITIONS = ["NM", "LP", "MP", "HP", "DMG"] as const
-export const RARITIES = ["L", "SEC", "SR", "R", "UC", "C", "P", "SP"] as const
+// Version facet — ปกติ / พาราเลล (regular | parallel). Rarity is BASE-only now
+// (SEC/SR/R/UC/C/L/SP/TR/DON come from the game config); parallel is no longer a
+// rarity chip. Selecting a version sends the `variant` param.
+export const VARIANTS = ["regular", "parallel"] as const
 export const SORT_OPTIONS = [
   { value: "newest", label: "ใหม่ล่าสุด" },
   { value: "price_jpy_asc", label: "ราคาต่ำ → สูง" },

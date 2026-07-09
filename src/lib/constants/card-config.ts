@@ -36,6 +36,19 @@ export function getCardTypeLabel(code: string, lang: Language): string {
   return CARD_TYPES.find((ct) => ct.code === code)?.label[lang] ?? code;
 }
 
-export function getColorOptions(lang: Language): { value: string; label: string }[] {
-  return CARD_COLORS.map((cc) => ({ value: cc.value, label: cc.label[lang] }));
+export function getColorOptions(
+  lang: Language,
+): { value: string; label: string; dot: string }[] {
+  return CARD_COLORS.map((cc) => ({
+    value: cc.value,
+    label: cc.label[lang],
+    dot: cc.dotClass,
+  }));
+}
+
+/** Card-type filter options in the user's language (Leader → ลีดเดอร์ / リーダー). */
+export function getCardTypeOptions(
+  lang: Language,
+): { value: string; label: string }[] {
+  return CARD_TYPES.map((ct) => ({ value: ct.code, label: ct.label[lang] }));
 }

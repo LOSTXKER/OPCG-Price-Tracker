@@ -47,6 +47,7 @@ export function MarketplaceBrowse({
   const [search, setSearch] = useState("")
   const [conditions, setConditions] = useState<string[]>([])
   const [rarities, setRarities] = useState<string[]>([])
+  const [variants, setVariants] = useState<string[]>([])
   const [sort, setSort] = useState("newest")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
 
@@ -64,14 +65,19 @@ export function MarketplaceBrowse({
       params.set("limit", String(pageSize))
       if (sort !== "newest") params.set("sort", sort)
       if (conditions.length === 1) params.set("condition", conditions[0]!)
+      // Rarity is BASE-only; the server expands each to its P- family. The
+      // version facet (ปกติ/พาราเลล) narrows regular vs parallel via `variant` —
+      // single-value, so we only send it when exactly one version is chosen
+      // (picking both = no narrowing, same as none).
       if (rarities.length > 0) params.set("rarity", rarities.join(","))
+      if (variants.length === 1) params.set("variant", variants[0]!)
       if (search.trim()) params.set("q", search.trim())
       // When deep-linked from a public profile, we keep all subsequent
       // pagination/filter requests scoped to that seller.
       if (lockedSeller) params.set("seller", lockedSeller.id)
       return params
     },
-    [pageSize, sort, conditions, rarities, search, lockedSeller],
+    [pageSize, sort, conditions, rarities, variants, search, lockedSeller],
   )
 
   const fetchPage = useCallback(
@@ -104,7 +110,7 @@ export function MarketplaceBrowse({
           setError(e instanceof Error ? e.message : t(useUIStore.getState().language, "loadFailed"))
         })
     })
-  }, [page, sort, conditions, rarities, fetchPage])
+  }, [page, sort, conditions, rarities, variants, fetchPage])
 
   const handleSearch = useCallback(() => {
     setPage(1)
@@ -149,6 +155,11 @@ export function MarketplaceBrowse({
           setRarities(v)
           setPage(1)
         }}
+        variants={variants}
+        onVariantsChange={(v) => {
+          setVariants(v)
+          setPage(1)
+        }}
       />
 
       <div className="flex items-center gap-2 text-meta">
@@ -163,6 +174,12 @@ export function MarketplaceBrowse({
           <>
             <span>·</span>
             <span>{rarities.join(", ")}</span>
+          </>
+        )}
+        {variants.length > 0 && (
+          <>
+            <span>·</span>
+            <span>{variants.map((v) => t(lang, v as "regular" | "parallel")).join(", ")}</span>
           </>
         )}
       </div>

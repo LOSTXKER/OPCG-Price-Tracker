@@ -22,6 +22,7 @@ import { SetPicker } from "@/components/shared/set-picker"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 import { RARITY_HEX } from "@/lib/constants/rarities"
+import { getCardTypeLabel, getColorOptions } from "@/lib/constants/card-config"
 import { getGameConfig } from "@/lib/game-config"
 import { useUIStore } from "@/stores/ui-store"
 import { t, type Language } from "@/lib/i18n"
@@ -46,9 +47,12 @@ function FilterControls({
   setActiveColor,
   activeCardType,
   setActiveCardType,
+  activeVariant,
+  setActiveVariant,
   rarityOptions,
   colorOptions,
   typeOptions,
+  variantOptions,
   activeFilterCount,
   clearAllFilters,
 }: {
@@ -59,9 +63,12 @@ function FilterControls({
   setActiveColor: (c: string | null) => void
   activeCardType: string | null
   setActiveCardType: (t: string | null) => void
+  activeVariant: string | null
+  setActiveVariant: (v: string | null) => void
   rarityOptions: RarityOpt[]
   colorOptions: ColorOpt[]
   typeOptions: TypeOpt[]
+  variantOptions: { code: string; label: string }[]
   activeFilterCount: number
   clearAllFilters: () => void
 }) {
@@ -137,6 +144,31 @@ function FilterControls({
         </div>
       )}
 
+      {/* Version — เบส: rarity ไม่มี P- แล้ว, มาเลือก ปกติ / พาราเลล ที่นี่แทน. */}
+      {variantOptions.length > 0 && (
+        <div>
+          <span className="mb-1.5 block text-eyebrow">{t(lang, "variant")}</span>
+          <div className="flex flex-wrap gap-1.5">
+            {variantOptions.map((v) => (
+              <button
+                key={v.code}
+                onClick={() =>
+                  setActiveVariant(activeVariant === v.code ? null : v.code)
+                }
+                className={cn(
+                  "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium",
+                  activeVariant === v.code
+                    ? "border-primary/40 bg-primary/5 text-primary"
+                    : "border-hair bg-background text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {v.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {activeFilterCount > 0 && (
         <button
           onClick={clearAllFilters}
@@ -172,6 +204,8 @@ export function SelectStep({
   setActiveColor,
   activeCardType,
   setActiveCardType,
+  activeVariant,
+  setActiveVariant,
   showFilters,
   setShowFilters,
   activeFilterCount,
@@ -197,6 +231,8 @@ export function SelectStep({
   setActiveColor: (c: string | null) => void
   activeCardType: string | null
   setActiveCardType: (t: string | null) => void
+  activeVariant: string | null
+  setActiveVariant: (v: string | null) => void
   showFilters: boolean
   setShowFilters: (v: boolean) => void
   activeFilterCount: number
@@ -220,13 +256,29 @@ export function SelectStep({
   // Filters follow the current game — no OPCG hardcode. Empty sections vanish.
   const gameCfg = getGameConfig(currentGame)
   const rarityOptions = (gameCfg?.rarityFilterOptions ?? []) as RarityOpt[]
-  const colorOptions = (gameCfg?.colors ?? []) as ColorOpt[]
-  const typeOptions = (gameCfg?.cardTypes ?? []) as TypeOpt[]
+  // Colour + type labels are baked English in the config — relabel to the user's
+  // language (เบส: ภาษาตัวกรองต้องตรงกับที่ user เลือก).
+  const colorLabels = new Map(getColorOptions(lang).map((o) => [o.value, o.label]))
+  const colorOptions = (gameCfg?.colors ?? []).map((c) => ({
+    ...c,
+    label: colorLabels.get(c.code) ?? c.label,
+  })) as ColorOpt[]
+  const typeOptions = (gameCfg?.cardTypes ?? []).map((ty) => ({
+    ...ty,
+    label: getCardTypeLabel(ty.code, lang),
+  })) as TypeOpt[]
+  const variantOptions = [
+    { code: "regular", label: t(lang, "regular") },
+    { code: "parallel", label: t(lang, "parallel") },
+  ]
 
   // Count only the modal's own facets (set has its own control up top now).
-  const modalFilterCount = [activeRarity, activeColor, activeCardType].filter(
-    Boolean,
-  ).length
+  const modalFilterCount = [
+    activeRarity,
+    activeColor,
+    activeCardType,
+    activeVariant,
+  ].filter(Boolean).length
 
   const filterProps = {
     lang,
@@ -236,9 +288,12 @@ export function SelectStep({
     setActiveColor,
     activeCardType,
     setActiveCardType,
+    activeVariant,
+    setActiveVariant,
     rarityOptions,
     colorOptions,
     typeOptions,
+    variantOptions,
     activeFilterCount,
     clearAllFilters,
   }
@@ -486,6 +541,7 @@ export function SelectStep({
                   setActiveRarity(null)
                   setActiveColor(null)
                   setActiveCardType(null)
+                  setActiveVariant(null)
                 }}
                 disabled={modalFilterCount === 0}
                 className="ease-chrome flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium text-primary hover:bg-primary/5 disabled:opacity-40"

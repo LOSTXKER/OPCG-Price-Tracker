@@ -25,6 +25,8 @@ import { MarketTable } from "@/components/market/market-table"
 import { buildMarketColumns } from "@/components/market/market-columns"
 import { CardGrid } from "@/components/cards/card-grid"
 import { t } from "@/lib/i18n"
+import { getGameConfig } from "@/lib/game-config"
+import { RARITY_HEX } from "@/lib/constants/rarities"
 import { useUIStore } from "@/stores/ui-store"
 import {
   type SortKey,
@@ -38,6 +40,12 @@ import { useSearch } from "./use-search"
 // /search renders the shared market table with no "Views" column (views are a
 // home "popular" tab concept). Static — never changes — so build it once.
 const SEARCH_COLUMNS = buildMarketColumns({ showViews: false })
+
+// Rarity facet = BASE options only (SEC/SR/R/UC/C/L/SP/TR/DON — no P- variants).
+// The server expands a base rarity to its P- family (rarity=SEC → SEC + P-SEC),
+// so we drive the chips off the game config's canonical base list instead of the
+// distinct DB rarities (which include "P-SEC" etc.). No client ",P-" expansion.
+const RARITY_OPTIONS = getGameConfig("opcg")?.rarityFilterOptions ?? []
 
 type SetOption = {
   code: string
@@ -60,13 +68,7 @@ const SORT_KEYS: { value: SortKey; key: "sortPriceDesc" | "sortPriceAsc" | "sort
   { value: "name", key: "sortNameAz" },
 ]
 
-function SearchContent({
-  sets,
-  rarities,
-}: {
-  sets: SetOption[]
-  rarities: string[]
-}) {
+function SearchContent({ sets }: { sets: SetOption[] }) {
   const lang = useUIStore((s) => s.language)
   const SORT_OPTIONS = SORT_KEYS.map((o) => ({ key: o.value, label: t(lang, o.key) }))
   const [showFilters, setShowFilters] = useState(false)
@@ -89,6 +91,7 @@ function SearchContent({
     setChangePeriod,
     selectedSet,
     selectedRarity,
+    selectedVariant,
     inputRef,
     sortCol,
     sortDir,
@@ -100,13 +103,21 @@ function SearchContent({
     handlePageChange,
     handleSetChange,
     handleRarityChange,
+    handleVariantChange,
     refetch,
     clearFilters,
     clearInput,
   } = useSearch()
 
-  // Rarity is the only modal facet. Selection is a comma-joined string in the
-  // hook; toggle in/out of the array and re-join to preserve the multi query.
+  // Version facet — ปกติ / พาราเลล → the `variant` param (regular|parallel).
+  // Single-select: tapping the active chip clears it (both).
+  const VARIANT_OPTIONS = [
+    { code: "regular", label: t(lang, "regular") },
+    { code: "parallel", label: t(lang, "parallel") },
+  ]
+
+  // Rarity + version are the modal facets. Rarity is a comma-joined multi-select
+  // in the hook; toggle in/out of the array and re-join to preserve the query.
   const rarityValues = selectedRarity ? selectedRarity.split(",") : []
   const rarityCount = rarityValues.length
   const toggleRarity = (value: string) => {
@@ -115,6 +126,8 @@ function SearchContent({
       : [...rarityValues, value]
     handleRarityChange(next.join(","))
   }
+  // How many modal facets are set (drives the "ตัวกรอง" button badge + reset).
+  const modalFilterCount = rarityCount + (selectedVariant ? 1 : 0)
 
   return (
     <div className="space-y-4">
@@ -181,26 +194,24 @@ function SearchContent({
               </div>
             )}
 
-            {rarities.length > 0 && (
-              <button
-                type="button"
-                onClick={() => setShowFilters(true)}
-                className={cn(
-                  "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm transition-colors",
-                  rarityCount > 0
-                    ? "border-primary/40 bg-primary/5 text-primary"
-                    : "border-hair bg-background text-muted-foreground hover:bg-muted hover:text-foreground",
-                )}
-              >
-                <Filter className="size-3.5" />
-                {t(lang, "filter")}
-                {rarityCount > 0 && (
-                  <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
-                    {rarityCount}
-                  </span>
-                )}
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setShowFilters(true)}
+              className={cn(
+                "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm transition-colors",
+                modalFilterCount > 0
+                  ? "border-primary/40 bg-primary/5 text-primary"
+                  : "border-hair bg-background text-muted-foreground hover:bg-muted hover:text-foreground",
+              )}
+            >
+              <Filter className="size-3.5" />
+              {t(lang, "filter")}
+              {modalFilterCount > 0 && (
+                <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
+                  {modalFilterCount}
+                </span>
+              )}
+            </button>
 
             <div className="hidden sm:block">
               <ToolbarSortDropdown
@@ -242,37 +253,69 @@ function SearchContent({
         </Surface>
       )}
 
-      {/* Rarity filter — opens in the canonical FilterModal. Set + sort stay as
-          their own controls above; only the secondary facet lives here. */}
-      {rarities.length > 0 && (
-        <FilterModal
-          open={showFilters}
-          onOpenChange={setShowFilters}
-          onReset={() => handleRarityChange("")}
-          resetDisabled={rarityCount === 0}
-        >
+      {/* Rarity + version filters — open in the canonical FilterModal. Set + sort
+          stay as their own controls above; the secondary facets live here. Rarity
+          chips are BASE only (config list); the server expands SEC → SEC + P-SEC.
+          The version facet (ปกติ/พาราเลล) narrows regular/parallel. */}
+      <FilterModal
+        open={showFilters}
+        onOpenChange={setShowFilters}
+        onReset={() => {
+          handleRarityChange("")
+          handleVariantChange("")
+        }}
+        resetDisabled={modalFilterCount === 0}
+      >
+        {RARITY_OPTIONS.length > 0 && (
           <div>
             <span className="mb-1.5 block text-eyebrow">{t(lang, "rarity")}</span>
             <div className="flex flex-wrap gap-1.5">
-              {rarities.map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => toggleRarity(r)}
-                  className={cn(
-                    "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors",
-                    rarityValues.includes(r)
-                      ? "border-primary/40 bg-primary/5 text-primary"
-                      : "border-hair bg-background text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  {r}
-                </button>
-              ))}
+              {RARITY_OPTIONS.map((r) => {
+                const active = rarityValues.includes(r.code)
+                return (
+                  <button
+                    key={r.code}
+                    type="button"
+                    onClick={() => toggleRarity(r.code)}
+                    className={cn(
+                      "ease-chrome rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors",
+                      active
+                        ? "text-white"
+                        : "bg-muted text-muted-foreground hover:text-foreground",
+                    )}
+                    style={active ? { backgroundColor: RARITY_HEX[r.code] ?? "#6B7280" } : undefined}
+                  >
+                    {r.label}
+                  </button>
+                )
+              })}
             </div>
           </div>
-        </FilterModal>
-      )}
+        )}
+
+        <div>
+          <span className="mb-1.5 block text-eyebrow">{t(lang, "variant")}</span>
+          <div className="flex flex-wrap gap-1.5">
+            {VARIANT_OPTIONS.map((v) => (
+              <button
+                key={v.code}
+                type="button"
+                onClick={() =>
+                  handleVariantChange(selectedVariant === v.code ? "" : v.code)
+                }
+                className={cn(
+                  "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors",
+                  selectedVariant === v.code
+                    ? "border-primary/40 bg-primary/5 text-primary"
+                    : "border-hair bg-background text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {v.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </FilterModal>
 
       {/* Loading */}
       {isPending && (
@@ -380,13 +423,7 @@ function SearchContent({
   )
 }
 
-export default function SearchClient({
-  sets,
-  rarities,
-}: {
-  sets: SetOption[]
-  rarities: string[]
-}) {
+export default function SearchClient({ sets }: { sets: SetOption[] }) {
   return (
     <Suspense
       fallback={
@@ -397,7 +434,7 @@ export default function SearchClient({
         </div>
       }
     >
-      <SearchContent sets={sets} rarities={rarities} />
+      <SearchContent sets={sets} />
     </Suspense>
   )
 }

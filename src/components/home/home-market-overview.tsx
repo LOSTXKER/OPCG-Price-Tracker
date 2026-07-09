@@ -18,7 +18,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
-import { getColorOptions } from "@/lib/constants/card-config"
+import { getCardTypeLabel, getColorOptions } from "@/lib/constants/card-config"
 import { useMarketCards } from "@/hooks/use-market-cards"
 
 import { MarketTable } from "@/components/market/market-table"
@@ -69,6 +69,11 @@ export function HomeMarketOverview({
         label: f.key === "rarity" ? t(lang, "rarity")
           : f.key === "type" ? t(lang, "type")
           : f.label,
+        // Type option labels arrive baked English from page.tsx (ISR, no request
+        // language) — relabel to the user's language. Rarity codes (SEC) stay as-is.
+        options: f.key === "type"
+          ? f.options.map((o) => ({ ...o, label: getCardTypeLabel(o.value, lang) }))
+          : f.options,
       })),
     {
       key: "color",
@@ -234,12 +239,15 @@ export function HomeMarketOverview({
                           )
                         }
                         className={cn(
-                          "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium",
+                          "ease-chrome flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium",
                           active
                             ? "border-primary/40 bg-primary/5 text-primary"
                             : "border-hair bg-background text-muted-foreground hover:text-foreground"
                         )}
                       >
+                        {opt.dot && (
+                          <span className={cn("size-2.5 rounded-full", opt.dot)} />
+                        )}
                         {opt.label}
                       </button>
                     )

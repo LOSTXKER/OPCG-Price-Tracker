@@ -6,11 +6,16 @@ import Link from "next/link"
 import { buttonVariants } from "@/components/ui/button"
 import { FilterModal } from "@/components/shared/filter-modal"
 import { FilterToolbar } from "@/components/shared/filter-toolbar"
+import { getGameConfig } from "@/lib/game-config"
 import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
 
-import { CONDITIONS, RARITIES, SORT_OPTIONS } from "./types"
+import { CONDITIONS, SORT_OPTIONS, VARIANTS } from "./types"
+
+// Rarity options = BASE only (SEC/SR/R/UC/C/L/SP/TR/DON). No P- variants — the
+// version facet below handles regular/parallel instead.
+const RARITY_OPTIONS = getGameConfig("opcg")?.rarityFilterOptions ?? []
 
 type SortKey = (typeof SORT_OPTIONS)[number]["value"]
 
@@ -22,19 +27,19 @@ function FacetChips({
   selected,
   onToggle,
 }: {
-  options: readonly string[]
+  options: readonly { value: string; label: string }[]
   selected: string[]
   onToggle: (value: string) => void
 }) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {options.map((opt) => {
-        const active = selected.includes(opt)
+        const active = selected.includes(opt.value)
         return (
           <button
-            key={opt}
+            key={opt.value}
             type="button"
-            onClick={() => onToggle(opt)}
+            onClick={() => onToggle(opt.value)}
             className={cn(
               "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium",
               active
@@ -42,7 +47,7 @@ function FacetChips({
                 : "border-hair bg-background text-muted-foreground hover:text-foreground",
             )}
           >
-            {opt}
+            {opt.label}
           </button>
         )
       })}
@@ -62,6 +67,8 @@ export function BrowseToolbar({
   onConditionsChange,
   rarities,
   onRaritiesChange,
+  variants,
+  onVariantsChange,
 }: {
   search: string
   onSearchChange: (v: string) => void
@@ -74,11 +81,18 @@ export function BrowseToolbar({
   onConditionsChange: (v: string[]) => void
   rarities: string[]
   onRaritiesChange: (v: string[]) => void
+  variants: string[]
+  onVariantsChange: (v: string[]) => void
 }) {
   const lang = useUIStore((s) => s.language)
   const [showFilters, setShowFilters] = useState(false)
 
-  const activeCount = conditions.length + rarities.length
+  // Rarity codes need no translation; version labels come from i18n.
+  const rarityOptions = RARITY_OPTIONS.map((r) => ({ value: r.code, label: r.label }))
+  const conditionOptions = CONDITIONS.map((c) => ({ value: c, label: c }))
+  const variantOptions = VARIANTS.map((v) => ({ value: v, label: t(lang, v) }))
+
+  const activeCount = conditions.length + rarities.length + variants.length
 
   const toggle = (
     current: string[],
@@ -130,13 +144,14 @@ export function BrowseToolbar({
         onReset={() => {
           onConditionsChange([])
           onRaritiesChange([])
+          onVariantsChange([])
         }}
         resetDisabled={activeCount === 0}
       >
         <div>
           <span className="mb-1.5 block text-eyebrow">{t(lang, "mktFilterCondition")}</span>
           <FacetChips
-            options={CONDITIONS}
+            options={conditionOptions}
             selected={conditions}
             onToggle={(v) => toggle(conditions, v, onConditionsChange)}
           />
@@ -144,9 +159,17 @@ export function BrowseToolbar({
         <div>
           <span className="mb-1.5 block text-eyebrow">{t(lang, "mktFilterRarity")}</span>
           <FacetChips
-            options={RARITIES}
+            options={rarityOptions}
             selected={rarities}
             onToggle={(v) => toggle(rarities, v, onRaritiesChange)}
+          />
+        </div>
+        <div>
+          <span className="mb-1.5 block text-eyebrow">{t(lang, "variant")}</span>
+          <FacetChips
+            options={variantOptions}
+            selected={variants}
+            onToggle={(v) => toggle(variants, v, onVariantsChange)}
           />
         </div>
       </FilterModal>
