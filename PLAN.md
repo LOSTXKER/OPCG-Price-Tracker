@@ -1,18 +1,19 @@
 # Meecard — PLAN (งานโค้ดค้างจริง — ขุดจาก doc/ + เทียบโค้ดแล้ว 2026-06-13)
 > งานใหญ่แตกเป็น task ติ๊กได้ · ทำทีละอัน · ติ๊กเมื่อ **verify แล้ว** (ไม่ใช่แค่เขียนเสร็จ)
 > ลำดับ milestone = ข้อเสนอ — เบสสลับได้ · แผนธุรกิจ/north star อยู่ `doc/archive/detailed-plan-2026-04-28.md` (archived snapshot) ไม่ใช่ไฟล์นี้
+> สถานะล่าสุด sync จาก `master` ถึง PR #102 (`4cb48f8`) เมื่อ 2026-07-10
 
 ## 🧭 UX/UI Refactor Master Plan (2026-07-04 — แผนคุมงาน UI ทั้งหมดต่อจากนี้)
 > จาก audit ทั้งเว็บ (workflow 86 agents · 19 auditors + adversarial verify) ได้ 230 findings — **checklist รายข้อ + กติกา: [doc/uxui-refactor-plan.md](doc/uxui-refactor-plan.md)** · หลักฐานราย finding: [doc/uxui-audit-findings-2026-07-04.md](doc/uxui-audit-findings-2026-07-04.md) · ที่นี่ติ๊กระดับ phase เท่านั้น
 > แผนนี้ดูดซับงานค้างเดิม: R1 empty-state → Phase 4 · แตก client ยักษ์ → Phase 2/5 · Declutter Batch 5–6 → Phase 5 (honey/desktop balance)
 
-- [x] **Phase 0** แก้ของพัง/เสี่ยงจริง — **17/17 เสร็จ + verify (tsc0/lint0/test56/build✓ prerender static)** · `SETTINGS-03` แก้แล้ว (เบสอนุมัติ lib qrcode) · `SETS-05`/`CONTENT-03` ย้ายไป Phase 5 (query risk) · branch `fix/uxui-phase-0` รอ merge
-- [ ] **Phase 1** ลบของตาย ~3,000+ บรรทัด / orphan 18+ ไฟล์ (⚠️ เบสอนุมัติรายการลบก่อน)
-- [ ] **Phase 2** ประกาศ kit ทางการใน AGENTS.md + ยุบของซ้ำ (PriceTag เดียว · search engine เดียวจาก 3 ชุด · auth kit · Switch/QtyStepper/TabBar · AdminDataTable 8 หน้า)
-- [ ] **Phase 3** token sweep (hairline เดียว · elevation adoption · radius มาตรฐาน · status 660 จุด · วินัยเขียว/แดง)
-- [ ] **Phase 4** states (หน้า 404 · ศูนย์ spinner · loading.tsx ราย segment · empty ทุกจุดมี CTA)
-- [ ] **Phase 5** mobile pass ราย surface — เบสเลือกลำดับหน้า (เริ่ม 5.0: tap ≥44px + a11y ที่ atom กลาง)
-- [ ] **Phase 6** IA/naming polish (ชื่อ/ไอคอนปลายทางเดียว · palette ครบ destination)
+- [x] **Phase 0** แก้ของพัง/เสี่ยงจริง — **17/17 เสร็จ + merge #57** · verify tsc0/lint0/test56/build✓ prerender static · `SETS-05`/`CONTENT-03` ย้ายไป Phase 5 เพราะ query risk
+- [x] **Phase 1** core cleanup เสร็จ — #59–60 ลบ dead code ~3,360 บรรทัด + #91 ลบ orphan 0-importer อีก 3 ไฟล์ · proto เก็บเป็น reference และ `Surface` slot residual ไม่บล็อกเฟส
+- [x] **Phase 2** core kit/dedup เสร็จ #62–82 — canon ใน AGENTS.md · PriceTag/search/auth/control/admin kit กลาง · #102 ปิด GridCard ซ้ำด้วย canonical `CardItem` (EditionToggle/commerce outlier ย้ายไป Phase 5/7)
+- [x] **Phase 3** core token discipline เสร็จ #84–90 — hairline/elevation/chrome/radius/motion/color discipline + `TOKENS-07` semantic status; residual scrollbar/safe-area ย้ายเก็บราย surface และห้ามเริ่ม `TOKENS-07` ซ้ำ
+- [~] **Phase 4** core states: 404 เข้าแล้วตั้งแต่ #57; #92 เพิ่ม error ไทย + `loading.tsx` 8 dynamic segment · spinner/empty CTA/ยุบ EmptyState ที่เหลือเก็บราย surface ใน Phase 5
+- [~] **Phase 5** mobile pass เริ่มแล้ว #93–95 และต่อด้วย #97–100 — sort มือถือ · watchlist row/menu · tap-safe foundation + menu-fold บาง surface · picker/filter กลาง; dense cluster/per-surface/a11y/eyeball ยังเหลือ
+- [x] **Phase 6** IA/naming scope เสร็จ #96 — ชื่อ/ไอคอน/palette destination/canonical profile URL + breadcrumb i18n
 - [ ] **Phase 7** commerce + admin เก็บกวาด (**ก่อนเปิด marketplace flag**)
 
 ## 🎨 Redesign (in-place · ทิศเต็มใน [VISION.md](VISION.md) · **ไม่มีเวอร์ชัน v1/v2**)
@@ -22,8 +23,8 @@
 ### Foundation — token + atom kit + states (บล็อกทุก surface)
 - [x] warm primitive kit + `--p-*` → `globals.css` (dark+light) · proto เหลือแต่ `.proto-root` var
 - [x] token motion/elevation: `--dur-fast/base/slow` + `--ease-chrome/spring` + `--elev-flat/raised/overlay` (light+dark) · wire `.ease-chrome`/`.rise` → token · refactor button base → `duration-[var(--dur-base)] ease-[var(--ease-chrome)]` · verify ✓ (เหลือ: ทยอย migrate 20 ไฟล์ที่ยัง hardcode `duration-*` ตอนแตะหน้านั้นๆ)
-- [ ] atom kit (สร้าง/รวม): `PriceTag` · `HeroNumber` · `GradeChip`/`GradeRail` · `EditionToggle` · `SourceBadge` · `SellerChip` · `PriceLadder` · `CustodyTimeline` · `EventCard` *(มีแล้ว: ListRow · Surface · AdSlot · Skeleton)*
-- [ ] state system: skeleton รูปร่างตาม content ทุก async + `EmptyState`+CTA · ศูนย์ spinner
+- [~] atom kit: core canon อยู่ใน AGENTS.md แล้ว (`PriceTag` · `HeroNumber` · `CardItem` · `ListRow` · `Surface` · `AdSlot` · `Skeleton` ฯลฯ) · `GradeRail`/`EditionToggle` ยัง feature-local/defer · `SellerChip`/`PriceLadder`/`CustodyTimeline`/`EventCard` ทำเมื่อเข้า Phase 7
+- [~] state system: global 404/error/loading foundation เสร็จ #92 · skeleton/empty CTA/ศูนย์ spinner ที่เหลือเป็นงานราย surface ใน Phase 5
 - [x] **iOS design language tokens** (2026-07-03 · ส่วนหนึ่งของ showcase ด้านล่าง): `.hairline-b` (คู่ `.hairline-t` เดิม) · safe-area utilities (`.pt/pb/pl/pr-safe`) · `.text-large-title` (34px collapsing-nav large title) · `.frost` มีอยู่แล้วนำมาต่อยอด — ไม่แตะของเดิม
 
 ### 🍎 iOS Design Language — Showcase ✅ (2026-07-03 · เบส: "ทำ UXUI ทั้งเว็บทันสมัย มือถือแบบ Apple iOS ลองทำตัวอย่างมาดู")
@@ -63,7 +64,7 @@
 - [x] **Bottom-nav มือถือ: relabel + ตัดเด็ค + ปุ่มค้นหาเด่นกลาง (2026-07-03 เบสสั่งตรงๆ)** — ⚠️ **แก้ IA ที่เคย freeze 5 tab ไว้ตอน P0a** (2026-06-13): "ตลาด"→"หน้าแรก", "เรียกดู"→"ชุดการ์ด", ตัดแท็บ "เด็ค" ออก (หน้า `/decks` ยังอยู่ เข้าถึงผ่าน command search) แทนที่ด้วยปุ่มค้นหา action-only (ไม่ใช่ route) ทรงวงกลมลอยเด่น `bg-primary` เหนือแถบ เรียก `setSearchOpen(true)` เปิด `CommandSearchModal` เดิม · verify tsc0/lint0/test56/build✓/detect[] + browser จริง (screenshot + คลิกทดสอบเปิด search สำเร็จ)
 - [x] **ปรับต่อ: ปุ่มค้นหา → รายการโปรดธรรมดา + `/more` ตัด header/footer (2026-07-03 เบสสั่งต่อ)** — เบสปัดปุ่มค้นหาลอยทิ้ง เปลี่ยนกลับเป็น `TabLink` ปกติ (`/watchlist`, Bookmark icon) เหมือนแท็บอื่น · `/more`: เพิ่ม `SiteChrome` component ใน `main-chrome.tsx` (ซ่อน Header+Footer เมื่อ `CHROMELESS_ROUTES` หรือ `NO_HEADER_FOOTER_ROUTES=["/more"]`) แยกจาก `MainChrome` เดิมที่เหลือคุมแค่ `BottomNav` (ซ่อนเฉพาะ chromeless — `/more` ยังโชว์ bottom-nav) · เหตุผล: `/more` มีลิงก์ไปทุกที่ในตัวเองอยู่แล้ว header/footer เว็บซ้ำซ้อน · ⚠️ เจอ dev-server cache ค้าง (ครั้งที่ 3 ใน session) แก้ไม่ขึ้นจนกว่าจะ `rm -rf .next` เต็ม + restart ใหม่ทั้งหมด (ไม่พอแค่ `.next/dev`) · verify tsc0/lint0/test56/build✓/detect[] + browser จริงหลัง restart สะอาด ยืนยัน `/more` ไม่มี header/footer เลย ส่วนหน้าอื่นไม่กระทบ
 - [x] **`/more` ตัดหัวข้อ H1 + gutter มือถือทั้งเว็บ 16px→20px (2026-07-03 เบสสั่งต่อ)** — ลบ `<PageHeader title="เพิ่มเติม">` ออกจาก `more-client.tsx` (ซ้ำซ้อนหลังตัด site header ไปแล้ว) · gutter: แก้ต้นทาง `page-container.tsx` (`px-4`→`px-5` มือถือ, md/lg เดิม) + sync จุด `-mx-4`/`px-4` แบบ cancel-then-reapply ทั้งหมด 8 ไฟล์ (`grouped-list.tsx`, `header-mobile.tsx`, `settings/page.tsx`, `trending-tabs.tsx`, `sets-page-client.tsx`, `set-detail-content.tsx`, `market-overview-client.tsx`, profile public page 2 ไฟล์) ให้ตรงฐานใหม่ · verify tsc0/lint0/test56/build✓/detect[] + browser จริงวัด gutter ด้วย `getBoundingClientRect()` ยืนยัน 20px ทุกจุด + overflow-check หน้าที่มีแถวเลื่อนแนวนอนไม่ล้น
-- [ ] ต่อ audit หน้าที่เหลือ (list ใน PROGRESS.md) + ตัดสินใจเรื่อง `@base-ui/react/menu` hydration bug (เช็คอัปเดตเวอร์ชันก่อน) + เปิด PR รวม branch `ui/sets-redesign` เข้า master เมื่อเบสพร้อม
+- [~] ต่อ audit หน้าที่เหลือ (list ใน PROGRESS.md) + ตัดสินใจเรื่อง `@base-ui/react/menu` hydration bug (เช็คอัปเดตเวอร์ชันก่อน) · branch `ui/sets-redesign` merge เข้า master แล้ว (#49–56)
 
 ### Card detail — trust core ✅ (proto visionary layout · เต็มภาพ · est-labeled fill)
 - [x] **rework layout ตรง proto visionary** (เบสเลือก): grid `340px/1fr` · ซ้าย sticky = รูป+identity+EditionToggle+CTA · ขวา = hero + **3-stat box** (Last Sale·Lowest Listing·Sales 30d) + grade chips **outline-selected** + chart card + **tabs** (Comps/Listings/Population/Specs)
@@ -95,8 +96,8 @@
 - [x] hero (`HeroNumber` atom count-up + scrub-bind) + finger-scrub chart (pointer-events, range 1D·1W·1M·3M·1Y·ALL honey-active) + **inflow notch** (honey dot จาก isInflow) · KPI quartet 2×2 hairline · movers (เรียง abs THB swing) · holding detail sheet (tap tile บน collection grid)
 - [x] **game-aware** (namespace-ready, ยังไม่แยก URL): API `card.set.game` · `gameBreakdown` ใน hook · `PortfolioGameBreakdown` (collapse เหลือ 1 เกมตอนนี้ → null · ติดเมื่อมีเกม 2) · = โครงหน้ารวม `/all/portfolio` พร้อมเสียบ
 - [x] verify: tsc 0 · lint 0 err · test 56/56 · build ✓ · อ่าน component ทุกตัว fix 2 bug (scrub ไม่มี XAxis/YAxis → notch/cursor เพี้ยน + เส้นแบน · KPI ROI leak ทิศตอน hideBalance)
-- [ ] ⏭️ **แยก URL `/[game]/portfolio` + `/all/portfolio` aggregate** = milestone ถัดไป (อยู่ §Multi-game + P4.3 ด้านล่าง · ทำตอน Pokémon data มา · component ชุดนี้เสียบเข้าได้เลย)
-- [ ] 🧹 orphan: `portfolio-allocation-chart.tsx` (donut เก่า ไม่มี importer แล้วหลัง allocation rewrite เป็น bar) · `portfolio-item.tsx`/`portfolio-summary.tsx` ฯลฯ ที่ลบไปแล้ว — ⚠️ เบสยืนยันก่อนลบ allocation-chart
+- [x] **portfolio URL decision superseded (2026-06-30):** “ของฉัน” รวมทุกเกมที่ canonical `/portfolio`; `/opcg/portfolio` และ `/all/portfolio` redirect กลับ path เดียว · กรองเกมในหน้าแทน
+- [x] 🧹 orphan `portfolio-allocation-chart.tsx` + portfolio dead files ลบแล้วใน #59
 - [x] **Single-screen redesign** (2026-07-02 · เบส: "สวย ใช้ง่าย ดูโปร") — เลิกแท็บ ภาพรวม|ข้อมูลเชิงลึก → หน้าจอเดียว: money band (hero scrub + chart) → KPI quartet 2×2 (มูลค่า·ต้นทุน·P/L·ROI) → context band (movers chips + game-filter chips) → holdings → insights grid (breakdown+allocation) · `mobile-card` เหลือ 2 บรรทัด · `loading.tsx`+`portfolio-mock-preview` เขียนใหม่ mirror layout · movers เพิ่ม variant `chips` · verify tsc0/lint0/test56/build✓ + Chrome desktop+390px · ไม่แตะ API/schema
 - [x] **คืนแท็บ + multi-portfolio discoverable** (2026-07-02 เย็น · เบสสั่งต่อ) — แท็บ ภาพรวม|เชิงลึก กลับมาโดยคงของใหม่ (ภาพรวม = hero สด+KPI+chips+holdings · เชิงลึก = money band scrub+breakdown+movers+allocation) · switcher dropdown เพิ่ม "+ สร้างพอร์ตใหม่" (ชนลิมิต = Lock+PRO badge → upgrade dialog) + ตัวนับ "N/max พอร์ต" · selector ชนลิมิต = upsell block ชัดเจน · i18n ×4 key ใหม่ · verify ครบ + Chrome ทดสอบ upsell flow จริง (FREE 1/1)
 - [x] ~~Wow pass — hero showcase~~ (2026-07-02 ค่ำ) — การ์ดพัด+glow+stagger · **เบสปัดตก "ไม่ดีเลย" → รื้อทิ้งหมดในรอบถัดไป**
@@ -144,11 +145,11 @@
 - [ ] AdSlot `size`+skeleton (CLS 0) · AD_ZONES allowlist + ban-list **unit test** · `shouldRenderAdAt` cadence · promoted-listing governance (floor+cap+dedup)
 
 ### Multi-game (Pokémon)
-- [ ] `GameConfig` (1 ไฟล์) + `/[game]/` middleware + switcher (สลับแล้วอยู่ feature เดิม) + per-game tint + all-games portfolio aggregate [schema: Game +fields · gameId NOT NULL]
+- [~] `GameConfig` + `/[game]/` middleware + switcher + “ของฉัน” cross-game ทำแล้ว · เหลือ per-page scoping ของ catalog, sitemap/canonical, per-game tint และ data/schema `gameId NOT NULL` (⚠️ migration ต้องอนุมัติ)
 
 ## 🔴 M0 — บั๊ก/ของหลุดที่เจอจากการ audit (เร็ว ควรเก็บก่อน)
 - [ ] **cron `leaderboard-rewards` ไม่ถูก schedule ใน `vercel.json`** — route มีจริง (`/api/cron/leaderboard-rewards`) แต่ไม่เคยรันอัตโนมัติ → Top-10 monthly payout อาจไม่เคยจ่าย · เพิ่ม schedule (เสนอ: วันที่ 1 ของเดือน หลัง draw-raffle) + ตรวจย้อนหลังว่าต้อง backfill รางวัลไหม
-- [ ] งานใน working tree ค้าง commit (15 ไฟล์ raffle/header/i18n) — เก็บงานให้จบแล้ว commit
+- [x] งานใน working tree เก่า 15 ไฟล์ raffle/header/i18n เก็บเข้า history แล้ว · `master` สะอาดถึง #102
 
 ## 🎨 R — Refactor ทั้งระบบก่อน redesign (เบสสั่ง 2026-06-13 · "Refactor ก่อน เดี๋ยวค่อยปรับ Design")
 > ผล audit 2026-06-13: conventions ส่วนใหญ่ดีแล้ว (apiHandler ครบ ยกเว้น webhook/cron ที่มี guard ของตัวเอง · Zod 57/64 mutation routes · ไม่มี desktop-first override · typography token ใช้แล้ว 823 จุด) — น้ำหนัก refactor จริงอยู่ที่โครง client code + convention ตกค้าง + i18n · ส่วนการเปลี่ยน IA/หน้าตา รอเฟส redesign
@@ -159,7 +160,7 @@
 - [x] ไล่เช็ค `overflow-x-auto` ~30 จุด non-admin แล้ว: ที่เหลือเป็น tab-scroll/carousel/prose ที่ตั้งใจ + ตารางมี `hidden sm:block` fallback อยู่แล้ว (trending-tabs, home-market-overview) — ไม่ต้องแก้เพิ่ม
 
 ### R1 — UI consistency (mechanical — กวาดทีเดียวจบ)
-- [x] **Typography full sweep (workflow audit 2026-06-29 · 15 โซน · 91 findings · เบสสั่ง "ทำหมด")** ✅ 205 edits / 92 ไฟล์ · verify lint 0 err + test 56/56 + build ✓ · **แก้ครบ 91/91** (รวม 4 judgement-call ที่เบสเคาะ "แก้หมดให้จบ": badge→`.text-micro` · faq/related h2→h3 · reviews heading h5→h4 · settings title h2→h1) · **ยังไม่ commit** (กัน portfolio WIP อีกทีม) — ดึง role ที่ใช้ซ้ำกลับเข้า semantic token ทั้งเว็บ (ไม่รื้อดีไซน์):
+- [x] **Typography full sweep (workflow audit 2026-06-29 · 15 โซน · 91 findings · เบสสั่ง "ทำหมด")** ✅ 205 edits / 92 ไฟล์ · เข้า master แล้ว · verify lint 0 err + test 56/56 + build ✓ · **แก้ครบ 91/91** (รวม 4 judgement-call ที่เบสเคาะ "แก้หมดให้จบ": badge→`.text-micro` · faq/related h2→h3 · reviews heading h5→h4 · settings title h2→h1) — ดึง role ที่ใช้ซ้ำกลับเข้า semantic token ทั้งเว็บ (ไม่รื้อดีไซน์):
   - 🔴 3 จุดแดง (อ่านออก/ลำดับชั้น): marketplace `listing-card:108` ชื่อจางกว่าคนขาย → `.text-h5` · blog `[slug]:174` `prose-sm`→`prose` · profile `reviews-preview` prose 13→15px + วันที่ 10→13px
   - 🟠 systemic: form label→`.text-label` (auth/seller/marketplace/admin/alert) · item title→`.text-h5` (honey/admin) · badge→`.text-micro` · section heading→`.text-h3` · price→`.font-price` · column header→`.text-eyebrow`
   - 🔵 primitives: Card/Dialog/Sheet title→`.text-h4` (weight unify) · button `text-[0.8rem]`→`text-sm` (arbitrary+inversion) · input→`text-base md:text-sm` (iOS-zoom guard)
@@ -167,7 +168,7 @@
   - verify: lint 0 + test pass + build ✓ ก่อนเคลมเสร็จ
 - [x] typography residuals → token แล้ว: badge/pill `text-[10px]` → `.text-micro` (9 จุด) · overlay 9px → `.text-overlay` · auth hero `<h2>` → `.text-h1` (2) · ตัด weight ซ้ำ token (1) — ที่เหลือเป็นตัวเลข KPI ที่กติกาอนุญาต plain size (display token = 36-42px ใหญ่กว่าที่ design ใช้ ปล่อยไว้รอเฟส redesign เคาะ) · `portfolio-share-card` จงใจ style เองเพราะ export เป็นรูป — ไม่แตะ
 - [x] **lint errors ทั้ง repo: 29 → 0** (พังมาก่อน refactor — rule react-hooks v6) · วิธีที่ใช้: mounted-flag → `useHydrated()` ใหม่ (`src/hooks/use-hydrated.ts`, useSyncExternalStore) · countdown/URL-sync/localStorage read → setState ใน timeout-0/rAF callback · latest-value ref → อัปเดตใน effect · `PrivacyFeedback` hoist เป็น module component · conditional hooks ใน `set-detail-content` hoist เหนือ early return · `Date.now()` ใน render → `daysSince`/`daysUntil` ใน `lib/utils/time.ts` · `window.location.href=` → `.assign()` · prefer-const ×2
-- [ ] lint **warnings** เหลือ 81 (exhaustive-deps / unused-vars ส่วนใหญ่ในไฟล์เก่า) — ไล่เก็บเป็น batch แยก ก่อนตั้ง CI gate `--max-warnings 0`
+- [ ] lint **warnings** เหลือ 32 ณ 2026-07-10 (0 error; ส่วนใหญ่ `<img>`, scripts `.codex`, a11y/exhaustive-deps บางจุด) — ไล่เก็บเป็น batch แยกก่อนตั้ง CI gate `--max-warnings 0`
 - [ ] รวม empty-state: `shared/empty-state` + `kuma/kuma-empty-state` → ระบบเดียวมี variant (admin แยกไว้ได้)
 
 ### R2 — โครง client code (ลด friction ก่อน redesign)
@@ -175,8 +176,8 @@
 - [x] migrate hooks ครบ 9 ตัวที่มี fetch: portfolio-api, header-data, settings, public-config, marketplace-fees, rank-tiers (→ useSyncExternalStore), honey-data (19 จุด), compare-data, market-cards — คงพฤติกรรม 401→signOut / 403→limitReached / AbortError เดิม
 - [ ] migrate fetch ใน components ทีละ feature (~70 จุด): honey components → portfolio dialogs → marketplace → ที่เหลือ · **เริ่มแล้ว**: `profile/section-addresses.tsx` (reference pattern: JSON CRUD → apiGet/apiPost/apiPatch/apiDelete + apiTry) · ⚠️ FormData upload (cover/avatar) คง raw fetch ไว้ · auth-critical (profile-data-context 401→signOut) migrate ระวังเป็นพิเศษ
 - [ ] รวม empty-state — **ทบทวนแล้ว: ไม่ทำในเฟส refactor** · `shared/EmptyState` (functional) กับ `kuma/KumaEmptyState` (branded emoji+motion+preset) ตั้งใจแยกบทบาทตาม doc comment · การยุบ = งาน design รอเฟส redesign
-- [ ] แตก client components ยักษ์ แยก data hook ออกจาก presentation: `portfolio-client` 661 · `today-card` 645 · `compare-client` 629 · `price-hub` 567 · `honey-sidebar` 500 บรรทัด
-- [ ] ลบ `src/lib/notifications.ts` (71 บรรทัด, 0 importer — superseded by `notify/dispatch`) ⚠️ เบสยืนยันก่อนลบ
+- [x] แตก client components ยักษ์ชุดเดิมแล้ว: `portfolio-client` 310 · `today-card` 5 · `compare-client` 356 บรรทัด · `price-hub`/`honey-sidebar` แตกและลบ wrapper เดิม (#79 และ redesign ต่อเนื่อง)
+- [x] ลบ `src/lib/notifications.ts` (0 importer; superseded by `notify/dispatch`) แล้วใน #91
 - [ ] ยุบ re-export shims `tier.ts`/`tier-features.ts`/`plan-features.ts` (รวม 14 บรรทัด) ให้เหลือทางเข้าเดียว
 
 ### R3 — i18n hardening (ใหญ่ — ทำเป็น batch ราย feature)
@@ -263,8 +264,8 @@
 
 **P4.3 — `/[game]/` URL namespace (เบสสั่ง 2026-06-30 "URL แยกเกมทั้งแอป · ทำ UI ก่อน")**
 - [x] **routing core (Phase 1)** ✅ — กลยุทธ์ middleware-rewrite + cookie/header resolver (mirror `getServerLanguage` · ไม่ย้าย 102 route จริง · ไม่แก้ 180 ลิงก์): `src/lib/game/{constants,server}.ts` (GAME_COOKIE/HEADER · GAME_SCOPED_SEGMENTS allowlist · `getServerGame()`) · middleware: `/opcg/x` rewrite→flat `/x` + inject `x-game` + cookie · legacy `/x` redirect→`/{currentGame}/x` (ลิงก์เก่าใช้ได้หมด · namespace ทั้งแอปทันที) · `updateSession` refactor backward-compat รองรับ rewrite (auth ไม่พัง) · GameSwitcher นำทาง swap segment
-- [x] **verify (Phase 1)** ✅ — build ✓ · live curl matrix 2 รอบ (bypass on/off): `/portfolio`→307→`/opcg/portfolio` · `/opcg/portfolio`→200 · `/all/portfolio`→200 · `/sets`→307→`/opcg/sets` · `/messages`→302→login (auth ไม่พัง) · `/settings`/`/honey`/`/api`/`/` flat ไม่แตะ · ไม่มี loop · `kuma-game` cookie set ถูก
-- [~] **Phase 2 (per-page scoping)** — **portfolio ✅**: `useGameScope()` อ่าน game จาก URL · `usePortfolioApi(scope)` filter assets/stats/allocation ตามเกม (gameBreakdown คง cross-game) · `/all/portfolio`=รวมทุกเกม+breakdown · `/opcg`=scope เกมเดียว · `/pokemon`=empty state · verify lint0/tsc/test56/build + curl 4 route 200 · **เหลือ:** sets/cards/search/trending/compare/watchlist/decks อ่าน `getServerGame()` (server) · sitemap/canonical → prefixed · 307→308 ตอน stable · rename `middleware.ts`→`proxy.ts` (Next16)
+- [x] **verify ตอน routing Phase 1** ✅ — build ✓ + live curl matrix bypass on/off ผ่าน, auth/cookie/no-loop ถูก · **หมายเหตุ:** matrix portfolio เดิมถูก supersede ภายหลังด้วยมติ “ของฉันรวมทุกเกม”; สถานะปัจจุบันอยู่บรรทัดถัดไป
+- [~] **สถานะปัจจุบัน:** catalog/tool routes ใน `GAME_SCOPED_SEGMENTS` ใช้ `/{game}/...`; “ของฉัน” (`portfolio`/`watchlist`/`saved`) เป็น cross-game canonical flat path (`useGameScope` ถูกลบ #91) · portfolio+watchlist มี filter เกมในหน้า ส่วน saved ยังเป็น unified list · **เหลือ:** ตรวจ scoping จริงต่อ sets/cards/search/trending/compare/decks, sitemap/canonical → prefixed, 307→308 ตอน stable และ rename `middleware.ts`→`proxy.ts` ตาม Next 16
 - [ ] **DEFER (data)** — backfill `Card.gameId` (จาก set.game) + NOT NULL + `@@unique([gameId,cardCode])` · ขยาย CardType enum · Pokémon sets/rarities/pull-rate + scraper (ต้องหาแหล่งข้อมูล Pokémon ก่อน)
 
 ## 🧹 Declutter audit (screenshot ทุกหน้า mobile+desktop ผ่าน 2 workflows) — เบสเลือก B (live pages ก่อน, marketplace=P3 ทีหลัง)
