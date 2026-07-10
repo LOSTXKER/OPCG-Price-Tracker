@@ -24,7 +24,7 @@ import { useMarketCards } from "@/hooks/use-market-cards"
 import { MarketTable } from "@/components/market/market-table"
 import { PriceModeControl } from "@/components/market/price-mode-control"
 import { buildMarketColumns } from "@/components/market/market-columns"
-import { GridCard, GridCardSkeleton } from "./grid-card"
+import { CardItem, CardItemSkeleton } from "@/components/cards/card-item"
 import { Pagination } from "./pagination"
 import {
   type Tab,
@@ -318,14 +318,32 @@ export function HomeMarketOverview({
           </div>
           {m.isPending && m.cards.length === 0 ? (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-              {Array.from({ length: PAGE_SIZE }).map((_, i) => <GridCardSkeleton key={i} />)}
+              {Array.from({ length: PAGE_SIZE }).map((_, i) => <CardItemSkeleton key={i} />)}
             </div>
           ) : m.cards.length === 0 ? (
             <p className="py-12 text-center text-sm text-muted-foreground">{t(lang, "noData")}</p>
           ) : (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {m.cards.map((card) => (
-                <GridCard key={card.cardCode} card={card} changePeriod={m.changePeriod} priceMode={m.priceMode} />
+                <CardItem
+                  key={card.cardCode}
+                  cardCode={card.cardCode}
+                  cardId={card.id}
+                  nameJp={card.nameJp}
+                  nameEn={card.nameEn}
+                  nameTh={card.nameTh}
+                  rarity={card.rarity}
+                  imageUrl={card.imageUrl}
+                  setCode={card.set?.code ?? card.setCode}
+                  priceJpy={card.latestPriceJpy}
+                  priceChange24h={card.priceChange24h}
+                  priceChange7d={card.priceChange7d}
+                  priceChange30d={card.priceChange30d}
+                  psa10PriceUsd={card.psa10PriceUsd}
+                  changePeriod={m.changePeriod}
+                  priceMode={m.priceMode}
+                  linkSet
+                />
               ))}
             </div>
           )}

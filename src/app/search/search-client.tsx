@@ -19,7 +19,7 @@ import { FilterModal } from "@/components/shared/filter-modal"
 import { cn } from "@/lib/utils"
 import { ToolbarSortDropdown } from "@/components/ui/toolbar"
 import { SetPicker } from "@/components/shared/set-picker"
-import { GridCard, GridCardSkeleton } from "@/components/home/grid-card"
+import { CardItem, CardItemSkeleton } from "@/components/cards/card-item"
 import { MobileCardSkeleton } from "@/components/home/mobile-card-item"
 import { MarketTable } from "@/components/market/market-table"
 import { buildMarketColumns } from "@/components/market/market-columns"
@@ -322,7 +322,7 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
         viewMode === "grid" ? (
           <CardGrid>
             {Array.from({ length: 10 }).map((_, i) => (
-              <GridCardSkeleton key={i} />
+              <CardItemSkeleton key={i} />
             ))}
           </CardGrid>
         ) : (
@@ -354,11 +354,24 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
       {!isPending && cards.length > 0 && viewMode === "grid" && (
         <CardGrid>
           {cards.map((card) => (
-            <GridCard
+            <CardItem
               key={card.cardCode}
-              card={card}
+              cardCode={card.cardCode}
+              cardId={card.id}
+              nameJp={card.nameJp}
+              nameEn={card.nameEn}
+              nameTh={card.nameTh}
+              rarity={card.rarity}
+              imageUrl={card.imageUrl}
+              setCode={card.set?.code ?? card.setCode}
+              priceJpy={card.latestPriceJpy}
+              priceChange24h={card.priceChange24h}
+              priceChange7d={card.priceChange7d}
+              priceChange30d={card.priceChange30d}
+              psa10PriceUsd={card.psa10PriceUsd}
               changePeriod={changePeriod}
               priceMode="raw"
+              linkSet
             />
           ))}
         </CardGrid>

@@ -1,6 +1,7 @@
 "use client";
 
-import { Bell, Check, MoreHorizontal, Pin, Trash2 } from "lucide-react";
+import { ArrowUpRight, Bell, Check, MoreHorizontal, Pin, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 import { CardItem } from "@/components/cards/card-item";
 import { CardGrid } from "@/components/cards/card-grid";
@@ -132,7 +133,7 @@ export function WatchlistGridView({
               actionRow={
                 editMode ? null : (
                   <div
-                    className="relative z-20 flex items-center justify-between gap-1 border-t border-hair px-2 py-1"
+                    className="relative z-20 flex items-center gap-1.5 border-t border-hair p-2"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <CompareButton
@@ -143,11 +144,12 @@ export function WatchlistGridView({
                         rarity: entry.card.rarity,
                       }}
                       size="sm"
+                      variant="chip"
                     />
                     <DropdownMenu>
                       <DropdownMenuTrigger
                         aria-label={t(lang, "moreActions")}
-                        className="ease-chrome inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                        className="ease-chrome inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-transparent bg-muted/30 text-muted-foreground transition-colors hover:border-hair hover:bg-muted/70 hover:text-primary dark:border-hair"
                       >
                         <MoreHorizontal className="size-4" />
                       </DropdownMenuTrigger>
@@ -182,6 +184,16 @@ export function WatchlistGridView({
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
+                    {/* detail link fills the row like the home/search action row */}
+                    <Link
+                      href={`/cards/${entry.card.cardCode}`}
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label={t(lang, "viewDetails")}
+                      className="ml-auto inline-flex h-9 flex-1 items-center justify-center gap-1 rounded-md px-2 text-xs font-medium text-muted-foreground motion-base hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
+                    >
+                      <span className="truncate">{t(lang, "viewDetails")}</span>
+                      <ArrowUpRight className="size-3.5 shrink-0" />
+                    </Link>
                   </div>
                 )
               }
