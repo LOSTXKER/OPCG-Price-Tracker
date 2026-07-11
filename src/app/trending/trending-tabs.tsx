@@ -53,7 +53,7 @@ const MobileTrendingItem = memo(function MobileTrendingItem({
 
   return (
     <Link
-      href={`/cards/${card.cardCode}`}
+      href={`/opcg/cards/${card.cardCode}`}
       className="flex items-center gap-3 px-4 py-3 ease-chrome transition-colors active:bg-muted/70"
     >
       <span className="w-5 shrink-0 text-center font-price text-xs text-muted-foreground">
@@ -116,7 +116,7 @@ const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }:
       </td>
       <td className="px-4 py-2.5">
         <Link
-          href={`/cards/${card.cardCode}`}
+          href={`/opcg/cards/${card.cardCode}`}
           className="flex items-center gap-3 hover:underline"
         >
           <div className="relative size-9 shrink-0 overflow-hidden rounded-sm bg-muted">
@@ -142,7 +142,7 @@ const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }:
       </td>
       <td className="px-4 py-2.5">
         <Link
-          href={`/sets/${card.setCode}`}
+          href={`/opcg/sets/${card.setCode}`}
           className="font-mono text-xs text-muted-foreground ease-chrome transition-colors hover:text-primary"
         >
           {card.setCode.toUpperCase()}
@@ -234,7 +234,7 @@ export function TrendingTabs({ data }: { data: TrendingData }) {
             segmented control at 390px — contained horizontal scroll (same
             pattern as the card-detail section tabs / set type pills) instead
             of letting it overflow the whole page. */}
-        <div className="no-sb -mx-5 overflow-x-auto px-5 sm:mx-0 sm:overflow-visible sm:px-0">
+        <div className="no-sb scroll-fade-x -mx-5 overflow-x-auto px-5 sm:mx-0 sm:overflow-visible sm:px-0">
           <SegmentedControl
             options={tabOptions}
             value={activeTab}

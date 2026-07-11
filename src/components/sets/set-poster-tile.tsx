@@ -17,6 +17,7 @@ export function SetPosterTile({
   showCount = false,
   count,
   countLabel,
+  preload = false,
 }: {
   code: string
   displayName: string
@@ -26,10 +27,12 @@ export function SetPosterTile({
   count?: number
   /** pre-translated unit (e.g. "ใบ") — caller owns i18n. */
   countLabel?: string
+  /** Only the first above-the-fold poster on an index page should opt in. */
+  preload?: boolean
 }) {
   return (
     <Link
-      href={`/sets/${code}`}
+      href={`/opcg/sets/${code}`}
       aria-label={displayName}
       className="group flex flex-col gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
@@ -41,6 +44,7 @@ export function SetPosterTile({
             fill
             sizes="(max-width: 640px) 31vw, (max-width: 1024px) 23vw, (max-width: 1280px) 15vw, 13vw"
             className="object-cover object-top"
+            preload={preload}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">

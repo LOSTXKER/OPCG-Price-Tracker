@@ -25,7 +25,7 @@ export function EditionToggle({
         onClick={() => onChange("JP")}
         aria-pressed={value === "JP"}
         className={cn(
-          "ease-chrome min-h-10 rounded-full px-3 py-1.5 md:min-h-9",
+          "ease-chrome min-h-11 rounded-full px-3 py-1.5 md:min-h-9",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-inset",
           value === "JP"
             ? "bg-foreground/10 text-foreground"
@@ -39,7 +39,7 @@ export function EditionToggle({
         onClick={() => onChange("EN")}
         aria-pressed={value === "EN"}
         className={cn(
-          "ease-chrome inline-flex min-h-10 items-center gap-1 rounded-full px-3 py-1.5 md:min-h-9",
+          "ease-chrome inline-flex min-h-11 items-center gap-1 rounded-full px-3 py-1.5 md:min-h-9",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-inset",
           value === "EN"
             ? "bg-foreground/10 text-foreground"

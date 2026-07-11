@@ -151,7 +151,7 @@ export function useSearch() {
     e.preventDefault()
     const trimmed = inputValue.trim()
     if (!trimmed) return
-    router.push(`/search?q=${encodeURIComponent(trimmed)}`)
+    router.push(`/opcg/search?q=${encodeURIComponent(trimmed)}`)
   }
 
   const handleSortChange = (newSort: SortKey) => {

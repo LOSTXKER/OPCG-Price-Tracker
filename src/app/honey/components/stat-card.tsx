@@ -1,16 +1,12 @@
 "use client";
 
-import { Popover } from "@base-ui/react/popover";
-
 import { cn } from "@/lib/utils";
 import { t, type Language } from "@/lib/i18n";
-
-/* Shared popover styles */
-const POPOVER_POPUP_CLASS =
-  "w-56 rounded-lg bg-popover p-3 shadow-[var(--elev-overlay)] ring-1 ring-border/40 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95";
-
-const POPOVER_ARROW_CLASS =
-  "size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px] bg-popover ring-1 ring-border/40 data-[side=bottom]:top-1 data-[side=top]:-bottom-2.5";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 /**
  * Single shared layout for every stat tile. The whole card is the Popover trigger
@@ -37,8 +33,8 @@ export function HoneyStatCard({
   guideContent: React.ReactNode;
 }) {
   return (
-    <Popover.Root>
-      <Popover.Trigger
+    <Popover>
+      <PopoverTrigger
         render={(triggerProps) => <button type="button" {...triggerProps} aria-label={ariaLabel} />}
         className={cn(
           "panel group relative flex h-full w-full flex-col p-4 text-left",
@@ -69,16 +65,11 @@ export function HoneyStatCard({
             mobile and tabs sit closer to the fold. The how-to guide remains
             reachable via the card popover; full detail returns at sm+. */}
         {detail && <div className="mt-auto hidden sm:block">{detail}</div>}
-      </Popover.Trigger>
-      <Popover.Portal>
-        <Popover.Positioner side="bottom" sideOffset={6} align="center" className="z-50">
-          <Popover.Popup className={POPOVER_POPUP_CLASS}>
-            {guideContent}
-            <Popover.Arrow className={POPOVER_ARROW_CLASS} />
-          </Popover.Popup>
-        </Popover.Positioner>
-      </Popover.Portal>
-    </Popover.Root>
+      </PopoverTrigger>
+      <PopoverContent className="w-56 rounded-lg">
+        {guideContent}
+      </PopoverContent>
+    </Popover>
   );
 }
 

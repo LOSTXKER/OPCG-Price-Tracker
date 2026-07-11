@@ -11,7 +11,7 @@ import {
 } from "@/components/admin/admin-toolbar";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
-import { cn } from "@/lib/utils";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import type { SetData } from "./_components/types";
 import { useDropRatesEditor } from "./_components/use-drop-rates-editor";
 import { SetRow } from "./_components/set-row";
@@ -97,37 +97,33 @@ export function DropRatesManager({
       <div className="sticky top-0 z-20">
         <AdminToolbar
           actions={
-            <div className="flex items-center gap-1 rounded-lg border border-transparent dark:border-hair bg-muted/30 p-1">
-              {(
-                [
-                  { key: "all", label: "ทั้งหมด", count: sets.length },
-                  {
-                    key: "complete",
-                    label: "ครบ",
-                    count: completeCounts.complete,
-                  },
-                  {
-                    key: "incomplete",
-                    label: "ไม่ครบ",
-                    count: completeCounts.incomplete,
-                  },
-                ] as const
-              ).map((f) => (
-                <button
-                  key={f.key}
-                  onClick={() => setFilterMode(f.key)}
-                  className={cn(
-                    "rounded-md px-3 py-1.5 text-xs font-medium motion-base",
-                    filterMode === f.key
-                      ? "bg-primary/15 text-primary"
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  {f.label}
-                  <span className="ml-1 opacity-60">{f.count}</span>
-                </button>
-              ))}
-            </div>
+            <SegmentedControl<FilterMode>
+              value={filterMode}
+              onChange={setFilterMode}
+              size="sm"
+              ariaLabel="กรองตามความครบถ้วนของอัตราดรอป"
+              options={[
+                {
+                  value: "all",
+                  label: "ทั้งหมด",
+                  badge: <span className="opacity-60">{sets.length}</span>,
+                },
+                {
+                  value: "complete",
+                  label: "ครบ",
+                  badge: (
+                    <span className="opacity-60">{completeCounts.complete}</span>
+                  ),
+                },
+                {
+                  value: "incomplete",
+                  label: "ไม่ครบ",
+                  badge: (
+                    <span className="opacity-60">{completeCounts.incomplete}</span>
+                  ),
+                },
+              ]}
+            />
           }
         >
           <AdminSearch

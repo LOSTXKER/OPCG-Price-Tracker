@@ -32,7 +32,10 @@ import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
 
 import { YuyuteiAiPanel } from "./yuyutei-ai-panel";
 import { YuyuteiBulkBar } from "./yuyutei-bulk-bar";
-import { YuyuteiMatchRow } from "./yuyutei-match-row";
+import {
+  YuyuteiMatchCard,
+  YuyuteiMatchRow,
+} from "./yuyutei-match-row";
 import { SkeletonRows } from "./yuyutei-skeleton-rows";
 import { useYuyuteiAi } from "./use-yuyutei-ai";
 import type { ApiResponse, Mapping, MappingCard } from "./yuyutei-types";
@@ -288,6 +291,31 @@ export function YuyuteiMatchClient() {
     releaseDate: s.releaseDate ?? null,
   }));
 
+  const renderMapping = (m: Mapping, mobile: boolean) => {
+    const sharedProps = {
+      m,
+      showStatus: showStatusCol,
+      isChecked: selected.has(m.id),
+      isSaving: saving.has(m.id),
+      isAiProcessing: ai.aiProcessing.has(m.id),
+      effectiveCardId: resolveCardId(m),
+      onToggle: toggleOne,
+      onApprove: handleApprove,
+      onUnmatch: handleUnmatch,
+      onReject: handleReject,
+      onAiSuggest: ai.handleAiSuggestOne,
+      onPickCandidate: (mappingId: number, cardId: number) =>
+        setPickedCandidate((prev) => ({ ...prev, [mappingId]: cardId })),
+      onLightbox: openLightbox,
+    };
+
+    return mobile ? (
+      <YuyuteiMatchCard key={m.id} {...sharedProps} />
+    ) : (
+      <YuyuteiMatchRow key={m.id} {...sharedProps} />
+    );
+  };
+
   return (
     <AdminPage
       header={
@@ -415,8 +443,8 @@ export function YuyuteiMatchClient() {
       {/* ── Table ── */}
       <Surface variant="outline" className="overflow-hidden">
         {/* Status tabs */}
-        <div className="flex items-center justify-between border-b border-hair bg-muted/20 px-3 py-2">
-          <div className="flex items-center gap-0.5 rounded-lg bg-muted/60 p-0.5">
+        <div className="flex flex-col items-stretch gap-2 border-b border-hair bg-muted/20 px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="no-sb scroll-fade-x flex max-w-full items-center gap-0.5 overflow-x-auto rounded-lg bg-muted/60 p-0.5">
             {STATUS_TABS.map((tab) => {
               const count =
                 tab.key === ""
@@ -426,9 +454,10 @@ export function YuyuteiMatchClient() {
               return (
                 <button
                   key={tab.key}
+                  type="button"
                   onClick={() => patch({ status: tab.key, page: 1 })}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs motion-base",
+                    "flex min-h-11 shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 text-xs motion-base sm:min-h-0",
                     isActive
                       ? `${tab.activeBg} ${tab.textColor} font-semibold`
                       : "text-muted-foreground hover:text-foreground",
@@ -467,26 +496,31 @@ export function YuyuteiMatchClient() {
 
         {/* Content */}
         {loading && !data ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-hair bg-muted/40 text-meta">
-                  <th className="px-3 py-2.5 w-10" />
-                  {showStatusCol && <th className="px-3 py-2.5 text-left w-20">สถานะ</th>}
-                  <th className="px-3 py-2.5 text-left">รายการ Yuyutei</th>
-                  <th className="px-2 py-2.5 w-6" />
-                  <th className="px-3 py-2.5 text-left">การ์ดในฐานข้อมูล</th>
-                  <th className="px-3 py-2.5 text-right w-20">ราคา</th>
-                  <th className="px-3 py-2.5 text-left w-24">วิธีจับคู่</th>
-                  <th className="px-3 py-2.5 text-left w-32">อัปเดตล่าสุด</th>
-                  <th className="px-3 py-2.5 text-center w-32">การจัดการ</th>
-                </tr>
-              </thead>
-              <tbody>
-                <SkeletonRows showStatus={showStatusCol} />
-              </tbody>
-            </table>
-          </div>
+          <>
+            <div className="py-12 text-center text-meta sm:hidden" role="status">
+              กำลังโหลดรายการ…
+            </div>
+            <div className="hidden overflow-x-auto sm:block">
+              <table className="hidden w-full text-sm sm:table">
+                <thead>
+                  <tr className="border-b border-hair bg-muted/40 text-meta">
+                    <th className="px-3 py-2.5 w-10" />
+                    {showStatusCol && <th className="px-3 py-2.5 text-left w-20">สถานะ</th>}
+                    <th className="px-3 py-2.5 text-left">รายการ Yuyutei</th>
+                    <th className="px-2 py-2.5 w-6" />
+                    <th className="px-3 py-2.5 text-left">การ์ดในฐานข้อมูล</th>
+                    <th className="px-3 py-2.5 text-right w-20">ราคา</th>
+                    <th className="px-3 py-2.5 text-left w-24">วิธีจับคู่</th>
+                    <th className="px-3 py-2.5 text-left w-32">อัปเดตล่าสุด</th>
+                    <th className="px-3 py-2.5 text-center w-32">การจัดการ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <SkeletonRows showStatus={showStatusCol} />
+                </tbody>
+              </table>
+            </div>
+          </>
         ) : data?.mappings.length === 0 ? (
           <AdminEmptyState
             icon={Search}
@@ -497,54 +531,49 @@ export function YuyuteiMatchClient() {
             }
           />
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="sticky top-0 z-10">
-                <tr className="border-b border-hair bg-muted/40 text-meta">
-                  <th className="px-3 py-2.5 w-10 bg-muted/40">
-                    <input
-                      type="checkbox"
-                      checked={allChecked}
-                      onChange={toggleAll}
-                      className="accent-primary size-3.5 cursor-pointer"
-                    />
-                  </th>
-                  {showStatusCol && (
-                    <th className="px-3 py-2.5 text-left w-20 bg-muted/40">สถานะ</th>
-                  )}
-                  <th className="px-3 py-2.5 text-left bg-muted/40">รายการ Yuyutei</th>
-                  <th className="px-2 py-2.5 w-6 bg-muted/40" />
-                  <th className="px-3 py-2.5 text-left bg-muted/40">การ์ดในฐานข้อมูล</th>
-                  <th className="px-3 py-2.5 text-right w-20 bg-muted/40">ราคา</th>
-                  <th className="px-3 py-2.5 text-left w-24 bg-muted/40">วิธีจับคู่</th>
-                  <th className="px-3 py-2.5 text-left w-32 bg-muted/40">อัปเดตล่าสุด</th>
-                  <th className="px-3 py-2.5 text-center w-32 bg-muted/40">การจัดการ</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data?.mappings.map((m) => (
-                  <YuyuteiMatchRow
-                    key={m.id}
-                    m={m}
-                    showStatus={showStatusCol}
-                    isChecked={selected.has(m.id)}
-                    isSaving={saving.has(m.id)}
-                    isAiProcessing={ai.aiProcessing.has(m.id)}
-                    effectiveCardId={resolveCardId(m)}
-                    onToggle={toggleOne}
-                    onApprove={handleApprove}
-                    onUnmatch={handleUnmatch}
-                    onReject={handleReject}
-                    onAiSuggest={ai.handleAiSuggestOne}
-                    onPickCandidate={(mappingId, cardId) =>
-                      setPickedCandidate((prev) => ({ ...prev, [mappingId]: cardId }))
-                    }
-                    onLightbox={openLightbox}
-                  />
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <>
+            <div className="divide-y divide-hair sm:hidden">
+              <label className="flex min-h-11 items-center gap-3 bg-muted/40 px-4 text-body-sm">
+                <input
+                  type="checkbox"
+                  checked={allChecked}
+                  onChange={toggleAll}
+                  className="size-4 cursor-pointer accent-primary"
+                />
+                เลือกทั้งหมดในหน้านี้
+              </label>
+              {data?.mappings.map((m) => renderMapping(m, true))}
+            </div>
+            <div className="hidden overflow-x-auto sm:block">
+              <table className="hidden w-full text-sm sm:table">
+                <thead className="sticky top-0 z-10">
+                  <tr className="border-b border-hair bg-muted/40 text-meta">
+                    <th className="px-3 py-2.5 w-10 bg-muted/40">
+                      <input
+                        type="checkbox"
+                        checked={allChecked}
+                        onChange={toggleAll}
+                        className="accent-primary size-3.5 cursor-pointer"
+                      />
+                    </th>
+                    {showStatusCol && (
+                      <th className="px-3 py-2.5 text-left w-20 bg-muted/40">สถานะ</th>
+                    )}
+                    <th className="px-3 py-2.5 text-left bg-muted/40">รายการ Yuyutei</th>
+                    <th className="px-2 py-2.5 w-6 bg-muted/40" />
+                    <th className="px-3 py-2.5 text-left bg-muted/40">การ์ดในฐานข้อมูล</th>
+                    <th className="px-3 py-2.5 text-right w-20 bg-muted/40">ราคา</th>
+                    <th className="px-3 py-2.5 text-left w-24 bg-muted/40">วิธีจับคู่</th>
+                    <th className="px-3 py-2.5 text-left w-32 bg-muted/40">อัปเดตล่าสุด</th>
+                    <th className="px-3 py-2.5 text-center w-32 bg-muted/40">การจัดการ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data?.mappings.map((m) => renderMapping(m, false))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
 
         {/* Pagination */}

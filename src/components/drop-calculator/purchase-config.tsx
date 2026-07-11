@@ -1,10 +1,10 @@
 "use client"
 
 import { QtyStepper } from "@/components/ui/qty-stepper"
+import { SegmentedControl } from "@/components/ui/segmented-control"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { t } from "@/lib/i18n"
-import { cn } from "@/lib/utils"
 import { PACKS_PER_BOX, BOXES_PER_CARTON, CARDS_PER_PACK_JP } from "@/lib/utils/pull-rate"
 import { useUIStore } from "@/stores/ui-store"
 import type { DropRate, Unit } from "./types"
@@ -44,22 +44,16 @@ export function PurchaseConfig({ unit, quantity, dropRates, onUnitChange, onQuan
     <div className="space-y-4">
       <div className="space-y-3">
         <p className="text-eyebrow">{t(lang, "configurePurchase")}</p>
-        <div className="flex w-full rounded-lg border border-border bg-muted/40 p-0.5">
-          {PULL_UNITS.map((u) => (
-            <button
-              key={u}
-              onClick={() => onUnitChange(u)}
-              className={cn(
-                "flex-1 rounded-md py-1.5 text-center text-sm font-medium transition-all",
-                unit === u
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {t(lang, UNIT_I18N_KEYS[u])}
-            </button>
-          ))}
-        </div>
+        <SegmentedControl<Unit>
+          options={PULL_UNITS.map((value) => ({
+            value,
+            label: t(lang, UNIT_I18N_KEYS[value]),
+          }))}
+          value={unit}
+          onChange={onUnitChange}
+          fullWidth
+          ariaLabel={t(lang, "configurePurchase")}
+        />
         <div className="flex justify-center">
           <QtyStepper
             value={quantity}

@@ -25,7 +25,7 @@ export function OtherSets({
         title={title}
         action={
           <Link
-            href="/sets"
+            href="/opcg/sets"
             className="text-sm font-medium text-primary hover:underline"
           >
             {viewAllLabel}

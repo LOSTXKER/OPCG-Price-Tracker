@@ -43,7 +43,7 @@ export function CardThumbStrip({
   return (
     <div className={cn("flex gap-2", scroll && "overflow-x-auto pb-1", className)}>
       {cards.map((card) => (
-        <Link key={card.cardCode} href={`/cards/${card.cardCode}`} className="group shrink-0">
+        <Link key={card.cardCode} href={`/opcg/cards/${card.cardCode}`} className="group shrink-0">
           {card.label && <p className="mb-1.5 text-center text-eyebrow">{card.label}</p>}
           <div className={cn("relative aspect-[63/88] overflow-hidden rounded-lg bg-muted", s.w)}>
             {card.imageUrl ? (

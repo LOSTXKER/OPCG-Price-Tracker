@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "Trending Cards — Biggest Price Movers",
   description:
     "OPCG cards with the biggest price movement in the last 24 hours, 7 days, and 30 days. See top gainers and losers updated daily.",
-  alternates: { canonical: "/trending" },
+  alternates: { canonical: "/opcg/trending" },
 };
 
 const TAKE = 50;
@@ -98,7 +98,7 @@ export default async function TrendingPage() {
 
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Trending", href: "/trending" }])} />
+      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Trending", href: "/opcg/trending" }])} />
       <LocalizedBreadcrumb items={[{ labelKey: "home", href: "/" }, { labelKey: "trendingTitle" }]} />
       <div className="space-y-6">
         <TrendingPageHeader />
@@ -108,9 +108,9 @@ export default async function TrendingPage() {
       </div>
       <RelatedPages
         items={[
-          { href: "/sets", icon: Layers, title: "ชุดการ์ด", description: "ดูทุกชุดการ์ดพร้อมมูลค่าประเมิน" },
-          { href: "/market-overview", icon: BarChart3, title: "Market Overview", description: "สถิติตลาดภาพรวม" },
-          { href: "/compare", icon: GitCompareArrows, title: "เปรียบเทียบ", description: "เทียบการ์ดหลายใบแบบ side-by-side" },
+          { href: "/opcg/sets", icon: Layers, title: "ชุดการ์ด", description: "ดูทุกชุดการ์ดพร้อมมูลค่าประเมิน" },
+          { href: "/opcg/market-overview", icon: BarChart3, title: "Market Overview", description: "สถิติตลาดภาพรวม" },
+          { href: "/opcg/compare", icon: GitCompareArrows, title: "เปรียบเทียบ", description: "เทียบการ์ดหลายใบแบบ side-by-side" },
         ]}
       />
     </>

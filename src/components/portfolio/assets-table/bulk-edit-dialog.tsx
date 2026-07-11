@@ -297,7 +297,7 @@ export function BulkEditDialog({
           <div className="flex items-center gap-2 rounded-lg border border-hair bg-muted/20 px-3 py-2">
             <Search className="size-3.5 shrink-0 text-muted-foreground/50" />
             <input
-              className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground/40"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
               placeholder={t(lang, "searchByNameOrCode")}
               value={bulkSearch}
               onChange={(e) => setBulkSearch(e.target.value)}

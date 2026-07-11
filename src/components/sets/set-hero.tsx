@@ -58,7 +58,7 @@ export function SetHero({
             fill
             className="object-cover object-top"
             sizes="(min-width: 1024px) 240px, (min-width: 640px) 208px, 160px"
-            priority
+            preload
           />
         ) : (
           <div className="flex h-full items-center justify-center">
@@ -101,7 +101,7 @@ export function SetHero({
                 className="hidden h-4 w-px bg-hair sm:block"
               />
               <Link
-                href={`/cards/${topCard.cardCode}`}
+                href={`/opcg/cards/${topCard.cardCode}`}
                 className="group ease-chrome -mx-1.5 flex items-center gap-2 rounded-lg px-1.5 py-1 transition-colors hover:bg-muted/60"
               >
                 <span className="surface-1 relative aspect-[63/88] w-7 shrink-0 overflow-hidden rounded-sm">

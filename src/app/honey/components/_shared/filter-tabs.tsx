@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 
 /**
  * Pill segmented control used as the inline filter strip across Achievements,
@@ -22,32 +23,22 @@ export function FilterTabs<T extends string>({
 }) {
   return (
     <div
-      role="tablist"
-      aria-label={ariaLabel}
       className={cn(
-        "flex gap-1 overflow-x-auto bg-muted/20 px-4 py-1.5 scrollbar-none",
+        "scroll-fade-x flex gap-1 overflow-x-auto bg-muted/20 px-4 py-1.5 scrollbar-none",
         className,
       )}
     >
-      {options.map((opt) => {
-        const active = opt.key === value;
-        return (
-          <button
-            key={opt.key}
-            role="tab"
-            aria-selected={active}
-            onClick={() => onChange(opt.key)}
-            className={cn(
-              "shrink-0 rounded-md px-3 py-1.5 text-xs font-medium motion-base",
-              active
-                ? "bg-primary/15 text-primary"
-                : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
-            )}
-          >
-            {opt.label}
-          </button>
-        );
-      })}
+      <SegmentedControl<T>
+        value={value}
+        onChange={onChange}
+        options={options.map((option) => ({
+          value: option.key,
+          label: option.label,
+        }))}
+        size="sm"
+        ariaLabel={ariaLabel}
+        className="shrink-0 bg-transparent p-0 sm:p-0"
+      />
     </div>
   );
 }

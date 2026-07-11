@@ -26,10 +26,13 @@ import { Input } from "@/components/ui/input";
 import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
 import { useAdminList } from "@/lib/admin/use-admin-list";
 import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
-import type { ApiResponse, SortKey } from "./_components/types";
+import type { ApiResponse, Mapping, SortKey } from "./_components/types";
 import { ShortcutLegend, SortableHeader, StatsBar } from "./_components/match-ui";
 import { AddCardDialog } from "./_components/add-card-dialog";
-import { MappingRow } from "./_components/mapping-row";
+import {
+  MappingMobileCard,
+  MappingRow,
+} from "./_components/mapping-row";
 
 const API = "/api/admin/snkrdunk-matching";
 
@@ -175,8 +178,12 @@ export function SnkrdunkMatchClient() {
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      const tag = (e.target as HTMLElement).tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      const target = e.target as HTMLElement;
+      if (
+        target.closest(
+          'input, textarea, select, button, a, [role="button"], [contenteditable="true"]',
+        )
+      ) return;
       if (addDialogOpen) return;
 
       const len = mappings.length;
@@ -215,7 +222,12 @@ export function SnkrdunkMatchClient() {
   // Scroll focused row into view
   useEffect(() => {
     if (focusedIdx < 0) return;
-    const row = tableRef.current?.querySelector(`[data-row-idx="${focusedIdx}"]`);
+    const rowAttribute = window.matchMedia("(min-width: 640px)").matches
+      ? "data-desktop-row-idx"
+      : "data-mobile-row-idx";
+    const row = tableRef.current?.querySelector(
+      `[${rowAttribute}="${focusedIdx}"]`,
+    );
     row?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [focusedIdx]);
 
@@ -227,6 +239,34 @@ export function SnkrdunkMatchClient() {
   const setPage = (next: number | ((prev: number) => number)) => {
     const value = typeof next === "function" ? next(page) : next;
     patch({ page: value });
+  };
+
+  const renderMapping = (m: Mapping, idx: number, mobile: boolean) => {
+    const candidateId = pickedCandidate[m.id] ?? m.matchedCardId;
+    const sharedProps = {
+      m,
+      idx,
+      isSaving: saving.has(m.id),
+      candidateId,
+      isFocused: focusedIdx === idx,
+      isSelected: selected.has(m.id),
+      onFocus: () => setFocusedIdx(idx),
+      onToggleSelect: () => toggleSelect(m.id),
+      onPickCandidate: (cid: number) =>
+        setPickedCandidate((p) => ({ ...p, [m.id]: cid })),
+      onApprove: () => {
+        if (candidateId) handleApprove(m.id, candidateId);
+      },
+      onReject: () => handleReject(m.id),
+      onRefresh: () => handleRefresh(m.id),
+      onUnmatch: () => handleUnmatch(m.id),
+    };
+
+    return mobile ? (
+      <MappingMobileCard key={m.id} {...sharedProps} />
+    ) : (
+      <MappingRow key={m.id} {...sharedProps} />
+    );
   };
 
   return (
@@ -297,6 +337,21 @@ export function SnkrdunkMatchClient() {
           />
         </div>
 
+        <select
+          aria-label="เรียงลำดับ"
+          value={sort}
+          onChange={(event) => setSort(event.target.value as SortKey)}
+          className="h-11 min-w-0 flex-1 rounded-lg border border-hair bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring sm:hidden"
+        >
+          <option value="">เรียงค่าเริ่มต้น</option>
+          <option value="product-asc">SNKRDUNK A–Z</option>
+          <option value="product-desc">SNKRDUNK Z–A</option>
+          <option value="price-desc">ราคาสูง→ต่ำ</option>
+          <option value="price-asc">ราคาต่ำ→สูง</option>
+          <option value="date-desc">ใหม่→เก่า</option>
+          <option value="date-asc">เก่า→ใหม่</option>
+        </select>
+
         <Button
           type="button"
           variant="outline"
@@ -328,7 +383,30 @@ export function SnkrdunkMatchClient() {
 
       {/* Table */}
       <div ref={tableRef} className="overflow-hidden rounded-xl border border-border">
-        <table className="w-full text-sm">
+        <div className="divide-y divide-hair sm:hidden">
+          {loading && mappings.length === 0 ? (
+            <div className="py-12 text-center text-meta" role="status">
+              กำลังโหลดรายการ…
+            </div>
+          ) : mappings.length === 0 ? (
+            <div className="py-12 text-center text-meta">ไม่พบรายการ</div>
+          ) : (
+            <>
+              <label className="flex min-h-11 items-center gap-3 bg-muted/30 px-4 text-body-sm">
+                <input
+                  type="checkbox"
+                  checked={allOnPageSelected}
+                  onChange={toggleSelectAll}
+                  className="size-4 accent-primary"
+                />
+                เลือกทั้งหมดในหน้านี้
+              </label>
+              {mappings.map((m, idx) => renderMapping(m, idx, true))}
+            </>
+          )}
+        </div>
+
+        <table className="hidden w-full text-sm sm:table">
           <thead>
             <tr className="border-b border-border bg-muted/30 text-meta">
               <th className="w-10 py-2.5 pl-3 pr-1">
@@ -340,7 +418,10 @@ export function SnkrdunkMatchClient() {
                   aria-label="เลือกทั้งหมด"
                 />
               </th>
-              <th className="py-2.5 pl-1 pr-2 text-left">
+              <th
+                aria-sort={sort === "product-asc" ? "ascending" : sort === "product-desc" ? "descending" : "none"}
+                className="py-2.5 pl-1 pr-2 text-left"
+              >
                 <SortableHeader
                   label="SNKRDUNK"
                   sortKey="product"
@@ -350,7 +431,10 @@ export function SnkrdunkMatchClient() {
                   onSort={(s) => { setSort(s); setPage(1); }}
                 />
               </th>
-              <th className="px-2 py-2.5 text-left">
+              <th
+                aria-sort={sort === "price-asc" ? "ascending" : sort === "price-desc" ? "descending" : "none"}
+                className="px-2 py-2.5 text-left"
+              >
                 <SortableHeader
                   label="ราคา USD"
                   sortKey="price"
@@ -363,7 +447,10 @@ export function SnkrdunkMatchClient() {
               <th className="px-2 py-2.5 text-left font-medium">
                 จับคู่
               </th>
-              <th className="px-2 py-2.5 text-center">
+              <th
+                aria-sort={sort === "date-asc" ? "ascending" : sort === "date-desc" ? "descending" : "none"}
+                className="px-2 py-2.5 text-center"
+              >
                 <SortableHeader
                   label="สถานะ"
                   sortKey="date"
@@ -396,31 +483,7 @@ export function SnkrdunkMatchClient() {
                 </td>
               </tr>
             ) : (
-              mappings.map((m, idx) => {
-                const candidateId = pickedCandidate[m.id] ?? m.matchedCardId;
-                return (
-                  <MappingRow
-                    key={m.id}
-                    m={m}
-                    idx={idx}
-                    isSaving={saving.has(m.id)}
-                    candidateId={candidateId}
-                    isFocused={focusedIdx === idx}
-                    isSelected={selected.has(m.id)}
-                    onFocus={() => setFocusedIdx(idx)}
-                    onToggleSelect={() => toggleSelect(m.id)}
-                    onPickCandidate={(cid) =>
-                      setPickedCandidate((p) => ({ ...p, [m.id]: cid }))
-                    }
-                    onApprove={() => {
-                      if (candidateId) handleApprove(m.id, candidateId);
-                    }}
-                    onReject={() => handleReject(m.id)}
-                    onRefresh={() => handleRefresh(m.id)}
-                    onUnmatch={() => handleUnmatch(m.id)}
-                  />
-                );
-              })
+              mappings.map((m, idx) => renderMapping(m, idx, false))
             )}
           </tbody>
         </table>

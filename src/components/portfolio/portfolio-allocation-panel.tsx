@@ -56,7 +56,7 @@ export function PortfolioAllocationPanel({ allocation }: { allocation: Allocatio
           return slice.cardCode ? (
             <Link
               key={`${slice.name}-${i}`}
-              href={`/cards/${slice.cardCode}`}
+              href={`/opcg/cards/${slice.cardCode}`}
               className="ease-chrome block rounded-lg px-1 transition-colors hover:bg-muted/40"
             >
               {inner}

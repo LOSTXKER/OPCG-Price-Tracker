@@ -106,7 +106,7 @@ export function SetPicker({
 
   if (loading) {
     if (variant === "cta") return <Skeleton className="h-12 w-72 rounded-xl" />
-    if (variant === "inline") return <Skeleton className="h-9 w-full rounded-lg" />
+    if (variant === "inline") return <Skeleton className="h-11 w-full rounded-lg sm:h-9" />
     return <Skeleton className="h-9 w-56 rounded-full" />
   }
 
@@ -128,12 +128,12 @@ export function SetPicker({
             open && "border-primary/60 bg-primary/10",
           ),
           isPill && cn(
-            "h-9 max-w-[18rem] rounded-full border border-border bg-background pl-1 pr-3 text-sm",
+            "h-11 max-w-[18rem] rounded-full border border-border bg-background pl-1 pr-3 text-sm sm:h-9",
             "hover:bg-muted/70",
             open && "bg-muted/70",
           ),
           isInline && cn(
-            "h-9 w-full rounded-lg border bg-background px-2.5 text-sm",
+            "h-11 w-full rounded-lg border bg-background px-2.5 text-sm sm:h-9",
             selectedSet
               ? "border-primary/40 bg-primary/10"
               : prominent

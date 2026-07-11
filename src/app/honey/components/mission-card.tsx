@@ -2,6 +2,7 @@ import { ArrowRight, CheckCircle2, Gift } from "lucide-react";
 import NextLink from "next/link";
 import { Button } from "@/components/ui/button";
 import { t, type Language, type TranslationKey } from "@/lib/i18n";
+import { isGameScopedSegment } from "@/lib/game/constants";
 import { cn } from "@/lib/utils";
 import { localizedMissionName, localizedMissionDescription } from "../types";
 import { RewardChips } from "./_shared/reward-chip";
@@ -58,9 +59,11 @@ export function ClaimAction({
   }
   if (customCta) return <>{customCta}</>;
   if (ctaPath) {
+    const segment = ctaPath.split("/")[1];
+    const href = isGameScopedSegment(segment) ? `/opcg${ctaPath}` : ctaPath;
     return (
       <NextLink
-        href={ctaPath}
+        href={href}
         className="inline-flex h-8 items-center gap-1 rounded-lg border bg-background px-3 text-xs font-semibold text-foreground ease-chrome transition-colors hover:bg-muted"
       >
         {t(lang, "missionGoLabel")}

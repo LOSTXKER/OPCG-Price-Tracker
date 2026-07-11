@@ -1,12 +1,17 @@
 "use client"
 
-import { useId } from "react"
 import { X } from "lucide-react"
 
 import {
   CardPickerForm,
   type CardWithSet,
 } from "@/components/shared/card-picker-form"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { useCompareStore, type CompareItem } from "@/stores/compare-store"
 import { useUIStore } from "@/stores/ui-store"
 import { getCardName, t } from "@/lib/i18n"
@@ -35,7 +40,6 @@ export function CardPickerModal({
   const tierMax = isFinite(limits.compareCards) ? limits.compareCards : 6
   const atLimit = storeItems.length >= tierMax
   const selectedCodes = new Set(storeItems.map((i) => i.cardCode))
-  const titleId = useId()
 
   const handleToggle = (card: CardWithSet) => {
     const already = selectedCodes.has(card.cardCode)
@@ -53,33 +57,23 @@ export function CardPickerModal({
     toggle(item)
   }
 
-  if (!open) return null
-
   return (
-    <div
-      className="fixed inset-0 z-[100]"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby={titleId}
-    >
-      <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-in fade-in-0 duration-150"
-        onClick={onClose}
-      />
-
-      <div className="relative mx-auto mt-[5vh] flex h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-popover shadow-[var(--elev-overlay)] ring-1 ring-border/50 animate-in fade-in-0 slide-in-from-bottom-4 duration-[var(--dur-base)] md:mt-[8vh] md:h-[80vh]">
+    <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
+      <DialogContent
+        showCloseButton={false}
+        className="flex h-[90dvh] max-w-2xl flex-col gap-0 overflow-hidden rounded-2xl p-0 sm:max-w-2xl md:h-[80dvh]"
+      >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-hair px-4 py-3">
-          <h2 id={titleId} className="text-h3">
+          <DialogTitle className="text-h3">
             {t(lang, "addCardToCompare")}
-          </h2>
-          <button
-            aria-label="Close"
-            onClick={onClose}
-            className="flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+          </DialogTitle>
+          <DialogClose
+            aria-label={t(lang, "close")}
+            className="tap-safe flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             <X className="size-4" />
-          </button>
+          </DialogClose>
         </div>
 
         {/* The one shared card picker — multi-pick (selected rows show a Check).
@@ -98,16 +92,15 @@ export function CardPickerModal({
                   <UpgradeBadge featureKey="comparePlus" />
                 )}
               </div>
-              <button
-                onClick={onClose}
-                className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground motion-base hover:bg-primary/90"
+              <DialogClose
+                className="min-h-11 rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground motion-base hover:bg-primary/90 sm:min-h-0"
               >
                 {t(lang, "compareNow")}
-              </button>
+              </DialogClose>
             </div>
           }
         />
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   )
 }

@@ -60,7 +60,7 @@ export function SiblingGrid({
         return (
           <Link
             key={s.id}
-            href={`/cards/${s.cardCode}`}
+            href={`/opcg/cards/${s.cardCode}`}
             className={cn(
               "group flex flex-col gap-1.5 text-center",
               isCurrent && "pointer-events-none",

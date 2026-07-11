@@ -86,6 +86,8 @@ export function SortableHeader({
 
   return (
     <button
+      type="button"
+      aria-pressed={isAsc || isDesc}
       onClick={() => {
         if (isAsc) onSort(descKey);
         else if (isDesc) onSort("");
@@ -122,9 +124,10 @@ export function StatsBar({
   return (
     <div className="flex flex-wrap items-center gap-2">
       <button
+        type="button"
         onClick={() => onFilter("")}
         className={cn(
-          "rounded-full px-3 py-1 text-xs font-medium motion-base",
+          "min-h-11 rounded-full px-3 py-1 text-xs font-medium motion-base sm:min-h-0",
           activeFilter === ""
             ? "bg-primary text-primary-foreground"
             : "bg-muted text-muted-foreground hover:bg-muted/70"
@@ -135,9 +138,10 @@ export function StatsBar({
       {STATUS_META.map((s) => (
         <button
           key={s.key}
+          type="button"
           onClick={() => onFilter(activeFilter === s.key ? "" : s.key)}
           className={cn(
-            "rounded-full px-3 py-1 text-xs font-medium motion-base",
+            "min-h-11 rounded-full px-3 py-1 text-xs font-medium motion-base sm:min-h-0",
             activeFilter === s.key
               ? "ring-2 ring-offset-1 ring-offset-background ring-current"
               : "",

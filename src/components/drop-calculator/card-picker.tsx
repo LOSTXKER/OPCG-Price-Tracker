@@ -78,7 +78,7 @@ export function CardPicker({
             placeholder={t(lang, "searchByNameOrCode")}
             value={cardSearch}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="h-9 w-full rounded-full border border-border bg-background pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
+            className="h-9 w-full rounded-full border border-border bg-background pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
           />
         </div>
         <button

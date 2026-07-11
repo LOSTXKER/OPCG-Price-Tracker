@@ -1,6 +1,7 @@
 "use client";
 
 import { ClipboardList, History, Link2, Medal, ShoppingBag, Ticket, Trophy } from "lucide-react";
+import { useRef, type KeyboardEvent } from "react";
 import { t, type Language, type TranslationKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { TabKey } from "../types";
@@ -48,6 +49,34 @@ const GROUPS: GroupDef[] = [
   },
 ];
 
+const ALL_ITEMS = GROUPS.flatMap((group) => group.items);
+
+function useHoneyTabKeyboard(onTabChange: (next: TabKey) => void) {
+  const refs = useRef<Partial<Record<TabKey, HTMLButtonElement | null>>>({});
+
+  const onKeyDown = (event: KeyboardEvent<HTMLButtonElement>, key: TabKey) => {
+    const currentIndex = ALL_ITEMS.findIndex((item) => item.key === key);
+    let nextIndex: number | null = null;
+
+    if (event.key === "Home") nextIndex = 0;
+    else if (event.key === "End") nextIndex = ALL_ITEMS.length - 1;
+    else if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      nextIndex = (currentIndex + 1) % ALL_ITEMS.length;
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      nextIndex = (currentIndex - 1 + ALL_ITEMS.length) % ALL_ITEMS.length;
+    }
+
+    if (nextIndex == null) return;
+    event.preventDefault();
+    const next = ALL_ITEMS[nextIndex];
+    if (!next) return;
+    onTabChange(next.key);
+    refs.current[next.key]?.focus();
+  };
+
+  return { refs, onKeyDown };
+}
+
 export function HoneyTabNav({
   tab,
   onTabChange,
@@ -74,6 +103,7 @@ function DesktopSidebarNav({
   onTabChange: (next: TabKey) => void;
   lang: Language;
 }) {
+  const keyboard = useHoneyTabKeyboard(onTabChange);
   return (
     <nav
       role="tablist"
@@ -101,6 +131,11 @@ function DesktopSidebarNav({
                 aria-selected={active}
                 aria-controls={`honey-tabpanel-${item.key}`}
                 id={`honey-tab-${item.key}`}
+                tabIndex={active ? 0 : -1}
+                ref={(node) => {
+                  keyboard.refs.current[item.key] = node;
+                }}
+                onKeyDown={(event) => keyboard.onKeyDown(event, item.key)}
                 onClick={() => onTabChange(item.key)}
                 className={cn(
                   "flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-sm font-medium motion-base",
@@ -129,14 +164,15 @@ function MobileTabBar({
   onTabChange: (next: TabKey) => void;
   lang: Language;
 }) {
-  const allItems = GROUPS.flatMap((g) => g.items);
+  const keyboard = useHoneyTabKeyboard(onTabChange);
   return (
     <div
       role="tablist"
+      aria-orientation="horizontal"
       aria-label={t(lang, "honeyPageTitle")}
-      className="flex gap-0.5 overflow-x-auto rounded-lg bg-muted/30 p-1 scrollbar-none lg:hidden"
+      className="scroll-fade-x flex gap-0.5 overflow-x-auto rounded-lg bg-muted/30 p-1 scrollbar-none lg:hidden"
     >
-      {allItems.map((item) => {
+      {ALL_ITEMS.map((item) => {
         const Icon = item.icon;
         const active = tab === item.key;
         return (
@@ -146,17 +182,22 @@ function MobileTabBar({
             aria-selected={active}
             aria-controls={`honey-tabpanel-${item.key}`}
             id={`honey-tab-mobile-${item.key}`}
+            tabIndex={active ? 0 : -1}
+            ref={(node) => {
+              keyboard.refs.current[item.key] = node;
+            }}
+            onKeyDown={(event) => keyboard.onKeyDown(event, item.key)}
             onClick={() => onTabChange(item.key)}
             title={t(lang, item.labelKey)}
             className={cn(
-              "flex shrink-0 items-center gap-2 rounded-md px-3 py-3 text-xs font-medium motion-base sm:px-4",
+              "flex min-h-11 shrink-0 items-center gap-2 rounded-md px-3 py-2 text-xs font-medium motion-base sm:px-4",
               active
                 ? "bg-primary/15 text-primary"
                 : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
             )}
           >
             <Icon className="size-4" />
-            <span className="hidden sm:inline">{t(lang, item.labelKey)}</span>
+            <span>{t(lang, item.labelKey)}</span>
           </button>
         );
       })}

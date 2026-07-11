@@ -84,7 +84,7 @@ export const MarketTableRow = memo(function MarketTableRow({
             ) : (
               <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted" />
             )}
-            <Link href={`/cards/${card.cardCode}`} className="min-w-0">
+            <Link href={`/opcg/cards/${card.cardCode}`} className="min-w-0">
               <p className="truncate text-sm font-medium leading-tight hover:underline">{name}</p>
               <p className="mt-0.5 font-mono text-xs text-muted-foreground">
                 {card.baseCode ?? card.cardCode}
@@ -96,7 +96,7 @@ export const MarketTableRow = memo(function MarketTableRow({
       case "set":
         return setCode ? (
           <Link
-            href={`/sets/${setCode}`}
+            href={`/opcg/sets/${setCode}`}
             className="ease-chrome font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground hover:decoration-solid"
           >
             {setCode.toUpperCase()}

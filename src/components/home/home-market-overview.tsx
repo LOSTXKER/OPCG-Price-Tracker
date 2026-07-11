@@ -14,10 +14,12 @@ import { FilterModal } from "@/components/shared/filter-modal"
 import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker"
 import { AdSlot } from "@/components/ads/ad-slot"
 import { Input } from "@/components/ui/input"
+import { Pagination } from "@/components/ui/pagination"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
+import { formatCount } from "@/lib/utils/currency"
 import { getCardTypeLabel, getColorOptions } from "@/lib/constants/card-config"
 import { useMarketCards } from "@/hooks/use-market-cards"
 
@@ -25,7 +27,6 @@ import { MarketTable } from "@/components/market/market-table"
 import { PriceModeControl } from "@/components/market/price-mode-control"
 import { buildMarketColumns } from "@/components/market/market-columns"
 import { CardItem, CardItemSkeleton } from "@/components/cards/card-item"
-import { Pagination } from "./pagination"
 import {
   type Tab,
   type CardRow,
@@ -134,7 +135,7 @@ export function HomeMarketOverview({
               key={tab.id}
               onClick={() => m.handleTabChange(tab.id)}
               className={cn(
-                "ease-chrome relative -mb-px shrink-0 border-b-2 px-2.5 py-2.5 text-xs font-semibold",
+                "ease-chrome relative -mb-px min-h-11 shrink-0 border-b-2 px-2.5 py-2.5 text-xs font-semibold",
                 m.activeTab === tab.id
                   ? "border-primary text-primary"
                   : "border-transparent text-muted-foreground hover:text-foreground"
@@ -178,7 +179,7 @@ export function HomeMarketOverview({
               type="button"
               onClick={() => m.setFilterOpen(true)}
               className={cn(
-                "ease-chrome flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium",
+                "ease-chrome flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium md:min-h-0 md:min-w-0",
                 m.filterOpen || m.activeFilterCount > 0
                   ? "bg-primary/15 text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -239,7 +240,7 @@ export function HomeMarketOverview({
                           )
                         }
                         className={cn(
-                          "ease-chrome flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium",
+                          "ease-chrome flex min-h-11 items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium md:min-h-0",
                           active
                             ? "border-primary/40 bg-primary/5 text-primary"
                             : "border-hair bg-background text-muted-foreground hover:text-foreground"
@@ -264,7 +265,7 @@ export function HomeMarketOverview({
             <Input
               type="number"
               placeholder={t(lang, "min")}
-              className="surface-1 h-10 w-24 border-hair px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
+              className="surface-1 h-11 w-24 border-hair px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20 md:h-10"
               value={m.minPrice}
               onChange={(e) => { m.setMinPrice(e.target.value); m.setPage(1) }}
               min={0}
@@ -273,7 +274,7 @@ export function HomeMarketOverview({
             <Input
               type="number"
               placeholder={t(lang, "max")}
-              className="surface-1 h-10 w-24 border-hair px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20"
+              className="surface-1 h-11 w-24 border-hair px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20 md:h-10"
               value={m.maxPrice}
               onChange={(e) => { m.setMaxPrice(e.target.value); m.setPage(1) }}
               min={0}
@@ -353,10 +354,16 @@ export function HomeMarketOverview({
       <Pagination
         page={m.page}
         totalPages={m.totalPages}
-        total={m.total}
-        pageSize={PAGE_SIZE}
         isPending={m.isPending}
         onPageChange={m.setPage}
+        className="border-t border-hair px-4 py-3"
+        summary={
+          <p className="hidden text-meta sm:block">
+            {t(lang, "showingOf")} {formatCount((m.page - 1) * PAGE_SIZE + 1)}-
+            {formatCount(Math.min(m.page * PAGE_SIZE, m.total))} {t(lang, "from")}{" "}
+            {formatCount(m.total)} {t(lang, "card")}
+          </p>
+        }
       />
     </div>
     </div>

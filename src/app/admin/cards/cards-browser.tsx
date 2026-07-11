@@ -64,7 +64,7 @@ export function CardsBrowser({
       sort: "",
       order: "asc" as "asc" | "desc",
       page: 1,
-      perPage: 50,
+      perPage: 20,
     },
   });
   const {
@@ -292,7 +292,7 @@ export function CardsBrowser({
                 type="button"
                 onClick={() => setViewMode("table")}
                 className={cn(
-                  "rounded-md p-1.5 motion-base",
+                  "flex size-11 items-center justify-center rounded-md motion-base sm:size-7",
                   viewMode === "table"
                     ? "bg-primary/15 text-primary"
                     : "text-muted-foreground hover:text-foreground",
@@ -306,7 +306,7 @@ export function CardsBrowser({
                 type="button"
                 onClick={() => setViewMode("grid")}
                 className={cn(
-                  "rounded-md p-1.5 motion-base",
+                  "flex size-11 items-center justify-center rounded-md motion-base sm:size-7",
                   viewMode === "grid"
                     ? "bg-primary/15 text-primary"
                     : "text-muted-foreground hover:text-foreground",

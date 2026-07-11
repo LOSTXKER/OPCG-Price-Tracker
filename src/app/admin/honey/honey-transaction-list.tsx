@@ -1,12 +1,16 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { toast } from "sonner";
 import { Loader2, ChevronDown, Zap, Filter } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
 import { AdminNativeSelect } from "@/components/admin/admin-native-select";
+import {
+  AdminDataTable,
+  type Column,
+} from "@/components/admin/admin-data-table";
 import { getTypeInfo, ALL_TYPES } from "./honey-type-labels";
 
 interface Transaction {
@@ -36,6 +40,75 @@ export function HoneyTransactionList({
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(initialHasMore);
+
+  const columns = useMemo<Column<Transaction>[]>(
+    () => [
+      {
+        key: "user",
+        header: "ผู้ใช้",
+        render: (tx) => (
+          <div className="flex items-center gap-1.5">
+            <Zap
+              className={cn(
+                "size-3 shrink-0",
+                tx.amount > 0 ? "text-success" : "text-danger",
+              )}
+            />
+            <span className="max-w-[180px] truncate text-sm">
+              {tx.user.displayName ?? tx.user.email}
+            </span>
+          </div>
+        ),
+      },
+      {
+        key: "type",
+        header: "ประเภท",
+        render: (tx) => {
+          const typeInfo = getTypeInfo(tx.type);
+          return (
+            <Badge className={cn("text-overlay", typeInfo.bg, typeInfo.text)}>
+              {typeInfo.label}
+            </Badge>
+          );
+        },
+      },
+      {
+        key: "reason",
+        header: "รายละเอียด",
+        className: "max-w-[250px] truncate text-meta",
+        render: (tx) => tx.reason,
+      },
+      {
+        key: "amount",
+        header: "จำนวน",
+        headerClassName: "text-right",
+        className: "text-right",
+        render: (tx) => (
+          <span
+            className={cn(
+              "text-sm font-bold tabular-nums",
+              tx.amount > 0 ? "text-success" : "text-danger",
+            )}
+          >
+            {tx.amount > 0 ? "+" : ""}
+            {tx.amount.toLocaleString()}
+          </span>
+        ),
+      },
+      {
+        key: "date",
+        header: "วันที่",
+        headerClassName: "text-right",
+        className: "text-right text-meta",
+        render: (tx) =>
+          new Date(tx.createdAt).toLocaleDateString("th-TH", {
+            day: "numeric",
+            month: "short",
+          }),
+      },
+    ],
+    [],
+  );
 
   const loadMore = useCallback(
     async (currentPage: number, currentType: string, append: boolean) => {
@@ -94,87 +167,19 @@ export function HoneyTransactionList({
         </AdminNativeSelect>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-hair">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-hair bg-muted/30 text-meta">
-              <th className="px-3 py-2 text-left font-medium">ผู้ใช้</th>
-              <th className="px-3 py-2 text-left font-medium">ประเภท</th>
-              <th className="hidden px-3 py-2 text-left font-medium sm:table-cell">รายละเอียด</th>
-              <th className="px-3 py-2 text-right font-medium">จำนวน</th>
-              <th className="px-3 py-2 text-right font-medium">วันที่</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-hair">
-            {transactions.map((tx) => {
-              const typeInfo = getTypeInfo(tx.type);
-              return (
-                <tr
-                  key={tx.id}
-                  className="motion-base hover:bg-muted/70"
-                >
-                  <td className="px-3 py-2">
-                    <div className="flex items-center gap-1.5">
-                      <Zap
-                        className={cn(
-                          "size-3 shrink-0",
-                          tx.amount > 0 ? "text-success" : "text-danger",
-                        )}
-                      />
-                      <span className="max-w-[120px] truncate text-sm">
-                        {tx.user.displayName ?? tx.user.email}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-3 py-2">
-                    <Badge
-                      className={cn(
-                        "text-overlay",
-                        typeInfo.bg,
-                        typeInfo.text,
-                      )}
-                    >
-                      {typeInfo.label}
-                    </Badge>
-                  </td>
-                  <td className="hidden max-w-[250px] truncate px-3 py-2 text-meta sm:table-cell">
-                    {tx.reason}
-                  </td>
-                  <td className="px-3 py-2 text-right">
-                    <span
-                      className={cn(
-                        "text-sm font-bold tabular-nums",
-                        tx.amount > 0 ? "text-success" : "text-danger",
-                      )}
-                    >
-                      {tx.amount > 0 ? "+" : ""}
-                      {tx.amount.toLocaleString()}
-                    </span>
-                  </td>
-                  <td className="px-3 py-2 text-right text-meta">
-                    {new Date(tx.createdAt).toLocaleDateString("th-TH", {
-                      day: "numeric",
-                      month: "short",
-                    })}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-
-        {transactions.length === 0 && (
-          <p className="py-8 text-center text-sm text-muted-foreground">
-            ไม่พบธุรกรรม
-          </p>
-        )}
-      </div>
+      <AdminDataTable
+        columns={columns}
+        data={transactions}
+        rowKey={(tx) => tx.id}
+        emptyMessage="ไม่พบธุรกรรม"
+        compact
+      />
 
       {hasMore && (
         <button
           onClick={handleLoadMore}
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-lg border border-transparent dark:border-hair bg-muted/20 py-2 text-xs font-medium text-muted-foreground motion-base hover:bg-muted/70 hover:text-foreground disabled:opacity-50"
+          className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-transparent dark:border-hair bg-muted/20 py-2 text-xs font-medium text-muted-foreground motion-base hover:bg-muted/70 hover:text-foreground disabled:opacity-50"
         >
           {loading ? (
             <Loader2 className="size-3.5 animate-spin" />
